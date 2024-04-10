@@ -1,205 +1,163 @@
-Return-Path: <linux-gpio+bounces-5272-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5273-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23A3589EC7A
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 09:42:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D557389EC85
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 09:43:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6FF0CB23161
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 07:42:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FB071C210AB
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 07:43:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5D1313D52A;
-	Wed, 10 Apr 2024 07:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8254D13D292;
+	Wed, 10 Apr 2024 07:42:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xrPmfdoq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="etSk0y8Q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181FD13D294
-	for <linux-gpio@vger.kernel.org>; Wed, 10 Apr 2024 07:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6567913D26E;
+	Wed, 10 Apr 2024 07:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712734928; cv=none; b=spqESwCbRP08xd0EHDYItiALcRU6fJ8qXEPkXLWwRErvpjOLn0KqKeD4r/aACCB8CwAYP/CWluTg99L/cHq2scqzguoLYMthesPwypG0weebZx1d9uAZQwEGB1PU8NBeP+EwQgVaN7D/hINg5bT/qJIJxpvz+j0HIdornQhz1PE=
+	t=1712734967; cv=none; b=uZ7Uu9h0HRi4xyiHF4VKQSkzX1PvVusOWz3Vc4k+PqalXrMrRqJp+KcqMN+Qrwz2LzeKrACDlvEZ4SsIDWUy55uC/3YVtGr16tJlI97+sWpAGuSunff7ALPJRXsFTPPgm/PnFpu7iiAUtIB4WjFPjN30fzX+BW8zqqig4kbyCg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712734928; c=relaxed/simple;
-	bh=6JimvKABjGAhaAunVcg5wLuwEFqMbqXRS1l6okPFEp4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c1lszYVZqTSJNRYCGgavw6L7nwSG6CE22UUo9W3+3EVVZeWTLk92SRPTgR6KjWMAoRHOPTHWG2Zc67JK2W2I2b6tGts/SLH+rF/vh3jaGHsSyP9ek1/7Kf9wK9gd7FiEXvMNvUpdnjIrE95US61/lUk9VfVkR7na+BusrWH4wt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xrPmfdoq; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56e477db7fbso5816536a12.3
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Apr 2024 00:42:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712734923; x=1713339723; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=k3mXYs19jtAC2YbwmDdropY4/qIjzCwyc3vsFS2GcGA=;
-        b=xrPmfdoqalT722GL6FLJ3+UTBNIFGwP1Q4CURE/dJUGeXOZuf9ghUXjZ1jqQ2pjvf9
-         TRs0m8ql8yKJ+6GndJHDuM77rOMh80p6GdkLuedldi9iuvVzj7sGPSn1l5mnl9ZiX6GE
-         7A8zLS7ooUBD0BC5HyazuelJ2xNzIpu8YIXi1LOJD8WxrIM8xc2K0kuLslEddvWGIkLP
-         R9Lk4B2fpScQsDOM6Jw2aB3QPAJpIUyPySAyNvVq4XU/RCfUlp5cysFYX/wo7UYBW5sG
-         lgKNhEHDIrtOrQxGeL8UFcw6yEuiMtS913F+S7t/dircm4yc7Wx/JfkKUvjYTaBwMW+P
-         jcVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712734923; x=1713339723;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k3mXYs19jtAC2YbwmDdropY4/qIjzCwyc3vsFS2GcGA=;
-        b=UK2DJ8+jJu2aAGpo0Fkiucfeppa03DXfHNEBpUMVQSwTkiByuuoSc9mn1Ca9r6qUf5
-         yAC3HPoq+Qu/R3cCgm68OM4bC1cTZ4mjWgQYOpC7fR/CBHXhrm1L6lMWTCuR3lhoAiKB
-         AFjJxt6J20+5AGcKSmEBRo0oPlRR3+z0azlM7nqTO+L8o0NJ7AF2dl3Ca4fzQw47gUMC
-         /K1fu2ZXmK3maRLq0hDGpiu1UKkjxBMx65aTl7kFTbpDfTXBeMbmKSzgN+kGsUajwAO8
-         8ersZkEwFAMqo+GkXjAqPcNIOtu38p22oVNiEY6UHx4QmZnr7C8ZOJ4YnCiJamZ9sX3b
-         PKPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpiONzx0Gs+IHmqY/160/OzbXFl/+eqdsZ01pygt1ti0nZ8I8PHnt+gT9OmtAG02SzrPei+2qWBytEi+RIB1l1TLLsvTRKlekSbg==
-X-Gm-Message-State: AOJu0YxF9rHTwkClWbtrlNX7/rKyyEecEp68PyGv325SgclSup4enkW3
-	0Wcme78hThD9RfmmfK+uWc78ALUCsjX/L/RetIKMhTyOIJLTn+ddk4hz1wQE7ZM=
-X-Google-Smtp-Source: AGHT+IHbsaGMHaULq45hB1RQzGJ2jQouzCDk/Qs5dl99Xk4dB9Un2GtOpuqSHCNaJjxWq+FiwtopyQ==
-X-Received: by 2002:a17:907:9914:b0:a51:a688:3e9c with SMTP id ka20-20020a170907991400b00a51a6883e9cmr887114ejc.35.1712734923162;
-        Wed, 10 Apr 2024 00:42:03 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id y6-20020a17090668c600b00a46d049ff63sm6575359ejr.21.2024.04.10.00.41.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 00:42:02 -0700 (PDT)
-Message-ID: <285be63c-8939-495c-8411-ce2a68e25b2b@linaro.org>
-Date: Wed, 10 Apr 2024 09:41:57 +0200
+	s=arc-20240116; t=1712734967; c=relaxed/simple;
+	bh=wWmn+i8xN3FEdFuPGlH4Qym/IY9I8gIWH1H2pqqEuaY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r22uI4vJOpPwI/xJ0tXcBSnswEvJ90lEP6sYkMd7UOf+yuJhsgqpCvPkrSUji9Zb8A2BP6VFYoEPQc8F6zvFWL3LW3LZTPtNP9411+YoWIIOC9tI5Ocb0o9vt7Sg6tIti3AY41lIDpiGSsCCdVx5s6xCR8D/6EtbTf6Eq5e3VZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=etSk0y8Q; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712734966; x=1744270966;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wWmn+i8xN3FEdFuPGlH4Qym/IY9I8gIWH1H2pqqEuaY=;
+  b=etSk0y8QeZQW5RHRUvoQeLI/dCcy8YxHnx+cWQixUAKrepnA7UUslgFt
+   PZSiX9By9IyPRZ5A5G4VTqQipynUz8bVpunqxFtC+tKx8WABdT9eApcEm
+   fRhKuzEjXIgeFpKekBtsUU8Wlz+3i1IvFsUWiyTmZTesPKeKE8YQE2LaR
+   ADG+0RF32lVv7U+LfbWw8tUTCuWCqpsRioxLg5pQl+oyXe4k81l+6XIp+
+   fjBlc2l3+EMagFIblbAYIkHNP4AOSXPC9CYgn3Yc4813ozU2+RtGYw8Jq
+   mfXb/VORcIWT730tjmdRhlbTToxE8uqgq+/dZYaAoQ+efd/py25MYMd/s
+   g==;
+X-CSE-ConnectionGUID: +y3WIG1zT4OhA1+lfyJuWQ==
+X-CSE-MsgGUID: sQ2GUL/8Q66B85PGe4lQig==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11922723"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="11922723"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 00:42:45 -0700
+X-CSE-ConnectionGUID: zjXhJi3BT/ygfLrqIJYbgg==
+X-CSE-MsgGUID: xXIPWxd0QlGL07ac8ZmQwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="20361982"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 10 Apr 2024 00:42:43 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ruSbQ-00074g-0g;
+	Wed, 10 Apr 2024 07:42:40 +0000
+Date: Wed, 10 Apr 2024 15:42:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>, broonie@kernel.org,
+	linus.walleij@linaro.org, brgl@bgdev.pl
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	linux-spi@vger.kernel.org, patches@opensource.cirrus.com
+Subject: Re: [PATCH v4 3/3] spi: cs42l43: Add bridged cs35l56 amplifiers
+Message-ID: <202404101443.tYCaeZAm-lkp@intel.com>
+References: <20240409132126.1117916-4-ckeepax@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/25] virtio: store owner from modules with
- register_virtio_driver()
-To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Jonathan Corbet <corbet@lwn.net>,
- David Hildenbrand <david@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
- Jens Axboe <axboe@kernel.dk>, Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Olivia Mackall <olivia@selenic.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, Amit Shah <amit@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Gonglei <arei.gonglei@huawei.com>, "David S. Miller" <davem@davemloft.net>,
- Sudeep Holla <sudeep.holla@arm.com>,
- Cristian Marussi <cristian.marussi@arm.com>,
- Viresh Kumar <vireshk@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, David Airlie <airlied@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Daniel Vetter <daniel@ffwll.ch>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Alexander Graf <graf@amazon.com>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Eric Van Hensbergen <ericvh@kernel.org>,
- Latchesar Ionkov <lucho@ionkov.net>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Christian Schoenebeck <linux_oss@crudebyte.com>,
- Stefano Garzarella <sgarzare@redhat.com>, Kalle Valo <kvalo@kernel.org>,
- Dan Williams <dan.j.williams@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, Pankaj Gupta
- <pankaj.gupta.linux@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>,
- Anton Yakovlev <anton.yakovlev@opensynergy.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: virtualization@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
- linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
- iommu@lists.linux.dev, netdev@vger.kernel.org, v9fs@lists.linux.dev,
- kvm@vger.kernel.org, linux-wireless@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Viresh Kumar <viresh.kumar@linaro.org>
-References: <20240331-module-owner-virtio-v2-0-98f04bfaf46a@linaro.org>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240331-module-owner-virtio-v2-0-98f04bfaf46a@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240409132126.1117916-4-ckeepax@opensource.cirrus.com>
 
-On 31/03/2024 10:43, Krzysztof Kozlowski wrote:
-> Changes in v2:
-> - Three new patches: virtio mem+input+balloon
-> - Minor commit msg adjustments
-> - Add tags
-> - Link to v1: https://lore.kernel.org/r/20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org
-> 
-> Merging
-> =======
-> All further patches depend on the first virtio patch, therefore please ack
-> and this should go via one tree: maybe virtio?
+Hi Charles,
 
-Michael, Jason, Xuan,
+kernel test robot noticed the following build errors:
 
-Will you be able to take the entire patchset through virtio?
+[auto build test ERROR on broonie-spi/for-next]
+[also build test ERROR on brgl/gpio/for-next linus/master v6.9-rc3 next-20240410]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Best regards,
-Krzysztof
+url:    https://github.com/intel-lab-lkp/linux/commits/Charles-Keepax/gpio-swnode-Add-ability-to-specify-native-chip-selects-for-SPI/20240409-212316
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+patch link:    https://lore.kernel.org/r/20240409132126.1117916-4-ckeepax%40opensource.cirrus.com
+patch subject: [PATCH v4 3/3] spi: cs42l43: Add bridged cs35l56 amplifiers
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20240410/202404101443.tYCaeZAm-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240410/202404101443.tYCaeZAm-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404101443.tYCaeZAm-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/spi/spi-cs42l43.c: In function 'cs42l43_has_sidecar':
+>> drivers/spi/spi-cs42l43.c:262:50: error: invalid use of undefined type 'struct acpi_device'
+     262 |                 ret = acpi_get_local_address(adev->handle, &function);
+         |                                                  ^~
+
+
+vim +262 drivers/spi/spi-cs42l43.c
+
+   247	
+   248	static bool cs42l43_has_sidecar(struct fwnode_handle *fwnode)
+   249	{
+   250		static const u32 func_smart_amp = 0x1;
+   251		struct fwnode_handle *child_fwnode, *ext_fwnode;
+   252		unsigned int val;
+   253		u32 function;
+   254		int ret;
+   255	
+   256		fwnode_for_each_child_node(fwnode, child_fwnode) {
+   257			struct acpi_device *adev = to_acpi_device_node(child_fwnode);
+   258	
+   259			if (!adev)
+   260				continue;
+   261	
+ > 262			ret = acpi_get_local_address(adev->handle, &function);
+   263			if (ret || function != func_smart_amp) {
+   264				fwnode_handle_put(child_fwnode);
+   265				continue;
+   266			}
+   267	
+   268			ext_fwnode = fwnode_get_named_child_node(child_fwnode,
+   269					"mipi-sdca-function-expansion-subproperties");
+   270			if (!ext_fwnode) {
+   271				fwnode_handle_put(child_fwnode);
+   272				continue;
+   273			}
+   274	
+   275			ret = fwnode_property_read_u32(ext_fwnode,
+   276						       "01fa-cirrus-sidecar-instances",
+   277						       &val);
+   278	
+   279			fwnode_handle_put(ext_fwnode);
+   280			fwnode_handle_put(child_fwnode);
+   281	
+   282			if (!ret)
+   283				return !!val;
+   284		}
+   285	
+   286		return false;
+   287	}
+   288	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
