@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-5266-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5267-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D161489EA91
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 08:15:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6199B89EA97
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 08:15:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 604BF1F220A8
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 06:15:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D0C12843CC
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 06:15:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F76427453;
-	Wed, 10 Apr 2024 06:15:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D70BA282FE;
+	Wed, 10 Apr 2024 06:15:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oO4MybI3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nftInk5i"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCF520DDB;
-	Wed, 10 Apr 2024 06:15:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8132E20309;
+	Wed, 10 Apr 2024 06:15:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712729706; cv=none; b=glXJm9rxwZzCmKLBVldr5F6s3hlOcm0z9U3HbRdYK6VTlmGPmL3G614AVBw8+b+BDVTuCVrfipeg0fZsoPtXPfVTCF14A6dZzhVqUzlRdkIIUOYICqoAUZz3I/6rgj7XlEA3t/S2B3+D4lgBVJ8fYZvLivppWwmYgL8+WHeMMOc=
+	t=1712729737; cv=none; b=LZNXxrNG8wcTWHxlSNC5fYKfa+cnJPIG8oFCLcERO43rVHV9hW9oM8aY3OpbsLa+XTi1a941LRUHsmP96kORca/t+fwZ97TQmoeQoPopyXLTj9doItVsm8TZHxOHRrkvTAvd29ABYAvcVPr/0n6V8si8NqI2abGVutVJgnTV/Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712729706; c=relaxed/simple;
-	bh=tTAftMVMvBA8yzjiiDq4ZAl9e9obVzYJO2XCJ0Tz5Ro=;
+	s=arc-20240116; t=1712729737; c=relaxed/simple;
+	bh=WaVfCLsnOxqfmDiHc19FZF8OccbJOp3OuAbPrtbtGn4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DcapOfEYd/vN5LPNEmvNF9oSYQxqYb1ogHs/TOHCAaYyknzUiN31yHyBoP+VfbsU+7dnO5UWbDdhwYQfJv9qhcSAtVzbjENGWdm5pssZn8c9rO4H+f7PrgPy5ue4yjRRLHDx6mfVl9WhE2XnmDA8vUAkcqTt3JfQnfjKFD06h8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oO4MybI3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9C1DC433F1;
-	Wed, 10 Apr 2024 06:15:01 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=ouH1tmljBUah4Wd4S/Tms2jwkWA6dHHsh2k9zujyexNz3GARoe5j6MefMkI03hIfxENRsvOGFeA9A25eyOAnrQaZmIMIxbhCBMi93jukgirzN/WR2XyajLJXnmhj5c2rg/6nQgCA7cZTbimSPZMWDbJZTdgwB2WBI5X3hJqvHjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nftInk5i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89DE1C433C7;
+	Wed, 10 Apr 2024 06:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712729705;
-	bh=tTAftMVMvBA8yzjiiDq4ZAl9e9obVzYJO2XCJ0Tz5Ro=;
+	s=k20201202; t=1712729737;
+	bh=WaVfCLsnOxqfmDiHc19FZF8OccbJOp3OuAbPrtbtGn4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oO4MybI3nRypXQ84W3QrqSPHa/ATSg4G1c40Go8Ub7rffrDDphO2GrgYs9OsCHSe0
-	 ZutJTeoSMq1l35YilkbVijUn/C2zesLjKvnT4AiSGebr9LofouRXjowjPjAOgO9onf
-	 PP44U+mTBRzuIY2iRIU/LP8+9PUMbYIa5dDDeQ0g6rnm1CD38TNbCojyI30azvb/S5
-	 ir8XFm+YTZ/sGil20hD87ilLUhAQV227INXYYcySzR+FB7HWMAlspr0ETHaUapWxgM
-	 VnLoC739VJxeurIdGQcj2ZenQiQH25ZxtxUDf4ldQnXdNSwbx/410dHHerDkhXfsYR
-	 cSnTqrZvIL3WA==
-Message-ID: <868bb545-4b87-4437-bfce-18c43f431b51@kernel.org>
-Date: Wed, 10 Apr 2024 08:14:59 +0200
+	b=nftInk5idOsoqTik2M8PXD4+3gbgmg7TTBFF1i54LQh1yUltogB3NaTImw1XwEyLc
+	 7hwsxq7yjSiuHpB4sFvUIc5QQvDlSh3O/VTRVXw7BiZIYFQ9VNnUrJsq3PFPj7yXvH
+	 gigRl5d6HQx6zQHDJ05KuA7bkb89QikYxEAFMl7K1e+sIl3YmyogppXvdE0xLV/C4m
+	 UdVhdqnHkzZjxMecSfzNR1gKlzbWFYASCikK0IwUftik5phk7uQ4VCStO7Q3cYhg1G
+	 kNxPyTqLeAjuZztIemRxs2xd/Hrdhc3Q2WEbhPIGBQU7vjD5vyjifOcW7kojIrpdDP
+	 aqeFxI7wLf/AA==
+Message-ID: <40f0ed86-b38c-4592-9161-6d7c949c80e5@kernel.org>
+Date: Wed, 10 Apr 2024 08:15:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom,pmic-gpio: Allow
- gpio-hog nodes
+Subject: Re: [PATCH v2 2/2] ARM: dts: qcom: msm8974-hammerhead: Update gpio
+ hog node name
 To: Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht,
  phone-devel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
@@ -60,7 +60,7 @@ To: Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht,
 Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20240409-qcom-pmic-gpio-hog-v2-0-5ff812d2baed@z3ntu.xyz>
- <20240409-qcom-pmic-gpio-hog-v2-1-5ff812d2baed@z3ntu.xyz>
+ <20240409-qcom-pmic-gpio-hog-v2-2-5ff812d2baed@z3ntu.xyz>
 Content-Language: en-US
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -106,19 +106,17 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240409-qcom-pmic-gpio-hog-v2-1-5ff812d2baed@z3ntu.xyz>
+In-Reply-To: <20240409-qcom-pmic-gpio-hog-v2-2-5ff812d2baed@z3ntu.xyz>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 09/04/2024 20:36, Luca Weiss wrote:
-> Allow specifying a GPIO hog, as already used on
-> qcom-msm8974-lge-nexus5-hammerhead.dts.
+> Follow the gpio-hog bindings and use otg-hog as node name.
 > 
 > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 > ---
->  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml          | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-
+>  arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
