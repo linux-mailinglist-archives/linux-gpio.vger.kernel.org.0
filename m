@@ -1,163 +1,129 @@
-Return-Path: <linux-gpio+bounces-5273-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5274-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D557389EC85
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 09:43:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FFE489ECA0
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 09:48:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FB071C210AB
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 07:43:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BF68D1C20D92
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 07:48:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8254D13D292;
-	Wed, 10 Apr 2024 07:42:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D836E13D2BA;
+	Wed, 10 Apr 2024 07:47:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="etSk0y8Q"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jIQscl6T"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6567913D26E;
-	Wed, 10 Apr 2024 07:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEDF13D2B1
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Apr 2024 07:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712734967; cv=none; b=uZ7Uu9h0HRi4xyiHF4VKQSkzX1PvVusOWz3Vc4k+PqalXrMrRqJp+KcqMN+Qrwz2LzeKrACDlvEZ4SsIDWUy55uC/3YVtGr16tJlI97+sWpAGuSunff7ALPJRXsFTPPgm/PnFpu7iiAUtIB4WjFPjN30fzX+BW8zqqig4kbyCg0=
+	t=1712735250; cv=none; b=ir9zLI8N3e3v2rTY0LKn2TG9a+ntLK9y5AmxjcjUW+ebbOiBP3Ga/iJ4eQ7dkC0Urb4vznDCN33Ov6JEldkjQcgcqlGmdw+9vTnQTbIngp1VX5TX+jiwG03BDskw2Oec84sh+WMQK5O18yhAE2FVHmUefKtsLvrVk1bQXRO/ksA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712734967; c=relaxed/simple;
-	bh=wWmn+i8xN3FEdFuPGlH4Qym/IY9I8gIWH1H2pqqEuaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r22uI4vJOpPwI/xJ0tXcBSnswEvJ90lEP6sYkMd7UOf+yuJhsgqpCvPkrSUji9Zb8A2BP6VFYoEPQc8F6zvFWL3LW3LZTPtNP9411+YoWIIOC9tI5Ocb0o9vt7Sg6tIti3AY41lIDpiGSsCCdVx5s6xCR8D/6EtbTf6Eq5e3VZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=etSk0y8Q; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712734966; x=1744270966;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wWmn+i8xN3FEdFuPGlH4Qym/IY9I8gIWH1H2pqqEuaY=;
-  b=etSk0y8QeZQW5RHRUvoQeLI/dCcy8YxHnx+cWQixUAKrepnA7UUslgFt
-   PZSiX9By9IyPRZ5A5G4VTqQipynUz8bVpunqxFtC+tKx8WABdT9eApcEm
-   fRhKuzEjXIgeFpKekBtsUU8Wlz+3i1IvFsUWiyTmZTesPKeKE8YQE2LaR
-   ADG+0RF32lVv7U+LfbWw8tUTCuWCqpsRioxLg5pQl+oyXe4k81l+6XIp+
-   fjBlc2l3+EMagFIblbAYIkHNP4AOSXPC9CYgn3Yc4813ozU2+RtGYw8Jq
-   mfXb/VORcIWT730tjmdRhlbTToxE8uqgq+/dZYaAoQ+efd/py25MYMd/s
-   g==;
-X-CSE-ConnectionGUID: +y3WIG1zT4OhA1+lfyJuWQ==
-X-CSE-MsgGUID: sQ2GUL/8Q66B85PGe4lQig==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11922723"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="11922723"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 00:42:45 -0700
-X-CSE-ConnectionGUID: zjXhJi3BT/ygfLrqIJYbgg==
-X-CSE-MsgGUID: xXIPWxd0QlGL07ac8ZmQwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="20361982"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 10 Apr 2024 00:42:43 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ruSbQ-00074g-0g;
-	Wed, 10 Apr 2024 07:42:40 +0000
-Date: Wed, 10 Apr 2024 15:42:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>, broonie@kernel.org,
-	linus.walleij@linaro.org, brgl@bgdev.pl
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-spi@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH v4 3/3] spi: cs42l43: Add bridged cs35l56 amplifiers
-Message-ID: <202404101443.tYCaeZAm-lkp@intel.com>
-References: <20240409132126.1117916-4-ckeepax@opensource.cirrus.com>
+	s=arc-20240116; t=1712735250; c=relaxed/simple;
+	bh=ONYMph3tj1fdA84wy1aQLoDfOxoegNYP4GydSWdcrQM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QMW76/15Irpfbek9dE4p/DQU0TBDbIUz5vOrNkfmYlzYix2gGq2PteWXPUZyXQahVvMUfPiGbTxh2rR8Xjr8lxf9nAvnT2YJb4F+YhZ47h68o/7Szb0FufmkqCTj6jRc8E3L214zDo+QNxu3ufrWq0CJinMcvEjpt6CAyeM9HLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jIQscl6T; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d8129797fcso88125381fa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Apr 2024 00:47:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712735246; x=1713340046; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cY1vsIAOR7gYmyWT4/x1CauBvYzvXAp05ygDsgLKaBU=;
+        b=jIQscl6TD9kACsJPDCFc7CEdqIp+BfhhEygjRvrtyes17XzfoZG2wkHP1Z3IJ5KnBd
+         AbnSzaIjstmAP0Pexb+fibMBabKf7cu+8t3e6xW+z/qI5kEZmiC96Y7xo8kAO8Ch930e
+         w/8J0LI/uzaC9QifSpdckzr56dOjth4NJG9wrAFeKkYS8t3A9g/N4j253d5g2E1lxfwM
+         WyEH39wDsuwTPtwR4NEgmNhvoLcgDMAgN7FVXndG6qUeTV1bWMIMFeRhHDmf3FSzXJKx
+         pHQZ0TDzL+RUVbDblQX4SVO43919tzytLT9bitoGXnU2TOgxfmr0CZAMJQy2NdvHr5BZ
+         YiGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712735246; x=1713340046;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cY1vsIAOR7gYmyWT4/x1CauBvYzvXAp05ygDsgLKaBU=;
+        b=UOLAybF5oLz+TW8ttAt9lK89nbs1P4EHKSfxLmmtuPXa6VsvNZ4CWZ+frxmR42bwre
+         rj4N0yD9owimclDGHTqfd82huEIZf4Bib5jGhOWjRywTcrs8NBh2LEJZXfiwAhRv/dVx
+         PteNCylvNgEanQ1ikApyShlNxCmg7PXD9Gld/DBlAYYdOFtVCb020f/OYgaMPkc54IWB
+         9I3MzvYG6/uKccyeO0dCoCmVqeFNKJ8YOF8oQ4DPaKPjNbKbLIeHNzlB/mNYIl7rdPKe
+         IOZNMoMArI4P9R4c8o34v84+HvVZvBCJpjj71AmYgMV42/FH1ky6+Ui18InmJtoSGkj/
+         eg6Q==
+X-Gm-Message-State: AOJu0YzKbIb613xpYGdKjryU5uO+mkgqpmDph64GG6YqG4Q5ocNEYKOL
+	xW0KR+DoIO1wbWii5qKjQS5dHs5ruD24Wwi/qCEXMI6Kj5AWnzpIY5hE62S1J/WHLF1bbfnxYFW
+	Al1SB9hkYKfTZcH/UG1rCAMyqN18lp14Mh69LEYnjOcPlxxsg
+X-Google-Smtp-Source: AGHT+IEgff2Q3LyWvB0LrPDXk2epxG6dI37E2/NU699GhnOKrZ98WnaVEUqDTUY0ANeJinA8ZGgdF4e+RsatBT859N0=
+X-Received: by 2002:a05:651c:218:b0:2d8:713f:817b with SMTP id
+ y24-20020a05651c021800b002d8713f817bmr1385744ljn.26.1712735246261; Wed, 10
+ Apr 2024 00:47:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409132126.1117916-4-ckeepax@opensource.cirrus.com>
+References: <20240409093333.138408-1-brgl@bgdev.pl> <20240409093333.138408-2-brgl@bgdev.pl>
+In-Reply-To: <20240409093333.138408-2-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 10 Apr 2024 09:47:14 +0200
+Message-ID: <CAMRc=McN_8Se18i0d0vJu9_1iJRoVPx5JOwZ2K9HWij5M0gh2w@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 1/2] build: fix configure error messages on
+ missing functions
+To: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	=?UTF-8?Q?Gunnar_Th=C3=B6rnqvist?= <gunnar@igl.se>
+Cc: linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Charles,
+On Tue, Apr 9, 2024 at 11:33=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Fix three incorrect messages that report missing library functions as
+> required to build the core library when they are actually needed to build
+> the gpio-tools.
+>
+> Fixes: 9e69d7552cf2 ("configure: improve the header and library function =
+checks")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  configure.ac | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/configure.ac b/configure.ac
+> index 04787d4..3b5bbf2 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -117,9 +117,9 @@ AM_CONDITIONAL([WITH_GPIOSET_INTERACTIVE],
+>  AS_IF([test "x$with_tools" =3D xtrue],
+>         [# These are only needed to build tools
+>         AC_CHECK_FUNC([daemon], [], [FUNC_NOT_FOUND_TOOLS([daemon])])
+> -       AC_CHECK_FUNC([asprintf], [], [FUNC_NOT_FOUND_LIB([asprintf])])
+> -       AC_CHECK_FUNC([scandir], [], [FUNC_NOT_FOUND_LIB([scandir])])
+> -       AC_CHECK_FUNC([versionsort], [], [FUNC_NOT_FOUND_LIB([versionsort=
+])])
+> +       AC_CHECK_FUNC([asprintf], [], [FUNC_NOT_FOUND_TOOLS([asprintf])])
+> +       AC_CHECK_FUNC([scandir], [], [FUNC_NOT_FOUND_TOOLS([scandir])])
+> +       AC_CHECK_FUNC([versionsort], [], [FUNC_NOT_FOUND_TOOLS([versionso=
+rt])])
+>         AS_IF([test "x$with_gpioset_interactive" =3D xtrue],
+>                 [PKG_CHECK_MODULES([LIBEDIT], [libedit >=3D 3.1])])
+>         ])
+> --
+> 2.40.1
+>
 
-kernel test robot noticed the following build errors:
+This is non-controversial, so I applied it.
 
-[auto build test ERROR on broonie-spi/for-next]
-[also build test ERROR on brgl/gpio/for-next linus/master v6.9-rc3 next-20240410]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Charles-Keepax/gpio-swnode-Add-ability-to-specify-native-chip-selects-for-SPI/20240409-212316
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-patch link:    https://lore.kernel.org/r/20240409132126.1117916-4-ckeepax%40opensource.cirrus.com
-patch subject: [PATCH v4 3/3] spi: cs42l43: Add bridged cs35l56 amplifiers
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20240410/202404101443.tYCaeZAm-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240410/202404101443.tYCaeZAm-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404101443.tYCaeZAm-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/spi/spi-cs42l43.c: In function 'cs42l43_has_sidecar':
->> drivers/spi/spi-cs42l43.c:262:50: error: invalid use of undefined type 'struct acpi_device'
-     262 |                 ret = acpi_get_local_address(adev->handle, &function);
-         |                                                  ^~
-
-
-vim +262 drivers/spi/spi-cs42l43.c
-
-   247	
-   248	static bool cs42l43_has_sidecar(struct fwnode_handle *fwnode)
-   249	{
-   250		static const u32 func_smart_amp = 0x1;
-   251		struct fwnode_handle *child_fwnode, *ext_fwnode;
-   252		unsigned int val;
-   253		u32 function;
-   254		int ret;
-   255	
-   256		fwnode_for_each_child_node(fwnode, child_fwnode) {
-   257			struct acpi_device *adev = to_acpi_device_node(child_fwnode);
-   258	
-   259			if (!adev)
-   260				continue;
-   261	
- > 262			ret = acpi_get_local_address(adev->handle, &function);
-   263			if (ret || function != func_smart_amp) {
-   264				fwnode_handle_put(child_fwnode);
-   265				continue;
-   266			}
-   267	
-   268			ext_fwnode = fwnode_get_named_child_node(child_fwnode,
-   269					"mipi-sdca-function-expansion-subproperties");
-   270			if (!ext_fwnode) {
-   271				fwnode_handle_put(child_fwnode);
-   272				continue;
-   273			}
-   274	
-   275			ret = fwnode_property_read_u32(ext_fwnode,
-   276						       "01fa-cirrus-sidecar-instances",
-   277						       &val);
-   278	
-   279			fwnode_handle_put(ext_fwnode);
-   280			fwnode_handle_put(child_fwnode);
-   281	
-   282			if (!ret)
-   283				return !!val;
-   284		}
-   285	
-   286		return false;
-   287	}
-   288	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bart
 
