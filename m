@@ -1,95 +1,159 @@
-Return-Path: <linux-gpio+bounces-5335-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5337-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD36D8A0AC1
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 10:00:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77DFC8A0BDA
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 11:06:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9430F1F230FC
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 08:00:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 340EC2813DC
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 09:06:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9948F13EFFF;
-	Thu, 11 Apr 2024 08:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DC1814388B;
+	Thu, 11 Apr 2024 09:06:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bElwz7Tm"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ojbC6CIx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3898C13E8AD;
-	Thu, 11 Apr 2024 08:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9572613CF91;
+	Thu, 11 Apr 2024 09:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712822416; cv=none; b=SaES5X7RfGM412Vg7q7Mq2M4CUEu2Oeapn5lHRoEB0GFvRoF6RyA0KN32esKNv1p9nq2pzLZKSBNXOBwLs9Mt5JBwc/Pz03nHfSgtP/FPrAd3La2nHNOjqsDs4nGhxLwcCOYXlh+tdHxD0eQDQwpXkpV3/P55ocn9ReJRd53yEM=
+	t=1712826401; cv=none; b=Uvy3D6Lx7tpc6S5RjrvKtyO1DjOcgfiB9d4wkDFaXNjuaMicjQuz/UINS8AWcBGbWCkZMClJiFmf0teB8zFwCy4eWjvgtYx5cIQrI/pZ6y9NEEtabjxZhKmxWtd0b8OYXqMhzA7pRdLkSMPUcrzkSfwJnOBpkDXwrHvMT6jcnxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712822416; c=relaxed/simple;
-	bh=waEt8fKtfTAHPrtNAXCwzW9ODp2LwQ41zoYR/MtoFg0=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=ZrWTAASFhYgRoFCgRKQPG7u1/b0RVDPxTvDUaP8rL4pLTnkIRyrZpm0bDp9Ibc6FmY69QmbnR4IiSziqIXw3p2IhFplEuRBC3FgQYuwzXE/o0CagHgj5rksdl7PP0NCtpvfAc/6InMmBIODYINwhxHcrwvq9zq9/qwavN+00Q58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bElwz7Tm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97C3FC433C7;
-	Thu, 11 Apr 2024 08:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712822415;
-	bh=waEt8fKtfTAHPrtNAXCwzW9ODp2LwQ41zoYR/MtoFg0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=bElwz7TmiuY0Qzn2A4CYKyVm6jRxsPz9fLs3tgdB5vbkfrFqq/CvpYY+HiqvhvcWw
-	 lqtS7Dsd7UV0xkKAnYzrbfp+De5XTarO7RjpWMJXiZzzs4K0klARaTsx7eta1gBAOb
-	 WeCh5Pt0hpJbL/YwkNUT3ZG70LkqMnsyzFK/z4XK2FQNILTpQQf/RqjV6GAN9nEK39
-	 zViN+RjWkiJ4qdKDYzT6kEAcwCIq30WgrhGNr1z4TmyfaFL8gSPdSaQl5igSG2cN/W
-	 HXq6s6AOx3f1Qfg7vP62R6amtAeVDLyJjLMqgR4JhYR9sf+JJwQJT98faBihwRB+MK
-	 ntBtZB0ML9u5w==
-Message-ID: <3838e4684f98e1ce3818bfb6983844bc.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1712826401; c=relaxed/simple;
+	bh=Dw4OiJySKJyi55x3c7YHB1abWRK7uxOPkFLeIeCWC1g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Qg2XOMpp6BA7naokex8VnPeHekU8a7gdl4KrjoBW01QOZ9T2fxxsFw+Qj4avE772nMXVcsOJz/mzeknSruGfVIG1xU2rsQQNKdk+4OwPqLbDbNnn6sgenQ8jtyWwCLMHMVcZJMgPF4xkainrfI+GWznyAK+sV1e/sBjD1eoBLHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=ojbC6CIx; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43B5naFK004518;
+	Thu, 11 Apr 2024 04:06:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=L
+	pYSOT7i5AL8Na8w+Od+/QE7jZeltnffRlfPOlqLx6E=; b=ojbC6CIxhWalYpXMY
+	0A3Q7We5bO1YPXwSREopQHNeaJ98/jDaq+yGf8QXilslgLrLaOp1nkiVz/xSbbG+
+	oE/E7gbwwhfn0Jf1DV5ImINuZLzxMgQMPEhLRWeBDOaLgsqiFQBh7dMaVQg1u+4l
+	4ttot5FmOX8fvQjaoim7coW/H7Wi3mFdV5q1y+Aauo8tyrAEugWhUod6VeoSJBjv
+	HaFJtPeU1KMg/IaHmyb+Ru1eZlg4Deb7GYglAvJgiO8UVpX4lLGXvH+Rdi+npSiM
+	NZhu2+ZW1O9N+ZJetIxgUi6nb2oH5u9e2IxesIPlahMt1W5ty2JEOGgXAPSF3OnR
+	D6hiQ==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3xb2tjq0gx-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Apr 2024 04:06:31 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Apr
+ 2024 10:06:28 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
+ via Frontend Transport; Thu, 11 Apr 2024 10:06:28 +0100
+Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 6B6B6820243;
+	Thu, 11 Apr 2024 09:06:28 +0000 (UTC)
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>
+CC: <andy.shevchenko@gmail.com>, <bard.liao@intel.com>,
+        <linux-gpio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH 0/4] Add bridged amplifiers to cs42l43
+Date: Thu, 11 Apr 2024 10:06:24 +0100
+Message-ID: <20240411090628.2436389-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240402-pxa1908-lkml-v9-5-25a003e83c6f@skole.hr>
-References: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr> <20240402-pxa1908-lkml-v9-5-25a003e83c6f@skole.hr>
-Subject: Re: [PATCH v9 5/9] clk: mmp: Add Marvell PXA1908 clock driver
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, Duje =?utf-8?q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, Guilherme G. Piccoli <gpiccoli@igalia.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Kees Cook <keescook@chromium.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Lubomir Rintel <lkundrak@v3.sk>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>, Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Date: Thu, 11 Apr 2024 01:00:13 -0700
-User-Agent: alot/0.10
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: RuqMV_EM_wbH8HdoqjpApFZaHVksYb89
+X-Proofpoint-GUID: RuqMV_EM_wbH8HdoqjpApFZaHVksYb89
+X-Proofpoint-Spam-Reason: safe
 
-Quoting Duje Mihanovi=C4=87 (2024-04-02 13:55:41)
-> diff --git a/drivers/clk/mmp/clk-of-pxa1908.c b/drivers/clk/mmp/clk-of-px=
-a1908.c
-> new file mode 100644
-> index 000000000000..6f1f6e25a718
-> --- /dev/null
-> +++ b/drivers/clk/mmp/clk-of-pxa1908.c
-> @@ -0,0 +1,328 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-[...]
-> +static void __init pxa1908_apbc_clk_init(struct device_node *np)
-> +{
-> +       struct pxa1908_clk_unit *pxa_unit;
-> +
-> +       pxa_unit =3D kzalloc(sizeof(*pxa_unit), GFP_KERNEL);
-> +       if (!pxa_unit)
-> +               return;
-> +
-> +       pxa_unit->apbc_base =3D of_iomap(np, 0);
-> +       if (!pxa_unit->apbc_base) {
-> +               pr_err("failed to map apbc registers\n");
-> +               kfree(pxa_unit);
-> +               return;
-> +       }
-> +
-> +       mmp_clk_init(np, &pxa_unit->unit, APBC_NR_CLKS);
-> +
-> +       pxa1908_apb_periph_clk_init(pxa_unit);
-> +}
-> +CLK_OF_DECLARE(pxa1908_apbc, "marvell,pxa1908-apbc", pxa1908_apbc_clk_in=
-it);
+On some cs42l43 systems a couple of cs35l56 amplifiers are attached
+to the cs42l43's SPI and I2S. On Windows the cs42l43 is controlled
+by a SDCA class driver and these two amplifiers are controlled by
+firmware running on the cs42l43. However, under Linux the decision
+was made to interact with the cs42l43 directly, affording the user
+greater control over the audio system. However, this has resulted
+in an issue where these two bridged cs35l56 amplifiers are not
+populated in ACPI and must be added manually. There is at least an
+SDCA extension unit DT entry we can key off.
 
-Is there a reason this file can't be a platform driver?
+The process of adding this is handled using a software node, firstly the
+ability to add native chip selects to software nodes must be added.
+Secondly, an additional flag for naming the SPI devices is added this
+allows the machine driver to key to the correct amplifier. Then finally,
+the cs42l43 SPI driver adds the two amplifiers directly onto its SPI
+bus.
+
+An additional series will follow soon to add the audio machine driver
+parts (in the sof-sdw driver), however that is fairly orthogonal to
+this part of the process, getting the actual amplifiers registered.
+
+Thanks,
+Charles
+
+Series changes since v4:
+ - Remove extraneous fwnode_handle_puts in driver/spi/spi-cs42l43.c
+ - Make Kconfig for swnode undef gpios not user visible
+ - Add some missing headers
+ - Add patch to update handling in spi_dev_set_name
+ - Remove stray blank line
+ - Use ACPI_HANDLE_FWNODE
+
+Series changes since v3:
+ - Add Kconfig to make swnode conditionally built
+ - Add define for swnode name
+ - Add custom init and exit calls to register swnode
+ - Use export namespaces
+ - Always name swnode SPI devices after the node name
+ - Correct some header includes
+ - Use HZ_PER_MHZ
+ - Use some swnode helper macros
+ - Use acpi_get_local_address
+ - Correct some handle puts
+ - Add some dev_err_probes
+
+Series changes since v2:
+ - Add missing fwnode_handle_puts in driver/spi/spi-cs423l43.c
+
+Series changes since v1:
+ - Add missing statics in driver/spi/spi-cs42l43.c
+
+Charles Keepax (2):
+  gpio: swnode: Add ability to specify native chip selects for SPI
+  spi: Add a mechanism to use the fwnode name for the SPI device
+
+Maciej Strozek (1):
+  spi: cs42l43: Add bridged cs35l56 amplifiers
+
+Charles Keepax (3):
+  gpio: swnode: Add ability to specify native chip selects for SPI
+  spi: Switch to using is_acpi_device_node() in spi_dev_set_name()
+  spi: Update swnode based SPI devices to use the fwnode name
+
+Maciej Strozek (1):
+  spi: cs42l43: Add bridged cs35l56 amplifiers
+
+ drivers/gpio/Kconfig          |   3 +
+ drivers/gpio/gpiolib-swnode.c |  40 ++++++++++
+ drivers/spi/Kconfig           |   1 +
+ drivers/spi/spi-cs42l43.c     | 135 +++++++++++++++++++++++++++++++++-
+ drivers/spi/spi.c             |  13 +++-
+ include/linux/gpio/consumer.h |   4 +
+ 6 files changed, 191 insertions(+), 5 deletions(-)
+
+-- 
+2.39.2
+
 
