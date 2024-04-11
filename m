@@ -1,124 +1,91 @@
-Return-Path: <linux-gpio+bounces-5332-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5333-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBF468A08B9
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 08:47:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 411FC8A0AAB
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 09:57:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C5A91F26981
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 06:47:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72F791C21C77
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 07:57:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B282613E020;
-	Thu, 11 Apr 2024 06:47:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B85AF13EFF6;
+	Thu, 11 Apr 2024 07:56:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFKc09GO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ofl8sOom"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6059F13DBA5;
-	Thu, 11 Apr 2024 06:47:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BCE13E88A;
+	Thu, 11 Apr 2024 07:56:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712818020; cv=none; b=q3dyhIZyRdBk+x3rzFNr+Zykix7SVNb3vqDzCAj83OLKSssWqaEs8WlD3X+vzWaiWHmFdkUQgkeyJTBv4RTd257MQyJJJdUxFr+/le0WCO8neuPVv388zsjD59V5azgSyqrspFFnzEmb8rBZYOMEkaGVBQ1FgspVnSopROBrYCs=
+	t=1712822217; cv=none; b=eY97hySy6LkROfBpz7n2u8h+LJ63IqmeoZIjI7zJUB2G6mrQBGaVft19XsvgwsMM+DF2bcEOCP1nWZMdZhKYmi9BNwAqw51i/pKs7VPU0vLU/GiEBzP3yEjxJ4OmEGfICghjW/N02OZy06xd6a7nVQ2fTpM6JDHUEi7AZve3sZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712818020; c=relaxed/simple;
-	bh=GlRh8UW057t9Bq8GK2coWR2MWUDzOJl27L0JCrjgaf0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eH9Ut0FHX00iRnFivoLHN68QOoFcSRo83NRbqegtwEdb+pWWf1Po71ebNkUaIJBQDQ4t3XsNlRWqQzZTaKsVfA6AhQR/dK/aULT9TY1zZrU7u2cUuDQwL+hyFE7KbA+bVk2yGZZ9qpXCeB2rs1cZq1VlwXDw26aLdUFyjSbTPao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFKc09GO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3E6CC43390;
-	Thu, 11 Apr 2024 06:46:54 +0000 (UTC)
+	s=arc-20240116; t=1712822217; c=relaxed/simple;
+	bh=r82yVd6RGSCubhydxrcg4A9/P/oMhvzUKISskBjsB1M=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=Qt+777W9oce5BSFfl5rA5k9QKGdRmjrnig6C/Kh09bETCRIyxp/ajf7/t8HmIY2apOudUo+BiLrhkfJo9O5Y5Dc9DxrRsv9BzyNuJmDnXPMyEaRa+n1QY0gYsF+8KcOaNCopOrKwITx4FF0n9RUbIftWTq/qmeIbTevWrBub+m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ofl8sOom; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDDF3C43394;
+	Thu, 11 Apr 2024 07:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712818020;
-	bh=GlRh8UW057t9Bq8GK2coWR2MWUDzOJl27L0JCrjgaf0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZFKc09GOz2pyCjFCQEQ7BKvIvyvN4vJYweQ6qxwCoEii02GvFk6M3OceD33dErEmE
-	 WPTg7FvmEh6qU9vHd/IdEeSZCl4kSpOTpwM/HXc49zq50w/tCjpvpO4Q871zufnxHw
-	 iE1+omGnughItTcCtnltH5ji09DkK6WDCVla6Wb2pNwCS+/v8InKy4IIpUsFKJugsb
-	 ijFfsyRq0KP753r3KrhM5pYkHGvfGfHNti7g/TbniHp7ZOLBmdoLPaxbWOl0T5RQAV
-	 P/ZPTWC5ttBuCJIfmXSQN4I9loBcO0ahg7+T/vB9w/EHxXPvyVeNRi5D8NQ/VM0HB6
-	 KetL8uwhApKqw==
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	zhanghongchen <zhanghongchen@loongson.cn>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 5/5] pinctrl: realtek: fix module autoloading
-Date: Thu, 11 Apr 2024 08:46:14 +0200
-Message-Id: <20240411064614.7409-5-krzk@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240411064614.7409-1-krzk@kernel.org>
-References: <20240411064614.7409-1-krzk@kernel.org>
+	s=k20201202; t=1712822216;
+	bh=r82yVd6RGSCubhydxrcg4A9/P/oMhvzUKISskBjsB1M=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=ofl8sOomwMpWVFOnh5zoHRVILDniytHECrRA2JVpnG7JZjD3Enamxs0ZFb+PqnKa2
+	 WpqmwtqNtDq+cSsUqUCX36vBt3Z5jT5wb1Xb/uDrzv6Na62jOWRySCDwYVeGcxfqiO
+	 slVhlm+SAVlwAoX+2Dj30TaNqPUyI3Jzo99W2422SSmH6a/b7IZNxnv/ZGYSGNKB/b
+	 qHrPkdFyOGjtH7U+q2SpRlRSjdHOHqM259sHLHAUpta3V20jEwz7qz2V0YaiqHg6I/
+	 Yc3tfuZXbTcVukHnC9Q5XjWBvDpNK1GXQ9vBAFDQ/G8Ic4wQkYQAsooS8Ysn1qXgwX
+	 uuydngVahj46Q==
+Message-ID: <a6e75820e5b6a96d3b1161c9dbf5a8d8.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240402-pxa1908-lkml-v9-1-25a003e83c6f@skole.hr>
+References: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr> <20240402-pxa1908-lkml-v9-1-25a003e83c6f@skole.hr>
+Subject: Re: [PATCH v9 1/9] clk: mmp: Switch to use struct u32_fract instead of custom one
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, Duje =?utf-8?q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, Guilherme G. Piccoli <gpiccoli@igalia.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Kees Cook <keescook@chromium.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Lubomir Rintel <lkundrak@v3.sk>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>, Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
+Date: Thu, 11 Apr 2024 00:56:54 -0700
+User-Agent: alot/0.10
 
-Add MODULE_DEVICE_TABLE(), so the module could be properly autoloaded
-based on the alias from of_device_id table.  Pin controllers are
-considered core components, so usually they are built-in, however these
-can be built and used as modules on some generic kernel.
+Quoting Duje Mihanovi=C4=87 (2024-04-02 13:55:37)
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>=20
+> The struct mmp_clk_factor_tbl repeats the generic struct u32_fract.
+> Kill the custom one and use the generic one instead.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Tested-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> ---
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
----
+>=20
+> diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
+> index 55ac05379781..c83cec169ddc 100644
+> --- a/drivers/clk/mmp/clk.h
+> +++ b/drivers/clk/mmp/clk.h
+> @@ -3,6 +3,7 @@
+>  #define __MACH_MMP_CLK_H
+> =20
+>  #include <linux/clk-provider.h>
+> +#include <linux/math.h>
+>  #include <linux/pm_domain.h>
+>  #include <linux/clkdev.h>
+>=20
 
-Changes in v2:
-1. Add missing yank-yank.
-https://lore.kernel.org/all/1d96377f-2a9d-49df-ada3-086d1e6b9dab@kernel.org/
----
- drivers/pinctrl/realtek/pinctrl-rtd1315e.c | 1 +
- drivers/pinctrl/realtek/pinctrl-rtd1319d.c | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1315e.c b/drivers/pinctrl/realtek/pinctrl-rtd1315e.c
-index 10afc736a52b..86f919122bed 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd1315e.c
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd1315e.c
-@@ -1414,6 +1414,7 @@ static const struct of_device_id rtd1315e_pinctrl_of_match[] = {
- 	{ .compatible = "realtek,rtd1315e-pinctrl", },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, rtd1315e_pinctrl_of_match);
- 
- static struct platform_driver rtd1315e_pinctrl_driver = {
- 	.driver = {
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1319d.c b/drivers/pinctrl/realtek/pinctrl-rtd1319d.c
-index b1a654ac30dc..474c337d2d05 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd1319d.c
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd1319d.c
-@@ -1584,6 +1584,7 @@ static const struct of_device_id rtd1319d_pinctrl_of_match[] = {
- 	{ .compatible = "realtek,rtd1319d-pinctrl", },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, rtd1319d_pinctrl_of_match);
- 
- static struct platform_driver rtd1319d_pinctrl_driver = {
- 	.driver = {
--- 
-2.34.1
-
+This clkdev include should be dropped in another patch.
 
