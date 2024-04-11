@@ -1,97 +1,108 @@
-Return-Path: <linux-gpio+bounces-5352-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5353-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE9BB8A1582
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 15:28:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55C068A158F
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 15:30:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D7E01F22A1E
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 13:28:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8BDEF1C22A74
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 13:30:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0215E14D29E;
-	Thu, 11 Apr 2024 13:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0671D14EC6B;
+	Thu, 11 Apr 2024 13:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S9Q6Z+W7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZoVAAgOB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A651C14AD22;
-	Thu, 11 Apr 2024 13:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7B714C594;
+	Thu, 11 Apr 2024 13:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712842093; cv=none; b=fcbyTLkzoOx/islzs/rjdnu7iycY3RuXom1rrt9zKB06JOROXbfaSsgLhWdps9nw1W+GOQQz2/fQHurV/sWpxIPKZQkg5YnMKNKiflOoRr9pKvs24M2huQ7mDyMP+FFik7n5RMxs2mwDLEw9rVjTFnZ1nMYJACsULVey6Kgfxdc=
+	t=1712842252; cv=none; b=ExFzoboYRWHhO1Tk1UdhOgg/fThH5xAIXjBfb/hPZ+0wp0Cp1vEVOw0VxQ8huVPpbwvM+tT0PeQ0sEeZpdtTR/QtzxaPkHlwOtxxKwfAObQqO7gDk1SdLVLhYRqyAw/X47GxghKDf0XMjCeH5yJadIClF80Q5OsR71oOuP5Sv7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712842093; c=relaxed/simple;
-	bh=rN3vnamxh1y4e19vWKAPhoeeESNA3w+VvGOlWEyFGns=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LNQHsr0QVob70HnY5cNwuMe/4+sw4VqBQcWVXkU0AsfbGBwjLljx6FdUUY3JtRWHqLzw0wGr8k0qJZ0aO78jh0sowe1ZAOouyFMSfZei6jSsVjWCClSHFLervuZlMzBEok1qlwe/oe8/cqg6stlNeVy9nI35/cxyteFvz2zKPSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S9Q6Z+W7; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712842091; x=1744378091;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rN3vnamxh1y4e19vWKAPhoeeESNA3w+VvGOlWEyFGns=;
-  b=S9Q6Z+W7o1vnYlqo9nMo3eIuBz0Z7vrbM63vn+qexxoeGePkjGXCq5GX
-   UOM3dXq+SsyyhByR5FsVQwOZyyv8MDrfdvM5rRw5io+SVn9sMpjIs2I8N
-   /hsOwMykQ2O5awLRk7NgjXhxg+6koue/ISevnOgryvT8mxq8au0XiLkUJ
-   FqdWpXjZcEOkvZaDxVO5Pstg1z1PHiBg2CYFO+dW0k+QjN34Nv8ZDsDxQ
-   Rku3hXL9rdKFf3IBKyfVfvLlC50K8FPhlw+3Zta1PUuPr6ySuGVrYZAYK
-   6qcm7WZ6c4EcOG6oPOLkIpBjr+obmojlq4wdeikFsgTWWDrVeolDMGtmE
-   g==;
-X-CSE-ConnectionGUID: W3wfzMj5SPOnTsD0KihHqg==
-X-CSE-MsgGUID: bcY6aqeDTJaRmcCl1vat/w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8102458"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="8102458"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 06:28:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="937096973"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="937096973"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 11 Apr 2024 06:28:08 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id EB28532A; Thu, 11 Apr 2024 16:28:06 +0300 (EEST)
-Date: Thu, 11 Apr 2024 16:28:06 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v1 0/2] gpiolib: acpi: A couple of error checks amendmends
-Message-ID: <20240411132806.GB112498@black.fi.intel.com>
-References: <20240410202243.1658129-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1712842252; c=relaxed/simple;
+	bh=qvzJYzSFUTXPdDAX+VtKWKtJKrq2HC23Kyq401ntFGM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bv/PTOFyXJtjL9ozoGQdLTjuOmYfFO/+C58XElnl4eDPBTKwyZayCibpyjelHdTEK+j4U262y8sXZ3tBAsKWfvhSvMKuqswzGENOYIUgRYQL33tsuNpc2VRvBpN5jHbdXB1e76ROdcyuokplHQ02Oc5BDzVnRnImCVzFoPfbMxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZoVAAgOB; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a44665605f3so869953266b.2;
+        Thu, 11 Apr 2024 06:30:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712842249; x=1713447049; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qvzJYzSFUTXPdDAX+VtKWKtJKrq2HC23Kyq401ntFGM=;
+        b=ZoVAAgOB1qgcOmq3c6F4pFYIVom+qVWQ4iarbu5jIF6wWI9fNzHy0wAIdgVCQKU6Am
+         2wlB75+yFK8rF2u2jx0VAW2jAb5sc5N5+yHcSVshEUxUB6OaWqaa8iD6a7lRZONCS4A1
+         d18374st65rw/HuX8gayqghj7brLHKrQg74PBIIlP30ItJ3nVOyHYi1j4zBnVVkHoWk1
+         Z+Nzb6bVvlaqFJb5ltmDYCuxnK8kmWnrAE5lgqsDhDTW34d/yOAavUBwrbLVTFfRxd64
+         5Nsjak7nG5s0GOR72cwtf1Mi25HUWzA5ORNtlg37eGRPd4uKGm7RpDvftKEh15BNc45X
+         TO4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712842249; x=1713447049;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qvzJYzSFUTXPdDAX+VtKWKtJKrq2HC23Kyq401ntFGM=;
+        b=AB6u27iEBsnBR7Us9UiZKJveUELOicI8j+/kCrlw+PwMFAWZftEhNRGnZNB3Yv8EOC
+         PQs3JRlRWz8LqTAOcAPOlRi2AITbxKUgP/fz39wzIjPM9CX7u7Hf0ZcnZRYXHuW7EAok
+         qjanwmo/zp6l+4Z2ZGO0F5Xy34C22yUjmXFyW4n+NU09QENwcXOQGPz0I5z5ht8eLg+o
+         /6FOCLr3zhB51ZRbqiVehTG5RwY28jOamUsfYFvdB/q6zY2aLutALmE+4L6oijfTI6b/
+         BYUDzDAkS3WR5nNCtbgmeXICkq6eGj2tJ/lU5mN8+S6vGnSwwoAg0TCkmLRGbKCzUnFj
+         nf5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXcME2cupSY/oU8d950f1X/He4f6CaFlVKNAxobuJ5B9opnAmE1QidC32H/PyKKqNkPrJJSzTkApwpJfunD4zkZdADRxmnSHHSqbvCt6CxZalD83HxETQkX9/au6f+av/TAvSKg4w==
+X-Gm-Message-State: AOJu0Yz3Kgs/FDljPx7ZOeSDRG02Fyy/zbIp0JXG7oB3fQuFk4+u9z42
+	f75CBOJPR68RyZAXLMEaAN8H4Gzl7XBy1n8hOZxLyZH6ZMy0oR2TION7ViW8f/m7frgo+WPvgLQ
+	fw/ybDIBtk4RR3RpSahz8kZRZQQA=
+X-Google-Smtp-Source: AGHT+IFx3lm0Op9fIYTjTrR0A0oe3IhVAeGuWcQFMIFTBGlf2iM3O2WvTgztQ7Stz6xLWWGyTXgvzF1N349JPzbb72k=
+X-Received: by 2002:a17:906:a88a:b0:a52:15dd:20d8 with SMTP id
+ ha10-20020a170906a88a00b00a5215dd20d8mr2564278ejb.26.1712842249336; Thu, 11
+ Apr 2024 06:30:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240410202243.1658129-1-andriy.shevchenko@linux.intel.com>
+References: <20240411090628.2436389-1-ckeepax@opensource.cirrus.com> <20240411090628.2436389-3-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20240411090628.2436389-3-ckeepax@opensource.cirrus.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 11 Apr 2024 16:30:13 +0300
+Message-ID: <CAHp75VfAoKvvnQr74-rpJhEv=U=o00Doji-1zuV3-_+n+cbVVg@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] spi: Switch to using is_acpi_device_node() in spi_dev_set_name()
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: broonie@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	bard.liao@intel.com, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
+	patches@opensource.cirrus.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 10, 2024 at 11:21:45PM +0300, Andy Shevchenko wrote:
-> One error check is moved and one is dropped.
-> No functional changes intended.
-> 
-> Andy Shevchenko (2):
->   gpiolib: acpi: Remove never true check in acpi_get_gpiod_by_index()
->   gpiolib: acpi: Check for errors first in acpi_find_gpio()
+On Thu, Apr 11, 2024 at 12:06=E2=80=AFPM Charles Keepax
+<ckeepax@opensource.cirrus.com> wrote:
+>
+> Use the more modern is_acpi_device_node() rather than checking
+> ACPI_COMPANION().
 
-Both,
+I don't think it's valuable on its own. There is no clear motivation
+why to do that, I suggested it exactly in the conjunction of not
+introducing two ways of fwnode type check. That said, you probably
+want to elaborate the motivation in the commit message if you want to
+keep it separate.
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+...
+
+> +#include <linux/fwnode.h>
+
+This header is not supposed to be included by the end users. property.h is.
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
