@@ -1,61 +1,61 @@
-Return-Path: <linux-gpio+bounces-5367-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5369-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 617088A1A6D
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 18:51:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 766FE8A1C8D
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 19:50:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9010F1C20CAF
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 16:51:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E4A31B2A000
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 17:21:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A7AC482C1;
-	Thu, 11 Apr 2024 15:40:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB85205E33;
+	Thu, 11 Apr 2024 15:45:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="irYc3LU9"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hh1T/l8A"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6777C1DCA0D;
-	Thu, 11 Apr 2024 15:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C01205E26;
+	Thu, 11 Apr 2024 15:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850020; cv=none; b=iI1lvx2ZXRT8/0zCNPpNPoCWohsBA8wVNdCqvlYsXB1fSz1O2B5Qhp8wLYDGBv3ZvnjNsoNs/FTPKNNJErFFXPnZW43Y3o/UmYjCBULr5A+qvggUHUG5HGynjLeUAO53Qp15QGdVs78tZZWcxdN27UJk7GO8n5oLCLalYHr1yVA=
+	t=1712850308; cv=none; b=tzkzQDvhtHNLBAEScaV1MQsRmx93BK5EiTU73vy0dlg8l+XSjE0X4Q3DfyNFHQKv3Ol88M8whbLFKg/CvcZXjvhpOM5w7a8aWwHlqk2SChtjfT3UeJJPXAAqqLlnTYJ3vVQIGYF0ti4P0wTRPkfozsxy7nAgwswWcEZ12RtnRUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712850020; c=relaxed/simple;
-	bh=lTfWgvoTvKVd9f2A24EXgrmmHmIkvyTrOaY05JbbVMA=;
+	s=arc-20240116; t=1712850308; c=relaxed/simple;
+	bh=/IRr60aMZOeOyFiScIJ7Hqy89Fa77PW2HAAbz3xI4jQ=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q4edAbllL11DBlG+e1sSZg6ladn5OcmEjG1tA7FDOXvu6rUmDEWCyK9cfigzFkxXSCU7bKxdCnX77W+Vm5MYUv19Pxvn+GdU+JNRoVgH/IRKT82ze+HfOfqaMWHadmY1F/QU/+ezAlbaFQmLYdtAirpQ3NyurndHaHm62gWJQp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=irYc3LU9; arc=none smtp.client-ip=205.220.180.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=efAXcmlEhSHdBfi0o1uUgguWkg82vehvhJt/QOQKRdFm2MrQy8Quy+SRmSpg3mIMYLAH2CYYeEvSW3w2H4slf9kCWHgkLtq+6+52R0Ot6ledVM9j/HXVsm/90rrAs5ZHifA5S4bGAbBke5M8h7VjRgawHxjHpDFD4bC0BXypfME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hh1T/l8A; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43BBKYEc022854;
-	Thu, 11 Apr 2024 15:39:57 GMT
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43BDG7bV024388;
+	Thu, 11 Apr 2024 15:44:47 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=RFHrFkfwcQrgxQdoj1RVH
-	qtwLottyVNWq/7Jdndbpsc=; b=irYc3LU9Uc+DlT4ymOnGhcMVzq43CGTucGJSd
-	i21KmCSCnITu6Vo++gLvklaPtB3gO8opZuGA3o+n/Wz2qQ6f+Xpj6wjTRGrbjvEO
-	naCfid4zJ7ISb2TIioD9PX0BRnwW4VdD/65usS30OjHQayIFadedgnk5K8OraJ/1
-	Twqg7waPV2+ii/L1RKkC0JMWlYkbFo58qDRw8uS97TPcUdnd3fUUx0tUwtpvdbrL
-	J0FTt975FbFhadZ33BzJ25XMBP3g16rck0S1zNIq+/bTDIvrxodP/SQqwOp6+q/J
-	NEzx3/QDsMkUoOsDWJPzYpsT4c6P4hHHfOmhX+6g6uvOujjgQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xec6vsgks-1
+	:content-type:in-reply-to; s=qcppdkim1; bh=haD8srUSA/7piIQcBMU+j
+	z1u8jwrb7rUW232cvqEx3s=; b=Hh1T/l8AZXIPiuPJqEb+2xEhcwSozimpdVr7/
+	ABvip+E1Wk/J/Zj8agqdbWyJOXCUiT7kxIstytMkXA+Kr/EioGE0k1drFabachGG
+	e/twcqTZYzv9/ZuLmnPN3qe1clHinSdawWe/XA3nIErgRDeW4uRtXUcQGNH/g5LB
+	rnwWMlOrXRIsrFHYwNEFgG5AxakO2YYA/gPwVGw0SJvV8jq4U85e4u4sjAhUfnBv
+	psRlDjeOV5LSTGoaaOr+7fn2w0mbIocdr5edRg/SDi57nOvFQPmti6rJF1yvUb50
+	dcbDTpIE+iyP7jKi+xqrz3TUbZFyfzUAR9PjsEMo8l8BCqSDQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xebqx9mg6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 15:39:57 +0000 (GMT)
+	Thu, 11 Apr 2024 15:44:46 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43BFdr3E029269
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43BFijB4032349
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 15:39:53 GMT
+	Thu, 11 Apr 2024 15:44:45 GMT
 Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 11 Apr 2024 08:39:53 -0700
-Date: Thu, 11 Apr 2024 08:39:52 -0700
+ 15.2.1544.4; Thu, 11 Apr 2024 08:44:45 -0700
+Date: Thu, 11 Apr 2024 08:44:44 -0700
 From: Bjorn Andersson <quic_bjorande@quicinc.com>
 To: Krzysztof Kozlowski <krzk@kernel.org>
 CC: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>,
@@ -77,10 +77,10 @@ CC: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>,
         <linux-gpio@vger.kernel.org>, <imx@lists.linux.dev>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH 4/5] pinctrl: qcom: sm7150: fix module autoloading
-Message-ID: <ZhgESEq+9jRuta2B@hu-bjorande-lv.qualcomm.com>
-References: <20240410170150.248428-1-krzk@kernel.org>
- <20240410170150.248428-4-krzk@kernel.org>
+Subject: Re: [PATCH v2 4/5] pinctrl: qcom: sm7150: fix module autoloading
+Message-ID: <ZhgFbKg8DPBsRrac@hu-bjorande-lv.qualcomm.com>
+References: <20240411064614.7409-1-krzk@kernel.org>
+ <20240411064614.7409-4-krzk@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,35 +89,41 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240410170150.248428-4-krzk@kernel.org>
+In-Reply-To: <20240411064614.7409-4-krzk@kernel.org>
 X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Q4hixGIkEX4CJwtmeiJ4oFt_FKE4yeeM
-X-Proofpoint-GUID: Q4hixGIkEX4CJwtmeiJ4oFt_FKE4yeeM
+X-Proofpoint-GUID: KU4mU--SOy6t8CFhdoXd3JVsuCKtrbVx
+X-Proofpoint-ORIG-GUID: KU4mU--SOy6t8CFhdoXd3JVsuCKtrbVx
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-11_08,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 clxscore=1011 adultscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=0 spamscore=0
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2404010003 definitions=main-2404110115
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 suspectscore=0
+ adultscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404110115
 
-On Wed, Apr 10, 2024 at 07:01:49PM +0200, Krzysztof Kozlowski wrote:
+On Thu, Apr 11, 2024 at 08:46:13AM +0200, Krzysztof Kozlowski wrote:
 > Add MODULE_DEVICE_TABLE(), so the module could be properly autoloaded
 > based on the alias from of_device_id table.  Pin controllers are
 > considered core components, so usually they are built-in, however these
 > can be built and used as modules on some generic kernel.
 > 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
 
 Reviewed-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 
 Regards,
 Bjorn
 
+> ---
+> 
+> Changes in v2:
+> 1. Add ack
 > ---
 >  drivers/pinctrl/qcom/pinctrl-sm7150.c | 1 +
 >  1 file changed, 1 insertion(+)
