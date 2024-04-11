@@ -1,206 +1,115 @@
-Return-Path: <linux-gpio+bounces-5377-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5382-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 533238A1D94
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 20:14:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA0E38A1DC4
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 20:17:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 08CCE283419
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 18:14:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4850B1F260DC
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 18:17:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFA6B1E6F7F;
-	Thu, 11 Apr 2024 17:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F46254BDE;
+	Thu, 11 Apr 2024 17:26:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="BpYB3Wg8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CDyejZbC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A15F1E6F6F;
-	Thu, 11 Apr 2024 17:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C430D535D9;
+	Thu, 11 Apr 2024 17:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712855606; cv=none; b=kxYv8/Wm/KG6tjC9C0mDUVRV9pZAoz92PUrTd+jK25+Ok2DpN6wGEL90RyDmFX8DSaReG7458IaIdANHw7qGYAqsiTx+01WjHYYbKZDZamObH3PFowca+YJ7lsHFeeVFbxOAGZWnvI2KvJv1bpvHPuxPtYURjzAiN3jO52SVcQg=
+	t=1712856405; cv=none; b=AQRza/lm69jZWxgKExSoo6iuqAPv7rffxRomty9ZDNjzybj+n+/jM9FM1v5Hytdgj1nhlxovfHSGCjNoLEqLxUgUgX5SLKPQ89PlOaKsRnKMyxaUzwGRYLAVknlWKMhEVW/fuIcB1Umx2g7jdg7EVSiyHFrnmI78aNL5TEIGdeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712855606; c=relaxed/simple;
-	bh=OAkb6O93bCbim6J2BNly7gzfaDzf9BuBjbDFoXODMM8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bgTBnKyJtHzqJ17iqO2d0rt7KTm/bw7omq6EJa251Mz2b90iOGVCv8oiwLU+PouVQT/cdvTPPUpS2wk140PUV7QH/uhR3nJxZtC+LLZysehp6pIeDJ2tHtvrlvcHSIaS4QsPtshnwlAgfV2zf12epPh03evi8JklvehyNMEoAtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=BpYB3Wg8; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43B40ALn009489;
-	Thu, 11 Apr 2024 12:13:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:content-transfer-encoding:in-reply-to; s=
-	PODMain02222019; bh=MVsF3Y6/tW0tUDnyjWrIIKO1P2oaUgkqMmz08BtWtgU=; b=
-	BpYB3Wg8/aap59AWs5VEZ3Nnf1qgARGhbPYvr5na8qEElv8LMUGlnCxe4CzcCLY7
-	+GU9lda/2wd3mLKReA2cxSf5L2vFYIOWhISE6K87BBgTlEnSg9J/NfR3a/FRvyWe
-	+e9Tl/BAMsLARlDCzxb63SiyZIgx4MNhLb3tUoffu6QC07a8ZnR5HGdebgowgIwF
-	O1lBAh2qZZc7zTKO7jPEWDmnifF9XzoMkRFSgmXbXUARiXfVDsMJEnIlaSM4/814
-	8lisXR+dtm5ND3fxLYVIx2FfiAgZTavgyVoanoC0KYVTxMeIsXYfRTAqo/NWv+os
-	D1Q0A10fsoXDqZnSAfxIZA==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xb3sxqcaf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 12:13:18 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Apr
- 2024 18:13:16 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Thu, 11 Apr 2024 18:13:16 +0100
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 74359820242;
-	Thu, 11 Apr 2024 17:13:16 +0000 (UTC)
-Date: Thu, 11 Apr 2024 17:13:15 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-CC: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <bard.liao@intel.com>, <linux-gpio@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v5 4/4] spi: cs42l43: Add bridged cs35l56 amplifiers
-Message-ID: <ZhgaK9vhtvy3/YpU@ediswmail9.ad.cirrus.com>
-References: <20240411090628.2436389-1-ckeepax@opensource.cirrus.com>
- <20240411090628.2436389-5-ckeepax@opensource.cirrus.com>
- <CAHp75Ve00EuT0AdZy0b6OfqHySNkxTBuUbrv7z+mUgcrT56QWw@mail.gmail.com>
+	s=arc-20240116; t=1712856405; c=relaxed/simple;
+	bh=rb4Rwfv5xHnQdtI+SSu0ajaicwDU38E72wab/KYC78w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KR2qB5EJF5GQZ+PFzKn+U8I6yLQAbgIWyGCTAMVQA/Q7YUqqz8dIf8po0EFUhhGe+/Y7gHBGvGlu89JwJqgRTuwZs2ZxPnJGzqjbd6k1s3GsdS65pTGmz1LoGJIcy2q34jYxsIZF7/AtNb8GrrE2dBOMkvpYYLJhU8tjXJPL3Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CDyejZbC; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712856404; x=1744392404;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rb4Rwfv5xHnQdtI+SSu0ajaicwDU38E72wab/KYC78w=;
+  b=CDyejZbCvLFiFmOLVt9/RkTrbxuYqiJP72FFAZ2zOGCogQv076JnnPNg
+   1L9Z7KrjtLv5i1zGmm1EsRLwOzE3lZ29yPClI1qMqzRMSH7YhO4TPeIDh
+   I3SKhTQuk2J6lRg48rOmUyH7GN+MMOLxDV1ZIKgTeAVzB1waXqvo31Hgi
+   Sqy5zuwXsH+7jxNK0mIN0ODQu9eqX9ZLOFu1MzDqSRKv7vryuLxJNdU3P
+   5/8++PXiXtkWWKrMCG3RSs3/FCPA3Tuxh14G3pxBuo27sgZQDGDNH9FiG
+   /z/peF8fiVH904gBUXKS2cx7qyFfUQBilHKdA9Te6prFbNncHAWPqNuge
+   A==;
+X-CSE-ConnectionGUID: mQTJ7LqGRnCJl1C1YPR7xg==
+X-CSE-MsgGUID: 3AhjIcm2SzKPeD+XY0VtGA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="18845025"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="18845025"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 10:26:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="937097278"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="937097278"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Apr 2024 10:26:35 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id E99FC194; Thu, 11 Apr 2024 20:26:33 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	David Thompson <davthompson@nvidia.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Patrick Rudolph <patrick.rudolph@9elements.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Subject: [PATCH v1 0/4] gpiolib: acpi: Use con_id in acpi_dev_gpio_irq_get_by()
+Date: Thu, 11 Apr 2024 20:22:28 +0300
+Message-ID: <20240411172540.4122581-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Ve00EuT0AdZy0b6OfqHySNkxTBuUbrv7z+mUgcrT56QWw@mail.gmail.com>
-X-Proofpoint-ORIG-GUID: 1OExJAL_JgbNifayXx0Zj9S90ytHXE2u
-X-Proofpoint-GUID: 1OExJAL_JgbNifayXx0Zj9S90ytHXE2u
-X-Proofpoint-Spam-Reason: safe
 
-On Thu, Apr 11, 2024 at 05:04:33PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 11, 2024 at 12:06 PM Charles Keepax
-> <ckeepax@opensource.cirrus.com> wrote:
-> > From: Maciej Strozek <mstrozek@opensource.cirrus.com>
-> >
-> > On some cs42l43 systems a couple of cs35l56 amplifiers are attached
-> > to the cs42l43's SPI and I2S. On Windows the cs42l43 is controlled
-> > by a SDCA class driver and these two amplifiers are controlled by
-> > firmware running on the cs42l43. However, under Linux the decision
-> > was made to interact with the cs42l43 directly, affording the user
-> > greater control over the audio system. However, this has resulted
-> > in an issue where these two bridged cs35l56 amplifiers are not
-> > populated in ACPI and must be added manually.
-> >
-> > Check for the presence of the "01fa-cirrus-sidecar-instances" property
-> > in the SDCA extension unit's ACPI properties to confirm the presence
-> > of these two amplifiers and if they exist add them manually onto the
-> > SPI bus.
-> 
-> ...
-> 
-> > +static const struct software_node ampl = {
-> > +       .name                   = "cs35l56-left",
-> > +};
-> > +
-> > +static const struct software_node ampr = {
-> > +       .name                   = "cs35l56-right",
-> > +};
-> 
-> Still I fail to see how these are used. They provide just a static
-> swnode with name and no properties. How is that different from the
-> no-fwnode case? Can you test without these being defined?
-> 
+Use con_id instead of property in the acpi_dev_gpio_irq_get_by().
+It will be aligned with other GPIO library functions.
 
-The code in the last patch will pick up the name and use it to
-name the amps that are registered. This means when those amps are
-referred to by the audio machine driver code we will know what
-they are called. Admittedly that audio machine driver change
-isn't in this series as it is a bit of a work in progress and not
-technically necessary for just registering the amps as this
-series does.
+Assumed to go via my GPIO ACPI library tree follwoed by GPIO subsystem.
 
-> ...
-> 
-> > +static const struct software_node cs42l43_gpiochip_swnode = {
-> > +       .name                   = "cs42l43-pinctrl",
-> > +};
-> 
-> On the contrary I understand this one (however, using that generic
-> name prevents more than one or two drivers from being instantiated).
-> 
+Andy Shevchenko (4):
+  gpiolib: acpi: Extract __acpi_find_gpio() helper
+  gpiolib: acpi: Simplify error handling in __acpi_find_gpio()
+  gpiolib: acpi: Move acpi_can_fallback_to_crs() out of
+    __acpi_find_gpio()
+  gpiolib: acpi: Pass con_id instead of property into
+    acpi_dev_gpio_irq_get_by()
 
-Yeah that might need to change in the future, however there is no
-obvious use-cases for using multiple cs42l43's in a single system
-so at the moment we are not doing the work to support that case.
-There are plenty other things that would need fixed to support
-that as well.
+ drivers/gpio/gpio-pca953x.c                   |  2 +-
+ drivers/gpio/gpiolib-acpi.c                   | 52 +++++++++++--------
+ .../mellanox/mlxbf_gige/mlxbf_gige_main.c     |  2 +-
+ drivers/pinctrl/pinctrl-cy8c95x0.c            |  2 +-
+ include/linux/acpi.h                          |  8 +--
+ 5 files changed, 37 insertions(+), 29 deletions(-)
 
-> ...
-> 
-> > +       SOFTWARE_NODE_REFERENCE(&swnode_gpio_undefined),
-> 
-> gpio/property.h for this one.
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-Sorry, still not quite following this one, are you just reminding
-me to include the header when I move the swnode_gpio_undefined
-definition or are you asking for something more?
-
-> > +static bool cs42l43_has_sidecar(struct fwnode_handle *fwnode)
-> > +{
-> > +       static const u32 func_smart_amp = 0x1;
-> > +       struct fwnode_handle *child_fwnode, *ext_fwnode;
-> > +       unsigned int val;
-> > +       u32 function;
-> > +       int ret;
-> > +
-> > +       fwnode_for_each_child_node(fwnode, child_fwnode) {
-> > +               acpi_handle handle = ACPI_HANDLE_FWNODE(child_fwnode);
-> 
-> > +               if (!handle)
-> > +                       continue;
-> 
-> This is _almost_ redundant check. handle == NULL is for the global
-> root object which quite unlikely will have the _ADR method. The
-> specification is clear about this: "The _ADR object is valid only
-> within an Augmented Device Descriptor." That said, the check makes
-> sense against the (very) ill-formed DSDT.
-> 
-
-I am willing to be guided here, but given it would result in a
-null pointer dereference I am inclined to keep the check
-personally.
-
-> > +       if (has_sidecar) {
-> > +               ret = software_node_register(&cs42l43_gpiochip_swnode);
-> > +               if (ret) {
-> > +                       return dev_err_probe(priv->dev, ret,
-> > +                                            "Failed to register gpio swnode\n");
-> > +               }
-> > +
-> > +               ret = device_create_managed_software_node(&priv->ctlr->dev,
-> > +                                                         cs42l43_cs_props, NULL);
-> > +               if (ret) {
-> > +                       dev_err_probe(priv->dev, ret, "Failed to add swnode\n");
-> > +                       goto err;
-> > +               }
-> 
-> Wouldn't it miss the parent fwnode? I mean that you might probably
-> need to call...
-> 
-> > +       } else {
-> > +               device_set_node(&priv->ctlr->dev, fwnode);
-> 
-> ...this one always. Have you checked it? How does sysfs look like
-> before and after this change on the device in question?
-
-I will check this.
-
-Thanks,
-Charles
 
