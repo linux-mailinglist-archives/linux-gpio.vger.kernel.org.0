@@ -1,292 +1,215 @@
-Return-Path: <linux-gpio+bounces-5357-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5359-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06CF68A1647
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 15:50:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 47EFD8A16AA
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 16:06:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4DBC1B22AEF
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 13:50:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2679CB249C6
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 14:06:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3DA947773;
-	Thu, 11 Apr 2024 13:49:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CDE514F10D;
+	Thu, 11 Apr 2024 14:05:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EizjFafu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AxJ1Rgqa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D5E147C9D;
-	Thu, 11 Apr 2024 13:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6391814E2F6;
+	Thu, 11 Apr 2024 14:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712843386; cv=none; b=fv4S1gMD3bBNXv7EorAQTfc6A+kDAjds40V7XeRJuqCwVQKtbXZHxipFkzXIfyfVeElF8FiSacpDgtCt8uQoXuwTjLB6r7F1Lw5POcvaAoJTzTgx9/o00Xk6C8QINkYChBS7OVfYHawoF4ESiR7jZatwKSyuUfMs2kSP9cunP6k=
+	t=1712844314; cv=none; b=HpaFkwdGEouyynyBuzj5levJc7ZZ5E5y3m/IJKxUXSsioLlhqOZCb4vxkekUZm1fayzDRDkQk/5EpkhPbSqhcFdWbbARWIuxUNXSgus6QINut4ovKl4n7Lf6gziIUywQh6YxelBakHAzgcsiv0rlXLUuoo/ne7BsIPmGKnK0Ovo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712843386; c=relaxed/simple;
-	bh=gmld257+GG6WGIrfxRjRkWvqnB1xsmhIW/xZjCHCGSs=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=PNFuh1jo5O7VWWt2z0KE051Dr4gjF0QUh64Si7ehM0xsU3aqCr7IDXwMBveY146SET12YCVEv2JxYN6ocxvFszPNgsBCtyrUv8sF92niZzTDDugnbRgiR7gRAGmXhSZSia0VhtBmgOjGuV7Jf8wbvP7zd8ccyNo2H6EZLIzfSH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EizjFafu; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5317FE0002;
-	Thu, 11 Apr 2024 13:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712843375;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LiWlRAVSR0J/gKNCGbaKB/gU7+67qgp/9tQ2GW51RFg=;
-	b=EizjFafu2wVellm9z3fq9e6dRFMrKjVuDPuEA1bw5u5vNk6VBC0vRcw+BeMrH6oCoLXcIi
-	Qxt76lhOLB4npENtewa0dPrw1lvXzL6WSZRZWfqQ135hC8PBFSvtc+ag2mXuZTRYXTbDq6
-	EkWX6/K53V4hpwwN9FTWp5gT9g3HlKj5EYLoG5UFzSJ2a5zzezO9RnlKuqm230fN/xeyDC
-	4xsZzVJCXzvPfr1fPHL9/tJprb9trw9zAVVRz+c63mutYJl4+jhQRECYBiyk8rP1z11agX
-	mnL7ztnQ03MD84uBDEak2FDgNNupMAHtz12zls0OA16jGk7gaIzv2zcvqKVP9A==
+	s=arc-20240116; t=1712844314; c=relaxed/simple;
+	bh=9hXbqyB4jg2/DiQ561L5PV9NuzfwVfJtmYrBjhk6Loc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XgDm0i2oYViUqjfCLz2TIkdW0mSJzlfHEpUvIS7QeJ+nd7OcUeA/P1AEnmq8oOnxiHzRmlbBm336opWAsOy8wPo224EZponwvJPcfpmp9v4mnguqfBj3zyNJyth9dixrwrYUBMZ0sbvlBAcR7GTUW5osSGhKyjiJcc36xZJFp1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AxJ1Rgqa; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a51a1c8d931so780409566b.0;
+        Thu, 11 Apr 2024 07:05:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712844311; x=1713449111; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lMr2RdfaMHtCzd9z6n6a/XuN5kSoHB3m4+8tIANDQOQ=;
+        b=AxJ1RgqawAEvQRgRx8h0LiIjrcccoY8ER9pgKUJB21WRiPvEKX170qtIJk1rysk/yq
+         TAMRiZtkYAdkCGysOTXLJm1nB7MKL4SZvWlXwUX88Appd/U4w3LrS5D+NHSjIZsYRkBq
+         Q3sdpYXxq0rxYtMZf+IrkrbcCz/YFd7+WAoYCKMsbZe5qSODALx06aXZGYevr1Fh1IAs
+         bnlAkpEjq2ynAnnCpReQ/i64sAItW3Uwn7hR8h91rIk2NUa+blJzgqnlsV7PUlnmWocE
+         eg4eA84t7l3awUBUcmVpYsFmkQLkuiTUP4Y0eCaUd6+4f4QTo/1KHTfOzK2N9qI/LNh2
+         sw2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712844311; x=1713449111;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lMr2RdfaMHtCzd9z6n6a/XuN5kSoHB3m4+8tIANDQOQ=;
+        b=plPL/BfDYunlu+o5ahzyf9TkQYh9CWAb4HohbdcCa4ZR3xSLm/Fvli+F+xkPqTHjEB
+         9rOG1f2Pz33HsVQDYzArBd71awgj/mFVajpMreh7rMaGBIWRAH1ndQy6n5P9mihLQGFc
+         y/v9vKDkE56H7t+Q9Oq4Yf9lGzKNSIQXS9mJEOtlFjA2y6n7tAfl8cnuH7i6OcqVPkfW
+         jCuDqdjnyGhbtlGMexUkGL53+oSL/Dal54xMs6A3iYeL9IuuTX2jPo/U5lBcxGmEQ1Hb
+         qLbSlcmUhvU60UGcbU5ZdWc3Tj+3IzRD9SjvsHo7ocqpiWG/XYTDEV9LN3oksluIPWpE
+         rKxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWx45IgOoGh1QON5pIbbYkgqQRr/UuJDzIoBNguxgfXaSmewbn9ziOiqFO3SbgOxHcMIDBv+kaWgK6t9zkSNpIM9XZ+/ZZ9V/NeV8Ex8dVRWPdU5ogqUQ7STEfQzHkslxfJ60OETA==
+X-Gm-Message-State: AOJu0Yy55Ap4A7yTRpxWKspK9qGRRhOyDjWrTN2h6ObZgw3MATaQpRd+
+	NqseM5NCRdWWwXtMkaXVveMswQYFY4m9/4tEJFP4IBL5nVI94MMNW0DZ78rEoCQrCgz3pVD/KdI
+	7hCpvUkgApbp088dZMIuL/Wo9pQu2+1RgXnQ=
+X-Google-Smtp-Source: AGHT+IGtA7p8xwDiVp15r0e1pAZdVymjz9sBTuUKRdb3O0LaUqjpr9iuF91dQoPUQBSxoN1QkZyzeXiFdCf5i7Unt9c=
+X-Received: by 2002:a17:907:7249:b0:a52:1770:965 with SMTP id
+ ds9-20020a170907724900b00a5217700965mr2942806ejc.42.1712844310448; Thu, 11
+ Apr 2024 07:05:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20240411090628.2436389-1-ckeepax@opensource.cirrus.com> <20240411090628.2436389-5-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20240411090628.2436389-5-ckeepax@opensource.cirrus.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 11 Apr 2024 17:04:33 +0300
+Message-ID: <CAHp75Ve00EuT0AdZy0b6OfqHySNkxTBuUbrv7z+mUgcrT56QWw@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] spi: cs42l43: Add bridged cs35l56 amplifiers
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: broonie@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	bard.liao@intel.com, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
+	patches@opensource.cirrus.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 11 Apr 2024 15:49:34 +0200
-Message-Id: <D0HCAV6APTSD.WKGPESJ29D8A@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH 02/11] dt-bindings: clock: mobileye,eyeq5-clk: add
- EyeQ6L and EyeQ6H
-Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Michael Turquette" <mturquette@baylibre.com>, "Stephen Boyd"
- <sboyd@kernel.org>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Linus
- Walleij" <linus.walleij@linaro.org>
-X-Mailer: aerc 0.15.2
-References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
- <20240410-mbly-olb-v1-2-335e496d7be3@bootlin.com>
- <29ece6c8-ddf4-4dcd-b5b4-1cad8bc858d3@linaro.org>
-In-Reply-To: <29ece6c8-ddf4-4dcd-b5b4-1cad8bc858d3@linaro.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
 
-Hello Krzysztof,
-
-On Thu Apr 11, 2024 at 8:14 AM CEST, Krzysztof Kozlowski wrote:
-> On 10/04/2024 19:12, Th=C3=A9o Lebrun wrote:
-> > Add bindings describing EyeQ6L and EyeQ6H clock controllers.
-> > Add constants to index clocks.
-> >=20
-> > Bindings are conditional for two reasons:
-> >  - Some compatibles expose a single clock; they do not take clock cells=
-.
-> >  - All compatibles take a PLLs resource, not all take others (aimed at
-> >    divider clocks). Those that only take a resource for PLLs do not
-> >    require named resources.
-> >=20
-> > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> > ---
-> >  .../bindings/clock/mobileye,eyeq5-clk.yaml         | 103 +++++++++++++=
-+++++---
-> >  MAINTAINERS                                        |   2 +
-> >  include/dt-bindings/clock/mobileye,eyeq5-clk.h     |  21 +++++
-> >  3 files changed, 113 insertions(+), 13 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk=
-.yaml b/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
-
-[...]
-
-> >  properties:
-> >    compatible:
-> > -    const: mobileye,eyeq5-clk
-> > +    enum:
-> > +      - mobileye,eyeq5-clk
-> > +      - mobileye,eyeq6l-clk
-> > +      - mobileye,eyeq6h-central-clk
-> > +      - mobileye,eyeq6h-west-clk
-> > +      - mobileye,eyeq6h-east-clk
-> > +      - mobileye,eyeq6h-south-clk
-> > +      - mobileye,eyeq6h-ddr0-clk
-> > +      - mobileye,eyeq6h-ddr1-clk
-> > +      - mobileye,eyeq6h-acc-clk
-> > =20
-> > -  reg:
-> > -    maxItems: 2
-> > +  reg: true
+On Thu, Apr 11, 2024 at 12:06=E2=80=AFPM Charles Keepax
+<ckeepax@opensource.cirrus.com> wrote:
+> From: Maciej Strozek <mstrozek@opensource.cirrus.com>
 >
-> No, you must leave widest constraints here.
-
-Noted, will do.
-
-> > -  reg-names:
-> > -    items:
-> > -      - const: plls
-> > -      - const: ospi
-> > +  reg-names: true
+> On some cs42l43 systems a couple of cs35l56 amplifiers are attached
+> to the cs42l43's SPI and I2S. On Windows the cs42l43 is controlled
+> by a SDCA class driver and these two amplifiers are controlled by
+> firmware running on the cs42l43. However, under Linux the decision
+> was made to interact with the cs42l43 directly, affording the user
+> greater control over the audio system. However, this has resulted
+> in an issue where these two bridged cs35l56 amplifiers are not
+> populated in ACPI and must be added manually.
 >
-> No, you must leave widest constraints here.
+> Check for the presence of the "01fa-cirrus-sidecar-instances" property
+> in the SDCA extension unit's ACPI properties to confirm the presence
+> of these two amplifiers and if they exist add them manually onto the
+> SPI bus.
 
-Noted, will do.
+...
 
-> >    "#clock-cells":
-> > -    const: 1
-> > +    enum: [0, 1]
->
-> Looks like you squash here quite different devices...
+> +static const struct software_node ampl =3D {
+> +       .name                   =3D "cs35l56-left",
+> +};
+> +
+> +static const struct software_node ampr =3D {
+> +       .name                   =3D "cs35l56-right",
+> +};
 
-They are the same controllers but some only expose a single clock. It is
-EyeQ6H that has 7 OLB instances, so some don't deal with many clocks.
+Still I fail to see how these are used. They provide just a static
+swnode with name and no properties. How is that different from the
+no-fwnode case? Can you test without these being defined?
 
-I started with a more generic approach of #clock-cells =3D <1> and only
-have index zero available for those that have a single clock.
-I am not a fan of this however.
+...
 
-> >    clocks:
-> >      maxItems: 1
-> > @@ -43,9 +49,80 @@ properties:
-> >  required:
-> >    - compatible
-> >    - reg
-> > -  - reg-names
-> >    - "#clock-cells"
-> >    - clocks
-> >    - clock-names
-> > =20
-> > +allOf:
-> > +  # "mobileye,eyeq5-clk" provides:
-> > +  #  - PLLs and,
-> > +  #  - One divider clock related to ospi.
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          const: mobileye,eyeq5-clk
-> > +    then:
-> > +      properties:
-> > +        reg:
-> > +          minItems: 2
-> > +          maxItems: 2
-> > +        reg-names:
-> > +          minItems: 2
-> > +          maxItems: 2
->
-> So any name is now valid? Like "yellow-pony"?
+> +static const struct software_node cs42l43_gpiochip_swnode =3D {
+> +       .name                   =3D "cs42l43-pinctrl",
+> +};
 
-I do not understand what implies this. Below "items: enum: [...]"
-ensures only two allowed values. dtbs_check agrees:
+On the contrary I understand this one (however, using that generic
+name prevents more than one or two drivers from being instantiated).
 
-=E2=9F=A9 git diff
-diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-           b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-index 8d4f65ec912d..5031eb8b4270 100644
---- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-+++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-@@ -126,7 +126,7 @@ reset: reset-controller@e00000 {
-                        clocks: clock-controller@e0002c {
-                                compatible =3D "mobileye,eyeq5-clk";
-                                reg =3D <0x02c 0x50>, <0x11c 0x04>;
--                               reg-names =3D "plls", "ospi";
-+                               reg-names =3D "plls", "yellow-pony";
-                                #clock-cells =3D <1>;
-                                clocks =3D <&xtal>;
-                                clock-names =3D "ref";
+...
 
-=E2=9F=A9 make dtbs_check DT_SCHEMA_FILES=3Dmobileye DT_CHECKER_FLAGS=3D-m
-  UPD     include/config/kernel.release
-  DTC_CHK arch/mips/boot/dts/mobileye/eyeq5-epm5.dtb
-arch/mips/boot/dts/mobileye/eyeq5-epm5.dtb: system-controller@e00000:
-  clock-controller@e0002c:reg-names:1:
-  'yellow-pony' is not one of ['plls', 'ospi']
-  from schema $id:
-    http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
+> +       SOFTWARE_NODE_REFERENCE(&swnode_gpio_undefined),
 
-> > +          items:
-> > +            enum: [ plls, ospi ]
-> > +      required:
-> > +        - reg-names
-> > +
-> > +  # "mobileye,eyeq6h-south-clk" provides:
-> > +  #  - PLLs and,
-> > +  #  - Four divider clocks related to emmc, ospi and tsu.
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          const: mobileye,eyeq6h-south-clk
-> > +    then:
-> > +      properties:
-> > +        reg:
-> > +          minItems: 4
-> > +          maxItems: 4
-> > +        reg-names:
-> > +          minItems: 4
-> > +          maxItems: 4
-> > +          items:
-> > +            enum: [ plls, emmc, ospi, tsu ]
-> > +      required:
-> > +        - reg-names
-> > +
-> > +  # Other compatibles only provide PLLs. Do not ask for named resource=
-s.
-> > +  - if:
-> > +      not:
-> > +        required:
-> > +          - reg-names
-> > +    then:
-> > +      properties:
-> > +        reg:
-> > +          minItems: 1
-> > +          maxItems: 1
->
-> No, just restrict properly reg per variant.
+gpio/property.h for this one.
 
-Noted, will do.
+...
 
-> > +        reg-names: false
->
-> That's redundant. Drop entire if.
+> +static bool cs42l43_has_sidecar(struct fwnode_handle *fwnode)
+> +{
+> +       static const u32 func_smart_amp =3D 0x1;
+> +       struct fwnode_handle *child_fwnode, *ext_fwnode;
+> +       unsigned int val;
+> +       u32 function;
+> +       int ret;
+> +
+> +       fwnode_for_each_child_node(fwnode, child_fwnode) {
+> +               acpi_handle handle =3D ACPI_HANDLE_FWNODE(child_fwnode);
 
-Ah, yes. Will fix that.
+> +               if (!handle)
+> +                       continue;
 
-> > +
-> > +  # Some compatibles provide a single clock; they do not take a clock =
-cell.
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          enum:
-> > +            - mobileye,eyeq6h-central-clk
-> > +            - mobileye,eyeq6h-west-clk
-> > +            - mobileye,eyeq6h-east-clk
-> > +            - mobileye,eyeq6h-ddr0-clk
-> > +            - mobileye,eyeq6h-ddr1-clk
-> > +    then:
-> > +      properties:
-> > +        "#clock-cells":
-> > +          const: 0
->
-> Wait, so you define device-per-clock? That's a terrible idea. We also
-> discussed it many times and it was rejected many times.
->
-> You have one device, not 5.
+This is _almost_ redundant check. handle =3D=3D NULL is for the global
+root object which quite unlikely will have the _ADR method. The
+specification is clear about this: "The _ADR object is valid only
+within an Augmented Device Descriptor." That said, the check makes
+sense against the (very) ill-formed DSDT.
 
-Each region must be a syscon to make its various registers accessible to
-drivers that'll need it. Following that, I have a hard time seeing what
-would be the DT structure of 7 OLB system-controllers but a single
-clock node?
+> +               ret =3D acpi_get_local_address(handle, &function);
+> +               if (ret || function !=3D func_smart_amp)
+> +                       continue;
+> +
+> +               ext_fwnode =3D fwnode_get_named_child_node(child_fwnode,
+> +                               "mipi-sdca-function-expansion-subproperti=
+es");
+> +               if (!ext_fwnode)
+> +                       continue;
+> +
+> +               ret =3D fwnode_property_read_u32(ext_fwnode,
+> +                                              "01fa-cirrus-sidecar-insta=
+nces",
+> +                                              &val);
+> +
+> +               fwnode_handle_put(ext_fwnode);
+> +               fwnode_handle_put(child_fwnode);
+> +
+> +               if (!ret)
+> +                       return !!val;
+> +       }
+> +
+> +       return false;
+> +}
 
-Regards,
+...
 
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +       if (has_sidecar) {
+> +               ret =3D software_node_register(&cs42l43_gpiochip_swnode);
+> +               if (ret) {
+> +                       return dev_err_probe(priv->dev, ret,
+> +                                            "Failed to register gpio swn=
+ode\n");
+> +               }
+> +
+> +               ret =3D device_create_managed_software_node(&priv->ctlr->=
+dev,
+> +                                                         cs42l43_cs_prop=
+s, NULL);
+> +               if (ret) {
+> +                       dev_err_probe(priv->dev, ret, "Failed to add swno=
+de\n");
+> +                       goto err;
+> +               }
 
+Wouldn't it miss the parent fwnode? I mean that you might probably
+need to call...
+
+> +       } else {
+> +               device_set_node(&priv->ctlr->dev, fwnode);
+
+...this one always. Have you checked it? How does sysfs look like
+before and after this change on the device in question?
+
+> +       }
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
