@@ -1,117 +1,110 @@
-Return-Path: <linux-gpio+bounces-5355-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5356-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A6EC8A159A
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 15:33:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 621FE8A15BC
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 15:37:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7A3E1C212F4
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 13:33:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C7D628202D
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 13:37:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D04AD14F9DD;
-	Thu, 11 Apr 2024 13:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A012A14D703;
+	Thu, 11 Apr 2024 13:37:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m5wJsp5Z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y3uZr7pJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1B914F9D7;
-	Thu, 11 Apr 2024 13:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2772014D45D;
+	Thu, 11 Apr 2024 13:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712842424; cv=none; b=qaZdEtbjkYy8SW+myc7BbnSBhBcpjoSi8mPrf+/BgdCr0KpQvR7Vzno0uaPKpf1s2q1EnFZO1ayDtgrrC/aLd5fNLIfFLjNoUmJPQfw6+8Z8wW/r01a5CravF+uxoX2s1Uzzc6/b5T8FzYZ0h4cv7r5E3xlORZxF+dQzzcP5kzA=
+	t=1712842649; cv=none; b=L7BkR8yjcCfHuR08bX3CSjWOjkzeN3cxMzh9ZwUYUsdulzUM7hNpIsq80omXja5FmvbVw244DM5AaHDo0rZtL/+vrbkaYhssL9dsgAIol1fkx3l552G57UoyP8VU9ELljTrv2h378NbKER3F5+fg+tF4+Ud4RoyxU7eQp57KpwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712842424; c=relaxed/simple;
-	bh=I94ipfx2TNTJw+LkKEJqQzm3Mt7zbdi8apTqD/1MGsk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bWV27yH4WgHzZwb1KCI2BN0yGsSQ4BJUScSx9NKF65olUKbst326JSJeXwg8W8orPjZy7c9wO7FEIj38OeVBsmnwnav/fvB8cu3gx4O37kL52ciZJ7nPMKJMZ7o3bOlKAFwiR+b5tjjFzsO2saIu+ACPx5tglidHZNF3Yo3ddbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m5wJsp5Z; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a52176b2cb6so165136766b.2;
-        Thu, 11 Apr 2024 06:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712842421; x=1713447221; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zzVbincBYyE5qZwRAEXwYM35pwlF7NqzXwqmp8oeEWg=;
-        b=m5wJsp5ZnUeWK3V/HF7Z6K1KQXAM5+jIkrEwmzW9AIFGXZdWheTYi5FgmwhF2cYcCE
-         9I4aH6PbHDBBp0SqKnIqnejlr1JMufvsgiPz2vUbN2IbdXMuu29/J/8sW1SihxbCqlgh
-         WTrX1K9VnHvYcZZVuiZ3cTqibsfjo/p5hzlscaLGgwtpRpPp74whystLGWTthGfo+4oM
-         V8dB7yhzUMinr7Y2AS8EHUwONsAJOrmWeS83jimPyRLSB8M+hO3Jj3IyrqOF1Quhdddt
-         W6JAbLgKJ8SZZKs0IXCpmKFuJ4iAEFYdZr+tCdl4rwy9Tatm0sPA01FqkGAob1GuHvBp
-         H7+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712842421; x=1713447221;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zzVbincBYyE5qZwRAEXwYM35pwlF7NqzXwqmp8oeEWg=;
-        b=aLG9QgEr1ZWOQXPKhtKd9C6qkmoaWad/u25G/UpkEzSeIWwL4RjCO5U8THzqkYqCay
-         bEpXAc6mDluBNhXfRDCtut5iJrkpLx/mEAOS/KCoQPw43dhB8sUbCD9uH7c7+miK8RsT
-         eIR/etwUw5e/BuBgY/pUis9vVxIeBWH1mkSg5hQ1a7ySg8VwCmgML0T4qsosYf3twfSn
-         Y2WaZzS5/QBMHsNL1pojtttSdu/WqLoWMnzjANLvfmH6w8nkUeeYcdpR0cInshHmu0Gu
-         0pog79h8UJTv8siQmv5KZfVBM2QFWuai6tFEuqRVbdguY+WmRvmzYeK0Gn1EsPouOuDA
-         MtvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpSl/NPWbaCT+pj3UM90RXG2y0fzd3RWXZxxofExXDctlnuZsLl/sUpdYTlM1fMj7NlCn0x1g6XcPlSnnpObo8I6ba5+A+8j12R9eo0e0ZUl0kHPTYuWpZtetNkrtLr6tP6SqENQ==
-X-Gm-Message-State: AOJu0YyFdYYRCqt/+ZW9Qf/fEwM+iFOcWoGE8aZJExitRkU6i0V29GRK
-	zLONiGtzVNCSEGY1vnMVzsyHDaN64cTHZVVWnklGSxkRd+xQbGn0VlpRxtFfw+wb1oIoS2Qy2PL
-	h9qYk4noc/26fN2l59UdZsonXIWyM/GMpoKw=
-X-Google-Smtp-Source: AGHT+IHSKAK5yx2iH2r/nkTa19jeAW86cSRJWadPuv3y2KUS9hKYqhtE8N5xSiZSyFRuwXU2KBUbYpv9p7xFs98B9dY=
-X-Received: by 2002:a17:906:7308:b0:a51:885a:c0a with SMTP id
- di8-20020a170906730800b00a51885a0c0amr4035954ejc.61.1712842421506; Thu, 11
- Apr 2024 06:33:41 -0700 (PDT)
+	s=arc-20240116; t=1712842649; c=relaxed/simple;
+	bh=ZfH/I4d1hrRMe9hj7w2rGrT0Kd9Zdc2d48cUGU8d2hE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NnXWvZng0/Akq33UV5/NZuH6ZdEfv9L1gRoEsyd7QJaz+PQ+oPuxTzRMjT3a33+sifp0EKN8bpHO+EHpAfSTsxLOS4mjdvZEj/sOrIQeRJwNUuUQtoXh3bKmKy+DrirWHzgeLmQz45mJKwjoEsRGsExT6osymQFLKEjwSeY7YEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y3uZr7pJ; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712842648; x=1744378648;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZfH/I4d1hrRMe9hj7w2rGrT0Kd9Zdc2d48cUGU8d2hE=;
+  b=Y3uZr7pJGG2BrHZ/STELSfftynmmvfpW1FFWpwbc4i3Qwk37IWW/fSFy
+   GbYcHsrf/1mRzE6tndFgsihzXmKugzMzSTofB10vmDvPNNLxv4n8nXVWe
+   W0JI1+wqqHtnOYA5e3FTfSJJY95CI6cJyfTMsOt+DW2tDqsU/LqnIcv0D
+   iaP1ZhSKHkhRQnbrVn9hFSzot8h9kKZRVzQgRXB8+RyLkX8EwmsOwfxQj
+   nexPzEWgJBzogu1B7qvINKqwxqZfYGXe5mQkpljjbbIJMPr/ngJS93DvZ
+   lXdEo+/lZs7iUIGuVJjj5/fsyObq2UuI4jv0kYnmwKTD7z03zky7csdxJ
+   A==;
+X-CSE-ConnectionGUID: tljXGeGBSJys7WZAOTAA4g==
+X-CSE-MsgGUID: HB4JgGZxSvSTJ+/CZ/456A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="25705540"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="25705540"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 06:37:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="915463714"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="915463714"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 06:37:24 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1ruucE-00000003MYt-1MVd;
+	Thu, 11 Apr 2024 16:37:22 +0300
+Date: Thu, 11 Apr 2024 16:37:21 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v1 0/2] gpiolib: acpi: A couple of error checks amendmends
+Message-ID: <ZhfnkQmhBjA1tvrk@smile.fi.intel.com>
+References: <20240410202243.1658129-1-andriy.shevchenko@linux.intel.com>
+ <20240411132806.GB112498@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411090628.2436389-1-ckeepax@opensource.cirrus.com> <20240411090628.2436389-4-ckeepax@opensource.cirrus.com>
-In-Reply-To: <20240411090628.2436389-4-ckeepax@opensource.cirrus.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 11 Apr 2024 16:33:05 +0300
-Message-ID: <CAHp75VefB7fN8Bf3ZJ6sYnqdiHxoJ87zjDWERoEXNfY+NzosPA@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] spi: Update swnode based SPI devices to use the
- fwnode name
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	bard.liao@intel.com, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
-	patches@opensource.cirrus.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411132806.GB112498@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 11, 2024 at 12:06=E2=80=AFPM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
->
-> Update the name for software node based SPI devices to use the fwnode
-> name as the device name. This is helpful since swnode devices are
-> usually added within the kernel, and the kernel often then requires a
-> predictable name such that it can refer back to the device.
+On Thu, Apr 11, 2024 at 04:28:06PM +0300, Mika Westerberg wrote:
+> On Wed, Apr 10, 2024 at 11:21:45PM +0300, Andy Shevchenko wrote:
+> > One error check is moved and one is dropped.
+> > No functional changes intended.
+> > 
+> > Andy Shevchenko (2):
+> >   gpiolib: acpi: Remove never true check in acpi_get_gpiod_by_index()
+> >   gpiolib: acpi: Check for errors first in acpi_find_gpio()
+> 
+> Both,
+> 
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-...
+Pushed to my review and testing queue, thanks!
 
-> +       if (is_software_node(fwnode)) {
-> +               dev_set_name(dev, "spi-%s", fwnode_get_name(fwnode));
-
-Wouldn't %pfwP / %pfw work?
-
-Thinking more about this, maybe even the ACPI case also can be combined?
-See for the details
-
-87526603c892 ("irqdomain: Get rid of special treatment for ACPI in
-__irq_domain_add()")
-9ed78b05f998 ("irqdomain: Allow software nodes for IRQ domain creation")
-
-> +               return;
-> +       }
-
-
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
 
