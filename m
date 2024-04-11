@@ -1,130 +1,114 @@
-Return-Path: <linux-gpio+bounces-5347-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5348-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 814958A11B2
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 12:46:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 299CF8A12EA
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 13:28:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 37F441F20FE6
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 10:46:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B8171C216DD
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 11:28:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E977B146A95;
-	Thu, 11 Apr 2024 10:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 596241482EF;
+	Thu, 11 Apr 2024 11:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D48Q7gcp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYoGdsT1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A302263A2;
-	Thu, 11 Apr 2024 10:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF5214A0AE;
+	Thu, 11 Apr 2024 11:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712832396; cv=none; b=mHjFgejGZF+PW1BoxVIK84zgYBIqTnyjWYlsfEfyB4hWPuBAlPBt/D90UlyfYCSxw1awScNkLOtVAHeNBayVKjnagRyzx2p3O6R83cZIMgKoPPk1rwOoVSQtBsZh+X76h60l2UiX9+xGq6//axC3yeB4ISHuhlVoOZOOUdZKVGY=
+	t=1712834855; cv=none; b=gZtnUmmE7FTFyGtaxMqdBqhP7e03W9DhjV79V4mTfr4my1Xg2w528j9UQv6vaTfo08RUUiQk1cNnRkXnL9bjJ61CDoNMXA13Qcpwnz85SK4iJm8QU4DjeyvD29+W/dO7jqtLbO1WMGG7IK/UrxPMrRWltKiF6gUSfuR4HMZecJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712832396; c=relaxed/simple;
-	bh=5E/ca5c77gR9Zl6uJ+56UId421Q8eo1fpsHoBRfh3M0=;
-	h=Content-Type:Date:Message-Id:Cc:From:To:Subject:References:
-	 In-Reply-To; b=Rfuh1ORoFbqCOSOBGh1R9vAf5wbsgEQPn3P4NC4EkStpV2V2JpDdK8ft6pXLZx9eJ7Kwq/4DIzzqexOcxJBkZ26QdE6+7XT2cRD+rAPhfdqIY7HB2FUqXgRCkoyq9YuUOBPCc8zZhqKFjIw9ve55wVUrUWPcJbB5MEkdTbJJL0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D48Q7gcp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4DF0C43390;
-	Thu, 11 Apr 2024 10:46:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712832396;
-	bh=5E/ca5c77gR9Zl6uJ+56UId421Q8eo1fpsHoBRfh3M0=;
-	h=Date:Cc:From:To:Subject:References:In-Reply-To:From;
-	b=D48Q7gcp5d6vdTxK1pVgGN/JbGtABOsGSQEVFTDQa2pRCYlaZXNZtmoRrd5mq4Y8j
-	 vgOlAoLTwHv8fJRxrKGIZfSGqye01dBsY+2+7icW20Ms/WmNW4T3COgGpLEcbqVj/J
-	 7FdVB2aH1bCr6d0K2ESPU37gWI8QMaLacM9x+wpoZYGwknvxqqJVL58BSKF5dXYcMr
-	 Z8wbw2iZUnRZ/2hc+rFU23j+jRmbD21PPsO59m/KvBnrCv1GE00DW09y5GGMBE4HEE
-	 nF9ZIZ381+Uic75A0yrbWbf/gofNdnHpUpF7kgT27zGTzRL/xNwSJbwKdChP8Z/ehN
-	 M59rVIGPla/dA==
-Content-Type: multipart/signed;
- boundary=f7bcb3103797fb11dc8c9e325de0ccbdaba3a8a308f4ddca767ec9ae9a6c;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Thu, 11 Apr 2024 12:46:32 +0200
-Message-Id: <D0H8EQB97VFA.2P27K85EJXCTB@kernel.org>
-Cc: "Linus Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski"
- <brgl@bgdev.pl>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Andy Shevchenko" <andy.shevchenko@gmail.com>,
- <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/1] gpio: regmap: Use -ENOTSUPP consistently
-X-Mailer: aerc 0.16.0
-References: <20240410063930.1199355-1-andy.shevchenko@gmail.com>
-In-Reply-To: <20240410063930.1199355-1-andy.shevchenko@gmail.com>
+	s=arc-20240116; t=1712834855; c=relaxed/simple;
+	bh=pEPBqeAYoMzDCWxRgfG/69Jmpftv9TJ/hXdVNM+Wvtw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z2UwezikbwskwJtsSkzxBPfZmA2RmhY78JuzbfNaOylBpRw7B/8l+Xi8gwc9jPDDuZ68rjDCnX/CRGaaRUR5Dqmp0T1ka0KpOubqdP9v4JKRE+ns1gQtP+AGgqVN3BEv9pPhmBbS30vEx3SzaEcciVWKNINdOcT298FyY6g/Qws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WYoGdsT1; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a4702457ccbso986059766b.3;
+        Thu, 11 Apr 2024 04:27:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712834852; x=1713439652; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pEPBqeAYoMzDCWxRgfG/69Jmpftv9TJ/hXdVNM+Wvtw=;
+        b=WYoGdsT1QqwGPVldwLpf7yC/Qg+S/8D7Q0tj6nL4NZpxEQdg7IQzz5H5cD8IdsifPe
+         CqHn9cQHGiD9htCNBJlaif50k1ctgEZbMyJsh0hhrnyR8ToYFTHnFB1ynbcEc6V1t1mN
+         /jT13EyaDnquDsDZ/ltjCxOD3RAwQ/KfLchZA61HWR1Ag+had8srDfdpP0ka1DLg+k0i
+         qIl3NZ8hKW4Egk+7/v+b1nJ5Y66q8ImijR7ldqI4mjwsiEsoPmlVicPcrh6t0U8B5Azw
+         Q8JpEyzWyFIkPChhWJA4dn/MmVWt2g2NEiqWKfJczQiDKjTsc3z/ZuW0d6sIGRf06k/I
+         rtTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712834852; x=1713439652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pEPBqeAYoMzDCWxRgfG/69Jmpftv9TJ/hXdVNM+Wvtw=;
+        b=LQy1RpdaqMNMg6F3TGnrr7if0G8NhcdX+VSmtVWzfUNG2k5D+mUUVWhYACGSvCLKZa
+         h1rR9OS+uxOTtfkPTSB2X1xGhy0INXQ9p2XaxZgIISyv+VWkyoYlh9vSzet6QXqwrozo
+         oYo7Jp8xZZ4hBbZBJaG0okRju3OaodU2LCO4Eimfid8IG1p9JcDG3Kbov1jLre2tXvfP
+         tOESwtH5R1m3guypGH2fVgonVRxzUDlRVQly7Da7hhsdPpF2mER66qlh+69k16Bfpui6
+         K56aPQuFhXzMOscygVOBIesBpd89e/rlJJU6dIOJE7ps8Xf/rt+QR4VOiBKL1lgVSUL0
+         RvGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJdJaGeT481RvQEEyx5FKzEyLh/ojAe2NuXd72NTk4nSNLTNtBTeeis2sJUTfVO/TY4PhYUsWxTBwtjaybC3GZ8Q79rv4kHTXT/aQ8
+X-Gm-Message-State: AOJu0YwipTGnsseBFmwYaqnUvqtw2mWY+ibs8eueJxWq9LaP8pJpi7h2
+	QTEnO8rfD5r/5PeksWQ96uq2Hx6DVQfUJiM7vJu6PSSyeVvg10JjJMMsQYilvSJBjDSTE6lsptE
+	3q4/A5ACaZ48iHldWsyTNZLbpOj8=
+X-Google-Smtp-Source: AGHT+IF+E92mUFFdtpNUANWgNMqjMWcwkQ91fGDlFrc79EFg49AYNX+hnHqm1OSkN2DdbtEPzilPP4XYYCDdgrWnzpg=
+X-Received: by 2002:a17:907:9302:b0:a52:26fc:3203 with SMTP id
+ bu2-20020a170907930200b00a5226fc3203mr754807ejc.27.1712834851568; Thu, 11 Apr
+ 2024 04:27:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-
---f7bcb3103797fb11dc8c9e325de0ccbdaba3a8a308f4ddca767ec9ae9a6c
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20240410063930.1199355-1-andy.shevchenko@gmail.com> <D0H8EQB97VFA.2P27K85EJXCTB@kernel.org>
+In-Reply-To: <D0H8EQB97VFA.2P27K85EJXCTB@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 11 Apr 2024 14:26:54 +0300
+Message-ID: <CAHp75Vf8vWe=wn62w1yxt5C_Aue9q9C0H7ML7VchEiz999ffxw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: regmap: Use -ENOTSUPP consistently
+To: Michael Walle <mwalle@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-Hi Andy,
-
-On Wed Apr 10, 2024 at 8:39 AM CEST, Andy Shevchenko wrote:
-> The GPIO library expects the drivers to return -ENOTSUPP in some cases
-> and not using analogue POSIX code. Make the driver to follow this.
-
-I don't care too much, so if you like you can add
-
-Reviewed-by: Michael Walle <mwalle@kernel.org>
-
-But.. isn't it the wrong errno and isn't it discouraged to use it
-because it's a NFS only errno? Thus, wouldn't it make more sense for
-the core to accept EOPNOTSUPP and maybe convert it to ENOTSUPP if we
-don't want to break userspace?
-
--michael
-
-> Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
->  drivers/gpio/gpio-regmap.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, Apr 11, 2024 at 1:46=E2=80=AFPM Michael Walle <mwalle@kernel.org> w=
+rote:
+> On Wed Apr 10, 2024 at 8:39 AM CEST, Andy Shevchenko wrote:
+> > The GPIO library expects the drivers to return -ENOTSUPP in some cases
+> > and not using analogue POSIX code. Make the driver to follow this.
 >
-> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> index c08c8e528867e..71684dee2ca5d 100644
-> --- a/drivers/gpio/gpio-regmap.c
-> +++ b/drivers/gpio/gpio-regmap.c
-> @@ -129,7 +129,7 @@ static int gpio_regmap_get_direction(struct gpio_chip=
- *chip,
->  		base =3D gpio_regmap_addr(gpio->reg_dir_in_base);
->  		invert =3D 1;
->  	} else {
-> -		return -EOPNOTSUPP;
-> +		return -ENOTSUPP;
->  	}
-> =20
->  	ret =3D gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
-> @@ -160,7 +160,7 @@ static int gpio_regmap_set_direction(struct gpio_chip=
- *chip,
->  		base =3D gpio_regmap_addr(gpio->reg_dir_in_base);
->  		invert =3D 1;
->  	} else {
-> -		return -EOPNOTSUPP;
-> +		return -ENOTSUPP;
->  	}
-> =20
->  	ret =3D gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
+> I don't care too much, so if you like you can add
+>
+> Reviewed-by: Michael Walle <mwalle@kernel.org>
 
+Thank you!
 
---f7bcb3103797fb11dc8c9e325de0ccbdaba3a8a308f4ddca767ec9ae9a6c
-Content-Type: application/pgp-signature; name="signature.asc"
+> But.. isn't it the wrong errno and isn't it discouraged to use it
+> because it's a NFS only errno? Thus, wouldn't it make more sense for
+> the core to accept EOPNOTSUPP and maybe convert it to ENOTSUPP if we
+> don't want to break userspace?
 
------BEGIN PGP SIGNATURE-----
+We don't break user space as it is used purely internally to the GPIO
+/ pin control subsystems (which are in our area of interest, unlike
+plenty of other users).
 
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZhe/iBIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/isTwF/XCyGf2p6F7G12CDeKBlKMIQwJDLACieE
-GTK8iuyzUoL/Legr4j1zapvm+nSkFwIYAYDkgBxqzP3KAplp1eybe6b9EJnZWrpm
-Wx3JWhVVjnsw7IkRrxKcvW+3iKI+7QrsGYc=
-=DFER
------END PGP SIGNATURE-----
+The decision to have this error code had been made long time ago and
+now somebody probably is welcome to update, but for the sake of
+consistency let's continue what was done by design.
 
---f7bcb3103797fb11dc8c9e325de0ccbdaba3a8a308f4ddca767ec9ae9a6c--
+--=20
+With Best Regards,
+Andy Shevchenko
 
