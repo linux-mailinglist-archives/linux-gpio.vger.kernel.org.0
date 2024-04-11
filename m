@@ -1,108 +1,230 @@
-Return-Path: <linux-gpio+bounces-5363-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5364-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15CA18A17D9
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 16:53:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17ACB8A1809
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 17:02:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C423A283987
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 14:53:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E5611F21D4D
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Apr 2024 15:02:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B247DDDC;
-	Thu, 11 Apr 2024 14:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5020F134D1;
+	Thu, 11 Apr 2024 15:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JovcYbm0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676B7DDCB;
-	Thu, 11 Apr 2024 14:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566BCF4EE
+	for <linux-gpio@vger.kernel.org>; Thu, 11 Apr 2024 15:02:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712847184; cv=none; b=ceJHmDLzfQzvW0T7izkXf2knoGmQX/OccG7pSvZGwgU49lYww1ZuR/BIVMtpXZKSD2UBmBv/t+Wqet4zAt2BcHLfTvzc+Ia6BBktM1AR06H/a0Jbevrx+yAf++ATisxPqESG0ejsJdOexxIkZaG/vp53b6Wy3vAeQUJfKMTs3oY=
+	t=1712847766; cv=none; b=tZtk2Y+t/NRsPH+2gIv02H5uOoHtK/inGVJeBCg0OTn0cVcynvKGpUgJuP6YXQW4oSeRAYef2dDUG4rAsywuL9xyqZZpeNo5tuemx47RiIGP3BIlWjJlToN2+c/44hTIzCPQY0nWpTQ8G82ldUl1Rni7MbE3NmfYzwvlWgEKEAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712847184; c=relaxed/simple;
-	bh=EyhnWJiAS0nR8fJyhRZTkbp1BLMobMq6UhnnwGa9dmU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rvBneR4zl7ICKTbOrSRI7AH142uYNlBx6Dr/RkY6gK7wY42ouC00jwPvMhMvMrMkBeABbe6WJmzrO6u697sYva5CWn8pAwTIR9zbA/lvD7nuzfFNTfm+lFQR5ivJtsHjUc0OKQaraBktEywfaHSBLwp1M157lxuRNpNeeDefbUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d886f17740so10359581fa.1;
-        Thu, 11 Apr 2024 07:53:02 -0700 (PDT)
+	s=arc-20240116; t=1712847766; c=relaxed/simple;
+	bh=NphbnHJFtQ5GRPLYu0u8kTxQqcMxBP2fPxvXnPieduA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uJNbk9xwky4982RP91LG4Tkh0j7x1D3fB9HoHoUepKU4cIMQkMvxFV2V6YgNP0vRjsub6j/O7z1ASUOVrz5q9GBfIGcuIUS6HDb8RP6B9TD9YfVgAqLexwXukgYTQI8z1M822/EBlkRc+grQ5GjD1O4RWswL9UCVbU6ug8rul/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JovcYbm0; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so9002727a12.2
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Apr 2024 08:02:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712847762; x=1713452562; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=+P23aEc6D4AK3QieQ0wss35fFJtf/ttLJisvoFqgu+g=;
+        b=JovcYbm07B1eaf75IkhvWy/dVFqYJmoFSnOlxBR4tvauKYbd9x0wdMD9JlrtdNs1G6
+         iVjRXdiRW96RF822Ed+YEOFBS8Gqy0sZpIgTvX3DU4JiDUVFfrGkflZ3JqQAttOvNvVw
+         K4LmHFuR79ptIUw6dbhURm4aRf7ryPUyYb7ATmUEWKokW653n2xxQnEkrHNL00cmn0kp
+         RxBp4ckifqjUCKE02f0Fax6sQBlafIxHaj1N/zBMkjE4b14J/6/KYLUwrb2JTotHnGeA
+         9CfGULDYCfVvyx9IRQUvBGuPiwKxvh0qRNswJZhx/PS6lrC8WtrI7du8aXxYxbwRFGCX
+         88IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712847180; x=1713451980;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KVjsRotGn7u6Rn7aIZqkg7iAwWDdxhRzncPX3YRKcQk=;
-        b=OCmYHKHaFAhcNayLW8UM7bjr3GNq4pqLtgwMC0OMuLQB3sHvZDLwXNGNKhcyLO1JvC
-         EOv7sbkJf3eT9sSDuRmpc7d0UoQpoLkbw6Yl11+9aeLxvMEVxYo0ofr33aCT7DlbnrjA
-         vOzm8L9ssBi6SEqZFpIA43KjwTdC2L/zll5kImoXjQmReDxrW15uKvKgLAzOWLWgyKRH
-         s228Y7HrIyew3CqtGwViHgrTSIq9Q19zQq5ZXWXALH11IP0d9f2zG/nel8PNvLRVJI8f
-         IO2816L984qSbzvfRokRN4fOa33ZgqPTEYp9NsQVu40LOi0DfcGUXBZeTU/PcCvmKurB
-         1Ouw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBJhIZvsEAGMcxzUtDDyGv70orFvfIApxuDNpXdPcDABJ0dqdb4ewPHLf2RniFlMek7WKG9ugZawb5Lu6C/Un/K6hOxYMZ6wajEUXMCXeGngH/t6a2F+0IoMYhoau+skXxvYAXF8pHKAXChYoQkAAD8hd/91E5YYncX7SVQfZFkaCQWKORjnG820k0
-X-Gm-Message-State: AOJu0YzfG+YbP9ms85tvacLHFq5QGEfR4glnsJ/w5gsozdZI3RKMHtRc
-	hrh4i4t8yzYp9U7QDGBbpEHYDpkKxC2b0r6d+cedphC19dfX87z8/ez9jaVD1ck=
-X-Google-Smtp-Source: AGHT+IHtmYPwBRwzhlRVjfyHCc9sHZCUVQpmG1us9sILUW81OOhjlK0NGYvuhXXXnTKxFPVadxX9Hg==
-X-Received: by 2002:a05:651c:1416:b0:2d8:cea3:85e7 with SMTP id u22-20020a05651c141600b002d8cea385e7mr826281lje.12.1712847179572;
-        Thu, 11 Apr 2024 07:52:59 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id t5-20020a2e9545000000b002d865254e49sm233406ljh.16.2024.04.11.07.52.59
+        d=1e100.net; s=20230601; t=1712847762; x=1713452562;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+P23aEc6D4AK3QieQ0wss35fFJtf/ttLJisvoFqgu+g=;
+        b=Zhl58stJXNZlKZta8kBDyrXm3Xv++TeBj6qkzLxV765P21wSlCo7t5GyRp85ynUkaz
+         XgWEmBMeNowY5iZDczE0adWtx85WjwEkqs713d5CQAbyod6lrAXvAvgNs/dyCzepQcSQ
+         xcGGNv04726XfyJoQO1zDq3HZDSSENjY44UONeb8LAztJVaHqwvLbeYRfHKl7yyJADHb
+         2J+GO04i/2bOR+KgYkY849IgUFe7RtNF0SgH9xFZyjFk/EnayCjEsuclr7MGv1t8qS3d
+         w2IWA6F5ecLmd9ZNXes5NpjmXBipSBTQSKcihSibopQTHH3WmqsTPUUi0819AgCIlJI3
+         3Wcg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnSyZmsSwpe6+ovSdqHyuU6hceVt/93kTiQtX8KLMK7ClPR3FcAXhwqtbCv6l/hSWU+0a8AmJExRGYyDv/FSEEWHbtyJ7OXton5g==
+X-Gm-Message-State: AOJu0YyJt0jPZkgMXDxUE9CtNYWJN7t2RHCW94PNqxYRV52Axtidzu9w
+	rDlVeI77aHXbcaTrV+Eo9ffeB2HzLdglozQH85Z1NWFQjay3qD1RYenhJc57+AI=
+X-Google-Smtp-Source: AGHT+IGpo6GeSO3qvzPad2RXF4wEMof+Qy/1jy29kQFwn4tlvG5SFE0oakht0ocIv1pl2Hh6oQQIKQ==
+X-Received: by 2002:a50:d605:0:b0:56d:fc9f:cca0 with SMTP id x5-20020a50d605000000b0056dfc9fcca0mr18004edi.41.1712847762590;
+        Thu, 11 Apr 2024 08:02:42 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id ds2-20020a0564021cc200b0056febfc5395sm497978edb.58.2024.04.11.08.02.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 07:52:59 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-516d264d0e4so997522e87.0;
-        Thu, 11 Apr 2024 07:52:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVmJDqE8L/XUA8FP6Ny0/bic1vVecCTT8ffmr3LDR4EeeIAUfe+zFp7FoiACSXF63aZDDh95DiKb7FyvI2QwZTQ2jYeoorJ/SxtWSsWiFMhEKloglGTFaTfQBVYx5k5Cpdw43eIcIcQXlkV6zoFyS1RakSmw/OuclwLQdSKiEg98WPQ4K7Yc6rTAvFa
-X-Received: by 2002:a05:6512:33d2:b0:516:ac69:3bf5 with SMTP id
- d18-20020a05651233d200b00516ac693bf5mr1161921lfg.0.1712847179026; Thu, 11 Apr
- 2024 07:52:59 -0700 (PDT)
+        Thu, 11 Apr 2024 08:02:42 -0700 (PDT)
+Message-ID: <8c5ba2cc-b3c1-44df-99f2-a9146e8685f7@linaro.org>
+Date: Thu, 11 Apr 2024 17:02:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240226192530.141945-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240226192530.141945-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 11 Apr 2024 16:52:44 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUwwV85e02q+WqMSQ28zeVjLAjqNOHqjiDpX1swTg2c9Q@mail.gmail.com>
-Message-ID: <CAMuHMdUwwV85e02q+WqMSQ28zeVjLAjqNOHqjiDpX1swTg2c9Q@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: pinctrl-rzg2l: Remove extra space in
- function parameter
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/11] dt-bindings: clock: mobileye,eyeq5-clk: add EyeQ6L
+ and EyeQ6H
+To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org,
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ Gregory CLEMENT <gregory.clement@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
+ <20240410-mbly-olb-v1-2-335e496d7be3@bootlin.com>
+ <29ece6c8-ddf4-4dcd-b5b4-1cad8bc858d3@linaro.org>
+ <D0HCAV6APTSD.WKGPESJ29D8A@bootlin.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <D0HCAV6APTSD.WKGPESJ29D8A@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 26, 2024 at 8:25=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Remove unnecessary space in rzg2l_pinctrl_pm_setup_pfc() function
-> parameter.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 11/04/2024 15:49, Théo Lebrun wrote:
+>>> +    then:
+>>> +      properties:
+>>> +        reg:
+>>> +          minItems: 2
+>>> +          maxItems: 2
+>>> +        reg-names:
+>>> +          minItems: 2
+>>> +          maxItems: 2
+>>
+>> So any name is now valid? Like "yellow-pony"?
+> 
+> I do not understand what implies this. Below "items: enum: [...]"
+> ensures only two allowed values. dtbs_check agrees:
+> 
+> ⟩ git diff
+> diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+>            b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+> index 8d4f65ec912d..5031eb8b4270 100644
+> --- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+> +++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+> @@ -126,7 +126,7 @@ reset: reset-controller@e00000 {
+>                         clocks: clock-controller@e0002c {
+>                                 compatible = "mobileye,eyeq5-clk";
+>                                 reg = <0x02c 0x50>, <0x11c 0x04>;
+> -                               reg-names = "plls", "ospi";
+> +                               reg-names = "plls", "yellow-pony";
+>                                 #clock-cells = <1>;
+>                                 clocks = <&xtal>;
+>                                 clock-names = "ref";
+> 
+> ⟩ make dtbs_check DT_SCHEMA_FILES=mobileye DT_CHECKER_FLAGS=-m
+>   UPD     include/config/kernel.release
+>   DTC_CHK arch/mips/boot/dts/mobileye/eyeq5-epm5.dtb
+> arch/mips/boot/dts/mobileye/eyeq5-epm5.dtb: system-controller@e00000:
+>   clock-controller@e0002c:reg-names:1:
+>   'yellow-pony' is not one of ['plls', 'ospi']
+>   from schema $id:
+>     http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.10.
+Ah, so you defined the items but made them an random order? No, please
+keep same syntax which is what we always recommend anyway:
 
-Gr{oetje,eeting}s,
+https://elixir.bootlin.com/linux/v6.8/source/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml#L132
 
-                        Geert
+...
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+>>> +
+>>> +  # Some compatibles provide a single clock; they do not take a clock cell.
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          enum:
+>>> +            - mobileye,eyeq6h-central-clk
+>>> +            - mobileye,eyeq6h-west-clk
+>>> +            - mobileye,eyeq6h-east-clk
+>>> +            - mobileye,eyeq6h-ddr0-clk
+>>> +            - mobileye,eyeq6h-ddr1-clk
+>>> +    then:
+>>> +      properties:
+>>> +        "#clock-cells":
+>>> +          const: 0
+>>
+>> Wait, so you define device-per-clock? That's a terrible idea. We also
+>> discussed it many times and it was rejected many times.
+>>
+>> You have one device, not 5.
+> 
+> Each region must be a syscon to make its various registers accessible to
+> drivers that'll need it. Following that, I have a hard time seeing what
+> would be the DT structure of 7 OLB system-controllers but a single
+> clock node?
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+I assumed all these are in one syscon. Lack of DTS (example is quite
+limited, which is expected) does not help. Please link full DTS so we
+can see what you want to achieve.
+
+Best regards,
+Krzysztof
+
 
