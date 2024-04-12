@@ -1,103 +1,113 @@
-Return-Path: <linux-gpio+bounces-5411-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5432-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 393458A2CD2
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 12:49:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE9118A318D
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 16:52:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD9111F22C4A
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 10:49:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 152D11C2114A
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 14:52:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDBEC535BF;
-	Fri, 12 Apr 2024 10:49:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D041145B35;
+	Fri, 12 Apr 2024 14:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PXAJs4g5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCF443AC0
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Apr 2024 10:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DB0145333;
+	Fri, 12 Apr 2024 14:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712918947; cv=none; b=KgMjufAepI12WTvQiloCuEfS8aS2lvb9GWG5oPFtHySwEijOErAfbPo4kCozik0SvKAb+aIWEYyUOJuj1zASB63OxzJS9kqa/ZqnKrsP3uEK9G7JeyhgodehfC1sysidOsU/PL0K7ATzAPm4kb92Pd1GaJ5M769UO4p7GkSgqYE=
+	t=1712933572; cv=none; b=HO8JDTJZac0eU5OdyGs2XBy28cB9pzgHDPYM/60b0HEm0999nj9zCzR12ZCUBSfsN+bvKpQqhVYvxOE/sgOrupqcsCeqxZvQ/zjdJ+5rJ1Jfh/8AXJ5YmDII1aDRdlnwWPeOcW4pqo4OTvYGzSwBJJ6r5Xv/Vo94gdI+KE82wYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712918947; c=relaxed/simple;
-	bh=c7uGBSgj4i54t4cuUVmXTwG47NlFc+8aGQoUG+2Uv9Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MtU7qAwyMccYhzha6GXEdBYKGS1QooIgitV4ZKao9kDODqjtG7Xb58TD0l+/ImzMnKTDvoxjy8ylD/whuyC7M8OpX5bXojG78D9B/rmCIERvbFPFi7dmwhB+4PYhJ6gW0JmljFsNmitIVblJhDk/YNNM3OEG6Ccaed0vf3Dds20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
-	by andre.telenet-ops.be with bizsmtp
-	id AAox2C00G0SSLxL01AoxX9; Fri, 12 Apr 2024 12:48:57 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rvESF-00GpBe-KB;
-	Fri, 12 Apr 2024 12:48:56 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rvDjV-004eRm-Vf;
-	Fri, 12 Apr 2024 12:02:10 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: renesas: Fixes for v6.9
-Date: Fri, 12 Apr 2024 12:02:07 +0200
-Message-Id: <cover.1712915891.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1712933572; c=relaxed/simple;
+	bh=3VJO+40pwSkL8WEP5XEs7367DXnCHzRW9AIbe65tr7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h1ixzWl+R1yCRCu+dSqbLikH2KzgyrgVoftv+40dCgeodPe8SRDdKeafVr7xfeXpJt27Kx97nlj7sXb4bFSEn/hbh52hCAoPVMuTn/sOJYO0BiQunWGtq/sPZc/xGqyJe/TgMnuKYQNiMkKNu7jBq/y2ybS6lR4WuNOZxCihp+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PXAJs4g5; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712933571; x=1744469571;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3VJO+40pwSkL8WEP5XEs7367DXnCHzRW9AIbe65tr7w=;
+  b=PXAJs4g5wg3ErC1btReuQ0iiYUy8BKv8nVcclBwEa+cM9Un6mH4WcYAe
+   AFYgML7ccsQ2l+QtWUP97joyNtmOWHPsUsM/JP5YU9EIsBCTPDt8HzF+8
+   5ng6j6Ld0NeviflAFfc74eLzX1fP4DDESayIatu4IV/9gQdGD4+kBRUpc
+   eLT0iEp5cAeu3uDms74G0cMVOB92eWBfkBDX41qmpDtKLLtcyLIZzIGKa
+   HToSXqvb5MYCYKo18wb5YUfn/kLDPA/JBLEQkGck+6BnHISAaU0utNl6g
+   LCSs7IMsBDY5SQlSgDm4RH17WBtSJaFVJ/VxYHSSVTjkzOV3zpb+3fHSk
+   g==;
+X-CSE-ConnectionGUID: 7gGmLBNDSYCUN8qqGendhg==
+X-CSE-MsgGUID: 0E1ZN7QZRTSIaYuVw6rNUA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8497359"
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="8497359"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 07:52:50 -0700
+X-CSE-ConnectionGUID: UR2HQIB/T9aOUxFJHHipNw==
+X-CSE-MsgGUID: IbdOgvKoQS2wVBiMBfp5dQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="25906271"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa004.fm.intel.com with ESMTP; 12 Apr 2024 07:52:46 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id CCE371B02; Fri, 12 Apr 2024 13:19:44 +0300 (EEST)
+Date: Fri, 12 Apr 2024 13:19:44 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	David Thompson <davthompson@nvidia.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Patrick Rudolph <patrick.rudolph@9elements.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, netdev@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Use con_id in
+ acpi_dev_gpio_irq_get_by()
+Message-ID: <20240412101944.GE112498@black.fi.intel.com>
+References: <20240411172540.4122581-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240411172540.4122581-2-andriy.shevchenko@linux.intel.com>
 
-	Hi Linus,
+On Thu, Apr 11, 2024 at 08:22:28PM +0300, Andy Shevchenko wrote:
+> Use con_id instead of property in the acpi_dev_gpio_irq_get_by().
+> It will be aligned with other GPIO library functions.
+> 
+> Assumed to go via my GPIO ACPI library tree follwoed by GPIO subsystem.
+> 
+> Andy Shevchenko (4):
+>   gpiolib: acpi: Extract __acpi_find_gpio() helper
+>   gpiolib: acpi: Simplify error handling in __acpi_find_gpio()
+>   gpiolib: acpi: Move acpi_can_fallback_to_crs() out of
+>     __acpi_find_gpio()
+>   gpiolib: acpi: Pass con_id instead of property into
+>     acpi_dev_gpio_irq_get_by()
+> 
+>  drivers/gpio/gpio-pca953x.c                   |  2 +-
+>  drivers/gpio/gpiolib-acpi.c                   | 52 +++++++++++--------
 
-The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+For the gpiolib-acpi.c parts,
 
-  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-fixes-for-v6.9-tag1
-
-for you to fetch changes up to aa43c15a790cf083a6e6a7c531cffd27a5e1fd4f:
-
-  pinctrl: renesas: rzg2l: Execute atomically the interrupt configuration (2024-03-26 09:42:37 +0100)
-
-----------------------------------------------------------------
-pinctrl: renesas: Fixes for v6.9
-
-  - Fix a dtbs_check warning on RZ/G3S,
-  - Fix a lockdep warning on RZ/G2L.
-
-Thanks for pulling!
-
-----------------------------------------------------------------
-Claudiu Beznea (1):
-      pinctrl: renesas: rzg2l: Execute atomically the interrupt configuration
-
-Lad Prabhakar (1):
-      dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Allow 'input' and 'output-enable' properties
-
- .../devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml    |  2 ++
- drivers/pinctrl/renesas/pinctrl-rzg2l.c                       | 11 ++++++++++-
- 2 files changed, 12 insertions(+), 1 deletion(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
