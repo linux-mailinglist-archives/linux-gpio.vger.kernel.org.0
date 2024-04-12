@@ -1,113 +1,99 @@
-Return-Path: <linux-gpio+bounces-5432-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5408-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE9118A318D
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 16:52:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CE918A2C52
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 12:28:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 152D11C2114A
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 14:52:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A15461F23678
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 10:28:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D041145B35;
-	Fri, 12 Apr 2024 14:52:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 455AD537F0;
+	Fri, 12 Apr 2024 10:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PXAJs4g5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mpbUm07S"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DB0145333;
-	Fri, 12 Apr 2024 14:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AEB548E0
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Apr 2024 10:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712933572; cv=none; b=HO8JDTJZac0eU5OdyGs2XBy28cB9pzgHDPYM/60b0HEm0999nj9zCzR12ZCUBSfsN+bvKpQqhVYvxOE/sgOrupqcsCeqxZvQ/zjdJ+5rJ1Jfh/8AXJ5YmDII1aDRdlnwWPeOcW4pqo4OTvYGzSwBJJ6r5Xv/Vo94gdI+KE82wYA=
+	t=1712917713; cv=none; b=OiiDMwEY4A4kk4gTMplhXVr6g+tkx4jzF4RQ/IID4gQ6yKGFe7OLYkcNjWVhABctsvK4QhpYgHWSXmtOZzKNU6RBX2/Nz3C0eeyX83lZGWoH+hBPLCJpmIw6ouq8dqDoJFzO/nHMBM+xP3kRv1BmpUh5dLk+a45s2vIzl6T1ync=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712933572; c=relaxed/simple;
-	bh=3VJO+40pwSkL8WEP5XEs7367DXnCHzRW9AIbe65tr7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h1ixzWl+R1yCRCu+dSqbLikH2KzgyrgVoftv+40dCgeodPe8SRDdKeafVr7xfeXpJt27Kx97nlj7sXb4bFSEn/hbh52hCAoPVMuTn/sOJYO0BiQunWGtq/sPZc/xGqyJe/TgMnuKYQNiMkKNu7jBq/y2ybS6lR4WuNOZxCihp+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PXAJs4g5; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712933571; x=1744469571;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3VJO+40pwSkL8WEP5XEs7367DXnCHzRW9AIbe65tr7w=;
-  b=PXAJs4g5wg3ErC1btReuQ0iiYUy8BKv8nVcclBwEa+cM9Un6mH4WcYAe
-   AFYgML7ccsQ2l+QtWUP97joyNtmOWHPsUsM/JP5YU9EIsBCTPDt8HzF+8
-   5ng6j6Ld0NeviflAFfc74eLzX1fP4DDESayIatu4IV/9gQdGD4+kBRUpc
-   eLT0iEp5cAeu3uDms74G0cMVOB92eWBfkBDX41qmpDtKLLtcyLIZzIGKa
-   HToSXqvb5MYCYKo18wb5YUfn/kLDPA/JBLEQkGck+6BnHISAaU0utNl6g
-   LCSs7IMsBDY5SQlSgDm4RH17WBtSJaFVJ/VxYHSSVTjkzOV3zpb+3fHSk
-   g==;
-X-CSE-ConnectionGUID: 7gGmLBNDSYCUN8qqGendhg==
-X-CSE-MsgGUID: 0E1ZN7QZRTSIaYuVw6rNUA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8497359"
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="8497359"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 07:52:50 -0700
-X-CSE-ConnectionGUID: UR2HQIB/T9aOUxFJHHipNw==
-X-CSE-MsgGUID: IbdOgvKoQS2wVBiMBfp5dQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="25906271"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa004.fm.intel.com with ESMTP; 12 Apr 2024 07:52:46 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id CCE371B02; Fri, 12 Apr 2024 13:19:44 +0300 (EEST)
-Date: Fri, 12 Apr 2024 13:19:44 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	David Thompson <davthompson@nvidia.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, netdev@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Use con_id in
- acpi_dev_gpio_irq_get_by()
-Message-ID: <20240412101944.GE112498@black.fi.intel.com>
-References: <20240411172540.4122581-2-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1712917713; c=relaxed/simple;
+	bh=eLTgpMLLk88+QMporuNHqvJUIoJTUhWc0odbIhAvwcM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fSqL0l0rF0tHN3P9T9mWs6+qPWlErWi5hOwKmiwaMO5Nf/VBuchvumpwfsIGDOvlNTog552+lNeyCwzP4b1WUjGoQVTolcMjlO2J0zcx1s9MJw7i6OB3DgS4EYH55lA6iOh3NhOaiC/yvE+P8plWVlhM/tQrWXcrrDZHS9R+eRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mpbUm07S; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dcbcea9c261so815623276.3
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Apr 2024 03:28:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712917710; x=1713522510; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eLTgpMLLk88+QMporuNHqvJUIoJTUhWc0odbIhAvwcM=;
+        b=mpbUm07SJGdXs0meD6z1g0TcjWv25RkUY0vZF3+25LLs9TkTTexu8WxHlcipO2rv0U
+         qDsyGYsr5s9Nq7NRa0fyobD3Ih9JSeoca50gqLkk4TgSF1joEltrjz519AOkmvdrRjwd
+         dNkNWCPxBGbNZ/Y10WbQBparW3t4NSsOmX66fZp8+66Degy8AzWW03TmH7+6v7VBWnHh
+         ma34sN7LEJ9jyzGX0YasA7Y3WNhjKeBEXQaD3FpydVwhOFHUS0BXOMCu5aNgVBuAFyZ9
+         E1weOagpZQ0cg0hN3k34LBaxOFNEU671W0A/eVkOqmcbNds3TPgqZBD+/feKLfijtU+j
+         eu9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712917710; x=1713522510;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eLTgpMLLk88+QMporuNHqvJUIoJTUhWc0odbIhAvwcM=;
+        b=e1xQX3ExnMd/ejqNY1NBLs5dRtouzsTLaSdSBY0Vllw8Pk2PzHcd0saD1bLEUvtSUg
+         uwUbkAI9iD8KSeoX+7GEbLbewqB97XCtU0iQi8wS64EvxHhw5p1VGgz+a4EA8MpgT3CA
+         hCbJc4CUlJ7KadW3d4CENchYbuETjD2zlA0PvssJ37DxBCUF6I9xrwayyWI+7qEL1HVw
+         gzn3acx2kLrfTBvfV9597rTNIoA5Hygm3uPyHJ+CwPztyBDA10oRuMCg7OGCNNr1G0QD
+         1cpkRCEwBOfB5lHOLRKzSFb6PkqZkXh+L7IYtOE2YBKzJwR+pgkuyQEAabuZXj9iQ1l+
+         9DHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWikX/le4B42MIZ51x2/w/b1AWfTg5JL8A63cbWdGoxQMYEixBY8eFkn4sdtxw2QxiTEk85ZwKPp63yjoyBQE8m2GXkbSwXqXfe8w==
+X-Gm-Message-State: AOJu0Yw9hN6GPw5Fru5etA9vPx7aS98ZPEh/RptxfukYd/NLVujtWHxv
+	CW8VmN885q6TlLGec2LIMCmT3grKPbjIVOix5q5LMKff1/lon2LUowCZAr/Nw1KTRc4nOUsVU7E
+	1VHL7R8cxDWl3tFOUEgBfku+WNbSVgy47W5Zylg==
+X-Google-Smtp-Source: AGHT+IHPZw4JI1weB5+Ueqw+or5cIs3gBZYlkfLh4xNn2Aly++Ufb8+7mPl2iiIIx1tpNTRhIXA81+uSZdB4VQ/U8mM=
+X-Received: by 2002:a25:ba45:0:b0:dd0:1276:c2d1 with SMTP id
+ z5-20020a25ba45000000b00dd01276c2d1mr1826758ybj.35.1712917710171; Fri, 12 Apr
+ 2024 03:28:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240411172540.4122581-2-andriy.shevchenko@linux.intel.com>
+References: <20240410064156.1199493-1-andy.shevchenko@gmail.com>
+In-Reply-To: <20240410064156.1199493-1-andy.shevchenko@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 12 Apr 2024 12:28:18 +0200
+Message-ID: <CACRpkda-JN0TA3A19hWzB=Bx6pcyLmTDxvqOwo8eveJFGcwrOA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: pcie-idio-24: Use -ENOTSUPP consistently
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: William Breathitt Gray <william.gray@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, William Breathitt Gray <wbg@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 11, 2024 at 08:22:28PM +0300, Andy Shevchenko wrote:
-> Use con_id instead of property in the acpi_dev_gpio_irq_get_by().
-> It will be aligned with other GPIO library functions.
-> 
-> Assumed to go via my GPIO ACPI library tree follwoed by GPIO subsystem.
-> 
-> Andy Shevchenko (4):
->   gpiolib: acpi: Extract __acpi_find_gpio() helper
->   gpiolib: acpi: Simplify error handling in __acpi_find_gpio()
->   gpiolib: acpi: Move acpi_can_fallback_to_crs() out of
->     __acpi_find_gpio()
->   gpiolib: acpi: Pass con_id instead of property into
->     acpi_dev_gpio_irq_get_by()
-> 
->  drivers/gpio/gpio-pca953x.c                   |  2 +-
->  drivers/gpio/gpiolib-acpi.c                   | 52 +++++++++++--------
+On Wed, Apr 10, 2024 at 8:41=E2=80=AFAM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 
-For the gpiolib-acpi.c parts,
+> The GPIO library expects the drivers to return -ENOTSUPP in some cases
+> and not using analogue POSIX code. Make the driver to follow this.
+>
+> Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
 
