@@ -1,101 +1,146 @@
-Return-Path: <linux-gpio+bounces-5405-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5406-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F9488A296A
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 10:35:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 728CA8A2A33
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 11:04:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 76D3D1C218B6
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 08:35:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24F311F22C53
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 09:04:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDFD93218B;
-	Fri, 12 Apr 2024 08:35:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 796B658210;
+	Fri, 12 Apr 2024 08:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l3XjiX9/"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RqOyfTLr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC0E205E22
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Apr 2024 08:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2033A58AAD
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Apr 2024 08:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712910951; cv=none; b=YV/lx1+v4p4xQdg6a/q0EjJUn9Xp1sJFAGjFGGeP7H6YphqnXZUykAMxVvtqVOm5jOc82r/aOFdIlg4ioyNl8ziV/YPKixcfuoH1EgRF2V/waMyOx1bInvyMrJEWXEXMeWA1gt2yHcEFVc8apWMjyL81396P44tEKN2Wq+qCrDQ=
+	t=1712911969; cv=none; b=gMh7Mwq7Bil7KaprkU4DZf+pOi8MLhnQBo/gjHUxubU/Oq+w2A4rPbqI0VDvsHMl6MvF5tSR5SbYgH2vTZwmEu9joPExt1v5oQj0QL9bcSzgwYxjERxPFPCruqS3/jhA4tvv3O+VigtxhUXDIEbZ50tQkHwKesxs7bQ/RJ5PFcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712910951; c=relaxed/simple;
-	bh=NXQ75a3FjwYxIteev28RRS+HqX7YmAFu1v3daT9bg2w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=De0uPrEUPPhekZitKqXI0Cz72uiyyrnsmXCXQyEj83troh8ejdsjPHyaUrBqSo2suQcTJOzQC4w1tsJd9cKOglqX6GEn4rXbgzcAd93xwtUIhnJHwMhMD3gm9NFV8YrVZ9OLRG4txaMRNcLGJIbgXqa05uCn2jGd+1rS5h8pdOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l3XjiX9/; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dcc6fc978ddso520819276.0
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Apr 2024 01:35:50 -0700 (PDT)
+	s=arc-20240116; t=1712911969; c=relaxed/simple;
+	bh=/IeU9ssGSLw9Ct4KuGTCKCYgaCVVK3WWsbfp9sM9Zro=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=oW0huq32CtIaJNrVWDZACebvI9EzExkeK917UBM/wS0Uatp/MIxKkPQal1TRdoWAfyXKRv5oA/whT3faaYxDmPhLyh3pNAhPcTcRCQchLh1WZhwqKZRfF8bd2gs6pCGD5v7omZvtb3iD7CXWBIiYudcxsTeTm6E112MNEH90b5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RqOyfTLr; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-343e096965bso365516f8f.3
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Apr 2024 01:52:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712910949; x=1713515749; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712911965; x=1713516765; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NXQ75a3FjwYxIteev28RRS+HqX7YmAFu1v3daT9bg2w=;
-        b=l3XjiX9/TaO9E4fxMD7ZXlofpjM6zFi3WbHpp1dtZGu0DM1j13YQaolnK8Xq9rMuyW
-         vfwCyrIDEdvjQBifVmF6lQgQEItp/xeg2B0JjyUBfRJAdQclM1drxMwqt3Rn+ufiDGPH
-         ESmflo+aTfTMiP5w8V4oEiWyYzLDd1Hu94O6BzlPbVtTCkrgpiLD9/nRQvOTHCf6O8H4
-         otqPsNMzXljPqEisDAbgiw4PwfIBDr2iK4SE+3BPN7aHEQPPZWQmIh0RV7RCc85/CnwH
-         HTGrW6iTG/aIDpfZQ/RMCmXEFZJ0dtJ4v5qvVFv5YREiR13e+uvGuUDk2oFp0wmSd4lG
-         lWtw==
+        bh=yqg7/6oBVG7FC2A7yaPi7N20RXmvrxHvn6/HhvcSh6c=;
+        b=RqOyfTLrl4I0+Yl+iJg11oM+9a6lv6BgqUJ9wtodMOtWliCNM8w5JyeTGgqOJwBM1z
+         ftB6q+27wedCE+AIuSxFU3hbRhygw5fPjxpJE5ag9XRPPC7EyLnl1n6Pm+iPQ1k8LIZp
+         Xdy4CJigXNPFtOzOAg8ULhjbKBZv0GGLnERBlGMtwrDxwIbrkYv9wwKz5rsQatoO6YQ3
+         7mXR36iTAjgj5hk4SGcd2Z1eeZr1gEZZA14+z5DZNCbWYi6wb7XW0+mdY7W2sNpa8JxO
+         RajpZ1CxNxn5qCsrOxVol+8oU4aSwDNHBIucgM/oelKJGZgoGmRm9r0mLIgM0SGD+RYw
+         WwDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712910949; x=1713515749;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NXQ75a3FjwYxIteev28RRS+HqX7YmAFu1v3daT9bg2w=;
-        b=P9Jj9EgAUFWM8JgA8YPJ4oX8rZKsCPOzJDbuOqYBAY9uwjECb3NRbhMFOI/9q5y9KA
-         CF05e/4TRx+vBjJ/BRCfDeu5Nx+r7rc/bWfqXktF/QTxAyKtIwlx6l/VCJZOJvctA0Ou
-         UrUTFWA12LhGn6qI/QG++EBfL5gAJtgH9on/0uhpiPvWsU4GIp5QFt2FP6ydXlLz71uS
-         wGiGZ6GsOvw1OQ8LJlENGersZpGNOoEKnO6M+J8qidmvkguF80rlBx4QMCTqrb3b8ImS
-         NTaHgxMyEy4mpxXVXZPA3x4BD7y3Fy9k0e59ezEfAsbNbpll/jNTPaGj6DwgNE5FFeEJ
-         EdJA==
-X-Gm-Message-State: AOJu0YwldEEiw7NbQaHh/cLym1q/r5egF0z/1Ru14S0uGdrsbk8dHBXc
-	qztmT52vgiWCV5om4BJil/I09RfKfL4PXbOkXKlC7G/qGcOs5cZpoEFueNBgifS9wuWTg/nsGNH
-	YWn+8rey+AkbglH2Y83x0pFyAl7Vem4BAHz6KlQ==
-X-Google-Smtp-Source: AGHT+IEQMDPCClORhHrFh1S7GZ4UFVkhjRVOKCR8Ltk1OQIkxte25m2JtIrAmfkvoiUWEk25cgZKOj2DzKEx6IfW534=
-X-Received: by 2002:a25:5557:0:b0:dc6:d1d7:c762 with SMTP id
- j84-20020a255557000000b00dc6d1d7c762mr3907022ybb.11.1712910949423; Fri, 12
- Apr 2024 01:35:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712911965; x=1713516765;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yqg7/6oBVG7FC2A7yaPi7N20RXmvrxHvn6/HhvcSh6c=;
+        b=bQR18TyT0tDz4TGEGvx0k1oKFNCbp4D2STppWTXm1EMPO1m9a6LXkXKvMmr25Pzo51
+         HtNtywEf/R1OmMf0/O6NVXcOYDAtzGqgE9QQioIn2lP/QMn9XgarIIcm2YPcJwJeyhEe
+         ezfJZJ20YpiJ0gbQqQ2lbdt+tOEqpB/a9KE3qDnBgLzAiYu3vxGKOcn2eNvhMk6tX4hu
+         dhlw6poBbuGEJT7/cdT8pAq2ZLAFQgKbK/CTWrDk9KfzIyZtbFmNFmvFowTH4mFDM3fO
+         MEk21vke8rYypHS8EtLpJne43VpJjw5wsLGb391DuvjbOmrB/jedDnvbXn2UAoNvFd6b
+         8KTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUT/Mhu2vGMLOLDCRg+pMAh2YSJ+uqkH08u65+CNtGpZBj3aqvsn7X6R02GCnMmtiGLMXiLSqOMuivKWW6GWg82v9NqjkXd6GXadQ==
+X-Gm-Message-State: AOJu0Yzl5rvRg/LtcUGWKU65XhneOQngAGCaXw11GcXZdo2Cas+v5uJa
+	XENlI85H5FblQT3y0HoxKQlAucRnCxG+2G5sEKquoNJFmtl4S7XUQq7VSzAP5QE=
+X-Google-Smtp-Source: AGHT+IGaJEFW2OydWrtGlJEvOj+LQ9miUlniEJ47ZdatRM1Zm7j9aYX06RboRzFi8hrNNAXWEXWFlA==
+X-Received: by 2002:a5d:5982:0:b0:346:ba70:82f4 with SMTP id n2-20020a5d5982000000b00346ba7082f4mr2066199wri.46.1712911965458;
+        Fri, 12 Apr 2024 01:52:45 -0700 (PDT)
+Received: from localhost ([2a01:e0a:448:76e0:776e:989f:b50c:7cf6])
+        by smtp.gmail.com with ESMTPSA id b10-20020a056000054a00b00341b7d5054bsm3783180wrf.72.2024.04.12.01.52.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Apr 2024 01:52:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240410072102.1200869-1-andy.shevchenko@gmail.com>
-In-Reply-To: <20240410072102.1200869-1-andy.shevchenko@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 12 Apr 2024 10:35:38 +0200
-Message-ID: <CACRpkdbOhxp1z15LE2FS36+zzhoxrqBMELt8PppnK0NXRyeqFA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: sch: Switch to memory mapped IO accessors
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, William Breathitt Gray <wbg@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 12 Apr 2024 10:52:43 +0200
+Message-Id: <D0I0M4T4O9G1.UUESU247CE42@baylibre.com>
+Cc: <m.nirmaladevi@ltts.com>, <lee@kernel.org>, <robh+dt@kernel.org>,
+ <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+ <jpanis@baylibre.com>, <devicetree@vger.kernel.org>, <arnd@arndb.de>,
+ <gregkh@linuxfoundation.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+ <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <nm@ti.com>, <vigneshr@ti.com>,
+ <kristo@kernel.org>
+Subject: Re: [PATCH v6 10/11] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC
+ pinctrl and GPIO
+From: "Esteban Blanc" <eblanc@baylibre.com>
+To: "Bhargav Raviprakash" <bhargav.r@ltts.com>,
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20240408124047.191895-1-bhargav.r@ltts.com>
+ <20240408124047.191895-11-bhargav.r@ltts.com>
+In-Reply-To: <20240408124047.191895-11-bhargav.r@ltts.com>
 
-On Wed, Apr 10, 2024 at 9:21=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-
-> Convert driver to use memory mapped IO accessors.
+On Mon Apr 8, 2024 at 2:40 PM CEST, Bhargav Raviprakash wrote:
+> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
 >
-> Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they have
+> significant functional overlap.
+> TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
+> dedicated device functions.
+>
+> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/pinctrl/pinctrl-tps6594.c | 275 +++++++++++++++++++++++++-----
+>  1 file changed, 228 insertions(+), 47 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-=
+tps6594.c
+> index 66985e54b..f3d1c1518 100644
+> --- a/drivers/pinctrl/pinctrl-tps6594.c
+> +++ b/drivers/pinctrl/pinctrl-tps6594.c
+> @@ -338,8 +506,20 @@ static int tps6594_pinctrl_probe(struct platform_dev=
+ice *pdev)
+>  	config.parent =3D tps->dev;
+>  	config.regmap =3D tps->regmap;
+> -	config.ngpio =3D TPS6594_PINCTRL_PINS_NB;
+> -	config.ngpio_per_reg =3D 8;
+> +	switch (tps->chip_id) {
+> +	case TPS65224:
+> +		config.ngpio =3D ARRAY_SIZE(tps65224_gpio_func_group_names);
+> +		config.ngpio_per_reg =3D TPS65224_NGPIO_PER_REG;
+> +		break;
+> +	case TPS6593:
+> +	case TPS6594:
+> +		config.ngpio =3D ARRAY_SIZE(tps6594_gpio_func_group_names);
+> +		config.ngpio_per_reg =3D TPS6594_NGPIO_PER_REG;
+> +		break;
+> +	default:
+> +		break;
+> +	}
 
-If this is the direction we want to go with port-mapped I/O then
-I'm in.
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Please merge the two switch case.=20
 
-An ACK from William may be in order, he's usually keeping track
-of the port-mapped stuff.
+Other than that I think it's ok.
 
-Yours,
-Linus Walleij
+Best regards,
+
+--=20
+Esteban "Skallwar" Blanc
+BayLibre
 
