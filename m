@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-5396-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5397-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CE598A2402
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 04:57:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E71A68A25A4
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 07:20:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2A407B21621
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 02:57:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 75B60B21CA3
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Apr 2024 05:19:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C398125BA;
-	Fri, 12 Apr 2024 02:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11FED1A28C;
+	Fri, 12 Apr 2024 05:19:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QBXPtoxV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J0eg+fB9"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB12A2581;
-	Fri, 12 Apr 2024 02:57:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57F317BCE;
+	Fri, 12 Apr 2024 05:19:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712890632; cv=none; b=mm5QEvdAxlJq2Gq/vHSSYFsCaAlDdvlWoZoVUt316rVgEwQ1IIZvjfUUfwExHLvaD/nlbSFg5pGWNWaNg7Y2IOTrzeh3i3JNT/Mkc6KRqGL82IFTeaERRh+ay+AxMJjvzsMoXaGfV7SR7WZHtXt9mg9KqmEhnmrTfNv2TeZJn4c=
+	t=1712899191; cv=none; b=uSACbe4/8teJa2BcNgNp/+Rr0kv3oiqm0T4fW4TzsS/o1FX+jOkHIJtoUU4OHZRZhMksTzdWSWbYF7lFILI4KQyHotC42iEg3gWSlTY0X+bR/SsKn+pKSCgKGstKRuqRxaViCrpCJX4K+AziqkUAjc+/DUHof9x6kpfvy7BODW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712890632; c=relaxed/simple;
-	bh=p+4XkXpOxunuKnnWO83NDMUzum9+mHSSGqv0fFD9r7s=;
+	s=arc-20240116; t=1712899191; c=relaxed/simple;
+	bh=JnUwlu3hA8OWMeLa8KCW3yju2ShEzFTZuW+pPMy4qJU=;
 	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=L6JyFkn2NKnr/r1c1ydjG3XVmK4h0FWLV1miMn/3gXcXuBF0R2N3+scHv2ObOAu+HOlYug/HOV9iOrPvEiX4+RGMnjWrVD5F1Atnd3O+qPj2Y0JDmjt9Em8EqImeVTB7MlCutjNGDtT/WHEwETI6SCXibHkeAoj9kLQXp+xNGgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QBXPtoxV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CD58C072AA;
-	Fri, 12 Apr 2024 02:57:11 +0000 (UTC)
+	 Subject:From:Cc:To:Date; b=QD2AMySp98HsoFUKv2W8V/6aVpSEjD+finfvHo5DEfL/X3g7sxuu5vhxX2qA6xIWE4JdqP8z0+dGefnpKxtUHqtqHQboIU6zNamvfkeGONL8QWbjzls2IclmloUB6ffMH7GbnP+UcJQ9FPJrYFO9HhWxnF2UL9zU7ivt/x0oFRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J0eg+fB9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6608AC2BBFC;
+	Fri, 12 Apr 2024 05:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712890631;
-	bh=p+4XkXpOxunuKnnWO83NDMUzum9+mHSSGqv0fFD9r7s=;
+	s=k20201202; t=1712899191;
+	bh=JnUwlu3hA8OWMeLa8KCW3yju2ShEzFTZuW+pPMy4qJU=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=QBXPtoxV+vVyS1Qy7tf9k5jCPndXuhDBFvVab65uRIOAwl3+UUsVjhrMNQUyMB0U9
-	 XWrzecCBpSJSY9I7tZfg98E82DlruZ0nEfe9Ebj6o4hw7cfP8Pe9Q+pT9QLqmUv2MF
-	 Ua41VD2K+WiMR8pTxP61JOap3vM/LcNhERXRRRY+DpxhhBBzpTP9Aeobv0aIDhzjkt
-	 LXu0X0iGFgWDydnmQJB9nuxUQoIkHlJp/C8J7tRJjPzd2atq3+WOyGRtIVQ9deYEYD
-	 OKm6mRknWQLxRiZIP/r2Xv7wFQJOp3b+7oypEKXtTwIzx+piu5r8KAcEpn9MWFdc+x
-	 TQEXkVRPsIM2A==
-Message-ID: <58b23157c088cb4774d579cc8700de85.sboyd@kernel.org>
+	b=J0eg+fB9JaQywMndycZ6ohhjdQC1DvGQG//bGfPBvI17dD7Fh7ivnskva2zGeo78F
+	 g8r6mVScCv0aNZvOmVfY5nyDDruzh/GLJKQwTvKzE8AbrfxxOcgbsbCW+t3t+zxYj7
+	 xhaXcAVZCpKt5viKAByf8mv62xRXoYMcMQKeEIMLHq04iN47t7p4IMXXkbRyMvlEUm
+	 2PweoigGphpnbm30iCN0k7+gBtjMFwofoKKLAi8R+Qy3hdyEupHBtzO+qR7pvgDv+k
+	 DWYbiV4ilGXM3qv2dPtYyiOvf3BI6iDFVZLWZk8x8JPdOJ4rzWSAhqBb14m8qE4oFb
+	 W/F8WDlR+Mhjg==
+Message-ID: <32dec29a9a29ad204930fbf9eefd2b89.sboyd@kernel.org>
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -50,31 +50,60 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <de4c56a8-488d-4cdb-9d6c-e9d6e63b22b9@skole.hr>
-References: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr> <20240402-pxa1908-lkml-v9-5-25a003e83c6f@skole.hr> <3838e4684f98e1ce3818bfb6983844bc.sboyd@kernel.org> <de4c56a8-488d-4cdb-9d6c-e9d6e63b22b9@skole.hr>
-Subject: Re: [PATCH v9 5/9] clk: mmp: Add Marvell PXA1908 clock driver
+In-Reply-To: <D0H7PXOXYNXI.2QM4E0O02FK34@bootlin.com>
+References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com> <20240410-mbly-olb-v1-4-335e496d7be3@bootlin.com> <4ce9f3cea1ecd3777cf3e291cc865210.sboyd@kernel.org> <D0H7PXOXYNXI.2QM4E0O02FK34@bootlin.com>
+Subject: Re: [PATCH 04/11] clk: divider: Introduce CLK_DIVIDER_EVEN_INTEGERS flag
 From: Stephen Boyd <sboyd@kernel.org>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, Duje =?utf-8?q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, Guilherme G. Piccoli <gpiccoli@igalia.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Kees Cook <keescook@chromium.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Lubomir Rintel <lkundrak@v3.sk>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>, Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Date: Thu, 11 Apr 2024 19:57:09 -0700
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+To: Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, =?utf-8?q?Th=C3=A9o?= Lebrun <theo.lebrun@bootlin.com>
+Date: Thu, 11 Apr 2024 22:19:49 -0700
 User-Agent: alot/0.10
 
-Quoting Duje Mihanovi=C4=87 (2024-04-11 03:15:34)
-> On 4/11/2024 10:00 AM, Stephen Boyd wrote:
-> >=20
-> > Is there a reason this file can't be a platform driver?
+Quoting Th=C3=A9o Lebrun (2024-04-11 03:14:09)
+> Hello,
 >=20
-> Not that I know of, I did it like this only because the other in-tree=20
-> MMP clk drivers do so. I guess the initialization should look like any=20
-> of the qcom GCC drivers then?
+> On Thu Apr 11, 2024 at 5:06 AM CEST, Stephen Boyd wrote:
+> > Quoting Th=C3=A9o Lebrun (2024-04-10 10:12:33)
+> > > index 4a537260f655..cb348e502e41 100644
+> > > --- a/include/linux/clk-provider.h
+> > > +++ b/include/linux/clk-provider.h
+> > > @@ -675,13 +675,15 @@ struct clk_div_table {
+> > >   * CLK_DIVIDER_BIG_ENDIAN - By default little endian register access=
+es are used
+> > >   *     for the divider register.  Setting this flag makes the regist=
+er accesses
+> > >   *     big endian.
+> > > + * CLK_DIVIDER_EVEN_INTEGERS - clock divisor is 2, 4, 6, 8, 10, etc.
+> > > + *     Formula is 2 * (value read from hardware + 1).
+> > >   */
+> > >  struct clk_divider {
+> > >         struct clk_hw   hw;
+> > >         void __iomem    *reg;
+> > >         u8              shift;
+> > >         u8              width;
+> > > -       u8              flags;
+> > > +       u16             flags;
+> >
+> > This can stay u8
+>=20
+> It is unclear to me why it can stay u8? __clk_hw_register_divider() puts
+> clk_divider_flags into flags field of struct clk_divider.
+> BIT(8) overflows u8.
 
-Yes.
+Oh, I missed that part.
 
 >=20
-> While at it, do you think the other MMP clk drivers could use a conversio=
-n?
+> >
+> > >         const struct clk_div_table      *table;
+> > >         spinlock_t      *lock;
+> > >  };
+> >
+> > We should add a kunit test.
+>=20
+> Will look into how this works and try something for next revision. I
+> guess you are talking about adding clk_divider tests, not only tests
+> for this flag? I cannot find any existing kunit tests for clk_divider.
 >=20
 
-Sure, go for it. I'm a little wary if the conversion cannot be tested
-though. It doesn't hurt that other drivers haven't been converted.
+Right, there aren't any tests today. Thanks.
 
