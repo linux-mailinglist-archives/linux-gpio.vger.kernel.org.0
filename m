@@ -1,104 +1,118 @@
-Return-Path: <linux-gpio+bounces-5449-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5450-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 074D58A3CA2
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Apr 2024 13:32:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D02CE8A3CE1
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Apr 2024 15:57:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83ADD281BAA
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Apr 2024 11:32:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67A5A281E05
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Apr 2024 13:57:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 451E93F8F7;
-	Sat, 13 Apr 2024 11:32:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 766D144374;
+	Sat, 13 Apr 2024 13:57:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BAA14265;
-	Sat, 13 Apr 2024 11:32:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842DF1DFF4;
+	Sat, 13 Apr 2024 13:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713007958; cv=none; b=Kan3Lj4VOHDxpkKMVitNao/S/5RRm9eMYxK+12BXYnD6NoFgBsAHSMJlUGbD+tAMdvsxkee/BWDn1pldgvobeprg9ZI1S8HbjLmDiM4NBD2AxuwsJmfM8IKvqbmZPadp9hq2t7m2F38yCYOmaT12UmT8rjjGjjHpW47c8f7CR2Y=
+	t=1713016649; cv=none; b=qcui/jdDdyD1+gHUF9EDbCOnG0XWI9cytLOMAvfRnahmyahNp5k8V0WbNzuDlD6eo0iV2QpipOpQaRMIOQWqoCEUamUNTIGOVA0NtL1P35Id0MaRgFdQKFdLKBmpsUMlINHeLaWnrc6fXHzx9S9bjt6qqa+siJ3fd1L6uZK4Rcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713007958; c=relaxed/simple;
-	bh=Z/ckyqGb+pytaMUSxcubIfiijffJM/OYK5XFNgCxCYU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mEgXPAxWZX9N5/UGBkNETk8boqK4/RQKha1WjdbPvmJscrLlM+/W0BM2sp9aug/tshkCmTs/AjhiWzE/PFG52Gt1b40/l4N6lcWKYAVypKsO7xsDh9RFyfot5uuCGSKhRpu3xLzncD1cgJKFttv0YXfbNv0lcQfePjMePZ34J3U=
+	s=arc-20240116; t=1713016649; c=relaxed/simple;
+	bh=qawpc/DTqLcugOlpFIlyHOPojCNwyUlB8c5oN7kOICo=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=loQHW2sIRi8f6MMh83WICXB19R6ydQxRhtRFR3wCbgwjiydnGJ8zgMtrjsyLihxEfCPTONlfTo9R2qvb0c8q4K/xY/PQuIsvAYVAaMVFu/R+ynSyDnO97DsKPM5OSknP1iPdTmQt98NbtuZUfNXm5h9y5ufPe6TCz+dKSY8hWbo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
 Received: from localhost.localdomain (unknown [82.64.135.138])
-	by smtp2-g21.free.fr (Postfix) with ESMTPS id 8D48B2003C1;
-	Sat, 13 Apr 2024 13:32:24 +0200 (CEST)
+	by smtp2-g21.free.fr (Postfix) with ESMTPS id BA8FE2003C8;
+	Sat, 13 Apr 2024 15:57:01 +0200 (CEST)
 Received: by localhost.localdomain (Postfix, from userid 1000)
-	id 35A0D40039; Sat, 13 Apr 2024 13:31:30 +0200 (CEST)
-Date: Sat, 13 Apr 2024 13:31:29 +0200
+	id 5423D40039; Sat, 13 Apr 2024 15:56:08 +0200 (CEST)
+Date: Sat, 13 Apr 2024 15:56:08 +0200
 From: Etienne Buira <etienne.buira@free.fr>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: brgl@bgdev.pl, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][RFC][resend after bogus] gpio-syscon: do not report
- bogus error
-Message-ID: <ZhptEWb7tD5pummq@Z926fQmE5jqhFMgp6>
-Mail-Followup-To: Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <ZhgDCKhcHdwGoJ4Y@Z926fQmE5jqhFMgp6>
- <CACRpkdbTdGajQLSGDkD0cWRG+79tpojYkdyF3t0jD7_WEDtQLw@mail.gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>, Johan Jonker <jbx6244@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	shironeko <shironeko@tesaguri.club>,
+	Etienne Buira <etienne.buira@free.fr>,
+	Jonas Karlman <jonas@kwiboo.se>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Avoid error message on rk3328 use
+Message-ID: <ZhqO-DEmh-6TeHrt@Z926fQmE5jqhFMgp6>
+Mail-Followup-To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>, Johan Jonker <jbx6244@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	shironeko <shironeko@tesaguri.club>,
+	Etienne Buira <etienne.buira@free.fr>,
+	Jonas Karlman <jonas@kwiboo.se>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbTdGajQLSGDkD0cWRG+79tpojYkdyF3t0jD7_WEDtQLw@mail.gmail.com>
 
-On Fri, Apr 12, 2024 at 12:44:34PM +0200, Linus Walleij wrote:
-> Hi Etienne,
-> 
-> thanks for your patch!
-> 
-> On Thu, Apr 11, 2024 at 5:35 PM Etienne Buira <etienne.buira@free.fr> wrote:
-> 
-> > Do not call dev_err when gpio,syscon-dev is not set albeit unneeded.
-> > gpio-syscon is used with rk3328 chip, but this iomem region is
-> > documented in
-> > Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml and
-> > does not look like to require gpio,syscon-dev setting.
-> >
-> > Signed-off-by: Etienne Buira <etienne.buira@free.fr>
-> > X-Prefers: kind explanations over rotten tomatoes
-../..
-> So indeed the parent is a sycon, and syscon_node_to_regmap(np->parent) will
-> be used to populate priv->syscon on RK3328.
-../..
-> if (!has_parent_syscon) {
-> (...)
-> 
-> What do you think about this?
-../..
+rockchip,rk3328-grf-gpio is handled as syscon, but syscon mandates
+presence of gpio,syscon-dev node (or it will call dev_err() when probed).
+Correct rk3328.dtsi and related documentation to follow syscon's
+expectations.
 
-Hi Linus,
+Signed-off-by: Etienne Buira <etienne.buira@free.fr>
+---
+ .../devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml      | 2 ++
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi                        | 1 +
+ 2 files changed, 3 insertions(+)
 
-Thanks for your review.
+diff --git a/Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml
+index d8cce73ea0ae..2c878e7db900 100644
+--- a/Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml
+@@ -38,6 +38,7 @@ required:
+   - compatible
+   - gpio-controller
+   - "#gpio-cells"
++  - gpio,syscon-dev
+ 
+ additionalProperties: false
+ 
+@@ -47,4 +48,5 @@ examples:
+       compatible = "rockchip,rk3328-grf-gpio";
+       gpio-controller;
+       #gpio-cells = <2>;
++      gpio,syscon-dev = <&grf 0 0>;
+     };
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index b6f045069ee2..fd25d5bee19f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -296,6 +296,7 @@ grf_gpio: gpio {
+ 			compatible = "rockchip,rk3328-grf-gpio";
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
++			gpio,syscon-dev = <&grf 0 0>;
+ 		};
+ 
+ 		power: power-controller {
 
-IIUC, that would prevent calling dev_err() if, for example,
-gpio,syscon-dev were forgotten from
-arch/arm/boot/dts/ti/keystone/keystone-k2g.dtsi, dspgpio0 node although
-it is needed and would result in funny things without notice.
-
-Thinking twice about it, a cleaner way looks to add gpio,syscon-dev node
-to rk3328.dtsi. I'll send the one-liner to relevant people (that would
-be really easier if there were only one repo, with different
-branches...).
-
-Do you agree?
-
-Regards.
-
-Note: I'm not subscribed to list, so please To or CC me.
+base-commit: 20cb38a7af88dc40095da7c2c9094da3873fea23
+-- 
+2.43.0
 
 
