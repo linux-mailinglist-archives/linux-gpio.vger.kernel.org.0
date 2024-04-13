@@ -1,180 +1,104 @@
-Return-Path: <linux-gpio+bounces-5448-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5449-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E88918A3BB7
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Apr 2024 10:49:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 074D58A3CA2
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Apr 2024 13:32:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4CBD3B21449
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Apr 2024 08:49:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83ADD281BAA
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Apr 2024 11:32:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35CFC208B8;
-	Sat, 13 Apr 2024 08:49:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 451E93F8F7;
+	Sat, 13 Apr 2024 11:32:38 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECA91CD2F
-	for <linux-gpio@vger.kernel.org>; Sat, 13 Apr 2024 08:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BAA14265;
+	Sat, 13 Apr 2024 11:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712998160; cv=none; b=s4uFCAXvLVOf/7uoLCuO6X2xzI9gk684eL9yTMnncJ6ew2lXJ62yQeYN+opn361CRShMzyCmPjrJNaUgBii2ASy2LCfabBHnWZFdxyRORctMPSy5NxnS8zWkke69T79N6ebcDaDxon3ibbu3OI7YoP4iOJbn+Ql4Ramjl9v2jH8=
+	t=1713007958; cv=none; b=Kan3Lj4VOHDxpkKMVitNao/S/5RRm9eMYxK+12BXYnD6NoFgBsAHSMJlUGbD+tAMdvsxkee/BWDn1pldgvobeprg9ZI1S8HbjLmDiM4NBD2AxuwsJmfM8IKvqbmZPadp9hq2t7m2F38yCYOmaT12UmT8rjjGjjHpW47c8f7CR2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712998160; c=relaxed/simple;
-	bh=6FIPiQ594KFngeqpTnGrN4qG2Klq6DDn5xZjR0G3Pr4=;
+	s=arc-20240116; t=1713007958; c=relaxed/simple;
+	bh=Z/ckyqGb+pytaMUSxcubIfiijffJM/OYK5XFNgCxCYU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cJ35IygI0pXtuiwliVO+SoC5L/ccXulb9oFj62igQiu79e2u0lJq/KAioBW8qBICnWVmmOqTx5Qv7rpgp27CVjQ/nLwsU6Sc7T2jUuSUk9MRRVeHjwA6FpovRnUmdOibP6EmIocq4XA5XkhGtjs4H2GpiMk6dZvDDyYv61cvCfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvZ3g-00055f-W5; Sat, 13 Apr 2024 10:48:25 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvZ3a-00C201-5I; Sat, 13 Apr 2024 10:48:18 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvZ3a-000gB5-03;
-	Sat, 13 Apr 2024 10:48:18 +0200
-Date: Sat, 13 Apr 2024 10:48:17 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Nikita Shubin <nikita.shubin@maquefel.me>, 
-	Hartley Sweeten <hsweeten@visionengravers.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Sergey Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Ralf Baechle <ralf@linux-mips.org>, Aaron Wu <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
-	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, Netdev <netdev@vger.kernel.org>, 
-	linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-sound@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v9 00/38] ep93xx device tree conversion
-Message-ID: <izbjcqcvjjhwwbrrhk7jer536ydi5gr7gqdg5icsbmialrrepn@dp7q6jvjujrj>
-References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
- <66e1da99-5cf4-4506-b0bf-4bdf04959f41@app.fastmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mEgXPAxWZX9N5/UGBkNETk8boqK4/RQKha1WjdbPvmJscrLlM+/W0BM2sp9aug/tshkCmTs/AjhiWzE/PFG52Gt1b40/l4N6lcWKYAVypKsO7xsDh9RFyfot5uuCGSKhRpu3xLzncD1cgJKFttv0YXfbNv0lcQfePjMePZ34J3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
+Received: from localhost.localdomain (unknown [82.64.135.138])
+	by smtp2-g21.free.fr (Postfix) with ESMTPS id 8D48B2003C1;
+	Sat, 13 Apr 2024 13:32:24 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+	id 35A0D40039; Sat, 13 Apr 2024 13:31:30 +0200 (CEST)
+Date: Sat, 13 Apr 2024 13:31:29 +0200
+From: Etienne Buira <etienne.buira@free.fr>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: brgl@bgdev.pl, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][RFC][resend after bogus] gpio-syscon: do not report
+ bogus error
+Message-ID: <ZhptEWb7tD5pummq@Z926fQmE5jqhFMgp6>
+Mail-Followup-To: Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <ZhgDCKhcHdwGoJ4Y@Z926fQmE5jqhFMgp6>
+ <CACRpkdbTdGajQLSGDkD0cWRG+79tpojYkdyF3t0jD7_WEDtQLw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pjwf7nurmhwqoh67"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <66e1da99-5cf4-4506-b0bf-4bdf04959f41@app.fastmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdbTdGajQLSGDkD0cWRG+79tpojYkdyF3t0jD7_WEDtQLw@mail.gmail.com>
 
-
---pjwf7nurmhwqoh67
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Arnd,
-
-On Tue, Mar 26, 2024 at 11:07:06AM +0100, Arnd Bergmann wrote:
-> On Tue, Mar 26, 2024, at 10:18, Nikita Shubin via B4 Relay wrote:
-> > The goal is to recieve ACKs for all patches in series to merge it via=
-=20
-> > Arnd branch.
->=20
-> Thank you for the continued updates, I really hope we can merge
-> it all for 6.10. I've looked through it again and I'm pretty much
-> ready to just merge it, though I admit that the process is not
-> working out that great, and it would probably have been quicker
-> to add DT support to drivers individually through the subsystem
-> trees.
->=20
-> > Stephen Boyd, Vinod Koul PLEASE! give some comments on following, couse=
-=20
-> > i hadn't one for a couple of iterations already:
+On Fri, Apr 12, 2024 at 12:44:34PM +0200, Linus Walleij wrote:
+> Hi Etienne,
+> 
+> thanks for your patch!
+> 
+> On Thu, Apr 11, 2024 at 5:35 PM Etienne Buira <etienne.buira@free.fr> wrote:
+> 
+> > Do not call dev_err when gpio,syscon-dev is not set albeit unneeded.
+> > gpio-syscon is used with rk3328 chip, but this iomem region is
+> > documented in
+> > Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml and
+> > does not look like to require gpio,syscon-dev setting.
 > >
-> > Following patches require attention from Stephen Boyd, as they were=20
-> > converted to aux_dev as suggested:
-> >
-> > - ARM: ep93xx: add regmap aux_dev
-> > - clk: ep93xx: add DT support for Cirrus EP93xx
-> >
-> > Following patches require attention from Vinod Koul:
-> >
-> > - dma: cirrus: Convert to DT for Cirrus EP93xx
-> > - dma: cirrus: remove platform code
->=20
-> I suspect that Stephen and Vinod may be missing this, as reviewing
-> a 38 patch series tends to be a lot of work, and they may have
-> missed that they are on the critical path here. I certainly
-> tend to just ignore an entire thread when it looks like I'm not
-> immediately going to be reviewing it all and other people are
-> likely to have more comments first, so I'm not blaming them.
->=20
-> To better catch their attention, I would suggest you repost the
-> two smaller sets of patches as a separate series, with only the
-> relevant people on Cc. Please also include the respective
-> bindings when you send send these patches to Stephen and
-> Vinod.
+> > Signed-off-by: Etienne Buira <etienne.buira@free.fr>
+> > X-Prefers: kind explanations over rotten tomatoes
+../..
+> So indeed the parent is a sycon, and syscon_node_to_regmap(np->parent) will
+> be used to populate priv->syscon on RK3328.
+../..
+> if (!has_parent_syscon) {
+> (...)
+> 
+> What do you think about this?
+../..
 
-It seems this happend for the clock series; it's at
-https://lore.kernel.org/all/20240408-ep93xx-clk-v1-0-1d0f4c324647@maquefel.=
-me/
-and received an ack by Stephen.
+Hi Linus,
 
-Vinod gave some feedback in this thread with some remarks that need
-addressing.
+Thanks for your review.
 
-With the latter I wonder if the plan to get this as a whole into v6.10
-is screwed and if I should pick up the PWM bits (patches #12, #13 and
-maybe #38) via my tree. Patch #38 touches arch/arm and
-include/linux/soc, so I wouldn't pick that one up without an explicit
-ack by (I guess) Arnd.
+IIUC, that would prevent calling dev_err() if, for example,
+gpio,syscon-dev were forgotten from
+arch/arm/boot/dts/ti/keystone/keystone-k2g.dtsi, dspgpio0 node although
+it is needed and would result in funny things without notice.
 
-Best regards
-Uwe
+Thinking twice about it, a cleaner way looks to add gpio,syscon-dev node
+to rk3328.dtsi. I'll send the one-liner to relevant people (that would
+be really easier if there were only one repo, with different
+branches...).
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Do you agree?
 
---pjwf7nurmhwqoh67
-Content-Type: application/pgp-signature; name="signature.asc"
+Regards.
 
------BEGIN PGP SIGNATURE-----
+Note: I'm not subscribed to list, so please To or CC me.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYaRtAACgkQj4D7WH0S
-/k4o+wgAuEjfWmNoFVoIX9NkVmNLAztPiy6Nh9yJ/HEcfVvrFbjsMvDotb4qsGsE
-zfAz7mfofpUhLaFIGx1Sr9p8Zx4eXf0lmRH68rTiXE/hV39TXWKgmf03FG3yPOzN
-1KouxDXOtKIiBxdhSBON/zWyYksJzI9WfjLtzPhcbS0N3CEWi7aTvVS7HmKStyAU
-8/YI17F/4ym1Rf8Zm6JqyzQy5lOmmjy+Sq+BHfkB0ZpNIHQSoaOWISL3Y9bsFSJX
-ALkkO6L4WJVqkAL718q6pYMtb9SiNVyQjyYgYddxFfM6c6cnhg1AV+QEk+VLTPHy
-OgUVpigrpDXH/2JTVvZ7VetbpnSGAg==
-=sCOf
------END PGP SIGNATURE-----
-
---pjwf7nurmhwqoh67--
 
