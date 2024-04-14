@@ -1,86 +1,77 @@
-Return-Path: <linux-gpio+bounces-5478-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5479-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 290D68A41D6
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 12:35:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4ABA08A4249
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 14:30:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 606CA281B78
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 10:35:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7998281DB9
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 12:30:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB5C62BCF9;
-	Sun, 14 Apr 2024 10:35:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6062B4122C;
+	Sun, 14 Apr 2024 12:30:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TbVAWPZW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ewFGnCEn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01BB1BF37
-	for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 10:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC363E47E
+	for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 12:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713090900; cv=none; b=YsHd4we4T7hnSTq1D1Nybg8vhUmMZ7eys8Y6uRwxTRWcRcOTlhjlFyttDl95w5RNMjp8H7ozigA7DxpgW+/kNWaBKH+1dMHDimFP53Hy6alforRkXza2tPkHlMH3ho8Q5GOXfxeCokgRjPh3aSFa5X0xkSJG3xYDl7bFuro2gc8=
+	t=1713097804; cv=none; b=kNF8tKkdMhoChgRQ/TTx2Ddt0lr7+ZrLdzBvo29PsiVRSopnUzc1QDBK4UfmQJEdOHpSNPVSF6iFQi3MHLigVwEemqGaX3eQDrLPZXKVCH7CSJUY7P7MO6j012GPXE0LaHjIlTu7qTTvrxDvNMZaQCG/5BMzaGEeTJWUrKpD9RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713090900; c=relaxed/simple;
-	bh=ZN/2Rkys9GxS+NsmV9Oq0Mou1cdT+ldCxQlnc+6y1vY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GREboflD4fxWBG2o+ukbpJk20bvF5xt7xaUDTeyy3yC4xFGmpyUNqQHD6lL3NvMxtZp3kPYJ5r0UX09PtiG4SHBQ+6f+SoMkimHvjNEBIW4Rk0LdEBfCCzk2DXnqYDmaWfTFPZoEgkch8OuehGjJpIAX1SzRy8roQnynQcC5PXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TbVAWPZW; arc=none smtp.client-ip=209.85.167.53
+	s=arc-20240116; t=1713097804; c=relaxed/simple;
+	bh=qtuGD8Qi4HO+ZSdqf76Z5o59Yz2gkaVB/fgAlcvdcig=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ONyrLcNSeejBcY5iS4GQmSOi28p6NF+yK3tvIccUPEGN/qHZDq4/EH8kA66g5TFm9raPjo10ddkzrL9FY2umPfXGrunwKXBOt2BjfTVcIM2ZO8AlOjJsags9UjBm8rvO0j54Wqvm9tsFwncIfgtdG7lCGYb322cSraX65pCOJJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ewFGnCEn; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-518a56cdbcfso1637690e87.2
-        for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 03:34:58 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so3752906a12.2
+        for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 05:30:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713090897; x=1713695697; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3UQ++gxwD9lwMiCPaVI4itHAEaPjf5P2ziIdw7YNOfg=;
-        b=TbVAWPZW99jP3BcNiP677lo1DMX1oAodpK5mNVpNgxzWVzIUrMLna3n4c6jHBjNjRU
-         Q8M1errvEFlQHPBG4TBwM/aFv0uElPUC50G1OqrIOnWy74ueKkquWYSgHtqFi7EGi0m8
-         Ju4nTuWqKjVgPu3FCFOl4QoHxL0qLt4rYferqAtydtyc+0i+ztZwklrstSOcG910W2x0
-         CDbkxRhtIbVNNxhcX5XbXndb/VZkAJtqChDA+3yltDkGtSrEZB+rq2WGW9VHvd5LBIpA
-         Vj4E7wQBUqERVFfqTLgbJHUpwnVh5MDk8XCSyK4jTClY9sA1xQo3GeRqFxNAZ6Lken/r
-         w/qw==
+        d=linaro.org; s=google; t=1713097800; x=1713702600; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7hIs1bD9y9NsQj6kW1NSHcxE0175odmhzu852gkfegI=;
+        b=ewFGnCEnsThaTAW/3acmQXmy+g2Uqe2GKZtMS6Vi4mhTVp5JgLWLr5FcT98MzBpOPx
+         vkKlebYhk80zW51+ivLvwmfk8yGfGBcBlNBO1yS4PaJnDUItOT7cHuLRS3yQ+3HOgLHl
+         XpCO5rGiFDD9zOMJikJEd/x9w8MNAKTn9+TE6WO4Y2NDRSIOPuCaQf4bsDErZHYqP4YE
+         gCY2sYREy1jkTYhEIJkcCULAVTjuuK147/BXJQAi3JFDcjCWx8iDACcTz815lArjWvfC
+         ouUqZfaPJXmwWToex23dAS0/jkkPoHSvpi88xsbpTodCyfRMqMCbXbbUBfbDrnQ9ioHs
+         SoDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713090897; x=1713695697;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3UQ++gxwD9lwMiCPaVI4itHAEaPjf5P2ziIdw7YNOfg=;
-        b=DQ7leyYjOmDOsruFde85zOSMzEgg5J9UeoCLQRGs98/69UaUJZE8OSpWFuWpJKZfQx
-         WLaTiW5u+52equsnMhOsSUaeFPQ7j7tedJt6s1fkbqD1Eb0ZzyQ1AoQwpSScL4/IWOlj
-         tv/JNw9g042IXvvtR8tKyt6pW3Xt5BLF3jVwRNu8RuFZBotf2mkA+itlH/GWqZzDutyr
-         B/pkuF9/pNVUdfHwghd9qNwSgn4kRv6ETdRiM2yJKPn37EHKRtwzIk9pBcVpJaBKKacu
-         DkYhYCdq4lIyuolHVseiNF2QTW9P68j2xzhosdv8fDjz2xpzcR7bqchgAmvlf2siSXQn
-         F2Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZu7mxWNW1SMjE29fhf5kFifvW5Wc/DTFNOuXRCGLksI7d+QmXtoZKUiMmBC69orkOa4n4ceioRdEryp2TvKc1LhaCx4FYGFVSBw==
-X-Gm-Message-State: AOJu0YwBUSFJgJgWt5EtLCnuvOaqu7UWEfdtiyzOqly8LRLsixuu+RcE
-	Owvk19hqXTJPa5E994rVJPlekx0vE1J54FTNhkOcDiCwJ8p6g4fG0TrEsIrIz9k=
-X-Google-Smtp-Source: AGHT+IHRRIhsXhtPQpbnXWRN/evFQ9xpq1CsTuwyuPbVM1PmrjssVucapgd3lt6ANs4aSbJrf6z1aQ==
-X-Received: by 2002:ac2:53b3:0:b0:518:c2a5:5a3b with SMTP id j19-20020ac253b3000000b00518c2a55a3bmr1372919lfh.46.1713090896785;
-        Sun, 14 Apr 2024 03:34:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713097800; x=1713702600;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7hIs1bD9y9NsQj6kW1NSHcxE0175odmhzu852gkfegI=;
+        b=vSM+l4Qo10p6CHnbnVX4pfktYOjs8DSqlLNxgroMQVxo1p/Qa5gCyH661AHJcO0xo4
+         dPMXFULHV+LncvY0BWR6ROIPyKazFdX4J79pLXXtMLwNeWPyATsPpDrfFOCZZzM+unGq
+         PCWZ/S1PZU3rUAQGFjOyTyqskReWghXfjjG4+mD9RDs7QtwE0atTCMBHp67xg4/C7E0z
+         G/HdhW81ifAJJkE2nAKCEKQqqWHzjMieWSR1WVdRzuUZA5Daqvj6JETQmS79Dqa2KciH
+         L9LPoGluh9kUga6m0bc85jEMxVCV1tzJcsOF8cL+JmMJb5eybCCO7OowPAkeCoHLG2tj
+         JUzw==
+X-Gm-Message-State: AOJu0Yy68mvdWUlsasckvXyIfPmSNLqGKcpoj9ubEwSxHhWeGodyiunE
+	h90mZWSSC/itnxP70kn5RK3wN4iHfpuV1u0aT3q5lQGnAOczPa+fC8zKDz2MJ7weOF/MFf8uP92
+	o
+X-Google-Smtp-Source: AGHT+IFwr+gNRmOq9CKC+4GESGFYUZcAo31/rgDiivZsBuiZf4jGEsG/clVafzMhgYKNSENjyzOqqg==
+X-Received: by 2002:a17:906:c116:b0:a52:35d2:2e72 with SMTP id do22-20020a170906c11600b00a5235d22e72mr6581105ejc.68.1713097800323;
+        Sun, 14 Apr 2024 05:30:00 -0700 (PDT)
 Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id ne33-20020a1709077ba100b00a51b26ba6c5sm4032596ejc.219.2024.04.14.03.34.56
+        by smtp.gmail.com with ESMTPSA id mb24-20020a170906eb1800b00a525609ae30sm1337462ejb.169.2024.04.14.05.29.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Apr 2024 03:34:56 -0700 (PDT)
-Date: Sun, 14 Apr 2024 13:34:52 +0300
+        Sun, 14 Apr 2024 05:29:59 -0700 (PDT)
+Date: Sun, 14 Apr 2024 15:29:56 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Robert Marko <robimarko@gmail.com>
-Cc: Hanna Hawa <hhhawa@amazon.com>, andriy.shevchenko@linux.intel.com,
-	wsa@kernel.org, linus.walleij@linaro.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
-	talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
-	farbere@amazon.com, itamark@amazon.com
-Subject: Re: [PATCH v5 2/2] i2c: Set i2c pinctrl recovery info from it's
- device pinctrl
-Message-ID: <ac51854b-09a6-4b79-b409-b950929655cb@moroto.mountain>
-References: <20221228164813.67964-1-hhhawa@amazon.com>
- <20221228164813.67964-3-hhhawa@amazon.com>
- <416340b6-33a9-4b9e-bdc5-c5a9cffb3055@gmail.com>
+To: zengheng4@huawei.com
+Cc: linux-gpio@vger.kernel.org
+Subject: [bug report] pinctrl: devicetree: fix null pointer dereferencing in
+ pinctrl_dt_to_map
+Message-ID: <ec8acd44-f71d-4b91-be5e-1bf1b1aad062@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,58 +80,114 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <416340b6-33a9-4b9e-bdc5-c5a9cffb3055@gmail.com>
 
-On Thu, Apr 11, 2024 at 07:08:56PM +0200, Robert Marko wrote:
-> 
-> On 28. 12. 2022. 17:48, Hanna Hawa wrote:
-> > Currently the i2c subsystem rely on the controller device tree to
-> > initialize the pinctrl recovery information, part of the drivers does
-> > not set this field (rinfo->pinctrl), for example i2c DesignWare driver.
-> > 
-> > The pins information is saved part of the device structure before probe
-> > and it's done on pinctrl_bind_pins().
-> > 
-> > Make the i2c init recovery to get the device pins if it's not
-> > initialized by the driver from the device pins.
-> > 
-> > Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >   drivers/i2c/i2c-core-base.c | 5 ++++-
-> >   1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> > index 7539b0740351..fb5644457452 100644
-> > --- a/drivers/i2c/i2c-core-base.c
-> > +++ b/drivers/i2c/i2c-core-base.c
-> > @@ -34,6 +34,7 @@
-> >   #include <linux/of.h>
-> >   #include <linux/of_irq.h>
-> >   #include <linux/pinctrl/consumer.h>
-> > +#include <linux/pinctrl/devinfo.h>
-> >   #include <linux/pm_domain.h>
-> >   #include <linux/pm_runtime.h>
-> >   #include <linux/pm_wakeirq.h>
-> > @@ -282,7 +283,9 @@ static void i2c_gpio_init_pinctrl_recovery(struct i2c_adapter *adap)
-> >   {
-> >   	struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
-> >   	struct device *dev = &adap->dev;
-> > -	struct pinctrl *p = bri->pinctrl;
-> > +	struct pinctrl *p = bri->pinctrl ?: dev_pinctrl(dev->parent);
-> > +
-> > +	bri->pinctrl = p;
-> 
-> Hi Hanna,
-> I know this has already been merged, but setting bri->pinctrl breaks PXA
-> recovery.
+Hello Zeng Heng,
 
-This is patch is a year and half old so it's a bit late to just revert
-it...
+Commit 91d5c5060ee2 ("pinctrl: devicetree: fix null pointer
+dereferencing in pinctrl_dt_to_map") from Nov 10, 2022, leads to the
+following Smatch static checker warning:
 
-What does "breaks" mean in this context?  Is there a NULL dereference?
-Do you have a stack trace?  It's really hard to get inspired to look at
-the code when the bug report is so vague...
+	drivers/pinctrl/devicetree.c:224 pinctrl_dt_to_map()
+	warn: refcount leak 'np->kobj.kref.refcount.refs.counter': lines='224'
+
+drivers/pinctrl/devicetree.c
+    196 int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
+    197 {
+    198         struct device_node *np = p->dev->of_node;
+    199         int state, ret;
+    200         char *propname;
+    201         struct property *prop;
+    202         const char *statename;
+    203         const __be32 *list;
+    204         int size, config;
+    205         phandle phandle;
+    206         struct device_node *np_config;
+    207 
+    208         /* CONFIG_OF enabled, p->dev not instantiated from DT */
+    209         if (!np) {
+    210                 if (of_have_populated_dt())
+    211                         dev_dbg(p->dev,
+    212                                 "no of_node; not parsing pinctrl DT\n");
+    213                 return 0;
+    214         }
+    215 
+    216         /* We may store pointers to property names within the node */
+    217         of_node_get(np);
+    218 
+    219         /* For each defined state ID */
+    220         for (state = 0; ; state++) {
+    221                 /* Retrieve the pinctrl-* property */
+    222                 propname = kasprintf(GFP_KERNEL, "pinctrl-%d", state);
+    223                 if (!propname)
+--> 224                         return -ENOMEM;
+
+This should probably be "ret = -ENOMEM; goto err;", but is it okay to
+goto err on the first iteration when state is zero?
+
+    225                 prop = of_find_property(np, propname, &size);
+    226                 kfree(propname);
+    227                 if (!prop) {
+    228                         if (state == 0) {
+    229                                 of_node_put(np);
+    230                                 return -ENODEV;
+
+Here state == 0 is treated as a special case.  Which is fine.  But
+could it also have done a goto err instead?  I hope so because otherwise
+we'd have a bug later on the first iteration...
+
+    231                         }
+    232                         break;
+    233                 }
+    234                 list = prop->value;
+    235                 size /= sizeof(*list);
+    236 
+    237                 /* Determine whether pinctrl-names property names the state */
+    238                 ret = of_property_read_string_index(np, "pinctrl-names",
+    239                                                     state, &statename);
+    240                 /*
+    241                  * If not, statename is just the integer state ID. But rather
+    242                  * than dynamically allocate it and have to free it later,
+    243                  * just point part way into the property name for the string.
+    244                  */
+    245                 if (ret < 0)
+    246                         statename = prop->name + strlen("pinctrl-");
+    247 
+    248                 /* For every referenced pin configuration node in it */
+    249                 for (config = 0; config < size; config++) {
+    250                         phandle = be32_to_cpup(list++);
+    251 
+    252                         /* Look up the pin configuration node */
+    253                         np_config = of_find_node_by_phandle(phandle);
+    254                         if (!np_config) {
+    255                                 dev_err(p->dev,
+    256                                         "prop %s index %i invalid phandle\n",
+    257                                         prop->name, config);
+    258                                 ret = -EINVAL;
+    259                                 goto err;
+    260                         }
+    261 
+    262                         /* Parse the node */
+    263                         ret = dt_to_map_one_config(p, pctldev, statename,
+    264                                                    np_config);
+    265                         of_node_put(np_config);
+    266                         if (ret < 0)
+    267                                 goto err;
+    268                 }
+    269 
+    270                 /* No entries in DT? Generate a dummy state table entry */
+    271                 if (!size) {
+    272                         ret = dt_remember_dummy_state(p, statename);
+    273                         if (ret < 0)
+    274                                 goto err;
+    275                 }
+    276         }
+    277 
+    278         return 0;
+    279 
+    280 err:
+    281         pinctrl_dt_free_maps(p);
+    282         return ret;
+    283 }
 
 regards,
 dan carpenter
