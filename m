@@ -1,75 +1,75 @@
-Return-Path: <linux-gpio+bounces-5468-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5469-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9FFA8A4088
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 08:09:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8EA78A408D
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 08:12:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D7D01F2146E
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 06:09:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8B0C1C20F34
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 06:12:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74F1C1C6A3;
-	Sun, 14 Apr 2024 06:09:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 063C81C6A8;
+	Sun, 14 Apr 2024 06:11:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IORocknP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G8fRLg6p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBC11C290
-	for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 06:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB9D1C2AD
+	for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 06:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713074984; cv=none; b=by650VQsrcdmnCH204zNf89UlsyasXekPj1mattOA2zbkV7D/6Cj7BMCYJK00VDInoAcq968+35+66BDdIkue6Olk8eYHPMW67Kd+VPFOP+Ul9bSfwFjdlHVvz1ICoP3TjzpSfFezgS20AhwToL7HB6nDePjfyZJ2UiuCP822VQ=
+	t=1713075114; cv=none; b=dXhGNS1S5e202s9+w7B05hzhcLSLadnY5v4CwBA8KzLF2mhHAKflK9zpZbvFPvWqFl3BQjvZKZvWQHIuo+6fOqe44p+PqRwHZ+bxJqgufSLn/NOPPEUyfkg5sd2LrgvExAmICXNlarVa91eDXMnWSbjvpAwJjnpTKPOozdecAXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713074984; c=relaxed/simple;
-	bh=tV3iOEyquH0DhgcnL2VflNn8ea2xv5Iop9DT83BaobA=;
+	s=arc-20240116; t=1713075114; c=relaxed/simple;
+	bh=eFRsxOxHBmtCeLE5V4fhZdrAP+of9SqJzpq5mDZckkQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gu0oQws4VQ1MZkS9PAHRhgw0o0POV9K3WISYb4huI5/7iUn0NbzzVX8ENhZj91XTpR1Ig0nI627Rz8vBTTk2w+L71KkmP3t7EeFh6uPRU8l7Xs0p3Bm5f73cPPwfK2AfUCN4eYqZiGXgApNBkUu3ufH4m+n82bD+A2daL0pEyJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IORocknP; arc=none smtp.client-ip=209.85.218.54
+	 In-Reply-To:Content-Type; b=V+79wNr1/BQwDbQ9/+g5SpldvxnzxtAx2azi5OZLCVJFZoaBEQaXjpdAsHBYJcLsWkVjV0qxqar+Wczwhe/3bL8mRC0KODwFDo/F6ssmDTVWEdhrimxIIbKyr73NFXWhz4uxYoCtbgbd70WN+JjLDIFRAdtXdU35upLdWeBuPrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G8fRLg6p; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a46a7208eedso305275966b.0
-        for <linux-gpio@vger.kernel.org>; Sat, 13 Apr 2024 23:09:42 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2da08b07157so23034251fa.1
+        for <linux-gpio@vger.kernel.org>; Sat, 13 Apr 2024 23:11:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713074981; x=1713679781; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713075111; x=1713679911; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=8h9MKD/isJ62SBrCUg7yXtxM3Ynk3rIOeGl2PTjk+hA=;
-        b=IORocknPONU91g4pgJorckcvfSP0lDzTAmAAiThvsW6lvdqUZDpi8tWrGSVs3kOvHF
-         SvhwbS23fKgAzS18zOnhLg2RMPl+OST5dzjBJZ5xB1bPpK/2W2bv3NGEKAKKF8tLgx7E
-         Snk3lzA6o3VxKV7RibrkfGTqCy+qPWUaBASesKogFX6YUPimyNp9XQBYaOHV+10sZoI8
-         mGgqszV2cMEgrGd58HEsqsA8773hQxSkYFa4/OJ+RKVgfufzBdGO//EaeWu8ETl6VUj9
-         /gm3DiVWJ6SyZxIavugdtvplsi8Uoqq8DTI2QUYKrY1pvCGsTOduq9uDZMqZ0fi+z+Pz
-         dhZA==
+        bh=cd1B/deojel3okqrmPvn65KeF4SUoVm8wG0roldbzJ8=;
+        b=G8fRLg6pHXOeF5ykqXpmW44qOwsA0xdKMJP3fD4YsHS8DufTxRAXXWpSvw7AXwHrq4
+         k1Al2yEb0ro9hijh8gU/RObwNSnD4/0BPmo3s99a/zDmOglcsx6q0M1kNzkoiPp7IYv8
+         ZUiLIK2ISRWgfHkP4qjjyTegR5k77F2zcnpo0op2WVzDsiZBakAwckNkeWkC+ScYxruP
+         QMqg8xPVtRGO/RRfHLNPx6iKYiaakeFOAZj4CLn/Y+wWMhHIfVA5wM0413z6LtDc+6L1
+         GIdW6eLom7P+L7B0UzhaAwaLWXguKtF4Q0J8SaM7HjI22jsq9d7iA2AMGisJLbJEbOcn
+         E/kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713074981; x=1713679781;
+        d=1e100.net; s=20230601; t=1713075111; x=1713679911;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8h9MKD/isJ62SBrCUg7yXtxM3Ynk3rIOeGl2PTjk+hA=;
-        b=XJxXE7ZjZ5arm4VlWlXxhGEqO3BzPwAaDsZjr4A/4CZ1lCj/AN2lQ8zMv50xcjao26
-         E0pfxDlRCFGw4bkHD9dlTR83xraolKfvpeKlg+nj+aULK3QzWx3Kb2b+vstfyVRAWND6
-         S5Q0oHd43qove+Lzt3ODaJrAOFVzhty6zreOHuu7lzX+8McxGg1zYEKo3KaZhF5byooY
-         FmkJsXPVLMIL9r2lJ8EK42LIT4SX4iMzxwMv4G7K3eTiY2mrbG2JIJlz9H/gO5imL/ZW
-         m/jMv85YNx5P4LeNVP7S+hcknBkgZPaDR9vyrH5a8vnpUIUy9N/yeDyeHJ5vv2P3IY4q
-         G3/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWN4z/NmsWjgrbtqXxp4R70FNtUx+XoBYVyDjtKuMtg7ssvf36qAIuOlGe3I12JTz7qqkmrf3rax41kqegkLW3frf+qbTr9BhmkHw==
-X-Gm-Message-State: AOJu0YytcUI7b/4W3P1KgY/A0BVHiXRonGnyRpsdJ8FdVXnpAC+Gpi7+
-	tDsEqyfnjKvMkRJzD7fM4aMRLPVoBPrmPtH4gh+SlKyKaOoQsjoay/cp/1NKLRI=
-X-Google-Smtp-Source: AGHT+IGgmpdwoSQjqLjimpUlEsQbnIPt+4kl1TSepb9xdUqyowlRA7NVI1ZBmUT3RUuTzG9n4FU5NA==
-X-Received: by 2002:a17:907:6d0c:b0:a51:d49f:b6b5 with SMTP id sa12-20020a1709076d0c00b00a51d49fb6b5mr4397466ejc.49.1713074980868;
-        Sat, 13 Apr 2024 23:09:40 -0700 (PDT)
+        bh=cd1B/deojel3okqrmPvn65KeF4SUoVm8wG0roldbzJ8=;
+        b=fyyRz8dL2HYZVigjZ+iu/Z8Nk6n5l/sYcn/XGWDTR2Q1u4KaA9h3j9kqwSW/xs2nfl
+         8w9D3QXnI9HfAiyHfB1Ca6IRQfHNpcEAvUo9nGXRnRBMUIbb9L2rFDe/sT09429Q6xKR
+         5woLcNnz29xpm3UGxuwqTrDFh7cmoXbjkutqRWtqaI1jUh/TEEo84z5mbm7ciglzHB3m
+         zbqdiS+7ZvTeU2D8f4AK0SYO8lgd8OIaTBpWpZjFdFOnQoNy1NgxpNQpZSL4AMs2gVDd
+         wpM0sKdTZ0JLPgXx1p/EgJ7bxNKapiqV0HqpMsYwTdBrrxXGDrDJ7yGQZ29K7QhnShmZ
+         dcow==
+X-Forwarded-Encrypted: i=1; AJvYcCXpijYTbiLPF3GGjQpIyVX5Y6nR4o9O6tpO1yIWNkIu8VGAatqlFptARhtJvBITtam7zH3LEs60fecrIYzFxURGESAr8tO08Bkg1A==
+X-Gm-Message-State: AOJu0YxxiHT1xWh5EBrZaaIjHcyRsUp1PF6X9cqHIKZ4jH8jZGCdTnR9
+	OflqZ+jnQqIJOqrT7vDmRqpnDM3DF7Ou6/NpwoM95E4PO+ThFJkj0vq679j4WZs=
+X-Google-Smtp-Source: AGHT+IGatFcyjx4ZoKtHo2CnivNndKMYuB3RNG73Saq12WIxXbSVKNPi4KmUQ8kkEUebJL5Z4b4fCQ==
+X-Received: by 2002:a2e:8e88:0:b0:2d8:6ca7:2165 with SMTP id z8-20020a2e8e88000000b002d86ca72165mr4875055ljk.46.1713075111114;
+        Sat, 13 Apr 2024 23:11:51 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id x26-20020a170906711a00b00a521591ffacsm3812011ejj.34.2024.04.13.23.09.39
+        by smtp.gmail.com with ESMTPSA id kf20-20020a17090776d400b00a51e9b299b9sm3805488ejc.55.2024.04.13.23.11.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Apr 2024 23:09:40 -0700 (PDT)
-Message-ID: <b3227721-1244-48eb-87b4-8aaac46885d1@linaro.org>
-Date: Sun, 14 Apr 2024 08:09:38 +0200
+        Sat, 13 Apr 2024 23:11:50 -0700 (PDT)
+Message-ID: <df328b50-eec8-4a2e-ba58-666d6ce8d1c0@linaro.org>
+Date: Sun, 14 Apr 2024 08:11:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: Add support for BCM2712 pin
+Subject: Re: [PATCH 2/6] dt-bindings: mmc: Add support for BCM2712 SD host
  controller
 To: Andrea della Porta <andrea.porta@suse.com>,
  Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
@@ -94,7 +94,7 @@ To: Andrea della Porta <andrea.porta@suse.com>,
  linux-gpio@vger.kernel.org, Jonathan Bell <jonathan@raspberrypi.com>,
  Phil Elwell <phil@raspberrypi.com>
 References: <cover.1713036964.git.andrea.porta@suse.com>
- <2d1272cad92ad618297a6683e9264e31b8f2df73.1713036964.git.andrea.porta@suse.com>
+ <ad96fff723675c2d65a5e3328da9b09f2781cbcd.1713036964.git.andrea.porta@suse.com>
 Content-Language: en-US
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -141,140 +141,122 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <2d1272cad92ad618297a6683e9264e31b8f2df73.1713036964.git.andrea.porta@suse.com>
+In-Reply-To: <ad96fff723675c2d65a5e3328da9b09f2781cbcd.1713036964.git.andrea.porta@suse.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 14/04/2024 00:14, Andrea della Porta wrote:
 > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 
-Missing commit msg. We can't take empty commits. You have entire commit
-msg to describe the hardware, why not doing this?
-
-
-Plus, this wasn't even tested...
+? And what is being done here and why?
 
 > ---
->  .../pinctrl/brcm,bcm2712-pinctrl.yaml         | 99 +++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm2712-pinctrl.yaml
+>  .../bindings/mmc/brcm,sdhci-brcmstb.yaml      | 51 ++++++++++++++++++-
+>  1 file changed, 50 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2712-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2712-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..2908dfe99f3e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2712-pinctrl.yaml
-> @@ -0,0 +1,99 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/brcm,bcm2712-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom BCM2712 pin controller
-> +
-> +maintainers:
-> +  - Andrea della Porta <andrea.porta@suse.com>
-> +
-> +description:
-> +  Bindings for Broadcom's BCM2712 memory-mapped pin controller.
+> diff --git a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
+> index cbd3d6c6c77f..6aa137d78e4f 100644
+> --- a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
+> @@ -13,6 +13,7 @@ maintainers:
+>  properties:
+>    compatible:
+>      oneOf:
+> +      - const: brcm,bcm2712-sdhci
+>        - items:
+>            - enum:
+>                - brcm,bcm7216-sdhci
+> @@ -26,12 +27,16 @@ properties:
+>            - const: brcm,sdhci-brcmstb
+>  
+>    reg:
+> -    maxItems: 2
+> +    minItems: 2
+> +    maxItems: 4
+>  
+>    reg-names:
+> +    minItems: 2
+>      items:
+>        - const: host
+>        - const: cfg
+> +      - const: busisol
+> +      - const: lcpll
+>  
+>    interrupts:
+>      maxItems: 1
+> @@ -60,6 +65,7 @@ properties:
+>      description: Specifies that controller should use auto CMD12
+>  
+>  allOf:
+> +  - $ref: sdhci-common.yaml
+>    - $ref: mmc-controller.yaml#
 
-Drop "Bindings for" and describe hardware. Bindings do not have to tell
-they are bindings, it's obvious. They cannot be anything else.
+Why? Anyway, this replaces mmc-controller, doesn't it?
 
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - brcm,bcm2712-pinctrl
-> +      - brcm,bcm2712-aon-pinctrl
-> +      - brcm,bcm2712c0-pinctrl
-> +      - brcm,bcm2712c0-aon-pinctrl
-> +      - brcm,bcm2712d0-pinctrl
-> +      - brcm,bcm2712d0-aon-pinctrl
-> +
-> +  reg:
-> +    items:
-> +      - description: pin control registers
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties:
-> +  anyOf:
-> +    - type: object  
-> +      allOf:
-> +        - $ref: pincfg-node.yaml#
-> +        - $ref: pinmux-node.yaml#
-> +
+>    - if:
+>        properties:
+> @@ -71,6 +77,28 @@ allOf:
+>        required:
+>          - clock-frequency
+>  
+> +  - if:
 > +      properties:
-> +        function: 
-> +          enum: [ gpio, alt1, alt2, alt3, alt4, alt5, alt6, alt7, alt8,
-> +                 aon_cpu_standbyb, aon_fp_4sec_resetb, aon_gpclk, aon_pwm,
-> +                 arm_jtag, aud_fs_clk0, avs_pmu_bsc, bsc_m0, bsc_m1, bsc_m2,
-> +                 bsc_m3, clk_observe, ctl_hdmi_5v, enet0, enet0_mii,
-> +                 enet0_rgmii, ext_sc_clk, fl0, fl1, gpclk0, gpclk1, gpclk2,
-> +                 hdmi_tx0_auto_i2c, hdmi_tx0_bsc, hdmi_tx1_auto_i2c,
-> +                 hdmi_tx1_bsc, i2s_in, i2s_out, ir_in, mtsif, mtsif_alt,
-> +                 mtsif_alt1, pdm, pkt, pm_led_out, sc0, sd0, sd2, sd_card_a,
-> +                 sd_card_b, sd_card_c, sd_card_d, sd_card_e, sd_card_f,
-> +                 sd_card_g, spdif_out, spi_m, spi_s, sr_edm_sense, te0, te1,
-> +                 tsio, uart0, uart1, uart2, usb_pwr, usb_vbus, uui, vc_i2c0,
-> +                 vc_i2c3, vc_i2c4, vc_i2c5, vc_i2csl, vc_pcm, vc_pwm0,
-> +                 vc_pwm1, vc_spi0, vc_spi3, vc_spi4, vc_spi5, vc_uart0,
-> +                 vc_uart2, vc_uart3, vc_uart4 ]
+> +        compatible:
+> +          contains:
+> +            const: brcm,bcm2712-sdhci
 > +
-> +        pins:
-> +          items:
-> +            pattern: "^((aon_)?s?gpio[0-6]?[0-9])|(emmc_(clk|cmd|dat[0-7]|ds))$"
+> +    then:
+> +      properties:
+> +        reg:
+> +          maxItems: 4
+> +        clock-names:
+> +         const: "sw_sdio"
+
+Not tested.
+
 > +
-> +        bias-disable: true
-> +        bias-pull-down: true
-> +        bias-pull-up: true
-> +      additionalProperties: false
+> +    else:
+> +      properties:
+> +        reg:
+> +          minItems: 2
+> +          maxItems: 2
+> +        reg-names:
+> +          minItems: 2
+> +          maxItems: 2
 > +
-> +    - type: object
-> +      additionalProperties:
-> +        $ref: "#/additionalProperties/anyOf/0"
+>  required:
+>    - compatible
+>    - reg
+> @@ -114,3 +142,24 @@ examples:
+>        clocks = <&scmi_clk 245>;
+>        clock-names = "sw_sdio";
+>      };
 > +
-> +examples:
 > +  - |
-> +    pinctrl: pinctrl@7d504100 {
-> +      compatible = "brcm,bcm2712-pinctrl";
-> +        reg = <0x7d504100 0x30>;
+> +    soc {
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
 > +
-> +        uarta_24_pins: uarta_24_pins {
+> +      mmc@fff000 {
+> +        compatible = "brcm,bcm2712-sdhci";
+> +        reg = <0x10 0x00fff000  0x0 0x260>,
+> +              <0x10 0x00fff400  0x0 0x200>,
+> +              <0x10 0x015040b0  0x0 0x4>,  // Bus isolation control
+> +              <0x10 0x015200f0  0x0 0x24>; // LCPLL control misc0-8
+> +        reg-names = "host", "cfg", "busisol", "lcpll";
+> +        interrupts = <0x0 0x111 0x4>;
 
-Underscores are not allowed. Please observe the rules of DTS coding
-style (see docs).
+Use proper defines.
 
-> +          pin_rts {
-> +            function = "uart0";
-> +            pins = "gpio24";
-> +            bias-disable;
-> +        };
-> +
-> +        pin_cts {
-> +            function = "uart0";
-> +            pins = "gpio25";
-> +            bias-pull-up;
-> +        };
-> +      };
-> +
-> +      spi10_gpio2: spi10_gpio2 {
-> +        function = "vc_spi0";
-> +        pins = "gpio2", "gpio3", "gpio4";
+> +        clocks = <&clk_emmc2>;
+> +        sdhci-caps-mask = <0x0000C000 0x0>;
+> +        sdhci-caps = <0x0 0x0>;
+> +        mmc-ddr-3_3v;
+> +        clock-names = "sw_sdio";
 
-Messed indentation. Keep 4 space.
+names *always* follow property. In every DTS. Please fix youro DTS.
 
-> +        bias-disable;
-> +      };
-> +    };
-> +...
+
 
 Best regards,
 Krzysztof
