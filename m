@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-5474-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5475-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A97E8A40DE
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 09:21:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93E858A40ED
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 09:29:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3F931F21682
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 07:21:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C37CC1C20A7E
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 07:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B75B1CFBD;
-	Sun, 14 Apr 2024 07:21:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CF221F959;
+	Sun, 14 Apr 2024 07:29:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="G5vdpaEH"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="chUpjni5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-13.smtpout.orange.fr [80.12.242.13])
+Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D34EACE;
-	Sun, 14 Apr 2024 07:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B59A1C6A8;
+	Sun, 14 Apr 2024 07:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713079274; cv=none; b=CLl8FgXdBBYW300eZiwvDZK8sfv11KLmZl6iymbcPAYHI0jsj4uEmDtg4iXYeqh/ay5JwsTFmAhQv9AGGz+C67CzsO50au2gPSFMGVmuRhbWe1o6uXhxJ2eJZNH8Giu/ZcsGIumleViUY/Jr18Jnth9In0ixvWMjgjmnZrY7orE=
+	t=1713079740; cv=none; b=Y7tQV6CSEh4IhKaYjPdq5pOStOuHg/CnKOaKApSwYhqJM8Qch2UAcsYA/B1WbZo0gvF4mRYBBcefgYdRYGLlRaCHdCOzz8h08vEj9nKT20g1KCMXOE8TBc8hnLj4Zg5iin1E9EsgfxxWDRXiz/mPLU2bgcS3KoX0RA4fXm72tuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713079274; c=relaxed/simple;
-	bh=LffLWXbtrO8JQrVOEfI+ZVrSsRAK0cusnGbM3eJq/es=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cCWZuK1I6HZTr2A2IbpSPEVX9maj+VpBEMRiJwwArwbDjpZhftpX935cMq+IrvaoOboHZSOnYzG825wEFGR75H0y9CD0ztU6uyuT/HkII7XyS4cJiS624+z+hoZYdsw6dQKpsZhIKqBx6x/lYcKtcakggVWXoD/Q3+Kgnc/mAz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=G5vdpaEH; arc=none smtp.client-ip=80.12.242.13
+	s=arc-20240116; t=1713079740; c=relaxed/simple;
+	bh=zxDtmr9cEt3OU2v2d+Z08dqlldGrpRufndtqdNYKnlk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=LYT17mmCiLd6/xUf2U0wYnBp4rj8Mapv87IC6zQLFEv6h66wZ1/t4X+0a9lcpzj4FKmgwAVNfFAyFxKpenlm0A8/hXjZtaoK4PyQOHSa8NHU1rYOq3Qp/Sgjrf+DfPBV5ufWgMHsQCu5aF+q/fd0xKke0ZX4JySDSsD0TpgZUNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=chUpjni5; arc=none smtp.client-ip=80.12.242.26
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Received: from [192.168.1.18] ([86.243.17.157])
 	by smtp.orange.fr with ESMTPA
-	id vu9Xri76MUEo7vu9YrFcTz; Sun, 14 Apr 2024 09:19:54 +0200
+	id vuIGrbbZtReGpvuIHrYJio; Sun, 14 Apr 2024 09:28:55 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1713079195;
-	bh=HcKjhMiD/D1TvETHVyrW4OtEDwfkxXYGFLmr6OM5lX8=;
+	s=t20230301; t=1713079735;
+	bh=sg8mnWXtf9g5Ie61S+7ZWPXichK4YHH1B5BtmQzPcp0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=G5vdpaEHpJGN+C1v8XPSeNstGe8DdVLj57FyMhZY6BrpI9LOYflZile28IB43SWPm
-	 rnyixRiouyggiFlEUVncy0hWFoCweS8qWPl+0Ih2oXSGEgCqT+NFFnm3ASpOTqZ532
-	 9xVwMCqlBPdENLaw+3vXwxg/swzgvr8tj/wsjMg2oaPXxhoT8iSqXJU4EAcNWQ+dPo
-	 981uouKuhVykrQvgpn55J2Do4jQtURkVh2dGjbibR5QwIlu1sRtfdwhBBuY7yt3Kh2
-	 dmDzQYk2TsTwLYaiANIwJPMU5NBgXoRKI8Dtnh3PlEyx/aEF2TSx4HreqlQAc1zPrB
-	 2gDvrZs97RwvA==
+	b=chUpjni5ug14LifuErcTbkLCzLte4FPuoL4pJlu6lKeTCoAD+Y7Z1FTsMVx66miFQ
+	 VXWAxiwsaBWgHXkWWLLoesvYPoweacr23nndBiVD9QMrcc89XDLoGc48HrjCER2AM5
+	 VQnoejJQNVXlacqGEObUyhb1bN7boe8gX1L7uYN7TdipijICiRhlfwVtD/OdE8H88x
+	 Nq/x2Iq/Uzfy4pq9qjAaNDVzkCN8lNj7UsyGjCQKUBJc+PJyB1xmMg8uO7UzTay4+q
+	 WK4KXkbAKEVg1uwFVmvfnht2k44JQMorfe3Cdi4m20HKRQMtYKe2v8oxl8nZxfVqD/
+	 sQjtNZ0w+wFjA==
 X-ME-Helo: [192.168.1.18]
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 14 Apr 2024 09:19:54 +0200
+X-ME-Date: Sun, 14 Apr 2024 09:28:55 +0200
 X-ME-IP: 86.243.17.157
-Message-ID: <66b11910-c6e2-401c-a293-441f6d85bb90@wanadoo.fr>
-Date: Sun, 14 Apr 2024 09:19:46 +0200
+Message-ID: <059f414d-096e-4a45-bde5-d984fddf96b6@wanadoo.fr>
+Date: Sun, 14 Apr 2024 09:28:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,185 +57,90 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] pinctrl: bcm: Add pinconf/pinmux controller driver
- for BCM2712
-To: Andrea della Porta <andrea.porta@suse.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Adrian Hunter <adrian.hunter@intel.com>, Kamal Dasu
- <kamal.dasu@broadcom.com>, Al Cooper <alcooperx@gmail.com>,
- linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, Jonathan Bell <jonathan@raspberrypi.com>,
- Phil Elwell <phil@raspberrypi.com>
+Subject: Re: [PATCH 5/6] mmc: sdhci-brcmstb: Add BCM2712 support
+To: Andrea della Porta <andrea.porta@suse.com>
 References: <cover.1713036964.git.andrea.porta@suse.com>
- <8fb5dde9404875777587c867e7bdb4f691ab83f2.1713036964.git.andrea.porta@suse.com>
+ <7a75876def65f6282b7b3ca17ef8008c305d6c32.1713036964.git.andrea.porta@suse.com>
 Content-Language: en-MW
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <8fb5dde9404875777587c867e7bdb4f691ab83f2.1713036964.git.andrea.porta@suse.com>
+Cc: adrian.hunter@intel.com, alcooperx@gmail.com,
+ bcm-kernel-feedback-list@broadcom.com, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, florian.fainelli@broadcom.com,
+ jonathan@raspberrypi.com, kamal.dasu@broadcom.com,
+ krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+ phil@raspberrypi.com, robh@kernel.org, ulf.hansson@linaro.org
+In-Reply-To: <7a75876def65f6282b7b3ca17ef8008c305d6c32.1713036964.git.andrea.porta@suse.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 Le 14/04/2024 à 00:14, Andrea della Porta a écrit :
-> Add a pincontrol driver for BCM2712. BCM2712 allows muxing GPIOs
-> and setting configuration on pads.
+> Broadcom BCM2712 SoC has an SDHCI card controller using the SDIO CFG
+> register block present on other STB chips. Add support for BCM2712
+> SD capabilities of this chipset.
+> The silicon is SD Express capable but this driver port does not currently
+> include that feature yet.
+> Based on downstream driver by raspberry foundation maintained kernel.
 > 
-> Originally-by: Jonathan Bell <jonathan@raspberrypi.com>
-> Originally-by: Phil Elwell <phil@raspberrypi.com>
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> Signed-off-by: Andrea della Porta <andrea.porta-IBi9RG/b67k@public.gmane.org>
 > ---
->   drivers/pinctrl/bcm/Kconfig           |    9 +
->   drivers/pinctrl/bcm/Makefile          |    1 +
->   drivers/pinctrl/bcm/pinctrl-bcm2712.c | 1247 +++++++++++++++++++++++++
->   3 files changed, 1257 insertions(+)
->   create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm2712.c
+>   drivers/mmc/host/sdhci-brcmstb.c | 130 +++++++++++++++++++++++++++++++
+>   1 file changed, 130 insertions(+)
 
 ...
 
-> +static int bcm2712_pmx_get_function_groups(struct pinctrl_dev *pctldev,
-> +		unsigned selector,
-> +		const char * const **groups,
-> +		unsigned * const num_groups)
+> +static void sdhci_brcmstb_set_power(struct sdhci_host *host, unsigned char mode,
+> +				  unsigned short vdd)
 > +{
-> +	struct bcm2712_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
+> +	if (!IS_ERR(host->mmc->supply.vmmc)) {
+> +		struct mmc_host *mmc = host->mmc;
 
-Missing empty new line.
+This would look nicer if mmc was defined at the beginning of the 
+function and used in the if (!IS_ERR()) test.
 
-> +	/* every pin can do every function */
-> +	*groups = pc->gpio_groups;
-> +	*num_groups = pc->pctl_desc.npins;
 > +
-> +	return 0;
+> +		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
+> +	}
+> +	sdhci_set_power_noreg(host, mode, vdd);
 > +}
+> +
+>   static void sdhci_brcmstb_set_uhs_signaling(struct sdhci_host *host,
+>   					    unsigned int timing)
+>   {
+> @@ -168,6 +233,36 @@ static void sdhci_brcmstb_set_uhs_signaling(struct sdhci_host *host,
+>   	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
+>   }
 
 ...
 
-> +static int bcm2712_pinconf_get(struct pinctrl_dev *pctldev,
-> +			unsigned pin, unsigned long *config)
-> +{
-> +	struct bcm2712_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-> +	enum pin_config_param param = pinconf_to_config_param(*config);
-> +	u32 arg;
-> +
-> +	switch (param) {
-> +	case PIN_CONFIG_BIAS_DISABLE:
-> +		arg = (bcm2712_pull_config_get(pc, pin) == BCM2712_PULL_NONE);
-> +		break;
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +		arg = (bcm2712_pull_config_get(pc, pin) == BCM2712_PULL_DOWN);
-> +		break;
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		arg = (bcm2712_pull_config_get(pc, pin) == BCM2712_PULL_UP);
-> +		break;
-> +	default:
-> +		return -ENOTSUPP;
+> @@ -354,6 +468,19 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+>   	if (res)
+>   		goto err;
+>   
+> +	priv->pinctrl = devm_pinctrl_get(&pdev->dev);
+> +	if (IS_ERR(priv->pinctrl)) {
+> +			no_pinctrl = true;
+> +	}
+
+Indentation looks to large here.
+No need to { }
+
+> +	priv->pins_default = pinctrl_lookup_state(priv->pinctrl, "default");
+> +	if (IS_ERR(priv->pins_default)) {
+> +			dev_dbg(&pdev->dev, "No pinctrl default state\n");
+> +			no_pinctrl = true;
+
+Indentation looks to large here.
+
 > +	}
 > +
-> +	*config = pinconf_to_config_packed(param, arg);
+> +	if (no_pinctrl )
+> +		priv->pinctrl = NULL;
 > +
-> +	return -ENOTSUPP;
-
-Strange.
-
-	return 0;
-?
-
-> +}
-> +
-> +static int bcm2712_pinconf_set(struct pinctrl_dev *pctldev,
-> +			       unsigned int pin, unsigned long *configs,
-> +			       unsigned int num_configs)
-> +{
-> +	struct bcm2712_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-> +	u32 param, arg;
-> +	int i;
-> +
-> +	for (i = 0; i < num_configs; i++) {
-> +		param = pinconf_to_config_param(configs[i]);
-> +		arg = pinconf_to_config_argument(configs[i]);
-> +
-> +		switch (param) {
-> +		case PIN_CONFIG_BIAS_DISABLE:
-> +			bcm2712_pull_config_set(pc, pin, BCM2712_PULL_NONE);
-> +			break;
-> +		case PIN_CONFIG_BIAS_PULL_DOWN:
-> +			bcm2712_pull_config_set(pc, pin, BCM2712_PULL_DOWN);
-> +			break;
-> +		case PIN_CONFIG_BIAS_PULL_UP:
-> +			bcm2712_pull_config_set(pc, pin, BCM2712_PULL_UP);
-> +			break;
-> +		default:
-> +			return -ENOTSUPP;
-> +		}
-> +	} /* for each config */
-
-This comment is not really usefull, IMHO.
-
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int bcm2712_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	//struct device_node *np = dev->of_node;
-> +	const struct bcm_plat_data *pdata;
-> +	//const struct of_device_id *match;
-> +	struct bcm2712_pinctrl *pc;
-> +	const char **names;
-> +	int num_pins, i;
-> +
-> +	pdata = device_get_match_data(&pdev->dev);
-> +	if (!pdata)
-> +		return -EINVAL;
-> +
-> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-> +	if (!pc)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, pc);
-> +	pc->dev = dev;
-> +	spin_lock_init(&pc->lock);
-> +
-> +	//pc->base = devm_of_iomap(dev, np, 0, NULL);
-
-Any use for this commented code? (and variable declarations above)
-
-CJ
-
-> +	pc->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (WARN_ON(IS_ERR(pc->base))) {
-> +		//dev_err(dev, "could not get IO memory\n");
-> +		return PTR_ERR(pc->base);
-> +	}
-> +
-> +	pc->pctl_desc = *pdata->pctl_desc;
-> +	num_pins = pc->pctl_desc.npins;
-> +	names = devm_kmalloc_array(dev, num_pins, sizeof(const char *),
-> +				   GFP_KERNEL);
-> +	if (!names)
-> +		return -ENOMEM;
-> +	for (i = 0; i < num_pins; i++)
-> +		names[i] = pc->pctl_desc.pins[i].name;
-> +	pc->gpio_groups = names;
-> +	pc->pin_regs = pdata->pin_regs;
-> +	pc->pin_funcs = pdata->pin_funcs;
-> +	pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
-> +	if (IS_ERR(pc->pctl_dev))
-> +		return PTR_ERR(pc->pctl_dev);
-> +
-> +	pc->gpio_range = *pdata->gpio_range;
-> +	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
-> +
-> +	return 0;
-> +}
+>   	/*
+>   	 * Automatic clock gating does not work for SD cards that may
+>   	 * voltage switch so only enable it for non-removable devices.
 
 ...
 
