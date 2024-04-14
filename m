@@ -1,188 +1,147 @@
-Return-Path: <linux-gpio+bounces-5477-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5478-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9130B8A41B7
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 12:07:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 290D68A41D6
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 12:35:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B056D1C20E12
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 10:07:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 606CA281B78
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 10:35:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D75302421D;
-	Sun, 14 Apr 2024 10:07:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB5C62BCF9;
+	Sun, 14 Apr 2024 10:35:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="AXrl34k4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TbVAWPZW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B5C2C190;
-	Sun, 14 Apr 2024 10:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01BB1BF37
+	for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 10:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713089270; cv=none; b=DRedod4N2zAsEB6/E0p3+fMkWR1PokB7MNbWySLIdVDbumku53LgpiXLQz/IdI5KLr7Kob4Sewn3+hu3uu+cT6LLRV+VmyqeOpo81Xo9qGQX5rguP6rUOiEMo6VlphbVtGcAoBJIg9reTHrnQ0rKL3QK0zZg7dKzbPHNleihVO0=
+	t=1713090900; cv=none; b=YsHd4we4T7hnSTq1D1Nybg8vhUmMZ7eys8Y6uRwxTRWcRcOTlhjlFyttDl95w5RNMjp8H7ozigA7DxpgW+/kNWaBKH+1dMHDimFP53Hy6alforRkXza2tPkHlMH3ho8Q5GOXfxeCokgRjPh3aSFa5X0xkSJG3xYDl7bFuro2gc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713089270; c=relaxed/simple;
-	bh=PYNxOTBDPas3DhTn/LjQCOuHCajbvwfrlkj0oizsSsc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZpnNq9rkZC/RBF2USipZ0DT/2HvSjjlwg7Mtr/V+2OnfzOr4xM7bbJTxsl22mhcvwz5Ml6N7JIU7tisXZFytiTjGDxqC3po41J5Qqem8bCERmI42BJD3OHI6T7FrSPUCIYPxmVi53cLLbcxkmpIt2Z+PMQ47lIvebspbiJA5CjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=AXrl34k4; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1713089245; x=1713694045; i=wahrenst@gmx.net;
-	bh=BcXnyFLSiecfEm9hOusCZzYCTA6xHvCbglcnW+Su5Vc=;
-	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
-	b=AXrl34k4NiaR2xaCHzeaEXjYxpdn6m+RgoiOMGSVaIIq+ebfvFIGsR9fkBn9Vtrb
-	 +gXCgsJ4X7Gy508BafjwLAEN60VUQ9cz4in8dYLRJmEmSNoaniKWwTPZKDkXjDgLc
-	 j7Wn7lcB30e1n80Wn4O55TY/eoPXZvUhbaHGJJKFsEW0oJmHlEt8hYSmjer7TulEX
-	 9zeG+Ir5+aYzW3JW7pW9p/OraVRmvi1b8jGbzh1Q9pxW4iprrhk2d8mQmq/3k3tdU
-	 7HfLZIps80ScP4PruUT1xDug+E+WxeaO/DVHccwpL2OoqrLkHVgNQPxCAfpE7ByZN
-	 zrq4lcDKgtckw/9eIw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MkHMZ-1sbI0L4Bq5-00kcXr; Sun, 14
- Apr 2024 12:07:25 +0200
-Message-ID: <fd77cfa2-9bd8-4393-95bd-eced676bf6d2@gmx.net>
-Date: Sun, 14 Apr 2024 12:07:23 +0200
+	s=arc-20240116; t=1713090900; c=relaxed/simple;
+	bh=ZN/2Rkys9GxS+NsmV9Oq0Mou1cdT+ldCxQlnc+6y1vY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GREboflD4fxWBG2o+ukbpJk20bvF5xt7xaUDTeyy3yC4xFGmpyUNqQHD6lL3NvMxtZp3kPYJ5r0UX09PtiG4SHBQ+6f+SoMkimHvjNEBIW4Rk0LdEBfCCzk2DXnqYDmaWfTFPZoEgkch8OuehGjJpIAX1SzRy8roQnynQcC5PXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TbVAWPZW; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-518a56cdbcfso1637690e87.2
+        for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 03:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713090897; x=1713695697; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3UQ++gxwD9lwMiCPaVI4itHAEaPjf5P2ziIdw7YNOfg=;
+        b=TbVAWPZW99jP3BcNiP677lo1DMX1oAodpK5mNVpNgxzWVzIUrMLna3n4c6jHBjNjRU
+         Q8M1errvEFlQHPBG4TBwM/aFv0uElPUC50G1OqrIOnWy74ueKkquWYSgHtqFi7EGi0m8
+         Ju4nTuWqKjVgPu3FCFOl4QoHxL0qLt4rYferqAtydtyc+0i+ztZwklrstSOcG910W2x0
+         CDbkxRhtIbVNNxhcX5XbXndb/VZkAJtqChDA+3yltDkGtSrEZB+rq2WGW9VHvd5LBIpA
+         Vj4E7wQBUqERVFfqTLgbJHUpwnVh5MDk8XCSyK4jTClY9sA1xQo3GeRqFxNAZ6Lken/r
+         w/qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713090897; x=1713695697;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3UQ++gxwD9lwMiCPaVI4itHAEaPjf5P2ziIdw7YNOfg=;
+        b=DQ7leyYjOmDOsruFde85zOSMzEgg5J9UeoCLQRGs98/69UaUJZE8OSpWFuWpJKZfQx
+         WLaTiW5u+52equsnMhOsSUaeFPQ7j7tedJt6s1fkbqD1Eb0ZzyQ1AoQwpSScL4/IWOlj
+         tv/JNw9g042IXvvtR8tKyt6pW3Xt5BLF3jVwRNu8RuFZBotf2mkA+itlH/GWqZzDutyr
+         B/pkuF9/pNVUdfHwghd9qNwSgn4kRv6ETdRiM2yJKPn37EHKRtwzIk9pBcVpJaBKKacu
+         DkYhYCdq4lIyuolHVseiNF2QTW9P68j2xzhosdv8fDjz2xpzcR7bqchgAmvlf2siSXQn
+         F2Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZu7mxWNW1SMjE29fhf5kFifvW5Wc/DTFNOuXRCGLksI7d+QmXtoZKUiMmBC69orkOa4n4ceioRdEryp2TvKc1LhaCx4FYGFVSBw==
+X-Gm-Message-State: AOJu0YwBUSFJgJgWt5EtLCnuvOaqu7UWEfdtiyzOqly8LRLsixuu+RcE
+	Owvk19hqXTJPa5E994rVJPlekx0vE1J54FTNhkOcDiCwJ8p6g4fG0TrEsIrIz9k=
+X-Google-Smtp-Source: AGHT+IHRRIhsXhtPQpbnXWRN/evFQ9xpq1CsTuwyuPbVM1PmrjssVucapgd3lt6ANs4aSbJrf6z1aQ==
+X-Received: by 2002:ac2:53b3:0:b0:518:c2a5:5a3b with SMTP id j19-20020ac253b3000000b00518c2a55a3bmr1372919lfh.46.1713090896785;
+        Sun, 14 Apr 2024 03:34:56 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id ne33-20020a1709077ba100b00a51b26ba6c5sm4032596ejc.219.2024.04.14.03.34.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Apr 2024 03:34:56 -0700 (PDT)
+Date: Sun, 14 Apr 2024 13:34:52 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Robert Marko <robimarko@gmail.com>
+Cc: Hanna Hawa <hhhawa@amazon.com>, andriy.shevchenko@linux.intel.com,
+	wsa@kernel.org, linus.walleij@linaro.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
+	talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
+	farbere@amazon.com, itamark@amazon.com
+Subject: Re: [PATCH v5 2/2] i2c: Set i2c pinctrl recovery info from it's
+ device pinctrl
+Message-ID: <ac51854b-09a6-4b79-b409-b950929655cb@moroto.mountain>
+References: <20221228164813.67964-1-hhhawa@amazon.com>
+ <20221228164813.67964-3-hhhawa@amazon.com>
+ <416340b6-33a9-4b9e-bdc5-c5a9cffb3055@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] Add support for BCM2712 SD card controller
-To: Andrea della Porta <andrea.porta@suse.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Adrian Hunter <adrian.hunter@intel.com>, Kamal Dasu
- <kamal.dasu@broadcom.com>, Al Cooper <alcooperx@gmail.com>,
- linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, Jonathan Bell <jonathan@raspberrypi.com>,
- Phil Elwell <phil@raspberrypi.com>
-References: <cover.1713036964.git.andrea.porta@suse.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <cover.1713036964.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:accCx00poYGsvNcwQW0/34oRbtZyJ0evPPlSzcwec8RRGSsPtyL
- H8/yzIccKZRoXazP5Vorco9XbWGpZRbWwNDZ/I8xg3F7us6hcBusj0i3Gu5f3xS83sgaujI
- Kwvn2AG/sgbeHzNZEwEXEbUHp+pKoxo/by/mYab/eGqg6UXM+A6WFfnnX9jVq9Rmgz6x/gi
- pNbnG+q7hTDHFLJLi+uwg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jbo1m5rDERM=;opjDWYBWEtwH5Lex+q8wTD3WUsl
- qVKp2vcCJLptK1C8b1MDSIniJP9yVPydZ/XY6XCZyJoC2kTI7RrMG97ZBpgpo7AauVWkzOdQ8
- 6u8j/QbbJD266Avl37xxYavcbszqnXRa5NjPzJtO3fmPaq6HS5qCuyyUQ/ZFUPkDK1jLBpg6w
- tJr+QJ/1wuaAfAxziJoHCyAMYGVSvd4+iwZrCp1+M21x+3G9ypX52kSWHLHGCmpKvUjKDlVYM
- UUUDEaqjw4t5t1A7TRJQu33otVggqtVjR740XPT9SzqrdePwqE7g91MXMiQ30VJAus3Q7Q5eM
- +scKWV3/tKLfLQmZUn5q4mcyNsrlArCKImQdG3z/r2DwXpDx2GGmG47LdNek8HL0auYLInfDd
- tiGBdXTLLNA282dbQvz+EtMG6dUP0wisxX2Soz+WK/BbuYiJxsXB/HgKzkTFEbObtRfT0nplx
- 9sfP9ZVfHIJCH958kpy7yjuBbxtDKd9c3rHVXDQDE+wyzpP4xGdfAt1Jg0cZunPnHWQSThVQv
- k7flYjpdL9hFbiVav+0ldEjT5cJYWxU5aKMJk566fhcwUjs0gvkLszDnicLBKtGHz4pK0n/1m
- fLFI2YN6taln4gU24mX1nRRSGf/wiq+i219Re1eBBmtz4bbszjHKeRehARinA7MZTsc05cWYC
- B3kgaHHg9LCLKekT9PmarzNNZ/W0RpbmLMl59U8nviS03hPF9NoFIN50BjyOV6rbvuwVMJzhf
- MP0X+fYTmXR5R2GedhU5hqyJoBHWTEBMyXuxAP+XTJFaF4P0xh5dbfYxyDQSGCLnPpxAxLWG2
- CJR7fnkjB4Xg+sfcGA5IMJndBSbtEgLwrdsML7dNBZ7Z4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <416340b6-33a9-4b9e-bdc5-c5a9cffb3055@gmail.com>
 
-Hi Andrea,
+On Thu, Apr 11, 2024 at 07:08:56PM +0200, Robert Marko wrote:
+> 
+> On 28. 12. 2022. 17:48, Hanna Hawa wrote:
+> > Currently the i2c subsystem rely on the controller device tree to
+> > initialize the pinctrl recovery information, part of the drivers does
+> > not set this field (rinfo->pinctrl), for example i2c DesignWare driver.
+> > 
+> > The pins information is saved part of the device structure before probe
+> > and it's done on pinctrl_bind_pins().
+> > 
+> > Make the i2c init recovery to get the device pins if it's not
+> > initialized by the driver from the device pins.
+> > 
+> > Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >   drivers/i2c/i2c-core-base.c | 5 ++++-
+> >   1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> > index 7539b0740351..fb5644457452 100644
+> > --- a/drivers/i2c/i2c-core-base.c
+> > +++ b/drivers/i2c/i2c-core-base.c
+> > @@ -34,6 +34,7 @@
+> >   #include <linux/of.h>
+> >   #include <linux/of_irq.h>
+> >   #include <linux/pinctrl/consumer.h>
+> > +#include <linux/pinctrl/devinfo.h>
+> >   #include <linux/pm_domain.h>
+> >   #include <linux/pm_runtime.h>
+> >   #include <linux/pm_wakeirq.h>
+> > @@ -282,7 +283,9 @@ static void i2c_gpio_init_pinctrl_recovery(struct i2c_adapter *adap)
+> >   {
+> >   	struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
+> >   	struct device *dev = &adap->dev;
+> > -	struct pinctrl *p = bri->pinctrl;
+> > +	struct pinctrl *p = bri->pinctrl ?: dev_pinctrl(dev->parent);
+> > +
+> > +	bri->pinctrl = p;
+> 
+> Hi Hanna,
+> I know this has already been merged, but setting bri->pinctrl breaks PXA
+> recovery.
 
-Am 14.04.24 um 00:14 schrieb Andrea della Porta:
-> Hi,
->
-> This patchset adds support for the SDHCI controller on Broadcom BCM2712
-> SoC in order to make it possible to boot (particularly) Raspberry Pi 5
-> from SD card. This work is heavily based on downstream contributions.
-since your goal is minimal Raspberry Pi 5 support, i suggest to use this
-as the subject for this patch.
-> Patch #1 and 2: introduce the dt binding definitions for, respectively,
-> the new pin cfg/mux controller and the SD host controller as a preparato=
-ry
-> step for the upcoming dts.
->
-> Patch #3: add a somewhat reasonable (*almost* bare-minimum) dts to be us=
-ed
-> to boot Rpi5 boards. Since till now there was no support at all for any
-> 2712 based chipset, both the SoC and board dts plus definitions for the
-> new Pin and SD host controller have been added.
-The patch still seems to contain a lot unnecessary stuff (Wifi, BT,
-SPI), please try to remove as much as possible for the minimal support
-(just boot via debug UART & SD card) in order to make review easier. Btw
-this patch must be after pinctrl & SDHCI support.
-> Patch #4: the driver supporting the pin controller. Based on [1] and
-> successive fix commits.
->
-> Patch #5: add SDHCI support. Based on [2] and the next 2 fix commits.
-> Drop the SD Express implementation for now, that will be added by patch
-> #6.
->
-> Patch #6: this patch offers SD Express support and can be considered tot=
-ally
-> optional. The callback plumbing is slightly different w.r.t. the downstr=
-eam
-> approach (see [3]), as explained in the patch comment. Not sure what is =
-the best,
-> any comment is highly appreciated.
-I don't think this should be necessary for minimal Raspberry Pi 5
-support. Maybe this should be addressed later.
+This is patch is a year and half old so it's a bit late to just revert
+it...
 
-More important would be an additional patch which enables the necessary
-drivers in arm64/defconfig.
->
-> Tested succesfully on Raspberry Pi 5 using an SDxC card as the boot devi=
-ce.
->
-> Still untested:
-> - SD Express due to the lack of an Express capable card.
->    Also, it will need PCIe support first.
-> - card detection pin, since the sd was the booting and root fs device.
->
-> Many thanks,
-> Andrea
->
-> Links:
-> [1] - https://github.com/raspberrypi/linux/commit/d9b655314a826724538867=
-bf9b6c229d04c25d84
-> [2] - https://github.com/raspberrypi/linux/commit/e3aa070496e840e72a4dc3=
-84718690ea4125fa6a
-> [3] - https://github.com/raspberrypi/linux/commit/eb1df34db2a9a5b752eba4=
-0ee298c4ae87e26e87
->
-> Andrea della Porta (6):
->    dt-bindings: pinctrl: Add support for BCM2712 pin controller
->    dt-bindings: mmc: Add support for BCM2712 SD host controller
->    arm64: dts: broadcom: Add support for BCM2712
->    pinctrl: bcm: Add pinconf/pinmux controller driver for BCM2712
->    mmc: sdhci-brcmstb: Add BCM2712 support
->    mmc: sdhci-brcmstb: Add BCM2712 SD Express support
->
->   .../bindings/mmc/brcm,sdhci-brcmstb.yaml      |   51 +-
->   .../pinctrl/brcm,bcm2712-pinctrl.yaml         |   99 ++
->   arch/arm64/boot/dts/broadcom/Makefile         |    1 +
->   .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |  313 +++++
->   arch/arm64/boot/dts/broadcom/bcm2712-rpi.dtsi |   81 ++
->   arch/arm64/boot/dts/broadcom/bcm2712.dtsi     |  841 +++++++++++
->   drivers/mmc/host/Kconfig                      |    1 +
->   drivers/mmc/host/sdhci-brcmstb.c              |  275 ++++
->   drivers/pinctrl/bcm/Kconfig                   |    9 +
->   drivers/pinctrl/bcm/Makefile                  |    1 +
->   drivers/pinctrl/bcm/pinctrl-bcm2712.c         | 1247 +++++++++++++++++
->   11 files changed, 2918 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm2=
-712-pinctrl.yaml
->   create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
->   create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi.dtsi
->   create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712.dtsi
->   create mode 100644 drivers/pinctrl/bcm/pinctrl-bcm2712.c
->
+What does "breaks" mean in this context?  Is there a NULL dereference?
+Do you have a stack trace?  It's really hard to get inspired to look at
+the code when the bug report is so vague...
 
+regards,
+dan carpenter
 
