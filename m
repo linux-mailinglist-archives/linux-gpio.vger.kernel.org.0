@@ -1,194 +1,248 @@
-Return-Path: <linux-gpio+bounces-5479-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5480-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ABA08A4249
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 14:30:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EFD48A437E
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 17:45:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7998281DB9
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 12:30:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15EFE1F212D5
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Apr 2024 15:45:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6062B4122C;
-	Sun, 14 Apr 2024 12:30:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06223134751;
+	Sun, 14 Apr 2024 15:45:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ewFGnCEn"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GASB5ifX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC363E47E
-	for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 12:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519F913473B
+	for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 15:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713097804; cv=none; b=kNF8tKkdMhoChgRQ/TTx2Ddt0lr7+ZrLdzBvo29PsiVRSopnUzc1QDBK4UfmQJEdOHpSNPVSF6iFQi3MHLigVwEemqGaX3eQDrLPZXKVCH7CSJUY7P7MO6j012GPXE0LaHjIlTu7qTTvrxDvNMZaQCG/5BMzaGEeTJWUrKpD9RU=
+	t=1713109515; cv=none; b=KgwmkBf0rQJ/sPtQMU1Kg55FWEdg6pcTkJwqx0nJJd6CbYL2cFzGso0klVmruFdgVDoCV0Ggx74O5ULulA2mC8IvT1LqQYd0/n2DtKyvbqjj/r0GXM5SLa6ivJnpnLevUoWxfHc1Bnhwh6yCREsCFK934mzVdxqyTRHiiWHvEAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713097804; c=relaxed/simple;
-	bh=qtuGD8Qi4HO+ZSdqf76Z5o59Yz2gkaVB/fgAlcvdcig=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ONyrLcNSeejBcY5iS4GQmSOi28p6NF+yK3tvIccUPEGN/qHZDq4/EH8kA66g5TFm9raPjo10ddkzrL9FY2umPfXGrunwKXBOt2BjfTVcIM2ZO8AlOjJsags9UjBm8rvO0j54Wqvm9tsFwncIfgtdG7lCGYb322cSraX65pCOJJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ewFGnCEn; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so3752906a12.2
-        for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 05:30:02 -0700 (PDT)
+	s=arc-20240116; t=1713109515; c=relaxed/simple;
+	bh=OEIc28ol07Z7mVvQY4Coob3YaeEqgT4KTxem7ySMWWw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=msfhe2tob63HuEOw3wzvs2QB4ypSdnbBR4GLBRN4PDZ9aDiumhEEeJkpEhG2CMB0NB3wiDnbtoe3ufBwYQIf+pZTSuAhwyOwBmnwFfdPXEvpycvRzeEDlGNYGyB7ku3v/T4OjuVuNnp918TBcldT16WuvDVFXniXGVqm7Dx8+U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=GASB5ifX; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-22ed075a629so1578033fac.3
+        for <linux-gpio@vger.kernel.org>; Sun, 14 Apr 2024 08:45:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713097800; x=1713702600; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7hIs1bD9y9NsQj6kW1NSHcxE0175odmhzu852gkfegI=;
-        b=ewFGnCEnsThaTAW/3acmQXmy+g2Uqe2GKZtMS6Vi4mhTVp5JgLWLr5FcT98MzBpOPx
-         vkKlebYhk80zW51+ivLvwmfk8yGfGBcBlNBO1yS4PaJnDUItOT7cHuLRS3yQ+3HOgLHl
-         XpCO5rGiFDD9zOMJikJEd/x9w8MNAKTn9+TE6WO4Y2NDRSIOPuCaQf4bsDErZHYqP4YE
-         gCY2sYREy1jkTYhEIJkcCULAVTjuuK147/BXJQAi3JFDcjCWx8iDACcTz815lArjWvfC
-         ouUqZfaPJXmwWToex23dAS0/jkkPoHSvpi88xsbpTodCyfRMqMCbXbbUBfbDrnQ9ioHs
-         SoDA==
+        d=broadcom.com; s=google; t=1713109513; x=1713714313; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HLn6z2YP21yRN1ieUQH2RoQV4iBbEpUsHxXmWtgxO74=;
+        b=GASB5ifXSkcINP2Zp+d04mnZvBOE61oT4RK/av2U8+6znvT3Ns1UydTue6ofQLYRl/
+         D4aCYj+p+56LZ+9JQZG31BZtvv3trzafs0m1frdAvl40UvCt3funO/7g7HwQCfz4+t3i
+         sQ14DqPv8Gs1wre0DoT/C0P0Q8pw8BfzSpgpw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713097800; x=1713702600;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7hIs1bD9y9NsQj6kW1NSHcxE0175odmhzu852gkfegI=;
-        b=vSM+l4Qo10p6CHnbnVX4pfktYOjs8DSqlLNxgroMQVxo1p/Qa5gCyH661AHJcO0xo4
-         dPMXFULHV+LncvY0BWR6ROIPyKazFdX4J79pLXXtMLwNeWPyATsPpDrfFOCZZzM+unGq
-         PCWZ/S1PZU3rUAQGFjOyTyqskReWghXfjjG4+mD9RDs7QtwE0atTCMBHp67xg4/C7E0z
-         G/HdhW81ifAJJkE2nAKCEKQqqWHzjMieWSR1WVdRzuUZA5Daqvj6JETQmS79Dqa2KciH
-         L9LPoGluh9kUga6m0bc85jEMxVCV1tzJcsOF8cL+JmMJb5eybCCO7OowPAkeCoHLG2tj
-         JUzw==
-X-Gm-Message-State: AOJu0Yy68mvdWUlsasckvXyIfPmSNLqGKcpoj9ubEwSxHhWeGodyiunE
-	h90mZWSSC/itnxP70kn5RK3wN4iHfpuV1u0aT3q5lQGnAOczPa+fC8zKDz2MJ7weOF/MFf8uP92
-	o
-X-Google-Smtp-Source: AGHT+IFwr+gNRmOq9CKC+4GESGFYUZcAo31/rgDiivZsBuiZf4jGEsG/clVafzMhgYKNSENjyzOqqg==
-X-Received: by 2002:a17:906:c116:b0:a52:35d2:2e72 with SMTP id do22-20020a170906c11600b00a5235d22e72mr6581105ejc.68.1713097800323;
-        Sun, 14 Apr 2024 05:30:00 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id mb24-20020a170906eb1800b00a525609ae30sm1337462ejb.169.2024.04.14.05.29.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Apr 2024 05:29:59 -0700 (PDT)
-Date: Sun, 14 Apr 2024 15:29:56 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: zengheng4@huawei.com
-Cc: linux-gpio@vger.kernel.org
-Subject: [bug report] pinctrl: devicetree: fix null pointer dereferencing in
- pinctrl_dt_to_map
-Message-ID: <ec8acd44-f71d-4b91-be5e-1bf1b1aad062@moroto.mountain>
+        d=1e100.net; s=20230601; t=1713109513; x=1713714313;
+        h=in-reply-to:autocrypt:from:references:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HLn6z2YP21yRN1ieUQH2RoQV4iBbEpUsHxXmWtgxO74=;
+        b=vKNheJdEpWa5NXdU7QgLnwIQLy40IwtqlBQF8zJNfVxYZmDYo4vsA02aPFUvldMTBS
+         s8yWGdb2Tk9OglbMpRDhPtphq+1uN0BCA7qFnehvP+tMTTdpUiF7e1K1BJVLnp+mLauO
+         XsrEqp9tFDsw98LgVFg2CE5k30pVE0CaYtT9MdQoVV6i7+JWSH3sdoVEtE7WRk1d0Qzy
+         rSEn5NvnPO/aBNa/CRv1CDKKqsvH2tAauIoLAVAKs1bkEL7m1sSxkrkgQcqUfXW1sj3z
+         5Aa6sYKFcCiGicJ1yen4iEiG5lHsuAuVI8ATj+xTPYxyh8d3wjhjy1QnYBQjib0rV+do
+         GqVg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3BR4pksgIicZ/FTZABcKGJOAU2K3cSsNpgqcZn4bs6aTokMPIxCKNcel7+kN8ca2mOYTi00u6WWQaJhUuVKezlrxRp22mdxy3mA==
+X-Gm-Message-State: AOJu0YyLSYc1nqa7KUZxfTPzJGRcFIHP05jlgDUDr9H3D9SemsOZFL7H
+	1clU9eMYI0SG4jHYLPB5GOg4xOzNM9RKpRLW4qMRl9M3CNGNyUS/zGl68/gS3w==
+X-Google-Smtp-Source: AGHT+IGef64XBAsBgkfNWJu7tZdsIvG1R9p8nGTV2yY4dPAh702uD6D9389J+VOEi8V1ym/GC2/1jg==
+X-Received: by 2002:a05:6870:330b:b0:221:8dd0:9920 with SMTP id x11-20020a056870330b00b002218dd09920mr10210589oae.47.1713109513373;
+        Sun, 14 Apr 2024 08:45:13 -0700 (PDT)
+Received: from [10.230.29.214] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id p12-20020aa7860c000000b006eae2d9298esm5692768pfn.194.2024.04.14.08.45.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 14 Apr 2024 08:45:09 -0700 (PDT)
+Message-ID: <f6601f73-cb22-4ba3-88c5-241be8421fc3@broadcom.com>
+Date: Sun, 14 Apr 2024 08:45:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: Add support for BCM2712 pin
+ controller
+To: Andrea della Porta <andrea.porta@suse.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, Kamal Dasu
+ <kamal.dasu@broadcom.com>, Al Cooper <alcooperx@gmail.com>,
+ linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Jonathan Bell <jonathan@raspberrypi.com>,
+ Phil Elwell <phil@raspberrypi.com>
+References: <cover.1713036964.git.andrea.porta@suse.com>
+ <2d1272cad92ad618297a6683e9264e31b8f2df73.1713036964.git.andrea.porta@suse.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <2d1272cad92ad618297a6683e9264e31b8f2df73.1713036964.git.andrea.porta@suse.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000063dc90616106487"
 
-Hello Zeng Heng,
+--000000000000063dc90616106487
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Commit 91d5c5060ee2 ("pinctrl: devicetree: fix null pointer
-dereferencing in pinctrl_dt_to_map") from Nov 10, 2022, leads to the
-following Smatch static checker warning:
 
-	drivers/pinctrl/devicetree.c:224 pinctrl_dt_to_map()
-	warn: refcount leak 'np->kobj.kref.refcount.refs.counter': lines='224'
 
-drivers/pinctrl/devicetree.c
-    196 int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
-    197 {
-    198         struct device_node *np = p->dev->of_node;
-    199         int state, ret;
-    200         char *propname;
-    201         struct property *prop;
-    202         const char *statename;
-    203         const __be32 *list;
-    204         int size, config;
-    205         phandle phandle;
-    206         struct device_node *np_config;
-    207 
-    208         /* CONFIG_OF enabled, p->dev not instantiated from DT */
-    209         if (!np) {
-    210                 if (of_have_populated_dt())
-    211                         dev_dbg(p->dev,
-    212                                 "no of_node; not parsing pinctrl DT\n");
-    213                 return 0;
-    214         }
-    215 
-    216         /* We may store pointers to property names within the node */
-    217         of_node_get(np);
-    218 
-    219         /* For each defined state ID */
-    220         for (state = 0; ; state++) {
-    221                 /* Retrieve the pinctrl-* property */
-    222                 propname = kasprintf(GFP_KERNEL, "pinctrl-%d", state);
-    223                 if (!propname)
---> 224                         return -ENOMEM;
+On 4/13/2024 3:14 PM, Andrea della Porta wrote:
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
+>   .../pinctrl/brcm,bcm2712-pinctrl.yaml         | 99 +++++++++++++++++++
+>   1 file changed, 99 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm2712-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2712-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2712-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..2908dfe99f3e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2712-pinctrl.yaml
+> @@ -0,0 +1,99 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/brcm,bcm2712-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom BCM2712 pin controller
 
-This should probably be "ret = -ENOMEM; goto err;", but is it okay to
-goto err on the first iteration when state is zero?
+This is not strictly speaking BCM2712 specific, the pin controller you 
+describe is a Broadcom STB product line pin controller.
 
-    225                 prop = of_find_property(np, propname, &size);
-    226                 kfree(propname);
-    227                 if (!prop) {
-    228                         if (state == 0) {
-    229                                 of_node_put(np);
-    230                                 return -ENODEV;
+Please describe it as such as and make BCM2712 a specific instance of 
+the chip using that pin controller, see more comments on patch #4.
+-- 
+Florian
 
-Here state == 0 is treated as a special case.  Which is fine.  But
-could it also have done a goto err instead?  I hope so because otherwise
-we'd have a bug later on the first iteration...
+--000000000000063dc90616106487
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-    231                         }
-    232                         break;
-    233                 }
-    234                 list = prop->value;
-    235                 size /= sizeof(*list);
-    236 
-    237                 /* Determine whether pinctrl-names property names the state */
-    238                 ret = of_property_read_string_index(np, "pinctrl-names",
-    239                                                     state, &statename);
-    240                 /*
-    241                  * If not, statename is just the integer state ID. But rather
-    242                  * than dynamically allocate it and have to free it later,
-    243                  * just point part way into the property name for the string.
-    244                  */
-    245                 if (ret < 0)
-    246                         statename = prop->name + strlen("pinctrl-");
-    247 
-    248                 /* For every referenced pin configuration node in it */
-    249                 for (config = 0; config < size; config++) {
-    250                         phandle = be32_to_cpup(list++);
-    251 
-    252                         /* Look up the pin configuration node */
-    253                         np_config = of_find_node_by_phandle(phandle);
-    254                         if (!np_config) {
-    255                                 dev_err(p->dev,
-    256                                         "prop %s index %i invalid phandle\n",
-    257                                         prop->name, config);
-    258                                 ret = -EINVAL;
-    259                                 goto err;
-    260                         }
-    261 
-    262                         /* Parse the node */
-    263                         ret = dt_to_map_one_config(p, pctldev, statename,
-    264                                                    np_config);
-    265                         of_node_put(np_config);
-    266                         if (ret < 0)
-    267                                 goto err;
-    268                 }
-    269 
-    270                 /* No entries in DT? Generate a dummy state table entry */
-    271                 if (!size) {
-    272                         ret = dt_remember_dummy_state(p, statename);
-    273                         if (ret < 0)
-    274                                 goto err;
-    275                 }
-    276         }
-    277 
-    278         return 0;
-    279 
-    280 err:
-    281         pinctrl_dt_free_maps(p);
-    282         return ret;
-    283 }
-
-regards,
-dan carpenter
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIMSmQN4KkikXVto0
+YQLHZHrKm+PccUdjrg0A6aAkXIoWMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDQxNDE1NDUxM1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDcCUo+HMxcg9KE6CdGJ7FFi3mD8EQZhAt5
+wAgGX94CofZwzxYFQuP0PnGyNAlCo/QuHYXtJzIrSzGxXQ+ZSCqMXPIXuR8FzMJso3SahMVtqGoI
+MnjNShaaLF+YBgkHp68+WxVKsgzu8Latnujd65/3t7sxzK2umYb7sC/MKKWZ6zQy9rZOUuL7E3G9
+HxqVgkrBgvoUlDasCP18uMUGk6ro7zFO2mtasQavtXIRFyj6YOb5H22bKc6oTWCmmFjDVmdyZEG4
+7S2Nf6NTQKLjrpJXF24pGvtiXiFyfn/zDHASJ9d0iLwywqxjDcLK0NEX3an5JjoB1TGf1mXORzzG
+ayWr
+--000000000000063dc90616106487--
 
