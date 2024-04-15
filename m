@@ -1,103 +1,141 @@
-Return-Path: <linux-gpio+bounces-5500-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5501-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 891D68A5103
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 15:21:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FCED8A5127
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 15:25:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4307E284485
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 13:21:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8422B2517E
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 13:25:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38F5776028;
-	Mon, 15 Apr 2024 13:05:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 665537B3E1;
+	Mon, 15 Apr 2024 13:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="rfmml2/9";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="L74ojWGG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from c180-18.smtp-out.ap-south-1.amazonses.com (c180-18.smtp-out.ap-south-1.amazonses.com [76.223.180.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B56763EE;
-	Mon, 15 Apr 2024 13:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548C279DC5;
+	Mon, 15 Apr 2024 13:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713186333; cv=none; b=beNTOfo4j/VE8mv9oLlk+h5nIAG4M7WSOcc9LhrwxPVcIYtargg7AuFc5xlXx1HtbXHWUD6N7aEFLJVK0YvjM9UazNYoyfSaI8VE2/kbeGcdNzHuqKYwjlnTDMtT2UBp5obcbwYF6T9RZXobHB6u9p3CuJaDAsL3XTJcTLOD/as=
+	t=1713186670; cv=none; b=IVwPrpWwhPJFL7/hCUyR7jDgowrmbAB7vw07uRDnsDjCGGYcXJK5Ntqgj/aVO/xCtmLAbm4Q5IcFNI1LC8ViKKhvWGS+4ekX0+EWYqkNEJ9TgFRpGpZc7KRSZyr98wM51Kv+HQft4WCeb3wK3N3UrJw+5y1GhdeJb7QkreF5xa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713186333; c=relaxed/simple;
-	bh=e9tGNm4v3nKmynIONtpDA6Y1cuJoNNasV3i92wHJLUI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DaAFjRWTyk7g3p0pCYqzfwjt99CXPt7IFQCCsi6Vv55zPZa1sraR00gBdKfcU+i/xlej398VN8N7QEkNp6A6y6SAXmNKqbb2e1QYNXVKRHH1TT592nleDjJaXhYmtbhngHU9f4w3CtmO4j/mDkGmRf1HrNhRy8E8v8AldIidtzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: pxfsBNFjSGGMA/+gcsiXkA==
-X-CSE-MsgGUID: 0abM+Rf3ScyRz1TfETM3IA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11044"; a="8794833"
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="8794833"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 06:05:30 -0700
-X-CSE-ConnectionGUID: zyKL/BT3QWmfYv/DOdk9vQ==
-X-CSE-MsgGUID: WMeYX4HITFm+8UeMsF58cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="26704586"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 06:05:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1rwM1W-00000004PlW-2wXR;
-	Mon, 15 Apr 2024 16:05:26 +0300
-Date: Mon, 15 Apr 2024 16:05:26 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: William Breathitt Gray <wbg@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 1/1] gpio: sch: Switch to memory mapped IO accessors
-Message-ID: <Zh0mFrrmrO1zNmoN@smile.fi.intel.com>
-References: <20240410072102.1200869-1-andy.shevchenko@gmail.com>
- <ZhpC3lLD-BHqJEZz@ishi>
+	s=arc-20240116; t=1713186670; c=relaxed/simple;
+	bh=3+tVMKLYVPytnjlmvJ023AHFKQjV5avFp/EbX6YmW4s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d44SBNIkzsU626kqOpFqtNX3Vmkzqx2GZKsc8Kpx/6b71KIQmP6HdKxvseW935TeLFuV3nax46zUx1PqlvLwelgyJ0X3aLPjPIDaaV/6j7FqZvlZLLHRspUPVqpbNAtIlt2Q1dIT5oVJEeGJxKWvhe2mFSeNsVTMhyTa96QtnCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=rfmml2/9; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=L74ojWGG; arc=none smtp.client-ip=76.223.180.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ap-south-1.amazonses.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1713186658;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=3+tVMKLYVPytnjlmvJ023AHFKQjV5avFp/EbX6YmW4s=;
+	b=rfmml2/990hkt1QhOB1HFpgyGh+t9cG48SLlIjbCgTueVJQloJ+oUVUy9yXwqLHY
+	KoSpqH/dvdTFkf8HQ9CsSuxFpenojcGxS1aB6n1BQS0WT8p0o4K0Eiyho4sRrN/dqI6
+	F9EBXdpgv5zt2H3upd8kvwNGBL952kuO0hHA7XRrtlu0NUMbGeafjL9a76ws1swRmF5
+	c5rAP/RhutpLIn8N/mPoUzJHfi3ewCmSaU2zXa8DmiykV8c9olmkDyDhY7pcFJFZNPl
+	Rh0LlgviyPsbSgpZvuGCmKcpuyQ/sf7fYbtnDS58FEosmqEA+BlZhra8atb804BWKrK
+	Cw/XOYPqCQ==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=rlntogby6xsxlfnvyxwnvvhttakdsqto; d=amazonses.com; t=1713186658;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=3+tVMKLYVPytnjlmvJ023AHFKQjV5avFp/EbX6YmW4s=;
+	b=L74ojWGGCTCc9CPFNBR+HigXfO+w+Rl0hcPO6NajqpLvNhAa4p2Dj9qMIAMwpQYP
+	/wkCh15cgkMC8gUaO8d8PoFO6RUDW8xh8h+bCm703nQEbhr1JTSXnUkuKdgu6MzR6m4
+	Cyh/OXQcYvqyfLoeYxy5vO4MpNoGYvYQ7N8rEfOA=
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: lee@kernel.org
+Cc: arnd@arndb.de, bhargav.r@ltts.com, broonie@kernel.org, 
+	conor+dt@kernel.org, devicetree@vger.kernel.org, eblanc@baylibre.com, 
+	gregkh@linuxfoundation.org, jpanis@baylibre.com, kristo@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, lgirdwood@gmail.com, 
+	linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	m.nirmaladevi@ltts.com, nm@ti.com, robh+dt@kernel.org, 
+	vigneshr@ti.com
+Subject: Re: [RESEND PATCH v1 05/13] mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
+Date: Mon, 15 Apr 2024 13:10:58 +0000
+Message-ID: <0109018ee1e1d91a-d3a0a73a-548d-4b9c-a6a5-a4f375c3adf3-000000@ap-south-1.amazonses.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240411170344.GK2399047@google.com>
+References: <20240411170344.GK2399047@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhpC3lLD-BHqJEZz@ishi>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Feedback-ID: 1.ap-south-1./RC/PI2M8xOxQmTMPi0M1Q8h2FX69egpT62QKSaMPIA=:AmazonSES
+X-SES-Outgoing: 2024.04.15-76.223.180.18
 
-On Sat, Apr 13, 2024 at 04:31:26AM -0400, William Breathitt Gray wrote:
-> On Wed, Apr 10, 2024 at 10:21:02AM +0300, Andy Shevchenko wrote:
-> > Convert driver to use memory mapped IO accessors.
+Hello,
+
+On Wed, 14 Feb 2024 10:10:17 -0800, Lee Jones wrote:
+> On Mon, 08 Apr 2024, Bhargav Raviprakash wrote:
+> 
+> > Introduces a new struct tps6594_match_data. This struct holds fields for
+> > chip id and regmap config. Using this struct in of_device_id data field.
+> > This helps in adding support for TPS65224 PMIC.
 > > 
-> > Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> > Acked-by: Julien Panis <jpanis@baylibre.com>
+> > ---
+> >  drivers/mfd/tps6594-i2c.c   | 24 ++++++++++++++++--------
+> >  drivers/mfd/tps6594-spi.c   | 24 ++++++++++++++++--------
+> >  include/linux/mfd/tps6594.h | 11 +++++++++++
+> >  3 files changed, 43 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/drivers/mfd/tps6594-i2c.c b/drivers/mfd/tps6594-i2c.c
+> > index c125b474b..9e2ed48b7 100644
+> > --- a/drivers/mfd/tps6594-i2c.c
+> > +++ b/drivers/mfd/tps6594-i2c.c
+> > @@ -192,10 +192,16 @@ static const struct regmap_config tps6594_i2c_regmap_config = {
+> >  	.write = tps6594_i2c_write,
+> >  };
+> >  
+> > +static const struct tps6594_match_data match_data[] = {
+> > +	[TPS6594] = {TPS6594, &tps6594_i2c_regmap_config},
+> > +	[TPS6593] = {TPS6593, &tps6594_i2c_regmap_config},
+> > +	[LP8764] = {LP8764, &tps6594_i2c_regmap_config},
 > 
-> Acked-by: William Breathitt Gray <wbg@kernel.org>
-
-Pushed to my review and testing queue, thank you!
-
-> A minor suggestion below, but I find this patch accepted as-is.
+> Nit: There should be spaces after the '{' and before the '}'.
 > 
-> >  static int sch_gpio_probe(struct platform_device *pdev)
-> >  {
-> > +	struct device *dev = &pdev->dev;
+
+Sure! will fix it in the next version.
+
+> > +};
+> > +
+> >  static const struct of_device_id tps6594_i2c_of_match_table[] = {
+> > -	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
+> > -	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
+> > -	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
+> > +	{ .compatible = "ti,tps6594-q1", .data = &match_data[TPS6594], },
+> > +	{ .compatible = "ti,tps6593-q1", .data = &match_data[TPS6593], },
+> > +	{ .compatible = "ti,lp8764-q1",  .data = &match_data[LP8764], },
 > 
-> In general I think this is a good variable to define to simplify all the
-> &pdev->dev appearing throughout this callback, but I'd rather have seen
-> it as its own patch so we could change all the other uses of &pdev->dev
-> at once without distracting from the memory-mapped I/O change of this
-> particular patch. Not really necessary, but maybe at some point in the
-> future a follow-up patch doing such a cleanup would be nice.
+> Not keen on this.  Why do you pass the regmap data through here and
+> leave everything else to be matched on device ID?  It would be better to
+> keep passing the device ID through and match everything off of that.
+> 
+> 
+> -- 
+> Lee Jones [李琼斯]
 
-I avoid making unneeded  churn on a line I have updated in this patch.
-That's why I introduced the local variable proactively. Yet, I can do
-another patch to clean up the driver based on the existence of this var.
+Thanks for the feedback!
 
--- 
-With Best Regards,
-Andy Shevchenko
+These changes were made because of the following message:
+https://lore.kernel.org/all/7hcysy6ho6.fsf@baylibre.com/
 
+Please let us know which one to follow.
 
+Regards,
+Bhargav
 
