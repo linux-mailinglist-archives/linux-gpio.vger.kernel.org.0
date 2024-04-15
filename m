@@ -1,164 +1,172 @@
-Return-Path: <linux-gpio+bounces-5503-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5504-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2A258A5200
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 15:44:04 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC60C8A528C
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 16:01:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 596651F23601
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 13:44:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 576F6B22005
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 14:01:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A6AE71B3A;
-	Mon, 15 Apr 2024 13:43:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 679727353F;
+	Mon, 15 Apr 2024 14:01:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d2WMb8IX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YYy7YDQ4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A4C2B9C4
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Apr 2024 13:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B26873189;
+	Mon, 15 Apr 2024 14:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713188612; cv=none; b=MHgBEJQvMVqseJenv4RVvp6ZUyw9u5gcFxWpXAOsdcGvB5te00ootRFOjOxKI9smo9XtJGrlzsNg8DJMxOnXEIrV9sbC9Yay3fkI9/7LCGFOY7BCTSq3CpU7jCJzrl8VhA/edRhUbxpliKkM8mhVG1X5e/n0AWX4ZK9JDHuU9jA=
+	t=1713189675; cv=none; b=dG8Oky7s2knWYGRKj/Fif93wlVtGclnJrhfowU+usyd2NqbjgNm901oj+bBTq1U+80ilR483qt/mt+cwprGxHha5aU8wxZki8+NpX38NHEN2RymONNBqdPXu05+e8xeSQvsYu8PcLh+Gu4fFURnWIFxJkUxwJIjf8mBIEaMfKPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713188612; c=relaxed/simple;
-	bh=sEDCxjxDH5mRXI/IrV6BojjRAEuqHVsh2sMpVg0j2k8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E+xL52I0LaezADJpUOMbeUR5AYQupMCpZEkIRK6Wd+mOR4qakYtI/dX23AAqNSRwwbYVOxJJPOZayns0xaWuLs7/qLXdHcjz4FBOll0PAm8jGLBno3njjh7skGfoOIJWTptwjlv+4AWGEPW6yDGrVvvEroyNesGNBa/D8WhAN9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d2WMb8IX; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a52582ecde4so174985266b.0
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Apr 2024 06:43:31 -0700 (PDT)
+	s=arc-20240116; t=1713189675; c=relaxed/simple;
+	bh=lpBPkRDdCzQNZjrZ+c7eHd34o93n0pvgK/Pf7ypBlwA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ALRhmPXjajJNctqOiAWAC07ByQ3KWZnyRcJ2ArhErBRtdCrFyBE8SxN0jBpuJclX7q1UCxeaZUuYLAqioNRnLkE9zarTtCdj5lvhtezz+jWeB2Xv3RkbMF1h3B6Hvqyhb88b3SNEVQWxG+2sj4CjFYZNW/uieMwTuthI7yofDUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YYy7YDQ4; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-570175e8e6fso1991071a12.3;
+        Mon, 15 Apr 2024 07:01:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713188610; x=1713793410; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=D5agVIUntGcqet4xEAqpjWc8ya7IY8Ph+fSaGKkgBck=;
-        b=d2WMb8IXAbBtaupejMFNzqeUWMPhDyldln87zoytivNfJgKGvLSERofqnyfA8bzpbD
-         rHYDNyDt0WLfwe10986JjBixesl5nlfCy139oRc+ReyCE/j/xRKaJtlFcswPV7SdUJJJ
-         5hpML0s8KLhZXhiNa0T0vGbpNC84FI2zdSV0C4K6nInfaBsTV+pIEKopbjwVXHb3f61k
-         AzjPzo1rF2HBdSSOi384dayAX+NOweEw+gZtCJSlMUIEokg4rR+zUSRDV74yl7fhC8ET
-         iz1XujqxRjVZVB4sBaZ2pQeAmSzjWgct/i3wAbclJ+0eMYFjt6RXUMkuDBz2KBdZu0k2
-         s/Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713188610; x=1713793410;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1713189668; x=1713794468; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D5agVIUntGcqet4xEAqpjWc8ya7IY8Ph+fSaGKkgBck=;
-        b=F0JsGy4evXemP3cxym0Wu3VDqyj4X0xHBvGq5Nfac+roTXC20tUyPacPUssDJdblV9
-         uGPw/F0hCx7JpYIzJ337f3WQhYuVd9cJPanxtR0fgiKq2FoI5kqyp+KedCuw8DnGJQma
-         DmlLefiKyiat2adx76JkCTYfkngSqtbqc7Op9OZ6HuqAWhGtOLiVf9/LF8/443Wos1xw
-         wuIG7P+5rg/YIEC1UtPUks4HVPOZaxFv8REMqlFnttWuB3wR7Q+pVY9cfv6MJjiSCTQY
-         t9PMVxGgJ1i6F01FWHIchxq25ImaTGel1tUJdvt6yb4/kQnwDS20OkJUn9TmZ5oqbqT0
-         VR/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXAmTJ1GhRKy4WtLAkvOjAb5GCNCLCsjhYtgWwTFI6rfmf93GrhiTwaYBJIsI6MYQeCNrGI3wov/smPfac3/EyQVP6jfxyzWWlc5w==
-X-Gm-Message-State: AOJu0YxTDHYkxiMWCc5kkqo/c1C75RUpWRwpy/WRNhrQqZsMkbFV0U6U
-	GslHTnPfxhmMj55VJPbpp633/raQaJWxBPz+oarnWZ0t90wtzz07HWtiHSNOkg/0W4+K7iCTKyW
-	n
-X-Google-Smtp-Source: AGHT+IHFKdoXBJF4YQ8aEdmBoKEuHa7gbFkEhwvJQYaDbhuwQaH9FyeA7B8SJVfb2EwwfVADOQdo7w==
-X-Received: by 2002:a17:906:abd9:b0:a52:6c74:a29d with SMTP id kq25-20020a170906abd900b00a526c74a29dmr1657489ejb.76.1713188609502;
-        Mon, 15 Apr 2024 06:43:29 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id jy3-20020a170907762300b00a521603e14csm5514073ejc.138.2024.04.15.06.43.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 06:43:29 -0700 (PDT)
-Date: Mon, 15 Apr 2024 16:43:25 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Robert Marko <robimarko@gmail.com>
-Cc: Hanna Hawa <hhhawa@amazon.com>, andriy.shevchenko@linux.intel.com,
-	wsa@kernel.org, linus.walleij@linaro.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
-	talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
-	farbere@amazon.com, itamark@amazon.com
-Subject: Re: [PATCH v5 2/2] i2c: Set i2c pinctrl recovery info from it's
- device pinctrl
-Message-ID: <f7069e5b-0678-4f78-b06e-dba16c5e6088@moroto.mountain>
-References: <20221228164813.67964-1-hhhawa@amazon.com>
- <20221228164813.67964-3-hhhawa@amazon.com>
- <416340b6-33a9-4b9e-bdc5-c5a9cffb3055@gmail.com>
- <ac51854b-09a6-4b79-b409-b950929655cb@moroto.mountain>
- <CAOX2RU6YOBBgEuwdp8P0GTJ5vB0M5Cbqf5SnVJ9Jbou9w5405g@mail.gmail.com>
+        bh=p24MW4lT8Qhns1Y9ZBylqR7BJKJfhrh/oDdc/sbfEQk=;
+        b=YYy7YDQ4ruW5DHpniNynHooTjnzHWdQpQJLKOP93yhJyq7ZSK1lguAXFxIGzSq7Tsl
+         ptEjrb15JY3BZJjco7y/jbqs4kBGBd+ZH4uePhscuD3wvzeRnc4aizIoTuHB8W2ARd7K
+         GJJkaqTra80UR5vMLcpyGf4ag09OxG3U+P5v3DWvJhSQbqh812o4vVB7p5Rn42VVsvbE
+         iK/DK3AFeerzGNLS/DN+g0cs+ctyfTh4Gi2BaOGU2YTqPJj3/NPvnZYNLcSkSUKsx7p2
+         wo8QPSwbjH3mF7CRLR5bAqqPzZuqb3AkZk0q94earTjvfwD6E3Tl8qE6l5pav6zsze0D
+         uNlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713189668; x=1713794468;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p24MW4lT8Qhns1Y9ZBylqR7BJKJfhrh/oDdc/sbfEQk=;
+        b=Dmuz3BcfW93mDntMQ86WIJkJOP3Xafq/Oz4IMFnUp+MVTC14BQm84z+q/lva/iCb9a
+         rpB+7xat+VcILl1rP846FHyXWMkLZ9r3ndcblSxkz5t361z1tEewJpcxxHiikZw/EFI5
+         aQc3EPBNRnFm0g+fSZ8aB5+bdE+9kRgiVVE76XzToK8h4ZJP4CH1NaxoyAhFmXNpOVeL
+         9/03cQC/JDWbkAkCAokudOJZLPqio7q0ZqHSBtVxWkWHGEdZFovYmC7ucDFmNU56yaxx
+         RwWLr9rYhe3BBjxXWSGueuSfJxuMo0nWGNQvkNUXc6//+sJh4FiJuzAuAFLtBkBVz4eA
+         Hb1A==
+X-Forwarded-Encrypted: i=1; AJvYcCU1yX8UW6RUZdPZbP2AZY9Yvf73ljjFgnH0PkA2GGgvbZlskk+dP4Z6VOPbssXKkHtaQGh0KZmSxS0MVpPv2ipoUes7BIVFEC495oWPIjte616Yj0pzUBRIb6NtXYpGcS3XvBBHWk8AVqaVcqG9pYnIKo/oDyP17ToasIqXJ9BEVZHJW90=
+X-Gm-Message-State: AOJu0YzlBJMcTsa/MPchpxgtkjSRRbogBRpEL0L4HbJzBQP7hlnz3SPY
+	+H5Ftun4oh687MIImh+BvTxyZOrbB4EkdmEYnSEu2Bmu1bK6AJvhWEp+o8Z+zBF3PX51k9Czzw3
+	vq4Bhby20paF1zDH2udi1XoOOP2w=
+X-Google-Smtp-Source: AGHT+IGC1BfZnQLhZFzAUp5MFPYOAUjH5/+Y5w23zzmSabgzkZplX8A2dmV0W5bVlElQTHiFmOsGdVmTzH1nBpvI8Ik=
+X-Received: by 2002:a17:907:b9d5:b0:a54:c130:21fd with SMTP id
+ xa21-20020a170907b9d500b00a54c13021fdmr983688ejc.13.1713189668195; Mon, 15
+ Apr 2024 07:01:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOX2RU6YOBBgEuwdp8P0GTJ5vB0M5Cbqf5SnVJ9Jbou9w5405g@mail.gmail.com>
+References: <20240415-pinctrl-scmi-v10-0-59c6e7a586ee@nxp.com> <20240415-pinctrl-scmi-v10-4-59c6e7a586ee@nxp.com>
+In-Reply-To: <20240415-pinctrl-scmi-v10-4-59c6e7a586ee@nxp.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 15 Apr 2024 17:00:31 +0300
+Message-ID: <CAHp75VdoaL-66vDFeDWXg5V0XnL45F_JQZ_BNeaaOcSwQz5gnQ@mail.gmail.com>
+Subject: Re: [PATCH v10 4/4] pinctrl: Implementation of the generic
+ scmi-pinctrl driver
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Dhruva Gole <d-gole@ti.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Peng Fan <peng.fan@nxp.com>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 14, 2024 at 07:47:50PM +0200, Robert Marko wrote:
-> > > > @@ -282,7 +283,9 @@ static void i2c_gpio_init_pinctrl_recovery(struct i2c_adapter *adap)
-> > > >   {
-> > > >     struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
-> > > >     struct device *dev = &adap->dev;
-> > > > -   struct pinctrl *p = bri->pinctrl;
-> > > > +   struct pinctrl *p = bri->pinctrl ?: dev_pinctrl(dev->parent);
-> > > > +
-> > > > +   bri->pinctrl = p;
-> > >
-> > > Hi Hanna,
-> > > I know this has already been merged, but setting bri->pinctrl breaks PXA
-> > > recovery.
-> >
-> > This is patch is a year and half old so it's a bit late to just revert
-> > it...
-> 
-> Hi there,
-> I know it's old but I just tried it on 6.6 in OpenWrt.
-> 
-> >
-> > What does "breaks" mean in this context?  Is there a NULL dereference?
-> > Do you have a stack trace?  It's really hard to get inspired to look at
-> > the code when the bug report is so vague...
-> 
-> I admit that I did not explain this properly, but if bri->pinctrl is set then
-> PXA I2C is completely broken as in it doesn't work at all, there are no errors
-> other than trying to probe for I2C devices will time out.
-> We had the same symptoms when PXA was converted to generic I2C recovery and that
-> had to be reverted.
-> 
-> I think its probably some pinctrl issue but nobody has been able to
-> track it down.
+On Mon, Apr 15, 2024 at 11:43=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.c=
+om> wrote:
+>
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> scmi-pinctrl driver implements pinctrl driver interface and using
+> SCMI protocol to redirect messages from pinctrl subsystem SDK to
+> SCMI platform firmware, which does the changes in HW.
 
-If you wanted you could try the following patch with the change to
-i2c_gpio_init_pinctrl_recovery() and without it.  (It won't fix anything
-it only prints information to dmesg).
+Below are some cosmetics, but in general LGTM, thanks!
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-regards,
-dan carpenter
+...
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index 888ca636f3f3..f9477089b980 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -34,6 +34,7 @@
- #include <linux/platform_data/i2c-pxa.h>
- #include <linux/property.h>
- #include <linux/slab.h>
-+#include "../../pinctrl/core.h"
- 
- /* I2C register field definitions */
- #define IBMR_SDAS	(1 << 0)
-@@ -1345,6 +1346,12 @@ static int i2c_pxa_init_recovery(struct pxa_i2c *i2c)
- 		return 0;
- 
- 	i2c->pinctrl = devm_pinctrl_get(dev);
-+	if (IS_ERR(i2c->pinctrl))
-+		dev_info(dev, "i2c->pinctrl: %pe\n", i2c->pinctrl);
-+	else
-+		dev_info(dev, "i2c->pinctrl: %s %s\n",
-+			 dev_driver_string(i2c->pinctrl->dev),
-+			 dev_name(i2c->pinctrl->dev));
- 	if (PTR_ERR(i2c->pinctrl) == -ENODEV)
- 		i2c->pinctrl = NULL;
- 	if (IS_ERR(i2c->pinctrl))
+> +#include <linux/device.h>
+> +#include <linux/dev_printk.h>
 
+The second one is guaranteed to be included by the first one, so
+dev_printk.h can be removed.
+
+> +#include <linux/err.h>
+
++ errno.h as ENOTSUPP is defined there and surprisingly err.h doesn't
+include that.
+
++ mod_devicetable.h (for the ID table type definition)
+
+> +#include <linux/module.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+
+...
+
+> +/* Define num configs, if not large than 4 use stack, else use kcalloc *=
+/
+
+kcalloc()
+
+...
+
+> +       ret =3D pinctrl_ops->settings_get_one(pmx->ph, pin, PIN_TYPE, typ=
+e,
+> +                                           &config_value);
+> +       if (ret) {
+> +               /* Convert SCMI error code to PINCTRL expected error code=
+ */
+> +               if (ret =3D=3D -EOPNOTSUPP)
+> +                       ret =3D -ENOTSUPP;
+> +               return ret;
+> +       }
+
+It can be split as
+
+       ret =3D pinctrl_ops->settings_get_one(pmx->ph, pin, PIN_TYPE, type,
+                                           &config_value);
+       /* Convert SCMI error code to PINCTRL expected error code */
+       if (ret =3D=3D -EOPNOTSUPP)
+               return -ENOTSUPP;
+       if (ret)
+               return ret;
+
+...
+
+> +       ret =3D pinctrl_ops->settings_get_one(pmx->ph, group, GROUP_TYPE,=
+ type,
+> +                                           &config_value);
+> +       if (ret) {
+> +               /* Convert SCMI error code to PINCTRL expected error code=
+ */
+> +               if (ret =3D=3D -EOPNOTSUPP)
+> +                       ret =3D -ENOTSUPP;
+> +               return ret;
+> +       }
+
+As per above.
+
+--
+With Best Regards,
+Andy Shevchenko
 
