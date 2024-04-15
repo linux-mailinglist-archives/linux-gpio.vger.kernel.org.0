@@ -1,146 +1,164 @@
-Return-Path: <linux-gpio+bounces-5502-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5503-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7686C8A51F5
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 15:43:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2A258A5200
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 15:44:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2CB521F236FB
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 13:43:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 596651F23601
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 13:44:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B6807A13A;
-	Mon, 15 Apr 2024 13:39:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A6AE71B3A;
+	Mon, 15 Apr 2024 13:43:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="QJLJevb4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d2WMb8IX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2BD78C9F;
-	Mon, 15 Apr 2024 13:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A4C2B9C4
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Apr 2024 13:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713188395; cv=none; b=fD8G/seudMH+4N71MT3skIHSIlI4xSfMsEVmceJhSa5YmG9JdNyPsVJCs9hxF1ShfkQUvT7GD+nptsh/j0V2w7+9gCmCGCxkmD/1zAGnOlucUqERmuZtBC8vR3ltB6dRB/RrDpRGlXC/iIcGrjRRgc0nq2dEQWrZB//S5KbdlY8=
+	t=1713188612; cv=none; b=MHgBEJQvMVqseJenv4RVvp6ZUyw9u5gcFxWpXAOsdcGvB5te00ootRFOjOxKI9smo9XtJGrlzsNg8DJMxOnXEIrV9sbC9Yay3fkI9/7LCGFOY7BCTSq3CpU7jCJzrl8VhA/edRhUbxpliKkM8mhVG1X5e/n0AWX4ZK9JDHuU9jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713188395; c=relaxed/simple;
-	bh=PRv7pytBiOkLz7PrwuDdb9f+phDFiWKLJnUWoVPh+Uw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FqYyL9iOIxzUwMZEcLSzb3hpF9r+KzADELwcD0vuYvdkXa6/yY8s6JIc9Wqp1DARA5YDySSdtQP7n0nh3vzV+AJlMjrR4PPRnWOA7SQQdRbs/1NTcrp2mGHS+AIq0eXLn9VY4745IxGMK1PKKcd9Iw1URUqckuQ7LggoqqPIrdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=QJLJevb4; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43F7ttqX007088;
-	Mon, 15 Apr 2024 08:39:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:content-transfer-encoding:in-reply-to; s=
-	PODMain02222019; bh=43jG4b5GQ1petJnjZztW1SdBS9xSETSJDVBcQuPTL6Y=; b=
-	QJLJevb4fOiZNxCaclLbyb80QBuFEFLAAl/tY4AQ+gB/6TESNRfKtLvMFCQ/Qpo4
-	0EIDCduLjzuRryR2iuAGJBczQbu+7Rdpq2ackt+9D0gdVv9SWtltWV4jg7v865g+
-	Juxw2HyxuRO0aiboSZxYCbZ9ooAvhLTBRTwfNqYPFJLlGc/QZJTeXCMgBYRlV8p7
-	eH3naoMCXtM81qw+YNkcQpkFT+8CVnIoB/IgPuz4NM6uu1+/hmYDmjZdifue0koJ
-	HimH6m74eZ849+YTiak6mcYe7ZPF4LnSZ1NMupyrf29WMD5RQVfRXJ44kqB9njqj
-	stmY3Q3Tk2Vcfs0SaE9T0A==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xfqey9g8w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Apr 2024 08:39:46 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 15 Apr
- 2024 14:39:44 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
- via Frontend Transport; Mon, 15 Apr 2024 14:39:44 +0100
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 5FD1C820244;
-	Mon, 15 Apr 2024 13:39:44 +0000 (UTC)
-Date: Mon, 15 Apr 2024 13:39:43 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-CC: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <bard.liao@intel.com>, <linux-gpio@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v5 4/4] spi: cs42l43: Add bridged cs35l56 amplifiers
-Message-ID: <Zh0uH64AlEMJQyzz@ediswmail9.ad.cirrus.com>
-References: <20240411090628.2436389-1-ckeepax@opensource.cirrus.com>
- <20240411090628.2436389-5-ckeepax@opensource.cirrus.com>
- <CAHp75Ve00EuT0AdZy0b6OfqHySNkxTBuUbrv7z+mUgcrT56QWw@mail.gmail.com>
- <ZhgaK9vhtvy3/YpU@ediswmail9.ad.cirrus.com>
- <CAHp75Vc-f13sOghXkuqEVYsmnP3hT6ewLZwLr4mJJbruSqoxXw@mail.gmail.com>
+	s=arc-20240116; t=1713188612; c=relaxed/simple;
+	bh=sEDCxjxDH5mRXI/IrV6BojjRAEuqHVsh2sMpVg0j2k8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E+xL52I0LaezADJpUOMbeUR5AYQupMCpZEkIRK6Wd+mOR4qakYtI/dX23AAqNSRwwbYVOxJJPOZayns0xaWuLs7/qLXdHcjz4FBOll0PAm8jGLBno3njjh7skGfoOIJWTptwjlv+4AWGEPW6yDGrVvvEroyNesGNBa/D8WhAN9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d2WMb8IX; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a52582ecde4so174985266b.0
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Apr 2024 06:43:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713188610; x=1713793410; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=D5agVIUntGcqet4xEAqpjWc8ya7IY8Ph+fSaGKkgBck=;
+        b=d2WMb8IXAbBtaupejMFNzqeUWMPhDyldln87zoytivNfJgKGvLSERofqnyfA8bzpbD
+         rHYDNyDt0WLfwe10986JjBixesl5nlfCy139oRc+ReyCE/j/xRKaJtlFcswPV7SdUJJJ
+         5hpML0s8KLhZXhiNa0T0vGbpNC84FI2zdSV0C4K6nInfaBsTV+pIEKopbjwVXHb3f61k
+         AzjPzo1rF2HBdSSOi384dayAX+NOweEw+gZtCJSlMUIEokg4rR+zUSRDV74yl7fhC8ET
+         iz1XujqxRjVZVB4sBaZ2pQeAmSzjWgct/i3wAbclJ+0eMYFjt6RXUMkuDBz2KBdZu0k2
+         s/Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713188610; x=1713793410;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D5agVIUntGcqet4xEAqpjWc8ya7IY8Ph+fSaGKkgBck=;
+        b=F0JsGy4evXemP3cxym0Wu3VDqyj4X0xHBvGq5Nfac+roTXC20tUyPacPUssDJdblV9
+         uGPw/F0hCx7JpYIzJ337f3WQhYuVd9cJPanxtR0fgiKq2FoI5kqyp+KedCuw8DnGJQma
+         DmlLefiKyiat2adx76JkCTYfkngSqtbqc7Op9OZ6HuqAWhGtOLiVf9/LF8/443Wos1xw
+         wuIG7P+5rg/YIEC1UtPUks4HVPOZaxFv8REMqlFnttWuB3wR7Q+pVY9cfv6MJjiSCTQY
+         t9PMVxGgJ1i6F01FWHIchxq25ImaTGel1tUJdvt6yb4/kQnwDS20OkJUn9TmZ5oqbqT0
+         VR/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXAmTJ1GhRKy4WtLAkvOjAb5GCNCLCsjhYtgWwTFI6rfmf93GrhiTwaYBJIsI6MYQeCNrGI3wov/smPfac3/EyQVP6jfxyzWWlc5w==
+X-Gm-Message-State: AOJu0YxTDHYkxiMWCc5kkqo/c1C75RUpWRwpy/WRNhrQqZsMkbFV0U6U
+	GslHTnPfxhmMj55VJPbpp633/raQaJWxBPz+oarnWZ0t90wtzz07HWtiHSNOkg/0W4+K7iCTKyW
+	n
+X-Google-Smtp-Source: AGHT+IHFKdoXBJF4YQ8aEdmBoKEuHa7gbFkEhwvJQYaDbhuwQaH9FyeA7B8SJVfb2EwwfVADOQdo7w==
+X-Received: by 2002:a17:906:abd9:b0:a52:6c74:a29d with SMTP id kq25-20020a170906abd900b00a526c74a29dmr1657489ejb.76.1713188609502;
+        Mon, 15 Apr 2024 06:43:29 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id jy3-20020a170907762300b00a521603e14csm5514073ejc.138.2024.04.15.06.43.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 06:43:29 -0700 (PDT)
+Date: Mon, 15 Apr 2024 16:43:25 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Robert Marko <robimarko@gmail.com>
+Cc: Hanna Hawa <hhhawa@amazon.com>, andriy.shevchenko@linux.intel.com,
+	wsa@kernel.org, linus.walleij@linaro.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
+	talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
+	farbere@amazon.com, itamark@amazon.com
+Subject: Re: [PATCH v5 2/2] i2c: Set i2c pinctrl recovery info from it's
+ device pinctrl
+Message-ID: <f7069e5b-0678-4f78-b06e-dba16c5e6088@moroto.mountain>
+References: <20221228164813.67964-1-hhhawa@amazon.com>
+ <20221228164813.67964-3-hhhawa@amazon.com>
+ <416340b6-33a9-4b9e-bdc5-c5a9cffb3055@gmail.com>
+ <ac51854b-09a6-4b79-b409-b950929655cb@moroto.mountain>
+ <CAOX2RU6YOBBgEuwdp8P0GTJ5vB0M5Cbqf5SnVJ9Jbou9w5405g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vc-f13sOghXkuqEVYsmnP3hT6ewLZwLr4mJJbruSqoxXw@mail.gmail.com>
-X-Proofpoint-GUID: dfa4mVWMkbXvteXPtX7iOLK5Feoz88yp
-X-Proofpoint-ORIG-GUID: dfa4mVWMkbXvteXPtX7iOLK5Feoz88yp
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <CAOX2RU6YOBBgEuwdp8P0GTJ5vB0M5Cbqf5SnVJ9Jbou9w5405g@mail.gmail.com>
 
-On Thu, Apr 11, 2024 at 09:17:53PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 11, 2024 at 8:13 PM Charles Keepax
-> <ckeepax@opensource.cirrus.com> wrote:
-> > On Thu, Apr 11, 2024 at 05:04:33PM +0300, Andy Shevchenko wrote:
-> > > On Thu, Apr 11, 2024 at 12:06 PM Charles Keepax
-> > > <ckeepax@opensource.cirrus.com> wrote:
-> > > > +       if (has_sidecar) {
-> > > > +               ret = software_node_register(&cs42l43_gpiochip_swnode);
-> > > > +               if (ret) {
-> > > > +                       return dev_err_probe(priv->dev, ret,
-> > > > +                                            "Failed to register gpio swnode\n");
-> > > > +               }
+On Sun, Apr 14, 2024 at 07:47:50PM +0200, Robert Marko wrote:
+> > > > @@ -282,7 +283,9 @@ static void i2c_gpio_init_pinctrl_recovery(struct i2c_adapter *adap)
+> > > >   {
+> > > >     struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
+> > > >     struct device *dev = &adap->dev;
+> > > > -   struct pinctrl *p = bri->pinctrl;
+> > > > +   struct pinctrl *p = bri->pinctrl ?: dev_pinctrl(dev->parent);
 > > > > +
-> > > > +               ret = device_create_managed_software_node(&priv->ctlr->dev,
-> > > > +                                                         cs42l43_cs_props, NULL);
-> > > > +               if (ret) {
-> > > > +                       dev_err_probe(priv->dev, ret, "Failed to add swnode\n");
-> > > > +                       goto err;
-> > > > +               }
+> > > > +   bri->pinctrl = p;
 > > >
-> > > Wouldn't it miss the parent fwnode? I mean that you might probably
-> > > need to call...
-> > >
-
-Ok I am pretty sure this is all fine, I don't think we can pass a
-parent into device_create_managed_software_node since it requires
-a parent software node, but in this case there isn't one. This is
-the root node here, since the "parent" would be ACPI stuff here.
-
-> > > > +       } else {
-> > > > +               device_set_node(&priv->ctlr->dev, fwnode);
-> > >
-> > > ...this one always. Have you checked it? How does sysfs look like
-> > > before and after this change on the device in question?
+> > > Hi Hanna,
+> > > I know this has already been merged, but setting bri->pinctrl breaks PXA
+> > > recovery.
 > >
-> > I will check this.
+> > This is patch is a year and half old so it's a bit late to just revert
+> > it...
 > 
-
-We can't always call device_set_node. Firstly, we would need to
-set it to the software node, however that is never returned from
-device_create_managed_software_node. Secondly, the set_secondary_node
-called in device_create_managed_software_node will set the primary
-node anyway since there isn't a valid primary node on the device.
-Finally, we don't want the primary node set to the ACPI node anyway
-since we want to override those settings here with our bridged amp
-settings.
-
-> Basically in the expected case there should be two symlinks: to
-> physical node and to swnode.
+> Hi there,
+> I know it's old but I just tried it on 6.6 in OpenWrt.
 > 
+> >
+> > What does "breaks" mean in this context?  Is there a NULL dereference?
+> > Do you have a stack trace?  It's really hard to get inspired to look at
+> > the code when the bug report is so vague...
+> 
+> I admit that I did not explain this properly, but if bri->pinctrl is set then
+> PXA I2C is completely broken as in it doesn't work at all, there are no errors
+> other than trying to probe for I2C devices will time out.
+> We had the same symptoms when PXA was converted to generic I2C recovery and that
+> had to be reverted.
+> 
+> I think its probably some pinctrl issue but nobody has been able to
+> track it down.
 
-I think the sysfs all looks reasonable to me, I can see the SPI
-devices in /sys/bus/spi/devices, under those devices I can see a
-symlink to the software node.
+If you wanted you could try the following patch with the change to
+i2c_gpio_init_pinctrl_recovery() and without it.  (It won't fix anything
+it only prints information to dmesg).
 
-Thanks,
-Charles
+regards,
+dan carpenter
+
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index 888ca636f3f3..f9477089b980 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -34,6 +34,7 @@
+ #include <linux/platform_data/i2c-pxa.h>
+ #include <linux/property.h>
+ #include <linux/slab.h>
++#include "../../pinctrl/core.h"
+ 
+ /* I2C register field definitions */
+ #define IBMR_SDAS	(1 << 0)
+@@ -1345,6 +1346,12 @@ static int i2c_pxa_init_recovery(struct pxa_i2c *i2c)
+ 		return 0;
+ 
+ 	i2c->pinctrl = devm_pinctrl_get(dev);
++	if (IS_ERR(i2c->pinctrl))
++		dev_info(dev, "i2c->pinctrl: %pe\n", i2c->pinctrl);
++	else
++		dev_info(dev, "i2c->pinctrl: %s %s\n",
++			 dev_driver_string(i2c->pinctrl->dev),
++			 dev_name(i2c->pinctrl->dev));
+ 	if (PTR_ERR(i2c->pinctrl) == -ENODEV)
+ 		i2c->pinctrl = NULL;
+ 	if (IS_ERR(i2c->pinctrl))
+
 
