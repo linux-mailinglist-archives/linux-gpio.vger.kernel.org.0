@@ -1,92 +1,183 @@
-Return-Path: <linux-gpio+bounces-5510-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5512-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD3D28A52E9
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 16:18:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B2208A5701
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 18:04:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 40606B209E5
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 14:18:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB427284783
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 16:04:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5198374E3D;
-	Mon, 15 Apr 2024 14:18:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 026C97F7DD;
+	Mon, 15 Apr 2024 16:04:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=herrie.org header.i=@herrie.org header.b="Kq8Hix0p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2k5xxXL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from outbound6.mail.transip.nl (outbound6.mail.transip.nl [136.144.136.128])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33F873175;
-	Mon, 15 Apr 2024 14:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.136.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC75C7F7C1;
+	Mon, 15 Apr 2024 16:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713190706; cv=none; b=lpHs7pw221YsYRYAMZbK3XO7RNwzF0WcDSaItLTd54ZeVPdk/S17mdbnxjCYH1ojYZHwYCAb09iuUNku5TdxI7heOGddhbh4FwK3gXQoW9cbIqRBf0pzkKQT9RfwgDez6c0XGN2Wa3l3X1OfI7TH1BeijlABBG60zCLKLoft0wo=
+	t=1713197044; cv=none; b=iGN5edCSGWva26gktTAGBe+A+Neo++1Mzy91aL4LpDTcMyjnASK8omLj7llV6kFgQqbu9jKwQiFlSL2wRSbAY1Vfv8MeafARCKU+WhuKYvt8AKw2NjHRM+rpo9kZACUq5pAVYwGSc9gbxITyPwUh+ZaBCO1YYUlw1wDLgQTU83c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713190706; c=relaxed/simple;
-	bh=KsjfUPGlpRzaRp0MgK7YOyBeifgjIE37Gi21vj0GW8A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NcpcC354fZJfALoI2vjVCp7sh7zxm0f8cmnUNAvDQgPnAvRd/y7BKzvudZGdshlOGJ4G5FqtvuVDSgkMKy19Bqs4V4v6qWIbcPVX4DCf9xePdNtnu25vnb9cxxbZT21ArtDdaYb681//0j7lQlHG2gpqPEOvnCCujGWCIBs6PfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herrie.org; spf=pass smtp.mailfrom=herrie.org; dkim=pass (2048-bit key) header.d=herrie.org header.i=@herrie.org header.b=Kq8Hix0p; arc=none smtp.client-ip=136.144.136.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herrie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=herrie.org
-Received: from submission6.mail.transip.nl (unknown [10.103.8.157])
-	by outbound6.mail.transip.nl (Postfix) with ESMTP id 4VJ8Qy3hCFzwLJF8;
-	Mon, 15 Apr 2024 16:18:18 +0200 (CEST)
-Received: from herrie-desktop.. (110-31-146-85.ftth.glasoperator.nl [85.146.31.110])
-	by submission6.mail.transip.nl (Postfix) with ESMTPA id 4VJ8Qw0tNWz12Ly6;
-	Mon, 15 Apr 2024 16:18:16 +0200 (CEST)
-From: Herman van Hazendonk <github.com@herrie.org>
-To: andersson@kernel.org
-Cc: benwolsieffer@gmail.com,
-	chris.chapuis@gmail.com,
-	Herman van Hazendonk <github.com@herrie.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] pinctrl: qcom-ssbi: add support for PM8901
-Date: Mon, 15 Apr 2024 16:18:13 +0200
-Message-Id: <20240415141814.1983384-1-github.com@herrie.org>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1713197044; c=relaxed/simple;
+	bh=vKQQB/kQNxsfxqV52SjnDQrWdCTeXfpK2mB5tty3jPQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sq92g18OsZI0SUv2xN0dzJVPgMMKyQOSd3vNKYFXiY8L0z8tfFXNGUAPlCclA+Hg/cPQLN7GGIP8K0GbewjmQB6z/8dEjmpFnonwnGpdbqy23FZ4hXxfsrR76yEKlX3JavXjPybRQyfydB47Q7gmTQ0vG2Cn7sFNrZ19Nfx2ktY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S2k5xxXL; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a526a200879so161136166b.1;
+        Mon, 15 Apr 2024 09:03:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713197038; x=1713801838; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XxrRX3hsv4yMm/yfYw+Q8TuTZyI8eHv3V8RiKJyvMrE=;
+        b=S2k5xxXLR1ZflbeNC5Bj5TVcL7ZbndQYrfxHhR5EvbDEtl8QBTnQImE8FL2RUwtHBy
+         rJWPXnX2B5kzcY5vOc5zonbwa/ToUIyWN9vDrniBdwz3ku2edlqg45jlu2JTwlIlzwzk
+         d4yp9sRZYOQyrgDfm368GR67YnOE34s/bvOtUmds5O9DqJ84fzxRy6qYRxelnndOBjeN
+         JBYU+7S2be8Dc3LxAXQB6/2wYX18ko3lsHysLFBiC99xEOFHUaSWlwO+n9L/bgTTQ4NM
+         QqbyiNff4pPPDG2RSaufs9X5fsJiN9S8BF6V2tstj4Fn9D2xZuFR6S4jSbl4cZWsEDB+
+         wJZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713197038; x=1713801838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XxrRX3hsv4yMm/yfYw+Q8TuTZyI8eHv3V8RiKJyvMrE=;
+        b=hRDXs1DFuciCwWeIeQco2d9/BC+TjYnMKZPOg5M6XJ9+8EMZaFyOKLt6ihUIM2SR81
+         9y4wTon0sXB7dkt+G9z5TFUaNOHyWugD4YJXy4Ckr3wJoq3Bod3fDB5T+ep+hdN3476V
+         i+oAJLLL6y+o6j/JPpZv7Kq9zgGF4JGG/Jr+gIMayAY1mrhlQB/K7/+Q4NI5/MZ0CJTt
+         5OqGuHmds1XPSTlwIjWl+Sg7QKjYXLEFrxn70gayNnv2YxdngobjM7E+Qpn345xBMx/n
+         y94VLqphZGMdxS0mcw2r8hZecK9gsVstjwmWb+leE/5M1BmAhD800Rh0MHhQWnBtz82r
+         wHag==
+X-Forwarded-Encrypted: i=1; AJvYcCU5JFIdObIbRPCgKnk/b0wUqgCaIa0kuJ9MwBIKHKSUGGzd+i4jS3M9T7b9wgdN75fvw62ONfPLAGkHsFa26x/n0JR1pPwvE17cKFWwDWzBN1qjaff9i9oVpc4tqxxKgqHIjulS3w==
+X-Gm-Message-State: AOJu0YzPKTT1kht4uUPuKWtfELhl3aqKdljrph7KiaGUGDLmszCd6hsX
+	UbqqPto/OB4yEi5tbNVQf813zWYLaxwNms9f8aelsG5Z9ZtHVFNr7Zv/t+GjIqrQpQcJosEHh6j
+	Za5t+DgP6VcCE7pBS3OXLJoT9DPw=
+X-Google-Smtp-Source: AGHT+IFqPWLUOtioPyFA+9Eq0kLdAP+RccNs7V2f/lcdodkfeqXLfwisGeyRHS5Z8KiI8LsDkzA6B1xMIlmHldBp2KA=
+X-Received: by 2002:a17:906:6a1d:b0:a52:5230:b076 with SMTP id
+ qw29-20020a1709066a1d00b00a525230b076mr5114005ejc.2.1713197037899; Mon, 15
+ Apr 2024 09:03:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: ClueGetter at submission6.mail.transip.nl
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=transip-a; d=herrie.org; t=1713190696; h=from:subject:to:cc:date:
- mime-version; bh=4LHW9kxjWfO5y9vNvAIQy58sYhzSG2Pz9C7+L2RBBBA=;
- b=Kq8Hix0pHcXXF2GwFOfclW1BS9wkAVu7TL5ChHqO1NzWCPOmyslVdqvOD/bmVWGpJBk/25
- ZXDdSR0Nnla9XLQnTkoi79m3Hgdqyxt+crElakM0Xb3Z47XS7cur4lhFdR1PUFJxR3kaMZ
- lVRmhy5FrP/OMFkpBkiuuEOcLuZk1t75VXM8Q5lhAigF6ks0D3eZbmz2RELdugzVcFhFaC
- o31oEvqBZBdpl2gC86OwoLoVfkCUsm2aXftVCItun6kyNBIkwGWIGyoMpj+r08GYYMVeBA
- zhT5eEkgVE/jA91KGviYAfrrrlxyLX7jz4iIi2RUHbRr1Bti+W2KsykeueMQuA==
-X-Report-Abuse-To: abuse@transip.nl
+References: <20240411090628.2436389-1-ckeepax@opensource.cirrus.com>
+ <20240411090628.2436389-5-ckeepax@opensource.cirrus.com> <CAHp75Ve00EuT0AdZy0b6OfqHySNkxTBuUbrv7z+mUgcrT56QWw@mail.gmail.com>
+ <ZhgaK9vhtvy3/YpU@ediswmail9.ad.cirrus.com> <CAHp75Vc-f13sOghXkuqEVYsmnP3hT6ewLZwLr4mJJbruSqoxXw@mail.gmail.com>
+ <Zh0uH64AlEMJQyzz@ediswmail9.ad.cirrus.com>
+In-Reply-To: <Zh0uH64AlEMJQyzz@ediswmail9.ad.cirrus.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 15 Apr 2024 19:03:20 +0300
+Message-ID: <CAHp75Veqr290PKBNi+QhuSAR+_me+WXBSvYQSSrkpw-fTrV0zA@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] spi: cs42l43: Add bridged cs35l56 amplifiers
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: broonie@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	bard.liao@intel.com, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
+	patches@opensource.cirrus.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The PM8901 is used alongside the APQ8060/MSM8660 on the APQ8060 Dragonboard
-and HP TouchPad. It works the same as all others, so just add the
-compatible string for this variant.
+On Mon, Apr 15, 2024 at 4:39=E2=80=AFPM Charles Keepax
+<ckeepax@opensource.cirrus.com> wrote:
+> On Thu, Apr 11, 2024 at 09:17:53PM +0300, Andy Shevchenko wrote:
+> > On Thu, Apr 11, 2024 at 8:13=E2=80=AFPM Charles Keepax
+> > <ckeepax@opensource.cirrus.com> wrote:
+> > > On Thu, Apr 11, 2024 at 05:04:33PM +0300, Andy Shevchenko wrote:
+> > > > On Thu, Apr 11, 2024 at 12:06=E2=80=AFPM Charles Keepax
+> > > > <ckeepax@opensource.cirrus.com> wrote:
 
-Signed-off-by: Herman van Hazendonk <github.com@herrie.org>
----
- drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c | 1 +
- 1 file changed, 1 insertion(+)
+...
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-index 3aee6835a2de..82221d0c813b 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-@@ -808,6 +808,7 @@ static const struct of_device_id pm8xxx_mpp_of_match[] = {
- 	{ .compatible = "qcom,pm8038-mpp", .data = (void *) 6 },
- 	{ .compatible = "qcom,pm8058-mpp", .data = (void *) 12 },
- 	{ .compatible = "qcom,pm8821-mpp", .data = (void *) 4 },
-+	{ .compatible = "qcom,pm8901-mpp", .data = (void *) 4 },
- 	{ .compatible = "qcom,pm8917-mpp", .data = (void *) 10 },
- 	{ .compatible = "qcom,pm8921-mpp", .data = (void *) 12 },
- 	{ },
+> > > > > +               ret =3D software_node_register(&cs42l43_gpiochip_=
+swnode);
+> > > > > +               if (ret) {
+> > > > > +                       return dev_err_probe(priv->dev, ret,
+> > > > > +                                            "Failed to register =
+gpio swnode\n");
+> > > > > +               }
+> > > > > +
+> > > > > +               ret =3D device_create_managed_software_node(&priv=
+->ctlr->dev,
+> > > > > +                                                         cs42l43=
+_cs_props, NULL);
+> > > > > +               if (ret) {
+> > > > > +                       dev_err_probe(priv->dev, ret, "Failed to =
+add swnode\n");
+> > > > > +                       goto err;
+> > > > > +               }
+> > > >
+> > > > Wouldn't it miss the parent fwnode? I mean that you might probably
+> > > > need to call...
+>
+> Ok I am pretty sure this is all fine,
+
+But have you checked this?
+
+> I don't think we can pass a
+> parent into device_create_managed_software_node since it requires
+> a parent software node, but in this case there isn't one. This is
+> the root node here, since the "parent" would be ACPI stuff here.
+
+No, this is done implicitly by so called primary and secondary fwnode.
+If you have no fwnode is added to the device (via let's say
+device_set_node() call), it most likely has no "primary" fwnode which
+is usually points to the "physical" one (from ACPI or DT), while
+secondary one will be pointing to swnode:
+
+Ex.
+
+# ls -ld /sys/devices/pci0000:00/0000:00:11.0/dwc3.0.auto/*_node
+lrwxrwxrwx    1 root     root             0 Jan  1 00:01
+/sys/devices/pci0000:00/0000:00:11.0/dwc3.0.auto/firmwar
+e_node -> ../../../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08
+lrwxrwxrwx    1 root     root             0 Jan  1 00:01
+/sys/devices/pci0000:00/0000:00:11.0/dwc3.0.auto/softwar
+e_node -> ../../../../kernel/software_nodes/node0
+
+> > > > > +       } else {
+> > > > > +               device_set_node(&priv->ctlr->dev, fwnode);
+> > > >
+> > > > ...this one always. Have you checked it? How does sysfs look like
+> > > > before and after this change on the device in question?
+> > >
+> > > I will check this.
+>
+> We can't always call device_set_node. Firstly, we would need to
+> set it to the software node, however that is never returned from
+> device_create_managed_software_node. Secondly, the set_secondary_node
+> called in device_create_managed_software_node will set the primary
+> node anyway since there isn't a valid primary node on the device.
+
+That was basically my question above. If the device has a primary
+fwnode (or one shared with a parent) it would be nice to propagate it.
+OTOH it might have a side effect of using properties from that in the
+code.
+
+> Finally, we don't want the primary node set to the ACPI node anyway
+> since we want to override those settings here with our bridged amp
+> settings.
+>
+> > Basically in the expected case there should be two symlinks: to
+> > physical node and to swnode.
+
+> I think the sysfs all looks reasonable to me, I can see the SPI
+> devices in /sys/bus/spi/devices, under those devices I can see a
+> symlink to the software node.
+
+OK.
+
+
+--
+With Best Regards,
+Andy Shevchenko
 
