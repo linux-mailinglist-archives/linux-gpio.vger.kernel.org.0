@@ -1,220 +1,132 @@
-Return-Path: <linux-gpio+bounces-5556-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5558-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A713A8A701C
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 17:48:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0DDF8A70CC
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 18:02:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63D90286058
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 15:48:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5B9A128691E
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 16:02:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 082DA131BD0;
-	Tue, 16 Apr 2024 15:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F07AB131E43;
+	Tue, 16 Apr 2024 16:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hxAl+vKX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5C713119E
-	for <linux-gpio@vger.kernel.org>; Tue, 16 Apr 2024 15:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979C213119E;
+	Tue, 16 Apr 2024 16:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713282460; cv=none; b=RTbpARYyj6cYamrMKrlOfU5T0SnLoPQygk1YTw7z58teIxR4LGE4Cj+pH5+NsaDUE8PJ5rrkD7MBwqeXy48wJHI9JQJIhfk2/YtutsjDEWjm1YaOoSu6CFFvWfUTiqLqvoo3HDck1YTFVUKkMHUesgYEWDu30GGfwLLpiA53Ek8=
+	t=1713283314; cv=none; b=HWgjU4pspXf1kFToRMjYClCfGVjuYPiX6JUlPu2u2ZLFJxxMxjz48ncNj8dYyX3ngEBwBpOtepyN3yiOnY8iVBqG+GjBBIpopMzYjbVi0VVz8/AFfFTBpxYhQQpCND8VuYGisYcT3pRDlnznoKfw5FIBzdCvU1VVQLpq1TbJvts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713282460; c=relaxed/simple;
-	bh=FdQr1h/L7g/vE47GLu19CgVt8kMTGmoLXr4TPLuHPec=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AtG09cdJP9zJSOjGcmhT1Gm2tkSMNWJrBK7xvr/FxH5DVlfuI3lPSqYDXWfnNlJ64TY8MCx5VJLQlJJh7flGGCivqffJ+re4VSLPVAuPIN5D03MpT++y0cjlURVn39Ots/yctxhUhg1syqdbug+pHY99TF/0pr4FIC09ruubeSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:76d0:2bff:fec8:549])
-	by albert.telenet-ops.be with bizsmtp
-	id BrnW2C00J0SSLxL06rnWYW; Tue, 16 Apr 2024 17:47:30 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rwl1K-008J68-TW;
-	Tue, 16 Apr 2024 17:47:30 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rwl1u-00Ebkk-B2;
-	Tue, 16 Apr 2024 17:47:30 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Cong Dang <cong.dang.xn@renesas.com>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] pinctrl: renesas: r8a779h0: Add INTC-EX pins, groups, and function
-Date: Tue, 16 Apr 2024 17:47:23 +0200
-Message-Id: <258d03b27b77f60cc03fc3257bb4c6715b612a61.1713282028.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1713282028.git.geert+renesas@glider.be>
-References: <cover.1713282028.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1713283314; c=relaxed/simple;
+	bh=CIIWnHafYS85G8cd9e60rj7Vkph8QEAZkp+usIKi/X8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mQhvUCUROgCZ2iqGMsyopKKx7ywpFylGgmEBpw/VXzoPSEZv9M3RDRGZG66zDHgVORilaLZj3lY501qSO90g2/zpIVXSMOkAMtQXsbcR67NkPRTdgplzs6KY9SpqGRT4SdaOAUJd9ZYNEoyN50gJlyElj+9nfaZO+JXCjgESHjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hxAl+vKX; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4A265C0008;
+	Tue, 16 Apr 2024 16:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713283303;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y7lcnqaRazFwJFVK5/WHOD289rB7ddonTK7K7dl1R7o=;
+	b=hxAl+vKX+Mf28jmCLqp3EiKVxs99qWvy6NWTthAfL/1rQYtCSESgYzQEgIcs9JNjpuyKag
+	cgtHErhGAkaYL237+kfmsg1uL1hzBndwQT6uMSnnFHEAXzLfXg0Rjqh4Afm+iKRTPKDZPq
+	if3ChBmix4sTpHn2V5XYpZa0lCIGhLOgnwjCyKWlpu2E4PBgu50gjLbDYD3/5/W0Su88cO
+	rzfckWPAUlM+xsXn6dBgX34WOOFUm3dd4PnZ7+780r/AZu4gbz/Rf/hz1zDQZHQxpQOFf5
+	CXQ1lFvZNiUf3xCdT7bRFM7WkpkM3Fgb2RSq88sn8cnTOfMbv+he40GgOokbkQ==
+Message-ID: <fcd7b616-07e0-45a3-b14a-d0c194d58a86@bootlin.com>
+Date: Tue, 16 Apr 2024 18:01:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 05/11] PCI: cadence: Extract link setup sequence from
+ cdns_pcie_host_setup()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+ <20240102-j7200-pcie-s2r-v5-5-4b8c46711ded@bootlin.com>
+ <111df2a5-7e05-480c-a5a5-57cf8d83c0d0@moroto.mountain>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <111df2a5-7e05-480c-a5a5-57cf8d83c0d0@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Add pins, groups, and function for the Interrupt Controller for External
-Devices (INTC-EX) on the Renesas R-Car V4M (R8A779H0) SoC.
+On 4/16/24 16:16, Dan Carpenter wrote:
+> On Tue, Apr 16, 2024 at 03:29:54PM +0200, Thomas Richard wrote:
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 5b14f7ee3c79..93d9922730af 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -497,6 +497,30 @@ static int cdns_pcie_host_init(struct device *dev,
+>>  	return cdns_pcie_host_init_address_translation(rc);
+>>  }
+>>  
+>> +int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+>> +{
+>> +	struct cdns_pcie *pcie = &rc->pcie;
+>> +	struct device *dev = rc->pcie.dev;
+>> +	int ret;
+>> +
+>> +	if (rc->quirk_detect_quiet_flag)
+>> +		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+>> +
+>> +	cdns_pcie_host_enable_ptm_response(pcie);
+>> +
+>> +	ret = cdns_pcie_start_link(pcie);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to start link\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = cdns_pcie_host_start_link(rc);
+>> +	if (ret)
+>> +		dev_dbg(dev, "PCIe link never came up\n");
+> 
+> If we're going to ignore this error the message should be a dev_err()
+> at least.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/pinctrl/renesas/pfc-r8a779h0.c | 112 +++++++++++++++++++++++++
- 1 file changed, 112 insertions(+)
+Hello Dan,
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a779h0.c b/drivers/pinctrl/renesas/pfc-r8a779h0.c
-index 0cbfe7637fc97743..438d1f2739dd4bcd 100644
---- a/drivers/pinctrl/renesas/pfc-r8a779h0.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a779h0.c
-@@ -1660,6 +1660,90 @@ static const unsigned int i2c3_mux[] = {
- 	SDA3_MARK, SCL3_MARK,
- };
- 
-+/* - INTC-EX ---------------------------------------------------------------- */
-+static const unsigned int intc_ex_irq0_a_pins[] = {
-+	/* IRQ0_A */
-+	RCAR_GP_PIN(0, 6),
-+};
-+static const unsigned int intc_ex_irq0_a_mux[] = {
-+	IRQ0_A_MARK,
-+};
-+static const unsigned int intc_ex_irq0_b_pins[] = {
-+	/* IRQ0_B */
-+	RCAR_GP_PIN(1, 20),
-+};
-+static const unsigned int intc_ex_irq0_b_mux[] = {
-+	IRQ0_B_MARK,
-+};
-+
-+static const unsigned int intc_ex_irq1_a_pins[] = {
-+	/* IRQ1_A */
-+	RCAR_GP_PIN(0, 5),
-+};
-+static const unsigned int intc_ex_irq1_a_mux[] = {
-+	IRQ1_A_MARK,
-+};
-+static const unsigned int intc_ex_irq1_b_pins[] = {
-+	/* IRQ1_B */
-+	RCAR_GP_PIN(1, 21),
-+};
-+static const unsigned int intc_ex_irq1_b_mux[] = {
-+	IRQ1_B_MARK,
-+};
-+
-+static const unsigned int intc_ex_irq2_a_pins[] = {
-+	/* IRQ2_A */
-+	RCAR_GP_PIN(0, 4),
-+};
-+static const unsigned int intc_ex_irq2_a_mux[] = {
-+	IRQ2_A_MARK,
-+};
-+static const unsigned int intc_ex_irq2_b_pins[] = {
-+	/* IRQ2_B */
-+	RCAR_GP_PIN(0, 13),
-+};
-+static const unsigned int intc_ex_irq2_b_mux[] = {
-+	IRQ2_B_MARK,
-+};
-+
-+static const unsigned int intc_ex_irq3_a_pins[] = {
-+	/* IRQ3_A */
-+	RCAR_GP_PIN(0, 3),
-+};
-+static const unsigned int intc_ex_irq3_a_mux[] = {
-+	IRQ3_A_MARK,
-+};
-+static const unsigned int intc_ex_irq3_b_pins[] = {
-+	/* IRQ3_B */
-+	RCAR_GP_PIN(1, 23),
-+};
-+static const unsigned int intc_ex_irq3_b_mux[] = {
-+	IRQ3_B_MARK,
-+};
-+
-+static const unsigned int intc_ex_irq4_a_pins[] = {
-+	/* IRQ4_A */
-+	RCAR_GP_PIN(1, 17),
-+};
-+static const unsigned int intc_ex_irq4_a_mux[] = {
-+	IRQ4_A_MARK,
-+};
-+static const unsigned int intc_ex_irq4_b_pins[] = {
-+	/* IRQ4_B */
-+	RCAR_GP_PIN(2, 3),
-+};
-+static const unsigned int intc_ex_irq4_b_mux[] = {
-+	IRQ4_B_MARK,
-+};
-+
-+static const unsigned int intc_ex_irq5_pins[] = {
-+	/* IRQ5 */
-+	RCAR_GP_PIN(2, 2),
-+};
-+static const unsigned int intc_ex_irq5_mux[] = {
-+	IRQ5_MARK,
-+};
-+
- /* - MMC -------------------------------------------------------------------- */
- static const unsigned int mmc_data_pins[] = {
- 	/* MMC_SD_D[0:3], MMC_D[4:7] */
-@@ -2416,6 +2500,18 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
- 	SH_PFC_PIN_GROUP(i2c2),
- 	SH_PFC_PIN_GROUP(i2c3),
- 
-+	SH_PFC_PIN_GROUP(intc_ex_irq0_a),
-+	SH_PFC_PIN_GROUP(intc_ex_irq0_b),
-+	SH_PFC_PIN_GROUP(intc_ex_irq1_a),
-+	SH_PFC_PIN_GROUP(intc_ex_irq1_b),
-+	SH_PFC_PIN_GROUP(intc_ex_irq2_a),
-+	SH_PFC_PIN_GROUP(intc_ex_irq2_b),
-+	SH_PFC_PIN_GROUP(intc_ex_irq3_a),
-+	SH_PFC_PIN_GROUP(intc_ex_irq3_b),
-+	SH_PFC_PIN_GROUP(intc_ex_irq4_a),
-+	SH_PFC_PIN_GROUP(intc_ex_irq4_b),
-+	SH_PFC_PIN_GROUP(intc_ex_irq5),
-+
- 	BUS_DATA_PIN_GROUP(mmc_data, 1),
- 	BUS_DATA_PIN_GROUP(mmc_data, 4),
- 	BUS_DATA_PIN_GROUP(mmc_data, 8),
-@@ -2629,6 +2725,20 @@ static const char * const i2c3_groups[] = {
- 	"i2c3",
- };
- 
-+static const char * const intc_ex_groups[] = {
-+	"intc_ex_irq0_a",
-+	"intc_ex_irq0_b",
-+	"intc_ex_irq1_a",
-+	"intc_ex_irq1_b",
-+	"intc_ex_irq2_a",
-+	"intc_ex_irq2_b",
-+	"intc_ex_irq3_a",
-+	"intc_ex_irq3_b",
-+	"intc_ex_irq4_a",
-+	"intc_ex_irq4_b",
-+	"intc_ex_irq5",
-+};
-+
- static const char * const mmc_groups[] = {
- 	"mmc_data1",
- 	"mmc_data4",
-@@ -2813,6 +2923,8 @@ static const struct sh_pfc_function pinmux_functions[] = {
- 	SH_PFC_FUNCTION(i2c2),
- 	SH_PFC_FUNCTION(i2c3),
- 
-+	SH_PFC_FUNCTION(intc_ex),
-+
- 	SH_PFC_FUNCTION(mmc),
- 
- 	SH_PFC_FUNCTION(msiof0),
--- 
-2.34.1
+In fact we already ignore this error [1]
+I only moved the hardware configuration part of cdns_pcie_host_setup()
+into a new function cdns_pcie_host_link_setup().
+
+But I can use this patch to switch to dev_err() if needed.
+
+[1]
+https://elixir.bootlin.com/linux/v6.9-rc4/source/drivers/pci/controller/cadence/pcie-cadence-host.c#L549
+
+Regards,
+
+Thomas
 
 
