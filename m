@@ -1,132 +1,166 @@
-Return-Path: <linux-gpio+bounces-5558-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5559-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0DDF8A70CC
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 18:02:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C9F18A70F8
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 18:13:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5B9A128691E
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 16:02:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CECBA1F224A5
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 16:13:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F07AB131E43;
-	Tue, 16 Apr 2024 16:01:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61896131BC0;
+	Tue, 16 Apr 2024 16:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hxAl+vKX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgeZcO62"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979C213119E;
-	Tue, 16 Apr 2024 16:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9857D13172A;
+	Tue, 16 Apr 2024 16:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713283314; cv=none; b=HWgjU4pspXf1kFToRMjYClCfGVjuYPiX6JUlPu2u2ZLFJxxMxjz48ncNj8dYyX3ngEBwBpOtepyN3yiOnY8iVBqG+GjBBIpopMzYjbVi0VVz8/AFfFTBpxYhQQpCND8VuYGisYcT3pRDlnznoKfw5FIBzdCvU1VVQLpq1TbJvts=
+	t=1713283976; cv=none; b=eIC+flYH6RJxox+AztmDUIIE6gI7iUt/3weDW51cjNomRjKPOf8RVJNtF22kG3aeG6TSeVrT2wM6LxvrVsnc0W8P7Fb9B5UL4KbEAWzu84LcVTsiaeL4SFTmm/JkjaAQo4kx5r8ly1UklEpbbjPeI17pHM/fCxJ6QvcderjpYwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713283314; c=relaxed/simple;
-	bh=CIIWnHafYS85G8cd9e60rj7Vkph8QEAZkp+usIKi/X8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mQhvUCUROgCZ2iqGMsyopKKx7ywpFylGgmEBpw/VXzoPSEZv9M3RDRGZG66zDHgVORilaLZj3lY501qSO90g2/zpIVXSMOkAMtQXsbcR67NkPRTdgplzs6KY9SpqGRT4SdaOAUJd9ZYNEoyN50gJlyElj+9nfaZO+JXCjgESHjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hxAl+vKX; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4A265C0008;
-	Tue, 16 Apr 2024 16:01:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713283303;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y7lcnqaRazFwJFVK5/WHOD289rB7ddonTK7K7dl1R7o=;
-	b=hxAl+vKX+Mf28jmCLqp3EiKVxs99qWvy6NWTthAfL/1rQYtCSESgYzQEgIcs9JNjpuyKag
-	cgtHErhGAkaYL237+kfmsg1uL1hzBndwQT6uMSnnFHEAXzLfXg0Rjqh4Afm+iKRTPKDZPq
-	if3ChBmix4sTpHn2V5XYpZa0lCIGhLOgnwjCyKWlpu2E4PBgu50gjLbDYD3/5/W0Su88cO
-	rzfckWPAUlM+xsXn6dBgX34WOOFUm3dd4PnZ7+780r/AZu4gbz/Rf/hz1zDQZHQxpQOFf5
-	CXQ1lFvZNiUf3xCdT7bRFM7WkpkM3Fgb2RSq88sn8cnTOfMbv+he40GgOokbkQ==
-Message-ID: <fcd7b616-07e0-45a3-b14a-d0c194d58a86@bootlin.com>
-Date: Tue, 16 Apr 2024 18:01:38 +0200
+	s=arc-20240116; t=1713283976; c=relaxed/simple;
+	bh=/Y3zo1KcddHRAAx9chnFCnaj6B+PNjuHwGVWXwXYUVs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZinnrcTH9gnM5Dvr0jVKLXTGk7zRdDS/oywH/12LQ49YOeHkAsxVbFOE0wRhUJ37HhP6LM4EbVlN6FeCyvCVckNiA75M3TxwGsVRB8TW1k6FgwgL5d6XPEhtBTmL4GMqZS2bNYYCRT23j15gfL0vtEVSKGy8d5qiFe5Dpy9Ezpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jgeZcO62; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3499f1bed15so214899f8f.1;
+        Tue, 16 Apr 2024 09:12:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713283973; x=1713888773; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lE0iIAKwN26IHZrOzJQ+UkxUYWi8S6bm+npmiEEpfoU=;
+        b=jgeZcO62rlTkt2EpF+NykjONmJN1O/oMswfDCZfhs6kV+cDDesdn62aKBLNcKE0pYG
+         vC7Ebo+AVHi6MFrfopLw1WhrJ4tfSdfhuDdobCkriHs5DpO6mr6t9vJeHFULFHuOHg2Z
+         iAZ/pbQj6uf1P6p48UMmI6UOG2d56h6ky5OiNQgNcWZ0l/BALsKP5iXWYLEVLaTC7hPx
+         x7yKURhXNTw91spy/E/n/TJJmctYIX+WX3ikIbj4FslD6gwcKceGs6++yXlWaGKm9f6c
+         e+dCCdF7+W8XhrBpr8nXOxHGyXYy6S/WFWEYCintqIDv6i3FaP3PRzL5kxzAxmzF6Kgh
+         duPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713283973; x=1713888773;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lE0iIAKwN26IHZrOzJQ+UkxUYWi8S6bm+npmiEEpfoU=;
+        b=gSsDaq/QD6TGcfKm6n9XYeSRkg00S56kjDmsWcrqtL5JizFaAtRj3jzt6ePpNsNGBJ
+         z/jvpQ/L2sSANDc+7/xSNZ4k0mcu4/8nF6Pv+LJhYiJIeBLTKnQ6caaQftpcyBsUdMYJ
+         nxA0e4d8sVQX48AORWUz5ZTPXaSkAob2IbdWYwiREuF3xlD1LBwZjSLJMPASqa7wputd
+         m7SmRvQU2h72EQpIqsTRq34YmQhTzlI2TNK4g35Jsh4nfyTvxKblEg1veSgetYFbIds9
+         rN7r6vntQT4YWzBEPvG4esvxR/BRHC3PJuhzURn1fLyehpOZqRizEgdR5seUn66BY9Fl
+         CTjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWBzdsxe9Bz8BYl2PG0i7F3BffyzlY93L+HTW8i49IU52fGQpeaJfEwhC1JvcdWwYMZ+JRWY1cPuOwglMXBInWbwr7gFplmsshzpWeVQI/0w2RMB/Z76w22/FVQBR0CHky3LR5ytJ8ei64hki7TPcBa3zmtMEQM8a4VWZiCLWftyzu+os=
+X-Gm-Message-State: AOJu0Yyh0vJUIWPGH5qckW1wIhuhdMFGXjP+Y9+C0+jlVnVPlA5TgvNA
+	gp/tZcvEi6eGNeUFiNzFkV2OTmKg7sMt2U/vFW8RQvSQU4yO3l+7075W
+X-Google-Smtp-Source: AGHT+IG9ARM425fPZMKoPQYcOH+P46IbQ6VFXNx/9g39D202o1HbwRny8IvK1x5SH0HBZINbFbyuOg==
+X-Received: by 2002:a05:6000:1041:b0:33e:d139:412c with SMTP id c1-20020a056000104100b0033ed139412cmr2499659wrx.30.1713283972768;
+        Tue, 16 Apr 2024 09:12:52 -0700 (PDT)
+Received: from U4.lan ([91.66.160.190])
+        by smtp.gmail.com with ESMTPSA id t7-20020adfe447000000b00343eac2acc4sm15350743wrm.111.2024.04.16.09.12.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 09:12:52 -0700 (PDT)
+From: Alex Bee <knaerzche@gmail.com>
+To: Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Chris Zhong <zyw@rock-chips.com>,
+	Zhang Qing <zhangqing@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Alex Bee <knaerzche@gmail.com>
+Subject: [PATCH v4 0/5] Add RK816 PMIC support
+Date: Tue, 16 Apr 2024 18:12:32 +0200
+Message-ID: <20240416161237.2500037-1-knaerzche@gmail.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 05/11] PCI: cadence: Extract link setup sequence from
- cdns_pcie_host_setup()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>,
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
- <20240102-j7200-pcie-s2r-v5-5-4b8c46711ded@bootlin.com>
- <111df2a5-7e05-480c-a5a5-57cf8d83c0d0@moroto.mountain>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <111df2a5-7e05-480c-a5a5-57cf8d83c0d0@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On 4/16/24 16:16, Dan Carpenter wrote:
-> On Tue, Apr 16, 2024 at 03:29:54PM +0200, Thomas Richard wrote:
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 5b14f7ee3c79..93d9922730af 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -497,6 +497,30 @@ static int cdns_pcie_host_init(struct device *dev,
->>  	return cdns_pcie_host_init_address_translation(rc);
->>  }
->>  
->> +int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
->> +{
->> +	struct cdns_pcie *pcie = &rc->pcie;
->> +	struct device *dev = rc->pcie.dev;
->> +	int ret;
->> +
->> +	if (rc->quirk_detect_quiet_flag)
->> +		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
->> +
->> +	cdns_pcie_host_enable_ptm_response(pcie);
->> +
->> +	ret = cdns_pcie_start_link(pcie);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to start link\n");
->> +		return ret;
->> +	}
->> +
->> +	ret = cdns_pcie_host_start_link(rc);
->> +	if (ret)
->> +		dev_dbg(dev, "PCIe link never came up\n");
-> 
-> If we're going to ignore this error the message should be a dev_err()
-> at least.
+This series aims to add support for Rockchip RK816 PMIC series. As per
+datasheet it's targeted for RK3126/RK3128 (RK816-1), RK1108 (RK816-2) and
+PX3-SE (RK816-3) but might be used for other SoCs as well. The MFD consists
+of an integrated RTC, a GPIO controller, two 32k clock outputs, a power
+key, 3 buck- and 6 ldo regulators, 3 regulator-switches, and charger with
+integrated fuel gauge. Charger and fuel gauge are not part of this series.
+Two of the switches (otg/boost) are part of the binding, but not of
+the driver. They must only ever be enabled if no battery charging is
+happening, but it will be enabled automatically if a battery is attached
+and an external power source is connected. Thus that needs some
+incorporation of a yet to be added charger driver.
+Integration in the existing rk8xx-infrastructure was pretty straightforward
+and only needed very little tweaking. In order to not further bloat the
+driver(s) too much with additional `#define`s I tried to re-use existing
+ones wherever possible.
 
-Hello Dan,
+The patches are loosely based on the vendor's implementation, verified
+against the datasheet and tested/measured on a RK3126 board.
 
-In fact we already ignore this error [1]
-I only moved the hardware configuration part of cdns_pcie_host_setup()
-into a new function cdns_pcie_host_link_setup().
+I'd like to gently ping pinctrl and regulator maintainers: please have a
+look at this series. I've now added Sebastian Reichel to the recipients, as
+he recently added RK806 support and re-worked parts of the rk8xx drivers.
 
-But I can use this patch to switch to dev_err() if needed.
+changes since v1:
+  - integrated Krzysztof's feedback for the bindings and the resulting
+    driver changes
+  - fixed a sparse warning 
 
-[1]
-https://elixir.bootlin.com/linux/v6.9-rc4/source/drivers/pci/controller/cadence/pcie-cadence-host.c#L549
+link to v1:
+https://lore.kernel.org/lkml/20240321143911.90210-2-knaerzche@gmail.com/
 
-Regards,
+changes since v2:
+  - integrated Krzysztof's feedback to v2 of the bindings and the resulting
+    driver changes
 
-Thomas
+link to v2:
+https://lore.kernel.org/lkml/20240323085852.116756-1-knaerzche@gmail.com/
+
+changes since v3:
+  - integrated Krzysztof's feedback to the bindings of v3 
+  - integrated Lee's feedback to the mfd part of v3 
+
+link to v3:
+https://lore.kernel.org/lkml/20240323132757.141861-2-knaerzche@gmail.com/
+
+Please see individual patches for details about the changes.
+
+Alex Bee (5):
+  dt-bindings: mfd: Add rk816 binding
+  mfd: rk8xx: Add RK816 support
+  pinctrl: rk805: Add rk816 pinctrl support
+  regulator: rk808: Support apply_bit for
+    rk808_set_suspend_voltage_range
+  regulator: rk808: Add RK816 support
+
+ .../bindings/mfd/rockchip,rk816.yaml          | 274 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |   4 +-
+ drivers/mfd/rk8xx-core.c                      | 104 +++++++
+ drivers/mfd/rk8xx-i2c.c                       |  45 ++-
+ drivers/pinctrl/pinctrl-rk805.c               |  69 +++++
+ drivers/regulator/rk808-regulator.c           | 218 +++++++++++++-
+ include/linux/mfd/rk808.h                     | 144 +++++++++
+ 7 files changed, 851 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rockchip,rk816.yaml
+
+-- 
+2.43.2
 
 
