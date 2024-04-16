@@ -1,235 +1,103 @@
-Return-Path: <linux-gpio+bounces-5548-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5549-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C55B48A6C8D
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 15:34:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EFAB8A6C97
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 15:35:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 826B6280DAD
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 13:34:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BED72825E6
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 13:35:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E97813280F;
-	Tue, 16 Apr 2024 13:30:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEAC512C7E3;
+	Tue, 16 Apr 2024 13:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ly3tUPHV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sp13Bn2q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E50132470;
-	Tue, 16 Apr 2024 13:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB5212C499
+	for <linux-gpio@vger.kernel.org>; Tue, 16 Apr 2024 13:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713274237; cv=none; b=txzF4TN4mPVYWqtQSBfD2ilpSkTy6ho2QPrvnB+xGB7lG1WpSMGR7vHoeoIzsp9btV5QZKjTInNnOwBSRHKdz+FRX2XJutQza5iFUWP4R0RSkiP0Nc+mwZVG/yJaHgmDdN4/4JX0gtpYsf0csqEBSqd1Lejh5gBni3zOl2EuBOs=
+	t=1713274422; cv=none; b=M1cwx+4lxmYA6RjU1kT8ciXTEs+ShfBpeBnqLtLhMhujVdzXfdOs4QFb92pQ+6yUcdVri40RqlXEdHUtn1vV1xVFf0Z7si/DfZEoK/7+4Pn8E+uESLTlq9cun3/v9EYY+GogaWN9CJiP/dppFSCjmANUOobJiOKPayuUmKUAMIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713274237; c=relaxed/simple;
-	bh=lpcRI6pbJ32meL/VjTzpGOcoWSJTYnk21moIdV1Kpxk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sX74VLvrXQgZHsa3UZzRrzx8za03yzPOqtUx/fQh2BJPLvpMWj60a4tlDTga5Be2kPzfW/MVu+2dPLJ0XOo0+n/viCrnWWN9Nu3qIlqrNrpoz/E27Ui6s4FZ+OPkS5JbufBMeuiGlzzSLsgZbjM7RcT3gZIoOC2LFGxEyIKDZDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ly3tUPHV; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 37A8840003;
-	Tue, 16 Apr 2024 13:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713274229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M72jZYyV65DqxQX89BNQFEE+r0wyDWzohfJY2wWVXuo=;
-	b=Ly3tUPHVPHxGu2QGf1SReurnXyVT6yZJ2fK77RoLnNLB4XnongqrymoRROo2eNs32VwIjH
-	+kgILqGY2ooadU4CkFnaTAV1+r2G2DkEkFvsCCIm4oy/QhaXoum08Xx7YhTHSHNkFPv/Yb
-	W/0ql6ngJTtsiaPSjw09Gec9DUYqcWAfwuGEooptvqlQBQw2OVZekcGbDLyIGJmFhj4op/
-	bmOecvZaw56s/5WJg5aNLren0s3uanD+/Vn8mZMLNmtlTlWzVZ43UwX6ZIHDOpIHcPcG+m
-	5AYr47/tmI4N25ASXbJG9ncJNe1tkj82DN/+JJWexW0f8Xv3sUqANYfpeLqCPw==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Tue, 16 Apr 2024 15:30:00 +0200
-Subject: [PATCH v5 11/11] PCI: j721e: Add suspend and resume support
+	s=arc-20240116; t=1713274422; c=relaxed/simple;
+	bh=xm6C2Ao4ypYVX1MhC1/uBnS+FZuFYDGrl9Ts/4p+yMc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K8uKvDQ/cQO+t/a8Mt9r0FnS00emICvUzpmtnCK8D8dkqXW5EcsJcY2M+lHxVFSpNXHufk2RnsuYoE3RzsHShyGL+LHMiQXKeDVjOqi/bY0BgeRf0ChK6CyNLIQ5A558elxH6eUqgk/cpJYqXblXdRTuHtUwKcD/fnc7muhdzpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sp13Bn2q; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-de0f9a501d6so4354409276.3
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Apr 2024 06:33:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713274418; x=1713879218; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xm6C2Ao4ypYVX1MhC1/uBnS+FZuFYDGrl9Ts/4p+yMc=;
+        b=sp13Bn2q9evfeJd9EipdsvPvJJ20fsLxtu0e2T4sOIsoVi6tEwHFgTMPr5hJ4xvL3+
+         /XdlATepihbkYiwQOGMiQDKuWfJuUPxUKDbuB1868msZGPLH4GWxbaadktcuzaeRHXMO
+         tuViVW0TSHIgH6skftZVOmR8Fhkg+9pMlPtQ8AQ7RwXLqRr8H2N4R+feh4gRPn1fIYcX
+         /hhW/WFC0qy9cyzSZxT1fNQ0o+1rIFQkUtLBrqYizWYrrDK95ubNBUibgZGr7HU8fmKR
+         8CXciflHH2xxD7qZEqv0QauO8hzpcjneMx+nNtikSGMwFLA6/crxNdOJvXptr5Ir6E5z
+         UO6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713274418; x=1713879218;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xm6C2Ao4ypYVX1MhC1/uBnS+FZuFYDGrl9Ts/4p+yMc=;
+        b=xSY86hJrsPXe+AfYLexHQv2r//Zkq6KRdAwM+wkC/0VKy8evywtdrbXlG00Tu1X7g+
+         zw2R/8c+E0J+fmNtjN/ag9BUaGrcdrDJoytV6XHTpvqfxUNORh9qFVPnzNvYX2bZNOFA
+         8GgGHBMHGcwqS2cyAAI1JSyRMErIAVvpyq0C1DCXEO+VNLwm+5RDlgbwLa1nHB1PvjB9
+         b1z3riKUcC1/6GdojXIm73P6ZULFqbVKcCjLTdp8PSXsImk4veMuumKuppxpFsgkRAqX
+         vL8K7LXPX90ShXUEPJwj4p5k3Ko8BrUjJyAqCaYLVgIObVgTmbjq5J7tK3KaCvwE7Rpa
+         /E6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUyKAnzn6+aeGiPey/TLWEwuLSaDl6FNrcZ2eEgg9Ybi7btLGEyX1kXe3NReWtpG8YpZuaD/g5UzdtENO4gGW7xFbsVjTJ3rAyd9Q==
+X-Gm-Message-State: AOJu0YyNkbAR6BFaUBPNjj67OpIY0TQduV5YfC5GZX//WRkzbILJ2VUn
+	sTgVnAMNqJFdgTnLc01fFnw9xnb/as48KaS4N8jDk6xrt6oP5rQpRA8Z5gu3K8YgBS/CgXrtLbw
+	jZVX63fAHUjoC+VMkKWjo3Dea+6QmKzHK4+oB2g==
+X-Google-Smtp-Source: AGHT+IGhXYN8RFtzdBC2XFtqBYQ0YqRkDw4rw6+jm0oCglv8rsHArIyTep+NJikgb3knd6W2WrjZHHfgC8IvOHzqHkA=
+X-Received: by 2002:a25:3341:0:b0:dce:1871:3d30 with SMTP id
+ z62-20020a253341000000b00dce18713d30mr11319804ybz.21.1713274417844; Tue, 16
+ Apr 2024 06:33:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240102-j7200-pcie-s2r-v5-11-4b8c46711ded@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
- thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.12.0
-X-GND-Sasl: thomas.richard@bootlin.com
+References: <20240415105328.3651441-1-zengheng4@huawei.com>
+In-Reply-To: <20240415105328.3651441-1-zengheng4@huawei.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 16 Apr 2024 15:33:25 +0200
+Message-ID: <CACRpkdZz0zD62T8cxXQkTjkR58CZ3_0uVr5F0Amy0Qa9jrc3nA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: devicetree: fix refcount leak in pinctrl_dt_to_map()
+To: Zeng Heng <zengheng4@huawei.com>
+Cc: linux-kernel@vger.kernel.org, xiexiuqi@huawei.com, 
+	linux-gpio@vger.kernel.org, weiyongjun1@huawei.com, dan.carpenter@linaro.org, 
+	liwei391@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Théo Lebrun <theo.lebrun@bootlin.com>
+On Mon, Apr 15, 2024 at 12:54=E2=80=AFPM Zeng Heng <zengheng4@huawei.com> w=
+rote:
 
-Add suspend and resume support. Only the rc mode is supported.
+> If we fail to allocate propname buffer, we need to drop the reference
+> count we just took. Because the pinctrl_dt_free_maps() includes the
+> droping operation, here we call it directly.
+>
+> Fixes: 91d5c5060ee2 ("pinctrl: devicetree: fix null pointer dereferencing=
+ in pinctrl_dt_to_map")
+> Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Zeng Heng <zengheng4@huawei.com>
 
-During the suspend stage PERST# is asserted, then deasserted during the
-resume stage.
+Patch applied for fixes.
 
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 98 ++++++++++++++++++++++++++++--
- 1 file changed, 92 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 967a5bf38e26..96316a79ab8a 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -7,6 +7,8 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/container_of.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
- #include <linux/io.h>
-@@ -22,6 +24,8 @@
- #include "../../pci.h"
- #include "pcie-cadence.h"
- 
-+#define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-+
- #define ENABLE_REG_SYS_2	0x108
- #define STATUS_REG_SYS_2	0x508
- #define STATUS_CLR_REG_SYS_2	0x708
-@@ -531,12 +535,12 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 		pcie->refclk = clk;
- 
- 		/*
--		 * "Power Sequencing and Reset Signal Timings" table in
--		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
--		 * indicates PERST# should be deasserted after minimum of 100us
--		 * once REFCLK is stable. The REFCLK to the connector in RC
--		 * mode is selected while enabling the PHY. So deassert PERST#
--		 * after 100 us.
-+		 * "Power Sequencing and Reset Signal Timings" table (section
-+		 * 2.9.2) in PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION,
-+		 * REV. 5.1 indicates PERST# should be deasserted after minimum
-+		 * of 100us once REFCLK is stable (symbol T_PERST-CLK).
-+		 * The REFCLK to the connector in RC mode is selected while
-+		 * enabling the PHY. So deassert PERST# after 100 us.
- 		 */
- 		if (gpiod) {
- 			fsleep(PCIE_T_PERST_CLK_US);
-@@ -588,6 +592,87 @@ static void j721e_pcie_remove(struct platform_device *pdev)
- 	pm_runtime_disable(dev);
- }
- 
-+static int j721e_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-+		clk_disable_unprepare(pcie->refclk);
-+	}
-+
-+	cdns_pcie_disable_phy(pcie->cdns_pcie);
-+
-+	return 0;
-+}
-+
-+static int j721e_pcie_resume_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
-+	int ret;
-+
-+	ret = j721e_pcie_ctrl_init(pcie);
-+	if (ret < 0)
-+		return ret;
-+
-+	j721e_pcie_config_link_irq(pcie);
-+
-+	/*
-+	 * This is not called explicitly in the probe, it is called by
-+	 * cdns_pcie_init_phy().
-+	 */
-+	ret = cdns_pcie_enable_phy(pcie->cdns_pcie);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		struct cdns_pcie_rc *rc = cdns_pcie_to_rc(cdns_pcie);
-+
-+		ret = clk_prepare_enable(pcie->refclk);
-+		if (ret < 0)
-+			return ret;
-+
-+		/*
-+		 * "Power Sequencing and Reset Signal Timings" table (section
-+		 * 2.9.2) in PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION,
-+		 * REV. 5.1 indicates PERST# should be deasserted after minimum
-+		 * of 100us once REFCLK is stable (symbol T_PERST-CLK).
-+		 * The REFCLK to the connector in RC mode is selected while
-+		 * enabling the PHY. So deassert PERST# after 100 us.
-+		 */
-+		if (pcie->reset_gpio) {
-+			fsleep(PCIE_T_PERST_CLK_US);
-+			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+		}
-+
-+		ret = cdns_pcie_host_link_setup(rc);
-+		if (ret < 0) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return ret;
-+		}
-+
-+		/*
-+		 * Reset internal status of BARs to force reinitialization in
-+		 * cdns_pcie_host_init().
-+		 */
-+		for (enum cdns_pcie_rp_bar bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
-+			rc->avail_ib_bar[bar] = true;
-+
-+		ret = cdns_pcie_host_init(rc);
-+		if (ret) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_NOIRQ_DEV_PM_OPS(j721e_pcie_pm_ops,
-+			       j721e_pcie_suspend_noirq,
-+			       j721e_pcie_resume_noirq);
-+
- static struct platform_driver j721e_pcie_driver = {
- 	.probe  = j721e_pcie_probe,
- 	.remove_new = j721e_pcie_remove,
-@@ -595,6 +680,7 @@ static struct platform_driver j721e_pcie_driver = {
- 		.name	= "j721e-pcie",
- 		.of_match_table = of_j721e_pcie_match,
- 		.suppress_bind_attrs = true,
-+		.pm	= pm_sleep_ptr(&j721e_pcie_pm_ops),
- 	},
- };
- builtin_platform_driver(j721e_pcie_driver);
-
--- 
-2.39.2
-
+Yours,
+Linus Walleij
 
