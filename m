@@ -1,59 +1,59 @@
-Return-Path: <linux-gpio+bounces-5521-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5522-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5FFC8A5E20
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 01:17:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D17508A614B
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 05:07:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E975D1C20A71
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Apr 2024 23:17:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 143DEB21855
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 03:07:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59D17158D95;
-	Mon, 15 Apr 2024 23:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E739014A82;
+	Tue, 16 Apr 2024 03:07:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BcHH5c3j"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pYWbPcTa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2077.outbound.protection.outlook.com [40.107.6.77])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2082.outbound.protection.outlook.com [40.107.21.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17811272B8;
-	Mon, 15 Apr 2024 23:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6158171D2;
+	Tue, 16 Apr 2024 03:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713223048; cv=fail; b=dUlOr7W/gCniBJD32dD3SmzhqUoaq8/nCcihFLe1Wf9l++Q0KRnGSYmXjYq5nTh1J8i602y0PCIupKsQeech2P7+VNd8YcOmlbxOccLm7U0vkYh6oq4uhk4Hq4urlerZ/LLV+JfOs13nXKg3yEp6fxClnPt/YV3lDPpltiYZYbA=
+	t=1713236857; cv=fail; b=sOdNf0Qs1bmqxkmSarH670D/hGHdnjj4NqHkg33g7R7kwPT+IHNsZMRWnFA8XiOyLtJqTrLYe4Ad7iF1zRlVuX5L8UmFMbgQDUH+IfiBk0MIgmikGHjj8DFQif7TIgSN8yXZ5eP4wCw9VgeaVf+vpYZTMIN8IAiunOa993uY3Y4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713223048; c=relaxed/simple;
-	bh=9GGxT+Qd3O44G6ZVjCrGxxwo4Ib9zfB+yxxBBegOszA=;
+	s=arc-20240116; t=1713236857; c=relaxed/simple;
+	bh=1+tD5ilSPiMRpfDpHa1G+adQPK3FaLSCbfrah8QW4I0=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FHu+hPkX9swgjobNTXPJo213KrjWbC0LccegdHAZvMoz8JVCyTjWw6cLJ3ny43v+pAWXBT3Jt266stzLdoF2KVv/ltMjEytSxOfzwzMCtwwpqVxB8a3EyhfXzmNQaTDlS+lMaiQQhibdPc8r2BM12mb7sgmIyqOVmY5GRs+Wwww=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=BcHH5c3j; arc=fail smtp.client-ip=40.107.6.77
+	 Content-Type:MIME-Version; b=V1l5H+WyRKQSR8RichzRYE7CJvVXIuAMOFXmdYR1Ii5E/87mIgNe5wZtFAYKstcnS6k14SW/tAQdsUSrl6q/7Avd4L1glhGl4cyIQBanGkSBdk69Fed0CiScHcMqRgCJEMnUGrZhS1pOSAYlZ6ONTtoltvN39Ix+6QntZaTpSgQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=pYWbPcTa; arc=fail smtp.client-ip=40.107.21.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gpRmzrMccXuy/TRLHhgD6EfzeiQHJ6QT9BCsBrRPEVEEGG/MpnL0CjMQZrblzcDwmVmXP9m9LcRo76rddzK8HdFq15g1SQ68tHCS6WWGGOSfHUBfWi8LG+ZWFGpDY0LsRJbv1BIkim7eQfvZ4jlru1wnfzc1To69iP8M2FciLfQEBt71SScn7dSwnK9kYAptkHYMTd2DhgqDbXS7RGd7D4UbS8TEWCh764HbjP+RwG1cHk85The9096Mv0dRGaKpYKDQHsZFhDkcGtX8UjqWeBtwew8+IkrfA6QUYOdB7IVb0toJVbSATceGZRME+KUJejuVfh99Z85V8WxzC0tE3g==
+ b=haPG8LtE9mNx41JQVJT8PDiWANS3IV9PMKioFYKfguE4raFvqOr7oQZ37biVMXGLibDC6L0B9swiqEvP5EeTZCCOK5Aj/Eq7koJ8e40o+ysY+/f54U3Xn/prR4wJUNBXFvFt71bqEYs/Afbv0HKIn71SE5aZFfeGOhQlcZgTjc6VqbijuOqB1ARNJWDQV8VhDrdHtCNDKp3yfsWQXxHCnevRg7+NCfAO26T9B3FpRNVpuDh/Ya/h0lhzCjvWO28eWoU/Z+RjjpAnrF7yiGHvBSRvSrrTc2jdpjJVKiuNh6+peD4poXyUrgKuZ1VZkFQmCVMm+JONuFEERRewCG+DCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xaY8MMqc8QJGt+Qp/QPNjSAYiPp2Sqnb6wOKy66rJqY=;
- b=dlKPCbK8iy0yYRP3pzoM26hH9Y7OkXon75klvUOl+k473ZISCkwXOnUOdoIyAj/GNehI5/NX4JEtm3Sl+USepE0eMtpoOH+FjJt/3iezHtCwUWGy++jIOPy5xKi/FcBg0bVC5r6tJXJFVDsr7JVRb2maO15ZyeQO3JMQbOt1R6BvJnrgF+TAALftS9V0BvVN0AAC9TZTyqB4on2cgMtiDekj7P60VqRLmol+27ZL/GNqxbgK6ew29HDoRTHdAHAU/xSKQZfpvVhay5RAOBiBJ7zIcxOhOFYwH9lLNVdB7VVckLc85r/NjmzwyWBLNc1+yGAGntnNgDzAuTWyWjlexQ==
+ bh=nySIb/Iw+lI/CT3Zpo8ioILLfp8eWdiip/rK2Zz3xrg=;
+ b=eunDGIsSSlHl6PO1Dg6OYP+Gm3cwzMbeUy3BZ4RVRI6TrbFFvHzc+vj6d9DZagtxRN+dNCBpM40pJkeTrw5QDZsOXMxpO5KjUC7bgguUWGPEx53/A2fJbLm39/lsxRyl1KLhNQ2vXO69OTas3mNFpEJd/p49oTtEt5363hM3hO+njIV1pkcPdHNSReg4EP9qgt9Qah7VJPrg6Vnn69CuU7KoL4oM9ozm3wq+dSwdKj6Wq9WMGtjoU+mpt/cvEmQV2tc1nT9KMiYzVMMXHQ9E+UzDWRR9sTFntY8nEkEF4yaD1dfShxM3UP5MQ7qJ0IoOXMcA8G/lhDjwhOD83C4/GQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xaY8MMqc8QJGt+Qp/QPNjSAYiPp2Sqnb6wOKy66rJqY=;
- b=BcHH5c3jDc+ALLPXRY8lOLJUAKDzuyXPy4iPTKlTVxkrj1HKA7scZXN1IO3GpzpRzK1savlu99Wms9DOtH16m2/M0vzVbbPU3NELxY9cWGiFU/5SGCzCfGvI5qSNiQhc7vRvGx8mfnX2ZVt8KJEwmrsoVdEGQrE0EGAwT1+AbrA=
+ bh=nySIb/Iw+lI/CT3Zpo8ioILLfp8eWdiip/rK2Zz3xrg=;
+ b=pYWbPcTa0Ofc3tj/5cbDLsfixe8JGUQaFnnIP9UCt2N0g9F7rqtAZi67yLpC4Yd98JKTeY7f8oXzTZTT1DjTWWyhMmxAAjE3qgQZjnoUa/I584ihHVYBpyQt66v++NqFWg4UGS7tSeBczOO3OvIxsN3nUEIyBmINKu1QDmN9V1A=
 Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by DU2PR04MB8918.eurprd04.prod.outlook.com (2603:10a6:10:2e1::18) with
+ by AS5PR04MB9731.eurprd04.prod.outlook.com (2603:10a6:20b:654::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Mon, 15 Apr
- 2024 23:17:23 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Tue, 16 Apr
+ 2024 03:07:32 +0000
 Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
  ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7452.049; Mon, 15 Apr 2024
- 23:17:23 +0000
+ ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7452.049; Tue, 16 Apr 2024
+ 03:07:32 +0000
 From: Peng Fan <peng.fan@nxp.com>
 To: Rob Herring <robh@kernel.org>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
 CC: Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski
@@ -67,16 +67,18 @@ CC: Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski
 	"linux-arm-kernel@lists.infradead.org"
 	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/3] dt-bindings: pinctrl: support i.MX95 SCMI pinctrl
-Thread-Topic: [PATCH 1/3] dt-bindings: pinctrl: support i.MX95 SCMI pinctrl
-Thread-Index: AQHajG9cdUkQ2lgZgUStYTjvuii937Fp9agAgAAFLsA=
-Date: Mon, 15 Apr 2024 23:17:23 +0000
+Subject: RE: [PATCH 2/3] dt-bindings: firmware: arm,scmi: support i.MX95 SCMI
+ Pinctrl
+Thread-Topic: [PATCH 2/3] dt-bindings: firmware: arm,scmi: support i.MX95 SCMI
+ Pinctrl
+Thread-Index: AQHajG9fogbrSJSEIkC/zlbnV4Z6dbFp93iAgABErEA=
+Date: Tue, 16 Apr 2024 03:07:32 +0000
 Message-ID:
- <DU0PR04MB94174F4B34DB446A951CDBFC88092@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <DU0PR04MB941714AFCDC74997BFF34DFD88082@DU0PR04MB9417.eurprd04.prod.outlook.com>
 References: <20240412-pinctrl-scmi-oem-v1-v1-0-704f242544c1@nxp.com>
- <20240412-pinctrl-scmi-oem-v1-v1-1-704f242544c1@nxp.com>
- <20240415225008.GA215835-robh@kernel.org>
-In-Reply-To: <20240415225008.GA215835-robh@kernel.org>
+ <20240412-pinctrl-scmi-oem-v1-v1-2-704f242544c1@nxp.com>
+ <20240415225637.GA234203-robh@kernel.org>
+In-Reply-To: <20240415225637.GA234203-robh@kernel.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -84,44 +86,44 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|DU2PR04MB8918:EE_
-x-ms-office365-filtering-correlation-id: dac86816-eee1-4936-0408-08dc5da234c8
+x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|AS5PR04MB9731:EE_
+x-ms-office365-filtering-correlation-id: 4fa1e5a0-b40e-46f3-85b4-08dc5dc25bbb
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
 x-microsoft-antispam-message-info:
- MKTiiYkgEFv/Tsv4M5R7Re/+HX5xoUE/Y8itnU5MRuHG+9K8si4RAerk6zR5NLRK7YQzAgbSLIGhnoCq6LkGYW34cKWyqXol2a/YtNo+VUBYbtNJKY0hse+O/1fkJK00wJ/hx+qu8GXZaEv/0NWHnP7m2+U0wdMIWMLS/1rC4WkM/dtWYfZtLq1VtAyCHqP1tvFS/LkLIyttWC+RYGNtVual9rCDWb0Gz7Xzr9wYWV7izy6tDdWtodudsvqJOjC0ZNFgBbWa/35VdMN4szapiIRFKA7XzbjGfnIasme7zX6JFN7NVsnb3ZobhOvkbjvLmbD5Zua/dsXIjzObzwvafXiFJ2mxXZ4ICqy9HoO6+cnlHqdgPgL2jDxbJYXY29OPFtVQ91KPnTFEY75UTVGmdP2diL9+dfAQCnr5OJIu3dDxO2pj2vvWZPupWaeBDQS0oo7i4vVzf/s3V6hVfWAHT0pQS4ZaHfUz5rqw6cJMl06SvclHogccLBw58JrDj0nMPL5SnfppHYo8gpfsg/Z1uizfMAvap90POybPdV3l4ILnFj+enF3sfvqqX0XbRiamevlmHnQXuxbxhWeairfW2LYuU5JDuDkEmUcWcxteBkGzGVtiTRqast3UlTJloEi4T2nKOsjTpfV3r2dv6MRsQboMo2SbePS5pTSWEaVG06J7z3wgsh50l7nx5kTJEuyydUuvqNoh9ZpfBMLT2mk5MA==
+ rGnob1dvScK1ej3IZio28m8wM13Rrl4LmwiONX6v1bZ+jCIU77Fu0/++pQhEfxAfruzuZxIMO1lyWcJUcHaMRND8XEfqtPeBQ17/vL4ebK/nIoTMSkvUC8wOA6Zp8cbwb3cb7muRi4Z1724AzQ7lS58mH+JzgUHoy0ijc7acOavTT8Pwn8szWT+J9wqEcpkN0UNx2rUqeHpoN+E//F2kVR/dTTtMy2MWgGvf5VwSH1Rp/f/NvD7q/JcaovvkrRtXd0Jr3PIRCjCihe2sXj2v8Ivjl3hJInVO/m2bnmSYUq+AlS7cLl+GMIwO2xshp1Edb0+Kte95mNqMcYsQOduToZn2w2Znrp9MHQnsWmfCLlpRIrZtDnPPdx6ZGKOw66msv23GXPMGykXdy1yWuqjemyzpIa0YKuHSaSb6DkhGMcKwjzHOWqY2fmyVfN6dE+BSLz/2hRuxwliO/9+lImN7IwoaQzbE1U+eXhipixognt0/JIDLnObK8l1zbnvp/dKe67yxA2mXjp801LYW8xlZqvfdwzJGG/glLh3TEn5Ypax60FCSUWDy8rzTZydPv8xVDypdX6rnohdKYqXQD4gUqqqLK+ezFhZzk6/U0AJa5EkurWRcEnSyjYD/NzsTITL4r1KOZxDtlRONpPm9JRJ+P0uUaHrQUEirucRAnQisDryEcyQz1d2UEymKd4eDUp8Lmfy6Os3+DRr3+5KzteJSuTFIUHSPodD8WfWkJow0RoY=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?+xQvLD0Y1KNIMCftvOZPauQNrFsig/pQdXCt0BJwbioZshULMHRqTA5WeYTG?=
- =?us-ascii?Q?MmH/4L0iO4hfgC0x42mJJoQs4IrFBMphOlc+4oRhFClyv+sz1YBEcYy24FNG?=
- =?us-ascii?Q?mW2GRLK0kLOeZ7ActVNaXUTV6rzdNf6CfXlblCZ1vg67a2hCsh7xuWIb0Be6?=
- =?us-ascii?Q?4wd2bB08AHw8gU1tv4vikk7AXFrzNaNauz4/iovPYHP/FQME1eX6Q42Zeddu?=
- =?us-ascii?Q?tv2E9FyFELtwFULthOMAOfi6RjCP6hA63GeY4cLEVWC82XYE1ALTpCRtCrG1?=
- =?us-ascii?Q?ntXYic7EGvrVzuikzWkg2ovSylCUrwzCtPZTiwNbVylLJsauDChIU9jPh8QX?=
- =?us-ascii?Q?PUYBtNxLyf3Cj0cGOgLOEhILVy1KbSyssst3lFXBv3kbOWR/m22jMzR/ymac?=
- =?us-ascii?Q?MQ7ov5A7W5CSb01QCJ/qRsPKzakxzo5XBH6DtAl1wtWIbp54z8PFM2vDU4YH?=
- =?us-ascii?Q?D3fMUod5Bviz08iXUOy+omIil5iM0kd5o0fjs5Hq/gAw2UOwFDYTpjbDzAjP?=
- =?us-ascii?Q?QnvqAnXEvWV3XtGlkhXXGQMa07hM2CD6H4mJhiAxGLMKP7On3coCJCkkL2yG?=
- =?us-ascii?Q?O0dMW+XB2i6l/PLo24flzW+QeIR/wjtupnagXyebdf2tTrtQPlmvUefnldgE?=
- =?us-ascii?Q?Cw6d7M5WLqjD0drT27AeZeYqGaE+pwvV/pc7eo7M1QetUJ67aYDxyv5HqNvk?=
- =?us-ascii?Q?edfUDOHpf1Dt/Pvcoz4faRXiuDRdT732jmzJOc9LWN1pAgisz7T/dH9XDhz+?=
- =?us-ascii?Q?6PPbxSChdzIn9j6ozZ/m1+nuIacGxpAdWQLNEETCl+Ip3LYkC9F67h0aLNfK?=
- =?us-ascii?Q?2CyF+Ymy29nXRyjkBWHRCIdB0zVX2AqDG8zHbc83G2bswrsNBrGvv45x0g8n?=
- =?us-ascii?Q?gqBa8Lwp2SJj/VMIR1qB3HyloyZi9bamSAn0PeJHVsmjlRiaBCnCdFYAscEU?=
- =?us-ascii?Q?29ID7hLQCR/Eay30BQwb9yNphB3QvQy+5yPYchPH193QCSpg91HUjqDW1OeI?=
- =?us-ascii?Q?62ekpO/m43lW0laJJChsc9mfmOu8ZYmp3UgQJvBVgiXQ1/rqlnwc7tBaIx8h?=
- =?us-ascii?Q?J8wwu165VGtIhNKUHMQIAeHnVZ3C1wX+/ifgwZ3bgvwTN5HTGV/cjNwf8VZC?=
- =?us-ascii?Q?p5VWKDh05duUJuQYPKJnwb3F/7ufTnFsFgdDSgfr7mr1zJbDsJFoEhWjNci8?=
- =?us-ascii?Q?Lq7n7amaUnp+otJ33OfJfor0dry/j88V+pnP6EUiAcruksXSJ6Htbcpo5PiT?=
- =?us-ascii?Q?2f4i4/tJunlWsOODa61TemDzmMjE6vxt9Rt7StGp8KBSpmklezSrC76vRHvJ?=
- =?us-ascii?Q?Mn+6lZkD9kBJaqU9YTh21kYKk5s2wxQU0nnkMr/0xj3AneYgSgg/2CUGLhyG?=
- =?us-ascii?Q?+sWKtVYYQZzK1wgO8gY5PwM4CB8UNUnE3c++8C0O9i9iWtDwgGi5hs7GkwWO?=
- =?us-ascii?Q?IYzILDClgCpsK5taju/jT9QmEchtlsr6CTZI4wf6eobw6bukqYipzyB07ZAN?=
- =?us-ascii?Q?m9XYKRysT+zs2/fducjsJDYc46M/VcFptD5mXtr8WzbIhzHhiw9VJLXbtqZI?=
- =?us-ascii?Q?R3MTgH8+1x24Sb/Of2s=3D?=
+ =?us-ascii?Q?ixbvclbe5YFb8FOOSQQ8BNoi09iZFwWOwLau2qObJ3TRTDN8QgfCTDuUCtGU?=
+ =?us-ascii?Q?oJRybjl191QuE7M8r6u4jS6zkb48DtYk+sDQ3ITK6mmF2CXevIFEtayp/Bfq?=
+ =?us-ascii?Q?Ve5ucrH0y0+B+92YPusMCbcDjnz95v+J3sIMDftI73F7QPUqGfVOwACoqz/X?=
+ =?us-ascii?Q?bnnl1r4sHEUsA/YxxkGXZervpKhDSalO/NQTpSmHuN7NbmqmPrFuqXzvOFDr?=
+ =?us-ascii?Q?qb9yLaRp3FjKDmxu5KD04OpKtrgvkjJlA7bb6PiQS+pW27IVd52sTLcQU2tI?=
+ =?us-ascii?Q?L0Na776nKaphcxidNsBM0C8LhdKUcg+RTlTWHnEpCYNPct2yptgHR+ebbxcm?=
+ =?us-ascii?Q?Gp7cT+cOXozwI1n1l1nEXF3+2yKLxC30frjieGaBwPAO1YXbe2KSbhNmzdhP?=
+ =?us-ascii?Q?LHOIo4zTgdVYHcARY0jMPDSBhw3HbuBJIhvNKmGSQ1kb4pYgrR9do0OHW6CN?=
+ =?us-ascii?Q?JD6W+gdZGEdE7AbDOe+rbU1reRGAnBSXYkwIj+TBrfLp0hzeh/4H/+b9WFKs?=
+ =?us-ascii?Q?SJ03vJ8j6gh6x5wRjdRBRgCWuUdclwsCSbUrCg3R41mfu8Sbi72Cmj+PSxsS?=
+ =?us-ascii?Q?Xe1aRJIEU46xzLt9RxY/Q5Vbw2brSCmaEfknPUYF3FaipqN+xGEWHwKclQ5Z?=
+ =?us-ascii?Q?e3wOMOzyvkMWQi9zWh+rl9r/m59XVdj/J6BuhSGZetvxp6hg63GuOJyfk16k?=
+ =?us-ascii?Q?jBTFyU9NN3HI0DtLw3TS95OL8kmAZMJ4Xev6aD1bCPjDfnzF/yZeLWa5AAN+?=
+ =?us-ascii?Q?wxMEHhlKOyc/pPiVn6FhIc1yADTXCzpjLvVkFQXhviwisJI9aQ/GG/mDBcO5?=
+ =?us-ascii?Q?lQDntEAB/u+clfc2BTYaQqCeBZNkzIrc1WWWQvfuyABgmQVpr7v9FJT/CqN0?=
+ =?us-ascii?Q?B7LatwPuU9T8UonRndq9zxaUUVohOnLUbIY5cGs1EDM9wiJfU9QhmuYA4f9t?=
+ =?us-ascii?Q?Y7F0YdqMITNh51uBuf4OC8yyR61cnsRII+eBwdSQ3QTADphRWeTL4p3MlywK?=
+ =?us-ascii?Q?H8C0p+4VG0EbXfNH1FyAXCXk7NBv8P9EiYaN6jYYsAEQ3fa3riJoIx/wDaOh?=
+ =?us-ascii?Q?gumVandmFINHu6J/CKX354BlJkfWuS9OWoBgYZvSHimZnVHpgVbAMe/mwa6u?=
+ =?us-ascii?Q?4q1L30F54F3NiWbQc48NqpU2mGrYKg+MPPOVCmeqeFr7NcjDwyHXeFLkTfyr?=
+ =?us-ascii?Q?7TITDemd+pw8xKbE6kX8st1FYZ4LXv2TjTYGuZ84xipFhYWuG9lMIIgWsVFd?=
+ =?us-ascii?Q?cGLdkdhr9h7vct23WK3bCTleaoeZb0hyktuSHfK3jFAirCnCPpZFfo2RzpXv?=
+ =?us-ascii?Q?CJ6aIh42XwbFsIOxcb94RWV8TCigw8CvKEFNaxJugPnIZunJXXKarFmwxM5x?=
+ =?us-ascii?Q?FrMnv4Elml9lz1YQaKx5B04jsm9YVe3LLOdEvuiDWg6OeTTe+9ZGsaBjyi3p?=
+ =?us-ascii?Q?GOq2w1+F47Q4W2f0MqJt5lz/ijmDjvxC1bLStLzf0WDinPaLlzlWQ4RbbEoD?=
+ =?us-ascii?Q?oBTzpDK/9tWSE28zIq25cIeuWn5YgvKB7KmsytoSCIMt0eBKzzlgByii0QNj?=
+ =?us-ascii?Q?AItO7no+o8q9vuJRyKo=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -133,196 +135,127 @@ MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dac86816-eee1-4936-0408-08dc5da234c8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2024 23:17:23.1314
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4fa1e5a0-b40e-46f3-85b4-08dc5dc25bbb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2024 03:07:32.3574
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CNMxBYV280pydP4oHPiAOa9HVmKqF6eF92CN0OQVW2iDaXz9cQu8H1iWuxRlVU0SbN77UTjQf7aqgH5FFHIWRQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8918
+X-MS-Exchange-CrossTenant-userprincipalname: fU5OnVZWP1Z1TA1i8liGTq46KXWd4wBcN7YZLnNT9eLxV5s24u/gWTLKn1DqZXKlbu36YUBDy8VitBTVtL7jlQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB9731
 
 Hi Rob,
 
-> Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: support i.MX95 SCMI pinctr=
-l
+> Subject: Re: [PATCH 2/3] dt-bindings: firmware: arm,scmi: support i.MX95
+> SCMI Pinctrl
 >=20
-> On Fri, Apr 12, 2024 at 08:29:25AM +0800, Peng Fan (OSS) wrote:
+> On Fri, Apr 12, 2024 at 08:29:26AM +0800, Peng Fan (OSS) wrote:
 > > From: Peng Fan <peng.fan@nxp.com>
 > >
-> > i.MX95 Pinctrl is managed by SCMI firmware using OEM extensions. This
-> > patch is to add i.MX95 Pinctrl OEM extensions properties.
+> > i.MX95 SCMI Pinctrl uses OEM specific units, so add '$ref' to
+> > '/schemas/pinctrl/nxp,imx95-pinctrl.yaml' and an example.
 > >
 > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > > ---
-> >  .../bindings/pinctrl/nxp,imx95-pinctrl.yaml        | 44
-> ++++++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
+> >  Documentation/devicetree/bindings/firmware/arm,scmi.yaml | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
 > >
-> > diff --git
-> > a/Documentation/devicetree/bindings/pinctrl/nxp,imx95-pinctrl.yaml
-> > b/Documentation/devicetree/bindings/pinctrl/nxp,imx95-pinctrl.yaml
-> > new file mode 100644
-> > index 000000000000..4bf7a6192813
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/nxp,imx95-pinctrl.yaml
-> > @@ -0,0 +1,44 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) # Copyright 2024
-> > +NXP %YAML 1.2
-> > +---
-> > +$id:
-> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
-i
-> > +cetree.org%2Fschemas%2Fpinctrl%2Fnxp%2Cimx95-
-> pinctrl.yaml%23&data=3D05%
+> > diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > index e9d3f043c4ed..ebc6c083b538 100644
+> > --- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > +++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > @@ -249,9 +249,11 @@ properties:
 > >
-> +7C02%7Cpeng.fan%40nxp.com%7C4c448715c4ad4cd1f70808dc5d9e6924%
-> 7C686ea1
-> >
-> +d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C638488182142511691%7CU
-> nknown%7CT
-> >
-> +WFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiL
-> CJXVC
-> >
-> +I6Mn0%3D%7C0%7C%7C%7C&sdata=3DBckWIcVgYU6l8lV6fIpyDIZHt5hCyFdgF
-> xaWBUBb9
-> > +7s%3D&reserved=3D0
-> > +$schema:
-> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
-i
-> > +cetree.org%2Fmeta-
-> schemas%2Fcore.yaml%23&data=3D05%7C02%7Cpeng.fan%40nx
-> >
-> +p.com%7C4c448715c4ad4cd1f70808dc5d9e6924%7C686ea1d3bc2b4c6fa9
-> 2cd99c5c
-> >
-> +301635%7C0%7C0%7C638488182142522802%7CUnknown%7CTWFpbGZs
-> b3d8eyJWIjoiM
-> >
-> +C4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7
-> C%7C%7
-> >
-> +C&sdata=3D1BJASfju905Rua9G2mkNvPKDppN9%2BP5UaxFCbXDtPqo%3D&res
-> erved=3D0
-> > +
-> > +title: i.MX System Control and Management Interface (SCMI) Pinctrl
-> > +Protocol
-> > +
-> > +maintainers:
-> > +  - Peng Fan <peng.fan@arm.com>
-> > +
-> > +patternProperties:
-> > +  '-pins$': false
+> >    protocol@19:
+> >      type: object
+> > -    allOf:
+> > -      - $ref: '#/$defs/protocol-node'
+> > -      - $ref: /schemas/pinctrl/pinctrl.yaml
 >=20
-> Why?
+> I don't think anything from here was actually used...
 
-The node will be as blow, there is no
-"-pins$".
+You mean this not used?
+allOf:
+  - $ref: '#/$defs/protocol-node'
+  - $ref: /schemas/pinctrl/pinctrl.yaml
 
-+&scmi_iomuxc {                                                            =
+Or below?
+>=20
+>=20
+> > +    anyOf:
+> > +      - $ref: /schemas/pinctrl/nxp,imx95-pinctrl.yaml
+> > +      - allOf:
+> > +          - $ref: '#/$defs/protocol-node'
+>=20
+> This must always apply and should not be under the anyOf.
+
+I just try in arm,scmi.yaml:
+  protocol@19:                                                             =
                         =20
-+       pinctrl_uart1: uart1grp {                                          =
+    type: object                                                           =
                         =20
-+               txd {                                                      =
+    allOf:                                                                 =
                         =20
-+                       pins =3D "uart1txd";                               =
-                          =20
-+                       nxp,func-id =3D <0>;                               =
-                          =20
-+                       nxp,pin-conf =3D <0x31e>;                          =
-                          =20
-+               };                                                         =
+      - $ref: '#/$defs/protocol-node'                                      =
                         =20
-+               rxd {                                                      =
+      - anyOf:                                                             =
                         =20
-+                       pins =3D "uart1rxd";                               =
-                          =20
-+                       nxp,func-id =3D <0>;                               =
-                          =20
-+                       nxp,pin-conf =3D <0x31e>;                          =
-                          =20
-+               };                                                         =
+          - $ref: /schemas/pinctrl/nxp,imx95-pinctrl.yaml                  =
                         =20
-+       };
->=20
-> > +  'grp$':
-> > +    type: object
->=20
-> Missing 'additionalProperties: false'
+          - $ref: /schemas/pinctrl/pinctrl.yaml                            =
+                        =20
+                                                                           =
+                        =20
+    unevaluatedProperties: false =20
 
-Fix in v2.
+And in nxp,imx95-pinctrl.yaml:
+patternProperties:                                                         =
+                        =20
+  'grp$':                                                                  =
+                        =20
+    type: object                                                           =
+                        =20
+    additionalProperties: false                                            =
+                        =20
+                                                                           =
+                        =20
+    patternProperties:                                                     =
+                        =20
+      '[a-f0-9]+$':                                                        =
+                        =20
+        type: object                                                       =
+                        =20
+        unevaluatedProperties: false    =20
 
->=20
-> > +
-> > +    properties:
-> > +      $nodename:
-> > +        pattern: "^[0-9a-f]+$"
->=20
-> Drop. That has no effect. You just defined the nodename above.
+But the following example always reports:=20
+                pinctrl_usdhc1: usdhc1grp {                                =
+                      =20
+                    sd1-pin0 {                                             =
+                        =20
+                        pins =3D "sd1cmd";                                 =
+                          =20
+                        nxp,func-id =3D <0>;                               =
+                          =20
+                        nxp,pin-conf =3D <0x138e>;                         =
+                          =20
+                    };                                                     =
+                        =20
+                };
 
-This is to define a subnode, as just listed above, "txd" and "rxd".
+arm,scmi.example.dtb: scmi: protocol@19: Unevaluated properties are not all=
+owed ('usdhc1grp' was unexpected)
 
->=20
-> > +
-> > +      pins:
-> > +        $ref: /schemas/types.yaml#/definitions/string
-> > +        description: name of the pin
->=20
-> Needs to define the possible values.
-
-There will be hundreds of pins, I need to list them all here?
-
->=20
-> > +
-> > +      nxp,func-id:
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        description: high impedance mode ("third-state", "floating")
->=20
-> We already have a standard property for high impendance. You should know
-> that since you obviously copied the description...
-
-My bad. Fix in v2.
-
->=20
-> > +
-> > +      nxp,pin-conf:
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        description: latch weakly
->=20
-> Same here.
-
-Fix in v2.
-
->=20
-> > +
-> > +      nxp,daisy-id:
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        description: pull up the pin. Takes as optional argument on ha=
-rdware
-> > +          supporting it the pull strength in Ohm.
->=20
-> And here...
-
-Fix in v2.
-
->=20
-> > +
-> > +      nxp,daisy-conf:
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        description: pull down the pin. Takes as optional argument on
-> hardware
-> > +          supporting it the pull strength in Ohm.
->=20
-> And here...
-
-Fix in v2.
+Do you have any suggestions on how to write the yaml correct?
 
 Thanks,
 Peng.
+
 >=20
-> > +
-> > +additionalProperties: true
+> > +          - $ref: /schemas/pinctrl/pinctrl.yaml
+> >
+> >      unevaluatedProperties: false
+> >
 > >
 > > --
 > > 2.37.1
