@@ -1,121 +1,108 @@
-Return-Path: <linux-gpio+bounces-5551-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5552-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF37F8A6D44
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 16:05:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 900E28A6D62
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 16:08:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFC431C21241
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 14:05:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAD4D1C20150
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 14:08:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E160D12CDAE;
-	Tue, 16 Apr 2024 14:05:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A833612D20C;
+	Tue, 16 Apr 2024 14:08:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GLlJDBCd"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="W+Cdt6As"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D932612838C;
-	Tue, 16 Apr 2024 14:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6616F12CD90;
+	Tue, 16 Apr 2024 14:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713276317; cv=none; b=kYGGJaSaz55BrG0+XiaH9pD+YMb9UO0G7S42ZHh7LbFfd+gR87qQygL76HJA7OtxwXcRt8vks+2udGtpEU6UwV+yxut5exFK3AkAOzV0vc2Lg6Tfiw6aPdq6Lq6X+r2rsA8lyAoU/NansjZpSRgTQRVdUHgDy2wx72mQg34xAPQ=
+	t=1713276518; cv=none; b=B3TjFc7i9VclSO0+aR3vPoNDHJNbdoa/XaDKuMp7Y7eOthXo7m2eWbcqEVCC7TnfNboLlk+hO41ehZyONCcoPu5BLE86JvJmpRI52XlRHIleFHH+lmy3ntUMtzKnvJZvFYU6Lvp4YekHks22g0d4zeZV2xtWGt6ayGtfAaYjj2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713276317; c=relaxed/simple;
-	bh=8M2ppSPVva638z5ABaUVriqyvbuS97xgMtG6yxPRPDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UdQax1IdkX5syaIGD5xBgJAQ8r5veI9uJn+goR6uYrpIj2zAVIZ0YXGne/r2AViYJLkGWattP4UHiY1tw8t0yB/ryGlqRwvySEkk4tToAaDC5kXYW5xnLBj3U1qzKWdeWekAAeIEGEKHQyK96QTQkDxS1k0CGQiX/iGa5v0ImvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GLlJDBCd; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713276314; x=1744812314;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=8M2ppSPVva638z5ABaUVriqyvbuS97xgMtG6yxPRPDU=;
-  b=GLlJDBCdmt+Q0jAgMTSwVBo/7QpwXWZR8ywotGfw/PqUtnjbpyE0gFdV
-   QfG0iInftIqiAtQw9+F6tny4m0zuQFZMRTSGD4ajS4qpnpf0zcQ6zBfwC
-   fFlswPKv82c/ISfru0K0FwgbiU1hn5YbCWliOA3bYkocVRdghTeJQhew+
-   vOSFwrf4aE6VhkGuWQwYNQTFJ7AyfMXICqGt9QnUyyPcTiUyegufkD5t5
-   5jyR7oMkKft20trFRqxfJBwJPiTFSlBOTJhkjWAtV40aq8Hlsn0T35JR0
-   q3DcgOSZCi1qQhQ5NvzwwFzZIs8oOlXwQ6uLBE86kYH4s+Qg1+FocLuuw
-   w==;
-X-CSE-ConnectionGUID: 19haIpVuSW+ibFHqiHR1Pw==
-X-CSE-MsgGUID: LftmEfNOTvCqndEidjV8Xg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="12554253"
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="12554253"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 07:05:13 -0700
-X-CSE-ConnectionGUID: Osep5OIWR6yhlH0nyEsqwg==
-X-CSE-MsgGUID: 5BAvzasNR0WOGHBLZR1yMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="22340887"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 07:05:09 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rwjQo-00000004iLg-1Y7q;
-	Tue, 16 Apr 2024 17:05:06 +0300
-Date: Tue, 16 Apr 2024 17:05:05 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v2 1/2] gpiolib: Fix a mess with the GPIO_* flags
-Message-ID: <Zh6FkejXcwBTAqIR@smile.fi.intel.com>
-References: <20240408231727.396452-1-andriy.shevchenko@linux.intel.com>
- <20240408231727.396452-2-andriy.shevchenko@linux.intel.com>
- <CACRpkdYaXVvtt3b9rFxU4ZNShD17Bm4XU9X3h4dY501iJy3kPA@mail.gmail.com>
- <ZhlSaFWlbE6OS7om@smile.fi.intel.com>
- <CAMRc=Me489H-mTfT1hfUsY47iKwoaVsf6sgkiBwBVkxJOBo9UA@mail.gmail.com>
- <CACRpkdZRp-DFQgb3=Ut27DHd1w11_aEY0HbLjJHob=C5Ek-dyw@mail.gmail.com>
+	s=arc-20240116; t=1713276518; c=relaxed/simple;
+	bh=8s/8WXuXfhhydmS2bkr1sreOQKFJDW/DwkDi1ejTEyg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TIHTwgQcgla2EEHjnviLVz2NMffPAkPoL9dQUW+rSyrRCmY8+h3+EaAB+3/9j49ML7bFBODrmIj1OuyCxED4djjMEkuvof7yRCkKNBkYxE+ckqyLYkaMizbgaueqrWtLaQkj48Dhv5PcCe0BDqBs9Ej50c3xmlb2NxEvD80e2UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=W+Cdt6As; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43G5uYam005067;
+	Tue, 16 Apr 2024 09:08:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-transfer-encoding:in-reply-to; s=
+	PODMain02222019; bh=w/I27fSXAckxstsH9arR2p6lcMwXlJ4bwWLfxKcSNLo=; b=
+	W+Cdt6As759eeKk/fMIl22eGor4Ow2ET1/Bi+veM7Y3dBFavQ9BJ3lUYy1XbwUOt
+	oqNZM319xTvwv3224JFdD5fgJVWwKSGWXn2nHjGbJ0JorelvNmRQciIcl9k93REe
+	yJxMOgRkgPYyjB3KE6t1I+pYjMYczj45/BI/RADR8/YLt5dW+wtKZj9YTecO/yum
+	7zywp9wBuuQEuBVfPAudmMQEsSGJC+cghXjU5dUfPAZGUysDO9BeHOZAhchKTBno
+	KthuQvJILLR1pcq0uk9M3wglIzg3Lp6nOdRIz0+kxG1GgMGltJsfq0ee+hFRKqUQ
+	jNeVdt+nbph87LCJCQK6NQ==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3xfpfhtmp5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Apr 2024 09:08:23 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 16 Apr
+ 2024 15:08:21 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
+ via Frontend Transport; Tue, 16 Apr 2024 15:08:21 +0100
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 5B939820242;
+	Tue, 16 Apr 2024 14:08:21 +0000 (UTC)
+Date: Tue, 16 Apr 2024 14:08:20 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+CC: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <bard.liao@intel.com>, <linux-gpio@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v7 4/4] spi: cs42l43: Add bridged cs35l56 amplifiers
+Message-ID: <Zh6GVEKQR9xvtZXC@ediswmail9.ad.cirrus.com>
+References: <20240416100904.3738093-1-ckeepax@opensource.cirrus.com>
+ <20240416100904.3738093-5-ckeepax@opensource.cirrus.com>
+ <CAHp75VeSnwqTnpVGdJq33svHk-UnpV8L0JgiRA2MC3ZQy6dA+Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdZRp-DFQgb3=Ut27DHd1w11_aEY0HbLjJHob=C5Ek-dyw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAHp75VeSnwqTnpVGdJq33svHk-UnpV8L0JgiRA2MC3ZQy6dA+Q@mail.gmail.com>
+X-Proofpoint-ORIG-GUID: -pBx-4UNPgDPALQBxTRU9wbqqeupzSHt
+X-Proofpoint-GUID: -pBx-4UNPgDPALQBxTRU9wbqqeupzSHt
+X-Proofpoint-Spam-Reason: safe
 
-On Tue, Apr 16, 2024 at 02:22:09PM +0200, Linus Walleij wrote:
-> On Fri, Apr 12, 2024 at 9:44 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Tue, Apr 16, 2024 at 04:40:39PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 16, 2024 at 1:09 PM Charles Keepax
+> <ckeepax@opensource.cirrus.com> wrote:
+> > From: Maciej Strozek <mstrozek@opensource.cirrus.com>
 > 
-> > IIUC include/dt-bindings/ headers should only be used by DT sources
-> > and code that parses the OF properties.
+> > +               ret = devm_add_action(priv->dev, cs42l43_release_sw_node, NULL);
+> > +               if (ret) {
 > 
-> That's what I have come to understand as well.
+> > +                       software_node_unregister(&cs42l43_gpiochip_swnode);
 > 
-> I wonder if there is something that can be done to enforce it?
+> This is not needed when you use devm_add_action_or_reset(); that's why
+> I mentioned that API and not simple devm_add_action(). Can be fixed
+> later of course, not a big deal.
 > 
-> Ideally the code that parses OF properties should have to
-> opt in to get access to the <dt-bindings/*> namespace.
 
-Whatever you, guys, come up with as a solution, can it be fixed sooner than later?
-I mean, I would appreciate if somebody got it done for v6.9-rcX/v6.10-rc1 so we don't
-need to look into this again.
+Argh... sorry about that, not doing well on this series. Still a
+few people to look at the series so I will fix it up and doing
+another spin probably the next couple of days.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Charles
 
