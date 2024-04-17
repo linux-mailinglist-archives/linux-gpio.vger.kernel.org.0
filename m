@@ -1,132 +1,112 @@
-Return-Path: <linux-gpio+bounces-5578-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5580-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E1CC8A770E
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 23:52:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DE128A7AB2
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 04:46:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C279A1F21CB6
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Apr 2024 21:52:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE4791F22085
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 02:46:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E3186E60F;
-	Tue, 16 Apr 2024 21:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2DCA8BFA;
+	Wed, 17 Apr 2024 02:46:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dq+jCISf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQ8TPxmT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BDA69946
-	for <linux-gpio@vger.kernel.org>; Tue, 16 Apr 2024 21:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE678F54;
+	Wed, 17 Apr 2024 02:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713304353; cv=none; b=kDLf0cYvZDv5vtfXIlTQpUr/pTLoT2Z8k4YIL87bAWRckl76Qs9qvTTwurtRqeD8AxM/Q+i2AQcrF78Htinsm6LFEhKFhAd0iM5KzyvlT1mC4Kc19qJSCY7fXLR1Hv4itEs6aE+G0nFQesCFGl0irTlsxRpVLpAg+yJK3s4CnhQ=
+	t=1713321968; cv=none; b=HaFlkbdzhFPV8BhOxgV0J+HGRrc2doQ4ErjrGa3qmstFUaHrCruNHyrR6FkBGXZvROvdxJ7ir6fE76viuZOxP+6YjZK6EUBiTrRJ4seQGdDlw7X12JJcNk+xYl2FWD7iLlIS8ugNW+Vwx5d0XDFB//zksM5UeopUFNg41mtS0jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713304353; c=relaxed/simple;
-	bh=q6/gLtyhQSyX7zsxFDwS1nDlm6kwyGd7DE1AAnd5Ks8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qwumieYJn88bcLhhk4KseiLKX5s/tVnfwVAQDpNIexk4rSHWjqPRm5nv52c42yFP8C92RYEoM09l4ohei4icLO2zJdHLpLFrAuPK+zM68T/46P9P8q7iU/1w7Qwgbv6RmZ81dCR+TBLTcI1/2oIch3AUrQyLkfOISuBFnc0gD9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dq+jCISf; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ed5109d924so4188665b3a.0
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Apr 2024 14:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713304351; x=1713909151; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TXiJdzRTAuB1UlX3lfsMbcreITp5HZxliXA/4a98Y64=;
-        b=dq+jCISfnv29r/ddgXbGEF5TlyZL3tAtFSDg389/LE7B4UN60m8BUK7w6pKlaGiNh0
-         w67HmrWVcAat2iXZtXhs3v3ECblTQh1C5m0uFaspcCM9mLANKQKzCZSlJlnwoA0H0jml
-         4VKCh7JbdGHC/9F+GzKsNbmR9hNfeqY2MoHRACKucLH1jtrLUaMZsaHxmayoId7cCZ1Z
-         UV9RlA6J9el2a0Qj31Zx7VGszBn7Q+QO2MSSajwZvXKEcqI8haXkhupnDOPkZNeNMhVH
-         9J29//xpm+VzgOdcKWIBQI1S2GIoBcooWdzcjCa1d/M0PCNuuznZg5JbYpcXNnIrYhd8
-         wlCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713304351; x=1713909151;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TXiJdzRTAuB1UlX3lfsMbcreITp5HZxliXA/4a98Y64=;
-        b=jlNUa0pBVGNX3KwZT27HfmIPVu48Fcsb37JeQuyHaaE+v6saxzpwEbb/SGcSLQ1QCt
-         Jq3f3GVOJXoUR1VyV7eZEQLbsxH0uem4bBbSJQju1IZ2lmRdUwirOndvbh3+IoZuT6/4
-         jEpek7uLuwir392kRTvPjqsDHWz4x1wh7hml0sba812pVmYJiiLwSmWFfaTXpuCEgyXo
-         NC1GU3S0+KQFtxJrhirQSogBW5zGWe+59+6x6TTYBskmfUnpQ5NRVL4nklLnWM3Nzimv
-         AfgidsD8UOcThRNJ89Ty24ri2LaY7wGenpi/EbobxMaojfOm1DGmrcxSD8w4eklarmwl
-         Lukg==
-X-Gm-Message-State: AOJu0Yyb9EouDXZuxsaSRamtmmFqHR1xHzYAjxnkrPes6PMTLPxEiBGe
-	/CuJTa4e1gfWUMJxEJ0PEV7GzFIuTPP2NJEbBfEz/gHwlvVWs1G0kOQiBZw5UyHPLbybZq6awC3
-	cyAw=
-X-Google-Smtp-Source: AGHT+IGAixADyk/tsrCZSC2YS7wzRIrpN+S1hZwAxxKZOgoLJcJBlwxtj5tmxfZm0fYIiUdmxF9OvQ==
-X-Received: by 2002:a05:6a21:3d84:b0:1a7:aba5:7ce9 with SMTP id bj4-20020a056a213d8400b001a7aba57ce9mr12798568pzc.34.1713304351505;
-        Tue, 16 Apr 2024 14:52:31 -0700 (PDT)
-Received: from brgl-uxlite.. ([24.75.208.145])
-        by smtp.gmail.com with ESMTPSA id o8-20020a656148000000b005f07f34eb59sm8005217pgv.27.2024.04.16.14.52.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 14:52:30 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	=?UTF-8?q?Gunnar=20Th=C3=B6rnqvist?= <gunnar@igl.se>
-Cc: linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH v2 4/4] tools: add minutes as a new supported time unit
-Date: Tue, 16 Apr 2024 23:52:22 +0200
-Message-Id: <20240416215222.175166-5-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240416215222.175166-1-brgl@bgdev.pl>
-References: <20240416215222.175166-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1713321968; c=relaxed/simple;
+	bh=1r6hxdxqI6GXVNcgZCfmJy/7fxS2i7yA03rrwOq53wk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=hvCuCFi7z4J+qhwC6FafwuLpN7rItVmY21iMZ8FGhA0aNcVK4WQq39MCHs1+G4J5+8+ATyNlZAkaq+jwThV4Nfhl68fFUWDkbgy4dya+sAAYXq3bwTHLy1AF4bXOQnLQiD/0Zlpu0RVlsTkFsUDS9K1zSGrYxpLp3ZEHWSFLYZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQ8TPxmT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6331EC3277B;
+	Wed, 17 Apr 2024 02:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713321968;
+	bh=1r6hxdxqI6GXVNcgZCfmJy/7fxS2i7yA03rrwOq53wk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=rQ8TPxmT2G1V5MRR+J4TNo82uUs9AfUCoL+mWrk4f4DuwAZyD2K8VjoIJtINVleMT
+	 lSu5QejvD6ayXYfgOJW2uJh7XHkUl3WrZTaZJWv64L4Q4/okCiLiviCBtVVrE6Wrps
+	 Uq89lKmgaBDnajsIHBcsnAUIl/LbVmG3lkNB0xcMAqTVcmslFXtjqNekPeJe+iIly0
+	 jWemLub5ngzS197GJinIZr4FDg99vIYrk2NK/8uoVwioyX43zRZ3duSmMDd2ykYS8U
+	 /wUY+pGseIm/nb0J9kEdBVzDHCAkCMHXG2YpOlyYZ/Gr5V3vHYzQMbpf0OLl/LxqXc
+	 anJ+Isq3K9sIw==
+From: Mark Brown <broonie@kernel.org>
+To: linus.walleij@linaro.org, brgl@bgdev.pl, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: andy.shevchenko@gmail.com, bard.liao@intel.com, 
+ linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
+ patches@opensource.cirrus.com
+In-Reply-To: <20240416100904.3738093-1-ckeepax@opensource.cirrus.com>
+References: <20240416100904.3738093-1-ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v7 0/4] Add bridged amplifiers to cs42l43
+Message-Id: <171332196643.1698999.8454490477837124341.b4-ty@kernel.org>
+Date: Wed, 17 Apr 2024 11:46:06 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, 16 Apr 2024 11:09:00 +0100, Charles Keepax wrote:
+> In some cs42l43 systems a couple of cs35l56 amplifiers are attached
+> to the cs42l43's SPI and I2S. On Windows the cs42l43 is controlled
+> by a SDCA class driver and these two amplifiers are controlled by
+> firmware running on the cs42l43. However, under Linux the decision
+> was made to interact with the cs42l43 directly, affording the user
+> greater control over the audio system. However, this has resulted
+> in an issue where these two bridged cs35l56 amplifiers are not
+> populated in ACPI and must be added manually. There is at least an
+> SDCA extension unit DT entry we can key off.
+> 
+> [...]
 
-Make it more convenient to specify longer time periods in gpio-tools by
-introducing minutes as the new time unit.
+Applied to
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- tools/tools-common.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-diff --git a/tools/tools-common.c b/tools/tools-common.c
-index 500e9a2..4340bce 100644
---- a/tools/tools-common.c
-+++ b/tools/tools-common.c
-@@ -138,10 +138,12 @@ long long parse_period(const char *option)
- 	}
- 
- 	if (m) {
--		if (*end != 's')
-+		if (*end == '\0')
-+			m = 60000000;
-+		else if (*end == 's')
-+			end++;
-+		else
- 			return -1;
--
--		end++;
- 	} else {
- 		m = 1000;
- 	}
-@@ -213,7 +215,7 @@ void print_period_help(void)
- {
- 	printf("\nPeriods:\n");
- 	printf("    Periods are taken as milliseconds unless units are specified. e.g. 10us.\n");
--	printf("    Supported units are 's', 'ms', and 'us'.\n");
-+	printf("    Supported units are 'm', 's', 'ms', and 'us' for minutes, seconds, milliseconds and microseconds respectively.\n");
- }
- 
- #define TIME_BUFFER_SIZE 20
--- 
-2.40.1
+Thanks!
+
+[1/4] gpio: swnode: Add ability to specify native chip selects for SPI
+      commit: 9d50f95bc0d5df56f2591b950a251d90bffad094
+[2/4] spi: Switch to using is_acpi_device_node() in spi_dev_set_name()
+      commit: 8a101146bcf014060530d71eba8edc52eca257f7
+[3/4] spi: Update swnode based SPI devices to use the fwnode name
+      commit: ed8921188f3568ba1659ff041f21e83565c74ec2
+[4/4] spi: cs42l43: Add bridged cs35l56 amplifiers
+      commit: 439fbc97502ae16f3e54e05d266d103674cc4f06
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
 
