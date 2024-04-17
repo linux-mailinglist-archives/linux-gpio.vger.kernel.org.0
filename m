@@ -1,114 +1,88 @@
-Return-Path: <linux-gpio+bounces-5602-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5603-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75D2C8A8141
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 12:46:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAB468A8242
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 13:41:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AA991C218EA
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 10:46:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E7021C22E38
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 11:41:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C87EB13C684;
-	Wed, 17 Apr 2024 10:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PWdzLCmT"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 290C613CAAE;
+	Wed, 17 Apr 2024 11:41:50 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4934313C679;
-	Wed, 17 Apr 2024 10:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B1213C8FD;
+	Wed, 17 Apr 2024 11:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713350809; cv=none; b=L+lInuyK1F1Oi/J98SfU+8DLYFUuh5VHIcyfLElETDrnL+UW0okKFgNHAuVGY9RL2S8TzG/773liHf9Ztz4EShjZh7GAAlAEIKcvlXdWCNKWy0469RgGhkaZOIkHq9WH1NTqzVZMTfyZRHZI7CLOSOUXAYhLuAxy1JNAEquYTRo=
+	t=1713354110; cv=none; b=g5hox6Kwg19ydeIjoV9P7gDecGGSubwE/oAI2WNAVgTDN81hfjWr97ursDB+hH7Iu15WZJrHiGa02efckns5QDzjybWlah+AImFhJJ1evtsz1N/8f7t92QkcbGnNwo9UBUQ5ylk+WFLVPo5ehOvHSndmJigoWR2qCFq7Gb3FB30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713350809; c=relaxed/simple;
-	bh=zRUl1g1oCuh2NUNoJLoN8viN6QzNopdu5zeZVVRrzQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZfxxSiph5BJGZh9VDvtd4lS5Feb9kpnuKCxk3J8FiNq3uHxjKFk1Hu+gPtpOvTEIYjUsNIsy4QtxM9h5dy78oS3rzZyHiz0C5AXyhJEY/MnrK55NvYZK8JVm90prGzuBNgDjEv2p11iNOZqlymBO7YBIyON8uruwPoyN911wP/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PWdzLCmT; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713350808; x=1744886808;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=zRUl1g1oCuh2NUNoJLoN8viN6QzNopdu5zeZVVRrzQM=;
-  b=PWdzLCmT6FuV9yGDScsua9hS0vKA5dCWz2HpWv2nmbLxFVTCUtrzBW/c
-   P+wtzumMLz7ncBXaf/qATdSic5TUsV8dH4++Rmu5abZMLx4vUUdgk9zJo
-   ASATKIakH1qFeH0jc+Ct3cz+aLx/P0kz0DeQ3hKe8c8GVNt8Io+qtspDA
-   wlhuJgO7V46rC+ikphE2964ROXvtHBP7i42GD+EfJ+rVcH+WO4oobHmAo
-   x8Tz02ySELpUQ3BUH8VjD7kSoXWD+PkUgWEYKRkllJiKdZAqwHHvYxVya
-   NU3fm0nVAFKMSrBibzM53wK/GZfEk339YDpmNw44000dP8rr1d67DWPz5
-   w==;
-X-CSE-ConnectionGUID: eIC3Qzc1Rpmhh7e3DEYplA==
-X-CSE-MsgGUID: CJZXqm2SRdqWTrPyWOlXnA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="9384934"
-X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="9384934"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 03:46:48 -0700
-X-CSE-ConnectionGUID: 7xesHoykSlmDYwOgGmdBNQ==
-X-CSE-MsgGUID: 0o9K/sRaR/iYccEKwJwRfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="53539555"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 03:46:46 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rx2oN-00000004zgo-17WX;
-	Wed, 17 Apr 2024 13:46:43 +0300
-Date: Wed, 17 Apr 2024 13:46:42 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+	s=arc-20240116; t=1713354110; c=relaxed/simple;
+	bh=l54Wu8s+duN2ahaY2Z71FTJM436QMiVa5c8omPbhR7w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Cgkaf06iACKv5yGGD7WWNZC7xxAkns7clDYL/PGNz5y+d6jFd4mp8dTejR1UCZStc/wcnbV/ZEOchm6gycYF4K7rz0alBHAXtoNcuQJKXxiA6FNPM5WJ8nU6GX44CryM/aYXjthiU1hFFeMDNgEFD3Oe+/0yIoAuqEECUMUwAPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.07,209,1708354800"; 
+   d="scan'208";a="205707553"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 17 Apr 2024 20:41:46 +0900
+Received: from renesas-deb12.cephei.uk (unknown [10.226.93.98])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id A71B841D6871;
+	Wed, 17 Apr 2024 20:41:43 +0900 (JST)
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [rfc, PATCH v1 1/1] gpiolib: Get rid of never false
- gpio_is_valid() calls
-Message-ID: <Zh-oku-XzpcH_8FH@smile.fi.intel.com>
-References: <20240221213208.17914-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=Mfh-ojboNUELXfszKUbZRfeZn9vsN-HMTdMQv6my6ZrdQ@mail.gmail.com>
+Subject: [PATCH] pinctrl: renesas: rzg2l: Limit 2.5V power supply to Ethernet interfaces
+Date: Wed, 17 Apr 2024 12:41:31 +0100
+Message-Id: <20240417114132.6605-1-paul.barker.ct@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mfh-ojboNUELXfszKUbZRfeZn9vsN-HMTdMQv6my6ZrdQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Feb 27, 2024 at 02:06:05PM +0100, Bartosz Golaszewski wrote:
-> On Wed, Feb 21, 2024 at 10:32 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > In the cases when gpio_is_valid() is called with unsigned parameter
-> > the result is always true in the GPIO library code, hence the check
-> > for false won't ever be true. Get rid of such calls.
-> >
-> > While at it, move GPIO device base to be unsigned to clearly show
-> > it won't ever be negative. This requires a new definition for the
-> > maximum GPIO number in the system.
+The RZ/G3S SoC supports configurable supply voltages for several of its
+I/O interfaces. All of these interfaces support both 1.8V and 3.3V
+supplies, but only the Ethernet and XSPI interfaces support a 2.5V
+supply.
 
-> > ---
-> 
-> It looks like a risky change that late in the release cycle. I want to
-> avoid some CI problems at rc6. Please resend it once v6.9-rc1 is
-> tagged.
+Voltage selection for the XSPI interface is not yet supported, so this
+leaves only the Ethernet interfaces currently supporting selection of a
+2.5V supply. So we need to return an error if there is an attempt to
+select a 2.5V supply for any non-Ethernet interface.
 
-Not sure why resend, but I missed that somehow. Can you consider applying it?
+Fixes: 51996952b8b5 ("pinctrl: renesas: rzg2l: Add support to select power source for Ethernet pins")
+Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index eb5a8c654260..33602f0e4dad 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -892,6 +892,8 @@ static int rzg2l_set_power_source(struct rzg2l_pinctrl *pctrl, u32 pin, u32 caps
+ 		val = PVDD_1800;
+ 		break;
+ 	case 2500:
++		if (!(caps & (PIN_CFG_IO_VMC_ETH0 | PIN_CFG_IO_VMC_ETH1)))
++			return -EINVAL;
+ 		val = PVDD_2500;
+ 		break;
+ 	case 3300:
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.2
 
 
