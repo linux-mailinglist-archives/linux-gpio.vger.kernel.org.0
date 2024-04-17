@@ -1,149 +1,103 @@
-Return-Path: <linux-gpio+bounces-5588-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5589-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53BD38A7D71
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 09:53:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCBDD8A7DB4
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 10:05:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84C301C216C3
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 07:53:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5A1C5B22EF8
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 08:05:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFAE773199;
-	Wed, 17 Apr 2024 07:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 607427C6C1;
+	Wed, 17 Apr 2024 08:05:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="in2TKG1Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mM2l7cCz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CF66E61E;
-	Wed, 17 Apr 2024 07:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3427175E;
+	Wed, 17 Apr 2024 08:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713340409; cv=none; b=BUobtl+jIqB3N4ghcKXPNw6fSS6Czb5+JptP7PeBp+tJbw/ikHKOLDtgfQVoJZagfNQVXPK6pbOVWfMGoyPKeyMRa9FldtW9ddPK8DFeGv4vb9sQHxRD6kQfGJxliWyI+z/A3Eu8lP48NsFZouHKgty8ss8OeOlYcrkYvkj7w4Y=
+	t=1713341137; cv=none; b=Ta4c3k0qH0qVtPrhOFe6co8CUaLL3xkwl4Orns764ihHB6emiMJcJ47c0jUmWs1ETDWQRfk735V2e9t/HDoBmmWBnrvVikI/3OASTihKCMTyNKpzyYBXNPCiyMVlzGo9HNsjzJenwV7vcUEVbDzmFyGrGBrh4A2dW/IeD6Vdsbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713340409; c=relaxed/simple;
-	bh=Mb2a7596Lmd6anWCFMHZ+kYccUmgTpwKjnEeL5+XNOQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=jms4mf8n9GScZ96m5WBP0KBrpi8qsUXb6O2FvxJc6WcofANs0cNm7Ckqzwx+N0v9qaTkBcPe3+P/+Ab6aqI4ljid6kdNe6b8o4ZO/kdv9EEcDI0yDIgp7lLJ989/TUoH4kfPJd/rEltEBn8M+ZzUTASvpC0n0N9Zzw9+sT+iZJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=in2TKG1Q; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2BA64E0004;
-	Wed, 17 Apr 2024 07:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713340405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1/f2fgDpr3YH/Sb3o75KFxeysANmwnrDztJzWkxW1KI=;
-	b=in2TKG1QGupbNAYcOgKkb0N+dVS1KjzghCUGoMBe/aO0EnXrHvmHWh7B4fgRNMDorqxFxk
-	Vuehzy3mwP2JIu5l0/DQ/WKBZfYpRZOx0XlqZ3B8KbIhltcld9wUuIsulVWvTVWiN24eY1
-	mfPUHr8xDB9sSUC6vVHNZLQzFMpXdjiz6Ujf6rhHILx2mJDDlA+9NsLIjSID/W+j12L43J
-	EmmVr+jH3vl643xlJo/0mKxo0gSrnePqWBG00NOY447pgnnknE0J7w+W8r1pwapgNpvK6S
-	IU1JqiqWAMdbTSh6T9vkRiJYUb2FweW+P7Vs/Kqvy6f1vMJsYJH8GfgFhhdIcg==
+	s=arc-20240116; t=1713341137; c=relaxed/simple;
+	bh=lQQlXJQazE1BpJa7cuH8qp/auLHjUtYGP4Ml3ycwZ78=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y3Kaayy5nS4tKBnhhmXTQ8FV45He2Hq1cqZrrQTqcbjy0iHsCMaCksOAi6Xk9gIxJ/Ru536DDYLzTRNYVNgqcqtUZ06jCd/nQNiiGfiljOVuF2NRgB1FZYHUJo9y7eTyvWHJWpOKNgPa31zAAH6s6RbjrJKGR5XXHUO+FvEKyPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mM2l7cCz; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a52582ecde4so396261066b.0;
+        Wed, 17 Apr 2024 01:05:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713341129; x=1713945929; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lQQlXJQazE1BpJa7cuH8qp/auLHjUtYGP4Ml3ycwZ78=;
+        b=mM2l7cCzhfdFLWfwQiqd4nsj8qAlAWC76lgY7uyqcwZfCRRuhY28LXjoDXq1EtX0+M
+         ei15FlMncvOFof63H7YARwTt0n0M0hKCeeoVX1vmE1z3hQv2oQPssvUQ+/Rdrwt4J6ym
+         uvBVLr+qL91imy/l7S3yrEiT2CAm+KlIl7UfEDnZiVJP/4Qg9OsZ/Hg1FBnk/242wSo+
+         u+pscqP5gqFAh1rBqn36C34fmNLkIQOwTWK+in5sn5x8oE/wgTf4MWiKaYQ4nt2gzqHO
+         UvV/MjWT9syUthyxwCNFzgFZ8XuEh4qDRZb52ZImLE8ag31gd0zpNCK1i0Y4JTwllXdt
+         jc1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713341129; x=1713945929;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lQQlXJQazE1BpJa7cuH8qp/auLHjUtYGP4Ml3ycwZ78=;
+        b=JPBhcob05zrqRbmLioJkVNq/3bvCeh5FxyI1rTk3SWL6n5svR4EAG+cghlkSiyC5dy
+         gDi3FTtKtg21AYGQDwC4BRJNwiV+C7HMi3EE379QTofIyATDXIQF0CWXme50A79MZz7N
+         jXDB4jDAHtMBWKTz3Tdg0vOKdqcDw6hB8JCGiFe6qeRc2MNXDOWIjVmQQi0xSmIeLarX
+         RQRpHwQRVHGGS+tf705JtFeuctWs/yqLfjklrngVHU/qfCDDtAnXyldZvSx3+n2W2ACF
+         xb4jAmA3h8l8J5Z7wgWl1/kNXrnlfUPyhNeEfqqqqnIcikXHocrbsEaWg3Rl4c+IPqaj
+         do4g==
+X-Forwarded-Encrypted: i=1; AJvYcCX88HUyseiJ65gAMkLdaSKGFljZgioVB2Uo3lcPAJJmt+RuucpL9/ThhWpNW5HqU9+KOlPG94ThNpiwfZk1+HLKrmhyii6ca4K81FG6jDAklIx05zGOjgTSxHAj6UsEbt1ViuMa8jJFDw==
+X-Gm-Message-State: AOJu0Yz4pATjAEIJc17ukxMe6+Q6pjy45ntD1rrllKHK11S0Orcj3N1Z
+	aMQ1gkha73gHiwgoqmUlFV/dHcuZ9/SUnfI1v+VK4WmJxh4EWGFQk3yjrvll0bFRqkr8XcDQBxf
+	RGjt9R1rzdpL8ocii3FSE/NcAT2Q=
+X-Google-Smtp-Source: AGHT+IHIl6XXnV6jonEwRoBIMHjCADhwAaYmaVFRLbMWFV8Gsf2seyaQPK1HAduYiy2A4nr/ZINetgBwQDbFuEejJug=
+X-Received: by 2002:a17:906:81d7:b0:a52:6899:37db with SMTP id
+ e23-20020a17090681d700b00a52689937dbmr5536538ejx.50.1713341129142; Wed, 17
+ Apr 2024 01:05:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20240410072102.1200869-1-andy.shevchenko@gmail.com>
+ <ZhpC3lLD-BHqJEZz@ishi> <CAMRc=MerqbYue_uubSkr0ta3wr+yQxfFMfk+vAUZa+C2oR+udQ@mail.gmail.com>
+In-Reply-To: <CAMRc=MerqbYue_uubSkr0ta3wr+yQxfFMfk+vAUZa+C2oR+udQ@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 17 Apr 2024 11:04:52 +0300
+Message-ID: <CAHp75VcofgAQLFVLdsA-A1AkjVzQBJWtam=w00+z9-rueZyv8A@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: sch: Switch to memory mapped IO accessors
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: William Breathitt Gray <wbg@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 17 Apr 2024 09:53:23 +0200
-Message-Id: <D0M8HFHFPO6M.KXQCAE8TZNIH@bootlin.com>
-Subject: Re: [PATCH 08/11] MIPS: mobileye: eyeq5: add OLB syscon node
-Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Michael Turquette" <mturquette@baylibre.com>, "Stephen Boyd"
- <sboyd@kernel.org>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Linus
- Walleij" <linus.walleij@linaro.org>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: aerc 0.15.2
-References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
- <20240410-mbly-olb-v1-8-335e496d7be3@bootlin.com>
- <faa0769f-bd5e-4c6b-9f61-1a369830ad28@linaro.org>
- <D0HD94HI3W7W.3KLAW6WFIN6ZE@bootlin.com>
- <6e3b02d9-9a1e-4fc0-9459-9c9c0d37aa92@linaro.org>
-In-Reply-To: <6e3b02d9-9a1e-4fc0-9459-9c9c0d37aa92@linaro.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
 
-Hello,
+On Wed, Apr 17, 2024 at 12:17=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> On Sat, Apr 13, 2024 at 10:31=E2=80=AFAM William Breathitt Gray <wbg@kern=
+el.org> wrote:
 
-On Thu Apr 11, 2024 at 5:07 PM CEST, Krzysztof Kozlowski wrote:
-> On 11/04/2024 16:34, Th=C3=A9o Lebrun wrote:
-> > Hello,
-> >=20
-> > On Thu Apr 11, 2024 at 8:15 AM CEST, Krzysztof Kozlowski wrote:
-> >> On 10/04/2024 19:12, Th=C3=A9o Lebrun wrote:
-> >>> The OLB ("Other Logic Block") is a syscon region hosting clock, reset
-> >>> and pin controllers. It contains registers such as I2C speed mode tha=
-t
-> >>> need to be accessible by other nodes.
-> >>>
-> >>> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> >>> ---
-> >>>  arch/mips/boot/dts/mobileye/eyeq5.dtsi | 8 ++++++++
-> >>>  1 file changed, 8 insertions(+)
-> >>>
-> >>> diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/=
-dts/mobileye/eyeq5.dtsi
-> >>> index 6cc5980e2fa1..e82d2a57f6da 100644
-> >>> --- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-> >>> +++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-> >>> @@ -100,6 +100,14 @@ uart2: serial@a00000 {
-> >>>  			clock-names =3D "uartclk", "apb_pclk";
-> >>>  		};
-> >>> =20
-> >>> +		olb: system-controller@e00000 {
-> >>> +			compatible =3D "mobileye,eyeq5-olb", "syscon", "simple-mfd";
-> >>> +			reg =3D <0 0xe00000 0x0 0x400>;
-> >>> +			ranges =3D <0x0 0x0 0xe00000 0x400>;
-> >>> +			#address-cells =3D <1>;
-> >>> +			#size-cells =3D <1>;
-> >>
-> >> Do not add incomplete node. ranges, address/size-cells are incorrect i=
-n
-> >> this context and you will have warnings.
-> >>
-> >> Add complete node, so these properties make sense.
-> >=20
-> > I'll squash all four commits into one. For reference, commits are:
-> >=20
-> >  - MIPS: mobileye: eyeq5: add OLB syscon node
-> >  - MIPS: mobileye: eyeq5: use OLB clocks controller node
-> >  - MIPS: mobileye: eyeq5: add OLB reset controller node
-> >  - MIPS: mobileye: eyeq5: add pinctrl node & pinmux function nodes
-> >=20
-> > This means two things: (1) it won't be partially applicable and (2) it
->
-> Why?
->
-> > will make one big commit adding pins and editing clocks.
->
-> It never was partially applicable. Causing warnings does not make things
-> partially applicable. If node is too big, although I personally do not
-> agree, it's quite moderate size chunk, then sure, split pinctrl groups
-> or pinctrl node to additional patch.
+...
 
-Thanks for feedback; it'll become a single patch as it is fine with you.
+> I applied it as is, if anyone wants it, this can be sent on top of it.
 
-Regards,
+Thanks, but I assumed this should go via my tree and as PR to you. At
+least I have it already in my for-next.
 
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+--=20
+With Best Regards,
+Andy Shevchenko
 
