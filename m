@@ -1,131 +1,114 @@
-Return-Path: <linux-gpio+bounces-5601-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5602-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 805EA8A8122
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 12:39:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75D2C8A8141
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 12:46:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BEA6284B23
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 10:39:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AA991C218EA
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 10:46:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBFAA13C667;
-	Wed, 17 Apr 2024 10:39:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C87EB13C684;
+	Wed, 17 Apr 2024 10:46:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="iDw0+Ko4";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="LIzpgBeT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PWdzLCmT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from c180-15.smtp-out.ap-south-1.amazonses.com (c180-15.smtp-out.ap-south-1.amazonses.com [76.223.180.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AF84685;
-	Wed, 17 Apr 2024 10:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4934313C679;
+	Wed, 17 Apr 2024 10:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713350363; cv=none; b=DYfRNW8ZlV0eSZJAObj6eXdMLcRYBBhQuM43Ozc29InBxPkPA8RJWUziSMm3OiDyxGDDlEwbB+7DivmJFRUU/g4sX3O971GO79JEodzNRCLuqYZX/OwH062TUBU17WaV3+vZ7YI2S8VYrLXZCFsvrwpEzknAU0tMXW1A5EiXNtc=
+	t=1713350809; cv=none; b=L+lInuyK1F1Oi/J98SfU+8DLYFUuh5VHIcyfLElETDrnL+UW0okKFgNHAuVGY9RL2S8TzG/773liHf9Ztz4EShjZh7GAAlAEIKcvlXdWCNKWy0469RgGhkaZOIkHq9WH1NTqzVZMTfyZRHZI7CLOSOUXAYhLuAxy1JNAEquYTRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713350363; c=relaxed/simple;
-	bh=NWxt9d6qlEYlWK8ONuEubNI6cEEiqQEqAs1/YysiTXc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rn/11TfDgWFDI/6ThbON3gPBxtykCurQboF42gqsK8tv/Dr5TRePg0Y1M79ecCmZt2Q83IRIe9suzGY1hR3nKvKVYodgVmMdmzXjQcv37III3en97/S5r0//Vhdr+JIRyufNhZtvk6J9b9uw+QBw4aDTgPVqjIfIo3HtPodM6bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=iDw0+Ko4; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=LIzpgBeT; arc=none smtp.client-ip=76.223.180.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ap-south-1.amazonses.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1713350359;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=NWxt9d6qlEYlWK8ONuEubNI6cEEiqQEqAs1/YysiTXc=;
-	b=iDw0+Ko4VjjNSOLAqtbkxxSW4kWOmku+JNmuqlam4SazW4E757F2+T1UPRMQf+Vv
-	gwDGl9l+IRdcc+oBfazWBWYDXjOH3xNOciWI956r00FYT6eCPHi8233jbyHt4JIaCoZ
-	60j5IsQc9LNNbLQgbNEfgiRnMd8KR/5xcHxefMbGgg1KSHr9r8OKDZkBQhJlZxng88K
-	Vg2Q3dvdRZzry3Jy0E5qUNzh2pUA/SPueG6gfiks113lCOMXHdjWwVzNgfJ7bSeH2eK
-	jfYlTC8j1bYeKduKp1tAb5qXIbvyv0zQ7vrtLEVk4pu++RdX/1Rm2bOxhGBiWWR/BVL
-	P+1hg62FmQ==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=rlntogby6xsxlfnvyxwnvvhttakdsqto; d=amazonses.com; t=1713350359;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-	bh=NWxt9d6qlEYlWK8ONuEubNI6cEEiqQEqAs1/YysiTXc=;
-	b=LIzpgBeTCWEWB5WNJnCh9aTyItQegEqFPWzULF+5NjwWCOIJiOkwy2cP9ZrIDZoH
-	fAw8skjRXHGzJuWyEvI4vzJ2wz+cDYqe1ikxWdDHhHjJ6HjVBEj2Erhc9o/tVQJbjGS
-	jznsQSMvHm8VBjpqI4dIk03VMLY2LO8E7s7R7lH8=
-From: Bhargav Raviprakash <bhargav.r@ltts.com>
-To: eblanc@baylibre.com
-Cc: arnd@arndb.de, bhargav.r@ltts.com, broonie@kernel.org, 
-	conor+dt@kernel.org, devicetree@vger.kernel.org, 
-	gregkh@linuxfoundation.org, jpanis@baylibre.com, kristo@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, lee@kernel.org, 
-	lgirdwood@gmail.com, linus.walleij@linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, nm@ti.com, 
-	robh+dt@kernel.org, vigneshr@ti.com
-Subject: Re: [PATCH v6 10/11] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
-Date: Wed, 17 Apr 2024 10:39:19 +0000
-Message-ID: <0109018eeba3b870-adff6d96-6d05-45e3-b2ef-1b5ec0b034e0-000000@ap-south-1.amazonses.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <D0I0M4T4O9G1.UUESU247CE42@baylibre.com>
-References: <D0I0M4T4O9G1.UUESU247CE42@baylibre.com>
+	s=arc-20240116; t=1713350809; c=relaxed/simple;
+	bh=zRUl1g1oCuh2NUNoJLoN8viN6QzNopdu5zeZVVRrzQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZfxxSiph5BJGZh9VDvtd4lS5Feb9kpnuKCxk3J8FiNq3uHxjKFk1Hu+gPtpOvTEIYjUsNIsy4QtxM9h5dy78oS3rzZyHiz0C5AXyhJEY/MnrK55NvYZK8JVm90prGzuBNgDjEv2p11iNOZqlymBO7YBIyON8uruwPoyN911wP/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PWdzLCmT; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713350808; x=1744886808;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=zRUl1g1oCuh2NUNoJLoN8viN6QzNopdu5zeZVVRrzQM=;
+  b=PWdzLCmT6FuV9yGDScsua9hS0vKA5dCWz2HpWv2nmbLxFVTCUtrzBW/c
+   P+wtzumMLz7ncBXaf/qATdSic5TUsV8dH4++Rmu5abZMLx4vUUdgk9zJo
+   ASATKIakH1qFeH0jc+Ct3cz+aLx/P0kz0DeQ3hKe8c8GVNt8Io+qtspDA
+   wlhuJgO7V46rC+ikphE2964ROXvtHBP7i42GD+EfJ+rVcH+WO4oobHmAo
+   x8Tz02ySELpUQ3BUH8VjD7kSoXWD+PkUgWEYKRkllJiKdZAqwHHvYxVya
+   NU3fm0nVAFKMSrBibzM53wK/GZfEk339YDpmNw44000dP8rr1d67DWPz5
+   w==;
+X-CSE-ConnectionGUID: eIC3Qzc1Rpmhh7e3DEYplA==
+X-CSE-MsgGUID: CJZXqm2SRdqWTrPyWOlXnA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="9384934"
+X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
+   d="scan'208";a="9384934"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 03:46:48 -0700
+X-CSE-ConnectionGUID: 7xesHoykSlmDYwOgGmdBNQ==
+X-CSE-MsgGUID: 0o9K/sRaR/iYccEKwJwRfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
+   d="scan'208";a="53539555"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 03:46:46 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rx2oN-00000004zgo-17WX;
+	Wed, 17 Apr 2024 13:46:43 +0300
+Date: Wed, 17 Apr 2024 13:46:42 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [rfc, PATCH v1 1/1] gpiolib: Get rid of never false
+ gpio_is_valid() calls
+Message-ID: <Zh-oku-XzpcH_8FH@smile.fi.intel.com>
+References: <20240221213208.17914-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Mfh-ojboNUELXfszKUbZRfeZn9vsN-HMTdMQv6my6ZrdQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Feedback-ID: 1.ap-south-1./RC/PI2M8xOxQmTMPi0M1Q8h2FX69egpT62QKSaMPIA=:AmazonSES
-X-SES-Outgoing: 2024.04.17-76.223.180.15
+In-Reply-To: <CAMRc=Mfh-ojboNUELXfszKUbZRfeZn9vsN-HMTdMQv6my6ZrdQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 12 Apr 2024 10:52:43 +0200, Esteban Blanc wrote:
-> On Mon Apr 8, 2024 at 2:40 PM CEST, Bhargav Raviprakash wrote:
-> > From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+On Tue, Feb 27, 2024 at 02:06:05PM +0100, Bartosz Golaszewski wrote:
+> On Wed, Feb 21, 2024 at 10:32 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > >
-> > Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they have
-> > significant functional overlap.
-> > TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
-> > dedicated device functions.
+> > In the cases when gpio_is_valid() is called with unsigned parameter
+> > the result is always true in the GPIO library code, hence the check
+> > for false won't ever be true. Get rid of such calls.
 > >
-> > Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
-> > Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> > While at it, move GPIO device base to be unsigned to clearly show
+> > it won't ever be negative. This requires a new definition for the
+> > maximum GPIO number in the system.
+
 > > ---
-> >  drivers/pinctrl/pinctrl-tps6594.c | 275 +++++++++++++++++++++++++-----
-> >  1 file changed, 228 insertions(+), 47 deletions(-)
-> >
-> > diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-tps6594.c
-> > index 66985e54b..f3d1c1518 100644
-> > --- a/drivers/pinctrl/pinctrl-tps6594.c
-> > +++ b/drivers/pinctrl/pinctrl-tps6594.c
-> > @@ -338,8 +506,20 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
-> >  	config.parent = tps->dev;
-> >  	config.regmap = tps->regmap;
-> > -	config.ngpio = TPS6594_PINCTRL_PINS_NB;
-> > -	config.ngpio_per_reg = 8;
-> > +	switch (tps->chip_id) {
-> > +	case TPS65224:
-> > +		config.ngpio = ARRAY_SIZE(tps65224_gpio_func_group_names);
-> > +		config.ngpio_per_reg = TPS65224_NGPIO_PER_REG;
-> > +		break;
-> > +	case TPS6593:
-> > +	case TPS6594:
-> > +		config.ngpio = ARRAY_SIZE(tps6594_gpio_func_group_names);
-> > +		config.ngpio_per_reg = TPS6594_NGPIO_PER_REG;
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
 > 
-> Please merge the two switch case. 
-> 
-> Other than that I think it's ok.
-> 
-> Best regards,
-> 
-> -- 
-> Esteban "Skallwar" Blanc
-> BayLibre
+> It looks like a risky change that late in the release cycle. I want to
+> avoid some CI problems at rc6. Please resend it once v6.9-rc1 is
+> tagged.
 
-Thanks! I will merge those switch cases in the next version.
+Not sure why resend, but I missed that somehow. Can you consider applying it?
 
-Regards,
-Bhargav
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
