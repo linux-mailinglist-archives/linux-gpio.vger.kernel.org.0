@@ -1,112 +1,220 @@
-Return-Path: <linux-gpio+bounces-5580-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5581-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DE128A7AB2
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 04:46:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A9CB8A7C65
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 08:38:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE4791F22085
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 02:46:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B5E231F24300
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 06:38:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2DCA8BFA;
-	Wed, 17 Apr 2024 02:46:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B96759B7A;
+	Wed, 17 Apr 2024 06:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQ8TPxmT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q2rbkCim"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE678F54;
-	Wed, 17 Apr 2024 02:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541141E481
+	for <linux-gpio@vger.kernel.org>; Wed, 17 Apr 2024 06:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713321968; cv=none; b=HaFlkbdzhFPV8BhOxgV0J+HGRrc2doQ4ErjrGa3qmstFUaHrCruNHyrR6FkBGXZvROvdxJ7ir6fE76viuZOxP+6YjZK6EUBiTrRJ4seQGdDlw7X12JJcNk+xYl2FWD7iLlIS8ugNW+Vwx5d0XDFB//zksM5UeopUFNg41mtS0jw=
+	t=1713335882; cv=none; b=EE02MRYAFt1U/m1GReOzZE7SFDErTeh/Yd01aAp0VDHoAcdUUT9vvM3rJva6H2H6s/icuudlMSytAprVE8RNqndQ5ClmrQpLTw8yWd2tONbDHps5fjdkynBdxeJCl501+VlcphtuAJZlb5JMDrnNVh2m38QEmEI7gHcvMJOUYjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713321968; c=relaxed/simple;
-	bh=1r6hxdxqI6GXVNcgZCfmJy/7fxS2i7yA03rrwOq53wk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hvCuCFi7z4J+qhwC6FafwuLpN7rItVmY21iMZ8FGhA0aNcVK4WQq39MCHs1+G4J5+8+ATyNlZAkaq+jwThV4Nfhl68fFUWDkbgy4dya+sAAYXq3bwTHLy1AF4bXOQnLQiD/0Zlpu0RVlsTkFsUDS9K1zSGrYxpLp3ZEHWSFLYZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQ8TPxmT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6331EC3277B;
-	Wed, 17 Apr 2024 02:46:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713321968;
-	bh=1r6hxdxqI6GXVNcgZCfmJy/7fxS2i7yA03rrwOq53wk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=rQ8TPxmT2G1V5MRR+J4TNo82uUs9AfUCoL+mWrk4f4DuwAZyD2K8VjoIJtINVleMT
-	 lSu5QejvD6ayXYfgOJW2uJh7XHkUl3WrZTaZJWv64L4Q4/okCiLiviCBtVVrE6Wrps
-	 Uq89lKmgaBDnajsIHBcsnAUIl/LbVmG3lkNB0xcMAqTVcmslFXtjqNekPeJe+iIly0
-	 jWemLub5ngzS197GJinIZr4FDg99vIYrk2NK/8uoVwioyX43zRZ3duSmMDd2ykYS8U
-	 /wUY+pGseIm/nb0J9kEdBVzDHCAkCMHXG2YpOlyYZ/Gr5V3vHYzQMbpf0OLl/LxqXc
-	 anJ+Isq3K9sIw==
-From: Mark Brown <broonie@kernel.org>
-To: linus.walleij@linaro.org, brgl@bgdev.pl, 
- Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: andy.shevchenko@gmail.com, bard.liao@intel.com, 
- linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
- patches@opensource.cirrus.com
-In-Reply-To: <20240416100904.3738093-1-ckeepax@opensource.cirrus.com>
-References: <20240416100904.3738093-1-ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v7 0/4] Add bridged amplifiers to cs42l43
-Message-Id: <171332196643.1698999.8454490477837124341.b4-ty@kernel.org>
-Date: Wed, 17 Apr 2024 11:46:06 +0900
+	s=arc-20240116; t=1713335882; c=relaxed/simple;
+	bh=XdubQlvbRekfK62ICx+dIbojYG5RjXDBAtj679fYaPw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=s3A/8A2XETkRuWZgqgrHaUG6fSF+bADyDKJixESEvALm6UPZWbyHZptdWqpoRaz3+r5lia9T2IZLCQ8mR/2w7zY4lvNyU+5rhKGf6oD0q2CfABq6dv7+323t/84V/Qw+nvQ3cqOQ4qWiWQlNvkw0y3VaXYxJEX9z6vh2rMwLktw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q2rbkCim; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713335880; x=1744871880;
+  h=date:from:to:cc:subject:message-id;
+  bh=XdubQlvbRekfK62ICx+dIbojYG5RjXDBAtj679fYaPw=;
+  b=Q2rbkCimtUrl/14w4Zx/F1H5JO1Gr11ewozmGME7w98b+7oojdlkS7HB
+   IV0RP4k68HJ6dTqJgYelltsXy9XifQK+oafdql2I8rnQuuWWfdQdtff+j
+   l1ZzFr6iG39MKQHubSs4fIcx3Z4SvQ+VA1DlKSvAcEoOikY/DzuMQzV13
+   0tVZldSEO/ryRNK2057ZVESt89ENzrSd6uzxiqJPepDp9UcYMPSGFU8Mi
+   4EV/2mSq5V1OAzTfBSFz+QkSGWWc/ndPbcgJsYrIjyE6KRKtrpGT1aw0G
+   0S7euNKjD/JzaCBo7eoRzFgSIomh5PNEWKCgC8aakmFSPpi0VUQu2nw/Y
+   g==;
+X-CSE-ConnectionGUID: krWGWcqTSSe2v0Z3IkIvrQ==
+X-CSE-MsgGUID: WU5zz4/MS9qvS1QrIuEteg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="26273250"
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="26273250"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:37:59 -0700
+X-CSE-ConnectionGUID: Bxt2BboQSzG+Y3W5xvG7EA==
+X-CSE-MsgGUID: IIzaVOV1Qa2fmBL0aw7fxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
+   d="scan'208";a="27208849"
+Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 16 Apr 2024 23:37:58 -0700
+Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rwyvY-0006Dl-2Q;
+	Wed, 17 Apr 2024 06:37:53 +0000
+Date: Wed, 17 Apr 2024 14:36:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 50dca75e7d34f7ba2c5a57eb767a33f14c42000d
+Message-ID: <202404171420.xKPd10cZ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev
 
-On Tue, 16 Apr 2024 11:09:00 +0100, Charles Keepax wrote:
-> In some cs42l43 systems a couple of cs35l56 amplifiers are attached
-> to the cs42l43's SPI and I2S. On Windows the cs42l43 is controlled
-> by a SDCA class driver and these two amplifiers are controlled by
-> firmware running on the cs42l43. However, under Linux the decision
-> was made to interact with the cs42l43 directly, affording the user
-> greater control over the audio system. However, this has resulted
-> in an issue where these two bridged cs35l56 amplifiers are not
-> populated in ACPI and must be added manually. There is at least an
-> SDCA extension unit DT entry we can key off.
-> 
-> [...]
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 50dca75e7d34f7ba2c5a57eb767a33f14c42000d  dt-bindings: pinctrl: qcom,pmic-gpio: Allow gpio-hog nodes
 
-Applied to
+elapsed time: 1004m
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+configs tested: 127
+configs skipped: 3
 
-Thanks!
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-[1/4] gpio: swnode: Add ability to specify native chip selects for SPI
-      commit: 9d50f95bc0d5df56f2591b950a251d90bffad094
-[2/4] spi: Switch to using is_acpi_device_node() in spi_dev_set_name()
-      commit: 8a101146bcf014060530d71eba8edc52eca257f7
-[3/4] spi: Update swnode based SPI devices to use the fwnode name
-      commit: ed8921188f3568ba1659ff041f21e83565c74ec2
-[4/4] spi: cs42l43: Add bridged cs35l56 amplifiers
-      commit: 439fbc97502ae16f3e54e05d266d103674cc4f06
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240417   gcc  
+arc                   randconfig-002-20240417   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-004-20240417   gcc  
+arm64                            alldefconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-003-20240417   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240417   gcc  
+csky                  randconfig-002-20240417   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240417   clang
+i386         buildonly-randconfig-003-20240417   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240417   clang
+i386                  randconfig-004-20240417   clang
+i386                  randconfig-005-20240417   clang
+i386                  randconfig-006-20240417   clang
+i386                  randconfig-013-20240417   clang
+i386                  randconfig-016-20240417   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240417   gcc  
+loongarch             randconfig-002-20240417   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5249evb_defconfig   gcc  
+m68k                        m5407c3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+microblaze                      mmu_defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                      maltasmvp_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240417   gcc  
+nios2                 randconfig-002-20240417   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240417   gcc  
+parisc                randconfig-002-20240417   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                     kmeter1_defconfig   gcc  
+powerpc                     ksi8560_defconfig   gcc  
+powerpc               randconfig-001-20240417   gcc  
+powerpc               randconfig-002-20240417   gcc  
+powerpc                  storcenter_defconfig   gcc  
+powerpc                     tqm5200_defconfig   gcc  
+powerpc64             randconfig-002-20240417   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240417   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                    randconfig-001-20240417   gcc  
+sh                    randconfig-002-20240417   gcc  
+sh                           se7721_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240417   gcc  
+sparc64               randconfig-002-20240417   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-002-20240417   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240417   gcc  
+xtensa                randconfig-002-20240417   gcc  
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
