@@ -1,100 +1,149 @@
-Return-Path: <linux-gpio+bounces-5587-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5588-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 802908A7D30
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 09:36:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53BD38A7D71
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 09:53:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D34E28317B
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 07:36:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84C301C216C3
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Apr 2024 07:53:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDBDE745C3;
-	Wed, 17 Apr 2024 07:35:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFAE773199;
+	Wed, 17 Apr 2024 07:53:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=herrie.org header.i=@herrie.org header.b="wIrzrm4m"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="in2TKG1Q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from outbound11.mail.transip.nl (outbound11.mail.transip.nl [136.144.136.18])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20446CDA1;
-	Wed, 17 Apr 2024 07:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.136.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CF66E61E;
+	Wed, 17 Apr 2024 07:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713339349; cv=none; b=ncJ3hakYj9iRu4sARzKBJNCkpYqHHrWO4gWUEHNwc8r9g9EihE3vc3j19XG1Ogkq4whrLxZtvPLGoP+0ZEl2xbAJHU/wE0ErdHfY02sB6OwTU28q7Q5c6P2pjWA9dR1i9USOaPYV6ua7xgYsK82qlw1wgmt5/6ihF7J9eQPb6wA=
+	t=1713340409; cv=none; b=BUobtl+jIqB3N4ghcKXPNw6fSS6Czb5+JptP7PeBp+tJbw/ikHKOLDtgfQVoJZagfNQVXPK6pbOVWfMGoyPKeyMRa9FldtW9ddPK8DFeGv4vb9sQHxRD6kQfGJxliWyI+z/A3Eu8lP48NsFZouHKgty8ss8OeOlYcrkYvkj7w4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713339349; c=relaxed/simple;
-	bh=SHKa031b3gssZAFMARLpJsBsZfy5fESYEginTqV3/ZY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tUbzvntNZfs42zgLJPCbeL2usVifZqgd57dd4H6S0J+EnK9AULfOgYc+ChShJaJJvYDEpjSln/Be9h3ymEkt+Sl3g23eQzeL37ajN2zOJV14aKhalxfy4pFq3nq+LvMKJPQaRKmK3zExmuH43zOWQxjJmpi7VKNbqvbLyfw5rek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herrie.org; spf=pass smtp.mailfrom=herrie.org; dkim=pass (2048-bit key) header.d=herrie.org header.i=@herrie.org header.b=wIrzrm4m; arc=none smtp.client-ip=136.144.136.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herrie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=herrie.org
-Received: from submission4.mail.transip.nl (unknown [10.103.8.155])
-	by outbound11.mail.transip.nl (Postfix) with ESMTP id 4VKCPM4hLSzkQNK4;
-	Wed, 17 Apr 2024 09:35:35 +0200 (CEST)
-Received: from herrie-desktop.. (110-31-146-85.ftth.glasoperator.nl [85.146.31.110])
-	by submission4.mail.transip.nl (Postfix) with ESMTPA id 4VKCPL5WpFznTp8;
-	Wed, 17 Apr 2024 09:35:34 +0200 (CEST)
-From: Herman van Hazendonk <github.com@herrie.org>
-To: github.com@herrie.org
-Cc: andersson@kernel.org,
-	benwolsieffer@gmail.com,
-	chris.chapuis@gmail.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	konrad.dybcio@linaro.org,
-	krzk+dt@kernel.org,
-	linus.walleij@linaro.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	robh@kernel.org
-Subject: [PATCH v2 1/2] dt-bindings: pinctrl: qcom,pmic-mpp: add support for PM8901
-Date: Wed, 17 Apr 2024 09:35:32 +0200
-Message-Id: <20240417073532.3718510-1-github.com@herrie.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240415141743.1983350-1-github.com@herrie.org>
-References: <20240415141743.1983350-1-github.com@herrie.org>
+	s=arc-20240116; t=1713340409; c=relaxed/simple;
+	bh=Mb2a7596Lmd6anWCFMHZ+kYccUmgTpwKjnEeL5+XNOQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=jms4mf8n9GScZ96m5WBP0KBrpi8qsUXb6O2FvxJc6WcofANs0cNm7Ckqzwx+N0v9qaTkBcPe3+P/+Ab6aqI4ljid6kdNe6b8o4ZO/kdv9EEcDI0yDIgp7lLJ989/TUoH4kfPJd/rEltEBn8M+ZzUTASvpC0n0N9Zzw9+sT+iZJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=in2TKG1Q; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2BA64E0004;
+	Wed, 17 Apr 2024 07:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713340405;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1/f2fgDpr3YH/Sb3o75KFxeysANmwnrDztJzWkxW1KI=;
+	b=in2TKG1QGupbNAYcOgKkb0N+dVS1KjzghCUGoMBe/aO0EnXrHvmHWh7B4fgRNMDorqxFxk
+	Vuehzy3mwP2JIu5l0/DQ/WKBZfYpRZOx0XlqZ3B8KbIhltcld9wUuIsulVWvTVWiN24eY1
+	mfPUHr8xDB9sSUC6vVHNZLQzFMpXdjiz6Ujf6rhHILx2mJDDlA+9NsLIjSID/W+j12L43J
+	EmmVr+jH3vl643xlJo/0mKxo0gSrnePqWBG00NOY447pgnnknE0J7w+W8r1pwapgNpvK6S
+	IU1JqiqWAMdbTSh6T9vkRiJYUb2FweW+P7Vs/Kqvy6f1vMJsYJH8GfgFhhdIcg==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: ClueGetter at submission4.mail.transip.nl
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=transip-a; d=herrie.org; t=1713339335; h=from:subject:to:cc:
- references:in-reply-to:date:mime-version;
- bh=j8qU9SmIWp5C34F+ofmR8Pu30Ccwt3X51g+H9Nuh7A4=;
- b=wIrzrm4mNADi9YB2TD+qH1W7ziWbHLnOqlQR9vF0PP3MAzyI2dNn0TbUv5vxEJy9+5rDj2
- 3hoVuPchMzGc05T3ICXZd2ukwu7dL3GIbRVEELaa1+fjBQ40XU/+EAamoA7xwzTrSNJqdo
- /kTtIHjF3KfU2VxG+3u3Vd4W9sIrxYqcwokVHRLDg9ldzkDF9V8/O/UT993jNxI+wBXwyd
- GKDqvGMvDd4ZKFt/H33zA+NKyOzSfiuChkQkr7QkNhsxXObaHKsOC5K0hnoS2cPuv71Fw1
- YgogaVYuG0d0cn5rQf2iCRAuov1aBeT1HhLISY5gy3CvtSlFkuPWuudOv7eirg==
-X-Report-Abuse-To: abuse@transip.nl
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 17 Apr 2024 09:53:23 +0200
+Message-Id: <D0M8HFHFPO6M.KXQCAE8TZNIH@bootlin.com>
+Subject: Re: [PATCH 08/11] MIPS: mobileye: eyeq5: add OLB syscon node
+Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Michael Turquette" <mturquette@baylibre.com>, "Stephen Boyd"
+ <sboyd@kernel.org>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Linus
+ Walleij" <linus.walleij@linaro.org>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: aerc 0.15.2
+References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
+ <20240410-mbly-olb-v1-8-335e496d7be3@bootlin.com>
+ <faa0769f-bd5e-4c6b-9f61-1a369830ad28@linaro.org>
+ <D0HD94HI3W7W.3KLAW6WFIN6ZE@bootlin.com>
+ <6e3b02d9-9a1e-4fc0-9459-9c9c0d37aa92@linaro.org>
+In-Reply-To: <6e3b02d9-9a1e-4fc0-9459-9c9c0d37aa92@linaro.org>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-The PM8901 is used alongside the APQ8060/MSM8660 on the APQ8060 Dragonboard
-and HP TouchPad. It works the same as all others, so just add the
-compatible string for this variant.
+Hello,
 
-Signed-off-by: Herman van Hazendonk <github.com@herrie.org>
----
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml | 1 +
- 1 file changed, 1 insertion(+)
+On Thu Apr 11, 2024 at 5:07 PM CEST, Krzysztof Kozlowski wrote:
+> On 11/04/2024 16:34, Th=C3=A9o Lebrun wrote:
+> > Hello,
+> >=20
+> > On Thu Apr 11, 2024 at 8:15 AM CEST, Krzysztof Kozlowski wrote:
+> >> On 10/04/2024 19:12, Th=C3=A9o Lebrun wrote:
+> >>> The OLB ("Other Logic Block") is a syscon region hosting clock, reset
+> >>> and pin controllers. It contains registers such as I2C speed mode tha=
+t
+> >>> need to be accessible by other nodes.
+> >>>
+> >>> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> >>> ---
+> >>>  arch/mips/boot/dts/mobileye/eyeq5.dtsi | 8 ++++++++
+> >>>  1 file changed, 8 insertions(+)
+> >>>
+> >>> diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/=
+dts/mobileye/eyeq5.dtsi
+> >>> index 6cc5980e2fa1..e82d2a57f6da 100644
+> >>> --- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+> >>> +++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+> >>> @@ -100,6 +100,14 @@ uart2: serial@a00000 {
+> >>>  			clock-names =3D "uartclk", "apb_pclk";
+> >>>  		};
+> >>> =20
+> >>> +		olb: system-controller@e00000 {
+> >>> +			compatible =3D "mobileye,eyeq5-olb", "syscon", "simple-mfd";
+> >>> +			reg =3D <0 0xe00000 0x0 0x400>;
+> >>> +			ranges =3D <0x0 0x0 0xe00000 0x400>;
+> >>> +			#address-cells =3D <1>;
+> >>> +			#size-cells =3D <1>;
+> >>
+> >> Do not add incomplete node. ranges, address/size-cells are incorrect i=
+n
+> >> this context and you will have warnings.
+> >>
+> >> Add complete node, so these properties make sense.
+> >=20
+> > I'll squash all four commits into one. For reference, commits are:
+> >=20
+> >  - MIPS: mobileye: eyeq5: add OLB syscon node
+> >  - MIPS: mobileye: eyeq5: use OLB clocks controller node
+> >  - MIPS: mobileye: eyeq5: add OLB reset controller node
+> >  - MIPS: mobileye: eyeq5: add pinctrl node & pinmux function nodes
+> >=20
+> > This means two things: (1) it won't be partially applicable and (2) it
+>
+> Why?
+>
+> > will make one big commit adding pins and editing clocks.
+>
+> It never was partially applicable. Causing warnings does not make things
+> partially applicable. If node is too big, although I personally do not
+> agree, it's quite moderate size chunk, then sure, split pinctrl groups
+> or pinctrl node to additional patch.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
-index fe717d8d4798..43146709e204 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
-@@ -35,6 +35,7 @@ properties:
-               - qcom,pm8038-mpp
-               - qcom,pm8058-mpp
-               - qcom,pm8821-mpp
-+              - qcom,pm8901-mpp
-               - qcom,pm8917-mpp
-               - qcom,pm8921-mpp
-           - const: qcom,ssbi-mpp
+Thanks for feedback; it'll become a single patch as it is fine with you.
+
+Regards,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
