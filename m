@@ -1,101 +1,105 @@
-Return-Path: <linux-gpio+bounces-5657-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5658-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA8498A98C5
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 13:38:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3471B8A98D4
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 13:41:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 39474B22A04
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 11:38:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65EB21C22384
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 11:41:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96F1516132A;
-	Thu, 18 Apr 2024 11:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E74E515E5DD;
+	Thu, 18 Apr 2024 11:41:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="X35fjDLz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PQf7Pv7c"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE691607B2
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Apr 2024 11:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE4356464;
+	Thu, 18 Apr 2024 11:41:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713440226; cv=none; b=mgGlsOdBVJCTcM8u1cgzuAftZK8cHqH3W9q5aHJr3tAIEI4nLlPhsYt4sSesPIv7JoUY67yF0vjANRP9W9GwAlDEmOhPsRe/k4/om6SLhX0QtbA7Ed3Xq5VCxgHVYz1RKx7yghqzal/6vskpyxuSbUVfj6T6kKbS7l/7Rhom6RA=
+	t=1713440471; cv=none; b=JK2xxejNhPj6y1IvJ1pSdZHHHyjP3c+HSAOLP8HD8OTkAt9PVzSot1WEWD7YTJsacMYnDcXSjrqU9iQYleO5sermqztER12aFU3z0q/2CPm5Y5JpmhIhpuNKgvoGzXkYIbwNinfojQTqRrruqv7jbMkGEJRuuNMm0G0dClVFSCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713440226; c=relaxed/simple;
-	bh=ZZZeam4pgnqliiYd7rSqCNAXjDr1ZIcR6XnFF+yoxhU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=dflg+0nYTJ/11In866UJdyWV5nMDxDo/CgfqApkP/ilYwnNK/ZaLfslBZZfbPWFuq1mtonTZaUxUter6WrVY8kadZdHcmlGsP7wpaR5Ggq2csyu7KO6W19s5YMsWUyJzLWljSCdc5kV3C7uzmDJDfhu01+QWHFIjHQ3djnGTNW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=X35fjDLz; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-de462f3d992so824842276.2
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Apr 2024 04:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1713440223; x=1714045023; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZZZeam4pgnqliiYd7rSqCNAXjDr1ZIcR6XnFF+yoxhU=;
-        b=X35fjDLziTAlsFGhP+zcL4k7jjS2KQVa/FNoBquCW/6KdJas9Ge1UiSj9cFAraGlBk
-         1WPxRm5bvT3x48P5BGW2Y5bd1Mtd+V9n36ie3TYmVm82hAHuL/5ycyZM22sQErnzr3sF
-         T/kBIJ5AGfZBLxDxNFAfLMdlc+sFIVFIHfl4weV8K0Qp56heC5s6VbH+kRLr0q6bxsWT
-         R/cKX8XMT9XkApu3a9qx41iIyADcqNkCoCx+0chOxo6g1QKWAmMbdwOM8YIIe4gfxlfo
-         /eSe6Kyuha9SAb+AXda1fGShpb5ansyRwPZvCasEQG2GUMkbpj3+ARAAMeIY4Aksq3xq
-         fb7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713440223; x=1714045023;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZZZeam4pgnqliiYd7rSqCNAXjDr1ZIcR6XnFF+yoxhU=;
-        b=wvlGxK+ANBhOeZITovGARwfqozUCWTsazW2aiXirRiUbLEbCOwpAlCUrbdydrxf/y4
-         dL4hL6uSGG2Bg7FdMrd6rOE2JKylwUV1B9/N0oSC8/ZDz36Ub54yvgoKqijl+ERtECHa
-         fNifP5wdiPBPPfwpwAcNXCda7eTun87DzrdcbrBHFmlU8LkacKZKZOYKZnwOURGMYBKn
-         zOuqIQAMzhYh4K+epauTqN7zo20IRyXUNFrmMNmqbhMkZ+LapjBGbpILHgSpb0phvxb4
-         iSzxi7emfzsNF9G1AKFIhwcXoA6L3IiL2r4BQPg4DerP7m+nzgjvHRsy54IiEH4xaCeG
-         ZQyg==
-X-Forwarded-Encrypted: i=1; AJvYcCVI8Y0wJ7ffDL+G7HO0lZWdjSeXpd51WzOQPfzNMI/ijFjFIgveEDO79kWZt/RkaI2R1ed3tcgRGPnQy7NRSpL42lPXgW92vZJRHA==
-X-Gm-Message-State: AOJu0YzMVpCmzuSoKCswwdshmTMdcGDbt9tout2p4xCy4Tds2kqGKgJT
-	LbM7z/0y/Vm2WwpyfSHD3dudacGViTUD2Fy+xhQ6xX6JpsFYafspe5QpousYczeBaoYVlxEyAH7
-	S9uvNhrJ6QlftUgQ6Syk05/2Dsp6DdiED/0EZinhPCkG6rIIE
-X-Google-Smtp-Source: AGHT+IEdkW+CyII8z7WZkjodbEgRdb4E6h/kaH7hdjEbG33x+3xhic2q0P7PbB+yCsHetlQWjQ5J6iBWF+0gaeVvTA8=
-X-Received: by 2002:a25:3f06:0:b0:dc2:2e01:4ff0 with SMTP id
- m6-20020a253f06000000b00dc22e014ff0mr2548299yba.45.1713440223265; Thu, 18 Apr
- 2024 04:37:03 -0700 (PDT)
+	s=arc-20240116; t=1713440471; c=relaxed/simple;
+	bh=29rZzXIWIenydqbQ7JXySEbe+bvaUMgnfeczXYGzGKw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BV/e/+ESm2pxpvVZdmtSpifUAW/CipVgEA9ASiGEDhSboYfehnb7RiVxT+VWhdwslO1Pse9bILLpffEDWdVj15/uBLmc27uDtChAv5ViBLZquAa+XH0hd0YHjw2A5VK15WQK8HduyRsxsgSOYZCC3zcAn/SLPDReqSU8T2v6PKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PQf7Pv7c; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713440470; x=1744976470;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=29rZzXIWIenydqbQ7JXySEbe+bvaUMgnfeczXYGzGKw=;
+  b=PQf7Pv7cRxIQLXhqmuCYzrrjD06iYHb9aVrajHey3qFAPsabWgYmvEmQ
+   lGMZ2OMRebCQa7NZ50RIbQdpdPAnzeqegRGKjq+VRcHmushu221LGBdUw
+   X8ED8sAMmnojI9pCIi2JMrIKHL+02nE1TtwGq/WnjijuiyBbt7WMSP2Sb
+   rDZ8iONxq1FeocI5eW7H1bG/tZzgpCISqcEG8IMsbvW5Mo9VFHhxkGxLl
+   N1aLkd7nWemdoar64VjsNzfS/PgEM/hMzLFNkK5QcuEiL5/HAANXI40Zd
+   nly0zd3qYkHi5XWJfIxnye2UoYlDD9oyG9e2qRriuiGM6riNs9WrZ7C0M
+   w==;
+X-CSE-ConnectionGUID: hKwyDmSYQ2CluxN9qV36Xg==
+X-CSE-MsgGUID: h5LJS9wwQtuXtvfDBVo2EQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="8817178"
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="8817178"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:41:07 -0700
+X-CSE-ConnectionGUID: CF7Wzp+YQN6vn4RSDXu8UQ==
+X-CSE-MsgGUID: UJBlmCWVRjCuBNo1ZkNy4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="22823073"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:41:06 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rxQ8U-00000000JQI-22np;
+	Thu, 18 Apr 2024 14:41:02 +0300
+Date: Thu, 18 Apr 2024 14:41:02 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Zeng Heng <zengheng4@huawei.com>
+Cc: linus.walleij@linaro.org, dan.carpenter@linaro.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	liwei391@huawei.com
+Subject: Re: [PATCH v2] pinctrl: devicetree: fix refcount leak in
+ pinctrl_dt_to_map()
+Message-ID: <ZiEGzuVzV_fV52DR@smile.fi.intel.com>
+References: <20240418113459.4182749-1-zengheng4@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Phil Elwell <phil@raspberrypi.com>
-Date: Thu, 18 Apr 2024 12:36:52 +0100
-Message-ID: <CAMEGJJ3y_A1vtTV1x8836+AMOHs6NnWx_EsLTJMgaR5Fb9fgtQ@mail.gmail.com>
-Subject: Advice on using gpio-brcmstb with gpio-ranges
-To: Florian Fainelli <florian.fainelli@broadcom.com>, Doug Berger <opendmb@gmail.com>, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418113459.4182749-1-zengheng4@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello,
+On Thu, Apr 18, 2024 at 07:34:59PM +0800, Zeng Heng wrote:
+> If we fail to allocate propname buffer, we need to drop the reference
+> count we just took, otherwise it will lead reference leak. Here the
+> error exit path is modified to jump to the err label and call
+> pinctrl_dt_free_maps() which would drop the counter.
+> 
+> In the meantime, if it is found that the property 'pinctrl-0' is not
+> present, ENODEV is returned and also jump to the err label and call the
+> free function, in case the Smatch tool complains.
 
-I'm having difficulty using the gpio-brcmstb driver with the
-gpio-ranges property. gpio-brcmstb allows multiple banks of up to 32
-GPIO lines to be declared using a single DT node. However, if you do
-that, any declared gpio-ranges get applied to all banks without any
-kind of filtering or adjustment. This is because the gpio-brcmstb
-makes use of gpio-mmio, which requires one gpio_chip per bank. These
-gpio_chips have the same DT node, hence the same ranges, but are
-unaware that only a subset applies to them.
+> ---
 
-The GPIO<->pinctrl mapping can be configured in driver code, but this
-is deprecated (as is forcing global GPIO base numbers to start at
-zero, but the driver does it anyway).
+You forgot a changelog, but I think this needs to be a followup.
 
-What is the best way forward? Does one have to say that in
-gpio-brcmstb, gpio-ranges and multiple banks are mutually
-incompatible?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thanks,
 
-Phil
 
