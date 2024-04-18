@@ -1,169 +1,132 @@
-Return-Path: <linux-gpio+bounces-5666-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5667-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E49108A9C46
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 16:07:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89F808AA0DD
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 19:13:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 44ADAB21790
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 14:07:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 40D771F2203B
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 17:13:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6135E165FC5;
-	Thu, 18 Apr 2024 14:07:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AA2C172BD4;
+	Thu, 18 Apr 2024 17:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Fb5EQ6Iz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA49E163A9B;
-	Thu, 18 Apr 2024 14:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1499C15E20F
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Apr 2024 17:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713449256; cv=none; b=p981Rkktih034qIpQ1uhXMPPxOEjneOlPQgiwobNIk2pe+5YXlWZmBq8B+HTOIX7AYmcv+Vtngw/zln4Od91QKz1hv1DnY+atgZat7P0HNLecn7D6VTFAY9SDIoPQucyd9jBW0oraagKUl7PIDTe8CkDXlUncvFnOWyUPrVO89A=
+	t=1713460416; cv=none; b=du6DjzmlTYmihHWFQaz0H2uP6kEKq0pd2/wFenG/anjItUkckowHfec9Eb6uLmKb3UPAHmCnJdsTDVizmIjS6okkDjFWDhivCiEbEXFU1UfxzLJ1vmCX+BX5/A8b1pd+hx/nTl9x5NHMUtyQaX8H6Yi7c7gjASFeNQEtdJe5GO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713449256; c=relaxed/simple;
-	bh=FJF+jvoxE49NJphdMwIbdaNcFtOd2M9yRXYXL1Nazuo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m84bjTkpU3vCfSw6TvVDYnwTCgLwU5TfEbPyvln6RiHzGZ/1ehJ2Q5nIdpZBIp+Jur9vgbIl8KbpBiREUb+p7dK9HXgazD7pIhRc5FJjh5Km1tlLYwzhlJgISHHNqPRhmjdveVfk9Ju5h/JX99t8l+WQ72JybW3z3YdhZ51FobI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6150670d372so8218647b3.1;
-        Thu, 18 Apr 2024 07:07:30 -0700 (PDT)
+	s=arc-20240116; t=1713460416; c=relaxed/simple;
+	bh=33bp98M8vYpK0Mw4ItmO5JzHKSDRByKo5z3fyvO13u0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=boaKRIkeYa5glogb3jMNx5KuFhzTCrDPC/Gs2Gen6h4SSFjaja9/nDD1/5VsVeISShBNEO220HxEuvm6LEYCPvsWLfWK99W6OS4sZDGOXx24L6dUJ8yOnaoc2PfqB4lA5OzGhygKo+4csoDEjEC4e16bBhImrNyDhtqkTV+EnuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Fb5EQ6Iz; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6edb76d83d0so1006710b3a.0
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Apr 2024 10:13:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713460412; x=1714065212; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=A9Nrs6OMVDjvu+Fg3bPZe+Mh7T8v2MnPaN+nf5ROhho=;
+        b=Fb5EQ6IzXjFVlbjNgxruQEAjMqMxnmnT1A94TiKo0NjzFdYyjfIvvpLzGE8KBPqCkJ
+         B9JF+GZhRVD1YrM+V/GSp1+nQw9voXGskKj8C41IThciPF31HrvgFJ/7A48v6XVk9pAM
+         pV7zIFcXrBlILXOn7Rru8xJK486djO1FjNXmfbQb9gdBt4+q6m1NO2eo2KXtlLwLFB5I
+         vuLP5w8wfC3mDrf5Xj85tal1qwyrhl5i0e3Cf6qWWmdtApb6cTSZOZtQMMwNseN7Gs7j
+         La3k0LNWjoRv1ChHYutly5itMD4sg/pz3kIPium8+g5fAKhE4h1oxxpqerwGqFiQ+Irv
+         clrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713449248; x=1714054048;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n9GRpmL+xi3CtBGop9v1/wYQ7wRylluWVZ65rgWaWfA=;
-        b=ViUB4DxnOmVgomgE3eBkZCNO9+rT+rCzY7e0eXR/HOzpwB8FAnwdP1CsVgB3tsdjvJ
-         bFvuklvHEXCTKRp2o1KIGFMM6kWaZnPuTNC/Y5a78cqyYQpv38abmyb1VwELnhhr8jya
-         ucYFCfW/iEN8zEmV+mAucoq1fJqXxb6TtuzXrJUQ9HVklyqwFdc/LHDz2YqRnC0orDun
-         IqLz8/aIJ6PqvzLfX5FBelhuHLCilotS0rPj6UjO5Q5eTmdT1owfKe9bugbRilZJ2RWH
-         6PDQRq/gp94HAxH9nfN9VEOZv15Isiwdw+mPXUMWFSpuRaF+g7Fmfy5Fbd6L30kS5TrP
-         5BVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXOvhkDc0KO84B4gQBGWr8f7DmzGMXQ/dgLG0DluS5NmggegTcD4BtiR78Fnm6EZbtN6RDFX2/jm2VvbvWXyzNPgDYmNe7d4uez7DZ9tGb54436Ygz3sIzklogpBc5JObYRu8Mkszxyf2+TtfWCYFbR7our+pjo3D8zqvs8jtDyy3Qr4OewOP24weX
-X-Gm-Message-State: AOJu0YxdEIglbNs3fui2q6rgYYX+VyFZHSz4HohLQPKnrMFt0hHfvxTF
-	TscRegja0cQ+yyv3hWZvkkFQCEynH6mXSmqfL73ZFdKXeWwbqqP/OGnWfxli
-X-Google-Smtp-Source: AGHT+IETZ9A5bwkSPR1uvldqDj2rqv7jLERHpIyVNrkIstnYrsKiSrT8hidyQDh8GzL/sKnPl3gWbA==
-X-Received: by 2002:a05:690c:690b:b0:615:1e99:bd6e with SMTP id if11-20020a05690c690b00b006151e99bd6emr3153185ywb.35.1713449248528;
-        Thu, 18 Apr 2024 07:07:28 -0700 (PDT)
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
-        by smtp.gmail.com with ESMTPSA id i84-20020a0ddf57000000b00617cd7bd3a9sm339944ywe.109.2024.04.18.07.07.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Apr 2024 07:07:28 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-de45e5c3c84so968023276.1;
-        Thu, 18 Apr 2024 07:07:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+n+qCl/ULOpw+jq/x/rAdjV37Utq4YF45D7aTUXnHQxZ4EXxYA0EENS/e7LkxtBlQV7jUfiq85jExp+F4+44GUa9YolTh6ftezv55A9H04vj4e5vSWrcFIjh/ZxRQ9q0KNpAOX/bdgvsF9InYvep8KhmqKreMnE+QjG6lgtkRk6YZ6RHX89kO+k9y
-X-Received: by 2002:a25:b115:0:b0:de4:5ec1:9ba2 with SMTP id
- g21-20020a25b115000000b00de45ec19ba2mr2913597ybj.27.1713449247038; Thu, 18
- Apr 2024 07:07:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713460412; x=1714065212;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A9Nrs6OMVDjvu+Fg3bPZe+Mh7T8v2MnPaN+nf5ROhho=;
+        b=F8cvkmLDywdDthJZXbbIL2DoOOmk+2Qb+IHmzmz+8Fel9zrZvgXxtLOOv9SkhPzGww
+         RsK/3wlBhwozIIeOZc7FhcRWbkyZXd2qSbrVvV7Edd305bPbj23YasgyBbmcxqdSWdrM
+         iinu32w94BzDWQGcO2v+aLuEkGqLmKTI9P85juPM3KY6Q/CetV2RXRKUfSoAx5OKOLS2
+         IFW9KYY9qy5SxG91AbInlSqbnDXPuto9b2RGXhOOt4yVdm6wCxlT2QBvpV8N3oLuzVxf
+         R+LKqfqU98M/sNSncSIa86nfEx3YU6cNlMW/6q2hpTh6gMokogBEtSMSlaVowpWjyHJL
+         3asQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1Ni9m7cW+Zhsrs1QDPb6CzHeNMLu2TsBiu9WdrzZS09pNg5MVyIFHyC7ycAYiNhq4fzqBlOT5B4zEagqnJDDsGtQ805HKfZEq0Q==
+X-Gm-Message-State: AOJu0YxujNOmy88ev9prGnS1R27EbjC9Ar/ud6ZoKd2tRUkJWjmz0wwT
+	pUHUMxztdJdbyERtgY4EUEc26p08YfYm2TXK0iVXo+qHGKSw3tr+gUq4aK0Gfiw=
+X-Google-Smtp-Source: AGHT+IE3tG2/trGJpFefH2yxN5NkujHeRNR5NE563/ig+Y12P+8UXQ55A73e4tXVMSj4aoosn7e2Og==
+X-Received: by 2002:a05:6a00:2351:b0:6ed:d68d:948b with SMTP id j17-20020a056a00235100b006edd68d948bmr4688338pfj.2.1713460412286;
+        Thu, 18 Apr 2024 10:13:32 -0700 (PDT)
+Received: from brgl-uxlite.. ([24.75.208.145])
+        by smtp.gmail.com with ESMTPSA id f4-20020a056a0022c400b006ed066ebed4sm1775858pfj.93.2024.04.18.10.13.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 10:13:31 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: fixes for v6.9-rc5
+Date: Thu, 18 Apr 2024 19:13:29 +0200
+Message-Id: <20240418171329.6542-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240320104230.446400-1-claudiu.beznea.uj@bp.renesas.com> <20240320104230.446400-3-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20240320104230.446400-3-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 18 Apr 2024 16:07:14 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXescaJ-V0iuXsxo=X-7RYTBR1W5+EXZCw_2VPHEFGzdA@mail.gmail.com>
-Message-ID: <CAMuHMdXescaJ-V0iuXsxo=X-7RYTBR1W5+EXZCw_2VPHEFGzdA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] pinctrl: renesas: rzg2l: Configure the interrupt
- type on resume
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: linus.walleij@linaro.org, tglx@linutronix.de, biju.das.jz@bp.renesas.com, 
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Claudiu,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On Wed, Mar 20, 2024 at 11:43=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev>=
- wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Commit dce0919c83c3 ("irqchip/renesas-rzg2l: Do not set TIEN and TINT
-> source at the same time") removed the setup of TINT from
-> rzg2l_irqc_irq_enable(). To address the spourious interrupt issue the set=
-up
-> of TINT has been moved in rzg2l_tint_set_edge() though
-> rzg2l_disable_tint_and_set_tint_source(). With this, the interrupts are
-> not properly re-configured after a suspend-to-RAM cycle. To address
-> this issue and avoid spurious interrupts while resumming set the
-> interrupt type before enabling it.
->
-> Fixes: dce0919c83c3 ("irqchip/renesas-rzg2l: Do not set TIEN and TINT sou=
-rce at the same time")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Linus,
 
-Thanks for your patch!
+Please pull the following set of minor fixes for the next RC. Details are
+in the signed tag as usual.
 
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -2045,7 +2045,9 @@ static void rzg2l_gpio_irq_restore(struct rzg2l_pin=
-ctrl *pctrl)
->
->         for (unsigned int i =3D 0; i < RZG2L_TINT_MAX_INTERRUPT; i++) {
->                 struct irq_data *data;
-> +               unsigned long flags;
->                 unsigned int virq;
-> +               int ret;
->
->                 if (!pctrl->hwirq[i])
->                         continue;
-> @@ -2063,17 +2065,17 @@ static void rzg2l_gpio_irq_restore(struct rzg2l_p=
-inctrl *pctrl)
->                         continue;
->                 }
->
-> -               if (!irqd_irq_disabled(data)) {
-> -                       unsigned long flags;
-> -
-> -                       /*
-> -                        * This has to be atomically executed to protect =
-against a concurrent
-> -                        * interrupt.
-> -                        */
-> -                       raw_spin_lock_irqsave(&pctrl->lock.rlock, flags);
-> +               /*
-> +                * This has to be atomically executed to protect against =
-a concurrent
-> +                * interrupt.
-> +                */
-> +               raw_spin_lock_irqsave(&pctrl->lock.rlock, flags);
-> +               ret =3D rzg2l_gpio_irq_set_type(data, irqd_get_trigger_ty=
-pe(data));
-> +               if (ret)
-> +                       dev_crit(pctrl->dev, "Failed to set IRQ type for =
-virq=3D%u\n", virq);
-> +               else if (!irqd_irq_disabled(data))
->                         rzg2l_gpio_irq_enable(data);
-> -                       raw_spin_unlock_irqrestore(&pctrl->lock.rlock, fl=
-ags);
-> -               }
-> +               raw_spin_unlock_irqrestore(&pctrl->lock.rlock, flags);
->         }
->  }
+Thanks,
+Bartosz
 
-LGTM, but I'd rather move the dev_crit() outside (i.e. after) the
-critical section.
+The following changes since commit fec50db7033ea478773b159e0e2efb135270e3b7:
 
-Gr{oetje,eeting}s,
+  Linux 6.9-rc3 (2024-04-07 13:22:46 -0700)
 
-                        Geert
+are available in the Git repository at:
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.9-rc5
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+for you to fetch changes up to 69ffed4b62523bbc85511f150500329d28aba356:
+
+  gpiolib: swnode: Remove wrong header inclusion (2024-04-17 22:48:14 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.9-rc5
+
+- use -ENOTSUPP consistently in Intel GPIO drivers
+- don't include dt-bindings headers in gpio-swnode code
+- add missing of device table to gpio-lpc32xx and fix autoloading
+
+----------------------------------------------------------------
+Andy Shevchenko (3):
+      gpio: wcove: Use -ENOTSUPP consistently
+      gpio: crystalcove: Use -ENOTSUPP consistently
+      gpiolib: swnode: Remove wrong header inclusion
+
+Bartosz Golaszewski (1):
+      Merge tag 'intel-gpio-v6.9-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-current
+
+Krzysztof Kozlowski (1):
+      gpio: lpc32xx: fix module autoloading
+
+ drivers/gpio/gpio-crystalcove.c | 2 +-
+ drivers/gpio/gpio-lpc32xx.c     | 1 +
+ drivers/gpio/gpio-wcove.c       | 2 +-
+ include/linux/gpio/property.h   | 1 -
+ 4 files changed, 3 insertions(+), 3 deletions(-)
 
