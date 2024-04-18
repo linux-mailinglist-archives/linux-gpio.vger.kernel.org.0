@@ -1,111 +1,169 @@
-Return-Path: <linux-gpio+bounces-5665-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5666-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C40D68A9C32
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 16:05:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E49108A9C46
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 16:07:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 012511C21E96
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 14:05:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 44ADAB21790
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 14:07:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A04DA165FAF;
-	Thu, 18 Apr 2024 14:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NLT/7kK6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6135E165FC5;
+	Thu, 18 Apr 2024 14:07:36 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBE91649CC;
-	Thu, 18 Apr 2024 14:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA49E163A9B;
+	Thu, 18 Apr 2024 14:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713449106; cv=none; b=phoN6zvWbA2T/FUaXy5SLqGme4m+4zKRGC8OKYbWD6gz73IiW8nh71156yvP2ZQpu+k1FWlTsntOV/lX1VIXSnx1+ubY0uM7Y9RjDxGiyKNJHpMPI5ccKJ+QzAgMJp1cdl7ZNgkW226mEGM37mfiGJAqYk+U2zH8IRIQnKmZl3M=
+	t=1713449256; cv=none; b=p981Rkktih034qIpQ1uhXMPPxOEjneOlPQgiwobNIk2pe+5YXlWZmBq8B+HTOIX7AYmcv+Vtngw/zln4Od91QKz1hv1DnY+atgZat7P0HNLecn7D6VTFAY9SDIoPQucyd9jBW0oraagKUl7PIDTe8CkDXlUncvFnOWyUPrVO89A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713449106; c=relaxed/simple;
-	bh=ffm9wt7h18bF8l/+SJ6vz1syVkmFX+Rsu+y3Rz24JkA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U1NXmpHqNGaDoJpCoO5mPkPCqwwAoop11g6oGyfAKiSs8BDQqazkw0MYfztxA3iy8jxJXgIlXwmu6aI8XV6lZbceDwVU/4YnY5WT/ixer7FnkDf4K1z6ISl3U4Fhu0PQ7GRFsJus72LZH8CTq0TVLALPYf9AlRdYwi5w39VRlGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NLT/7kK6; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713449104; x=1744985104;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ffm9wt7h18bF8l/+SJ6vz1syVkmFX+Rsu+y3Rz24JkA=;
-  b=NLT/7kK6b6aPLGzo/JBOXhvXhp++ms7F4AjGj1H7begXvarAep1wb9HB
-   i7p5SHMUGlULjM1xWnryvOozmmuQF/VibGebjesJREs84JgynEepe3Jcp
-   W1jJksyqpNc+/FH43KYsKxdmeDxxoOSU4wf8BX4LMY5p3y1RUyXMlWEHR
-   hmsifU766cezUACtQPK0IViHub5Ae9YGIOsnUmK6mRXtwBMYom2XQEFjy
-   faDHGWkafOsSOBfa4eL4kMasadTrOtPF1iXg3bQielYxCjB1V9b8xnszd
-   n1SFWXJ8yTVykj9Vydqe8ypYbd34qZYQH57GaRMibhsEAMLo+mZFUuB/6
-   g==;
-X-CSE-ConnectionGUID: fMTHk3asQhi8PLZUmcnvWQ==
-X-CSE-MsgGUID: JiYMg8gRTIyAjjulDIHvAg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="11939349"
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="11939349"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 07:05:03 -0700
-X-CSE-ConnectionGUID: QBTJWpBFTU2swZqG5+yixA==
-X-CSE-MsgGUID: 3bqEiufyTRCSE/aXWa8VNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="23076175"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 07:05:01 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rxSNn-00000000LVr-1Jxr;
-	Thu, 18 Apr 2024 17:04:59 +0300
-Date: Thu, 18 Apr 2024 17:04:58 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Zeng Heng <zengheng4@huawei.com>
-Cc: linus.walleij@linaro.org, dan.carpenter@linaro.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	liwei391@huawei.com
-Subject: Re: [PATCH v2 resend] pinctrl: devicetree: fix refcount leak in
- pinctrl_dt_to_map()
-Message-ID: <ZiEoiuHbIyyWs5hE@smile.fi.intel.com>
-References: <20240418115813.93241-1-zengheng4@huawei.com>
+	s=arc-20240116; t=1713449256; c=relaxed/simple;
+	bh=FJF+jvoxE49NJphdMwIbdaNcFtOd2M9yRXYXL1Nazuo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m84bjTkpU3vCfSw6TvVDYnwTCgLwU5TfEbPyvln6RiHzGZ/1ehJ2Q5nIdpZBIp+Jur9vgbIl8KbpBiREUb+p7dK9HXgazD7pIhRc5FJjh5Km1tlLYwzhlJgISHHNqPRhmjdveVfk9Ju5h/JX99t8l+WQ72JybW3z3YdhZ51FobI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6150670d372so8218647b3.1;
+        Thu, 18 Apr 2024 07:07:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713449248; x=1714054048;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n9GRpmL+xi3CtBGop9v1/wYQ7wRylluWVZ65rgWaWfA=;
+        b=ViUB4DxnOmVgomgE3eBkZCNO9+rT+rCzY7e0eXR/HOzpwB8FAnwdP1CsVgB3tsdjvJ
+         bFvuklvHEXCTKRp2o1KIGFMM6kWaZnPuTNC/Y5a78cqyYQpv38abmyb1VwELnhhr8jya
+         ucYFCfW/iEN8zEmV+mAucoq1fJqXxb6TtuzXrJUQ9HVklyqwFdc/LHDz2YqRnC0orDun
+         IqLz8/aIJ6PqvzLfX5FBelhuHLCilotS0rPj6UjO5Q5eTmdT1owfKe9bugbRilZJ2RWH
+         6PDQRq/gp94HAxH9nfN9VEOZv15Isiwdw+mPXUMWFSpuRaF+g7Fmfy5Fbd6L30kS5TrP
+         5BVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXOvhkDc0KO84B4gQBGWr8f7DmzGMXQ/dgLG0DluS5NmggegTcD4BtiR78Fnm6EZbtN6RDFX2/jm2VvbvWXyzNPgDYmNe7d4uez7DZ9tGb54436Ygz3sIzklogpBc5JObYRu8Mkszxyf2+TtfWCYFbR7our+pjo3D8zqvs8jtDyy3Qr4OewOP24weX
+X-Gm-Message-State: AOJu0YxdEIglbNs3fui2q6rgYYX+VyFZHSz4HohLQPKnrMFt0hHfvxTF
+	TscRegja0cQ+yyv3hWZvkkFQCEynH6mXSmqfL73ZFdKXeWwbqqP/OGnWfxli
+X-Google-Smtp-Source: AGHT+IETZ9A5bwkSPR1uvldqDj2rqv7jLERHpIyVNrkIstnYrsKiSrT8hidyQDh8GzL/sKnPl3gWbA==
+X-Received: by 2002:a05:690c:690b:b0:615:1e99:bd6e with SMTP id if11-20020a05690c690b00b006151e99bd6emr3153185ywb.35.1713449248528;
+        Thu, 18 Apr 2024 07:07:28 -0700 (PDT)
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
+        by smtp.gmail.com with ESMTPSA id i84-20020a0ddf57000000b00617cd7bd3a9sm339944ywe.109.2024.04.18.07.07.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Apr 2024 07:07:28 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-de45e5c3c84so968023276.1;
+        Thu, 18 Apr 2024 07:07:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU+n+qCl/ULOpw+jq/x/rAdjV37Utq4YF45D7aTUXnHQxZ4EXxYA0EENS/e7LkxtBlQV7jUfiq85jExp+F4+44GUa9YolTh6ftezv55A9H04vj4e5vSWrcFIjh/ZxRQ9q0KNpAOX/bdgvsF9InYvep8KhmqKreMnE+QjG6lgtkRk6YZ6RHX89kO+k9y
+X-Received: by 2002:a25:b115:0:b0:de4:5ec1:9ba2 with SMTP id
+ g21-20020a25b115000000b00de45ec19ba2mr2913597ybj.27.1713449247038; Thu, 18
+ Apr 2024 07:07:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240418115813.93241-1-zengheng4@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240320104230.446400-1-claudiu.beznea.uj@bp.renesas.com> <20240320104230.446400-3-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20240320104230.446400-3-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 18 Apr 2024 16:07:14 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXescaJ-V0iuXsxo=X-7RYTBR1W5+EXZCw_2VPHEFGzdA@mail.gmail.com>
+Message-ID: <CAMuHMdXescaJ-V0iuXsxo=X-7RYTBR1W5+EXZCw_2VPHEFGzdA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pinctrl: renesas: rzg2l: Configure the interrupt
+ type on resume
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: linus.walleij@linaro.org, tglx@linutronix.de, biju.das.jz@bp.renesas.com, 
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 18, 2024 at 07:58:13PM +0800, Zeng Heng wrote:
-> If we fail to allocate propname buffer, we need to drop the reference
-> count we just took, otherwise it will lead reference leak. Here the
-> error exit path is modified to jump to the err label and call
-> pinctrl_dt_free_maps() which would drop the counter.
-> 
-> In the meantime, if it is found that the property 'pinctrl-0' is not
-> present, ENODEV is returned and also jump to the err label and call the
-> free function, in case the Smatch tool complains.
+Hi Claudiu,
 
-...
+On Wed, Mar 20, 2024 at 11:43=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev>=
+ wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Commit dce0919c83c3 ("irqchip/renesas-rzg2l: Do not set TIEN and TINT
+> source at the same time") removed the setup of TINT from
+> rzg2l_irqc_irq_enable(). To address the spourious interrupt issue the set=
+up
+> of TINT has been moved in rzg2l_tint_set_edge() though
+> rzg2l_disable_tint_and_set_tint_source(). With this, the interrupts are
+> not properly re-configured after a suspend-to-RAM cycle. To address
+> this issue and avoid spurious interrupts while resumming set the
+> interrupt type before enabling it.
+>
+> Fixes: dce0919c83c3 ("irqchip/renesas-rzg2l: Do not set TIEN and TINT sou=
+rce at the same time")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-> ---
-> v2: add a comment and modify the commit message, without any logical
->     changes.
+Thanks for your patch!
 
-You probably didn't get what I was saying...
-Linus already applied your version, what is missing is the comment.
-This should be done as a followup patch.
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -2045,7 +2045,9 @@ static void rzg2l_gpio_irq_restore(struct rzg2l_pin=
+ctrl *pctrl)
+>
+>         for (unsigned int i =3D 0; i < RZG2L_TINT_MAX_INTERRUPT; i++) {
+>                 struct irq_data *data;
+> +               unsigned long flags;
+>                 unsigned int virq;
+> +               int ret;
+>
+>                 if (!pctrl->hwirq[i])
+>                         continue;
+> @@ -2063,17 +2065,17 @@ static void rzg2l_gpio_irq_restore(struct rzg2l_p=
+inctrl *pctrl)
+>                         continue;
+>                 }
+>
+> -               if (!irqd_irq_disabled(data)) {
+> -                       unsigned long flags;
+> -
+> -                       /*
+> -                        * This has to be atomically executed to protect =
+against a concurrent
+> -                        * interrupt.
+> -                        */
+> -                       raw_spin_lock_irqsave(&pctrl->lock.rlock, flags);
+> +               /*
+> +                * This has to be atomically executed to protect against =
+a concurrent
+> +                * interrupt.
+> +                */
+> +               raw_spin_lock_irqsave(&pctrl->lock.rlock, flags);
+> +               ret =3D rzg2l_gpio_irq_set_type(data, irqd_get_trigger_ty=
+pe(data));
+> +               if (ret)
+> +                       dev_crit(pctrl->dev, "Failed to set IRQ type for =
+virq=3D%u\n", virq);
+> +               else if (!irqd_irq_disabled(data))
+>                         rzg2l_gpio_irq_enable(data);
+> -                       raw_spin_unlock_irqrestore(&pctrl->lock.rlock, fl=
+ags);
+> -               }
+> +               raw_spin_unlock_irqrestore(&pctrl->lock.rlock, flags);
+>         }
+>  }
 
--- 
-With Best Regards,
-Andy Shevchenko
+LGTM, but I'd rather move the dev_crit() outside (i.e. after) the
+critical section.
 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
