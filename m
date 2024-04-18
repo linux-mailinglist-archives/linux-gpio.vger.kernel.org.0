@@ -1,142 +1,106 @@
-Return-Path: <linux-gpio+bounces-5655-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5656-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C7F68A96F9
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 12:05:41 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A49D8A98A5
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 13:36:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B5092B222DC
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 10:05:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E134BB20FE4
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 11:36:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA3B315B57C;
-	Thu, 18 Apr 2024 10:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X/RpJc/K"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CC7A15E7E8;
+	Thu, 18 Apr 2024 11:36:12 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A23115B55D;
-	Thu, 18 Apr 2024 10:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D283F15E20B;
+	Thu, 18 Apr 2024 11:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713434732; cv=none; b=rVahcLSosSdFAq3YVdM9RQNxu64z5NKUi1Tr6xBRlavSFrmRJ9C+ud4Z0dwcSdtBOPBHyUA65ewlNzNG/5qd0aKCEcUceZrPmCuuKr1GK6cuhcTPNTZQnSxIKQINho2vYap3P6bIXEDaO0fhNKaJkr8le9q1TdMZNAYJaVYVmwA=
+	t=1713440171; cv=none; b=MnA8ctDWmfKSN10ZVqXGwex32jVEsWkTduBQJE5cXsCbPvwxtyfuXLI3sOYgtRbruJGS4P74nUgaiBU72qhIpZq/jqwPpkOLOvPkTSfvLYj29Thw8mKDxwRUb1tcybbmxpV03cs2dEtaVdXoGQzuEcwDH9uDjbhJFJxyALMO6rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713434732; c=relaxed/simple;
-	bh=ZVDmlHfsA6ASP3gtkKW9PH6qXzB94xtz3znACVrZ57Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DivQyBU0MBSDnwqPzvaN2HgmAbnXGHwtRlpMrJmnFacs+7Im8ZbtL28LSDsPl3FK55xb0Sc1CifxAZl0t4Yurn+sZ3ZTrTA8OGdJyBObt9LPDEKRktCn5pCFc0qrrjG0W6tG8Xz/vvu6CF/pxSpTLQGpTcOcdUZvCnFfPiaxlwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X/RpJc/K; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713434730; x=1744970730;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZVDmlHfsA6ASP3gtkKW9PH6qXzB94xtz3znACVrZ57Q=;
-  b=X/RpJc/KdnEaklXNMyMZ2CZinVgsiD4tqCGwm4OquMjENJNqaCGeanF5
-   v0Dg/joczBd3bdtcuWaDzWELVR4aMqIbZGdU8Ug7F6gozcvNsGfoHwdUx
-   xjcvzddHOrKtA7t+1ybY2/5fGixyFHR8+uWD1l2tIUXDKOzdLXydQLTgi
-   rPOiS1xfaiM+JbVvnrLHwOE215Mh9q7aLfREVDfhLgJyGQ7FleVga/Nbx
-   GXd5u+i+plj95BpZdCsrEHWG7RkhtCSK2epiTD5/LRRjpups0t4YSzTOw
-   6XZIHZ/83rBpKTfCe9lS3ADv7Osp5Ik8WdZ9ZiFnqWt8osTLJZxs2xj6a
-   A==;
-X-CSE-ConnectionGUID: 64S/wltrQLuUZNCj0+D/1w==
-X-CSE-MsgGUID: Sz/y8zeZRyu1woe+o9mAjw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="11914747"
-X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
-   d="scan'208";a="11914747"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 03:05:29 -0700
-X-CSE-ConnectionGUID: MgzVA2yhRaWsJua/oiLlRA==
-X-CSE-MsgGUID: 80JK7GM9QKC9OXLjhRS1hA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,211,1708416000"; 
-   d="scan'208";a="60356866"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 03:05:28 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rxOdw-00000000IAL-367P;
-	Thu, 18 Apr 2024 13:05:24 +0300
-Date: Thu, 18 Apr 2024 13:05:24 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Zeng Heng <zengheng4@huawei.com>, linus.walleij@linaro.org,
-	linux-kernel@vger.kernel.org, xiexiuqi@huawei.com,
-	linux-gpio@vger.kernel.org, weiyongjun1@huawei.com,
-	liwei391@huawei.com
-Subject: Re: [PATCH] pinctrl: devicetree: fix refcount leak in
- pinctrl_dt_to_map()
-Message-ID: <ZiDwZGY-MF5OdVmH@smile.fi.intel.com>
-References: <20240415105328.3651441-1-zengheng4@huawei.com>
- <Zh_rM04PspfXxlv_@smile.fi.intel.com>
- <d80e09d8-5f35-4865-9fe8-195b86527972@moroto.mountain>
- <ZiAC9zzSWume8063@smile.fi.intel.com>
- <fe83e07f-ca28-4c00-9b1b-7d16c63bad62@moroto.mountain>
+	s=arc-20240116; t=1713440171; c=relaxed/simple;
+	bh=mYKpq11TeEMkgFYw8ClkM9Lq9+dX6OXQAfN5poL4xgI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H8hjj3yQLisQx5pwXYNECT9cIPQH4Nk7j9o3faa5sFl9BRYjDCYoVIooqyN4inDKnKEJYH/Ql5ARcQxJzyml1f/GEdgshnyNATWnk13nass42H4xC5hF4HxFHpR4hVWKPlqEW30fBSUXCGnT++54n4kPJJMDjg070j3xVaM8AfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VKwd41KZ0ztWbs;
+	Thu, 18 Apr 2024 19:33:12 +0800 (CST)
+Received: from kwepemi500024.china.huawei.com (unknown [7.221.188.100])
+	by mail.maildlp.com (Postfix) with ESMTPS id 157FB180084;
+	Thu, 18 Apr 2024 19:36:06 +0800 (CST)
+Received: from huawei.com (10.175.103.91) by kwepemi500024.china.huawei.com
+ (7.221.188.100) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 18 Apr
+ 2024 19:36:05 +0800
+From: Zeng Heng <zengheng4@huawei.com>
+To: <linus.walleij@linaro.org>, <dan.carpenter@linaro.org>,
+	<andriy.shevchenko@intel.com>
+CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<liwei391@huawei.com>
+Subject: [PATCH v2] pinctrl: devicetree: fix refcount leak in pinctrl_dt_to_map()
+Date: Thu, 18 Apr 2024 19:34:59 +0800
+Message-ID: <20240418113459.4182749-1-zengheng4@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe83e07f-ca28-4c00-9b1b-7d16c63bad62@moroto.mountain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi500024.china.huawei.com (7.221.188.100)
 
-On Wed, Apr 17, 2024 at 08:49:42PM +0300, Dan Carpenter wrote:
-> On Wed, Apr 17, 2024 at 08:12:23PM +0300, Andy Shevchenko wrote:
-> > On Wed, Apr 17, 2024 at 06:38:46PM +0300, Dan Carpenter wrote:
-> > > On Wed, Apr 17, 2024 at 06:30:59PM +0300, Andy Shevchenko wrote:
-> > > > On Mon, Apr 15, 2024 at 06:53:28PM +0800, Zeng Heng wrote:
+If we fail to allocate propname buffer, we need to drop the reference
+count we just took, otherwise it will lead reference leak. Here the
+error exit path is modified to jump to the err label and call
+pinctrl_dt_free_maps() which would drop the counter.
 
-...
+In the meantime, if it is found that the property 'pinctrl-0' is not
+present, ENODEV is returned and also jump to the err label and call the
+free function, in case the Smatch tool complains.
 
-> > > > >  	for (state = 0; ; state++) {
-> > > > >  		/* Retrieve the pinctrl-* property */
-> > > > >  		propname = kasprintf(GFP_KERNEL, "pinctrl-%d", state);
-> > > > > -		if (!propname)
-> > > > > -			return -ENOMEM;
-> > > > > +		if (!propname) {
-> > > > > +			ret = -ENOMEM;
-> > > > > +			goto err;
-> > > > > +		}
-> > > > >  		prop = of_find_property(np, propname, &size);
-> > > > >  		kfree(propname);
-> > > > >  		if (!prop) {
-> > > > >  			if (state == 0) {
-> > > > > -				of_node_put(np);
-> > > > > -				return -ENODEV;
-> > > > > +				ret = -ENODEV;
-> > > > > +				goto err;
-> > > > 
-> > > > Has it been tested? How on earth is this a correct change?
-> > > > 
-> > > > We iterate over state numbers until we have properties available. This chunk is
-> > > > _successful_ exit path, we may not free parsed maps! Am I wrong?
-> > > 
-> > > In this path state == 0 so we haven't had a successful iteration yet.
-> > 
-> > Ah, indeed, this is not a status. Okay, makes sense, but calling that free
-> > function for the purpose of the putting of_node seems an overkill...
-> 
-> Sure, that's one way to look at it, but it's suspicious looking when
-> there is a direct return which is surrounded by gotos.  As I write this,
-> I remember that Smatch has a warning for code like that.
-> 
-> Probably we should add a comment to say:
-> 
-> 	/* Return -ENODEV if the property 'pinctrl-0' is not present. */
+Fixes: 91d5c5060ee2 ("pinctrl: devicetree: fix null pointer dereferencing in pinctrl_dt_to_map")
+Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Zeng Heng <zengheng4@huawei.com>
+---
+ drivers/pinctrl/devicetree.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Good idea, go for it!
-
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index df1efc2e5202..37069e40af2b 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -220,14 +220,17 @@ int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
+ 	for (state = 0; ; state++) {
+ 		/* Retrieve the pinctrl-* property */
+ 		propname = kasprintf(GFP_KERNEL, "pinctrl-%d", state);
+-		if (!propname)
+-			return -ENOMEM;
++		if (!propname) {
++			ret = -ENOMEM;
++			goto err;
++		}
+ 		prop = of_find_property(np, propname, &size);
+ 		kfree(propname);
+ 		if (!prop) {
+ 			if (state == 0) {
+-				of_node_put(np);
+-				return -ENODEV;
++				/* Return -ENODEV if the property 'pinctrl-0' is not present. */
++				ret = -ENODEV;
++				goto err;
+ 			}
+ 			break;
+ 		}
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
 
