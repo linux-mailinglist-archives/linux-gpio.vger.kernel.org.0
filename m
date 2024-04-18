@@ -1,133 +1,89 @@
-Return-Path: <linux-gpio+bounces-5659-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5660-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 052698A9914
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 13:52:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99EBA8A9918
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 13:54:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9AB411F218E4
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 11:52:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C97591C2158A
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Apr 2024 11:54:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569DC15EFD8;
-	Thu, 18 Apr 2024 11:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AiiJ4opM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 890C515ECF1;
+	Thu, 18 Apr 2024 11:54:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52D615ECCC;
-	Thu, 18 Apr 2024 11:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D901015E7FA;
+	Thu, 18 Apr 2024 11:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713441132; cv=none; b=e1G6UEtMb9E7+EnrmZBHmbzdO0XTzju2y6nff1H0p4qRWu/6H4dCgIcnI8MdBqNySylG00y1QC6N54Sn066RW0FOb+Uxw1DpbEXvjLHwZ1GKwtSq+/A1jJfoXeK6+1FYw4vFygepcrOvRhPWz8tr4pTP2+a+2ZVZT3uh4nllyAk=
+	t=1713441259; cv=none; b=f8Fp4Bb1yTQ3aOAhdE9e+bro9zEKDCPBu7mZf8kGA/5gdprVjbm0cC1aR45IJr2hu8yNoZCD0P0BTeiKUL1I0gIMUkZFM7JnKnNZ0rzF+fyXXH6N4XsN5I1OBEWXZNmdRZkr5reD3H44C4xuTxpelJl73nlleCuG6WKwhfuXA+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713441132; c=relaxed/simple;
-	bh=NNLjt8tWDXIZVT3SCOlsS+2zQ3f4L2mZhjbwYH3fVHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XegtpbgPKDTNUl4yJBoJz8eSCuMBZuCr7QDI+vUca6643m4lr5OMh/iyhmH8yt/q6X9wkHyvuoKtCfWkfQ/WoSy77L3j1VWLZCdU9W6Ecww51fM4UQm1pbcrg8t1eugJH+NMmDQLWZnvHzGc1Eqee5YGXrhxGup3nun4tQOsAOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AiiJ4opM; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713441130; x=1744977130;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=NNLjt8tWDXIZVT3SCOlsS+2zQ3f4L2mZhjbwYH3fVHY=;
-  b=AiiJ4opMGlKAGTQ7+vdBqKchWhTjGGxHGC90tvdDz5c8xv8kvcZ0ISZt
-   46wzDYGVNmpKzvajLurrbCYseosL9E3CMnF2A0ix3ZcE3vWtz+U9c17SL
-   QGm8LFR1knx6ermiMPJ7+4JobZujKgehkzAKCS+8EWUOYSGoP96hhi8H0
-   MYxsOlvCu+hGnLBkqfCxwyEyI8KJOFp+cIMxS2qXPcCk35vASSpXmeNI2
-   7n3WG7BQ6hvnUQYP2HLI9Dz0DJSDzBQIqK8R1yLTVKtirMupX0wtVdI6+
-   4PQX87FhBhVMPkrS6GVmjB0371F3H5dkpf49LE7kkq9BwT8N6JeG6xsP6
-   Q==;
-X-CSE-ConnectionGUID: MedRW+rRS/qUqf7fXQiSiw==
-X-CSE-MsgGUID: 7yT2wxYGT86weIhOW8WxoA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="19681133"
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="19681133"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:52:10 -0700
-X-CSE-ConnectionGUID: tFOkMf+JQ6ijNWjkG/hSmA==
-X-CSE-MsgGUID: qFJqIMf5QP2xm/Krp1j0vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
-   d="scan'208";a="23567364"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 04:52:06 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rxQJ9-00000000JcA-0NbX;
-	Thu, 18 Apr 2024 14:52:03 +0300
-Date: Thu, 18 Apr 2024 14:52:02 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v2 1/2] gpiolib: Fix a mess with the GPIO_* flags
-Message-ID: <ZiEJYiNNnx_gYvm1@smile.fi.intel.com>
-References: <20240408231727.396452-1-andriy.shevchenko@linux.intel.com>
- <20240408231727.396452-2-andriy.shevchenko@linux.intel.com>
- <CACRpkdYaXVvtt3b9rFxU4ZNShD17Bm4XU9X3h4dY501iJy3kPA@mail.gmail.com>
- <ZhlSaFWlbE6OS7om@smile.fi.intel.com>
- <CAMRc=Me489H-mTfT1hfUsY47iKwoaVsf6sgkiBwBVkxJOBo9UA@mail.gmail.com>
- <CACRpkdZRp-DFQgb3=Ut27DHd1w11_aEY0HbLjJHob=C5Ek-dyw@mail.gmail.com>
- <Zh6FkejXcwBTAqIR@smile.fi.intel.com>
- <CAMRc=MeXV4_MT5_DKYtHqO+324dFJnr+Y1UtR9w9mj-y2OOqAw@mail.gmail.com>
- <Zh-MMAjf6hhNOCpL@smile.fi.intel.com>
- <CAMRc=MfJdfwP7=a3govCcj8XHR7uPwCf2BA+BiWqif74pW5u8A@mail.gmail.com>
+	s=arc-20240116; t=1713441259; c=relaxed/simple;
+	bh=CG4gMAT/u+dqzVOE7SFDWH6+kKzOmYoWtiKUTwuXNGM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Xtd0QMW5aD3Sn4OOyxeRn1XzUeC6nB0Uzg6qYHULoFAEGVDbNzuFcL59fHyU+XLnlpfG88q3r2RiIlYAzA/n9lUPh24/qQ72DKsvFNHIidn1Na1gdr2O5RJ2IY+5FHUpUa2yaPrqRfsu+kepXoZpU/Tppxle7cXg5np3q5ewfhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VKx1m0VDDzwSdL;
+	Thu, 18 Apr 2024 19:51:08 +0800 (CST)
+Received: from kwepemi500024.china.huawei.com (unknown [7.221.188.100])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4C358180080;
+	Thu, 18 Apr 2024 19:54:12 +0800 (CST)
+Received: from [10.174.179.163] (10.174.179.163) by
+ kwepemi500024.china.huawei.com (7.221.188.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 18 Apr 2024 19:54:11 +0800
+Message-ID: <442a67cb-8f1c-f6ac-98c1-ef97db52d5a2@huawei.com>
+Date: Thu, 18 Apr 2024 19:54:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2] pinctrl: devicetree: fix refcount leak in
+ pinctrl_dt_to_map()
+Content-Language: en-US
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+CC: <linus.walleij@linaro.org>, <dan.carpenter@linaro.org>,
+	<linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<liwei391@huawei.com>
+References: <20240418113459.4182749-1-zengheng4@huawei.com>
+ <ZiEGzuVzV_fV52DR@smile.fi.intel.com>
+From: Zeng Heng <zengheng4@huawei.com>
+In-Reply-To: <ZiEGzuVzV_fV52DR@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfJdfwP7=a3govCcj8XHR7uPwCf2BA+BiWqif74pW5u8A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi500024.china.huawei.com (7.221.188.100)
 
-On Wed, Apr 17, 2024 at 08:39:52PM +0200, Bartosz Golaszewski wrote:
-> On Wed, Apr 17, 2024 at 10:45 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Apr 16, 2024 at 11:07:58PM +0200, Bartosz Golaszewski wrote:
 
-...
+在 2024/4/18 19:41, Andy Shevchenko 写道:
+> On Thu, Apr 18, 2024 at 07:34:59PM +0800, Zeng Heng wrote:
+>> If we fail to allocate propname buffer, we need to drop the reference
+>> count we just took, otherwise it will lead reference leak. Here the
+>> error exit path is modified to jump to the err label and call
+>> pinctrl_dt_free_maps() which would drop the counter.
+>>
+>> In the meantime, if it is found that the property 'pinctrl-0' is not
+>> present, ENODEV is returned and also jump to the err label and call the
+>> free function, in case the Smatch tool complains.
+>> ---
+> You forgot a changelog, but I think this needs to be a followup.
 
-> > Again, the problem now is only in open source / open drain configurations
-> > and there are only a few users of these flags _in kernel_. I do not see
-> > why it can not be done in one or two evenings time range.
-> 
-> So you know what needs doing. I'm at a conference now, I'll be off for
-> a week in April and I also have another conference scheduled for May.
-> If you believe this needs addressing urgently, then I suggest you do
-> it right. Otherwise, I'll get to it when I have the time.
-> Unfortunately my TODO list runneth over. :(
+Oops, the resend patch would come soon.
 
-I have started already as you may have noticed.
 
-> But I have to say, I suspect it won't be as easy as you present it
-> because we have so many build configs that may fail.
+Thanks,
 
-Let's see (with a hope)...
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Zeng Heng
 
 
