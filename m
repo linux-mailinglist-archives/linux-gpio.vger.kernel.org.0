@@ -1,116 +1,114 @@
-Return-Path: <linux-gpio+bounces-5688-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5689-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 714E48AAF4C
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 15:27:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96EB68AAF51
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 15:29:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA9CD1C22316
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 13:27:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C92841C2257E
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 13:29:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2EDE1272DC;
-	Fri, 19 Apr 2024 13:27:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E2BF128387;
+	Fri, 19 Apr 2024 13:29:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qekj9SK+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="doKKNFpX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2415685943;
-	Fri, 19 Apr 2024 13:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02BA85943
+	for <linux-gpio@vger.kernel.org>; Fri, 19 Apr 2024 13:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713533267; cv=none; b=CzAQ2elanqSEnj21G8JJ5ktXqD2r+lbOyyqMmQSSeNAq7zUkaVIZTk1uD90PR/zjMNMp4qgQeQdET83EoQ7dpSjvFQb/rvCINFN6lNMC2pAoD+CyHr0le6TawErGDuWnM0EVqSIomNyw1eEzATDuP/+rlr0bg7ydPQY7C/65b1A=
+	t=1713533367; cv=none; b=VqMguFH6whgbjtBh9l9GmtLj2jVS0jwgQPYJpTy5YzbJkIkuXCz0aDi74oOQ8Uuif4de7rg0f7yNFgl+WQwZUTK7NX0iT3NE3tvx+PQHmZ683l5v+CGJcm65IW7qZt7yIUUM938SW8gnmXbo7tbNCQgzQtkk4Gdrll+tZhwt1fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713533267; c=relaxed/simple;
-	bh=tAjbLsXIapgYTL9f7raZF2mp3g+wwb4J9qj9tlHlRZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iwq8khHrohCRHEg+QJeF2g8pFhj245us4ke+Qr6AlTo+RNIOQGS4jA6VcK7e0R5mcNbGckKnfSupiCyVTNa7OAu575+l5fJ76TCHzU3XVFhD1Fq2MGMAvpPCc/Zovog3ZL02ymPgZ7sWkTL1iVkbpcF40KLMZXwaJM3kP1BOOj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qekj9SK+; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713533266; x=1745069266;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tAjbLsXIapgYTL9f7raZF2mp3g+wwb4J9qj9tlHlRZE=;
-  b=Qekj9SK+/zK4PL8oJ97/ZmfmuTsNXRmYLpFDa1J1SCf1Q9yGarfIuqkr
-   MT9DdL+eONuaEHSK9R16mA6JP5LQLA5vg6qVVooGcM/DvuAxIuuK0XgnC
-   Va3yyb3Zgn+5UoRCuyHvxa5k7/67+TOms+tn9zauN+lvaCfCe1CMARm42
-   diEDaVaG8IwFVhWjAqLjZtXRiqIV2LutaTv/fGJ8GuLPUhVL1BUjzFuqM
-   uQeX5f0uC/aAu0g7gD+J5ttXtbrNCrPBbLPSFCK892G+019BGqaq2hZ3V
-   w+/RfXu3gx1S2B8X6vSx0P0VMQuSMTGXxyi69Q9//WX2cjkIzIf7yp8YR
-   Q==;
-X-CSE-ConnectionGUID: fqTkFCcZQaKoK1wI+CP/vA==
-X-CSE-MsgGUID: 6kXZDVLbRiKTjT/c2l7fUQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="20524795"
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="20524795"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:27:45 -0700
-X-CSE-ConnectionGUID: 0giGa5KkRW6LbE4k6icGeA==
-X-CSE-MsgGUID: m+WgrNILSK+WJGx5ZDemgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,213,1708416000"; 
-   d="scan'208";a="23835138"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 06:27:41 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rxoHC-00000000jGq-0TsA;
-	Fri, 19 Apr 2024 16:27:38 +0300
-Date: Fri, 19 Apr 2024 16:27:37 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Jiawen Wu <jiawenwu@trustnetic.com>
-Cc: brgl@bgdev.pl, bartosz.golaszewski@linaro.org, elder@linaro.org,
-	geert+renesas@glider.be, linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	paulmck@kernel.org, warthog618@gmail.com, wsa@the-dreams.de
-Subject: Re: [PATCH v3 00/24] gpio: rework locking and object life-time
- control
-Message-ID: <ZiJxSeao5Zcv9KdF@smile.fi.intel.com>
-References: <02a101da9227$bda04cb0$38e0e610$@trustnetic.com>
+	s=arc-20240116; t=1713533367; c=relaxed/simple;
+	bh=7JAiJ5Etf3MuJKuNZBjkja2+rCHW1cnBdM4LUduqTKQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rJLjjIzKQ71OOQ3b3Dtvoepb9o6vlZhxnRm0j5FPwpYk/3q2kiUzFuQqqygLzm0SRTqMsOcRwZPNKHo3hZs/Q+ulJCAhHdsovDt65wmCqh5F39S2TnMXJ+g70eg4F7mJHKFrWL+OspZApgWFuCJzRNxxEzStXzlvwVXIXi96y2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=doKKNFpX; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-61ae4743d36so23182817b3.2
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Apr 2024 06:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713533365; x=1714138165; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7JAiJ5Etf3MuJKuNZBjkja2+rCHW1cnBdM4LUduqTKQ=;
+        b=doKKNFpXWbFPX9Hk7DLkM9Zs03XuC/xLc1N2FAiVqVzFml+x+GA0Sd57E747W7pqXs
+         8hg6JSR6s1ii8m5DeiT/LCpPNsZfJLHxHOB7AF8QBNhBgXlz2AxnQm1MOWpOnSFndsIj
+         hB8tgllVCjXxje8dv2cBH9Qc9agmXUjz0Z/JxDmzolY+9YUhrXEwbbbtLxcDwBHiAHto
+         O0ZRcbrAlifHDC9X685pTo38FLoFL7BjR92BLEZDcGTnpJzfPso7G9BKB0Blbf1zOANY
+         6EankST9bH1KDEr6mO3Tb3cq8TIDpXI0oraRwCbo1yM3y4i4mTUITjqXkybYPRld/Gu0
+         d9cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713533365; x=1714138165;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7JAiJ5Etf3MuJKuNZBjkja2+rCHW1cnBdM4LUduqTKQ=;
+        b=eA4AEzpeEFhzUje6S0sDTkSAqECdbToPtNZ/GVIabceFfb0wTar9dcaR8tNxHbx1sn
+         Ztl7MVfrSoFjv7iQy6D4uXE1yaiwoByfly9p1CHUA4Rifh3xnChPUrFMpL4ndAYXAqqE
+         19DH++HVHkui7bk6DX2WykGzkhAlz2yTkCzBTwnfuJ5Paff7AHX8UlA4mhuT5OhSXA0Q
+         MAI4TDtZNIEWrGGa9qMKMACeUtQ4ZvNIMzebvtHaPtJQQaS0x/QaOcYUpp0GC53ldqtu
+         4svSU4S8Vo9z0sD+pLF5cUHznbpAdd1O0ZOz0t+UHyomAYbA5hxaSQhUhqOAI6N/V21d
+         aT6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXyTwo2KdJAt/EKmDbvphlwDerOIGPPgVDUCrx7W3bxXjj30RIcAv3vfJ1MXnTcYlKtFGh8wPGENyapvJs0XXGjA9uF0InMPFj36Q==
+X-Gm-Message-State: AOJu0Yy6WORval/lxPzA4/+6xIOZBlwFXfVVaFvXILZYPj26rG8GM2bs
+	JwWgiWueW+eLaJUDMr6/3FPJAqO0VqV7BLCoYjN5VKH4o/bjsgAVAcjPPBA39yNyGd68WhLJUtL
+	cvv/j3DMdGzG3SkT6DuaR4bdoXsxnxH7SXG2b1Q==
+X-Google-Smtp-Source: AGHT+IFgMs/8AHU4XdiOhdZmmG+AX6lMDzgX2zHpudUuHQbXt36lKVWz9la2Pxkh/EmTXCCM3Oc22brh0qqFa3E8lKQ=
+X-Received: by 2002:a25:86c7:0:b0:de0:d45f:7c5 with SMTP id
+ y7-20020a2586c7000000b00de0d45f07c5mr1937027ybm.20.1713533364785; Fri, 19 Apr
+ 2024 06:29:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02a101da9227$bda04cb0$38e0e610$@trustnetic.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240408231727.396452-1-andriy.shevchenko@linux.intel.com>
+ <20240408231727.396452-2-andriy.shevchenko@linux.intel.com>
+ <CACRpkdYaXVvtt3b9rFxU4ZNShD17Bm4XU9X3h4dY501iJy3kPA@mail.gmail.com>
+ <ZhlSaFWlbE6OS7om@smile.fi.intel.com> <CAMRc=Me489H-mTfT1hfUsY47iKwoaVsf6sgkiBwBVkxJOBo9UA@mail.gmail.com>
+ <CACRpkdZRp-DFQgb3=Ut27DHd1w11_aEY0HbLjJHob=C5Ek-dyw@mail.gmail.com>
+ <Zh6FkejXcwBTAqIR@smile.fi.intel.com> <CAMRc=MeXV4_MT5_DKYtHqO+324dFJnr+Y1UtR9w9mj-y2OOqAw@mail.gmail.com>
+ <Zh-MMAjf6hhNOCpL@smile.fi.intel.com> <CAMRc=MfJdfwP7=a3govCcj8XHR7uPwCf2BA+BiWqif74pW5u8A@mail.gmail.com>
+In-Reply-To: <CAMRc=MfJdfwP7=a3govCcj8XHR7uPwCf2BA+BiWqif74pW5u8A@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 19 Apr 2024 15:29:13 +0200
+Message-ID: <CACRpkdYHuw1K1VYbTH3YzvmZevt_whNsd1ce58wCSd1+B1np5A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpiolib: Fix a mess with the GPIO_* flags
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Arend van Spriel <arend.vanspriel@broadcom.com>, Kalle Valo <kvalo@kernel.org>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 19, 2024 at 03:03:54PM +0800, Jiawen Wu wrote:
-> Hi Bartosz Golaszewski,
-> 
-> I ran into a kernel crash problem when I pull the latest net-next.git, and
-> finally it was found that is caused by this patch series merged.
+On Wed, Apr 17, 2024 at 8:40=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-Can you bisect further, i.e. which patch (now a commit message) is the culprit?
+> Unfortunately my TODO list runneth over. :(
 
-> The kernel crashed because I got gpio=0 when I called irq_find_mapping()
-> and then struct irq_data *d=null, as my driver describes:
-> 
-> 	int gpio = irq_find_mapping(gc->irq.domain, hwirq);
-> 	struct irq_data *d = irq_get_irq_data(gpio);
-> 
-> 	txgbe_gpio_irq_ack(d);
-> 
-> The deeper positioning is this line in __irq_resolve_mapping().
-> 
-> 	data = rcu_dereference(domain->revmap[hwirq]);
-> 		
-> So, is it the addition of SRCU infrastructure that causes this issue?
+When in situations like this, patch the objective into
+drivers/gpio/TODO so others can pick it up, that's why
+I created the file, and it has actually helped a bit!
 
-Do you have a full traceback / Oops message to share?
+IMO you don't even need to send edits to this file for
+review, it's just a work document. Just edit and commit
+it in your tree.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
 
