@@ -1,148 +1,157 @@
-Return-Path: <linux-gpio+bounces-5681-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5682-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48B828AADCF
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 13:40:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3C058AAE91
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 14:35:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A6311C208E0
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 11:40:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31CE01C20F4F
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 12:35:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F2AC823A9;
-	Fri, 19 Apr 2024 11:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TxTc2htZ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DB387F7C7;
+	Fri, 19 Apr 2024 12:35:22 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0453F8F6;
-	Fri, 19 Apr 2024 11:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D08F5812F;
+	Fri, 19 Apr 2024 12:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713526838; cv=none; b=Nx9Yk1CHn1iiOnbbm11vGVmJOk1zcYN6XZIZ16t/8sVwazlj9wx5ZcyjGhmxQunoWktclaMWziJYbOGNHU3CIeWlEFa5zDzpMZ9IrwnbFfI4lRiBCC9RY050Nvr1Dqt3CkAkuhyTZRqcigxD08A/0IyCk8d2GfNT4RBJfsc+vpI=
+	t=1713530121; cv=none; b=P5qhuBfEj0/joa1GqqsHRrhxgV0vcrHO0M4zyxtgQLO04IcAPe95wJ9ncmoeNTQ+BUG9pW4BnN1pRF/vuJEAHXVP8juAgqvOV1Ldnij2T/VOyVu8mNSjjaAX/1LfHEWrVQb8Pgecks09PoMZR3QVsulllfh2ZHexkqIqj34ffgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713526838; c=relaxed/simple;
-	bh=67tAD9dPGFnocIYPgAQfazAvvpd43UU0V/pMhoUAdYo=;
-	h=Content-Type:Mime-Version:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=pyQAY9msep0S5MyiCLDFlbrZ+znCl6GXY0w9waEeJ+TDfTuMK3HbGN6xI9KrmtyhfhWuXcseD+QZVzAlnzBCYC1jW3kohw3jaiD4P1ZToanUnZXMiIUEb9JAT48eYz0EcH5eHSggeJTRxSaoApvNMGp+4gMB/zghdKAeHvgQFPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TxTc2htZ; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51acb95b892so399542e87.2;
-        Fri, 19 Apr 2024 04:40:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713526835; x=1714131635; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KCpSylsBBU0U0ink6MW+pyy6ZLptHlf0p+v10lZOwHU=;
-        b=TxTc2htZ7OfSWDf22sQUBYZEtZI0nV4YPpi0dkJe+kSGBUZ7gXGe4vGD/dPY4oouvy
-         8lQvv38MkQy6mzpN4t12Oi5VlrCJ383icUDgurtcI7SSg3GgPG0xSCDJ1nB8/pRJ78uE
-         9GPN/c5rYzhCS52t4eJMD9/lV3vIx/XUfMgY5380UVYYiZw+4vf82eexncEK28yU4raZ
-         L8Rx3Y/S5IWbigRuHiIrC046Ox1LLKU+IPvkGzEwaVsO300NttCTJkUzaf+1VHdXs/0S
-         fSYUVD3iPZ/vXNAqHkq3qMY2W3Ynq65VZ4gOBnEYbk/qjlE49xA/g8t3UtnpCkrjK1t9
-         tL9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713526835; x=1714131635;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KCpSylsBBU0U0ink6MW+pyy6ZLptHlf0p+v10lZOwHU=;
-        b=LBK21c8MEXiM6oB4EFHlGx+bV2MA8Icyqi8JulmY1miU1Dd/ykV2l3uqF0d9BYBdcO
-         //+ue9Y6bV1Tg48b/0PmpBmtNpLHS3Q1MqsH/naJUw3VKl2qztBOOdYwkNqKmAt6/kvt
-         fNvUCPc1E0XlwiHxKJbq9MgZeDK4NDn5xjxzkK3KqpIXCj1b/TfReLe0DsoK69Fc3Z4J
-         qt3VlrfjbqBKveQZ1MLJjQfe8uIR2knU+C+486wVbdxtfqlEj0iATE0GdnqItR8M8mIX
-         EbCjAhTFRqNP0dKRNp9OSbCb2JZoZESnBhzyHNiVckU5pwNRMnuFgSKJ3SyUPl23kPWh
-         3BZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBLFOKJGPfANrCouQdhWLVoFKI+sLvM5W5mG4MviLCi+/HyFAfC6Jt3jwGqsu+6YFcwPXmk4x2OWvj++DJkB1OV+nr8kfJqR0dIOhA8nKhTA3obNWLXKK2dEsJmknjJwb3Wh2Jv2aiWVZm95fR3MCNyRUUFOBXMeywMrIyPfUneEIXU40T
-X-Gm-Message-State: AOJu0Yz9keriRx2JVkzGaCu8SoALqQRAdznx3CtdiH/7sACvi6fW0aRI
-	bZrT1O7uP3/6ugms/lajtUgKfzojf6Oezv526DKvKBXCIUSwoQen
-X-Google-Smtp-Source: AGHT+IGXx10cQyWuXmKeXjxTiJxMX6EMsrsI/7/4aIqi/FyvDkB5maihBkBnT5nDmKZVmAC6L4MjNw==
-X-Received: by 2002:ac2:5618:0:b0:51a:ca2d:eeb7 with SMTP id v24-20020ac25618000000b0051aca2deeb7mr738796lfd.14.1713526834339;
-        Fri, 19 Apr 2024 04:40:34 -0700 (PDT)
-Received: from localhost (p200300e41f162000f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f16:2000:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id v22-20020a1709064e9600b00a55865b2760sm702466eju.30.2024.04.19.04.40.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Apr 2024 04:40:33 -0700 (PDT)
-Content-Type: multipart/signed;
- boundary=83f6e9dfc46da42c4afe7fb111a4258e10f079b07429dbcb59380d138491;
- micalg=pgp-sha256; protocol="application/pgp-signature"
+	s=arc-20240116; t=1713530121; c=relaxed/simple;
+	bh=dxcXW3Z5o69jrxta3xxO8E57aeJDmyUL46fXb1HiMZg=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=cqbH3BrJBqww2Y5WWLW+TX2vZMOpkNGO3Pq95hH1h1pQNfq50gEjuLA+0h8hSRhP+D61IGNHGWr2E+T2rskWkjY5FIBv4PAoiyx8r293xuXZ9yRaUsS9uTbX6Lx82BQHWz3ciiZwjMuQPg0ML4zUunq1Ahr1YazbhFyzOcvoH8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
+Received: from localhost.localdomain (unknown [82.64.135.138])
+	by smtp2-g21.free.fr (Postfix) with ESMTPS id 29DC82003CC;
+	Fri, 19 Apr 2024 14:35:08 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+	id 4D89840039; Fri, 19 Apr 2024 14:34:12 +0200 (CEST)
+Date: Fri, 19 Apr 2024 14:34:12 +0200
+From: Etienne Buira <etienne.buira@free.fr>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, etienne.buira@free.fr
+Subject: [PATCH v2] gpio-syscon: do not report bogus error
+Message-ID: <ZiJkxBU3bYNWOdbK@Z926fQmE5jqhFMgp6>
+Mail-Followup-To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, etienne.buira@free.fr
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Fri, 19 Apr 2024 13:40:33 +0200
-Message-Id: <D0O2KG09X87O.1UR0G6BXCEJ5E@gmail.com>
-Cc: <mochs@nvidia.com>, <csoto@nvidia.com>, <jamien@nvidia.com>,
- <smangipudi@nvidia.com>
-Subject: Re: [PATCH] gpio: tegra186: Fix tegra186_gpio_is_accessible() check
-From: "Thierry Reding" <thierry.reding@gmail.com>
-To: "Prathamesh Shete" <pshete@nvidia.com>, <linus.walleij@linaro.org>,
- <brgl@bgdev.pl>, <jonathanh@nvidia.com>, <treding@nvidia.com>,
- <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
-References: <20240416123501.12916-1-pshete@nvidia.com>
-In-Reply-To: <20240416123501.12916-1-pshete@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---83f6e9dfc46da42c4afe7fb111a4258e10f079b07429dbcb59380d138491
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Do not issue "can't read the data register offset!" when gpio,syscon-dev
+is not set albeit unneeded.  gpio-syscon is used with rk3328 chip, but
+this iomem region is documented in
+Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml and
+does not require gpio,syscon-dev setting.
 
-On Tue Apr 16, 2024 at 2:35 PM CEST, Prathamesh Shete wrote:
-> The controller has several register bits describing access control
-> information for a given GPIO pin. When SCR_SEC_[R|W]EN is unset, it
-> means we have full read/write access to all the registers for given GPIO
-> pin. When SCR_SEC[R|W]EN is set, it means we need to further check the
-> accompanying SCR_SEC_G1[R|W] bit to determine read/write access to all
-> the registers for given GPIO pin.
->
-> This check was previously declaring that a GPIO pin was accessible
-> only if either of the following conditions were met:
->
->   - SCR_SEC_REN + SCR_SEC_WEN both set
->
->     or
->
->   - SCR_SEC_REN + SCR_SEC_WEN both set and
->     SCR_SEC_G1R + SCR_SEC_G1W both set
->
-> Update the check to properly handle cases where only one of
-> SCR_SEC_REN or SCR_SEC_WEN is set.
->
-> Fixes: b2b56a163230 ("gpio: tegra186: Check GPIO pin permission before ac=
-cess.")
-> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-> ---
->  drivers/gpio/gpio-tegra186.c | 22 ++++++++++++++--------
->  1 file changed, 14 insertions(+), 8 deletions(-)
+It has been suggested to automatically detect if node has a valid
+parent, but that would defeat the purpose of error message, for example
+arch/arm/boot/dts/ti/keystone/keystone-k2g.dtsi could then be used
+without gpio,syscon-dev, and lead to funny results without error
+message.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+It has been tried to mandate use of gpio,syscon-dev, but that raised
+objection.
 
---83f6e9dfc46da42c4afe7fb111a4258e10f079b07429dbcb59380d138491
-Content-Type: application/pgp-signature; name="signature.asc"
+So while this patch may be kludgy, it looks the less bad to address
+the spurious dev_err call.
 
------BEGIN PGP SIGNATURE-----
+v2:
+  - changed flag name
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmYiWDEACgkQ3SOs138+
-s6FEphAAmS5L755Tb0YYFIl6RB74eVji3nmDr+ejsQxu0Oaj3NW+Ms1lzxjIuuCy
-eVTsEAaoaIS6eZA1mX0MMqXJ7cEao3IqG5jGXPer8DxYD8JxW523Pu2N7lG1+FoH
-Xr+jozaaTqR6pAJu0/E2eYa38xNkUDZmydTPTQJSz35wrBDBP+nGZ9llaCsYIf2B
-yoF0DAd/ByUig48bnROxBKE6Wqay7oEJmUFY0/Vb/Ef20qqOnTc2TADVcsWkzIsQ
-2e6f5hffAxQ+bMYVgfUZ77z8Tv2Ib0SQFIoB97w+IyLR//5o/c00d1Lii1L3lyBf
-Cu0K0I3tyRa4lh2k7BIXaFyUreJE9Z/KJdRC+OQbeBWWn0B9AXgGAsuyAqMGblsj
-OVg7K8jsjTW5EYEE/D8QxlU+U9QU7KKH/viXvAN4z8yiXV5Iq/EmygrMyy+xRyrR
-o4TOpe8mCHaPHb7EJWDxG6+JaAF14MGyNlBkYG4cwolByaTH8neJixlUQqywwWAj
-eHmymvJa+4r3Brrnnjj9340V+3OnB26GB1HFOohqO4gdUXciYfEhyBeRx9y0Y7pG
-SSje8X/HymrXzJcOJOr/mfBzsnL7TGYbXH9qsU+pNWm4C03ZGK7o+ITYj0fwJxuZ
-DlqqXG9jjTaiIdLYwpetbFTH3d5nEnQmCh5MOD/6C/Dchs+vtjw=
-=XyTt
------END PGP SIGNATURE-----
+Signed-off-by: Etienne Buira <etienne.buira@free.fr>
+---
+ drivers/gpio/gpio-syscon.c | 35 ++++++++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
 
---83f6e9dfc46da42c4afe7fb111a4258e10f079b07429dbcb59380d138491--
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+index 6e1a2581e6ae..4f103ce26019 100644
+--- a/drivers/gpio/gpio-syscon.c
++++ b/drivers/gpio/gpio-syscon.c
+@@ -13,9 +13,10 @@
+ #include <linux/regmap.h>
+ #include <linux/mfd/syscon.h>
+ 
+-#define GPIO_SYSCON_FEAT_IN	BIT(0)
+-#define GPIO_SYSCON_FEAT_OUT	BIT(1)
+-#define GPIO_SYSCON_FEAT_DIR	BIT(2)
++#define GPIO_SYSCON_FEAT_IN		BIT(0)
++#define GPIO_SYSCON_FEAT_OUT		BIT(1)
++#define GPIO_SYSCON_FEAT_DIR		BIT(2)
++#define GPIO_SYSCON_FEAT_USE_PARENT	BIT(3)
+ 
+ /* SYSCON driver is designed to use 32-bit wide registers */
+ #define SYSCON_REG_SIZE		(4)
+@@ -27,7 +28,9 @@
+  * @flags:		Set of GPIO_SYSCON_FEAT_ flags:
+  *			GPIO_SYSCON_FEAT_IN:	GPIOs supports input,
+  *			GPIO_SYSCON_FEAT_OUT:	GPIOs supports output,
+- *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction.
++ *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction,
++ *			GPIO_SYSCON_FEAT_USE_PARENT:	gpio,syscon-dev do not
++ *				have to be set, parent regspace will be used.
+  * @bit_count:		Number of bits used as GPIOs.
+  * @dat_bit_offset:	Offset (in bits) to the first GPIO bit.
+  * @dir_bit_offset:	Optional offset (in bits) to the first bit to switch
+@@ -149,7 +152,7 @@ static void rockchip_gpio_set(struct gpio_chip *chip, unsigned int offset,
+ 
+ static const struct syscon_gpio_data rockchip_rk3328_gpio_mute = {
+ 	/* RK3328 GPIO_MUTE is an output only pin at GRF_SOC_CON10[1] */
+-	.flags		= GPIO_SYSCON_FEAT_OUT,
++	.flags		= GPIO_SYSCON_FEAT_OUT | GPIO_SYSCON_FEAT_USE_PARENT,
+ 	.bit_count	= 1,
+ 	.dat_bit_offset = 0x0428 * 8 + 1,
+ 	.set		= rockchip_gpio_set,
+@@ -221,19 +224,21 @@ static int syscon_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->syscon))
+ 		return PTR_ERR(priv->syscon);
+ 
+-	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
+-					 &priv->dreg_offset);
+-	if (ret)
+-		dev_err(dev, "can't read the data register offset!\n");
++	if (!(priv->data->flags & GPIO_SYSCON_FEAT_USE_PARENT)) {
++		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
++						 &priv->dreg_offset);
++		if (ret)
++			dev_err(dev, "can't read the data register offset!\n");
+ 
+-	priv->dreg_offset <<= 3;
++		priv->dreg_offset <<= 3;
+ 
+-	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
+-					 &priv->dir_reg_offset);
+-	if (ret)
+-		dev_dbg(dev, "can't read the dir register offset!\n");
++		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
++						 &priv->dir_reg_offset);
++		if (ret)
++			dev_dbg(dev, "can't read the dir register offset!\n");
+ 
+-	priv->dir_reg_offset <<= 3;
++		priv->dir_reg_offset <<= 3;
++	}
+ 
+ 	priv->chip.parent = dev;
+ 	priv->chip.owner = THIS_MODULE;
+
+base-commit: 4cece764965020c22cff7665b18a012006359095
+-- 
+2.43.0
+
 
