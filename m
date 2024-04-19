@@ -1,157 +1,172 @@
-Return-Path: <linux-gpio+bounces-5682-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5683-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3C058AAE91
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 14:35:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C50868AAF1A
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 15:11:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31CE01C20F4F
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 12:35:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FD62282274
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 13:11:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DB387F7C7;
-	Fri, 19 Apr 2024 12:35:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CFE486131;
+	Fri, 19 Apr 2024 13:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WgaDV7KP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D08F5812F;
-	Fri, 19 Apr 2024 12:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9118D85C74
+	for <linux-gpio@vger.kernel.org>; Fri, 19 Apr 2024 13:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713530121; cv=none; b=P5qhuBfEj0/joa1GqqsHRrhxgV0vcrHO0M4zyxtgQLO04IcAPe95wJ9ncmoeNTQ+BUG9pW4BnN1pRF/vuJEAHXVP8juAgqvOV1Ldnij2T/VOyVu8mNSjjaAX/1LfHEWrVQb8Pgecks09PoMZR3QVsulllfh2ZHexkqIqj34ffgo=
+	t=1713532297; cv=none; b=m7Sn5Tcxna13Yzr96dJIYjAVeIe5Twjpk9OC0madcj15NnhBoGOk59CA1iFHQTeJCpFeeP5GEVM4Mp1s3l9ALKizReNq9+PwRndPZH9B/Od9K0Dfgg42+/LbV6stumHXCWD7JY0Oraz23qXgWT8NIEgWask0+7BGsqzBQpHe7y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713530121; c=relaxed/simple;
-	bh=dxcXW3Z5o69jrxta3xxO8E57aeJDmyUL46fXb1HiMZg=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=cqbH3BrJBqww2Y5WWLW+TX2vZMOpkNGO3Pq95hH1h1pQNfq50gEjuLA+0h8hSRhP+D61IGNHGWr2E+T2rskWkjY5FIBv4PAoiyx8r293xuXZ9yRaUsS9uTbX6Lx82BQHWz3ciiZwjMuQPg0ML4zUunq1Ahr1YazbhFyzOcvoH8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
-Received: from localhost.localdomain (unknown [82.64.135.138])
-	by smtp2-g21.free.fr (Postfix) with ESMTPS id 29DC82003CC;
-	Fri, 19 Apr 2024 14:35:08 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-	id 4D89840039; Fri, 19 Apr 2024 14:34:12 +0200 (CEST)
-Date: Fri, 19 Apr 2024 14:34:12 +0200
-From: Etienne Buira <etienne.buira@free.fr>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, etienne.buira@free.fr
-Subject: [PATCH v2] gpio-syscon: do not report bogus error
-Message-ID: <ZiJkxBU3bYNWOdbK@Z926fQmE5jqhFMgp6>
-Mail-Followup-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, etienne.buira@free.fr
+	s=arc-20240116; t=1713532297; c=relaxed/simple;
+	bh=GOKCVMSTNaA6lXAE7yggz6r1QECEGrAck2tn/InTWJw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dPitlwsFen1xo5WncBhWFVlhsgNsEO6FqB+K/6+xHd4y0WyUwRqdcgzQaWx6wxtyHzE8MENpZNU31QXk3XHgB2TMz6hpLWW0ElSpDVENzyDeTBjJYKGL6GrIOKMlHUCLl/GYpb/HOJlurqxABTZfy4n4eiuEMt+oCN4QBQaJ+fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WgaDV7KP; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc74435c428so2161403276.2
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Apr 2024 06:11:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713532294; x=1714137094; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UXgtDkC8EaDAy1lPCRjBn5ZbvljYuzgvsv6Zpn67Xbo=;
+        b=WgaDV7KPI/DqlpC3lj32LxOEKl0ZvaeDtVhsouVSXj28E4tFlzLXnvY03uU/77B6A4
+         qMoFFw2csNEVAFKlrglHZ+pa97WJcuVX3TRhRvkEaWwofzstI2BSfnCLIQEKWIC7+Nfd
+         VKGmzgk9aR5/XWdktkRvpaHuy+cg5/gpYri16DDZ4aWi6NSX08c8FG2xdutTuH4UpcSN
+         ZkiRQjoe4seS04JGUEhXnLC9smU7XwbGngkAkB0/81X2WrJm85FIoSdRgMDy/Rfz/WpK
+         gqWweO6UcUX6wC0C2b/6CSF9FIgTiiKjx2F4Pwvvu0HbQAlzNtyUDpbk9T7rb8wzz2zf
+         0XRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713532294; x=1714137094;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UXgtDkC8EaDAy1lPCRjBn5ZbvljYuzgvsv6Zpn67Xbo=;
+        b=Gx65/qH1fxNFrl++6CkSN5nc7XgwFvBzOmuFm/1SGttHdc+u30Ij4zP7caz+yErlfs
+         MroLz2Fo964neXYPKAx/kjyPE3s5ClKo5qAIqevhC/qypPHkNqeQT8udylh9jiBnFqhd
+         5FpKFf7xyMqhnqxwzWPhc7NGkmUjIko1GxaBDV1THn//mfBuCLLB0KchcxDTbsZH39W+
+         XX3vKrp8UQkKkWjLST8aVEeHdG8NMvgtVYA3YeLKr+ZjM8CgKNWqlu2JUj4jfUf12UZa
+         d0SibmvbFBQFxQXeT2NopKz5Iwbs/glCBhET69SBYp1B81HtxZCBc/rl0u0fkiIyGPou
+         79SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWrr2nREWgPiHSx/lpsaKiEpNDocP6UU7K0TIrI3N5RAQd8txASXrMihT7dj5w/XlhVYst/85xKyUN/9HeqrPzyp4WzUsdx46SUFw==
+X-Gm-Message-State: AOJu0Yx1kmKNhO2hg/shWB6oiRFyIsjWJFPE+hrEk702XNVaj/5afZrf
+	+VSG+BssIFMcHEOppsSWHnUJugahzTP7f53qaYTsV3n9ofP/j8cXUs0u3dtVogsmBBaCZyUK7fJ
+	cLMnwGBQ1vN60tWPsofZBx9ZRSgIjpqdwgOATLw==
+X-Google-Smtp-Source: AGHT+IF7fJMloHUkqS9dzr6pPah2k0itIUV5Ij6WynNDjU3f/phN7+DsgIDQHGZsEmuabnVTyJSGAFDGXXkr6242mOE=
+X-Received: by 2002:a25:8548:0:b0:dc6:c32f:6126 with SMTP id
+ f8-20020a258548000000b00dc6c32f6126mr1857295ybn.22.1713532294482; Fri, 19 Apr
+ 2024 06:11:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240419080555.97343-1-aapo.vienamo@linux.intel.com>
+In-Reply-To: <20240419080555.97343-1-aapo.vienamo@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 19 Apr 2024 15:11:23 +0200
+Message-ID: <CACRpkdbSB+JTdhGXViWs-SmR3nUnm6dVXt3WzK-d4zFSz63XxQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Add Intel Granite Rapids-D vGPIO driver
+To: Aapo Vienamo <aapo.vienamo@linux.intel.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Do not issue "can't read the data register offset!" when gpio,syscon-dev
-is not set albeit unneeded.  gpio-syscon is used with rk3328 chip, but
-this iomem region is documented in
-Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml and
-does not require gpio,syscon-dev setting.
+Hi Aapo,
 
-It has been suggested to automatically detect if node has a valid
-parent, but that would defeat the purpose of error message, for example
-arch/arm/boot/dts/ti/keystone/keystone-k2g.dtsi could then be used
-without gpio,syscon-dev, and lead to funny results without error
-message.
+thanks for your patch!
 
-It has been tried to mandate use of gpio,syscon-dev, but that raised
-objection.
+The code is impeccable, not much to say about that.
+From that PoV the driver is finished.
 
-So while this patch may be kludgy, it looks the less bad to address
-the spurious dev_err call.
+I have some technical review comments:
 
-v2:
-  - changed flag name
+On Fri, Apr 19, 2024 at 10:07=E2=80=AFAM Aapo Vienamo
+<aapo.vienamo@linux.intel.com> wrote:
 
-Signed-off-by: Etienne Buira <etienne.buira@free.fr>
----
- drivers/gpio/gpio-syscon.c | 35 ++++++++++++++++++++---------------
- 1 file changed, 20 insertions(+), 15 deletions(-)
+> This driver provides a basic GPIO driver for the Intel Granite Rapids-D
+> virtual GPIOs. On SoCs with limited physical pins on the package, the
+> physical pins controlled by this driver would be exposed on an external
+> device such as a BMC or CPLD.
+>
+> Signed-off-by: Aapo Vienamo <aapo.vienamo@linux.intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 6e1a2581e6ae..4f103ce26019 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -13,9 +13,10 @@
- #include <linux/regmap.h>
- #include <linux/mfd/syscon.h>
- 
--#define GPIO_SYSCON_FEAT_IN	BIT(0)
--#define GPIO_SYSCON_FEAT_OUT	BIT(1)
--#define GPIO_SYSCON_FEAT_DIR	BIT(2)
-+#define GPIO_SYSCON_FEAT_IN		BIT(0)
-+#define GPIO_SYSCON_FEAT_OUT		BIT(1)
-+#define GPIO_SYSCON_FEAT_DIR		BIT(2)
-+#define GPIO_SYSCON_FEAT_USE_PARENT	BIT(3)
- 
- /* SYSCON driver is designed to use 32-bit wide registers */
- #define SYSCON_REG_SIZE		(4)
-@@ -27,7 +28,9 @@
-  * @flags:		Set of GPIO_SYSCON_FEAT_ flags:
-  *			GPIO_SYSCON_FEAT_IN:	GPIOs supports input,
-  *			GPIO_SYSCON_FEAT_OUT:	GPIOs supports output,
-- *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction.
-+ *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction,
-+ *			GPIO_SYSCON_FEAT_USE_PARENT:	gpio,syscon-dev do not
-+ *				have to be set, parent regspace will be used.
-  * @bit_count:		Number of bits used as GPIOs.
-  * @dat_bit_offset:	Offset (in bits) to the first GPIO bit.
-  * @dir_bit_offset:	Optional offset (in bits) to the first bit to switch
-@@ -149,7 +152,7 @@ static void rockchip_gpio_set(struct gpio_chip *chip, unsigned int offset,
- 
- static const struct syscon_gpio_data rockchip_rk3328_gpio_mute = {
- 	/* RK3328 GPIO_MUTE is an output only pin at GRF_SOC_CON10[1] */
--	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.flags		= GPIO_SYSCON_FEAT_OUT | GPIO_SYSCON_FEAT_USE_PARENT,
- 	.bit_count	= 1,
- 	.dat_bit_offset = 0x0428 * 8 + 1,
- 	.set		= rockchip_gpio_set,
-@@ -221,19 +224,21 @@ static int syscon_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->syscon))
- 		return PTR_ERR(priv->syscon);
- 
--	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
--					 &priv->dreg_offset);
--	if (ret)
--		dev_err(dev, "can't read the data register offset!\n");
-+	if (!(priv->data->flags & GPIO_SYSCON_FEAT_USE_PARENT)) {
-+		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
-+						 &priv->dreg_offset);
-+		if (ret)
-+			dev_err(dev, "can't read the data register offset!\n");
- 
--	priv->dreg_offset <<= 3;
-+		priv->dreg_offset <<= 3;
- 
--	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
--					 &priv->dir_reg_offset);
--	if (ret)
--		dev_dbg(dev, "can't read the dir register offset!\n");
-+		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
-+						 &priv->dir_reg_offset);
-+		if (ret)
-+			dev_dbg(dev, "can't read the dir register offset!\n");
- 
--	priv->dir_reg_offset <<= 3;
-+		priv->dir_reg_offset <<= 3;
-+	}
- 
- 	priv->chip.parent = dev;
- 	priv->chip.owner = THIS_MODULE;
+OK I get how it works, but not all the way right? We write these registers,
+and somehow that results on pins on a completely different piece of
+silicon in a different package driving some lines low/high?
 
-base-commit: 4cece764965020c22cff7665b18a012006359095
--- 
-2.43.0
+So ... can we write something about how the signal gets over there
+from where the driver is running? It needs to happen somehow, right?
 
+> +config GPIO_GRANITERAPIDS
+> +       tristate "Intel Granite Rapids-D vGPIO support"
+> +       depends on X86 || COMPILE_TEST
+> +       select GPIOLIB_IRQCHIP
+> +       help
+> +         Select this to enable GPIO support on platforms with the follow=
+ing
+> +         SoCs:
+> +
+> +         - Intel Granite Rapids-D
+> +
+> +         The driver enables basic GPIO functionality and implements inte=
+rrupt
+> +         support.
+> +
+> +         To compile this driver as a module, choose M here: the module w=
+ill
+> +         be called gpio-graniterapids.
+
+This help text is not as informative as the commit log. Write something
+about how the GPIO works here, too.
+
+> +static int gnr_gpio_configure_pad(struct gpio_chip *gc, unsigned int gpi=
+o,
+> +                                 u32 clear_mask, u32 set_mask)
+> +{
+> +       struct gnr_gpio *priv =3D gpiochip_get_data(gc);
+> +       void __iomem *addr =3D gnr_gpio_get_padcfg_addr(priv, gpio);
+> +       u32 dw;
+> +
+> +       if (test_bit(gpio, priv->ro_bitmap))
+> +               return -EACCES;
+> +
+> +       guard(raw_spinlock_irqsave)(&priv->lock);
+> +
+> +       dw =3D readl(addr);
+> +       dw &=3D ~clear_mask;
+> +       dw |=3D set_mask;
+> +       writel(dw, addr);
+> +
+> +       return 0;
+> +}
+
+Configure pad sounds like pin control so it's a bit of icky name.
+What it really does is configure the direction (in or out) for this
+GPIO pad. And it's not really the *pad* that is configured, right?
+It is the hardware *driver* for the pad, i.e. what is reflected in
+the GPIO line control register.
+
+Can you rename this:
+gnr_gpio_configure_direction()?
+
+With the above stuff addressed:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
 
