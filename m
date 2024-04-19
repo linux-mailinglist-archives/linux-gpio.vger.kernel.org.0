@@ -1,106 +1,114 @@
-Return-Path: <linux-gpio+bounces-5684-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5685-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 598AF8AAF1E
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 15:13:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42C178AAF36
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 15:20:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A0611C21CF2
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 13:13:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EDE0C1F23263
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 13:20:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3788E86130;
-	Fri, 19 Apr 2024 13:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55949128387;
+	Fri, 19 Apr 2024 13:20:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SmnJbJSd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gyxpWJ7D"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB228565E;
-	Fri, 19 Apr 2024 13:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0AD86651
+	for <linux-gpio@vger.kernel.org>; Fri, 19 Apr 2024 13:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713532416; cv=none; b=fugZd+Vdj8numwfdtbwUtC2tLghU5DGGDvDtFjDS7FR8POGBNT+hnsDWuM9wEZ+stMUz9UDv3kkuId4LAG+JizX1PsMW8kEtcVUv4gb5xHehYVCR1rDMpAt0LjdXeX5f7Xp0OB+U1+r7AbeMGYbFpxOwEhN9RXqAwsFtpqPsv0A=
+	t=1713532822; cv=none; b=pxHDgxx5Wl6wmbF6huyc/USAyRAlVS+RlVApHoL/VZOKF9kipqEjY7nwRl0sLcTc3WVWbx/Xae4nTECxtSh5hI9Ons7Srm0AU7K8o7kE9cYJ4h7gqkErw3fQ8bv55wv4seb8nABJmecmPi49hhqf+RsFP1Pa5/s1P3EyH4HA6AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713532416; c=relaxed/simple;
-	bh=MJ73iTnDL63VDAaoVci/EpuuDDKiIcZS/XQoD41BgO0=;
+	s=arc-20240116; t=1713532822; c=relaxed/simple;
+	bh=ukqNim2wR4zF3yUVwL5ebSYvcGgLz6CYpTrNBxxNrNU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ftLssyOfUmH/zA2RPwYFExzToJGKiRcwedM81dzx28Cw0MGsSaIvmGTv1AdvwzzwXStFEGjMKeCX/KI9GpGVWVj+RiLG5AxjNWQNtssjs3dzeh8JAti9gbnxe4bhn1iKNmJNJDwv+/N/TrsQmJql/TRF5NV/PkpJoZGekiLKt58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SmnJbJSd; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2da01cb187cso35517161fa.0;
-        Fri, 19 Apr 2024 06:13:34 -0700 (PDT)
+	 To:Cc:Content-Type; b=sMtQSPD/Qzz8hWYWBB8flhC/FGQrJh0Ng4pIvpG908CYQeFjAuY0xlMnZEgB0PqwhCiG3AkOFSwR/F9LJ1kndLIOLfKL3j2wrz8YitqBydibq9fkPjZ6NEp3J+3nblXBuJlnOTBeCNQG6LbRt2rU3rF0WTDeFhdXzCDx9diy62U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gyxpWJ7D; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-61ac45807cbso22289077b3.1
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Apr 2024 06:20:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713532412; x=1714137212; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713532819; x=1714137619; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MJ73iTnDL63VDAaoVci/EpuuDDKiIcZS/XQoD41BgO0=;
-        b=SmnJbJSdI6v9/yvTO3CRSdD6LwFaQFxfHv8Dy2Xdu1o29KV9FpLE0F/m0WT6Ilqyha
-         TT0xYCk6tDb3kZ993xljOVqLmV+JyKIlPEl9S0MCMrAnlvxpFB7l/ihxu5dCnixzXnf9
-         uIvRF1AFCv1fE9xhDr+sIwoPQW5uBhOLOh258zpg1hzZMOFEDKVoFvCmyL865HR/3wC6
-         O42ObIe4WtFDxcXRAguuArf+y2250GnSUr/xj8RrDdEvzeHk8EHuidcyAgZIAxZKmpkj
-         V9hd1RsQiWvIz7ukwkWWlc09Gl7idkBaOxH5FpTLl7LoJUT4NXEM3F40ZtGDfyXsybC6
-         /3ww==
+        bh=ukqNim2wR4zF3yUVwL5ebSYvcGgLz6CYpTrNBxxNrNU=;
+        b=gyxpWJ7DQoONgUIXaVXhsNH+4a//S2TMpfKpHA8nOBSsAifOpd9YXMcffjOfiKsQzC
+         mUtuuhBBe/tauEnU2uRBZkwY8uw5l28Fp/MwFBYQ7VSv4DVK5yGJcfFEKb5aKCEBeTyE
+         P+TtlJCHE+zynCGlX6X5WyZlZyebnHSYyjRz3UChIjxSKz0pHf/G3pvo3CKGcdHzUYHZ
+         zs8AO1E6klEYdRYLJe9TPgsv8OTzW7eCczq8mhdMx14eYv1xEaFNf2jyDhWousRhbHTO
+         CnJHfcwm8eysEdPujMC/a2nDuRTMLric+lDJOllwkxuL4kEoc8pbj0TOd+oCIRnhbkjG
+         ZAUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713532412; x=1714137212;
+        d=1e100.net; s=20230601; t=1713532819; x=1714137619;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MJ73iTnDL63VDAaoVci/EpuuDDKiIcZS/XQoD41BgO0=;
-        b=ZWz+mR8/R9Fbc88JLuCexcJ+YYWAbdfwfWg7WROX2gCxLfjqPCqqDsoFjRCOLoLIyQ
-         abbfmZAX0LhLtvFulLQlSnHbjcFBfygn3r6+SBK20/i44+l3Hz3DMBViWC+0i9c/zlUr
-         08t4X/TaZnDWQrDuW4MOPNbaW7FJZzbSj3Do9aKEaX3y7KTHKbmck6BjdW03K+oI5tp6
-         f8VEBVFBL4IEXrd2mRx6Z1D8BPAfnafFbwEjMtfKmBs5aZpfBmEBBPwv/223v1Ubhxob
-         sTwt0MbruXfS/mLPxroF+PQwzIJJaukn/KXqM74AWvS74aKa0UFnanoXX37Q0yqzHqMF
-         9LVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXtWXw9aqb3Yc5ol0KPo5zX3qCMxH2XLLPnYVQ67e/uaUQzH0oPhskV7XJQ7mU36Do0oVtot2AUP30BRzH6gYdSgS5HmB90dgPnqniT0nuepO47v3TSqOFa58E1409bEOxSMTwABHd5Sg==
-X-Gm-Message-State: AOJu0YxffBp6oE6uSId5fGODi5kiMl26yGALcTfSOBgHCxZglBaYi3Ub
-	zBLNGidJUnwwPHTl9DRCYsgf03z+YSBAv4kJA6GZPPMPdceyKiBSAdYZtlkk2IlDRLLUIQnr6vM
-	YopgvGj9ofpZ85Jr/TIcyYEdbiHtaaaVC
-X-Google-Smtp-Source: AGHT+IG7gfxPubAP9gSOnIjknhFnPUEiFEDKljcZeaFawdJsO8HX2BiSv3dGeybyWDrlIggO9Zs8TBAZwl9Lc6qL9ik=
-X-Received: by 2002:a05:651c:a12:b0:2db:817d:834 with SMTP id
- k18-20020a05651c0a1200b002db817d0834mr2198605ljq.10.1713532412340; Fri, 19
- Apr 2024 06:13:32 -0700 (PDT)
+        bh=ukqNim2wR4zF3yUVwL5ebSYvcGgLz6CYpTrNBxxNrNU=;
+        b=O7zpxR63KpXWaZcd8tGVJ/gYJl7z+Zf0utsGo3no7QHkE1kCoOhxVG2wupEggoZWVU
+         VXyi0JC6s7yPnwxXrKudjBM48pcyJJUVtKxHPmTpJDq+Vuk25HelWvetztmib30jGHkz
+         GPMlPMLBs2muCA9I5bwQJBrDVxlvQ1LfMoEXj/fBDSossB4gWUgBxUEM+XgiXfzWISdq
+         csU90oSEUGKh3hqoC7IMTMlYGGSIsfmkMPav6YhAUA8RdKMnUe1pH/ikFNHidw51dMTy
+         jLYFpPgvufO801MtJjkRgQJ3aFmGGw/USrsqQZoZ/qZK05y5laoYR0J5poIGKukdPwDj
+         xHRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX67e+NvHXS2ml5zLJQ5EtQ5I5H1sN7KtQKACdc+JxFfi30/xZDU42zw6u/HTNj+hOivLUmQNAFY8Z2V3O2zTS+TwQcfkaLfoccow==
+X-Gm-Message-State: AOJu0Ywk3KNFHGVuRrQLuvX+bnsVK/jTN2shf3NdOnXPb8RX/iq0o2r1
+	RSCjsX+lx4IN9laZNlx0cTSAnxyurwKqlXnJLz9QYHSP5Inku4oPu+ugCtPxg6h5FIw7YziAVKC
+	kLJNNew/swVEPqxN8lLxL5S+WckcbBmsLOL/QVw==
+X-Google-Smtp-Source: AGHT+IEI8D+Rjptnk9iY+KnYSSwY8zcUnaRQkQica2+cfdRoT6xlKYqfZKkb6nl1YXf4Kgi4R3V+bGAEnQx8Wp+MmB0=
+X-Received: by 2002:a25:acdc:0:b0:dc7:4460:878a with SMTP id
+ x28-20020a25acdc000000b00dc74460878amr1977072ybd.3.1713532818807; Fri, 19 Apr
+ 2024 06:20:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240419080555.97343-1-aapo.vienamo@linux.intel.com>
-In-Reply-To: <20240419080555.97343-1-aapo.vienamo@linux.intel.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 19 Apr 2024 16:12:55 +0300
-Message-ID: <CAHp75Ve=TUqba0Ga23QCiP7uM==VzY6kL=3A-5k5WNJAz4gGuA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Add Intel Granite Rapids-D vGPIO driver
-To: Aapo Vienamo <aapo.vienamo@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20240418-pinctrl-scmi-v11-0-499dca9864a7@nxp.com>
+In-Reply-To: <20240418-pinctrl-scmi-v11-0-499dca9864a7@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 19 Apr 2024 15:20:08 +0200
+Message-ID: <CACRpkdbswetf2Tr6H216nxb8XKX8evyiWiVcsK5E=inqBUUVng@mail.gmail.com>
+Subject: Re: [PATCH v11 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Dhruva Gole <d-gole@ti.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Peng Fan <peng.fan@nxp.com>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>, 
+	Andy Shevchenko <andy@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 19, 2024 at 11:07=E2=80=AFAM Aapo Vienamo
-<aapo.vienamo@linux.intel.com> wrote:
+On Thu, Apr 18, 2024 at 3:24=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
+m> wrote:
+
+> Per Sudeep's reply in v10,
+> "This series looks good overall. Since it has pinctrl driver, I need Linu=
+s
+> to ack/agree to pick the whole series up or I can ack them so that Linus
+> can take the whole series. Either way it is fine for me."
 >
-> This driver provides a basic GPIO driver for the Intel Granite Rapids-D
-> virtual GPIOs. On SoCs with limited physical pins on the package, the
-> physical pins controlled by this driver would be exposed on an external
-> device such as a BMC or CPLD.
+> v11 is just minor update per Andy to patch 4 and Andy's R-b applied.
 >
-> Signed-off-by: Aapo Vienamo <aapo.vienamo@linux.intel.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Hope v11 is good for you to pick up.
+>
+> Linus, would you ack or this patchset go through your tree?
 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Since most of it is in firmware rather than pinctrl I suppose
+the best is to merge it in the firmware or SoC tree, so:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Hmm... How did this happen?
-
---=20
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
 
