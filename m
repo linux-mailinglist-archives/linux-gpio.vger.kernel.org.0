@@ -1,127 +1,132 @@
-Return-Path: <linux-gpio+bounces-5695-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5696-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C117A8AB0E7
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 16:43:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E20238AB299
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 17:57:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F210B1C214A8
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 14:43:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F22C91C223CF
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 15:57:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB92812EBDD;
-	Fri, 19 Apr 2024 14:43:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60353130A5C;
+	Fri, 19 Apr 2024 15:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HLwY5B8e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NB10FGA3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF438562A;
-	Fri, 19 Apr 2024 14:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1490512F59B;
+	Fri, 19 Apr 2024 15:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713537790; cv=none; b=acUBjE+psyjp8WFkRGx0z1q9zZQEqNP+ftFob0MuoqXCVXw2S6Bm+Tc5RmfP0ZbzAo9CLuvvm5216XTbGlCTWtNRDhVTMShrBlkx7C3wgXUgMNf3FjqzzGOP7P5e/uVx19xie6reJeCQxBavCw5SZZeCiAeuxAe3qQjT2t1+N9Y=
+	t=1713542272; cv=none; b=pwhcw6Q/uiJCa8EQv4tLae7NMHpeiNpFQBeHiogzNuqJBOdvE5A2ega80WwgTsDIm+Flz8TxjzS+1p4rlGiXuCVm0EJz9QcXi2BAfh5YhMjFBSZ28N+7h780E1Vaj11yCIIbcsoiToSW/0ipDAf+imQej+MHhdwQA1uptvM60HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713537790; c=relaxed/simple;
-	bh=GzR8k/QVmr64Q3usu7GsrkbHHThh/zrClh8KEifcHkU=;
+	s=arc-20240116; t=1713542272; c=relaxed/simple;
+	bh=8QEDQjOppN6rgrkwPLW/8KvmAUWYG8et7RnU5mOglu8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e++uarVv4gRl0TtYKWQ1H03HmHBmZv+1qJGwoUVmgKpy6j5ToJ5teM9UKz4A92vtBSHOU+sFhw09EaK2gwx0fkh8ioQcSJpfYgdmT2Xi1KOSO/OeVizuo8mA52guUE9f9joTIi4nafddaYuK/2nVV39u5905BUSKQGm2Ay3PcJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HLwY5B8e; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713537789; x=1745073789;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=GzR8k/QVmr64Q3usu7GsrkbHHThh/zrClh8KEifcHkU=;
-  b=HLwY5B8e7/oOHxC0/F3Dx5CiKHwSKLPZJHZUyY7EAiRz1YDP8NFrnrwT
-   cqyYFSoaGaWWaIfdZuM7ByGqoipmwR+HJrE+jbnSDbZAohlQ8C52evY0S
-   Qd+y3H6TPH9ui1w5+3JmR6OEvfyTClc9mxWV9WSpeh9DMJs7RkHbpx4Kr
-   AjvPs2+Y7K3+LMeKukRMhG897UBxckj3PhsUkIhPu3LEXK6QKQTOLKY/3
-   57yrM8VFLlUtQ6DD5I+qsroXvU9EzSaiQ0J/eP2P7h27MjVXG2DY5FpnM
-   q83KCRFulmXMb8gbjZ17G+8E3v9mdPr6fQodV6VCts/uGkigFH/1iN2sd
-   g==;
-X-CSE-ConnectionGUID: gcK+xMpDRoaTYCMWqaKciw==
-X-CSE-MsgGUID: cZhst/pmRdG/G59gLzMnJg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11049"; a="20564028"
-X-IronPort-AV: E=Sophos;i="6.07,214,1708416000"; 
-   d="scan'208";a="20564028"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 07:43:08 -0700
-X-CSE-ConnectionGUID: 4tlJWgHFT+myZN9cxJ/keQ==
-X-CSE-MsgGUID: EF1ndmXPRoiZrEv7+m9KaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,214,1708416000"; 
-   d="scan'208";a="54552844"
-Received: from mpkangas-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.63.92])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2024 07:43:06 -0700
-Date: Fri, 19 Apr 2024 17:42:59 +0300
-From: Aapo Vienamo <aapo.vienamo@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH] gpio: Add Intel Granite Rapids-D vGPIO driver
-Message-ID: <ljyjvdtzhgug7frkiwbrvobbusnzqu5gpn345n5bjsmbuw5gjd@xex3dznz5jov>
-References: <20240419080555.97343-1-aapo.vienamo@linux.intel.com>
- <CACRpkdbSB+JTdhGXViWs-SmR3nUnm6dVXt3WzK-d4zFSz63XxQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lzbg2gh7wJp2wxIBoMVef6n92HK66nvWzgA/GQz4jw8akbaJnE/fL5qBfQE2CU5GScvlSyDB8yafZ+5miSm77l/oqsiMoq3CsLOQIDB5XfKEy9fJ4Rof/FlMsP+iqeM+MiEm5W00Q3dzpUt+0TxjkM20z2B5T6EhcnPhE+MoYXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NB10FGA3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F5B9C072AA;
+	Fri, 19 Apr 2024 15:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713542271;
+	bh=8QEDQjOppN6rgrkwPLW/8KvmAUWYG8et7RnU5mOglu8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NB10FGA3HUo4FWUdWzr/7uRQFBe3lrvgTHD57CEE1hkQsdk2PFT0iRvsT6WlBsryH
+	 R9ECS0tIP+q2ePoWG3IXYHRwrC4ZbdKbm2b6WKVRbsH6kivseIWcvWn1YLLFFCjqnJ
+	 +WEiNG9+K6yDDCcarItZTLBsG6w0laG+wVvCVK6NBCvHmYuMpUV1H6260C2irK8N3s
+	 N1ICOKTf3K1upQySIskCOkv9FNsFnP6fBdzQmAOw3+O15/uvuu1Td3Jr7hm0nIo9ij
+	 ShYAEPNvj7I0A5Guge7e3pn+aQC+rO7on5RMuT9Gg8vururtjFLBW040ID3hA375Zi
+	 S69jOsJC2LEcw==
+Date: Fri, 19 Apr 2024 16:57:40 +0100
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Jamie Gibbons <jamie.gibbons@microchip.com>,
+	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1 4/5] dt-bindings: PCI: microchip: increase number of
+ items in ranges property
+Message-ID: <20240419-batboy-mutt-4da787cffd3d@spud>
+References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
+ <20240327-debunk-perky-f5514ca332be@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="P5gNKGuon3/meze+"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbSB+JTdhGXViWs-SmR3nUnm6dVXt3WzK-d4zFSz63XxQ@mail.gmail.com>
+In-Reply-To: <20240327-debunk-perky-f5514ca332be@spud>
 
-Hi Linus,
 
-Thanks for the review!
+--P5gNKGuon3/meze+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 19, 2024 at 03:11:23PM GMT, Linus Walleij wrote:
-> On Fri, Apr 19, 2024 at 10:07 AM Aapo Vienamo
-> > +static int gnr_gpio_configure_pad(struct gpio_chip *gc, unsigned int gpio,
-> > +                                 u32 clear_mask, u32 set_mask)
-> > +{
-> > +       struct gnr_gpio *priv = gpiochip_get_data(gc);
-> > +       void __iomem *addr = gnr_gpio_get_padcfg_addr(priv, gpio);
-> > +       u32 dw;
-> > +
-> > +       if (test_bit(gpio, priv->ro_bitmap))
-> > +               return -EACCES;
-> > +
-> > +       guard(raw_spinlock_irqsave)(&priv->lock);
-> > +
-> > +       dw = readl(addr);
-> > +       dw &= ~clear_mask;
-> > +       dw |= set_mask;
-> > +       writel(dw, addr);
-> > +
-> > +       return 0;
-> > +}
-> 
-> Configure pad sounds like pin control so it's a bit of icky name.
-> What it really does is configure the direction (in or out) for this
-> GPIO pad. And it's not really the *pad* that is configured, right?
-> It is the hardware *driver* for the pad, i.e. what is reflected in
-> the GPIO line control register.
-> 
-> Can you rename this:
-> gnr_gpio_configure_direction()?
+PCI maintainers, could you please either apply this (preferred!) or give
+me an ack to take it with the dts?
 
-I do agree that the pad part of the name maybe isn't the best, though
-this function isn't just for direction control, since it's used for
-setting the pin output state as well in gnr_gpio_set(). The idea is that
-locking and masking of the register accesses is factored out of the gpio
-callbacks and implemented in this function.
+Thanks,
+Conor.
 
-Maybe gnr_gpio_configure_pin()?
+On Wed, Mar 27, 2024 at 12:24:39PM +0000, Conor Dooley wrote:
+> From: Valentina Fernandez <valentina.fernandezalanis@microchip.com>
+>=20
+> Increase the number of items in the ranges property to allow up to 3
+> ranges. For example a prefetchable range, a non-prefetchable range
+> and an IO range, depending on configuration.
+>=20
+> Signed-off-by: Valentina Fernandez <valentina.fernandezalanis@microchip.c=
+om>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.ya=
+ml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> index f7a3c2636355..e8212a05b7b1 100644
+> --- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> @@ -65,7 +65,8 @@ properties:
+>        - const: msi
+> =20
+>    ranges:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 3
+> =20
+>    dma-ranges:
+>      minItems: 1
+> --=20
+> 2.43.0
+>=20
 
-Best regards,
-Aapo
+--P5gNKGuon3/meze+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZiKUdAAKCRB4tDGHoIJi
+0uRiAP0V/vBz26onjgXgloeZ0gVi8i6q/SLsKfs59S/dQBZHkwEAjywPdUJikVo/
+2Y4XvNpmuSZqJZbzHcMQXcsxriJmdgQ=
+=nmUD
+-----END PGP SIGNATURE-----
+
+--P5gNKGuon3/meze+--
 
