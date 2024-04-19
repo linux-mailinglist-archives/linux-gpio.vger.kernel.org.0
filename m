@@ -1,172 +1,114 @@
-Return-Path: <linux-gpio+bounces-5698-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5699-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DF198AB60F
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 22:41:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0771A8AB66F
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 23:29:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE8AA283814
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 20:41:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8A758B21F88
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 21:29:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56C5212E73;
-	Fri, 19 Apr 2024 20:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D757E137779;
+	Fri, 19 Apr 2024 21:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="efbQuTFT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Il34BblI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAF0101C5
-	for <linux-gpio@vger.kernel.org>; Fri, 19 Apr 2024 20:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33628111A5
+	for <linux-gpio@vger.kernel.org>; Fri, 19 Apr 2024 21:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713559289; cv=none; b=FmB3RLS8DtBLLgJclJP+8z6lVcEQQhxHf3ljFoFcoqIg46D7+VrPQUs+vkQuDQFxPgixgerbe/5RyrBzrwn2hxy6QKjZHxTx8AftRtm7PdcM1r5MfcudCm1SOoB5srgeGGpCZKXvTySMUOHnEDMqaf/QxKBdt2JYyGq/siCsaZU=
+	t=1713562169; cv=none; b=PI2KzTzc1WQqzpJL6qkTCDVT3faD9yJ3Ff0LD7CYk2my3iAE7Hvc6gOFkXJwfIggEFnQOw94ki7JQt++cg62Q70HbOLIovBaw6ynejkOwnImBwit4+Vcm19sIV1z/woYTGbjViGvMI8cd4iQzvSH33NOBN6QazdJnih065WdWoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713559289; c=relaxed/simple;
-	bh=yKdfi8jhZdBmtPBLTn7ZHB0DWbu4BbAfDy+jSIZUgMw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=THyVOgnqSNyILRvzugIUPjoKXIUWKXYfveA85ij1Xp3VorPXlRFysQBsTD7mhDNS8tirtscMcElCHDh0SmPM28fqJCxWMSkvo4cmsu2c77Uz0kCEm7p3qBT37EY/xGlteZxwhU1g3Sk5hy/M6xiW2AZJe4WA92j0o+f4jPOfxdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=efbQuTFT; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1713559274; x=1714164074; i=wahrenst@gmx.net;
-	bh=Ee2ErIZx7CzCmYbEAO0zt6xBsCL/S6gjt9MXhMAFgOw=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=efbQuTFT0agcm/m35iC2uSMcwHG8A862qHyPIbQ9VAgIjGby6ntgdo+aPp9HyDob
-	 u5F+nDlicD1m4P60w05epNTj0ZQcszExI9LEi6EsBsgkNn0cPKFNYQbPMl6nnFtk+
-	 LktpcDW6sRfvsEVmIaeZepqGlXNn8jFphTjceJhDhNtGp2AVNp0vObN8SKp65BZfD
-	 I0NxXipIC6gzpUEsF1vLSLeZHa6RXT3JpoRb3o7RJxU/G5Uqtht71a+XXQuJbnQ+1
-	 JPV/dOU09x57hJoz92Z0osNWYqPKF9zSTofEtE3wp3cII4NfMWMRopF79Q6HOkvTL
-	 fKgr7qWJHYWoVcQ8aQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MxUrx-1svNM83i9J-00xpFO; Fri, 19
- Apr 2024 22:41:13 +0200
-From: Stefan Wahren <wahrenst@gmx.net>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Kent Gibson <warthog618@gmail.com>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH] pinctrl: bcm2835: Make pin freeing behavior configurable
-Date: Fri, 19 Apr 2024 22:40:57 +0200
-Message-Id: <20240419204057.86078-1-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1713562169; c=relaxed/simple;
+	bh=2GysBCBET65HJHpPRbD59HZPSuc6WYob58y8/gPNikI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p33EASULL+D5vyFLQhk3zQPSaXlM2EoytNSICBYrOLDXsu/gMUdK5qObRZLvjV7yGY8OjIPppzUkUu8PH67vfQ2U98VyEAAzwxrPnYLJGWT1Qrf3bAFUyzq/W1wyxnmvCkhzAskyEUhpbIM8ljrn5H4I2AzMnKgQ/4B86RWqgC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Il34BblI; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-de46da8ced2so2339199276.0
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Apr 2024 14:29:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713562167; x=1714166967; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IIpOYqRh88R0i8LNHu4obmBeVHXo+nptZ2aPcWVTDA4=;
+        b=Il34BblIAlN9mkQWFsF4xuAFQ9o70L3F/AfqIdT6G4+COQ4nWSvD4MPPMilKZumz66
+         AMNgTDK13/+gv2Tx3DjyqQkRNchFCfEMyf/gtFLBg2BpmyyaOOl5z+ZqPgbvIJ4ur2x8
+         614F6AI9GAKdn4MX1bEzHbOZOEuV+aaJSvhvz3be4rxUA94jXe+cIr+sOIKJDoBjmUxJ
+         pMY2h2YWaadbZNYdUgsXZF3yy3PqH9A2fQzJ20D679rSFtGIAiDE4CtZWkIJrs/6tpru
+         ovDhJh9iRtZNQ8bbH9JoZBQWSZB2/H7h+73FDa3ChxYRt2DR4K3mMfXdMroo50hfyIUQ
+         a66A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713562167; x=1714166967;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IIpOYqRh88R0i8LNHu4obmBeVHXo+nptZ2aPcWVTDA4=;
+        b=LxrbkcnlNVg9amJJ8YoEFXKTxlSjhKwBBKvh9XJnBYAwGMugdY72JWQP3brc5vZsjL
+         0uQLvyEQzN7S8MB2sA2Tz++xf4ADtZwZyn5MUFGs6ynhv5i1lCDicGdEueClQpVs5nvq
+         pN8ObbCjFTTId9FdP+XBHVsbSFtsE1jyzb2CSRgDbZregKhEebWe5VKAS3pL+0KMRodC
+         s9ZgJ6+jbuMCn61ipo89Votbb3cFaqlZMpX4Njibn2CtbwL//nd4YRub5zYcuv5zZN5D
+         khipW5CnEO7jOmY7sXn8XAB96VGd0cUQKOMNjTRoB1DyxgNg/O2PavOaZNCQ+Xou0Q0b
+         RFvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPrWhLo7evmSmKbntu/ccsjm4ufJlk9G34Ko7YPc+kw1H7lp5d4Hhoeav/MmNsTv8eLppSvYrwDR3gywNoboCnZf31mV4KPMLgAg==
+X-Gm-Message-State: AOJu0YzfRPebtQ4USJWnwmKG+YhP93l7nsr9xKk7oxKNc/0+hZ9u+1p3
+	SID0NoalsxdZpAfcCoD4Ob+dZNrCoWdkW6qwoK07yHBJRDDKUs6uNmXYerf/QdC0j9SW0mU2uhg
+	6U/cOQLQZJ41Q7rRDYU4rOvMMikQ1VLE2cuUOUg==
+X-Google-Smtp-Source: AGHT+IFq6P5+bwPZWKT2aKGN9XWl5zccC4LReC5Jg0mx18NS/M+8Z3JsMrOAqUuEy0c78dMpwxt2/HmMqmBo1470aWc=
+X-Received: by 2002:a25:83ca:0:b0:ddd:6964:40c with SMTP id
+ v10-20020a2583ca000000b00ddd6964040cmr3061330ybm.50.1713562167179; Fri, 19
+ Apr 2024 14:29:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QKwPfkHrv4cXmBcL73z06scgNcBK+4nRIFXRhtWMM2VJsqkcFHh
- 8+WE7qUMv6HgRukjHrx5gK5uJKZsWoqoisCOJDnAD+kHpPHYMGu8nO3aMePe64YIrav2jug
- j7OnQq2t0DyfLk0CCBWItBzSuBAULfiZfErBVX09hNPQQUH2WCYYuxmx1sfeiHgD15Awfrz
- Fnzug3OwVUlfiXVvxtAYQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HIkY0K5dSII=;RGL7d6NUp6gLGvVlkcACnebL0rZ
- PQmjsCp13/pYaJR00Sl8kSc8HFJNvQB35rbFVpceq5fOc7prjdcq+z5/8sbCEKIEWxRxnkWLg
- hR8qFKQG3+AIbqRQ3dg2lNvlk253CW+hbDGbQR/9DAJ8ms13cMGMydKsicQ7qpX41XDpN1DJf
- LPYZtk5dQlGUglhyloTAzSNazNpVE6rU3h2cdzn6r0IYEQeapRgthBmQ0sFHYEM148fcAVrpZ
- JUtUeu+yyUdUAcOcWGEzNLlgnAsGiLs28ldL9IUT/ecpcfr4A5mhIYwowtS20pl/aMhFkN6bZ
- sdTHofYwaINwytBy3hJT3RPOghqYp9AjJUzup0u3A9uhvf8IYbP8eGzP8C5hSkAM6pAHTm/5v
- Jhy7x6lTt15cA8LIrkzGpBrL/6uckk+rGtblMTTmwHrDOnu2BFpfkdAft+CaU8+pvcFGWk8hA
- qcJLPNqEhV/IR2EZt2GYSNfCVhkG2tq24mioElgZ6cRZPndH1wK3nW/8gFu6wyqKr7/XDH2rB
- L45H0BuTLCCjUHWK0KzZJp8zLInf41OjdauktLRPyTk0kLVzFZb8Xqu3FmyqPfIrzwk5zztSM
- 6LDH55CCt/emly60mUNaAxCGNawbvhOdcqt2LVYQ6YOIoes6ZU4VWls1RkOKDT7tN/Mu0tyrE
- ebL8t+Z0ZVFLYqiq28iXaIVh6P3J7WZTmwnuKqacx6nBSzGJIcK3C9mJ/sGR/RmqSKklHNXtp
- rGetaDmodxF3yHlsPVtyeVjPJW9iWJlyF96j/Si9L37PjfHhS+TzHQmjzlNcWbrshwhmjxJoF
- 7jsPqRwh/2rndX2vpq1b2zy+buGaAOReYUjcMXkUq7va8=
+References: <02a101da9227$bda04cb0$38e0e610$@trustnetic.com>
+In-Reply-To: <02a101da9227$bda04cb0$38e0e610$@trustnetic.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Fri, 19 Apr 2024 23:29:16 +0200
+Message-ID: <CACMJSeuGu4nCVsbSnTrJwEdU+RF0BKHbzS7A9Cf2CiM_stJPzg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/24] gpio: rework locking and object life-time control
+To: Jiawen Wu <jiawenwu@trustnetic.com>
+Cc: brgl@bgdev.pl, andriy.shevchenko@linux.intel.com, elder@linaro.org, 
+	geert+renesas@glider.be, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, paulmck@kernel.org, warthog618@gmail.com, 
+	wsa@the-dreams.de
+Content-Type: text/plain; charset="UTF-8"
 
-Until now after a bcm2835 pin was freed its pinmux was set to GPIO_IN.
-So in case it was configured as GPIO_OUT before the configured output
-level also get lost. As long as GPIO sysfs was used this wasn't
-actually a problem because the pins and their possible output level
-were kept by sysfs.
+On Fri, 19 Apr 2024 at 09:04, Jiawen Wu <jiawenwu@trustnetic.com> wrote:
+>
+> Hi Bartosz Golaszewski,
+>
+> I ran into a kernel crash problem when I pull the latest net-next.git, and
+> finally it was found that is caused by this patch series merged.
+>
+> The kernel crashed because I got gpio=0 when I called irq_find_mapping()
+> and then struct irq_data *d=null, as my driver describes:
+>
+>         int gpio = irq_find_mapping(gc->irq.domain, hwirq);
+>         struct irq_data *d = irq_get_irq_data(gpio);
+>
+>         txgbe_gpio_irq_ack(d);
+>
+> The deeper positioning is this line in __irq_resolve_mapping().
+>
+>         data = rcu_dereference(domain->revmap[hwirq]);
+>
+> So, is it the addition of SRCU infrastructure that causes this issue?
+>
 
-Since more and more Raspberry Pi users start using libgpiod they are
-confused about this behavior. So make the pin freeing behavior of
-GPIO_OUT configurable via module parameter. In case
-pinctrl-bcm2835.strict_gpiod is set to 0, the output level is kept.
+This is irq-specific RCU that I did not add in the GPIO series. Please
+provide us with more information. Bisect to the exact commit causing
+the issue and post the kernel log (we don't know what kind of crash
+you trigger and what the stack trace is).
 
-This patch based on the downstream work of Phil Elwell.
-
-Link: https://github.com/raspberrypi/linux/pull/6117
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/p=
-inctrl-bcm2835.c
-index f5a9372d43bd..a5b2096c97fc 100644
-=2D-- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -244,6 +244,10 @@ static const char * const irq_type_names[] =3D {
- 	[IRQ_TYPE_LEVEL_LOW] =3D "level-low",
- };
-
-+static bool strict_gpiod =3D true;
-+module_param(strict_gpiod, bool, 0644);
-+MODULE_PARM_DESC(strict_gpiod, "unless true, GPIO_OUT remain when pin fre=
-ed");
-+
- static inline u32 bcm2835_gpio_rd(struct bcm2835_pinctrl *pc, unsigned re=
-g)
- {
- 	return readl(pc->base + reg);
-@@ -926,6 +930,14 @@ static int bcm2835_pmx_free(struct pinctrl_dev *pctld=
-ev,
- 		unsigned offset)
- {
- 	struct bcm2835_pinctrl *pc =3D pinctrl_dev_get_drvdata(pctldev);
-+	enum bcm2835_fsel fsel =3D bcm2835_pinctrl_fsel_get(pc, offset);
-+
-+	if (fsel =3D=3D BCM2835_FSEL_GPIO_IN)
-+		return 0;
-+
-+	/* preserve GPIO_OUT in non-strict mode */
-+	if (!strict_gpiod && fsel =3D=3D BCM2835_FSEL_GPIO_OUT)
-+		return 0;
-
- 	/* disable by setting to GPIO_IN */
- 	bcm2835_pinctrl_fsel_set(pc, offset, BCM2835_FSEL_GPIO_IN);
-@@ -970,10 +982,7 @@ static void bcm2835_pmx_gpio_disable_free(struct pinc=
-trl_dev *pctldev,
- 		struct pinctrl_gpio_range *range,
- 		unsigned offset)
- {
--	struct bcm2835_pinctrl *pc =3D pinctrl_dev_get_drvdata(pctldev);
--
--	/* disable by setting to GPIO_IN */
--	bcm2835_pinctrl_fsel_set(pc, offset, BCM2835_FSEL_GPIO_IN);
-+	bcm2835_pmx_free(pctldev, offset);
- }
-
- static int bcm2835_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
-@@ -1419,6 +1428,9 @@ static int bcm2835_pinctrl_probe(struct platform_dev=
-ice *pdev)
- 		goto out_remove;
- 	}
-
-+	dev_info(dev, "GPIO_OUT remain when pin freed: %s\n",
-+		 strict_gpiod ? "no" : "yes");
-+
- 	return 0;
-
- out_remove:
-=2D-
-2.34.1
-
+Bart
 
