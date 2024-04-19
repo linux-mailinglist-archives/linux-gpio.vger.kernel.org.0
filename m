@@ -1,173 +1,103 @@
-Return-Path: <linux-gpio+bounces-5679-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5680-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC47E8AAAA6
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 10:36:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 152E68AAACD
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 10:47:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C2CC1C21FFF
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 08:36:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3AE21F221AF
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 08:47:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 760055FBBA;
-	Fri, 19 Apr 2024 08:36:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06CB16F07B;
+	Fri, 19 Apr 2024 08:47:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="FzRyFZFe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNRP7gv4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17A05EE8D
-	for <linux-gpio@vger.kernel.org>; Fri, 19 Apr 2024 08:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68871E4BE;
+	Fri, 19 Apr 2024 08:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713515774; cv=none; b=Ag0zOryy4f0/RsemARIwHAFcBZQJSfgLSlC1+WYREJq/9tmKB6s3JRYjn5efTdQwaIF78gWnjc2xmgnT6zZTy6S/orGl+VSIki7QudBmpdldSD6XI8LUlPNCP6m0l7HJGvQLW2+gqO8vBnrhMi6i2pGEZq/rtYfO2+Jjr9xjB5o=
+	t=1713516428; cv=none; b=lRNX/MI8uvKQVWy8NoHc0dgzeIzosyJLdqzs0kipVIwVLI5tXPbGAPXevJTfn2IWrkBVvSuTcVPputBzAImLd45braCKqsRUvHPRYYhut3EHd7FQ22Za8HWoFN3pW+JleyCCS5J6koVbzUccgqNrZvIi+JEf6DHjNq3qjaixM8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713515774; c=relaxed/simple;
-	bh=hF0/38INzKLknEA8dxytWSaQqKMw9EKeY4CG3eRywl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I3hdQVBjrulKCJ1BPZspweyJU8cjtk54BBAe5yvG2ykSRY8zCL4VTKFBp+x5hM9cn6DEbfLpa4gz/ECFUNvjRSZydzBvCbaSJ/nopGU11LCR1Rpvv6CirMFtXcGlXk/OeP2RPJjM2TiHiz55fsdH+Oqo1b0NvHruzEJZkSJZ7wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=FzRyFZFe; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-617d25b2bc4so18062997b3.2
-        for <linux-gpio@vger.kernel.org>; Fri, 19 Apr 2024 01:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1713515771; x=1714120571; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qHjnNQ86N++geHQUiCSUMyaqWDgVxDALRY9racYl+Uk=;
-        b=FzRyFZFea9qDVYjfh9Dtabd8HjnRNY9xe3QJ8JtBODgxtpcJm2P+2OcisRWNqn12fm
-         RhKO1sQwPgGXVbSPshZTxI7r8jAi0cgMs7TuPZBDf34GdvnTW8o2Ea0LS9ybnAXuZjvD
-         I+IkFEMWTIA0C08Jpvv+Zu2hi2wnbreJyUuUoAB6azfyLuR2/ssCuBgGPjPFWgUYDB/3
-         Q+/nk3wq8YwFZvB+kCYYAFrc7rJjZjmnXpaDcu4iK+jpWTjPkt5ueHTfpC3M9C4ERb+r
-         g3XaJ5+11DC7ezI4XPN8gOkc05hfHl+y3C2fsi4EVIWGrBlriCnQOI44I69FAOPStk7h
-         g5cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713515771; x=1714120571;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qHjnNQ86N++geHQUiCSUMyaqWDgVxDALRY9racYl+Uk=;
-        b=PkrbIoBheDG/GoNzB4t85SxlyNGnxTpmhtFegAQRrfXzTPetrhRuyGcTKIQwfu7y8x
-         yLmlvSMheyBSwSlSBFL6grQZldXM5ANmWUc9u8cI0tIbOFqWaV5Xsi+4e9ieVe60918l
-         M7CqWrea9/O7uWKMj0pCC+T7yC8eEMV//P/kO3hBfMbwp3ZrNO7Lwm03lGDlCKMr2Nla
-         153yB9GIXaKAhCdZw0DdCAe5VaznrO2vegQkDBJN89+WhX0rSf+H/pFGqAwAusBSRh3e
-         D4Q6PPdS/V8Bgh6qAFRCqEEXcLbJyZd/A46WpuMOg9WRUU9RjUsfmyMG8owaX+NF2zIb
-         +sHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyt39XrGkYTp4U67c8nIshZf0If7O/pSfEdjpsOIDmEnTZ/Kb4saHFhKOBNfZnDgr9BMiFq/RT/+bZaVLtXhNpZlxuezvra8PurQ==
-X-Gm-Message-State: AOJu0Yykc1Ae3ZaWZJ5G4OwwJw8KnaAWyehMsQ1sBeuLLICULpEoBBnp
-	CluB9fBrnm7nL9CD5dHOz7da2Dd3gT+Y0VylBpHzyNTlCXtDg11auaHQwPtaN50b0YmNeFTvs0m
-	lEN3DhLFLo2sslasZcgutJWNP7vpc3gyc0/NnTw==
-X-Google-Smtp-Source: AGHT+IHD8DsNgEG3VcswCSP7Vc00sVnoZ+iA5w2TYOFFymsovAj6wgN84R56QS07sK5VX+KWadlwkeKKG1UDfJ1O114=
-X-Received: by 2002:a5b:bcf:0:b0:de0:d32b:52bf with SMTP id
- c15-20020a5b0bcf000000b00de0d32b52bfmr1080482ybr.39.1713515771559; Fri, 19
- Apr 2024 01:36:11 -0700 (PDT)
+	s=arc-20240116; t=1713516428; c=relaxed/simple;
+	bh=JMeqt/5R/X4ObeTie5ZZL2cEEJlLOQITn5aJcjiO5xA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hr+hRNFETC/8IL6IEYvlUb+GHwKogAzdFT98d4S7ozlHC6VfpwG9DCGgD29kTJMi4ueV9MG0vPXyqnzzuKYfUrPaUvERpnHBCeOzOQ/r6Jpm6QxPee60mDb80N4GTUs0pzH4CWuhdDaGb7kEVYdvGM4s5m+9WFZU+KwB0DfkT1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNRP7gv4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E7B3C072AA;
+	Fri, 19 Apr 2024 08:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713516428;
+	bh=JMeqt/5R/X4ObeTie5ZZL2cEEJlLOQITn5aJcjiO5xA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XNRP7gv4zpvIDLVA6xhX7CxYZWDeV+CQJyPorxrIuZsEvZ2b6d8UOWD1aPQUwe1jR
+	 hwyjW4qE3KT8wa+MDpguSeQr+XGI/Xf/51zvT7mXKyUmjlngFcKJgZDoEYGpRtX1wR
+	 PcreBNXDbbY7k/AZysJfwNWKY8ZBcWbveoTnTXCMYpd3Ck3PidHWtELXSakSWR4qui
+	 JYaXXEZq3I0sROMMP+SCMyixZBjKZXwVkiwo+XaLddiuWFunYl/lyMGmTnV2VSW7UH
+	 moyB6IielIcUXx1jOkPTzueokbZN77sRvvjdr1ttXYM5+mF6yDzGQHmq0j9VT4Xhdg
+	 B8f97vxlGOP7g==
+Date: Fri, 19 Apr 2024 10:47:03 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+	Vignesh R <vigneshr@ti.com>, Peter Rosin <peda@axentia.se>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+	thomas.petazzoni@bootlin.com, u-kumar1@ti.com, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v5 02/11] i2c: omap: wakeup the controller during
+ suspend() callback
+Message-ID: <eld637v3jvgqrjubwqlsxkafgqiqcfpukfwpcd5qoyvyrhubff@n6gzrwzr2klh>
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+ <20240102-j7200-pcie-s2r-v5-2-4b8c46711ded@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMEGJJ3y_A1vtTV1x8836+AMOHs6NnWx_EsLTJMgaR5Fb9fgtQ@mail.gmail.com>
- <4a0c4893-0c34-45f8-aef3-e8a7c2fc88b5@broadcom.com>
-In-Reply-To: <4a0c4893-0c34-45f8-aef3-e8a7c2fc88b5@broadcom.com>
-From: Phil Elwell <phil@raspberrypi.com>
-Date: Fri, 19 Apr 2024 09:36:00 +0100
-Message-ID: <CAMEGJJ3yDvyRvNM8y+mZzJyz0Y3+k8YRJim9cPXYaFiAgFb8vA@mail.gmail.com>
-Subject: Re: Advice on using gpio-brcmstb with gpio-ranges
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Doug Berger <opendmb@gmail.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240102-j7200-pcie-s2r-v5-2-4b8c46711ded@bootlin.com>
 
-[Redo without the HTML]
-On Fri, 19 Apr 2024 at 04:59, Florian Fainelli
-<florian.fainelli@broadcom.com> wrote:
->
-> On 4/18/2024 4:36 AM, Phil Elwell wrote:
-> > Hello,
-> >
-> > I'm having difficulty using the gpio-brcmstb driver with the
-> > gpio-ranges property. gpio-brcmstb allows multiple banks of up to 32
-> > GPIO lines to be declared using a single DT node. However, if you do
-> > that, any declared gpio-ranges get applied to all banks without any
-> > kind of filtering or adjustment. This is because the gpio-brcmstb
-> > makes use of gpio-mmio, which requires one gpio_chip per bank. These
-> > gpio_chips have the same DT node, hence the same ranges, but are
-> > unaware that only a subset applies to them.
-> >
-> > The GPIO<->pinctrl mapping can be configured in driver code, but this
-> > is deprecated (as is forcing global GPIO base numbers to start at
-> > zero, but the driver does it anyway).
->
-> More like it has not been converted to use a dynamic base, that is on
-> our TODO.
+Hi Thomas,
 
-Then this may be a helpful starting point:
-https://github.com/raspberrypi/linux/commit/2c6ef57c11137c07d5961c3dda2021e0403628ae
+> +static int omap_i2c_suspend(struct device *dev)
+> +{
+> +	/*
+> +	 * If the controller is autosuspended, there is no way to wakeup it once
+> +	 * runtime pm is disabled (in suspend_late()).
+> +	 * But a device may need the controller up during suspend_noirq() or
+> +	 * resume_noirq().
+> +	 * Wakeup the controller while runtime pm is enabled, so it is available
+> +	 * until its suspend_noirq(), and from resume_noirq().
+> +	 */
+> +	return pm_runtime_resume_and_get(dev);
+> +}
+> +
+> +static int omap_i2c_resume(struct device *dev)
+> +{
+> +	pm_runtime_mark_last_busy(dev);
+> +	pm_runtime_put_autosuspend(dev);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct dev_pm_ops omap_i2c_pm_ops = {
+>  	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>  				      pm_runtime_force_resume)
+> +	SET_SYSTEM_SLEEP_PM_OPS(omap_i2c_suspend, omap_i2c_resume)
 
-> > What is the best way forward? Does one have to say that in
-> > gpio-brcmstb, gpio-ranges and multiple banks are mutually
-> > incompatible?
->
-> Do you have a DT snippet of what you would like to achieve?
+If you don't have CONFIG_PM_SLEEP, though, this doesn't compile.
 
-Sure, but it's not very elaborate:
-
-    gio: gpio@7d508500 {
-        compatible = "brcm,brcmstb-gpio";
-        reg = <0x7d508500 0x40>;
-        interrupt-parent = <&main_irq>;
-        interrupts = <0>;
-        gpio-controller;
-        #gpio-cells = <2>;
-        interrupt-controller;
-        #interrupt-cells = <2>;
-        brcm,gpio-bank-widths = <32 22>;
-        brcm,gpio-direct;
-        gpio-ranges = <&pinctrl 0 0 54>;
-    };
-
-Phil
-
-
-On Fri, 19 Apr 2024 at 04:59, Florian Fainelli
-<florian.fainelli@broadcom.com> wrote:
->
->
->
-> On 4/18/2024 4:36 AM, Phil Elwell wrote:
-> > Hello,
-> >
-> > I'm having difficulty using the gpio-brcmstb driver with the
-> > gpio-ranges property. gpio-brcmstb allows multiple banks of up to 32
-> > GPIO lines to be declared using a single DT node. However, if you do
-> > that, any declared gpio-ranges get applied to all banks without any
-> > kind of filtering or adjustment. This is because the gpio-brcmstb
-> > makes use of gpio-mmio, which requires one gpio_chip per bank. These
-> > gpio_chips have the same DT node, hence the same ranges, but are
-> > unaware that only a subset applies to them.
-> >
-> > The GPIO<->pinctrl mapping can be configured in driver code, but this
-> > is deprecated (as is forcing global GPIO base numbers to start at
-> > zero, but the driver does it anyway).
->
-> More like it has not been converted to use a dynamic base, that is on
-> our TODO.
->
-> >
-> > What is the best way forward? Does one have to say that in
-> > gpio-brcmstb, gpio-ranges and multiple banks are mutually
-> > incompatible?
->
-> Do you have a DT snippet of what you would like to achieve?
->
-> >
-> > Thanks,
-> >
-> > Phil
->
-> --
-> Florian
+Andi
 
