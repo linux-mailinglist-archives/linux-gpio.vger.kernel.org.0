@@ -1,104 +1,105 @@
-Return-Path: <linux-gpio+bounces-5701-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5702-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B01F78AB73B
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Apr 2024 00:24:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59A168ABBC3
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Apr 2024 15:33:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66A3F1F22547
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Apr 2024 22:24:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8A5DB20E98
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Apr 2024 13:33:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3EF613D2B9;
-	Fri, 19 Apr 2024 22:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJ+nSZZo"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D15BF2030A;
+	Sat, 20 Apr 2024 13:33:05 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6378313D2A1;
-	Fri, 19 Apr 2024 22:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA6F20309;
+	Sat, 20 Apr 2024 13:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713565485; cv=none; b=ucXaqSyNP+dyyq9EfNnB7goKP4jLvc2I28c5F6oZN3ANmYOgkvWFgm8r+u9Tp3VAQ6LpdzvDZSwUULPY78pzoR0RVOfd+AvJFEatmOCMdEHTi/UebD2cQde++O37LSL29rGkIaOpLne/SSqPUfoHZWTYu+rRJvswDKUeeMW3698=
+	t=1713619985; cv=none; b=dO1cd16IyLApROrVU6vOAaWA3FRk1dDMY/fhrnUlferAWtK+YUpb4266BJyV7N0uw/IOr2VTiXjpDMrQKT3ZkAeDAzy1E4DE1gCBUr+p+fCv/uXczxJjNHOLQaLMQhbI72hcU/7R7eo9P275Sdyt9hETPcfz5aSRrObKO+t8rGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713565485; c=relaxed/simple;
-	bh=0pD1drXQj39EFN70jQBI3yqld3d3RmDOuileOMRvtOA=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=n9rjERSm4DljifxfOpjS61yxfcWaUe1T1ck6yM8TfevGihERsJ4G7AZVjE41JQqWcrpnGHJFmVZQ7cKXalgQd4cUmHNahEob8T73lnSStX0Oz+3sOwAA8/G1gFfwjUHr0P4BfgqTr57ZmrxBArWGMz/hhugw7Uf0wMv0KQdNZxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rJ+nSZZo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B25F0C116B1;
-	Fri, 19 Apr 2024 22:24:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713565484;
-	bh=0pD1drXQj39EFN70jQBI3yqld3d3RmDOuileOMRvtOA=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=rJ+nSZZoJx3f6EJuiigZuYRjPe0R+Glwm9i+QGpOqc7TGdsye5yFeaoD736tqv9He
-	 MCSyZ4VcJFcULkULRxpuZLMiivKub3KLxbSTZNIJrcHc1BYs/oWBqcIhQi7YhpCKrd
-	 bn8BQNsVc6iHexGOxLVjtppPRXvK1+F5a506CSPqpRJ5BtS86jg5DeArHC7L7b5XyP
-	 5gJTx93tQjPKjLCNLCHee/v4Y/bD9nRTpM+BpPOilpkJliu5tpDgsCZmWtywNNOyOU
-	 X1QN7XerODRFMluOIZto5hzj6Woeqhpcq/LNa2an4nDdBL95/yr8Qpxe8g9z55eZWS
-	 UJNmsj9flPzjA==
-Message-ID: <d7ff7dd609cd1b9a50e5ffa882d05b90.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1713619985; c=relaxed/simple;
+	bh=PEcDp8I3M8Yr7iDTgjFDbNrl9L5ce/gSH/kcCCvROGw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EVjoi7r9RMkxDtx+JDPnGNfYMogiu4kqKXFt70Vst6m0knba6VLeSUfZaHOVvpuwMnIjr/pGI36LBn/AEUmxUFO+uMARNICCv1xQtQGMFhGSwAem8W66hGXfaZyk+bk+y7FOLfTCmcGQRrEgGUrvUGG0zmtWSuHPvAp7FJQ2fr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id CAECE8333C;
+	Sat, 20 Apr 2024 15:32:59 +0200 (CEST)
+Message-ID: <eb221864-0044-4ea5-bbee-7545d10cb130@skole.hr>
+Date: Sat, 20 Apr 2024 15:32:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <3287993.aeNJFYEL58@radijator>
-References: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr> <de4c56a8-488d-4cdb-9d6c-e9d6e63b22b9@skole.hr> <58b23157c088cb4774d579cc8700de85.sboyd@kernel.org> <3287993.aeNJFYEL58@radijator>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v9 5/9] clk: mmp: Add Marvell PXA1908 clock driver
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, Duje =?utf-8?q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, Guilherme G. Piccoli <gpiccoli@igalia.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Kees Cook <keescook@chromium.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Lubomir Rintel <lkundrak@v3.sk>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>, Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Date: Fri, 19 Apr 2024 15:24:42 -0700
-User-Agent: alot/0.10
+To: Stephen Boyd <sboyd@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Haojian Zhuang <haojian.zhuang@linaro.org>, Kees Cook
+ <keescook@chromium.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Lubomir Rintel <lkundrak@v3.sk>,
+ Michael Turquette <mturquette@baylibre.com>, Rob Herring
+ <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Tony Lindgren <tony@atomide.com>, Tony Luck <tony.luck@intel.com>,
+ Will Deacon <will@kernel.org>
+Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr>
+ <de4c56a8-488d-4cdb-9d6c-e9d6e63b22b9@skole.hr>
+ <58b23157c088cb4774d579cc8700de85.sboyd@kernel.org>
+ <3287993.aeNJFYEL58@radijator>
+ <d7ff7dd609cd1b9a50e5ffa882d05b90.sboyd@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+In-Reply-To: <d7ff7dd609cd1b9a50e5ffa882d05b90.sboyd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Quoting Duje Mihanovi=C4=87 (2024-04-19 07:31:14)
-> On Friday, April 12, 2024 4:57:09=E2=80=AFAM GMT+2 Stephen Boyd wrote:
-> > Quoting Duje Mihanovi=C4=87 (2024-04-11 03:15:34)
-> >=20
-> > > On 4/11/2024 10:00 AM, Stephen Boyd wrote:
-> > > > Is there a reason this file can't be a platform driver?
-> > >=20
-> > > Not that I know of, I did it like this only because the other in-tree
-> > > MMP clk drivers do so. I guess the initialization should look like any
-> > > of the qcom GCC drivers then?
-> >=20
-> > Yes.
->=20
-> With the entire clock driver code in one file this is quite messy as I al=
-so=20
-> needed to add module_init and module_exit functions to (un)register each =
+On 4/20/24 00:24, Stephen Boyd wrote:
+> Quoting Duje Mihanović (2024-04-19 07:31:14)
+>> On Friday, April 12, 2024 4:57:09 AM GMT+2 Stephen Boyd wrote:
+>>> Quoting Duje Mihanović (2024-04-11 03:15:34)
+>>>
+>>>> On 4/11/2024 10:00 AM, Stephen Boyd wrote:
+>>>>> Is there a reason this file can't be a platform driver?
+>>>>
+>>>> Not that I know of, I did it like this only because the other in-tree
+>>>> MMP clk drivers do so. I guess the initialization should look like any
+>>>> of the qcom GCC drivers then?
+>>>
+>>> Yes.
+>>
+>> With the entire clock driver code in one file this is quite messy as I also
+>> needed to add module_init and module_exit functions to (un)register each
+>> platform driver, presumably because the module_platform_driver macro doesn't
+>> work with multiple platform drivers in one module. If I split up the driver
+>> code for each clock controller block into its own file (such as clk-of-
+>> pxa1908-apbc.c) as I believe is the best option, should the commits be split
+>> up accordingly as well?
+> 
+> Sure. Why is 'of' in the name? Maybe that is unnecessary?
 
-> platform driver, presumably because the module_platform_driver macro does=
-n't=20
-> work with multiple platform drivers in one module. If I split up the driv=
-er=20
-> code for each clock controller block into its own file (such as clk-of-
-> pxa1908-apbc.c) as I believe is the best option, should the commits be sp=
-lit=20
-> up accordingly as well?
+That seems to be a historical leftover from when Marvell was just adding 
+DT support to the ARM32 MMP SoCs which Rob followed along with in the 
+PXA1928 clk driver and so have I. Should I drop it then as Marvell has 
+in the PXA1908 vendor kernel?
 
-Sure. Why is 'of' in the name? Maybe that is unnecessary?
+Regards,
+--
+Duje
 
->=20
-> > > While at it, do you think the other MMP clk drivers could use a=20
-> conversion?
-> >=20
-> > I'm a little wary if the conversion cannot be tested though.
->=20
-> I'd rather leave it to someone with the hardware then, especially since t=
-he=20
-> only reason I found out about the above is that the board I'm working on =
-
-> failed to boot completely without the module_init function.
->=20
-
-Ok, sounds fine.
 
