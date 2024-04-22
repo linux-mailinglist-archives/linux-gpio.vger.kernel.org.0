@@ -1,166 +1,111 @@
-Return-Path: <linux-gpio+bounces-5705-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5706-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BCA38AC68C
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 10:17:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 604358AC740
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 10:40:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42B9B1C21AFA
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 08:17:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 927431C21513
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 08:40:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCFB94F890;
-	Mon, 22 Apr 2024 08:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itu84G3X"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3D5C502B6;
+	Mon, 22 Apr 2024 08:40:00 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291014AEC1;
-	Mon, 22 Apr 2024 08:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D051C433CF
+	for <linux-gpio@vger.kernel.org>; Mon, 22 Apr 2024 08:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713773830; cv=none; b=ENQSNuATw0UtSwMpZLqKb2Z2P4E0G9JrfD8aDcCDcUj1URBni/wQQrKYmqpuqjkPfieF+GnpMqFnNxG9SXplxHPYpnrRSvy8PHYztCLarZEPGZMwAw8o+tj1eMV3OaaoEcT1KiXoQXKlKna8yv/fIIDYrWjaN3nUS84DrPeSzwA=
+	t=1713775200; cv=none; b=tjvd/peGdfNdoH/izYghETFEv+VpdpIIUkTLBHzgjA5IUiqk4l6fRSCfuwOiVC8ddblQy8mEQq0Dn5NKIiQDQh26CaD/BZI26TQvT9lOufeMqz1xn15l6DNSk7IgsYUM7fuNDOouMOMniEwZ51BEmA4pr5kNFD40dGzrWqzo7gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713773830; c=relaxed/simple;
-	bh=M9B7WRjrvk2JAsBFwlrLC6qkllLzalEbntZIoYH3cKw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cNrRqNfzryRIzRpsiT/XFHoAagKms8zKTfgxaBxqUgxpf5VqB7oK/TjiNlu0xTrUon7cK9rrmZgGWi1lt6pGG8LffEDXJx40i55kU2d27/yOIA3r8+0vh22b0GKmLmWIaoSZMn1p3IRxexKU8dE+647B+PBjyqkZF+25sdnFR4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=itu84G3X; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a4702457ccbso455388366b.3;
-        Mon, 22 Apr 2024 01:17:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713773827; x=1714378627; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=POE7+7bDdgxJYrWynyeU3Cirtp8tecozyW6D2rsQgo8=;
-        b=itu84G3XOf6V0qGmoMJMy7DGC5TUJ9Qbh6K2ZoLABhklzCNZ+TZmv0cJrNyrxqVHzU
-         1yvtgaNnahz1KQHXf8cKKMw7LeOKqkArp5nTjZWgSA/WZF3+tlOwwXAfg0B5QiMkjzss
-         KYejzdOaJlzTZlTDpIY6ODaCiB73/w62GkZ8muFvblBGjfi1nmB6ZoO6OckfKLPo/tNL
-         kb0bvPoHW3IvZR+mVX7suU1nOAUoFKGxNoNpMPMSen//uXavL2jhTtCkgYGWS4jwPC5z
-         go5rcJCoKLLhTRgduekGS9l67LajAnv2NKPuAI2W0eBG+DR0sBzWgxE4u/JjtJBmtC8b
-         XvJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713773827; x=1714378627;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=POE7+7bDdgxJYrWynyeU3Cirtp8tecozyW6D2rsQgo8=;
-        b=iB4LmxspRV3x7DSJNE2SW0tlT1ysW/trdsxQfOrPZnUvRhOqLxAutpEg8k+Bx04p3g
-         bFDSXwQytBe6f5nYiSBJ3DLIcsnaBjcX/q3TWlQslmYnJiqQhCpPS+8yygNAFM5TRR+w
-         EyR82vU2mKthBmL0m/17SToooGkBN+6yA6jNo+n47WR8EVInUKNFtHzDy8M9VlnqIVYm
-         RvkcSFzEyAL9EBONCYeAkeKckmuWfs7j8bMR1ZSu9OwE9i9xA3yinL/WMxxkFIjcR4Pj
-         faCKrDOQqR/+5bXDZmmOp895glIrhicB4vO4gwZllyftZAnt3C0ec3vrbqZ562XzDfEu
-         xU0g==
-X-Forwarded-Encrypted: i=1; AJvYcCV9sTC/7oN4FAXn6THEZTRpdFBEO4L9njeyOr8ns2BVsv3i2uayecnSGHn3pnpyHr6AuN74z9H9b8h5Ui1L5gkdmXEQkefVhghlxe+jMWijin6xfe71UYqxOahnW5MaRiweZEHUGhUk5EAFM+uPnGUwuzUE92GZrlTITFH/vKj6EB7azWE=
-X-Gm-Message-State: AOJu0Ywu6/k2bzDxcJ80rAECABHbuqKqFC0hQnE1Avk3Mlcr8Pb+Ypq6
-	BSsvlAjEQrm254rh08261S5SxJ1irFsKt8Jp/V5X+8ZDTnbiIIM4cItFIPQZLLVR//lJyJ9Ju0e
-	eUG1bhNyMddJ56qoIog/Cxj+n8ms=
-X-Google-Smtp-Source: AGHT+IGdGb378Q6HBFI7vnqwgZAe/ou95qevOvoX9Sk6JXOvi4Phmy2Xhg+rj7Z4WCygmd7t+cDyddlSEuxBKKtbxVQ=
-X-Received: by 2002:a17:907:2d9f:b0:a56:cb24:fbb9 with SMTP id
- gt31-20020a1709072d9f00b00a56cb24fbb9mr388348ejc.20.1713773827167; Mon, 22
- Apr 2024 01:17:07 -0700 (PDT)
+	s=arc-20240116; t=1713775200; c=relaxed/simple;
+	bh=Y5LaT6VMQwV75sFLhiDLZlNUiEGLXlU7BLi/iw4fmdQ=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bccQSKZE65S+bQzyplHC77W6iqBWS1c6zB1KvmaQkgyFzvNJ59uw4x8xR1XwdpaEEx3WBk9iwcjLgePuV/tkVHHkU/9t0x0Hi28eeSnfE+gkuAsWyD7R2XNLwfVwSXTcyU1LVKUMryEY9IMaTQH3vzZ2cbW4QaOOADwaCXnbHYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trustnetic.com; spf=pass smtp.mailfrom=trustnetic.com; arc=none smtp.client-ip=15.184.224.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trustnetic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trustnetic.com
+X-QQ-mid:Yeas1t1713775098t358t44927
+Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [125.119.247.132])
+X-QQ-SSF:00400000000000F0FUF000000000000
+From: =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
+X-BIZMAIL-ID: 11855313605505495495
+To: "'Bartosz Golaszewski'" <bartosz.golaszewski@linaro.org>,
+	<andriy.shevchenko@linux.intel.com>
+Cc: <brgl@bgdev.pl>,
+	<elder@linaro.org>,
+	<geert+renesas@glider.be>,
+	<linus.walleij@linaro.org>,
+	<linux-gpio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<paulmck@kernel.org>,
+	<warthog618@gmail.com>,
+	<wsa@the-dreams.de>
+References: <02a101da9227$bda04cb0$38e0e610$@trustnetic.com> <CACMJSeuGu4nCVsbSnTrJwEdU+RF0BKHbzS7A9Cf2CiM_stJPzg@mail.gmail.com>
+In-Reply-To: <CACMJSeuGu4nCVsbSnTrJwEdU+RF0BKHbzS7A9Cf2CiM_stJPzg@mail.gmail.com>
+Subject: RE: [PATCH v3 00/24] gpio: rework locking and object life-time control
+Date: Mon, 22 Apr 2024 16:38:17 +0800
+Message-ID: <033a01da9490$6c517490$44f45db0$@trustnetic.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409095637.2135-1-ychuang570808@gmail.com>
- <20240409095637.2135-4-ychuang570808@gmail.com> <ZhZTsV3RKpuyeUr4@surfacebook.localdomain>
- <643a0d80-3d99-420e-9e77-acc67728fbe7@gmail.com>
-In-Reply-To: <643a0d80-3d99-420e-9e77-acc67728fbe7@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 22 Apr 2024 11:16:31 +0300
-Message-ID: <CAHp75VfMb_=XKoQNbbVphLg-eQgc6eJbZOW36g_hU=-iK2bSOQ@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO driver
-To: Jacky Huang <ychuang570808@gmail.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	p.zabel@pengutronix.de, j.neuschaefer@gmx.net, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ychuang3@nuvoton.com, schung@nuvoton.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQKkRktGdWWxOHu8pOWwvozmol9uowIV96vBr8/aZvA=
+Content-Language: zh-cn
+X-QQ-SENDSIZE: 520
+Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz8a-1
 
-On Mon, Apr 22, 2024 at 7:10=E2=80=AFAM Jacky Huang <ychuang570808@gmail.co=
-m> wrote:
-> On 2024/4/10 =E4=B8=8B=E5=8D=88 04:54, Andy Shevchenko wrote:
-
-...
-
-> >> +#define MA35_GP_MODE_MASK_WIDTH              2
-> >> +
-> >> +#define MA35_GP_SLEWCTL_MASK_WIDTH   2
-> > I looked at the code how you use these... Oh, please switch to FIELD_GE=
-T() /
-> > FIELD_PREP() (don't forget to include bitfield.h)
+On Sat, April 20, 2024 5:29 AM, Bartosz Golaszewski wrote:
+> On Fri, 19 Apr 2024 at 09:04, Jiawen Wu <jiawenwu@trustnetic.com> wrote:
 > >
-> > ...
+> > Hi Bartosz Golaszewski,
 > >
-> > ...
-> >> +             regval &=3D ~GENMASK(setting->shift + MA35_MFP_BITS_PER_=
-PORT - 1,
-> >> +                                setting->shift);
-> > This will generate an awful code. Use respective FIELD_*() macros.
+> > I ran into a kernel crash problem when I pull the latest net-next.git, and
+> > finally it was found that is caused by this patch series merged.
 > >
-> > ...
+> > The kernel crashed because I got gpio=0 when I called irq_find_mapping()
+> > and then struct irq_data *d=null, as my driver describes:
 > >
-> >> +     regval &=3D ~GENMASK(gpio * MA35_GP_MODE_MASK_WIDTH - 1,
-> >> +                        gpio * MA35_GP_MODE_MASK_WIDTH);
-> >> +     regval |=3D mode << gpio * MA35_GP_MODE_MASK_WIDTH;
-> > Ditto.
+> >         int gpio = irq_find_mapping(gc->irq.domain, hwirq);
+> >         struct irq_data *d = irq_get_irq_data(gpio);
 > >
-> > ...
+> >         txgbe_gpio_irq_ack(d);
 > >
-> >> +     regval &=3D GENMASK(gpio * MA35_GP_MODE_MASK_WIDTH - 1,
-> >> +                       gpio * MA35_GP_MODE_MASK_WIDTH);
-> >> +
-> >> +     return regval >> gpio * MA35_GP_MODE_MASK_WIDTH;
-> > Ditto.
+> > The deeper positioning is this line in __irq_resolve_mapping().
+> >
+> >         data = rcu_dereference(domain->revmap[hwirq]);
+> >
+> > So, is it the addition of SRCU infrastructure that causes this issue?
+> >
+> 
+> This is irq-specific RCU that I did not add in the GPIO series. Please
+> provide us with more information. Bisect to the exact commit causing
+> the issue and post the kernel log (we don't know what kind of crash
+> you trigger and what the stack trace is).
+> 
+> Bart
+> 
 
-...
+Hi Bartosz & Andy,
 
-> Allow me to remove irrelevant parts.
->
-> I attempted to follow your advice and use FIELD_GET() and FIELD_PREP(),
-> but found
-> it impractical. The reason is that these two macros require their 'mask'
-> argument
-> to be a constant, otherwise compilation errors occur, which is the issue
-> I encountered.
-> Since the mask here is calculated and not a constant, compilation errors
-> occur.
->
-> Taking MA35_GP_REG_MODE as an example, within 32 bits, every 2 bits
-> represent
-> the mode of a GPIO pin, and the mask is obtained by GENMASK(gpio * 2 -1,
-> gpio * 2),
+Thanks for your replies.
 
-This is not good for the compiler, it can't figure out (at least in
-some _supported_ by Linux kernel versions on some architectures) that
-GENMASK can be constant here just left-shifted by arbitrary bits.
+I'm sorry for the misunderstanding, and glad this patch doesn't cause any
+problems. I thought the issue was in this patch because of my mistake.
+It's actually caused by other patches. :)
 
-> where the 'gpio' argument is a variable, not a constant, leading to
-> compilation
-> errors.
->
-> Due to this reason, I will leave this part unchanged, or do you have any
-> other suggestions?
 
-If you need non-constant field_get()/field_prep(), add a new patch
-that moves them from drivers/iio/temperature/mlx90614.c (and there are
-more custom implementations:
-https://elixir.bootlin.com/linux/latest/A/ident/field_get) to the
-bitfield.h and use them in your code.
 
---=20
-With Best Regards,
-Andy Shevchenko
+
+
 
