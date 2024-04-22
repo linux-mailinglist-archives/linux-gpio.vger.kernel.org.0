@@ -1,129 +1,123 @@
-Return-Path: <linux-gpio+bounces-5718-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5719-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F8728AD3BB
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 20:16:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F8ED8AD50C
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 21:44:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCE801F216C1
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 18:16:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 91C03B22072
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 19:44:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95E7B154430;
-	Mon, 22 Apr 2024 18:16:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 304F415535B;
+	Mon, 22 Apr 2024 19:44:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="teAiQ9Wb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMBO7gB5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828A513F015
-	for <linux-gpio@vger.kernel.org>; Mon, 22 Apr 2024 18:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33C315534B;
+	Mon, 22 Apr 2024 19:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713809761; cv=none; b=igXbiK2ecKCdVCJNoFvNMeT/duNkgnasZI0h7d4RNyniudEdDSMG8hzJCM/w7LCbea7V5MSgNN8LHzjcyYdlzXeA4OkBb4wni1tTgbpW8AzfIr5JRZjr1Njy/bOgXumheH64Xu3FGnBBEyhwbvRmLHA9xAptC77PvIpouoQAsAk=
+	t=1713815066; cv=none; b=BLJDJmjz1aQPOqu9QNa1jl/doFa8CHOhbkn5j6tTOV9bB2IGv4TKtzglej6QTqVhDl6Qg3UIX7vMjqm53HmLErfUGGEwM3K+v8g99zeOe9MuezuLIFARkmfvbueG6NOOEeN9FXxyAVmePaPKQnPbgG+U+O4CUtjwW8QzC68KMtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713809761; c=relaxed/simple;
-	bh=IOleGRSqiLrOnDc5YCXgdneK0qitLwASA+PISN9Mf4s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fGWjBuA3POyeyUVOsbsexcgOUnn0FdzQ/gkMktuDtWUIPbLNR/l1v8OKLJ+FpRb4ZkkctbNAcisV2JQJpTA1BA/Q1SrGIb2jz9bCXXTVg0rWmaECLb9j3Y8qYQAwa/la0C5gA/3/WfqXfTIBW/tTmE6oDBiz8nLGTyPzKaMDX7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=teAiQ9Wb; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2da01cb187cso81970611fa.0
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Apr 2024 11:15:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713809757; x=1714414557; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/W5ZN7raaRP3ZZ1h9F2RQUujI6Z+M9K+S0uQNN3LNFc=;
-        b=teAiQ9WbAOgLLir1YBiNX5xg4xBP56yFYeBPZoxezPTF4tSVcbLdAr/97mpn8q3BP2
-         bdwNGCk32uK5MEFTccmwAawmgwgYYMNe0Dzw+VXLioCDQZWQ+esYynEG+bbQS+7MJ7ls
-         YVnAGVXWvsZV4DyJB+tqtGNAEQu5B1uUPerRKInvaY4LS87WZS/x6DQr7BWuO1Fbo3iC
-         PIPV4mIaFNpytgSBy+9ZFCMhzXuq70vAxrkkBkNAyYpfKQHen5JEVG76yr45IZo+fATb
-         s4XTX4Z/d3uWRjOpW4oGrp5r7lCAuA20LXhxAngdiEFnMdELxTBful645jLoM0l1Ozxp
-         sZIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713809757; x=1714414557;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/W5ZN7raaRP3ZZ1h9F2RQUujI6Z+M9K+S0uQNN3LNFc=;
-        b=s4/UsefYUaxADLTeWIlCUzQ3vkr6nqFLBmKQtGMQr9hfSKtCiNgr1I/UkHpgbxKI/I
-         gAH3XqB712odYm7KcfHZyYFlWIF6LTMEAq3Zz3q50eMEBJ+b2Vn7kGDKcBA0SKwI/w7b
-         kyZG/gCL4N6wo5DNwERnxIr49kkHCgikFyJ0Il7AwjG/ZS/qnEF0BHgapmHA3+DHgS7K
-         cGmY3vYTCx+d5qGxg7EQTZpotdsGWrnCiME98gSmJv0HpVZ9q1t9YN0UJNSNAquApVWx
-         uiDN2LkCvGHNWJ4D94X3KDbxgBcERmNCbsqdkeylpJaHA9uf20hxMI0840+ajBO9NPpm
-         sjwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXeEE5K9495TmkKp+9OrEtTCWdQ7gIElLt6k8vgOMAVzacfmHSqt/vxxje5ZdJ5WnkeP50GuJxpfK5PZqW9YgBNY+D82F5RXn8h7A==
-X-Gm-Message-State: AOJu0YwNvuiLGFdGosRtr4FQhrFeiJRw0Mfy0YmGrrejs0ejkpOZM40y
-	kRH/zCMYIT1L/ZVlF+gFMT7otx4fWP9NbpVj8cS5IUU0qDUAq0si8u7hotB4RZsK5bS0bGKdSgM
-	CpCCGMApm0Ml2ZrZfd5tt8iUmRrWmaLz6MN3EMw==
-X-Google-Smtp-Source: AGHT+IHF0U6Z0JMZDp3wfqRK2LfkQhsTNo2JATZwgkEOA8YL2ECekB/juabxSjpvUeetR440tKyQC7kHdqT/WnVRuKQ=
-X-Received: by 2002:a05:651c:198c:b0:2dd:c3e5:eefc with SMTP id
- bx12-20020a05651c198c00b002ddc3e5eefcmr2445901ljb.27.1713809757633; Mon, 22
- Apr 2024 11:15:57 -0700 (PDT)
+	s=arc-20240116; t=1713815066; c=relaxed/simple;
+	bh=K8WN8aubdBUdpq2B/uKYg69yANymGJsXmW3941zGW1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=FpqNPGh4lS60cKG1o0KxOtSbPzII9X57pTfHsri2bQSjENadhInjyIjD+aBRSWt/XkxQ56M2NaigrhbKaWmx5Vv4U+eHh/fRc04FODHLyy4/9PKk5FNCWXsVeXceAHsAVejfs4bW7ICCxk6XHmgBtxDWxkgCI2UJrbKTFFlpYOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMBO7gB5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CFF1C116B1;
+	Mon, 22 Apr 2024 19:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713815065;
+	bh=K8WN8aubdBUdpq2B/uKYg69yANymGJsXmW3941zGW1s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GMBO7gB5pjdjM0klxQpfKSPZbshoJO0PuGP/01h9ETcM6twO2atsJALTuh+zPMT38
+	 OtIGcuxHm2VtBWIzQNCoiOMNyr6zdoObSloYFSjblqoLnbRBLQXjyFlp/OFQ+DdYNz
+	 r6xb2t/OSk2DG5KCgZYH8sfUy7ppbw0o/lBI58Smy+QewkeKumlPSw6Ki3qLI/0N5b
+	 26Z1hij8g8+RVqSYAYIBmo0mSuJzKVsGpo/T+n8iYgIMTk11Gw3d635aisJOwmLND7
+	 xpQXKqIB1Q9fvJRrIL+yQyZKoPijFAg9rBtf8C8dCm213am27yKB2DXaIo5mkWT88r
+	 8yKoVYGpWI2Ig==
+Date: Mon, 22 Apr 2024 14:44:23 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Andi Shyti <andi.shyti@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Tony Lindgren <tony@atomide.com>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Vignesh R <vigneshr@ti.com>, Peter Rosin <peda@axentia.se>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com,
+	thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH v5 02/11] i2c: omap: wakeup the controller during
+ suspend() callback
+Message-ID: <20240422194423.GA414623@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416215222.175166-1-brgl@bgdev.pl> <20240416215222.175166-3-brgl@bgdev.pl>
- <20240417072350.GA120983@rigel>
-In-Reply-To: <20240417072350.GA120983@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 22 Apr 2024 20:15:46 +0200
-Message-ID: <CAMRc=MfJxFYBoVK5GGks-A++n6naLJ31B6-UJBdxiw7gvnfxfQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v2 2/4] tools: use ppoll() where higher timeout
- resolution makes sense
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?Q?Gunnar_Th=C3=B6rnqvist?= <gunnar@igl.se>, 
-	linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd5d0aa5-ca0c-47a5-8e40-4742bc939cfa@bootlin.com>
 
-On Wed, Apr 17, 2024 at 9:23=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Tue, Apr 16, 2024 at 11:52:20PM +0200, Bartosz Golaszewski wrote:
-> >
-> > -             ret =3D poll(pollfds, resolver->num_chips, cfg.idle_timeo=
-ut);
-> > +             if (cfg.idle_timeout > 0) {
-> > +                     idle_timeout.tv_sec =3D cfg.idle_timeout / 100000=
-0;
-> > +                     idle_timeout.tv_nsec =3D
-> > +                                     (cfg.idle_timeout % 1000000) * 10=
-00;
-> > +             }
-> > +
-> > +             ret =3D ppoll(pollfds, resolver->num_chips,
-> > +                         cfg.idle_timeout > 0 ? &idle_timeout : NULL, =
-NULL);
-> >               if (ret < 0)
-> >                       die_perror("error polling for events");
-> >
->
-> One minor nit - I would introduce a timespec pointer initialised to NULL
-> and set to point to idle_timeout within the if rather than repeat the
-> cfg.idle_timeout > 0 test.
->
+On Mon, Apr 22, 2024 at 11:40:02AM +0200, Thomas Richard wrote:
+> On 4/19/24 10:47, Andi Shyti wrote:
+> > Hi Thomas,
+> > 
+> >> +static int omap_i2c_suspend(struct device *dev)
+> >> +{
+> >> +	/*
+> >> +	 * If the controller is autosuspended, there is no way to wakeup it once
+> >> +	 * runtime pm is disabled (in suspend_late()).
+> >> +	 * But a device may need the controller up during suspend_noirq() or
+> >> +	 * resume_noirq().
+> >> +	 * Wakeup the controller while runtime pm is enabled, so it is available
+> >> +	 * until its suspend_noirq(), and from resume_noirq().
+> >> +	 */
+> >> +	return pm_runtime_resume_and_get(dev);
+> >> +}
+> >> +
+> >> +static int omap_i2c_resume(struct device *dev)
+> >> +{
+> >> +	pm_runtime_mark_last_busy(dev);
+> >> +	pm_runtime_put_autosuspend(dev);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >>  static const struct dev_pm_ops omap_i2c_pm_ops = {
+> >>  	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> >>  				      pm_runtime_force_resume)
+> >> +	SET_SYSTEM_SLEEP_PM_OPS(omap_i2c_suspend, omap_i2c_resume)
+> > 
+> > If you don't have CONFIG_PM_SLEEP, though, this doesn't compile.
+> 
+> Hello Andi,
+> 
+> Yes indeed, the __maybe_unused attribute is missing for
+> omap_i2c_suspend() and omap_i2c_resume().
 
-Actually we can avoid it by doing it once before we enter the for(;;)
-loop. It's passed by constant pointer to ppoll() anyway and having the
-struct AND pointer to it initialized to NULL sounds more complex than
-it needs to be. I'll do it in v2.
+Isn't there a way to avoid having to use the __maybe_unused attribute?
 
-> But that is just personal preference, so either way,
->
-> Reviewed-by: Kent Gibson <warthog618@gmail.com>
->
+E.g., use DEFINE_SIMPLE_DEV_PM_OPS() as is done by these:
 
-Thanks, I'll keep the tag if you don't mind the above solution?
+  82f9cefadac4 ("serial: 8250_exar: switch to DEFINE_SIMPLE_DEV_PM_OPS()")
+  f243df0a0be0 ("media: platform: rzg2l-cru: rzg2l-csi2: Switch to RUNTIME_PM_OPS()")
+  6ccc22a5afcb ("net: ravb: Switch to SYSTEM_SLEEP_PM_OPS()/RUNTIME_PM_OPS() and pm_ptr()")
 
-Bart
+Bjorn
 
