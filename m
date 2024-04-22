@@ -1,148 +1,153 @@
-Return-Path: <linux-gpio+bounces-5709-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5710-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EE8E8ACA78
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 12:21:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C33A38ACB37
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 12:49:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A1F09B20B57
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 10:21:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFE191C208F7
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 10:49:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 456BD53814;
-	Mon, 22 Apr 2024 10:20:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 016CB481DD;
+	Mon, 22 Apr 2024 10:49:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yazwWYqp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iUHScp/8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A6113E3ED
-	for <linux-gpio@vger.kernel.org>; Mon, 22 Apr 2024 10:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3E3205E38
+	for <linux-gpio@vger.kernel.org>; Mon, 22 Apr 2024 10:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713781258; cv=none; b=WEhh5nr/spuFnXeZc+hzEn1+N/CS7y+T9mt7sFfEMFfZhau8C/TlgtTnZTbXgkzadYVv9EmCv+drZwG3N54S6ZUMkIGIOdRneAGkcnLU+a49tl+LhFLSc4kmT2l4XjbDIJ21MQa4GP3hp08GIT+w6Gsyi6dHHWLV3qTAsLkU3OQ=
+	t=1713782977; cv=none; b=d47qnWR7IYhXLpuioISzfspRsvxXE71/PUOFFXFbipEREQsDRBzKhkrjIkW37IfhCzmeNSvcHjx4WBaeKCMq/k8ePGzEaEVg4YVTxiAnuKSVuQOQ+DjKUtB4y1h/JTBHlrAouidP3vTNTxZ6rRDdLrH75lZ/eg+h3l/HB0SZOvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713781258; c=relaxed/simple;
-	bh=aDZG2lDnq+hlwDfokO8r20HjfALS7hd3CmW+2KPsvoo=;
+	s=arc-20240116; t=1713782977; c=relaxed/simple;
+	bh=MSgaIq6vFVrG+Bd/mmoMgGRw/81lVUqASzuGDmfQUvc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NZGoc3+xKZC2zzbvW8OL8l9ecRji076joPhHCinvMTaRuvELFzi2lrQ1oV6Nnnl6XTXF4Z3TfcZ4IrA6eiz6yt9oe9br4L4UhAd6ZXpjKT63nu+Rv9+UiPoZx92y7xKSDEJjvAu90fPNvMt9CrCjni0cKznWEdkZ0iWLTolBnZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yazwWYqp; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2da0b3f7ad2so60777971fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Apr 2024 03:20:56 -0700 (PDT)
+	 To:Cc:Content-Type; b=aiF5va3HJaIJk6wSV/0bVsilho/O/8xuhTX3DSK1EzE8BDa582yxnOUqfojIdmvp71fv5EM6a70t17MChW0dxTXA2GNYHOto7HceSRcuWXrPo6vB1JNCDNtLkAKm109sLV1y+RsDKjjIAtPD+altI+a0utaEeBAAUWhDW7zq3qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iUHScp/8; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3c70999ff96so2645140b6e.2
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Apr 2024 03:49:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713781254; x=1714386054; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1713782975; x=1714387775; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G6n3QpSD2GmO3aRxqZjaA+3Qv43wmj5fZfLqd7FRwxQ=;
-        b=yazwWYqpf9xn7faT1wou0Og2IiTFr1DF1uCPWVjw5ypNfFu2j0/ETzOWOQd7i80wUR
-         B9ADs/vcUpYKLG/08IIjO2xya0FBcC6od2r6Q9VraZty8pWs7qzQpo1kihq7SolX/xg/
-         lP0R/ESzADXVcVibDrtGRKYG/vZtetEmfMVcS1oqDycddZ4Ix2iTlLC0K8emqRjvYnSQ
-         NuBiGixAMrnKJdCHJEk2x427WmlzgJ+538awzudPVd4Gxs9GfdMtoazJb1qLLA97uatG
-         BHASOeiIkdwoXujH5SkILT4UBYBcq7LYCawayxEzSWbRJ/VTDr1+bdualRSme+IMIV+P
-         ADPQ==
+        bh=4wCCwoRdKJhCHGpJd9PxrqHyRj74wPSMq6YviT3yZjQ=;
+        b=iUHScp/8wgj3Gfwo424qoB0AiQHDPsJfVPhR5RTW77Ph33rqvneA2N3DtWONu+VuG/
+         h8d8tI9+ZkZy/RoL73GHC7TREWeNY110rusFc3P1Bm1PEZLODLBe7CPWwJR5mMLq7gnl
+         ijrggCZqRvH1NDttH/z4IRjgnptPSYQRHJbyvGMjoEJ5PRVx8ZHrYbP0FhsAP2ZU3EZS
+         Db5WQycO1XhFvgc+txMNvGqa4TO3kuUWEU6k3LjImhNOExByDSbTGNWvfLxUeptdgBZE
+         bYZEE9s4pHA7o13gL8BW+SvEzXOaFG0Aab/twbwrYWKLMyyj3iWvHjbqj0Dv21/1OagW
+         wiag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713781254; x=1714386054;
+        d=1e100.net; s=20230601; t=1713782975; x=1714387775;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=G6n3QpSD2GmO3aRxqZjaA+3Qv43wmj5fZfLqd7FRwxQ=;
-        b=T+iSvQU3uFapliFUYoSlPr4GBpldBp2Ga2TvXlJp1sOb35BSp7mYxszsw55L9kWlqw
-         Oxyn0qYn2oY/DabSTpWiJdvi7AaslGGiHMbhfzxPdd7OQVHAABKnKRav+SqcO8DU8dK9
-         mNGyHYFrksmP1IFcZWXJe9dlD58vdlprWE1PZVNFOBsSqSbAryS9JAm1ALt6xtKAa37J
-         TDhs6Dhv5Tlygg2XOFhvcxbijX3jtr2YQ9J37ro0QF+TSbdP2GMAcd5NUga2SvLr66m/
-         D6VcUwao43PC/3Vbf8y7h9t09JWIZfv+DxtBH14/IztxWG01Mgi4n5P/ARDz10tq8vj/
-         ffhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVCc+J1PKIuPxCL8z3d4enN6Lo8DMbgcWp9Nm1l5SIfUs6jDcNF92fuBaCXGJXsRKt+mq9JAIguc17yGQw36UOK7vbZZXSSjMAd7w==
-X-Gm-Message-State: AOJu0YzlgoKfXcGxUuRoswvF4OGwZDDZ0Mjo1ftE9c0+Ma3wGAcluIsF
-	9DZzrC1jIWyNww+Rf0hZi/VSPsZBk6RMQBCh2T69RVMrdgR3N2eplA6yZoEuWMPk31jO2Gfjc1u
-	Iki0vgD0ZTp9pjdI22a9CZZ02lC4LH7aaaXEqgUDoW+xh0MUs
-X-Google-Smtp-Source: AGHT+IHr2ThsGdQtCcOcItjjiHDeJR/H4Tg2szdpz/AaCf4bt15EJa9zH07VzlC1p3stpJp/fhYMSq7J43V38aJacQY=
-X-Received: by 2002:a05:651c:49e:b0:2d6:c5d7:8477 with SMTP id
- s30-20020a05651c049e00b002d6c5d78477mr5433987ljc.36.1713781254425; Mon, 22
- Apr 2024 03:20:54 -0700 (PDT)
+        bh=4wCCwoRdKJhCHGpJd9PxrqHyRj74wPSMq6YviT3yZjQ=;
+        b=ldMieJjae2KDZTKFqbjVYu5oQlCTZJiYlIz/o76dMH/7YsAb6y11IdKeVJH6eJLC+M
+         dVIHLPxwrnw4S8M90CQ7W7q+L2T27RUrdtnpOt0R6aURiByInc72isWKQapd6U9/tQgj
+         zm7X+Ex41XymBoMveEKGYqtSTCAbslXOjcWQDcrxPwlzsoR9EJNYG8kwFkk0rsuipfdI
+         IobEiJEhg9EHDGYgDzoFfuB65JwRxToubzrmIa2gub0o9N3FH2CMIGtfnyZVMB9EHMp+
+         9uFdLSei4EtF2CqzweaHvjarDuKA/mq8S9FbH0Hl1YoWTRId9NpGayXZGeyZlaAsnnNo
+         3mKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVOxqbnAJN2pwQscRVV7V8oBH4BGpmX5H0QYp5UmJIUMSYiKpp0SRCWxNNC1mwjHzqpGmEgO4jyZyFVOILDgnrnsX9tD/KOav9SJA==
+X-Gm-Message-State: AOJu0YzuQeMcB3CPkjCLNJlSUjzqzKV9YCLqQDTyLdQO+d4JkdBUcLmQ
+	xAmM2mmIeJLDkE2WU4npjZrL8ObrGlwb79maFyKWU8rtfTBRK/t22/96et4eMrEDSYf7ZBS43zo
+	VJk0Adk7h7ha5VOkSBCiw5bmJJ1NTDwh5JfvA7A==
+X-Google-Smtp-Source: AGHT+IFEHPg3T7oe8vbsNCk4s8UvW89ZVEensdAkiOr24MNYoCE9jhFTbt9hAWcHqruDgqJhMro5EHkYWXZfTQSAbn8=
+X-Received: by 2002:a05:6870:fb91:b0:22e:b736:786d with SMTP id
+ kv17-20020a056870fb9100b0022eb736786dmr12108386oab.31.1713782974899; Mon, 22
+ Apr 2024 03:49:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240419080555.97343-1-aapo.vienamo@linux.intel.com>
- <MW5PR84MB1842F4C102CBFA73E861F420AB0D2@MW5PR84MB1842.NAMPRD84.PROD.OUTLOOK.COM>
- <CAHp75Vd_zfuRc5nV42MHUjyOPQgf0+=A5Yyj8kaO7vYcmQsOzw@mail.gmail.com>
-In-Reply-To: <CAHp75Vd_zfuRc5nV42MHUjyOPQgf0+=A5Yyj8kaO7vYcmQsOzw@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 22 Apr 2024 12:20:43 +0200
-Message-ID: <CAMRc=Me_XTQmWMi-+XAm-FwkEwgUM+rsG2gYP8jLGZaH58c4PA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Add Intel Granite Rapids-D vGPIO driver
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Elliott, Robert (Servers)" <elliott@hpe.com>, Aapo Vienamo <aapo.vienamo@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20240416212141.6683-1-brgl@bgdev.pl>
+In-Reply-To: <20240416212141.6683-1-brgl@bgdev.pl>
+From: Grant Likely <grant.likely@linaro.org>
+Date: Mon, 22 Apr 2024 11:49:24 +0100
+Message-ID: <CANH6bkDZRVApDNoBoYJYN+jUEAnVpWFBr0fSBR+gO1Cjz2-WCw@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 0/2] licensing: relicense C++ bindings and add a
+ document on contributing
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 20, 2024 at 12:02=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Tue, Apr 16, 2024 at 10:21=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 >
-> On Fri, Apr 19, 2024 at 11:00=E2=80=AFPM Elliott, Robert (Servers)
-> <elliott@hpe.com> wrote:
-> > > -----Original Message-----
-> > > From: Aapo Vienamo <aapo.vienamo@linux.intel.com>
-> > > Sent: Friday, April 19, 2024 3:06 AM
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> ...
+> I'm Cc'ing all copyright holders for this project's C++ source code since
+> the last license change which are Linaro, BayLibre and Kent Gibson. Pleas=
+e
+> kindly leave your Acks.
 >
-> > > +static int gnr_gpio_probe(struct platform_device *pdev)
-> > > +{
-> > > +     size_t num_backup_pins =3D IS_ENABLED(CONFIG_PM_SLEEP) ? GNR_NU=
-M_PINS
-> > > : 0;
-> > > +     struct device *dev =3D &pdev->dev;
-> > > +     struct gpio_irq_chip *girq;
-> > > +     struct gnr_gpio *priv;
-> > > +     void __iomem *regs;
-> > > +     int irq, ret;
-> > > +
-> > > +     priv =3D devm_kzalloc(dev, struct_size(priv, pad_backup,
-> > > num_backup_pins), GFP_KERNEL);
-> > > +     if (!priv)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     regs =3D devm_platform_ioremap_resource(pdev, 0);
-> > > +     if (IS_ERR(regs))
-> > > +             return PTR_ERR(regs);
-> > > +
-> > > +     irq =3D platform_get_irq(pdev, 0);
-> > > +     if (irq < 0)
-> > > +             return irq;
-> > > +
-> > > +     ret =3D devm_request_irq(dev, irq, gnr_gpio_irq, IRQF_SHARED |
-> > > IRQF_NO_THREAD,
-> > > +                            dev_name(dev), priv);
-> > > +     if (ret)
-> > > +             return dev_err_probe(dev, ret, "failed to request inter=
-rupt\n");
-> >
-> > All of these early returns will leave the memory allocated to priv
-> > forever, since priv isn't saved anywhere until:
->
-> > > +     platform_set_drvdata(pdev, priv);
->
-> I'm not sure I got your comment right. Do you think there is a memory
-> leak on the error paths above? If so, can you elaborate, because I
-> don't see it?
->
+> Bartosz Golaszewski (2):
+>   licensing: relicense C++ bindings under LGPL-2.1-or-later
+>   doc: add a file explaining the contribution process in detail
 
-Elliott: if probe fails and we return, all devm_ resources will be
-released. I don't see any error in this code either.
+For the series:
+Acked-by: Grant Likely <grant.likely@linaro.org>
 
-Bart
+>
+>  CONTRIBUTING.md                             |  88 +++++++++++
+>  COPYING                                     |  11 +-
+>  LICENSES/LGPL-3.0-or-later.txt              | 165 --------------------
+>  README                                      |   2 +
+>  bindings/cxx/chip-info.cpp                  |   2 +-
+>  bindings/cxx/chip.cpp                       |   2 +-
+>  bindings/cxx/edge-event-buffer.cpp          |   2 +-
+>  bindings/cxx/edge-event.cpp                 |   2 +-
+>  bindings/cxx/exception.cpp                  |   2 +-
+>  bindings/cxx/gpiod.hpp                      |   2 +-
+>  bindings/cxx/gpiodcxx/chip-info.hpp         |   2 +-
+>  bindings/cxx/gpiodcxx/chip.hpp              |   2 +-
+>  bindings/cxx/gpiodcxx/edge-event-buffer.hpp |   2 +-
+>  bindings/cxx/gpiodcxx/edge-event.hpp        |   2 +-
+>  bindings/cxx/gpiodcxx/exception.hpp         |   2 +-
+>  bindings/cxx/gpiodcxx/info-event.hpp        |   2 +-
+>  bindings/cxx/gpiodcxx/line-config.hpp       |   2 +-
+>  bindings/cxx/gpiodcxx/line-info.hpp         |   2 +-
+>  bindings/cxx/gpiodcxx/line-request.hpp      |   2 +-
+>  bindings/cxx/gpiodcxx/line-settings.hpp     |   2 +-
+>  bindings/cxx/gpiodcxx/line.hpp              |   2 +-
+>  bindings/cxx/gpiodcxx/misc.hpp              |   2 +-
+>  bindings/cxx/gpiodcxx/request-builder.hpp   |   2 +-
+>  bindings/cxx/gpiodcxx/request-config.hpp    |   2 +-
+>  bindings/cxx/gpiodcxx/timestamp.hpp         |   2 +-
+>  bindings/cxx/info-event.cpp                 |   2 +-
+>  bindings/cxx/internal.cpp                   |   2 +-
+>  bindings/cxx/internal.hpp                   |   2 +-
+>  bindings/cxx/line-config.cpp                |   2 +-
+>  bindings/cxx/line-info.cpp                  |   2 +-
+>  bindings/cxx/line-request.cpp               |   2 +-
+>  bindings/cxx/line-settings.cpp              |   2 +-
+>  bindings/cxx/line.cpp                       |   2 +-
+>  bindings/cxx/misc.cpp                       |   2 +-
+>  bindings/cxx/request-builder.cpp            |   2 +-
+>  bindings/cxx/request-config.cpp             |   2 +-
+>  bindings/cxx/tests/gpiosim.cpp              |   2 +-
+>  bindings/cxx/tests/gpiosim.hpp              |   2 +-
+>  bindings/cxx/tests/helpers.cpp              |   2 +-
+>  bindings/cxx/tests/helpers.hpp              |   2 +-
+>  40 files changed, 127 insertions(+), 211 deletions(-)
+>  create mode 100644 CONTRIBUTING.md
+>  delete mode 100644 LICENSES/LGPL-3.0-or-later.txt
+>
+> --
+> 2.40.1
+>
 
