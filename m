@@ -1,74 +1,52 @@
-Return-Path: <linux-gpio+bounces-5707-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5708-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39D3E8AC8B1
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 11:19:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C95308AC91A
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 11:40:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5A311F21181
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 09:19:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84E462826D4
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 09:40:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2758453E35;
-	Mon, 22 Apr 2024 09:19:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FA6E7FBA1;
+	Mon, 22 Apr 2024 09:40:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BB7+TtK2"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="S+pNIIbd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9709B52F96;
-	Mon, 22 Apr 2024 09:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539BD64A98;
+	Mon, 22 Apr 2024 09:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713777561; cv=none; b=BG7AFpvL2GnPql6rXIXKl+5KOGPzZRl0rH3mefEE8jDoUJIIv7/zb6GYKjcT0/Ob2mDkKgxDXUQvTPK6Ta7Pi+hpPDZ2+GV3CJhqJMW2QjJoXOW6L4ldrcINrJcox/Qjpww6iK4/KxACteEJYpRWoVyRe2oGHH0QENWFTlNdBc8=
+	t=1713778814; cv=none; b=POy5crvRabNoKCrkc1Voha1pYx2eJWvn/hjsu/eS8IQFSjoaIWvzMxeUBnliVGBgeGlAF0jBpWC+A0pgBztybxLv7NwA5+SxcUQyDNN+Sp71yvA788vdLMb9U79tusNgyQjM2bmYY11GXe8Gvf6bw5nXHsqhJiKrCs/YQID+J2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713777561; c=relaxed/simple;
-	bh=0SzAzbO9mizr1+31aiP0iXs3Mw2nXgbrlKRbnEyHEV0=;
+	s=arc-20240116; t=1713778814; c=relaxed/simple;
+	bh=GlLSRRIiVc809HVRdBjHwu3wV54d3OJygCGFqUwLYpw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rheRBvpvKkL5nSLZAbNkdlmGBhEJKbubAPd6jk973SZTYXdhzFvoEy84r6ilM/yG+CdJiqlbZitT9j8MzkK66NC5UV9x8b/3yj35aoZye/Zs+z3F4RGdWDJv/kaNS9JYs6HvEQXRyYltts+Pl8jRkAdkZ36wOFfB9dPQGVjnxN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BB7+TtK2; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so3355823b3a.0;
-        Mon, 22 Apr 2024 02:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713777560; x=1714382360; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/Ep3MhmTtFiF+uEKgR3YsV/c0mK0RSR4QMExWC1N258=;
-        b=BB7+TtK2f+1fzz655IBMEY4ZiVKijlzOuw1U/AG1taNme8BQQ8nqit8YPF3wT8zN+x
-         Bcl6QaDiRy2UYCfwTP2ESJyFfR7M7H52KK0WOqlzarUZQ4xtL/S47dfPmV60iKc3ZVXW
-         ycy2lvcGZ0747q00IoAsd59CUN3ZqkHTUPA6FmvFgpFfMgSae8LJt7JA3KgWkHZCOZXh
-         soK2v5DwqPgj1Flc2xsKjJ8nm8UKRyqRCGYikPpzyWmL/uRLdcj8FPkw8Kfw3bRh5zxX
-         zzJBrTvOXMtb1rXNAajhEvHEwschzndG2Gkfe/siHU/gtgfxvcYEPVp5JVw6Nc4cBk6Z
-         swCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713777560; x=1714382360;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Ep3MhmTtFiF+uEKgR3YsV/c0mK0RSR4QMExWC1N258=;
-        b=pwe8D8OsAVutTDB1e5n7L4wmYnQQMFNJ7vj3zdnWrooak8V5Hl/1z/bsTFXLKlqlMJ
-         XRcWLZQ5Q9tBs3UpDrViPvfgBvSrhdBFy1n8X+KF3FcDPMsjk9Jeqestogrk8ilnH6W7
-         QfYqlYJXKyChQUExkhC7mYerEXaBFkMKlHq9X1E3pcXiE5cN1wonNJgsPn9U/gy+ngTV
-         PoORWAtB9DnpaWMtrADXDP+lIDcCtOawRo/9mhvNzt6idBz1zbJiwmBiCvS67x2Xfvba
-         6M6/8pI6v7jBVF54q8oQDM/rzMFsPrFf59M915beB2rJBRqaQKRxoN3rCGPAok+Uaklu
-         y2jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuCWQS/tYmXbXVR5hssVBMudQGy2ZO0VH4MHinKpq4aAxd4v93g4hv+dTQ9BX+8bSYpupj/QuK+gRDnASI3v8QzrCEMIS584arS+dJICbiWZBp0I/3H5mKR+eMw8ImMe7SwJKTF8LHaI1uKpfN/ICg/iAGqN6q6QGS+3YQTiwAqEMd1+c=
-X-Gm-Message-State: AOJu0YymS7G+OD4b72Pc97UZIVBPOjYlMQ8G6oVS9CXA5D1ffddzhJ22
-	Pa42sdGqWZ93CSbgdoR9own2jm0Fw3rI3uaLiHPea1/SaukyBXel
-X-Google-Smtp-Source: AGHT+IEXrDILus4aNiNBVg1PEwpG5j2RHHDlxnvL7ic9sqQK7z3m47SHTbboBcgfTF53l9Ffs1/HzA==
-X-Received: by 2002:a05:6a00:10c3:b0:6ed:2fb8:467b with SMTP id d3-20020a056a0010c300b006ed2fb8467bmr9424598pfu.26.1713777559764;
-        Mon, 22 Apr 2024 02:19:19 -0700 (PDT)
-Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id y8-20020aa78048000000b006f2e10b00d6sm1283814pfm.41.2024.04.22.02.19.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 02:19:19 -0700 (PDT)
-Message-ID: <843c3c2a-2f46-4d49-aed4-ad07ebcb7b27@gmail.com>
-Date: Mon, 22 Apr 2024 17:19:15 +0800
+	 In-Reply-To:Content-Type; b=Lhf4dilDdl2lEDfzjGz3f32hS5CI1skF5NB8zAcrA0VkrD8dGZ98S0DWNPIanYXIxjU2tCq7Kl2681f20HD6y2yt+2TXk7PGr6TGmgA9cZNDz4jqNy+YGMFB1t7u21IagwpkNFHrDtO2S+9UV8xMpSrsEbETU6vEdGTmb1zp8Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=S+pNIIbd; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7ADA6240007;
+	Mon, 22 Apr 2024 09:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1713778803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RwTZz+QOuJFhVcfuZG7WHposSII0qZDyi7L1Xxt7bUA=;
+	b=S+pNIIbddjv1f/2u29qA50eSn2u78IHQoN/yeXQn9kXAkAxKzudzCKTzUBwh806OYKshiC
+	XGYhR4UsoJ0QlB3O0AUh1LU1fBv9Y3UF6JuutBlAfd/g6+gu+4UwRgFn2ib0YSsJgcmyCG
+	/lnMkpE8r8xkMCye4NTD0jiU49Wjlf3MFmEcL3mVdAcR5gD9sJcM5/uqBb+tdlL8wkj/Yx
+	ro+vEj/ipMhhHRpGzc+o8gn5YOKRaRb41slSwYMfQVbvK/vhNFZcNmVT9JwX0RLnisKXtu
+	0FAMl2TB1Pr0wTlhu5nFkiJpL2ffcyqpdkWVLP3IVvuD6KXXm8p33rFygEY6VQ==
+Message-ID: <cd5d0aa5-ca0c-47a5-8e40-4742bc939cfa@bootlin.com>
+Date: Mon, 22 Apr 2024 11:40:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,99 +54,71 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/3] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO
- driver
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- p.zabel@pengutronix.de, j.neuschaefer@gmx.net,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- ychuang3@nuvoton.com, schung@nuvoton.com
-References: <20240409095637.2135-1-ychuang570808@gmail.com>
- <20240409095637.2135-4-ychuang570808@gmail.com>
- <ZhZTsV3RKpuyeUr4@surfacebook.localdomain>
- <643a0d80-3d99-420e-9e77-acc67728fbe7@gmail.com>
- <CAHp75VfMb_=XKoQNbbVphLg-eQgc6eJbZOW36g_hU=-iK2bSOQ@mail.gmail.com>
+Subject: Re: [PATCH v5 02/11] i2c: omap: wakeup the controller during
+ suspend() callback
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>,
+ Peter Rosin <peda@axentia.se>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+ <20240102-j7200-pcie-s2r-v5-2-4b8c46711ded@bootlin.com>
+ <eld637v3jvgqrjubwqlsxkafgqiqcfpukfwpcd5qoyvyrhubff@n6gzrwzr2klh>
 Content-Language: en-US
-From: Jacky Huang <ychuang570808@gmail.com>
-In-Reply-To: <CAHp75VfMb_=XKoQNbbVphLg-eQgc6eJbZOW36g_hU=-iK2bSOQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <eld637v3jvgqrjubwqlsxkafgqiqcfpukfwpcd5qoyvyrhubff@n6gzrwzr2klh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Dear Andy,
+On 4/19/24 10:47, Andi Shyti wrote:
+> Hi Thomas,
+> 
+>> +static int omap_i2c_suspend(struct device *dev)
+>> +{
+>> +	/*
+>> +	 * If the controller is autosuspended, there is no way to wakeup it once
+>> +	 * runtime pm is disabled (in suspend_late()).
+>> +	 * But a device may need the controller up during suspend_noirq() or
+>> +	 * resume_noirq().
+>> +	 * Wakeup the controller while runtime pm is enabled, so it is available
+>> +	 * until its suspend_noirq(), and from resume_noirq().
+>> +	 */
+>> +	return pm_runtime_resume_and_get(dev);
+>> +}
+>> +
+>> +static int omap_i2c_resume(struct device *dev)
+>> +{
+>> +	pm_runtime_mark_last_busy(dev);
+>> +	pm_runtime_put_autosuspend(dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static const struct dev_pm_ops omap_i2c_pm_ops = {
+>>  	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>>  				      pm_runtime_force_resume)
+>> +	SET_SYSTEM_SLEEP_PM_OPS(omap_i2c_suspend, omap_i2c_resume)
+> 
+> If you don't have CONFIG_PM_SLEEP, though, this doesn't compile.
 
+Hello Andi,
 
-On 2024/4/22 下午 04:16, Andy Shevchenko wrote:
-> On Mon, Apr 22, 2024 at 7:10 AM Jacky Huang <ychuang570808@gmail.com> wrote:
->> On 2024/4/10 下午 04:54, Andy Shevchenko wrote:
-> ...
->
->>>> +#define MA35_GP_MODE_MASK_WIDTH              2
->>>> +
->>>> +#define MA35_GP_SLEWCTL_MASK_WIDTH   2
->>> I looked at the code how you use these... Oh, please switch to FIELD_GET() /
->>> FIELD_PREP() (don't forget to include bitfield.h)
->>>
->>> ...
->>>
->>> ...
->>>> +             regval &= ~GENMASK(setting->shift + MA35_MFP_BITS_PER_PORT - 1,
->>>> +                                setting->shift);
->>> This will generate an awful code. Use respective FIELD_*() macros.
->>>
->>> ...
->>>
->>>> +     regval &= ~GENMASK(gpio * MA35_GP_MODE_MASK_WIDTH - 1,
->>>> +                        gpio * MA35_GP_MODE_MASK_WIDTH);
->>>> +     regval |= mode << gpio * MA35_GP_MODE_MASK_WIDTH;
->>> Ditto.
->>>
->>> ...
->>>
->>>> +     regval &= GENMASK(gpio * MA35_GP_MODE_MASK_WIDTH - 1,
->>>> +                       gpio * MA35_GP_MODE_MASK_WIDTH);
->>>> +
->>>> +     return regval >> gpio * MA35_GP_MODE_MASK_WIDTH;
->>> Ditto.
-> ...
->
->> Allow me to remove irrelevant parts.
->>
->> I attempted to follow your advice and use FIELD_GET() and FIELD_PREP(),
->> but found
->> it impractical. The reason is that these two macros require their 'mask'
->> argument
->> to be a constant, otherwise compilation errors occur, which is the issue
->> I encountered.
->> Since the mask here is calculated and not a constant, compilation errors
->> occur.
->>
->> Taking MA35_GP_REG_MODE as an example, within 32 bits, every 2 bits
->> represent
->> the mode of a GPIO pin, and the mask is obtained by GENMASK(gpio * 2 -1,
->> gpio * 2),
-> This is not good for the compiler, it can't figure out (at least in
-> some _supported_ by Linux kernel versions on some architectures) that
-> GENMASK can be constant here just left-shifted by arbitrary bits.
->
->> where the 'gpio' argument is a variable, not a constant, leading to
->> compilation
->> errors.
->>
->> Due to this reason, I will leave this part unchanged, or do you have any
->> other suggestions?
-> If you need non-constant field_get()/field_prep(), add a new patch
-> that moves them from drivers/iio/temperature/mlx90614.c (and there are
-> more custom implementations:
-> https://elixir.bootlin.com/linux/latest/A/ident/field_get) to the
-> bitfield.h and use them in your code.
->
+Yes indeed, the __maybe_unused attribute is missing for
+omap_i2c_suspend() and omap_i2c_resume().
 
-Thank you. It works for me. I will adopt the approach used in mlx90614.c.
-
-
-Best Regards,
-Jacky Huang
+-- 
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
