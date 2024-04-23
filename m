@@ -1,116 +1,147 @@
-Return-Path: <linux-gpio+bounces-5767-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5768-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F5C78AF371
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 18:06:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E540C8AF4D5
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 19:03:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 417C11F236E6
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 16:06:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 726B628446B
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 17:03:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5682313CA98;
-	Tue, 23 Apr 2024 16:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D67213DDB0;
+	Tue, 23 Apr 2024 17:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uwp0Q4mf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFF813CA81;
-	Tue, 23 Apr 2024 16:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481A285298;
+	Tue, 23 Apr 2024 17:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713888366; cv=none; b=kl5gtGVjOcDhNgeq9PpTBT+t5J6WxzLNGX6Lrvk0dWRXeD8NTVKy2Whv6Tmk5wU8bzC+/yseRQGK+v1itIkRVDC5u8RHNjjAvyC/rLZHNFup7ThpoGbwnQRypIlBSQ4Ps1XsxYNf18H0GvveYQRF46ezq7eYkM3TWt8xFdZg7es=
+	t=1713891769; cv=none; b=rdvH8xZ1AnEwGEr0JTh79hqbFeJNeKIdsJppa6dSjDmjNWRlUC9Fgv8/5hnGtEWN3oK4fg1DYzv48l/jcIcyeiuVhvrTFq02JnE2arSJda5Dc3Z9oDaSCjI9/rtA3hefcbfI/zqf8RFtmAMo9GU+hcMFTbeY0y8htXNu6mVHvkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713888366; c=relaxed/simple;
-	bh=QQMhOz7NDz+lNA87IQggc91wQxr/7XmKxGMbgJuvYo4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M3+0uU4/zxy9iHDfp/IRFT3GQpluJUfnXpBEQUkBzOtjhIBv9elaF1TdmiEQj3wV8Xiuv657gmI3sxz/lfwCd4Hgv817WX45fzRnQsaVzhoJo2V1SfDh4p2BsoTN1c6X+9VDBx1CjinUD8hevblW0PKDvMVkJHtE9L3yb2EVUrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: bnHsb/J5QQmV33n0UomTOg==
-X-CSE-MsgGUID: CEfvNxiNQdee9YHZBFb1TA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9312959"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9312959"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 09:06:04 -0700
-X-CSE-ConnectionGUID: LYGEq/79Sa+qDtrCi/1Veg==
-X-CSE-MsgGUID: 65O88O6jRX2M92k6olZJSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="29058763"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 09:05:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rzIeX-00000000Nys-2y1l;
-	Tue, 23 Apr 2024 19:05:53 +0300
-Date: Tue, 23 Apr 2024 19:05:53 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	devicetree@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Olivia Mackall <olivia@selenic.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>, arm@kernel.org,
-	Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Subject: Re: [PATCH v6 00/11] Turris Omnia MCU driver
-Message-ID: <ZifcYXdJ7mSEJVfh@smile.fi.intel.com>
-References: <20240418121116.22184-1-kabel@kernel.org>
+	s=arc-20240116; t=1713891769; c=relaxed/simple;
+	bh=m466dLvNB0J/uZky3+7Cr0D0JS90YH5KfreDtY0WtCI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i6KaJcc8lxSIYDGqI8CdztIJmSiGHl7pClrfAOq96cuCodPyKdgs6+R7LlpmzPzicHoGMJSmA0zxqJSKxPXHzay6j3DceG5Nw8ATo013aMwh0XI+LmfAFz2eIAOaAZkDILj1IWXna/D1J7ol4oCC6sXOpVMtAiBnanP8r8DTvVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uwp0Q4mf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C88FAC116B1;
+	Tue, 23 Apr 2024 17:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713891768;
+	bh=m466dLvNB0J/uZky3+7Cr0D0JS90YH5KfreDtY0WtCI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Uwp0Q4mfSETIxa9OxjK3u8WnepsDNQvoZbPWMdrGbW3C7w21NNxl1qRoRwHNISOne
+	 5pATbefczTl/liC1rygFYOPquXadURSEebV9ijNkUiuWz1QP65u7gBYIl9WHotkC+K
+	 uCaYgHBm/FIMakELMGRYR59O2XaS+m5AFl5h7hc61lb4jQNxzPERhAJ/zrbg3kUdS4
+	 OOXOHYcevRra4wJC4Lb64tK7BqVfFQl5C6sfWJobMgNrlEhtwq+UhojnbX4LYz7Sc/
+	 2TRqCHfEumFSy3DRdWSGY9gVGkZfzeXGlgOM3+THhjr5eulcXZRAZa8Oem0GC1Xao/
+	 fK/xjWqveLQNg==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51ac5923ef6so53227e87.0;
+        Tue, 23 Apr 2024 10:02:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUTnpXnjgdT7pcdWkfnblln508x1csgZNhttI3WztFFG9VF6T/6ZV9rZ/k507kaZrYnYy7/U2LKCxI6wIhelgX4eG5ioK2oyYXp7XwHbmsd5KJirmpyntU8y21Yg/1IzG7y+yh+I9s3PbPQPfmEHLZ5ggoX3dciNSkKr32w4T6nNuixy7T0E4j3P/6JcMMVplMXrlNnKox/TYC9qyI38JXWeN7I
+X-Gm-Message-State: AOJu0YwjcIvRg9LTBccsL/oG23YCuzkICqzgFSHRlO/su3l4hM8RkN07
+	UTkySLWwoLu02o9G3PTm6ZOWtBJWq1Tvo7fxVjIJ8Xc17r6wpbi0g9xL4mx+bgtIY64cVR9DOCH
+	9vWeo35UG/94EUMdsoQoW7oOoyA==
+X-Google-Smtp-Source: AGHT+IGVgsWU2NH32RQwD8Bf2g9mUv7U7WYuzYFHvrHKWCMJy9A+v9NRW7oUYUBxGn5HV5Q+/Hbch3rapFRcttQIUl0=
+X-Received: by 2002:a19:910a:0:b0:513:dcd2:1267 with SMTP id
+ t10-20020a19910a000000b00513dcd21267mr954795lfd.23.1713891767189; Tue, 23 Apr
+ 2024 10:02:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240418121116.22184-1-kabel@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240326220628.2392802-1-quic_amelende@quicinc.com> <20240326220628.2392802-3-quic_amelende@quicinc.com>
+In-Reply-To: <20240326220628.2392802-3-quic_amelende@quicinc.com>
+From: Rob Herring <robh+dt@kernel.org>
+Date: Tue, 23 Apr 2024 12:02:34 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLZkU_74JK-BGOe83-redCi_TcV3dOOZs9DX3jThHfXrw@mail.gmail.com>
+Message-ID: <CAL_JsqLZkU_74JK-BGOe83-redCi_TcV3dOOZs9DX3jThHfXrw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: pinctrl: qcom,pmic-gpio: Add PMIH0108
+ and PMD8028 support
+To: Anjelique Melendez <quic_amelende@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, linus.walleij@linaro.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	quic_subbaram@quicinc.com, quic_collinsd@quicinc.com, 
+	quic_jprakash@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 18, 2024 at 02:11:05PM +0200, Marek Behún wrote:
-> Hello Andy, Dan, Linus, Arnd, Gregory, and others,
-> 
-> I am sending v6 of the series adding Turris Omnia MCU driver.
-> 
-> This series depends on the immutable branch between LEDs and locking,
-> introducing devm_mutex_init(), see the PR
->   https://lore.kernel.org/linux-leds/20240412084616.GR2399047@google.com/
+On Tue, Mar 26, 2024 at 5:07=E2=80=AFPM Anjelique Melendez
+<quic_amelende@quicinc.com> wrote:
+>
+> Update the Qualcomm Technologies, Inc. PMIC GPIO binding documentation
+> to include compatible strings for PMIH0108 and PMD8028 PMICs.
 
-...
+You didn't test this with dtbs_check:
 
->   devm-helpers: Add resource managed version of irq_create_mapping()
->   devm-helpers: Add resource managed version of debugfs directory create
->     function
+     47  gpio@c000: gpio-line-names: ['AP_SUSPEND', '', '', '', '',
+'', '', '', '', '', '', ''] is too short
+     10  gpio@8800: gpio-line-names: ['FLASH_STROBE_1', 'AP_SUSPEND',
+'PM8008_1_RST_N', '', '', '', 'PMIC_EDP_BL_EN', 'PMIC_EDP_BL_PWM', '']
+is too short
 
-IIUC you created them as static inline, the header will become yet another
-cumbersome and messy "kernel.h". Can we prevent that?
+>
+> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
+> ---
+>  .../bindings/pinctrl/qcom,pmic-gpio.yaml      | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yam=
+l b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> index 2b17d244f051..a786357ed1af 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> @@ -57,10 +57,12 @@ properties:
+>            - qcom,pma8084-gpio
+>            - qcom,pmc8180-gpio
+>            - qcom,pmc8180c-gpio
+> +          - qcom,pmd8028-gpio
+>            - qcom,pmi632-gpio
+>            - qcom,pmi8950-gpio
+>            - qcom,pmi8994-gpio
+>            - qcom,pmi8998-gpio
+> +          - qcom,pmih0108-gpio
+>            - qcom,pmk8350-gpio
+>            - qcom,pmk8550-gpio
+>            - qcom,pmm8155au-gpio
+> @@ -143,6 +145,7 @@ allOf:
+>                - qcom,pm8005-gpio
+>                - qcom,pm8450-gpio
+>                - qcom,pm8916-gpio
+> +              - qcom,pmd8028-gpio
+>                - qcom,pmk8350-gpio
+>                - qcom,pmr735a-gpio
+>                - qcom,pmr735b-gpio
+> @@ -304,6 +307,21 @@ allOf:
+>            minItems: 1
+>            maxItems: 7
+>
+> +  - if:
+> +      properties:
+> +        comptaible:
 
--- 
-With Best Regards,
-Andy Shevchenko
+It took me a bit to find, but you've got a typo here. The result is
+this "if" schema is always true unless you actually have an instance
+with the typo too. Please send a fix.
 
-
+> +          contains:
+> +            enum:
+> +              - qcom,pmih0108-gpio
+> +    then:
+> +      properties:
+> +        gpio-line-names:
+> +          minItems: 18
+> +          maxItems: 18
+> +        gpio-reserved-ranges:
+> +          minItems: 1
+> +          maxItems: 9
 
