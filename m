@@ -1,67 +1,69 @@
-Return-Path: <linux-gpio+bounces-5730-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5729-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 120868AE1BD
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 12:05:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AF148AE1BA
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 12:05:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72504B240AA
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 10:05:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A89061F250C5
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 10:05:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 023A76311D;
-	Tue, 23 Apr 2024 10:05:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A889D63102;
+	Tue, 23 Apr 2024 10:05:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fGuwvlce"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Q86PCwzx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB015FDA9
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 10:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E8F60DCF
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 10:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713866702; cv=none; b=Oitz8oy5hTJ8xPBxGtGSSq9TAOGnL7aCeUAJTMYFIfFNgVawF/G3xmJviXKNXIDPtNDcD4J80h9gp1UlwImbUy8teBOf6IYuQyslwjEjkIK8fAKLB7z6yxtKRDcXNFaqIDsSRRiFO4cmZpoSbzdZjhfuag9LBa26po28cacFPCU=
+	t=1713866702; cv=none; b=L3zfYgFeZ/Z5rukKPudcsu/q1InDXlyKnNAt91e9Ji/L0nGsjxKuz6iLaftrQnof6QgwYqi/+60SbFSKYwxmjyg6zZZL7/3ezFdbiZEHTfqO+xMKztetTOvriW6sqpyLDi/RlxklJFBjLy82+V+S7p0PUf//83h76KcerGyiApM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1713866702; c=relaxed/simple;
-	bh=SbzOs6EdnJ/risp164W8Zj4fmySgIpuafm3nhJD6amY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=X+orbmKxxJcYBJk6KTh9mJVP/C5Jlwfa6OsIYHZVRtkBPk4b8WAuA4zYu4ydYxt0ldqCw6lqZXZFrL9OQzGy2FJt1NCX6SLTrTwy1Q/FxUFeSyt6aLJeRD+cF37O5BEMFM/0paI0NcZpPVCiZgCn+McOroCjdeMid1TLAoW5nac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fGuwvlce; arc=none smtp.client-ip=209.85.128.50
+	bh=wZgr20dfY+CkOzhOLyU4m7MU2TR5zJLdVN/TG6a7ASs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tecpCOI98Pk49L2f1aV6f3fyd8OLmrrcvrb8PBkGLXBXG0r2Roaok/as/Oqi7ki/Pg0cCf1gWSazw6fAsmJYgScR1LeNrKrOf0ssD1OVlJ5CUK/Rvs0LMmWnppXkNqgBWSWjcRRg0MFHRgOZBSVew+5kmxh/9u2i8KMILS9Eg/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Q86PCwzx; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41ac4cd7a1cso2338065e9.1
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 03:04:57 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41a5b68ed85so11035885e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 03:04:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713866696; x=1714471496; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vTSrT+hCubd8ysxRKnjowB2bfq/YsB0FodhJnN02xvQ=;
-        b=fGuwvlceeJW8uAwKDhm2i8oX1vnVEM+XlBw4ujuvnAlXQiafwGSJ+bfybV/l2i9Uc6
-         tidhZ9D8ryGivXtEokO0Kvvz+1uCoavvEmCel9L9EsN0RZghoy+OTN9U7aPlaQr8RCVq
-         a2Bl5yKDm32XVKvZb7jk63SeCXIaX0vbj2ZUVZ4BnzjVPMYKoR2nHhFYA9b9RjsiQZFZ
-         yvAyuvHjQGtfEQrCOH5G+/s9a/yVkD15zGsvch7o9TtW7sXg+t7VbMOSYgraQM7Rrf/L
-         TUr5XtOPdnuI399SFABpRbPNwqQLVZeZ2TSxOVMd4EVTCmHKQcSH9xzatAOeOTNUFMRX
-         jWYw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713866698; x=1714471498; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E7pba3IahTgD9DftxTzBcYMSbhG2YiMnuGqnb35n1gw=;
+        b=Q86PCwzxmL20dHEkmZD0V911rfDI3vUmEuXXslvs2maNaFHl1FeAYBLu0rHkDoP71Q
+         TesEbIx8UHkPzjLXWYUI04XwF7bzmWDrBJw2qVKBKYDIzyp8FuMjHKKH41CIdW9G/TzT
+         cT0mZAQqwKPsQUeKK1AMfEwls0NFV8s8oohZnhEwXU7tceatFeNPSaKoHJ+o0u7svo+l
+         OIRQJ+AT+s7GOJDxfyO2yqtFGZs/JqJ7eKVZ7SBP9XlWN1TShUtZ9XSwDn5n3curMQ0e
+         vKjrXG04ydlqJNmR7BxrAK8BLvU8cmbS7fz5M3dDRs63VWYVs7Lj9WzOfTJGXUZw1yTm
+         cj6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713866696; x=1714471496;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vTSrT+hCubd8ysxRKnjowB2bfq/YsB0FodhJnN02xvQ=;
-        b=EfJn/c9qVD/wEceChtHAmtJKvkyBCYcS7/SqXUCL4D06YKEqg5VU8nGAiGaWIH6pwp
-         EmuFWEBfwK6YH/3vphnNNXWQDO2oCl8sqBfUUHkSl7+5heoDCcqfsNPhstD/pZxPQjDA
-         YHedHSW+xAMQXi85KBJvd8As5s3PiEvG/a+iyERDqv5rcDY45bb+IeB4/DZJ62w0hcRY
-         6BDcF0VbUHOBO/qGmBd/dw/Ls+HWZFcntzBV1yVG8DWi/+OjLasAkLqrFt7kcp71fNeS
-         gbM1gpLEswpuIr6LEaMnp/EzK+MkDjwZ1VH75Z6J2wkPJWKTV2g2pYISRvM+PT4wcij+
-         w7Ag==
-X-Gm-Message-State: AOJu0YyeYI6vjK0n5RYTV1hvrIvjo+3wXRvBvpumaVweBibO/gmTSgFw
-	Ygg1CZC1reNSM38MSmoW4DiaYQTYpywjm4zpqd2bbecEm6fBdOQtZp1Ok1dl6GQ=
-X-Google-Smtp-Source: AGHT+IGAjxM782EM0X30HvzST7eAS+/DZyhZ/5nfRmuTobAeBhOU+4WRsJ0Sc7unPEcfj9kke9ikoQ==
-X-Received: by 2002:a05:600c:3582:b0:418:e304:4a13 with SMTP id p2-20020a05600c358200b00418e3044a13mr6997122wmq.19.1713866696342;
-        Tue, 23 Apr 2024 03:04:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713866698; x=1714471498;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E7pba3IahTgD9DftxTzBcYMSbhG2YiMnuGqnb35n1gw=;
+        b=Ld2Ew83xJR7OURW+MPM31r/yLtKF3cS9XkpzvKazUc34SzwzsU9ZkZLtqfZ8phfskG
+         6JwY0fomc2ZYQilRmpHFTzG38WA7SJ7Fulizc/gOzAmIAXBDPMy5B3WMofdhtYZzEU7P
+         GxRez2VhQH1UYdNz1yWPGVtG50WQAgfDGPEIwWD4Gy6AfGEUuA2GaU8lynJpQ0bFxXZs
+         DQzosIM9J+I4S0Lw0727of2tks2v0334Zeq+5m74wFETLyNRU4os6Pp3t9KERhr4kUbi
+         JBZC/7efgqtk+bU0GNlIImvcDNi6p6/QtnYix25xilBeKfvGkF8kYM7Qn50d53wMZE4d
+         tiTw==
+X-Gm-Message-State: AOJu0YyNGMZ0hcsaEtBwIa58oyqGM5qbTCzNI6ejWM3MqJxzL0luOLsz
+	odgvmMeUM0oAV+SqMPgqDKjwXwMfm0pVkU3VN19v6+qrsJMnDjG9SI+nL3DMvYc=
+X-Google-Smtp-Source: AGHT+IEvyoelW2XJXtzNG4MegsaDgos16YqfhUsokEe8vzdbvwCRMmYJjSvMVqQSHAlrsonezdVmZA==
+X-Received: by 2002:a05:600c:3b94:b0:417:e316:fbb3 with SMTP id n20-20020a05600c3b9400b00417e316fbb3mr1469245wms.15.1713866698051;
+        Tue, 23 Apr 2024 03:04:58 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:a046:fbef:467d:18f7])
-        by smtp.gmail.com with ESMTPSA id ay13-20020a05600c1e0d00b0041a7581f8b6sm5223200wmb.23.2024.04.23.03.04.55
+        by smtp.gmail.com with ESMTPSA id ay13-20020a05600c1e0d00b0041a7581f8b6sm5223200wmb.23.2024.04.23.03.04.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 23 Apr 2024 03:04:56 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
@@ -70,52 +72,112 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 	=?UTF-8?q?Gunnar=20Th=C3=B6rnqvist?= <gunnar@igl.se>
 Cc: linux-gpio@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH v3 0/4] tools: timeout handling improvements
-Date: Tue, 23 Apr 2024 12:04:48 +0200
-Message-Id: <20240423100452.32958-1-brgl@bgdev.pl>
+Subject: [libgpiod][PATCH v3 1/4] tools: rename timeout to idle_timeout in gpiomon and gpionotify
+Date: Tue, 23 Apr 2024 12:04:49 +0200
+Message-Id: <20240423100452.32958-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240423100452.32958-1-brgl@bgdev.pl>
+References: <20240423100452.32958-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Here's an assortment of improvements to parsing and handling of timeouts
-in gpio-tools.
+Use a more meaningful name for the variable storing the idle timeout
+value.
 
-I still decided to unify the period parsing between gpioset and gpioget even
-if it doesn't make much sense for gpioget to support periods longer than
-fractions of a second. Let users decide.
+Suggested-by: Kent Gibson <warthog618@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ tools/gpiomon.c    | 8 ++++----
+ tools/gpionotify.c | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-v2 -> v3:
-- only initialize the timespec containing the timeout value once before
-  entering the for loop
-
-v1 -> v2:
-- extend the series with renaming the timeout variable, using ppoll() instead
-  of poll() and supporting minutes as time unit
-- drop already applied patch
-
-Bartosz Golaszewski (4):
-  tools: rename timeout to idle_timeout in gpiomon and gpionotify
-  tools: use ppoll() where higher timeout resolution makes sense
-  tools: allow longer time periods
-  tools: add minutes as a new supported time unit
-
- configure.ac         |  2 ++
- tools/gpioget.c      |  4 ++--
- tools/gpiomon.c      | 28 +++++++++++++++++++++-------
- tools/gpionotify.c   | 16 ++++++++++++----
- tools/gpioset.c      | 16 ++++++++--------
- tools/tools-common.c | 32 ++++++++++++++++++++++----------
- tools/tools-common.h |  5 +++--
- 7 files changed, 70 insertions(+), 33 deletions(-)
-
+diff --git a/tools/gpiomon.c b/tools/gpiomon.c
+index e3abb2d..40e6ac2 100644
+--- a/tools/gpiomon.c
++++ b/tools/gpiomon.c
+@@ -30,7 +30,7 @@ struct config {
+ 	const char *fmt;
+ 	enum gpiod_line_clock event_clock;
+ 	int timestamp_fmt;
+-	int timeout;
++	int idle_timeout;
+ };
+ 
+ static void print_help(void)
+@@ -143,7 +143,7 @@ static int parse_config(int argc, char **argv, struct config *cfg)
+ 	memset(cfg, 0, sizeof(*cfg));
+ 	cfg->edges = GPIOD_LINE_EDGE_BOTH;
+ 	cfg->consumer = "gpiomon";
+-	cfg->timeout = -1;
++	cfg->idle_timeout = -1;
+ 
+ 	for (;;) {
+ 		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
+@@ -176,7 +176,7 @@ static int parse_config(int argc, char **argv, struct config *cfg)
+ 			cfg->fmt = optarg;
+ 			break;
+ 		case 'i':
+-			cfg->timeout = parse_period_or_die(optarg) / 1000;
++			cfg->idle_timeout = parse_period_or_die(optarg) / 1000;
+ 			break;
+ 		case 'l':
+ 			cfg->active_low = true;
+@@ -453,7 +453,7 @@ int main(int argc, char **argv)
+ 	for (;;) {
+ 		fflush(stdout);
+ 
+-		ret = poll(pollfds, resolver->num_chips, cfg.timeout);
++		ret = poll(pollfds, resolver->num_chips, cfg.idle_timeout);
+ 		if (ret < 0)
+ 			die_perror("error polling for events");
+ 
+diff --git a/tools/gpionotify.c b/tools/gpionotify.c
+index 2c56590..d2aee15 100644
+--- a/tools/gpionotify.c
++++ b/tools/gpionotify.c
+@@ -23,7 +23,7 @@ struct config {
+ 	const char *chip_id;
+ 	const char *fmt;
+ 	int timestamp_fmt;
+-	int timeout;
++	int idle_timeout;
+ };
+ 
+ static void print_help(void)
+@@ -108,7 +108,7 @@ static int parse_config(int argc, char **argv, struct config *cfg)
+ 	int opti, optc;
+ 
+ 	memset(cfg, 0, sizeof(*cfg));
+-	cfg->timeout = -1;
++	cfg->idle_timeout = -1;
+ 
+ 	for (;;) {
+ 		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
+@@ -132,7 +132,7 @@ static int parse_config(int argc, char **argv, struct config *cfg)
+ 			cfg->fmt = optarg;
+ 			break;
+ 		case 'i':
+-			cfg->timeout = parse_period_or_die(optarg) / 1000;
++			cfg->idle_timeout = parse_period_or_die(optarg) / 1000;
+ 			break;
+ 		case 'n':
+ 			cfg->events_wanted = parse_uint_or_die(optarg);
+@@ -422,7 +422,7 @@ int main(int argc, char **argv)
+ 	for (;;) {
+ 		fflush(stdout);
+ 
+-		ret = poll(pollfds, resolver->num_chips, cfg.timeout);
++		ret = poll(pollfds, resolver->num_chips, cfg.idle_timeout);
+ 		if (ret < 0)
+ 			die_perror("error polling for events");
+ 
 -- 
 2.40.1
 
