@@ -1,147 +1,140 @@
-Return-Path: <linux-gpio+bounces-5768-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5769-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E540C8AF4D5
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 19:03:06 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBD3F8AF5BD
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 19:41:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 726B628446B
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 17:03:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08DF41C23DBD
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 17:41:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D67213DDB0;
-	Tue, 23 Apr 2024 17:02:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D991213DDD0;
+	Tue, 23 Apr 2024 17:41:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uwp0Q4mf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zwl/5Zek"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481A285298;
-	Tue, 23 Apr 2024 17:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1662613D8BA
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 17:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713891769; cv=none; b=rdvH8xZ1AnEwGEr0JTh79hqbFeJNeKIdsJppa6dSjDmjNWRlUC9Fgv8/5hnGtEWN3oK4fg1DYzv48l/jcIcyeiuVhvrTFq02JnE2arSJda5Dc3Z9oDaSCjI9/rtA3hefcbfI/zqf8RFtmAMo9GU+hcMFTbeY0y8htXNu6mVHvkY=
+	t=1713894067; cv=none; b=UY1QiFT3Hx6s6e2/+QkBBrd9dNa/9orYsMqFZu/X+E3K9fCZ4K/N3nEPrPnsXmRl1xYSFno3XY9fxpGNJHzL6VCxVXE92kE4OF4OdDOmdzPAvhIwCBVPKjLLexY8ARPgFbf+6U2+XQbcpFehbDNDA0BLTvjlimlyZdYOm6PovS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713891769; c=relaxed/simple;
-	bh=m466dLvNB0J/uZky3+7Cr0D0JS90YH5KfreDtY0WtCI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i6KaJcc8lxSIYDGqI8CdztIJmSiGHl7pClrfAOq96cuCodPyKdgs6+R7LlpmzPzicHoGMJSmA0zxqJSKxPXHzay6j3DceG5Nw8ATo013aMwh0XI+LmfAFz2eIAOaAZkDILj1IWXna/D1J7ol4oCC6sXOpVMtAiBnanP8r8DTvVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uwp0Q4mf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C88FAC116B1;
-	Tue, 23 Apr 2024 17:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713891768;
-	bh=m466dLvNB0J/uZky3+7Cr0D0JS90YH5KfreDtY0WtCI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Uwp0Q4mfSETIxa9OxjK3u8WnepsDNQvoZbPWMdrGbW3C7w21NNxl1qRoRwHNISOne
-	 5pATbefczTl/liC1rygFYOPquXadURSEebV9ijNkUiuWz1QP65u7gBYIl9WHotkC+K
-	 uCaYgHBm/FIMakELMGRYR59O2XaS+m5AFl5h7hc61lb4jQNxzPERhAJ/zrbg3kUdS4
-	 OOXOHYcevRra4wJC4Lb64tK7BqVfFQl5C6sfWJobMgNrlEhtwq+UhojnbX4LYz7Sc/
-	 2TRqCHfEumFSy3DRdWSGY9gVGkZfzeXGlgOM3+THhjr5eulcXZRAZa8Oem0GC1Xao/
-	 fK/xjWqveLQNg==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51ac5923ef6so53227e87.0;
-        Tue, 23 Apr 2024 10:02:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUTnpXnjgdT7pcdWkfnblln508x1csgZNhttI3WztFFG9VF6T/6ZV9rZ/k507kaZrYnYy7/U2LKCxI6wIhelgX4eG5ioK2oyYXp7XwHbmsd5KJirmpyntU8y21Yg/1IzG7y+yh+I9s3PbPQPfmEHLZ5ggoX3dciNSkKr32w4T6nNuixy7T0E4j3P/6JcMMVplMXrlNnKox/TYC9qyI38JXWeN7I
-X-Gm-Message-State: AOJu0YwjcIvRg9LTBccsL/oG23YCuzkICqzgFSHRlO/su3l4hM8RkN07
-	UTkySLWwoLu02o9G3PTm6ZOWtBJWq1Tvo7fxVjIJ8Xc17r6wpbi0g9xL4mx+bgtIY64cVR9DOCH
-	9vWeo35UG/94EUMdsoQoW7oOoyA==
-X-Google-Smtp-Source: AGHT+IGVgsWU2NH32RQwD8Bf2g9mUv7U7WYuzYFHvrHKWCMJy9A+v9NRW7oUYUBxGn5HV5Q+/Hbch3rapFRcttQIUl0=
-X-Received: by 2002:a19:910a:0:b0:513:dcd2:1267 with SMTP id
- t10-20020a19910a000000b00513dcd21267mr954795lfd.23.1713891767189; Tue, 23 Apr
- 2024 10:02:47 -0700 (PDT)
+	s=arc-20240116; t=1713894067; c=relaxed/simple;
+	bh=Q0dSCCnoXMSTf8gtCFWfGUjhsVCrIJ9NwNhl7evNoHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lnY+T9bXhpgMtlqHbS7FUmLa9IwHeSqw4VdmsXu5yr8hZAkeOyOP2Cbfhjm5d+1L1VY1nKvPsZeMU6dUFr3r6NpYKxeZkj7lYqkg+0UTpdItZixgyoZfgxQvK3X5OQ5iZC37QiExnBGY98ET7g7crpjovc5TqZB8vY4Yb2SsrTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zwl/5Zek; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713894066; x=1745430066;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Q0dSCCnoXMSTf8gtCFWfGUjhsVCrIJ9NwNhl7evNoHk=;
+  b=Zwl/5ZekC4An8f0uWBhNVX4wkt5H/7SvE/4MCBYMXofS1rZgvy3WxxG1
+   SpsCZLHMSO9A/FCn3A4HWRIxnLv56WF1hthVMVaJh2v12Xc/U9lsBSE7y
+   bWep/JSoQ0YjFpnUmGMyuWgSrEHbGVoENlLhoaOBbo4DaYnxDPJRiYDnR
+   LiPmlhF3Wh1ZtPsZN2R9VGVnOooO2R0jv1nWt+Ipsa/zYgfrf14xSTxbC
+   Ak2Qap9Uut+ylQk/j9zPY10RIDhfdYSAwmEDmgwGmj0wzRJgL1HNmyWYi
+   0g+LLace9E5rHsEQfy36KYFDFD37llg7qQJRQXJjeilGm7tZgcWhU52/o
+   g==;
+X-CSE-ConnectionGUID: pTFPC/5GTL+DqhEm5TXDaA==
+X-CSE-MsgGUID: pvSfw2FrTu2PeyOvGlKYTQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="34896797"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="34896797"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 10:41:05 -0700
+X-CSE-ConnectionGUID: /I7nsArQQoal4M34MvsMaA==
+X-CSE-MsgGUID: QbOMtJgzSDSkMtdG7RyFBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="28926990"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 10:41:03 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rzK8a-00000000PpV-2qdG;
+	Tue, 23 Apr 2024 20:41:00 +0300
+Date: Tue, 23 Apr 2024 20:41:00 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Erik Schilling <erik.schilling@linaro.org>,
+	Phil Howard <phil@gadgetoid.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][RFC/RFT 00/18] dbus: add GLib-based DBus daemon and
+ command-line client
+Message-ID: <ZifyrLNQ9AV0ohBt@smile.fi.intel.com>
+References: <20240412122804.109323-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326220628.2392802-1-quic_amelende@quicinc.com> <20240326220628.2392802-3-quic_amelende@quicinc.com>
-In-Reply-To: <20240326220628.2392802-3-quic_amelende@quicinc.com>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Tue, 23 Apr 2024 12:02:34 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLZkU_74JK-BGOe83-redCi_TcV3dOOZs9DX3jThHfXrw@mail.gmail.com>
-Message-ID: <CAL_JsqLZkU_74JK-BGOe83-redCi_TcV3dOOZs9DX3jThHfXrw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: pinctrl: qcom,pmic-gpio: Add PMIH0108
- and PMD8028 support
-To: Anjelique Melendez <quic_amelende@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, linus.walleij@linaro.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	quic_subbaram@quicinc.com, quic_collinsd@quicinc.com, 
-	quic_jprakash@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412122804.109323-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Mar 26, 2024 at 5:07=E2=80=AFPM Anjelique Melendez
-<quic_amelende@quicinc.com> wrote:
->
-> Update the Qualcomm Technologies, Inc. PMIC GPIO binding documentation
-> to include compatible strings for PMIH0108 and PMD8028 PMICs.
+On Fri, Apr 12, 2024 at 02:27:46PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> This has been in the works for a long time but I'm finally ready to share it
+> with the world. This introduces the DBus API definition and its implementation
+> in the form of a GPIO manager daemon and a companion command-line client as
+> well as GLib bindings to libgpiod which form the base on which the former are
+> built.
+> 
+> Please note that while the functionality is complete, the dbus part still
+> requires some work (bug fixing, corner-cases, general ironing out of all the
+> wrinkles, a lot of code could be refactored too). This is why the series is
+> marked as RFC/RFT. I want to get it out for reviews and first tests before I
+> leave for EOSS and later on vacation. I am aware of some instabilities so don't
+> be surprised by an occasional segfault.
+> 
+> While I split the GLib and DBus code into several commits for easier review,
+> I intend to apply all changes to bindings/glib/ and dbus/ as two big commits
+> in the end as otherwise the split commits are not buildable until all of them
+> are applied.
+> 
+> The main point of interest is the DBus interface definition XML at
+> dbus/lib/io.gpiod1.xml as it is what defines the actual DBus API. Everything
+> else can be considered as implementation details as it's easier to change
+> later than the API that's supposed to be stable once released.
+> 
+> The first two patches expose the test infrastructure we use for the core
+> library and tools to the GLib bindings and dbus code. Next we add the GLib
+> bindings themselves. Not much to discuss here, they cover the entire libgpiod
+> API but wrap it in GObject abstractions and plug into the GLib event loop.
+> 
+> Finally we add the DBus code that's split into the daemon and command-line
+> client. I added some examples to the README and documented the behavior in
+> the help text of the programs as well as documented the interface file with
+> XML comments that gdbus-codegen can parse and use to generate docbook output.
+> 
+> For DBus, most of the testing happens in the command-line client bash tests.
+> It has a very good coverage of the daemon's code and also allows to run the
+> daemon through valgrind and verify there are no memory leaks and invalid
+> accesses. I still intend to extend the C test-suite for DBus with some corner
+> cases but didn't not have enough time for it.
 
-You didn't test this with dtbs_check:
+I might have time to briefly look at this code, but I can't test right away as
+I have no setup that uses D-Bus, all what I use is a simplest Buildroot +
+Busybox.
 
-     47  gpio@c000: gpio-line-names: ['AP_SUSPEND', '', '', '', '',
-'', '', '', '', '', '', ''] is too short
-     10  gpio@8800: gpio-line-names: ['FLASH_STROBE_1', 'AP_SUSPEND',
-'PM8008_1_RST_N', '', '', '', 'PMIC_EDP_BL_EN', 'PMIC_EDP_BL_PWM', '']
-is too short
+-- 
+With Best Regards,
+Andy Shevchenko
 
->
-> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
-> ---
->  .../bindings/pinctrl/qcom,pmic-gpio.yaml      | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yam=
-l b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-> index 2b17d244f051..a786357ed1af 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-> @@ -57,10 +57,12 @@ properties:
->            - qcom,pma8084-gpio
->            - qcom,pmc8180-gpio
->            - qcom,pmc8180c-gpio
-> +          - qcom,pmd8028-gpio
->            - qcom,pmi632-gpio
->            - qcom,pmi8950-gpio
->            - qcom,pmi8994-gpio
->            - qcom,pmi8998-gpio
-> +          - qcom,pmih0108-gpio
->            - qcom,pmk8350-gpio
->            - qcom,pmk8550-gpio
->            - qcom,pmm8155au-gpio
-> @@ -143,6 +145,7 @@ allOf:
->                - qcom,pm8005-gpio
->                - qcom,pm8450-gpio
->                - qcom,pm8916-gpio
-> +              - qcom,pmd8028-gpio
->                - qcom,pmk8350-gpio
->                - qcom,pmr735a-gpio
->                - qcom,pmr735b-gpio
-> @@ -304,6 +307,21 @@ allOf:
->            minItems: 1
->            maxItems: 7
->
-> +  - if:
-> +      properties:
-> +        comptaible:
 
-It took me a bit to find, but you've got a typo here. The result is
-this "if" schema is always true unless you actually have an instance
-with the typo too. Please send a fix.
-
-> +          contains:
-> +            enum:
-> +              - qcom,pmih0108-gpio
-> +    then:
-> +      properties:
-> +        gpio-line-names:
-> +          minItems: 18
-> +          maxItems: 18
-> +        gpio-reserved-ranges:
-> +          minItems: 1
-> +          maxItems: 9
 
