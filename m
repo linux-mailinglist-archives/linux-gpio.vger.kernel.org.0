@@ -1,160 +1,121 @@
-Return-Path: <linux-gpio+bounces-5758-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5759-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F90A8AE895
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 15:49:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFC918AE8BA
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 15:54:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1CB8528A7C1
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 13:49:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B6EC5B24F1D
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 13:54:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28741139CEA;
-	Tue, 23 Apr 2024 13:48:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 340511369BC;
+	Tue, 23 Apr 2024 13:54:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YXMcclPS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m88+BXqe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A5C139CE4;
-	Tue, 23 Apr 2024 13:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2095A1369A2
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 13:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713880081; cv=none; b=UPIx0CG9uHQ4D7rauJxE4pf52RoPW0zshuWUA1BWPTRhU1iFZzO+SEo8z1j87ASpCm2nBZZw5HgPLnsz+O7myFDTcf0DruZQ5jGxhLx0zyiawrdAVwc/TxFeJLgAAn8vSX1Cz5L6hOgaZ9vY66ktI8HZmDz8r01A+o1j2RI8VtE=
+	t=1713880443; cv=none; b=KFp8wszpNJYxVJBhvTly7hMRCeK1mOuJUaoqxBY6F1u5KGW0k9/ssQ/Y60Rb2uET4yrylTL2uKhc6nOPGj8AwR42FKB9lL6eTDHk0+fgQpt4bBz5azy22dWVR738jeynDDcGV8olvFsnH8sBY+2o4gG3oSIZsThDTVmRppSsDro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713880081; c=relaxed/simple;
-	bh=y7Dn96ugvzlC/fk+MWurHAoRm3fMDnGgcPR8W5+vqVk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=UZGi0raQE83vfIIdXzhjix6h2EHLYfQIlu874A0fqgf2u/y0uem7UZ3gz2t+iSVbhnsh02quo8mviO5SdgtRVby2A7OYP3xrwUawCu7h5YXC5mwuVYkAHTnoIRpZd8P2sRpTB09B7RXkW5sVkMhA10lQwwJ5odYwCy6pwtcpSh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YXMcclPS; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713880081; x=1745416081;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=y7Dn96ugvzlC/fk+MWurHAoRm3fMDnGgcPR8W5+vqVk=;
-  b=YXMcclPSjxK2/3aCS5GMtdKaPQ2j/KxxdMYUb7OkCcHqt+t7kH3lnJa9
-   QrtzH08rDpzEbv3SnuEAUIwHTKvLC7jX1cU2xPD9FOWYhBA85g1AZVvY6
-   lKLarmnzuZDJNMyfwTiCKiTiraawz6TwYMPgSznC2y6EXQSc8Bn3p4cwB
-   LgvLLTUf4+FY9pfBU0xuGlEzY31gM49gut183EqCmZfXZ6m5K+QyvK6Se
-   nLuFuamctWkwOmEeIBsjbiqY56QL+1ya9JgHT6znTggIJCNgbqd7/JSpg
-   8wLZ/Xo668jK4UfPlIm1lVnS/XHSksnPsQC53bWzHDrS5KJiseJz7Kvr7
-   g==;
-X-CSE-ConnectionGUID: zpPTa7NCRbe1esiX4IPBiA==
-X-CSE-MsgGUID: XM8UpB/FSpy8JUoIi7fGVw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="13296914"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="13296914"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:48:00 -0700
-X-CSE-ConnectionGUID: BkcXkZPRS0S3k78O4PCmZQ==
-X-CSE-MsgGUID: U3NDdzEdTHSANk8ap3Fl9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24881235"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.40])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:47:57 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 23 Apr 2024 16:47:53 +0300 (EEST)
-To: Aapo Vienamo <aapo.vienamo@linux.intel.com>
-cc: Linus Walleij <linus.walleij@linaro.org>, 
-    Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
-    linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH] gpio: Add Intel Granite Rapids-D vGPIO driver
-In-Reply-To: <20240419080555.97343-1-aapo.vienamo@linux.intel.com>
-Message-ID: <b3f2fad7-85aa-d1db-46ab-b3debd84caa7@linux.intel.com>
-References: <20240419080555.97343-1-aapo.vienamo@linux.intel.com>
+	s=arc-20240116; t=1713880443; c=relaxed/simple;
+	bh=lI8s7owPpwByD6RBM7NHPi7jr13y3XDnCKjaFdUwjWc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nbpMkmRZ5YUzgd7wA05jpjA2fDMupKK43d3IQDIZfEQtBI5L7qlAmqLAj268cjO9sB1sLKZUwJZ9b1qihNQBYHpPcDxFpwHqoLKg9YnURGKP3UnAVKTvk2XZndfOq7mSDj4IKoC+hr0gUzl09qcQgsrHoh+8BnpIF8jfejgCS+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m88+BXqe; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51ae2e37a87so4505390e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 06:54:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713880439; x=1714485239; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=66DV356nl07B8s70QCWM5H1mhDJnsNQGWmnd/8jOjIU=;
+        b=m88+BXqejBwLtkDrGq6/v7M8QzujZRfz5jTdI2ReXj6HQu8l0BSMjE+/0lE59GKLsx
+         /KjPRHamHMuqqCQQT3XRu31qY+NnQicWnGSAtHcYuT8jmMk5scLytC1AeY3xxoDhBFF5
+         Bh9/GcrwEUOg5PvTbq7R7NUn8+3ZW9PwSBPqFE89+FadxkqB4C/JWl1g0/FDw/E4YorN
+         aHuDIfji2lN0FaeUaqTxYvmxjp3nzok/q3d1xKhKEb1TCSPJv2k8KMj5jgxy7bpnT5BU
+         NC4CtJ1Nbwk9YnecknsqGXNFfRsUqgv1+Es2VbmRROuABKyhCsaS+C2qV6RfVMih+sZs
+         sc+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713880439; x=1714485239;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=66DV356nl07B8s70QCWM5H1mhDJnsNQGWmnd/8jOjIU=;
+        b=MPk9RJZmGNvR3cyZ0WEKoJf93LubFqD1NOBrUxH5cH3GFTmd+gWJzXkwSbmOIlEgne
+         XZ+cRGUdbvrK365dKVWpCGYXPm6GL5a8WafOt/zNyIV66x/oHER3G+2cwNEpqGvLF8Wf
+         ISvnTArSsQLz9of7NSPfad4INdA1+g/XTJW9sHIciWN7MkjuvYsuRpPOCKl3g1qIGIwA
+         rVyCmuUQY3oFDLqCxWFC8CG620BvJ/O2+m1BJaotjAsH8+oXwQEQutf0zEPEuNXRWpsq
+         hSplnnyPEYqPouDortDCkeNp5+2cik7Un12obHUmiZC4OiRILpWDmGdqMF/W1F56NksE
+         ncTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUU0W6l3Q2VAK4Rca6tk3hA1yYYDHduBEwGqFWczqllnBCi5LGqirmEoD9VF5uDqRvOcDbwvAbfbe+NLu7vBLG7YKlTsQzCA0OTEw==
+X-Gm-Message-State: AOJu0YxS3e1TRS4gTXtyy8w/Oy12UFusxQAPxNvlRXhwxOnEmQ2D42t7
+	nbcp1Nxs4HLGjWzrfbxw/hiyp3A44X6Nt1iquar6f6PpyLG0dlnKimdfIeqgg930tRtuNAmZV/3
+	W
+X-Google-Smtp-Source: AGHT+IFWeokGbcRhJU5XEUlY7hLxYHlCNeke73KzR6lYd7KgpcLeleHIVBSpBUji33s4BCx3gMhpDA==
+X-Received: by 2002:ac2:4a69:0:b0:513:b062:98c4 with SMTP id q9-20020ac24a69000000b00513b06298c4mr8574686lfp.11.1713880438992;
+        Tue, 23 Apr 2024 06:53:58 -0700 (PDT)
+Received: from [192.168.1.140] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id b18-20020ac24112000000b0051a61f2d251sm1875997lfi.290.2024.04.23.06.53.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 06:53:58 -0700 (PDT)
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 0/5] Decrease the usage of global GPIO numbers for LEDs
+Date: Tue, 23 Apr 2024 15:53:56 +0200
+Message-Id: <20240423-gpio-leds-v1-0-799c2f6bc61c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHW9J2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDEyNj3fSCzHzdnNSUYl3LFFMLk2TLRAszU0sloPqCotS0zAqwWdGxtbU
+ A1ZbYwVsAAAA=
+To: Andrew Lunn <andrew@lunn.ch>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+ Gregory Clement <gregory.clement@bootlin.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.13.0
 
-On Fri, 19 Apr 2024, Aapo Vienamo wrote:
+Fix up the orion boards to use GPIO descriptor tables
+instead of hardcoded GPIO numbers in all board files.
 
-> This driver provides a basic GPIO driver for the Intel Granite Rapids-D
-> virtual GPIOs. On SoCs with limited physical pins on the package, the
-> physical pins controlled by this driver would be exposed on an external
-> device such as a BMC or CPLD.
-> 
-> Signed-off-by: Aapo Vienamo <aapo.vienamo@linux.intel.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+git grep 'struct gpio_led_platform_data' gives a list of
+suspects. We wade through them and root out the use of
+global GPIO numbers in favor of descriptors.
 
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Linus Walleij (5):
+      ARM: orion5x: Convert D2Net board to GPIO descriptors for LEDs
+      ARM: orion5x: Convert DNS323 board to GPIO descriptors for LEDs
+      ARM: orion5x: Convert MV2120 board to GPIO descriptors for LEDs
+      ARM: orion5x: Convert Net2big board to GPIO descriptors for LEDs
+      ARM: orion5x: Convert TS409 board to GPIO descriptors for LEDs
 
-> diff --git a/drivers/gpio/gpio-graniterapids.c b/drivers/gpio/gpio-graniterapids.c
-> new file mode 100644
-> index 000000000000..61bcafe1985e
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-graniterapids.c
-> @@ -0,0 +1,382 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Intel Granite Rapids-D vGPIO driver
-> + *
-> + * Copyright (c) 2024, Intel Corporation.
-> + *
-> + * Author: Aapo Vienamo <aapo.vienamo@linux.intel.com>
-> + */
-> +
-> +#include <linux/array_size.h>
-> +#include <linux/bitmap.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/gfp_types.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/math.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/overflow.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/types.h>
-> +
-> +#include <linux/gpio/driver.h>
-> +
-> +#define GNR_NUM_PINS 128
-> +#define GNR_PINS_PER_REG 32
-> +#define GNR_NUM_REGS DIV_ROUND_UP(GNR_NUM_PINS, GNR_PINS_PER_REG)
-> +
-> +#define GNR_CFG_BAR		0x00
-> +#define GNR_CFG_LOCK_OFFSET	0x04
-> +#define GNR_GPI_STATUS_OFFSET	0x20
-> +#define GNR_GPI_ENABLE_OFFSET	0x24
-> +
-> +#define GNR_CFG_DW_RX_MASK	(3 << 22)
+ arch/arm/mach-orion5x/board-d2net.c   | 16 +++++++--
+ arch/arm/mach-orion5x/dns323-setup.c  | 63 ++++++++++++++++++++++++++---------
+ arch/arm/mach-orion5x/mv2120-setup.c  | 29 +++++++++++-----
+ arch/arm/mach-orion5x/net2big-setup.c | 21 +++++++++---
+ arch/arm/mach-orion5x/ts409-setup.c   | 25 +++++++++-----
+ 5 files changed, 116 insertions(+), 38 deletions(-)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240423-gpio-leds-9d584c9a8659
 
-GENMASK()
-
-+ #include <linux/bits.h>
-
-> +#define GNR_CFG_DW_RX_DISABLE	(2 << 22)
-> +#define GNR_CFG_DW_RX_EDGE	(1 << 22)
-> +#define GNR_CFG_DW_RX_LEVEL	(0 << 22)
-
-FIELD_PREP(GNR_CFG_DW_RX_MASK, xx) x 3
-
-> +#define GNR_CFG_DW_RXDIS	BIT(4)
-> +#define GNR_CFG_DW_TXDIS	BIT(3)
-> +#define GNR_CFG_DW_RXSTATE	BIT(1)
-> +#define GNR_CFG_DW_TXSTATE	BIT(0)
-
-These require #include <linux/bits.h> (just pointing this out so you know
-in future, you'll need to add it anyway for GENMASK() as mentioned above).
-
+Best regards,
 -- 
- i.
+Linus Walleij <linus.walleij@linaro.org>
 
 
