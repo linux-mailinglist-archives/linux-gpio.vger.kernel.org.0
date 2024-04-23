@@ -1,135 +1,215 @@
-Return-Path: <linux-gpio+bounces-5745-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5754-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11CDA8AE4C1
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 13:49:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EF9A8AE579
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 14:06:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC6CF1F21C15
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 11:49:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 722D81C22EED
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 12:06:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C35471422D6;
-	Tue, 23 Apr 2024 11:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 814E860279;
+	Tue, 23 Apr 2024 12:00:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jUNa/QHf"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="K+6F9M2I"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2056.outbound.protection.outlook.com [40.107.92.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173D086253
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 11:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713872468; cv=none; b=IEWkYjlPUJ/1iaoQMSwgtylI+SBVhJR2tPcB3cGZsG7HPv871U5QCg004k7wfW4HCUwhKo3vWNLXmVUtw/NFpYKTObcksQJGGf5ZAFpqfHWKytDgt/CnzeJ3mkg5mEEmww+EP0ZqkfEXcJC/j8bvZmjb157KiWpA19mDNfVRs54=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713872468; c=relaxed/simple;
-	bh=jGSxB/aKBQrvQZyFP9ugxKa9qzrbfWhqVhGn/ZIkYAs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tXffdyLg/85Y2ggSWwi7gSaBaJbCUBxTClFVSw8HvAtmoAT2jHyf5PB3f/Redx/vE79GiXo1LDUfDPQiYTa353syk0RB87+EiVBEZV3X/nLoYVLM45akm9WZxgz6tSaZ+8RVTKVmIjmw4wpUBnTZVnDJ6ghqDJaYlEH0B+khTZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jUNa/QHf; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-de4640ec49fso5686446276.2
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 04:41:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713872466; x=1714477266; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lHww8guo9joHfM40pOxCx1WuFD69gCMICsgCV/kfVdI=;
-        b=jUNa/QHf+h7rYfkyPkjek9PKWLdqhYn8cYkiC0ZAa62e0AthIsdqVaYno2Psgu54Tw
-         uGB5D8REfnmWsukIeVHj6PGddpntyXFlHNKuiTAHQ2UG44fKPlmLzBdQrn656KyFViXv
-         36GuWW834TeQTyRaWp4QxurOJ6mxzmpSdThL4pbt8jFxflYLIE+TPUQoiMQqW7O1E6Ss
-         PNMyVuXkYz0rU7Flh/7J2Sr1heGl+7Mae6Pw+gHCQJNuYwKw9U7X5KJRXRWCjSDd64ca
-         +XqNq1ZFw+EAjP62mGVaLWygdTyauWXRSzDvP7nvO7Jta9NClP4bKUdaGAMRihp0Ouqb
-         4qKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713872466; x=1714477266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lHww8guo9joHfM40pOxCx1WuFD69gCMICsgCV/kfVdI=;
-        b=KBh8wcrrecKoaxK0ZpIYQ6g5Zk2n0dv4PosSb+nOEMDazIslBxLZqZvGDQxgyj2R1L
-         NYChFvGfEaYFk6aNBzmV1Va1Pfc1ryHU9uUOtMdMtVZad4rH/A57Xq6HNRbATBkseCt5
-         kerPTQmqyMozAcSn3hBXY6cBSdOuKgjbh54piZRvvqcsMQo+RAANWyf2A9AA2x0Wzywj
-         O2ZxBnYADdpKHmftz6DXOoV/DFDtvZSCD+D8pDtYoWAekksiRXXClZ6T8eN8gFtuBW5r
-         0zOj/b9yQViUu9QgMP8188bij80aCLOWkmNKJxDYdYCIIW8jn5Dj57G70XGC3RhvBleN
-         AN0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVA0vXc7qTEJfpo+3SKq936R2Sk2k2ar2lqxK6s/zo1iHn1ZJDKUOb8/la9V/7ck7gJGTZtQezZqnLgT2t0TvbqNcbAgj5kpnO7Pw==
-X-Gm-Message-State: AOJu0YwyBnMv3IVVsaa4sEeKLoFPaN8DMVMNbk2guz2NySrtYrFqp77r
-	vvnR8/ckM09TU+0Iv7OFhNDypeRnxozIjWwQtFF3L8VclMFol49GJiN0tGNt5bxe22wzaXq1jkb
-	zV6li5/N7MBAEL47Bq1EIA1K5JdmQRdRmBCbj9w==
-X-Google-Smtp-Source: AGHT+IG0zUJ0k+vOuaZckaNvNj9KvErNxit8stDC2Lri93dfWftA1haaHyaI6RFYiG/AC23vxxVy2y/4BpkWBRxblqM=
-X-Received: by 2002:a25:bc45:0:b0:de5:5084:715d with SMTP id
- d5-20020a25bc45000000b00de55084715dmr1506637ybk.53.1713872466081; Tue, 23 Apr
- 2024 04:41:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3591E2AD11;
+	Tue, 23 Apr 2024 12:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713873649; cv=fail; b=iXZDLlcasIuT1mHiw46X6Uinlhc2oaIRTePL+tEazS5LxmGBme3bLOIEyHE0Toa9QPcg8ebvM1lDGdVZXfsFbeVnFMTBehawnt0kHsheeKxtcmsKo2u7H9JfFW3/wDoHn2eTezKNNk6EJxFuKBJFO0FbkslWeCxgX861kEYm5l4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713873649; c=relaxed/simple;
+	bh=N95eFet9en23hUv4gotXYxKwheqNZiL9WrDFPgm0ej4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EerlZTSJQcqv5Ct9D6zHPDILh1C66Twsev+slhYnk9fHjaQkiQAO2ZrJ5qcXFLsZoYo5EYNxcwcZXrSSP4DAiqG/EgVusHNACqhbDEYJCVZL35Plx9Hed9N2iXYB7JKE+QwtvwUK716b22Ppjns8CqNhytsmAQy8VZhPG3E8shw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=K+6F9M2I; arc=fail smtp.client-ip=40.107.92.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dcH/zTvBLUT5vnJUJSmfzhdHsIfeKm37vWEQwpnOlOjy9UuAJMXDLbmOvBNrD2NGXcvhx16U84d7Q2ohw18vXfObVIkNGFpdQo28rex7GHdrueQ7gHvh+F9FvhyZuI2Ejutkt3PchzxFCjod32bvzYRHulcpWea+8wXOrChvGtVMKO79lH1bB097BXSvCOGeSZCiq8PkVoOyeWknrTvK2VWBXhSG0nCbW7JqVpUfvR2bcvrduSfAsgPIT282NjYmmeZg23ryMUiX49uwyJ5kY9cc9PDGOBPoqD147OoODTM5XSSpyzQNI0lxLOhhxhoiPzQ5Y26FNIQhgR2bg5KjpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6Xz9h7cPg9TXUXXSKZmbTelqnZA4UGUBAXomaKRzsCg=;
+ b=FgPrCqJo03SeqxXosI9cRxnsAMNl7EQNgvzsRYKa9uvvRzBa9Q3909biH5aDUZhTyyi4fUIu6EIIZyRQkiTA6xKjrWbCo9ttuF2dxRQYChKNWY2Wz/0HXoPFNEMCp6P/YXDq2SoKnj0UnIJZSdbJVhlZzq3cmO8Owm9+jsIXiTkv1VrQQ6O/P5wiFE1yO2PXyFwLssvLhyac7owciGda6Hzzxui+J8KDAgb+DvOJkQ4B++GfbM0WzIOQhvCiv/SSXc+SvTCJkvBZqth6nEmbsAWbyxvHyqC8zQsoCprEFbYoDzvR4v05MK8NbZqvOX3Ad9ly47aaajQSHWM8ryyT0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6Xz9h7cPg9TXUXXSKZmbTelqnZA4UGUBAXomaKRzsCg=;
+ b=K+6F9M2IRKG05HsSIN9sj7lo1w8fCi5jZufbXsKJkxAt9fejpRbuOFXjdVYyVNekNjWiggcLKp61o/TES5EN32NlAXElCgIUVBINmgbWMpURwFnEETxwRh96+RqYsn6zrmfz0Ng2naQ/38I9iCZRSO83EDs587KPQIoJZRgrlZldWxFiPnTn2WhYS4VbsqpHjNX0PLKuJG+2nrhhaiTtRV66jeiwH4P7mwLOJHrUHpX6hJPmTo2nvDqs+j3yALdtLO2l4UjIcikgZ6iWlrwI7kY1YQTARVp+/u0YkWAi4B8II3fUEHwMKBnyLpy9SXgJk7KmEIyPks80YqZ8zzMNXg==
+Received: from BN8PR15CA0053.namprd15.prod.outlook.com (2603:10b6:408:80::30)
+ by MN0PR12MB6128.namprd12.prod.outlook.com (2603:10b6:208:3c4::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 23 Apr
+ 2024 12:00:38 +0000
+Received: from BN2PEPF000044A1.namprd02.prod.outlook.com
+ (2603:10b6:408:80:cafe::58) by BN8PR15CA0053.outlook.office365.com
+ (2603:10b6:408:80::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.34 via Frontend
+ Transport; Tue, 23 Apr 2024 12:00:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BN2PEPF000044A1.mail.protection.outlook.com (10.167.243.152) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7519.19 via Frontend Transport; Tue, 23 Apr 2024 12:00:37 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 23 Apr
+ 2024 05:00:17 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 23 Apr
+ 2024 05:00:16 -0700
+Received: from pshete-ubuntu.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Tue, 23 Apr 2024 05:00:13 -0700
+From: Prathamesh Shete <pshete@nvidia.com>
+To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <jonathanh@nvidia.com>,
+	<treding@nvidia.com>, <sfr@canb.auug.org.au>, <linux-gpio@vger.kernel.org>,
+	<linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <mochs@nvidia.com>, <csoto@nvidia.com>, <pshete@nvidia.com>,
+	<jamien@nvidia.com>, <smangipudi@nvidia.com>
+Subject: [PATCH v2] gpio: tegra186: Fix tegra186_gpio_is_accessible() check
+Date: Tue, 23 Apr 2024 17:30:11 +0530
+Message-ID: <20240423120011.21554-1-pshete@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CACMJSeu+fUdYoxue-q=DxFdvtopgshQY+i2kpZMP-RGOTqMu_g@mail.gmail.com>
+References: <CACMJSeu+fUdYoxue-q=DxFdvtopgshQY+i2kpZMP-RGOTqMu_g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423022814.3951048-1-haibo.chen@nxp.com>
-In-Reply-To: <20240423022814.3951048-1-haibo.chen@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 23 Apr 2024 13:40:55 +0200
-Message-ID: <CACRpkdaRxoEZT1_KyJ3QMDgBcciw1XUXKr=cEiPxbcwSnpmyiA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: vf610: always set GPIO to input mode when used as
- interrupt source
-To: haibo.chen@nxp.com
-Cc: brgl@bgdev.pl, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A1:EE_|MN0PR12MB6128:EE_
+X-MS-Office365-Filtering-Correlation-Id: af34eac1-e130-4103-07b0-08dc638cfd6c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Eod41ayva1XH61sm9jrzphH113eBQYGqREQ3Clf9iPWE0QNrKPHxn6PdEwvj?=
+ =?us-ascii?Q?F2V6VXO+FfvHj2B9KAn1wWTjlH6nxqujrIv6Bqm3whKyTc90qYJvy9p0OvtQ?=
+ =?us-ascii?Q?JgijEyVR4A9Ylrw14oe3URE50L50xf0XVZNUTdhTOtmN0n+D8nBIlMXs36Lc?=
+ =?us-ascii?Q?iFk/taylIdJeyk9jGEGQXMeqlAwWPiOWDVB/H4xY7Wh5QJNeZ+izZjRzanST?=
+ =?us-ascii?Q?NGatCaPyM0SV/5wB/lNczNNasEzJOfDg4AHNbsODLRoto+gXfS2Tap6qX9NG?=
+ =?us-ascii?Q?U+6E24NpcxfmPT9AxFi7Q/HJCGefyaoXwCwhqPs7x5bfLDg9VcAdgzFkobjD?=
+ =?us-ascii?Q?hO7JfnBDLpWusERn2jTLP5y5ii+LNvysaWa8sTp4ZDnc2W+lCZ6T/iF5eipt?=
+ =?us-ascii?Q?j0KeesX92t9TahHC57tCoGOjYHehPxJk6VJhPqkjUF6LPrRS8VscLUkzPV6C?=
+ =?us-ascii?Q?Wsmld/199zrmP4WOVLSPxm+4Nii6EP2yB4hK885KFgR7Q3uiH5IlXihjv3Y9?=
+ =?us-ascii?Q?CrhbBOMeKmDdKGQ00/IKnXpg2bsma7bvrH+YgDZ+e0Sz23mJ1pPiSIQgM0wS?=
+ =?us-ascii?Q?DZuMIKLBEbT/hayOH/aaU/VnbA8kM/Db1Jfo3TxiTTENX0b8E+Rc6q/KWHgS?=
+ =?us-ascii?Q?eUyTpKtkLSRRPbgOJ4NdTkQp2glX1rBkrREMC+Ku2n5OFVtQ/usjJIL9+bgM?=
+ =?us-ascii?Q?ga4nQ4qSB7uCYk4KzR+se+v6B8c5Dp4RVyKKFbpAp9SZryAmLDD8G/2QLVzF?=
+ =?us-ascii?Q?Z744IWdFp6IosozR72bHeHnG0jVbOPj83iW8GZ/r7ZrJ1qFaXyp17U35F/lb?=
+ =?us-ascii?Q?LMrLRegj3LF7ogR8XNVFfbKuVJVKT1w2nT62zZbEyJGvMmAtAg7d03yGjo4y?=
+ =?us-ascii?Q?WppgUZYXz8x6tDmGaTEfGz7ymjIk1akl0fgrpEz/OmPr6dTxgfo+Tx7d9goi?=
+ =?us-ascii?Q?wIueN6XxaTOFEZKzpHlC5oTutUCv6LMnihsIqMS5TY/MDWI9gFpr2JTQPQHn?=
+ =?us-ascii?Q?3YRxDK03/7vbBhMEsB1zk2YaY/4gcuFopxPisuTkjM8RpIxwLFhQMReFTaNO?=
+ =?us-ascii?Q?us3nQk2XhRSltnFxTfiXqW5J3JF18DPh0dPGhpsnmXj6wY8nGR2M9fkZ57cZ?=
+ =?us-ascii?Q?/WJOS1wFJsrDr02v1GEe6mpMKbaPYVwHulcMxnUhVp7k5C4iqWF9cvoDLhRg?=
+ =?us-ascii?Q?YWHXcRmrf9lQ96lnL73a6RbcfxnSzQ89DeYaQMLH65liOopPE/GlNfSrJbPD?=
+ =?us-ascii?Q?kpQutieIoxyG8fAz99Ehx48jMQtE5o1zqSXF3JiQwbUHiH8MjKN+j6vKfM5e?=
+ =?us-ascii?Q?XFEtplUoCdQJmGSQDpS3mwEt47XRrGZX1eJNxbiOObOZwoh9VgmIDD38eobE?=
+ =?us-ascii?Q?h0CdH2R02S7hh+WpFWxdOaSrz83H?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(376005)(1800799015)(82310400014)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 12:00:37.5867
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: af34eac1-e130-4103-07b0-08dc638cfd6c
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A1.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6128
 
-On Tue, Apr 23, 2024 at 4:28=E2=80=AFAM <haibo.chen@nxp.com> wrote:
+The controller has several register bits describing access control
+information for a given GPIO pin. When SCR_SEC_[R|W]EN is unset, it
+means we have full read/write access to all the registers for given GPIO
+pin. When SCR_SEC[R|W]EN is set, it means we need to further check the
+accompanying SCR_SEC_G1[R|W] bit to determine read/write access to all
+the registers for given GPIO pin.
 
-> From: Haibo Chen <haibo.chen@nxp.com>
->
-> Though the default pin configuration is INPUT, but if the prior stage doe=
-s
-> configure the pins as OUTPUT, then Linux will not reconfigure the pin as
-> INPUT.
->
-> e.g. When use one pin as interrupt source, and set as low level trigger,
-> if prior stage already set this pin as OUTPUT low, then will meet interru=
-pt
-> storm.
->
-> So always set GPIO to input mode when used as interrupt source to fix abo=
-ve
-> case.
->
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> ---
->  drivers/gpio/gpio-vf610.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-> index 07e5e6323e86..305b0bcdee6f 100644
-> --- a/drivers/gpio/gpio-vf610.c
-> +++ b/drivers/gpio/gpio-vf610.c
-> @@ -214,7 +214,7 @@ static int vf610_gpio_irq_set_type(struct irq_data *d=
-, u32 type)
->         else
->                 irq_set_handler_locked(d, handle_edge_irq);
->
-> -       return 0;
-> +       return port->gc.direction_input(&port->gc, d->hwirq);
+This check was previously declaring that a GPIO pin was accessible
+only if either of the following conditions were met:
 
-Just call vf610_gpio_direction_input() instead of indirecting through
-gc->direction_input(), no need to jump through the vtable and as
-Bartosz says: it just makes that struct vulnerable.
+  - SCR_SEC_REN + SCR_SEC_WEN both set
 
-Second:
+    or
 
-In this patch also implement gc->get_direction() which is currently
-unimplemented. If you are going to change the direction of a
-GPIO randomly at runtime then the framework really likes to
-have a chance to know the current direction for obvious reasons.
+  - SCR_SEC_REN + SCR_SEC_WEN both set and
+    SCR_SEC_G1R + SCR_SEC_G1W both set
 
-Yours,
-Linus Walleij
+Update the check to properly handle cases where only one of
+SCR_SEC_REN or SCR_SEC_WEN is set.
+
+Fixes: b2b56a163230 ("gpio: tegra186: Check GPIO pin permission before access.")
+Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+---
+ drivers/gpio/gpio-tegra186.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+index d87dd06db40d..9130c691a2dd 100644
+--- a/drivers/gpio/gpio-tegra186.c
++++ b/drivers/gpio/gpio-tegra186.c
+@@ -36,12 +36,6 @@
+ #define  TEGRA186_GPIO_SCR_SEC_REN		BIT(27)
+ #define  TEGRA186_GPIO_SCR_SEC_G1W		BIT(9)
+ #define  TEGRA186_GPIO_SCR_SEC_G1R		BIT(1)
+-#define  TEGRA186_GPIO_FULL_ACCESS		(TEGRA186_GPIO_SCR_SEC_WEN | \
+-						 TEGRA186_GPIO_SCR_SEC_REN | \
+-						 TEGRA186_GPIO_SCR_SEC_G1R | \
+-						 TEGRA186_GPIO_SCR_SEC_G1W)
+-#define  TEGRA186_GPIO_SCR_SEC_ENABLE		(TEGRA186_GPIO_SCR_SEC_WEN | \
+-						 TEGRA186_GPIO_SCR_SEC_REN)
+ 
+ /* control registers */
+ #define TEGRA186_GPIO_ENABLE_CONFIG 0x00
+@@ -177,10 +171,18 @@ static inline bool tegra186_gpio_is_accessible(struct tegra_gpio *gpio, unsigned
+ 
+ 	value = __raw_readl(secure + TEGRA186_GPIO_SCR);
+ 
+-	if ((value & TEGRA186_GPIO_SCR_SEC_ENABLE) == 0)
+-		return true;
++	/*
++	 * When SCR_SEC_[R|W]EN is unset, then we have full read/write access to all the
++	 * registers for given GPIO pin.
++	 * When SCR_SEC[R|W]EN is set, then there is need to further check the accompanying
++	 * SCR_SEC_G1[R|W] bit to determine read/write access to all the registers for given
++	 * GPIO pin.
++	 */
+ 
+-	if ((value & TEGRA186_GPIO_FULL_ACCESS) == TEGRA186_GPIO_FULL_ACCESS)
++	if (((value & TEGRA186_GPIO_SCR_SEC_REN) == 0 ||
++	     ((value & TEGRA186_GPIO_SCR_SEC_REN) && (value & TEGRA186_GPIO_SCR_SEC_G1R))) &&
++	     ((value & TEGRA186_GPIO_SCR_SEC_WEN) == 0 ||
++	     ((value & TEGRA186_GPIO_SCR_SEC_WEN) && (value & TEGRA186_GPIO_SCR_SEC_G1W))))
+ 		return true;
+ 
+ 	return false;
+-- 
+2.17.1
+
 
