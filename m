@@ -1,229 +1,174 @@
-Return-Path: <linux-gpio+bounces-5797-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5798-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD78D8AF8D4
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 23:18:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5ADD8AFC65
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 01:05:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7237D1F235B7
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 21:18:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 021641C22B17
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 23:05:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7605F143865;
-	Tue, 23 Apr 2024 21:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F41D3364D6;
+	Tue, 23 Apr 2024 23:05:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="acfKufp4"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iIWWrZ6T"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D98F143862
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 21:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3BB2E63B
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 23:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713907128; cv=none; b=QXGzpSgieOYlZlUf5tLlicjFvU/xkz7Go1JtpgpU6FKvNz0+PBP8dVqKfVnLhSKSRoSkY3LSbskI6PlL4jLGerNlKxWeDxsFYR7BTQZ8PZp5rjbtC7h8Hxe5/htsDHSaydWb215NRdvZw17jwFZgDqDa99EpxicIVhgnIWn1k2I=
+	t=1713913508; cv=none; b=NB1gWArCQBxl6G7uZ275o9lS66CUrGtJhsfOXQqPvwJsZULRG90f28vNr94Kjpx/T2oGlNkwvAqVlWw844mArKbivZLPmCOSrEIb0d+v9eK3L5n1clWAdiH3DkzAd6LlCDlSJpGjHpmQvCjz2hkzspyk2XspDkCfz0FGnoOzo9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713907128; c=relaxed/simple;
-	bh=njKCwb/lz3vqswaO2zscKYCXLnar/2LjWx1IFyJN8xU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=XZ/JEzSMMekClwaoo5U7XNj8tC6OH5B9/qqSZILbzmEYwqYaK3+zLVRBxiAGw7lBmlCLJ2Ht+LpVfq+qDGZaroZFqKENAoR7sJubMYo4twL1zd+giinGuUW6EYPkVCYkfE0C4pH93Y37wB9ZGvXropd5s09YVzBAARSWjcAwctw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=acfKufp4; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713907127; x=1745443127;
-  h=date:from:to:cc:subject:message-id;
-  bh=njKCwb/lz3vqswaO2zscKYCXLnar/2LjWx1IFyJN8xU=;
-  b=acfKufp48/u+ANQU98G5zDoBq4Ispsx+xIazi+oB7AO9oco/21WjI8JY
-   Eyg9TLPaxxMp3LRZGfBFJYc0M2YHqgTDBgDBbmyXfUmyPLw6noAMUluCU
-   gS2kLaoREe/8314wG8CLQE9xE9MuEGtDn+v/GLCh97J+U6ibLXZtGtyFl
-   ZFRHtYLtzhN1u9rA5zYddOPHTniXdL/LFiVXuDaw92gwR4MJn9g06tpib
-   dPDV8Mt8RUXuyUC/06VUNxhTZ2kfNIGJ/LE7r4nx3U2uU6FbFG5Damo/M
-   bBfvZmnVl5SxIpdIHh6thkB+ZMy7Yp7m+BvY+Kg4Cut+aMUbw1fgasaHn
-   g==;
-X-CSE-ConnectionGUID: PkPF3XgzSj6pCE0CHvo/MQ==
-X-CSE-MsgGUID: XM/T4KFcSwW+41bAbokF6g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="13349281"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="13349281"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 14:18:46 -0700
-X-CSE-ConnectionGUID: N5HrvSm/QkGHrOcaRcyahg==
-X-CSE-MsgGUID: OX5uxWsxTMWQgHoWFWZzrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="25005756"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 23 Apr 2024 14:18:44 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rzNXG-0000XE-1Y;
-	Tue, 23 Apr 2024 21:18:42 +0000
-Date: Wed, 24 Apr 2024 05:17:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:at24/for-current] BUILD SUCCESS
- f42c97027fb75776e2e9358d16bf4a99aeb04cf2
-Message-ID: <202404240551.FxqJdPPI-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1713913508; c=relaxed/simple;
+	bh=W5rtmWZn+gzmSPYDajf5hzHjrrARRPwmvtUOsrkg4+4=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=MloSnZe4P8CTOequkvHTjMGEaXeM5YnExiN4VoIQAh/ornJE+gN1FsS7iMsWMkl4YWEwscwih2FnpPMGTdCoK9GM8UBAbVy3GBmKdtdq0bWFyQYjbO3IfUv35QHKBlvTpNDJCs2WV4NzjxvR/5RyBdSlnvxOmstrH3kYpli5BJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iIWWrZ6T; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <5bb0dc7e-4c89-4f3d-abc6-41ae9ded5ae9@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1713913503;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MSoV0N+Bh0IcWueNazIcpLY5jxZX12Cx6M7J1n6K4tQ=;
+	b=iIWWrZ6TYv1Vkk9lzS5cmCbBhaLuYOk6Y3nM7tg9EQHaECQ4PwjLBPtijt3JPsXmwxwUs8
+	G0aNxaaEd1AFs9bPfZnlFuXSArh1+4m56fH2DQ1ULb8FjeIrWj53YB0naS/20bX503DvbS
+	7YtZjJWLmJxpyDE2ScYFTkwSzguYsdQ=
+Date: Tue, 23 Apr 2024 19:04:59 -0400
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Language: en-US
+To: Michal Simek <michal.simek@amd.com>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+Subject: pinctrl: zynqmp: Valid pin muxings cannot be configured
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git at24/for-current
-branch HEAD: f42c97027fb75776e2e9358d16bf4a99aeb04cf2  eeprom: at24: fix memory corruption race condition
+Hi Michal,
 
-elapsed time: 721m
+I was looking to upstream one of our ZynqMP boards, and I ran into an
+issue with the pinmuxing. We use almost all of the I/Os, so everything
+is tightly packed into the MIO. For example, we have the QSPI on MIO0 to
+MIO5, and MIO6 to MIO11 are used for SPI1. However, I cannot select this
+configuration using the pinmux driver. I am using the following
+configuration:
 
-configs tested: 136
-configs skipped: 3
+pinctrl_qspi_default: qspi-default {
+	mux {
+		groups = "qspi0_0_grp";
+		function = "qspi0";
+	};
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+	mux-cs {
+		groups = "qspi_ss_0_grp";
+		function = "qspi_ss";
+	};
+};
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                             pxa_defconfig   gcc  
-arm64                            alldefconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   clang
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240423   clang
-i386         buildonly-randconfig-002-20240423   clang
-i386         buildonly-randconfig-003-20240423   gcc  
-i386         buildonly-randconfig-004-20240423   clang
-i386         buildonly-randconfig-005-20240423   clang
-i386         buildonly-randconfig-006-20240423   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240423   gcc  
-i386                  randconfig-002-20240423   gcc  
-i386                  randconfig-003-20240423   clang
-i386                  randconfig-004-20240423   gcc  
-i386                  randconfig-005-20240423   clang
-i386                  randconfig-006-20240423   clang
-i386                  randconfig-011-20240423   gcc  
-i386                  randconfig-012-20240423   clang
-i386                  randconfig-013-20240423   clang
-i386                  randconfig-014-20240423   gcc  
-i386                  randconfig-015-20240423   gcc  
-i386                  randconfig-016-20240423   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        stmark2_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                         bigsur_defconfig   gcc  
-mips                          malta_defconfig   gcc  
-mips                       rbtx49xx_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                        apsh4ad0a_defconfig   gcc  
-sh                                  defconfig   gcc  
-sh                        edosk7705_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240423   clang
-x86_64       buildonly-randconfig-002-20240423   clang
-x86_64       buildonly-randconfig-003-20240423   gcc  
-x86_64       buildonly-randconfig-004-20240423   gcc  
-x86_64       buildonly-randconfig-005-20240423   clang
-x86_64       buildonly-randconfig-006-20240423   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240423   clang
-x86_64                randconfig-002-20240423   gcc  
-x86_64                randconfig-003-20240423   gcc  
-x86_64                randconfig-004-20240423   gcc  
-x86_64                randconfig-005-20240423   gcc  
-x86_64                randconfig-006-20240423   gcc  
-x86_64                randconfig-011-20240423   gcc  
-x86_64                randconfig-012-20240423   gcc  
-x86_64                randconfig-013-20240423   clang
-x86_64                randconfig-014-20240423   clang
-x86_64                randconfig-015-20240423   clang
-x86_64                randconfig-016-20240423   gcc  
-x86_64                randconfig-071-20240423   clang
-x86_64                randconfig-072-20240423   clang
-x86_64                randconfig-073-20240423   clang
-x86_64                randconfig-074-20240423   gcc  
-x86_64                randconfig-075-20240423   gcc  
-x86_64                randconfig-076-20240423   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                  cadence_csp_defconfig   gcc  
+pinctrl_spi1_default: spi1-default {
+	mux {
+		groups = "spi1_0_grp";
+		function = "spi1";
+	};
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+	mux-cs {
+		groups = "spi1_ss_0_grp", "spi1_ss_1_grp";
+		function = "spi1_ss";
+	};
+};
+
+But I get the following errors on boot:
+
+[    4.261739] zynqmp-pinctrl firmware:zynqmp-firmware:pinctrl: pin MIO8 already requested by ff050000.spi; cannot claim for ff0f0000.spi
+[    4.274506] zynqmp-pinctrl firmware:zynqmp-firmware:pinctrl: error -EINVAL: pin-8 (ff0f0000.spi)
+[    4.283789] zynqmp-pinctrl firmware:zynqmp-firmware:pinctrl: error -EINVAL: could not request pin 8 (MIO8) from group qspi0_0_grp  on device zynqmp_pinctrl
+
+This is because the qspi0_0_grp and spi1_0_grp groups overlap:
+
+group: qspi0_0_grp
+pin 0 (MIO0)
+pin 1 (MIO1)
+pin 2 (MIO2)
+pin 3 (MIO3)
+pin 4 (MIO4)
+pin 8 (MIO8)
+pin 9 (MIO9)
+pin 10 (MIO10)
+pin 11 (MIO11)
+pin 12 (MIO12)
+
+group: qspi_ss_0_grp
+pin 5 (MIO5)
+pin 7 (MIO7)
+
+group: qspi_fbclk_0_grp
+pin 6 (MIO6)
+
+group: spi1_0_grp
+pin 6 (MIO6)
+pin 10 (MIO10)
+pin 11 (MIO11)
+
+group: spi1_ss_0_grp
+pin 9 (MIO9)
+
+group: spi1_ss_1_grp
+pin 8 (MIO8)
+
+group: spi1_ss_2_grp
+pin 7 (MIO7)
+
+However, we are not using the "upper" pins of the QSPI device.
+Therefore, these pins should not be included in the qspi0_0_grp. This
+stems from the driver placing all possible pins into a function's group,
+even though each pin can be muxed individially and it is not necessary
+to mux all pins for full functionality.
+
+I think it would be better to have a single group for each pin:
+
+pinctrl_qspi_default: qspi-default {
+	mux {
+		groups = "mio0", "mio1", "mio2", "mio3", "mio4";
+		function = "qspi0";
+	};
+
+	mux-cs {
+		groups = "mio5";
+		function = "qspi_ss";
+	};
+};
+
+pinctrl_spi1_default: spi1-default {
+	mux {
+		groups = "mio6", "mio10", "mio11";
+		function = "spi1";
+	};
+
+	mux-cs {
+		groups = "mio8", "mio9";
+		function = "spi1_ss";
+	};
+};
+
+This allows the full functionality of this chip to be configured. Does
+that sound good? I can send a patch to this effect if you agree.
+
+--Sean
 
