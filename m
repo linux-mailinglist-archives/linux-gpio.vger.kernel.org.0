@@ -1,208 +1,110 @@
-Return-Path: <linux-gpio+bounces-5792-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5793-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93E258AF6DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 20:46:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 858378AF6E1
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 20:48:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 02A111F22651
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 18:46:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D6F94B21A46
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 18:48:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1E5A13EFE5;
-	Tue, 23 Apr 2024 18:46:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCD0613E3F8;
+	Tue, 23 Apr 2024 18:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dtsW7yGV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWKeXMsw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4730813E8BF;
-	Tue, 23 Apr 2024 18:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4273EA76;
+	Tue, 23 Apr 2024 18:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713897981; cv=none; b=sSaDRjAAFT00BxILPCJSSKIjUBhKrqLrxxxAg1fBHJDuQIM9WWb6WPhTt18lboHfCqx7H+4yhEOnt92ai7b1n4btUr0VzoZ6egmU561ZorI4IOnV6qTk3GVr2jslOfaL0vgL9umwd8F1fy67sCtesAolzZ3ZzpjU0JQNeGs5T3A=
+	t=1713898084; cv=none; b=inOXu+z9yeB6uOSXcS8J/Td3+ZQssQgZFRP7VgX4NmInJI6/OXpYE2F+9mHXBmcJM8Y0OQrfAPZx5Ise0/s8KtDJPj7nDdfDplyLtY4cNaAIeAqT+siL3eoenasvp+qYnwFfOFazMNxxCJuoRMrJ4aiDS/AXaQzQX0kkSIHdPhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713897981; c=relaxed/simple;
-	bh=d/HyYNt+HcwR5qBTgkaDiIlU6r66mEwGYIlwSWKtMzQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Nm1cAqMusGsXoaaQalvedc/A/pSbjzfl5vM1NfZfosN45dbol+glLc1r6hH8lYd0coUt+fjqFJAE4NHtirJWwp5Bdp7euhVTYt20rRpFMicwi1Svcfban7p/QYv/lMii4IcQ6/FGGDVjqP0jBR06OepuWvDqhO3aMns74uXZ9o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dtsW7yGV; arc=none smtp.client-ip=209.85.167.180
+	s=arc-20240116; t=1713898084; c=relaxed/simple;
+	bh=H5568VIrx9lixuPNa8YvFEWiBslOts9v3R70mPD8pzo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i61C6lcbOaJCbICYfLlEZ2Crx7R2LFMySVeg7VSaRrWo6+VNF9b3mSGbTN5nsp79HLv5AmwfRPJEV4KXqe0fd2P1Q7I4djzhMgSb0ohxRia1S7/8lYsXKuPPode/jcX2qvvZ3EP1iWmn0+tjjhSiZE4ymDi8TqnOxb1ipPIhV5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SWKeXMsw; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c70e46f3caso3542147b6e.2;
-        Tue, 23 Apr 2024 11:46:19 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e3c9300c65so51713375ad.0;
+        Tue, 23 Apr 2024 11:48:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713897979; x=1714502779; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MysULTgnN7k+Xud5MO2Zc39+JXGl3oEbD4FIUD15UgY=;
-        b=dtsW7yGVOP9uUwYEQrYsk79M0NJHLR4GjaU/gxdw9C0ki2n5o04KmUjq7IuUcVGggd
-         wZiu1E2VfP6Znb0/gj1KzFdHaGen7EXTD/yyLRMORmVIXIcvWzNhMUCduYd1yN6yZ+es
-         6QiGpqYRHGEvPZlmh791BnrcT/8TolvaBJN/8KC4lVNbRc1aOHxdePkifUIVR4ibQwLv
-         fLWjC9AveThJUVbwqAF5p1DPrdA4oWrKp7tVuoK/wfqxn37dNGS2HziLnmusgsSepfFt
-         wFGivQVuQHlZ8K/S8NbNIf7x42zhQHYK586K6KVsllhQmHZ98X5cY+yathsSLuIyHiyd
-         lC3Q==
+        d=gmail.com; s=20230601; t=1713898083; x=1714502883; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pX6RYPwRziaLwatJslL9RyMCesZcjbHxs3ByM77+JCY=;
+        b=SWKeXMswtT47xjFM02PzpjTrPZKtZlGkL1aoQ8cM/QfyRH+wYxggAcutxPs1UdHvRr
+         hRExlA45VEoz4nMvbgQb4nskeOTxcYnge8FH1xjSriwtG8lWK8hcSvFU146+Wlq5mB6Z
+         8BYSTvPlF4ZMS/AM2tuVeJjklHOG5LF+XMNktx/w6TP9DRSrsY7UPYVDbpsVDTVz4SKZ
+         z1eROukJ7H2oOk4+sTUQ3k2EW8H4hoUC8eYTcnpfhHcB15tT8MAq9FFRTsG7TbAAUKR2
+         +dHkHzSUrBgv5eAQGdPpqbabksOxlmGCrX0Vq3OZu/SMEX1XbNQJ6i318Qq1pl/Dubqu
+         sWVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713897979; x=1714502779;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MysULTgnN7k+Xud5MO2Zc39+JXGl3oEbD4FIUD15UgY=;
-        b=AfJQcRRaiZFmEl/ZnIZ9hA/NqKyrd35IXms7qVLPLzSnsngt6NgQLaBBRGiVIJHGcD
-         7cFfw1ADsPL1Vz/JLg6S1k6jhKJyD/Lf9kAMfXZyOdmKogLl5iGxYiRkq2gYHLUvkece
-         WqjkIoy7eTZJXaV7CDWdCv9QqeFRL2yxfiNrYmzfZasXms3wX0gD/aNX8wR6Q7da9+IX
-         1NKzNkQz+cXand9XyMVhpEc2zut2xQRO3Jcskgzj5YLtjLW3MPE0u2ku8KPCttSG39ja
-         oxym0++dMvytz/MdA0BxSDaKcec+NAI3aGclYaz4qiY40gd9jlBbLw6/4c+SQW0Oj9CT
-         MY1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVdZabDMb7tjU8PFYx28jSO1qHIsNaAkTjM45G7u5mwa/MAKeQLFvKnGNx94Gxs0qOlMtstdXHKalU0ZUfuzCSk5DkPHDh2mqiYQUVtY6Intdq0awKTIh11ub8ydAT7kF8JfTpOwFLDGg==
-X-Gm-Message-State: AOJu0YwfJ7CpXDj5oOStwrqwVwhXsAd8h2FRRufx9t7jWg3BIV5FnCEq
-	+8KtFBT/H9oL/M35tu4nA9GCi+URusOd/l9CnwY/xxOOndoetrLX
-X-Google-Smtp-Source: AGHT+IHVrjJnk12Cra/vApgCck0OQK7U/htDoLVGpch/iM6o+qAWkpg7ZBWU6UKE5uG8o5Oqw0+BUw==
-X-Received: by 2002:a05:6808:14d1:b0:3c4:e208:b784 with SMTP id f17-20020a05680814d100b003c4e208b784mr227117oiw.27.1713897979242;
-        Tue, 23 Apr 2024 11:46:19 -0700 (PDT)
-Received: from stbirv-lnx-1.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g7-20020a0ce4c7000000b0069b7aca529esm4214773qvm.14.2024.04.23.11.46.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 11:46:18 -0700 (PDT)
-From: Doug Berger <opendmb@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Doug Berger <opendmb@gmail.com>,
-	Phil Elwell <phil@raspberrypi.com>
-Subject: [PATCH v2] gpio: brcmstb: Use dynamic GPIO base numbers
-Date: Tue, 23 Apr 2024 11:46:05 -0700
-Message-Id: <20240423184605.2094376-1-opendmb@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1713898083; x=1714502883;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pX6RYPwRziaLwatJslL9RyMCesZcjbHxs3ByM77+JCY=;
+        b=S35w/vfZ84tTVhV2QJwlZBpLBy+ki3B29aMLnR6KsvBj9AOrnauCXgs4XOvatlJdLh
+         rJyzoP9hJbhNTxStRLbXxYKVF+L7KuEUNFCB46FE78Ea+GFuGdwM2fBAo6zBOnyvg25z
+         G0n+Zr4hmreMAddjgrHtQ1Jom1gtLXhlY/5NomQsgiA7KjXIRb85GBzcqW2/EW6xGxAX
+         5dcRSkkkRpKN+bSvcDeVUzIETudRJTCGS/HQpnpXDehyVu9fO03wMuatuu78lry42hVL
+         jeG+ztAQVy6dwe+WC8zH0DP3ZMQnlfyH2SElMTGmyYSUJhikKCa7Vc2lHqbx10YYd5kx
+         UGzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjD0Erv3tECQ/K7eP/r0s80u51bQmSYwJ6VzN96YsJWIUEQ8oDaGBS4uQZcCMEaKh+1mLQyOBqOzmw+YslBaCQqq36AzO6P2X0rBwGDpqbFLRt0S4Y6t3VPZtdTelViUGt9g1E8uLvJA==
+X-Gm-Message-State: AOJu0YzdacAmzjwDUNLVt+h/7rOzeuGHXwhHApMivlmpmBzIpXrViaVT
+	BclerJN3mMP3Rspju+nt0zCNgSgd131LtTMoHSyG1pxAIQxaONqy
+X-Google-Smtp-Source: AGHT+IHO+XPG1I7/p/baM5AJcJmueayGWEnQTbjJxKPqrnkkS2plAOEp+7WSaHEZhaTrjWIAgzNrJw==
+X-Received: by 2002:a17:902:9a42:b0:1e5:31c5:d7be with SMTP id x2-20020a1709029a4200b001e531c5d7bemr344081plv.40.1713898082818;
+        Tue, 23 Apr 2024 11:48:02 -0700 (PDT)
+Received: from [10.69.55.76] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z3-20020a170903018300b001e0bcccc800sm10377709plg.35.2024.04.23.11.48.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 11:48:02 -0700 (PDT)
+Message-ID: <d8dcd3ad-25c7-46fc-b628-e6adcb5c2c9c@gmail.com>
+Date: Tue, 23 Apr 2024 11:47:59 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: brcmstb: Use dynamic GPIO base numbers
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Phil Elwell <phil@raspberrypi.com>
+References: <20240423175025.1490171-1-opendmb@gmail.com>
+ <5f550f60-d7b9-4cb2-badf-fde4f53db790@broadcom.com>
+Content-Language: en-US
+From: Doug Berger <opendmb@gmail.com>
+In-Reply-To: <5f550f60-d7b9-4cb2-badf-fde4f53db790@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Forcing a gpiochip to have a fixed base number now leads to a warning
-message. Remove the need to do so by using the offset value of the
-gpiochip.
+On 4/23/2024 11:11 AM, Florian Fainelli wrote:
+> On 4/23/24 10:50, Doug Berger wrote:
+>> Forcing a gpiochip to have a fixed base number now leads to a warning
+>> message. Remove the need to do so by using the offset value of the
+>> gpiochip.
+>>
+>> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+>> Signed-off-by: Doug Berger <opendmb@gmail.com>
+> 
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> 
+> Thanks!
+Just submitted v2.
 
-Signed-off-by: Phil Elwell <phil@raspberrypi.com>
-Signed-off-by: Doug Berger <opendmb@gmail.com>
----
-change in v2:
-  gc->base is already initialized to -1 by bgpio_init() so the
-  redundant initialization in this driver was removed.
-
- drivers/gpio/gpio-brcmstb.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-index a789af4a5c85..790cb278b72a 100644
---- a/drivers/gpio/gpio-brcmstb.c
-+++ b/drivers/gpio/gpio-brcmstb.c
-@@ -50,7 +50,6 @@ struct brcmstb_gpio_priv {
- 	struct irq_domain *irq_domain;
- 	struct irq_chip irq_chip;
- 	int parent_irq;
--	int gpio_base;
- 	int num_gpios;
- 	int parent_wake_irq;
- };
-@@ -92,7 +91,7 @@ brcmstb_gpio_get_active_irqs(struct brcmstb_gpio_bank *bank)
- static int brcmstb_gpio_hwirq_to_offset(irq_hw_number_t hwirq,
- 					struct brcmstb_gpio_bank *bank)
- {
--	return hwirq - (bank->gc.base - bank->parent_priv->gpio_base);
-+	return hwirq - bank->gc.offset;
- }
- 
- static void brcmstb_gpio_set_imask(struct brcmstb_gpio_bank *bank,
-@@ -118,7 +117,7 @@ static int brcmstb_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- {
- 	struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
- 	/* gc_offset is relative to this gpio_chip; want real offset */
--	int hwirq = offset + (gc->base - priv->gpio_base);
-+	int hwirq = offset + gc->offset;
- 
- 	if (hwirq >= priv->num_gpios)
- 		return -ENXIO;
-@@ -263,7 +262,7 @@ static void brcmstb_gpio_irq_bank_handler(struct brcmstb_gpio_bank *bank)
- {
- 	struct brcmstb_gpio_priv *priv = bank->parent_priv;
- 	struct irq_domain *domain = priv->irq_domain;
--	int hwbase = bank->gc.base - priv->gpio_base;
-+	int hwbase = bank->gc.offset;
- 	unsigned long status;
- 
- 	while ((status = brcmstb_gpio_get_active_irqs(bank))) {
-@@ -412,7 +411,7 @@ static int brcmstb_gpio_of_xlate(struct gpio_chip *gc,
- 	if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
- 		return -EINVAL;
- 
--	offset = gpiospec->args[0] - (gc->base - priv->gpio_base);
-+	offset = gpiospec->args[0] - bank->gc.offset;
- 	if (offset >= gc->ngpio || offset < 0)
- 		return -EINVAL;
- 
-@@ -596,8 +595,8 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 	const __be32 *p;
- 	u32 bank_width;
- 	int num_banks = 0;
-+	int num_gpios = 0;
- 	int err;
--	static int gpio_base;
- 	unsigned long flags = 0;
- 	bool need_wakeup_event = false;
- 
-@@ -611,7 +610,6 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(reg_base))
- 		return PTR_ERR(reg_base);
- 
--	priv->gpio_base = gpio_base;
- 	priv->reg_base = reg_base;
- 	priv->pdev = pdev;
- 
-@@ -651,7 +649,7 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 			dev_dbg(dev, "Width 0 found: Empty bank @ %d\n",
- 				num_banks);
- 			num_banks++;
--			gpio_base += MAX_GPIO_PER_BANK;
-+			num_gpios += MAX_GPIO_PER_BANK;
- 			continue;
- 		}
- 
-@@ -691,7 +689,6 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 			err = -ENOMEM;
- 			goto fail;
- 		}
--		gc->base = gpio_base;
- 		gc->of_gpio_n_cells = 2;
- 		gc->of_xlate = brcmstb_gpio_of_xlate;
- 		/* not all ngpio lines are valid, will use bank width later */
-@@ -713,7 +710,7 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 					bank->id);
- 			goto fail;
- 		}
--		gpio_base += gc->ngpio;
-+		num_gpios += gc->ngpio;
- 
- 		dev_dbg(dev, "bank=%d, base=%d, ngpio=%d, width=%d\n", bank->id,
- 			gc->base, gc->ngpio, bank->width);
-@@ -724,7 +721,7 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
- 		num_banks++;
- 	}
- 
--	priv->num_gpios = gpio_base - priv->gpio_base;
-+	priv->num_gpios = num_gpios;
- 	if (priv->parent_irq > 0) {
- 		err = brcmstb_gpio_irq_setup(pdev, priv);
- 		if (err)
--- 
-2.34.1
-
+Sorry,
+     Doug
 
