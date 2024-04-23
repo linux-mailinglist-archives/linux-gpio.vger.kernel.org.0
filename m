@@ -1,183 +1,160 @@
-Return-Path: <linux-gpio+bounces-5757-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5758-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 381178AE73A
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 15:00:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F90A8AE895
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 15:49:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E29021F26377
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 13:00:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1CB8528A7C1
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 13:49:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D1E312F371;
-	Tue, 23 Apr 2024 12:59:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28741139CEA;
+	Tue, 23 Apr 2024 13:48:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c+DisPx4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YXMcclPS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7027D12D1FE;
-	Tue, 23 Apr 2024 12:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A5C139CE4;
+	Tue, 23 Apr 2024 13:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713877190; cv=none; b=pIxKwBLjP2078MMLICU5auTnRM4v6NWut4B+aganhxgw2PEFF5wJ/RPFFAeyq823o5+lw165NCcgkIX/zlUPRKmBN9+4nMK3fM667r7Nlsa/I7RJlYX0NnaBEnCFpin4u4pcy66XKQv7dxC04ks3F+hLP/GXOMX3Op68YYBJuEI=
+	t=1713880081; cv=none; b=UPIx0CG9uHQ4D7rauJxE4pf52RoPW0zshuWUA1BWPTRhU1iFZzO+SEo8z1j87ASpCm2nBZZw5HgPLnsz+O7myFDTcf0DruZQ5jGxhLx0zyiawrdAVwc/TxFeJLgAAn8vSX1Cz5L6hOgaZ9vY66ktI8HZmDz8r01A+o1j2RI8VtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713877190; c=relaxed/simple;
-	bh=7GaZ6z1KKQVx9no+OijvvNIpBImultry935P5y+8rrg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nR6W4s0mIqKZosfFZ2b4X0IvA4iCWf0F6cGdeBYjVnk8On62WrTLMD1UkWSD0qorBsr+2xrARVbKSCaaR6KnUf9cVFGPovT8AIrV3z9pjV/mgv2CoiEhg9bIy1tpzrPOhnPrzuJ7eouDEG4GgIsnb1b3SUlBQNokz18dzdim7BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c+DisPx4; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1713880081; c=relaxed/simple;
+	bh=y7Dn96ugvzlC/fk+MWurHAoRm3fMDnGgcPR8W5+vqVk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UZGi0raQE83vfIIdXzhjix6h2EHLYfQIlu874A0fqgf2u/y0uem7UZ3gz2t+iSVbhnsh02quo8mviO5SdgtRVby2A7OYP3xrwUawCu7h5YXC5mwuVYkAHTnoIRpZd8P2sRpTB09B7RXkW5sVkMhA10lQwwJ5odYwCy6pwtcpSh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YXMcclPS; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713877189; x=1745413189;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7GaZ6z1KKQVx9no+OijvvNIpBImultry935P5y+8rrg=;
-  b=c+DisPx4rsM/mrtJ91h88DS7/feoN8Fkdza5gaOzAD0utGm9Le6Zijik
-   C5PHlvTT1Zihv0oCyPjs8CdqOUPyGQ2NpbCvRLPUkHd8UbMgra9Ksk1dh
-   N2Hq2znjpFqjBNsyIThD1siisG0Q3rxIWJtsjtXQWgiSI+WkYoKZRsdIp
-   bT9ztrZR4EQq2BSoiSfzwRaD2RdEG6H1rOSQKwFi1bHGjUI+fXX5xjxqy
-   WBJkhVZPI1hwzohAuEZ92+G4E7PTPS/L6Lb0TZiqL7bRedlniI5LDX6Yl
-   kVfLF8cHaQZ3TzX/0OlUhNxMsi+PdrBXW6iGmf4Wn/LUnd9s1mo1/6Zbf
+  t=1713880081; x=1745416081;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=y7Dn96ugvzlC/fk+MWurHAoRm3fMDnGgcPR8W5+vqVk=;
+  b=YXMcclPSjxK2/3aCS5GMtdKaPQ2j/KxxdMYUb7OkCcHqt+t7kH3lnJa9
+   QrtzH08rDpzEbv3SnuEAUIwHTKvLC7jX1cU2xPD9FOWYhBA85g1AZVvY6
+   lKLarmnzuZDJNMyfwTiCKiTiraawz6TwYMPgSznC2y6EXQSc8Bn3p4cwB
+   LgvLLTUf4+FY9pfBU0xuGlEzY31gM49gut183EqCmZfXZ6m5K+QyvK6Se
+   nLuFuamctWkwOmEeIBsjbiqY56QL+1ya9JgHT6znTggIJCNgbqd7/JSpg
+   8wLZ/Xo668jK4UfPlIm1lVnS/XHSksnPsQC53bWzHDrS5KJiseJz7Kvr7
    g==;
-X-CSE-ConnectionGUID: dyKndjrwQxq+kcTUAXbWOw==
-X-CSE-MsgGUID: roOEnrO3SL6bNWMGgqL1pQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9328019"
+X-CSE-ConnectionGUID: zpPTa7NCRbe1esiX4IPBiA==
+X-CSE-MsgGUID: XM8UpB/FSpy8JUoIi7fGVw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="13296914"
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9328019"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 05:59:48 -0700
-X-CSE-ConnectionGUID: 01aWmH+7Q+CCrRKT+QYgSg==
-X-CSE-MsgGUID: rztc+s70S7aCZwMDAP6Htg==
+   d="scan'208";a="13296914"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:48:00 -0700
+X-CSE-ConnectionGUID: BkcXkZPRS0S3k78O4PCmZQ==
+X-CSE-MsgGUID: U3NDdzEdTHSANk8ap3Fl9Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24963915"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 05:59:46 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rzFkM-00000000L2U-23F1;
-	Tue, 23 Apr 2024 15:59:42 +0300
-Date: Tue, 23 Apr 2024 15:59:42 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Alban Bedel <albeu@free.fr>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@toke.dk>,
-	linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2] wifi: ath9k: Obtain system GPIOS from descriptors
-Message-ID: <Ziewvkh_Hd2j5hHF@smile.fi.intel.com>
-References: <20240423-descriptors-wireless-v2-1-6d1d03b30bfa@linaro.org>
+   d="scan'208";a="24881235"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.40])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 06:47:57 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 23 Apr 2024 16:47:53 +0300 (EEST)
+To: Aapo Vienamo <aapo.vienamo@linux.intel.com>
+cc: Linus Walleij <linus.walleij@linaro.org>, 
+    Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+    linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH] gpio: Add Intel Granite Rapids-D vGPIO driver
+In-Reply-To: <20240419080555.97343-1-aapo.vienamo@linux.intel.com>
+Message-ID: <b3f2fad7-85aa-d1db-46ab-b3debd84caa7@linux.intel.com>
+References: <20240419080555.97343-1-aapo.vienamo@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240423-descriptors-wireless-v2-1-6d1d03b30bfa@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Apr 23, 2024 at 02:12:33PM +0200, Linus Walleij wrote:
-> The ath9k has an odd use of system-wide GPIOs: if the chip
-> does not have internal GPIO capability, it will try to obtain a
-> GPIO line from the system GPIO controller:
-> 
->   if (BIT(gpio) & ah->caps.gpio_mask)
->         ath9k_hw_gpio_cfg_wmac(...);
->   else if (AR_SREV_SOC(ah))
->         ath9k_hw_gpio_cfg_soc(ah, gpio, out, label);
-> 
-> Where ath9k_hw_gpio_cfg_soc() will attempt to issue
-> gpio_request_one() passing the local GPIO number of the controller
-> (0..31) to gpio_request_one().
-> 
-> This is somewhat peculiar and possibly even dangerous: there is
-> nowadays no guarantee of the numbering of these system-wide
-> GPIOs, and assuming that GPIO 0..31 as used by ath9k would
-> correspond to GPIOs 0..31 on the system as a whole seems a bit
-> wild.
-> 
-> Register all 32 GPIOs at index 0..31 directly in the ATH79K
-> GPIO driver and associate with WIFI if and only if we are probing
-> ATH79K wifi from the AHB bus (used for SoCs).
+On Fri, 19 Apr 2024, Aapo Vienamo wrote:
 
-...
+> This driver provides a basic GPIO driver for the Intel Granite Rapids-D
+> virtual GPIOs. On SoCs with limited physical pins on the package, the
+> physical pins controlled by this driver would be exposed on an external
+> device such as a BMC or CPLD.
+> 
+> Signed-off-by: Aapo Vienamo <aapo.vienamo@linux.intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+
+> diff --git a/drivers/gpio/gpio-graniterapids.c b/drivers/gpio/gpio-graniterapids.c
+> new file mode 100644
+> index 000000000000..61bcafe1985e
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-graniterapids.c
+> @@ -0,0 +1,382 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * This registers all of the ath79k GPIOs as descriptors to be picked
-> + * directly from the ATH79K wifi driver if the two are jitted together
-> + * in the same SoC.
+> + * Intel Granite Rapids-D vGPIO driver
+> + *
+> + * Copyright (c) 2024, Intel Corporation.
+> + *
+> + * Author: Aapo Vienamo <aapo.vienamo@linux.intel.com>
 > + */
-> +#define ATH79K_WIFI_DESCS 32
-> +static int ath79_gpio_register_wifi_descriptors(struct device *dev,
-> +						const char *label)
-> +{
-> +	struct gpiod_lookup_table *lookup;
-> +	int i;
-
-unsigned ?
-
-> +	/* Create a gpiod lookup using gpiochip-local offsets + 1 for NULL */
-> +        lookup = devm_kzalloc(dev,
-> +			      struct_size(lookup, table, ATH79K_WIFI_DESCS + 1),
-> +			      GFP_KERNEL);
-
 > +
-
-Besides unneeded blank line the above has a broken indentation.
-
-> +	if (!lookup)
-> +		return -ENOMEM;
+> +#include <linux/array_size.h>
+> +#include <linux/bitmap.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gfp_types.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/math.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/overflow.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/types.h>
 > +
-> +	lookup->dev_id = "ath9k";
+> +#include <linux/gpio/driver.h>
 > +
-> +	for (i = 0; i < ATH79K_WIFI_DESCS; i++) {
-
-> +		lookup->table[i] = (struct gpiod_lookup)
-
-This is not needed as GPIO_LOOKUP_IDX() is a compound literal.
-
-> +			GPIO_LOOKUP_IDX(label, 0, NULL, i,
-> +					GPIO_ACTIVE_HIGH);
-
-Hence:
-
-		lookup->table[i] =
-			GPIO_LOOKUP_IDX(label, 0, NULL, i, GPIO_ACTIVE_HIGH);
-
-> +	}
+> +#define GNR_NUM_PINS 128
+> +#define GNR_PINS_PER_REG 32
+> +#define GNR_NUM_REGS DIV_ROUND_UP(GNR_NUM_PINS, GNR_PINS_PER_REG)
 > +
-> +	gpiod_add_lookup_table(lookup);
+> +#define GNR_CFG_BAR		0x00
+> +#define GNR_CFG_LOCK_OFFSET	0x04
+> +#define GNR_GPI_STATUS_OFFSET	0x20
+> +#define GNR_GPI_ENABLE_OFFSET	0x24
 > +
-> +	return 0;
-> +}
+> +#define GNR_CFG_DW_RX_MASK	(3 << 22)
 
-...
+GENMASK()
 
-> +	/* Obtains a system specific GPIO descriptor from another GPIO controller */
-> +	gpiod = devm_gpiod_get_index(ah->dev, NULL, gpio, flags);
++ #include <linux/bits.h>
 
-> +
+> +#define GNR_CFG_DW_RX_DISABLE	(2 << 22)
+> +#define GNR_CFG_DW_RX_EDGE	(1 << 22)
+> +#define GNR_CFG_DW_RX_LEVEL	(0 << 22)
 
-Unneeded blank line.
+FIELD_PREP(GNR_CFG_DW_RX_MASK, xx) x 3
 
-> +	if (IS_ERR(gpiod)) {
-> +		err = PTR_ERR(gpiod);
->  		ath_err(ath9k_hw_common(ah), "request GPIO%d failed:%d\n",
->  			gpio, err);
->  		return;
->  	}
+> +#define GNR_CFG_DW_RXDIS	BIT(4)
+> +#define GNR_CFG_DW_TXDIS	BIT(3)
+> +#define GNR_CFG_DW_RXSTATE	BIT(1)
+> +#define GNR_CFG_DW_TXSTATE	BIT(0)
+
+These require #include <linux/bits.h> (just pointing this out so you know
+in future, you'll need to add it anyway for GENMASK() as mentioned above).
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+ i.
 
 
