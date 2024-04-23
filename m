@@ -1,162 +1,143 @@
-Return-Path: <linux-gpio+bounces-5764-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5766-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23E498AE8BB
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 15:54:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 735D28AEB2D
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 17:32:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 558801C21EEE
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 13:54:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F37328602F
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 15:32:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 700D6136E2A;
-	Tue, 23 Apr 2024 13:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gL+PxhQt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51DBC13B293;
+	Tue, 23 Apr 2024 15:32:16 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868221369A9
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 13:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F2686273;
+	Tue, 23 Apr 2024 15:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713880447; cv=none; b=snjfFlEYRS+aLFt0PxPqImV1jcYOCexmWZ3nFOiuV59rhP8LiSApdXO+ZZMTw2jsncrhNUkMe9j3n8gBSdPF2/lSHd/AFfvT+CgFnaJa2rjGZoD8+c7jioYNRMXZnwMOxQ1QnBRUG976ZuBWTGat66HUOBJ9/L2Qs8oGor0/Fek=
+	t=1713886336; cv=none; b=tNKgtB6B93n2WBbG7kwJDneKmvObraaQJcvomhCM1SHOynqgF/AgT5Dsa70ayaSMUqsJGXU+RwEMn672LndvqEuIhsoQaR6JA1+FNNTTf/LRaRCD/LaMJs07mmRtccmhZc/ERV0TX/3Xv6NGDE9bCAFCnwUFo7dZEe5Vnu6f7O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713880447; c=relaxed/simple;
-	bh=Rc2IumjbQ8OjG4qfb9Z/1cwn+g9VCp4urj9gZ8iGneE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LEJeH0wKtB6UUI2unxFgRJybwrc8TlQigWSHdkrKhPBg5TEBRY1R2cEPcrz8OJPkuP4Ok9kfneYZuCcSUZrUmV24pgFQcB+NEbYpGopP0KDQCue2+wJ2X901ZGAy+NgXhrNZwgzB6VH9HrNPd57Kzc5LZL6Dbe+KBrtprtFQuZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gL+PxhQt; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-51b09c3a111so3790114e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 06:54:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713880443; x=1714485243; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gtSA0+kfCH0DzApn0Z0KwQ9Ybzg48e+TinciXUnlIO0=;
-        b=gL+PxhQtlBkKCKXD98D2fu1xrRdORNGEnBDV/FrEbJNoBoc7FFnRYyd5UvRhJzb2l2
-         RzCdzfltTycU79WqlEZj7VtEhLVBx6AAOrS3d13s1U7+xYabw7PJIDytySBbvrQw7Mjr
-         UP4WZQR/3o7QAsgw3agtrqWOzFiPjShjC/ZC8wbiA5pe1sn+KUwdfCvYnQdvJdzpQ1hC
-         2SYe6hmYZyYcv8yQjZicliIoCpmS7zHzjEOIu32MEUm2jn6AevV/cylDobxClyZy1Ote
-         HGWbFQ4ihwWPeVLlP5NgnxKL4o4NXkFW6Gbb3NSFp+6I7drLhK5xqIqqq42CQGZSROhw
-         lDaQ==
+	s=arc-20240116; t=1713886336; c=relaxed/simple;
+	bh=Axa3Mn5+KVTK6qIzldvrgQzSEYO2/lcirqLJInKyRG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GZXUHKad3OyzKN5sXvMkdcCwHi/SC+qdEiHlkpBu2RC39c/65eVwFVLgqCaKD0yxWm9nxqE7vzg9cGu2cc/n8sXv6gCB0IH4N4+gwcLp6Ao0P/rt5gYcjdPVX0csfc+Zwww0OvvARN5u9n7k5snp8/ROvx7LcmHdmMD3hQDFlTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61816fc256dso50988897b3.0;
+        Tue, 23 Apr 2024 08:32:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713880443; x=1714485243;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1713886333; x=1714491133;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gtSA0+kfCH0DzApn0Z0KwQ9Ybzg48e+TinciXUnlIO0=;
-        b=HusnikhvBifQEIKY5DCMK1+VPSdpQpUezlS0RrxUaHUQn+2/58EsWb6D1kyR+bjMhR
-         EmM2+wXug1Cd0MP8SN/ibRmQeZG/u1W4vymRx2pZ3Vbec0hipsnYmNIKnHJUARGk5X/q
-         95zVjDtO7ceid3heZ44hqQ9INkBd3UqhcS7xX1XmgqBIyOL6U2dWanteLcpVS1a+DrIb
-         hhhQxoKPFdJ8+hUvMXID2gnWiWU5rdtR5yeZD/UaysfVISwRdVXkiD+ebghJ00dmP8/y
-         HXIHny+Q9N6r/h5JVyhyI/rxvvM4rewLENgP1ytiAMOiA/o8y5G+/7q88VQWmARv2C7T
-         g9yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdyT3UGxMBEC8cYBJe2PJ3I3hC1tMscbrdPavkE6XSCzT7ba2TLIVlhdXD6NaINFC97yzOFhI4Aa8Ri2o6i62/NBLTfdCnz/IHJQ==
-X-Gm-Message-State: AOJu0YxdOt5zynbxwq0RCl5LdUQ0RnMp3jsaZr0N4QpeJGyOVKd5TdoH
-	ja5yPMuEpC1ysEk9iR3JDk8xO8mbZ8OXAjAsJZFWzMiVdtUMRxcBQLp1Il5UiwkUIbooKjA1a9M
-	V
-X-Google-Smtp-Source: AGHT+IFlE4pqogUlR+eZ37BQq666pDAg97ATWOgkDpFMSX8lWAbA7K/Gu3ABd18BwtKzqHaH18zFDA==
-X-Received: by 2002:a19:640e:0:b0:519:6691:4135 with SMTP id y14-20020a19640e000000b0051966914135mr8449450lfb.67.1713880443491;
-        Tue, 23 Apr 2024 06:54:03 -0700 (PDT)
-Received: from [192.168.1.140] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id b18-20020ac24112000000b0051a61f2d251sm1875997lfi.290.2024.04.23.06.54.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 06:54:02 -0700 (PDT)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 23 Apr 2024 15:54:01 +0200
-Subject: [PATCH 5/5] ARM: orion5x: Convert TS409 board to GPIO descriptors
- for LEDs
+        bh=pCFrzV7qoH1GMPZYbyZsRzzURQK7cGFU6Wp+TTcFvr8=;
+        b=LPth/cZFk4JlInnptjMDl2XXrxBuMp0XvL4yz+QzMwOw+nQtJnNxU6IvnOtkHNc26g
+         r9Dsdbd1RCRnGCFLbPbtbpU+ComM9edt8DNvVWY+mVi69/tQM/Q2USepwH3CsauSfZ9E
+         8exeAQQQQppYsLSrrz5XTkAEV2rRg73eMmQ5p3MyR3zVSBjvdCMOrk1tua83g4WSld/t
+         G4aiJ/8uvsFwDgJ6Bsve8MnyL78nzphgOt3ns2KOPA6ljKo5pPAeDG1T2KuJnt9JeXMS
+         Cm8teEftdPyUAw6hasL1/6DLyB5YdYc7DcWLwKHaV7dW6tB5VOu+HQCXTCl9K4D9kA8P
+         PXGA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7Vti+OI5iSIThtBBjC6Chrsdy7O4OEQNRvPLTCumRwOTuJLD5zxzGA4u/7GRbgZeyd/zojaC9pFjziwq/YLzKiWpgfRxHO/f7kClseyR0dQc5vUA/HnCK6hsnlrS2fuuu9YiSIwf0X5CIRmXTQYLHR4h80VlJP2HDo9kf/Q/ztw6ImdQqlRwyANXZYO7kVASOVF+j3ZLvBwXKY7w3mEiuvMhMi1Ki6eWlaWGnH808ZQO0OVKzlHLZNK9gPuz/y0kzX5SRmQOpW5sOuyo7dKWrFoMhXotd02GAZ1suCw==
+X-Gm-Message-State: AOJu0YzgtujE/L709zM1lFPaeDlAMuS5nUCbJ3TtZPrjo6NHsudG/Cvq
+	GfMAJYIMAaYua5dSWK3IevJZh2dw+E4v7jWNtHEVtsizwisZ6Paid/fXetzm
+X-Google-Smtp-Source: AGHT+IEn9o9kwpQ21sUDm3boQ5gEGYvUxHSf9p6oYyBqPVpgAQDC1EghII1JwoT01XsucnyZNFnveA==
+X-Received: by 2002:a05:690c:61c6:b0:61b:1a4f:158b with SMTP id hk6-20020a05690c61c600b0061b1a4f158bmr13675592ywb.6.1713886331234;
+        Tue, 23 Apr 2024 08:32:11 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id z12-20020a81ac4c000000b00617f1b4943esm2480486ywj.106.2024.04.23.08.32.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 08:32:11 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-db4364ecd6aso5760935276.2;
+        Tue, 23 Apr 2024 08:32:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVI4gBTrDCBV79aoDQ+Z2jvbLk16BClJTyYYOHXBbHU8Dw6HZCDo28WffVKQpmrv7wzQliCHqJ0khwkjoH/BrxdVBlBuyiLZRkb+HuKTWWexZ0C2P7teEWKhR/F2i4ol7O9imDwzh12qvMGkwVfPbXI2S+iVhDSlPEmrxQl/jpA20Mmt9caMzgK+7T3Y+xQ8W9WKB7nFoZAkeTTTbv1Iixy2777zCnQaTNfLmalj6hUQqeCtPncVGQz4zwJKMWH+DChm1sbM90hIcRf31RUNGRC/jTHghxzSNZd4vI/UA==
+X-Received: by 2002:a25:86c7:0:b0:de0:d45f:7c5 with SMTP id
+ y7-20020a2586c7000000b00de0d45f07c5mr11933981ybm.20.1713886329809; Tue, 23
+ Apr 2024 08:32:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240423-gpio-leds-v1-5-799c2f6bc61c@linaro.org>
-References: <20240423-gpio-leds-v1-0-799c2f6bc61c@linaro.org>
-In-Reply-To: <20240423-gpio-leds-v1-0-799c2f6bc61c@linaro.org>
-To: Andrew Lunn <andrew@lunn.ch>, 
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
- Gregory Clement <gregory.clement@bootlin.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
- Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.13.0
+References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
+ <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com> <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
+ <CAHp75Vf+F3ArczHQ+nSmP4uFvRdMAQWufmR6xR0xtbHfVvFm-g@mail.gmail.com> <c5ed5bed-9c93-47eb-8277-d78e12e96b42@bootlin.com>
+In-Reply-To: <c5ed5bed-9c93-47eb-8277-d78e12e96b42@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 23 Apr 2024 17:31:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV3NbCHchm9eHhGQNuvzmdwuP_fdt31m7vNY7Cp2-3-=Q@mail.gmail.com>
+Message-ID: <CAMuHMdV3NbCHchm9eHhGQNuvzmdwuP_fdt31m7vNY7Cp2-3-=Q@mail.gmail.com>
+Subject: Re: [PATCH v5 01/11] gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com, 
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This makes the LEDs on the TS409 Orion5x board use GPIO
-descriptors instead of hardcoded GPIOs from the global
-numberspace.
+Hi Thomas,
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/arm/mach-orion5x/ts409-setup.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+On Tue, Apr 23, 2024 at 12:53=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+> On 4/23/24 12:34, Andy Shevchenko wrote:
+> > On Tue, Apr 23, 2024 at 12:42=E2=80=AFPM Geert Uytterhoeven
+> > <geert@linux-m68k.org> wrote:
+> >> On Tue, Apr 16, 2024 at 3:31=E2=80=AFPM Thomas Richard
+> >> <thomas.richard@bootlin.com> wrote:
+> >
+> > ...
+> >
+> >>         +i2c-rcar e66d8000.i2c: error -16 : 10000005
+> >
+> > It probably means that I=C2=B2C host controller is already in power off
+> > mode and can't serve anymore.
+>
+> Yes the i2c controller is already off.
+> In fact it's the same issue I had with the i2c-omap driver.
+> In suspend-noirq, the runtime pm is disabled, so you can't wakeup a
+> device. More details available in this thread [1].
+> So the trick is to wakeup the device during suspend (like I did for the
+> i2c-omap driver [2].
+>
+> [1]
+> https://lore.kernel.org/all/f68c9a54-0fde-4709-9d2f-0d23a049341b@bootlin.=
+com/
+> [2]
+> https://lore.kernel.org/all/20240102-j7200-pcie-s2r-v5-2-4b8c46711ded@boo=
+tlin.com/
+>
+> I think the patch below should fix the issue.
 
-diff --git a/arch/arm/mach-orion5x/ts409-setup.c b/arch/arm/mach-orion5x/ts409-setup.c
-index 6f60dc1dfa22..8131982c10d9 100644
---- a/arch/arm/mach-orion5x/ts409-setup.c
-+++ b/arch/arm/mach-orion5x/ts409-setup.c
-@@ -8,6 +8,7 @@
-  * Copyright (C) 2008  Martin Michlmayr <tbm@cyrius.com>
-  */
- #include <linux/gpio.h>
-+#include <linux/gpio/machine.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/platform_device.h>
-@@ -168,20 +169,27 @@ static struct i2c_board_info __initdata qnap_ts409_i2c_rtc = {
- static struct gpio_led ts409_led_pins[] = {
- 	{
- 		.name		= "ts409:red:sata1",
--		.gpio		= 4,
--		.active_low	= 1,
- 	}, {
- 		.name		= "ts409:red:sata2",
--		.gpio		= 5,
--		.active_low	= 1,
- 	}, {
- 		.name		= "ts409:red:sata3",
--		.gpio		= 6,
--		.active_low	= 1,
- 	}, {
- 		.name		= "ts409:red:sata4",
--		.gpio		= 7,
--		.active_low	= 1,
-+	},
-+};
-+
-+static struct gpiod_lookup_table ts409_leds_gpio_table = {
-+	.dev_id = "leds-gpio",
-+	.table = {
-+		GPIO_LOOKUP_IDX("orion_gpio0", 4, NULL,
-+				0, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("orion_gpio0", 5, NULL,
-+				1, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("orion_gpio0", 6, NULL,
-+				2, GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP_IDX("orion_gpio0", 7, NULL,
-+				3, GPIO_ACTIVE_LOW),
-+		{ },
- 	},
- };
- 
-@@ -300,6 +308,7 @@ static void __init qnap_ts409_init(void)
- 	if (qnap_ts409_i2c_rtc.irq == 0)
- 		pr_warn("qnap_ts409_init: failed to get RTC IRQ\n");
- 	i2c_register_board_info(0, &qnap_ts409_i2c_rtc, 1);
-+	gpiod_add_lookup_table(&ts409_leds_gpio_table);
- 	platform_device_register(&ts409_leds);
- 
- 	/* register tsx09 specific power-off method */
+Thanks, I gave that a try, but it doesn't make any difference.
 
--- 
-2.44.0
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
