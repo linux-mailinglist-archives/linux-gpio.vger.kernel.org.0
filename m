@@ -1,140 +1,101 @@
-Return-Path: <linux-gpio+bounces-5721-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5722-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 011DD8AD92E
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 01:31:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2B288ADB2D
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 02:38:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96C8AB2172D
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Apr 2024 23:31:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 31399B21828
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 00:38:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2569F446B6;
-	Mon, 22 Apr 2024 23:31:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 037803D6B;
+	Tue, 23 Apr 2024 00:38:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPpSSJM1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTll7Hu7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2CA1C286
-	for <linux-gpio@vger.kernel.org>; Mon, 22 Apr 2024 23:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78AB184;
+	Tue, 23 Apr 2024 00:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713828709; cv=none; b=Iqy9TmffRT1ECed/SOdh4QGKXMehGxzoACf6RKB6QyXIjp2r6Exyp1R04NG293xvDNzyARU/DhKI76n3Id+ypKvKEgi13ZLm3H8SrXbHcPM2+TUJW+YvECVErtO6LEpC01EkcgDO6LwgjHmRzi5IMWxMyTB9khIkIWl1/LmsifM=
+	t=1713832720; cv=none; b=j4b8hipABbIK61kxk9DuthcyujGIdGAb5Zj7Mgjhyo7eMFsgeJD6CEMtnTUHKnVonA58+2U7kHwL8vQD9zR8BQFJcx398/xov/gfvE8JiNzVQwIX172YkwdbNT+6OpCptkzD0l6ix04O4PTYlan4I4BBXI0rStn/6+Z+Eitkyls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713828709; c=relaxed/simple;
-	bh=3dka/XVkSoJpyx6ajkP38SvtV0kcj68jMNq8f6mjM2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DFPIZej6HRgoCOk372+V58omrIheZLvwcWWCU5RdjLXH2483F183KbKSA21lMMgazCndukUqG7p1050I+PZ1K1pfI9VQg3r2U29clWot6RBILp0jjTl5C34bnGbaGGslTwawiyaHG5Lnq8a1DhIh4qfyzGgGt2kzOv3BNJR0E8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FPpSSJM1; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e8f68f8e0dso21762475ad.3
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Apr 2024 16:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713828708; x=1714433508; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Gmwx2tdXEZv+TDYBPROJBqQiesmBtR5K07TEnJhILCQ=;
-        b=FPpSSJM18HF9g/nYCMP3VS43dpK0/w7joNrCRJlhTFUuDJJ8E/f0JsZlaUF8OxSIXJ
-         pasZUeqW37ijRNOP0hGa/JpbqNeFrLy3lPB4hjbXlSdN0mBu1PGxm0CW3m1QAtz8ceOU
-         MtdZbtBq1QtOXrXwWxqtGRa3NOYAobfBNGXEeZXPZJAMnWzphsbzs52rtlqsJ6EX3FF0
-         FM2U3isSpwer3oZNqxkNEATxWHkhQdTCWaRW/NLfNGjK917dz76Z0efQg5AhHDtx0I9q
-         CwwjsC1b1kx9nqJjBczh27RmUjXm1gaPryQOfJR8KCV+I9hrchHmb+nvdBAKpRq15Xxh
-         0/sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713828708; x=1714433508;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gmwx2tdXEZv+TDYBPROJBqQiesmBtR5K07TEnJhILCQ=;
-        b=N0liQR9g6HIYNZZ34uboa41zJpZioa8wLzUqWcHdar2PSkTneaPgILtZc32wPJwmS3
-         chyUYmFyT9A3DOfxC8GOoVoJS4fa8jn4t1H1eW0+lkftPm4y4EMThDxayce/1dwVbHl8
-         rK1EvpTDLxfSoQJj+dH6k/xGtGXOkEpXqRAWsSdlOKux7OqEvX9oILdX0rQJF0LSAlym
-         YPiEb8xYlosUYh6l3s0zc6O2dLnZ1/LrdMFJ4lE6vOv1vUIZFdqRLkkL2AREUkxAaImL
-         czywxBrpepozB+oqn5LyGW77Y3+gp2gCUynqF4UCyehL7RLfVlDCgb0SUQJL9pkRiYhi
-         6Yhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyUQMBx5ID0vHRQYSsiGtmOdUwCAJt/hAxBrgirCJDlJklwqZ6gEm4xjVt5kD+jqpgIwCSr//vC7zR/tcUpFp9ZSAxJzHsIWzvwQ==
-X-Gm-Message-State: AOJu0Yw91eCbiltZlc5y8GB7Ztf49gdPo5WXVBjC3tTCKbx3LG82kckg
-	dRO5ctVKasVvm3T9KtRI2kZ6b8kw4EkmNfMecPTcKQOPesvfLNii
-X-Google-Smtp-Source: AGHT+IEmaEM8a2hUAVNNHKtIs9sghScc6jH6KyHd8VoXRw8RLsRQtMVUiBE0HqUnejj+va5Wbub/TQ==
-X-Received: by 2002:a17:903:238e:b0:1e8:9054:101a with SMTP id v14-20020a170903238e00b001e89054101amr13906360plh.60.1713828707878;
-        Mon, 22 Apr 2024 16:31:47 -0700 (PDT)
-Received: from rigel (14-202-6-107.static.tpgi.com.au. [14.202.6.107])
-        by smtp.gmail.com with ESMTPSA id i15-20020a17090332cf00b001e904f9717asm5551909plr.87.2024.04.22.16.31.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Apr 2024 16:31:47 -0700 (PDT)
-Date: Tue, 23 Apr 2024 07:31:42 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Gunnar =?iso-8859-1?Q?Th=F6rnqvist?= <gunnar@igl.se>,
-	linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH v2 2/4] tools: use ppoll() where higher timeout
- resolution makes sense
-Message-ID: <20240422233142.GA4078@rigel>
-References: <20240416215222.175166-1-brgl@bgdev.pl>
- <20240416215222.175166-3-brgl@bgdev.pl>
- <20240417072350.GA120983@rigel>
- <CAMRc=MfJxFYBoVK5GGks-A++n6naLJ31B6-UJBdxiw7gvnfxfQ@mail.gmail.com>
+	s=arc-20240116; t=1713832720; c=relaxed/simple;
+	bh=Mu7unsryILuvM3Nf4rtyuH+NnGl/Ag6KmANbCK5/2A4=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=NimtZvSp4BY0FkYUHFLmKYB0TNNz3VTqyhyXUOy9rbNA13fHQpWy+m4LxeHEYpw6mVu4knaeUqrr/nl9RSQhE2I6mf4YXMC8y1fY26hgucNcXqURRzR8X/G8yklnBohLR9xA+ceq91BMDqxIjwimIvD3RWbiFJl8vbLHTuD3bEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTll7Hu7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26AC3C113CC;
+	Tue, 23 Apr 2024 00:38:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713832720;
+	bh=Mu7unsryILuvM3Nf4rtyuH+NnGl/Ag6KmANbCK5/2A4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=JTll7Hu7wF1BKHSgU8lKwIEL8hfr25t3ek+6NP5oW5+ShsrBaqQxD7sfBZFQdPk+x
+	 L+2+LOIS3x3RAUoeIcsVM5+JZmlF5DkB8ezeM2plNruKpD3fqnng/RomOYEvnH7LBD
+	 0KmaMANR6rnRRIaD0S1XEYQOMGImnsWtw2hvxUa2ZiDcFdS2a7/IE3RN8rURKVcUpq
+	 OwSlcgK+tPnnj/3PiZH1FpL8GZy4kiZKEdT+KXRh1QeTkyzpfb0+oS7TKyGBHX6Eri
+	 PQY26zMwJRRA9RUcx12XelpDstx/304B41rFNc1pBSigH/+mYctSdN1ASRmUw8oMYk
+	 yfacwyHNuCAQQ==
+Message-ID: <2473d3ddeea21640b20735d660e48f98.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfJxFYBoVK5GGks-A++n6naLJ31B6-UJBdxiw7gvnfxfQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <eb221864-0044-4ea5-bbee-7545d10cb130@skole.hr>
+References: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr> <de4c56a8-488d-4cdb-9d6c-e9d6e63b22b9@skole.hr> <58b23157c088cb4774d579cc8700de85.sboyd@kernel.org> <3287993.aeNJFYEL58@radijator> <d7ff7dd609cd1b9a50e5ffa882d05b90.sboyd@kernel.org> <eb221864-0044-4ea5-bbee-7545d10cb130@skole.hr>
+Subject: Re: [PATCH v9 5/9] clk: mmp: Add Marvell PXA1908 clock driver
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, Duje =?utf-8?q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, Guilherme G. Piccoli <gpiccoli@igalia.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Kees Cook <keescook@chromium.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Lubomir Rintel <lkundrak@v3.sk>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>, Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
+Date: Mon, 22 Apr 2024 17:38:38 -0700
+User-Agent: alot/0.10
 
-On Mon, Apr 22, 2024 at 08:15:46PM +0200, Bartosz Golaszewski wrote:
-> On Wed, Apr 17, 2024 at 9:23 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Tue, Apr 16, 2024 at 11:52:20PM +0200, Bartosz Golaszewski wrote:
-> > >
-> > > -             ret = poll(pollfds, resolver->num_chips, cfg.idle_timeout);
-> > > +             if (cfg.idle_timeout > 0) {
-> > > +                     idle_timeout.tv_sec = cfg.idle_timeout / 1000000;
-> > > +                     idle_timeout.tv_nsec =
-> > > +                                     (cfg.idle_timeout % 1000000) * 1000;
-> > > +             }
-> > > +
-> > > +             ret = ppoll(pollfds, resolver->num_chips,
-> > > +                         cfg.idle_timeout > 0 ? &idle_timeout : NULL, NULL);
-> > >               if (ret < 0)
-> > >                       die_perror("error polling for events");
-> > >
-> >
-> > One minor nit - I would introduce a timespec pointer initialised to NULL
-> > and set to point to idle_timeout within the if rather than repeat the
-> > cfg.idle_timeout > 0 test.
-> >
->
-> Actually we can avoid it by doing it once before we enter the for(;;)
-> loop. It's passed by constant pointer to ppoll() anyway and having the
-> struct AND pointer to it initialized to NULL sounds more complex than
-> it needs to be. I'll do it in v2.
->
+Quoting Duje Mihanovi=C4=87 (2024-04-20 06:32:56)
+> On 4/20/24 00:24, Stephen Boyd wrote:
+> > Quoting Duje Mihanovi=C4=87 (2024-04-19 07:31:14)
+> >> On Friday, April 12, 2024 4:57:09=E2=80=AFAM GMT+2 Stephen Boyd wrote:
+> >>> Quoting Duje Mihanovi=C4=87 (2024-04-11 03:15:34)
+> >>>
+> >>>> On 4/11/2024 10:00 AM, Stephen Boyd wrote:
+> >>>>> Is there a reason this file can't be a platform driver?
+> >>>>
+> >>>> Not that I know of, I did it like this only because the other in-tree
+> >>>> MMP clk drivers do so. I guess the initialization should look like a=
+ny
+> >>>> of the qcom GCC drivers then?
+> >>>
+> >>> Yes.
+> >>
+> >> With the entire clock driver code in one file this is quite messy as I=
+ also
+> >> needed to add module_init and module_exit functions to (un)register ea=
+ch
+> >> platform driver, presumably because the module_platform_driver macro d=
+oesn't
+> >> work with multiple platform drivers in one module. If I split up the d=
+river
+> >> code for each clock controller block into its own file (such as clk-of-
+> >> pxa1908-apbc.c) as I believe is the best option, should the commits be=
+ split
+> >> up accordingly as well?
+> >=20
+> > Sure. Why is 'of' in the name? Maybe that is unnecessary?
+>=20
+> That seems to be a historical leftover from when Marvell was just adding =
 
-Ah, I overlooked the for loop, so you are right that it should be
-initialised before that.
+> DT support to the ARM32 MMP SoCs which Rob followed along with in the=20
+> PXA1928 clk driver and so have I. Should I drop it then as Marvell has=20
+> in the PXA1908 vendor kernel?
+>=20
 
-> > But that is just personal preference, so either way,
-> >
-> > Reviewed-by: Kent Gibson <warthog618@gmail.com>
-> >
->
-> Thanks, I'll keep the tag if you don't mind the above solution?
->
-
-Sure.
-
-Cheers,
-Kent.
-
+Sounds good to me.
 
