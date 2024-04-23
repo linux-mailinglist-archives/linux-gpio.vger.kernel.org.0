@@ -1,105 +1,116 @@
-Return-Path: <linux-gpio+bounces-5765-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5767-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 132D18AEB2A
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 17:32:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F5C78AF371
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 18:06:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2E3A2B20F76
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 15:32:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 417C11F236E6
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 16:06:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7B7F13B2AC;
-	Tue, 23 Apr 2024 15:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9Suwh23"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5682313CA98;
+	Tue, 23 Apr 2024 16:06:06 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613E113C3E3;
-	Tue, 23 Apr 2024 15:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFF813CA81;
+	Tue, 23 Apr 2024 16:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713886333; cv=none; b=pmlK2RARl5z6ke4R5lJgxqhflXxqQAtC0wg3LraaSRi6Thwa4iJnaVM5DoTDq3fr3WS4yYNsbkgDQHCz7I8ZjqYj7gPHl66k2qNLrInaiH9DDuQW6APsk2mfWKp78lDZVaGiQxtHUbHZzJ/h2rpJrIMidX81i1LcIcg2ISgK6Fc=
+	t=1713888366; cv=none; b=kl5gtGVjOcDhNgeq9PpTBT+t5J6WxzLNGX6Lrvk0dWRXeD8NTVKy2Whv6Tmk5wU8bzC+/yseRQGK+v1itIkRVDC5u8RHNjjAvyC/rLZHNFup7ThpoGbwnQRypIlBSQ4Ps1XsxYNf18H0GvveYQRF46ezq7eYkM3TWt8xFdZg7es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713886333; c=relaxed/simple;
-	bh=loKLUZOtD2Ahu5u6ZjVLLzhH7+gsOeQjN/iG5Ye4+LQ=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=tiFgH5VXmXIt83++ohvpAOwneJDDCe60vgamg5vVNoOsS2vR7Y52a28sdj4dP14SLQJTgL+ePx0MnTUDZp5bmDBQZ27I2gJ3CyAWYeLDrGguI6uhp3XWJIa2Hy3pBIXWkTT5ZVFeXk9gHYVywjJSs8oBmRnvx/VUQg0lves3q6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9Suwh23; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5777C116B1;
-	Tue, 23 Apr 2024 15:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713886333;
-	bh=loKLUZOtD2Ahu5u6ZjVLLzhH7+gsOeQjN/iG5Ye4+LQ=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=E9Suwh23sx3IIB9Z4pNt8T3srnBCr1SXJeKfITWC9nJdUUAEgGeoLHY3vPzwf2l7J
-	 PbIlygKMPxrjsWiugzGcnIo0YwCqESO5UXHg+SnqMmg+pDrQr1Au3eX8/3UUtcLqcJ
-	 5huwrjYTxZKD1fA5MJcG84xh0LbhcElv9IlkKd/Pj8D0JYzgVH1GDuMBhLSuQgHl3p
-	 F8fZN+wiUbzWSfqmznAM3NtpvdsYkMYouebc9tkT5n3TDxcA+FTCXZg75hWLn1wJ7/
-	 hX84vsv3KTvjBXSqQfU+Jz3YapjUAHCDeUMyRR/AngQBui1KUCyVEJU9ox8Isar3jg
-	 S1aB3BjHhTtVw==
-From: Kalle Valo <kvalo@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,  Arnd Bergmann
- <arnd@arndb.de>,  Alban Bedel <albeu@free.fr>,  Bartosz Golaszewski
- <brgl@bgdev.pl>,  Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?=
- <toke@toke.dk>,
-  linux-wireless@vger.kernel.org,  brcm80211-dev-list.pdl@broadcom.com,
-  linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2] wifi: ath9k: Obtain system GPIOS from descriptors
-References: <20240423-descriptors-wireless-v2-1-6d1d03b30bfa@linaro.org>
-Date: Tue, 23 Apr 2024 18:32:08 +0300
-In-Reply-To: <20240423-descriptors-wireless-v2-1-6d1d03b30bfa@linaro.org>
-	(Linus Walleij's message of "Tue, 23 Apr 2024 14:12:33 +0200")
-Message-ID: <87v848t7rb.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1713888366; c=relaxed/simple;
+	bh=QQMhOz7NDz+lNA87IQggc91wQxr/7XmKxGMbgJuvYo4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M3+0uU4/zxy9iHDfp/IRFT3GQpluJUfnXpBEQUkBzOtjhIBv9elaF1TdmiEQj3wV8Xiuv657gmI3sxz/lfwCd4Hgv817WX45fzRnQsaVzhoJo2V1SfDh4p2BsoTN1c6X+9VDBx1CjinUD8hevblW0PKDvMVkJHtE9L3yb2EVUrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: bnHsb/J5QQmV33n0UomTOg==
+X-CSE-MsgGUID: CEfvNxiNQdee9YHZBFb1TA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9312959"
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="9312959"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 09:06:04 -0700
+X-CSE-ConnectionGUID: LYGEq/79Sa+qDtrCi/1Veg==
+X-CSE-MsgGUID: 65O88O6jRX2M92k6olZJSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
+   d="scan'208";a="29058763"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 09:05:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rzIeX-00000000Nys-2y1l;
+	Tue, 23 Apr 2024 19:05:53 +0300
+Date: Tue, 23 Apr 2024 19:05:53 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	devicetree@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Olivia Mackall <olivia@selenic.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>, arm@kernel.org,
+	Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Subject: Re: [PATCH v6 00/11] Turris Omnia MCU driver
+Message-ID: <ZifcYXdJ7mSEJVfh@smile.fi.intel.com>
+References: <20240418121116.22184-1-kabel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240418121116.22184-1-kabel@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Linus Walleij <linus.walleij@linaro.org> writes:
+On Thu, Apr 18, 2024 at 02:11:05PM +0200, Marek Behún wrote:
+> Hello Andy, Dan, Linus, Arnd, Gregory, and others,
+> 
+> I am sending v6 of the series adding Turris Omnia MCU driver.
+> 
+> This series depends on the immutable branch between LEDs and locking,
+> introducing devm_mutex_init(), see the PR
+>   https://lore.kernel.org/linux-leds/20240412084616.GR2399047@google.com/
 
-> The ath9k has an odd use of system-wide GPIOs: if the chip
-> does not have internal GPIO capability, it will try to obtain a
-> GPIO line from the system GPIO controller:
->
->   if (BIT(gpio) & ah->caps.gpio_mask)
->         ath9k_hw_gpio_cfg_wmac(...);
->   else if (AR_SREV_SOC(ah))
->         ath9k_hw_gpio_cfg_soc(ah, gpio, out, label);
->
-> Where ath9k_hw_gpio_cfg_soc() will attempt to issue
-> gpio_request_one() passing the local GPIO number of the controller
-> (0..31) to gpio_request_one().
->
-> This is somewhat peculiar and possibly even dangerous: there is
-> nowadays no guarantee of the numbering of these system-wide
-> GPIOs, and assuming that GPIO 0..31 as used by ath9k would
-> correspond to GPIOs 0..31 on the system as a whole seems a bit
-> wild.
->
-> Register all 32 GPIOs at index 0..31 directly in the ATH79K
-> GPIO driver and associate with WIFI if and only if we are probing
-> ATH79K wifi from the AHB bus (used for SoCs).
->
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Changes in v2:
-> - Define all the descriptors directly in the ATH79K
->   GPIO driver in case the driver want to request them directly.
-> - Link to v1: https://lore.kernel.org/r/20240131-descriptors-wireless-v1-0-e1c7c5d68746@linaro.org
+...
 
-Linus, via which tree should this go?
+>   devm-helpers: Add resource managed version of irq_create_mapping()
+>   devm-helpers: Add resource managed version of debugfs directory create
+>     function
+
+IIUC you created them as static inline, the header will become yet another
+cumbersome and messy "kernel.h". Can we prevent that?
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+With Best Regards,
+Andy Shevchenko
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
 
