@@ -1,692 +1,223 @@
-Return-Path: <linux-gpio+bounces-5785-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5786-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4500D8AF628
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 20:02:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E72978AF654
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 20:11:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F4A71C24621
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 18:02:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28446B28C10
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 18:11:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D4DC144D22;
-	Tue, 23 Apr 2024 17:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBCE413E3FA;
+	Tue, 23 Apr 2024 18:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DgZ9lMjf"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TLDA4juJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8035143C6F;
-	Tue, 23 Apr 2024 17:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BA113666F
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 18:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713895174; cv=none; b=ByMMk24WWYYEwKNmung7bcK7xDvN8wLpSz7Yyn7grAJTLp26efFSCT7tJYmsqMTfNk5PHYHpk3rmzeZ1gXd+hRJClzOtLtAj+e4XRFV5I/NL0VQqK4xRIiz+Rg0aQx07UpwvT2m/ucq8pXylE/fr+XsXV+lWbQdiD2KsifkexJY=
+	t=1713895890; cv=none; b=tJ639QmEdwMol6+dLiHOXMt6LoYbhY0cMxjg3C74suyp72VDQ7n+4C9g9FXkKlLPULEZsWt7wbLur4rK+Lq/2hNuJU/Q8r5ajHF7V7F0K9nCRNRZsHCOXfBoq+DcTdq6dVGkw0uNH/4u4rkqYrrtUow1U/BMLbKvyDmPbqKneac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713895174; c=relaxed/simple;
-	bh=JM2mRqpDBRblBzr7A+RrHdUgIcSBQBDa9NjVpzLYq64=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p7AJJwJkdB3bbJmU2aTthkju84nbNHEnL1A7cfx8WTn6qa/MW+IEU7PaDx+r8rH6JSLMR9/ER8mSslaBXIy6Gr7UIF/mOxRNhVvmPqDZTqmjteXv21QSCbjyAlIksW5MGg40dR+daPneEh9XDHyRUQiHle+jQUT1ysv+U4vOtyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DgZ9lMjf; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4196c62bb4eso32645025e9.2;
-        Tue, 23 Apr 2024 10:59:31 -0700 (PDT)
+	s=arc-20240116; t=1713895890; c=relaxed/simple;
+	bh=bnZAQvcG/iTdny8fBsW3l88+SA3DBL7tREj7Y1iAZgo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FaKZYvH2fSkBVLJun+VxKlaC/XxiBAOtghzQ3VkV35Ru2DzpoldY+uTYVaIY//Bun2R32lgVBB3ULy71Zpp4VrM3Cdk8yHcdiHuzydhG+besVT7WMXxwdVBhTVmwur8yHTOJ99kzw02okuLMg7MUViGlagaOuYFKGABUsM9EaMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=TLDA4juJ; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-437202687bfso39580191cf.2
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 11:11:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713895170; x=1714499970; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5UlZJOdbrr4w7IN8RhsDHqQQd56vqfihEwOWI2Dp2Zg=;
-        b=DgZ9lMjfSgMq08CqbK6z4N+eRAT7Cdss1UzhPQ+SXYD4y3A9etlXyMmwFC3DJJGMZn
-         qbidI2CTAbEfS1pxifvCB+EQZ04ol//qfQxPEqjgU80hHlMOvpvGoKsGscg7uF+u7jTJ
-         dxP2Uf/AKOaXAs99gEYUZlgxCESe0+Xgoie7PYxu3ssUPeEsdcSkoJ9oewWMsL3rK67Q
-         I6mJ9eiKq9sOPjb3ExtCn/HketEtxfGIvB0n2mYTGDtMfU8+q+5rWAcba/EYPL6fpFeP
-         lW7GabyYLgXssKrKF0rpN/IsVzDOeUdxB6+lg+yXeBBe2HSyfZKCUbdfx0/hDuoU7jLo
-         yNrQ==
+        d=broadcom.com; s=google; t=1713895887; x=1714500687; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DZVhSrwRSD/Z6LG2+efw26LsmOzJLZctIjvXhjEfvOg=;
+        b=TLDA4juJSoiqTfoeVasXN6HVo8Sp5NSlAy4dGa11TbV8fJBbRWhR7O3N3apI0Pvgbb
+         803d6syRCb0kU+JJx38BWcU8FKt2L2HSgiHcugLck2KYaK7FKh2hFZg+GC7xCf8cueYA
+         Y5SCft9vfTrC3MbPmYyySEQAmq9ZKzjU6EpU0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713895170; x=1714499970;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5UlZJOdbrr4w7IN8RhsDHqQQd56vqfihEwOWI2Dp2Zg=;
-        b=qjCJZ9KMJwYj3Xrn9NN0D3WkGD5y13qQk23D/bZL5fN90I5NDBCvaLFEpHhBAxMqxh
-         Y+sKy1RuF9tRboN0rt/4DOO0+ZE5lOhjz5Ku5hp9xEX0vg+BVoWQm5s3baatTH9hdDW1
-         biB29fUvBWW4UsVQyBIV17WCUzu/cPnMadpauQ8IuB2VYC+NXI1m9mkbIRlZ8fj63i06
-         hnmjkc9OIhuZgtIE5HVodJK+NuPOXDGGsh31PbvUxWWbFH2AAmequXr8ZilDL+3Z7mkE
-         TBoR3PGu8lrA+R8aQtO1eRzbHVAft81RZNgP0g8FvL0xgzUWAF6X5vIZTzbczBvEcLA8
-         ARfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkCoKVJ3B3Ty3/LoUwmEr45Hnd6ZeKYHdMzoBgaPcJhbtx6jKut9H4aFiM67HXIgwTkMRd4jAc0LBwsGtj3pC28CP+ToPAT1th2ikgi+OcGFD77D1jafeFoY7G18e/0J+HaGXAlE1sU8hYnqfoTcC0Jmq63IKgJDkfvYdEYNM/Snl/14CUth6WoJ67
-X-Gm-Message-State: AOJu0YyXV2sjlAGCVB5CA5KznELbUs3HesqTjeeW74na/JbBUVZEutcD
-	x53ieW6JhrysXMUWRO6Gv/m8PcI0YMCLz9H2r0jsdSc78vRYH2Mk
-X-Google-Smtp-Source: AGHT+IHgont4897T904JKXHafu3TUc10hFLHse2iO2Aq9GMGS+gTZEt1PTJxMKsD51hgvdGxQ2UGXg==
-X-Received: by 2002:a05:600c:1f0b:b0:41a:c33d:772f with SMTP id bd11-20020a05600c1f0b00b0041ac33d772fmr16040wmb.8.1713895170217;
-        Tue, 23 Apr 2024 10:59:30 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:cef0:9ed3:1428:f85f])
-        by smtp.gmail.com with ESMTPSA id fl5-20020a05600c0b8500b0041abeaaf7f0sm2808145wmb.28.2024.04.23.10.59.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 10:59:29 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 13/13] pinctrl: renesas: pinctrl-rzg2l: Add support for RZ/V2H SoC
-Date: Tue, 23 Apr 2024 18:59:00 +0100
-Message-Id: <20240423175900.702640-14-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        d=1e100.net; s=20230601; t=1713895887; x=1714500687;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DZVhSrwRSD/Z6LG2+efw26LsmOzJLZctIjvXhjEfvOg=;
+        b=wPYZuO/BF8iMxva4UjtprAsgi4cG34/1wvmmRoCX2JJXNQEFMizbb0uVnRJvKyfxsQ
+         8ckexmUBZECNGo0Ymo/8WnIF04EwZ71LQnlQ1dsAzvrTQ8H/AV7eueOrKQdCG64JKpGU
+         r3vd/WgVm+/pgcvl3UJU2wQzs6sPPbmM6jDRrdsieUA3bwDbDlyAh4SY8d/LgY2aPZRC
+         0VRMnU6MfzxC7wkAa7lmU8nJBvnPp7voKgPWC+1hmdBQEHjzKZfn3YFYwB4bA5MyNFoy
+         NehI3ZYR0AoWzCkIolEu+s/4kGKCo9V0iIEkNd8HmxCwJpd9PPQvXGsvS3XF1rELcXTl
+         4S+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWBItqARXne1nAzCCr7wWDkbdPEAYSJXVCuCg4bAbFSHzE/bgjBzvPZySyN/UYYB3oA7nCRiP5zUeSi0LljEVVJ7aWapokkl0cd4g==
+X-Gm-Message-State: AOJu0YwVDHDtN8E4QQLvLB6gZG5YQvF9ZbFpl06J4TsVzdLZ4Qe33tmX
+	r+h1GYDwFOAzkaejaTqo3r5j+ADB/Xar2RVAydERjeHQgh3f0+2ndTai5pvxdQ==
+X-Google-Smtp-Source: AGHT+IEoAYBuVDmqOzhbjHBRrl45+dbnpi43byHQW9JslDsu0ZGYCilTrR+f724Bjrk5dXkf7tYXyQ==
+X-Received: by 2002:a05:622a:1a8b:b0:439:e106:e4b1 with SMTP id s11-20020a05622a1a8b00b00439e106e4b1mr164893qtc.51.1713895886805;
+        Tue, 23 Apr 2024 11:11:26 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id x17-20020ac85391000000b0043770fd3629sm5378372qtp.75.2024.04.23.11.11.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Apr 2024 11:11:26 -0700 (PDT)
+Message-ID: <5f550f60-d7b9-4cb2-badf-fde4f53db790@broadcom.com>
+Date: Tue, 23 Apr 2024 11:11:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: brcmstb: Use dynamic GPIO base numbers
+To: Doug Berger <opendmb@gmail.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Phil Elwell <phil@raspberrypi.com>
+References: <20240423175025.1490171-1-opendmb@gmail.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20240423175025.1490171-1-opendmb@gmail.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000088d2cb0616c77b0d"
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+--00000000000088d2cb0616c77b0d
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add pinctrl driver support for RZ/V2H(P) SoC.
+On 4/23/24 10:50, Doug Berger wrote:
+> Forcing a gpiochip to have a fixed base number now leads to a warning
+> message. Remove the need to do so by using the offset value of the
+> gpiochip.
+> 
+> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-RFC->v2
-- Renamed renesas-rzv2h,output-impedance -> renesas,output-impedance
-- Dropped IOLH groups
-- Fixed dedicated pin configs
-- Updated r9a09g057_variable_pin_cfg
-- Added support OEN
-- Added support for bias settings
-- Added function pointers for pwpr (un)lock
-- Added support for slew-rate
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 419 +++++++++++++++++++++++-
- 1 file changed, 415 insertions(+), 4 deletions(-)
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 7e3ed18e0745..ee0dcdd7921a 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -59,6 +59,10 @@
- #define PIN_CFG_OEN			BIT(15)
- #define PIN_CFG_VARIABLE		BIT(16)
- #define PIN_CFG_NOGPIO_INT		BIT(17)
-+#define PIN_CFG_OPEN_DRAIN		BIT(18)
-+#define PIN_CFG_SCHMIT_CTRL		BIT(19)
-+#define PIN_CFG_ELC			BIT(20)
-+#define PIN_CFG_IOLH_RZV2H		BIT(21)
- 
- #define RZG2L_MPXED_COMMON_PIN_FUNCS(group) \
- 					(PIN_CFG_IOLH_##group | \
-@@ -73,6 +77,10 @@
- #define RZG3S_MPXED_PIN_FUNCS(group)	(RZG2L_MPXED_COMMON_PIN_FUNCS(group) | \
- 					 PIN_CFG_SOFT_PS)
- 
-+#define RZV2H_MPXED_PIN_FUNCS		(RZG2L_MPXED_COMMON_PIN_FUNCS(RZV2H) | \
-+					 PIN_CFG_OPEN_DRAIN | \
-+					 PIN_CFG_SR)
-+
- #define RZG2L_MPXED_ETH_PIN_FUNCS(x)	((x) | \
- 					 PIN_CFG_FILONOFF | \
- 					 PIN_CFG_FILNUM | \
-@@ -128,13 +136,15 @@
- #define ETH_POC(off, ch)	((off) + (ch) * 4)
- #define QSPI			(0x3008)
- #define ETH_MODE		(0x3018)
-+#define PFC_OEN			(0x3C40) /* known on RZ/V2H(P) only */
- 
- #define PVDD_2500		2	/* I/O domain voltage 2.5V */
- #define PVDD_1800		1	/* I/O domain voltage <= 1.8V */
- #define PVDD_3300		0	/* I/O domain voltage >= 3.3V */
- 
- #define PWPR_B0WI		BIT(7)	/* Bit Write Disable */
--#define PWPR_PFCWE		BIT(6)	/* PFC Register Write Enable */
-+#define PWPR_PFCWE		BIT(6)	/* PFC (and PMC on RZ/V2H) Register Write Enable */
-+#define PWPR_REGWE_B		BIT(5)	/* OEN Register Write Enable, known only in RZ/V2H(P) */
- 
- #define PM_MASK			0x03
- #define PFC_MASK		0x07
-@@ -153,6 +163,19 @@
- #define RZG2L_TINT_IRQ_START_INDEX	9
- #define RZG2L_PACK_HWIRQ(t, i)		(((t) << 16) | (i))
- 
-+/* Custom pinconf parameters */
-+#define RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE	(PIN_CONFIG_END + 1)
-+
-+static const struct pinconf_generic_params renesas_rzv2h_custom_bindings[] = {
-+	{ "renesas,output-impedance", RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE, 1 },
-+};
-+
-+#ifdef CONFIG_DEBUG_FS
-+static const struct pin_config_item renesas_rzv2h_conf_items[] = {
-+	PCONFDUMP(RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE, "output-impedance", "x", true),
-+};
-+#endif
-+
- /* Read/write 8 bits register */
- #define RZG2L_PCTRL_REG_ACCESS8(_read, _addr, _val)	\
- 	do {						\
-@@ -330,6 +353,8 @@ struct rzg2l_pinctrl {
- 	spinlock_t			lock; /* lock read/write registers */
- 	struct mutex			mutex; /* serialize adding groups and functions */
- 
-+	raw_spinlock_t			pwpr_lock; /* serialize PWPR register access */
-+
- 	struct rzg2l_pinctrl_pin_settings *settings;
- 	struct rzg2l_pinctrl_reg_cache	*cache;
- 	struct rzg2l_pinctrl_reg_cache	*dedicated_cache;
-@@ -354,6 +379,39 @@ static u64 rzg2l_pinctrl_get_variable_pin_cfg(struct rzg2l_pinctrl *pctrl,
- 	return 0;
- }
- 
-+static const struct rzg2l_variable_pin_cfg r9a09g057_variable_pin_cfg[] = {
-+	{
-+		.port = 11,
-+		.pin = 0,
-+		.cfg = RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL,
-+	},
-+	{
-+		.port = 11,
-+		.pin = 1,
-+		.cfg = RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL | PIN_CFG_IEN,
-+	},
-+	{
-+		.port = 11,
-+		.pin = 2,
-+		.cfg = RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL | PIN_CFG_IEN,
-+	},
-+	{
-+		.port = 11,
-+		.pin = 3,
-+		.cfg = RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL | PIN_CFG_IEN,
-+	},
-+	{
-+		.port = 11,
-+		.pin = 4,
-+		.cfg = RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL | PIN_CFG_IEN,
-+	},
-+	{
-+		.port = 11,
-+		.pin = 5,
-+		.cfg = RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL | PIN_CFG_IEN,
-+	},
-+};
-+
- #ifdef CONFIG_RISCV
- static const struct rzg2l_variable_pin_cfg r9a07g043f_variable_pin_cfg[] = {
- 	{
-@@ -480,6 +538,19 @@ static void rzg2l_pmc_writeb(struct rzg2l_pinctrl *pctrl, u8 val, void __iomem *
- 	writeb(val, addr);
- }
- 
-+static void rzv2h_pmc_writeb(struct rzg2l_pinctrl *pctrl, u8 val, void __iomem *addr)
-+{
-+	const struct rzg2l_register_offsets *regs = &pctrl->data->hwcfg->regs;
-+	u8 pwpr;
-+
-+	raw_spin_lock(&pctrl->pwpr_lock);
-+	pwpr = readb(pctrl->base + regs->pwpr);
-+	writeb(pwpr | PWPR_PFCWE, pctrl->base + regs->pwpr);
-+	writeb(val, addr);
-+	writeb(pwpr & ~PWPR_PFCWE, pctrl->base + regs->pwpr);
-+	raw_spin_unlock(&pctrl->pwpr_lock);
-+}
-+
- static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
- 				       u8 pin, u8 off, u8 func)
- {
-@@ -1120,14 +1191,107 @@ static int rzg2l_get_bias_val(enum pin_config_param param)
- 	return -EINVAL;
- }
- 
-+static int rzv2h_get_bias_param(u8 val)
-+{
-+	switch (val) {
-+	case 0:
-+	case 1:
-+		return PIN_CONFIG_BIAS_DISABLE;
-+	case 2:
-+		return PIN_CONFIG_BIAS_PULL_DOWN;
-+	case 3:
-+		return PIN_CONFIG_BIAS_PULL_UP;
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int rzv2h_get_bias_val(enum pin_config_param param)
-+{
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		return 0;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		return 2;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		return 3;
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static u8 rzv2h_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, u32 offset)
-+{
-+	static const char * const pin_names[] = { "ET0_TXC_TXCLK", "ET1_TXC_TXCLK",
-+						  "XSPI0_RESET0N", "XSPI0_CS0N",
-+						  "XSPI0_CKN", "XSPI0_CKP" };
-+	const struct pinctrl_pin_desc *pin_desc = &pctrl->desc.pins[offset];
-+	u8 bit_array[] = { 0, 1, 2, 3, 4, 5 };
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(bit_array); i++) {
-+		if (!strcmp(pin_desc->name, pin_names[i]))
-+			return bit_array[i];
-+	}
-+
-+	/* Should not happen. */
-+	return 0;
-+}
-+
-+static u32 rzv2h_read_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin)
-+{
-+	u8 bit;
-+
-+	if (!(caps & PIN_CFG_OEN))
-+		return 0;
-+
-+	bit = rzv2h_pin_to_oen_bit(pctrl, offset);
-+
-+	return !(readb(pctrl->base + PFC_OEN) & BIT(bit));
-+}
-+
-+static int rzv2h_write_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin, u8 oen)
-+{
-+	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
-+	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
-+	unsigned long flags;
-+	u8 val, bit;
-+	u8 pwpr;
-+
-+	if (!(caps & PIN_CFG_OEN))
-+		return -EINVAL;
-+
-+	bit = rzv2h_pin_to_oen_bit(pctrl, offset);
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+	val = readb(pctrl->base + PFC_OEN);
-+	if (oen)
-+		val &= ~BIT(bit);
-+	else
-+		val |= BIT(bit);
-+
-+	raw_spin_lock(&pctrl->pwpr_lock);
-+	pwpr = readb(pctrl->base + regs->pwpr);
-+	writeb(pwpr | PWPR_REGWE_B, pctrl->base + regs->pwpr);
-+	writeb(val, pctrl->base + PFC_OEN);
-+	writeb(pwpr & ~PWPR_REGWE_B, pctrl->base + regs->pwpr);
-+	raw_spin_unlock(&pctrl->pwpr_lock);
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return 0;
-+}
-+
- static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
- 				     unsigned int _pin,
- 				     unsigned long *config)
- {
- 	struct rzg2l_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
--	enum pin_config_param param = pinconf_to_config_param(*config);
- 	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
- 	const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[_pin];
-+	u32 param = pinconf_to_config_param(*config);
- 	u64 *pin_data = pin->drv_data;
- 	unsigned int arg = 0;
- 	u32 off;
-@@ -1240,6 +1404,14 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
- 		break;
- 	}
- 
-+	case RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE: {
-+		if (!(cfg & PIN_CFG_IOLH_RZV2H))
-+			return -EINVAL;
-+
-+		arg = rzg2l_read_pin_config(pctrl, IOLH(off), bit, IOLH_MASK);
-+		break;
-+	}
-+
- 	default:
- 		return -ENOTSUPP;
- 	}
-@@ -1259,9 +1431,8 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
- 	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
- 	struct rzg2l_pinctrl_pin_settings settings = pctrl->settings[_pin];
- 	u64 *pin_data = pin->drv_data;
--	enum pin_config_param param;
- 	unsigned int i, arg, index;
--	u32 off;
-+	u32 off, param;
- 	u64 cfg;
- 	int ret;
- 	u8 bit;
-@@ -1367,6 +1538,17 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
- 			rzg2l_rmw_pin_config(pctrl, IOLH(off), bit, IOLH_MASK, index);
- 			break;
- 
-+		case RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE:
-+			arg = pinconf_to_config_argument(_configs[i]);
-+
-+			if (!(cfg & PIN_CFG_IOLH_RZV2H))
-+				return -EINVAL;
-+
-+			if (arg > 3)
-+				return -EINVAL;
-+			rzg2l_rmw_pin_config(pctrl, IOLH(off), bit, IOLH_MASK, arg);
-+			break;
-+
- 		default:
- 			return -EOPNOTSUPP;
- 		}
-@@ -1814,6 +1996,39 @@ static const u64 r9a08g045_gpio_configs[] = {
- 	RZG2L_GPIO_PORT_PACK(6, 0x2a, RZG3S_MPXED_PIN_FUNCS(A)),			/* P18 */
- };
- 
-+static const char * const rzv2h_gpio_names[] = {
-+	"P00", "P01", "P02", "P03", "P04", "P05", "P06", "P07",
-+	"P10", "P11", "P12", "P13", "P14", "P15", "P16", "P17",
-+	"P20", "P21", "P22", "P23", "P24", "P25", "P26", "P27",
-+	"P30", "P31", "P32", "P33", "P34", "P35", "P36", "P37",
-+	"P40", "P41", "P42", "P43", "P44", "P45", "P46", "P47",
-+	"P50", "P51", "P52", "P53", "P54", "P55", "P56", "P57",
-+	"P60", "P61", "P62", "P63", "P64", "P65", "P66", "P67",
-+	"P70", "P71", "P72", "P73", "P74", "P75", "P76", "P77",
-+	"P80", "P81", "P82", "P83", "P84", "P85", "P86", "P87",
-+	"P90", "P91", "P92", "P93", "P94", "P95", "P96", "P97",
-+	"PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7",
-+	"PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7",
-+};
-+
-+static const u64 r9a09g057_gpio_configs[] = {
-+	RZG2L_GPIO_PORT_PACK(8, 0x20, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL),	/* P0 */
-+	RZG2L_GPIO_PORT_PACK(6, 0x21, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL),	/* P1 */
-+	RZG2L_GPIO_PORT_PACK(2, 0x22, RZG2L_MPXED_COMMON_PIN_FUNCS(RZV2H) |
-+				      PIN_CFG_OPEN_DRAIN),				/* P2 */
-+	RZG2L_GPIO_PORT_PACK(8, 0x23, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL),	/* P3 */
-+	RZG2L_GPIO_PORT_PACK(8, 0x24, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL),	/* P4 */
-+	RZG2L_GPIO_PORT_PACK(8, 0x25, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL),	/* P5 */
-+	RZG2L_GPIO_PORT_PACK(8, 0x26, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL |
-+				      PIN_CFG_ELC),					/* P6 */
-+	RZG2L_GPIO_PORT_PACK(8, 0x27, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL),	/* P7 */
-+	RZG2L_GPIO_PORT_PACK(8, 0x28, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL |
-+				      PIN_CFG_ELC),					/* P8 */
-+	RZG2L_GPIO_PORT_PACK(8, 0x29, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL),	/* P9 */
-+	RZG2L_GPIO_PORT_PACK(8, 0x2a, RZV2H_MPXED_PIN_FUNCS | PIN_CFG_SCHMIT_CTRL),	/* PA */
-+	RZG2L_GPIO_PORT_PACK(6, 0x2b, PIN_CFG_VARIABLE),				/* PB */
-+};
-+
- static const struct {
- 	struct rzg2l_dedicated_configs common[35];
- 	struct rzg2l_dedicated_configs rzg2l_pins[7];
-@@ -1940,6 +2155,138 @@ static const struct rzg2l_dedicated_configs rzg3s_dedicated_pins[] = {
- 						       PIN_CFG_IO_VMC_SD1)) },
- };
- 
-+static struct rzg2l_dedicated_configs rzv2h_dedicated_pins[] = {
-+	{ "NMI", RZG2L_SINGLE_PIN_PACK(0x1, 0, (PIN_CFG_FILONOFF | PIN_CFG_FILNUM |
-+						PIN_CFG_FILCLKSEL)) },
-+	{ "TMS_SWDIO", RZG2L_SINGLE_PIN_PACK(0x3, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_IEN)) },
-+	{ "TDO", RZG2L_SINGLE_PIN_PACK(0x3, 2, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
-+	{ "WDTUDFCA", RZG2L_SINGLE_PIN_PACK(0x5, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						     PIN_CFG_PUPD | PIN_CFG_OPEN_DRAIN)) },
-+	{ "WDTUDFCM", RZG2L_SINGLE_PIN_PACK(0x5, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						     PIN_CFG_PUPD | PIN_CFG_OPEN_DRAIN)) },
-+	{ "SCIF_RXD", RZG2L_SINGLE_PIN_PACK(0x6, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						     PIN_CFG_PUPD)) },
-+	{ "SCIF_TXD", RZG2L_SINGLE_PIN_PACK(0x6, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						     PIN_CFG_PUPD)) },
-+	{ "XSPI0_CKP", RZG2L_SINGLE_PIN_PACK(0x7, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD | PIN_CFG_OEN)) },
-+	{ "XSPI0_CKN", RZG2L_SINGLE_PIN_PACK(0x7, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD | PIN_CFG_OEN)) },
-+	{ "XSPI0_CS0N", RZG2L_SINGLE_PIN_PACK(0x7, 2, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						       PIN_CFG_PUPD | PIN_CFG_OEN)) },
-+	{ "XSPI0_DS", RZG2L_SINGLE_PIN_PACK(0x7, 3, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						     PIN_CFG_PUPD)) },
-+	{ "XSPI0_RESET0N", RZG2L_SINGLE_PIN_PACK(0x7, 4, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+							  PIN_CFG_PUPD | PIN_CFG_OEN)) },
-+	{ "XSPI0_RSTO0N", RZG2L_SINGLE_PIN_PACK(0x7, 5, (PIN_CFG_PUPD)) },
-+	{ "XSPI0_INT0N", RZG2L_SINGLE_PIN_PACK(0x7, 6, (PIN_CFG_PUPD)) },
-+	{ "XSPI0_ECS0N", RZG2L_SINGLE_PIN_PACK(0x7, 7, (PIN_CFG_PUPD)) },
-+	{ "XSPI0_IO0", RZG2L_SINGLE_PIN_PACK(0x8, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "XSPI0_IO1", RZG2L_SINGLE_PIN_PACK(0x8, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "XSPI0_IO2", RZG2L_SINGLE_PIN_PACK(0x8, 2, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "XSPI0_IO3", RZG2L_SINGLE_PIN_PACK(0x8, 3, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "XSPI0_IO4", RZG2L_SINGLE_PIN_PACK(0x8, 4, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "XSPI0_IO5", RZG2L_SINGLE_PIN_PACK(0x8, 5, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "XSPI0_IO6", RZG2L_SINGLE_PIN_PACK(0x8, 6, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "XSPI0_IO7", RZG2L_SINGLE_PIN_PACK(0x8, 7, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "SD0CLK", RZG2L_SINGLE_PIN_PACK(0x9, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
-+	{ "SD0CMD", RZG2L_SINGLE_PIN_PACK(0x9, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						   PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD0RSTN", RZG2L_SINGLE_PIN_PACK(0x9, 2, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
-+	{ "SD0DAT0", RZG2L_SINGLE_PIN_PACK(0xa, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD0DAT1", RZG2L_SINGLE_PIN_PACK(0xa, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD0DAT2", RZG2L_SINGLE_PIN_PACK(0xa, 2, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD0DAT3", RZG2L_SINGLE_PIN_PACK(0xa, 3, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD0DAT4", RZG2L_SINGLE_PIN_PACK(0xa, 4, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD0DAT5", RZG2L_SINGLE_PIN_PACK(0xa, 5, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD0DAT6", RZG2L_SINGLE_PIN_PACK(0xa, 6, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD0DAT7", RZG2L_SINGLE_PIN_PACK(0xa, 7, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD1CLK", RZG2L_SINGLE_PIN_PACK(0xb, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
-+	{ "SD1CMD", RZG2L_SINGLE_PIN_PACK(0xb, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						   PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD1DAT0", RZG2L_SINGLE_PIN_PACK(0xc, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD1DAT1", RZG2L_SINGLE_PIN_PACK(0xc, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD1DAT2", RZG2L_SINGLE_PIN_PACK(0xc, 2, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "SD1DAT3", RZG2L_SINGLE_PIN_PACK(0xc, 3, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "PCIE0_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
-+	{ "PCIE1_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
-+	{ "ET0_MDIO", RZG2L_SINGLE_PIN_PACK(0xf, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						     PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "ET0_MDC", RZG2L_SINGLE_PIN_PACK(0xf, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						    PIN_CFG_PUPD)) },
-+	{ "ET0_RXCTL_RXDV", RZG2L_SINGLE_PIN_PACK(0x10, 0, (PIN_CFG_PUPD)) },
-+	{ "ET0_TXCTL_TXEN", RZG2L_SINGLE_PIN_PACK(0x10, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+							    PIN_CFG_PUPD)) },
-+	{ "ET0_TXER", RZG2L_SINGLE_PIN_PACK(0x10, 2, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "ET0_RXER", RZG2L_SINGLE_PIN_PACK(0x10, 3, (PIN_CFG_PUPD)) },
-+	{ "ET0_RXC_RXCLK", RZG2L_SINGLE_PIN_PACK(0x10, 4, (PIN_CFG_PUPD)) },
-+	{ "ET0_TXC_TXCLK", RZG2L_SINGLE_PIN_PACK(0x10, 5, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+							   PIN_CFG_PUPD | PIN_CFG_OEN)) },
-+	{ "ET0_CRS", RZG2L_SINGLE_PIN_PACK(0x10, 6, (PIN_CFG_PUPD)) },
-+	{ "ET0_COL", RZG2L_SINGLE_PIN_PACK(0x10, 7, (PIN_CFG_PUPD)) },
-+	{ "ET0_TXD0", RZG2L_SINGLE_PIN_PACK(0x11, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "ET0_TXD1", RZG2L_SINGLE_PIN_PACK(0x11, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "ET0_TXD2", RZG2L_SINGLE_PIN_PACK(0x11, 2, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "ET0_TXD3", RZG2L_SINGLE_PIN_PACK(0x11, 3, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "ET0_RXD0", RZG2L_SINGLE_PIN_PACK(0x11, 4, (PIN_CFG_PUPD)) },
-+	{ "ET0_RXD1", RZG2L_SINGLE_PIN_PACK(0x11, 5, (PIN_CFG_PUPD)) },
-+	{ "ET0_RXD2", RZG2L_SINGLE_PIN_PACK(0x11, 6, (PIN_CFG_PUPD)) },
-+	{ "ET0_RXD3", RZG2L_SINGLE_PIN_PACK(0x11, 7, (PIN_CFG_PUPD)) },
-+	{ "ET1_MDIO", RZG2L_SINGLE_PIN_PACK(0x12, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_IEN | PIN_CFG_PUPD)) },
-+	{ "ET1_MDC", RZG2L_SINGLE_PIN_PACK(0x12, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						     PIN_CFG_PUPD)) },
-+	{ "ET1_RXCTL_RXDV", RZG2L_SINGLE_PIN_PACK(0x13, 0, (PIN_CFG_PUPD)) },
-+	{ "ET1_TXCTL_TXEN", RZG2L_SINGLE_PIN_PACK(0x13, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+							    PIN_CFG_PUPD)) },
-+	{ "ET1_TXER", RZG2L_SINGLE_PIN_PACK(0x13, 2, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						       PIN_CFG_PUPD)) },
-+	{ "ET1_RXER", RZG2L_SINGLE_PIN_PACK(0x13, 3, (PIN_CFG_PUPD)) },
-+	{ "ET1_RXC_RXCLK", RZG2L_SINGLE_PIN_PACK(0x13, 4, (PIN_CFG_PUPD)) },
-+	{ "ET1_TXC_TXCLK", RZG2L_SINGLE_PIN_PACK(0x13, 5, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+							   PIN_CFG_PUPD | PIN_CFG_OEN)) },
-+	{ "ET1_CRS", RZG2L_SINGLE_PIN_PACK(0x13, 6, (PIN_CFG_PUPD)) },
-+	{ "ET1_COL", RZG2L_SINGLE_PIN_PACK(0x13, 7, (PIN_CFG_PUPD)) },
-+	{ "ET1_TXD0", RZG2L_SINGLE_PIN_PACK(0x14, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "ET1_TXD1", RZG2L_SINGLE_PIN_PACK(0x14, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "ET1_TXD2", RZG2L_SINGLE_PIN_PACK(0x14, 2, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "ET1_TXD3", RZG2L_SINGLE_PIN_PACK(0x14, 3, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
-+						      PIN_CFG_PUPD)) },
-+	{ "ET1_RXD0", RZG2L_SINGLE_PIN_PACK(0x14, 4, (PIN_CFG_PUPD)) },
-+	{ "ET1_RXD1", RZG2L_SINGLE_PIN_PACK(0x14, 5, (PIN_CFG_PUPD)) },
-+	{ "ET1_RXD2", RZG2L_SINGLE_PIN_PACK(0x14, 6, (PIN_CFG_PUPD)) },
-+	{ "ET1_RXD3", RZG2L_SINGLE_PIN_PACK(0x14, 7, (PIN_CFG_PUPD)) },
-+};
-+
- static int rzg2l_gpio_get_gpioint(unsigned int virq, struct rzg2l_pinctrl *pctrl)
- {
- 	const struct pinctrl_pin_desc *pin_desc = &pctrl->desc.pins[virq];
-@@ -2476,6 +2823,9 @@ static int rzg2l_pinctrl_probe(struct platform_device *pdev)
- 	BUILD_BUG_ON(ARRAY_SIZE(r9a08g045_gpio_configs) * RZG2L_PINS_PER_PORT >
- 		     ARRAY_SIZE(rzg2l_gpio_names));
- 
-+	BUILD_BUG_ON(ARRAY_SIZE(r9a09g057_gpio_configs) * RZG2L_PINS_PER_PORT >
-+		     ARRAY_SIZE(rzv2h_gpio_names));
-+
- 	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
- 	if (!pctrl)
- 		return -ENOMEM;
-@@ -2498,6 +2848,7 @@ static int rzg2l_pinctrl_probe(struct platform_device *pdev)
- 
- 	spin_lock_init(&pctrl->lock);
- 	spin_lock_init(&pctrl->bitmap_lock);
-+	raw_spin_lock_init(&pctrl->pwpr_lock);
- 	mutex_init(&pctrl->mutex);
- 	atomic_set(&pctrl->wakeup_path, 0);
- 
-@@ -2747,6 +3098,32 @@ static void rzg2l_pwpr_pfc_lock(struct rzg2l_pinctrl *pctrl)
- 	writel(PWPR_B0WI, pctrl->base + regs->pwpr);	/* B0WI=1, PFCWE=0 */
- }
- 
-+static void rzv2h_pwpr_pfc_unlock(struct rzg2l_pinctrl *pctrl)
-+{
-+	const struct rzg2l_register_offsets *regs = &pctrl->data->hwcfg->regs;
-+	u8 pwpr;
-+
-+	/*
-+	 * lock is acquired in pfc unlock call back and then released in
-+	 * pfc lock callback
-+	 */
-+	raw_spin_lock(&pctrl->pwpr_lock);
-+	/* Set the PWPR register to allow PFC and PMC register to write */
-+	pwpr = readb(pctrl->base + regs->pwpr);
-+	writeb(PWPR_PFCWE | pwpr, pctrl->base + regs->pwpr);
-+}
-+
-+static void rzv2h_pwpr_pfc_lock(struct rzg2l_pinctrl *pctrl)
-+{
-+	const struct rzg2l_register_offsets *regs = &pctrl->data->hwcfg->regs;
-+	u8 pwpr;
-+
-+	/* Set the PWPR register to be write-protected */
-+	pwpr = readb(pctrl->base + regs->pwpr);
-+	writeb(pwpr & ~PWPR_PFCWE, pctrl->base + regs->pwpr);
-+	raw_spin_unlock(&pctrl->pwpr_lock);
-+}
-+
- static const struct rzg2l_hwcfg rzg2l_hwcfg = {
- 	.regs = {
- 		.pwpr = 0x3014,
-@@ -2792,6 +3169,12 @@ static const struct rzg2l_hwcfg rzg3s_hwcfg = {
- 	.oen_max_port = 7, /* P7_1 is the maximum OEN port. */
- };
- 
-+static const struct rzg2l_hwcfg rzv2h_hwcfg = {
-+	.regs = {
-+		.pwpr = 0x3c04,
-+	},
-+};
-+
- static struct rzg2l_pinctrl_data r9a07g043_data = {
- 	.port_pins = rzg2l_gpio_names,
- 	.port_pin_configs = r9a07g043_gpio_configs,
-@@ -2846,6 +3229,30 @@ static struct rzg2l_pinctrl_data r9a08g045_data = {
- 	.get_bias_val = &rzg2l_get_bias_val,
- };
- 
-+static struct rzg2l_pinctrl_data r9a09g057_data = {
-+	.port_pins = rzv2h_gpio_names,
-+	.port_pin_configs = r9a09g057_gpio_configs,
-+	.n_ports = ARRAY_SIZE(r9a09g057_gpio_configs),
-+	.dedicated_pins = rzv2h_dedicated_pins,
-+	.n_port_pins = ARRAY_SIZE(r9a09g057_gpio_configs) * RZG2L_PINS_PER_PORT,
-+	.n_dedicated_pins = ARRAY_SIZE(rzv2h_dedicated_pins),
-+	.hwcfg = &rzv2h_hwcfg,
-+	.variable_pin_cfg = r9a09g057_variable_pin_cfg,
-+	.n_variable_pin_cfg = ARRAY_SIZE(r9a09g057_variable_pin_cfg),
-+	.num_custom_params = ARRAY_SIZE(renesas_rzv2h_custom_bindings),
-+	.custom_params = renesas_rzv2h_custom_bindings,
-+#ifdef CONFIG_DEBUG_FS
-+	.custom_conf_items = renesas_rzv2h_conf_items,
-+#endif
-+	.pwpr_pfc_unlock = &rzv2h_pwpr_pfc_unlock,
-+	.pwpr_pfc_lock = &rzv2h_pwpr_pfc_lock,
-+	.pmc_writeb = &rzv2h_pmc_writeb,
-+	.read_oen = &rzv2h_read_oen,
-+	.write_oen = &rzv2h_write_oen,
-+	.get_bias_param = &rzv2h_get_bias_param,
-+	.get_bias_val = &rzv2h_get_bias_val,
-+};
-+
- static const struct of_device_id rzg2l_pinctrl_of_table[] = {
- 	{
- 		.compatible = "renesas,r9a07g043-pinctrl",
-@@ -2859,6 +3266,10 @@ static const struct of_device_id rzg2l_pinctrl_of_table[] = {
- 		.compatible = "renesas,r9a08g045-pinctrl",
- 		.data = &r9a08g045_data,
- 	},
-+	{
-+		.compatible = "renesas,r9a09g057-pinctrl",
-+		.data = &r9a09g057_data,
-+	},
- 	{ /* sentinel */ }
- };
- 
+Thanks!
 -- 
-2.34.1
+Florian
 
+
+--00000000000088d2cb0616c77b0d
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIPGoImwi5+A/nLPp
+yT4bNoSMiNwrVTemCOqjNQYJHOqsMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDQyMzE4MTEyN1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBGNqovROT4IPsU2FNCOSPri+PCK5PL6JI2
+F83tR55FVvnRoH7US3buckq7Zdl09gyOKW0Aeq38ivA7UWt53ToDO5C+jm02i05A0NERGU1Ze/I5
+BKFUaeXeY906v3aCCAl2b/n0tpABWTvbxDGrdPEUKbI6zl0MtaLGbvw3tThhEJcNKZ8b1E5vsHTt
+X46CHMPtj50hPZY58PtokoIu/DINfOyIUojvf78fE4I88+Rs9rTOlUJk/IFiqsaSt4kUvSO/WfD3
+9ki0EEinfVgCeEGBwJDB5obrtU/eCrm7GVLOaHqFR7QcUuAGPQ6uMRza/Vfcja/0lbUlSIavwh+X
+BGTK
+--00000000000088d2cb0616c77b0d--
 
