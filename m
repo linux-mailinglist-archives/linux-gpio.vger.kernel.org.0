@@ -1,61 +1,62 @@
-Return-Path: <linux-gpio+bounces-5751-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5752-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D213F8AE507
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 13:56:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D82AE8AE51A
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 13:57:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D11C28595A
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 11:56:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C3182860E2
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 11:57:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DDFF1494B1;
-	Tue, 23 Apr 2024 11:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C18D314AD02;
+	Tue, 23 Apr 2024 11:42:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o39pQtoe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SsqNsIRb"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2A1149C56;
-	Tue, 23 Apr 2024 11:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BE014A62F;
+	Tue, 23 Apr 2024 11:42:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713872514; cv=none; b=trI03JAOw3Fj0GCMmFQl9XEF+ZOZv+lXDm1NbpCge1dZoQr8ft6zX8Yf2/c8/4QhhTCI0XKRRuhlTixRjfxZB8f1N8uAACRHAs2/9KlT9vPdOisAN/xzGzWx5Z9rFtY4N6Um9gBkY4vt7jZjSF3AXpehQxes4cSty4C+32RWTGk=
+	t=1713872526; cv=none; b=mtf6di81V35XVD7b6MD/nb7JfxkU1DuSiB8fndlnY23ikObbmP0RrPWVobvC8O27Of7uPy1xsylrMycgcc0/++zVj2axH18/7z4QZBOjCZAE83rI0tg4n+9Xa5gC64X7kxZgLDdMa6SSRUxLi/FJaan8cybEocWPfFALrIAMNA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713872514; c=relaxed/simple;
-	bh=SiukaLuq2psfqut4fXWa4EyUxhGROvB4lZ1QAXnBiHg=;
+	s=arc-20240116; t=1713872526; c=relaxed/simple;
+	bh=mWrSk3XozYzDcT0mn492u1kdzxXJSpSV1I21tLLJDBU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=auQjGPssEglDUlwKbeUpf0xRunxvnoWMBtAaA62pDcXJrJH4g1q8MheC+dofG0wu6qI2U8O7tgPL612hmv30N+2flXRIcWJ1ibcjDXQOcAULYHMiawn7m6R2dli7IFA5rwNquJA5Urix8mJxoKVlBtVnpGH1YptaHwgkePqKaRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o39pQtoe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A206AC32782;
-	Tue, 23 Apr 2024 11:41:52 +0000 (UTC)
+	 MIME-Version; b=iHxnh8iUCmBn//FElkX0WEpxScmOa9hTqPdqWxRjtwzhwOk3Wa4UpYY77gECWcH4zs6TeVZFJQBu5+1B/xlUv8+PNE6kg6rbp3soDfqzOZmG0ZIPQFPEv4q/kvXWZ5pjB8XrKxXNeA3RcYCwRMS/eTk0ivPwV4vT0VnKbolYHkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SsqNsIRb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1066C2BD11;
+	Tue, 23 Apr 2024 11:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713872513;
-	bh=SiukaLuq2psfqut4fXWa4EyUxhGROvB4lZ1QAXnBiHg=;
+	s=k20201202; t=1713872526;
+	bh=mWrSk3XozYzDcT0mn492u1kdzxXJSpSV1I21tLLJDBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o39pQtoeY93g2bFqJ7ybrr3xKwKQQyEPv+KBdu+dyxL49zvn5fgWS0RsL0JJ/FIZ8
-	 CWiIjrOMq467RfSDzabbgtHNhFCoFWU+bzxUL2TVeDPEthGXO51vh6OXXViVf1bFAv
-	 Ca08egEBpywfa3a+//4PHTvcUzpy3CJuwdnb8+hTgnaZkjN/OzlvClR1HZadDcEIes
-	 LccgJxEVlZYftfHo1krZEMLwFBQrK6gmUJ0/xnTdYVLsbE5H1FKHWL3zKLX0FUlrVF
-	 uxrUcuFgtwZE8WCIKIq2hHiUp6JbhMby/ivistR+AoVEnZiDBGoN8lZ2vVJ6fy2M8M
-	 vIscJ12l0/LyQ==
+	b=SsqNsIRbo3rm59u9U44n8gf5QGNwh44lRura1P7pEI31GoiWCo+ujJiQtU0N9jpPW
+	 4qXHJ6FX9qwkC/h0zbzklwYsZAcmsLunBu/AJwA9qZHpIaNHA+VlHEFvULMgwrG1QQ
+	 DgkJUCeFodxX/1iqc6u0UVnHQ/82vih7Bb00eO8ZrolTR5bAbk5KU9dnwsYt0Z7UBZ
+	 t/eaSQ6Y7Dq42sHSnxIrvGYLOgovgphxSbDF4gCd1zyCPpJQQblpoDQsYdz5S5UIaU
+	 dVu03X+yAandRLAYA+ubCqY3u5YKVUFff8VWNvNgNoHjSre33YT7gCRIo2sJsWPqhl
+	 tjBjxCceJxT+g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	andy@kernel.org,
 	linus.walleij@linaro.org,
 	brgl@bgdev.pl,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 5/8] gpio: crystalcove: Use -ENOTSUPP consistently
-Date: Tue, 23 Apr 2024 07:03:00 -0400
-Message-ID: <20240423110304.1659456-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 4/7] gpio: wcove: Use -ENOTSUPP consistently
+Date: Tue, 23 Apr 2024 07:03:14 -0400
+Message-ID: <20240423110318.1659628-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240423110304.1659456-1-sashal@kernel.org>
-References: <20240423110304.1659456-1-sashal@kernel.org>
+In-Reply-To: <20240423110318.1659628-1-sashal@kernel.org>
+References: <20240423110318.1659628-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,36 +65,37 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.274
+X-stable-base: Linux 4.19.312
 Content-Transfer-Encoding: 8bit
 
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit ace0ebe5c98d66889f19e0f30e2518d0c58d0e04 ]
+[ Upstream commit 0c3b532ad3fbf82884a2e7e83e37c7dcdd4d1d99 ]
 
 The GPIO library expects the drivers to return -ENOTSUPP in some
 cases and not using analogue POSIX code. Make the driver to follow
 this.
 
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-crystalcove.c | 2 +-
+ drivers/gpio/gpio-wcove.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-crystalcove.c b/drivers/gpio/gpio-crystalcove.c
-index 14d1f4c933b69..8b9c1833bf7d4 100644
---- a/drivers/gpio/gpio-crystalcove.c
-+++ b/drivers/gpio/gpio-crystalcove.c
-@@ -91,7 +91,7 @@ static inline int to_reg(int gpio, enum ctrl_register reg_type)
- 		case 0x5e:
- 			return GPIOPANELCTL;
- 		default:
--			return -EOPNOTSUPP;
-+			return -ENOTSUPP;
- 		}
- 	}
+diff --git a/drivers/gpio/gpio-wcove.c b/drivers/gpio/gpio-wcove.c
+index dde7c6aecbb5e..b8d79f70cb965 100644
+--- a/drivers/gpio/gpio-wcove.c
++++ b/drivers/gpio/gpio-wcove.c
+@@ -110,7 +110,7 @@ static inline unsigned int to_reg(int gpio, enum ctrl_register reg_type)
+ 	unsigned int reg;
  
+ 	if (gpio >= WCOVE_GPIO_NUM)
+-		return -EOPNOTSUPP;
++		return -ENOTSUPP;
+ 
+ 	if (reg_type == CTRL_IN)
+ 		reg = GPIO_IN_CTRL_BASE + gpio;
 -- 
 2.43.0
 
