@@ -1,215 +1,314 @@
-Return-Path: <linux-gpio+bounces-5754-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5755-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EF9A8AE579
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 14:06:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EE208AE5B9
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 14:12:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 722D81C22EED
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 12:06:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 75ABBB228D5
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 12:12:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 814E860279;
-	Tue, 23 Apr 2024 12:00:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F83B8563D;
+	Tue, 23 Apr 2024 12:12:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="K+6F9M2I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qX99TQMM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2056.outbound.protection.outlook.com [40.107.92.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3591E2AD11;
-	Tue, 23 Apr 2024 12:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713873649; cv=fail; b=iXZDLlcasIuT1mHiw46X6Uinlhc2oaIRTePL+tEazS5LxmGBme3bLOIEyHE0Toa9QPcg8ebvM1lDGdVZXfsFbeVnFMTBehawnt0kHsheeKxtcmsKo2u7H9JfFW3/wDoHn2eTezKNNk6EJxFuKBJFO0FbkslWeCxgX861kEYm5l4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713873649; c=relaxed/simple;
-	bh=N95eFet9en23hUv4gotXYxKwheqNZiL9WrDFPgm0ej4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EerlZTSJQcqv5Ct9D6zHPDILh1C66Twsev+slhYnk9fHjaQkiQAO2ZrJ5qcXFLsZoYo5EYNxcwcZXrSSP4DAiqG/EgVusHNACqhbDEYJCVZL35Plx9Hed9N2iXYB7JKE+QwtvwUK716b22Ppjns8CqNhytsmAQy8VZhPG3E8shw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=K+6F9M2I; arc=fail smtp.client-ip=40.107.92.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dcH/zTvBLUT5vnJUJSmfzhdHsIfeKm37vWEQwpnOlOjy9UuAJMXDLbmOvBNrD2NGXcvhx16U84d7Q2ohw18vXfObVIkNGFpdQo28rex7GHdrueQ7gHvh+F9FvhyZuI2Ejutkt3PchzxFCjod32bvzYRHulcpWea+8wXOrChvGtVMKO79lH1bB097BXSvCOGeSZCiq8PkVoOyeWknrTvK2VWBXhSG0nCbW7JqVpUfvR2bcvrduSfAsgPIT282NjYmmeZg23ryMUiX49uwyJ5kY9cc9PDGOBPoqD147OoODTM5XSSpyzQNI0lxLOhhxhoiPzQ5Y26FNIQhgR2bg5KjpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6Xz9h7cPg9TXUXXSKZmbTelqnZA4UGUBAXomaKRzsCg=;
- b=FgPrCqJo03SeqxXosI9cRxnsAMNl7EQNgvzsRYKa9uvvRzBa9Q3909biH5aDUZhTyyi4fUIu6EIIZyRQkiTA6xKjrWbCo9ttuF2dxRQYChKNWY2Wz/0HXoPFNEMCp6P/YXDq2SoKnj0UnIJZSdbJVhlZzq3cmO8Owm9+jsIXiTkv1VrQQ6O/P5wiFE1yO2PXyFwLssvLhyac7owciGda6Hzzxui+J8KDAgb+DvOJkQ4B++GfbM0WzIOQhvCiv/SSXc+SvTCJkvBZqth6nEmbsAWbyxvHyqC8zQsoCprEFbYoDzvR4v05MK8NbZqvOX3Ad9ly47aaajQSHWM8ryyT0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Xz9h7cPg9TXUXXSKZmbTelqnZA4UGUBAXomaKRzsCg=;
- b=K+6F9M2IRKG05HsSIN9sj7lo1w8fCi5jZufbXsKJkxAt9fejpRbuOFXjdVYyVNekNjWiggcLKp61o/TES5EN32NlAXElCgIUVBINmgbWMpURwFnEETxwRh96+RqYsn6zrmfz0Ng2naQ/38I9iCZRSO83EDs587KPQIoJZRgrlZldWxFiPnTn2WhYS4VbsqpHjNX0PLKuJG+2nrhhaiTtRV66jeiwH4P7mwLOJHrUHpX6hJPmTo2nvDqs+j3yALdtLO2l4UjIcikgZ6iWlrwI7kY1YQTARVp+/u0YkWAi4B8II3fUEHwMKBnyLpy9SXgJk7KmEIyPks80YqZ8zzMNXg==
-Received: from BN8PR15CA0053.namprd15.prod.outlook.com (2603:10b6:408:80::30)
- by MN0PR12MB6128.namprd12.prod.outlook.com (2603:10b6:208:3c4::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 23 Apr
- 2024 12:00:38 +0000
-Received: from BN2PEPF000044A1.namprd02.prod.outlook.com
- (2603:10b6:408:80:cafe::58) by BN8PR15CA0053.outlook.office365.com
- (2603:10b6:408:80::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.34 via Frontend
- Transport; Tue, 23 Apr 2024 12:00:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN2PEPF000044A1.mail.protection.outlook.com (10.167.243.152) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7519.19 via Frontend Transport; Tue, 23 Apr 2024 12:00:37 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 23 Apr
- 2024 05:00:17 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 23 Apr
- 2024 05:00:16 -0700
-Received: from pshete-ubuntu.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 23 Apr 2024 05:00:13 -0700
-From: Prathamesh Shete <pshete@nvidia.com>
-To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <jonathanh@nvidia.com>,
-	<treding@nvidia.com>, <sfr@canb.auug.org.au>, <linux-gpio@vger.kernel.org>,
-	<linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <mochs@nvidia.com>, <csoto@nvidia.com>, <pshete@nvidia.com>,
-	<jamien@nvidia.com>, <smangipudi@nvidia.com>
-Subject: [PATCH v2] gpio: tegra186: Fix tegra186_gpio_is_accessible() check
-Date: Tue, 23 Apr 2024 17:30:11 +0530
-Message-ID: <20240423120011.21554-1-pshete@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CACMJSeu+fUdYoxue-q=DxFdvtopgshQY+i2kpZMP-RGOTqMu_g@mail.gmail.com>
-References: <CACMJSeu+fUdYoxue-q=DxFdvtopgshQY+i2kpZMP-RGOTqMu_g@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F3C82865
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 12:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713874361; cv=none; b=d6RcvcAu8hBYAK8Io489ZHQpJVXPwuokP6iMcAkbvElCerbXD6jAdqdi+RjDlo5C49GHGO4FQ19UwQn/VE//qSwiK1ulTSBp3OkvAmyb7yYAFnDs9AVNWRw+5/NxeFNn3fj5PyvqVymIbaJKabfrOVNwkz/5JMHxEIJtr6Crmog=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713874361; c=relaxed/simple;
+	bh=0eXJ5AIjzz1TBGZ8SlshIPrEHZaZwZfYEdof+dSpu4Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=EfFtruUxRIGy+jylEiJ2rPEyPCjGCc8ptT9FVxe6s0O/kW38Y6196xVQeiSV2tSKVCEOIO+9HoqmpgdKsJE7gU9++EcrasP96MYpsklYpc2zsWW3b8QEhfxfZ9Ai/idyYihE2u9dQ7a143P/Ij/twDrZTt24wO/mtHDrE5XcCFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qX99TQMM; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2dd041acff1so40839131fa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 05:12:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1713874356; x=1714479156; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vysJsMiH5IVqdTs4yMwZxZ7nUmt2aG7eBhkn8qm8hvI=;
+        b=qX99TQMMdHbskFYUaw8c93sIJsUhKmj/WPdyahHcupUhwn5wol4aVoPczkOKYwJZhE
+         eoInxzjAHIl3UNKyvPPrD4MrbLcSoFT6mTFMsgRQYUghsLattmGcqIebu9XT556dBhsf
+         DydmpqGgnTOIa+IEknFxg24mo8Xn2LVmDC7LSGEYykUy1xLHd1NSq56YEaYXC7641xeZ
+         9TOL0rZszeGld5cCS3013EmEeXQGCC3lAP83Eb48vbFXjPojkN0s40rZ2s8YpVsGT0iP
+         LeLVtP/E8XJqi4YipKryKSgbgOvQ1Bclle5+s+2qcJQNnSEjekMwR59BIRs3OZH2SRfN
+         gQdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713874356; x=1714479156;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vysJsMiH5IVqdTs4yMwZxZ7nUmt2aG7eBhkn8qm8hvI=;
+        b=jEBH4NQ7SzFi2tnb1lgL06IchnBJoscNgKesjlorvou6X/9wDE/VbgxNFKR0zWwdTk
+         BEjG/ifFJxLmM9jdaCKu5cJc4yiDNXp7yZd48D71V34zJ4aINAGAx4hcOKqf95neFknx
+         nsFPpBFnTYFEpCLF0TebVoL6h6ehPzSojmkArzsrMppNvW2cwJ5gDlkqy2y4SezLanmM
+         6iU0ksnwE0bb2iLkahhgo00Ejt33yqxwa+3xBfhOe9oYKSSZYnY7qVq055SSwt9IAq+H
+         REGyJN+GrvupTHagiioYe3LPXDPdOui9ZixXXDllw1t1yGUy+TkJu8xSqtvHEfg81FHP
+         AxtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbxzPklfPYrLgyY1I0ycuj7Dh04dcGVonYocA2mzxzlAEV107o0ELlFqr3O9Td+tV/t0eV9ly9YAbTY6n1XPnFXS5dsYYAZw6RHw==
+X-Gm-Message-State: AOJu0YxsC7zdakTzntbiRFnN2A7yTrR0x+IpR6ce6eGn5kHeqIBi1km+
+	zTVpRulbch3JsmzVDbCbbAAYoBkNgEA568YL6zdjVARnvFwNz1cqatOrR1AXUm0=
+X-Google-Smtp-Source: AGHT+IHBRMGvaJM98f86Z6m/RfVhK2XejjNGF3EvcRq/4x3oGM0DKpd2PbeCJdgmzHjLPVVbdsNzJg==
+X-Received: by 2002:a2e:9852:0:b0:2d8:a98d:18e with SMTP id e18-20020a2e9852000000b002d8a98d018emr7955886ljj.8.1713874355700;
+        Tue, 23 Apr 2024 05:12:35 -0700 (PDT)
+Received: from [192.168.1.140] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id x6-20020a2e7c06000000b002da179d8d25sm1628982ljc.64.2024.04.23.05.12.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 05:12:35 -0700 (PDT)
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 23 Apr 2024 14:12:33 +0200
+Subject: [PATCH v2] wifi: ath9k: Obtain system GPIOS from descriptors
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044A1:EE_|MN0PR12MB6128:EE_
-X-MS-Office365-Filtering-Correlation-Id: af34eac1-e130-4103-07b0-08dc638cfd6c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Eod41ayva1XH61sm9jrzphH113eBQYGqREQ3Clf9iPWE0QNrKPHxn6PdEwvj?=
- =?us-ascii?Q?F2V6VXO+FfvHj2B9KAn1wWTjlH6nxqujrIv6Bqm3whKyTc90qYJvy9p0OvtQ?=
- =?us-ascii?Q?JgijEyVR4A9Ylrw14oe3URE50L50xf0XVZNUTdhTOtmN0n+D8nBIlMXs36Lc?=
- =?us-ascii?Q?iFk/taylIdJeyk9jGEGQXMeqlAwWPiOWDVB/H4xY7Wh5QJNeZ+izZjRzanST?=
- =?us-ascii?Q?NGatCaPyM0SV/5wB/lNczNNasEzJOfDg4AHNbsODLRoto+gXfS2Tap6qX9NG?=
- =?us-ascii?Q?U+6E24NpcxfmPT9AxFi7Q/HJCGefyaoXwCwhqPs7x5bfLDg9VcAdgzFkobjD?=
- =?us-ascii?Q?hO7JfnBDLpWusERn2jTLP5y5ii+LNvysaWa8sTp4ZDnc2W+lCZ6T/iF5eipt?=
- =?us-ascii?Q?j0KeesX92t9TahHC57tCoGOjYHehPxJk6VJhPqkjUF6LPrRS8VscLUkzPV6C?=
- =?us-ascii?Q?Wsmld/199zrmP4WOVLSPxm+4Nii6EP2yB4hK885KFgR7Q3uiH5IlXihjv3Y9?=
- =?us-ascii?Q?CrhbBOMeKmDdKGQ00/IKnXpg2bsma7bvrH+YgDZ+e0Sz23mJ1pPiSIQgM0wS?=
- =?us-ascii?Q?DZuMIKLBEbT/hayOH/aaU/VnbA8kM/Db1Jfo3TxiTTENX0b8E+Rc6q/KWHgS?=
- =?us-ascii?Q?eUyTpKtkLSRRPbgOJ4NdTkQp2glX1rBkrREMC+Ku2n5OFVtQ/usjJIL9+bgM?=
- =?us-ascii?Q?ga4nQ4qSB7uCYk4KzR+se+v6B8c5Dp4RVyKKFbpAp9SZryAmLDD8G/2QLVzF?=
- =?us-ascii?Q?Z744IWdFp6IosozR72bHeHnG0jVbOPj83iW8GZ/r7ZrJ1qFaXyp17U35F/lb?=
- =?us-ascii?Q?LMrLRegj3LF7ogR8XNVFfbKuVJVKT1w2nT62zZbEyJGvMmAtAg7d03yGjo4y?=
- =?us-ascii?Q?WppgUZYXz8x6tDmGaTEfGz7ymjIk1akl0fgrpEz/OmPr6dTxgfo+Tx7d9goi?=
- =?us-ascii?Q?wIueN6XxaTOFEZKzpHlC5oTutUCv6LMnihsIqMS5TY/MDWI9gFpr2JTQPQHn?=
- =?us-ascii?Q?3YRxDK03/7vbBhMEsB1zk2YaY/4gcuFopxPisuTkjM8RpIxwLFhQMReFTaNO?=
- =?us-ascii?Q?us3nQk2XhRSltnFxTfiXqW5J3JF18DPh0dPGhpsnmXj6wY8nGR2M9fkZ57cZ?=
- =?us-ascii?Q?/WJOS1wFJsrDr02v1GEe6mpMKbaPYVwHulcMxnUhVp7k5C4iqWF9cvoDLhRg?=
- =?us-ascii?Q?YWHXcRmrf9lQ96lnL73a6RbcfxnSzQ89DeYaQMLH65liOopPE/GlNfSrJbPD?=
- =?us-ascii?Q?kpQutieIoxyG8fAz99Ehx48jMQtE5o1zqSXF3JiQwbUHiH8MjKN+j6vKfM5e?=
- =?us-ascii?Q?XFEtplUoCdQJmGSQDpS3mwEt47XRrGZX1eJNxbiOObOZwoh9VgmIDD38eobE?=
- =?us-ascii?Q?h0CdH2R02S7hh+WpFWxdOaSrz83H?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(376005)(1800799015)(82310400014)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 12:00:37.5867
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: af34eac1-e130-4103-07b0-08dc638cfd6c
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044A1.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6128
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240423-descriptors-wireless-v2-1-6d1d03b30bfa@linaro.org>
+X-B4-Tracking: v=1; b=H4sIALClJ2YC/22Nyw6CMBBFf4XM2hpanrLyPwyL0o4wCaFkxqCG9
+ N+txKXLc5Nz7g6CTCjQZTswbiQUlgTmlIGb7DKiIp8YTG7KXBujPIpjWh+BRT2JcUYRNbTeXir
+ v7FBUkNSV8U6vI3vrE08kSXgfL5v+rr9gof8HN61yhdo1rvJ125T1dabFcjgHHqGPMX4Ao4iiN
+ LkAAAA=
+To: Kalle Valo <kvalo@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Arnd Bergmann <arnd@arndb.de>, Alban Bedel <albeu@free.fr>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
+Cc: linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, 
+ linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.13.0
 
-The controller has several register bits describing access control
-information for a given GPIO pin. When SCR_SEC_[R|W]EN is unset, it
-means we have full read/write access to all the registers for given GPIO
-pin. When SCR_SEC[R|W]EN is set, it means we need to further check the
-accompanying SCR_SEC_G1[R|W] bit to determine read/write access to all
-the registers for given GPIO pin.
+The ath9k has an odd use of system-wide GPIOs: if the chip
+does not have internal GPIO capability, it will try to obtain a
+GPIO line from the system GPIO controller:
 
-This check was previously declaring that a GPIO pin was accessible
-only if either of the following conditions were met:
+  if (BIT(gpio) & ah->caps.gpio_mask)
+        ath9k_hw_gpio_cfg_wmac(...);
+  else if (AR_SREV_SOC(ah))
+        ath9k_hw_gpio_cfg_soc(ah, gpio, out, label);
 
-  - SCR_SEC_REN + SCR_SEC_WEN both set
+Where ath9k_hw_gpio_cfg_soc() will attempt to issue
+gpio_request_one() passing the local GPIO number of the controller
+(0..31) to gpio_request_one().
 
-    or
+This is somewhat peculiar and possibly even dangerous: there is
+nowadays no guarantee of the numbering of these system-wide
+GPIOs, and assuming that GPIO 0..31 as used by ath9k would
+correspond to GPIOs 0..31 on the system as a whole seems a bit
+wild.
 
-  - SCR_SEC_REN + SCR_SEC_WEN both set and
-    SCR_SEC_G1R + SCR_SEC_G1W both set
+Register all 32 GPIOs at index 0..31 directly in the ATH79K
+GPIO driver and associate with WIFI if and only if we are probing
+ATH79K wifi from the AHB bus (used for SoCs).
 
-Update the check to properly handle cases where only one of
-SCR_SEC_REN or SCR_SEC_WEN is set.
-
-Fixes: b2b56a163230 ("gpio: tegra186: Check GPIO pin permission before access.")
-Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpio/gpio-tegra186.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+Changes in v2:
+- Define all the descriptors directly in the ATH79K
+  GPIO driver in case the driver want to request them directly.
+- Link to v1: https://lore.kernel.org/r/20240131-descriptors-wireless-v1-0-e1c7c5d68746@linaro.org
+---
+ drivers/gpio/gpio-ath79.c           | 47 ++++++++++++++++++++++++++++++++++++-
+ drivers/net/wireless/ath/ath9k/hw.c | 29 ++++++++++++-----------
+ drivers/net/wireless/ath/ath9k/hw.h |  3 ++-
+ 3 files changed, 63 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index d87dd06db40d..9130c691a2dd 100644
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@ -36,12 +36,6 @@
- #define  TEGRA186_GPIO_SCR_SEC_REN		BIT(27)
- #define  TEGRA186_GPIO_SCR_SEC_G1W		BIT(9)
- #define  TEGRA186_GPIO_SCR_SEC_G1R		BIT(1)
--#define  TEGRA186_GPIO_FULL_ACCESS		(TEGRA186_GPIO_SCR_SEC_WEN | \
--						 TEGRA186_GPIO_SCR_SEC_REN | \
--						 TEGRA186_GPIO_SCR_SEC_G1R | \
--						 TEGRA186_GPIO_SCR_SEC_G1W)
--#define  TEGRA186_GPIO_SCR_SEC_ENABLE		(TEGRA186_GPIO_SCR_SEC_WEN | \
--						 TEGRA186_GPIO_SCR_SEC_REN)
+diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
+index f0c0c0f77eb0..f83ce0595ea8 100644
+--- a/drivers/gpio/gpio-ath79.c
++++ b/drivers/gpio/gpio-ath79.c
+@@ -9,6 +9,7 @@
+  */
  
- /* control registers */
- #define TEGRA186_GPIO_ENABLE_CONFIG 0x00
-@@ -177,10 +171,18 @@ static inline bool tegra186_gpio_is_accessible(struct tegra_gpio *gpio, unsigned
+ #include <linux/gpio/driver.h>
++#include <linux/gpio/machine.h> /* For WLAN GPIOs */
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/gpio-ath79.h>
+ #include <linux/of.h>
+@@ -222,6 +223,46 @@ static const struct of_device_id ath79_gpio_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, ath79_gpio_of_match);
  
- 	value = __raw_readl(secure + TEGRA186_GPIO_SCR);
++#if IS_ENABLED(CONFIG_ATH9K_AHB)
++/*
++ * This registers all of the ath79k GPIOs as descriptors to be picked
++ * directly from the ATH79K wifi driver if the two are jitted together
++ * in the same SoC.
++ */
++#define ATH79K_WIFI_DESCS 32
++static int ath79_gpio_register_wifi_descriptors(struct device *dev,
++						const char *label)
++{
++	struct gpiod_lookup_table *lookup;
++	int i;
++
++	/* Create a gpiod lookup using gpiochip-local offsets + 1 for NULL */
++        lookup = devm_kzalloc(dev,
++			      struct_size(lookup, table, ATH79K_WIFI_DESCS + 1),
++			      GFP_KERNEL);
++
++	if (!lookup)
++		return -ENOMEM;
++
++	lookup->dev_id = "ath9k";
++
++	for (i = 0; i < ATH79K_WIFI_DESCS; i++) {
++		lookup->table[i] = (struct gpiod_lookup)
++			GPIO_LOOKUP_IDX(label, 0, NULL, i,
++					GPIO_ACTIVE_HIGH);
++	}
++
++	gpiod_add_lookup_table(lookup);
++
++	return 0;
++}
++#else
++static int ath79_gpio_register_wifi_descriptors(struct device *dev,
++						const char *label)
++{
++}
++#endif
++
+ static int ath79_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct ath79_gpio_platform_data *pdata = dev_get_platdata(&pdev->dev);
+@@ -291,7 +332,11 @@ static int ath79_gpio_probe(struct platform_device *pdev)
+ 		girq->handler = handle_simple_irq;
+ 	}
  
--	if ((value & TEGRA186_GPIO_SCR_SEC_ENABLE) == 0)
--		return true;
-+	/*
-+	 * When SCR_SEC_[R|W]EN is unset, then we have full read/write access to all the
-+	 * registers for given GPIO pin.
-+	 * When SCR_SEC[R|W]EN is set, then there is need to further check the accompanying
-+	 * SCR_SEC_G1[R|W] bit to determine read/write access to all the registers for given
-+	 * GPIO pin.
-+	 */
+-	return devm_gpiochip_add_data(dev, &ctrl->gc, ctrl);
++	err = devm_gpiochip_add_data(dev, &ctrl->gc, ctrl);
++	if (err)
++		return err;
++
++	return ath79_gpio_register_wifi_descriptors(dev, ctrl->gc.label);
+ }
  
--	if ((value & TEGRA186_GPIO_FULL_ACCESS) == TEGRA186_GPIO_FULL_ACCESS)
-+	if (((value & TEGRA186_GPIO_SCR_SEC_REN) == 0 ||
-+	     ((value & TEGRA186_GPIO_SCR_SEC_REN) && (value & TEGRA186_GPIO_SCR_SEC_G1R))) &&
-+	     ((value & TEGRA186_GPIO_SCR_SEC_WEN) == 0 ||
-+	     ((value & TEGRA186_GPIO_SCR_SEC_WEN) && (value & TEGRA186_GPIO_SCR_SEC_G1W))))
- 		return true;
+ static struct platform_driver ath79_gpio_driver = {
+diff --git a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k/hw.c
+index 5982e0db45f9..ee6705836746 100644
+--- a/drivers/net/wireless/ath/ath9k/hw.c
++++ b/drivers/net/wireless/ath/ath9k/hw.c
+@@ -20,7 +20,7 @@
+ #include <linux/time.h>
+ #include <linux/bitops.h>
+ #include <linux/etherdevice.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <asm/unaligned.h>
  
- 	return false;
+ #include "hw.h"
+@@ -2727,19 +2727,25 @@ static void ath9k_hw_gpio_cfg_output_mux(struct ath_hw *ah, u32 gpio, u32 type)
+ static void ath9k_hw_gpio_cfg_soc(struct ath_hw *ah, u32 gpio, bool out,
+ 				  const char *label)
+ {
++	enum gpiod_flags flags = out ? GPIOD_OUT_LOW : GPIOD_IN;
++	struct gpio_desc *gpiod;
+ 	int err;
+ 
+-	if (ah->caps.gpio_requested & BIT(gpio))
++	if (ah->gpiods[gpio])
+ 		return;
+ 
+-	err = gpio_request_one(gpio, out ? GPIOF_OUT_INIT_LOW : GPIOF_IN, label);
+-	if (err) {
++	/* Obtains a system specific GPIO descriptor from another GPIO controller */
++	gpiod = devm_gpiod_get_index(ah->dev, NULL, gpio, flags);
++
++	if (IS_ERR(gpiod)) {
++		err = PTR_ERR(gpiod);
+ 		ath_err(ath9k_hw_common(ah), "request GPIO%d failed:%d\n",
+ 			gpio, err);
+ 		return;
+ 	}
+ 
+-	ah->caps.gpio_requested |= BIT(gpio);
++	gpiod_set_consumer_name(gpiod, label);
++	ah->gpiods[gpio] = gpiod;
+ }
+ 
+ static void ath9k_hw_gpio_cfg_wmac(struct ath_hw *ah, u32 gpio, bool out,
+@@ -2800,11 +2806,6 @@ void ath9k_hw_gpio_free(struct ath_hw *ah, u32 gpio)
+ 		return;
+ 
+ 	WARN_ON(gpio >= ah->caps.num_gpio_pins);
+-
+-	if (ah->caps.gpio_requested & BIT(gpio)) {
+-		gpio_free(gpio);
+-		ah->caps.gpio_requested &= ~BIT(gpio);
+-	}
+ }
+ EXPORT_SYMBOL(ath9k_hw_gpio_free);
+ 
+@@ -2832,8 +2833,8 @@ u32 ath9k_hw_gpio_get(struct ath_hw *ah, u32 gpio)
+ 			val = REG_READ(ah, AR_GPIO_IN(ah)) & BIT(gpio);
+ 		else
+ 			val = MS_REG_READ(AR, gpio);
+-	} else if (BIT(gpio) & ah->caps.gpio_requested) {
+-		val = gpio_get_value(gpio) & BIT(gpio);
++	} else if (ah->gpiods[gpio]) {
++		val = gpiod_get_value(ah->gpiods[gpio]);
+ 	} else {
+ 		WARN_ON(1);
+ 	}
+@@ -2856,8 +2857,8 @@ void ath9k_hw_set_gpio(struct ath_hw *ah, u32 gpio, u32 val)
+ 			AR7010_GPIO_OUT : AR_GPIO_IN_OUT(ah);
+ 
+ 		REG_RMW(ah, out_addr, val << gpio, BIT(gpio));
+-	} else if (BIT(gpio) & ah->caps.gpio_requested) {
+-		gpio_set_value(gpio, val);
++	} else if (ah->gpiods[gpio]) {
++		gpiod_set_value(ah->gpiods[gpio], val);
+ 	} else {
+ 		WARN_ON(1);
+ 	}
+diff --git a/drivers/net/wireless/ath/ath9k/hw.h b/drivers/net/wireless/ath/ath9k/hw.h
+index 450ab19b1d4e..1eb4ff8955ae 100644
+--- a/drivers/net/wireless/ath/ath9k/hw.h
++++ b/drivers/net/wireless/ath/ath9k/hw.h
+@@ -19,6 +19,7 @@
+ 
+ #include <linux/if_ether.h>
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/io.h>
+ #include <linux/firmware.h>
+ 
+@@ -302,7 +303,6 @@ struct ath9k_hw_capabilities {
+ 	u8 max_rxchains;
+ 	u8 num_gpio_pins;
+ 	u32 gpio_mask;
+-	u32 gpio_requested;
+ 	u8 rx_hp_qdepth;
+ 	u8 rx_lp_qdepth;
+ 	u8 rx_status_len;
+@@ -783,6 +783,7 @@ struct ath_hw {
+ 	struct ath9k_hw_capabilities caps;
+ 	struct ath9k_channel channels[ATH9K_NUM_CHANNELS];
+ 	struct ath9k_channel *curchan;
++	struct gpio_desc *gpiods[32];
+ 
+ 	union {
+ 		struct ar5416_eeprom_def def;
+
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240122-descriptors-wireless-b8da95dcab35
+
+Best regards,
 -- 
-2.17.1
+Linus Walleij <linus.walleij@linaro.org>
 
 
