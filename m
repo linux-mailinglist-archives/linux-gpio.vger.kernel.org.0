@@ -1,187 +1,252 @@
-Return-Path: <linux-gpio+bounces-5723-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5724-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD8948ADBED
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 04:28:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A36CE8ADCF4
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 06:55:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92BBB283792
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 02:28:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 304AD1F22C70
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 04:55:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE96617BA8;
-	Tue, 23 Apr 2024 02:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF281F95A;
+	Tue, 23 Apr 2024 04:55:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JdGfldmu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FsOBVbgp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2076.outbound.protection.outlook.com [40.107.22.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5155B19BBA;
-	Tue, 23 Apr 2024 02:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713839331; cv=fail; b=Cangy0/8pjCVDL2LfhZGS8lo4s2MycVLvrMJt+gDwhRGdnUQziOcY1eFUrLVUxAh4GRMr74knkkwJim7svsyL7ljW+RzXlKyFwL9eOb2RQMbbrkQGuXoec1u7xrqspODGoH796yrqSy7ntQTo5RuA2Jj0zQxCUUo8kyXybbPonI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713839331; c=relaxed/simple;
-	bh=Hs8rcJ+RVxpO4U60LR+iDWU/HUMzZI1cTzadNgJQlDg=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=OFVnlbXIwQ3vwGxyvq4b8ztbUqpUM8y5dDdmEQrsTM4VYjWAMi+zAQ1Db57Toq7N/spQJahtf07zp/ZGi8jBDHBxrhWaNTWYtkAhj8aZKt2Mr+nQnO2hTSsVDVzE4WXHYP5gbpLCqD08wjdNCcIk6yh8NOA0Nf5a4d/HFqGrxdM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=JdGfldmu; arc=fail smtp.client-ip=40.107.22.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IOULnQh0d6OD9cX56w0IutulFwNGLMBHPMaJcgguNixHuKNCz6f6H6gbi6mcXcCLIXOjlGokNvGLPodHVl/eH7RW6rmKP2+mAggzyhvnyGp+RBRng3jNzhGGmGG8c4jqXlySZ6j9eFO04hbe2xqBAEJNqyXd4MjJfLdp9mZr80OSFgsEtmrxvr3/NpcNZWQjDHKn1ItQHJoiR39L+cvIAK0p4IDmL/oSTCDi9/CSNwiLtOBcJQKu6rGVYEuXT1+EKCp2jBr29c6/TR0+Zk5qJuCf+ey4Wz95SWHCJJTGZ1v4IGqIgCTugsrflbdQG9cYOA+1b0+4ax5lFNw0erFTiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7aekq6Fd/o1H+XWrNY8CCjy8BzXAlXKb5LxMGVq1fWo=;
- b=kTFcSMTms/1jw3nxILYMgpvT+SXSXeRZX5QEibLODcSY7oz/EYtnxT/0NdwuiH2rNAYe0Mc3m00nRXnPVPdKzqTsnsXqHl+mHX6hhvliwHrPvf6fFQgmLpGzBrVOCegBFrNkxbX/ReBGE+l0X+ZKUTbf/AUJpQq9Apg0FMY2fesGi8xtGobKvRPM4T/u8W2GJyVECGxfx/DZZoEKkzvq0cqc+6DTV2a+Otzd3ZLXAHL4jcazpKjSbxQ17k8NItQitIaQEt06f+SppOyPrsNITI6iW/W3d8BU6mj9JTa6JeXjr5lo58hs4NbnUYkFjcOTcw7cG2mDmn+k2HjeZTBqZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7aekq6Fd/o1H+XWrNY8CCjy8BzXAlXKb5LxMGVq1fWo=;
- b=JdGfldmuL+iaKgdgbGyiPEQSljQFuPa3cWY3KwgloTI/w6ZxV+xCVRSgsZkeRVxIkSw7wTTY5WoI165iW7bO3HIfOAtlZ/NldtE+OTLFs3YIjFYAP7Uaudtr9VavV6K2emK/ur5EAPkRuEnUEeXj4/VRDn1ehGMDWAlMXYKJLVo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU0PR04MB9496.eurprd04.prod.outlook.com (2603:10a6:10:32d::19)
- by DB8PR04MB7098.eurprd04.prod.outlook.com (2603:10a6:10:fd::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 23 Apr
- 2024 02:28:46 +0000
-Received: from DU0PR04MB9496.eurprd04.prod.outlook.com
- ([fe80::8271:6309:7e7c:1895]) by DU0PR04MB9496.eurprd04.prod.outlook.com
- ([fe80::8271:6309:7e7c:1895%4]) with mapi id 15.20.7472.044; Tue, 23 Apr 2024
- 02:28:46 +0000
-From: haibo.chen@nxp.com
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	haibo.chen@nxp.com
-Subject: [PATCH] gpio: vf610: always set GPIO to input mode when used as interrupt source
-Date: Tue, 23 Apr 2024 10:28:14 +0800
-Message-Id: <20240423022814.3951048-1-haibo.chen@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0043.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::19) To DU0PR04MB9496.eurprd04.prod.outlook.com
- (2603:10a6:10:32d::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83191C68C;
+	Tue, 23 Apr 2024 04:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713848123; cv=none; b=hMByY4vQVOeSYgrNQWnKuNL05FZ7Zj/izqTLQPnpHL1iVW+EhplbSOxrJwL4vIfxHMH/OzjKw2tL42H6gkqTharuMxd2YGoVBsMW6kf6W0/7WGi8kk8Fdema1y2dfO/TFm61DzZA8AwxM/wtB13Ahh8pDwhc7XXPLQSyM3JeVAI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713848123; c=relaxed/simple;
+	bh=dM1irCOow2NIbaKdVIMZH1hiIO0ucp6NLiVkcwkDJ/k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=lVZqxctX5gm0nlkx2e7VNOAp4v0VhZzpwSWx7pzJETXQerSou2HfPBOiZxdrTkcFyVUr/RhiVc7wsoH/HA5P9bNBTFeLHzp0dn4k6j0F14ZyFebYjv95QrEDOx0+SSz8d1zv3wLWCW4DSPprmZLntz5QDIAZcKrJl5fep5KBMyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FsOBVbgp; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56e2c1650d8so4969441a12.0;
+        Mon, 22 Apr 2024 21:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713848120; x=1714452920; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cWJeY9aVHJ3vD2kAH4qZ/jJ2xGIa4SXbG0F8x3vcA2U=;
+        b=FsOBVbgp9h0aJwPRhd4kQ8mbl911JZXl9wkyp3ENgdDg9UqHnKQO7cWCdwGGcEZ8RR
+         X3dyzrz3EXkfQsxswl9sD3RFdMFLZO3+Sf1oq+JEC19sjfs4UXNEaF9cx80CgHVygttF
+         hiiiteTfFm3pPxjlq36f8hFZDx+Z1V7OyQI69l0mapxziPxjbuqK4OSO7410FusaBQRl
+         t9VhEaMCIsIc0ZX5wB25+4hprM1yG1PUZ+oj2noDr9UlOMvKuZRUlC861GCoBRowX0AU
+         nVgtlCYCa5AVPPLXz2egqfyL7jCY8ujkpkK8vUxQ9lS53WDcqr+vXxSPUJiNTeW5aq/Q
+         FoDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713848120; x=1714452920;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cWJeY9aVHJ3vD2kAH4qZ/jJ2xGIa4SXbG0F8x3vcA2U=;
+        b=tipU8zqN5XjW68DPFRYejGfa/arcfJB4nFIlkG0wrJofVNB1U4yK/nFMpvMaYI7kuq
+         a3u7nk5pQdImLjwNJa2KCyj1rrCLb1/747h71GHT0rrPnB8sYqUAeCgeEsEW/eZjZEgO
+         CJkjjt8h2gTfBExEaL1q04v5Qm0YXsiu3z8eC9Y7jS3Z63bkWtJYwZIPVSXsu4bf1Oji
+         dcMSjGiURWtmeMd8VBxhvQdX24mP54NVxporclL4VrU4Tov9hKRpvpIYyo6DTCtVqqkL
+         4aA2Y+J0A6TB3mvzUj87PjXsHUrK2rLiq84NNyY8HSQiV/PO70jmwXo0Wi516akm5hOW
+         DtPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVavKxl2mLXg5v9xRK4pANt7f+HhVqx5+/N1r6sGG1nQYl+sYwWjhWFtbdRl4Sl3wOIPIWeqAR2H8Tcl1aA207Ln9+yJE1DlLkn8B8rpQwpcUV3QkObQfAtra00cAl5cEhR78A1MGw=
+X-Gm-Message-State: AOJu0YymqWcDhS33dSy4hbqQeym21S/s+nLb5dURiW8yQyukTxljq37n
+	OzRH/ejeNJ6LvoJrGtmQtZilveuqeN4F9HBv0P2OORdQIVtPZUgw
+X-Google-Smtp-Source: AGHT+IFFKMIRTGZSvCpOZZfgWGNGraXSzwnMFBJMXLzj83wn8qF0ijQJiEduYX8ya/MSfTn9ppr10w==
+X-Received: by 2002:a17:906:2a14:b0:a55:8f25:14f with SMTP id j20-20020a1709062a1400b00a558f25014fmr5732170eje.40.1713848119806;
+        Mon, 22 Apr 2024 21:55:19 -0700 (PDT)
+Received: from localhost.lan (031011218106.poznan.vectranet.pl. [31.11.218.106])
+        by smtp.gmail.com with ESMTPSA id rn2-20020a170906d92200b00a55a67a81c8sm3019557ejb.126.2024.04.22.21.55.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Apr 2024 21:55:19 -0700 (PDT)
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To: Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Hsin-Yi Wang <hsinyi@chromium.org>,
+	linux-mediatek@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH RESEND 1/2] dt-bindings: pinctrl: mediatek: mt7622: fix array properties
+Date: Tue, 23 Apr 2024 06:55:01 +0200
+Message-Id: <20240423045502.7778-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR04MB9496:EE_|DB8PR04MB7098:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3abecc4-9490-49cb-7a60-08dc633d19f8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bmpXf1c1TcWTIcJcXGWN+O6IvBCqgcG7mFzAKtG2Ozxy71qpkUZAFr/tAPzl?=
- =?us-ascii?Q?GqJqp0QwKUs26AdXfU+cqTFzGIAJAVzLTJwvB0fn83jqAkVMkcgDfUNiD81+?=
- =?us-ascii?Q?/Nxu8KUcQXnP9Br/TCWUeD7n2DM+bU7VsAH9IsjSWYzUN1ODZ841pF1rkaye?=
- =?us-ascii?Q?VRBaxsldE7Z4DhO0KjEitRl6nJBC4NIFonKJ4bD6Otz5bdHnYU1X1M07IE/4?=
- =?us-ascii?Q?98n7Hp8KQLB7O/cSggR0SuYTE5RM1fOxe7ZBhvaWPa1EcCdStzlT+MzkTdpH?=
- =?us-ascii?Q?OLQP/wBOPTLXC+QfFP4ALBt8mjPDaXFwR5Tj82kaQ06NXcOUQm0pLWxkO702?=
- =?us-ascii?Q?eYpQ3LnqQKDY0agPN2H75cBZ9CJ5v2UPAPSEKxfXdTATjygagql01r87//kp?=
- =?us-ascii?Q?IIA8WEWH8bk3vJhj+bYqVIpgJnUdDkI8oQWSclXuQIECUmVFYNj4ZWGouRTN?=
- =?us-ascii?Q?hZTHPPenGHfoGwWyeB9hkPpebvAxm1+XmrIUdS9d3dbZWFeUrEvioZRi4AKr?=
- =?us-ascii?Q?SnncSh/NAnuH/mTr8IPvD3UJoGNihJCg2UF3N9/YRoCTKXkWHVzHgiZZtc4U?=
- =?us-ascii?Q?ik6wNaEEMMKZLx68w+01Wzh9dYj/sob3ibw2RVQXRv65hHNVEJg4N0xtkKxI?=
- =?us-ascii?Q?OTHELvdO+1lk6fBg+g9wrEiJ90arqwztcTFDC8++6P2TaKC1euhEditJMHHE?=
- =?us-ascii?Q?qQTTAnXiwxqnvfDWzgiWb0sZyTseEdqHfenKIolsM3vM4DCKCuzv8Q3NzhTa?=
- =?us-ascii?Q?aOfkuamn++GByTxXZywuySmu8NYBmpvRg6JOdFjwH83coEf+N5zLP0gkaJIL?=
- =?us-ascii?Q?AuyKVwytN1hRMMPDP5tPok0stRZUvtvDet4giBlA8qUD3Agh/22Cdaf21tFm?=
- =?us-ascii?Q?OuLltTMjVRAEbSbEBDJM6Zrs5DFwaPKfBanpi/+ucDnH9SWqwWWxoEdHKeBH?=
- =?us-ascii?Q?ZFI0ZK4RIhVSQQMDU5TJxrLL6g9M8i0XdTznXR14pezyOYykXmv9VQF2YgEz?=
- =?us-ascii?Q?C86HAJnxzIdHFKtf9oV2uEQaa8v/3rjZiIO3IOINV/d1qUWN7WiykDXANwxb?=
- =?us-ascii?Q?taPrKILXTQRABDFgwzeiIGAcfV6L7O+y2BCsdZRzlgU5mOYaGi6JvAG3oAph?=
- =?us-ascii?Q?OZ1em0Zc2ywIjnyNcZDjKFHI7lTljgMAE0FfI6KPII882Mkc8+6WUmAaLkHj?=
- =?us-ascii?Q?KlZYgtWAschODPK0bac9IuBeXkGeAwU3Y9wKGwZYw5TkFBMJxaD5hmnJYMeb?=
- =?us-ascii?Q?GOFp2bVbbpfG8dt/GJ9aAsVWtCa8Zwqz9ztopWHZANogWNEO3kO+j4jvd68L?=
- =?us-ascii?Q?lKGzZoHUjJurZs8W1d0cYqE95RQDaA+GJ/Jip6Ny1wpxfQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(376005)(366007)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?3ZeFVq+5ikG6UbLoUyW+Ef0Vo3dho8DtUkkMeN9f/CwcMowKD0q/cyvIKHLq?=
- =?us-ascii?Q?dAxESchQX5KSmuKL6560YCNoZ5Hk/w2pzl6dPoD4pJBxisDj/WqAeEM0XLIr?=
- =?us-ascii?Q?fJXCa5ub51UsBnvfj6ZM9SFcPrRBytKiXz5CtAfQ+gda5MtpCZtoXIVL5FbA?=
- =?us-ascii?Q?MSzbfTse9QXyXNviF549Te5KmuQfkHlTYN0jcqiA9qxD5+SVbFnolQraFghj?=
- =?us-ascii?Q?mzqMYgddiwknRaM3TwORrCMwr41stG9Uk2y73hUA9UBdc8tD/4QutNGSO6Rg?=
- =?us-ascii?Q?dNBkIe/vxhlGlWDtyI1HDW0gCHUnXVY6IA5H7r2C/SqysBLwKO+zL+Jq8/G0?=
- =?us-ascii?Q?23yijpPZynsjhyCG8lzHhdHIGZIf698sVFT5qfP5vJWE1p7LRblWLQfEaMcw?=
- =?us-ascii?Q?hmxUdsCVLJ51JhI8T+1GcLlokDIL80ZeUlRfxA3Bw2Ul03gGTk8BurIOWIlR?=
- =?us-ascii?Q?89PI5PPh449efy9VFcbDauicTanw1//psxiFh/eRpjJalFavkyyxENnFQncA?=
- =?us-ascii?Q?CiKTXBiEMHf9bW24EVeopWTGyVug6Inw7PPmHglGPkEZKUZM0bpJvbVxIRtn?=
- =?us-ascii?Q?nhVMIehIAOO4YWV2NePajFtC/ljpdKsuAo1LlRIrDkPVEKkQqTwvREeuWXP8?=
- =?us-ascii?Q?ldxYU5yo8DahwytsMptW2nl94O4EeBUrYP4376GPuuGF+4O5DjM6ciEz/By2?=
- =?us-ascii?Q?ewAxykSukP25LdHO+f3HKwnlc5XL5JbY7ynlyojN5jV4OOyyFJEwofKdOoCn?=
- =?us-ascii?Q?vwujeL+i4QHdNQ38lR1GVK6hZ5C0c9QHLGSB6bR3Q3U0zzPnNOJTcvW4aw5m?=
- =?us-ascii?Q?4eUK+rTONPmQgMpQ7eNfmcZ2kpehQcVpVTcRYkbTTSKvclslozDXHtuHZv2u?=
- =?us-ascii?Q?CkEFqaoox/k8MiycBau3qm7TC05CUnVM299golRUDrYIeK4ssfusrtKKphBt?=
- =?us-ascii?Q?TB9ESSG0gvQBd6Z+wKSd5awccSh3u/uVIX74OL70+BmsH/QEPBOMl8oxB/dP?=
- =?us-ascii?Q?qjD9glIapD/PU4B2tl09ePvr4b+Nvk9rMnz6MR3iI+yKlo16LwAMwizzAfNW?=
- =?us-ascii?Q?qfhA8znt8F/YR6x1F/tC/T++BsBi63Fo/GTBYBbpppg1D/CHPzF3i0foYAuS?=
- =?us-ascii?Q?fjBK1nbUsGNwIYAFk634H1xRwvrrdcuf5ruMbKv5m4z/3IJxaGkpc1RxpbtV?=
- =?us-ascii?Q?FI6Ec1nG/JCL2OU7lk3SzsmmVbtSdyqr1b6GwtmucWz863Zk5wK9hSKdY/Lh?=
- =?us-ascii?Q?DS6CtxwcQW4LoFbSjl3sjZ9EEArmIRnI0uZ/URTwdqW4dUrEyqAwMnpMtCuC?=
- =?us-ascii?Q?R2Z0Hh81fSxEdZV6GmpRhGMVl/IuOIXBgrzG2UdMQ7fBCkaTI6rDBDxlImY6?=
- =?us-ascii?Q?egp6Yr60yq+HAw5LGUrLHSv1a/RwIFNTuVsfxeEp/GDHaZLC+RDu0qAKxeaZ?=
- =?us-ascii?Q?GcgW5YuK/cPXbAZ/pqDFSepBFNjZPEboHUUKjbbXwNhWaQpL5GZFO0TdIia8?=
- =?us-ascii?Q?jeUS8EfCJNluclSfsxkhexJde6BnvhcKDXLxdn+JSE6HFcoghWmPHNQMbs1l?=
- =?us-ascii?Q?qUsJ6SdFjvh0h9ekLl2f47P9UHTpI8NivHEZxyBI?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3abecc4-9490-49cb-7a60-08dc633d19f8
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9496.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 02:28:46.3119
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hOmJbWxz50VVh1fAUbEAB6io9QnSfDph4kEjO3LAGgUP7vk/jz/NozfbXGKust17qyHXeksdaAz2h633N49dTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7098
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Haibo Chen <haibo.chen@nxp.com>
+From: Rafał Miłecki <rafal@milecki.pl>
 
-Though the default pin configuration is INPUT, but if the prior stage does
-configure the pins as OUTPUT, then Linux will not reconfigure the pin as
-INPUT.
+Some properties (function groups & pins) are meant to be arrays and
+should allow multiple entries out of enum sets. Use "items" for those.
 
-e.g. When use one pin as interrupt source, and set as low level trigger,
-if prior stage already set this pin as OUTPUT low, then will meet interrupt
-storm.
+Mistake was noticed during validation of in-kernel DTS files.
 
-So always set GPIO to input mode when used as interrupt source to fix above
-case.
-
-Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Fixes: b9ffc18c6388 ("dt-bindings: mediatek: convert pinctrl to yaml")
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/gpio/gpio-vf610.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+RESEND without 3/3 that needs more work
 
-diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-index 07e5e6323e86..305b0bcdee6f 100644
---- a/drivers/gpio/gpio-vf610.c
-+++ b/drivers/gpio/gpio-vf610.c
-@@ -214,7 +214,7 @@ static int vf610_gpio_irq_set_type(struct irq_data *d, u32 type)
- 	else
- 		irq_set_handler_locked(d, handle_edge_irq);
+ .../pinctrl/mediatek,mt7622-pinctrl.yaml      | 92 ++++++++++---------
+ 1 file changed, 49 insertions(+), 43 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
+index bd72a326e6e0..60f30a59f385 100644
+--- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7622-pinctrl.yaml
+@@ -97,7 +97,8 @@ patternProperties:
+             then:
+               properties:
+                 groups:
+-                  enum: [emmc, emmc_rst]
++                  items:
++                    enum: [emmc, emmc_rst]
+           - if:
+               properties:
+                 function:
+@@ -105,8 +106,9 @@ patternProperties:
+             then:
+               properties:
+                 groups:
+-                  enum: [esw, esw_p0_p1, esw_p2_p3_p4, rgmii_via_esw,
+-                         rgmii_via_gmac1, rgmii_via_gmac2, mdc_mdio]
++                  items:
++                    enum: [esw, esw_p0_p1, esw_p2_p3_p4, rgmii_via_esw,
++                           rgmii_via_gmac1, rgmii_via_gmac2, mdc_mdio]
+           - if:
+               properties:
+                 function:
+@@ -123,10 +125,11 @@ patternProperties:
+             then:
+               properties:
+                 groups:
+-                  enum: [i2s_in_mclk_bclk_ws, i2s1_in_data, i2s2_in_data,
+-                         i2s3_in_data, i2s4_in_data, i2s_out_mclk_bclk_ws,
+-                         i2s1_out_data, i2s2_out_data, i2s3_out_data,
+-                         i2s4_out_data]
++                  items:
++                    enum: [i2s_in_mclk_bclk_ws, i2s1_in_data, i2s2_in_data,
++                           i2s3_in_data, i2s4_in_data, i2s_out_mclk_bclk_ws,
++                           i2s1_out_data, i2s2_out_data, i2s3_out_data,
++                           i2s4_out_data]
+           - if:
+               properties:
+                 function:
+@@ -159,10 +162,11 @@ patternProperties:
+             then:
+               properties:
+                 groups:
+-                  enum: [pcie0_0_waken, pcie0_1_waken, pcie1_0_waken,
+-                         pcie0_0_clkreq, pcie0_1_clkreq, pcie1_0_clkreq,
+-                         pcie0_pad_perst, pcie1_pad_perst, pcie_pereset,
+-                         pcie_wake, pcie_clkreq]
++                  items:
++                    enum: [pcie0_0_waken, pcie0_1_waken, pcie1_0_waken,
++                           pcie0_0_clkreq, pcie0_1_clkreq, pcie1_0_clkreq,
++                           pcie0_pad_perst, pcie1_pad_perst, pcie_pereset,
++                           pcie_wake, pcie_clkreq]
+           - if:
+               properties:
+                 function:
+@@ -178,11 +182,12 @@ patternProperties:
+             then:
+               properties:
+                 groups:
+-                  enum: [pwm_ch1_0, pwm_ch1_1, pwm_ch1_2, pwm_ch2_0, pwm_ch2_1,
+-                         pwm_ch2_2, pwm_ch3_0, pwm_ch3_1, pwm_ch3_2, pwm_ch4_0,
+-                         pwm_ch4_1, pwm_ch4_2, pwm_ch4_3, pwm_ch5_0, pwm_ch5_1,
+-                         pwm_ch5_2, pwm_ch6_0, pwm_ch6_1, pwm_ch6_2, pwm_ch6_3,
+-                         pwm_ch7_0, pwm_0, pwm_1]
++                  items:
++                    enum: [pwm_ch1_0, pwm_ch1_1, pwm_ch1_2, pwm_ch2_0, pwm_ch2_1,
++                           pwm_ch2_2, pwm_ch3_0, pwm_ch3_1, pwm_ch3_2, pwm_ch4_0,
++                           pwm_ch4_1, pwm_ch4_2, pwm_ch4_3, pwm_ch5_0, pwm_ch5_1,
++                           pwm_ch5_2, pwm_ch6_0, pwm_ch6_1, pwm_ch6_2, pwm_ch6_3,
++                           pwm_ch7_0, pwm_0, pwm_1]
+           - if:
+               properties:
+                 function:
+@@ -260,33 +265,34 @@ patternProperties:
+           pins:
+             description:
+               An array of strings. Each string contains the name of a pin.
+-            enum: [GPIO_A, I2S1_IN, I2S1_OUT, I2S_BCLK, I2S_WS, I2S_MCLK, TXD0,
+-                   RXD0, SPI_WP, SPI_HOLD, SPI_CLK, SPI_MOSI, SPI_MISO, SPI_CS,
+-                   I2C_SDA, I2C_SCL, I2S2_IN, I2S3_IN, I2S4_IN, I2S2_OUT,
+-                   I2S3_OUT, I2S4_OUT, GPIO_B, MDC, MDIO, G2_TXD0, G2_TXD1,
+-                   G2_TXD2, G2_TXD3, G2_TXEN, G2_TXC, G2_RXD0, G2_RXD1, G2_RXD2,
+-                   G2_RXD3, G2_RXDV, G2_RXC, NCEB, NWEB, NREB, NDL4, NDL5, NDL6,
+-                   NDL7, NRB, NCLE, NALE, NDL0, NDL1, NDL2, NDL3, MDI_TP_P0,
+-                   MDI_TN_P0, MDI_RP_P0, MDI_RN_P0, MDI_TP_P1, MDI_TN_P1,
+-                   MDI_RP_P1, MDI_RN_P1, MDI_RP_P2, MDI_RN_P2, MDI_TP_P2,
+-                   MDI_TN_P2, MDI_TP_P3, MDI_TN_P3, MDI_RP_P3, MDI_RN_P3,
+-                   MDI_RP_P4, MDI_RN_P4, MDI_TP_P4, MDI_TN_P4, PMIC_SCL,
+-                   PMIC_SDA, SPIC1_CLK, SPIC1_MOSI, SPIC1_MISO, SPIC1_CS,
+-                   GPIO_D, WATCHDOG, RTS3_N, CTS3_N, TXD3, RXD3, PERST0_N,
+-                   PERST1_N, WLED_N, EPHY_LED0_N, AUXIN0, AUXIN1, AUXIN2,
+-                   AUXIN3, TXD4, RXD4, RTS4_N, CST4_N, PWM1, PWM2, PWM3, PWM4,
+-                   PWM5, PWM6, PWM7, GPIO_E, TOP_5G_CLK, TOP_5G_DATA,
+-                   WF0_5G_HB0, WF0_5G_HB1, WF0_5G_HB2, WF0_5G_HB3, WF0_5G_HB4,
+-                   WF0_5G_HB5, WF0_5G_HB6, XO_REQ, TOP_RST_N, SYS_WATCHDOG,
+-                   EPHY_LED0_N_JTDO, EPHY_LED1_N_JTDI, EPHY_LED2_N_JTMS,
+-                   EPHY_LED3_N_JTCLK, EPHY_LED4_N_JTRST_N, WF2G_LED_N,
+-                   WF5G_LED_N, GPIO_9, GPIO_10, GPIO_11, GPIO_12, UART1_TXD,
+-                   UART1_RXD, UART1_CTS, UART1_RTS, UART2_TXD, UART2_RXD,
+-                   UART2_CTS, UART2_RTS, SMI_MDC, SMI_MDIO, PCIE_PERESET_N,
+-                   PWM_0, GPIO_0, GPIO_1, GPIO_2, GPIO_3, GPIO_4, GPIO_5,
+-                   GPIO_6, GPIO_7, GPIO_8, UART0_TXD, UART0_RXD, TOP_2G_CLK,
+-                   TOP_2G_DATA, WF0_2G_HB0, WF0_2G_HB1, WF0_2G_HB2, WF0_2G_HB3,
+-                   WF0_2G_HB4, WF0_2G_HB5, WF0_2G_HB6]
++            items:
++              enum: [GPIO_A, I2S1_IN, I2S1_OUT, I2S_BCLK, I2S_WS, I2S_MCLK, TXD0,
++                     RXD0, SPI_WP, SPI_HOLD, SPI_CLK, SPI_MOSI, SPI_MISO, SPI_CS,
++                     I2C_SDA, I2C_SCL, I2S2_IN, I2S3_IN, I2S4_IN, I2S2_OUT,
++                     I2S3_OUT, I2S4_OUT, GPIO_B, MDC, MDIO, G2_TXD0, G2_TXD1,
++                     G2_TXD2, G2_TXD3, G2_TXEN, G2_TXC, G2_RXD0, G2_RXD1, G2_RXD2,
++                     G2_RXD3, G2_RXDV, G2_RXC, NCEB, NWEB, NREB, NDL4, NDL5, NDL6,
++                     NDL7, NRB, NCLE, NALE, NDL0, NDL1, NDL2, NDL3, MDI_TP_P0,
++                     MDI_TN_P0, MDI_RP_P0, MDI_RN_P0, MDI_TP_P1, MDI_TN_P1,
++                     MDI_RP_P1, MDI_RN_P1, MDI_RP_P2, MDI_RN_P2, MDI_TP_P2,
++                     MDI_TN_P2, MDI_TP_P3, MDI_TN_P3, MDI_RP_P3, MDI_RN_P3,
++                     MDI_RP_P4, MDI_RN_P4, MDI_TP_P4, MDI_TN_P4, PMIC_SCL,
++                     PMIC_SDA, SPIC1_CLK, SPIC1_MOSI, SPIC1_MISO, SPIC1_CS,
++                     GPIO_D, WATCHDOG, RTS3_N, CTS3_N, TXD3, RXD3, PERST0_N,
++                     PERST1_N, WLED_N, EPHY_LED0_N, AUXIN0, AUXIN1, AUXIN2,
++                     AUXIN3, TXD4, RXD4, RTS4_N, CST4_N, PWM1, PWM2, PWM3, PWM4,
++                     PWM5, PWM6, PWM7, GPIO_E, TOP_5G_CLK, TOP_5G_DATA,
++                     WF0_5G_HB0, WF0_5G_HB1, WF0_5G_HB2, WF0_5G_HB3, WF0_5G_HB4,
++                     WF0_5G_HB5, WF0_5G_HB6, XO_REQ, TOP_RST_N, SYS_WATCHDOG,
++                     EPHY_LED0_N_JTDO, EPHY_LED1_N_JTDI, EPHY_LED2_N_JTMS,
++                     EPHY_LED3_N_JTCLK, EPHY_LED4_N_JTRST_N, WF2G_LED_N,
++                     WF5G_LED_N, GPIO_9, GPIO_10, GPIO_11, GPIO_12, UART1_TXD,
++                     UART1_RXD, UART1_CTS, UART1_RTS, UART2_TXD, UART2_RXD,
++                     UART2_CTS, UART2_RTS, SMI_MDC, SMI_MDIO, PCIE_PERESET_N,
++                     PWM_0, GPIO_0, GPIO_1, GPIO_2, GPIO_3, GPIO_4, GPIO_5,
++                     GPIO_6, GPIO_7, GPIO_8, UART0_TXD, UART0_RXD, TOP_2G_CLK,
++                     TOP_2G_DATA, WF0_2G_HB0, WF0_2G_HB1, WF0_2G_HB2, WF0_2G_HB3,
++                     WF0_2G_HB4, WF0_2G_HB5, WF0_2G_HB6]
  
--	return 0;
-+	return port->gc.direction_input(&port->gc, d->hwirq);
- }
+           bias-disable: true
  
- static void vf610_gpio_irq_mask(struct irq_data *d)
 -- 
-2.34.1
+2.35.3
 
 
