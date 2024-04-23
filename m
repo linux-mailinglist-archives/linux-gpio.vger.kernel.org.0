@@ -1,187 +1,136 @@
-Return-Path: <linux-gpio+bounces-5735-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5736-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EDE48AE31C
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 12:55:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 780508AE330
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 12:57:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CCAEF28AB3D
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 10:55:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 152BA1F20F59
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 10:57:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A08A985C4E;
-	Tue, 23 Apr 2024 10:53:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B123626DF;
+	Tue, 23 Apr 2024 10:57:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KwIJrc7A"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FKlmAwYP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B6A824A4;
-	Tue, 23 Apr 2024 10:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC50101EE
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 10:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713869629; cv=none; b=iTM2wGl4UDGy7Eqt2A0PKr7s4EByaD6VNCKkxMgxFXaqELsN/1tTjx9MkMWTPMQNdu2bKzsVYz134D9fw7mO/tbfNH2smhZk/YReYSElUDsZc9V6ATLTD4BI+IglIt2k3WueEtTQvWbcwEPDmUrbsPO3QOEDF2taKCN5ceypCPo=
+	t=1713869825; cv=none; b=ARUWV2cvQQom2BAjzO2XJdBcafC5lzOpakFdErkbmzjpWLHk4kYZWn3o8AKbVOtfRjiSQSwbNhjgqWJFlBvl+LgdjhWgLEJ4/CICKbEPL4ATCTNTz02ZHSFTo7fu03LarIJml6vAOCzF6lqte4b4066IBXw71I8VKQiMad/jOQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713869629; c=relaxed/simple;
-	bh=LrmdXQwT4U4g4BrzSOIGcl4UVDjaVzUdJEoh8Po20rc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cjc5OzdU7YeMYkC5hoGuhxKH7jx4LCAipEfPK4GQ/2/sisnaW50gTUCu6bCfJWIs7NUtlwoYOAas9awQJYmSh8szlDLnlET9gCmCp3ie5q0WXSrjCH7ColwFvmirDwFhvAngRnRiF/uj+a6/zY+QJK2esW4SOACiJV8nGr01YeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KwIJrc7A; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F3442E000A;
-	Tue, 23 Apr 2024 10:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1713869624;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LO0/KBAgvShTcAJdKgnWdGKkN3QsevtB0Y7cE2P2ynU=;
-	b=KwIJrc7A3BRzlbEC4BAMGMC3UhWnjAUAKktH+AeN9xTRxinYxN4uHtqrXp3BAMpGSCtKuW
-	EHdUq5EIvACj1peiZv3/QYxbj+pk5rhhVMPokdO6cRPcJ05lF455YRvnu70XV+wQUHSNzN
-	MOLdzjs6cmPSEIYHt+hbeRMIWH51OYlGYNVFuQAa09/GVl+uaG6Uw2gTxKwFVASzLbFf+L
-	i2Sh+JmqFAz6E9pux/W/+n8AbPEfEPufhexCHt8Nih224Js90u0RciZ5cjH84Bbb4HScMD
-	9E7THt+SiW1Qo9zHY9y86QjvrCr3hUycq7V9K66jwGFcWIDxmM2k/aRt1NhqDw==
-Message-ID: <c5ed5bed-9c93-47eb-8277-d78e12e96b42@bootlin.com>
-Date: Tue, 23 Apr 2024 12:53:42 +0200
+	s=arc-20240116; t=1713869825; c=relaxed/simple;
+	bh=wLVBgPgK46w9KM0ua1X9pCnwdk9I/0PinDZppvDLcmE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=faV9Bby/kQ1t0HfaRifzv787B6up868szxja9H0YEL08D0xxbKjDPLdmNFd4LcKZo8bq3OPupb9RrQRyV3PzBZ9euBSuiHQ5++I+YRj5iamKmHP427KB/G7xjoYir7vniCyhigcNUQvXJp2ciCvyoIhBwyTWx9qGrki2IO5Uchc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FKlmAwYP; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51ac5923ef6so3260646e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 03:57:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713869822; x=1714474622; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kdW/LjY6qj29zoQWo6lWGy4ogoBC4CsCwa2E/E8rpTg=;
+        b=FKlmAwYPCVuTvzgimu8LM8+rewAEw6pe2SSrycXxV3GrrDnAuLopXO5ogfv1WoV894
+         FQpsU+OI/vUkZ46EA6+0G52v3PZTGpW/R20yOm1DPpDOdq0IcanzXiK/fMdy6APWJA1W
+         u+COoTqWCTZHXirL4oNAytKy76VzVrIC0ohRL0U/8Kok4aBk9y57oxqzrbF5rxS7kVUh
+         1S5K0gGTVP/mvwe5dV47LpB6UjRHCE2/KA6EqhNZJAUvz/KSADHajLLAoOn+ZxyTgVnV
+         Ls4/BjdtuNqowlQX/FbbDR+xIhsFLfzFSVU2XvuoYE9yiUBHInl+Mb9FAWG1T4Qda5Zx
+         IXxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713869822; x=1714474622;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kdW/LjY6qj29zoQWo6lWGy4ogoBC4CsCwa2E/E8rpTg=;
+        b=RpWx4wu86BZG+QmfpeDQ2bWDgpRy8ShAwxN/m34//bbHBvqQxJa5DqRZ10/2SUR23F
+         mexDepqb1x6Uudp1W+SWJmWwIk+Nh9DwBL8FThj+QrRuR7eFW0dftzklj9GqeaMhQovR
+         RKGTnsIWO8Ab36IV/U2vev0qMhTAhfsqtwmrDi8s9fmrMxUXbmod1teXnCOfZWu35v3T
+         PSxaFpyek75bzgNc58f7sHzCz/XoVP3bAh2z8iDGKLDkKOlzqrPfAbeskCUtslFjhAZI
+         ggVYxjoM1TbOUxyvrguOm50M/OY6q/IqaVM/Rlt7pUtuUA83gDPiYx+sy3teWKjFJ7AX
+         PPww==
+X-Forwarded-Encrypted: i=1; AJvYcCUb9NDT9d7FlaeguILimNhmdtRNIBLK/pQen8tlMTTrQr+z525J1jcCBaFcXGFTNjXNjYEP6COl5H8qp2g8LXlz23JLjkFwXF+Ecg==
+X-Gm-Message-State: AOJu0YySDLHdW20LL0KtIEZ5VC7c1qW39GSC3q+DoInK2225eCU2dLAd
+	cQKYiRmbTquqg/gd/iqIQA1j4EHGxJNJHbkvi/iEitnApzUILPh1gRvNR9x14sGGvWvGJBOC456
+	awbzp/uAptSwK5zqBGQgETsz774TGFL+KIJNQAA==
+X-Google-Smtp-Source: AGHT+IHq2NMdnc+Cduu/lVn33H+Myuo+m7Js3CIcZkZiVbqVDmL57a3r9YJygCSp+EwxMqSAKS5xQlOBYQJzMkAjP60=
+X-Received: by 2002:ac2:5e9e:0:b0:51b:533f:6483 with SMTP id
+ b30-20020ac25e9e000000b0051b533f6483mr745330lfq.30.1713869821680; Tue, 23 Apr
+ 2024 03:57:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/11] gpio: pca953x: move suspend()/resume() to
- suspend_noirq()/resume_noirq()
-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>,
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <20240102-j7200-pcie-s2r-v5-0-4b8c46711ded@bootlin.com>
- <20240102-j7200-pcie-s2r-v5-1-4b8c46711ded@bootlin.com>
- <CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM+cdgSSTNjpn1OnC2xw@mail.gmail.com>
- <CAHp75Vf+F3ArczHQ+nSmP4uFvRdMAQWufmR6xR0xtbHfVvFm-g@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75Vf+F3ArczHQ+nSmP4uFvRdMAQWufmR6xR0xtbHfVvFm-g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: thomas.richard@bootlin.com
+References: <20240423022814.3951048-1-haibo.chen@nxp.com>
+In-Reply-To: <20240423022814.3951048-1-haibo.chen@nxp.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 23 Apr 2024 12:56:50 +0200
+Message-ID: <CAMRc=MeoAbdqwtpK87zQytC7PcS==HjQ6GUO7MeWcZHRXf-SjQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: vf610: always set GPIO to input mode when used as
+ interrupt source
+To: haibo.chen@nxp.com
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/23/24 12:34, Andy Shevchenko wrote:
-> On Tue, Apr 23, 2024 at 12:42 PM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
->> On Tue, Apr 16, 2024 at 3:31 PM Thomas Richard
->> <thomas.richard@bootlin.com> wrote:
-> 
-> ...
-> 
->>         +i2c-rcar e66d8000.i2c: error -16 : 10000005
-> 
-> It probably means that I²C host controller is already in power off
-> mode and can't serve anymore.
+On Tue, Apr 23, 2024 at 4:28=E2=80=AFAM <haibo.chen@nxp.com> wrote:
+>
+> From: Haibo Chen <haibo.chen@nxp.com>
+>
+> Though the default pin configuration is INPUT, but if the prior stage doe=
+s
+> configure the pins as OUTPUT, then Linux will not reconfigure the pin as
+> INPUT.
+>
+> e.g. When use one pin as interrupt source, and set as low level trigger,
+> if prior stage already set this pin as OUTPUT low, then will meet interru=
+pt
+> storm.
+>
+> So always set GPIO to input mode when used as interrupt source to fix abo=
+ve
+> case.
+>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> ---
+>  drivers/gpio/gpio-vf610.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+> index 07e5e6323e86..305b0bcdee6f 100644
+> --- a/drivers/gpio/gpio-vf610.c
+> +++ b/drivers/gpio/gpio-vf610.c
+> @@ -214,7 +214,7 @@ static int vf610_gpio_irq_set_type(struct irq_data *d=
+, u32 type)
+>         else
+>                 irq_set_handler_locked(d, handle_edge_irq);
+>
+> -       return 0;
+> +       return port->gc.direction_input(&port->gc, d->hwirq);
+>  }
+>
+>  static void vf610_gpio_irq_mask(struct irq_data *d)
+> --
+> 2.34.1
+>
 
-Hello,
+Can you use gpiod_direction_output()? Otherwise the flags of the
+descriptor will tell a different story.
 
-Yes the i2c controller is already off.
-In fact it's the same issue I had with the i2c-omap driver.
-In suspend-noirq, the runtime pm is disabled, so you can't wakeup a
-device. More details available in this thread [1].
-So the trick is to wakeup the device during suspend (like I did for the
-i2c-omap driver [2].
+Also: this doesn't matter here as it's a built-in driver but irq
+callbacks accessing gpio_chip is a thing that still needs addressing
+as it doesn't use SRCU. :(
 
-[1]
-https://lore.kernel.org/all/f68c9a54-0fde-4709-9d2f-0d23a049341b@bootlin.com/
-[2]
-https://lore.kernel.org/all/20240102-j7200-pcie-s2r-v5-2-4b8c46711ded@bootlin.com/
-
-I think the patch below should fix the issue.
-
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -1232,7 +1232,7 @@ static void rcar_i2c_remove(struct platform_device
-*pdev)
-        pm_runtime_disable(dev);
- }
-
--static int rcar_i2c_suspend(struct device *dev)
-+static int rcar_i2c_suspend_noirq(struct device *dev)
- {
-        struct rcar_i2c_priv *priv = dev_get_drvdata(dev);
-
-@@ -1240,7 +1240,7 @@ static int rcar_i2c_suspend(struct device *dev)
-        return 0;
- }
-
--static int rcar_i2c_resume(struct device *dev)
-+static int rcar_i2c_resume_noirq(struct device *dev)
- {
-        struct rcar_i2c_priv *priv = dev_get_drvdata(dev);
-
-@@ -1248,8 +1248,23 @@ static int rcar_i2c_resume(struct device *dev)
-        return 0;
- }
-
-+static int rcar_i2c_suspend(struct device *dev)
-+{
-+       pm_runtime_get_sync(dev);
-+
-+       return 0;
-+}
-+
-+static int rcar_i2c_resume(struct device *dev)
-+{
-+       pm_runtime_put(dev);
-+
-+       return 0;
-+}
-+
- static const struct dev_pm_ops rcar_i2c_pm_ops = {
--       NOIRQ_SYSTEM_SLEEP_PM_OPS(rcar_i2c_suspend, rcar_i2c_resume)
-+       NOIRQ_SYSTEM_SLEEP_PM_OPS(rcar_i2c_suspend_noirq,
-rcar_i2c_resume_noirq)
-+       SYSTEM_SLEEP_PM_OPS(rcar_i2c_suspend, rcar_i2c_resume)
- };
-
- static struct platform_driver rcar_i2c_driver = {
-
-> 
->>         +pca953x 4-0020: Failed to sync GPIO dir registers: -16
->>         +pca953x 4-0020: Failed to restore register map: -16
->>         +pca953x 4-0020: PM: dpm_run_callback(): pca953x_resume_noirq
->> returns -16
->>         +pca953x 4-0020: PM: failed to resume async noirq: error -16
-> 
-> Yeah, with this it's kinda forcing _every_ I²C host controller PM to
-> be moved also to noirq() or alike.
-
-Yes indeed.
-But this controller is already in noirq().
-So the issue was already there.
-We never saw it because we never did i2c accesses in noirq().
-
-Best Regards,
-
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Bart
 
