@@ -1,80 +1,64 @@
-Return-Path: <linux-gpio+bounces-5790-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5791-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70F328AF66F
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 20:23:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 960CF8AF688
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 20:30:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7CAEE1C225E5
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 18:23:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4BE52281118
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Apr 2024 18:30:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D506213E884;
-	Tue, 23 Apr 2024 18:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cQ28XInV"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A185C13E8AA;
+	Tue, 23 Apr 2024 18:29:59 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA4413E3FA
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Apr 2024 18:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F8813DDAA;
+	Tue, 23 Apr 2024 18:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713896623; cv=none; b=Mc5GHRmtE8SyI9rw6WDsj/MA9aL9P8WJeElw3mHJr1tKsfpL0R/xfYvYPwADCOVdcpWdFQGGn5Mk1LZ5qB0l85O1chTRn020pGAJacpKsCs9KARY7WAdPPh7lOtAoVFwPmsAyypWpi/TCVASgevU0iGsSFH5ABhj3+9Ma7RWEag=
+	t=1713896999; cv=none; b=AU7NksAmB6p5LLMzQkDHR5i9JiMjCtbzPagX+P8K21kH5fQ8yCt6//8bwzMFyIYQq5FQ++JxLn4sYhsfIYxQIXpPg6GNSxxatethlk0o2UAQmoG+KKrEwERWKdIwx/jkdACo0tQ6QizrXpfzDXKUsfF6EEiwtGuZzacOUq4QxAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713896623; c=relaxed/simple;
-	bh=vfQN5ppueQw/I0DbjFUSeJkqDMWVQYD8CF2gOyANUGU=;
+	s=arc-20240116; t=1713896999; c=relaxed/simple;
+	bh=u+jW0tJOmCnes0B+R2bL403F+bcRaggYH4EWURUlaiE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ik3p6uK8ayPrUn/XlavJrwyhMDsjSJhpcmrAd2JS7xg0611hM/As3MB5WK2R6xGm9l2saCJ9NlvPZfJ4mcKY2mkSun1Bk+6adxnB3TjLrui8zzxA1DU+PX2u6nEVX2bMqwxK5PdiiC/vyOVncShHKUknEDf/mjfvbNZyVt7gbn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cQ28XInV; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713896622; x=1745432622;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vfQN5ppueQw/I0DbjFUSeJkqDMWVQYD8CF2gOyANUGU=;
-  b=cQ28XInV3+fgiNbpZb7v3mknKx8z06X26KUWjafHEBQXhWBPSk49Crkb
-   4mSyhlyD0NvlZeFnjX1iwqmIsevZZuYRLuoIKRCHsbipX+6H1ZdXkeOWN
-   QbfeBkxnwzGepWAw8Ak5zA8e4SiuY+f9g6U2zuinj9yJoz1ti1iKGuj4K
-   cbkRwuJwEJhaUBIlRMmEnRTTmEXNl69PidzOR4G/7mdRx4sfEEyFQdxTk
-   ekR1tBhX5A4obJDmdaInCkFCDciv4TnHUWgOCr6L5Op8AU222c64h1/IX
-   5gs3L/Tf8/8rzGgrBbULBWdAS9CPdbFNBJYVSPU47Xb9Vfz9hpcO940a0
-   Q==;
-X-CSE-ConnectionGUID: 4it7M9YrTqCifroBWTRHuw==
-X-CSE-MsgGUID: UUvQR0qBSfKlJ34yBfrZ2Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9350581"
+	 Content-Type:Content-Disposition:In-Reply-To; b=tWnCAbzvkzVpSMpF46TsyJiYOT7L3RTrU4g3wWf+XT/5o3+5/1LxJUJNFIdbnecjB/tcEqRyXpTfgmsxyq0BmUoyGP5S38Efa8ZCTBdO+lRUkFcKQaNxjDeqOrEffBJvVDA8Y+WLWi9mjopK8S9TNExaMsXtNP8OxSfvOXZE7hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: QRGtseqfQOCMdXwW7xsoJA==
+X-CSE-MsgGUID: YG04vnEgRkOApE70J5mFjw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="9329798"
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="9350581"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 11:23:41 -0700
-X-CSE-ConnectionGUID: IYTztj+ITXaNU3X99Rw95A==
-X-CSE-MsgGUID: rNFsrS5gSiegYlg6HsnTGg==
+   d="scan'208";a="9329798"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 11:29:57 -0700
+X-CSE-ConnectionGUID: T489GwyVTWqDK4H6kCJHQQ==
+X-CSE-MsgGUID: F/zUM+zISH63zORzV1VXOg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24966469"
+   d="scan'208";a="24495894"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 11:23:39 -0700
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 11:29:55 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rzKno-00000000QoY-2gHM;
-	Tue, 23 Apr 2024 21:23:36 +0300
-Date: Tue, 23 Apr 2024 21:23:36 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
+	(envelope-from <andy@kernel.org>)
+	id 1rzKtt-00000000QwT-0ju7;
+	Tue, 23 Apr 2024 21:29:53 +0300
+Date: Tue, 23 Apr 2024 21:29:52 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Aapo Vienamo <aapo.vienamo@linux.intel.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	Phil Howard <phil@gadgetoid.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>, linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][RFC/RFT 06/18] bindings: glib: add examples
-Message-ID: <Zif8qBoZq7I3Xrbb@smile.fi.intel.com>
-References: <20240412122804.109323-1-brgl@bgdev.pl>
- <20240412122804.109323-7-brgl@bgdev.pl>
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Elliott, Robert (Servers)" <elliott@hpe.com>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v2] gpio: Add Intel Granite Rapids-D vGPIO driver
+Message-ID: <Zif-IHllDG6CmJmk@smile.fi.intel.com>
+References: <20240423181314.84677-1-aapo.vienamo@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,79 +67,29 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240412122804.109323-7-brgl@bgdev.pl>
+In-Reply-To: <20240423181314.84677-1-aapo.vienamo@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Apr 12, 2024 at 02:27:52PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Add example programs showcasing the usage of GLib bindings to libgpiod.
-
-> +		ret = g_gpiod_chip_get_line_offset_from_name(chip, line_name,
-> +							     &offset, &err);
-> +		if (ret) {
-> +			info = g_gpiod_chip_get_info(chip, &err);
-> +			if (!info) {
-> +				g_printerr("Failed to get chip info: %s\n",
-> +					   err->message);
-> +				return EXIT_FAILURE;
-> +			}
-> +
-> +			g_print("%s %u\n",
-> +				g_gpiod_chip_info_get_name(info),
-> +				offset);
-> +
-> +			return EXIT_SUCCESS;
-> +		} else if (!ret && err) {
-
-Besides redundant 'else' the !ret is also redundant.
-
-> +			g_printerr("Failed to map the line name '%s' to offset: %s\n",
-> +				   line_name, err->message);
-> +			return EXIT_FAILURE;
-> +		}
-> +	}
+On Tue, Apr 23, 2024 at 09:13:14PM +0300, Aapo Vienamo wrote:
+> This driver provides a basic GPIO driver for the Intel Granite Rapids-D
+> virtual GPIOs. On SoCs with limited physical pins on the package, the
+> physical pins controlled by this driver would be exposed on an external
+> device such as a BMC or CPLD. The virtual GPIO registers are an
+> interface to firmware, which communicates with the external device that
+> implements the GPIO hardware functionality.
 
 ...
 
-> +		direction == G_GPIOD_LINE_DIRECTION_INPUT ?
-> +					"input" : "output",
+> +#include <linux/bitmap.h>
+> +#include <linux/bits.h>
 
-One line?
-
-...
-
-> +	settings = g_gpiod_line_settings_new(
-> +			"direction", G_GPIOD_LINE_DIRECTION_INPUT,
-> +			NULL);
-
-Personally I do not like the open parenthesis style...
-
-I don't even know why you have done this way with having a plenty of room in
-the previous line at least for the first parameter.
+The latter is guaranteed to be included by the former. I can amend this when
+applying.
 
 ...
 
-> +	req_cfg = g_gpiod_request_config_new(
-> +			"consumer", "get-multiple-line-values", NULL);
-
-Ditto. And so on across the code of the entire series...
-
-...
-
-> +	ret = g_gpiod_line_request_set_value(data->request, data->line_offset,
-> +					     data->value, &err);
-> +	if (!ret) {
-
-ret == 0 equals error?!
-
-> +		g_printerr("failed to set line value: %s\n", err->message);
-> +		exit(EXIT_FAILURE);
-
-Don't you have something like err->code to propagate?
-
-> +	}
-
+I'll wait for others to review for a while. I want to send my PR to Bart at
+the end of this week.
 
 -- 
 With Best Regards,
