@@ -1,121 +1,167 @@
-Return-Path: <linux-gpio+bounces-5811-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5812-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A00838B0B09
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 15:35:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8848C8B113A
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 19:38:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 049A4B27513
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 13:35:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB1611C2383B
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 17:38:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 603A715E7EE;
-	Wed, 24 Apr 2024 13:32:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34FDA16D4D3;
+	Wed, 24 Apr 2024 17:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="crWrIenO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDG0W1y7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAB615E7E2
-	for <linux-gpio@vger.kernel.org>; Wed, 24 Apr 2024 13:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEF515B55C;
+	Wed, 24 Apr 2024 17:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713965557; cv=none; b=CbdR27Yw8iFnXgipb4w3sS0ocfvBDaY3rvB552+itZl6m0CBJYPiiMiuc0cPM8kRdx/SZQNwjjFU9iye7TfCvLGl3u2d9jpSls3r7I5sAOpL1AmlYQkqPFHWG1uj9zA8FjhPv0i9rP0qlQCOU7+LVjN/WNT8+StPvPVyMqj6dyg=
+	t=1713980300; cv=none; b=U5JtoKf/DQlYa094Xe7ebmcMmJzpG+lVD+sQmQ4JdTtxwJf6IZDFaEGopbUf94SOTuRotej6dGoQhmRBlsvYwcrAiYaV/zTEggKFxOcQBi1Len2wsFKd2n4i7jn03TTGtxHpqhsA7n5cJCjiZ6/2UkqBtDSE2JilDJV8LdE0WuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713965557; c=relaxed/simple;
-	bh=sqIFK4Ke/iibSqSzQ2BwQLyPnh2uu6n9SbHcTFTF+/I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YphXOo4mMrVoJnofSmVrC4L10GgtEo/zWMqG6/dUy4fVb4KJlblOF4O131EUmz9qCgQGHfA2mb8ttkb/dEt/NttAwKX4TIqW9Y/whpsxEyCzO5Hbn4AeXCl+Txm6NxKpZpXWqT2oOS7Y7L5XmKISxYVOqOTvj4YNKdHDKLmwbQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=crWrIenO; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-418e4cd2196so52644465e9.1
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Apr 2024 06:32:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713965554; x=1714570354; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ON7DRK4o1QQEG6zMRrSA5yFg2l3FUOQ+KbU0jTc3aC0=;
-        b=crWrIenOl8wTB724qL6vZoQtJs2o57vqHDpgA8aQeWzcftmmw9mEh/jXiT6RtyMYzD
-         I1lFgBAchRxDl4+a1PLWGotEisXG/Oc4CDVXlkWiEbpIK9AB1lCT/LG+at2OiQZZFDTO
-         9ysiYW5gthum06Cjs1Ov43iF6lLyWo3Nb/rSTlrnln8UcSMMZjpl8ODyuMXld8kwS1mK
-         2chWUnUAIeSaXp94jRzZDMn6Vht3bO5l3IY/65dH664NJLWMbwHkbx0zDBCDbu47mtwp
-         zm9+VgcOvqxAnpSLoqNIHNpRcfH8zF+7u79D+JnWv8b/s48xCBb1BRwvCJ55x+i76Bxl
-         32/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713965554; x=1714570354;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ON7DRK4o1QQEG6zMRrSA5yFg2l3FUOQ+KbU0jTc3aC0=;
-        b=PnxMnnT5aDMzG1ZjvHgwfCue2VqECRLH4NpKzK0eeUiio06L5pseV24rkMMUablila
-         WJANyTGdOqyKm8tNKZIiPjnTZ8tEvGzQ4ve6upyt8D0KNOVSFOrqmk+aK1hzIkcirdVS
-         WL1eBoVD/ynJbR79qAKhEdCMJqraoCJ3xVzDt/ZeSbK3FbdZvnFMNbGLcD7kmiJomFAv
-         2bF38rWOiohif02+e1kn+XEYP3fpF46a6oitMYuywVPyJKuJeqxXO/7EHyjrwSxq+dE8
-         d6awYeoyynACgx+5o/tfsZK5T1vW9Eo+P8YQhkINBGpS5yV3WSMpHD/p+WWcTZybbBFR
-         trSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjTW058weHOirdJ0MI+c6pdfTGDPTWNg/sngEfBl6MAFn4Mc2xQ8uSEeiWYCp8Kj7/T7DT3O1zqDWhqbAiRMrsYRkpuanU7p0dzQ==
-X-Gm-Message-State: AOJu0YweLgGPJEqLpQ+N3cN0OdTsGPUb8KAYDU8uw03rpE73qoUB8D21
-	ErBHS466zrvZnUiAN/HvmlvnfwTohqbMDTroVqwHdx25mS5nwfwyKpoRpxfDvLo=
-X-Google-Smtp-Source: AGHT+IFt5k+u0qlhoBUYdAEe0Bqa4xVeIXq/GvItIj5LfRSsXjv3ukTNbIY3sE/Ec8osEpb2ZDqjGw==
-X-Received: by 2002:a05:600c:1da7:b0:41b:24c0:aec5 with SMTP id p39-20020a05600c1da700b0041b24c0aec5mr297122wms.13.1713965553846;
-        Wed, 24 Apr 2024 06:32:33 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:da66:dc78:acc5:bb9c])
-        by smtp.gmail.com with ESMTPSA id d11-20020a05600c3acb00b0041aea85be32sm3343941wms.22.2024.04.24.06.32.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 06:32:33 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	jonathanh@nvidia.com,
-	treding@nvidia.com,
-	sfr@canb.auug.org.au,
+	s=arc-20240116; t=1713980300; c=relaxed/simple;
+	bh=aod6ewur68dhk71qakXSy0qZ7PztmoQeNVY9RZWrBCU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FlniCpuocnP6KHl34KnMZZaAiXfxWPoTEOjlpguTXRf1lQq9X/s3ODImOqSEmTHKIhl720nDATQM8FEow+Mylk1pnZ/66mHfyQVJs7aAT4U7ZUYfCjlBS6qXK0irrjNy6quAZKWWm5qmVLSXCUKa71nn5xHdoLFknHAg86VbHHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDG0W1y7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84AC5C113CD;
+	Wed, 24 Apr 2024 17:38:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713980299;
+	bh=aod6ewur68dhk71qakXSy0qZ7PztmoQeNVY9RZWrBCU=;
+	h=From:List-Id:To:Cc:Subject:Date:From;
+	b=HDG0W1y7dJs8jROaJ/vATkjVSzyAjoCUm+TErmO1j8gYqoSjV/n+N1UdArZSqTT0S
+	 Yy4S0CF2xmBBySJ5CNvdZ4gN3awJ/zPdFTxFL0id+DjOgaHTtdRwFSCFz/SL0Htd84
+	 cR15vC+wO9i1c1Gvr1YZpDGGUCRLdwcKC2LkXN88Z/xH+Vc/hgfj6M5ENg24b2sLP5
+	 /AFXu7OnXn00jivZ3aB7U3fBOSwmZvYCRVjSPhYRwX92KN8GmI6IHCspwjRa6zJkxu
+	 eFS+y3XWM0+Ilq6XsmipaFi6vxXWDliZV6+2RrJQig9WIR8TcR2J+YTwOfFqzWrULK
+	 SccO/07dU2yaw==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	soc@kernel.org,
+	arm@kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	devicetree@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-crypto@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prathamesh Shete <pshete@nvidia.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	mochs@nvidia.com,
-	csoto@nvidia.com,
-	jamien@nvidia.com,
-	smangipudi@nvidia.com
-Subject: Re: [PATCH v3] gpio: tegra186: Fix tegra186_gpio_is_accessible() check
-Date: Wed, 24 Apr 2024 15:32:32 +0200
-Message-Id: <171396554137.82284.11131075774933207943.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240424095514.24397-1-pshete@nvidia.com>
-References: <CAMRc=MfJokORpEOMkOmQdzTuZxcUAcnmpdEyJWKqvT0gCpuzbg@mail.gmail.com> <20240424095514.24397-1-pshete@nvidia.com>
+	linux-rtc@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	Olivia Mackall <olivia@selenic.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Subject: [PATCH v7 0/9] Turris Omnia MCU driver
+Date: Wed, 24 Apr 2024 19:37:59 +0200
+Message-ID: <20240424173809.7214-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hello Andy, Hans, Ilpo, Arnd, Gregory, and others,
 
+this is v7 of the series adding Turris Omnia MCU driver.
 
-On Wed, 24 Apr 2024 15:25:14 +0530, Prathamesh Shete wrote:
-> The controller has several register bits describing access control
-> information for a given GPIO pin. When SCR_SEC_[R|W]EN is unset, it
-> means we have full read/write access to all the registers for given GPIO
-> pin. When SCR_SEC[R|W]EN is set, it means we need to further check the
-> accompanying SCR_SEC_G1[R|W] bit to determine read/write access to all
-> the registers for given GPIO pin.
-> 
-> [...]
+This series depends on the immutable branch between LEDs and locking,
+introducing devm_mutex_init(), see the PR
+  https://lore.kernel.org/linux-leds/20240412084616.GR2399047@google.com/
 
-Applied, thanks!
+See also cover letters for v1, v2, v3, v4, v5 and v6:
+  https://patchwork.kernel.org/project/linux-soc/cover/20230823161012.6986-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20230919103815.16818-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231023143130.11602-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231026161803.16750-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240323164359.21642-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240418121116.22184-1-kabel@kernel.org/
 
-[1/1] gpio: tegra186: Fix tegra186_gpio_is_accessible() check
-      commit: d806f474a9a7993648a2c70642ee129316d8deff
+Changes since v6:
+- moved the DT binding from arm/cznic,turris-omnia-mcu.yaml to
+  firmware/cznic,turris-omnia-mcu.yaml, as suggested by Conor Dooley
+  (patch 1)
+- dropped the devm-helpers.h additions, for the reasons see
+  https://lore.kernel.org/soc/20240423184346.37eb0915@thinkpad/
+- use gpiod_to_irq(gpiochip_get_desc(...)) instead of
+  irq_create_mapping(), as suggested by Andy Shevchenko (patches 6 and
+  7)
+- added a dummy read of TRNG entropy when registering TRNG, in case
+  someone cleared the TRNG interrupt before probing the driver, but did
+  not read the entropy (the MCU won't send a new TRNG interrupt if the
+  entropy is not collected) (patch 6)
+- fixed a bug in TRNG probing, wherein if the 
 
-Best regards,
+Marek Behún (9):
+  dt-bindings: arm: add cznic,turris-omnia-mcu binding
+  platform: cznic: Add preliminary support for Turris Omnia MCU
+  platform: cznic: turris-omnia-mcu: Add support for MCU connected GPIOs
+  platform: cznic: turris-omnia-mcu: Add support for poweroff and wakeup
+  platform: cznic: turris-omnia-mcu: Add support for MCU watchdog
+  platform: cznic: turris-omnia-mcu: Add support for MCU provided TRNG
+  platform: cznic: turris-omnia-mcu: Add support for digital message
+    signing via debugfs
+  ARM: dts: turris-omnia: Add MCU system-controller node
+  ARM: dts: turris-omnia: Add GPIO key node for front button
+
+ .../ABI/testing/debugfs-turris-omnia-mcu      |   13 +
+ .../sysfs-bus-i2c-devices-turris-omnia-mcu    |  126 ++
+ .../firmware/cznic,turris-omnia-mcu.yaml      |   86 ++
+ MAINTAINERS                                   |    5 +
+ .../dts/marvell/armada-385-turris-omnia.dts   |   35 +-
+ drivers/platform/Kconfig                      |    2 +
+ drivers/platform/Makefile                     |    1 +
+ drivers/platform/cznic/Kconfig                |   51 +
+ drivers/platform/cznic/Makefile               |    9 +
+ .../platform/cznic/turris-omnia-mcu-base.c    |  439 +++++++
+ .../platform/cznic/turris-omnia-mcu-debugfs.c |  216 ++++
+ .../platform/cznic/turris-omnia-mcu-gpio.c    | 1047 +++++++++++++++++
+ .../cznic/turris-omnia-mcu-sys-off-wakeup.c   |  258 ++++
+ .../platform/cznic/turris-omnia-mcu-trng.c    |  109 ++
+ .../cznic/turris-omnia-mcu-watchdog.c         |  123 ++
+ drivers/platform/cznic/turris-omnia-mcu.h     |  188 +++
+ include/linux/turris-omnia-mcu-interface.h    |  249 ++++
+ 17 files changed, 2956 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/debugfs-turris-omnia-mcu
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu
+ create mode 100644 Documentation/devicetree/bindings/firmware/cznic,turris-omnia-mcu.yaml
+ create mode 100644 drivers/platform/cznic/Kconfig
+ create mode 100644 drivers/platform/cznic/Makefile
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-base.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-debugfs.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-gpio.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-sys-off-wakeup.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-trng.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-watchdog.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu.h
+ create mode 100644 include/linux/turris-omnia-mcu-interface.h
+
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.43.2
+
 
