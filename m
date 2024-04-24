@@ -1,119 +1,121 @@
-Return-Path: <linux-gpio+bounces-5810-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5811-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 536E38B0ACD
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 15:24:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A00838B0B09
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 15:35:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F754284824
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 13:24:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 049A4B27513
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 13:35:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408D315B98B;
-	Wed, 24 Apr 2024 13:24:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 603A715E7EE;
+	Wed, 24 Apr 2024 13:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="crWrIenO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8641C15B57E;
-	Wed, 24 Apr 2024 13:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAB615E7E2
+	for <linux-gpio@vger.kernel.org>; Wed, 24 Apr 2024 13:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713965093; cv=none; b=Gt3d9qHyi48L6wSLmp5ZJg8yXFwE1/RTet3dLTMU60HUXcDW9DqY46220b0afe8pgxVptquRNWvqJ2rCho+9K1mFvye5oYM55qxTeaWWJPxIfEPNHKBuTeFGMNbloEVCSrg4bN+6qclfa/FYETAaX3tJMfsfWPe4+XKOLaLD0U4=
+	t=1713965557; cv=none; b=CbdR27Yw8iFnXgipb4w3sS0ocfvBDaY3rvB552+itZl6m0CBJYPiiMiuc0cPM8kRdx/SZQNwjjFU9iye7TfCvLGl3u2d9jpSls3r7I5sAOpL1AmlYQkqPFHWG1uj9zA8FjhPv0i9rP0qlQCOU7+LVjN/WNT8+StPvPVyMqj6dyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713965093; c=relaxed/simple;
-	bh=8nSpm7d+EszE3CIUChwqBFG5Zc2nEDoIt/NW+sy6Ky8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ETX0Ih8q3DYuutbiWmAyU9ZoAJSxEMirVfolF4dH7SG98krUEUoO8g26NkwpAKumE9YphT9f+mOX64bUUBdQXeVZTkWnCvYsyZP4TL+JY236EKyTti0UjXm+i8utTi2ppQbZJ0d1ccZHsCpTNI3w/2ToWERwyKVQmaFvLaYAT1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-617cd7bd929so71735667b3.3;
-        Wed, 24 Apr 2024 06:24:51 -0700 (PDT)
+	s=arc-20240116; t=1713965557; c=relaxed/simple;
+	bh=sqIFK4Ke/iibSqSzQ2BwQLyPnh2uu6n9SbHcTFTF+/I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YphXOo4mMrVoJnofSmVrC4L10GgtEo/zWMqG6/dUy4fVb4KJlblOF4O131EUmz9qCgQGHfA2mb8ttkb/dEt/NttAwKX4TIqW9Y/whpsxEyCzO5Hbn4AeXCl+Txm6NxKpZpXWqT2oOS7Y7L5XmKISxYVOqOTvj4YNKdHDKLmwbQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=crWrIenO; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-418e4cd2196so52644465e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Apr 2024 06:32:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1713965554; x=1714570354; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ON7DRK4o1QQEG6zMRrSA5yFg2l3FUOQ+KbU0jTc3aC0=;
+        b=crWrIenOl8wTB724qL6vZoQtJs2o57vqHDpgA8aQeWzcftmmw9mEh/jXiT6RtyMYzD
+         I1lFgBAchRxDl4+a1PLWGotEisXG/Oc4CDVXlkWiEbpIK9AB1lCT/LG+at2OiQZZFDTO
+         9ysiYW5gthum06Cjs1Ov43iF6lLyWo3Nb/rSTlrnln8UcSMMZjpl8ODyuMXld8kwS1mK
+         2chWUnUAIeSaXp94jRzZDMn6Vht3bO5l3IY/65dH664NJLWMbwHkbx0zDBCDbu47mtwp
+         zm9+VgcOvqxAnpSLoqNIHNpRcfH8zF+7u79D+JnWv8b/s48xCBb1BRwvCJ55x+i76Bxl
+         32/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713965090; x=1714569890;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1713965554; x=1714570354;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=51puU55Boep6afXIofcFUmMmV+ZDqAsVB5VCzE6Soos=;
-        b=gVh2Q19QZxkE3Rv46f+eGxshgQByeYmfk9we4yh1aDVf/tnKwPgjbP1WQQtEz5yDcW
-         7/y3eV29GN3JsEsR1vZBV0KuuNbsicj0aSl6B7+FMsgm7WZPFdLq97HecCF6jaOtr8DD
-         tPBgMf1SGr0ILoJUh2sZcUAdVjareuVvWoOFCaC8Hceu0Ayew9covjixGzmy3fqPmhxT
-         cGrUrz2tqbjHrAYEZwRXrpFwYilDoe+Gz6xwCVgK5qyBaZjLYWFuUzLHB1oB+AamOtXw
-         ioqJhhKoiU/QcXggoLIHK6rZU5XO1Qfhq32NhGwxTYqIyXNXWTErumPk/aep3pNux4ew
-         tZng==
-X-Forwarded-Encrypted: i=1; AJvYcCVn6qBQyknDR8KmZFWub72L/8zxRb4qjXVCBdFbLwTrOWyy3vyBD6UomTM3769pm515RpemBFDEiLlhwg9VeEw73rhuu/YQoiU51Bb3ZPPvps4V7rOM4vV7rRx45BVzbuoplK3ktQ4ByAhJp4qBLt3fRqc5Wq8nj7BvCfNkViDsV1ij0vaSkKKB1Qtb
-X-Gm-Message-State: AOJu0Yz/clEqJM/Pgetd9evGl/F/SqSH7e7WKMQ9fqiwo8TNNpmlOezM
-	YrWwZO0JhMiMp+JU++dGafOPxJ/P0hXnxY5SyvCBfCt2Pay5xxhM+Haj/zG9
-X-Google-Smtp-Source: AGHT+IGg+QUbIiGMOqaoITdcCaCCEQE4L980zRDOVEEGiMJIAAQ8PPAUcXL/EDLKZJ3hoIK87LDBMQ==
-X-Received: by 2002:a05:690c:f12:b0:61b:3304:ce04 with SMTP id dc18-20020a05690c0f1200b0061b3304ce04mr3137328ywb.34.1713965090336;
-        Wed, 24 Apr 2024 06:24:50 -0700 (PDT)
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
-        by smtp.gmail.com with ESMTPSA id x135-20020a0dd58d000000b006186a9d32b0sm3010003ywd.43.2024.04.24.06.24.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Apr 2024 06:24:50 -0700 (PDT)
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-de4665b4969so7032902276.2;
-        Wed, 24 Apr 2024 06:24:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUqDxsUjzBl5NDYfu2VvC2j4DizMU8s/S69QkJI0Az0jwYvLtQg0uoC/Byi7OQUOd6xQP+8cNkIhP6TYItxKv87rhI7EBCE8OicaeDxJi+sDtqtdD5LXX6Ufuq6dGVfoz0yJMcdh/dfdRcMjjXB9xld1ADT9sLwoyI2AXGFBD2rRMxiGOIRStPCaEBj
-X-Received: by 2002:a25:295:0:b0:de5:4bb4:25b9 with SMTP id
- 143-20020a250295000000b00de54bb425b9mr2790709ybc.12.1713965089779; Wed, 24
- Apr 2024 06:24:49 -0700 (PDT)
+        bh=ON7DRK4o1QQEG6zMRrSA5yFg2l3FUOQ+KbU0jTc3aC0=;
+        b=PnxMnnT5aDMzG1ZjvHgwfCue2VqECRLH4NpKzK0eeUiio06L5pseV24rkMMUablila
+         WJANyTGdOqyKm8tNKZIiPjnTZ8tEvGzQ4ve6upyt8D0KNOVSFOrqmk+aK1hzIkcirdVS
+         WL1eBoVD/ynJbR79qAKhEdCMJqraoCJ3xVzDt/ZeSbK3FbdZvnFMNbGLcD7kmiJomFAv
+         2bF38rWOiohif02+e1kn+XEYP3fpF46a6oitMYuywVPyJKuJeqxXO/7EHyjrwSxq+dE8
+         d6awYeoyynACgx+5o/tfsZK5T1vW9Eo+P8YQhkINBGpS5yV3WSMpHD/p+WWcTZybbBFR
+         trSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVjTW058weHOirdJ0MI+c6pdfTGDPTWNg/sngEfBl6MAFn4Mc2xQ8uSEeiWYCp8Kj7/T7DT3O1zqDWhqbAiRMrsYRkpuanU7p0dzQ==
+X-Gm-Message-State: AOJu0YweLgGPJEqLpQ+N3cN0OdTsGPUb8KAYDU8uw03rpE73qoUB8D21
+	ErBHS466zrvZnUiAN/HvmlvnfwTohqbMDTroVqwHdx25mS5nwfwyKpoRpxfDvLo=
+X-Google-Smtp-Source: AGHT+IFt5k+u0qlhoBUYdAEe0Bqa4xVeIXq/GvItIj5LfRSsXjv3ukTNbIY3sE/Ec8osEpb2ZDqjGw==
+X-Received: by 2002:a05:600c:1da7:b0:41b:24c0:aec5 with SMTP id p39-20020a05600c1da700b0041b24c0aec5mr297122wms.13.1713965553846;
+        Wed, 24 Apr 2024 06:32:33 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:da66:dc78:acc5:bb9c])
+        by smtp.gmail.com with ESMTPSA id d11-20020a05600c3acb00b0041aea85be32sm3343941wms.22.2024.04.24.06.32.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 06:32:33 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	jonathanh@nvidia.com,
+	treding@nvidia.com,
+	sfr@canb.auug.org.au,
+	linux-gpio@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prathamesh Shete <pshete@nvidia.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	mochs@nvidia.com,
+	csoto@nvidia.com,
+	jamien@nvidia.com,
+	smangipudi@nvidia.com
+Subject: Re: [PATCH v3] gpio: tegra186: Fix tegra186_gpio_is_accessible() check
+Date: Wed, 24 Apr 2024 15:32:32 +0200
+Message-Id: <171396554137.82284.11131075774933207943.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240424095514.24397-1-pshete@nvidia.com>
+References: <CAMRc=MfJokORpEOMkOmQdzTuZxcUAcnmpdEyJWKqvT0gCpuzbg@mail.gmail.com> <20240424095514.24397-1-pshete@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240417114132.6605-1-paul.barker.ct@bp.renesas.com> <CAMuHMdWq2y0ELZpj38TZLequjB_=5_1VQe-1XCBjTLmW86xjog@mail.gmail.com>
-In-Reply-To: <CAMuHMdWq2y0ELZpj38TZLequjB_=5_1VQe-1XCBjTLmW86xjog@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 24 Apr 2024 15:24:38 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXRwCZeuR9mBcHX4APo43u9F=BhsW9g6vJqk_9UNVhuLA@mail.gmail.com>
-Message-ID: <CAMuHMdXRwCZeuR9mBcHX4APo43u9F=BhsW9g6vJqk_9UNVhuLA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Limit 2.5V power supply to
- Ethernet interfaces
-To: Paul Barker <paul.barker.ct@bp.renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 24, 2024 at 3:24=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
-> On Wed, Apr 17, 2024 at 1:41=E2=80=AFPM Paul Barker
-> <paul.barker.ct@bp.renesas.com> wrote:
-> > The RZ/G3S SoC supports configurable supply voltages for several of its
-> > I/O interfaces. All of these interfaces support both 1.8V and 3.3V
-> > supplies, but only the Ethernet and XSPI interfaces support a 2.5V
-> > supply.
-> >
-> > Voltage selection for the XSPI interface is not yet supported, so this
-> > leaves only the Ethernet interfaces currently supporting selection of a
-> > 2.5V supply. So we need to return an error if there is an attempt to
-> > select a 2.5V supply for any non-Ethernet interface.
-> >
-> > Fixes: 51996952b8b5 ("pinctrl: renesas: rzg2l: Add support to select po=
-wer source for Ethernet pins")
-> > Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-clk for v6.10.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-renesas-pinctrl, of course ;-)
 
-Gr{oetje,eeting}s,
+On Wed, 24 Apr 2024 15:25:14 +0530, Prathamesh Shete wrote:
+> The controller has several register bits describing access control
+> information for a given GPIO pin. When SCR_SEC_[R|W]EN is unset, it
+> means we have full read/write access to all the registers for given GPIO
+> pin. When SCR_SEC[R|W]EN is set, it means we need to further check the
+> accompanying SCR_SEC_G1[R|W] bit to determine read/write access to all
+> the registers for given GPIO pin.
+> 
+> [...]
 
-                        Geert
+Applied, thanks!
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+[1/1] gpio: tegra186: Fix tegra186_gpio_is_accessible() check
+      commit: d806f474a9a7993648a2c70642ee129316d8deff
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
