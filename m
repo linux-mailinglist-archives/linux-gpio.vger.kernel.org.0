@@ -1,135 +1,114 @@
-Return-Path: <linux-gpio+bounces-5827-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5828-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93F178B12B5
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 20:43:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D04F18B12D6
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 20:51:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C55FA1C2117E
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 18:43:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E04F1C245C4
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Apr 2024 18:51:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7EF02EAE6;
-	Wed, 24 Apr 2024 18:42:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF01518C31;
+	Wed, 24 Apr 2024 18:51:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEgXKmyM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JIzsY0rU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9632C84F;
-	Wed, 24 Apr 2024 18:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4150B3D68;
+	Wed, 24 Apr 2024 18:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713984158; cv=none; b=o2H6xrSOAiMP/0vfD1YbuHfZnkReoJUkxBGxuZomzTFNb4rFz8JG62jgBqaUS0163YFdlHNRFpx3hqBE5qXkuPdDZ1haLZCflZZ7ZfuTTAsTxLikUmqXJJsEKEmadlvTqm4xzsTVxQTYr+qZ8sEx05TQ9Wt3GWEyXqtRXkGhvyA=
+	t=1713984671; cv=none; b=S68Z/CDDFaYQ/ehVGNmjmlUBDATiKLb1cTKXuZ6hg2tbQHuRq6bhL328t9mAbmtvmgBZogTBf5aQDL5Nt4X5RF4vl4X1qKEqjoUCBNu2VHjFy511g1385xpuSZWpUpfhcNzXIlf5f9sP/CUqVI/s5LHbuqU2VRqncdQpKdkzzz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713984158; c=relaxed/simple;
-	bh=CP8WfTDyvgYNfa6AxhA6VjlMigbLNYOvffOz1XRpFWw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YXn+apzEPccx/UWS2H+IMKjEfukV4kNfINJn1gXzMbJIp3SnoS1wBQVC2E/ervNbqGkYOuyug1ldL39ekUpNAdT9A6JqklvI2HQ49bzacZSdn8VglxhXuxpAsT6S6UyFTwkASBz/nzzBcef0wVQqyRNGy20MKPvfX6r3b/0dKAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEgXKmyM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9CEDFC4AF0A;
-	Wed, 24 Apr 2024 18:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713984157;
-	bh=CP8WfTDyvgYNfa6AxhA6VjlMigbLNYOvffOz1XRpFWw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=vEgXKmyMlfjzGjfZToH0m5KMt4CE3/1hWUDo/8wdSxv/gHJpCkYuWL82iQEx5g3EW
-	 rtZLPgGUnWWGVu7jRx7X87rJDemytYjWHNAuZIDTg1TJ3intp+YgdYes12lQ8luDfB
-	 AI9fqc807HDcN+jFnRmCwVl9oMuYQGApq581ZXEmsCZ0fPBBjoAgEB3xETOW4R2vG5
-	 PNcepVs32s7tkB55bB62BcOgsCf+xkkj2OKOu09sCbJB8CkylT4CEgJDsUREz0tusu
-	 mqOpu3sqGjvRGorbOzrNxZBAtmYnkThfKu5SV7Uyh1kvWa7HWabFdeVahy1IMy0PKZ
-	 48ufA4lp1g3ow==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D430C4345F;
-	Wed, 24 Apr 2024 18:42:37 +0000 (UTC)
-From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
-Date: Wed, 24 Apr 2024 20:42:39 +0200
-Subject: [PATCH v10 12/12] MAINTAINERS: add myself as Marvell PXA1908
- maintainer
+	s=arc-20240116; t=1713984671; c=relaxed/simple;
+	bh=SStE9y303FO3ATf9eXjsLwO2XtEcu5VteWqqA950+Ok=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=apA02oV5pIRUsN166IstDeiNy1b2xnFfI2KbuxqjIZ+hlbH+KatwdMVh6Mm4GoKpzWwakBaN1YM+RbBoqgCuDyvIP/fX8S+coDEVm/vDyHvhdPUkgx1pijwaU/Fze/PJK+3MDD9f2mVkhoWMWKQCTTzlRuCYn2wU4SuR2ALTE9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JIzsY0rU; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5f7a42bf0adso148211a12.1;
+        Wed, 24 Apr 2024 11:51:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713984669; x=1714589469; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=48mxMFWxRPbfhbz62qZsFgeMgLn9gqf3uPCw7ejtzBk=;
+        b=JIzsY0rUYTseNvFbGV1xMuc5T5ORXbbybwNYt4QQ95nEzJZAcoEf1ssPrLeM8qfNdK
+         manVZf8qVAQsT/Gs7LfO1nNyPUKDZuu8zEUY6ADEBvU486OXSg49ajagQxQxjq6JZBhE
+         aseBANB72FyVhm2366hHNzFz+ybJ8LEhWe3wZ/ZXNSvL9ckCfUTZruIIsvTBIL+wJ5/k
+         nJtmgxOW8oHXq7wwOskm5utLI1l1pyxHZoBUSnzPyMK6z76vLP9JMugi85FFkDjj0371
+         Kld1su9StKTiCL5PBEu2sH/Sh4IlprLClO1hcPCsyBcAnLtn4qd7ZfVpX/OiIa6EoNVe
+         2EFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713984669; x=1714589469;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=48mxMFWxRPbfhbz62qZsFgeMgLn9gqf3uPCw7ejtzBk=;
+        b=NrdSONMlMQAVYZ98bh6qQLud4BhkG7NuyiQeqPCPO4f/XzYVA+uQahWLwBAmCsiJjc
+         E8sR8b5oi/NVc4xDOVfgzr4oQQFeNuSGi1W96/Otd5EUBSYFp2fjJaK6ZsNA9qWTU1EN
+         UF8Ga0IVxvz+3gML6pB1XLc2imJ+xO7c6nJ1bux6rIhkTy7Dgfsc9O3FwAoPwtz1PT3c
+         H0mzkf+QeQJVx1vFhHS4c5lrPST2EeZEnYtVlBGBvQNrKrHLCLrarGKaDP2XS3JwEFgp
+         BOhke9RdqL8AJbPgA7JNLLAvUMJgDxHmx300Hy6uWpysfX2PzCEh95KcZESpWoTRBy9R
+         d5GA==
+X-Forwarded-Encrypted: i=1; AJvYcCXhiZ1mIFS4OhuXe1fhVnhC1EsS9n/t1Kv5Ttaq7UJTeL8LYh9U8ayxlzmlh6z5M3Q4evm8jBzjY9YwZhyrQrxT2ccWIsI4Fs+crOKB1RVRPn372Yahxvb9HkCEQxg2ZtD/QPQF/qs2Vyc4Vax/aGnfIMS9RaMXeW+1uvHhsMYzRK1RcuA=
+X-Gm-Message-State: AOJu0YyBsgFGcXcORdodNV/wK5xNVwn+v+7N27P3OAJ5R4yZwur5R16c
+	7e2MqbOz5X4Q82LFAbZFrmgMxXfJ006A0YAYsg3sgcsrfokL+r0H
+X-Google-Smtp-Source: AGHT+IHkqSQ1b6O6+sYib4DgIQ/4zA0iPn9beMEBsE9puyrhvi9JxgtyrS6CkUdDbAEWb4Ui+Cy73Q==
+X-Received: by 2002:a17:90b:4b0e:b0:29b:10bc:acaf with SMTP id lx14-20020a17090b4b0e00b0029b10bcacafmr2947707pjb.30.1713984669425;
+        Wed, 24 Apr 2024 11:51:09 -0700 (PDT)
+Received: from stbirv-lnx-1.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u8-20020a170902e5c800b001e425d86ad9sm12268728plf.151.2024.04.24.11.51.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Apr 2024 11:51:08 -0700 (PDT)
+From: Doug Berger <opendmb@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Phil Elwell <phil@raspberrypi.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Doug Berger <opendmb@gmail.com>
+Subject: [PATCH 0/3] gpio: brcmstb: add support for gpio-ranges
+Date: Wed, 24 Apr 2024 11:50:36 -0700
+Message-Id: <20240424185039.1707812-1-opendmb@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240424-pxa1908-lkml-v10-12-36cdfb5841f9@skole.hr>
-References: <20240424-pxa1908-lkml-v10-0-36cdfb5841f9@skole.hr>
-In-Reply-To: <20240424-pxa1908-lkml-v10-0-36cdfb5841f9@skole.hr>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
- Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>, 
- Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Rob Herring <robh@kernel.org>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=906;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=IAO2s2H9eu3z+8543Qj+Twu7btrO5EN1Y9FniKrdIpI=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBmKVKVE2n5S7pMEvJ2dz5c5NHiJUcq66HbNB47N
- dzaKjRup7+JAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZilSlQAKCRCaEZ6wQi2W
- 4WZCD/0e6BPwFLQgizdDY83IxSn9oXdBBmvVOC8UrCDlq+RZqV20ZPSC/Fwa2WvlgS3KujswLP4
- Ic9DKe9rZkIIUzr+QzaL3Z94bgSVXDxfs2W/rHMRlD2v/EH/A5k6ciR5cou9lcRkl68SYwevmVj
- qzaxs5gh5OG27pKWbunNHSHMhmDWhbawbWz5KFEfkcYe4FcsaYqigw3JPpiKVFGGNfKJ5w0x/xb
- pyDhPqrE96Irc77j37PGHeNJhmHX6dPgnEP7w997pE0d3kwNwlfW7IC2huzz+WHiZBq1p5lZcpA
- bwqEbB65dA7F6PhfErDC8Ohp3jWgvDDEU2z2OVEBL7fX3MLC0W1s0QrVm8xhEPKDwrh3GnrJPBO
- q79TUoZZTAD1oryVw/CBdRbl1ee1nGRxNWdByJekEBSWDYkGXk7qeqorzBQYFEP/uHEbn0Ck5EW
- HlPjUn4MOdn184Ngh4Y/hYwkXH11GQo7jgysCLviH0RVOi/SZwxh9Hlzv2uxMZ7j82JCxtDAdN3
- ph7B+fWWz9WM6+jC40qrOWsPSPj75Z8Z9tIuykacvdZasIdGRN9M9WDrqyZCcR9Qz3pp8ME2faJ
- jCU3+2ERgJOpCD0Nmp4IzLZqa7cLY4i6KACiJ5e0dg36zY+Ley0m9nxNBUS3g+HhOwgHi+5Vb24
- r9I3U9sMvziOoyA==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
-X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/default with
- auth_id=112
-X-Original-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Reply-To: duje.mihanovic@skole.hr
 
-From: Duje Mihanović <duje.mihanovic@skole.hr>
+The Raspberry Pi 5 includes Broadcom STB GPIO IP as well as
+Broadcom 2712 pin controller IP.
 
-Add myself as the maintainer for Marvell PXA1908 SoC support.
+The community has expressed interest in linking the two drivers
+with the "gpio-ranges" property in device tree. This commit
+stack implements the necessary changes.
 
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Doug Berger (3):
+  dt-bindings: gpio: brcmstb: add gpio-ranges
+  gpio: of: support gpio-ranges for multiple gpiochip devices
+  gpio: brcmstb: add support for gpio-ranges
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ebf03f5f0619..5d48ac9801df 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2370,6 +2370,15 @@ F:	drivers/irqchip/irq-mvebu-*
- F:	drivers/pinctrl/mvebu/
- F:	drivers/rtc/rtc-armada38x.c
- 
-+ARM/Marvell PXA1908 SOC support
-+M:	Duje Mihanović <duje.mihanovic@skole.hr>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+T:	git https://gitlab.com/LegoLivesMatter/linux
-+F:	arch/arm64/boot/dts/marvell/pxa1908*
-+F:	drivers/clk/mmp/clk-pxa1908*.c
-+F:	include/dt-bindings/clock/marvell,pxa1908.h
-+
- ARM/Mediatek RTC DRIVER
- M:	Eddie Huang <eddie.huang@mediatek.com>
- M:	Sean Wang <sean.wang@mediatek.com>
+ .../bindings/gpio/brcm,brcmstb-gpio.yaml      |  3 +++
+ drivers/gpio/gpio-brcmstb.c                   |  2 ++
+ drivers/gpio/gpiolib-of.c                     | 23 +++++++++++++++++--
+ 3 files changed, 26 insertions(+), 2 deletions(-)
 
 -- 
-2.44.0
-
+2.34.1
 
 
