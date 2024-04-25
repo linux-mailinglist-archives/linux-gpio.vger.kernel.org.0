@@ -1,249 +1,124 @@
-Return-Path: <linux-gpio+bounces-5859-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5860-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A34D88B2525
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 17:31:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A27F38B25EB
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 18:04:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C90181C218E5
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 15:31:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 586601F217D4
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 16:04:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E8AD14B081;
-	Thu, 25 Apr 2024 15:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F200814D29C;
+	Thu, 25 Apr 2024 16:03:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tCd2zckO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="py0150OJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC2A14A4F7;
-	Thu, 25 Apr 2024 15:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E821814C5BD
+	for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 16:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714059105; cv=none; b=i39roKMIzgh3AiDPWm2e1IepMajCmDH37Aj+mfzsXc9SC9k6l1Vr6dSPvPKNPCWZWGnib1EmbRTI99PdbefMWXrtl2E0iZZU5u3iZfDTiudTazbA7fQXEVC1T4x/FrIKWPtsTgY+CYjkHUxhaWiYnyQaVaxwJWeD/wVrtH3ohRY=
+	t=1714061033; cv=none; b=s8hsN6Glu/B8Gn7PhykXbCFbq+i3zs32CBaRVbwX19LWlirr6gWk3GLt+aq2lFvF8czIkht6FpeetQzbRreh3Hfhd1f/K+KdKNhnuzk1f/hgtjzGgqM+E+CIinaae9aVB11pn6N49InZoxSS0oMfAcsADXgx5/F4qF+GWmCvRAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714059105; c=relaxed/simple;
-	bh=3/GCTM431jHb9nDcDDmIr5rh5QVpw++p6BByO8EL4Z4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MgxJ71JBpN2np7cT+KKC1KBqJ62gUESHKazu7nrpa9R98JihnJZoCvFANsYXJvt7+JFghrKMAMyYd1+6Qmlm3FDVyzkkDtYObZM2sxyFXe4RjzCMFSe86MGp10x88X6cjHtzTqERNBOXvrGNOBDeaoDhzF1If/R+kMsgLDsgfVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tCd2zckO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95DBDC113CC;
-	Thu, 25 Apr 2024 15:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714059103;
-	bh=3/GCTM431jHb9nDcDDmIr5rh5QVpw++p6BByO8EL4Z4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tCd2zckOmDI/bTXDD6Q4O/dY6HpYLih6zDo5Ye0WBjd7OthjGOsZZzce1D0Yzxxax
-	 Om22flbhYkb/UEHgKwexvcRNoAMtYT8g+3xJI+UvHi35BB0UY9l3jXY0UhRl1abFka
-	 wyWQg3+tXq6Jj8CACW218C6TaoyaUDQPDzJUduVmbvlgILAU8AneoIGKhXNRG2aLHu
-	 4ePllrlWYMNtlbj4f4ry+ATP2RSWig7gAg/JcQ75zX8cCw6Unf8cL9vT22RVDlZ9A5
-	 oEOMNua/fgg5Yjflz1lgwLVEIEq0lG9THS5xdMO6i9lp+mDa2KYSNHmFv1oVxCez7y
-	 +v/bkdeENoPoA==
-Date: Thu, 25 Apr 2024 10:31:40 -0500
-From: Rob Herring <robh@kernel.org>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: firmware: arm,scmi: Add properties
- for i.MX95 Pinctrl OEM extensions
-Message-ID: <20240425153140.GA2556348-robh@kernel.org>
-References: <20240418-pinctrl-scmi-oem-v1-v2-0-3a555a3c58c3@nxp.com>
- <20240418-pinctrl-scmi-oem-v1-v2-1-3a555a3c58c3@nxp.com>
- <20240424193007.GA329896-robh@kernel.org>
- <DU0PR04MB9417C67342B1DD6CC299B4CE88172@DU0PR04MB9417.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1714061033; c=relaxed/simple;
+	bh=2oqcmNS3jd8d2/9WZaZaIujWbPFQr6kvI2pAa+x+YxA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=USf6AxVp0078DwRBCwwnioVS6Fmg1faZYK6n+SSsTnfbdjFLJfUpPakxTuCVdX3eQGA7BdxNGID/H2KsmOqFF8mM6iouxhBk//+H7yTW+l2epNYSN/i3cBjLnAIkTTtTCO5aFhbfvZlhL+ZAs56Ub3+LvOCVGEXwLDtrJ8dzlUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=py0150OJ; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-518a3e0d2ecso1787023e87.3
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 09:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714061030; x=1714665830; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=90o4FgSL+CeIO1gyLTC5XITGjfeMRvZ6Pyb1+yyX+Xg=;
+        b=py0150OJutXqulUaeKnhAW9xaT2b0NaYvrgJY9bN+os8z/Odw/lX3mqnN5VMJDFy4k
+         R3QMNI7MaikB5/suno5zKVBzJqokUcD8/8K/9ECpoNf0XWAEOtBsWM07Qx3AnkjUkI2Z
+         TUAQMrWHDll4hhPHi9X2rEu+CzUsbTdzNPzA0t4CGLh4UXKW8457gwKJLdc7qBvV1Jy4
+         rPmjjfFzd32/vNp6XBTPW9sWRb3cFQjvfUJifNh0lMN7XsWn5dnC4EQdC2w/w+VMETve
+         04rfBWCeLtnSt7TrNGqXQWwMuG/ZnKNBWr6GCpdEu4CaEzEflVt9Ib12YSIgCEJTM+5G
+         Z3Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714061030; x=1714665830;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=90o4FgSL+CeIO1gyLTC5XITGjfeMRvZ6Pyb1+yyX+Xg=;
+        b=jnS2WQO0ctnnE9KtCUqCUovP2izBDUgYeQdXLqP6Ik23iZL5LfjMr93YGHOpwJ3Gva
+         GmNQ6h3apbq3ryuJt/Up3wB4vizgdGeX/hRLKqokjSFj2ZVsb8iXdX73wM354k6xcuPn
+         96gnDEopxzJFo6uDdFHTnRBhbZGNEHxiHAZKE+W9M+6RW2l1AKoZ/NzUbzJEGae/BSv9
+         GRZNlj87UFzvffS/XJF7xEkgwJOvA2ozddGVXylsZj2uzHpHiO3YH6xACNOV2FfJW4K3
+         xAJUkv69T37fUXyGTWq/kcOt5QDa6RM6zUcvAIvnK8SuU2yZHaDEmcpvW8H589N247Ub
+         IFog==
+X-Forwarded-Encrypted: i=1; AJvYcCVwgUnoJmWNID7UZCJEMU8Vgkvcait+CpAii2cP80K24aDsvT/efCClasl8r5TWJeVYFnE4eiHEo2nNn7jU7FjCQjNXHeMhiMmBBw==
+X-Gm-Message-State: AOJu0YxJ3qWDtHjbGC7OFFCXiwntKnNxH/eADmHXhnjI3CBZNP7SXfEB
+	kKLj0rzk8PhUdDUD7h02NYy41ARO/hwJKym89OzPZt7hXik1QdaO2bT8G28nDSA=
+X-Google-Smtp-Source: AGHT+IH4W0cQvppH7SQIIXB9y9gkfeZnnN7nZLtEwV9kMHM6f50E3eDdLoX2AavWUT9QZExL/niKeA==
+X-Received: by 2002:ac2:5edd:0:b0:51b:4b94:a956 with SMTP id d29-20020ac25edd000000b0051b4b94a956mr5436845lfq.21.1714061029915;
+        Thu, 25 Apr 2024 09:03:49 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id mm10-20020a170906cc4a00b00a58a44a4419sm1329562ejb.57.2024.04.25.09.03.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Apr 2024 09:03:49 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Subject: [PATCH 0/2] clock support for Samsung Exynos pin controller
+ (Google Tensor gs101)
+Date: Thu, 25 Apr 2024 17:03:30 +0100
+Message-Id: <20240425-samsung-pinctrl-busclock-v1-0-898a200abe68@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DU0PR04MB9417C67342B1DD6CC299B4CE88172@DU0PR04MB9417.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIANJ+KmYC/x3MTQqEMAxA4atI1gba+jfMVcSFxqhhnCqNiiDe3
+ eLyW7x3gXIQVvgmFwQ+RGXxETZNgKbWj4zSR4MzLje5K1Dbv+5+xFU8bWHGbleaF/qhLSy5rK/
+ KT2kg5mvgQc53XTf3/QAY9rBvagAAAA==
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
+ Peter Griffin <peter.griffin@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.12.4
 
-On Thu, Apr 25, 2024 at 09:06:00AM +0000, Peng Fan wrote:
-> Hi Rob,
-> 
-> > Subject: Re: [PATCH v2 1/2] dt-bindings: firmware: arm,scmi: Add properties
-> > for i.MX95 Pinctrl OEM extensions
-> > 
-> > On Thu, Apr 18, 2024 at 10:53:17AM +0800, Peng Fan (OSS) wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > i.MX95 Pinctrl is managed by SCMI firmware using OEM extensions. This
-> > > patch is to add i.MX95 Pinctrl OEM extensions properties.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >  .../devicetree/bindings/firmware/arm,scmi.yaml     |  9 ++-
-> > >  .../bindings/firmware/nxp,imx95-scmi-pinctrl.yaml  | 66
-> > > ++++++++++++++++++++++
-> > >  2 files changed, 72 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> > > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> 
-> ....
-> 
-> > > +
-> > > +title: i.MX System Control and Management Interface (SCMI) Pinctrl
-> > > +Protocol
-> > > +
-> > > +maintainers:
-> > > +  - Peng Fan <peng.fan@arm.com>
-> > > +
-> > > +patternProperties:
-> > > +  '[a-f0-9]+$':
-> > > +    type: object
-> > > +    unevaluatedProperties: false
-> > > +
-> > > +    properties:
-> > > +      pins:
-> > > +        $ref: /schemas/types.yaml#/definitions/string
-> > > +        description: name of the pin
-> > > +        items:
-> > > +          enum: [ daptdi, daptmsswdio, daptclkswclk, daptdotraceswo,
-> > > +                  gpioio00, gpioio01, gpioio02, gpioio03, gpioio04,
-> > 
-> > ioio?
-> 
-> Yes. The name is exported from SCMI firmware.
-> 
-> > 
-> > > +                  gpioio05, gpioio06, gpioio07, gpioio08, gpioio09,
-> > > +                  gpioio10, gpioio11, gpioio12, gpioio13, gpioio14,
-> > > +                  gpioio15, gpioio16, gpioio17, gpioio18, gpioio19,
-> > > +                  gpioio20, gpioio21, gpioio22, gpioio23, gpioio24,
-> > > +                  gpioio25, gpioio26, gpioio27, gpioio28, gpioio29,
-> > > +                  gpioio30, gpioio31, gpioio32, gpioio33, gpioio34,
-> > > +                  gpioio35, gpioio36, gpioio37, ccmclko1, ccmclko2,
-> > > +                  ccmclko3, ccmclko4, enet1mdc, enet1mdio, enet1td3,
-> > > +                  enet1td2, enet1td1, enet1td0, enet1txctl, enet1txc,
-> > > +                  enet1rxctl, enet1rxc, enet1rd0, enet1rd1, enet1rd2,
-> > > +                  enet1rd3, enet2mdc, enet2mdio, enet2td3, enet2td2,
-> > > +                  enet2td1, enet2td0, enet2txctl, enet2txc, enet2rxctl,
-> > > +                  enet2rxc, enet2rd0, enet2rd1, enet2rd2, enet2rd3,
-> > > +                  sd1clk, sd1cmd, sd1data0, sd1data1, sd1data2, sd1data3,
-> > > +                  sd1data4, sd1data5, sd1data6, sd1data7, sd1strobe,
-> > > +                  sd2vselect, sd3clk, sd3cmd, sd3data0, sd3data1,
-> > > +                  sd3data2, sd3data3, xspi1data0, xspi1data1, xspi1data2,
-> > > +                  xspi1data3, xspi1data4, xspi1data5, xspi1data6,
-> > > +                  xspi1data7, xspi1dqs, xspi1sclk, xspi1ss0b, xspi1ss1b,
-> > > +                  sd2cdb, sd2clk, sd2cmd, sd2data0, sd2data1, sd2data2,
-> > > +                  sd2data3, sd2resetb, i2c1scl, i2c1sda, i2c2scl, i2c2sda,
-> > > +                  uart1rxd, uart1txd, uart2rxd, uart2txd, pdmclk,
-> > > +                  pdmbitstream0, pdmbitstream1, sai1txfs, sai1txc,
-> > > +                  sai1txd0, sai1rxd0, wdogany, fccuerr0 ]
-> > > +
-> > > +      nxp,func-id:
-> > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > +        description: Indicates the PAD connections which function
-> > > + module
-> > 
-> > The description makes no sense...
-> 
-> I will use below description in v3:
-> For each pin, there are up to 8 muxing options (called ALT modes). For example:
-> Select 1 of 5 iomux modes to be used for pad: DAP_TCLK_SWCLK.
-> 000b - Select mux mode: ALT0 mux port: JTAG_MUX_TCK of instance: jtag_mux
-> 010b - Select mux mode: ALT2 mux port: CAN4_RX of instance: imx95_wakeupmix_top
-> 100b - Select mux mode: ALT4 mux port: FLEXIO1_FLEXIO30 of instance: imx95_wakeupmix_top
-> 101b - Select mux mode: ALT5 mux port: GPIO3_IO30 of instance: imx95_wakeupmix_top
-> 110b - Select mux mode: ALT6 mux port: LPUART5_CTS_B of instance: imx95_wakeupmix_top
-> The nxp,func-id property is selecting one ALT mode.
+This series enables clock support on the Samsung Exynos pin controller
+driver.
 
-Looks like constraints on the values. Please add schema for them. I 
-don't think you need to list an example. 
+This is required on Socs like Google Tensor gs101, which implement
+fine-grained clock control / gating, and as such a running bus clock is
+required for register access to work.
 
-Perhaps you should be using 'pinmux' property. That is the standard way 
-to specify a numeric mux mode.
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+---
+André Draszik (2):
+      dt-bindings: pinctrl: samsung: google,gs101-pinctrl needs a clock
+      pinctrl: samsung: support a bus clock
 
+ .../bindings/pinctrl/samsung,pinctrl.yaml          |  17 ++++
+ drivers/pinctrl/samsung/pinctrl-exynos.c           | 111 +++++++++++++++++++++
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |  74 ++++++++++++++
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |   2 +
+ 4 files changed, 204 insertions(+)
+---
+base-commit: a59668a9397e7245b26e9be85d23f242ff757ae8
+change-id: 20240425-samsung-pinctrl-busclock-151c23d76860
 
-> > 
-> > > +
-> > > +      nxp,pin-conf:
-> > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > +        description: The PAD configuration
-> > 
-> > PAD stands for? Or is it pin configuration as the property name says?
-> 
-> It is pin configuration which includes pull up/down, drive strength and etc.
-> 
-> > 
-> > This is just a raw register values? 
-> 
-> Yes.
-> 
-> Why can't standard pinctrl properties be
-> > used here. What's the point of using SCMI pinctrl if you are just shuttling
-> > register values to SCMI?
-> 
-> Standard pinctrl properties will need more memory in our SCMI
-> firmware design. We have limited on-chip memory for SCMI firmware usage.
+Best regards,
+-- 
+André Draszik <andre.draszik@linaro.org>
 
-Then maybe you shouldn't be using SCMI and just write a pinctrl driver. 
-Or, Linux has to parse the DT anyways, so use standard properties and 
-transform them into your register values and send that to SCMI.
-
-> > > +
-> > > +      nxp,daisy-id:
-> > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > +        description: The select input register ID
-> > > +
-> > > +      nxp,daisy-conf:
-> > > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > > +        description: The select input register value
-> > 
-> > I remember some daisy chaining stuff in iomuxc, but otherwise
-> > 
-> > What's the relationship between these 2 properties? Is it valid if only
-> > 1 is present? I doubt it.
-> 
-> The scmi firmware will convert the daisy-id into register address, and
-> write the daisy-conf value into the register.
-> 
->  Looks like an address and value pair. Either the
-> > schema needs to define allowed combinations
-> 
-> The firmware will check whether id and conf is valid, is there a need to define
-> allowed combinations? There will be lots of check to define allowed
-> combinations.
-
-The firmware can't check that the DT contains nxp,daisy-id but not 
-nxp,daisy-conf or vice-versa. Of course the kernel could check that, but 
-validating the DT is not the kernel's job.
-
-
->  or design the properties in a
-> > way you don't have too. IOW, make a single property that's a tuple of register
-> > ID and value.
-> 
-> Define tuple will make the property not able to use linux generic pinconf
-> driver. The current parse_dt_cfg for custom_dt_params only support a
-> single u32 value and not easy to support tuple.
-
-Sounds like a Linux problem. We're talking about bindings. Fix Linux if 
-it doesn't meet your needs.
-
-
-How many bits of id and conf do you need? This too could just be part of 
-'pinmux' property. It's value is entirely h/w specific and up to you. 
-You just need to fit it into 32-bits (though we could perhaps enlarge 
-it).
-
-Rob
 
