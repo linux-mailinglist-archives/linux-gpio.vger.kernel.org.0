@@ -1,193 +1,102 @@
-Return-Path: <linux-gpio+bounces-5853-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5854-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 004218B231E
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 15:48:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3876C8B2354
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 16:00:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB5672862ED
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 13:48:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 46335B215B4
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 14:00:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7FB8149C77;
-	Thu, 25 Apr 2024 13:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90C0F14A0B8;
+	Thu, 25 Apr 2024 13:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="boLIi6R+"
+	dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b="UxJThwJg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43741494D1;
-	Thu, 25 Apr 2024 13:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95751149E17
+	for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 13:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714052888; cv=none; b=g45d/bJWS++AymiPaa3ytPMdGtrgzZDuoORYl5lg8gjgOFpTTYZEXPSL3hLA5zJJjbPc6MjdefPh+DAtMi26nf4hcK+k8iXhFL+D4Cr0GPeRemlJEJK48UgdVqOqIdndBGIIRsUCiLHisH8Sl6b93Vuhj2Bi3V1gNJm0zi9XgJs=
+	t=1714053570; cv=none; b=s72P02lUfsrhN33jMxcimKzWnnuNfdrLEeqGhE4Mj0qsI17L6HXHKPfN5Qusr5HhMeCrjBjQYVWMoFdpzOb+VuYkjvGLfG3/z6HH9zKjS9Hal10TwuAqru5HC8zZxY/URHFzK8hCHrT9haAj4IT+yXAm8bEGohsd1l6Qt5UZB0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714052888; c=relaxed/simple;
-	bh=VVDERpYPM9KQxilgs5G//sA0Lmaf+Mjj63KOyRayoYA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=knl2qqPhwvcorxkmwa9RVZnlSTCpFZLQPx6vaQJqMHyg3+Qlzl/UxwVSL8DfilychZVAdgc9G2A0H1nimxaQBGIfezXbwxX+73dPwuAXWqiAzHZl39tsX5xZlCMmg2YsYp29ecpWJpJ3THQPCUiFEIBx+ZyevGVj8n133qUZ3Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=boLIi6R+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43P9x6BW001380;
-	Thu, 25 Apr 2024 13:47:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=WDD9ufnAdqz8oMuirK7+5
-	QxXew2z3pBpsyZ1Jwjt7L0=; b=boLIi6R+6EfAd0ae5YFqCZ81/Hcff19XR94gu
-	iRsxQV1cj1qWjqclIGYpAeEZja6LSsJkRF5rNT8MzrdzmGPrHzL1i05N+UkikQ3X
-	0+89IcHIvmiXoJ20jRXLqu4Ee2xQLX3EexEe174jlZlD3PposanJIvn/mzMcUNO/
-	QZGN4KTJw35jC5TYBfB/scxiPv6KXGhxAO0mbmQvR79s3yaSUlaK2sx5I+/4alyv
-	i/GSMof8oBYZns6RLweS8+DgpyTgq2REasrVjSVsOXf0CjTaUdceHHbplgqvrv+6
-	P7d4ZWtoGbuBEo6ND8TqrAVkRIG+8n2l/QHvaTCG57coyc53Q==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xqn0wgtwj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 13:47:29 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43PDlRlJ019865
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Apr 2024 13:47:27 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 25 Apr 2024 06:47:27 -0700
-Date: Thu, 25 Apr 2024 06:47:26 -0700
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: Johan Hovold <johan@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Jaiganesh Narayanan <njaigane@codeaurora.org>,
-        Doug Anderson
-	<dianders@chromium.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: qcom: Fix behavior in abscense of open-drain
- support
-Message-ID: <Zipe7u/9ajRXa81U@hu-bjorande-lv.qualcomm.com>
-References: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
- <ZipGRl_QC_x83MFt@hovoldconsulting.com>
+	s=arc-20240116; t=1714053570; c=relaxed/simple;
+	bh=bxaYAw3KFAukICHyA8ZADUCzO0ruG6dtxRHo2LheGEA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QIDLDwMEPk6M6V9Bj8zbKmN8Q4KqI1ioyoVVMSn4F8VU16vPT+Mw6o0vzSGlvDEzhzBZ5kjAykvgbGpU7lL0vGd4FCjAjxH32EBkbqdIqTAXNmFXJcVvDr7E2t0nyX20nLTdPCb6SCD8ttLzbRqOUtwcYNvNqWTNgcVlh7eVdvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr; spf=pass smtp.mailfrom=freebox.fr; dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b=UxJThwJg; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freebox.fr
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41b62970084so2432085e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 06:59:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=freebox-fr.20230601.gappssmtp.com; s=20230601; t=1714053566; x=1714658366; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c/c8R+r2wKwqushYa97j544g6TTlix/kEzEOUalKigY=;
+        b=UxJThwJgBtkepgF1e2axhmQymFrdcSCPr3zvjzvCuk7gyndAT79kCcUYiyYx5dN+qP
+         4O0sGl/qmW0exa9XtppR3DKQxj0tJgWb+Lpyn4WoVn+CQEVzk6owEyU9JzC0zAslRTp0
+         mF0bzrqCVgFvk6c3LX/7VrvPb+g4F852pSTMobrCPfQZzpbX9eJIIhxAVd2hZYi/SNkL
+         5nbQ+aYkwYbaK/+jVGgXeNOyrpm/IWdAOY51gqOEU+37RJhneIqE642QjZyUIp92J7/T
+         AvIpwpzUn61WykowEgeWlEnrSYEUJTmzAdo3KOImCl2SftlPa7UZjFHJi9TA7nfJRsPP
+         4Aow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714053566; x=1714658366;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c/c8R+r2wKwqushYa97j544g6TTlix/kEzEOUalKigY=;
+        b=ovqkGn4Zsfk3TiirN97CnMsjMSqv4qKY8z2eImjwdZdzmqKruZI8lWKxPQrhuWoWct
+         ccEFq90MggRvANukeg+enFz7JVGxtLpbPE6nqtcqMKYMPHjTvtraLSwa/xg39FJQyLTu
+         64+2kGjoV4fhEJBMN/FfCe2nlSS1T+Nt3vDYAagWAl+4s9qWNv/vmYz9BarUvrbFGsAf
+         C3CthksDpvSVOjsusVT4GMYdkOMhP8VQbNvLT5IHDjWYz2WnmC4K/ecpbnphjhMSyUNo
+         QeYfJgluW/UaE9MBBFb+fJbRlr6tyxKRlhw3bZ0xgE/9ANo5P9+LkH6rZb4/FqieZ/fY
+         0vIg==
+X-Gm-Message-State: AOJu0YykvOK0IExXQHdPB+hdVnlhMW3mjXmgiMuEYmuYAhwz1rBfphPn
+	tzWxfGTNANS454Gosn3ImyRKgA15wkRvmWb1hE49QY8yP4xvCXJBCPua3n6Kqpc=
+X-Google-Smtp-Source: AGHT+IHcVSLzRPPOv8+VkqJn3b1N+UKHe0ajTrqk97KpyD5BrgPSvbqWpwe4PKtfGo8kjhQZEZa7bQ==
+X-Received: by 2002:a05:600c:4f8f:b0:419:f9ae:e50 with SMTP id n15-20020a05600c4f8f00b00419f9ae0e50mr4641377wmq.37.1714053565674;
+        Thu, 25 Apr 2024 06:59:25 -0700 (PDT)
+Received: from fbxleo.iliad.local (freebox.vlq16.iliad.fr. [213.36.7.13])
+        by smtp.gmail.com with ESMTPSA id o12-20020a05600c4fcc00b00418a6d62ad0sm31479464wmq.34.2024.04.25.06.59.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Apr 2024 06:59:25 -0700 (PDT)
+From: =?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
+Subject: [PATCH 0/2] pinctrl: core: fix untreated named gpio ranges in pinctrl_pins_show()
+Date: Thu, 25 Apr 2024 15:58:00 +0200
+Message-ID: <cover.1714049455.git.lduboin@freebox.fr>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZipGRl_QC_x83MFt@hovoldconsulting.com>
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: dadqXKE7q0Kd3I_QQxoWGIW_xYmiAZfD
-X-Proofpoint-GUID: dadqXKE7q0Kd3I_QQxoWGIW_xYmiAZfD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-25_13,2024-04-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- impostorscore=0 malwarescore=0 phishscore=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 lowpriorityscore=0 bulkscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404250100
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 25, 2024 at 02:02:14PM +0200, Johan Hovold wrote:
-> On Wed, Apr 24, 2024 at 08:45:31PM -0700, Bjorn Andersson wrote:
-> > When a GPIO is configured as OPEN_DRAIN gpiolib will in
-> > gpiod_direction_output() attempt to configure the open-drain property of
-> > the hardware and if this fails fall back to software emulation of this
-> > state.
-> > 
-> > The TLMM block in most Qualcomm platform does not implement such
-> > functionality, so this call would be expected to fail. But due to lack
-> > of checks for this condition, the zero-initialized od_bit will cause
-> > this request to silently corrupt the lowest bit in the config register
-> > (which typically is part of the bias configuration) and happily continue
-> > on.
-> > 
-> > Fix this by checking if the od_bit value is unspecified and if so fail
-> > the request to avoid the unexpected state, and to make sure the software
-> > fallback actually kicks in.
-> 
-> Fortunately, this is currently not a problem as the gpiochip driver does
-> not implement the set_config() callback, which means that the attempt to
-> change the pin configuration currently always fails with -ENOTSUP (see
-> gpio_do_set_config()).
-> 
+This series covers errors I encountered with the pinctrl_pins_show()
+function when dealing with named gpio ranges generated through the
+device tree using 'gpio-ranges-group-names'.
 
-You're right. I was convinced that I implemented set_config() and got
-lost in the indirections.
+These errors were introduced with the original implementation in 
+f1b206cf7c57561ea156798f323b0541a783bd2f.
 
-> Specifically, this means that the software fallback kicks in, which I
-> had already verified.
-> 
+Léo DUBOIN (2):
+  pinctrl: core: take into account the pins array in pinctrl_pins_show()
+  pinctrl: core: reset gpio_device in loop in pinctrl_pins_show()
 
-I thought you did, and found this strange.
+ drivers/pinctrl/core.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-> Now, perhaps there is some other path which can allow you to end up
-> here, but it's at least not via gpiod_direction_output().
-> 
-> The msm pinctrl binding does not allow 'drive-open-drain' so that path
-> should also be ok unless you have a non-conformant devicetree.
-> 
+-- 
+2.42.0
 
-Looking at it again, I believe you're right and this is currently dead
-code, waiting to screw us over once someone opens up the code path I
-thought I fixed...
-
-> > It is assumed for now that no implementation will come into existence
-> > with BIT(0) being the open-drain bit, simply for convenience sake.
-> > 
-> > Fixes: 13355ca35cd1 ("pinctrl: qcom: ipq4019: add open drain support")
-> 
-> I guess hardware open-drain mode has never been properly tested on
-> ipq4019.
-> 
-
-I see no other explanation. Perhaps there were additional changes in the
-downstream tree where that change came from.
-
-> > Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> > ---
-> >  drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
-> >  drivers/pinctrl/qcom/pinctrl-msm.h | 3 ++-
-> >  2 files changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > index aeaf0d1958f5..329474dc21c0 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > @@ -313,6 +313,8 @@ static int msm_config_reg(struct msm_pinctrl *pctrl,
-> >  			*mask |= BIT(g->i2c_pull_bit) >> *bit;
-> >  		break;
-> >  	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> > +		if (!g->od_bit)
-> > +			return -EOPNOTSUPP;
-> 
-> I believe this should be -ENOTSUPP, which the rest of the driver and
-> subsystem appear to use.
-> 
-
-Both error codes are used in across gpio/pinctrl subsystems. I first
-went ENOTSUPP but folded, perhaps too easily, when checkpatch told me
-EOPNOTSUPP was better.
-
-
-I'm leaning towards us reverting the ipq4019 patch, rather than try
-complete the patch, but will give this some more thought before spinning
-v2.
-
-Thank you,
-Bjorn
-
-> >  		*bit = g->od_bit;
-> >  		*mask = 1;
-> >  		break;
-> 
-> Johan
 
