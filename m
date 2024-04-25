@@ -1,72 +1,64 @@
-Return-Path: <linux-gpio+bounces-5846-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5847-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4E768B20C9
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 13:56:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C23A8B20D4
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 14:02:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A79C1F26353
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 11:56:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C3061F24B7E
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 12:02:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92B9412AAF3;
-	Thu, 25 Apr 2024 11:56:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4352F12B169;
+	Thu, 25 Apr 2024 12:02:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cMkt8iyI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ssZnt+F6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DA72AEF1
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 11:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC9884E0E;
+	Thu, 25 Apr 2024 12:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714046160; cv=none; b=sGI19wqY8s+DFGNUz2IKD0x5ESoFjXSOFC6ROVofHiU0JEO3gCf0suKB7YU9zd+LsJrU3PkjmNw9yroFZyWQQPS4z1j+LKMGo6lgbeZ43WVhuKVYoh4MGrdL0Y84DxXbtw6Q83Z932NpQdLKJ8SHo6i6BDC9FyIcWSf3Af78qek=
+	t=1714046535; cv=none; b=LcW0FfjMglvyzK+P9A/2sz74AdHpYZmk5W23chi8/ocY6Zr0YqfEc3pSE8wNWy3kC8V0qKfSzW2l1Hh5Y8t3sghl9iw9AGYZabyX1rF85fUULVADoEXJZ88FPHWoxqh9l2YDE15UsooloBDRSMfP8wiqa1D1SNyEtIeIUDrwFeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714046160; c=relaxed/simple;
-	bh=r3pRjxpIZHmEpRbogQ4vWIVk3Y5dqkyWL3sFWRuM1BM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Zmn9u6SU0GutgXEXE4qNXoTMFWfd3YZy08vHtbMSZA76bPB2l6Ii1QOGalwKdB7FPD5Muk1kQL42KT+Yg4a2zEE1YKL6/iI5v+4y9p5mUwvvSgo/JlKmXCsiVHDGNYbDbhw1/QUNJxc01eo5El83YJBFQVTQXFnov4N9z+hnIgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cMkt8iyI; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714046159; x=1745582159;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=r3pRjxpIZHmEpRbogQ4vWIVk3Y5dqkyWL3sFWRuM1BM=;
-  b=cMkt8iyIZYur2iktfUGTRHUo45vFigL1CrHbGSN4DISOwEIn/XMhOfxq
-   tRg3Y4Mc1Sidz5oRCIORm60dVKNLuG1Kq2SEfnHCrzLYLDqxwCN70x3iD
-   RyYGotAzzOvybq337CAqk/wDeKLXiZTgs34f7VSvolFgB9pGsSeEGnw03
-   f6w51Z+tmTVSsWFv0euLtmfQxu/BegPjN1++2LkDDoXcLp/Hh3/7XPfPq
-   v6Quiie/BRXTJwQWCFvzUaf3K+R5LyZYBJp47oUuIa25v608lS00wEO+h
-   MDsh9MU+Rmeqd2wHK1CBe6Tgxn5Ahq/33nBRJzj/N9BUjhKZZMCr7ntSU
-   A==;
-X-CSE-ConnectionGUID: svMaqlgMRiqBflYsy3KquQ==
-X-CSE-MsgGUID: Au6zgJjCQOWgyNCQSRreaA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9550791"
-X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="9550791"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 04:55:58 -0700
-X-CSE-ConnectionGUID: S6SsojVrQB2C+mUiR0bPhQ==
-X-CSE-MsgGUID: JAA9MIA9R1qMlaqVXp9qPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="25673704"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 25 Apr 2024 04:55:57 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id CE7BF288; Thu, 25 Apr 2024 14:55:55 +0300 (EEST)
-Date: Thu, 25 Apr 2024 14:55:55 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linux GPIO <linux-gpio@vger.kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-gpio for 6.9-2
-Message-ID: <ZipEyyjM955f7ABy@black.fi.intel.com>
+	s=arc-20240116; t=1714046535; c=relaxed/simple;
+	bh=IsokxEzMjspQdJ6vbgSWEZO+bwVScekTaycFJ/Dr5nM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FadfTfHAfGLJboiZmGniFIpW3JDMjvoVp1tz97fGMXMJCyqZ0CPWQZF0JgxOdvuxheheGOuFau418tbZWUudqyLz1xiDV2tSKpulI37YCX5Vw+G/cH5wyyPuOEl5NecqKd6V3iKZiqwyOv7BRzk+Im4hqxuajuZG6lxafkPjaBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ssZnt+F6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D7DC113CC;
+	Thu, 25 Apr 2024 12:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714046534;
+	bh=IsokxEzMjspQdJ6vbgSWEZO+bwVScekTaycFJ/Dr5nM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ssZnt+F6c5C7fMP2Rv+zpjBsDZUzPNNQxiUU3+aKm/gMy76wi/kViatVTn0CwizWF
+	 GKQmIY/KZtpsqcd3hGGWRqVBKFxKqfg/qhEFgvkPtoQ1Ivpaij54PeyWnWD86GOw+a
+	 ETQQ/q97VlYlkalLlE2f1QK8rzoFmCIfRROFKBF8GkTtOEAtg3pTvxbwd7F6CjYsDs
+	 wYIImnz+C3zwgR/vFCMBBUwSGAHZyw9Ar48HwrAeH/dS3xzUEh87u1PeUlPfub/0qb
+	 ADx988KGvC5r/QxV6gr3xd8jHidY7Afv0fAUZA3fRMj9svI5UE6nozaR80ECjOqEnn
+	 GH0q3p3x2sheA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rzxnq-000000001yQ-0MAo;
+	Thu, 25 Apr 2024 14:02:14 +0200
+Date: Thu, 25 Apr 2024 14:02:14 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Bjorn Andersson <quic_bjorande@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Brian Norris <computersforpeace@gmail.com>,
+	Jaiganesh Narayanan <njaigane@codeaurora.org>,
+	Doug Anderson <dianders@chromium.org>,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: Fix behavior in abscense of open-drain
+ support
+Message-ID: <ZipGRl_QC_x83MFt@hovoldconsulting.com>
+References: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,50 +67,70 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
 
-Hi Linux GPIO  maintainers,
+On Wed, Apr 24, 2024 at 08:45:31PM -0700, Bjorn Andersson wrote:
+> When a GPIO is configured as OPEN_DRAIN gpiolib will in
+> gpiod_direction_output() attempt to configure the open-drain property of
+> the hardware and if this fails fall back to software emulation of this
+> state.
+> 
+> The TLMM block in most Qualcomm platform does not implement such
+> functionality, so this call would be expected to fail. But due to lack
+> of checks for this condition, the zero-initialized od_bit will cause
+> this request to silently corrupt the lowest bit in the config register
+> (which typically is part of the bias configuration) and happily continue
+> on.
+> 
+> Fix this by checking if the od_bit value is unspecified and if so fail
+> the request to avoid the unexpected state, and to make sure the software
+> fallback actually kicks in.
 
-One small fix for long-standing non-critical issue in Intel Tangier driver
-for v6.9-rcX. The change was tested on Intel Edison platform along with the
-Linux Next for a few weeks w/o issues reported. Please, pull.
+Fortunately, this is currently not a problem as the gpiochip driver does
+not implement the set_config() callback, which means that the attempt to
+change the pin configuration currently always fails with -ENOTSUP (see
+gpio_do_set_config()).
 
-Thanks,
+Specifically, this means that the software fallback kicks in, which I
+had already verified.
 
-With Best Regards,
-Andy Shevchenko
+Now, perhaps there is some other path which can allow you to end up
+here, but it's at least not via gpiod_direction_output().
 
-The following changes since commit ace0ebe5c98d66889f19e0f30e2518d0c58d0e04:
+The msm pinctrl binding does not allow 'drive-open-drain' so that path
+should also be ok unless you have a non-conformant devicetree.
 
-  gpio: crystalcove: Use -ENOTSUPP consistently (2024-04-05 20:12:39 +0300)
+> It is assumed for now that no implementation will come into existence
+> with BIT(0) being the open-drain bit, simply for convenience sake.
+> 
+> Fixes: 13355ca35cd1 ("pinctrl: qcom: ipq4019: add open drain support")
 
-are available in the Git repository at:
+I guess hardware open-drain mode has never been properly tested on
+ipq4019.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v6.9-2
+> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
+>  drivers/pinctrl/qcom/pinctrl-msm.h | 3 ++-
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index aeaf0d1958f5..329474dc21c0 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -313,6 +313,8 @@ static int msm_config_reg(struct msm_pinctrl *pctrl,
+>  			*mask |= BIT(g->i2c_pull_bit) >> *bit;
+>  		break;
+>  	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +		if (!g->od_bit)
+> +			return -EOPNOTSUPP;
 
-for you to fetch changes up to 7d045025a24b6336d444d359bd4312f351d017f9:
+I believe this should be -ENOTSUPP, which the rest of the driver and
+subsystem appear to use.
 
-  gpio: tangier: Use correct type for the IRQ chip data (2024-04-12 23:41:05 +0300)
+>  		*bit = g->od_bit;
+>  		*mask = 1;
+>  		break;
 
-----------------------------------------------------------------
-intel-gpio for v6.9-2
-
-* Make data pointer dereference robust in Intel Tangier driver
-
-The following is an automated git shortlog grouped by driver:
-
-tangier:
- -  Use correct type for the IRQ chip data
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      gpio: tangier: Use correct type for the IRQ chip data
-
- drivers/gpio/gpio-tangier.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Johan
 
