@@ -1,154 +1,639 @@
-Return-Path: <linux-gpio+bounces-5837-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5838-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 217338B1B57
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 08:59:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FCAD8B1C58
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 09:59:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 839F71F2299D
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 06:59:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9214A1C21EDE
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 07:59:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D8769946;
-	Thu, 25 Apr 2024 06:59:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291FF6F06D;
+	Thu, 25 Apr 2024 07:59:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J3LtZaxz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cqOQ7wEn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA143C08F
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 06:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE5B6D1B0
+	for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 07:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714028355; cv=none; b=qh2dD8nU5rmNbMD0qUH1Z3ViwenGvJMqeLoPtPfGEBfp/mb2N+YMemJG6wjE9kMA6Id5uB+L6zmg+GCPAS+PTo1iU5B1eyW0EY0uK19FE9m9ncCQNY6M9h4NOHJ2izNRvBnd6klWOxOA1Xi+ZLeJTQyq57oEAvos6KGE4fdCCMw=
+	t=1714031971; cv=none; b=bdURtQSPoc6tKc6DXZmxj4nT+NROe9Ftmil0R41n4TpALJtuuHZ4CPUV9pCfLDEa7RkG9rI7TgR15PXzIbV0tqFlXw6U20o0YAIGMrrMeY1v+gblzaU8ARuphDEsAhl9ByE4BdkdfJ1ak6tov5/64j0YkL53oMOiLnyd60QqGOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714028355; c=relaxed/simple;
-	bh=z5jx6HtgVTpu9E6jNxPG5tEWAnqSpYuFVdPfk3SZAEI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XF85hC54YhyX44yZxG3oDMZkrOK/kFF8EKNj1ATc+xtAptGm5Bi5KhDNAFY8PEhZoePqxAW0iPP07fx5rsNybUKfJ0V/WlZSChWQe0SE1/l/dY08YgK4fZausv4SQ0PCTc2hT72NYTOBo2SRN3tjjJTKorwM62WF7H8equ+WIVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J3LtZaxz; arc=none smtp.client-ip=209.85.208.54
+	s=arc-20240116; t=1714031971; c=relaxed/simple;
+	bh=xrSdkqAR2Ts7zjorkQIr3WlQ784Ey6Ra4r7EpBZsoi8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rZo+YFnrUWhzcuw/Nk2fVn9RtoxNlFeXqC47BDoW32QDE5/Dgjifa4Co1NNsqguX7EGCrsL5d8fsnhnYiGB/HVI5O824+P/3CdLUJU8uHzgG53Bzc5LC+62N9WafbEPs0twX/clKSlcjyE2Q+JZwqd4JBLUu+UkO8G1euU6jSak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cqOQ7wEn; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-572242ed990so522892a12.0
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Apr 2024 23:59:13 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41b5dc5e037so707515e9.3
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 00:59:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714028351; x=1714633151; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=OJt7GQviSaHwmxCYZtnsF3ZT5cKCAy7SutbGqK4H06k=;
-        b=J3LtZaxzFi3ubBGGx54b+GoGWLjKznoDE/p9GOKYn7I7DDoZ7/GPzXu7IpSTO9O3Xt
-         w80+JWGkuDxXQW5962LMJoZGZ5QSd6qLauktyRTPuQorb9jND3S8zyLNoRTefbYjhBWh
-         fVEBImvkNh3/Zely8vOZGGq0ySeIbOTSbkFJ3kTF8KafZOTT7zYqFfEmGm4GgR2ZszoT
-         rEXF0X3LgZYu5jJxDeCxp3y30p5zP+iQU/EcnBvOkdFChITgYkkdZC21LVxIk1N+SD8Q
-         Zj2l3PugucDvlxNxaka6rvz/N1s7hSTioMbIcs6RrOAOY/GB6qfoi2c37ekm274CrPLp
-         fO1w==
+        d=linaro.org; s=google; t=1714031968; x=1714636768; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KgkkBkwl2a3w3YPdRbEvUKh5659wVwBZZZWyPb6VST4=;
+        b=cqOQ7wEnSgmR/2/5UZgObCkwE8kaLY8GREAylp3QgZvmwfT/92+L0w/fwkUbSho6Fy
+         5mosiFEeZSCkPX0nqVDhoBXaObMpolLAg3Lyr02brANkzN5YnEoxf0iAS3yzLDYAJLEt
+         +gcB49RtrrVXTA7LIYNJd7PsgkKK9EBJI9zYq4XToxngVxOWN4+Br4gv4T2SlwVXQaEp
+         DRauDMps1jcpN3cfiFy79MkGLR/Kjp9vH2VzJaTXAJV+9KBBiaqmc/E6qtbX8Q8Vcx99
+         EEMxYpq/g6NuOid2ABEKSSpSuhJq/TV4keoTdw0JGnEkNh+oJyhcaUvsJbplXbIdvdr0
+         wpEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714028351; x=1714633151;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OJt7GQviSaHwmxCYZtnsF3ZT5cKCAy7SutbGqK4H06k=;
-        b=dBZe/t6IVF5QXKBTUvqZegWr606y2a4CpgmVIUavlQyCb7k6va+/AJcXdDd4HOSNUe
-         huOfjYwYoKmMxdjfg8o3pSuwVOdH1iA4YtElrmVFigCJucjiIxkowoR/E63NxrIlHjOb
-         etAVon/vb8yKl4/F2aWHT0vXYG3rRdOkMp5Q4O6Bai6r6TP5fYUXiCIhBi4pSwXDgAy7
-         oQAYr5AezFm0zpCGwFgAefOna2/wlpST1xiRB0G9Ip62MMEKges38mAW/FQUrpUoX+Al
-         67oC0AEaHa3efYRNXukODjOM3tYz1DDetKhAwp1kJ3rY59HCRGrXL2dxLpJjo4VN3F2G
-         c0iw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvJIQDt6QhgP7BcUDwa1eOVPR8eDB8RM//4VSjuXDh1/+Iw/r3q4It2FVBQ08+/qsU4Ihs6cGCMP/yIjLo7wuCokUOAvqfMymOpg==
-X-Gm-Message-State: AOJu0Yw5ZsjarD8YWpzG7X1341zX5jsB3Fz6S0R9UgAN04fkJcj87+xa
-	eRSIuNL4r8LXw6ej4UOXVddjWKFPvc6E1cqNHRf12sa2Xr7GTQg/xu96YgpquvI=
-X-Google-Smtp-Source: AGHT+IF5dhSBGr5KQdhtsEFv63O6COLGuBL0vfdDLKinDeAYNw8vV70ZSY/l7q4ZEmvoEvefnUGz7w==
-X-Received: by 2002:a50:8e08:0:b0:56e:2a0a:c133 with SMTP id 8-20020a508e08000000b0056e2a0ac133mr3786854edw.22.1714028351586;
-        Wed, 24 Apr 2024 23:59:11 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id cs14-20020a0564020c4e00b005723e8610d2sm395020edb.77.2024.04.24.23.59.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Apr 2024 23:59:11 -0700 (PDT)
-Message-ID: <2a6f758d-eade-4feb-bc93-f1a6811a6f88@linaro.org>
-Date: Thu, 25 Apr 2024 08:59:09 +0200
+        d=1e100.net; s=20230601; t=1714031968; x=1714636768;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KgkkBkwl2a3w3YPdRbEvUKh5659wVwBZZZWyPb6VST4=;
+        b=Vm5j47fK5XE/KIQ1P2JnwlMRJHaDzwAq3L3FiU9BdMadIdF7h/Ao+z2O97JvNn30zC
+         O50cmkWjhMvjis3xjpDmnmKdZjNikWW8++IMvq408bVBJtCTtw1JTwfgtrZQYxCd7CS9
+         37gRuBSa5otm7jLSMdUYP9UEP/0gHOVFkfrxve5Yril2It4npFEvwQp4W9qR7vmeAdVb
+         0cfBBP8xqXenDGGVwevvV7jaY/7rSnSLBizP2O/99lWI1x4R2y8MPZYXkutqQdnUy+EG
+         5bY1vwk4xBvs2R5y1aV9q2ZTzauyCMLrHWRxCHyMxsC97fmRqSkkeRgdYEH9zLPQb1wl
+         gB0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVPoqxMTFQ3X6xFLX/F/hwMY7Fo8XI7f6h5Ivq+RGjrJoiOFj9ukLNwkEpIgE8ijxRi1k+O5zIacthAAyFFtmwOwipTK+OHcwfKSw==
+X-Gm-Message-State: AOJu0Yw+RD8WyyyxuZHlql6g19x9vxcd7dQWOq6acx5svuQlnBLwGKyk
+	+njuyM52xjTfnB80BZunUOwtVtmeF9qRGAdSUkqMDx6Mt1dTWP+DNm/luuJ297w=
+X-Google-Smtp-Source: AGHT+IH+6ksnS68uM1lve6mEz21PPZmuDBvFqCYzVE2GClX0FySihV87rV5bb402rbO+C9JZZ4+oLw==
+X-Received: by 2002:a05:600c:548a:b0:41a:7ab1:fd98 with SMTP id iv10-20020a05600c548a00b0041a7ab1fd98mr3724905wmb.21.1714031967408;
+        Thu, 25 Apr 2024 00:59:27 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id q15-20020a05600c46cf00b00416e2c8b290sm30503963wmo.1.2024.04.25.00.59.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Apr 2024 00:59:27 -0700 (PDT)
+Date: Thu, 25 Apr 2024 10:59:22 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, lee@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, jpanis@baylibre.com,
+	devicetree@vger.kernel.org, arnd@arndb.de,
+	gregkh@linuxfoundation.org, lgirdwood@gmail.com, broonie@kernel.org,
+	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
+	kristo@kernel.org, eblanc@baylibre.com
+Subject: Re: [PATCH v7 08/10] regulator: tps6594-regulator: Add TI TPS65224
+ PMIC regulators
+Message-ID: <54eca1ac-288c-4f88-8c06-f5859bfa715c@moroto.mountain>
+References: <20240417114934.186248-1-bhargav.r@ltts.com>
+ <0109018eebe46a92-b169814e-4300-450a-ab0d-45fbe3c2d988-000000@ap-south-1.amazonses.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: brcmstb: add gpio-ranges
-To: Doug Berger <opendmb@gmail.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Phil Elwell <phil@raspberrypi.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240424185039.1707812-1-opendmb@gmail.com>
- <20240424185039.1707812-2-opendmb@gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240424185039.1707812-2-opendmb@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0109018eebe46a92-b169814e-4300-450a-ab0d-45fbe3c2d988-000000@ap-south-1.amazonses.com>
 
-On 24/04/2024 20:50, Doug Berger wrote:
-> Add optional gpio-ranges device-tree property to the Broadcom
-> Set-Top-Box GPIO controller.
+On Wed, Apr 17, 2024 at 11:49:59AM +0000, Bhargav Raviprakash wrote:
+> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
 > 
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
+> Add support for TPS65224 regulators (bucks and LDOs) to TPS6594 driver as
+> they have significant functional overlap. TPS65224 PMIC has 4 buck
+> regulators and 3 LDOs. BUCK12 can operate in dual phase.
+> The output voltages are configurable and are meant to supply power to the
+> main processor and other components.
+> 
+> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> Reviewed-by: Mark Brown <broonie@kernel.org>
 > ---
+>  drivers/regulator/Kconfig             |   4 +-
+>  drivers/regulator/tps6594-regulator.c | 243 +++++++++++++++++++++++---
+>  2 files changed, 222 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index 7db0a29b5..1e4119f00 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -1563,13 +1563,15 @@ config REGULATOR_TPS6594
+>  	depends on MFD_TPS6594 && OF
+>  	default MFD_TPS6594
+>  	help
+> -	  This driver supports TPS6594 voltage regulator chips.
+> +	  This driver supports TPS6594 series and TPS65224 voltage regulator chips.
+>  	  TPS6594 series of PMICs have 5 BUCKs and 4 LDOs
+>  	  voltage regulators.
+>  	  BUCKs 1,2,3,4 can be used in single phase or multiphase mode.
+>  	  Part number defines which single or multiphase mode is i used.
+>  	  It supports software based voltage control
+>  	  for different voltage domains.
+> +	  TPS65224 PMIC has 4 BUCKs and 3 LDOs. BUCK12 can be used in dual phase.
+> +	  All BUCKs and LDOs volatge can be controlled through software.
+>  
+>  config REGULATOR_TPS6524X
+>  	tristate "TI TPS6524X Power regulators"
+> diff --git a/drivers/regulator/tps6594-regulator.c b/drivers/regulator/tps6594-regulator.c
+> index b7f0c8779..3c8e0b1cd 100644
+> --- a/drivers/regulator/tps6594-regulator.c
+> +++ b/drivers/regulator/tps6594-regulator.c
+> @@ -66,6 +66,15 @@ static struct tps6594_regulator_irq_type tps6594_ext_regulator_irq_types[] = {
+>  	  REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>  };
+>  
+> +static struct tps6594_regulator_irq_type tps65224_ext_regulator_irq_types[] = {
+> +	{ TPS65224_IRQ_NAME_VCCA_UVOV, "VCCA", "voltage out of range",
+> +	  REGULATOR_EVENT_REGULATION_OUT },
+> +	{ TPS65224_IRQ_NAME_VMON1_UVOV, "VMON1", "voltage out of range",
+> +	  REGULATOR_EVENT_REGULATION_OUT },
+> +	{ TPS65224_IRQ_NAME_VMON2_UVOV, "VMON2", "voltage out of range",
+> +	  REGULATOR_EVENT_REGULATION_OUT },
+> +};
+> +
+>  struct tps6594_regulator_irq_data {
+>  	struct device *dev;
+>  	struct tps6594_regulator_irq_type *type;
+> @@ -122,6 +131,27 @@ static const struct linear_range ldos_4_ranges[] = {
+>  	REGULATOR_LINEAR_RANGE(1200000, 0x20, 0x74, 25000),
+>  };
+>  
+> +/* Voltage range for TPS65224 Bucks and LDOs */
+> +static const struct linear_range tps65224_bucks_1_ranges[] = {
+> +	REGULATOR_LINEAR_RANGE(500000, 0x0a, 0x0e, 20000),
+> +	REGULATOR_LINEAR_RANGE(600000, 0x0f, 0x72, 5000),
+> +	REGULATOR_LINEAR_RANGE(1100000, 0x73, 0xaa, 10000),
+> +	REGULATOR_LINEAR_RANGE(1660000, 0xab, 0xfd, 20000),
+> +};
+> +
+> +static const struct linear_range tps65224_bucks_2_3_4_ranges[] = {
+> +	REGULATOR_LINEAR_RANGE(500000, 0x0, 0x1a, 25000),
+> +	REGULATOR_LINEAR_RANGE(1200000, 0x1b, 0x45, 50000),
+> +};
+> +
+> +static const struct linear_range tps65224_ldos_1_ranges[] = {
+> +	REGULATOR_LINEAR_RANGE(1200000, 0xC, 0x36, 50000),
+> +};
+> +
+> +static const struct linear_range tps65224_ldos_2_3_ranges[] = {
+> +	REGULATOR_LINEAR_RANGE(600000, 0x0, 0x38, 50000),
+> +};
+> +
+>  /* Operations permitted on BUCK1/2/3/4/5 */
+>  static const struct regulator_ops tps6594_bucks_ops = {
+>  	.is_enabled		= regulator_is_enabled_regmap,
+> @@ -197,6 +227,38 @@ static const struct regulator_desc buck_regs[] = {
+>  			  4, 0, 0, NULL, 0, 0),
+>  };
+>  
+> +/* Buck configuration for TPS65224 */
+> +static const struct regulator_desc tps65224_buck_regs[] = {
+> +	TPS6594_REGULATOR("BUCK1", "buck1", TPS6594_BUCK_1,
+> +			  REGULATOR_VOLTAGE, tps6594_bucks_ops, TPS65224_MASK_BUCK1_VSET,
+> +			  TPS6594_REG_BUCKX_VOUT_1(0),
+> +			  TPS65224_MASK_BUCK1_VSET,
+> +			  TPS6594_REG_BUCKX_CTRL(0),
+> +			  TPS6594_BIT_BUCK_EN, 0, 0, tps65224_bucks_1_ranges,
+> +			  4, 0, 0, NULL, 0, 0),
+> +	TPS6594_REGULATOR("BUCK2", "buck2", TPS6594_BUCK_2,
+> +			  REGULATOR_VOLTAGE, tps6594_bucks_ops, TPS65224_MASK_BUCKS_VSET,
+> +			  TPS6594_REG_BUCKX_VOUT_1(1),
+> +			  TPS65224_MASK_BUCKS_VSET,
+> +			  TPS6594_REG_BUCKX_CTRL(1),
+> +			  TPS6594_BIT_BUCK_EN, 0, 0, tps65224_bucks_2_3_4_ranges,
+> +			  4, 0, 0, NULL, 0, 0),
+> +	TPS6594_REGULATOR("BUCK3", "buck3", TPS6594_BUCK_3,
+> +			  REGULATOR_VOLTAGE, tps6594_bucks_ops, TPS65224_MASK_BUCKS_VSET,
+> +			  TPS6594_REG_BUCKX_VOUT_1(2),
+> +			  TPS65224_MASK_BUCKS_VSET,
+> +			  TPS6594_REG_BUCKX_CTRL(2),
+> +			  TPS6594_BIT_BUCK_EN, 0, 0, tps65224_bucks_2_3_4_ranges,
+> +			  4, 0, 0, NULL, 0, 0),
+> +	TPS6594_REGULATOR("BUCK4", "buck4", TPS6594_BUCK_4,
+> +			  REGULATOR_VOLTAGE, tps6594_bucks_ops, TPS65224_MASK_BUCKS_VSET,
+> +			  TPS6594_REG_BUCKX_VOUT_1(3),
+> +			  TPS65224_MASK_BUCKS_VSET,
+> +			  TPS6594_REG_BUCKX_CTRL(3),
+> +			  TPS6594_BIT_BUCK_EN, 0, 0, tps65224_bucks_2_3_4_ranges,
+> +			  4, 0, 0, NULL, 0, 0),
+> +};
+> +
+>  static struct tps6594_regulator_irq_type tps6594_buck1_irq_types[] = {
+>  	{ TPS6594_IRQ_NAME_BUCK1_OV, "BUCK1", "overvoltage", REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+>  	{ TPS6594_IRQ_NAME_BUCK1_UV, "BUCK1", "undervoltage", REGULATOR_EVENT_UNDER_VOLTAGE },
+> @@ -269,6 +331,41 @@ static struct tps6594_regulator_irq_type tps6594_ldo4_irq_types[] = {
+>  	  REGULATOR_EVENT_OVER_CURRENT },
+>  };
+>  
+> +static struct tps6594_regulator_irq_type tps65224_buck1_irq_types[] = {
+> +	{ TPS65224_IRQ_NAME_BUCK1_UVOV, "BUCK1", "voltage out of range",
+> +	  REGULATOR_EVENT_REGULATION_OUT },
+> +};
+> +
+> +static struct tps6594_regulator_irq_type tps65224_buck2_irq_types[] = {
+> +	{ TPS65224_IRQ_NAME_BUCK2_UVOV, "BUCK2", "voltage out of range",
+> +	  REGULATOR_EVENT_REGULATION_OUT },
+> +};
+> +
+> +static struct tps6594_regulator_irq_type tps65224_buck3_irq_types[] = {
+> +	{ TPS65224_IRQ_NAME_BUCK3_UVOV, "BUCK3", "voltage out of range",
+> +	  REGULATOR_EVENT_REGULATION_OUT },
+> +};
+> +
+> +static struct tps6594_regulator_irq_type tps65224_buck4_irq_types[] = {
+> +	{ TPS65224_IRQ_NAME_BUCK4_UVOV, "BUCK4", "voltage out of range",
+> +	  REGULATOR_EVENT_REGULATION_OUT },
+> +};
+> +
+> +static struct tps6594_regulator_irq_type tps65224_ldo1_irq_types[] = {
+> +	{ TPS65224_IRQ_NAME_LDO1_UVOV, "LDO1", "voltage out of range",
+> +	  REGULATOR_EVENT_REGULATION_OUT },
+> +};
+> +
+> +static struct tps6594_regulator_irq_type tps65224_ldo2_irq_types[] = {
+> +	{ TPS65224_IRQ_NAME_LDO2_UVOV, "LDO2", "voltage out of range",
+> +	  REGULATOR_EVENT_REGULATION_OUT },
+> +};
+> +
+> +static struct tps6594_regulator_irq_type tps65224_ldo3_irq_types[] = {
+> +	{ TPS65224_IRQ_NAME_LDO3_UVOV, "LDO3", "voltage out of range",
+> +	  REGULATOR_EVENT_REGULATION_OUT },
+> +};
+> +
+>  static struct tps6594_regulator_irq_type *tps6594_bucks_irq_types[] = {
+>  	tps6594_buck1_irq_types,
+>  	tps6594_buck2_irq_types,
+> @@ -284,7 +381,20 @@ static struct tps6594_regulator_irq_type *tps6594_ldos_irq_types[] = {
+>  	tps6594_ldo4_irq_types,
+>  };
+>  
+> -static const struct regulator_desc multi_regs[] = {
+> +static struct tps6594_regulator_irq_type *tps65224_bucks_irq_types[] = {
+> +	tps65224_buck1_irq_types,
+> +	tps65224_buck2_irq_types,
+> +	tps65224_buck3_irq_types,
+> +	tps65224_buck4_irq_types,
+> +};
+> +
+> +static struct tps6594_regulator_irq_type *tps65224_ldos_irq_types[] = {
+> +	tps65224_ldo1_irq_types,
+> +	tps65224_ldo2_irq_types,
+> +	tps65224_ldo3_irq_types,
+> +};
+> +
+> +static const struct regulator_desc tps6594_multi_regs[] = {
+>  	TPS6594_REGULATOR("BUCK12", "buck12", TPS6594_BUCK_1,
+>  			  REGULATOR_VOLTAGE, tps6594_bucks_ops, TPS6594_MASK_BUCKS_VSET,
+>  			  TPS6594_REG_BUCKX_VOUT_1(1),
+> @@ -315,7 +425,17 @@ static const struct regulator_desc multi_regs[] = {
+>  			  4, 4000, 0, NULL, 0, 0),
+>  };
+>  
+> -static const struct regulator_desc ldo_regs[] = {
+> +static const struct regulator_desc tps65224_multi_regs[] = {
+> +	TPS6594_REGULATOR("BUCK12", "buck12", TPS6594_BUCK_1,
+> +			  REGULATOR_VOLTAGE, tps6594_bucks_ops, TPS65224_MASK_BUCK1_VSET,
+> +			  TPS6594_REG_BUCKX_VOUT_1(0),
+> +			  TPS65224_MASK_BUCK1_VSET,
+> +			  TPS6594_REG_BUCKX_CTRL(0),
+> +			  TPS6594_BIT_BUCK_EN, 0, 0, tps65224_bucks_1_ranges,
+> +			  4, 4000, 0, NULL, 0, 0),
+> +};
+> +
+> +static const struct regulator_desc tps6594_ldo_regs[] = {
+>  	TPS6594_REGULATOR("LDO1", "ldo1", TPS6594_LDO_1,
+>  			  REGULATOR_VOLTAGE, tps6594_ldos_1_2_3_ops, TPS6594_MASK_LDO123_VSET,
+>  			  TPS6594_REG_LDOX_VOUT(0),
+> @@ -346,6 +466,30 @@ static const struct regulator_desc ldo_regs[] = {
+>  			  1, 0, 0, NULL, 0, 0),
+>  };
+>  
+> +static const struct regulator_desc tps65224_ldo_regs[] = {
+> +	TPS6594_REGULATOR("LDO1", "ldo1", TPS6594_LDO_1,
+> +			  REGULATOR_VOLTAGE, tps6594_ldos_1_2_3_ops, TPS6594_MASK_LDO123_VSET,
+> +			  TPS6594_REG_LDOX_VOUT(0),
+> +			  TPS6594_MASK_LDO123_VSET,
+> +			  TPS6594_REG_LDOX_CTRL(0),
+> +			  TPS6594_BIT_LDO_EN, 0, 0, tps65224_ldos_1_ranges,
+> +			  1, 0, 0, NULL, 0, TPS6594_BIT_LDO_BYPASS),
+> +	TPS6594_REGULATOR("LDO2", "ldo2", TPS6594_LDO_2,
+> +			  REGULATOR_VOLTAGE, tps6594_ldos_1_2_3_ops, TPS6594_MASK_LDO123_VSET,
+> +			  TPS6594_REG_LDOX_VOUT(1),
+> +			  TPS6594_MASK_LDO123_VSET,
+> +			  TPS6594_REG_LDOX_CTRL(1),
+> +			  TPS6594_BIT_LDO_EN, 0, 0, tps65224_ldos_2_3_ranges,
+> +			  1, 0, 0, NULL, 0, TPS6594_BIT_LDO_BYPASS),
+> +	TPS6594_REGULATOR("LDO3", "ldo3", TPS6594_LDO_3,
+> +			  REGULATOR_VOLTAGE, tps6594_ldos_1_2_3_ops, TPS6594_MASK_LDO123_VSET,
+> +			  TPS6594_REG_LDOX_VOUT(2),
+> +			  TPS6594_MASK_LDO123_VSET,
+> +			  TPS6594_REG_LDOX_CTRL(2),
+> +			  TPS6594_BIT_LDO_EN, 0, 0, tps65224_ldos_2_3_ranges,
+> +			  1, 0, 0, NULL, 0, TPS6594_BIT_LDO_BYPASS),
+> +};
+> +
+>  static irqreturn_t tps6594_regulator_irq_handler(int irq, void *data)
+>  {
+>  	struct tps6594_regulator_irq_data *irq_data = data;
+> @@ -369,17 +513,18 @@ static irqreturn_t tps6594_regulator_irq_handler(int irq, void *data)
+>  static int tps6594_request_reg_irqs(struct platform_device *pdev,
+>  				    struct regulator_dev *rdev,
+>  				    struct tps6594_regulator_irq_data *irq_data,
+> -				    struct tps6594_regulator_irq_type *tps6594_regs_irq_types,
+> +				    struct tps6594_regulator_irq_type *regs_irq_types,
+> +				    size_t interrupt_cnt,
+>  				    int *irq_idx)
+>  {
+>  	struct tps6594_regulator_irq_type *irq_type;
+>  	struct tps6594 *tps = dev_get_drvdata(pdev->dev.parent);
+> -	int j;
+> +	size_t j;
+>  	int irq;
+>  	int error;
+>  
+> -	for (j = 0; j < REGS_INT_NB; j++) {
+> -		irq_type = &tps6594_regs_irq_types[j];
+> +	for (j = 0; j < interrupt_cnt; j++) {
+> +		irq_type = &regs_irq_types[j];
+>  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+>  		if (irq < 0)
+>  			return -EINVAL;
+> @@ -412,14 +557,38 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+>  	struct tps6594_ext_regulator_irq_data *irq_ext_reg_data;
+>  	struct tps6594_regulator_irq_type *irq_type;
+>  	u8 buck_configured[BUCK_NB] = { 0 };
+> +	u8 ldo_configured[LDO_NB] = { 0 };
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This should be bool and the related changes like using true/false.
 
-Best regards,
-Krzysztof
+Actually, on reviewing this code even more, I really suggest you first
+do some clean up to this driver and then just change this to:
 
+	int nr_ldo;
+
+Then use that instead of LDO_NB.
+
+buck_configured[] should be bool as well.
+
+>  	u8 buck_multi[MULTI_PHASE_NB] = { 0 };
+> -	static const char * const multiphases[] = {"buck12", "buck123", "buck1234", "buck34"};
+> +	static const char * const tps6594_multiphases[] = {"buck12", "buck123",
+> +							   "buck1234", "buck34"};
+> +	static const char * const tps65224_multiphases[] = {"buck12"};
+
+The tps65224_multiphases[] array is never used except to get the
+ARRAY_SIZE().  Neither of these are necessary.  Just use
+multi_regs[multi].supply_name instead.
+
+
+>  	static const char *npname;
+>  	int error, i, irq, multi, delta;
+>  	int irq_idx = 0;
+>  	int buck_idx = 0;
+> +	unsigned int multi_phase_cnt = 0;
+
+No need to initialize this here.
+
+>  	size_t ext_reg_irq_nb = 2;
+>  	size_t reg_irq_nb;
+> +	struct tps6594_regulator_irq_type **bucks_irq_types;
+> +	const struct regulator_desc *multi_regs;
+> +	struct tps6594_regulator_irq_type **ldos_irq_types;
+> +	const struct regulator_desc *ldo_regs;
+> +	size_t interrupt_count;
+> +
+> +	if (tps->chip_id == TPS65224) {
+> +		bucks_irq_types = tps65224_bucks_irq_types;
+> +		interrupt_count = ARRAY_SIZE(tps65224_buck1_irq_types);
+> +		multi_regs = tps65224_multi_regs;
+> +		ldos_irq_types = tps65224_ldos_irq_types;
+> +		ldo_regs = tps65224_ldo_regs;
+> +	} else {
+> +		bucks_irq_types = tps6594_bucks_irq_types;
+> +		interrupt_count = ARRAY_SIZE(tps6594_buck1_irq_types);
+> +		multi_regs = tps6594_multi_regs;
+> +		ldos_irq_types = tps6594_ldos_irq_types;
+> +		ldo_regs = tps6594_ldo_regs;
+
+
+Initialize multi_phase_cnt in this block with all the other variables
+instead of below.
+
+> +	}
+> +
+>  	enum {
+>  		MULTI_BUCK12,
+>  		MULTI_BUCK123,
+> @@ -434,6 +603,10 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+>  	config.driver_data = tps;
+>  	config.regmap = tps->regmap;
+>  
+> +	multi_phase_cnt = (tps->chip_id == TPS65224) ?
+> +			   ARRAY_SIZE(tps65224_multiphases) :
+> +			   ARRAY_SIZE(tps6594_multiphases);
+> +
+>  	/*
+>  	 * Switch case defines different possible multi phase config
+>  	 * This is based on dts buck node name.
+> @@ -442,13 +615,13 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+>  	 * In case of Multiphase configuration, value should be defined for
+>  	 * buck_configured to avoid creating bucks for every buck in multiphase
+>  	 */
+> -	for (multi = MULTI_FIRST; multi < MULTI_NUM; multi++) {
+> -		np = of_find_node_by_name(tps->dev->of_node, multiphases[multi]);
+> +	for (multi = MULTI_FIRST; multi < multi_phase_cnt; multi++) {
+> +		np = of_find_node_by_name(tps->dev->of_node, tps6594_multiphases[multi]);
+
+Use multi_regs[multi].supply_name here.
+
+>  		npname = of_node_full_name(np);
+>  		np_pmic_parent = of_get_parent(of_get_parent(np));
+>  		if (of_node_cmp(of_node_full_name(np_pmic_parent), tps->dev->of_node->full_name))
+>  			continue;
+> -		delta = strcmp(npname, multiphases[multi]);
+> +		delta = strcmp(npname, tps6594_multiphases[multi]);
+>  		if (!delta) {
+
+Unrelated to your patch but this should be:
+
+	if (strcmp(npname, tps6594_multiphases[multi]) == 0) {
+
+The == means that the strings are equal.  No need for a delta variable.
+
+>  			switch (multi) {
+>  			case MULTI_BUCK12:
+> @@ -486,6 +659,11 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+>  		/* There is only 4 buck on LP8764 */
+>  		buck_configured[4] = 1;
+>  		reg_irq_nb = size_mul(REGS_INT_NB, (BUCK_NB - 1));
+> +	} else if (tps->chip_id == TPS65224) {
+> +		/* TPS65224 has 4 bucks and 3 LDOs. 1 Interrupt for each buck and ldo */
+> +		buck_configured[4] = 1;
+> +		ldo_configured[3] = 1;
+> +		reg_irq_nb = size_mul(1, (size_add((BUCK_NB - 1), (LDO_NB - 1))));
+>  	} else {
+>  		reg_irq_nb = size_mul(REGS_INT_NB, (size_add(BUCK_NB, LDO_NB)));
+
+No need for size_add/mul().  These are small constants so it's not
+going to integer overflow.
+
+The other suggestion here would be to do a clean up of the driver first
+so instead of marking the last buck_configured[4] = 1; we would instead
+say "nr_buck = 4;"  Then the math become easier and we can remove the
+comments and the confusing subtractions.
+
+        if (tps->chip_id == LP8764) {
+                nr_buck = 4;
+                nr_ldo = 0;
+        } else if (tps->chip_id == TPS65224) {
+                nr_buck = ARRAY_SIZE(tps65224_buck_regs);
+                nr_ldo = ARRAY_SIZE(tps65224_ldo_regs);
+        } else {
+                nr_buck = BUCK_NB;  // FIXME.  ARRAY_SIZE()
+                nr_ldo = ARRAY_SIZE(tps6594_ldo_regs);
+        }
+
+        reg_irq_nb = multi_regs * (nr_buck + nr_ldo);
+
+>  	}
+> @@ -495,7 +673,7 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+>  	if (!irq_data)
+>  		return -ENOMEM;
+>  
+> -	for (i = 0; i < MULTI_PHASE_NB; i++) {
+> +	for (i = 0; i < multi_phase_cnt; i++) {
+>  		if (buck_multi[i] == 0)
+>  			continue;
+>  
+> @@ -508,18 +686,23 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+>  		/* config multiphase buck12+buck34 */
+>  		if (i == 1)
+>  			buck_idx = 2;
+> +
+>  		error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+> -						 tps6594_bucks_irq_types[buck_idx], &irq_idx);
+> +						 bucks_irq_types[buck_idx],
+> +						 interrupt_count, &irq_idx);
+>  		if (error)
+>  			return error;
+> +
+>  		error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+> -						 tps6594_bucks_irq_types[buck_idx + 1], &irq_idx);
+> +						 bucks_irq_types[buck_idx + 1],
+> +						 interrupt_count, &irq_idx);
+>  		if (error)
+>  			return error;
+>  
+>  		if (i == 2 || i == 3) {
+>  			error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+>  							 tps6594_bucks_irq_types[buck_idx + 2],
+> +							 interrupt_count,
+>  							 &irq_idx);
+>  			if (error)
+>  				return error;
+> @@ -527,6 +710,7 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+>  		if (i == 3) {
+>  			error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+>  							 tps6594_bucks_irq_types[buck_idx + 3],
+> +							 interrupt_count,
+>  							 &irq_idx);
+>  			if (error)
+>  				return error;
+> @@ -537,21 +721,26 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+>  		if (buck_configured[i] == 1)
+>  			continue;
+>  
+> -		rdev = devm_regulator_register(&pdev->dev, &buck_regs[i], &config);
+> +		const struct regulator_desc *buck_cfg = (tps->chip_id == TPS65224) ?
+> +							 tps65224_buck_regs : buck_regs;
+> +
+> +		rdev = devm_regulator_register(&pdev->dev, &buck_cfg[i], &config);
+>  		if (IS_ERR(rdev))
+>  			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+> -					     "failed to register %s regulator\n",
+> -					     pdev->name);
+> +					     "failed to register %s regulator\n", pdev->name);
+
+There are too many unrelated white space changes in this patch.
+
+>  
+>  		error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+> -						 tps6594_bucks_irq_types[i], &irq_idx);
+> +						 bucks_irq_types[i], interrupt_count, &irq_idx);
+>  		if (error)
+>  			return error;
+>  	}
+>  
+> -	/* LP8764 dosen't have LDO */
+> +	/* LP8764 doesn't have LDO */
+>  	if (tps->chip_id != LP8764) {
+> -		for (i = 0; i < ARRAY_SIZE(ldo_regs); i++) {
+> +		for (i = 0; i < LDO_NB; i++) {
+> +			if (ldo_configured[i] == 1)
+> +				continue;
+> +
+
+Now that we have introduced a nr_ldo variable we can delete the
+/* LP8764 doesn't have LDO */ comment and the if LP8764 statement and
+the if (ldo_configured[i] == 1) condition.
+
+	for (i = 0; i < nr_ldo; i++) {
+		rdev = devm_regulator_register(&pdev->dev, &ldo_regs[i], &config);
+
+The BUCK loop would only loop nr_buck times as well.
+
+>  			rdev = devm_regulator_register(&pdev->dev, &ldo_regs[i], &config);
+>  			if (IS_ERR(rdev))
+>  				return dev_err_probe(tps->dev, PTR_ERR(rdev),
+> @@ -559,7 +748,7 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+>  						     pdev->name);
+>  
+>  			error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
+> -							 tps6594_ldos_irq_types[i],
+> +							 ldos_irq_types[i], interrupt_count,
+>  							 &irq_idx);
+>  			if (error)
+>  				return error;
+> @@ -568,16 +757,21 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+>  
+>  	if (tps->chip_id == LP8764)
+>  		ext_reg_irq_nb = ARRAY_SIZE(tps6594_ext_regulator_irq_types);
+> +	else if (tps->chip_id == TPS65224)
+> +		ext_reg_irq_nb = ARRAY_SIZE(tps65224_ext_regulator_irq_types);
+
+Declare an irq_types pointer.
+
+	if (tps->chip_id == TPS65224) {
+		irq_types = tps65224_ext_regulator_irq_types;
+		irq_count = ARRAY_SIZE(tps65224_ext_regulator_irq_types);
+	} else {
+		irq_types = tps6594_ext_regulator_irq_types;
+		if (tps->chip_id == LP8764)
+			irq_count = ARRAY_SIZE(tps6594_ext_regulator_irq_types);
+		else
+			irq_count = 2;
+	}
+
+>  
+>  	irq_ext_reg_data = devm_kmalloc_array(tps->dev,
+> -					ext_reg_irq_nb,
+> -					sizeof(struct tps6594_ext_regulator_irq_data),
+> -					GFP_KERNEL);
+> +					      ext_reg_irq_nb,
+> +					      sizeof(struct tps6594_ext_regulator_irq_data),
+> +					      GFP_KERNEL);
+
+Unrelated.
+
+>  	if (!irq_ext_reg_data)
+>  		return -ENOMEM;
+>  
+>  	for (i = 0; i < ext_reg_irq_nb; ++i) {
+> -		irq_type = &tps6594_ext_regulator_irq_types[i];
+> +		if (tps->chip_id == TPS65224)
+> +			irq_type = &tps65224_ext_regulator_irq_types[i];
+> +		else
+> +			irq_type = &tps6594_ext_regulator_irq_types[i];
+>  
+>  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+>  		if (irq < 0)
+
+regards,
+dan carpenter
 
