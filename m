@@ -1,208 +1,249 @@
-Return-Path: <linux-gpio+bounces-5858-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5859-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BAA68B24FB
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 17:22:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A34D88B2525
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 17:31:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C6C37B25A10
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 15:22:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C90181C218E5
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 15:31:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1F1A14AD24;
-	Thu, 25 Apr 2024 15:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E8AD14B081;
+	Thu, 25 Apr 2024 15:31:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lGFhM1vP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tCd2zckO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E12C14AD15
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 15:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC2A14A4F7;
+	Thu, 25 Apr 2024 15:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714058567; cv=none; b=W5bpRFH+YqCQlx3iiSXYVo2NnpRHi1aaFJ88lSCy5FCG+6gUYpZWoZ65HFS1kpDf3vAwLvrKX9tLbc1Rvi3/b4mqzOsGAxeZc47Fk2xj81+nrywVXtZXD+4nQkqLIerRRTEnyKw08hyA4uBWbVMiMvmIKCqpDcPmAFzUaNIiBvY=
+	t=1714059105; cv=none; b=i39roKMIzgh3AiDPWm2e1IepMajCmDH37Aj+mfzsXc9SC9k6l1Vr6dSPvPKNPCWZWGnib1EmbRTI99PdbefMWXrtl2E0iZZU5u3iZfDTiudTazbA7fQXEVC1T4x/FrIKWPtsTgY+CYjkHUxhaWiYnyQaVaxwJWeD/wVrtH3ohRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714058567; c=relaxed/simple;
-	bh=Zp1XztddXWSkzPRERD8uSH+GGbnPFecGU8R3FZDOubA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GxrowsKn4TAsze1TeEu8EwZq5HQL/FUBMVxzHYtRdIcrbdiPRYAHVhhRgqQS4dFJCcKpq106dLAY3SeOqD3DFcrJVWooWt0VVdmIuYZbYjJl6aVoEk9iFxy7dFasLI/LWruuYDh3lU99NhEVLOVnjU4t4oyDIVVm2yGvnLeA/aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lGFhM1vP; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <309b52e6-c206-4811-b14e-db5206adf902@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1714058563;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yLi5S9z+IggrVLuyc1ioiY20GXVGW50A1sm+DJHyEzY=;
-	b=lGFhM1vPlM2U00uPhd1FsTRiffFXhMa+qiOudGzBGWJC5ejhSmPE4Wr+9Go5rHD1AeM+GF
-	tBfSckSzzxYSJq4idyH1eMnfxoytxkL4evZVUUKA8OQNOZGTUA7a2iM/jTINOmelMwu1qf
-	RktX9bHZPJgLsPfojIwXR3wSNSvBjwA=
-Date: Thu, 25 Apr 2024 11:22:40 -0400
+	s=arc-20240116; t=1714059105; c=relaxed/simple;
+	bh=3/GCTM431jHb9nDcDDmIr5rh5QVpw++p6BByO8EL4Z4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MgxJ71JBpN2np7cT+KKC1KBqJ62gUESHKazu7nrpa9R98JihnJZoCvFANsYXJvt7+JFghrKMAMyYd1+6Qmlm3FDVyzkkDtYObZM2sxyFXe4RjzCMFSe86MGp10x88X6cjHtzTqERNBOXvrGNOBDeaoDhzF1If/R+kMsgLDsgfVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tCd2zckO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95DBDC113CC;
+	Thu, 25 Apr 2024 15:31:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714059103;
+	bh=3/GCTM431jHb9nDcDDmIr5rh5QVpw++p6BByO8EL4Z4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tCd2zckOmDI/bTXDD6Q4O/dY6HpYLih6zDo5Ye0WBjd7OthjGOsZZzce1D0Yzxxax
+	 Om22flbhYkb/UEHgKwexvcRNoAMtYT8g+3xJI+UvHi35BB0UY9l3jXY0UhRl1abFka
+	 wyWQg3+tXq6Jj8CACW218C6TaoyaUDQPDzJUduVmbvlgILAU8AneoIGKhXNRG2aLHu
+	 4ePllrlWYMNtlbj4f4ry+ATP2RSWig7gAg/JcQ75zX8cCw6Unf8cL9vT22RVDlZ9A5
+	 oEOMNua/fgg5Yjflz1lgwLVEIEq0lG9THS5xdMO6i9lp+mDa2KYSNHmFv1oVxCez7y
+	 +v/bkdeENoPoA==
+Date: Thu, 25 Apr 2024 10:31:40 -0500
+From: Rob Herring <robh@kernel.org>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: firmware: arm,scmi: Add properties
+ for i.MX95 Pinctrl OEM extensions
+Message-ID: <20240425153140.GA2556348-robh@kernel.org>
+References: <20240418-pinctrl-scmi-oem-v1-v2-0-3a555a3c58c3@nxp.com>
+ <20240418-pinctrl-scmi-oem-v1-v2-1-3a555a3c58c3@nxp.com>
+ <20240424193007.GA329896-robh@kernel.org>
+ <DU0PR04MB9417C67342B1DD6CC299B4CE88172@DU0PR04MB9417.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: pinctrl: zynqmp: Valid pin muxings cannot be configured
-To: Michal Simek <michal.simek@amd.com>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <5bb0dc7e-4c89-4f3d-abc6-41ae9ded5ae9@linux.dev>
- <f42fd731-ba2d-4000-99b2-c98f0ce77b67@amd.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <f42fd731-ba2d-4000-99b2-c98f0ce77b67@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DU0PR04MB9417C67342B1DD6CC299B4CE88172@DU0PR04MB9417.eurprd04.prod.outlook.com>
 
-On 4/24/24 02:22, Michal Simek wrote:
-> Hi Sean,
+On Thu, Apr 25, 2024 at 09:06:00AM +0000, Peng Fan wrote:
+> Hi Rob,
 > 
-> On 4/24/24 01:04, Sean Anderson wrote:
->> Hi Michal,
->>
->> I was looking to upstream one of our ZynqMP boards, and I ran into an
->> issue with the pinmuxing. We use almost all of the I/Os, so everything
->> is tightly packed into the MIO. For example, we have the QSPI on MIO0 to
->> MIO5, and MIO6 to MIO11 are used for SPI1. However, I cannot select this
->> configuration using the pinmux driver. I am using the following
->> configuration:
->>
->> pinctrl_qspi_default: qspi-default {
->>     mux {
->>         groups = "qspi0_0_grp";
->>         function = "qspi0";
->>     };
->>
->>     mux-cs {
->>         groups = "qspi_ss_0_grp";
->>         function = "qspi_ss";
->>     };
->> };
->>
->> pinctrl_spi1_default: spi1-default {
->>     mux {
->>         groups = "spi1_0_grp";
->>         function = "spi1";
->>     };
->>
->>     mux-cs {
->>         groups = "spi1_ss_0_grp", "spi1_ss_1_grp";
->>         function = "spi1_ss";
->>     };
->> };
->>
->> But I get the following errors on boot:
->>
->> [    4.261739] zynqmp-pinctrl firmware:zynqmp-firmware:pinctrl: pin MIO8 already requested by ff050000.spi; cannot claim for ff0f0000.spi
->> [    4.274506] zynqmp-pinctrl firmware:zynqmp-firmware:pinctrl: error -EINVAL: pin-8 (ff0f0000.spi)
->> [    4.283789] zynqmp-pinctrl firmware:zynqmp-firmware:pinctrl: error -EINVAL: could not request pin 8 (MIO8) from group qspi0_0_grp  on device zynqmp_pinctrl
->>
->> This is because the qspi0_0_grp and spi1_0_grp groups overlap:
->>
->> group: qspi0_0_grp
->> pin 0 (MIO0)
->> pin 1 (MIO1)
->> pin 2 (MIO2)
->> pin 3 (MIO3)
->> pin 4 (MIO4)
->> pin 8 (MIO8)
->> pin 9 (MIO9)
->> pin 10 (MIO10)
->> pin 11 (MIO11)
->> pin 12 (MIO12)
->>
->> group: qspi_ss_0_grp
->> pin 5 (MIO5)
->> pin 7 (MIO7)
->>
->> group: qspi_fbclk_0_grp
->> pin 6 (MIO6)
->>
->> group: spi1_0_grp
->> pin 6 (MIO6)
->> pin 10 (MIO10)
->> pin 11 (MIO11)
->>
->> group: spi1_ss_0_grp
->> pin 9 (MIO9)
->>
->> group: spi1_ss_1_grp
->> pin 8 (MIO8)
->>
->> group: spi1_ss_2_grp
->> pin 7 (MIO7)
->>
->> However, we are not using the "upper" pins of the QSPI device.
->> Therefore, these pins should not be included in the qspi0_0_grp. This
->> stems from the driver placing all possible pins into a function's group,
->> even though each pin can be muxed individially and it is not necessary
->> to mux all pins for full functionality.
+> > Subject: Re: [PATCH v2 1/2] dt-bindings: firmware: arm,scmi: Add properties
+> > for i.MX95 Pinctrl OEM extensions
+> > 
+> > On Thu, Apr 18, 2024 at 10:53:17AM +0800, Peng Fan (OSS) wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > i.MX95 Pinctrl is managed by SCMI firmware using OEM extensions. This
+> > > patch is to add i.MX95 Pinctrl OEM extensions properties.
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >  .../devicetree/bindings/firmware/arm,scmi.yaml     |  9 ++-
+> > >  .../bindings/firmware/nxp,imx95-scmi-pinctrl.yaml  | 66
+> > > ++++++++++++++++++++++
+> > >  2 files changed, 72 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
 > 
-> Correct. These configurations were not consider at that time when code
-> was written. The same issue is there if you want to combine pins from
-> different groups. IIRC uart rx via MIOX and tx not from MIOX+1.
+> ....
 > 
->>
->> I think it would be better to have a single group for each pin:
->>
->> pinctrl_qspi_default: qspi-default {
->>     mux {
->>         groups = "mio0", "mio1", "mio2", "mio3", "mio4";
->>         function = "qspi0";
->>     };
->>
->>     mux-cs {
->>         groups = "mio5";
->>         function = "qspi_ss";
->>     };
->> };
->>
->> pinctrl_spi1_default: spi1-default {
->>     mux {
->>         groups = "mio6", "mio10", "mio11";
->>         function = "spi1";
->>     };
->>
->>     mux-cs {
->>         groups = "mio8", "mio9";
->>         function = "spi1_ss";
->>     };
->> };
->>
->> This allows the full functionality of this chip to be configured. Does
->> that sound good? I can send a patch to this effect if you agree.
+> > > +
+> > > +title: i.MX System Control and Management Interface (SCMI) Pinctrl
+> > > +Protocol
+> > > +
+> > > +maintainers:
+> > > +  - Peng Fan <peng.fan@arm.com>
+> > > +
+> > > +patternProperties:
+> > > +  '[a-f0-9]+$':
+> > > +    type: object
+> > > +    unevaluatedProperties: false
+> > > +
+> > > +    properties:
+> > > +      pins:
+> > > +        $ref: /schemas/types.yaml#/definitions/string
+> > > +        description: name of the pin
+> > > +        items:
+> > > +          enum: [ daptdi, daptmsswdio, daptclkswclk, daptdotraceswo,
+> > > +                  gpioio00, gpioio01, gpioio02, gpioio03, gpioio04,
+> > 
+> > ioio?
 > 
-> The only question is if this can be done without changing TF-A code
-> because we are running out of space in OCM for it.
+> Yes. The name is exported from SCMI firmware.
+> 
+> > 
+> > > +                  gpioio05, gpioio06, gpioio07, gpioio08, gpioio09,
+> > > +                  gpioio10, gpioio11, gpioio12, gpioio13, gpioio14,
+> > > +                  gpioio15, gpioio16, gpioio17, gpioio18, gpioio19,
+> > > +                  gpioio20, gpioio21, gpioio22, gpioio23, gpioio24,
+> > > +                  gpioio25, gpioio26, gpioio27, gpioio28, gpioio29,
+> > > +                  gpioio30, gpioio31, gpioio32, gpioio33, gpioio34,
+> > > +                  gpioio35, gpioio36, gpioio37, ccmclko1, ccmclko2,
+> > > +                  ccmclko3, ccmclko4, enet1mdc, enet1mdio, enet1td3,
+> > > +                  enet1td2, enet1td1, enet1td0, enet1txctl, enet1txc,
+> > > +                  enet1rxctl, enet1rxc, enet1rd0, enet1rd1, enet1rd2,
+> > > +                  enet1rd3, enet2mdc, enet2mdio, enet2td3, enet2td2,
+> > > +                  enet2td1, enet2td0, enet2txctl, enet2txc, enet2rxctl,
+> > > +                  enet2rxc, enet2rd0, enet2rd1, enet2rd2, enet2rd3,
+> > > +                  sd1clk, sd1cmd, sd1data0, sd1data1, sd1data2, sd1data3,
+> > > +                  sd1data4, sd1data5, sd1data6, sd1data7, sd1strobe,
+> > > +                  sd2vselect, sd3clk, sd3cmd, sd3data0, sd3data1,
+> > > +                  sd3data2, sd3data3, xspi1data0, xspi1data1, xspi1data2,
+> > > +                  xspi1data3, xspi1data4, xspi1data5, xspi1data6,
+> > > +                  xspi1data7, xspi1dqs, xspi1sclk, xspi1ss0b, xspi1ss1b,
+> > > +                  sd2cdb, sd2clk, sd2cmd, sd2data0, sd2data1, sd2data2,
+> > > +                  sd2data3, sd2resetb, i2c1scl, i2c1sda, i2c2scl, i2c2sda,
+> > > +                  uart1rxd, uart1txd, uart2rxd, uart2txd, pdmclk,
+> > > +                  pdmbitstream0, pdmbitstream1, sai1txfs, sai1txc,
+> > > +                  sai1txd0, sai1rxd0, wdogany, fccuerr0 ]
+> > > +
+> > > +      nxp,func-id:
+> > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > > +        description: Indicates the PAD connections which function
+> > > + module
+> > 
+> > The description makes no sense...
+> 
+> I will use below description in v3:
+> For each pin, there are up to 8 muxing options (called ALT modes). For example:
+> Select 1 of 5 iomux modes to be used for pad: DAP_TCLK_SWCLK.
+> 000b - Select mux mode: ALT0 mux port: JTAG_MUX_TCK of instance: jtag_mux
+> 010b - Select mux mode: ALT2 mux port: CAN4_RX of instance: imx95_wakeupmix_top
+> 100b - Select mux mode: ALT4 mux port: FLEXIO1_FLEXIO30 of instance: imx95_wakeupmix_top
+> 101b - Select mux mode: ALT5 mux port: GPIO3_IO30 of instance: imx95_wakeupmix_top
+> 110b - Select mux mode: ALT6 mux port: LPUART5_CTS_B of instance: imx95_wakeupmix_top
+> The nxp,func-id property is selecting one ALT mode.
 
-I think this can be done just in the Linux driver. This would also be
-convenient because then it will work regardless of the firmware.
+Looks like constraints on the values. Please add schema for them. I 
+don't think you need to list an example. 
 
-> Just a generic question to your problem. It doesn't sound like a
-> dynamic case. You have static assignment for pins which likely won't
-> change over lifecycle. QSPI can be even boot device. Do you really
-> need to describe pins via DT that it is not enough to have them
-> configured via psu_init directly?
->
-> Driver has been developed for i2c bus recovery via gpio which was the
-> main application. Right now Kria SOM is using it for carrier card pins
-> configuration.  And Kria is pretty much only platform where this is
-> regularly tested.
+Perhaps you should be using 'pinmux' property. That is the standard way 
+to specify a numeric mux mode.
 
-This is just following the example of the ZCU102. But you're right,
-these pin configurations are static (excepting I2C).
 
---Sean
+> > 
+> > > +
+> > > +      nxp,pin-conf:
+> > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > > +        description: The PAD configuration
+> > 
+> > PAD stands for? Or is it pin configuration as the property name says?
+> 
+> It is pin configuration which includes pull up/down, drive strength and etc.
+> 
+> > 
+> > This is just a raw register values? 
+> 
+> Yes.
+> 
+> Why can't standard pinctrl properties be
+> > used here. What's the point of using SCMI pinctrl if you are just shuttling
+> > register values to SCMI?
+> 
+> Standard pinctrl properties will need more memory in our SCMI
+> firmware design. We have limited on-chip memory for SCMI firmware usage.
+
+Then maybe you shouldn't be using SCMI and just write a pinctrl driver. 
+Or, Linux has to parse the DT anyways, so use standard properties and 
+transform them into your register values and send that to SCMI.
+
+> > > +
+> > > +      nxp,daisy-id:
+> > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > > +        description: The select input register ID
+> > > +
+> > > +      nxp,daisy-conf:
+> > > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > > +        description: The select input register value
+> > 
+> > I remember some daisy chaining stuff in iomuxc, but otherwise
+> > 
+> > What's the relationship between these 2 properties? Is it valid if only
+> > 1 is present? I doubt it.
+> 
+> The scmi firmware will convert the daisy-id into register address, and
+> write the daisy-conf value into the register.
+> 
+>  Looks like an address and value pair. Either the
+> > schema needs to define allowed combinations
+> 
+> The firmware will check whether id and conf is valid, is there a need to define
+> allowed combinations? There will be lots of check to define allowed
+> combinations.
+
+The firmware can't check that the DT contains nxp,daisy-id but not 
+nxp,daisy-conf or vice-versa. Of course the kernel could check that, but 
+validating the DT is not the kernel's job.
+
+
+>  or design the properties in a
+> > way you don't have too. IOW, make a single property that's a tuple of register
+> > ID and value.
+> 
+> Define tuple will make the property not able to use linux generic pinconf
+> driver. The current parse_dt_cfg for custom_dt_params only support a
+> single u32 value and not easy to support tuple.
+
+Sounds like a Linux problem. We're talking about bindings. Fix Linux if 
+it doesn't meet your needs.
+
+
+How many bits of id and conf do you need? This too could just be part of 
+'pinmux' property. It's value is entirely h/w specific and up to you. 
+You just need to fit it into 32-bits (though we could perhaps enlarge 
+it).
+
+Rob
 
