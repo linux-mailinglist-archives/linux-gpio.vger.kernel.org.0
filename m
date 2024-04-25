@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-5865-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5866-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07CD68B2814
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 20:18:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F1BA68B281D
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 20:19:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1FFC2810B9
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 18:18:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD3C02835C5
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 18:19:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD5721514F1;
-	Thu, 25 Apr 2024 18:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E602B14F123;
+	Thu, 25 Apr 2024 18:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJWBDeku"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMf1VqXG"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E40737152;
-	Thu, 25 Apr 2024 18:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984131E864;
+	Thu, 25 Apr 2024 18:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714068913; cv=none; b=gb80gZkGlf6TkHPhk4PMqBY1a4s36J+iQ/VWQrljwIeObGBt9O3WVaH5BBlRWpgn++7CQgNf1tHySRP1X13xKhwsaFW/Us9anz+aTdAgOw2gLgVKOFjpdbSTkOjXBfeQEieUMUGr8SCszGPTsaYTnLJxC8uFy03WS5CfD44BQyI=
+	t=1714069138; cv=none; b=XXo1nwfjrxx1fO7R7Oh5H6LpMZeXnW00ctR8w+VNoYQj3SuSG9JPavcemmDvXGQI5VkITUZDWQj7Oq2hWoZ4ZcfC79ShLBssURARgmspYdpOB9qnYz4tDQv3Y0gQb2s2xVsGhIYRJEjzZsqH3AAJS0qwxNrHpOgoETX/YUMSjR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714068913; c=relaxed/simple;
-	bh=Hm6KipD1mulch7bD1DZAgbKR/1NijPMuo19jswflu5Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PdlB1MpV6NhSuHokn1I4d75mgVGS5whGgF9Plfby9rq2onOnY9ZRalSYi6pm//AIusW0WM24h+a02W4SdQPpTMnakGW12BYvhXXztY0Usz7vweaKOFYAbP/ZE83ahR0KD+ccJYKYjz+hw169FU/zniWb/Tp8gOCYR244Y8zV1UE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJWBDeku; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B7BEC113CC;
-	Thu, 25 Apr 2024 18:15:07 +0000 (UTC)
+	s=arc-20240116; t=1714069138; c=relaxed/simple;
+	bh=1dOIGlTFqSW46AxgWNHlTpkTFfDJv+QsCwa+JC4bZI8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=CaR39V5VyWGoDGwq2CeUBIlfAGHTLUp1cQYAijQRPcmYyw5rE12c3dd+TdhwEqH1TTCWx6wsb1oE5QDd57xyWpy1PGU/J9SfQluY2EQkNmhqSoAUJECySjzduGjF/fuyDvazaMhh7qoDpN8MBLRS4N8kAcbeHGJMyUOe3PVSnCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMf1VqXG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DAF5C2BBFC;
+	Thu, 25 Apr 2024 18:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714068912;
-	bh=Hm6KipD1mulch7bD1DZAgbKR/1NijPMuo19jswflu5Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZJWBDekujMaZTxITnfz63f0TBOuYRBt6cLsvLq0oXjS7mp+yWwQJ2n0Gc+NJa1+XA
-	 NiPq3fy9ze94j9jf3Pe9qVkOQb4aOd0YjWBYXfXwUgylbW8WSenerWz16a9VPfloL8
-	 ZnzHkPgILJoP9EBX5dFijWCVffaelHIgdeVH5/PsdGXnVNpBpEE6AblK2qvxkXmAuM
-	 A/5QQsqwzK+lvvLtXnReB/5JSVfOKAGg8IFJuqJkGnRal5knMdl6kJgvLSuQJ+xjmQ
-	 H7yA+ptUyH59GHtyHtnyzDuihxOOADjNqf6v22h+X5G3uaz8qPPzFQGN8Him12oqnc
-	 GA5vFbayPsCSA==
-Message-ID: <56a32a2d-2f6f-4f7b-8359-6f3062c010e2@kernel.org>
-Date: Thu, 25 Apr 2024 20:15:05 +0200
+	s=k20201202; t=1714069138;
+	bh=1dOIGlTFqSW46AxgWNHlTpkTFfDJv+QsCwa+JC4bZI8=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=WMf1VqXGnG3LOo2FfwCxagzFd1vaBPOY5Zbuv8KySiRVOlpETQd58NmJ4PN1KU56R
+	 uyE+Ugki0OCndnQxPQNAJ6U6LMy+Kyp+fI+8W0HFfWg/FTbDRdrVc1VoPdyULNhc4F
+	 HDY5e97fNJD8tPypJrOhxlnAp1yk8QsABWj77rSC4lbRkXJAcPX2pYj6g6Uo4lhuHu
+	 FUS262F7M9lV8ur8fPiboWAa6Sn2pHpKTHX8z8I2gjooDhWYlBV4xtcqswyYnUOTW1
+	 42u52lTN4PfR6TnCU2/5RlJZIOxWaO4u8j5s/wIRuSS/dAyYh7gwoAU1ixGpZGO0MS
+	 6VG/VZJ/TUKCg==
+Message-ID: <013f2da9-1d91-4b62-b5b7-d603d0c09aef@kernel.org>
+Date: Thu, 25 Apr 2024 20:18:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -52,6 +52,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: samsung: google,gs101-pinctrl
  needs a clock
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
  Sylwester Nawrocki <s.nawrocki@samsung.com>,
  Alim Akhtar <alim.akhtar@samsung.com>,
@@ -65,7 +66,7 @@ Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
  linux-kernel@vger.kernel.org
 References: <20240425-samsung-pinctrl-busclock-v1-0-898a200abe68@linaro.org>
  <20240425-samsung-pinctrl-busclock-v1-1-898a200abe68@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <56a32a2d-2f6f-4f7b-8359-6f3062c010e2@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -110,66 +111,30 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240425-samsung-pinctrl-busclock-v1-1-898a200abe68@linaro.org>
+In-Reply-To: <56a32a2d-2f6f-4f7b-8359-6f3062c010e2@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 25/04/2024 18:03, André Draszik wrote:
-> The pin controller on Google Tensor gs101 requires a bus clock for
-> register access to work. Add it.
+On 25/04/2024 20:15, Krzysztof Kozlowski wrote:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            const: google,gs101-pinctrl
+>> +    then:
+>> +      required:
+>> +        - clocks
+>> +        - clock-names
 > 
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> else:
+>   properties:
+>     clocks: false
+>     clock-names: false
 > 
-> ---
-> As we only have the one clock here, please let me know if the
-> clock-names should be removed. Having it does make
-> /sys/kernel/debug/clk/clk_summary look nicer / more meaningful though
-> :-)
-> ---
->  .../devicetree/bindings/pinctrl/samsung,pinctrl.yaml    | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
-> index 118549c25976..49cc36b76fd0 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
-> @@ -73,6 +73,13 @@ properties:
->      minItems: 1
->      maxItems: 2
->  
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pclk
-> +
->    wakeup-interrupt-controller:
->      $ref: samsung,pinctrl-wakeup-interrupt.yaml
->  
-> @@ -120,6 +127,16 @@ required:
->  
->  allOf:
->    - $ref: pinctrl.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: google,gs101-pinctrl
-> +    then:
-> +      required:
-> +        - clocks
-> +        - clock-names
+> but anyway this is all a bit fragile, because pinctrl is not a driver
+> and you rely on initcall ordering.
 
-else:
-  properties:
-    clocks: false
-    clock-names: false
-
-but anyway this is all a bit fragile, because pinctrl is not a driver
-and you rely on initcall ordering.
-
-> 
+It is a driver, although initcall ordering is still there. Anyway, it's
+the first soc requiring clock for pinctrl
 
 Best regards,
 Krzysztof
