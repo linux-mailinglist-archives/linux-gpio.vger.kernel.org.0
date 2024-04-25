@@ -1,188 +1,114 @@
-Return-Path: <linux-gpio+bounces-5851-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5852-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0C5C8B223A
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 15:07:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F3148B22DE
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 15:33:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 56CB6283514
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 13:07:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C7F8286112
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 13:33:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 443B5149C66;
-	Thu, 25 Apr 2024 13:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B646F149C62;
+	Thu, 25 Apr 2024 13:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jUhexmaV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f73fmtAn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF3E149C4E
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 13:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FCB1494B4
+	for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 13:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714050421; cv=none; b=qzkWudxL1lKus7dX27rK34c0GyARa5SUHb+9FCKPFXyCf8ayUaj84w0QtmSnRqZtDZHzu8CeyzzjXfinx+967MkP3W61ZymQCIBGDqx0Ub62Pdumzoohc3jt8kll8mPBylhO/f3818DvYawLohaTQsoimRWYOBrnRJ+TkvAr8sY=
+	t=1714051955; cv=none; b=eYKbzxnBO+S9KE1nuKT0RaIAKfOygq7+qhq77J4pEYUiRujNsngYwfsFpvxIomsqdH/zMrlod4Lym8k4ZnKDUvJOH+tkIBDPLxtDBCOGKONUz8M4w2NhOsMfjmrw9DPTRGWleNxUnX+gXEQyuor+Th4K9gZp6CDcP4XLJ/mDccI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714050421; c=relaxed/simple;
-	bh=iCLpk1XYOML5rjW/DzWQBTxUzuHTUhaSKVXX0JoQ3Fo=;
+	s=arc-20240116; t=1714051955; c=relaxed/simple;
+	bh=/6eKXUAK4EgyhY5+gpkUlOuOYAyN96XyilV5/5P3pfo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k6HOCURpr4F/fPq4pX0etOFKzznBDgFhqUmwy7iItxQ8eQTtYI/7yWtrwOF2GWEknFCZfGplNc4sog5zPerc0idX0k0odnLQOA9ksz56MGvkTZ9YpYEKDWjSneuISUeWXSgWPTwp3db+s8lpHzEIu/5fYf9QNyUvJRBnaBPZw3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jUhexmaV; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2dae975d0dcso21373591fa.1
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 06:06:57 -0700 (PDT)
+	 To:Cc:Content-Type; b=SCWIym6OqeZ+czd3ePZI+5yig78W2xSiyDepyf9ru+6dXXzC1OuDTQy75oMAtgr9VS0/371nGXvLnrAZVsZl6q8doGbVrVQwMvyM7/doj/GMxSvrC37RlLTic+gRrQmhYE9yz6ieGzwdaDzaW207Jk9s0aPkOHYKbNWxc0w3LOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f73fmtAn; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-de54c2a4145so1215075276.0
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 06:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1714050416; x=1714655216; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1714051953; x=1714656753; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OXjxjK1s1trKrgIcuofImk0hlW/Fp+pJsvVfi+fABag=;
-        b=jUhexmaVg3+VvIhtKVjrGJT/suS68SwbTxEHzojrrWp0Q55MrZoXxZyCbKkVrQ/6bx
-         ju8IHHDJ5c/jMOr4UPeLE8+vJNyWBNEO7suLpacoeiDSHT9gIK7FpMFA0TrXiew1G7KO
-         6lsNAlXIDfze8Ak2cecflHIHN/IHNF0/d1Y/wuD1w8LO3Kxsn2Ep5A0NYaQkvzEqapRp
-         9EEsj6nrs8q2L6hMY8fbdrKg4mhWYIud31Z6gd+5fxlJp5ApmKL/W2nmqID5+74MScRb
-         WIKNHmWi7NbNXKDdOJDdigtBTCZVOL2PRUeNwsTNAE/SkfdbxMeI3E97Y5alJTH7BoqX
-         3jNw==
+        bh=QXCeP1z6jD1p0OdF8g8n7UYe/MRsZT6hAqrfk8EBvac=;
+        b=f73fmtAntdx2huHaJefRGk6FzB6aHlHc5jOc7WNIuA6QNXT6OhVND6Rzde1Be7xOiw
+         xHozyLMQBpB4iLYwNB/TkDp1iYQU3OeMnOlceJwxFB2TJdEpstVpYkA7X70OA9CyFUwo
+         XPP0EPc75XJ3tb+5Cj0m5D4LvwLCw1ykMu43wjz8+D5PTQXS4y1xtoMzIGMnkoZVVMZj
+         PLrzSvWC4SE+3ec3biYd12rdzLM/Q3Sgu8iPe9Iumgcz0GkiYWY3YXK6/i+Ep0PIeBJI
+         Ybb+kLWDhATBjcU7sxUq7zzmgLj0M+Hn0pHiWTgfKAJzjY70mRbzw5zcNNgEIHuwgKTH
+         RpAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714050416; x=1714655216;
+        d=1e100.net; s=20230601; t=1714051953; x=1714656753;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OXjxjK1s1trKrgIcuofImk0hlW/Fp+pJsvVfi+fABag=;
-        b=W6HulztzO4xC91yOicgLrwoSWmHCKkWQ9VvhgpLCWp0QXQKP4Vbjt2NpWKXGOBfbFz
-         N1TlFr9XdK4VX4KCa1m+grMK2QDssMm/dXb7jZYIAIiEtFmmnqt+N/n//GBGDJGYHTF1
-         wJ7eZ0xl/sHLqgO7kRJTjMVNo1b79XVdIduKAYdi7ZAIYUom1QuFHSbjhrcdjEQxAypB
-         FyOpr7NirQ6D9RqFbsmttdKn/BSX1HyWQOANvDRJAco9Io9+l3USGLUeeZWhaT8RAf04
-         HHK1nlJWY0M0fJqrVmQwBssLEumy99geoBsFKYhbIJsCD5S+BUEw62cUAkriRzYoiZdu
-         BdYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUc8wxvcbR37ibMDQs0LBVyDk+FWSlAijWI74WIp+JZ/6p+e0SgjaJlGEW45I/gsPCHlfCBznzliL7mR3qG7vN7cR+R+JcUrjkQHg==
-X-Gm-Message-State: AOJu0YyJFBFek8Qj1IHj9OLL+6aj5V7jAxDQTTr1Fcx3R/S9OD4uXPYR
-	MVTwZE2wpNN1JJWtKHo3DbuEDd+kkWPetcmDyMAGwIcMTQJelSwKiCmjTmTApS9+pJGbfUdcdtx
-	cGympDUVXzw7veI6NSWGMLj5Hmf94GxOJj2fIYA==
-X-Google-Smtp-Source: AGHT+IEOISNStsO/9+WhdVo2RtgV8uceX8S2G+eTOusKA26PiwFvCdNPq3Iw+sCaXY1CsixaLmp+nRqIEwhJ7bS+kyg=
-X-Received: by 2002:a2e:90d4:0:b0:2dd:c2eb:66db with SMTP id
- o20-20020a2e90d4000000b002ddc2eb66dbmr913164ljg.14.1714050416212; Thu, 25 Apr
- 2024 06:06:56 -0700 (PDT)
+        bh=QXCeP1z6jD1p0OdF8g8n7UYe/MRsZT6hAqrfk8EBvac=;
+        b=ZSY1SLs5QtnGYdxdh3EukPX3d/+RBTpTXOnkAIPgUUfiaqgTthCEUlusXAecpAxbu6
+         dp6cs5ODJiUCIR2Z/B2YWpK49FcjGJBBccYWLHJ/U2EHpRyDDKx47ICYnF83u+ygdm3C
+         4Jw5bB8vplJLY0wUOdAaMWDFG8MOUHUIDJMThsfA0wLgpNmOEZB0e524EMpZmoqw9V57
+         74nRwvREl1gmrjZQemAEovGksC7DJ+UrRmwafO8f2hAnZTdku0ibfTO06y9KNi8rjF5O
+         MS2ecHKstouHLNyGB/9nPNG4hqNvW8U6pa4wXlPR1++ZqTc8Qzn96PlHmwcLhzrop2nB
+         /uXQ==
+X-Gm-Message-State: AOJu0Yx7Ft8Civ0A9USOw5hH7Ie/wLyIOtxK/+2tnuGaVuzJhdzi6gUn
+	ssTYbtBmYgdGr+PjCtJ+cVfX8YEAtT22o05ik9c9ZnEb/QfZii9Bu1EmdOkrkOLhRycZCVxb6TQ
+	MR+Qt9d91o0RYw+H51FhmykINDvMbJGf2qXDR1gAPLDGopdUS
+X-Google-Smtp-Source: AGHT+IG7JqjQ/+60u9ekcuuXFhCYBn1KH86nTu/vAovcQmKmmA7wUu66762JYBxWB3D9I5h3QQxq1tgAmjzyYEFZgfA=
+X-Received: by 2002:a25:cece:0:b0:de5:5b9c:4451 with SMTP id
+ x197-20020a25cece000000b00de55b9c4451mr5916440ybe.10.1714051952947; Thu, 25
+ Apr 2024 06:32:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423022814.3951048-1-haibo.chen@nxp.com> <CACRpkdaRxoEZT1_KyJ3QMDgBcciw1XUXKr=cEiPxbcwSnpmyiA@mail.gmail.com>
- <AS1PR04MB9502BE89834E7F9DA3E8D70B90112@AS1PR04MB9502.eurprd04.prod.outlook.com>
- <DU0PR04MB949691D7F68E2F32371B604F90102@DU0PR04MB9496.eurprd04.prod.outlook.com>
-In-Reply-To: <DU0PR04MB949691D7F68E2F32371B604F90102@DU0PR04MB9496.eurprd04.prod.outlook.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 25 Apr 2024 15:06:45 +0200
-Message-ID: <CAMRc=McQtohbuUSrhH8LiF6EWUzRKyHSObBv4D6VeE87NmdZQQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: vf610: always set GPIO to input mode when used as
- interrupt source
-To: Bough Chen <haibo.chen@nxp.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>
+References: <ZipJDvhxihtpiCgN@black.fi.intel.com>
+In-Reply-To: <ZipJDvhxihtpiCgN@black.fi.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 25 Apr 2024 15:32:20 +0200
+Message-ID: <CACRpkdY0uHPeukL+F3tu+-=FEMd4fcbbei0JOiadWchjbr_aHA@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-pinctrl for 6.9-1
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linux pin control <linux-gpio@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 24, 2024 at 1:01=E2=80=AFPM Bough Chen <haibo.chen@nxp.com> wro=
-te:
->
-> > -----Original Message-----
-> > From: Bough Chen
-> > Sent: 2024=E5=B9=B44=E6=9C=8823=E6=97=A5 20:21
-> > To: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: brgl@bgdev.pl; linux-gpio@vger.kernel.org; linux-kernel@vger.kernel=
-.org;
-> > imx@lists.linux.dev
-> > Subject: RE: [PATCH] gpio: vf610: always set GPIO to input mode when us=
-ed as
-> > interrupt source
-> >
-> > > -----Original Message-----
-> > > From: Linus Walleij <linus.walleij@linaro.org>
-> > > Sent: 2024=E5=B9=B44=E6=9C=8823=E6=97=A5 19:41
-> > > To: Bough Chen <haibo.chen@nxp.com>
-> > > Cc: brgl@bgdev.pl; linux-gpio@vger.kernel.org;
-> > > linux-kernel@vger.kernel.org; imx@lists.linux.dev
-> > > Subject: Re: [PATCH] gpio: vf610: always set GPIO to input mode when
-> > > used as interrupt source
-> > >
-> > > On Tue, Apr 23, 2024 at 4:28=E2=80=AFAM <haibo.chen@nxp.com> wrote:
-> > >
-> > > > From: Haibo Chen <haibo.chen@nxp.com>
-> > > >
-> > > > Though the default pin configuration is INPUT, but if the prior
-> > > > stage does configure the pins as OUTPUT, then Linux will not
-> > > > reconfigure the pin as INPUT.
-> > > >
-> > > > e.g. When use one pin as interrupt source, and set as low level
-> > > > trigger, if prior stage already set this pin as OUTPUT low, then
-> > > > will meet interrupt storm.
-> > > >
-> > > > So always set GPIO to input mode when used as interrupt source to
-> > > > fix above case.
-> > > >
-> > > > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> > > > ---
-> > > >  drivers/gpio/gpio-vf610.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-> > > > index 07e5e6323e86..305b0bcdee6f 100644
-> > > > --- a/drivers/gpio/gpio-vf610.c
-> > > > +++ b/drivers/gpio/gpio-vf610.c
-> > > > @@ -214,7 +214,7 @@ static int vf610_gpio_irq_set_type(struct
-> > > > irq_data *d,
-> > > u32 type)
-> > > >         else
-> > > >                 irq_set_handler_locked(d, handle_edge_irq);
-> > > >
-> > > > -       return 0;
-> > > > +       return port->gc.direction_input(&port->gc, d->hwirq);
-> > >
-> > > Just call vf610_gpio_direction_input() instead of indirecting through
-> > > gc->direction_input(), no need to jump through the vtable and as
-> > > Bartosz says: it just makes that struct vulnerable.
-> >
-> > Thanks for your quick review, I will do that in V2.
-> >
-> > >
-> > > Second:
-> > >
-> > > In this patch also implement gc->get_direction() which is currently
-> > > unimplemented. If you are going to change the direction of a GPIO
-> > > randomly at runtime then the framework really likes to have a chance
-> > > to know the current direction for obvious reasons.
-> >
-> > Yes, will implement gc->get_direction(), if we did this before, then fo=
-r this case
-> > we meet, framework will print out error log, save much debug time.
->
-> Hi Linus,
->
-> I implement gc->get_direction() today, for the case to request one gpio a=
-s irq, gpio architecture will first
-> call gpiochip_reqres_irq(), if the ROM or Uboot already config this gpio =
-pin as OUTPUT mode, will get
-> the following log:
->
-> [    2.714889] gpio gpiochip3: (43850000.gpio): gpiochip_lock_as_irq: tri=
-ed to flag a GPIO set as output for IRQ
-> [    2.724816] gpio gpiochip3: (43850000.gpio): unable to lock HW IRQ 11 =
-for IRQ
-> [    2.731972] genirq: Failed to request resources for 2-0050 (irq 211) o=
-n irqchip gpio-vf610
->
-> Any suggested method to avoid this case? My previous method works because=
- driver lack of gc->get_direction().
->
+On Thu, Apr 25, 2024 at 2:14=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Can you make the driver default all lines to input when the device is
-being registered? Possibly also revert to input when the line is being
-freed?
+> A couple of GPIO mode fixes for Intel Bay Trail from Hans. This was a few=
+ weeks
+> in Linux Next without issues reported. Please, pull for v6.9-rcX.
+>
+> Thanks,
+>
+> With Best Regards,
+> Andy Shevchenko
+>
+> The following changes since commit 4cece764965020c22cff7665b18a0120063590=
+95:
+>
+>   Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/in=
+tel-pinctrl-v6.9-1
+>
+> for you to fetch changes up to 5d10a157ebe02ac9b8abacfd529f8b045e8aa41b:
 
-Bartosz
+Pulled into my fixes branch and pushed out for test.
+Hopefully I will send a bunch of fixes upstream tomorrow.
+
+Yours,
+Linus Walleij
 
