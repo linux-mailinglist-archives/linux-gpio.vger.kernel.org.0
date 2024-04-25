@@ -1,80 +1,48 @@
-Return-Path: <linux-gpio+bounces-5864-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5865-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1E448B2790
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 19:26:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07CD68B2814
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 20:18:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F386D1C217FE
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 17:26:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1FFC2810B9
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Apr 2024 18:18:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52D0514E2F8;
-	Thu, 25 Apr 2024 17:26:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD5721514F1;
+	Thu, 25 Apr 2024 18:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f73AH+Uv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJWBDeku"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B12C14E2DF
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 17:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E40737152;
+	Thu, 25 Apr 2024 18:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714065990; cv=none; b=mX3psPyGI4hQb/8AbCZnKZ006ZMiLDfSeyzNSY8co9u6XJND+GwSHacdjPnH/HdU+41UOuZ44GHBpHoQq3pwebphCdNrW1INA0adHDwWX/TMb6V04ulQrUSd1WlSxtzL+y68B9Pz8XwIVFFhWLj/YblZuwG098IkCyKIT7RSfKs=
+	t=1714068913; cv=none; b=gb80gZkGlf6TkHPhk4PMqBY1a4s36J+iQ/VWQrljwIeObGBt9O3WVaH5BBlRWpgn++7CQgNf1tHySRP1X13xKhwsaFW/Us9anz+aTdAgOw2gLgVKOFjpdbSTkOjXBfeQEieUMUGr8SCszGPTsaYTnLJxC8uFy03WS5CfD44BQyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714065990; c=relaxed/simple;
-	bh=Po1ljQ7eoWzq/WDxwP6FdJhliggBW98Ff7CLurYurCA=;
+	s=arc-20240116; t=1714068913; c=relaxed/simple;
+	bh=Hm6KipD1mulch7bD1DZAgbKR/1NijPMuo19jswflu5Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mk0aimOucQEg36ef9jNDG3zyZDlMJQVCN/IZE4Bqj3+6so11V09VTLJtgKae8aLv19ByPYcxyxMyGSd1cecVG/NO0VWfFuQJHhAm0fA7RdOA+sfBLrGXJC/JbEg3CYjNNfUzGwFrkziLJ2uJ77yFdsao0qG2Iu8UP8eTtSVcCs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f73AH+Uv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714065987;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I/w6o0gJnQBhi5RHHs3mWoMd83fjHst48Us5ZNZk3kM=;
-	b=f73AH+UvLm4VFJMZe0Cj11UXTz3s56EyQB/+TApTBUJNm7MbELbdIv9wLEEJ6hYAYvVBol
-	RwD4DdYpC62RglXVBV1qXUbe2uRVMreLey6a99Ud+s58cKO4m0mP9iTA2mmAFG4JiFfJLa
-	Wn66J41Lq67AJ/UfBbu+nF+DBosU6aI=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-650-jdhW7FKVM0uLbEBD8Ean5g-1; Thu, 25 Apr 2024 13:26:25 -0400
-X-MC-Unique: jdhW7FKVM0uLbEBD8Ean5g-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a5190b1453fso74531866b.2
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Apr 2024 10:26:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714065984; x=1714670784;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I/w6o0gJnQBhi5RHHs3mWoMd83fjHst48Us5ZNZk3kM=;
-        b=lsa4sMPNlt7iE1hjRLnImd9u0UGxVHwXeLoI+nyAe+BYHrYK3zvKjRUAyEcasgWy4p
-         YGrIgk7KmpsTE1pgrddhSyiOQApk8IZkBZ03dMt2Xd34sAlbrb/t+JvaDBvsw0Sbcrbj
-         inLs3IENs3MnnMrKmfW13AxtSuJQ+VcIK74aVsBcxccJN7jZCyHlNMoDXqtAwMvE91Ny
-         DQYAqzLDQNiJuJiizyJpAXUJ51aY4LO6kGDL7WB/h/xrWZxpR4x+mAWOql7nzXihh63f
-         FEKmkhhzbTcQWdSSWP1IDK8IG7Gho+uAuToYz2QJxAztp20mgkUd4JhDJ8kN+3/iYb0V
-         r82Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV8EHT6CfLezs8jFbANN93qiGkaUhUZN9Y4f0jdKeNVg7ubwwb79C0j9RzBwnDIGyGy8Udnm/q50UiY/vCUOazbIiqFNOdfX9SqHA==
-X-Gm-Message-State: AOJu0YyaR8P5gZJz43AVjm+IQrPdn0HHNyoEL12bo8h3BzfetwDrOiiZ
-	i7XB7fZI+XOy2+hXH4AIHL6D9dB4MN4l57RQRdp2voK+3xxR5ULPr7TKn5yHz+UVlYBr7ZXdAtS
-	VOSHYKHQmUYYu6arHxQFT7YDctER9+5p4kRfLEcgCj8+LUpZ8coWUA/C7Ejw=
-X-Received: by 2002:a17:906:2b86:b0:a55:3f2f:4b40 with SMTP id m6-20020a1709062b8600b00a553f2f4b40mr231108ejg.68.1714065984561;
-        Thu, 25 Apr 2024 10:26:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEweaKuz3eMwWJrng0edjEF9B1AvNbWdzDA8QCL2mjjgLRa4aJ38bLsqghjMCXy4lRNldi1Pw==
-X-Received: by 2002:a17:906:2b86:b0:a55:3f2f:4b40 with SMTP id m6-20020a1709062b8600b00a553f2f4b40mr231087ejg.68.1714065984195;
-        Thu, 25 Apr 2024 10:26:24 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a4-20020a1709062b0400b00a58bf7c8de8sm472026ejg.201.2024.04.25.10.26.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Apr 2024 10:26:23 -0700 (PDT)
-Message-ID: <5ff49965-1e8b-409c-8110-1782143c908c@redhat.com>
-Date: Thu, 25 Apr 2024 19:26:22 +0200
+	 In-Reply-To:Content-Type; b=PdlB1MpV6NhSuHokn1I4d75mgVGS5whGgF9Plfby9rq2onOnY9ZRalSYi6pm//AIusW0WM24h+a02W4SdQPpTMnakGW12BYvhXXztY0Usz7vweaKOFYAbP/ZE83ahR0KD+ccJYKYjz+hw169FU/zniWb/Tp8gOCYR244Y8zV1UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJWBDeku; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B7BEC113CC;
+	Thu, 25 Apr 2024 18:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714068912;
+	bh=Hm6KipD1mulch7bD1DZAgbKR/1NijPMuo19jswflu5Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZJWBDekujMaZTxITnfz63f0TBOuYRBt6cLsvLq0oXjS7mp+yWwQJ2n0Gc+NJa1+XA
+	 NiPq3fy9ze94j9jf3Pe9qVkOQb4aOd0YjWBYXfXwUgylbW8WSenerWz16a9VPfloL8
+	 ZnzHkPgILJoP9EBX5dFijWCVffaelHIgdeVH5/PsdGXnVNpBpEE6AblK2qvxkXmAuM
+	 A/5QQsqwzK+lvvLtXnReB/5JSVfOKAGg8IFJuqJkGnRal5knMdl6kJgvLSuQJ+xjmQ
+	 H7yA+ptUyH59GHtyHtnyzDuihxOOADjNqf6v22h+X5G3uaz8qPPzFQGN8Him12oqnc
+	 GA5vFbayPsCSA==
+Message-ID: <56a32a2d-2f6f-4f7b-8359-6f3062c010e2@kernel.org>
+Date: Thu, 25 Apr 2024 20:15:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,81 +50,128 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/6] mmc: sdhci-acpi: Add some DMI quirks to fix
- various issues on Bay Trail devices
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Andy Shevchenko
- <andy@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>,
- linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20240410191639.526324-1-hdegoede@redhat.com>
- <CAPDyKFrkPm=JEaiwTcVdqtG0hePEu-D76ec89nzFiF2MxYOwgw@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAPDyKFrkPm=JEaiwTcVdqtG0hePEu-D76ec89nzFiF2MxYOwgw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: samsung: google,gs101-pinctrl
+ needs a clock
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
+ Peter Griffin <peter.griffin@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240425-samsung-pinctrl-busclock-v1-0-898a200abe68@linaro.org>
+ <20240425-samsung-pinctrl-busclock-v1-1-898a200abe68@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240425-samsung-pinctrl-busclock-v1-1-898a200abe68@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
-
-On 4/25/24 6:21 PM, Ulf Hansson wrote:
-> On Wed, 10 Apr 2024 at 21:16, Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi All,
->>
->> Here is v3 of my series adding DMI quirks to fix various issues on Intel
->> Bay Trail tablets.
->>
->> Changes in v3:
->> - Replace "mmc: sdhci-acpi: Disable UHS/1.8V modes on Lenovo Yoga
->>   Tablet 2 series sdcard slot" with a new patch from Adrian which
->>   actually fixes these modes:
->>   "[PATCH v3 2/6] mmc: sdhci: Add support for "Tuning Error" interrupts"
->>
->>   Note this is missing a Signed-off-by from Adrian since this started out
->>   as a quick test patch from Adrian.
->>   Adrian, can you provide your S-o-b for this patch?
->>
->> Changes in v2:
->> - Address a few small remarks from Andy and adds Andy's Reviewed-by
->>   to the patches
->>
->> Regards,
->>
->> Hans
->>
->>
->> Adrian Hunter (1):
->>   mmc: sdhci: Add support for "Tuning Error" interrupts
->>
->> Hans de Goede (5):
->>   mmc: core: Add mmc_gpiod_set_cd_config() function
->>   mmc: sdhci-acpi: Sort DMI quirks alphabetically
->>   mmc: sdhci-acpi: Fix Lenovo Yoga Tablet 2 Pro 1380 sdcard slot not
->>     working
->>   mmc: sdhci-acpi: Disable write protect detection on Toshiba WT10-A
->>   mmc: sdhci-acpi: Add quirk to enable pull-up on the card-detect GPIO
->>     on Asus T100TA
->>
->>  drivers/mmc/core/slot-gpio.c  | 20 ++++++++++++
->>  drivers/mmc/host/sdhci-acpi.c | 61 +++++++++++++++++++++++++++++++----
->>  drivers/mmc/host/sdhci.c      | 10 ++++--
->>  drivers/mmc/host/sdhci.h      |  3 +-
->>  include/linux/mmc/slot-gpio.h |  1 +
->>  5 files changed, 86 insertions(+), 9 deletions(-)
->>
+On 25/04/2024 18:03, André Draszik wrote:
+> The pin controller on Google Tensor gs101 requires a bus clock for
+> register access to work. Add it.
 > 
-> The series applied for next, thanks!
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
 > 
-> I assume some/all these patches may deserve to get backported to
-> stable kernels, but it looks like that may be better for you to manage
-> by yourself!?
+> ---
+> As we only have the one clock here, please let me know if the
+> clock-names should be removed. Having it does make
+> /sys/kernel/debug/clk/clk_summary look nicer / more meaningful though
+> :-)
+> ---
+>  .../devicetree/bindings/pinctrl/samsung,pinctrl.yaml    | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> index 118549c25976..49cc36b76fd0 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> @@ -73,6 +73,13 @@ properties:
+>      minItems: 1
+>      maxItems: 2
+>  
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pclk
+> +
+>    wakeup-interrupt-controller:
+>      $ref: samsung,pinctrl-wakeup-interrupt.yaml
+>  
+> @@ -120,6 +127,16 @@ required:
+>  
+>  allOf:
+>    - $ref: pinctrl.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: google,gs101-pinctrl
+> +    then:
+> +      required:
+> +        - clocks
+> +        - clock-names
 
-From my pov the entire series is suitable for stable, so if you can mark
-them all for stable that would be great.
+else:
+  properties:
+    clocks: false
+    clock-names: false
 
-Regards,
+but anyway this is all a bit fragile, because pinctrl is not a driver
+and you rely on initcall ordering.
 
-Hans
+> 
 
+Best regards,
+Krzysztof
 
 
