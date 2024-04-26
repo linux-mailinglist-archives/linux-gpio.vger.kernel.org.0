@@ -1,695 +1,147 @@
-Return-Path: <linux-gpio+bounces-5892-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5893-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AC7B8B3866
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 15:26:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 052B78B3895
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 15:38:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8C7DDB21048
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 13:26:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 867791F218FD
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 13:38:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8B9B148307;
-	Fri, 26 Apr 2024 13:25:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E469E147C62;
+	Fri, 26 Apr 2024 13:37:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sqAK+lx5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvAfI/8p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD4E1474C5
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Apr 2024 13:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680451F956
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Apr 2024 13:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714137946; cv=none; b=E7KI2L7094DfH7AEqCq4YiWnu2vINkpFttwkRp6skBBf9U4mrIZjDjSpYBgxquoXAOC/2eb4UbaX1x9DOBlJFSo+fDUcjSrbfBferg7t4PJv1XCEwZUE2944aMJ3/xqMSdYvzxT9w4uiGr2Pu7ylBDwdbKjvmPTBu9h8/Wa2XU4=
+	t=1714138677; cv=none; b=s/2iWCnKqnPftWik3eLqau3OfpMsMJwU/UfdgtvNOvzs4bxwVU7tKi5kzIPevsqdTLO/FAfHn+QMbxl9r4KyT+QTUMNir1zntbXfS34MHRtRg8s7DQ21HG3FxdLRhiV4hde2V1j+qxK41QA1k0wTtsuMR0AZi/zmI5Ett7mRtVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714137946; c=relaxed/simple;
-	bh=mwFsyIFVInmmVw0ifFWX9WCQpqskJD34qrtcrTlVpKA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I+pKLbi/rH0pDIr033zExLe5McrjPQ2dGPyGTTKOid52feJ0c0oSaxPkzSlEdR2wRG5lMk0NBeykeRv1DVYG8WGgqY9It/2LM2uX3yvidiESvudhtm2rY5n8vRmeEXq3/4uNLsK3cp3byhpp5ZfBWtvy+NpOjtJJ5H0WZ9I96mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sqAK+lx5; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56c5d05128dso2251551a12.0
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Apr 2024 06:25:43 -0700 (PDT)
+	s=arc-20240116; t=1714138677; c=relaxed/simple;
+	bh=GNrR2ZBRTkUyIoOvBrBbnCMVH8HTtzziSwMSulDOEMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m1Dah9l0+LPfZLBPQgH+4EkSY1sufQ+9pABiUnF2VrVj7iJl4cbi2TtzkvbSB2FhgQY2khMedvoMOL6YNUuvRq0ptITQntAHnLfE1Qrjt8LtbLczxH8L2S6bA0jI/yvJTaXi5vFd834UU1khX5WVsryq9MTlsfoJ4MAa6GKLIlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvAfI/8p; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e36b7e7dd2so18269075ad.1
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Apr 2024 06:37:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714137942; x=1714742742; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S9Qwvd6hs9zicHZIfahxQLk96QTDqsG31aYfRw5jOvY=;
-        b=sqAK+lx5QTXDbkCWgBiUFXt59GJBK8C6nUSV+xzH/VyNQ8fEIWlWu0KaQD7VaNwWpK
-         NxoER47RFk6GlYsCg4Gz70MbP678DnMY2YNIc1CFRmJprZzkKhbY2GVHuRjNSfG/h4ME
-         34q0HFThmrC8rYn8PUd2MFUGLX1nc9aOvot1vuV9joT2TR2HN8obSY+Mxnna9d5pUznL
-         CXBwgSVrmXjpWlggyxq8aMIc6NB4J4Xs4v/U2j2MT1LABDcVEMRRcPS122R8DJz/cIwr
-         iKDNTD/qtLp73Gs+7bPCjnjqIUNThcay0YWtdDyV0ZuXlM82eMEQ3BeR7NsWL27KQawb
-         YyaQ==
+        d=gmail.com; s=20230601; t=1714138676; x=1714743476; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kJRAPjibqVc85KMaMVvBivnOM8W6Quxw8WV87zJCqx8=;
+        b=JvAfI/8p6z7JoZpYzoqBuLl/n4GIpp9FmeYeG21lptDDBf4v9NPrCnxiUZEusYkclf
+         4n2dFFZk0i0LV+zNJh/wiLzE5X/TOYWNfz3o9TX7SgzfQ8eJU7pmob6JWTzG/BD76Wxm
+         o+SSBf7LzKWVaz1SwcscoOdv7BRXuHJWtAe2sH2yUHZHK1qE8Y6DzdeHJ6F8r1IEOEKs
+         CFVIuA8VQNfzNN/dA9w+bqrVeqE8ffdtEblqRkIUugiK5XCbgK5IBSmkkJ/ZtlrHNGry
+         qa0oeiDR3bjvRgN8DtB8qc95ljvuoewoP77gGphaDvj7XT/lQGrGTYwk7igbP1NJN38F
+         8J4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714137942; x=1714742742;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S9Qwvd6hs9zicHZIfahxQLk96QTDqsG31aYfRw5jOvY=;
-        b=s6OhhGjQDOfzCDVhhMGZ0pfs24EwD3txuozp+u8Um7TGHJMgsNbKANu0j/BLq9DgQx
-         9dj7WOWLMo8qB3gPZV2merQffP1h+QBNpONAcQJhtrt7tZxS98odyhTLzIG9FSgSI4/g
-         EyW92K3y8loqUaYKMhkMaapag2xFXrvcd5yqI4iFwlpy8s12Fchemsr1LYPQvYWOjMVK
-         HwNeiOWLkQY5ZkvCUHTNdPmi+guTVT/Z3e5Tv898OBpP+9mgH1EfZHUmKDAMV+PfEPRJ
-         O3sqph209DgwJ4eOmY3PBEVQl4r1EQHlmuXL0mu4WGzYmgPuDmi51PRAzXfyz6FnBJtk
-         7lGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8BLxWdIT82CWZrl8e4TJTsAqbA3XGTYfvt8RfWzAgdiuGqqPEj+ytw5RzpQDo+vjk3T4j3b31WjxVNubEETIFW8vlvUNz1dz6iQ==
-X-Gm-Message-State: AOJu0YzxKFLvU/t0obx0iyYbzjddT+kociLxHrXZ3MF2hDFkcFWe4i0b
-	9G5eLVq2uHERV59fy2DnalhEwhdXTOwJ6uspjmDXdSoogjl0h3Ct+Vjw2dv07D8=
-X-Google-Smtp-Source: AGHT+IFPgQrAIUQP20yEu4oO7js9vKFb4DNMdww69vNskf8NztZKPbb+J0sFVmxmMre3HcBA1Sw7gw==
-X-Received: by 2002:a50:cd15:0:b0:56e:64a:2a47 with SMTP id z21-20020a50cd15000000b0056e064a2a47mr1787949edi.42.1714137942138;
-        Fri, 26 Apr 2024 06:25:42 -0700 (PDT)
-Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id q25-20020aa7cc19000000b0057203242f31sm6187837edt.11.2024.04.26.06.25.41
+        d=1e100.net; s=20230601; t=1714138676; x=1714743476;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kJRAPjibqVc85KMaMVvBivnOM8W6Quxw8WV87zJCqx8=;
+        b=ohYqqWtmfbtLp7a+06PDgI6U586xt2RH5eqVHRMsDHr+LvVuV60uwMNntVwrwH+ahY
+         Zj4J6FOLTrz3ClKNCtmuCzJdChs0aLOcniQ693fVfQFFbi/Ns2zTGdA7NfDPjQQXpjmS
+         9+FfNTZajsObPP22SeFHIonTZxDdaOOt3hEtp7NirW7n9/H3PPjayG8YrH4ZepcFCFp7
+         uX6/a+1DuGaHmRqZFAX2c06MXmuSxJ8brajyUWGSQ8CGVGZKWa7mEwFqY0ZRZnRiYLvg
+         FO0KQ40vucMmBn2lZ1S6WMKT2jtLxDuylVLZeuEw/lVywmMLlArdbuzcctBOqWPOcTR7
+         nVzw==
+X-Forwarded-Encrypted: i=1; AJvYcCXW5KSNsYPLV4qxJEnOc+4EqJdHi9lCe/zJOArBazf3WNSeRoJDeq3UGllav4LofOtffkKXIEYP7fWN5UqS9L29k/Mx+JcO8McHoA==
+X-Gm-Message-State: AOJu0YzimhM9pKC/24I6wUchDBaAFQPwW1DigP+o9908cBnMGXPJi7N0
+	YEvD5aTFDpbtEhIfZS7D69JjMm3uJH5zrsdL5JZm0m3d7LmfqY96+pAW7Q==
+X-Google-Smtp-Source: AGHT+IERc8Gkl/jTu55WbgHpWjYqGOkQXJLOnhtv4Vfg/QYjhtLw3wU8OHGeClEmRTTif0PMUI/Tcg==
+X-Received: by 2002:a17:902:6545:b0:1ea:26bf:928 with SMTP id d5-20020a170902654500b001ea26bf0928mr2345154pln.50.1714138675476;
+        Fri, 26 Apr 2024 06:37:55 -0700 (PDT)
+Received: from rigel (14-200-166-65.static.tpgi.com.au. [14.200.166.65])
+        by smtp.gmail.com with ESMTPSA id t20-20020a170902b21400b001e3e081dea1sm15499084plr.0.2024.04.26.06.37.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 06:25:41 -0700 (PDT)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Fri, 26 Apr 2024 14:25:15 +0100
-Subject: [PATCH v3 2/2] pinctrl: samsung: support a bus clock
+        Fri, 26 Apr 2024 06:37:54 -0700 (PDT)
+Date: Fri, 26 Apr 2024 21:37:51 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Gilles BULOZ <gilles.buloz@kontron.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [questions] : gpiolib and gpioset behaviour
+Message-ID: <20240426133751.GA380503@rigel>
+References: <a6492fca-e5f9-3f5c-6a61-d08c051f0ac9@kontron.com>
+ <CAMRc=MdQ8CT7uxBRhPmttNhm5kzp1+Vij2LmVGO0QsA0xUPtNQ@mail.gmail.com>
+ <04e6ac4e-0178-c910-2dcd-45a726f75c0d@kontron.com>
+ <20240426020720.GA9777@rigel>
+ <76794fbe-db97-a00b-c16c-b3e4296c3b9d@kontron.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240426-samsung-pinctrl-busclock-v3-2-adb8664b8a7e@linaro.org>
-References: <20240426-samsung-pinctrl-busclock-v3-0-adb8664b8a7e@linaro.org>
-In-Reply-To: <20240426-samsung-pinctrl-busclock-v3-0-adb8664b8a7e@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
- Peter Griffin <peter.griffin@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, 
- Sam Protsenko <semen.protsenko@linaro.org>, kernel-team@android.com, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-X-Mailer: b4 0.12.4
+In-Reply-To: <76794fbe-db97-a00b-c16c-b3e4296c3b9d@kontron.com>
 
-On some Samsung-based SoCs there are separate bus clocks / gates each
-for each pinctrl instance. To be able to access each pinctrl instance's
-registers, this bus clock needs to be running, otherwise register
-access will hang. Google Tensor gs101 is one example for such an
-implementation.
+On Fri, Apr 26, 2024 at 03:08:33PM +0200, Gilles BULOZ wrote:
+> On Fri, Apr 26, 2024 at 04:07 AM, Kent Gibson wrote :
+> > On Mon, Apr 22, 2024 at 06:49:05PM +0200, Gilles BULOZ wrote:
+> >> On Mon, Apr 22, 2024 at 3:55 PM Bartosz Golaszewski wrote :
+> >>> On Mon, Apr 22, 2024 at 2:44 PM Gilles BULOZ <gilles.buloz@kontron.com> wrote:
+> >>>>
 
-Update the driver to handle this optional bus clock:
-* handle an optional bus clock from DT
-* prepare it during driver probe
-* enclose all relevant register accesses with a clock enable & disable
+> >>
+> >
+> > I suspect you are referring to gpiolib here - the mask in gc->get_multiple()
+> > being unsigned long*.
+> >
+> > The uAPI that libgpiod uses is limited to 64 lines per request, but that is
+> > only relevant if you want to request more than 64 lines at once from userspace
+> > (you would have to break that into two requests to access all 112 lines).
+> >
+> > Note that the mask in gc->get_multiple() is unsigned long*, so it is a
+> > pointer to an array of unsigned long.  Its width is not limited by
+> > unsigned long, but by the bits parameter.  In your case the mask you pass
+> > should contain multiple unsigned longs to achieve 112 bits.
+> > Refer to gpiod_get_array_value_complex() for an example of building bitmap
+> > masks to pass to gc->get_multiple(), in that case via
+> > gpio_chip_get_multiple().
+> >
+>
+> I was refering the get_multiple/set_multiple callbacks in struct gpio_chip
+> that are defined like this :
+>  int (*get_multiple)(struct gpio_chip *gc, unsigned long *mask, unsigned long *bits);
+>  void (*set_multiple)(struct gpio_chip *gc, unsigned long *mask, unsigned long *bits);
+> With some debug in my GPIO chip driver implementing these functions, I saw that
+> the bits set in "mask" and the ones used in "bits" are the ones whose bit
+> numbers are directly matching the GPIO offset/line numbers of the chip. But I
+> only used unsigned long, not arrays, so I thought I was limited to offset/line
+> 31 on 32bit arch, and 63 on 64bit arch.
+> As you suggested, I'm currently having a look to gpiod_get_array_value_complex()
+> but I must admit I'm currently a little bit lost. I've never thought GPIO
+> implementation could become so complex for my brain :-)
+>
 
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
+The bit of primary interest that I was referring to was the DECLARE_BITMAP()
+as used for the fastpath mask:
 
----
-v2:
-- propagate clk_enable() errors in samsung_pinmux_setup(), i.e.
-  struct pinmux_ops::set_mux()
-- move clk_enable()/disable() outside bank->slock lock, to avoid
-  possible deadlocks due to locking inversion
-- fix some comments
-- use 'ret' instead of 'i' in samsung_pinctrl_resume()
----
- drivers/pinctrl/samsung/pinctrl-exynos.c  | 112 ++++++++++++++++++++++++++++++
- drivers/pinctrl/samsung/pinctrl-samsung.c |  95 ++++++++++++++++++++++++-
- drivers/pinctrl/samsung/pinctrl-samsung.h |   2 +
- 3 files changed, 206 insertions(+), 3 deletions(-)
+		DECLARE_BITMAP(fastpath_mask, FASTPATH_NGPIO);
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index 871c1eb46ddf..ce5e6783b5b9 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -13,6 +13,7 @@
- // the Samsung pinctrl/gpiolib driver. It also includes the implementation of
- // external gpio and wakeup interrupt support.
- 
-+#include <linux/clk.h>
- #include <linux/device.h>
- #include <linux/interrupt.h>
- #include <linux/irqdomain.h>
-@@ -61,6 +62,12 @@ static void exynos_irq_mask(struct irq_data *irqd)
- 	else
- 		reg_mask = our_chip->eint_mask + bank->eint_offset;
- 
-+	if (clk_enable(bank->drvdata->pclk)) {
-+		dev_err(bank->gpio_chip.parent,
-+			"unable to enable clock for masking IRQ\n");
-+		return;
-+	}
-+
- 	raw_spin_lock_irqsave(&bank->slock, flags);
- 
- 	mask = readl(bank->eint_base + reg_mask);
-@@ -68,6 +75,8 @@ static void exynos_irq_mask(struct irq_data *irqd)
- 	writel(mask, bank->eint_base + reg_mask);
- 
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
-+
-+	clk_disable(bank->drvdata->pclk);
- }
- 
- static void exynos_irq_ack(struct irq_data *irqd)
-@@ -82,7 +91,15 @@ static void exynos_irq_ack(struct irq_data *irqd)
- 	else
- 		reg_pend = our_chip->eint_pend + bank->eint_offset;
- 
-+	if (clk_enable(bank->drvdata->pclk)) {
-+		dev_err(bank->gpio_chip.parent,
-+			"unable to enable clock to ack IRQ\n");
-+		return;
-+	}
-+
- 	writel(1 << irqd->hwirq, bank->eint_base + reg_pend);
-+
-+	clk_disable(bank->drvdata->pclk);
- }
- 
- static void exynos_irq_unmask(struct irq_data *irqd)
-@@ -110,6 +127,12 @@ static void exynos_irq_unmask(struct irq_data *irqd)
- 	else
- 		reg_mask = our_chip->eint_mask + bank->eint_offset;
- 
-+	if (clk_enable(bank->drvdata->pclk)) {
-+		dev_err(bank->gpio_chip.parent,
-+			"unable to enable clock for unmasking IRQ\n");
-+		return;
-+	}
-+
- 	raw_spin_lock_irqsave(&bank->slock, flags);
- 
- 	mask = readl(bank->eint_base + reg_mask);
-@@ -117,6 +140,8 @@ static void exynos_irq_unmask(struct irq_data *irqd)
- 	writel(mask, bank->eint_base + reg_mask);
- 
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
-+
-+	clk_disable(bank->drvdata->pclk);
- }
- 
- static int exynos_irq_set_type(struct irq_data *irqd, unsigned int type)
-@@ -127,6 +152,7 @@ static int exynos_irq_set_type(struct irq_data *irqd, unsigned int type)
- 	unsigned int shift = EXYNOS_EINT_CON_LEN * irqd->hwirq;
- 	unsigned int con, trig_type;
- 	unsigned long reg_con;
-+	int ret;
- 
- 	switch (type) {
- 	case IRQ_TYPE_EDGE_RISING:
-@@ -159,11 +185,20 @@ static int exynos_irq_set_type(struct irq_data *irqd, unsigned int type)
- 	else
- 		reg_con = our_chip->eint_con + bank->eint_offset;
- 
-+	ret = clk_enable(bank->drvdata->pclk);
-+	if (ret) {
-+		dev_err(bank->gpio_chip.parent,
-+			"unable to enable clock for configuring IRQ type\n");
-+		return ret;
-+	}
-+
- 	con = readl(bank->eint_base + reg_con);
- 	con &= ~(EXYNOS_EINT_CON_MASK << shift);
- 	con |= trig_type << shift;
- 	writel(con, bank->eint_base + reg_con);
- 
-+	clk_disable(bank->drvdata->pclk);
-+
- 	return 0;
- }
- 
-@@ -200,6 +235,14 @@ static int exynos_irq_request_resources(struct irq_data *irqd)
- 	shift = irqd->hwirq * bank_type->fld_width[PINCFG_TYPE_FUNC];
- 	mask = (1 << bank_type->fld_width[PINCFG_TYPE_FUNC]) - 1;
- 
-+	ret = clk_enable(bank->drvdata->pclk);
-+	if (ret) {
-+		dev_err(bank->gpio_chip.parent,
-+			"unable to enable clock for configuring pin %s-%lu\n",
-+			bank->name, irqd->hwirq);
-+		return ret;
-+	}
-+
- 	raw_spin_lock_irqsave(&bank->slock, flags);
- 
- 	con = readl(bank->pctl_base + reg_con);
-@@ -209,6 +252,8 @@ static int exynos_irq_request_resources(struct irq_data *irqd)
- 
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
- 
-+	clk_disable(bank->drvdata->pclk);
-+
- 	return 0;
- }
- 
-@@ -223,6 +268,13 @@ static void exynos_irq_release_resources(struct irq_data *irqd)
- 	shift = irqd->hwirq * bank_type->fld_width[PINCFG_TYPE_FUNC];
- 	mask = (1 << bank_type->fld_width[PINCFG_TYPE_FUNC]) - 1;
- 
-+	if (clk_enable(bank->drvdata->pclk)) {
-+		dev_err(bank->gpio_chip.parent,
-+			"unable to enable clock for deconfiguring pin %s-%lu\n",
-+			bank->name, irqd->hwirq);
-+		return;
-+	}
-+
- 	raw_spin_lock_irqsave(&bank->slock, flags);
- 
- 	con = readl(bank->pctl_base + reg_con);
-@@ -232,6 +284,8 @@ static void exynos_irq_release_resources(struct irq_data *irqd)
- 
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
- 
-+	clk_disable(bank->drvdata->pclk);
-+
- 	gpiochip_unlock_as_irq(&bank->gpio_chip, irqd->hwirq);
- }
- 
-@@ -281,10 +335,19 @@ static irqreturn_t exynos_eint_gpio_irq(int irq, void *data)
- 	unsigned int svc, group, pin;
- 	int ret;
- 
-+	if (clk_enable(bank->drvdata->pclk)) {
-+		dev_err(bank->gpio_chip.parent,
-+			"unable to enable clock for handling IRQ\n");
-+		return IRQ_NONE;
-+	}
-+
- 	if (bank->eint_con_offset)
- 		svc = readl(bank->eint_base + EXYNOSAUTO_SVC_OFFSET);
- 	else
- 		svc = readl(bank->eint_base + EXYNOS_SVC_OFFSET);
-+
-+	clk_disable(bank->drvdata->pclk);
-+
- 	group = EXYNOS_SVC_GROUP(svc);
- 	pin = svc & EXYNOS_SVC_NUM_MASK;
- 
-@@ -563,6 +626,20 @@ static void exynos_irq_demux_eint16_31(struct irq_desc *desc)
- 
- 	chained_irq_enter(chip, desc);
- 
-+	/*
-+	 * just enable the clock once here, to avoid an enable/disable dance for
-+	 * each bank.
-+	 */
-+	if (eintd->nr_banks) {
-+		struct samsung_pin_bank *b = eintd->banks[0];
-+
-+		if (clk_enable(b->drvdata->pclk)) {
-+			dev_err(b->gpio_chip.parent,
-+				"unable to enable clock for pending IRQs\n");
-+			return;
-+		}
-+	}
-+
- 	for (i = 0; i < eintd->nr_banks; ++i) {
- 		struct samsung_pin_bank *b = eintd->banks[i];
- 		pend = readl(b->eint_base + b->irq_chip->eint_pend
-@@ -572,6 +649,9 @@ static void exynos_irq_demux_eint16_31(struct irq_desc *desc)
- 		exynos_irq_demux_eint(pend & ~mask, b->irq_domain);
- 	}
- 
-+	if (eintd->nr_banks)
-+		clk_disable(eintd->banks[0]->drvdata->pclk);
-+
- 	chained_irq_exit(chip, desc);
- }
- 
-@@ -695,6 +775,12 @@ static void exynos_pinctrl_suspend_bank(
- 	struct exynos_eint_gpio_save *save = bank->soc_priv;
- 	const void __iomem *regs = bank->eint_base;
- 
-+	if (clk_enable(bank->drvdata->pclk)) {
-+		dev_err(bank->gpio_chip.parent,
-+			"unable to enable clock for saving state\n");
-+		return;
-+	}
-+
- 	save->eint_con = readl(regs + EXYNOS_GPIO_ECON_OFFSET
- 						+ bank->eint_offset);
- 	save->eint_fltcon0 = readl(regs + EXYNOS_GPIO_EFLTCON_OFFSET
-@@ -704,6 +790,8 @@ static void exynos_pinctrl_suspend_bank(
- 	save->eint_mask = readl(regs + bank->irq_chip->eint_mask
- 						+ bank->eint_offset);
- 
-+	clk_disable(bank->drvdata->pclk);
-+
- 	pr_debug("%s: save     con %#010x\n", bank->name, save->eint_con);
- 	pr_debug("%s: save fltcon0 %#010x\n", bank->name, save->eint_fltcon0);
- 	pr_debug("%s: save fltcon1 %#010x\n", bank->name, save->eint_fltcon1);
-@@ -716,9 +804,17 @@ static void exynosauto_pinctrl_suspend_bank(struct samsung_pinctrl_drv_data *drv
- 	struct exynos_eint_gpio_save *save = bank->soc_priv;
- 	const void __iomem *regs = bank->eint_base;
- 
-+	if (clk_enable(bank->drvdata->pclk)) {
-+		dev_err(bank->gpio_chip.parent,
-+			"unable to enable clock for saving state\n");
-+		return;
-+	}
-+
- 	save->eint_con = readl(regs + bank->pctl_offset + bank->eint_con_offset);
- 	save->eint_mask = readl(regs + bank->pctl_offset + bank->eint_mask_offset);
- 
-+	clk_disable(bank->drvdata->pclk);
-+
- 	pr_debug("%s: save     con %#010x\n", bank->name, save->eint_con);
- 	pr_debug("%s: save    mask %#010x\n", bank->name, save->eint_mask);
- }
-@@ -753,6 +849,12 @@ static void exynos_pinctrl_resume_bank(
- 	struct exynos_eint_gpio_save *save = bank->soc_priv;
- 	void __iomem *regs = bank->eint_base;
- 
-+	if (clk_enable(bank->drvdata->pclk)) {
-+		dev_err(bank->gpio_chip.parent,
-+			"unable to enable clock for restoring state\n");
-+		return;
-+	}
-+
- 	pr_debug("%s:     con %#010x => %#010x\n", bank->name,
- 			readl(regs + EXYNOS_GPIO_ECON_OFFSET
- 			+ bank->eint_offset), save->eint_con);
-@@ -774,6 +876,8 @@ static void exynos_pinctrl_resume_bank(
- 						+ 2 * bank->eint_offset + 4);
- 	writel(save->eint_mask, regs + bank->irq_chip->eint_mask
- 						+ bank->eint_offset);
-+
-+	clk_disable(bank->drvdata->pclk);
- }
- 
- static void exynosauto_pinctrl_resume_bank(struct samsung_pinctrl_drv_data *drvdata,
-@@ -782,6 +886,12 @@ static void exynosauto_pinctrl_resume_bank(struct samsung_pinctrl_drv_data *drvd
- 	struct exynos_eint_gpio_save *save = bank->soc_priv;
- 	void __iomem *regs = bank->eint_base;
- 
-+	if (clk_enable(bank->drvdata->pclk)) {
-+		dev_err(bank->gpio_chip.parent,
-+			"unable to enable clock for restoring state\n");
-+		return;
-+	}
-+
- 	pr_debug("%s:     con %#010x => %#010x\n", bank->name,
- 		 readl(regs + bank->pctl_offset + bank->eint_con_offset), save->eint_con);
- 	pr_debug("%s:    mask %#010x => %#010x\n", bank->name,
-@@ -789,6 +899,8 @@ static void exynosauto_pinctrl_resume_bank(struct samsung_pinctrl_drv_data *drvd
- 
- 	writel(save->eint_con, regs + bank->pctl_offset + bank->eint_con_offset);
- 	writel(save->eint_mask, regs + bank->pctl_offset + bank->eint_mask_offset);
-+
-+	clk_disable(bank->drvdata->pclk);
- }
- 
- void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata)
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index ed07e23e0912..acde42983934 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -15,6 +15,7 @@
- // but provides extensions to which platform specific implementation of the gpio
- // and wakeup interrupts can be hooked to.
- 
-+#include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/gpio/driver.h>
- #include <linux/init.h>
-@@ -371,7 +372,7 @@ static void pin_to_reg_bank(struct samsung_pinctrl_drv_data *drvdata,
- }
- 
- /* enable or disable a pinmux function */
--static void samsung_pinmux_setup(struct pinctrl_dev *pctldev, unsigned selector,
-+static int samsung_pinmux_setup(struct pinctrl_dev *pctldev, unsigned selector,
- 					unsigned group)
- {
- 	struct samsung_pinctrl_drv_data *drvdata;
-@@ -382,6 +383,7 @@ static void samsung_pinmux_setup(struct pinctrl_dev *pctldev, unsigned selector,
- 	unsigned long flags;
- 	const struct samsung_pmx_func *func;
- 	const struct samsung_pin_group *grp;
-+	int ret;
- 
- 	drvdata = pinctrl_dev_get_drvdata(pctldev);
- 	func = &drvdata->pmx_functions[selector];
-@@ -397,6 +399,12 @@ static void samsung_pinmux_setup(struct pinctrl_dev *pctldev, unsigned selector,
- 		reg += 4;
- 	}
- 
-+	ret = clk_enable(drvdata->pclk);
-+	if (ret) {
-+		dev_err(pctldev->dev, "failed to enable clock for setup\n");
-+		return ret;
-+	}
-+
- 	raw_spin_lock_irqsave(&bank->slock, flags);
- 
- 	data = readl(reg + type->reg_offset[PINCFG_TYPE_FUNC]);
-@@ -405,6 +413,10 @@ static void samsung_pinmux_setup(struct pinctrl_dev *pctldev, unsigned selector,
- 	writel(data, reg + type->reg_offset[PINCFG_TYPE_FUNC]);
- 
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
-+
-+	clk_disable(drvdata->pclk);
-+
-+	return 0;
- }
- 
- /* enable a specified pinmux by writing to registers */
-@@ -412,8 +424,7 @@ static int samsung_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 				  unsigned selector,
- 				  unsigned group)
- {
--	samsung_pinmux_setup(pctldev, selector, group);
--	return 0;
-+	return samsung_pinmux_setup(pctldev, selector, group);
- }
- 
- /* list of pinmux callbacks for the pinmux vertical in pinctrl core */
-@@ -436,6 +447,7 @@ static int samsung_pinconf_rw(struct pinctrl_dev *pctldev, unsigned int pin,
- 	u32 data, width, pin_offset, mask, shift;
- 	u32 cfg_value, cfg_reg;
- 	unsigned long flags;
-+	int ret;
- 
- 	drvdata = pinctrl_dev_get_drvdata(pctldev);
- 	pin_to_reg_bank(drvdata, pin, &reg_base, &pin_offset, &bank);
-@@ -447,6 +459,12 @@ static int samsung_pinconf_rw(struct pinctrl_dev *pctldev, unsigned int pin,
- 	width = type->fld_width[cfg_type];
- 	cfg_reg = type->reg_offset[cfg_type];
- 
-+	ret = clk_enable(drvdata->pclk);
-+	if (ret) {
-+		dev_err(drvdata->dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+
- 	raw_spin_lock_irqsave(&bank->slock, flags);
- 
- 	mask = (1 << width) - 1;
-@@ -466,6 +484,8 @@ static int samsung_pinconf_rw(struct pinctrl_dev *pctldev, unsigned int pin,
- 
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
- 
-+	clk_disable(drvdata->pclk);
-+
- 	return 0;
- }
- 
-@@ -555,11 +575,19 @@ static void samsung_gpio_set_value(struct gpio_chip *gc,
- static void samsung_gpio_set(struct gpio_chip *gc, unsigned offset, int value)
- {
- 	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
-+	struct samsung_pinctrl_drv_data *drvdata = bank->drvdata;
- 	unsigned long flags;
- 
-+	if (clk_enable(drvdata->pclk)) {
-+		dev_err(drvdata->dev, "failed to enable clock\n");
-+		return;
-+	}
-+
- 	raw_spin_lock_irqsave(&bank->slock, flags);
- 	samsung_gpio_set_value(gc, offset, value);
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
-+
-+	clk_disable(drvdata->pclk);
- }
- 
- /* gpiolib gpio_get callback function */
-@@ -569,12 +597,23 @@ static int samsung_gpio_get(struct gpio_chip *gc, unsigned offset)
- 	u32 data;
- 	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
- 	const struct samsung_pin_bank_type *type = bank->type;
-+	struct samsung_pinctrl_drv_data *drvdata = bank->drvdata;
-+	int ret;
- 
- 	reg = bank->pctl_base + bank->pctl_offset;
- 
-+	ret = clk_enable(drvdata->pclk);
-+	if (ret) {
-+		dev_err(drvdata->dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+
- 	data = readl(reg + type->reg_offset[PINCFG_TYPE_DAT]);
- 	data >>= offset;
- 	data &= 1;
-+
-+	clk_disable(drvdata->pclk);
-+
- 	return data;
- }
- 
-@@ -591,9 +630,11 @@ static int samsung_gpio_set_direction(struct gpio_chip *gc,
- 	struct samsung_pin_bank *bank;
- 	void __iomem *reg;
- 	u32 data, mask, shift;
-+	struct samsung_pinctrl_drv_data *drvdata;
- 
- 	bank = gpiochip_get_data(gc);
- 	type = bank->type;
-+	drvdata = bank->drvdata;
- 
- 	reg = bank->pctl_base + bank->pctl_offset
- 			+ type->reg_offset[PINCFG_TYPE_FUNC];
-@@ -619,12 +660,22 @@ static int samsung_gpio_set_direction(struct gpio_chip *gc,
- static int samsung_gpio_direction_input(struct gpio_chip *gc, unsigned offset)
- {
- 	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
-+	struct samsung_pinctrl_drv_data *drvdata = bank->drvdata;
- 	unsigned long flags;
- 	int ret;
- 
-+	ret = clk_enable(drvdata->pclk);
-+	if (ret) {
-+		dev_err(drvdata->dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+
- 	raw_spin_lock_irqsave(&bank->slock, flags);
- 	ret = samsung_gpio_set_direction(gc, offset, true);
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
-+
-+	clk_disable(drvdata->pclk);
-+
- 	return ret;
- }
- 
-@@ -633,14 +684,23 @@ static int samsung_gpio_direction_output(struct gpio_chip *gc, unsigned offset,
- 							int value)
- {
- 	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
-+	struct samsung_pinctrl_drv_data *drvdata = bank->drvdata;
- 	unsigned long flags;
- 	int ret;
- 
-+	ret = clk_enable(drvdata->pclk);
-+	if (ret) {
-+		dev_err(drvdata->dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+
- 	raw_spin_lock_irqsave(&bank->slock, flags);
- 	samsung_gpio_set_value(gc, offset, value);
- 	ret = samsung_gpio_set_direction(gc, offset, false);
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
- 
-+	clk_disable(drvdata->pclk);
-+
- 	return ret;
- }
- 
-@@ -1164,6 +1224,12 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	drvdata->pclk = devm_clk_get_optional_prepared(dev, "pclk");
-+	if (IS_ERR(drvdata->pclk)) {
-+		ret = PTR_ERR(drvdata->pclk);
-+		goto err_put_banks;
-+	}
-+
- 	ret = samsung_pinctrl_register(pdev, drvdata);
- 	if (ret)
- 		goto err_put_banks;
-@@ -1202,6 +1268,13 @@ static int __maybe_unused samsung_pinctrl_suspend(struct device *dev)
- 	struct samsung_pinctrl_drv_data *drvdata = dev_get_drvdata(dev);
- 	int i;
- 
-+	i = clk_enable(drvdata->pclk);
-+	if (i) {
-+		dev_err(drvdata->dev,
-+			"failed to enable clock for saving state\n");
-+		return i;
-+	}
-+
- 	for (i = 0; i < drvdata->nr_banks; i++) {
- 		struct samsung_pin_bank *bank = &drvdata->pin_banks[i];
- 		const void __iomem *reg = bank->pctl_base + bank->pctl_offset;
-@@ -1231,6 +1304,8 @@ static int __maybe_unused samsung_pinctrl_suspend(struct device *dev)
- 		}
- 	}
- 
-+	clk_disable(drvdata->pclk);
-+
- 	if (drvdata->suspend)
- 		drvdata->suspend(drvdata);
- 	if (drvdata->retention_ctrl && drvdata->retention_ctrl->enable)
-@@ -1250,8 +1325,20 @@ static int __maybe_unused samsung_pinctrl_suspend(struct device *dev)
- static int __maybe_unused samsung_pinctrl_resume(struct device *dev)
- {
- 	struct samsung_pinctrl_drv_data *drvdata = dev_get_drvdata(dev);
-+	int ret;
- 	int i;
- 
-+	/*
-+	 * enable clock before the callback, as we don't want to have to deal
-+	 * with callback cleanup on clock failures.
-+	 */
-+	ret = clk_enable(drvdata->pclk);
-+	if (ret) {
-+		dev_err(drvdata->dev,
-+			"failed to enable clock for restoring state\n");
-+		return ret;
-+	}
-+
- 	if (drvdata->resume)
- 		drvdata->resume(drvdata);
- 
-@@ -1286,6 +1373,8 @@ static int __maybe_unused samsung_pinctrl_resume(struct device *dev)
- 				writel(bank->pm_save[type], reg + offs[type]);
- 	}
- 
-+	clk_disable(drvdata->pclk);
-+
- 	if (drvdata->retention_ctrl && drvdata->retention_ctrl->disable)
- 		drvdata->retention_ctrl->disable(drvdata);
- 
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
-index ab791afaabf5..d50ba6f07d5d 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-@@ -274,6 +274,7 @@ struct samsung_pin_ctrl {
-  *             through samsung_pinctrl_drv_data, not samsung_pin_bank).
-  * @dev: device instance representing the controller.
-  * @irq: interrpt number used by the controller to notify gpio interrupts.
-+ * @pclk: optional bus clock if required for accessing registers
-  * @ctrl: pin controller instance managed by the driver.
-  * @pctl: pin controller descriptor registered with the pinctrl subsystem.
-  * @pctl_dev: cookie representing pinctrl device instance.
-@@ -293,6 +294,7 @@ struct samsung_pinctrl_drv_data {
- 	void __iomem			*virt_base;
- 	struct device			*dev;
- 	int				irq;
-+	struct clk			*pclk;
- 
- 	struct pinctrl_desc		pctl;
- 	struct pinctrl_dev		*pctl_dev;
+That does the sizing math for you.  In your case you would use 112 for
+the NGPIO.  There are also examples of using __set_bit() to set bits in
+the mask.  Take a look in linux/bitmaps.h and linux/bitops.h for the
+relevant definitions if you want to dig deeper.
 
--- 
-2.44.0.769.g3c40516874-goog
+And, yeah, the amount of work that goes into just driving physical
+lines up and down, fundamentally just toggling bits, frequently makes my brain
+hurt too ;-).
 
+Cheers,
+Kent.
 
