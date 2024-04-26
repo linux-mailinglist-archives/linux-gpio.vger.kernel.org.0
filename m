@@ -1,164 +1,198 @@
-Return-Path: <linux-gpio+bounces-5900-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5901-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCBBA8B420C
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Apr 2024 00:08:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 236338B42C9
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Apr 2024 01:44:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 316E81F22D19
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 22:08:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D49C1F22891
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 23:44:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C38C0376E7;
-	Fri, 26 Apr 2024 22:08:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B77613BBE1;
+	Fri, 26 Apr 2024 23:44:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XiAPYb6t"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GMB7FAU+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D332C6B7;
-	Fri, 26 Apr 2024 22:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B434C8C;
+	Fri, 26 Apr 2024 23:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714169300; cv=none; b=V6nkYnDFpb2fcswdQR4bFqDDj4r4Roc3gTfwLBU3bTJ8WQV3LkD0/C23HyhLx7KevSJG2jS/3KSancp00bq8V5c6tbcVg85lrpoy3bby/beEFjFJQhhyOSI0TdizSvLsdNXSDcnjLmVkjSMYcl1k5TIu6sc4984lSGVpul0iQCs=
+	t=1714175069; cv=none; b=sZljz2SBNopdR8k/QhjQTx4nbvjZ491I0dE6dh35+P1XOT0dsdnbwgduVoVtc51NQTTg9qTPNpiAUG9eH8444DWO2K2A1fyS/vEV5zbCu+1dAdkkFLvgoACKV12AHIf0xwranBm6Nb4ucZGX/kuGbpkOchh0yDmqQfncS50Egfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714169300; c=relaxed/simple;
-	bh=0khILg54FT/sDBrzWK5mNL6qNVmfbtcLyd+OTVQdtoU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pf7tT9/yTl3JuhjgZRZ6LB05H4bOgsHv2Um+yQIEmrhsZYJfGzfq7Zb++21kW8R4Nl0tWaAW6+zYQSUeoKG08zscuR1lLM7yh4KrGSwBuxrBglBMiM1IoGKsgJdJQNgqjuuBvVT6mhRMq1wIX/vOwQZrK8/u5rHKONMcvAEVaoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XiAPYb6t; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-de596c078c2so2316503276.0;
-        Fri, 26 Apr 2024 15:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714169298; x=1714774098; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0khILg54FT/sDBrzWK5mNL6qNVmfbtcLyd+OTVQdtoU=;
-        b=XiAPYb6tRt3fA84i+wAAyzsq8knS7Ik8jZxt5ebiFI9/1vc5xulY36+ie9LN+FxYfo
-         9+q7sFeCgfG2mW+KWY+VsYBushZuxgQ7ChZ3jiZZniGBSruTxR+lZ8m2rBVGCvlMqx8b
-         sM3UhSGyEBzKzHOqrLnkpz9wmtkhSIuHcHbgzAheY/4bVFLxuq3Q4Nc6qj1Xi6mwV7Cd
-         cgobJwi7OZhaltCKcNTnt9Jt2n+Gi+5Au9z1nXv+Ya0fTq5lGZfTu+3U6XBmLyXx3wOs
-         dHpASih3/Z4itkZb5h4OwSZ3Muu5a/jHLiWLZdWCAU+PDI8m879CH0oHUNtJ3dvyMGrA
-         fTeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714169298; x=1714774098;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0khILg54FT/sDBrzWK5mNL6qNVmfbtcLyd+OTVQdtoU=;
-        b=xN+cZJbRG3NuP73E8h68eEw1admeA8L8bNz5G1SM/TRMM1fDdcIs/JgN69hoj7Soka
-         47Zuoy7TZ4KYMCuwC1iN/OIu842rK0xRYyAg8qZXevJjOAcaSJMBJd/7kl3sEsbg11DH
-         6z4fAWOM7O9SpZPGBGNqKL10Hci311GaCI4kz6COMeBebINkVxJaTfuoThXoHjaZH+IJ
-         C49vxfQiiRi2JvIRJ0Zf02CK8x8j8/kunSNHxE6fBmu5VFmPQ9o7Xd4++501w0XJZ1Wu
-         EhqPnQsK4DlKjT4v8w2j3xztWEtHRrJ7H42tTE9R7TFedKxbW24PHs8rEvKJbve6xchQ
-         05fg==
-X-Forwarded-Encrypted: i=1; AJvYcCWnlnVZLixhnXTbubdXLWSx9Uk5id0J3UEsv0U3jGGRaJxc5F3w98HZZE53WNN95MNyDLFUej29DJbqfHjSWb3uyOCXpfmhpABh+JSVl54/LSAQLZLF3+AZTspLiNmah+wn3HQ2MDIpJa9R7yJLoyO0wh2gIDm1QRm/ykQ6thhRc0GVycEZiTY=
-X-Gm-Message-State: AOJu0YyiRCzFSBZNmeUV0vkWz1Ii4VVmMcqIcXM/p5R6EyT+RI+15hE4
-	8UKEdsz6ncwOWuNu3y95A7vRe1nI2jlkHyGuq/JbSsdZJtep/s+me0BRYFQfipioJDoArX1qgIr
-	S9ILkLtoB5mIeUiLOUFIhZ4vo/2c=
-X-Google-Smtp-Source: AGHT+IGATzNR3kaBbDpb0EkDU4wV4HvJlDtd4NArx1rLPtzu8SyJ9NkwXfooBm54KAjIyFV9MaKB/H1WtIXS9Q4VarU=
-X-Received: by 2002:a25:d845:0:b0:de5:a15a:7118 with SMTP id
- p66-20020a25d845000000b00de5a15a7118mr4144739ybg.42.1714169298049; Fri, 26
- Apr 2024 15:08:18 -0700 (PDT)
+	s=arc-20240116; t=1714175069; c=relaxed/simple;
+	bh=VjnxGuvPOCHw/9I5pDPbvU2HDjwTkVBHsu9VkyFjC2A=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KmXIMmt2/INgBWvorpDmln6E+uaC1WEJZOOxxW/TaAWBkWY7huM5LJXtafRaUmjtrf27BsDcYtKyJnywBuJLxsFI9QMi/zvNFTkNQqLjehopai0tDqiDJRPU+whajE4GznRSo7YQcciyYVm/gvE7RU/Cm7ftC8bf2T/m3KlMkKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GMB7FAU+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43QMEfta027231;
+	Fri, 26 Apr 2024 23:43:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-transfer-encoding:in-reply-to; s=
+	qcppdkim1; bh=fvZQEOMEBMhpsqY4aqtd8hxe5+VAEhLT1fCgDKvfvvc=; b=GM
+	B7FAU+45LCPYMJ/MUNgt+1RkhC271XUlinQSe+K54fnKLKN5Gm5o68AygFgTW2oy
+	nMCnKpJVFgdYZL6OztEiWl7Og6suWcaeeSlab6xuR6IJwiWxm+R3yucII8XNZZmn
+	oHH//bZOs//I/hUyrhjU4KjgngGdCEEs8EfJrOAmTjY/3VGT51wRP94qYQE3EP1b
+	lI8B7ABr0T+GRgFwXHiqhZcjKuI94/R7/DMikixvs6ApyFfjhtwhnguyGfpdWhuq
+	JDRrFbdI1jfb7zPzZCV3u3IbET1Mnhvi3GbB/OsNOWcYcwenRpIYDgxyRaD5vAqC
+	URupSEslvpumLE2Bb6Rw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xr88fhvmt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 23:43:57 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43QNhutm023766
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 23:43:56 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 26 Apr 2024 16:43:56 -0700
+Date: Fri, 26 Apr 2024 16:43:54 -0700
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+To: Brian Norris <computersforpeace@gmail.com>
+CC: Johan Hovold <johan@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jaiganesh Narayanan
+	<njaigane@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: qcom: Fix behavior in abscense of open-drain
+ support
+Message-ID: <Ziw8OrNS55AtyDkI@hu-bjorande-lv.qualcomm.com>
+References: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
+ <ZipGRl_QC_x83MFt@hovoldconsulting.com>
+ <CAN8TOE_Vd9c2eYgomhu_ukofTeO9eK8Yhrtt-8BQckmJnGfj6w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com> <ZipGRl_QC_x83MFt@hovoldconsulting.com>
-In-Reply-To: <ZipGRl_QC_x83MFt@hovoldconsulting.com>
-From: Brian Norris <computersforpeace@gmail.com>
-Date: Fri, 26 Apr 2024 15:08:06 -0700
-Message-ID: <CAN8TOE_Vd9c2eYgomhu_ukofTeO9eK8Yhrtt-8BQckmJnGfj6w@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: Fix behavior in abscense of open-drain support
-To: Johan Hovold <johan@kernel.org>
-Cc: Bjorn Andersson <quic_bjorande@quicinc.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Jaiganesh Narayanan <njaigane@codeaurora.org>, 
-	Doug Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAN8TOE_Vd9c2eYgomhu_ukofTeO9eK8Yhrtt-8BQckmJnGfj6w@mail.gmail.com>
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Ifl1ivFekn3THFMt8QS6P6VNvuH_5K65
+X-Proofpoint-GUID: Ifl1ivFekn3THFMt8QS6P6VNvuH_5K65
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-26_20,2024-04-26_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 mlxscore=0 phishscore=0 mlxlogscore=999 spamscore=0
+ bulkscore=0 adultscore=0 malwarescore=0 impostorscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2404260167
 
-Hi Johan, Bjorn,
-
-On Thu, Apr 25, 2024 at 5:02=E2=80=AFAM Johan Hovold <johan@kernel.org> wro=
-te:
->
-> On Wed, Apr 24, 2024 at 08:45:31PM -0700, Bjorn Andersson wrote:
-> > When a GPIO is configured as OPEN_DRAIN gpiolib will in
-> > gpiod_direction_output() attempt to configure the open-drain property o=
-f
-> > the hardware and if this fails fall back to software emulation of this
-> > state.
+On Fri, Apr 26, 2024 at 03:08:06PM -0700, Brian Norris wrote:
+> Hi Johan, Bjorn,
+> 
+> On Thu, Apr 25, 2024 at 5:02 AM Johan Hovold <johan@kernel.org> wrote:
 > >
-> > The TLMM block in most Qualcomm platform does not implement such
-> > functionality, so this call would be expected to fail. But due to lack
-> > of checks for this condition, the zero-initialized od_bit will cause
-> > this request to silently corrupt the lowest bit in the config register
-> > (which typically is part of the bias configuration) and happily continu=
-e
-> > on.
+> > On Wed, Apr 24, 2024 at 08:45:31PM -0700, Bjorn Andersson wrote:
+> > > When a GPIO is configured as OPEN_DRAIN gpiolib will in
+> > > gpiod_direction_output() attempt to configure the open-drain property of
+> > > the hardware and if this fails fall back to software emulation of this
+> > > state.
+> > >
+> > > The TLMM block in most Qualcomm platform does not implement such
+> > > functionality, so this call would be expected to fail. But due to lack
+> > > of checks for this condition, the zero-initialized od_bit will cause
+> > > this request to silently corrupt the lowest bit in the config register
+> > > (which typically is part of the bias configuration) and happily continue
+> > > on.
+> 
+> Apologies if I broke something here.
 
-Apologies if I broke something here. Both the pinctrl subsystem and
-the wide world of diverse QCOM chips can be complicated beasts. I
-definitely could have missed things along the way. (And on first
-glance, it seems like you may have found one. I definitely did not
-consider the gpiod_direction_output() "emulation" behavior here when
-submitting this.)
+False alarm on the breakage part, I got lost in the software layers.
 
-But I can't tell based on subsequent conversation: are you observing a
-real problem, or is this a theoretical one that only exists if the
-gpiochip driver adds set_config() support?
+> Both the pinctrl subsystem and
+> the wide world of diverse QCOM chips can be complicated beasts. I
+> definitely could have missed things along the way. (And on first
+> glance, it seems like you may have found one. I definitely did not
+> consider the gpiod_direction_output() "emulation" behavior here when
+> submitting this.)
+> 
+> But I can't tell based on subsequent conversation: are you observing a
+> real problem, or is this a theoretical one that only exists if the
+> gpiochip driver adds set_config() support?
+> 
 
-> > Fix this by checking if the od_bit value is unspecified and if so fail
-> > the request to avoid the unexpected state, and to make sure the softwar=
-e
-> > fallback actually kicks in.
->
-> Fortunately, this is currently not a problem as the gpiochip driver does
-> not implement the set_config() callback, which means that the attempt to
-> change the pin configuration currently always fails with -ENOTSUP (see
-> gpio_do_set_config()).
->
-> Specifically, this means that the software fallback kicks in, which I
-> had already verified.
->
-> Now, perhaps there is some other path which can allow you to end up
-> here, but it's at least not via gpiod_direction_output().
->
-> The msm pinctrl binding does not allow 'drive-open-drain' so that path
-> should also be ok unless you have a non-conformant devicetree.
+There is a problem that if a non-ipq4019 device where to be pinconf'ed
+for open-drain, the outcome would be unexpected and I have a concern
+that someone one day would implement set_config().
 
-The ipq4019 binding does:
-https://git.kernel.org/linus/99d19f5a48ee6fbc647935de458505e9308078e3
+So, I'd like to fix this, but my argumentation is at least wrong.
 
-This is used in OpenWrt device trees.
-
-> > It is assumed for now that no implementation will come into existence
-> > with BIT(0) being the open-drain bit, simply for convenience sake.
+> > > Fix this by checking if the od_bit value is unspecified and if so fail
+> > > the request to avoid the unexpected state, and to make sure the software
+> > > fallback actually kicks in.
 > >
-> > Fixes: 13355ca35cd1 ("pinctrl: qcom: ipq4019: add open drain support")
->
-> I guess hardware open-drain mode has never been properly tested on
-> ipq4019.
+> > Fortunately, this is currently not a problem as the gpiochip driver does
+> > not implement the set_config() callback, which means that the attempt to
+> > change the pin configuration currently always fails with -ENOTSUP (see
+> > gpio_do_set_config()).
+> >
+> > Specifically, this means that the software fallback kicks in, which I
+> > had already verified.
+> >
+> > Now, perhaps there is some other path which can allow you to end up
+> > here, but it's at least not via gpiod_direction_output().
+> >
+> > The msm pinctrl binding does not allow 'drive-open-drain' so that path
+> > should also be ok unless you have a non-conformant devicetree.
+> 
+> The ipq4019 binding does:
+> https://git.kernel.org/linus/99d19f5a48ee6fbc647935de458505e9308078e3
+> 
 
-It was quite some time ago that I wrote and tested this, and per the
-above, I easily could have missed things. (Plus, the open drain
-configuration may not have much practical effect on the systems in
-question, so certain errors may not even be observable.)
+Perhaps we could convert that to yaml?
 
-But I do recall seeing the code in question activate. And inspection
-shows that the pinconf_apply_setting() -> ... msm_config_group_set()
-path is non-dead code here, for appropriate device trees.
+> This is used in OpenWrt device trees.
+> 
 
-I can try to fire up my development devices again and see what's up if
-that helps, but I won't have time to do that in the next few days.
+Thanks, I couldn't find a user, so this was helpful input for deciding
+the path forward.
 
-Brian
+> > > It is assumed for now that no implementation will come into existence
+> > > with BIT(0) being the open-drain bit, simply for convenience sake.
+> > >
+> > > Fixes: 13355ca35cd1 ("pinctrl: qcom: ipq4019: add open drain support")
+> >
+> > I guess hardware open-drain mode has never been properly tested on
+> > ipq4019.
+> 
+> It was quite some time ago that I wrote and tested this, and per the
+> above, I easily could have missed things. (Plus, the open drain
+> configuration may not have much practical effect on the systems in
+> question, so certain errors may not even be observable.)
+> 
+> But I do recall seeing the code in question activate. And inspection
+> shows that the pinconf_apply_setting() -> ... msm_config_group_set()
+> path is non-dead code here, for appropriate device trees.
+> 
+
+Thank you for taking a look, Brian. This was valuable input. I will
+rework this to have a valid motivation - at least.
+
+> I can try to fire up my development devices again and see what's up if
+> that helps, but I won't have time to do that in the next few days.
+> 
+
+As my observation was incorrect, I don't think that is urgent.
+
+Regards,
+Bjorn
 
