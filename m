@@ -1,111 +1,132 @@
-Return-Path: <linux-gpio+bounces-5881-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5882-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F366C8B353B
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 12:24:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6E018B3617
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 12:55:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B40BB283F88
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 10:24:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 447031F22F6D
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 10:55:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2C80143877;
-	Fri, 26 Apr 2024 10:24:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47BC71448EA;
+	Fri, 26 Apr 2024 10:55:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C3AernpZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DuSafFZI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33C113FD82
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Apr 2024 10:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6786F143C4D
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Apr 2024 10:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714127088; cv=none; b=m1dEBvdXx+TfPduWZgxowUE+YsYNy2B67SQudpOiZs15+UtZMk3l9uMyLjXy4Sk4gW+ujg9euTjH056l0FFbyiqHf07VZhvKPjkOTKLnobMl5mONokUaMvRwdbw781S7tyV5qqkJHr7zIu85V1K55apVsjsWloLATD5/GD5VLL8=
+	t=1714128903; cv=none; b=Z9BQTdMWO2udJ8fcgyl2r8c6sAj/BgOeE9x185UQEjOPg78QBGMhnQGXRsA8/cu4HUrmc/BU6HM4xZ47UEEutQsgx/dt8bNFA55yD8rmfnTWuBBinvpzfQsNa8k2mMYA+pdVL+xbmA6gRlTOYzhYhCLGpHrs6QL1+9WbQqPlr1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714127088; c=relaxed/simple;
-	bh=mWpj8k4SBbNDC/pKx9uwTeUPaJQ/tHNsASWd6FTkf+g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nUGdqeCrxIhAMeb3V2Cm6IN4L1OtXEFvFR4DP/DCZrvUX/zlRNwYvtXNtpHeiuwV1zXRlAvClH03OlfRI4aM+Ya45pAQfDWXPxiKOOrLEat/ZbU8LeKYQyK/ia4tTgk5dLtrsMyuehym4SIRqrfYL7/VhxpUtPgGFe1FUuBW71s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C3AernpZ; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714127087; x=1745663087;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=mWpj8k4SBbNDC/pKx9uwTeUPaJQ/tHNsASWd6FTkf+g=;
-  b=C3AernpZoD0lwiNgUDVmri8gAOJ/mbjrJGTXv5I+fnEcWDlT5XyCD2rq
-   Pa/fNXoydjrsrqlnyEHUtPeO1YKMSbVmSXz5cimagCt6ummBNSs6+G4z7
-   uCxs4gCqvOlawR+NvxBCEK6G6sSunzM1QYIsI/q8CImzoH6utnojmcoZU
-   yTc5nD8j3tgpMk4NE2zfhlhQ3m+S8jgXBjdC64E1hb9FL034HwvAirtBd
-   HwqM/lmWTVc5/mkbiqxEvKlYJ+aHj6ovXZmWpaZqCeTZtApPrD75CzZz0
-   ITfaFExoMG+D6fe3ON8gqUWKkPynEo5Dzek9R5Y/bKUeOKosLUljr9BfL
-   g==;
-X-CSE-ConnectionGUID: phG5jehBTzySUpc0bkibfg==
-X-CSE-MsgGUID: 9DAjzVzcQMO+svvVYYIBZg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="35245074"
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="35245074"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 03:24:46 -0700
-X-CSE-ConnectionGUID: W6siUojPQD24DnFjHPaiSg==
-X-CSE-MsgGUID: Pnwu3+hCSdWkJdQkFTOi8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,232,1708416000"; 
-   d="scan'208";a="30180920"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 26 Apr 2024 03:24:45 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s0Il0-0003as-26;
-	Fri, 26 Apr 2024 10:24:42 +0000
-Date: Fri, 26 Apr 2024 18:24:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org
-Subject: [linusw-gpio:b4/spitz 4/4] include/linux/spi/pxa2xx_spi.h:53:52:
- warning: 'struct property_entry' declared inside parameter list will not be
- visible outside of this definition or declaration
-Message-ID: <202404261804.6lkYMrCw-lkp@intel.com>
+	s=arc-20240116; t=1714128903; c=relaxed/simple;
+	bh=DIyBYigJJ/qTpLE5EewD87Aphyv6LkbS9QtWMPjRHd0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Shr90tMYg9ItIGv8vHK0SOlzW31rnIqJPuDvygsUH7vvHiR1xvaKFMKqGvDXrVcUfbdE79VFLPmSS42bemCWusC7kL70RZqXsoL6d5B1twtlejiUIuKn+5jvNJ4XPqx5W5J/kCQ7xtxT+aCe8dA6j7ZD9WVVUJfXwOn+g3KfNH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DuSafFZI; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2de232989aaso22166861fa.1
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Apr 2024 03:55:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714128899; x=1714733699; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DIyBYigJJ/qTpLE5EewD87Aphyv6LkbS9QtWMPjRHd0=;
+        b=DuSafFZIzN52bdTGiaUJXRuSPumFMeA/xpFEKs6SMZaZL/v22SGx2Cu6pVaXyatGYo
+         zWiZzHcO6PusXJcQvQ2BADO7i8rkGcjlbUjPUp5zp3T3etUGonr0XcACuz5wDTvZ3SDN
+         UlHf44D5XXlrp0JlwDrNUFWM7WkpurF/ajL7Mt+Yt/RlSiQO9Z7yox7n7soiiVyv/REG
+         r9pwAKf1tybC35POhsjiKMsgxuKOlO5xpsW+hTi43sc6mbkwMTWErj1zk+7A0YgcDn6K
+         zsggJhgDsf4TRi25aFwPhFRTuqfHUtK6lyl2DjTG1xUaiPz/Gw9FySv+IZ0ZSNLA2iZh
+         BhPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714128899; x=1714733699;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DIyBYigJJ/qTpLE5EewD87Aphyv6LkbS9QtWMPjRHd0=;
+        b=N0mvpbtB9kXPfUfB8T8ymJXwarcB2pleL1tBiUyKaTKDZGiVjzi2wezqCTF07huthj
+         wNW03xOEmrp9/csbONsZ6U+6tWKy2tCEVHvDKfczgxWuDHnmLq5EM/npVB8SbnmacB5K
+         d3F2qH15/wp4KnXzd+Eh08CGG9Vgn+gOannC/hEELgcySl7bkUT0WBRqPNIoNk4x4O64
+         PMAqDJKAdJT0s+wotVA43t0KhR2LcZUunN6r3qz/RCH1MCaYc1gLjyLcSbrfpWuOqQOP
+         qQ9qIoIIfnCrOAX+pwlphFzUiGKgCNRdDEp539DsGaMUmOytJtM32ohaNmthtsais/ol
+         7N8w==
+X-Forwarded-Encrypted: i=1; AJvYcCU4KPgAAq0ql+2sLSkneQELqqslFUEt1IuLH53P9ZUcii+TZ0WVD3YsyokyGRDi0SWHjwFKEB2ca77Oeo7d8j2XuToTOEEda+g8dg==
+X-Gm-Message-State: AOJu0YxEQb1XyfY+9pkUcxCCyeWUc6AgxIPdoGqb9ozp1HjT1YQ+b0fP
+	OuB4vfz2L1ykFSujX+PyUeX8EDaG3h8+R/B5WCNGEtrOupSHPpv16w7+q6lKx+M=
+X-Google-Smtp-Source: AGHT+IFyC/4QrUfmFma/svm6P7ncU0LS1OeE3p4iwwLxVeaF0tQ3vYyuoA8eoICoNDNcv4AhdWdRLw==
+X-Received: by 2002:a2e:be0f:0:b0:2df:48a:b8d9 with SMTP id z15-20020a2ebe0f000000b002df048ab8d9mr1837667ljq.35.1714128899379;
+        Fri, 26 Apr 2024 03:54:59 -0700 (PDT)
+Received: from [10.1.1.109] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id n6-20020a05600c3b8600b0041892e839bcsm30822115wms.33.2024.04.26.03.54.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Apr 2024 03:54:59 -0700 (PDT)
+Message-ID: <8023ea8c1eab725baf0389fe34b918bb5dd924c8.camel@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: samsung: google,gs101-pinctrl
+ needs a clock
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki
+ <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Peter
+ Griffin <peter.griffin@linaro.org>, semen.protsenko@linaro.org
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker
+	 <willmcvicker@google.com>, kernel-team@android.com, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 26 Apr 2024 11:54:57 +0100
+In-Reply-To: <013f2da9-1d91-4b62-b5b7-d603d0c09aef@kernel.org>
+References: <20240425-samsung-pinctrl-busclock-v1-0-898a200abe68@linaro.org>
+	 <20240425-samsung-pinctrl-busclock-v1-1-898a200abe68@linaro.org>
+	 <56a32a2d-2f6f-4f7b-8359-6f3062c010e2@kernel.org>
+	 <013f2da9-1d91-4b62-b5b7-d603d0c09aef@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3-1 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/spitz
-head:   40c9c2538a37054ef2a1c56f3a41e64ba82cd6aa
-commit: 40c9c2538a37054ef2a1c56f3a41e64ba82cd6aa [4/4] ARM: spitz: Use software nodes for the ADS7846 touchscreen
-config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20240426/202404261804.6lkYMrCw-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240426/202404261804.6lkYMrCw-lkp@intel.com/reproduce)
+On Thu, 2024-04-25 at 20:18 +0200, Krzysztof Kozlowski wrote:
+> On 25/04/2024 20:15, Krzysztof Kozlowski wrote:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 properties:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 contains:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 c=
+onst: google,gs101-pinctrl
+> > > +=C2=A0=C2=A0=C2=A0 then:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 required:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - clocks
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - clock-names
+> >=20
+> > else:
+> > =C2=A0 properties:
+> > =C2=A0=C2=A0=C2=A0 clocks: false
+> > =C2=A0=C2=A0=C2=A0 clock-names: false
+> >=20
+> > but anyway this is all a bit fragile, because pinctrl is not a driver
+> > and you rely on initcall ordering.
+>=20
+> It is a driver, although initcall ordering is still there. Anyway, it's
+> the first soc requiring clock for pinctrl
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404261804.6lkYMrCw-lkp@intel.com/
+If I see it right, E850 has similar gates, and like on gs101 they're curren=
+tly
+also all marked as CLK_IGNORE_UNUSED in the e850 clock driver with a commen=
+t that
+a driver update is needed. I've added Sam.
 
-All warnings (new ones prefixed by >>):
+Cheers,
+Andre'
 
-   In file included from drivers/spi/spi-pxa2xx-dma.c:15:
->> include/linux/spi/pxa2xx_spi.h:53:52: warning: 'struct property_entry' declared inside parameter list will not be visible outside of this definition or declaration
-      53 | void pxa2xx_set_spi_node(unsigned id, const struct property_entry *props);
-         |                                                    ^~~~~~~~~~~~~~
-
-
-vim +53 include/linux/spi/pxa2xx_spi.h
-
-    51	
-    52	extern void pxa2xx_set_spi_info(unsigned id, struct pxa2xx_spi_controller *info);
-  > 53	void pxa2xx_set_spi_node(unsigned id, const struct property_entry *props);
-    54	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
