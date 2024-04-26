@@ -1,125 +1,107 @@
-Return-Path: <linux-gpio+bounces-5877-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5878-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE0308B316A
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 09:33:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B0038B320C
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 10:10:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EBE2CB2291D
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 07:33:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C479AB2263A
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Apr 2024 08:10:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B687713C3EA;
-	Fri, 26 Apr 2024 07:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nwUdAWLC"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE70613C9A1;
+	Fri, 26 Apr 2024 08:10:26 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A35E13C3D2
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Apr 2024 07:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001C413C8F8
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Apr 2024 08:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714116818; cv=none; b=TWbQMGfGV4r/8Pz/BStjk4BoGMeRRFQGo9uQnnrndRAFcaBPknIAeSt3g3f7TmYX4OesO2BlDmyrivianoXJpkUkjz3OgqYzTjmGxGbNcvYtFoUAv3v8xegXh97Z6XTOludKLNgEct1kEima9htmlcwr1zH7A3zJ8xmv/oIfugY=
+	t=1714119026; cv=none; b=tbibb0kqE6S/z3skS7QkPG0xC3uSoPm/MSYn3NYkEkF5UvWvDYK8jfzxVDnpK5xDPG0QOgzLooOCcFbAYSziniZm87Q105NbmmVyQy/VdzOUlVN+MpbBWfMwtq10hd8xI2jogtN8i0JKL7anV18jJ38XmQFMbGgFNsGMvKqPymE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714116818; c=relaxed/simple;
-	bh=9ePKGoQQ03Kw1+fDy3bdzYL0h8yQNi0slcWIGi8PPz0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EA1Pi1Cegaej9/Ykril+D2U0A9HoDGlgs+rQJI/YjGBudDo/qo1K2xdRe55RO0jrOXBWl6lELR3pB2eodVjHex5kCbXz+Byajtvy7Wbq2EPGlLJ5GP7oSLPaN46A5ff9IBcWBS90v3xqKYyK1HuKv9LV63h3DE1BZxMlrKeDVE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nwUdAWLC; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41ba1ba5591so583205e9.1
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Apr 2024 00:33:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1714116815; x=1714721615; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AZHhtC7yB+LEmKe67OSuhKeCGfLVnVMhlXHLt/YBxSQ=;
-        b=nwUdAWLCQAVibxOIv9dBJjOWMuCEynyJf8vmZGTSY1cZGSYEtHfijdiFNxGSsjUnuV
-         5fADZlrt2oxtVDmhZoD2/kDR+dDFGmDsQYgIA68hvgM0/8wkrCVSIMJz1R1gy7yKLbBl
-         FFGBk0aLhRqK56NvVhcmB709dNJXoAlgzkdqCKZZiI8qfKkVZSnIhokh0wOwK4iRPBAG
-         OpOw0GO8uysmQnc5CdNJg3QD1g8BsezYh4muj1bCHfFHsqQpFjOYhDV78RH131PoKxQ/
-         hHox7UA8I+qOrIBZfWDat/UPVTjGp3uOq1j0JPvoqI9/12+MDjIzHt/3ydcHfW9mG7Fe
-         OlnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714116815; x=1714721615;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AZHhtC7yB+LEmKe67OSuhKeCGfLVnVMhlXHLt/YBxSQ=;
-        b=iNaP+hfvcOHyPaWHbaiHqHvQ8TgIdsC+BdplbLSTvxkYdJFagcFPECFTqLZqeBJ2Tj
-         wnOGYc8U0YaXscz5bVzZKNh8Kvft34OQpenrxmhryiSg/G4SkLJK9TLrYOGc901jay1m
-         MnF8UEYH3YSOKS2nb4V3qulAupnm3zK7gE/o6NlQQU4eowqydxpSxlAYt1lYxHNTZBWh
-         1n2D3WIEUMlEAWklFr4Of8AdIuTwzHPBImu1/vEM9jloLyRWguRNLKzDUxsKcGeuc/bR
-         lWeZIJqe4CmgAhTjeqXVELbCEj4OtNECj0oCKgbeuuJv6y7twixpkkUHO6f7RVLpQf9+
-         +fYg==
-X-Forwarded-Encrypted: i=1; AJvYcCXaS1TLLhwj3GGdvO0TIAcKkBkwWbH4Q1lk3kmFwa5JPzpN0qXnxMN4m0+HDK/kv6N3r792qoe3BBykGNh4QGCgoQscBTEwjhZU3w==
-X-Gm-Message-State: AOJu0YwBPHC4NPEa/QaPjK3Wx/3CCmFZkF6swQgNhawB4QB2rX3siKY5
-	7k+aoyJpG7nyQgMU7Tc8VQ1vT6GaImWsXXewdvRcgQdhwh7ndw2p115kR+Af9Xs=
-X-Google-Smtp-Source: AGHT+IFAYmHbznrVYvrFyG3S4RgGzbE1l0SOZYxWBq+xKHGXgg5E4ck93IiPSX+DZnp/DKsyl3rmgw==
-X-Received: by 2002:a05:600c:470f:b0:41a:8374:7eae with SMTP id v15-20020a05600c470f00b0041a83747eaemr1364455wmo.31.1714116815390;
-        Fri, 26 Apr 2024 00:33:35 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:3e63:d6ed:67ba:fbe4])
-        by smtp.gmail.com with ESMTPSA id q15-20020a05600c46cf00b00416e2c8b290sm33935449wmo.1.2024.04.26.00.33.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Apr 2024 00:33:35 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Doug Berger <opendmb@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	bcm-kernel-feedback-list@broadcom.com,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] gpio: brcmstb: add support for gpio-ranges
-Date: Fri, 26 Apr 2024 09:33:33 +0200
-Message-Id: <171411680836.6435.15788506275238936215.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240424185039.1707812-1-opendmb@gmail.com>
-References: <20240424185039.1707812-1-opendmb@gmail.com>
+	s=arc-20240116; t=1714119026; c=relaxed/simple;
+	bh=PWs5K2o7hD2FhttCY45PVtj7N09NnHXkHaEhJQgE1ks=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QwDY//Ip6jNFpMocDhrHBrAxABvgAAxsdjnn29eVIBLP4YZXbq5Tr+f1H71ZP0BNFDfJ3eeXtThXJs0uiBg4K2mTx/TtK6y2TCg2UtIEnCCxF6woaB+lc2oU7D87v46z4Bqmk+OPk2aQ/oaej8Br5sUgsvsJgGaeXJl2PcklGDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:a8cf:a8c7:966f:f6c0])
+	by laurent.telenet-ops.be with bizsmtp
+	id FkAK2C00C4stinQ01kAKnB; Fri, 26 Apr 2024 10:10:20 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1s0GeH-00ACan-MB;
+	Fri, 26 Apr 2024 10:10:19 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1s0Gex-00Cea4-Lk;
+	Fri, 26 Apr 2024 10:10:19 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v6.10
+Date: Fri, 26 Apr 2024 10:10:18 +0200
+Message-Id: <cover.1714118620.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+	Hi Linus,
 
+The following changes since commit 02cd2d3be1c31a3fd328ee83e576340d34bc57d9:
 
-On Wed, 24 Apr 2024 11:50:36 -0700, Doug Berger wrote:
-> The Raspberry Pi 5 includes Broadcom STB GPIO IP as well as
-> Broadcom 2712 pin controller IP.
-> 
-> The community has expressed interest in linking the two drivers
-> with the "gpio-ranges" property in device tree. This commit
-> stack implements the necessary changes.
-> 
-> [...]
+  pinctrl: renesas: rzg2l: Configure the interrupt type on resume (2024-04-22 09:54:00 +0200)
 
-Applied, thanks!
+are available in the Git repository at:
 
-[1/3] dt-bindings: gpio: brcmstb: add gpio-ranges
-      commit: 7c66f8173360556ac0c3c38a91234af5a0a5a4a9
-[2/3] gpio: of: support gpio-ranges for multiple gpiochip devices
-      commit: e818cd3c8a345c046edff00b5ad0be4d39f7e4d4
-[3/3] gpio: brcmstb: add support for gpio-ranges
-      commit: 5539287ca65686f478e058a1e939294cb5682426
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.10-tag1
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+for you to fetch changes up to cd27553b0dee6fdc4a2535ab9fc3c8fbdd811d13:
+
+  pinctrl: renesas: rzg2l: Limit 2.5V power supply to Ethernet interfaces (2024-04-25 10:35:05 +0200)
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v6.10
+
+  - Add external interrupt pin groups on R-Car V4M,
+  - Miscellaneous fixes and improvements.
+
+----------------------------------------------------------------
+Geert Uytterhoeven (2):
+      pinctrl: renesas: r8a779h0: Fix IRQ suffixes
+      pinctrl: renesas: r8a779h0: Add INTC-EX pins, groups, and function
+
+Lad Prabhakar (1):
+      pinctrl: renesas: rzg2l: Remove extra space in function parameter
+
+Paul Barker (1):
+      pinctrl: renesas: rzg2l: Limit 2.5V power supply to Ethernet interfaces
+
+ drivers/pinctrl/renesas/pfc-r8a779h0.c  | 136 +++++++++++++++++++++++++++++---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c |   4 +-
+ 2 files changed, 127 insertions(+), 13 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 
