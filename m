@@ -1,314 +1,115 @@
-Return-Path: <linux-gpio+bounces-5911-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5912-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E9FC8B45F4
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Apr 2024 13:22:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B3DD28B4652
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Apr 2024 14:09:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFFD61F23FE5
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Apr 2024 11:22:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 554C81F247A6
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Apr 2024 12:09:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDF3148CFC;
-	Sat, 27 Apr 2024 11:21:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E23E04D5AC;
+	Sat, 27 Apr 2024 12:09:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FvIWmMiS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRWdNeeh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE444AECE
-	for <linux-gpio@vger.kernel.org>; Sat, 27 Apr 2024 11:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B730446AD
+	for <linux-gpio@vger.kernel.org>; Sat, 27 Apr 2024 12:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714216868; cv=none; b=fyljeFkmCpZd+IOo52Rl6IR9lrT6hQfO/ZH2OBTWxQP8dQ8paggehxWCSk+kC5xGzA1p55ZQigZFsqPWnGAzO3Wqcho0hLFJ9CbEDL//jb4Vd9P4EL6CXPBLDRD4Gf7VrI5NySyTPEq/LGmDxnlo37LZQ/E3EZiwqpZIqIN3zhA=
+	t=1714219748; cv=none; b=cfaZ0HjgDn0hnsVLsvHvXFg3RvawkTA5FxfhGYC4dWcDPIOdb08qxDOSVQiIhcsV1j5dhu7wMNVgh5q/ktL+YwJK5PXBu6Qd83xAKpEPNC2b6tuSwCL7Jqr27z+XLTW8kDpX+qUTQRoB4TiAJwyqUq1jNHcUaRa78UvoAGv0YiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714216868; c=relaxed/simple;
-	bh=3JUN8Ef0UN+QBAUtDjm4G/guX9OmgDZKtS1+dGOmR3E=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JnXyZRIiKzMwq78ADaprdarbKcCKrKfoYy5WDqNWxr20GU7VLSggD/p9EtIEp2KYhTKiNYfP4A2YqKNjaYT8yBpu6ohHStJcqgLp6feIV0N61tSAAqJ3HtKPocOj+TxJZOst6d4oLm8ALHFbaPVoc31Enxvk7srgU/NLttyZeTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FvIWmMiS; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-571be483ccaso3569016a12.2
-        for <linux-gpio@vger.kernel.org>; Sat, 27 Apr 2024 04:21:06 -0700 (PDT)
+	s=arc-20240116; t=1714219748; c=relaxed/simple;
+	bh=u8QGEotXiwAafjK9Vw2YjXHjgyS7EVLh2jq93JsPzdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j4CSStxhsMTdkk7uaHGrsUtdheGe/UTB9gVuRXBBuNyyIyvVyfXkq7EU1dBAlORA56GwdTXvMPcmn3F3ZYrxWJ1tQfc4jYmniIiWFzd7uKc5l6J5XaIQVLNI8RlHiU1+x8ku1RFh4CVI8kgRyBNVo71RSjmqI4jepcpCiH+jfs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VRWdNeeh; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5c6bd3100fcso2016084a12.3
+        for <linux-gpio@vger.kernel.org>; Sat, 27 Apr 2024 05:09:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1714216865; x=1714821665; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IRPW+GikaAPs83DoedFde9bOURsu7XsMsV7lagjHs7E=;
-        b=FvIWmMiSW9+C4aLc39D3A8nGIH6rQH3XL2uaBKjpjeTMFGJsvDUGZYMn59b4NxFw9+
-         ThWsePp/ITittER0oI0ECgZ6KJQeq5bNh51VCaeGHYAgK9lFMdWE/HdnLghEGsA0og4W
-         6KfRKJUmaEUNallWLQ13/sxnqsHun2E1XLs2hKgTfnp2q1YJ52lQqdwq81TSHu/v2+nq
-         A+XeEH0V7PsceM2f5KozMaZ5NiQzsBucmkDCv4/J6gfiA338CJ5oew7sFlvlui6dE9lY
-         diClqm/paSvbx3BCialfD1g8Caaqx3fsAMDxmeDrsV0iFh8oOLAZtR9ClnRqQWtRW0eb
-         i7ig==
+        d=gmail.com; s=20230601; t=1714219747; x=1714824547; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EPaxrRc/bDyASZ4kEZT4tqy6dF0aAUBGhjbeaI4ONWc=;
+        b=VRWdNeehsDQpvK4P/km+2ga+CZ8yY1TiM/7fLi0NN4DWvs8suJJkaNAJ2Cecj6zoba
+         SIyjYim89jVAGq2iESCO9cSou8SBy2nhOQRGAnxqxZ0Wj0ee3mPVb4lxAt5atkLIsuS4
+         dahDZcd8FO6hg3Lu1nvFxq1wrgabeofnE19mrRfpb6KrkppCXE8q54C4P+BddWZADd/6
+         iZ7VmhrrEUTY6qTB+I3SuEmGjlnEc/p70y+IqeD+5X4n8+FPeLRu7KGphJvodiSmV927
+         tRy/kfDr+Jag9IUI0WScuc0TotaSol05rNqilE/Qs/r9syo8VFCbGoFh//PCYEr1sgMq
+         llsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714216865; x=1714821665;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from
+        d=1e100.net; s=20230601; t=1714219747; x=1714824547;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IRPW+GikaAPs83DoedFde9bOURsu7XsMsV7lagjHs7E=;
-        b=JDItyYo5VI5MTvoI5uSs7UR92fWZ1zsQf1StxL9EUBvTcyXV3vHPA2BVucSfqfS0QT
-         dicF9TMCnDaTWGXZns2151z2MlHRLgeljozcUf5dCuxDmGq3w+NFzKj4bGruhohTVQbc
-         GLk376+VkjCDzluDydfIfu9peZnmVOTHvPgFpXX3+Itu3ruv055zNioudmfTj7oOY6as
-         r2OnOdrawFS9J0dXS3fF06nC/AQ8AihoVnxW0usuPoMMz3sW1pAEn1CwMZFMhdrvfvBJ
-         +ubdMuCXnem1GuzaN8eJ9n25+C2WIR0ojij38FLGh6jZT7JKOHUE10ECus3VB5XtTjFq
-         ogmg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Xj9gPxUDMNaQZoKkDEd9PE/4Jh2BslUp+kbQPtDMqfykb7bkU418VmwRVXpdRStrOnpwzn841FvW0lLTJFSZ2LfXTC9VGrgkzA==
-X-Gm-Message-State: AOJu0YxeApjgxMWjM7wPvUgsb4WsmbIUcn2uwa8UsLXgIjpNb9dgPGFA
-	zIpQKr/aoGxRv0cPjQqF4FIy5HYqPrBBhtADI8i2LzSrvIBC3jWwoj6UomaoBRY=
-X-Google-Smtp-Source: AGHT+IF2riIwu/t+oL7gyIiwcDjB2WQ1NvfVhyty6/q7huEYLjYW7wFDCHoweSqHgFZ70bFqTKHI1A==
-X-Received: by 2002:a50:8e5e:0:b0:56f:e58f:31f7 with SMTP id 30-20020a508e5e000000b0056fe58f31f7mr3477624edx.28.1714216864903;
-        Sat, 27 Apr 2024 04:21:04 -0700 (PDT)
-Received: from localhost (host-87-1-234-99.retail.telecomitalia.it. [87.1.234.99])
-        by smtp.gmail.com with ESMTPSA id ig1-20020a056402458100b0057272ff56f3sm89762edb.93.2024.04.27.04.21.04
+        bh=EPaxrRc/bDyASZ4kEZT4tqy6dF0aAUBGhjbeaI4ONWc=;
+        b=YUcjbSfFAT0XZL9UmOf6q2gFe921qTOreXuu2TxnkhRFRT/wSz/7/KxTW0cl/5IEbf
+         MIVLD4HMRgUGk4/BkbnXw6TvKPxrod+0c1zxY6TXHjH9ONiF+w/Bw6dCQkyCf7k9gLXe
+         V5Z9VobxHtEJEoCUbkmXNEzHYmtzAPaAJ8zjqd6UqhDHZ2CLS27kt/jwKIXQ/dHfcPaz
+         XsGooAHs7MHPXIBnLybgLwVCBBtF1IT7K9RC+2k+lQmlmOg1g2KWhULpp8AJ8+GiLa2t
+         9yT4x0O9LR6BEOJYnAnl1B40GcvQZDxXbVv/+D1V+JLaEg+P5EujDM2VTeK5YtkBYwom
+         LUhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxEe5t8puxiwTgmGiHE1hsalZ2gHUYf3GAS6xf6ONPOY7yjoXchLQNQuKufxAAgiACQTbG3T9zi06Zcd9c9H4h5avou//bHzNQgg==
+X-Gm-Message-State: AOJu0YwhA3jp5nAfxcwr7PwDXGbcfNmieSfnXQoIrBNkPDok7OABtVKZ
+	J20ouJrBVnC+n8fG3Vi2FViS6OcGOSiq+B7U1CpAVNsGA3/y44JS
+X-Google-Smtp-Source: AGHT+IENewNgy5z3lm8S4C5y+SNaqgNKu9Tcq85O6/b92aVh23LJh55D5KkDKBYaCdy3v3uiBQdQWg==
+X-Received: by 2002:a17:902:ce09:b0:1e5:28cd:4ef9 with SMTP id k9-20020a170902ce0900b001e528cd4ef9mr6254223plg.30.1714219746607;
+        Sat, 27 Apr 2024 05:09:06 -0700 (PDT)
+Received: from rigel (14-200-166-65.static.tpgi.com.au. [14.200.166.65])
+        by smtp.gmail.com with ESMTPSA id m6-20020a1709026bc600b001e99ffdbe56sm11094306plt.215.2024.04.27.05.09.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Apr 2024 04:21:04 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Sat, 27 Apr 2024 13:21:06 +0200
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kamal Dasu <kamal.dasu@broadcom.com>,
-	Al Cooper <alcooperx@gmail.com>, linux-mmc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Jonathan Bell <jonathan@raspberrypi.com>,
-	Phil Elwell <phil@raspberrypi.com>
-Subject: Re: [PATCH 6/6] mmc: sdhci-brcmstb: Add BCM2712 SD Express support
-Message-ID: <ZizfokNsEExVRYaF@apocalypse>
-Mail-Followup-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kamal Dasu <kamal.dasu@broadcom.com>,
-	Al Cooper <alcooperx@gmail.com>, linux-mmc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Jonathan Bell <jonathan@raspberrypi.com>,
-	Phil Elwell <phil@raspberrypi.com>
-References: <cover.1713036964.git.andrea.porta@suse.com>
- <a3d82e5a28fe53f1f61621d37d1695b0cd7655d2.1713036964.git.andrea.porta@suse.com>
- <6042c0c7-bb8a-4898-8bed-92155b8e9c4f@broadcom.com>
+        Sat, 27 Apr 2024 05:09:06 -0700 (PDT)
+Date: Sat, 27 Apr 2024 20:09:02 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Gilles BULOZ <gilles.buloz@kontron.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [questions] : gpiolib and gpioset behaviour
+Message-ID: <20240427120902.GA367260@rigel>
+References: <a6492fca-e5f9-3f5c-6a61-d08c051f0ac9@kontron.com>
+ <CAMRc=MdQ8CT7uxBRhPmttNhm5kzp1+Vij2LmVGO0QsA0xUPtNQ@mail.gmail.com>
+ <04e6ac4e-0178-c910-2dcd-45a726f75c0d@kontron.com>
+ <20240426020720.GA9777@rigel>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6042c0c7-bb8a-4898-8bed-92155b8e9c4f@broadcom.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240426020720.GA9777@rigel>
 
-On 08:55 Sun 14 Apr     , Florian Fainelli wrote:
-> 
-> 
-> On 4/13/2024 3:14 PM, Andrea della Porta wrote:
-> > Broadcom BCM2712 SDHCI controller is SD Express capable. Add support
-> > for sde capability where the implementation is based on downstream driver,
-> > diverging from it in the way that init_sd_express callback is invoked:
-> > in downstream the sdhci_ops structure has been augmented with a new
-> > function ptr 'init_sd_express' that just propagate the call to the
-> > driver specific callback so that the callstack from a structure
-> > standpoint is mmc_host_ops -> sdhci_ops. The drawback here is in the
-> > added level of indirection (the newly added init_sd_express is
-> > redundant) and the sdhci_ops structure declaration has to be changed.
-> > To overcome this the presented approach consist in patching the mmc_host_ops
-> > init_sd_express callback to point directly to the custom function defined in
-> > this driver (see struct brcmstb_match_priv).
-> > 
-> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > ---
-> >   drivers/mmc/host/Kconfig         |   1 +
-> >   drivers/mmc/host/sdhci-brcmstb.c | 147 ++++++++++++++++++++++++++++++-
-> >   2 files changed, 147 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> > index aebc587f77a7..343ccac1a4e4 100644
-> > --- a/drivers/mmc/host/Kconfig
-> > +++ b/drivers/mmc/host/Kconfig
-> > @@ -1018,6 +1018,7 @@ config MMC_SDHCI_BRCMSTB
-> >   	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
-> >   	depends on MMC_SDHCI_PLTFM
-> >   	select MMC_CQHCI
-> > +	select OF_DYNAMIC
-> >   	default ARCH_BRCMSTB || BMIPS_GENERIC
-> >   	help
-> >   	  This selects support for the SDIO/SD/MMC Host Controller on
-> > diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
-> > index 907a4947abe5..56fb34a75ec2 100644
-> > --- a/drivers/mmc/host/sdhci-brcmstb.c
-> > +++ b/drivers/mmc/host/sdhci-brcmstb.c
-> > @@ -29,6 +29,7 @@
-> >   #define BRCMSTB_PRIV_FLAGS_HAS_CQE		BIT(0)
-> >   #define BRCMSTB_PRIV_FLAGS_GATE_CLOCK		BIT(1)
-> > +#define BRCMSTB_PRIV_FLAGS_HAS_SD_EXPRESS	BIT(2)
-> >   #define SDHCI_ARASAN_CQE_BASE_ADDR		0x200
-> > @@ -50,13 +51,19 @@ struct sdhci_brcmstb_priv {
-> >   	unsigned int flags;
-> >   	struct clk *base_clk;
-> >   	u32 base_freq_hz;
-> > +	struct regulator *sde_1v8;
-> > +	struct device_node *sde_pcie;
-> > +	void *__iomem sde_ioaddr;
-> > +	void *__iomem sde_ioaddr2;
-> >   	struct pinctrl *pinctrl;
-> >   	struct pinctrl_state *pins_default;
-> > +	struct pinctrl_state *pins_sdex;
-> >   };
-> >   struct brcmstb_match_priv {
-> >   	void (*hs400es)(struct mmc_host *mmc, struct mmc_ios *ios);
-> >   	void (*cfginit)(struct sdhci_host *host);
-> > +	int (*init_sd_express)(struct mmc_host *mmc, struct mmc_ios *ios);
-> >   	struct sdhci_ops *ops;
-> >   	const unsigned int flags;
-> >   };
-> > @@ -263,6 +270,105 @@ static void sdhci_brcmstb_cfginit_2712(struct sdhci_host *host)
-> >   	}
-> >   }
-> > +static int bcm2712_init_sd_express(struct mmc_host *mmc, struct mmc_ios *ios)
-> > +{
-> > +	struct sdhci_host *host = mmc_priv(mmc);
-> > +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> > +	struct sdhci_brcmstb_priv *brcmstb_priv = sdhci_pltfm_priv(pltfm_host);
-> > +	struct device *dev = host->mmc->parent;
-> > +	u32 ctrl_val;
-> > +	u32 present_state;
-> > +	int ret;
-> > +
-> > +	if (!brcmstb_priv->sde_ioaddr || !brcmstb_priv->sde_ioaddr2)
-> > +		return -EINVAL;
-> > +
-> > +	if (!brcmstb_priv->pinctrl)
-> > +		return -EINVAL;
-> > +
-> > +	/* Turn off the SD clock first */
-> > +	sdhci_set_clock(host, 0);
-> > +
-> > +	/* Disable SD DAT0-3 pulls */
-> > +	pinctrl_select_state(brcmstb_priv->pinctrl, brcmstb_priv->pins_sdex);
-> > +
-> > +	ctrl_val = readl(brcmstb_priv->sde_ioaddr);
-> > +	dev_dbg(dev, "ctrl_val 1 %08x\n", ctrl_val);
-> > +
-> > +	/* Tri-state the SD pins */
-> > +	ctrl_val |= 0x1ff8;
-> 
-> No magic values please.
+On Fri, Apr 26, 2024 at 10:07:20AM +0800, Kent Gibson wrote:
+> On Mon, Apr 22, 2024 at 06:49:05PM +0200, Gilles BULOZ wrote:
+> > On Mon, Apr 22, 2024 at 3:55 PM Bartosz Golaszewski wrote :
+> > > On Mon, Apr 22, 2024 at 2:44 PM Gilles BULOZ <gilles.buloz@kontron.com> wrote:
+> > >>
+>
+> Note that the mask in gc->get_multiple() is unsigned long*, so it is a
+> pointer to an array of unsigned long.  Its width is not limited by
+> unsigned long, but by the bits parameter.  In your case the mask you pass
+> should contain multiple unsigned longs to achieve 112 bits.
+> Refer to gpiod_get_array_value_complex() for an example of building bitmap
+> masks to pass to gc->get_multiple(), in that case via
+> gpio_chip_get_multiple().
+>
 
-Ack.
+Bah, what was I saying here - both the mask AND bits parameters of
+get_multiple()/set_multiple() are bitmaps of width gc->ngpio, where the
+mask identifies the pins to get/set and bits contains the values.
 
-> 
-> > +	writel(ctrl_val, brcmstb_priv->sde_ioaddr);
-> > +	dev_dbg(dev, "ctrl_val 1->%08x (%08x)\n", ctrl_val, readl(brcmstb_priv->sde_ioaddr));
-> > +	/* Let voltages settle */
-> > +	udelay(100);
-> 
-> Why not usleep_range()?
+My bad - must've been before the coffee soaked in.
 
-No real reason. I assume only the lower boundary is critical so I can use usleep_range instead.
-Will be fixed in a future patch, the SD express support will be drpped in V2 since nto strictly
-necessary.
-
-> 
-> > +
-> > +	/* Enable the PCIe sideband pins */
-> > +	ctrl_val &= ~0x6000;
-> 
-> No magic values please.
-> 
-> > +	writel(ctrl_val, brcmstb_priv->sde_ioaddr);
-> > +	dev_dbg(dev, "ctrl_val 1->%08x (%08x)\n", ctrl_val, readl(brcmstb_priv->sde_ioaddr));
-> > +	/* Let voltages settle */
-> > +	udelay(100);
-> 
-> Likewise.
-
-Ditto.
-
-> 
-> > +
-> > +	/* Turn on the 1v8 VDD2 regulator */
-> > +	ret = regulator_enable(brcmstb_priv->sde_1v8);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* Wait for Tpvcrl */
-> > +	msleep(1);
-> > +
-> > +	/* Sample DAT2 (CLKREQ#) - if low, card is in PCIe mode */
-> > +	present_state = sdhci_readl(host, SDHCI_PRESENT_STATE);
-> > +	present_state = (present_state & SDHCI_DATA_LVL_MASK) >> SDHCI_DATA_LVL_SHIFT;
-> > +	dev_dbg(dev, "state = 0x%08x\n", present_state);
-> > +
-> > +	if (present_state & BIT(2)) {
-> 
-> Likewise, replace with constant.
-
-Ack.
-
-> 
-> > +		dev_err(dev, "DAT2 still high, abandoning SDex switch\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	/* Turn on the LCPLL PTEST mux */
-> > +	ctrl_val = readl(brcmstb_priv->sde_ioaddr2 + 20); // misc5
-> > +	ctrl_val &= ~(0x7 << 7);
-> > +	ctrl_val |= 3 << 7;
-> > +	writel(ctrl_val, brcmstb_priv->sde_ioaddr2 + 20);
-> > +	dev_dbg(dev, "misc 5->%08x (%08x)\n", ctrl_val, readl(brcmstb_priv->sde_ioaddr2 + 20));
-> > +
-> > +	/* PTEST diff driver enable */
-> > +	ctrl_val = readl(brcmstb_priv->sde_ioaddr2);
-> > +	ctrl_val |= BIT(21);
-> > +	writel(ctrl_val, brcmstb_priv->sde_ioaddr2);
-> > +
-> > +	dev_dbg(dev, "misc 0->%08x (%08x)\n", ctrl_val, readl(brcmstb_priv->sde_ioaddr2));
-> > +
-> > +	/* Wait for more than the minimum Tpvpgl time */
-> > +	msleep(100);
-> > +
-> > +	if (brcmstb_priv->sde_pcie) {
-> > +		struct of_changeset changeset;
-> > +		static struct property okay_property = {
-> > +			.name = "status",
-> > +			.value = "okay",
-> > +			.length = 5,
-> > +		};
-> > +
-> > +		/* Enable the pcie controller */
-> > +		of_changeset_init(&changeset);
-> > +		ret = of_changeset_update_property(&changeset,
-> > +						   brcmstb_priv->sde_pcie,
-> > +						   &okay_property);
-> > +		if (ret) {
-> > +			dev_err(dev, "%s: failed to update property - %d\n", __func__,
-> > +			       ret);
-> > +			return -ENODEV;
-> > +		}
-> > +		ret = of_changeset_apply(&changeset);
-> > +	}
-> 
-> Why are you doing this? Cannot the firmware enable/disable the node
-> according to the boot mode or something else?
-> 
-> This is not going to fly for upstream, sorry.
-> -- 
-> Florian
-
+Cheers,
+Kent.
 
 
