@@ -1,161 +1,224 @@
-Return-Path: <linux-gpio+bounces-5909-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5910-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5ECD38B45C6
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Apr 2024 13:14:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB4498B45D0
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Apr 2024 13:16:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C4111C20D6A
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Apr 2024 11:13:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C3E89B2185B
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Apr 2024 11:16:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AB3F4AECE;
-	Sat, 27 Apr 2024 11:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B4AC4AEF4;
+	Sat, 27 Apr 2024 11:16:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gjwb+yHB"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XzVtDjXg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D85747F7E
-	for <linux-gpio@vger.kernel.org>; Sat, 27 Apr 2024 11:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4386F487BF
+	for <linux-gpio@vger.kernel.org>; Sat, 27 Apr 2024 11:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714216433; cv=none; b=a2QVFFqpBlINqvYi0zQ4KR0K3JjmSyKtOvjx040OMuPPZWoN2Yop+jAw1255nGkcy3rvvnQTDcYt9k2pAqMQcJ5z0y/QLjm3rjqea7rVVFgpDj+6JKXVbnnYcvcr5Al/RrNP+MwMtk5a2u4ihAu403F2nnO+IO39JJGFYilji2o=
+	t=1714216600; cv=none; b=tVvGJfAPhtPungMhRUNxfN3Sk3M/wFmV7uYqXUSXCtTiwwDTGq/HYtLuWQdBGj5FDn+T1CBWZlCOcXfIrrIW051ar8GL5hBvdWwEBK61oGA5TkxXCBeZcaaKOcFTcYguwZGFgxxN1dj0ljwOP1neV5+LAcbvp8fT+G83lxtobfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714216433; c=relaxed/simple;
-	bh=Z5qfOnWdamTc+T2nZyu7qHNYdjyHqF1xekWpTIgiRSc=;
+	s=arc-20240116; t=1714216600; c=relaxed/simple;
+	bh=6+JyWGlWuL3neFwfndVAm41mP9TCdZhO4TKU+cop+kc=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GSN2LwHoFoeBf+9QhqMXBZymKeepcTz0OKEFhxn5aAfSPRmXFUupgmnmpRVxpvhR3ByERRt2hCkdQUvXqZdhtO1LQBjB//DLA/J9my1k6UM0w64Xv82Fg+zVBOWJLRPIRK1TcCPZ+JE+1uVXWtBl9OPcmR/nocD1P3x3HRlxihk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gjwb+yHB; arc=none smtp.client-ip=209.85.208.51
+	 Content-Type:Content-Disposition:In-Reply-To; b=UMBiSyNrvzR3+ya1bPNSHuJ8U+3sn33siy/9MjhtOmMLAV6TQ9RvjnvDH76Ux4/HYpIawhRuKv2h/59ZLFofkwWkStyI+DYjyf7DYf20+tcuRA23pwN4xZBL1NTJmt+kkejGEAdG2/bbACHEKqswrOY1L/VB79mekW3eAumOndo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XzVtDjXg; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so4489169a12.2
-        for <linux-gpio@vger.kernel.org>; Sat, 27 Apr 2024 04:13:51 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-572242ed990so3217088a12.0
+        for <linux-gpio@vger.kernel.org>; Sat, 27 Apr 2024 04:16:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1714216429; x=1714821229; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1714216595; x=1714821395; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:mail-followup-to:message-id:subject:cc:to
          :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4RDYgLk1RtD/QZsZ7nsHxXtHxKa5q/ot4f4fZ891gTM=;
-        b=gjwb+yHB6TymEvpZCgZYjNGSwcloiwJLyf+VyQ5wCKT8oZoUwr/PeHYyTr0ZrkLKIq
-         6636+At0ZmlPYnGyrmhPnr2IkkC8kygdvLGpZPnHv9I3/cALYhclUjVCWFZM1CGmVSUm
-         eWE7+Yv8N/luafZWaDb9dBGcF9ZZX+PKcg+wUEXAAwRWwJYJJJYHTNOPfNHxccDqyM/+
-         Qb99fFqtYH8XH6m+OCJwxDSsximbeTR7nk19hhGxghO1eoVbzNA8msyxuuwtnAwDB1uV
-         MLvyIUON3iRktBK4L8Wx6h8Yth0DD1fDll6oRqLXe04wy11asBG1e/iXa5h/WzUCDIIS
-         zSsQ==
+        bh=cWZ79BmqrOM43+BCD+VAgtUw9w+BzvSsy0l3aYOkwOM=;
+        b=XzVtDjXgC+dnW9W3hYw2fbdXVOfEpk18lgRg/dQrGiFHIm8In/fHOTGEirxUAweF/4
+         7tnm+bYHjXAnW7kpB9Fgr1ZKXj3r+6wD7iy6ewaNWNQL/gvr8HC032fJ1QY1F/I3IAFM
+         hCJ7GWFhwn7qC8AGp7yJNEstypGzK0m1WugC/tKJksisAfBo9vAaR8nK/kG121DejWha
+         yN6a/SgXV4nUgBnq8YwtfypD/0K8bYRa0bMhkjqDzow21QhOf2gnyUKe9y3v+G+zCv/K
+         J05cErm/NcWlkCplR2vFSwjKaSeKJ5T1CNQRdzPXEBk0Hq8NZQ2hPX9q3Hgu5hYw3xol
+         Ofeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714216429; x=1714821229;
+        d=1e100.net; s=20230601; t=1714216595; x=1714821395;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:mail-followup-to:message-id:subject:cc:to
          :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4RDYgLk1RtD/QZsZ7nsHxXtHxKa5q/ot4f4fZ891gTM=;
-        b=VwqG8eqj94mpMGZoO9yq2ksjQfcyBdTR+QsVWUJU8P2EQhsLCfR7cB2e2Z8kymCZpK
-         jgoACcFpLSikavxe2LY6e8O0KwgEzKu/4rPv4Bt2KUKY2q43T37kpkd1T/YzG8Hv1Qyn
-         /xarKF6vqZlwO+1SpKvogBokNiGqFdmoOZiOO8StFposMIDW0WxpSyAQRIu7xJ17j4KK
-         HBT/QvCHP6yjIt6mDLJ6PNSXeONpLVGCHfRu1G1TZ9OV5nrU2VsIkDLShe5NwLG6u/4q
-         7YSE5dhP/ynUnFg/vTjO+sIXqUpQ6/0ky6gLSTZvaG5sQL08c4DUtSjHyynFPmGELiUU
-         l/JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVr4GVGjURlkIsMZuqFIdx65+vh1mVh3IJoav7B0GOK+SvbrV+H1isIBRY73CW0dcTiD8e/9CorTUm9q4YlegaeZTy6VFHR3VizQ==
-X-Gm-Message-State: AOJu0Yx9jh/VFvWMhKahT7a9sFCJySGajDIxbcCup9AkhtIuEFj+Ltzo
-	2GXLb07mCSQGKSV9XxmetJhZkrhz3i0VMOcvxC8AqLvOsVJmiLdCcXSKc3FDsbQ=
-X-Google-Smtp-Source: AGHT+IEEs920x533drbPxLSc6HQCIbc9YyZpIJ14gZErY6tXi1wXzKTQxnvCeVuB+NCa/EXFabnckw==
-X-Received: by 2002:a17:906:aed2:b0:a58:a2f9:d795 with SMTP id me18-20020a170906aed200b00a58a2f9d795mr5383931ejb.59.1714216429515;
-        Sat, 27 Apr 2024 04:13:49 -0700 (PDT)
+        bh=cWZ79BmqrOM43+BCD+VAgtUw9w+BzvSsy0l3aYOkwOM=;
+        b=iSJ3D/mgszupA15+tRQPLSvu8GDvEW84C4jqzdbZE63XIwY33gMDb2idDtDPgX8YHq
+         lkUbYP+IkR6HSWB+nFD7Z74x6yKX9jXfGinUPWKClobGsrD5BbrandVSEa0+Jrjhs6FM
+         Gn+drk6huuW75GtuqruHtZy5T9GoVeGp6Bn+/CiUdw+kSDtb8hw8s9ZnC+QCFnvjAyqq
+         VehSsyW3UWQwlKaQQa94taY2YmTb+8oSmaZY2X8/FzLMtjbaRUr/Qi0/m6tLFlO8V5k+
+         GZiDaLFT72ftBnvW9rFveGKkf744q5k2nzts4FRN1hnGWej5I2XEHXwfB6F26P4qAyRD
+         rREA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSbO8cRfnYbGL3bUgSYT442RKPBbFkQI2cn3wT5bJ7zf5p/96Ix2Y++0uNwRuJzpFRoKaYJTsZ54Y4hVMBA52cKLc8nXDm9PR5Tg==
+X-Gm-Message-State: AOJu0Yx861fvygVU6GgYg6eSlv35QJpVqPC/rIezBj2Wty6yrzgErKw4
+	nQdV9yntKReUnJjWSQXUtik4SXWYoZI2xoYbkPdaGevHoog/Hp+WT/sqFay5bnA=
+X-Google-Smtp-Source: AGHT+IHrGtv7xT9rFyE4L8LkvUgTtsWBslnRasfuA9d5IggWzQk3+JPxHG/Eoxi5ndjr+pKGaak2Wg==
+X-Received: by 2002:a50:9e87:0:b0:570:1ea6:e9d8 with SMTP id a7-20020a509e87000000b005701ea6e9d8mr3714303edf.9.1714216595365;
+        Sat, 27 Apr 2024 04:16:35 -0700 (PDT)
 Received: from localhost (host-87-1-234-99.retail.telecomitalia.it. [87.1.234.99])
-        by smtp.gmail.com with ESMTPSA id ah2-20020a1709069ac200b00a4e393b6349sm11462597ejc.5.2024.04.27.04.13.49
+        by smtp.gmail.com with ESMTPSA id cf8-20020a0564020b8800b0056c24df7a78sm11060511edb.5.2024.04.27.04.16.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Apr 2024 04:13:49 -0700 (PDT)
+        Sat, 27 Apr 2024 04:16:35 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Sat, 27 Apr 2024 13:13:50 +0200
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kamal Dasu <kamal.dasu@broadcom.com>,
-	Al Cooper <alcooperx@gmail.com>, linux-mmc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Jonathan Bell <jonathan@raspberrypi.com>,
-	Phil Elwell <phil@raspberrypi.com>
-Subject: Re: [PATCH 4/6] pinctrl: bcm: Add pinconf/pinmux controller driver
- for BCM2712
-Message-ID: <Zizd7sPYOhifpTJZ@apocalypse>
-Mail-Followup-To: Linus Walleij <linus.walleij@linaro.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kamal Dasu <kamal.dasu@broadcom.com>,
-	Al Cooper <alcooperx@gmail.com>, linux-mmc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Jonathan Bell <jonathan@raspberrypi.com>,
-	Phil Elwell <phil@raspberrypi.com>
+Date: Sat, 27 Apr 2024 13:16:36 +0200
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Andrea della Porta <andrea.porta@suse.com>, adrian.hunter@intel.com,
+	alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+	conor+dt@kernel.org, devicetree@vger.kernel.org,
+	florian.fainelli@broadcom.com, jonathan@raspberrypi.com,
+	kamal.dasu@broadcom.com, krzysztof.kozlowski+dt@linaro.org,
+	linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org, phil@raspberrypi.com, robh@kernel.org,
+	ulf.hansson@linaro.org
+Subject: Re: [PATCH 6/6] mmc: sdhci-brcmstb: Add BCM2712 SD Express support
+Message-ID: <ZizelID_-Hxdxp_N@apocalypse>
+Mail-Followup-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Andrea della Porta <andrea.porta@suse.com>, adrian.hunter@intel.com,
+	alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+	conor+dt@kernel.org, devicetree@vger.kernel.org,
+	florian.fainelli@broadcom.com, jonathan@raspberrypi.com,
+	kamal.dasu@broadcom.com, krzysztof.kozlowski+dt@linaro.org,
+	linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org, phil@raspberrypi.com, robh@kernel.org,
+	ulf.hansson@linaro.org
 References: <cover.1713036964.git.andrea.porta@suse.com>
- <8fb5dde9404875777587c867e7bdb4f691ab83f2.1713036964.git.andrea.porta@suse.com>
- <CACRpkdYmfEz-eM_R3ifGnbu6saL4Fd60D2ksyCr0SW0X6M_1VQ@mail.gmail.com>
+ <a3d82e5a28fe53f1f61621d37d1695b0cd7655d2.1713036964.git.andrea.porta@suse.com>
+ <57f240af-7e99-4bc1-a2c5-415441aa5f0b@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdYmfEz-eM_R3ifGnbu6saL4Fd60D2ksyCr0SW0X6M_1VQ@mail.gmail.com>
+In-Reply-To: <57f240af-7e99-4bc1-a2c5-415441aa5f0b@wanadoo.fr>
 
-On 15:07 Tue 16 Apr     , Linus Walleij wrote:
-> Hi Andrea,
+On 09:34 Sun 14 Apr     , Christophe JAILLET wrote:
+> Le 14/04/2024 à 00:14, Andrea della Porta a écrit :
+> > Broadcom BCM2712 SDHCI controller is SD Express capable. Add support
+> > for sde capability where the implementation is based on downstream driver,
+> > diverging from it in the way that init_sd_express callback is invoked:
+> > in downstream the sdhci_ops structure has been augmented with a new
+> > function ptr 'init_sd_express' that just propagate the call to the
+> > driver specific callback so that the callstack from a structure
+> > standpoint is mmc_host_ops -> sdhci_ops. The drawback here is in the
+> > added level of indirection (the newly added init_sd_express is
+> > redundant) and the sdhci_ops structure declaration has to be changed.
+> > To overcome this the presented approach consist in patching the mmc_host_ops
+> > init_sd_express callback to point directly to the custom function defined in
+> > this driver (see struct brcmstb_match_priv).
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta-IBi9RG/b67k@public.gmane.org>
+> > ---
+> >   drivers/mmc/host/Kconfig         |   1 +
+> >   drivers/mmc/host/sdhci-brcmstb.c | 147 ++++++++++++++++++++++++++++++-
+> >   2 files changed, 147 insertions(+), 1 deletion(-)
 > 
-> thanks for your patch!
+> ...
 > 
-> Some comments apart from was said already.
+> > +	if (brcmstb_priv->sde_pcie) {
+> > +		struct of_changeset changeset;
+> > +		static struct property okay_property = {
+> > +			.name = "status",
+> > +			.value = "okay",
+> > +			.length = 5,
+> > +		};
+> > +
+> > +		/* Enable the pcie controller */
+> > +		of_changeset_init(&changeset);
+> > +		ret = of_changeset_update_property(&changeset,
+> > +						   brcmstb_priv->sde_pcie,
+> > +						   &okay_property);
+> > +		if (ret) {
+> > +			dev_err(dev, "%s: failed to update property - %d\n", __func__,
+> > +			       ret);
+> > +			return -ENODEV;
+> > +		}
+> > +		ret = of_changeset_apply(&changeset);
+> > +	}
+> > +
+> > +	dev_dbg(dev, "%s -> %d\n", __func__, ret);
 > 
-> On Sun, Apr 14, 2024 at 12:14â€¯AM Andrea della Porta
-> <andrea.porta@suse.com> wrote:
-> 
-> > +#include <linux/pinctrl/consumer.h>
-> > +#include <linux/pinctrl/machine.h>
-> 
-> Really? Why?
-> 
-> > +#include <linux/pinctrl/pinconf.h>
-> > +#include <linux/pinctrl/pinctrl.h>
-> > +#include <linux/pinctrl/pinmux.h>
-> > +#include <linux/pinctrl/pinconf-generic.h>
-> 
-> I would just expect these.
-> 
-> > +static int bcm2712_pinctrl_probe(struct platform_device *pdev)
-> > +{
-> > +       struct device *dev = &pdev->dev;
-> > +       //struct device_node *np = dev->of_node;
-> > +       const struct bcm_plat_data *pdata;
-> > +       //const struct of_device_id *match;
-> 
-> I don't know if others commented on it but drop all commented-out code
-> or make use of it.
+> Is this really useful?
 
-Forgot to remove those lines. Will ve dropped in a future patch since
-the pin controller driver will not be included in V2 since it's not
-strictly needed to support SD boot.
+Not really. Removed.
 
-Many thanks,
+> 
+> > +	return ret;
+> > +}
+> > +
+> 
+> ...
+> 
+> > @@ -468,6 +581,24 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+> >   	if (res)
+> >   		goto err;
+> > +	priv->sde_1v8 = devm_regulator_get_optional(&pdev->dev, "sde-1v8");
+> > +	if (IS_ERR(priv->sde_1v8))
+> > +		priv->flags &= ~BRCMSTB_PRIV_FLAGS_HAS_SD_EXPRESS;
+> > +
+> > +	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> > +	if (iomem) {
+> > +		priv->sde_ioaddr = devm_ioremap_resource(&pdev->dev, iomem);
+> > +		if (IS_ERR(priv->sde_ioaddr))
+> > +			priv->sde_ioaddr = NULL;
+> > +	}
+> > +
+> > +	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+> > +	if (iomem) {
+> > +		priv->sde_ioaddr2 = devm_ioremap_resource(&pdev->dev, iomem);
+> > +		if (IS_ERR(priv->sde_ioaddr2))
+> > +			priv->sde_ioaddr = NULL;
+> 
+> sde_ioaddr2 ?
+> 
+> > +	}
+> > +
+> >   	priv->pinctrl = devm_pinctrl_get(&pdev->dev);
+> >   	if (IS_ERR(priv->pinctrl)) {
+> >   			no_pinctrl = true;
+> > @@ -478,8 +609,16 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+> >   			no_pinctrl = true;
+> >   	}
+> > -	if (no_pinctrl )
+> > +	priv->pins_sdex = pinctrl_lookup_state(priv->pinctrl, "sd-express");
+> > +	if (IS_ERR(priv->pins_sdex)) {
+> > +			dev_dbg(&pdev->dev, "No pinctrl sd-express state\n");
+> > +			no_pinctrl = true;
+> 
+> Indentation looks too large.
+
+Ack.
+
+> 
+> > +	}
+> > +
+> > +	if (no_pinctrl || !priv->sde_ioaddr || !priv->sde_ioaddr2) {
+> >   		priv->pinctrl = NULL;
+> > +		priv->flags &= ~BRCMSTB_PRIV_FLAGS_HAS_SD_EXPRESS;
+> > +	}
+> >   	/*
+> >   	 * Automatic clock gating does not work for SD cards that may
+> 
+> ...
+> 
+
+In general I'll drop SD express patch for now, it will be re-introduced in a future patch.
+
+Best regards,
 Andrea
-
-> 
-> Yours,
-> Linus Walleij
 
