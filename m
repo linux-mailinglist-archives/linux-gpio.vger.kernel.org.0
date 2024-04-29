@@ -1,132 +1,138 @@
-Return-Path: <linux-gpio+bounces-5925-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5926-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B3EE8B5170
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2024 08:30:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 247648B51F3
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2024 09:05:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D58F01F2230D
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2024 06:30:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CCFCA1F21520
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Apr 2024 07:05:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08E0E8BE5;
-	Mon, 29 Apr 2024 06:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB46012E5E;
+	Mon, 29 Apr 2024 07:05:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qDTcfWGQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBXO7841"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CB61118C
-	for <linux-gpio@vger.kernel.org>; Mon, 29 Apr 2024 06:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EB46FCB;
+	Mon, 29 Apr 2024 07:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714372209; cv=none; b=EZyths6eTbQVhVVTdbkYGzkpVbVRA4X5FVNCRS74rp42yGKddlpTWpAGOuRQ9faMseaB6qnWXJC/V0Fv3uypF5eLhukkLEK8fm5aZzMdQZSHB0W5Mbq5CFVWuuQBzOEP54ftSPPsUA/cLLSD9ipuzIQJBmqh1yOwcQqhoMRn/9g=
+	t=1714374338; cv=none; b=EgYQMRqAsb+OsAe4CQlweVi8tMRoI2WcVOwsph8cwJzSEiutUgqfa5qbGAprPnYazz2lpZz/oFuGMmPdzX1v5uy8DAdRSRurmASBwDDKpbCTbqc2IANLXMeUG9kVW4KY5ZlqoHCTDI2LmxDXsUUNjClhI/mLbF0MujYsGPFXz9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714372209; c=relaxed/simple;
-	bh=8n9nos46ZeCKMxrrh/FbGilPaqWbM17BK84mfxu0dZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rgFsvH+TGH8Jw4/hMI0lqn5zZrv7HXiKrx/ll8B8ycLezpw076ctFtQ2y0oD3gvWMV3idUwGisrkttv/l0LUeaW8uLEDQWYWgmAOZH89jb6IrkzZyOrn+E5mEpFzcY/HsXJyj6iLQWcAn0hUXV1shbYVtweg+Ru2pZMxoXzEqQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qDTcfWGQ; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a51addddbd4so445242866b.0
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Apr 2024 23:30:07 -0700 (PDT)
+	s=arc-20240116; t=1714374338; c=relaxed/simple;
+	bh=A92NApa3ooDk01UhoJeZtWditAENVRvKRE9OTUjWJrQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o7fLpgdMp6sScetIRDYr8zHFzNdG00izPVsXWIpSwi/3OG8Q0xpLjN/+vkOweBZQct9P1GtoJcAkOag47thHk7Z8L83LsVdIyxQmxci1B9ttgblkIsdpddOZT6RUawMbx7wvpbyZSWDFAyfYHJZG0KiRTwhfZUfecBK4SJOKvQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBXO7841; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ab1ddfded1so3661331a91.1;
+        Mon, 29 Apr 2024 00:05:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714372206; x=1714977006; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KERnA4T0jCEQs34o3IlPybs8QOMiz93MooHjuPlhTb4=;
-        b=qDTcfWGQiqzfjSa73WXDla11hMgusX+XP5sddxz367GMuUQ6OJGAvBfblERspdVtkc
-         TSG5I8n7Zgt7v7XX6U30TqkNXuOjGndLQrevt7xyhyripPJh/FpoHYuuAAiJJ1M228tB
-         MlG/TdKTt6lPV0LAg3TeuPyGBqx3tpuFR+eh/qymSrff3xIFa9Yg8mn0mnP8uOfXdYLP
-         RNBvnkaPi0a+1pN4AE7VH9vBABA6LlrtU2XGbohUXd6Qxn0UsLxPQ0VlFAX70XJitW3Y
-         1vtd2/Mcglgri4Tyi71X1/Hg8UTDxp06rAtk9TugqhT0M/ILiNiD/UL8m7PnE4nmoZv+
-         cOxw==
+        d=gmail.com; s=20230601; t=1714374336; x=1714979136; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vEglK9K8c5i8QBLiYdAQTdb0ab9SQtK5PmVbKoN4XV8=;
+        b=OBXO78410p6hWkVoxBvJYtnL/xjyIfWIPnyk3rJGv4A+lSZjPfUkGpe29ZBe0c4+vW
+         ha4p7YAANIjlZKpV07/W1xpRk3tSL9xw8xhOe9qMXis6reSCvpjWwKB9fL3PMQ4KVsxA
+         6aEEE3Qb/0ZOPnlv/3317Na9CkAv+p2TUrt6q4GoxTMuPQAUGcrtT4EOgFN3BPHm5Kp5
+         +u3OTFg2Pkuwv9jeefooTnoMEOnZxxwXc3d/pDIUZonMPb1TqNUxpeRILm/9RdsZIRFC
+         FG4JTAF8fCmwETFf1SfBh9AYf+eRQoE7erJAiL0X17qS/kwUgwHNX5wKzJU+2JmpCDbK
+         sepg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714372206; x=1714977006;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KERnA4T0jCEQs34o3IlPybs8QOMiz93MooHjuPlhTb4=;
-        b=eAVhJTipSSRkw4dnHZWCrmGhb3LiwaIU1ajz+m0FwsMyB9Xxwx3bD68njnIr/SrzON
-         l7XlC/JiCLmPWVdlvgpju+MA1mOtZb13zoZfV+Cd14qzdvDRcIqKf7JMxVGCy5NoK/JV
-         08Vp67NhmA7D2BBsRO1QVeFf239KVztAo3B/z/YVVjopul82zhQ96P0dNVW9V0elpzZi
-         3UdSetiqonCvt5KMtTuyEOa8XwTO59h+4FKiQC5n/sQRjERqGpzce4+rmYRsig5/6tFZ
-         YJMTC6shagypiBH+MjrO9EbbVlb1CwSr1BtYtEXTgl/QEIfIeL+ms/YPzavNk3ixNVus
-         w1dg==
-X-Forwarded-Encrypted: i=1; AJvYcCULiZMlo6tByFOkbhD1lnzjCFMaDw7CdE970dL8Qhz6YE+jbVn0MCQbQMfHct2B7x7XAqgpqsWthiZ8uO/sZ/SOIEnKbNkb+cXf4A==
-X-Gm-Message-State: AOJu0YxdqZDEBtRUijAgurZjBzPY91+A75ZynBZL0WVwnIyugnQ2+k0F
-	LgV24SHC1xRXDyQ6fDgOyssoKldcHGkoa5JvDK7tdPheOHO1kLZdQVbgguzJovwPuattpzaCegN
-	c
-X-Google-Smtp-Source: AGHT+IEuwGziIm6KgpZpUtsLTsqKVmTl4T2GUPgk2+IbpwCDyVrzevDmt0o2BYgkfnHK8qfanoQquQ==
-X-Received: by 2002:a17:906:3602:b0:a58:e569:1242 with SMTP id q2-20020a170906360200b00a58e5691242mr3198451ejb.4.1714372206208;
-        Sun, 28 Apr 2024 23:30:06 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id h26-20020a170906399a00b00a51f2b5b1fcsm13544638eje.75.2024.04.28.23.30.05
+        d=1e100.net; s=20230601; t=1714374336; x=1714979136;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vEglK9K8c5i8QBLiYdAQTdb0ab9SQtK5PmVbKoN4XV8=;
+        b=JejPvIHARBrQBS4Z/7YmsCdKJChmDOelTXITrrDaUEEu51/pzePdk79k81n/EV8xsJ
+         fgFY1ThhYV8ooTd7Rf/ABCDpkPH0AfpQZoo+jcs1o5/Ly39ySVb2c7fQqYOefmhWYbIv
+         OMswRr7ueTRE3p1G2a4BNlS8YxU1rvd1YeTqavOjQ/rYibmVXkkuWqQ0KqL5mGERAvVw
+         YQJRfRcPLJPjfQjJ3y64C9iXFlsO/QPSbJTelJMZ0zmY4L3IvSCdBug1kFVp7I1zsY9J
+         xUrvyc62hoVeEZPFjlLv1XxBjqADUAdDvjxKtdd7/N3++vJDbShi/8QsFHmi7XZlgix0
+         zhuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxpz5d9WNY8EwIvX7bNfFHm1Ftdbj8Kkl+EPEI+/xSZFARzzRhsPTM7Y1p5F1yIcLhjpvY3nHsDxvQdJX7+yU+lOHaUyHFNrRaFkLX
+X-Gm-Message-State: AOJu0YzRx+NF4jUtHWE0ayrT4wgxaMUxGXEdULE8n157yN1twJy1/f1W
+	HL5c3YPwHQmVDl6DOsyyGlIH9cAoX+B9TluONgqSA9+L+J0+LFAX65r4Qw==
+X-Google-Smtp-Source: AGHT+IGMAMI8jVYAcx5uDRIfdvsKW0eMKlGR3gETBwuInjA3i51gQQBZTkLDilCVqH0FdDm+X1BZAQ==
+X-Received: by 2002:a17:90b:1d01:b0:2a2:bd4b:764f with SMTP id on1-20020a17090b1d0100b002a2bd4b764fmr8222549pjb.3.1714374336553;
+        Mon, 29 Apr 2024 00:05:36 -0700 (PDT)
+Received: from localhost.localdomain ([1.200.153.166])
+        by smtp.gmail.com with ESMTPSA id gt5-20020a17090af2c500b002b16f39c917sm1947355pjb.50.2024.04.29.00.05.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Apr 2024 23:30:05 -0700 (PDT)
-Date: Mon, 29 Apr 2024 09:30:01 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Jim Liu <jim.t90615@gmail.com>
-Cc: KWLIU@nuvoton.com, JJLIU0@nuvoton.com, linus.walleij@linaro.org,
-	brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v2] gpio: nuvoton: Fix sgpio irq handle error
-Message-ID: <0ef4941c-ffa3-4f34-b3bb-4b97d923294f@moroto.mountain>
-References: <20240429060642.2920266-1-JJLIU0@nuvoton.com>
+        Mon, 29 Apr 2024 00:05:36 -0700 (PDT)
+From: Jim Liu <jim.t90615@gmail.com>
+X-Google-Original-From: Jim Liu <JJLIU0@nuvoton.com>
+To: JJLIU0@nuvoton.com,
+	KWLIU@nuvoton.com,
+	jim.t90615@gmail.com,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	dan.carpenter@linaro.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	openbmc@lists.ozlabs.org
+Subject: [PATCH v3] gpio: nuvoton: Fix sgpio irq handle error
+Date: Mon, 29 Apr 2024 15:05:23 +0800
+Message-Id: <20240429070523.3160248-1-JJLIU0@nuvoton.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240429060642.2920266-1-JJLIU0@nuvoton.com>
-
-On Mon, Apr 29, 2024 at 02:06:42PM +0800, Jim Liu wrote:
-> User use gpiomon to monitor input pin ,if triger the system will call trace and rcu stall.
-> 
-> The irq_handler uses generic_handle_domain_irq, so there is need to remove irq_find_mapping.
-> 
-> Fixes: c4f8457d17ce ("gpio: nuvoton: Add Nuvoton NPCM sgpio driver")
-> Signed-off-by: Jim Liu <JJLIU0@nuvoton.com>
-> ---
-> Changes for v2:
->    - add more description
-
-Part of the commit is missing so it will break the build.
-
-drivers/gpio/gpio-npcm-sgpio.c: In function ‘npcm_sgpio_irq_handler’:
-drivers/gpio/gpio-npcm-sgpio.c:437:28: warning: unused variable ‘girq’ [-Wunused-variable]
-  437 |         unsigned int i, j, girq;
-      |                            ^~~~
-
-Thanks for improving the commit message and adding a Fixes tag.  That's
-very helpful, but it still can be improved a bit.
-
-======================================
-
-Subject: [PATCH v3] gpio: nuvoton: Fix stall in npcm_sgpio_irq_handler()
 
 The generic_handle_domain_irq() function calls irq_resolve_mapping()
 so calling irq_find_mapping() is duplicative and will lead to a stack
 trace and an RCU stall.
 
-[ cut and paste the call trace here]
 
 Fixes: c4f8457d17ce ("gpio: nuvoton: Add Nuvoton NPCM sgpio driver")
-Signed-off-by:
+Signed-off-by: Jim Liu <JJLIU0@nuvoton.com>
+---
+Changes for v3:
+   - remove unused variable
+Changes for v2:
+   - add more description
+---
+ drivers/gpio/gpio-npcm-sgpio.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-======================================
-
-Otherwise it looks good.  Please fix and resend.
-
-regards,
-dan carpenter
+diff --git a/drivers/gpio/gpio-npcm-sgpio.c b/drivers/gpio/gpio-npcm-sgpio.c
+index d31788b43abc..260570614543 100644
+--- a/drivers/gpio/gpio-npcm-sgpio.c
++++ b/drivers/gpio/gpio-npcm-sgpio.c
+@@ -434,7 +434,7 @@ static void npcm_sgpio_irq_handler(struct irq_desc *desc)
+ 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+ 	struct irq_chip *ic = irq_desc_get_chip(desc);
+ 	struct npcm_sgpio *gpio = gpiochip_get_data(gc);
+-	unsigned int i, j, girq;
++	unsigned int i, j;
+ 	unsigned long reg;
+ 
+ 	chained_irq_enter(ic, desc);
+@@ -443,11 +443,9 @@ static void npcm_sgpio_irq_handler(struct irq_desc *desc)
+ 		const struct npcm_sgpio_bank *bank = &npcm_sgpio_banks[i];
+ 
+ 		reg = ioread8(bank_reg(gpio, bank, EVENT_STS));
+-		for_each_set_bit(j, &reg, 8) {
+-			girq = irq_find_mapping(gc->irq.domain,
+-						i * 8 + gpio->nout_sgpio + j);
+-			generic_handle_domain_irq(gc->irq.domain, girq);
+-		}
++		for_each_set_bit(j, &reg, 8)
++			generic_handle_domain_irq(gc->irq.domain,
++						  i * 8 + gpio->nout_sgpio + j);
+ 	}
+ 
+ 	chained_irq_exit(ic, desc);
+-- 
+2.34.1
 
 
