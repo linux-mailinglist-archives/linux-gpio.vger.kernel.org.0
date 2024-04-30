@@ -1,114 +1,176 @@
-Return-Path: <linux-gpio+bounces-5936-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5937-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCDB38B6C03
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 09:42:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 308078B6C25
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 09:50:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 487E81F22554
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 07:42:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 53FB41C2205D
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 07:50:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCD923F8DE;
-	Tue, 30 Apr 2024 07:42:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD16C3F9E0;
+	Tue, 30 Apr 2024 07:50:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TdXxaxXs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j2PvapAo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A133EA98
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Apr 2024 07:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E9E3BBE3
+	for <linux-gpio@vger.kernel.org>; Tue, 30 Apr 2024 07:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714462965; cv=none; b=o4zuBoodMg6iyFlMoVwyenpyZIQtsad1SNejUADwxGkMbscdSsxAgtVLh499qYmBdfveQ0BGOQlcgBmDHb7pThYNXwLihdZ78PaQnlSOpT2RRs6htW9SHFFCzoR+KkB0rmTxH4VB4aLiVdMyfoa36ZOrNIroko6sK3FR+oaEV8E=
+	t=1714463422; cv=none; b=oK5d47Dj291k1YxZ7Xax7sfSPkWPXfubOerXxirEJ17oll1L92/wj53if4vhGwHE12ecLNwKDG/iY8phirMWVSWKbP+0wYUgsdGnINMtigGIrBwm0NV+iunvOl6Y/ZxJAOZ7PXJgmOxwHhhL5o1DbMz3L0D1jBBtaj19iCia8yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714462965; c=relaxed/simple;
-	bh=6rOSQeWbEhAv8MCLaqz4msA0/THApX/ROztnBEcH/ZI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=auHKjPqw9COJpJpZKhej5HiQeUcoYCAbxyWcsygewVuh0q3kPIDXIF7peAmFqtfUxOKcvDGJKoHriLrLyTUnQptSvKptD/RSkWtDjJI3majTlxSPuHNk5gt7KFiQuGXfdkd9g6LvS1YceFjQXEUGMoLSLX3bm6kcNI1FcQiaSSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TdXxaxXs; arc=none smtp.client-ip=209.85.218.49
+	s=arc-20240116; t=1714463422; c=relaxed/simple;
+	bh=EF5ldR5uHG4JPFXib+OoLVUeB+8jGp5a6KVbR8bCpok=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=fYinCdjcNbovycUUhb9F+muIsNIKYtW1qWP5kmlVS61S8Jdd+P9fDnpj2mR4Ek4tLZMOHDneGbqhTUIEyUzt1tIFy0QdWBO6Ia8E+Kr/mr8VwLk+wsy1xjog4S6avMGGmxvRy07i0QnO9Bxh1tL/ICgJJNPvEpp7jbvjw2acb6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j2PvapAo; arc=none smtp.client-ip=209.85.219.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a51a7d4466bso587616866b.2
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Apr 2024 00:42:43 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-de54b28c41eso6028006276.0
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Apr 2024 00:50:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714462962; x=1715067762; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j5p+Hhe5o0oz9SnrKznY0Fc+JFHlQEV01P0MQ+lMur0=;
-        b=TdXxaxXsJ00JCbd4wmYYur+0wi5UWdEXowlZwsXZJTVUhOmLJbm4DchDvOG1A4e449
-         ldyDHYDL33k3hVJPInivhD9pYDQ6dgoxmux0Ofsoga8pXHkTrDKgAVuNvL0SIc9jYxc/
-         NNg2p6JNO2BL2z5lVkoVqfJ1ex2Y+fhxiULsy22sr1KMAObAxsrYwBq3tt2AxopMDB9w
-         xF1fGQ8RdCPl5F7PzeqSKCMUu7T5WWUsTEwIXyfhwYIa8dGfAj0EnsiTbeI++Uw/OJEs
-         21aZX2UCCjkD4jD6dKO8PNvwBAQ7fUqNE/qtRomTH1Nz1ArqwhNfvyIxCd43qu2NqECl
-         4hHQ==
+        d=linaro.org; s=google; t=1714463420; x=1715068220; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oj+sxpJnJ9QMTH6odiZZHrnV6iIJzPyVwEyx8Qt7Yr4=;
+        b=j2PvapAopCa8bZa+r3lyvJeDQrvCVv8ggMVPuyc/WtwfrHi1rcvYRK+fnN4OVuH7ba
+         kvjjCUQxKNWlOsOhUKADkbJae/Of7ndH803udPQW1w5v1sGZ4hHZh1a37B0oVreDp5CC
+         Imu5S37AHhqAFCL5lriPxLhZl4UkvsFXmegZHsOtIonb3s5m1WtjPpyhE2N1mGsJVa3H
+         4RQDz51KQWB8/Mw/0sQv61MGv0CSyLS3+nMeUb5RVILNohw++1T4niq5HMofOxFIHqUz
+         KNVNJYaPqtpfNzKjOS1LN17+ZdKfGDuTp4yZ5qAlS3JPSqhYWlGjpkZB9v+o2BpWr9aS
+         IFmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714462962; x=1715067762;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j5p+Hhe5o0oz9SnrKznY0Fc+JFHlQEV01P0MQ+lMur0=;
-        b=XELSUqHKkde2WtBBE0qpYhOG8Ta3OpTa81vl9D2JsklRaXXMMXvU/jKugU8oLAVWwM
-         vM07rxRdXSqCPG1gryGWCBOo+B5UUPLew3VctL+6IIPBq9lRP9MCCvzg6i87RBgorsRC
-         vQcfUWVNoHwcRKxt29CFaYDblS3zw3dzrZZFIeQASPqydvff5tfbKeajN2DaRfarnDyy
-         mvKmrDCq33IBgclxy3Yi0KDzoqeSbCUmmFeYiruJl83iRvf8kBZnFMj72JY6l+XEgzl2
-         UMXCvfyTvA38HvZffHk6u4I5r+KyiVbrgyc9Qs3D9kOo3htgkr/ur4aL2SssNlzXb8i2
-         117w==
-X-Forwarded-Encrypted: i=1; AJvYcCUxfrto6ZVEn8/+wlgS+lIsRCFegWOS3N87vM5WE1oBcwACow/ke2L0xhPZ9BLdbAb1WgI0CocCSzrMwWlH4kw6LlJzfJF9dFzCHg==
-X-Gm-Message-State: AOJu0YyGX8AmHKlEfy20+g5CwZcIYK+cjdjFaRc/k22ZGiUFW758/1Q8
-	0lMEOq0woW14zfv09ULTJtaVSaiQt4yeT89D570kXQ5MpkQCIZzNEwIIpK81MLM2Qv8NYeTRrbq
-	j7pg=
-X-Google-Smtp-Source: AGHT+IGBMuRm0U6K3jNaqA1YmMlR1gvfu8aRSrgUg/G0JYE7jjhY0WN5zoh6hbRFgw5euhqtv+xtKw==
-X-Received: by 2002:a17:906:378d:b0:a52:1770:965 with SMTP id n13-20020a170906378d00b00a5217700965mr7467711ejc.42.1714462961803;
-        Tue, 30 Apr 2024 00:42:41 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id p11-20020a170906a00b00b00a55892e840bsm13175844ejy.205.2024.04.30.00.42.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 00:42:41 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: kernel test robot <lkp@intel.com>
-In-Reply-To: <20240430060304.12332-1-krzysztof.kozlowski@linaro.org>
-References: <20240430060304.12332-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] pinctrl: samsung: drop redundant drvdata assignment
-Message-Id: <171446296047.37280.9740688458228801878.b4-ty@linaro.org>
-Date: Tue, 30 Apr 2024 09:42:40 +0200
+        d=1e100.net; s=20230601; t=1714463420; x=1715068220;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oj+sxpJnJ9QMTH6odiZZHrnV6iIJzPyVwEyx8Qt7Yr4=;
+        b=GUdk4ehbqziy/3iDBbbgQx1h+VwSvWYDMN6gqe0guLUianQ64oEWDnOJP1FbWUGV/D
+         vk9LwkutRj3/NFHc33HBUy9cwZt+iqczYAqpR5D3eo8xWDkxTooHtlqUvV2KPJY8yiDd
+         Z823GhsOHdzjfRVwRl34VLt73T3bZxUK4sv/C0UxW6OsnnuBJcTBLtyXFaFoDrXwurmq
+         AjHmBokoYh+aPjvroAfM9l8Hr5uO8PoodJ6EFZ5BSfv39lsTTIG1UKTyB9sNhnnGNRaI
+         YSRwHq2VfqRW8v5Dp4zsrJoF34fw66K7BMiVWwmPgmklDmS3m9xnEGrxDfOwSxJ9Lbc8
+         QxmQ==
+X-Gm-Message-State: AOJu0Ywr0daFnbcak3ttiI51ay/uCKGAsQh3GtANWEAup6Tq6M9dk4OV
+	l0TAG2V1QLwapGf49plWgjL2EpSvg33GZkeUDMO51iddkj++5j4WH0aZd/ZKRb9U0onRmDSzpo5
+	9tDJdb3LDhEX7w8NlIBslBzihNadwb/dKXdaP3A==
+X-Google-Smtp-Source: AGHT+IGU4SuKe0UpNrDwFY40H12oekaJKWL2kVjkqmbbeng6qEuGh46nbB5bbdPVn+o/CpqYY4EQzeLKzLkDJjn9YZU=
+X-Received: by 2002:a25:558a:0:b0:de5:5a6f:a52a with SMTP id
+ j132-20020a25558a000000b00de55a6fa52amr13565292ybb.26.1714463420128; Tue, 30
+ Apr 2024 00:50:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 30 Apr 2024 09:50:08 +0200
+Message-ID: <CACRpkdY8HPt5SMmqpuo-GKGf=94U7E9=5-eYiMpoJXv6kMJB7A@mail.gmail.com>
+Subject: [GIT PULL] Pin control fixes for v6.9
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Linus,
 
-On Tue, 30 Apr 2024 08:03:04 +0200, Krzysztof Kozlowski wrote:
-> Fix W=1 warning:
-> 
->   drivers/pinctrl/samsung/pinctrl-samsung.c: In function ‘samsung_gpio_set_direction’:
->   drivers/pinctrl/samsung/pinctrl-samsung.c:633:42: warning: variable ‘drvdata’ set but not used [-Wunused-but-set-variable]
-> 
-> 
+some belated fixes. Sorry for sitting on them for
+so long.
 
-Applied, thanks!
+Details in the signed tag, please pull them in!
 
-[1/1] pinctrl: samsung: drop redundant drvdata assignment
-      https://git.kernel.org/pinctrl/samsung/c/e5b3732a9654f26d21647d9e7b4fec846f6d4810
+Yours,
+Linus Walleij
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
 
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.9-2
+
+for you to fetch changes up to ac816e9eb5cdae3d33a01037740483db6176013a:
+
+  Merge tag 'intel-pinctrl-v6.9-1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into fixes
+(2024-04-25 14:30:54 +0200)
+
+----------------------------------------------------------------
+Pin control fixes for the v6.9 series:
+
+- Fix a double-free in the pinctrl_enable() errorpath.
+
+- Fix a refcount leak in pinctrl_dt_to_map().
+
+- Fix selecting the GPIO pin control state and the UART3
+  pin config group in the Intel Baytrail driver.
+
+- Fix readback of schmitt trigger status in the Mediatek
+  Paris driver, along with some semantic pin config issues
+  in this driver.
+
+- Fix a pin suffix typo in the Meson A1 driver.
+
+- Fix an erroneous register offset in he Aspeed G6 driver.
+
+- Fix an inconsistent lock state and the interrupt type on
+  resume in the Renesas RZG2L driver.
+
+- Fix some minor confusion in the Renesas DT bindings.
+
+----------------------------------------------------------------
+Billy Tsai (1):
+      pinctrl: pinctrl-aspeed-g6: Fix register offset for pinconf of GPIOR-T
+
+Chen-Yu Tsai (2):
+      pinctrl: mediatek: paris: Fix PIN_CONFIG_INPUT_SCHMITT_ENABLE readback
+      pinctrl: mediatek: paris: Rework support for
+PIN_CONFIG_{INPUT,OUTPUT}_ENABLE
+
+Claudiu Beznea (2):
+      pinctrl: renesas: rzg2l: Execute atomically the interrupt configuration
+      pinctrl: renesas: rzg2l: Configure the interrupt type on resume
+
+Dan Carpenter (1):
+      pinctrl: core: delete incorrect free in pinctrl_enable()
+
+Hans de Goede (2):
+      pinctrl: baytrail: Fix selecting gpio pinctrl state
+      pinctrl: baytrail: Add pinconf group for uart3
+
+Jan Dakinevich (1):
+      pinctrl/meson: fix typo in PDM's pin name
+
+Lad Prabhakar (1):
+      dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Allow 'input' and
+'output-enable' properties
+
+Linus Walleij (3):
+      Merge tag 'renesas-pinctrl-fixes-for-v6.9-tag1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers
+into fixes
+      Merge tag 'renesas-pinctrl-fixes-for-v6.9-tag2' of
+git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers
+into fixes
+      Merge tag 'intel-pinctrl-v6.9-1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into fixes
+
+Zeng Heng (1):
+      pinctrl: devicetree: fix refcount leak in pinctrl_dt_to_map()
+
+ .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml    |  2 +
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c         | 34 +++++-----
+ drivers/pinctrl/core.c                             |  8 +--
+ drivers/pinctrl/devicetree.c                       | 10 +--
+ drivers/pinctrl/intel/pinctrl-baytrail.c           | 78 ++++++++++++----------
+ drivers/pinctrl/intel/pinctrl-intel.h              |  4 ++
+ drivers/pinctrl/mediatek/pinctrl-paris.c           | 40 ++++-------
+ drivers/pinctrl/meson/pinctrl-meson-a1.c           |  6 +-
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c            | 14 +++-
+ 9 files changed, 100 insertions(+), 96 deletions(-)
 
