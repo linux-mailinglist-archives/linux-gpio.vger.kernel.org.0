@@ -1,176 +1,163 @@
-Return-Path: <linux-gpio+bounces-5937-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5938-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 308078B6C25
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 09:50:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 574098B74DB
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 13:51:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 53FB41C2205D
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 07:50:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7D4D1F22733
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 11:51:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD16C3F9E0;
-	Tue, 30 Apr 2024 07:50:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EE2013D244;
+	Tue, 30 Apr 2024 11:51:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j2PvapAo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMotWVD+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E9E3BBE3
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Apr 2024 07:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46691311B0;
+	Tue, 30 Apr 2024 11:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714463422; cv=none; b=oK5d47Dj291k1YxZ7Xax7sfSPkWPXfubOerXxirEJ17oll1L92/wj53if4vhGwHE12ecLNwKDG/iY8phirMWVSWKbP+0wYUgsdGnINMtigGIrBwm0NV+iunvOl6Y/ZxJAOZ7PXJgmOxwHhhL5o1DbMz3L0D1jBBtaj19iCia8yQ=
+	t=1714477881; cv=none; b=na3uTiXUcqArIW5vGtnH0oovOIx2+sTCzZqxDRrP71aofxQqSbCwCicroJRmcVqDiSzV29Rm51ROawB9hOnzSs6sQstQKScrThcwttX55M9lV5FWEGLs3RZWROU5JjfPuxUbVois38lZl0jeFhuDkQizrmcmrvOF+t+06i5ukRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714463422; c=relaxed/simple;
-	bh=EF5ldR5uHG4JPFXib+OoLVUeB+8jGp5a6KVbR8bCpok=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=fYinCdjcNbovycUUhb9F+muIsNIKYtW1qWP5kmlVS61S8Jdd+P9fDnpj2mR4Ek4tLZMOHDneGbqhTUIEyUzt1tIFy0QdWBO6Ia8E+Kr/mr8VwLk+wsy1xjog4S6avMGGmxvRy07i0QnO9Bxh1tL/ICgJJNPvEpp7jbvjw2acb6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j2PvapAo; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-de54b28c41eso6028006276.0
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Apr 2024 00:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714463420; x=1715068220; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oj+sxpJnJ9QMTH6odiZZHrnV6iIJzPyVwEyx8Qt7Yr4=;
-        b=j2PvapAopCa8bZa+r3lyvJeDQrvCVv8ggMVPuyc/WtwfrHi1rcvYRK+fnN4OVuH7ba
-         kvjjCUQxKNWlOsOhUKADkbJae/Of7ndH803udPQW1w5v1sGZ4hHZh1a37B0oVreDp5CC
-         Imu5S37AHhqAFCL5lriPxLhZl4UkvsFXmegZHsOtIonb3s5m1WtjPpyhE2N1mGsJVa3H
-         4RQDz51KQWB8/Mw/0sQv61MGv0CSyLS3+nMeUb5RVILNohw++1T4niq5HMofOxFIHqUz
-         KNVNJYaPqtpfNzKjOS1LN17+ZdKfGDuTp4yZ5qAlS3JPSqhYWlGjpkZB9v+o2BpWr9aS
-         IFmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714463420; x=1715068220;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oj+sxpJnJ9QMTH6odiZZHrnV6iIJzPyVwEyx8Qt7Yr4=;
-        b=GUdk4ehbqziy/3iDBbbgQx1h+VwSvWYDMN6gqe0guLUianQ64oEWDnOJP1FbWUGV/D
-         vk9LwkutRj3/NFHc33HBUy9cwZt+iqczYAqpR5D3eo8xWDkxTooHtlqUvV2KPJY8yiDd
-         Z823GhsOHdzjfRVwRl34VLt73T3bZxUK4sv/C0UxW6OsnnuBJcTBLtyXFaFoDrXwurmq
-         AjHmBokoYh+aPjvroAfM9l8Hr5uO8PoodJ6EFZ5BSfv39lsTTIG1UKTyB9sNhnnGNRaI
-         YSRwHq2VfqRW8v5Dp4zsrJoF34fw66K7BMiVWwmPgmklDmS3m9xnEGrxDfOwSxJ9Lbc8
-         QxmQ==
-X-Gm-Message-State: AOJu0Ywr0daFnbcak3ttiI51ay/uCKGAsQh3GtANWEAup6Tq6M9dk4OV
-	l0TAG2V1QLwapGf49plWgjL2EpSvg33GZkeUDMO51iddkj++5j4WH0aZd/ZKRb9U0onRmDSzpo5
-	9tDJdb3LDhEX7w8NlIBslBzihNadwb/dKXdaP3A==
-X-Google-Smtp-Source: AGHT+IGU4SuKe0UpNrDwFY40H12oekaJKWL2kVjkqmbbeng6qEuGh46nbB5bbdPVn+o/CpqYY4EQzeLKzLkDJjn9YZU=
-X-Received: by 2002:a25:558a:0:b0:de5:5a6f:a52a with SMTP id
- j132-20020a25558a000000b00de55a6fa52amr13565292ybb.26.1714463420128; Tue, 30
- Apr 2024 00:50:20 -0700 (PDT)
+	s=arc-20240116; t=1714477881; c=relaxed/simple;
+	bh=vBMSAoS4FslXBKMp6Bl0M5x8r+e0FbC1+oCjbaWlU+U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Veq64Z2g6VZ8yaZtUdsSWhHyFmhXGaYocvbq1droZ/zZNL0NxWUsQ6XOYKh0+h4Hm9Hm10r005QoeuzTDk5PgNY1/hpTTbIOoIjZA9vNmo/hH1BiJgOpdjljuf43/RlKfnX5tjZLj4RjHCl/nRRAIEHZhmbD7sHfY0mOrh9rsLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMotWVD+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58150C2BBFC;
+	Tue, 30 Apr 2024 11:51:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714477881;
+	bh=vBMSAoS4FslXBKMp6Bl0M5x8r+e0FbC1+oCjbaWlU+U=;
+	h=From:List-Id:To:Cc:Subject:Date:From;
+	b=gMotWVD+CJA+GM/SxYj9XE7Mk8Hco1CyjfuSrPqdU4hoQhynWYHtQIf0WOOfdbiSU
+	 lU++GicjvEdHyvtJ/8558SA6RYJnUoN63kWFqctUrcB7K3zk6sGEgwtD97p87r32UU
+	 bkzxDigyd5GNgegCk/2QZdxTAtFYahWogTFfgVxh86MKfx6FkmyV1PQPc4VyyNtenw
+	 CLmUjK9nDlCymDKeaptNcIMJi3bKb05F/yTrnkzPo0rGMK1ooGAhbovsZIsSUdgL5J
+	 n76Xq8hcCI/tuQIThcly+VDWJj5hmkXapZ88+F+emQBPlrTjdemHej3Mk/lC3n0TS1
+	 /Ll+rmIzu0bHQ==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	soc@kernel.org,
+	arm@kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	devicetree@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-crypto@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	Olivia Mackall <olivia@selenic.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Subject: [PATCH v8 0/9] Turris Omnia MCU driver
+Date: Tue, 30 Apr 2024 13:51:02 +0200
+Message-ID: <20240430115111.3453-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 30 Apr 2024 09:50:08 +0200
-Message-ID: <CACRpkdY8HPt5SMmqpuo-GKGf=94U7E9=5-eYiMpoJXv6kMJB7A@mail.gmail.com>
-Subject: [GIT PULL] Pin control fixes for v6.9
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+Hello Andy, Hans, Ilpo, Arnd, Gregory, and others,
 
-some belated fixes. Sorry for sitting on them for
-so long.
+this is v8 of the series adding Turris Omnia MCU driver.
 
-Details in the signed tag, please pull them in!
+This series depends on the immutable branch between LEDs and locking,
+introducing devm_mutex_init(), see the PR
+  https://lore.kernel.org/linux-leds/20240412084616.GR2399047@google.com/
 
-Yours,
-Linus Walleij
+See also cover letters for v1, v2, v3, v4, v5, v6 and v7:
+  https://patchwork.kernel.org/project/linux-soc/cover/20230823161012.6986-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20230919103815.16818-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231023143130.11602-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231026161803.16750-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240323164359.21642-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240418121116.22184-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240424173809.7214-1-kabel@kernel.org/
 
-The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+Changes since v7:
+- fixed wrong $id path in DT binding (patch 1)
+- removed resource managed IRQ mapping disposal, which is not needed, as
+  pointed out by Andy (patches 6, 7)
+- added some more #includes (for linux/device.h, linux/interrupt.h,
+  linux/hw_random.h) (patches 3, 6, 7)
+- dropped the Fixes tags from the DT changes (patches 8, 9), with an
+  explanation of this added into the commit message of patch 8, as
+  suggested by Andrew
 
-  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+Marek Behún (9):
+  dt-bindings: firmware: add cznic,turris-omnia-mcu binding
+  platform: cznic: Add preliminary support for Turris Omnia MCU
+  platform: cznic: turris-omnia-mcu: Add support for MCU connected GPIOs
+  platform: cznic: turris-omnia-mcu: Add support for poweroff and wakeup
+  platform: cznic: turris-omnia-mcu: Add support for MCU watchdog
+  platform: cznic: turris-omnia-mcu: Add support for MCU provided TRNG
+  platform: cznic: turris-omnia-mcu: Add support for digital message
+    signing via debugfs
+  ARM: dts: turris-omnia: Add MCU system-controller node
+  ARM: dts: turris-omnia: Add GPIO key node for front button
 
-are available in the Git repository at:
+ .../ABI/testing/debugfs-turris-omnia-mcu      |   13 +
+ .../sysfs-bus-i2c-devices-turris-omnia-mcu    |  126 ++
+ .../firmware/cznic,turris-omnia-mcu.yaml      |   86 ++
+ MAINTAINERS                                   |    5 +
+ .../dts/marvell/armada-385-turris-omnia.dts   |   35 +-
+ drivers/platform/Kconfig                      |    2 +
+ drivers/platform/Makefile                     |    1 +
+ drivers/platform/cznic/Kconfig                |   51 +
+ drivers/platform/cznic/Makefile               |    9 +
+ .../platform/cznic/turris-omnia-mcu-base.c    |  439 +++++++
+ .../platform/cznic/turris-omnia-mcu-debugfs.c |  207 ++++
+ .../platform/cznic/turris-omnia-mcu-gpio.c    | 1048 +++++++++++++++++
+ .../cznic/turris-omnia-mcu-sys-off-wakeup.c   |  258 ++++
+ .../platform/cznic/turris-omnia-mcu-trng.c    |  101 ++
+ .../cznic/turris-omnia-mcu-watchdog.c         |  123 ++
+ drivers/platform/cznic/turris-omnia-mcu.h     |  188 +++
+ include/linux/turris-omnia-mcu-interface.h    |  249 ++++
+ 17 files changed, 2940 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/debugfs-turris-omnia-mcu
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu
+ create mode 100644 Documentation/devicetree/bindings/firmware/cznic,turris-omnia-mcu.yaml
+ create mode 100644 drivers/platform/cznic/Kconfig
+ create mode 100644 drivers/platform/cznic/Makefile
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-base.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-debugfs.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-gpio.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-sys-off-wakeup.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-trng.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-watchdog.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu.h
+ create mode 100644 include/linux/turris-omnia-mcu-interface.h
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.9-2
+-- 
+2.43.2
 
-for you to fetch changes up to ac816e9eb5cdae3d33a01037740483db6176013a:
-
-  Merge tag 'intel-pinctrl-v6.9-1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into fixes
-(2024-04-25 14:30:54 +0200)
-
-----------------------------------------------------------------
-Pin control fixes for the v6.9 series:
-
-- Fix a double-free in the pinctrl_enable() errorpath.
-
-- Fix a refcount leak in pinctrl_dt_to_map().
-
-- Fix selecting the GPIO pin control state and the UART3
-  pin config group in the Intel Baytrail driver.
-
-- Fix readback of schmitt trigger status in the Mediatek
-  Paris driver, along with some semantic pin config issues
-  in this driver.
-
-- Fix a pin suffix typo in the Meson A1 driver.
-
-- Fix an erroneous register offset in he Aspeed G6 driver.
-
-- Fix an inconsistent lock state and the interrupt type on
-  resume in the Renesas RZG2L driver.
-
-- Fix some minor confusion in the Renesas DT bindings.
-
-----------------------------------------------------------------
-Billy Tsai (1):
-      pinctrl: pinctrl-aspeed-g6: Fix register offset for pinconf of GPIOR-T
-
-Chen-Yu Tsai (2):
-      pinctrl: mediatek: paris: Fix PIN_CONFIG_INPUT_SCHMITT_ENABLE readback
-      pinctrl: mediatek: paris: Rework support for
-PIN_CONFIG_{INPUT,OUTPUT}_ENABLE
-
-Claudiu Beznea (2):
-      pinctrl: renesas: rzg2l: Execute atomically the interrupt configuration
-      pinctrl: renesas: rzg2l: Configure the interrupt type on resume
-
-Dan Carpenter (1):
-      pinctrl: core: delete incorrect free in pinctrl_enable()
-
-Hans de Goede (2):
-      pinctrl: baytrail: Fix selecting gpio pinctrl state
-      pinctrl: baytrail: Add pinconf group for uart3
-
-Jan Dakinevich (1):
-      pinctrl/meson: fix typo in PDM's pin name
-
-Lad Prabhakar (1):
-      dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Allow 'input' and
-'output-enable' properties
-
-Linus Walleij (3):
-      Merge tag 'renesas-pinctrl-fixes-for-v6.9-tag1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers
-into fixes
-      Merge tag 'renesas-pinctrl-fixes-for-v6.9-tag2' of
-git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers
-into fixes
-      Merge tag 'intel-pinctrl-v6.9-1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into fixes
-
-Zeng Heng (1):
-      pinctrl: devicetree: fix refcount leak in pinctrl_dt_to_map()
-
- .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml    |  2 +
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c         | 34 +++++-----
- drivers/pinctrl/core.c                             |  8 +--
- drivers/pinctrl/devicetree.c                       | 10 +--
- drivers/pinctrl/intel/pinctrl-baytrail.c           | 78 ++++++++++++----------
- drivers/pinctrl/intel/pinctrl-intel.h              |  4 ++
- drivers/pinctrl/mediatek/pinctrl-paris.c           | 40 ++++-------
- drivers/pinctrl/meson/pinctrl-meson-a1.c           |  6 +-
- drivers/pinctrl/renesas/pinctrl-rzg2l.c            | 14 +++-
- 9 files changed, 100 insertions(+), 96 deletions(-)
 
