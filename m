@@ -1,70 +1,70 @@
-Return-Path: <linux-gpio+bounces-5954-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5955-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1269F8B7D21
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 18:35:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F025B8B7D28
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 18:36:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3DBE28368E
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 16:35:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B3291C233D4
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 16:36:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8885181303;
-	Tue, 30 Apr 2024 16:33:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9610C537E4;
+	Tue, 30 Apr 2024 16:35:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="LtTR4xUx";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="l4AIKQ5F"
+	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="r8aLWyOa";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="iFe69TVP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from c180-37.smtp-out.ap-south-1.amazonses.com (c180-37.smtp-out.ap-south-1.amazonses.com [76.223.180.37])
+Received: from c180-41.smtp-out.ap-south-1.amazonses.com (c180-41.smtp-out.ap-south-1.amazonses.com [76.223.180.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD57B660;
-	Tue, 30 Apr 2024 16:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25462DDBE;
+	Tue, 30 Apr 2024 16:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714494832; cv=none; b=QKmk2dg97ntqQlMi0/ypZgjjZw6NEip6yWRp3CeYJtpyujbX49LD8JXdIZ3eHx+oQnGjQ/ccatluZmBHvCFg5bpkPC/GnDt6JQiLVhhi3v8+6nNLoPHS5FC6yf7V64vA5KgOgKi2IXOn/+cNEmVpdt/HZX+btMbnj0xrUj9XRm4=
+	t=1714494906; cv=none; b=QfRmdoMgePFcnHFt52xU0mLzR2ydLSmXmZSmbqqFDSKBo/rik3FmDnThz6cUlO6v2utmplLOUpGiJIpdn1y+nEmKtENQuAiw6VuAdD7CgSNgceqM8dwREAm9a+49bXBPawMvF0WMXjPRx2HMw24IXZ23FphUuAB3V/m22CrUtuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714494832; c=relaxed/simple;
+	s=arc-20240116; t=1714494906; c=relaxed/simple;
 	bh=zEDn16rjn9GzO2QDljpufeKyO0tKY0IaC3GTvKCqwFQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dYLYrBbEZ2FeTqQnu0EMnatAz5hRSnLkCJbpYeOGip9i1rTx1sz0iZXRVgjcIgEeDQsMiZJEjXRBsQ7r0m67uK6VE1Ls7oFa+Npz818NGwjOH2q3nYCPS1SR9lZD1N/wS9pB8WjcpqEElyyLQfYA5RNtGo/npJ3n7WtxtR+/uoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=LtTR4xUx; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=l4AIKQ5F; arc=none smtp.client-ip=76.223.180.37
+	 MIME-Version; b=shTNEtj4b4mY1d0xrh/p/wZGRLqSw1ObY5u/CQPZhx/hGMnsrTCCSF3GY48SB4ZfH6T2+EoYispSJX8bRRDjhqGiIQdVyZ1fXM+/R+dOMWDC4Mjxz15IR+p/OsJdEULUQPeG3y12ty2v5ApcxDn7kl1HLpaTP+COSCZrKyRGS5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=r8aLWyOa; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=iFe69TVP; arc=none smtp.client-ip=76.223.180.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ap-south-1.amazonses.com
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1714494827;
+	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1714494901;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
 	bh=zEDn16rjn9GzO2QDljpufeKyO0tKY0IaC3GTvKCqwFQ=;
-	b=LtTR4xUxAsHJUp9Iy+Wt9Xq1iB2+9ja62inaDe0dk4R5Y3SLiHEz4Ah3ruERqYPf
-	xB1ccpjLEdgqFEpG9k0x0tQgQpwZij1c8K8wzo+eMWxyOi1ANrdlUJUwHhPSB0M3e3W
-	AiCcIgjYW+05zyd6TOEVXVChGOG7FauReDdcVh2gTb/tyualS/nVg524ERm0b+Oxdtk
-	3t5nxWdD5foQcm46QksfIdFPab8k0m1WbpR7K2RJf2Sow90omUoCNYWtvORxn1LbmUp
-	l+KYJA3Qj04bgoBayaGBrouoDGag5t1G7UrhA9KASuu7o0inhhk2N3Pk8pzuqHIhS/N
-	FpT9VCvWZQ==
+	b=r8aLWyOaOBg6rSjBJ66YeJKwv0dFnyjrDRjtictbTipPkifspPSS+8+9xlI7yz7A
+	3RU6b+kOgrIVFyWaglnlcsfU5d5OwremZL3VcXn+1396/A9S3ciAh1D+lP/ior+5izy
+	xnjEIc/C4S6Sd5O+9GkWdpWQcgPC236zBelewSJKmueaZEhmZkese6ViFZvuXBjdHyq
+	0h2KlAvV3ZMcuVgdfTjxVlhX93YN3+YbTIld4w0uQXHgSoLe9VOW5vlNco0z5Lnl6fC
+	BCtgOoo7d4rtXGLFIRojjBPgXGiH1gukIU5uOnnNU882RcwHctLdmCAyroGzg6JXOLP
+	gt04ADnX7g==
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=zpkik46mrueu52d3326ufxxchortqmoc; d=amazonses.com; t=1714494827;
+	s=zpkik46mrueu52d3326ufxxchortqmoc; d=amazonses.com; t=1714494901;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
 	bh=zEDn16rjn9GzO2QDljpufeKyO0tKY0IaC3GTvKCqwFQ=;
-	b=l4AIKQ5FJUZQ3PX2YdvfnxmgT/wH4VkDtsBIZ61gZbZdZVfm4o4vZZkmEUCvwHVR
-	34z8EJNxjD8Mz0xQWsXGnuOr04Z5yVFY/NrQR2uGyseUq8ZF8vBQn03/SROohum8b30
-	Pc5H4/qUmYv2ojj5TdydBHWx62cfyXqEOU3DaUs4=
+	b=iFe69TVPnG6pdZhasxwgQnWOnk7O+nWC23Mis94q0atYZmajQQVi7ucEBaOXsY/u
+	/GpRtqlZ/m6ELfgaBBMALfdQl1p3+q5YrnxOTFa7htJlBr58gaEElEwrujA6NxUn9Jk
+	tCOO33WV2BpVVKNkDqjZ+rmfHG6crszsRNL4MbDc=
 From: Bhargav Raviprakash <bhargav.r@ltts.com>
 To: linux-kernel@vger.kernel.org
-Cc: arnd@arndb.de, broonie@kernel.org, conor+dt@kernel.org, 
-	conor.dooley@microchip.com, devicetree@vger.kernel.org, 
-	eblanc@baylibre.com, gregkh@linuxfoundation.org, jpanis@baylibre.com, 
-	kristo@kernel.org, krzysztof.kozlowski+dt@linaro.org, lee@kernel.org, 
+Cc: bhargav.r@ltts.com, arnd@arndb.de, broonie@kernel.org, 
+	conor+dt@kernel.org, devicetree@vger.kernel.org, eblanc@baylibre.com, 
+	gregkh@linuxfoundation.org, jpanis@baylibre.com, kristo@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, lee@kernel.org, 
 	lgirdwood@gmail.com, linus.walleij@linaro.org, 
 	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
 	m.nirmaladevi@ltts.com, nm@ti.com, robh+dt@kernel.org, 
-	vigneshr@ti.com, Bhargav Raviprakash <bhargav.r@ltts.com>
+	vigneshr@ti.com
 Subject: [PATCH v8 04/10] mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
-Date: Tue, 30 Apr 2024 16:33:47 +0000
-Message-ID: <0109018f2fdaecea-12513236-1059-4227-9078-7b3e0d447cc0-000000@ap-south-1.amazonses.com>
+Date: Tue, 30 Apr 2024 16:35:01 +0000
+Message-ID: <0109018f2fdc0d44-9e032c9d-52ed-451e-bd22-bb51b8b474b0-000000@ap-south-1.amazonses.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <0109018f2f26a14f-157bb3a2-2f9b-4653-a619-46e1feb8f229-000000@ap-south-1.amazonses.com>
-References: <0109018f2f26a14f-157bb3a2-2f9b-4653-a619-46e1feb8f229-000000@ap-south-1.amazonses.com>
+In-Reply-To: <0109018f2f24c15e-c50bfc29-5f1d-4368-a4b8-2c9f1d398abb-000000@ap-south-1.amazonses.com>
+References: <0109018f2f24c15e-c50bfc29-5f1d-4368-a4b8-2c9f1d398abb-000000@ap-south-1.amazonses.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -73,7 +73,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Feedback-ID: 1.ap-south-1./RC/PI2M8xOxQmTMPi0M1Q8h2FX69egpT62QKSaMPIA=:AmazonSES
-X-SES-Outgoing: 2024.04.30-76.223.180.37
+X-SES-Outgoing: 2024.04.30-76.223.180.41
 
 Add support for TPS65224 PMIC in TPS6594's I2C driver which has
 significant functional overlap.
