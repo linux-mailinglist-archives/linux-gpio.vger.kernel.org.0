@@ -1,223 +1,179 @@
-Return-Path: <linux-gpio+bounces-5962-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5963-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B407B8B845C
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2024 04:27:29 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55D9C8B88A0
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2024 12:32:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A3DF1F23992
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2024 02:27:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1B6EB22A02
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2024 10:32:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9A5610A2B;
-	Wed,  1 May 2024 02:27:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C224B53E13;
+	Wed,  1 May 2024 10:32:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l8sES53+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ee59RFtq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C497510A03;
-	Wed,  1 May 2024 02:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53798524BE
+	for <linux-gpio@vger.kernel.org>; Wed,  1 May 2024 10:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714530444; cv=none; b=igSlpwyehDVbNubQl0KA+QAbjtqNubhIld2Rpxdgz1WAqYjqp7v5NIdZpl/HICJiE6lTITAbu5wmtp12tzb1CsKQAb/N5YFoRLJOg64eeRxEjdNAdje2pqIPL9ukhtTdXD4HdkL/+SQtyohGQW/qHpbn8tlAfcun6/gfd1i+Tbk=
+	t=1714559525; cv=none; b=iF0mEqqYVAPsXpAIOMYLcr8nOFDlfHdS8Q/SIBIh3VjJ0GJHb2RiH4ab7AGW600+ZyPh8khIznEFN8pDLMcaPlOXadmKBPQ680KhXyC/tkeYXpLR04pcwE7KxbS9uL6SPfFLlxqNLet1quLxQSA/753E25/Nl8MffYEhrjOFYBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714530444; c=relaxed/simple;
-	bh=FRsGkPHSoydqvdyIJ0MAzb+gXp7P2C0gjeuRsN5UjrM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OQgxlgfoFxPwHUR7OlDp6g8DkSMNIfVF8cpbRVsnVMgxD0cdyUXOYchqE8sb33GabSFyYL9q4TFf8GHbJ067iKDUvAml2v3gL5YhLXKou2mw3K/LPvuoio6FIUP3kefH4oZnG9ORnktTgk1DPnQJnP+r5u0AoKXLPg7q/gzAYW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l8sES53+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4410ro4A010509;
-	Wed, 1 May 2024 02:27:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=7fjKpIV
-	CrG16rPBfMRo3DetkYGl8dg4mfjzHivxICDc=; b=l8sES53+3JznQl8ZRRyH/mU
-	BQiTnakv3qSEZ/RU0aOiA9GrGT2eox2L8ROC/rEeCpwCeJ2dBJ9cWl0lithwkIS9
-	N5be88KxcjQHPYWu/3+AbttBUZ50sOFFlGdAY+HMtYh+j5/rff5vAwWhkONwlbBs
-	sHwuRcrt3yPCLyYvyFN+O0iOj93OPsYu4gst10ndZCWH2Ti+RgugowYT6Tf8SDrp
-	WMgI99+t5LcrNwvGZ8NyfdcR8cf9vn2Vh7WJv3Xi6BKX0j9Kd3RKadgGwuPIpOxf
-	aZE9UdiJo1wvTpEmtEVXCv6LcFqW+QhDZwKvo8Ulo7wSphDEmU0+AGFnuYDtNMQ=
-	=
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xtv1htg3e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 May 2024 02:27:19 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4412RIKV007727
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 1 May 2024 02:27:18 GMT
-Received: from zhonhan-gv.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 30 Apr 2024 19:27:16 -0700
-From: Zhongqiu Han <quic_zhonhan@quicinc.com>
-To: <brgl@bgdev.pl>, <warthog618@gmail.com>, <linus.walleij@linaro.org>
-CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_zhonhan@quicinc.com>
-Subject: [PATCH] gpiolib: cdev: Fix use after free in lineinfo_changed_notify
-Date: Wed, 1 May 2024 10:26:12 +0800
-Message-ID: <20240501022612.1787143-1-quic_zhonhan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1714559525; c=relaxed/simple;
+	bh=i6mHdqNYmux6BgzNRN3h7HykTcRoNOkwzXMRaJD8KTE=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=PbXxH9qutQn2pfFWxeeW73YP2TTI2LX5KCEvr9gqew3ocJcrenc2sZ0rMWZzyNVjmCrPJnko3JPhK4TtyUm/coKAVhgN1vdxqz3F1pSlIbYEiubpw2wiPbFQC98jBjt66uQ0YdfPhbc4fsRa7FLfCTuEjfq9JkcTFET5Wm95RXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ee59RFtq; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714559524; x=1746095524;
+  h=date:from:to:cc:subject:message-id;
+  bh=i6mHdqNYmux6BgzNRN3h7HykTcRoNOkwzXMRaJD8KTE=;
+  b=ee59RFtq4ZCLpIJ3QlEfVGlduBkkYq7/9sDcOFd0y7SvcjOVb1E+N/JT
+   KZu7NwRQ+QxQJpzAb8aIHQDltKRx7qKikLXCQd2qYj77paUYWA7EPNOVV
+   yemOu4Qrn6Qxpbwskv3SV8PHXSqZUhBGz4MIJJ8rtu9DM2ygp++k1nP68
+   nVyOkxxF6DUZfZf5dho8KXL3GqLjopY1OzrizK7l/jJ0sZ/DwqPMQG1gK
+   rlY5+HOdBL9Mro0NgG35khsadDO6VngqhxMLGJLQZyFq0JrLn46bQLP0v
+   +wFsbt56ELbyHa0bmUIb7vWNQjNx6NtTlNVbv5jTTZTzaUgHgrhAdsvAK
+   A==;
+X-CSE-ConnectionGUID: sxgNzjcdQky/udE693kSCg==
+X-CSE-MsgGUID: AjvbGpXlTkqpZiyl1xg83w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="20900203"
+X-IronPort-AV: E=Sophos;i="6.07,245,1708416000"; 
+   d="scan'208";a="20900203"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 03:32:03 -0700
+X-CSE-ConnectionGUID: 74OW4SP/TH+3ypw8I/odjw==
+X-CSE-MsgGUID: SHr/HLYWSRmHb2Gs11ZhfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,245,1708416000"; 
+   d="scan'208";a="26750529"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 01 May 2024 03:32:01 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s27Fn-0009R8-1S;
+	Wed, 01 May 2024 10:31:59 +0000
+Date: Wed, 01 May 2024 18:31:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 077895d14a6b2fc02e8fe588f5cee6d1bcdddd3b
+Message-ID: <202405011816.ebq3OqhV-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 1cbCZhYTMPGdyBrm88lZGUsnNNseqoMn
-X-Proofpoint-ORIG-GUID: 1cbCZhYTMPGdyBrm88lZGUsnNNseqoMn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-01_02,2024-04-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=980 adultscore=0
- spamscore=0 clxscore=1011 suspectscore=0 impostorscore=0 phishscore=0
- bulkscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2405010016
 
-The use-after-free issue occurs when userspace closes the GPIO chip device
-file (e.g., "/dev/gpiochip0") by invoking gpio_chrdev_release(), while one
-of its GPIO lines is simultaneously being released. In a stress test
-scenario, stress-ng tool starts multi stress-ng-dev threads to continuously
-open and close device file in the /dev, the use-after-free issue will occur
-with a low reproducibility.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 077895d14a6b2fc02e8fe588f5cee6d1bcdddd3b  Merge branch 'devel' into for-next
 
-Here is the typical stack when issue happened:
+elapsed time: 1634m
 
-BUG: KASAN: slab-use-after-free in lineinfo_changed_notify+0x84/0x1bc
-Read of size 8 at addr ffffff803c06e840 by task stress-ng-dev/5437
-Call trace:
- dump_backtrace
- show_stack
- dump_stack_lvl
- print_report
- kasan_report
- __asan_load8
- lineinfo_changed_notify
- notifier_call_chain
- blocking_notifier_call_chain
- gpiod_free_commit
- gpiod_free
- gpio_free
- st54spi_gpio_dev_release
- __fput
- __fput_sync
- __arm64_sys_close
- invoke_syscall
- el0_svc_common
- do_el0_svc
- el0_svc
- el0t_64_sync_handler
- el0t_64_sync
-Allocated by task 5425:
- kasan_set_track
- kasan_save_alloc_info
- __kasan_kmalloc
- __kmalloc
- bitmap_zalloc
- gpio_chrdev_open
- chrdev_open
- do_dentry_open
- vfs_open
- path_openat
- do_filp_open
- do_sys_openat2
- __arm64_sys_openat
- invoke_syscall
- el0_svc_common
- do_el0_svc
- el0_svc
- el0t_64_sync_handler
- el0t_64_sync
-Freed by task 5425:
- kasan_set_track
- kasan_save_free_info
- ____kasan_slab_free
- __kasan_slab_free
- slab_free_freelist_hook
- __kmem_cache_free
- kfree
- bitmap_free
- gpio_chrdev_release
- __fput
- __fput_sync
- __arm64_sys_close
- invoke_syscall
- el0_svc_common
- do_el0_svc
- el0_svc
- el0t_64_sync_handler
- el0t_64_sync
+configs tested: 86
+configs skipped: 4
 
-The use-after-free issue occurs as follows: watched_lines is freed by
-bitmap_free(), but the lineinfo_changed_nb notifier chain cannot be
-successfully unregistered due to waiting write rwsem when closing the
-GPIO chip device file. Additionally, one of the GPIO chip's lines is
-also in the release process and holds the notifier chain's read rwsem.
-Consequently, a race condition leads to the use-after-free of
-watched_lines.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-[free]
-gpio_chrdev_release()
-  --> bitmap_free(cdev->watched_lines)                  <-- freed
-  --> blocking_notifier_chain_unregister()
-    --> down_write(&nh->rwsem)                          <-- waiting rwsem
-          --> __down_write_common()
-            --> rwsem_down_write_slowpath()
-                  --> schedule_preempt_disabled()
-                    --> schedule()
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                                 defconfig   gcc  
+arm                               allnoconfig   clang
+arm                                 defconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240501   clang
+i386         buildonly-randconfig-002-20240501   gcc  
+i386         buildonly-randconfig-004-20240501   gcc  
+i386         buildonly-randconfig-005-20240501   gcc  
+i386         buildonly-randconfig-006-20240501   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240501   gcc  
+i386                  randconfig-002-20240501   clang
+i386                  randconfig-003-20240501   gcc  
+i386                  randconfig-004-20240501   gcc  
+i386                  randconfig-005-20240501   clang
+i386                  randconfig-006-20240501   clang
+i386                  randconfig-011-20240501   gcc  
+i386                  randconfig-012-20240501   gcc  
+i386                  randconfig-013-20240501   gcc  
+i386                  randconfig-014-20240501   gcc  
+i386                  randconfig-015-20240501   gcc  
+i386                  randconfig-016-20240501   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
 
-[use]
-st54spi_gpio_dev_release()
-  --> gpio_free()
-    --> gpiod_free()
-      --> gpiod_free_commit()
-        --> gpiod_line_state_notify()
-          --> blocking_notifier_call_chain()
-            --> down_read(&nh->rwsem);                  <-- held rwsem
-            --> notifier_call_chain()
-              --> lineinfo_changed_notify()
-                --> test_bit(xxxx, cdev->watched_lines) <-- use after free
-
-To fix this issue, call the bitmap_free() function after successfully
-unregistering the notifier chain. This prevents lineinfo_changed_notify()
-from being called, thus avoiding the use-after-free race condition.
-
-Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes in line info")
-Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
----
- drivers/gpio/gpiolib-cdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index d09c7d728365..6b3a43e3ba47 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -2799,11 +2799,11 @@ static int gpio_chrdev_release(struct inode *inode, struct file *file)
- 	struct gpio_chardev_data *cdev = file->private_data;
- 	struct gpio_device *gdev = cdev->gdev;
- 
--	bitmap_free(cdev->watched_lines);
- 	blocking_notifier_chain_unregister(&gdev->device_notifier,
- 					   &cdev->device_unregistered_nb);
- 	blocking_notifier_chain_unregister(&gdev->line_state_notifier,
- 					   &cdev->lineinfo_changed_nb);
-+	bitmap_free(cdev->watched_lines);
- 	gpio_device_put(gdev);
- 	kfree(cdev);
- 
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
