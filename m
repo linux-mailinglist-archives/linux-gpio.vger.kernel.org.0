@@ -1,70 +1,68 @@
-Return-Path: <linux-gpio+bounces-5961-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5962-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C03948B7D3F
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 18:38:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B407B8B845C
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2024 04:27:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E05EE1C21D11
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Apr 2024 16:38:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A3DF1F23992
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2024 02:27:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 268E5199E92;
-	Tue, 30 Apr 2024 16:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9A5610A2B;
+	Wed,  1 May 2024 02:27:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b="H1KQtZz6";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="btSmqQl8"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="l8sES53+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from c180-45.smtp-out.ap-south-1.amazonses.com (c180-45.smtp-out.ap-south-1.amazonses.com [76.223.180.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3268179965;
-	Tue, 30 Apr 2024 16:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.223.180.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C497510A03;
+	Wed,  1 May 2024 02:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714494967; cv=none; b=tm8Oo12B0EQamAxO+ivHmqNp3AGijuKMLt3bZLEkqHvbBye0hNldDi/kfzT5+qUQ1XNf77tL1vzEbbxJuN4a0A0cLy+xzUt7FcIP9oMnsNrtfDkBia+pGPPJGZzuDTSWCyPDiIpolFAB/xNClKWDbN0E6KH//SPA4EyMdSstMns=
+	t=1714530444; cv=none; b=igSlpwyehDVbNubQl0KA+QAbjtqNubhIld2Rpxdgz1WAqYjqp7v5NIdZpl/HICJiE6lTITAbu5wmtp12tzb1CsKQAb/N5YFoRLJOg64eeRxEjdNAdje2pqIPL9ukhtTdXD4HdkL/+SQtyohGQW/qHpbn8tlAfcun6/gfd1i+Tbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714494967; c=relaxed/simple;
-	bh=/z6DZH45bLOkfq/gVueWFPb4M8m52qtDKhLklz3wx38=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oPKZOot8oTc91K+pWWRcXCndU5SleCTbCeWtQMlcbsZFEKhXj1HxbtdD56ofxx1vWHz3jhG30TMe6bPhJiA8LE6XtQV0dNaxGHx1fW1mL+LpWGKyFo2cgRJ8q4G8jSfA3+XPwmB8TKrnj5e3h3atDTMHcdZlMXmg5fhL97/5M5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ap-south-1.amazonses.com; dkim=pass (2048-bit key) header.d=ltts.com header.i=@ltts.com header.b=H1KQtZz6; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=btSmqQl8; arc=none smtp.client-ip=76.223.180.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ap-south-1.amazonses.com
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=i3fe3efcd4pbz7ipgssfqjhzqx347xbc; d=ltts.com; t=1714494963;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=/z6DZH45bLOkfq/gVueWFPb4M8m52qtDKhLklz3wx38=;
-	b=H1KQtZz67/faeWjiZwSpMdixZ/m5qeSJi5VuouLNeQInv2BDTMmsySN1BLKIcXzR
-	xtdDu4G1WSG9HDmKtaLrsifAo00dUYv0COtCJQPtF5JSH3H8i1wGBCnvYiVm3du8s5A
-	LOCP+FZurlCdsms4hajqj6BpTnygAm+Db9Ql9IMKvvZ/KJyF4YOpFeN8ZnpvG0YByIQ
-	53uwPWeo6RwVFBg3Dbw2T6YFMDjACKYRkvbT7ZdK4I0FAFFoepyyyWbEdITRvigM343
-	It1mRVvb1dbR9OHnddwAN4bixntbRaqFEBDpFuRMsdLy0Ye7y+IdgWtmax26mtJwbdB
-	avTEAS4f1g==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=zpkik46mrueu52d3326ufxxchortqmoc; d=amazonses.com; t=1714494963;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-	bh=/z6DZH45bLOkfq/gVueWFPb4M8m52qtDKhLklz3wx38=;
-	b=btSmqQl8DRqgVF1J8k1jhBf/sDbV71Tv9XDJlXxi3oDobNZ3h5V5HB+p5zqQ8wld
-	j75/NGskpIB0s5GdAlc56Sch367l9S+hWv4OsVYcMaDZoGQS74uLILz0UYTyuE7EtNH
-	rbH5atpe+8iU6YACHRcnTpLPBtJFKEY3oU7Z4jHU=
-From: Bhargav Raviprakash <bhargav.r@ltts.com>
-To: linux-kernel@vger.kernel.org
-Cc: bhargav.r@ltts.com, arnd@arndb.de, broonie@kernel.org, 
-	conor+dt@kernel.org, devicetree@vger.kernel.org, eblanc@baylibre.com, 
-	gregkh@linuxfoundation.org, jpanis@baylibre.com, kristo@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, lee@kernel.org, 
-	lgirdwood@gmail.com, linus.walleij@linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	m.nirmaladevi@ltts.com, nm@ti.com, robh+dt@kernel.org, 
-	vigneshr@ti.com
-Subject: [PATCH v8 10/10] arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P dts
-Date: Tue, 30 Apr 2024 16:36:03 +0000
-Message-ID: <0109018f2fdcfee6-3cc623b4-2f4e-47aa-adc3-96f071d209f8-000000@ap-south-1.amazonses.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <0109018f2f24c15e-c50bfc29-5f1d-4368-a4b8-2c9f1d398abb-000000@ap-south-1.amazonses.com>
-References: <0109018f2f24c15e-c50bfc29-5f1d-4368-a4b8-2c9f1d398abb-000000@ap-south-1.amazonses.com>
+	s=arc-20240116; t=1714530444; c=relaxed/simple;
+	bh=FRsGkPHSoydqvdyIJ0MAzb+gXp7P2C0gjeuRsN5UjrM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OQgxlgfoFxPwHUR7OlDp6g8DkSMNIfVF8cpbRVsnVMgxD0cdyUXOYchqE8sb33GabSFyYL9q4TFf8GHbJ067iKDUvAml2v3gL5YhLXKou2mw3K/LPvuoio6FIUP3kefH4oZnG9ORnktTgk1DPnQJnP+r5u0AoKXLPg7q/gzAYW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=l8sES53+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4410ro4A010509;
+	Wed, 1 May 2024 02:27:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=7fjKpIV
+	CrG16rPBfMRo3DetkYGl8dg4mfjzHivxICDc=; b=l8sES53+3JznQl8ZRRyH/mU
+	BQiTnakv3qSEZ/RU0aOiA9GrGT2eox2L8ROC/rEeCpwCeJ2dBJ9cWl0lithwkIS9
+	N5be88KxcjQHPYWu/3+AbttBUZ50sOFFlGdAY+HMtYh+j5/rff5vAwWhkONwlbBs
+	sHwuRcrt3yPCLyYvyFN+O0iOj93OPsYu4gst10ndZCWH2Ti+RgugowYT6Tf8SDrp
+	WMgI99+t5LcrNwvGZ8NyfdcR8cf9vn2Vh7WJv3Xi6BKX0j9Kd3RKadgGwuPIpOxf
+	aZE9UdiJo1wvTpEmtEVXCv6LcFqW+QhDZwKvo8Ulo7wSphDEmU0+AGFnuYDtNMQ=
+	=
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xtv1htg3e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 01 May 2024 02:27:19 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4412RIKV007727
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 1 May 2024 02:27:18 GMT
+Received: from zhonhan-gv.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 30 Apr 2024 19:27:16 -0700
+From: Zhongqiu Han <quic_zhonhan@quicinc.com>
+To: <brgl@bgdev.pl>, <warthog618@gmail.com>, <linus.walleij@linaro.org>
+CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_zhonhan@quicinc.com>
+Subject: [PATCH] gpiolib: cdev: Fix use after free in lineinfo_changed_notify
+Date: Wed, 1 May 2024 10:26:12 +0800
+Message-ID: <20240501022612.1787143-1-quic_zhonhan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -72,144 +70,153 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: 1.ap-south-1./RC/PI2M8xOxQmTMPi0M1Q8h2FX69egpT62QKSaMPIA=:AmazonSES
-X-SES-Outgoing: 2024.04.30-76.223.180.45
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 1cbCZhYTMPGdyBrm88lZGUsnNNseqoMn
+X-Proofpoint-ORIG-GUID: 1cbCZhYTMPGdyBrm88lZGUsnNNseqoMn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-01_02,2024-04-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=980 adultscore=0
+ spamscore=0 clxscore=1011 suspectscore=0 impostorscore=0 phishscore=0
+ bulkscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2405010016
 
-Add support for TPS65224 PMIC in device tree of AM62P EVM. Adds regulator
-configuration, pinmux configurations and pmic device nodes.
+The use-after-free issue occurs when userspace closes the GPIO chip device
+file (e.g., "/dev/gpiochip0") by invoking gpio_chrdev_release(), while one
+of its GPIO lines is simultaneously being released. In a stress test
+scenario, stress-ng tool starts multi stress-ng-dev threads to continuously
+open and close device file in the /dev, the use-after-free issue will occur
+with a low reproducibility.
 
-Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+Here is the typical stack when issue happened:
+
+BUG: KASAN: slab-use-after-free in lineinfo_changed_notify+0x84/0x1bc
+Read of size 8 at addr ffffff803c06e840 by task stress-ng-dev/5437
+Call trace:
+ dump_backtrace
+ show_stack
+ dump_stack_lvl
+ print_report
+ kasan_report
+ __asan_load8
+ lineinfo_changed_notify
+ notifier_call_chain
+ blocking_notifier_call_chain
+ gpiod_free_commit
+ gpiod_free
+ gpio_free
+ st54spi_gpio_dev_release
+ __fput
+ __fput_sync
+ __arm64_sys_close
+ invoke_syscall
+ el0_svc_common
+ do_el0_svc
+ el0_svc
+ el0t_64_sync_handler
+ el0t_64_sync
+Allocated by task 5425:
+ kasan_set_track
+ kasan_save_alloc_info
+ __kasan_kmalloc
+ __kmalloc
+ bitmap_zalloc
+ gpio_chrdev_open
+ chrdev_open
+ do_dentry_open
+ vfs_open
+ path_openat
+ do_filp_open
+ do_sys_openat2
+ __arm64_sys_openat
+ invoke_syscall
+ el0_svc_common
+ do_el0_svc
+ el0_svc
+ el0t_64_sync_handler
+ el0t_64_sync
+Freed by task 5425:
+ kasan_set_track
+ kasan_save_free_info
+ ____kasan_slab_free
+ __kasan_slab_free
+ slab_free_freelist_hook
+ __kmem_cache_free
+ kfree
+ bitmap_free
+ gpio_chrdev_release
+ __fput
+ __fput_sync
+ __arm64_sys_close
+ invoke_syscall
+ el0_svc_common
+ do_el0_svc
+ el0_svc
+ el0t_64_sync_handler
+ el0t_64_sync
+
+The use-after-free issue occurs as follows: watched_lines is freed by
+bitmap_free(), but the lineinfo_changed_nb notifier chain cannot be
+successfully unregistered due to waiting write rwsem when closing the
+GPIO chip device file. Additionally, one of the GPIO chip's lines is
+also in the release process and holds the notifier chain's read rwsem.
+Consequently, a race condition leads to the use-after-free of
+watched_lines.
+
+[free]
+gpio_chrdev_release()
+  --> bitmap_free(cdev->watched_lines)                  <-- freed
+  --> blocking_notifier_chain_unregister()
+    --> down_write(&nh->rwsem)                          <-- waiting rwsem
+          --> __down_write_common()
+            --> rwsem_down_write_slowpath()
+                  --> schedule_preempt_disabled()
+                    --> schedule()
+
+[use]
+st54spi_gpio_dev_release()
+  --> gpio_free()
+    --> gpiod_free()
+      --> gpiod_free_commit()
+        --> gpiod_line_state_notify()
+          --> blocking_notifier_call_chain()
+            --> down_read(&nh->rwsem);                  <-- held rwsem
+            --> notifier_call_chain()
+              --> lineinfo_changed_notify()
+                --> test_bit(xxxx, cdev->watched_lines) <-- use after free
+
+To fix this issue, call the bitmap_free() function after successfully
+unregistering the notifier chain. This prevents lineinfo_changed_notify()
+from being called, thus avoiding the use-after-free race condition.
+
+Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes in line info")
+Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
 ---
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 95 +++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
+ drivers/gpio/gpiolib-cdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-index 1773c05f7..5d8e4321b 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-@@ -112,6 +112,16 @@ vddshv_sdio: regulator-3 {
- 		bootph-all;
- 	};
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index d09c7d728365..6b3a43e3ba47 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -2799,11 +2799,11 @@ static int gpio_chrdev_release(struct inode *inode, struct file *file)
+ 	struct gpio_chardev_data *cdev = file->private_data;
+ 	struct gpio_device *gdev = cdev->gdev;
  
-+	vcc_3v3_main: regulator-4 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3_main";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vmain_pd>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -580,6 +590,12 @@ &main_uart1 {
- &mcu_pmx0 {
- 	bootph-all;
+-	bitmap_free(cdev->watched_lines);
+ 	blocking_notifier_chain_unregister(&gdev->device_notifier,
+ 					   &cdev->device_unregistered_nb);
+ 	blocking_notifier_chain_unregister(&gdev->line_state_notifier,
+ 					   &cdev->lineinfo_changed_nb);
++	bitmap_free(cdev->watched_lines);
+ 	gpio_device_put(gdev);
+ 	kfree(cdev);
  
-+	pmic_irq_pins_default: pmic-irq-default-pins {
-+		pinctrl-single,pins = <
-+			AM62PX_MCU_IOPAD(0x000, PIN_INPUT, 7) /* (B10) MCU_GPIO0_0 */
-+		>;
-+	};
-+
- 	wkup_uart0_pins_default: wkup-uart0-default-pins {
- 		pinctrl-single,pins = <
- 			AM62PX_MCU_IOPAD(0x02c, PIN_INPUT, 0)	/* (C7) WKUP_UART0_CTSn */
-@@ -589,6 +605,13 @@ AM62PX_MCU_IOPAD(0x028, PIN_OUTPUT, 0)	/* (D7) WKUP_UART0_TXD */
- 		>;
- 		bootph-all;
- 	};
-+
-+	wkup_i2c0_pins_default: wkup-i2c0-default-pins {
-+		pinctrl-single,pins = <
-+			AM62PX_MCU_IOPAD(0x04c, PIN_INPUT, 0) /* (A13) WKUP_I2C0_SCL */
-+			AM62PX_MCU_IOPAD(0x050, PIN_INPUT, 0) /* (C11) WKUP_I2C0_SDA */
-+		>;
-+	};
- };
- 
- &wkup_uart0 {
-@@ -599,6 +622,78 @@ &wkup_uart0 {
- 	bootph-all;
- };
- 
-+&wkup_i2c0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&wkup_i2c0_pins_default>;
-+	clock-frequency = <400000>;
-+
-+	tps65224: pmic@48 {
-+		compatible = "ti,tps65224-q1";
-+		reg = <0x48>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_irq_pins_default>;
-+		interrupt-parent = <&mcu_gpio0>;
-+		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+		ti,primary-pmic;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		buck12-supply = <&vcc_3v3_main>;
-+		buck3-supply = <&vcc_3v3_main>;
-+		buck4-supply = <&vcc_3v3_main>;
-+
-+		ldo1-supply = <&vcc_3v3_main>;
-+		ldo2-supply = <&vcc_3v3_main>;
-+		ldo3-supply = <&vcc1v8_sys>;
-+
-+		regulators {
-+			vcc_core: buck12 {
-+				regulator-name = "vcc_core_buck12";
-+				regulator-min-microvolt = <715000>;
-+				regulator-max-microvolt = <895000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc1v8_sys: buck3 {
-+				regulator-name = "vcc1v8_sys_buck3";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc1v1: buck4 {
-+				regulator-name = "vcc1v1_buck4";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-always-on;
-+			};
-+
-+			vdda1v8: ldo1 {
-+				regulator-name = "vdda1v8_ldo1";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			dvdd3v3: ldo2 {
-+				regulator-name = "dvdd3v3_ldo2";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc_0v85: ldo3 {
-+				regulator-name = "vcc_0v85_ldo3";
-+				regulator-min-microvolt = <850000>;
-+				regulator-max-microvolt = <850000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
- /* mcu_gpio0 and mcu_gpio_intr are reserved for mcu firmware usage */
- &mcu_gpio0 {
- 	status = "reserved";
 -- 
 2.25.1
 
