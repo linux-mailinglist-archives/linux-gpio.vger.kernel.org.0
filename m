@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-5963-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5964-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55D9C8B88A0
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2024 12:32:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A2CF8B88A6
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2024 12:33:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1B6EB22A02
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2024 10:32:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B6421C213BE
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 May 2024 10:33:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C224B53E13;
-	Wed,  1 May 2024 10:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB35F53E13;
+	Wed,  1 May 2024 10:33:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ee59RFtq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UzkbwirP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53798524BE
-	for <linux-gpio@vger.kernel.org>; Wed,  1 May 2024 10:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF1D52F7A
+	for <linux-gpio@vger.kernel.org>; Wed,  1 May 2024 10:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714559525; cv=none; b=iF0mEqqYVAPsXpAIOMYLcr8nOFDlfHdS8Q/SIBIh3VjJ0GJHb2RiH4ab7AGW600+ZyPh8khIznEFN8pDLMcaPlOXadmKBPQ680KhXyC/tkeYXpLR04pcwE7KxbS9uL6SPfFLlxqNLet1quLxQSA/753E25/Nl8MffYEhrjOFYBk=
+	t=1714559585; cv=none; b=nS96LnRa8YkNPYvX7JvBcmBlLphX+Om8JFpsBy0OiD0EULA3vQoKHTqa/vnjPZziTtiL2LEsvK7KovuKqLq0wyNW9WjM1YDWx7LiZ3N+FExQkyJBdsXF4ZE5qAp3wbKNcKG9JEZPubxwN+bMJtsOX3KM79pgFD1wv6rM4SszVz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714559525; c=relaxed/simple;
-	bh=i6mHdqNYmux6BgzNRN3h7HykTcRoNOkwzXMRaJD8KTE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=PbXxH9qutQn2pfFWxeeW73YP2TTI2LX5KCEvr9gqew3ocJcrenc2sZ0rMWZzyNVjmCrPJnko3JPhK4TtyUm/coKAVhgN1vdxqz3F1pSlIbYEiubpw2wiPbFQC98jBjt66uQ0YdfPhbc4fsRa7FLfCTuEjfq9JkcTFET5Wm95RXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ee59RFtq; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1714559585; c=relaxed/simple;
+	bh=SVspdpiLeCISKTDyl0+qzhTBD7Jwu5GLRnW2joC0j5Q=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=gWMCkioS6X/SAtWYnoDlWfm2IGBJsvbt6SmFvXFNqs2htj3U+Syv2PIqDwLadFGu13QDGxG1DZJ+SPt6bTeB5ueV2kghVecmYD5XgPRalNPtQ6UD1q8NDJ8Pt6DqI+sZjGVdWsJ7Da1SCAJwu29Vof9v3NOnUsmZEBoaK1JaUlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UzkbwirP; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714559524; x=1746095524;
+  t=1714559584; x=1746095584;
   h=date:from:to:cc:subject:message-id;
-  bh=i6mHdqNYmux6BgzNRN3h7HykTcRoNOkwzXMRaJD8KTE=;
-  b=ee59RFtq4ZCLpIJ3QlEfVGlduBkkYq7/9sDcOFd0y7SvcjOVb1E+N/JT
-   KZu7NwRQ+QxQJpzAb8aIHQDltKRx7qKikLXCQd2qYj77paUYWA7EPNOVV
-   yemOu4Qrn6Qxpbwskv3SV8PHXSqZUhBGz4MIJJ8rtu9DM2ygp++k1nP68
-   nVyOkxxF6DUZfZf5dho8KXL3GqLjopY1OzrizK7l/jJ0sZ/DwqPMQG1gK
-   rlY5+HOdBL9Mro0NgG35khsadDO6VngqhxMLGJLQZyFq0JrLn46bQLP0v
-   +wFsbt56ELbyHa0bmUIb7vWNQjNx6NtTlNVbv5jTTZTzaUgHgrhAdsvAK
-   A==;
-X-CSE-ConnectionGUID: sxgNzjcdQky/udE693kSCg==
-X-CSE-MsgGUID: AjvbGpXlTkqpZiyl1xg83w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="20900203"
+  bh=SVspdpiLeCISKTDyl0+qzhTBD7Jwu5GLRnW2joC0j5Q=;
+  b=UzkbwirPcxReAhLcRbApOdBeSbncFCS6hzuEss9ByQUYnPs0IzTrCPj8
+   ej1+FYum9Pv/lIdEqyTaiKIXKKX/jHfbSvjmQTXE1oXP3cLP2ZVxrk7KL
+   AUZIUKy+hjiEYIVP3eKnqi9mmW2yUbW+tu/ixKC6tD71Ug447Zj/yzzd0
+   XrZdn5VF/wns1izA4Y1ZeEndfvQU4WWVB9P6sUt5MuiNMlTUQ86deqEky
+   s4tbQtNYw9SCn0LeI9ISqmFTkWEESewg3R3kjRIL0gz347gLmU4j5KPFJ
+   rQT2HQjTQVv+DxDG/CkbNz5+cPzekd83gztREwBsfsiGDh4Jomb1J4/5b
+   g==;
+X-CSE-ConnectionGUID: odowqemfQh2Mru3R5jghHA==
+X-CSE-MsgGUID: 3lC6F+E6S0eruPb370x5/w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10148034"
 X-IronPort-AV: E=Sophos;i="6.07,245,1708416000"; 
-   d="scan'208";a="20900203"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 03:32:03 -0700
-X-CSE-ConnectionGUID: 74OW4SP/TH+3ypw8I/odjw==
-X-CSE-MsgGUID: SHr/HLYWSRmHb2Gs11ZhfQ==
+   d="scan'208";a="10148034"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 03:33:03 -0700
+X-CSE-ConnectionGUID: oe9p/fA1RVadtgQSmCIswA==
+X-CSE-MsgGUID: chghQApfRKKujHFFlBF5mg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,245,1708416000"; 
-   d="scan'208";a="26750529"
+   d="scan'208";a="26829719"
 Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 01 May 2024 03:32:01 -0700
+  by fmviesa010.fm.intel.com with ESMTP; 01 May 2024 03:33:02 -0700
 Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1s27Fn-0009R8-1S;
-	Wed, 01 May 2024 10:31:59 +0000
-Date: Wed, 01 May 2024 18:31:19 +0800
+	id 1s27Gl-0009Ri-2F;
+	Wed, 01 May 2024 10:32:59 +0000
+Date: Wed, 01 May 2024 18:32:26 +0800
 From: kernel test robot <lkp@intel.com>
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 077895d14a6b2fc02e8fe588f5cee6d1bcdddd3b
-Message-ID: <202405011816.ebq3OqhV-lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ dbe0ed330218a748e1dd7e10c394532d968048f9
+Message-ID: <202405011823.krXBS5Db-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -74,13 +74,13 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 077895d14a6b2fc02e8fe588f5cee6d1bcdddd3b  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: dbe0ed330218a748e1dd7e10c394532d968048f9  Merge tag 'renesas-pinctrl-for-v6.10-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into devel
 
-elapsed time: 1634m
+elapsed time: 1635m
 
-configs tested: 86
-configs skipped: 4
+configs tested: 87
+configs skipped: 3
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -106,6 +106,7 @@ i386                              allnoconfig   gcc
 i386                             allyesconfig   gcc  
 i386         buildonly-randconfig-001-20240501   clang
 i386         buildonly-randconfig-002-20240501   gcc  
+i386         buildonly-randconfig-003-20240501   clang
 i386         buildonly-randconfig-004-20240501   gcc  
 i386         buildonly-randconfig-005-20240501   gcc  
 i386         buildonly-randconfig-006-20240501   clang
