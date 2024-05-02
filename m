@@ -1,299 +1,217 @@
-Return-Path: <linux-gpio+bounces-6017-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6018-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B023D8B9EF9
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2024 18:55:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBC7B8BA0A9
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2024 20:40:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66A9528891D
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2024 16:55:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1F485B21B0B
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2024 18:40:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 328EC16D4D4;
-	Thu,  2 May 2024 16:55:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 821FE174EDF;
+	Thu,  2 May 2024 18:40:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NHzoKBIp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAHFP/NA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA2D1E894;
-	Thu,  2 May 2024 16:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35223155350;
+	Thu,  2 May 2024 18:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714668945; cv=none; b=rfKlZt4yNnpbb6T6FbzgA5ijcNfbvy0d8Obo56oVoVVpx5N1BbK/f7kTWxR3LluVqoiUTxvUTdob8POZwBFszWIuifFyCoPy2LY9oZUs4F9dqb/ijm3mtIzJ/rBexF5T/MDXX67g5nLi4rvM2vanIh6igiizD9p8en6KMPtg6PY=
+	t=1714675217; cv=none; b=sLu3e4YTKVTKkF7uwg84bJclVlmEKmH0Oqkzd9dgS/+ABR6DTMSCmpcyivv1lE5CZUEk7gz6XrdJXGKA3O0RCGzi/U2cLtTwP44+tRHgnqnkD2sYuz46NW2P+e6aPvt98Y21AMAxyI2rI+gQ+zJKBxnKaz2goHGM/niGp7wq1jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714668945; c=relaxed/simple;
-	bh=NTiH9xtmjaaUSzcq1AeIlKIisEgq8Mn91h3eXZilv7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PP+4FWUinjq3j2NOKW5OR5WJd12uAGICIi+/Hsr7VJpQO4eqx+IHpXV7oRhnLYSH6qfmb+E+BWEXeTpNrb/XS8ddoeSpu5KRNRjBqJBAeYQ3uGEBFGbqMpTgrs8X0p5f3VH/qDEPvccx21yyXvy9wR8rW7ZVCn1SlnANH4uPaJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NHzoKBIp; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 442FK5ke030693;
-	Thu, 2 May 2024 16:55:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=9o2BA+pquRrnaYiKJ2EhY+0yNfSzSbd9cIh0wfWqN9s=; b=NH
-	zoKBIpJGfATl5cU+Sk9oQD4rEJ//FA9OCEhOd8Y8MrnqDLuhwK46ySI7TcPjoC/T
-	/P+0898lmMgpkabRaEUG6FIefHeYblxKrliI/u6TfBL79SoRqTibPf/mnG5w0UkG
-	1JPyumOW6QqwLRBzVJ+yA+J2BOzU/YsaIdDqDP8S9LEv17OTZad4SF+Z/8PlH9cr
-	HwvhTpIvLhkX62hc5rf9rl46u5eILVykUDqjUsSgQvyGAvBIHq3GY1oOFtYRtJBy
-	mHPNAWBTco6ezhrXlUeG2sHdxIxqcvkpvjhHTocQzHk0QOWMR9RF4MdXs8tmxkPx
-	MAAR9bqJ/REOTJF5dBDQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xurt72n34-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 May 2024 16:55:35 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 442GtYaB011441
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 2 May 2024 16:55:34 GMT
-Received: from [10.253.39.74] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 2 May 2024
- 09:55:32 -0700
-Message-ID: <0acc171b-31d2-46e7-9156-d7d3432b1b22@quicinc.com>
-Date: Fri, 3 May 2024 00:55:29 +0800
+	s=arc-20240116; t=1714675217; c=relaxed/simple;
+	bh=W5wFylu4znY7p5AjANG4/Vgp7FEQmDmVli7qKcbQo0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n9tq39OE0upbwtoGw74p1zc7+Cl6+PEhFENCIzwpubbjv4dBYzVTtyeWGYhh2jTbrC7QILVodI1u8QLyGK2Ah7GyNrykUuOvtLucrp7Tt+WyTu3O/0xcNlj1VnCtx7O7tSczMe0lzRN3goJjhAv1Hb/7y/Wk67g5HYhHODfhGL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAHFP/NA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9C06C113CC;
+	Thu,  2 May 2024 18:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714675216;
+	bh=W5wFylu4znY7p5AjANG4/Vgp7FEQmDmVli7qKcbQo0w=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:From;
+	b=cAHFP/NAPrl6DEg1/PnJaQHHzpc25KBPSl0vd1n4bja55GlysooyOy8Xwj3g5aF1K
+	 jEIkwC/c6x6Gw0Pqtu2cEhTfpa7TC4H4Zw1XZQFaR1ZtZpiRgG5nOxx3PP2DW0KUPZ
+	 Dx5UugTDy5Ntkm2RcI53D0/5A7vHNK4MdZRDogb43iTohT2jll08PRIus1IbhAysxN
+	 7aaXaZFQnNl08iTAaeD2GE41y9Ofy7TN7DRqAkeS/bvKj22wFCoSUld7QJj0cxgCMZ
+	 8huqKspTP8GZHrY23BLRCIUsaHzDLJm9IFHMsSXPfjhtMk6Q2AuA48nz123A/CEHh1
+	 hz5X4CdzvrUBw==
+Date: Thu, 2 May 2024 20:40:05 +0200
+From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, arm@kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-rtc@vger.kernel.org,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v8 2/9] platform: cznic: Add preliminary support for
+ Turris Omnia MCU
+Message-ID: <20240502184005.fsdbwrbzmv5gshxh@kandell>
+References: <20240430115111.3453-1-kabel@kernel.org>
+ <20240430115111.3453-3-kabel@kernel.org>
+ <CAHp75VcgfvyZ9rcNev9CpQEN3CkUVozEkv+ycaQggPbE4tx+1Q@mail.gmail.com>
+ <20240430160507.45f1f098@dellmb>
+ <ZjELmaD3aQEuEa5K@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpiolib: cdev: Fix use after free in
- lineinfo_changed_notify
-To: Kent Gibson <warthog618@gmail.com>
-CC: <brgl@bgdev.pl>, <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_zhonhan@quicinc.com>
-References: <20240501022612.1787143-1-quic_zhonhan@quicinc.com>
- <20240502015122.GA15967@rigel>
-Content-Language: en-US
-From: Zhongqiu Han <quic_zhonhan@quicinc.com>
-In-Reply-To: <20240502015122.GA15967@rigel>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9LM3uz8yI3dRjx6VPy0W5ZP3WzJcuw6e
-X-Proofpoint-ORIG-GUID: 9LM3uz8yI3dRjx6VPy0W5ZP3WzJcuw6e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-02_08,2024-05-02_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- suspectscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- phishscore=0 spamscore=0 bulkscore=0 malwarescore=0 impostorscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2405020111
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZjELmaD3aQEuEa5K@smile.fi.intel.com>
 
-On 5/2/2024 9:51 AM, Kent Gibson wrote:
-> On Wed, May 01, 2024 at 10:26:12AM +0800, Zhongqiu Han wrote:
->> The use-after-free issue occurs when userspace closes the GPIO chip device
->> file (e.g., "/dev/gpiochip0") by invoking gpio_chrdev_release(), while one
->> of its GPIO lines is simultaneously being released. In a stress test
->> scenario, stress-ng tool starts multi stress-ng-dev threads to continuously
->> open and close device file in the /dev, the use-after-free issue will occur
->> with a low reproducibility.
+On Tue, Apr 30, 2024 at 06:17:45PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 30, 2024 at 04:05:07PM +0200, Marek Behún wrote:
+> > On Tue, 30 Apr 2024 15:53:51 +0300
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > On Tue, Apr 30, 2024 at 2:51 PM Marek Behún <kabel@kernel.org> wrote:
 > 
-> This could be clearer.  Use-after-free of what?  We don't find out it is
-> the watched_lines bitmap until much later...
+> ...
 > 
-
-Hi Kent,
-Thanks a lot for the review, I will take care of this on v2 and plan to
-verify it as follows:
-
-The use-after-free issue occurs as follows: when the GPIO chip device
-file is being closed by invoking gpio_chrdev_release(), watched_lines is
-freed by bitmap_free(), but the unregistration of lineinfo_changed_nb
-notifier chain failed due to waiting write rwsem. Additionally, one of
-the GPIO chip's lines is also in the release process and holds the
-notifier chain's read rwsem. Consequently, a race condition leads to the
-use-after-free of watched_lines.
-
->>
->> Here is the typical stack when issue happened:
->>
+> > > > +static int omnia_get_version_hash(struct omnia_mcu *mcu, bool bootloader,
+> > > > +                                 u8 version[static OMNIA_FW_VERSION_HEX_LEN])
+> > > 
+> > > Interesting format of the last parameter. Does it make any difference
+> > > to the compiler if you use u8 *version?
+> > 
+> > The compiler will warn if an array with not enough space is passed as
+> > argument.
 > 
-> This stack trace is excessive [1].
+> Really?
+
+Indeed:
+
+  extern void a(char *x);
+
+  static void b(char x[static 10]) {
+      a(x);
+  }
+
+  void c(void) {
+      char x[5] = "abcd";
+      b(x);
+  }
+
+says:
+  test.c: In function ‘c’:
+  test.c:9:9: warning: ‘b’ accessing 10 bytes in a region of size 5 [-Wstringop-overflow=]
+      9 |         b(x);
+        |         ^~~~
+  test.c:9:9: note: referencing argument 1 of type ‘char[10]’
+  test.c:3:13: note: in a call to function ‘b’
+      3 | static void b(char x[static 10]) {
+        |
+
+...
+
+> > > > +               dev_err(dev, "Cannot read MCU %s firmware version: %d\n", type,
+> > > > +                       err);  
+> > > 
+> > > One  line?
+> > 
+> > I'd like to keep this driver to 80 columns.
 > 
-Acknowledged. I will drop it.
-
->> BUG: KASAN: slab-use-after-free in lineinfo_changed_notify+0x84/0x1bc
->> Read of size 8 at addr ffffff803c06e840 by task stress-ng-dev/5437
->> Call trace:
->>   dump_backtrace
->>   show_stack
->>   dump_stack_lvl
->>   print_report
->>   kasan_report
->>   __asan_load8
->>   lineinfo_changed_notify
->>   notifier_call_chain
->>   blocking_notifier_call_chain
->>   gpiod_free_commit
->>   gpiod_free
->>   gpio_free
->>   st54spi_gpio_dev_release
->>   __fput
->>   __fput_sync
->>   __arm64_sys_close
->>   invoke_syscall
->>   el0_svc_common
->>   do_el0_svc
->>   el0_svc
->>   el0t_64_sync_handler
->>   el0t_64_sync
->> Allocated by task 5425:
->>   kasan_set_track
->>   kasan_save_alloc_info
->>   __kasan_kmalloc
->>   __kmalloc
->>   bitmap_zalloc
->>   gpio_chrdev_open
->>   chrdev_open
->>   do_dentry_open
->>   vfs_open
->>   path_openat
->>   do_filp_open
->>   do_sys_openat2
->>   __arm64_sys_openat
->>   invoke_syscall
->>   el0_svc_common
->>   do_el0_svc
->>   el0_svc
->>   el0t_64_sync_handler
->>   el0t_64_sync
->> Freed by task 5425:
->>   kasan_set_track
->>   kasan_save_free_info
->>   ____kasan_slab_free
->>   __kasan_slab_free
->>   slab_free_freelist_hook
->>   __kmem_cache_free
->>   kfree
->>   bitmap_free
->>   gpio_chrdev_release
->>   __fput
->>   __fput_sync
->>   __arm64_sys_close
->>   invoke_syscall
->>   el0_svc_common
->>   do_el0_svc
->>   el0_svc
->>   el0t_64_sync_handler
->>   el0t_64_sync
->>
->> The use-after-free issue occurs as follows: watched_lines is freed by
->> bitmap_free(), but the lineinfo_changed_nb notifier chain cannot be
->> successfully unregistered due to waiting write rwsem when closing the
->> GPIO chip device file. Additionally, one of the GPIO chip's lines is
->> also in the release process and holds the notifier chain's read rwsem.
->> Consequently, a race condition leads to the use-after-free of
->> watched_lines.
->>
+> Then better to have a logical split then?
 > 
-> Drop the stack trace above and rework this paragraph into the opening
-> paragraph.
+> 			dev_err(dev, "Cannot read MCU %s firmware version: %d\n",
+> 				type, err);
+
+OK
+
+> > > > +               omnia_info_missing_feature(dev, "feature reading");  
+> > > 
+> > > Tautology. Read the final message. I believe you wanted to pass just
+> > > "reading" here.
+> > 
+> > No, I actually wanted it to print
+> >   Your board's MCU firmware does not support the feature reading
+> >   feature.
+> > as in the feature "feature reading" is not supported.
+> > I guess I could change it to
+> >   Your board's MCU firmware does not support the feature reading.
+> > but that would complicate the code: either I would need to add
+> > " feature" suffix to all the features[].name, or duplicate the
+> > info string from the omnia_info_missing_feature() function.
 > 
-
-Yes, I will drop the stack above and rework this paragraph into
-opening paragraph. Like the first comments reply.
-
-
-> Might be good to note the side effects of the use-after-free.
-> AFAICT it may only result in an event being generated for userspace where
-> it shouldn't.  But, as the chrdev is being closed, userspace wont have the
-> chance to read that event anyway, so no appreciable difference?
+> From point of a mere user (as I am towards this driver) I consider
+> the tautology confusing.
 > 
-
-Yes, there is no NULL access issue because there doesn't set
-watched_lines = NULL; after bitmap_free, I also think it can only cause
-the unexpected event is being generated. I will take care of it on v2.
-
-
->> [free]
->> gpio_chrdev_release()
->>    --> bitmap_free(cdev->watched_lines)                  <-- freed
->>    --> blocking_notifier_chain_unregister()
->>      --> down_write(&nh->rwsem)                          <-- waiting rwsem
->>            --> __down_write_common()
->>              --> rwsem_down_write_slowpath()
->>                    --> schedule_preempt_disabled()
->>                      --> schedule()
->>
->> [use]
->> st54spi_gpio_dev_release()
->>    --> gpio_free()
->>      --> gpiod_free()
->>        --> gpiod_free_commit()
->>          --> gpiod_line_state_notify()
->>            --> blocking_notifier_call_chain()
->>              --> down_read(&nh->rwsem);                  <-- held rwsem
->>              --> notifier_call_chain()
->>                --> lineinfo_changed_notify()
->>                  --> test_bit(xxxx, cdev->watched_lines) <-- use after free
->>
->> To fix this issue, call the bitmap_free() function after successfully
->  > "successfully" is confusing here as there is no unsuccessfully.
+> 	...the 'reading' feature
 > 
+> may be a good compromise.
 
-Acknowledged. I plan to verify it as follows:
+I have rewritten it to use another dev_info:
+  dev_info(dev,
+           "Your board's MCU firmware does not support feature reading.\n");
 
-To fix this issue, call the bitmap_free() function after
-blocking_notifier_chain_unregister.
-
->> unregistering the notifier chain. This prevents lineinfo_changed_notify()
->> from being called, thus avoiding the use-after-free race condition.
 > 
-> The final sentence doesn't add anything - the reorder fixing the problem
-> is clear enough.
+> ...
 > 
-
-Acknowledged. I will remove it.
-
->>
->> Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes in line info")
->> Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
->> ---
->>   drivers/gpio/gpiolib-cdev.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
->> index d09c7d728365..6b3a43e3ba47 100644
->> --- a/drivers/gpio/gpiolib-cdev.c
->> +++ b/drivers/gpio/gpiolib-cdev.c
->> @@ -2799,11 +2799,11 @@ static int gpio_chrdev_release(struct inode *inode, struct file *file)
->>   	struct gpio_chardev_data *cdev = file->private_data;
->>   	struct gpio_device *gdev = cdev->gdev;
->>
->> -	bitmap_free(cdev->watched_lines);
->>   	blocking_notifier_chain_unregister(&gdev->device_notifier,
->>   					   &cdev->device_unregistered_nb);
->>   	blocking_notifier_chain_unregister(&gdev->line_state_notifier,
->>   					   &cdev->lineinfo_changed_nb);
->> +	bitmap_free(cdev->watched_lines);
->>   	gpio_device_put(gdev);
->>   	kfree(cdev);
->>
+> > > > +       memcpy(mcu->board_first_mac, &reply[9], ETH_ALEN);  
+> > > 
+> > > There is an API ether_copy_addr() or so, don't remember by heart.
+> > > You also need an include for ETH_ALEN definition.
+> > 
+> > Doc for ether_addr_copy says:
+> >   Please note: dst & src must both be aligned to u16.
+> > since the code does:
+> >   u16 *a = (u16 *)dst;
+> >   const u16 *b = (const u16 *)src;
+> > 
+> >   a[0] = b[0];
+> >   a[1] = b[1];
+> >   a[2] = b[2]
+> > 
+> > Since I am copying from &reply[9], which is not u16-aligned, this won't
+> > work.
 > 
-> No problem with the code change - makes total sense.
+> It would work on architectures that support misaligned accesses, but in general
+> you are right. Perhaps a comment on top to avoid "cleanup" patches like this?
+
+
+OK
+ 
+> > > > +enum omnia_ctl_byte_e {
+> > > > +       CTL_LIGHT_RST           = BIT(0),
+> > > > +       CTL_HARD_RST            = BIT(1),
+> > > > +       /* BIT(2) is currently reserved */
+> > > > +       CTL_USB30_PWRON         = BIT(3),
+> > > > +       CTL_USB31_PWRON         = BIT(4),
+> > > > +       CTL_ENABLE_4V5          = BIT(5),
+> > > > +       CTL_BUTTON_MODE         = BIT(6),
+> > > > +       CTL_BOOTLOADER          = BIT(7)  
+> > > 
+> > > Keep trailing comma as it might be extended (theoretically). And you
+> > > do the similar in other enums anyway.
+> > 
+> > ctl_byt is 8-bit, so this enum really can't be extended.
 > 
-Thanks for the review.
-
-> Cheers,
-> Kent.
+> I understand that (even before writing the previous reply).
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces-in-commit-messages
+> > In fact I need
+> > to drop the last comma from omnia_ext_sts_dword_e and omnia_int_e.
+> 
+> Who prevents from having in a new firmware let's say
+> 
+>  BIT(31) | BIT(1)
+> 
+> as a new value?
+> 
+> From Linux perspective these are not terminating lines.
 
--- 
-Thx and BRs,
-Zhongqiu Han
-
+OK
 
