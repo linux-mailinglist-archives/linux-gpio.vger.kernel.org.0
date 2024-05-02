@@ -1,144 +1,121 @@
-Return-Path: <linux-gpio+bounces-6005-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6006-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 698728B957C
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2024 09:46:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F7308B95EF
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2024 09:58:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 99820B215EE
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2024 07:46:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18411281C9C
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 May 2024 07:58:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F05123741;
-	Thu,  2 May 2024 07:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SR2mCp3s"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7279653E27;
+	Thu,  2 May 2024 07:56:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5E5225AE;
-	Thu,  2 May 2024 07:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39327524B8;
+	Thu,  2 May 2024 07:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714636002; cv=none; b=qSIgTowmFLNUy+EECZSJZhTIBPAGy2G/m3enHv3XQMGVdY+svF5hfOnx7jhkQ+zutja8vXiVO7FumiYUsA1aBy4Xu7clKo99dZu0DX3hViYnWnR64GeQWmplyI41Ipk4YWBzmdW4x6A60pwofMEKXZymtVbb54tAUlsHEmJFoDs=
+	t=1714636615; cv=none; b=evm/wruWXwR95OROGV4Kr9riTNR/DX0LQBs7Q+t0kvCVAYFBpn7D5Z6mZuePPozXWYvlTW9aKra+H2/ndmgcEnQvhYzfk4ZKWkltfRIOX3qQBu9xRV1e8H3xGD+TLeSQyRJbB5Jf6NhEmhsOWexrndqCZHzx66l4QvddG1nMv40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714636002; c=relaxed/simple;
-	bh=51OpcgVVRLpo30BsMQIvjTqnAxBAwx6Vvn/ZEENsG0A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KpWL+ukCedUHUTwhf+QtrOjTOLnmDFOXVq9qNpTI0owjc2x4zlcz4pIgFhF2VUg0QqpqKN7u9GuFZOc1OtBluDPc6W44Ud2FHPGP7x/vVqBGXZzos05Nwg8cuVdfc9c6peesdY+dtjzrjMUB/H466kFPWgxJmHuKqAR6BxnWQdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SR2mCp3s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68726C113CC;
-	Thu,  2 May 2024 07:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714636001;
-	bh=51OpcgVVRLpo30BsMQIvjTqnAxBAwx6Vvn/ZEENsG0A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SR2mCp3sCShgNeqyqia0ej5cXOBh5f1/unNiRm+Y8gLXd/SV/HcrnRsdL/wPanEau
-	 TG5sF3JddlIvTst8MOCY3+zVEY0u33sB7tF2ZM0s55tMYKz2GzNm+rKbBmlJ0zaECK
-	 /b61gxM+oj5uRh5g+eOgRGznSS8yLzRVQSj4f/LS1nqEpKvCMujxxaeS6BXU5Lz/5Q
-	 uU1us66L0QkAcQ6WCWfQlMq4QvKS9XattzWqoMTFpUzommjio/RndVx1hjS/BLZr/3
-	 pSTAvqUdXwlILYiA8hztNuv6qkj29EA8oavsS+ldAIYzyhwjFjBglREQKArZkdqnK9
-	 cBzOrTMLeV8VA==
-Message-ID: <9a960401-f41f-4902-bcbd-8f30f318ba98@kernel.org>
-Date: Thu, 2 May 2024 09:46:34 +0200
+	s=arc-20240116; t=1714636615; c=relaxed/simple;
+	bh=ypJWL7x/X6X6oULQbgFITZTwqrdEjdeGT/HY2pn/rb0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PR0YXVuT1qEUXLhSvjkmiZgz/PMO0xqrKJB8h2pLtNqTTLpZST7GyjhLV1NuT/cpkX35nQ5Ahb8kbk4ZAUKCIes2kv4nbhhOwthg0nGcQlgD2NJ10N/+Gc5EYM2K2ZUvHZ+C0CUNOntinh048WlzOEwKPjEo0eP5bSmO0MVp6OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-de6074a464aso3571135276.0;
+        Thu, 02 May 2024 00:56:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714636612; x=1715241412;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=izYgKy1POKCUq3cIGK/Mh2mBGgIcZ6Da6ueKIohPZtg=;
+        b=hxX1TvBzX6xKRcW5qn1b9Mvb0J8g6fR8lvyPd59+IsWmP35ZHRqvHXx8ud9Hr6n4eT
+         xLTjEPlXQdy/nh+RFs/G56Mx9von0g99ZsfjGA4rxll/iavCZnaoBfSj4yeMIc/jkXnR
+         a3i1tUKgscMBo/RTWD9zmGaIKOTACeBUBK/XfnMy44p4qbFPLt9kKBa/MKw6T/FkfdGM
+         MUmt35cIENYdEBBOadRry/pPSf45ps6UNCNMYokxuDrtbfwirQSpfD2oS77Weceibmcd
+         o8aKOAySpdUGIXny0hqqLWbks68XBnUrwlvKgoEp3bBkBvHopJF3u28olTRM9XYrZzG7
+         TmZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXBCPGUU+RHNEH0QkUdfjW+HAZ8kkoQiyrUEM9JQc94deO4//UOalCOps0FoQcjiFgISpvwi+8wAdB0kpps0APtsedC9Aeif5SRy8R43wngGvT288RbINS/lgpHGgSXKgL/JaeUdXIpdgs9I3vCtnU8sOMLupVZWgVfM333rFNXF2iDfK2PPGdbEx+g
+X-Gm-Message-State: AOJu0YyWMiTn5TqwypQ7cJ8nPlVjBV4ZZWbAl8F0oY8ejWVUHseTDANv
+	Pp/sdmsD/IkSORyrLzAYMea37k00p8X46dPEIjEbzJKszWk4SlvPu4cNQT8c
+X-Google-Smtp-Source: AGHT+IFoyhiad9yaMA8qlGFA6eE7zUQTP6bhNtz3wSNg7UElhdASCMH3Mk+wymtUdF8+ypzkP197zA==
+X-Received: by 2002:a25:d347:0:b0:de6:37e:e103 with SMTP id e68-20020a25d347000000b00de6037ee103mr5695750ybf.7.1714636611690;
+        Thu, 02 May 2024 00:56:51 -0700 (PDT)
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
+        by smtp.gmail.com with ESMTPSA id g21-20020a25b115000000b00de8a9ba531bsm86009ybj.60.2024.05.02.00.56.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 May 2024 00:56:51 -0700 (PDT)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-61af74a010aso75863757b3.0;
+        Thu, 02 May 2024 00:56:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWNWekZ7+DkGVhBSItrnj6AKENd21/vaHe3uhkIwe1wfKSCPaH6WEzcYjr7xTd/2O4FqumGSxe/qFfOYtCo/5g+AupTZqPHoAXtQlaWkCeeauESnFjJAjMv06WnYgor5FXCgpq7xwxfUzOkFXBWrlkkniJa085xfTXr10Ju/1j3qZ590mz8O6aMptnD
+X-Received: by 2002:a25:d041:0:b0:dc7:5c37:5420 with SMTP id
+ h62-20020a25d041000000b00dc75c375420mr5690048ybg.60.1714636611197; Thu, 02
+ May 2024 00:56:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] pinctrl: samsung: support a bus clock
-To: Tudor Ambarus <tudor.ambarus@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
- Peter Griffin <peter.griffin@linaro.org>
-Cc: Will McVicker <willmcvicker@google.com>,
- Sam Protsenko <semen.protsenko@linaro.org>, kernel-team@android.com,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240426-samsung-pinctrl-busclock-v3-0-adb8664b8a7e@linaro.org>
- <20240426-samsung-pinctrl-busclock-v3-2-adb8664b8a7e@linaro.org>
- <ea6f17d7-49bf-4a1e-ba3b-757e29221590@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <ea6f17d7-49bf-4a1e-ba3b-757e29221590@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <bb6b85722d80d665779e3043d1499c4fc38f0ff3.1714562004.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <bb6b85722d80d665779e3043d1499c4fc38f0ff3.1714562004.git.mirq-linux@rere.qmqm.pl>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 2 May 2024 09:56:39 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUy+e1vQRBUfo2paBJi4pro-tKf9hOe3YaddcB=OtRfJw@mail.gmail.com>
+Message-ID: <CAMuHMdUy+e1vQRBUfo2paBJi4pro-tKf9hOe3YaddcB=OtRfJw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas/sh73a0: use rdev_get_drvdata()
+To: =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 02/05/2024 09:41, Tudor Ambarus wrote:
->>  
->> @@ -223,6 +268,13 @@ static void exynos_irq_release_resources(struct irq_data *irqd)
->>  	shift = irqd->hwirq * bank_type->fld_width[PINCFG_TYPE_FUNC];
->>  	mask = (1 << bank_type->fld_width[PINCFG_TYPE_FUNC]) - 1;
->>  
->> +	if (clk_enable(bank->drvdata->pclk)) {
->> +		dev_err(bank->gpio_chip.parent,
->> +			"unable to enable clock for deconfiguring pin %s-%lu\n",
->> +			bank->name, irqd->hwirq);
->> +		return;
-> 
-> but here we just print an error. I guess that for consistency reasons it
-> would be good to follow up with a patch and change the return types of
-> these methods and return the error too when the clock enable fails.
+Hi Michal,
 
-That's a release, so usually void callback. The true issue is that we
-expect release to always succeed, I think.
+On Wed, May 1, 2024 at 1:16=E2=80=AFPM Micha=C5=82 Miros=C5=82aw <mirq-linu=
+x@rere.qmqm.pl> wrote:
+> Replace `reg_data` access with the official wrapper. The field is going
+> away soon.
 
-This points to issue with this patchset: looks like some patchwork all
-around the places having register accesses. But how do you even expect
-interrupts and pins to work if entire pinctrl block is clock gated?
+Thanks for your patch!
 
-Best regards,
-Krzysztof
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202404301218.URkWO6dj-lkp@i=
+ntel.com/
 
+I am not sure these tags are needed, as the issue is not present in
+any tree yet?
+
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Do you want me to pick this up (for v6.11), or do you want to queue
+this with the other patches from the series that removes reg_data?
+Please let me know.
+In case of the latter:
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
