@@ -1,103 +1,157 @@
-Return-Path: <linux-gpio+bounces-6043-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6044-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B4EC8BA91A
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 10:44:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 522FA8BA98E
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 11:13:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C643FB215BF
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 08:43:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E1AD281D8E
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 09:13:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D521C14A601;
-	Fri,  3 May 2024 08:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 496E414F11A;
+	Fri,  3 May 2024 09:13:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a/NOYwCr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X14Yt8iO"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B3514A4D8
-	for <linux-gpio@vger.kernel.org>; Fri,  3 May 2024 08:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6B9146D4B;
+	Fri,  3 May 2024 09:13:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714725797; cv=none; b=ZX+23SPcZhdkUNnjVI8sqQphdGLrzBdNHKFJ20J8LUAvFf59j6lrlMBLJa12Ff3N38Q7sSnxaGTrxG5uHnMao2iSBFoc1/Xfc2kUXx47FtoG8WyFGPPIeClXQ/8IUZLEugo9qNcBEHc94Uc8lAQ4O/M+wIZO8NNUbxbGMeEMwiw=
+	t=1714727595; cv=none; b=ZPcGbs5qqrSDumqzPc0HatnGC2f3xUxotCm/oulyIxN2iZxnpR/rJR5f2L8uwq3NI1lZvHr/4YphirWr80wlSe1n22tD0qzy3d3Tcz4MCpN2poXRq+urm6UBFd5q400KqXAz8qOan3JuMw6whjbNH9JwpRc4ESIM7FRqR0n8jN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714725797; c=relaxed/simple;
-	bh=mOL5Jgsv8bIIOkznU+eimVgosfZXeFAhc5I+WFQZS5Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2ICDgG5S5zonmMIn+3wKw76HlReHre2AaaiDMO6V+SSQ9ghTacfg4D00bdE0nZoMDwXvaLJjZUqDnMTd2vC5TQJooagaqHIb4ZjkkTq/LqM3nFtSCs7cWZHopeQXmLeqqrxJnpPkkyiSvBVJkJ0Y7BjznAzXS3t7cHrad8/BL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a/NOYwCr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A759C116B1;
-	Fri,  3 May 2024 08:43:14 +0000 (UTC)
+	s=arc-20240116; t=1714727595; c=relaxed/simple;
+	bh=3LaUaAv7CyMgsmPwhMzjeWmmLQOKPPAU1rg5+fLg16Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Akz5aPQWVFLeH3C0yX62tyAlATK181UBEji1DFiEQZzk/G2xXonEZPKNg2C1ONVq+HNZjflc3HCE+/D7Zm2rEMC7msuKuF3ZcYLMGjCC0KiSIdyFaYHsdz7qlBHrw1KMtHx5EBpy+oxhMuuUBVdEbmmMheRGWIVRGXO/im43hZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X14Yt8iO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C6B6C116B1;
+	Fri,  3 May 2024 09:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714725797;
-	bh=mOL5Jgsv8bIIOkznU+eimVgosfZXeFAhc5I+WFQZS5Y=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:From;
-	b=a/NOYwCraBHXNsPXaLjeJgEezTK2EOJIuTxym3IFI1pL/ZdmUfbGeksC33jq9bC+4
-	 4UDbjIme8UUwxy72Yh0I2T4VyyGhnYN3eDRx3RgoRTUb4VUyj4Y1DwcM4OVFvJ7dpB
-	 b4z1axPwEDpf1Ofe+JTts0HhPU5d+QTEAccUIVoNSDmevodoYtqcUSrPBbubiVUnWR
-	 X9F3a1vCVYbWWzhrh99nUT47+hXQCv80IrlU06d0GjifWoDGkUMaYFuZlPd2yKoJyU
-	 Us0xu5kNu6E/PfqT03rOsXPrT0WAczOXB+ikTnDTU2otu++ongGhQ/ZR5aVKtFYjVG
-	 O9jaoPlhGW/YA==
-Date: Fri, 3 May 2024 10:43:06 +0200
-From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, arm@kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v8 3/9] platform: cznic: turris-omnia-mcu: Add support
- for MCU connected GPIOs
-Message-ID: <20240503084306.klwzn67drsidq6l6@kandell>
-References: <20240430115111.3453-1-kabel@kernel.org>
- <20240430115111.3453-4-kabel@kernel.org>
- <CAHp75VdV_JmbS1pM11Pf8S5vWU8X1FrKpw3aAtTHK0tsLua5fg@mail.gmail.com>
+	s=k20201202; t=1714727594;
+	bh=3LaUaAv7CyMgsmPwhMzjeWmmLQOKPPAU1rg5+fLg16Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=X14Yt8iOniJkilrmKoZkCD67RtnmMu1YNUsyONG1snPV1Xl2iOjt5G/S9DDBkqhDE
+	 +oLAX5nuJ2lbJuEGOQrMsxSVlWclgAXvyouhYBOqERsC8trTUQrVNf2Hp1pyRA5NbP
+	 15cwS8bOq57cZfaShsVHT9DoPy8EWK1REvCTtkV41JybZBF1PYKJJ9TT0OgM8G5fr2
+	 octBJP4J3rV0uBoP6x6WaIolQcXWFYOXiR5g8gIwfGeBPg96F5L+vOLKWa2nBQN8/4
+	 C0gM8lCFunDpmlEbheXfKT1e30qNKHZ1F68YMQeI1J4qwo0pFUtSREJ7PzjUer6gEJ
+	 xRS1eqReFgfZA==
+Message-ID: <c39eab66-4e78-4f24-bcaf-003161b38ed0@kernel.org>
+Date: Fri, 3 May 2024 11:13:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdV_JmbS1pM11Pf8S5vWU8X1FrKpw3aAtTHK0tsLua5fg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] pinctrl: samsung: support a bus clock
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
+ Peter Griffin <peter.griffin@linaro.org>
+Cc: Will McVicker <willmcvicker@google.com>,
+ Sam Protsenko <semen.protsenko@linaro.org>, kernel-team@android.com,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240426-samsung-pinctrl-busclock-v3-0-adb8664b8a7e@linaro.org>
+ <20240426-samsung-pinctrl-busclock-v3-2-adb8664b8a7e@linaro.org>
+ <ea6f17d7-49bf-4a1e-ba3b-757e29221590@linaro.org>
+ <9a960401-f41f-4902-bcbd-8f30f318ba98@kernel.org>
+ <c4c73732595b067369a6c8d71508d54358962552.camel@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <c4c73732595b067369a6c8d71508d54358962552.camel@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 03, 2024 at 07:05:34AM +0300, Andy Shevchenko wrote:
-... 
-> > +       err = omnia_cmd_read(client, cmd, &reply, (__fls(bits) >> 3) + 1);
+On 02/05/2024 12:41, André Draszik wrote:
+> On Thu, 2024-05-02 at 09:46 +0200, Krzysztof Kozlowski wrote:
+>> On 02/05/2024 09:41, Tudor Ambarus wrote:
+>>>>  
+>>>> @@ -223,6 +268,13 @@ static void exynos_irq_release_resources(struct irq_data *irqd)
+>>>>  	shift = irqd->hwirq * bank_type->fld_width[PINCFG_TYPE_FUNC];
+>>>>  	mask = (1 << bank_type->fld_width[PINCFG_TYPE_FUNC]) - 1;
+>>>>  
+>>>> +	if (clk_enable(bank->drvdata->pclk)) {
+>>>> +		dev_err(bank->gpio_chip.parent,
+>>>> +			"unable to enable clock for deconfiguring pin %s-%lu\n",
+>>>> +			bank->name, irqd->hwirq);
+>>>> +		return;
+>>>
+>>> but here we just print an error. I guess that for consistency reasons it
+>>> would be good to follow up with a patch and change the return types of
+>>> these methods and return the error too when the clock enable fails.
+>>
+>> That's a release, so usually void callback. The true issue is that we
+>> expect release to always succeed, I think.
+>>
+>> This points to issue with this patchset: looks like some patchwork all
+>> around the places having register accesses. But how do you even expect
+>> interrupts and pins to work if entire pinctrl block is clock gated?
 > 
-> Perhaps a helper for this (__fls(x) >> 3 + (y)) ? It seems it's used
-> in a few places.
+> I was initially thinking the same, but the clock seems to be required for
+> register access only, interrupts are still being received and triggered
+> with pclk turned off as per my testing.
 
-It is used 3 times:
-  rlen = ((__fls(rising) >> 3) << 1) + 1;
-  flen = ((__fls(falling) >> 3) << 1) + 2;
-  err = omnia_cmd_read(client, cmd, &reply, (__fls(bits) >> 3) + 1);
+Probably we could simplify this all and keep the clock enabled always,
+when device is not suspended. Toggling clock on/off for every pin change
+is also an overhead. Anyway, I merged the patches for now, because it
+addresses real problem and seems like one of reasonable solutions.
 
-The last one is not compatible with the first two (because of the "<< 1").
+Best regards,
+Krzysztof
 
-The first two instances are contained within a function that is dedicated
-to "computing needed reply length".
-
-I could probably do something like
-
-  static inline unsigned int
-  omnia_compute_reply_len(uin32_t mask, bool interleaved, unsigned int offset)
-  {
-          return ((__fls(mask) >> 3) << interleaved) + 1 + offset;
-  }
-
-Then the 3 instances would become
-
-  rlen = omnia_compute_reply_len(rising, true, 0);
-  flen = omnia_compute_reply_len(falling, true, 1);
-  err = omnia_cmd_read(client, cmd, &reply,
-                       omnia_compute_reply_len(bits, false, 0));
-
-What do you think?
 
