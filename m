@@ -1,113 +1,140 @@
-Return-Path: <linux-gpio+bounces-6037-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6038-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2A7D8BA892
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 10:18:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60C178BA8A8
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 10:25:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 77D441F22998
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 08:18:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C72E2831BA
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 08:25:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA44A149DF6;
-	Fri,  3 May 2024 08:18:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0960148FF8;
+	Fri,  3 May 2024 08:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cT/UZhzh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xlNS2NDp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DBD149C5C;
-	Fri,  3 May 2024 08:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24564148840
+	for <linux-gpio@vger.kernel.org>; Fri,  3 May 2024 08:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714724311; cv=none; b=frLJ4f9KopfuV1h4vE/nggxTI2X3+pN0Ezm1dBIDedr60c4Y4a14cNnRywCtCgm+Pk3juLhUf7kXcGA2zprD8dF6HFltMUt/+y+j8wd0H4jEZKoY/TlB+8qSujbsx2NY+vGj6uBLFXMGoxQaPHpOLgmDEedTGevUE/DjQwe30+g=
+	t=1714724722; cv=none; b=g/1QFedoQzzwNKckFwda+AL30rscyoGiZbseAzaxeSZk16kx06wL3ZKzDtjKGrY0VsnXeysLWTWH8kaGKMDNezc40PyRMFfw7FRs4KM3UhLytSybgnFFnzvillsw9bQbrsm4UBdhgAbzWwsvm6hjo2lI9J/eD2jwjmMu//b3mzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714724311; c=relaxed/simple;
-	bh=Ar7uJX7Y9sXsbDOmIJMUCHFevTN4ih2GP+FjawYHoKU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UAQD4LHwccQUBUPd2e0OerMkzVm9MRNMGvl/jAKo2eZ82D8THYBvuXZ5qliatq+MNpNtWLrr0AsmSNN4+wqykfX3GGBuB72CWnvLF2V7YJhuxmk1BjtdSfKHYqS7UBlGj0vkxw8LvWjPVlUe9Ir+yH0FzYTBk6cq7utGguNeqIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cT/UZhzh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE542C116B1;
-	Fri,  3 May 2024 08:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714724310;
-	bh=Ar7uJX7Y9sXsbDOmIJMUCHFevTN4ih2GP+FjawYHoKU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cT/UZhzheEo8BNxry12VAnxMma0HNlH+1RB/bHS5QYg5IOSD4mj9+VCZlPjHcsW02
-	 OrZ+ZycUrCzOTOvkD8dkC16GR/JbSBgaOd9JDrErk+YAWC2fz+xjWftfCN0N7BghHk
-	 xEsJTrz9UZKrT/srpvSTzey8HFeOXP4hkOeA/z+KA0xCFWvNmxJpXEnuCfbD+XG2sv
-	 zoVA2H6qKUvNZOdEaShKbDPliat7oTAhGXrnef4/3S3ajxDc0z+gkUC2vEixxsA4Kv
-	 G0swc9lUWOKI956K6ZSLvtZuKLh5A6B8bJH4zsZ5LMruxVuMpUr3vhdriOpaX3po+l
-	 I0Tog+m54kBCQ==
-Date: Fri, 3 May 2024 09:18:24 +0100
-From: Lee Jones <lee@kernel.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Alex Bee <knaerzche@gmail.com>
-Cc: Chris Zhong <zyw@rock-chips.com>, Zhang Qing <zhangqing@rock-chips.com>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] Add RK816 PMIC support
-Message-ID: <20240503081824.GI1227636@google.com>
-References: <20240416161237.2500037-1-knaerzche@gmail.com>
- <171472425816.1279735.1509285489643125462.b4-ty@kernel.org>
+	s=arc-20240116; t=1714724722; c=relaxed/simple;
+	bh=cVP7B3sF120rjkDhDq/OGXc+zfN6c9JvSfwlIiJpnnE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZCACnjy9TKqP59xizs5tqi1LE8r6euSQcri6zhGQ1sisu1ldOCchiJXZvo/VpcSDvMXNOUTF7KmPmKHZ5ZRDScbYAX9J4F9LhFbsInk53OJRhIdeTAYtQx+FJ5vC8GUyC3V4OjtmV6jB9MwdAIildWrBMQ2CP80omiCINqbKRSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xlNS2NDp; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-de604ca3cfcso4962285276.3
+        for <linux-gpio@vger.kernel.org>; Fri, 03 May 2024 01:25:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714724720; x=1715329520; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bchtsFZa231WDwhCK43w8WElucPGcRMAZVNIRVgrxXM=;
+        b=xlNS2NDpDYmkSx3KWC3GG/+VkkrMCcKsjTpmGoC3Dc43cLgC8nrahSUP0IyizRBZCO
+         8NTdJt4oMcMYyqhO6vfSrXW2wgYECtQ1R82I3HCFvRwMGO/IL1k45dxHAiakWpoZAS26
+         Hd/chf/tmrpsVKM0ItUnHFDGMLGiPpvDQiZDIYrAdgVamwMuAThsWdOLDKk4sXwFP8+F
+         fq8SXbXO2ZKFdB55WxsvUex4R6do6DhoJ9raTLrKlF4srJcbAVkuKAmBvva4TrPqsZp1
+         noKNhcncfm390iCY8HRA6LKhHMhJ5cXEK2VZ78UzCRrH4tDAyixajOcngDV091NAUfIp
+         C5yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714724720; x=1715329520;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bchtsFZa231WDwhCK43w8WElucPGcRMAZVNIRVgrxXM=;
+        b=PnwN5r4knjk16mC0o6uK4OqLR0Z+MhUybRFcPtAcbSuDXZ6YNWBgnD/OpUcwH+EcM3
+         hDbJuk4qvTzWv5KxdtQhHIjz0zCcc/6MOxpfqFwCR/jebMwMxK5I3ah5/NJ55MHi8+w5
+         Ytk+Mnu2aDBRDdQjDk23k5BKuhHwK26N89tHdMlSfAnNQaFFDbpvaQkzAoB/yYdcBE3y
+         ZoCKuetI2My57UzWYzxV66LqoGyxCIRJEemlVE0QSpl6/f3y13CI1VJSB4rDjXq3a1wl
+         5IQcawU9RoEuVl2IsGiNJS081Fgd5mbTOAd4leNZw4hcQ3ap2W1SFlhq4zmumU/4UAFy
+         idIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIiM3lRfdOGrJ1C9JII6Z4HdrjRIsxnWuOssb31DqMJbnR6yGXbdCULCucDgqL0T3R2nRtDLiGXeMbENFru/TygEF0pAGqwHYolg==
+X-Gm-Message-State: AOJu0YxUd34Hkw4xKqhB1l37OGHOrkdTkL7goxnyfnltUnMubk8W0jtU
+	AY/yk2fb1s2IY+HkzFtuXv/bDYCpz9Qj86IJ5fZEL/7feBWqfShdoALCRf56v63pUj4oRxEA00X
+	62dboyscfAvTKiABCcZdcbHfPVFU0+h01WDmKbQ==
+X-Google-Smtp-Source: AGHT+IGOmgFRI3dij98vcr3a8JChYiD6KDG7uUhnFKFgBJEsL3f05wJE75Q8PObsl35X7cBGrSk31Q6zOpRlRE2IV2w=
+X-Received: by 2002:a05:6902:1343:b0:dc6:e4f8:7e22 with SMTP id
+ g3-20020a056902134300b00dc6e4f87e22mr2195573ybu.62.1714724720155; Fri, 03 May
+ 2024 01:25:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <171472425816.1279735.1509285489643125462.b4-ty@kernel.org>
+References: <20240424185039.1707812-1-opendmb@gmail.com> <20240424185039.1707812-3-opendmb@gmail.com>
+In-Reply-To: <20240424185039.1707812-3-opendmb@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 3 May 2024 10:25:08 +0200
+Message-ID: <CACRpkda4v6Nu8V3MVamDpfs4qnc89e8Vd8fSyaNsqJQ40GQqZg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] gpio: of: support gpio-ranges for multiple gpiochip devices
+To: Doug Berger <opendmb@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Phil Elwell <phil@raspberrypi.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 03 May 2024, Lee Jones wrote:
+Hi Dough,
 
-> On Tue, 16 Apr 2024 18:12:32 +0200, Alex Bee wrote:
-> > This series aims to add support for Rockchip RK816 PMIC series. As per
-> > datasheet it's targeted for RK3126/RK3128 (RK816-1), RK1108 (RK816-2) and
-> > PX3-SE (RK816-3) but might be used for other SoCs as well. The MFD consists
-> > of an integrated RTC, a GPIO controller, two 32k clock outputs, a power
-> > key, 3 buck- and 6 ldo regulators, 3 regulator-switches, and charger with
-> > integrated fuel gauge. Charger and fuel gauge are not part of this series.
-> > Two of the switches (otg/boost) are part of the binding, but not of
-> > the driver. They must only ever be enabled if no battery charging is
-> > happening, but it will be enabled automatically if a battery is attached
-> > and an external power source is connected. Thus that needs some
-> > incorporation of a yet to be added charger driver.
-> > Integration in the existing rk8xx-infrastructure was pretty straightforward
-> > and only needed very little tweaking. In order to not further bloat the
-> > driver(s) too much with additional `#define`s I tried to re-use existing
-> > ones wherever possible.
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [1/5] dt-bindings: mfd: Add rk816 binding
->       commit: 06dfb41b1cf8d64327e5c4391e165f466506c4f0
-> [2/5] mfd: rk8xx: Add RK816 support
->       commit: e9006f81faf8e438ea83626db578610e49f31576
-> [3/5] pinctrl: rk805: Add rk816 pinctrl support
->       commit: 1bd97d64b5f0c01d03ecc9473ccfcf180dbbf54a
-> [4/5] regulator: rk808: Support apply_bit for rk808_set_suspend_voltage_range
->       commit: 9f4e899c286b5127e2443d50e37ee2112efbfa2c
-> [5/5] regulator: rk808: Add RK816 support
->       commit: 5eb068da74a0b443fb99a89d9e5062691649c470
+thanks for your patch!
 
-Submitted for build testing.
+I'm a bit confused here:
 
-If successful, I'll follow-up with a PR.
+On Wed, Apr 24, 2024 at 8:51=E2=80=AFPM Doug Berger <opendmb@gmail.com> wro=
+te:
 
--- 
-Lee Jones [李琼斯]
+
+> +               /* Ignore ranges outside of this GPIO chip */
+> +               if (pinspec.args[0] >=3D (chip->offset + chip->ngpio))
+> +                       continue;
+> +               if (pinspec.args[0] + pinspec.args[2] <=3D chip->offset)
+> +                       continue;
+
+Here pinspec.args[0] and [2] comes directly from the device tree.
+
+The documentation in Documentation/devicetree/bindings/gpio/gpio.txt
+says:
+
+> 2.2) Ordinary (numerical) GPIO ranges
+> -------------------------------------
+>
+> It is useful to represent which GPIOs correspond to which pins on which p=
+in
+> controllers. The gpio-ranges property described below represents this wit=
+h
+> a discrete set of ranges mapping pins from the pin controller local numbe=
+r space
+> to pins in the GPIO controller local number space.
+>
+> The format is: <[pin controller phandle], [GPIO controller offset],
+>                 [pin controller offset], [number of pins]>;
+>
+> The GPIO controller offset pertains to the GPIO controller node containin=
+g the
+> range definition.
+
+So I do not understand how pinspec[0] and [2] can ever be compared
+to something involving chip->offset which is a Linux-specific offset.
+
+It rather looks like you are trying to accomodate the Linux numberspace
+in the ranges, which it was explicitly designed to avoid.
+
+I just don't get it.
+
+So NACK until I understand what is going on here.
+
+Yours,
+Linus Walleij
 
