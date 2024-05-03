@@ -1,113 +1,137 @@
-Return-Path: <linux-gpio+bounces-6046-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6047-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A55F68BA9D2
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 11:23:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C69398BA9E5
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 11:30:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D7DC286103
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 09:23:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C5961F2248E
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 09:30:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E61FB1509B5;
-	Fri,  3 May 2024 09:20:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 338DB14F9CE;
+	Fri,  3 May 2024 09:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxjknMmh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="grBC8Hap"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4FF14F13D;
-	Fri,  3 May 2024 09:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7575C14F11A
+	for <linux-gpio@vger.kernel.org>; Fri,  3 May 2024 09:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714728028; cv=none; b=VJUujmS6MEkfhsD2udSs5NEnCRSXMQv+RJlJWZHgm9LAeMTd6LK9ZyBcLI5nvYFozq1xWFZ23vR4YyTBoBYofwHCdrf7nEKKuY2lETAnW8T+5sZIYil5MHtbXuEXJWIPXCSVjwvk86jdcy2L9VRYO/w84x2EXj91Zw6gq1WJCZA=
+	t=1714728612; cv=none; b=r9m5m95T64YNcqwW43/OCmHTd4qadfeO+MXT2S5iIqRKQ5RImlCRrgOP8G4h9PFpXt11uFeWPWP12xHzKPEMfkW6gkk6djRhG9pjL3p5YSwOWSYy8pjxl3WhLCe2vtiucW/xwuTl5JUgiqAGZTs90mbEIdYCYuo+af7bRxc1B8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714728028; c=relaxed/simple;
-	bh=fy6FxSu0cqTQvWDYYzdNQibPVZfADLl8MbYVCyUvbWc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QeNMAyHPXG+A7B1O5Rax5QdvE8O61vjEhcXOvpLENECZOpy1vfrKiM8ABK1aeA9AEIsKC6LhZ/55FW7NCmKaD8t6urkZBt/yP72YJYj33ds6dEItqvd/w2eMYjv5gnCknKRymsOCx22l8SpYlVuOPlj7wuirwLrfQYmJyVHiiiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxjknMmh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44B3EC116B1;
-	Fri,  3 May 2024 09:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714728028;
-	bh=fy6FxSu0cqTQvWDYYzdNQibPVZfADLl8MbYVCyUvbWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NxjknMmh5vUI+1ocScunvSswB4eol9lkhUhyulij3YNu0byBPWZp339PixNbydQ9q
-	 V7Ujm4OI7JX+OfXQAvRR+nlevC1H/h/Z+YwVeeAo9V+zx85kVmIKt3sQNt5rO5Pzfs
-	 E44nEsjU37MEETJ5W8AFIY5t/oa8Hk0eG+Z0rDowi50ZlOkTpgmGuPfSALc9R+bKMh
-	 24VKquRSjNNj3j4tzCmvVSWFg1T0NhsMVjig3rksNuXTUvEwS0VukELyFx2nv9JHc4
-	 NqbiwlDQsIgkY4bqZFhZmu9R1c+8lg6H3JhxQQZLtsutJ2NO/qJxBYjPJmX4nRP5ve
-	 lrnETyKMq2CKw==
-Date: Fri, 3 May 2024 10:20:21 +0100
-From: Lee Jones <lee@kernel.org>
-To: linux-kernel@vger.kernel.org, Bhargav Raviprakash <bhargav.r@ltts.com>
-Cc: m.nirmaladevi@ltts.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	jpanis@baylibre.com, devicetree@vger.kernel.org, arnd@arndb.de,
-	gregkh@linuxfoundation.org, lgirdwood@gmail.com, broonie@kernel.org,
-	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
-	kristo@kernel.org, eblanc@baylibre.com
-Subject: Re: (subset) [PATCH v8 00/10] Add support for TI TPS65224 PMIC
-Message-ID: <20240503092021.GM1227636@google.com>
-References: <0109018f2f24c15e-c50bfc29-5f1d-4368-a4b8-2c9f1d398abb-000000@ap-south-1.amazonses.com>
- <171472796178.1311350.4406575677999610125.b4-ty@kernel.org>
+	s=arc-20240116; t=1714728612; c=relaxed/simple;
+	bh=ZNb2/oSuDvsekJbrUvzVBARQvr1M+l1FF1dsoV5we18=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=iZSQeVqU/CttLz+A9LgB8XubDbM7wV+A8t9YIMn9bYRVIGyOmuSZma/vm7NjzSOVzLhaKui6XHBJI0yoxOLfZX+pgiBnvmeH3xsieUZmW7GQjjgzp/oZkywanejZVUphNHP8kTFIBbh0EQ3sbPNme6if6pyZe/ZdzlGIwqK9IyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=grBC8Hap; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41b79451128so52894795e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 03 May 2024 02:30:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714728608; x=1715333408; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KULRcTjxfat7nflWft5bz9NukEzEddiZ2lggi8GzZ0E=;
+        b=grBC8HapctbhvTbub7vtfg58qy5UOfQxyjgAjDMr32V+DGEd/69rY110u70yzZlY6a
+         YmTPKt6IV/MsENRwslhCcbDgSBGDe4k4WwzTlYIt+UO878ZX9DsXIkIBMxVOx1zoJcMY
+         FgyP0o6IbUbVXaV/zQE9StkIZtrzmXk2HHCRqlXL4sUGRIgGwR6+/lv89I0zWRDMwEYT
+         G/IBabHtyjy3TnI+0zk87noYm/ZWO0Zw3J2clS2bjmnsg/8KU+9cPmQN6GJ1G5t4k8al
+         m5T7fR3TvFhtVSnfpYMK9+YV2RvBLszqst1ruyBDcymP28MMtXB2/tAKCpwzjRoyeK5+
+         Xd6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714728608; x=1715333408;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KULRcTjxfat7nflWft5bz9NukEzEddiZ2lggi8GzZ0E=;
+        b=SDeMdkbMGyR1LnCF4Im0iwnWqGI0LJJdKRjTgReMbMVq+SHkJI8V5S/ZUpHkgFWdCY
+         8adc5AsLBq9mfdsk1hg/exBf+/ybg4tdFl8cqcJk+J9mXqyoSi7FqokpKfh1+Mvboe4A
+         fbtNH1iRkmKMFqayjupKQ5BksHVCQy4EmqPNesBdNL0oGRwXnJucdAesO9Qnz913RiWp
+         wpIuc8WrpMKvQyHXP7dkeMes8sF0L6H3SV/FNhlcnS6X+XA5JfNvHv1F/Zi+Rz6hC4sk
+         5tyS/HSbYS+ag0LmobYXo3M5NhxvZI2HGR245kNU3lcwG5qtgCI5E70Dlq2jCSdQEgiI
+         rpqA==
+X-Forwarded-Encrypted: i=1; AJvYcCXeXm/syPIQrQt2JshpnlQMDZIdkK8SEnm9X8nMpl0Dz/H2lBykKCUqRbSxcnJv2XDUKX63zRw3+qe9cBhcTalOIbWSRI7QWiPmnA==
+X-Gm-Message-State: AOJu0YzBIkcM387E4H1o9TzIFePAGqT0PCXFp/EoTnLQjxGBE+rbxIor
+	PajZdPV0ePgeTloo84p0bvuxxOMXUZiYDpXjCFSPGfFesoIi4xa9kBKY7MjBEb0=
+X-Google-Smtp-Source: AGHT+IFMjfL7kc5atSQVs5RqNDVKOWw0871oLlfuW3vxv/8yUSCVntr1NwQgjxnL3bhXh2tYDPwLzw==
+X-Received: by 2002:a05:600c:a01:b0:41b:13a3:6183 with SMTP id z1-20020a05600c0a0100b0041b13a36183mr1736973wmp.24.1714728607700;
+        Fri, 03 May 2024 02:30:07 -0700 (PDT)
+Received: from [10.1.1.109] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id bi9-20020a05600c3d8900b00418db9e4228sm4988571wmb.29.2024.05.03.02.30.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 May 2024 02:30:07 -0700 (PDT)
+Message-ID: <0106b6f58ce19752c2c685d128e5a480103ee91c.camel@linaro.org>
+Subject: Re: [PATCH v3 2/2] pinctrl: samsung: support a bus clock
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Tudor Ambarus
+ <tudor.ambarus@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Peter Griffin
+ <peter.griffin@linaro.org>
+Cc: Will McVicker <willmcvicker@google.com>, Sam Protsenko
+	 <semen.protsenko@linaro.org>, kernel-team@android.com, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 03 May 2024 10:30:06 +0100
+In-Reply-To: <c39eab66-4e78-4f24-bcaf-003161b38ed0@kernel.org>
+References: <20240426-samsung-pinctrl-busclock-v3-0-adb8664b8a7e@linaro.org>
+	 <20240426-samsung-pinctrl-busclock-v3-2-adb8664b8a7e@linaro.org>
+	 <ea6f17d7-49bf-4a1e-ba3b-757e29221590@linaro.org>
+	 <9a960401-f41f-4902-bcbd-8f30f318ba98@kernel.org>
+	 <c4c73732595b067369a6c8d71508d54358962552.camel@linaro.org>
+	 <c39eab66-4e78-4f24-bcaf-003161b38ed0@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3-1 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <171472796178.1311350.4406575677999610125.b4-ty@kernel.org>
 
-On Fri, 03 May 2024, Lee Jones wrote:
+Hi Krzysztof,
 
-> On Tue, 30 Apr 2024 13:14:49 +0000, Bhargav Raviprakash wrote:
-> > This series modifies the existing TPS6594 drivers to add support for the
-> > TPS65224 PMIC device that is a derivative of TPS6594. TPS65224 has a
-> > similar register map to TPS6594 with a few differences. SPI, I2C, ESM,
-> > PFSM, Regulators and GPIO features overlap between the two devices.
-> > 
-> > TPS65224 is a Power Management IC (PMIC) which provides regulators and
-> > other features like GPIOs, Watchdog, Error Signal Monitor (ESM) and
-> > Pre-configurable Finite State Machine (PFSM). The SoC and the PMIC can
-> > communicate through the I2C or SPI interfaces. The PMIC TPS65224
-> > additionally has a 12-bit ADC.
-> > Data Sheet for TPS65224: https://www.ti.com/product/TPS65224-Q1
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [01/10] mfd: tps6594: Add register definitions for TI TPS65224 PMIC
->         commit: 84ccfaee29fe46e305244a69c4471e83629ad5d1
-> [02/10] mfd: tps6594: use volatile_table instead of volatile_reg
->         commit: 436250638b6d8e6cf8dceed82cdbbfc90ce3a775
-> [03/10] dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
->         commit: 91fbd800649f62bcc6a002ae9e0c0b6b5bb3f0d0
-> [04/10] mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
->         commit: f8e5fc60e6666b46ce113b6b6de221ebba88668f
-> [05/10] mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
->         commit: 02716864fd5a53e057dcecdb36c807be6494120c
-> [06/10] mfd: tps6594-core: Add TI TPS65224 PMIC core
->         commit: 9d855b8144e6016357eecdd9b3fe7cf8c61a1de3
-> [07/10] misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
->         commit: 91020aecc8136174429d41a6dae3de7cf39f8000
-> [08/10] regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators
->         commit: 00c826525fbae0230f6c3e9879e56d50267deb42
-> [09/10] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
->         commit: 2088297159178ffc7c695fa34a7a88707371927d
+On Fri, 2024-05-03 at 11:13 +0200, Krzysztof Kozlowski wrote:
+> On 02/05/2024 12:41, Andr=C3=A9 Draszik wrote:
+> > I was initially thinking the same, but the clock seems to be required f=
+or
+> > register access only, interrupts are still being received and triggered
+> > with pclk turned off as per my testing.
+>=20
+> Probably we could simplify this all and keep the clock enabled always,
+> when device is not suspended. Toggling clock on/off for every pin change
+> is also an overhead. Anyway, I merged the patches for now, because it
+> addresses real problem and seems like one of reasonable solutions.
 
-Submitted for build testing.
+I had contemplated a global enable of the clock on driver instantiation
+as well, but in the end for me the reasons why I chose the fine-grained
+approach here instead were:
 
-If it passes, I'll send out a PR for other maintainers to pull from.
+* Since the clock is only needed for register access, it seems only
+  natural to enable it during register accesses only. (The same would
+  happen if we had support for automatic clock gating in Linux).
+* If we think about external GPIO interrupts, they are likely to occur
+  very rarely (think button press by operator on some external keys or
+  I2C interrupts), it seems a waste to have the clock running all the
+  time.
+* drivers/i2c/busses/i2c-exynos5.c and drivers/soc/samsung/exynos-usi.c
+  also kinda do it this way. Bus clocks are only enabled when needed
+  (e.g. during transfer) (granted, the IPs (IP clocks) are also fully
+  enabled/disabled in those drivers when idle, and there is no such
+  thing here)
 
--- 
-Lee Jones [李琼斯]
+
+Cheers,
+Andre'
+
 
