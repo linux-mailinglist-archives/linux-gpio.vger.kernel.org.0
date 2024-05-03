@@ -1,144 +1,237 @@
-Return-Path: <linux-gpio+bounces-6058-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6059-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10C7D8BADC7
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 15:35:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0158A8BAEAF
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 16:21:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0103EB222E3
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 13:35:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB3C81F24569
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 14:21:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDE3C153BCA;
-	Fri,  3 May 2024 13:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7772D154C15;
+	Fri,  3 May 2024 14:21:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8pxkAeR"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Nl9ST+k1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46D115358C;
-	Fri,  3 May 2024 13:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52952153BF3;
+	Fri,  3 May 2024 14:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714743297; cv=none; b=QdDI7ui1SE8JkdrvIddevXD/wh+CrcgphpEO3lca11r4Ex6/r+Dwt1ouKzeUTxTL3UXxXYzX+RRiyPnHCkkg+O3Gc+5D0t0MBfwyiUKcp/dulvnoTKj0+47P85km0GALALDGRJGHM5L3J1ln5QWKWKCDf2AncaIlJueFSugTcww=
+	t=1714746079; cv=none; b=sI160RSMmZrH6DV4N4pbcSR6sNHD6jV1g3MVjhaJnH5dsOW8Zx0aF0N5shdZJU3zsp9zB0bMC+HxS9YJpnWTOoCB2IA6B/Z7lZBA/JTXuf7Gl6BjM2Y+oukC1n2IPF5w54/lM5R2KQo1+mzBGZ3CvzVqIUml/8hXUVXmrenM/Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714743297; c=relaxed/simple;
-	bh=AGslWhle4NIaFIY0mVoJpE21AAJwhRwa4mBQbv6ZRFM=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=ZbJR8BoAB0xNMdbXKEZA52H3HLQaEMQIy4+bExftRviAXcSzqF4uD9hM6QPNWrbhO6u0eFBnnh0Vr7+XUb2UscEUOd4rTGiaB8H+ugWSpVJIAiRb9kmRX1KjI3i6PtRQtDZ7IRKFlNkToL8v8T9vZ6HfqLqT+VJNGQmXgq5tuGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8pxkAeR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD5EC2BBFC;
-	Fri,  3 May 2024 13:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714743297;
-	bh=AGslWhle4NIaFIY0mVoJpE21AAJwhRwa4mBQbv6ZRFM=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=k8pxkAeRmvIoVFkp6t0iXIq3Gk4/1zk2zsNC6IImZ8848Oj6h/sv3hrHQbujGE8F9
-	 Th53FltcJuJmWM2gttqffpQyn0Npyg8ipLNkJYhLH+ngxHqDK3G1LS+F2YNbjnur/a
-	 R/IHfBkmS4ZD0JOoIfMgS+WDOyoynrWM0NOQaiPZlSb3RgE2ljKQ9+zpVOgoblwOg7
-	 AMSE0fgJ+qkieWzWp+Dv9EdL1WrF4lrrEqD70VPZHcX4aYP5DYV9BCv4w+Seaa6lsj
-	 J083SIH0G8vlrWMiVw/r9Cj97UYB9BVmfr3uAj+Q6fBKCffkmIgaQWIMwcnGC6hsgZ
-	 OY1Fxq7Iuc7jg==
-Date: Fri, 03 May 2024 08:34:55 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1714746079; c=relaxed/simple;
+	bh=RlPqLAnreRucam7vP7wW4xXszOq8/j39ateAy9eIb5s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bH6nJ5Jl7PcDnBdvJnIxVFThUOFhVI6rCWRmXrm5uPy8VcV/Q6VVMXNb0+M5RL2wlRKt40pab90ehIWN7M9irHVbZWge1sEOLE+z0h+3e9bmZBxTra40k9wSqSWplSCysDP4Kl4w58pJKvo0dnJwCWhI941RH7/Kvkj3mCINTHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Nl9ST+k1; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3AED6E0005;
+	Fri,  3 May 2024 14:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1714746069;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PTqZ54gj8ig1Fedp9Waojut71etolv05n2qYK+FFydU=;
+	b=Nl9ST+k1xWyBaGbqqkpWbBra4iDps9JT33bXsHJP3ig/58P0koDDbDG9GF9zgGmrIKv9rX
+	YCSuvvlGwEc07hcY8gk+IHELyo+MppOToCYM85b4j0ZWo4LhukVsDwUCrpv3Fb7KH01SSu
+	zYCmcrGZhl5zjVfbT56EBtCIgAcLvR05DSBXAATqAu1eiHXe4PPMBOZCv52YoDFuM+B4Dd
+	2WI4bYNmNzK5B39Y9rIexSg/HzyrNzx6qs1xeYBQqhlIBEQGZoNc6i3fAcpNLMlsWNfGgg
+	ZfHiMl5DV1y0sR0NCVQ7qnAdKpqGBY/n3Is5aZ9mMoJH/sQFFL87HGUn6U0iug==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: [PATCH v2 00/11] Add Mobileye EyeQ system controller support (clk,
+ reset, pinctrl)
+Date: Fri, 03 May 2024 16:20:45 +0200
+Message-Id: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Alex Soo <yuklin.soo@starfivetech.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Drew Fustini <drew@beagleboard.org>, 
- linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
- Jianlong Huang <jianlong.huang@starfivetech.com>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAL3yNGYC/0XMSwqDMBSF4a3IHTcl5lFtR91HcWCSm3pBTUkkV
+ MS9N5VCh//h8G2QMBImuFUbRMyUKMwlxKkCO/TzExm50iC4UFzxlk1mXFkYDWt032qvrXcoodx
+ fET29D+rRlR4oLSGuh5zr7/pDav5Hcs04k1Kjul5cY1DeTQjLSPPZhgm6fd8/Vog/16IAAAA=
+To: Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Hal Feng <hal.feng@starfivetech.com>, 
- Emil Renner Berthing <kernel@esmil.dk>
-In-Reply-To: <20240503111436.113089-2-yuklin.soo@starfivetech.com>
-References: <20240503111436.113089-1-yuklin.soo@starfivetech.com>
- <20240503111436.113089-2-yuklin.soo@starfivetech.com>
-Message-Id: <171474329596.655929.15885006298482703153.robh@kernel.org>
-Subject: Re: [RFC PATCH v3 1/7] dt-bindings: pinctrl: starfive: Add JH8100
- pinctrl
+ Conor Dooley <conor+dt@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: theo.lebrun@bootlin.com
 
+Hello,
 
-On Fri, 03 May 2024 19:14:30 +0800, Alex Soo wrote:
-> Add documentation and header file for JH8100 pinctrl driver.
-> 
-> Signed-off-by: Alex Soo <yuklin.soo@starfivetech.com>
-> ---
->  .../pinctrl/starfive,jh8100-aon-pinctrl.yaml  | 260 ++++++++++++++++++
->  .../starfive,jh8100-sys-east-pinctrl.yaml     | 222 +++++++++++++++
->  .../starfive,jh8100-sys-gmac-pinctrl.yaml     | 162 +++++++++++
->  .../starfive,jh8100-sys-west-pinctrl.yaml     | 219 +++++++++++++++
->  .../pinctrl/starfive,jh8100-pinctrl.h         |  13 +
->  5 files changed, 876 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml
->  create mode 100644 include/dt-bindings/pinctrl/starfive,jh8100-pinctrl.h
-> 
+This builds on previous EyeQ5 system-controller revisions[0], supporting
+EyeQ5, EyeQ6L and EyeQ6H. We expose a few OLB system-controller
+features here:
+ - Clocks: some read-only PLLs derived from main crystal and some
+   divider clocks based on PLLs.
+ - Resets.
+ - Pin controller, only on EyeQ5 (rest will use generic pinctrl-single).
 
-My bot found errors running 'make dt_binding_check' on your patch:
+EyeQ6H is special in that it has seven instances of this
+system-controller. Those are spread around and cannot be seen as a
+single device, hence are exposed as seven DT nodes and seven
+compatibles.
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml:109:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
-./Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml:96:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
-./Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml:99:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
-./Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml:136:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
+This revision differs from previous in that it exposes all devices as a
+single DT node. Driver-wise, a MFD registers multiple cells for each
+device. Each driver is still in isolation from one another, each in
+their respective subsystem.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-gmac'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-gmac'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-west'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-west'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-east'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-sys-pinctrl-east'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-aon-pinctrl'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml: properties:compatible: [{'items': [{'const': 'starfive,jh8100-aon-pinctrl'}, {'const': 'syscon'}, {'const': 'simple-mfd'}]}] is not of type 'object', 'boolean'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml: ignoring, error in schema: properties: compatible
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml: ignoring, error in schema: properties: compatible
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml: ignoring, error in schema: properties: compatible
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml: ignoring, error in schema: properties: compatible
-Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.example.dtb: /example-0/soc/pinctrl@123e0000: failed to match any schema with compatible: ['starfive,jh8100-sys-pinctrl-west', 'syscon', 'simple-mfd']
-Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.example.dtb: /example-0/soc/pinctrl@12770000: failed to match any schema with compatible: ['starfive,jh8100-sys-pinctrl-gmac', 'syscon', 'simple-mfd']
-Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.example.dtb: /example-0/soc/pinctrl@122d0000: failed to match any schema with compatible: ['starfive,jh8100-sys-pinctrl-east', 'syscon', 'simple-mfd']
-Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.example.dtb: /example-0/soc/pinctrl@1f300000: failed to match any schema with compatible: ['starfive,jh8100-aon-pinctrl', 'syscon', 'simple-mfd']
+This has been requested during previous reviews and took time to
+implement; I'd be happy to get some feedback on this aspect.
 
-doc reference errors (make refcheckdocs):
+Patches are targeting MIPS, clk, reset, pinctrl and MFD:
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240503111436.113089-2-yuklin.soo@starfivetech.com
+MIPS:
+ - dt-bindings: clock: mobileye,eyeq5-clk: drop bindings
+ - dt-bindings: clock: mobileye,eyeq5-reset: drop bindings
+ - dt-bindings: soc: mobileye: add EyeQ OLB system controller
+ - MIPS: mobileye: eyeq5: add OLB system-controller node
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+   Start by dropping already accepted dt-bindings that don't match
+   current approach of single node for entire OLB (and no subnodes).
+   Then add single dt-bindings that cover clk/reset/pinctrl features.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+   Squash devicetree commits together into one.
+   Adapted to having a single devicetree node without subnodes.
 
-pip3 install dtschema --upgrade
+MFD:
+ - driver core: platform: Introduce platform_device_add_with_name()
+ - mfd: Add cell device name
+ - mfd: olb: Add support for Mobileye OLB system-controller
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+   There are seven instances of OLB on EyeQ6H. That means many clk/reset
+   instances. Without naming devices properly it becomes a mess because
+   integer IDs are not explicit. Add feature to name MFD sub-devices.
+
+   Then add OLB MFD platform driver; a really simple driver. Most its
+   content is iomem resources and MFD cells.
+
+clk:
+ - clk: divider: Introduce CLK_DIVIDER_EVEN_INTEGERS flag
+ - clk: eyeq: add driver
+
+reset:
+ - reset: eyeq: add platform driver
+
+pinctrl:
+ - pinctrl: eyeq5: add platform driver
+
+Have a nice day,
+Théo
+
+[0]: https://lore.kernel.org/lkml/20240301-mbly-clk-v9-0-cbf06eb88708@bootlin.com/
+
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+Changes in v2:
+- dt-bindings:
+  - Drop mobileye,eyeq5-clk and mobileye,eyeq5-reset bindings.
+  - Update OLB bindings to handle clk/reset/pinctrl from OLB node.
+- MFD:
+  - Add core driver and MFD patches to allow setting sub-devices names
+    from MFD cell.
+  - Add MFD OLB driver.
+- clk:
+  - Change type of eqc_pll->reg64 from u32 to unsigned int.
+  - Use resource indexes rather than names for iomem resources.
+  - Put early PLLs into a separate match data table. Also, have store
+    number of late clocks in early match data to properly alloc cells.
+  - Pre-acquire all divclk resources first, then register them.
+    This simplifies code.
+  - Extract PLLs and divclks init to two separate functions.
+  - Avoid variable declarations in loop bodies.
+  - Do not register match data table to platform driver. It gets probed
+    as MFD sub-device matching on driver name. Match data table is
+    matched against parent OF node compatible.
+  - Fix ugly memory corruption bug when clk count == 1.
+- reset:
+  - EQR_EYEQ5_SARCR and EQR_EYEQ6H_SARCR did not use offset 0x0: do
+    minus four to all their offsets and reduce resource sizes.
+  - Remove resource names. Reset i uses iomem resource index i.
+  - Simplify xlate: have two implementations for of_reset_n_cells==1 and
+    of_reset_n_cells==2. Both call the same helper internal function.
+  - Do not register match data table to platform driver. It gets probed
+    as MFD sub-device matching on driver name. Match data table is
+    matched against parent OF node compatible.
+- pinctrl:
+  - Remove match data table to platform driver. It gets probed as MFD
+    sub-device matching on driver name. Driver has single compatible.
+  - Drop "Reviewed-by: Linus Walleij" as driver changed approach.
+- MIPS DTS:
+  - Squash all commits together into a single one.
+  - Adapt to new approach: OLB is now a single OF node.
+- Link to v1: https://lore.kernel.org/r/20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com
+
+---
+Théo Lebrun (11):
+      dt-bindings: clock: mobileye,eyeq5-clk: drop bindings
+      dt-bindings: clock: mobileye,eyeq5-reset: drop bindings
+      dt-bindings: soc: mobileye: add EyeQ OLB system controller
+      driver core: platform: Introduce platform_device_add_with_name()
+      mfd: Add cell device name
+      mfd: olb: Add support for Mobileye OLB system-controller
+      clk: divider: Introduce CLK_DIVIDER_EVEN_INTEGERS flag
+      clk: eyeq: add driver
+      reset: eyeq: add platform driver
+      pinctrl: eyeq5: add platform driver
+      MIPS: mobileye: eyeq5: add OLB system-controller node
+
+ .../bindings/clock/mobileye,eyeq5-clk.yaml         |  51 --
+ .../bindings/reset/mobileye,eyeq5-reset.yaml       |  43 --
+ .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  | 375 +++++++++++
+ MAINTAINERS                                        |   5 +
+ .../{eyeq5-fixed-clocks.dtsi => eyeq5-clocks.dtsi} |  54 +-
+ arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi        | 125 ++++
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi             |  22 +-
+ drivers/base/platform.c                            |  17 +-
+ drivers/clk/Kconfig                                |  11 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-divider.c                          |  12 +-
+ drivers/clk/clk-eyeq.c                             | 690 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/mfd-core.c                             |   2 +-
+ drivers/mfd/mobileye-olb.c                         | 180 ++++++
+ drivers/pinctrl/Kconfig                            |  14 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-eyeq5.c                    | 573 +++++++++++++++++
+ drivers/reset/Kconfig                              |  13 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-eyeq.c                         | 541 ++++++++++++++++
+ include/dt-bindings/clock/mobileye,eyeq5-clk.h     |  21 +
+ include/linux/clk-provider.h                       |  11 +-
+ include/linux/mfd/core.h                           |  19 +-
+ include/linux/platform_device.h                    |  12 +-
+ 26 files changed, 2651 insertions(+), 155 deletions(-)
+---
+base-commit: d5a00175dce1740a3e9d519933ba76f9ce5cbd24
+change-id: 20240408-mbly-olb-75a85f5cfde3
+
+Best regards,
+-- 
+Théo Lebrun <theo.lebrun@bootlin.com>
 
 
