@@ -1,140 +1,410 @@
-Return-Path: <linux-gpio+bounces-6038-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6039-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60C178BA8A8
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 10:25:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C8C68BA8BC
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 10:28:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C72E2831BA
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 08:25:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A8FB1F22B4B
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 08:28:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0960148FF8;
-	Fri,  3 May 2024 08:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6E64148FE7;
+	Fri,  3 May 2024 08:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xlNS2NDp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owkQbAI4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24564148840
-	for <linux-gpio@vger.kernel.org>; Fri,  3 May 2024 08:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67647148853
+	for <linux-gpio@vger.kernel.org>; Fri,  3 May 2024 08:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714724722; cv=none; b=g/1QFedoQzzwNKckFwda+AL30rscyoGiZbseAzaxeSZk16kx06wL3ZKzDtjKGrY0VsnXeysLWTWH8kaGKMDNezc40PyRMFfw7FRs4KM3UhLytSybgnFFnzvillsw9bQbrsm4UBdhgAbzWwsvm6hjo2lI9J/eD2jwjmMu//b3mzc=
+	t=1714724910; cv=none; b=Mw3luRhgez5iTw63xIs91ArETIjBodWswBl3Bo8clrK7vD15BJ+8ukmVB/pAS6awcjTqD85oz7nT1MpLXe/ePJBNh+3bWbUjveHkCo0QQaN0yKjPPJ817TdbY02pgqfO+oVZKl2NCDaxFFVOFWLRZOiQg7+HsUPD11vPUeNWJT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714724722; c=relaxed/simple;
-	bh=cVP7B3sF120rjkDhDq/OGXc+zfN6c9JvSfwlIiJpnnE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZCACnjy9TKqP59xizs5tqi1LE8r6euSQcri6zhGQ1sisu1ldOCchiJXZvo/VpcSDvMXNOUTF7KmPmKHZ5ZRDScbYAX9J4F9LhFbsInk53OJRhIdeTAYtQx+FJ5vC8GUyC3V4OjtmV6jB9MwdAIildWrBMQ2CP80omiCINqbKRSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xlNS2NDp; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-de604ca3cfcso4962285276.3
-        for <linux-gpio@vger.kernel.org>; Fri, 03 May 2024 01:25:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714724720; x=1715329520; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bchtsFZa231WDwhCK43w8WElucPGcRMAZVNIRVgrxXM=;
-        b=xlNS2NDpDYmkSx3KWC3GG/+VkkrMCcKsjTpmGoC3Dc43cLgC8nrahSUP0IyizRBZCO
-         8NTdJt4oMcMYyqhO6vfSrXW2wgYECtQ1R82I3HCFvRwMGO/IL1k45dxHAiakWpoZAS26
-         Hd/chf/tmrpsVKM0ItUnHFDGMLGiPpvDQiZDIYrAdgVamwMuAThsWdOLDKk4sXwFP8+F
-         fq8SXbXO2ZKFdB55WxsvUex4R6do6DhoJ9raTLrKlF4srJcbAVkuKAmBvva4TrPqsZp1
-         noKNhcncfm390iCY8HRA6LKhHMhJ5cXEK2VZ78UzCRrH4tDAyixajOcngDV091NAUfIp
-         C5yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714724720; x=1715329520;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bchtsFZa231WDwhCK43w8WElucPGcRMAZVNIRVgrxXM=;
-        b=PnwN5r4knjk16mC0o6uK4OqLR0Z+MhUybRFcPtAcbSuDXZ6YNWBgnD/OpUcwH+EcM3
-         hDbJuk4qvTzWv5KxdtQhHIjz0zCcc/6MOxpfqFwCR/jebMwMxK5I3ah5/NJ55MHi8+w5
-         Ytk+Mnu2aDBRDdQjDk23k5BKuhHwK26N89tHdMlSfAnNQaFFDbpvaQkzAoB/yYdcBE3y
-         ZoCKuetI2My57UzWYzxV66LqoGyxCIRJEemlVE0QSpl6/f3y13CI1VJSB4rDjXq3a1wl
-         5IQcawU9RoEuVl2IsGiNJS081Fgd5mbTOAd4leNZw4hcQ3ap2W1SFlhq4zmumU/4UAFy
-         idIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIiM3lRfdOGrJ1C9JII6Z4HdrjRIsxnWuOssb31DqMJbnR6yGXbdCULCucDgqL0T3R2nRtDLiGXeMbENFru/TygEF0pAGqwHYolg==
-X-Gm-Message-State: AOJu0YxUd34Hkw4xKqhB1l37OGHOrkdTkL7goxnyfnltUnMubk8W0jtU
-	AY/yk2fb1s2IY+HkzFtuXv/bDYCpz9Qj86IJ5fZEL/7feBWqfShdoALCRf56v63pUj4oRxEA00X
-	62dboyscfAvTKiABCcZdcbHfPVFU0+h01WDmKbQ==
-X-Google-Smtp-Source: AGHT+IGOmgFRI3dij98vcr3a8JChYiD6KDG7uUhnFKFgBJEsL3f05wJE75Q8PObsl35X7cBGrSk31Q6zOpRlRE2IV2w=
-X-Received: by 2002:a05:6902:1343:b0:dc6:e4f8:7e22 with SMTP id
- g3-20020a056902134300b00dc6e4f87e22mr2195573ybu.62.1714724720155; Fri, 03 May
- 2024 01:25:20 -0700 (PDT)
+	s=arc-20240116; t=1714724910; c=relaxed/simple;
+	bh=WPFQDOZyXqlIgSkFDs2liqlBzNzrSepKHsz+LqKxi18=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LFvB6BaVRc1zBVM5n9TtcB2AlYOkymx2lEVKSIKTc+i38KNLxPaOUPO+pNwjt65hmSbQxvo1nMVaRmFmSoWtTnja3i4oDIspFewBkSKWxcuQMuw6fdGanbhr+KeNX5ghy7zHOE2g/2i7SjfWhxLCYvOi0dfy49YkH/J1XA2eObo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owkQbAI4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FF45C116B1;
+	Fri,  3 May 2024 08:28:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714724909;
+	bh=WPFQDOZyXqlIgSkFDs2liqlBzNzrSepKHsz+LqKxi18=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:From;
+	b=owkQbAI4HDNZFH9hjnIOzf0LKj9YSWG0oHwOeBLU0zLjlvcyPb2SC/sgZOouqhec9
+	 jcRV8LrCorHPw9XIoAQ/UOaKv8P9xuJT9K70t+BbW25fwPNJBoJtcZOZb86gx0snuZ
+	 OnBSkyUWHEhJbUdi6e3lFDpLZXovRQxczhQaQJC3MrQ46yIq5rRwdzKNyoo+OOBDvV
+	 UQjmCfHt/eul62Jxgckk6Z/YoQwslInXHUct77cNHZUUHUmsNnZFGE1lPiXaJYMJKz
+	 6bD+juZrSbBO4WaC+28jnkDCOYC0xpRzsF2PBXruGrFUqP5DTG6aFlxrZnx/D6208Y
+	 WjeOtRmdngw8A==
+Date: Fri, 3 May 2024 10:28:17 +0200
+From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, arm@kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v8 3/9] platform: cznic: turris-omnia-mcu: Add support
+ for MCU connected GPIOs
+Message-ID: <20240503082714.ow5qtqu2myi3z2ug@kandell>
+References: <20240430115111.3453-1-kabel@kernel.org>
+ <20240430115111.3453-4-kabel@kernel.org>
+ <CAHp75VdV_JmbS1pM11Pf8S5vWU8X1FrKpw3aAtTHK0tsLua5fg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424185039.1707812-1-opendmb@gmail.com> <20240424185039.1707812-3-opendmb@gmail.com>
-In-Reply-To: <20240424185039.1707812-3-opendmb@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 3 May 2024 10:25:08 +0200
-Message-ID: <CACRpkda4v6Nu8V3MVamDpfs4qnc89e8Vd8fSyaNsqJQ40GQqZg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpio: of: support gpio-ranges for multiple gpiochip devices
-To: Doug Berger <opendmb@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Phil Elwell <phil@raspberrypi.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VdV_JmbS1pM11Pf8S5vWU8X1FrKpw3aAtTHK0tsLua5fg@mail.gmail.com>
 
-Hi Dough,
+On Fri, May 03, 2024 at 07:05:34AM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 30, 2024 at 2:51 PM Marek Behún <kabel@kernel.org> wrote:
+> >
+> > Add support for GPIOs connected to the MCU on the Turris Omnia board.
+> >
+> > This includes:
+> > - front button pin
+> > - enable pins for USB regulators
+> > - MiniPCIe / mSATA card presence pins in MiniPCIe port 0
+> > - LED output pins from WAN ethernet PHY, LAN switch and MiniPCIe ports
+> > - on board revisions 32+ also various peripheral resets and another
+> >   voltage regulator enable pin
+> 
+> ...
+> 
+> > -int omnia_cmd_read(const struct i2c_client *client, u8 cmd, void *reply,
+> > -                  unsigned int len)
+> > +int omnia_cmd_write_read(const struct i2c_client *client,
+> > +                        void *cmd, unsigned int cmd_len,
+> > +                        void *reply, unsigned int reply_len)
+> >  {
+> >         struct i2c_msg msgs[2];
+> > -       int ret;
+> > +       int ret, num;
+> >
+> >         msgs[0].addr = client->addr;
+> >         msgs[0].flags = 0;
+> > -       msgs[0].len = 1;
+> > -       msgs[0].buf = &cmd;
+> > -       msgs[1].addr = client->addr;
+> > -       msgs[1].flags = I2C_M_RD;
+> > -       msgs[1].len = len;
+> > -       msgs[1].buf = reply;
+> > -
+> > -       ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
+> > +       msgs[0].len = cmd_len;
+> > +       msgs[0].buf = cmd;
+> > +       num = 1;
+> > +
+> > +       if (reply_len) {
+> > +               msgs[1].addr = client->addr;
+> > +               msgs[1].flags = I2C_M_RD;
+> > +               msgs[1].len = reply_len;
+> > +               msgs[1].buf = reply;
+> > +               num++;
+> > +       }
+> > +
+> > +       ret = i2c_transfer(client->adapter, msgs, num);
+> >         if (ret < 0)
+> >                 return ret;
+> > -       if (ret != ARRAY_SIZE(msgs))
+> > +       if (ret != num)
+> >                 return -EIO;
+> >
+> >         return 0;
+> 
+> Hold on, you are "patching" the code you just brought by the previous
+> patch?! No, just do from the beginning how it should be at the end.
 
-thanks for your patch!
+Fixed.
 
-I'm a bit confused here:
+> > +#include <linux/devm-helpers.h>
+> 
+> Do you still need this?
 
-On Wed, Apr 24, 2024 at 8:51=E2=80=AFPM Doug Berger <opendmb@gmail.com> wro=
-te:
+Yes, for devm_delayed_work_drop().
 
+> ...
+> 
+> > +#define FRONT_BUTTON_RELEASE_DELAY     50 /* ms */
+> 
+> Use proper unit suffix instead of a comment like many others do.
+> 
+> _MS here.
 
-> +               /* Ignore ranges outside of this GPIO chip */
-> +               if (pinspec.args[0] >=3D (chip->offset + chip->ngpio))
-> +                       continue;
-> +               if (pinspec.args[0] + pinspec.args[2] <=3D chip->offset)
-> +                       continue;
+Fixed.
 
-Here pinspec.args[0] and [2] comes directly from the device tree.
+> > +static const char * const omnia_mcu_gpio_templates[64] = {
+> > +       /* GPIOs with value read from the 16-bit wide status */
+> > +       [4]  = "gpio%u.MiniPCIe0 Card Detect",
+> > +       [5]  = "gpio%u.MiniPCIe0 mSATA Indicator",
+> > +       [6]  = "gpio%u.Front USB3 port over-current",
+> > +       [7]  = "gpio%u.Rear USB3 port over-current",
+> > +       [8]  = "gpio%u.Front USB3 port power",
+> > +       [9]  = "gpio%u.Rear USB3 port power",
+> > +       [12] = "gpio%u.Front Button",
+> > +
+> > +       /* GPIOs with value read from the 32-bit wide extended status */
+> > +       [16] = "gpio%u.SFP nDET",
+> > +       [28] = "gpio%u.MiniPCIe0 LED",
+> > +       [29] = "gpio%u.MiniPCIe1 LED",
+> > +       [30] = "gpio%u.MiniPCIe2 LED",
+> > +       [31] = "gpio%u.MiniPCIe0 PAN LED",
+> > +       [32] = "gpio%u.MiniPCIe1 PAN LED",
+> > +       [33] = "gpio%u.MiniPCIe2 PAN LED",
+> > +       [34] = "gpio%u.WAN PHY LED0",
+> > +       [35] = "gpio%u.WAN PHY LED1",
+> > +       [36] = "gpio%u.LAN switch p0 LED0",
+> > +       [37] = "gpio%u.LAN switch p0 LED1",
+> > +       [38] = "gpio%u.LAN switch p1 LED0",
+> > +       [39] = "gpio%u.LAN switch p1 LED1",
+> > +       [40] = "gpio%u.LAN switch p2 LED0",
+> > +       [41] = "gpio%u.LAN switch p2 LED1",
+> > +       [42] = "gpio%u.LAN switch p3 LED0",
+> > +       [43] = "gpio%u.LAN switch p3 LED1",
+> > +       [44] = "gpio%u.LAN switch p4 LED0",
+> > +       [45] = "gpio%u.LAN switch p4 LED1",
+> > +       [46] = "gpio%u.LAN switch p5 LED0",
+> > +       [47] = "gpio%u.LAN switch p5 LED1",
+> > +
+> > +       /* GPIOs with value read from the 16-bit wide extended control status */
+> > +       [48] = "gpio%u.eMMC nRESET",
+> > +       [49] = "gpio%u.LAN switch nRESET",
+> > +       [50] = "gpio%u.WAN PHY nRESET",
+> > +       [51] = "gpio%u.MiniPCIe0 nPERST",
+> > +       [52] = "gpio%u.MiniPCIe1 nPERST",
+> > +       [53] = "gpio%u.MiniPCIe2 nPERST",
+> > +       [54] = "gpio%u.WAN PHY SFP mux",
+> > +};
+> 
+> You may reduce the memory footprint of these just by doing "gpio%u."
+> part(s) outside. Here compiler won't compress this (as in the case of
+> repetitive string literals),
 
-The documentation in Documentation/devicetree/bindings/gpio/gpio.txt
-says:
+Are you saying that I should dynamically create another array just to
+pass it to the gpiochip's names pointer?
+ 
+> > +static const struct omnia_gpio {
+> > +       u8 cmd, ctl_cmd;
+> > +       u32 bit, ctl_bit;
+> > +       u32 int_bit;
+> > +       u16 feat, feat_mask;
+> > +} omnia_gpios[64] = {
+> 
+> It's much better to decouple definition and assignment and put
+> definition _before_ the macros that fill it.
 
-> 2.2) Ordinary (numerical) GPIO ranges
-> -------------------------------------
->
-> It is useful to represent which GPIOs correspond to which pins on which p=
-in
-> controllers. The gpio-ranges property described below represents this wit=
-h
-> a discrete set of ranges mapping pins from the pin controller local numbe=
-r space
-> to pins in the GPIO controller local number space.
->
-> The format is: <[pin controller phandle], [GPIO controller offset],
->                 [pin controller offset], [number of pins]>;
->
-> The GPIO controller offset pertains to the GPIO controller node containin=
-g the
-> range definition.
+Fixed.
 
-So I do not understand how pinspec[0] and [2] can ever be compared
-to something involving chip->offset which is a Linux-specific offset.
+> > +               scoped_guard(mutex, &mcu->lock)
+> > +                       val = omnia_cmd_read_bit(mcu->client,
+> > +                                                CMD_GET_EXT_CONTROL_STATUS,
+> > +                                                EXT_CTL_PHY_SFP_AUTO);
+> > +
+> > +               if (val < 0)
+> > +                       return val;
+> 
+> I would move that under guard  for the sake of better readability
+> (usual pattern in place). It's anyway a slow path and one branch under
+> the mutex won't affect anything.
 
-It rather looks like you are trying to accomodate the Linux numberspace
-in the ranges, which it was explicitly designed to avoid.
+OK.
 
-I just don't get it.
+> > +               if (val)
+> > +                       return GPIO_LINE_DIRECTION_IN;
+> > +
+> > +               return GPIO_LINE_DIRECTION_OUT;
+> 
+> ...
+> 
+> > +       struct omnia_mcu *mcu = gpiochip_get_data(gc);
+> > +       u32 sts_bits, ext_sts_bits, ext_ctl_bits;
+> > +       int err, i;
+> 
+> > +       sts_bits = 0;
+> > +       ext_sts_bits = 0;
+> > +       ext_ctl_bits = 0;
+> 
+> Why not assign these inside the definition line?
 
-So NACK until I understand what is going on here.
+OK.
 
-Yours,
-Linus Walleij
+> > +       for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
+> > +               if (omnia_gpios[i].cmd == CMD_GET_STATUS_WORD)
+> > +                       __assign_bit(i, bits, sts_bits & omnia_gpios[i].bit);
+> > +               else if (omnia_gpios[i].cmd == CMD_GET_EXT_STATUS_DWORD)
+> > +                       __assign_bit(i, bits, ext_sts_bits &
+> > +                                             omnia_gpios[i].bit);
+> 
+> One line?
+
+That would be 81 columns, which I would like to avoid.
+I can remove the _bits suffix from these variables, though. What do you
+think?
+
+> > +               else if (omnia_gpios[i].cmd == CMD_GET_EXT_CONTROL_STATUS)
+> > +                       __assign_bit(i, bits, ext_ctl_bits &
+> > +                                             omnia_gpios[i].bit);
+> 
+> Ditto?
+> 
+> > +       }
+> 
+> ...
+> 
+> > +       struct omnia_mcu *mcu = gpiochip_get_data(gc);
+> > +       u16 ext_ctl, ext_ctl_mask;
+> > +       u8 ctl, ctl_mask;
+> > +       int i;
+> > +
+> > +       ctl = 0;
+> > +       ctl_mask = 0;
+> > +       ext_ctl = 0;
+> > +       ext_ctl_mask = 0;
+> 
+> Assignments in the definition line?
+
+OK
+
+> > +       for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
+> > +               if (omnia_gpios[i].ctl_cmd == CMD_GENERAL_CONTROL) {
+> > +                       ctl_mask |= omnia_gpios[i].ctl_bit;
+> > +                       if (test_bit(i, bits))
+> > +                               ctl |= omnia_gpios[i].ctl_bit;
+> > +               } else if (omnia_gpios[i].ctl_cmd == CMD_EXT_CONTROL) {
+> > +                       ext_ctl_mask |= omnia_gpios[i].ctl_bit;
+> > +                       if (test_bit(i, bits))
+> > +                               ext_ctl |= omnia_gpios[i].ctl_bit;
+> > +               }
+> > +       }
+> 
+> ...
+> 
+> > +/**
+> > + * omnia_mask_interleave - Interleaves the bytes from @rising and @falling
+> > + *     @dst: the destination u8 array of interleaved bytes
+> > + *     @rising: rising mask
+> > + *     @falling: falling mask
+> > + *
+> > + * Interleaves the little-endian bytes from @rising and @falling words.
+> > + *
+> > + * If @rising = (r0, r1, r2, r3) and @falling = (f0, f1, f2, f3), the result is
+> > + * @dst = (r0, f0, r1, f1, r2, f2, r3, f3).
+> > + *
+> > + * The MCU receives interrupt mask and reports pending interrupt bitmap int this
+> 
+> an interrupt
+> a pending
+> int --> in ?
+
+Thx.
+
+> > + * interleaved format. The rationale behind it is that the low-indexed bits are
+> > + * more important - in many cases, the user will be interested only in
+> > + * interrupts with indexes 0 to 7, and so the system can stop reading after
+> > + * first 2 bytes (r0, f0), to save time on the slow I2C bus.
+> > + *
+> > + * Feel free to remove this function and its inverse, omnia_mask_deinterleave,
+> > + * and use an appropriate bitmap_* function once such a function exists.
+> > + */
+> > +static void omnia_mask_interleave(u8 *dst, u32 rising, u32 falling)
+> > +{
+> > +       for (int i = 0; i < sizeof(u32); ++i) {
+> > +               dst[2 * i] = rising >> (8 * i);
+> > +               dst[2 * i + 1] = falling >> (8 * i);
+> > +       }
+> 
+> I will look at this later on,
+> 
+> > +}
+> 
+> > +static void omnia_mask_deinterleave(const u8 *src, u32 *rising, u32 *falling)
+> > +{
+> > +       *rising = *falling = 0;
+> > +
+> > +       for (int i = 0; i < sizeof(u32); ++i) {
+> > +               *rising |= src[2 * i] << (8 * i);
+> > +               *falling |= src[2 * i + 1] << (8 * i);
+> > +       }
+> > +}
+> 
+> and into this.
+> 
+> ...
+> 
+> > +static size_t omnia_irq_compute_pending_length(u32 rising, u32 falling)
+> > +{
+> > +       size_t rlen = 0, flen = 0;
+> > +
+> > +       if (rising)
+> > +               rlen = ((__fls(rising) >> 3) << 1) + 1;
+> > +
+> > +       if (falling)
+> > +               flen = ((__fls(falling) >> 3) << 1) + 2;
+> > +
+> > +       return max(rlen, flen);
+> > +}
+> 
+> I am not sure why you need this, but it can be done easily
+> 
+> x = ((__fls(falling | rising) >> 3) << 1) + 1;
+> if (falling)
+>   return x + 1;
+> return x;
+> 
+> and most likely you can drop minmax.h.
+
+This will return different results for for example when
+  rising = 0x100
+  falling = 0x10
+where we need to read only 3 bytes, but your version will say that we
+need 4 bytes.
+
+> > +static const char * const front_button_modes[2] = { "mcu", "cpu" };
+> 
+> 2 is not needed.
+
+OK
+
+> > -#include <linux/i2c.h>
+> 
+> ??? That is exactly the point to have things done from the beginning.
+
+I must have somehow missed this before sending, I see that I've already
+fixed it in my working branch.
+
+> > +#include <linux/bitops.h>
+> > +#include <linux/gpio/driver.h>
+> >  #include <linux/if_ether.h>
+> > +#include <linux/mutex.h>
+> >  #include <linux/types.h>
+> > +#include <linux/workqueue.h>
+> >  #include <asm/byteorder.h>
+> 
+> ...
+> 
+> > +       err = omnia_cmd_read(client, cmd, &reply, (__fls(bits) >> 3) + 1);
+> 
+> Perhaps a helper for this (__fls(x) >> 3 + (y)) ? It seems it's used
+> in a few places.
+> 
+> 
+> > +       if (err)
+> > +               return err;
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
 
