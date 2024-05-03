@@ -1,121 +1,109 @@
-Return-Path: <linux-gpio+bounces-6029-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6030-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58CA48BA7C3
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 09:29:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F6FC8BA7DC
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 09:35:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15561282020
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 07:28:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C1ADF1C2179F
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 07:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1513C146D75;
-	Fri,  3 May 2024 07:28:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BE6E1474BB;
+	Fri,  3 May 2024 07:35:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bWCxnhYi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EMoxFuP/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7217A146D50
-	for <linux-gpio@vger.kernel.org>; Fri,  3 May 2024 07:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6DE139593;
+	Fri,  3 May 2024 07:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714721334; cv=none; b=BMOYoGqjffPqfEzkhaz5wZ0RC+CZJHvotEdNbUjvjG0WOBK3wws7w3lp9AkAqv8HNKm4dYB10hODKagz2ZU9TuVe3BJbSMmXhCrZGGuD61M+1JehvygYrDlbIDbSZKolTWj5tebbFFdidPPksH19ao8gxqAMBto06vQ7CKLrqJA=
+	t=1714721705; cv=none; b=aLfS3hptG+p+W96FiVDmXpqqAqKHIvdVnLGhd3X8HkAjKGW4qsc5wx3Y9ZkTha5OyTKdI7t7to6oB5sej+9p9IoAOdcQpKZovskHAw71yADOZCjwCroEtJVMTLWWppgN3aYymnsenLVDb3WbXRemunldoTCr1swhXlJovwwTNyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714721334; c=relaxed/simple;
-	bh=Hn+kibtNuVGY16LR1Tui4J9dCha04H++GGopC0OUDOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R93rINJPGuWenfy2rClU2nLP5tMWMMFDZplQHEKgz/QcRouWwig43rcKM+VRL8RL1oCCtQ28WWbLdkLqhvYmANuKCxO1N9frCDcueaocYzWIrjPfZ4HmSgjBZR1hPjItpe12f6zrT0wXzGLCMQ4JB6i79DrVSfHE+fyruF3IVKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bWCxnhYi; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-de604ca3cfcso4925528276.3
-        for <linux-gpio@vger.kernel.org>; Fri, 03 May 2024 00:28:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714721332; x=1715326132; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hn+kibtNuVGY16LR1Tui4J9dCha04H++GGopC0OUDOA=;
-        b=bWCxnhYi1vzW7akPHe39Sq0l65OBVtnxZfGzJmGAVxFKRT8QpSInC5K9T8Uj1at039
-         JNC5tHoPar9bSAoQasXba6ZWaFA9NKZFei2ThX655NfNkUxBqRo1igwSDyoJsEsoyjFV
-         k4BxBmx+7gPWX5RoJo4C469uIC2EGbWstwzYaDrXFJT6l3KF8jNyV0JLskKyl1BBAJNI
-         wqw/qFCgXY6lJkVAKmB7s5CQcHtVOD8qkU5yVCDaSmaTHog9/lPfCJ+e+7ty0YFKXdty
-         MWJFFvkhHtfmmivbA+WqevsBGzrXpbmQiBBOXsU4EpCnz2trDDM/Vc5ahIlvuYchXD/S
-         b3tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714721332; x=1715326132;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hn+kibtNuVGY16LR1Tui4J9dCha04H++GGopC0OUDOA=;
-        b=tEPrt5Z9WUOXkxzs4aUXNd/oWZ03h/L4MX7eRgfSdzOsj4o8TIVo8TcDllgdrXoumj
-         ySsg3NuG0BcdxHrh9w3a3BOHYsJxOuEpexxp8lC7HW6LF3lWzBDDChCACH3ZgyLVUsTk
-         1PtDmmPViq3gzdF0FttvBE2YEWmSW7qwQbVU2WjBbwl5onyYGadbF0QzHVSzLRvw5AJR
-         jMvhsRNh7QYb/5Z9dplw5w6hko0zwf57fjXVU5OOZj5bVVeD5DG8FCaKv+ly5f4aELwh
-         IBdKNegtwZ8c1hWMw/OV6enXKPTf4iaWNWUa17v0DpuFtXiJ1rWXdRNhYuHtkY3ZoMGF
-         i8Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvxzME6AgFHZBzpeRf8VtwU7Pbl8BFXMLgSrFQAEI9K1hF8voSjuN+t706i0OGf006GgzecKE/2cubAQ5btWZOBxcHjQWzU3FZ6w==
-X-Gm-Message-State: AOJu0YyuVLep65vlTc/CYwPtEbMF7Q6WumMAknb9C1OHxxAcBQMPNoJX
-	SqQKXaqAPyShiZh8tVFRo68UbUb6XvqdgaE+9NeyNYC9wwPHF+XETo2VAqp2AUF1R09ZHlZOQsq
-	AjsjNDxy+7pmYb1XRBq1kZxjgnIOpBgiffBk7jA==
-X-Google-Smtp-Source: AGHT+IF0xjlVgsvZVFX4uIc9xGkdM4zN5rBjDCjVF5rIBWnC2grAED83RKEyEUanO8Zm+9uvlUebxitXHnTav2HLKug=
-X-Received: by 2002:a25:dc08:0:b0:de6:723:3035 with SMTP id
- y8-20020a25dc08000000b00de607233035mr2121144ybe.13.1714721332503; Fri, 03 May
- 2024 00:28:52 -0700 (PDT)
+	s=arc-20240116; t=1714721705; c=relaxed/simple;
+	bh=pC91j2Fk6CmGMbzSbYOZVVJ6XRNvvhHzHeGWZQeg3vk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hRhPErDBApxIqRrDEDwo71f+rZ3xBzvhxtU2AKuIK/A8is1ARtvdFBjVE9ibFRmP4lWc7y+WEixg5VLaij2gesKucglVlBx7tLsCuaNganLIRcmMgmMjmDsQ/FjcFMTdYRY2EE4RB08T7orp1sUTlUg8drNfoUVRrCghY1Y7BQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EMoxFuP/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 831F9C116B1;
+	Fri,  3 May 2024 07:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714721704;
+	bh=pC91j2Fk6CmGMbzSbYOZVVJ6XRNvvhHzHeGWZQeg3vk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EMoxFuP/8+/tBjtlxuT32p4uAwKGR5ysEaMBdK5a794d6zYEnDCNTIfJ+3in8n4ww
+	 7xpS7babtCyPdelDpyEfi3++9S3duQ0FKEUpy16u1+gyRQC8d35XUOFsy3/3eg9otP
+	 S/LugJbaSia3gfi5Pphf2OrBcW2LFn+HLTjrrexO6KKUm7PFWv/Tyd9QC7G/SAQroG
+	 z6eNRYzg1adI/HkHmE8uVh2Iv1mUqSy72Z6va5COtp/FBs+ch0yHeVLvEG5SKfiFTj
+	 2wXbsDitdFtiY5PWoVnZJPZmpJDCZDEJ4MQ13D6BFGYVDolXPyRIU56NKG1feQQbYr
+	 Wg/Av3N9cjVTg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1s2nRh-0000000040a-1OYn;
+	Fri, 03 May 2024 09:35:05 +0200
+Date: Fri, 3 May 2024 09:35:05 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Brian Norris <computersforpeace@gmail.com>,
+	Jaiganesh Narayanan <njaigane@codeaurora.org>,
+	Doug Anderson <dianders@chromium.org>,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: Fix behavior in abscense of open-drain
+ support
+Message-ID: <ZjSTqfxgrox0IceO@hovoldconsulting.com>
+References: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
+ <CACRpkdYw8jzFH5n377G76iMqri70Tf-1Vc=P5D6ESU_U0qRXWQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
-In-Reply-To: <20240424-tlmm-open-drain-v1-1-9dd2041f0532@quicinc.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 3 May 2024 09:28:41 +0200
-Message-ID: <CACRpkdYw8jzFH5n377G76iMqri70Tf-1Vc=P5D6ESU_U0qRXWQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: Fix behavior in abscense of open-drain support
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Brian Norris <computersforpeace@gmail.com>, 
-	Jaiganesh Narayanan <njaigane@codeaurora.org>, Johan Hovold <johan@kernel.org>, 
-	Doug Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdYw8jzFH5n377G76iMqri70Tf-1Vc=P5D6ESU_U0qRXWQ@mail.gmail.com>
 
-On Thu, Apr 25, 2024 at 5:46=E2=80=AFAM Bjorn Andersson
-<quic_bjorande@quicinc.com> wrote:
+On Fri, May 03, 2024 at 09:28:41AM +0200, Linus Walleij wrote:
+> On Thu, Apr 25, 2024 at 5:46 AM Bjorn Andersson
+> <quic_bjorande@quicinc.com> wrote:
+> 
+> > When a GPIO is configured as OPEN_DRAIN gpiolib will in
+> > gpiod_direction_output() attempt to configure the open-drain property of
+> > the hardware and if this fails fall back to software emulation of this
+> > state.
+> >
+> > The TLMM block in most Qualcomm platform does not implement such
+> > functionality, so this call would be expected to fail. But due to lack
+> > of checks for this condition, the zero-initialized od_bit will cause
+> > this request to silently corrupt the lowest bit in the config register
+> > (which typically is part of the bias configuration) and happily continue
+> > on.
+> >
+> > Fix this by checking if the od_bit value is unspecified and if so fail
+> > the request to avoid the unexpected state, and to make sure the software
+> > fallback actually kicks in.
+> >
+> > It is assumed for now that no implementation will come into existence
+> > with BIT(0) being the open-drain bit, simply for convenience sake.
+> >
+> > Fixes: 13355ca35cd1 ("pinctrl: qcom: ipq4019: add open drain support")
+> > Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+> 
+> I tried to follow the discussion but couldn't get to a verdict on this patch,
+> should it be applied or not, and if it should be applied, should the Fixes:
+> tag be dropped or left and considered a nonurgent fix as it does not
+> affect current behaviour?
 
-> When a GPIO is configured as OPEN_DRAIN gpiolib will in
-> gpiod_direction_output() attempt to configure the open-drain property of
-> the hardware and if this fails fall back to software emulation of this
-> state.
->
-> The TLMM block in most Qualcomm platform does not implement such
-> functionality, so this call would be expected to fail. But due to lack
-> of checks for this condition, the zero-initialized od_bit will cause
-> this request to silently corrupt the lowest bit in the config register
-> (which typically is part of the bias configuration) and happily continue
-> on.
->
-> Fix this by checking if the od_bit value is unspecified and if so fail
-> the request to avoid the unexpected state, and to make sure the software
-> fallback actually kicks in.
->
-> It is assumed for now that no implementation will come into existence
-> with BIT(0) being the open-drain bit, simply for convenience sake.
->
-> Fixes: 13355ca35cd1 ("pinctrl: qcom: ipq4019: add open drain support")
-> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+It should not be applied in its current form (e.g. as the commit message
+is incorrect). Bjorn will be sending a v2.
 
-I tried to follow the discussion but couldn't get to a verdict on this patc=
-h,
-should it be applied or not, and if it should be applied, should the Fixes:
-tag be dropped or left and considered a nonurgent fix as it does not
-affect current behaviour?
-
-Yours,
-Linus Walleij
+Johan
 
