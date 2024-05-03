@@ -1,131 +1,85 @@
-Return-Path: <linux-gpio+bounces-6075-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6076-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24E438BB08E
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 18:07:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4565E8BB0CA
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 18:22:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 55BC31C20E92
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 16:07:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01C4E287291
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 16:22:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E340415532B;
-	Fri,  3 May 2024 16:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20D57155342;
+	Fri,  3 May 2024 16:22:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBrMuUW0"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MDO8H5l+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999CCA944;
-	Fri,  3 May 2024 16:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611E521360
+	for <linux-gpio@vger.kernel.org>; Fri,  3 May 2024 16:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714752441; cv=none; b=MJEDb99OOY9W3JO2o03qRuN4SxVpWf7PLgo7hV274EqxC438bNmfLLdbKepy7Zq9/BQEKYrLENM6NSk5Q6MXXWVbwXTDJ9MkbS1VyLiemFEcRwmW0F7tfllYR5vfisTXFeJplsI7QjceGV6dYFJkXbDC59Xz3AlyOKxTh73At0g=
+	t=1714753346; cv=none; b=TXaJuzp0zAQ8H3pa2QrSleYSQvunRLwb03/6HnIiD9R5yIsIHQ/CmD13SCDZWGpNCVlWyCDZFynivXkFU3w9G2sxAOL4CAVeXLh8Xy0okoE7VGVeBlgVsEvR5LZMUaSdQyRVaW00T/ad9Xy7VMgEXCCGvY7UWk1vxZYkJ/wPy6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714752441; c=relaxed/simple;
-	bh=W91kcN7nrkWghZ/PoRIVOeNh3GWbeg+b2FW9mH1axwY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bu8ideHFdM3OGhgk3CfZJWNnolqPsPiaDSGQqZKW34gccNH3rowvhJJ6/Nk4u3AycZIe/ElUJ1NKq32GeR6xx/O+9UF8X0TZF9GChRxOvJvLyuxd2EqNgnHwUB30mDZMabap0vs3exB3M9NNb2hXVqb8/l0NmIwsupvimPjNWEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBrMuUW0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5DEBC116B1;
-	Fri,  3 May 2024 16:07:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714752441;
-	bh=W91kcN7nrkWghZ/PoRIVOeNh3GWbeg+b2FW9mH1axwY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OBrMuUW0rIzSheM3VMg+BPEExT47shrT6vDtXPA/mYlO86AKvbLspq93o37ooLZkg
-	 TO5HSnOpCGfcdQnvry6z4aKC+RE/RiIfy+5xFk913pofDAHOZ0obuDJ52RhY1kn3pk
-	 7yV5Cb/Yd///3aCUP8g0WFLWZKHfaM8SdG+3yxo8t80O+/r1jIgXarRWvlLaPekLtx
-	 /rCBufHXZw0XInJ70OUguiUwEgfn0jO2MuVX/JLR8GgtZmsIqEP6dHx0eMEuk2j7D6
-	 e2K4jV1VytMBye349sNgGR0yTODH9wmFJHsjXJPiT/kr0oQTW5CWkmkFP6WQkxdKEq
-	 0w1WXOw120J6Q==
-Date: Fri, 3 May 2024 17:07:15 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alex Soo <yuklin.soo@starfivetech.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	s=arc-20240116; t=1714753346; c=relaxed/simple;
+	bh=J4+OVdF9NycY9uPpp5VNvqKh8hgvCLPHf5ryhnZ0hZo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jy6l9DX7MufhI0oZZuvESUHiY6hl41yWY/GtUQcHZIxH23v4Kll8FQJRj9oIbU+G5YRhHQAHQFCPGlh7ucFvz6R4esucfoKEWhuDKLe+N/wgOo0YnW0FtfScOIqXGwvTNSw1GYQpk/hLzre637fy+rPVVr9K+e1wie3smCcoFoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MDO8H5l+; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1714753343;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KP44cf8QKhMXu5ffjHI0m+hur3z2Dlqf8PHPq6RoGLQ=;
+	b=MDO8H5l+ItJTiZCk3zMF9/ViSoHOLASF0iDshxKCKXR0SyELESqumRGF/p5ojgPuTRh3pO
+	ChXq1Rn0V5sUbaLY45OLVcqgpodKVk9wGWxnus9FbP0KXws9JdQ0iWjJN8VV7nxxjArSvJ
+	0cOUn/IflKzbcysiXkVAHoaY3r354wk=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Michal Simek <michal.simek@amd.com>,
+	linux-gpio@vger.kernel.org
+Cc: Krishna Potthuri <sai.krishna.potthuri@amd.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Sean Anderson <sean.anderson@linux.dev>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Drew Fustini <drew@beagleboard.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [RFC PATCH v3 1/7] dt-bindings: pinctrl: starfive: Add JH8100
- pinctrl
-Message-ID: <20240503-undress-mantra-e5e46b2f6360@spud>
-References: <20240503111436.113089-1-yuklin.soo@starfivetech.com>
- <20240503111436.113089-2-yuklin.soo@starfivetech.com>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	devicetree@vger.kernel.org
+Subject: [PATCH 0/2] pinctrl: zynqmp: Support muxing individual pins
+Date: Fri,  3 May 2024 12:22:15 -0400
+Message-Id: <20240503162217.1999467-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KxAjTyFg5buG+CKV"
-Content-Disposition: inline
-In-Reply-To: <20240503111436.113089-2-yuklin.soo@starfivetech.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+
+This series adds support for muxing individual pins, instead of
+requiring groups to be muxed together. See [1] for additional
+discussion.
+
+[1] https://lore.kernel.org/linux-arm-kernel/5bb0dc7e-4c89-4f3d-abc6-41ae9ded5ae9@linux.dev/
 
 
---KxAjTyFg5buG+CKV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sean Anderson (2):
+  dt-bindings: pinctrl: xilinx: Add support for function with pins
+  pinctrl: zynqmp: Support muxing individual pins
 
-On Fri, May 03, 2024 at 07:14:30PM +0800, Alex Soo wrote:
-> Add documentation and header file for JH8100 pinctrl driver.
->=20
-> Signed-off-by: Alex Soo <yuklin.soo@starfivetech.com>
+ .../bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml | 344 +++++++++---------
+ drivers/pinctrl/pinctrl-zynqmp.c              |  61 +++-
+ 2 files changed, 219 insertions(+), 186 deletions(-)
 
-> diff --git a/include/dt-bindings/pinctrl/starfive,jh8100-pinctrl.h b/incl=
-ude/dt-bindings/pinctrl/starfive,jh8100-pinctrl.h
-> new file mode 100644
-> index 000000000000..153ba950c062
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/starfive,jh8100-pinctrl.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 OR MIT */
-> +/*
-> + * Copyright (C) 2023-2024 StarFive Technology Co., Ltd.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_PINCTRL_STARFIVE_JH8100_H__
-> +#define __DT_BINDINGS_PINCTRL_STARFIVE_JH8100_H__
-> +
-> +/* Pad Slew Rates */
-> +#define PAD_SLEW_RATE_FAST		1
-> +#define PAD_SLEW_RATE_SLOW		0
+-- 
+2.35.1.1320.gc452695387.dirty
 
-Should this really be in the bindings? I don't see it having a direct
-user in the driver.
-
-Also, if this is the only header you have, I think the RFC tag could be
-dropped, since there'll not be a header we need to worry about getting
-into U-Boot etc with values that may change when the SoC moves from an
-FPGA etc to tape out.
-
-Cheers,
-Conor.
-
---KxAjTyFg5buG+CKV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjULswAKCRB4tDGHoIJi
-0gziAQCOhL3Nl0Z9Etl6BrrDO57we/UhOPrfgVEhlu3CnukqOwD+JLtE6cJPbh5t
-83xkoNV1bF4rXWsE5iiR7H8VKiAfEQc=
-=Lyzr
------END PGP SIGNATURE-----
-
---KxAjTyFg5buG+CKV--
 
