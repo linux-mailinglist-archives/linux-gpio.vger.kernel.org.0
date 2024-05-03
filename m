@@ -1,425 +1,176 @@
-Return-Path: <linux-gpio+bounces-6023-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6024-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C8C98BA5E4
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 06:06:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F27B8BA704
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 08:28:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 97B7D1F226CB
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 04:06:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7C611F2238E
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 May 2024 06:28:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E4501F951;
-	Fri,  3 May 2024 04:06:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F08EC13A252;
+	Fri,  3 May 2024 06:28:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ms2dZ6qY"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="KKHbWn3h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B21114F62
-	for <linux-gpio@vger.kernel.org>; Fri,  3 May 2024 04:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1511A13A245
+	for <linux-gpio@vger.kernel.org>; Fri,  3 May 2024 06:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714709174; cv=none; b=ak7g9MqUDgDZI0uJK6RL0YLvM8743OveTbxpSUn87V9uBhaDSSjycYYoQ7q8rjs5lxmMJUPqktKay5Iati3oLP0ZTfInipJxpmdXlTkXQh4druVwNv4FoalnmYd1p2MDdrck8FxMEIRba0FwhL8B7tD5vI6pP2+H0l7l967cPXc=
+	t=1714717702; cv=none; b=ZBmOVeKjUCQXJk0h42bH8pxmmGF9mbl8P6LoRgwsI2PVOb7WbM+DjA8tnEHW09rwytx7+FvD94e4rG9kVOLAJpn/9NaQKx3w9DXGJSdE4n6Pyux+KFJXPmPho/0Wly3TznFRPYj32upVyLg5FSZeI563UU2/sNHFCzWTEk8Aw3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714709174; c=relaxed/simple;
-	bh=jmDjjQ8L0nC9WWkn5Cx65rtl/J3kKthuHYnOOsansfU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TcU/TtTA1HVMZQvb+Ja1nEvWj3Diab06QzdiJfzldepiyUfX/3CF+btbefYretk10ITFFjkS5yt6xwwmBeCl9BFSkR7toX4HEmffVt8XCqRLQWjQGyM7iOtT6o2TUsSWqDLq5OPEqyuwNMr/m5YTdZDZFCNNPvToAFgF+x8Ygwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ms2dZ6qY; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2e1fa1f1d9bso21353431fa.0
-        for <linux-gpio@vger.kernel.org>; Thu, 02 May 2024 21:06:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714709170; x=1715313970; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8PXQyUjbHynvM6KgiR6KwKTuOztlmJYtLW2yS/umw78=;
-        b=ms2dZ6qY5gf06tJtEOEcHqgoRwdvXQlpP6D9+H9DiYMYHQnYoViJzA0uI4qYg/YuY8
-         fY7fmzC1H9hRPN6/MAgL8wZu3gyCUvTpK4BhkNeSpEs/7KlwMYuXHfugobf96T408J+k
-         8YydIBqNfKurpmSpLcnythL8mX91m3hx15oUWZ5Xbza/q9w6TUeAD2yGh8suy1q8yTsO
-         uyOxmjtX+RgmrLuZuXb21AyG2U2K1elzwEsC42GFz90rAUWry2rEjfqiGcDXpSgEJASc
-         budELi26+KUj7px7qg0Of9yspEfzjoYqxFNgTFXYmq88s6BsBanFZkboeUwBLgGw79Dh
-         CPoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714709171; x=1715313971;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8PXQyUjbHynvM6KgiR6KwKTuOztlmJYtLW2yS/umw78=;
-        b=DGsxNrV1eQCQ1xYHU5UH8eJovS+40dNnglAPxSuFpyCYLrWeXZZEcThNf8Q6+LIJC5
-         sVd7eNMHK8dwGOTK6BnRLS1L7NptCzOWgPx0l5UX2GXUoU+WmAxPUkSDYKhvswXS1hla
-         mWqYtXevcHAoXbF+p2wEOmknhRmjBCbDS1HEvKyZT+yl2EoIlaty1yQBNIhPHtcFItSd
-         LaW/KPYJutxKeWzOJSm09kinfqwVz0/UG29gaIrF3oGLFyvFQD/W0Ivoog+HfELKnkf2
-         djhYkGhqVn4TsaRNz3gDgl1HVbF6UYT2PgshCV0Qq0ww1ZHC2poEeYf6qwZD0qVcNQGR
-         5GJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmDaLgWVQDp8TOfkG1dn1CRXS8ExkGIAOfqWQr0cnw4UuNqvzhSmfuJLNdiv1E6/KBLKBuuYRByVc+ViBChAHxrHo94mOJN5Fl3Q==
-X-Gm-Message-State: AOJu0YxaJktMl6lJlZlbvweXjHWc2YxRtiIdBRpXJCdawkle/N4nt/g3
-	UJz3qjYO0UhvcI1Yvpd6INmWGAGZhnU0sMlmXbNH/GR7L5rI1HDbHoESOMSKwJTCcQDXjGEYsnC
-	8CiE1QLto9Ij1ML99ZDWFjOAuo7E=
-X-Google-Smtp-Source: AGHT+IGniQoBgsUz/IlUNE1dnBD3fj9L81d4G/KPuH0XLQbRdM1h4FiziuAWwAvYCceMChDuWb/HLszFSosg+EJma/U=
-X-Received: by 2002:a2e:7314:0:b0:2e0:298d:65ec with SMTP id
- o20-20020a2e7314000000b002e0298d65ecmr935292ljc.17.1714709170346; Thu, 02 May
- 2024 21:06:10 -0700 (PDT)
+	s=arc-20240116; t=1714717702; c=relaxed/simple;
+	bh=IUwge+7iOSeg+/AHeqJXo1xPk55YNKp1I9CeP6EhQD4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=czQ1hjCTFxqtu4tFSiPmQM+4FFCbsuwkZsuDEFloHUjdMfup4hLZiNxxo8TJnDuHfzx+merU4F6lqKKKBDU3qe/SjJraWRBAElMiD3luchAcQfhd4dRrP+jyuwxf9lZFw69WYatLGjHUm2+r1nCuMbeHUm9LKdtvRdGXdQ5e6zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=KKHbWn3h; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1714717689; x=1715322489; i=wahrenst@gmx.net;
+	bh=Q1p9KR+G9aa+TDUZhbp6bfC0A0vuMuQ1F8vjV2eqkoc=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=KKHbWn3hp1xONDA1XvU7sihywV/duqD8qgW9txu+GmL8vlA0g7i31NJ8qrOK/+RM
+	 5nthmlILyZVNc6NpQ6FGEgH1vG3/F/vrYnLMRQKJIuyhImmp0HzTwzVQEKNPcKNfa
+	 jyMBU9/g/6eUvMYZXIuGXdcSQh/pG+QYV3g4fG9F2rDk/6vCDovOYMfWfSAKHIhal
+	 knrkugOKWit/HWdYiBmgqkkB3o1tObh3Gb40uaZECT4abOV2DjBO+3k67gaS08LCu
+	 tRq2ZprfFfYWGTR2wPHFYVj4f1Du8AeeHJIus2nIX6qCNWl64mRESIx2rPr5sJkP7
+	 PA2SV+vPB2YHCWiFEw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MFsUv-1rrZB944YJ-00HMbM; Fri, 03
+ May 2024 08:28:09 +0200
+From: Stefan Wahren <wahrenst@gmx.net>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Kent Gibson <warthog618@gmail.com>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH V2] pinctrl: bcm2835: Make pin freeing behavior configurable
+Date: Fri,  3 May 2024 08:27:45 +0200
+Message-Id: <20240503062745.11298-1-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430115111.3453-1-kabel@kernel.org> <20240430115111.3453-4-kabel@kernel.org>
-In-Reply-To: <20240430115111.3453-4-kabel@kernel.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 3 May 2024 07:05:34 +0300
-Message-ID: <CAHp75VdV_JmbS1pM11Pf8S5vWU8X1FrKpw3aAtTHK0tsLua5fg@mail.gmail.com>
-Subject: Re: [PATCH v8 3/9] platform: cznic: turris-omnia-mcu: Add support for
- MCU connected GPIOs
-To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, 
-	arm@kernel.org, Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:4U3OBSwNwE4ir9nLtcGNRIwLehYn5ZgXVQDgGfW5WPXLvk+lmwP
+ 7RHzHHmsubv9jYnStJXl4oZ8Kau5Mw0oZ56dvkGTKhI1aw43qVUm5zIQWk/OV5KQDpEU6pc
+ 8MPzSS95z5xQSNJLKk/Bhv668ezZELacIOvf6heSWtA8Ol3h195AtdNUWRgGe3DoxFecjMl
+ hnP9tVEyjmTpPD0QrpluA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:i7A+T2fS+eY=;9pgMDjQbnCzS1rdAajih5R5rwdd
+ ahvm4KqcrcjJdFh+ZMhEiwqnQLC/M5aitUmexs4WoFPk6534saG666lk3kSWssds95GgN+nlj
+ 13euBSeENeryN6bJY15uvNzLsAg0++2DLVd7cuzfnuKQDaKl5qHPcJOjhk19BqgPOgzr1e6Fe
+ D2T36LPdQXsX/wK613q4oDKjoVdU+45g/Gf96An8VxSo44Ew1XMNpPnzgfiAdhxni06K+Hxnz
+ Oj3d3LHp4uUOMAzvqpvQQtwiVWjYDCsXPUw20zY2rAh3hdHRE0rnfTMbC67AjoKKzlHgPoj2I
+ 0d8WOhQvuUnK4ocgyNOvxaBvstBSzNErFI8Rf3xAEvooyDj3+0vzDVkXNuRMbs29QvI5chVTc
+ c03pQ1E0B8YP1NGsWdvx0Hb/aeyRRbmU9zwESYSTSWJJJ1LXc2zbf5SkqSBRP43iop5py3OXA
+ 8PXa+UgqskHGMwkhCO0ATjR6TK5QY9JL5eox6HJWFzlPIQBPm+HRcFRBKcoHYGQyy2l+KFARF
+ 7/nnEn8lhVKuZf1UmLvFSw4HYCGDjtDwrt+E78HBhAVZCp87dDsExDbw2Ct1Wa86wkH/BuZaB
+ nR3vlukwtQMBOzsLGzXx2ChZXVPQHyVwcE2Me3OpFZIW2l/WYk6jMZOuMbh8r5gwuQGa8man4
+ sIdQOCgG9uBD9UnD27fUzth2KwPDd945q5+msL5Cl6bRH4/z4LCFjM/K9qMbl3aJkWSVq2uRo
+ eBpV3yrBcrZKQqkQjg8YY8j+MCwqCbw9PcpH4eFULL9K5apP0Ysv2sqMaB50eoBY1K/3U666+
+ wnfGNqr37es59uhGy2deohv6ezTBKp46lVZxQniMRawuc=
 
-On Tue, Apr 30, 2024 at 2:51=E2=80=AFPM Marek Beh=C3=BAn <kabel@kernel.org>=
- wrote:
->
-> Add support for GPIOs connected to the MCU on the Turris Omnia board.
->
-> This includes:
-> - front button pin
-> - enable pins for USB regulators
-> - MiniPCIe / mSATA card presence pins in MiniPCIe port 0
-> - LED output pins from WAN ethernet PHY, LAN switch and MiniPCIe ports
-> - on board revisions 32+ also various peripheral resets and another
->   voltage regulator enable pin
+Until now after a bcm2835 pin was freed its pinmux was set to GPIO_IN.
+So in case it was configured as GPIO_OUT before the configured output
+level also get lost. As long as GPIO sysfs was used this wasn't
+actually a problem because the pins and their possible output level
+were kept by sysfs.
 
-...
+Since more and more Raspberry Pi users start using libgpiod they are
+confused about this behavior. So make the pin freeing behavior of
+GPIO_OUT configurable via module parameter. In case
+pinctrl-bcm2835.persist_gpio_outputs is set to 1, the output level is
+kept.
 
-> -int omnia_cmd_read(const struct i2c_client *client, u8 cmd, void *reply,
-> -                  unsigned int len)
-> +int omnia_cmd_write_read(const struct i2c_client *client,
-> +                        void *cmd, unsigned int cmd_len,
-> +                        void *reply, unsigned int reply_len)
->  {
->         struct i2c_msg msgs[2];
-> -       int ret;
-> +       int ret, num;
->
->         msgs[0].addr =3D client->addr;
->         msgs[0].flags =3D 0;
-> -       msgs[0].len =3D 1;
-> -       msgs[0].buf =3D &cmd;
-> -       msgs[1].addr =3D client->addr;
-> -       msgs[1].flags =3D I2C_M_RD;
-> -       msgs[1].len =3D len;
-> -       msgs[1].buf =3D reply;
-> -
-> -       ret =3D i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
-> +       msgs[0].len =3D cmd_len;
-> +       msgs[0].buf =3D cmd;
-> +       num =3D 1;
-> +
-> +       if (reply_len) {
-> +               msgs[1].addr =3D client->addr;
-> +               msgs[1].flags =3D I2C_M_RD;
-> +               msgs[1].len =3D reply_len;
-> +               msgs[1].buf =3D reply;
-> +               num++;
-> +       }
-> +
-> +       ret =3D i2c_transfer(client->adapter, msgs, num);
->         if (ret < 0)
->                 return ret;
-> -       if (ret !=3D ARRAY_SIZE(msgs))
-> +       if (ret !=3D num)
->                 return -EIO;
->
->         return 0;
+This patch based on the downstream work of Phil Elwell.
 
-Hold on, you are "patching" the code you just brought by the previous
-patch?! No, just do from the beginning how it should be at the end.
+Link: https://github.com/raspberrypi/linux/pull/6117
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
 
-...
+Changes in V2:
+- improve parameter name as suggested by Kent Gibson
 
-> +#include <linux/devm-helpers.h>
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-Do you still need this?
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/p=
+inctrl-bcm2835.c
+index f5a9372d43bd..b4293a827a89 100644
+=2D-- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -244,6 +244,10 @@ static const char * const irq_type_names[] =3D {
+ 	[IRQ_TYPE_LEVEL_LOW] =3D "level-low",
+ };
 
-...
-
-> +#define FRONT_BUTTON_RELEASE_DELAY     50 /* ms */
-
-Use proper unit suffix instead of a comment like many others do.
-
-_MS here.
-
-...
-
-> +static const char * const omnia_mcu_gpio_templates[64] =3D {
-> +       /* GPIOs with value read from the 16-bit wide status */
-> +       [4]  =3D "gpio%u.MiniPCIe0 Card Detect",
-> +       [5]  =3D "gpio%u.MiniPCIe0 mSATA Indicator",
-> +       [6]  =3D "gpio%u.Front USB3 port over-current",
-> +       [7]  =3D "gpio%u.Rear USB3 port over-current",
-> +       [8]  =3D "gpio%u.Front USB3 port power",
-> +       [9]  =3D "gpio%u.Rear USB3 port power",
-> +       [12] =3D "gpio%u.Front Button",
-> +
-> +       /* GPIOs with value read from the 32-bit wide extended status */
-> +       [16] =3D "gpio%u.SFP nDET",
-> +       [28] =3D "gpio%u.MiniPCIe0 LED",
-> +       [29] =3D "gpio%u.MiniPCIe1 LED",
-> +       [30] =3D "gpio%u.MiniPCIe2 LED",
-> +       [31] =3D "gpio%u.MiniPCIe0 PAN LED",
-> +       [32] =3D "gpio%u.MiniPCIe1 PAN LED",
-> +       [33] =3D "gpio%u.MiniPCIe2 PAN LED",
-> +       [34] =3D "gpio%u.WAN PHY LED0",
-> +       [35] =3D "gpio%u.WAN PHY LED1",
-> +       [36] =3D "gpio%u.LAN switch p0 LED0",
-> +       [37] =3D "gpio%u.LAN switch p0 LED1",
-> +       [38] =3D "gpio%u.LAN switch p1 LED0",
-> +       [39] =3D "gpio%u.LAN switch p1 LED1",
-> +       [40] =3D "gpio%u.LAN switch p2 LED0",
-> +       [41] =3D "gpio%u.LAN switch p2 LED1",
-> +       [42] =3D "gpio%u.LAN switch p3 LED0",
-> +       [43] =3D "gpio%u.LAN switch p3 LED1",
-> +       [44] =3D "gpio%u.LAN switch p4 LED0",
-> +       [45] =3D "gpio%u.LAN switch p4 LED1",
-> +       [46] =3D "gpio%u.LAN switch p5 LED0",
-> +       [47] =3D "gpio%u.LAN switch p5 LED1",
-> +
-> +       /* GPIOs with value read from the 16-bit wide extended control st=
-atus */
-> +       [48] =3D "gpio%u.eMMC nRESET",
-> +       [49] =3D "gpio%u.LAN switch nRESET",
-> +       [50] =3D "gpio%u.WAN PHY nRESET",
-> +       [51] =3D "gpio%u.MiniPCIe0 nPERST",
-> +       [52] =3D "gpio%u.MiniPCIe1 nPERST",
-> +       [53] =3D "gpio%u.MiniPCIe2 nPERST",
-> +       [54] =3D "gpio%u.WAN PHY SFP mux",
-> +};
-
-You may reduce the memory footprint of these just by doing "gpio%u."
-part(s) outside. Here compiler won't compress this (as in the case of
-repetitive string literals),
-
-...
-
-> +static const struct omnia_gpio {
-> +       u8 cmd, ctl_cmd;
-> +       u32 bit, ctl_bit;
-> +       u32 int_bit;
-> +       u16 feat, feat_mask;
-> +} omnia_gpios[64] =3D {
-
-It's much better to decouple definition and assignment and put
-definition _before_ the macros that fill it.
-
-> +};
-
-...
-
-> +               scoped_guard(mutex, &mcu->lock)
-> +                       val =3D omnia_cmd_read_bit(mcu->client,
-> +                                                CMD_GET_EXT_CONTROL_STAT=
-US,
-> +                                                EXT_CTL_PHY_SFP_AUTO);
-> +
-> +               if (val < 0)
-> +                       return val;
-
-I would move that under guard  for the sake of better readability
-(usual pattern in place). It's anyway a slow path and one branch under
-the mutex won't affect anything.
-
-> +               if (val)
-> +                       return GPIO_LINE_DIRECTION_IN;
-> +
-> +               return GPIO_LINE_DIRECTION_OUT;
-
-...
-
-> +       struct omnia_mcu *mcu =3D gpiochip_get_data(gc);
-> +       u32 sts_bits, ext_sts_bits, ext_ctl_bits;
-> +       int err, i;
-
-> +       sts_bits =3D 0;
-> +       ext_sts_bits =3D 0;
-> +       ext_ctl_bits =3D 0;
-
-Why not assign these inside the definition line?
-
-...
-
-> +       for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
-> +               if (omnia_gpios[i].cmd =3D=3D CMD_GET_STATUS_WORD)
-> +                       __assign_bit(i, bits, sts_bits & omnia_gpios[i].b=
-it);
-> +               else if (omnia_gpios[i].cmd =3D=3D CMD_GET_EXT_STATUS_DWO=
-RD)
-> +                       __assign_bit(i, bits, ext_sts_bits &
-> +                                             omnia_gpios[i].bit);
-
-One line?
-
-> +               else if (omnia_gpios[i].cmd =3D=3D CMD_GET_EXT_CONTROL_ST=
-ATUS)
-> +                       __assign_bit(i, bits, ext_ctl_bits &
-> +                                             omnia_gpios[i].bit);
-
-Ditto?
-
-> +       }
-
-...
-
-> +       struct omnia_mcu *mcu =3D gpiochip_get_data(gc);
-> +       u16 ext_ctl, ext_ctl_mask;
-> +       u8 ctl, ctl_mask;
-> +       int i;
-> +
-> +       ctl =3D 0;
-> +       ctl_mask =3D 0;
-> +       ext_ctl =3D 0;
-> +       ext_ctl_mask =3D 0;
-
-Assignments in the definition line?
-
-...
-
-> +       for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
-> +               if (omnia_gpios[i].ctl_cmd =3D=3D CMD_GENERAL_CONTROL) {
-> +                       ctl_mask |=3D omnia_gpios[i].ctl_bit;
-> +                       if (test_bit(i, bits))
-> +                               ctl |=3D omnia_gpios[i].ctl_bit;
-> +               } else if (omnia_gpios[i].ctl_cmd =3D=3D CMD_EXT_CONTROL)=
++static bool persist_gpio_outputs;
++module_param(persist_gpio_outputs, bool, 0644);
++MODULE_PARM_DESC(persist_gpio_outputs, "Enable GPIO_OUT persistence when =
+pin is freed");
++
+ static inline u32 bcm2835_gpio_rd(struct bcm2835_pinctrl *pc, unsigned re=
+g)
  {
-> +                       ext_ctl_mask |=3D omnia_gpios[i].ctl_bit;
-> +                       if (test_bit(i, bits))
-> +                               ext_ctl |=3D omnia_gpios[i].ctl_bit;
-> +               }
-> +       }
+ 	return readl(pc->base + reg);
+@@ -926,6 +930,13 @@ static int bcm2835_pmx_free(struct pinctrl_dev *pctld=
+ev,
+ 		unsigned offset)
+ {
+ 	struct bcm2835_pinctrl *pc =3D pinctrl_dev_get_drvdata(pctldev);
++	enum bcm2835_fsel fsel =3D bcm2835_pinctrl_fsel_get(pc, offset);
++
++	if (fsel =3D=3D BCM2835_FSEL_GPIO_IN)
++		return 0;
++
++	if (persist_gpio_outputs && fsel =3D=3D BCM2835_FSEL_GPIO_OUT)
++		return 0;
 
-...
+ 	/* disable by setting to GPIO_IN */
+ 	bcm2835_pinctrl_fsel_set(pc, offset, BCM2835_FSEL_GPIO_IN);
+@@ -970,10 +981,7 @@ static void bcm2835_pmx_gpio_disable_free(struct pinc=
+trl_dev *pctldev,
+ 		struct pinctrl_gpio_range *range,
+ 		unsigned offset)
+ {
+-	struct bcm2835_pinctrl *pc =3D pinctrl_dev_get_drvdata(pctldev);
+-
+-	/* disable by setting to GPIO_IN */
+-	bcm2835_pinctrl_fsel_set(pc, offset, BCM2835_FSEL_GPIO_IN);
++	bcm2835_pmx_free(pctldev, offset);
+ }
 
-> +/**
-> + * omnia_mask_interleave - Interleaves the bytes from @rising and @falli=
-ng
-> + *     @dst: the destination u8 array of interleaved bytes
-> + *     @rising: rising mask
-> + *     @falling: falling mask
-> + *
-> + * Interleaves the little-endian bytes from @rising and @falling words.
-> + *
-> + * If @rising =3D (r0, r1, r2, r3) and @falling =3D (f0, f1, f2, f3), th=
-e result is
-> + * @dst =3D (r0, f0, r1, f1, r2, f2, r3, f3).
-> + *
-> + * The MCU receives interrupt mask and reports pending interrupt bitmap =
-int this
+ static int bcm2835_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
+@@ -1419,6 +1427,9 @@ static int bcm2835_pinctrl_probe(struct platform_dev=
+ice *pdev)
+ 		goto out_remove;
+ 	}
 
-an interrupt
-a pending
-int --> in ?
++	dev_info(dev, "GPIO_OUT persistence: %s\n",
++		 persist_gpio_outputs ? "yes" : "no");
++
+ 	return 0;
 
-> + * interleaved format. The rationale behind it is that the low-indexed b=
-its are
-> + * more important - in many cases, the user will be interested only in
-> + * interrupts with indexes 0 to 7, and so the system can stop reading af=
-ter
-> + * first 2 bytes (r0, f0), to save time on the slow I2C bus.
-> + *
-> + * Feel free to remove this function and its inverse, omnia_mask_deinter=
-leave,
-> + * and use an appropriate bitmap_* function once such a function exists.
-> + */
-> +static void omnia_mask_interleave(u8 *dst, u32 rising, u32 falling)
-> +{
-> +       for (int i =3D 0; i < sizeof(u32); ++i) {
-> +               dst[2 * i] =3D rising >> (8 * i);
-> +               dst[2 * i + 1] =3D falling >> (8 * i);
-> +       }
+ out_remove:
+=2D-
+2.34.1
 
-I will look at this later on,
-
-> +}
-
-> +static void omnia_mask_deinterleave(const u8 *src, u32 *rising, u32 *fal=
-ling)
-> +{
-> +       *rising =3D *falling =3D 0;
-> +
-> +       for (int i =3D 0; i < sizeof(u32); ++i) {
-> +               *rising |=3D src[2 * i] << (8 * i);
-> +               *falling |=3D src[2 * i + 1] << (8 * i);
-> +       }
-> +}
-
-and into this.
-
-...
-
-> +static size_t omnia_irq_compute_pending_length(u32 rising, u32 falling)
-> +{
-> +       size_t rlen =3D 0, flen =3D 0;
-> +
-> +       if (rising)
-> +               rlen =3D ((__fls(rising) >> 3) << 1) + 1;
-> +
-> +       if (falling)
-> +               flen =3D ((__fls(falling) >> 3) << 1) + 2;
-> +
-> +       return max(rlen, flen);
-> +}
-
-I am not sure why you need this, but it can be done easily
-
-x =3D ((__fls(falling | rising) >> 3) << 1) + 1;
-if (falling)
-  return x + 1;
-return x;
-
-and most likely you can drop minmax.h.
-
-...
-
-> +static const char * const front_button_modes[2] =3D { "mcu", "cpu" };
-
-2 is not needed.
-
-...
-
-> -#include <linux/i2c.h>
-
-??? That is exactly the point to have things done from the beginning.
-
-> +#include <linux/bitops.h>
-> +#include <linux/gpio/driver.h>
->  #include <linux/if_ether.h>
-> +#include <linux/mutex.h>
->  #include <linux/types.h>
-> +#include <linux/workqueue.h>
->  #include <asm/byteorder.h>
-
-...
-
-> +       err =3D omnia_cmd_read(client, cmd, &reply, (__fls(bits) >> 3) + =
-1);
-
-Perhaps a helper for this (__fls(x) >> 3 + (y)) ? It seems it's used
-in a few places.
-
-
-> +       if (err)
-> +               return err;
-
---
-With Best Regards,
-Andy Shevchenko
 
