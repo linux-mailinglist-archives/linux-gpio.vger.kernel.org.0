@@ -1,69 +1,69 @@
-Return-Path: <linux-gpio+bounces-6100-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6101-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C52718BBC17
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 May 2024 15:16:56 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E98CB8BBC1F
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 May 2024 15:17:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7E1A1C20E7A
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 May 2024 13:16:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C6F11F210AF
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 May 2024 13:17:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A19ED39FFE;
-	Sat,  4 May 2024 13:16:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FC903C08F;
+	Sat,  4 May 2024 13:16:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="LbykI/RZ"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="JwGL8Zs6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2069.outbound.protection.outlook.com [40.107.249.69])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2058.outbound.protection.outlook.com [40.107.22.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FA9374C4;
-	Sat,  4 May 2024 13:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D886A39FD7;
+	Sat,  4 May 2024 13:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714828578; cv=fail; b=Ge+Dl22efjfI8LOretsl/vWJ/Ws00AzEerRzGY5F+GqD8ukg/MckRXzUWpCViHqP9/D/wl670LRfEvD7uaU0otmLhP8dscXI67pDiCHCU+SEMLPMa3RDh7sDHFo6gEk8BDA6AUSJdIA4a9ZWUvapVXdQ/dp9n4nPLrW8Z129IV8=
+	t=1714828595; cv=fail; b=AaTH6O6L9AHh7l6mo980Lpwnbde0XBjPgw0VCysAOqqJdgbFLfBRfi/ThHCNXNh8R7AdiE4Gy8g0jjfyqjfkZNWEM1dtzqfwgjfBB0l/7lhPCt44n5d/7It3zCbUUBLKOIg2T3nuMsWLFcEmJLwxvAOA1sJqhC2IRjwc+o71ozI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714828578; c=relaxed/simple;
-	bh=aGocML37yKFLTQmAgdHIf5uoWsvtHUPQJME8EyVoT6s=;
+	s=arc-20240116; t=1714828595; c=relaxed/simple;
+	bh=7oLy/VNXv8mod/yO9pa5qybVbR+daZZ1X7hIX56xPZk=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=SGyCPYqe1yAKP1BNxwr4MOFzeDbgv1wTN5ltC/OkKrrUZfXwMstLD/QDQzTdzLJNsyCh7MQ7CfFC2diBhoZ8oZJr9Zus9Zb/7m3MFnqxGdy4ei+wVsNREbqRIBtu7L5xXIFq6CyNx5AlRyEP/YnvjkS+2oqyF1A8W+9xuReY5go=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=LbykI/RZ; arc=fail smtp.client-ip=40.107.249.69
+	 To:Cc:MIME-Version; b=ljsrVEScI7pvf0iAnssomqYaC8TZdcJPfbhF1BGOvNaboObH2lAX6xq5LPk+JvZvj6KvMSqnHcOirIucFBPY8rPcowbOtXKXSXFilCDc+eCmExKmm0+nVxNyd8pOUh0dk6bxTOTGpZIesgarw1bfAXY7mqNw/Q7ThykGMaI2xQc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=JwGL8Zs6; arc=fail smtp.client-ip=40.107.22.58
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HjpbylIYacvnbNTWQP2eW4n5I4okmE77Ce7/Dl53/EpW4Yt8DXzAzkFvYu8UldsRbkKqZPe3VissAU7I5jfJT18hYiGAWBsdEdnKWAxcBtPOxibb3Uvon5JFSTkptfPnOy+MOP4npnLPhRn2tEFbe5z65Iz2iDYrAswN+z3Z5vb9513kV3ldW2CqleJMF/LBMywB+tgrfD1sGL75xCez5X2jjrv89l0qKlBZxw7i97RzX9mJjN/K+2COUQuDVL5mt5yS5gJnHUTzAtbOU9tYZw1tgYgDMOiZnkfllE34U/j8XoJKG2jhVj2zCGCbLpe2KUyy0a7olcgT55PALcNERw==
+ b=LIMM1EBcMpsAfoIajRF8lWxzqD5W5hV8CGR9eAQIs2T1oAhTOaKF0HCpJcnlc8sroJw018a5EyhoY5IExC3qqM/iF61FMdZnyHLMLCHhq+o3yrexo0iu9Xr6TXSyls9xJcIV9CfYgZ+X/aCnw1tL8enOeJjt4t93iHXGazwvHkTRL9iCy39v8F84rGNy+ty1x9SjkVGouTe9sqS0rH8auDRgN7zXZLuVBTATTG/Q+EUh8bsjNjHp+HpDHsA7LAmZVOH2dIy2QjpI/oaqPgOrLmimERTvp+7q6Ez3IYJqHLdlc4/GhQ5pFdeXTBNPcjCVidkv+cXMKY7URRnZ/9XmTA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YyGeWpCkYZh4WcKx5URim9X/pl2xw38Z9ho8YthB/aQ=;
- b=dqGYH1FwLeN/qpMQsYJ0OBQXmLTP3aJUc7GzoCCWjyJrF2QvI0uVycx7CRkHbtc06SSQTJXmiPi98aUf8gG+JmiOsOJZce7M9pBhnCR5rJYGyI/FtQTsCJV3takHYFyBu5OvMG5wH+3DxvDvamud9A2R1+Q2Ji6fZKFaCngPDKCeNqgasKOdE43yAK2dV8QO6XxD96iLBsLPosTkRWwlHIfemLah8ppu6psxAyg1SCa9WNfgotSaU2gMDmZjVlSeqadnP3f6fEMXWOQ2EwK9OVhXs0rWjqLeX5R6xyLhkLhONee/sWVU+hrlwhz8XbRQi4V2NZ2Z+TyEchh4//yPTA==
+ bh=G6JJzIlsATPz+eeVRC+tmQRXVLBCszxKxTWLO7z/7Rw=;
+ b=iIBs6qs50gXDdVnot+R0Tt18PMfLYan0y5eX4WWZBZ6Rmn1OplAcASf2Ui7+GWnY0XYgH1qEIPRphOElHqDmFQ0Zwp6kIoZEpOkkA+jGHrU5kIwPxWj4a7Qfp9QyPyfzFcR/YpluMQWUoDneKgvXgDhQd5yzbpvUzSm9pGJU/ZhPNAtVfq9FVVodtKKzBKFkmrN+CHcjg6/6ldPW3ecglLQ6llosWZ/4FQCY0rikWyE9gVaYAfal2h9nPcS6PsLMFvNrT7JYHLWHqWyNYPCV/oFruvx2k2GN5W83t6C/Kc8qRswy4wIevZm6SgryLF3MhM/fbgDlE6Q6nM9FCbfr1g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YyGeWpCkYZh4WcKx5URim9X/pl2xw38Z9ho8YthB/aQ=;
- b=LbykI/RZmuGK+O14E8wO67iqZNfdyu5EQnlofWQCNSbAHiStMpPWzUmxv9UiR5GbG2yCzkxFgz1NQ+IwIUW1ySOpuWD6sM2jl05iLgCGOtZjFpdDtSOXhpaDm8KRFQiOPoJLE8ZmlMC7w+DDbq97yjKsNdcQeIQlGxagDrmT7Ms=
+ bh=G6JJzIlsATPz+eeVRC+tmQRXVLBCszxKxTWLO7z/7Rw=;
+ b=JwGL8Zs6PoyHk+U+trsx6DmiL7Uh7CdB7QXcgZ7fwYsKtjlQTGUndTL/ynWE1SI9AmOVt8aHUAITzcJGJjBmYWjzAdmi/zHzu3mXgciACNlrVtknBQWSZS3t4z9FZHrkV8M2dvU6mytpNprf/CaijdDfxEEPyGCXAiuTQK0BNhs=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
  by AM9PR04MB8633.eurprd04.prod.outlook.com (2603:10a6:20b:43c::24) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Sat, 4 May
- 2024 13:16:13 +0000
+ 2024 13:16:30 +0000
 Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
  ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
  ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7544.036; Sat, 4 May 2024
- 13:16:13 +0000
+ 13:16:30 +0000
 From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Date: Sat, 04 May 2024 21:20:12 +0800
-Subject: [PATCH v2 14/20] pinctrl: mediatek: Use scope based of_node_put()
+Date: Sat, 04 May 2024 21:20:13 +0800
+Subject: [PATCH v2 15/20] pinctrl: freescale: Use scope based of_node_put()
  cleanups
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240504-pinctrl-cleanup-v2-14-26c5f2dc1181@nxp.com>
+Message-Id: <20240504-pinctrl-cleanup-v2-15-26c5f2dc1181@nxp.com>
 References: <20240504-pinctrl-cleanup-v2-0-26c5f2dc1181@nxp.com>
 In-Reply-To: <20240504-pinctrl-cleanup-v2-0-26c5f2dc1181@nxp.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -106,11 +106,11 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  imx@lists.linux.dev, linux-aspeed@lists.ozlabs.org, 
  openbmc@lists.ozlabs.org, Peng Fan <peng.fan@nxp.com>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714828815; l=2143;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714828815; l=5535;
  i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=lm1PEdHATfoxwJUL9YMs41GxvVEK/pacMdZ5mWFlWX8=;
- b=d8MWpOtXKNnFGmfz1eHOooCE8YCLHVTyQNBBLhSiEJgr+86Or3+ekvXynCYNgOqJisw6NtlEy
- IWju/BxoMOfBW/IhPYIVChwIIYZ7T5qVjSiPvU1zknqEB2Ele8EoB2c
+ bh=CgYPpbd8zRZLHMaSBUod3MJSkUGYYuTkn7XHxXWmDfQ=;
+ b=QThPNXw7bxO4a7RWVR+x8/it3yFCdDCIJhct6pJk1X4WfCzb33CCZ6xXajsk5epDPQ/hH1F0c
+ spUFq/qYsKOCFwSsFFp6AnQ0TVEi4pJVnIpdLi/K9c5op0pxw0uris8
 X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
  pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
 X-ClientProxiedBy: SG2PR06CA0230.apcprd06.prod.outlook.com
@@ -125,94 +125,94 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|AM9PR04MB8633:EE_
-X-MS-Office365-Filtering-Correlation-Id: f321deef-96f6-48ee-0b73-08dc6c3c5f9b
+X-MS-Office365-Filtering-Correlation-Id: 826172fc-8f7a-47ae-4b44-08dc6c3c6988
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230031|52116005|7416005|376005|1800799015|366007|38350700005|921011;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c0JCeTN0SDFDVG5oUlhXRkhxbHZIRExxVWVFeWJmK1hqR1A5Y2UyR0VyOUFs?=
- =?utf-8?B?OEVYbzZtSi9GdDU4S1NZNjVPK3lCL3VHK1BxOTFNUk1tQU5HV21LWjNnZXJn?=
- =?utf-8?B?MHZUZXNVYjVkbVNpOVc1c1NTbXYrQzdOWWRvdUdaaDNOei9qNVBWM3lvblB3?=
- =?utf-8?B?N0E2eTlMTFpLZHovM0trbitLMUdvQzdGeWFxcHV6SXNWVVVST29zMElEQ0RV?=
- =?utf-8?B?amFYTWw5TGQwZm9qNVErWkdyUkRLQWl4QnQyWHEwWjlzeG5jNmNjQ2dTQ2h2?=
- =?utf-8?B?RzU2TStMdlZ3dUI2d094RFgzaHVFMlNSL1BMakJJUjFBTVJSNjZZNlIzd1Ex?=
- =?utf-8?B?YVNQb3pOLzYwbldsRi9JaXlWZ2tONlI4a0FkbTJyeFluTm1XUGR0S2xVVkZ0?=
- =?utf-8?B?VFcxbjFRcXIrNHlsdjJTMFBySm1hbWVRUE5idzN3eHk2SzlkYmVTVE5CVnB2?=
- =?utf-8?B?OTBSenRScVEySVVZVkFWU0haSFBPdFYrVk4zSjNYSUNIazBwOFNiRzR1V0xr?=
- =?utf-8?B?Mk9yYlFZbWU5TXdBTDZxV25UWDF3N1h4bGM4TWwxL3hBY2hKbjVBYUZ4ZDlZ?=
- =?utf-8?B?M2ZMcHYrRkNOMG4yTW1XVnAyU3FUYTNIZnRJYmZDTGt5dHpMOVowYWYxUC9B?=
- =?utf-8?B?YWQvbzhaY2RYSEtNdzBBTzN5MHVoald0T21aTG52eEhvQ3R5WGJVb0hHVlhT?=
- =?utf-8?B?cjZHejZ6d2l5a29sM3dHbXJyVjdSZXhmbkFWZ3RwcGVpeU1ZSm51UVVJMHdU?=
- =?utf-8?B?M0ZWVHo2MXdGY3hDNmQzRUxIVFVmYmM4U0Y1eGNXVjBYdGhQTVhBWDdCWlZ5?=
- =?utf-8?B?d0g0VGpHaENZVjVVSEo2RDJkUktpbm82QWpqUzgrZHhVaFFOVFV2WU9ibFhM?=
- =?utf-8?B?QmdYRUpKcVQ3c0ZHN3o0NkU1WFI2TmZ5MExobHRDQjlCeEdCRFVMMkZWQVFq?=
- =?utf-8?B?NnhJQ1N4bGV5UU8vTHEwUTlaakRqY1BYTGkzWkpvUGRMaXJkQTJkY3VLMGtu?=
- =?utf-8?B?RlRWa1V1OGpGSkZCSVVINDZ4NXdLT2xJZ1I1QkRoUktCV3Q0OXkxZ1BuVDRF?=
- =?utf-8?B?NDk0eUFqY3NUNFJjVUFUYzVyeTVkdWlCSWd1Mkx0bG1vRk55RDkvWXBGWFdR?=
- =?utf-8?B?WjA5Sm1NUUZJeGhKdXJ2OTRZMTlheFJtRWthU3VFajN3aTh3eW1QbVJSTGpO?=
- =?utf-8?B?SWpTMjlkRWFZZ3BNdHBKYzNKZzhlTVExamNmRTU5d1gzanV3S3dMQzhNMXN3?=
- =?utf-8?B?a0RUbmM4a3NOOEc2Q01rS2RMamh3WlloaGtLOW8vS0w0c2tzcXNxdG5VUklR?=
- =?utf-8?B?d1c2NkFKUC9vMjRDMGhVL1hmUDcyTFlPTGQyQjN6NGRyYzk1dFNYbFViNERH?=
- =?utf-8?B?dVMvbUJSOVBocXRLNzdka3Z4S1loQUpZZ09pTmg0S0VVT3NZR3hkNDNYNnRX?=
- =?utf-8?B?bndkYjEvM1JjTFBnVzFPaThKVkNnSWEvZFpQZnhtekd5WkdETG1vbUk3Rklr?=
- =?utf-8?B?bG5TTnZCUi9UZlJLNWl6LzN6R0lnR2x1YzlwTDRqaExDbEJtZEhMV3N4alFq?=
- =?utf-8?B?S0YwNmZSVGVBaGQ4cnFYdnhwWmVJVThQUHE5M2o5Tk96d09aTDMrZGN1RjBE?=
- =?utf-8?B?amRrQzBnbFZacWxqeDVFV1drK1R4TmtuRzd0a2E0K1NNNU80bUtvRDRkL09V?=
- =?utf-8?B?OUNTRUxhc1EybEQwcmJWREwwLytVc1NRZ0NhaktHVTZyWFlIREpOS3M1WWl3?=
- =?utf-8?B?V01tWDU3M1VYRmRmMXhBS1E4dmUwYWlQNytUaUhLM0VWODJOaGh6R3RXdjN0?=
- =?utf-8?Q?RSsChYiiP4tQ4c0GA4kuFGTaAK4pCq77iXazs=3D?=
+	=?utf-8?B?b0NFTThrOXRSN3EwQjAvZkc3RXhFUUNRUTVsMUhGQ3NrTEszcU1Gdjk4MkZS?=
+ =?utf-8?B?MDRMZ3Ira2ZrdGpkazdCTE5Hd1Vsa1hmbzFSYkVYblhWTmp0Q0gvWWlac2pI?=
+ =?utf-8?B?T2dub0FwVUJ4dTBVY2hSVWpvZGJjTzFrbDlLVHhqaFdtaTYxdk9UZElYZE81?=
+ =?utf-8?B?ckRzZ1loQTE4aGtucm9Cc08zK29iWWVUUjhIZmR3MFVlMGlzc2ZvV1dsNlpa?=
+ =?utf-8?B?UDZQN0VxOElMRkZydGU5ZkNDRFFkc3lJNVBoSjhjdldUTUorOFpKNzdwNzRI?=
+ =?utf-8?B?aC9YM0phWlNwVmVEZkc1UElrM2t5L25IZ3I0eE5Yc2x3ZnpENS9KYVBaQnpo?=
+ =?utf-8?B?ZXUvNTIrSmUvNGh1QTZBbWN5dkhZS0FvQVFEd20yN3VmQmdodzAreWQvZjdy?=
+ =?utf-8?B?TlFPa0lQb0NxS2ltZ2JiOVlhZHczbEJLL2NWbTBjMWZ1UlVwVVcxcGk1NThX?=
+ =?utf-8?B?M0VVc043RnZXMjh1NjlCSVRGd1BMVTZBekIwcEkzbkRWaE9BZUpxZHI1NDM4?=
+ =?utf-8?B?dDRNRUY2dkpUSXZTRnJwRDZLV1NXWVZWeEFnSDBqSnlXUnlZQmxnZEd3VS9m?=
+ =?utf-8?B?Qnl3NkhObEZweWd2eEM0TDhCMzNXVE9XZUJVR3duYVkranpQWDFMSTVERGhI?=
+ =?utf-8?B?TlVRWjl3WDArNkhJczlGZ0xSeXZoQjdCYVBEeG5PeUI4T3gwTGxIdTVqbDdT?=
+ =?utf-8?B?cUNKN2pTRzEzK0hLcVFrVkU4Mk1hZ1ZxNzNKN2dBOWYrWFJNRlZBTzJLWTJN?=
+ =?utf-8?B?LytNbTZYakdFemxuck5DZ2pQa2pQRk95aDNCVEt5Z2hWK1NCWGcra1VDZU9k?=
+ =?utf-8?B?bkV0ZC8zZHdyMFlHVFY4N0RwaFlrdzViSEZFZ3BwTGxqRDdTcE9SYlFoeU5L?=
+ =?utf-8?B?L1BDb0x5ZTRNQWkzZlFqK1RvRllXR29uVkk4eG96SDRpWGFLbnUyc2F3Vzdk?=
+ =?utf-8?B?ZkgzVkRIcDRvZjhXbVYvSE5sV3J5RUxrWlZJYlNLSzdVMWg4cUdrYmlxbVRE?=
+ =?utf-8?B?Y2N6TjZXTTNESjNSN2s2UFE1eGtmSTN1cStXcWgvNlpDbWwvZkJ4a3QxUWkx?=
+ =?utf-8?B?WHZFamcyb0JLME9sN0RUUE5vWFpOMno5ZEx2M0tXYzc2L3FuRHBNbUtpQUNx?=
+ =?utf-8?B?SGtlYnVSd0NDWVRENGlaVXh5eVgvK2ZlS25CU09PTmRDZzY0TWV4b2FxeEtw?=
+ =?utf-8?B?QUJpbTBvVURiUzduRjlOOWNpZEk5VG12cmVoY3U5THFhYUovMGZ0UHZLSy9T?=
+ =?utf-8?B?M1ZPbldCU0lCL1l0dGtJNVhacjgzd2hRaW9wZnVtK0wxNmhyNnJZY1BJS2Vu?=
+ =?utf-8?B?c0wxS2hxV3NDZ0R5aEJDNWNqMVBCQ1hnNzg3VUhVUDVCa2tLWVhzMmNUYTJB?=
+ =?utf-8?B?WHVHa0kvWHFhTEI3WVdINUtsbnY3SkJSYW9XalhaOVFLdkVxc3FRN1lDSUxz?=
+ =?utf-8?B?VnFUUlRTQWhDbXNHRXB4MlRXSjhBc3VtQkpqWjlKRHRTZ0gxUzBuQTNrUEJi?=
+ =?utf-8?B?THRnNEE4VVZNZ3ZQS3FsNXUwcytGRXE2bDVyYlBpa29TKzJwSnVoNlFMcUlw?=
+ =?utf-8?B?dndXTVl3VkI3NDlmSWxUVjlnM3FsQ1FaY3dnVGY2V2dOUzhoZ3RoYXBhalFr?=
+ =?utf-8?B?WVJ1UDNJU3Zzdm1GSXR6TVppRGNtZVlHUWhzYWxWMTB0VzZYaGhTL3J1TGYz?=
+ =?utf-8?B?ZTNNQy9XYmIwQnZ6NmY1Q092MUZERzhad2hZK1Q2QXdERFFRQlNXWXNKUWlG?=
+ =?utf-8?B?Ym5UVEVIUEJRT3FXemp1UVowalhzN3ZDSnFOdGFvU0RhVjg5VURTY0Jqb1lm?=
+ =?utf-8?B?M3VwY2hrQkFiOG9wU1ZPUT09?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(7416005)(376005)(1800799015)(366007)(38350700005)(921011);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SFgraXdDV00xaTgydFE0Y2FqdHJxZExLMjJrb25hZFVPajFPdlR5eThEclFm?=
- =?utf-8?B?NXJKdklxNFF2UHNmSkJpTFlvZmMzamwyL0cvdlhyZVZMMDFwR1JTN0RzendW?=
- =?utf-8?B?a3NHN29FNytqN0t6QzRWbU9kamcxSHI0U1l3NjkzRjZwdTEwWUpHekZNVGpT?=
- =?utf-8?B?VjhJL1d5aTF2bVJlaE83ZVFPRmtZSktqR3p4aFRWWHp0S0t3Ky90S0duNEVp?=
- =?utf-8?B?TFVlN01HSTcrVmhoVmdpb3p0RFpnNC95ck4wNXdxVWx4VGdHZTd4TFpnSEV1?=
- =?utf-8?B?blo3MmowZ01rb2I3dXpaUTkrOTV2TWlzaU9hZ1VFS0Qycmx1K3BDVGE2dzlj?=
- =?utf-8?B?cU9EU2dPYTROWFdTbXRvdjk1OURRbkZlMmVSdXp1bFRzMENpNTRuWnNwaENn?=
- =?utf-8?B?aUExQ3RuRHp5Q3lkandBRjcyQjZDb2srT2ViNzRLVnlxRHJDdGZxUEFuNDR0?=
- =?utf-8?B?bDFqSXRwdE5pOWtUYkE4Q2htNjREYTFaS0FQYVFRZTcxazhScXJEUjhzZHBN?=
- =?utf-8?B?aVR3cmxwNTdqRHFKWktRSmdQUWg5cXRhTmh6ZlgxbE5IK2VYRnZQcVRTRlkx?=
- =?utf-8?B?N05BVkQ2NUNocTB1ZVpGM2QrazlJd3JSTjZ6V0FkWEdtcTEvSFBxb3lhYWh5?=
- =?utf-8?B?aGtxbDVybU44YmpKTFdsSVdlUEl6cU5YZWZIdnBsYXEwTFNka0ZuV0UwZEw5?=
- =?utf-8?B?bGZEWUl5bTRTVjcza0FHc29JL2R3SjdZdzFMM1krTW5hZFM1ZHpjVlZldllu?=
- =?utf-8?B?UmtJMjFpcXN1Z2NvRk5pcXFKdWlJN0RMZVYyeFBqYVNxMDRRQnhWcWV2S0Jp?=
- =?utf-8?B?ek1LSHp0WEQ0ZDRvNmhqa2dnUEJFY2pRWlo3NmlVZ2w5UWpVeXlPY1Z2aWpP?=
- =?utf-8?B?a1Z3U3gwS3RDbkNjR2VqYUp2WVRRNnFiekRmYkRmOG5manhubDdXWjFaQ2ZC?=
- =?utf-8?B?S3dDQ3JpdVZPSC9qN2xVR3doSldKdlMzbzkzMHQ1RmsycWFNVE03UTA5dkFE?=
- =?utf-8?B?c291ZUdqY1ZSVDRlMmI0Y1Y4V0pCU1B6MHFmclMxZmdEWmhCM0tvNjFxQXRJ?=
- =?utf-8?B?ZGc4Q01wSHAvQXNKQnlteTllS0c5cndkcGhGak9Bb3BaYkpmVFUrOUdlWWFQ?=
- =?utf-8?B?dUtrTlpXMXF2QWlXSGhQbHYxMmxSaWdRdTM0KytGckVuY1IrMnIrNVJ2K1dX?=
- =?utf-8?B?cUNIQVpiNG5XdlFGSDYrQS9CMzB5Rnd3VWgvZUtxTkFDUG4ybzN3Q01FSHRa?=
- =?utf-8?B?Tnl1ZTMzaG11RkFyZjdJa3dNRmhmRGE3ZkJpdEZGVE42ZmFXd0RBRjVrby90?=
- =?utf-8?B?elBGT21obkg0UmZ0cUh6Q3I5UHplQjhEd0FKV1M4WEtZUzhrUVd2cEZJb2tC?=
- =?utf-8?B?T3FqdmU0SEI4YklUNUkwZmQvR1V1U2czK0dBb1Q1QmZqU1oycWxTR0Fhb29N?=
- =?utf-8?B?UHRhb2FNQ1lkSXhZTnpMRW9ySDJwajNsOHBjSTVCY1RMQ0R1aURjWUM2cEZK?=
- =?utf-8?B?RGpSNTcxU2ZHSGhBN2RXRGtDc0RSRVRxUzJCcy81bGNvVm1aK0QzemNCQjNF?=
- =?utf-8?B?c1hZRGMyL1VtdGZtUFdMSFBGTjdzSlRqTkE2RFE2TVYxNWtiTSsxWEx1Y3FM?=
- =?utf-8?B?R1ZLM2xFem9kckJ0Q1laTERDd3dJejhVOEI0ckhzQ3ErVlltZVFBZkxVaXhV?=
- =?utf-8?B?N0ZYeHNkSDlSQzZMMEpvUkJRdlRHSHdwOFlWQzBSZ3N1VVFjenNCUy9tVEVW?=
- =?utf-8?B?dWtQMTZyMkZ0SGZyN0EzdlZUZllqUWxQaTFGOUtmK3lKSXBRWHJ2dG1CZ1lz?=
- =?utf-8?B?QUZFK2xoRGZEeTdVaGxtYWN5SWwrTi95S0lZUVBqZzU2R3dmZGgraGNCVk5w?=
- =?utf-8?B?MjdEZkw4aEpYQit5K3prdGZ4eVVDckVzMW1Mem1JaGJKczBiQW5WTlVURzRp?=
- =?utf-8?B?VVFhVHAydGFwbUxMSU5uRWlqYXhnRzJSYXFLN1gyS2NJYUFWL0dWbjBDR1lD?=
- =?utf-8?B?WEszRUJhT1lmbkY4QzFYUHFyK21ROVFDZE5ETFF0OHlxaTU4b3JZeC95dzBJ?=
- =?utf-8?B?YTZJRXBBY1VNYy90UDNHejRDMU0xbnVNUnJQQTZqbzd2TmFNaHp1WkNRSHpS?=
- =?utf-8?Q?j7mJrs6vxwrXPaA9fau1ED4Xn?=
+	=?utf-8?B?OFJXV2MvS3RwbEJTMlVDc1hadk1mYUZJUm9kMlN6MWxpbUtGelN5U0pWYmhJ?=
+ =?utf-8?B?bVpJbzE0SGNBWnQ4VkY0bzBIZEtXQjd2T3o2MUF1dkkvM25JdnlhWjF4cXNU?=
+ =?utf-8?B?ekFucjlwc2ZxYVRGaWJ1TVFYR0FsSnR5L1grTjRYSy9ieExkYjM4VVJ2cnhU?=
+ =?utf-8?B?b2xlOU9xQ2pjMFVxZ0JGdmZ1MzkraDYvbkV4YVB4ODU4aCtLSUhGTm9tNTM1?=
+ =?utf-8?B?b2NyRmtvb3VwMm5BLzY0YXlhWnlTM3NpY3Zyb3lWaDkvcUpnRGdEaytYRENt?=
+ =?utf-8?B?YklGZGdkdDBPczIvWGY4RGdEUzB6ZUF2aWZPaDZ0dm9oK3pOamgwcGNScnM3?=
+ =?utf-8?B?UGcyRE9SZUhoNHhmY2tJR2huc0ljKzMyTFUyU3hIcHQvQWkrRnpCWVhGZGZ5?=
+ =?utf-8?B?SDlOaThKNjYydlRIdGZZKzE4bEZFbnBUV1RObFU2R3MvQWluVHlQMG9ONDY2?=
+ =?utf-8?B?SWhHQzhtY08vcDUrZXpqeXZoNEwydllUSFdTRG1xa0RlWVEzMUk4cFNmTFla?=
+ =?utf-8?B?NDQ1dkNiZmdxSmN0bGlzK0hSYUZPWit4bElka01uTGFlQ3VPbEpLRlFxYllB?=
+ =?utf-8?B?b2lIdkFGbC9LZGNJdUhpT1NIMkt5UmJmRGNQc0dyMWZMcmFHc2dQeFhuMFBr?=
+ =?utf-8?B?TCszNXBaZXczTHNXb3RhYjQ5eHZPT1l1WnNXVWpybGdKYmNEdW9oak52OWo5?=
+ =?utf-8?B?c2toM2E1Z0tpMXZpTXNkYWFlQmlXd0pYRW1ldzcvRXAwR2pRa2FocmdVaGsr?=
+ =?utf-8?B?b3paVml0N00rL2dFN09FeTNqbHdEQlB4WDh3citjMEgxTDc4dUJ0Ykt4VmY4?=
+ =?utf-8?B?RUgyd0lSUXk1K2xSWHBGemRCQUxiVFRqYVhVQkZHWTBQcWJZU21oYUdwMzk4?=
+ =?utf-8?B?cy9sS1c0dFRxMmUrZ0N3dWpyYVFNVjlHRlRwWWxTbFNPZDE4M1VsR3I5bWVs?=
+ =?utf-8?B?TVZlcmtMaWhpU2NHZ0IrKzIwcVZ4TDVDSzIxZ21pN1VBbTV4N1QyRnpkdTYz?=
+ =?utf-8?B?VDIwLzZzSkJYSmtqUFJRZXd3QXU5WFIrMEtUSDRhQ2RmcTVhcDh0ODRFVmZT?=
+ =?utf-8?B?bno5aDBtRlNJc0xJL2NEdkY1NkUrZ3RoVGN4SW55S3ZhRTZFV0NsOGhNTHRN?=
+ =?utf-8?B?YS9CamIwalVQSXZWY25ENko2MndxZzQ5dmJRWnRFNFhCOUt4dmZiM2hUV1RF?=
+ =?utf-8?B?K0NhSkJpaW45OWNGdVhtQWZCM1YxZFVDSHA1MzZTanBBU1k4RC9qQ3V4UGQx?=
+ =?utf-8?B?UzRwNlBsaW1tbzExa0gwN2N6TCswcWZScWsrR3laQnZTejhZNG54YU1VMXl4?=
+ =?utf-8?B?NjRFeERaQmF2bE4vTUh2ZCtZdE5BSnlZelhVem56dEx6SlJaeWljWG8rTy93?=
+ =?utf-8?B?Q2U0NXBsU1JTMHBhSFZnSWtQYmlHYWl4cTlNVmVSbnd1cG9EeTNlYloxbmV6?=
+ =?utf-8?B?WDRHMDJGeFV0Kyt5cW5zeHppRS9lUC9BZ3Q1aENvYjZLWHdBajFrdDViclpj?=
+ =?utf-8?B?M21xcU5MOHFwNjM2RjA5VGpkTS9sc21DelN0N2F2V200Uzl3UFBMbXNoYzZB?=
+ =?utf-8?B?TTUvSmluZDJ3ZVkzM1RidXk5c3AvNEFBUXdYVWdnVE9Md08wTWZIa1cxcXJ3?=
+ =?utf-8?B?Q3pocHFYOUwrT24wMTRwQVFGemgxaGN3MXFDT2dja3pVU2JOOWdEc0dERXNJ?=
+ =?utf-8?B?ZTJlb1JXR3VHNHBkcWNBWU0rSmF5Yi8vdDhVbmp1WnA0UXlqa293MXBDckt2?=
+ =?utf-8?B?Mkw5M1h4RndsM3BTbEwyWVc2RzBGbmFsSUJya3UrRlU3ZEx2ZWdPM2MrMXZQ?=
+ =?utf-8?B?cGFrQjlhMWJzUDhCenN6QnhzWGV3cGNZdVloTmQyOTZubzd5ZWErMkd5dGFW?=
+ =?utf-8?B?RnlGcHdkR0pPN2h0UlNSQ3Vsdms4QWhqRE9BUCs1cThTWGhRNHdpV0p4MlFv?=
+ =?utf-8?B?SXNvMU5Kdms0MkZiL2xER1E5TkRKaEVmWDhENWNUb005MFYxdDFHRU1vQkZP?=
+ =?utf-8?B?ZEJiODB0ZG0zbW1FWVgxc2xRaFkrS05PaUxCc2VCWW5HNEJPbkVpUE4veUll?=
+ =?utf-8?B?ODBUTUZicW8zSmxNcVhwZ210SEtKdnFUUm1DcjEzbnNPZEczN2JHQVRQUEJm?=
+ =?utf-8?Q?flGCiE1iMzSEktcOEaBrvJCgZ?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f321deef-96f6-48ee-0b73-08dc6c3c5f9b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 826172fc-8f7a-47ae-4b44-08dc6c3c6988
 X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2024 13:16:13.8452
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2024 13:16:30.5045
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lasWAHSEU3CxIZoEiNBOjXZT/zjQItAD5txUd1NRZGwJarmvJdg3IsFiwxyqubcEn/E1ytvCZx3FX7rxsZyRBQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: vZZ7kr3dkSjhuW6rezuQjtYbweUoIm8juzVfBE1tlEK9WX76tRZQ7SkDKVhXwIHJQ/qGFmQ99JQhT5X1sU2CgA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8633
 
 From: Peng Fan <peng.fan@nxp.com>
@@ -221,63 +221,176 @@ Use scope based of_node_put() cleanup to simplify code.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 4 +---
- drivers/pinctrl/mediatek/pinctrl-paris.c      | 4 +---
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ drivers/pinctrl/freescale/pinctrl-imx.c       | 25 +++++++------------------
+ drivers/pinctrl/freescale/pinctrl-imx1-core.c | 16 +++++-----------
+ drivers/pinctrl/freescale/pinctrl-mxs.c       | 14 ++++----------
+ 3 files changed, 16 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-index d39afc122516..91edb539925a 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-@@ -621,7 +621,6 @@ static int mtk_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
- 				 struct device_node *np_config,
- 				 struct pinctrl_map **map, unsigned *num_maps)
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index 2d3d80921c0d..2b7448e3cd65 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -580,7 +580,6 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
+ 				       u32 index)
  {
--	struct device_node *np;
- 	unsigned reserved_maps;
- 	int ret;
+ 	struct pinctrl_dev *pctl = ipctl->pctl;
+-	struct device_node *child;
+ 	struct function_desc *func;
+ 	struct group_desc *grp;
+ 	const char **group_names;
+@@ -605,17 +604,15 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
+ 	if (!group_names)
+ 		return -ENOMEM;
+ 	i = 0;
+-	for_each_child_of_node(np, child)
++	for_each_child_of_node_scoped(np, child)
+ 		group_names[i++] = child->name;
+ 	func->group_names = group_names;
  
-@@ -629,12 +628,11 @@ static int mtk_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	*num_maps = 0;
- 	reserved_maps = 0;
+ 	i = 0;
+-	for_each_child_of_node(np, child) {
++	for_each_child_of_node_scoped(np, child) {
+ 		grp = devm_kzalloc(ipctl->dev, sizeof(*grp), GFP_KERNEL);
+-		if (!grp) {
+-			of_node_put(child);
++		if (!grp)
+ 			return -ENOMEM;
+-		}
  
--	for_each_child_of_node(np_config, np) {
-+	for_each_child_of_node_scoped(np_config, np) {
- 		ret = mtk_pctrl_dt_subnode_to_map(pctldev, np, map,
- 				&reserved_maps, num_maps);
- 		if (ret < 0) {
- 			pinctrl_utils_free_map(pctldev, *map, *num_maps);
--			of_node_put(np);
- 			return ret;
+ 		mutex_lock(&ipctl->mutex);
+ 		radix_tree_insert(&pctl->pin_group_tree,
+@@ -635,21 +632,13 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
+  */
+ static bool imx_pinctrl_dt_is_flat_functions(struct device_node *np)
+ {
+-	struct device_node *function_np;
+-	struct device_node *pinctrl_np;
+-
+-	for_each_child_of_node(np, function_np) {
+-		if (of_property_read_bool(function_np, "fsl,pins")) {
+-			of_node_put(function_np);
++	for_each_child_of_node_scoped(np, function_np) {
++		if (of_property_read_bool(function_np, "fsl,pins"))
+ 			return true;
+-		}
+ 
+-		for_each_child_of_node(function_np, pinctrl_np) {
+-			if (of_property_read_bool(pinctrl_np, "fsl,pins")) {
+-				of_node_put(pinctrl_np);
+-				of_node_put(function_np);
++		for_each_child_of_node_scoped(function_np, pinctrl_np) {
++			if (of_property_read_bool(pinctrl_np, "fsl,pins"))
+ 				return false;
+-			}
  		}
  	}
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index b19bc391705e..e12316c42698 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -536,7 +536,6 @@ static int mtk_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
- 				    struct pinctrl_map **map,
- 				    unsigned *num_maps)
+ 
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
+index 90c696046b38..af1ccfc90bff 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
+@@ -508,7 +508,6 @@ static int imx1_pinctrl_parse_functions(struct device_node *np,
+ 				       struct imx1_pinctrl_soc_info *info,
+ 				       u32 index)
  {
--	struct device_node *np;
- 	unsigned reserved_maps;
+-	struct device_node *child;
+ 	struct imx1_pmx_func *func;
+ 	struct imx1_pin_group *grp;
  	int ret;
+@@ -531,14 +530,12 @@ static int imx1_pinctrl_parse_functions(struct device_node *np,
+ 	if (!func->groups)
+ 		return -ENOMEM;
  
-@@ -544,13 +543,12 @@ static int mtk_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	*num_maps = 0;
- 	reserved_maps = 0;
- 
--	for_each_child_of_node(np_config, np) {
-+	for_each_child_of_node_scoped(np_config, np) {
- 		ret = mtk_pctrl_dt_subnode_to_map(pctldev, np, map,
- 						  &reserved_maps,
- 						  num_maps);
- 		if (ret < 0) {
- 			pinctrl_utils_free_map(pctldev, *map, *num_maps);
--			of_node_put(np);
+-	for_each_child_of_node(np, child) {
++	for_each_child_of_node_scoped(np, child) {
+ 		func->groups[i] = child->name;
+ 		grp = &info->groups[grp_index++];
+ 		ret = imx1_pinctrl_parse_groups(child, grp, info, i++);
+-		if (ret == -ENOMEM) {
+-			of_node_put(child);
++		if (ret == -ENOMEM)
  			return ret;
- 		}
+-		}
  	}
+ 
+ 	return 0;
+@@ -548,7 +545,6 @@ static int imx1_pinctrl_parse_dt(struct platform_device *pdev,
+ 		struct imx1_pinctrl *pctl, struct imx1_pinctrl_soc_info *info)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+-	struct device_node *child;
+ 	int ret;
+ 	u32 nfuncs = 0;
+ 	u32 ngroups = 0;
+@@ -557,7 +553,7 @@ static int imx1_pinctrl_parse_dt(struct platform_device *pdev,
+ 	if (!np)
+ 		return -ENODEV;
+ 
+-	for_each_child_of_node(np, child) {
++	for_each_child_of_node_scoped(np, child) {
+ 		++nfuncs;
+ 		ngroups += of_get_child_count(child);
+ 	}
+@@ -579,12 +575,10 @@ static int imx1_pinctrl_parse_dt(struct platform_device *pdev,
+ 	if (!info->functions || !info->groups)
+ 		return -ENOMEM;
+ 
+-	for_each_child_of_node(np, child) {
++	for_each_child_of_node_scoped(np, child) {
+ 		ret = imx1_pinctrl_parse_functions(child, info, ifunc++);
+-		if (ret == -ENOMEM) {
+-			of_node_put(child);
++		if (ret == -ENOMEM)
+ 			return -ENOMEM;
+-		}
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/pinctrl/freescale/pinctrl-mxs.c b/drivers/pinctrl/freescale/pinctrl-mxs.c
+index e77311f26262..aee70fa55bec 100644
+--- a/drivers/pinctrl/freescale/pinctrl-mxs.c
++++ b/drivers/pinctrl/freescale/pinctrl-mxs.c
+@@ -490,16 +490,14 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
+ 	/* Get groups for each function */
+ 	idxf = 0;
+ 	fn = fnull;
+-	for_each_child_of_node(np, child) {
++	for_each_child_of_node_scoped(np, child) {
+ 		if (is_mxs_gpio(child))
+ 			continue;
+ 		if (of_property_read_u32(child, "reg", &val)) {
+ 			ret = mxs_pinctrl_parse_group(pdev, child,
+ 						      idxg++, NULL);
+-			if (ret) {
+-				of_node_put(child);
++			if (ret)
+ 				return ret;
+-			}
+ 			continue;
+ 		}
+ 
+@@ -509,19 +507,15 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
+ 						 f->ngroups,
+ 						 sizeof(*f->groups),
+ 						 GFP_KERNEL);
+-			if (!f->groups) {
+-				of_node_put(child);
++			if (!f->groups)
+ 				return -ENOMEM;
+-			}
+ 			fn = child->name;
+ 			i = 0;
+ 		}
+ 		ret = mxs_pinctrl_parse_group(pdev, child, idxg++,
+ 					      &f->groups[i++]);
+-		if (ret) {
+-			of_node_put(child);
++		if (ret)
+ 			return ret;
+-		}
+ 	}
+ 
+ 	return 0;
 
 -- 
 2.37.1
