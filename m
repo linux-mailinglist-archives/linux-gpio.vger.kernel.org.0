@@ -1,189 +1,191 @@
-Return-Path: <linux-gpio+bounces-6114-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6115-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D5368BC05A
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 14:25:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ABF488BC08C
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 15:35:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 242591C209B1
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 12:25:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2B8D1C20B33
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 13:35:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FA7F19479;
-	Sun,  5 May 2024 12:25:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 319DA1CF8F;
+	Sun,  5 May 2024 13:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="C4rEVt+b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hpijnvm9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86BC1862C
-	for <linux-gpio@vger.kernel.org>; Sun,  5 May 2024 12:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB2F1BC5C
+	for <linux-gpio@vger.kernel.org>; Sun,  5 May 2024 13:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714911914; cv=none; b=XPhB52FMhy2ydkKmChaCIUXuhjMEGNr0VfGUUN4LNGXpOOI8FcPEG8sA/Vn5pMB8T1Pp4GeEklWA5jh3DIXIVrbzahLomyrCluJ1XnYeYaS+gGv6DbHvc18m4iGICyp3STahdFyB2uCDm2nUxvm49A89q16FFpA8OOuzXevjVbw=
+	t=1714916109; cv=none; b=RHxd/D6IJrvIPCW1wUSwqVhYhIC+82eE5rNn3HBj/pYSbA0IeUUx1mRUQSUua6ipZZIqD8o4aXJibv56NVa1UDisB2ZXwCG9WGnvquVfJGt32ysF625pn2J3QHNwryJGTijf/YRd+0rkXiKdxlmRdzrTLHdMNEaBYzmMi/bV2HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714911914; c=relaxed/simple;
-	bh=yrQqbN5qDXhsCWhv8edlKrikJt0tdGrh2rwpISyK1Jk=;
+	s=arc-20240116; t=1714916109; c=relaxed/simple;
+	bh=IT4pco8MAZnL50CLW4X0zxFp4FEEkZqP0SFsyNpVTN4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BBwpzsvwRWWb2SD9TrvZWouwAzqDVEM04rcAZqJqfJBEnJ29xWGe3ssRm/mpFGsxyuGIFLJDpIlZx4L7OFMx6F02miURkxzPMqnS314fQYZ6Vuy7Uu2QlSVTCK3Q/Qpqxs05scGaWIeZXaHvgmnGcCiIJwukcAF59qcOskJt73M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=C4rEVt+b; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51f1b378ca5so1664770e87.1
-        for <linux-gpio@vger.kernel.org>; Sun, 05 May 2024 05:25:12 -0700 (PDT)
+	 To:Cc:Content-Type; b=SeLa3tSEYGTTZDS2KiGW6FoxsFXpDbgtK6ZO5lFE25uWWmvZvqBmEMvDSxq0ExYohdt1Mub3nNbHzq1gTTksnAovsuRLdppEYPmgOuO9nxj5PVueTC5xEy7l0NXD0YNlQjM0QGhUs7fys8PJdf+gy7eishwri/dQDVPxUHV1GOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hpijnvm9; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a59b81d087aso149143966b.3
+        for <linux-gpio@vger.kernel.org>; Sun, 05 May 2024 06:35:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1714911911; x=1715516711; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714916105; x=1715520905; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=I6d8pltQnbe1BNul8TKdyylJH57jCMCGH7OFNBm5Jck=;
-        b=C4rEVt+b13HI8XC3SCWwlaVD4zD2doCRm2g4yQsdhiE5iO35klgZphT3h/u/RpisiH
-         7yoHa2nHdEOY3AM9QPMEfwjhBcWkuohBcDXBmjZRy7WMQFknyy+Tq2iX3k0lYdMRCzni
-         MlICsHei+6dF5hDf5vV8bz42G7ba8bx1+a5q+Jv5bjl8lPYmxLjzBeORfJBhwxGpcnXU
-         ZAWIWIBYpuH+7RQ1oeEnZlm2xfWwU8467OEwzhv8rgeHCJ6Um7AYVyVcLeMPjVXVAvIP
-         zXbkJHdqTIPNIN+JyGI5pfnir260CgZMod9PnvVN3ZJs/uXFGqpe6BwlVDQkVOeEvqei
-         paig==
+        bh=SPcqfr+g+bSXYm7pimJ3InvzS+CyypGlpNPh0xMs/rc=;
+        b=Hpijnvm9xc5gZs7zBjyYBMlXRcITw2pfo16mOXfR/qd5Jqipylx6aF2VQEan5T6ElM
+         T/UjXezK8g8MGOOa7EyRLAWD+eVML6gNulPufAp9Ot7QYlAImAucwzmCy/z8pHsBWGb3
+         quvYH25VPGlJPD8GUN625Hh1qMnLYiHAH0LNOV5dMuAK7qtrqvmj7DsWjTTki26Lvbtf
+         EAlvmxRUSDWIlDnkf9qHEL1SYCBBJDBbqoXOCcnav0iAenD3zNn3rzIEFiPQ0HwLOHjA
+         Z+qoNjhcfcuhgU2idVYqpYzjqP2H3Pa074+LT2sCn0oIGiSBgLvJaurBp9IK3lBuvOnP
+         +j3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714911911; x=1715516711;
+        d=1e100.net; s=20230601; t=1714916105; x=1715520905;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=I6d8pltQnbe1BNul8TKdyylJH57jCMCGH7OFNBm5Jck=;
-        b=xE0tC7v3XPTLvXjt9Qk1eJso5d35h0X3Vd9U1ZpzCp+pO/jHz5XtM0JAD0HzMAsas9
-         eJta39LBkco6F2tUatSkwYPoC9pZRNmyFDCjmDqqMgER1cQoKv9pmviBhHl+BGoZRBzj
-         8Zp2WmHT6PMfvL6o8wx1UCOX7jDWJXLzC8wXPQMQEmVP8B/DgHBTPa424TNaA1OS9hKz
-         U54OjA6+fMCYsdjREjTjDT9TNOSQOMVM1Q5wir3/+jeI+cthhxK+xyp5Nhn0SCWfoNv/
-         h0q9C+l5F0cDtwFRqvq/7LLedc1HmZFJmh6XFusLFFs2WDszfS66YQHac5pFVt6DbNvX
-         bO5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXTmeSiTY6oWvn/zYcfkdknNEQJTpzyLN8A7TKTODY4ulk/FCW80hg6pu2Xp7S3RHwlLfAG55Ph/ZGFqp0OnChc7z7fYLq+hzrpKw==
-X-Gm-Message-State: AOJu0YxzhzrOxljdFwEFGd95/5w71xIT+ECs9Xs5ea/MqCy0TysRp1TZ
-	wTG/k9M7JKF0TE/rh9wHIebmmWyZynM/EbastrV1Md436cVqiyHmEE6uPy/6yYa36nwUabuc5/a
-	UQZS/lA/YY6jhLrtDM8yrwJI3rKKP36W55p2rCg==
-X-Google-Smtp-Source: AGHT+IGHC8sNZwgMzoG3QPzD5Yufu5CNex3JNhg27cIEDBNo3bkezg4pBrhViAS/E/M0FeLM7mdMlT2yKEfcduH5taI=
-X-Received: by 2002:a05:6512:4027:b0:51d:d630:365c with SMTP id
- br39-20020a056512402700b0051dd630365cmr8601279lfb.4.1714911910873; Sun, 05
- May 2024 05:25:10 -0700 (PDT)
+        bh=SPcqfr+g+bSXYm7pimJ3InvzS+CyypGlpNPh0xMs/rc=;
+        b=YIlnE6UWI5UCikd4bK7nTyyWAu0Vlhq44GbuqUSl3hnoZ0WxYijhfnePyuzHG983OE
+         KOYeWr7BZCsaB4bxs6vzrl1+8Klfsgg0bJXNTtvEiP/nSgKbjCUmC2jG9NZiyYi8jXL4
+         3wCrmfTt1DfMLvDPO3lQF0OO+XhwDlj3hSBle8cdSWVTLto8pd62/f/O78p0ZcKiBAZ6
+         wH2dzO8LUPvP3X3/0ZA25V1tRVdJcJYCpLuhZZwxeJaorWbqGZCyNUqIdUc5XjFFA6pu
+         gJ0brAeTmMO81dKnT1n4xYYBRzM80+RD7XamTXG19VbH42Czg8gLwoyfi2viAqvi/7Pl
+         owLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXWco8W5jKDjfqMMRJQcv/b5Wtc7AHea+4qvNd1dHyHAte+3OJsEmQyfq/7ffzY4Y7Y8JJvWOsmz59lno38kZrVd2Bz3l+JqB4akg==
+X-Gm-Message-State: AOJu0YzijguJPO7ezKw202LHpjWelEg2fkBrPTGG91RHehd1W2ttmbGl
+	Kwn27s5pZGflsga0mz28VTjPb2gRbJkqehwGuBLNlKli++9K3j2da2ilYajoowCZUlq0SOV/NMr
+	hbFDU7aHbWollGWVnqnBxeyhV46U=
+X-Google-Smtp-Source: AGHT+IGVMzODczjSb3xYifmUIjM97SrQLtGh7kNjX1SuDadTH6xGpEbH9YZyMj+ajPCbWymnZ+I+P2vRO2HVR89KP4o=
+X-Received: by 2002:a17:906:608d:b0:a58:7ea5:c49b with SMTP id
+ t13-20020a170906608d00b00a587ea5c49bmr6427702ejj.42.1714916104913; Sun, 05
+ May 2024 06:35:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424185039.1707812-1-opendmb@gmail.com> <20240424185039.1707812-3-opendmb@gmail.com>
- <CACRpkda4v6Nu8V3MVamDpfs4qnc89e8Vd8fSyaNsqJQ40GQqZg@mail.gmail.com> <45b7742c-9cde-4238-9c2c-c75dfbe9d8f3@gmail.com>
-In-Reply-To: <45b7742c-9cde-4238-9c2c-c75dfbe9d8f3@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Sun, 5 May 2024 14:25:00 +0200
-Message-ID: <CAMRc=MfEVCDf8sn7C-cO_Y1xa4RehQj1tvRSRtC5aj0dF6uJWA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpio: of: support gpio-ranges for multiple gpiochip devices
-To: Doug Berger <opendmb@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Phil Elwell <phil@raspberrypi.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+References: <20240430115111.3453-1-kabel@kernel.org> <20240430115111.3453-4-kabel@kernel.org>
+ <CAHp75VdV_JmbS1pM11Pf8S5vWU8X1FrKpw3aAtTHK0tsLua5fg@mail.gmail.com>
+ <20240503082714.ow5qtqu2myi3z2ug@kandell> <ZjUyJSuGthKH0q4q@smile.fi.intel.com>
+ <20240505081832.vf2267v37shu6fhe@kandell>
+In-Reply-To: <20240505081832.vf2267v37shu6fhe@kandell>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 5 May 2024 16:34:28 +0300
+Message-ID: <CAHp75VcDi5hbG3wzygBJ=iGteVrzJp08sKD0cJyS1vvkx8fo6Q@mail.gmail.com>
+Subject: Re: [PATCH v8 3/9] platform: cznic: turris-omnia-mcu: Add support for
+ MCU connected GPIOs
+To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, 
+	arm@kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 3, 2024 at 10:21=E2=80=AFPM Doug Berger <opendmb@gmail.com> wro=
-te:
->
-> On 5/3/2024 1:25 AM, Linus Walleij wrote:
-> > Hi Dough,
-> >
-> > thanks for your patch!
-> Thanks for your review!
->
-> >
-> > I'm a bit confused here:
-> "Communication is hard" and I may be confused about your confusion, but
-> hopefully we can work it out.
->
-> >
-> > On Wed, Apr 24, 2024 at 8:51=E2=80=AFPM Doug Berger <opendmb@gmail.com>=
+On Sun, May 5, 2024 at 11:18=E2=80=AFAM Marek Beh=C3=BAn <kabel@kernel.org>=
  wrote:
-> >
-> >
-> >> +               /* Ignore ranges outside of this GPIO chip */
-> >> +               if (pinspec.args[0] >=3D (chip->offset + chip->ngpio))
-> >> +                       continue;
-> >> +               if (pinspec.args[0] + pinspec.args[2] <=3D chip->offse=
-t)
-> >> +                       continue;
-> >
-> > Here pinspec.args[0] and [2] comes directly from the device tree.
-> >
-> > The documentation in Documentation/devicetree/bindings/gpio/gpio.txt
-> > says:
-> >
-> >> 2.2) Ordinary (numerical) GPIO ranges
-> >> -------------------------------------
-> >>
-> >> It is useful to represent which GPIOs correspond to which pins on whic=
-h pin
-> >> controllers. The gpio-ranges property described below represents this =
-with
-> >> a discrete set of ranges mapping pins from the pin controller local nu=
-mber space
-> >> to pins in the GPIO controller local number space.
-> >>
-> >> The format is: <[pin controller phandle], [GPIO controller offset],
-> >>                  [pin controller offset], [number of pins]>;
-> >>
-> >> The GPIO controller offset pertains to the GPIO controller node contai=
-ning the
-> >> range definition.
-> I think we are in agreement here. For extra clarity, I will add that in
-> my understanding pinspec.args[0] corresponds to [GPIO controller offset]
-> and pinspec.args[2] corresponds to [number of pins].
->
-> >
-> > So I do not understand how pinspec[0] and [2] can ever be compared
-> > to something involving chip->offset which is a Linux-specific offset.
-> >
-> > It rather looks like you are trying to accomodate the Linux numberspace
-> > in the ranges, which it was explicitly designed to avoid.
-> The struct gpio_chip documentation in include/linux/gpio/driver.h says:
->
->  > * @offset: when multiple gpio chips belong to the same device this
->  > *    can be used as offset within the device so friendly names can
->  > *    be properly assigned.
->
-> It is my understanding that this value represents the offset of a
-> gpiochip relative to the GPIO controller device defined by the GPIO
-> controller node in device tree. This puts it in the same number space as
-> [GPIO controller offset]. I believe it was introduced for the specific
-> purpose of translating [GPIO controller offset] values into
-> Linux-specific offsets, which is why it is being reused for that purpose
-> in this patch.
->
-> For GPIO Controllers that contain a single gpiochip the 'offset' member
-> is 0 and the device tree node offsets can be applied directly to the
-> gpiochip. However, when a GPIO Controller contains multiple gpiochips,
-> the device tree node offsets must be translated to each individual gpioch=
-ip.
->
-> >
-> > I just don't get it.
-> >
-> > So NACK until I understand what is going on here.
-> >
-> > Yours,
-> > Linus Walleij
-> I hope it makes sense now, but if not please help me understand what I
-> may be missing.
->
-> Thanks,
->      Doug
->
+> On Fri, May 03, 2024 at 09:51:17PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 03, 2024 at 10:28:17AM +0200, Marek Beh=C3=BAn wrote:
+> > > On Fri, May 03, 2024 at 07:05:34AM +0300, Andy Shevchenko wrote:
+> > > > On Tue, Apr 30, 2024 at 2:51=E2=80=AFPM Marek Beh=C3=BAn <kabel@ker=
+nel.org> wrote:
 
-Linus,
+...
 
-Please let me know if this is still a NAK, if so, I'll drop this
-series from my tree at least for this release.
+> > > > > +static const char * const omnia_mcu_gpio_templates[64] =3D {
+> > > > > +       /* GPIOs with value read from the 16-bit wide status */
+> > > > > +       [4]  =3D "gpio%u.MiniPCIe0 Card Detect",
+> > > > > +       [5]  =3D "gpio%u.MiniPCIe0 mSATA Indicator",
+> > > > > +       [6]  =3D "gpio%u.Front USB3 port over-current",
+> > > > > +       [7]  =3D "gpio%u.Rear USB3 port over-current",
+> > > > > +       [8]  =3D "gpio%u.Front USB3 port power",
+> > > > > +       [9]  =3D "gpio%u.Rear USB3 port power",
+> > > > > +       [12] =3D "gpio%u.Front Button",
+> > > > > +
+> > > > > +       /* GPIOs with value read from the 32-bit wide extended st=
+atus */
+> > > > > +       [16] =3D "gpio%u.SFP nDET",
+> > > > > +       [28] =3D "gpio%u.MiniPCIe0 LED",
+> > > > > +       [29] =3D "gpio%u.MiniPCIe1 LED",
+> > > > > +       [30] =3D "gpio%u.MiniPCIe2 LED",
+> > > > > +       [31] =3D "gpio%u.MiniPCIe0 PAN LED",
+> > > > > +       [32] =3D "gpio%u.MiniPCIe1 PAN LED",
+> > > > > +       [33] =3D "gpio%u.MiniPCIe2 PAN LED",
+> > > > > +       [34] =3D "gpio%u.WAN PHY LED0",
+> > > > > +       [35] =3D "gpio%u.WAN PHY LED1",
+> > > > > +       [36] =3D "gpio%u.LAN switch p0 LED0",
+> > > > > +       [37] =3D "gpio%u.LAN switch p0 LED1",
+> > > > > +       [38] =3D "gpio%u.LAN switch p1 LED0",
+> > > > > +       [39] =3D "gpio%u.LAN switch p1 LED1",
+> > > > > +       [40] =3D "gpio%u.LAN switch p2 LED0",
+> > > > > +       [41] =3D "gpio%u.LAN switch p2 LED1",
+> > > > > +       [42] =3D "gpio%u.LAN switch p3 LED0",
+> > > > > +       [43] =3D "gpio%u.LAN switch p3 LED1",
+> > > > > +       [44] =3D "gpio%u.LAN switch p4 LED0",
+> > > > > +       [45] =3D "gpio%u.LAN switch p4 LED1",
+> > > > > +       [46] =3D "gpio%u.LAN switch p5 LED0",
+> > > > > +       [47] =3D "gpio%u.LAN switch p5 LED1",
+> > > > > +
+> > > > > +       /* GPIOs with value read from the 16-bit wide extended co=
+ntrol status */
+> > > > > +       [48] =3D "gpio%u.eMMC nRESET",
+> > > > > +       [49] =3D "gpio%u.LAN switch nRESET",
+> > > > > +       [50] =3D "gpio%u.WAN PHY nRESET",
+> > > > > +       [51] =3D "gpio%u.MiniPCIe0 nPERST",
+> > > > > +       [52] =3D "gpio%u.MiniPCIe1 nPERST",
+> > > > > +       [53] =3D "gpio%u.MiniPCIe2 nPERST",
+> > > > > +       [54] =3D "gpio%u.WAN PHY SFP mux",
+> > > > > +};
+> > > >
+> > > > You may reduce the memory footprint of these just by doing "gpio%u.=
+"
+> > > > part(s) outside. Here compiler won't compress this (as in the case =
+of
+> > > > repetitive string literals),
+> > >
+> > > Are you saying that I should dynamically create another array just to
+> > > pass it to the gpiochip's names pointer?
+> >
+> > I have looked into this again and now I'm puzzled how you tested this.
+> > To me it seems that those gpio%u will go as a fixed string to the user =
+space,
+> > there is no %u --> number substitution happens. Moreover, this data any=
+way
+> > is redundant. Userspace and debugfs all have line numbers being printed=
+.
+> >
+>
+> It gets substituted in drivers/gpio/gpiolib-sysfs.c, function
+> gpiod_export():
+>
+>   dev =3D device_create_with_groups(&gpio_class, &gdev->dev,
+>                                   MKDEV(0, 0), data, gpio_groups,
+>                                   ioname ? ioname : "gpio%u",
+>                                   desc_to_gpio(desc));
+>
+> The ioname variable contains the string.
+>
+> This is then visible in sysfs:
+>
+>   $ cd /sys/class/gpio
+>   $ echo 560 >export
+>   $ ls
+>   ...
+>   gpio560.eMMC nRESET
+>   ...
 
-Bart
+Interesting. But before giving my conclusion on this, what is the
+output of /sys/kernel/debug/gpio and `gpioinfo` (the latter from
+libgpiod)?
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
