@@ -1,144 +1,189 @@
-Return-Path: <linux-gpio+bounces-6113-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6114-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A66438BC058
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 14:23:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D5368BC05A
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 14:25:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EBFF4B21001
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 12:23:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 242591C209B1
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 12:25:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD0FF18C36;
-	Sun,  5 May 2024 12:23:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FA7F19479;
+	Sun,  5 May 2024 12:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="1rzayCna"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="C4rEVt+b"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6604186A
-	for <linux-gpio@vger.kernel.org>; Sun,  5 May 2024 12:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86BC1862C
+	for <linux-gpio@vger.kernel.org>; Sun,  5 May 2024 12:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714911791; cv=none; b=Aue8qonIZtAD65JAeawFiD8e9I6joTipUAxnoZ03CJaSN5tDAY/KtzIKUP9w4czK/PqWTQsHeJvJymtm2P+h0KfhQNpMFxe9UygrrGHZlhjavPfMsqPAdowhiqqJyzBGgqn4p5V5rV0tJXeLFL3PuYEEaAcAQtgNK0NDM1NUmzI=
+	t=1714911914; cv=none; b=XPhB52FMhy2ydkKmChaCIUXuhjMEGNr0VfGUUN4LNGXpOOI8FcPEG8sA/Vn5pMB8T1Pp4GeEklWA5jh3DIXIVrbzahLomyrCluJ1XnYeYaS+gGv6DbHvc18m4iGICyp3STahdFyB2uCDm2nUxvm49A89q16FFpA8OOuzXevjVbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714911791; c=relaxed/simple;
-	bh=E2e+KBmb9YTZIQNw7gyRcdAdxmO8Wo+zcNDYQn6wDQk=;
+	s=arc-20240116; t=1714911914; c=relaxed/simple;
+	bh=yrQqbN5qDXhsCWhv8edlKrikJt0tdGrh2rwpISyK1Jk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UVjEInMvUsqkVb1SaBiYQZFNqrAYZS3Nxv+LvDV22IN5p9Y+GKlSkDpUrIaBJuxClIlt7IEaruRdfkNZi/3yb3CQwI0ADJUJAGM2tHNOEDEQbtNmu84sr+I31xNIxTFhB8QHteDcDVO0CPTLrXiqCjsJriEF2HSP7uTGRVTPArc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=1rzayCna; arc=none smtp.client-ip=209.85.208.178
+	 To:Cc:Content-Type; b=BBwpzsvwRWWb2SD9TrvZWouwAzqDVEM04rcAZqJqfJBEnJ29xWGe3ssRm/mpFGsxyuGIFLJDpIlZx4L7OFMx6F02miURkxzPMqnS314fQYZ6Vuy7Uu2QlSVTCK3Q/Qpqxs05scGaWIeZXaHvgmnGcCiIJwukcAF59qcOskJt73M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=C4rEVt+b; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2db17e8767cso13553061fa.3
-        for <linux-gpio@vger.kernel.org>; Sun, 05 May 2024 05:23:08 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51f1b378ca5so1664770e87.1
+        for <linux-gpio@vger.kernel.org>; Sun, 05 May 2024 05:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1714911787; x=1715516587; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1714911911; x=1715516711; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HSAr4n5Bmz/3NAuqmrIGiy0YoVXgzQXcdQqMh5u4C3w=;
-        b=1rzayCnaxyHOzto+mDJPLTWQkHDzAOI+Prtb16+WjlkDdcWlvzuUdnrFEBIweORjeU
-         74zPT7u915252rS8GHjvqhPSsBsyGgHVRoAuJNtpMKFk7t4wxEzd+9AsdL+03AzrSuEu
-         n+0yT63Do64C6RtAU3EQyrGv3xsxKZ9105k7apwfOK+Jx5U8ijH8jkaFOwPBYDI1Hse/
-         SPSar6mSHL6j/fKGca2hMJ4UzI0Qwmqfx10f9YzRSpv+vSlSR1K/flRO0IBR8oW2DFQ5
-         wxgxXqzmYKJh17FGpMM0cZ/8WMrsG0udMyLa5NcWcT4StQapchgJWp/GX3B+yDapy3wq
-         zasA==
+        bh=I6d8pltQnbe1BNul8TKdyylJH57jCMCGH7OFNBm5Jck=;
+        b=C4rEVt+b13HI8XC3SCWwlaVD4zD2doCRm2g4yQsdhiE5iO35klgZphT3h/u/RpisiH
+         7yoHa2nHdEOY3AM9QPMEfwjhBcWkuohBcDXBmjZRy7WMQFknyy+Tq2iX3k0lYdMRCzni
+         MlICsHei+6dF5hDf5vV8bz42G7ba8bx1+a5q+Jv5bjl8lPYmxLjzBeORfJBhwxGpcnXU
+         ZAWIWIBYpuH+7RQ1oeEnZlm2xfWwU8467OEwzhv8rgeHCJ6Um7AYVyVcLeMPjVXVAvIP
+         zXbkJHdqTIPNIN+JyGI5pfnir260CgZMod9PnvVN3ZJs/uXFGqpe6BwlVDQkVOeEvqei
+         paig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714911787; x=1715516587;
+        d=1e100.net; s=20230601; t=1714911911; x=1715516711;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HSAr4n5Bmz/3NAuqmrIGiy0YoVXgzQXcdQqMh5u4C3w=;
-        b=uPBPQYrRnvk7q1cNzCfqyGvoUy+CHOKA46orpL4v44hHuFW6NpTZwGybjlDF2d0nMy
-         neqOu2U2ggpEchD32JY2ay+DIBPi8fY5A2k0MbQMJFwwRRtZox1ClXcUnCu40SzAYW4o
-         iGhxrHO/MwuM4NJUyeUbCXZ42G38bJx20i2qPqJyf79d7acGQsLPEzsMcbssQrNi6BGa
-         ZH78XW2mQeaTfZFM1VhPClBJJU7duXjTc5Nc5rfcFK9ffEj6wfO1wRNlXiMHnlrM8MJ4
-         kQv09PUdjVoYjrZCnHqruFkQb0rfwYAMmVumZ2g8voqcRyie9Nn8n+Wk+s/cKR5wAlgY
-         Q+WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8tqKcyAihtYh8+niOcPyCDwYQqBjo5vf2q9F5FfLoUyMGS3v3qBSVbb7HZzUDX3c1wt1rvB4pDAea64XCjYw0iuJBKHkEMHzzaA==
-X-Gm-Message-State: AOJu0YzvQZoBTw144ZUogWojsj0N33FhG62lTzfs06mhhDxYbKDl6iff
-	g8U3KExVLvLiK2SkE1oo4lnL78iqri003B0RF5ULuZdGE0q1xN7LcyCN6SPEFc79aXV6COzWEWg
-	QNFxUEVhf9ADk6AKXY9R5LfoOLNwYkKjDm61zCQ==
-X-Google-Smtp-Source: AGHT+IH4OgvhpTuR8NUJ0jT6ZYIBg3xi09T3TZ+qCyKws+N3dIcP80CxmF73NvNBxMflur5QUexUGUAZiSDxbWdANgc=
-X-Received: by 2002:a05:6512:1256:b0:51d:4c0a:a512 with SMTP id
- fb22-20020a056512125600b0051d4c0aa512mr6180164lfb.68.1714911786804; Sun, 05
- May 2024 05:23:06 -0700 (PDT)
+        bh=I6d8pltQnbe1BNul8TKdyylJH57jCMCGH7OFNBm5Jck=;
+        b=xE0tC7v3XPTLvXjt9Qk1eJso5d35h0X3Vd9U1ZpzCp+pO/jHz5XtM0JAD0HzMAsas9
+         eJta39LBkco6F2tUatSkwYPoC9pZRNmyFDCjmDqqMgER1cQoKv9pmviBhHl+BGoZRBzj
+         8Zp2WmHT6PMfvL6o8wx1UCOX7jDWJXLzC8wXPQMQEmVP8B/DgHBTPa424TNaA1OS9hKz
+         U54OjA6+fMCYsdjREjTjDT9TNOSQOMVM1Q5wir3/+jeI+cthhxK+xyp5Nhn0SCWfoNv/
+         h0q9C+l5F0cDtwFRqvq/7LLedc1HmZFJmh6XFusLFFs2WDszfS66YQHac5pFVt6DbNvX
+         bO5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXTmeSiTY6oWvn/zYcfkdknNEQJTpzyLN8A7TKTODY4ulk/FCW80hg6pu2Xp7S3RHwlLfAG55Ph/ZGFqp0OnChc7z7fYLq+hzrpKw==
+X-Gm-Message-State: AOJu0YxzhzrOxljdFwEFGd95/5w71xIT+ECs9Xs5ea/MqCy0TysRp1TZ
+	wTG/k9M7JKF0TE/rh9wHIebmmWyZynM/EbastrV1Md436cVqiyHmEE6uPy/6yYa36nwUabuc5/a
+	UQZS/lA/YY6jhLrtDM8yrwJI3rKKP36W55p2rCg==
+X-Google-Smtp-Source: AGHT+IGHC8sNZwgMzoG3QPzD5Yufu5CNex3JNhg27cIEDBNo3bkezg4pBrhViAS/E/M0FeLM7mdMlT2yKEfcduH5taI=
+X-Received: by 2002:a05:6512:4027:b0:51d:d630:365c with SMTP id
+ br39-20020a056512402700b0051dd630365cmr8601279lfb.4.1714911910873; Sun, 05
+ May 2024 05:25:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2d27e1ad360dec2c3d78d9800bc93ecb6f9b50c5.1714573214.git.lorenzo@kernel.org>
-In-Reply-To: <2d27e1ad360dec2c3d78d9800bc93ecb6f9b50c5.1714573214.git.lorenzo@kernel.org>
+References: <20240424185039.1707812-1-opendmb@gmail.com> <20240424185039.1707812-3-opendmb@gmail.com>
+ <CACRpkda4v6Nu8V3MVamDpfs4qnc89e8Vd8fSyaNsqJQ40GQqZg@mail.gmail.com> <45b7742c-9cde-4238-9c2c-c75dfbe9d8f3@gmail.com>
+In-Reply-To: <45b7742c-9cde-4238-9c2c-c75dfbe9d8f3@gmail.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Sun, 5 May 2024 14:22:55 +0200
-Message-ID: <CAMRc=MeQp6FFhXSr1HbvVAd+D3wOsmtLvoxjt7QmT2a=NNTHmA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: airoha: en7581: Add gpio controller nodes
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, nbd@nbd.name, 
-	john@phrozen.org, devicetree@vger.kernel.org, dd@embedd.com, 
-	catalin.marinas@arm.com, will@kernel.org, upstream@airoha.com, 
-	lorenzo.bianconi83@gmail.com, angelogioacchino.delregno@collabora.com, 
-	linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+Date: Sun, 5 May 2024 14:25:00 +0200
+Message-ID: <CAMRc=MfEVCDf8sn7C-cO_Y1xa4RehQj1tvRSRtC5aj0dF6uJWA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] gpio: of: support gpio-ranges for multiple gpiochip devices
+To: Doug Berger <opendmb@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Phil Elwell <phil@raspberrypi.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 1, 2024 at 4:26=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.org=
-> wrote:
+On Fri, May 3, 2024 at 10:21=E2=80=AFPM Doug Berger <opendmb@gmail.com> wro=
+te:
 >
-> Introduce the Airoha EN7581 gpio nodes in Airoha EN7581 dtsi
+> On 5/3/2024 1:25 AM, Linus Walleij wrote:
+> > Hi Dough,
+> >
+> > thanks for your patch!
+> Thanks for your review!
 >
-> Tested-by: Rajeev Kumar <Rajeev.Kumar@airoha.com>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
-> This patch is based on the following pending patch:
-> https://patchwork.kernel.org/project/spi-devel-general/patch/189790802f3b=
-a1a80c4ab5e064b2425e5a360098.1714571980.git.lorenzo@kernel.org/
-> ---
->  arch/arm64/boot/dts/airoha/en7581.dtsi | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> >
+> > I'm a bit confused here:
+> "Communication is hard" and I may be confused about your confusion, but
+> hopefully we can work it out.
 >
-> diff --git a/arch/arm64/boot/dts/airoha/en7581.dtsi b/arch/arm64/boot/dts=
-/airoha/en7581.dtsi
-> index 98c2a86086e1..5d0d76cecfe0 100644
-> --- a/arch/arm64/boot/dts/airoha/en7581.dtsi
-> +++ b/arch/arm64/boot/dts/airoha/en7581.dtsi
-> @@ -178,5 +178,25 @@ spi_nand: nand@0 {
->                                 spi-rx-bus-width =3D <2>;
->                         };
->                 };
-> +
-> +               gpio0: gpio@1fbf0200 {
+> >
+> > On Wed, Apr 24, 2024 at 8:51=E2=80=AFPM Doug Berger <opendmb@gmail.com>=
+ wrote:
+> >
+> >
+> >> +               /* Ignore ranges outside of this GPIO chip */
+> >> +               if (pinspec.args[0] >=3D (chip->offset + chip->ngpio))
+> >> +                       continue;
+> >> +               if (pinspec.args[0] + pinspec.args[2] <=3D chip->offse=
+t)
+> >> +                       continue;
+> >
+> > Here pinspec.args[0] and [2] comes directly from the device tree.
+> >
+> > The documentation in Documentation/devicetree/bindings/gpio/gpio.txt
+> > says:
+> >
+> >> 2.2) Ordinary (numerical) GPIO ranges
+> >> -------------------------------------
+> >>
+> >> It is useful to represent which GPIOs correspond to which pins on whic=
+h pin
+> >> controllers. The gpio-ranges property described below represents this =
+with
+> >> a discrete set of ranges mapping pins from the pin controller local nu=
+mber space
+> >> to pins in the GPIO controller local number space.
+> >>
+> >> The format is: <[pin controller phandle], [GPIO controller offset],
+> >>                  [pin controller offset], [number of pins]>;
+> >>
+> >> The GPIO controller offset pertains to the GPIO controller node contai=
+ning the
+> >> range definition.
+> I think we are in agreement here. For extra clarity, I will add that in
+> my understanding pinspec.args[0] corresponds to [GPIO controller offset]
+> and pinspec.args[2] corresponds to [number of pins].
+>
+> >
+> > So I do not understand how pinspec[0] and [2] can ever be compared
+> > to something involving chip->offset which is a Linux-specific offset.
+> >
+> > It rather looks like you are trying to accomodate the Linux numberspace
+> > in the ranges, which it was explicitly designed to avoid.
+> The struct gpio_chip documentation in include/linux/gpio/driver.h says:
+>
+>  > * @offset: when multiple gpio chips belong to the same device this
+>  > *    can be used as offset within the device so friendly names can
+>  > *    be properly assigned.
+>
+> It is my understanding that this value represents the offset of a
+> gpiochip relative to the GPIO controller device defined by the GPIO
+> controller node in device tree. This puts it in the same number space as
+> [GPIO controller offset]. I believe it was introduced for the specific
+> purpose of translating [GPIO controller offset] values into
+> Linux-specific offsets, which is why it is being reused for that purpose
+> in this patch.
+>
+> For GPIO Controllers that contain a single gpiochip the 'offset' member
+> is 0 and the device tree node offsets can be applied directly to the
+> gpiochip. However, when a GPIO Controller contains multiple gpiochips,
+> the device tree node offsets must be translated to each individual gpioch=
+ip.
+>
+> >
+> > I just don't get it.
+> >
+> > So NACK until I understand what is going on here.
+> >
+> > Yours,
+> > Linus Walleij
+> I hope it makes sense now, but if not please help me understand what I
+> may be missing.
+>
+> Thanks,
+>      Doug
+>
 
-These labels are not used anywhere.
+Linus,
+
+Please let me know if this is still a NAK, if so, I'll drop this
+series from my tree at least for this release.
 
 Bart
-
-> +                       compatible =3D "airoha,en7523-gpio";
-> +                       reg =3D <0 0x1fbf0204 0 0x4>,
-> +                             <0 0x1fbf0200 0 0x4>,
-> +                             <0 0x1fbf0220 0 0x4>,
-> +                             <0 0x1fbf0214 0 0x4>;
-> +                       gpio-controller;
-> +                       #gpio-cells =3D <2>;
-> +               };
-> +
-> +               gpio1: gpio@1fbf0270 {
-> +                       compatible =3D "airoha,en7523-gpio";
-> +                       reg =3D <0 0x1fbf0270 0 0x4>,
-> +                             <0 0x1fbf0260 0 0x4>,
-> +                             <0 0x1fbf0264 0 0x4>,
-> +                             <0 0x1fbf0278 0 0x4>;
-> +                       gpio-controller;
-> +                       #gpio-cells =3D <2>;
-> +               };
->         };
->  };
-> --
-> 2.44.0
->
 
