@@ -1,190 +1,144 @@
-Return-Path: <linux-gpio+bounces-6112-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6113-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EAF08BBFBA
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 10:18:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A66438BC058
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 14:23:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 947EF1F215D8
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 08:18:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EBFF4B21001
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 May 2024 12:23:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36A6563A5;
-	Sun,  5 May 2024 08:18:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD0FF18C36;
+	Sun,  5 May 2024 12:23:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dT2LpXCx"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="1rzayCna"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA93C3FF1
-	for <linux-gpio@vger.kernel.org>; Sun,  5 May 2024 08:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6604186A
+	for <linux-gpio@vger.kernel.org>; Sun,  5 May 2024 12:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714897123; cv=none; b=kA82oeVpNGsOeEvnD5sy4et+kCk7E6shTS4DzSkH/TRwQG8yWEvPlcBQN1+VDiRFtqKtDnH/OkBu1rQIzqBOksO5n0vLfC6fD53wefVb02xB+T+jAeMHkjtzOu6x+VQJGa+PcRLclWZ8lJIENaIL2YuTajqMbjJgm2MZHPajhlY=
+	t=1714911791; cv=none; b=Aue8qonIZtAD65JAeawFiD8e9I6joTipUAxnoZ03CJaSN5tDAY/KtzIKUP9w4czK/PqWTQsHeJvJymtm2P+h0KfhQNpMFxe9UygrrGHZlhjavPfMsqPAdowhiqqJyzBGgqn4p5V5rV0tJXeLFL3PuYEEaAcAQtgNK0NDM1NUmzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714897123; c=relaxed/simple;
-	bh=1FMFuBl0hrQz+H0k9+W8lNfqcytRvBs+C8vMJJ7rW+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KvoGGFrC6gq95CKnsLNAhb0Mq20Xh8gXFQW7VIC2dhaNYSQV5X+jbLaeyBdPMhoDQLyPFgbnz7KzP/CdPQW2XtvKH21v0z9CjNU/IaNkXt25FfCqAMv7uhxiRbnbDAA5IR4kCYpKm7fT4guJKM+p9pZwCeOS4YFJMm16+1r/8fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dT2LpXCx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE006C113CC;
-	Sun,  5 May 2024 08:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714897122;
-	bh=1FMFuBl0hrQz+H0k9+W8lNfqcytRvBs+C8vMJJ7rW+I=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:From;
-	b=dT2LpXCxvHk1lwYEBoaoDOevchcrrw+mv7haY50ajhWjSRiX3vpdE2uj6xhHsE54t
-	 DQDfCMD4/nb/fLGOYWLRxmcFXqmDKrTrD3PKdxn5lf4cX9IbbcxO+mkI0LtqemXHXN
-	 odR3lGzvk/Eo/KcB9taqkNxghPPx3An93ZS65Kt50lRnAZkNH+blPtSZbsEPdi/Gl+
-	 hzf1mnaRe3yNukWWJF7Biu6xPrYkMCqDheH+ahqq6ZVV3sD3xo3dML0B4/Pt7mr07j
-	 M3PypSM8F9wdKKlICuqXad9bw9ihfTDS1KCC527Y2TM2Uc8Nyh+x1efetCrspmC7Fg
-	 GRV+CtsY7sbmw==
-Date: Sun, 5 May 2024 10:18:32 +0200
-From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, arm@kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v8 3/9] platform: cznic: turris-omnia-mcu: Add support
- for MCU connected GPIOs
-Message-ID: <20240505081832.vf2267v37shu6fhe@kandell>
-References: <20240430115111.3453-1-kabel@kernel.org>
- <20240430115111.3453-4-kabel@kernel.org>
- <CAHp75VdV_JmbS1pM11Pf8S5vWU8X1FrKpw3aAtTHK0tsLua5fg@mail.gmail.com>
- <20240503082714.ow5qtqu2myi3z2ug@kandell>
- <ZjUyJSuGthKH0q4q@smile.fi.intel.com>
+	s=arc-20240116; t=1714911791; c=relaxed/simple;
+	bh=E2e+KBmb9YTZIQNw7gyRcdAdxmO8Wo+zcNDYQn6wDQk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UVjEInMvUsqkVb1SaBiYQZFNqrAYZS3Nxv+LvDV22IN5p9Y+GKlSkDpUrIaBJuxClIlt7IEaruRdfkNZi/3yb3CQwI0ADJUJAGM2tHNOEDEQbtNmu84sr+I31xNIxTFhB8QHteDcDVO0CPTLrXiqCjsJriEF2HSP7uTGRVTPArc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=1rzayCna; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2db17e8767cso13553061fa.3
+        for <linux-gpio@vger.kernel.org>; Sun, 05 May 2024 05:23:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1714911787; x=1715516587; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HSAr4n5Bmz/3NAuqmrIGiy0YoVXgzQXcdQqMh5u4C3w=;
+        b=1rzayCnaxyHOzto+mDJPLTWQkHDzAOI+Prtb16+WjlkDdcWlvzuUdnrFEBIweORjeU
+         74zPT7u915252rS8GHjvqhPSsBsyGgHVRoAuJNtpMKFk7t4wxEzd+9AsdL+03AzrSuEu
+         n+0yT63Do64C6RtAU3EQyrGv3xsxKZ9105k7apwfOK+Jx5U8ijH8jkaFOwPBYDI1Hse/
+         SPSar6mSHL6j/fKGca2hMJ4UzI0Qwmqfx10f9YzRSpv+vSlSR1K/flRO0IBR8oW2DFQ5
+         wxgxXqzmYKJh17FGpMM0cZ/8WMrsG0udMyLa5NcWcT4StQapchgJWp/GX3B+yDapy3wq
+         zasA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714911787; x=1715516587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HSAr4n5Bmz/3NAuqmrIGiy0YoVXgzQXcdQqMh5u4C3w=;
+        b=uPBPQYrRnvk7q1cNzCfqyGvoUy+CHOKA46orpL4v44hHuFW6NpTZwGybjlDF2d0nMy
+         neqOu2U2ggpEchD32JY2ay+DIBPi8fY5A2k0MbQMJFwwRRtZox1ClXcUnCu40SzAYW4o
+         iGhxrHO/MwuM4NJUyeUbCXZ42G38bJx20i2qPqJyf79d7acGQsLPEzsMcbssQrNi6BGa
+         ZH78XW2mQeaTfZFM1VhPClBJJU7duXjTc5Nc5rfcFK9ffEj6wfO1wRNlXiMHnlrM8MJ4
+         kQv09PUdjVoYjrZCnHqruFkQb0rfwYAMmVumZ2g8voqcRyie9Nn8n+Wk+s/cKR5wAlgY
+         Q+WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8tqKcyAihtYh8+niOcPyCDwYQqBjo5vf2q9F5FfLoUyMGS3v3qBSVbb7HZzUDX3c1wt1rvB4pDAea64XCjYw0iuJBKHkEMHzzaA==
+X-Gm-Message-State: AOJu0YzvQZoBTw144ZUogWojsj0N33FhG62lTzfs06mhhDxYbKDl6iff
+	g8U3KExVLvLiK2SkE1oo4lnL78iqri003B0RF5ULuZdGE0q1xN7LcyCN6SPEFc79aXV6COzWEWg
+	QNFxUEVhf9ADk6AKXY9R5LfoOLNwYkKjDm61zCQ==
+X-Google-Smtp-Source: AGHT+IH4OgvhpTuR8NUJ0jT6ZYIBg3xi09T3TZ+qCyKws+N3dIcP80CxmF73NvNBxMflur5QUexUGUAZiSDxbWdANgc=
+X-Received: by 2002:a05:6512:1256:b0:51d:4c0a:a512 with SMTP id
+ fb22-20020a056512125600b0051d4c0aa512mr6180164lfb.68.1714911786804; Sun, 05
+ May 2024 05:23:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZjUyJSuGthKH0q4q@smile.fi.intel.com>
+References: <2d27e1ad360dec2c3d78d9800bc93ecb6f9b50c5.1714573214.git.lorenzo@kernel.org>
+In-Reply-To: <2d27e1ad360dec2c3d78d9800bc93ecb6f9b50c5.1714573214.git.lorenzo@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Sun, 5 May 2024 14:22:55 +0200
+Message-ID: <CAMRc=MeQp6FFhXSr1HbvVAd+D3wOsmtLvoxjt7QmT2a=NNTHmA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: airoha: en7581: Add gpio controller nodes
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, nbd@nbd.name, 
+	john@phrozen.org, devicetree@vger.kernel.org, dd@embedd.com, 
+	catalin.marinas@arm.com, will@kernel.org, upstream@airoha.com, 
+	lorenzo.bianconi83@gmail.com, angelogioacchino.delregno@collabora.com, 
+	linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 03, 2024 at 09:51:17PM +0300, Andy Shevchenko wrote:
-> On Fri, May 03, 2024 at 10:28:17AM +0200, Marek Behún wrote:
-> > On Fri, May 03, 2024 at 07:05:34AM +0300, Andy Shevchenko wrote:
-> > > On Tue, Apr 30, 2024 at 2:51 PM Marek Behún <kabel@kernel.org> wrote:
-> 
-> ...
-> 
-> > > > +static const char * const omnia_mcu_gpio_templates[64] = {
-> > > > +       /* GPIOs with value read from the 16-bit wide status */
-> > > > +       [4]  = "gpio%u.MiniPCIe0 Card Detect",
-> > > > +       [5]  = "gpio%u.MiniPCIe0 mSATA Indicator",
-> > > > +       [6]  = "gpio%u.Front USB3 port over-current",
-> > > > +       [7]  = "gpio%u.Rear USB3 port over-current",
-> > > > +       [8]  = "gpio%u.Front USB3 port power",
-> > > > +       [9]  = "gpio%u.Rear USB3 port power",
-> > > > +       [12] = "gpio%u.Front Button",
-> > > > +
-> > > > +       /* GPIOs with value read from the 32-bit wide extended status */
-> > > > +       [16] = "gpio%u.SFP nDET",
-> > > > +       [28] = "gpio%u.MiniPCIe0 LED",
-> > > > +       [29] = "gpio%u.MiniPCIe1 LED",
-> > > > +       [30] = "gpio%u.MiniPCIe2 LED",
-> > > > +       [31] = "gpio%u.MiniPCIe0 PAN LED",
-> > > > +       [32] = "gpio%u.MiniPCIe1 PAN LED",
-> > > > +       [33] = "gpio%u.MiniPCIe2 PAN LED",
-> > > > +       [34] = "gpio%u.WAN PHY LED0",
-> > > > +       [35] = "gpio%u.WAN PHY LED1",
-> > > > +       [36] = "gpio%u.LAN switch p0 LED0",
-> > > > +       [37] = "gpio%u.LAN switch p0 LED1",
-> > > > +       [38] = "gpio%u.LAN switch p1 LED0",
-> > > > +       [39] = "gpio%u.LAN switch p1 LED1",
-> > > > +       [40] = "gpio%u.LAN switch p2 LED0",
-> > > > +       [41] = "gpio%u.LAN switch p2 LED1",
-> > > > +       [42] = "gpio%u.LAN switch p3 LED0",
-> > > > +       [43] = "gpio%u.LAN switch p3 LED1",
-> > > > +       [44] = "gpio%u.LAN switch p4 LED0",
-> > > > +       [45] = "gpio%u.LAN switch p4 LED1",
-> > > > +       [46] = "gpio%u.LAN switch p5 LED0",
-> > > > +       [47] = "gpio%u.LAN switch p5 LED1",
-> > > > +
-> > > > +       /* GPIOs with value read from the 16-bit wide extended control status */
-> > > > +       [48] = "gpio%u.eMMC nRESET",
-> > > > +       [49] = "gpio%u.LAN switch nRESET",
-> > > > +       [50] = "gpio%u.WAN PHY nRESET",
-> > > > +       [51] = "gpio%u.MiniPCIe0 nPERST",
-> > > > +       [52] = "gpio%u.MiniPCIe1 nPERST",
-> > > > +       [53] = "gpio%u.MiniPCIe2 nPERST",
-> > > > +       [54] = "gpio%u.WAN PHY SFP mux",
-> > > > +};
-> > > 
-> > > You may reduce the memory footprint of these just by doing "gpio%u."
-> > > part(s) outside. Here compiler won't compress this (as in the case of
-> > > repetitive string literals),
-> > 
-> > Are you saying that I should dynamically create another array just to
-> > pass it to the gpiochip's names pointer?
-> 
-> I have looked into this again and now I'm puzzled how you tested this.
-> To me it seems that those gpio%u will go as a fixed string to the user space,
-> there is no %u --> number substitution happens. Moreover, this data anyway
-> is redundant. Userspace and debugfs all have line numbers being printed.
-> 
+On Wed, May 1, 2024 at 4:26=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.org=
+> wrote:
+>
+> Introduce the Airoha EN7581 gpio nodes in Airoha EN7581 dtsi
+>
+> Tested-by: Rajeev Kumar <Rajeev.Kumar@airoha.com>
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> ---
+> This patch is based on the following pending patch:
+> https://patchwork.kernel.org/project/spi-devel-general/patch/189790802f3b=
+a1a80c4ab5e064b2425e5a360098.1714571980.git.lorenzo@kernel.org/
+> ---
+>  arch/arm64/boot/dts/airoha/en7581.dtsi | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/airoha/en7581.dtsi b/arch/arm64/boot/dts=
+/airoha/en7581.dtsi
+> index 98c2a86086e1..5d0d76cecfe0 100644
+> --- a/arch/arm64/boot/dts/airoha/en7581.dtsi
+> +++ b/arch/arm64/boot/dts/airoha/en7581.dtsi
+> @@ -178,5 +178,25 @@ spi_nand: nand@0 {
+>                                 spi-rx-bus-width =3D <2>;
+>                         };
+>                 };
+> +
+> +               gpio0: gpio@1fbf0200 {
 
-It gets substituted in drivers/gpio/gpiolib-sysfs.c, function
-gpiod_export():
+These labels are not used anywhere.
 
-  dev = device_create_with_groups(&gpio_class, &gdev->dev,
-                                  MKDEV(0, 0), data, gpio_groups,
-				  ioname ? ioname : "gpio%u",
-				  desc_to_gpio(desc));
+Bart
 
-The ioname variable contains the string.
-
-This is then visible in sysfs:
-
-  $ cd /sys/class/gpio
-  $ echo 560 >export
-  $ ls
-  ...
-  gpio560.eMMC nRESET
-  ...
-
-
-> ...
-> 
-> > > > +       for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
-> > > > +               if (omnia_gpios[i].cmd == CMD_GET_STATUS_WORD)
-> > > > +                       __assign_bit(i, bits, sts_bits & omnia_gpios[i].bit);
-> > > > +               else if (omnia_gpios[i].cmd == CMD_GET_EXT_STATUS_DWORD)
-> > > > +                       __assign_bit(i, bits, ext_sts_bits &
-> > > > +                                             omnia_gpios[i].bit);
-> > > 
-> > > One line?
-> > 
-> > That would be 81 columns, which I would like to avoid.
-> 
-> 81?! It's fine! Even documentation allows that for the readability.
-
-OK
-
-> > I can remove the _bits suffix from these variables, though. What do you
-> > think?
-> 
-> Make sense as well.
-> 
-> > > > +               else if (omnia_gpios[i].cmd == CMD_GET_EXT_CONTROL_STATUS)
-> > > > +                       __assign_bit(i, bits, ext_ctl_bits &
-> > > > +                                             omnia_gpios[i].bit);
-> > > 
-> > > Ditto?
-> > > 
-> > > > +       }
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> +                       compatible =3D "airoha,en7523-gpio";
+> +                       reg =3D <0 0x1fbf0204 0 0x4>,
+> +                             <0 0x1fbf0200 0 0x4>,
+> +                             <0 0x1fbf0220 0 0x4>,
+> +                             <0 0x1fbf0214 0 0x4>;
+> +                       gpio-controller;
+> +                       #gpio-cells =3D <2>;
+> +               };
+> +
+> +               gpio1: gpio@1fbf0270 {
+> +                       compatible =3D "airoha,en7523-gpio";
+> +                       reg =3D <0 0x1fbf0270 0 0x4>,
+> +                             <0 0x1fbf0260 0 0x4>,
+> +                             <0 0x1fbf0264 0 0x4>,
+> +                             <0 0x1fbf0278 0 0x4>;
+> +                       gpio-controller;
+> +                       #gpio-cells =3D <2>;
+> +               };
+>         };
+>  };
+> --
+> 2.44.0
+>
 
