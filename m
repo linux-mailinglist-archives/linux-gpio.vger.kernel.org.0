@@ -1,143 +1,133 @@
-Return-Path: <linux-gpio+bounces-6121-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6122-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5AF88BC7BC
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 08:43:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E62C08BC7C4
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 08:44:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72323281409
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 06:43:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 43A05B2110C
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 06:44:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE20747F45;
-	Mon,  6 May 2024 06:43:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F324EB30;
+	Mon,  6 May 2024 06:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSZfBus7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qr16YN+f"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473F53BBE8;
-	Mon,  6 May 2024 06:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF06C45948
+	for <linux-gpio@vger.kernel.org>; Mon,  6 May 2024 06:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714977811; cv=none; b=ow2AZfyxBSYPAsufgxAgrymeLU1ASH4uGauRNxxbg314zxh4zkcgGHWmRIfMQdHv40Oh+U8bVKpLHVY++vRKkEYBMQh5ILPkoR8dse1ieAt3SQFarK0ZGkZjS6CV3WmmeAAlyfKO5f3EwvLNmDGuKhDggwkkL0VGGiUt1lgAVSQ=
+	t=1714977843; cv=none; b=mvQc64tLF779P4gMDrWs4O5o2cxbX/CU5ceGQueDTmRduadoNWHoH+N4TiwnuZbatE/mjbzQ2u+ckqEBD4BD3mqyHmcgkaiz5i+3lQpVy2tJFyxOklOyGAsAPWFUTXMBtoasXfThThNtoNLaEFYVPaX8hhVnhR3y0jhW3p59QmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714977811; c=relaxed/simple;
-	bh=cHcYODpyX5cPBwr6W7tusxLoH0Z9u7FCNY5rMLy27es=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UBY17/+y9qEGlaPdpqDRTG2kI3SyevHMtW3DjopWHK6V08h4oKR/op21BA0cvpnORXgicbKrZr/pm2g8GZA2LBUqKj7DoJkSXQjZdwdsiJMKgEOn1zW6KGa0C3Anz/73IpQIvesooYcBkIL4hicISt3ov5h9S0F0wnlwCyI4EEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KSZfBus7; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5f415fd71f8so1226495a12.3;
-        Sun, 05 May 2024 23:43:30 -0700 (PDT)
+	s=arc-20240116; t=1714977843; c=relaxed/simple;
+	bh=+/vmtuwmmN0BkTcdqfeu0A3XLiBRElrfuAmQSvAzTkA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FpHJ5OuiM4qLxJ7VzTPz4gyaPwwvrfllWVmebK4fVg4Z7DCHkrxyYAswVxj3tQnsQF4Zb+0lY94fwXLg4RdKJ/3cuZDDrcMyzsUhNkqwkpWiNSWccJdfvoRbEh1dhB0klFsDGKP4vtSDceoA9KZPyxZnelQmdEr4WsUnsehFJVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qr16YN+f; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-de6074a464aso1671157276.0
+        for <linux-gpio@vger.kernel.org>; Sun, 05 May 2024 23:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714977809; x=1715582609; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=alx1vGLK4Nn7gqqZZSreCoEN1bAw1gLW3wJCKjtuMCQ=;
-        b=KSZfBus7XPksTXXx9knZfHIbU/lEmRdbShJ2hs4swFqNv2VNmRKmZ1PYSADfQH7VBI
-         IzzE0Fw67ZDtD3IDw5qpWV5YTXA9L7DlY+lrS0G6NYAvexJKf81H8DOujHBx7NkNRHk3
-         B03q/NakBrTaLbu2WBPdqNLfyeVoDr/KPyeO/SJBQqBcuC3XlhRpWvcd15/cq4SR99wc
-         hbb/8ILOV+Gtj9tsL7p4LRwakcmz7uYkwf9JobxAlawlbnhqXLcjfWhxT2x8DdZqqrho
-         3qNNvDg50rCIH6KeyXbSdGPmGln2nY0fllBpcvwIXzUZllldXrM0YPBgUYRuU29S3UDP
-         HhKA==
+        d=linaro.org; s=google; t=1714977841; x=1715582641; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6fWzqRWfAJc/NQrrpKZ9y7YY+4PerAXpQ7bOHb0K0kI=;
+        b=qr16YN+fnK3puHG8iqW9rAL8PUUUe9rwvYcxwu4yGTcvgrsgCYXaoM+E3Eh7lgxZUp
+         FS+QfGW3Mngik9zP7Uxv+WiPJl3MEQjsekJ5YqSP42mnJVYjinkCzODpTY7D6i4wT/Yd
+         MxR3cAEN0rxS6aKNCcV8dLOspn+cFo8OWU6yZ0awUnUjLbw7ZoN8cUVEJBuU5AUgb7Fw
+         2woJebFTqq5n+sUZZW2CCYcXxWsprDHs+jn5oFA7HuF38rLoQL1qL24wOZoPQEp5/tCP
+         59v8KEFpnb/k4xi3cgsCNcZ6y4pBR+kwyF+nvGs1na+LLnD7oXc4hSemHHGD7Iehjlph
+         HufQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714977809; x=1715582609;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=alx1vGLK4Nn7gqqZZSreCoEN1bAw1gLW3wJCKjtuMCQ=;
-        b=YPcw31KJNOVl5jcIbVIUDAFPTOezYsmJJU7ba6f3dGBVYrgAmwq1Ebwdeq6Xr6/Qk6
-         x0ro18l05ilNHlX1trrBNKGdRbXg1lehISlm8DrUS5W1Uwk77SjpuNLjEL8r/3Dr+5gU
-         AyLYJ0fLGPshw7kLngy2gJri7PQKue/irTFzihriXz0fj7rUDf3wTDWRbVCX4s5jm76P
-         mMLI8rEdzBPeuLhDhNAagsWEA9MdC4NWfqf1byT7C42iXDXm1ZICJ87MTOZYa0nv1wwJ
-         SjaDp40XBsXkuDcrNEO+Dma+/L2quCPuOL6ZZnrLU3YNzUiYuey0OgdkVyouqenURGQf
-         O4hg==
-X-Forwarded-Encrypted: i=1; AJvYcCV09ALB/G55SGsxmte+4NAuhrER7TEqMpARZYFFAmiWEn0VffeU+M5NFL//uUuRkOLJ60RsEXmG0yakcyTIluek9iRXu9NgP4tcjDW6
-X-Gm-Message-State: AOJu0YyJnmotzsmF6vGaCiL8wWw8VkgDBlfPkQI5gViIEBJeiZepkmBt
-	lcx6VVWwNK+p1rfToq6ET2pW0Gmh8u4+9y2W3mtaaOV0bgggVPuH
-X-Google-Smtp-Source: AGHT+IEc8dvXLKGNap462wqPULim0DUj6ARd6c5SuDImQ68+8z/pTRGVjzDTTZW7X9a2rUwA2mQebQ==
-X-Received: by 2002:a17:90a:c697:b0:2b2:d086:6f84 with SMTP id n23-20020a17090ac69700b002b2d0866f84mr7584028pjt.7.1714977809393;
-        Sun, 05 May 2024 23:43:29 -0700 (PDT)
-Received: from localhost.localdomain ([180.217.157.40])
-        by smtp.gmail.com with ESMTPSA id r8-20020a17090a2e8800b002a2a3aebb38sm7322415pjd.48.2024.05.05.23.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 May 2024 23:43:28 -0700 (PDT)
-From: Jim Liu <jim.t90615@gmail.com>
-X-Google-Original-From: Jim Liu <JJLIU0@nuvoton.com>
-To: JJLIU0@nuvoton.com,
-	KWLIU@nuvoton.com,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	dan.carpenter@linaro.org,
-	jim.t90615@gmail.com,
-	elfring@users.sourceforge.net
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openbmc@lists.ozlabs.org
-Subject: [PATCH v4] gpio: nuvoton: Fix sgpio irq handle error
-Date: Mon,  6 May 2024 14:42:44 +0800
-Message-Id: <20240506064244.1645922-1-JJLIU0@nuvoton.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1714977841; x=1715582641;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6fWzqRWfAJc/NQrrpKZ9y7YY+4PerAXpQ7bOHb0K0kI=;
+        b=pVNZiqJOcdvH5cbSgKs2vVMNqHjKSj38tX9/VPz77WnugSuVWt3WzZn5z4dH0FakQQ
+         +q97XcHK9QMrOcp1/B5eQ3UMKR+m1yf1aP0tlTjcTUyiDZM1AECFlXiru8yI0X34Pq0S
+         rG5CaAZnu72ZGjF6k3LcFn0vMAbD7571agPgyvww6xi523rzL5d+PVVI13x3iUMVCFtO
+         HcBX5iucRFuCiRDUoVIOFO8/NwTX+9iSAbG7p9Hi7wcvKCX+ENlt+afS/4XoG6O7OSxQ
+         uMQ3M2NHormY6aD1DToFMALdfNA0J7LwoBiwyWjfHIryOUSkEaIHE7Yf0Y4GpKdKWlWm
+         CtPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVszu+q1Rw2ExQhDRpJ3WEsifQVm2ttiG7h9UC+68MezcbAaRW2vhJ337CSTRI1LuLE4ys2FIRe68yBFJYKX2JBn2dc3kcdDPUfpg==
+X-Gm-Message-State: AOJu0Yz1WErje6gS5PWGdyuh/rNPdBzepqQH/SoYZeGCDF2jNB4riWiU
+	aPLlaQOgheEIGq0J0XB6eOIz+NCsd1z7lLupzy+EPsMnY8zD2zclk8ZdFv9gxRGABnnMtal+8bl
+	EjC4dwpPVM65eyjehaSmP+YWFwRKQTQWb2+0BpQ==
+X-Google-Smtp-Source: AGHT+IEb7mzDNe2H4Ku9FVS///8B7gL+gaG75b5yESoOBOFdJDYKLI2OvwzQGn9HZT9kt9FG6uW4bkEa0u8cVKAGzAw=
+X-Received: by 2002:a5b:84c:0:b0:de8:8588:aada with SMTP id
+ v12-20020a5b084c000000b00de88588aadamr9105336ybq.8.1714977840931; Sun, 05 May
+ 2024 23:44:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240503162217.1999467-1-sean.anderson@linux.dev>
+In-Reply-To: <20240503162217.1999467-1-sean.anderson@linux.dev>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 6 May 2024 08:43:49 +0200
+Message-ID: <CACRpkdbOAoSDNFhXfz3djUZh1_MQ_T75CC+-LmojRXvyCbUusA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pinctrl: zynqmp: Support muxing individual pins
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org, 
+	Krishna Potthuri <sai.krishna.potthuri@amd.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The generic_handle_domain_irq() function calls irq_resolve_mapping().
-Thus delete a duplicative irq_find_mapping() call
-so that a stack trace and an RCU stall will be avoided.
+On Fri, May 3, 2024 at 6:22=E2=80=AFPM Sean Anderson <sean.anderson@linux.d=
+ev> wrote:
 
+> This series adds support for muxing individual pins, instead of
+> requiring groups to be muxed together. See [1] for additional
+> discussion.
+>
+> [1] https://lore.kernel.org/linux-arm-kernel/5bb0dc7e-4c89-4f3d-abc6-41ae=
+9ded5ae9@linux.dev/
 
-Fixes: c4f8457d17ce ("gpio: nuvoton: Add Nuvoton NPCM sgpio driver")
-Signed-off-by: Jim Liu <JJLIU0@nuvoton.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
----
-Changes for v4:
-   - modify commit description
-Changes for v3:
-   - remove unused variable
-Changes for v2:
-   - add more description
----
- drivers/gpio/gpio-npcm-sgpio.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+The way I usually would recommend to solve this would be to
+define new subgroups, so e.g. for a UARTS:
 
-diff --git a/drivers/gpio/gpio-npcm-sgpio.c b/drivers/gpio/gpio-npcm-sgpio.c
-index d31788b43abc..260570614543 100644
---- a/drivers/gpio/gpio-npcm-sgpio.c
-+++ b/drivers/gpio/gpio-npcm-sgpio.c
-@@ -434,7 +434,7 @@ static void npcm_sgpio_irq_handler(struct irq_desc *desc)
- 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
- 	struct irq_chip *ic = irq_desc_get_chip(desc);
- 	struct npcm_sgpio *gpio = gpiochip_get_data(gc);
--	unsigned int i, j, girq;
-+	unsigned int i, j;
- 	unsigned long reg;
- 
- 	chained_irq_enter(ic, desc);
-@@ -443,11 +443,9 @@ static void npcm_sgpio_irq_handler(struct irq_desc *desc)
- 		const struct npcm_sgpio_bank *bank = &npcm_sgpio_banks[i];
- 
- 		reg = ioread8(bank_reg(gpio, bank, EVENT_STS));
--		for_each_set_bit(j, &reg, 8) {
--			girq = irq_find_mapping(gc->irq.domain,
--						i * 8 + gpio->nout_sgpio + j);
--			generic_handle_domain_irq(gc->irq.domain, girq);
--		}
-+		for_each_set_bit(j, &reg, 8)
-+			generic_handle_domain_irq(gc->irq.domain,
-+						  i * 8 + gpio->nout_sgpio + j);
- 	}
- 
- 	chained_irq_exit(ic, desc);
--- 
-2.34.1
+uart0_grp =3D pin_rx, pin_tx, pin_cts, pin_dts, pin_dcd;
 
+And today this would be used like that:
+
+mux0:
+    function =3D "uart0";
+    groups =3D "uart0_grp";
+
+Then we realize that not everyone need all the modem
+control signals provided. What to do. Well this:
+
+uart0_rxtx_grp =3D pin_rx, pin_tx:
+uart0_modem_grp =3D pin_cts, pin_dts, pin_dcd;
+
+mux0:
+    function =3D "uart0";
+    groups =3D "uart0_rxtx_grp";
+
+Now the CTS, DTS, DCD pins can be reused for something
+else such as GPIO.
+
+I *know* that this breaks ABI: the driver group definitions change
+and the device tree needs to be changed too.
+
+This only matters if the users have a habit of distributing the
+kernel and DTB separately so a new kernel needs to support
+and old DTB. This varies in how much control we have but I
+think for Xilinx systems the kernel and DTB are always updated
+in lockstep, so it really does not matter?
+
+Yours,
+Linus Walleij
 
