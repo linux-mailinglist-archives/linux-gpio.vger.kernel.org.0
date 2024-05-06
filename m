@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-6148-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6147-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A17E8BD127
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 17:10:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07F668BD123
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 17:10:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27E3A2853B7
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 15:10:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 70FB61F2208D
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 15:10:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E11C6155A30;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC849155A25;
 	Mon,  6 May 2024 15:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PfR5drgW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIWaKCl7"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F5B155336;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725C615531D;
 	Mon,  6 May 2024 15:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715008215; cv=none; b=D5ur/YhYk8qOIJcE0BVkZ3PgQhfMGMcZKEB/o/lcfeZX2oJ3tMeSm/e+6jegis4S2iJFTs5WAFiZp6NFk1lh7FlVqU9fEW2HlB/tEr82f2MaiiaIVTlg+6eyfSf7TTQsWfo8O2eCSTX+LRfM44QaLQ+OE3761hpWAlpIGmklXsE=
+	t=1715008215; cv=none; b=fv+/pE57d+EnnJJ3zwJ6Nn2JBn0mJjtOjNhCfvPJBzsZlQw2b3sTYrlXW4S3LDiPNxH2lRo0xkK56/UG6Nny17u2C17YCXjrHAupqvVLKmbTjL1iu3uSrqZJ0JHMRduFLXGmujkzaFkms/hwYhrtNADaFr4VyhTF4jXwnW+iM/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715008215; c=relaxed/simple;
-	bh=ysW2dfSlvMClvcrj43aokizS/K9NZ5GHVi4SudgETa0=;
+	bh=AkdkaR54sACrEoSvNXOHYSL1x8xDnc3d3gyuETl7sUU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q1NOqUqYc0SkWdDgxQXKGpyR4qBypoCmedHfS9jJ2Shd+Fv+vgz94ehUegRmBte8tPlo6r7/AUwPVmAO3fajl7s4TltQIkqkNkoGdQNYNdvaL1/f8VzXXaNnj8NW7fs4NuZj6zr+IYAXuiUgfA0e3LEVP8i0iijiByqGNvUkl1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PfR5drgW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4220C4DDFD;
+	 MIME-Version; b=VxAbrCLH2LHxcZRclCdILQTpD8nQVp8tqTg1Qh+h428lDiBnMmP/1NjGmCGjnBROVYCwZv1ePuTR3Ll1L2Eq7o1F7r88LLPZPrSIZcoWkoEspZr1r8v0l9r1NAkcB6NSY5abCCZAE6g/uvBKFxfhOiwPRmGcAB7mkiYNewmufbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIWaKCl7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4B5CC4DDF1;
 	Mon,  6 May 2024 15:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715008215;
-	bh=ysW2dfSlvMClvcrj43aokizS/K9NZ5GHVi4SudgETa0=;
+	bh=AkdkaR54sACrEoSvNXOHYSL1x8xDnc3d3gyuETl7sUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PfR5drgW597jkO7PARyT6eQjHYQ9cnUHTy8i4JrrMV8+PnAjO+Zzwol8lzL4Tit5I
-	 oXDwZjot/WmMDmxolLhVlDWVmafDYu02txnCzojkBeKRL/PkzPHQySLVRoVxF+1/+J
-	 39Uea5MJzS8QEgnzIp8L9lVa+9qxzmuEvTIXi0NLBOsP5xzsJ2vRm6pyW7OaTAD8Tq
-	 NConWcEdhGICWofjR3CRAhMK+uASZ5R0VLN3akWZyDwG1AhKepmGxdbOoNeBllDJ6c
-	 5L7pfZKHPGsi73R5FhDrtJDvKTAYqrfLlCcO6dTDUj8LccERh1IE1pDUux/NDGop6M
-	 24r+y+/r/6zhw==
+	b=MIWaKCl70QAmGJwYnzJ4aB9Bm4VHKlrVwiBBJVJ4Ag08l46Qn0GcZsIH1d2kUfxv7
+	 GEJ0zt8mw9Y0ShewmqWl++sLpvQx4/rE4Sj+ms4nqOZdC0DMyGqYIJL3dTH7M+1Ojv
+	 ywHOlHJNM3YaSYZ7ozZz/jT/PgY3SnMYFxkvxIWDUYbG+xdf+mvwBLjISjqJBc8WSH
+	 CBzNNtX0qEwrkyfMrGOJt1mPZyn7sgYT2vGBgaAkQNnSWRyTjxj+vEfwHjFrLxNS3J
+	 H2an/u2fkk2SvNMXON25Dbdg0KYkuHM5gX7aVropoZteDfD3GYolBipKIRWiEg66m3
+	 TYyvEtgaaWAgA==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1s3zyq-000000006CP-2KgO;
+	id 1s3zyq-000000006CU-2jIX;
 	Mon, 06 May 2024 17:10:16 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Lee Jones <lee@kernel.org>,
@@ -62,11 +62,10 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH 09/13] pinctrl: qcom: spmi-gpio: drop broken pm8008 support
-Date: Mon,  6 May 2024 17:08:26 +0200
-Message-ID: <20240506150830.23709-10-johan+linaro@kernel.org>
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH 10/13] dt-bindings: mfd: pm8008: rework binding
+Date: Mon,  6 May 2024 17:08:27 +0200
+Message-ID: <20240506150830.23709-11-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240506150830.23709-1-johan+linaro@kernel.org>
 References: <20240506150830.23709-1-johan+linaro@kernel.org>
@@ -78,40 +77,233 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The SPMI GPIO driver assumes that the parent device is an SPMI device
-and accesses random data when backcasting the parent struct device
-pointer for non-SPMI devices.
+Rework the pm8008 binding by dropping internal details like register
+offsets and interrupts and by adding the missing regulator and
+temperature alarm properties.
 
-Fortunately this does not seem to cause any issues currently when the
-parent device is an I2C client like the PM8008, but this could change if
-the structures are reorganised (e.g. using structure randomisation).
+Note that child nodes are still used for pinctrl and regulator
+configuration.
 
-Notably the interrupt implementation is also broken for non-SPMI devices.
+Also note that the pinctrl state definition will be extended later and
+could eventually also be shared with other PMICs (e.g. by breaking out
+bits of qcom,pmic-gpio.yaml).
 
-Also note that the two GPIO pins on PM8008 are used for interrupts and
-reset so their practical use should be limited.
-
-Drop the broken GPIO support for PM8008 for now.
-
-Fixes: ea119e5a482a ("pinctrl: qcom-pmic-gpio: Add support for pm8008")
-Cc: stable@vger.kernel.org	# 5.13
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 1 -
- 1 file changed, 1 deletion(-)
+ .../devicetree/bindings/mfd/qcom,pm8008.yaml  | 154 ++++++++++--------
+ 1 file changed, 90 insertions(+), 64 deletions(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index f4e2c88a7c82..e61be7d05494 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1206,7 +1206,6 @@ static const struct of_device_id pmic_gpio_of_match[] = {
- 	{ .compatible = "qcom,pm7325-gpio", .data = (void *) 10 },
- 	{ .compatible = "qcom,pm7550ba-gpio", .data = (void *) 8},
- 	{ .compatible = "qcom,pm8005-gpio", .data = (void *) 4 },
--	{ .compatible = "qcom,pm8008-gpio", .data = (void *) 2 },
- 	{ .compatible = "qcom,pm8019-gpio", .data = (void *) 6 },
- 	/* pm8150 has 10 GPIOs with holes on 2, 5, 7 and 8 */
- 	{ .compatible = "qcom,pm8150-gpio", .data = (void *) 10 },
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml b/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
+index e1e05921afb4..ac1bab0261b6 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
++++ b/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
+@@ -19,116 +19,142 @@ properties:
+     const: qcom,pm8008
+ 
+   reg:
+-    description:
+-      I2C slave address.
+-
+     maxItems: 1
+ 
+   interrupts:
+     maxItems: 1
+ 
+-    description: Parent interrupt.
+-
+   reset-gpios:
+     maxItems: 1
+ 
+-  "#interrupt-cells":
++  vdd_l1_l2-supply: true
++  vdd_l3_l4-supply: true
++  vdd_l5-supply: true
++  vdd_l6-supply: true
++  vdd_l7-supply: true
++
++  gpio-controller: true
++
++  "#gpio-cells":
+     const: 2
+ 
+-    description: |
+-      The first cell is the IRQ number, the second cell is the IRQ trigger
+-      flag. All interrupts are listed in include/dt-bindings/mfd/qcom-pm8008.h.
++  gpio-ranges:
++    maxItems: 1
+ 
+   interrupt-controller: true
+ 
+-  "#address-cells":
+-    const: 1
++  "#interrupt-cells":
++    const: 2
+ 
+-  "#size-cells":
++  "#thermal-sensor-cells":
+     const: 0
+ 
+-patternProperties:
+-  "^gpio@[0-9a-f]+$":
++  pinctrl:
+     type: object
++    additionalProperties: false
++    patternProperties:
++      "-state$":
++        type: object
++        $ref: "#/$defs/qcom-pm8008-pinctrl-state"
++        unevaluatedProperties: false
+ 
+-    description: |
+-      The GPIO peripheral. This node may be specified twice, one for each GPIO.
+-
+-    properties:
+-      compatible:
+-        items:
+-          - const: qcom,pm8008-gpio
+-          - const: qcom,spmi-gpio
++  regulators:
++    type: object
++    additionalProperties: false
++    patternProperties:
++      "^ldo[1-7]$":
++        type: object
++        $ref: /schemas/regulator/regulator.yaml#
++        unevaluatedProperties: false
+ 
+-      reg:
+-        description: Peripheral address of one of the two GPIO peripherals.
+-        maxItems: 1
++required:
++  - compatible
++  - reg
++  - interrupts
++  - vdd_l1_l2-supply
++  - vdd_l3_l4-supply
++  - vdd_l5-supply
++  - vdd_l6-supply
++  - vdd_l7-supply
++  - gpio-controller
++  - "#gpio-cells"
++  - gpio-ranges
++  - interrupt-controller
++  - "#interrupt-cells"
++  - "#thermal-sensor-cells"
+ 
+-      gpio-controller: true
++additionalProperties: false
+ 
+-      gpio-ranges:
+-        maxItems: 1
++$defs:
++  qcom-pm8008-pinctrl-state:
++    type: object
+ 
+-      interrupt-controller: true
++    allOf:
++      - $ref: /schemas/pinctrl/pinmux-node.yaml
++      - $ref: /schemas/pinctrl/pincfg-node.yaml
+ 
+-      "#interrupt-cells":
+-        const: 2
++    properties:
++      pins:
++        items:
++          pattern: "^gpio[12]$"
+ 
+-      "#gpio-cells":
+-        const: 2
++      function:
++        items:
++          - enum:
++              - normal
+ 
+     required:
+-      - compatible
+-      - reg
+-      - gpio-controller
+-      - interrupt-controller
+-      - "#gpio-cells"
+-      - gpio-ranges
+-      - "#interrupt-cells"
++      - pins
++      - function
+ 
+     additionalProperties: false
+ 
+-required:
+-  - compatible
+-  - reg
+-  - interrupts
+-  - "#address-cells"
+-  - "#size-cells"
+-  - "#interrupt-cells"
+-
+-additionalProperties: false
+-
+ examples:
+   - |
+     #include <dt-bindings/gpio/gpio.h>
+-    #include <dt-bindings/mfd/qcom-pm8008.h>
+     #include <dt-bindings/interrupt-controller/irq.h>
+ 
+     i2c {
+       #address-cells = <1>;
+       #size-cells = <0>;
+ 
+-      pmic@8 {
++      pm8008: pmic@8 {
+         compatible = "qcom,pm8008";
+         reg = <0x8>;
+-        #address-cells = <1>;
+-        #size-cells = <0>;
+-        interrupt-controller;
+-        #interrupt-cells = <2>;
+ 
+         interrupt-parent = <&tlmm>;
+         interrupts = <32 IRQ_TYPE_EDGE_RISING>;
+ 
+         reset-gpios = <&tlmm 42 GPIO_ACTIVE_LOW>;
+ 
+-        pm8008_gpios: gpio@c000 {
+-          compatible = "qcom,pm8008-gpio", "qcom,spmi-gpio";
+-          reg = <0xc000>;
+-          gpio-controller;
+-          gpio-ranges = <&pm8008_gpios 0 0 2>;
+-          #gpio-cells = <2>;
+-          interrupt-controller;
+-          #interrupt-cells = <2>;
++        vdd_l1_l2-supply = <&vreg_s8b_1p2>;
++        vdd_l3_l4-supply = <&vreg_s1b_1p8>;
++        vdd_l5-supply = <&vreg_bob>;
++        vdd_l6-supply = <&vreg_bob>;
++        vdd_l7-supply = <&vreg_bob>;
++
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio-ranges = <&pm8008 0 0 2>;
++
++        interrupt-controller;
++        #interrupt-cells = <2>;
++
++        #thermal-sensor-cells = <0>;
++
++        pinctrl {
++          gpio-keys-state {
++            pins = "gpio1";
++            function = "normal";
++          };
++        };
++
++        regulators {
++          ldo1 {
++            regulator-name = "vreg_l1";
++            regulator-min-microvolt = <950000>;
++            regulator-max-microvolt = <1300000>;
++          };
+         };
+       };
+     };
 -- 
 2.43.2
 
