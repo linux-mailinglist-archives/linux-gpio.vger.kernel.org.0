@@ -1,156 +1,130 @@
-Return-Path: <linux-gpio+bounces-6135-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6136-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B1428BCC3D
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 12:45:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F21C8BCCD5
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 13:30:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2ACAE1F22D87
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 10:45:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8FC67B21D14
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 11:30:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BED9142E6D;
-	Mon,  6 May 2024 10:45:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FA06142913;
+	Mon,  6 May 2024 11:30:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDZK6MWq"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="AHD0pizr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LmDhZqq7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E107757FC;
-	Mon,  6 May 2024 10:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DADC4EB2B;
+	Mon,  6 May 2024 11:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714992306; cv=none; b=EvhCiFkQ0P5I7qFa2flquM2IqOejo+sr6i6csjWXAcp8Xw0sfvH0dVRGxjxZMmWs7/M/ARQevOx3HVPEmSSpIMwiB/f2HM7vvvYbSZCWlxc2YvY8F535DXUO+g9l5bIcw1rsblhno36bSj5qkd5s1jsxkDwsWUvJ8yK2stSSsyQ=
+	t=1714995009; cv=none; b=FSv5opTY7AAHwI8LnvBa4pC5PsIensYWc68qjlx0RdMPbVzL4GwOUfA681FEuB7pyAyxG0naBPfpG4onQVfRgfrcIqDDQN5KcxlK9FnwGI8pNd6Uavq1RND5FvEg0aqW3J/e1JM/jEneenkVL9hDBvsUZAVeo1k3MlwS80fhvNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714992306; c=relaxed/simple;
-	bh=EHme3yAbX+1vqZyTcgfu8ySIyYMza6nwEd4TlXNJbjk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=noAxoMvQg1nxIPk6mugPzx9qN8h+5LcfwAcBIqsCxdQaR2/thy9gRKmsVuGM4oO1KzOSQNGl2cVErjJKISXcXiXcp28uSkkTOf9y4XEa1F2AV4CZDHmvU9t2ijh2XlglGNJgyw/O2zlO5JKsqt3FndyGyVgIIGnndwX60ZS2qXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hDZK6MWq; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a59c448b44aso235291266b.2;
-        Mon, 06 May 2024 03:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714992303; x=1715597103; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EHme3yAbX+1vqZyTcgfu8ySIyYMza6nwEd4TlXNJbjk=;
-        b=hDZK6MWqdSN5iGi1qgxitByTUQu3yrt3FiSNXSvpvS7d9ZGbT1jnX3SrwkCTpgSVs4
-         TRPrsN+9wkpTIRqaDs7eoiFGRgeRQe//dgC+Se2mc9v4NwzOp1fP86mSAmU6rQPY9pbS
-         skwIRB3S4u3J8mANCDra3KoDMorMJ4ctS5nEEG6toAcV43mKVWGefAacmPqjdQZbRdKG
-         VvewOI/f+0nmNZrgk32xNxR+hDRxNbhChQkVPgfPzC71GQnBjGvHT5tZBTteOSv+7Em1
-         FM7r4V4+B6fVs+8EzCzC27//mMp9bZEcoDYdK+GipabTbWb0bHmV/PR4KuCnbmUHOzOy
-         8ddA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714992303; x=1715597103;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EHme3yAbX+1vqZyTcgfu8ySIyYMza6nwEd4TlXNJbjk=;
-        b=dqn36iW6NaiJKBAlF+FK1/wdW2hRi3W/uTKExv9Eak7/MFp8M15rl9wV1mWDi7AhO0
-         mypogHDmXzf08Wcn+OuowOl9KC6809fc25QZvsLL4wGJy6cWnr+3SkRcoeiizAPvPLbC
-         E9XTJybjlK2HwT43MwgUzUYttcVQy62M56GYxjzU3YZ9MfXKDh6QIGuig4vb7P9mZOeB
-         2Fqfu6Fb0Qtkp1PYKSHpZVSAwEg4Q0xnoBbYRMPmrMVC29ghR1VFKMnvCpiaTX8qMxtf
-         CjldVo20z9Bne6M4BsuuJrDfLltNQ1ZOSUpwEQe4wzI32SN057DbImFJQBzXbXAC5Xq3
-         nXHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXX6QIBfJW05oQOd6MPFcoxuSLJiWaa+n1DJpNpakjN12EGaPMqzIMLDAEKjfqmt01yGkbmlM0HyzPe3RO3CsaG8ctGl3nl73VVXakNbW+sxsOTSDwvkbjvzIbEIE4a2WfLjsKk1Drciw==
-X-Gm-Message-State: AOJu0Yy1qL4T84S79pB3kWMD5hyDOYZYZtwEjh8jEAP246n333O6YsFa
-	b6/HjnNCtw3Y/ktJDGvHCGuisvF7EKBhQ1hb1jYOZzatTDk3Yf/QW1M3Mfd3VtDHDSIzZhN9q/3
-	EA4Ei68zeJwOeg7vXx8SUkXLnD/Y=
-X-Google-Smtp-Source: AGHT+IFOweTyVqz+q//mIchLXte5UnSewstJ0qxVvQ5l5HmJ8VdPrSRRJeSjsHQnWTc65ee02jA4bLzIM0raZ0ZDL+0=
-X-Received: by 2002:a17:907:7203:b0:a59:c9ce:338a with SMTP id
- dr3-20020a170907720300b00a59c9ce338amr2131074ejc.2.1714992302776; Mon, 06 May
- 2024 03:45:02 -0700 (PDT)
+	s=arc-20240116; t=1714995009; c=relaxed/simple;
+	bh=qvCGSoQawQTxwKwTMIcTAx8d5xEdDNJuiCoB8WMClEI=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=HUN0uM7xbuEznalkK+X2EX9ePElcCOQBZC4pS2vJ5C9TruYM0Dozlbc/afo/CllnKYOviaLqBJF16wES7NV/gRdBZALFdlW62wcLOMJx9xDWsU+HoNYYV7An2Ij0I3navReXx89LQt6kvm/KwSMS0WpeXFHgzav5ODBUcO7odTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=AHD0pizr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LmDhZqq7; arc=none smtp.client-ip=64.147.123.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.west.internal (Postfix) with ESMTP id EACC01800139;
+	Mon,  6 May 2024 07:30:05 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Mon, 06 May 2024 07:30:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1714995005; x=1715081405; bh=s6x+9FStSk
+	mw7vHjv+iXvtpuGZLNrdWUBFo+scPQRuU=; b=AHD0pizrJgQdHxOS42Q/D4QKdi
+	cukMgjIREaL18jW6eVNU3mtIyiMNJFV0dWbbZwqjz7A9JAI6Q8SRmHDpp3/EHYrN
+	zzfedo+5gcPFmtepD7mWH6dJyBAkImSl28b0R2S529P4QD3gPNoPQXE0GkfJLbni
+	bcHbtznhHXH751bObyWlZVllJcOdc6r6kv2juDiQUxR9GNM7quOoL8HTNYvtEb2x
+	m0CfmibODx9F0D6N3VJ99qwikzWIkgHbRVWsvr2bp+M5Iv5H+bSfZxsDwjIBn++s
+	whqy2Szt7gPoUwTa38Qfw8Sro9kx7f/cMhlq3aMZq3xr0zO+YPIEH+p9N8lQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1714995005; x=1715081405; bh=s6x+9FStSkmw7vHjv+iXvtpuGZLN
+	rdWUBFo+scPQRuU=; b=LmDhZqq7geQ9VNHRILOo3gI5RJvQJGxeL8VVaM5An/rh
+	LtwkpztUwJ392kBYoAaNVWLTYaQw19J3sFYEdSme5Y5YDv7mNGNZl0q0imMTFBPO
+	UIyVnzKx4ksC1fbPKw+JqdVOZCLt9AJMt5/zBbbdHXRQp4vIIuReZwVorC0nBcs1
+	xrGuE8vBurc1hvWVxvDF8idaZsmBU4O7tHVPuQRK8FMmc8+U27/0rT+AL4uBo7y5
+	f+WEhDi0jKB/yneA6LWkgYFCCxwA4lhayxK5aAIn0cxco2alT5yIyTp89h5AqEyG
+	IletbRxaeMKUFqDzOZk3YEjXPJcxoV/sc7VO24xamg==
+X-ME-Sender: <xms:PL84ZhG2CJ47LRvE8Z0f0oI7RS-IFtnFCC95EF-yqkNb8rHH5Q2zkQ>
+    <xme:PL84ZmXn6vpMMB6daj34dsfRhVIzZRgz1AOoC2Lfni8UmPbiZqACo4ooefkh-X-zv
+    gTM3KdvLsDFQqTN5o0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddviedggeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:PL84ZjKcZcBSYJOyDf-lKjpDwcJR5r_7cWSnzd2f_K9vhXgUq4LTnQ>
+    <xmx:PL84ZnHZk9R4VkiVpThqxonxMYAhPtAuT361zbNj-r0vIUunaIoccQ>
+    <xmx:PL84ZnXfvgYh9t5xO0bUHgrm4-NMynO8_nj9bNnUGmHbvb-e9uvL1Q>
+    <xmx:PL84ZiPfylLJxKa4OeZsppFpdbsmqGHP_KpbYLTOvv1C-8k2ahMeZg>
+    <xmx:Pb84ZkWBosuE-iq_ccMnFYDgkDpdoTT83l6NuSACPF_77-HLv-M_O3El>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id A5F9DB6008F; Mon,  6 May 2024 07:30:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-437-gcad818a2a-fm-20240502.001-gcad818a2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240505141420.627398-1-andy.shevchenko@gmail.com>
- <CACRpkdap=KXuyoCjWt_v53ArRPynDQndAjjHfvapLUM7VWbbdA@mail.gmail.com> <CAHp75Vdn+F=MMAyguOFup5xyOCEVZowOordiEG1FQ9Y22kLdDg@mail.gmail.com>
-In-Reply-To: <CAHp75Vdn+F=MMAyguOFup5xyOCEVZowOordiEG1FQ9Y22kLdDg@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 6 May 2024 13:44:26 +0300
-Message-ID: <CAHp75Vey_gJ9KHemwK4QdStdW4vYCTWnY2yUwNxWycaZg3SgUQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Discourage to use formatting strings in
- line names
-To: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-Id: <8accb26e-c7a8-43aa-90d5-d83d5a1575de@app.fastmail.com>
+In-Reply-To: <20240506-imx-pinctrl-optional-v2-2-bdff75085156@geanix.com>
+References: <20240506-imx-pinctrl-optional-v2-0-bdff75085156@geanix.com>
+ <20240506-imx-pinctrl-optional-v2-2-bdff75085156@geanix.com>
+Date: Mon, 06 May 2024 13:29:43 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Esben Haabendal" <esben@geanix.com>,
+ "Russell King" <linux@armlinux.org.uk>, "Shawn Guo" <shawnguo@kernel.org>,
+ "Sascha Hauer" <s.hauer@pengutronix.de>,
+ "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+ "Fabio Estevam" <festevam@gmail.com>, "Dong Aisheng" <aisheng.dong@nxp.com>,
+ "Jacky Bai" <ping.bai@nxp.com>, "Linus Walleij" <linus.walleij@linaro.org>
+Cc: "Rasmus Villemoes" <rasmus.villemoes@prevas.dk>,
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] pinctrl: freescale: Use CONFIG_SOC_IMXRT to guard i.MX
+ RT1xxx drivers
+Content-Type: text/plain
 
-On Mon, May 6, 2024 at 1:39=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Mon, May 6, 2024 at 10:19=E2=80=AFAM Linus Walleij <linus.walleij@lina=
-ro.org> wrote:
-> > On Sun, May 5, 2024 at 4:14=E2=80=AFPM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> >
-> > > Currently the documentation for line names allows to use %u inside
-> > > the alternative name. This is broken in character device approach
-> > > from day 1 and being in use solely in sysfs.
-> > >
-> > > Character device interface has a line number as a part of its address=
-,
-> > > so the users better rely on it. Hence remove the misleading documenta=
-tion.
-> > >
-> > > On top of that, there are no in-kernel users (out of 6, if I'm correc=
-t)
-> > > for such names and moreover if one exists it won't help in distinguis=
-hing
-> > > lines with the same naming as '%u' will also be in them and we will g=
-et
-> > > a warning in gpiochip_set_desc_names() for such cases.
+On Mon, May 6, 2024, at 12:23, Esben Haabendal wrote:
+> 
+>  config PINCTRL_IMXRT1050
+>  	bool "IMXRT1050 pinctrl driver"
+> -	depends on ARCH_MXC
+> +	depends on SOC_IMXRT
+> +	default SOC_IMXRT
+>  	select PINCTRL_IMX
+>  	help
+>  	  Say Y here to enable the imxrt1050 pinctrl driver
 
-Dunno if I need to elaborate this more, but just in case here is one:
-Even if one puts '%u' to one line and avoids putting it into other:
+Maybe make this
 
- "gpio%u.foo"
- "gpioX.foo"
+       depends on SOC_IMXRT || COMPILE_TEST
 
-it means that it was already in mind to distinguish them beforehand,
-diminishing the '%u' appearance in the first place. I.e. one may do
+I see that all the i.MX pinctrl drivers are currently missing
+this, but a lot of other platforms have the ||COMPILE_TEST 
+bit so it gets included in x86 allmodconfig tests that
+often gets run before sending or merging changes.
 
- "foo X"
- "foo Y"
-
-to begin with. Besides that repetitive namings are discouraged and
-most likely have no value but confusion.
-For example,
-
-"gpio%u.SPI CS"
-"gpio%u.SPI CS"
-
-would be rather
-
-"SPI CS 0"
-"SPI CS 1"
-
-which is much more clearer to the user.
-
-> > > Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Thank you!
->
-> Meanwhile, Cc'ing to Kent as well.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
-
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+    Arnd
 
