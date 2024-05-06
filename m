@@ -1,272 +1,683 @@
-Return-Path: <linux-gpio+bounces-6168-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6169-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B678D8BD604
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 22:05:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7F588BD613
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 22:16:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B698DB2265A
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 20:05:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3052A1F23D82
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 May 2024 20:16:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BAE915B0E8;
-	Mon,  6 May 2024 20:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V2jJM2yE"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A7FD15B106;
+	Mon,  6 May 2024 20:16:05 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A36745D9
-	for <linux-gpio@vger.kernel.org>; Mon,  6 May 2024 20:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E856C15AD95
+	for <linux-gpio@vger.kernel.org>; Mon,  6 May 2024 20:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715025901; cv=none; b=BK5bC9MATvn+QAS0JY+PwOe7n7Dt2OvU+TvL/dDqqqXxMAQY6pyA4uKZ5BjE1VOL1r2bqM7vWchD5l1cenaISXVC+NLxYsk9v/bTMOsEQqeJzpe50FgA16zI5nOoC7lqnOkK7vFQi4WK7nHgDBwean1NezwCbuMgefKCzbmRSx0=
+	t=1715026564; cv=none; b=plg3ZM0kGUMSw6E8Dxx6tdzB6g0et19HjmF8feDxOKe50Z5DOGLVwfw37m1I9xFTFBRr8duxyMf0WrY2/X0mQAO6H7NG4AH60+O1OyiD0QW8xdSGTlA1IMdpWyiZLSbA6VMBgwCbmMXaJwLFDgqRENELIrJejDtLPVDF7V2X1TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715025901; c=relaxed/simple;
-	bh=zuL0BA6VWQC7A+ETLc+EbX1q9lDoZDdqsdWqD8ErF8I=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=rZgu8Wu/9p1Qn1BTkiYChh/xmQFf5qBLs9NPd8wsFHC2S/vSqGumH6EML/sPQM3H/vrI7Zn17XdJlnBm1/FqdKzqNiOKcrxHHb2MPU/l4Nf7mNXGFpPMX5N8Xkh7GgYPDyVyPm51HxdRQ5/QIfspWc06dGw+wz5OPSAXDiA5s9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V2jJM2yE; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715025899; x=1746561899;
-  h=date:from:to:cc:subject:message-id;
-  bh=zuL0BA6VWQC7A+ETLc+EbX1q9lDoZDdqsdWqD8ErF8I=;
-  b=V2jJM2yEb479bCoZGt7Wl3vVTVqN6sHnx8vqeN/UUN5AeXA7K/6XuAWF
-   19WJLarkyC53qKcbixRnm3Yff+0H1i+M604KmYYA9dZLmVT3z8liEnY9F
-   5ZWJHJb/SjcIvrAmrvQxh5CVoameRJhvr4oWMWJ4lgvvxmKdKNccAAFOH
-   Zyr0b2/WBGkyNlOLRdXEDwNaqT0MVbX5gJYwvZO/u37dQzKB3AulY0k8S
-   NaIr2/sxzrMXazM+EnvgM36+RjUwb9+w04fq/sVidtfjXaDXWCtikxE1A
-   V3CXyjXWA4LtIXQ7Hw3arUjks+toziKiSnDDfcNkXvfVpmAK8BrMtsPfT
-   g==;
-X-CSE-ConnectionGUID: B5t3FcjrQtCUmHBQ0vV6Zw==
-X-CSE-MsgGUID: 0DF7nI2kT7iUidj9ARqUrg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10916705"
-X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
-   d="scan'208";a="10916705"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 13:04:59 -0700
-X-CSE-ConnectionGUID: r+pcoWbKRGGGpjgwSYN56g==
-X-CSE-MsgGUID: B4Wt2IXARv6CTd95P70XsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
-   d="scan'208";a="28803085"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 06 May 2024 13:04:58 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s44Zy-00010M-3B;
-	Mon, 06 May 2024 20:04:54 +0000
-Date: Tue, 07 May 2024 04:04:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 83906257f2e4441a4610f83ae24a713ba609b64a
-Message-ID: <202405070435.yiJDMzFd-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1715026564; c=relaxed/simple;
+	bh=7e7enVBOTBWT2FAM18zxpera1NSmBKeUCsEGflGgEmQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G2JqzmeoROnhxxahMmzxQMyu7Puj9cMLA/zn1xFTVS8ctoSeogEX75HOLY6dIuv2cUbE2e1PVYw+Bfn8j6lEz3Er9K2HGi249TaVU/VzTxyq0/GDLbK/0icJKsZJRg3zxrYEbdyo3L1CL1KKuCeMnMUM2GepWDUS0BWJngcZ8xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-25-208.elisa-laajakaista.fi [88.113.25.208])
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+	id 7317e310-0be5-11ef-a9de-005056bdf889;
+	Mon, 06 May 2024 23:15:59 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 6 May 2024 23:15:57 +0300
+To: Alex Soo <yuklin.soo@starfivetech.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Drew Fustini <drew@beagleboard.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [RFC PATCH v3 2/7] pinctrl: starfive: jh8100: add main driver
+ and sys_east domain sub-driver
+Message-ID: <Zjk6fVwE_uUt3_G9@surfacebook.localdomain>
+References: <20240503111436.113089-1-yuklin.soo@starfivetech.com>
+ <20240503111436.113089-3-yuklin.soo@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240503111436.113089-3-yuklin.soo@starfivetech.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 83906257f2e4441a4610f83ae24a713ba609b64a  Merge tag 'samsung-pinctrl-6.10' of https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung into devel
+Fri, May 03, 2024 at 07:14:31PM +0800, Alex Soo kirjoitti:
+> Add Starfive JH8100 SoC pinctrl main driver to provide the
+> common APIs that are used by the sub-drivers of pinctrl
+> domains:
+> - sys_east,
+> - sys_west,
+> - sys_gmac,
+> - aon (always-on)
+> 
+> to implement the following tasks:
+> 
+> - applies pin multiplexing, function selection, and pin
+>   configuration for devices during system initialization
+>   or change of pinctrl state due to power management.
+> - read or set pin configuration from user space.
+> 
+> Also, add the sys_east domain sub-driver since it requires
+> at least one domain sub-driver to run the probe function in
+> the main driver to enable the basic pinctrl functionalities
+> on the system.
 
-elapsed time: 725m
+...
 
-configs tested: 179
-configs skipped: 3
+> +config PINCTRL_STARFIVE_JH8100
+> +	bool
+> +	select GENERIC_PINCONF
+> +	select GENERIC_PINCTRL_GROUPS
+> +	select GENERIC_PINMUX_FUNCTIONS
+> +	select GPIOLIB
+> +	select GPIOLIB_IRQCHIP
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +	select OF_GPIO
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240506   gcc  
-arc                   randconfig-002-20240506   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                     davinci_all_defconfig   clang
-arm                                 defconfig   clang
-arm                   randconfig-001-20240506   clang
-arm                   randconfig-002-20240506   clang
-arm                   randconfig-003-20240506   gcc  
-arm                   randconfig-004-20240506   clang
-arm                         s5pv210_defconfig   gcc  
-arm                         wpcm450_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240506   gcc  
-arm64                 randconfig-002-20240506   gcc  
-arm64                 randconfig-003-20240506   clang
-arm64                 randconfig-004-20240506   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240506   gcc  
-csky                  randconfig-002-20240506   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240506   clang
-hexagon               randconfig-002-20240506   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240506   gcc  
-i386         buildonly-randconfig-002-20240506   clang
-i386         buildonly-randconfig-003-20240506   gcc  
-i386         buildonly-randconfig-004-20240506   gcc  
-i386         buildonly-randconfig-005-20240506   gcc  
-i386         buildonly-randconfig-006-20240506   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240506   gcc  
-i386                  randconfig-002-20240506   clang
-i386                  randconfig-003-20240506   gcc  
-i386                  randconfig-004-20240506   clang
-i386                  randconfig-005-20240506   clang
-i386                  randconfig-006-20240506   gcc  
-i386                  randconfig-011-20240506   gcc  
-i386                  randconfig-012-20240506   gcc  
-i386                  randconfig-013-20240506   gcc  
-i386                  randconfig-014-20240506   clang
-i386                  randconfig-015-20240506   clang
-i386                  randconfig-016-20240506   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240506   gcc  
-loongarch             randconfig-002-20240506   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                     loongson1b_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240506   gcc  
-nios2                 randconfig-002-20240506   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-32bit_defconfig   gcc  
-parisc                randconfig-001-20240506   gcc  
-parisc                randconfig-002-20240506   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                     kilauea_defconfig   clang
-powerpc                     mpc5200_defconfig   clang
-powerpc                      pmac32_defconfig   clang
-powerpc               randconfig-001-20240506   gcc  
-powerpc               randconfig-002-20240506   clang
-powerpc               randconfig-003-20240506   gcc  
-powerpc                     tqm5200_defconfig   gcc  
-powerpc64             randconfig-001-20240506   clang
-powerpc64             randconfig-002-20240506   clang
-powerpc64             randconfig-003-20240506   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240506   clang
-riscv                 randconfig-002-20240506   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240506   gcc  
-s390                  randconfig-002-20240506   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                        apsh4ad0a_defconfig   gcc  
-sh                                  defconfig   gcc  
-sh                        dreamcast_defconfig   gcc  
-sh                    randconfig-001-20240506   gcc  
-sh                    randconfig-002-20240506   gcc  
-sh                   secureedge5410_defconfig   gcc  
-sh                        sh7757lcr_defconfig   gcc  
-sh                  sh7785lcr_32bit_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                       sparc64_defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240506   gcc  
-sparc64               randconfig-002-20240506   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240506   clang
-um                    randconfig-002-20240506   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240506   gcc  
-x86_64       buildonly-randconfig-002-20240506   gcc  
-x86_64       buildonly-randconfig-003-20240506   gcc  
-x86_64       buildonly-randconfig-004-20240506   clang
-x86_64       buildonly-randconfig-005-20240506   clang
-x86_64       buildonly-randconfig-006-20240506   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240506   clang
-x86_64                randconfig-002-20240506   clang
-x86_64                randconfig-003-20240506   clang
-x86_64                randconfig-004-20240506   clang
-x86_64                randconfig-005-20240506   clang
-x86_64                randconfig-006-20240506   clang
-x86_64                randconfig-011-20240506   gcc  
-x86_64                randconfig-012-20240506   gcc  
-x86_64                randconfig-013-20240506   gcc  
-x86_64                randconfig-014-20240506   gcc  
-x86_64                randconfig-015-20240506   gcc  
-x86_64                randconfig-016-20240506   gcc  
-x86_64                randconfig-071-20240506   gcc  
-x86_64                randconfig-072-20240506   clang
-x86_64                randconfig-073-20240506   gcc  
-x86_64                randconfig-074-20240506   clang
-x86_64                randconfig-075-20240506   gcc  
-x86_64                randconfig-076-20240506   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                           alldefconfig   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240506   gcc  
-xtensa                randconfig-002-20240506   gcc  
+Why?
+
+...
+
+> +/*
+> + * Pinctrl / GPIO driver for StarFive JH8100 SoC sys east controller
+> + *
+> + * Copyright (C) 2023-2024 StarFive Technology Co., Ltd.
+> + * Author: Alex Soo <yuklin.soo@starfivetech.com>
+
+> + *
+
+Unneeded blank line.
+
+> + */
+
+...
+
+> +#include <linux/gpio/driver.h>
+> +#include <linux/module.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+
+This lacks some of inclusions.
+E.g., array_size.h, mod_devicetable.h, io.h.
+
+...
+
+> +#ifdef CONFIG_PM_SLEEP
+
+SHouldn't be in a new code. Use proper PM macros.
+
+> +static int jh8100_sys_e_pinctrl_suspend(struct device *dev)
+> +{
+> +	struct jh8100_pinctrl *sfp;
+> +	int i;
+> +
+> +	sfp = dev_get_drvdata(dev);
+
+> +	if (!sfp)
+> +		return -EINVAL;
+
+When this check can be true?
+
+> +	for (i = 0; i < sfp->info->nregs; i++)
+> +		sfp->jh8100_sys_east_regs[i] = readl_relaxed(sfp->base + (i * 4));
+> +
+> +	return pinctrl_force_sleep(sfp->pctl);
+> +}
+> +
+> +static int jh8100_sys_e_pinctrl_resume(struct device *dev)
+> +{
+> +	struct jh8100_pinctrl *sfp;
+> +	int i;
+
+> +	sfp = dev_get_drvdata(dev);
+> +	if (!sfp)
+> +		return -EINVAL;
+
+Ditto.
+
+> +	for (i = 0; i < sfp->info->nregs; i++)
+> +		writel_relaxed(sfp->jh8100_sys_east_regs[i], sfp->base + (i * 4));
+
+Too many parentheses.
+
+> +	return pinctrl_force_default(sfp->pctl);
+> +}
+> +#endif
+
+...
+
+> +static SIMPLE_DEV_PM_OPS(jh8100_sys_e_pinctrl_dev_pm_ops,
+> +			 jh8100_sys_e_pinctrl_suspend,
+> +			 jh8100_sys_e_pinctrl_resume);
+
+Don't use obsoleted macros, use new ones.
+
+...
+
+> +#ifdef CONFIG_PM_SLEEP
+> +		.pm = &jh8100_sys_e_pinctrl_dev_pm_ops,
+> +#endif
+
+Ditto, no ugly ifdeffery.
+
+> +		.of_match_table = jh8100_sys_e_pinctrl_of_match,
+> +	},
+> +};
+
+...
+
+> +/*
+> + * Pinctrl / GPIO driver for StarFive JH8100 SoC
+> + *
+> + * Copyright (C) 2023-2024 StarFive Technology Co., Ltd.
+> + * Author: Alex Soo <yuklin.soo@starfivetech.com>
+
+> + *
+
+Unneeded blank line.
+
+> + */
+
+...
+
++ array_size.h
+
+> +#include <linux/bits.h>
+> +#include <linux/clk.h>
+
++ container_of.h
+
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_wakeirq.h>
+> +#include <linux/reset.h>
+> +#include <linux/seq_file.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/string.h>
+
++ types.h
+
+...
+
+> +static unsigned int jh8100_pinmux_din(u32 v)
+> +{
+> +	return (v & GENMASK(31, 24)) >> 24;
+> +}
+> +
+> +static u32 jh8100_pinmux_dout(u32 v)
+> +{
+> +	return (v & GENMASK(23, 16)) >> 16;
+> +}
+> +
+> +static u32 jh8100_pinmux_doen(u32 v)
+> +{
+> +	return (v & GENMASK(15, 10)) >> 10;
+> +}
+> +
+> +static u32 jh8100_pinmux_function(u32 v)
+> +{
+> +	return (v & GENMASK(9, 8)) >> 8;
+> +}
+> +
+> +static unsigned int jh8100_pinmux_pin(u32 v)
+> +{
+> +	return v & GENMASK(7, 0);
+> +}
+
+These all are reinventions of bitfield.h.
+
+...
+
+> +static void jh8100_pin_dbg_show(struct pinctrl_dev *pctldev,
+> +				struct seq_file *s, unsigned int pin)
+> +{
+> +	struct jh8100_pinctrl *sfp = pinctrl_dev_get_drvdata(pctldev);
+> +	const struct jh8100_pinctrl_domain_info *info = sfp->info;
+> +
+> +	seq_printf(s, "%s", dev_name(pctldev->dev));
+
+> +	if (pin < sfp->gc.ngpio) {
+
+When this is not true?
+
+If that case even possible, invert the conditional to reduce the indentation
+level.
+
+> +		unsigned int offset = 4 * (pin / 4);
+> +		unsigned int shift  = 8 * (pin % 4);
+> +		u32 dout = readl_relaxed(sfp->base + info->dout_reg_base + offset);
+> +		u32 doen = readl_relaxed(sfp->base + info->doen_reg_base + offset);
+> +		u32 gpi = readl_relaxed(sfp->base + info->gpi_reg_base + offset);
+> +
+> +		dout = (dout >> shift) & info->dout_mask;
+> +		doen = (doen >> shift) & info->doen_mask;
+> +		gpi = ((gpi >> shift) - 2) & info->gpi_mask;
+> +
+> +		seq_printf(s, " dout=%u doen=%u din=%u", dout, doen, gpi);
+> +	}
+> +}
+
+...
+
+> +	pgnames = devm_kcalloc(dev, ngroups, sizeof(*pgnames), GFP_KERNEL);
+> +	if (!pgnames)
+> +		return -ENOMEM;
+> +
+> +	map = kcalloc(nmaps, sizeof(*map), GFP_KERNEL);
+> +	if (!map)
+> +		return -ENOMEM;
+
+Why one is managed and another is not? Shouldn't be both either managed or not?
+
+...
+
+> +	mutex_lock(&sfp->mutex);
+
+Don't you want to use cleanup.h from day 1?
+
+...
+
+> +	for_each_child_of_node(np, child) {
+
+Why not using _scoped() variant?
+
+...
+
+> +		int npins = of_property_count_u32_elems(child, "pinmux");
+
+Why signed?
+Please, decouple definition and assignment.
+
+> +		int *pins;
+> +		u32 *pinmux;
+> +		int i;
+> +
+> +		if (npins < 1) {
+> +			dev_err(dev,
+> +				"invalid pinctrl group %pOFn.%pOFn: pinmux not set\n",
+> +				np, child);
+> +			ret = -EINVAL;
+
+Can npins be negative? In such case why shadowing an error code?
+
+> +			goto put_child;
+> +		}
+
+...
+
+> +		ret = pinctrl_generic_add_group(pctldev, grpname,
+> +						pins, npins, pinmux);
+
+One line?
+
+...
+
+> +	for (i = 0; i < group->grp.npins; i++) {
+> +		u32 v = pinmux[i];
+> +
+> +		jh8100_set_one_pin_mux(sfp,
+> +				       jh8100_pinmux_pin(v),
+> +				       jh8100_pinmux_din(v),
+> +				       jh8100_pinmux_dout(v),
+> +				       jh8100_pinmux_doen(v),
+> +				       jh8100_pinmux_function(v));
+> +		}
+
+Indentation?
+
+...
+
+> +static u32 jh8100_padcfg_ds_to_mA(u32 padcfg)
+> +{
+> +	return jh8100_drive_strength_mA[(padcfg >> 1) & 3U];
+
+GENMASK() ?
+
+> +}
+> +
+> +static u32 jh8100_padcfg_ds_to_uA(u32 padcfg)
+> +{
+> +	return jh8100_drive_strength_mA[(padcfg >> 1) & 3U] * 1000;
+
+Ditto.
+
+> +}
+
+...
+
+> +static u32 jh8100_padcfg_ds_from_mA(u32 v)
+> +{
+> +	int i;
+
+Why signed?
+
+> +	for (i = 0; i < ARRAY_SIZE(jh8100_drive_strength_mA); i++) {
+> +		if (v <= jh8100_drive_strength_mA[i])
+> +			break;
+> +	}
+> +	return i << 1;
+> +}
+
+...
+
+> +static int jh8100_gpio_get_direction(struct gpio_chip *gc,
+> +				     unsigned int gpio)
+
+One line?
+
+> +{
+> +	struct jh8100_pinctrl *sfp = container_of(gc,
+> +			struct jh8100_pinctrl, gc);
+> +	const struct jh8100_pinctrl_domain_info *info = sfp->info;
+> +	unsigned int offset = 4 * (gpio / 4);
+> +	unsigned int shift  = 8 * (gpio % 4);
+> +	u32 doen = readl_relaxed(sfp->base + info->doen_reg_base + offset);
+
+> +	doen = (doen >> shift) & info->doen_mask;
+> +
+> +	return doen == 0 ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
+
+	if ((doen >> shift) & info->doen_mask)
+		return GPIO_LINE_DIRECTION_IN;
+
+	return GPIO_LINE_DIRECTION_OUT;
+
+> +}
+
+...
+
+> +static int jh8100_gpio_direction_input(struct gpio_chip *gc,
+> +				       unsigned int gpio)
+> +{
+> +	struct jh8100_pinctrl *sfp = container_of(gc,
+> +			struct jh8100_pinctrl, gc);
+
+Broken indentation, just put on one line.
+
+> +	/* enable input and schmitt trigger */
+> +	jh8100_padcfg_rmw(sfp, gpio,
+> +			  JH8100_PADCFG_IE | JH8100_PADCFG_SMT,
+> +			  JH8100_PADCFG_IE | JH8100_PADCFG_SMT);
+> +
+> +	jh8100_set_one_pin_mux(sfp, gpio, 255, 0, 1, 0);
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int jh8100_gpio_direction_output(struct gpio_chip *gc,
+> +					unsigned int gpio, int value)
+> +{
+> +	struct jh8100_pinctrl *sfp = container_of(gc,
+> +			struct jh8100_pinctrl, gc);
+
+> +	jh8100_set_one_pin_mux(sfp, gpio,
+> +			       255, value ? 1 : 0,
+> +			       0, 0);
+
+Use room on the previous lines.
+
+
+> +	/* disable input, schmitt trigger and bias */
+> +	jh8100_padcfg_rmw(sfp, gpio,
+> +			  JH8100_PADCFG_IE | JH8100_PADCFG_SMT,
+> +			  0);
+> +	return 0;
+> +}
+
+...
+
+> +{
+> +	struct jh8100_pinctrl *sfp = container_of(gc,
+> +			struct jh8100_pinctrl, gc);
+
+One line. You may create a helper to_jh8100_pinctrl() and use everywhere,
+
+> +	const struct jh8100_pinctrl_domain_info *info = sfp->info;
+> +	void __iomem *reg = sfp->base + info->gpioin_reg_base
+> +			+ 4 * (gpio / 32);
+
+Split definition and assignment. It will increase readability.
+
+> +	return !!(readl_relaxed(reg) & BIT(gpio % 32));
+> +}
+
+...
+
+> +static void jh8100_gpio_set(struct gpio_chip *gc,
+> +			    unsigned int gpio, int value)
+> +{
+> +	struct jh8100_pinctrl *sfp = container_of(gc,
+> +			struct jh8100_pinctrl, gc);
+> +	const struct jh8100_pinctrl_domain_info *info = sfp->info;
+> +	unsigned int offset = 4 * (gpio / 4);
+> +	unsigned int shift  = 8 * (gpio % 4);
+> +	void __iomem *reg_dout = sfp->base + info->dout_reg_base + offset;
+> +	u32 dout = (value ? 1 : 0) << shift;
+
+	u32 dout = value ? BIT(shift) : 0;
+
+> +	u32 mask = info->dout_mask << shift;
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&sfp->lock, flags);
+> +	dout |= readl_relaxed(reg_dout) & ~mask;
+> +	writel_relaxed(dout, reg_dout);
+> +	raw_spin_unlock_irqrestore(&sfp->lock, flags);
+> +}
+
+...
+
+> +static void jh8100_irq_mask(struct irq_data *d)
+> +{
+> +	struct jh8100_pinctrl *sfp = jh8100_from_irq_data(d);
+> +	const struct jh8100_gpio_irq_reg *irq_reg = sfp->info->irq_reg;
+> +	irq_hw_number_t gpio = irqd_to_hwirq(d);
+> +	void __iomem *ie = sfp->base + irq_reg->ie_reg_base
+> +		+ 4 * (gpio / 32);
+> +	u32 mask = BIT(gpio % 32);
+> +	unsigned long flags;
+> +	u32 value;
+> +
+> +	raw_spin_lock_irqsave(&sfp->lock, flags);
+> +	value = readl_relaxed(ie) & ~mask;
+> +	writel_relaxed(value, ie);
+> +	raw_spin_unlock_irqrestore(&sfp->lock, flags);
+> +
+> +	gpiochip_disable_irq(&sfp->gc, d->hwirq);
+
+You have gpio, why not use it here?
+
+> +}
+
+...
+
+> +static void jh8100_irq_unmask(struct irq_data *d)
+> +{
+> +	struct jh8100_pinctrl *sfp = jh8100_from_irq_data(d);
+> +	const struct jh8100_gpio_irq_reg *irq_reg = sfp->info->irq_reg;
+> +	irq_hw_number_t gpio = irqd_to_hwirq(d);
+> +	void __iomem *ie = sfp->base + irq_reg->ie_reg_base
+> +		+ 4 * (gpio / 32);
+> +	u32 mask = BIT(gpio % 32);
+> +	unsigned long flags;
+> +	u32 value;
+> +
+> +	gpiochip_enable_irq(&sfp->gc, d->hwirq);
+
+Ditto.
+
+> +	raw_spin_lock_irqsave(&sfp->lock, flags);
+> +	value = readl_relaxed(ie) | mask;
+> +	writel_relaxed(value, ie);
+> +	raw_spin_unlock_irqrestore(&sfp->lock, flags);
+> +}
+
+...
+
+> +static int jh8100_irq_set_wake(struct irq_data *d, unsigned int enable)
+> +{
+> +	struct jh8100_pinctrl *sfp = jh8100_from_irq_data(d);
+> +	int ret = 0;
+> +
+> +	if (enable)
+> +		ret = enable_irq_wake(sfp->wakeup_irq);
+> +	else
+> +		ret = disable_irq_wake(sfp->wakeup_irq);
+> +	if (ret)
+> +		dev_err(sfp->dev, "failed to %s wake-up interrupt\n",
+> +			enable ? "enable" : "disable");
+
+str_enable_disable() (will require string_choices.h).
+
+> +	return ret;
+> +}
+
+...
+
+> +static void jh8100_irq_print_chip(struct irq_data *d, struct seq_file *p)
+> +{
+> +	struct jh8100_pinctrl *sfp = jh8100_from_irq_data(d);
+> +
+> +	seq_printf(p, sfp->gc.label);
+
+This is bad. Use seq_puts() or proper formatting string.
+
+> +}
+
+...
+
+> +	writel_relaxed(~0U, sfp->base + sfp->info->irq_reg->ic_reg_base);
+
+GENMASK() ?
+
+...
+
+> +		writel_relaxed(~0U, sfp->base + sfp->info->irq_reg->ic1_reg_base);
+
+Ditto.
+
+...
+
+> +	info = of_device_get_match_data(&pdev->dev);
+> +	if (!info)
+> +		return -ENODEV;
+
+Use device_get_match_data() from property.h.
+
+...
+
+> +	clk = devm_clk_get_optional(dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return dev_err_probe(dev, PTR_ERR(clk), "could not get clock\n");
+
+Why not _enabled() variant?
+
+...
+
+> +	/*
+> +	 * we don't want to assert reset and risk undoing pin muxing for the
+
+We
+
+> +	 * early boot serial console, but let's make sure the reset line is
+> +	 * deasserted in case someone runs a really minimal bootloader.
+> +	 */
+
+...
+
+> +	ret = devm_pinctrl_register_and_init(dev,
+> +					     jh8100_pinctrl_desc,
+> +					     sfp, &sfp->pctl);
+
+Can occupy less lines.
+
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				     "could not register pinctrl driver\n");
+
+...
+
+> +	if (sfp->gc.ngpio > 0) {
+
+Is it really can be not true?
+
+> +		ret = devm_gpiochip_add_data(dev, &sfp->gc, sfp);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret, "could not register gpiochip\n");
+> +
+> +		dev_info(dev, "StarFive JH8100 GPIO chip registered %d GPIOs\n", sfp->gc.ngpio);
+> +	}
+
+...
+
+> +/*
+> + * Pinctrl / GPIO driver for StarFive JH8100 SoC
+> + *
+> + * Copyright (C) 2023-2024 StarFive Technology Co., Ltd.
+> + * Author: Alex Soo <yuklin.soo@starfivetech.com>
+
+> + *
+
+Unneeded blank line.
+
+> + */
+> +
+> +#ifndef __PINCTRL_STARFIVE_JH8100_H__
+> +#define __PINCTRL_STARFIVE_JH8100_H__
+
+A lot of inclusions are missed, like
+
+types.h
+
+> +#include "../core.h"
+
+
+Some of the forward declarations are missed, like
+
+struct device;
+
+> +#endif /* __PINCTRL_STARFIVE_JH8100_H__ */
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With Best Regards,
+Andy Shevchenko
+
+
 
