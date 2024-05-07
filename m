@@ -1,74 +1,63 @@
-Return-Path: <linux-gpio+bounces-6188-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6189-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B68C8BE15B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 13:48:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29D3F8BE1B7
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 14:09:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3CFE31C21E0C
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 11:48:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C41A1C22A26
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 12:09:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F31BE1553A5;
-	Tue,  7 May 2024 11:48:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 640E1156F23;
+	Tue,  7 May 2024 12:09:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uf9H3qsB"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e8SXGGRz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3A66F525
-	for <linux-gpio@vger.kernel.org>; Tue,  7 May 2024 11:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640E3156864;
+	Tue,  7 May 2024 12:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715082516; cv=none; b=hHp9zcPj6WE20FXXz47EQWNchl4tbiStuH8yqny6XZ0//IA0puVsQrl8xP/Elhi3fEyMxFPoGWowCIxRJj35faodyUEr5JZiTOWjQJWmoCgbTj4tqwAbltvZGniv8iFdFh5qgaVgfXLq7Bq6tP26DEd2oGaDbvIbEdcNLBLu8NQ=
+	t=1715083766; cv=none; b=renagJpxLr7L9bewwyO0Pb8IH1NN63EFjtWzqzs3PXWx14YUMKDzYIXQCH/gvKaT+NpekTNMOTOIjMFzGBCauViYVVE4kXfHChGSvwL7o9YLKGVB5msAVaYVfh7zFGx3snrjJC1M/l6gHxqpX6y47+OZs2IBL0vtDDwbY+mScGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715082516; c=relaxed/simple;
-	bh=ZvJC+HUC23cfgfMiVTigE+cAqOZWAnz9vZbxnvZ8ru0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fVIb5HGf8VkTOQtxfBvVZt6VRzeM5vSFwpReiYU0AAumA6cKanmNS/9Bqssp4uOC8TGY3oLQG2KudY5YzBjJKEOc8sPPisnR/7khu/eJbnia/k7aqi30X5dpy+xq7wZEQPLF1ZEqsUJcLhPxdsnaKi1PpMz05xenEAJMIPMvtSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Uf9H3qsB; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51f300b318cso3641635e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 07 May 2024 04:48:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715082513; x=1715687313; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=72j6zNVVvGNrYMrCouTEzvFzVcRHh6PlR7ef9XOXTgQ=;
-        b=Uf9H3qsBB1mG3WF0plN0CboxxB8ch2s0qKwTRYjag5C+BU+IlXgsKM7hYhx0tiDts2
-         qc5GbbkGrphWjfcS+9odIxupiYn3+72eaOnbOPvQApgPU0thtOqJlCDYUz1XGu+dDaAH
-         Huc5tLjXXOFf2KLEjD28m96nOAVqIW7n0/sfFcMoSK8GYpQbS0s1RNUZb1eADTOmrwuz
-         8DuYQ7U+k5T+XgM60SVoz92dVdmP3eZeZh/Rxt+VwAlk0G6GyUUTIawqDpPuhDZL7exM
-         wtfjhEQwpPR0lbTGLdPgex00KjwZGJe/yoEJtW1tBOfEVywhncSXW2k1RYA7Lg1XzDiS
-         hyew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715082513; x=1715687313;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=72j6zNVVvGNrYMrCouTEzvFzVcRHh6PlR7ef9XOXTgQ=;
-        b=CkNlvTQMwhSnM75e8+XPnUW6/5M+Vm0RKRbQSUlDwlIL673IWWlpOmkj+6OfnWBrbN
-         AYvUmrEFEb+X+BFjJPSqU+1IzSNES9mUAO1hBizkyg5e+EqadZUX1pD9koYs73b713UY
-         8s4Rx7oA4EdFsqUnRpkMPdf5kHeg2rBKm+PBZv0NWwAsLhVbHYpnsuv+jfNTJ7mSQO78
-         hmvDBGKu8Cl90olBnOK7xCB2zXyieTIRNKfaOsomWhGiA8BJwd14CB0RDK5qPHyzcCtR
-         Q7+PRyhdvoVM6OBVzZX5QcvKeawYn4rPlHuBwrEmR+TlJ7tlTJayErJO2ibNElXlC8Il
-         Z3MA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYK/NYeBpv29Qg3AX9IxcaV8kRziQv3y3ezGDi90ojJNg8FTqsuN7y0qrEVLsuccb3s2xMhEUz/71grDbAAEblhTITgVZq9rjWrA==
-X-Gm-Message-State: AOJu0YxFDrPrWGleNLdwoPu89WQp8TfYV8PowZvSHWdLp4gMu2OeNLME
-	sr0gF81mmLj9lmAT3NfWLmiC+7YZ1KKJ8OhVABxHyQmcy6C1xOe4fObC6C4tlfo=
-X-Google-Smtp-Source: AGHT+IEztQUsixU46vbtT83NzSNtDU2V2kQ90UiEWc9l8x732HZwYxqrdp6DKhIl1y8iyklIcrQtPg==
-X-Received: by 2002:a19:f713:0:b0:51d:3675:6a08 with SMTP id z19-20020a19f713000000b0051d36756a08mr7293073lfe.66.1715082513172;
-        Tue, 07 May 2024 04:48:33 -0700 (PDT)
-Received: from [172.30.205.144] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id b15-20020ac2562f000000b0051884ea2a32sm2086190lff.31.2024.05.07.04.48.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 May 2024 04:48:32 -0700 (PDT)
-Message-ID: <6dc632b0-792c-49c8-9f66-43f7a14789cc@linaro.org>
-Date: Tue, 7 May 2024 13:48:30 +0200
+	s=arc-20240116; t=1715083766; c=relaxed/simple;
+	bh=HCGP99NE1vvsYrUaRK7HqkFYcs6GoeKj0GjrrT1XHb8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JKbzmGBxN9uocX9vW2ZUGX4TrFKr7dbdnx1Ph99L+zrxs8MpdPcRgLvSIucAD8fYsDU+IBYcyeN0x/zzWwRUAegQFH7VngfdmGU9qz/XjHS+Duw6ZJukaqQVIvCkemoRvKdF9Uuu3YcDfcJB+hwTc2vQB29/Gs+kohuSHh+rr3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=e8SXGGRz; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447A0DFE002421;
+	Tue, 7 May 2024 12:09:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=A0KNG1OheSY4eJfBQ8FWYAD/Op94koyC048SY3Hxa/Y=; b=e8
+	SXGGRz6qTidybEyn6Gr3rzOCG16jJbFpGFuxQmTfr4KWIJJJzaIzzgnykJWFp+BU
+	ogM19KFbqMu0ezJudMjBArFWWlD/oFEhTxDdlGGJJPun7GWJrHzrNenlDtOOvPP6
+	FESf3KL3bvIRnbDmx+PrpU7tq5E45Xklv8V5rY6GKPyeNwoJ0Qp5oy7fK7QwD0b3
+	bmZd4Y85NtLCiYzd/cIxo1Uu1iZBVz6QVEvqOgPsrbfeRp0XK28ciSS208vay+RP
+	/8Cr29u8P4cQbpZ7Hu8P2miy9OII47kiRC2bl4aoewSXFBxzXb7PAYnKkW4FCNJ/
+	BfYa38WcJkR5i0FLGSmw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xyj5h88jk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 May 2024 12:09:20 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 447C9IBw023774
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 7 May 2024 12:09:18 GMT
+Received: from [10.239.133.66] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 7 May 2024
+ 05:09:17 -0700
+Message-ID: <730734c0-59a6-4612-90ee-9715ab832515@quicinc.com>
+Date: Tue, 7 May 2024 20:09:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,66 +65,155 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
-To: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Das Srinagesh <quic_gurus@quicinc.com>,
- Satya Priya <quic_c_skakit@quicinc.com>, Stephen Boyd <swboyd@chromium.org>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-13-johan+linaro@kernel.org>
+Subject: Re: [PATCH v2] gpiolib: cdev: Fix use after free in
+ lineinfo_changed_notify
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <warthog618@gmail.com>, <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240505141156.2944912-1-quic_zhonhan@quicinc.com>
+ <CAMRc=MdmOg6pJ7hvKSpkoTKjQny8xL5BFT2HNzgKgnjsCuwhwQ@mail.gmail.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240506150830.23709-13-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Zhongqiu Han <quic_zhonhan@quicinc.com>
+In-Reply-To: <CAMRc=MdmOg6pJ7hvKSpkoTKjQny8xL5BFT2HNzgKgnjsCuwhwQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: OLzAz5dztDVf4SftD1VkI2hRKDynivdd
+X-Proofpoint-GUID: OLzAz5dztDVf4SftD1VkI2hRKDynivdd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-07_06,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ mlxscore=0 impostorscore=0 bulkscore=0 priorityscore=1501 adultscore=0
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2405070082
 
+On 5/7/2024 4:00 PM, Bartosz Golaszewski wrote:
+> On Sun, May 5, 2024 at 4:12 PM Zhongqiu Han <quic_zhonhan@quicinc.com> wrote:
+>>
+>> The use-after-free issue occurs as follows: when the GPIO chip device file
+>> is being closed by invoking gpio_chrdev_release(), watched_lines is freed
+>> by bitmap_free(), but the unregistration of lineinfo_changed_nb notifier
+>> chain failed due to waiting write rwsem. Additionally, one of the GPIO
+>> chip's lines is also in the release process and holds the notifier chain's
+>> read rwsem. Consequently, a race condition leads to the use-after-free of
+>> watched_lines.
+>>
+>> Here is the typical stack when issue happened:
+>>
+>> [free]
+>> gpio_chrdev_release()
+>>    --> bitmap_free(cdev->watched_lines)                  <-- freed
+>>    --> blocking_notifier_chain_unregister()
+>>      --> down_write(&nh->rwsem)                          <-- waiting rwsem
+>>            --> __down_write_common()
+>>              --> rwsem_down_write_slowpath()
+>>                    --> schedule_preempt_disabled()
+>>                      --> schedule()
+>>
+> 
+> The rwsem has been removed in v6.9-rc1. I assume you're targeting
+> stable branches with this change? Or does it still occur with the
+> recent SRCU rework? This is important to know before I send it
+> upstream.
+> 
+> Bart
+> 
 
+Hi Bart,
 
-On 5/6/24 17:08, Johan Hovold wrote:
-> From: Satya Priya <quic_c_skakit@quicinc.com>
-> 
-> Qualcomm Technologies, Inc. PM8008 is an I2C-controlled PMIC containing
-> seven LDO regulators. Add a PM8008 regulator driver to support PMIC
-> regulator management via the regulator framework.
-> 
-> Note that this driver, originally submitted by Satya Priya [1], has been
-> reworked to match the new devicetree binding which no longer describes
-> each regulator as a separate device.
-> 
-> This avoids describing internal details like register offsets in the
-> devicetree and allows for extending the implementation with features
-> like over-current protection without having to update the binding.
-> 
-> Specifically note that the regulator interrupts are shared between all
-> regulators.
-> 
-> Note that the secondary regmap is looked up by name and that if the
-> driver ever needs to be generalised to support regulators provided by
-> the primary regmap (I2C address) such information could be added to a
-> driver lookup table matching on the parent compatible.
-> 
-> This also fixes the original implementation, which looked up regulators
-> by 'regulator-name' property rather than devicetree node name and which
-> prevented the regulators from being named to match board schematics.
-> 
-> [1] https://lore.kernel.org/r/1655200111-18357-8-git-send-email-quic_c_skakit@quicinc.com
-> 
-> Signed-off-by: Satya Priya <quic_c_skakit@quicinc.com>
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> [ johan: rework probe to match new binding, amend commit message and
->           Kconfig entry]
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
+Thanks a lot for the review.
 
-I'm a bit lukewarm on calling this qcom-pm8008-regulator.. But then
-qcom-i2c-regulator or qpnp-i2c-regulator may bite due to being overly
-generic.. Would you know whether this code will also be used for e.g.
-PM8010?
+I guess the "rwsem -> srcu switch" you mentioned is this commit
+d83cee3d2bb1 ("gpio: protect the pointer to gpio_chip in gpio_device
+with SRCU")? Currently the use-after-free issue of watched_lines is
+related to notifier chain rwsem instead of the rwsem which is as one
+struct member of gpio_device.
 
-Konrad
+int blocking_notifier_chain_unregister(struct blocking_notifier_head *nh,
+         struct notifier_block *n)
+{
+     int ret;
+
+     /*
+      * This code gets used during boot-up, when task switching is
+      * not yet working and interrupts must remain disabled.  At
+      * such times we must not call down_write().
+      */
+     if (unlikely(system_state == SYSTEM_BOOTING))
+         return notifier_chain_unregister(&nh->head, n);
+
+     down_write(&nh->rwsem);------------------->waiting rwsem here
+     ret = notifier_chain_unregister(&nh->head, n);
+     up_write(&nh->rwsem);
+     return ret;
+}
+
+struct blocking_notifier_head {
+     struct rw_semaphore rwsem;
+     struct notifier_block __rcu *head;
+};
+
+Please forgive me for not explaining rwsem on the commit message and
+kindly let me know if there is any misunderstanding. Thank you~
+
+>> [use]
+>> st54spi_gpio_dev_release()
+>>    --> gpio_free()
+>>      --> gpiod_free()
+>>        --> gpiod_free_commit()
+>>          --> gpiod_line_state_notify()
+>>            --> blocking_notifier_call_chain()
+>>              --> down_read(&nh->rwsem);                  <-- held rwsem
+>>              --> notifier_call_chain()
+>>                --> lineinfo_changed_notify()
+>>                  --> test_bit(xxxx, cdev->watched_lines) <-- use after free
+>>
+>> The side effect of the use-after-free issue is that a GPIO line event is
+>> being generated for userspace where it shouldn't. However, since the chrdev
+>> is being closed, userspace won't have the chance to read that event anyway.
+>>
+>> To fix the issue, call the bitmap_free() function after the unregistration
+>> of lineinfo_changed_nb notifier chain.
+>>
+>> Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes in line info")
+>> Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
+>> ---
+>> v1 -> v2:
+>> - Drop the excessive stack log from commit message to make it more readable.
+>> - Add a note regarding the side effects of the use-after-free on commit message.
+>> - Link to v1: https://lore.kernel.org/lkml/20240501022612.1787143-1-quic_zhonhan@quicinc.com/
+>>
+>>   drivers/gpio/gpiolib-cdev.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+>> index d09c7d728365..6b3a43e3ba47 100644
+>> --- a/drivers/gpio/gpiolib-cdev.c
+>> +++ b/drivers/gpio/gpiolib-cdev.c
+>> @@ -2799,11 +2799,11 @@ static int gpio_chrdev_release(struct inode *inode, struct file *file)
+>>          struct gpio_chardev_data *cdev = file->private_data;
+>>          struct gpio_device *gdev = cdev->gdev;
+>>
+>> -       bitmap_free(cdev->watched_lines);
+>>          blocking_notifier_chain_unregister(&gdev->device_notifier,
+>>                                             &cdev->device_unregistered_nb);
+>>          blocking_notifier_chain_unregister(&gdev->line_state_notifier,
+>>                                             &cdev->lineinfo_changed_nb);
+>> +       bitmap_free(cdev->watched_lines);
+>>          gpio_device_put(gdev);
+>>          kfree(cdev);
+>>
+>> --
+>> 2.25.1
+>>
+
+-- 
+Thx and BRs,
+Zhongqiu Han
+
 
