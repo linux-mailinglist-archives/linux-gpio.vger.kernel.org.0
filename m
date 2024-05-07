@@ -1,140 +1,147 @@
-Return-Path: <linux-gpio+bounces-6194-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6195-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 696FD8BE65D
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 16:48:24 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 954AD8BE69B
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 16:53:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 259A8288539
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 14:48:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E68EB233A5
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 14:53:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE4FB15FD04;
-	Tue,  7 May 2024 14:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21CB215FD15;
+	Tue,  7 May 2024 14:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PCHoPc57"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BWWaekmb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0B015F32E
-	for <linux-gpio@vger.kernel.org>; Tue,  7 May 2024 14:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7EF15FCF0;
+	Tue,  7 May 2024 14:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093299; cv=none; b=c2lIsxRXNxeGPNMpqdkrOVyV8xJW5OY19WFlpSbLT0yejvDm9XKAXEZbECNu0zbxACYyyAy1fWjDtH6k+YgUKYxvldliOjZML2i5esfTWaN0Gxal2x+G3tcjkGZmlVOSIYhsn+nYFCEfBwjcKH8GJlKnowdZEK+4BusfvhRjLi4=
+	t=1715093575; cv=none; b=skNfStd2FyDIoD85YFKGJIb30qVfmzrEGAM8zCUynS6dFqFL2eFvDBrfuo23/fyXiNXon3RY0GEu3psiSD9Mm2gcczC39ABstTlVzpZxDp16VLxUYw7Wqa1hW4HBrJdB735sEiTaLIPq0mA+1jN8NmXUu/P1FOH8rQFz2dYLNGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715093299; c=relaxed/simple;
-	bh=O9U7eifATy8AucP2fwKsqv2Qi7a/NxF2S8DlLhQxBOk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EomIPQ9YDNVdMdwmYVjE1cavpHoFlqydeKrFrAqAlsEYkuYYsXCzXRu13Ai2foJRjhptSXMnC/dwsJ3Tmb/s2OIre5o2FtlEJaLoD8YWDRE5zqwuBm2HRmTTzXHUUhs5qBKwy9SppcD7IlNhgagINJfUKRegjHTBa66IV9jV6DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PCHoPc57; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2db17e8767cso40755101fa.3
-        for <linux-gpio@vger.kernel.org>; Tue, 07 May 2024 07:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1715093296; x=1715698096; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6E2tOH2LZeelmKHGCVRYEwTjym6Omr1xato4eYpOm4E=;
-        b=PCHoPc57NicYWeCbCLKQYtSzZ48TuQrqMCrl8LMUNj1+cWv5FFlocjDP5Ngpw3Xj6A
-         /8O3ynUZRCUQnO7z8PJfGkD+AeDrPLCEzEk+AVONMHcEneXGaArld6X6WA3Ruc4aj1WE
-         QfrZoxDS293sasejpLyGJFGL2JMNrQX12NRBu7NYcqFpg1z3v+qkf5VzNZksenEbbrbl
-         mPBFHb0dDbkWG6ec0QgMx4EmflB1wo8dJhXIfllZD7DgxIXEY787uqhvgD0BCJ80uBTh
-         5svbzqg8tseNOdKKzNBkyFi//p++C6BnsSiQOKXVWfpljM8AO/a7vaBdlSwR0wW1MIyX
-         ttVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715093296; x=1715698096;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6E2tOH2LZeelmKHGCVRYEwTjym6Omr1xato4eYpOm4E=;
-        b=l+CKs8fS+cRrVryRqYzob/zQ6AvWxUgbEHDRQE2JMcOGO290bFtUPvSF3Jvwx00d5Q
-         Sc/eDgmAKXC8F580tMjD+9ggx7LmgardShM0xt8UYF+QOPkRFxCyUBjD+lmRLW1aGM3I
-         lQgAwA53bydHihEf6hUdpNbDf0jPL3A9OjsOfulWbDDXVfY+4ed/nK5IF+niOJwAh8iT
-         wemFSCWq6Vcq5mcRCbr/2d39LF4EuzwAZb/Z/xmeUzs+jHymE+8yA6Owx29PBCslr07n
-         PsJAs6HeeJkFwC8BXMHG6Zio9m50q/kAGIQVEe3VbrsvYnDrinOWT1DVhtl1dSAfN5AA
-         K+aA==
-X-Forwarded-Encrypted: i=1; AJvYcCX5taiECjSZpGyDcUSlCT6buzdrf5JS6ZNI/FHp3QR3CPqOijBWKUqC0Cc74KCGsHe/I5QZJmWi3HeYJ4iU6fn1S/qtVFt9PljqnA==
-X-Gm-Message-State: AOJu0YwgfxoLOxbUBMvdCzNq6bCxa/I5ooMWR9UNFcJvDJxhCfe+4BmY
-	NPsch13Z/1fgYuKnGdMZVDnOO8YphDACWt7P62WXTX3pXoEu4YYDzvHpTxSPF59eF3q4WE1R6f5
-	8liBILmoYl8NVVPoGd56XJTxcHJ5u+eQdePuv3g==
-X-Google-Smtp-Source: AGHT+IEWf5bz0gIK/ChOYdDJ2AEL/N1lGY6OKBycVzHc97pVufGbuietFwGdydp8PqHnPhjEha+mXPz4acp5wASwKDE=
-X-Received: by 2002:a2e:b0d5:0:b0:2e1:d94a:773f with SMTP id
- g21-20020a2eb0d5000000b002e1d94a773fmr8924737ljl.11.1715093295962; Tue, 07
- May 2024 07:48:15 -0700 (PDT)
+	s=arc-20240116; t=1715093575; c=relaxed/simple;
+	bh=MlQMJtQlUuf6lLca3bql80rz2yBaAuTOSQM7x4CO/+E=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=YEie/5xLR5KGKMqFhvia7yN02pILKObNf3TAanbAQ/cpROO3pqtMdmW798mTZHZrb8cxQB1Ezp4KjeoG4BDG+5FlTivbBy1YrmeRURaOSSl8rmkik2SdM42GIK9l7EXIyOV6GNzYf0e9wFITSPSRLTXmnSN7mse6dKve7FFDGFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BWWaekmb; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5D8DBC0002;
+	Tue,  7 May 2024 14:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715093570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UGenY7YAzUwlgiT73G7TaHalCSUU2X6AFVguS+ovgFw=;
+	b=BWWaekmbWtG3JQ8gcKhy7e0+HcN08YNNci5RJE5FZSeN+mPVBdOtCyww7UraBvBuBvNe4j
+	roYAhUgVdwh+j5vWIebRHxzomUrJwZcQ/rWk189pVSdKnmtnMoUiZQnH9uyhOUzhuFQfNP
+	LMPFRd2atO3kzm+eFRMubYigSEaCuE+BqOnl9Jc3yZtRx9YorACLWdx9KZJcOpAN0cXTK9
+	BpzVO+y3YCNj2AWGaxSiF8EnDdT9NWnes/ppIWSp+tMJw4iBuCmvMs2+q8ESc8VIzGX/61
+	KexeA06fv4ck3ADqNmciQ4qi8pZnbmmPuJ0WYduRP8DP0xw1NhkhKm3qPyDtBQ==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240507121346.16969-1-brgl@bgdev.pl> <597f5da2-71be-4144-a570-fdc4f06c4cc6@paulmck-laptop>
-In-Reply-To: <597f5da2-71be-4144-a570-fdc4f06c4cc6@paulmck-laptop>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 7 May 2024 16:48:04 +0200
-Message-ID: <CAMRc=MexihBpLBcY-8aX06buUYmtE07ZpkMq0Ho3jrHb6VE7Sw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix the speed of descriptor label setting with SRCU
-To: paulmck@kernel.org
-Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 07 May 2024 16:52:49 +0200
+Message-Id: <D13HXGJGMS76.XIIIZLZBCZ09@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v2 00/11] Add Mobileye EyeQ system controller support
+ (clk, reset, pinctrl)
+Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: "Stephen Boyd" <sboyd@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Lee Jones" <lee@kernel.org>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Philipp Zabel" <p.zabel@pengutronix.de>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+X-Mailer: aerc 0.17.0
+References: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
+ <8dcdb1422cd144128c1dc6fff1c273d3.sboyd@kernel.org>
+In-Reply-To: <8dcdb1422cd144128c1dc6fff1c273d3.sboyd@kernel.org>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Tue, May 7, 2024 at 4:24=E2=80=AFPM Paul E. McKenney <paulmck@kernel.org=
-> wrote:
->
-> On Tue, May 07, 2024 at 02:13:46PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Commit 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
-> > caused a massive drop in performance of requesting GPIO lines due to th=
-e
-> > call to synchronize_srcu() on each label change. Rework the code to not
-> > wait until all read-only users are done with reading the label but
-> > instead atomically replace the label pointer and schedule its release
-> > after all read-only critical sections are done.
-> >
-> > To that end wrap the descriptor label in a struct that also contains th=
-e
-> > rcu_head struct required for deferring tasks using call_srcu() and stop
-> > using kstrdup_const() as we're required to allocate memory anyway. Just
-> > allocate enough for the label string and rcu_head in one go.
-> >
-> > Reported-by: Neil Armstrong <neil.armstrong@linaro.org>
-> > Closes: https://lore.kernel.org/linux-gpio/CAMRc=3DMfig2oooDQYTqo23W3PX=
-SdzhVO4p=3DG4+P8y1ppBOrkrJQ@mail.gmail.com/
-> > Fixes: 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
-> > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Looks good to me!
->
-> Acked-by: Paul E. McKenney <paulmck@kernel.org>
->
-> One semi-related question...  Why the per-descriptor srcu_struct?
->
-> If the srcu_struct was shared among all of these, you could just do one
-> synchronize_srcu() and one cleanup_srcu_struct() instead of needing to
-> do one per gdev->desc[] entry.
->
-> You might be able to go further and have one srcu_struct for all the
-> gpio devices.
->
-> Or did you guys run tests and find some performance problem with sharing
-> srcu_struct structures?   (I wouldn't expect one, but sometimes the
-> hardware has a better imagination than I do.)
->
+Hello,
 
-I guess my goal was not to make synchronize_srcu() for descriptor X
-wait for read-only operations on descriptor Y. But with that gone, I
-suppose you're right, we can improve this patch further by switching
-to a single SRCU descriptor.
+On Sat May 4, 2024 at 4:34 AM CEST, Stephen Boyd wrote:
+> Quoting Th=C3=A9o Lebrun (2024-05-03 07:20:45)
+> > This builds on previous EyeQ5 system-controller revisions[0], supportin=
+g
+> > EyeQ5, EyeQ6L and EyeQ6H. We expose a few OLB system-controller
+> > features here:
+> >  - Clocks: some read-only PLLs derived from main crystal and some
+> >    divider clocks based on PLLs.
+> >  - Resets.
+> >  - Pin controller, only on EyeQ5 (rest will use generic pinctrl-single)=
+.
+> >=20
+> > EyeQ6H is special in that it has seven instances of this
+> > system-controller. Those are spread around and cannot be seen as a
+> > single device, hence are exposed as seven DT nodes and seven
+> > compatibles.
+> >=20
+> > This revision differs from previous in that it exposes all devices as a
+> > single DT node. Driver-wise, a MFD registers multiple cells for each
+> > device. Each driver is still in isolation from one another, each in
+> > their respective subsystem.
+>
+> Why can't you use auxiliary device and driver APIs?
 
-I'll send a v2.
+Good question. Reasons I see:
 
-Bart
+ - I didn't know about auxdev beforehand. I discussed the rework with a
+   few colleagues and none mentioned it either.
+
+ - It feels simpler to let each device access iomem resources. From my
+   understanding, an auxdev is supposed to make function calls to its
+   parent without inheriting iomem access. That sounds like it will put
+   the register logic/knowledge inside a single driver, which could or
+   could not be a better option.
+
+   Implementing a function like this feels like cheating:
+      int olb_read(struct device *dev, u32 offset, u32 *val);
+
+   With an MFD, we hand over a part of the iomem resource to each child
+   and they deal with it however they like.
+
+ - Syscon is what I picked to share parts of OLB to other devices that
+   need it. Currently that is only for I2C speed mode but other devices
+   have wrapping-related registers. MFD and syscon are deeply connected
+   so an MFD felt natural.
+
+ - That would require picking one device that is platform driver, the
+   rest being all aux devices. Clock driver appears to be the one, same
+   as two existing mpfs and starfive-jh7110 that use auxdev for clk and
+   reset.
+
+Main reason I see for picking auxdev is that it forces devices to
+interact with a defined internal API. That can lead to nicer
+abstractions rather than inheriting resources as is being done in MFD.
+
+Are there other reasons?
+
+Thanks,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
