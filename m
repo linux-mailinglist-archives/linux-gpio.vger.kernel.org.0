@@ -1,105 +1,129 @@
-Return-Path: <linux-gpio+bounces-6176-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6177-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85DAF8BD95B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 04:21:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 166328BDBB5
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 08:39:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C142283D82
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 02:21:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 23550B21979
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 06:39:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E672E4C6B;
-	Tue,  7 May 2024 02:21:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C141178C82;
+	Tue,  7 May 2024 06:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tt4Z8jAa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="idOjJyk7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEAB10F2
-	for <linux-gpio@vger.kernel.org>; Tue,  7 May 2024 02:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7476078685;
+	Tue,  7 May 2024 06:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715048472; cv=none; b=jY/i5ETfe95VrOuOVUWjhcxHm4kl9O7fPsOZzJUj3FOtTh64EpGznRXfIYi1PRuwSv6TRjFTOAKCsnfvWVXmFZZZZkYGY94ONMkDPWmRqgQYzgzqxpRvPsnVV9172M4Ld1ieGId0ukITV/B0X3HqanWBXYdWadIRGNcRXfADMCc=
+	t=1715063943; cv=none; b=LQlIqUqlxHWIHAU1TXm1NMHcCvQ2Qp3XLwRrf99hM4mEOXj+ybx6zNRSNOOBgxwXrjSBuK72JNaB36BTaHkaDiA0dInoWKcnJJ28P6H8aYafE+k7YtwtNa+QVNmsJQ9gtyN2ijSGfWFdF7PgQnjnxoXndFXl+N5nsu2OiZyhilI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715048472; c=relaxed/simple;
-	bh=Ge3JevKO47oC1tvWtGBHLAEVqOQwPJWczm8zrCtGWm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GRjBYYti18P0gJabM7Y6g/iOVU88vtoywgf2/Rqkx8JtLj5i/h0EvZ5sYrfCjfChMoTIaWxv9hpVToCYL4cvIHEV9bJDSgjhtFSTr5bVWazhe7qZlh2Z3za7EGtflvPTFEsR+bDrFbv8JK3FpvFxvE37ofQjPhMbnlwSvI1GC3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tt4Z8jAa; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6f44881ad9eso2074233b3a.3
-        for <linux-gpio@vger.kernel.org>; Mon, 06 May 2024 19:21:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715048471; x=1715653271; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FbrrCEZq7+2htqDN6803THiAx0hhELu9ZM/tn9kyGJ4=;
-        b=Tt4Z8jAaWec0wuiVcV6/kG7GL4fQvNO0A42oj7IJ82AD5QNuCP6/nH8T+/v54hsoGP
-         G86yMzgNe4AA+lHnBFPRqhXfLH5ukX2gPWQeN63vvAMJhw+9geYVev7yu/Blmn4TJf2c
-         r4DaF98Uz7CFh91A+x5ysdO2QWEeIyugEFHqQPnDOIfSHYEVwvfF6lZWFhRPtGeL0Fu+
-         no1IY06i6lXRlo+FIPnLGpZeuz4Rm8Gtlv7H0nuPIy+MyuRunK6xhmX2XQP1FD09OXh/
-         Ar3TNfryC/cNZSCAxMMnE2wVsn6ha5bCER5lb6JOUgxckwd0VKxyc45M7kZhswbEpdLd
-         yTAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715048471; x=1715653271;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FbrrCEZq7+2htqDN6803THiAx0hhELu9ZM/tn9kyGJ4=;
-        b=Vk6c0fxburQnh75Mv1sGRMnR4VMq4kALuoSMkj/9S8BqYlHjas3C4fUZ+VqLipWZZp
-         UMzVyj7dP18/zxBRzeztwe3jTnnK1RlfbULpa+zbGdSowz2E4gwl+O9L3mxHT01/QFKS
-         /+jYHjHm17D++nrVJu+vPUuCa8OVW/FyobPfTGqpZTJuXf7u9xq52W359TK95FN34oBj
-         wJ9WH90rDcjK5V5zO10i4Y/J6OJ0pTLFPM/3gY4iDzKiggEacE4OMCTTmflAG9yNl90m
-         TU4vWZWoun5x7tOzxa0LZEAvCp0OwZ4u7U0Wm6zxuq7KA+1ekLV1h5HQ7FpUnAAw351H
-         cmkw==
-X-Gm-Message-State: AOJu0YyIGWGPZrUImCMNJtaVMyYRXdprStORsazoolccbdLdZ7lGyAHo
-	b5yZOu+HsTO9zjRqx420VSgQz2Qlj08wtogTuVLopmMx4+NIHQ+4D3r22g==
-X-Google-Smtp-Source: AGHT+IGJMHYnI31Z6n24Su2+zjueI1nrTEWH0Xq5dw0aB5uPMQuKvHBbUn4R9I6lotanPfoUEIPq4w==
-X-Received: by 2002:a05:6a00:3a27:b0:6ec:f9d3:d0c6 with SMTP id fj39-20020a056a003a2700b006ecf9d3d0c6mr13686122pfb.16.1715048470585;
-        Mon, 06 May 2024 19:21:10 -0700 (PDT)
-Received: from rigel (14-200-166-65.static.tpgi.com.au. [14.200.166.65])
-        by smtp.gmail.com with ESMTPSA id u10-20020aa7838a000000b006f456b23f90sm5235159pfm.31.2024.05.06.19.21.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 19:21:10 -0700 (PDT)
-Date: Tue, 7 May 2024 10:21:06 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Subject: [libgpiod][RFC] helper functions for basic use cases
-Message-ID: <20240507022106.GC26136@rigel>
+	s=arc-20240116; t=1715063943; c=relaxed/simple;
+	bh=6tMH+Ue0cPv8Ydx1cx5w4FvF1zoat+8A48ho3NUCMoo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VVPLj0cwfs5gG4FakercVcQMHCACdz0dV+eQfoSgpF45aX+8FlzUC/qOqqaVcvA8tosp9TBLF0qWWcKTC/rX6SYnXUcV6r0FsZc4g1HjtuIG6aoMII7+ZUyXNCwZvyjpIXJZ3RrRZTRhH6k1/PL9CKmZFwk8FrGg9GlfI1CENtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=idOjJyk7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C0A0C2BBFC;
+	Tue,  7 May 2024 06:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715063943;
+	bh=6tMH+Ue0cPv8Ydx1cx5w4FvF1zoat+8A48ho3NUCMoo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=idOjJyk7XistPhdtgHR2vppVHaYcg60tgMCM6Rpv433nB68m+lEYCJEONyhONGL4m
+	 CBSdZ9EZIWUJkwBkc4Am6sGrfrcEPsUxKQLvRb7pM6KbNjouH+GGIBbjyFvvRntUqp
+	 i87DIPsc/zNBlctFx2uo3tdbNjcrUSTc9/5enrQ/9ykMz+Lciif3nLJSVpxPt3XIpq
+	 f2MfWhAXvopGeyfvBDM+W2PdOowU1zlS+Es9BRrufVuS1rdIYiEbHlmqpxiM12xZFZ
+	 6l3M0XDnWXnK27kQc6+8jglT23TupiK8BIKU8RuP18qdnVRHVfhwZwR9gib5gC42CY
+	 HRbXUsItpWevw==
+Message-ID: <ce331f5d-d690-474b-91aa-5257cf58884d@kernel.org>
+Date: Tue, 7 May 2024 08:38:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/13] dt-bindings: mfd: pm8008: add reset gpio
+To: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Das Srinagesh <quic_gurus@quicinc.com>,
+ Satya Priya <quic_c_skakit@quicinc.com>, Stephen Boyd <swboyd@chromium.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
+ <20240506150830.23709-2-johan+linaro@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240506150830.23709-2-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Bart,
+On 06/05/2024 17:08, Johan Hovold wrote:
+> Describe the optional reset gpio (which may not be wired up).
+> 
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-I realise you want to keep libgpiod minimal, but in my latest survey of the
-problems that new or potential users are finding with libgpiod the most
-common one was that it is way too complicated to do simple things.
-They just want to request an input or output line and play with it.
-They think that should be an easy thing to do, and will completely write
-off libgpiod because it is not - the learning curve is too steep.
-And they have a point.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I've raised this before, but I think libgpiod is in need of a small (and I
-emphasize small) set of helper functions to simplify basic use cases,
-like just requesting a single input or output line.  Maybe functions to
-control setting bias, edge detection and debounce on inputs (using
-reconfigure after the initial request).
-The functions would be separated from the existing functions by naming,
-e.g. gpiod_helper_XXX, or some such, so there would be no confusion with
-the existing.
+Best regards,
+Krzysztof
 
-Any chance your position has changed since last I asked?
-
-Cheers,
-Kent.
 
