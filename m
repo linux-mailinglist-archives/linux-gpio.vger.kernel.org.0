@@ -1,165 +1,103 @@
-Return-Path: <linux-gpio+bounces-6198-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6199-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADB718BE73C
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 17:19:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCB3B8BE72B
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 17:15:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6493BB29FFA
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 15:14:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A3181C23D9A
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 15:15:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 564DD161914;
-	Tue,  7 May 2024 15:14:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A35C1635CC;
+	Tue,  7 May 2024 15:15:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ISpe8zWi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5bYQe1y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB3215EFDE;
-	Tue,  7 May 2024 15:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3A1161914;
+	Tue,  7 May 2024 15:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715094872; cv=none; b=jei0tJAQv+AKVXcsphCaX7cXRbYLQkbU7e8YUcDZ+KFSI/v3YGlgfFyvmqQQUfFLFAXJQGnZI5HqitBOpmX/THc823iDLOV6VVdLJJy8Uyqzf7kKMFCbVyETRN2Y6WpZeFA9Q59xSrgzPRWePB2G3cJfRSN+Yl8RSK/FRpnNtok=
+	t=1715094935; cv=none; b=SAeASRx6DGtHNLU7eKuU7xj8OZA4QObBEJR+sNgE8wEVGZ6MQ+ZmhuW+l3Y4U/OuY6yC634HlwMs/oNHctCFeVZIDyRN4NJ5yxhAUds1kKklVqEFYdAToxtN/Q9Si2ZKpCTdYeicrtSTKTN/CQuf7lTC1jfKb5aUNA4nXbr4RVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715094872; c=relaxed/simple;
-	bh=nB/cJv7IcDvCVPO18M+qfbJN1yWBxowX9QN+QZhjrR4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=H4khYe0h5U/qJ6NHesExnrc4F1L4uHtETnecZXQyP3l8FpBReFUQuvOzXk6g/HzzYJILtwP081Rulj0+v7k1VIXJQvyeu9BdrpodEHdKvfOZEAxygEUb0mry+A2J50huTSNIaCCJzqe8CCq6jxjv8tNfbk4kj61hPrbo42xxT90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ISpe8zWi; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E1D86E0005;
-	Tue,  7 May 2024 15:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715094867;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=206gGNUNB5hA5ZcFAZ6jyveJ5RgZY1MARbRfGQUc+HM=;
-	b=ISpe8zWiQep2P8Frm93frtzWECPQK7E31QuFfs4MQwQGxwF1LFceQXULO98URfaceGT6Pa
-	jd4Zwu76vmRl0LoukyAE9I4K5l8c8SUb5DBZzHHcw3hrTHvqkYr2ajIoRqQ5xcZmBMsaoO
-	mNRJInwwjq8LXBtvcpKIP/bFFbFDdLjsLaWqrqqeLU8C4FBgvnvEkmqsG+PNicz8fn1Hon
-	Fndh/FnABacFn11AoTLhgl5WSfUw1ks8SZSeCAQWVu0BWwIpo2bknBUYO/DPHUQqjVScoI
-	ZBu3nmgXHXdEvbSPJoT7Z5PLlX5yPraMtGNFME/46CrnxcK7PhdX0+lnB1KFOg==
+	s=arc-20240116; t=1715094935; c=relaxed/simple;
+	bh=AF0IG7U9yLaf0TKDjmv2oW0NAZ5Yv6qM/EdNBZdaA+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mlVw9IiUfBF1wfQKbuFtX3twj1dIX2BJhw316lCgSaRzfO7SNA42mHAgr9qfx9KkkvOv5n9Mn9o2WxdaiAR4Sa2Ft9yo/XDKNC6zcMfpyLYXWmzBftwJdAi2hwo3NDs02m1LAo6g3bGAom5bHxhlsxquJqkpJcgHCoxtnEviAqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5bYQe1y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F331C2BBFC;
+	Tue,  7 May 2024 15:15:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715094934;
+	bh=AF0IG7U9yLaf0TKDjmv2oW0NAZ5Yv6qM/EdNBZdaA+M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N5bYQe1yIl5osdfHFh58czWgmEpherJOCYDFqdQqTSJ7s9wfmt+AOOJ1/l4Q3g7qJ
+	 vTYfylx128AP7P4/AAQsV3/EN5mNgSQCUu+TZqLAKJuSPeeId8hMMt3GIHGzoH4QDi
+	 kOL+KBP9mQb98GY7LtAVJgqC3Tvg8blVd/wK7KReF/KwDNCbcWbXk3Fs3sO/D6F6ly
+	 txyM8vZoxtvQ100G2Y65/qu5S2X/GfOj6BGaLAuQQdJu5r4AR8KnDAmPDE2lTl1s36
+	 hSLVUzZkp0CyUMG88QDwF59bHtFI9sMLAu250o1l8Od8kJLkOQOXJjQUDUTgoPx5OD
+	 5frM4STFkxL8Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1s4MXY-000000004ZW-2wmP;
+	Tue, 07 May 2024 17:15:36 +0200
+Date: Tue, 7 May 2024 17:15:36 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Das Srinagesh <quic_gurus@quicinc.com>,
+	Satya Priya <quic_c_skakit@quicinc.com>,
+	Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 03/13] mfd: pm8008: deassert reset on probe
+Message-ID: <ZjpFmGNWCu6zXLrC@hovoldconsulting.com>
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
+ <20240506150830.23709-4-johan+linaro@kernel.org>
+ <ZjkoAzHnYTKk_6Yr@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 07 May 2024 17:14:25 +0200
-Message-Id: <D13IE06GUEJ9.UUNOU4QH2QN9@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH v2 00/11] Add Mobileye EyeQ system controller support
- (clk, reset, pinctrl)
-Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, "Stephen Boyd"
- <sboyd@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Lee Jones" <lee@kernel.org>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Michael Turquette"
- <mturquette@baylibre.com>, "Philipp Zabel" <p.zabel@pengutronix.de>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-X-Mailer: aerc 0.17.0
-References: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
- <8dcdb1422cd144128c1dc6fff1c273d3.sboyd@kernel.org>
- <D13HXGJGMS76.XIIIZLZBCZ09@bootlin.com>
-In-Reply-To: <D13HXGJGMS76.XIIIZLZBCZ09@bootlin.com>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjkoAzHnYTKk_6Yr@surfacebook.localdomain>
 
-Hello,
+On Mon, May 06, 2024 at 09:57:07PM +0300, Andy Shevchenko wrote:
+> Mon, May 06, 2024 at 05:08:20PM +0200, Johan Hovold kirjoitti:
+> > Request and deassert any (optional) reset gpio during probe in case it
+> > has been left asserted by the boot firmware.
+> > 
+> > Note the reset line is not asserted to avoid reverting to the default
+> > I2C address in case the firmware has configured an alternate address.
+> 
+> ...
+> 
+> > +	reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+> > +	if (IS_ERR(reset))
+> > +		return PTR_ERR(reset);
+> 
+> Shouldn't you wait a bit to make chip settle down?
 
-On Tue May 7, 2024 at 4:52 PM CEST, Th=C3=A9o Lebrun wrote:
-> On Sat May 4, 2024 at 4:34 AM CEST, Stephen Boyd wrote:
-> > Quoting Th=C3=A9o Lebrun (2024-05-03 07:20:45)
-> > > This builds on previous EyeQ5 system-controller revisions[0], support=
-ing
-> > > EyeQ5, EyeQ6L and EyeQ6H. We expose a few OLB system-controller
-> > > features here:
-> > >  - Clocks: some read-only PLLs derived from main crystal and some
-> > >    divider clocks based on PLLs.
-> > >  - Resets.
-> > >  - Pin controller, only on EyeQ5 (rest will use generic pinctrl-singl=
-e).
-> > >=20
-> > > EyeQ6H is special in that it has seven instances of this
-> > > system-controller. Those are spread around and cannot be seen as a
-> > > single device, hence are exposed as seven DT nodes and seven
-> > > compatibles.
-> > >=20
-> > > This revision differs from previous in that it exposes all devices as=
- a
-> > > single DT node. Driver-wise, a MFD registers multiple cells for each
-> > > device. Each driver is still in isolation from one another, each in
-> > > their respective subsystem.
-> >
-> > Why can't you use auxiliary device and driver APIs?
->
-> Good question. Reasons I see:
->
->  - I didn't know about auxdev beforehand. I discussed the rework with a
->    few colleagues and none mentioned it either.
->
->  - It feels simpler to let each device access iomem resources. From my
->    understanding, an auxdev is supposed to make function calls to its
->    parent without inheriting iomem access. That sounds like it will put
->    the register logic/knowledge inside a single driver, which could or
->    could not be a better option.
->
->    Implementing a function like this feels like cheating:
->       int olb_read(struct device *dev, u32 offset, u32 *val);
->
->    With an MFD, we hand over a part of the iomem resource to each child
->    and they deal with it however they like.
->
->  - Syscon is what I picked to share parts of OLB to other devices that
->    need it. Currently that is only for I2C speed mode but other devices
->    have wrapping-related registers. MFD and syscon are deeply connected
->    so an MFD felt natural.
->
->  - That would require picking one device that is platform driver, the
->    rest being all aux devices. Clock driver appears to be the one, same
->    as two existing mpfs and starfive-jh7110 that use auxdev for clk and
->    reset.
->
-> Main reason I see for picking auxdev is that it forces devices to
-> interact with a defined internal API. That can lead to nicer
-> abstractions rather than inheriting resources as is being done in MFD.
->
-> Are there other reasons?
+Yeah, probably. I actually asserted reset here for a while (e.g. to
+reset the address), but didn't have to use a post-reset delay then.
 
-Self replying myself. I gave myself some time to think about that but I
-still have more thought now that I've written the previous email, and
-re-read almost all old revisions of this series.
+I'll see if I can find someone with access to a datasheet or maybe add
+some small delay here anyway.
 
-I do like this auxdev proposal. More so than current MFD revision. One
-really nice feature is that it centralises access to iomem. I've
-noticed recently a register that has most its fields for reset but one
-lost bit dealing with a clock mux. Logic to handle that would be in one
-location.
-
-Also, I just noticed you hinted at auxiliary devices in previous emails,
-which I thought was a generic term. I did not see it as a specific
-kernel infrastructure to be used. Sorry about that.
-
-Regards,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Johan
 
