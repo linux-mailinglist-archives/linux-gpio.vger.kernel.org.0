@@ -1,147 +1,113 @@
-Return-Path: <linux-gpio+bounces-6195-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6196-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 954AD8BE69B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 16:53:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9ECF28BE6CB
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 17:01:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E68EB233A5
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 14:53:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D03481C23A89
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 15:01:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21CB215FD15;
-	Tue,  7 May 2024 14:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF092160862;
+	Tue,  7 May 2024 15:01:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BWWaekmb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8AmCP22"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7EF15FCF0;
-	Tue,  7 May 2024 14:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6068A1607B3;
+	Tue,  7 May 2024 15:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093575; cv=none; b=skNfStd2FyDIoD85YFKGJIb30qVfmzrEGAM8zCUynS6dFqFL2eFvDBrfuo23/fyXiNXon3RY0GEu3psiSD9Mm2gcczC39ABstTlVzpZxDp16VLxUYw7Wqa1hW4HBrJdB735sEiTaLIPq0mA+1jN8NmXUu/P1FOH8rQFz2dYLNGo=
+	t=1715094061; cv=none; b=WeNxcBrGGvZf8wRfmI6kdwLWkqULRson0FYIIpwSyv0XmynFEjJ2zsAJvFY3DtCnANRAQNNE/qRRilXh3rsfUDrLL0RAyYtz6JIDvVI3cTfY3ik3pm+6bu0VVvGrf7lCg/wr8WHZHyBs0mQZpcrogupRtIESIWii/dnMjiIpo0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715093575; c=relaxed/simple;
-	bh=MlQMJtQlUuf6lLca3bql80rz2yBaAuTOSQM7x4CO/+E=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=YEie/5xLR5KGKMqFhvia7yN02pILKObNf3TAanbAQ/cpROO3pqtMdmW798mTZHZrb8cxQB1Ezp4KjeoG4BDG+5FlTivbBy1YrmeRURaOSSl8rmkik2SdM42GIK9l7EXIyOV6GNzYf0e9wFITSPSRLTXmnSN7mse6dKve7FFDGFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BWWaekmb; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5D8DBC0002;
-	Tue,  7 May 2024 14:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715093570;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UGenY7YAzUwlgiT73G7TaHalCSUU2X6AFVguS+ovgFw=;
-	b=BWWaekmbWtG3JQ8gcKhy7e0+HcN08YNNci5RJE5FZSeN+mPVBdOtCyww7UraBvBuBvNe4j
-	roYAhUgVdwh+j5vWIebRHxzomUrJwZcQ/rWk189pVSdKnmtnMoUiZQnH9uyhOUzhuFQfNP
-	LMPFRd2atO3kzm+eFRMubYigSEaCuE+BqOnl9Jc3yZtRx9YorACLWdx9KZJcOpAN0cXTK9
-	BpzVO+y3YCNj2AWGaxSiF8EnDdT9NWnes/ppIWSp+tMJw4iBuCmvMs2+q8ESc8VIzGX/61
-	KexeA06fv4ck3ADqNmciQ4qi8pZnbmmPuJ0WYduRP8DP0xw1NhkhKm3qPyDtBQ==
+	s=arc-20240116; t=1715094061; c=relaxed/simple;
+	bh=8a2pyO1gn1Kbk1AilEdpctkENSJMzwz0LXzeDq6SO6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ddW6kXK1c9elZMTPrsZjC9z691iCwbyOHP+/cAbwjCFFr7N5EWDRn+E0nXiS0vxPtTIwHTIxlIkdauOuIl/tXdSkN0CK9y10OHeoYqGajgYaHxiiEnKNvcgVKGeUq/VH5dEyU6TndG5UfkKhOmHJOAA7AarsjqPlaq3VZqaIZR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8AmCP22; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCF65C2BBFC;
+	Tue,  7 May 2024 15:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715094060;
+	bh=8a2pyO1gn1Kbk1AilEdpctkENSJMzwz0LXzeDq6SO6I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y8AmCP226PFSr1YG4tK7kuHNHtRyXGzMaSR8rzq7qFVoJUWZvo4d4WAwq1Tog2Sft
+	 xP/tdeNq2x0Hv7QGRCdhyMdoBRJrYhBj2/vXX7OqL+NG7tIgSsct9ZaLK5RG+aLN0u
+	 S1ZO9xXZDot7EEgkLuuCj+6nJ8mCaIo97JcEHha9UFZa5E51w2UfQkBpR2P8i2JGg8
+	 6u/3g/Ohu2oy5D6j/HCNlgyZU2b8CJ7/lzuPt4nRwR39EsYibtD+Yw7yOYy2pGR3cY
+	 D+jhKdJbx7UP3Wv2qUcS7YMoLw/pJMEQcG5Oiqf5F4C+B86ih/mB3bMXg6duXGUHyA
+	 Pk7p2WYVijbJw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1s4MJT-000000003QQ-0G9L;
+	Tue, 07 May 2024 17:01:03 +0200
+Date: Tue, 7 May 2024 17:01:03 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Das Srinagesh <quic_gurus@quicinc.com>,
+	Satya Priya <quic_c_skakit@quicinc.com>,
+	Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 02/13] mfd: pm8008: fix regmap irq chip initialisation
+Message-ID: <ZjpCL_NQD7X3hasO@hovoldconsulting.com>
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
+ <20240506150830.23709-3-johan+linaro@kernel.org>
+ <ZjknxSsyo20b5_Tm@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 07 May 2024 16:52:49 +0200
-Message-Id: <D13HXGJGMS76.XIIIZLZBCZ09@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH v2 00/11] Add Mobileye EyeQ system controller support
- (clk, reset, pinctrl)
-Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Stephen Boyd" <sboyd@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Lee Jones" <lee@kernel.org>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Michael Turquette"
- <mturquette@baylibre.com>, "Philipp Zabel" <p.zabel@pengutronix.de>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-X-Mailer: aerc 0.17.0
-References: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
- <8dcdb1422cd144128c1dc6fff1c273d3.sboyd@kernel.org>
-In-Reply-To: <8dcdb1422cd144128c1dc6fff1c273d3.sboyd@kernel.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjknxSsyo20b5_Tm@surfacebook.localdomain>
 
-Hello,
+On Mon, May 06, 2024 at 09:56:05PM +0300, Andy Shevchenko wrote:
+> Mon, May 06, 2024 at 05:08:19PM +0200, Johan Hovold kirjoitti:
+> > The regmap irq array is potentially shared between multiple PMICs and
+> 
+> IRQ
 
-On Sat May 4, 2024 at 4:34 AM CEST, Stephen Boyd wrote:
-> Quoting Th=C3=A9o Lebrun (2024-05-03 07:20:45)
-> > This builds on previous EyeQ5 system-controller revisions[0], supportin=
-g
-> > EyeQ5, EyeQ6L and EyeQ6H. We expose a few OLB system-controller
-> > features here:
-> >  - Clocks: some read-only PLLs derived from main crystal and some
-> >    divider clocks based on PLLs.
-> >  - Resets.
-> >  - Pin controller, only on EyeQ5 (rest will use generic pinctrl-single)=
-.
-> >=20
-> > EyeQ6H is special in that it has seven instances of this
-> > system-controller. Those are spread around and cannot be seen as a
-> > single device, hence are exposed as seven DT nodes and seven
-> > compatibles.
-> >=20
-> > This revision differs from previous in that it exposes all devices as a
-> > single DT node. Driver-wise, a MFD registers multiple cells for each
-> > device. Each driver is still in isolation from one another, each in
-> > their respective subsystem.
->
-> Why can't you use auxiliary device and driver APIs?
+I'm referring to an array of struct regmap_irq. Perhaps I can add an
+underscore.
+ 
+> > should only contain static data.
+> > 
+> > Use a custom macro to initialise also the type fields and drop the
+> > unnecessary updates on each probe.
+> 
+> ...
+> 
+> > +#define _IRQ_TYPE_ALL (IRQ_TYPE_EDGE_BOTH | IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW)
+> 
+> This is repetition of IRQ_TYPE_DEFAULT.
 
-Good question. Reasons I see:
+Thanks, I guess I should use IRQ_TYPE_SENSE_MASK here even.
 
- - I didn't know about auxdev beforehand. I discussed the rework with a
-   few colleagues and none mentioned it either.
+> ...
+> 
+> > -			dev_err(dev, "Failed to probe irq periphs: %d\n", rc);
+> > +			dev_err(dev, "failed to add IRQ chip: %d\n", rc);
+> 
+> dev_err_probe(...); ?
 
- - It feels simpler to let each device access iomem resources. From my
-   understanding, an auxdev is supposed to make function calls to its
-   parent without inheriting iomem access. That sounds like it will put
-   the register logic/knowledge inside a single driver, which could or
-   could not be a better option.
+This function won't return -EPROBE_DEFER, and that would be a separate
+change in any case.
 
-   Implementing a function like this feels like cheating:
-      int olb_read(struct device *dev, u32 offset, u32 *val);
-
-   With an MFD, we hand over a part of the iomem resource to each child
-   and they deal with it however they like.
-
- - Syscon is what I picked to share parts of OLB to other devices that
-   need it. Currently that is only for I2C speed mode but other devices
-   have wrapping-related registers. MFD and syscon are deeply connected
-   so an MFD felt natural.
-
- - That would require picking one device that is platform driver, the
-   rest being all aux devices. Clock driver appears to be the one, same
-   as two existing mpfs and starfive-jh7110 that use auxdev for clk and
-   reset.
-
-Main reason I see for picking auxdev is that it forces devices to
-interact with a defined internal API. That can lead to nicer
-abstractions rather than inheriting resources as is being done in MFD.
-
-Are there other reasons?
-
-Thanks,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Johan
 
