@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-6178-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6179-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 228A38BDBC1
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 08:41:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F16E18BDBC7
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 08:43:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD9FD1F238D1
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 06:41:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 357E2B210D0
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 06:43:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8DF16D1CC;
-	Tue,  7 May 2024 06:41:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9535378C7D;
+	Tue,  7 May 2024 06:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbWxii1a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XDXqA1aG"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB8478B50;
-	Tue,  7 May 2024 06:41:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480B86D1CC;
+	Tue,  7 May 2024 06:43:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715064070; cv=none; b=Yaz8lADQ9NWEUfagwSw80esR9+WRK4mz0TK3PyApDY5Jq/Zdh0qaFDwmhCLVRXBELvyxA5eWBRQQ2+51ymYKLmY9aODuFKamFmiD5Hf/ja1ryLip0LC4zsJJzMmzv9tu00EmKlnh8qXCCnw2gsWs5f4DYQUucbwjjcNZO9VUb8k=
+	t=1715064196; cv=none; b=D7scTzBeXbwv/rf83bHrSJmN6Tn9y7Tf2FpbKhcaklcepxMwTmo1ezlSK/95NAmH8WrGJGFL+VELDr3ZEEMn/r72/UEYfzOqIVNLj6zTqheUwwvK3370Etb3gvwlNHGro9z9aqwNFr7Y70aPClb8bEdNO3jXfe9P5Bk6jR+Fc+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715064070; c=relaxed/simple;
-	bh=5eQd0Sx0nkNvoNKC2RtYfFZZ8Y8MDo0O95i8gKHAf/o=;
+	s=arc-20240116; t=1715064196; c=relaxed/simple;
+	bh=PZ7H48ij72QNi6XqAFb8r4NGekwZEISKHS4tLqNgqHU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YOUApXTebXVTqHeAH9pq7Kk57O6w8uhAwD5ueK4s66sfrXH39XjNgCWqYdfBYfmIwOxpG/NBuROjX8yUdibSs+vV3aHRxsO80QRzWUNuJ6TyYgS5nh5L++n+78Tktb5yR9qBmUT3op1oZTwpnQMfdxuBnyDLy0oLPY2Sn5l06Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbWxii1a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAB66C2BBFC;
-	Tue,  7 May 2024 06:41:04 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Pm2X7uI9nZSxGZMDWWLXWctd9zFgKaubOfJbMykBKylxYX6pHxZOAtsPGUKe8yOr0GPIYUpUBC7a/CpffJDK9ZfI/FwIIwzTGL8CFVIeDE/KmusV38zSFgKZL6P56QAJtRFacCpg487eOq4nzcBjEgpylEBh3uCzDapuEbO6gvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XDXqA1aG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7FCDC2BBFC;
+	Tue,  7 May 2024 06:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715064070;
-	bh=5eQd0Sx0nkNvoNKC2RtYfFZZ8Y8MDo0O95i8gKHAf/o=;
+	s=k20201202; t=1715064195;
+	bh=PZ7H48ij72QNi6XqAFb8r4NGekwZEISKHS4tLqNgqHU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RbWxii1agc1VNp9F5VnoykEMn0LJC7dPsrVtwC6wdulCP4xU4B1Cvrf6VVwfJk8Qg
-	 Ib8W8wAFoTdD+zHDnk8zykj6hFoK8cyJDQfnUXQsy2q3viEiDUsu8K4Tdss/32tECG
-	 JRkQqJUSlLdCi3+bwyqvw3UCJApfZg0iSfuUDZy/R8YZuk0DlLHxyudrXWdySoL/+K
-	 uOKjeB2ti9YRd860/eLY54fe9yeXji87biT6sM4ouTPQ2hAsiBj1FacvUW+khUmDTZ
-	 fXz1vu7WDokf/eAifZMwwPDTGXuszKKWAI65F6kHkMKIZKrcc0zHHsqg04Qv/Re20o
-	 rbNwJ8lT5FpZg==
-Message-ID: <cbf4e021-a128-4122-8e19-66f139edc4d9@kernel.org>
-Date: Tue, 7 May 2024 08:41:02 +0200
+	b=XDXqA1aGrgcvWt8sYhXTM+lat37JYxQ/oCnqhjMCOcP4om5Nb8Wq3q+X5ANZSztMx
+	 EY7ft+dzJ8VP3vCyEGuM01xbVpfntx99BBSp6zjmxr/3NcACpPTSLigxkbSnoA6mMH
+	 vjc0toDyjDh/1WdBh/H4eUIGzNzpm2fFpyFfKwZEdtUxsb22upEB/zmvgAdmPhDw0t
+	 T34I4fN1j6YwpTMIB/M3KrrR/xrHrgqgceMA3AcWCIIKS/KCGjo7gzqtigvmbmmImh
+	 MCJx3R2i2wOg4kE6PH1CKQQ8lcG6OivZ48aMd+XraC/HsSrJ/+MJaCreuBVR0JEF6V
+	 SFLXrkiC+xCzg==
+Message-ID: <fa54422f-329e-4c3e-b297-b84438f75abe@kernel.org>
+Date: Tue, 7 May 2024 08:43:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/13] dt-bindings: pinctrl: qcom,pmic-gpio: drop pm8008
+Subject: Re: [PATCH 10/13] dt-bindings: mfd: pm8008: rework binding
 To: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
  Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
  Bjorn Andersson <andersson@kernel.org>
@@ -62,7 +62,7 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
  linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-9-johan+linaro@kernel.org>
+ <20240506150830.23709-11-johan+linaro@kernel.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,26 +108,57 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240506150830.23709-9-johan+linaro@kernel.org>
+In-Reply-To: <20240506150830.23709-11-johan+linaro@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 06/05/2024 17:08, Johan Hovold wrote:
-> The binding for PM8008 is being reworked so that internal details like
-> interrupts and register offsets are no longer described. This
-> specifically also involves dropping the gpio child node and its
-> compatible string which is no longer needed.
+> Rework the pm8008 binding by dropping internal details like register
+> offsets and interrupts and by adding the missing regulator and
+> temperature alarm properties.
 > 
-> Note that there are currently no users of the upstream binding and
-> driver.
+> Note that child nodes are still used for pinctrl and regulator
+> configuration.
+> 
+> Also note that the pinctrl state definition will be extended later and
+> could eventually also be shared with other PMICs (e.g. by breaking out
+> bits of qcom,pmic-gpio.yaml).
 > 
 > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > ---
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 3 ---
->  1 file changed, 3 deletions(-)
+>  .../devicetree/bindings/mfd/qcom,pm8008.yaml  | 154 ++++++++++--------
+>  1 file changed, 90 insertions(+), 64 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml b/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
+> index e1e05921afb4..ac1bab0261b6 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
+> @@ -19,116 +19,142 @@ properties:
+>      const: qcom,pm8008
+>  
+>    reg:
+> -    description:
+> -      I2C slave address.
 
-Dropping compatibles from bindings must happen after they are dropped
-from kernel, so this should go after spmi-gpio patch.
+Please split cleanups from actual functional/content rework.
+
+> -
+>      maxItems: 1
+>  
+>    interrupts:
+>      maxItems: 1
+>  
+> -    description: Parent interrupt.
+> -
+>    reset-gpios:
+>      maxItems: 1
+>  
+> -  "#interrupt-cells":
+> +  vdd_l1_l2-supply: true
+
+No underscores in property names.
+
+
 
 Best regards,
 Krzysztof
