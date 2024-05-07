@@ -1,58 +1,57 @@
-Return-Path: <linux-gpio+bounces-6202-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6203-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B23D78BE7A7
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 17:45:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3709B8BE7CC
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 17:52:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D57161C21A71
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 15:45:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E59C328274B
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 15:52:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF0C71649DE;
-	Tue,  7 May 2024 15:44:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08968165FD4;
+	Tue,  7 May 2024 15:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4lOqjEN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AMbZQAM4"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9146015F30F;
-	Tue,  7 May 2024 15:44:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BB615E1E2;
+	Tue,  7 May 2024 15:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715096695; cv=none; b=q+zmP32jd6SZZ5SWwqkQiatQTpi1S/461EiHsaFIl1BvJKHGjwBtcR00g8lIBehPMecR7/X1YSUjV1ZFKpt4pI0jHYBVcpdcOTrD4dW+PMIiXKte9CX6IXWP6zfZ7tl4ns7qzA+711Tsvpe6OLQs1Kj3WbQRW5Zlx6KRluMIhGk=
+	t=1715097134; cv=none; b=Jfz3NXRtLINOvL0KN5z5JraXiWhRq4xKKbOVYAk0uuvYLlK/Z+wPdLKiAyTdYk+Phyuf0LxlAR08GmD6PvUpPZIinv1uUSOL1LJ0jpFGvOftM/ZWd9VmvdcVtSMTUzRiX0FABRHiRVAYDraCeglyci8g//ie3wIso6ce+9B60W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715096695; c=relaxed/simple;
-	bh=yFzbHrUIErgI/K91OQv9I/OpYVQQJu7B8yxVKKO+SzA=;
+	s=arc-20240116; t=1715097134; c=relaxed/simple;
+	bh=P2vSRZtRgkdxOqQUeJVty78/jCAKTgcuzaOvxK4M7eY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gifa4UlwrBUF5AbeyhTGERM/Txl2Mb61LXaxTO6El4NXqAbBcM1M09e6KPpT2rAuYAHtf8j5Ovf7pfhPPAFeqNARg9VoCEF/UD32OS/gDd0KjxDcvz32Ph4p9dnrt++7JiuX0eNq9qHrp5KJPDoNeaY5JE5j+RnmB1php9KB83E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4lOqjEN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BEA0C2BBFC;
-	Tue,  7 May 2024 15:44:55 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=EM43cGpNQb3HjyN1+2TqszcWcQVN1pKIQfENJqV/347Avnlm1zinPj7iMcehA8PB5akr7+NpHrMfXqLL8QNZcx+dO90rNLOrCSeUxkqGj4nCecPsZMkH2Nv/t6NTMlSb0lBtF8yBEAsKFBd+wdU0UdcTYXmgx0IIfWVXLZoIFu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AMbZQAM4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45A03C2BBFC;
+	Tue,  7 May 2024 15:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715096695;
-	bh=yFzbHrUIErgI/K91OQv9I/OpYVQQJu7B8yxVKKO+SzA=;
+	s=k20201202; t=1715097134;
+	bh=P2vSRZtRgkdxOqQUeJVty78/jCAKTgcuzaOvxK4M7eY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P4lOqjENPtah9e5qgGQEp/wINkms6VgwKnJh9NPCBjGY+i/g/SrwKxIl9X0D4ZjPL
-	 qFJcLf5k1dq+jjf+7ASYn9kBNmp9/1j+kI6eaNsJNH983lp0jKo5ERRmH54k+UXWo0
-	 KYvc8ce2T1UNM7+ZoYOma7FhZdNNyT9PSFymDGR457iL6GhHqyJb0KoLSMJg4cXjSC
-	 i6x0ld8brNqNY6ledquErLyFDvzG2F6iQ3LQgbykcSvyTyP9q2n1HArF3xrd3tYNaq
-	 tES8Q9NVC0+kh/K2LTeaNnsK0QXQD4Ul6RRKI+w7tTgc29reP88Uih6isPu3ZMA0zt
-	 GV4nUy8grFExg==
+	b=AMbZQAM4JyVqwNOuBsPbY21+XXdFF5F4D6e9MTQ5hdPTaO2K/2viznyAjPuKKpz1d
+	 bIhCJSPJKicfCGWqEmIimQ8yNs2mKbTKRRrIMQXL4qei7CyESWAKNz8xq4Lz5JJo0M
+	 nAkRko4hFKqJIxL9x/XpfU4++M7+qBYpo5whDIIQVG+yanbNVGzk2p5r8PM8CCnyIq
+	 JIf7/lH0XWXLDS3RblvBugKeDT+o8bJsgs06y6H2K/bGHqfudfneTrD1aLgE1oU6Jw
+	 5KpQyguCsH/xgSyuP/Rr5t0dyPFYtbyxXrzP7wyQgm0s4HlmKJuptqOsvbdi+d0Dr+
+	 4hov+wWA3y01w==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan@kernel.org>)
-	id 1s4Mzx-0000000051g-16t0;
-	Tue, 07 May 2024 17:44:57 +0200
-Date: Tue, 7 May 2024 17:44:57 +0200
+	id 1s4N71-0000000057F-3roK;
+	Tue, 07 May 2024 17:52:16 +0200
+Date: Tue, 7 May 2024 17:52:15 +0200
 From: Johan Hovold <johan@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
 Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
 	Mark Brown <broonie@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
@@ -63,10 +62,10 @@ Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org
 Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
-Message-ID: <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
+Message-ID: <ZjpOLzG8vSwuDk5k@hovoldconsulting.com>
 References: <20240506150830.23709-1-johan+linaro@kernel.org>
  <20240506150830.23709-13-johan+linaro@kernel.org>
- <Zjkq_nWyvc6bUtiu@surfacebook.localdomain>
+ <6dc632b0-792c-49c8-9f66-43f7a14789cc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,10 +74,10 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zjkq_nWyvc6bUtiu@surfacebook.localdomain>
+In-Reply-To: <6dc632b0-792c-49c8-9f66-43f7a14789cc@linaro.org>
 
-On Mon, May 06, 2024 at 10:09:50PM +0300, Andy Shevchenko wrote:
-> Mon, May 06, 2024 at 05:08:29PM +0200, Johan Hovold kirjoitti:
+On Tue, May 07, 2024 at 01:48:30PM +0200, Konrad Dybcio wrote:
+> On 5/6/24 17:08, Johan Hovold wrote:
 > > From: Satya Priya <quic_c_skakit@quicinc.com>
 > > 
 > > Qualcomm Technologies, Inc. PM8008 is an I2C-controlled PMIC containing
@@ -88,164 +87,47 @@ On Mon, May 06, 2024 at 10:09:50PM +0300, Andy Shevchenko wrote:
 > > Note that this driver, originally submitted by Satya Priya [1], has been
 > > reworked to match the new devicetree binding which no longer describes
 > > each regulator as a separate device.
-
+> > 
+> > This avoids describing internal details like register offsets in the
+> > devicetree and allows for extending the implementation with features
+> > like over-current protection without having to update the binding.
+> > 
+> > Specifically note that the regulator interrupts are shared between all
+> > regulators.
+> > 
+> > Note that the secondary regmap is looked up by name and that if the
+> > driver ever needs to be generalised to support regulators provided by
+> > the primary regmap (I2C address) such information could be added to a
+> > driver lookup table matching on the parent compatible.
+> > 
+> > This also fixes the original implementation, which looked up regulators
+> > by 'regulator-name' property rather than devicetree node name and which
+> > prevented the regulators from being named to match board schematics.
+> > 
 > > [1] https://lore.kernel.org/r/1655200111-18357-8-git-send-email-quic_c_skakit@quicinc.com
-> 
-> Make it Link: tag?
-> 
-> Link: URL [1]
-
-Sure.
-
+> > 
+> > Signed-off-by: Satya Priya <quic_c_skakit@quicinc.com>
+> > Cc: Stephen Boyd <swboyd@chromium.org>
 > > [ johan: rework probe to match new binding, amend commit message and
-> >          Kconfig entry]
+> >           Kconfig entry]
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > ---
 > 
-> Wouldn't be better on one line?
+> I'm a bit lukewarm on calling this qcom-pm8008-regulator.. But then
+> qcom-i2c-regulator or qpnp-i2c-regulator may bite due to being overly
+> generic.. Would you know whether this code will also be used for e.g.
+> PM8010?
 
-Now you're really nit picking. ;) I think I prefer to stay within 72
-columns.
+Yes, for any sufficiently similar PMICs, including SPMI ones. So
+'qpnp-regulator' would be a generic name, but only Qualcomm knows what
+PMICs they have and how they are related -- the rest of us is left doing
+tedious code forensics to try to make some sense of this.
 
-> + array_size.h
-> + bits.h
-
-Ok.
-
-> > +#include <linux/device.h>
-> 
-> > +#include <linux/kernel.h>
-> 
-> What is this header for?
-
-Probably the ones that are not explicitly included.
-
-> + math.h
-> 
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/regulator/driver.h>
-> 
-> + asm/byteorder.h
-
-Ok, thanks.
-
-> > +static int pm8008_regulator_get_voltage(struct regulator_dev *rdev)
-> > +{
-> > +	struct pm8008_regulator *pm8008_reg = rdev_get_drvdata(rdev);
-> > +	__le16 mV;
-> > +	int uV;
-> > +
-> > +	regmap_bulk_read(pm8008_reg->regmap,
-> > +			LDO_VSET_LB_REG(pm8008_reg->base), (void *)&mV, 2);
-> 
-> Why casting?
-
-I tried not change things in the v15 from Qualcomm that I based this
-on. I couldn't help cleaning up a few things in probe, which I was
-touching anyway, but I left it there.
-
-I'll drop the unnecessary cast.
-
-> > +	uV = le16_to_cpu(mV) * 1000;
-> > +	return (uV - pm8008_reg->rdesc.min_uV) / pm8008_reg->rdesc.uV_step;
-> > +}
-> > +
-> > +static inline int pm8008_write_voltage(struct pm8008_regulator *pm8008_reg,
-> > +							int mV)
-> > +{
-> > +	__le16 vset_raw;
-> > +
-> > +	vset_raw = cpu_to_le16(mV);
-> 
-> Can be joined to a single line.
-
-Sure.
-
-> > +	return regmap_bulk_write(pm8008_reg->regmap,
-> > +			LDO_VSET_LB_REG(pm8008_reg->base),
-> > +			(const void *)&vset_raw, sizeof(vset_raw));
-> 
-> Why casting?
-
-Same answer as above. Will drop.
-
-> > +}
-> 
-> ...
-> 
-> > +static int pm8008_regulator_set_voltage(struct regulator_dev *rdev,
-> > +					unsigned int selector)
-> > +{
-> > +	struct pm8008_regulator *pm8008_reg = rdev_get_drvdata(rdev);
-> > +	int rc, mV;
-> > +
-> > +	rc = regulator_list_voltage_linear_range(rdev, selector);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +
-> > +	/* voltage control register is set with voltage in millivolts */
-> > +	mV = DIV_ROUND_UP(rc, 1000);
-> 
-> > +	rc = pm8008_write_voltage(pm8008_reg, mV);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +
-> > +	return 0;
-> 
-> 	return pm8008_write_voltage(pm8008_reg, mV);
-
-Possibly, but I tend to prefer explicit error paths.
-
-> > +}
-> 
-> > +
-> > +	regmap = dev_get_regmap(dev->parent, "secondary");
-> > +	if (!regmap)
-> > +		return -EINVAL;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(reg_data); i++) {
-> > +		pm8008_reg = devm_kzalloc(dev, sizeof(*pm8008_reg), GFP_KERNEL);
-> > +		if (!pm8008_reg)
-> > +			return -ENOMEM;
-> > +
-> > +		pm8008_reg->regmap = regmap;
-> > +		pm8008_reg->base = reg_data[i].base;
-> > +
-> > +		/* get slew rate */
-> > +		rc = regmap_bulk_read(pm8008_reg->regmap,
-> > +				LDO_STEPPER_CTL_REG(pm8008_reg->base), &val, 1);
-> > +		if (rc < 0) {
-> > +			dev_err(dev, "failed to read step rate: %d\n", rc);
-> > +			return rc;
-> 
-> 			return dev_err_probe(...);
-
-Nah, regmap won't trigger a probe deferral.
-
-> > +static struct platform_driver pm8008_regulator_driver = {
-> > +	.driver	= {
-> > +		.name = "qcom-pm8008-regulator",
-> > +	},
-> > +	.probe = pm8008_regulator_probe,
-> > +};
-> 
-> > +
-> 
-> Unneeded blank line.
-
-I noticed that one too, but such things are up the author to decide.
-
-> > +module_platform_driver(pm8008_regulator_driver);
-> 
-> ...
-> 
-> > +MODULE_ALIAS("platform:qcom-pm8008-regulator");
-> 
-> Use ID table instead.
-
-No, the driver is not using an id-table for matching so the alias is
-needed for module auto-loading.
+So just like for compatible strings, letting the first supported PMIC
+name the driver makes sense as we don't know when we'll want to add a
+second one for another set of devices (and we don't want to call that
+one 'qpnp-regulator-2'). On the other hand, these names are now mostly
+internal and can more easily be renamed later.
 
 Johan
 
