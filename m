@@ -1,70 +1,70 @@
-Return-Path: <linux-gpio+bounces-6206-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6207-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A29CB8BEA71
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 19:23:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2289C8BEA6F
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 19:23:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4ACB1B2331C
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 17:17:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CBA3A1F25791
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 17:23:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62AB516190C;
-	Tue,  7 May 2024 17:17:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A06E16C45B;
+	Tue,  7 May 2024 17:23:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRF/Ew9X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJLpzM2x"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00A4A951;
-	Tue,  7 May 2024 17:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9320E2576E;
+	Tue,  7 May 2024 17:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715102245; cv=none; b=rSc8kV0xRfpmariT8DSAaQUjbi2EWqMR1dCnEKoQZGAxnqLTabL+XVauIK/YgvKEn/QD/dHCtLMiqUP246yjgIy1VlzwdaSB1t1M0DgW4zFKE0AebJd3NFFZXRUqA6uHsVM6hDzlxi8UY/i6GJWGaNy5TXbfl8RwaNm817P2US4=
+	t=1715102594; cv=none; b=e+6oFmDvR9dBTxVmcBGAtVEmcwSLmLP4Pl6lJtV6GXWswO85lpdcWqyN//zEWeF6Dk1KA4qZaFfjh1zGddxM9K9nPYOKvmpourOxSGxyJWFKLgoXc4dC1rmgdPm63kcKROlRj7UIfcrRT6V1Q4UeoJA+3alI0dg4p3KuN+1Lm2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715102245; c=relaxed/simple;
-	bh=tt10DJ7fLHqtt+N8vHO5fh/JA2Lt8pJk91/4mSduB3I=;
+	s=arc-20240116; t=1715102594; c=relaxed/simple;
+	bh=3F87m22ds3DtRntLOJQ7ftRIl7lcVxL3MvLrxRHABQk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NAkF+xt4n3ajKGH4xIg41Udjhm99HrMPh3yjvgzh9Z4/4ATnHOYPWUTitP4oGj0LS8QpSFUOaUhnkZEBNDiI/MQFGNmJ8ZfOzT/4+x8t7fF3TRjBK8ZmSACEo+SHMJv0lm3qToAG53oVJfYvqmUHNp9cb079qi8qPhr2a4RDIXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRF/Ew9X; arc=none smtp.client-ip=209.85.218.54
+	 To:Cc:Content-Type; b=et9bUZm4KKSZP0Tuo7RzkhO6fGtumSX8pYF6NYA6kPnRlD29137gBNRRCw9d0tjGRkhX2mOWBM+txocWVxQflltD0tfYK+4/bdGAuyQbsENpH4cKRIbp75yW+698y8ZAJJ4Ph9aimWEbZ5PxZr0kSgrWDgDnqs+ZQ68i8CQVatA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJLpzM2x; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a59b178b75bso604683266b.0;
-        Tue, 07 May 2024 10:17:23 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a59c5c9c6aeso667351066b.2;
+        Tue, 07 May 2024 10:23:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715102242; x=1715707042; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1715102591; x=1715707391; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aU3pwl905vszgFU7HmwRESNu0Xm5cT15cD2mMAswx3s=;
-        b=KRF/Ew9X6gvX+noHrDQEK2lUttRBh279tLKA8zZEINsqXubOAFnBH+ru/CMwP24rwq
-         oCfpcqeX8i+IRb0aXuxiFgE4zGjDgQDRmK5ghMI6KpLt77TZFYQRGUP5lIEc13QyTO6r
-         HCbB4Qnp/2lDc4sTmYY+jf43WHkhSXPTDotR3qq9MEGQwPGCLlTVy3r//zyBFuMfdAfp
-         ORBuhyVnlIRroHQbs97nHWI/M7EeSye8t8b6SIa26vOYlwfPRBKe6QUUY88+lyJhohMx
-         GqFaxXpOtseC9CFcZbnV/H7REGhFDFfFxli51K2z5R0ABkFcrLnRKlTt9CS/kifRP5Ru
-         35Ug==
+        bh=mtpEy3EJrN6MtVyzu+KwApVVoDL/88fc8jtoTZBIjpE=;
+        b=RJLpzM2xiBnVBzkMorajdYftDzO7BBQtsx7+ijGyaYqPbmud6X0v7+O4yj7f4vVrod
+         eZTzEJBlGQsh/5+hKQhP2vkFUZDDobheT9cadF5suv07A7PfLSK+eWIOcIuVq8EcMPsH
+         stH8/86Xenz9J8FT7e00xkCrvqIFur/sY+25BtX0VkYivv4AmT0ki1S7oqpXV065wCIS
+         +DHcfFKb7CNzRYPEgzdISuChgvQBbt3aC7NefyHQONTwQTdEuyuiTwbnmtNhPsF4SLzU
+         oOdjwa5q72r698atZcqLKSIRaEkPc/fxLbPPVyrjk2CGVg3RZsEd7sFVrKCX4lrCazoF
+         DqjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715102242; x=1715707042;
+        d=1e100.net; s=20230601; t=1715102591; x=1715707391;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aU3pwl905vszgFU7HmwRESNu0Xm5cT15cD2mMAswx3s=;
-        b=IHUCVxm3dcK39h8IOYxEuVFb9OAJqyFN0fHCjgiUhrX43lQtPFiqffLMzCIEsxMyWP
-         qgvSHH50a0EMekjobZ7aNZu/NcqTqyxkd17i0ik2GOcd8KqqCz9H0xw0o+dSoRBSzyVz
-         yvHZazeyflAAS1uRyCP6sqFOWnSHwYfNW2kwbpvDZreNZqHoc42DwS3S4cpsqh77rlui
-         mqVG3bNmE/lMGW6PdbEfVu89Hoj6RnBwRN7uhEis+KzN0b7CIKu+46OOZ8mON8oTeBwH
-         7b4Rdi5dg3ZUtsOom85GRkt6U2BqiuPnn3Wsxhe/Wq6ql+pfLLZ7mhaXD49hQ0I+SPOh
-         LpNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOVh+A+l/aMeF4FXBukRFye1L5/UtKyO2G6/IkzVjc5HdkULzoU8LIKvwwHBz1re+S1hyJGNNauWvYUlA5foHyosvti95rQMYNX5lYNrDPjGREuf93WUWw1CMUkzA8lgCIX1iL/8KO9oSpjFv+WQetAtPm20Tw62hJNf7d4qsKSS5rcV1cW55uX3T2VgtoOWQo87lygUlQq6onJwp9MNS6bkmi
-X-Gm-Message-State: AOJu0YyuJ+0SZZEDsgBcGK87TVF9sKUQqAk0zJyjyo3LMPjxL0UzSy5N
-	yW/CAbsXR5K9t5gvzrEZS0eZrPDIuzJV48HrX7CZyjHwdhp1f3rCQYK9P6wpJy4sdmzZyZoycRy
-	4v2pGc9E4TRMuNqntVIMJ0GWHczs=
-X-Google-Smtp-Source: AGHT+IG49CF7WhQZ87/VBmjtQFbVERL2rpkIsMgd7aYOztjgT0HKRzqzxOGBbKp1dCnVBrBbx7oAsUgIjRXIjMeChfU=
-X-Received: by 2002:a17:906:488:b0:a59:ae57:1663 with SMTP id
- a640c23a62f3a-a59fb955523mr7210766b.19.1715102241777; Tue, 07 May 2024
- 10:17:21 -0700 (PDT)
+        bh=mtpEy3EJrN6MtVyzu+KwApVVoDL/88fc8jtoTZBIjpE=;
+        b=r/5HXM+GpEfaAF4Vbj7eCkBmhOE5RerZcdFhPlSFEAprOfQDYi1GlEEVqkCYgWH3VD
+         xc2HdQaTn+3oHXTIKlKMU3ow1jAgIejVK4T/Ns5pugLECNRL29EwNRdDnfqWCJCKWOMO
+         fh5Cl4Yf6eI+DF5F7LO/axHlfVQKdMAsXrXXKdyYz6VjjF21yNAxU0ARB8NEsWwK4Jm8
+         far2yfP0FoYN+mDbJU4wd/hAw4DJ+u0Gq/MhyTKET1cV/KUT0cGA7GgCmnc+ToPhwjAT
+         MGF8G1ZUqG/kZLLkruoZ9smsiQ3ikw5xsBi3j1L22XljFGjiLMhhEzyo5lHNsi8HKd3q
+         6PbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXo21MPbX0/6CwJ0NJbbQUtq2jdwZeZCROeCosGSv57S8x6lmg8RvD3FljtWPVmsrYZgy70zDLuNXZh7UqGe1WqMfirzIdzgDac6yduCz+g/pmSSyBsRyjXaJjq/2enWnMjPuhpDghzTuA7hdpnvGSNRNufwAX+vQFzMFVO55L5Aku5La3EyaC1Op4jXxVHnq6/+QyEESRgqovwc4ECTUGqa/UC
+X-Gm-Message-State: AOJu0YyF/Uj6KLHMKKZwgmomG7RbKDVx0olpJ3JRGrEg/KqbdR3X91Fn
+	A2KQ8pNWIzM56hmlY2gaA7f2pAZkYMKWyqO76CU1wEa7TszBxjZw1JerCvIFTBj4k27BqU1hWeK
+	4FinNjy9bjrmsuarFIuygVNqeYIFxGUrJubc=
+X-Google-Smtp-Source: AGHT+IGXdccpEUeGZ+Ks9kMHiGVxDjhaCsFZ34YEEfFp7COih3bNCh1tz4j4I0IdvGWomksccuVx14Kw2lbIbTh6psg=
+X-Received: by 2002:a17:906:4c58:b0:a59:9b64:216e with SMTP id
+ a640c23a62f3a-a59fb96a001mr7247866b.46.1715102590903; Tue, 07 May 2024
+ 10:23:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -72,14 +72,15 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-3-johan+linaro@kernel.org> <ZjknxSsyo20b5_Tm@surfacebook.localdomain>
- <ZjpCL_NQD7X3hasO@hovoldconsulting.com>
-In-Reply-To: <ZjpCL_NQD7X3hasO@hovoldconsulting.com>
+ <20240506150830.23709-13-johan+linaro@kernel.org> <Zjkq_nWyvc6bUtiu@surfacebook.localdomain>
+ <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
+In-Reply-To: <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 7 May 2024 20:16:45 +0300
-Message-ID: <CAHp75Vf0raEoVmvRKNxDQ7wdAOtwWYp_fQ1m8WBdnWEFGFOrYA@mail.gmail.com>
-Subject: Re: [PATCH 02/13] mfd: pm8008: fix regmap irq chip initialisation
-To: Johan Hovold <johan@kernel.org>
+Date: Tue, 7 May 2024 20:22:34 +0300
+Message-ID: <CAHp75VdUFMvkj-r76H7GFZdpcoh_nb8v6CBj4wBHztNhiaWULQ@mail.gmail.com>
+Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
+To: Johan Hovold <johan@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
 Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>, 
 	Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
 	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
@@ -91,30 +92,58 @@ Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 7, 2024 at 6:01=E2=80=AFPM Johan Hovold <johan@kernel.org> wrot=
+On Tue, May 7, 2024 at 6:44=E2=80=AFPM Johan Hovold <johan@kernel.org> wrot=
 e:
-> On Mon, May 06, 2024 at 09:56:05PM +0300, Andy Shevchenko wrote:
-> > Mon, May 06, 2024 at 05:08:19PM +0200, Johan Hovold kirjoitti:
-> > > The regmap irq array is potentially shared between multiple PMICs and
+> On Mon, May 06, 2024 at 10:09:50PM +0300, Andy Shevchenko wrote:
+> > Mon, May 06, 2024 at 05:08:29PM +0200, Johan Hovold kirjoitti:
 
 ...
 
-> > > -                   dev_err(dev, "Failed to probe irq periphs: %d\n",=
- rc);
-> > > +                   dev_err(dev, "failed to add IRQ chip: %d\n", rc);
+> > > [ johan: rework probe to match new binding, amend commit message and
+> > >          Kconfig entry]
 > >
-> > dev_err_probe(...); ?
+> > Wouldn't be better on one line?
 >
-> This function won't return -EPROBE_DEFER,
+> Now you're really nit picking. ;) I think I prefer to stay within 72
+> columns.
 
-This is not an argument for a long time (since documentation of
-dev_err_probe() had been amended to encourage its use for any error
-cases in probe).
+Not really. The tag block is special and the format is rather one
+entry per line. This might break some scriptings.
 
-> and that would be a separate
-> change in any case.
+...
 
-Sure, but why to add a technical debt? Perhaps a precursor cleanup patch?
+> > > +#include <linux/kernel.h>
+> >
+> > What is this header for?
+>
+> Probably the ones that are not explicitly included.
+
+Please, remove it, it's a mess nowadays and most of what you need is
+available via other headers.
+
+...
+
+> >                       return dev_err_probe(...);
+>
+> Nah, regmap won't trigger a probe deferral.
+
+And it doesn't matter. What we gain with dev_err_probe() is:
+- special handling of deferred probe
+- unified format of messages in ->probe() stage
+
+The second one is encouraged.
+
+...
+
+> > > +MODULE_ALIAS("platform:qcom-pm8008-regulator");
+> >
+> > Use ID table instead.
+>
+> No, the driver is not using an id-table for matching so the alias is
+> needed for module auto-loading.
+
+Then create one. Added Krzysztof for that. (He is working on dropping
+MODULE_ALIAS() in cases like this one)
 
 --=20
 With Best Regards,
