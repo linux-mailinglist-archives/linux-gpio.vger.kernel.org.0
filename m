@@ -1,133 +1,125 @@
-Return-Path: <linux-gpio+bounces-6203-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6204-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3709B8BE7CC
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 17:52:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B44CC8BE835
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 18:06:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E59C328274B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 15:52:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 674111F2C90C
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 16:06:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08968165FD4;
-	Tue,  7 May 2024 15:52:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A6B916C858;
+	Tue,  7 May 2024 16:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AMbZQAM4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpwgShI5"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BB615E1E2;
-	Tue,  7 May 2024 15:52:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FE516C6A0;
+	Tue,  7 May 2024 16:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097134; cv=none; b=Jfz3NXRtLINOvL0KN5z5JraXiWhRq4xKKbOVYAk0uuvYLlK/Z+wPdLKiAyTdYk+Phyuf0LxlAR08GmD6PvUpPZIinv1uUSOL1LJ0jpFGvOftM/ZWd9VmvdcVtSMTUzRiX0FABRHiRVAYDraCeglyci8g//ie3wIso6ce+9B60W4=
+	t=1715097718; cv=none; b=U4FFjgYGZO/iKStcb+Al6PYS25cYl9GlTL9P81GMnRSxcLtEwykrmDUcbYZAC8eZV/sWrUyUyanzbQBosHe3GQgs0Kovo3Z2KZf5abzinf9E2rzK5bvF+1oUUW6IQmh5ttsclq2Fz29X5o2jg8DLWl7lzy7iD+r7vGPWAif+B4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715097134; c=relaxed/simple;
-	bh=P2vSRZtRgkdxOqQUeJVty78/jCAKTgcuzaOvxK4M7eY=;
+	s=arc-20240116; t=1715097718; c=relaxed/simple;
+	bh=VZJ8+RLe61gK9PUlD/myRLomOS9W7a54C8toInBF7gE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EM43cGpNQb3HjyN1+2TqszcWcQVN1pKIQfENJqV/347Avnlm1zinPj7iMcehA8PB5akr7+NpHrMfXqLL8QNZcx+dO90rNLOrCSeUxkqGj4nCecPsZMkH2Nv/t6NTMlSb0lBtF8yBEAsKFBd+wdU0UdcTYXmgx0IIfWVXLZoIFu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AMbZQAM4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45A03C2BBFC;
-	Tue,  7 May 2024 15:52:14 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=rDPsN3bn7F/NwAq6Cs3+qWQgfpaWca7qhQ1K8ueIfj1D3B4k2iAf6DSr2LJh27wiAwysGyl95lUNgtAXHN3CHqYVUJYkWGkRHW1gTYu2dljQ3lCBRZC7U9ZHw19IWSVeUY75Eb8VZk/ZnZz6X2qzjKIk0pvYk1BpoIhcE3tJtc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpwgShI5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBED5C2BBFC;
+	Tue,  7 May 2024 16:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715097134;
-	bh=P2vSRZtRgkdxOqQUeJVty78/jCAKTgcuzaOvxK4M7eY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AMbZQAM4JyVqwNOuBsPbY21+XXdFF5F4D6e9MTQ5hdPTaO2K/2viznyAjPuKKpz1d
-	 bIhCJSPJKicfCGWqEmIimQ8yNs2mKbTKRRrIMQXL4qei7CyESWAKNz8xq4Lz5JJo0M
-	 nAkRko4hFKqJIxL9x/XpfU4++M7+qBYpo5whDIIQVG+yanbNVGzk2p5r8PM8CCnyIq
-	 JIf7/lH0XWXLDS3RblvBugKeDT+o8bJsgs06y6H2K/bGHqfudfneTrD1aLgE1oU6Jw
-	 5KpQyguCsH/xgSyuP/Rr5t0dyPFYtbyxXrzP7wyQgm0s4HlmKJuptqOsvbdi+d0Dr+
-	 4hov+wWA3y01w==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1s4N71-0000000057F-3roK;
-	Tue, 07 May 2024 17:52:16 +0200
-Date: Tue, 7 May 2024 17:52:15 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
+	s=k20201202; t=1715097717;
+	bh=VZJ8+RLe61gK9PUlD/myRLomOS9W7a54C8toInBF7gE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=SpwgShI5wIUMTdUWl1AeFmLRRDMtdEx/ZrTwMcKYxc9Qf5PMou/bpLvF2mHuXtYsh
+	 afCaX30hHxu15qEi2zpYsZX8K4knnxrSaMaU/dJjEnHU5aM2AlfKoLJtEJTnPUyPPk
+	 Q9bWlJuTMbPzN2ljhYFoVjyCeSJqn+cYuoiOFFGHwZxBQLtUdY1NicXRZ13uUFKgCs
+	 0vLEuwJ+XnjC0wwho324ZcrX/8TuCng5HZHv6vypkOQvg9UPE+KsLQPJgHY0ES+syw
+	 D6NqFfQoNjQ0wbTZM6zvuxdVST6Du/tMSl405yFVrj67Swyj885sRcp3iilJoGGF6j
+	 zE5RSniEqZUGA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 86E8BCE14CC; Tue,  7 May 2024 09:01:57 -0700 (PDT)
+Date: Tue, 7 May 2024 09:01:57 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Satya Priya <quic_c_skakit@quicinc.com>,
-	Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
-Message-ID: <ZjpOLzG8vSwuDk5k@hovoldconsulting.com>
-References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-13-johan+linaro@kernel.org>
- <6dc632b0-792c-49c8-9f66-43f7a14789cc@linaro.org>
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH] gpiolib: fix the speed of descriptor label setting with
+ SRCU
+Message-ID: <1e9042a9-f8ba-4ca9-a5e3-5eed1a02e1ca@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240507121346.16969-1-brgl@bgdev.pl>
+ <597f5da2-71be-4144-a570-fdc4f06c4cc6@paulmck-laptop>
+ <CAMRc=MexihBpLBcY-8aX06buUYmtE07ZpkMq0Ho3jrHb6VE7Sw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6dc632b0-792c-49c8-9f66-43f7a14789cc@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MexihBpLBcY-8aX06buUYmtE07ZpkMq0Ho3jrHb6VE7Sw@mail.gmail.com>
 
-On Tue, May 07, 2024 at 01:48:30PM +0200, Konrad Dybcio wrote:
-> On 5/6/24 17:08, Johan Hovold wrote:
-> > From: Satya Priya <quic_c_skakit@quicinc.com>
-> > 
-> > Qualcomm Technologies, Inc. PM8008 is an I2C-controlled PMIC containing
-> > seven LDO regulators. Add a PM8008 regulator driver to support PMIC
-> > regulator management via the regulator framework.
-> > 
-> > Note that this driver, originally submitted by Satya Priya [1], has been
-> > reworked to match the new devicetree binding which no longer describes
-> > each regulator as a separate device.
-> > 
-> > This avoids describing internal details like register offsets in the
-> > devicetree and allows for extending the implementation with features
-> > like over-current protection without having to update the binding.
-> > 
-> > Specifically note that the regulator interrupts are shared between all
-> > regulators.
-> > 
-> > Note that the secondary regmap is looked up by name and that if the
-> > driver ever needs to be generalised to support regulators provided by
-> > the primary regmap (I2C address) such information could be added to a
-> > driver lookup table matching on the parent compatible.
-> > 
-> > This also fixes the original implementation, which looked up regulators
-> > by 'regulator-name' property rather than devicetree node name and which
-> > prevented the regulators from being named to match board schematics.
-> > 
-> > [1] https://lore.kernel.org/r/1655200111-18357-8-git-send-email-quic_c_skakit@quicinc.com
-> > 
-> > Signed-off-by: Satya Priya <quic_c_skakit@quicinc.com>
-> > Cc: Stephen Boyd <swboyd@chromium.org>
-> > [ johan: rework probe to match new binding, amend commit message and
-> >           Kconfig entry]
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> > ---
+On Tue, May 07, 2024 at 04:48:04PM +0200, Bartosz Golaszewski wrote:
+> On Tue, May 7, 2024 at 4:24 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Tue, May 07, 2024 at 02:13:46PM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > Commit 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
+> > > caused a massive drop in performance of requesting GPIO lines due to the
+> > > call to synchronize_srcu() on each label change. Rework the code to not
+> > > wait until all read-only users are done with reading the label but
+> > > instead atomically replace the label pointer and schedule its release
+> > > after all read-only critical sections are done.
+> > >
+> > > To that end wrap the descriptor label in a struct that also contains the
+> > > rcu_head struct required for deferring tasks using call_srcu() and stop
+> > > using kstrdup_const() as we're required to allocate memory anyway. Just
+> > > allocate enough for the label string and rcu_head in one go.
+> > >
+> > > Reported-by: Neil Armstrong <neil.armstrong@linaro.org>
+> > > Closes: https://lore.kernel.org/linux-gpio/CAMRc=Mfig2oooDQYTqo23W3PXSdzhVO4p=G4+P8y1ppBOrkrJQ@mail.gmail.com/
+> > > Fixes: 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
+> > > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Looks good to me!
+> >
+> > Acked-by: Paul E. McKenney <paulmck@kernel.org>
+> >
+> > One semi-related question...  Why the per-descriptor srcu_struct?
+> >
+> > If the srcu_struct was shared among all of these, you could just do one
+> > synchronize_srcu() and one cleanup_srcu_struct() instead of needing to
+> > do one per gdev->desc[] entry.
+> >
+> > You might be able to go further and have one srcu_struct for all the
+> > gpio devices.
+> >
+> > Or did you guys run tests and find some performance problem with sharing
+> > srcu_struct structures?   (I wouldn't expect one, but sometimes the
+> > hardware has a better imagination than I do.)
+> >
 > 
-> I'm a bit lukewarm on calling this qcom-pm8008-regulator.. But then
-> qcom-i2c-regulator or qpnp-i2c-regulator may bite due to being overly
-> generic.. Would you know whether this code will also be used for e.g.
-> PM8010?
+> I guess my goal was not to make synchronize_srcu() for descriptor X
+> wait for read-only operations on descriptor Y. But with that gone, I
+> suppose you're right, we can improve this patch further by switching
+> to a single SRCU descriptor.
+> 
+> I'll send a v2.
 
-Yes, for any sufficiently similar PMICs, including SPMI ones. So
-'qpnp-regulator' would be a generic name, but only Qualcomm knows what
-PMICs they have and how they are related -- the rest of us is left doing
-tedious code forensics to try to make some sense of this.
+My guess is that a separate patch for each of the two changes would be
+best, but I must defer to you guys on that.
 
-So just like for compatible strings, letting the first supported PMIC
-name the driver makes sense as we don't know when we'll want to add a
-second one for another set of devices (and we don't want to call that
-one 'qpnp-regulator-2'). On the other hand, these names are now mostly
-internal and can more easily be renamed later.
-
-Johan
+							Thanx, Paul
 
