@@ -1,193 +1,287 @@
-Return-Path: <linux-gpio+bounces-6212-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6213-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3EDC8BEB5E
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 20:16:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D2FB8BEB7F
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 20:35:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1EC49B2AB3F
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 18:14:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 34E571C21FF5
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 May 2024 18:35:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0530116D32D;
-	Tue,  7 May 2024 18:14:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A0B816D331;
+	Tue,  7 May 2024 18:35:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rAThU3xS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgtYPCVb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF4C73513
-	for <linux-gpio@vger.kernel.org>; Tue,  7 May 2024 18:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0451C13C825;
+	Tue,  7 May 2024 18:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715105689; cv=none; b=Nq/hP3mj01PiTAQH4Wjc+BXsCsQ2Jyfd7vF8YCagdl5Kvs8m4Ysx+zlGvKGK/J+yD/T/6SzLMcpBRIA1GMB/UEgse4/HOQvf19Wt17RTBSvMlLhzLM8ZPlqVyBq0hOBd01XeZAmnM9K0Z8ZtgXknI/E0ZhtgTmOTmy7Z2RkXj2A=
+	t=1715106926; cv=none; b=GmoGkMKD2ygRYSt9eAHdEEmTAk82/fvqZ2QvOAZsBdKiBNPDkzoT6lZuytyRZFOvj91oXtEd45wKyhbrHX9GZXroFZ7doAOjSy7osShKVJTArXbrjei7i6XqDVdQQKcH/l3KdyAyEgU32yD87xLCpRQMtl5xA22VwBEXQYYKXNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715105689; c=relaxed/simple;
-	bh=9Ifwdzf+BLBCB/Pq8sUmd441Gn2ZPiWzxJzH0wqn3vo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Akiu27Tz5ycmyaKgOP6BLwKQTB0Rj32NgLBZ/9buZ/kU8IB/yArl1umcEhbdQxICPqeRhIc94KyQlibLYTU1EQkXCkbVfHWZ5hYEcnmGCb+2MT66z3yz8xHsZZkd24FtK+k2wNlmZxGmFpdeioXdZNmmMAYlKxtxhjKT/GYDLLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rAThU3xS; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a59a8f0d941so919580766b.2
-        for <linux-gpio@vger.kernel.org>; Tue, 07 May 2024 11:14:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715105686; x=1715710486; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=MKG3vCPxMeIDWy7dMjQ27D54/PVeAXq1+pgcoFyh+N4=;
-        b=rAThU3xSd+iCtd9LxSkd4tEC9ndGyggz8T1qpZOysZDCNBWwzyrNwpAzpK+RI3ytNE
-         ZczhXmeNJit/k9vRX6n9fNGdoGJxC+yt3IfmJ/MJJIOaq672knn8p7nQyhI8Zk9nuFHM
-         uHuoW725bt8/dWIWe05bY0EEQxcjQBVsGdZ6Hp8HEjo/XanhUX10xOpHbwENPZwTYM2d
-         p2jIVV+n5p9fsTwnVN4HdbkjMEhIi+vx2uvQoQtEg+zH0MFLeVsen5GGr3kK6aBLGCJx
-         1s03MiyFdKewu4FlNb+gfw6XOT14cLjHYsxA5QSJmASmGZKe/w1KUi5TWExYD1M9Xr0w
-         p/1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715105686; x=1715710486;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MKG3vCPxMeIDWy7dMjQ27D54/PVeAXq1+pgcoFyh+N4=;
-        b=WaLAqPcsjSBGmZm9Df18KeOrmz2ueQANp06jc4b6pvTGGoY4T9d29VMu5uCtn45Hfj
-         PdgTrgNj+kqpRx1k2cS/GyFvq0E4+f4jLiSKTgBf1gmfIeWhspZWnHvcS0rxiGlr193U
-         IcjvaGPvZGL4tqz3j/IhOLAZPBotPg6PD3FAUyJFEZFZM9TCZEJ6y4pPf2Qf07jvacs6
-         8vETBKkD76K5K1y/dwtLqWuOveZHGXnTSAEQwsoyFaaoC1sa8igUcptW4A3GWBBamS3P
-         BDoadgYg9cEalQOldufz4j0dwM/3bHSpESgopf8XvOudYylE44TkAIKws33pdbOiluXK
-         +pXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTzw5f6szcci2rcfDpVGAtTQDFjNNE++5yqimtl9fqoyv3YzgZM/+J+ZNw+Y/54/0+/+IzxMS6RrWWDsZ3KkR2oeDOqvBVevK/UQ==
-X-Gm-Message-State: AOJu0YwZuhs1cuJaUNQCBkyqdR5TbhufSkvnXeYSYgyw/Y7HO4Gro6iH
-	ei2OEequ6eCDOpsc53ITksFDxJLzjnob84ApPjBfDC5D5EQGE8xyAcZ2finTNvE=
-X-Google-Smtp-Source: AGHT+IHukQGajVAIgfxT7c6EtSGBonSivjXFUtAQjqO9LdhBb9jC224vD7xHt8n4BbkDE9Tw0ZEQsw==
-X-Received: by 2002:a17:906:4e81:b0:a59:a2f1:5a10 with SMTP id a640c23a62f3a-a59fb94bc41mr14398866b.6.1715105686570;
-        Tue, 07 May 2024 11:14:46 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id wr5-20020a170907700500b00a59f3e926c8sm663606ejb.152.2024.05.07.11.14.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 May 2024 11:14:46 -0700 (PDT)
-Message-ID: <8d2ea17c-f91e-4e14-a239-e5e999f6ac50@linaro.org>
-Date: Tue, 7 May 2024 20:14:43 +0200
+	s=arc-20240116; t=1715106926; c=relaxed/simple;
+	bh=TELV8mwIKIxcpUSfKl97kkO2PhVXm6bY9UQzIfbvyME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LwMXd0EkXrhTIXuqfryqAhKHlo0Fje85Ob8a3YnhmWCgqaxAYcLXA4JlbBmMhs3+yvmBTQVqRkR2oFPfUhVEpZ9A36TfsnLPr7ObVHULybkioFU6wDXl3TUINzzOTyataeUV/jNntgGe0XPdU2ELWV6SUoocjq0u7oLj23UEhXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgtYPCVb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F710C2BBFC;
+	Tue,  7 May 2024 18:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715106925;
+	bh=TELV8mwIKIxcpUSfKl97kkO2PhVXm6bY9UQzIfbvyME=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=AgtYPCVb8iZvLBsMlqjrcFAH6Ita4rUX/3mRDHYkc/6QjHQTFNibqtIE67w5EeOA+
+	 SiQyd7WHTnCtOvAco/6hGeIHlVy+KZppR3BtFsBY6C7BDXU6Yw6IkEjIG2+eInzUO7
+	 W4LGZC+kwNMUEnctl6dK+Iawra4TlrR2l7aCNxlHy0S9UrFVawwJjfspfS5TfurMY1
+	 oZMeXEi7kvUXbSSWlrqQlCfjSseUK2+Aig7zK4TIwml5scBu0k24JtYJ//DusS82NG
+	 MRGv/eMOcdixi61wHWpGYfi4MzJWItfXXOloauTAzqk2i+eGM88XPhGZHqytJdCfNS
+	 lp3lwv5v20RCg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 1064DCE0C56; Tue,  7 May 2024 11:35:25 -0700 (PDT)
+Date: Tue, 7 May 2024 11:35:25 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpiolib: use a single SRCU struct for all GPIO
+ descriptors
+Message-ID: <bee9f8b8-2b12-45a0-a440-04ecb71b98bd@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240507172414.28513-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
- Johan Hovold <johan@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Das Srinagesh <quic_gurus@quicinc.com>,
- Satya Priya <quic_c_skakit@quicinc.com>, Stephen Boyd <swboyd@chromium.org>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-13-johan+linaro@kernel.org>
- <Zjkq_nWyvc6bUtiu@surfacebook.localdomain>
- <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
- <CAHp75VdUFMvkj-r76H7GFZdpcoh_nb8v6CBj4wBHztNhiaWULQ@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CAHp75VdUFMvkj-r76H7GFZdpcoh_nb8v6CBj4wBHztNhiaWULQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240507172414.28513-1-brgl@bgdev.pl>
 
-On 07/05/2024 19:22, Andy Shevchenko wrote:
-> On Tue, May 7, 2024 at 6:44 PM Johan Hovold <johan@kernel.org> wrote:
->> On Mon, May 06, 2024 at 10:09:50PM +0300, Andy Shevchenko wrote:
->>> Mon, May 06, 2024 at 05:08:29PM +0200, Johan Hovold kirjoitti:
+On Tue, May 07, 2024 at 07:24:14PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> ...
+> We used a per-descriptor SRCU struct in order to not impose a wait with
+> synchronize_srcu() for descriptor X on read-only operations of
+> descriptor Y. Now that we no longer call synchronize_srcu() on
+> descriptor label change but only when releasing descriptor resources, we
+> can use a single SRCU structure for all GPIO descriptors in a given chip.
 > 
->>>> [ johan: rework probe to match new binding, amend commit message and
->>>>          Kconfig entry]
->>>
->>> Wouldn't be better on one line?
->>
->> Now you're really nit picking. ;) I think I prefer to stay within 72
->> columns.
+> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
+
+> ---
+>  drivers/gpio/gpiolib-cdev.c |  2 +-
+>  drivers/gpio/gpiolib.c      | 41 +++++++++++++++++--------------------
+>  drivers/gpio/gpiolib.h      | 10 ++++-----
+>  3 files changed, 25 insertions(+), 28 deletions(-)
 > 
-> Not really. The tag block is special and the format is rather one
-> entry per line. This might break some scriptings.
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index d09c7d728365..fea149ae7774 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -2351,7 +2351,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+>  
+>  	dflags = READ_ONCE(desc->flags);
+>  
+> -	scoped_guard(srcu, &desc->srcu) {
+> +	scoped_guard(srcu, &desc->gdev->desc_srcu) {
+>  		label = gpiod_get_label(desc);
+>  		if (label && test_bit(FLAG_REQUESTED, &dflags))
+>  			strscpy(info->consumer, label,
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 2fa3756c9073..fa50db0c3605 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -112,8 +112,8 @@ const char *gpiod_get_label(struct gpio_desc *desc)
+>  	if (!test_bit(FLAG_REQUESTED, &flags))
+>  		return NULL;
+>  
+> -	label = srcu_dereference_check(desc->label, &desc->srcu,
+> -				       srcu_read_lock_held(&desc->srcu));
+> +	label = srcu_dereference_check(desc->label, &desc->gdev->desc_srcu,
+> +				srcu_read_lock_held(&desc->gdev->desc_srcu));
+>  
+>  	return label->str;
+>  }
+> @@ -138,7 +138,7 @@ static int desc_set_label(struct gpio_desc *desc, const char *label)
+>  
+>  	old = rcu_replace_pointer(desc->label, new, 1);
+>  	if (old)
+> -		call_srcu(&desc->srcu, &old->rh, desc_free_label);
+> +		call_srcu(&desc->gdev->desc_srcu, &old->rh, desc_free_label);
+>  
+>  	return 0;
+>  }
+> @@ -709,13 +709,10 @@ EXPORT_SYMBOL_GPL(gpiochip_line_is_valid);
+>  static void gpiodev_release(struct device *dev)
+>  {
+>  	struct gpio_device *gdev = to_gpio_device(dev);
+> -	unsigned int i;
+>  
+> -	for (i = 0; i < gdev->ngpio; i++) {
+> -		/* Free pending label. */
+> -		synchronize_srcu(&gdev->descs[i].srcu);
+> -		cleanup_srcu_struct(&gdev->descs[i].srcu);
+> -	}
+> +	/* Call pending kfree()s for descriptor labels. */
+> +	synchronize_srcu(&gdev->desc_srcu);
+> +	cleanup_srcu_struct(&gdev->desc_srcu);
+>  
+>  	ida_free(&gpio_ida, gdev->id);
+>  	kfree_const(gdev->label);
+> @@ -992,6 +989,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  	if (ret)
+>  		goto err_remove_from_list;
+>  
+> +	ret = init_srcu_struct(&gdev->desc_srcu);
+> +	if (ret)
+> +		goto err_cleanup_gdev_srcu;
+> +
+>  #ifdef CONFIG_PINCTRL
+>  	INIT_LIST_HEAD(&gdev->pin_ranges);
+>  #endif
+> @@ -999,23 +1000,19 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  	if (gc->names) {
+>  		ret = gpiochip_set_desc_names(gc);
+>  		if (ret)
+> -			goto err_cleanup_gdev_srcu;
+> +			goto err_cleanup_desc_srcu;
+>  	}
+>  	ret = gpiochip_set_names(gc);
+>  	if (ret)
+> -		goto err_cleanup_gdev_srcu;
+> +		goto err_cleanup_desc_srcu;
+>  
+>  	ret = gpiochip_init_valid_mask(gc);
+>  	if (ret)
+> -		goto err_cleanup_gdev_srcu;
+> +		goto err_cleanup_desc_srcu;
+>  
+>  	for (desc_index = 0; desc_index < gc->ngpio; desc_index++) {
+>  		struct gpio_desc *desc = &gdev->descs[desc_index];
+>  
+> -		ret = init_srcu_struct(&desc->srcu);
+> -		if (ret)
+> -			goto err_cleanup_desc_srcu;
+> -
+>  		if (gc->get_direction && gpiochip_line_is_valid(gc, desc_index)) {
+>  			assign_bit(FLAG_IS_OUT,
+>  				   &desc->flags, !gc->get_direction(gc, desc_index));
+> @@ -1027,7 +1024,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  
+>  	ret = of_gpiochip_add(gc);
+>  	if (ret)
+> -		goto err_cleanup_desc_srcu;
+> +		goto err_free_valid_mask;
+>  
+>  	ret = gpiochip_add_pin_ranges(gc);
+>  	if (ret)
+> @@ -1074,10 +1071,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  	gpiochip_remove_pin_ranges(gc);
+>  err_remove_of_chip:
+>  	of_gpiochip_remove(gc);
+> -err_cleanup_desc_srcu:
+> -	while (desc_index--)
+> -		cleanup_srcu_struct(&gdev->descs[desc_index].srcu);
+> +err_free_valid_mask:
+>  	gpiochip_free_valid_mask(gc);
+> +err_cleanup_desc_srcu:
+> +	cleanup_srcu_struct(&gdev->desc_srcu);
+>  err_cleanup_gdev_srcu:
+>  	cleanup_srcu_struct(&gdev->srcu);
+>  err_remove_from_list:
+> @@ -2407,7 +2404,7 @@ char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset)
+>  	if (!test_bit(FLAG_REQUESTED, &desc->flags))
+>  		return NULL;
+>  
+> -	guard(srcu)(&desc->srcu);
+> +	guard(srcu)(&desc->gdev->desc_srcu);
+>  
+>  	label = kstrdup(gpiod_get_label(desc), GFP_KERNEL);
+>  	if (!label)
+> @@ -4798,7 +4795,7 @@ static void gpiolib_dbg_show(struct seq_file *s, struct gpio_device *gdev)
+>  	}
+>  
+>  	for_each_gpio_desc(gc, desc) {
+> -		guard(srcu)(&desc->srcu);
+> +		guard(srcu)(&desc->gdev->desc_srcu);
+>  		if (test_bit(FLAG_REQUESTED, &desc->flags)) {
+>  			gpiod_get_direction(desc);
+>  			is_out = test_bit(FLAG_IS_OUT, &desc->flags);
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index 69a353c789f0..8e0e211ebf08 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -31,6 +31,7 @@
+>   * @chip: pointer to the corresponding gpiochip, holding static
+>   * data for this device
+>   * @descs: array of ngpio descriptors.
+> + * @desc_srcu: ensures consistent state of GPIO descriptors exposed to users
+>   * @ngpio: the number of GPIO lines on this GPIO device, equal to the size
+>   * of the @descs array.
+>   * @can_sleep: indicate whether the GPIO chip driver's callbacks can sleep
+> @@ -61,6 +62,7 @@ struct gpio_device {
+>  	struct module		*owner;
+>  	struct gpio_chip __rcu	*chip;
+>  	struct gpio_desc	*descs;
+> +	struct srcu_struct	desc_srcu;
+>  	int			base;
+>  	u16			ngpio;
+>  	bool			can_sleep;
+> @@ -150,7 +152,6 @@ struct gpio_desc_label {
+>   * @label:		Name of the consumer
+>   * @name:		Line name
+>   * @hog:		Pointer to the device node that hogs this line (if any)
+> - * @srcu:		SRCU struct protecting the label pointer.
+>   *
+>   * These are obtained using gpiod_get() and are preferable to the old
+>   * integer-based handles.
+> @@ -188,7 +189,6 @@ struct gpio_desc {
+>  #ifdef CONFIG_OF_DYNAMIC
+>  	struct device_node	*hog;
+>  #endif
+> -	struct srcu_struct	srcu;
+>  };
+>  
+>  #define gpiod_not_found(desc)		(IS_ERR(desc) && PTR_ERR(desc) == -ENOENT)
+> @@ -256,7 +256,7 @@ static inline int gpio_chip_hwgpio(const struct gpio_desc *desc)
+>  
+>  #define gpiod_err(desc, fmt, ...) \
+>  do { \
+> -	scoped_guard(srcu, &desc->srcu) { \
+> +	scoped_guard(srcu, &desc->gdev->desc_srcu) { \
+>  		pr_err("gpio-%d (%s): " fmt, desc_to_gpio(desc), \
+>  		       gpiod_get_label(desc) ? : "?", ##__VA_ARGS__); \
+>  	} \
+> @@ -264,7 +264,7 @@ do { \
+>  
+>  #define gpiod_warn(desc, fmt, ...) \
+>  do { \
+> -	scoped_guard(srcu, &desc->srcu) { \
+> +	scoped_guard(srcu, &desc->gdev->desc_srcu) { \
+>  		pr_warn("gpio-%d (%s): " fmt, desc_to_gpio(desc), \
+>  			gpiod_get_label(desc) ? : "?", ##__VA_ARGS__); \
+>  	} \
+> @@ -272,7 +272,7 @@ do { \
+>  
+>  #define gpiod_dbg(desc, fmt, ...) \
+>  do { \
+> -	scoped_guard(srcu, &desc->srcu) { \
+> +	scoped_guard(srcu, &desc->gdev->desc_srcu) { \
+>  		pr_debug("gpio-%d (%s): " fmt, desc_to_gpio(desc), \
+>  			 gpiod_get_label(desc) ? : "?", ##__VA_ARGS__); \
+>  	} \
+> -- 
+> 2.40.1
 > 
-> ...
-
-I think [] can be wrapped, I saw it at least many times and I use as well...
-
-...
-
-> ...
-> 
->>>> +MODULE_ALIAS("platform:qcom-pm8008-regulator");
->>>
->>> Use ID table instead.
->>
->> No, the driver is not using an id-table for matching so the alias is
->> needed for module auto-loading.
-> 
-> Then create one. Added Krzysztof for that. (He is working on dropping
-> MODULE_ALIAS() in cases like this one)
-
-Yeah, please use ID table, since this is a driver (unless I missed
-something). Module alias does not scale, leads to stale and duplicated
-entries, so should not be used as substitute of ID table. Alias is
-suitable for different cases.
-
-Best regards,
-Krzysztof
-
 
