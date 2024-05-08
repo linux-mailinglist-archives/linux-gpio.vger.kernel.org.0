@@ -1,120 +1,123 @@
-Return-Path: <linux-gpio+bounces-6238-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6239-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E41A88BFBBC
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 13:17:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 962428BFC6E
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 13:42:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7AD58B22935
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 11:17:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C76131C22FFE
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 11:42:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A0B181ADA;
-	Wed,  8 May 2024 11:17:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59F76839FE;
+	Wed,  8 May 2024 11:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NjWCU0oM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFF581ABF;
-	Wed,  8 May 2024 11:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5C245018;
+	Wed,  8 May 2024 11:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715167058; cv=none; b=sefvklo4AM4vvzSXYNu3RvLc+thirgFsk47tOUb4URth69Ja+5I655krx+7SxkddYdehsKHPwP8tNEA8X36HCswi9KO5dW+j+L5IeVXoxsuLqlyS+Vc5AYWCkeHTtTVAaFlYTMBUGsdXnM9i/8Ae2PtV6P5J4opNBbxkMyJGg0Y=
+	t=1715168508; cv=none; b=rcv9D8DCoXpu0yoJYLJ2O5g1adnDVW5g8DHr+0hfZwt+NiJNxezszwWyk8um37CO2GtxEjkMJPCV0Q7cGTIhLbD+HRdctIGW3a8VShjKQXNBTjOwVWYbkhZgZb+fW3gzQH1Y1UFTd5NLAycR79IHxSP/mOlq8FTxiGev4WJbOnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715167058; c=relaxed/simple;
-	bh=hoBw8RlPKlZhiTIisWaNwFJrb/JCUldr/F60EG7LQJQ=;
+	s=arc-20240116; t=1715168508; c=relaxed/simple;
+	bh=S46HwLr17tH08+TRizfIdIjC/J7jZ/ETH3qJImqj9P8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PuR+t3VWHJOm5OoH7jjxGSPAxVhsYKx25SmgfBtT+OXzHR5QkI89FMIOUFFwqJtsGBkefeEejVjg1Ymz96TtV0ZR+h01k7vJi17sco4GS9rt30wKhToNraR8wb1hI/jp14ysQQFJT0Fgtz2cf/pXrAVC9JH3P7rW4vmDEYqz+s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: VUMQeUu1ThelLdiCQj1P0A==
-X-CSE-MsgGUID: jDz7RiiVQa2Hswi9evx1og==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="28535463"
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="28535463"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 04:17:36 -0700
-X-CSE-ConnectionGUID: FYQYL4JjTrmMh8A84hJPDA==
-X-CSE-MsgGUID: tFsKdhskQxen+Pk2x3TCSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="28949322"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 04:17:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1s4fIa-00000005PLq-33pb;
-	Wed, 08 May 2024 14:17:24 +0300
-Date: Wed, 8 May 2024 14:17:24 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, arm@kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	devicetree@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=N3l6jfvZjP3LSMgy546BeYbNZxbEapauKY0NJ7TsXInO4j4QG6aqmkq3oYkctNCu2weubWFmhAMPQVnjf6EalXAkNKGSInFTaMbGnBcmSlX050Wv2+4Xt1tgiShfSWNyFXdyj/uvnvVEnK0se9BNkJ2i8YDJwunervbGB4YKLx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NjWCU0oM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3B08C3277B;
+	Wed,  8 May 2024 11:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715168507;
+	bh=S46HwLr17tH08+TRizfIdIjC/J7jZ/ETH3qJImqj9P8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NjWCU0oM/07qgdlJpK0eTNpD/OZfK1FfSQRXEgArJ1GDV+DyFKCZoB+3ezdre8Akk
+	 EVzjttt2xD0nsFo3Z5poaJfl3U0zXCyZtw0UoM9L6klGYa9XXkfeaPUcnK4NOr7xAH
+	 qsRdlvEpE2M+Gn3ALLi0cQs8a2GvLXjZWDQ+0/b/ZKlt8a/OqXi77J8oeNr+0rzHdE
+	 Lmt2tdnkNGVzhBPzJkJ5wXZ7ZvrJM2A48H9JnSwwU1RDsWmdIj1O/grrVO9oeR3jqB
+	 9/L1FvknQx3P5P4xttFXkzQEnDZ4Roqvlqmvs7gZ/g9mTEsjdXOmy531pRId3SGG9K
+	 QO7xu/8U03rzg==
+Date: Wed, 8 May 2024 20:41:43 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	Olivia Mackall <olivia@selenic.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Rob Herring <robh@kernel.org>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Subject: Re: [PATCH v9 0/9] Turris Omnia MCU driver
-Message-ID: <ZjtfRIykefGlqRF9@smile.fi.intel.com>
-References: <20240508103118.23345-1-kabel@kernel.org>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Das Srinagesh <quic_gurus@quicinc.com>,
+	Satya Priya <quic_c_skakit@quicinc.com>,
+	Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
+Message-ID: <Zjtk90ZoKvFrmi1L@finisterre.sirena.org.uk>
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
+ <20240506150830.23709-13-johan+linaro@kernel.org>
+ <Zjkq_nWyvc6bUtiu@surfacebook.localdomain>
+ <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
+ <CAHp75VdUFMvkj-r76H7GFZdpcoh_nb8v6CBj4wBHztNhiaWULQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="WOUJEMZDjv5vndYJ"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240508103118.23345-1-kabel@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-
-On Wed, May 08, 2024 at 12:31:09PM +0200, Marek Behún wrote:
-> Hello Andy, Hans, Ilpo, Arnd, Gregory, and others,
-> 
-> this is v9 of the series adding Turris Omnia MCU driver.
-> 
-> This series still depends on the immutable branch between LEDs and
-> locking, introducing devm_mutex_init(), see the PR
->   https://lore.kernel.org/linux-leds/20240412084616.GR2399047@google.com/
-> 
-> See also cover letters for v1, v2, v3, v4, v5, v6, v7 and v8:
->   https://patchwork.kernel.org/project/linux-soc/cover/20230823161012.6986-1-kabel@kernel.org/
->   https://patchwork.kernel.org/project/linux-soc/cover/20230919103815.16818-1-kabel@kernel.org/
->   https://patchwork.kernel.org/project/linux-soc/cover/20231023143130.11602-1-kabel@kernel.org/
->   https://patchwork.kernel.org/project/linux-soc/cover/20231026161803.16750-1-kabel@kernel.org/
->   https://patchwork.kernel.org/project/linux-soc/cover/20240323164359.21642-1-kabel@kernel.org/
->   https://patchwork.kernel.org/project/linux-soc/cover/20240418121116.22184-1-kabel@kernel.org/
->   https://patchwork.kernel.org/project/linux-soc/cover/20240424173809.7214-1-kabel@kernel.org/
->   https://patchwork.kernel.org/project/linux-soc/cover/20240430115111.3453-1-kabel@kernel.org/
-
-From GPIO implementation perspective, it's good enough in my opinion. The rest
-can be amended later on.
-
--- 
-With Best Regards,
-Andy Shevchenko
+In-Reply-To: <CAHp75VdUFMvkj-r76H7GFZdpcoh_nb8v6CBj4wBHztNhiaWULQ@mail.gmail.com>
+X-Cookie: Accuracy, n.:
 
 
+--WOUJEMZDjv5vndYJ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, May 07, 2024 at 08:22:34PM +0300, Andy Shevchenko wrote:
+> On Tue, May 7, 2024 at 6:44=E2=80=AFPM Johan Hovold <johan@kernel.org> wr=
+ote:
+
+> > > > [ johan: rework probe to match new binding, amend commit message and
+> > > >          Kconfig entry]
+
+> > > Wouldn't be better on one line?
+
+> > Now you're really nit picking. ;) I think I prefer to stay within 72
+> > columns.
+
+> Not really. The tag block is special and the format is rather one
+> entry per line. This might break some scriptings.
+
+No, really - the above is absolutely fine, random notes in the middle of
+things are reasonably common and scripting that can't cope with them is
+going to encounter a bunch of problems.  This stuff needs to be readable
+by humans and this is just a stylistic preference on your part.
+
+--WOUJEMZDjv5vndYJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmY7ZPYACgkQJNaLcl1U
+h9BDMAf/c6jnrB5DGzsK8YxcJFkAon0+x6MNIbq3mZGjufO9NdnEf0FSC6u51Aad
+nSF6gSZe49arslXszvjwJJszRuYMga7OQzwRwROoqxxWfKx29XcXappYyYeA/mBN
+Vfxej1jCTKxQpogB+Ma5J3AFcNf0diNSG/V3ZF/YCYv4aW7vNwthkuKVgjnU+GsX
+Y/0hNkfrBIilPzomD0DxG3aSNhHMs0BCENrTDHDY4zONqoGdqotH4aUQZN+wdPTL
+UcEUImtpVm2e7yJBHM9HXOLtOAsYhwmy08gvgDAZig/JFOIykDo1NLqINmmV0Q2V
+MBTJQFmsBLt6fu6YfbdeF9deJqFC3w==
+=xko8
+-----END PGP SIGNATURE-----
+
+--WOUJEMZDjv5vndYJ--
 
