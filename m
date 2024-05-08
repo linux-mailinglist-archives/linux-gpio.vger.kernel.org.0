@@ -1,115 +1,108 @@
-Return-Path: <linux-gpio+bounces-6250-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6251-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64E008C03C2
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 19:51:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F4EF8C03CB
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 19:53:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06AF31F21E79
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 17:51:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8295D1C21135
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 17:53:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 614CF12AAF9;
-	Wed,  8 May 2024 17:51:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93C4A12BE9F;
+	Wed,  8 May 2024 17:53:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZGi2A4T"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z3I5vugc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA728BEE;
-	Wed,  8 May 2024 17:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C2C12AAF9
+	for <linux-gpio@vger.kernel.org>; Wed,  8 May 2024 17:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715190703; cv=none; b=EHR0HD8isDprBaDsDquqxanj5oGQnVdLgYhdULcF9PrA6k1s44xJ+T51lQFrokngRUa73tLK2ovA6fycpk8nZXIWFRb/Zagtn+I8RuQ0BJkeGBhECINFJKhzILdSNgGR6SnOrwJjsBoqD0ob4Nrgx+QhX67+ueHTSlImKwoMYO8=
+	t=1715190816; cv=none; b=eVjjOTNaAF2fYGVqgOke4YAqEba/2KcmDp88B0RoVbB4+qacR1xWJW7V6AGM8wm9PmoMDkRvu+Q1ZiPE0Cr0nGv7MtyLmyVVuWA4ER8LdH7j3L30qzTOxcquUczlxe3Ipmu9c7v65B54oxzJHIOU/jjwchJ3BXxu7JsWAltAmy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715190703; c=relaxed/simple;
-	bh=6BoXTjno+NyYSgI8Dc+giUYFLUmA8bHJfXR+Wn6NEzA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=szblAnsNAsC/9DPnWSyTMFn9W+8qQGzwq6WRxaBfxgz/yBq3pg7iGD/jyQp6jo7dWFR0YaOK7ywkbdd0u7Wjc8x8Vz1qMvrCYxZkFaqjoX6LxdC9JZK9PI1IgHCzuLlnnxWkH/w3cedFntPEgb0dLIZG4u1tO8LxVAiqgcM7dgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZGi2A4T; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69EFC113CC;
-	Wed,  8 May 2024 17:51:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715190702;
-	bh=6BoXTjno+NyYSgI8Dc+giUYFLUmA8bHJfXR+Wn6NEzA=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:From;
-	b=OZGi2A4TNpGcY+C687v7tFZX8EX7YlwtJSk47SHRcAamTYNiq/NWWyXieV/jNX/yR
-	 a6KPaTu7Uw6/tPk7e6KdcAVRAooRQeie107vVWvp9eNyktIzqr5HVmYLYkq/52fUJU
-	 0Ce0XXzHrKH62z3H+sWbAAGJd1H9osUP35KWDGu5bRSEhw2BZ5zYaN1swEr39KMIir
-	 lDAVgb7TC1bq8PVov4YOwj7Vn9uodBfR55Sa94Pq2SjoM3LZ5Afs97sBMTZ61n9xGg
-	 dYZKP0aBd229t2pqrWY0ilqmEUwNfViBiCgu9lhtpfyNsuVLg7DLh3kajcZTtYEg7k
-	 Q6j/Oy9rp55Mg==
-Date: Wed, 8 May 2024 19:50:55 +0200
-From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, arm@kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	devicetree@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	Olivia Mackall <olivia@selenic.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Subject: Re: [PATCH v9 0/9] Turris Omnia MCU driver
-Message-ID: <20240508175055.he4zsuvkj3bojnem@kandell>
-References: <20240508103118.23345-1-kabel@kernel.org>
- <ZjtfRIykefGlqRF9@smile.fi.intel.com>
+	s=arc-20240116; t=1715190816; c=relaxed/simple;
+	bh=HXVW8h5p3JlTih8gUxuhHHUusD8gorkN4xSmGzUCymw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Juk+bTw9M1XD5TvcgDJeTYWMWfcIwVqup0rI5bV8m5skGdLeVu5RwHLQZKLY3kqyi0TGu1piz9h9PaKPIOI06ssOn6KPaKffqrCQ6bVfMSMygoeVvNVj3RJ+SIbDjMjY8k3D1SBWmAor6by+Dj3fCeLWOCfsnoNBDNT07Py6MGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z3I5vugc; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2e0933d3b5fso374671fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 08 May 2024 10:53:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715190813; x=1715795613; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=o2vH4bNd6Ss0R422TZj0wAc00Y2LU/Z/9oAmYOP5+g0=;
+        b=z3I5vugcrxwKKVNljde2uGKdCz5e1lece186rznyzUoAWTjcFspW73CSjOCEB0V79i
+         1c8VxYIz9ism7HR+lQwDchbjnCs9rs47QX0BaHOWlEyRowLFYU4M1usjK0yt8NtIVL7C
+         Q/O11nRqCzyh+fPfp6D6mrTy1MHEjZLlTYIbfGT6eZxVXWx1+ucgkTImwRXzC7ToKOaP
+         YdwJzKA9QsuxnsfO+WbBFJfmmkjNSTVjdYOdPC57rhWpt3/UXpaQCcjaYFTnlwi/qE5Q
+         bvQNvQEciyVhffFF1LBuBRZKC2HyfYVpoX6M7wxknTEHNrrUWMTTFXoMDWpFrH9TRo4t
+         b42Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715190813; x=1715795613;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o2vH4bNd6Ss0R422TZj0wAc00Y2LU/Z/9oAmYOP5+g0=;
+        b=M6LinTZvQS92T+g/pTzcK2W7Set98F44jxc0SRjT0MxXxyL3vsaj50oNtGqzX/PJ0Z
+         J1zoBt7n3MhTwYlTM4v5eOm2LPO+tCAKdanVyqrxZh2zFteCRdKGHASojRoVqyBSrl0m
+         /UawTcnVOmF6eMQHnukckOl3xy/fMXxBcOUWseMjhfpwMAovEYDRbaBEH17Bt+O0BuOx
+         BS5mdfpelPztim+CSrnncM7wqxXFUJYOsDuGT180aTmr5E14cAfMP67vU1FvQLSBJE5u
+         MQY79F08UjkJTq3a7VYZTwSDf1R6/9mwZiGLnmC8oIRWuAnfmM7mgezL8z360QUnIxp2
+         YSrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXO+43blgk/y4ykbnAVljvSBT8nCKBrlAUZ+4a4gtPJpfVaPNId4lBqQltfIaWGpM8VsdTcbhc0MaxjJkaki0i34o2XDJLSyB+xbA==
+X-Gm-Message-State: AOJu0Yy1y49YrgljIdPM3/55svqnJ7KwP6IhJbAcpeCp3pSSRESilLLy
+	GCUcBWu/8ks6f6s/IhJKJkRW0cXJuDn8WxXUV9vp1r3o42ftVigFQP8pnNyoX0Q=
+X-Google-Smtp-Source: AGHT+IF2J+4cHJzRkZkOke7CEGfqkv9jue8DGyFyfN7rnlviR2OAOQp+F+Jb2MFYGSJCq+ODh52Ncw==
+X-Received: by 2002:a05:651c:228:b0:2e1:c6bd:ebba with SMTP id 38308e7fff4ca-2e446d83be8mr19651601fa.1.1715190812970;
+        Wed, 08 May 2024 10:53:32 -0700 (PDT)
+Received: from [192.168.0.3] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f882085a4sm30541715e9.39.2024.05.08.10.53.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 May 2024 10:53:32 -0700 (PDT)
+Message-ID: <b372c0a3-facf-4576-91b8-acabef270d87@linaro.org>
+Date: Wed, 8 May 2024 18:53:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZjtfRIykefGlqRF9@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/13] arm64: dts: qcom: sc8280xp-x13s: enable pm8008
+ camera pmic
+To: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Das Srinagesh <quic_gurus@quicinc.com>,
+ Satya Priya <quic_c_skakit@quicinc.com>, Stephen Boyd <swboyd@chromium.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
+ <20240506150830.23709-14-johan+linaro@kernel.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240506150830.23709-14-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 08, 2024 at 02:17:24PM +0300, Andy Shevchenko wrote:
-> On Wed, May 08, 2024 at 12:31:09PM +0200, Marek Behún wrote:
-> > Hello Andy, Hans, Ilpo, Arnd, Gregory, and others,
-> > 
-> > this is v9 of the series adding Turris Omnia MCU driver.
-> > 
-> > This series still depends on the immutable branch between LEDs and
-> > locking, introducing devm_mutex_init(), see the PR
-> >   https://lore.kernel.org/linux-leds/20240412084616.GR2399047@google.com/
-> > 
-> > See also cover letters for v1, v2, v3, v4, v5, v6, v7 and v8:
-> >   https://patchwork.kernel.org/project/linux-soc/cover/20230823161012.6986-1-kabel@kernel.org/
-> >   https://patchwork.kernel.org/project/linux-soc/cover/20230919103815.16818-1-kabel@kernel.org/
-> >   https://patchwork.kernel.org/project/linux-soc/cover/20231023143130.11602-1-kabel@kernel.org/
-> >   https://patchwork.kernel.org/project/linux-soc/cover/20231026161803.16750-1-kabel@kernel.org/
-> >   https://patchwork.kernel.org/project/linux-soc/cover/20240323164359.21642-1-kabel@kernel.org/
-> >   https://patchwork.kernel.org/project/linux-soc/cover/20240418121116.22184-1-kabel@kernel.org/
-> >   https://patchwork.kernel.org/project/linux-soc/cover/20240424173809.7214-1-kabel@kernel.org/
-> >   https://patchwork.kernel.org/project/linux-soc/cover/20240430115111.3453-1-kabel@kernel.org/
+On 06/05/2024 16:08, Johan Hovold wrote:
+> Enable the PM8008 PMIC which is used to power the camera sensors.
 > 
-> From GPIO implementation perspective, it's good enough in my opinion. The rest
-> can be amended later on.
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
-I will send v10 tomorrow with these issues fixed. We'll see if Arnd will
-be willing to take this for 6.10, and if not, 6.11 will it be.
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-Marek
+
 
