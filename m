@@ -1,102 +1,119 @@
-Return-Path: <linux-gpio+bounces-6241-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6242-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F4B28BFD0F
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 14:22:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA0F28C006D
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 16:47:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA7B91C20E78
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 12:22:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 33594B20986
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 14:47:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9328683CBE;
-	Wed,  8 May 2024 12:22:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87E4E86643;
+	Wed,  8 May 2024 14:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dVHZguV/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8812A83CCF;
-	Wed,  8 May 2024 12:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77108288C;
+	Wed,  8 May 2024 14:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715170939; cv=none; b=RGPuImIywIX7o5bdbpUHDbtu3x8YMdW2+B8veJJVTEt47UZTKZdMDH75VS4VkekS8cZbnM7zihaUleYYKMBWXTv6y2Ac29vPswCdPxJ0uQnI2I4U6uC2pl1iC8/NMOSPBrscqc8iKgYkzzERy8dBkzBiUp6oKywxlAc64j9lACQ=
+	t=1715179668; cv=none; b=YwLpuUX8q/DEgNUpgahq1URqiqLDARNsMu907+UvnWdb809IouJ1Hu6EP1k0xIZJ1RnfdekFX91H5sPU1m9GVLbm9Qh+E6cY2BbQO5QE1pPQCXIzKzvr+imuoQirx5OKETFK7ootwecy6Brt7Zb7ThLEZ2SqxdGtrmHJQo4cr1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715170939; c=relaxed/simple;
-	bh=X1S1dzhW3wRfqpB++o89A6VLOtGJiekN3EHOLbW+84E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K6SikQK/+cjezFBMcYKuZIhf/pSlseV1QnJDGe11a9uCugIbMdwj/GRZvDvilbq//wPbVxThoR06JpjvRj3ljmNkR4H+7mUJoUA6nVLOG3yNasnfXUC1xTTCUmW4zJFmlXeBF5/cc5gQv41srJxXgCGC8/dSi0e3CZoVVkNPBV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 559B91007;
-	Wed,  8 May 2024 05:22:42 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C7873F587;
-	Wed,  8 May 2024 05:22:14 -0700 (PDT)
-Date: Wed, 8 May 2024 13:22:12 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
+	s=arc-20240116; t=1715179668; c=relaxed/simple;
+	bh=sTQc9TnfJ619YsREO/2k3bf7m0clS3X1O8y57w4C5e4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ym0akXiZ8S5GqW0+pq6Ts63hZDp/7ToRSXqf6jB3pMghDiQpvFENKe3n9t5SqjLZ17gRnmUWZ8RJxZCNIryXhdFdO1+rvOUMe0/WVr8SV3WhY7GvaKLN05cL2zq9jAypsItqFwdv3DJTehGxwWlo1SKVqZjkDjKOfpuNr9Y5L8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dVHZguV/; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715179667; x=1746715667;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sTQc9TnfJ619YsREO/2k3bf7m0clS3X1O8y57w4C5e4=;
+  b=dVHZguV/dJklt2S/4lJ5zv+qi42SjNQt2mw5FVPxLT8Yg0JcfBZLk0yO
+   H+xAhtqF2hnAnT4aLW6orPyczc2QYUHiapvrjFAUKQmZOg2f+VuREEXOx
+   XFigKuNYh/r90uioZvhzHNYAhcl/gJzqTXIe070C7UoZZ49m18FxFPyEd
+   uVQzs/TX6QfD4xA/BR04o559gaQPgdwfBgjf7UJNKVZBNDcqJwiWFxmzR
+   69Pqyj++Y0ndDXOUr08mT2qrR4TePcT1Jf6esB2paet943pSN0JeKvAmt
+   u55CaTSxkWuVob74HUtVOhItOn8G2pAdKgDKb2ttMo37p2ezXZ0kVundh
+   w==;
+X-CSE-ConnectionGUID: x1AkhCcaQhuXo7d0JSek+Q==
+X-CSE-MsgGUID: bEeC0YnsRGW9gMhImTgkhA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="10980054"
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="10980054"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 07:47:46 -0700
+X-CSE-ConnectionGUID: j+0b/XKVTQGDmRNhhBuPtg==
+X-CSE-MsgGUID: bot995rVT4i2ELIC7UNrfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="29426386"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP; 08 May 2024 07:47:45 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 6B8AA109; Wed, 08 May 2024 17:47:43 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Aisheng Dong <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v5 0/3] pinctrl: scmi: support i.MX95 OEM extensions
-Message-ID: <ZjtudPS1CUqCJU5v@bogus>
-References: <20240508-pinctrl-scmi-oem-v3-v5-0-6f2b167f71bc@nxp.com>
- <ZjtCGXgwgtZ4X49v@bogus>
- <DU0PR04MB94170BB9A2C41DE40C8F575288E52@DU0PR04MB9417.eurprd04.prod.outlook.com>
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] gpiolib: Return label, if set, for IRQ only line
+Date: Wed,  8 May 2024 17:47:41 +0300
+Message-ID: <20240508144741.1270912-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DU0PR04MB94170BB9A2C41DE40C8F575288E52@DU0PR04MB9417.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 08, 2024 at 09:41:24AM +0000, Peng Fan wrote:
-> Hi Sudeep,
->
-> > Subject: Re: [PATCH v5 0/3] pinctrl: scmi: support i.MX95 OEM extensions
-> >
-> > On Wed, May 08, 2024 at 11:32:01AM +0800, Peng Fan (OSS) wrote:
-> > > ARM SCMI v3.2 Table 24 Pin Configuration Type and Enumerations:
-> > > '192 -255 OEM specific units'.
-> > >
-> > > i.MX95 System Manager FW supports SCMI PINCTRL protocol, but it has
-> > > zero functions, groups. So pinctrl-scmi.c could not be reused for i.MX95.
-> > > Because nxp,pin-func, nxp,pin-conf properties are rejected by dt
-> > > maintainers, so use generic property 'pinmux' which requires a new
-> > > driver pinctrl-imx-scmi.c
-> > >
-> >
-> > Not a review in particular, but if we decide to merge this deviation, it must be
-> > under the condition that it can be deleted anytime in the future if this
-> > becomes annoyance(like other vendors using this as a way to deviate from
-> > the specification). If we can't agree with that, then we better not merge this
-> > at all.
->
-> It is ok for me. I agree.
-> But actually this driver still follows Spec by using OEM extensions.
->
+If line has been locked as IRQ without requesting,
+still check its label and return it, if not NULL.
 
-Agreed, but that's what I call as deviations. When such extensions are
-used as baseline implementation, it becomes deviations.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---
-Regards,
-Sudeep
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index db536ec9734d..1f1673552767 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -105,16 +105,16 @@ const char *gpiod_get_label(struct gpio_desc *desc)
+ 	unsigned long flags;
+ 
+ 	flags = READ_ONCE(desc->flags);
+-	if (test_bit(FLAG_USED_AS_IRQ, &flags) &&
+-	    !test_bit(FLAG_REQUESTED, &flags))
+-		return "interrupt";
+-
+-	if (!test_bit(FLAG_REQUESTED, &flags))
+-		return NULL;
+ 
+ 	label = srcu_dereference_check(desc->label, &desc->srcu,
+ 				       srcu_read_lock_held(&desc->srcu));
+ 
++	if (test_bit(FLAG_USED_AS_IRQ, &flags))
++		return label->str ?: "interrupt";
++
++	if (!test_bit(FLAG_REQUESTED, &flags))
++		return NULL;
++
+ 	return label->str;
+ }
+ 
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
+
 
