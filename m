@@ -1,1326 +1,148 @@
-Return-Path: <linux-gpio+bounces-6234-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6235-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CE658BFB09
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 12:31:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B83F8BFB67
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 12:58:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 57605B231DB
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 10:31:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 277E02831D4
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 10:58:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B703D81737;
-	Wed,  8 May 2024 10:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bN+vgq5D"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2C4781749;
+	Wed,  8 May 2024 10:58:39 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F34C80BFF
-	for <linux-gpio@vger.kernel.org>; Wed,  8 May 2024 10:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186DD7EF1E;
+	Wed,  8 May 2024 10:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715164300; cv=none; b=jHY+hvScCj/lwNjBWAQmSI+KBClr1b5GyApjNDosjlOdCPDyoyYbM+N9ckisRTP44KDyM+/lohc1+xBcEwR69JlY/7OISosiGnLh7XmhuaXIaCEB5qlD7DVkJD+nkhfGQ/iNKAfS6U5h0ZT3QPH5MsMG/10uqLz31pEojluaGE8=
+	t=1715165919; cv=none; b=i/10MwcdAsGB10KLWrOXkp1P4pWaRpTznZYbhHw5l/h9f4C+zDcO1PDZVRYN22oJj2dPhxdYgBqxCZRSvN8GRIJFuHRQWBUOyhzVX4VrnzBfwwidGYxc/nqD6M4MFU+NkfhpO8IYLKOq90bP9St9sY2wv1oPhoU0jkz8BsGyRsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715164300; c=relaxed/simple;
-	bh=TJjicE8d6XCekGzFRizTcSvxUV8ZlKsFLgUwdlX9rrU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JTyqzo+4zdz+E7otXRU6C6qODNkkO5tqCvk/Ap1qwW7HZtIfeBMkiECULR0lka+bWrEy5k/IsB18oN1ATGCQ9iNn5+WQsdliyhPbUWBBVB38CAmk7zHq/LHTCW7l3r0WxS0EiHaRuPuUx+X79RQAfWGXlFQ/IK99c1z8L3KSSNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bN+vgq5D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A61CC4DDE1;
-	Wed,  8 May 2024 10:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715164299;
-	bh=TJjicE8d6XCekGzFRizTcSvxUV8ZlKsFLgUwdlX9rrU=;
-	h=From:List-Id:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bN+vgq5DvUjNEVhyWlY8YlndwQkr8/LaeT3dnJYKo7S70Rb76T4fA90i/uLftXp1s
-	 1zaDvN0q8NMLxQwriaRWiOP3x3O1JYX7+ddaFDglz1V/Wy3jkXaV7TyJc1EjFf0/iu
-	 5neApm0UDr8FzJRnAFpiE8E6G8xA75fdnbFsdNYNcjsfqGUlIb/ky81EiXGuDmU1Od
-	 xzWwpuwl6Veg3QwT8TwwrD8sHwn0hZj03Bxm9PqrsI88jigRSJQEsS4/Iy7vfl+uuE
-	 knYHUaAf39LhFsi7c0lKaPA+H2+qCvAXz37s1jT6WxJRLkyvTnfwYwOQqUqPZjDtjT
-	 KNLkCR9dKyrYg==
-From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-To: Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	soc@kernel.org,
-	arm@kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
+	s=arc-20240116; t=1715165919; c=relaxed/simple;
+	bh=oK8Ps5pWIiXzvtTq6erCKYqbUyIACm90iS5WcjxXyqM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ASfnc34rPjqSnuxe+jz1DLoPdH2xrz7vwLgUl665TNkSjmSDAOnjZqy4Rwl+2XlvB8nR1ddIKrGyxLgdaXHOyOPaPj5flr+7Svcy7q1EdrLHu0Z4hRZwumkx364uSkcx2C9DSZ2Y8fUhqKlUA6MTMmGChqkg4yLLSeR5PnucS2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: L9VJsnbOQtakB9K3seseIA==
+X-CSE-MsgGUID: MyFZIttzQX6dqpLFdxk7BQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="22171413"
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="22171413"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 03:58:37 -0700
+X-CSE-ConnectionGUID: Ja0uQrJvRyaRl45hGG6lAw==
+X-CSE-MsgGUID: OU+OvBErQyWZ2HLb66rDRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="28821136"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 03:58:34 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1s4f0I-00000005P1l-21SC;
+	Wed, 08 May 2024 13:58:30 +0300
+Date: Wed, 8 May 2024 13:58:30 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, arm@kernel.org,
 	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org
-Cc: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH v9 3/9] platform: cznic: turris-omnia-mcu: Add support for MCU connected GPIOs
-Date: Wed,  8 May 2024 12:31:12 +0200
-Message-ID: <20240508103118.23345-4-kabel@kernel.org>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240508103118.23345-1-kabel@kernel.org>
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-rtc@vger.kernel.org,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v9 2/9] platform: cznic: Add preliminary support for
+ Turris Omnia MCU
+Message-ID: <Zjta1vXG0Yak3vz-@smile.fi.intel.com>
 References: <20240508103118.23345-1-kabel@kernel.org>
+ <20240508103118.23345-3-kabel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240508103118.23345-3-kabel@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Add support for GPIOs connected to the MCU on the Turris Omnia board.
+On Wed, May 08, 2024 at 12:31:11PM +0200, Marek Beh�n wrote:
+> Add the basic skeleton for a new platform driver for the microcontroller
+> found on the Turris Omnia board.
 
-This includes:
-- front button pin
-- enable pins for USB regulators
-- MiniPCIe / mSATA card presence pins in MiniPCIe port 0
-- LED output pins from WAN ethernet PHY, LAN switch and MiniPCIe ports
-- on board revisions 32+ also various peripheral resets and another
-  voltage regulator enable pin
+Some cosmetics in case you need a new version.
+Possibly can be done as follow up(s).
 
-Signed-off-by: Marek Behún <kabel@kernel.org>
----
- .../sysfs-bus-i2c-devices-turris-omnia-mcu    |   16 +
- drivers/platform/cznic/Kconfig                |   15 +
- drivers/platform/cznic/Makefile               |    1 +
- .../platform/cznic/turris-omnia-mcu-base.c    |    3 +-
- .../platform/cznic/turris-omnia-mcu-gpio.c    | 1037 +++++++++++++++++
- drivers/platform/cznic/turris-omnia-mcu.h     |   65 ++
- 6 files changed, 1136 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/cznic/turris-omnia-mcu-gpio.c
+...
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu b/Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu
-index 8245c1f15c71..3fb998c8ae26 100644
---- a/Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu
-+++ b/Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu
-@@ -22,6 +22,22 @@ Description:	(RO) Contains device first MAC address. Each Turris Omnia is
- 
- 		Format: %pM.
- 
-+What:		/sys/bus/i2c/devices/<mcu_device>/front_button_mode
-+Date:		July 2024
-+KernelVersion:	6.10
-+Contact:	Marek Behún <kabel@kernel.org>
-+Description:	(RW) The front button on the Turris Omnia router can be
-+		configured either to change the intensity of all the LEDs on the
-+		front panel, or to send the press event to the CPU as an
-+		interrupt.
-+
-+		This file switches between these two modes:
-+		- "mcu" makes the button press event be handled by the MCU to
-+		  change the LEDs panel intensity.
-+		- "cpu" makes the button press event be handled by the CPU.
-+
-+		Format: %s.
-+
- What:		/sys/bus/i2c/devices/<mcu_device>/fw_features
- Date:		July 2024
- KernelVersion:	6.10
-diff --git a/drivers/platform/cznic/Kconfig b/drivers/platform/cznic/Kconfig
-index db5f4a673d28..d95e7c83c7ae 100644
---- a/drivers/platform/cznic/Kconfig
-+++ b/drivers/platform/cznic/Kconfig
-@@ -16,9 +16,24 @@ config TURRIS_OMNIA_MCU
- 	tristate "Turris Omnia MCU driver"
- 	depends on MACH_ARMADA_38X || COMPILE_TEST
- 	depends on I2C
-+	select GPIOLIB
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  Say Y here to add support for the features implemented by the
- 	  microcontroller on the CZ.NIC's Turris Omnia SOHO router.
-+	  The features include:
-+	  - GPIO pins
-+	    - to get front button press events (the front button can be
-+	      configured either to generate press events to the CPU or to change
-+	      front LEDs panel brightness)
-+	    - to enable / disable USB port voltage regulators and to detect
-+	      USB overcurrent
-+	    - to detect MiniPCIe / mSATA card presence in MiniPCIe port 0
-+	    - to configure resets of various peripherals on board revisions 32+
-+	    - to enable / disable the VHV voltage regulator to the SOC in order
-+	      to be able to program SOC's OTP on board revisions 32+
-+	    - to get input from the LED output pins of the WAN ethernet PHY, LAN
-+	      switch and MiniPCIe ports
- 	  To compile this driver as a module, choose M here; the module will be
- 	  called turris-omnia-mcu.
- 
-diff --git a/drivers/platform/cznic/Makefile b/drivers/platform/cznic/Makefile
-index 31adca73bb94..53fd8f1777a3 100644
---- a/drivers/platform/cznic/Makefile
-+++ b/drivers/platform/cznic/Makefile
-@@ -2,3 +2,4 @@
- 
- obj-$(CONFIG_TURRIS_OMNIA_MCU)	+= turris-omnia-mcu.o
- turris-omnia-mcu-y		:= turris-omnia-mcu-base.o
-+turris-omnia-mcu-y		+= turris-omnia-mcu-gpio.o
-diff --git a/drivers/platform/cznic/turris-omnia-mcu-base.c b/drivers/platform/cznic/turris-omnia-mcu-base.c
-index 9b5acb857e07..45971228e343 100644
---- a/drivers/platform/cznic/turris-omnia-mcu-base.c
-+++ b/drivers/platform/cznic/turris-omnia-mcu-base.c
-@@ -196,6 +196,7 @@ static const struct attribute_group omnia_mcu_base_group = {
- 
- static const struct attribute_group *omnia_mcu_groups[] = {
- 	&omnia_mcu_base_group,
-+	&omnia_mcu_gpio_group,
- 	NULL
- };
- 
-@@ -371,7 +372,7 @@ static int omnia_mcu_probe(struct i2c_client *client)
- 					     "Cannot read board info\n");
- 	}
- 
--	return 0;
-+	return omnia_mcu_register_gpiochip(mcu);
- }
- 
- static const struct of_device_id of_omnia_mcu_match[] = {
-diff --git a/drivers/platform/cznic/turris-omnia-mcu-gpio.c b/drivers/platform/cznic/turris-omnia-mcu-gpio.c
-new file mode 100644
-index 000000000000..e386e8d4e369
---- /dev/null
-+++ b/drivers/platform/cznic/turris-omnia-mcu-gpio.c
-@@ -0,0 +1,1037 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * CZ.NIC's Turris Omnia MCU GPIO and IRQ driver
-+ *
-+ * 2024 by Marek Behún <kabel@kernel.org>
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/bug.h>
-+#include <linux/cleanup.h>
-+#include <linux/device.h>
-+#include <linux/devm-helpers.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/mutex.h>
-+#include <linux/sysfs.h>
-+#include <linux/turris-omnia-mcu-interface.h>
-+#include <linux/types.h>
-+#include <linux/workqueue.h>
-+#include <asm/unaligned.h>
-+
-+#include "turris-omnia-mcu.h"
-+
-+#define OMNIA_CMD_INT_ARG_LEN		8
-+#define FRONT_BUTTON_RELEASE_DELAY_MS	50
-+
-+static const char * const omnia_mcu_gpio_templates[64] = {
-+	/* GPIOs with value read from the 16-bit wide status */
-+	[4]  = "MiniPCIe0 Card Detect",
-+	[5]  = "MiniPCIe0 mSATA Indicator",
-+	[6]  = "Front USB3 port over-current",
-+	[7]  = "Rear USB3 port over-current",
-+	[8]  = "Front USB3 port power",
-+	[9]  = "Rear USB3 port power",
-+	[12] = "Front Button",
-+
-+	/* GPIOs with value read from the 32-bit wide extended status */
-+	[16] = "SFP nDET",
-+	[28] = "MiniPCIe0 LED",
-+	[29] = "MiniPCIe1 LED",
-+	[30] = "MiniPCIe2 LED",
-+	[31] = "MiniPCIe0 PAN LED",
-+	[32] = "MiniPCIe1 PAN LED",
-+	[33] = "MiniPCIe2 PAN LED",
-+	[34] = "WAN PHY LED0",
-+	[35] = "WAN PHY LED1",
-+	[36] = "LAN switch p0 LED0",
-+	[37] = "LAN switch p0 LED1",
-+	[38] = "LAN switch p1 LED0",
-+	[39] = "LAN switch p1 LED1",
-+	[40] = "LAN switch p2 LED0",
-+	[41] = "LAN switch p2 LED1",
-+	[42] = "LAN switch p3 LED0",
-+	[43] = "LAN switch p3 LED1",
-+	[44] = "LAN switch p4 LED0",
-+	[45] = "LAN switch p4 LED1",
-+	[46] = "LAN switch p5 LED0",
-+	[47] = "LAN switch p5 LED1",
-+
-+	/* GPIOs with value read from the 16-bit wide extended control status */
-+	[48] = "eMMC nRESET",
-+	[49] = "LAN switch nRESET",
-+	[50] = "WAN PHY nRESET",
-+	[51] = "MiniPCIe0 nPERST",
-+	[52] = "MiniPCIe1 nPERST",
-+	[53] = "MiniPCIe2 nPERST",
-+	[54] = "WAN PHY SFP mux",
-+};
-+
-+struct omnia_gpio {
-+	u8 cmd, ctl_cmd;
-+	u32 bit, ctl_bit;
-+	u32 int_bit;
-+	u16 feat, feat_mask;
-+};
-+
-+#define _DEF_GPIO(_cmd, _ctl_cmd, _bit, _ctl_bit, _int_bit, _feat, _feat_mask) \
-+	{								\
-+		.cmd = _cmd,						\
-+		.ctl_cmd = _ctl_cmd,					\
-+		.bit = _bit,						\
-+		.ctl_bit = _ctl_bit,					\
-+		.int_bit = _int_bit,					\
-+		.feat = _feat,						\
-+		.feat_mask = _feat_mask,				\
-+	}
-+#define _DEF_GPIO_STS(_name) \
-+	_DEF_GPIO(OMNIA_CMD_GET_STATUS_WORD, 0, OMNIA_STS_ ## _name, 0, \
-+		  OMNIA_INT_ ## _name, 0, 0)
-+#define _DEF_GPIO_CTL(_name) \
-+	_DEF_GPIO(OMNIA_CMD_GET_STATUS_WORD, OMNIA_CMD_GENERAL_CONTROL, \
-+		  OMNIA_STS_ ## _name, OMNIA_CTL_ ## _name, 0, 0, 0)
-+#define _DEF_GPIO_EXT_STS(_name, _feat) \
-+	_DEF_GPIO(OMNIA_CMD_GET_EXT_STATUS_DWORD, 0, OMNIA_EXT_STS_ ## _name, \
-+		  0, OMNIA_INT_ ## _name, \
-+		  OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS, \
-+		  OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS)
-+#define _DEF_GPIO_EXT_STS_LED(_name, _ledext) \
-+	_DEF_GPIO(OMNIA_CMD_GET_EXT_STATUS_DWORD, 0, OMNIA_EXT_STS_ ## _name, \
-+		  0, OMNIA_INT_ ## _name, OMNIA_FEAT_LED_STATE_ ## _ledext, \
-+		  OMNIA_FEAT_LED_STATE_EXT_MASK)
-+#define _DEF_GPIO_EXT_STS_LEDALL(_name) \
-+	_DEF_GPIO(OMNIA_CMD_GET_EXT_STATUS_DWORD, 0, OMNIA_EXT_STS_ ## _name, \
-+		  0, OMNIA_INT_ ## _name, OMNIA_FEAT_LED_STATE_EXT_MASK, 0)
-+#define _DEF_GPIO_EXT_CTL(_name, _feat) \
-+	_DEF_GPIO(OMNIA_CMD_GET_EXT_CONTROL_STATUS, OMNIA_CMD_EXT_CONTROL, \
-+		  OMNIA_EXT_CTL_ ## _name, OMNIA_EXT_CTL_ ## _name, 0, \
-+		  OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS, \
-+		  OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS)
-+#define _DEF_INT(_name) \
-+	_DEF_GPIO(0, 0, 0, 0, OMNIA_INT_ ## _name, 0, 0)
-+
-+static const struct omnia_gpio omnia_gpios[64] = {
-+	/* GPIOs with value read from the 16-bit wide status */
-+	[4]  = _DEF_GPIO_STS(CARD_DET),
-+	[5]  = _DEF_GPIO_STS(MSATA_IND),
-+	[6]  = _DEF_GPIO_STS(USB30_OVC),
-+	[7]  = _DEF_GPIO_STS(USB31_OVC),
-+	[8]  = _DEF_GPIO_CTL(USB30_PWRON),
-+	[9]  = _DEF_GPIO_CTL(USB31_PWRON),
-+
-+	/* brightness changed interrupt, no GPIO */
-+	[11] = _DEF_INT(BRIGHTNESS_CHANGED),
-+
-+	[12] = _DEF_GPIO_STS(BUTTON_PRESSED),
-+
-+	/* TRNG interrupt, no GPIO */
-+	[13] = _DEF_INT(TRNG),
-+
-+	/* MESSAGE_SIGNED interrupt, no GPIO */
-+	[14] = _DEF_INT(MESSAGE_SIGNED),
-+
-+	/* GPIOs with value read from the 32-bit wide extended status */
-+	[16] = _DEF_GPIO_EXT_STS(SFP_nDET, PERIPH_MCU),
-+	[28] = _DEF_GPIO_EXT_STS_LEDALL(WLAN0_MSATA_LED),
-+	[29] = _DEF_GPIO_EXT_STS_LEDALL(WLAN1_LED),
-+	[30] = _DEF_GPIO_EXT_STS_LEDALL(WLAN2_LED),
-+	[31] = _DEF_GPIO_EXT_STS_LED(WPAN0_LED, EXT),
-+	[32] = _DEF_GPIO_EXT_STS_LED(WPAN1_LED, EXT),
-+	[33] = _DEF_GPIO_EXT_STS_LED(WPAN2_LED, EXT),
-+	[34] = _DEF_GPIO_EXT_STS_LEDALL(WAN_LED0),
-+	[35] = _DEF_GPIO_EXT_STS_LED(WAN_LED1, EXT_V32),
-+	[36] = _DEF_GPIO_EXT_STS_LEDALL(LAN0_LED0),
-+	[37] = _DEF_GPIO_EXT_STS_LEDALL(LAN0_LED1),
-+	[38] = _DEF_GPIO_EXT_STS_LEDALL(LAN1_LED0),
-+	[39] = _DEF_GPIO_EXT_STS_LEDALL(LAN1_LED1),
-+	[40] = _DEF_GPIO_EXT_STS_LEDALL(LAN2_LED0),
-+	[41] = _DEF_GPIO_EXT_STS_LEDALL(LAN2_LED1),
-+	[42] = _DEF_GPIO_EXT_STS_LEDALL(LAN3_LED0),
-+	[43] = _DEF_GPIO_EXT_STS_LEDALL(LAN3_LED1),
-+	[44] = _DEF_GPIO_EXT_STS_LEDALL(LAN4_LED0),
-+	[45] = _DEF_GPIO_EXT_STS_LEDALL(LAN4_LED1),
-+	[46] = _DEF_GPIO_EXT_STS_LEDALL(LAN5_LED0),
-+	[47] = _DEF_GPIO_EXT_STS_LEDALL(LAN5_LED1),
-+
-+	/* GPIOs with value read from the 16-bit wide extended control status */
-+	[48] = _DEF_GPIO_EXT_CTL(nRES_MMC, PERIPH_MCU),
-+	[49] = _DEF_GPIO_EXT_CTL(nRES_LAN, PERIPH_MCU),
-+	[50] = _DEF_GPIO_EXT_CTL(nRES_PHY, PERIPH_MCU),
-+	[51] = _DEF_GPIO_EXT_CTL(nPERST0, PERIPH_MCU),
-+	[52] = _DEF_GPIO_EXT_CTL(nPERST1, PERIPH_MCU),
-+	[53] = _DEF_GPIO_EXT_CTL(nPERST2, PERIPH_MCU),
-+	[54] = _DEF_GPIO_EXT_CTL(PHY_SFP, PERIPH_MCU),
-+};
-+
-+/* mapping from interrupts to indexes of GPIOs in the omnia_gpios array */
-+static const u8 omnia_int_to_gpio_idx[32] = {
-+	[__bf_shf(OMNIA_INT_CARD_DET)]			= 4,
-+	[__bf_shf(OMNIA_INT_MSATA_IND)]			= 5,
-+	[__bf_shf(OMNIA_INT_USB30_OVC)]			= 6,
-+	[__bf_shf(OMNIA_INT_USB31_OVC)]			= 7,
-+	[__bf_shf(OMNIA_INT_BUTTON_PRESSED)]		= 12,
-+	[__bf_shf(OMNIA_INT_TRNG)]			= 13,
-+	[__bf_shf(OMNIA_INT_MESSAGE_SIGNED)]		= 14,
-+	[__bf_shf(OMNIA_INT_SFP_nDET)]			= 16,
-+	[__bf_shf(OMNIA_INT_BRIGHTNESS_CHANGED)]	= 11,
-+	[__bf_shf(OMNIA_INT_WLAN0_MSATA_LED)]		= 28,
-+	[__bf_shf(OMNIA_INT_WLAN1_LED)]			= 29,
-+	[__bf_shf(OMNIA_INT_WLAN2_LED)]			= 30,
-+	[__bf_shf(OMNIA_INT_WPAN0_LED)]			= 31,
-+	[__bf_shf(OMNIA_INT_WPAN1_LED)]			= 32,
-+	[__bf_shf(OMNIA_INT_WPAN2_LED)]			= 33,
-+	[__bf_shf(OMNIA_INT_WAN_LED0)]			= 34,
-+	[__bf_shf(OMNIA_INT_WAN_LED1)]			= 35,
-+	[__bf_shf(OMNIA_INT_LAN0_LED0)]			= 36,
-+	[__bf_shf(OMNIA_INT_LAN0_LED1)]			= 37,
-+	[__bf_shf(OMNIA_INT_LAN1_LED0)]			= 38,
-+	[__bf_shf(OMNIA_INT_LAN1_LED1)]			= 39,
-+	[__bf_shf(OMNIA_INT_LAN2_LED0)]			= 40,
-+	[__bf_shf(OMNIA_INT_LAN2_LED1)]			= 41,
-+	[__bf_shf(OMNIA_INT_LAN3_LED0)]			= 42,
-+	[__bf_shf(OMNIA_INT_LAN3_LED1)]			= 43,
-+	[__bf_shf(OMNIA_INT_LAN4_LED0)]			= 44,
-+	[__bf_shf(OMNIA_INT_LAN4_LED1)]			= 45,
-+	[__bf_shf(OMNIA_INT_LAN5_LED0)]			= 46,
-+	[__bf_shf(OMNIA_INT_LAN5_LED1)]			= 47,
-+};
-+
-+/* index of PHY_SFP GPIO in the omnia_gpios array */
-+#define OMNIA_GPIO_PHY_SFP_OFFSET	54
-+
-+static int omnia_ctl_cmd_locked(struct omnia_mcu *mcu, u8 cmd, u16 val,
-+				u16 mask)
-+{
-+	unsigned int len;
-+	u8 buf[5];
-+
-+	buf[0] = cmd;
-+
-+	switch (cmd) {
-+	case OMNIA_CMD_GENERAL_CONTROL:
-+		buf[1] = val;
-+		buf[2] = mask;
-+		len = 3;
-+		break;
-+
-+	case OMNIA_CMD_EXT_CONTROL:
-+		put_unaligned_le16(val, &buf[1]);
-+		put_unaligned_le16(mask, &buf[3]);
-+		len = 5;
-+		break;
-+
-+	default:
-+		BUG();
-+	}
-+
-+	return omnia_cmd_write(mcu->client, buf, len);
-+}
-+
-+static int omnia_ctl_cmd(struct omnia_mcu *mcu, u8 cmd, u16 val, u16 mask)
-+{
-+	guard(mutex)(&mcu->lock);
-+
-+	return omnia_ctl_cmd_locked(mcu, cmd, val, mask);
-+}
-+
-+static int omnia_gpio_request(struct gpio_chip *gc, unsigned int offset)
-+{
-+	if (!omnia_gpios[offset].cmd)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int omnia_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+
-+	if (offset == OMNIA_GPIO_PHY_SFP_OFFSET) {
-+		int val;
-+
-+		scoped_guard(mutex, &mcu->lock) {
-+			val = omnia_cmd_read_bit(mcu->client,
-+						 OMNIA_CMD_GET_EXT_CONTROL_STATUS,
-+						 OMNIA_EXT_CTL_PHY_SFP_AUTO);
-+			if (val < 0)
-+				return val;
-+		}
-+
-+		if (val)
-+			return GPIO_LINE_DIRECTION_IN;
-+
-+		return GPIO_LINE_DIRECTION_OUT;
-+	}
-+
-+	if (omnia_gpios[offset].ctl_cmd)
-+		return GPIO_LINE_DIRECTION_OUT;
-+
-+	return GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static int omnia_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
-+{
-+	const struct omnia_gpio *gpio = &omnia_gpios[offset];
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+
-+	if (offset == OMNIA_GPIO_PHY_SFP_OFFSET)
-+		return omnia_ctl_cmd(mcu, OMNIA_CMD_EXT_CONTROL,
-+				     OMNIA_EXT_CTL_PHY_SFP_AUTO,
-+				     OMNIA_EXT_CTL_PHY_SFP_AUTO);
-+
-+	if (gpio->ctl_cmd)
-+		return -ENOTSUPP;
-+
-+	return 0;
-+}
-+
-+static int omnia_gpio_direction_output(struct gpio_chip *gc,
-+				       unsigned int offset, int value)
-+{
-+	const struct omnia_gpio *gpio = &omnia_gpios[offset];
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+	u16 val, mask;
-+
-+	if (!gpio->ctl_cmd)
-+		return -ENOTSUPP;
-+
-+	mask = gpio->ctl_bit;
-+	val = value ? mask : 0;
-+
-+	if (offset == OMNIA_GPIO_PHY_SFP_OFFSET)
-+		mask |= OMNIA_EXT_CTL_PHY_SFP_AUTO;
-+
-+	return omnia_ctl_cmd(mcu, gpio->ctl_cmd, val, mask);
-+}
-+
-+static int omnia_gpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	const struct omnia_gpio *gpio = &omnia_gpios[offset];
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+
-+	/*
-+	 * If firmware does not support the new interrupt API, we are informed
-+	 * of every change of the status word by an interrupt from MCU and save
-+	 * its value in the interrupt service routine. Simply return the saved
-+	 * value.
-+	 */
-+	if (gpio->cmd == OMNIA_CMD_GET_STATUS_WORD &&
-+	    !(mcu->features & OMNIA_FEAT_NEW_INT_API))
-+		return !!(mcu->last_status & gpio->bit);
-+
-+	guard(mutex)(&mcu->lock);
-+
-+	/*
-+	 * If firmware does support the new interrupt API, we may have cached
-+	 * the value of a GPIO in the interrupt service routine. If not, read
-+	 * the relevant bit now.
-+	 */
-+	if (gpio->int_bit && (mcu->is_cached & gpio->int_bit))
-+		return !!(mcu->cached & gpio->int_bit);
-+
-+	return omnia_cmd_read_bit(mcu->client, gpio->cmd, gpio->bit);
-+}
-+
-+static int omnia_gpio_get_multiple(struct gpio_chip *gc, unsigned long *mask,
-+				   unsigned long *bits)
-+{
-+	u32 sts_bits = 0, ext_sts_bits = 0, ext_ctl_bits = 0;
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+	int err, i;
-+
-+	/* determine which bits to read from the 3 possible commands */
-+	for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
-+		if (omnia_gpios[i].cmd == OMNIA_CMD_GET_STATUS_WORD)
-+			sts_bits |= omnia_gpios[i].bit;
-+		else if (omnia_gpios[i].cmd == OMNIA_CMD_GET_EXT_STATUS_DWORD)
-+			ext_sts_bits |= omnia_gpios[i].bit;
-+		else if (omnia_gpios[i].cmd == OMNIA_CMD_GET_EXT_CONTROL_STATUS)
-+			ext_ctl_bits |= omnia_gpios[i].bit;
-+	}
-+
-+	guard(mutex)(&mcu->lock);
-+
-+	if (mcu->features & OMNIA_FEAT_NEW_INT_API) {
-+		/* read relevant bits from status */
-+		err = omnia_cmd_read_bits(mcu->client, OMNIA_CMD_GET_STATUS_WORD,
-+					  sts_bits, &sts_bits);
-+		if (err)
-+			return err;
-+	} else {
-+		/*
-+		 * Use status word value cached in the interrupt service routine
-+		 * if firmware does not support the new interrupt API.
-+		 */
-+		sts_bits = mcu->last_status;
-+	}
-+
-+	/* read relevant bits from extended status */
-+	err = omnia_cmd_read_bits(mcu->client, OMNIA_CMD_GET_EXT_STATUS_DWORD,
-+				  ext_sts_bits, &ext_sts_bits);
-+	if (err)
-+		return err;
-+
-+	/* read relevant bits from extended control */
-+	err = omnia_cmd_read_bits(mcu->client, OMNIA_CMD_GET_EXT_CONTROL_STATUS,
-+				  ext_ctl_bits, &ext_ctl_bits);
-+	if (err)
-+		return err;
-+
-+	/* assign relevant bits in result */
-+	for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
-+		if (omnia_gpios[i].cmd == OMNIA_CMD_GET_STATUS_WORD)
-+			__assign_bit(i, bits, sts_bits & omnia_gpios[i].bit);
-+		else if (omnia_gpios[i].cmd == OMNIA_CMD_GET_EXT_STATUS_DWORD)
-+			__assign_bit(i, bits, ext_sts_bits & omnia_gpios[i].bit);
-+		else if (omnia_gpios[i].cmd == OMNIA_CMD_GET_EXT_CONTROL_STATUS)
-+			__assign_bit(i, bits, ext_ctl_bits & omnia_gpios[i].bit);
-+	}
-+
-+	return 0;
-+}
-+
-+static void omnia_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-+{
-+	const struct omnia_gpio *gpio = &omnia_gpios[offset];
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+	u16 val, mask;
-+
-+	if (!gpio->ctl_cmd)
-+		return;
-+
-+	mask = gpio->ctl_bit;
-+	val = value ? mask : 0;
-+
-+	omnia_ctl_cmd(mcu, gpio->ctl_cmd, val, mask);
-+}
-+
-+static void omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
-+				    unsigned long *bits)
-+{
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+	u16 ext_ctl = 0, ext_ctl_mask = 0;
-+	u8 ctl = 0, ctl_mask = 0;
-+	int i;
-+
-+	for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
-+		if (omnia_gpios[i].ctl_cmd == OMNIA_CMD_GENERAL_CONTROL) {
-+			ctl_mask |= omnia_gpios[i].ctl_bit;
-+			if (test_bit(i, bits))
-+				ctl |= omnia_gpios[i].ctl_bit;
-+		} else if (omnia_gpios[i].ctl_cmd == OMNIA_CMD_EXT_CONTROL) {
-+			ext_ctl_mask |= omnia_gpios[i].ctl_bit;
-+			if (test_bit(i, bits))
-+				ext_ctl |= omnia_gpios[i].ctl_bit;
-+		}
-+	}
-+
-+	guard(mutex)(&mcu->lock);
-+
-+	if (ctl_mask)
-+		omnia_ctl_cmd_locked(mcu, OMNIA_CMD_GENERAL_CONTROL,
-+				     ctl, ctl_mask);
-+
-+	if (ext_ctl_mask)
-+		omnia_ctl_cmd_locked(mcu, OMNIA_CMD_EXT_CONTROL,
-+				     ext_ctl, ext_ctl_mask);
-+}
-+
-+static bool omnia_gpio_available(struct omnia_mcu *mcu,
-+				 const struct omnia_gpio *gpio)
-+{
-+	if (gpio->feat_mask)
-+		return (mcu->features & gpio->feat_mask) == gpio->feat;
-+
-+	if (gpio->feat)
-+		return mcu->features & gpio->feat;
-+
-+	return true;
-+}
-+
-+static int omnia_gpio_init_valid_mask(struct gpio_chip *gc,
-+				      unsigned long *valid_mask,
-+				      unsigned int ngpios)
-+{
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+
-+	for (unsigned int i = 0; i < ngpios; i++) {
-+		const struct omnia_gpio *gpio = &omnia_gpios[i];
-+
-+		if (gpio->cmd || gpio->int_bit)
-+			__assign_bit(i, valid_mask,
-+				     omnia_gpio_available(mcu, gpio));
-+		else
-+			__clear_bit(i, valid_mask);
-+	}
-+
-+	return 0;
-+}
-+
-+static int omnia_gpio_of_xlate(struct gpio_chip *gc,
-+			       const struct of_phandle_args *gpiospec,
-+			       u32 *flags)
-+{
-+	u32 bank, gpio;
-+
-+	if (WARN_ON(gpiospec->args_count != 3))
-+		return -EINVAL;
-+
-+	if (flags)
-+		*flags = gpiospec->args[2];
-+
-+	bank = gpiospec->args[0];
-+	gpio = gpiospec->args[1];
-+
-+	switch (bank) {
-+	case 0:
-+		return gpio < 16 ? gpio : -EINVAL;
-+	case 1:
-+		return gpio < 32 ? 16 + gpio : -EINVAL;
-+	case 2:
-+		return gpio < 16 ? 48 + gpio : -EINVAL;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static void omnia_irq_shutdown(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+	u32 bit = omnia_gpios[hwirq].int_bit;
-+
-+	mcu->rising &= ~bit;
-+	mcu->falling &= ~bit;
-+}
-+
-+static void omnia_irq_mask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+	u32 bit = omnia_gpios[hwirq].int_bit;
-+
-+	if (!omnia_gpios[hwirq].cmd)
-+		mcu->rising &= ~bit;
-+	mcu->mask &= ~bit;
-+	gpiochip_disable_irq(gc, hwirq);
-+}
-+
-+static void omnia_irq_unmask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+	u32 bit = omnia_gpios[hwirq].int_bit;
-+
-+	gpiochip_enable_irq(gc, hwirq);
-+	mcu->mask |= bit;
-+	if (!omnia_gpios[hwirq].cmd)
-+		mcu->rising |= bit;
-+}
-+
-+static int omnia_irq_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+	struct device *dev = &mcu->client->dev;
-+	u32 bit = omnia_gpios[hwirq].int_bit;
-+
-+	if (!(type & IRQ_TYPE_EDGE_BOTH)) {
-+		dev_err(dev, "irq %u: unsupported type %u\n", d->irq, type);
-+		return -EINVAL;
-+	}
-+
-+	if (type & IRQ_TYPE_EDGE_RISING)
-+		mcu->rising |= bit;
-+	else
-+		mcu->rising &= ~bit;
-+
-+	if (type & IRQ_TYPE_EDGE_FALLING)
-+		mcu->falling |= bit;
-+	else
-+		mcu->falling &= ~bit;
-+
-+	return 0;
-+}
-+
-+static void omnia_irq_bus_lock(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+
-+	/* nothing to do if MCU firmware does not support new interrupt API */
-+	if (!(mcu->features & OMNIA_FEAT_NEW_INT_API))
-+		return;
-+
-+	mutex_lock(&mcu->lock);
-+}
-+
-+/**
-+ * omnia_mask_interleave - Interleaves the bytes from @rising and @falling
-+ *	@dst: the destination u8 array of interleaved bytes
-+ *	@rising: rising mask
-+ *	@falling: falling mask
-+ *
-+ * Interleaves the little-endian bytes from @rising and @falling words.
-+ *
-+ * If @rising = (r0, r1, r2, r3) and @falling = (f0, f1, f2, f3), the result is
-+ * @dst = (r0, f0, r1, f1, r2, f2, r3, f3).
-+ *
-+ * The MCU receives an interrupt mask and reports a pending interrupt bitmap in
-+ * this interleaved format. The rationale behind this is that the low-indexed
-+ * bits are more important - in many cases, the user will be interested only in
-+ * interrupts with indexes 0 to 7, and so the system can stop reading after
-+ * first 2 bytes (r0, f0), to save time on the slow I2C bus.
-+ *
-+ * Feel free to remove this function and its inverse, omnia_mask_deinterleave,
-+ * and use an appropriate bitmap_* function once such a function exists.
-+ */
-+static void omnia_mask_interleave(u8 *dst, u32 rising, u32 falling)
-+{
-+	for (int i = 0; i < sizeof(u32); ++i) {
-+		dst[2 * i] = rising >> (8 * i);
-+		dst[2 * i + 1] = falling >> (8 * i);
-+	}
-+}
-+
-+/**
-+ * omnia_mask_deinterleave - Deinterleaves the bytes into @rising and @falling
-+ *	@src: the source u8 array containing the interleaved bytes
-+ *	@rising: pointer where to store the rising mask gathered from @src
-+ *	@falling: pointer where to store the falling mask gathered from @src
-+ *
-+ * This is the inverse function to omnia_mask_interleave.
-+ */
-+static void omnia_mask_deinterleave(const u8 *src, u32 *rising, u32 *falling)
-+{
-+	*rising = *falling = 0;
-+
-+	for (int i = 0; i < sizeof(u32); ++i) {
-+		*rising |= src[2 * i] << (8 * i);
-+		*falling |= src[2 * i + 1] << (8 * i);
-+	}
-+}
-+
-+static void omnia_irq_bus_sync_unlock(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+	struct device *dev = &mcu->client->dev;
-+	u8 cmd[1 + OMNIA_CMD_INT_ARG_LEN];
-+	u32 rising, falling;
-+	int err;
-+
-+	/* nothing to do if MCU firmware does not support new interrupt API */
-+	if (!(mcu->features & OMNIA_FEAT_NEW_INT_API))
-+		return;
-+
-+	cmd[0] = OMNIA_CMD_SET_INT_MASK;
-+
-+	rising = mcu->rising & mcu->mask;
-+	falling = mcu->falling & mcu->mask;
-+
-+	/* interleave the rising and falling bytes into the command arguments */
-+	omnia_mask_interleave(&cmd[1], rising, falling);
-+
-+	dev_dbg(dev, "set int mask %8ph\n", &cmd[1]);
-+
-+	err = omnia_cmd_write(mcu->client, cmd, sizeof(cmd));
-+	if (err) {
-+		dev_err(dev, "Cannot set mask: %d\n", err);
-+		goto unlock;
-+	}
-+
-+	/*
-+	 * Remember which GPIOs have both rising and falling interrupts enabled.
-+	 * For those we will cache their value so that .get() method is faster.
-+	 * We also need to forget cached values of GPIOs that aren't cached
-+	 * anymore.
-+	 */
-+	mcu->both = rising & falling;
-+	mcu->is_cached &= mcu->both;
-+
-+unlock:
-+	mutex_unlock(&mcu->lock);
-+}
-+
-+static const struct irq_chip omnia_mcu_irq_chip = {
-+	.name			= "Turris Omnia MCU interrupts",
-+	.irq_shutdown		= omnia_irq_shutdown,
-+	.irq_mask		= omnia_irq_mask,
-+	.irq_unmask		= omnia_irq_unmask,
-+	.irq_set_type		= omnia_irq_set_type,
-+	.irq_bus_lock		= omnia_irq_bus_lock,
-+	.irq_bus_sync_unlock	= omnia_irq_bus_sync_unlock,
-+	.flags			= IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
-+static void omnia_irq_init_valid_mask(struct gpio_chip *gc,
-+				      unsigned long *valid_mask,
-+				      unsigned int ngpios)
-+{
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+
-+	for (unsigned int i = 0; i < ngpios; i++) {
-+		const struct omnia_gpio *gpio = &omnia_gpios[i];
-+
-+		if (gpio->int_bit)
-+			__assign_bit(i, valid_mask,
-+				     omnia_gpio_available(mcu, gpio));
-+		else
-+			__clear_bit(i, valid_mask);
-+	}
-+}
-+
-+static int omnia_irq_init_hw(struct gpio_chip *gc)
-+{
-+	struct omnia_mcu *mcu = gpiochip_get_data(gc);
-+	u8 cmd[1 + OMNIA_CMD_INT_ARG_LEN] = {};
-+
-+	cmd[0] = OMNIA_CMD_SET_INT_MASK;
-+
-+	return omnia_cmd_write(mcu->client, cmd, sizeof(cmd));
-+}
-+
-+/*
-+ * Determine how many bytes we need to read from the reply to the
-+ * OMNIA_CMD_GET_INT_AND_CLEAR command in order to retrieve all unmasked
-+ * interrupts.
-+ */
-+static unsigned int omnia_irq_compute_pending_length(u32 rising, u32 falling)
-+{
-+	return max(omnia_compute_reply_length(rising, true, 0),
-+		   omnia_compute_reply_length(falling, true, 1));
-+}
-+
-+static bool omnia_irq_read_pending_new(struct omnia_mcu *mcu,
-+				       unsigned long *pending)
-+{
-+	struct device *dev = &mcu->client->dev;
-+	u8 reply[OMNIA_CMD_INT_ARG_LEN] = {};
-+	u32 rising, falling;
-+	unsigned int len;
-+	int err;
-+
-+	len = omnia_irq_compute_pending_length(mcu->rising & mcu->mask,
-+					       mcu->falling & mcu->mask);
-+	if (!len)
-+		return false;
-+
-+	guard(mutex)(&mcu->lock);
-+
-+	err = omnia_cmd_read(mcu->client, OMNIA_CMD_GET_INT_AND_CLEAR, reply,
-+			     len);
-+	if (err) {
-+		dev_err(dev, "Cannot read pending IRQs: %d\n", err);
-+		return false;
-+	}
-+
-+	/* deinterleave the reply bytes into rising and falling */
-+	omnia_mask_deinterleave(reply, &rising, &falling);
-+
-+	rising &= mcu->mask;
-+	falling &= mcu->mask;
-+	*pending = rising | falling;
-+
-+	/* cache values for GPIOs that have both edges enabled */
-+	mcu->is_cached &= ~(rising & falling);
-+	mcu->is_cached |= mcu->both & (rising ^ falling);
-+	mcu->cached = (mcu->cached | rising) & ~falling;
-+
-+	return true;
-+}
-+
-+static int omnia_read_status_word_old_fw(struct omnia_mcu *mcu, u16 *status)
-+{
-+	int err;
-+
-+	err = omnia_cmd_read_u16(mcu->client, OMNIA_CMD_GET_STATUS_WORD,
-+				 status);
-+	if (!err)
-+		/*
-+		 * Old firmware has a bug wherein it never resets the USB port
-+		 * overcurrent bits back to zero. Ignore them.
-+		 */
-+		*status &= ~(OMNIA_STS_USB30_OVC | OMNIA_STS_USB31_OVC);
-+
-+	return err;
-+}
-+
-+static void button_release_emul_fn(struct work_struct *work)
-+{
-+	struct omnia_mcu *mcu = container_of(to_delayed_work(work),
-+					     struct omnia_mcu,
-+					     button_release_emul_work);
-+
-+	mcu->button_pressed_emul = false;
-+	generic_handle_irq_safe(mcu->client->irq);
-+}
-+
-+static void fill_int_from_sts(u32 *rising, u32 *falling, u16 rising_sts,
-+			      u16 falling_sts, u16 sts_bit, u32 int_bit)
-+{
-+	if (rising_sts & sts_bit)
-+		*rising |= int_bit;
-+	if (falling_sts & sts_bit)
-+		*falling |= int_bit;
-+}
-+
-+static bool omnia_irq_read_pending_old(struct omnia_mcu *mcu,
-+				       unsigned long *pending)
-+{
-+	struct device *dev = &mcu->client->dev;
-+	u16 status, rising_sts, falling_sts;
-+	u32 rising, falling;
-+	int err;
-+
-+	guard(mutex)(&mcu->lock);
-+
-+	err = omnia_read_status_word_old_fw(mcu, &status);
-+	if (err) {
-+		dev_err(dev, "Cannot read pending IRQs: %d\n", err);
-+		return false;
-+	}
-+
-+	/*
-+	 * The old firmware triggers an interrupt whenever status word changes,
-+	 * but does not inform about which bits rose or fell. We need to compute
-+	 * this here by comparing with the last status word value.
-+	 *
-+	 * The OMNIA_STS_BUTTON_PRESSED bit needs special handling, because the
-+	 * old firmware clears the OMNIA_STS_BUTTON_PRESSED bit on successful
-+	 * completion of the OMNIA_CMD_GET_STATUS_WORD command, resulting in
-+	 * another interrupt:
-+	 * - first we get an interrupt, we read the status word where
-+	 *   OMNIA_STS_BUTTON_PRESSED is present,
-+	 * - MCU clears the OMNIA_STS_BUTTON_PRESSED bit because we read the
-+	 *   status word,
-+	 * - we get another interrupt because the status word changed again
-+	 *   (the OMNIA_STS_BUTTON_PRESSED bit was cleared).
-+	 *
-+	 * The gpiolib-cdev, gpiolib-sysfs and gpio-keys input driver all call
-+	 * the gpiochip's .get() method after an edge event on a requested GPIO
-+	 * occurs.
-+	 *
-+	 * We ensure that the .get() method reads 1 for the button GPIO for some
-+	 * time.
-+	 */
-+
-+	if (status & OMNIA_STS_BUTTON_PRESSED) {
-+		mcu->button_pressed_emul = true;
-+		mod_delayed_work(system_wq, &mcu->button_release_emul_work,
-+				 msecs_to_jiffies(FRONT_BUTTON_RELEASE_DELAY_MS));
-+	} else if (mcu->button_pressed_emul) {
-+		status |= OMNIA_STS_BUTTON_PRESSED;
-+	}
-+
-+	rising_sts = ~mcu->last_status & status;
-+	falling_sts = mcu->last_status & ~status;
-+
-+	mcu->last_status = status;
-+
-+	/*
-+	 * Fill in the relevant interrupt bits from status bits for CARD_DET,
-+	 * MSATA_IND and BUTTON_PRESSED.
-+	 */
-+	rising = 0;
-+	falling = 0;
-+	fill_int_from_sts(&rising, &falling, rising_sts, falling_sts,
-+			  OMNIA_STS_CARD_DET, OMNIA_INT_CARD_DET);
-+	fill_int_from_sts(&rising, &falling, rising_sts, falling_sts,
-+			  OMNIA_STS_MSATA_IND, OMNIA_INT_MSATA_IND);
-+	fill_int_from_sts(&rising, &falling, rising_sts, falling_sts,
-+			  OMNIA_STS_BUTTON_PRESSED, OMNIA_INT_BUTTON_PRESSED);
-+
-+	/* Use only bits that are enabled */
-+	rising &= mcu->rising & mcu->mask;
-+	falling &= mcu->falling & mcu->mask;
-+	*pending = rising | falling;
-+
-+	return true;
-+}
-+
-+static bool omnia_irq_read_pending(struct omnia_mcu *mcu,
-+				   unsigned long *pending)
-+{
-+	if (mcu->features & OMNIA_FEAT_NEW_INT_API)
-+		return omnia_irq_read_pending_new(mcu, pending);
-+	else
-+		return omnia_irq_read_pending_old(mcu, pending);
-+}
-+
-+static irqreturn_t omnia_irq_thread_handler(int irq, void *dev_id)
-+{
-+	struct omnia_mcu *mcu = dev_id;
-+	struct irq_domain *domain;
-+	unsigned long pending;
-+	int i;
-+
-+	if (!omnia_irq_read_pending(mcu, &pending))
-+		return IRQ_NONE;
-+
-+	domain = mcu->gc.irq.domain;
-+
-+	for_each_set_bit(i, &pending, 32) {
-+		unsigned int nested_irq;
-+
-+		nested_irq = irq_find_mapping(domain, omnia_int_to_gpio_idx[i]);
-+
-+		handle_nested_irq(nested_irq);
-+	}
-+
-+	return IRQ_RETVAL(pending);
-+}
-+
-+static const char * const front_button_modes[] = { "mcu", "cpu" };
-+
-+static ssize_t front_button_mode_show(struct device *dev,
-+				      struct device_attribute *a, char *buf)
-+{
-+	struct omnia_mcu *mcu = dev_get_drvdata(dev);
-+	int val;
-+
-+	if (mcu->features & OMNIA_FEAT_NEW_INT_API) {
-+		val = omnia_cmd_read_bit(mcu->client, OMNIA_CMD_GET_STATUS_WORD,
-+					 OMNIA_STS_BUTTON_MODE);
-+		if (val < 0)
-+			return val;
-+	} else {
-+		val = !!(mcu->last_status & OMNIA_STS_BUTTON_MODE);
-+	}
-+
-+	return sysfs_emit(buf, "%s\n", front_button_modes[val]);
-+}
-+
-+static ssize_t front_button_mode_store(struct device *dev,
-+				       struct device_attribute *a,
-+				       const char *buf, size_t count)
-+{
-+	struct omnia_mcu *mcu = dev_get_drvdata(dev);
-+	int err, i;
-+
-+	i = sysfs_match_string(front_button_modes, buf);
-+	if (i < 0)
-+		return i;
-+
-+	err = omnia_ctl_cmd_locked(mcu, OMNIA_CMD_GENERAL_CONTROL,
-+				   i ? OMNIA_CTL_BUTTON_MODE : 0,
-+				   OMNIA_CTL_BUTTON_MODE);
-+	if (err)
-+		return err;
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(front_button_mode);
-+
-+static struct attribute *omnia_mcu_gpio_attrs[] = {
-+	&dev_attr_front_button_mode.attr,
-+	NULL
-+};
-+
-+const struct attribute_group omnia_mcu_gpio_group = {
-+	.attrs = omnia_mcu_gpio_attrs,
-+};
-+
-+int omnia_mcu_register_gpiochip(struct omnia_mcu *mcu)
-+{
-+	bool new_api = mcu->features & OMNIA_FEAT_NEW_INT_API;
-+	struct device *dev = &mcu->client->dev;
-+	unsigned long irqflags;
-+	int err;
-+
-+	err = devm_mutex_init(dev, &mcu->lock);
-+	if (err)
-+		return err;
-+
-+	mcu->gc.request = omnia_gpio_request;
-+	mcu->gc.get_direction = omnia_gpio_get_direction;
-+	mcu->gc.direction_input = omnia_gpio_direction_input;
-+	mcu->gc.direction_output = omnia_gpio_direction_output;
-+	mcu->gc.get = omnia_gpio_get;
-+	mcu->gc.get_multiple = omnia_gpio_get_multiple;
-+	mcu->gc.set = omnia_gpio_set;
-+	mcu->gc.set_multiple = omnia_gpio_set_multiple;
-+	mcu->gc.init_valid_mask = omnia_gpio_init_valid_mask;
-+	mcu->gc.can_sleep = true;
-+	mcu->gc.names = omnia_mcu_gpio_templates;
-+	mcu->gc.base = -1;
-+	mcu->gc.ngpio = ARRAY_SIZE(omnia_gpios);
-+	mcu->gc.label = "Turris Omnia MCU GPIOs";
-+	mcu->gc.parent = dev;
-+	mcu->gc.owner = THIS_MODULE;
-+	mcu->gc.of_gpio_n_cells = 3;
-+	mcu->gc.of_xlate = omnia_gpio_of_xlate;
-+
-+	gpio_irq_chip_set_chip(&mcu->gc.irq, &omnia_mcu_irq_chip);
-+	/* This will let us handle the parent IRQ in the driver */
-+	mcu->gc.irq.parent_handler = NULL;
-+	mcu->gc.irq.num_parents = 0;
-+	mcu->gc.irq.parents = NULL;
-+	mcu->gc.irq.default_type = IRQ_TYPE_NONE;
-+	mcu->gc.irq.handler = handle_bad_irq;
-+	mcu->gc.irq.threaded = true;
-+	if (new_api)
-+		mcu->gc.irq.init_hw = omnia_irq_init_hw;
-+	mcu->gc.irq.init_valid_mask = omnia_irq_init_valid_mask;
-+
-+	err = devm_gpiochip_add_data(dev, &mcu->gc, mcu);
-+	if (err)
-+		return dev_err_probe(dev, err, "Cannot add GPIO chip\n");
-+
-+	/*
-+	 * Before requesting the interrupt, if firmware does not support the new
-+	 * interrupt API, we need to cache the value of the status word, so that
-+	 * when it changes, we may compare the new value with the cached one in
-+	 * the interrupt handler.
-+	 */
-+	if (!new_api) {
-+		err = omnia_read_status_word_old_fw(mcu, &mcu->last_status);
-+		if (err)
-+			return dev_err_probe(dev, err,
-+					     "Cannot read status word\n");
-+
-+		INIT_DELAYED_WORK(&mcu->button_release_emul_work,
-+				  button_release_emul_fn);
-+	}
-+
-+	irqflags = IRQF_ONESHOT;
-+	if (new_api)
-+		irqflags |= IRQF_TRIGGER_LOW;
-+	else
-+		irqflags |= IRQF_TRIGGER_FALLING;
-+
-+	err = devm_request_threaded_irq(dev, mcu->client->irq, NULL,
-+					omnia_irq_thread_handler, irqflags,
-+					"turris-omnia-mcu", mcu);
-+	if (err)
-+		return dev_err_probe(dev, err, "Cannot request IRQ\n");
-+
-+	if (!new_api) {
-+		/*
-+		 * The button_release_emul_work has to be initialized before the
-+		 * thread is requested, and on driver remove it needs to be
-+		 * canceled before the thread is freed. Therefore we can't use
-+		 * devm_delayed_work_autocancel() directly, because the order
-+		 *   devm_delayed_work_autocancel();
-+		 *   devm_request_threaded_irq();
-+		 * would cause improper release order:
-+		 *   free_irq();
-+		 *   cancel_delayed_work_sync();
-+		 * Instead we first initialize the work above, and only now
-+		 * after IRQ is requested we add the work devm action.
-+		 */
-+		err = devm_add_action(dev, devm_delayed_work_drop,
-+				      &mcu->button_release_emul_work);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-diff --git a/drivers/platform/cznic/turris-omnia-mcu.h b/drivers/platform/cznic/turris-omnia-mcu.h
-index d511321ee485..b62afc663c07 100644
---- a/drivers/platform/cznic/turris-omnia-mcu.h
-+++ b/drivers/platform/cznic/turris-omnia-mcu.h
-@@ -8,8 +8,12 @@
- #ifndef __TURRIS_OMNIA_MCU_H
- #define __TURRIS_OMNIA_MCU_H
- 
-+#include <linux/bitops.h>
-+#include <linux/gpio/driver.h>
- #include <linux/if_ether.h>
-+#include <linux/mutex.h>
- #include <linux/types.h>
-+#include <linux/workqueue.h>
- #include <asm/byteorder.h>
- 
- struct i2c_client;
-@@ -23,18 +27,75 @@ struct omnia_mcu {
- 	u64 board_serial_number;
- 	u8 board_first_mac[ETH_ALEN];
- 	u8 board_revision;
-+
-+	/* GPIO chip */
-+	struct gpio_chip gc;
-+	struct mutex lock;
-+	u32 mask, rising, falling, both, cached, is_cached;
-+	/* Old MCU firmware handling needs the following */
-+	struct delayed_work button_release_emul_work;
-+	u16 last_status;
-+	bool button_pressed_emul;
- };
- 
- int omnia_cmd_write_read(const struct i2c_client *client,
- 			 void *cmd, unsigned int cmd_len,
- 			 void *reply, unsigned int reply_len);
- 
-+static inline int omnia_cmd_write(const struct i2c_client *client, void *cmd,
-+				  unsigned int len)
-+{
-+	return omnia_cmd_write_read(client, cmd, len, NULL, 0);
-+}
-+
- static inline int omnia_cmd_read(const struct i2c_client *client, u8 cmd,
- 				 void *reply, unsigned int len)
- {
- 	return omnia_cmd_write_read(client, &cmd, 1, reply, len);
- }
- 
-+static inline unsigned int
-+omnia_compute_reply_length(u32 mask, bool interleaved, unsigned int offset)
-+{
-+	if (!mask)
-+		return 0;
-+
-+	return ((__fls(mask) >> 3) << interleaved) + 1 + offset;
-+}
-+
-+/* Returns 0 on success */
-+static inline int omnia_cmd_read_bits(const struct i2c_client *client, u8 cmd,
-+				      u32 bits, u32 *dst)
-+{
-+	__le32 reply;
-+	int err;
-+
-+	if (!bits) {
-+		*dst = 0;
-+		return 0;
-+	}
-+
-+	err = omnia_cmd_read(client, cmd, &reply,
-+			     omnia_compute_reply_length(bits, false, 0));
-+	if (!err)
-+		*dst = le32_to_cpu(reply) & bits;
-+
-+	return err;
-+}
-+
-+static inline int omnia_cmd_read_bit(const struct i2c_client *client, u8 cmd,
-+				     u32 bit)
-+{
-+	u32 reply;
-+	int err;
-+
-+	err = omnia_cmd_read_bits(client, cmd, bit, &reply);
-+	if (err)
-+		return err;
-+
-+	return !!reply;
-+}
-+
- static inline int omnia_cmd_read_u32(const struct i2c_client *client, u8 cmd,
- 				     u32 *dst)
- {
-@@ -67,4 +128,8 @@ static inline int omnia_cmd_read_u8(const struct i2c_client *client, u8 cmd,
- 	return omnia_cmd_read(client, cmd, reply, sizeof(*reply));
- }
- 
-+extern const struct attribute_group omnia_mcu_gpio_group;
-+
-+int omnia_mcu_register_gpiochip(struct omnia_mcu *mcu);
-+
- #endif /* __TURRIS_OMNIA_MCU_H */
+> +Date:		July 2024
+> +KernelVersion:	6.10
+
+TBH, I'm not sure you manage to squeeze this rather big driver to v6.10.
+
+...
+
+> +static const struct attribute_group *omnia_mcu_groups[] = {
+> +	&omnia_mcu_base_group,
+> +	NULL
+> +};
+
+__ATTRIBUTE_GROUPS()
+
+...
+
+Perhaps also
+
+	struct i2c_client *client = mcu->client;
+
+> +	struct device *dev = &mcu->client->dev;
+
+	struct device *dev = &client->dev;
+
+> +	bool suggest_fw_upgrade = false;
+> +	u16 status;
+> +	int err;
+> +
+> +	/* status word holds MCU type, which we need below */
+> +	err = omnia_cmd_read_u16(mcu->client, OMNIA_CMD_GET_STATUS_WORD,
+> +				 &status);
+
+	err = omnia_cmd_read_u16(client, OMNIA_CMD_GET_STATUS_WORD, &status);
+
+and so on...
+
+
+> +	if (err)
+> +		return err;
+
+...
+
+> +	/*
+> +	 * check whether MCU firmware supports the OMNIA_CMD_GET_FEATURES
+
+Check
+
+> +	 * command
+
+command.
+
+> +	 */
+
 -- 
-2.43.2
+With Best Regards,
+Andy Shevchenko
+
 
 
