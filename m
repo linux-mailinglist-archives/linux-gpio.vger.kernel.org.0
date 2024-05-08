@@ -1,256 +1,183 @@
-Return-Path: <linux-gpio+bounces-6221-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6222-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFA248BF63A
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 08:27:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2E3C8BF690
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 08:52:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3AB9228AA65
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 06:27:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E673B1C2134B
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 May 2024 06:52:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2591017C79;
-	Wed,  8 May 2024 06:26:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FB1922301;
+	Wed,  8 May 2024 06:52:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SBNZXCEi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKGv8vI5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8BA18651
-	for <linux-gpio@vger.kernel.org>; Wed,  8 May 2024 06:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7521717C72;
+	Wed,  8 May 2024 06:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715149572; cv=none; b=dE1ZOYeerZu7r9fJxoJCZPtUo8n4jjkgJhxW+V2O7UUdNOPL808adaolcylEKd/D8l61dUczVDsfSSATMkEXi4k/w5bKmTi5mo5YaIIS+vzByqbQM6Gie6WVxyAqesyOPMuPoAKcN5caLySUR1+ySqti84XIgjIUYyqDuBzz2OE=
+	t=1715151119; cv=none; b=aJkQSzLqILAhqctzimY/+8IGyguOz7IDRkHLcHuroUyHLvrYshQS2TEIV83BcW927TIqN1FmRWy6ipjCAqjMRmMmQfqH4Ab8NAiYhfcYMaGvyYC3uzAQGKAePjcn0TK5YI8xNFf5L9ob6kPWvEAopbRBpQV3IvG9M3GsFysRsSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715149572; c=relaxed/simple;
-	bh=hSEZx/Ot+C27u67tZEAzV+FhPT5gn15goIbeYLa/W24=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=YfVwH7QImuAODmWjKVvK0iivDBnBEopQ+Q5jVoFQWoVdn44hyD1N9hvKvMe38n2KQc9wx76rx8KnjElhu6vxQf7drORRPXN54u2xZEK/38+jnkS0M1KWdkAmA52OPYT4Ql3pJFXmhHG9DwnPTsnhXrYHAN7frBCBo8EkFg25axY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SBNZXCEi; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715149571; x=1746685571;
-  h=date:from:to:cc:subject:message-id;
-  bh=hSEZx/Ot+C27u67tZEAzV+FhPT5gn15goIbeYLa/W24=;
-  b=SBNZXCEi8vWPWB87t7B2mDRprFJRkBA7XHzuG6mtn51/8bJ87cjQopaG
-   RvGxp5kZ8WRDR71Cki05nvN+5tb5zW1hzhrxHrnQYK/5k4M6UOibuSBR5
-   VBII8rpBCYHEA03ogpGqdI6Vn0CLY0wnW9FZuBCluCiGpn/d6PnpXEPuq
-   oCW6gQdGrlFgo35+jU512aXHmSbtw9C/Rj4LfdMgNGlkiA2r33i+Xfb2N
-   xLDxEwjux8vbuyxzgbClOSLPmhuWvoNnoeTNrQJw9xQltprQ9dc3YRi42
-   TAXiqAPPQOybi9LUsjSvt7m4wt5aPfCQ3xX9DHq3SJvbSB6hn5w50LpJ5
-   w==;
-X-CSE-ConnectionGUID: 72Dw/zqESJak/D0RFvpmtA==
-X-CSE-MsgGUID: b0y3IPeiR0mg2W28dqZAuQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="22141461"
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="22141461"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 23:26:10 -0700
-X-CSE-ConnectionGUID: g03wmjW/R2KxmqTGYhPApA==
-X-CSE-MsgGUID: uy/G0wSDTF+yWCGAry210g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="33582518"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 07 May 2024 23:26:09 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s4akg-00034Z-23;
-	Wed, 08 May 2024 06:26:06 +0000
-Date: Wed, 08 May 2024 14:25:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 7f45fe2ea3b8c85787976293126a4a7133b107de
-Message-ID: <202405081454.X9FBb8C5-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1715151119; c=relaxed/simple;
+	bh=8tMm0vKZ7/QYeUIxxaN6I4ebRfGzeidiLXa6IH1bn4U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jpcFUCjvaMNEIlaqpaVfyqjwTvz9WFzgyV6fXfwfuylVMHmPvy+/UtSi2kGR1RWgIuAD8ZZ59jo7dVCuzyi1wkT9hmnbhVR9XB4LOf6e/l0zXMD1lt9CaZrupmhgKaYLBpWNZo6KZACHod8aafLJZi3ZPhWhJ6QVwlae5i/p264=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iKGv8vI5; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ed835f3c3cso36827975ad.3;
+        Tue, 07 May 2024 23:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715151118; x=1715755918; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WskmxvCHwHG3hfNPcbruZ83J/Bg2hUlZTocqPe8dPgI=;
+        b=iKGv8vI5wpfbXd6dRnztsJxwxzs0dw6/IzPa2aVdWSF5/EINDMrvfLOTWbNILkOfEA
+         DOvIK/hdh9dN6uEN5Db276o/jzoOIYb5NNLCwNyMaIvYMy5Wl+Q0tH4d+e2gvGbGzitw
+         +aWY/i3gITJiC08IT6lIebH7NFouq5fVC7XIegRrqGvp0ai0rKbtRsGurKXxB837Cl5n
+         efjl3UkmJ0yess4u8LTpZqqDqZOcNUeeeVh11qIub3yZznITmsg5O7eyx3/apzJ7oy/j
+         lym4HZjftYwLUMxkXwxORoyZdhvByeilIZUykYgXe+UE6ZOMt7ARhbb+NoH3YeE3Lz/w
+         iAVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715151118; x=1715755918;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WskmxvCHwHG3hfNPcbruZ83J/Bg2hUlZTocqPe8dPgI=;
+        b=DAUqIGOCStHE+tLFzmKXPvbatyzKdne+3iO/v9C/AlFDpXq+qeMpNdXPL/C4XEu7+V
+         j2V8T/C6/Y08A7uQP6q2AwIx0+tjmJ2IIl2m0fgPMvanJjyq1IcyNgRXkRsazo3Os/Zr
+         4N27rIRNoM3moFmd7wZBGdHIFUjd6BYqFQdg4PsY5XawObuDGskKVHKX00XZDmdG2kOr
+         kzsWvRukva2jHvBq+XCRaeOLFJt0mWW2kBOTJfgYe9TFdr/hY2YvEIE4bxI7lr031R9I
+         dr3SPLTtKb/d4r8YD1h+Pv2dnoaygWSVWod+xYt5c7vF8c+9HsWS0WiAnQSxiYc5mStQ
+         bXsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRKoNuV7iDXVuZSaQD62Qvnv/r2RXg47lAKXfNXgTGkOHstbAbxbs2BNQIWVH1Q3UDlLywoayWkVyy1YEV2/0t+KS/tuwKIvyf8XGGm+F0FW3apX0BuLpwfYygZovJw8A8NJ+ThIcbcCKnFPpHD7CZNUwfgFeUdpWNCiO3ln5KaHoYOeg=
+X-Gm-Message-State: AOJu0YxXvCuZc6PpkHcOPZVGvwhyjlEaBVzNB848Ngbu1/ll9KNfXeBw
+	pXKwk5PaYzE+2At1ZHSIXUmVCm9EbM0qt8No8V1wDVpQiOUwhc2A
+X-Google-Smtp-Source: AGHT+IFznNnqBEiRDo5hWVDYp3yJ8T9y+3Zi4TiiHVmFM4beO+uR4Wt/1JIWOn/pJK2F4BlV5ewuDg==
+X-Received: by 2002:a17:903:191:b0:1ea:b125:befa with SMTP id d9443c01a7336-1eeb078efddmr21188235ad.55.1715151117636;
+        Tue, 07 May 2024 23:51:57 -0700 (PDT)
+Received: from a28aa0606c51.. (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id c12-20020a170902d48c00b001e434923462sm11136267plg.50.2024.05.07.23.51.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 23:51:57 -0700 (PDT)
+From: Jacky Huang <ychuang570808@gmail.com>
+To: linus.walleij@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	p.zabel@pengutronix.de,
+	j.neuschaefer@gmx.net
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ychuang3@nuvoton.com,
+	schung@nuvoton.com
+Subject: [PATCH v8 0/3] Add support for nuvoton ma35d1 pin control
+Date: Wed,  8 May 2024 06:51:38 +0000
+Message-Id: <20240508065141.565848-1-ychuang570808@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 7f45fe2ea3b8c85787976293126a4a7133b107de  gpio: nuvoton: Fix sgpio irq handle error
+From: Jacky Huang <ychuang3@nuvoton.com>
 
-elapsed time: 1250m
+This patch series adds the pin control and GPIO driver for the nuvoton ma35d1
+ARMv8 SoC. It includes DT binding documentation and the ma35d1 pin control driver.
 
-configs tested: 163
-configs skipped: 3
+This pin control driver has been tested on the ma35d1 som board with Linux 6.9.0-rc7.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+v8:
+  - Update pinctrl driver:
+    - Utilize macros wherever possible for managing register bit fields.
+    - Revise the usage of 'hwirq'.
+    - Transition to fwnode-based operations instead of device_node as possible.
+    - Refactor function ma35_pinctrl_parse_groups().
+    - Adopt new PM macros.
+    - Implement other minor fixes.
+  - Update dt-binding docuemnt:
+    - Add property 'reg' to this pinctrl node.
+    - Correct the patternProperties name from "pins-" to "-pins" and relocate
+      it under "-grp".
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240508   gcc  
-arc                   randconfig-002-20240508   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240508   gcc  
-arm                   randconfig-002-20240508   clang
-arm                   randconfig-003-20240508   clang
-arm                   randconfig-004-20240508   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240508   gcc  
-arm64                 randconfig-002-20240508   clang
-arm64                 randconfig-003-20240508   gcc  
-arm64                 randconfig-004-20240508   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240508   gcc  
-csky                  randconfig-002-20240508   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240508   clang
-hexagon               randconfig-002-20240508   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240508   clang
-i386         buildonly-randconfig-002-20240508   clang
-i386         buildonly-randconfig-003-20240508   gcc  
-i386         buildonly-randconfig-004-20240508   gcc  
-i386         buildonly-randconfig-005-20240508   clang
-i386         buildonly-randconfig-006-20240508   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240508   gcc  
-i386                  randconfig-002-20240508   clang
-i386                  randconfig-003-20240508   clang
-i386                  randconfig-004-20240508   gcc  
-i386                  randconfig-005-20240508   clang
-i386                  randconfig-006-20240508   gcc  
-i386                  randconfig-011-20240508   gcc  
-i386                  randconfig-012-20240508   gcc  
-i386                  randconfig-013-20240508   clang
-i386                  randconfig-014-20240508   clang
-i386                  randconfig-015-20240508   clang
-i386                  randconfig-016-20240508   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240508   gcc  
-loongarch             randconfig-002-20240508   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240508   gcc  
-nios2                 randconfig-002-20240508   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240508   gcc  
-parisc                randconfig-002-20240508   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc               randconfig-001-20240508   clang
-powerpc               randconfig-002-20240508   gcc  
-powerpc               randconfig-003-20240508   clang
-powerpc64             randconfig-001-20240508   gcc  
-powerpc64             randconfig-002-20240508   gcc  
-powerpc64             randconfig-003-20240508   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240508   gcc  
-riscv                 randconfig-002-20240508   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240508   clang
-s390                  randconfig-002-20240508   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240508   gcc  
-sh                    randconfig-002-20240508   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240508   gcc  
-sparc64               randconfig-002-20240508   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240508   gcc  
-um                    randconfig-002-20240508   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240508   clang
-x86_64       buildonly-randconfig-002-20240508   clang
-x86_64       buildonly-randconfig-003-20240508   clang
-x86_64       buildonly-randconfig-004-20240508   clang
-x86_64       buildonly-randconfig-005-20240508   gcc  
-x86_64       buildonly-randconfig-006-20240508   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240508   gcc  
-x86_64                randconfig-002-20240508   clang
-x86_64                randconfig-003-20240508   clang
-x86_64                randconfig-004-20240508   gcc  
-x86_64                randconfig-005-20240508   gcc  
-x86_64                randconfig-006-20240508   gcc  
-x86_64                randconfig-011-20240508   clang
-x86_64                randconfig-012-20240508   clang
-x86_64                randconfig-013-20240508   gcc  
-x86_64                randconfig-014-20240508   gcc  
-x86_64                randconfig-015-20240508   clang
-x86_64                randconfig-016-20240508   gcc  
-x86_64                randconfig-071-20240508   gcc  
-x86_64                randconfig-072-20240508   gcc  
-x86_64                randconfig-073-20240508   clang
-x86_64                randconfig-074-20240508   gcc  
-x86_64                randconfig-075-20240508   gcc  
-x86_64                randconfig-076-20240508   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240508   gcc  
-xtensa                randconfig-002-20240508   gcc  
+v7:
+  - Replace the magic numbers appearing in the driver with defined constants, or
+    provide comments to explain them.
+  - Update the ma35_irq_irqtype()
+    - irq_set_handler_locked(d, handle_edge_irq) and
+      irq_set_handler_locked(d, handle_level_irq)
+    - add case IRQ_TYPE_EDGE_BOTH
+  - Use handle_bad_irq for girq->handler, instead of handle_level_irq
+
+v6:
+  - Remove DTS from this patchset. The DTS will be submitted in another patchset.
+
+v5:
+  - Update the pinctrl driver header file pinctrl-ma35.h
+    - Include platform_device.h to fix compile issues.
+
+v4:
+  - Update the pinctrl driver Kconfig
+    - Add depends to CONFIG_PINCTRL_MA35D1 to prevent compilation errors.
+  - Update the pinctrl driver
+    - Utilize devm_kcalloc() instead of devm_kzalloc().
+    - Employ ARRAY_SIZE() instead of sizeof()/sizeof().
+
+v3:
+  - Update DTS and YAML files
+    - Corrected the unit address of nodes gpioa ~ gpion.
+    - Removed the invalid "pin-default" node.
+    - Removed the phandle entry from "nuvoton,pins".
+  - Update pinctrl driver
+    - Fixed the Kconfig by using "depend on" instead of "if".
+    - Removed unused #include of header files.
+    - Utilized immutable irq_chip instead of dynamic irq_chip.
+    - Replaced ma35_dt_free_map() with pinconf_generic_dt_free_map().
+    - Implemented other minor fixes as suggested by the reviewer.
+
+v2:
+  - Update nuvoton,ma35d1-pinctrl.yaml
+    - Update the 'nuvoton,pins' to follow the style of rockchip pinctrl approch.
+    - Use power-source to indicate the pin voltage selection which follow the
+      realtek pinctrl approch.
+    - Instead of integer, use drive-strength-microamp to specify the real driving
+      strength capability of IO pins.
+  - Update ma35d1 pinctrl driver
+    - Add I/O drive strength lookup table for translating device tree setting
+      into control register.
+  - Remove ma35d1-pinfunc.h which is unused after update definition of 'nuvoton,pins'.
+
+
+Jacky Huang (3):
+  dt-bindings: reset: Add syscon to nuvoton ma35d1 system-management
+    node
+  dt-bindings: pinctrl: Document nuvoton ma35d1 pin control
+  pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO driver
+
+ .../pinctrl/nuvoton,ma35d1-pinctrl.yaml       |  178 ++
+ .../bindings/reset/nuvoton,ma35d1-reset.yaml  |    3 +-
+ drivers/pinctrl/nuvoton/Kconfig               |   19 +
+ drivers/pinctrl/nuvoton/Makefile              |    2 +
+ drivers/pinctrl/nuvoton/pinctrl-ma35.c        | 1197 +++++++++++
+ drivers/pinctrl/nuvoton/pinctrl-ma35.h        |   52 +
+ drivers/pinctrl/nuvoton/pinctrl-ma35d1.c      | 1799 +++++++++++++++++
+ 7 files changed, 3249 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.c
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.h
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
 
