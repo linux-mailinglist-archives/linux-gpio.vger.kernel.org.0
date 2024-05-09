@@ -1,86 +1,114 @@
-Return-Path: <linux-gpio+bounces-6278-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6279-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CFE98C1000
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2024 14:56:18 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 470F88C1020
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2024 15:08:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2ADE31F23CE3
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2024 12:56:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BFF7B284A08
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 May 2024 13:08:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33155152780;
-	Thu,  9 May 2024 12:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03D63150984;
+	Thu,  9 May 2024 13:07:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="cwAMr01z"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QVwpTfNp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3027A150984;
-	Thu,  9 May 2024 12:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DE0147C96
+	for <linux-gpio@vger.kernel.org>; Thu,  9 May 2024 13:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715259367; cv=none; b=m7V4+hupLodeH7N7oAWyAjD5UQQ5a/ONldvG/mZFqY/0cVEX9QYnxoFTACd4mc0FCbzCohAHtpj1M/TQbWJHjuluYm6In1ZNu0+ErNCXNYi2RtC3k9Q/1oCSinBmIPVOMFfUxAcguHNuHOrXdagRcQpNhrcJnIJDF12Dy2BGzt0=
+	t=1715260077; cv=none; b=OV7g9uMM0TkbvLifGr6OOoxF6ozsGWEKRyNlVqpSHbN0DNhQSClW1hUekdKqmDKTvDEb7+Qz3kI1yD/pj0ADcn6Hs+yBGTiJWsWJFt8noNThQ0aWi51BQgJw1IpNQbMxUEjIZoc2x7ee9QqfjnSBksZVBowtvu78j+YveDO5kX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715259367; c=relaxed/simple;
-	bh=JDF0xeyMENO/odeWyrMiImKcaqtEJAiCaQpN6vwM+FU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bZ83g0m4kyiLunAL621dbi6AGCrEHvgMjkxi4J7ZKWVgjjS0yY8Mf0a8ZNY62yYSkprY42DaCJD5Z3Zckx8351UvM/gCuIFVZo5xOXuxM1cFzbz0621f82/uNyhu7dqgYRTyFCXjFcfuYqgULoHubBH3b3FPNaJ61FNve+pdAjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=cwAMr01z; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715259360;
-	bh=JDF0xeyMENO/odeWyrMiImKcaqtEJAiCaQpN6vwM+FU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cwAMr01zu7qFF8kZOVDcp+mmxiKgLmUqZQsZmlPlrJr8BjhtpkyVbLixqZ7XpOyrG
-	 bRSMZcqHSxTt9AaQ1zF+746lGsmLaH8usSIbMoSKR6hy4N7W3nachwtREkLsvwWvrx
-	 TLzrKqRV55wChbisWCk19t4dO2hjtWTzg2z0JOZk2T1WkBg26i6QOnr1y2frodnDTy
-	 uCQ508rQhWrMQFaBr3NmrFe202moFeH8cholN+Anb7uh8SWT5SF+L5Gd4qbCy2aQpr
-	 J2rTOpnL4aTAnVTD9ZTkgLm+na6qFgtAah4NiJcS3Gb9F9RjdowK0h/DGClWOqI1mk
-	 jJRtNGA+dPhpQ==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BBF903782172;
-	Thu,  9 May 2024 12:55:59 +0000 (UTC)
-Message-ID: <217a8630-de33-4886-b812-53541dcdf178@collabora.com>
-Date: Thu, 9 May 2024 14:55:59 +0200
+	s=arc-20240116; t=1715260077; c=relaxed/simple;
+	bh=z8SqJFswMNiOCt/oP6O/swgxgA2P0/VGrYDi7IdlXyU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nXnTZUBXCOZKsP8HRPKvcvo5FH3s1ohzV1B5/EapuTggdgP837MlYOwwT8m80VtJg7yhqEaGImyXiE46GM1hcVv/0lvljWXzANKHdVsPj5wXBE665PidIjqEjB5OUl9u3rMCY2GsOq/F17GIF/uLVn1KIxqe9q3i+2aigeB+Apg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QVwpTfNp; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e4939c5323so11341891fa.2
+        for <linux-gpio@vger.kernel.org>; Thu, 09 May 2024 06:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1715260074; x=1715864874; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BnIPJSuPpdfHAhCpgelWzQDxXKYscFTQ9fmV3MxWiXM=;
+        b=QVwpTfNpnFBE6FSBD5Z1mVRCF0biN2xFbwAnyst68JqoS9BEABNmZP+hUhvkAiG9KS
+         1tSRA5djNokPEEGG2lHtZ3Rco9n0H7FWKbNVsgRjUS1eQ3+0G5BqPw8n1CSlQEGxuZow
+         awlG60ddW+ndAC0R/IeoBcGdOepQwKc+68w3HONwScqLSCoU7l01Fa5ryg4UOuumXzre
+         EcTwFNNf45hM/knUaXjagCp1YD04K9hopJPtuRSl13jHvLELNqtlN1xPiBJV/+NtqpdO
+         TYYYjOubTWoA+apwtmZSlQlm1jv5X71p1W/Y00VgPnK5dXR3etJ6NMahhA6iP8bqW+3a
+         CXHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715260074; x=1715864874;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BnIPJSuPpdfHAhCpgelWzQDxXKYscFTQ9fmV3MxWiXM=;
+        b=eZJtYoXx1eEunCSMxfTdMdev8SKM5zZrxy6Whk0ebeBLShZdh6i9IUftH2lVDpuz2B
+         y9SWN++XNPhwPqhX+ttXdfu3dl2T1aCt8uH2MLu9iAc6MSZt09T41aQuNYtN5bu03moY
+         sNxvDFqKYzvL+T2rUZ34lHSSJqS++YYLVwJoeJKqQGVDaRnD4lxYTLNUymT5c6GnFJnY
+         cMHVm9bBxupmp3IMVmVnG8Xht7qrXKWuEfg+AG+hJVYDxkZUvw4wks+Bwe3VNmnZi9+c
+         Y9dikAdZJCfZGjwB7G9v7LUet5QP+QZpa2/aHDQWxHcYX6MD0FsBmeEcFk0qM5T6qtQJ
+         BvAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYNdV69ImZUEk847kpob8MsqQ6xzZ0uD7dmAN/TBYJHwyDAptzN4+nDBn2knEFkzsU0CHjn7tcIrQTpAZ4+db5amGLNQb6db+74w==
+X-Gm-Message-State: AOJu0YyD8BH4SnElLNAEwcLMOzfumQH2XphdDLEq7UCA44l/lI7V0bzW
+	dviBsKqRdngHmzw1X/KJyFBMKAd1j571Wl8YF6iQiFui8dTvSye+TqBbv6CNFVc=
+X-Google-Smtp-Source: AGHT+IGqH7UFebNPJ9olqkCf6MNwQWe3pDuQuLPOy+hnDSHelK8uBIUKEyXUUQ5x6P9RLIO8q2+38A==
+X-Received: by 2002:a2e:870d:0:b0:2e0:3f37:5af5 with SMTP id 38308e7fff4ca-2e447697286mr45694331fa.41.1715260074260;
+        Thu, 09 May 2024 06:07:54 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:5c73:df7d:ebfd:d941])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f882085c5sm60626675e9.40.2024.05.09.06.07.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 06:07:53 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] gpiolib: use a single SRCU struct for all GPIO descriptors
+Date: Thu,  9 May 2024 15:07:52 +0200
+Message-Id: <171526005990.16179.13548989415103122490.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240507172414.28513-1-brgl@bgdev.pl>
+References: <20240507172414.28513-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpiolib: acpi: Add ACPI device NULL check to
- acpi_can_fallback_to_crs()
-To: Laura Nao <laura.nao@collabora.com>, mika.westerberg@linux.intel.com,
- andriy.shevchenko@linux.intel.com
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, kernel@collabora.com,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-acpi@vger.kernel.org, "kernelci.org bot" <bot@kernelci.org>
-References: <20240509104605.538274-1-laura.nao@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240509104605.538274-1-laura.nao@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Il 09/05/24 12:46, Laura Nao ha scritto:
-> Check ACPI device for NULL inside acpi_can_fallback_to_crs(), so callers
-> won't need to.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On Tue, 07 May 2024 19:24:14 +0200, Bartosz Golaszewski wrote:
+> We used a per-descriptor SRCU struct in order to not impose a wait with
+> synchronize_srcu() for descriptor X on read-only operations of
+> descriptor Y. Now that we no longer call synchronize_srcu() on
+> descriptor label change but only when releasing descriptor resources, we
+> can use a single SRCU structure for all GPIO descriptors in a given chip.
 > 
-> Signed-off-by: Laura Nao <laura.nao@collabora.com>
-> Reported-by: "kernelci.org bot" <bot@kernelci.org>
-> Closes: https://lore.kernel.org/all/20240426154208.81894-1-laura.nao@collabora.com/
-> Fixes: 49c02f6e901c ("gpiolib: acpi: Move acpi_can_fallback_to_crs() out of __acpi_find_gpio()")
 > 
+> [...]
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Applied, thanks!
 
+[1/1] gpiolib: use a single SRCU struct for all GPIO descriptors
+      commit: 7765ffed533d4a9f0291a0edc660496d104396ec
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
