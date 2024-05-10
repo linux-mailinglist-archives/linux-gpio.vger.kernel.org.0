@@ -1,62 +1,82 @@
-Return-Path: <linux-gpio+bounces-6287-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6288-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3948E8C1F80
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 10:10:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 731738C21DE
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 12:18:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BC771C2135E
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 08:09:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84D001C21354
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 10:18:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2375315F3F1;
-	Fri, 10 May 2024 08:09:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8EE216C443;
+	Fri, 10 May 2024 10:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dqk/LqIQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWHAMRwr"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9431131192
-	for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 08:09:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748742233B;
+	Fri, 10 May 2024 10:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715328591; cv=none; b=OyBQPhJsce0jF+qfSZJBWjVASrFURnK1S36axSUgOTk4aJ1Af0kpWc/ZOOo0Ov6+L/C3ysaPuBHVHD6D57NR+WMK8oik2YbMgsfYTuC4BxfuRFdXuwjOlpZ10Ge8xtqu9+faiDd+XSoC1Mk2JaFiiUP2CNVNw1HUs2eTNmU5HaA=
+	t=1715336309; cv=none; b=anGATSEBw/74KeAUNEFdj1w7J1fAIA4tJAXcn44tsEsz7RphsQ5yfd8T9b/Gkqq0/k97GTK49n2HjBNBjTTYSlyyaOOdf4/mqL8yxeEaAw238e5IxLNvymttXiufVKQvr9Ha23JTE/v0FLzaCs1xdsPHKL2G/Xe7D6oqpZDQPYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715328591; c=relaxed/simple;
-	bh=W2UAzXDx1JJQEGjRLpfJ+yKhnxYjrwqMgJeXw+yMleo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZFrKgrr5GFZAFASifer57LUYRaEh4oYTfuEIRCkVw2j4WIPeAeDTect+vjRIq/kA0AfJ4AxTFBqGR648FowdqP0xLmEfY7GAvpTtrZDDBLf3M6pQC3aTe33w2qrVPJMe7g17C2+5aN+Qi+sS1sUdBZNaLqguzwMKO7aKn2VCPJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dqk/LqIQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48AE6C113CC;
-	Fri, 10 May 2024 08:09:49 +0000 (UTC)
+	s=arc-20240116; t=1715336309; c=relaxed/simple;
+	bh=3mgk/qKH2ybFNCBiVS1cLaPC0sYDQzDSpjzoyqxz4Ms=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NMiRXoZ+RUrzFfjivfbimRkA3RFGV1hoq2jc0NMazdhm2ZchsYuP99wzNa+34Us6NgUQT1WROCMwNK4uq+z3TF4NnisEmNeRY5p1yav1wfh9Av2fUW66Nz4jatKEkF7L2PsWogupiAIslW8HVOlF08dOsy6umfWtOgs/HV+PTvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWHAMRwr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36AFEC113CC;
+	Fri, 10 May 2024 10:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715328591;
-	bh=W2UAzXDx1JJQEGjRLpfJ+yKhnxYjrwqMgJeXw+yMleo=;
-	h=Date:From:To:List-Id:Cc:Subject:In-Reply-To:References:From;
-	b=dqk/LqIQL/tWGZe4UHPMQFasZmFc3m8UEle9efU9dFXtv6z6iOXMO3QgbENbOrosT
-	 3gKGWtsazKHUFczDbFALaTqvxEtmQwprHr/6oOgQo/IYPePNNV97noyllpku/hDXP2
-	 TcTxi5P9i6cWLPXPhp+of1Q2hZHtUcyAvcAimJPyZkaqd4rvdCnSUQb80AZWsBqtWC
-	 kl6vCjeFLcbncgYncRHqNO3vLp6Y2Bjk1RfoPhFdB+xWXXAhdmSl7+6udarbJlG/hs
-	 F/eqzVgBl2+BKpRkPOH9PGu3ItvEdbymmO3FCREXX2t4Acw5u/b/GHmmnMb8uVBKn6
-	 pumg9gO1oAkQA==
-Date: Fri, 10 May 2024 10:09:46 +0200
-From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Arnd Bergmann
- <arnd@arndb.de>, soc@kernel.org, arm@kernel.org, Hans de Goede
- <hdegoede@redhat.com>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
- <ilpo.jarvinen@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v9 3/9] platform: cznic: turris-omnia-mcu: Add support
- for MCU connected GPIOs
-Message-ID: <20240510100946.270c00e3@dellmb>
-In-Reply-To: <ZjtfCjAlDMMndRfv@smile.fi.intel.com>
-References: <20240508103118.23345-1-kabel@kernel.org>
-	<20240508103118.23345-4-kabel@kernel.org>
-	<ZjtfCjAlDMMndRfv@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=k20201202; t=1715336309;
+	bh=3mgk/qKH2ybFNCBiVS1cLaPC0sYDQzDSpjzoyqxz4Ms=;
+	h=From:List-Id:To:Cc:Subject:Date:From;
+	b=QWHAMRwr0i2LHX4GA+obVtqai9FuSYUCoEERqCgeRrsZLQo14dQ13OXCz5dZwvUQK
+	 yIOv22lSKzIOMaVB0zGZsNYv0+r2pSm/TpsEkbhoSua8Ej00UfYLpQQL2AwFbu/Fki
+	 IktGBBQt5xtio0h8Clb522ehSoCvb1LA+eAGF3bXbCSclCmfdxQdUKQXPgZbV1H6Lr
+	 pVbIZVimzk3PLj8FtcU5dBCxhQ6E8GvzQrRk3KJqsVrFVTFbUmGWEk905XWpQChpiV
+	 uW8Oh1m8VwvHdUd1BQunByGx4JfS7YtxY3JT98/sd3qR+ZGAD8mrhRp7lTk0p2jsOu
+	 Zbmyi0CMPD3og==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	soc@kernel.org,
+	arm@kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	devicetree@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-crypto@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	Olivia Mackall <olivia@selenic.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Subject: [PATCH v10 0/9] Turris Omnia MCU driver
+Date: Fri, 10 May 2024 12:18:10 +0200
+Message-ID: <20240510101819.13551-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,118 +84,94 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, 8 May 2024 14:16:26 +0300
-Andy Shevchenko <andy@kernel.org> wrote:
+Hello Andy, Hans, Ilpo, Arnd, Gregory, and others,
 
-> On Wed, May 08, 2024 at 12:31:12PM +0200, Marek Beh=C3=BAn wrote:
+this is v10 of the series adding Turris Omnia MCU driver.
 
-...
+This series still depends on the immutable branch between LEDs and
+locking, introducing devm_mutex_init(), see the PR
+  https://lore.kernel.org/linux-leds/20240412084616.GR2399047@google.com/
 
-> > +static int omnia_ctl_cmd_locked(struct omnia_mcu *mcu, u8 cmd, u16 val,
-> > +				u16 mask) =20
->=20
-> Can be one line as it's only 81 characters long.
+See also cover letters for v1 to v9:
+  https://patchwork.kernel.org/project/linux-soc/cover/20230823161012.6986-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20230919103815.16818-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231023143130.11602-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231026161803.16750-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240323164359.21642-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240418121116.22184-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240424173809.7214-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240430115111.3453-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240508103118.23345-1-kabel@kernel.org/
 
-OK
+Changes since v9:
+- in functions where mcu->client is referred to multiple times added
+  a helper variable client = mcu->client, suggested by Andy
+- changed instances of
+    if (!err)
+      do_something;
+    return err;
+  patterns to the more traditional pattern
+    if (err)
+      return err;
+    do_something;
+    return 0;
+  as suggested by Andy
+- fixed some typos reported by Andy
+- changed crc32_be(0xffffffff, ...) to crc32_be(~0, ...), as suggested
+  by Andy
+- changed to use the DECI unit macro from units.h instead of hardcoded
+  10, as suggested by Andy
+- changed -EINTR to -ERESTARTSYS in trng read and signature read
+- changed the mutex lock in signature read to interruptible mutex lock,
+  as pointed out by Andy
 
-> > +	if (type & IRQ_TYPE_EDGE_RISING)
-> > +		mcu->rising |=3D bit;
-> > +	else
-> > +		mcu->rising &=3D ~bit;
-> > +
-> > +	if (type & IRQ_TYPE_EDGE_FALLING)
-> > +		mcu->falling |=3D bit;
-> > +	else
-> > +		mcu->falling &=3D ~bit; =20
->=20
-> If those variables was defined as unsigned long, these can be just
->=20
-> 	__assign_bit()
-> 	__assign_bit()
->=20
-> And other non-atomic bitops elsewhere, like __clear_bit().
-=20
-Changing this propagated to many other variables and even required
-some refactoring of the omnia_gpio structure, since the bit, ctl_bit
-and int_bit members are stored as a masks, but __assign_bit() /
-__set_bit() / __clear_bit() requires bit numbers.
+Marek Behún (9):
+  dt-bindings: firmware: add cznic,turris-omnia-mcu binding
+  platform: cznic: Add preliminary support for Turris Omnia MCU
+  platform: cznic: turris-omnia-mcu: Add support for MCU connected GPIOs
+  platform: cznic: turris-omnia-mcu: Add support for poweroff and wakeup
+  platform: cznic: turris-omnia-mcu: Add support for MCU watchdog
+  platform: cznic: turris-omnia-mcu: Add support for MCU provided TRNG
+  platform: cznic: turris-omnia-mcu: Add support for digital message
+    signing via debugfs
+  ARM: dts: turris-omnia: Add MCU system-controller node
+  ARM: dts: turris-omnia: Add GPIO key node for front button
 
-For example
-  if (gpio->int_bit && (mcu->is_cached & gpio->int_bit))
-    return !!(mcu->cached & gpio->int_bit);
-needed to change to
-  if (gpio->has_int && (mcu->is_cached & BIT(gpio->int_bit)))
-    return !!(mcu->cached & BIT(gpio->int_bit));
-and so on.
+ .../ABI/testing/debugfs-turris-omnia-mcu      |   13 +
+ .../sysfs-bus-i2c-devices-turris-omnia-mcu    |  126 ++
+ .../firmware/cznic,turris-omnia-mcu.yaml      |   86 ++
+ MAINTAINERS                                   |    5 +
+ .../dts/marvell/armada-385-turris-omnia.dts   |   35 +-
+ drivers/platform/Kconfig                      |    2 +
+ drivers/platform/Makefile                     |    1 +
+ drivers/platform/cznic/Kconfig                |   50 +
+ drivers/platform/cznic/Makefile               |    9 +
+ .../platform/cznic/turris-omnia-mcu-base.c    |  450 +++++++
+ .../platform/cznic/turris-omnia-mcu-debugfs.c |  208 ++++
+ .../platform/cznic/turris-omnia-mcu-gpio.c    | 1039 +++++++++++++++++
+ .../cznic/turris-omnia-mcu-sys-off-wakeup.c   |  257 ++++
+ .../platform/cznic/turris-omnia-mcu-trng.c    |  103 ++
+ .../cznic/turris-omnia-mcu-watchdog.c         |  128 ++
+ drivers/platform/cznic/turris-omnia-mcu.h     |  216 ++++
+ include/linux/turris-omnia-mcu-interface.h    |  249 ++++
+ 17 files changed, 2976 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/debugfs-turris-omnia-mcu
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu
+ create mode 100644 Documentation/devicetree/bindings/firmware/cznic,turris-omnia-mcu.yaml
+ create mode 100644 drivers/platform/cznic/Kconfig
+ create mode 100644 drivers/platform/cznic/Makefile
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-base.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-debugfs.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-gpio.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-sys-off-wakeup.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-trng.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-watchdog.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu.h
+ create mode 100644 include/linux/turris-omnia-mcu-interface.h
 
-Moreover, I agree that the if-else statement which you commented on,
-when changed to __assign_bit(), looks much nicer, but some changes that
-sprouted from this are in my opinion less readable.
+-- 
+2.43.2
 
-I have prepared the fixup patch, but I am not confident enough that
-everything is done correctly. I would prefer leaving this one for
-later, if it is okay with you.
-
-> > + * Feel free to remove this function and its inverse, omnia_mask_deint=
-erleave,
-> > + * and use an appropriate bitmap_* function once such a function exist=
-s. =20
->=20
-> bitmap_*()
-
-OK
-
-...
-
-> > +static int omnia_read_status_word_old_fw(struct omnia_mcu *mcu, u16 *s=
-tatus)
-> > +{
-> > +	int err;
-> > +
-> > +	err =3D omnia_cmd_read_u16(mcu->client, OMNIA_CMD_GET_STATUS_WORD,
-> > +				 status);
-> > +	if (!err) =20
->=20
-> Why not traditional pattern?
->=20
-> 	if (err)
-> 		return err;
-
-OK, also for the rest similar.
-
-...
-
-> > +static bool omnia_irq_read_pending(struct omnia_mcu *mcu,
-> > +				   unsigned long *pending)
-> > +{
-> > +	if (mcu->features & OMNIA_FEAT_NEW_INT_API)
-> > +		return omnia_irq_read_pending_new(mcu, pending);
-> > +	else =20
->=20
-> 'else' is redundant, but it can be still used for indentation purposes he=
-re.
-
-As you say, for indentation purposes I would prefer keeping it this way.
-
->=20
-> > +		return omnia_irq_read_pending_old(mcu, pending);
-> > +} =20
->=20
-> ...
->=20
-> > +static struct attribute *omnia_mcu_gpio_attrs[] =3D {
-> > +	&dev_attr_front_button_mode.attr,
-> > +	NULL
-> > +};
-> > +
-> > +const struct attribute_group omnia_mcu_gpio_group =3D {
-> > +	.attrs =3D omnia_mcu_gpio_attrs,
-> > +}; =20
->=20
-> Haven't seen the rest, but here perhaps ATTRIBUTE_GROUPS().
-
-Those define the variable as static, but I need to access it from
-turris-omnia-mcu-base.c compilation unit.
 
