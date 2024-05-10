@@ -1,136 +1,181 @@
-Return-Path: <linux-gpio+bounces-6286-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6287-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 783EA8C1E82
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 08:56:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3948E8C1F80
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 10:10:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 09DCDB218E3
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 06:56:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BC771C2135E
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 08:09:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21B7815EFAF;
-	Fri, 10 May 2024 06:53:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2375315F3F1;
+	Fri, 10 May 2024 08:09:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHxAbzVF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dqk/LqIQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8C313BAE5;
-	Fri, 10 May 2024 06:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9431131192
+	for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 08:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715324032; cv=none; b=P+GH9DmoQq22VXxHKfV3edmk/WqmJABHKUJ55RneN/XaIOrDzlrEGbQzVD0Uwdh3GmsUODDjZ+1kG3XHqJpPujydWYFBx/DLBETt2mSFnNuYRBdI2Ng/8sgeSQHb94tGdzQP/qGdxdhBWuuEK7/MJMmQgxaBACxQh+d7HhmG8QU=
+	t=1715328591; cv=none; b=OyBQPhJsce0jF+qfSZJBWjVASrFURnK1S36axSUgOTk4aJ1Af0kpWc/ZOOo0Ov6+L/C3ysaPuBHVHD6D57NR+WMK8oik2YbMgsfYTuC4BxfuRFdXuwjOlpZ10Ge8xtqu9+faiDd+XSoC1Mk2JaFiiUP2CNVNw1HUs2eTNmU5HaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715324032; c=relaxed/simple;
-	bh=EsEjqVfurQEi6EaE+OnivMb6kc+dfAW6aZlvySrlEJ0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XAceuzReLNhQi0BzzpItyzIhy3pxpKyEFfb3QEdME3k4Gq9b7juftk0128WP3AxB2aqWdcz4pmAZU0BjFv1ov6q92I8PsKR35ObqIkjHTPrg2pQ/NlLEZgRMf/4Aj7UCkqs6YHAG8Hx2KjMmaTLANWWdV3CG4ElGKUMwVfkihn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kHxAbzVF; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-61c4ebd0c99so1108010a12.0;
-        Thu, 09 May 2024 23:53:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715324030; x=1715928830; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6bttAWzIw7yUE9dMi4CPYP8/KpV+KHriPCsuJRLVxh0=;
-        b=kHxAbzVFW7HjfUOul8oeA4hvE80FUd5a3EHfmVDHvgDuGkLLk7akMJw4RK/ZFbxotA
-         h/CS50EhhnImqkGWgOiutA42dz7dO+Pjp8+gBSJjnxDymUE3NWwL+QIKii4oz9h7a2ML
-         2CXeNXY4hl+GSwB2fhmPQTaPnGgnm//maYbyCOWTD3DdQhbrW7wtX18ALk9cdLp9XymH
-         bEJXvrX4jEAR9mRmxcbefGyK8sj58CE8JcGKNQQsVqNy5U48I5EMoL8TurWDiUvPuS9l
-         eJOy9JXJWyDaOSdohUun9oI47o3YmFt2LvTMdzG01WWdR6TJJMu9wyEyPbOS6Xyo7oQ0
-         fLpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715324030; x=1715928830;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6bttAWzIw7yUE9dMi4CPYP8/KpV+KHriPCsuJRLVxh0=;
-        b=DMTxzg6PfdEuqIE4bNDLQhXTrqUdgeQAHwc3Uo6ccuh2awCXExw8tvZNy8HZuVB3lb
-         pQNeUynwWNuqlTE7yH3n3FFu2xJKNFpfosGsgOnT47esgLHJXyZGNAExa5dlvpYr5uW3
-         eSgp/rP9CreNRcO/3wafUgHbZI/gdfVPAMrLFvdMQYoJ2AYIcTh8ITqhOq7dx+AVCaUp
-         KOZTEo8WQ36s4zUESThH4K477tKTcXJaEokAiCEyR1ZOQ/YFV/qYoA8/2p/WG/GCSno3
-         X619X8HDwdPjCRGFDigB73iXWXoZLRjfTUzeITGYelZ0bwVVR1kESvVSk4QAvq0x2/DM
-         6BTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMFK1P2pq3Ne1xp9KDMYddKmCX3IMxOXOTXVuh+3v6edch0PaLTwHGpDjZlGhrgj4fLS9xtWj5GUyPfLs7tLNSIJmZYCzAoAHgtg==
-X-Gm-Message-State: AOJu0YxI74Fj83LfpB8R0rEGGofxghBLkzLkTcrumr9aHbNMpQyXUY20
-	DR36w2lPVPdD9rHAovHx5NiPSLwGpVq6uEctbAUiJWJ7BhRBk+fnC195aA==
-X-Google-Smtp-Source: AGHT+IF8GQJf63MP69uLJd6CLJ5Gt+AVs0HTNZe2BkiOqmatoXe0KyWQ4LHwPTq6nDPvP0Ldo3sGlQ==
-X-Received: by 2002:a05:6a21:168e:b0:1a9:4964:726 with SMTP id adf61e73a8af0-1afde0bc494mr2426478637.21.1715324030616;
-        Thu, 09 May 2024 23:53:50 -0700 (PDT)
-Received: from rigel.home.arpa (60-241-107-82.static.tpgi.com.au. [60.241.107.82])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf2f4bdsm24951675ad.152.2024.05.09.23.53.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 23:53:49 -0700 (PDT)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl,
-	linus.walleij@linaro.org
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH] gpiolib: cdev: fix uninitialised kfifo
-Date: Fri, 10 May 2024 14:53:42 +0800
-Message-Id: <20240510065342.36191-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1715328591; c=relaxed/simple;
+	bh=W2UAzXDx1JJQEGjRLpfJ+yKhnxYjrwqMgJeXw+yMleo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZFrKgrr5GFZAFASifer57LUYRaEh4oYTfuEIRCkVw2j4WIPeAeDTect+vjRIq/kA0AfJ4AxTFBqGR648FowdqP0xLmEfY7GAvpTtrZDDBLf3M6pQC3aTe33w2qrVPJMe7g17C2+5aN+Qi+sS1sUdBZNaLqguzwMKO7aKn2VCPJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dqk/LqIQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48AE6C113CC;
+	Fri, 10 May 2024 08:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715328591;
+	bh=W2UAzXDx1JJQEGjRLpfJ+yKhnxYjrwqMgJeXw+yMleo=;
+	h=Date:From:To:List-Id:Cc:Subject:In-Reply-To:References:From;
+	b=dqk/LqIQL/tWGZe4UHPMQFasZmFc3m8UEle9efU9dFXtv6z6iOXMO3QgbENbOrosT
+	 3gKGWtsazKHUFczDbFALaTqvxEtmQwprHr/6oOgQo/IYPePNNV97noyllpku/hDXP2
+	 TcTxi5P9i6cWLPXPhp+of1Q2hZHtUcyAvcAimJPyZkaqd4rvdCnSUQb80AZWsBqtWC
+	 kl6vCjeFLcbncgYncRHqNO3vLp6Y2Bjk1RfoPhFdB+xWXXAhdmSl7+6udarbJlG/hs
+	 F/eqzVgBl2+BKpRkPOH9PGu3ItvEdbymmO3FCREXX2t4Acw5u/b/GHmmnMb8uVBKn6
+	 pumg9gO1oAkQA==
+Date: Fri, 10 May 2024 10:09:46 +0200
+From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Arnd Bergmann
+ <arnd@arndb.de>, soc@kernel.org, arm@kernel.org, Hans de Goede
+ <hdegoede@redhat.com>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
+ <ilpo.jarvinen@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v9 3/9] platform: cznic: turris-omnia-mcu: Add support
+ for MCU connected GPIOs
+Message-ID: <20240510100946.270c00e3@dellmb>
+In-Reply-To: <ZjtfCjAlDMMndRfv@smile.fi.intel.com>
+References: <20240508103118.23345-1-kabel@kernel.org>
+	<20240508103118.23345-4-kabel@kernel.org>
+	<ZjtfCjAlDMMndRfv@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-If a line is requested with debounce, and that results in debouncing
-in software, and the line is subsequently reconfigured to enable edge
-detection then the allocation of the kfifo to contain edge events is
-overlooked.  This results in events being written to and read from an
-unitialised kfifo.  Read events are returned to userspace.
+On Wed, 8 May 2024 14:16:26 +0300
+Andy Shevchenko <andy@kernel.org> wrote:
 
-Initialise the kfifo in the case where the software debounce is
-already active.
+> On Wed, May 08, 2024 at 12:31:12PM +0200, Marek Beh=C3=BAn wrote:
 
-Fixes: 65cff7046406 ("gpiolib: cdev: support setting debounce")
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- drivers/gpio/gpiolib-cdev.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+...
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index d09c7d728365..57c92395219e 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -1193,6 +1193,8 @@ static int edge_detector_update(struct line *line,
- 				struct gpio_v2_line_config *lc,
- 				unsigned int line_idx, u64 edflags)
- {
-+	u64 eflags;
-+	int ret;
- 	u64 active_edflags = READ_ONCE(line->edflags);
- 	unsigned int debounce_period_us =
- 			gpio_v2_line_config_debounce_period(lc, line_idx);
-@@ -1204,6 +1206,18 @@ static int edge_detector_update(struct line *line,
- 	/* sw debounced and still will be...*/
- 	if (debounce_period_us && READ_ONCE(line->sw_debounced)) {
- 		line_set_debounce_period(line, debounce_period_us);
-+		/*
-+		 * ensure event fifo is initialised if edge detection
-+		 * is now enabled.
-+		 */
-+		eflags = edflags & GPIO_V2_LINE_EDGE_FLAGS;
-+		if (eflags && !kfifo_initialized(&line->req->events)) {
-+			ret = kfifo_alloc(&line->req->events,
-+					  line->req->event_buffer_size,
-+					  GFP_KERNEL);
-+			if (ret)
-+				return ret;
-+		}
- 		return 0;
- 	}
- 
--- 
-2.39.2
+> > +static int omnia_ctl_cmd_locked(struct omnia_mcu *mcu, u8 cmd, u16 val,
+> > +				u16 mask) =20
+>=20
+> Can be one line as it's only 81 characters long.
 
+OK
+
+> > +	if (type & IRQ_TYPE_EDGE_RISING)
+> > +		mcu->rising |=3D bit;
+> > +	else
+> > +		mcu->rising &=3D ~bit;
+> > +
+> > +	if (type & IRQ_TYPE_EDGE_FALLING)
+> > +		mcu->falling |=3D bit;
+> > +	else
+> > +		mcu->falling &=3D ~bit; =20
+>=20
+> If those variables was defined as unsigned long, these can be just
+>=20
+> 	__assign_bit()
+> 	__assign_bit()
+>=20
+> And other non-atomic bitops elsewhere, like __clear_bit().
+=20
+Changing this propagated to many other variables and even required
+some refactoring of the omnia_gpio structure, since the bit, ctl_bit
+and int_bit members are stored as a masks, but __assign_bit() /
+__set_bit() / __clear_bit() requires bit numbers.
+
+For example
+  if (gpio->int_bit && (mcu->is_cached & gpio->int_bit))
+    return !!(mcu->cached & gpio->int_bit);
+needed to change to
+  if (gpio->has_int && (mcu->is_cached & BIT(gpio->int_bit)))
+    return !!(mcu->cached & BIT(gpio->int_bit));
+and so on.
+
+Moreover, I agree that the if-else statement which you commented on,
+when changed to __assign_bit(), looks much nicer, but some changes that
+sprouted from this are in my opinion less readable.
+
+I have prepared the fixup patch, but I am not confident enough that
+everything is done correctly. I would prefer leaving this one for
+later, if it is okay with you.
+
+> > + * Feel free to remove this function and its inverse, omnia_mask_deint=
+erleave,
+> > + * and use an appropriate bitmap_* function once such a function exist=
+s. =20
+>=20
+> bitmap_*()
+
+OK
+
+...
+
+> > +static int omnia_read_status_word_old_fw(struct omnia_mcu *mcu, u16 *s=
+tatus)
+> > +{
+> > +	int err;
+> > +
+> > +	err =3D omnia_cmd_read_u16(mcu->client, OMNIA_CMD_GET_STATUS_WORD,
+> > +				 status);
+> > +	if (!err) =20
+>=20
+> Why not traditional pattern?
+>=20
+> 	if (err)
+> 		return err;
+
+OK, also for the rest similar.
+
+...
+
+> > +static bool omnia_irq_read_pending(struct omnia_mcu *mcu,
+> > +				   unsigned long *pending)
+> > +{
+> > +	if (mcu->features & OMNIA_FEAT_NEW_INT_API)
+> > +		return omnia_irq_read_pending_new(mcu, pending);
+> > +	else =20
+>=20
+> 'else' is redundant, but it can be still used for indentation purposes he=
+re.
+
+As you say, for indentation purposes I would prefer keeping it this way.
+
+>=20
+> > +		return omnia_irq_read_pending_old(mcu, pending);
+> > +} =20
+>=20
+> ...
+>=20
+> > +static struct attribute *omnia_mcu_gpio_attrs[] =3D {
+> > +	&dev_attr_front_button_mode.attr,
+> > +	NULL
+> > +};
+> > +
+> > +const struct attribute_group omnia_mcu_gpio_group =3D {
+> > +	.attrs =3D omnia_mcu_gpio_attrs,
+> > +}; =20
+>=20
+> Haven't seen the rest, but here perhaps ATTRIBUTE_GROUPS().
+
+Those define the variable as static, but I need to access it from
+turris-omnia-mcu-base.c compilation unit.
 
