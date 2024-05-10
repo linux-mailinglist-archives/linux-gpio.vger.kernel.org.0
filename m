@@ -1,79 +1,79 @@
-Return-Path: <linux-gpio+bounces-6305-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6306-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4825F8C28BA
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 18:26:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94EB98C28BC
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 18:26:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6BC5F1C22640
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 16:26:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A3711F213C6
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 16:26:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF7E2176FBE;
-	Fri, 10 May 2024 16:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF1DE1779A9;
+	Fri, 10 May 2024 16:26:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b="s+BF2aXy"
+	dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b="WjFSInR+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FCD175571
-	for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 16:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C19176FAB
+	for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 16:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715358380; cv=none; b=pDk5XkDre7OV/RZURtt00Sn/pNMFL023Y1TChA87o3O1tzQfVfJ6Ud3jk0yAgxc9KRtMOtNk5QQc3loLke6vBmP5OJG4VRhU2P4LdcLRR1PMroJlVykWcQA8zSh7aKBT6OmQeMRa/7THffaFRfZjoqKjhkXDgdNDSz1Heap7K90=
+	t=1715358385; cv=none; b=HVWOZ02mFnKishm1OGjxRohNQ5HN46jRMCfr2LaFDPs2i/zji3z6u0YlmadUBW0cru7quh/YiP8OSNW1vfGzE5O8P2xU+xCpKT7EUVlyWNfyCGypnrHLWJOTaxISDjwbCnhd+C6LqAOmrUDTKrTLbh/fgvZvz2vQc74HLlaWvkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715358380; c=relaxed/simple;
-	bh=KbpZ8d+RgwRLaIMQKqSigv1pMFc5n3ynVMEzJAYBd0Q=;
+	s=arc-20240116; t=1715358385; c=relaxed/simple;
+	bh=mUZACTmIvN9VpSJnu+37t6kjVWpWjqK6pTbjUJgvM2c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R7ktV+ZsKNdouqsR3nmzMmrygwzdNV0lMWv2jaV0WBPzHIZ57+DU+mPZQu1+cWmq4cS0OW9w4/UXFsBwJtDUqixGbgIGlS7Qccj2TrSV+8t44F+PvTku/ENRV0kUBvLYQ5zIpDDftHm2WBeRwRxwaJLIKqDTSMFEWiW3T8rUG6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr; spf=pass smtp.mailfrom=freebox.fr; dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b=s+BF2aXy; arc=none smtp.client-ip=209.85.221.46
+	 MIME-Version:Content-Type; b=PPvRjGGEo3RivRFjKocBTgoas70v+L/67a5+ohcZus0LHIcDwRKP9ZhyKfcxi52osnkUA+R7SpX64WGLahZgh0dGB0U24D/4aTK+HUxDQhC3WaI0SGHNTCgKs4HWXIDpMBQtvI6yrTxFK2I+ymWqh2Y+2jSdfN43fen+l7B8piE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr; spf=pass smtp.mailfrom=freebox.fr; dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b=WjFSInR+; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freebox.fr
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-34eb52bfca3so1873428f8f.0
-        for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 09:26:17 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51f45104ef0so2308894e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 09:26:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=freebox-fr.20230601.gappssmtp.com; s=20230601; t=1715358376; x=1715963176; darn=vger.kernel.org;
+        d=freebox-fr.20230601.gappssmtp.com; s=20230601; t=1715358382; x=1715963182; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LR5Th4rgsENBGC1XHGIaoOrv3KgiGLQWWbPFYgnaOZw=;
-        b=s+BF2aXypt2jr58DeNFOn2BHSyW10ZqG83XvjafmJtepCygO1c+J788odMPsATwUcF
-         pd7RaXS19SrYF+8lHaprfICoQFxDeezqKMyWpLB6j7HxZPfa/SHcAbv6+DfZrdb/zrrY
-         Xiuyoq3g+LYlI1G1DAkHoD7/woLmjDf3uxbn7LlB6JaAu8W3DXXdmOQAj47hkaBlJJaU
-         YWZmQtArzxn6ZuxLNGqahXi7sslnVVO6+FphG1mxCVO7fEradADWcb/r6J1vzrwxuKfr
-         A/ofCw8NGnkr+6iNo2MtSKPJxFnMke5QfSQ7dnBQHkv5YHFRbiANhxCllyss8wfjQkgI
-         7D9Q==
+        bh=QyGh/Qwq5NmQyuXE/qEzsm92r8+stUz1K4JXovBXMG0=;
+        b=WjFSInR+004w6lES0+Sqg96x+A0/oUCJiki5+9SVN0gyrruZSBj3408Vqg1dOOgtJr
+         GIOkBovnH3X/SxyNGeCr7XtoXtydBSU4/m+w0jUvkEIihPxe9j7YAqFXm2Ouqw8Sap5M
+         kw60olOuLghrLDjttCacq7Uz3h8KMprNoZ5TYG2xxJoQKthweA+Cd8qJsI2XNsfF1RS3
+         BXEgRb4DgE7fQza9KXZGscn6oJMboPbeFLm0vgbREYo3MXBD+xbzLD8yTLNXjabZc5Sk
+         Y/fp7289weaEGP7neKAgR5rthEA6Yh2297aNDYclU3130+Ct72SkzoIv0SjvAC19dGJB
+         3nXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715358376; x=1715963176;
+        d=1e100.net; s=20230601; t=1715358382; x=1715963182;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LR5Th4rgsENBGC1XHGIaoOrv3KgiGLQWWbPFYgnaOZw=;
-        b=FkKnF0qjN+hS2ko0vgeSJQGhp1L6dqRNJFkwCWzdJQ7d6ruwRsT0AX5psHrLruRqaP
-         gtFxhr82yU4TbkVFgD/FxXRqV7TcyshwqIazV7re0UNsEWS04NGn36ieFogRmlwMSRj1
-         JdrSxdstq5sXQXzseM6rT5ALO0atvh1oXRRlbiDY8f6EFwi29TufyM1ihmYSJxNi+g1f
-         hfCljUqh1YvA65pz+58n2oxP0tio6L9dCw9rTOjczbI4AFjCzDGS/v3nP0Rn6YHJ01o/
-         BYllfdxzhYTLoadVCv5Vm6skNAtSkYfT/a/SyxFVCnZRtd6zTq4oCNd2pZtZoLM5gAJl
-         UljA==
-X-Gm-Message-State: AOJu0YyaDzsLDTKC1enGrzAFSldq38t7BqLml2azcmmGBeak8YmGKQ8M
-	EkErFhC2C7WnzOygeDTbua121bQmwS9W7SujOIobxGB2fhK+8pBwQz4nfzqaeXs=
-X-Google-Smtp-Source: AGHT+IGnMyhOx29AvuQhDh0cLZxd8JVQPcGXpdsgHPHaDyNcqfDQQCBeaoRnQyw34Crs9jM3D/0ZVQ==
-X-Received: by 2002:a5d:6503:0:b0:34c:eb4a:1948 with SMTP id ffacd0b85a97d-3504a631080mr2882705f8f.5.1715358376406;
-        Fri, 10 May 2024 09:26:16 -0700 (PDT)
+        bh=QyGh/Qwq5NmQyuXE/qEzsm92r8+stUz1K4JXovBXMG0=;
+        b=LWQ/Hf9Iddw2u2z70HQfFcsBQz5ZsXSVIZKWEG7gEuFOTNRio6OYU70Q6591kwNgwq
+         Yrl0RpvsWIn3KSO7mxEzZ97gEDu2S2l2uS/I/2fqxryDzEUoBP8PIV1Ar8I+dwqdyJd/
+         jMCSvZT8Knm8SdmSEKmXQEcash9O8GvZGpqUoImX9nzOhoricoVv/VbjQEUDGCZvgcRV
+         hKlCmwgXTV5utWqSEhnbKHL274osOeHLRg9Nbw8cQ2P1OllSxX5XQVz6P4k27epzqVEA
+         979mwp0AgDbnTImHs6JLmOMbtD9BAgpppq6WXRJlCirZwi4ahhoV7B+q5hl5wE6eQLyM
+         TYMg==
+X-Gm-Message-State: AOJu0YwVxn6upPPRttmdQmSdSjOmiQUI8AIv2b1CxVwlK8GeJ0lHsu1I
+	xe9YaEO46kG/DXS+oja146/s/bLjBgUbubTHLHfKz7aZAmB4R7VWC0wNOojjIp8=
+X-Google-Smtp-Source: AGHT+IE+Rh5byA5+4RfuhgVDmEQbOyg3w/YYGC/qD0xJW0Xl2arSt0vCilMQiRGox+uasSLbDvJ/1w==
+X-Received: by 2002:a05:6512:3283:b0:51f:1bf8:610e with SMTP id 2adb3069b0e04-5220fc6d559mr1885977e87.37.1715358381642;
+        Fri, 10 May 2024 09:26:21 -0700 (PDT)
 Received: from fbxleo.iliad.local (freebox.vlq16.iliad.fr. [213.36.7.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b896aa5sm4952206f8f.34.2024.05.10.09.26.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b896aa5sm4952206f8f.34.2024.05.10.09.26.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 May 2024 09:26:16 -0700 (PDT)
+        Fri, 10 May 2024 09:26:21 -0700 (PDT)
 From: =?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
 To: linus.walleij@linaro.org
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	=?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
-Subject: [PATCH RESEND 1/2] pinctrl: core: take into account the pins array in pinctrl_pins_show()
-Date: Fri, 10 May 2024 18:25:38 +0200
-Message-ID: <6df39bd47942156be5713f8f4e317d2ad3e0ddeb.1714049455.git.lduboin@freebox.fr>
+Subject: [PATCH RESEND 2/2] pinctrl: core: reset gpio_device in loop in pinctrl_pins_show()
+Date: Fri, 10 May 2024 18:25:39 +0200
+Message-ID: <c40d0634abefa19e689ffd450e0f48a8d63c4fc4.1714049455.git.lduboin@freebox.fr>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <cover.1714049455.git.lduboin@freebox.fr>
 References: <cover.1714049455.git.lduboin@freebox.fr>
@@ -86,49 +86,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-We previously only looked at the 'pin_base' of the pinctrl_gpio_ranges
-struct for determining if a pin matched a GPIO number.
+We were not resetting the pointer to the associated gpio_device once
+we are done displaying a pin's information.
 
-This value is present only if the 'pins' array is not NULL,
-and is 0 otherwise. This means that GPIO ranges declared using
-gpiochip_add_pingroup_range(), thus making use of pins, were always matched
-by the pins in the range [0-npins] even if they contained pins in a
-completely separate range.
+This meant that once we reached the end of a gpio-range, if there
+were pins right after it that did not belong to any known range,
+they would be associated with the previous range's gpio device.
+
+This resulted in those pins appearing as <4294966783:old_gdev> instead
+of the expected <0:?> (due to gpio_num being -1).
 
 Signed-off-by: Léo DUBOIN <lduboin@freebox.fr>
 ---
- drivers/pinctrl/core.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/pinctrl/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 6649357637ff..901f2f9bf850 100644
+index 901f2f9bf850..ad878196ada9 100644
 --- a/drivers/pinctrl/core.c
 +++ b/drivers/pinctrl/core.c
-@@ -1672,11 +1672,20 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+@@ -1670,6 +1670,7 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
+ 		seq_printf(s, "pin %d (%s) ", pin, desc->name);
+ 
  #ifdef CONFIG_GPIOLIB
++		gdev = NULL;
  		gpio_num = -1;
  		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
--			if ((pin >= range->pin_base) &&
--			    (pin < (range->pin_base + range->npins))) {
--				gpio_num = range->base + (pin - range->pin_base);
--				break;
-+			if (range->pins != NULL) {
-+				for (int i = 0; i < range->npins; ++i) {
-+					if (range->pins[i] == pin) {
-+						gpio_num = range->base + i;
-+						break;
-+					}
-+				}
-+			} else if ((pin >= range->pin_base) &&
-+				   (pin < (range->pin_base + range->npins))) {
-+				gpio_num =
-+					range->base + (pin - range->pin_base);
- 			}
-+			if (gpio_num != -1)
-+				break;
- 		}
- 		if (gpio_num >= 0)
- 			/*
+ 			if (range->pins != NULL) {
 -- 
 2.42.0
 
