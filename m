@@ -1,119 +1,123 @@
-Return-Path: <linux-gpio+bounces-6306-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6307-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94EB98C28BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 18:26:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C58E8C294A
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 19:31:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A3711F213C6
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 16:26:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BDA8D1C21C2C
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 17:30:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF1DE1779A9;
-	Fri, 10 May 2024 16:26:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 023441BDC8;
+	Fri, 10 May 2024 17:30:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b="WjFSInR+"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="z5DxnAXS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C19176FAB
-	for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 16:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D045182C3
+	for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 17:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715358385; cv=none; b=HVWOZ02mFnKishm1OGjxRohNQ5HN46jRMCfr2LaFDPs2i/zji3z6u0YlmadUBW0cru7quh/YiP8OSNW1vfGzE5O8P2xU+xCpKT7EUVlyWNfyCGypnrHLWJOTaxISDjwbCnhd+C6LqAOmrUDTKrTLbh/fgvZvz2vQc74HLlaWvkg=
+	t=1715362232; cv=none; b=bEtxQEPmWIuzA6wFPfXJHjJJF5v1lMOp+qZxjrhmuYhwF6Sa7pNDFGAkrkiLpVO+SglhH3UvPX0O4PXxwSVK9oJ17/RaHc3BX1Hs7Ds6pVcPY1B7+gF0rYPtO8O+tYdh0P3KmMMmraZyzdhK/iWhpGYxjOlq9rfLGw3EK4ngtrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715358385; c=relaxed/simple;
-	bh=mUZACTmIvN9VpSJnu+37t6kjVWpWjqK6pTbjUJgvM2c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PPvRjGGEo3RivRFjKocBTgoas70v+L/67a5+ohcZus0LHIcDwRKP9ZhyKfcxi52osnkUA+R7SpX64WGLahZgh0dGB0U24D/4aTK+HUxDQhC3WaI0SGHNTCgKs4HWXIDpMBQtvI6yrTxFK2I+ymWqh2Y+2jSdfN43fen+l7B8piE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr; spf=pass smtp.mailfrom=freebox.fr; dkim=pass (2048-bit key) header.d=freebox-fr.20230601.gappssmtp.com header.i=@freebox-fr.20230601.gappssmtp.com header.b=WjFSInR+; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freebox.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freebox.fr
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51f45104ef0so2308894e87.3
-        for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 09:26:23 -0700 (PDT)
+	s=arc-20240116; t=1715362232; c=relaxed/simple;
+	bh=hafeYmzmAmpFYvZ7IQk64xn7yeH+cV6NM/sBG+qZIQM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bS226zdhf3f6PiVZOK3y2h/csnzuD7BZ45hdP2sJuf4gd1VcVX0pH586xabu5UzOgBWRNJCd7T9f+ERQSy6SMMAu7t3wZ1sYSPnmuGzUzRA3CzFpXeob5vPfXQ2ErbgTQ2qHWZaquwUtDB8picuqlwom5g5ds3imbGjgfZwh4JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=z5DxnAXS; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e4939c5323so27898501fa.2
+        for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 10:30:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=freebox-fr.20230601.gappssmtp.com; s=20230601; t=1715358382; x=1715963182; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1715362229; x=1715967029; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QyGh/Qwq5NmQyuXE/qEzsm92r8+stUz1K4JXovBXMG0=;
-        b=WjFSInR+004w6lES0+Sqg96x+A0/oUCJiki5+9SVN0gyrruZSBj3408Vqg1dOOgtJr
-         GIOkBovnH3X/SxyNGeCr7XtoXtydBSU4/m+w0jUvkEIihPxe9j7YAqFXm2Ouqw8Sap5M
-         kw60olOuLghrLDjttCacq7Uz3h8KMprNoZ5TYG2xxJoQKthweA+Cd8qJsI2XNsfF1RS3
-         BXEgRb4DgE7fQza9KXZGscn6oJMboPbeFLm0vgbREYo3MXBD+xbzLD8yTLNXjabZc5Sk
-         Y/fp7289weaEGP7neKAgR5rthEA6Yh2297aNDYclU3130+Ct72SkzoIv0SjvAC19dGJB
-         3nXQ==
+        bh=hafeYmzmAmpFYvZ7IQk64xn7yeH+cV6NM/sBG+qZIQM=;
+        b=z5DxnAXSU6ZymtGwCgl7RhDLkoyeQShwzLHeC3oRrI8grVbsrRjD2F6kI0retIwtds
+         AzD71/v8wpW+At9wGN1DGlQFgkAlMsd0SoM6zjiG2MPOf6/x93Bwv3z1POy2LdzTW2mj
+         iyW+cd3Iyfb/azfhTfaTM0dRtwgJPca7NBF59yrDl9waS6rbioewZNO6JhzFD4ZIwzmG
+         wqMO6CUWK87BFc/0w3WRlnKK9hD72Nvck79mb5erDks0Tqk/Rdb78yn0wFwMYcnPc+xj
+         6geRr1wHbBAv74X4cdu3ud92F2Q+mRQ0ghdq2zboJD7+vWYq+HxRqOkhBu0eWl1UZ0Ag
+         3MPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715358382; x=1715963182;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1715362229; x=1715967029;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QyGh/Qwq5NmQyuXE/qEzsm92r8+stUz1K4JXovBXMG0=;
-        b=LWQ/Hf9Iddw2u2z70HQfFcsBQz5ZsXSVIZKWEG7gEuFOTNRio6OYU70Q6591kwNgwq
-         Yrl0RpvsWIn3KSO7mxEzZ97gEDu2S2l2uS/I/2fqxryDzEUoBP8PIV1Ar8I+dwqdyJd/
-         jMCSvZT8Knm8SdmSEKmXQEcash9O8GvZGpqUoImX9nzOhoricoVv/VbjQEUDGCZvgcRV
-         hKlCmwgXTV5utWqSEhnbKHL274osOeHLRg9Nbw8cQ2P1OllSxX5XQVz6P4k27epzqVEA
-         979mwp0AgDbnTImHs6JLmOMbtD9BAgpppq6WXRJlCirZwi4ahhoV7B+q5hl5wE6eQLyM
-         TYMg==
-X-Gm-Message-State: AOJu0YwVxn6upPPRttmdQmSdSjOmiQUI8AIv2b1CxVwlK8GeJ0lHsu1I
-	xe9YaEO46kG/DXS+oja146/s/bLjBgUbubTHLHfKz7aZAmB4R7VWC0wNOojjIp8=
-X-Google-Smtp-Source: AGHT+IE+Rh5byA5+4RfuhgVDmEQbOyg3w/YYGC/qD0xJW0Xl2arSt0vCilMQiRGox+uasSLbDvJ/1w==
-X-Received: by 2002:a05:6512:3283:b0:51f:1bf8:610e with SMTP id 2adb3069b0e04-5220fc6d559mr1885977e87.37.1715358381642;
-        Fri, 10 May 2024 09:26:21 -0700 (PDT)
-Received: from fbxleo.iliad.local (freebox.vlq16.iliad.fr. [213.36.7.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b896aa5sm4952206f8f.34.2024.05.10.09.26.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 May 2024 09:26:21 -0700 (PDT)
-From: =?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
-To: linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?L=C3=A9o=20DUBOIN?= <lduboin@freebox.fr>
-Subject: [PATCH RESEND 2/2] pinctrl: core: reset gpio_device in loop in pinctrl_pins_show()
-Date: Fri, 10 May 2024 18:25:39 +0200
-Message-ID: <c40d0634abefa19e689ffd450e0f48a8d63c4fc4.1714049455.git.lduboin@freebox.fr>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <cover.1714049455.git.lduboin@freebox.fr>
-References: <cover.1714049455.git.lduboin@freebox.fr>
+        bh=hafeYmzmAmpFYvZ7IQk64xn7yeH+cV6NM/sBG+qZIQM=;
+        b=A04FN/WRA3RK0aCWdX2EoRr/SIhC8aZu42pbL8wVnFdLB58GJNIE2LNOuvR5rG1SJt
+         nX3zE78ZbnnRQa7goUWQxrDQ+Nj8xctfivkKmCMSSg6QE7zu6nfoy5pREQXHtWr2gCue
+         C/HDq5uq2oDmKS11iIsgaAhdy/HXXRNrR+Lj8YPsFDV+SxU3ogzobC6iivMvE8u2mMTk
+         k8qdZyPylTwL3H32wADS4RwLAYTb5uvAlg3LcftQv+fkAJarBhQcOIaqXjzp3VogSLKv
+         StpsMPN9+gmBduRBR2+eRUIoxw+mBKyBKZQH9kntCoIkrSz69oGwYt/Dz0/IDz4p7rkd
+         3fZg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8fGGsL1adEDFS5m72G851O7MQV18Nlsmf0RY/PvlfvMtkvSvPeR7JAEpsO2c9UkYyE4+PGdnuUw9JWYRsYcT07ht2vFWY473NyA==
+X-Gm-Message-State: AOJu0YxpoAe+/JPp1CCufWtGx19LVJzpBKAeuNML9FwTJPQwY1tlYiJi
+	ybLfgDvdkwvcvPxj7GKbJWtu2jbMoNG9XzeNcctuNZST1EVCVgUJlJka3/kdgU9x4+mro2ZFSuV
+	FRBvWEEeOzMUCF3zlfEpHkJiGewttAYVV/yjmdQ==
+X-Google-Smtp-Source: AGHT+IFC5U4tUTLmtZfD1n42fYZlcbiYrt6+0cTV9kidbE7Q74IhQSc8NPztNkj7UmseGnDFT/K2R3KJqoFmdm2dF3g=
+X-Received: by 2002:a2e:a40f:0:b0:2e4:a21a:bf7d with SMTP id
+ 38308e7fff4ca-2e51ff5234cmr33610941fa.21.1715362228679; Fri, 10 May 2024
+ 10:30:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240508144741.1270912-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Me3XOy6HfqjxDQBwnSW9pOCtK_Ry7keJ2LiXGFB88t4nA@mail.gmail.com>
+ <ZjzWlNdDVVBRD-Ma@surfacebook.localdomain> <CAMRc=MeuAQgos+=GmYr0X+5Pi+foJaRNwuNM0D3b4-FwxoD2mg@mail.gmail.com>
+ <Zj5AZMycTCPUoT-l@smile.fi.intel.com> <Zj5B5ONDI7DB86on@smile.fi.intel.com> <Zj5F8tidsVPkDGEi@smile.fi.intel.com>
+In-Reply-To: <Zj5F8tidsVPkDGEi@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 10 May 2024 19:30:17 +0200
+Message-ID: <CAMRc=Mfq50x5RUM76yYXG9hGh4vGTO2hTgFeO8Ty1Z0p3oo_2Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Return label, if set, for IRQ only line
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-We were not resetting the pointer to the associated gpio_device once
-we are done displaying a pin's information.
+On Fri, May 10, 2024 at 6:06=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Fri, May 10, 2024 at 06:48:52PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 10, 2024 at 06:42:28PM +0300, Andy Shevchenko wrote:
+> > > On Thu, May 09, 2024 at 04:23:07PM +0200, Bartosz Golaszewski wrote:
+> > > > On Thu, May 9, 2024 at 3:58=E2=80=AFPM Andy Shevchenko
+> > > > <andy.shevchenko@gmail.com> wrote:
+>
+> ...
+>
+> > > > Fair enough but I would like to know what your bigger plan is befor=
+e
+> > > > picking this up.
+> > >
+> > > I stand corrected, this patch has an immediate effect on the generic
+> > > gpiolib_dbg_show() which does *not* use the above mentioned call..
+> >
+> > Ah, but it doesn't use gpiod_get_label() in the else branch either...
+> >
+> > I want to amend the else branch there to print similar or reuse the mai=
+n one.
+> > For the latter I have locally a patch to modify gpiolib_dbg_show() to s=
+how
+> > the interrupt lines as well even if they are not requested.
+>
+> I just shared that patch, if you are okay with both, it would be nice
+> to have them applied.
+>
 
-This meant that once we reached the end of a gpio-range, if there
-were pins right after it that did not belong to any known range,
-they would be associated with the previous range's gpio device.
+Not for this merge window, we'll see in two weeks.
 
-This resulted in those pins appearing as <4294966783:old_gdev> instead
-of the expected <0:?> (due to gpio_num being -1).
-
-Signed-off-by: Léo DUBOIN <lduboin@freebox.fr>
----
- drivers/pinctrl/core.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 901f2f9bf850..ad878196ada9 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1670,6 +1670,7 @@ static int pinctrl_pins_show(struct seq_file *s, void *what)
- 		seq_printf(s, "pin %d (%s) ", pin, desc->name);
- 
- #ifdef CONFIG_GPIOLIB
-+		gdev = NULL;
- 		gpio_num = -1;
- 		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
- 			if (range->pins != NULL) {
--- 
-2.42.0
-
+Bart
 
