@@ -1,101 +1,139 @@
-Return-Path: <linux-gpio+bounces-6310-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6311-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAE008C29C5
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 20:20:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A6EF8C29CE
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 20:26:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32BD3B23E22
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 18:20:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C21D1C216FF
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 18:26:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 655BF22F19;
-	Fri, 10 May 2024 18:20:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3092374D9;
+	Fri, 10 May 2024 18:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cX0DXVNp"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="UBrzni0G"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CA322EE3
-	for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 18:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAB817BA3
+	for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 18:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715365240; cv=none; b=UiAYNFh/qWOxeb45AX3SGninsl0ZK+gxfHmvKj+fBbOT+8D7xuDZvXcVmGsDN1HcUyBYQy2AtjWYdwqtbkVQMMIlJl/WJMm+B8nlU456xPWbwPHzMvDZgy3cYtzybRCyVR/pt73vR464cifwVJE1knt2hOv7OiTjwvp1bHssqTc=
+	t=1715365607; cv=none; b=n1sS7ZQJaf/9/oHaVGFDBDAs0f6B4Lzbtm0tnv+fRjb0azAW8ZYuTmixTvvmojH95In4nAkwMwxOnBcS54LVn9lFsWeiTWwkOiHbMWsFPSpGVZGAsHV6DOtzQr+6S+xlFH3w8OACtUPOjRy4YHuVsePN/QoPTDn8FfI6OYeS9vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715365240; c=relaxed/simple;
-	bh=FIh9mIJOztl95rUL7+7HOkA/jTMURvkLGAkBDDGq7lc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WdnWVnbymUjC4NckuLxEFwaurqtwQ+M8kmbllJ3GgtDSGbPYy/vJ/25eG0L5O3QFmmH4vGMqlySER0HpiODKF85zuPkEIolmrHjgDrrjmDHmx5va/4bEDp1K23Pbnj88RD+HKmc5G2EAAFuT1dJpASsQ+0Qs6TwDWXQscGSFDcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cX0DXVNp; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715365239; x=1746901239;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FIh9mIJOztl95rUL7+7HOkA/jTMURvkLGAkBDDGq7lc=;
-  b=cX0DXVNpk6Ko0r4rsflNrrdfueofjbcohf6e4Y5/qCgRAHGECGr9yWZg
-   2ENEgONaBaI2PN+dmfxbMgvqPDsyKLocPWXKdCHkyzfAXwu4oUZg9a/UZ
-   ILq8AA1/+4Kqvd5+EMs+mIGd1bqpbVqsSPKEfqfqvy039nXT0ZHVL43JC
-   PpEOqz015guGcjxLEQP7ZgQ+O642JXg5vhHvIA/Cuc3Sl0M8WDcz0CG3x
-   lYDGyFrQjtJLXpnRA5Q4CfZAgWxE8yVpkV3sJfm6c+WGcdR/xFD+astJK
-   obky2OKas0GqNKKcSF4dD7zp2XZNA79CbMSE6+42vB1Uw+8kZ/ktraQqC
-   w==;
-X-CSE-ConnectionGUID: M0YX+i+lQ+GNOffD9Tu3JQ==
-X-CSE-MsgGUID: SJ2YCw8hSdWh1d9uNKjJWg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11069"; a="28846168"
-X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="28846168"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 11:20:39 -0700
-X-CSE-ConnectionGUID: JLVWtboYRu6UOyrBwpQ1Dg==
-X-CSE-MsgGUID: giDbbcm+RDyFBAa3RanYCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="60546505"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 11:20:36 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1s5UrB-00000006DMO-3RNN;
-	Fri, 10 May 2024 21:20:33 +0300
-Date: Fri, 10 May 2024 21:20:33 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: linux-gpio@vger.kernel.org
+	s=arc-20240116; t=1715365607; c=relaxed/simple;
+	bh=MhTpSYlniw09ynrGEPyV5q2Agl9hNAli8lBhN6J7RRg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k8LTvhYr6GPKFmqpH83F+oybGUvkKvUiIQGvh90RlhDUKP9Mvzp9K8j0TbzMQIhkQ/aLgt0hTaWpGBq21dm9i8x8VH+5xwABBVYq7/1BAysHHSKbHnCEqT5oeNWQyyKIwGacft8ZAqtDVep4zYD5RyTH9skI2QQXraKlnZkw600=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=UBrzni0G; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-34db6a299b2so1775261f8f.3
+        for <linux-gpio@vger.kernel.org>; Fri, 10 May 2024 11:26:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1715365603; x=1715970403; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3QEkrlUEm+5W5lnp6HukD9LF+vny0h09LkKwSRX06UI=;
+        b=UBrzni0G85wytcUfSXcnGCHf0H+AdUN+jfDwzItNR+6xb3qCMAvhPtrpGDQpmG0V+t
+         JIVBThQkIUgl7gO7WXxHxZYLmYjJpxqFY+i65+ll20yIHcFm4YWXln15k0tHfglurPg7
+         XyT3WUApoz7TZcoQ7X9W3TEC5NZngjCE5d3R4n3isgmP5j/XATbrRGYpSDqSPGDeCbuD
+         fEpCzmu5HVZzW3kDy3SrgEiFrEghLeeaq+j7a3kjXbUe1LzxKC0gG+jcH8ZSGhUIix1D
+         FMSqgCwfh/IT+z70rE9998iThzQCUA2EviI3wfy5FoBPQbYLMF11W7Xns4AR4u0hID0f
+         /w+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715365603; x=1715970403;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3QEkrlUEm+5W5lnp6HukD9LF+vny0h09LkKwSRX06UI=;
+        b=fNhFHZ0O0sokEZLlUMIT9DEOgbcD8sosdHWVGMXzBFUYjV2eqdqFGuKNuOVlUz3o98
+         btjG/oq0bAMd/WfYR1IsNxYww2kaQcFpVqVar+Ag1hsH1/WXPMiZs6detx4b7opqErgh
+         y8CNhOeUL1aIj3IuJXXDiOY2tWPCVSOiNFdkQhAogidFb1tBx8AD+8e+2G3K5+cjhlXb
+         eSS4cnzYqR+WPc9prXB1JEPdNeFIziA51GTg9R6gfoYUJE5K9gNWibvatmOC9lEozQgy
+         k856c2th8orQ7fmldibw5PcyjE/5Cg5p6GnqeJd5JMUVnAv0kRamrIRVEzZKdwwFRRZd
+         oLgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJYEyDkbFgJrs7c9OSRg6I9CK3MjV49qCSmVPUCunIgApfGjn3PkcqoY+pDEVmMO9vxi1sFAXItNAH8Rxg53Huv8aueF80DAJvlg==
+X-Gm-Message-State: AOJu0YzGkEavglxXMDCHp2qyZp0pTlfVvnMMDg9QmELM30LWG29+ygWo
+	s9N7RDIz2GIJO0VvgmpViXvsaC8Wj3RbrN9BgqKAC/XAOmOzi9iBB5Dnhw8q0Do=
+X-Google-Smtp-Source: AGHT+IFeLwkav5v4iPuh0Gz6pchGRbm+soi1ErYGVONkn6HlYK04px73Z1UuB08Vyrm3T8na5XY68A==
+X-Received: by 2002:adf:f60d:0:b0:34e:aef7:4ff9 with SMTP id ffacd0b85a97d-3504aa62e64mr2798361f8f.61.1715365603515;
+        Fri, 10 May 2024 11:26:43 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:f6ed:a982:f92e:840c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b8a789asm5184745f8f.51.2024.05.10.11.26.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 May 2024 11:26:43 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	William Breathitt Gray <wbg@kernel.org>
-Subject: Re: GPIO drivers under drivers/char/
-Message-ID: <Zj5lce8vzGhJWVeA@smile.fi.intel.com>
-References: <Zj5agJGxhpyO4zp-@smile.fi.intel.com>
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: fixes for v6.9
+Date: Fri, 10 May 2024 20:26:40 +0200
+Message-Id: <20240510182640.44486-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zj5agJGxhpyO4zp-@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-(Update William's email; btw, William, it seems MAINTAINERS need an update, or .mailcap)
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On Fri, May 10, 2024 at 08:33:53PM +0300, Andy Shevchenko wrote:
-> Hi!
-> 
-> Due to patch bomb from Jens, I noticed that we have two interesting drivers
-> (and a common library) under drivers/char/. Shouldn't we move them to
-> drivers/gpio/ to keep an eye on that (with the respective update of MAINTAINERS
-> if needed)? Also William might say something about this since those are old ISA
-> (?) related ones and (perhaps?) might utilise PC-104 code.
+Linus,
 
--- 
-With Best Regards,
-Andy Shevchenko
+Here are some last-minute fixes for this release from the GPIO subsystem.
 
+The first two address a regression in performance reported to me after the
+conversion to using SRCU in GPIOLIB that was merged during the v6.9 merge
+window. The second patch is not technically a fix but since after the
+first one we no longer need to use a per-descriptor SRCU struct, I think
+it's worth to simplify the code before it gets released on Sunday.
 
+The next two commits fix two memory issues: one use-after-free bug and
+one instance of possibly leaking kernel stack memory to user-space.
+
+Please pull,
+Bartosz
+
+The following changes since commit e67572cd2204894179d89bd7b984072f19313b03:
+
+  Linux 6.9-rc6 (2024-04-28 13:47:24 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.9
+
+for you to fetch changes up to ee0166b637a5e376118e9659e5b4148080f1d27e:
+
+  gpiolib: cdev: fix uninitialised kfifo (2024-05-10 16:38:27 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.9
+
+- fix a performance regression in GPIO requesting and releasing after
+  the conversion to SRCU
+- fix a use-after-free bug due to a race-condition
+- fix leaking stack memory to user-space in a GPIO uABI corner case
+
+----------------------------------------------------------------
+Bartosz Golaszewski (2):
+      gpiolib: fix the speed of descriptor label setting with SRCU
+      gpiolib: use a single SRCU struct for all GPIO descriptors
+
+Kent Gibson (1):
+      gpiolib: cdev: fix uninitialised kfifo
+
+Zhongqiu Han (1):
+      gpiolib: cdev: Fix use after free in lineinfo_changed_notify
+
+ drivers/gpio/gpiolib-cdev.c | 18 ++++++++++++--
+ drivers/gpio/gpiolib.c      | 58 ++++++++++++++++++++++++++++-----------------
+ drivers/gpio/gpiolib.h      | 17 ++++++++-----
+ 3 files changed, 63 insertions(+), 30 deletions(-)
 
