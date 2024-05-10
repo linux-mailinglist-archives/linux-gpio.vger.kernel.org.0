@@ -1,140 +1,111 @@
-Return-Path: <linux-gpio+bounces-6295-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6296-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F69C8C271A
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 16:46:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F29E68C271E
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 16:47:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 407141F256F4
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 14:46:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5AC5DB24331
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 14:47:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5C551708BC;
-	Fri, 10 May 2024 14:46:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18B79171086;
+	Fri, 10 May 2024 14:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e6M65UEp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Li9vp/Te"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA00B168AFC;
-	Fri, 10 May 2024 14:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E8912C526;
+	Fri, 10 May 2024 14:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715352381; cv=none; b=i+BqwmF1bQL5F55Lg9Pvi/m7xHWjEhnPCgyRCXgIv/SIOFJoPfiiQLDqm2/JWKka0NQpvb+hARuwSDLDqsLMj4bo2DGLyD8Ww2a58OOkkwpCzoNYhEl5S0dTJgPsIYIhmglh3WpZRgXqzo1glWcX8q2z8LcIPCotr8AjQFZbIZo=
+	t=1715352453; cv=none; b=CkWDK2uoBxiasjNRPnnaSTlMeP7Lb/M1T2+fw2mdJWwiZga5dv5+sCoAr6brHJN0/Kbbl+cZNUUOVGsb83BaxP//pruaj4/kcDOkSlUl9+hp1bycY7pCrENVhx/vSvbLL47m3yz4u41qAk+YHeG0r8pJsGWIP2qKYU8jnQfPdVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715352381; c=relaxed/simple;
-	bh=PiJqpHpxECsvIuqM1iLqQKFUGF/+tlUVyGz3yiigaxc=;
+	s=arc-20240116; t=1715352453; c=relaxed/simple;
+	bh=TnctR5VIFK9cG6OWB0Ya5IbDIo4SYtggYGdcqptbWFs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eN4QDnp+cxd8vvqkvT9xCA5Mms3qj0PN6JlqQAUcdNGmGDzuw443iTMk3V5xbwF9xQq5rrFU26usFXLTFZX9geiZMxWNG8GuZOYADScrABzTbMFFXgGYqR4LI/4b9ir5CLBBtjsua+CBY8CgFHtUi7jtxrHNgv0tVtS/00leelI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e6M65UEp; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715352380; x=1746888380;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PiJqpHpxECsvIuqM1iLqQKFUGF/+tlUVyGz3yiigaxc=;
-  b=e6M65UEpiVRZGk0vyMlIXzGZUZKg6wH/jXjxK2BE7w7J4vp2bJt0c/7m
-   IXqdspOLU7ReSCBVN8yIupzT9f+RjgWaaUul5sXjXCbqcqngkrVt+wW9N
-   4FCLHrHr2GBKRCVBqQf8Q+LKV1PGQ/cXjwBh95OSDjM7/e7FcGapepCvv
-   /kJ47Z0RM6uDiwbHVJwptQcsT+0O+X2rH7Xc22hwZsIqiSNVi1+3+UwmR
-   ei3JjUhMS8yEMTEfKwk0A7TVnMb+aqe1d3DEMcvZuZq97mYdz6QHaX9Qc
-   qgGCpdozTk2a0oZ6eSxe1Ze8Jr1xdwsce5Cqywjyag+vW+mAEqBi+r7F6
-   w==;
-X-CSE-ConnectionGUID: kLZfFGoOT6mNfacOOXS0Sg==
-X-CSE-MsgGUID: kwqZNo8TT6i7RG+TKneDYg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11186325"
-X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="11186325"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 07:46:20 -0700
-X-CSE-ConnectionGUID: JXtM5Uk0SgKoHE4imzvCnQ==
-X-CSE-MsgGUID: vDUdxz2dS/2Nxpe5MFM+EQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="34284943"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 07:46:17 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s5RVm-000000068IS-1O6i;
-	Fri, 10 May 2024 17:46:14 +0300
-Date: Fri, 10 May 2024 17:46:13 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Laura Nao <laura.nao@collabora.com>
-Cc: mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-	brgl@bgdev.pl, kernel@collabora.com, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	"kernelci.org bot" <bot@kernelci.org>
-Subject: Re: [PATCH] gpiolib: acpi: Add ACPI device NULL check to
- acpi_can_fallback_to_crs()
-Message-ID: <Zj4zNefxGUGKjxha@smile.fi.intel.com>
-References: <20240509104605.538274-1-laura.nao@collabora.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=exrDeOyXMC1C3e4G1oAdXO/qRh/eaYz600/W9cvHCxwDTVklofVHzNwhOXY2mbzOZ8/8afaE3Q3gGXdDiwfAsAMxY7BClhIMazomUJars5gTVB+Oi458t1p9A8zygtaM1nQpU61JqxE+VdkamY/LBOwRg9FksoFO/2eVBLCZNrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Li9vp/Te; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2FC5C113CC;
+	Fri, 10 May 2024 14:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715352453;
+	bh=TnctR5VIFK9cG6OWB0Ya5IbDIo4SYtggYGdcqptbWFs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Li9vp/TemlmLoGa4Drj5pMqrB9B/eOJ8kRGM9FJy8eKVlpYt0yEDycu79BLt8bMFT
+	 ZSbJrlTAFYmLm9w61RoIGnFUvDguhCJau2YdBOb5EcLVMhWCnwh4cEu19HqGuLKtK8
+	 CzbyV3grZA7zvPzYepKxWUGbRjq2KQy1z0B3BlX+mS5MeK+6L9pcbb/uVY00aaDU6l
+	 jHJnij6hDeqdzK0/jSuDqeONHD6Vs66goJwDZqkYewjuzZq3cb9Qq5Bifmt9XexbtV
+	 OwbO+e21a8eUDlmFFVhKpJUJlL80dRmtQm9j7CH0yKpqhDwOH42DOlLe0bciQ0xxT/
+	 z7Z9Jf89ol4wg==
+Date: Fri, 10 May 2024 15:47:26 +0100
+From: Lee Jones <lee@kernel.org>
+To: Alex Bee <knaerzche@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Chris Zhong <zyw@rock-chips.com>,
+	Zhang Qing <zhangqing@rock-chips.com>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [GIT PULL] Immutable branch between MFD, Pinctrl and Regulator due
+ for the v6.10 merge window
+Message-ID: <20240510144726.GB6146@google.com>
+References: <20240416161237.2500037-1-knaerzche@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240509104605.538274-1-laura.nao@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240416161237.2500037-1-knaerzche@gmail.com>
 
-On Thu, May 09, 2024 at 12:46:05PM +0200, Laura Nao wrote:
-> Check ACPI device for NULL inside acpi_can_fallback_to_crs(), so callers
-> won't need to.
+Enjoy!
 
-Thank you for the patch, one change seems good to have along this.
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
 
-...
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
 
->  	/* Never allow fallback if the device has properties */
-> -	if (acpi_dev_has_props(adev) || adev->driver_gpios)
-> +	if (!adev || acpi_dev_has_props(adev) || adev->driver_gpios)
+are available in the Git repository at:
 
-Right, since it was adev || _crs() combined.
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pinctrl-regulator-v6.10
 
->  		return false;
+for you to fetch changes up to 5eb068da74a0b443fb99a89d9e5062691649c470:
 
-Now we may remove that check from __acpi_find_gpio():
+  regulator: rk808: Add RK816 support (2024-05-03 09:15:38 +0100)
 
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -988,10 +988,10 @@ __acpi_find_gpio(struct fwnode_handle *fwnode, const char *con_id, unsigned int
- 	}
- 
- 	/* Then from plain _CRS GPIOs */
--	if (!adev || !can_fallback)
--		return ERR_PTR(-ENOENT);
-+	if (can_fallback)
-+		return acpi_get_gpiod_by_index(adev, NULL, idx, info);
- 
--	return acpi_get_gpiod_by_index(adev, NULL, idx, info);
-+	return ERR_PTR(-ENOENT);
- }
- 
- struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
+----------------------------------------------------------------
+Immutable branch between MFD, Pinctrl and Regulator due for the v6.10 merge window
 
+----------------------------------------------------------------
+Alex Bee (5):
+      dt-bindings: mfd: Add rk816 binding
+      mfd: rk8xx: Add RK816 support
+      pinctrl: rk805: Add rk816 pinctrl support
+      regulator: rk808: Support apply_bit for rk808_set_suspend_voltage_range
+      regulator: rk808: Add RK816 support
 
-As a side effect it will make the comment better to understand.
-
-With above suggestion applied, feel free to add mine
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-You might need to rephrase the commit message to say that
-
- "We also move the check in additional to the moving the function call
- outside of __acpi_find_gpio()."
-
-or something similar, up to you.
+ .../devicetree/bindings/mfd/rockchip,rk816.yaml    | 274 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   4 +-
+ drivers/mfd/rk8xx-core.c                           | 104 ++++++++
+ drivers/mfd/rk8xx-i2c.c                            |  45 +++-
+ drivers/pinctrl/pinctrl-rk805.c                    |  69 ++++++
+ drivers/regulator/rk808-regulator.c                | 218 +++++++++++++++-
+ include/linux/mfd/rk808.h                          | 144 +++++++++++
+ 7 files changed, 851 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rockchip,rk816.yaml
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lee Jones [李琼斯]
 
