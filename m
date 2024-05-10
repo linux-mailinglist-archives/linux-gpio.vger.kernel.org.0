@@ -1,116 +1,104 @@
-Return-Path: <linux-gpio+bounces-6302-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6303-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12CF08C286B
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 18:05:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E05388C286D
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 18:06:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B59AA2840FF
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 16:05:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9265528713D
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 May 2024 16:06:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B76B9171E75;
-	Fri, 10 May 2024 16:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OuzbwB8S"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08225172760;
+	Fri, 10 May 2024 16:06:17 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D840086AC9;
-	Fri, 10 May 2024 16:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4361A86AC9;
+	Fri, 10 May 2024 16:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715357140; cv=none; b=OHECm2hEPte0/CcbX6NKNSTI7iY24G5hSgDLjFuErY/a8Q3hDKs3+zW2nfmhl8OUB32wnOgSsc89I7TZgX86b8lqZawnZJNZUduoi2he+4wjL+ucZ/LdxZmt7V3mAxgi29PdOMiCht9v3L0AvTBz/txpMlGbdbYfXBpEk7vYZDA=
+	t=1715357176; cv=none; b=LtBcMCLz+z2NVTtRemp9pNOooQ1ns4ywHPW4n2r1XWbtLMI3Yrc9MFm2KEVIDlqGrJhSYA9GkgfNTdIJ/rOu1IIk0CqpGmLR2HSpnDWvqz3ikgr1NM9IaQ1XWtnK7nr4lIs15APGxIZcPtFzcDvL0J0m/5P/SfoDf3Rx5dxW1f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715357140; c=relaxed/simple;
-	bh=ckj5we4N/Mr2/EJ4drL/UB/mvFMDyVnjq5odoSR/r48=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qrJIE9PXKQmGUj9UVm3qhsWWOaTRodmO+OkyeTJr0ezLKXWlCfNZyzkgm8jGTW8EXCsopFf4QnkQTU3h1B9B17BSrrQzItW362JZjlPe0gVIwcciQ/AJGrSk330DeBDYERzORHX1YbcGWys7fXz+SDJLDew1IsXL1SAIE9WR67Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OuzbwB8S; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715357139; x=1746893139;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ckj5we4N/Mr2/EJ4drL/UB/mvFMDyVnjq5odoSR/r48=;
-  b=OuzbwB8SznXv3GQLnvcPsdiCcYe8pdQjjfg04raJ06VjyhvymYsYb8tR
-   sGDlwmfFrYbzzyfQc4QNmmQtnrN4rbQRIgTHtDEQLMZCKFRUTIuS+4cxM
-   GC8O8ZSXoM0DYvVXz2ZLFXhqNiz5JB/n2CBLZOkIjinp/Eyv6U383I3UG
-   MZb5Q4MMVpSRzbRFF/4HNpRseTP+NP6mz0cYOTgl/+qbfZg5cHqcSWLQ1
-   JJI4xEBhX8SWMlfUfn+x1q7AVXfsoSwwqpDQgoGDt27CO2DTg2p02IWRg
-   AJDomh5FohAnRHGF4nHSvJhfYdFikcpPeqrBp7GVElVQXVj3wJZEpoVvF
-   g==;
-X-CSE-ConnectionGUID: QqZyACbDSlmk8yP7KSX9ZA==
-X-CSE-MsgGUID: 6ZYm18FZS7KPo4wK3Q0PyQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="15138974"
+	s=arc-20240116; t=1715357176; c=relaxed/simple;
+	bh=j4uybE4YtEbAjUzCWbZKx6q2ZjgRPAq1bLEfLHhDuw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OZEG8+gXsCtvaC9c/XAzfXsvidB2evdpLAbVxitIJPl6aoGIh8PKWb/yIfF0iFlXuKGQ627JbTP0iTS0wDMupIP5vaGBwYSmYhq+mMmeAkZuV+PfjOavWL5AKIu8JIx9iEt9JF63ywdOw3756cbiAqZnNhUCURu1lN+qksJL1vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-CSE-ConnectionGUID: mVXQsOBkSjygL9ozmWzqgw==
+X-CSE-MsgGUID: smyKGbogQi2X0x+5kIInoQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11469506"
 X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="15138974"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 09:05:38 -0700
-X-CSE-ConnectionGUID: nx/gAas6R2K029o6hJO2eQ==
-X-CSE-MsgGUID: 4UEzSVr8RWmxHesvKJGPZw==
+   d="scan'208";a="11469506"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 09:06:15 -0700
+X-CSE-ConnectionGUID: lUNcjwIEQkGtdFvPVS453Q==
+X-CSE-MsgGUID: wQeDrx6eSSGMoqtL4tfOuQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="34099315"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 10 May 2024 09:05:36 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 5D5D41AC; Fri, 10 May 2024 19:05:35 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+   d="scan'208";a="29609303"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 09:06:13 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1s5Sl8-000000069ns-43Bb;
+	Fri, 10 May 2024 19:06:10 +0300
+Date: Fri, 10 May 2024 19:06:10 +0300
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] gpiolib: Show more info for interrupt only lines in debugfs
-Date: Fri, 10 May 2024 19:04:46 +0300
-Message-ID: <20240510160534.2424281-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] gpiolib: Return label, if set, for IRQ only line
+Message-ID: <Zj5F8tidsVPkDGEi@smile.fi.intel.com>
+References: <20240508144741.1270912-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Me3XOy6HfqjxDQBwnSW9pOCtK_Ry7keJ2LiXGFB88t4nA@mail.gmail.com>
+ <ZjzWlNdDVVBRD-Ma@surfacebook.localdomain>
+ <CAMRc=MeuAQgos+=GmYr0X+5Pi+foJaRNwuNM0D3b4-FwxoD2mg@mail.gmail.com>
+ <Zj5AZMycTCPUoT-l@smile.fi.intel.com>
+ <Zj5B5ONDI7DB86on@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zj5B5ONDI7DB86on@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Show more info for interrupt only lines in debugfs. It's useful
-to monitor the lines that have been never requested as GPIOs,
-but IRQs.
+On Fri, May 10, 2024 at 06:48:52PM +0300, Andy Shevchenko wrote:
+> On Fri, May 10, 2024 at 06:42:28PM +0300, Andy Shevchenko wrote:
+> > On Thu, May 09, 2024 at 04:23:07PM +0200, Bartosz Golaszewski wrote:
+> > > On Thu, May 9, 2024 at 3:58 PM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+...
 
-For the reference. May be applied together with
-20240508144741.1270912-1-andriy.shevchenko@linux.intel.com
-as a precursor.
+> > > Fair enough but I would like to know what your bigger plan is before
+> > > picking this up.
+> > 
+> > I stand corrected, this patch has an immediate effect on the generic
+> > gpiolib_dbg_show() which does *not* use the above mentioned call..
+> 
+> Ah, but it doesn't use gpiod_get_label() in the else branch either...
+> 
+> I want to amend the else branch there to print similar or reuse the main one.
+> For the latter I have locally a patch to modify gpiolib_dbg_show() to show
+> the interrupt lines as well even if they are not requested.
 
- drivers/gpio/gpiolib.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I just shared that patch, if you are okay with both, it would be nice
+to have them applied.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 1f1673552767..4cd7e05f3e5b 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4801,11 +4801,11 @@ static void gpiolib_dbg_show(struct seq_file *s, struct gpio_device *gdev)
- 
- 	for_each_gpio_desc(gc, desc) {
- 		guard(srcu)(&desc->srcu);
--		if (test_bit(FLAG_REQUESTED, &desc->flags)) {
-+		is_irq = test_bit(FLAG_USED_AS_IRQ, &desc->flags);
-+		if (is_irq || test_bit(FLAG_REQUESTED, &desc->flags)) {
- 			gpiod_get_direction(desc);
- 			is_out = test_bit(FLAG_IS_OUT, &desc->flags);
- 			value = gpio_chip_get_value(gc, desc);
--			is_irq = test_bit(FLAG_USED_AS_IRQ, &desc->flags);
- 			active_low = test_bit(FLAG_ACTIVE_LOW, &desc->flags);
- 			seq_printf(s, " gpio-%-3u (%-20.20s|%-20.20s) %s %s %s%s\n",
- 				   gpio, desc->name ?: "", gpiod_get_label(desc),
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+With Best Regards,
+Andy Shevchenko
+
 
 
