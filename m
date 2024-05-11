@@ -1,121 +1,64 @@
-Return-Path: <linux-gpio+bounces-6316-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6318-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 555A08C314D
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 May 2024 14:41:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 258C38C3228
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 May 2024 17:34:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F453281FBF
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 May 2024 12:41:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D04EF1F216EB
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 May 2024 15:34:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6934D42044;
-	Sat, 11 May 2024 12:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHQBofdD"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8C5556459;
+	Sat, 11 May 2024 15:34:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from server233.hosting.reg.ru (server233.hosting.reg.ru [31.31.198.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269793F9FB
-	for <linux-gpio@vger.kernel.org>; Sat, 11 May 2024 12:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74CD38DD3
+	for <linux-gpio@vger.kernel.org>; Sat, 11 May 2024 15:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=31.31.198.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715431293; cv=none; b=HKsJ9q/A8Sos1Nz2mfgPbagUvd+XFP8tsnWiIWEq6GOkxIwUP0M9lotj2SDKJLihlJzrzV2QULtETwmpjZqkAmFxrxWO//ssU6cJgNSA4yMHz43OeEC62xw5eY0BB4/G6cLDImgYsj9fH97HRHEXTfOeIIvN1WrUEvhpZdoTjCQ=
+	t=1715441667; cv=none; b=de7vQiyWKVGyOaGBO2Kix3P/oI8GdC09V0DTgA2X3E5/fJDrMXYSjWZnczZJUka7qR1DHDAq9bEqpGTB5z1pEM7K8RW3mlcHY+Az2PZQGdXN2Rh6P2W+U/gGWZSKjRw7LnFv6Kb2xdLFkb1hFhiMDkzq5CfdkWWuF5Cv3CA9FoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715431293; c=relaxed/simple;
-	bh=avN3Xg3Mbfc96QLRWHhwQNaqyLEHRO9S1hxukvt0CNQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qpv9MqvrSeyhB1E60I9/P1UlUrAILcZtfmdllwCiF2yEobhkaJGJVlsJbnjiDhhJw28u89NzXSJ3lbFjfQNAwqh9YZkFgYJb0WwqKH+gNfhb4fshSOXg+4kzYo/U4u5be/mCHPput1AKMT2Rb+28G93xSwFwJB874xF95oPYfRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHQBofdD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50CF3C2BBFC;
-	Sat, 11 May 2024 12:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715431292;
-	bh=avN3Xg3Mbfc96QLRWHhwQNaqyLEHRO9S1hxukvt0CNQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NHQBofdDefqWJ/XLFYoTiG8KOrkVcCoXGSapOuAxhyEvIFGPO0e5AxGs1awLh7GSX
-	 0g8ep98qyZfIUyj6eDSd9acaXsVS0fKryMhVaX6kLaHSutfM41JZnl2t0XtqWmh/Md
-	 pFbMpoH992PxYOliMxxGQoH4G8ttoF/g3+ZL9o/4fs1i0M1JE6ranpoA+DJgx74g3m
-	 61cSIltsizhSjjHqjvm308C3y4f07YTM6PKuK3zREsBus+9vaHzsFY0Phg0GErepio
-	 R8VbG7lQUPFLMML5BtLSGAE0jgogbNlIFw57K/NCM+gI5AdyD4CXSZuKoLgPGmPj7o
-	 bmYp+nubkvBLQ==
-Date: Sat, 11 May 2024 21:41:28 +0900
-From: William Breathitt Gray <wbg@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: GPIO drivers under drivers/char/
-Message-ID: <Zj9neMiKZH9vlsKp@ishi>
-References: <Zj5agJGxhpyO4zp-@smile.fi.intel.com>
- <Zj5lce8vzGhJWVeA@smile.fi.intel.com>
+	s=arc-20240116; t=1715441667; c=relaxed/simple;
+	bh=gG7Z8aYIXCruQJYRbRXZhmbq+n0rEGrAFjp3vU7qYjM=;
+	h=To:Subject:Date:From:Message-ID:MIME-Version:Content-Type; b=sbRQCdy3ePzCTLEp6Sil+SkQfW/yiWBjzNKS1MofY26kB4K38przvGbhnddjogmU1WKTxLUEBYZNW6FYkv6XTM2jkeVRdE8cyEdhS5TYCr0C1tsoCnk8oE+3DtnKs+i0we/R+gjqZcAIZrmodkYv9kL6zHbqwYq5RH+v/r9YqFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nextmail.ru; spf=fail smtp.mailfrom=nextmail.ru; arc=none smtp.client-ip=31.31.198.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nextmail.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nextmail.ru
+Received: from u0756578 by server233.hosting.reg.ru with local (Exim 4.97.1)
+	(envelope-from <tox@nextmail.ru>)
+	id 1s5ncv-00000000TIx-3uKc
+	for linux-gpio@vger.kernel.org;
+	Sat, 11 May 2024 17:23:05 +0300
+To: linux-gpio@vger.kernel.org
+Subject: =?utf-8?Q?=D0=9A=D0=BE=D0=BF=D0=B8=D1=8F:_Wishing_for_More_Meaningful_Con?=  =?utf-8?Q?versations?=
+Date: Sat, 11 May 2024 17:23:05 +0300
+From: =?utf-8?B?0JzQtdC20LTRg9C90LDRgNC+0LTQvdCw0Y8g0JDRgdGB0L7RhtC40LDRhtC4?=
+ =?utf-8?B?0Y8g0LLQtdGC0LXRgNCw0L3RgdC60LjRhSDQvtGA0LPQsNC90LjQt9Cw0YY=?=
+ =?utf-8?B?0LjQuQ==?= <tox@nextmail.ru>
+Reply-To: getFoure <linux-gpio@vger.kernel.org>
+Message-ID: <50961f2b6fb8f69ec403b5e2dbcdf74f@iavo.org>
+X-Priority: 3
+X-Mailer: PHPMailer 5.2.1 (http://code.google.com/a/apache-extras.org/p/phpmailer/)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="F5qTcyqTReKKx6d5"
-Content-Disposition: inline
-In-Reply-To: <Zj5lce8vzGhJWVeA@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
 
+Это копия сообщения, которое вы отправили Написать нам через Международная Ассоциация ветеранских организаций
 
---F5qTcyqTReKKx6d5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Это письмо отправлено с сайта https://iavo.org/ от:
+getFoure <linux-gpio@vger.kernel.org>
 
-On Fri, May 10, 2024 at 09:20:33PM +0300, Andy Shevchenko wrote:
-> (Update William's email; btw, William, it seems MAINTAINERS need an updat=
-e, or .mailcap)
->=20
-> On Fri, May 10, 2024 at 08:33:53PM +0300, Andy Shevchenko wrote:
-> > Hi!
-> >=20
-> > Due to patch bomb from Jens, I noticed that we have two interesting dri=
-vers
-> > (and a common library) under drivers/char/. Shouldn't we move them to
-> > drivers/gpio/ to keep an eye on that (with the respective update of MAI=
-NTAINERS
-> > if needed)? Also William might say something about this since those are=
- old ISA
-> > (?) related ones and (perhaps?) might utilise PC-104 code.
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
+ 
+Dearest, you're the destination of my journey. 
+Whenever you find the time, might you visit my page using this link: https://tinyurl.com/22yspntc I've posted some recent photos and updates from recent events there. It would be fantastic to catch up and share our experiences.
 
-Thank you for the forward; I'm updating MAINTAINERS to match my
-kernel.org address from now on so that we don't have this problem again
-in the future. :-)
-
-Regarding the gpio char drivers, I take it you are referring to the
-nsc_gpio used by scx200_gpio and pc8736x_gpio. I agree, these should be
-moved to the GPIO subsystem so they're with the old GPIO drivers (and
-ported to the standard GPIO interface we have there if they're not
-already).
-
-Taking a quick look, neither of these are PC-104 devices, but rather
-appear to be part of the Super I/O chip. Regardless, the driver
-interface can be the same since they're both performing ioport
-operations over an ISA bus essentially. You can utilize
-include/linux/isa.h and leverage the module_isa_driver() like what we do
-in the gpio-mm driver.
-
-William Breathitt Gray
-
---F5qTcyqTReKKx6d5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZj9neAAKCRC1SFbKvhIj
-K4iZAQCBp4kX9sMAYppdnYkv3nZ+4PZgbgAm+zb67e4Nk4YjRwEA6GKWBV32IK/k
-9yI1hmtbsST+4ibug2yowDgz+h8lRQU=
-=FoYW
------END PGP SIGNATURE-----
-
---F5qTcyqTReKKx6d5--
 
