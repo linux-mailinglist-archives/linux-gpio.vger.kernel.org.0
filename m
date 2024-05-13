@@ -1,105 +1,234 @@
-Return-Path: <linux-gpio+bounces-6341-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6342-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 317258C449D
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 17:52:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 242358C44B8
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 18:00:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E8781C22CA0
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 15:52:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 46C391C21261
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 16:00:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 982C0154BE8;
-	Mon, 13 May 2024 15:52:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5AF2155322;
+	Mon, 13 May 2024 16:00:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/ylobXw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQjlSwWK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45275154454;
-	Mon, 13 May 2024 15:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2E8154423
+	for <linux-gpio@vger.kernel.org>; Mon, 13 May 2024 16:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715615549; cv=none; b=L8UdWHWTzyZ9Pb9nUWyqRZtTgiKpN3ciSWpJx7QzazSVWmGYvpys70oOyA2TUphThWFuj5JnQzl0osq/tTRi+7sutydzIVxjX3e6FJrqnxoy6LlmLHcuEXrXMRRXX7bVHQWVCE07Q+ZtU0l9qeZUFxLh8IoNxKaN1s3HBLmafYw=
+	t=1715616042; cv=none; b=GUDgyAL03tsYj0vXxK7MMc35KlABMTcK2u2IsD5rucgg2rCGkqbsIMF4wEMu4QUJ/i5grkIClRLqZ2d3tLJu0gOBWH3TTtolgdY+FylN3R4Jvja02ivLMWEWCs6vLNR9pRl7QlYcvfskaVvhu/BCqyRN0+Z+/7N2T/OxSZ3+9oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715615549; c=relaxed/simple;
-	bh=75oUXoThArbKO9d+Z2VBTAalA0tvT0Hl3rs3i7zDhpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cLeU8tqnUPUejVam7XJci36zGcoLfiHS8noLV7yyNURcRplygSsYC/cIILY4Npjf+nh/l6I1gA/ygUi0aG4/TYhnai/x1lRMabd0T+Rkdq30ULaYQz8nHj49J0yKSZ84hiEukgFS76bIYGr2WReXuW9G1HETvmsjCNOjCWDoLVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/ylobXw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A04C113CC;
-	Mon, 13 May 2024 15:52:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715615548;
-	bh=75oUXoThArbKO9d+Z2VBTAalA0tvT0Hl3rs3i7zDhpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q/ylobXwd7VbMVe5SZijuHybR9/viyvDmLqnsjPI5wKdNrwYWOV9ldFMfbYgMjSW3
-	 CT1ar1NzJbZmkRAtbn5WLVNOxJKSJWm9n4yiHl75DDaX0eCqrgOR4+Jx2bq9/up9Nf
-	 frU78yhv9D+8CZwH8XqhNZcObRSxLJxqY096ijIm+pQ/SOaGG9xYrG8r1AYAjcl8Wk
-	 23yXpcQwUIuaYpr+1W0EzoxJbOSoQiDmgj1FAmXmpsJbPWjSXcPqb7glY1tevr3jHn
-	 hXMfdIP6cAEGP0zy8SpJyz5VoUIt+PlmlXmvhAB84ZEVOGBlQ4Al9k0s704R9UU3e1
-	 iAe6gIP0jxQqQ==
-Date: Mon, 13 May 2024 16:52:23 +0100
-From: Conor Dooley <conor@kernel.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: imx: Support i.MX91 IOMUXC
-Message-ID: <20240513-unmarked-lurk-70edc676de22@spud>
-References: <20240513-imx91-pinctrl-v1-0-c99a23c6843a@nxp.com>
- <20240513-imx91-pinctrl-v1-1-c99a23c6843a@nxp.com>
+	s=arc-20240116; t=1715616042; c=relaxed/simple;
+	bh=Uh6pKliHDjiDlMryuuvZ8WMdzrsu6kEPrlI/HCA8LYE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kymazAuBfLoI+M4GUaMhrBULP9wuKkdAEMxHLA+nGreTXNURrPnj7tWmINUEDt3b+0hYAT6d82PYwJF10a7bflGiXWB5I+M2w9BIx8q9jd40WK6HPp2tAE8H8Z3A0F2oZuYykAnNuu1I3f+VIrslhPadIfZ5I+N1Io5z7FHihhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IQjlSwWK; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-61eba9f9c5dso3447442a12.0
+        for <linux-gpio@vger.kernel.org>; Mon, 13 May 2024 09:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715616040; x=1716220840; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=brkn6v8SSbjYiuiZBSlHF51hLOGKsSq7XCa0uWmwoVc=;
+        b=IQjlSwWKzLuLPoEwNd6SHOjaUJonQ85kvkfDVzKZZSyRavvz7kPigsp71ZjbhPP3Re
+         8SGmdGOqQEHpN0exHcCaHPDmrDeKHvTWHISt0nxAf6lBX8i74Slix0tdrz3p4ir3SDgo
+         tRZN9WwlGpxOZBCtzr4bFqnPZRUC0/JD5NGCwYCekCmQ7ZlkdDx6nrs8d1lmxfi51XPQ
+         wwDaPuP6mv1y0y83HQMcFs5yHcBPY52dES8HpBynwmByuxuUPG0cDEU2Ns2H7CR7kCsP
+         arjp+Tts9VqAMrkL9MjKDBbdMDHQeHtgKACvfObrcvHordiHCwL9TEGjoxLIv6lWgVtF
+         CZbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715616040; x=1716220840;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=brkn6v8SSbjYiuiZBSlHF51hLOGKsSq7XCa0uWmwoVc=;
+        b=hh7DBmRsvokqH5kkzH/dSnim6uL/gD+Axjt/MPuc0dR80n2N5L8YEm5mXqjdAuHqeE
+         czo6UdkORmYY79rU475bjX5d5W8mHzD7h2UHjbgvWFbP958kAyi0CRzNHrPzLgPhaSSX
+         bqimQkgEPlgh0QljW3aNeuzvu4Lin8bTKSQ2QxysvkRGXbtEAHwhUC52wXnGjYgYYk4r
+         GpM98/z4vTM+3Qmws0iiGkbraSEd5hAUnK2OkZbgFb+mXAXYu/0Vv4KG5R8QmXscJxEa
+         mlaX5FZoR1kEJYTi2u/eWAOhyhn3HyYriv/TddNt0zFqcoNZY1Ak2CsSe0hl7WallXCk
+         E9Fw==
+X-Gm-Message-State: AOJu0Yypxzjs8uv9hVl0QcawoBdmOGxpgTvYy7e9BR6Eyt2y4jWkj88A
+	yv+fw/oWk167+qs9Ly8Az1KhJXEucChLEh4PeciOr1h4BT4dGJxujeCZ/Q==
+X-Google-Smtp-Source: AGHT+IE/gM42S+iLpQs0wAk0gU4ss5GFijo3Iwq6/z5ArfARUF+SvbeFnj/mnPlMhqHtUNunyuOPXA==
+X-Received: by 2002:a17:90b:11d4:b0:2b5:340d:cfcc with SMTP id 98e67ed59e1d1-2b6cc44f53bmr8446253a91.11.1715616040058;
+        Mon, 13 May 2024 09:00:40 -0700 (PDT)
+Received: from rigel.home.arpa (60-241-107-82.static.tpgi.com.au. [60.241.107.82])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b628ca5279sm9967544a91.41.2024.05.13.09.00.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 09:00:39 -0700 (PDT)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH] tests: add enable_debounce_then_edge_detection
+Date: Tue, 14 May 2024 00:00:31 +0800
+Message-Id: <20240513160031.309139-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="IB6mHrhOGrSkI2CG"
-Content-Disposition: inline
-In-Reply-To: <20240513-imx91-pinctrl-v1-1-c99a23c6843a@nxp.com>
+Content-Transfer-Encoding: 8bit
 
+A bug was recently discovered in the kernel that can result in the edge
+event fifo not being correctly initialised and stack contents being
+returned in edge events. The trigger for the bug is requesting a line with
+debounce, but not edge detection, and then reconfiguring the line to
+enable edge detection.
 
---IB6mHrhOGrSkI2CG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add a test case that triggers the bug.  This will fail on kernels that
+do not contain the fix for the bug.  The test is located in a new test
+file, tests-kernel-uapi.c, intended to contain tests specifically
+testing some aspect of the kernel uAPI, not libgpiod itself.
 
-On Mon, May 13, 2024 at 05:20:46PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> i.MX91 and i.MX93 share similar design. They could share same dt-binding
-> doc, so rename fsl,imx93-pinctrl.yaml to fsl,imx9-pinctrl.yaml and add
-> i.MX91 compatible string
->=20
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ tests/Makefile.am         |   1 +
+ tests/tests-kernel-uapi.c | 112 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 113 insertions(+)
+ create mode 100644 tests/tests-kernel-uapi.c
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 0680d5e..a5e1fe0 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -24,6 +24,7 @@ gpiod_test_SOURCES = \
+ 	tests-chip-info.c \
+ 	tests-edge-event.c \
+ 	tests-info-event.c \
++	tests-kernel-uapi.c \
+ 	tests-line-config.c \
+ 	tests-line-info.c \
+ 	tests-line-request.c \
+diff --git a/tests/tests-kernel-uapi.c b/tests/tests-kernel-uapi.c
+new file mode 100644
+index 0000000..453237c
+--- /dev/null
++++ b/tests/tests-kernel-uapi.c
+@@ -0,0 +1,112 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <bartekgola@gmail.com>
++// SPDX-FileCopyrightText: 2024 Kent Gibson <warthog618@gmail.com>
++
++#include <glib.h>
++#include <gpiod.h>
++#include <poll.h>
++
++#include "gpiod-test.h"
++#include "gpiod-test-helpers.h"
++#include "gpiod-test-sim.h"
++
++#define GPIOD_TEST_GROUP "kernel-uapi"
++
++static gpointer falling_and_rising_edge_events(gpointer data)
++{
++	GPIOSimChip *sim = data;
++
++	/*
++	 * needs to be as long as several system timer ticks or resulting
++	 * pulse width is unreliable and may get filtered by debounce.
++	 */
++	g_usleep(50000);
++
++	g_gpiosim_chip_set_pull(sim, 2, G_GPIOSIM_PULL_UP);
++
++	g_usleep(50000);
++
++	g_gpiosim_chip_set_pull(sim, 2, G_GPIOSIM_PULL_DOWN);
++
++	return NULL;
++}
++
++GPIOD_TEST_CASE(enable_debounce_then_edge_detection)
++{
++	static const guint offset = 2;
++
++	g_autoptr(GPIOSimChip) sim = g_gpiosim_chip_new("num-lines", 8, NULL);
++	g_autoptr(struct_gpiod_chip) chip = NULL;
++	g_autoptr(struct_gpiod_line_settings) settings = NULL;
++	g_autoptr(struct_gpiod_line_config) line_cfg = NULL;
++	g_autoptr(struct_gpiod_line_request) request = NULL;
++	g_autoptr(GThread) thread = NULL;
++	g_autoptr(struct_gpiod_edge_event_buffer) buffer = NULL;
++	struct gpiod_edge_event *event;
++	guint64 ts_rising, ts_falling;
++	gint ret;
++
++	chip = gpiod_test_open_chip_or_fail(g_gpiosim_chip_get_dev_path(sim));
++	settings = gpiod_test_create_line_settings_or_fail();
++	line_cfg = gpiod_test_create_line_config_or_fail();
++	buffer = gpiod_test_create_edge_event_buffer_or_fail(64);
++
++	gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_INPUT);
++	gpiod_line_settings_set_debounce_period_us(settings, 10);
++	gpiod_test_line_config_add_line_settings_or_fail(line_cfg, &offset, 1,
++							 settings);
++	request = gpiod_test_chip_request_lines_or_fail(chip, NULL, line_cfg);
++
++	gpiod_line_settings_set_edge_detection(settings, GPIOD_LINE_EDGE_BOTH);
++	gpiod_test_line_config_add_line_settings_or_fail(line_cfg, &offset, 1,
++							 settings);
++	gpiod_test_line_request_reconfigure_lines_or_fail(request, line_cfg);
++
++	thread = g_thread_new("request-release",
++			      falling_and_rising_edge_events, sim);
++	g_thread_ref(thread);
++
++	/* First event. */
++
++	ret = gpiod_line_request_wait_edge_events(request, 1000000000);
++	g_assert_cmpint(ret, >, 0);
++	gpiod_test_join_thread_and_return_if_failed(thread);
++
++	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
++	g_assert_cmpint(ret, ==, 1);
++	gpiod_test_join_thread_and_return_if_failed(thread);
++
++	g_assert_cmpuint(gpiod_edge_event_buffer_get_num_events(buffer), ==, 1);
++	event = gpiod_edge_event_buffer_get_event(buffer, 0);
++	g_assert_nonnull(event);
++	gpiod_test_join_thread_and_return_if_failed(thread);
++
++	g_assert_cmpint(gpiod_edge_event_get_event_type(event), ==,
++			GPIOD_EDGE_EVENT_RISING_EDGE);
++	g_assert_cmpuint(gpiod_edge_event_get_line_offset(event), ==, 2);
++	ts_rising = gpiod_edge_event_get_timestamp_ns(event);
++
++	/* Second event. */
++
++	ret = gpiod_line_request_wait_edge_events(request, 1000000000);
++	g_assert_cmpint(ret, >, 0);
++	gpiod_test_join_thread_and_return_if_failed(thread);
++
++	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
++	g_assert_cmpint(ret, ==, 1);
++	gpiod_test_join_thread_and_return_if_failed(thread);
++
++	g_assert_cmpuint(gpiod_edge_event_buffer_get_num_events(buffer), ==, 1);
++	event = gpiod_edge_event_buffer_get_event(buffer, 0);
++	g_assert_nonnull(event);
++	gpiod_test_join_thread_and_return_if_failed(thread);
++
++	g_assert_cmpint(gpiod_edge_event_get_event_type(event), ==,
++			GPIOD_EDGE_EVENT_FALLING_EDGE);
++	g_assert_cmpuint(gpiod_edge_event_get_line_offset(event), ==, 2);
++	ts_falling = gpiod_edge_event_get_timestamp_ns(event);
++
++	g_thread_join(thread);
++
++	g_assert_cmpuint(ts_falling, >, ts_rising);
++}
+-- 
+2.39.2
 
-Cheers,
-Conor.
-
---IB6mHrhOGrSkI2CG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkI3NwAKCRB4tDGHoIJi
-0pgzAQD3d1IeZ8b0wLTFJJ95fjJ2Q609ddPtd03Luv1hdENw4AEAsk0RA/+UlonM
-ssqf2EyqMRFAysuP6wxT2tTHB0c1RAY=
-=hAAr
------END PGP SIGNATURE-----
-
---IB6mHrhOGrSkI2CG--
 
