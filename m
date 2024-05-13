@@ -1,79 +1,89 @@
-Return-Path: <linux-gpio+bounces-6337-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6338-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0355D8C41D1
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 15:24:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC8DE8C41DE
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 15:27:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD42D1F22B7E
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 13:24:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86205B21045
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 13:27:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CD88152195;
-	Mon, 13 May 2024 13:24:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BC62152199;
+	Mon, 13 May 2024 13:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oeRQKCeI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFF751514E5;
-	Mon, 13 May 2024 13:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C451514C7
+	for <linux-gpio@vger.kernel.org>; Mon, 13 May 2024 13:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715606686; cv=none; b=Dyn1Z+ZlL8seiVX2A//Q+WaC7hfVfZaHoUOsEtAY+DGX6D6HME257LTqWC6CWMV+9QkbIn7iPEWLtOmsu6YYGglS2IyMQS33mKF1SiwOaJK33P7kqUS+BQ3TnmYpS+qQUfyvEFYTB4/g85sdaylh2r9UIfQiWYbcXCuRkhjFSOY=
+	t=1715606816; cv=none; b=JewK1EzGtOUu1FdSPoCMbOnjbCfEHbLh+5N2B6lfr/NDIWhATcEyuoBejjdnMvF28CJW9Wf8MFIuCm8Jp9dtRL5yhCLYO8/hpBk7n90RWh6OqozMusIWc7Gr6PotmrV2/ETsAZfJoG87NcCUHsD/jT+vUnLFVmma2lrt7oMQYRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715606686; c=relaxed/simple;
-	bh=/0f/9NJPEz9XROE4twEmI/N9FBspLI3sqJzJ1VENxgk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WfF5SfQv9bewzbHjBgYgdwBqraYF2s7CL/BLUwfaHonaztBJBOLZ4g2Mj2yaczUZw75Fm375YHpPqLJQHG7gTpmuuPMKLN6RbGa8ASJnJi1KqqfF+Ot/xo1+C/qnQwWAhM1rWivGXV5oXao/kYS2TytIJWAjXg8He74NytfX1Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FAB91007;
-	Mon, 13 May 2024 06:25:09 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B8603F7A6;
-	Mon, 13 May 2024 06:24:42 -0700 (PDT)
-Date: Mon, 13 May 2024 14:24:39 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v6 0/3] pinctrl: scmi: support i.MX95 OEM extensions
-Message-ID: <ZkIUl2SoCICsZy7Z@bogus>
-References: <20240513-pinctrl-scmi-oem-v3-v6-0-904975c99cc4@nxp.com>
+	s=arc-20240116; t=1715606816; c=relaxed/simple;
+	bh=b7K7kPrdH0lk2Did9nbk2rhIphWevYOhfPILVbZs3WI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=MTgwLF+qV5wUB0PvjQlrpq+RBmIrCtcFJD8vycE90Y6QwMcBa2V+EqqNXBbOvx84DUnNnKELYheXWlVnxP9+k7ByQcw/nLGtpl8oLJYXZquOx67cevqXy4zQ7AY9jkNfMzpZRuUR9IQ9bai9wFvfL/GqILsPwLSuPs0kbl2PVYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oeRQKCeI; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51f0602bc58so4840853e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 13 May 2024 06:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1715606813; x=1716211613; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=b7K7kPrdH0lk2Did9nbk2rhIphWevYOhfPILVbZs3WI=;
+        b=oeRQKCeIbRUfDUDOyt6l8fmf+xwPyj/ahWyUbaUZ3iFKjsZ6yXKtoSYBSTcZgMkb5N
+         7IQGD7gbW3r1nmUhBMYq92CYaa6KSPcJMHk1EHxPpREC6SL0nFacRinQbINZV/iwPUEf
+         iSVOdLtRzi4vXXO2V6MFMJh0Xci/kM+gpSbKxcjrdeSwBVOlZ7lWa0kFOE2Jgiqqp2iK
+         Xwn6sO2qa6LeLlN/ZM4gkNOigCQWxV+PjTdAHgzxUrQFDndo9+jQdPL7hMik+PY0wL1Y
+         SWtIeDeNPZNfcOQ/KdRFDXTDd7y6bTOKetQhi/rU27lul+p/hUjiS5g1l7xZTC2LnOcm
+         31Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715606813; x=1716211613;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=b7K7kPrdH0lk2Did9nbk2rhIphWevYOhfPILVbZs3WI=;
+        b=BJbvQfWizo2lH3Fb20iYUEujqEyCJ5Xj/igH/Rvzj6gcyk9FWtG9TKtnEBVbTsvMv3
+         MYMmgFxURJJHvTkAig7bF6fXta7F1LOxXWdJ9HkxgNdSatp7axHn2t+nuL9bt8QqIiCZ
+         z085/UeJui1rypMF3OHnMrKcmyj3YlAN4r2W/fbOSZsg9P7wOGve0U0V9A504JwUlzPt
+         mmYZ5lmRXvemgFNZ6DTPjtvS1ZB6jVgaKQsZ5oqb0oWzpuB00bLtW+uVQdUmKcXofg2o
+         M47TyZuouM4Mwz+ZBvn06Y5AZ2EIBVRoeGFKpChptNvDjxLXe9nvCPBe85jmX27wLpZS
+         Q21Q==
+X-Gm-Message-State: AOJu0YwNKpEIwlpYfBNWH8OBpQt3EuV9MmiapjmAA9fLMS6RZuBoqfs2
+	8IHVm7P+9uZ796vy0/qpg2QFLZHcExeePPKYzF5LEDJwb6m+K1lT9At2S+f619xfo3JoTJ0fzrA
+	3/C7MfKjcckBBY1wQytxlAzJOK3lV/+cMJFLwvRmf1H5/k5RqnTy92Q==
+X-Google-Smtp-Source: AGHT+IEgbcYKeKadY90hQFQLAWTpyLcPLDm22VUYfnMmUokIN8/BP+hqoa9BH1auSpPqREeMczvEADKbQ8IDppeKF2Q=
+X-Received: by 2002:a19:e00c:0:b0:51f:b186:8247 with SMTP id
+ 2adb3069b0e04-5220e373b52mr2852013e87.12.1715606812421; Mon, 13 May 2024
+ 06:26:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240513-pinctrl-scmi-oem-v3-v6-0-904975c99cc4@nxp.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 13 May 2024 15:26:40 +0200
+Message-ID: <CAMRc=Mev8M_jHw_zP7ETkmdoK5JzGTKBCS75Evt_445YHJVpxw@mail.gmail.com>
+Subject: [ANNOUNCE] libgpiod v2.1.2 released
+To: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 13, 2024 at 07:45:23PM +0800, Peng Fan (OSS) wrote:
-> Hi Sudeep, Linus
->   Is it possible for you to pick up this patchset earlier if no major
->   comments?
->
+I've released libgpiod v2.1.2. This is a bugfix release containing a
+build fix with slibtool, relicensing the C++ under LGPL-2.0-or-later
+and preemptively addressing changed labeling in gpio-sim that will
+cause failures in bash tests of gpio-tools starting with linux v6.9.
 
-FYI, it is the start of the merge window for v6.10. Any new feature
-planned to be merged for v6.10 must be already in linux-next and anything
-else need to wait for v6.11.
+Details can be found in NEWS and the tarball and git tag in their
+usual places[1][2].
 
-In short, this is not a v6.10 material and please wait until -rc1.
+Bart
 
---
-Regards,
-Sudeep
+[1] https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
+[2] git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
 
