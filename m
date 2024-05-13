@@ -1,148 +1,105 @@
-Return-Path: <linux-gpio+bounces-6340-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6341-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1A2E8C447C
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 17:43:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 317258C449D
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 17:52:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58B7A1F217E3
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 15:43:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E8781C22CA0
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 15:52:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17C3F154425;
-	Mon, 13 May 2024 15:43:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 982C0154BE8;
+	Mon, 13 May 2024 15:52:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMKbzLPP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/ylobXw"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31DA5695;
-	Mon, 13 May 2024 15:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45275154454;
+	Mon, 13 May 2024 15:52:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715615022; cv=none; b=gG/gC62CJOrs5urX3JGjb8GxLhdoZfiIFRgC3Kfqvup3zX7Hz79s+Da4h7GPUYBi0epC20riu1GsLbbyMfbAYP91IfMXsEceKXQLhhNEbqr0Ntd9Gv24x8mAjt7guuJp1WeyMig8N6qjz/lpAcFT5EVCVHTyfT9YzlGZ2CvMJHs=
+	t=1715615549; cv=none; b=L8UdWHWTzyZ9Pb9nUWyqRZtTgiKpN3ciSWpJx7QzazSVWmGYvpys70oOyA2TUphThWFuj5JnQzl0osq/tTRi+7sutydzIVxjX3e6FJrqnxoy6LlmLHcuEXrXMRRXX7bVHQWVCE07Q+ZtU0l9qeZUFxLh8IoNxKaN1s3HBLmafYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715615022; c=relaxed/simple;
-	bh=J5hQzjcurJJsGoxq8banr21Pa9wy7hpwCT+lAe7WOE0=;
+	s=arc-20240116; t=1715615549; c=relaxed/simple;
+	bh=75oUXoThArbKO9d+Z2VBTAalA0tvT0Hl3rs3i7zDhpo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cs7a9rN+DKEjlb0COyBiIYjOQUw80SrFuZiWKsxptnYCxHcaNa/RzmgQ+8RyZoEk0wIwv3h6oMjD6itmJW5zPv46IAQi1/11zfYmGsKk7o5x2/DzO5LcV0t7Jaugb8jXsTK4lT3YqmsH68P4UhumGO4Sz+XSJUFhyIp9L8yS9Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMKbzLPP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFD3C113CC;
-	Mon, 13 May 2024 15:43:39 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=cLeU8tqnUPUejVam7XJci36zGcoLfiHS8noLV7yyNURcRplygSsYC/cIILY4Npjf+nh/l6I1gA/ygUi0aG4/TYhnai/x1lRMabd0T+Rkdq30ULaYQz8nHj49J0yKSZ84hiEukgFS76bIYGr2WReXuW9G1HETvmsjCNOjCWDoLVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/ylobXw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A04C113CC;
+	Mon, 13 May 2024 15:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715615022;
-	bh=J5hQzjcurJJsGoxq8banr21Pa9wy7hpwCT+lAe7WOE0=;
+	s=k20201202; t=1715615548;
+	bh=75oUXoThArbKO9d+Z2VBTAalA0tvT0Hl3rs3i7zDhpo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nMKbzLPPNsLi0Y8bkFTPWjaohdSK+zjR/LvuOiBHGWooKmEZhkO8GY5CGqx69n9SY
-	 gmUfcQnR/qlVBTtISjVkp1GIAEX62k9Xhy5MvfgYGpx738kE98QnYt6L4lh8D2UVvY
-	 njDTH1JHN7TLogXHGHglAmaOi+2EL6Fl7HL1evq0sj1Eg+m7KOniXC77KHE++f/xFr
-	 EmNYfasW0x5ush8kPti6vIYX2O0GXuxKaSCHTN+PV8z0wYb/ez5LtN0E7GW6dvX6vQ
-	 KVTiEDh+VA2pizGwAWFZY3iKFc66KeeAMxfYxtyR/K2OgZ5jAila5ho3auBdQSii6o
-	 H1+Y30X1MN4Uw==
-Date: Mon, 13 May 2024 17:43:37 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Devyn Liu <liudingyuan@huawei.com>, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, f.fangjian@huawei.com, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com, linux-acpi@vger.kernel.org, 
-	jonathan.cameron@huawei.com, yangyicong@huawei.com, yisen.zhuang@huawei.com, 
-	kong.kongxinwei@hisilicon.com
-Subject: Re: [PATCH] gpiolib: acpi: Fix failed in acpi_gpiochip_find() by
- adding parent node match
-Message-ID: <crpbtmccglgf4mpyt4ogdiqztophoadx34llx6z6lmnbneufju@pwm5j3fwusle>
-References: <20240513075901.2030293-1-liudingyuan@huawei.com>
- <ZkHcniqCiLPEPN9o@smile.fi.intel.com>
+	b=Q/ylobXwd7VbMVe5SZijuHybR9/viyvDmLqnsjPI5wKdNrwYWOV9ldFMfbYgMjSW3
+	 CT1ar1NzJbZmkRAtbn5WLVNOxJKSJWm9n4yiHl75DDaX0eCqrgOR4+Jx2bq9/up9Nf
+	 frU78yhv9D+8CZwH8XqhNZcObRSxLJxqY096ijIm+pQ/SOaGG9xYrG8r1AYAjcl8Wk
+	 23yXpcQwUIuaYpr+1W0EzoxJbOSoQiDmgj1FAmXmpsJbPWjSXcPqb7glY1tevr3jHn
+	 hXMfdIP6cAEGP0zy8SpJyz5VoUIt+PlmlXmvhAB84ZEVOGBlQ4Al9k0s704R9UU3e1
+	 iAe6gIP0jxQqQ==
+Date: Mon, 13 May 2024 16:52:23 +0100
+From: Conor Dooley <conor@kernel.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>,
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: imx: Support i.MX91 IOMUXC
+Message-ID: <20240513-unmarked-lurk-70edc676de22@spud>
+References: <20240513-imx91-pinctrl-v1-0-c99a23c6843a@nxp.com>
+ <20240513-imx91-pinctrl-v1-1-c99a23c6843a@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="IB6mHrhOGrSkI2CG"
+Content-Disposition: inline
+In-Reply-To: <20240513-imx91-pinctrl-v1-1-c99a23c6843a@nxp.com>
+
+
+--IB6mHrhOGrSkI2CG
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZkHcniqCiLPEPN9o@smile.fi.intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-On May 13 2024, Andy Shevchenko wrote:
-> On Mon, May 13, 2024 at 03:59:01PM +0800, Devyn Liu wrote:
-> > Previous patch modified the standard used by acpi_gpiochip_find()
-> > to match device nodes. Using the device node set in gc->gpiodev->d-
-> > ev instead of gc->parent.
-> > 
-> > However, there is a situation in gpio-dwapb where the GPIO device
-> > driver will set gc->fwnode for each port corresponding to a child
-> > node under a GPIO device, so gc->gpiodev->dev will be assigned the
-> > value of each child node in gpiochip_add_data().
-> > 
-> > gpio-dwapb.c:
-> > 128,31 static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
-> > 			       struct dwapb_port_property *pp,
-> > 			       unsigned int offs);
-> > port->gc.fwnode = pp->fwnode;
-> > 
-> > 693,39 static int dwapb_gpio_probe;
-> > err = dwapb_gpio_add_port(gpio, &pdata->properties[i], i);
-> > 
-> > When other drivers request GPIO pin resources through the GPIO device
-> > node provided by ACPI (corresponding to the parent node), the change
-> > of the matching object to gc->gpiodev->dev in acpi_gpiochip_find()
-> > only allows finding the value of each port (child node), resulting
-> > in a failed request.
-> > 
-> > Reapply the condition of using gc->parent for match in acpi_gpio-
-> > chip_find() in the code can compatible with the problem of gpio-dwapb,
-> > and will not affect the two cases mentioned in the patch:
-> > 1. There is no setting for gc->fwnode.
-> > 2. The case that depends on using gc->fwnode for match.
-> 
-> Thanks for the report, analysis, and patch.
-> 
-> ...
-> 
-> >  static int acpi_gpiochip_find(struct gpio_chip *gc, const void *data)
-> >  {
-> > -	return device_match_acpi_handle(&gc->gpiodev->dev, data);
-> > +	return device_match_acpi_handle(&gc->gpiodev->dev, data) ||
-> > +		(gc->parent && device_match_acpi_handle(gc->parent, data));
-> >  }
+On Mon, May 13, 2024 at 05:20:46PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> i.MX91 and i.MX93 share similar design. They could share same dt-binding
+> doc, so rename fsl,imx93-pinctrl.yaml to fsl,imx9-pinctrl.yaml and add
+> i.MX91 compatible string
+>=20
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-The original patch (from Devyn) is:
-Tested-by: Benjamin Tissoires <bentiss@kernel.org>
-
-For reference, a successful run can be seen at:
-https://gitlab.freedesktop.org/bentiss/hid/-/jobs/58661693
-
-> 
-> I'm wondering if the below approach will work for all:
-> 
-> static int acpi_gpiochip_find(struct gpio_chip *gc, const void *data)
-> {
-> 	struct device *dev = acpi_get_first_physical_node(ACPI_COMPANION(&gc->gpiodev->dev));
-> 
-> 	return device_match_acpi_handle(dev, data);
-> }
-
-Looks like I get a bad dev pointer in this situation:
-https://gitlab.freedesktop.org/bentiss/hid/-/jobs/58662689#L704
-
-Not sure if this is because the not-yet-upstream patches I have in
-hid-cp2112 are doing something wrong or if there is a good reason for
-it...
-
-The patch that adds fwnode to hid-cp2112 are:
-https://gitlab.freedesktop.org/bentiss/gitlab-kernel-ci/-/blob/master/VM/0002-HID-usbhid-Share-USB-device-firmware-node-with-child.patch
-https://gitlab.freedesktop.org/bentiss/gitlab-kernel-ci/-/blob/master/VM/0003-HID-cp2112-Fwnode-Support.patch
-
-both of those patches are applied before compilation in the CI run from
-above.
-
-> 
-> Cc'ing to Benjamin for testing and commenting.
-
-TL;DR: initial patch is fine, yours will probably need a check on the
-dev return value, so not sure if we gain a lot...
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
 Cheers,
-Benjamin
+Conor.
+
+--IB6mHrhOGrSkI2CG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkI3NwAKCRB4tDGHoIJi
+0pgzAQD3d1IeZ8b0wLTFJJ95fjJ2Q609ddPtd03Luv1hdENw4AEAsk0RA/+UlonM
+ssqf2EyqMRFAysuP6wxT2tTHB0c1RAY=
+=hAAr
+-----END PGP SIGNATURE-----
+
+--IB6mHrhOGrSkI2CG--
 
