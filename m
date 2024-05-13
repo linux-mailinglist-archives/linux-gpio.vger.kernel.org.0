@@ -1,119 +1,148 @@
-Return-Path: <linux-gpio+bounces-6339-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6340-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F286E8C4364
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 16:40:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1A2E8C447C
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 17:43:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92B0A1F21AF8
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 14:40:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58B7A1F217E3
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 May 2024 15:43:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA6191C01;
-	Mon, 13 May 2024 14:40:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17C3F154425;
+	Mon, 13 May 2024 15:43:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xAPw15O0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMKbzLPP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F311859
-	for <linux-gpio@vger.kernel.org>; Mon, 13 May 2024 14:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31DA5695;
+	Mon, 13 May 2024 15:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715611236; cv=none; b=WMlhqu93gugrY6xpni9iF/PAclA+0HArW0JuXeGNJ12PyqdvF3w2fxoDjRnyd9QT+tIVzxcUePReJn3axjf7eBdyDAREDu9/Wd0M5CDEUVPiTTwBqul+77pnpoQKPWTxfgpn/e+8UQxe0h5FFyMKsHgtggVdVeScKBNGnt0Z010=
+	t=1715615022; cv=none; b=gG/gC62CJOrs5urX3JGjb8GxLhdoZfiIFRgC3Kfqvup3zX7Hz79s+Da4h7GPUYBi0epC20riu1GsLbbyMfbAYP91IfMXsEceKXQLhhNEbqr0Ntd9Gv24x8mAjt7guuJp1WeyMig8N6qjz/lpAcFT5EVCVHTyfT9YzlGZ2CvMJHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715611236; c=relaxed/simple;
-	bh=RR+FvSe6PreSIlJJZUiEFi2zgORXY/2RQNOZhVNzURo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=k993xpnjd9FHaipWlhvnzrVEyO8Slr03CBK7VTuQyDhahQdA35ooGyreZeY7VzLpCKL6fomjllhH+e8MUQoL3X1dcqYMDlXOLhNIAWxnFeoOuBssIpvaxcrkLOYB3KpurxU3cLqHqIKK91+Fs+ahn6WMLTBIzpOdeIW1MsD1/3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xAPw15O0; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e0933d3b5fso65313171fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 13 May 2024 07:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1715611233; x=1716216033; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VJZwp0seGlB/jzhkQ5Y+HidZv7cCxncq0/tJbVWAKEo=;
-        b=xAPw15O0QUSMYye2skVlocMAQB7F3uTyvqBKsV28QsvvkzO7NNOBk1dntmQOzkzW8k
-         xP3v9KsUd7xR6K4uA/Q3o0k5AUDloe316IPLcknkgx6gwQ3dfrpSd659Mv3Xtredai48
-         RZjZ10ZKC2C0OF+KV4YmEngIkcO4CL2uxxC/Z3SIrJ2BeIMuRaN/CfACC7h03SpGJfDG
-         tZA/WsSl8fA79RnuEjlnhW+M3cWzqZZXfvS7thKlNQTnbY+rdSinKCOqMjLStDDDfu0O
-         MlZACyxN6jc1FADEgOmQ/nOOZWKJ9r57q7p2XTl2pqjFXOChojktHoVk79M9lkaBNqhU
-         gZ0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715611233; x=1716216033;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VJZwp0seGlB/jzhkQ5Y+HidZv7cCxncq0/tJbVWAKEo=;
-        b=PKwPbmopSHWtheH1ULnFFkUSZGNk6oVzIJZInjT3pttcuQz/WSF39qsqsUykPb1s17
-         zSbFXOKITR4I8Vot02ktVVo/CQ4e2IEJko5k+z24zlPJt6yjhfZMK1Aoi/XWjfGAUHy/
-         jWecS+TFI3Rj2dor2iLoFYvs9vL8P/kZyfjvSieVSTVEtFIeRtG0h+wtS22Dvler+/Fs
-         g2RLxpwxycxO5IiVSSr+jQq+748EFmqAgNRkQP51B6yPChrtWgSCx3OGUdTIwrS5Fw/x
-         rLMt2fwTmo9Q0VSffZFPomFD07JswUA8aW9bdgsVPbbTdNBVfFw+mn7Pupo77/GlUdRK
-         KGjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNuKOacK/ZOovTrRXBXphjZbtWg9ymLRw84WO7Lkh/tA3pFPjrS/0SJnHpirxSFMniougBx8c9qd7NrN0Bmvjx0qfNTG6KVeO2BA==
-X-Gm-Message-State: AOJu0YznLGmhtf6erLpWBCofCcXSq4Z0uWpCwa+n4gAKo5d0avkJ6Yll
-	n2Hf91pcb/2Wek4S9SGst7O+/xqswsTz8hnNz15fsaQRLFVqLu3H4lveDFL10uuUwaHGqJpJ67S
-	5ZaNEUKMaK6WB+fG/T2G+17tj4CyetyIBzxGGHQ==
-X-Google-Smtp-Source: AGHT+IHxCuLpm4IulBnsKetvV5ifAyUozwLm3CsA9M2AGmsza/OqaDOtQw0zMpp0VpkMf9ZJlEwpkklIaKxy+ZOtm/w=
-X-Received: by 2002:a2e:8949:0:b0:2e2:1a8b:e2f with SMTP id
- 38308e7fff4ca-2e51fd42b4emr64871511fa.2.1715611232847; Mon, 13 May 2024
- 07:40:32 -0700 (PDT)
+	s=arc-20240116; t=1715615022; c=relaxed/simple;
+	bh=J5hQzjcurJJsGoxq8banr21Pa9wy7hpwCT+lAe7WOE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cs7a9rN+DKEjlb0COyBiIYjOQUw80SrFuZiWKsxptnYCxHcaNa/RzmgQ+8RyZoEk0wIwv3h6oMjD6itmJW5zPv46IAQi1/11zfYmGsKk7o5x2/DzO5LcV0t7Jaugb8jXsTK4lT3YqmsH68P4UhumGO4Sz+XSJUFhyIp9L8yS9Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMKbzLPP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFD3C113CC;
+	Mon, 13 May 2024 15:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715615022;
+	bh=J5hQzjcurJJsGoxq8banr21Pa9wy7hpwCT+lAe7WOE0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nMKbzLPPNsLi0Y8bkFTPWjaohdSK+zjR/LvuOiBHGWooKmEZhkO8GY5CGqx69n9SY
+	 gmUfcQnR/qlVBTtISjVkp1GIAEX62k9Xhy5MvfgYGpx738kE98QnYt6L4lh8D2UVvY
+	 njDTH1JHN7TLogXHGHglAmaOi+2EL6Fl7HL1evq0sj1Eg+m7KOniXC77KHE++f/xFr
+	 EmNYfasW0x5ush8kPti6vIYX2O0GXuxKaSCHTN+PV8z0wYb/ez5LtN0E7GW6dvX6vQ
+	 KVTiEDh+VA2pizGwAWFZY3iKFc66KeeAMxfYxtyR/K2OgZ5jAila5ho3auBdQSii6o
+	 H1+Y30X1MN4Uw==
+Date: Mon, 13 May 2024 17:43:37 +0200
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Devyn Liu <liudingyuan@huawei.com>, linus.walleij@linaro.org, 
+	brgl@bgdev.pl, f.fangjian@huawei.com, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com, linux-acpi@vger.kernel.org, 
+	jonathan.cameron@huawei.com, yangyicong@huawei.com, yisen.zhuang@huawei.com, 
+	kong.kongxinwei@hisilicon.com
+Subject: Re: [PATCH] gpiolib: acpi: Fix failed in acpi_gpiochip_find() by
+ adding parent node match
+Message-ID: <crpbtmccglgf4mpyt4ogdiqztophoadx34llx6z6lmnbneufju@pwm5j3fwusle>
+References: <20240513075901.2030293-1-liudingyuan@huawei.com>
+ <ZkHcniqCiLPEPN9o@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZiJkxBU3bYNWOdbK@Z926fQmE5jqhFMgp6>
-In-Reply-To: <ZiJkxBU3bYNWOdbK@Z926fQmE5jqhFMgp6>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 13 May 2024 16:40:21 +0200
-Message-ID: <CAMRc=Mft4MJVx9bvO6Ab=2O+WC0oG19SbYquuh2AOBNi=Mqmww@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio-syscon: do not report bogus error
-To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, etienne.buira@free.fr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZkHcniqCiLPEPN9o@smile.fi.intel.com>
 
-On Fri, Apr 19, 2024 at 2:35=E2=80=AFPM Etienne Buira <etienne.buira@free.f=
-r> wrote:
->
-> Do not issue "can't read the data register offset!" when gpio,syscon-dev
-> is not set albeit unneeded.  gpio-syscon is used with rk3328 chip, but
-> this iomem region is documented in
-> Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml and
-> does not require gpio,syscon-dev setting.
->
-> It has been suggested to automatically detect if node has a valid
-> parent, but that would defeat the purpose of error message, for example
-> arch/arm/boot/dts/ti/keystone/keystone-k2g.dtsi could then be used
-> without gpio,syscon-dev, and lead to funny results without error
-> message.
->
-> It has been tried to mandate use of gpio,syscon-dev, but that raised
-> objection.
->
-> So while this patch may be kludgy, it looks the less bad to address
-> the spurious dev_err call.
->
-> v2:
->   - changed flag name
->
-> Signed-off-by: Etienne Buira <etienne.buira@free.fr>
-> ---
+On May 13 2024, Andy Shevchenko wrote:
+> On Mon, May 13, 2024 at 03:59:01PM +0800, Devyn Liu wrote:
+> > Previous patch modified the standard used by acpi_gpiochip_find()
+> > to match device nodes. Using the device node set in gc->gpiodev->d-
+> > ev instead of gc->parent.
+> > 
+> > However, there is a situation in gpio-dwapb where the GPIO device
+> > driver will set gc->fwnode for each port corresponding to a child
+> > node under a GPIO device, so gc->gpiodev->dev will be assigned the
+> > value of each child node in gpiochip_add_data().
+> > 
+> > gpio-dwapb.c:
+> > 128,31 static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+> > 			       struct dwapb_port_property *pp,
+> > 			       unsigned int offs);
+> > port->gc.fwnode = pp->fwnode;
+> > 
+> > 693,39 static int dwapb_gpio_probe;
+> > err = dwapb_gpio_add_port(gpio, &pdata->properties[i], i);
+> > 
+> > When other drivers request GPIO pin resources through the GPIO device
+> > node provided by ACPI (corresponding to the parent node), the change
+> > of the matching object to gc->gpiodev->dev in acpi_gpiochip_find()
+> > only allows finding the value of each port (child node), resulting
+> > in a failed request.
+> > 
+> > Reapply the condition of using gc->parent for match in acpi_gpio-
+> > chip_find() in the code can compatible with the problem of gpio-dwapb,
+> > and will not affect the two cases mentioned in the patch:
+> > 1. There is no setting for gc->fwnode.
+> > 2. The case that depends on using gc->fwnode for match.
+> 
+> Thanks for the report, analysis, and patch.
+> 
+> ...
+> 
+> >  static int acpi_gpiochip_find(struct gpio_chip *gc, const void *data)
+> >  {
+> > -	return device_match_acpi_handle(&gc->gpiodev->dev, data);
+> > +	return device_match_acpi_handle(&gc->gpiodev->dev, data) ||
+> > +		(gc->parent && device_match_acpi_handle(gc->parent, data));
+> >  }
 
-Linus,
+The original patch (from Devyn) is:
+Tested-by: Benjamin Tissoires <bentiss@kernel.org>
 
-Do you have any objections? If not, I'll pick it up after the merge
-window. The patch does not look very clean but I cannot find anything
-obviously wrong.
+For reference, a successful run can be seen at:
+https://gitlab.freedesktop.org/bentiss/hid/-/jobs/58661693
 
-Bartosz
+> 
+> I'm wondering if the below approach will work for all:
+> 
+> static int acpi_gpiochip_find(struct gpio_chip *gc, const void *data)
+> {
+> 	struct device *dev = acpi_get_first_physical_node(ACPI_COMPANION(&gc->gpiodev->dev));
+> 
+> 	return device_match_acpi_handle(dev, data);
+> }
+
+Looks like I get a bad dev pointer in this situation:
+https://gitlab.freedesktop.org/bentiss/hid/-/jobs/58662689#L704
+
+Not sure if this is because the not-yet-upstream patches I have in
+hid-cp2112 are doing something wrong or if there is a good reason for
+it...
+
+The patch that adds fwnode to hid-cp2112 are:
+https://gitlab.freedesktop.org/bentiss/gitlab-kernel-ci/-/blob/master/VM/0002-HID-usbhid-Share-USB-device-firmware-node-with-child.patch
+https://gitlab.freedesktop.org/bentiss/gitlab-kernel-ci/-/blob/master/VM/0003-HID-cp2112-Fwnode-Support.patch
+
+both of those patches are applied before compilation in the CI run from
+above.
+
+> 
+> Cc'ing to Benjamin for testing and commenting.
+
+TL;DR: initial patch is fine, yours will probably need a check on the
+dev return value, so not sure if we gain a lot...
+
+Cheers,
+Benjamin
 
