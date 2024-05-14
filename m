@@ -1,141 +1,136 @@
-Return-Path: <linux-gpio+bounces-6374-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6375-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8ABFE8C594D
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 18:05:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 12DEA8C5D84
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 May 2024 00:14:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 47207281334
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 16:05:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B25EB2827F0
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 22:14:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B8BF17F361;
-	Tue, 14 May 2024 16:05:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 520DB181D04;
+	Tue, 14 May 2024 22:14:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ns0gklQ2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PZdVlN7M"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A22B1292D2;
-	Tue, 14 May 2024 16:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72150181B91
+	for <linux-gpio@vger.kernel.org>; Tue, 14 May 2024 22:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715702739; cv=none; b=qrp2CCZAucxkRT3mA46GONfoMOlf7z4iJoPlAAvif1trEAYAbKjKNwNGQVKCofk4db+A/64culD53DtlCj8VqXfBjafPxppQtoXQ4PKVL3eUTLTsLknMqKFNnpdZVUCoktuZTDN9xy/nrJ1r3fTBy3cLYJmZC6hXAkL/OfPdVKA=
+	t=1715724851; cv=none; b=NAJ/8ToSJLXBY40JT8EPfaUaj/mWNFkzYCBi6dyUfvZVg84puQSZTif79LrLMXNnRCQYHvFzwyqLmJa4W73cnbPzJ0fpnR96pHRcuyPruK0MYQapa1PmJILnb6wGe0TCoN2oIRvcu9HJJ0Q30NjL1nS99pTFR1yqe+OGOY1BKb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715702739; c=relaxed/simple;
-	bh=tpiw7IYuGjhBXF2DDCwDzTvk5q5Xhwg23VZBJ9+60Y8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dJX/c8SodaXVGezLCzGk1lHBPk5wM/0p8Ckle/RjfWBZPXCX014CYYlbH/ZQ4mqH3Y6VjZJt3AAgwqUc5QjM9RWvuBBpMGknINnvBt8Bjiy8Np9h7ZfA0hv5W/1fk26n7y5V2i1T5YLZ5GZub2JBZBSmmAw50UjVIJItdHF6rho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ns0gklQ2; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a59a352bbd9so59232066b.1;
-        Tue, 14 May 2024 09:05:37 -0700 (PDT)
+	s=arc-20240116; t=1715724851; c=relaxed/simple;
+	bh=lzBPunHqv+o+xTxtSNAE8nU1RNUODhqWO5eQAE9ZN5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SZ2yLpjiZDWBqfvJ07m3Iee/zMjJ7jz8PUp18AIw8KOGgmD05lR+wZHgF0UJK3eSSB+tMjtEDJ8vQIiJKkyPgHCSJOt2BR3jv0phnF3k1yXeWmjj2Ix0L/z01VVjr6f1v0+JPckKXi88q8pyVd+kiHiO20aqtg4RNAvlTRBsmQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PZdVlN7M; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41fe54cb0e3so38953915e9.2
+        for <linux-gpio@vger.kernel.org>; Tue, 14 May 2024 15:14:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715702736; x=1716307536; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fW1Zk+kCimN2Iqojt/YnfpXJKfkUntvLK6DTSR9T0HM=;
-        b=ns0gklQ2AkBv6MxF/wadcyvr+IXytgX3d4osjkoqrjT3bp3JVv3lV2pP9T662NbErH
-         H/dfQ4QWWmPj4r8OeO+uSTl0mmMuRZ+QOJlL4ROlQ3Y8UvMd7eqy+BylxNXIBIGBAumO
-         tlq7D1pKn0E8JmfNdO1/0sHiRO9HTq+e/qeYRLyh0QmuQb8iUQrm9a+47r9P6KNJJrUw
-         UUMY/pGW6fL+TZemcTOYEvsXt3HSDBxeY8MAimThrtelF2wIP9jGuDwEdXd7ENPWscLC
-         fZNuaX3VKdi298GjlgSI2RtibNNIDn8N+lp9Ev5DFNSYYkbG5iwf+HPWCH9HkXCx9+Wy
-         vxnw==
+        d=linaro.org; s=google; t=1715724848; x=1716329648; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=47eSe1ifqIz6O47Mgn/jUdV6aglJ10TXGnxAmO1D8Uw=;
+        b=PZdVlN7MH+/3CkSpd8eZdQLNn887XcoIMJOmrT89D8Syv7RjKHmX+7fxb8FkMFAIpD
+         /AxKkhFxEBLU7gAXQZ1apAYY6Iyz7cgtd9foQA938vKXcgQUhCn+yuqea+jC5fS3cDpT
+         5AtbyJeQtbTpNAxZ29PJh8qISTJORMUu6LcnJZnzrYpuj2riI/vzNVwGLPNdoQ1dmp0J
+         u3Er4a1kspOKKlys2NUqJqNmds2WhYyNLpxVnP01EwZ2eciR1rZRJO8v7sTQ/HeRD7tg
+         NIfKhrnO/n41E9mONum+y8kWMyqcS3/izymmvRVNZJxkbZBvh2yWZBmwApbpjvP0pDsE
+         OAuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715702736; x=1716307536;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fW1Zk+kCimN2Iqojt/YnfpXJKfkUntvLK6DTSR9T0HM=;
-        b=lnUJ4CBS9HGSvy4IJncD1+UdFAtKh36i9HUMCyhH08hhBvdGovN3sovDv2KRduns2x
-         f7HNjSH42qHTIRBdsQDAwZSAuRp3J0r4ie505RrbaYxWP66tymGrGmMdSFagpeA95wwB
-         gJ6x6DoCpleoy+ZuW+O+SwH83A77iZ9SXmIr+w8wq2NHdwPYwkMx4rPJmOpH3UyzMP6z
-         IWcKb/LqiR23SjYBx3r1hqwxxeR2+Vt+WfCPaFL90f4kKUOSTnGO+cyr11o2KCJf9Quu
-         gsT4G29Oa70mBk22lTI4JQxP73xSy1ewhRPnxz3X207WOh2ybebRjNXCBHGbF0cEPxD8
-         jbjw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0wXHtli9mhSgeN1I4XV/3sRjxwqSPZZ05cTQnye5WVfoKGQwVaWzsmpKLtBOQWqdzs+1zCbsTX/kS+s4kOYdtNn5l9W9SfjkTzPOEMzqzBK3RdFz7Wl2iDqilodGmCMyK7vcfrLkXtq+MKAYpomPxU3vsoNV/WgyO1OgjSiReDkxgXEOeLAlm6I/kcDR0IJkyEOWfkjrdzSeBxS6RfU+/rjIG
-X-Gm-Message-State: AOJu0Yzdh7KiTiX22DZz2BbWJ41Z/GWQ/mGCycRfV24c0XHhaxrzZWF5
-	8Ukkt9Zq4h6kfIc3UwZ3moRKpEGVEu4ri6KMKJ+AuTzPjdzP67EfYqTP6/bPa5TeL1e3Ci054mX
-	772WpDmIm7q1q6uNbPskR2NLT1d0=
-X-Google-Smtp-Source: AGHT+IF1K9kLqXaF/wSSHniCW4SSJsP6V1e2Eey8FppUfEal0xssx45EV2LSI4Ou5zR7+iz4dGAHI/k3UMcmiX2NRyw=
-X-Received: by 2002:a17:907:86a9:b0:a5a:24ab:f5e with SMTP id
- a640c23a62f3a-a5a2d27d8bcmr1377625766b.25.1715702735782; Tue, 14 May 2024
- 09:05:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715724848; x=1716329648;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=47eSe1ifqIz6O47Mgn/jUdV6aglJ10TXGnxAmO1D8Uw=;
+        b=tZJWKj1GZB/VM9tTb1JPCalIFOkoZ35mYw+501+ZdEgcDQvUrdkhgoc+UuUK8rpi7R
+         2B1SxLuv6BpJtuxu3ay9QS/G9f4Ow8W5zX9WBwc9/NFQUjxjO6AF+my7OckoqRqNUAaz
+         qhZSfi7HPAAz3DXvsbxUiM6WZxbbf90RjrdavGlKxa9WvXKUPL+WRnTT9VPml1nRpNv/
+         yDUCLBCGynZQldTD6fDUTYR2yesw5rp8Lnkrr1eZWGdB9keBJZSixuY97V79KdrTtlIp
+         x0akEMBl9fSTXgxaXcLhEuSYVXrRbbxIIZFuNwrQmmLRihUGHfiDuodt00a3ihJfCsYi
+         Dofw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZZLG9WT0T2NSpTphTwVh0cxfT7Wwkl/CLN1HWrp+CC86WVy+gR9XNqWS16ZFeP527oTBRVm6FWOTubUTdWrUcUTpApcbvTzDATQ==
+X-Gm-Message-State: AOJu0YyOwRJm0wyfQJdUAWHRbGbXKQVrAfAk9uD4vclFdWjlSOgGYnrt
+	C9G1qe8i55jBBHt5XJQNspD0Z6cgxjwKUrqmgZw6n2kCs6+V50T/qrXgwe+4BaU=
+X-Google-Smtp-Source: AGHT+IE9Exumr8cSW9rXqiQSZiKueBgNhIQL6ZpN/BQTxO5vOYlNwuHSv+P0bAk7D61Uvo3cGbQVjg==
+X-Received: by 2002:a05:600c:19c8:b0:41f:e720:eec9 with SMTP id 5b1f17b1804b1-41feac59c27mr103801265e9.25.1715724847761;
+        Tue, 14 May 2024 15:14:07 -0700 (PDT)
+Received: from [10.1.2.16] ([149.14.240.163])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f87d20488sm243327695e9.25.2024.05.14.15.14.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 15:14:07 -0700 (PDT)
+Message-ID: <c8ec69e4-a411-448d-8ebb-c896a2c754c7@linaro.org>
+Date: Wed, 15 May 2024 00:14:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZjpMeVk_HiixZUEu@hovoldconsulting.com> <20240514140446.706847-1-quic_skakitap@quicinc.com>
- <CAHp75VcfYuukpLg=F36ykddsT9SpfdGNyyvVeyw-Yvz61Lrq7g@mail.gmail.com> <0a372307-8887-ac97-54c6-d6080e64540f@quicinc.com>
-In-Reply-To: <0a372307-8887-ac97-54c6-d6080e64540f@quicinc.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 14 May 2024 19:04:58 +0300
-Message-ID: <CAHp75VddpSz9Z785ey1FfgDMPD-zY8gesrqD1rt8yGdc9Pz-PQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
-To: "Satya Priya Kakitapalli (Temp)" <quic_skakitap@quicinc.com>
-Cc: johan@kernel.org, andersson@kernel.org, broonie@kernel.org, 
-	conor+dt@kernel.org, devicetree@vger.kernel.org, johan+linaro@kernel.org, 
-	konrad.dybcio@linaro.org, krzk+dt@kernel.org, lee@kernel.org, 
-	lgirdwood@gmail.com, linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, 
-	swboyd@chromium.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, johan@kernel.org
+Cc: andersson@kernel.org, andy.shevchenko@gmail.com, broonie@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org, johan+linaro@kernel.org,
+ krzk+dt@kernel.org, lee@kernel.org, lgirdwood@gmail.com,
+ linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_c_skakit@quicinc.com, quic_gurus@quicinc.com, robh@kernel.org,
+ swboyd@chromium.org
+References: <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
+ <20240514134317.691887-1-quic_skakitap@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240514134317.691887-1-quic_skakitap@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 14, 2024 at 6:05=E2=80=AFPM Satya Priya Kakitapalli (Temp)
-<quic_skakitap@quicinc.com> wrote:
-> On 5/14/2024 7:48 PM, Andy Shevchenko wrote:
-> > On Tue, May 14, 2024 at 5:05=E2=80=AFPM Satya Priya Kakitapalli
-> > <quic_skakitap@quicinc.com> wrote:
-> >>> On Thu, May 09, 2024 at 03:07:02PM +0300, Andy Shevchenko wrote:
-> >>>> Wed, May 08, 2024 at 10:37:50PM +0000, Stephen Boyd kirjoitti:
-> >>>>> Quoting Johan Hovold (2024-05-06 08:08:29)
 
-...
 
-> >>>>>> +               BUILD_BUG_ON((ARRAY_SIZE(pldo_ranges) !=3D 1) ||
-> >>>>> This should be an && not || right?
-> >>>>>> +                               (ARRAY_SIZE(nldo_ranges) !=3D 1));
-> >>>> In any case BUILD_BUG_ON() is not encouraged for such cases, it woul=
-d be much
-> >>>> better to have a static_assert() near to one of those arrays.
-> >>> I think the reason it is placed here is that the above line reads:
-> >>>
-> >>>        rdesc->n_linear_ranges =3D 1;
-> >>>
-> >>> and that would need to change if anyone expands the arrays.
-> >> Correct. static_assert() cannot be used in the middle of code here, it=
- can only be used at the declarations part which doesn't serve the purpose.
-> > I didn't get this. The ARRAY_SIZE():s are defined at compile time
-> > globally. How does this prevent from using static_assert()?
+On 5/14/24 15:43, Satya Priya Kakitapalli wrote:
+>> On Tue, May 07, 2024 at 01:48:30PM +0200, Konrad Dybcio wrote:
+>>> On 5/6/24 17:08, Johan Hovold wrote:
+>>>> From: Satya Priya <quic_c_skakit@quicinc.com>
+>>>>
+>>>> Qualcomm Technologies, Inc. PM8008 is an I2C-controlled PMIC containing
+>>>> seven LDO regulators. Add a PM8008 regulator driver to support PMIC
+>>>> regulator management via the regulator framework.
+>>>>
+>>>> Note that this driver, originally submitted by Satya Priya [1], has been
+>>>> reworked to match the new devicetree binding which no longer describes
+>>>> each regulator as a separate device.
+>>>>
+>>>> This avoids describing internal details like register offsets in the
+>>>> devicetree and allows for extending the implementation with features
+>>>> like over-current protection without having to update the binding.
+>>>>
+>>>> Specifically note that the regulator interrupts are shared between all
+>>>> regulators.
+>>>>
+>>>> Note that the secondary regmap is looked up by name and that if the
+>>>> driver ever needs to be generalised to support regulators provided by
+>>>> the primary regmap (I2C address) such information could be added to a
+>>>> driver lookup table matching on the parent compatible.
+>>>>
+>>>> This also fixes the original implementation, which looked up regulators
+>>>> by 'regulator-name' property rather than devicetree node name and which
+>>>> prevented the regulators from being named to match board schematics.
+>>>>
+>>>> [1] https://lore.kernel.org/r/1655200111-18357-8-git-send-email-quic_c_skakit@quicinc.com
+>>>>
+>>>> Signed-off-by: Satya Priya <quic_c_skakit@quicinc.com>
+> 
+> This is my old email which is discontinued, please use <quic_skakitap@quicinc.com>
 
-> The reason we added it here is to make sure the nlod_ranges and
-> pldo_ranges doesn't become larger, and we forget updating the
-> n_linear_ranges.
+Please submit an entry to the .mailmap file
 
-> Adding static_assert here is not feasible so adding a
-> BUILD_BUG_ON at this point makes sure the n_linear_ranges is proper.
-
-No, static_assert() will do _exactly_ the same with better error
-reporting and location, but what you are trying to say is that the
-location is chosen to be near to the n_liner_ranges assignment which
-happens at runtime, that's why it can't be used as an argument to
-BUILD_BUG_ON(). Based on this discussion I think the comment is
-missing before BUILD_BUG_ON() to explain the semantics of 1 and all
-that was just said.
-
-> >> So, BUILD_BUG_ON is the only way to go here.
-> > I don't think so.
-
-As i said.
-
---=20
-With Best Regards,
-Andy Shevchenko
+Konrad
 
