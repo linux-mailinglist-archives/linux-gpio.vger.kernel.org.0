@@ -1,228 +1,146 @@
-Return-Path: <linux-gpio+bounces-6354-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6355-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 326A78C4D4D
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 09:52:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20C398C4D7B
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 10:07:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 55D401C21199
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 07:52:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C77CA280F7E
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 08:07:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 273FB14F6C;
-	Tue, 14 May 2024 07:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fdx/36aN"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 297CF182B5;
+	Tue, 14 May 2024 08:07:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03F914A85
-	for <linux-gpio@vger.kernel.org>; Tue, 14 May 2024 07:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916F417996;
+	Tue, 14 May 2024 08:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715673168; cv=none; b=DqxLS2GH9aMJa282X4/s+qWI4dCiXlRvkHx7CGB9MwbB1utFmzOghqy4lc/+qnH4+0gH/ZHTmx0JXVDTZlGOXGZ4f+RwjKy5THKvQwyXhfnwUNw3RiK0ozAYjvcoXP3fpZ3NGkohd8BegG9sZskwjOVF9utsgXdCGjtPCvt9oEg=
+	t=1715674038; cv=none; b=hU2FRyLRnxZKkiLov9y/zS6ulLg4MU21gwRrwGh9w2OBKoezjLS2eCI0Dalu3V8/fJe+2A/F/l+5iT89jXfCHrYllzzQYCfxaiUhH16QpTojXBCDol1XtrrJbwygX4iGVShz5kyPi3dTs+o8wWfRGp8uzeyGQkGw/FSZrNyCb+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715673168; c=relaxed/simple;
-	bh=OOaEOfAYR5Gh8oK5DJeYpeAymVXp+rXthUNYm11olFA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZzVOkVBdknS/HRgWl6uh0dWLWm6qBUVmXV4wXdB9vbseLHMqbIJBwgN6RdB8qPFqkZpHJUhrZ5ru0vkmgROXT4EfMaNMbe8JcdJwHHzRORiyono7buWD3O5qP+Dyp0XhQ8YR0iIvQquVgHfdtBmeWyLlFSmJHL2gvpwLybc8pm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fdx/36aN; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a59a5f81af4so1332172566b.3
-        for <linux-gpio@vger.kernel.org>; Tue, 14 May 2024 00:52:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1715673165; x=1716277965; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RRbZom6ag8wZbaXN8JlgLAmY9gMu1rXQduqBeQbgtG0=;
-        b=fdx/36aNHMQtj5SORgPbubr/7tgpKfA/OXn/XJx+ePYRMtCcwODwzTfsWCFcLnlnSw
-         g9/0SHe3U016vRPqIcXtT6iJab/6zN3eVBhP4Q+FQ4F/9J+Se5Sr5i6+BDrLhioRLtRy
-         mHuyazFtWx5C6LSff4QAq8oHI1sGafpPsAnpkCZYnRXjJFb20raviqHbe67bNKNboc1B
-         N27HAmHJszNLpDxWJ4qo17o0Op1uG263uFwSyD5SBiRO/Gy34qsdgfsuvW3eZjMxoIQf
-         aV8XYG+qJHqPf+i90p6aylzG4wDwxpscwslrJsLAnkOG+Oy3gQEknv92/c1PTTumI+kC
-         MuKw==
+	s=arc-20240116; t=1715674038; c=relaxed/simple;
+	bh=toj7avCrdtDP66sy+w2xPyKX8oobvvymnd+3vjyORlc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lLn8jUm/ThhrMH/0cvUl/XwG/bigkmUavSS00ZbkfFOVPN2We+O7C+aQa9zyE5SLkQhpMHjl0Ew2FRC0Bz1RMhOhVzI0IsblVINKNJUBz5liWYSc4kj00fDIgsiNXYxwUhoSSUZyRje3ur6AGVHo5zgaZGz4f6xXFDT+Vp3e09k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-61e04fcf813so59817737b3.3;
+        Tue, 14 May 2024 01:07:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715673165; x=1716277965;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RRbZom6ag8wZbaXN8JlgLAmY9gMu1rXQduqBeQbgtG0=;
-        b=AxkkX5KWoDADhGw2HCemdne2M3tKX1+FMPzboHMqqb/gZKBg26G3HhPntQnObjAd/s
-         ePc6RmxnJxy1/ABmIfKAyvJGSmsgRkeVQUl1fJEOQ2vXwRPFLb/q+1503vziQN1ocat1
-         MNGxj0EbXyiA5vKL8vDZqwSvUbpwX6WkO76E+fX9Guq2EYP94fMvggNuELMVeOAPbm7A
-         bqwVkqUuSWJZCJklsAytxaAJwv30FDGigeIv80SmhnEARgRWrV3JfNUziKkDEU5xiGZh
-         CztrKYaqddVRDXiz0BMzS3PnMgosgUQldteJKiiR14GU49SKiXUQIdD//PEpNSX6YzMx
-         0SbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXsAvxsWqoZpINb3iqZy3Nqm10Vp+qojG6eX/UAgwcC4an/7Z46jiA3xf7V5+nYJp+m/CrWoXJ59moaFbrgYIQe/M1jAN3ObL3Hpw==
-X-Gm-Message-State: AOJu0YwmMHackDg7LkmiTp3mRvRhjFsLbPvyPHcRhN9xMYjjpRqbvV04
-	gUjVDOGBxG2Lmt5lxakF0GD9jACHZEvv2CRhMASqsWtRKPwui/MkoWLy2pKQYs0=
-X-Google-Smtp-Source: AGHT+IHEP9Pihcxscu5GOvum+xRZvm2vozKn++BTGhjVa2EM2uUdG259qd+sevlst3Pm2tIrgRrkMQ==
-X-Received: by 2002:a17:906:b7d7:b0:a59:b02a:90e7 with SMTP id a640c23a62f3a-a5a2d6a1708mr884283066b.64.1715673165062;
-        Tue, 14 May 2024 00:52:45 -0700 (PDT)
-Received: from brgl-uxlite.. ([149.14.240.163])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a7b53fc8fsm99184866b.38.2024.05.14.00.52.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 00:52:44 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-X-Google-Original-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] gpio: updates for v6.10-rc1
-Date: Tue, 14 May 2024 09:52:43 +0200
-Message-Id: <20240514075243.7008-1-bartosz.golaszewski@linaro.org>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1715674035; x=1716278835;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mAZGt+1Rc/qtuBUqNnzX2rBGCR5XoalBEqWaRtcOihM=;
+        b=Iw4IaWQY1QwhFqN+npKwJG6R2WAEeKh/7wlU8M1zhh6zgPMYBbGCExna4NVD4azTm2
+         fwcKDtUEXl0HqHUAhJeYa56jbl8Ilr5hqhzJYdBJjOjOz4lS1VjwVwcVWPKFryULM3kd
+         8EkeI7m4Lk1AGR11inXpvAGG2ZLOByZ85HGaedoH5h7CT+fEz1AvRpuzDCUXcSFa8b4X
+         y5Ak4b5GtpLe3RTb69FxGFVCg4KPNLKvBqJUe4VHHsIHAX3YJED/QRakA3lOgyKiJJ8L
+         m9Ou9u2uyIoC4qZdxiQQM6Ljg+ANlTB8RcvxEm1tMSLL//+bx4CBSgEa0jQrKNJXO7Xd
+         jwHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWj8vv9qRX44nJZ2fw4LRrvwF7M5pA0HhNQZZs4ZXqrKbTJxhqfZA4nC8gYayDLDDir9fGS+NP/4OXL1s1hGDSONAEGWDp3jTz9SxLyUpFtn81jHfE/T32IBQoJNe7yv83Gdq/E1s9PMXbL928bfmVHdxuqXpnjQed79nk5S02RUCLrIDnwAZAPRNfrGXL12cqnWB4xTmEJcV4SPVASQAihITB6Sqm7XYOsO8ehDWCSoA1lOslXnQio+kJksQP+X+tPIBOpXw5wdglkIA==
+X-Gm-Message-State: AOJu0YxnaZVK0299AffwWYdOxj9UBafosFEXrkv9FjLhrpn4BqXDLNJZ
+	eLfR1wQin7f+hCBJkxKEEquE+W685McUel/HjrKsxLUx3LVs82v9w1eXnELn
+X-Google-Smtp-Source: AGHT+IGxjxDOYrEBfWACS3xb4tBhGmMofLxxMuAzFLCqhT/U50fNTCZGyD79+TBrcCbgSwQTnN+5tw==
+X-Received: by 2002:a25:7909:0:b0:dd0:c866:ec3a with SMTP id 3f1490d57ef6-dee4f344357mr9991216276.22.1715674035592;
+        Tue, 14 May 2024 01:07:15 -0700 (PDT)
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com. [209.85.222.175])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f194c3asm50576136d6.69.2024.05.14.01.07.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 May 2024 01:07:15 -0700 (PDT)
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-792b8d31702so339701585a.3;
+        Tue, 14 May 2024 01:07:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVf5DFfZPLOyhchVtkqQQEau6PvVJvWpWfK6MH7evdfLUxtEBMaJRn/MqBWZHm2IsKsPS5UpziVP+gAUJaHPZsAk9yLBg/5ORozWICwSjP96i136aq9D+mQhjaGpFuF4QgVFjGI7ZjzqF7FHzRuv3L3ICCvatIPMMHvJLxmM6fHMnT+HDRF1J0D70RyBrXRq/g+btRfPctdwxEeMpwijhD9oqPUUcAvcE5CKahhBTpOvOhE6IBaA5zWmK6e8Ex35u1CEl7jnnKLVxALfQ==
+X-Received: by 2002:a05:690c:fd0:b0:611:7132:e6ba with SMTP id
+ 00721157ae682-622b0147778mr138786587b3.40.1715674014345; Tue, 14 May 2024
+ 01:06:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240504-pinctrl-cleanup-v2-0-26c5f2dc1181@nxp.com>
+ <20240504-pinctrl-cleanup-v2-7-26c5f2dc1181@nxp.com> <CAMuHMdUD=1rpns_mLF2rMM-x5EnOK7TExaJxoJVkbXjVz1H8uQ@mail.gmail.com>
+ <CACRpkdaUecnwvHFdtGkuM80SObvXpXZkWGYoUMgnNHcvObYF0g@mail.gmail.com>
+ <CAMuHMdWCD+k8=iX8+tcK76DU_m9quR8BV+K68K73SygJzCz5VA@mail.gmail.com> <CACRpkdYS8=cHT=7tGbzWZ73jbLhjqdpssbaHH-qREe=bcHYe2A@mail.gmail.com>
+In-Reply-To: <CACRpkdYS8=cHT=7tGbzWZ73jbLhjqdpssbaHH-qREe=bcHYe2A@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 14 May 2024 10:06:42 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUucOu-c7tbeBBCMaoouFcUnJi0aRU--pc2Gk9QWNrANg@mail.gmail.com>
+Message-ID: <CAMuHMdUucOu-c7tbeBBCMaoouFcUnJi0aRU--pc2Gk9QWNrANg@mail.gmail.com>
+Subject: Re: [PATCH v2 07/20] pinctrl: renesas: Use scope based of_node_put() cleanups
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
+	Hal Feng <hal.feng@starfivetech.com>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Patrice Chotard <patrice.chotard@foss.st.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Damien Le Moal <dlemoal@kernel.org>, Ludovic Desroches <ludovic.desroches@microchip.com>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Chester Lin <chester62515@gmail.com>, 
+	Matthias Brugger <mbrugger@suse.com>, Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, 
+	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
+	Joel Stanley <joel@jms.id.au>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-samsung-soc@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	imx@lists.linux.dev, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
+	Peng Fan <peng.fan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Linus,
+On Tue, May 14, 2024 at 9:33=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+> On Tue, May 14, 2024 at 8:36=E2=80=AFAM Geert Uytterhoeven <geert@linux-m=
+68k.org> wrote:
+> > > Does this go into the Renesas patch stack?
+> > > I think the patch stands fine without the rest of the series.
+> >
+> > Sure, I can do that.
+>
+> Please apply it!
 
-This was a quiet release cycle for the GPIO tree and so the main pull-request
-is relatively small. We have one new driver, some minor improvements to the
-GPIO core code and across several drivers, some DT and documentation updates
-but in general nothing stands out or is controversial. All changes have spent
-time in next with no reported issues (or ones that were quickly fixed).
+OK, will queue in renesas-pinctrl for v6.11.
 
-Details are in the signed tag. Please consider pulling.
+> > From your positive response to v1, I thought that perhaps you just
+> > wanted to take the full series yourself?
+>
+> Sorry, I always prefer submaintainers to pick their stuff, they
+> know what they are doing and they can test the entire patch
+> stack properly.
 
-Best Regards,
-Bartosz Golaszewski
+OK, will (try to ;-) remember...
 
-The following changes since commit 39cd87c4eb2b893354f3b850f916353f2658ae6f:
+Gr{oetje,eeting}s,
 
-  Linux 6.9-rc2 (2024-03-31 14:32:39 -0700)
+                        Geert
 
-are available in the Git repository at:
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.10-rc1
-
-for you to fetch changes up to 7f45fe2ea3b8c85787976293126a4a7133b107de:
-
-  gpio: nuvoton: Fix sgpio irq handle error (2024-05-07 09:44:33 +0200)
-
-----------------------------------------------------------------
-gpio updates for v6.10-rc1
-
-GPIO core:
-- remove more unused legacy interfaces (after converting the last remaining
-  users to better alternatives)
-- update kerneldocs
-- improve error handling and log messages in GPIO ACPI code
-- remove dead code (always true checks) from GPIOLIB
-
-New drivers:
-- add a driver for Intel Granite Rapids-D vGPIO
-
-Driver improvements:
-- use -ENOTSUPP consistently in gpio-regmap and gpio-pcie-idio-24
-- provide an ID table for gpio-cros-ec to avoid a driver name fallback check
-- add support for gpio-ranges for GPIO drivers supporting multiple GPIO banks
-- switch to using dynamic GPIO base in gpio-brcmstb
-- fix irq handling in gpio-npcm-sgpio
-- switch to memory mapped IO accessors in gpio-sch
-
-DT bindings:
-- add support for gpio-ranges to gpio-brcmstb
-- add support for a new model and the gpio-line-names property to gpio-mpfs
-
-Documentation:
-- replace leading tabs with spaces in code blocks
-- fix typos
-
-----------------------------------------------------------------
-Aapo Vienamo (1):
-      gpio: Add Intel Granite Rapids-D vGPIO driver
-
-Andy Shevchenko (21):
-      ARM: pxa: spitz: Open code gpio_request_array()
-      ARM: sa1100: Open code gpio_request_array()
-      gpiolib: legacy: Remove unused gpio_request_array() and gpio_free_array()
-      gpiolib: Do not mention legacy GPIOF_* in the code
-      gpio: wcove: Use -ENOTSUPP consistently
-      gpio: crystalcove: Use -ENOTSUPP consistently
-      gpiolib: acpi: Remove never true check in acpi_get_gpiod_by_index()
-      gpiolib: acpi: Check for errors first in acpi_find_gpio()
-      Documentation: gpio: Replace leading TABs by spaces in code blocks
-      gpio: pcie-idio-24: Use -ENOTSUPP consistently
-      gpio: regmap: Use -ENOTSUPP consistently
-      gpio: sch: Switch to memory mapped IO accessors
-      gpio: sch: Utilise temporary variable for struct device
-      gpiolib: acpi: Extract __acpi_find_gpio() helper
-      gpiolib: acpi: Simplify error handling in __acpi_find_gpio()
-      gpiolib: acpi: Move acpi_can_fallback_to_crs() out of __acpi_find_gpio()
-      gpiolib: acpi: Pass con_id instead of property into acpi_dev_gpio_irq_get_by()
-      gpiolib: Get rid of never false gpio_is_valid() calls
-      gpiolib: acpi: Add fwnode name to the GPIO interrupt label
-      gpiolib: acpi: Set label for IRQ only lines
-      gpiolib: Discourage to use formatting strings in line names
-
-Bartosz Golaszewski (2):
-      Merge tag 'v6.9-rc2' into gpio/for-next
-      Merge tag 'intel-gpio-v6.10-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-next
-
-David Lechner (1):
-      Documentation: gpio: fix typo
-
-Doug Berger (4):
-      gpio: brcmstb: Use dynamic GPIO base numbers
-      dt-bindings: gpio: brcmstb: add gpio-ranges
-      gpio: of: support gpio-ranges for multiple gpiochip devices
-      gpio: brcmstb: add support for gpio-ranges
-
-Jamie Gibbons (2):
-      dt-bindings: gpio: mpfs: add coreGPIO support
-      dt-bindings: gpio: mpfs: allow gpio-line-names
-
-Jim Liu (1):
-      gpio: nuvoton: Fix sgpio irq handle error
-
-Peng Fan (1):
-      gpiolib: use dev_err() when gpiod_configure_flags failed
-
-Tzung-Bi Shih (1):
-      gpio: cros-ec: provide ID table for avoiding fallback match
-
- .../bindings/gpio/brcm,brcmstb-gpio.yaml           |   3 +
- .../bindings/gpio/microchip,mpfs-gpio.yaml         |  17 +-
- Documentation/driver-api/gpio/driver.rst           |  28 +-
- Documentation/driver-api/gpio/legacy.rst           |  16 -
- .../translations/zh_CN/driver-api/gpio/legacy.rst  |  16 -
- Documentation/translations/zh_TW/gpio.txt          |  17 -
- .../userspace-api/gpio/gpio-v2-get-line-ioctl.rst  |   2 +-
- MAINTAINERS                                        |   1 +
- arch/arm/mach-pxa/spitz_pm.c                       |  22 +-
- arch/arm/mach-sa1100/h3600.c                       |  47 ++-
- drivers/gpio/Kconfig                               |  18 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-brcmstb.c                        |  21 +-
- drivers/gpio/gpio-cros-ec.c                        |   8 +
- drivers/gpio/gpio-crystalcove.c                    |   2 +-
- drivers/gpio/gpio-graniterapids.c                  | 383 +++++++++++++++++++++
- drivers/gpio/gpio-npcm-sgpio.c                     |  10 +-
- drivers/gpio/gpio-pca953x.c                        |   2 +-
- drivers/gpio/gpio-pcie-idio-24.c                   |   2 +-
- drivers/gpio/gpio-regmap.c                         |   4 +-
- drivers/gpio/gpio-sch.c                            |  35 +-
- drivers/gpio/gpio-wcove.c                          |   2 +-
- drivers/gpio/gpiolib-acpi.c                        |  65 ++--
- drivers/gpio/gpiolib-legacy.c                      |  49 +--
- drivers/gpio/gpiolib-of.c                          |  23 +-
- drivers/gpio/gpiolib-sysfs.c                       |   2 +-
- drivers/gpio/gpiolib.c                             |  26 +-
- drivers/gpio/gpiolib.h                             |   2 +-
- .../ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c |   2 +-
- drivers/pinctrl/pinctrl-cy8c95x0.c                 |   2 +-
- include/linux/acpi.h                               |   8 +-
- include/linux/gpio.h                               |  21 +-
- include/linux/gpio/driver.h                        |   4 +-
- 33 files changed, 624 insertions(+), 237 deletions(-)
- create mode 100644 drivers/gpio/gpio-graniterapids.c
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
