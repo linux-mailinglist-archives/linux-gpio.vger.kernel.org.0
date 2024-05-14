@@ -1,111 +1,132 @@
-Return-Path: <linux-gpio+bounces-6363-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6364-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E8438C4ED9
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 12:21:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29D158C55DF
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 14:15:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 02ACC282E56
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 10:21:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CAE11C225C1
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 12:15:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CEC612D76E;
-	Tue, 14 May 2024 09:32:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 567F33F9D2;
+	Tue, 14 May 2024 12:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNKd76c5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BNPebhYH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4532F12D761;
-	Tue, 14 May 2024 09:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB57320F;
+	Tue, 14 May 2024 12:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715679170; cv=none; b=Ix+8SLuHbVBKyRokE+mhk+LgyrDb+J2rBVx28MK9ftdDJ9zy7D59W32B1N9zszaUaYL4muYJkXt8q1UZq2ci1IWavkArRbmKVCnMEJeUCzZd/tONT+eQAct0lb2x1l4aJz+62o/zDgyVOVIKtALFU5IrhR1qY4WTUSlTMMfgb5Y=
+	t=1715688922; cv=none; b=gT6g0aALXk3ttd7tHG/bUOYy5gs/xfiTrB3mWMvqy5wIr0dCEeBd689oZLdLRdXpH3wSOg4GYl+9/dr5MK4oCar3oGBKTQS4ReikAnuNCJg6pFVY5ol7oGNGZdZfYl+gP/GcQQKD1ul0IovRXyKpG1d0NyBe6HadWzV8p9cKZh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715679170; c=relaxed/simple;
-	bh=xl2Y0XwgJT/Ar/0cuoTl1AAPtkGPWQehhvGFxEo0aXA=;
+	s=arc-20240116; t=1715688922; c=relaxed/simple;
+	bh=C8AbzcTH0UDOHtZozDO2s82ZaO9jrv9srhBKUr1ss0o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kOv1cqhCEuprsjeIburrAlMEIDQ/NCuliWiU47lE1BSp70kpNvD6ZD/qFkPan6o9CaopeJSlEc1boPKsYpy1X1+5lIvJM9PVNmVmB0TLRjslq30W8D0QtQU7mFUZ8YgRRgvN3F6Fs53VR7a2b6Y2Mk9fq77NikeMWCd/5qTbqQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNKd76c5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3964C2BD11;
-	Tue, 14 May 2024 09:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715679169;
-	bh=xl2Y0XwgJT/Ar/0cuoTl1AAPtkGPWQehhvGFxEo0aXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GNKd76c5QKRrqOvo1jNUI+RPfN7n8qytbLk/D5mhQebrv5sE8do1i/2EDl7cPERaq
-	 4EnfubLEmelNSCYhfCJtUdVyfGDPnTRzy5dC2YKulIJciOrm1gTV4n36nBMLnuynTc
-	 kKTM+U7xZtICAIA1q+qBtgnn3ghYUCDLztRLd6xtcPCu2DWWEB/p/9leY/gvl3grfg
-	 TPAtGUgyslwmh5nNYsDXaGX4SL7CCzp6m4MdYuNlVZVopjd4krOTa3O46BUaCVc9P8
-	 BvWbnVgj1vh1p8Y8cscAA7/X4JNHDNNxQPZU1zJpPMeuz8OCNqu18KlkBtoMOQ3B8V
-	 Vod4Y0CaGYlUQ==
-Date: Tue, 14 May 2024 10:30:38 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	naresh.solanki@9elements.com, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: cy8c95x0: Cache muxed registers
-Message-ID: <2008e2e7-59f6-437c-a3c6-1fb9e31bf635@sirena.org.uk>
-References: <20231219125350.4031370-1-patrick.rudolph@9elements.com>
- <ZkL2Sdf0NcqaZRZ4@surfacebook.localdomain>
- <CACRpkdbUye6RhbRNGn6sapARwVUyi5hKS-5VEVBr6ZR6W_KdQw@mail.gmail.com>
- <CALNFmy33wMHBcoU9ei0vVsn0gUM7-0jdkDDq_Loa3=mMWXiWcw@mail.gmail.com>
- <CACRpkdZhY_Yz2jHGXWO5_t8Qdey8me0Gytds7V64GYOFoEC2Dg@mail.gmail.com>
- <CAHp75VfA8G6KyhD5_HDyKWp5AdpsnnQ27gzTDRRjDRCVXkT-ag@mail.gmail.com>
- <d4c03f3b-a8ce-44bd-8897-8a2f276dede6@sirena.org.uk>
- <CAHp75VdDMOLuRhDNQ=dzoE6Yyah+k-pGm8vY8B2DmFiyPBuftw@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mp+QrAQn6+JGpVM0N6WiBRnMisaCWXRk8ASAKwQ5JKVfUlnZ2Lvuj8SRajI5AxUkKBEpE2+5qHB+HzM4Zy6j8MqFpC0yR3UcEuRFlBezyK8rVErlvqcClcdFVE3vftCNnKvFfeQAH/lHkQgpvk4wLooJT/36OHiu2HrMF0YnX0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BNPebhYH; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1eca195a7c8so45209445ad.2;
+        Tue, 14 May 2024 05:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715688920; x=1716293720; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pskd4OyVYfOv6TtD0JP21Spo2bkD19tl3Fnn6qpniO0=;
+        b=BNPebhYHx4NpL7w/Coz0w61gjSCfuMaabxWrsV7QbKv48vnQ2+EbcQJ1jPsS50M9Mh
+         0wA0s41utSAq/aV+ks2jkuSMB01c3nmMPJ5f8swBsw+h++vqUoorGUY7sgd2hP7XF15x
+         tDp/CH7PGJC8O6CYptJ8vhx+Ff3rfqN2EG2JN4yBNUwpw8O6DYDiCAuKpB+/KAULNwnh
+         DzAWsUHpwrQ7CCsqEg/BrOTBUHZWeD2d6mt2Nf3dQ3DHH6pOlxPZXCvyn0hHpMEP2hDg
+         lgK5GG/E1jCMCvhyQvWJ9gRzHRnBpPx4D9xIU8/gWkhNXe/N3gjbRxyjS7ryDwWjIOUm
+         lQUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715688920; x=1716293720;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pskd4OyVYfOv6TtD0JP21Spo2bkD19tl3Fnn6qpniO0=;
+        b=hOnnnXcT7HcwHE13yAA+8pKNxeSSu/lA5uzYrJCNu/vP6j1AscL4eR5ItTednSiwVe
+         M1ckN07dKPLocSoloKLCOLO9RDI2djwxy6zrTQd4TPWkZeqpQGt/heYMUYmCnjzO/Np4
+         /UQZ3H2rXyEFwdSgAU8AtqYAqLXiJvW1WG6SsbTBuvqcA1R1dJMr58UpHgkljKHTpC9h
+         jDMkmHVdkrbkhze+SHZPnHEShX2cn7RpzyeJr7wsxWt+NTTvxCyK6fA6zyNdlmHg7VXl
+         oo2q5knC1mctkwaJOS0+m4sovgDI5zTGp8Jd+eOQyu8utcepXWC6xEx6II89drMQ8zSR
+         vZIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgHomR8eKStZ0ZiyGL8DSor4j5NJWr8XBzTKIbBOzE3ugwCIiJ30bfHiV+eCmcFu5d263AKUep4C88B9965Hi2Xq/fOHlWnwXhwA+kI7+w1ICIrlncrJ2J8loTpF/rgXDLxOK9eX72FQ==
+X-Gm-Message-State: AOJu0Yz8beFayqD4a3RiCXIxbDAoJ18PvLuSnFNACa8CY7BMylac9ZZX
+	H9q8vhVe0kAVw+USW8Y+mRUmle7ovmJbDEjU/aw+uhDlQCWe/t/A
+X-Google-Smtp-Source: AGHT+IH4mZIj1+A3RtNyc5REPvnbWn8cl+CBwJqHJcC5O4EVt74huk85AhWJipxoDmtWtR8hvEqGBg==
+X-Received: by 2002:a17:902:6ac1:b0:1e2:7dc7:477 with SMTP id d9443c01a7336-1ef440583dbmr106394935ad.57.1715688920056;
+        Tue, 14 May 2024 05:15:20 -0700 (PDT)
+Received: from rigel (60-241-107-82.static.tpgi.com.au. [60.241.107.82])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c138fa2sm96107365ad.261.2024.05.14.05.15.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 May 2024 05:15:19 -0700 (PDT)
+Date: Tue, 14 May 2024 20:15:15 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH] gpiolib: cdev: fix uninitialised kfifo
+Message-ID: <20240514121515.GA72688@rigel>
+References: <20240510065342.36191-1-warthog618@gmail.com>
+ <171534996897.34114.8159265536879918834.b4-ty@linaro.org>
+ <20240514033656.GA24922@rigel>
+ <CACMJSetivWMXNu9dJyMeJTfYSsQaez_7kSHce-5NJL6=72Rd0g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wVv4mP3Bc7+QJDE6"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VdDMOLuRhDNQ=dzoE6Yyah+k-pGm8vY8B2DmFiyPBuftw@mail.gmail.com>
-X-Cookie: In the war of wits, he's unarmed.
+In-Reply-To: <CACMJSetivWMXNu9dJyMeJTfYSsQaez_7kSHce-5NJL6=72Rd0g@mail.gmail.com>
 
+On Tue, May 14, 2024 at 08:56:13AM +0200, Bartosz Golaszewski wrote:
+> On Tue, 14 May 2024 at 05:37, Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Fri, May 10, 2024 at 04:06:16PM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > >
+> > > On Fri, 10 May 2024 14:53:42 +0800, Kent Gibson wrote:
+> > > > If a line is requested with debounce, and that results in debouncing
+> > > > in software, and the line is subsequently reconfigured to enable edge
+> > > > detection then the allocation of the kfifo to contain edge events is
+> > > > overlooked.  This results in events being written to and read from an
+> > > > unitialised kfifo.  Read events are returned to userspace.
+> > > >
+> > > > Initialise the kfifo in the case where the software debounce is
+> > > > already active.
+> > > >
+> > > > [...]
+> > >
+> > > Applied, thanks!
+> > >
+> > > [1/1] gpiolib: cdev: fix uninitialised kfifo
+> > >       commit: 3c1625fe5a2e0d68cd7b68156f02c1b5de09a161
+> > >
+> >
+> > I've got a patch series to tidy this up and catch any similar errors
+> > earlier going forward.
+> > It is of course based on this patch, but that isn't in gpio/for-next yet.
+> > How should I proceed?
+> >
+> > Cheers,
+> > Kent.
+>
+> Pull in current master into gpio/for-next, apply your series, make
+> sure it works and then wait until v6.10-rc1 is tagged because I won't
+> be picking up anything during merge window.
+>
 
---wVv4mP3Bc7+QJDE6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Will do.
 
-On Tue, May 14, 2024 at 12:23:19PM +0300, Andy Shevchenko wrote:
-> On Tue, May 14, 2024 at 12:02=E2=80=AFPM Mark Brown <broonie@kernel.org> =
-wrote:
-
-> > If there's paging of registers then regmap supports this with the ranges
-> > feature, you can tell regmap where the window is in the physical
-> > register map and which register to use to switch pages and have regmap
-> > export the underlying registers as a linear range of virtual registers.
-
-> In this chip there are two ranges that are dependent on a selector,
-> one is for port selection (which the original change is about) and
-> another is for PWM (IIRC). Note that they are orthogonal to each
-> other, meaning they have their own selector registers.
-
-That's fine, you can have as many ranges as you like.
-
---wVv4mP3Bc7+QJDE6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZDLz0ACgkQJNaLcl1U
-h9BzNgf9GfN9MZ5e6oaGtY+Ipa0A6tL2poXDyqpEp9EvhvwwtcRqxyybQqM/Lqn0
-uM7Zfrdc4uuE1q7zfhcIIa7eFhiv+vthUPJxXiNDrdFEBfbLUkZAAeR4yEO4BRgu
-6QLTLeunPcUJO5+LirQgD/HBa7tv37OMQmfw8uJ19HCs/nteS62E/P1Fiy5vEsQD
-Vw8WjztE0aPu8mTulgJnL0rd5QnxoOjN/b92oKGyDdpmHu5uejylYkOTWtyRvpt0
-QQPqvcKbvmNVyFAnK9duyUHxkNfzY2jJHdKRXJtcsyd4xg5ogylKQJc7QR3EAqy5
-qLBqj5VA37qFv3bAldN8cT7VeV0eBQ==
-=uQse
------END PGP SIGNATURE-----
-
---wVv4mP3Bc7+QJDE6--
+Thanks,
+Kent.
 
