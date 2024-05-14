@@ -1,132 +1,151 @@
-Return-Path: <linux-gpio+bounces-6364-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6365-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29D158C55DF
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 14:15:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEAE38C5608
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 14:27:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CAE11C225C1
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 12:15:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42B71281B4C
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 12:27:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 567F33F9D2;
-	Tue, 14 May 2024 12:15:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 705F548CF2;
+	Tue, 14 May 2024 12:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BNPebhYH"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="TB1hUabf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB57320F;
-	Tue, 14 May 2024 12:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE675225A8;
+	Tue, 14 May 2024 12:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715688922; cv=none; b=gT6g0aALXk3ttd7tHG/bUOYy5gs/xfiTrB3mWMvqy5wIr0dCEeBd689oZLdLRdXpH3wSOg4GYl+9/dr5MK4oCar3oGBKTQS4ReikAnuNCJg6pFVY5ol7oGNGZdZfYl+gP/GcQQKD1ul0IovRXyKpG1d0NyBe6HadWzV8p9cKZh4=
+	t=1715689617; cv=none; b=f5s9VATRDI2eZSaBG0Ar27xXXH/PcFFsHTttLGyd83VgcrbX/Eefg1jHF8qmXVytHnFIC2RC0uc7Sf828kPF4LlxNOU+sKX8rRwaHpQAWoO2WO3ovU70wtIY931kXD5nopM/wBbtHJXFRWjbIAptQHW7OMny/f2UgGs8Ya0KCog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715688922; c=relaxed/simple;
-	bh=C8AbzcTH0UDOHtZozDO2s82ZaO9jrv9srhBKUr1ss0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mp+QrAQn6+JGpVM0N6WiBRnMisaCWXRk8ASAKwQ5JKVfUlnZ2Lvuj8SRajI5AxUkKBEpE2+5qHB+HzM4Zy6j8MqFpC0yR3UcEuRFlBezyK8rVErlvqcClcdFVE3vftCNnKvFfeQAH/lHkQgpvk4wLooJT/36OHiu2HrMF0YnX0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BNPebhYH; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1eca195a7c8so45209445ad.2;
-        Tue, 14 May 2024 05:15:20 -0700 (PDT)
+	s=arc-20240116; t=1715689617; c=relaxed/simple;
+	bh=xU1lG+LaTVYlDzKuYpkmb+8guhxZCCniE7IDWhABdcc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LUzwBjwEhnMcMVBw4CGKKei/ZLXBq/rk4potqs1YKTip6LAT9NbyrIXapOkkNzqQ5gGauj0dzd/F6kdcV0E6eAlxNRLOQMZgL22EaOUxqYeHRpyXMAJb+YJsMmE7pSWVyGnW7FJHMsyhS3EgQTUxQoUUTzUwH9E6zyzdbQuRQq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=TB1hUabf; arc=none smtp.client-ip=72.21.196.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715688920; x=1716293720; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pskd4OyVYfOv6TtD0JP21Spo2bkD19tl3Fnn6qpniO0=;
-        b=BNPebhYHx4NpL7w/Coz0w61gjSCfuMaabxWrsV7QbKv48vnQ2+EbcQJ1jPsS50M9Mh
-         0wA0s41utSAq/aV+ks2jkuSMB01c3nmMPJ5f8swBsw+h++vqUoorGUY7sgd2hP7XF15x
-         tDp/CH7PGJC8O6CYptJ8vhx+Ff3rfqN2EG2JN4yBNUwpw8O6DYDiCAuKpB+/KAULNwnh
-         DzAWsUHpwrQ7CCsqEg/BrOTBUHZWeD2d6mt2Nf3dQ3DHH6pOlxPZXCvyn0hHpMEP2hDg
-         lgK5GG/E1jCMCvhyQvWJ9gRzHRnBpPx4D9xIU8/gWkhNXe/N3gjbRxyjS7ryDwWjIOUm
-         lQUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715688920; x=1716293720;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pskd4OyVYfOv6TtD0JP21Spo2bkD19tl3Fnn6qpniO0=;
-        b=hOnnnXcT7HcwHE13yAA+8pKNxeSSu/lA5uzYrJCNu/vP6j1AscL4eR5ItTednSiwVe
-         M1ckN07dKPLocSoloKLCOLO9RDI2djwxy6zrTQd4TPWkZeqpQGt/heYMUYmCnjzO/Np4
-         /UQZ3H2rXyEFwdSgAU8AtqYAqLXiJvW1WG6SsbTBuvqcA1R1dJMr58UpHgkljKHTpC9h
-         jDMkmHVdkrbkhze+SHZPnHEShX2cn7RpzyeJr7wsxWt+NTTvxCyK6fA6zyNdlmHg7VXl
-         oo2q5knC1mctkwaJOS0+m4sovgDI5zTGp8Jd+eOQyu8utcepXWC6xEx6II89drMQ8zSR
-         vZIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgHomR8eKStZ0ZiyGL8DSor4j5NJWr8XBzTKIbBOzE3ugwCIiJ30bfHiV+eCmcFu5d263AKUep4C88B9965Hi2Xq/fOHlWnwXhwA+kI7+w1ICIrlncrJ2J8loTpF/rgXDLxOK9eX72FQ==
-X-Gm-Message-State: AOJu0Yz8beFayqD4a3RiCXIxbDAoJ18PvLuSnFNACa8CY7BMylac9ZZX
-	H9q8vhVe0kAVw+USW8Y+mRUmle7ovmJbDEjU/aw+uhDlQCWe/t/A
-X-Google-Smtp-Source: AGHT+IH4mZIj1+A3RtNyc5REPvnbWn8cl+CBwJqHJcC5O4EVt74huk85AhWJipxoDmtWtR8hvEqGBg==
-X-Received: by 2002:a17:902:6ac1:b0:1e2:7dc7:477 with SMTP id d9443c01a7336-1ef440583dbmr106394935ad.57.1715688920056;
-        Tue, 14 May 2024 05:15:20 -0700 (PDT)
-Received: from rigel (60-241-107-82.static.tpgi.com.au. [60.241.107.82])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c138fa2sm96107365ad.261.2024.05.14.05.15.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 May 2024 05:15:19 -0700 (PDT)
-Date: Tue, 14 May 2024 20:15:15 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linus.walleij@linaro.org
-Subject: Re: [PATCH] gpiolib: cdev: fix uninitialised kfifo
-Message-ID: <20240514121515.GA72688@rigel>
-References: <20240510065342.36191-1-warthog618@gmail.com>
- <171534996897.34114.8159265536879918834.b4-ty@linaro.org>
- <20240514033656.GA24922@rigel>
- <CACMJSetivWMXNu9dJyMeJTfYSsQaez_7kSHce-5NJL6=72Rd0g@mail.gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1715689616; x=1747225616;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jZ0aIN73vHSEd/w0f15GiiFOLZHUFBfpeWf82hZw6m8=;
+  b=TB1hUabfEMQWWWkY7MDUZt6vuCG9lhBXMqXoImr/Z60/35aBT1/Fur/6
+   kqrMQEFAv2gpbK0U30Eu5oAAHNC9uPvDS8d8DUvhFW7LrKYmORofdDBTd
+   wgqIuIEhJWDPY/NKILgkrSmRFtiHzDdr6Jki8oNgWLxQftRC+VNLfW60d
+   w=;
+X-IronPort-AV: E=Sophos;i="6.08,159,1712620800"; 
+   d="scan'208";a="401038834"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2024 12:26:52 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.17.79:16153]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.23.178:2525] with esmtp (Farcaster)
+ id d2bd624b-9d24-4d18-9f3a-ab99477b65da; Tue, 14 May 2024 12:26:51 +0000 (UTC)
+X-Farcaster-Flow-ID: d2bd624b-9d24-4d18-9f3a-ab99477b65da
+Received: from EX19D002EUC003.ant.amazon.com (10.252.51.218) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 14 May 2024 12:26:50 +0000
+Received: from EX19MTAUWB001.ant.amazon.com (10.250.64.248) by
+ EX19D002EUC003.ant.amazon.com (10.252.51.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 14 May 2024 12:26:49 +0000
+Received: from dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com
+ (10.253.65.58) by mail-relay.amazon.com (10.250.64.254) with Microsoft SMTP
+ Server id 15.2.1258.28 via Frontend Transport; Tue, 14 May 2024 12:26:49
+ +0000
+Received: by dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (Postfix, from userid 23002382)
+	id BBB5620AC2; Tue, 14 May 2024 12:26:48 +0000 (UTC)
+From: Hagar Hemdan <hagarhem@amazon.com>
+To:
+CC: Norbert Manthey <nmanthey@amazon.de>, Hagar Hemdan <hagarhem@amazon.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] gpio: prevent potential speculation leaks in gpio_device_get_desc()
+Date: Tue, 14 May 2024 12:26:01 +0000
+Message-ID: <20240514122601.15261-1-hagarhem@amazon.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACMJSetivWMXNu9dJyMeJTfYSsQaez_7kSHce-5NJL6=72Rd0g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, May 14, 2024 at 08:56:13AM +0200, Bartosz Golaszewski wrote:
-> On Tue, 14 May 2024 at 05:37, Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Fri, May 10, 2024 at 04:06:16PM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > >
-> > > On Fri, 10 May 2024 14:53:42 +0800, Kent Gibson wrote:
-> > > > If a line is requested with debounce, and that results in debouncing
-> > > > in software, and the line is subsequently reconfigured to enable edge
-> > > > detection then the allocation of the kfifo to contain edge events is
-> > > > overlooked.  This results in events being written to and read from an
-> > > > unitialised kfifo.  Read events are returned to userspace.
-> > > >
-> > > > Initialise the kfifo in the case where the software debounce is
-> > > > already active.
-> > > >
-> > > > [...]
-> > >
-> > > Applied, thanks!
-> > >
-> > > [1/1] gpiolib: cdev: fix uninitialised kfifo
-> > >       commit: 3c1625fe5a2e0d68cd7b68156f02c1b5de09a161
-> > >
-> >
-> > I've got a patch series to tidy this up and catch any similar errors
-> > earlier going forward.
-> > It is of course based on this patch, but that isn't in gpio/for-next yet.
-> > How should I proceed?
-> >
-> > Cheers,
-> > Kent.
->
-> Pull in current master into gpio/for-next, apply your series, make
-> sure it works and then wait until v6.10-rc1 is tagged because I won't
-> be picking up anything during merge window.
->
+Users can call the gpio_ioctl() interface to get information about gpio
+chip lines.
+Lines on the chip are identified by an offset in the range
+of [0,chip.lines).
+Offset is copied from user and then used as an array index to get
+the gpio descriptor without sanitization.
 
-Will do.
+This change ensures that the offset is sanitized by
+using "array_index_nospec" to mitigate any possibility of speculative
+information leaks.
 
-Thanks,
-Kent.
+This bug was discovered and resolved using Coverity Static Analysis
+Security Testing (SAST) by Synopsys, Inc.
+
+Fixes: aad955842d1c ("gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and GPIO_V2_GET_LINEINFO_WATCH_IOCTL")
+Signed-off-by: Hagar Hemdan <hagarhem@amazon.com>
+---
+Only compile tested, no access to HW.
+---
+ drivers/gpio/gpiolib-cdev.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 9dad67ea2597..215c03e6808f 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -20,6 +20,7 @@
+ #include <linux/kfifo.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/nospec.h>
+ #include <linux/overflow.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/poll.h>
+@@ -2170,7 +2171,8 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 	lflags = eventreq.handleflags;
+ 	eflags = eventreq.eventflags;
+ 
+-	desc = gpio_device_get_desc(gdev, offset);
++	desc = gpio_device_get_desc(gdev,
++				array_index_nospec(offset, gdev->ngpio));
+ 	if (IS_ERR(desc))
+ 		return PTR_ERR(desc);
+ 
+@@ -2477,7 +2479,8 @@ static int lineinfo_get_v1(struct gpio_chardev_data *cdev, void __user *ip,
+ 		return -EFAULT;
+ 
+ 	/* this doubles as a range check on line_offset */
+-	desc = gpio_device_get_desc(cdev->gdev, lineinfo.line_offset);
++	desc = gpio_device_get_desc(cdev->gdev,
++				array_index_nospec(lineinfo.line_offset, cdev->gdev->ngpio));
+ 	if (IS_ERR(desc))
+ 		return PTR_ERR(desc);
+ 
+@@ -2514,7 +2517,8 @@ static int lineinfo_get(struct gpio_chardev_data *cdev, void __user *ip,
+ 	if (memchr_inv(lineinfo.padding, 0, sizeof(lineinfo.padding)))
+ 		return -EINVAL;
+ 
+-	desc = gpio_device_get_desc(cdev->gdev, lineinfo.offset);
++	desc = gpio_device_get_desc(cdev->gdev,
++				array_index_nospec(lineinfo.offset, cdev->gdev->ngpio));
+ 	if (IS_ERR(desc))
+ 		return PTR_ERR(desc);
+ 
+-- 
+2.40.1
+
 
