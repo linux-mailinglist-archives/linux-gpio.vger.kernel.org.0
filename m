@@ -1,128 +1,134 @@
-Return-Path: <linux-gpio+bounces-6372-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6373-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E993B8C57C9
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 16:19:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3036A8C5874
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 17:05:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6293B1F227EF
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 14:19:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E304C282206
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 May 2024 15:05:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BF46144D2C;
-	Tue, 14 May 2024 14:19:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD3C617EB8A;
+	Tue, 14 May 2024 15:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0olyf2r"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fwH2L2d/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD85A1448D7;
-	Tue, 14 May 2024 14:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6ABF3EA66;
+	Tue, 14 May 2024 15:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715696374; cv=none; b=gXAl18Boy+JXAbV4621Dca8jeAdi+uAncUAzpZf2w1BgXh4jZwV3BqMmgAPqSboi2SEumdIiuSz0+T5J1OWLo7aKztE0Y18E18bKdYHZH4RTTCwU2DLpXeVXwA6rZWaXqDqh9Z0hKysc/V7xtNvDWLdUsxm6VeEIwT1rPw6TUKA=
+	t=1715699116; cv=none; b=rAr1lJOeT06x1bwVn+xJumIPhTrpZPI0hQkSEBR21t+5BJPxIP32IycZiW3ey9xnmhX7xK1NbTFxlCSpbYLeSkJGB6fdrq81MUMYExZSr5XzLjm5sn1CIBvmsSDs5rHoiAQx2NHccnAtoejRBYFHwDjM+KtJPH9kEbUu3TP0e4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715696374; c=relaxed/simple;
-	bh=r1xN7xUhEHx+dV+kiWuY93GBKrBBL7jDPFL0byrbFjM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q3KJESaj/pxt+W7VMig2Qpknj0w0hxQbXWMgHsmXxNSQ78Q+zSfCWwcUrHvxb/4zM4BmXden89KntN1DknVqQrnLcoYUZjSyWdUU1HRVtlD8tNwZeYE4lFbLDtM5vLwVKCsFYjedVn5q4gCzeGBdk83+GsDWwgDLd8YrEoMKnb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P0olyf2r; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a59a0e4b773so45831466b.2;
-        Tue, 14 May 2024 07:19:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715696371; x=1716301171; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AS/xWef6bfATcw3hLhDNBUVW+/DIL4IeSHNuS3Wsvdg=;
-        b=P0olyf2r/Klzr+Th5s92rpIKelES5nBQdSDiqJCb843mIUTWXv3427BpcnVyBh0pz8
-         ieZI0OigwpCZQOOeCqxjgZ0G0C1+nLHIMvSsheUcG2uT6nFi9j4cXWWTT7YHTlUykAed
-         nKw6+Wdr/naxqLLRasnO5ENXxh+5dfoGie2Fvx8l14jalxlmnTb+WBXTeabfxQkjppry
-         1qlg6g3UKVL3rFYwaQszww1s6p2R+OpADuddESN7Pdk+qOVXdmQ4g6KURGLzrP9RQgAG
-         YI9ux+6MV61N1VJf6L81SyBiDd3aBR0IFcHV9udhkKrtZxUhCXbhYwamG/StUnkfXfJx
-         YRIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715696371; x=1716301171;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AS/xWef6bfATcw3hLhDNBUVW+/DIL4IeSHNuS3Wsvdg=;
-        b=gdXrAM0o7ZSUBVvH6pXsRxETPdUI2SkQMEL9eLQ1hT0yhTDhoYS+2OXOS0bywoWiMv
-         DJEtUmP7UXNwxO4FVbmMURFUGspNl92tDXYaH8Ft8B/tHCWG3qCa1VGOydcgEkTUFt4C
-         sjlYFO+SGVrdq7pL3FxtO7bza6cMg7KMyUc87O8BFrN0N+mzwlGKY3sx6ys/7dh3jyvg
-         F2lC7rhND4u4QLTJ321HIiW4eKYKh2QU1GARPrwG0bp9sutC4EDC33qqsAETx/e1rpa1
-         OwRrHvM1PmT4Nv4JS4Yxxrn9rKSyOQEE9lpHRWfgw2Yfq3l9smWg+44d/siKefjbw2bZ
-         87DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuLl9idAVgPBWMB7+E5EjVtFYojbIcBcYBwjVdo5WTkVTpVMoyFhZCf6XVoINeRJuhMjHvMXMU315wg5ZVQxpP8r3hPJexVDpgqcRrlfJVK8OoS6GAhcDi9ssSy+QYT67ucG8JHYf8SB6neERMISis9hRm8uW66cQsjDYA7UuQ+XiztwnGlmaYeR2tZVvFXHjJ73803YaQT8RF4Uk6wsBwVppZ
-X-Gm-Message-State: AOJu0YxbGySAuuprI5gzBSUQlyXxWUOyxiH7yKbC79tSkEWwgJB1lV1l
-	PwbdkVfSX7qaS33Jtlt9meI8bYEDQz4jE7DFgMVSVhg8MsNSbd4S5bVK4LCgyi7pOyW7XvNelWP
-	m5prg1mWfHveWhp4NquC5u6gvJzk=
-X-Google-Smtp-Source: AGHT+IFQhotJp12K8DqMgmEGSWFR/t8jbLw3SLlqQrPU09u1dcY1cowc2ccw4W4NjSbQ2Zvi1EWeMrcYhXfcp0MQDKY=
-X-Received: by 2002:a17:907:6d01:b0:a59:9f3e:b1ca with SMTP id
- a640c23a62f3a-a5a2d6657camr1011541766b.55.1715696370835; Tue, 14 May 2024
- 07:19:30 -0700 (PDT)
+	s=arc-20240116; t=1715699116; c=relaxed/simple;
+	bh=w4qu7AcWvUkrD2GyDHl1h65yHhTJv5ueqrzrzj7ci3s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TMqHrKhOVpbr3EudIwoRQuP1lc6c/Q7umqo8FBPYQAQN7KUU0yaxuDGoZCaJsETdBKCGi2QcDQl2trqbKetZzG4yqLSs+c3jXmUSYK72R4L2J4bpgj4uE+uXnw4yixTYj5i3VLqc0HBUFcMMlk05n60WFE8ux09hmPBrj2glx1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fwH2L2d/; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44EBohpO004317;
+	Tue, 14 May 2024 15:05:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=NnZu3bgBmSPSM6LjznEKtBZHGtRz96Gtt9Ol698i3bE=; b=fw
+	H2L2d/9BoqMTJgCd45y6wQvAHo0ncZjyEqdX8HMR5PCTprwfXmuRNoOhgcv2s/Sz
+	hrg0O6wK43J0ZPZ7aMUTqPYBQx/aczrpep8aG1RzpzcRSVti39ViagTLFHVizOhg
+	4hVZ30A+hikkkj93BzXzP0s2BO8LOQyP0fQOUdNxBMkTsqSHMQLtvqOyLiLF0J/c
+	txY/Eiu5x/Vp36QW9boaZOFeu4ygJfmhzwYmNNmKkJVYEo8bPcIVNVMIS7TQxh5k
+	GGLqUz/0+j8PDcpI0/o/BAcNZuuvE8w3/ziqZ9S2+wcJvPDKNHJU2vr6EyAxDYi3
+	FOQKMCc0kp2yfGPvNqsQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y47eg8fxc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 15:05:08 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44EF55m7013646
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 14 May 2024 15:05:05 GMT
+Received: from [10.216.14.10] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 14 May
+ 2024 08:04:59 -0700
+Message-ID: <0a372307-8887-ac97-54c6-d6080e64540f@quicinc.com>
+Date: Tue, 14 May 2024 20:34:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZjpMeVk_HiixZUEu@hovoldconsulting.com> <20240514140446.706847-1-quic_skakitap@quicinc.com>
-In-Reply-To: <20240514140446.706847-1-quic_skakitap@quicinc.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 14 May 2024 17:18:54 +0300
-Message-ID: <CAHp75VcfYuukpLg=F36ykddsT9SpfdGNyyvVeyw-Yvz61Lrq7g@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
 Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Cc: johan@kernel.org, andersson@kernel.org, broonie@kernel.org, 
-	conor+dt@kernel.org, devicetree@vger.kernel.org, johan+linaro@kernel.org, 
-	konrad.dybcio@linaro.org, krzk+dt@kernel.org, lee@kernel.org, 
-	lgirdwood@gmail.com, linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, 
-	swboyd@chromium.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+CC: <johan@kernel.org>, <andersson@kernel.org>, <broonie@kernel.org>,
+        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <johan+linaro@kernel.org>, <konrad.dybcio@linaro.org>,
+        <krzk+dt@kernel.org>, <lee@kernel.org>, <lgirdwood@gmail.com>,
+        <linus.walleij@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <robh@kernel.org>, <swboyd@chromium.org>
+References: <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
+ <20240514140446.706847-1-quic_skakitap@quicinc.com>
+ <CAHp75VcfYuukpLg=F36ykddsT9SpfdGNyyvVeyw-Yvz61Lrq7g@mail.gmail.com>
+From: "Satya Priya Kakitapalli (Temp)" <quic_skakitap@quicinc.com>
+In-Reply-To: <CAHp75VcfYuukpLg=F36ykddsT9SpfdGNyyvVeyw-Yvz61Lrq7g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 06wmee6BnCQYyBEKBkIDU_zBFoOtEd63
+X-Proofpoint-ORIG-GUID: 06wmee6BnCQYyBEKBkIDU_zBFoOtEd63
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-14_08,2024-05-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ malwarescore=0 phishscore=0 spamscore=0 mlxlogscore=894 lowpriorityscore=0
+ clxscore=1015 impostorscore=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405140106
 
-On Tue, May 14, 2024 at 5:05=E2=80=AFPM Satya Priya Kakitapalli
-<quic_skakitap@quicinc.com> wrote:
-> > On Thu, May 09, 2024 at 03:07:02PM +0300, Andy Shevchenko wrote:
-> > > Wed, May 08, 2024 at 10:37:50PM +0000, Stephen Boyd kirjoitti:
-> > > > Quoting Johan Hovold (2024-05-06 08:08:29)
 
-...
-
-> > > > > +               BUILD_BUG_ON((ARRAY_SIZE(pldo_ranges) !=3D 1) ||
-> > > >
-> > > > This should be an && not || right?
-> > >
-> > > > > +                               (ARRAY_SIZE(nldo_ranges) !=3D 1))=
-;
-> > >
-> > > In any case BUILD_BUG_ON() is not encouraged for such cases, it would=
- be much
-> > > better to have a static_assert() near to one of those arrays.
-> >
-> > I think the reason it is placed here is that the above line reads:
-> >
-> >       rdesc->n_linear_ranges =3D 1;
-> >
-> > and that would need to change if anyone expands the arrays.
+On 5/14/2024 7:48 PM, Andy Shevchenko wrote:
+> On Tue, May 14, 2024 at 5:05 PM Satya Priya Kakitapalli
+> <quic_skakitap@quicinc.com> wrote:
+>>> On Thu, May 09, 2024 at 03:07:02PM +0300, Andy Shevchenko wrote:
+>>>> Wed, May 08, 2024 at 10:37:50PM +0000, Stephen Boyd kirjoitti:
+>>>>> Quoting Johan Hovold (2024-05-06 08:08:29)
+> ...
 >
-> Correct. static_assert() cannot be used in the middle of code here, it ca=
-n only be used at the declarations part which doesn't serve the purpose.
+>>>>>> +               BUILD_BUG_ON((ARRAY_SIZE(pldo_ranges) != 1) ||
+>>>>> This should be an && not || right?
+>>>>>> +                               (ARRAY_SIZE(nldo_ranges) != 1));
+>>>> In any case BUILD_BUG_ON() is not encouraged for such cases, it would be much
+>>>> better to have a static_assert() near to one of those arrays.
+>>> I think the reason it is placed here is that the above line reads:
+>>>
+>>>        rdesc->n_linear_ranges = 1;
+>>>
+>>> and that would need to change if anyone expands the arrays.
+>> Correct. static_assert() cannot be used in the middle of code here, it can only be used at the declarations part which doesn't serve the purpose.
+> I didn't get this. The ARRAY_SIZE():s are defined at compile time
+> globally. How does this prevent from using static_assert()?
 
-I didn't get this. The ARRAY_SIZE():s are defined at compile time
-globally. How does this prevent from using static_assert()?
 
-> So, BUILD_BUG_ON is the only way to go here.
+The reason we added it here is to make sure the nlod_ranges and 
+pldo_ranges doesn't become larger, and we forget updating the 
+n_linear_ranges. Adding static_assert here is not feasible so adding a 
+BUILD_BUG_ON at this point makes sure the n_linear_ranges is proper.
 
-I don't think so.
 
---=20
-With Best Regards,
-Andy Shevchenko
+>> So, BUILD_BUG_ON is the only way to go here.
+> I don't think so.
+>
 
