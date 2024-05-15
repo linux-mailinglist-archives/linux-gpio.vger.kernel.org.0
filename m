@@ -1,234 +1,130 @@
-Return-Path: <linux-gpio+bounces-6395-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6396-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 970058C64BA
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 May 2024 12:05:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF7CF8C663A
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 May 2024 14:17:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BAA471C21CAC
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 May 2024 10:04:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 58A16B21365
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 May 2024 12:17:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAFB685955;
-	Wed, 15 May 2024 10:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45573745CB;
+	Wed, 15 May 2024 12:17:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ExyH4UuP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/hDoivy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD848121B;
-	Wed, 15 May 2024 10:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4DA14AB4;
+	Wed, 15 May 2024 12:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715767311; cv=none; b=UJLiVvAh/WgfoHwtAHb+dYcpH3z5KGO4zbu5sTHw3ioPDXUl3/BN1Jc4sGpsxdJfhh6FAvRCAABZ8/r9nkZhFbN6MDRUgMIPjuPr90ikTMsjPTprHIIWeSu1YryBmgoHYLOHtq0hu+HLZIfFQrZZP5YfxJZJ7VipoVFGoaodFlc=
+	t=1715775468; cv=none; b=HmJISdRmbCryjDon7rpkfFG1PEATBhIGVt+IABTf3VqAW8aRlOMLBlSrmiFPme+ckcNeKrDID3WPjXr3W682CTFU/kIyhI80y8MgfPZ5oTnRUmtQrlSLnhMff5Mk57f0ATAA7rtkDw3gmU/F7E2FTpGT7RowJ03YvWVfeWMjUwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715767311; c=relaxed/simple;
-	bh=lpcRI6pbJ32meL/VjTzpGOcoWSJTYnk21moIdV1Kpxk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VpODlNmn2CVcNI/gvtxP5qPE46X3z/w8/qUUPsxUZGLSawFiLX/vDPJvcHMi73yjCCaETRvxQsF7ChuneQ4PaNsL8NAubtq/u/aj9crRn1guEMq3uuJ68ZK0rACW1cCKTmA/Dk1MtnldMo0TfWzE8x6KS6n/s6pODDPvFaerafQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ExyH4UuP; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 996BB1BF20B;
-	Wed, 15 May 2024 10:01:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715767307;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M72jZYyV65DqxQX89BNQFEE+r0wyDWzohfJY2wWVXuo=;
-	b=ExyH4UuPFAgSmMV9C4UNjzQmZuuNJKVcVAg7O2v3KjsFLD0vKpUfL11zUL3OxxqZ6Mw1Qx
-	979f3niomtNL8rm7PHDTpV6uBwScnOmsdtXV1MjJSOEffWWAwbWuT5zEyQTrIR6YTXZCW6
-	FDEK0cdRpuLu3y1GBMo0m+tajN7qGx0x/1PYS+nXgvRV9HJnObncVdiTw04frKlzceI4Ra
-	Skdr2LszbcQBMYkf3KXnDb2+2/C0dZMIsiF31TmZCKd3TqWBmXTuChiaVatgS2lBSGPF8q
-	PHpB6jupV/gfnKdMJVQ6smH2hFlHBOIC2LWKoqNPHUdR4tXqQLGZitcIFkMFkA==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Wed, 15 May 2024 12:01:13 +0200
-Subject: [PATCH v6 12/12] PCI: j721e: Add suspend and resume support
+	s=arc-20240116; t=1715775468; c=relaxed/simple;
+	bh=Q2y9O+8MQgFUY1TFrbqsl53M1XGtWJlJDpF/18mcmIE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j6yhMcGthOdiMrnaJaBPF6cEZwDDT5TOu12uc2vTldYaAL6xaG0qDNZfkbwF+MuGMn2tNone7AyO9qEuFUFYrrqYSOgGMECxg+wHqZNUl8+NUo4ZAgm8pXo3oJDUQoc7IK+WBrAZjbNuaLQhHUsFqq+o0NZO3D4eSweHuSbmnUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/hDoivy; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51f0b6b682fso7332565e87.1;
+        Wed, 15 May 2024 05:17:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715775464; x=1716380264; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d0aAEbXdgajt50FIPOAy30WPXnBHXkZn9O/zxN8IbEU=;
+        b=f/hDoivy6J3btMafQLocUW/DJo0FK3hK8YSYfgFG89B1R5voVaTP2dGcI2QHV4UGEB
+         pjOGe1EZng9xH2sE39CIjFIKeJy01X7dxe/ifNQbjTzbFA3EODuzFn9mUplP4IdHd5WA
+         FZ7fVwV3VYntfptsqaX5dMptaKKaveJBgJDH+F23ZWJm1QWYpPAkYKHtctsgOnzqqp7P
+         c+darUDx/kajHUJH/4aTnmnwT/1yM8NCjpXLrtvsLRoK96wuks59RjKAPrphY+VJGYnJ
+         y65F6bsmYISWjCJi+YOe5IFal6aI6Oz33OigJA99ETf1UhLqzBEud8uvn2rbTEguFNQB
+         S0Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715775464; x=1716380264;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d0aAEbXdgajt50FIPOAy30WPXnBHXkZn9O/zxN8IbEU=;
+        b=RuuQcugd7oqrEk/zjj2SYO5hrqIJmB6fWyxHn6V+iXrhOyknDMtanEj5wK9x4rT/mJ
+         71J+hI3h13CFmxXW10vh+kF40zZ+Ry7B5TlFe89lY2Xje16brjp4SOK6EknCf9viHl5p
+         Ohz3XOiO+VoRGFVsPx/310Z9ij6SEsDPbGL6gFvLWQQtMBQ6D4ByIVukQew2aTp47K13
+         5PZ1SYYdR3wWR5K02XO6TCtiLCG8KlzQiCKV7ZbMdwwk5t18pgf6+EM14AaioZgg2KbC
+         MgCe+rzXvNf1fS742iwRKmhz6hJicTunhUZYO6BBrsTNy+iuqtpXvCzR30/uuJwExyln
+         BnSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVeyBeE43z7VoY5BsUvUOELe0hgcP+lQ10PSL6FCukRKAJbHReYffKR8vuvgOlt5s31j7Vq1Lr5b0Ylqnk2Y5oV+DnB258vOlVIO1He4yniQtxz8r81xZReyZTDZWcMNTr4igd2GAR4mPLLsTXjsnZWdJSoj6SOIplVgdIJ58w+DwQwXOg=
+X-Gm-Message-State: AOJu0YxgT2UM6P2aJb5jSYo65q7WgaGTktVSs2UW1P+ddzBRrtmsqkJj
+	27E93rv7oNO653KTwy05wk30ILBIX5OVk7M0rtFgD89e8puxa3PF
+X-Google-Smtp-Source: AGHT+IG4Hkq6991vIoxDDRYmbp1gvzhu/qj+0mxidX62jQ3RMGCze6F96qvW6K5C207sigpd1tp2RQ==
+X-Received: by 2002:a05:6512:124d:b0:516:cf23:588 with SMTP id 2adb3069b0e04-5220fc7bef6mr16714600e87.27.1715775464345;
+        Wed, 15 May 2024 05:17:44 -0700 (PDT)
+Received: from yoga-710.tas.nnz-ipc.net ([178.218.200.115])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f35ad684sm2515614e87.3.2024.05.15.05.17.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 05:17:44 -0700 (PDT)
+From: Dmitry Yashin <dmt.yashin@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Jianqun Xu <jay.xu@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Yashin <dmt.yashin@gmail.com>
+Subject: [PATCH 0/3] pinctrl: rockchip: add rk3308b SoC support
+Date: Wed, 15 May 2024 17:16:31 +0500
+Message-ID: <20240515121634.23945-1-dmt.yashin@gmail.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240102-j7200-pcie-s2r-v6-12-4656ef6e6d66@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v6-0-4656ef6e6d66@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v6-0-4656ef6e6d66@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
- thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.12.0
-X-GND-Sasl: thomas.richard@bootlin.com
 
-From: Théo Lebrun <theo.lebrun@bootlin.com>
+This patch series fixes iomux routes on rk3308 and adds support for
+pin controller found on rk3308b. According to rk3308b TRM, this pinctrl
+much the same as rk3308's, but with additional iomux routes and 3bit
+iomuxes selected via gpio##_sel_src_ctrl registers.
 
-Add suspend and resume support. Only the rc mode is supported.
+Downstream kernel [1] managed this SoC's with rk3308b_soc_data_init,
+wich picked configuration based on cpuid. Upstream pinctrl patches
+droped soc init function.
 
-During the suspend stage PERST# is asserted, then deasserted during the
-resume stage.
+The function rk3308b_soc_sel_src_init sets up gpio##_sel_src_ctrl
+registers, making SoC to use 3bit iomuxes over some 2bit old ones.
 
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 98 ++++++++++++++++++++++++++++--
- 1 file changed, 92 insertions(+), 6 deletions(-)
+These patches have been tested on Radxa's ROCK Pi S, one based on rk3308
+and the other on rk3308b (from the latest batches). For the new boards
+fixes broken spi1 clk.
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 967a5bf38e26..96316a79ab8a 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -7,6 +7,8 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/container_of.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
- #include <linux/io.h>
-@@ -22,6 +24,8 @@
- #include "../../pci.h"
- #include "pcie-cadence.h"
- 
-+#define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-+
- #define ENABLE_REG_SYS_2	0x108
- #define STATUS_REG_SYS_2	0x508
- #define STATUS_CLR_REG_SYS_2	0x708
-@@ -531,12 +535,12 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 		pcie->refclk = clk;
- 
- 		/*
--		 * "Power Sequencing and Reset Signal Timings" table in
--		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
--		 * indicates PERST# should be deasserted after minimum of 100us
--		 * once REFCLK is stable. The REFCLK to the connector in RC
--		 * mode is selected while enabling the PHY. So deassert PERST#
--		 * after 100 us.
-+		 * "Power Sequencing and Reset Signal Timings" table (section
-+		 * 2.9.2) in PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION,
-+		 * REV. 5.1 indicates PERST# should be deasserted after minimum
-+		 * of 100us once REFCLK is stable (symbol T_PERST-CLK).
-+		 * The REFCLK to the connector in RC mode is selected while
-+		 * enabling the PHY. So deassert PERST# after 100 us.
- 		 */
- 		if (gpiod) {
- 			fsleep(PCIE_T_PERST_CLK_US);
-@@ -588,6 +592,87 @@ static void j721e_pcie_remove(struct platform_device *pdev)
- 	pm_runtime_disable(dev);
- }
- 
-+static int j721e_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-+		clk_disable_unprepare(pcie->refclk);
-+	}
-+
-+	cdns_pcie_disable_phy(pcie->cdns_pcie);
-+
-+	return 0;
-+}
-+
-+static int j721e_pcie_resume_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
-+	int ret;
-+
-+	ret = j721e_pcie_ctrl_init(pcie);
-+	if (ret < 0)
-+		return ret;
-+
-+	j721e_pcie_config_link_irq(pcie);
-+
-+	/*
-+	 * This is not called explicitly in the probe, it is called by
-+	 * cdns_pcie_init_phy().
-+	 */
-+	ret = cdns_pcie_enable_phy(pcie->cdns_pcie);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		struct cdns_pcie_rc *rc = cdns_pcie_to_rc(cdns_pcie);
-+
-+		ret = clk_prepare_enable(pcie->refclk);
-+		if (ret < 0)
-+			return ret;
-+
-+		/*
-+		 * "Power Sequencing and Reset Signal Timings" table (section
-+		 * 2.9.2) in PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION,
-+		 * REV. 5.1 indicates PERST# should be deasserted after minimum
-+		 * of 100us once REFCLK is stable (symbol T_PERST-CLK).
-+		 * The REFCLK to the connector in RC mode is selected while
-+		 * enabling the PHY. So deassert PERST# after 100 us.
-+		 */
-+		if (pcie->reset_gpio) {
-+			fsleep(PCIE_T_PERST_CLK_US);
-+			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+		}
-+
-+		ret = cdns_pcie_host_link_setup(rc);
-+		if (ret < 0) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return ret;
-+		}
-+
-+		/*
-+		 * Reset internal status of BARs to force reinitialization in
-+		 * cdns_pcie_host_init().
-+		 */
-+		for (enum cdns_pcie_rp_bar bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
-+			rc->avail_ib_bar[bar] = true;
-+
-+		ret = cdns_pcie_host_init(rc);
-+		if (ret) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_NOIRQ_DEV_PM_OPS(j721e_pcie_pm_ops,
-+			       j721e_pcie_suspend_noirq,
-+			       j721e_pcie_resume_noirq);
-+
- static struct platform_driver j721e_pcie_driver = {
- 	.probe  = j721e_pcie_probe,
- 	.remove_new = j721e_pcie_remove,
-@@ -595,6 +680,7 @@ static struct platform_driver j721e_pcie_driver = {
- 		.name	= "j721e-pcie",
- 		.of_match_table = of_j721e_pcie_match,
- 		.suppress_bind_attrs = true,
-+		.pm	= pm_sleep_ptr(&j721e_pcie_pm_ops),
- 	},
- };
- builtin_platform_driver(j721e_pcie_driver);
+Similar effort [2] was made several years ago, but without keeping base
+rk3308 SoC pinctrl support.
 
+[1] https://github.com/radxa/kernel/blob/stable-4.4-rockpis/drivers/pinctrl/pinctrl-rockchip.c#L4388
+[2] https://lore.kernel.org/linux-rockchip/20220930102620.1568864-1-jay.xu@rock-chips.com/
+
+Dmitry Yashin (3):
+  pinctrl: rockchip: update rk3308 iomux routes
+  dt-bindings: pinctrl: rockchip: add rk3308b
+  pinctrl: rockchip: add rk3308b SoC support
+
+ .../bindings/pinctrl/rockchip,pinctrl.yaml    |   1 +
+ drivers/pinctrl/pinctrl-rockchip.c            | 187 ++++++++++++++++++
+ drivers/pinctrl/pinctrl-rockchip.h            |   1 +
+ 3 files changed, 189 insertions(+)
+
+
+base-commit: ed30a4a51bb196781c8058073ea720133a65596f
 -- 
 2.39.2
 
