@@ -1,129 +1,155 @@
-Return-Path: <linux-gpio+bounces-6406-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6407-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B9438C6F71
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2024 02:19:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2376D8C725E
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2024 10:03:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C14F51C216C1
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2024 00:19:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B9E111F2261F
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 May 2024 08:03:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD2FB391;
-	Thu, 16 May 2024 00:19:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 971E96BB4E;
+	Thu, 16 May 2024 08:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tc0WWOZq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+kNbRQn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50045389
-	for <linux-gpio@vger.kernel.org>; Thu, 16 May 2024 00:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5584EB30;
+	Thu, 16 May 2024 08:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715818753; cv=none; b=Xh9btamq0HNZJctRxTd3dDpsm7x5kY2JUXZd/xeoG2H3IEb0LwGawj5dxmZRsNS88KMAcgsQDWpT0+iaTxou6q1QLyoOmbg8IPc5VC6fNrs9dEQjHD1V6cPZFv8tAqdoifjnUHQPywujy3Z5t/5pNi0knE526GdJniD4wwU4gFs=
+	t=1715846585; cv=none; b=upFwa5oqH+7k/bX2erGquoYx3+DWTrjkjJgnsRPVb+n8PtnRD9IKfJiHjbkfJG9lmhBzudiL91QNxNe/E+mCTca3W1O2FpWLMVJIZuBd3go3L0xstHdchNP6Um73MZg6DRGM7QMZWzWtzV5foH9LD6ehh6CF2HsDhwNLB+bd5ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715818753; c=relaxed/simple;
-	bh=9Abxnb+VqZx2S7uzGx6q4aREDkA97dvn7k8vn2uSGkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kug9dNIUZnvd4yy9DsrN41ZsyslTMQnMRORUkOazyq0AYIg7F+L5SnUxRg+7cAvgZ4Py8ghk1CuJTrRl1w5qM6oWS6c2+pS4PqfuBiDFM3mUEkKdFyje+IhAqJFJH/vE6kwG1iTweh4Zz0x3H7JjKYh9QpLmbdN2dVFxZoRaMNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tc0WWOZq; arc=none smtp.client-ip=209.85.160.52
+	s=arc-20240116; t=1715846585; c=relaxed/simple;
+	bh=5HE3VuQjHHXUOEE4YFWAvTD0H1sgsk7BGUNdV6sOGOc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=trw+hNLr2FZysSAvHSuT2C8Gm49VniiJ+Ap8K9tYQwRbxYAwKWlu+5S+Q7/WUDHjK7+ahesDWo40rp1ibGwUjSNg/NlUlvzVQFMOu2fDosvE6Y7N+cTgNwifHZWiXimlXXFJgxeTc4V+llbhgIl94k+hjpET1Q+uN0+BGnE1Ngw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+kNbRQn; arc=none smtp.client-ip=209.85.222.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-241572c02efso82214fac.3
-        for <linux-gpio@vger.kernel.org>; Wed, 15 May 2024 17:19:12 -0700 (PDT)
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-7fbbb2cf3c1so1196845241.3;
+        Thu, 16 May 2024 01:03:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715818751; x=1716423551; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZJpFhHVzlJ3eO6FFa/Bq92NCOSKlmExMi0dCAXfo83w=;
-        b=Tc0WWOZqR0UGQ700KpzAUDI/im3KokVHBPBSnES2mtE9+zITHFpqfFwXLcsCXhYqHg
-         /2uhvnG8tQHJTO4+D8PFEdYKIjlt4o1Lf0OEqNBVBkpzC9sLtIlHz0E55YTKi+y5Cu9r
-         5Qh10W/XW1/jsCZQdRA8rSPJRYVUyDVjkAgitH+udG05Lhfj/cfpwSnHCVcZid2hmghJ
-         lDTrb7/NIn49r60Gg29Rdin45Bjge/SP2Dji1cjgbA4E6LP4hQFUes7FsVQz4A8CjiK2
-         zlROCJUCTNNmBIotvgYuVoSbGOsafOCo089c1fO59UmsSCSsOCALu7D/tTFtU1zMi7XL
-         bTUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715818751; x=1716423551;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1715846583; x=1716451383; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZJpFhHVzlJ3eO6FFa/Bq92NCOSKlmExMi0dCAXfo83w=;
-        b=rgkaygX0eWR3VVnClz13k9LTk6hdtrPgwX3rAGHoYlBuu0DU8Azx18eqV3lmtG9kJJ
-         nKA3zb+uPXdy2ode5XmgHpgKsQeWeiHrgZvZmD5JuR95rARdt/GqL8+F3d9F6N2oidI+
-         CcXJTH2ZwZw0sBrhdjlLDmX9TCx7fLjIjKlcjBZ2WujTIZlv/Vl/CmwArcMDEGKJYj6T
-         kygsvfKGyT/z+SpWZoCyjcGB9LHIZ2WhcYqWyXUPXeQ6wxvy7M8TnQzWa2Zyrgeis8jh
-         t1Ib21uldWmUqZecs4QOBKLuLR9jd8LQKcTWyv3AoCXnSb2qGRu+6TSWXht/vFL0jYlT
-         Q2lg==
-X-Gm-Message-State: AOJu0YyVTGj7U8eephqXkAQSZgl3L52GMshKpL2ehQrSInlp2/Mik0D6
-	FEcvFcKg+xLMEPaN6mebl3k104OILYTVP5DV7L+/bQmfAVPhsWfKSjuRxQ==
-X-Google-Smtp-Source: AGHT+IEq383gjWEmjv0dGtvS/Xj3AGF21tjYMagSvbnpj/6uPe7WsRFvd4G5DqLUZQHjQ4LtfspVGA==
-X-Received: by 2002:a05:6870:b6a7:b0:23e:6d9a:8f45 with SMTP id 586e51a60fabf-24172f79503mr20285677fac.48.1715818751224;
-        Wed, 15 May 2024 17:19:11 -0700 (PDT)
-Received: from rigel (60-241-107-82.static.tpgi.com.au. [60.241.107.82])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-63411346dc1sm10487007a12.83.2024.05.15.17.19.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 17:19:10 -0700 (PDT)
-Date: Thu, 16 May 2024 08:19:06 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod][RFC] helper functions for basic use cases
-Message-ID: <20240516001906.GA5963@rigel>
-References: <CAMRc=Men25EQSuUtyf+b-TSfndnmQ8oCfNVU82pq1E-+r64QHg@mail.gmail.com>
- <20240511011144.GA3390@rigel>
- <CAMRc=McwX7f4KNqunRSj6jk=6-6oj9kUy9XJRc=HokyfaiUsmA@mail.gmail.com>
- <20240513101331.GB89686@rigel>
- <CAMRc=MftXh6SV_jNVDaUOwww21gH5gFeb8zGSVBLv=jMP_mFKQ@mail.gmail.com>
- <20240514133804.GA107324@rigel>
- <CAMRc=MdyUmfGaJ_0edvhMYwC7x5HwYyFAdD5EY-13+5yoRUeiw@mail.gmail.com>
- <20240515091848.GA86661@rigel>
- <CAMRc=MeBGJwyKBTYD1PQkk940t6ECsBxHCprjFUx1KFSKMe7fw@mail.gmail.com>
- <20240515141436.GA349711@rigel>
+        bh=fl0nj/kLrslUm9shiSkyG/Y7CY/aAcnLARdZY81Sgbk=;
+        b=j+kNbRQn5iymX73FVekrMtiTXiLFbcKGcrnKuLEbUWYxt1tRfqS1NKJq+MjfUAwGtx
+         PeGzp30ZnvuXy/RMhH3sEw7jP32/V01d4lRvohnGrBJr9ICWBjB3fDiIu0u0XKDZWyei
+         SbTbk2uImlEaAXJ7EkAVKUez74uxRlSDPYb6qeW6p1GrBHIvxutKNRAmCmCRv3T7M7Jl
+         p7fzznEMV05vwMrHcpw/LOYmOjIhJDy8/WFT87bwBd0VaB+6GaMTCTCMmNXTHcpYC3mS
+         rc/i+Jw+LsEDT6rVtqN/UPPdvM0JkGgD5oXVwBhWRtV+HcGljkAGOp4Zp2vRYtLzCH4K
+         fknQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715846583; x=1716451383;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fl0nj/kLrslUm9shiSkyG/Y7CY/aAcnLARdZY81Sgbk=;
+        b=SjiIDmS6+bgO86DxaQZwFyfCkgn0d01yGfDaggnH52vaDvbT1Rekh1kbDURBKXl15z
+         ABQwZmSyNtYw6LEnLptDSZo4Bg7n6p0Mh0kDvsXGArXfwTBladUMWwJFKrOpPsFJkAlm
+         7k3l29o5SChPIwhYYH3GzUgxjdxu7rbAN7X1Spu7FJUscs7NvgT5FFYqcWPRkuMyy/wW
+         mIDD4YrneHTcQ+4jj35Gdf4R2UlBWkzRsACkZgHkztS/XnSavOZNmdQAK0tYqWCUmI2c
+         Ve6Ih+4YK659iLUZr3Z9eyFj2mYOJdw6/UMdAtwdrgqQ8Kq9AYshvZKMjiwIenQrEyE3
+         9haw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiFfJO0GraIj8CNK13YAILSomlGzc5WGlJTvZTYz11iDNrLN6TYxxyLC91XmQzF36j0CivSyzXAkXPZOmwLW2cuQWXupOWf1SSk4wziltXc2bwQLM1HkAUaKMeA0mnsxHKDlzFWE6MQdt4VrYd0rdn4U3LQp+BkE80JmbBn9pz0rokNmk=
+X-Gm-Message-State: AOJu0Yy+zndMGE/XzSaYogrd9u2QIYSP4YYhvZJvhlxlf+7PAtHfPwcC
+	7WFMVqZkWhOyM4IX21oBrDZKcNdQoxeJyt+qWDPaO2boA8nYTr02WNoTVaAuPYkI6IQn87hJy0l
+	LXud4hkEPPCjN+C1PbW2WxuujBVk=
+X-Google-Smtp-Source: AGHT+IEGmuIZ94m60TpcHFKQ9zhWmQGKsauGUlJNHGP37sp7Ssf2UU/Ll/3JZVxKgrv+EFCNMM8uiab2zcK65YD2nbo=
+X-Received: by 2002:a05:6122:368d:b0:4df:2ce2:6e4 with SMTP id
+ 71dfb90a1353d-4df882c1c5amr15980200e0c.4.1715846582738; Thu, 16 May 2024
+ 01:03:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240515141436.GA349711@rigel>
+References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 16 May 2024 09:02:35 +0100
+Message-ID: <CA+V-a8vN5YHX3NFJNmqxzQt6HB=xC1Srr12ZvzEWHhKe85YWSg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/13] Add PFC support for Renesas RZ/V2H(P) SoC
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-renesas-soc@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 15, 2024 at 10:14:36PM +0800, Kent Gibson wrote:
-> On Wed, May 15, 2024 at 06:54:15AM -0700, Bartosz Golaszewski wrote:
-> > On Wed, 15 May 2024 11:18:48 +0200, Kent Gibson <warthog618@gmail.com> said:
-> > >
-> >
-> > Yeah, I hate it...
-> >
+On Tue, Apr 23, 2024 at 6:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
 >
-> I wasn't expecting any love for it - it is ugly.
-> But it does the job.
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-
-An alternative is to extend the struct gpiod_line_request to contain a
-pointer to the config.  The ext constructors would store their config
-there rather than free it.  The core constructors would leave it NULL,
-though you would always have the option to keep a copy there later if
-core wants to make use of it.
-And gpiod_line_request_free() would free it.
-
-The ext mutators would only accept requests with the config set.
-
-That can all be conditional on extensions being part of the build.
-
-So taking advantage of the pimpl interface.  Yay.
-
-Would that work for you?
-
-And I think I mis-interpreted one of your earlier mails - you want the
-extensions to go in their own shared library, not bundled in libgpiod.so?
-Though if that is the case it would be helpful to relax the use of pimpl
-within the lib so the extensions can access any fields not made public
-through the core API, as well as more efficiently access those that are.
+> Hi All,
+>
+> This patch series aims to add PFC (Pin Function Controller) support for
+> Renesas RZ/V2H(P) SoC. The PFC block on RZ/V2H(P) is almost similar to
+> one found on the RZ/G2L family with couple of differences. To able to
+> re-use the use the existing driver for RZ/V2H(P) SoC function pointers
+> are introduced based on the SoC changes.
+>
+>
+> RFC->v2
+> - Fixed review comments pointed by Rob
+> - Incorporated changes suggested by Claudiu
+> - Fixed build error reported for m68K
+> - Dropped IOLH groups as we will be passing register values
+> - Fixed configs for dedicated pins
+> - Added support for slew-rate and bias settings
+> - Added support for OEN
+>
+> RFC: https://patchwork.kernel.org/project/linux-renesas-soc/cover/2024032=
+6222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+>
+> Cheers,
+> Prabhakar
+>
+> Lad Prabhakar (13):
+>   dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Remove the check from the
+>     object
+>   dt-bindings: pinctrl: renesas: Document RZ/V2H(P) SoC
+>   pinctrl: renesas: pinctrl-rzg2l: Allow more bits for pin configuration
+>   pinctrl: renesas: pinctrl-rzg2l: Allow parsing of variable
+>     configuration for all architectures
+>   pinctrl: renesas: pinctrl-rzg2l: Validate power registers for SD and
+>     ETH
+>   pinctrl: renesas: pinctrl-rzg2l: Add function pointers for
+>     locking/unlocking the PFC register
+>   pinctrl: renesas: pinctrl-rzg2l: Add function pointer for writing to
+>     PMC register
+>   pinctrl: renesas: pinctrl-rzg2l: Add function pointers for
+>     reading/writing OEN register
+>   pinctrl: renesas: pinctrl-rzg2l: Add support to configure the
+>     slew-rate
+>   pinctrl: renesas: pinctrl-rzg2l: Add support to set pulling up/down
+>     the pins
+>   pinctrl: renesas: pinctrl-rzg2l: Pass pincontrol device pointer to
+>     pinconf_generic_parse_dt_config()
+>   pinctrl: renesas: pinctrl-rzg2l: Add support for custom parameters
+>   pinctrl: renesas: pinctrl-rzg2l: Add support for RZ/V2H SoC
+>
+Gentle ping.
 
 Cheers,
-Kent.
+Prabhakar
+
+>  .../pinctrl/renesas,rzg2l-pinctrl.yaml        |  40 +-
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 640 ++++++++++++++++--
+>  2 files changed, 617 insertions(+), 63 deletions(-)
+>
+> --
+> 2.34.1
+>
 
