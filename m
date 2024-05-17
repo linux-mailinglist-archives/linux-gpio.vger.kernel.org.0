@@ -1,126 +1,114 @@
-Return-Path: <linux-gpio+bounces-6419-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6420-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A35928C8120
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 08:58:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AF868C8207
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 10:01:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 448121F21DB1
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 06:58:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD0A31F2271F
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 08:01:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 742C314F65;
-	Fri, 17 May 2024 06:58:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 491E21B809;
+	Fri, 17 May 2024 08:01:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f8KVFHeN"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k3eoWmSs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A4E14A8D;
-	Fri, 17 May 2024 06:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63112E62C;
+	Fri, 17 May 2024 08:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715929126; cv=none; b=VLqn52wxqx/2rWfxCVjPvSWNA0ws7zGM2WsqVc62CcuYmYZUesucRBMVBVX61IKsLLW/+32ztB2ZVuceL3D8dSUCM8wGm21pwsCt4zniahz+C+ktxmbw8vY5HkCXRUE4gXIR26GChD+wd+b8XZ3qkXJRA+5uoNV87+sLhfIYf6k=
+	t=1715932861; cv=none; b=rD74SmuDRa7qqfNrs1zwZFoP+BPqyTpmxe4RqE7uy5FUXidopz6djKo2cehGnDjRSiwuewtHYx34feA2Ews3Y4m36ReCgZ/FsTP4OiXT1B+5esQ4TYUK7/W7wqCgesy+GAx+o9dQS7C7T+CzvoZLeHsIXajenwHgrqvG4ipY8+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715929126; c=relaxed/simple;
-	bh=vEIiADZtH0GuW0hNucCCzsAmTERzBSekKmZgJqaVvNQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nph3ncLbh8XeRstBi9VATrS+5C6qrz7DDAS/gXA5YvEhxHo55o0w9Q9grVnw1sLFLt+1j09RErRrWIViR6xa67/Vn5OWwSilpSSO/kBaqWLewrePWkLhqstJrdRW46dhlyTomJkYHq2YVGzVY4RmVs6IT5KHio+QB6HXcAvyhWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f8KVFHeN; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5366060016;
-	Fri, 17 May 2024 06:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715929116;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8+WtpG+JowVcU8bh3DYjQQ6K0ukhxfEGwefCmJzc8YA=;
-	b=f8KVFHeNh2VvHZZ6hzRy0KYo2z1+B2wGwXn7zUG349l2A4tKLI0ZDhpexlh3IUzFtK/cnH
-	G4vfuEDwNMPNJmSzzVKJTqJkec3UDkhb7Ri4LEuTyTyQUy6andM+Hdr7ASxso739ADCNPf
-	Ko2E4NMePCqgMC1A7+eqx3f8QeIF3NA3fUwPrU+0d2wbbE4Xl5hJJ2PXaQO6+G79OZlB49
-	Vj8Yl1i5JyjqZXeJ6PFT0cGNZNX4RmNQb3gU6C55uHf8H9w8r1JsdI8Hp2gyLKvg/YudPM
-	6YxX7AHARvGW/6A5RRP+N28w/ZyAq10mTdiG1jEHqlveht7usBO2Q8V8FqmNjQ==
-Date: Fri, 17 May 2024 08:58:32 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Dmitry Yashin <dmt.yashin@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, Jianqun Xu
- <jay.xu@rock-chips.com>, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] pinctrl: rockchip: add rk3308b SoC support
-Message-ID: <20240517085832.365ac878@booty>
-In-Reply-To: <81aa0e4e-a3c7-41d1-8cd2-4d060730b37a@gmail.com>
-References: <20240515121634.23945-1-dmt.yashin@gmail.com>
-	<20240515121634.23945-4-dmt.yashin@gmail.com>
-	<20240515182954.03c4a475@booty>
-	<81aa0e4e-a3c7-41d1-8cd2-4d060730b37a@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1715932861; c=relaxed/simple;
+	bh=Vdoo6QU/u39c9Rgl96CtP6qcbMot2KPUxgfcFSgZyBI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tq+pR/kSgE6TkYwJk8tRVjRONhfmRDV3FFipGRSO2zpv0QB9B5pCLqQqhKoS6PBbUJFKLgal34mW0a96HYiaTtZB5rm2rt/G2566/067ZqZW6k2Zm8woutCnEbrEUmKdxdlahdQlNZvdEmtEuhs1jHs8fYFDQeBOit4RqzXVFCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=k3eoWmSs; arc=none smtp.client-ip=99.78.197.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1715932859; x=1747468859;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vm22BVZO7WVhxQCWzSyuBh1sHNc/VQxR59e5eUx+xd4=;
+  b=k3eoWmSsD4hZMAzQad/QUuCfeJvJavE2aFhdzP3v/u44N/uhF68VFZ8O
+   3pqmmSqE/IHdWEEwOaplIWNXFtvmEQEmKHRA1RP4MROnsURM7mcpopkrQ
+   3wDMgIQG/kGd6M/XG+YQvFTcp/Gp9o5smWtlA/Gj5v5oLDEtGCzEsBUy4
+   A=;
+X-IronPort-AV: E=Sophos;i="6.08,167,1712620800"; 
+   d="scan'208";a="89887872"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:00:57 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [10.0.10.100:16909]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.18.108:2525] with esmtp (Farcaster)
+ id 8a5c4799-5210-44e6-a13c-cf4505886cc0; Fri, 17 May 2024 08:00:56 +0000 (UTC)
+X-Farcaster-Flow-ID: 8a5c4799-5210-44e6-a13c-cf4505886cc0
+Received: from EX19D002EUC003.ant.amazon.com (10.252.51.218) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 17 May 2024 08:00:56 +0000
+Received: from EX19MTAUWA001.ant.amazon.com (10.250.64.204) by
+ EX19D002EUC003.ant.amazon.com (10.252.51.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 17 May 2024 08:00:55 +0000
+Received: from dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com
+ (10.253.65.58) by mail-relay.amazon.com (10.250.64.204) with Microsoft SMTP
+ Server id 15.2.1258.28 via Frontend Transport; Fri, 17 May 2024 08:00:55
+ +0000
+Received: by dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (Postfix, from userid 23002382)
+	id D32C420C24; Fri, 17 May 2024 08:00:54 +0000 (UTC)
+Date: Fri, 17 May 2024 08:00:54 +0000
+From: Hagar Hemdan <hagarhem@amazon.com>
+To: Kent Gibson <warthog618@gmail.com>
+CC: Norbert Manthey <nmanthey@amazon.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <hagarhem@amazon.com>
+Subject: Re: [PATCH] gpio: prevent potential speculation leaks in
+ gpio_device_get_desc()
+Message-ID: <20240517080054.GA12268@amazon.com>
+References: <20240514122601.15261-1-hagarhem@amazon.com>
+ <20240514124221.GA76024@rigel>
+ <20240516125742.GA14240@amazon.com>
+ <20240516145540.GA116534@rigel>
+ <20240516162239.GA184911@rigel>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240516162239.GA184911@rigel>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Hello Dmitry,
-
-On Thu, 16 May 2024 17:06:46 +0500
-Dmitry Yashin <dmt.yashin@gmail.com> wrote:
-
-> Hi Luca,
+On Fri, May 17, 2024 at 12:22:39AM +0800, Kent Gibson wrote:
+> On Thu, May 16, 2024 at 10:55:40PM +0800, Kent Gibson wrote:
+> > On Thu, May 16, 2024 at 12:57:42PM +0000, Hagar Hemdan wrote:
+> > > On Tue, May 14, 2024 at 08:42:21PM +0800, Kent Gibson wrote:
+> >
+> > Now I need to test your patch to see what it actually does.
+> >
 > 
-> On 15.05.24 21:29, Luca Ceresoli wrote:
-> > I'm skeptical about this being bound to a new DT compatible. As far as I
-> > know the RK3308 and RK3308B are mostly equivalent, so it looks as the
-> > pinctrl implementation could be detected at runtime. This would let
-> > products to be built with either chip version and work on any without
-> > any DT change.  
+> Tested.  Fails.  It does what I thought it would - clamps the offset into
+> bounds BEFORE the call to gpio_device_get_desc().
 > 
+> The appropriate place for this fix is in gpio_device_get_desc(), after
+> the bounds check.
 > 
-> Thanks for your feedback.
-> 
-> Indeed, these SoC's have a lot in common, but as I can see the rk3308b
-> has more blocks, like extra PWM's (rk3308 datasheet 1.5 [0] shows only
-> 1x PWM 4ch, when rk3308b and rk3308b-s have 3x PWM 4ch), 1-wire and
-> CAN controller (mentioned in the TRM, but dropped from rk3308b
-> datasheet for some reason).
-> 
-> So, in my view, it really makes sense to add rk3308b.dtsi, where extra
-> PWM's, pinctrl compatible and its pin functions can be moved. And if
-> its not worth it, then I will try to adapt the entire series to runtime
-> config based on cpuid like you suggested.
+> Cheers,
+> Kent.
+>
+yes, you are right. The speculation macro should be after the bounds
+check. I missed this property this time.
+I will fix it in v2.
 
-Having a rk3308b.dtsi would probably make sense, yes, as there are
-several differences as you described. However for the pinctrl it seems
-probably not necessary.
-
-I've seen actual products being manufactured with two different RK3308
-variants in different lots of production, but with the same DT that has
-rockchip,rk3308-pinctrl in it. Those would need a _selective_ DT
-upgrade in order to benefit from your changes.
-
-And even if a product had always used the B variant, it would need DT
-upgrade when upgrading to a kernel with your changes. Otherwise with
-patch 1/3 of this series the pictrl driver would lose many routes after
-upgrading the kernel (but not the DT): can this lead to
-previously-working devices to stop working? I think this is a
-fundamental question to reply.
-
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+Hagar Hemdan
 
