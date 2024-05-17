@@ -1,129 +1,114 @@
-Return-Path: <linux-gpio+bounces-6426-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6427-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B919E8C8499
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 12:12:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B324F8C8522
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 12:54:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5ADDD1F23FE4
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 10:12:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6DA74284BD0
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 10:54:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC3532E40F;
-	Fri, 17 May 2024 10:12:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A7323AC25;
+	Fri, 17 May 2024 10:53:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="cbZ8dS/o"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Eg5moTrb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3B7200D2;
-	Fri, 17 May 2024 10:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9FD3D576
+	for <linux-gpio@vger.kernel.org>; Fri, 17 May 2024 10:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715940764; cv=none; b=Z8GbfHgKyXa8TWNJE1i8GvkXDzUsXwVIFIrMiTuO57rC3c8uRnAbjjDj2b7ndfXH3WIUqZbivOw92xe+fGM/UQ2uf9035UEKwOknjlLNUB5gL3YqI9HAooa1e8iSqLxA3Vof/3FE993NY+wAiySE6yQ4vsY3m3XM16hrCkxtkGM=
+	t=1715943231; cv=none; b=pp8XMHldo2tHxwNYXUT95RPNhLt2FF1PaeGOxb0AUlPn5cr3exd8Y8GF+RVq0kYTQWT2VpBnWK8NP/1vRn19951ewsLvfZ+STMz8ChqfeGD7abgdu2cKka0TcujiHmZjznyqHrMrPmGp+64cW78lTVAtat/0kStok2T+HARLQEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715940764; c=relaxed/simple;
-	bh=DNCDM6IxkJLGGSLYqPfZ1r8XHL+hCpAHIncnxjbHTj4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XRDXDcm7EXRc+/H+t4ehPjHEeJ5zJAfwAVvmsYz+CDpnv5p76YksGkLpAuPvz09R31E3l4t+33ChgOtuSulzus6ftbLvKcQ/N2teFQwsshP6RBJ0BTWP3gl1wfXrtfm8g0UlEUlyBDhdpmm5p4B/WHOLQp7XewNIhaZAzIyyFhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=cbZ8dS/o; arc=none smtp.client-ip=207.171.190.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1715943231; c=relaxed/simple;
+	bh=781+FiDqwCGALJ3tKo/Rnkg4ZBqX9e+C31f/LjJNIZk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sQxFvboTVttTC0pqpwd3uLDYAqyjBpdBr5KzeBNz9DzWm8Vme+VKi9a9jjNQL6OZiKvsRSTNCC3VH5oaiv+ZP/LiKHnQ/17TDkaQYxOQdjSMuEIWRbXrdziwqAhNk03hbRqQLPC7wCPb3NaOjxRw7Soi5ggRGMgYWvqLv/viJhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Eg5moTrb; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5238b5c080cso2279602e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 17 May 2024 03:53:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1715940764; x=1747476764;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=DdDjU8RAWsRCjt4a0p8GXfqvpw/fXzr4zK/kj9NVBs0=;
-  b=cbZ8dS/o3XOfgEmbr9hyYLdpOy/oLlyKpf4tUCw7zK89ZcVxaKfLaK1a
-   YjP4K7nS/owvkDejz7V10czzDtnVaVLhQ//qkEtF9uN6d12TkPoINYx+5
-   vvt9fdXgdFkA9F7NTl2lf3gtK1wH9xHAwyqL8sRbmI+MwXgVcbOL+vNKh
-   E=;
-X-IronPort-AV: E=Sophos;i="6.08,167,1712620800"; 
-   d="scan'208";a="345036791"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 10:12:38 +0000
-Received: from EX19MTAEUC002.ant.amazon.com [10.0.10.100:33278]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.12.108:2525] with esmtp (Farcaster)
- id d0dc88c3-ff31-469a-bfb3-2ca9871ee2a6; Fri, 17 May 2024 10:12:36 +0000 (UTC)
-X-Farcaster-Flow-ID: d0dc88c3-ff31-469a-bfb3-2ca9871ee2a6
-Received: from EX19D002EUA004.ant.amazon.com (10.252.50.181) by
- EX19MTAEUC002.ant.amazon.com (10.252.51.245) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 17 May 2024 10:12:35 +0000
-Received: from EX19MTAUEC001.ant.amazon.com (10.252.135.222) by
- EX19D002EUA004.ant.amazon.com (10.252.50.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 17 May 2024 10:12:35 +0000
-Received: from dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com
- (10.253.65.58) by mail-relay.amazon.com (10.252.135.200) with Microsoft SMTP
- Server id 15.2.1258.28 via Frontend Transport; Fri, 17 May 2024 10:12:35
- +0000
-Received: by dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (Postfix, from userid 23002382)
-	id EE56320C24; Fri, 17 May 2024 10:12:34 +0000 (UTC)
-From: Hagar Hemdan <hagarhem@amazon.com>
-To:
-CC: Norbert Manthey <nmanthey@amazon.de>, Hagar Hemdan <hagarhem@amazon.com>,
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
-	<brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>,
-	<linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] gpio: prevent potential speculation leaks in gpio_device_get_desc()
-Date: Fri, 17 May 2024 10:12:27 +0000
-Message-ID: <20240517101227.12118-1-hagarhem@amazon.com>
-X-Mailer: git-send-email 2.40.1
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1715943228; x=1716548028; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=781+FiDqwCGALJ3tKo/Rnkg4ZBqX9e+C31f/LjJNIZk=;
+        b=Eg5moTrbGgKLQIRN5NvasYYWy4DG2oAD87sGuvooxAKTg2eFkaBq/zBMrRvFOx5gA3
+         tbz1vj9tYxUsGy7b7rLvpezgRlZCanjC8MSc7vK65sKJDAlsBD+HnxfVdKjKJDdnZJPO
+         PW4riBSDQthUd5MZvEDzBvL/erZco9ptDOkAW5wnuyLBN0rKidLfg1CQs7qdq5cIyAUN
+         XBPeTq+m0zoB0jEDfThAVueyYrqWG2TjkAtP2F04qusRENf9qLS2+F7j0EkeIFvah27i
+         oE/41ISWBlVIesTbbqaPEDgV/Mis9OOkwbLsCEY+LeCD5gC6S3pKBW/CwWE10BrkGWnu
+         fh1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715943228; x=1716548028;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=781+FiDqwCGALJ3tKo/Rnkg4ZBqX9e+C31f/LjJNIZk=;
+        b=BKw4Zro3WVnxcYFMk8oN4Ww+Lk1NO2VHAzrq0/CLd+BLPxPpqfXPDnQfKgor1qP+E+
+         uzGQ7sSv1lKVI4UxGD0M6LRyuBWWq7OXllrBRU24CIMpahasqfNEX+MwDrmGNEoKh6Ve
+         Bxc94KSyyREr8Z/vZuSc4zVt9S+vLCgbhEQhovlW8ANsY/QiCasgyhbkPV7+PAhYT2/K
+         q+4T6Dm3X59dWQqqigsQwj6K6/p9MirIc8XMWopDUXEll0Gm3mmCoRlSC67WzrksXX+p
+         Zow66eGMoQDDkEyZmc4RMsSlVlx7ry2YeKxc/+sP953xnQej7tH2tceWrd12IUc/vs8J
+         ZNtQ==
+X-Gm-Message-State: AOJu0YwNIe+owX/BKev6Z+jZZDB7FXxDqoSSVUHV+1yZH+FNnUgOzUGS
+	V3zahgVIdUNDCb+AeQH4hYKild8BN7ynLZGHHfp0gpf9HowWmdc8Dq8RONnuyluxlQiMk7ya91Y
+	GYCGnK/jrVRjsTnYz3Zpitj81CPHPbqTBZusj7yY1yZf08qKOvYo=
+X-Google-Smtp-Source: AGHT+IEHHwze4UWEGHCdOjgOVhD/gYFjRURhSkNFguYtvTvLb/SmtREu359GDQ91EWaDDbZsqCnxdbIQpNVFHpp+n90=
+X-Received: by 2002:a05:6512:32ae:b0:523:8a14:9149 with SMTP id
+ 2adb3069b0e04-5238a1491b0mr5606305e87.21.1715943227594; Fri, 17 May 2024
+ 03:53:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20240507022106.GC26136@rigel> <CAMRc=Men25EQSuUtyf+b-TSfndnmQ8oCfNVU82pq1E-+r64QHg@mail.gmail.com>
+ <20240511011144.GA3390@rigel> <CAMRc=McwX7f4KNqunRSj6jk=6-6oj9kUy9XJRc=HokyfaiUsmA@mail.gmail.com>
+ <20240513101331.GB89686@rigel> <CAMRc=MftXh6SV_jNVDaUOwww21gH5gFeb8zGSVBLv=jMP_mFKQ@mail.gmail.com>
+ <20240514133804.GA107324@rigel> <CAMRc=MdyUmfGaJ_0edvhMYwC7x5HwYyFAdD5EY-13+5yoRUeiw@mail.gmail.com>
+ <20240515091848.GA86661@rigel> <CAMRc=MeBGJwyKBTYD1PQkk940t6ECsBxHCprjFUx1KFSKMe7fw@mail.gmail.com>
+ <20240515141436.GA349711@rigel>
+In-Reply-To: <20240515141436.GA349711@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 17 May 2024 12:53:36 +0200
+Message-ID: <CAMRc=Me9ffciaXnOKE+ABLDBVbSRzTAEHRVzpLk641eocF4q8g@mail.gmail.com>
+Subject: Re: [libgpiod][RFC] helper functions for basic use cases
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Userspace may trigger a speculative read of an address outside the gpio
-descriptor array.
-Users can do that by calling gpio_ioctl() with an offset out of range.
-Offset is copied from user and then used as an array index to get
-the gpio descriptor without sanitization in gpio_device_get_desc().
+On Wed, May 15, 2024 at 4:14=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Wed, May 15, 2024 at 06:54:15AM -0700, Bartosz Golaszewski wrote:
+> >
+> > I think the code should go into ext/, the gpiod-ext.h header can go rig=
+ht next
+> > to gpiod.h in include/ and the examples can be in the same examples/ di=
+rectory,
+> > just call them something_something_ext.c to indicate they use the simpl=
+er API.
+> >
+> > Does that sound right?
+> >
+>
+> At the moment I've made the code a conditionally compiled block in
+> line-request.c, so it can directly use the line-request internals.
+> Pretty sure that can be changed to use the core API, but isn't pimpl with=
+in
+> the library itself a tad extreme?
 
-This change ensures that the offset is sanitized by using
-array_index_nospec() to mitigate any possibility of speculative
-information leaks.
+I have a strong preference for that code to live in a separate .so
+file (and by extension - a separate compilation unit).
 
-This bug was discovered and resolved using Coverity Static Analysis
-Security Testing (SAST) by Synopsys, Inc.
-
-Fixes: aad955842d1c ("gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and GPIO_V2_GET_LINEINFO_WATCH_IOCTL")
-Signed-off-by: Hagar Hemdan <hagarhem@amazon.com>
----
-v3: update the commit mesg
----
- drivers/gpio/gpiolib.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index fa50db0c3605..b58e4fe78cec 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -17,6 +17,7 @@
- #include <linux/list.h>
- #include <linux/lockdep.h>
- #include <linux/module.h>
-+#include <linux/nospec.h>
- #include <linux/of.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/seq_file.h>
-@@ -201,7 +202,7 @@ gpio_device_get_desc(struct gpio_device *gdev, unsigned int hwnum)
- 	if (hwnum >= gdev->ngpio)
- 		return ERR_PTR(-EINVAL);
- 
--	return &gdev->descs[hwnum];
-+	return &gdev->descs[array_index_nospec(hwnum, gdev->ngpio)];
- }
- EXPORT_SYMBOL_GPL(gpio_device_get_desc);
- 
--- 
-2.40.1
-
+Bart
 
