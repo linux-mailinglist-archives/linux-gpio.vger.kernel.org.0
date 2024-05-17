@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-6442-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6443-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69D428C870E
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 15:16:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E3248C8718
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 15:17:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B8A61F23AE1
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 13:16:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7ADE71C20A83
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 May 2024 13:17:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 090D053E14;
-	Fri, 17 May 2024 13:16:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FC9053E08;
+	Fri, 17 May 2024 13:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="kkOf4K4L"
+	dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b="cjFZN1xx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B94537EF
-	for <linux-gpio@vger.kernel.org>; Fri, 17 May 2024 13:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A69A5102F
+	for <linux-gpio@vger.kernel.org>; Fri, 17 May 2024 13:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715951782; cv=none; b=oTRH3kEjN5Bj2RdtoLYy86ZDazRs3aRHe5DwiRV30d+sTF1JQiz4hOJ9JvG9gZyDHBsULlFzvHattnTnqsajBxYvqP24UFkWGzrG67aq/Vy6J3Jb2UEWtQPMyK1MCzCbU4R2jfwrw8lqTpPj7SHwrlCE6k5sW/9rVKWP/T2bXWw=
+	t=1715951798; cv=none; b=WVHtwW1FCRvANmWgZQslQ3CzYzvyMhsM5G9ZfEC2nEiKACEGYHM9oehySejSlCwx1GYUEGdgGaUQJuu8eVF6szNkqVJ9ZbMVdddMhM5qW+M8R3spajMujbUpAe/XS77UoBgrw7IkWrl72HpzuGOtOT0lij+bdTyjpHUayyoZA/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715951782; c=relaxed/simple;
-	bh=1yhPImTIxbRUJs4BEG3JtFs30Z11V54swjqaxOYSnE4=;
+	s=arc-20240116; t=1715951798; c=relaxed/simple;
+	bh=LsL6/+HEsOXR+sC6ERUzXuGIUNVSxnK0ZFUkngyWS04=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YQwMRBkxBxNclaK4QFfr4QGyemElos8eN4r/GuhbPtP7L/LbCd0uxywQBdWzt9NxkixwlpB8pmvSU3NSbF8FjeZlYU5ewfjP4ZF27xozWTl8bhIDM4tyTOpF2iZ3EFKsU7sx44iDSXUE/370PSzMg9q8K+t+wd6KN8KTbRaJ42Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=kkOf4K4L; arc=none smtp.client-ip=91.218.175.187
+	 In-Reply-To:To:Cc; b=O4akhJQq0gjSuuoJ1qnW4UW/Y6+V73IOY4COynPAGAEHhTP/8xZ3vIsq+bp2b/ZcDwojL9thwiai0FBtgrJ3RNj0KDoj0QntFcCV3sj2bV6BJC0X72l580tFXSzYDrMNV0CLHqpFT80ZE8+GXw8eltL6JY9L4YAXcwRYPl3KGgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk; spf=pass smtp.mailfrom=pqrs.dk; dkim=pass (2048-bit key) header.d=pqrs.dk header.i=@pqrs.dk header.b=cjFZN1xx; arc=none smtp.client-ip=95.215.58.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pqrs.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pqrs.dk
 X-Envelope-To: broonie@kernel.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqrs.dk; s=key1;
-	t=1715951779;
+	t=1715951793;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VxTCkbzQ0q0xLLZFecGhD5poDn8vUvNddwfmtWAlFos=;
-	b=kkOf4K4L/SGmGiCesu1d/Kul9e18UUApGAWfr11Xr4C+jyF0YzVqrzkZDLTgr5A9qVS+vJ
-	S89BH6vtX3wc25vEdy1k8ZOKs3m6GOPJPoBA/3ju11K16Oo0ckZwhPSEePi4m4Nqwq+FrR
-	Z9NZDsJAUILZugZuXpeOsL4T7LBhd9j0DABt+Q1ITg21URDsAPCbUbCPW208RAMORP1va7
-	jd8uh9vfoax0vM6pl+HKqU27gwZDMBU9h8owM4Zkv1tWD3EPkr7UjpSLQpUsnJ7VQcRy0t
-	Yrwv87/bBb6Yk31+YVlRcaJj//Qmcutcs4VNhEfceCDsB5TRzZ87E3VU/oqClw==
+	bh=S8nebunxi/byJgjN/w1ZOJ1kbMfAR+jz+Tg2mpCFNWc=;
+	b=cjFZN1xxWW6muiTPhuOb32VS0vyZ9LuOcO+zvrBNxNLG8U6VHm27MIdUPHm2YcY2WbBGR2
+	EPXY1WnZqphGg3038eoaj8eBRAmpv+o4sZdnmYCiGjObjOk5riT5sbiPQu+gwdjQyGQOUP
+	+x04HHATCbTFUhmZbMVUyZ4ppJCA/gxOBbjUG83xphHhXrgMT7UWF6UwJNZGV2lukqWk2b
+	NSQyfvYviWYGNJS1mO8eX3BsZ+Y7awd27gr4U7NQkyYlzSOs+TIcVYBRrWvjqqqnWsiiws
+	ZTT79Kx2eK7Gcloo1V3MMM/2x8sXU9GB0+CYd9bTBIVMQ6k9WJ82ShBLgAJ4FA==
 X-Envelope-To: gregkh@linuxfoundation.org
 X-Envelope-To: rafael@kernel.org
 X-Envelope-To: robh@kernel.org
@@ -68,8 +68,9 @@ X-Envelope-To: linux-i2c@vger.kernel.org
 X-Envelope-To: alsi@bang-olufsen.dk
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: =?utf-8?q?Alvin_=C5=A0ipraga?= <alvin@pqrs.dk>
-Date: Fri, 17 May 2024 15:02:17 +0200
-Subject: [PATCH 10/13] dt-bindings: vendor-prefixes: add Bang & Olufsen a/s
+Date: Fri, 17 May 2024 15:02:18 +0200
+Subject: [PATCH 11/13] dt-bindings: a2b: add compatible string for Beosound
+ Shape node
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,7 +79,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240517-a2b-v1-10-b8647554c67b@bang-olufsen.dk>
+Message-Id: <20240517-a2b-v1-11-b8647554c67b@bang-olufsen.dk>
 References: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
 In-Reply-To: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
 To: Mark Brown <broonie@kernel.org>, 
@@ -101,32 +102,26 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Alvin Šipraga <alsi@bang-olufsen.dk>
 
-Bang & Olufsen a/s is a Danish designer and manufacturer of high-end
-consumer audio and home entertainment products.
-
-The vendor prefix 'beo,' follows from the ubiquitous product naming
-scheme, e.g. Beosound Balance, Beolab 28.
-
-https://www.bang-olufsen.com/
+The Beosound Shape has the same device tree bindings as an AD2425, so it
+is sufficient to just add an entry to the compatible enum.
 
 Signed-off-by: Alvin Šipraga <alsi@bang-olufsen.dk>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/a2b/adi,ad24xx.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index fbf47f0bacf1..470ed53de8f1 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -208,6 +208,8 @@ patternProperties:
-     description: Compass Electronics Group, LLC
-   "^beagle,.*":
-     description: BeagleBoard.org Foundation
-+  "^beo,.*":
-+    description: Bang & Olufsen a/s
-   "^belling,.*":
-     description: Shanghai Belling Co., Ltd.
-   "^bhf,.*":
+diff --git a/Documentation/devicetree/bindings/a2b/adi,ad24xx.yaml b/Documentation/devicetree/bindings/a2b/adi,ad24xx.yaml
+index dcda15e8032a..bea29f88d535 100644
+--- a/Documentation/devicetree/bindings/a2b/adi,ad24xx.yaml
++++ b/Documentation/devicetree/bindings/a2b/adi,ad24xx.yaml
+@@ -81,6 +81,7 @@ patternProperties:
+           - adi,ad2427-node
+           - adi,ad2428-node
+           - adi,ad2429-node
++          - beo,shape-node
+ 
+       reg:
+         maxItems: 1
 
 -- 
 2.44.0
