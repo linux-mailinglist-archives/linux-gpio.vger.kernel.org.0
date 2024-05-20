@@ -1,153 +1,121 @@
-Return-Path: <linux-gpio+bounces-6467-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6468-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2959B8C9587
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 May 2024 19:28:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 71B7B8C98A8
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 May 2024 06:38:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 60D371F21D92
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 May 2024 17:28:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B95D1F21AA6
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 May 2024 04:38:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B013B50243;
-	Sun, 19 May 2024 17:28:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79D4412B73;
+	Mon, 20 May 2024 04:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QrtWXu4a"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="haioVuSD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE83F46444
-	for <linux-gpio@vger.kernel.org>; Sun, 19 May 2024 17:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D950468E;
+	Mon, 20 May 2024 04:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716139688; cv=none; b=g58LxbEFK0mnaQqw03bn9NWizH2Iii4hG1BvZEx7HjRk8ZGafZMeZrac4pXbr9i8Zd2I5eIFKXXe++FcJCZpuXTCXYWC/WmP6mp/pg9c0lEclV0GXZINNQyTvEcswMKCr0dcNOKVx5cNzhNMYrWS5hdJQ4MbL+8+RxCddQIqApc=
+	t=1716179876; cv=none; b=UrkrMVkN1qo/K8dSIqo+1l8MBZueGlv0oEeMo0RiDFxAhlzkjIcQXU0kwqBYUsHIjCp+ng6xkh1am7/Ipf2A7phierv9VP2qsb6e4cMUNgI/0oD2hsIK1vVoHblgz9XmLFHSSCURUy17IXZhKu8QiMx28fDE1Y8uX8GRriynbMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716139688; c=relaxed/simple;
-	bh=C7Bo8yy7avAwm4E3qVaujOfZItIgyC/ssTWzng36bw4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZQYfQm8a19SCtEUluRTIeA8gbQbevmdWx9vvF7ssMXmc9E1v736pD+T8WsS+mjxJ76OnLr5ZCNMAaS6OAZbd+57TtXOfIvK5IVfkwXkIEo9Kg3qa0xy6MiRjn4ZgHQcjY6LVpCO2U1CsHxkUMcZRbCgFpplER9iz7qRtKdYui5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QrtWXu4a; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-523b20e2615so4260165e87.1
-        for <linux-gpio@vger.kernel.org>; Sun, 19 May 2024 10:28:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716139683; x=1716744483; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bfftBWeVqaeieWMDwDgaFTXo1TkiwE5SU6imM85kzuY=;
-        b=QrtWXu4aR5F9UcSLPaA01efyHlCTiid74CEVnSI7licYxhkKDF1uBBd7+cFo2L9YgE
-         TEeaGI0vP4SVF5LBZb/3QpGUFPo8cwQmJWONaGnKejyLPYA+Y0Fne2Zf0e8jmCHsM322
-         9TnoQ3VyhIZ20Dx+AKRvD6+H4jVUIxknmpRSgFCMo5nbsTbKp0ayQ07UCYkqp7AX3yFS
-         dzj/OXq7q6kNVGRls+sTAwtSpc9lp7zRFz9qPi0lGU4iZrxfhTzE7wUpjVjI5zQMSV4c
-         VWCia82c6AqZ5/7bBKHstwNZwT6+ZL3OYwUQM71B5Ru1iCqDsK+WxSbIFyPQQzmwUi3y
-         MmWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716139683; x=1716744483;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bfftBWeVqaeieWMDwDgaFTXo1TkiwE5SU6imM85kzuY=;
-        b=CLi65vHJXCWrel8GnomjImsSjTwe3vuroi8itsyJFhzm+neWbRJG9NJ1z36S+1GumJ
-         UyNoIev2FhxFZ2RuWN3s/QhdFhBLCMOgmfxA0fm91odcc6ZSU+c7Z+UUhF69AYv4TMek
-         yHJWd22ckckuLKarDg/xYSYIOcRPWt+wY0PgctRP7PJeYzVK68eppaUugTCjX7EK9EgG
-         8qDT1ZzSY1WJcFFQmwmX5L0D/7PjQ7BXZJg8zkxfuxZEYGWohafwNN29av+6fYEVqD4n
-         mSV+8UMYYDQyRGte2raGWA2m4EToCE5zXs1BZJ7irIK2CrHPCXRZ7Nrk2HkcVzLMgj0M
-         yBYw==
-X-Forwarded-Encrypted: i=1; AJvYcCX1J6CKKNiNr+L/o9zll+d3iLL3xOUpCK3ZApBhnivuKuKAiLTH0Y1pBeQALeYYJo8SRgIDcuoUGVbfbNaS3aYqSBCV8LPXRYbYnQ==
-X-Gm-Message-State: AOJu0Yw34KfqlfSbNQjAkzB9eTHaU0B1I6pcoc7HjFnvDVDD9rhh/mvV
-	43FWjgv2NDrEoGH38f8EVnRV7anW6tavVtiUeUsKqXKKRGq9UdJtht/TeIVi9fdmSCUoaZ8iUPg
-	d2Eu/lbvwd9fIJXfCOvn9whWCxbsX+Kn+5uPK6Q==
-X-Google-Smtp-Source: AGHT+IGD+GgVDLIiKKswOsHFmDBuBrzI2l17OB+2USkIGab8PvZL3e9XE/DZZS3iluh1MJ32jR6QDGZFzo4MA2wTzqg=
-X-Received: by 2002:a19:8c4d:0:b0:51f:2709:3641 with SMTP id
- 2adb3069b0e04-5220fb72e2fmr16098806e87.26.1716139682752; Sun, 19 May 2024
- 10:28:02 -0700 (PDT)
+	s=arc-20240116; t=1716179876; c=relaxed/simple;
+	bh=2YAnCqrREP/hJDbqr7chrj4LIgZjefs5gj8e5cVBzIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d0RcQewxWKgvPyg4MrxuNhJrdnWvE0cRQQ5ABXj8mvbNye3h2xFhQtbLwBsWlh8Zzp0FHec860UNXa+Njf/360PDgvcqyMHFIyFKa9nVN5qyEmFXVSyK5Cv3GjDLQVLY0E9hjw4lqhU2LqA/tCDIxgHEuSBcOumIdfxDoo3lUMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=haioVuSD; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716179875; x=1747715875;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2YAnCqrREP/hJDbqr7chrj4LIgZjefs5gj8e5cVBzIQ=;
+  b=haioVuSDGKTr4cf24fmI7M2y5ljVi6siZX7365F+PoMNB9///osAk1i+
+   Z0l2hgswYqu+eVeHojqBXe9WLurtjdtn5SONBnxUa+FB8LXNLzhY4P6xp
+   ZipWEZolzeMwcA398VdG6YAZuBgAhxfkUObyGIvSq2YlUz6eUhlPt5bAm
+   Jtwl8bZY+7qHZYCTJ4tGC8U4lfcJAjnshIcPJePGkBpMEn24Nrv9llyrm
+   J//oX0eTq9Oc2leoYXAOq4cI7sPrTI0pLBy54cNSAnvSGDYwQk15b/XTo
+   GIRIbYZbrB2hlDqcpgH/xwBL2PF80mtp5KkUCXyLBfEZZUewlvb4OtPF/
+   w==;
+X-CSE-ConnectionGUID: D/bIB6QuSHO6VQ4TijWdGg==
+X-CSE-MsgGUID: WICmLBEYTIyrnvBaVxv2Xg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11077"; a="16116490"
+X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
+   d="scan'208";a="16116490"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2024 21:37:55 -0700
+X-CSE-ConnectionGUID: oMFfpQaRSVOQnyfAVkcMwA==
+X-CSE-MsgGUID: aCR+5qLdTjawS+XI7LU1/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,174,1712646000"; 
+   d="scan'208";a="33009876"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP; 19 May 2024 21:37:51 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id B0519193; Mon, 20 May 2024 07:37:49 +0300 (EEST)
+Date: Mon, 20 May 2024 07:37:49 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Devyn Liu <liudingyuan@huawei.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, f.fangjian@huawei.com,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	andriy.shevchenko@linux.intel.com, linux-acpi@vger.kernel.org,
+	jonathan.cameron@huawei.com, yangyicong@huawei.com,
+	yisen.zhuang@huawei.com, kong.kongxinwei@hisilicon.com
+Subject: Re: [PATCH] gpiolib: acpi: Fix failed in acpi_gpiochip_find() by
+ adding parent node match
+Message-ID: <20240520043749.GH1421138@black.fi.intel.com>
+References: <20240513075901.2030293-1-liudingyuan@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240519144920.14804-1-egyszeregy@freemail.hu>
-In-Reply-To: <20240519144920.14804-1-egyszeregy@freemail.hu>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Sun, 19 May 2024 19:27:51 +0200
-Message-ID: <CAMRc=MctEsMiRgaV5UTiaxjoFDa2izX9wnLAU07=G8gBEcSKoQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Introduce "linux,gpiochip-name" property for
- device tree of GPIO controller.
-To: egyszeregy@freemail.hu
-Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240513075901.2030293-1-liudingyuan@huawei.com>
 
-On Sun, May 19, 2024 at 4:49=E2=80=AFPM <egyszeregy@freemail.hu> wrote:
->
-> From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
->
-> Optionally, a GPIO controller may have a "linux,gpiochip-name" property.
+On Mon, May 13, 2024 at 03:59:01PM +0800, Devyn Liu wrote:
+> Previous patch modified the standard used by acpi_gpiochip_find()
+> to match device nodes. Using the device node set in gc->gpiodev->d-
+> ev instead of gc->parent.
+> 
+> However, there is a situation in gpio-dwapb where the GPIO device
+> driver will set gc->fwnode for each port corresponding to a child
+> node under a GPIO device, so gc->gpiodev->dev will be assigned the
+> value of each child node in gpiochip_add_data().
+> 
+> gpio-dwapb.c:
+> 128,31 static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+> 			       struct dwapb_port_property *pp,
+> 			       unsigned int offs);
+> port->gc.fwnode = pp->fwnode;
+> 
+> 693,39 static int dwapb_gpio_probe;
+> err = dwapb_gpio_add_port(gpio, &pdata->properties[i], i);
+> 
+> When other drivers request GPIO pin resources through the GPIO device
+> node provided by ACPI (corresponding to the parent node), the change
+> of the matching object to gc->gpiodev->dev in acpi_gpiochip_find()
+> only allows finding the value of each port (child node), resulting
+> in a failed request.
+> 
+> Reapply the condition of using gc->parent for match in acpi_gpio-
+> chip_find() in the code can compatible with the problem of gpio-dwapb,
+> and will not affect the two cases mentioned in the patch:
+> 1. There is no setting for gc->fwnode.
+> 2. The case that depends on using gc->fwnode for match.
+> 
+> Fixes: 5062e4c14b75 ("gpiolib: acpi: use the fwnode in acpi_gpiochip_find()")
+> Fixes: 067dbc1ea5ce ("gpiolib: acpi: Don't use GPIO chip fwnode in acpi_gpiochip_find()")
+> Signed-off-by: Devyn Liu <liudingyuan@huawei.com>
 
-Oh, may it really?
-
-$ git grep "linux,gpiochip-name" Documentation/devicetree/bindings/
-$
-
-Doesn't look like it.
-
-> This is a string which is defining a custom suffix name for gpiochip in
-> /dev/gpiochip-<name> format. It helps to improve software portability
-> between various SoCs and reduce complexities of hardware related codes
-> in SWs.
->
-> Signed-off-by: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
-> ---
->  drivers/gpio/gpiolib.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index ce94e37bcbee..e24d8db1d054 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -860,6 +860,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, =
-void *data,
->                                struct lock_class_key *lock_key,
->                                struct lock_class_key *request_key)
->  {
-> +       const char *name;
->         struct gpio_device *gdev;
->         unsigned int desc_index;
->         int base =3D 0;
-> @@ -896,7 +897,16 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc,=
- void *data,
->                 goto err_free_gdev;
->         }
->
-> -       ret =3D dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
-> +       /*
-> +        * If "linux,gpiochip-name" is specified in device tree, use /dev=
-/gpiochip-<name>
-> +        * in Linux userspace, otherwise use /dev/gpiochip<id>.
-> +        */
-> +       ret =3D device_property_read_string(gc->parent, "linux,gpiochip-n=
-ame", &name);
-> +       if (ret < 0)
-> +               ret =3D dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev=
-->id);
-> +       else
-> +               ret =3D dev_set_name(&gdev->dev, GPIOCHIP_NAME "-%s", nam=
-e);
-> +
->         if (ret)
->                 goto err_free_ida;
->
-> --
-> 2.39.3
->
-
-NAK, this is udev's task in user-space if you need this.
-
-Bart
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
