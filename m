@@ -1,242 +1,126 @@
-Return-Path: <linux-gpio+bounces-6474-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6476-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 777B98C9F41
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 May 2024 17:04:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C75CD8CA00B
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 May 2024 17:48:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 069D31F21B97
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 May 2024 15:04:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 693EC1F218F1
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 May 2024 15:48:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9DC1137746;
-	Mon, 20 May 2024 15:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xduTDc1x"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B33913775F;
+	Mon, 20 May 2024 15:48:26 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EA1136E2E
-	for <linux-gpio@vger.kernel.org>; Mon, 20 May 2024 15:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCE45579A;
+	Mon, 20 May 2024 15:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716217477; cv=none; b=u85QP+O3o6WTAWizrBkXoPXtOQVfNzowgkU+K8vjsdWMqGISsI+SP2vXyEMrgdbIaW1GMtrlX58PVkgcF5c3UQTOexvp9i44JIc/fh8jXOQPq8YhuTO25vJlk3UgG9VFJmbgu684bQx51AsArpIzvcb9Tvr1ztslRO/jUJM2FnA=
+	t=1716220106; cv=none; b=evn1HarwSEnCwpn4fV0F7EhU8xN05QI9SPw4XR2WKYq9bT2AvVcKjII37TBKPtgOeluEDOsEIOpo6Ze7j4sz6X9jyqx2GrLjHWbinDDtuqMHRFmLADO+FtzTbXTQ7YARv7ISsz0Nz2hkweEQJAU2NQfy2YlnRIdTS0u1EZ34Kk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716217477; c=relaxed/simple;
-	bh=rZJaNLBVEf+aK2rDOIXSWaoAcXGZCiPjotRHJZW2cj0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uTjCo6bTaK+n9fPk6CZcJdx4GJFbRiqgUVJ4q878I97dF9oCCp6gI0/fGPwwUeH5wklSuUQTFerE9aHlFj6tuuNcZOyVop+WZMeP1SqKPSChqwhhBqbDp5ymXLHZRojKmc6IzFN0tNsUUwgAz/it2/3v+luxfUQvwOlusWPn1jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xduTDc1x; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Envelope-To: linus.walleij@linaro.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1716217474;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M5zviEf5A12KnXDSQllyVorIBh12Tl6r4o0V0p+XKTg=;
-	b=xduTDc1xFMCmLLPJTZC6FSmby3/D/cKU1Fr3zpI1koYGiES/CQsult1CS8u6WgO6odOyqX
-	g0i5amQ0sxSbUeqDZNLCzwtYPLeydD6MuUp2FF0Un7jMKYBThmk/D/6MEKrs6X56HCG/W+
-	3Q4ULtmQEt3q8JPlcqVftRTcTJJrnoU=
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: linux-gpio@vger.kernel.org
-X-Envelope-To: sai.krishna.potthuri@amd.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: andy.shevchenko@gmail.com
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: sean.anderson@linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Michal Simek <michal.simek@amd.com>,
-	linux-gpio@vger.kernel.org
-Cc: Krishna Potthuri <sai.krishna.potthuri@amd.com>,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH v2 2/2] pinctrl: zynqmp: Support muxing individual pins
-Date: Mon, 20 May 2024 11:04:24 -0400
-Message-Id: <20240520150424.2531458-3-sean.anderson@linux.dev>
-In-Reply-To: <20240520150424.2531458-1-sean.anderson@linux.dev>
-References: <20240520150424.2531458-1-sean.anderson@linux.dev>
+	s=arc-20240116; t=1716220106; c=relaxed/simple;
+	bh=8sPgUO6A6S54NHecpLAH9MdSYbkpfIj4fhZVkGGxefs=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=b8xz1l+Vj9JZ19NyFaOb90dM6kFLzIocN3UEhEuuhI88NstcxX/73TgpZdd3zgvjaFceon3hmIjytpLDzdZnmOs87lChb0OUCGaAb9LUXPdbOM90Wxjf79oICnGnq9N46MvOhQh9EnfdqLs2R5OIlNgjKTokrkP7gpOd06HJ9hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
+Received: from localhost.localdomain (unknown [82.64.135.138])
+	by smtp2-g21.free.fr (Postfix) with ESMTPS id B36492003AE;
+	Mon, 20 May 2024 17:48:11 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+	id 7035340039; Mon, 20 May 2024 17:47:03 +0200 (CEST)
+Date: Mon, 20 May 2024 17:47:03 +0200
+From: Etienne Buira <etienne.buira@free.fr>
+To: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, etienne.buira@free.fr
+Subject: [PATCH] gpio-syscon: do not report bogus error
+Message-ID: <Zktwd4Y8zu6XSGaE@Z926fQmE5jqhFMgp6>
+Mail-Followup-To: linus.walleij@linaro.org, brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	etienne.buira@free.fr
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-While muxing groups of pins at once can be convenient for large
-interfaces, it can also be rigid. This is because the group is set to
-all pins which support a particular function, even though not all pins
-may be used. For example, the sdhci0 function may be used with a 8-bit
-eMMC, 4-bit SD card, or even a 1-bit SD card. In these cases, the extra
-pins may be repurposed for other uses, but this is not currently
-allowed.
+Do not issue "can't read the data register offset!" when gpio,syscon-dev
+is not set albeit unneeded.  gpio-syscon is used with rk3328 chip, but
+this iomem region is documented in
+Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml and
+does not require gpio,syscon-dev setting.
 
-There is not too much point in pin "groups" when there are not actual
-pin groups at the hardware level. The pins can all be muxed
-individually, so there's no point in adding artificial groups on top.
-Just mux the pins like the hardware allows.
+v3:
+  - moved from flag to parent regmap detection
 
-To this effect, add a new group for each pin which can be muxed. These
-groups are part of each function the pin can be muxed to. We treat group
-selectors beyond the number of groups as "pin" groups. To set this up,
-we initialize groups before functions, and then create a bitmap of used
-pins for each function. These used pins are appended to the function's
-list of groups.
-
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+Signed-off-by: Etienne Buira <etienne.buira@free.fr>
 ---
+ drivers/gpio/gpio-syscon.c | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-Changes in v2:
-- Use __set_bit instead of set_bit
-- Use size_add when calculating the number of kcalloc members
-- Expand commit message with some more motivation
-
- drivers/pinctrl/pinctrl-zynqmp.c | 61 ++++++++++++++++++++++----------
- 1 file changed, 43 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-zynqmp.c b/drivers/pinctrl/pinctrl-zynqmp.c
-index 5c46b7d7ebcb..7cc1e43fb07c 100644
---- a/drivers/pinctrl/pinctrl-zynqmp.c
-+++ b/drivers/pinctrl/pinctrl-zynqmp.c
-@@ -10,6 +10,7 @@
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+index 6e1a2581e6ae..3a90a3a1caea 100644
+--- a/drivers/gpio/gpio-syscon.c
++++ b/drivers/gpio/gpio-syscon.c
+@@ -208,6 +208,7 @@ static int syscon_gpio_probe(struct platform_device *pdev)
+ 	struct syscon_gpio_priv *priv;
+ 	struct device_node *np = dev->of_node;
+ 	int ret;
++	bool use_parent_regmap = false;
  
- #include <dt-bindings/pinctrl/pinctrl-zynqmp.h>
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+@@ -216,24 +217,28 @@ static int syscon_gpio_probe(struct platform_device *pdev)
+ 	priv->data = of_device_get_match_data(dev);
  
-+#include <linux/bitmap.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
-@@ -97,7 +98,7 @@ static int zynqmp_pctrl_get_groups_count(struct pinctrl_dev *pctldev)
- {
- 	struct zynqmp_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
- 
--	return pctrl->ngroups;
-+	return pctrl->ngroups + zynqmp_desc.npins;
- }
- 
- static const char *zynqmp_pctrl_get_group_name(struct pinctrl_dev *pctldev,
-@@ -105,7 +106,10 @@ static const char *zynqmp_pctrl_get_group_name(struct pinctrl_dev *pctldev,
- {
- 	struct zynqmp_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
- 
--	return pctrl->groups[selector].name;
-+	if (selector < pctrl->ngroups)
-+		return pctrl->groups[selector].name;
-+
-+	return zynqmp_desc.pins[selector - pctrl->ngroups].name;
- }
- 
- static int zynqmp_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
-@@ -115,8 +119,13 @@ static int zynqmp_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
- {
- 	struct zynqmp_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
- 
--	*pins = pctrl->groups[selector].pins;
--	*npins = pctrl->groups[selector].npins;
-+	if (selector < pctrl->ngroups) {
-+		*pins = pctrl->groups[selector].pins;
-+		*npins = pctrl->groups[selector].npins;
-+	} else {
-+		*pins = &zynqmp_desc.pins[selector - pctrl->ngroups].number;
-+		*npins = 1;
+ 	priv->syscon = syscon_regmap_lookup_by_phandle(np, "gpio,syscon-dev");
+-	if (IS_ERR(priv->syscon) && np->parent)
++	if (IS_ERR(priv->syscon) && np->parent) {
+ 		priv->syscon = syscon_node_to_regmap(np->parent);
++		use_parent_regmap = true;
 +	}
+ 	if (IS_ERR(priv->syscon))
+ 		return PTR_ERR(priv->syscon);
  
- 	return 0;
- }
-@@ -560,10 +569,12 @@ static int zynqmp_pinctrl_prepare_func_groups(struct device *dev, u32 fid,
- {
- 	u16 resp[NUM_GROUPS_PER_RESP] = {0};
- 	const char **fgroups;
--	int ret, index, i;
-+	int ret, index, i, pin;
-+	unsigned int npins;
-+	unsigned long *used_pins __free(bitmap) =
-+		bitmap_zalloc(zynqmp_desc.npins, GFP_KERNEL);
- 
--	fgroups = devm_kcalloc(dev, func->ngroups, sizeof(*fgroups), GFP_KERNEL);
--	if (!fgroups)
-+	if (!used_pins)
- 		return -ENOMEM;
- 
- 	for (index = 0; index < func->ngroups; index += NUM_GROUPS_PER_RESP) {
-@@ -578,23 +589,37 @@ static int zynqmp_pinctrl_prepare_func_groups(struct device *dev, u32 fid,
- 			if (resp[i] == RESERVED_GROUP)
- 				continue;
- 
--			fgroups[index + i] = devm_kasprintf(dev, GFP_KERNEL,
--							    "%s_%d_grp",
--							    func->name,
--							    index + i);
--			if (!fgroups[index + i])
--				return -ENOMEM;
--
- 			groups[resp[i]].name = devm_kasprintf(dev, GFP_KERNEL,
- 							      "%s_%d_grp",
- 							      func->name,
- 							      index + i);
- 			if (!groups[resp[i]].name)
- 				return -ENOMEM;
-+
-+			for (pin = 0; pin < groups[resp[i]].npins; pin++)
-+				__set_bit(groups[resp[i]].pins[pin], used_pins);
- 		}
- 	}
- done:
-+	npins = bitmap_weight(used_pins, zynqmp_desc.npins);
-+	fgroups = devm_kcalloc(dev, size_add(func->ngroups, npins),
-+			       sizeof(*fgroups), GFP_KERNEL);
-+	if (!fgroups)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < func->ngroups; i++) {
-+		fgroups[i] = devm_kasprintf(dev, GFP_KERNEL, "%s_%d_grp",
-+					    func->name, i);
-+		if (!fgroups[i])
-+			return -ENOMEM;
-+	}
-+
-+	pin = 0;
-+	for_each_set_bit(pin, used_pins, zynqmp_desc.npins)
-+		fgroups[i++] = zynqmp_desc.pins[pin].name;
-+
- 	func->groups = fgroups;
-+	func->ngroups += npins;
- 
- 	return 0;
- }
-@@ -772,6 +797,10 @@ static int zynqmp_pinctrl_prepare_function_info(struct device *dev,
- 	if (!groups)
- 		return -ENOMEM;
- 
-+	ret = zynqmp_pinctrl_prepare_group_pins(dev, groups, pctrl->ngroups);
-+	if (ret)
-+		return ret;
-+
- 	for (i = 0; i < pctrl->nfuncs; i++) {
- 		ret = zynqmp_pinctrl_prepare_func_groups(dev, i, &funcs[i],
- 							 groups);
-@@ -779,10 +808,6 @@ static int zynqmp_pinctrl_prepare_function_info(struct device *dev,
- 			return ret;
- 	}
- 
--	ret = zynqmp_pinctrl_prepare_group_pins(dev, groups, pctrl->ngroups);
+-	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
+-					 &priv->dreg_offset);
 -	if (ret)
--		return ret;
--
- 	pctrl->funcs = funcs;
- 	pctrl->groups = groups;
+-		dev_err(dev, "can't read the data register offset!\n");
++	if (!use_parent_regmap) {
++		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
++						 &priv->dreg_offset);
++		if (ret)
++			dev_err(dev, "can't read the data register offset!\n");
  
+-	priv->dreg_offset <<= 3;
++		priv->dreg_offset <<= 3;
+ 
+-	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
+-					 &priv->dir_reg_offset);
+-	if (ret)
+-		dev_dbg(dev, "can't read the dir register offset!\n");
++		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
++						 &priv->dir_reg_offset);
++		if (ret)
++			dev_dbg(dev, "can't read the dir register offset!\n");
+ 
+-	priv->dir_reg_offset <<= 3;
++		priv->dir_reg_offset <<= 3;
++	}
+ 
+ 	priv->chip.parent = dev;
+ 	priv->chip.owner = THIS_MODULE;
+
+base-commit: 4cece764965020c22cff7665b18a012006359095
 -- 
-2.35.1.1320.gc452695387.dirty
+2.43.0
 
 
