@@ -1,80 +1,74 @@
-Return-Path: <linux-gpio+bounces-6528-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6529-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6325A8CB1A2
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 17:47:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ADFB8CB26E
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 18:48:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BB7F281781
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 15:47:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C08EF1F2291C
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 16:48:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB36B1D52B;
-	Tue, 21 May 2024 15:47:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04D7F148301;
+	Tue, 21 May 2024 16:48:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="anlTrY+9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jcb0d1Ca"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24E71FBB;
-	Tue, 21 May 2024 15:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188A91482F1
+	for <linux-gpio@vger.kernel.org>; Tue, 21 May 2024 16:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716306451; cv=none; b=IWgKmIdm+DymfdjxoMHcrrYBzUzjNn0F3wLDZ5thERiw5zOS/F4QbLWm/MzkRcsnDqZTQNMGjXG/Mq+8QrHVc38tvNZjEqMwHhCQzIrD/oPQ+4c897Qe4ehkpK7LjmqWGw6TkOymvrI4gQqIRiBrxSgOSDCfETyVjvkKj3CYB1I=
+	t=1716310109; cv=none; b=ONhKhZ0M1ZEz10LmpBmK6MPUxLqEbiDwHzZJfJ/qj2A2dDwUiNIc4ANtfL5FyK5Mw2eyaBHesxDXtuBL5rhWDdSPZeurnwkxxrlPCeGHM6+yeORq3hxnC2SrdzKmguauIc1fAfSd1S4UVFe/BKgjcXFDOk3tzrglCOSVf6KXoK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716306451; c=relaxed/simple;
-	bh=muREvFmTCCrQm9KGsdQInt2Uyefx2O/x1zLCjJT+RiQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d6dgX32wWkEUHHo6hNB+RD7oEAYysKCIt+Y63CdlEj6Yfi1xEajXUCOlQYs6RihajOtbmXgPp/cw5eOwrdVpkn1AUpavtVD0NYxU3PGTZ4qUcbjc8eu/nmfSoNpoaXWxvIBYh3LBVhpUxYicf1t1CH/qRzNZ2iSQW+84aY3Cog8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=anlTrY+9; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1716310109; c=relaxed/simple;
+	bh=20VOATDLRsn0OJDx4Nlip92L/g8dIv+dozEDBnBbXLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Q8YeVbm32Qvdi3asawli4jRwPi64N6iiz8jycSdkixnMBFhZtKgqM2clTJ76OrKUIeXnxzcezSn9UhHieGJ08pW9lOK/kCEHLNPFV6Fuc2GsqZJ/rpgmetpIQpWNO68gQhmKIN+8ShgNhJ8FOc6j4drbyyD7HMOW3gO1qdUjr7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jcb0d1Ca; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716306449; x=1747842449;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=muREvFmTCCrQm9KGsdQInt2Uyefx2O/x1zLCjJT+RiQ=;
-  b=anlTrY+9BnDBsKISlPz6cSHr8txl5W4jx9oc0m2kkiecWpbtSErvLoqz
-   gU5+3S3O9QHB1OKhKHxTytQ00WCq+rlzpNJbpkh6ma4KDnz/6+l7f+roE
-   53UVXsklIaIEr4MBOdFOS1szagfSIjoI/xMviyTJE4NiBhUnhS32LFSrB
-   AcN8YLRMOdG6tRZWQS1WVPpe6SonJOKE6Kq9Lkc8nEw4Y7SuJ3sX6l6je
-   3HlLS41iFAoxHx+ZUZlhov+OPw8XF4dbIVCMoD8XEzvsNq+EYTjZF84nj
-   bZ/xKDNGV57jRjsFoAZM3dTuSMDaVV2cJZZ77lFT8m94To5/Yaz98lBVw
-   A==;
-X-CSE-ConnectionGUID: JqSdfCEiSlGUxa6z8yaMBg==
-X-CSE-MsgGUID: omWfhK5iQq2blW/8qs3NMg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12301913"
+  t=1716310108; x=1747846108;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=20VOATDLRsn0OJDx4Nlip92L/g8dIv+dozEDBnBbXLE=;
+  b=Jcb0d1CaM9rOnI4aQL+gqCLLGJDnxwM1iGWWI22Ihzqjk247xjivX40I
+   A1bRchgC8U/cf9qc7H03HeOwuSO1iR9I2klDqoySTtP6Zp22qOsXiyOVc
+   cs5rj42vv93Tdzhje/MFNtqeghwQvSYYyvn1HhVXYBU/uOJhIKxUsxrLu
+   +KPSgrHcQs9yMIjZhR1zj0Ca1e9RWS14cmmSZ4NEh+51IMVK7CgS3iEo+
+   vPmTGAIgQUNNLOjeenzABLkJeO6UsvAJpZ7SlI6KVnCMPgWsKwYHTnhNb
+   RNZis84lv7jtPXbJngJWDuSEqjTdtVXHX2t4S9CXVb3XU6hgEo5yfel8k
+   Q==;
+X-CSE-ConnectionGUID: 2j5QxIG9R2GLgri0AEBOew==
+X-CSE-MsgGUID: hYS6DU3aTCiz3Cx8lDU5lA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="30044661"
 X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
-   d="scan'208";a="12301913"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 08:47:28 -0700
-X-CSE-ConnectionGUID: A54Wee5oT5KWhdWOJyYzjA==
-X-CSE-MsgGUID: T52cE34wS0qBbaLkM5ODzw==
+   d="scan'208";a="30044661"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 09:48:27 -0700
+X-CSE-ConnectionGUID: ePv+3SjSQLSTU8YFMTh8Sw==
+X-CSE-MsgGUID: dboaXVzoSF2M5mJ7wehPrg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,178,1712646000"; 
-   d="scan'208";a="56191217"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 08:47:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s9Rhy-00000009hWz-3UE8;
-	Tue, 21 May 2024 18:47:22 +0300
-Date: Tue, 21 May 2024 18:47:22 +0300
+   d="scan'208";a="37812646"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa005.jf.intel.com with ESMTP; 21 May 2024 09:48:26 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 8DBC43D1; Tue, 21 May 2024 19:48:24 +0300 (EEST)
+Date: Tue, 21 May 2024 19:48:24 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Devyn Liu <liudingyuan@huawei.com>, linus.walleij@linaro.org,
-	brgl@bgdev.pl, f.fangjian@huawei.com, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	jonathan.cameron@huawei.com, yangyicong@huawei.com,
-	yisen.zhuang@huawei.com, kong.kongxinwei@hisilicon.com
-Subject: Re: [PATCH] gpiolib: acpi: Fix failed in acpi_gpiochip_find() by
- adding parent node match
-Message-ID: <ZkzCCkOx8AtjPWSE@smile.fi.intel.com>
-References: <20240513075901.2030293-1-liudingyuan@huawei.com>
- <20240520043749.GH1421138@black.fi.intel.com>
+To: Linux GPIO <linux-gpio@vger.kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-gpio for 6.10-2
+Message-ID: <ZkzQWCBqagIVsGeB@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,48 +77,66 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240520043749.GH1421138@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, May 20, 2024 at 07:37:49AM +0300, Mika Westerberg wrote:
-> On Mon, May 13, 2024 at 03:59:01PM +0800, Devyn Liu wrote:
-> > Previous patch modified the standard used by acpi_gpiochip_find()
-> > to match device nodes. Using the device node set in gc->gpiodev->d-
-> > ev instead of gc->parent.
-> > 
-> > However, there is a situation in gpio-dwapb where the GPIO device
-> > driver will set gc->fwnode for each port corresponding to a child
-> > node under a GPIO device, so gc->gpiodev->dev will be assigned the
-> > value of each child node in gpiochip_add_data().
-> > 
-> > gpio-dwapb.c:
-> > 128,31 static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
-> > 			       struct dwapb_port_property *pp,
-> > 			       unsigned int offs);
-> > port->gc.fwnode = pp->fwnode;
-> > 
-> > 693,39 static int dwapb_gpio_probe;
-> > err = dwapb_gpio_add_port(gpio, &pdata->properties[i], i);
-> > 
-> > When other drivers request GPIO pin resources through the GPIO device
-> > node provided by ACPI (corresponding to the parent node), the change
-> > of the matching object to gc->gpiodev->dev in acpi_gpiochip_find()
-> > only allows finding the value of each port (child node), resulting
-> > in a failed request.
-> > 
-> > Reapply the condition of using gc->parent for match in acpi_gpio-
-> > chip_find() in the code can compatible with the problem of gpio-dwapb,
-> > and will not affect the two cases mentioned in the patch:
-> > 1. There is no setting for gc->fwnode.
-> > 2. The case that depends on using gc->fwnode for match.
-> > 
-> > Fixes: 5062e4c14b75 ("gpiolib: acpi: use the fwnode in acpi_gpiochip_find()")
-> > Fixes: 067dbc1ea5ce ("gpiolib: acpi: Don't use GPIO chip fwnode in acpi_gpiochip_find()")
-> > Signed-off-by: Devyn Liu <liudingyuan@huawei.com>
-> 
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Hi Linux GPIO maintainers and Linus,
 
-Pushed to my review and testing queue, thanks!
+Here is a couple of kinda good to have before v6.10-rc1 is out fixes as one of
+the regressions was introduced just in the PR of previous GPIO ACPI work that
+landed recently (via GPIO subsystem PR).
+
+Thorsten insisted [1] that it's a good to have flawless v6.10-rc1 than waiting
+for a normal process to be taken. Hence I created a tag against the latest
+(as of today) snapshot of Linus' tree with two pending fixes. I can't weight
+myself the criticalness of the changes, but NULL pointer dereference is kinda
+one that better to go via fast track. Hence this PR is sent to GPIO maintainers
+and to Linus Torvalds directly.
+
+Note, due to a couple of other regressions (not done by me) [2][3] I wasn't
+able to test this PR earlier anyway. But now it's not only compile, but also
+HW tested.
+
+Thanks,
+
+With Best Regards,
+Andy Shevchenko
+
+Link: https://lore.kernel.org/r/c10a77b6-e7b1-43c0-af38-79092eeb34f1@leemhuis.info [1]
+Link: https://lore.kernel.org/r/20240517200534.8EC5F33E@davehans-spike.ostc.intel.com [2]
+Link: https://lore.kernel.org/r/20240514190730.2787071-1-andriy.shevchenko@linux.intel.com [3]
+
+The following changes since commit 8f6a15f095a63a83b096d9b29aaff4f0fbe6f6e6:
+
+  Merge tag 'cocci-for-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/jlawall/linux (2024-05-20 16:00:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v6.10-2
+
+for you to fetch changes up to adbc49a5a8c6fcf7be154c2e30213bbf472940da:
+
+  gpiolib: acpi: Fix failed in acpi_gpiochip_find() by adding parent node match (2024-05-21 18:46:45 +0300)
+
+----------------------------------------------------------------
+intel-gpio for v6.10-2
+
+* NULL pointer dereference fix in GPIO APCI library
+* Restore ACPI handle matching for GPIO devices represented in banks
+
+The following is an automated git shortlog grouped by driver:
+
+gpiolib:
+ -  acpi: Fix failed in acpi_gpiochip_find() by adding parent node match
+ -  acpi: Move ACPI device NULL check to acpi_can_fallback_to_crs()
+
+----------------------------------------------------------------
+Devyn Liu (1):
+      gpiolib: acpi: Fix failed in acpi_gpiochip_find() by adding parent node match
+
+Laura Nao (1):
+      gpiolib: acpi: Move ACPI device NULL check to acpi_can_fallback_to_crs()
+
+ drivers/gpio/gpiolib-acpi.c | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
 
 -- 
 With Best Regards,
