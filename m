@@ -1,99 +1,355 @@
-Return-Path: <linux-gpio+bounces-6508-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6509-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D08AA8CAB60
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 12:01:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F06A8CAB82
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 12:09:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CD7F1C214C3
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 10:01:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C20B31C20B52
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 10:09:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2238358236;
-	Tue, 21 May 2024 10:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22E286BB56;
+	Tue, 21 May 2024 10:09:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vc7D2ADM"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="BLWYKzAd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18AE6A8AD;
-	Tue, 21 May 2024 10:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830CA4F88A;
+	Tue, 21 May 2024 10:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716285689; cv=none; b=jqBtiGstXpFuK2jm8o7qHxFSyME1vpfeGzu8hJzcOf32dCEm6NKPvBS8UU+k1qlkg0GuEuE6ksP3JfnzXxY7c50AKZLnh0Ak7rUS6C6rtudhhpUTQaX5qoUpMLMCMpvgmwTSge8WQTmMiIXdyCu6Swu5iT4rjRoq9g43eRk1py8=
+	t=1716286176; cv=none; b=IHPxKQO0XopMuTxn2Cv8JIxy2dOCe7g3ITWqkZJfEou7DkSrUR0jy+y6X1zAzSWUJhdAKJ629jm7HBJr1+2ByZQiLSAkvSEFec4mBVUEW+HV9HAeQ06/K+znupYOPAGAqv9GI67Hgb4DMLR+OrLtY/SYf36VLIDNAkG5rvGu5i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716285689; c=relaxed/simple;
-	bh=n8+o3NVnL57asI8p4M/36TOmWj7QNAqCHYBIEm6XABA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CjikhbNzy6UEX5nrM0WPSJueA3MRy2U+dEmDp31eo7iaoOPxY8HMW692nvIoGWwKsmEQ/lwfLAx0oUuH3t1Ye33pIVcg2UEsPflKmWiDoOzX33deqQPZPmcvI2TjOqid4fcijVk9cgq01okws1POFyDMLRUGrzpNI0LjMmvllIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vc7D2ADM; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=j75BGBZI1XcWKMkzeEf52Hy2BMGSWC5SHXSgriK1ehQ=;
-	t=1716285688; x=1716717688; b=vc7D2ADMAp/nMoHfrkYJjjr00DE67wlW7XHbaK4S8r6U5yH
-	dfK8Cdna3KtqnWE5l7Fw+LJ2wfb5LJhehJ8vaWQpbZvoCaSrnCM4282CxGesNrlmVy89gb6mHoSZp
-	3wsMC6deVsKvs5kY+ut+3s85J0oa6V7TRSd2iKNHwCVfloijByOmH9Al8SKiLI5apoX9aK7X6PPdY
-	zwbF/4pna8g9ZKoABiQXvlM/PfG7f1ttHehgjmUw8N2EwCpJNq35+VHMSP93Sk9e6w5535gk3Rh8T
-	g0Yn9NQte1OmaS78fjNMxqec0arpAcDVpJBgpToxlOgEtlts4fc8Kl1bbeercsrA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s9MJ3-0000k3-Uj; Tue, 21 May 2024 12:01:18 +0200
-Message-ID: <b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
-Date: Tue, 21 May 2024 12:01:17 +0200
+	s=arc-20240116; t=1716286176; c=relaxed/simple;
+	bh=z1eCyzrs0kaldb2RBdt3QhyvlygYoxrEnoe6oO53hus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W894ffbitP8mCj+VZp8rcLfHc5z/1zTXbTRIEbx2Df2STvtfeOzPR16YMMQDCAXYkaHrw9UR6Pxb6y1okI7C8flh/xKAYpbfqgxC4Ck+PUnT6LAOZej5AzAdcxy8QNFbmK6/9fBok1PCZfqdGh3O6TZ6AKapAFc2/RKFfhsXUSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=BLWYKzAd; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7003BCE3;
+	Tue, 21 May 2024 12:09:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1716286159;
+	bh=z1eCyzrs0kaldb2RBdt3QhyvlygYoxrEnoe6oO53hus=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BLWYKzAdAP+LSHQaQF7h3RE7g4o0YJ72wpqvprflzLTLU3plcMYvvXgJap3k8BPg3
+	 NDaJ+72b6hIA3+wLqoevoKYC0cnf+2dhReO5gXglD5YcttO4xOdb59173wlv7UkZ2s
+	 IPtfWePKgEhACWOWG9CCQ2YRlgfuR4BjI9LzBj88=
+Date: Tue, 21 May 2024 13:09:22 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Alexandru Ardelean <alexandru.ardelean@analog.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Clark Wang <xiaoning.wang@nxp.com>
+Subject: Re: [PATCH 5/5] pwm: adp5585: Add Analog Devices ADP5585 support
+Message-ID: <20240521100922.GF16345@pendragon.ideasonboard.com>
+References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
+ <20240520195942.11582-6-laurent.pinchart@ideasonboard.com>
+ <dl7a6puox5lc36fpto2fgyfgmpd3uboqc4lcfdtuaxzzsboqld@alw7vyi7pqjz>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] gpiolib: acpi: Move ACPI device NULL check to
- acpi_can_fallback_to_crs()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Laura Nao <laura.nao@collabora.com>
-Cc: mika.westerberg@linux.intel.com, linus.walleij@linaro.org, brgl@bgdev.pl,
- kernel@collabora.com, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- "kernelci.org bot" <bot@kernelci.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20240513095610.216668-1-laura.nao@collabora.com>
- <ZkHlLLLoagsYlll7@smile.fi.intel.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <ZkHlLLLoagsYlll7@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716285688;572a1b2c;
-X-HE-SMSGID: 1s9MJ3-0000k3-Uj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dl7a6puox5lc36fpto2fgyfgmpd3uboqc4lcfdtuaxzzsboqld@alw7vyi7pqjz>
 
+Hi Uwe,
 
+Thank you for the quick review.
 
-On 13.05.24 12:02, Andy Shevchenko wrote:
-> On Mon, May 13, 2024 at 11:56:10AM +0200, Laura Nao wrote:
->> Following the relocation of the function call outside of
->> __acpi_find_gpio(), move the ACPI device NULL check to
->> acpi_can_fallback_to_crs().
+On Tue, May 21, 2024 at 10:51:26AM +0200, Uwe Kleine-König wrote:
+> On Mon, May 20, 2024 at 10:59:41PM +0300, Laurent Pinchart wrote:
+> > diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
+> > new file mode 100644
+> > index 000000000000..709713d8f47a
+> > --- /dev/null
+> > +++ b/drivers/pwm/pwm-adp5585.c
+> > @@ -0,0 +1,230 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Analog Devices ADP5585 PWM driver
+> > + *
+> > + * Copyright 2022 NXP
+> > + * Copyright 2024 Ideas on Board Oy
+> > + */
 > 
-> Thank you, I'll add this to my tree as we have already the release happened.
-> I will be available after v6.10-rc1 is out.
+> Please document some hardware properties here in the same format as many
+> other PWM drivers. The things I'd like to read there are:
+> 
+>  - Only supports normal polarity
+>  - How does the output pin behave when the hardware is disabled
+>    (typically "low" or "high-Z" or "freeze")
+>  - Does changing parameters or disabling complete the currently running
+>    period?
+>  - Are there glitches in .apply()? E.g. when the new duty_cycle is
+>    already written but the new period is not.
+> 
+> > +#include <linux/container_of.h>
+> > +#include <linux/device.h>
+> > +#include <linux/math.h>
+> > +#include <linux/minmax.h>
+> > +#include <linux/mfd/adp5585.h>
+> > +#include <linux/module.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pwm.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/time.h>
+> 
+> Do you need these all? I wounder about time.h.
 
-Hmm, what exactly do you mean with that? It sounds as you only want to
-add this to the tree once -rc1 is out -- which seems likely at this
-point, as that patch is not yet in -next. If that's the case allow me to
-ask: why? I'd say it should be fixes rather sooner than later, as other
-people might run into this as well and then have to deal with bisecing,
-reporting, ...
+Yes I've checked them all :-) time.h is for NSEC_PER_SEC (defined in
+vdso/time64.h, which I thought would be better replaced by time.h).
 
-Ciao, Thorsten
+> > +#define ADP5585_PWM_CHAN_NUM		1
+> > +
+> > +#define ADP5585_PWM_OSC_FREQ_HZ		1000000U
+> > +#define ADP5585_PWM_MIN_PERIOD_NS	(2ULL * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
+> > +#define ADP5585_PWM_MAX_PERIOD_NS	(2ULL * 0xffff * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
+> > +
+> > +struct adp5585_pwm_chip {
+> > +	struct pwm_chip chip;
+> > +	struct regmap *regmap;
+> > +	struct mutex lock;
+> 
+> What does this mutex protect against? You can safely assume that there
+> are no concurrent calls of the callbacks. (This isn't ensured yet, but I
+> consider a consumer who does this buggy and it will soon be ensured.)
 
+That's good to know. I couldn't find that information. I'll revisit the
+locking in v2, and add a comment to document the mutex in case it's
+still needed.
+
+> > +	u8 pin_config_val;
+> > +};
+> > +
+> > +static inline struct adp5585_pwm_chip *
+> > +to_adp5585_pwm_chip(struct pwm_chip *chip)
+> > +{
+> > +	return container_of(chip, struct adp5585_pwm_chip, chip);
+> > +}
+> > +
+> > +static int pwm_adp5585_request(struct pwm_chip *chip, struct pwm_device *pwm)
+> > +{
+> > +	struct adp5585_pwm_chip *adp5585_pwm = to_adp5585_pwm_chip(chip);
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	guard(mutex)(&adp5585_pwm->lock);
+> > +
+> > +	ret = regmap_read(adp5585_pwm->regmap, ADP5585_PIN_CONFIG_C, &val);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	adp5585_pwm->pin_config_val = val;
+> > +
+> > +	ret = regmap_update_bits(adp5585_pwm->regmap, ADP5585_PIN_CONFIG_C,
+> > +				 ADP5585_R3_EXTEND_CFG_MASK,
+> > +				 ADP5585_R3_EXTEND_CFG_PWM_OUT);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = regmap_update_bits(adp5585_pwm->regmap, ADP5585_GENERAL_CFG,
+> > +				 ADP5585_OSC_EN, ADP5585_OSC_EN);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return 0;
+> 
+> The last four lines are equivalent to
+> 
+> 	return ret;
+
+I prefer the existing code but can also change it.
+
+> What is the purpose of this function? Setup some kind of pinmuxing? The
+> answer to that question goes into a code comment. If it's pinmuxing, is
+> this a hint to use the pinctrl subsystem? (Maybe it's overkill, but if
+> it's considered a good idea later, it might be hard to extend the dt
+> bindings, so thinking about that now might be a good idea.)
+
+The ADP5585_R3_EXTEND_CFG_PWM_OUT bit is about pinmuxing, yes. I'll add
+a comment. I considered pinctrl too, but I think it's overkill.
+
+> > +}
+> > +
+> > +static void pwm_adp5585_free(struct pwm_chip *chip, struct pwm_device *pwm)
+> > +{
+> > +	struct adp5585_pwm_chip *adp5585_pwm = to_adp5585_pwm_chip(chip);
+> > +
+> > +	guard(mutex)(&adp5585_pwm->lock);
+> > +
+> > +	regmap_update_bits(adp5585_pwm->regmap, ADP5585_PIN_CONFIG_C,
+> > +			   ADP5585_R3_EXTEND_CFG_MASK,
+> > +			   adp5585_pwm->pin_config_val);
+> 
+> I wonder if writing a deterministic value instead of whatever was in
+> that register before .request() would be more robust and less
+> surprising.
+
+I'll change that. It looks like the last remains of the original code
+are going away :-)
+
+> > +	regmap_update_bits(adp5585_pwm->regmap, ADP5585_GENERAL_CFG,
+> > +			   ADP5585_OSC_EN, 0);
+> > +}
+> > +
+> > +static int pwm_adp5585_apply(struct pwm_chip *chip,
+> > +			     struct pwm_device *pwm,
+> > +			     const struct pwm_state *state)
+> > +{
+> > +	struct adp5585_pwm_chip *adp5585_pwm = to_adp5585_pwm_chip(chip);
+> > +	u32 on, off;
+> > +	int ret;
+> > +
+> > +	if (!state->enabled) {
+> > +		guard(mutex)(&adp5585_pwm->lock);
+> > +
+> > +		return regmap_update_bits(adp5585_pwm->regmap, ADP5585_PWM_CFG,
+> > +					  ADP5585_PWM_EN, 0);
+> > +	}
+> > +
+> > +	if (state->period < ADP5585_PWM_MIN_PERIOD_NS ||
+> > +	    state->period > ADP5585_PWM_MAX_PERIOD_NS)
+> > +		return -EINVAL;
+> 
+> Make this:
+> 
+> 	if (state->period < ADP5585_PWM_MIN_PERIOD_NS)
+> 		return -EINVAL;
+> 
+> 	period = min(ADP5585_PWM_MAX_PERIOD_NS, state->period)
+> 	duty_cycle = min(period, state->period);
+
+I haven't been able to find documentation about the expected behaviour.
+What's the rationale for returning an error if the period is too low,
+but silently clamping it if it's too high ?
+
+> > +
+> > +	/*
+> > +	 * Compute the on and off time. As the internal oscillator frequency is
+> > +	 * 1MHz, the calculation can be simplified without loss of precision.
+> > +	 */
+> > +	on = DIV_ROUND_CLOSEST_ULL(state->duty_cycle,
+> > +				   NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
+> > +	off = DIV_ROUND_CLOSEST_ULL(state->period - state->duty_cycle,
+> > +				    NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
+> 
+> round-closest is wrong. Testing with PWM_DEBUG should point that out.
+> The right algorithm is:
+> 
+> 	on = duty_cycle / (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
+> 	off = period / (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ) - on
+> 
+> 
+> > +	if (state->polarity == PWM_POLARITY_INVERSED)
+> > +		swap(on, off);
+> 
+> Uhh, no. Either you can do inverted polarity or you cannot. Don't claim
+> you can.
+
+OK, but what's the rationale ? This is also an area where I couldn't
+find documentation.
+
+> > [...]
+> > +static int adp5585_pwm_probe(struct platform_device *pdev)
+> > +{
+> > +	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
+> > +	struct adp5585_pwm_chip *adp5585_pwm;
+> > +	int ret;
+> > +
+> > +	adp5585_pwm = devm_kzalloc(&pdev->dev, sizeof(*adp5585_pwm), GFP_KERNEL);
+> > +	if (!adp5585_pwm)
+> > +		return -ENOMEM;
+> > +
+> > +	platform_set_drvdata(pdev, adp5585_pwm);
+> > +
+> > +	adp5585_pwm->regmap = adp5585->regmap;
+> > +
+> > +	mutex_init(&adp5585_pwm->lock);
+> > +
+> > +	adp5585_pwm->chip.dev = &pdev->dev;
+> > +	adp5585_pwm->chip.ops = &adp5585_pwm_ops;
+> > +	adp5585_pwm->chip.npwm = ADP5585_PWM_CHAN_NUM;
+> 
+> That is wrong since commit
+> 05947224ff46 ("pwm: Ensure that pwm_chips are allocated using pwmchip_alloc()")
+
+I'll update the code.
+
+> > +	ret = devm_pwmchip_add(&pdev->dev, &adp5585_pwm->chip);
+> > +	if (ret) {
+> > +		mutex_destroy(&adp5585_pwm->lock);
+> > +		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void adp5585_pwm_remove(struct platform_device *pdev)
+> > +{
+> > +	struct adp5585_pwm_chip *adp5585_pwm = platform_get_drvdata(pdev);
+> > +
+> > +	mutex_destroy(&adp5585_pwm->lock);
+> 
+> Huh, this is a bad idea. The mutex is gone while the pwmchip is still
+> registered. AFAIK calling mutex_destroy() is optional, and
+> adp5585_pwm_remove() can just be dropped. Ditto in the error paths of
+> .probe().
+
+mutex_destroy() is a no-op when !CONFIG_DEBUG_MUTEXES. When the config
+option is selected, it gets more useful. I would prefer moving away from
+the devm_* registration, and unregister the pwm_chip in .remove()
+manually, before destroying the mutex.
+
+> > +}
+> > +
+> > +static const struct of_device_id adp5585_pwm_of_match[] = {
+> > +	{ .compatible = "adi,adp5585-pwm" },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, adp5585_pwm_of_match);
+> 
+> Is it normal/usual for mfd drivers to use of stuff? I thought they use
+> plain platform style binding, not sure though.
+
+I'll test it.
+
+> > +static struct platform_driver adp5585_pwm_driver = {
+> > +	.driver	= {
+> > +		.name = "adp5585-pwm",
+> > +		.of_match_table = adp5585_pwm_of_match,
+> > +	},
+> > +	.probe = adp5585_pwm_probe,
+> > +	.remove_new = adp5585_pwm_remove,
+> > +};
+> > +module_platform_driver(adp5585_pwm_driver);
+> > +
+> > +MODULE_AUTHOR("Xiaoning Wang <xiaoning.wang@nxp.com>");
+> > +MODULE_DESCRIPTION("ADP5585 PWM Driver");
+> > +MODULE_LICENSE("GPL");
+
+-- 
+Regards,
+
+Laurent Pinchart
 
