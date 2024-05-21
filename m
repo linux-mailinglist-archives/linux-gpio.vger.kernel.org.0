@@ -1,353 +1,99 @@
-Return-Path: <linux-gpio+bounces-6507-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6508-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0746B8CAA60
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 10:51:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D08AA8CAB60
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 12:01:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B0ED728238A
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 08:51:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CD7F1C214C3
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 10:01:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A505956771;
-	Tue, 21 May 2024 08:51:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2238358236;
+	Tue, 21 May 2024 10:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vc7D2ADM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C2F56773
-	for <linux-gpio@vger.kernel.org>; Tue, 21 May 2024 08:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18AE6A8AD;
+	Tue, 21 May 2024 10:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716281499; cv=none; b=iGrSMuL7E7ux3DoiQGCZY9G2rS9gwb4M+T8e0PRZPeERrGoHO0rlmenFSS67yVaKBndCxzDTlOqlbv8HK7qGaHM/xN6zwwG3IJQgAhHWuihdPeT6nQ+4gB/qBfz/qkyqBjPeic0wMFA7xoeZ8AhlidAshmRLd2DvmELlfXZVgjU=
+	t=1716285689; cv=none; b=jqBtiGstXpFuK2jm8o7qHxFSyME1vpfeGzu8hJzcOf32dCEm6NKPvBS8UU+k1qlkg0GuEuE6ksP3JfnzXxY7c50AKZLnh0Ak7rUS6C6rtudhhpUTQaX5qoUpMLMCMpvgmwTSge8WQTmMiIXdyCu6Swu5iT4rjRoq9g43eRk1py8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716281499; c=relaxed/simple;
-	bh=rS3UVYhGZuhcoa6yECMf2xlQPlWNMlzpfZZdREAOwiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E6NO2CiZXD6vUKYANqrb84m5fx5iU0oJwpmqIfYHLBkg16YLIBzdaLY0sC6039cfCuN9Xl3eBNNX+LNgQrzGpK1F5LCV6l3AUr5057BZGE7v/VWUr3yRTmtJHtV5tRCzEbzdBlfQYpzt/jmnP3A5zbvD9vUisKIApxB4872a1h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s9LDV-0004UJ-1r; Tue, 21 May 2024 10:51:29 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s9LDS-002MiS-Tt; Tue, 21 May 2024 10:51:26 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s9LDS-009MhI-2g;
-	Tue, 21 May 2024 10:51:26 +0200
-Date: Tue, 21 May 2024 10:51:26 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	Alexandru Ardelean <alexandru.ardelean@analog.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Clark Wang <xiaoning.wang@nxp.com>
-Subject: Re: [PATCH 5/5] pwm: adp5585: Add Analog Devices ADP5585 support
-Message-ID: <dl7a6puox5lc36fpto2fgyfgmpd3uboqc4lcfdtuaxzzsboqld@alw7vyi7pqjz>
-References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
- <20240520195942.11582-6-laurent.pinchart@ideasonboard.com>
+	s=arc-20240116; t=1716285689; c=relaxed/simple;
+	bh=n8+o3NVnL57asI8p4M/36TOmWj7QNAqCHYBIEm6XABA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CjikhbNzy6UEX5nrM0WPSJueA3MRy2U+dEmDp31eo7iaoOPxY8HMW692nvIoGWwKsmEQ/lwfLAx0oUuH3t1Ye33pIVcg2UEsPflKmWiDoOzX33deqQPZPmcvI2TjOqid4fcijVk9cgq01okws1POFyDMLRUGrzpNI0LjMmvllIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vc7D2ADM; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=j75BGBZI1XcWKMkzeEf52Hy2BMGSWC5SHXSgriK1ehQ=;
+	t=1716285688; x=1716717688; b=vc7D2ADMAp/nMoHfrkYJjjr00DE67wlW7XHbaK4S8r6U5yH
+	dfK8Cdna3KtqnWE5l7Fw+LJ2wfb5LJhehJ8vaWQpbZvoCaSrnCM4282CxGesNrlmVy89gb6mHoSZp
+	3wsMC6deVsKvs5kY+ut+3s85J0oa6V7TRSd2iKNHwCVfloijByOmH9Al8SKiLI5apoX9aK7X6PPdY
+	zwbF/4pna8g9ZKoABiQXvlM/PfG7f1ttHehgjmUw8N2EwCpJNq35+VHMSP93Sk9e6w5535gk3Rh8T
+	g0Yn9NQte1OmaS78fjNMxqec0arpAcDVpJBgpToxlOgEtlts4fc8Kl1bbeercsrA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s9MJ3-0000k3-Uj; Tue, 21 May 2024 12:01:18 +0200
+Message-ID: <b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
+Date: Tue, 21 May 2024 12:01:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="f7l4z7wuw4trzvr4"
-Content-Disposition: inline
-In-Reply-To: <20240520195942.11582-6-laurent.pinchart@ideasonboard.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] gpiolib: acpi: Move ACPI device NULL check to
+ acpi_can_fallback_to_crs()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Laura Nao <laura.nao@collabora.com>
+Cc: mika.westerberg@linux.intel.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+ kernel@collabora.com, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "kernelci.org bot" <bot@kernelci.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240513095610.216668-1-laura.nao@collabora.com>
+ <ZkHlLLLoagsYlll7@smile.fi.intel.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <ZkHlLLLoagsYlll7@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1716285688;572a1b2c;
+X-HE-SMSGID: 1s9MJ3-0000k3-Uj
 
 
---f7l4z7wuw4trzvr4
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello Laurent,
+On 13.05.24 12:02, Andy Shevchenko wrote:
+> On Mon, May 13, 2024 at 11:56:10AM +0200, Laura Nao wrote:
+>> Following the relocation of the function call outside of
+>> __acpi_find_gpio(), move the ACPI device NULL check to
+>> acpi_can_fallback_to_crs().
+> 
+> Thank you, I'll add this to my tree as we have already the release happened.
+> I will be available after v6.10-rc1 is out.
 
-On Mon, May 20, 2024 at 10:59:41PM +0300, Laurent Pinchart wrote:
-> diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
-> new file mode 100644
-> index 000000000000..709713d8f47a
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-adp5585.c
-> @@ -0,0 +1,230 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Analog Devices ADP5585 PWM driver
-> + *
-> + * Copyright 2022 NXP
-> + * Copyright 2024 Ideas on Board Oy
-> + */
+Hmm, what exactly do you mean with that? It sounds as you only want to
+add this to the tree once -rc1 is out -- which seems likely at this
+point, as that patch is not yet in -next. If that's the case allow me to
+ask: why? I'd say it should be fixes rather sooner than later, as other
+people might run into this as well and then have to deal with bisecing,
+reporting, ...
 
-Please document some hardware properties here in the same format as many
-other PWM drivers. The things I'd like to read there are:
+Ciao, Thorsten
 
- - Only supports normal polarity
- - How does the output pin behave when the hardware is disabled
-   (typically "low" or "high-Z" or "freeze")
- - Does changing parameters or disabling complete the currently running
-   period?
- - Are there glitches in .apply()? E.g. when the new duty_cycle is
-   already written but the new period is not.
-
-> +#include <linux/container_of.h>
-> +#include <linux/device.h>
-> +#include <linux/math.h>
-> +#include <linux/minmax.h>
-> +#include <linux/mfd/adp5585.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/time.h>
-
-Do you need these all? I wounder about time.h.
-
-> +#define ADP5585_PWM_CHAN_NUM		1
-> +
-> +#define ADP5585_PWM_OSC_FREQ_HZ		1000000U
-> +#define ADP5585_PWM_MIN_PERIOD_NS	(2ULL * NSEC_PER_SEC / ADP5585_PWM_OSC=
-_FREQ_HZ)
-> +#define ADP5585_PWM_MAX_PERIOD_NS	(2ULL * 0xffff * NSEC_PER_SEC / ADP558=
-5_PWM_OSC_FREQ_HZ)
-> +
-> +struct adp5585_pwm_chip {
-> +	struct pwm_chip chip;
-> +	struct regmap *regmap;
-> +	struct mutex lock;
-
-What does this mutex protect against? You can safely assume that there
-are no concurrent calls of the callbacks. (This isn't ensured yet, but I
-consider a consumer who does this buggy and it will soon be ensured.)
-
-> +	u8 pin_config_val;
-> +};
-> +
-> +static inline struct adp5585_pwm_chip *
-> +to_adp5585_pwm_chip(struct pwm_chip *chip)
-> +{
-> +	return container_of(chip, struct adp5585_pwm_chip, chip);
-> +}
-> +
-> +static int pwm_adp5585_request(struct pwm_chip *chip, struct pwm_device =
-*pwm)
-> +{
-> +	struct adp5585_pwm_chip *adp5585_pwm =3D to_adp5585_pwm_chip(chip);
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	guard(mutex)(&adp5585_pwm->lock);
-> +
-> +	ret =3D regmap_read(adp5585_pwm->regmap, ADP5585_PIN_CONFIG_C, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	adp5585_pwm->pin_config_val =3D val;
-> +
-> +	ret =3D regmap_update_bits(adp5585_pwm->regmap, ADP5585_PIN_CONFIG_C,
-> +				 ADP5585_R3_EXTEND_CFG_MASK,
-> +				 ADP5585_R3_EXTEND_CFG_PWM_OUT);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D regmap_update_bits(adp5585_pwm->regmap, ADP5585_GENERAL_CFG,
-> +				 ADP5585_OSC_EN, ADP5585_OSC_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-The last four lines are equivalent to
-
-	return ret;
-
-What is the purpose of this function? Setup some kind of pinmuxing? The
-answer to that question goes into a code comment. If it's pinmuxing, is
-this a hint to use the pinctrl subsystem? (Maybe it's overkill, but if
-it's considered a good idea later, it might be hard to extend the dt
-bindings, so thinking about that now might be a good idea.)
-
-> +}
-> +
-> +static void pwm_adp5585_free(struct pwm_chip *chip, struct pwm_device *p=
-wm)
-> +{
-> +	struct adp5585_pwm_chip *adp5585_pwm =3D to_adp5585_pwm_chip(chip);
-> +
-> +	guard(mutex)(&adp5585_pwm->lock);
-> +
-> +	regmap_update_bits(adp5585_pwm->regmap, ADP5585_PIN_CONFIG_C,
-> +			   ADP5585_R3_EXTEND_CFG_MASK,
-> +			   adp5585_pwm->pin_config_val);
-
-I wonder if writing a deterministic value instead of whatever was in
-that register before .request() would be more robust and less
-surprising.
-
-> +	regmap_update_bits(adp5585_pwm->regmap, ADP5585_GENERAL_CFG,
-> +			   ADP5585_OSC_EN, 0);
-> +}
-> +
-> +static int pwm_adp5585_apply(struct pwm_chip *chip,
-> +			     struct pwm_device *pwm,
-> +			     const struct pwm_state *state)
-> +{
-> +	struct adp5585_pwm_chip *adp5585_pwm =3D to_adp5585_pwm_chip(chip);
-> +	u32 on, off;
-> +	int ret;
-> +
-> +	if (!state->enabled) {
-> +		guard(mutex)(&adp5585_pwm->lock);
-> +
-> +		return regmap_update_bits(adp5585_pwm->regmap, ADP5585_PWM_CFG,
-> +					  ADP5585_PWM_EN, 0);
-> +	}
-> +
-> +	if (state->period < ADP5585_PWM_MIN_PERIOD_NS ||
-> +	    state->period > ADP5585_PWM_MAX_PERIOD_NS)
-> +		return -EINVAL;
-
-Make this:
-
-	if (state->period < ADP5585_PWM_MIN_PERIOD_NS)
-		return -EINVAL;
-
-	period =3D min(ADP5585_PWM_MAX_PERIOD_NS, state->period)
-	duty_cycle =3D min(period, state->period);
-
-> +
-> +	/*
-> +	 * Compute the on and off time. As the internal oscillator frequency is
-> +	 * 1MHz, the calculation can be simplified without loss of precision.
-> +	 */
-> +	on =3D DIV_ROUND_CLOSEST_ULL(state->duty_cycle,
-> +				   NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
-> +	off =3D DIV_ROUND_CLOSEST_ULL(state->period - state->duty_cycle,
-> +				    NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
-
-round-closest is wrong. Testing with PWM_DEBUG should point that out.
-The right algorithm is:
-
-	on =3D duty_cycle / (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
-	off =3D period / (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ) - on
-
-
-> +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
-> +		swap(on, off);
-
-Uhh, no. Either you can do inverted polarity or you cannot. Don't claim
-you can.
-
-> [...]
-> +static int adp5585_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct adp5585_dev *adp5585 =3D dev_get_drvdata(pdev->dev.parent);
-> +	struct adp5585_pwm_chip *adp5585_pwm;
-> +	int ret;
-> +
-> +	adp5585_pwm =3D devm_kzalloc(&pdev->dev, sizeof(*adp5585_pwm), GFP_KERN=
-EL);
-> +	if (!adp5585_pwm)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, adp5585_pwm);
-> +
-> +	adp5585_pwm->regmap =3D adp5585->regmap;
-> +
-> +	mutex_init(&adp5585_pwm->lock);
-> +
-> +	adp5585_pwm->chip.dev =3D &pdev->dev;
-> +	adp5585_pwm->chip.ops =3D &adp5585_pwm_ops;
-> +	adp5585_pwm->chip.npwm =3D ADP5585_PWM_CHAN_NUM;
-
-That is wrong since commit
-05947224ff46 ("pwm: Ensure that pwm_chips are allocated using pwmchip_alloc=
-()")
-
-> +	ret =3D devm_pwmchip_add(&pdev->dev, &adp5585_pwm->chip);
-> +	if (ret) {
-> +		mutex_destroy(&adp5585_pwm->lock);
-> +		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void adp5585_pwm_remove(struct platform_device *pdev)
-> +{
-> +	struct adp5585_pwm_chip *adp5585_pwm =3D platform_get_drvdata(pdev);
-> +
-> +	mutex_destroy(&adp5585_pwm->lock);
-
-Huh, this is a bad idea. The mutex is gone while the pwmchip is still
-registered. AFAIK calling mutex_destroy() is optional, and
-adp5585_pwm_remove() can just be dropped. Ditto in the error paths of
-=2Eprobe().
-
-> +}
-> +
-> +static const struct of_device_id adp5585_pwm_of_match[] =3D {
-> +	{ .compatible =3D "adi,adp5585-pwm" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, adp5585_pwm_of_match);
-
-Is it normal/usual for mfd drivers to use of stuff? I thought they use
-plain platform style binding, not sure though.
-
-> +static struct platform_driver adp5585_pwm_driver =3D {
-> +	.driver	=3D {
-> +		.name =3D "adp5585-pwm",
-> +		.of_match_table =3D adp5585_pwm_of_match,
-> +	},
-> +	.probe =3D adp5585_pwm_probe,
-> +	.remove_new =3D adp5585_pwm_remove,
-> +};
-> +module_platform_driver(adp5585_pwm_driver);
-> +
-> +MODULE_AUTHOR("Xiaoning Wang <xiaoning.wang@nxp.com>");
-> +MODULE_DESCRIPTION("ADP5585 PWM Driver");
-> +MODULE_LICENSE("GPL");
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---f7l4z7wuw4trzvr4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZMYI0ACgkQj4D7WH0S
-/k5o2ggAn5MfFbCQP7ri49/q/bz5rZE9zGc3gzfL9Bpoe58kY4ehkuNQU9nNNFLI
-Xzz7HWAKjj/kdl//C3bjDN2pxLGWicD0XQurcNncJ6eZJ8ZutQMkCDSGyDrDqge8
-s09gq0w5155lkVHQ7JlsubNTg6EjgnYJYeH0PDXd7KLUG8z6lvmHjsbtO+aK5RRy
-TiMmZYCiQL8vpP++Hxp49hYEWJEGlfcKuAms26DTBHY4rbZ5SuL8OVG4uK5AB2zF
-Tlh86xzjO4MaHHCSvGpJbyEgjpbFP2CFeIK2xTSxRXHpS88m7nRt2KAFyn7Tv/fB
-a92OAk1aCppi3eDqvWJKGFA6VGXd5w==
-=GkWI
------END PGP SIGNATURE-----
-
---f7l4z7wuw4trzvr4--
 
