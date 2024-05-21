@@ -1,98 +1,124 @@
-Return-Path: <linux-gpio+bounces-6539-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6540-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1ECF8CB464
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 21:44:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 336808CB635
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 00:59:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E6E42824FA
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 19:44:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 652C31C21CBB
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 22:58:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76F3B149016;
-	Tue, 21 May 2024 19:44:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F1AF149E1B;
+	Tue, 21 May 2024 22:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="E2hvY6Pu"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="vBGwbRRu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEBF433AD;
-	Tue, 21 May 2024 19:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CBC58AC1;
+	Tue, 21 May 2024 22:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716320684; cv=none; b=AYMKnKXnQP7cSozN/y7p76wB/9xJbg8SkOBDP9vZg7xrjrYULiCYxqpQgzlKPQ8KDCOFpnx4ehd8QHjyrpP0cVMTNzZBrzBv89WtyXPunvtbVFIltNORSC+MLXYj3WAhcUxMBXcn5mN/FJp2y3UwRtzF9F44r9rkj+mmdTypkBQ=
+	t=1716332333; cv=none; b=EYnE0zfSshQaOeuk/qHEoFhpVkRVM/McKUfLa/KCnfgwk3mm0N+EiVvbg/O/aToYa/0KVC04IjV6s2NaC/BiYaGR8AD4k8E9hGKVEY1l/i7w9RI3KTbtqcertIQKZH27BGASZw+5HYoq4/TGPrgtCih8els34uRduvn4UtC5LKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716320684; c=relaxed/simple;
-	bh=r3VPy55grG4HmD9HQEZNmYScSv+0YD8VyAqAQZNxQUI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hvgfQCoH4w9IBULV7TCfQdS5HVRIRBhdVBN2RJe42RzNiyrDOmuApkd/SA2PBhVp8qey9RXfjOkr6DH2d440U/THbBU4Ca1VW3qpQx3zCE5UUoyjFPTWCwUQ6ZSv2ONxRJUpBWmHXdK8M7jpOMR2iGTi8IyjHcJF4cAa+9le7/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=E2hvY6Pu; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id EE62BC8E;
-	Tue, 21 May 2024 21:44:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1716320669;
-	bh=r3VPy55grG4HmD9HQEZNmYScSv+0YD8VyAqAQZNxQUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E2hvY6PuMZvrTKrsKT1LHuQjITBsscZlqyACpiuWTwIzOJMwwRevLvcR8VgBXPgHo
-	 +oGdKfynZi9yRpe/xfr+yli4d1NWpdS1kWErCkUB9Rratks8TEhDr4bjeSLlmsMANK
-	 bG2+aR3ecVZ8qCEHTrAHMI83UqZ9sYJVA3CrrsjU=
-Date: Tue, 21 May 2024 22:44:31 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Alexandru Ardelean <alexandru.ardelean@analog.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: trivial-devices: Drop adi,adp5585 and
- adi,adp5585-02
-Message-ID: <20240521194431.GB8863@pendragon.ideasonboard.com>
-References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
- <20240520195942.11582-2-laurent.pinchart@ideasonboard.com>
- <920c3b0d-86ed-4616-989c-0d493a189c91@kernel.org>
+	s=arc-20240116; t=1716332333; c=relaxed/simple;
+	bh=/B63K473/HxOhEaoZ5QSdxb9axvdA6PXOTlKChP8wTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZmBjWE4NKkMDFgzoso9MEhcIJstJRhx/u0bZrbnJKxLhwPM2/5phMK8v4MawwjbS9x/LFNo7ME3VE38QEj6Fp5m+P2MUzZwIjR0dSTmXYyrjFgkneJl6UodEJgWOxBUVQPhC+DIUkvUBVboWGORFQ1eBb+R7rZrxoBlhKbDt4KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=vBGwbRRu; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1716332328;
+	bh=m5I1hOOLWDM4EKnSwZVCL6AUhsSRzC0ZdbYcp6s33oY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=vBGwbRRuKRF0BQiFf/r+f85cMaXx1vDJoO0/C/n/9sqfHuTJy6wLzuKQE8oDglY+z
+	 ePqh4kdTxZbFsRemBV1RoNVIQumRJdGbE98CHUDLHiiowMHfqpqN4uH8inbOE0mO03
+	 X0z6pUdTDGWBUfntSnY9RWI4TYgludTdNReIYWbLCqwGwqJqhAOymGg4x3R9kHY8Lw
+	 bcv/f79IMzYbEV0Z+Zy4XZch+ugi3rmWpbAOEnIBVK5riT0msEBH8JkEzYvhuPuTEz
+	 TkgNB2uU1rlLQ9vjxkAgZGpkW/m7rYPCxcSXuWCEgHmpTUIGQBocjO1y0BowFbMO8r
+	 ZW9mtHgvaUJjQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VkVGt0NJ5z4wx5;
+	Wed, 22 May 2024 08:58:45 +1000 (AEST)
+Date: Wed, 22 May 2024 08:58:44 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Laura Nao
+ <laura.nao@collabora.com>, mika.westerberg@linux.intel.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, kernel@collabora.com,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-acpi@vger.kernel.org, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, "kernelci.org bot"
+ <bot@kernelci.org>
+Subject: Re: [PATCH] gpiolib: acpi: Move ACPI device NULL check to
+ acpi_can_fallback_to_crs()
+Message-ID: <20240522085844.16cba3f4@canb.auug.org.au>
+In-Reply-To: <Zkyo6DL7NQltLLNr@smile.fi.intel.com>
+References: <20240513095610.216668-1-laura.nao@collabora.com>
+	<ZkHlLLLoagsYlll7@smile.fi.intel.com>
+	<b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
+	<Zkyo6DL7NQltLLNr@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <920c3b0d-86ed-4616-989c-0d493a189c91@kernel.org>
+Content-Type: multipart/signed; boundary="Sig_/f4YoUvWlnSG1U.tc=fqyysd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, May 21, 2024 at 09:02:19PM +0200, Krzysztof Kozlowski wrote:
-> On 20/05/2024 21:59, Laurent Pinchart wrote:
-> > The Analog Devices ADP5585 is a multi-function device that requires
-> > non-trivial DT bindings. To prepare for proper support of the device,
-> > drop the related compatible strings from trivial-devices.yaml. They were
-> > added by mistake, without any user in the mainline kernel, neither in
-> > device tree sources nor in drivers.
-> > 
-> > Fixes: e5dddbedfe09 ("dt-bindings: add ADP5585/ADP5589 entries to trivial-devices")
-> 
-> I don't see a bug there. Just because there are no users, it is not yet
-> a bug.
+--Sig_/f4YoUvWlnSG1U.tc=fqyysd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The bug (as I see it) is that compatible strings were added to the list
-of trivial devices when then patch series that did so did not intend
-those compatible strings to be used by anything.
+Hi Andy,
 
-> This should be squashed with next patch so you keep compatibles documented.
+On Tue, 21 May 2024 17:00:08 +0300 Andy Shevchenko <andriy.shevchenko@linux=
+.intel.com> wrote:
+>
+> Because:
+>=20
+> - that's the policy of Linux Next (do not include what's not supposed to =
+be
+>   merged during merge window), Cc'ed to Stephen to clarify, it might be t=
+hat
+>   I'm mistaken
 
-I'm fine with that.
+My current daily reports say "Do not add any work intended for v6.11 to
+your linux-next included branches until after v6.10-rc1 has been
+released".  i.e. we don't want new development work added to linux-next
+during the merge window as that may just cause unnecessary conflicts or
+build failures while we are trying to just get the merge window done.
 
--- 
-Regards,
+I have always said (maybe not recently) that bug fixes are always
+welcome.  Also, more urgent bug fixes often just bypass linux-next.
 
-Laurent Pinchart
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/f4YoUvWlnSG1U.tc=fqyysd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZNJyQACgkQAVBC80lX
+0Gw8nwf/YZtacic07OrQgrRr+3kjNmlsFymQdM0iKgZwpQVnU+njjrMSqsaPkR6+
+XCbbMBVuWXUCgZA8/uZNikakUqd0A6/By+Mb1AdZNbBL53sD9L9q1rtyTFzbWCuG
+1toNLpyk9GiYbUjLcsguHF8iRPpyFFO24CpokgZNkq5QoJ6WZbhN8H0WhInCtVGe
+ml3K1WvqMS1oShOGl6A6xeciD9J1v83mnYgCLQ4wWW0eESP8VDL47zH6WwUkuahQ
+qOESWjMX/Ug6xP9xwF9y6WXjCL0MLxE9IULLb+MHyanbVIVwPDbF7JtTy0Tq8gb9
+C5jmjOH/PBE+mC4QH9aQPBWp0vO36A==
+=YofX
+-----END PGP SIGNATURE-----
+
+--Sig_/f4YoUvWlnSG1U.tc=fqyysd--
 
