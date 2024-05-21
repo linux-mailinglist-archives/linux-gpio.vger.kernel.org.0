@@ -1,164 +1,213 @@
-Return-Path: <linux-gpio+bounces-6523-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6524-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FC5E8CB119
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 17:15:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9B828CB136
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 17:26:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 516C91C2144D
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 15:15:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 705F0283513
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 15:26:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CA1A1448C5;
-	Tue, 21 May 2024 15:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAB021448D9;
+	Tue, 21 May 2024 15:26:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KtVL0Mge"
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="BS/EnN8P"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593491442F4
-	for <linux-gpio@vger.kernel.org>; Tue, 21 May 2024 15:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C018A1442EF
+	for <linux-gpio@vger.kernel.org>; Tue, 21 May 2024 15:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716304506; cv=none; b=cugF1ZyLu9cnDMwes3KDFbbVmymUSGiUkwog6/NMiJ9M5ksgfTzgXomZyKs3zkcFTyIXtqDdlEpIrPk8OKYAoiERE/OmP9q4c92Gat+12p1zO1MgnEjBTubyv11TBiL+oSxRbuDVpyY3XGjyAGGsrfBgwjHswppqidUkAi8j7mQ=
+	t=1716305203; cv=none; b=QH70mg3TB7nvxfEB/Tqb3fcnGK0pjuck02lGGhi3OJUs5DVEJ5r+nfTI1Jhfe+d64IDG7NGSp6WdYitcIHMKvS+DxhgHfOeaLmnk6d10d7VMlHeGDt/l3yeiPZocxDAk0/H2gDR5L+PsJ8vFDiixuo6WFKcB36nQDkGQfLSKn8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716304506; c=relaxed/simple;
-	bh=T2ifjglhleACoGzA3W9qXBAebw1S+BJei9x62Qvf8W0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GfpGCtGd3Cc78q+H6LfpY+V49LuTagIbqFhVezCDUPc1KXIAgP+tN9RG5yHVO4BbNeeEIMXGfWKzs0QlSfdtlBXI1KDSJIgljHovsGs/gygwex5hYpjxfFDsOI2XbHjYxczYxxKrHNcCb8fAKWVo0nw9fox3XFwIo+VrF91ewsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KtVL0Mge; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-34e28e32ea4so3170459f8f.2
-        for <linux-gpio@vger.kernel.org>; Tue, 21 May 2024 08:15:04 -0700 (PDT)
+	s=arc-20240116; t=1716305203; c=relaxed/simple;
+	bh=YbcpAnvKee2GOMccnSTVfLdSPbQ/cZoM9orq9m3+dek=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TxpeTTX8v/TBgxejAnZClJklZIWdIY1AtL2sQnKzUDJ/Q1EQ2FtcGRciVmsgriiQPPQa/bIAwqsweeF2H1t45Usdq/AdMOeEZ7SCk+oPtbiaoDYznRg6/H2k+weVTeFXdpQbxM/mbfwXGZiQPyAQ/aJbUUl7gpI93/RiJ1Ftk0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=BS/EnN8P; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a5a5cb0e6b7so900250966b.1
+        for <linux-gpio@vger.kernel.org>; Tue, 21 May 2024 08:26:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716304503; x=1716909303; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=azoi0SbFupGMIvxO9VUZWv367nSnqyR1kY4+4A+MoAo=;
-        b=KtVL0Mge2ByDNHYggnfmglBChA+JGjzaod2ars9PGT9VViMqRFvI35HAehMRtoezQK
-         OXqRJrCM+Hg9bslSckEpF1oEZuDY5zfs68ZhNEId/I6CcER6HBc//JA0iUoKLqtV3F63
-         HxjoqvAtGYNRaL0OUViuKmi1XED2Dojtuj6C+GAW+LHfQJBUVbG4G3/f7kLd6J1EeVIq
-         yXH6m5oPISxG29zd3gPlxsg+Mw8ftcK5+f9lH/eK9aybc5GXaBEtJaY+0RYc2Zoth7a8
-         Cmlop6Sgl8LGt7Cii8Bq/vb/RDzHFXUXNSPpxT+Bxuv4xUCfXXin4xp/sEdRO+fAqrud
-         LmMg==
+        d=9elements.com; s=google; t=1716305199; x=1716909999; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0SP7h2B6yJgGk4TH9IEQ7JI0U019rt16DjXGMkeKeb4=;
+        b=BS/EnN8PmaRk1Jmat2BP1RZDEfPL7COEnqjTFsqKlLlt4brTZk8qLSb8L/AJOyr2en
+         D5zuaIOZ8XiRsLtXzvyZRG0bxeaVbSa3pkywN91poW9SnbyEB1jfWY3Mdzfp5OUzIhNO
+         VTkfAaY7P7IgvxhVLaOF2m0zHtvMPImKEXsBs1Ia+ScdvwZcFMLzyui7aYzLH8CoMbUP
+         qxGWcK8IK5Y9GakY+U61BpLAXbHvL3nmsSv0LN7Hxc342JWP8/KCCw7uXLkFZKsuSXDe
+         TF+Znt7g+fkyFnY9aSOIHNfpfeEVnS6uGL+lE6bHhueFQtdV6AXrB2snwKxK0pvFtVp9
+         FTwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716304503; x=1716909303;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1716305199; x=1716909999;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=azoi0SbFupGMIvxO9VUZWv367nSnqyR1kY4+4A+MoAo=;
-        b=wqaI4JPw5wQ6+dHFEvS4SjXwHw0RfqVQdYf3kXjlxoHpigUZxNuc6JK/LvvKooNfcO
-         CacS1lj4JiYCENKiQeM93jcd6rp5ca+MTYY5mqr9yY7Uy5YKZLkPZX9ED6Nx6QsZnmX/
-         IpXeA75CEGSchOR+8Lry05XkG+jbojmN/G+x1T2DyD9JDKi6eEhy0NHTXfoaEhELPwPE
-         rxdnRWGKNYxyeh1nO4IIs0p4u0u5bNXJgTFgiqjOqe1n1Qlcq+jGli7iA/GPJmh/nNdk
-         viVbSscPkZ9cebraWJnvCcm9sYpq0ZUiw/6JYSHuqa94UIx7oE5445sfgkPh4Wz+oORH
-         hSUg==
-X-Forwarded-Encrypted: i=1; AJvYcCV4/jT2D2p/Pn+Ka0jH7u3Acg+qxuiUToMCNBYkBafknIkB3HLIe6MOVfHxMfY5bwb0b7uV1vTiPnIoZwKMT/JW3ysXVtD0b2uqJw==
-X-Gm-Message-State: AOJu0Ywbek4NwalXqgoTCZRYapGaFR30SQeHsfzLZZBSKgw3gMgk8kdT
-	kPQ9vsCYlkGf33U3cYkbBpPEdOjP6Gma828UaLixNxoMpQgGY041gWtPV8WsEXY=
-X-Google-Smtp-Source: AGHT+IHzU0JxpZXXr7W5GwpCcwxi3Tw1/SjViLUKB8R4tz6z4ILHBs6/Na/3Bpr6mcnETmijNu9iHg==
-X-Received: by 2002:a5d:4569:0:b0:352:9e0c:f9d3 with SMTP id ffacd0b85a97d-3529e0d09cemr8052347f8f.31.1716304502724;
-        Tue, 21 May 2024 08:15:02 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-351da8877ccsm14396247f8f.55.2024.05.21.08.15.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 May 2024 08:15:02 -0700 (PDT)
-Message-ID: <20f234f2-37c0-400e-b918-dc7a4602beb7@linaro.org>
-Date: Tue, 21 May 2024 17:15:00 +0200
+        bh=0SP7h2B6yJgGk4TH9IEQ7JI0U019rt16DjXGMkeKeb4=;
+        b=NQp7sehxUjmT8xZ55+1Qo/d3NTJzchpBUzqJL5iRA+o3ZOg66fF5MSKmB+42o3DB50
+         c4L4oWi4zgiMdZIs3qQF45Yd3/5sq3HKRQ4+cgKEra3Wy/DdZcWblJNfuqYrfKtOFw1X
+         no1oYTRxmDLJnJlajHPai7lvcPccxYSDQqAFjnLjZK9nN7ucM9mfFIhvo9PjGdNzzP9L
+         G+uT1cx20WoBKmwQoa0ye77yZifIyVJq5PG9WBG/JN0JOllMw85YMFcIF+N+vz09y1Vo
+         2YvgTC+FOPjwgcunPlsKHGZQ8xTIsdOF2XGZ8IcLHDXstjdXF5Dpbvi9WrcFiS2RKH5Z
+         oNBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsuk2FbPNSRY92EHfUkJ2do5niaUTVnot1743+bquT/p9VCeQdjDZD81nZ25gjNqB4divfGythJF6pOXHMgDqrptyCPRdxKq3Ccw==
+X-Gm-Message-State: AOJu0YwRnFh8OsKeN43ri3yjS4GOTrofgx8cdOG3xsWVOCwB32gvKt4M
+	zdnBJow4YJgOas3SqEidlgbyVjrA1hgTzKt1ymJQ8E9QwhQyeHfEuzXmAZsiVYg=
+X-Google-Smtp-Source: AGHT+IHNXBESWf3UtYt88Rul5ND3zDlu4ztC4pHIbV9GB5hTd3riRS/EOXQgXNRtiuUfWmdtSDvAWg==
+X-Received: by 2002:a17:906:6882:b0:a5a:76e2:c2a8 with SMTP id a640c23a62f3a-a5a76e2c306mr1547537466b.23.1716305199086;
+        Tue, 21 May 2024 08:26:39 -0700 (PDT)
+Received: from fedora.sec.9e.network (ip-037-049-067-221.um09.pools.vodafone-ip.de. [37.49.67.221])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b180c7sm1638327666b.221.2024.05.21.08.26.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 08:26:38 -0700 (PDT)
+From: Patrick Rudolph <patrick.rudolph@9elements.com>
+To: Patrick Rudolph <patrick.rudolph@9elements.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: naresh.solanki@9elements.com,
+	andy.shevchenko@gmail.com,
+	broonie@kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] pinctrl: cy8c95x0: Use single I2C lock
+Date: Tue, 21 May 2024 17:25:57 +0200
+Message-ID: <20240521152602.1097764-1-patrick.rudolph@9elements.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] dt-bindings: gpio: lsi,zevio-gpio: convert to dtschema
-To: Pratik Farkase <pratikfarkase94@gmail.com>
-Cc: Pratik Farkase <pratik.farkase@wsisweden.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240521132849.34647-1-pratik.farkase@wsisweden.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240521132849.34647-1-pratik.farkase@wsisweden.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 21/05/2024 15:28, Pratik Farkase wrote:
-> Convert Zevio GPIO Controller from text to dtschema.
-> 
-> Signed-off-by: Pratik Farkase <pratik.farkase@wsisweden.com>
-> ---
-> Changes in v3:
-> - Updated relative path filename to match actual path filename
-> - Added `interrupts` property
+Currently there are 3 locks being used when accessing the chip, one
+in the driver and one in each regmap. Reduce that to one driver only
+lock that protects all regmap and regcache accesses.
 
-Why?
+Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
+---
+ drivers/pinctrl/pinctrl-cy8c95x0.c | 32 ++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 15 deletions(-)
 
-It wasn't present before, so please mention changes done during
-conversion in the commit msg with short explanation why.
-
-
-> Changes in v2:
-> - Renamed file from `gpio-zevio.yaml` to `lsi,zevio-gpio.yaml`
-> - Fixed the space indentation in example
-> ---
-> ---
-
-
-Best regards,
-Krzysztof
+diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
+index 981c569bd671..ca54d91fdc77 100644
+--- a/drivers/pinctrl/pinctrl-cy8c95x0.c
++++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
+@@ -453,7 +453,6 @@ cy8c95x0_mux_reg_read(void *context, unsigned int off, unsigned int *val)
+ 	u8 port = CY8C95X0_MUX_REGMAP_TO_PORT(off);
+ 	int ret, reg = CY8C95X0_MUX_REGMAP_TO_REG(off);
+ 
+-	mutex_lock(&chip->i2c_lock);
+ 	/* Select the correct bank */
+ 	ret = regmap_write(chip->regmap, CY8C95X0_PORTSEL, port);
+ 	if (ret < 0)
+@@ -463,11 +462,7 @@ cy8c95x0_mux_reg_read(void *context, unsigned int off, unsigned int *val)
+ 	 * Read the register through direct access regmap. The target range
+ 	 * is marked volatile.
+ 	 */
+-	ret = regmap_read(chip->regmap, reg, val);
+-out:
+-	mutex_unlock(&chip->i2c_lock);
+-
+-	return ret;
++	return regmap_read(chip->regmap, reg, val);
+ }
+ 
+ static int
+@@ -477,7 +472,6 @@ cy8c95x0_mux_reg_write(void *context, unsigned int off, unsigned int val)
+ 	u8 port = CY8C95X0_MUX_REGMAP_TO_PORT(off);
+ 	int ret, reg = CY8C95X0_MUX_REGMAP_TO_REG(off);
+ 
+-	mutex_lock(&chip->i2c_lock);
+ 	/* Select the correct bank */
+ 	ret = regmap_write(chip->regmap, CY8C95X0_PORTSEL, port);
+ 	if (ret < 0)
+@@ -487,11 +481,7 @@ cy8c95x0_mux_reg_write(void *context, unsigned int off, unsigned int val)
+ 	 * Write the register through direct access regmap. The target range
+ 	 * is marked volatile.
+ 	 */
+-	ret = regmap_write(chip->regmap, reg, val);
+-out:
+-	mutex_unlock(&chip->i2c_lock);
+-
+-	return ret;
++	return regmap_write(chip->regmap, reg, val);
+ }
+ 
+ static bool cy8c95x0_mux_accessible_register(struct device *dev, unsigned int off)
+@@ -524,6 +514,7 @@ static const struct regmap_config cy8c95x0_muxed_regmap = {
+ 	.num_reg_defaults_raw = MUXED_STRIDE * BANK_SZ,
+ 	.readable_reg = cy8c95x0_mux_accessible_register,
+ 	.writeable_reg = cy8c95x0_mux_accessible_register,
++	.disable_locking = true,
+ };
+ 
+ /* Direct access regmap */
+@@ -542,6 +533,7 @@ static const struct regmap_config cy8c95x0_i2c_regmap = {
+ 
+ 	.cache_type = REGCACHE_FLAT,
+ 	.max_register = CY8C95X0_COMMAND,
++	.disable_locking = true,
+ };
+ 
+ static inline int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip,
+@@ -559,6 +551,8 @@ static inline int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip
+ 	if (reg == CY8C95X0_PORTSEL)
+ 		return -EINVAL;
+ 
++	mutex_lock(&chip->i2c_lock);
++
+ 	/* Registers behind the PORTSEL mux have their own regmap */
+ 	if (cy8c95x0_muxed_register(reg)) {
+ 		regmap = chip->muxed_regmap;
+@@ -574,7 +568,7 @@ static inline int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip
+ 
+ 	ret = regmap_update_bits_base(regmap, off, mask, val, change, async, force);
+ 	if (ret < 0)
+-		return ret;
++		goto out;
+ 
+ 	/* Update the cache when a WC bit is written */
+ 	if (cy8c95x0_wc_register(reg) && (mask & val)) {
+@@ -595,6 +589,8 @@ static inline int cy8c95x0_regmap_update_bits_base(struct cy8c95x0_pinctrl *chip
+ 			regcache_cache_only(regmap, false);
+ 		}
+ 	}
++out:
++	mutex_unlock(&chip->i2c_lock);
+ 
+ 	return ret;
+ }
+@@ -667,7 +663,9 @@ static int cy8c95x0_regmap_read(struct cy8c95x0_pinctrl *chip, unsigned int reg,
+ 				unsigned int port, unsigned int *read_val)
+ {
+ 	struct regmap *regmap;
+-	int off;
++	int off, ret;
++
++	mutex_lock(&chip->i2c_lock);
+ 
+ 	/* Registers behind the PORTSEL mux have their own regmap */
+ 	if (cy8c95x0_muxed_register(reg)) {
+@@ -682,7 +680,11 @@ static int cy8c95x0_regmap_read(struct cy8c95x0_pinctrl *chip, unsigned int reg,
+ 			off = reg;
+ 	}
+ 
+-	return regmap_read(regmap, off, read_val);
++	ret = regmap_read(regmap, off, read_val);
++
++	mutex_unlock(&chip->i2c_lock);
++
++	return ret;
+ }
+ 
+ static int cy8c95x0_write_regs_mask(struct cy8c95x0_pinctrl *chip, int reg,
+-- 
+2.44.0
 
 
