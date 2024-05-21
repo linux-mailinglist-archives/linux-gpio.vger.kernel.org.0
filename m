@@ -1,65 +1,83 @@
-Return-Path: <linux-gpio+bounces-6516-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6517-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 676188CAFCD
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 15:58:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E26E8CAFD5
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 16:00:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 980A41C21A5A
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 13:58:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 49976282A3E
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 14:00:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E05CF7F47F;
-	Tue, 21 May 2024 13:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AD907F466;
+	Tue, 21 May 2024 14:00:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j+PRTIpK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GED+tXhJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FFF7EF18;
-	Tue, 21 May 2024 13:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7435A1E502;
+	Tue, 21 May 2024 14:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716299905; cv=none; b=jt0P2o/wyjbY5AWdlXHuP5pZuDrihYuhoiRET7TCFj7jXHdQgZl6Z4WwjsDoxtcLTInR0cNM4uqnCnThHLK2x3oh6DOAXaG+fWI6II71fuNiCQqcvvB2SBzlKdhESFZu4dAFdVgIUNnc1VcHAM5eBtMx1DkrU+pQzOqIucdqpMg=
+	t=1716300016; cv=none; b=s/3Besofhh+5A55A23DjvIRCECGOI7VCRqeVPGMcPreDMOG9n+CKCVgstjpU7t6YSBGrL5/BM/IryA0N3mDPVW+tdaRaNBgx6li7cX5zzOASWuFgssOSvZmL4hW8tLecDJ9LrLk5XCxxr9qBXcz2Qhmq36KCMzQc9nn9L4UOWN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716299905; c=relaxed/simple;
-	bh=5HmqnqzsCxCFATCFiGYJDXxeivAzpUBsJa0zJPKEjyM=;
+	s=arc-20240116; t=1716300016; c=relaxed/simple;
+	bh=1fC1qPkHIzJeKGkFtyxB3WvFL7tvcX3u9xMga4DyzdM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZGGN+UaLgHCqsdAZFuTJ3CY5j6LTX4tIULuGTpuII/y/jC+0ZwDdYZHNrRrGE1bvCdLTPF00qe4XwaxsFhvyjlSMTDpg2cmenIQsATstGnPzmd1MSZ6I/dj+PUQogEN0YB5l1kj2YY7LyJwpWGuUoEju2P7ariPU9AIpsB0AYBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j+PRTIpK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 010D0C2BD11;
-	Tue, 21 May 2024 13:58:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716299905;
-	bh=5HmqnqzsCxCFATCFiGYJDXxeivAzpUBsJa0zJPKEjyM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j+PRTIpKK8u+UHgOf9az9SySkFMZ+a4n0cu7VdC8zw2I3xA0P4gEK7BKH+rSh15Fn
-	 UUlRp5eC1zF7G4eKzbdwRnzs4iIEVN4gnv5cIsEgr0UquISM4cg15xd109f6LyH+/x
-	 EMmqw7aQbIkmP2UWcLvDfQEvmIxyKnI0TJX9cOtAO+eyVd3Zd8ztwvkB8otr/dC6ri
-	 eTGEyjFVQ4bAngNWO5jddw/L3iKIw51D/KqMfnLKsq/SD4/lCkVJ69N9XBIuBVbyeV
-	 TNDPxdX/NmLV0jJYpw9zb39lUMHZw2BtiS9Ng0bs9cFXjeYLs3n2XkMxOPfb23Gn+O
-	 SQqDllUEmCL4w==
-Date: Tue, 21 May 2024 08:58:23 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: imx@lists.linux.dev, Fabio Estevam <festevam@gmail.com>,
-	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>,
-	linux-gpio@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-kernel@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: firmware: arm,scmi: Add properties for
- i.MX95 Pinctrl OEM extensions
-Message-ID: <171629989985.3959039.18302222463531901927.robh@kernel.org>
-References: <20240521-pinctrl-scmi-imx95-v1-0-9a1175d735fd@nxp.com>
- <20240521-pinctrl-scmi-imx95-v1-1-9a1175d735fd@nxp.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qKru6iv4CpOO3307B67R5QuLsfIUY7F6/Qrm59snCVg7gW4+omeprvfTmWJiIxZONuuavzIpmDwdZtKgyiUOjDRwVT3LdRrzFgd6HpBolLZnC0EeLsYXXot0wdmaTv+u0gDxTcPHsdL3o8MMwugFxzTWP2fwVb5eQQSuvzvb76c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GED+tXhJ; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716300015; x=1747836015;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1fC1qPkHIzJeKGkFtyxB3WvFL7tvcX3u9xMga4DyzdM=;
+  b=GED+tXhJWaBT6iq2YZ9TiYJpplDYEpVn+Mag5IVZTOCjVMC2xHjIjNx2
+   uPArEkvz/+lmz0zndvnUaKJBpvUoReuuqHE80J3nHub5bEfMcTWm8UFrQ
+   n9WiH3o/JwcEHjIWwk+itGXZm7HuFP03KAThvVv9DTDc2v8cTititeDvg
+   /xQUxdx/FWAKVRUswEcC0kiYS4+bFy0kgd1SNAibkrWc4BUxSB82xB24n
+   aRZ/B4Vc/MVOTKLqH4IRxeCkRUJvwxgJekjce1DNPRZqLKQoeGS/hBh26
+   2qr1VshiPpywsqHp1swwG1PEqjtlFjBrksgJRsOvC4YwfK+N1jDOnECGm
+   w==;
+X-CSE-ConnectionGUID: iytRVh3hQdabtI2Ydo+yrA==
+X-CSE-MsgGUID: 5KIGelyUS2KVGTaU8gpB2Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="16334075"
+X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
+   d="scan'208";a="16334075"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 07:00:14 -0700
+X-CSE-ConnectionGUID: D+4sqOvIR1S+ndvCyQ4I8Q==
+X-CSE-MsgGUID: CHCjpVRuSsq5mWwTi2UUpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
+   d="scan'208";a="33531814"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 07:00:12 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s9Q2D-00000009fnx-0Pr9;
+	Tue, 21 May 2024 17:00:09 +0300
+Date: Tue, 21 May 2024 17:00:08 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Laura Nao <laura.nao@collabora.com>, mika.westerberg@linux.intel.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, kernel@collabora.com,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"kernelci.org bot" <bot@kernelci.org>
+Subject: Re: [PATCH] gpiolib: acpi: Move ACPI device NULL check to
+ acpi_can_fallback_to_crs()
+Message-ID: <Zkyo6DL7NQltLLNr@smile.fi.intel.com>
+References: <20240513095610.216668-1-laura.nao@collabora.com>
+ <ZkHlLLLoagsYlll7@smile.fi.intel.com>
+ <b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,26 +86,43 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240521-pinctrl-scmi-imx95-v1-1-9a1175d735fd@nxp.com>
+In-Reply-To: <b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Tue, May 21, 2024 at 12:01:17PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 13.05.24 12:02, Andy Shevchenko wrote:
+> > On Mon, May 13, 2024 at 11:56:10AM +0200, Laura Nao wrote:
+> >> Following the relocation of the function call outside of
+> >> __acpi_find_gpio(), move the ACPI device NULL check to
+> >> acpi_can_fallback_to_crs().
+> > 
+> > Thank you, I'll add this to my tree as we have already the release happened.
+> > I will be available after v6.10-rc1 is out.
+> 
+> Hmm, what exactly do you mean with that? It sounds as you only want to
+> add this to the tree once -rc1 is out -- which seems likely at this
+> point, as that patch is not yet in -next. If that's the case allow me to
+> ask: why?
 
-On Tue, 21 May 2024 14:25:57 +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> i.MX95 Pinctrl is managed by System Control Management Interface(SCMI)
-> firmware using OEM extensions. No functions, no groups are provided by
-> the firmware. So add i.MX95 specific properties.
-> 
-> To keep aligned with current i.MX pinctrl bindings, still use "fsl,pins"
-> for i.MX95.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../devicetree/bindings/firmware/arm,scmi.yaml     |  4 +-
->  .../bindings/firmware/nxp,imx95-scmi-pinctrl.yaml  | 53 ++++++++++++++++++++++
->  2 files changed, 56 insertions(+), 1 deletion(-)
-> 
+Because:
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+- that's the policy of Linux Next (do not include what's not supposed to be
+  merged during merge window), Cc'ed to Stephen to clarify, it might be that
+  I'm mistaken
+
+- the process of how we maintain the branches is to have them based on top of
+  rc1 (rarely on other rcX and never on an arbitrary commit from vanilla
+
+> I'd say it should be fixes rather sooner than later, as other
+> people might run into this as well and then have to deal with bisecing,
+> reporting, ...
+
+Yes, but we have a process during merge window, it's special and different
+from vX.Y-rc1..vX.Y times.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
