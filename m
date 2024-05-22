@@ -1,152 +1,143 @@
-Return-Path: <linux-gpio+bounces-6557-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6558-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 844538CBF33
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 12:24:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 431DC8CBFC8
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 13:00:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FBD71F21100
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 10:24:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 74FEA1C21CD8
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 11:00:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E59D82495;
-	Wed, 22 May 2024 10:23:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B0A824BF;
+	Wed, 22 May 2024 10:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PdY5IoCY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A638248C
-	for <linux-gpio@vger.kernel.org>; Wed, 22 May 2024 10:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663F98062B
+	for <linux-gpio@vger.kernel.org>; Wed, 22 May 2024 10:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716373431; cv=none; b=Ceu2w19HexudU5huKLBrid4h9y3oORWQ5s1QOCy3JUQwumUkx8xYY5ps2lwGxFV4xSW/wao9ldYt+G1uj0F9tc4i94qkNZtSJcwJGDMtveBuj03T+32ScU15wE74CvoQnM+JjLnR1371gWwdgRzKP/a7ELpeSvpakRSVg3G8ANA=
+	t=1716375594; cv=none; b=sFVesTlvWeeb59Y4kVk8/IFcu6+ZJjOH2X404XH01V/mEm3Bzx6azATzRzbLqCjrwZxRIwCbH44oOhvcjACPeKPY7HcybEOwqxKjukGVKoPUBEV7Vs1E5G7nfVTpOxuNYvh/pG0d9P1xReLiRUmhP3xxl9SSvd0jatAhf55bE/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716373431; c=relaxed/simple;
-	bh=8Jv2FoH6NJPjGOP0LC/PqVRnbeV7oAwm/+X5xjFYdEk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AMPam8VGDfDt0Ng0Y3EupJ1NCyemf4IRcb18uJnzoVKU9Qt4jL4flOrOkt2zgZ0WhVbBjFanSjiSqz5eaN/jY6hjFgLlrUOiy4pwrHbfVFM5mRBZKt7UKDONLbeM43ie1ZM++ln4ZG7mjAxKqCinV4kHoCj8kfeiXgXCz/6xx7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s9j8I-0000WW-JS; Wed, 22 May 2024 12:23:42 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s9j8H-002Vkx-RJ; Wed, 22 May 2024 12:23:41 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1s9j8H-009uTO-2Q;
-	Wed, 22 May 2024 12:23:41 +0200
-Date: Wed, 22 May 2024 12:23:41 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Clark Wang <xiaoning.wang@nxp.com>
-Subject: Re: [PATCH 5/5] pwm: adp5585: Add Analog Devices ADP5585 support
-Message-ID: <kn46i4ejb7demlieowowwur7mps6bmlaiqctxuh2gufi7vnon3@ourzmteng7gk>
-References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
- <20240520195942.11582-6-laurent.pinchart@ideasonboard.com>
- <dl7a6puox5lc36fpto2fgyfgmpd3uboqc4lcfdtuaxzzsboqld@alw7vyi7pqjz>
- <20240521100922.GF16345@pendragon.ideasonboard.com>
- <xobmekjwqanow765yr42tsgknc5gc7szjublq6ywgbmoxovlr5@v3sofz5bmkol>
- <20240522101335.GE1935@pendragon.ideasonboard.com>
+	s=arc-20240116; t=1716375594; c=relaxed/simple;
+	bh=IPhQUWhLvaMh+UJE8aZ8RgjY1xis0QA6NKil/djKaQc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L+O/eqaTAknMk+3tQBbFzRY0BE2W6WKHf378kTIG69X6gMOaEj3fgJ1xwOykBa1MTSJrSZiabSKLfwDvhJhfOT0eU0zeQFvlwlnfU8V6lgEiqCcDeWdBaM6N902cjz+DnATq3+sVq1PKWJOUpmL0qBmoA/+yGsjtCUwsC5Xo8U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PdY5IoCY; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5238fe0cfc9so798429e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 May 2024 03:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716375590; x=1716980390; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ysxzhAAkjCPK5L/c8Pn6sm+5f6CCYebW1vFWzyTda3w=;
+        b=PdY5IoCYPnFbd2BNAKOImzaig4rnBm1WSYaflOc/aq9gCg5Y3XRDflFmolbP9uu0c1
+         9m9lnhhCwRbtbu1ANorPt66MVnMmznpjoANVHjYT4r7MSCtysm/wXmZF3DPtv5zlsBmj
+         QR9GcH1LuVOtYejjRCDNlQxhOCqcBSMPrurVjuOJeru8frIehIU4PVbBvp5i1q39mhTk
+         jW5NQwM7jAcUT3WqCVnGFlm12MKKhe77mLAe5Y/WQ2H5gFgcus1Zlm/3cHCh0TMJQ9kJ
+         hU7dusHvl2bjsMmTGDrqTIYzqXEX3Uyv7sv3l4Z9XETDKr1PtJPBQ1OpZNz0j/XBReWD
+         EL3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716375590; x=1716980390;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ysxzhAAkjCPK5L/c8Pn6sm+5f6CCYebW1vFWzyTda3w=;
+        b=ePwwfD85c4M7Pk/sUPKsvpXsTvsk35KKGyu2PD2WcY7m0x/iiptUmH/c4PednQF/K/
+         m861eo8mNMXhuHHcb5wVxlFQ+T3suWE2yay3kXQGhWuNMZlm8kYUHgeGNnZhevfUVKGf
+         pXDr6P+DDo+iJLAgHiHTbqT+4hSR9fggQaxdhkRyoLYLztNzEQ+SZTpZTBEIPEHFmbou
+         cWkvNvVaj9yNf7Pug1YYG5PoOuAIiZp7phfWZlo0Be26ZC+GgpqbzuNichd3s978vXIC
+         310f6M/8gd731LRkp5zc+ycvjpGrrsi1I3389qVUAfl9GExDaxi2TwYP/2Nud7nXgJ3x
+         fMNg==
+X-Gm-Message-State: AOJu0YwamnFaxRitIdkXq6QzXS9Sz/uS3OFS3xbu1PmkB1o7vV8OrQz+
+	U2EkGWiInWYew2ngclGvhdOhEqFGJGgXBQW4t/X5ntQFqHdMl4WVgHzTnwSxbyknBTlQeMGVQK8
+	PFMCEET/aC+D7SOOI8ojoLZF5V98VfLQx2mNU9/ape5RxjKgV
+X-Google-Smtp-Source: AGHT+IHW90iyp5kkHTEv7vZDuU8XeJcXJgVwQVl4Tp40VZSR5hfESidPOiTwOlKngxFtHYj0rRNdb2N8UIvbsZN4CPg=
+X-Received: by 2002:ac2:5332:0:b0:523:89b0:9b5d with SMTP id
+ 2adb3069b0e04-5269b2e625emr494717e87.9.1716375590432; Wed, 22 May 2024
+ 03:59:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="njhuclhgrbcf33b5"
-Content-Disposition: inline
-In-Reply-To: <20240522101335.GE1935@pendragon.ideasonboard.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-
-
---njhuclhgrbcf33b5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20240511011144.GA3390@rigel> <CAMRc=McwX7f4KNqunRSj6jk=6-6oj9kUy9XJRc=HokyfaiUsmA@mail.gmail.com>
+ <20240513101331.GB89686@rigel> <CAMRc=MftXh6SV_jNVDaUOwww21gH5gFeb8zGSVBLv=jMP_mFKQ@mail.gmail.com>
+ <20240514133804.GA107324@rigel> <CAMRc=MdyUmfGaJ_0edvhMYwC7x5HwYyFAdD5EY-13+5yoRUeiw@mail.gmail.com>
+ <20240515091848.GA86661@rigel> <CAMRc=MeBGJwyKBTYD1PQkk940t6ECsBxHCprjFUx1KFSKMe7fw@mail.gmail.com>
+ <20240515141436.GA349711@rigel> <CAMRc=Me9ffciaXnOKE+ABLDBVbSRzTAEHRVzpLk641eocF4q8g@mail.gmail.com>
+ <20240517123732.GA423787@rigel>
+In-Reply-To: <20240517123732.GA423787@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 22 May 2024 12:59:39 +0200
+Message-ID: <CAMRc=McuzzzRF8ttRKZWouayF250p8V2OXwmyjSrKOYe95Mn+g@mail.gmail.com>
+Subject: Re: [libgpiod][RFC] helper functions for basic use cases
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Laurent,
+On Fri, May 17, 2024 at 2:37=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Fri, May 17, 2024 at 12:53:36PM +0200, Bartosz Golaszewski wrote:
+> > On Wed, May 15, 2024 at 4:14=E2=80=AFPM Kent Gibson <warthog618@gmail.c=
+om> wrote:
+> > >
+> > > On Wed, May 15, 2024 at 06:54:15AM -0700, Bartosz Golaszewski wrote:
+> > > >
+> > > > I think the code should go into ext/, the gpiod-ext.h header can go=
+ right next
+> > > > to gpiod.h in include/ and the examples can be in the same examples=
+/ directory,
+> > > > just call them something_something_ext.c to indicate they use the s=
+impler API.
+> > > >
+> > > > Does that sound right?
+> > > >
+> > >
+> > > At the moment I've made the code a conditionally compiled block in
+> > > line-request.c, so it can directly use the line-request internals.
+> > > Pretty sure that can be changed to use the core API, but isn't pimpl =
+within
+> > > the library itself a tad extreme?
+> >
+> > I have a strong preference for that code to live in a separate .so
+> > file (and by extension - a separate compilation unit).
+> >
+>
+> Oh, I agree - that makes total sense.  The direction I was headed felt wr=
+ong,
+> so I figured I must've misunderstood what you meant.
+>
+> I'll re-organise it into a separate unit.
+>
+> Does that unit have to act through the core API, or can we give it
+> access to the internals?
 
-On Wed, May 22, 2024 at 01:13:35PM +0300, Laurent Pinchart wrote:
-> On Tue, May 21, 2024 at 03:05:53PM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Tue, May 21, 2024 at 01:09:22PM +0300, Laurent Pinchart wrote:
-> > > On Tue, May 21, 2024 at 10:51:26AM +0200, Uwe Kleine-K=F6nig wrote:
-> > > > On Mon, May 20, 2024 at 10:59:41PM +0300, Laurent Pinchart wrote:
-> > > > > +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
-> > > > > +		swap(on, off);
-> > > >=20
-> > > > Uhh, no. Either you can do inverted polarity or you cannot. Don't c=
-laim
-> > > > you can.
-> > >=20
-> > > OK, but what's the rationale ? This is also an area where I couldn't
-> > > find documentation.
-> >=20
-> > I don't have a good rationale here. IMHO this inverted polarity stuff is
-> > only a convenience for consumers because the start of the period isn't
-> > visible from the output wave form (apart from (maybe) the moment where
-> > you change the configuration) and so
-> >=20
-> > 	.period =3D 5000, duty_cycle =3D 1000, polarity =3D PWM_POLARITY_NORMAL
-> >=20
-> > isn't distinguishable from
-> >=20
-> > 	.period =3D 5000, duty_cycle =3D 4000, polarity =3D PWM_POLARITY_INVER=
-SED
-> >=20
-> > . But it's a historic assumption of the pwm core that there is a
-> > relevant difference between the two polarities and I want at least a
-> > consistent behaviour among the lowlevel drivers. BTW, this convenience
-> > is the reason I'm not yet clear how I want to implemement a duty_offset.
->=20
-> Consistency is certainly good. Inverting the duty cycle to implement
-> inverted polarity would belong in the PWM core if we wanted to implement
-> it in software I suppose. I'll drop it from the driver.
+If we can avoid it accessing the internals, that would be awesome.
+Unless you hit a road-block, please try to keep the core separate.
 
-This isn't as easy as it sounds however. From the POV of the PWM core
-the capabilities of the currently used hardware are unclear. So if a
-request with (say) normal polarity and a certain duty_cycle + period
-fails, it's unknown if it would be beneficial to try with inverted
-polarity and if that is OK for the requesting consumer. So there is
-information missing in both directions.
+> And where do you stand wrt the idea of adding a config pointer to struct
+> gpiod_line_request itself?
+>
 
-Best regards
-Uwe
+We'd need to make a deep copy, otherwise it could be destroyed and the
+pointer would be left dangling, right?
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Bart
 
---njhuclhgrbcf33b5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZNx6wACgkQj4D7WH0S
-/k7gSQf/eP3kBKkVvjsZKN2YXLxC/e3LV/e5b/nZfHIgt3CEctZeTQcGfZLQa5V+
-WVkCjKeolCGJXYxsB84okaHK/6GPQ+cWMquFk4qbN28WgIHSj+7HJCkaqDY14Ar/
-9oW8fVNG4s9ZpbeQPJ4iH4b5zrx+JSQRzeW2hw9l+XvCeMG8d9Eno8m9CERF72ud
-6dL1fkPvxjtFklYNgqwGavc65n+kqme2GvfHu87ZkPHb4lLH14tMtlZOmlaIKGpS
-hUJSMQugUreF6MndO9VsMpmKK80YigNY7L4d8D19W1H5nwvTaxuO5kwahMbYas0f
-4LqNkFV5ycdF43EAUXChc/1w57dTyQ==
-=s0N3
------END PGP SIGNATURE-----
-
---njhuclhgrbcf33b5--
+> Cheers,
+> Kent.
+>
+>
 
