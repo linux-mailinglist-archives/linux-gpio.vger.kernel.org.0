@@ -1,143 +1,111 @@
-Return-Path: <linux-gpio+bounces-6558-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6559-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 431DC8CBFC8
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 13:00:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B75248CC03D
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 13:30:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 74FEA1C21CD8
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 11:00:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D189E1C21499
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 11:30:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B0A824BF;
-	Wed, 22 May 2024 10:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8000D56B72;
+	Wed, 22 May 2024 11:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PdY5IoCY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ppKeuQOg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663F98062B
-	for <linux-gpio@vger.kernel.org>; Wed, 22 May 2024 10:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A003A8175B
+	for <linux-gpio@vger.kernel.org>; Wed, 22 May 2024 11:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716375594; cv=none; b=sFVesTlvWeeb59Y4kVk8/IFcu6+ZJjOH2X404XH01V/mEm3Bzx6azATzRzbLqCjrwZxRIwCbH44oOhvcjACPeKPY7HcybEOwqxKjukGVKoPUBEV7Vs1E5G7nfVTpOxuNYvh/pG0d9P1xReLiRUmhP3xxl9SSvd0jatAhf55bE/M=
+	t=1716377412; cv=none; b=hCjaAQRRNLltgGPdcn5IIhzpJvuFv2EX96a6ydAmsR/DpnHFveONQNyTpdGEo1we6z37gSO7HX6xGYXxSJ/R/NQHQakPDMV88n5EakQCo3NDBLDLIDsSXNJH445x8vp+JfdvejJD3xNJYuSQiWs+pJQf/H+cOUPcqMRz0POaVYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716375594; c=relaxed/simple;
-	bh=IPhQUWhLvaMh+UJE8aZ8RgjY1xis0QA6NKil/djKaQc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L+O/eqaTAknMk+3tQBbFzRY0BE2W6WKHf378kTIG69X6gMOaEj3fgJ1xwOykBa1MTSJrSZiabSKLfwDvhJhfOT0eU0zeQFvlwlnfU8V6lgEiqCcDeWdBaM6N902cjz+DnATq3+sVq1PKWJOUpmL0qBmoA/+yGsjtCUwsC5Xo8U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PdY5IoCY; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5238fe0cfc9so798429e87.0
-        for <linux-gpio@vger.kernel.org>; Wed, 22 May 2024 03:59:52 -0700 (PDT)
+	s=arc-20240116; t=1716377412; c=relaxed/simple;
+	bh=bRrRWdcT1vEQ/NkN7+6mhIfe7t/y2q9qD8PTe3O9S/I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=G1X5oFKs033/2akRO/ww3U/bUQp4Shs+INFivAHH6TSAUTZzP3pg4f1PNsbkMfi9niX9/5DE9sascT43dQxJBC8ux2yRvmf+jg+VLKsQEP+uj2Co73Z4B3HAcFScSNTwid01pvn6bw7yUTTuOVcD77KhalwKe5SXOJ7xGUtLeoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ppKeuQOg; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a59ab4f60a6so864313566b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 May 2024 04:30:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716375590; x=1716980390; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ysxzhAAkjCPK5L/c8Pn6sm+5f6CCYebW1vFWzyTda3w=;
-        b=PdY5IoCYPnFbd2BNAKOImzaig4rnBm1WSYaflOc/aq9gCg5Y3XRDflFmolbP9uu0c1
-         9m9lnhhCwRbtbu1ANorPt66MVnMmznpjoANVHjYT4r7MSCtysm/wXmZF3DPtv5zlsBmj
-         QR9GcH1LuVOtYejjRCDNlQxhOCqcBSMPrurVjuOJeru8frIehIU4PVbBvp5i1q39mhTk
-         jW5NQwM7jAcUT3WqCVnGFlm12MKKhe77mLAe5Y/WQ2H5gFgcus1Zlm/3cHCh0TMJQ9kJ
-         hU7dusHvl2bjsMmTGDrqTIYzqXEX3Uyv7sv3l4Z9XETDKr1PtJPBQ1OpZNz0j/XBReWD
-         EL3A==
+        d=linaro.org; s=google; t=1716377409; x=1716982209; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hq4L2X2KWQEpJApjySQzZvtfrY/x0TDF4kT6FwZYzPM=;
+        b=ppKeuQOgjEp+N4igWsekMRBEoUK0ivuPq6ItFdCjrhggclkjtnKKVpaMQMlOzLUy/a
+         MRq+UVtuASKE9wSFcpvwPi6z/76lG7nmATRWRpTIu93E1Wwm6vvoP8OLepqajWyvZLQF
+         P8eprUsbYtT4SLG576ooO1WMPCLMYOSzcnXh09BASQFNNS2d7fOGGpqLnmQ3V9dRnuoN
+         v1CqQuoosqmgW36YeUIyAWsi6dDVnsVsiRBn8sbwAPRXhrmP/jLRptqKJwJGsI0v7wEi
+         jXe5gQq7XCRMbVT18MwnmV+XDDlwjVBHw0OO3eKuMNjYLy/kdENAOjhoilndTbMCrEaf
+         9Oyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716375590; x=1716980390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ysxzhAAkjCPK5L/c8Pn6sm+5f6CCYebW1vFWzyTda3w=;
-        b=ePwwfD85c4M7Pk/sUPKsvpXsTvsk35KKGyu2PD2WcY7m0x/iiptUmH/c4PednQF/K/
-         m861eo8mNMXhuHHcb5wVxlFQ+T3suWE2yay3kXQGhWuNMZlm8kYUHgeGNnZhevfUVKGf
-         pXDr6P+DDo+iJLAgHiHTbqT+4hSR9fggQaxdhkRyoLYLztNzEQ+SZTpZTBEIPEHFmbou
-         cWkvNvVaj9yNf7Pug1YYG5PoOuAIiZp7phfWZlo0Be26ZC+GgpqbzuNichd3s978vXIC
-         310f6M/8gd731LRkp5zc+ycvjpGrrsi1I3389qVUAfl9GExDaxi2TwYP/2Nud7nXgJ3x
-         fMNg==
-X-Gm-Message-State: AOJu0YwamnFaxRitIdkXq6QzXS9Sz/uS3OFS3xbu1PmkB1o7vV8OrQz+
-	U2EkGWiInWYew2ngclGvhdOhEqFGJGgXBQW4t/X5ntQFqHdMl4WVgHzTnwSxbyknBTlQeMGVQK8
-	PFMCEET/aC+D7SOOI8ojoLZF5V98VfLQx2mNU9/ape5RxjKgV
-X-Google-Smtp-Source: AGHT+IHW90iyp5kkHTEv7vZDuU8XeJcXJgVwQVl4Tp40VZSR5hfESidPOiTwOlKngxFtHYj0rRNdb2N8UIvbsZN4CPg=
-X-Received: by 2002:ac2:5332:0:b0:523:89b0:9b5d with SMTP id
- 2adb3069b0e04-5269b2e625emr494717e87.9.1716375590432; Wed, 22 May 2024
- 03:59:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716377409; x=1716982209;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hq4L2X2KWQEpJApjySQzZvtfrY/x0TDF4kT6FwZYzPM=;
+        b=Wtx6JJJyvbeStGGG6jyiE8QXSx9b5bpB0fb0i2SaalUKslNBPz0yllCpwQqDZqFt2U
+         jH7mV9WMIGuXXpZIUzEmDmeIJ8hpWqZc2RIkhR31lpToqeo+7mrHA4r8FEDEqWQAMD/q
+         qMw6Nt9SSWciziDElyaOfQrh7Q5VEd9t9RX96JmG03nYtlCGJioSgC5Z4zZR5qPI/98P
+         S+KCwP7GmWGL8DQpAn+HI7/Y308qXDD3F5xZOGLA96TkS+G3U9aLmAbRQbw1hNaX90hk
+         d+DnvSN8KoIUSO/Y10d/XivZ6qmbInPNQHBYiFw8SZe9+LV/ZICNZwc/OUcn38iMksQS
+         B+Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3HJetlZ23j0vkabYV0EGP+lAFZ4+uylbPQCCF3lXkg17zpLTOChH0mDeEMp9cbYjlcHHSZHadmBxVocmf2bRzo03PtTYbhceP8w==
+X-Gm-Message-State: AOJu0Yxn4vCHzgcMa4AvpVJdRmgvWK45DsEPNV49XUwcseOEg0Ym1k8D
+	5bOBIw7dm3Fx0JPkAT0QoWEt+K8fu99OBmqE+6VJZEGnBSphbMi6I5fNJ5tMxZk=
+X-Google-Smtp-Source: AGHT+IEkOqOZ+PmlgG3pPNruELWYRYHJ49f5/J0ysA4MlrgNX2XFOiAUfem8CdDZEHZl04/Kc/jveg==
+X-Received: by 2002:a17:906:c17:b0:a59:edbc:193d with SMTP id a640c23a62f3a-a62281e1a9cmr156921466b.55.1716377408960;
+        Wed, 22 May 2024 04:30:08 -0700 (PDT)
+Received: from [127.0.1.1] ([2a00:f41:c55:53ae:4d0a:75f4:a9ea:5025])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01652sm1768363066b.167.2024.05.22.04.30.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 04:30:08 -0700 (PDT)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: [PATCH 0/2] PMC8380 PMIC pinctrl
+Date: Wed, 22 May 2024 13:30:03 +0200
+Message-Id: <20240522-topic-pmc8380_gpio-v1-0-7298afa9e181@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240511011144.GA3390@rigel> <CAMRc=McwX7f4KNqunRSj6jk=6-6oj9kUy9XJRc=HokyfaiUsmA@mail.gmail.com>
- <20240513101331.GB89686@rigel> <CAMRc=MftXh6SV_jNVDaUOwww21gH5gFeb8zGSVBLv=jMP_mFKQ@mail.gmail.com>
- <20240514133804.GA107324@rigel> <CAMRc=MdyUmfGaJ_0edvhMYwC7x5HwYyFAdD5EY-13+5yoRUeiw@mail.gmail.com>
- <20240515091848.GA86661@rigel> <CAMRc=MeBGJwyKBTYD1PQkk940t6ECsBxHCprjFUx1KFSKMe7fw@mail.gmail.com>
- <20240515141436.GA349711@rigel> <CAMRc=Me9ffciaXnOKE+ABLDBVbSRzTAEHRVzpLk641eocF4q8g@mail.gmail.com>
- <20240517123732.GA423787@rigel>
-In-Reply-To: <20240517123732.GA423787@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 22 May 2024 12:59:39 +0200
-Message-ID: <CAMRc=McuzzzRF8ttRKZWouayF250p8V2OXwmyjSrKOYe95Mn+g@mail.gmail.com>
-Subject: Re: [libgpiod][RFC] helper functions for basic use cases
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADvXTWYC/x3MQQqAIBBA0avErBN0LJGuEhFhU80iFY0IpLsnL
+ d/i/wKZElOGoSmQ6ObMwVeotgF3LH4nwWs1oMRO9ojiCpGdiKez2sp5jxwEmVVLa9RmDUINY6K
+ Nn386Tu/7AQt2P0pkAAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.14-dev
 
-On Fri, May 17, 2024 at 2:37=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Fri, May 17, 2024 at 12:53:36PM +0200, Bartosz Golaszewski wrote:
-> > On Wed, May 15, 2024 at 4:14=E2=80=AFPM Kent Gibson <warthog618@gmail.c=
-om> wrote:
-> > >
-> > > On Wed, May 15, 2024 at 06:54:15AM -0700, Bartosz Golaszewski wrote:
-> > > >
-> > > > I think the code should go into ext/, the gpiod-ext.h header can go=
- right next
-> > > > to gpiod.h in include/ and the examples can be in the same examples=
-/ directory,
-> > > > just call them something_something_ext.c to indicate they use the s=
-impler API.
-> > > >
-> > > > Does that sound right?
-> > > >
-> > >
-> > > At the moment I've made the code a conditionally compiled block in
-> > > line-request.c, so it can directly use the line-request internals.
-> > > Pretty sure that can be changed to use the core API, but isn't pimpl =
-within
-> > > the library itself a tad extreme?
-> >
-> > I have a strong preference for that code to live in a separate .so
-> > file (and by extension - a separate compilation unit).
-> >
->
-> Oh, I agree - that makes total sense.  The direction I was headed felt wr=
-ong,
-> so I figured I must've misunderstood what you meant.
->
-> I'll re-organise it into a separate unit.
->
-> Does that unit have to act through the core API, or can we give it
-> access to the internals?
+nothing special, just some boilerplate
 
-If we can avoid it accessing the internals, that would be awesome.
-Unless you hit a road-block, please try to keep the core separate.
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+Konrad Dybcio (2):
+      dt-bindings: pinctrl: qcom,pmic-gpio: Document PMC8380
+      pinctrl: qcom: spmi: Add PMC8380
 
-> And where do you stand wrt the idea of adding a config pointer to struct
-> gpiod_line_request itself?
->
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 1 +
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                      | 1 +
+ 2 files changed, 2 insertions(+)
+---
+base-commit: 8314289a8d50a4e05d8ece1ae0445a3b57bb4d3b
+change-id: 20240522-topic-pmc8380_gpio-e6d30861f862
 
-We'd need to make a deep copy, otherwise it could be destroyed and the
-pointer would be left dangling, right?
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
-Bart
-
-> Cheers,
-> Kent.
->
->
 
