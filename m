@@ -1,236 +1,159 @@
-Return-Path: <linux-gpio+bounces-6554-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6555-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A6608CBF17
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 12:13:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 123EE8CBF27
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 12:19:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 085E71F23369
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 10:13:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A46C1B20A8B
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 10:19:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10DD781AC9;
-	Wed, 22 May 2024 10:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LMGMBDev"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBC4B81ABA;
+	Wed, 22 May 2024 10:19:46 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C11E81AA7;
-	Wed, 22 May 2024 10:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B4A405CC;
+	Wed, 22 May 2024 10:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716372827; cv=none; b=gpkUWP4WLxxkc/i0t7QI//LBKu9/3k0MMhsS07l8GLK05u4EowhHWxy7I5DO6h3nuCy+1GYoPyCmf2kEmJOVkOdFPRqnLIv3y8zdA04U1C4ivUA6qDhymdjwXZcZE+3T87ctvoZfIgMkmHBn8WL0H+PDpkQWQuFn+iSU+d4ED+8=
+	t=1716373186; cv=none; b=RLS1VUiDMp9RQYY693Bo8eame7V59znAXh/Vh19zwVTAzysPyakf/wcG57M2Lht5CzrSkr8wA/B+jWhCnXwdFx9nmFZlD0bklFlE8zpD3FHl550WbrrcDLedkC5s798Ej1fm0bJoSXTj2rPRmVce1OE9kU50MzspSWwNWRrLFYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716372827; c=relaxed/simple;
-	bh=1mP4oCCZIocHPEfXo/hwjMohvwOhWaSus8BGK7ZMHLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o3SFXNbHHKCwyBWGyyUJDkLy0w7tkYPsTyu63rPb+clQzFzCciegRP2aU+V1v3sKG1sxE3PPihKOluZubBmlbRpIRJXLpUY9w7IwnAz+ttPW1S0Up1O2pc7CrEhtxF0bk8pHA4FMSBNVskpashn8mxwk98bIidY8Rtb0E5FuPwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=LMGMBDev; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 70FBAFD6;
-	Wed, 22 May 2024 12:13:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1716372811;
-	bh=1mP4oCCZIocHPEfXo/hwjMohvwOhWaSus8BGK7ZMHLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LMGMBDev4PAjWhtqVUMjdqFbaSJpAqgilatWhqlbIIY/WUBls4LzhOAnmggVXpziL
-	 8UROPQlZp2DW/GLFYwUAexLeOH/DpKJIpDOFG9wljMtXYZ6ZCAsKZF9e6ybbodcRE2
-	 L5OS7yQRtXmrygLrnKrPZYGUxubH0r6jBtyTlaUc=
-Date: Wed, 22 May 2024 13:13:35 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Clark Wang <xiaoning.wang@nxp.com>
-Subject: Re: [PATCH 5/5] pwm: adp5585: Add Analog Devices ADP5585 support
-Message-ID: <20240522101335.GE1935@pendragon.ideasonboard.com>
-References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
- <20240520195942.11582-6-laurent.pinchart@ideasonboard.com>
- <dl7a6puox5lc36fpto2fgyfgmpd3uboqc4lcfdtuaxzzsboqld@alw7vyi7pqjz>
- <20240521100922.GF16345@pendragon.ideasonboard.com>
- <xobmekjwqanow765yr42tsgknc5gc7szjublq6ywgbmoxovlr5@v3sofz5bmkol>
+	s=arc-20240116; t=1716373186; c=relaxed/simple;
+	bh=h/WrScmV7jrD1kirJW74TuxtAnU/XPNByaPbQ1ps5Eg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hRM72NCVryuU7hsU2GDbo/1tnnPpeaOM+nG1eWLq4Q6nwUYTx4Xi9DgjgiLhYqNSzqCO5iT6gRCxasn6Y8orF+8AFETRnxDB2TsgXLMeSKMBJLhCNBlzH6PjFaiRnmNJYhHIkCDr9Cvzo8fZKDtu1PpvPaCQ4JU6DV4CfsctQlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6202ad4cae3so46598477b3.2;
+        Wed, 22 May 2024 03:19:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716373183; x=1716977983;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EbANJdHWuB2a7IymPyfXUkvFMkRGKi7YXN40vnGgOh4=;
+        b=bRcuX7DmT5tI5YRRxKBXzO9xJtI/Z9p9ykxdacHacJuvYCqWepcwJ9j32Ri8g7ZP7e
+         PmTBYc6Wk4O4exnYq+X6f5tFjXu4DLBOGtfSRbBjKyFIbIgljfxxDS3ZsM60jgfKqsKb
+         nAV7duPMUP0pkL0ol2Y/mOfAAuff+85U70Y9oVS6xWaVQI4hmBktVx73JwFYvqhCXMAG
+         ODyETgfsnF0/JDFh3Eg9HdNLVGkZXBXBB0ngWrFyFdbU3S9WH8LyOG0K0yYBbbKWWgSW
+         aanCwU2m1j6xD7m15JOWNLb06EKQBLxdY//maxZ8iLs0zd/18rIISnxq7xdcZjW4UuVU
+         22+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXiYFSLzVpSTIwq4anMqBQSRwlIMH5htCVGCavxOHdRy9VnlvXc8yhzLNtl4EJAt5qLg4kZUXgM/5VmALYQq9P9WKEunMmokNLy/3X9nLptgT9zg6hx46dRx8MBVQcNsRs+ZAAWZbDP2KBFfLGL9aRpalb366aK9yAjWgHXIyd4ixdBriFZ30XMtdOd6AAEG3j8fjfMSb3BH/7+m2tPwDvQnmCsruGgMg==
+X-Gm-Message-State: AOJu0YxqZgkNQx0BjV7drQKL8kfS+jTStqv1e4ZIkVikSaPC7LCGF+wD
+	7AidgHDdyA08mDSfvnVJ2k1VWuK9DK5xtrqtoKtG9+vu9z6EX2g57SyBvaJa
+X-Google-Smtp-Source: AGHT+IGIChpmkFiMRpqkudu4J80oNjhMzGh3P0H4zxTtg2Nv0doirKxenJGDe7UTeD+Oo3vh0nUJ7A==
+X-Received: by 2002:a0d:d40e:0:b0:622:ed44:3450 with SMTP id 00721157ae682-627e48a0dbemr14236757b3.46.1716373183572;
+        Wed, 22 May 2024 03:19:43 -0700 (PDT)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6209e346810sm58078907b3.95.2024.05.22.03.19.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 May 2024 03:19:43 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-61be4b98766so7421587b3.3;
+        Wed, 22 May 2024 03:19:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWA7Z1co0zWrNN6AU0xCnH0fn9bQaTfVokExwTEkX5jgSw39pkc1gdjTocc2lc+5wTtSHd3t1i0xokoe9vejM5QF3rKWJJLetTEc2ADe4HtQZM+ncOcczb5Pp/w00sGw/g+O7tIpZySSwZsxm/mPIvjrfZahI6oZTWtg3d3YbQweHw6Ub+wueMvmeWq0RYoNCfyArsFW9MaAVHOh8OY1x+Gpji2K5czsw==
+X-Received: by 2002:a0d:cc4a:0:b0:61a:999f:e499 with SMTP id
+ 00721157ae682-627e471f818mr15049237b3.22.1716373183070; Wed, 22 May 2024
+ 03:19:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <xobmekjwqanow765yr42tsgknc5gc7szjublq6ywgbmoxovlr5@v3sofz5bmkol>
+References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240423175900.702640-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240423175900.702640-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 22 May 2024 12:19:31 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXUM-s5RQXgKQUtqu5=fVTFk5Ajg2WNZ2eAiy5Lr-tX5A@mail.gmail.com>
+Message-ID: <CAMuHMdXUM-s5RQXgKQUtqu5=fVTFk5Ajg2WNZ2eAiy5Lr-tX5A@mail.gmail.com>
+Subject: Re: [PATCH v2 03/13] pinctrl: renesas: pinctrl-rzg2l: Allow more bits
+ for pin configuration
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 21, 2024 at 03:05:53PM +0200, Uwe Kleine-König wrote:
-> Hello,
-> 
-> [dropping Alexandru Ardelean from Cc as their address bounces]
-> 
-> On Tue, May 21, 2024 at 01:09:22PM +0300, Laurent Pinchart wrote:
-> > On Tue, May 21, 2024 at 10:51:26AM +0200, Uwe Kleine-König wrote:
-> > > On Mon, May 20, 2024 at 10:59:41PM +0300, Laurent Pinchart wrote:
-> > > > +	ret = regmap_update_bits(adp5585_pwm->regmap, ADP5585_GENERAL_CFG,
-> > > > +				 ADP5585_OSC_EN, ADP5585_OSC_EN);
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	return 0;
-> > > 
-> > > The last four lines are equivalent to
-> > > 
-> > > 	return ret;
-> > 
-> > I prefer the existing code but can also change it.
-> 
-> Well, I see the upside of your approach. If this was my only concern I
-> wouldn't refuse to apply the patch.
+Hi Prabhakar,
 
-While I have my preferences, I also favour consistency, so I'm happy to
-comply with the preferred coding style for the subsystem :-) I'll
-update this in the next version.
+On Tue, Apr 23, 2024 at 7:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> The pin configuration bits have been growing for every new SoCs being
+> added for the pinctrl-rzg2l driver which would mean updating the macros
+> every time for each new configuration. To avoid this allocate additional
+> bits for pin configuration by relocating the known fixed bits to the very
+> end of the configuration.
+>
+> Also update the size of 'cfg' to 'u64' to allow more configuration bits i=
+n
+> the 'struct rzg2l_variable_pin_cfg'.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> RFC->v2
+> - Merged the macros and rzg2l_variable_pin_cfg changes into single patch
+> - Updated types for the config changes
 
-> > > > +	regmap_update_bits(adp5585_pwm->regmap, ADP5585_GENERAL_CFG,
-> > > > +			   ADP5585_OSC_EN, 0);
-> > > > +}
-> > > > +
-> > > > +static int pwm_adp5585_apply(struct pwm_chip *chip,
-> > > > +			     struct pwm_device *pwm,
-> > > > +			     const struct pwm_state *state)
-> > > > +{
-> > > > +	struct adp5585_pwm_chip *adp5585_pwm = to_adp5585_pwm_chip(chip);
-> > > > +	u32 on, off;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (!state->enabled) {
-> > > > +		guard(mutex)(&adp5585_pwm->lock);
-> > > > +
-> > > > +		return regmap_update_bits(adp5585_pwm->regmap, ADP5585_PWM_CFG,
-> > > > +					  ADP5585_PWM_EN, 0);
-> > > > +	}
-> > > > +
-> > > > +	if (state->period < ADP5585_PWM_MIN_PERIOD_NS ||
-> > > > +	    state->period > ADP5585_PWM_MAX_PERIOD_NS)
-> > > > +		return -EINVAL;
-> > > 
-> > > Make this:
-> > > 
-> > > 	if (state->period < ADP5585_PWM_MIN_PERIOD_NS)
-> > > 		return -EINVAL;
-> > > 
-> > > 	period = min(ADP5585_PWM_MAX_PERIOD_NS, state->period)
-> > > 	duty_cycle = min(period, state->period);
-> > 
-> > I haven't been able to find documentation about the expected behaviour.
-> > What's the rationale for returning an error if the period is too low,
-> > but silently clamping it if it's too high ?
-> 
-> Well, it's only implicitly documented in the implementation of
-> PWM_DEBUG. The reasoning is a combination of the following thoughts:
-> 
->  - Requiring exact matches is hard to work with, so some deviation
->    between request and configured value should be allowed.
->  - Rounding in both directions has strange and surprising effects. The
->    corner cases (for all affected parties (=consumer, lowlevel driver
->    and pwm core)) are easier if you only round in one direction.
->    One ugly corner case in your suggested patch is:
->    ADP5585_PWM_MAX_PERIOD_NS corresponds to 0xffff clock ticks.
->    If the consumer requests period=64000.2 clock ticks, you configure
->    for 64000. If the consumer requests period=65535.2 clock ticks you
->    return -EINVAL.
->    Another strange corner case is: Consider a hardware that can
->    implement the following periods 499.7 ns, 500.2 ns, 500.3 ns and then
->    only values >502 ns.
->    If you configure for 501 ns, you'd get 500.3 ns. get_state() would
->    tell you it's running at 500 ns. If you then configure 500 ns you
->    won't get 500.3 ns any more.
->  - If you want to allow 66535.2 clock ticks (and return 65535), what
->    should be the maximal value that should yield 65535? Each cut-off
->    value is arbitrary, so using \infty looks reasonable (to me at
->    least).
->  - Rounding down is easier than rounding up, because that's what C's /
->    does. (Well, this is admittedly a bit arbitrary, because if you round
->    down in .apply() you have to round up in .get_state().)
+Thanks for the update!
 
-Thank you for the detailed explanation.
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -78,9 +78,9 @@
+>                                          PIN_CFG_FILNUM | \
+>                                          PIN_CFG_FILCLKSEL)
+>
+> -#define PIN_CFG_PIN_MAP_MASK           GENMASK_ULL(35, 28)
+> -#define PIN_CFG_PIN_REG_MASK           GENMASK(27, 20)
+> -#define PIN_CFG_MASK                   GENMASK(19, 0)
+> +#define PIN_CFG_PIN_MAP_MASK           GENMASK_ULL(62, 55)
+> +#define PIN_CFG_PIN_REG_MASK           GENMASK_ULL(54, 47)
+> +#define PIN_CFG_MASK                   GENMASK_ULL(46, 0)
+>
+>  /*
+>   * m indicates the bitmap of supported pins, a is the register index
 
-> > > round-closest is wrong. Testing with PWM_DEBUG should point that out.
-> > > The right algorithm is:
-> > > 
-> > > 	on = duty_cycle / (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
-> > > 	off = period / (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ) - on
-> > > 
-> > > 
-> > > > +	if (state->polarity == PWM_POLARITY_INVERSED)
-> > > > +		swap(on, off);
-> > > 
-> > > Uhh, no. Either you can do inverted polarity or you cannot. Don't claim
-> > > you can.
-> > 
-> > OK, but what's the rationale ? This is also an area where I couldn't
-> > find documentation.
-> 
-> I don't have a good rationale here. IMHO this inverted polarity stuff is
-> only a convenience for consumers because the start of the period isn't
-> visible from the output wave form (apart from (maybe) the moment where
-> you change the configuration) and so
-> 
-> 	.period = 5000, duty_cycle = 1000, polarity = PWM_POLARITY_NORMAL
-> 
-> isn't distinguishable from
-> 
-> 	.period = 5000, duty_cycle = 4000, polarity = PWM_POLARITY_INVERSED
-> 
-> . But it's a historic assumption of the pwm core that there is a
-> relevant difference between the two polarities and I want at least a
-> consistent behaviour among the lowlevel drivers. BTW, this convenience
-> is the reason I'm not yet clear how I want to implemement a duty_offset.
+> @@ -241,9 +241,9 @@ struct rzg2l_dedicated_configs {
+>   * @pin: port pin
+>   */
+>  struct rzg2l_variable_pin_cfg {
+> -       u32 cfg:20;
+> -       u32 port:5;
+> -       u32 pin:3;
+> +       u64 cfg:46;
 
-Consistency is certainly good. Inverting the duty cycle to implement
-inverted polarity would belong in the PWM core if we wanted to implement
-it in software I suppose. I'll drop it from the driver.
+47, to match PIN_CFG_MASK()?
 
-> > > > +	ret = devm_pwmchip_add(&pdev->dev, &adp5585_pwm->chip);
-> > > > +	if (ret) {
-> > > > +		mutex_destroy(&adp5585_pwm->lock);
-> > > > +		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static void adp5585_pwm_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct adp5585_pwm_chip *adp5585_pwm = platform_get_drvdata(pdev);
-> > > > +
-> > > > +	mutex_destroy(&adp5585_pwm->lock);
-> > > 
-> > > Huh, this is a bad idea. The mutex is gone while the pwmchip is still
-> > > registered. AFAIK calling mutex_destroy() is optional, and
-> > > adp5585_pwm_remove() can just be dropped. Ditto in the error paths of
-> > > .probe().
-> > 
-> > mutex_destroy() is a no-op when !CONFIG_DEBUG_MUTEXES. When the config
-> > option is selected, it gets more useful. I would prefer moving away from
-> > the devm_* registration, and unregister the pwm_chip in .remove()
-> > manually, before destroying the mutex.
-> 
-> In that case I'd prefer a devm_mutex_init()?!
+> +       u64 port:5;
+> +       u64 pin:3;
+>  };
 
-Maybe that would be useful :-) Let's see if I can drop the mutex though.
+To avoid such mistakes, and to increase uniformity, I think it would
+be good to get rid of this structure, and replace it by masks, to be
+used with FIELD_GET() and FIELD_PREP_CONST().
 
--- 
-Regards,
+Gr{oetje,eeting}s,
 
-Laurent Pinchart
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
