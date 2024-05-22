@@ -1,124 +1,130 @@
-Return-Path: <linux-gpio+bounces-6540-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6541-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 336808CB635
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 00:59:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86BA08CB6D1
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 02:47:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 652C31C21CBB
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 May 2024 22:58:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BADFCB211EE
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 00:47:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F1AF149E1B;
-	Tue, 21 May 2024 22:58:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA11B17F3;
+	Wed, 22 May 2024 00:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="vBGwbRRu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ck3eFua9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CBC58AC1;
-	Tue, 21 May 2024 22:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CBC4A1A
+	for <linux-gpio@vger.kernel.org>; Wed, 22 May 2024 00:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716332333; cv=none; b=EYnE0zfSshQaOeuk/qHEoFhpVkRVM/McKUfLa/KCnfgwk3mm0N+EiVvbg/O/aToYa/0KVC04IjV6s2NaC/BiYaGR8AD4k8E9hGKVEY1l/i7w9RI3KTbtqcertIQKZH27BGASZw+5HYoq4/TGPrgtCih8els34uRduvn4UtC5LKc=
+	t=1716338826; cv=none; b=oYtE6hpBjdWZCOZnhn6c0vo/x8gd/uC1kuo5M0i23Sddupew67nGfQrTQWr5i+564fJB3ThczLF/Hg9ke8Q+wFMtgRKx2AaMpiqfrkDKoSCM42tswCGC4aqIm5e/ZOrHAgINXQApxH9KiFn3NKFmiyNKBgluHfoJn96oasw5zOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716332333; c=relaxed/simple;
-	bh=/B63K473/HxOhEaoZ5QSdxb9axvdA6PXOTlKChP8wTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZmBjWE4NKkMDFgzoso9MEhcIJstJRhx/u0bZrbnJKxLhwPM2/5phMK8v4MawwjbS9x/LFNo7ME3VE38QEj6Fp5m+P2MUzZwIjR0dSTmXYyrjFgkneJl6UodEJgWOxBUVQPhC+DIUkvUBVboWGORFQ1eBb+R7rZrxoBlhKbDt4KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=vBGwbRRu; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1716332328;
-	bh=m5I1hOOLWDM4EKnSwZVCL6AUhsSRzC0ZdbYcp6s33oY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vBGwbRRuKRF0BQiFf/r+f85cMaXx1vDJoO0/C/n/9sqfHuTJy6wLzuKQE8oDglY+z
-	 ePqh4kdTxZbFsRemBV1RoNVIQumRJdGbE98CHUDLHiiowMHfqpqN4uH8inbOE0mO03
-	 X0z6pUdTDGWBUfntSnY9RWI4TYgludTdNReIYWbLCqwGwqJqhAOymGg4x3R9kHY8Lw
-	 bcv/f79IMzYbEV0Z+Zy4XZch+ugi3rmWpbAOEnIBVK5riT0msEBH8JkEzYvhuPuTEz
-	 TkgNB2uU1rlLQ9vjxkAgZGpkW/m7rYPCxcSXuWCEgHmpTUIGQBocjO1y0BowFbMO8r
-	 ZW9mtHgvaUJjQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VkVGt0NJ5z4wx5;
-	Wed, 22 May 2024 08:58:45 +1000 (AEST)
-Date: Wed, 22 May 2024 08:58:44 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Laura Nao
- <laura.nao@collabora.com>, mika.westerberg@linux.intel.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, kernel@collabora.com,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-acpi@vger.kernel.org, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, "kernelci.org bot"
- <bot@kernelci.org>
-Subject: Re: [PATCH] gpiolib: acpi: Move ACPI device NULL check to
- acpi_can_fallback_to_crs()
-Message-ID: <20240522085844.16cba3f4@canb.auug.org.au>
-In-Reply-To: <Zkyo6DL7NQltLLNr@smile.fi.intel.com>
-References: <20240513095610.216668-1-laura.nao@collabora.com>
-	<ZkHlLLLoagsYlll7@smile.fi.intel.com>
-	<b20b567f-ce96-45e8-aab7-29768f8313f5@leemhuis.info>
-	<Zkyo6DL7NQltLLNr@smile.fi.intel.com>
+	s=arc-20240116; t=1716338826; c=relaxed/simple;
+	bh=pJ43JH4GxkkZXJeG1xVxu9SWkWIkiuSojfa9dyS6RGA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XzwqB0aI8se8ad95Yg1Fj2qjjlOAk0R2oLNjUXpcZVn9jobmupRlF1PEGyAgj18uJiLvizPMxWSzGjyZZI6GtMDUzVoS2ZwsCISTMkB1SwYtCu29bqqtk8934hBSDq0kfg2RgoM+j/+wKvmKIbrYSpG4kjeJMRTuXYQ2huPL0iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ck3eFua9; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6f4d6b7168eso1435752b3a.2
+        for <linux-gpio@vger.kernel.org>; Tue, 21 May 2024 17:47:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716338824; x=1716943624; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=I9x3ARlB0HXnU8tcs/38vFI+YBlPZNzKtpvsZOoRO+4=;
+        b=ck3eFua9fzz4QLfkFWZIkZzguHmkDenP7UtH/l5m+ZUgMrxMzokQRH3pr9bqxZu3Gl
+         IgAMyv6HGta67WUkAaTymqc1dS2ccBAMf2WjAWb0dVt1hL/m7vK4gId2VFS2xWNTRMKg
+         MWjSuCMZiCRSwAraSbcR+AXPcB4Cdrx+5H9gi6zvQIf5e3bQr8kXR4kUofDT2gWkk4ru
+         eVr4byO6Paa3TUwKlHRymV9Ay8ciyTk6jz5ahGxviC5XhIRx4QRQDgTXYWF14rg1EpE4
+         EfRhudV24UsTvjTsBBBpsH2JzvEJknoCjnTwoPgUt9LB5R9mi0dN6m0/00J1+Zz909kO
+         tiTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716338824; x=1716943624;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I9x3ARlB0HXnU8tcs/38vFI+YBlPZNzKtpvsZOoRO+4=;
+        b=phhSEWpLJsRGzZMUdgQbFR5FoFI6gvHWkBGIQPQ4apgiUgUL/ITyJGZ3hjQztHLcNL
+         fbR4k3RgonAnS/afjRmAf9mzcVNPUynWPMdTe9e4q1GWqw1yJG/CwnqXrb4zRy2ReJE/
+         c5JELR6jKQs5Yvv3kSw1e34o4kn+f181ugxPu/xKn9gyIzSNrO7sXuSD6ecrv65TufUJ
+         MYjTwtPQZIyWgWXEMSJjKT9M285FeISfgF+O5LaDnhDZ6P6+JLebyYv4kWrafgcDTAIY
+         7pO2hixjhTYUMDXs+pKYPxqN4WTDi7ExHn6g/GLqY14TXNfR84ORp+YLUACLVcTCiAEC
+         XOUg==
+X-Gm-Message-State: AOJu0Yye8DEQ+f99RZ0VQVX0ODXD2xLYvy6CVYP7009gbL4IFgpwR4/t
+	DPT2kdImn5AQuzUUJnZTjc0/d8jF24See6exWJd/43aP7R3kYLwEnIJBKQ==
+X-Google-Smtp-Source: AGHT+IFo3Gf+kWFlsCgjJL5mzALr7wtHVI6uOIJ/gFT6Lt1I7uEANYkuliMp82AL0w7gaaJCCi67sw==
+X-Received: by 2002:a05:6a00:2311:b0:6ec:faff:ec1f with SMTP id d2e1a72fcca58-6f6d606a5a9mr637409b3a.11.1716338824283;
+        Tue, 21 May 2024 17:47:04 -0700 (PDT)
+Received: from rigel.home.arpa (60-241-107-82.static.tpgi.com.au. [60.241.107.82])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2af2c36sm22066302b3a.173.2024.05.21.17.47.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 May 2024 17:47:03 -0700 (PDT)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH 0/2] support casting line.Value to bool
+Date: Wed, 22 May 2024 08:46:41 +0800
+Message-Id: <20240522004643.96863-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/f4YoUvWlnSG1U.tc=fqyysd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/f4YoUvWlnSG1U.tc=fqyysd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+While writing a gpiod plugin for gpiozero (Python), I had to map line.Value
+to its bool equivalent.  Casting seemed the obvious way to go, as it is
+essentially a boolean, but that didn't work as I expected - it always
+returned True. This is the case for any Python type that does not provide
+a suitable conversion operator.
 
-Hi Andy,
+This series adds support for casting line.Value to bool.
 
-On Tue, 21 May 2024 17:00:08 +0300 Andy Shevchenko <andriy.shevchenko@linux=
-.intel.com> wrote:
->
-> Because:
->=20
-> - that's the policy of Linux Next (do not include what's not supposed to =
-be
->   merged during merge window), Cc'ed to Stephen to clarify, it might be t=
-hat
->   I'm mistaken
+Patch 1 adds a test that comfirms the existing behaviour.
+Patch 2 adds the __bool__() operator to make the Value behave as one
+might expect.
 
-My current daily reports say "Do not add any work intended for v6.11 to
-your linux-next included branches until after v6.10-rc1 has been
-released".  i.e. we don't want new development work added to linux-next
-during the merge window as that may just cause unnecessary conflicts or
-build failures while we are trying to just get the merge window done.
+As an aside, I couldn't for the life of me work out how to run the complete
+python test suite.  There are no hints in the documentation.
 
-I have always said (maybe not recently) that bug fixes are always
-welcome.  Also, more urgent bug fixes often just bypass linux-next.
+There is a python-tests-run target in the Makefile, but that didn't work:
 
---=20
-Cheers,
-Stephen Rothwell
+~/libgpiod/bindings/python$ make python-tests-run
+PYTHONPATH=/home/kent/libgpiod/bindings/python
+LD_LIBRARY_PATH=/home/kent/libgpiod/lib/.libs/:\
+	/home/kent/libgpiod/tests/gpiosim/.libs/ \
+python3 -B -m tests
+/bin/bash: line 2: /home/kent/libgpiod/tests/gpiosim/.libs/: Is a directory
+make: *** [Makefile:677: python-tests-run] Error 126
 
---Sig_/f4YoUvWlnSG1U.tc=fqyysd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I tried fixing that but I still couldn't satisfy ld wrt the gpiosim
+(I don't have libgpiod installed - just using the local build),
+so gave up and called this particular test directly with
 
------BEGIN PGP SIGNATURE-----
+$ python -m unittest tests_line.py
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZNJyQACgkQAVBC80lX
-0Gw8nwf/YZtacic07OrQgrRr+3kjNmlsFymQdM0iKgZwpQVnU+njjrMSqsaPkR6+
-XCbbMBVuWXUCgZA8/uZNikakUqd0A6/By+Mb1AdZNbBL53sD9L9q1rtyTFzbWCuG
-1toNLpyk9GiYbUjLcsguHF8iRPpyFFO24CpokgZNkq5QoJ6WZbhN8H0WhInCtVGe
-ml3K1WvqMS1oShOGl6A6xeciD9J1v83mnYgCLQ4wWW0eESP8VDL47zH6WwUkuahQ
-qOESWjMX/Ug6xP9xwF9y6WXjCL0MLxE9IULLb+MHyanbVIVwPDbF7JtTy0Tq8gb9
-C5jmjOH/PBE+mC4QH9aQPBWp0vO36A==
-=YofX
------END PGP SIGNATURE-----
+While that passes, I can't guarantee it hasn't caused some other
+breakage, though it seems very unlikely.
 
---Sig_/f4YoUvWlnSG1U.tc=fqyysd--
+Kent Gibson (2):
+  bindings: python: tests: add test for casting line.Value to bool
+  bindings: python: support casting line.Value to bool
+
+ bindings/python/gpiod/line.py       |  3 +++
+ bindings/python/tests/Makefile.am   |  1 +
+ bindings/python/tests/tests_line.py | 11 +++++++++++
+ 3 files changed, 15 insertions(+)
+ create mode 100644 bindings/python/tests/tests_line.py
+
+--
+2.39.2
+
 
