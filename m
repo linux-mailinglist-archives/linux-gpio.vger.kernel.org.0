@@ -1,117 +1,152 @@
-Return-Path: <linux-gpio+bounces-6556-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6557-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCF228CBF2A
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 12:21:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 844538CBF33
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 12:24:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0915E1F23189
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 10:21:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FBD71F21100
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 May 2024 10:24:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95D0F81ADB;
-	Wed, 22 May 2024 10:21:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E59D82495;
+	Wed, 22 May 2024 10:23:51 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAD9405CC;
-	Wed, 22 May 2024 10:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A638248C
+	for <linux-gpio@vger.kernel.org>; Wed, 22 May 2024 10:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716373304; cv=none; b=Tl4GFy7aSbFSifk5VBWuhlJYYPE+uuVzJZjI82h9AVTp31gizHIf6UJ8kg5rUyq6dDKswCc9KpNNwq+CKbtoLIAZQfkGuul8wa9wxQEvJXb8TlqOUU2f6lZe2SeVVEp6V5yVHCUmQPynCGijyC0Vvo5yCdgrY3YKPfbUoZIS9kE=
+	t=1716373431; cv=none; b=Ceu2w19HexudU5huKLBrid4h9y3oORWQ5s1QOCy3JUQwumUkx8xYY5ps2lwGxFV4xSW/wao9ldYt+G1uj0F9tc4i94qkNZtSJcwJGDMtveBuj03T+32ScU15wE74CvoQnM+JjLnR1371gWwdgRzKP/a7ELpeSvpakRSVg3G8ANA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716373304; c=relaxed/simple;
-	bh=DBq4Ox5uFTydSGsLfDtl08A7861OqqBL4+Cp+/Y78Uc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T9CDUYmGi9xCnSpDOq9HIKMDE68Kv4awu3MYdwSglTaI311tgNFefpIi0e9cK7eJ4TDVjmQzQ6KJl+N8+zy+sSI/ZfQq0M3VPHTPz+kiGL3hA9Nx2Pzuwg0TfcaMm+O5waA7RFWq/bOMa73KhIbxiFyFZhqnnt7UG/0rsjqWt3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6202ad4cae3so46612247b3.2;
-        Wed, 22 May 2024 03:21:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716373301; x=1716978101;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E48NPUNSq5hL9+7t26ygo54Sg5ZDiYQpkMoK+iQmpmM=;
-        b=tUpdQRSaPNgbLax8eWkGPoFTqwyB2pAOHLDH+YJD3Yz4B++pMxeSBD9MbSGFqZizT/
-         RJUp5UGQlWjV1mMjTjdEmZWqLJ92UKWMAut0ZK42gzJMvo1dLtJ6nlTEgyoNlokPX+ui
-         pvoDo787rizaOoIXVqeBM7I5nUZlM6rLpfnkJIMqgnmwo68vM31ZhR9VRU3P1fdHVsKL
-         2PiBjArZw2aFIGrpbeBJGh/Hj30960I27wipCVB6HZxdWtsvOmY9Nh7mCQYFOj13n0Cd
-         rwzQ6/Q544gSNfXe2zRZjWaYZ3Mv6UjbE8f2uKfxC/tvV8SaHziJzVSdlH8TnHDTejBL
-         zg5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXghN0MCqoamIV6jX9L8UrL6m6cJIa4b7VMH57RKkX52XMT2AbuBcHjt10rxgzqKDxqylDEt0AQYnf0p19ujnYPOPYMrk9mdaDHDhReP8KKZ83PA8nBNh1X+EpYbgLrsmhnKpGDIg8dh2iiRqXD6aj5+FmdPFImTQjjkj1MeCtI/va+VEYHMPFrCrEkkhiXUaNeGuvbs96TtUDrERuRWgjwcO91LgU6WA==
-X-Gm-Message-State: AOJu0YzOdZEJJAiSIGZ3Ow0EEszLx/06e6W6dRWETSG8YRW+JkaS+NmD
-	NG1yrXdfHJJ5JpKhBxTiyx9JmRzNTqGMaLmdvs/y5zNTfxBkNC6ftJP/pO6Z
-X-Google-Smtp-Source: AGHT+IHQfBBEfU9fj6NgNw0bCryWelzDSTlqri1D1yPMhuRNvaGejRvqvBNgj5RLm/9CdRZEtt8VPA==
-X-Received: by 2002:a81:5203:0:b0:620:4018:7c67 with SMTP id 00721157ae682-627e472aed5mr15675607b3.27.1716373300313;
-        Wed, 22 May 2024 03:21:40 -0700 (PDT)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6209e2347easm57092247b3.2.2024.05.22.03.21.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 May 2024 03:21:39 -0700 (PDT)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-627ea4e0becso3247217b3.0;
-        Wed, 22 May 2024 03:21:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWiYT/plF/SzT5QXQh2GCozZAR2kOfIy/m/p5qMD96yzGuGhS9whFQyBPEN3j4dtFQENerTEcKlOngkrdurrUenG3qUdQ+2gCZq9r2ScnxIYQT3g6LYBouVflOdal6WoN62x/X6Rp78OtQmQ4LsXH6kFuSSBwtwqtxrcIpUvgnRrBzIP6pOKDNjqXwK1RN3A+uW90wvcXiwF/RzWX/HSyXkkze1xKnpkg==
-X-Received: by 2002:a25:b287:0:b0:de5:5a6f:a52a with SMTP id
- 3f1490d57ef6-df4e0c1649emr1808983276.26.1716373299671; Wed, 22 May 2024
- 03:21:39 -0700 (PDT)
+	s=arc-20240116; t=1716373431; c=relaxed/simple;
+	bh=8Jv2FoH6NJPjGOP0LC/PqVRnbeV7oAwm/+X5xjFYdEk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AMPam8VGDfDt0Ng0Y3EupJ1NCyemf4IRcb18uJnzoVKU9Qt4jL4flOrOkt2zgZ0WhVbBjFanSjiSqz5eaN/jY6hjFgLlrUOiy4pwrHbfVFM5mRBZKt7UKDONLbeM43ie1ZM++ln4ZG7mjAxKqCinV4kHoCj8kfeiXgXCz/6xx7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s9j8I-0000WW-JS; Wed, 22 May 2024 12:23:42 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s9j8H-002Vkx-RJ; Wed, 22 May 2024 12:23:41 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s9j8H-009uTO-2Q;
+	Wed, 22 May 2024 12:23:41 +0200
+Date: Wed, 22 May 2024 12:23:41 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Clark Wang <xiaoning.wang@nxp.com>
+Subject: Re: [PATCH 5/5] pwm: adp5585: Add Analog Devices ADP5585 support
+Message-ID: <kn46i4ejb7demlieowowwur7mps6bmlaiqctxuh2gufi7vnon3@ourzmteng7gk>
+References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
+ <20240520195942.11582-6-laurent.pinchart@ideasonboard.com>
+ <dl7a6puox5lc36fpto2fgyfgmpd3uboqc4lcfdtuaxzzsboqld@alw7vyi7pqjz>
+ <20240521100922.GF16345@pendragon.ideasonboard.com>
+ <xobmekjwqanow765yr42tsgknc5gc7szjublq6ywgbmoxovlr5@v3sofz5bmkol>
+ <20240522101335.GE1935@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240423175900.702640-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240423175900.702640-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 22 May 2024 12:21:27 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWh+y++uKue6EMGmjLN+=3nhGpVAbmMFqywpCMctXe6Ww@mail.gmail.com>
-Message-ID: <CAMuHMdWh+y++uKue6EMGmjLN+=3nhGpVAbmMFqywpCMctXe6Ww@mail.gmail.com>
-Subject: Re: [PATCH v2 04/13] pinctrl: renesas: pinctrl-rzg2l: Allow parsing
- of variable configuration for all architectures
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="njhuclhgrbcf33b5"
+Content-Disposition: inline
+In-Reply-To: <20240522101335.GE1935@pendragon.ideasonboard.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+
+
+--njhuclhgrbcf33b5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 23, 2024 at 7:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Enable parsing of variable configuration for all architectures. This patc=
-h
-> is in preparation for adding support for the RZ/V2H SoC, which utilizes t=
-he
-> ARM64 architecture and features port pins with variable configuration.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> RFC->v2
-> - No change
+Hello Laurent,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Wed, May 22, 2024 at 01:13:35PM +0300, Laurent Pinchart wrote:
+> On Tue, May 21, 2024 at 03:05:53PM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Tue, May 21, 2024 at 01:09:22PM +0300, Laurent Pinchart wrote:
+> > > On Tue, May 21, 2024 at 10:51:26AM +0200, Uwe Kleine-K=F6nig wrote:
+> > > > On Mon, May 20, 2024 at 10:59:41PM +0300, Laurent Pinchart wrote:
+> > > > > +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
+> > > > > +		swap(on, off);
+> > > >=20
+> > > > Uhh, no. Either you can do inverted polarity or you cannot. Don't c=
+laim
+> > > > you can.
+> > >=20
+> > > OK, but what's the rationale ? This is also an area where I couldn't
+> > > find documentation.
+> >=20
+> > I don't have a good rationale here. IMHO this inverted polarity stuff is
+> > only a convenience for consumers because the start of the period isn't
+> > visible from the output wave form (apart from (maybe) the moment where
+> > you change the configuration) and so
+> >=20
+> > 	.period =3D 5000, duty_cycle =3D 1000, polarity =3D PWM_POLARITY_NORMAL
+> >=20
+> > isn't distinguishable from
+> >=20
+> > 	.period =3D 5000, duty_cycle =3D 4000, polarity =3D PWM_POLARITY_INVER=
+SED
+> >=20
+> > . But it's a historic assumption of the pwm core that there is a
+> > relevant difference between the two polarities and I want at least a
+> > consistent behaviour among the lowlevel drivers. BTW, this convenience
+> > is the reason I'm not yet clear how I want to implemement a duty_offset.
+>=20
+> Consistency is certainly good. Inverting the duty cycle to implement
+> inverted polarity would belong in the PWM core if we wanted to implement
+> it in software I suppose. I'll drop it from the driver.
 
-Gr{oetje,eeting}s,
+This isn't as easy as it sounds however. From the POV of the PWM core
+the capabilities of the currently used hardware are unclear. So if a
+request with (say) normal polarity and a certain duty_cycle + period
+fails, it's unknown if it would be beneficial to try with inverted
+polarity and if that is OK for the requesting consumer. So there is
+information missing in both directions.
 
-                        Geert
+Best regards
+Uwe
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--njhuclhgrbcf33b5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZNx6wACgkQj4D7WH0S
+/k7gSQf/eP3kBKkVvjsZKN2YXLxC/e3LV/e5b/nZfHIgt3CEctZeTQcGfZLQa5V+
+WVkCjKeolCGJXYxsB84okaHK/6GPQ+cWMquFk4qbN28WgIHSj+7HJCkaqDY14Ar/
+9oW8fVNG4s9ZpbeQPJ4iH4b5zrx+JSQRzeW2hw9l+XvCeMG8d9Eno8m9CERF72ud
+6dL1fkPvxjtFklYNgqwGavc65n+kqme2GvfHu87ZkPHb4lLH14tMtlZOmlaIKGpS
+hUJSMQugUreF6MndO9VsMpmKK80YigNY7L4d8D19W1H5nwvTaxuO5kwahMbYas0f
+4LqNkFV5ycdF43EAUXChc/1w57dTyQ==
+=s0N3
+-----END PGP SIGNATURE-----
+
+--njhuclhgrbcf33b5--
 
