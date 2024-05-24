@@ -1,76 +1,77 @@
-Return-Path: <linux-gpio+bounces-6610-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6611-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A8DD8CE957
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2024 20:04:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD2038CE955
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2024 20:04:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 82770B216EA
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E40F61C20BDE
 	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2024 18:04:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1CF03BB27;
-	Fri, 24 May 2024 18:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12AFF3BBC1;
+	Fri, 24 May 2024 18:04:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="1cndh7S6"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zuoMKSD+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE62E3B1AC
-	for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 18:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF103B1A3
+	for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 18:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716573849; cv=none; b=hgSn97iuE/Y+xYxbvTQTJrfd8uK4TfZ0pvR3VRp3frppO4LwWtWdBd0OsfNUsTIYhk46ucrkw9M1X/CIn5s1hxJmDmIeE0clOwdN0x9fFNTGxRbWOzHY3ScotE4EtW8xABNRohvPaSZEx3IO3AXWi1tYpdL0+xM+Jv9O6kVetx4=
+	t=1716573850; cv=none; b=ki4IpD6yIxesRED7jNE/o4yhzLFcANkE50tQId19Ae1cVoPxP2O64hh/9qP2aMkBg4R2rmKAgSQGAPAOZc3UgI431DdIlxBY9kyFIE8NlHAIPRjpgVPWGKF1G4tGb/uKabQ9pF30Iri5ILLQjW+lUKfmsrQaPus/g7DfE5bZma0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716573849; c=relaxed/simple;
-	bh=Qbl0wFycEDzMrTT5CU1N0Ueak8FzUvxplFalMn8aNhc=;
+	s=arc-20240116; t=1716573850; c=relaxed/simple;
+	bh=wYbreMX2LOBMbl1R69OKGsBBvx8WqKuDaihyiydcl8M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nYk0EEB/4u2Cxj0vgMVNQcl4/YRHbMQ+WYNla9EMRu1Nk6461hlnqphpLaGNm7aciLzMk8ZD27F7NEti38mZmqYH5MPV7UOf+Cpce9gRhA4Fvt2pNYhX8Op/pOdI5+Q/3ClWO5f/MKzxKhV9Esp5fyQZ1D0qBzU5Nh0Oe8dwV4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=1cndh7S6; arc=none smtp.client-ip=209.85.128.48
+	 In-Reply-To:To:Cc; b=cauoQiEfH0C+uhaRf5Mg1xt3w9vSJ4GkCbeqWSdRooX7MkXzsJnJZhER80JRD8TyKl14O2yVnT1pq9lZSpZWqaiijwoyfBPh6NJ/z500b1C/pt9XeY+IdcNb7mbP4v3CGEdWe/DnqlySwXRIOHtMiWU0iWcGFDqkXEkyjO471tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zuoMKSD+; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4202c1d19d5so64373455e9.2
-        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 11:04:07 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4200ee78f34so32458885e9.3
+        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 11:04:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716573846; x=1717178646; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716573847; x=1717178647; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UBofyP0L45wNyQmF4Cl/rFhlc2AXCK++twiohfFn4ok=;
-        b=1cndh7S6r94baxI+PQcFy3G4X8bgsD51xR9zErdeVqBpWPhnK8UCMlmuSI024QTjKZ
-         NdIAtEuV/xrRGNGodr7V/emFcuY/y5HBDiN7ki8b/kty3QwBiUj/R8p1BtOQFUxz9biq
-         +YTwZjM2ied/YBou9R6eNPnUCUIOeU7IgRzFf+T/OGtLuF3RcO0esJiekiwXVX5F5D4C
-         dhuj7IMgkSs9KQ0rXfGx7LyyA4CPVn6cuz3izWqQ845puNkaXWH2MukFVrAZ/IrRDPLj
-         XPKGPXJbD89p3/HVt99/oHjpRPTZQzJCNtlzvZ97Q8XOqdlbYxJd0UWSPNz5X4k06MZc
-         muIg==
+        bh=sSfxUpsCurzjN9zrJCHGoSodTDdImTIm6nR1mONwCw4=;
+        b=zuoMKSD+vcgLbM2uXyNFaRKjIBL9epkBrwqTUg2s06uFgoJmXe1hYuON6YadYcWszl
+         SNobrU5gwZxBq+dYqgUIx1S4n4hTY19nsy4i36nH3YREAPGFSX0dvQ0NIFQGUhcdoGAT
+         +RSJmxXYe2jpI8c7g+3IOC7jfZzsuSlE72sPwyc//2+AkwJjbDXsSZ+RhadpWEe/4zCW
+         FC+8Pppb7BESQVPtmG61Hnq5s/Wug0QxLGsrV2T8S29TV0kAC0PcXnOB7IVnKnPizsG4
+         vhSPAoi46V8BNjvo6AOE/mldmSpxmppxTMeM9pIlx5GZzIlTzedwSOWXLHUZYftvzKGW
+         Z5TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716573846; x=1717178646;
+        d=1e100.net; s=20230601; t=1716573847; x=1717178647;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UBofyP0L45wNyQmF4Cl/rFhlc2AXCK++twiohfFn4ok=;
-        b=jGhyUWibOpjSKe2ODSHO5mxDtKX83WR0pVDzDPJBxJFnloV8RXuThNTFE0nivo06PA
-         eai8n1R5GylXqmaNqq2V2ZAHk7zuSVMd+Ft2MnS/1aP99Mux69GlnRwLoL43ynjDyV/O
-         GHjcuoKuNHq7BZrEiRYVJlDjo86qAvmkTcpX1KXZ236UpZvFA07Luwk+0gRKumzRik+V
-         a8mTVBhl+9MzbRjOfXW8Ns5vpdE8DJCMcVTCzz1Q+xuPPlkwlDUp81CJgUIlSuiubvHt
-         4TPTs+G76hZsV4e3nykTmHsFJ/zb43VufWEslHcVpbjrbxAmJwuZvdMSi0l9FMVFjz1L
-         YGtg==
-X-Forwarded-Encrypted: i=1; AJvYcCWljibpFCVWANncF1ReD6Rc61LDo8FB+CLwIkDaxSYuLzhZhc8lzPIMdY9wM+Q35/m3qkEA88IXKCdrqcX+Oqccc4Anvlb+ALY3cg==
-X-Gm-Message-State: AOJu0YxUP88OZm0BmzZkI+PiTzpYRmu2xzm5v9PieYWLcJ+m8chfJcEU
-	5yF3JpW8i1Afe14uxS99uIvoB5lZysHXdpr0ASz4WDB1GAE7d9GuhtCiyADo5kUN30zHn41Y61V
-	0
-X-Google-Smtp-Source: AGHT+IFTLfGe41ciSPMo1/bDWDEEVLFstoTAdtO6itfbP24VgzWOsZrQAZIF83/03W0wppJGmWulwg==
-X-Received: by 2002:a05:600c:21d1:b0:418:b9fa:43e9 with SMTP id 5b1f17b1804b1-421089f316emr25318215e9.29.1716573846041;
+        bh=sSfxUpsCurzjN9zrJCHGoSodTDdImTIm6nR1mONwCw4=;
+        b=F9dGF5FVKh4XtOPaRccX2vDcLRbwQ6R9gn65x/59G111grmjHbOwkqXSrLttCGvFpj
+         LLrjJoFL0cdNZ63wZP5tAYxQeW1eYzgW6Zb0eVNW/9jVhvrCBBCIrV4xpa1PVzd3njEV
+         Hl020A9U/s7wIqnCrKO2jgT244x2FU2LjKP47bmOTThGthgVFHVY7LssiJ3esWiXs5bO
+         uAMI4UYN3jfihAbIDx+eKBKOURTfZDRTRCIdS4UzI6A4SmzE2lvA8D4GOZif4nkG7lGU
+         /0tz19lhTSCEMC/Wlg3ysrJRYlYrfm6Y5+3O+JNO88fMrQdBJY/eyuL8yak4kj9prI1R
+         KLYw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1nhH+6UFDlrZE76nVOy+sPeWVBjkRR5gzXXDTQyhueEl9FOiiQmu4iJyifLkp+Av8pxtpQkpxJaPmx+/yUaPRrdprmpSwSvOWjw==
+X-Gm-Message-State: AOJu0YwQSNAvv7DpzV30aYSURrvay1k9WLQp1k1Q4cZk3NrTdS7iAJUm
+	+yJobHj17/4fp3ksqNuah0xvpJP1zafQYGgXWs9LckC91ERFJJcaHWizGTaolyTfJG35PG+TiZX
+	i
+X-Google-Smtp-Source: AGHT+IHOHenXG5qdtvNWf1Su5nXL8hwRdoxvrrFOYjBwcGN6L+65EwNiOUhoIN8RpO+rkZxobBCigw==
+X-Received: by 2002:a05:600c:2111:b0:420:1fab:177f with SMTP id 5b1f17b1804b1-42108a0325bmr22245795e9.30.1716573846976;
         Fri, 24 May 2024 11:04:06 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:75a:e000:986a:afa7:d450:11a9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-420fc82cc41sm58338675e9.0.2024.05.24.11.04.05
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-420fc82cc41sm58338675e9.0.2024.05.24.11.04.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 May 2024 11:04:05 -0700 (PDT)
+        Fri, 24 May 2024 11:04:06 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 24 May 2024 20:03:28 +0200
-Subject: [PATCH libgpiod 2/4] tools: tests: use $@ instead of $*
+Date: Fri, 24 May 2024 20:03:29 +0200
+Subject: [PATCH libgpiod 3/4] tools: tests: remove unneeded ';' in while
+ loops
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,7 +80,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240524-fix-bash-tests-v1-2-1397c73073a6@linaro.org>
+Message-Id: <20240524-fix-bash-tests-v1-3-1397c73073a6@linaro.org>
 References: <20240524-fix-bash-tests-v1-0-1397c73073a6@linaro.org>
 In-Reply-To: <20240524-fix-bash-tests-v1-0-1397c73073a6@linaro.org>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
@@ -88,80 +89,57 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
  linux-gpio@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1516;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=952;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=9WdA7ekccTVMGnQL93blEJQyMBbkAK5+koJN9uuCxLY=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmUNaTOmb8vEsRDPVwVkTS93xP+zQTs7tGDkwfG
- HwMTHSMFUaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlDWkwAKCRARpy6gFHHX
- crMwEACGxSJdtIg9B02kd506pZcR2XyJalRCDOTiHBOzySGh5Qo8pHMq68flai8wDCMb2TENY6I
- YKK2Tig81Q0/+KBwTITuVN4V3Y23r91qXL5xVxURA57F7YcRoh6cgt5OslUlZORm7dzO1AipiaJ
- 7KCSmXqrJTMqMlU4ZfKlNsjsINiGc7MxbTxxj+x+mBMwIbNv6kvIBs3xEe6ar66+XHJBqZtl6D3
- 0mPSgdvmpWrjvP8OynV7h/CZGw3o7ymMWqr38wGT6KHODXhkPhvlf6RA4K8ZrSuDgKsmUn11PO+
- hNkYkb/j4kk9MX/B8ef/B9nHXth+G6ZcLiXt7CtKOs0KTLXdUraIyIK9ZkRIoO2UAGkBBUaOP/b
- LxP1HanpwuTADVYyRmHnEC17pbQSsKFhi3ZH4qlX24n4s1ynkLjxH5XIUiyxahNyAwaLNjJBYMI
- 71QweIxT4cLAn5Dp/itOcp3RGFTXWaa/pYRoG2UKD73Ak7W9uZZMH9FyxNrmQ1KT7piZ6NcTL0X
- pbJVPhhpv63ALpdhpjQZSYIJD4sqRRQueclrUqh6BrIPQVHwbf7i5gGDFLGmGTtg1cnSPAenPuj
- pWrPrju/4RmaH0HZhzKEBSHW+NeGFJHteL5eJ2yXEPyws+w27jUO6HluJi0D2LqwiriArADsnaI
- Zv6W5N4i9HqRh0A==
+ bh=zGsTLldY8HX3ZiEv4OGR4VINX6+NtXF2XY9jTg7Ha8Y=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmUNaTbpdROYuWntBCA944J1fh2W9gy+2BZl38+
+ 5mbnIcZxweJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlDWkwAKCRARpy6gFHHX
+ crDnD/47+T6uMSVvaWTW21HoT7p7e4tYbsINiTSATReu4yCQsmueN7+ZSwgCU005Cp+Rhcnr298
+ bAKPWNbjycIli76mQsnkxfreugD/MyZkaAsQ7hWn0Mj0pEgS7SYJ2VJUheqYub2kVxFl8l0XYy7
+ 7uWUspQJ4fHjxsgbZmoyk+MKux8P+E0xQ29FZlLhxTtGemzU38iFs7W/6dzjTI/dV2HkYFKF7iq
+ uQQsVzzGLmF7LzVKedHZDxyol4AfTOuRnaIg9h0keWVe52Q9+hVsFVOi6WnLXEL//DjnRNXE8ZZ
+ bzgjqAvjbelBeHHOdG60oRkJhOOkUvauZNBBI9rjMdVjePMZe9nHf94CE1OhUYZe85Lr1R9oiJV
+ CAAgo6skRs0V6Xc7bPTZnF5mpF8vNCf9HhAx9IyItYnYBsHcyaKgbSUk4VLNOaAhTFe3agP5X3B
+ YHXXSwlYhSUs29qk8zCfa9UW7jRp0UW75k7j419HD+BFDrXjQu3rbwBzBObMaM6aDutYJG4WwQw
+ Isuetm+k5/9E851m24X7Ui3aN+QWTPOOG5xsBSue2q6Nc0VvaZti2ibSr+Ps6n1yn0oBWACHQTk
+ d2q51G6oQciUNSkM5xlsxaQ+ujf/3iUwqeUUV4ayvKdsbexAb6xo41X5JGaXfBbOW3XlbZ2TY45
+ KCxZBx6HqyKYhJA==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-$@ does not break up quoted arguments which is what we want in all cases
-in the bash test-suite. Use it instead of $*.
+We're already breaking the line between while and do so there's no need
+for the ';' character.
 
 Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- tools/gpio-tools-test.bash | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ tools/gpio-tools-test.bash | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/gpio-tools-test.bash b/tools/gpio-tools-test.bash
-index abb2f5d..8b4f054 100755
+index 8b4f054..efd895d 100755
 --- a/tools/gpio-tools-test.bash
 +++ b/tools/gpio-tools-test.bash
-@@ -27,10 +27,10 @@ GPIOSIM_APP_NAME="gpio-tools-test"
- MIN_KERNEL_VERSION="5.17.4"
- MIN_SHUNIT_VERSION="2.1.8"
- 
--# Run the command in $* and fail the test if the command succeeds.
-+# Run the command in $@ and fail the test if the command succeeds.
- assert_fail() {
--	$* || return 0
--	fail " '$*': command did not fail as expected"
-+	$@ || return 0
-+	fail " '$@': command did not fail as expected"
- }
- 
- # Check if the string in $2 matches against the pattern in $1.
-@@ -71,7 +71,7 @@ gpiosim_chip() {
- 
- 	mkdir -p $BANKPATH
- 
--	for ARG in $*
-+	for ARG in $@
+@@ -211,7 +211,7 @@ dut_read_redirect() {
+ dut_read() {
+ 	local LINE
+ 	lines=()
+-	while read -t 0.2 -u ${COPROC[0]} LINE;
++	while read -t 0.2 -u ${COPROC[0]} LINE
  	do
- 		local KEY=$(echo $ARG | cut -d"=" -f1)
- 		local VAL=$(echo $ARG | cut -d"=" -f2)
-@@ -253,7 +253,7 @@ dut_regex_match() {
- }
- 
- dut_write() {
--	echo $* >&${COPROC[1]}
-+	echo $@ >&${COPROC[1]}
- }
- 
- dut_kill() {
-@@ -283,7 +283,7 @@ tearDown() {
- }
- 
- request_release_line() {
--	$SOURCE_DIR/gpioget -c $* >/dev/null
-+	$SOURCE_DIR/gpioget -c $@ >/dev/null
- }
- 
- #
+ 		if [ -n "$DUT_FIRST_CHAR" ]
+ 		then
+@@ -232,7 +232,7 @@ dut_flush() {
+ 	lines=()
+ 	output=
+ 	unset DUT_FIRST_CHAR
+-	while read -t 0 -u ${COPROC[0]} JUNK;
++	while read -t 0 -u ${COPROC[0]} JUNK
+ 	do
+ 		read -t 0.1 -u ${COPROC[0]} JUNK || true
+ 	done
 
 -- 
 2.43.0
