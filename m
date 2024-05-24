@@ -1,146 +1,180 @@
-Return-Path: <linux-gpio+bounces-6612-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6613-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FD8A8CE956
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2024 20:04:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 897568CE96B
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2024 20:22:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF107281F61
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2024 18:04:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC7891C20410
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2024 18:22:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A1C33BBCB;
-	Fri, 24 May 2024 18:04:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07CF83BBD9;
+	Fri, 24 May 2024 18:22:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="a01tE+DT"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="q5QYtPxr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CA53B78D
-	for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 18:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311C11CAA4
+	for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 18:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716573851; cv=none; b=TJd1EXOxsJRwhC0cViklCPQNEVc1aP9sfkAvM4BMCHDg2vX5WGw352XYanRJUeUuHR9uOiT3nZ4rZ2rxqKy0n0lz9FFlmXOBDuCtsKrTP3NDHMkPtWpKJHs55Tr4IQj08ezkKCnXbAEsUlhbXJ5/rc+m2Ee6+V+HXicW6MFhPrs=
+	t=1716574939; cv=none; b=RMIbDc5X/EPwNOb1IXbABE0uod+whGo1Ftnu+R+FmqIsDPOu8b3ZICkHgAEK1p+nXOL6SQ6xj7EV9dqGwyykbEIEn4TrYvk8u2fhDvvWI5SScv6hOLvqM6Da86QFEOiWQmSn6wYS3ja5HH2Li7g4K2XQmiSCAJQSswviWyo9w4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716573851; c=relaxed/simple;
-	bh=at2qeg7TZrGB+vqR8Tw+7OB/9/hyQe6VN2Q5tm6MxDU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LpFfjrh9WsIYoNo35Tz7paIvbZS+Y/xKST1d1ong0AHywTFSjUJwdOetUyuvE/x9768tIcr2QFyY3d5SqSYD1ELjZKB8qCOsYK3i403iJApOxV9Sed+ddnD91WZ/GeSZw6XRjZ6NuUwIDeMiFixOOn5DO8DaRgjBi+oimrVCEDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=a01tE+DT; arc=none smtp.client-ip=209.85.128.45
+	s=arc-20240116; t=1716574939; c=relaxed/simple;
+	bh=DBEuJllGRMmsGDtn5RfgkcpQH6/0UYcTg3JQe/ltgTg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tuOeegelcY5UCrHN+w4ue+g7OOGbNhGfQJF8etYMZLv+YdIYX9nfURGxGr6aChQF2ikEJKeVKgCCobeFBI07UcJNRgeSnrjcnR3G2f6iKNBYJTLqtKmcJ8t4SdVIeaRxgDHWzCfB1Dwpp6tyuFwfQwvwxi6Otbzg9gqAlxN8EoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=q5QYtPxr; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42102c51524so12355575e9.1
-        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 11:04:09 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5295c65d3fdso1120409e87.0
+        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 11:22:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716573848; x=1717178648; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ENB6cfVwUITPokGq9QFCSbQS03CG8NsMXHiVtHbY30A=;
-        b=a01tE+DT82NvupyrQd67QVV/ZU7SNCRjsDClwweyspbw1oHKUeuSYGKhr91M27Nd9k
-         pkDOnxu4cOgce697JMbJRS9ni2Ad8T7W6Sd2ziF/m83+d5+442TTmaUnkCpNN3UK1yZW
-         KxER0C+ZtS+LfUYbsvyGeZteUi9zCuL6Q40ggNylYTVexp+JTg937R9W4zDTC0N1A5hA
-         NZi/Xy1WrUx4mkTGKoUJWG8sxnu1bojanUUmctNaiMvOApracpY2+I5teR4Pl3GxA5cy
-         ib/OJJ42g6KiKpyVmXHumTHuOcoHk/z5+QsrZMLbYkx2l6EgFzJSpkyvpSHgkGQ30v08
-         G+SQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716574936; x=1717179736; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QJNJ4rhMr+Arz197wwoLuaEKZyBWw20ufNqeneZtnxA=;
+        b=q5QYtPxrq3f0ibCyOEtDQIe/pt++3ib34iWKrt1TdC98+qaAg2PII95rVDyC0iGYlq
+         raw22/4+CLdNvwb0wjeFK7xz2i/HplXv+L+SFzJtY7tLiEhZnK3qV9BP09WsOQrj2Qne
+         kX61PjnLbWrGPrjKQQeYXszw1amk1dRf4Fv6T0DGxuwTjHfH8DDgQsEg8sbfSFJ9+iKY
+         4EM30gHf4ajYorMsPNx0Wq/zmB5BEWRB9UKEEq9BRIcrd4J3jSrDFt0AilHKZw6E2EEL
+         17TuvVWAo4xlk8EhzCfW2g4ytfjxxS3xi/yH5ukDCbgD81gXvyXRooeI0ZRq/ru7wSJf
+         dIVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716573848; x=1717178648;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1716574936; x=1717179736;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ENB6cfVwUITPokGq9QFCSbQS03CG8NsMXHiVtHbY30A=;
-        b=OO/0+AultLfGBF/F01CIRq/Jfw6hVc1v+N8pM2CQmWCFi9AMh+aDmDLGrGxIvMgMyX
-         DF3k21S/Exy+EgWkCZ5Ip4l1Ion1H2yaNLxvnHibl8X8qf+oNfzFZOdIisrmY6fkV8na
-         vXlxqT/lbOZKNIyEGd5AcqA3FS0IgetcbL2e1q0ocfD0lplPkDZrdenQHEOCnm+rqUcA
-         Mm9e2wxzSJREl4vqRvXUFBb+fsrcEIKF7lQ9DqEkw5kC9+EXHHJjRJl4qrQ3z1xKhplG
-         7njL/Wp019Fnwi4p7MWlRd5HcrB5BRAYEd2WbphWwW+zJc+1kPDJtDU1fak2JRr6P9v/
-         H50A==
-X-Forwarded-Encrypted: i=1; AJvYcCUFHoidQ20VDe7BvMUrJJjcpi/tW69oFsuDOTP0/NU0EIGa3dFWBG/Al8NlicbLOmVSWqFjG51StVfgbY5RLoyK1Kof/jzFEmPnRg==
-X-Gm-Message-State: AOJu0YwPved4SaSh+N5HvHrH6SScTdD7KNYbh7SxYdIQQ5yMFlS/5aV4
-	eIfTPj8InEQg0ANOegxJo4G6Zg0AKo5bZpSChwb3zknGD7ZeRUEmM0fyGIxtgifkGnrlFaXIMuz
-	n
-X-Google-Smtp-Source: AGHT+IGz2o+o/oi5p9Uh1utwk4cNoMThONCyJL+gXkNlyeBiyembj0j98jqU9oOJkgU9Mqa/8zbJ2g==
-X-Received: by 2002:a05:600c:3b1c:b0:418:2981:c70f with SMTP id 5b1f17b1804b1-421015fdc48mr51949725e9.19.1716573847748;
-        Fri, 24 May 2024 11:04:07 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:75a:e000:986a:afa7:d450:11a9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-420fc82cc41sm58338675e9.0.2024.05.24.11.04.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 May 2024 11:04:07 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 24 May 2024 20:03:30 +0200
-Subject: [PATCH libgpiod 4/4] tools: tests: remove dependency on grep
+        bh=QJNJ4rhMr+Arz197wwoLuaEKZyBWw20ufNqeneZtnxA=;
+        b=KGVrPhdXntj/wxNwysQC/BlxLJFzhc/zRT3QyzeJYRl8D+EzlX4afI/l1i6grrV2UP
+         R+WhN6QazN0gbqw1qbbVXPzK/srxLW5wKytA2yQw52rZtHkLpLXDml23FPkH4snl8KJ7
+         Ve1WOKcanDe6EFJjNnRuM/shbvJ46KkmUEmo2cBRVbBdv9azrEMj2MIRECwlF5dkWxJr
+         xb6iWTebWmTMJ8GE78OlEJ7UASPv7t2jm5rQxyrbL12qWHyKxbo9Qyd5XkfGNWdtvqtj
+         K6lHKjaVMKWmdhO3WM+Vn2LO4m8Z0IF3YAwgTpWrLH3eFZ7Hpkk9yQwdwr3JhaXckIs6
+         flSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVljnWzL2Jpnp3BRDl2vgH9wRYEMXRs3iiVHwEK6rmKr/METlM6WHujTVkuOiAjhYG0R9i+oADs2j2sD/7ghQPxcMXg+/8q/AILsQ==
+X-Gm-Message-State: AOJu0YzAAZThZ1XYRuITHQPRypI9KHH141Amv9mohGf1ZumFLgw3zcyw
+	TmYsbrgt8aMVae1kgQJpVZRB1UQOd+n0Q4zvZxX/JUzOI0IQuReapr2DmjGbeZbhdndRaiAwVFJ
+	Wy0MsGhoyl71JerpFTmZ8kLmqoBra/7p5lweLAA==
+X-Google-Smtp-Source: AGHT+IHv7qIelG+kwfpU9Kgn7dbnftn6iYOGo2HMF32FM6tRTZjIabXXNwlbWHiimkJf8XqkYavHy5wJhzREphaNNv8=
+X-Received: by 2002:a05:6512:3c86:b0:51d:8ff3:f835 with SMTP id
+ 2adb3069b0e04-52946483da9mr1258530e87.26.1716574936313; Fri, 24 May 2024
+ 11:22:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240524-fix-bash-tests-v1-4-1397c73073a6@linaro.org>
-References: <20240524-fix-bash-tests-v1-0-1397c73073a6@linaro.org>
-In-Reply-To: <20240524-fix-bash-tests-v1-0-1397c73073a6@linaro.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Kent Gibson <warthog618@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- linux-gpio@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1106;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=43A85VroYhG+c0X7e0DEgkIsiai6FryEmOt7U+pPjvo=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmUNaT31Lq2MLlCyQtjJb4Qx++dlQRcegWgoz4b
- aVc9+Tz8aeJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlDWkwAKCRARpy6gFHHX
- cgnVEACjvhct1mN0D+1VNH1ITN6AvWJM73BCV7xStGI/Xh4Av4wl47l04pffv8I/3BFwTGlEdeD
- bGRwSvhhuD5a0+wo2g+xDD/OAwHXWkjdoKJvVUZJ5BeD4usOl/pNPzIiDMrkugb5v5ELBjorq1W
- 9uWU3+5+tQsFAMRY7Lc893fLWzZ/WzPetE+EGX6dNJDwtw66S1tBjv6esFZekopLcGMh5wPlP56
- pMxyNF3jnJb/irv9IIUfZRnLQqUXNOcdj2+6FzJ+5naL+USBgAt0kk3VwTF4BCtWJUQiPMj9RSk
- ZdiFKYK+zkWjLjmYCuhVRDb3TQ3yi2rlAi7UF5w39bjh0vDU93gc+dXfvle7+Po21s6F9tvdD2p
- WeLmOq+VwzTEgjZz0voOLmooVG3kLT2Lk7gGM5RHB5fIMAI9LtSgE+iPhyRaanMZr2KNloYS1y9
- AF5F8aX55Yrw4NnLah6/pGao6/3GM1IWV/V/LJ+SLV8HQXCsRam6Hv3kzVv+vetmtdleqyywcW8
- /ijlR7Rabgl7ruCiAC44AGARjQ1XFAQp7onR7+xLVS4w10hFUzIJvxiDCKM4ZXQ0Dcn5tyIaGCY
- HhKFaiEBmj8mSZfQNZEsKghEysaBooSqteWq8o4Tfe9Dj0MIsiKu43Zgh7YI0hrhOlqZOTNWWRA
- YuEBG8xfkZ7CVbQ==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+References: <20240412122804.109323-1-brgl@bgdev.pl> <20240412122804.109323-7-brgl@bgdev.pl>
+ <Zif8qBoZq7I3Xrbb@smile.fi.intel.com>
+In-Reply-To: <Zif8qBoZq7I3Xrbb@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 24 May 2024 20:22:05 +0200
+Message-ID: <CAMRc=Mdp1_faK8_1GmyJZanMCDpW_503fRFsigg39+XPoV4acQ@mail.gmail.com>
+Subject: Re: [libgpiod][RFC/RFT 06/18] bindings: glib: add examples
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	Erik Schilling <erik.schilling@linaro.org>, Phil Howard <phil@gadgetoid.com>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Apr 23, 2024 at 8:23=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Fri, Apr 12, 2024 at 02:27:52PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Add example programs showcasing the usage of GLib bindings to libgpiod.
+>
+> > +             ret =3D g_gpiod_chip_get_line_offset_from_name(chip, line=
+_name,
+> > +                                                          &offset, &er=
+r);
+> > +             if (ret) {
+> > +                     info =3D g_gpiod_chip_get_info(chip, &err);
+> > +                     if (!info) {
+> > +                             g_printerr("Failed to get chip info: %s\n=
+",
+> > +                                        err->message);
+> > +                             return EXIT_FAILURE;
+> > +                     }
+> > +
+> > +                     g_print("%s %u\n",
+> > +                             g_gpiod_chip_info_get_name(info),
+> > +                             offset);
+> > +
+> > +                     return EXIT_SUCCESS;
+> > +             } else if (!ret && err) {
+>
+> Besides redundant 'else' the !ret is also redundant.
+>
 
-We only use grep in one place where we can use the -regex option of find
-instead. Switch to using find --regex and drop grep entirely from the
-tools test-suite.
+Indeed but isn't it premature nitpicking in the grand scheme of things? :)
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- tools/gpio-tools-test.bash | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> > +                     g_printerr("Failed to map the line name '%s' to o=
+ffset: %s\n",
+> > +                                line_name, err->message);
+> > +                     return EXIT_FAILURE;
+> > +             }
+> > +     }
+>
+> ...
+>
+> > +             direction =3D=3D G_GPIOD_LINE_DIRECTION_INPUT ?
+> > +                                     "input" : "output",
+>
+> One line?
+>
+> ...
+>
+> > +     settings =3D g_gpiod_line_settings_new(
+> > +                     "direction", G_GPIOD_LINE_DIRECTION_INPUT,
+> > +                     NULL);
+>
+> Personally I do not like the open parenthesis style...
+>
+> I don't even know why you have done this way with having a plenty of room=
+ in
+> the previous line at least for the first parameter.
+>
+> ...
+>
+> > +     req_cfg =3D g_gpiod_request_config_new(
+> > +                     "consumer", "get-multiple-line-values", NULL);
+>
+> Ditto. And so on across the code of the entire series...
+>
 
-diff --git a/tools/gpio-tools-test.bash b/tools/gpio-tools-test.bash
-index efd895d..f910282 100755
---- a/tools/gpio-tools-test.bash
-+++ b/tools/gpio-tools-test.bash
-@@ -162,7 +162,7 @@ gpiosim_cleanup() {
- 		ls $BANKPATH/line* > /dev/null 2>&1
- 		if [ "$?" = "0" ]
- 		then
--			for LINE in $(find $BANKPATH/ | grep -E "line[0-9]+$")
-+			for LINE in $(find $BANKPATH/ -regex ".*line[0-9]+$")
- 			do
- 				test -e $LINE/hog && rmdir $LINE/hog
- 				rmdir $LINE
-@@ -3078,7 +3078,6 @@ check_prog() {
- check_prog shunit2
- check_prog modprobe
- check_prog timeout
--check_prog grep
- 
- # Check if we're running a kernel at the required version or later
- check_kernel $MIN_KERNEL_VERSION
+Personal taste.
 
--- 
-2.43.0
+> ...
+>
+> > +     ret =3D g_gpiod_line_request_set_value(data->request, data->line_=
+offset,
+> > +                                          data->value, &err);
+> > +     if (!ret) {
+>
+> ret =3D=3D 0 equals error?!
+>
 
+It returns gboolean where false means error. This is a pattern in GLib.
+
+> > +             g_printerr("failed to set line value: %s\n", err->message=
+);
+> > +             exit(EXIT_FAILURE);
+>
+> Don't you have something like err->code to propagate?
+>
+
+What for? err->message is the human-readable string of the error.
+
+Bart
 
