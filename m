@@ -1,330 +1,129 @@
-Return-Path: <linux-gpio+bounces-6607-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6608-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F68B8CE94E
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2024 19:59:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B8478CE953
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2024 20:04:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E9E1AB21610
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2024 17:59:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A60AE280F23
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 May 2024 18:04:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7259D381CC;
-	Fri, 24 May 2024 17:59:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 738BA3B293;
+	Fri, 24 May 2024 18:04:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dcBBaLTQ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bjRi0ec5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0C63BBC0
-	for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 17:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913C639FD4
+	for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 18:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716573558; cv=none; b=tkNjgX0bbOYfVyoF39kPaL01tiH4onytyRhmVN0sPrbavWsNq/QHzP2LCL85Wp67/mqufNtaUVaXB1OtdVnwDtf4bUoaB577U4PJlnRfX+1ExXAiqTwhuSQh6aCbKSxBO/KzsfKE0pQISlIDDRCaalBxj6hb5sBxhEyN4v6E2hs=
+	t=1716573848; cv=none; b=giU8Sy/VVD667pRtJBM7HoU4Rse6w0F1zs/uYx/EuNQu2l6SeBenbwqMnzqv2PjD6j+gZuoFI7/kR2ILV/f0oRwyLNfe7Q6v3hA8SUJPNjW6M1ES7aup+HdHuEr5LrHfECNu+KeCNhD0rUw63AnzOpWdyM3w6SnMnSX0bLExtpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716573558; c=relaxed/simple;
-	bh=mC9qX95n2SdGish+S2j2BgUFPIX1sxJOm86gBiaa24o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BqU6LzOQNuVVpV0U7ClrHRxCafaokSwVVl4pYszNgmWIhcpZQc0Dctnj/EllhHVURXOhQjeiFIy/905RLOaurzHR4G/KKPVJk6q+JPyAO1XMqIAn2uPs+1ttQBvQIUNlJm4Rf1fZnn8tUAuq0kl8wAQe2ukHLa5ivAUBj+hokog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dcBBaLTQ; arc=none smtp.client-ip=209.85.167.46
+	s=arc-20240116; t=1716573848; c=relaxed/simple;
+	bh=xcPbQWGcaApL9iu6CvvsQmNwa5FSOhvgCq507aC6CSg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=C87r38uqocWnii23k9TneIpFNuwbP88uDGvdJ0oBkTa7oy5zkpbpiQ1S70acp78uG6fbYgqcyh50uqestSgZC0DSONsKwIA5Bqcc7a/L0va02AHQGPf+Jcr4Lot7E2SUnq1a75HvmzslhUk5zC/Rac1+5AJiSYyF6ag3ijLTNFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bjRi0ec5; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52327368e59so10187911e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 10:59:15 -0700 (PDT)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4210aa012e5so6428955e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 24 May 2024 11:04:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716573553; x=1717178353; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qZoiixYITOj1pWsEwm9bNZLxSrSxt+lDFIvyce6XVtA=;
-        b=dcBBaLTQbNeU7dpkeAeGEXJMK/IeFZCEvoOFBdtTSXDxr/hstCI5DWVZG6rybpetdy
-         38xlw4Z1gIYL6CHLhabsqGzbB53XyiAzsnRtjPw24JCTh38r+eHf3xc4h52XnGxfF1LN
-         kKbxs8jVaBHtImknZ0VfNR17PgoRZpGACdHA2FEhP13zBvS8d/7SSxETy8++psUpS47u
-         Pi1POMY0WabGdZ+Ai1Npd6yEmwCldihEAv+Hy1nsWPZiJXPIwbmHZIUNAYhtFGhRcFmf
-         qcjNwMQ0DqJX/rN+7FL32azVnAWqZPtK0oY5PyWi/TmTIIVJ9vgryi3EHZ+QjK0/r/Hz
-         oydQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716573844; x=1717178644; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WaxqONmuOilC4mIC3FFNFOnvTV890+lcMH/n5cSV+c0=;
+        b=bjRi0ec5qDp+ilmof59snkFwwVgIXoN+ZRoK9RESuBl/y0dpxqcXYt0y7R3HjsAvr3
+         53Sj12blA6M1Fc7pO+x/19DXuZlapPVp5NpZsPx16v4Wpd4whGuHdfP8eroRtNGu/nfr
+         38lKy8RWauHE+0r/cWgsEpLDMZJN95K5YyWj6lboQ55CvQWEnyk1AwmlnT2KZ5vDDNp+
+         CipzpAEz7IrHL5uhxYxH0i+Bd3zLekDJ/m8PrUIRk7JDxSwjnZzNZeqvW/9seezBS89S
+         tgfo+tI+rA/WcvgZpT88WD1rn4bul1nhGHGFM1nhBPjoalyjyw5m8EH20ZhYKXQ6hNmt
+         GDuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716573553; x=1717178353;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qZoiixYITOj1pWsEwm9bNZLxSrSxt+lDFIvyce6XVtA=;
-        b=SSj+C7NIpo0CUf5sC8MvdT1nHlZG938JLXBtwsB8jzHGT3+IMWsF4EQ8IUlirv3AXT
-         RI0jL+GrQxMroOrUt0Ry1z5vsiDsjhCzLlbgk+/KgVnWaKDDTJcUXtSiCbxaNZgAoNW+
-         x2QNivB1Z4Y3nfKnjl7vs+1Qswg8HA51kYg44a5pNJFe1/cpZTsz9yrWgVAaVWvB+/F1
-         7qvCvMd1Dnuahyp7Ck+nN/vj33EE1ZID9H6H2BLY/EBo8HvMmAtXGOTtrnjxYcZoZ5oT
-         wYx5/IrhByOEhDoUvqL21pLqJStJE6Q8/aW/gneM1LJ0uLY9QThVXgdNpkBmuwERmSNo
-         z3jw==
-X-Forwarded-Encrypted: i=1; AJvYcCXcV8qLAL45qQ6s6SKfrP9+aUy8VkqH1vKgxrQWJ8F67KCiI1Z65IfqE0rU3b6DJk2iHjKaq/g0fY57fKMbtSgvDqyyRuWbPYIoCQ==
-X-Gm-Message-State: AOJu0YyMJstk/C5jRPBEOwgp5lRtMWBrZ4J/e6Jg/T5MxudhN42qX2NR
-	xqwD8CabYRGGOVsTtkVT/w1nq2ZyrQMmMn0pQK3djNzzgarKrhRNRW+HYwyFWUaNCaZ62eCMg6e
-	qsUtww0yUHAKGOgIFFbsEGtSx8xIttfEEuAPGig==
-X-Google-Smtp-Source: AGHT+IFxlTs2gkd1jqfxHRSTXmwDAMk+i4p2GqAhGEEpGZXbKrwfjAGp9fpEzkugOeILKuxow2UxaBxYcJDw0DkOUco=
-X-Received: by 2002:a05:6512:1152:b0:51b:9254:91e2 with SMTP id
- 2adb3069b0e04-529661f2cf1mr2211722e87.55.1716573553352; Fri, 24 May 2024
- 10:59:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716573844; x=1717178644;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WaxqONmuOilC4mIC3FFNFOnvTV890+lcMH/n5cSV+c0=;
+        b=fJKP384gVlqbM9twdmzIoxbux8VIJ1SAPeKy9XK4ua3gU4BhMJmRnQdYsvlxsIKEVF
+         xZYBBpVfrbSsDylcjr+HlARlNxpkcKPN2zN7LZBD1Gaot9FabXP0A6RJYmoaZB4oYKdH
+         T6FR5b0yJG5IUG+xqGYRJeMPdeQglxRtmFrW6ZLT0E78kM3lfHb5kK1x05gvpbVECkSC
+         F3HRvJ5a3/aqKDCYP8no65WQooYt22EpDWy472/B+/Lcaz+76mGXNeVUUO4XAUsan9Cp
+         TmtHptIRrpGYhBeH2M02b4vgZx1wUmAuq4fYpg8DqKM5VPxfng7YxXpqZhdA+tega69J
+         RoHw==
+X-Forwarded-Encrypted: i=1; AJvYcCU88gNVWnXraeVSwcX7COR8/7/pMsz98riH8LVQHIpG1hJOJ4+nIIS28nwdkNiTuOMObiRlT7CFdeyZpYWRl98FocfRQJuy0bPKlg==
+X-Gm-Message-State: AOJu0YwLOII0a3kEyPY8NFoqqd9TeSTQcbYORceBvnDcX4ZrFroIpOLa
+	W/es7hH8bibdY+z60TcXqqnt0CjZOj6hgAz4KjVrNF7hJoFh7JvdQ7EvUiJkx3h4KxF9uNfvi8d
+	R
+X-Google-Smtp-Source: AGHT+IGcomq6UBxY765+4ngndQO4RbNjQ4MHZ9UOOpbagQud/qPF+eY+L6HqO9VgcXWKkYjovc8Pow==
+X-Received: by 2002:a7b:c2aa:0:b0:41c:1434:f571 with SMTP id 5b1f17b1804b1-42108aba96bmr21688655e9.37.1716573844512;
+        Fri, 24 May 2024 11:04:04 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:75a:e000:986a:afa7:d450:11a9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-420fc82cc41sm58338675e9.0.2024.05.24.11.04.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 May 2024 11:04:04 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH libgpiod 0/4] tools: tests: fix a few issues in bash
+ scripts
+Date: Fri, 24 May 2024 20:03:26 +0200
+Message-Id: <20240524-fix-bash-tests-v1-0-1397c73073a6@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412122804.109323-1-brgl@bgdev.pl> <20240412122804.109323-3-brgl@bgdev.pl>
- <Zif7McOO-1d2coCO@smile.fi.intel.com>
-In-Reply-To: <Zif7McOO-1d2coCO@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 24 May 2024 19:59:01 +0200
-Message-ID: <CAMRc=Me5eeBsYM3zXr21RucEPx4yiw5Uhxu0-Dr8C-qguOSoBQ@mail.gmail.com>
-Subject: Re: [libgpiod][RFC/RFT 02/18] tests: split out the common test code
- for bash scripts
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	Erik Schilling <erik.schilling@linaro.org>, Phil Howard <phil@gadgetoid.com>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG7WUGYC/x2MQQqAMAzAviI9W9DZKfgV8bBpNwuisooI4t8dH
+ gNJHlBOwgp98UDiS1T2LUNdFjAtbouMMmcGUxmqrCEMcqN3uuDJeipasj6YlqjzDeToSJyNfzj
+ AKj4ess8wvu8HcJe3EmoAAAA=
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Kent Gibson <warthog618@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ linux-gpio@vger.kernel.org
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=666;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=xcPbQWGcaApL9iu6CvvsQmNwa5FSOhvgCq507aC6CSg=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmUNaKRa5+GMmdYjQ75wZTwLKZZAP19YgMkLdu6
+ Kvii1T6JzCJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlDWigAKCRARpy6gFHHX
+ cmdUD/sG4c+vHxurNLEiEXM+MSkWXXE23b0oeEyHKXsnc4sFutnzXxQXzCLLBMAnkuzrHVDWCMN
+ C+jQlBcMBpBSMHSL6u9tq3JlALTcexnP8XzfBHFD705i7On5YVYAaOPUwMws3AhUuR06Zrz1hHo
+ XnTWdor0ZrHod1wylbEG90Vi1pDaGOyX/u7jFbjcfdY98eLzy8819iBiDBjcmrqusckqt3qDqYB
+ oZEP7E1jfBuxZEaxeEnNlE6Fv2Q+LqTAQPHTD3TuifkYBYXZaA/y8qxiq/Dd3V7nybfA1udfMdq
+ pswQkjjbHGox4H5qmrox27OD0JT+PbY4tP1JpwA/AiAPvaCLf9+kQV+omWVuPP7g2WC4jaXfTu6
+ MsKXH5y7vYW/zfh/oE89YR8iNhyX4gxexfVAfp6kYFcVF32KzCpsbVZNDoOS+Pl6MImLlvSK3jH
+ +q88sZatjB3Mzqq+Pr5pe3wBASHC82H78j8VnsC0mGCTTxdpZR1R9MIhw2JyJDM4Gc0pwwcNVUN
+ vZgQ8W89GNRhiAs1BKXnI9QTGYVd7b4Lad4/0dD34f9lBywHet7n86kiXg+hMzAG+D8s+dLTIXy
+ ADcUNvwRtBlx7jBwHoSpwuCN9FAxY2HyTE1IfbwS4CN4YMlfofMpWVm1ZyfR1mGi0z2t+EE5FUH
+ 9+jQQDGfa9e2JIA==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Tue, Apr 23, 2024 at 8:17=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Apr 12, 2024 at 02:27:48PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > In order to allow the upcoming DBus command-line client tests to reuse =
-the
-> > existing bash test harness, let's put the common code into an importabl=
-e
-> > file and rename run_tool to run_prog to reflect that it now can run any
-> > program.
->
-> >  tests/bash/Makefile.am                |   4 +
-> >  tests/bash/gpiod-bash-test-helper.inc | 328 +++++++++++++++
->
-> Is the 'bash' a new folder name?
->
-> If so, it might be problematic for make as it may recognize it as a bash
-> command. I would rather name it 'scripts' or 'shell' or alike.
->
+Fix a few issues with tools tests reported by Andy.
 
-Good point, 'scripts' works fine.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (4):
+      tools: tests: use tabs for indentation consistently
+      tools: tests: use $@ instead of $*
+      tools: tests: remove unneeded ';' in while loops
+      tools: tests: remove dependency on grep
 
-For the rest: it's out of scope for this series - you reviewed code
-that has existed for a while - and needs to be addressed separately.
+ tools/gpio-tools-test.bash | 33 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
+---
+base-commit: 27fe10150f6d5fa78d1a1ef1e922dc8395d1154d
+change-id: 20240524-fix-bash-tests-545bf26447b3
 
-> ...
->
-> > +++ b/tests/bash/gpiod-bash-test-helper.inc
->
-> And why not a simple shell? Do you use bashisms?
->
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Yes, quite a lot actually.
-
-> ...
->
-> > +# Run the command in $* and fail the test if the command succeeds.
->
-> "$*" in most cases is simply wrong. "$@" is better.
->
-> https://unix.stackexchange.com/questions/294052/how-to-properly-pass-set-=
-of-parameters-with-spaces-into-shell-function
->
-
-I'll change this.
-
-> ...
->
-> > +num_lines_is() {
-> > +     [ "$1" -eq "0" ] || [ -z "$output" ] && return 0
->
-> -o inside [] will do better than ||
->
-> > +     local NUM_LINES=3D$(echo "$output" | wc -l)
-> > +     assertEquals " number of lines:" "$1" "$NUM_LINES"
-> > +}
->
-> ...
->
-> > +     for ARG in $*
->
-> This may be wrong.
->
-> > +     do
->
-> > +     done
->
-> ...
->
-> > +gpiosim_chip_symlink_cleanup() {
-> > +     if [ -n "$GPIOSIM_CHIP_LINK" ]
-> > +     then
-> > +             rm "$GPIOSIM_CHIP_LINK"
-> > +     fi
->
-> If you use already || or && you may continue doing that, this will be one=
- liner
-> with it.
->
->         [ -n "$GPIOSIM_CHIP_LINK" ] && rm "$GPIOSIM_CHIP_LINK"
->
-> > +     unset GPIOSIM_CHIP_LINK
-> > +}
->
-> ...
->
-> > +     for i in {1..30}; do
->
-> $(seq 1 30) or IIRC $(seq 30)
->
-> Less bashisms are better.
->
-
-Disagree. We know we'll keep on using bash here in tests. No issue
-with using it here.
-
-> > +             [ "$(<$PORT)" =3D "$EXPECTED" ] && return
-> > +             sleep 0.01
-> > +     done
->
-> ...
->
-> > +             if [ "$?" =3D "0" ]
-> > +             then
-> > +                     for LINE in $(find $BANKPATH/ | grep -E "line[0-9=
-]+$")
->
-> What's the point in -E ?
->
-> Yet another `Useless use of grep`.
->
-
-Right, we only use grep in one place. I think we used to depend on it
-more in the past. I'll drop it.
-
-> IIRC how `find` works. You may filter names there (and with regex IIRC ag=
-ain).
->
-> > +                     do
-> > +                             test -e $LINE/hog && rmdir $LINE/hog
->
-> Why not [ -e ... ] && ?
->
-> > +                             rmdir $LINE
-> > +                     done
-> > +             fi
->
-> ...
->
-> > +dut_read_redirect() {
-> > +     output=3D$(<$SHUNIT_TMPDIR/$DUT_OUTPUT)
-> > +        local ORIG_IFS=3D"$IFS"
-> > +        IFS=3D$'\n' lines=3D($output)
-> > +        IFS=3D"$ORIG_IFS"
->
-> TABs vs. spaces indentation issues?
->
-
-Indeed and not only here.
-
-> > +}
->
-> ...
->
-> > +dut_read() {
-> > +     local LINE
-> > +     lines=3D()
-> > +     while read -t 0.2 -u ${COPROC[0]} LINE;
->
-> What is ; for as you are using three-lines form?
->
-> > +     do
-> > +             if [ -n "$DUT_FIRST_CHAR" ]
-> > +             then
-> > +                     LINE=3D${DUT_FIRST_CHAR}${LINE}
-> > +                     unset DUT_FIRST_CHAR
-> > +             fi
-> > +             lines+=3D("$LINE")
->
-> Don't remember the syntax, but something like this
->
-> lines=3D$((LINE + $lines))
->
-> is better than bashisms.
->
-> > +     done
-> > +     output=3D"${lines[@]}"
-> > +}
->
-> ...
->
-> > +     read -t 0.2 -u ${COPROC[0]} LINE || (echo Timeout && false)
->
-> Wouldn't () fork a shell?
-> (The () vs. {} discussion, don't remember by heart though.)
->
-> ...
->
-> > +dut_write() {
-> > +     echo $* >&${COPROC[1]}
->
-> Oh.
->
-> > +}
->
-> ...
->
-> > +# Must be done after we sources shunit2 as we need SHUNIT_VERSION to b=
-e set.
-> > +oneTimeSetUp() {
-> > +     test "$SHUNIT_VERSION" =3D "$MIN_SHUNIT_VERSION" && return 0
-> > +     local FIRST=3D$(printf "$SHUNIT_VERSION\n$MIN_SHUNIT_VERSION\n" |=
- sort -Vr | head -1)
->
-> I believe you can do it with a simple test rather than involving sort and=
- head
-> and printf. And test most likely will be builtin.
->
-> > +     test "$FIRST" =3D "$MIN_SHUNIT_VERSION" && \
-> > +             die "minimum shunit version required is $MIN_SHUNIT_VERSI=
-ON (current version is $SHUNIT_VERSION"
-> > +}
->
-> ...
->
-> > +     SORTED=3D$(printf "$REQUIRED\n$CURRENT" | sort -V | head -n 1)
->
-> Ditto.
->
-> > +     if [ "$SORTED" !=3D "$REQUIRED" ]
->
-> Dup? Seems to me you can run a single test to get the answer.
->
-> > +     then
-> > +             die "linux kernel version must be at least: v$REQUIRED - =
-got: v$CURRENT"
->
-> Linux
->
-> > +     fi
->
-> ...
->
-> Okay, it seems you moved existing code... That code needs more love towar=
-ds
-> becoming a nicely formatted shell.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
-
-I will send a series addressing some of the issues. Others I choose to
-ignore for now as they are a matter of personal taste and Kent is the
-author of most of the bash code here.
-
-Bart
 
