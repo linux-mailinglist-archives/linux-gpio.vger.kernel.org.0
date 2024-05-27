@@ -1,80 +1,84 @@
-Return-Path: <linux-gpio+bounces-6642-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6643-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 843958CFF66
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 13:54:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12B458CFF69
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 13:55:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B19C51C21387
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 11:54:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C2CC328545D
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 11:55:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63DD015DBA8;
-	Mon, 27 May 2024 11:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F23415E5C9;
+	Mon, 27 May 2024 11:54:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frMP3jSg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KG64d+DC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA07813AA31;
-	Mon, 27 May 2024 11:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8899313AA31;
+	Mon, 27 May 2024 11:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716810880; cv=none; b=RzX+N5Dh5Ep9WTAys1pKX4VwwBv9j+m7Hpip1mOBN7GCti6oxqKqwcA6uHNsRHPHtLukR3O+If8LvyXZSJRgKp3FUB1MbP96L21TDCvDWNy9MtxdRnN/6h4Q4sR93JeoV4PpW1X3G5nZvoIluEfNqrK6MJHo5QWJtHWgjDfKSEo=
+	t=1716810884; cv=none; b=MR09q4QFHeXdQWtm5OQsaNMK/nwW+/sV6iIwRMGWqFFE2Ulfe7mp0gugBnhPLV2F96Qn7Ta2MxQIvhf6DZXgq++NpAqvf6J9heSBEIsJ8FPs0YAUMnxAwzrMDeJAndIyzbDg17Vqz+4pus5GiqJc9Y4OfqgIRBwSfpajRCpAD4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716810880; c=relaxed/simple;
-	bh=Ep8t7vPeAwXRzCTeTUUWkx1TqvppgijvQkJ80jbST/g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z0xm30ZVCUojCbxLh/JO+KkBbRxXykrGEfUJWUuTIOdbCQWigqPMRK1Hz44ieFgiw6OKMD3MXFzdN5Qf7+AzdsZNrie9+p/ny/Yt5KYn+u98Ou0Z56QMJxX6CzDkyIKzpG6lUuX9GezahifTPKm235r+HKyLSUFp7nZKUxAkbJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=frMP3jSg; arc=none smtp.client-ip=209.85.210.176
+	s=arc-20240116; t=1716810884; c=relaxed/simple;
+	bh=UeKu1anSSx/heAnksOb9OY/e1ocsm3apk+xTukJJzeY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iqvQ6FDTUlqeXCXao/uVT02gg15eHsBycI0Pw/UJJz5D/Qc0s+OsswRYE7vzH+34VtZcFTCY+/4DE5y4+y4xopHlmv0laq/NmNInGShpN/+tO0DPScRyl3iJqPZC9qAizHAgeA2I4Z+DycsU32piPT6bbQ5FjmZVOeQ99PKwT0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KG64d+DC; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f850ff30c0so3305593b3a.0;
-        Mon, 27 May 2024 04:54:38 -0700 (PDT)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f8ec7e054dso1964658b3a.2;
+        Mon, 27 May 2024 04:54:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716810878; x=1717415678; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3u9+Rm0QSuOetnYvXN2dLgl+DFtTpVtk+t4PrA9bwrY=;
-        b=frMP3jSgE2E7gzEuQBlzhjMGCXHfginjVlZHX7AWYgYZGVkR6exzLNQPa6fEjgLZKt
-         0o5yL7ls0uwd+6XAnTbz/r3F97cqcZkVGATJAe90tuAR6MtBGJtm/3l8geHkAnaW4FDm
-         LvFzsbTPqfra1rWuJthYSwdOW8UYhn0iJ29vh8CYFJLhTLwlu6bS5g1r4Uo5JdvyVgIn
-         Nm3H8p1VjTADjv+pO9XPUEcUGwMCVcmP9l1Y7KcSQIqORuOdAzCbEuD1GOguKcT7o+9U
-         3dK/1jKs//jpOqZmhqnD5+EAnWRJnrNUCm8ku3/8gtgygSQjpGtsSU+GUfKosipr+c7b
-         RFkg==
+        d=gmail.com; s=20230601; t=1716810883; x=1717415683; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4jYNZGuufvcnAd1nYnzFJWOOAgslXCStrEQYQHkxTy0=;
+        b=KG64d+DCxca9U6AdJWl9146yeeIsvLTJnahgEQY2G04c3Y7QmZ8WDGEPqJOFylDS+S
+         9ucQYJJ8CMWutZeiqw0Ni1g6y3a0dDxoZ3n9hsPq+iIE7fDPZQKCcgA/u2axdqP6oXcJ
+         neyVlDoHFfS5iVhqo+TPql5RgQaWaiP9E8TQeH24i74gxhyx9cujspLdS9vxvQOjO2fK
+         cAUNIbygRzHsdOGCC3ctemlxfzRgEdwCpzcqnxzL9C2k7NAwgIHt8s5stI3rPa+HF182
+         0yWYtCqCWDJZVGw9lfkXu+Koe/cOlfoGsRHbH+6n0CBVt8C+IfbgjNjsifG6KHE8l1+8
+         H7Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716810878; x=1717415678;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3u9+Rm0QSuOetnYvXN2dLgl+DFtTpVtk+t4PrA9bwrY=;
-        b=oYcZq1ygbrXcH6/GAy6EwaruA6EfNdy77WsX6whHzCDOUIo9HZZlDXUUhyv3aiQQh5
-         PgWMTQVGmqm8uCkGSLYDJ/g40wHlMsYf2u4jrpNmb0WY9j/LxrDnYJ0MJULzlh/f+GKD
-         fevoMQFgioqYNnOduLEBTMkocyalRVI7PtW5I5Nk0b8Q+/Z+x7kSDp+3eGrIahOewKmE
-         QtzZ1bE4p/E5J+x7NBv2UCmjItGhNJ43aMW/fqUtQwdYcNTEGcQdlD2hrWA6jByfkGaG
-         LmvpAdYCdxRKJxd/ZKuosYGDMEvebnJlOpSmvJj2DOz9RjqWHHo6sH4iUKrJWFX3tYw7
-         POZw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNDF3bNMyf/PmZi7kXGBE1crxcF4OhRYy7rsiYnKisdGr/i0djEG40l9TwvLLz+wJx1LzNS6JZlV/o9anwcvezcoflCXsvPC/baA==
-X-Gm-Message-State: AOJu0YzEghssDRigL92/m+kA/LXAsF/soGq6yGIo/nhEsR16hdN6p326
-	r9+6Ci3ifwluYc/xW4v+/x5QdR/SiEEYR+vG5inGvgrASQGqoXuAySXx/A==
-X-Google-Smtp-Source: AGHT+IGpl826vUP9xVNgNYcO5JNWPvOROP0I4Yi3KEgU7Ysr+t0wAmz891RTRbB0AYbb/CbT1QKMSw==
-X-Received: by 2002:a05:6a00:2911:b0:6f3:854c:dee0 with SMTP id d2e1a72fcca58-6f8f3e843ecmr10371888b3a.21.1716810877830;
-        Mon, 27 May 2024 04:54:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716810883; x=1717415683;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4jYNZGuufvcnAd1nYnzFJWOOAgslXCStrEQYQHkxTy0=;
+        b=B59Zr1SVtP9jKlmRls+rO0/R9LPViqlV289VsyaaRo9hBnYGpYiF2hMBLGnf0zAm0M
+         j9ShPVbx0KYtliDtHx248Ari11oNcH8F1g/UrEdjYlfznyKAdZKzQOyIHkbtPXsFagAq
+         s3GiFZwgkwh9HS8DEE2HooZMEviWZV8hPlBnt4vxonkGzb+D6T9/CZQ6omolyHFHSFQP
+         IhfIw7HSiHB8Q/b6GPgOfwLzLHWOjFWgNTJWHxNcDA0CY6X/XGKeP9AkDkwywCf6Wk7m
+         D2C/ODz9c/IJ7gflJBAlOBlrdYDpq2ksKdKFpuRh/Gd99XSRE4nmSrfymLjOkhdRTcye
+         5tAg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxLu3BlTSlXMj68ZxHX9TszKNGBcbX3O0dX344n/KOHzODBOX81qy7RxN+ROqHdPdc6k3Ea45TeNXvFfZbeCTh6BvtJsCIIGCvGA==
+X-Gm-Message-State: AOJu0Yz7jvnjNlFkObU6tMGVJHxUiyljF6r3ln12gcDu68VMxl8UYkFK
+	aU4WIK8Xjkn7+Hgsnp1X38iP2BsVOhIM1kKdXeJXAUXYeQ5RPvIGDy52EA==
+X-Google-Smtp-Source: AGHT+IFA14Kq8CMO1mVJAzbZbOFEgQFNvES93H+6KUiHExk9/vPw6dyfDPxBDNlv2Mgs4WrQgzyv9A==
+X-Received: by 2002:a05:6a00:27a9:b0:6ed:d8d2:5040 with SMTP id d2e1a72fcca58-6f8f3b38a8emr13144173b3a.21.1716810882608;
+        Mon, 27 May 2024 04:54:42 -0700 (PDT)
 Received: from rigel.home.arpa (60-241-107-82.static.tpgi.com.au. [60.241.107.82])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fcbea8a9sm4749256b3a.139.2024.05.27.04.54.35
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fcbea8a9sm4749256b3a.139.2024.05.27.04.54.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 04:54:37 -0700 (PDT)
+        Mon, 27 May 2024 04:54:42 -0700 (PDT)
 From: Kent Gibson <warthog618@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	brgl@bgdev.pl,
 	linus.walleij@linaro.org
 Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 0/3] gpiolib: cdev: tidy up kfifo handling
-Date: Mon, 27 May 2024 19:54:16 +0800
-Message-Id: <20240527115419.92606-1-warthog618@gmail.com>
+Subject: [PATCH 1/3] gpiolib: cdev: Add INIT_KFIFO() for linereq events
+Date: Mon, 27 May 2024 19:54:17 +0800
+Message-Id: <20240527115419.92606-2-warthog618@gmail.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240527115419.92606-1-warthog618@gmail.com>
+References: <20240527115419.92606-1-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,38 +87,37 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series is a follow up to my recent kfifo initialisation fix[1].
+The initialisation of the linereq events kfifo relies on the struct being
+zeroed and a subsequent call to kfifo_alloc().  The call to kfifo_alloc()
+is deferred until edge detection is first enabled for the linereq.  If the
+kfifo is inadvertently accessed before the call to kfifo_alloc(), as was
+the case in a recently discovered bug, it behaves as a FIFO of size 1 with
+an element size of 0, so writes and reads to the kfifo appear successful
+but copy no actual data.
 
-Patch 1 adds calling INIT_KFIFO() on the event kfifo in order to induce
-an oops if the kfifo is accessed prior to being allocated.  Not calling
-INIT_KFIFO() could be considered an abuse of the kfifo API. I don't
-recall, but it is possible that it was not being called as we also make
-use of kfifo_initialized(), and the assumption was that it would return
-true after the INIT_KFIFO() call. In fact it only returns true once
-the kfifo has been allocated.
+As a defensive measure, initialise the kfifo with INIT_KFIFO() when the
+events kfifo is constructed.  This initialises the kfifo element size
+and zeroes its data pointer, so any inadvertant access prior to the
+kfifo_alloc() call will trigger an oops.
 
-Patch 2 adds a helper to perform the allocation of the kfifo to reduce
-code duplication.
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ drivers/gpio/gpiolib-cdev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Patch 3 tidies up the handling of kfifo_out() errors, making them
-visible where they may currently be obscured.  These errors are not
-expected to ever happen, so this should not produce any visible
-difference, but if they do occur it will now be more obvious.
-
-Cheers,
-Kent.
-
-[1] https://lore.kernel.org/linux-gpio/20240510065342.36191-1-warthog618@gmail.com/
-
-Kent Gibson (3):
-  gpiolib: cdev: Add INIT_KFIFO() for linereq events
-  gpiolib: cdev: Refactor allocation of linereq events kfifo
-  gpiolib: cdev: Cleanup kfifo_out() error handling
-
- drivers/gpio/gpiolib-cdev.c | 74 ++++++++++++++++++-------------------
- 1 file changed, 35 insertions(+), 39 deletions(-)
-
---
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 9dad67ea2597..d4e47960cc98 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -1774,6 +1774,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+ 
+ 	mutex_init(&lr->config_mutex);
+ 	init_waitqueue_head(&lr->wait);
++	INIT_KFIFO(lr->events);
+ 	lr->event_buffer_size = ulr.event_buffer_size;
+ 	if (lr->event_buffer_size == 0)
+ 		lr->event_buffer_size = ulr.num_lines * 16;
+-- 
 2.39.2
 
 
