@@ -1,134 +1,133 @@
-Return-Path: <linux-gpio+bounces-6688-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6689-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B66068D0E5F
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 21:46:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3799B8D0E63
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 21:51:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA1681C210A7
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 19:46:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 626A41C21A0D
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 19:51:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DE321F93E;
-	Mon, 27 May 2024 19:46:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C1132556F;
+	Mon, 27 May 2024 19:51:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ufyk4Ag1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LlJ4V0HW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792E617C60
-	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 19:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF3022324
+	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 19:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716839181; cv=none; b=hz0xd5HKkJKu8m5V5NmDwGKwXTSwaq0iBAbhcnOBI7CUmYzHf74yxo+7wG9Yku8afV6zZh7OC4Cs28QvCknUspGN+GgV1CEdTH63n3RTviybbwvbAlhQm3lnSvMjvGWBZ09rRZYg2tOJ42NFGymPEkQPiloQ7CKuaxEsjZi888A=
+	t=1716839480; cv=none; b=B7QucbzFSOEMKw/lpJiHmLVjZMkYpl7jZC5o6Z+VNTEpoMo2adPryAYBjaI3KrY2C6RgplABuP7mpP9TatpZ3esulKkzMI8VLLC4chQoRNnbFg/vTScCc/BKVigESm+nCtPAINvXcOw74QBNIFXitzwLwAbI5dhnV+huaxGCWlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716839181; c=relaxed/simple;
-	bh=rRqysAQWeM6jhpqHiLqjcOu4gGLwxsR8yzfqPRbmEyY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rPGSVUG6vYmWcQiPJLx4aQoA+vJQKsO4uIMCvo74w/P8TuAaVeY+G2saAGf0CPKuUvFy8ZJ19ZkGhUCUmWe8vZh2ebH5kBfYa+j/LkFkK7E0wPPx/OY6A1POYZQ4KHMaou1irp1V8MnA3XqWsIKnTUAkJhXFAsjHTrKlYPgcB1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ufyk4Ag1; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4211245e889so419555e9.2
-        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 12:46:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716839178; x=1717443978; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rTl6IrIa+G4LMhRu5xAux6Zx02fHfcpRAhnP/gxP1yQ=;
-        b=Ufyk4Ag1O63Z0Rpll458NoxMHL7PcmsdnMql7Uw1ystnyo5GP1cKKuyZD/UNbLV4ff
-         YUnqDcu7jIhmmx7n/VVNCgSnwBUmylsHNm36kNuqR+rv634o2S4dTVKG72R9jcYJeVf3
-         cAVXsqjY8/SgYLlqmeNZ/72RZmrKioDKy0Jw8CCQ66Oxg4TH8MVAlHrfgi4R8tRMEBYp
-         cUKJua+AupRDKoDohzf7e0ovNGwC+YHKUkZTH23x2BhKtyXKr9xzMgjAx+Zs2E/nQmZg
-         kT6aIB/UQwDJS6unOmn6AzPdwJ93hdoQmAgz/5MG9PZhH3EOGzzlGDmO/3GFoaVXcz2u
-         /mcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716839178; x=1717443978;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rTl6IrIa+G4LMhRu5xAux6Zx02fHfcpRAhnP/gxP1yQ=;
-        b=COCtOKF2MMCInTbvc7j0AnvPmbyIvKg5p9pXVbdoub/c7wF073WspS4zsS2Dfm+Wt7
-         U4/m0lReNFlXqIIgyiDZsO8JOldhywosX0aGSRg62vuZdmSjrUatKtHIXM/xtKLNAFUG
-         4WPchRwtnzcR/MJOHgYg4sjylUPLGHlIrdN1JzAN3rnF3EbSMhMsnshEAGLxTy0rD7sI
-         Zv63oIk4hRFSoDVfxWQbWz9qYYmErFXrKj++dd+1KtpxXW9T3XF3dxZIQV9doShO4NTu
-         7R5MlxS4BxeeIFqDWhrkP/BbsbhIoX+1YyP3rAWHvfh1xznREWhXBnUgeHFe0MwjNONn
-         huSg==
-X-Gm-Message-State: AOJu0YwdHrupuRW3qxrZtcIwM+ozbmuVom1Eix4uXmPg274aR8/nB5ZO
-	C2eng1BkzU0jm5tUeBpKR2uKNEjA0uDX1aIsol4mIDnt64HH5N/vZawztL4BRpq8XCh0OgneFn9
-	3
-X-Google-Smtp-Source: AGHT+IGsC38qG7dqVJxXKZvWjhjWY02r40PAijRszttq6aSYh9bw3ao3UA8deJctkniQVJNnIzRl3A==
-X-Received: by 2002:a1c:7717:0:b0:420:2df0:1a9b with SMTP id 5b1f17b1804b1-421089ffaf2mr79420285e9.18.1716839177236;
-        Mon, 27 May 2024 12:46:17 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:c322:131e:ff9d:ef41])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100f5299dsm146868935e9.20.2024.05.27.12.46.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 12:46:16 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1716839480; c=relaxed/simple;
+	bh=gjI0fUmyL++ztkU3RT0DG6sSqd55wePs8GlTawqTNH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cTb1aysa85cgb9h7kSDTERdH4wyxlMHft7+GPU9E2K+XQ77vct3wmTXrw3gdG6I/IcVhP+ElcIGnuQYjRp5oqxQ2eVc1c0nBj73MtVhtaUOjcbq9brkzK7ei75A2EA633vms4D8YsAw3YCyqx5Np7qHfQatVMj27NQ7hNylYTlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LlJ4V0HW; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716839477; x=1748375477;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=gjI0fUmyL++ztkU3RT0DG6sSqd55wePs8GlTawqTNH8=;
+  b=LlJ4V0HWWEHCizKTgDfISY/feIVIZgsCBk+gYuSQxdsoJFHLz8Qr6vvB
+   VfiE6tzEqtc3rmK3qoi+LFi2YIhgErk/qq73hlc+ftyK5oaN9PCyZZMhf
+   Xd8W/RVLOOQHxJZckxeBUxZthd9m9LTFYjXvxmxuIWjMYUzSPT6xeNUQg
+   NcKeo/EKW3oc0ReRmULjklrft5DO0BtHRv9E3eby/fyicNCyiurdzVpGf
+   MfBx9b4P2nbkNplZMtpN6qPaAGFWxJM1v6iGiK8PZpyTV/BA4XNbcPU7l
+   1KMZMA6a6NmYpGxaoyVR46YNYZOZwI6g21k28/Fn+OCGK6WRBoUD93xKD
+   w==;
+X-CSE-ConnectionGUID: OHKXXTwTRN2d6o6CthXNvQ==
+X-CSE-MsgGUID: AyFlXKpuR6yi/OyLM3x5JA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="23833931"
+X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
+   d="scan'208";a="23833931"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 12:51:17 -0700
+X-CSE-ConnectionGUID: t4/htuC/T4aCyCIz0F2Vdw==
+X-CSE-MsgGUID: jK71MdYyR/e75Zq/1ThO4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
+   d="scan'208";a="34923504"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 12:51:16 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1sBgNE-0000000BMEU-469s;
+	Mon, 27 May 2024 22:51:12 +0300
+Date: Mon, 27 May 2024 22:51:12 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Erik Schilling <erik.schilling@linaro.org>,
+	Phil Howard <phil@gadgetoid.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>, linux-gpio@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpiolib: make gpiochip_set_desc_names() return void
-Date: Mon, 27 May 2024 21:46:13 +0200
-Message-ID: <20240527194613.197810-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
+Subject: Re: [libgpiod][RFC/RFT 06/18] bindings: glib: add examples
+Message-ID: <ZlTkMNQ5OGyAgf8A@smile.fi.intel.com>
+References: <20240412122804.109323-1-brgl@bgdev.pl>
+ <20240412122804.109323-7-brgl@bgdev.pl>
+ <Zif8qBoZq7I3Xrbb@smile.fi.intel.com>
+ <CAMRc=Mdp1_faK8_1GmyJZanMCDpW_503fRFsigg39+XPoV4acQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mdp1_faK8_1GmyJZanMCDpW_503fRFsigg39+XPoV4acQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, May 24, 2024 at 08:22:05PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Apr 23, 2024 at 8:23 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Fri, Apr 12, 2024 at 02:27:52PM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-gpiochip_set_desc_names() cannot fail so drop its return value.
+...
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+> > > +     ret = g_gpiod_line_request_set_value(data->request, data->line_offset,
+> > > +                                          data->value, &err);
+> > > +     if (!ret) {
+> >
+> > ret == 0 equals error?!
+> 
+> It returns gboolean where false means error. This is a pattern in GLib.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index fa62367ee929..07e36e15f71f 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -485,7 +485,7 @@ static struct gpio_desc *gpio_name_to_desc(const char * const name)
-  *   1. Non-unique names are still accepted,
-  *   2. Name collisions within the same GPIO chip are not reported.
-  */
--static int gpiochip_set_desc_names(struct gpio_chip *gc)
-+static void gpiochip_set_desc_names(struct gpio_chip *gc)
- {
- 	struct gpio_device *gdev = gc->gpiodev;
- 	int i;
-@@ -504,8 +504,6 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
- 	/* Then add all names to the GPIO descriptors */
- 	for (i = 0; i != gc->ngpio; ++i)
- 		gdev->descs[i].name = gc->names[i];
--
--	return 0;
- }
- 
- /*
-@@ -999,11 +997,9 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	INIT_LIST_HEAD(&gdev->pin_ranges);
- #endif
- 
--	if (gc->names) {
--		ret = gpiochip_set_desc_names(gc);
--		if (ret)
--			goto err_cleanup_desc_srcu;
--	}
-+	if (gc->names)
-+		gpiochip_set_desc_names(gc);
-+
- 	ret = gpiochip_set_names(gc);
- 	if (ret)
- 		goto err_cleanup_desc_srcu;
+For booleans we have a pattern like
+
+	if (bool_func(...))
+
+to imply it.
+
+	ret = int_func(...);
+	if (ret) // if (!ret)
+
+kinda implies int. Does Glib has that type of pattern?
+
+> > > +             g_printerr("failed to set line value: %s\n", err->message);
+> > > +             exit(EXIT_FAILURE);
+> >
+> > Don't you have something like err->code to propagate?
+> 
+> What for? err->message is the human-readable string of the error.
+
+If somebody wants to parse this with a script?
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
 
