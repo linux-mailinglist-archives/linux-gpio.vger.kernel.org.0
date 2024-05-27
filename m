@@ -1,76 +1,75 @@
-Return-Path: <linux-gpio+bounces-6647-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6648-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 844468CFF87
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 14:03:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E9118CFF88
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 14:03:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F182280DAA
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 12:03:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5FF441C2136D
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 12:03:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4213115DBB9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A350415DBC7;
 	Mon, 27 May 2024 12:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vak/C2n2"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="eha53wG1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5032313A3EF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D771A1581E2
 	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 12:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716811377; cv=none; b=A5PJoBisgurAZtlkllunpYTuL1nMhPWyswqQu68Ru3VdC2KdrDVzM92yrU3pyQ4wK6/iAHIWLxeyPsKpSktyzqKOYGsteWRGI21Aw5jpq0dlL5AsQI9WrH65HgrnRUFFK5OHJgmKjaALH7eqBZBuGn0Fl1pRs1eridg2bYG10cw=
+	t=1716811377; cv=none; b=Z/G3+zlneUYUKz3rHJhCmcJTkvPnIuK6epsAndtcuNPCow+cIOsWY5GGOJ0x1VlHlEmTv7Au7m2nYl+S1ouI9cvvW7wkXeMirJh3JNzWHXZB4btzUCuVgw3nmY602igFHQcRHh375ks3TtGHa08MDT8slBHM3dNEePbXfYAvDDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716811377; c=relaxed/simple;
-	bh=1GyvaNvfpUaEvNsFHnNWVs/AwwJFUlI35Md9Z/n30BQ=;
+	bh=3SWqp5R7Bu0rvm4UOAB/oEgbYdmdwbaKvQeAvUEztEE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=V+CYYVBjFltsHr9DiUGQ/G+mW9mCW78e/S2dVDfFCXKz6V+PFFaj8jzWQBZzI3KpqBpuw2yR+Pao75DYy1phBqrNkLou4A6+A4jzdtBNvcai1LYePSJDRnqM4c/r8BT3kC1Bc+L9mBdYjbGXXjKV00wRdhPDpdZwFcXRd3tmWjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vak/C2n2; arc=none smtp.client-ip=209.85.221.50
+	 In-Reply-To:To:Cc; b=uEWxPhO9BdwoGxp6c2hvJ4DtZTH2dKFDts8woIHF2WCjrQMeKKpnNZoAx/qxnmEGznJy1bB1H7oDmHbQ/lEB5JKyVfCv/TaJ3/6uU098qwV5OemwuLNH1nu1VKKprptnYPLwIRMkdPiV8xbW72dq8xLhO+L+u2SaXgWs3rM3w8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=eha53wG1; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-354f3f6c3b1so4503688f8f.2
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3550134ef25so3385579f8f.1
         for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 05:02:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716811373; x=1717416173; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716811374; x=1717416174; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uKl7FLzd4c1z0RWK+9MURhj1M0dXFZqZSbP25u6zhN0=;
-        b=vak/C2n2IIlzQRDIJ4EMaoNajd89sBl5Ad3DoGXqPlhBC25nNVcoa1FNc+qQ6OmiI0
-         rtwMpCVANWL38Lrz8VI4WyO7YI4Hn/Rn4OpLaNhtly6KGKmcGK76QQWUzPNr5dyTfsyv
-         aTFQJUTqXSupMXOu7JtLlo5RdEkq+ikUPirFNuyiFf+jp6aCgTtOL6BXfi3BjurymSdk
-         M9ApQgm3OXqTHcybRE4NsoV+ROoIjBu1d3N46UcauOfHD/HCpj4Ucey41vrTUhwFAn1r
-         EXlVRqrW0L1HKcKrHegX6+aTcVzOXwU9WZqdGAqA3vVngv1p43swO/fDqJIzEtVoOM64
-         6vLA==
+        bh=mQoBxcNwEPGeK/CJ2ix92VYyAncAwUaqxKCb5BaFg9U=;
+        b=eha53wG1H74HbblTH4KJ6BeCWhfHsabsuBtQigaop9j8AqYdb4O//Zzu+tmGJB6hn8
+         ZizIOe1SOSklxi12b2OUnX8UsY6fr0CDZxhULLIwj3nBxGnyBBpKjaOc9hGszWCsq27S
+         80MfEsRNEVBgHikF4x1YMGoIRxBZy1v2urAdwZDLiOUhO02AzUYFBtIsccmm5gbIScl+
+         32Nr5IP4O7/s7EYdovVtLveCLPPgYjGHKMT44MhL9BvIx5gtAd4UCgKPpLYIVWXTZAvV
+         A1Tb3LSt9egoGVajUu2o/Vd5kdtzO5RvhR6Pl3aTZvXKRL2v7/Bjqd71nhj2hHswvs4a
+         nnVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716811373; x=1717416173;
+        d=1e100.net; s=20230601; t=1716811374; x=1717416174;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uKl7FLzd4c1z0RWK+9MURhj1M0dXFZqZSbP25u6zhN0=;
-        b=ZWKGe6QuaoClkZTl2+IzPd64RHcAqNTmJ9JxhNxXrKjnrV1qLkf+B1hr5JEu8rZAhQ
-         SPo1sbMw4rZWmpahx02OPVwXOepMDuMuIWnGY9K0V/q+M1NwCLs71J5JTqdNELApABs0
-         W73XhDW1bUK0/hi4YaCNSjCPay/VLjGhmD1EHpg7NLQoy2tJCfVKzKPDb09d8KzK/5yI
-         zBCyCQvlVL6ayUU7YGfsDi3CHICTG6FrrL1D97Hz+N6JsjZCRq9QnESgx61kq5UKRhxk
-         xubkvR5TEfK8qdQbw9gm5MId3a+FW6PYr5x6yO3ggSNJUE05DeDA9dgbv5eJ+vM4N8I6
-         WpJg==
-X-Forwarded-Encrypted: i=1; AJvYcCWJZiXXwxGmUMQtvtHPbrLe5QUNnnhRtvV1LK0Tv+BoNKpiG7PTNoJxUP0iVEaVuBJK8w9e4R8EYpaujCNtz9n8ufdxrjDDQ8GeZQ==
-X-Gm-Message-State: AOJu0YyHXOuUJRoCuW71QwlpgejAjZYFjX6b1fth7HdcIs/xhNycQ96A
-	IRz73XGXtDC96oWNYe2XdsetnsnSsDSNaQ+SXWWXWTW6HtWMEjNRUzAVNNucejY=
-X-Google-Smtp-Source: AGHT+IHVxeCXazkPTiFMkTn28dY9tUbFeTthnhR+ht2mXkNfq+37e1sai0C55NOnzAe6iGJLxcKYUQ==
-X-Received: by 2002:adf:f7c5:0:b0:355:161:b7e6 with SMTP id ffacd0b85a97d-3552f4fffdamr6206698f8f.41.1716811373537;
-        Mon, 27 May 2024 05:02:53 -0700 (PDT)
+        bh=mQoBxcNwEPGeK/CJ2ix92VYyAncAwUaqxKCb5BaFg9U=;
+        b=lh3ltmAJV6IDJM6XsWKSvgyew/jDoA+bo7TA8AyJOhEnNihozxoz1HuiO3lokYz0Q6
+         XhvFtuTAYJur6yqP3mf0vNAYqAmdRWUeJDQc8q1mxFzLzU2rm/xkf5KOnb459lUJLdXs
+         dV+sKXuEMhrFcBZ6eMbNHuFQm0jKypFMs1yWv5U0oT4ItCIEOk6L3DK0pNNyoLeVoxLV
+         jlyhanPsQ7JTrwkd5eLdE5xroVOcjlqdFBWxSznS0LKA51hGIbxZcU+KPBqxh52Jvwe1
+         FKtW+86wnhSTmopJ+8wqOrDR50VsBrklQhFLXnaLUDIvwpjHalImo7z03YSveI2WjvJ9
+         rp4A==
+X-Forwarded-Encrypted: i=1; AJvYcCU1kAZbNPjPrGl8xfBAViNHoztjj83UBYR3wflDBdywEf25E1nrB0RCv6fNf8tZyLpVU2qywIsWYkTRZ1phlPOrWNQKgrkt/RL3Vw==
+X-Gm-Message-State: AOJu0YyT44+mU1bo8U8b0HeLPCjgqJlfbvu7CAvrIQsMGxjaHB7MSPHP
+	kqjTQEunJ8ix5nsgWuu/7aarE7MvHRB+NuVCGKaNmYKqvNsIbI9YRfz8RNMjhZA=
+X-Google-Smtp-Source: AGHT+IE+cB2CbFpWnrN2FoUqb9Uw4B9N182z4qp6iG7QjsRdMOmOAZDA7GvfCNOeTZw15Nz0v+I/fg==
+X-Received: by 2002:a05:6000:ecd:b0:354:f8a9:345 with SMTP id ffacd0b85a97d-35526c19179mr6195429f8f.14.1716811374120;
+        Mon, 27 May 2024 05:02:54 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:75a:e000:c322:131e:ff9d:ef41])
         by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35579d7ed6fsm8948032f8f.9.2024.05.27.05.02.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 27 May 2024 05:02:53 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 27 May 2024 14:02:33 +0200
-Subject: [PATCH libgpiod v2 1/4] tools: tests: use tabs for indentation
- consistently
+Date: Mon, 27 May 2024 14:02:34 +0200
+Subject: [PATCH libgpiod v2 2/4] tools: tests: use "$@" instead of $*
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,7 +78,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240527-fix-bash-tests-v2-1-05d90cea24cd@linaro.org>
+Message-Id: <20240527-fix-bash-tests-v2-2-05d90cea24cd@linaro.org>
 References: <20240527-fix-bash-tests-v2-0-05d90cea24cd@linaro.org>
 In-Reply-To: <20240527-fix-bash-tests-v2-0-05d90cea24cd@linaro.org>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
@@ -88,68 +87,81 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
  linux-gpio@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1105;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1604;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=PHUzz9u14ti8fJ8sk3Q5oiYwXdrwukZ94ljgxiqUlwk=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmVHZperRoi5c2a641dj2uf6ERVp0Kqcw4Ljpaf
- nYL3rE8V/iJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlR2aQAKCRARpy6gFHHX
- cm+sEACsyiISUolsa2hRm0XADbRQf1308bD0j4eBFrSyDY19HeO/F6DfuDDEdLowXTkLK6y07Lj
- 65q80+8pqe3y04GseHVJnBR7CkKZ/HqtQ5eyZ6HiHbPkFOuWpUSllo0EJyrO0ycgSFJR0rbhUT1
- UpYimoaDadfLuJhno39KgeDwsrdBcC6Vef7/ppHUfXDlEttZDmBrJo1LySE5pms4pYLodjdWrh3
- HbaLjT9kalOfaKp8Pwf0PpRAThNzOL/VbrM9pjvZ9MOLMF5WX532/gGHEsNkti8Tk4s8YpHvIyE
- PNRpftXCDh1zkTDsWRmw2YkBUf93V6FnDFPwWUXXHpStAvyQo8jVl2VNBwr3Pz9BWWHS+tpJd2O
- fKi1Nx5NTCI0+lgb7L9OFw6S+gIH892KUYoMxO38I4gXyDJZIYkyDP433ykZou59mua317TEmX8
- lzDy96E2lQRE6E8BeuxLWqFxshaelnB+itVMUF5eD2LnDB1G4bp9su5BfsHTtZRpV6GWsx78y8P
- 7vHQhCDaEV4eKnEG7EW8LCLPVi+fKMmCKYOc3KcbUNMCDbm5ifxkmyOvSXOo+DQQX3Jp8J8RPGR
- XosA9Mp9ZgbtCePePjvdE+YrayHuDRf/BsTq/t9aNv36Sw3h8TQv55r8NGf8gyDSVaUx6nH66Bg
- N11q0l81jW8QMzg==
+ bh=lAUUanRx1+5v7vYuvYyCPsbxc+iiANfxUeBQZldOY1w=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmVHZqXbb4fkQjAfyfx2gOICdBTht/00LQWjmU/
+ iXMRDtzoXaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZlR2agAKCRARpy6gFHHX
+ cuNKEAC+RpFuQ04d6MciCiXZLLlHRJq3ndhZspzO1SXs0o/dl7FY4DQV+r/MmRt1AWEk2nNt9hV
+ eRbhOElTRVTvC5JrHU9hpr/xD+Pt/MHtnQ6nydCicFDW6lLNNCInXeL7WeQR43DNKSnV08n7Qxo
+ 317pcm0BKmYXh1gAvVGGdf+o/5O9jfhLGSmv2+wCfcq97Ox5AwAdikveIWA9ypMBsO1DSeh/cnu
+ WKurWWlZ1a+Or40HTO1EF3uw50b40BEdTI62hr8B6RdEtSeqOrVSiADDwW35tLIqKsJZIHyctno
+ 2urV1/ZNgEN3OPGQTMh6Sj/stFSiomA/964bpkURKUtpPFcx5w8PmI26MhdI/+akBlQkdVkmJvb
+ Ief9ah2XuZ2eafqAkianyrxKe49P1raThAH4JIR3ATD3812aoKqgHv6NwXZcOqPZNltQv9bn/y4
+ 3bSr/irghYSinfZJmXDyQO4Gk47fMbhjvTvpu142M65/3cFxCQJWBhh3JOvliKH5Z2aBLFgz3cP
+ ufF7bzHuhAPeoBq6rRFzMEm/ulT2b33RO7y9mWYp6VOV13ho+FVaTuhJQ3r/f+7hAfacsAfHc0W
+ vP5JGRlbjhxrwq1uNxWMrge5F1nLerhSOpSwJAVaAw8Vjs6kNE1kptrbTb2X6pQ0KNjBuFhKAjH
+ OH00+XoPlw+YEtA==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Replace all spaces used for indentation with tabs.
+$@ does not break up quoted arguments which is what we want in all cases
+in the bash test-suite. Use it instead of $*. While at it: prevent
+globbing with double quotes but allow variable expansion.
 
 Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- tools/gpio-tools-test.bash | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ tools/gpio-tools-test.bash | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/tools/gpio-tools-test.bash b/tools/gpio-tools-test.bash
-index b55c5eb..abb2f5d 100755
+index abb2f5d..dde26b4 100755
 --- a/tools/gpio-tools-test.bash
 +++ b/tools/gpio-tools-test.bash
-@@ -203,9 +203,9 @@ dut_run_redirect() {
+@@ -27,10 +27,10 @@ GPIOSIM_APP_NAME="gpio-tools-test"
+ MIN_KERNEL_VERSION="5.17.4"
+ MIN_SHUNIT_VERSION="2.1.8"
  
- dut_read_redirect() {
- 	output=$(<$SHUNIT_TMPDIR/$DUT_OUTPUT)
--        local ORIG_IFS="$IFS"
--        IFS=$'\n' lines=($output)
--        IFS="$ORIG_IFS"
-+	local ORIG_IFS="$IFS"
-+	IFS=$'\n' lines=($output)
-+	IFS="$ORIG_IFS"
+-# Run the command in $* and fail the test if the command succeeds.
++# Run the command in $@ and fail the test if the command succeeds.
+ assert_fail() {
+-	$* || return 0
+-	fail " '$*': command did not fail as expected"
++	"$@" || return 0
++	fail " '$@': command did not fail as expected"
  }
  
- dut_read() {
-@@ -269,12 +269,12 @@ dut_wait() {
+ # Check if the string in $2 matches against the pattern in $1.
+@@ -71,7 +71,7 @@ gpiosim_chip() {
+ 
+ 	mkdir -p $BANKPATH
+ 
+-	for ARG in $*
++	for ARG in "$@"
+ 	do
+ 		local KEY=$(echo $ARG | cut -d"=" -f1)
+ 		local VAL=$(echo $ARG | cut -d"=" -f2)
+@@ -253,7 +253,7 @@ dut_regex_match() {
  }
  
- dut_cleanup() {
--        if [ -n "$DUT_PID" ]
--        then
-+	if [ -n "$DUT_PID" ]
-+	then
- 		kill -SIGTERM $DUT_PID 2> /dev/null
- 		wait $DUT_PID || false
--        fi
--        rm -f $SHUNIT_TMPDIR/$DUT_OUTPUT
-+	fi
-+	rm -f $SHUNIT_TMPDIR/$DUT_OUTPUT
+ dut_write() {
+-	echo $* >&${COPROC[1]}
++	echo "$@" >&${COPROC[1]}
  }
  
- tearDown() {
+ dut_kill() {
+@@ -283,7 +283,7 @@ tearDown() {
+ }
+ 
+ request_release_line() {
+-	$SOURCE_DIR/gpioget -c $* >/dev/null
++	$SOURCE_DIR/gpioget -c "$@" >/dev/null
+ }
+ 
+ #
 
 -- 
 2.43.0
