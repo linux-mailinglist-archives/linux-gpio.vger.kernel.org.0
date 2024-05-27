@@ -1,152 +1,120 @@
-Return-Path: <linux-gpio+bounces-6641-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6642-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B3178CFF21
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 13:38:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 843958CFF66
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 13:54:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 938041C214E2
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 11:38:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B19C51C21387
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 11:54:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC7CC15D5C2;
-	Mon, 27 May 2024 11:38:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63DD015DBA8;
+	Mon, 27 May 2024 11:54:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rKIuKKW8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frMP3jSg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7137F131E41
-	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 11:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA07813AA31;
+	Mon, 27 May 2024 11:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716809890; cv=none; b=u+hHIGoAj/Qn9mPwDjpxzxTvZiq5eANNj1IrQIXd2TCZG9E3GVZD0NH1r3TBis9ohn4yLxpg+c1iLBY7ffcEYwNi2KWVtDAKMmNqXr4LQgMs3Nof9zSTSvjNx54nIXi9A2LuK0RVcuhyAsdNACPwiJyll03LNpbVCMlD/KKFzz0=
+	t=1716810880; cv=none; b=RzX+N5Dh5Ep9WTAys1pKX4VwwBv9j+m7Hpip1mOBN7GCti6oxqKqwcA6uHNsRHPHtLukR3O+If8LvyXZSJRgKp3FUB1MbP96L21TDCvDWNy9MtxdRnN/6h4Q4sR93JeoV4PpW1X3G5nZvoIluEfNqrK6MJHo5QWJtHWgjDfKSEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716809890; c=relaxed/simple;
-	bh=Dgbz6dj702RlZKT+eqJcrM3mxxgu3tv0Apn+UO0FjvA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pJtGw599+4rSjz80iscwPYWjNaXs+GBbuARJ5bHnnO052zAR8n15NjV7neq54IOtJJHfPwEOGnkT2NfGz+CS5MFZ/IllmhfA/hv+waXpzgiIRt0gm28fHxekjGHGxJ+VFZ0UmxNKIAorawKTRfjqjBCB1ss4DEC2bxSnXDssOts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rKIuKKW8; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2e95a7622cfso36046961fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 04:38:08 -0700 (PDT)
+	s=arc-20240116; t=1716810880; c=relaxed/simple;
+	bh=Ep8t7vPeAwXRzCTeTUUWkx1TqvppgijvQkJ80jbST/g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z0xm30ZVCUojCbxLh/JO+KkBbRxXykrGEfUJWUuTIOdbCQWigqPMRK1Hz44ieFgiw6OKMD3MXFzdN5Qf7+AzdsZNrie9+p/ny/Yt5KYn+u98Ou0Z56QMJxX6CzDkyIKzpG6lUuX9GezahifTPKm235r+HKyLSUFp7nZKUxAkbJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=frMP3jSg; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f850ff30c0so3305593b3a.0;
+        Mon, 27 May 2024 04:54:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716809886; x=1717414686; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JnbYtUct4rqtK+O/oKnuLrNzbZSoeD114dRYc3nO5k0=;
-        b=rKIuKKW8MH6kmR6pbR328nfzT67RGwwdyWdGnchb0RtuEE6A6JAfT3DKejE36QrbEO
-         4otD79IniP1aoff7m02mc/Rm75Te5baYC/MShWNEHXpAssJHNy9VmSs2G1XUEAFfXJC0
-         jij9tiNet4aOl1EU/JgjQILYECvfOJg2a0L390yuKriJ+3SruweMG5syaJipgR+X9d7y
-         wtYCDg5EHbazq60EP23rt5SN/YJ+T28Tk1rMP7sZXjbOcJeBfF2+uBHK71pYBwo84CNJ
-         YAm0sluhoR5amrDn40LRGcU/5YYIGOF3U5hLW/snDTNXDSJKQmB3oanTkNoA1DkS47Rs
-         eDhA==
+        d=gmail.com; s=20230601; t=1716810878; x=1717415678; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3u9+Rm0QSuOetnYvXN2dLgl+DFtTpVtk+t4PrA9bwrY=;
+        b=frMP3jSgE2E7gzEuQBlzhjMGCXHfginjVlZHX7AWYgYZGVkR6exzLNQPa6fEjgLZKt
+         0o5yL7ls0uwd+6XAnTbz/r3F97cqcZkVGATJAe90tuAR6MtBGJtm/3l8geHkAnaW4FDm
+         LvFzsbTPqfra1rWuJthYSwdOW8UYhn0iJ29vh8CYFJLhTLwlu6bS5g1r4Uo5JdvyVgIn
+         Nm3H8p1VjTADjv+pO9XPUEcUGwMCVcmP9l1Y7KcSQIqORuOdAzCbEuD1GOguKcT7o+9U
+         3dK/1jKs//jpOqZmhqnD5+EAnWRJnrNUCm8ku3/8gtgygSQjpGtsSU+GUfKosipr+c7b
+         RFkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716809886; x=1717414686;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JnbYtUct4rqtK+O/oKnuLrNzbZSoeD114dRYc3nO5k0=;
-        b=Rjbu1S2GFniOihIRJ9HpqZXYAkx3lg78CqOzwp668+2pbnMKpUZQHMN9E/ntc9brJB
-         7S72g89IW1Sy4tx5Em2ViirmPO2ICfeZUl9rK6zj+bzCEnlo+9Xf0Pmtw8u7ePmXB57R
-         NFTYBAaMXbPYCI/J0DgFvMUGyALrQuqIq+bzKYNLhBQx3wKpJLo0rIXeZSo1T5eF8BiW
-         IfGXG6EUkjEDnp0XjZrr8cZMkWoxx+ezMFdU+H8F0UrGeBlwetqZU3IbZdrmbsk4kCsf
-         R6WJtGVLCv99EYJPOOdU32t8e1+DoVhoxWHsK3wzq8EgGcVVs4nH+rGs/Y06E74kQwNx
-         r+TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtFCjLYq63Tx7tsPVaJZReZUwJropVnegiwla1WwFVIxcOCVxMUGCDyPCNH1DFvGQFJCLDVmAlE6tQ87EEgJ5Zy9cgH0cFgvMpew==
-X-Gm-Message-State: AOJu0Yy40EEV8JrV2+SLqda2MXkO+DrhhfoF5xE7dm3a2M5XWv7ywHOA
-	FP6oK6rCYh+XDxIUWkK0tjhD6aRH1bpcTD1HK7ChqKBPq623MygTdfthU0fK0etnDekpJSvOBoq
-	CcPVta8HneEWby2bAjR1snOOXhlqQtijbGxwX3g==
-X-Google-Smtp-Source: AGHT+IGVL5df9qZX0rKyZszRM1wSQ9mQBhQ94s0ig8TjJWA/kV7lqTNT/8wMVQ/vDbcAJhO8lc5L78H/kDpnKWcyIRc=
-X-Received: by 2002:a2e:9607:0:b0:2e6:f3ee:c443 with SMTP id
- 38308e7fff4ca-2e95b24c610mr55712631fa.36.1716809886525; Mon, 27 May 2024
- 04:38:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716810878; x=1717415678;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3u9+Rm0QSuOetnYvXN2dLgl+DFtTpVtk+t4PrA9bwrY=;
+        b=oYcZq1ygbrXcH6/GAy6EwaruA6EfNdy77WsX6whHzCDOUIo9HZZlDXUUhyv3aiQQh5
+         PgWMTQVGmqm8uCkGSLYDJ/g40wHlMsYf2u4jrpNmb0WY9j/LxrDnYJ0MJULzlh/f+GKD
+         fevoMQFgioqYNnOduLEBTMkocyalRVI7PtW5I5Nk0b8Q+/Z+x7kSDp+3eGrIahOewKmE
+         QtzZ1bE4p/E5J+x7NBv2UCmjItGhNJ43aMW/fqUtQwdYcNTEGcQdlD2hrWA6jByfkGaG
+         LmvpAdYCdxRKJxd/ZKuosYGDMEvebnJlOpSmvJj2DOz9RjqWHHo6sH4iUKrJWFX3tYw7
+         POZw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNDF3bNMyf/PmZi7kXGBE1crxcF4OhRYy7rsiYnKisdGr/i0djEG40l9TwvLLz+wJx1LzNS6JZlV/o9anwcvezcoflCXsvPC/baA==
+X-Gm-Message-State: AOJu0YzEghssDRigL92/m+kA/LXAsF/soGq6yGIo/nhEsR16hdN6p326
+	r9+6Ci3ifwluYc/xW4v+/x5QdR/SiEEYR+vG5inGvgrASQGqoXuAySXx/A==
+X-Google-Smtp-Source: AGHT+IGpl826vUP9xVNgNYcO5JNWPvOROP0I4Yi3KEgU7Ysr+t0wAmz891RTRbB0AYbb/CbT1QKMSw==
+X-Received: by 2002:a05:6a00:2911:b0:6f3:854c:dee0 with SMTP id d2e1a72fcca58-6f8f3e843ecmr10371888b3a.21.1716810877830;
+        Mon, 27 May 2024 04:54:37 -0700 (PDT)
+Received: from rigel.home.arpa (60-241-107-82.static.tpgi.com.au. [60.241.107.82])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fcbea8a9sm4749256b3a.139.2024.05.27.04.54.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 04:54:37 -0700 (PDT)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl,
+	linus.walleij@linaro.org
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH 0/3] gpiolib: cdev: tidy up kfifo handling
+Date: Mon, 27 May 2024 19:54:16 +0800
+Message-Id: <20240527115419.92606-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524-fix-bash-tests-v1-0-1397c73073a6@linaro.org>
- <20240524-fix-bash-tests-v1-2-1397c73073a6@linaro.org> <20240525015431.GA5731@rigel>
- <CAMRc=Mfk_r7v86wfgQgeSGxwVFZkm9SUXw5tFJxBX6cVFAHPUw@mail.gmail.com> <20240527102435.GA61454@rigel>
-In-Reply-To: <20240527102435.GA61454@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 27 May 2024 13:37:55 +0200
-Message-ID: <CAMRc=Mf-uG5fJ0KoyTq-7yXxX9aH5GXew8LfsViE7c8yQf29bQ@mail.gmail.com>
-Subject: Re: [PATCH libgpiod 2/4] tools: tests: use $@ instead of $*
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 27, 2024 at 12:24=E2=80=AFPM Kent Gibson <warthog618@gmail.com>=
- wrote:
->
-> On Mon, May 27, 2024 at 11:49:09AM +0200, Bartosz Golaszewski wrote:
-> > On Sat, May 25, 2024 at 3:54=E2=80=AFAM Kent Gibson <warthog618@gmail.c=
-om> wrote:
-> > >
-> > > On Fri, May 24, 2024 at 08:03:28PM +0200, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > >
-> > > > $@ does not break up quoted arguments which is what we want in all =
-cases
-> > > > in the bash test-suite. Use it instead of $*.
-> > > >
-> > >
-> > > I believe it needs to be "$@".  Everywhere.
-> > >
-> > > Where do we use quoted arguments/whitespaced parameters?
-> > > So this is purely about "good" shell?  In that case why stop here - e=
-.g.
-> > > shellcheck picks up a load more "Double quote to prevent splitting/gl=
-obbing"
-> > > and the like.
-> > >
-> >
-> > You're not wrong but I have an impression that this is just a
-> > sarcastic way of telling me this change is not needed. Could you
-> > confirm?
-> >
->
-> Me? Sarcastic? ;-)  Well, yes and no, but mainly no.
->
-> Strictly speaking, the change is not needed, given the functions in quest=
-ion
-> are only used internally and we know whitespace is not an issue.
->
-> OTOH, I'm fine with this change, but I do think in that case we should fi=
-x
-> everything, to some accepted standard of "good" shell.
-> I believe Andy suggested the same.  I happened to suggest shellcheck as t=
-he
-> standard as that is what my editor happened to be using.
-> Happy to go with something else if you have a better alternative.
->
+This series is a follow up to my recent kfifo initialisation fix[1].
 
-No, you're right, let's bring it up to shellcheck's standard.
+Patch 1 adds calling INIT_KFIFO() on the event kfifo in order to induce
+an oops if the kfifo is accessed prior to being allocated.  Not calling
+INIT_KFIFO() could be considered an abuse of the kfifo API. I don't
+recall, but it is possible that it was not being called as we also make
+use of kfifo_initialized(), and the assumption was that it would return
+true after the INIT_KFIFO() call. In fact it only returns true once
+the kfifo has been allocated.
 
-> If you want to apply this series (after fixing the "$@"), I'm happy to pa=
-tch
-> that to correct all the other things that shellcheck throws up - there ar=
-e
-> lots.
->
+Patch 2 adds a helper to perform the allocation of the kfifo to reduce
+code duplication.
 
-Sure, knock yourself out. Resend the series with this fixed then.
+Patch 3 tidies up the handling of kfifo_out() errors, making them
+visible where they may currently be obscured.  These errors are not
+expected to ever happen, so this should not produce any visible
+difference, but if they do occur it will now be more obvious.
 
-> Then if we do happen to make use of whitespace in the future we're good.
->
-> Cheers,
-> Kent.
+Cheers,
+Kent.
 
-Thanks,
-Bart
+[1] https://lore.kernel.org/linux-gpio/20240510065342.36191-1-warthog618@gmail.com/
+
+Kent Gibson (3):
+  gpiolib: cdev: Add INIT_KFIFO() for linereq events
+  gpiolib: cdev: Refactor allocation of linereq events kfifo
+  gpiolib: cdev: Cleanup kfifo_out() error handling
+
+ drivers/gpio/gpiolib-cdev.c | 74 ++++++++++++++++++-------------------
+ 1 file changed, 35 insertions(+), 39 deletions(-)
+
+--
+2.39.2
+
 
