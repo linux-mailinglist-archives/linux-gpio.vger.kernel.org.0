@@ -1,113 +1,145 @@
-Return-Path: <linux-gpio+bounces-6660-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6661-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA8458D00EC
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 15:04:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA8768D010B
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 15:15:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 632A61F25C3A
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 13:04:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7195D2847D5
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 13:15:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D8D613BC3B;
-	Mon, 27 May 2024 13:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6841015ECD1;
+	Mon, 27 May 2024 13:15:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RphZbBsa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SyHO7WSO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2071607B2
-	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 13:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE09A15E5BE
+	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 13:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716814803; cv=none; b=ccMaSLdXVS/y4MLm/ZACPn+Aiwwd7qVwONtVNXHkX8SCk+7QxGc6jKYcp4BcUuX3POqhqo8cuyGh6QI0PRWgkocTL8JnhYAWVBtdtj0akMG8bpx4wdUKfyt+ZRylyOFki64NMQSvc/uuUB7p0T2kvaOiYBnJ+rbql+UmI8nK3PI=
+	t=1716815733; cv=none; b=RfCqPU9rXwMYs+5Vo170IRbfwjfBiPj7X1SQeivJ+JzGcwfweOVHxns5ML+QHXebdW+fyeqkdnS30TrpPweD7B2CsGgx3uppc4jURGj6Saz1DdkJA9pUxMDRPlF9pF6su1h6Xzx70aTTyUoNEVUlOcJ+kYBk4DHXfJi2SqQFS5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716814803; c=relaxed/simple;
-	bh=HkaP6glwKL/GZZMmy621Cw2Bayb68Wj/BHPrr3EyiO4=;
+	s=arc-20240116; t=1716815733; c=relaxed/simple;
+	bh=K247tM0uRG0BEBi0QtYli0dAiX2cPA2+pN50KQ+XwJ8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qls2Rxhze55ku5M/LhScvTqgLyWNdLb/H5kCds1O1fO/YkBaAw9ewiJczyjviMuRZYRSETXjt0sJTt8GBjAcnX8a8C/7Ol4kcP8ktINCxVbikVPVslbNd5SywbmUVZx3j29KaUQeeKdS8kvCzIqEEqCimvmzLyzjiX/nFfeTZTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RphZbBsa; arc=none smtp.client-ip=209.85.219.178
+	 To:Cc:Content-Type; b=Ta/dJPMNfdKLcSx0W6w5Sq8K1Iu3OZk7Ry+7vWj5zrJRVBINaAa9/QV3OVyr7YoOLihshf9ddNitW1GCP5zy8TDeg7ZE7qTAc7XfhVx+qlEAQA2g+wIiLMClDacig+HSVwf+pOPl272PVNRxufl1JTOkVg57CMp0W36d/muU5r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SyHO7WSO; arc=none smtp.client-ip=209.85.219.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-df4e503983fso5352225276.2
-        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 06:00:01 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-df78acd5bb6so1812510276.3
+        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 06:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716814800; x=1717419600; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1716815730; x=1717420530; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Wywx+DoAm5KgDivz+e0k+JypCKJpEVBBW6X7OipnxCA=;
-        b=RphZbBsaDKHLL3mVGp//+NbB/i5gEiymO6lgy5ToTxx/TEtVM93laxTh3kdHxSHpuC
-         LIwg/a6JvRsonooJ5hboHx+tcOLiuTswOS35B/e/CUuhwv83/wTsKITxLhZfyWFvIAxO
-         13nvZqT3xds1FlTyYihvr9+Sp1/WfRlkG6jJI44PiQ2Y64K5v2d1S65gLRIt5VWefB62
-         ZsTG+BQ7yYxLoJg6UFqLAoxg919V29iMss5s8ydPbpyhP6yjVjQJ/+4bIAkst3ztT7vd
-         AR3VuXKbjr8MIQW/vwYk5iH0FGmJpCXOVinPjQyBBxXlZmVQfKjpIN5ZbqpOceLFg0ri
-         zC5Q==
+        bh=ORWWAV5DFVa1AMsT2HoJ2yL9cgtTVCQWr4c970t4N2A=;
+        b=SyHO7WSObKi/9vVbWpFY6Iyi/jPD3vlvvL2Qk6liuyQAxH2aO220Y1WYbahv1/dan6
+         09NGErKxptysMMj+46h15XI65RhX+UsWq2UIEL4waYEsdm599mD/XZCbSGMjGtg6RxPz
+         h9eI5jS6jDdR6uMZUITLr5j96bji46XXFOwEIB2XweALj095/cSqImxFmxPSi7iiweNX
+         fOm+Tyz2NksN5ul5WLE6EgdFGXbbaQok5YCvUnOtaHHO+L+n6w0F175mAFyYpHJt3ZwC
+         57APHQ7Sq7sbOEj5Y8mLhpBED+N3a8WPC+OQrDaMW1HfMUMvqxB6E1q/e7F1n77SPB2b
+         hlhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716814800; x=1717419600;
+        d=1e100.net; s=20230601; t=1716815730; x=1717420530;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Wywx+DoAm5KgDivz+e0k+JypCKJpEVBBW6X7OipnxCA=;
-        b=bGOOn8xCViXbRAwZCB9wDNG6hBU2wThpl2bI7lcN7KztMT+DSStatJA88wBJOXQdvy
-         RabasNArnaXQtEWdezEAWTzpncHga1wg+me7Fcjj1lzarL/1GuIylpcHwrc5gOJROtYY
-         6RSowBV04Yagy8B4qFr2N2ZKsHAT2oW0k3OwLt6L/Ta0bhPUq8es3hpRb+m3ZUJj3jzO
-         rKjfPZ01MSouMOuaSvMSPwuQUouI9l+6+9okzH0fXrfXf03PcPiK1KVxH83F7HeByODM
-         20qvbo9NNpnRbFS+JcMTmjH2MTqIhmTIq3Y0EACFDpwZ5cP1ldXsr2/vfRQl9TnbH10Z
-         C90g==
-X-Forwarded-Encrypted: i=1; AJvYcCWBKrFjha3FkVOmyClQtw0xT9izXJSOQGyZZNPGUPv+ofaWngMM8WEDjvWKkDsRU9YkEdPyHQKKxqA+cIUi7XPc4l4qmXvob8lYKA==
-X-Gm-Message-State: AOJu0YzLHw3DZko42EqSVidgOfyq8jZpBMK6zOdMeLGIvpxaEHIZZKJ6
-	nPzIdfeUGNvZjMEmyIN3X9bpPW+rYD+aW92ZBE3YAuLK7/3WNqGL/v5iZtIy5igPfGzjC4yXstP
-	Edh3SLHKRLHOY0GUpLGVypjPCzIB72MQs58F/9Q==
-X-Google-Smtp-Source: AGHT+IFb5DbLkPdaiOEZs/ep03FNPZZ+bNRgzDn0ZDr8Mf2yH8mLV7AhtYtaaqlTf4TIqDPk7TtDNMGL41zvuu8XISM=
-X-Received: by 2002:a25:8392:0:b0:df4:9a10:4e12 with SMTP id
- 3f1490d57ef6-df77223e466mr8632612276.57.1716814800453; Mon, 27 May 2024
- 06:00:00 -0700 (PDT)
+        bh=ORWWAV5DFVa1AMsT2HoJ2yL9cgtTVCQWr4c970t4N2A=;
+        b=pu7w/oiKZ8mZ6RXGUeI2jam+Jv9PE2H1UlD7KEbXO9ivvdPUH5rLX8j5meSe120LBL
+         VnB7Ml5KJWeU49L9wh8Y5Dj+n93LCfYFpOu8l3dFfx3EVTpMyDMr2mIiH3KqTWea6YTN
+         8W85VGVRJtfnqECVUDmnxyDbtJi9Xzh2HLHgQm/Ie0nvCHPLaoC0GzbwsvhwzmIc6oWp
+         9THq9XPTW5JFBIE9Iw0EKzwiO/3jh9jAa9Ody0ieKFPsZO2m/NjZvvb67JjDcYn2Q9N7
+         RBav2t1nKs11m0ExVYJIHTdWS5YfxxkcAJ8/QQtKsB2se/UQbfcWj8rsqj45KT2gEYl2
+         FJhA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQo0My9kwCqNliDZrE9E8zrkuvHf50kUxcykeD2PihvKeaZkcTOzv7zzxz3KuJGo46g3lrtPKNMr5ABEiODjfkRLYY+1ZI0vqApQ==
+X-Gm-Message-State: AOJu0Yy/bN/0ZGue+bvvNWHd3mHGN22mC1/D+sI1mE0tklv2JulqjvjV
+	Xsm9CE7YE2JM0vgs4L8ZwwBBivHeFpju9FHKE/ewQQjfkb7LSXEP9aV45srufN2nR/Sw7mG/sHI
+	FxX0mdhCNkN4mVl2QgH5vIm5h7tS4Hx4DHLYHJg==
+X-Google-Smtp-Source: AGHT+IFLnsaD839+3qfvvjKNYcPNIoZukpexfAQJweynlTmE92arqErfYxJaJwjE2NjnD3ByeP9B2Eef7aVU5QowlBM=
+X-Received: by 2002:a25:bc0a:0:b0:df4:ece5:2712 with SMTP id
+ 3f1490d57ef6-df7721c416bmr9545693276.39.1716815730399; Mon, 27 May 2024
+ 06:15:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240521012447.42211-1-ychuang570808@gmail.com>
-In-Reply-To: <20240521012447.42211-1-ychuang570808@gmail.com>
+References: <20240503162217.1999467-1-sean.anderson@linux.dev>
+ <CACRpkdbOAoSDNFhXfz3djUZh1_MQ_T75CC+-LmojRXvyCbUusA@mail.gmail.com> <06a4e5fd-3d26-4923-bcbf-0bdd66d756c4@linux.dev>
+In-Reply-To: <06a4e5fd-3d26-4923-bcbf-0bdd66d756c4@linux.dev>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 27 May 2024 14:59:49 +0200
-Message-ID: <CACRpkdb9EZ6fpLHO7a+A4szM_wc6JT6pxH0e0EWCOX6Mg2KkcQ@mail.gmail.com>
-Subject: Re: [PATCH v9 0/3] Add support for nuvoton ma35d1 pin control
-To: Jacky Huang <ychuang570808@gmail.com>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	p.zabel@pengutronix.de, linux-arm-kernel@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ychuang3@nuvoton.com, schung@nuvoton.com
+Date: Mon, 27 May 2024 15:15:19 +0200
+Message-ID: <CACRpkdbSsgxtKqF6ORXubufTaegjysHU7zH-tJfDfKNd=Kdoeg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pinctrl: zynqmp: Support muxing individual pins
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org, 
+	Krishna Potthuri <sai.krishna.potthuri@amd.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 21, 2024 at 3:24=E2=80=AFAM Jacky Huang <ychuang570808@gmail.co=
-m> wrote:
+On Mon, May 6, 2024 at 4:45=E2=80=AFPM Sean Anderson <sean.anderson@linux.d=
+ev> wrote:
 
-> From: Jacky Huang <ychuang3@nuvoton.com>
->
-> This patch series adds the pin control and GPIO driver for the nuvoton ma=
-35d1
-> ARMv8 SoC. It includes DT binding documentation and the ma35d1 pin contro=
-l driver.
->
-> This pin control driver has been tested on the ma35d1 som board with Linu=
-x 6.9.0-rc7.
->
-> v9:
->   - Update pinctrl driver:
->     - Fixed a compilation warning reported by testrobot.
->     - Removed unnecessary gpiochip_remove().
->     - Made other minor fixes.
+> > Then we realize that not everyone need all the modem
+> > control signals provided. What to do. Well this:
+> >
+> > uart0_rxtx_grp =3D pin_rx, pin_tx:
+> > uart0_modem_grp =3D pin_cts, pin_dts, pin_dcd;
+> >
+> > mux0:
+> >     function =3D "uart0";
+> >     groups =3D "uart0_rxtx_grp";
+> >
+> > Now the CTS, DTS, DCD pins can be reused for something
+> > else such as GPIO.
+> >
+> > I *know* that this breaks ABI: the driver group definitions change
+> > and the device tree needs to be changed too.
 
-Patch v9 applied for the v6.11 kernel.
+Actually I didn't think that over, it is possible to add new groups
+and retain the old ones.
 
-9 iterations are certainly enough, if there are more comments they can be
-addressed in-tree.
+I.e. retain uart0_grp, but additionally add and use
+uart0_rxtx and uart0_modem_grp and use one or the
+other approach.
+
+> Well, the pin groups are actually defined in the PMU firmware.
+
+Is that firmware written in such an helpful way that the groups
+can be extracted from the firmware then, as with SCMI? Or is it
+a matter of duplicating the info from the PMU in the software-defined
+groups.
+
+> And
+> frankly, I don't see the point of pin "groups" when there are not actual
+> pin groups at the hardware level. The pins can all be muxed
+> individually, so there's no point in adding artificial groups on top.
+> Just mux the pins like the hardware allows and everything is easy. Cuts
+> down on the absurd number of strings too.
+
+So are you going to switch all of Xilinx devicetrees over to using exclusiv=
+ely
+the new method (muxing individual pins)?
+
+I'm fine with one (string identified groups) which I encourage, but I
+let individual pin control pass as well on several occasions.
+
+What I don't want to see is a Franken-solution that mixes the two
+approaches, even less so on the same system. Someone is going to
+have to maintain the resulting mess. And this looks like exactly that.
+
+If you want to mux individual pins instead of groups and functions, by
+all means, but please do not mix the two approaches in the same
+driver, I'm just trying to save Xilinx from themselves here.
 
 Yours,
 Linus Walleij
