@@ -1,149 +1,115 @@
-Return-Path: <linux-gpio+bounces-6651-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6652-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B26D18D000D
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 14:32:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 919D08D0049
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 14:42:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E43E91C22198
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 12:32:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E3852852E9
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 12:42:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 389FA15E5C1;
-	Mon, 27 May 2024 12:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A05A415E5C6;
+	Mon, 27 May 2024 12:42:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zm2sB3HX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mROal7UP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD1413BC31
-	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 12:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0256615E5AF
+	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 12:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716813125; cv=none; b=m3WbjUJWcFGwVwwx6lqASnsRtURgpMw2bcI7n/dQVeiOHX+w3OHRuE817OdNtU42NLVSb5mYNhbi5+UUl1yCYupwF4u/YP0oUn3cMBzld+tQD8310TZCtDxc6K6x1RbiczX5+jYH4B6eQp/fKeHNl2mxifXHe+NsTd/sy9LmpQ0=
+	t=1716813744; cv=none; b=BYiW4l/UGZl0URtJlybj2RdR3OVpAvEyLtG3LlepYJpJyOOK7CXmqPOhFQd0MMgGdHl+NWVDrLc8yDV12Gws/CAjONyWv3x7SKffCvGJWmjK4sVDvFTx2jRmHXYXwPh7PUlvgA+U2+z03cnfYmZP68LYp0pT/prp0XZaci8hv3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716813125; c=relaxed/simple;
-	bh=goUxZvIFN/u5EojLxx/8XlvUz1D2u0hDwKrpvKzzkOs=;
+	s=arc-20240116; t=1716813744; c=relaxed/simple;
+	bh=gvmIvei/evck27eAyXPfMfAUpIW//VOl8Dual8yqM7I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sSerbxXxSke+4qvZ7VyN48pxVEik+EFjTIz8Tp6k3IxMV7YkJaoDpV1EheiEu9JT7SfCwdhOavhpuhOuoEo87qEeaX7HEAD8n2Cx0RP/xedkl7xTifLraGinQAcs50ztT4CadXxlzTbdIEwAXpmmy0HN/clsPYpnvU+vLO9axd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zm2sB3HX; arc=none smtp.client-ip=209.85.219.174
+	 To:Cc:Content-Type; b=b3tj+wLJ1pldLxyBKf2U8RlHUQmCfslIQQZlRJJJuh3QLUpeJZL5QDszv54s7aETEWf4lRYbRFeuYr1wV3mNyVnJBULKWb42QfiKuVLH7mN8vaw9+XQUDI2e4VVAIAMlyPTnoDYOiaQtSZo8LUrxO3mjyeXF3k0jalmrQjONpPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mROal7UP; arc=none smtp.client-ip=209.85.219.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-df7607785e9so3443539276.2
-        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 05:32:03 -0700 (PDT)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dee72970df8so4113948276.0
+        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 05:42:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716813122; x=1717417922; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1716813742; x=1717418542; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZJDUGLRRsJ0ivWLRLg9qi0jczqwj4hSiWcWfn/3vXsg=;
-        b=Zm2sB3HXlYpP98E0ld4n3B7LgvUwguSUtQ21GGd0yRALluXUIL0yIbqkxSchqAXOsR
-         LxqVz+WMBtM/I3jRVcNOORgmptvrWd0y87ZMdcyg2ueMdwzJJXD5vNxcdY9t4A4Gu1rP
-         wcSSkwYMEv2acmmMNFM1DyMa8zwvPxsvJAa8LLHtoXfSK+/wnDI2A+jiNU0uGaI+1NgF
-         H8y5g9ZaOCl/+0uvJZmsXeJl1U3EccnD0dSe7OPt3A7wHcjDalVYLUaDegI/tZbuCBec
-         H9jTJKyya2JVB0dcLuqBDtuUpas2Pi7uFoVNEUeoFKIqpGPi5Pp/TYYpsJOV2YAsMOHG
-         M0+Q==
+        bh=RreWtAd7Wi7xpCgHNvoy0257vlpp2GBbsNvbWW0dsCg=;
+        b=mROal7UPeV2+tDOeg7vELm3fdnAOS2UtsxNIQR93+IGkKg2PeHQ4YyjhmoAj1aa3/r
+         A2yFsVPYqHOfW9WEXIA4MbOetgHi+ea1yB20ZLG1PmNmtQIDaQwDPsvbcPYe99ayKRIX
+         VJZmoV4mFCM4bOFV/bWoNX8qfELEM2p2r7jBu4tiITj0KXXrxcPSaiA1MV/G4vjTM0lB
+         mVlC9FSYngw4/VlTY5UqiDFXSESXuteL3bfKTpkB5dekpP7+G3DSPHGc6F0MBO3Jvn8d
+         JterMso9fM9vfabEGXWrp+WvMOLCpmhal/pNqcJ/vHju21Z3joHdTpUD/tmLzcUO+skT
+         sbDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716813122; x=1717417922;
+        d=1e100.net; s=20230601; t=1716813742; x=1717418542;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZJDUGLRRsJ0ivWLRLg9qi0jczqwj4hSiWcWfn/3vXsg=;
-        b=G4qYobitMy+IOQor26ugYg5mckS0sHVVjbn7T5d0SwLnUuYrFoBRs6hgp618UfGVif
-         x8H5XgN8mm8u5+pZoCR12wIqvBVYBRX2l0iZyfvHYNyiDrb+d4bY49a5y4qF2BCzqAFU
-         39mbeLhuluFOUN0nQphvXO/+WIt1WNqVCHJTRjkYmUXVsirWqfKbw0q3C3ARYsD3qrGf
-         bATr6luwT4Vf/Ch5Z+muvRTxAN0iA+eQAzVYd9ick0E4HZDv28apsD0dfk2IOxbzDg+A
-         Jo0nFEsDDpbhlfEgrGm1EN1niZpkfBR06ptbkA0xhxvKPrVZ/vsi7Ofpv6KR0nFpi3bf
-         Iccg==
-X-Forwarded-Encrypted: i=1; AJvYcCWzy6ipxOw09zJXJB3bgNj6bfr8jWfRcEA/KJ9VQnYMgeLhbkeN7YgHfQqdqERcp5oBKAB7sBcp9tIPWS0oPOYVttzVexZwpbc4DQ==
-X-Gm-Message-State: AOJu0YzdWwCpNdZ23xmoUCOgaRlfZlxVtbGFyj9a2X330PXSZGWpM0bj
-	5blbQwj/QelQOl+UIm7pYHtKpNLzsZ1mUfFvOTNaHy0yfyN5UgDltWZhkdplkVLlIaSoxF5pkD8
-	ed4lWO0NTiQwGLcW8+7AZJ/FN5m29iqgNRuFdG45GRyf7O18bbs9osc0G
-X-Google-Smtp-Source: AGHT+IFbWEK6qKocYhw6f8EvHhlrGAgfVZ6YKjWo+tvRZyGR5zLrpIUyxn/pC4oFmBGHvnvExLlnPLbfXeXIcI3u80E=
-X-Received: by 2002:a25:abeb:0:b0:df7:69a2:f823 with SMTP id
- 3f1490d57ef6-df77215546amr9090048276.7.1716813122592; Mon, 27 May 2024
- 05:32:02 -0700 (PDT)
+        bh=RreWtAd7Wi7xpCgHNvoy0257vlpp2GBbsNvbWW0dsCg=;
+        b=L7lRskwqRRrUaBCOr2+aCdEQHx/av00OCHutomvXL/pNGHFHsEEay/EoAbyt27YLQn
+         xk15D2AmwT09z/WSVfCQ8nDIPu8v0Z82Zwj2L6I3eyl7s8aOcEbYA4YgfG4W/8t/+WAD
+         uPryrS6RlSA/IR6s/PvTIASetLh9hX13RvOy/BwLBG09kj6RMk7KnLNH330qB7W2S/+S
+         Lstvxbb6A7a8CUtaK1tluqz3nUqTGznZ6F+zYmvRw2EUtP8A+6CFqIo4/Y5N3p80szc3
+         q1ND6pm1cSBA5+i7A77V7BpB1kS3RVrmp/cKsXAWK4xiDsXLg+n1JvHM+KP9I3/gL/rV
+         s2hw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsUSGqLK2Vn8Af5U+x5vo54GmlRjRgaHOzZUAJwB6NB8z7DT+QKGcKqX5XaojLaUXqviHHeYyH8E4tqISjbh0xztdez/o2zgrIhg==
+X-Gm-Message-State: AOJu0Yw64xxEzsSSNMH6OP5SJORJ9+R7H4IXxMvfQVOvj4FXjoBekWvK
+	FXGf4QLDUNDthBrxAvbrSIkxX31aX3T49C4hjCKByAmcrLQ//XydIUDBs5x9yN4K+wIScFQpjk8
+	9CgqESy1Rk6K+hMjpyz2jXA9QbxwY9fbmXLW5EA==
+X-Google-Smtp-Source: AGHT+IGnKKyNaK0erydWgd+7egLyO1LEZVbwIGZL84HNMIAWKZun14kUnLhTrRDtqLO6jO06aGMtpPufyBXFe4UUfcs=
+X-Received: by 2002:a25:c302:0:b0:df4:d98d:3e4f with SMTP id
+ 3f1490d57ef6-df5422399dfmr8673203276.12.1716813741865; Mon, 27 May 2024
+ 05:42:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240503111436.113089-1-yuklin.soo@starfivetech.com> <20240503111436.113089-7-yuklin.soo@starfivetech.com>
-In-Reply-To: <20240503111436.113089-7-yuklin.soo@starfivetech.com>
+References: <20240513-imx91-pinctrl-v1-0-c99a23c6843a@nxp.com>
+In-Reply-To: <20240513-imx91-pinctrl-v1-0-c99a23c6843a@nxp.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 27 May 2024 14:31:51 +0200
-Message-ID: <CACRpkdajd1WkzscPiZL8JKvf10VHy5ppYjy-zAOaNTh0cFXtbQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 6/7] gpiolib: enable GPIO interrupt to wake up a
- system from sleep
-To: Alex Soo <yuklin.soo@starfivetech.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Hal Feng <hal.feng@starfivetech.com>, 
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
-	Jianlong Huang <jianlong.huang@starfivetech.com>, Emil Renner Berthing <kernel@esmil.dk>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Drew Fustini <drew@beagleboard.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Date: Mon, 27 May 2024 14:42:10 +0200
+Message-ID: <CACRpkdYP1Tp6Cxn7xMNusZi=DP6LPUUTaKOPzW4FChu3oEbkFQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pinctrl: freescale: support i.MX91 pinctrl
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 3, 2024 at 1:15=E2=80=AFPM Alex Soo <yuklin.soo@starfivetech.co=
-m> wrote:
+On Mon, May 13, 2024 at 11:12=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.c=
+om> wrote:
 
-> Add function gpiochip_wakeup_irq_setup() to configure and enable a
-> GPIO pin with interrupt wakeup capability according to user-defined
-> wakeup-gpios property in the device tree. Interrupt generated by
-> toggling the logic level (rising/falling edge) on the specified
-> GPIO pin can wake up a system from sleep mode.
->
-> Signed-off-by: Alex Soo <yuklin.soo@starfivetech.com>
+> Add i.MX91 IOMUXC binding doc and driver.
+> i.MX91 IOMUXC has similar design as i.MX93 IOMUXC, so reuse the
+> i.MX93 binding.
 
-This is a very helpful patch I think.
+Patches applied for v6.11.
 
-I'm looking forward to the next iteration.
+I haven't heard much from the i.MX maintainers for a while I guess they
+are busy.
 
-> @@ -1045,8 +1047,15 @@ int gpiochip_add_data_with_key(struct gpio_chip *g=
-c, void *data,
->                 if (ret)
->                         goto err_remove_irqchip;
->         }
-> +
-> +       ret =3D gpiochip_wakeup_irq_setup(gc);
-> +       if (ret)
-> +               goto err_remove_device;
+Should Peng Fan be added to this list?
 
-Do we have any in-tree drivers that do this by themselves already?
+PIN CONTROLLER - FREESCALE
+M:      Dong Aisheng <aisheng.dong@nxp.com>
+M:      Fabio Estevam <festevam@gmail.com>
+M:      Shawn Guo <shawnguo@kernel.org>
+M:      Jacky Bai <ping.bai@nxp.com>
 
-In that case we should convert them to use this function in the same
-patch to avoid regressions.
-
-> +static irqreturn_t gpio_wake_irq_handler(int irq, void *data)
-> +{
-> +       struct irq_data *irq_data =3D data;
-
-I'm minimalist so I usually just call the parameter "d" instead of "data"
-and irq_data I would call *id but it's your pick.
-
-> +
-> +       if (!irq_data || irq !=3D irq_data->irq)
-> +               return IRQ_NONE;
-> +
-> +       return IRQ_HANDLED;
-
-Please add some debug print:
-
-struct gpio_chip *gc =3D irq_data->chip_data;
-
-chip_dbg(gc, "GPIO wakeup on IRQ %d\n", irq);
-
-The rest looks good to me (after fixing Andy's comments!)
-
-I would perhaps put some
-debug print that "GPIO wakeup enabled at offset %d" in the
-end as well, so people can easily follow this in the debug prints.
+Maybe someone should be subtracted?
 
 Yours,
 Linus Walleij
