@@ -1,122 +1,292 @@
-Return-Path: <linux-gpio+bounces-6668-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6669-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AE4E8D01D8
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 15:39:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C24CD8D01DB
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 15:40:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAC9629488D
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 13:39:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72BFC294CD5
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 13:40:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89FBC15EFC2;
-	Mon, 27 May 2024 13:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B72915EFDE;
+	Mon, 27 May 2024 13:37:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aeGZyS+5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BxigHGnu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511561E893
-	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 13:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DBF15EFD4;
+	Mon, 27 May 2024 13:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716816955; cv=none; b=DxcP7O61ZQBPxWAbm6o1Rx56eOcu74GlCRBq7/34Oc87OPe9BaRsnw+xMtRthonfYvXorOxvvbASUOtb5xhz6C4DwAfNJCwImRRmny16paUYYJHPl66Lzr46gwD4t95stsPJUpdhpZAEk8ex46MC4a1jiVlN/qSPaanXHx3LkyA=
+	t=1716817050; cv=none; b=Y8qRn38dckl7PheFxdB1XvbWaw7ihwOpd3vvCpcqvRCXvL7tnuhpvRMiCR2ixaU8NAtssOE17FOHYb2OOyUwIG+A4kc/BkOh2Qx49QuDuLaCv/7ggKo3gSLNmswZJFYWTPaLsj0Px41X6El4gL1/RgJ/4lId9lsGL8Nub6QHPaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716816955; c=relaxed/simple;
-	bh=cHyWOtsQFJXA3gHNsv6N0XMoE/NjXO4PiddAGoUoIOc=;
+	s=arc-20240116; t=1716817050; c=relaxed/simple;
+	bh=o/GJKaIJ9lYTnxwGxykVsJt4sN0dAnKoOra7dqwTt4I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mCXcpD5Tvh66zRCtGM1sFXKcggAKGlxoVkeGeNAvAJW3JD770magyKKe+QJ+UahdkqqW7pOp2sX3CoikGOr2TTBB4V/cMaR4s8z8/cVNBWnkjp5eLOHlXGTqNZlWzpvIQ9p+NC6hTFdyVBr3PMKwQppTTIifKP5cjb3oYQ2WkPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aeGZyS+5; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-df4d5d0b8d0so5582558276.2
-        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 06:35:53 -0700 (PDT)
+	 To:Cc:Content-Type; b=B44PXd8g1dB2LbKcOyNKNw9XFpt/198ChVyxREJH867ZMUOuILSWGZ+aaDg1AwdpPhINU/tOvpVbarqef2iv3A/6Ntc6BKo7nGeYtb9ZTWXQvbajJGA0mR9Rwq3CJtu+gb9j/+uoZQF7ABdx6whZpUPlUSaEc5dTjFNFeLWEYw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BxigHGnu; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57822392a0dso8432068a12.0;
+        Mon, 27 May 2024 06:37:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716816952; x=1717421752; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1716817047; x=1717421847; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0l1MPZiDRQM4PHTCb9pi2jF/YP3Ix2IGNRYszcmSCQY=;
-        b=aeGZyS+530nyZWWgxl7zthUC3rtD7VXwi4R0m/S9NVh2swl5mv3if5f3ezZSMtgllc
-         6uvzKpCTJiWjzp/NogUsYvtpWFvwXHKHJtLzAlciErAl/7ascXoEyKyR5weq+cjmXzyr
-         6b1XZC5sFHVPQVba3YQmZE5sLhV4NIh8WW56s3tD+o8ak/hIQnqiY4z0WsJQjaN1uyRy
-         spnvZ9E9FLRxzvi+WGqzbE495U7MBeuTHU3YO/NY6YxI+rP9J3DFN4yTlOVgDOr3P9Ix
-         FYG22KBAkBi7z87RXfTGqnYjoB3EmNav/bv559rpG4x2b1p48MrRQollI1obUjo1I3tg
-         Pgag==
+        bh=Zhl9jNgY4cx1h8lYgOg4MyjfEdUbVWKXbFvOwfCvYuQ=;
+        b=BxigHGnu+jNq6wOB8Vyf1tY8i6qBWu2+9u1i7lDgPL2Jv3wV3zX63E/AHUxOWspoZ/
+         xNhg2O6orHmSBXbq49jb7vYwbHkrKO2WnvnQpdjaDBk9ZGuFptVMAywGN8PlLhFTzlrb
+         u2xjVAgH4FrXYkCTznRcWBvFjzJiqe7T9PlMzLVVrIwax3qF8ZgngvyfCXb8Y583r5c7
+         vguIJisnk2Vmh+sbaYCDY5VMd049g7vvOx5i88cGblfXMMxQMcbZH9xOR434xpDcLyZR
+         v4pWxAzJ46cBSn1VVU0K1COQiIon1emwTJ0WVl3DWkMTwLfr9hUZbjCDpC6zp+HZSEhm
+         MHqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716816952; x=1717421752;
+        d=1e100.net; s=20230601; t=1716817047; x=1717421847;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0l1MPZiDRQM4PHTCb9pi2jF/YP3Ix2IGNRYszcmSCQY=;
-        b=dJ0BXeJMbL300rXStKCcM8j/tK2Su7imk/clL979Z+OimyGzd15Y8ebtDUdSllirIG
-         GvrtBcPAKB+2QO5sqsG9/yszN4crf9iHVNBS6wFjrufIzTWCLkvL30PnvXkfw31sGMB/
-         KjGmuz9bsfRy5bB1pm7+1XAsDfaKFTOif1L7u3UgnYegmIFCyL7MRHLEkJp+JkYgoDwo
-         iJb4ZIQ5kG7a/jkcrcZ9554TsCaHf4wyCgjehNkxVMWo2Hpat+94aoEMJsZ1S7Cu+wiX
-         IeYebtM8sUd17thB24SGuRfBF5xPaeqqVHAAlBE7ap82fRVMioAlhk6Ho8bhJdTJHM7w
-         cGPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVI3SLvxi5b2JeYyHVS2JoNShpJJ8/Z9V7dcDBTqZKpvVoTZ3FpNgXPGv4fkyl6JVBv0CsCPL0KL3IMcANCn4uVWbZdt46c9kDJhg==
-X-Gm-Message-State: AOJu0YyExC1A8dDbIvvifW0Nvx2kS2dcFvgPYFzeHT6KvXt2eENTSEKh
-	DdavtZL+EN6SAvUXCm/kqwyPhTUCwidhhXhlJavYny3jJWru8v7yBiwl8GvhO7uJs7Hvce+QVTe
-	DIij+HN8XLVWAXaZrm2JGIsvhQSG223rAjk/vAg==
-X-Google-Smtp-Source: AGHT+IE/LA8ME5QhFJ+uJHDIypk5nwZTwYjAHyFG+KUSEiBlCoShGuRS8LXccT+SSLRQq1cYnHUOPX0IwhCX6ekM/qw=
-X-Received: by 2002:a25:ab14:0:b0:df4:dfa4:bb89 with SMTP id
- 3f1490d57ef6-df7721c8a64mr9723707276.32.1716816952282; Mon, 27 May 2024
- 06:35:52 -0700 (PDT)
+        bh=Zhl9jNgY4cx1h8lYgOg4MyjfEdUbVWKXbFvOwfCvYuQ=;
+        b=sy7NocTNpN1x6bWRUYs7xWf9SN13FNHhh5b9vfypi2AMpfkwfyf9GNpuviXMgOaS87
+         b+MpdZbh3oKvJTYfw2mDsqt1E4NYfaOGccHMykLuaF+uz4RmA8NzvYrYdGaZg1kfFkEO
+         TCh4Di3xH5vqZ7uB+K+pxdNc5uh4IBUG1S7q1wcXdf2kWGhU3j/hvezajcY2TC2lyNSZ
+         MQL3DI2WHEFglxfAMBoXSq10dUYjM47Cl+c2OXBzm5y4hr4E88YNHjvYM9BvwWyFjOqP
+         7PqW0gdlWLSq3zK0oPTrAmLuLhwLhBzgNXz0gHuhoJHZ9VTl5hr3snClTUYE1v3D7yA0
+         CuOg==
+X-Forwarded-Encrypted: i=1; AJvYcCWcqYggwj+qC2BBVrKfgbnXzFrAZYXOL6CT1RUqbPzYmafoP4FDxR4Puxpmf5EyCLT5QCIwB0Zk2/zXuIUqZnQHAo9jRZxfnoA+1e8rnDWK/le3ilxd92gLg1R07xicwq5jOOR65QdgWQylR/GtIgh3NFYMIP1vAkIdGymxilqN6Oc=
+X-Gm-Message-State: AOJu0YzUbIXqDZ8NUSvzQO1d5sUp58CnhfoVKPRskiJHFuTnVty9Xq6E
+	JN6iWsXqnAaJVYexHmL8oFpr5YZLdCK9epo6hak5zlYppsrk8iyYTEwkwErcRzIZRTu7vi/QDOv
+	nvt6vJw+2OW8YE6/ucIbhnkF3vMQ=
+X-Google-Smtp-Source: AGHT+IGNl2z4R/oM1svkC/xv2oug1/YAJPGB8K/gQHSeNCj3kD+oViSn7sJ1ii+BZAgOyqOaKsDgiNo1c7T46mX0HQg=
+X-Received: by 2002:a17:906:a219:b0:a59:c52b:993c with SMTP id
+ a640c23a62f3a-a62651163ddmr498564866b.77.1716817046720; Mon, 27 May 2024
+ 06:37:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506150830.23709-1-johan+linaro@kernel.org> <20240506150830.23709-10-johan+linaro@kernel.org>
-In-Reply-To: <20240506150830.23709-10-johan+linaro@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 27 May 2024 15:35:41 +0200
-Message-ID: <CACRpkdakSEGLsx+GwGe1PwTaOT3sBc2a=P0vvdUA3Q3xxHjGsw@mail.gmail.com>
-Subject: Re: [PATCH 09/13] pinctrl: qcom: spmi-gpio: drop broken pm8008 support
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+References: <20240527112857.90554-1-wahrenst@gmx.net> <20240527112857.90554-3-wahrenst@gmx.net>
+In-Reply-To: <20240527112857.90554-3-wahrenst@gmx.net>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 27 May 2024 16:36:50 +0300
+Message-ID: <CAHp75Vd46F7pYEvcXRn5ezCKWTAo_oMORht9vC2QedETgRAf2Q@mail.gmail.com>
+Subject: Re: [PATCH V5 2/2] pwm: Add GPIO PWM driver
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Das Srinagesh <quic_gurus@quicinc.com>, 
-	Satya Priya <quic_c_skakit@quicinc.com>, Stephen Boyd <swboyd@chromium.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	stable@vger.kernel.org
+	Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Chris Morgan <macromorgan@hotmail.com>, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Vincent Whitchurch <vincent.whitchurch@axis.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 6, 2024 at 5:10=E2=80=AFPM Johan Hovold <johan+linaro@kernel.or=
-g> wrote:
+On Mon, May 27, 2024 at 2:29=E2=80=AFPM Stefan Wahren <wahrenst@gmx.net> wr=
+ote:
+>
+> From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+>
+> Add a software PWM which toggles a GPIO from a high-resolution timer.
+>
+> This will naturally not be as accurate or as efficient as a hardware
+> PWM, but it is useful in some cases.  I have for example used it for
+> evaluating LED brightness handling (via leds-pwm) on a board where the
+> LED was just hooked up to a GPIO, and for a simple verification of the
+> timer frequency on another platform.
+>
+> Since high-resolution timers are used, sleeping GPIO chips are not
+> supported and are rejected in the probe function.
 
-> The SPMI GPIO driver assumes that the parent device is an SPMI device
-> and accesses random data when backcasting the parent struct device
-> pointer for non-SPMI devices.
->
-> Fortunately this does not seem to cause any issues currently when the
-> parent device is an I2C client like the PM8008, but this could change if
-> the structures are reorganised (e.g. using structure randomisation).
->
-> Notably the interrupt implementation is also broken for non-SPMI devices.
->
-> Also note that the two GPIO pins on PM8008 are used for interrupts and
-> reset so their practical use should be limited.
->
-> Drop the broken GPIO support for PM8008 for now.
->
-> Fixes: ea119e5a482a ("pinctrl: qcom-pmic-gpio: Add support for pm8008")
-> Cc: stable@vger.kernel.org      # 5.13
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+...
 
-Is this something I can just apply, maybe with the DT binding drop
-patch right (8/13) after it?
+> +#include <linux/cleanup.h>
+> +#include <linux/container_of.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/hrtimer.h>
 
-IIUC it does not need to go into fixes because there are no regressions,
-right?
++ math.h
 
-Yours,
-Linus Walleij
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/platform_device.h>
+
++ property.h
+
+> +#include <linux/pwm.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/time.h>
+> +#include <linux/types.h>
+
+...
+
+> +static enum hrtimer_restart pwm_gpio_timer(struct hrtimer *gpio_timer)
+> +{
+> +       struct pwm_gpio *gpwm =3D container_of(gpio_timer, struct pwm_gpi=
+o,
+> +                                            gpio_timer);
+> +       unsigned long flags;
+> +       u64 next_toggle;
+> +       bool new_level;
+
+> +       spin_lock_irqsave(&gpwm->lock, flags);
+
+You added cleanup.h, why not scoped_guard() here?
+
+> +       /* Apply new state at end of current period */
+> +       if (!gpwm->level && gpwm->changing) {
+> +               gpwm->changing =3D false;
+> +               gpwm->state =3D gpwm->next_state;
+> +               new_level =3D !!gpwm->state.duty_cycle;
+> +       } else {
+> +               new_level =3D !gpwm->level;
+> +       }
+
+> +       next_toggle =3D pwm_gpio_toggle(gpwm, new_level);
+> +
+
+Unneeded blank line.
+
+> +       if (next_toggle)
+> +               hrtimer_forward(gpio_timer, hrtimer_get_expires(gpio_time=
+r),
+> +                               ns_to_ktime(next_toggle));
+> +
+> +       spin_unlock_irqrestore(&gpwm->lock, flags);
+> +
+> +       return next_toggle ? HRTIMER_RESTART : HRTIMER_NORESTART;
+> +}
+
+...
+
+> +       spin_lock_irqsave(&gpwm->lock, flags);
+
+guard()
+
+> +       if (!state->enabled) {
+> +               pwm_gpio_round(&gpwm->state, state);
+> +               gpwm->running =3D false;
+> +               gpwm->changing =3D false;
+> +
+> +               gpiod_set_value(gpwm->gpio, invert);
+> +       } else if (gpwm->running) {
+> +               pwm_gpio_round(&gpwm->next_state, state);
+> +               gpwm->changing =3D true;
+> +       } else {
+> +               unsigned long next_toggle;
+> +
+> +               pwm_gpio_round(&gpwm->state, state);
+> +               gpwm->changing =3D false;
+> +
+> +               next_toggle =3D pwm_gpio_toggle(gpwm, !!state->duty_cycle=
+);
+> +               if (next_toggle)
+> +                       hrtimer_start(&gpwm->gpio_timer, next_toggle,
+> +                                     HRTIMER_MODE_REL);
+> +       }
+> +
+> +       spin_unlock_irqrestore(&gpwm->lock, flags);
+> +
+> +       return 0;
+
+...
+
+> +static int pwm_gpio_get_state(struct pwm_chip *chip, struct pwm_device *=
+pwm,
+> +                              struct pwm_state *state)
+> +{
+> +       struct pwm_gpio *gpwm =3D pwmchip_get_drvdata(chip);
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&gpwm->lock, flags);
+
+Ditto.
+
+> +       if (gpwm->changing)
+> +               *state =3D gpwm->next_state;
+> +       else
+> +               *state =3D gpwm->state;
+> +
+> +       spin_unlock_irqrestore(&gpwm->lock, flags);
+> +
+> +       return 0;
+> +}
+
+...
+
+> +static int pwm_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct pwm_chip *chip;
+> +       struct device *dev =3D &pdev->dev;
+> +       struct pwm_gpio *gpwm;
+> +       int ret;
+> +
+> +       chip =3D devm_pwmchip_alloc(&pdev->dev, 1, sizeof(*gpwm));
+
+You have dev, use it.
+
+> +       if (IS_ERR(chip))
+> +               return PTR_ERR(chip);
+> +
+> +       gpwm =3D pwmchip_get_drvdata(chip);
+> +
+> +       spin_lock_init(&gpwm->lock);
+> +
+> +       gpwm->gpio =3D devm_gpiod_get(dev, NULL, GPIOD_ASIS);
+> +       if (IS_ERR(gpwm->gpio))
+> +               return dev_err_probe(dev, PTR_ERR(gpwm->gpio),
+> +                                    "%pfw: could not get gpio\n",
+> +                                    dev_fwnode(dev));
+> +
+> +       if (gpiod_cansleep(gpwm->gpio))
+> +               return dev_err_probe(dev, -EINVAL,
+> +                                    "%pfw: sleeping GPIO not supported\n=
+",
+> +                                    dev_fwnode(dev));
+> +
+> +       chip->ops =3D &pwm_gpio_ops;
+> +       chip->atomic =3D true;
+> +
+> +       hrtimer_init(&gpwm->gpio_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL=
+);
+> +       gpwm->gpio_timer.function =3D pwm_gpio_timer;
+> +
+> +       ret =3D pwmchip_add(chip);
+> +       if (ret < 0)
+> +               return dev_err_probe(dev, ret, "could not add pwmchip\n")=
+;
+> +
+> +       platform_set_drvdata(pdev, gpwm);
+
+> +       dev_info(dev, "pwm-gpio probed, hr timer resolution: %u ns\n", hr=
+timer_resolution);
+
+Is this important info? Can it be retrieved differently (via sysfs or
+procfs or so)?
+
+> +       return 0;
+> +}
+> +
+> +static void pwm_gpio_remove(struct platform_device *pdev)
+> +{
+> +       struct pwm_gpio *gpwm =3D platform_get_drvdata(pdev);
+> +
+> +       hrtimer_cancel(&gpwm->gpio_timer);
+
+This is a bit worrying. The probe sequence is to init timer followed
+by adding PWM, here seems the broken order. Shouldn't you need to
+wrapt hrtimer_init() into devm_add_action_or_reset()?
+
+> +}
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
