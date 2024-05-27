@@ -1,136 +1,172 @@
-Return-Path: <linux-gpio+bounces-6635-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6636-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF8748CFE09
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 12:24:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98D6C8CFE73
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 12:57:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 24B35B23540
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 10:24:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD4E31C2162C
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 10:57:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EE9E13B780;
-	Mon, 27 May 2024 10:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF55D13B792;
+	Mon, 27 May 2024 10:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmkdqMPZ"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="l9/UrnP5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2066.outbound.protection.outlook.com [40.107.100.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F4313B5B8
-	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 10:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716805482; cv=none; b=ioz7tcJ95WrbPTIgNNUOeBqo6gomrzcp+Sj3LejuvGF5HbZWCU/UzNFLpbCBZq+9ouP1HwSdadeij7LLEZh+QHfiJIExUgXixDYwpBzKpsM6tjnlZhS1ALSLPtiXa9erkQR/7HvYkfeQZWRYgc5THUkvWhRdwyBudUFVWMdu0tc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716805482; c=relaxed/simple;
-	bh=Jpt5NLQ2ML/kfm90LvL9J6dtfNG5W8GdVkpJMmkv+HU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dd7V5GIEfYuWXbHMDLwi0t9V5s8D6IqdXQdafo1YRGowpajoQ31kiStBlyaQGGmEmcU7KoFvDF1n1ZtOHQraXUmOrG/40ipdjJ8vmUJwl8RRVdYCOCcpxe7n33Z0k6XNSpE1u7h5+kT/pW3aeE1hUmm7VtNWMVP5KlUPESuYkkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MmkdqMPZ; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2bdefdeb545so2963370a91.2
-        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 03:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716805480; x=1717410280; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZHMhiwkLXruXuyY1orc0ajLiNbmfJQiTnzfRP0TWJrc=;
-        b=MmkdqMPZW3xSTHS3MKqodtEgIlwEuznnUFssvHNG6LTmnrNo4PXWuoTo3rnbUYYNVi
-         wLVp7xuAf4XZsvAMR0o9BI18ltdBTn7oHpu5W9YQcTehW9KVvOGw7PIuCp61jD89hv+b
-         8j0mMFnnMLCNkdbjMOFLaYSyZwLA5GdI6lzTAVOjSD9uwVXDj25c+mgozWKPc0wjlMJN
-         MfLi1hFDknJTSV6BZ+LuOTJqITdjxOcwH3TmW1Jod+GzKEjhznLc8f2rYpUc10ETygMM
-         4ISBk2A3QBSFyk+uRjUQej6VK+Nr9LKXUnh7j+VuPptPSVVk6Ubtvlcqt8lYWNql3qYZ
-         ewtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716805480; x=1717410280;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZHMhiwkLXruXuyY1orc0ajLiNbmfJQiTnzfRP0TWJrc=;
-        b=nSY3kxpvnLr9sZtu+GBOmQ+cgsbB8QcjVlhUJ1yhxNtx1+OPXa6npmjDi/qn9kiK2+
-         ivfPyDBaBg2KHKEeFDGtl06NuaJFu6vvcWu3fL6sDespNzDm1n9mQZcdGS9262HoPkXT
-         MYLHaMEbFsOo1w97HL/axBfzANfm0GW60QlUlErn5BHyFWMNgIoGdGx2PxF7qvC4O+rT
-         9j55hsxS/zpqLJ1m5HTuewwllRd4vv5aOxid5RRCqk0sfexVrAi+c++u/+v4e1ryenwj
-         QegPb9anilfy1ttuprg67U4yS/jfdtnuud/YnXmWh1/leCUv2CgEb61RYn2s+BEzWeij
-         yRmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcePUItEeLrVs09xhD2wosPOwhu1BmNX6EBUyD3faWpwPhJEsXeXIC+9iZZdmil0lNnWAAM9L9t6b2xrRSpTpqANq6XmwdZRMpnw==
-X-Gm-Message-State: AOJu0Yw+Fkzl6KQiL7Pvxpde+ZMQGrNUcwrdSZUa5Rm5w2BOITZi1UH8
-	zql5ocS88DJ0vD+FP8/qlHBezstMjMdVB1omYGsnVaiCvqdSQaZLdcLTRw==
-X-Google-Smtp-Source: AGHT+IGMFG2JIxYR8gdh0Ra3gKGYPCXeGkezcLi6ZtCIbh6u0k4/vFk0hX8poxbOhwfsUSymBD5/hg==
-X-Received: by 2002:a17:90b:190e:b0:2b1:e314:a5e6 with SMTP id 98e67ed59e1d1-2bf82fbbc38mr4942950a91.7.1716805480079;
-        Mon, 27 May 2024 03:24:40 -0700 (PDT)
-Received: from rigel (60-241-107-82.static.tpgi.com.au. [60.241.107.82])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bdd9ef09f9sm7285203a91.23.2024.05.27.03.24.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 03:24:39 -0700 (PDT)
-Date: Mon, 27 May 2024 18:24:35 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH libgpiod 2/4] tools: tests: use $@ instead of $*
-Message-ID: <20240527102435.GA61454@rigel>
-References: <20240524-fix-bash-tests-v1-0-1397c73073a6@linaro.org>
- <20240524-fix-bash-tests-v1-2-1397c73073a6@linaro.org>
- <20240525015431.GA5731@rigel>
- <CAMRc=Mfk_r7v86wfgQgeSGxwVFZkm9SUXw5tFJxBX6cVFAHPUw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF4226AFA;
+	Mon, 27 May 2024 10:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716807446; cv=fail; b=XHbTmYdH4qffEd/s3JxoY9oNzOBSVRNeo0Fi1MiYmtpKiF8XhO36f+ZbYRgB9JrHFURO7vdxCVSyWamMorSFV2Eq5TO/TltX3kHfGwr7g3FTLk/Dnuyklp8zV6wIVP0ZahkrFMZPF4ToR0NR6wPgLmMx0e60uE8HA+wU6HtHjL8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716807446; c=relaxed/simple;
+	bh=za6MkDiMDsJ2aZWe5nl1pcpr0AQMTHa4zfjiDfjwvBo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f5TVFZCBwkTyECCaMKAS4coVMs7YPECaMkhAqN4cRCzhMapw0F9HjPvIyLq8W5W/I0+G72OPstUqI3If756ZSJP3ivWOuiSH1K3vlQicvpTPritk1DAJTLuior1wpFxfWhtSDywzEMY5QbDWgNlAb2tuBXMGnouJhpmq+dbM1uk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=l9/UrnP5; arc=fail smtp.client-ip=40.107.100.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ev+eQBmUBdfCKriLM6WsXW0gBJmtQYKN2EwyWZg54qVXurEuPEmhPtqm1uNczszlkOlWaRTKkcnOBjVuqhDFFhI3rNMF+GzhYIj0RR4aQt8nt/BjHmhaT0XOlXgiHVXzhTG6XWyJKElINbx87/r4oKNKq/RuSlgkPngVs//fRWjiCB9KdRUyS1HouuInKGjAASOEzFtuhf+rqmuQ+uUP/11RiIk0Rc7qXAiHjx9D1hAF8h8S0AKp2ouW+J0szPbNocQGDHLcUikq5wtu+3Vf+/FbTEADu/WSYdgwYsHrvOkp/29KSoArE0eOIGV8lzqWSsasgXj53qeYfv1ZqdaNPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oG78tLhwINJ9iccBwkkdT1EljNSfYwDlgCdrVYo+q90=;
+ b=kJOQog7wgJa73lPH7kBnGNLQFavWxzVTUyPwIrGmfYDKpsaqBNbN/JerCzv/akKzwy8mbOvt4IgmrvNLY+l8Oayg4c63miRh7O7CP944ttZRByNXXy5AO//p2z3B7uId2NMUN0KDqgGpPG28l6u58KwksBhbBj8R0JpIE5VRznZtkAeRpgFmUF9gZb76oFCCeN30ir8qkRFuKtsISaOqQ2YiSUpJ/hJpw6VpBNOoZCGhvv/fYiISn/0odWkfVV/q6h0kIaHSrLyp95K/odc9GZMlUlalC6elcCyNMzdgOWsnG1VM1l+DrJcG7/XIkIMU7M9YCfP1Im+BwgogfImdYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oG78tLhwINJ9iccBwkkdT1EljNSfYwDlgCdrVYo+q90=;
+ b=l9/UrnP5z1fLPvR09i3jOon0tUBOZTpziuzDYbWgtjaC2i15KM9kgcX5tYoUUMT59kPmdhvZeTbAktmv9JBnRnRqh/4hSFgzlA4pfUk7ARH+y5L6KP+9nJCJ7ECyFM3l0gEQxQ7FAo8HC25GaxTDJuUyFq11LMdGv8OIpicT1FY=
+Received: from SA1P222CA0184.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:3c4::29)
+ by CY8PR12MB7436.namprd12.prod.outlook.com (2603:10b6:930:50::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29; Mon, 27 May
+ 2024 10:57:20 +0000
+Received: from SN1PEPF0002636D.namprd02.prod.outlook.com
+ (2603:10b6:806:3c4:cafe::19) by SA1P222CA0184.outlook.office365.com
+ (2603:10b6:806:3c4::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29 via Frontend
+ Transport; Mon, 27 May 2024 10:57:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002636D.mail.protection.outlook.com (10.167.241.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7633.15 via Frontend Transport; Mon, 27 May 2024 10:57:19 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 27 May
+ 2024 05:57:18 -0500
+From: Michal Simek <michal.simek@amd.com>
+To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
+	<michal.simek@xilinx.com>, <git@xilinx.com>
+CC: Swati Agarwal <swati.agarwal@amd.com>, Linus Walleij
+	<linus.walleij@linaro.org>, "moderated list:ARM/ZYNQ ARCHITECTURE"
+	<linux-arm-kernel@lists.infradead.org>, "open list:PIN CONTROL SUBSYSTEM"
+	<linux-gpio@vger.kernel.org>
+Subject: [PATCH] pinctrl: pinctrl-zynqmp: Use pin numbers stored in pin descriptor
+Date: Mon, 27 May 2024 12:57:15 +0200
+Message-ID: <2413a1f99278d70313960f13daecda9ef54172d8.1716807432.git.michal.simek@amd.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1017; i=michal.simek@amd.com; h=from:subject:message-id; bh=2RyMbQH9rHyZK8vkODIFbxZ5e9EqcMpW3/eY8Ivo3jg=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhrSQdM7zVz/OUzrZwiFxI1vwzMVVfKuEDe8cOPxUhfOZi FhAS79ZRywLgyATg6yYIou0zZUzeytnTBG+eFgOZg4rE8gQBi5OAZiIyH2G+RkMcnFHHk1lZu1S DbC9Pk8yJHGOBsN8/9g9s+ObE+1r3TY6/tqw+WGNovdcAA==
+X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mfk_r7v86wfgQgeSGxwVFZkm9SUXw5tFJxBX6cVFAHPUw@mail.gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002636D:EE_|CY8PR12MB7436:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78d2e4c7-7588-4339-80c4-08dc7e3bc7c7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|36860700004|376005|1800799015|82310400017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ywgv/tqwC8caDeRmpcM8AhT2TSYwWitEGDoIpNqIyGlFo77LdllBnF/WsCqc?=
+ =?us-ascii?Q?eMazWx4X67Bxr7LezEdpKPWc95Zp6/CpGbaMjxvgNif2bTbKXbWVZhrqnv1l?=
+ =?us-ascii?Q?xFU1G+kNlUN30aKeRNqxy83UKYIBx8cjskA5V9yq80o+9FVaoBD77tKu8Omk?=
+ =?us-ascii?Q?wc3LNFmvkECcYd21YRdGs1jEdLMHCHckb4iC7qHOvY/zDuKxZXxXRxGoFlpO?=
+ =?us-ascii?Q?MqL1qVjYUh29uf27RFmXCBYDE0aj4eD8JorMsW2ZJpWXWVsG59O49j3cVS9Q?=
+ =?us-ascii?Q?D0FuF3jvDh1UyWLNDuUF92BQ9d3OeN/K/jNEshtZ7MIuATrnI3ZwDs6+uH2a?=
+ =?us-ascii?Q?0dQPsDtczwn0agQavS/go2oeuolMkVl21lhXrzaRIoSUeihkFUzv9xwzfoaz?=
+ =?us-ascii?Q?si9gcWMCuHTFTg4xjuX4zNiACupN4U61hhIaj4Gjq9fURix6jDF0111buPBB?=
+ =?us-ascii?Q?eCWPaIsOdVmnNxaXMMiTMgDp7pAU9F/LRPTj2htM4p5yihHv5R/wkr6ut2dl?=
+ =?us-ascii?Q?+Q6BbJxgUYtmDgplcGYMTgPFRc1AZV7hF2m3XzMPGUfXCv6YLImXlCGsRq9k?=
+ =?us-ascii?Q?uqaboLLACz5ztbiz4598J3tap9+nZHnQzq9CsMnM0G8Pht+RaexVDEYzqpU9?=
+ =?us-ascii?Q?BdvX95EZCm41Gsu67nQDO945ZO2h+YOhdCqMWb8lR41OcNtG2Kr9LeIxUM6a?=
+ =?us-ascii?Q?Cn0D4nccF7Oa6zAKaFG2SuMVfJXwIy7PXUBHfEIYwlA9Pmd+EaSxAshFtXTw?=
+ =?us-ascii?Q?5z53KGWY5WpmuavB6RJ9wbCOwPEyshxHxmu+V/+Eeol6O8MmCT68SbQRgzoH?=
+ =?us-ascii?Q?8lkrR/+OvskRFDDWeS/ZifRAG7m+DNpL0kUi32nCuZwUdb8PIlrgyfLNnyxl?=
+ =?us-ascii?Q?9IPUiIFv6+UrvcZ2BqKfdVu71fdkerFlbreVtPoPg5n13QyPklhST2ixsauo?=
+ =?us-ascii?Q?wQkEFO1W3Bn/XxbqT7jokgtSTGGZFPCtcPkX4asjVNKp6om7B8A7qPllvHVg?=
+ =?us-ascii?Q?woV7q4VkT4VId2t1G30cyXs1cOMSsAKzmtgXdGjWuiM5ZJTGE/H6tNwrtK2i?=
+ =?us-ascii?Q?gvUWjsKaJyELDukPHhX/3aM1noYrc6/ZNI0H1kfo61JGO7cFB6rRnjTtKAi4?=
+ =?us-ascii?Q?LHlPVBOnQ7WfkH2L+ecJwHG4d3ACaW/tXuN+XvW7laD5CcLtHLhZI/Sx7BQS?=
+ =?us-ascii?Q?2blu8R31KfQ3IS/TGS0lKe7695gG10IN1C3BCybRvc4QCX7wZYAxhevM5rJh?=
+ =?us-ascii?Q?WYCFYiiU5iFikIHj4CqMWeyxTELuW/kjrLb2l93lWO/J26Lnk1ohSv8TIMim?=
+ =?us-ascii?Q?L+34Dvvw7aCOjSx/a2CZgfQlH3q2fep7+oVuCn3a8O2CzV+p332VbfRjh1df?=
+ =?us-ascii?Q?JnphHeApY/ULz1SuG0Igi9O0pJL1?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(1800799015)(82310400017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2024 10:57:19.9053
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78d2e4c7-7588-4339-80c4-08dc7e3bc7c7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002636D.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7436
 
-On Mon, May 27, 2024 at 11:49:09AM +0200, Bartosz Golaszewski wrote:
-> On Sat, May 25, 2024 at 3:54 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Fri, May 24, 2024 at 08:03:28PM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > $@ does not break up quoted arguments which is what we want in all cases
-> > > in the bash test-suite. Use it instead of $*.
-> > >
-> >
-> > I believe it needs to be "$@".  Everywhere.
-> >
-> > Where do we use quoted arguments/whitespaced parameters?
-> > So this is purely about "good" shell?  In that case why stop here - e.g.
-> > shellcheck picks up a load more "Double quote to prevent splitting/globbing"
-> > and the like.
-> >
->
-> You're not wrong but I have an impression that this is just a
-> sarcastic way of telling me this change is not needed. Could you
-> confirm?
->
+From: Swati Agarwal <swati.agarwal@amd.com>
 
-Me? Sarcastic? ;-)  Well, yes and no, but mainly no.
+Use pin numbers stored in the pin descriptors instead of index value while
+creating the pin groups. Pin Id's are not same as Index values for Xilinx
+Versal platform, so use the pin values from descriptor which works for both
+ZynqMP and Versal platforms.
 
-Strictly speaking, the change is not needed, given the functions in question
-are only used internally and we know whitespace is not an issue.
+Signed-off-by: Swati Agarwal <swati.agarwal@amd.com>
+Signed-off-by: Michal Simek <michal.simek@amd.com>
+---
 
-OTOH, I'm fine with this change, but I do think in that case we should fix
-everything, to some accepted standard of "good" shell.
-I believe Andy suggested the same.  I happened to suggest shellcheck as the
-standard as that is what my editor happened to be using.
-Happy to go with something else if you have a better alternative.
+ drivers/pinctrl/pinctrl-zynqmp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If you want to apply this series (after fixing the "$@"), I'm happy to patch
-that to correct all the other things that shellcheck throws up - there are
-lots.
+diff --git a/drivers/pinctrl/pinctrl-zynqmp.c b/drivers/pinctrl/pinctrl-zynqmp.c
+index 5c46b7d7ebcb..1ea0353767b7 100644
+--- a/drivers/pinctrl/pinctrl-zynqmp.c
++++ b/drivers/pinctrl/pinctrl-zynqmp.c
+@@ -718,7 +718,7 @@ static int zynqmp_pinctrl_prepare_group_pins(struct device *dev,
+ 	int ret;
+ 
+ 	for (pin = 0; pin < zynqmp_desc.npins; pin++) {
+-		ret = zynqmp_pinctrl_create_pin_groups(dev, groups, pin);
++		ret = zynqmp_pinctrl_create_pin_groups(dev, groups, zynqmp_desc.pins[pin].number);
+ 		if (ret)
+ 			return ret;
+ 	}
+-- 
+2.40.1
 
-Then if we do happen to make use of whitespace in the future we're good.
-
-Cheers,
-Kent.
 
