@@ -1,104 +1,134 @@
-Return-Path: <linux-gpio+bounces-6687-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6688-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79CDC8D086E
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 18:27:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B66068D0E5F
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 21:46:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ABC721C22A48
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 16:27:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA1681C210A7
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 19:46:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19F6127442;
-	Mon, 27 May 2024 16:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DE321F93E;
+	Mon, 27 May 2024 19:46:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zp0ml6KC"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ufyk4Ag1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9F12629C
-	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 16:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792E617C60
+	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 19:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716826807; cv=none; b=I+2uQktJZHmrHINHKACMTO29eHdzFjrpU3+qeyb37sJd7eZwrefj/MR4IERo61rb+YT3cEMNbLHbncx46J6B5cvKVNV6sRA18DTGoA4XjxEC4FlWsrpzOM6DfdIoXqejd4OzbZRA2UZfVZgOxFDZ52QWP3G1F4ho70CsvLaXTew=
+	t=1716839181; cv=none; b=hz0xd5HKkJKu8m5V5NmDwGKwXTSwaq0iBAbhcnOBI7CUmYzHf74yxo+7wG9Yku8afV6zZh7OC4Cs28QvCknUspGN+GgV1CEdTH63n3RTviybbwvbAlhQm3lnSvMjvGWBZ09rRZYg2tOJ42NFGymPEkQPiloQ7CKuaxEsjZi888A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716826807; c=relaxed/simple;
-	bh=paqah35wK7UHfAY+o4yWBNvGXjX05ZG0aeMp6H2T0EA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PrnerLZB4LWV0MOWwUQfjwxFVzdyE00iQoker3Q9ISggoVSLq7wP4k7S08YWrEDlXLUu8viX3N+bxuB3fAjBvAKwvlGcHgGY2Py0o5wOtxbC5f6ggc3ZpBzXrboydUVR7N46uP3Yfd4Loep1soju7so9vMJKen7dXdqIZIZhDQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zp0ml6KC; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716826807; x=1748362807;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=paqah35wK7UHfAY+o4yWBNvGXjX05ZG0aeMp6H2T0EA=;
-  b=Zp0ml6KCeWkefHEibnzKhgoZExzJV/ulaBxLll3PdIG+vahbbia10Zhz
-   Hf1V2DOxonUJijNeudssIevxL/Lb8d28FS8JvvrQxRG17C7a09Bywsp/Q
-   EWsp/bOI2PJlU05MBqh4EfBNFMgHDQUfa+UkENlB12YMQfaM6eFDqTsuj
-   s2IbftkazV16C1aAkFlJMyZ+e2Zvv18JEXj2SfW5fpliIpXyXxF/73KQf
-   oeXpEn1SMLtMGjzpAkL5UUkJ8Lfmo3O4NlED42leNEmqmnPCOQ+fq5dup
-   hgZkZLaBQyrXg4IrMSlfDQJwLzh00M4PEWNK1KbtMrMWQ+/65+Vy0P12i
-   Q==;
-X-CSE-ConnectionGUID: QfYEdCxcSJKsWJf1j9HowQ==
-X-CSE-MsgGUID: YCklZfbESUapXIQVjtjMag==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="16985954"
-X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
-   d="scan'208";a="16985954"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 09:20:06 -0700
-X-CSE-ConnectionGUID: n+5S0vzIQuSjk2cw+zGw3g==
-X-CSE-MsgGUID: 4umqhQxHS5azjSuqDGBg7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,193,1712646000"; 
-   d="scan'208";a="34693426"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 09:20:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sBd4r-0000000BJrC-2qFO;
-	Mon, 27 May 2024 19:20:01 +0300
-Date: Mon, 27 May 2024 19:20:01 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH libgpiod v2 2/4] tools: tests: use "$@" instead of $*
-Message-ID: <ZlSyscNCrZv0LRHL@smile.fi.intel.com>
-References: <20240527-fix-bash-tests-v2-0-05d90cea24cd@linaro.org>
- <20240527-fix-bash-tests-v2-2-05d90cea24cd@linaro.org>
- <20240527124420.GA108041@rigel>
+	s=arc-20240116; t=1716839181; c=relaxed/simple;
+	bh=rRqysAQWeM6jhpqHiLqjcOu4gGLwxsR8yzfqPRbmEyY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rPGSVUG6vYmWcQiPJLx4aQoA+vJQKsO4uIMCvo74w/P8TuAaVeY+G2saAGf0CPKuUvFy8ZJ19ZkGhUCUmWe8vZh2ebH5kBfYa+j/LkFkK7E0wPPx/OY6A1POYZQ4KHMaou1irp1V8MnA3XqWsIKnTUAkJhXFAsjHTrKlYPgcB1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ufyk4Ag1; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4211245e889so419555e9.2
+        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 12:46:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716839178; x=1717443978; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rTl6IrIa+G4LMhRu5xAux6Zx02fHfcpRAhnP/gxP1yQ=;
+        b=Ufyk4Ag1O63Z0Rpll458NoxMHL7PcmsdnMql7Uw1ystnyo5GP1cKKuyZD/UNbLV4ff
+         YUnqDcu7jIhmmx7n/VVNCgSnwBUmylsHNm36kNuqR+rv634o2S4dTVKG72R9jcYJeVf3
+         cAVXsqjY8/SgYLlqmeNZ/72RZmrKioDKy0Jw8CCQ66Oxg4TH8MVAlHrfgi4R8tRMEBYp
+         cUKJua+AupRDKoDohzf7e0ovNGwC+YHKUkZTH23x2BhKtyXKr9xzMgjAx+Zs2E/nQmZg
+         kT6aIB/UQwDJS6unOmn6AzPdwJ93hdoQmAgz/5MG9PZhH3EOGzzlGDmO/3GFoaVXcz2u
+         /mcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716839178; x=1717443978;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rTl6IrIa+G4LMhRu5xAux6Zx02fHfcpRAhnP/gxP1yQ=;
+        b=COCtOKF2MMCInTbvc7j0AnvPmbyIvKg5p9pXVbdoub/c7wF073WspS4zsS2Dfm+Wt7
+         U4/m0lReNFlXqIIgyiDZsO8JOldhywosX0aGSRg62vuZdmSjrUatKtHIXM/xtKLNAFUG
+         4WPchRwtnzcR/MJOHgYg4sjylUPLGHlIrdN1JzAN3rnF3EbSMhMsnshEAGLxTy0rD7sI
+         Zv63oIk4hRFSoDVfxWQbWz9qYYmErFXrKj++dd+1KtpxXW9T3XF3dxZIQV9doShO4NTu
+         7R5MlxS4BxeeIFqDWhrkP/BbsbhIoX+1YyP3rAWHvfh1xznREWhXBnUgeHFe0MwjNONn
+         huSg==
+X-Gm-Message-State: AOJu0YwdHrupuRW3qxrZtcIwM+ozbmuVom1Eix4uXmPg274aR8/nB5ZO
+	C2eng1BkzU0jm5tUeBpKR2uKNEjA0uDX1aIsol4mIDnt64HH5N/vZawztL4BRpq8XCh0OgneFn9
+	3
+X-Google-Smtp-Source: AGHT+IGsC38qG7dqVJxXKZvWjhjWY02r40PAijRszttq6aSYh9bw3ao3UA8deJctkniQVJNnIzRl3A==
+X-Received: by 2002:a1c:7717:0:b0:420:2df0:1a9b with SMTP id 5b1f17b1804b1-421089ffaf2mr79420285e9.18.1716839177236;
+        Mon, 27 May 2024 12:46:17 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:c322:131e:ff9d:ef41])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100f5299dsm146868935e9.20.2024.05.27.12.46.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 12:46:16 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpiolib: make gpiochip_set_desc_names() return void
+Date: Mon, 27 May 2024 21:46:13 +0200
+Message-ID: <20240527194613.197810-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240527124420.GA108041@rigel>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 27, 2024 at 08:44:20PM +0800, Kent Gibson wrote:
-> On Mon, May 27, 2024 at 02:02:34PM +0200, Bartosz Golaszewski wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-...
+gpiochip_set_desc_names() cannot fail so drop its return value.
 
-> It also doesn't like looping on find results in patch 4[2], though that
-> is not related to your change, so leave it and I'll fix it later?
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-Does it really mean _to fix_ rather than _to "fix"_? I mean how do we know that
-shellcheck is 100% correct tool and has no bugs?
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index fa62367ee929..07e36e15f71f 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -485,7 +485,7 @@ static struct gpio_desc *gpio_name_to_desc(const char * const name)
+  *   1. Non-unique names are still accepted,
+  *   2. Name collisions within the same GPIO chip are not reported.
+  */
+-static int gpiochip_set_desc_names(struct gpio_chip *gc)
++static void gpiochip_set_desc_names(struct gpio_chip *gc)
+ {
+ 	struct gpio_device *gdev = gc->gpiodev;
+ 	int i;
+@@ -504,8 +504,6 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
+ 	/* Then add all names to the GPIO descriptors */
+ 	for (i = 0; i != gc->ngpio; ++i)
+ 		gdev->descs[i].name = gc->names[i];
+-
+-	return 0;
+ }
+ 
+ /*
+@@ -999,11 +997,9 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	INIT_LIST_HEAD(&gdev->pin_ranges);
+ #endif
+ 
+-	if (gc->names) {
+-		ret = gpiochip_set_desc_names(gc);
+-		if (ret)
+-			goto err_cleanup_desc_srcu;
+-	}
++	if (gc->names)
++		gpiochip_set_desc_names(gc);
++
+ 	ret = gpiochip_set_names(gc);
+ 	if (ret)
+ 		goto err_cleanup_desc_srcu;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
 
