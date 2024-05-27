@@ -1,160 +1,171 @@
-Return-Path: <linux-gpio+bounces-6682-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6683-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D65838D05A5
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 17:15:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 285208D067A
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 17:46:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 795A92870BA
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 15:14:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A893D1F239AA
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 15:46:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 418D7161935;
-	Mon, 27 May 2024 14:57:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6A0561FDA;
+	Mon, 27 May 2024 15:46:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z1E/BMBm"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="w3/wSNXL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C948161331;
-	Mon, 27 May 2024 14:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B8E61FD7
+	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 15:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716821831; cv=none; b=AvcrPTYp0bTk96pqUoRp8us78JCdP0PwYo6WZYCZ7FbsGFMfGeoxtnmZsxZGy65KrrikDEmTFK8PzJTFDHxra9dKonqycYo5f1n4PR668kCXxRs2tjR6/7Hh40DNIcXzEntrvhv8n8hNhl61m3dycAY+rAaPO07jSmaI+7zyQy0=
+	t=1716824773; cv=none; b=H5WG1PwftiN8Y5oi3VIHApzz53hIy0A1aCKp7ldVcqrg2K1CR2h42Pc+gSx3SK3jhN822H3bhnrQWtGN7tlGA0hMK0yzxuap53+Arc4jQGEoCVu4qaWxiwfQ2H+4C5GE/Y3hgjhh70xPsQqEP7Q4OqPmGZwXTzPdW+x9YDmMnZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716821831; c=relaxed/simple;
-	bh=anwxSewuYppnpNpMRH71PAQfXd/+GYXNJoF3P+nqe34=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=TVfBFcW+unspPzadjFhNIhhP9sC1ZRMXRGSRH20N5asQB7J6Jh74CqHs9F30l4516hK1Nl1IEl3d8mpmw5VqwL0kfl829Yh4EMU0fI1awiTF57K/aaozjAI3WAEHwX3jhw8Xdymi/942dTNploHutpwnKeeXay9R65AQiXlkKdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z1E/BMBm; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716821830; x=1748357830;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=anwxSewuYppnpNpMRH71PAQfXd/+GYXNJoF3P+nqe34=;
-  b=Z1E/BMBmxrBTKdRBoV5tpn3pusSVRNufrrzHWQKPNRXEVuoW2e0gTFHA
-   Fee8haKSKuqcEILJNVapHsVB6sgQ8Tyv7HVhrTE8oJ/pAcAUdDGbTmAw0
-   IvyMmGeSdrazB9HJTF6Rgad+IXmsqHrzfo2dSAZza7NSGqyK1oOzqWUWD
-   baSkMbASxV48viiCQzfg3AXEFUW7BR1RCs9GALfpN/IFnMwEiKmTXv/i3
-   Hl5vaW9Uoo5lINCqdcVx+tPFfbmIFpNfMauXRGp08662NYCtvy+F0VqQe
-   k97dDmJA1hFSXlFc9mYq+Tx8Mze3rra2zzJS2FZHNPdye8UsBKfE27GOv
-   g==;
-X-CSE-ConnectionGUID: 82zxdn2xTxeP/c20Epnsvg==
-X-CSE-MsgGUID: i5XIEIwgRSCaMzU2xsCY9w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="11715418"
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="11715418"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:57:09 -0700
-X-CSE-ConnectionGUID: vIoPr/bnQ+mlO+fYA48sLw==
-X-CSE-MsgGUID: tyWK4F2TR2GXjCyiin5UKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="39192759"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.140])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 07:57:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 27 May 2024 17:57:02 +0300 (EEST)
-To: Dan Carpenter <dan.carpenter@linaro.org>
-cc: Linus Walleij <linus.walleij@linaro.org>, 
-    Bartosz Golaszewski <brgl@bgdev.pl>, 
-    Dmitry Baryshkov <dbaryshkov@gmail.com>, linux-gpio@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] gpio: amd8111: Convert PCIBIOS_* return codes to
- errnos
-In-Reply-To: <50e1c6a7-f583-4b5b-997b-2e505b3df0ec@moroto.mountain>
-Message-ID: <8ca1b7a8-5abb-e7b7-2e08-ec8c8edccdcb@linux.intel.com>
-References: <20240527132345.13956-1-ilpo.jarvinen@linux.intel.com> <09f2f3ac-94a7-43d3-8c43-0d264a1d9c65@moroto.mountain> <7d475c6c-8bbf-86f4-b2d8-8bc11cb9043e@linux.intel.com> <50e1c6a7-f583-4b5b-997b-2e505b3df0ec@moroto.mountain>
+	s=arc-20240116; t=1716824773; c=relaxed/simple;
+	bh=SGFmyrdBpkcUDBKLlJbB8SidCvGsrcV/bdnpnGA3shY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SwyUD23C+acv6AGzmTX0DoyFG2RcL0v3ZUaRHSCv+ijRpnkD/l8SePw/v7ZTbvEGoMZ3EU2lDKxvyPSos/2ILm3EbNbEolUk8IHGXHsyBrUeFklq6vR9CnHDGQQRtOdbp9MqPE1Xuxqx6QTL2zWgEUgxoPG7RCPf3njnmW69qCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=w3/wSNXL; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2e95a60dfcdso41126301fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 08:46:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716824769; x=1717429569; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yp6J+k2BS7MrlAaW9IdYoKQ2d/8GzynpT8yYjQ+kbY4=;
+        b=w3/wSNXLTP/HD5zfKAb3xYPteRdq3uaVgOQ2ZHjZxsO6laorMqY0PTDDMGWAVorNB3
+         KibVYk1XqulxaceoIdo6UmDrR01ex6Bxdp55BXPJq+ZFf8hE/4fkiolvxLryXz/Vt340
+         RExgDfio/qx9+A7xxJMV12EPy7q6LbyyZPKshBccjy9cWbiM6JvyFno8K50EkGyEWnO+
+         CiVnLH3uhu21+Wz5sXOvLsB2jOM/dRiSW63W1EZSr0auJaEUGhH06/sMhJM4i/dUL73b
+         XVpb1gfkpGNklO9ahpw1azoJAplXCkM7J/xMSfGg6naNytTEUQri+nkT1y9LC+pkuy0+
+         mu+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716824769; x=1717429569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yp6J+k2BS7MrlAaW9IdYoKQ2d/8GzynpT8yYjQ+kbY4=;
+        b=JRmasbBTzFEwv0zjq4ldhe/3m+0j+mMLjN1U5xVrL8JdEDMshzDVxjGmoscEe1WCsy
+         cWQvlo0z8xdKf5qs3+s8vCW9z5eYwd3sd3pqgFNMy4t5wzvjuYC3SfsZ+u7NHcB6LcVw
+         iIpqAoBN7DogTzmPcoP2gABstJASS2kZvsHd7xaAJ2gbMllSKOYeJ1dMtzFvQbnYHRQ6
+         r5svmj/72T6A2QvUze4oF83p16NY6u1TaeEM2qWUNyY5QF02gUF9JBH91DFlkOGz4WAq
+         6o5cj3VHouyP2x+3sgtNFeOnYVvRgGDd8M2PAHOkJc3QVl/97qubTy8AZKM8R+voO4Lb
+         g/hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmDNnpyEohY0IvH0jJsxmdgboUJGIzbKieNjPCHKF1yEqLA93TBXdhcnp7qUXLuBl5OsyiNEpLmo1+TAJCrq7jF/XmHDZrhaTZcA==
+X-Gm-Message-State: AOJu0YysG5m4+FA041n10nDu7tRiwI2x9e3ZOtio9wp2W+pgBbvkm1vx
+	fJvJSR2gdC0lAX358BALSSfJ311Wxf4xadOvQFjNVP3VX2Zs2AFeSOAL38IIFhcT97smqZmcS9m
+	58cWoJbdY/4ct6wx1028GgcSH2ycYCemiaP2vQ/2+i0QAwcsq
+X-Google-Smtp-Source: AGHT+IFyIhhVfYqvJUz/29+pKK/OkK1ERKnS7QgghOt+wn5Gqm9SW3abHYuC62rZHikjymQKJkX2TVBbU9ijrdU3P0U=
+X-Received: by 2002:a2e:9b0e:0:b0:2e0:c81c:25da with SMTP id
+ 38308e7fff4ca-2e95b229936mr58475651fa.30.1716824769393; Mon, 27 May 2024
+ 08:46:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2079346626-1716821822=:1006"
+References: <20240527-fix-bash-tests-v2-0-05d90cea24cd@linaro.org>
+ <20240527-fix-bash-tests-v2-2-05d90cea24cd@linaro.org> <20240527124420.GA108041@rigel>
+ <CAMRc=Md5OF7+BM8gqTbu581cqbWZsWUNCS7T--Hu0Dwq-r5mfw@mail.gmail.com>
+ <20240527125732.GA121700@rigel> <20240527132050.GA133150@rigel>
+In-Reply-To: <20240527132050.GA133150@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 27 May 2024 17:45:57 +0200
+Message-ID: <CAMRc=Meai4q0BEvh2GTLVNEBeQqUjjimDuBVF6z1p0mrGKgP+A@mail.gmail.com>
+Subject: Re: [PATCH libgpiod v2 2/4] tools: tests: use "$@" instead of $*
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, May 27, 2024 at 3:20=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Mon, May 27, 2024 at 08:57:32PM +0800, Kent Gibson wrote:
+> > On Mon, May 27, 2024 at 02:51:52PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, May 27, 2024 at 2:44=E2=80=AFPM Kent Gibson <warthog618@gmail=
+.com> wrote:
+> > > >
+> > > > On Mon, May 27, 2024 at 02:02:34PM +0200, Bartosz Golaszewski wrote=
+:
+> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > >
+> > > > > $@ does not break up quoted arguments which is what we want in al=
+l cases
+> > > > > in the bash test-suite. Use it instead of $*. While at it: preven=
+t
+> > > > > globbing with double quotes but allow variable expansion.
+> > > > >
+> > > > > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.or=
+g>
+> > > > > ---
+> > > > >  tools/gpio-tools-test.bash | 12 ++++++------
+> > > > >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > > > >
+> > > > > diff --git a/tools/gpio-tools-test.bash b/tools/gpio-tools-test.b=
+ash
+> > > > > index abb2f5d..dde26b4 100755
+> > > > > --- a/tools/gpio-tools-test.bash
+> > > > > +++ b/tools/gpio-tools-test.bash
+> > > > > @@ -27,10 +27,10 @@ GPIOSIM_APP_NAME=3D"gpio-tools-test"
+> > > > >  MIN_KERNEL_VERSION=3D"5.17.4"
+> > > > >  MIN_SHUNIT_VERSION=3D"2.1.8"
+> > > > >
+> > > > > -# Run the command in $* and fail the test if the command succeed=
+s.
+> > > > > +# Run the command in $@ and fail the test if the command succeed=
+s.
+> > > > >  assert_fail() {
+> > > > > -     $* || return 0
+> > > > > -     fail " '$*': command did not fail as expected"
+> > > > > +     "$@" || return 0
+> > > > > +     fail " '$@': command did not fail as expected"
+> > > > >  }
+> > > > >
+> > > >
+> > > > Ironically, shellcheck doesn't like the '$@' in the fail string[1],=
+ so you
+> > > > should use $* there.
+> > > >
+> > > > It also doesn't like looping on find results in patch 4[2], though =
+that
+> > > > is not related to your change, so leave it and I'll fix it later?
+> > > >
+> > >
+> > > What does it want here? This looks correct to me? Should we do "$(fin=
+d...)"?
+> > >
+> >
+> > Refer to the referenced link - it is worried about filenames containing
+> > whitespace.
+> > Not sure what the best option is here - I am only just looking into it.=
+..
+> >
+>
+> How about using this for the cleanup:
+>
+>                 echo 0 > "$DEVPATH/live"
+>                 find "$DEVPATH" -type d -name hog -exec rmdir '{}' '+'
+>                 find "$DEVPATH" -type d -name "line*" -exec rmdir '{}' '+=
+'
+>                 find "$DEVPATH" -type d -name "bank*" -exec rmdir '{}' '+=
+'
+>                 rmdir "$DEVPATH"
+>
+> It is a bit less subtle, but that works for me.
+>
 
---8323328-2079346626-1716821822=:1006
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Looks good and works fine. I'll use it, thanks a lot!
 
-On Mon, 27 May 2024, Dan Carpenter wrote:
-> On Mon, May 27, 2024 at 05:11:32PM +0300, Ilpo J=E4rvinen wrote:
-> > On Mon, 27 May 2024, Dan Carpenter wrote:
-> >=20
-> > > On Mon, May 27, 2024 at 04:23:44PM +0300, Ilpo J=E4rvinen wrote:
-> > > > diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd811=
-1.c
-> > > > index 6f3ded619c8b..3377667a28de 100644
-> > > > --- a/drivers/gpio/gpio-amd8111.c
-> > > > +++ b/drivers/gpio/gpio-amd8111.c
-> > > > @@ -195,8 +195,10 @@ static int __init amd_gpio_init(void)
-> > > > =20
-> > > >  found:
-> > > >  =09err =3D pci_read_config_dword(pdev, 0x58, &gp.pmbase);
-> > > > -=09if (err)
-> > > > +=09if (err) {
-> > > > +=09=09err =3D pcibios_err_to_errno(err);
-> > >=20
-> > > The patch is correct, but is the CC to stable necessary?  Is this a r=
-eal
-> > > concern?
-> > >=20
-> > > Most callers don't check.  Linus Torvalds, once said something to the
-> > > effect that if your PCI bus starts failing, there isn't anything the
-> > > operating system can do, so checking is pointless.  The only fix is t=
-o
-> > > buy new hardware.  There was a hotpluggable PCI back in the day but I
-> > > don't think it exists any more.
-> >=20
-> > I don't mind if the CC stable isn't there.
->=20
-> I don't mind either way.  I was hoping you were going to say it was for
-> some new hotswap hardware Intel was working on.
-
-That's not exactly the correct answer but I'm auditing all these because=20
-I have a sinister plan to convert the PCI accessors away from returning=20
-PCIBIOS_* codes and push the conversion down into real PCIBIOS interface=20
-under arch/x86/pci where they'd be immediately converted into errnos.
-
-As the by-product of the audit, I see all these cases where the return
-type is incorrect so I've created a fix for each where the return type=20
-confusion propagates.
-
-> Smatch deletes all the failure paths from the pci_read_ functions
-> because otherwise you end up with a lot of warnings that no one cares
-> about.  Uninitialized variables mostly?
-
-Please note that there's a difference between ignoring errors entirely and=
-=20
-returning wrong value (type) on errors.
-
-At this point, I've already ignored many many cases where the value type=20
-confusion does not propagate because of my main goal which is anyway to=20
-eventually get rid of having to deal with PCIBIOS_* codes in any generic=20
-code.
-
-If a PCIBIOS_* return code somehow leaks into userspace where errno would=
-=20
-be expected, it could confuse userspace (e.g., one case unrelated to=20
-module init functions I found is sysfs show function returning positive in=
-=20
-case of error which has obviously different meaning from the caller's=20
-point of view).
-
-In case of module init, do_module_init() checks for ret > 0 and prints=20
-warning + stacktrace, however, it does not attempt to correct the return=20
-code so I think the positive code still leaks into userspace.
-
---=20
- i.
-
---8323328-2079346626-1716821822=:1006--
+Bart
 
