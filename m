@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-6626-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6627-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BDE98CF77E
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 04:55:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F10478CF7EF
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 05:08:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B0498B20D02
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 02:55:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A74581F20F9F
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 03:08:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D94C46FB0;
-	Mon, 27 May 2024 02:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC1328C0B;
+	Mon, 27 May 2024 03:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hz7nbNA6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpvSIamX"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868F820E6;
-	Mon, 27 May 2024 02:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5948679F6;
+	Mon, 27 May 2024 03:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716778511; cv=none; b=qwCzf0wVhu3MYDOeTED1mnEkNnnP/09iN6EvHnBGgMWPOmCzu0ZPA+pBwikBZViRl3uF3V2fKHYi1A1RDHgaou1CcV6YROmEjZ/l4hAAtCegjZAMHO5I2aFUMxhLSzqVIR9QJUbI67+MHw6bgipiePUd2gwmeaxoCESRjpcID4c=
+	t=1716779226; cv=none; b=sXSismyvpKqS+xx6k/OaGhdkYWSAY2IKPKQQXVPBpPdXQYUS3EC1Vcu1mvn+BfPHJPm33zhbdqthvunSW3XzKJaWY8wnZfQrjcaHOODeti8NSTATic2kGQIDjxDkyuBqWU20a8DH1FrkRhK0Hi+NuAsDiAi20oTiU27cl8hP6B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716778511; c=relaxed/simple;
-	bh=IVnqRn382nSyzKHmBGD+vnMqxsrVjaWy+z+fc70OVCQ=;
+	s=arc-20240116; t=1716779226; c=relaxed/simple;
+	bh=3rVpb3BXXNkOipWnRw3qrSJpClaL41p1KwTUy2ndhEM=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=sMjCwD5bqz5g9BnUkdzK8pgajs/RBLfudd0DOQ5TjHxNWgLLfGDIELEtiVy4Tn/qnGVdVMfoc0AzJADMBlYptyUIAuht0ZsI9g2uyCJxjiSHNotd2IzTkc9jd9M/iAFvI/rDOvRPIGlJxVyFF0qWvFDvbPz3P8ZszZh2qQk2OlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hz7nbNA6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1BA85C4AF09;
-	Mon, 27 May 2024 02:55:11 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=CVIpKpwleu54EqgmQqZWBTqXyWAd0PzUQj1rsqa4Lq27JzDGxIUZkch7Cc7lxzgTk8YOZfXrKaNeNIsTWcJAC5FUNS17Z/lehJrNlktQ13xfhA3WHcZRijr2yEX8tNekIHjstCfNhG4CpQDjv69exfW1B9wn8BtfvnHllIpz39Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpvSIamX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EC67CC32782;
+	Mon, 27 May 2024 03:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716778511;
-	bh=IVnqRn382nSyzKHmBGD+vnMqxsrVjaWy+z+fc70OVCQ=;
+	s=k20201202; t=1716779226;
+	bh=3rVpb3BXXNkOipWnRw3qrSJpClaL41p1KwTUy2ndhEM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Hz7nbNA6xcRLqNb84tLKLDU+OIUJY/ckZOHXviqjRx0neEDOR4tQZ+wNt4PhoDd4W
-	 6iWJPsVizMXGwuN782ZpDTMVPgA6itKdNeEPfeAlhnV4xiCCm1clLWBCWJ4WrUebIt
-	 VwbeENY7KWZqJ92/MHyshIz6EVnOLceIBgLUcYsfBBr8wdx5h7+fRiILKIttW7Begk
-	 bn7AY7GcNpm2w+Hqj+52mB+wYabtFHaVeOFTkO8256gO+qYfb0xJP7455DccR/ufxT
-	 PirGvqOGnpxo/7ktYz01b5VepgqbeaNkg1spFtnn85RjvMUYmHEz7nWPrGyvR1hbi2
-	 DbvAvCVjC4sYA==
+	b=jpvSIamXTiGCJUyljpbsvFdJp63C1hBsbS0A+dVYueNW+U4EO+Rgj6NPg0Tv8yHRG
+	 Mh++Dil+YouKeEw/d3JPDeKzRwXYGsbRj+8iaIMtuPj588s0a02/Mc72WmAa4RCr2I
+	 OO/g6gewalxxyypUE9b3dFxsK7vsqSVuEJEZm+AeGLeECK8MTtG/QWfWT2Bf5IwwUu
+	 /3KzNooo4gaBmrBP7NiFV6Un3FesTGnxnbBiUkKAfbXgiNUgVajqEzyHwz8IdkSUVL
+	 P0xhJAwjjzs7h7/T576/jf0tzqlf/fRR6XEKJjg945qPtTDvHvNFfUecoHzW4uzbgL
+	 UTg+JvSCS0h5Q==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0BBCFD4F15D;
-	Mon, 27 May 2024 02:55:11 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DB4CBCF21F7;
+	Mon, 27 May 2024 03:07:05 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -55,8 +55,8 @@ Content-Transfer-Encoding: 8bit
 Subject: Re: [PATCH v2 0/6] provide ID table for avoiding fallback match
 From: patchwork-bot+chrome-platform@kernel.org
 Message-Id: 
- <171677851104.1901.10099915202413513803.git-patchwork-notify@kernel.org>
-Date: Mon, 27 May 2024 02:55:11 +0000
+ <171677922589.1901.13930428876573381422.git-patchwork-notify@kernel.org>
+Date: Mon, 27 May 2024 03:07:05 +0000
 References: <20240401030052.2887845-1-tzungbi@kernel.org>
 In-Reply-To: <20240401030052.2887845-1-tzungbi@kernel.org>
 To: Tzung-Bi Shih <tzungbi@kernel.org>
@@ -68,7 +68,7 @@ Cc: bleung@chromium.org, groeck@chromium.org, linus.walleij@linaro.org,
 
 Hello:
 
-This series was applied to chrome-platform/linux.git (for-kernelci)
+This series was applied to chrome-platform/linux.git (for-next)
 by Sebastian Reichel <sebastian.reichel@collabora.com>:
 
 On Mon,  1 Apr 2024 11:00:46 +0800 you wrote:
