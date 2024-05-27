@@ -1,171 +1,153 @@
-Return-Path: <linux-gpio+bounces-6683-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6684-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 285208D067A
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 17:46:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76D798D07AE
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 18:11:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A893D1F239AA
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 15:46:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CADA5B26094
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 May 2024 16:07:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6A0561FDA;
-	Mon, 27 May 2024 15:46:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0035B16F0C4;
+	Mon, 27 May 2024 15:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="w3/wSNXL"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PUTkJtv+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B8E61FD7
-	for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 15:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC4E15F403;
+	Mon, 27 May 2024 15:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716824773; cv=none; b=H5WG1PwftiN8Y5oi3VIHApzz53hIy0A1aCKp7ldVcqrg2K1CR2h42Pc+gSx3SK3jhN822H3bhnrQWtGN7tlGA0hMK0yzxuap53+Arc4jQGEoCVu4qaWxiwfQ2H+4C5GE/Y3hgjhh70xPsQqEP7Q4OqPmGZwXTzPdW+x9YDmMnZQ=
+	t=1716825478; cv=none; b=CPZ7Ryc/Lfir5ydAEsgd/+yKs0eeG7+7Mgc0AH/IPQpUg8aIkIb4rQSJ5h5RR8g67a+QAzImhQFft7jZ+IsjDQevCwcFDVW/oIevaTwvnETWpWNTGZW23esEWk5GG49Cs0LSeG32sSLnY+vfTJqsFg4BK2D78k4yz087wjnqMI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716824773; c=relaxed/simple;
-	bh=SGFmyrdBpkcUDBKLlJbB8SidCvGsrcV/bdnpnGA3shY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SwyUD23C+acv6AGzmTX0DoyFG2RcL0v3ZUaRHSCv+ijRpnkD/l8SePw/v7ZTbvEGoMZ3EU2lDKxvyPSos/2ILm3EbNbEolUk8IHGXHsyBrUeFklq6vR9CnHDGQQRtOdbp9MqPE1Xuxqx6QTL2zWgEUgxoPG7RCPf3njnmW69qCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=w3/wSNXL; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2e95a60dfcdso41126301fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 27 May 2024 08:46:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716824769; x=1717429569; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yp6J+k2BS7MrlAaW9IdYoKQ2d/8GzynpT8yYjQ+kbY4=;
-        b=w3/wSNXLTP/HD5zfKAb3xYPteRdq3uaVgOQ2ZHjZxsO6laorMqY0PTDDMGWAVorNB3
-         KibVYk1XqulxaceoIdo6UmDrR01ex6Bxdp55BXPJq+ZFf8hE/4fkiolvxLryXz/Vt340
-         RExgDfio/qx9+A7xxJMV12EPy7q6LbyyZPKshBccjy9cWbiM6JvyFno8K50EkGyEWnO+
-         CiVnLH3uhu21+Wz5sXOvLsB2jOM/dRiSW63W1EZSr0auJaEUGhH06/sMhJM4i/dUL73b
-         XVpb1gfkpGNklO9ahpw1azoJAplXCkM7J/xMSfGg6naNytTEUQri+nkT1y9LC+pkuy0+
-         mu+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716824769; x=1717429569;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Yp6J+k2BS7MrlAaW9IdYoKQ2d/8GzynpT8yYjQ+kbY4=;
-        b=JRmasbBTzFEwv0zjq4ldhe/3m+0j+mMLjN1U5xVrL8JdEDMshzDVxjGmoscEe1WCsy
-         cWQvlo0z8xdKf5qs3+s8vCW9z5eYwd3sd3pqgFNMy4t5wzvjuYC3SfsZ+u7NHcB6LcVw
-         iIpqAoBN7DogTzmPcoP2gABstJASS2kZvsHd7xaAJ2gbMllSKOYeJ1dMtzFvQbnYHRQ6
-         r5svmj/72T6A2QvUze4oF83p16NY6u1TaeEM2qWUNyY5QF02gUF9JBH91DFlkOGz4WAq
-         6o5cj3VHouyP2x+3sgtNFeOnYVvRgGDd8M2PAHOkJc3QVl/97qubTy8AZKM8R+voO4Lb
-         g/hw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmDNnpyEohY0IvH0jJsxmdgboUJGIzbKieNjPCHKF1yEqLA93TBXdhcnp7qUXLuBl5OsyiNEpLmo1+TAJCrq7jF/XmHDZrhaTZcA==
-X-Gm-Message-State: AOJu0YysG5m4+FA041n10nDu7tRiwI2x9e3ZOtio9wp2W+pgBbvkm1vx
-	fJvJSR2gdC0lAX358BALSSfJ311Wxf4xadOvQFjNVP3VX2Zs2AFeSOAL38IIFhcT97smqZmcS9m
-	58cWoJbdY/4ct6wx1028GgcSH2ycYCemiaP2vQ/2+i0QAwcsq
-X-Google-Smtp-Source: AGHT+IFyIhhVfYqvJUz/29+pKK/OkK1ERKnS7QgghOt+wn5Gqm9SW3abHYuC62rZHikjymQKJkX2TVBbU9ijrdU3P0U=
-X-Received: by 2002:a2e:9b0e:0:b0:2e0:c81c:25da with SMTP id
- 38308e7fff4ca-2e95b229936mr58475651fa.30.1716824769393; Mon, 27 May 2024
- 08:46:09 -0700 (PDT)
+	s=arc-20240116; t=1716825478; c=relaxed/simple;
+	bh=LyY89JJGjC8Y+DxaXq1cHlE/nuU3X/RNIGtC1yqhUhI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=I5fZtjOlAibwg1RSKhXPaAlotrpGEvsSEs6qcNILhQoLk2btVRRYMt0o/XnjjHzWypnteuu/q9vQaq1Irq4d7yhOCZk2NuzsiV05bdJbN+rD4A9Rci5EFvO9PNQ6YwcMyMm/aqCuTjWI6knF3IWjF+OugN7kKY5moK+FbkR8i+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PUTkJtv+; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1716825410; x=1717430210; i=markus.elfring@web.de;
+	bh=cCQzbMHV0uZw8ARZF6tyJxZsTWRc/buEbEqLjIXSnlw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=PUTkJtv+17tmHPSwdj2hf899Cxz87JZtpAv6Jc/t460ErK6rIZ1XjrMEwjT/IL5e
+	 u6asEjjbaWV05EEJOrnLlJNLso+bKJ6JUhoe+vAQmYcyr1mOVJ9CmwVzJFYdsDjWk
+	 lhH7BRvhFBzVj6hnFHPSxBLuofy8FnxnuGCzKVh06VXSoykW9+Z5sNppeifyGBhS7
+	 Tbby0eXDkzEd3ur+rXCvlZhYwOhxY2j+kjNeQE+m/gaI7bzpQ3HVkzXeOYg+oIyfZ
+	 hv0kSHTDq7XWjQmMF+X+gAfIYHkN5y02reNDf+/pFuI1uzraU+ayvVz08dwXuor0H
+	 +gQ8lygtBMIj/W0VNQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N6JxT-1sa0Ai3q9J-016inV; Mon, 27
+ May 2024 17:56:50 +0200
+Message-ID: <aa58efd3-b502-4bed-8c84-e5d78da23fbe@web.de>
+Date: Mon, 27 May 2024 17:56:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527-fix-bash-tests-v2-0-05d90cea24cd@linaro.org>
- <20240527-fix-bash-tests-v2-2-05d90cea24cd@linaro.org> <20240527124420.GA108041@rigel>
- <CAMRc=Md5OF7+BM8gqTbu581cqbWZsWUNCS7T--Hu0Dwq-r5mfw@mail.gmail.com>
- <20240527125732.GA121700@rigel> <20240527132050.GA133150@rigel>
-In-Reply-To: <20240527132050.GA133150@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 27 May 2024 17:45:57 +0200
-Message-ID: <CAMRc=Meai4q0BEvh2GTLVNEBeQqUjjimDuBVF6z1p0mrGKgP+A@mail.gmail.com>
-Subject: Re: [PATCH libgpiod v2 2/4] tools: tests: use "$@" instead of $*
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Peng Fan <peng.fan@nxp.com>, soc@kernel.org,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Chester Lin <chester62515@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Damien Le Moal <dlemoal@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>,
+ Dvorkin Dmitry <dvorkin@tibbo.com>, Emil Renner Berthing <kernel@esmil.dk>,
+ Fabio Estevam <festevam@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+ Hal Feng <hal.feng@starfivetech.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
+ <heiko@sntech.de>, Jacky Bai <ping.bai@nxp.com>,
+ Jianlong Huang <jianlong.huang@starfivetech.com>,
+ Joel Stanley <joel@jms.id.au>, Jonathan Hunter <jonathanh@nvidia.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Ludovic Desroches <ludovic.desroches@microchip.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Matthias Brugger <mbrugger@suse.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>, Orson Zhai
+ <orsonzhai@gmail.com>, Patrice Chotard <patrice.chotard@foss.st.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Sean Wang <sean.wang@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>,
+ Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+ Stephen Warren <swarren@wwwdotorg.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Thierry Reding <thierry.reding@gmail.com>, Tony Lindgren <tony@atomide.com>,
+ Viresh Kumar <vireshk@kernel.org>, Wells Lu <wellslutw@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-samsung-soc@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ imx@lists.linux.dev, linux-aspeed@lists.ozlabs.org,
+ openbmc@lists.ozlabs.org, kernel@pengutronix.de,
+ Peng Fan <peng.fan@oss.nxp.com>
+References: <20240504-pinctrl-cleanup-v2-18-26c5f2dc1181@nxp.com>
+Subject: Re: [PATCH v2 18/20] pinctrl: freescale: mxs: Fix refcount of child
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240504-pinctrl-cleanup-v2-18-26c5f2dc1181@nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:fY28vuOzSy7D3myo+NUo+Q8h4MAB+DMYH6x54XY9zacr23bFm3Z
+ XEU1mqywgExmQK1yZjuU6En9jXs1HgcwzsaQZ+4suTC5BPEjIf/Fg4o0HdX3AuRpQZI2yac
+ KrkniKWThKnQbs96+yLl/Dm5E5NsImhOyFs1ksUAetHBWVW2WfIWoOdGSaoQFZRJLEXutYy
+ iCHwBxLqQsK9Mq+39k2DQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:TjeN7uyFccs=;bjTTRHq6gIBTOMFXSFUogBWSZuQ
+ ZTwgZq2VnppV1aZlnrDYMmOmytXyq0JrjEzIfy/yH2myRvZFwVxrMpYgtVdN++fuf8ainJk/t
+ uFkTD8huhpK+v/6sd6lXCGtTOMoxBExDvHrzfiIvMwNnj5vJaD78bXrOpQIviBkrbo/dpouOC
+ Ln7QFnEpQNN9tfIRGg8gaddFRITCsPb8eIY2ZjqdGWqcC0mpb+GXVonl0LzMFBCnUIrGNucUB
+ JyF0gcU5WkAg6RJMxI6bQbphTn5At4z7kJpzYsMNnHFABhVCUal+gm0247pr1mpjl/KiGECTR
+ XNTX442NdkykPvhiMNWp17M35HW0J6oLENbsSL8PyhGQHAW5h5EnpFB5SuC+MkmcW7VQwxd36
+ lCdpZmXrsZsRJ7AbJhptgf/dByjHu/LOLAj4+ethb/xC2SLDH84JLTDzzYCw43EzHk/09K8p9
+ cDEpfpl8+VPFN35SSlqs/3lTQxU1UurqQF96DxIJCZdCGRE3icPsCoTwZMOJqDYJkYsmztQRH
+ YW541Ftvhar9wZSgE19Bcj1s0L3HXu9Xp3pkz7IcX+lrc7RPJuNoPC+xc48ucMhoGmNSMI5WK
+ RVp1WSoLoJahSt7/mjjyxqyly6XzUtnKE6um1tWMAR0vojK8hQcOOL84UbAmXM7tbS+2QyuCj
+ LkzuEZ/KIlY89jP9+dNMuuSCCwKeQJA7ykttwUV0aQte1rS7POYfJSX2aeTAa8Z7rWLzt7kHc
+ AmtJvjHPIr4iMol58kTZo18kQbOqJQsi9qx7qS9pObTVMxyOiWt4lPdDW0vYOWO4MOmC4QlIy
+ k96VHg44SU3OMjnGBpPp4v6EScAmUEUHJaYg/CdI/NGc8=
 
-On Mon, May 27, 2024 at 3:20=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Mon, May 27, 2024 at 08:57:32PM +0800, Kent Gibson wrote:
-> > On Mon, May 27, 2024 at 02:51:52PM +0200, Bartosz Golaszewski wrote:
-> > > On Mon, May 27, 2024 at 2:44=E2=80=AFPM Kent Gibson <warthog618@gmail=
-.com> wrote:
-> > > >
-> > > > On Mon, May 27, 2024 at 02:02:34PM +0200, Bartosz Golaszewski wrote=
-:
-> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > > >
-> > > > > $@ does not break up quoted arguments which is what we want in al=
-l cases
-> > > > > in the bash test-suite. Use it instead of $*. While at it: preven=
-t
-> > > > > globbing with double quotes but allow variable expansion.
-> > > > >
-> > > > > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.or=
-g>
-> > > > > ---
-> > > > >  tools/gpio-tools-test.bash | 12 ++++++------
-> > > > >  1 file changed, 6 insertions(+), 6 deletions(-)
-> > > > >
-> > > > > diff --git a/tools/gpio-tools-test.bash b/tools/gpio-tools-test.b=
-ash
-> > > > > index abb2f5d..dde26b4 100755
-> > > > > --- a/tools/gpio-tools-test.bash
-> > > > > +++ b/tools/gpio-tools-test.bash
-> > > > > @@ -27,10 +27,10 @@ GPIOSIM_APP_NAME=3D"gpio-tools-test"
-> > > > >  MIN_KERNEL_VERSION=3D"5.17.4"
-> > > > >  MIN_SHUNIT_VERSION=3D"2.1.8"
-> > > > >
-> > > > > -# Run the command in $* and fail the test if the command succeed=
-s.
-> > > > > +# Run the command in $@ and fail the test if the command succeed=
-s.
-> > > > >  assert_fail() {
-> > > > > -     $* || return 0
-> > > > > -     fail " '$*': command did not fail as expected"
-> > > > > +     "$@" || return 0
-> > > > > +     fail " '$@': command did not fail as expected"
-> > > > >  }
-> > > > >
-> > > >
-> > > > Ironically, shellcheck doesn't like the '$@' in the fail string[1],=
- so you
-> > > > should use $* there.
-> > > >
-> > > > It also doesn't like looping on find results in patch 4[2], though =
-that
-> > > > is not related to your change, so leave it and I'll fix it later?
-> > > >
-> > >
-> > > What does it want here? This looks correct to me? Should we do "$(fin=
-d...)"?
-> > >
-> >
-> > Refer to the referenced link - it is worried about filenames containing
-> > whitespace.
-> > Not sure what the best option is here - I am only just looking into it.=
-..
-> >
->
-> How about using this for the cleanup:
->
->                 echo 0 > "$DEVPATH/live"
->                 find "$DEVPATH" -type d -name hog -exec rmdir '{}' '+'
->                 find "$DEVPATH" -type d -name "line*" -exec rmdir '{}' '+=
-'
->                 find "$DEVPATH" -type d -name "bank*" -exec rmdir '{}' '+=
-'
->                 rmdir "$DEVPATH"
->
-> It is a bit less subtle, but that works for me.
->
+How do you think about to use the summary phrase =E2=80=9CFix reference co=
+unting for children in mxs_pinctrl_probe_dt()=E2=80=9D?
 
-Looks good and works fine. I'll use it, thanks a lot!
 
-Bart
+=E2=80=A6
+> of_get_next_child() will increase refcount =E2=80=A6
+
+                                    the reference counter?
+
+
+> Per current implementation, 'child' will be override by
+
+                                              overridden?
+
+
+> for_each_child_of_node(np, child), so use of_get_child_count to avoid
+> refcount leakage.
+
+Another wording suggestion:
+  for_each_child_of_node(np, child). Thus use an of_get_child_count() call
+  to avoid reference counting leakage.
+
+
+Regards,
+Markus
 
