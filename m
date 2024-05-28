@@ -1,148 +1,169 @@
-Return-Path: <linux-gpio+bounces-6743-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6744-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 982348D230D
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 20:10:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA3E68D2381
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 20:50:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7B821C22DA5
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 18:10:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD54D1C22F92
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 18:50:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CD57481D7;
-	Tue, 28 May 2024 18:09:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCA55171E43;
+	Tue, 28 May 2024 18:48:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ce2x0BiQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/Cq38XZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD19B1DA4C;
-	Tue, 28 May 2024 18:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF432E639;
+	Tue, 28 May 2024 18:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716919797; cv=none; b=OIk2yxse5rbYDCnpfXWbuLkg66yoG3p5UuUOzVs5wd3zUtQyYNmZvse/CLh7OeztsaP9ZehoUUzEsNUAxP7GD+78hrNu0bZvcV2egS8xN1CtTLkxWlkGCwK4Uo1Em5R72zdjP8Vg0YdDXYbmXm4sT3y4LD07EnojP+/pJricy6c=
+	t=1716922098; cv=none; b=KEhY1wnURjTJrIoAalGSJ11dUCeKg46iyX6paajBNr5WE6GufCd0m1r4aUKYrxgaglp7zZV1PpvyrI/GXaWukixqqbAUL8zFapVe3vGQ7RigSkAvJouXkx5qc3O8qb/6ffVjeRmJCNGZxFXU14DyOhVGcrHH6EGldPrNpRF6Md8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716919797; c=relaxed/simple;
-	bh=FfkCmvn8rmMIG+GOvKiTWLsMfjkaV0rloiGxJwgk+iM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NCRLYVOEpnoSlfwGKrvJ+f+Yea7lJzRAWDIqCVxBXqJ2u1nXMYWeUwE38MLThvd9XlgiMBzlSxvZ+5e2Rn4HT9gFbr02h1smt+C3/SVlQW6C5qFby8uFbyI1nQwzziDGRtFQQHfrIAk20v6Nm4luK2Q2SBRHWRZI3uUTJI2R5og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Ce2x0BiQ; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3FE318D0;
-	Tue, 28 May 2024 20:09:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1716919790;
-	bh=FfkCmvn8rmMIG+GOvKiTWLsMfjkaV0rloiGxJwgk+iM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ce2x0BiQ0uu8VvjRYGuTOWT1yZUXjj/JuL1BX1dyocWlaufKNbJAGdVtHJmRQ0dQB
-	 Z1uwKGsQ8O/gGNlU2+YwHGXa0AmNAuiGuyVKAHmmmQsDXhY1xh4YgP7ueS52xoTnNn
-	 1b1xbXLkywf6o5mLqo9PAxZXXHXIvRrI16Mi4n8o=
-Date: Tue, 28 May 2024 21:09:41 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Alexandru Ardelean <alexandru.ardelean@analog.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH 4/5] gpio: adp5585: Add Analog Devices ADP5585 support
-Message-ID: <20240528180941.GA10903@pendragon.ideasonboard.com>
-References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
- <20240520195942.11582-5-laurent.pinchart@ideasonboard.com>
- <CACRpkdbAq1Cqr4X8fjEjOTxw7ky9b6V0ye1NYKfDy5E1BmAX6g@mail.gmail.com>
- <20240528122734.GA29970@pendragon.ideasonboard.com>
+	s=arc-20240116; t=1716922098; c=relaxed/simple;
+	bh=MRChlc3fno+fgWLT1UD9zMfX7V7oZsD0KEIC9Fr5KPg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RHWPWOKAhfbmVKjTyFYkkeNF75l46+4X0+T1idcBdpn7I25iOXftjz0APARDPOodYx7ZmQ+9CqD1WjJgiqlY6if6vNEQ7/k2dce6OfTJ2d5TLER6LmLI4c2YvORuIM1jc6anuCWoXzKondML+cv5MDtyj4HpvbG9/NuBa3MfHC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B/Cq38XZ; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4e4eff99f16so372054e0c.1;
+        Tue, 28 May 2024 11:48:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716922096; x=1717526896; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bxlvn5Oq9LbYwfLCGxNQLz0UZ5j1MQaP4pgY98KDpRk=;
+        b=B/Cq38XZ/hShv/h3v17RcYM5+cZzKn8uI4ZinvzHxsND4zNIU2Q4ooucJccj9I+QtA
+         EMwbGbPr6NRKulqPi3he6L2/ePrfDWRysVBx8wuaRBmly3dTI8adRiI8c09l9P18JOFP
+         jS6166nNcoin8QYvDwoEiHP++x/ddV+wqhi/KaCqFo3iwzVwMzi3eAe4OSYwN0Ia7Yv4
+         JVrofvEWa3B4skFlo3fjGaXTVcjExHlP0UxX1k8wgKP40Ao6i5DYZ80zIj1/fHYzuZmd
+         e/CVrLeCetK/obB02bYxY8y4E9no9gMjlkDUgjlPGfH0fLNz71mWePrfg/QV76c/k0aa
+         fFuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716922096; x=1717526896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bxlvn5Oq9LbYwfLCGxNQLz0UZ5j1MQaP4pgY98KDpRk=;
+        b=FzizrR3qxbMH061iZezYxPZ+hjbJ3OgJ4Ef6ZkafuKyvkUzeAV8aIKUxkHcwFDHNW2
+         TFwmIDYMJDEV/7EuNuCn/ykgtaNN4oDMUCuiWtM08HK/b0Uz9MZMq1vwdX7WoCmC+/KM
+         82nwvoUo2UPnfTd0rXwMAbdfwftnzPY30S/sR5Rd2QsI+0+4Uc/niW8/yV0vl8csqdCJ
+         ak4w+lgwj4jEdxPq18wcHZvXk/jZhiI90xlv6J9pz8H7LkhnGuXDGazfhVDVT1XSCR0f
+         gOnYIdrY6tPTOgnbk2U44xXfuURDa5Wujm5osVkkebozcH+NX6cx+UwEJ/iFBFEqJ2HG
+         /B9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWR5oXylYlqxbm1IYZX71K+M5RH53sFOj75JSY4Cbkz7zFgmJqednIiqJzuli+Zsmgj58Xt7E0jqO7T5MoCvEjc3gPQqk9KEy+BTzM5/XRDmaO162pl0Pml7yj8v/7cFg6g0Io/5HnXEGZhIoqJ8+O7B3HbCHNXe5E99Dyzcp+CDNhH3TGRz6PhgcFjoBPB3c0UqWlenynIGzbKA3v63VLUWg2OUFUa+Q==
+X-Gm-Message-State: AOJu0Yy3pP36ir7aTeyDf+GwTDBg9mDmhDVEULTf8lF0d9b4RWEMBDPF
+	m7noDmakF9tnNPBuMBiGF2AMN9aveBwU2m+39LsHWjEhe7p89aOxrf/1+8b3rL/2a/LaWETZbmw
+	Co2Rd7c/c70+iq4NTsHxIenoJbBk=
+X-Google-Smtp-Source: AGHT+IE9trmXEg3oEOdmSAsRssG2a/Bs2cLxXZv1lQZLY6SJ5JxtgyKLzQTyBQReU97+ZhJRjwN1iYkNyibCrLnWAuk=
+X-Received: by 2002:a05:6122:4127:b0:4e4:eda9:ec32 with SMTP id
+ 71dfb90a1353d-4e4f02d0410mr13536269e0c.10.1716922095852; Tue, 28 May 2024
+ 11:48:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240528122734.GA29970@pendragon.ideasonboard.com>
+References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240423175900.702640-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXUM-s5RQXgKQUtqu5=fVTFk5Ajg2WNZ2eAiy5Lr-tX5A@mail.gmail.com>
+In-Reply-To: <CAMuHMdXUM-s5RQXgKQUtqu5=fVTFk5Ajg2WNZ2eAiy5Lr-tX5A@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 28 May 2024 19:47:04 +0100
+Message-ID: <CA+V-a8vbV0LZ0XkHEOYLww4mpgiaSzfGDCi+Hi45XNSSgSRnfA@mail.gmail.com>
+Subject: Re: [PATCH v2 03/13] pinctrl: renesas: pinctrl-rzg2l: Allow more bits
+ for pin configuration
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 28, 2024 at 03:27:34PM +0300, Laurent Pinchart wrote:
-> Hi Linus,
-> 
-> On Tue, May 28, 2024 at 01:54:29PM +0200, Linus Walleij wrote:
-> > On Mon, May 20, 2024 at 9:59 PM Laurent Pinchart wrote:
-> > 
-> > > From: Haibo Chen <haibo.chen@nxp.com>
-> > >
-> > > The ADP5585 is a 10/11 input/output port expander with a built in keypad
-> > > matrix decoder, programmable logic, reset generator, and PWM generator.
-> > > This driver supports the GPIO function using the platform device
-> > > registered by the core MFD driver.
-> > >
-> > > The driver is derived from an initial implementation from NXP, available
-> > > in commit 451f61b46b76 ("MLK-25917-2 gpio: adp5585-gpio: add
-> > > adp5585-gpio support") in their BSP kernel tree. It has been extensively
-> > > rewritten.
-> > >
-> > > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > 
-> > (...)
-> > 
-> > > +static int adp5585_gpio_direction_input(struct gpio_chip *chip, unsigned int off)
-> > > +{
-> > > +       struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
-> > > +       unsigned int bank = ADP5585_BANK(off);
-> > > +       unsigned int bit = ADP5585_BIT(off);
-> > > +
-> > > +       guard(mutex)(&adp5585_gpio->lock);
-> > > +
-> > > +       return regmap_update_bits(adp5585_gpio->regmap,
-> > > +                                 ADP5585_GPIO_DIRECTION_A + bank,
-> > > +                                 bit, 0);
-> > 
-> > First, I love the guarded mutex!
-> 
-> Yes, it's neat :-)
-> 
-> > But doesn't regmap already contain a mutex? Or is this one of those
-> > cases where regmap has been instantiated without a lock?
-> 
-> regmap indeed includes a lock, but it will lock each register access
-> independently. In adp5585_gpio_get_value() we need to read two
-> registers atomically, so we need to cover them by a single lock.
-> 
-> I could drop the lock from regmap, but I would then likely need to
-> introduce a lock in the parent mfd device that both the PWM and GPIO
-> children would use to protect bus access. That may make sense in the
-> future, but is a bit overkill for now I think.
+Hi Geert,
 
-Actually, I think I can drop the lock. Concurrent access to the
-registers from different GPIOs are protected by the regmap lock, and
-concurrent access to groups of registers for the same GPIO isn't a valid
-use case as callers shouldn't do that.
+Thank you for the review.
 
-> > > +       gc = &adp5585_gpio->gpio_chip;
-> > > +       gc->parent = dev;
-> > > +       gc->direction_input  = adp5585_gpio_direction_input;
-> > > +       gc->direction_output = adp5585_gpio_direction_output;
-> > 
-> > And chance to implemen ->get_direction()?
-> 
-> Sure, I'll add that to v2.
-> 
-> > Other than this I think the driver is ready for merge, so with the
-> > comments fixed or addressed:
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Thank you.
+On Wed, May 22, 2024 at 11:19=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, Apr 23, 2024 at 7:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
+.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > The pin configuration bits have been growing for every new SoCs being
+> > added for the pinctrl-rzg2l driver which would mean updating the macros
+> > every time for each new configuration. To avoid this allocate additiona=
+l
+> > bits for pin configuration by relocating the known fixed bits to the ve=
+ry
+> > end of the configuration.
+> >
+> > Also update the size of 'cfg' to 'u64' to allow more configuration bits=
+ in
+> > the 'struct rzg2l_variable_pin_cfg'.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > RFC->v2
+> > - Merged the macros and rzg2l_variable_pin_cfg changes into single patc=
+h
+> > - Updated types for the config changes
+>
+> Thanks for the update!
+>
+> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > @@ -78,9 +78,9 @@
+> >                                          PIN_CFG_FILNUM | \
+> >                                          PIN_CFG_FILCLKSEL)
+> >
+> > -#define PIN_CFG_PIN_MAP_MASK           GENMASK_ULL(35, 28)
+> > -#define PIN_CFG_PIN_REG_MASK           GENMASK(27, 20)
+> > -#define PIN_CFG_MASK                   GENMASK(19, 0)
+> > +#define PIN_CFG_PIN_MAP_MASK           GENMASK_ULL(62, 55)
+> > +#define PIN_CFG_PIN_REG_MASK           GENMASK_ULL(54, 47)
+> > +#define PIN_CFG_MASK                   GENMASK_ULL(46, 0)
+> >
+> >  /*
+> >   * m indicates the bitmap of supported pins, a is the register index
+>
+> > @@ -241,9 +241,9 @@ struct rzg2l_dedicated_configs {
+> >   * @pin: port pin
+> >   */
+> >  struct rzg2l_variable_pin_cfg {
+> > -       u32 cfg:20;
+> > -       u32 port:5;
+> > -       u32 pin:3;
+> > +       u64 cfg:46;
+>
+> 47, to match PIN_CFG_MASK()?
+>
+Oops, I missed that.
 
--- 
-Regards,
+> > +       u64 port:5;
+> > +       u64 pin:3;
+> >  };
+>
+> To avoid such mistakes, and to increase uniformity, I think it would
+> be good to get rid of this structure, and replace it by masks, to be
+> used with FIELD_GET() and FIELD_PREP_CONST().
+>
+Agreed, I will make a patch on top of this patch (so that its easier
+for review).
 
-Laurent Pinchart
+Cheers,
+Prabhakar
 
