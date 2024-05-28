@@ -1,141 +1,104 @@
-Return-Path: <linux-gpio+bounces-6734-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6735-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D853A8D1B44
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 14:28:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 346D08D1CD7
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 15:24:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 172B41C22264
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 12:28:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6635D1C22E7F
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 13:24:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DF9316D9A4;
-	Tue, 28 May 2024 12:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kDdVQQAG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D15D16F26C;
+	Tue, 28 May 2024 13:23:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC6716B722;
-	Tue, 28 May 2024 12:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F51716ABC2;
+	Tue, 28 May 2024 13:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716899270; cv=none; b=LWZQNFU1yLMsuMbh48gVHuC/fEtM3Pt1FRsE635QHdeTjrAgMGYt1loYYlYbcp5Kvr10TGRBOyg32fdtz7quteT3rJ9PTa5xaPJesztYJxDtSTbohXO/sviKqmj9h72D2T2SBJsa1NDWtNFTQNhVBBRKMJfBQTzpMDyyLV4f9LY=
+	t=1716902607; cv=none; b=TWy5nBo9TanjDiGCysKwKHgG4p9FD4blec8LU5KQ6JiC64rMn6AX89keB0g/1EZZAXgiPocPArRjDPtjScXI96hHqm7AZuvChg1T/jm1OQKHgdrLZ6z4yQ1ivAW+o/pWWQoawwvb3vp6OZQTrYIUMPHVzdvu1c+AsZy0M4yQASg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716899270; c=relaxed/simple;
-	bh=I8xyTDSo2DdUfwiGqFmJGZhy5ikIjBhPpjVahgmEH2k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dFjtME/UzMqLIWHj350d2pfRxkMr220bemSSMu1p/UV3JnXiXf92GjU2hRXDFSGt2v+AOEvgTAFa9nSlophK0pflGI9rXcDuSjlvyfDWWZf/dJ88BUUm1CSRLP6N9HRAhtecdSV4i0XpUwgVuehevzMx0Cbl2qgJbvV+de0/2SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=kDdVQQAG; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 601208D0;
-	Tue, 28 May 2024 14:27:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1716899263;
-	bh=I8xyTDSo2DdUfwiGqFmJGZhy5ikIjBhPpjVahgmEH2k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kDdVQQAGaDRMwpDxn+N+kHyvAbTb3NMVBSx1ViZ2jWmu7ZOqZ9f40Yare7Sa1PKn/
-	 FLia8QxHpNUngQuB05RXVCkUKKd0gNFCumWF9F2WeLpez3uNuZHEGjeAArYBxQaJcd
-	 pCitUJFW/MXne08UYXX9iudRsw0LEBRUOUymRwZ0=
-Date: Tue, 28 May 2024 15:27:34 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Alexandru Ardelean <alexandru.ardelean@analog.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH 4/5] gpio: adp5585: Add Analog Devices ADP5585 support
-Message-ID: <20240528122734.GA29970@pendragon.ideasonboard.com>
-References: <20240520195942.11582-1-laurent.pinchart@ideasonboard.com>
- <20240520195942.11582-5-laurent.pinchart@ideasonboard.com>
- <CACRpkdbAq1Cqr4X8fjEjOTxw7ky9b6V0ye1NYKfDy5E1BmAX6g@mail.gmail.com>
+	s=arc-20240116; t=1716902607; c=relaxed/simple;
+	bh=VpoXeImvv+3zjups/cZs0SCyUkXvCCcET3oHfElZJnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UlgkHmV0mBDdRvQPN8z5DDSU1ReRSfGfyDxErXT1hJoTF8E9QSTAClSr8BiA+HcF+Kt/BzCP4/5WE20rd9AQPqyzoUN3Si8DBxw6FCe9SZhf9Pypo3VhYevgHyCBmxmRQEaZKlGSQPeziXAbv8c+7ojlVRSqVU0FlSFs5PxAOgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i5e86193d.versanet.de ([94.134.25.61] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1sBwnL-00040P-DW; Tue, 28 May 2024 15:23:15 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Dmitry Yashin <dmt.yashin@gmail.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Jianqun Xu <jay.xu@rock-chips.com>, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Dmitry Yashin <dmt.yashin@gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: rockchip: update rk3308 iomux routes
+Date: Tue, 28 May 2024 15:23:14 +0200
+Message-ID: <2553645.4XsnlVU6TS@diego>
+In-Reply-To: <a54be779-9728-4ac4-9b85-8cf6787f491d@gmail.com>
+References:
+ <20240515121634.23945-1-dmt.yashin@gmail.com> <1770701.X513TT2pbd@diego>
+ <a54be779-9728-4ac4-9b85-8cf6787f491d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbAq1Cqr4X8fjEjOTxw7ky9b6V0ye1NYKfDy5E1BmAX6g@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Linus,
-
-On Tue, May 28, 2024 at 01:54:29PM +0200, Linus Walleij wrote:
-> On Mon, May 20, 2024 at 9:59 PM Laurent Pinchart wrote:
-> 
-> > From: Haibo Chen <haibo.chen@nxp.com>
+Am Dienstag, 28. Mai 2024, 14:18:35 CEST schrieb Dmitry Yashin:
+> Hi Heiko,
+>=20
+> On 5/28/24 4:52 PM, Heiko St=C3=BCbner wrote:
+> > Hi Linus,
 > >
-> > The ADP5585 is a 10/11 input/output port expander with a built in keypad
-> > matrix decoder, programmable logic, reset generator, and PWM generator.
-> > This driver supports the GPIO function using the platform device
-> > registered by the core MFD driver.
+> > Am Dienstag, 28. Mai 2024, 13:29:12 CEST schrieb Linus Walleij:
+> >> On Wed, May 15, 2024 at 2:17=E2=80=AFPM Dmitry Yashin <dmt.yashin@gmai=
+l.com> wrote:
+> >>
+> >>> Some of the rk3308 iomux routes in rk3308_mux_route_data belong to
+> >>> the rk3308b SoC. Remove them and correct i2c3 routes.
+> >>>
+> >>> Fixes: 7825aeb7b208 ("pinctrl: rockchip: add rk3308 SoC support")
+> >>> Signed-off-by: Dmitry Yashin <dmt.yashin@gmail.com>
+> >> While you guys are thinking about the RK3308B support, is this fix
+> >> something I can just apply?
+> > I'd think so. I've detailed stuff in my Review mail I just sent.
+> > Both the soc itself and also the affected pin functions are niche
+> > enough that this should not cause breakage.
 > >
-> > The driver is derived from an initial implementation from NXP, available
-> > in commit 451f61b46b76 ("MLK-25917-2 gpio: adp5585-gpio: add
-> > adp5585-gpio support") in their BSP kernel tree. It has been extensively
-> > rewritten.
 > >
-> > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> (...)
-> 
-> > +static int adp5585_gpio_direction_input(struct gpio_chip *chip, unsigned int off)
-> > +{
-> > +       struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
-> > +       unsigned int bank = ADP5585_BANK(off);
-> > +       unsigned int bit = ADP5585_BIT(off);
-> > +
-> > +       guard(mutex)(&adp5585_gpio->lock);
-> > +
-> > +       return regmap_update_bits(adp5585_gpio->regmap,
-> > +                                 ADP5585_GPIO_DIRECTION_A + bank,
-> > +                                 bit, 0);
-> 
-> First, I love the guarded mutex!
+> > Heiko
+> >
+> >
+> >
+>=20
+> Should i just drop 1/3 from V2 then?
 
-Yes, it's neat :-)
+I guess just check the state of affairs once your v2 is ready ;-) .
 
-> But doesn't regmap already contain a mutex? Or is this one of those
-> cases where regmap has been instantiated without a lock?
+I.e. if LinusW grabs patch1 before you post v2, just drop it, otherwise
+send it along.
 
-regmap indeed includes a lock, but it will lock each register access
-independently. In adp5585_gpio_get_value() we need to read two
-registers atomically, so we need to cover them by a single lock.
 
-I could drop the lock from regmap, but I would then likely need to
-introduce a lock in the parent mfd device that both the PWM and GPIO
-children would use to protect bus access. That may make sense in the
-future, but is a bit overkill for now I think.
+> Thanks everyone for the feedback on this series. I'll prepare V2 based
+> on runtime chip detection with use of GRF_CHIP_ID.
 
-> > +       gc = &adp5585_gpio->gpio_chip;
-> > +       gc->parent = dev;
-> > +       gc->direction_input  = adp5585_gpio_direction_input;
-> > +       gc->direction_output = adp5585_gpio_direction_output;
-> 
-> And chance to implemen ->get_direction()?
 
-Sure, I'll add that to v2.
 
-> Other than this I think the driver is ready for merge, so with the
-> comments fixed or addressed:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thank you.
-
--- 
-Regards,
-
-Laurent Pinchart
 
