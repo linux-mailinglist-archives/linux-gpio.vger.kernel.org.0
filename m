@@ -1,148 +1,115 @@
-Return-Path: <linux-gpio+bounces-6718-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6719-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA4F58D1693
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 10:44:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D77868D1701
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 11:14:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4769B1F22146
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 08:44:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 149031C22C8A
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 09:14:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C61B13C9C6;
-	Tue, 28 May 2024 08:44:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9163613D618;
+	Tue, 28 May 2024 09:14:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="N8N7Yyz+"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ye/7+DK5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896AF13C8F2
-	for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 08:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6219F73474
+	for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 09:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716885842; cv=none; b=GOwugIfkafzw0LiK+8MiOZIet8fkwi2HJwi49lt7g9Lr89KD0DlCvsmsLTjDPcvbWmfmmKLZv9fawjdJ0SezhV87aBstTLoxEFWl+bzousW9cIlDp0rTjtDmAhCQbcGDpkWkBZ+TbhOXqsQCmEq4EZ/L6z5XW6+b87EfLoQ2BZg=
+	t=1716887672; cv=none; b=OKj5Meh+Jk+kvPvEyGd5F0zgaPO01bxNmk1dPTDW0FHgoN+ZWjdw0HdvWArUSGS8Z6/9okA9x7mwkm+bZ5oPn4os09bTYmDQ+RjygIQoOcU7alTSW/3Wz8qCEXmiJ2MTeOAXBWjQLaHffWICqzjoVtUnL49/f8yy7sUa9ksBcN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716885842; c=relaxed/simple;
-	bh=8HvIGKRSxVSzXwS7Na7UKkF6X7VsSrmut2KntrLmI1Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HSY0iPj4u99v21co4MejSJA1+OnDJuKICCs3sEsUtwnKdqh2cioYDLAQaVGDxyN7XuAptFpALjkQufNK618ESpJ9ypp7gSKCiK9qElCxwiNM26AOaRqk5bI+bb4LtzfhXizC98zo22hiHvMJsY4MmKdTfUJ9kksVBwnjjj175o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=N8N7Yyz+; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1716885834;
- bh=GQr2PqTVIib2CwbHMvN8Y3i6rh0ebN+xNoUL7A1dzos=;
- b=N8N7Yyz+XiVCGNY/9/+kwTe/Hs4dGQZnp9pqovP0A4/X0wvlSWCA3WXoXPq7hO9GbwjliZ4Wc
- +ZAFkHevpm2adPN3/0NDo+2TNNiXhxQu79xqiaDmmdcVtXPcCwVcG0HCJzXzTV92mSt/eELqhl0
- 09dYX/FGx46v84g+fzMSdJj5Nnkn2vhaPN3XIGbXQE1Fn6nKCw2jD4Ka90mrJ/WIT2DL/M1BBUI
- PqAKbOFCrn7wyD5cxzi22HwZiHCks/HBwJv30mIk9Jg6wkPf0gRqz7rg9WRPl6XKyI4WEG/kc91
- uTOMYKBRYsa2MRxTruUOl0/zjJm9/RSGfyy0lxhldv8w==
-Message-ID: <82435177-1a4a-46c0-9a12-c056647d587f@kwiboo.se>
-Date: Tue, 28 May 2024 10:43:43 +0200
+	s=arc-20240116; t=1716887672; c=relaxed/simple;
+	bh=jKQCs4D4V9knEPuqqeVO+i3nqP2WfwbPVJ82OkWSexc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WEk4d77hwgXRxJizrB3+B4u1o4ZJL61bveVdYgdP9s+Hn5EhFlF5aK64+n01eqAZ+L9tBgR1j5TsyL/qcSoZNuO8GE+rWyE9cCOmNZSE/KQbubAtAG5FNT38swhPWpWBuPRA2bSyC7VY2WNWHxwljSE+ym2qq1E/0FbhmHEFxhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ye/7+DK5; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-357d533b744so523498f8f.2
+        for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 02:14:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716887668; x=1717492468; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ln8YvVhf/nOTdvHmWQXA5NgQG0yGaru+0KQ7MY0vvfY=;
+        b=ye/7+DK52kPKk9KPX/yjjnJNMVqWKlFolfde99x7Dgozf9eQVGJBNp8NDE6FmFKoIJ
+         LWjM75yPM4mUR8ZtCQ1KprYEmOx1v6UqGfETgbKbNDY5lv5atY/PGRz4/8bQnaAutNkY
+         k8vkUEAlVXqwYu7FWmtdwlHusybsaAMl3AZh4coBlCP+MiQkXKj1NypITfrUQKL4rvfL
+         2kG8EKMiqjplwv6Beg0DY+ioC+CTEp8h13aHx69rskkCQ80yOdBk4j4pjQ6Vkby5qsIs
+         bKGUhGIGXpDZKnT/CfkOH5YCDY8fvQ1uIhyTNFnPvl4yOp/UVGK/tYQLCWqnu06thBzr
+         DQ5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716887668; x=1717492468;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ln8YvVhf/nOTdvHmWQXA5NgQG0yGaru+0KQ7MY0vvfY=;
+        b=q84/Ps+V/2JcKMXy++73jblSPKK8LhkUKvHVaMk0Thxv4CLF12e1WsSMmXvFhJw4CU
+         Z5myRkTzFIoU1qq8W0hFh6MxvQv1AcaSo4DgdoIyEmbLMuvq9PM2pDcztJIlg8ZzDdmR
+         Dbbp9Ho8RE9cyOwTt8/ieEAjHessrLRg12Sylm2UwvV+U4fmIq9ErsNvL2rS1KC/eNgd
+         B4cQeFyD8uUiGB4egQD+WX3IswU0qZmQuwftmiyuTwDFHsi3+f2TmPBfy2vNATuvIigH
+         95GSyO1zee9l27JsVly4igrQ3AaSfRbRfa1hF4wwp7hsY6P44ELapV7ExzynNiA9sy7O
+         vNZg==
+X-Gm-Message-State: AOJu0YzdmPbrOxHNcDZlCjJ7UTUdS/E3aH54xT/w8qyxqDP/SUN41syU
+	zfJpJg3UcEAQkG92eAlvJ1s7dlgh3XL2I3Ah6KMu59BEZVkmDqFxDhUUoD02k5SrPNZZBPtJPLw
+	d
+X-Google-Smtp-Source: AGHT+IEsohdcRideuLmQtDW+bKkAcorqFWxQRN/m4SN0rnFcM37kqzKpNlB3K+DEvixiceLUrfXHQQ==
+X-Received: by 2002:adf:a34a:0:b0:354:eb2d:be00 with SMTP id ffacd0b85a97d-3552fdf235fmr7171655f8f.62.1716887668287;
+        Tue, 28 May 2024 02:14:28 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:93eb:927a:e851:8a2f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35b2500e0dbsm1294065f8f.86.2024.05.28.02.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 02:14:27 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl,
+	Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH 0/2] bindings: python: fix running tests via Makefile
+Date: Tue, 28 May 2024 11:14:26 +0200
+Message-ID: <171688766294.44697.16948097872903942955.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240526113234.253859-1-warthog618@gmail.com>
+References: <20240526113234.253859-1-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] pinctrl: rockchip: add rk3308b SoC support
-To: "=?UTF-8?Q?Heiko_St=C3=BCbner?=" <heiko@sntech.de>, Dmitry Yashin
- <dmt.yashin@gmail.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Rob Herring
- <robh@kernel.org>, Jianqun Xu <jay.xu@rock-chips.com>,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240515121634.23945-1-dmt.yashin@gmail.com>
- <81aa0e4e-a3c7-41d1-8cd2-4d060730b37a@gmail.com>
- <20240517085832.365ac878@booty> <4771649.rnE6jSC6OK@diego>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <4771649.rnE6jSC6OK@diego>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Report-Abuse-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-ForwardEmail-Version: 0.4.40
-X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-ForwardEmail-ID: 665599456a993415841a589f
 
-On 2024-05-28 10:17, Heiko Stübner wrote:
-> Am Freitag, 17. Mai 2024, 08:58:32 CEST schrieb Luca Ceresoli:
->> Hello Dmitry,
->>
->> On Thu, 16 May 2024 17:06:46 +0500
->> Dmitry Yashin <dmt.yashin@gmail.com> wrote:
->>
->>> Hi Luca,
->>>
->>> On 15.05.24 21:29, Luca Ceresoli wrote:
->>>> I'm skeptical about this being bound to a new DT compatible. As far as I
->>>> know the RK3308 and RK3308B are mostly equivalent, so it looks as the
->>>> pinctrl implementation could be detected at runtime. This would let
->>>> products to be built with either chip version and work on any without
->>>> any DT change.  
->>>
->>>
->>> Thanks for your feedback.
->>>
->>> Indeed, these SoC's have a lot in common, but as I can see the rk3308b
->>> has more blocks, like extra PWM's (rk3308 datasheet 1.5 [0] shows only
->>> 1x PWM 4ch, when rk3308b and rk3308b-s have 3x PWM 4ch), 1-wire and
->>> CAN controller (mentioned in the TRM, but dropped from rk3308b
->>> datasheet for some reason).
->>>
->>> So, in my view, it really makes sense to add rk3308b.dtsi, where extra
->>> PWM's, pinctrl compatible and its pin functions can be moved. And if
->>> its not worth it, then I will try to adapt the entire series to runtime
->>> config based on cpuid like you suggested.
->>
->> Having a rk3308b.dtsi would probably make sense, yes, as there are
->> several differences as you described. However for the pinctrl it seems
->> probably not necessary.
->>
->> I've seen actual products being manufactured with two different RK3308
->> variants in different lots of production, but with the same DT that has
->> rockchip,rk3308-pinctrl in it. Those would need a _selective_ DT
->> upgrade in order to benefit from your changes.
->>
->> And even if a product had always used the B variant, it would need DT
->> upgrade when upgrading to a kernel with your changes. Otherwise with
->> patch 1/3 of this series the pictrl driver would lose many routes after
->> upgrading the kernel (but not the DT): can this lead to
->> previously-working devices to stop working? I think this is a
->> fundamental question to reply.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On Sun, 26 May 2024 19:32:32 +0800, Kent Gibson wrote:
+> Recently I couldn't work out how to run the test suite for the Python
+> bindings.  There were two problems, the make target did not run the
+> tests correctly, and the tests need to be run as root.  This series
+> fixes the Makefile so the tests can be run via the make target, and
+> documents how to call it as it isn't totally obvious.
 > 
-> If things can be runtime-detectable, they should be detected at runtime.
-> So yes, while we need to know that it is a rk3308-something before
-> via the dt, if we can distinguish between the rk3308 variants at runtime
-> we should definitly do so.
-
-The GRF_CHIP_ID reg (0xFF000800) can be used to identify what model is
-used at runtime:
-
-RK3308: 0xCEA (errata: chip id value is 32'h0cea (32'd3306))
-RK3308B: 0x3308
-RK3308BS: 0x3308C
-
-Vendor U-Boot make use of this reg to identify what model is running:
-https://github.com/rockchip-linux/u-boot/blob/next-dev/arch/arm/include/asm/arch-rockchip/cpu.h#L68-L82
-
-I can only validate on real hw that the reg value is 0x3308 for RK3308B.
-
-Regards,
-Jonas
-
+> Patch 1 adds a Testing section to the README to clarify how to run the
+> tests.
 > 
-> Heiko
-> 
+> [...]
 
+Applied, thanks!
+
+[1/2] bindings: python: add Testing section to README
+      commit: 8635780c1c21d7833c960d49a796be5553b3f624
+[2/2] bindings: python: fix python-tests-run make target
+      commit: dee10f08070d97d9dc8b1dfde7576fb1a8d81cc6
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
