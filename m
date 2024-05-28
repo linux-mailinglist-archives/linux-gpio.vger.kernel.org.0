@@ -1,107 +1,108 @@
-Return-Path: <linux-gpio+bounces-6723-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6724-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E8A08D19C6
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 13:38:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4A4E8D19CF
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 13:39:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0225D1F2387A
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 11:38:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 06DCD1C20EE8
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 11:39:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6913B16C849;
-	Tue, 28 May 2024 11:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A07E16D9B4;
+	Tue, 28 May 2024 11:38:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="TWgNXuMv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gKBOir1Z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77AF16C6B1;
-	Tue, 28 May 2024 11:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959E016D4E9
+	for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 11:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716896286; cv=none; b=nHY4GHJUcg0vUSjjPgqxtdrWxKtiYBItiKM/G7ISFSZoR05OJbEYN0kpCWfCKWSjpLoaVWz7cAOrSjMzkR+ndXjDJOGvIKfTiKc9aXxyFTk+MdAJcAK7fly/ELVAfvFK6hLuhrAZLIXJyJjM5nCHnlLFwAYbduamN/DhlnWt0SY=
+	t=1716896293; cv=none; b=a3iGn4JX7eyaaci6lwTqtflBn78mGo6FyB9+HzePKK9Yje/ZBUH0o2usJTmt5cymTvl32ig8qqiwH8kihiNQ2fZ5nYogictphpAxXnvuZdec0/EmuGYJij2wuZgRhld7w37bObpCZ7URZbKdLm2n1VVYowuhrpGlZ6ZqqF9JMxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716896286; c=relaxed/simple;
-	bh=iIEfkaLcBZrLnXPb98Krsanziumo17QkX9cbSc6RakU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=PbaUgLva9KBWDXjotCh32Eywjd9wRWHU1h8A7lelIQoASEMIaawLkA9L8Ll0ah0kvHZg2+e2vZMtNLDPfgdsFgi09P6Sa97Qukfl6TyIVeFQLq2VVSDZCL6/R1eNF8tWpnU+mfnVNTpUdQYZzoqJK8whesNi64zQzC0CR/6TqNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=TWgNXuMv; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1716896259; x=1717501059; i=markus.elfring@web.de;
-	bh=TDvFBcJGyPwRaT6zbKz3iL8MSVk3ipgQOdseEeqP3Oo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=TWgNXuMvD9jrT87vwEeAqB6F/Y1R3BBMFNEmuFE3hWpNBkauYtFT3ijCfkXfWw/2
-	 QA+0x+wWGG0oCylh1hvtgEoWuZO0aiCZu3tXm6P2eY6/NX9MGbIHZSERumye5rS0g
-	 6s3eyLcutS+H4gWKliP+8uAKu4xv3VMJANFmFA4AG1uyJbX3YhKuduvPg6HGRZugX
-	 iRm/TavfTS+shBwmilOzdNMCCRcp4C4el8b8xQUZoEEN0qG59VC5Q1mQkb2N94lIG
-	 j5kiD/2XF4cHV1Nqqnk5rrUKiNo6t8nuZ1+Sh7HqZThD4kKm3zA/Iqyd2xu+CN4Gf
-	 w+3eSx9ZeFFL5X0zDA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MyvBA-1sPTn731G6-00vx4O; Tue, 28
- May 2024 13:37:39 +0200
-Message-ID: <9abb1d5e-fdac-4500-9218-fb9f28ff2c05@web.de>
-Date: Tue, 28 May 2024 13:37:33 +0200
+	s=arc-20240116; t=1716896293; c=relaxed/simple;
+	bh=MzKOsHfMqcEbAgbro03BEkIexxY7ioREoSPx82+mCkI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mzuA5DWEHJj+xIYGxTLBmq8sAyZAbnT6/L1h2BgUMtgLxYT05gAxpwGVfXHWET7eGRQi2Gs17QnKYnccO0l8q4V23xCiaVXpR9jhQYJA3EkDu2CnL5e7l6TvEQ64IenMVvi3fzcvnVDMQ1GuW7rqAZCX2EPMiLiLlXF1/N7ESc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gKBOir1Z; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-df7722171bcso782380276.3
+        for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 04:38:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716896290; x=1717501090; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MzKOsHfMqcEbAgbro03BEkIexxY7ioREoSPx82+mCkI=;
+        b=gKBOir1Zie8eqOyMucZIlB80d/TU2BbtXB1S56vAhaZvADzkvSZt8MkAiZc4M3bbiN
+         gpAzbo/4JQEeN2K7imve4y02j6jceLfp81qPyfvxFEleiMG+oEnSXBSUrvbnwedT0aFM
+         FwaDdti6twq5ZWDFUkwniMFvLugZnYMQ7aZizQSCiuOZ8TWMYC+k87ACQhg6vX532xB+
+         R/It1vqx1lkQySLV3RxmrYmMddSs2NVOUEy0RwK++OjXVrpcBhwl+UkXALk289a3Be0/
+         OnszAkbh+Hpzp6mGy1AEMW7Yutc9kt7Wq4JVtHzmb4HZ5EzXVJcfHNHb5uYLwORk5Yzb
+         QWZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716896290; x=1717501090;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MzKOsHfMqcEbAgbro03BEkIexxY7ioREoSPx82+mCkI=;
+        b=aEjig1icCeaLE4Di3n3neOd3kjumtsKiXVBsSMgnRR8GWYu4QEg8K3/z9meaIrFJPH
+         WqNNX4iQlxXcyoFwfkYW1ZdJsEyUk43PEJx0mJSBxWeOKwZHEvwIGsy0uhx1w8POpT1T
+         jMYpW3DSOYMWJGGlyIyMqzyxRjocy1Rzu8B+sSrOK9+CExcKfaUjxVF2HP8d6K7Hu37b
+         /YHZJiKn3Z2CpiVfazyTS8xwiRMDGbaZdcEuyNWaWkGNo9uzoP639eJkH4xnWiu/47Or
+         6wxchcAu6GmOVPwrgFlyiSSUJEDIDlR92D71l+wa2iG9V1tg1cU10pfvLRcxP32ca2Au
+         1tZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWh16A9kxG0osh/0a0ysnWcHILLGGbjYuxPYMZqvHt7MO3k2Z0XnUiOT/bROe1g9Jle6BS2ESSP0rgTOJBOra1t2kiygsvChxB5vw==
+X-Gm-Message-State: AOJu0Ywx1J2bvJxHYvPC+agG41cw9pR9NgxbuadxxxXCWLMGI9wcrcWS
+	bA2upQCCj372raCPm57oMp4YyXfIDjRdvHiaeSm3CBLZfggmVl1dgtobLVqQC4ctH5PI/1NHMnB
+	5hiW/DvwZDKyXwa3uRy2Hnz+igLPx+mfk+0Cxwg==
+X-Google-Smtp-Source: AGHT+IFdWOfI1NoIMu23ncdyzrqayVvCIbtSBXzmT1072SkezYLbTQ/Wy7WEifX1vSkdblVpJ0/GFf7VJPh29VPnHM4=
+X-Received: by 2002:a25:b101:0:b0:de6:197b:ff89 with SMTP id
+ 3f1490d57ef6-df772269eb6mr9776298276.64.1716896290645; Tue, 28 May 2024
+ 04:38:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Weihao Li <cn.liweihao@gmail.com>, linux-gpio@vger.kernel.org,
- linux-mips@vger.kernel.org,
- Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- =?UTF-8?B?QXLEsW7DpyDDnG5hbA==?= <arinc.unal@arinc9.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>,
- Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240527022036.31985-1-user@blabla>
-Subject: Re: [PATCH] pinctrl: ralink: mt76x8: fix pinmux function
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240527022036.31985-1-user@blabla>
-Content-Type: text/plain; charset=UTF-8
+References: <0109018f85002ae1-6fb831b2-74c2-4559-98f1-a3ef25e72558-000000@ap-south-1.amazonses.com>
+In-Reply-To: <0109018f85002ae1-6fb831b2-74c2-4559-98f1-a3ef25e72558-000000@ap-south-1.amazonses.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 28 May 2024 13:37:59 +0200
+Message-ID: <CACRpkdb6kKrO=-a84NVwmQ=DdSE9KmaO5SdWaHRYi4EDxAEv9A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinctrl-tps6594: make tps65224_muxval_remap and
+ tps6594_muxval_remap as static to fix sparse warning
+To: Nirmala devi Mal Nadar <m.nirmaladevi@ltts.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, lee@kernel.org, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5QkSmp5bnBaXcyDYB3+Ih3oVkyDJtxHb/IzWgk/DY8NzsXDVZg6
- QWk3eZqikcrEs8miOgajsxVgKq+rlIOuLQtMCPj9jKFJSjGTUZTagp/PxcHPA0rDgNTMFnJ
- 9fffCIAM/h4Nxfe7lYa2sDjpUuYfPlm4aNm8KX0dqnDpnmGhAqF0f10WEdxcEX63N0VLXVs
- JGGNeQlNRKTwSQnLaDZ2A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:V7J8FSJ60RI=;BPsXQDfKwdHj7znD2lR8xkEVM4G
- MTgW1lUc2eByEVsKs+jfIGQWsJ5XF+09sJtvksTq72coBXuW5W8ZZ0IIjdsQXN829BCPPckje
- 4lMphmJH3SRDGB1aZoDZ2vXakerGWL0OrBtlIXyxk2gyAi77FDkbtVZUKdL/5VV1t+Pg+9hAA
- 40atqIs60e9vYXd6LOmelQkP3I5drwPMLJjdhz21who7qcyVHXQfhyr8bp35eoOGnn3zZtZ5e
- y3XA+CoEPSY9q+Hs5zm8PjUI/c8PcHxQn+NloqQ8fxxrymF9cKwjLjjDuFuYcobRt4XnVVJzq
- DOG8T/Iqx8b/WjoGke/GVpyVncHtEVdsvxH4ufAi7bbFCBJ37EyAvDJ3dSXSIAjc+fYkT60lc
- 7kRCOvpoaLg+abEKpWIJEYYtsuIxuAsoU7hp0CY+9sdQ2Z+eDeEPWuvwEmSvoxk+ZkIzgPUzc
- TjoOsfMXlFCOrh3n5uN8xPEIzYEysVAdXa+73b3ZzkSQqNk4gPnb/KQtX2YQjRW4HM32awVrO
- xqVHBYZH1CvIN0AUBUcZynt9gDIQWbPopvh7qtXh4TrFeG9tb6vNDel3jtMY15H3nYWHvHFz3
- WQwXMb4ByE7Ruy6Jbqpi3gf5cQ8LIJ25M7OAlKu2N9TCBkdkWSqLnUlfctJjcc4mUmPTYt5/7
- zyCcMjuXToXeEL+f2O8o3+Va5ZuC7zuJnuwyw0xcXzrYMLuCZ5Di4FrHMp3KrUDgS+l14+ryo
- EXP9PuUJg6nKZehG+ww9+R3aK9teE3Iy/eK8Ohw5UIN665blXy/WLsb6X3veVhWomjsw3WU7k
- GCTba0XjzbV+gdBFztJyI9yY1Hgy0v8iXP5GpRkn2ZIQk=
 
-=E2=80=A6
-> There are some same function name in different pin groups, =E2=80=A6
+On Fri, May 17, 2024 at 7:22=E2=80=AFAM Nirmala devi Mal Nadar
+<m.nirmaladevi@ltts.com> wrote:
 
-                               names?
+> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+>
+> pinctrl: tps6594: Fix sparse warning.
+>
+> warning: symbol 'tps65224_muxval_remap' was not declared. Should it be st=
+atic?
+> warning: symbol 'tps6594_muxval_remap' was not declared. Should it be sta=
+tic?
+>
+> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202405111523.9yt759uX-lkp@i=
+ntel.com/
 
+Patch applied!
 
-=E2=80=A6
-> To solve this problem, a simple way is just add a pingrp refix to
-
-                                                    pin group prefix?
-
-Regards,
-Markus
+Yours,
+Linus Walleij
 
