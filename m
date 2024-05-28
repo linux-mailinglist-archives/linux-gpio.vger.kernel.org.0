@@ -1,38 +1,38 @@
-Return-Path: <linux-gpio+bounces-6762-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6765-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB1E78D2526
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 21:50:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FB908D2530
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 21:51:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A791828131D
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 19:50:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B11991C2708B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 19:51:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53E9417B41C;
-	Tue, 28 May 2024 19:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00E4117BB33;
+	Tue, 28 May 2024 19:50:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC9917994F
-	for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 19:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF0E17B43C
+	for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 19:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716925807; cv=none; b=Snl1p6Wt6Jj05e24GBI8Zn6s7LvKaHnV7SgGogNqEdScK08vuEzBoO4P8c5mzwmXkHe+U2fZQ3f7hficxCBk+l6RNzrpiXKOOS+mk1eZx3V9Ts17YE58P+6Ni1As15relw5YFT6jWYN1XmRbAyopVoZw2rG2NDMsJju+i2gzMtM=
+	t=1716925810; cv=none; b=AUdhf7qXFNCxseMz32HufQ0xsO75uL+SxzAlLIe/1IDivHsYpAx2n7606BbmvRixY0UUC8E7oXMc5X5qrZvCqPoigl/sv2M4VG2TIjTuwpA5cfgiDlY9H1h9ZCXd08yA6wQXWnJYJqXcAP1YD1GzZ1sGIcz6xK5bfCPDzvm1U7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716925807; c=relaxed/simple;
-	bh=Ipd1r706hFJdBLXw3qskh6dO0fzpcVigdcqkKJK4BV8=;
+	s=arc-20240116; t=1716925810; c=relaxed/simple;
+	bh=KYoxAAK6S+GIuN2E48DvdIJyuBlhCt1h5mEc1k8V3xc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Eo1Kf94AOUUSyiUFHkBVGuWEFsRpZPu/t6pjUODk0ZqWdtN5Mhd9DFD8MRMh2sWRxeu8SMk8OziFwU2TfODvCOyvYh5dI+Gc+i9FjwBzVLmoywLpQCgaBPdba69occQMCJqle6eoFQZuA/14IgTktSu943f6aVX/rXNwaZni8Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+	 MIME-Version; b=Jk0VydJ7NjAPpIM5+Y4bPUJWwUdy8Uid08sUihsaE3Ngz9IXhFAoyyhNAzQahhJSqbPzSP1WgJGFiICXPnoKDMDLHazwc+4vPNrSdRffKkQOxrMAFgOP10mR4ydclh3+6UOk+j7nP/KwZAReZcMmfMIVv4nlOqjKG8NJGPxF7CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
 	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id 798dced9-1d2b-11ef-aaf5-005056bdd08f;
-	Tue, 28 May 2024 22:50:03 +0300 (EEST)
+	id 7a1a2509-1d2b-11ef-aaf5-005056bdd08f;
+	Tue, 28 May 2024 22:50:04 +0300 (EEST)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -55,9 +55,9 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	Paul Cercueil <paul@crapouillou.net>,
 	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
 	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v2 07/11] pinctrl: imx: Convert to use func member
-Date: Tue, 28 May 2024 22:44:58 +0300
-Message-ID: <20240528194951.1489887-8-andy.shevchenko@gmail.com>
+Subject: [PATCH v2 08/11] pinctrl: ingenic: Convert to use func member
+Date: Tue, 28 May 2024 22:44:59 +0300
+Message-ID: <20240528194951.1489887-9-andy.shevchenko@gmail.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240528194951.1489887-1-andy.shevchenko@gmail.com>
 References: <20240528194951.1489887-1-andy.shevchenko@gmail.com>
@@ -75,50 +75,53 @@ desynchronisation of the generic pin function description.
 
 Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/pinctrl/freescale/pinctrl-imx.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/pinctrl/pinctrl-ingenic.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 2d3d80921c0d..44921e3bdb94 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -266,7 +266,7 @@ static int imx_pmx_set(struct pinctrl_dev *pctldev, unsigned selector,
- 	npins = grp->grp.npins;
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 959b9ea83a66..31703737731b 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -96,9 +96,7 @@
  
- 	dev_dbg(ipctl->dev, "enable function %s group %s\n",
+ #define INGENIC_PIN_FUNCTION(_name_, id)							\
+ 	{											\
+-		.name = _name_,									\
+-		.group_names = id##_groups,							\
+-		.num_group_names = ARRAY_SIZE(id##_groups),					\
++		.func = PINCTRL_PINFUNCTION(_name_, id##_groups, ARRAY_SIZE(id##_groups)),	\
+ 		.data = NULL,									\
+ 	}
+ 
+@@ -3769,7 +3767,7 @@ static int ingenic_pinmux_set_mux(struct pinctrl_dev *pctldev,
+ 		return -EINVAL;
+ 
+ 	dev_dbg(pctldev->dev, "enable function %s group %s\n",
 -		func->name, grp->grp.name);
 +		func->func.name, grp->grp.name);
  
- 	for (i = 0; i < npins; i++) {
- 		/*
-@@ -593,21 +593,21 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
- 		return -EINVAL;
- 
- 	/* Initialise function */
--	func->name = np->name;
--	func->num_group_names = of_get_child_count(np);
--	if (func->num_group_names == 0) {
-+	func->func.name = np->name;
-+	func->func.ngroups = of_get_child_count(np);
-+	if (func->func.ngroups == 0) {
- 		dev_info(ipctl->dev, "no groups defined in %pOF\n", np);
- 		return -EINVAL;
+ 	mode = (uintptr_t)grp->data;
+ 	if (mode <= 3) {
+@@ -4317,14 +4315,14 @@ static int __init ingenic_pinctrl_probe(struct platform_device *pdev)
  	}
  
--	group_names = devm_kcalloc(ipctl->dev, func->num_group_names,
--				   sizeof(char *), GFP_KERNEL);
-+	group_names = devm_kcalloc(ipctl->dev, func->ngroups, sizeof(*func->func.groups),
-+				   GFP_KERNEL);
- 	if (!group_names)
- 		return -ENOMEM;
- 	i = 0;
- 	for_each_child_of_node(np, child)
- 		group_names[i++] = child->name;
--	func->group_names = group_names;
-+	func->func.groups = group_names;
+ 	for (i = 0; i < chip_info->num_functions; i++) {
+-		const struct function_desc *func = &chip_info->functions[i];
++		const struct function_desc *function = &chip_info->functions[i];
++		const struct pinfunction *func = &function->func;
  
- 	i = 0;
- 	for_each_child_of_node(np, child) {
+ 		err = pinmux_generic_add_function(jzpc->pctl, func->name,
+-				func->group_names, func->num_group_names,
+-				func->data);
++						  func->groups, func->ngroups,
++						  function->data);
+ 		if (err < 0) {
+-			dev_err(dev, "Failed to register function %s\n",
+-					func->name);
++			dev_err(dev, "Failed to register function %s\n", func->name);
+ 			return err;
+ 		}
+ 	}
 -- 
 2.45.1
 
