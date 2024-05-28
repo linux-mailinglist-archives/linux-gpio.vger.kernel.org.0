@@ -1,227 +1,133 @@
-Return-Path: <linux-gpio+bounces-6732-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6733-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A0708D1AD1
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 14:14:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2079A8D1AEF
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 14:18:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D3BBB28252
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 12:14:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D00EE2847E3
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 12:18:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 840DA16D9CF;
-	Tue, 28 May 2024 12:13:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6117916D33D;
+	Tue, 28 May 2024 12:18:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VxkZQ/mB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGb+i24W"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E888B16D33E
-	for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 12:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906A279F5;
+	Tue, 28 May 2024 12:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716898397; cv=none; b=T9zagvo6uSc3mXfAxBpGNrwdqZWBcRudEJ5jwSLMe8sgzblMtbBQLFikVeFKJq0/zZfkoGSMcmqeqCqs8VR+65ZMRQyED/So1I4+7icShbNSMA2pXbbAMuF9ReucBC3qHGGOABoXobfMcWhZotBS5Ebew7aHyRWVgbz2ZhlD0sA=
+	t=1716898724; cv=none; b=ONTaRPgDRDL6D74xRT/XXoPBOQydDonC/jH0yazdZjd2LolIVu4bH0EDCrzmuqu8vU5EyvGtH7MwlGyVuNr/Fc20xKDmTmuihxk9Im2DNdujvqq5xg4JCn+s7M4HJ+iaLpgCl3RzlTu5zL6gl+wZ9c4RPRpNfpxySLwVDm76jhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716898397; c=relaxed/simple;
-	bh=zahCqpNAo5PX4J5AmLvaaCc3FUPSG2YcyPhcrnlbkCY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oBkAoIVO8ehrKzVZ+GVXgpHYR3s4GZY3Ou3LjKSuXNH7OqBm094ecut9vGX5ZOC5gmh/JLKP66/rSkkG7WkUlxmAB8tmEskldixkQLuU+wmm4MoCz9FlN67BIPQsRJZuXfvK6zoC9WdLoydXoG8f5DBbYmcfboTOLH9Bn6B1oU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VxkZQ/mB; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-62a2424ec50so6497567b3.3
-        for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 05:13:14 -0700 (PDT)
+	s=arc-20240116; t=1716898724; c=relaxed/simple;
+	bh=lrFI0/wIbmca4cXxnFcjytkpyrMnj3siPkLehlAEFjc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tg13nAhnkkJVWlXxFz1HK/XbM9YeQKoyiNbaeUslPvm7LwbuVkgKfWV/LvZ2TWCwmHU6E5h3LMYRbqSnUg5A+kbIYZzeF1TJeKojedmnIKWqKR+wOWdTZfccXByvl1dEqMpyDXKmM4qPnjjT2g0uvmo2nBUvHT8Jur0I+gGVsZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IGb+i24W; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2e95a74d51fso9886461fa.2;
+        Tue, 28 May 2024 05:18:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716898394; x=1717503194; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K+QAYTErS7U2iovpig+AATgQkbKxA71fHEB/B/5/5RI=;
-        b=VxkZQ/mBBMCEVa2JZ37DvDROv7D2taI9TfWvhwbPXqRZZGFAqpyFDDigExHqg9EQ0L
-         JPaQnGIo1QoNunMnsLC635RA46BpepC33NTj9Vx1EjCt/v1hqUTWBdv15tJPk/wneEJS
-         3TgDZ7NwXy/2rst9T/iZP0ScD7zEN27/b2ejaZlFRQ4QnsSG8EIrnWWM1iSe4RGMNByc
-         qwESJxOzlS7tme9wp2BqJEzRGCXmlnCIhDpmNBrAxYdalBdZndI3/DLXuJa/N07/ZiK8
-         48jyNJCGef2HdMS8EtUgC8pnxQQGR256xct0IEYDvLWvfxOXFosE8lEbIMQEp5UwrEPu
-         ctvg==
+        d=gmail.com; s=20230601; t=1716898720; x=1717503520; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jLL8Ft99cJVseIi4ayW8bS5YO6VTvNhFoRwZq32Fda8=;
+        b=IGb+i24WuT1LOs/Kl0e//QQhwIBQ6nrRUzqpRIzdke6MnbYlPMyTN/Vilz6ouNu2sI
+         E5fuBF+nlyAIWfY/b2NrKVVewpciEAAbXr6ToiDJlaS08m5xKykiQYSB6s/TYMzTGXRu
+         nenSkE8YIOeGjMNcyeSG4ksajOny/Jn32jHrdIv3LF5ZvYwD7ERDr1fr5T9SF/+G7E32
+         naz1VaCOHMoDs7zxqVjhwC48vwe+cB4+nIEEpNcO9F2RIa0oCLr92Gj1ahOkP+Rks98E
+         T2Eq1D5NwPhBQc8SqeOsSXugeSWzBEoa67S1Gk2HDljJO6ruEX8aczW03bCDYcYajpOY
+         4nbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716898394; x=1717503194;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K+QAYTErS7U2iovpig+AATgQkbKxA71fHEB/B/5/5RI=;
-        b=RLif+FnRhEH95Uzb09ibabyIIRMRlmdQ9qC10DtHchAuGieGpUVUnC7Gv1bIFWCfek
-         UBavB6dcm/vUB7e9pv1AxlUxkkRisp36aJ7JEXTDTXQu0QPyxBwHoi50BuxKKQ5UuOgf
-         KoSfYrFVwnHfe4aPTFxfw1d//gXJAYBAcS/COK/8v8z+y9CUE5t0EmDyZ59vdWzBOwPh
-         XmUdMVUof9F0xaWTG9IDAzkMLlneXrYwEtps2/Nrp2FV80xAukXn/KuaBichVNWmTLe/
-         VfcsrTaREWxjdZvHYAoSsfVaMZhfW+LeKSXxYBanUnRlwL9+DE28/PXTmkpFajiUKWPF
-         aGaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7LqQQg5gUwi63KlWRuqHQiacgp2dkqXWqHQg4zCq4DgtFCpMDD4xjHwbmubo7psJRnHr77ZcqY0P+8R68eTyp31W7LaO5auJNZw==
-X-Gm-Message-State: AOJu0Yy9M+B2bD2PDSq3qSz4SYgSKNe2+m5yubdxrcglkUsdwfvhSftO
-	UDN2BduNqq8Td8/z8n9fDDjf4iXIrYCvxKh1kilLAUO8w3SR4pYJt669kwuuzW07cCEc2XatkKw
-	H+edWJ9s5znr6Rfvh3+7NGnj2gK/7NRHn1C8Crg==
-X-Google-Smtp-Source: AGHT+IF3OL+F0UzaxHr0Sfnd3Ewd6kL8rw3K+W20Q6AByQLyFNPzPgdNIJJk6DqXFhbJtK6bpaM+mwCF04SLpF3w0RI=
-X-Received: by 2002:a25:558a:0:b0:de6:482:c7d5 with SMTP id
- 3f1490d57ef6-df77222182dmr10262233276.43.1716898393830; Tue, 28 May 2024
- 05:13:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1716898720; x=1717503520;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jLL8Ft99cJVseIi4ayW8bS5YO6VTvNhFoRwZq32Fda8=;
+        b=ic4ni1BpYB4iZr4cKMbiJFlSIv1gxSyO3gDq/2Up+AMltH97zhy0Dbe0hFzkA+AxR+
+         GZzJ7T5ecgf2pmQ288CorOz5h53LNzDEtkmV3u0lcPoDgmuILfrCjeZxK2VXCrWBB8vI
+         hZEUK9RwNuUsRia1x5kE2YpPG5TaT8cavCtjjL7m2bsNd5Yk9h9GuIbASyMnOQiWN3qy
+         fXdEZQ4F59vgFtKm+tkzxJAU9SFlT6Nl84+yAoQfNtwrNsnNgi11qhzolFmZWVCI3KU8
+         PJ7P8vwSDN0BCAtTuw7RnfwdomgTUVduhsuzS4OGfCST3nEnyrLtXcOFBZQXcw0MrL3i
+         /+9g==
+X-Forwarded-Encrypted: i=1; AJvYcCX05nbFaC1x1EHelgWFesb25bUSjVVNEpTPtPT/KiZqsfI6bZrzuWL+Dr7pyw0iTDUvTbzQOSyPPjJwPIVH+zRUiQdsNAzbDIFJgsTG2syrWSed6TLNofOepLsGvfUzJP8shnksQbnFjUTu+zJjO/dPdKzdq1DQ4BOEu2kCcITMK+mZmvs=
+X-Gm-Message-State: AOJu0Yw79NDxmmT7w2miefWHX/zhHFSXhJCnFlCaf6XZJJTqFLm8Xklh
+	5ubT0cYhfZ5LImNbabPrZMglqOHWOni4G3LeHxE0CkLjLsMaZqn7
+X-Google-Smtp-Source: AGHT+IGc0NnrB9tTNcE2A4QQn3xBsUhlCFH1lh48wmiR1tIpieoZLdQlD0imMwEebqbi4mFbk8xh6w==
+X-Received: by 2002:a05:651c:1030:b0:2e9:8c0a:746a with SMTP id 38308e7fff4ca-2e98c0a7a92mr6741881fa.52.1716898719317;
+        Tue, 28 May 2024 05:18:39 -0700 (PDT)
+Received: from [10.20.30.169] ([178.218.200.115])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e95bdcc963sm22551431fa.86.2024.05.28.05.18.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 05:18:39 -0700 (PDT)
+Message-ID: <a54be779-9728-4ac4-9b85-8cf6787f491d@gmail.com>
+Date: Tue, 28 May 2024 17:18:35 +0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk> <20240517-a2b-v1-6-b8647554c67b@bang-olufsen.dk>
-In-Reply-To: <20240517-a2b-v1-6-b8647554c67b@bang-olufsen.dk>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 28 May 2024 14:13:02 +0200
-Message-ID: <CACRpkdYKTD=97AfBN69X3BUf+4HjVrFwp-Ht2kf3HA62ud99QA@mail.gmail.com>
-Subject: Re: [PATCH 06/13] gpio: add AD24xx GPIO driver
-To: =?UTF-8?Q?Alvin_=C5=A0ipraga?= <alvin@pqrs.dk>
-Cc: Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Emil Svendsen <emas@bang-olufsen.dk>, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	=?UTF-8?Q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] pinctrl: rockchip: update rk3308 iomux routes
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>, Jianqun Xu
+ <jay.xu@rock-chips.com>, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Dmitry Yashin <dmt.yashin@gmail.com>
+References: <20240515121634.23945-1-dmt.yashin@gmail.com>
+ <20240515121634.23945-2-dmt.yashin@gmail.com>
+ <CACRpkdYO_zr=OEZCv8LKtw+fNOwJ906ZVKyPhbbyA=9gP5XQgg@mail.gmail.com>
+ <1770701.X513TT2pbd@diego>
+Content-Language: en-US
+From: Dmitry Yashin <dmt.yashin@gmail.com>
+In-Reply-To: <1770701.X513TT2pbd@diego>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Alvin,
+Hi Heiko,
 
-thanks for your patch!
-
-On Fri, May 17, 2024 at 2:58=E2=80=AFPM Alvin =C5=A0ipraga <alvin@pqrs.dk> =
-wrote:
-
-> From: Alvin =C5=A0ipraga <alsi@bang-olufsen.dk>
+On 5/28/24 4:52 PM, Heiko Stübner wrote:
+> Hi Linus,
 >
-> This driver adds GPIO function support for AD24xx A2B transceiver chips.
-> When a GPIO is requested, the relevant pin is automatically muxed to
-> GPIO mode. The device tree property gpio-reserved-ranges can be used to
-> protect certain pins which are reserved for other functionality such as
-> I2S/TDM data.
+> Am Dienstag, 28. Mai 2024, 13:29:12 CEST schrieb Linus Walleij:
+>> On Wed, May 15, 2024 at 2:17 PM Dmitry Yashin <dmt.yashin@gmail.com> wrote:
+>>
+>>> Some of the rk3308 iomux routes in rk3308_mux_route_data belong to
+>>> the rk3308b SoC. Remove them and correct i2c3 routes.
+>>>
+>>> Fixes: 7825aeb7b208 ("pinctrl: rockchip: add rk3308 SoC support")
+>>> Signed-off-by: Dmitry Yashin <dmt.yashin@gmail.com>
+>> While you guys are thinking about the RK3308B support, is this fix
+>> something I can just apply?
+> I'd think so. I've detailed stuff in my Review mail I just sent.
+> Both the soc itself and also the affected pin functions are niche
+> enough that this should not cause breakage.
 >
-> Signed-off-by: Alvin =C5=A0ipraga <alsi@bang-olufsen.dk>
-(...)
+>
+> Heiko
+>
+>
+>
 
->  config A2B_AD24XX_NODE
->         tristate "Analog Devices Inc. AD24xx node support"
->         select REGMAP_A2B
-> +       imply GPIO_AD24XX
+Should i just drop 1/3 from V2 then?
 
-Maybe it should even be select, if it's hard to think about a case
-where this is not desired?
+Thanks everyone for the feedback on this series. I'll prepare V2 based
+on runtime chip detection with use of GRF_CHIP_ID.
 
-> +config GPIO_AD24XX
-> +       tristate "Analog Devies Inc. AD24xx GPIO support"
-> +       depends on A2B_AD24XX_NODE
-> +       help
-> +         Say Y here to enable GPIO support for AD24xx A2B transceivers.
-> +
->  config GPIO_ARIZONA
->         tristate "Wolfson Microelectronics Arizona class devices"
->         depends on MFD_ARIZONA
+-- 
+Thanks,
+Dmitry
 
-This is grouped with the MFD devices but as I understand it A2B is a
-completely new bus type? Is MFD even always selected when A2B is
-in use?
-
-To me it's fine to add a new submenu for A2B devices, if there will be
-more of them.
-
-> +static int ad24xx_gpio_get_direction(struct gpio_chip *gc, unsigned int =
-offset)
-> +{
-> +       struct ad24xx_gpio *adg =3D gpiochip_get_data(gc);
-> +       unsigned int val;
-> +       int ret;
-> +
-> +       ret =3D regmap_read(adg->regmap, A2B_GPIOOEN, &val);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (val & BIT(offset))
-> +               return 0; /* output */
-> +
-> +       return 1; /* input */
-
-Please use GPIO_LINE_DIRECTION_OUT/GPIO_LINE_DIRECTION_IN
-instead of 0/1 here?
-
-Then you don't need the comments because it's evident.
-
-> +static int ad24xx_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +       struct ad24xx_gpio *adg =3D gpiochip_get_data(gc);
-> +       unsigned int val;
-> +       int ret;
-> +
-> +       ret =3D regmap_read(adg->regmap, A2B_GPIOIN, &val);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (val & BIT(offset))
-> +               return 1; /* high */
-> +
-> +       return 0; /* low */
-
-Just
-
-return !!(val & BIT(offset));
-
-> +static int ad24xx_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
-> +                                            unsigned int child,
-> +                                            unsigned int child_type,
-> +                                            unsigned int *parent,
-> +                                            unsigned int *parent_type)
-> +{
-> +       *parent =3D child;
-> +       return 0;
-> +}
-
-This deserves a comment, is IRQ 0 the singular parent of
-everything? Then it doesn't seem very hierarchical but rather
-cascaded don't you think?
-
-> +static int ad24xx_gpio_irq_set_type(struct irq_data *d, unsigned int typ=
-e)
-> +{
-> +       struct gpio_chip *gpio_chip =3D irq_data_get_irq_chip_data(d);
-> +       struct ad24xx_gpio *adg =3D gpiochip_get_data(gpio_chip);
-> +       irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
-> +
-> +       switch (type) {
-> +       case IRQ_TYPE_EDGE_RISING:
-> +               adg->irq_invert &=3D ~BIT(hwirq);
-> +               break;
-> +       case IRQ_TYPE_EDGE_FALLING:
-> +               adg->irq_invert |=3D BIT(hwirq);
-> +               break;
-> +       default:
-> +               return -EINVAL;
-> +       }
-
-No need for the "toggling trick" for supporting IRQ on both edges?
-Implementing that hack (which is in several drivers) will be nice to
-have for e.g. pushbuttons.
-
-> +static void ad24xx_gpio_irq_bus_lock(struct irq_data *d)
-> +{
-> +       struct gpio_chip *gpio_chip =3D irq_data_get_irq_chip_data(d);
-> +       struct ad24xx_gpio *adg =3D gpiochip_get_data(gpio_chip);
-> +
-> +       mutex_lock(&adg->mutex);
-> +}
-
-Is this mutex needed since there is already a mutex or spinlock
-in the regmap? Isn't this the case for A2B?
-
-Yours,
-Linus Walleij
 
