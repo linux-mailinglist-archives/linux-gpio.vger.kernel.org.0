@@ -1,105 +1,169 @@
-Return-Path: <linux-gpio+bounces-6730-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6731-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDE7C8D1A79
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 13:59:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF3418D1A84
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 14:01:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E7551F23F6A
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 11:59:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1E301C22CDD
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 12:01:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DB2116D323;
-	Tue, 28 May 2024 11:58:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1438E16C445;
+	Tue, 28 May 2024 12:01:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wvR3m5ZZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kbKZgCgM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A6A16C871
-	for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 11:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4778E13A242;
+	Tue, 28 May 2024 12:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716897531; cv=none; b=KZJSA7E/03VYcyQKWRG0+HZNyFG7Lbce77ehlnVKYLenQ+8VFsq4iAtan03cbMPlkdCQAaKZIrVW9dG+mIlDww5QeCMeLz0DfKSNBYOUOZohXHLEp28ZvhotuO+zmOHBE+XkogcAyvZqU38MaF21Gi2KzkfjU0eoIEXtiMfcZRo=
+	t=1716897679; cv=none; b=e0sUh2FGWOEFAFVkYq+caiumDOnoOWzWyRuR37e9296kHfQxz6+VCRHUTJ6BcFcMnD+VmO7Taw2beksLwgMShX1FIOWj2Rg98Y005rK7OALFgTvcvdlCq3Tz8d8tuFTofVp8qRPsli2DiCLhpf9J/jo0jIUDfXC7o+W6FTvUczc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716897531; c=relaxed/simple;
-	bh=XYEcwBrn2ZuAVxK/8OUQeCzOCxQyqvHA12tGOH+svqk=;
+	s=arc-20240116; t=1716897679; c=relaxed/simple;
+	bh=8WRHDTUZ0RTZvELeR+4+qbfh9ozH4kaFF8ljxt36pEI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aevywr0RM2AoCBtebomvCFEUA1IIUSXkT0dYySTzKEnBhv0dkOhhs4XZ5PM0rh9Cl2NajK/PgXyBP55/CuaBdyb4qRUHjTTcbpdpWhcvuyYowuwZ0Fd1qdzcVjDVPEyMWHbRYyMRsJOZng+TUtgvb7E2HbRcWDInsYZEjFgJEYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wvR3m5ZZ; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-627dde150d0so7655397b3.3
-        for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 04:58:49 -0700 (PDT)
+	 To:Cc:Content-Type; b=gku19gd/XCFfBfmV9UeKRPhyeZnpAMv3/zua1HcEC13+9aCWqNy2u8Okx02pmEeXdpD70vwctyFylLiI5j+2MhsOqGawfpzApQ/dXOYPBmvsw6MCuL8gtwWTYyaL/D8TcRpiEhTc/g2cR4yf9i2rMVSdKXv+vx8Dej6H14o4jHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kbKZgCgM; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5785d466c82so889381a12.3;
+        Tue, 28 May 2024 05:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716897529; x=1717502329; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1716897676; x=1717502476; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XYEcwBrn2ZuAVxK/8OUQeCzOCxQyqvHA12tGOH+svqk=;
-        b=wvR3m5ZZpG9TtziiPqDPQd0C34yd81oJCe8YxiDKUc7x3yDmT7O61VeD0EuhMNMEfA
-         JPkShAzEB05xK3MwdHG0UN53ECPH+FcKzBaXBYzvmFZFg73NSah1Cyl4QLhTlS4DN9Xw
-         y7Xu5ADr6FQgPeL3KBt/snfKfeCGH6cu3osGRYmwamijfnjbQqGsSoENKN5kyXnmOT6m
-         NkJxGf9W7QKX28IlARln1KP+2pS0jF9P+LfCd2gRSgBbzXglwdJxWq5+JsQE/XWHP+q0
-         L/j8iD6b/QTfd3PIyTEIhFdySbTNKb9YgYyR5jLd/Vk1wbP0Vt6YReX+QHkdfHlSu6X4
-         7F8w==
+        bh=NAgN1LldmRrlrSvzizrGCKqLHlKjnztSUaZS5Nc7Gtg=;
+        b=kbKZgCgMiVQU6z+wB7b/hCP1+KtZ/23hcZjyWvmXE8IPeQHgM7XVzwbrwxj5W9Liil
+         ZG38VIa9LRpT2hoEKkVRz7gz/oMWh8tRkKeeUBNzIM468+XbCc1aB8KQNVolRQ7dh2yr
+         dw3hZUIy3Pf8N/65q6MRdK6uPhpv1olPLHdHwr8Z5KnnwvVsIHjmhhYmmRWEEmW6OYHW
+         VYanJNqOdJuMrNAuWb17q8vcShCNImy5+wpW9I1aIcGoyXP3vqfhOYeDrbZaLetG9wEc
+         nNl2e6MZFYpvQfRoSXE0kB0OfN/wT9D4i1nwjW6+42uLqkvbLW9S/gttcSYCDGfjAH7n
+         j8qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716897529; x=1717502329;
+        d=1e100.net; s=20230601; t=1716897676; x=1717502476;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XYEcwBrn2ZuAVxK/8OUQeCzOCxQyqvHA12tGOH+svqk=;
-        b=LPCEWF763lTuFXx9QLZ4xUtYGzqSJPWYXFuqxErC+ZeiEwI/y7Cb+HEctcT4tfAB6z
-         cXlTYdMTzoN7FhXZI3CY4FYIeN4Lc4zHJWYaWpmR1NUcF78mCCc3wxM9KPXJoqnvN9r3
-         GOgygpXSLRSja+oisqMTMSCOprINv/AOhumL5dnbJ352e26dm27gwOYw4MBUbacs7bBU
-         9US0MMOKPAzGygigaQvAZvs9GDdYIzHje9ymMVfNt0LG24h48SudyQ60BUHCax6L1v7b
-         lsbkubhdC0DUgs9+DIndmGz0QHTS0oz5Z6GfDpAb+H/v596YK2swhkkK1TxhBSaoVg2v
-         Xo9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV03Rt5i+goubPgZqFCHCoBcq8LziIDfA8mdSyH25+fFuEEdBM9Je7foDxvWSbkGQyqpx37sFHN6zkQgKXCCEdGinIiv/EDFsFM1g==
-X-Gm-Message-State: AOJu0YyyWKHzpjPhhxtwWM2K2DHhM8JZ29nhn/UbFEuGb4GK3PmX7Pu4
-	xah4nzVVmLNbdKWoqwzO0OP3+AszJKxRRI4OTW3TXb/k7HcBH+5tRw47IqNi7eili/MV+DQWHxF
-	0IZfRWVG2jGeJlrh43Lqw8qC5O5pJoe7aHiWVQA==
-X-Google-Smtp-Source: AGHT+IEi2FFXpJzm6Ui68LI58fiW+9ORaUI9qMfSH5fZ2ghY0PYbSNMQ3NXlttGGYAUDF59nM+IzQBpvFB2cxXuz9QU=
-X-Received: by 2002:a81:92d4:0:b0:61b:33f6:9bbb with SMTP id
- 00721157ae682-62a08de4efamr123625807b3.28.1716897528671; Tue, 28 May 2024
- 04:58:48 -0700 (PDT)
+        bh=NAgN1LldmRrlrSvzizrGCKqLHlKjnztSUaZS5Nc7Gtg=;
+        b=F+0TrEmqexeeHiPEZO4iCgdkLkhZ9K7Omiy4u/cTBXnlU0OK4vlwyDSZEh09u8Mwa9
+         TM+WOehEqqm74ILKyt+9wPziijx/8SLb9+p38iETvDgZcW6uuCalR0ZeV1ssOWbVI9xO
+         55co0dmW7kOJvngoTNoUK+Rfo/9/RkF5qRSyNivao9nrtoG2aqtJwo5oSmBEjZ7ZUVjL
+         yBArVtlXZ68543I7RL/K+ftk0udlTO1fprIfSijR47JkkHt60HzRk7JwznJseadEAMY9
+         SQGJT0N+ZuAyIMeVHONaRSfPODIuYYwIm9bUIHEHKPmbSEKzmQgHRa/Nvyc7q5rIMSkx
+         J+YA==
+X-Forwarded-Encrypted: i=1; AJvYcCXhgCeoFdn8EcVEAkj65GiVbFmNvNaY+ykaBNq+LykukoaCHjnnTZcp6QV0HUBIyVdcsxln63Qc2OVvZR2xxjXm+u+EWBkBTDfxGcAr+9qcYtADBOUnHp1PiphQwjETponsDxnBf66dXg==
+X-Gm-Message-State: AOJu0Yw1V29ouZIxLq0yeysI/4w5G4aOb14guGKZaubkyZ95E35SpxE0
+	BT6JaVT6Y7EcEDt6j0xGnExq9kxfc/i34bpfwwmdvS6O7NLzoADniXJbVMhowam4nQihktD35m7
+	6o157emKGs7JMZTnc65k1HGexACc=
+X-Google-Smtp-Source: AGHT+IGWXAZnzJq/outpGdrrF+BzVco1qSOLCnXc5XWK+E8bGR9GWy0ZahU9VxoRM4PaeRGMN+5E3TDdnybOYtKZhcQ=
+X-Received: by 2002:a17:906:cb8b:b0:a59:c3d0:550c with SMTP id
+ a640c23a62f3a-a62643e4d86mr656965266b.43.1716897676330; Tue, 28 May 2024
+ 05:01:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240521152602.1097764-1-patrick.rudolph@9elements.com> <CAHp75VfpFtYtStacY68-iu32x-XK3XMn_34N7EH07vvhjwp36g@mail.gmail.com>
-In-Reply-To: <CAHp75VfpFtYtStacY68-iu32x-XK3XMn_34N7EH07vvhjwp36g@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 28 May 2024 13:58:37 +0200
-Message-ID: <CACRpkdbFVpZhF_RZEeZf06PRq-Sf1Z-8apUbnaJAFDaQt_5xMQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: cy8c95x0: Use single I2C lock
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Patrick Rudolph <patrick.rudolph@9elements.com>, naresh.solanki@9elements.com, 
-	broonie@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240527022036.31985-1-user@blabla> <9abb1d5e-fdac-4500-9218-fb9f28ff2c05@web.de>
+In-Reply-To: <9abb1d5e-fdac-4500-9218-fb9f28ff2c05@web.de>
+From: =?UTF-8?B?5p2O57u06LGq?= <cn.liweihao@gmail.com>
+Date: Tue, 28 May 2024 20:01:04 +0800
+Message-ID: <CAPEOAkRjKm_bcfX4CJe3HON=6abcfzBGjXo6VpcnhR-u9OCHzg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ralink: mt76x8: fix pinmux function
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org, 
+	Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	=?UTF-8?B?QXLEsW7DpyDDnG5hbA==?= <arinc.unal@arinc9.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	Sean Wang <sean.wang@kernel.org>, Sergio Paracuellos <sergio.paracuellos@gmail.com>, 
+	LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 21, 2024 at 7:25=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, May 21, 2024 at 6:26=E2=80=AFPM Patrick Rudolph
-> <patrick.rudolph@9elements.com> wrote:
-> >
-> > Currently there are 3 locks being used when accessing the chip, one
-> > in the driver and one in each regmap. Reduce that to one driver only
-> > lock that protects all regmap and regcache accesses.
+Markus Elfring <Markus.Elfring@web.de> =E4=BA=8E2024=E5=B9=B45=E6=9C=8828=
+=E6=97=A5=E5=91=A8=E4=BA=8C 19:37=E5=86=99=E9=81=93=EF=BC=9A
 >
-> Right. But please consider converting the driver to use cleanup.h.
-> Dunno if it requires a separate patch or can be folded into this one
-> as it seems you anyway touch almost all mutex calls in the code.
-> Linus?
+> =E2=80=A6
+> > There are some same function name in different pin groups, =E2=80=A6
+>
+>                                names?
+>
 
-I think it's best to add a separate patch for this for bisection,
-just right after this one.
+refclk [0][1], pwm [2][3] and some others. For example, without this
+patch, part of the pinmux-functions in the kernel debug fs looks like
+this
 
-Yours,
-Linus Walleij
+root@mt7628:/sys/kernel/debug/pinctrl/pinctrl-ralink-pinmux# cat
+pinmux-functions
+function 0: gpio, groups =3D [ pwm1 pwm0 uart2 uart1 i2c refclk perst
+wdt spi sdmode uart0 i2s spi cs1 spis gpio0 wled_an p0led_an p1led_an
+p2led_an p3led_an p4led_an wled_kn p0led_kn p1led_kn p2led_kn p3led_kn
+p4led_kn ]
+function 1: sdxc d6, groups =3D [ pwm1 ]
+function 2: utif, groups =3D [ pwm1 ]
+function 3: gpio, groups =3D [ pwm1 ]
+function 4: pwm1, groups =3D [ pwm1 ]
+function 5: sdxc d7, groups =3D [ pwm0 ]
+function 6: utif, groups =3D [ pwm0 ]
+function 7: gpio, groups =3D [ pwm0 ]
+function 8: pwm0, groups =3D [ pwm0 ]
+function 9: sdxc d5 d4, groups =3D [ uart2 ]
+function 10: pwm, groups =3D [ uart2 ]
+function 11: gpio, groups =3D [ uart2 ]
+function 12: uart2, groups =3D [ uart2 ]
+function 13: sw_r, groups =3D [ uart1 ]
+function 14: pwm, groups =3D [ uart1 ]
+function 15: gpio, groups =3D [ uart1 ]
+function 16: uart1, groups =3D [ uart1 ]
+function 17: -, groups =3D [ i2c ]
+function 18: debug, groups =3D [ i2c ]
+function 19: gpio, groups =3D [ i2c ]
+function 20: i2c, groups =3D [ i2c ]
+function 21: refclk, groups =3D [ refclk ]
+function 22: perst, groups =3D [ perst ]
+function 23: wdt, groups =3D [ wdt ]
+function 24: spi, groups =3D [ spi ]
+function 25: jtag, groups =3D [ sdmode ]
+function 26: utif, groups =3D [ sdmode ]
+function 27: gpio, groups =3D [ sdmode ]
+function 28: sdxc, groups =3D [ sdmode ]
+function 29: -, groups =3D [ uart0 ]
+function 30: -, groups =3D [ uart0 ]
+function 31: gpio, groups =3D [ uart0 ]
+function 32: uart0, groups =3D [ uart0 ]
+function 33: antenna, groups =3D [ i2s ]
+function 34: pcm, groups =3D [ i2s ]
+function 35: gpio, groups =3D [ i2s ]
+function 36: i2s, groups =3D [ i2s ]
+function 37: -, groups =3D [ spi cs1 ]
+function 38: refclk, groups =3D [ spi cs1 ]
+
+
+>
+> =E2=80=A6
+> > To solve this problem, a simple way is just add a pingrp refix to
+>
+>                                                     pin group prefix?
+>
+
+Yes. Just add a pin group prefix like pinctrl-mt7620.c does.
+
+> Regards,
+> Markus
+
+[0] https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/mediatek=
+/pinctrl-mt76x8.c#L73
+[1] https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/mediatek=
+/pinctrl-mt76x8.c#L101
+[2] https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/mediatek=
+/pinctrl-mt76x8.c#L54
+[3] https://elixir.bootlin.com/linux/latest/source/drivers/pinctrl/mediatek=
+/pinctrl-mt76x8.c#L61
 
