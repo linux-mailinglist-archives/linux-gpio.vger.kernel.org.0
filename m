@@ -1,166 +1,194 @@
-Return-Path: <linux-gpio+bounces-6771-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6770-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A28608D2566
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 22:03:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 360138D255F
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 22:02:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 311D01F24BFC
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 20:03:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5023287BB8
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 20:02:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62C6117838E;
-	Tue, 28 May 2024 20:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVlNeqd4"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4538117838C;
+	Tue, 28 May 2024 20:02:45 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9202172BDB;
-	Tue, 28 May 2024 20:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98530173349
+	for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 20:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716926587; cv=none; b=HM1KDmutwLJ44BYRG6wKNyqRCq9y3e4CXn4HnsowaHO3B21nGOdvjrrHuwdFyLPwKHC5OrERwhuJwcXfGGnLB2qSc+YasVcxhlJXOdwLHfl3e/WGU4VwMbET8eZBj9bt6+xlh6tpELFE4JypsgIHMn6BYa+/Lsjhe2WnYHQYHeU=
+	t=1716926565; cv=none; b=YRo+QXG8guGVHRh7tC7taACjwQSYBfcoHsjUPIRanfP/KVaW3e4Iu5iqkUZKA9H6Z9hVs3WbvaQljNTjtdFGyN94zOwGC6ckmgjl4Ouq+gM5ZwWA6AC4x4I6UGC64OtdFCAqiqqkb591aE3Q+/zq7a7p/cLwhuI9RwGNRyvd5n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716926587; c=relaxed/simple;
-	bh=hq6uRHm3y9M9TalehTKak0nkSHczL9psHTS4wjPnm1o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fkU9NU5LsUusFtIbKznfbvbMjvmf+cG1w+ueCvxlduX5ckxBpXaLqsnH5msZyviXcPlgv4igdEd/s5wy3MGhrSzpYM6X3u0gQ0Q/wTc1Bk11QK3C9ukQlx+dczRZhIDbs7xqSGuo+LM27+hs86JSYa+z2x+Bq6kGYKmnXyosVHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DVlNeqd4; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4e3316c0debso420265e0c.0;
-        Tue, 28 May 2024 13:03:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716926585; x=1717531385; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qSsi77YWskths0d6euwD+vNlpaxcZ5dztOfO9uvhPMw=;
-        b=DVlNeqd4rllQgRgGxjln/K2lU/HCRGAuJDn8dCE33VIM+P4jKJLu2GhvL0V56faTYr
-         LLXDGfi8E+x4u8JS1YlgU0ISwBqMbWPNicPuO7iD5/htiRN1fOaC6NvAjs2BUB3GhrG+
-         XfXrPla49VVh5SIl+tiL1htGqOpef4n0+/ucy+6I9+mJE+OZnioWkFv1joXRzpC/7ID5
-         eF6rBlnF8MdgLPpH/UcMT0EAMnx8fQ802z0AaCSHD4URU1BSFlZYdWpKJtylWuojiAeS
-         79nVdwbQvvKLYgXyY0lVaDNXU30KKp/NdyunDMRheXY6UM8Nc4jz6cuNsITm5YZ+aim1
-         7oRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716926585; x=1717531385;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qSsi77YWskths0d6euwD+vNlpaxcZ5dztOfO9uvhPMw=;
-        b=xNoQrc0lsxGxGlYjrfIt3fmgwB8ChvZjjN7K12d6JjJnCiJDCkN4byEk9YgkR7R8wH
-         0L7pbozoPvSdK56La0/sSpU47OHH9J5D3V2mwQT21RNPLZGMMMt4lkXLe3bl0aPNXoGV
-         YCSnXI+R9dDXFzCIUwp7iooxR5aLyzFCOnGAist71f1GDItBts45SYPRcpgzM10khYnC
-         P05subwhlBlh3+r/7P/nOyn7gogXwf2XCmnEwgoalv+n25dXuRsA+McRO1WntK5EYePz
-         Pq1YEeUNq318EEJ4F+/tyqhoEYjhmI7jqd4MtWNE25WnLgLcBRumGlkbwaCSPB6CmL63
-         8GKg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqchREPF+1JGHAwt14uqdk8SDjPqyqmB8O6Cx8E3xrSQMyC+7GjkrM2k2P/qgLGJKn3p4mktaysJw6ilI5fyYTQy1KZ17ga/BXV2ZkkfRrMbQIpvHfic/eUJmib+E7nid0ni5fEqaJCSSAgQU47ub5F4c7kl4PVrDku1I3xMtFj+8HJMtdmX0SPPoXK1ZXTWl2kzRqDpWDf7Z7OOkIR96rEzmQQwjQAg==
-X-Gm-Message-State: AOJu0Yw86fkUERQOwErvfJbvhnqiumk2l9oUyFgAvzwV4pouDffv05wT
-	rhr+W8JvhunTIQ0B6WRu+EDL0hC/eemgGHo5R6oGGC4yECrW//FxujsE4eVhW4MHsBKhXdLPwzC
-	jTlB468BsQZsK/yMnRWlRFuJHEm4=
-X-Google-Smtp-Source: AGHT+IHSpS7JgZ3F7Syj4TVYDPPmkFIU/f9NUkxoYHR18ZZdZFrcScSjcjBSuBmRHMrH+vxnu5WmdvRRTvtprS2k2KQ=
-X-Received: by 2002:a05:6122:3c54:b0:4d8:4a7f:c166 with SMTP id
- 71dfb90a1353d-4e4f02d957dmr13450250e0c.12.1716926584584; Tue, 28 May 2024
- 13:03:04 -0700 (PDT)
+	s=arc-20240116; t=1716926565; c=relaxed/simple;
+	bh=pTf2qUi734ES9Al085wTXfYC8mQU+J7CT38EpK7LQlk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ncZ/ucebWaclToqAjNDTJiJ9yeONmJljV83KQAc6oO5uf2OfwVv2D7HsOdJyvxFinY0Rk/nWeAV52MaIFs/E6LUzz+ena3q/KtOqDTSQhaGFkqyjY9vc2uqQYzudztBZoLhb9REBkA46DpEOenvBuo1N1MMftLbzYt/LZgKFapU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id 3cab8281-1d2d-11ef-aaf5-005056bdd08f;
+	Tue, 28 May 2024 23:02:41 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 28 May 2024 23:02:39 +0300
+To: Alvin =?utf-8?Q?=C5=A0ipraga?= <alvin@pqrs.dk>
+Cc: Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Emil Svendsen <emas@bang-olufsen.dk>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>
+Subject: Re: [PATCH 06/13] gpio: add AD24xx GPIO driver
+Message-ID: <ZlY4X2P1VpF0aqjM@surfacebook.localdomain>
+References: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
+ <20240517-a2b-v1-6-b8647554c67b@bang-olufsen.dk>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240423175900.702640-11-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWS8TNVjd6UBYe1X7p=aVVFBBErh8StL1urJL7w_WYLzA@mail.gmail.com>
-In-Reply-To: <CAMuHMdWS8TNVjd6UBYe1X7p=aVVFBBErh8StL1urJL7w_WYLzA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 28 May 2024 21:01:54 +0100
-Message-ID: <CA+V-a8tBAZiWMXSGTjQqvKjV8AoEMNBkyn+Oa__4WU1xVww93Q@mail.gmail.com>
-Subject: Re: [PATCH v2 10/13] pinctrl: renesas: pinctrl-rzg2l: Add support to
- set pulling up/down the pins
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240517-a2b-v1-6-b8647554c67b@bang-olufsen.dk>
 
-Hi Geert,
+Fri, May 17, 2024 at 02:58:04PM +0200, Alvin Šipraga kirjoitti:
+> From: Alvin Šipraga <alsi@bang-olufsen.dk>
+> 
+> This driver adds GPIO function support for AD24xx A2B transceiver chips.
 
-Thank you for the review.
+"Add GPIO..."
 
-On Wed, May 22, 2024 at 2:26=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> On Tue, Apr 23, 2024 at 7:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
-.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add support to configure bias-disable, bias-pull-up and bias-pull-down
-> > properties of the pin.
-> >
-> > Two new function pointers get_bias_param() and get_bias_val() are
-> > introduced as the values in PUPD register differ when compared to
-> > RZ/G2L family and RZ/V2H(P) SoC,
-> >
-> > Value | RZ/G2L        | RZ/V2H
-> > ---------------------------------
-> > 00b:  | Bias Disabled | Pull up/down disabled
-> > 01b:  | Pull-up       | Pull up/down disabled
-> > 10b:  | Pull-down     | Pull-down
-> > 11b:  | Prohibited    | Pull-up
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > RFC->v2
-> > - New patch
-> > ---
-> >  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 73 +++++++++++++++++++++++++
-> >  1 file changed, 73 insertions(+)
-> >
-> > diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/=
-renesas/pinctrl-rzg2l.c
-> > index 102fa75c71d3..c144bf43522b 100644
-> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > @@ -122,6 +122,7 @@
-> >  #define IOLH(off)              (0x1000 + (off) * 8)
-> >  #define SR(off)                        (0x1400 + (off) * 8)
-> >  #define IEN(off)               (0x1800 + (off) * 8)
-> > +#define PUPD(off)              (0x1C00 + (off) * 8)
-> >  #define ISEL(off)              (0x2C00 + (off) * 8)
-> >  #define SD_CH(off, ch)         ((off) + (ch) * 4)
-> >  #define ETH_POC(off, ch)       ((off) + (ch) * 4)
-> > @@ -140,6 +141,7 @@
-> >  #define IEN_MASK               0x01
-> >  #define IOLH_MASK              0x03
-> >  #define SR_MASK                        0x01
-> > +#define PUPD_MASK              0x03
-> >
-> >  #define PM_INPUT               0x1
-> >  #define PM_OUTPUT              0x2
-> > @@ -265,6 +267,8 @@ struct rzg2l_pinctrl_data {
-> >         void (*pmc_writeb)(struct rzg2l_pinctrl *pctrl, u8 val, void __=
-iomem *addr);
-> >         u32 (*read_oen)(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offs=
-et, u8 pin);
-> >         int (*write_oen)(struct rzg2l_pinctrl *pctrl, u32 caps, u32 off=
-set, u8 pin, u8 oen);
-> > +       int (*get_bias_param)(u8 val);
-> > +       int (*get_bias_val)(enum pin_config_param param);
->
-> Please use consistent naming: "pmc_writeb" uses <noun>_<verb> ordering,
-> "get_bias_pararm" uses <verb>_<noun> ordering.
->
-> Perhaps "hw_to_bias_param()" and "bias_param_to_hw()?"
->
-Ok, I'll rename as suggested above.
+> When a GPIO is requested, the relevant pin is automatically muxed to
+> GPIO mode. The device tree property gpio-reserved-ranges can be used to
+> protect certain pins which are reserved for other functionality such as
+> I2S/TDM data.
 
-Cheers,
-Prabhakar
+Why this doesn't use gpio-regmap?
+
+...
+
+> +config GPIO_AD24XX
+> +	tristate "Analog Devies Inc. AD24xx GPIO support"
+> +	depends on A2B_AD24XX_NODE
+> +	help
+> +	  Say Y here to enable GPIO support for AD24xx A2B transceivers.
+
+checkpatch probably complain about too short help text. You may extend it by
+explaining how module will be called.
+
+...
+
+> +#include <linux/a2b/a2b.h>
+> +#include <linux/a2b/ad24xx.h>
+
+This seems to me not so generic as below...
+
++ bits.h
++ device.h
++ err.h
+
+> +#include <linux/gpio/driver.h>
+
+> +#include <linux/interrupt.h>
+
++ mod_devicetable.h
+
+> +#include <linux/module.h>
+
++ mutex.h
+
+> +#include <linux/of_irq.h>
+
+Please, can we avoid OF in a new code?
+
+> +#include <linux/regmap.h>
+
+...hence move that group here and put a blank line before.
+
+...
+
+> +struct ad24xx_gpio {
+> +	struct device *dev;
+> +	struct a2b_func *func;
+> +	struct a2b_node *node;
+> +	struct regmap *regmap;
+> +	int irqs[AD24XX_MAX_GPIOS];
+
+> +	struct gpio_chip gpio_chip;
+
+If you move this to be the first member, you might get less code being
+generated at compile time.
+
+> +	struct irq_chip irq_chip;
+
+Should not be here, but static.
+
+> +	struct mutex mutex;
+> +	unsigned int irq_invert : AD24XX_MAX_GPIOS;
+> +	unsigned int irq_enable : AD24XX_MAX_GPIOS;
+> +};
+
+...
+
+> +	if (ret)
+> +		dev_err(adg->dev,
+> +			"failed to update interrupt configuration: %d\n", ret);
+
+Why and how is this useful?
+
+...
+
+> +	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+
+First of all it uses a wrong API (custom to IRQ core), second why do you need
+this?
+
+...
+
+> +	struct device_node *np;
+
+> +	np = of_irq_find_parent(dev->of_node);
+> +	if (!np)
+> +		return -ENOENT;
+> +
+> +	parent_domain = irq_find_host(np);
+> +	of_node_put(np);
+> +	if (!parent_domain)
+> +		return -ENOENT;
+
+Why is this magic needed?
+
+...
+
+> +	ret = devm_gpiochip_add_data(dev, gpio_chip, adg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+
+	return devm_gpiochip_add_data(...);
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
