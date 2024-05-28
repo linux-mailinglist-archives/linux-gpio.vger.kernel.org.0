@@ -1,194 +1,132 @@
-Return-Path: <linux-gpio+bounces-6770-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6772-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 360138D255F
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 22:02:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FFD18D257B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 22:08:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5023287BB8
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 20:02:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CE5C1C212E2
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 20:08:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4538117838C;
-	Tue, 28 May 2024 20:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A01FA17839D;
+	Tue, 28 May 2024 20:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gK8Rcx5R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98530173349
-	for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 20:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBF210A3E;
+	Tue, 28 May 2024 20:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716926565; cv=none; b=YRo+QXG8guGVHRh7tC7taACjwQSYBfcoHsjUPIRanfP/KVaW3e4Iu5iqkUZKA9H6Z9hVs3WbvaQljNTjtdFGyN94zOwGC6ckmgjl4Ouq+gM5ZwWA6AC4x4I6UGC64OtdFCAqiqqkb591aE3Q+/zq7a7p/cLwhuI9RwGNRyvd5n0=
+	t=1716926920; cv=none; b=gIAnjIMVgPqCY/B7/65vCVaLubLguN9M0RGz13ffyQ2g/MaDv5m+iToULnmZbRtjxnT9gjVhha8fnz3H2v7gp8LpNDH3RqhqwLpqEWu1LmyvhR7zz8pOD4IUh+UoosobS0z4a6IGbW2Ed6NKG/mJmpo5ryY05kRV+tndeQjgdIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716926565; c=relaxed/simple;
-	bh=pTf2qUi734ES9Al085wTXfYC8mQU+J7CT38EpK7LQlk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ncZ/ucebWaclToqAjNDTJiJ9yeONmJljV83KQAc6oO5uf2OfwVv2D7HsOdJyvxFinY0Rk/nWeAV52MaIFs/E6LUzz+ena3q/KtOqDTSQhaGFkqyjY9vc2uqQYzudztBZoLhb9REBkA46DpEOenvBuo1N1MMftLbzYt/LZgKFapU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
-	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id 3cab8281-1d2d-11ef-aaf5-005056bdd08f;
-	Tue, 28 May 2024 23:02:41 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 28 May 2024 23:02:39 +0300
-To: Alvin =?utf-8?Q?=C5=A0ipraga?= <alvin@pqrs.dk>
-Cc: Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Emil Svendsen <emas@bang-olufsen.dk>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>
-Subject: Re: [PATCH 06/13] gpio: add AD24xx GPIO driver
-Message-ID: <ZlY4X2P1VpF0aqjM@surfacebook.localdomain>
-References: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk>
- <20240517-a2b-v1-6-b8647554c67b@bang-olufsen.dk>
+	s=arc-20240116; t=1716926920; c=relaxed/simple;
+	bh=3iCdfDLl99/CGt5OYXsgO2nuQJGe/AEnLEcBIQLsQrM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iAu7iUXNvEFI+jSuYWNZFisCmndtkUwxUfktxbe6QhB6+DILzADFQ8zVf87ZtRESZCSu7QV/IbqKMG8Um/o2sSzl8bi7Gueb1FdOFWihT+yT7qjmprQMPwYrCPFSihLX1WIxXlc/gB2xpPgkGY0CI0vnuYRMPvw6DrQE7SaSe0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gK8Rcx5R; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-804e25cdd65so396564241.0;
+        Tue, 28 May 2024 13:08:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716926918; x=1717531718; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GWan09o2cS7AEXz0ZLVPwTi2FL7CeMGhj9lxWBPJhdM=;
+        b=gK8Rcx5RSlKMr7Y7jvKLTn7CRt/5LKp5TYmlhDmJE5cuSzn/V0E8cBGU5xZ4tn15oa
+         L0K/6jURBFQm0L5rz2Z+is7QdOemgdLZh+sexKXgSVEQn7iJMlQfFvNAzzIANcq6BB79
+         aNFQExGY8ELPbEahMBJrLG3skHx+VpFcGEeZXbadrsqryWBk7F3AJ2oEwjpjeyKuOHCf
+         OCnX9S9R5GHz8UhgyzgWlfFB3PBcExXZirsG6sBqFjaKTNcGOeIOMYYTORCwlz8/u7/O
+         fY8c4Bp0f91Vres7dn0lFTd8CFw/dOgTbnZEnsokOFJn4S3wqw7ahCBwQh7OsM/sMQDk
+         CkYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716926918; x=1717531718;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GWan09o2cS7AEXz0ZLVPwTi2FL7CeMGhj9lxWBPJhdM=;
+        b=Bc+UjcerZYyqvHt3MgBn7q+XCleVyBO1bW2eCx+XdBU8rWTyPPp9HJalZQRk4jjl2P
+         MestvGm7/kS9BIs27eWVofKIZgvKKn1AKBI/xsAiuJnelFiy3fRpgb22BJ8T4LSzzE+0
+         xjMPs4CFlmkMglliB4zrMFkNd1qkIKBf7BXWcHoNJO/HO6efjCrnz9a9t/bIHdYPoZ99
+         4DLodIMXCzmL1z8KAspMatEgfwPh5nEcKunZp+F2L0e/lAm9NSiOG6FU2UnDRhucwzzw
+         S5gaV3flPxNqbnakZvexTw4X3S1C6oWlpjJBUU3D0SRixOOYjMz8rTW2AeAdl+iMXr2p
+         lRdw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXWOD/8yyFqTGj/J+HOE2Mj/md6Yxu+Mt6eHTqKoISW6oST6kJAk//rQsWvg0PDB2Lb0QT8XqH2nI9YP1BJQ3evwjR+IwM8xgPioLXvCpEfhMmtS0nC123y7KdvkgcPq6K4YS4hwmCEXcdqI0Bx9yXLDgXtC1d5bZMF3peqHachFRS1Au8lr0h6b6NEEsSG1FdlLiNKKjTitVXxEwTOwJzwTF5HXWTNA==
+X-Gm-Message-State: AOJu0YyH8JOYncgEjWibpEpHmv4dEoh6XgJBBa1/rHnYr67isJXTifhE
+	QID5sBaMZatbn4CYupYDGQtSlTUabe7/RqlaPX8yVX2Jhsf1JVhK4WAngW2G3WQrMg0Je414Pyf
+	emdVM6vfn+hTMvmfKqbjXtwyO8FM=
+X-Google-Smtp-Source: AGHT+IFfJJ5HFZzJyQa9/CEYfyE8LWkzb4Q/29Ke4jwKfXtLTA98EbWRSp4pH5wT6KLVanMlHazgb/V1ONa8yBqFufU=
+X-Received: by 2002:a05:6122:2015:b0:4e4:e998:bf7f with SMTP id
+ 71dfb90a1353d-4e4f02d5449mr13996969e0c.11.1716926917774; Tue, 28 May 2024
+ 13:08:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240517-a2b-v1-6-b8647554c67b@bang-olufsen.dk>
+References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240423175900.702640-13-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXA8hnV6NTSNdYQNvuBsK5Os9CDgE64xLN3R0wAAmtJgA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXA8hnV6NTSNdYQNvuBsK5Os9CDgE64xLN3R0wAAmtJgA@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 28 May 2024 21:07:27 +0100
+Message-ID: <CA+V-a8t_6xm100n=t-u38-NAE3dOK5F6cp9Y=gZV6JcxT_+8mQ@mail.gmail.com>
+Subject: Re: [PATCH v2 12/13] pinctrl: renesas: pinctrl-rzg2l: Add support for
+ custom parameters
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fri, May 17, 2024 at 02:58:04PM +0200, Alvin Šipraga kirjoitti:
-> From: Alvin Šipraga <alsi@bang-olufsen.dk>
-> 
-> This driver adds GPIO function support for AD24xx A2B transceiver chips.
+Hi Geert,
 
-"Add GPIO..."
+Thank you for the review.
 
-> When a GPIO is requested, the relevant pin is automatically muxed to
-> GPIO mode. The device tree property gpio-reserved-ranges can be used to
-> protect certain pins which are reserved for other functionality such as
-> I2S/TDM data.
+On Wed, May 22, 2024 at 2:21=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, Apr 23, 2024 at 7:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
+.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > In preparation for passing custom params for RZ/V2H(P) SoC assign the
+> > custom params that is being passed via struct rzg2l_pinctrl_data.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > RFC->v2
+> > - No change
+>
+> Thanks for your patch!
+>
+> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > @@ -262,6 +262,9 @@ struct rzg2l_pinctrl_data {
+> >         const struct rzg2l_hwcfg *hwcfg;
+> >         const struct rzg2l_variable_pin_cfg *variable_pin_cfg;
+> >         unsigned int n_variable_pin_cfg;
+> > +       unsigned int num_custom_params;
+> > +       const struct pinconf_generic_params *custom_params;
+> > +       const struct pin_config_item *custom_conf_items;
+>
+> Perhaps this should be protected by #ifdef CONFIG_DEBUG_FS, too?
+>
+Agreed, I'll protect custom_conf_items by #ifdef CONFIG_DEBUG_FS.
 
-Why this doesn't use gpio-regmap?
-
-...
-
-> +config GPIO_AD24XX
-> +	tristate "Analog Devies Inc. AD24xx GPIO support"
-> +	depends on A2B_AD24XX_NODE
-> +	help
-> +	  Say Y here to enable GPIO support for AD24xx A2B transceivers.
-
-checkpatch probably complain about too short help text. You may extend it by
-explaining how module will be called.
-
-...
-
-> +#include <linux/a2b/a2b.h>
-> +#include <linux/a2b/ad24xx.h>
-
-This seems to me not so generic as below...
-
-+ bits.h
-+ device.h
-+ err.h
-
-> +#include <linux/gpio/driver.h>
-
-> +#include <linux/interrupt.h>
-
-+ mod_devicetable.h
-
-> +#include <linux/module.h>
-
-+ mutex.h
-
-> +#include <linux/of_irq.h>
-
-Please, can we avoid OF in a new code?
-
-> +#include <linux/regmap.h>
-
-...hence move that group here and put a blank line before.
-
-...
-
-> +struct ad24xx_gpio {
-> +	struct device *dev;
-> +	struct a2b_func *func;
-> +	struct a2b_node *node;
-> +	struct regmap *regmap;
-> +	int irqs[AD24XX_MAX_GPIOS];
-
-> +	struct gpio_chip gpio_chip;
-
-If you move this to be the first member, you might get less code being
-generated at compile time.
-
-> +	struct irq_chip irq_chip;
-
-Should not be here, but static.
-
-> +	struct mutex mutex;
-> +	unsigned int irq_invert : AD24XX_MAX_GPIOS;
-> +	unsigned int irq_enable : AD24XX_MAX_GPIOS;
-> +};
-
-...
-
-> +	if (ret)
-> +		dev_err(adg->dev,
-> +			"failed to update interrupt configuration: %d\n", ret);
-
-Why and how is this useful?
-
-...
-
-> +	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
-
-First of all it uses a wrong API (custom to IRQ core), second why do you need
-this?
-
-...
-
-> +	struct device_node *np;
-
-> +	np = of_irq_find_parent(dev->of_node);
-> +	if (!np)
-> +		return -ENOENT;
-> +
-> +	parent_domain = irq_find_host(np);
-> +	of_node_put(np);
-> +	if (!parent_domain)
-> +		return -ENOENT;
-
-Why is this magic needed?
-
-...
-
-> +	ret = devm_gpiochip_add_data(dev, gpio_chip, adg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-
-	return devm_gpiochip_add_data(...);
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Cheers,
+Prabhakar
 
