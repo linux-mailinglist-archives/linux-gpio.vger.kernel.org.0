@@ -1,162 +1,146 @@
-Return-Path: <linux-gpio+bounces-6752-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6753-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BF9D8D2497
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 21:27:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0BDB8D24B3
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 21:35:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38E891F2730A
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 19:27:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50451281E9A
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 May 2024 19:35:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD63D174EDE;
-	Tue, 28 May 2024 19:27:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32CC7176FB3;
+	Tue, 28 May 2024 19:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2LAsPaS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBC0174EDF
-	for <linux-gpio@vger.kernel.org>; Tue, 28 May 2024 19:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD16172BDB;
+	Tue, 28 May 2024 19:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716924465; cv=none; b=Ju7MRL/cW4XHsCv1dVS19Ygag9nvE31M2CW41hL2ReUb+gDVfKU7nMe2OXseO3Jv7oSrP5zZoDUsaY6F5Kd8sM6kENvw1C55ktulddyuk9zbCj+9XfZiZ00DUGZA/ynRItUsiMeSbglF6hLHsh4rkoKkOR81/B3OkZPfU0OLPpk=
+	t=1716924902; cv=none; b=OfOmtgjiPuyBQVl4ztRb4AjdnvzVsKpCfYXtXO89W444xyfbp7Cg4+jVCB6cnPdX8/mrpHGEgbVsVkz8GV1nUHW1tRbxk2oJ3ykObRMhYEI78fYzL3UUOdUP9pP3IojSJpoIn5+I8vY3to6lqqmqbZLwAcyxD4hyK484KaDiAjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716924465; c=relaxed/simple;
-	bh=cTKbpAhjrjCxOHCkBE9KZlU76K9Ysjv16xE/+1J9QZM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZI+rwyuI679bLk+WRy8KCAo27EO7n6mq9fGFdJ9WvkysvQhNKeZNYLdsnHVTX9vK6UtxmQe5BGP1YhUz3E36LYQeMTZwC08wEtcgZ4H4mSyXKJXleErUO97SuY+y7qwfJSa4nK7a4pxhR8yS6UViwXaWPG1Ew6fbDEwYSrJ3kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 55c6fc82-1d28-11ef-80c1-005056bdfda7;
-	Tue, 28 May 2024 22:27:35 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 28 May 2024 22:27:34 +0300
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Alexandru Ardelean <alexandru.ardelean@analog.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH v2 2/4] mfd: adp5585: Add Analog Devices ADP5585 core
- support
-Message-ID: <ZlYwJryxeZ2LAKYG@surfacebook.localdomain>
-References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
- <20240528190315.3865-3-laurent.pinchart@ideasonboard.com>
+	s=arc-20240116; t=1716924902; c=relaxed/simple;
+	bh=a4uznpruD3HcWpD/E1ppFvqI/FqLUVpI+8khoWDXyQg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mzjpvPsvx8x+vPI2hbVNWCvmpKLq0rNf2dpmUbza4cBtHRP7xI2L+ZExcO925EBJseE+AHI3q+A1r5lwYhhPxvr0ZbCMJS36UQ9O1qwOl80kuoP5yn1Z8y2tDxq3rxEzLaR4Any+gflHm1XJi2ONFmZW60SIgMw3XQ7mFDNpIvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j2LAsPaS; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-43fdbe0f072so4157911cf.3;
+        Tue, 28 May 2024 12:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716924899; x=1717529699; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KdtDEp3SXeyF+Tbij3Ph4M5b7pZ5MX93mXDPrVvI40E=;
+        b=j2LAsPaSoITuGFsJayIoezCYw23iYLE2Fjd/gTt10rnV+rEULLBWTLwuHNzjY1nfq1
+         hqAUAXpS8RA2QDrs0hN6M8MWCSGkBoqwLELyef1JUxE+fzy7QVMEuw659bdhJTRFxXBY
+         khMd1/C4FJnJKYfWtWV9CMy7R6h+b31weNYxQDSm0jlL1/z636bQAIwFAQQyNSB8lrys
+         XRJLhObUSqTE2HyNeKlnA3sMAwyKWflDvLxps7pCqULDcZTTr1x28b5GWzfpDIK5jSp1
+         1jOOzSgwVS3+kbyijmFfPY3CXhh+sR+XVlfIDTtxJGAE86wwOvqRSxq5qKVQCb3Hztif
+         3O4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716924899; x=1717529699;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KdtDEp3SXeyF+Tbij3Ph4M5b7pZ5MX93mXDPrVvI40E=;
+        b=YwWlQqsee3Zl1WKIxoK4eZmIPIEMFbGpp6+Ml1ySUXxee9zMTl9V6fl+oXflCF1BVV
+         jisiWuwBPb7/0CTa/GFPzk5L3xl3e9/62eyyDV7HzDzfyzfNhXDobv38hkYlDmtbTQKo
+         sxjOW6U/TVpmC5XPRpfrcwLe7ZF4IJcAf9ECTa4jx58GmOWDEGoGgxnkUqAbAprEPeXd
+         R4cebS1SxJWAsyupZ7aFxPMVSDYTwRkkeXp+rPPqLcDkIztIR+kEBe/oBZZNcNyhhNme
+         3HEwR0/BDyR31KdMkUfBdbf9wKE/qNJrj7GzYLro0QScfULk5H1DIdjSGiIfsvwYsTc6
+         Nrzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVn7cQ/Cctu382WVP5Enq3TMQwhIx8qY8frrvkONTPN+YBr4z0BTz5Y8hMtbC96HcBI8KRZRZnQGLPlSNTL2iPzPZHsu2kWhgTJI2k6rldB/iueHWSoxiQOHcsqt9ZMc0r+h0TYCrai/iq3jmEDAvjma8PdCNVaaqF9oazdPq85x7lvMCG5On3SarXZRCdVHZdjuCWkhmrPwJWYG0CwUGpO78JhSlzcHA==
+X-Gm-Message-State: AOJu0YyIbPywoj0W/BvufAJxqPyHSWVIM31aBJq2jzEtsXWJ4xVJdAmF
+	FeX21UoLtIF6hU/y6PIg2xLQlt+k5OBU0JnIhH/fN2L6XljFr6Xtv+F6or7fAUiDx8vh4HAZAUu
+	K979MOIf2CSc4h8YkgX6SmfV7nc4=
+X-Google-Smtp-Source: AGHT+IFtO90IJsqrOIlOd9fK4e9h+xVk02J0iqzPfqhBlTatBJhC8UB8BJvdxbtfnLSxzZQhBclaFa69Zym0aNOg/Ec=
+X-Received: by 2002:a05:622a:1991:b0:43d:dc3c:3c5e with SMTP id
+ d75a77b69052e-43fb0e512b0mr165482981cf.1.1716924899362; Tue, 28 May 2024
+ 12:34:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528190315.3865-3-laurent.pinchart@ideasonboard.com>
+References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240423175900.702640-8-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWh5dD_dT6+SvxycgfX6OHw0m4Lu+QoRE33HgG_-AyYaQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdWh5dD_dT6+SvxycgfX6OHw0m4Lu+QoRE33HgG_-AyYaQ@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 28 May 2024 20:33:48 +0100
+Message-ID: <CA+V-a8vV3ASyaLrzKK0XsLZseZECQhMbCy=APQqN+831AQGFrw@mail.gmail.com>
+Subject: Re: [PATCH v2 07/13] pinctrl: renesas: pinctrl-rzg2l: Add function
+ pointer for writing to PMC register
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tue, May 28, 2024 at 10:03:12PM +0300, Laurent Pinchart kirjoitti:
-> From: Haibo Chen <haibo.chen@nxp.com>
-> 
-> The ADP5585 is a 10/11 input/output port expander with a built in keypad
-> matrix decoder, programmable logic, reset generator, and PWM generator.
-> This driver supports the chip by modelling it as an MFD device, with two
-> child devices for the GPIO and PWM functions.
-> 
-> The driver is derived from an initial implementation from NXP, available
-> in commit 8059835bee19 ("MLK-25917-1 mfd: adp5585: add ADI adp5585 core
-> support") in their BSP kernel tree. It has been extensively rewritten.
+Hi Geert,
 
-...
+Thank you for the review.
 
-> +	tristate "Analog Devices ADP5585 MFD driver"
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	depends on I2C && OF
+On Wed, May 22, 2024 at 1:39=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, Apr 23, 2024 at 7:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
+.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > This patch introduces a function pointer, pmc_writeb(), in the
+> > struct rzg2l_pinctrl_data to facilitate writing to the PMC register. On
+> > the RZ/V2H(P) SoC, unlocking the PWPR.REGWE_A bit before writing to PMC
+> > registers is required, whereas this is not the case for the existing
+> > RZ/G2L family. This addition enables the reuse of existing code for
+> > RZ/V2H(P). Additionally, this patch populates this function pointer wit=
+h
+> > appropriate data for existing SoCs.
+> >
+> > Note that this functionality is only handled in rzg2l_gpio_request(), a=
+s
+> > PMC unlock/lock during PFC setup will be taken care of in the
+> > pwpr_pfc_unlock/pwpr_pfc_lock.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > RFC->v2
+> > - No change
+>
+> Thanks for the update!
+>
+> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > @@ -463,6 +464,11 @@ static const struct rzg2l_variable_pin_cfg r9a07g0=
+43f_variable_pin_cfg[] =3D {
+> >  };
+> >  #endif
+> >
+> > +static void rzg2l_pmc_writeb(struct rzg2l_pinctrl *pctrl, u8 val, void=
+ __iomem *addr)
+>
+> Please pass the register offset instead of the virtual register address.
+> You do have pctrl->base here, and rzv2h_pmc_writeb() will need to use
+> pctrl->base for all other register writes anyway.
+>
+Agreed,  I will pass the register offset (u16 offset) instead of
+virtual address.
 
-Why OF?
-No COMPILE_TEST?
-
-...
-
-+ array_size.h
-+ device.h // e.g., devm_kzalloc()
-
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/init.h>
-> +#include <linux/slab.h>
-> +#include <linux/i2c.h>
-
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-
-You don't need them, instead of proxying...
-
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/adp5585.h>
-
-m is earlier than 'o', but with above drop no more issue :-)
-
-...just include mod_devicetable.h.
-
-> +#include <linux/regmap.h>
-
-+ types.h // e.g., u8
-
-...
-
-> +	regmap_config = of_device_get_match_data(&i2c->dev);
-
-We have i2c_get_match_data().
-
-...
-
-> +#ifndef __LINUX_MFD_ADP5585_H_
-> +#define __LINUX_MFD_ADP5585_H_
-> +
-> +#include <linux/bits.h>
-
-...
-
-> +#define		ADP5585_MAN_ID(v)		(((v) & 0xf0) >> 4)
-
-GENMASK()
-
-...
-
-> +#define		ADP5585_Rx_PULL_CFG_MASK	(3)
-
-GENMASK()
-
-Why parentheses in all of them, btw?
-
-...
-
-> +#define		ADP5585_C4_EXTEND_CFG_MASK	(1U << 6)
-
-> +#define		ADP5585_R4_EXTEND_CFG_MASK	(1U << 5)
-
-> +#define		ADP5585_R3_EXTEND_CFG_MASK	(3U << 2)
-
-> +#define		ADP5585_R0_EXTEND_CFG_MASK	(1U << 0)
-
-> +#define		ADP5585_OSC_FREQ_MASK		(3U << 5)
-
-BIT() / GENMASK()
-
-> +#endif
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Cheers,
+Prabhakar
 
