@@ -1,72 +1,65 @@
-Return-Path: <linux-gpio+bounces-6865-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6866-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 660828D3B7F
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 17:55:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BBF28D3BC0
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 18:04:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C4981F275A4
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 15:55:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16B401F25DF8
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 16:04:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27BF3181D07;
-	Wed, 29 May 2024 15:55:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88F7518410C;
+	Wed, 29 May 2024 16:04:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WmXp/s9v"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KeTsBLNJ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6650181BB3;
-	Wed, 29 May 2024 15:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C07C8DE;
+	Wed, 29 May 2024 16:04:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998116; cv=none; b=ij5u8Q4Wgtoze/z0M1p1LDZ7aeXVT9U7tTiEdpDPnT0fGfApBg1/0tfQZBilI8lt5j6H0Avx766RH90XPeDmF97v1Aar/pXElnnAw1pUc9jW8QhA+J0gyTg04jUoN8mJ2eKEbiEEo17GIIG1cXAFwChK5NQoSBBaPheIEuUgLWE=
+	t=1716998674; cv=none; b=PwiUqykJEYzLb7l3URoInBV4eJ/YsLBoI8WZ6RkUzXE0Fc2EPVtrCqqtyuKt5vYnVQztM9SEsjqlqFQqPxF2ByvEoesCTnhq0AKfKZ2RiN78l2d3yj9BI5WJ+uRnxdKYw+e2fXY6VRr99uNsrCFKWeiv5/6bzWbx7GDCcZhRFLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998116; c=relaxed/simple;
-	bh=cvCI74XULFLsUOYSrpSQ5aAd1HGoaFATJaZrDy1RBK8=;
+	s=arc-20240116; t=1716998674; c=relaxed/simple;
+	bh=/EwIIXcKHGDW2AxegyIxUaFBTLYn3SLVszyabwPuc7k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UBOavMln/ZRfgK9DmWPjVcvS5YZeWcy52UoQZitKviT2i++HU3NflKidbK/na3yI5vVUrL+cWtRuxEYal6MZE3WYe7Q7tOxiTyZoo7u8L9/VZPXvcz1znHG48B8o5FhvkmAv/LR1pjCTSgiJ8a0/WmS1zQI8JBFmWkjXSTIJoW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WmXp/s9v; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B30FC113CC;
-	Wed, 29 May 2024 15:55:16 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=s0PsEV7DMUJdev7pKZUvIAquD+Yhw6QfSzs0d48yEwdvHNesktCWkGGvqf7xBR68QpKGYtNF5jTD+cEPWczOqGmoeWZghVHkFm2QsLAx2mCLkIoITfU8Sm2uOeBRZDIvnArwQXp91Q67AgyLm7YEWpn2HkSD0pEMwIiSu9DTMMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KeTsBLNJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC97FC113CC;
+	Wed, 29 May 2024 16:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716998116;
-	bh=cvCI74XULFLsUOYSrpSQ5aAd1HGoaFATJaZrDy1RBK8=;
+	s=k20201202; t=1716998673;
+	bh=/EwIIXcKHGDW2AxegyIxUaFBTLYn3SLVszyabwPuc7k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WmXp/s9vHFC0BXI3VHUObfGwuQj1zxrYLOB2NH1CaxvAcKrnnmPbBpHqtmBaUIvmO
-	 7OrKLE0HbBrxG9SObqzJVZTEUPG/49lSTHcWRAx6eQMz/CWbsqWhjE0DyfIqS9e1Z2
-	 gKhlZzo3158eL4rQlpNGpBVvfOeL+DRbOCbaCcs3hiRNd8jpj8MIJdeAwj/T+dja+8
-	 M0sHpT3wWbHEhzVpJzyvzpKPbWrzN5C3J+pA56Dew8ffLEk9zjHJLEqsVeBZWspcol
-	 rpW0Q5iOxnzsbvj6xFLHkjQ4h0e3px1WIoyVOf6b1ntkimc+DWUImO5SMuZXkkFxKI
-	 jnc9o0VQW92WA==
+	b=KeTsBLNJlZ6RfKwKub6VxjJVm24VDMg0I+DAF8xec7yGSA6HeXUBvEwKNwkRrtBo3
+	 Z88dNiMtRZLwujOID2J5vfC9BM2+hEJrG+Vezj6K307PDiBybDPBauBRmx9llXIh6C
+	 Tq8MB53S+GIYy8mBWn6sbzhNjkOA4x9v+UkIN/Dg8TmT8IsZKq9C75tbMDGcKTyh/L
+	 CMXGAFjG7NwxGnuwn5J7JDwwoidZljXi0x67Oz6BnahBS4K7oSP2KCkIvfAdYT8w23
+	 FzYNpEj5v3X5gFH+BtzFbZvJgj7akBWf/bEp7dWrIxjAAuan+KkodCi6ao00UOuPOQ
+	 /xsey53jh72ZQ==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan@kernel.org>)
-	id 1sCLdz-000000004DT-1fTP;
-	Wed, 29 May 2024 17:55:15 +0200
-Date: Wed, 29 May 2024 17:55:15 +0200
+	id 1sCLmz-000000004KZ-0YvL;
+	Wed, 29 May 2024 18:04:33 +0200
+Date: Wed, 29 May 2024 18:04:33 +0200
 From: Johan Hovold <johan@kernel.org>
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Satya Priya <quic_c_skakit@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Cc: andersson@kernel.org, andy.shevchenko@gmail.com, broonie@kernel.org,
+	conor+dt@kernel.org, devicetree@vger.kernel.org,
+	johan+linaro@kernel.org, konrad.dybcio@linaro.org,
+	krzk+dt@kernel.org, lee@kernel.org, lgirdwood@gmail.com,
+	linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	quic_c_skakit@quicinc.com, quic_gurus@quicinc.com, robh@kernel.org,
+	swboyd@chromium.org
 Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
-Message-ID: <ZldP4zODYZzCoHW3@hovoldconsulting.com>
-References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-13-johan+linaro@kernel.org>
- <CAE-0n52KTZ8G2VuvrDgJ9kAE61YULXY4u6nPP3CYWpg1CBjbXA@mail.gmail.com>
- <ZjyTEVLp8VAhQfT5@hovoldconsulting.com>
+Message-ID: <ZldSEZKusSVIHZJ3@hovoldconsulting.com>
+References: <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
+ <20240514134317.691887-1-quic_skakitap@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,51 +68,66 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZjyTEVLp8VAhQfT5@hovoldconsulting.com>
+In-Reply-To: <20240514134317.691887-1-quic_skakitap@quicinc.com>
 
-On Thu, May 09, 2024 at 11:10:41AM +0200, Johan Hovold wrote:
-> On Wed, May 08, 2024 at 10:37:50PM +0000, Stephen Boyd wrote:
-> > Quoting Johan Hovold (2024-05-06 08:08:29)
+On Tue, May 14, 2024 at 07:13:17PM +0530, Satya Priya Kakitapalli wrote:
+> > On Tue, May 07, 2024 at 01:48:30PM +0200, Konrad Dybcio wrote:
+> > > On 5/6/24 17:08, Johan Hovold wrote:
+> > > > From: Satya Priya <quic_c_skakit@quicinc.com>
+> > > > 
+> > > > Qualcomm Technologies, Inc. PM8008 is an I2C-controlled PMIC containing
+> > > > seven LDO regulators. Add a PM8008 regulator driver to support PMIC
+> > > > regulator management via the regulator framework.
+> > > > 
+> > > > Note that this driver, originally submitted by Satya Priya [1], has been
+> > > > reworked to match the new devicetree binding which no longer describes
+> > > > each regulator as a separate device.
 
-> > > +struct pm8008_regulator {
-> > > +       struct regmap           *regmap;
-> > > +       struct regulator_desc   rdesc;
-> > > +       u16                     base;
-> > > +       int                     step_rate;
-> > 
-> > Is struct regulator_desc::vsel_step usable for this? If not, can it be
-> > unsigned?
+> > > > [1] https://lore.kernel.org/r/1655200111-18357-8-git-send-email-quic_c_skakit@quicinc.com
+> > > > 
+> > > > Signed-off-by: Satya Priya <quic_c_skakit@quicinc.com>
 > 
-> Not sure, I'll take a look when respinning.
+> This is my old email which is discontinued, please use <quic_skakitap@quicinc.com>
 
-No, vsel_step is unrelated to this, which is really a slew rate.
+I've cleaned up and reworked the driver for v2 and changed the
+authorship to myself in the process, but I'll make sure to CC your new
+address when submitting.
 
-I've reworked the driver and dropped this field in favour of
-regulator_desc::ramp_delay.
+You should add an alias as Konrad suggested as you apparently have
+commits that use your old address.
 
-> > > +};
- 
-> > > +static int pm8008_regulator_get_voltage(struct regulator_dev *rdev)
-> > > +{
-> > > +       struct pm8008_regulator *pm8008_reg = rdev_get_drvdata(rdev);
-> > > +       __le16 mV;
-> > > +       int uV;
-
-> > > +
-> > > +       regmap_bulk_read(pm8008_reg->regmap,
-> > > +                       LDO_VSET_LB_REG(pm8008_reg->base), (void *)&mV, 2);
+> > > > Cc: Stephen Boyd <swboyd@chromium.org>
+> > > > [ johan: rework probe to match new binding, amend commit message and
+> > > >           Kconfig entry]
+> > > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > > > ---
+> > > 
+> > > I'm a bit lukewarm on calling this qcom-pm8008-regulator.. But then
+> > > qcom-i2c-regulator or qpnp-i2c-regulator may bite due to being overly
+> > > generic.. Would you know whether this code will also be used for e.g.
+> > > PM8010?
 > > 
-> > Is struct regulator_desc::vsel_reg usable for this?
+> > Yes, for any sufficiently similar PMICs, including SPMI ones. So
+> > 'qpnp-regulator' would be a generic name, but only Qualcomm knows what
+> > PMICs they have and how they are related -- the rest of us is left doing
+> > tedious code forensics to try to make some sense of this.
+> > 
+> > So just like for compatible strings, letting the first supported PMIC
+> > name the driver makes sense as we don't know when we'll want to add a
+> > second one for another set of devices (and we don't want to call that
+> > one 'qpnp-regulator-2'). On the other hand, these names are now mostly
+> > internal and can more easily be renamed later.
 > 
-> Will look into that.
+> There is a PMIC called PM8010 which also is implemented over I2C,
+> which could use the same pm8008 regulator driver.
+> Hence it is better to use device_id instead of a MODULE_ALIAS().
 
-I don't think vsel_reg can be used here as the voltage is set using two
-registers (LSB and MSB).
-  
-> > > +
-> > > +       uV = le16_to_cpu(mV) * 1000;
-> > > +       return (uV - pm8008_reg->rdesc.min_uV) / pm8008_reg->rdesc.uV_step;
-> > > +}
+Right, I've had PM8010 in mind all along, but it's hard to tell whether
+it will be using the same (sub)driver until code is submitted since you
+guys (Qualcomm) don't publish any documentation.
+
+I've changed the regulator (and GPIO) drivers to use platform device id
+matching for now either way.
 
 Johan
 
