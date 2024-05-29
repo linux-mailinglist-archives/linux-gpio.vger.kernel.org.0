@@ -1,81 +1,85 @@
-Return-Path: <linux-gpio+bounces-6856-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6857-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46D0B8D3953
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 16:33:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4955B8D3956
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 16:33:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DEF331F2748C
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 14:33:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05860288117
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 14:33:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C108215AAC6;
-	Wed, 29 May 2024 14:32:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C97D8159217;
+	Wed, 29 May 2024 14:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QVPyv7hF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="So/aCabK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA2715A4BC
-	for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 14:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD421E878
+	for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 14:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716993173; cv=none; b=LWUUpG7EjVyYj97Q4AQzJnuD+u8Ao3ghgT6vurLygFkAuOrHGSMTbfhngJucistvFv844eS2YZQcrITCSFwlnQCMoFMFLbpZronKWMvGfs3qMAkbyle90WC+5aSTZn45Nm0GOUudQHifSjTNfgkH+fTsspP8lRBsp6hi4T+3uiI=
+	t=1716993188; cv=none; b=lJBwkNrD5XGif/DcPp3Lzkte+8i/pyk03jr6RUi1Hz+GuE01DkhjjcWYYZsR5UoS/gizl6REzbHeAGj7OiLndguj06srzlxJcgNORnDuv4JQXpgjFxbqQQlcJW+OP+lUuSUA+WYJqDT0/Z9Hx7qL0DS+tOz/pC7is/9g5mO7z6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716993173; c=relaxed/simple;
-	bh=dVJ+EvwFT4Heb4Cx07/uQgdH1ZEbjDU3smi2K9tnUTg=;
+	s=arc-20240116; t=1716993188; c=relaxed/simple;
+	bh=OXOt0Fhkn0rU9Bpuv7it8LPEoKda0R/OenKf0O031Q0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxeAsCkEfZryDhDO1xZQq6de8TXTFwwlL68kvXWwI9OBYM5q0tkdf/TzQM8Keiu43TQ7nsmAHpARz8WsDpI2llTi2a7LbMh/VTYdoTIG1Lx+T0Bhm7Sf7/vaAjszi8HvhzNcCcIE8ridRFYUESMTuWbg68uYHuDC+E2pET5CZ1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QVPyv7hF; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a6302bdb54aso313611666b.0
-        for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 07:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716993170; x=1717597970; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yhL9Q7EwnBs27v2LEV5NKZLimYfj6QTltIE7lVekQTA=;
-        b=QVPyv7hFYfdvAge+P1PhDzAXHKd+67lYDtTRoHHNdcF+875YFuFvobBl/b5gEBPuP6
-         RnS3xscoIzaN1GpPMq0ffn5DWQO62n2Uo46UY5cMb1wnPzcvohesmZLzud1bbHl0Bs9z
-         fyN+0uK78T5qUfFyUaxUcKjY77cYlTvECJQcRJk7RuQIEBY29gRhBGgHEBI9ZhjwGnrk
-         lJuLVktf1QXIWcKFxBXtLYEJn6H8DbwVYj8GMcE4lhPWOQpOlVy5v5NHGEsbiuDXYZYq
-         qtdjGb4YDv0I7guJFg4eJmLyBx28JqfNwMVd2CrdXDcn3uMV+KXzZFyUjxM5oLucxaeM
-         aQ/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716993170; x=1717597970;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yhL9Q7EwnBs27v2LEV5NKZLimYfj6QTltIE7lVekQTA=;
-        b=oQfK8QL9rvHKSGiEHNMbnMFRs4J2Mz/IxRMRn0b3ribxzWNgYz4foCnqV99orKpFz7
-         J27dRR7hgEUXARFOd1diVf2hv7QBtDu6+LTzL/xyNkrqoJbrVSTwgEEeVbL5HQOxLWyf
-         ObR54cbde32aIUsQsGk0ZkAnEVvGOptoNPn6MXDSh0HoC7F+bJr0JjmhovRGL8btmRPj
-         4ou7v+dMmdgcQVJP30Nv7gz7gulwY2UjbxNlcPIdzQXQxnCwM06TAROQZGFPs37UYldr
-         i8CZfRKOcZNncJ5wKW3wHaoutaM6TxCtl/AvfiL/2QMQwq/ZX3VLR1J9T+WkUsLdWToA
-         yYVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkHLGPtbX4Jsb8PZHxu8vOlOWksGOH1WV6ayeE4GECVMBX7pa5Ze2YBuEEHu6wu3E3LNEdOshBxUWtuGpVsn8YbgsrsVJt3H+lAQ==
-X-Gm-Message-State: AOJu0YwfbOROf+NS9Xy6fjVtYpU1pAoyL1UlxVJmG5YKzt2txBHF9Hpy
-	CLG03UfLah/h/m4c4y//NldVy+fPQTaEBrStkxK5WmIBOAqjKG4xhwLJPE7NcpM=
-X-Google-Smtp-Source: AGHT+IGfQCqqRfxMIiISzvS9/g8UPvhr1QZ45ocg7vu1MZ6Ig+gY0oCIAZ6h2UT5aAvZRkeeCfsndA==
-X-Received: by 2002:a17:906:379a:b0:a63:41d4:ca86 with SMTP id a640c23a62f3a-a6341d4cbe1mr320147166b.24.1716993170311;
-        Wed, 29 May 2024 07:32:50 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6590d02e53sm40275466b.119.2024.05.29.07.32.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 07:32:50 -0700 (PDT)
-Date: Wed, 29 May 2024 17:32:46 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kent Gibson <warthog618@gmail.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=K77u5ZOGBkaich0aLaZUp3h46oHRKzD+QBMlgBTqgk87E02Szq+oOuYzCEu5bZ4FggYBTWPh3esPtEbxmRd/ZSnKK1x3JKRmgQZ1RXIHeYkbPCOnfnLsmfaUPHytKIQAmOex2QEwCgSDxdQRAQQajx/elvj53fIEfbb4J78RQzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=So/aCabK; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716993187; x=1748529187;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OXOt0Fhkn0rU9Bpuv7it8LPEoKda0R/OenKf0O031Q0=;
+  b=So/aCabKGj8V/hxVE/Vho1Wp3KCrgmgVFnGlYKre1zTAfUZZqntmV6vH
+   EO4z6+gzpsFE02hPqWgUTLNsMxy35WKmd9CYVJyiFkYgedJnrxzu4KhLm
+   Xi97TAdWSwZGSOIHawKGyK+aswrhqMjnZ/HafHB+EN7seVUf0wRg/ZGhx
+   FHyvzof4DfhdWch5yBgeNH9ACzCqvTCnlye0SSBC/ROCYbj/jhg9SnFdf
+   w9jkCuG3e5FL1Kw4fUFTYceo9urJNhwUKMWmxGv2Bx+pm4n2h+YSX1x6Q
+   PVcCoyPxdhRIQw9HBc+U6vJp5qh4gTB/rqLAzzHRcjLg9Eoyx+pCX2CQL
+   w==;
+X-CSE-ConnectionGUID: FscR43eZRuG0haDSYB3d0Q==
+X-CSE-MsgGUID: QuJ/sS/tQo+d+FLpzUOvxA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="17233836"
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="17233836"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 07:33:05 -0700
+X-CSE-ConnectionGUID: wOpgek3YRCCsUgpz+6T2JA==
+X-CSE-MsgGUID: Qavx3ZC+RwehK6K+bn8y7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
+   d="scan'208";a="35399182"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 07:33:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1sCKMP-0000000BpUd-1XUc;
+	Wed, 29 May 2024 17:33:01 +0300
+Date: Wed, 29 May 2024 17:33:00 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v7] gpio: virtuser: new virtual driver
-Message-ID: <c5799a51-b39b-49b7-89ef-9cec2509330a@moroto.mountain>
-References: <20240527144054.155503-1-brgl@bgdev.pl>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH libgpiod v2 2/4] tools: tests: use "$@" instead of $*
+Message-ID: <Zlc8nBQIH89d_mug@smile.fi.intel.com>
+References: <20240527-fix-bash-tests-v2-0-05d90cea24cd@linaro.org>
+ <20240527-fix-bash-tests-v2-2-05d90cea24cd@linaro.org>
+ <20240527124420.GA108041@rigel>
+ <ZlSyIWorOYQZX25a@smile.fi.intel.com>
+ <20240527233910.GA3504@rigel>
+ <Zlco4cBEWJVrnVU2@smile.fi.intel.com>
+ <20240529131847.GA191413@rigel>
+ <ZlctJNXjc5a-LYCg@smile.fi.intel.com>
+ <20240529134440.GA204223@rigel>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,38 +88,89 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240527144054.155503-1-brgl@bgdev.pl>
+In-Reply-To: <20240529134440.GA204223@rigel>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, May 27, 2024 at 04:40:54PM +0200, Bartosz Golaszewski wrote:
-> +static ssize_t
-> +gpio_virtuser_sysfs_consumer_store(struct device *dev,
-> +				   struct device_attribute *attr,
-> +				   const char *buf, size_t len)
-> +{
-> +	struct gpio_virtuser_line_data *data = to_gpio_virtuser_data(attr);
-> +	int ret;
-> +
-> +	if (strlen(buf) > GPIO_CONSUMER_NAME_MAX_LEN)
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This is off by one.  strlen() doesn't count the NUL terminator.
+On Wed, May 29, 2024 at 09:44:40PM +0800, Kent Gibson wrote:
+> On Wed, May 29, 2024 at 04:27:00PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 29, 2024 at 09:18:47PM +0800, Kent Gibson wrote:
+> > > On Wed, May 29, 2024 at 04:08:49PM +0300, Andy Shevchenko wrote:
+> > > > On Tue, May 28, 2024 at 07:39:10AM +0800, Kent Gibson wrote:
+> > > > > On Mon, May 27, 2024 at 07:17:37PM +0300, Andy Shevchenko wrote:
+> > > > > > On Mon, May 27, 2024 at 08:44:20PM +0800, Kent Gibson wrote:
+> > > > > > > On Mon, May 27, 2024 at 02:02:34PM +0200, Bartosz Golaszewski wrote:
 
-> +		return -EINVAL;
-> +
-> +	guard(mutex)(&data->consumer_lock);
-> +
-> +	ret = gpiod_set_consumer_name(data->desc, buf);
-> +	if (ret)
-> +		return ret;
-> +
-> +	sprintf(data->consumer, buf);
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-It results in a buffer overflow here.
+...
 
-> +
-> +	return len;
-> +}
+> > > > > > > >  assert_fail() {
+> > > > > > > > -	$* || return 0
+> > > > > > > > -	fail " '$*': command did not fail as expected"
+> > > > > > > > +	"$@" || return 0
+> > > > > > > > +	fail " '$@': command did not fail as expected"
+> > > > > > > >  }
+> > > > > > >
+> > > > > > > Ironically, shellcheck doesn't like the '$@' in the fail string[1], so you
+> > > > > > > should use $* there.
+> > > > > >
+> > > > > > But why does it do like this?
+> > > > >
+> > > > > Read the link[1].
+> > > >
+> > > > Okay, this is only for some debug / error messages. Still if one wants to have
+> > > > clear understanding on what has been passed to some function, $* is not a
+> > > > correct option. Also note the single quotes, shouldn't that protect from the
+> > > > arguments loss?
+> > >
+> > > That's right - I was only referring to this particular case where a
+> > > string is being constructed.  Wasn't that clear?
+> >
+> > I meant that if you want to have this knowledge in the debug / error message,
+> > you will fail with $*, that's why I consider shellcheck is incorrect.
+> >
+> > Ex.
+> >
+> > I have
+> >
+> > 	foo bar "baz bar2"
+> >
+> > and I want
+> >
+> > 	"ERROR: 'foo bar "baz bar2"' failed"
+> >
+> > type of message.
+> >
+> 
+> Fair point, but $@ doesn't give you that either:
+> 
+> boo() {
+> 	echo "star '$*'"
+> 	echo "hash '$@'"
+> }
+> 
+> boo foo bar "baz bar2"
+> 
+> gives:
+> 
+> star 'foo bar baz bar2'
+> hash 'foo bar baz bar2'
 
-regards,
-dan carpenter
+Oh, this is unfortunate. It seems entire model with quotation depends on the
+commands, printf makes it different, print -r -- makes it better, though, if
+one uses non-space IFS for it.
+
+> Is there any form that gives you the format you want?
+
+Yes, but it requires an iteration over arguments, roughly something like below
+(which is not yet what I want, but closer):
+
+	for a in "$@"; do
+		echo -n '"$a" ' # echo -n seems not portable IIRC
+	done
+	echo
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
