@@ -1,98 +1,209 @@
-Return-Path: <linux-gpio+bounces-6787-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6788-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD7778D2C27
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 07:14:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 432358D2CB4
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 07:45:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9710128785F
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 05:14:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 936FEB27155
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 05:45:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4653915CD6B;
-	Wed, 29 May 2024 05:13:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 110B515CD4D;
+	Wed, 29 May 2024 05:45:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="Ogf7jb0r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DxJgCyS8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94AB115B96C;
-	Wed, 29 May 2024 05:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F02715B98B;
+	Wed, 29 May 2024 05:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716959634; cv=none; b=kCmjqV46MQcErNu6VBHbi55jWJsiKq04nV35rkeXNU7stmynPTr2EqyzBrKyCX9ndQlo6dczGryQyjCrNIlVDuBK2DgwuCUcRLTr9N16ghxpVdiRhtWr+8XYg60etrZZGxwOtmDxqgHZYoRcLHUwsiRNeHR33HJW35othSYO+No=
+	t=1716961506; cv=none; b=hd5VDG/iPOm22McxYCWcrY4fNktP9E1CwfagxqysLc+bkm2ZowKRjlG+RJ5j5IsnZoR2z8hoDsUq4m3qemu57bNWcHfTRNlfb5cUnwF6qzoAXvhftw9/dx5Hck7djmmd+vWAsg+1CQy8HtIddkY55X2Ppjs1ofIZGDDJglP0ydI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716959634; c=relaxed/simple;
-	bh=DNmFw/89eKVtL0FVlNQdhHMc+b/d21jA4hq+4viHbxg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QrL3/OD8ZkABPRVLF0ZF0QzKdfpBYANplvcb68pWODnUjWYV6e5irYIKyOv+SuYLtZO0D00MZKhbnu78hw7PjXlrgzbl/mMzmM7p/YP/cU+4grzNbn5DeMXa2Gyp6ddDuugpCrsAtoQryDrTBk2UyzNybzvb/en69Q5Nhc58B1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=Ogf7jb0r; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-Received: from [127.0.1.1] (ppp118-210-171-248.adl-adc-lon-bras34.tpg.internode.on.net [118.210.171.248])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 00E64202C8;
-	Wed, 29 May 2024 13:13:49 +0800 (AWST)
+	s=arc-20240116; t=1716961506; c=relaxed/simple;
+	bh=cNGxdNuzdI5pKIB6QCt+zvjbCDD1qiXHOix5B2DCynU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=unyFU+ZpPXMLmzB5zyUvNjH6MkkMaDJK4qalrP74o7e/qPxjDA0X1cbal4U+1AT0Mhnj/M4g1Q5/ABSh9DO+9kCaKhkbvyiD6HJKCnB6hBMV5oDuhHPiz0hfadum6vJW261i77f3CUkXnyCLE7LAnYsfcAcIgrhEftaqk7LBKKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DxJgCyS8; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-354faf5f1b4so1552142f8f.1;
+        Tue, 28 May 2024 22:45:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1716959630;
-	bh=P8gBf6jRS53rX70PCjwXjULQnqD4pYqLyrNQvX02Huk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=Ogf7jb0rwfeRUAkEBHkEOilwFfPZtc+QdoNrArChblbzGnE7CDo46q1yyT0DH/Ynf
-	 z5n9pmVMBzEXkzjtkjG0izFzI1kSxebGxNUXFvTbPHoicrexeNxg/g2BRg0reUlBvr
-	 TzUfLfF++c7HdZb/Um7ygIBpum0TyF4Gh7CMdLmoTEP3Y1kOs5WtG47/HNteyXEK5H
-	 ITUSb0lRKidY9pqHKZI/VT6P9Qdqpra5M+UyYMdvnRevOX/5pGpBuMnwizSsfbMjfm
-	 APUQrzWs2NCjULoUy++v+NaqFRZH51JSWxkfwvQcu4ML1TRmqoHKqmceMl9OI+XEcD
-	 CtDR8KeQQ1P6g==
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-Date: Wed, 29 May 2024 14:43:23 +0930
-Subject: [PATCH 4/4] dt-bindings: gpio: aspeed,sgpio: Require
- #interrupt-cells
+        d=gmail.com; s=20230601; t=1716961503; x=1717566303; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GZ4JX//TKbZ+BzdC73sUZxj+uGqXuXB1LCY+TXma+K0=;
+        b=DxJgCyS8GrUzP++GE37DN5jzzC4SM/j7q48/BWnmn4SP/+LXsTCnZzSGSCuKkVOx7D
+         nR+Aic5eOldIPNfvRdVxnDkgt/8TfERl9yVpq2joRq/18jhmgYqZYnT0VHySW0HQOanv
+         a6joFTwZbQL7jiyJ5T1MCEx5AtMi1YPeT6r3ww7CLBrCpuzEm3x2pQYphR9+ak79htba
+         Jq5Kn5N1aIzzo+d5gMHhBevonH4Al36/UB8N04ozWs3N33bIgLO6HUrm4NL5kde7fh0r
+         rfRVPC+zBNGPrreb5+dHRXuK34MfEnUjePBbktHxIE/z7inxEHfJzl96h4F983H0wSVf
+         q2Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716961503; x=1717566303;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GZ4JX//TKbZ+BzdC73sUZxj+uGqXuXB1LCY+TXma+K0=;
+        b=qB7aupZu5iqgRe4NSIliPAl5PZXtUHnIHGtc/jUee5iiwHDx0UOV2ta2SIw+IWGYmB
+         C8eEKueBqpURPXfQWnVHRHi2hsdhMoUOVYVjub56O738F25bxSOKZdo2wFdz9/n4qDuR
+         ykYTmYJ9Br2+C/wUJO6oJ3yrJDdj06j0BSabNzoJ56eAvj05hlN6gqL3Kj940zZGJljK
+         Ton5VDsanPvGI92T3HAjISmd+0ZWeoX3b4JpV6L4p38q01Kg0Bo5Kj/0vEd1wywzxL5w
+         Cm1tGey6FA9gNUYT6N+qgfsQwy5SlZxlqhzLAV1WzOgeBAi/eJ/tsjb97TZo3NkoxvwF
+         WXqA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdgkIQx7ri29juaeQmbXmX47x6OwwrRIAuvXwl1mFvDWKmTZ6mtYOXRuWVT2/FHMZt6BApM+77HlhPtxJcimCCEdR0t6sHQ1DwKTdF0lpaHmrnafnLRTagOSXXzxLWmwUKR5SC+mqPJcpgED/806D8oEhjvDk4yD1i9R7KHsxUcec=
+X-Gm-Message-State: AOJu0YwrK77MsQizE61grd+k6tBTCoGHwnVn299p4yjldU+8Xr4usyUY
+	sGZWLUarqLyRHp2c6/Ka5HvdNZbhcRvJjanqZGUR2xoa2ymXd88YKJW3afVyw1DDrRrvNDut6uk
+	iAS2OA4ALd6pid/E2mAPOM/f2OAg=
+X-Google-Smtp-Source: AGHT+IEmXk1ClteOR0CXKb9UTg4kb3FWdCF1Ad1K0lkWzsKgMLOcTXlTYdT2PrlfOVMArx9qthbIYIGvqvAjdH792vw=
+X-Received: by 2002:a5d:408d:0:b0:355:4cb:5048 with SMTP id
+ ffacd0b85a97d-3552fe02949mr12133703f8f.43.1716961503182; Tue, 28 May 2024
+ 22:45:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240529-dt-warnings-gpio-sgpio-interrupt-cells-v1-4-91c42976833b@codeconstruct.com.au>
-References: <20240529-dt-warnings-gpio-sgpio-interrupt-cells-v1-0-91c42976833b@codeconstruct.com.au>
-In-Reply-To: <20240529-dt-warnings-gpio-sgpio-interrupt-cells-v1-0-91c42976833b@codeconstruct.com.au>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.13.0
+References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
+ <20240528190315.3865-3-laurent.pinchart@ideasonboard.com> <ZlYwJryxeZ2LAKYG@surfacebook.localdomain>
+ <20240528201326.GA8500@pendragon.ideasonboard.com>
+In-Reply-To: <20240528201326.GA8500@pendragon.ideasonboard.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 29 May 2024 08:44:26 +0300
+Message-ID: <CAHp75VeHA8qH_S=KJjAMv24vGP=hmeN9wSt1_NPsRhBZfEYXXw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] mfd: adp5585: Add Analog Devices ADP5585 core support
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Haibo Chen <haibo.chen@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It shouldn't have been the case that it wasn't required. The kernel
-devicetrees already specified it where compatible nodes were defined,
-and u-boot pulls in the kernel devicetrees, so this should have minimal
-practical impact.
+On Tue, May 28, 2024 at 11:13=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Tue, May 28, 2024 at 10:27:34PM +0300, Andy Shevchenko wrote:
+> > Tue, May 28, 2024 at 10:03:12PM +0300, Laurent Pinchart kirjoitti:
 
-Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
----
- Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml | 1 +
- 1 file changed, 1 insertion(+)
+...
 
-diff --git a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-index 02c02ef97565..433b50bd5484 100644
---- a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-@@ -62,6 +62,7 @@ required:
-   - clocks
-   - interrupts
-   - interrupt-controller
-+  - '#interrupt-cells'
-   - gpio-controller
-   - '#gpio-cells'
-   - ngpios
+> > > +   depends on I2C && OF
+> >
+> > Why OF?
+>
+> Because the driver works on OF systems only.
+>
+> > No COMPILE_TEST?
+>
+> The driver won't compile without CONFIG_I2C, so I can use
+>
+>         depends on I2C
+>         depends on OF || COMPILE_TEST
+>
+> Do you think that's better ?
 
--- 
-2.39.2
+I think that dropping OF completely is the best.
+OF || COMPILE_TEST would work as well, but I still don't know why we need t=
+his.
 
+...
+
+> > + array_size.h
+> > + device.h // e.g., devm_kzalloc()
+> >
+> > > +#include <linux/module.h>
+> > > +#include <linux/moduleparam.h>
+> > > +#include <linux/init.h>
+> > > +#include <linux/slab.h>
+>
+> I'll drop those 3 headers, there's not needed anymore.
+>
+> > > +#include <linux/i2c.h>
+> >
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_device.h>
+> >
+> > You don't need them, instead of proxying...
+>
+> of.h for of_device_get_match_data() and of_match_ptr(). I'll drop the
+> former, but I need the latter, so I'll keep of.h
+
+Why do you need of_match_ptr()? What for?
+
+> of_device.h for historical reasons probably, I'll drop it.
+>
+> > > +#include <linux/mfd/core.h>
+> > > +#include <linux/mfd/adp5585.h>
+> >
+> > m is earlier than 'o', but with above drop no more issue :-)
+> >
+> > ...just include mod_devicetable.h.
+> >
+> > > +#include <linux/regmap.h>
+> >
+> > + types.h // e.g., u8
+
+I assume that all marked with + in my previous reply you agree on?
+
+...
+
+> > > +#define            ADP5585_MAN_ID(v)               (((v) & 0xf0) >> =
+4)
+> >
+> > GENMASK()
+>
+> This is not a mask. Or do you mean
+>
+>         (((v) & GENMASK(7, 4)) >> 4)
+>
+> ?
+
+Yes.
+
+> I think that's overkill.
+
+Why? You have a mask, use it for less error prone code.
+
+...
+
+> > > +#define            ADP5585_Rx_PULL_CFG_MASK        (3)
+> >
+> > GENMASK()
+>
+> Not here, as this value is meant to be passed to ADP5585_Rx_PULL_CFG().
+
+Why is it marked as a mask? Rename it to _ALL or alike.
+
+...
+
+> > > +#define            ADP5585_C4_EXTEND_CFG_MASK      (1U << 6)
+> >
+> > > +#define            ADP5585_R4_EXTEND_CFG_MASK      (1U << 5)
+> >
+> > > +#define            ADP5585_R3_EXTEND_CFG_MASK      (3U << 2)
+> >
+> > > +#define            ADP5585_R0_EXTEND_CFG_MASK      (1U << 0)
+> >
+> > > +#define            ADP5585_OSC_FREQ_MASK           (3U << 5)
+> >
+> > BIT() / GENMASK()
+>
+> I'll use GENMASK for the masks.
+
+For a single bit the BIT() is okay, and TBH I don't remember if
+GENMASK() supports h =3D=3D l cases.
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
