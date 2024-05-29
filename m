@@ -1,45 +1,45 @@
-Return-Path: <linux-gpio+bounces-6816-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6820-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97F9A8D3302
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 11:30:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E6838D3313
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 11:31:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EDD98B2657D
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:30:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 01FC0B238FA
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:31:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8EAC16EC1A;
-	Wed, 29 May 2024 09:29:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CFA1175570;
+	Wed, 29 May 2024 09:29:53 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE80B16A362
-	for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 09:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5586B175571
+	for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 09:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716974988; cv=none; b=Stq9j4Wwu5rkVkcSyC+UDULG3IEgIQdCwnWlOsKLxtonrbgCUzx3iJqO8kD5clvvzH/5lVcYiaICNVVCrpcUYcR8xh9wXiiSjTLsXgpJxcWI+wbAxJP25DH/UAnAiqEZzKlDcwA/0rjPT4Fjo8zzs9kNtSbK6pip+9Co6kCQHH4=
+	t=1716974993; cv=none; b=X6eTCXbrCfCtBI1j4B1JJ1is9EBB2sXp2hap6ro4M/i9t6hgOZJz5Usaw5ns/ladYn4WnQtwg2S1PCpdyYkcrAXC25cXk9c7agrzwuWL7zWK54I0OAJK+oX99K3+V0KGVMeyIcXE0w+GUm86YZSv8l7uKxb/+Q9qJ30bU9GZ6bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716974988; c=relaxed/simple;
-	bh=8Vj2KXMLjW6yLYPbVR9bwxmDWAE3IVEg5kHIPrLC1Zg=;
+	s=arc-20240116; t=1716974993; c=relaxed/simple;
+	bh=4sedTVgxKSPnpGacsDR35PoCYTA0Qn5EQG3bHabnoLI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=azul7dLAo3A22j7Xp0iKuiUQr1foCN6l1bMkarMMUxVoaIFp8gPGz1XSDc5m8IyXWBIfR8VubrEiml9brZM77ssXf/5tmNy20Ty81s9oKwMk7N5vac/iWyIKl+anss4tjAisOXfL/yO8UmcQijqkrBsc9N1sn+ehXbXk39oaihc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+	 MIME-Version; b=Dcl6ZBE9kdidmvLWpNtNkfcDEX1kSoMpyQw2S2CVGF1GdM5iwgdtKYhaY3tmr57Skj/fucyFgS1mBt8wbQAxjbP51+95OSnlaaCQqqeOOz9IO3OtbBRhcjJd0CYVr05pCs4j4edkm/HbSLfK8LUzsdZcjKcPFqrEcwxU9RMItls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:1b01:1838:131c:4de4])
-	by albert.telenet-ops.be with bizsmtp
-	id UxVg2C00H3VPV9V06xVglN; Wed, 29 May 2024 11:29:43 +0200
+	by xavier.telenet-ops.be with bizsmtp
+	id UxVg2C00c3VPV9V01xVg5G; Wed, 29 May 2024 11:29:43 +0200
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1sCFbu-00GHKd-0W;
+	id 1sCFbu-00GHKm-1G;
 	Wed, 29 May 2024 11:29:40 +0200
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1sCFcq-008wS2-Dz;
+	id 1sCFcq-008wS6-Ei;
 	Wed, 29 May 2024 11:29:40 +0200
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Rob Herring <robh@kernel.org>,
@@ -54,9 +54,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/8] soc: renesas: Add R-Car fuse driver
-Date: Wed, 29 May 2024 11:29:32 +0200
-Message-Id: <7f58556cc1187ddd305935c8452e03c26949ce95.1716974502.git.geert+renesas@glider.be>
+Subject: [PATCH v2 4/8] pinctrl: renesas: Add R-Car Gen3 fuse support
+Date: Wed, 29 May 2024 11:29:33 +0200
+Message-Id: <a30fa2c5e0d07752692c5a69f5a5fc57ae719c1b.1716974502.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1716974502.git.geert+renesas@glider.be>
 References: <cover.1716974502.git.geert+renesas@glider.be>
@@ -68,25 +68,14 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-R-Car Gen3/Gen4 SoCs contain fuses indicating hardware support or
-hardware parameters.  Add a driver to access the state of the fuses.
-This supports three type of hardware fuse provides:
-  1. E-FUSE non-volatile memory accessible through the Pin Function
-     Controller on R-Car V3U and S4-8,
-  2. E-FUSE non-volatile memory accessible through OTP_MEM on R-Car V4H
-     and V4M,
-  3. Fuses tightly integrated with the Pin Function Controller on R-Car
-     Gen3 SoCs.
+On R-Car Gen3 SoCs, the fuse registers are tightly integrated into the
+Pin Function Controller.  Add support for them by providing the
+rcar-fuse driver with all needed info through a platform device and
+platform data.
 
-Types 1 and 2 use hardware descriptions in DT.
-Type 3 relies on a platform device with accompanying platform data, to
-be provided by the PFC driver.
-
-Two APIs are provided to read the state of the fuses:
-  - An kernelspace API (rcar_fuse_read()), to be used by e.g. the
-    Renesas UFSHCD driver,
-    Symbolic register indices are provided for convenience.
-  - A userspace API, using the NVMEM framework.
+Note that the number of fuse registers on R-Car V3H and V3H2 differs,
+while their PFC blocks use the same compatible value, hence this is
+handled by checking the top-level compatible value.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
@@ -94,325 +83,207 @@ Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 v2:
   - Add Reviewed-by.
 
-Questions:
-  - Should the NVMEM support be made optional, relaxing the dependency
-    on NVMEM?
-  - Currently, the NVMEM access is restricted to the root user.
-    Should his be relaxed?
-  - On R-Car S4, the full space from RCAR_FUSE_MON0 to RCAR_LTM0_MON2 is
-    exposed.  Should this be split into separate blocks?
+FUSE_MON[1-3] on R-Car V3M were only briefly documented in Hardware
+User's Manual Rev. 0.52/0.53
 ---
- drivers/soc/renesas/Kconfig             |   8 +
- drivers/soc/renesas/Makefile            |   1 +
- drivers/soc/renesas/rcar-fuse.c         | 201 ++++++++++++++++++++++++
- include/linux/platform_data/rcar_fuse.h |  11 ++
- include/linux/soc/renesas/rcar-fuse.h   |  41 +++++
- 5 files changed, 262 insertions(+)
- create mode 100644 drivers/soc/renesas/rcar-fuse.c
- create mode 100644 include/linux/platform_data/rcar_fuse.h
- create mode 100644 include/linux/soc/renesas/rcar-fuse.h
+ drivers/pinctrl/renesas/core.c         | 18 ++++++++++++++++++
+ drivers/pinctrl/renesas/pfc-r8a77951.c |  2 ++
+ drivers/pinctrl/renesas/pfc-r8a7796.c  |  4 ++++
+ drivers/pinctrl/renesas/pfc-r8a77965.c |  2 ++
+ drivers/pinctrl/renesas/pfc-r8a77970.c |  2 ++
+ drivers/pinctrl/renesas/pfc-r8a77980.c | 14 +++++++++++++-
+ drivers/pinctrl/renesas/pfc-r8a77990.c |  2 ++
+ drivers/pinctrl/renesas/pfc-r8a77995.c |  2 ++
+ drivers/pinctrl/renesas/sh_pfc.h       |  4 +++-
+ 9 files changed, 48 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index 3125ab575b60b8d1..13aadcf1dec7b8b8 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -376,6 +376,14 @@ config ARCH_R9A07G043
- 
- endif # RISCV
- 
-+config FUSE_RCAR
-+	tristate "R-Car Fuse support"
-+	depends on (ARCH_RENESAS && ARM64) || COMPILE_TEST
-+	depends on NVMEM
-+	help
-+	  Enable support for reading the fuses in the PFC, E-FUSE or OTP
-+	  non-volatile memory block on R-Car Gen3/Gen4 SoCs.
-+
- config PWC_RZV2M
- 	bool "Renesas RZ/V2M PWC support" if COMPILE_TEST
- 
-diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makefile
-index 725eedd9d73ceae7..8ff382a82ac94496 100644
---- a/drivers/soc/renesas/Makefile
-+++ b/drivers/soc/renesas/Makefile
-@@ -8,5 +8,6 @@ obj-$(CONFIG_ARCH_R9A06G032)	+= r9a06g032-smp.o
- endif
- 
- # Family
-+obj-$(CONFIG_FUSE_RCAR)		+= rcar-fuse.o
- obj-$(CONFIG_PWC_RZV2M)		+= pwc-rzv2m.o
- obj-$(CONFIG_RST_RCAR)		+= rcar-rst.o
-diff --git a/drivers/soc/renesas/rcar-fuse.c b/drivers/soc/renesas/rcar-fuse.c
-new file mode 100644
-index 0000000000000000..8fb2374f919b83e5
---- /dev/null
-+++ b/drivers/soc/renesas/rcar-fuse.c
-@@ -0,0 +1,201 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * R-Car Gen3/Gen4 E-FUSE/OTP Driver
-+ *
-+ * Copyright (C) 2024 Glider bv
-+ */
-+
-+#include <linux/cleanup.h>
-+#include <linux/device.h>
-+#include <linux/export.h>
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/mutex.h>
-+#include <linux/nvmem-provider.h>
+diff --git a/drivers/pinctrl/renesas/core.c b/drivers/pinctrl/renesas/core.c
+index 96d6040a8871419b..1c8447fcfb1180e3 100644
+--- a/drivers/pinctrl/renesas/core.c
++++ b/drivers/pinctrl/renesas/core.c
+@@ -20,6 +20,7 @@
+ #include <linux/math.h>
+ #include <linux/of.h>
+ #include <linux/pinctrl/machine.h>
 +#include <linux/platform_data/rcar_fuse.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/property.h>
-+#include <linux/soc/renesas/rcar-fuse.h>
+ #include <linux/platform_device.h>
+ #include <linux/psci.h>
+ #include <linux/slab.h>
+@@ -27,6 +28,8 @@
+ 
+ #include "core.h"
+ 
++#define FUSE_MON0	0x3e4		/* R-Car Gen3 */
 +
-+struct rcar_fuse {
-+	struct device *dev;
-+	void __iomem *base;
-+	unsigned int offset;
-+	unsigned int nregs;
-+	struct nvmem_device *nvmem;
-+};
+ static int sh_pfc_map_resources(struct sh_pfc *pfc,
+ 				struct platform_device *pdev)
+ {
+@@ -1372,6 +1375,21 @@ static int sh_pfc_probe(struct platform_device *pdev)
+ 	}
+ #endif
+ 
++	if (pfc->info->nr_fuse_regs) {
++		struct rcar_fuse_platform_data pdata = {
++			.base = pfc->windows[0].virt,
++			.offset = FUSE_MON0,
++			.nregs = pfc->info->nr_fuse_regs,
++		};
++		struct platform_device *fdev;
 +
-+struct rcar_fuse_data {
-+	unsigned int bank;	/* 0: PFC + E-FUSE, 1: OPT_MEM + E-FUSE */
-+	unsigned int offset;
-+	unsigned int nregs;
-+};
++		fdev = platform_device_register_data(pfc->dev, "rcar_fuse", -1,
++						     &pdata, sizeof(pdata));
++		if (IS_ERR(fdev))
++			dev_err_probe(pfc->dev, PTR_ERR(fdev),
++				      "failed to register fuses, ignoring\n");
++	}
 +
-+/* NVMEM access must not use the rcar_fuse singleton */
-+static int rcar_fuse_nvmem_read(void *priv, unsigned int offset, void *val,
-+				size_t bytes)
+ 	platform_set_drvdata(pdev, pfc);
+ 
+ 	dev_info(pfc->dev, "%s support registered\n", info->name);
+diff --git a/drivers/pinctrl/renesas/pfc-r8a77951.c b/drivers/pinctrl/renesas/pfc-r8a77951.c
+index a1d74f61fd8cce64..ae60bc5f70f0c223 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a77951.c
++++ b/drivers/pinctrl/renesas/pfc-r8a77951.c
+@@ -6187,5 +6187,7 @@ const struct sh_pfc_soc_info r8a77951_pinmux_info = {
+ 
+ 	.pinmux_data = pinmux_data,
+ 	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
++
++	.nr_fuse_regs = 1,
+ };
+ #endif
+diff --git a/drivers/pinctrl/renesas/pfc-r8a7796.c b/drivers/pinctrl/renesas/pfc-r8a7796.c
+index 807834f319f07d8c..b1ebd9a0b612e5b8 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a7796.c
++++ b/drivers/pinctrl/renesas/pfc-r8a7796.c
+@@ -6139,6 +6139,8 @@ const struct sh_pfc_soc_info r8a77960_pinmux_info = {
+ 
+ 	.pinmux_data = pinmux_data,
+ 	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
++
++	.nr_fuse_regs = 1,
+ };
+ #endif
+ 
+@@ -6166,5 +6168,7 @@ const struct sh_pfc_soc_info r8a77961_pinmux_info = {
+ 
+ 	.pinmux_data = pinmux_data,
+ 	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
++
++	.nr_fuse_regs = 1,
+ };
+ #endif
+diff --git a/drivers/pinctrl/renesas/pfc-r8a77965.c b/drivers/pinctrl/renesas/pfc-r8a77965.c
+index e7c88a5d983f4343..47f9843a336225ac 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a77965.c
++++ b/drivers/pinctrl/renesas/pfc-r8a77965.c
+@@ -6380,5 +6380,7 @@ const struct sh_pfc_soc_info r8a77965_pinmux_info = {
+ 
+ 	.pinmux_data = pinmux_data,
+ 	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
++
++	.nr_fuse_regs = 1,
+ };
+ #endif
+diff --git a/drivers/pinctrl/renesas/pfc-r8a77970.c b/drivers/pinctrl/renesas/pfc-r8a77970.c
+index e1b3e3b38ec3b864..688fe31c5b98ac14 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a77970.c
++++ b/drivers/pinctrl/renesas/pfc-r8a77970.c
+@@ -2557,4 +2557,6 @@ const struct sh_pfc_soc_info r8a77970_pinmux_info = {
+ 
+ 	.pinmux_data = pinmux_data,
+ 	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
++
++	.nr_fuse_regs = 4,
+ };
+diff --git a/drivers/pinctrl/renesas/pfc-r8a77980.c b/drivers/pinctrl/renesas/pfc-r8a77980.c
+index 877134d78c7e50c6..085eb6090420d013 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a77980.c
++++ b/drivers/pinctrl/renesas/pfc-r8a77980.c
+@@ -15,6 +15,7 @@
+ #include <linux/errno.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
++#include <linux/of.h>
+ 
+ #include "sh_pfc.h"
+ 
+@@ -3048,13 +3049,22 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
+ 	{ /* sentinel */ }
+ };
+ 
++static int r8a77980_pinmux_init(struct sh_pfc *pfc)
 +{
-+	struct rcar_fuse *fuse = priv;
-+	u32 *buf = val;
-+	int ret;
-+
-+	ret = pm_runtime_resume_and_get(fuse->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (; bytes >= 4; bytes -= 4, offset += 4)
-+		*buf++ = readl(fuse->base + fuse->offset + offset);
-+
-+	pm_runtime_put(fuse->dev);
++	if (of_machine_is_compatible("renesas,r8a77980a"))
++		r8a77980_pinmux_info.nr_fuse_regs = 5;
 +
 +	return 0;
 +}
 +
-+static struct rcar_fuse *rcar_fuse;
-+static DEFINE_MUTEX(rcar_fuse_lock);	/* Protects rcar_fuse singleton */
+ static const struct sh_pfc_soc_operations r8a77980_pfc_ops = {
++	.init = r8a77980_pinmux_init,
+ 	.pin_to_pocctrl = r8a77980_pin_to_pocctrl,
+ 	.get_bias = rcar_pinmux_get_bias,
+ 	.set_bias = rcar_pinmux_set_bias,
+ };
+ 
+-const struct sh_pfc_soc_info r8a77980_pinmux_info = {
++struct sh_pfc_soc_info r8a77980_pinmux_info = {
+ 	.name = "r8a77980_pfc",
+ 	.ops = &r8a77980_pfc_ops,
+ 	.unlock_reg = 0xe6060000, /* PMMR */
+@@ -3074,4 +3084,6 @@ const struct sh_pfc_soc_info r8a77980_pinmux_info = {
+ 
+ 	.pinmux_data = pinmux_data,
+ 	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
 +
-+int rcar_fuse_read(unsigned int idx, u32 *val)
-+{
-+	int ret;
++	.nr_fuse_regs = 1,
+ };
+diff --git a/drivers/pinctrl/renesas/pfc-r8a77990.c b/drivers/pinctrl/renesas/pfc-r8a77990.c
+index 262390dd7d67a101..748b9198d1efd820 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a77990.c
++++ b/drivers/pinctrl/renesas/pfc-r8a77990.c
+@@ -5336,5 +5336,7 @@ const struct sh_pfc_soc_info r8a77990_pinmux_info = {
+ 
+ 	.pinmux_data = pinmux_data,
+ 	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
 +
-+	guard(mutex)(&rcar_fuse_lock);
++	.nr_fuse_regs = 1,
+ };
+ #endif
+diff --git a/drivers/pinctrl/renesas/pfc-r8a77995.c b/drivers/pinctrl/renesas/pfc-r8a77995.c
+index 298e7a07e4934e67..f9003b8236a8881e 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a77995.c
++++ b/drivers/pinctrl/renesas/pfc-r8a77995.c
+@@ -3193,4 +3193,6 @@ const struct sh_pfc_soc_info r8a77995_pinmux_info = {
+ 
+ 	.pinmux_data = pinmux_data,
+ 	.pinmux_data_size = ARRAY_SIZE(pinmux_data),
 +
-+	if (!rcar_fuse)
-+		return -EPROBE_DEFER;
++	.nr_fuse_regs = 1,
+ };
+diff --git a/drivers/pinctrl/renesas/sh_pfc.h b/drivers/pinctrl/renesas/sh_pfc.h
+index 0061e96400598e49..ce9b591a275ffbd3 100644
+--- a/drivers/pinctrl/renesas/sh_pfc.h
++++ b/drivers/pinctrl/renesas/sh_pfc.h
+@@ -290,6 +290,8 @@ struct sh_pfc_soc_info {
+ 	unsigned int pinmux_data_size;
+ 
+ 	u32 unlock_reg;		/* can be literal address or mask */
 +
-+	if (idx >= rcar_fuse->nregs)
-+		return -EINVAL;
-+
-+	ret = pm_runtime_resume_and_get(rcar_fuse->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = readl(rcar_fuse->base + rcar_fuse->offset + idx * sizeof(u32));
-+
-+	pm_runtime_put(rcar_fuse->dev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(rcar_fuse_read);
-+
-+static int rcar_fuse_probe(struct platform_device *pdev)
-+{
-+	const struct rcar_fuse_platform_data *pdata;
-+	const struct rcar_fuse_data *data;
-+	struct device *dev = &pdev->dev;
-+	struct nvmem_config nvmem;
-+	struct rcar_fuse *fuse;
-+	int ret;
-+
-+	guard(mutex)(&rcar_fuse_lock);
-+
-+	if (rcar_fuse)
-+		return -EEXIST;
-+
-+	ret = devm_pm_runtime_enable(dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	fuse = devm_kzalloc(dev, sizeof(*fuse), GFP_KERNEL);
-+	if (!fuse)
-+		return -ENOMEM;
-+
-+	fuse->dev = dev;
-+
-+	data = device_get_match_data(dev);
-+	if (!data) {
-+		/* Fuse block integrated into PFC */
-+		pdata = dev->platform_data;
-+		if (!pdata)
-+			return -EINVAL;
-+
-+		fuse->base = pdata->base;
-+		fuse->offset = pdata->offset;
-+		fuse->nregs = pdata->nregs;
-+	} else {
-+		/* PFC + E-FUSE or OTP_MEM + E-FUSE */
-+		fuse->base = devm_platform_ioremap_resource(pdev, data->bank);
-+		if (IS_ERR(fuse->base))
-+			return PTR_ERR(fuse->base);
-+
-+		fuse->offset = data->offset;
-+		fuse->nregs = data->nregs;
-+	};
-+
-+	memset(&nvmem, 0, sizeof(nvmem));
-+	nvmem.dev = dev;
-+	nvmem.name = "fuse";
-+	nvmem.id = -1;
-+	nvmem.owner = THIS_MODULE;
-+	nvmem.type = NVMEM_TYPE_OTP;
-+	nvmem.read_only = true;
-+	nvmem.root_only = true;
-+	nvmem.reg_read = rcar_fuse_nvmem_read;
-+	nvmem.size = fuse->nregs * 4;
-+	nvmem.word_size = 4;
-+	nvmem.stride = 4;
-+	nvmem.priv = fuse;
-+
-+	fuse->nvmem = devm_nvmem_register(dev, &nvmem);
-+	if (IS_ERR(fuse->nvmem))
-+		return dev_err_probe(dev, PTR_ERR(fuse->nvmem),
-+				     "failed to register NVMEM device\n");
-+
-+	rcar_fuse = fuse;
-+
-+	return 0;
-+}
-+
-+static void rcar_fuse_remove(struct platform_device *pdev)
-+{
-+	guard(mutex)(&rcar_fuse_lock);
-+
-+	rcar_fuse = NULL;
-+}
-+
-+static const struct rcar_fuse_data rcar_fuse_v3u = {
-+	.bank = 0,
-+	.offset = 0xc0,
-+	.nregs = 10,
-+};
-+
-+static const struct rcar_fuse_data rcar_fuse_s4 = {
-+	.bank = 0,
-+	.offset = 0xc0,
-+	.nregs = 35,
-+};
-+
-+static const struct rcar_fuse_data rcar_fuse_v4h = {
-+	.bank = 1,
-+	.offset = 0x100,
-+	.nregs = 40
-+};
-+
-+static const struct rcar_fuse_data rcar_fuse_v4m = {
-+	.bank = 1,
-+	.offset = 0x100,
-+	.nregs = 4,
-+};
-+
-+static const struct of_device_id rcar_fuse_match[] = {
-+	{ .compatible = "renesas,r8a779a0-efuse", .data = &rcar_fuse_v3u },
-+	{ .compatible = "renesas,r8a779f0-efuse", .data = &rcar_fuse_s4 },
-+	{ .compatible = "renesas,r8a779g0-otp", .data = &rcar_fuse_v4h },
-+	{ .compatible = "renesas,r8a779h0-otp", .data = &rcar_fuse_v4m },
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver rcar_fuse_driver = {
-+	.probe = rcar_fuse_probe,
-+	.remove_new = rcar_fuse_remove,
-+	.driver = {
-+		.name = "rcar_fuse",
-+		.of_match_table = rcar_fuse_match,
-+	},
-+};
-+module_platform_driver(rcar_fuse_driver);
-+
-+MODULE_DESCRIPTION("Renesas R-Car E-FUSE/OTP driver");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Geert Uytterhoeven");
-diff --git a/include/linux/platform_data/rcar_fuse.h b/include/linux/platform_data/rcar_fuse.h
-new file mode 100644
-index 0000000000000000..07933336b5f4e668
---- /dev/null
-+++ b/include/linux/platform_data/rcar_fuse.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __LINUX_PLATFORM_DATA_RCAR_FUSE_H__
-+#define __LINUX_PLATFORM_DATA_RCAR_FUSE_H__
-+
-+struct rcar_fuse_platform_data {
-+	void __iomem *base;
-+	unsigned int offset;
-+	unsigned int nregs;
-+};
-+
-+#endif /* __LINUX_PLATFORM_DATA_RCAR_FUSE_H__ */
-diff --git a/include/linux/soc/renesas/rcar-fuse.h b/include/linux/soc/renesas/rcar-fuse.h
-new file mode 100644
-index 0000000000000000..37fc23ef74057066
---- /dev/null
-+++ b/include/linux/soc/renesas/rcar-fuse.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __LINUX_SOC_RENESAS_RCAR_FUSE_H__
-+#define __LINUX_SOC_RENESAS_RCAR_FUSE_H__
-+
-+#define RCAR_FUSE_MON0		0
-+#define RCAR_FUSE_MON1		1
-+#define RCAR_FUSE_MON2		2
-+#define RCAR_FUSE_MON3		3
-+#define RCAR_FUSE_MON4		4
-+#define RCAR_FUSE_MON5		5
-+#define RCAR_FUSE_MON6		6
-+#define RCAR_FUSE_MON7		7
-+#define RCAR_FUSE_MON8		8
-+#define RCAR_FUSE_MON9		9
-+
-+#define RCAR_LTM0_MON0		32
-+#define RCAR_LTM0_MON1		33
-+#define RCAR_LTM0_MON2		34
-+
-+#define RCAR_OTPMONITOR0	0
-+#define RCAR_OTPMONITOR3	3
-+#define RCAR_OTPMONITOR28	28
-+#define RCAR_OTPMONITOR32	32
-+#define RCAR_OTPMONITOR33	33
-+#define RCAR_OTPMONITOR34	34
-+#define RCAR_OTPMONITOR35	35
-+#define RCAR_OTPMONITOR36	36
-+#define RCAR_OTPMONITOR37	37
-+#define RCAR_OTPMONITOR38	38
-+#define RCAR_OTPMONITOR39	39
-+
-+#if IS_ENABLED(CONFIG_FUSE_RCAR)
-+int rcar_fuse_read(unsigned int idx, u32 *val);
-+#else
-+static inline int rcar_fuse_read(unsigned int idx, u32 *val)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
-+#endif /* __LINUX_SOC_RENESAS_RCAR_FUSE_H__ */
++	unsigned int nr_fuse_regs;
+ };
+ 
+ extern const struct sh_pfc_soc_info emev2_pinmux_info;
+@@ -316,7 +318,7 @@ extern const struct sh_pfc_soc_info r8a77960_pinmux_info;
+ extern const struct sh_pfc_soc_info r8a77961_pinmux_info;
+ extern const struct sh_pfc_soc_info r8a77965_pinmux_info;
+ extern const struct sh_pfc_soc_info r8a77970_pinmux_info;
+-extern const struct sh_pfc_soc_info r8a77980_pinmux_info;
++extern struct sh_pfc_soc_info r8a77980_pinmux_info;
+ extern const struct sh_pfc_soc_info r8a77990_pinmux_info;
+ extern const struct sh_pfc_soc_info r8a77995_pinmux_info;
+ extern const struct sh_pfc_soc_info r8a779a0_pinmux_info;
 -- 
 2.34.1
 
