@@ -1,82 +1,82 @@
-Return-Path: <linux-gpio+bounces-6886-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6887-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30F8C8D3F00
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 21:46:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDF218D3F1E
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 21:53:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E2285283675
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 19:46:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 254731F24868
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 19:53:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76CCF1C2330;
-	Wed, 29 May 2024 19:46:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E73891C2335;
+	Wed, 29 May 2024 19:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUTNrFkf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkGYnJV2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1246219FC;
-	Wed, 29 May 2024 19:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237E2522A;
+	Wed, 29 May 2024 19:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717011981; cv=none; b=O3apx1YPhqxuGNFXi7x+I+Hx8g4uifEl8Q7IwgqhME2ZhIxMnmeXAsvaMFTTFmK3x34l/SMzYpLGkN3aRZ336lMIp0PDuWXxcP8wnGXUFSArAPUwRoVTebVQEccLQrdLIuT2hsEf8XU5VuV9x9CuQAqGJYwUC2Csmg9vNd47vaU=
+	t=1717012429; cv=none; b=olnJIi1aStju59FkSYGwt+9GTEHtfuMB6dYnbayQ2Gfx6fE4vSEaDYzqbr0gtumiyc1yEFT0kcoQ4lC/z4rkpsAJEOC+akC8bEFCreXXbJFuNBvtwVSE815FXXbz5Anha+O6AeiPKH4+NKm6XCdfF7b1k5FEOYJW/unyGVh8YcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717011981; c=relaxed/simple;
-	bh=JiLCa4M+GV+8Ik9X1BrNHTYYxtfnMvl7ikNZHguaXnk=;
+	s=arc-20240116; t=1717012429; c=relaxed/simple;
+	bh=TgIN2Vko2QSfeAhaQWA7wstejia7wbLXf1FK1ROIXk0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EXkiORAQgUUaqjijDL7/+MxhBXLuNFXRfUw0CTbJAQ6Yx0xXp5gWdekBIEesTY1YDNCpwCXpZEJsFk0Zb01BIBMZTXMtV0qhDZJ+LaT423aKzfe5yHVlnwfuHJLDGywr9e1jOeTRKV4aV8bGNAUZajoKiFXFRnyTLaRvvC+zGfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MUTNrFkf; arc=none smtp.client-ip=209.85.218.53
+	 To:Cc:Content-Type; b=JRfYZXFa8wKAXozxybQSonExIS8SBLcTcxCRde5fLBZQ4VuyxdC6Osn3iGCbpO2Izbpn8CYgAhbJFyuzy+SQ5wDWYTqj4APpzvxmsPpS+hOhoyT/zb2f2gz7Frxky8T4+wlbEGfYROImsUOGP9GRS7Vt22fZD8CyVuc5Zr6YrPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hkGYnJV2; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a6265d48ec3so3992466b.0;
-        Wed, 29 May 2024 12:46:19 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a63359aaaa6so2949066b.2;
+        Wed, 29 May 2024 12:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717011978; x=1717616778; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717012426; x=1717617226; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=V9K3L66JrsQxxCHcyJ7DUl2BI/mquF1TDYKxyl3bERI=;
-        b=MUTNrFkfD90J3EGlPuWLhrM5iJwk5B7ogQAVF/M6ljMQx1Kz8WEe5xr/+Y7ftzfsCQ
-         53BHTIiF+10W4G3XP0xwzcXKASKnakC9K8haT3g+G05pBrNl5WTOgQUKanVjIelU2dIf
-         mu2+yMcgQ6hNWWl0iIYVhksFQz/acZDfiJnGzYTfVOsINxER78MwXdqj2XLDYl1v49oc
-         MOKgZAptfXOSxKkCXt+Qa613NKeMWhiSRpZjix0L1gqOhsrbJvEBdSaVzdceXImUCbhz
-         sCRT6fkv0fJ7CVGIWjjIROi2PA/X5NUDZF7kqSp6lIw3HUOIOKywidGksdWaMyeIsHuw
-         Dyuw==
+        bh=1m+eJ0+HTX5hevlSV4OPbUaaD5T4sWeJ+vrIGfi1+BU=;
+        b=hkGYnJV2SpsshZiT2LkD5opUJCFkC+gdGYq3PSJIxownC4hdckWUofZJ+1hmAO3+He
+         4mFTbf/Yobv1WCZug5NeiWtvKU6ads8sbAKGydvRXHWZCJ+tmLfNZQK7lboHZT1jVcup
+         fKShumFHCNwOQfKxgTjfBiAmDQnJg3XY/Eb+MtQ+mSOzZ09H+5DV7DLpR9jz0JTBD/8S
+         6bw3vGrNlRgNgfvcCYvW3byNlV4WCY0xA6zcVEVxdHXY9Pw7YSqHBPxkHdD1zJrUNcec
+         ooFwkdy0OE0yRrQxV8mNgS7w5ZtFRhs4iSHZpCF9lMW8+kXs4q9MNyAHQ9nterimdGNn
+         eXdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717011978; x=1717616778;
+        d=1e100.net; s=20230601; t=1717012426; x=1717617226;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V9K3L66JrsQxxCHcyJ7DUl2BI/mquF1TDYKxyl3bERI=;
-        b=EjtIlM34eX8WYWRQUy0XGvuXI46b2LZKXyQToH5nSUH1rvAHIE18P8Q8pYe2i/N4VH
-         zJ5ltsF+k9P6uZPDDkBC5tryVEINqAJotKQHBbV4KWDRkTtLuzKadfsO+mGJAnTwSH6X
-         dIySfQzsI0ZRs8jlgKLFqY5SIgtqQBE1hLJk5NVqYhnJoFdIPtk0mhcljNSFfo1qrw0O
-         YVWxYdpZ5j7tjQOjsorlIzxiSzZ0WXEPcQp0eRi5d2TdIVAbTWFZSWp67SoV2IbxPSrO
-         y1+78G31j1feT+tSte2nWsIGkqnD8tVlbsIrfibQJu71k4TW8GXHTBjIcO9OULcngRb8
-         Ypgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUu4nHGoovA2ngAGKV8AELxohNYvWzQclpXSvEHpbM+RbqAG1EC5V3bY7xnXF+dCn4/oJ6kplT1dfW0q9PN7QIsgQkZzv6Q7YumynQB4XJTs8VFodmpO5YAp3kKxi5vOLsu2gw+U+r/0crNje5odYzxZ5T1AOmmN2lBVwb/3hH0Y1jwURCIJQo6SAwVinOMRoeiXH9diugHZSrqCzif4ZLmQUbM
-X-Gm-Message-State: AOJu0Yy8cpBHVC+PaBkxBI/52fl7FXlPtsdCGs7MxHsGL0D5F8FkOkN5
-	hpRK7wmzf5huuNZV4Y/dw6HU/AU0sG+NxtYbinM+4C/3m/UZNH0ubMkbHw9yl15hem0503/Xr38
-	PSFMwOXtezf7GRbv4mWFoL5kSSyk=
-X-Google-Smtp-Source: AGHT+IFy1DdHPnET3S5rcX1wtUxbPXXfhSd7llDP1hK79djSGp3pk2YgfuRmMSb2EbQGo/xN3MRP6wolQFA6ZiC5toY=
-X-Received: by 2002:a17:906:8744:b0:a62:196c:b2af with SMTP id
- a640c23a62f3a-a65e90f503emr10431666b.52.1717011977944; Wed, 29 May 2024
- 12:46:17 -0700 (PDT)
+        bh=1m+eJ0+HTX5hevlSV4OPbUaaD5T4sWeJ+vrIGfi1+BU=;
+        b=iBlQcyAEj9m6ZrVp+jla9Ry3FD2lZFSxGhePt+VAnRZPm6UYXIrj5vKoINeJ1xrTZO
+         Vjs381UL4ERDQuXzDj3iRCeGJzS4MwGaPuIAipEsuoLBe+EKh4JGSEoJSZUiEkX2avsc
+         iWU5U4opZhyyEbmHSE7ozJ1Xr8Dtywb2afogbjkUO4OM9C6IEr0qfyfWV8YJxezC3KO4
+         a1cU+LcSV9MJXOgUziAM0flplS30tRzBwZ4+1zAAnT763qwDiZuYaIlhZ+xS1wYZfiC4
+         RyikTpl0PX6LW5yCbQ1XvpZ3lwttI/v39F2AAWXA2MYDkChwFXhAHuWD+fDUFkKnmVBt
+         BRYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUO/O8Pa01AgYY7Tr1F9YLK19GgiiImWJMFaGxPIWxKCqI55m8PTd59dzGnKj7+uxwoMQgC7niZCPnqX+M5gTEu0XEM0cLg/vIh/SAVPdo+e0vU0eVj4Ezl/ZpHe+dBX3BI1ZOY1hyTNA3j1XL+8GKPlZD3XdQHKQ8TVkeAheCLX59KEY5TR1eJKTDwTjYCtiqgXNS23Qzr3ZCUri7bLE+3Qt4V
+X-Gm-Message-State: AOJu0Yyw998Gm6ply0ftDV4AGAFexSL2o9ZCX3H73ZG2BMJYIOA6bSLF
+	JafUNTNsTy7exBEsTAcIR1Vc115cc3YoUGvUdQ94tlqxlZHTiqXuGgGPBFxPeWr44/YhMarq3+6
+	aUlmWXsvVjtGFkUeWQtFZTkJVoes=
+X-Google-Smtp-Source: AGHT+IHdLo2Dle0xvU6wdDZvW+5ygpMdmBCnbICN8kcAYk7je6Y+Ci1/SHIdh8p+ng8bmsjWJmc5zj2MS6lW66x6EsY=
+X-Received: by 2002:a17:906:4087:b0:a5a:896e:d0b4 with SMTP id
+ a640c23a62f3a-a65e8e5d2e3mr11830466b.26.1717012426261; Wed, 29 May 2024
+ 12:53:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240529162958.18081-1-johan+linaro@kernel.org> <20240529162958.18081-4-johan+linaro@kernel.org>
-In-Reply-To: <20240529162958.18081-4-johan+linaro@kernel.org>
+References: <20240529162958.18081-1-johan+linaro@kernel.org> <20240529162958.18081-13-johan+linaro@kernel.org>
+In-Reply-To: <20240529162958.18081-13-johan+linaro@kernel.org>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 29 May 2024 22:45:40 +0300
-Message-ID: <CAHp75VdnTQJFfqOdxC99gWckxebdUr4hV0wp3ZTs1Pey7q_fsA@mail.gmail.com>
-Subject: Re: [PATCH v2 03/14] mfd: pm8008: deassert reset on probe
+Date: Wed, 29 May 2024 22:53:09 +0300
+Message-ID: <CAHp75Vcww07EkUDVSMSd+RviQ9_uku=w4pkCWUt8iGTW580eXg@mail.gmail.com>
+Subject: Re: [PATCH v2 12/14] mfd: pm8008: rework driver
 To: Johan Hovold <johan+linaro@kernel.org>
 Cc: Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>, 
 	Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
@@ -93,23 +93,67 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, May 29, 2024 at 7:30=E2=80=AFPM Johan Hovold <johan+linaro@kernel.o=
 rg> wrote:
 >
-> Request and deassert any (optional) reset gpio during probe in case it
-> has been left asserted by the boot firmware.
+> Rework the pm8008 driver to match the new binding which no longer
+> describes internal details like interrupts and register offsets
+> (including which of the two consecutive I2C addresses the registers
+> belong to).
 >
-> Note the reset line is not asserted to avoid reverting to the default
-> I2C address in case the firmware has configured an alternate address.
+> Instead make the interrupt controller implementation internal and pass
+> interrupts to the subdrivers using MFD cell resources.
+>
+> Note that subdrivers may either get their resources, like register block
+> offsets, from the parent MFD or this can be included in the subdrivers
+> directly.
+>
+> In the current implementation, the temperature alarm driver is generic
+> enough to just get its base address and alarm interrupt from the parent
+> driver, which already uses this information to implement the interrupt
+> controller.
+>
+> The regulator driver, however, needs additional information like parent
+> supplies and regulator characteristics so in that case it is easier to
+> just augment its table with the regulator register base addresses.
+>
+> Similarly, the current GPIO driver already holds the number of pins and
+> that lookup table can therefore also be extended with register offsets.
+>
+> Note that subdrivers can now access the two regmaps by name, even if the
+> primary regmap is registered last so that it is returned by default when
+> no name is provided in lookups.
+>
+> Finally, note that the temperature alarm and GPIO subdrivers need some
+> minor rework before they can be used with non-SPMI devices like the
+> PM8008. The temperature alarm MFD cell name specifically uses a "qpnp"
+> rather than "spmi" prefix to prevent binding until the driver has been
+> updated.
 
 ...
 
-> +       /*
-> +        * The PMIC does not appear to require a post-reset delay, but wa=
-it
-> +        * for a millisecond for now anyway.
-> +        */
+> +       dummy =3D devm_i2c_new_dummy_device(dev, client->adapter, client-=
+>addr + 1);
+> +       if (IS_ERR(dummy)) {
+> +               ret =3D PTR_ERR(dummy);
+> +               dev_err(dev, "failed to claim second address: %d\n", ret)=
+;
+> +               return ret;
+> +       }
 
-> +       usleep_range(1000, 2000);
 
-fsleep() ?
+> +       ret =3D devm_regmap_add_irq_chip_fwnode(dev, fwnode, regmap, clie=
+nt->irq,
+>                                 IRQF_SHARED, 0, &pm8008_irq_chip, &irq_da=
+ta);
+> +       if (ret) {
+> +               dev_err(dev, "failed to add IRQ chip: %d\n", ret);
+> +               return ret;
+>         }
+
+I believe there is no harm to use
+
+  return dev_err_probe(...);
+
+for these. But it seems you don't like that API. Whatever, no-one will
+die, just additional work for the future :-)
 
 --=20
 With Best Regards,
