@@ -1,133 +1,124 @@
-Return-Path: <linux-gpio+bounces-6866-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6867-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BBF28D3BC0
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 18:04:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E91A48D3BFE
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 18:12:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16B401F25DF8
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 16:04:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A5881F22C71
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 16:12:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88F7518410C;
-	Wed, 29 May 2024 16:04:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7F2A1836D8;
+	Wed, 29 May 2024 16:12:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KeTsBLNJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BqeHSE29"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C07C8DE;
-	Wed, 29 May 2024 16:04:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9533C139588;
+	Wed, 29 May 2024 16:12:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716998674; cv=none; b=PwiUqykJEYzLb7l3URoInBV4eJ/YsLBoI8WZ6RkUzXE0Fc2EPVtrCqqtyuKt5vYnVQztM9SEsjqlqFQqPxF2ByvEoesCTnhq0AKfKZ2RiN78l2d3yj9BI5WJ+uRnxdKYw+e2fXY6VRr99uNsrCFKWeiv5/6bzWbx7GDCcZhRFLs=
+	t=1716999142; cv=none; b=F3zLpoBgi+LhxKoAp2/Rk76oDdf9YWLrZIUiggHiNL5dPhu1KA2jJcLpvhij76QmNJCd7XNmJDXez6xBD4RYQG2kP31M7P0kDuEOgORE9a+9R3u5afOnFbVJxH7QC/DgXVorr+T+9VKhWNM3wKOJIDDJvBBrOIcUZKkekkSUUyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716998674; c=relaxed/simple;
-	bh=/EwIIXcKHGDW2AxegyIxUaFBTLYn3SLVszyabwPuc7k=;
+	s=arc-20240116; t=1716999142; c=relaxed/simple;
+	bh=lgaCkdJMIInSxiz7vBoUGg06CC1AH2OE5Ds7z+4uj20=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s0PsEV7DMUJdev7pKZUvIAquD+Yhw6QfSzs0d48yEwdvHNesktCWkGGvqf7xBR68QpKGYtNF5jTD+cEPWczOqGmoeWZghVHkFm2QsLAx2mCLkIoITfU8Sm2uOeBRZDIvnArwQXp91Q67AgyLm7YEWpn2HkSD0pEMwIiSu9DTMMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KeTsBLNJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC97FC113CC;
-	Wed, 29 May 2024 16:04:33 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jz1pi9e+1DmyZ/wO2cgFQzhQsXwRfB0luPi8Lxcl57TYfH/mdWtoNXPudJS4l64Qd7uZrRS4S5p5BtIMSGw3y+2xXAnMlyuCmIrAU2uYg7yyxR9DxaztnE5PG7ccbXHROndhrIwFfZKIM2Rr84ocrkq3uhPXX85JeLtdgWoj9ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BqeHSE29; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 058ACC113CC;
+	Wed, 29 May 2024 16:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716998673;
-	bh=/EwIIXcKHGDW2AxegyIxUaFBTLYn3SLVszyabwPuc7k=;
+	s=k20201202; t=1716999142;
+	bh=lgaCkdJMIInSxiz7vBoUGg06CC1AH2OE5Ds7z+4uj20=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KeTsBLNJlZ6RfKwKub6VxjJVm24VDMg0I+DAF8xec7yGSA6HeXUBvEwKNwkRrtBo3
-	 Z88dNiMtRZLwujOID2J5vfC9BM2+hEJrG+Vezj6K307PDiBybDPBauBRmx9llXIh6C
-	 Tq8MB53S+GIYy8mBWn6sbzhNjkOA4x9v+UkIN/Dg8TmT8IsZKq9C75tbMDGcKTyh/L
-	 CMXGAFjG7NwxGnuwn5J7JDwwoidZljXi0x67Oz6BnahBS4K7oSP2KCkIvfAdYT8w23
-	 FzYNpEj5v3X5gFH+BtzFbZvJgj7akBWf/bEp7dWrIxjAAuan+KkodCi6ao00UOuPOQ
-	 /xsey53jh72ZQ==
+	b=BqeHSE29QPnQMignrE5w2XGYGsXvCmiSMZwHZIs81kkHHSlo1Ut5Fy8KB3hn6ZCe6
+	 M0p+2lFy18KGXOVT2vtwAqwlhT/SQ/DvuXXA6SfQOHN1G6Q8m8q8lgXQ4NcnpsQGrr
+	 pluMllHL4ndKJPTBSzXoowFPmHwgOi2LhF+mo9ljwaF3DQhdntqBflrqx3ngZYnadL
+	 vjYrwYBlaKXrSERTo3SQe24YTHr/DJnBGMJo7iuBvXoAC4IUqH6Qd1sElZTIpG6VI5
+	 YcnQ9wZSiDnVkamjVgHyvaZ2IkVhOzdP6x5B2z40kdQ6gyq18+Qyg9+qYyaNLFeTJa
+	 QVTFEjNVfCTYw==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan@kernel.org>)
-	id 1sCLmz-000000004KZ-0YvL;
-	Wed, 29 May 2024 18:04:33 +0200
-Date: Wed, 29 May 2024 18:04:33 +0200
+	id 1sCLuX-000000004RK-1VGX;
+	Wed, 29 May 2024 18:12:21 +0200
+Date: Wed, 29 May 2024 18:12:21 +0200
 From: Johan Hovold <johan@kernel.org>
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Cc: andersson@kernel.org, andy.shevchenko@gmail.com, broonie@kernel.org,
-	conor+dt@kernel.org, devicetree@vger.kernel.org,
-	johan+linaro@kernel.org, konrad.dybcio@linaro.org,
-	krzk+dt@kernel.org, lee@kernel.org, lgirdwood@gmail.com,
-	linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	quic_c_skakit@quicinc.com, quic_gurus@quicinc.com, robh@kernel.org,
-	swboyd@chromium.org
-Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
-Message-ID: <ZldSEZKusSVIHZJ3@hovoldconsulting.com>
-References: <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
- <20240514134317.691887-1-quic_skakitap@quicinc.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Das Srinagesh <quic_gurus@quicinc.com>,
+	Satya Priya <quic_c_skakit@quicinc.com>,
+	Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 09/13] pinctrl: qcom: spmi-gpio: drop broken pm8008
+ support
+Message-ID: <ZldT5ZqUkTc0klt8@hovoldconsulting.com>
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
+ <20240506150830.23709-10-johan+linaro@kernel.org>
+ <CACRpkdakSEGLsx+GwGe1PwTaOT3sBc2a=P0vvdUA3Q3xxHjGsw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240514134317.691887-1-quic_skakitap@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdakSEGLsx+GwGe1PwTaOT3sBc2a=P0vvdUA3Q3xxHjGsw@mail.gmail.com>
 
-On Tue, May 14, 2024 at 07:13:17PM +0530, Satya Priya Kakitapalli wrote:
-> > On Tue, May 07, 2024 at 01:48:30PM +0200, Konrad Dybcio wrote:
-> > > On 5/6/24 17:08, Johan Hovold wrote:
-> > > > From: Satya Priya <quic_c_skakit@quicinc.com>
-> > > > 
-> > > > Qualcomm Technologies, Inc. PM8008 is an I2C-controlled PMIC containing
-> > > > seven LDO regulators. Add a PM8008 regulator driver to support PMIC
-> > > > regulator management via the regulator framework.
-> > > > 
-> > > > Note that this driver, originally submitted by Satya Priya [1], has been
-> > > > reworked to match the new devicetree binding which no longer describes
-> > > > each regulator as a separate device.
-
-> > > > [1] https://lore.kernel.org/r/1655200111-18357-8-git-send-email-quic_c_skakit@quicinc.com
-> > > > 
-> > > > Signed-off-by: Satya Priya <quic_c_skakit@quicinc.com>
+On Mon, May 27, 2024 at 03:35:41PM +0200, Linus Walleij wrote:
+> On Mon, May 6, 2024 at 5:10 PM Johan Hovold <johan+linaro@kernel.org> wrote:
 > 
-> This is my old email which is discontinued, please use <quic_skakitap@quicinc.com>
-
-I've cleaned up and reworked the driver for v2 and changed the
-authorship to myself in the process, but I'll make sure to CC your new
-address when submitting.
-
-You should add an alias as Konrad suggested as you apparently have
-commits that use your old address.
-
-> > > > Cc: Stephen Boyd <swboyd@chromium.org>
-> > > > [ johan: rework probe to match new binding, amend commit message and
-> > > >           Kconfig entry]
-> > > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> > > > ---
-> > > 
-> > > I'm a bit lukewarm on calling this qcom-pm8008-regulator.. But then
-> > > qcom-i2c-regulator or qpnp-i2c-regulator may bite due to being overly
-> > > generic.. Would you know whether this code will also be used for e.g.
-> > > PM8010?
-> > 
-> > Yes, for any sufficiently similar PMICs, including SPMI ones. So
-> > 'qpnp-regulator' would be a generic name, but only Qualcomm knows what
-> > PMICs they have and how they are related -- the rest of us is left doing
-> > tedious code forensics to try to make some sense of this.
-> > 
-> > So just like for compatible strings, letting the first supported PMIC
-> > name the driver makes sense as we don't know when we'll want to add a
-> > second one for another set of devices (and we don't want to call that
-> > one 'qpnp-regulator-2'). On the other hand, these names are now mostly
-> > internal and can more easily be renamed later.
+> > The SPMI GPIO driver assumes that the parent device is an SPMI device
+> > and accesses random data when backcasting the parent struct device
+> > pointer for non-SPMI devices.
+> >
+> > Fortunately this does not seem to cause any issues currently when the
+> > parent device is an I2C client like the PM8008, but this could change if
+> > the structures are reorganised (e.g. using structure randomisation).
+> >
+> > Notably the interrupt implementation is also broken for non-SPMI devices.
+> >
+> > Also note that the two GPIO pins on PM8008 are used for interrupts and
+> > reset so their practical use should be limited.
+> >
+> > Drop the broken GPIO support for PM8008 for now.
+> >
+> > Fixes: ea119e5a482a ("pinctrl: qcom-pmic-gpio: Add support for pm8008")
+> > Cc: stable@vger.kernel.org      # 5.13
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > 
-> There is a PMIC called PM8010 which also is implemented over I2C,
-> which could use the same pm8008 regulator driver.
-> Hence it is better to use device_id instead of a MODULE_ALIAS().
+> Is this something I can just apply, maybe with the DT binding drop
+> patch right (8/13) after it?
 
-Right, I've had PM8010 in mind all along, but it's hard to tell whether
-it will be using the same (sub)driver until code is submitted since you
-guys (Qualcomm) don't publish any documentation.
+Yes, I guess so, unless it's easier to let everything go through MFD
+(except possibly the regulator driver).
 
-I've changed the regulator (and GPIO) drivers to use platform device id
-matching for now either way.
+I'll be posting a v2 in a bit and include these two there too. You can
+either pick them there or ack them as you prefer.
+
+> IIUC it does not need to go into fixes because there are no regressions,
+> right?
+
+As I mentioned in the commit message, the driver is backcasting a
+pointer to an incorrect type, which could lead to all sorts of trouble
+even if it does not seem to be the case currently (I did not check 5.13
+for example).
+
+Since it has always been broken, I'd rather err on the safe side and
+just drop it also from the stable trees.
 
 Johan
 
