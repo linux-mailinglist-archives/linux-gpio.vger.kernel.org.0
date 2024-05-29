@@ -1,114 +1,134 @@
-Return-Path: <linux-gpio+bounces-6854-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6855-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00EB48D3876
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 15:54:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21E9B8D3915
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 16:25:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67606B281B9
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 13:54:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2BA728885F
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 14:25:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59DA81BC2F;
-	Wed, 29 May 2024 13:54:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57220158842;
+	Wed, 29 May 2024 14:24:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TKXEKfAl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UgWnHcp2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DD51CA9F
-	for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 13:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8708A1586C6;
+	Wed, 29 May 2024 14:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716990881; cv=none; b=XxihNgWu3ZPdWhOiaPJkDe2TGPw+PmMVYsVISX6/S9VAPuVBnAazu6Siwm5z5hIxzIEWAl6q2+a8MF+NG0FwVh91PSLy4fwlOYsEljaqA+PIq5+1jjSY23z7K3oca1wPKIO1M3PwChKaREZdXKPSR++1oUi0xINFPCy+7FX9C1s=
+	t=1716992683; cv=none; b=TKwm485mKhDhCcUVhN5CwQ/gdldR5pLSmmeSVjo7u9sBjMnVdVF1LNHjKuu+skT5ZeCMnBRtfqhZk2/rsF4UiyhC1WPrubGt5VWbX0c4vJOOulT/Ob48BEMYJgSxZlw+leFAK8ZTNHnXcnPjfF3bYZPJ/d5f/9L5IRxLektzht4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716990881; c=relaxed/simple;
-	bh=11Zh7dymvIy0ueaM8kyP1ZCJImodqwKxS2WSeJTnvTM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XovjFsVZt6XHxNxr+6YHua3DqH/MvQ0S5OQQbJ6phhTb8wteRCkolGSY//sLAHRfqWWNuw4y9Or20FqJiATMgl6VV6I1ayKdEi+rIZwJwLpoXJ6BzzF2KgjHSZC9wWwKVD7MwWpQnlEmS/xXP88sLdHEFK298BTizVnOqu1PieM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=TKXEKfAl; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-420180b59b7so18135975e9.0
-        for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 06:54:38 -0700 (PDT)
+	s=arc-20240116; t=1716992683; c=relaxed/simple;
+	bh=mNgUYEnubcG8x6sqIvwYtUSCoKzzcOYzQhUu7gFNBSg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NuqtO01X19K2/Mj1OIf6x+sIIYY7I/9WhoQV3rtGvCM+lvFHYrSmRSkINxs4yZI3SNHLpIXTB60beYMHbahM5EOtxdrOoRrZ2NKRO35je6VlqY6anssc5BYYataAuOo+9eiHw8OqZM56wdpx2ZX7c3fQzTI/8ICjrdR5qkTevq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UgWnHcp2; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a630ff4ac84so244017266b.1;
+        Wed, 29 May 2024 07:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1716990877; x=1717595677; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1716992680; x=1717597480; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3cu0OKxrrUrCMupY71FO9BgTzzSaBF7qUn55ZRYc7CU=;
-        b=TKXEKfAlXc2+3NFyJyveGBcjxI4wrhPPwYj/8v+T8sy1sEyeB+BX7cTVPnAlFTRMAp
-         nAkDYvQdeFan0lPEd78HZk0INowYEA1ab1xjXUjpTwJp6LyRj7fU/8ggjVf22C3bbN4A
-         3dX0jTPBQV6Tvi5yY4TioxSnX6NQvqBKOaQnjZBDD6mOTBqphE5AstnAo8x9hpyv9TLp
-         UdDH18TPut2T1RgvOOkZzq6AI3/LQZr3ejjj6k3gRbYqC51iRXTC7886v4muvb+0lzvh
-         CC5NpFqw29d/jnWJsVGsZ6e8TxnpdTZCiHSZ76+5z3mzr2VS+vBi00SFi7RD5RsW0/pb
-         TRSg==
+        bh=RXUaCkB6tMzvL4LfnqvowAZkzoZ/9h0tRmEhy+jXdZA=;
+        b=UgWnHcp2nMy92Z71MaWa1rFD8SbWvyOsiINSOheSyQL/6CjxGQ+CX/BQuX2xaoyf+C
+         szANyfWicq/zjhreAoWuoKefLDtRy5O9Ctc5C9+XDnIYgI0j7pBQtUwONJCYfdSiDSGC
+         OcZGNlyTqcjGEmxv9NQ3JzUrGSu5JtdDzOwwvhl8OOaQZddH88/rw3/kFhJzqsMtAe28
+         vOHwTJCtZs3Ow5tyQE5PTT8ysdHAGw8c5HlrIGZkamB8Bi6qAb27Uzx7q0UrxT8mANTQ
+         4fznhDazqnhnFmclBrpQ5Q8UJKjOpV/QLRZu6HODIzulLFbjjlyKlm+ycLSbXD0JpJ6t
+         R7bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716990877; x=1717595677;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1716992680; x=1717597480;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3cu0OKxrrUrCMupY71FO9BgTzzSaBF7qUn55ZRYc7CU=;
-        b=IqGXowl/jI3Cr85HiWDCoXDIbXJIUiQzYhCSo03aT+f3bEx7z/GnnsxnFmHuz7/fBm
-         pi327PVPveK8iV3fQ/iNpggDpkBYkZSsoWlYhstDmcSNJPfePvmi4opMN0tgvKlHLucK
-         GFRrSwPcpJKY7OHISd6hIiPeLCz1dMk9Ayr7oLUj3SbEwWxeJVJy6RT5Oj85oh+Zs8P7
-         OMma0T3E19s3qPqCTV6p+hFchshbb+9fU4r28FWz1MRA8rs1+WnvVoeItGJrmKGkfVtx
-         zlSddWLgFtcN4TCGmrnDPJzMB6SQCS0wqhFkQDC2r33jkGF2yjUzQpuqxMVX0MlhR2tT
-         3xMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNzWi6XsT37Ojz2NJVPoSGmZd2SPQjlXlPJT48Rfqvcbv1FC3Y1y+9abp0d5HOduHFB7DytZJBuFoWu1/GT7klx2y4MzNpc8L6aA==
-X-Gm-Message-State: AOJu0YwceEbnUMtrgGQ2Py4km6KNnA9ALM1aao9fqQR7h/2ISWPfI9C5
-	k35PSvBOJF0giYq3ffo76fVyD0Fc4Dyo0VHDB/mtwkjKp4/u+wtlp77DyW7P1y0=
-X-Google-Smtp-Source: AGHT+IFUdeWc46YF3D93LD1v0yrBPmAVg4Nq48M0+cHWUChzwbXRKeoM06CnWlXyyTTXcpb/uwfOKA==
-X-Received: by 2002:a5d:598b:0:b0:356:4bb7:b205 with SMTP id ffacd0b85a97d-3564bb7b370mr12873257f8f.1.1716990877316;
-        Wed, 29 May 2024 06:54:37 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:f99a:a653:3792:fcc6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a1c930esm14724745f8f.84.2024.05.29.06.54.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 May 2024 06:54:37 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH libgpiod v3 0/4] tools: tests: fix a few issues in bash scripts
-Date: Wed, 29 May 2024 15:54:27 +0200
-Message-ID: <171699086373.55540.8469156210776706848.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240528-fix-bash-tests-v3-0-e9b5be2ba8bf@linaro.org>
-References: <20240528-fix-bash-tests-v3-0-e9b5be2ba8bf@linaro.org>
+        bh=RXUaCkB6tMzvL4LfnqvowAZkzoZ/9h0tRmEhy+jXdZA=;
+        b=pJ4whqEASyPzNQ/UmcYvI5Q0YxvbBMlt8LlcC1aqcwWi5ZxxLqL+NdZU+qw92WJnJE
+         9ROXCuhPIyn6JGdV7OGOslfrK8jTCMTK+CjK59ZU7DFtjoYisE33WsRJcrsW8hxU/ZOP
+         9gDSpczJLmAvl8fvSX930xkIe6+t+SY0lK8uBeJJMeEKuSu+5uxUmzFoWghGgntEZdAx
+         eRwIB/UyQuc15BniCfedV6zo8Lz8BdO21R7x1Hr1qOtpTAkANUTl17Zpa96XAMpxSidG
+         JW1YQxTZvPhRuusvAWR5BiLRCRpBCrcvWEU623+kADG04XqjWv267IYzZwfp8/YC4FhU
+         XL3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUrCoNX1IxK0UQgnx2fICkn36hJCXdWxNlLJCGTghZ3EMlf2KdUoQnawsce3GS03pXXNXl2gpkRpfssJb34QFtrgcFba8id5n0QgDYpoyYnMQOGquYYpPbBFTuQvGcrvQhjF0fKdGqSO07dAi836hVnUFQZ32ujiAK/bocPkV+9klI=
+X-Gm-Message-State: AOJu0Yzk646NzqspK6IgrlVnVuyt3SRqttb/fSWbhYejhWRYbUdPyxY8
+	Hz6VYXW+0uniiOyI2toKmik72mDr4qMIu98hLbxwOVWA2fkNKxmeHrr9l3XnGk+tEJbqfAruMKV
+	G5n6Oy0SvWyx7zhw5Wo8LCXPNibY=
+X-Google-Smtp-Source: AGHT+IHyZuAkokx73kdGAbIZ/CLYololxUsLncCUOjD0KN1JH9pe4IZRwVZJaedOC5UYnHuNWa89YDIMQfY5VzWtOtc=
+X-Received: by 2002:a17:906:384:b0:a62:2ef9:131 with SMTP id
+ a640c23a62f3a-a62641a2aecmr975337266b.6.1716992679816; Wed, 29 May 2024
+ 07:24:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
+ <20240528190315.3865-4-laurent.pinchart@ideasonboard.com> <ZlYyJpLeDLD_T5V6@surfacebook.localdomain>
+ <20240528202044.GB8500@pendragon.ideasonboard.com> <CAHp75Vc2-jOMybL7vwJHgrvb_434p094tgdLo1SyK4i_RXYiDw@mail.gmail.com>
+ <20240529094748.GM1436@pendragon.ideasonboard.com>
+In-Reply-To: <20240529094748.GM1436@pendragon.ideasonboard.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 29 May 2024 17:24:03 +0300
+Message-ID: <CAHp75Vf1uBTKHGazcuLCRvEo9k01t3+6oJnfZgpPZQ_dVCOeDg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Haibo Chen <haibo.chen@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, May 29, 2024 at 12:48=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Wed, May 29, 2024 at 09:16:43AM +0300, Andy Shevchenko wrote:
+> > On Tue, May 28, 2024 at 11:20=E2=80=AFPM Laurent Pinchart wrote:
+> > > On Tue, May 28, 2024 at 10:36:06PM +0300, Andy Shevchenko wrote:
 
+...
 
-On Tue, 28 May 2024 10:25:47 +0200, Bartosz Golaszewski wrote:
-> Fix a few issues with tools tests reported by Andy.
-> 
-> 
+> > > > > +   device_set_of_node_from_dev(dev, dev->parent);
+> > > >
+> > > > Why not device_set_node()?
+> > >
+> > > Because device_set_of_node_from_dev() is meant for this exact use cas=
+e,
+> > > where the same node is used for multiple devices. It also puts any
+> > > previous dev->of_node, ensuring proper refcounting when devices are
+> > > unbound and rebound, without being deleted.
+> >
+> > When will the refcount be dropped (in case of removal of this device)?
+> > Or you mean it shouldn't?
+>
+> Any refcount taken on the OF node needs to be dropped. The device core
+> only drops the refcount when the device is being deleted, not when
+> there's an unbind-rebind cycle without deletion of the device (as
+> happens for instance when the module is unloaded and reloaded).
 
-Applied, thanks!
+Under "device" you meant the real hardware, as Linux device (instance
+of the struct device object) is being rebuilt AFAIK)?
 
-[1/4] tools: tests: use tabs for indentation consistently
-      commit: 649b2baedd9042bbffa7f2e2847375b23c5adc2e
-[2/4] tools: tests: use "$@" instead of $*
-      commit: 4fae395c7c169e09441589ee64797cb62343da7d
-[3/4] tools: tests: remove unneeded ';' in while loops
-      commit: d75d591af73e2ebe52137221f4d87ce23f6c22d8
-[4/4] tools: tests: remove dependency on grep
-      commit: b569b91ce1e1749a4e4832e636721d3c05712593
+> This has
+> to be handled by the driver. device_set_of_node_from_dev() handles it.
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+But why do you need to keep a parent node reference bumped?
+Only very few drivers in the kernel use this API and I believe either
+nobody knows what they are doing and you are right, or you are doing
+something which is not needed.
+
+--
+With Best Regards,
+Andy Shevchenko
 
