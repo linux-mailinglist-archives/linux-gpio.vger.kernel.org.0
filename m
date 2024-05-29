@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-6871-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6873-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74A3B8D3CAC
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 18:34:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 174BA8D3CB1
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 18:34:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F983286127
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 16:34:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 467D71C252BD
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 16:34:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5787119069B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9250D1C8FD4;
 	Wed, 29 May 2024 16:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gysS0y5G"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pZ+7vg+b"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063E518735A;
-	Wed, 29 May 2024 16:30:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA6A190684;
+	Wed, 29 May 2024 16:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717000236; cv=none; b=FvUN2tXhG5x6RXcBykxte6ThBGQNAdmvZe4Shi9mG+6aBYWFZEX3sEhsKtwJv5qNTiRQCK+BLuUAqglFfUvAaooGNhd0a0cj6Pk/zHRU/AS7FPIuihqavU/P8Qzyy+AyQzJVP5GwLwVlcgzcn9IlEr8k6/E99zkNx98+wXU1hrU=
+	t=1717000236; cv=none; b=QhtmQdy0XOnw/0r+j52J+j9nQCX+lgsiUgAquVj22qyq+ubuIr8cHrMpPYn9MMOVIRaSowwvqNry7IO6mzHb0b9foL+AzSKrEGHkFOQ1Ss/micr7Xf7D64JzGpcEpHExbSBhgVoAHEp1ksVOdnRGF6mSsQ9z3JZHPACLi4TuIEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717000236; c=relaxed/simple;
-	bh=ktUgF/6UawgynxPPaqC7L5uMYlNVYYch3qE9zi0eRhM=;
+	bh=lga3d+eXyDGzWJge8vvnwfcv1gyBqqWJmkYtkVpaX6M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vBe4r92kfJ/Iblt94TpLr7B2l9ijyxjSPeYaEpnTETCWi97Mw0JHkx8nKbtygbTurTVCKew9yfA8kGt2wCW0BZvzWL9xTFvsZySxnyjM7eRSbRYhnCb7dV0avpsnChma7q8zTjS/+fmJgpcp7BHQiTbrEmDJ6b20bhLfoVDEiso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gysS0y5G; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 837EEC113CC;
+	 MIME-Version; b=tkzajrZre9/uAf+zcHIOnrhJFIerr8vxu5ps7gXm3DN+kN7HA4gtQICHRIiYdSGjoPjz9kw0YgSlD3BSy/hxPH9asm76A231RwSpaXZcCVWFcp67HsL/fqqAIqswOZ6Sk3xoovZtuUJhPXGLq3/YtBnnP+JuVfW6Fa5rq3Pp3Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pZ+7vg+b; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3F71C4DDE2;
 	Wed, 29 May 2024 16:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717000235;
-	bh=ktUgF/6UawgynxPPaqC7L5uMYlNVYYch3qE9zi0eRhM=;
+	bh=lga3d+eXyDGzWJge8vvnwfcv1gyBqqWJmkYtkVpaX6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gysS0y5GxOLy2gSWjX2Nmxy4IdenFHxzkia8cDFvsi07Eo7trhiVbQKo4iM/edUJ7
-	 k3bmhjOI++rlSb6TWrgx9+oEzj0IRK2lAyMBy78u0CK+K75vEmh+/pjLr5pb2Luktl
-	 Hpz2jlPaVP3GyxftSYxco/yu626Ay4KzVhUZWeIOz3otyT7GYXbiS5E3aEvEarBXft
-	 IK34ztYY/17GJq5lqkaNXJoaYfRZZmT6hj8YKpKKzC3Mzx/5hqf9FS3oC/wxAYCL0r
-	 YEVFy3XXiaNcYHWMvvPBUNo50W0/Wnv36e0WyT9K0IspiCjsNhCDo2AOKlINM9lxFM
-	 qseiQLW1xaseA==
+	b=pZ+7vg+baXHSYPaOi0WCGDW/RzsM6T0n59YPjj+DfPiAFJ89kLgRFQxk43lDah0Cv
+	 A7M/w7pFpq9EJzarS9ED9a8bcEC36L+GDRz1tlXBuRWPw5zQL87X6ZnDEc3cVugyEA
+	 UyeVZtl4G9/BH+hpaMjaMYswwHmgKqpJVblM8YgF6mGdwgmPxriH279kXWIrUQsf9z
+	 AY7vr2HBNbvlWUOFKuqYHCLp9nzFMxKOKvxNqn0/gUBIU/nCMMxTKXn3jjZMAPRY6p
+	 l6++qcAYMzi+P4fjnnCFY7Fo3j9w1UlNbnQr7oDv100widQfbsI2Lm/wGt7PDunz35
+	 fWvSran9qZ82A==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1sCMCB-000000004iq-2nfk;
+	id 1sCMCB-000000004is-36OJ;
 	Wed, 29 May 2024 18:30:35 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Lee Jones <lee@kernel.org>,
@@ -65,9 +65,9 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 05/14] mfd: pm8008: use lower case hex notation
-Date: Wed, 29 May 2024 18:29:49 +0200
-Message-ID: <20240529162958.18081-6-johan+linaro@kernel.org>
+Subject: [PATCH v2 06/14] mfd: pm8008: rename irq chip
+Date: Wed, 29 May 2024 18:29:50 +0200
+Message-ID: <20240529162958.18081-7-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.44.1
 In-Reply-To: <20240529162958.18081-1-johan+linaro@kernel.org>
 References: <20240529162958.18081-1-johan+linaro@kernel.org>
@@ -79,39 +79,28 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use lower case hex notation for consistency.
+Drop the redundant "irq" suffix from the irq chip name.
 
 Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/mfd/qcom-pm8008.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/mfd/qcom-pm8008.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/mfd/qcom-pm8008.c b/drivers/mfd/qcom-pm8008.c
-index ab55d524c27b..18173c7a7e7b 100644
+index 18173c7a7e7b..bab17417aeec 100644
 --- a/drivers/mfd/qcom-pm8008.c
 +++ b/drivers/mfd/qcom-pm8008.c
-@@ -38,8 +38,8 @@ enum {
+@@ -130,7 +130,7 @@ static int pm8008_set_type_config(unsigned int **buf, unsigned int type,
+ }
  
- #define PM8008_PERIPH_0_BASE	0x900
- #define PM8008_PERIPH_1_BASE	0x2400
--#define PM8008_PERIPH_2_BASE	0xC000
--#define PM8008_PERIPH_3_BASE	0xC100
-+#define PM8008_PERIPH_2_BASE	0xc000
-+#define PM8008_PERIPH_3_BASE	0xc100
- 
- #define PM8008_TEMP_ALARM_ADDR	PM8008_PERIPH_1_BASE
- #define PM8008_GPIO1_ADDR	PM8008_PERIPH_2_BASE
-@@ -151,7 +151,7 @@ static const struct regmap_irq_chip pm8008_irq_chip = {
- static struct regmap_config qcom_mfd_regmap_cfg = {
- 	.reg_bits	= 16,
- 	.val_bits	= 8,
--	.max_register	= 0xFFFF,
-+	.max_register	= 0xffff,
- };
- 
- static int pm8008_probe(struct i2c_client *client)
+ static const struct regmap_irq_chip pm8008_irq_chip = {
+-	.name			= "pm8008_irq",
++	.name			= "pm8008",
+ 	.main_status		= I2C_INTR_STATUS_BASE,
+ 	.num_main_regs		= 1,
+ 	.irqs			= pm8008_irqs,
 -- 
 2.44.1
 
