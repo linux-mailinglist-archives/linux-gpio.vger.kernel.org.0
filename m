@@ -1,372 +1,797 @@
-Return-Path: <linux-gpio+bounces-6889-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6890-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95C8E8D3FAB
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 22:34:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 369218D3FFA
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 23:00:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F8F81F247DB
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 20:34:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E2E182857BF
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 21:00:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 593261C68B6;
-	Wed, 29 May 2024 20:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFbWKpDQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03CBA1C8FDD;
+	Wed, 29 May 2024 21:00:47 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E8D1B960;
-	Wed, 29 May 2024 20:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DF61CD31
+	for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 21:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717014841; cv=none; b=czyL/Ow8TmO9T06QPFh9ux3Ot5RKrrRaBxN3ummoU6fZ5ARe4sT64cRenApI5kr3NRSLkck7BRi9xHGpS71iiT4qY/0oONJkoK35K8AZGiEIU6dBdr4ym2MmO+OyvPX+XPyi7ytCwip0PzNAwSlKTsEmh9M2kT0dwF85cW+fshI=
+	t=1717016446; cv=none; b=OX290wh/C/Fvzbv1+WbhjwQGkKfSD56/Vtzv0Xl3vlXVvyTZBJ+/84lkACS73un8Cxk+FJonCmAJ7c/s0cUDw3umKFSmXsnMJLK0fW4JauajvLAthzY9G0rEZYItRgoe1Tay5FwhqIivieyW9Yn/CAoPQhK6FJQ0Qjftlpg2NP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717014841; c=relaxed/simple;
-	bh=fJphTOtn5DIVZnAXYLdPlqayiHth8f4F8eRKezQ4TlM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rXS/Bayh/NVzZY1+UuEUcLM+i3JAsjB0pv7Ho8DS7IXDtXRJ+9x4BSWWM6BXjkO9ShNeidxJuReNxKxXm6UlTVilaVMIV04PvX2xjjQkVjgumNYuQYEdRsQXnWySlBs/dluItoMIfv1tKcCqvUHyGCh35o1FCHNmyYUFH2rjweQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YFbWKpDQ; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-80327fdd618so57982241.3;
-        Wed, 29 May 2024 13:33:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717014838; x=1717619638; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0Fauxb3a9woYVSVleH2HKCsQTUw+gla+mpZmCxLA2Jw=;
-        b=YFbWKpDQvvt3mgGGlcwb68r5TpJLJp8xJrtoGIbC/EgW7hZ9QJLw+oNBoEgBTYS6rz
-         yaqxEjVjoM6KQ+/9IqvtviRp0r3hF6CuFxEWYTFFtb4FeKBWGxvEysViA8cY2/SRJ20v
-         Nk0LiOCgB9WI6zYVnkxmN6q9mDoiWx1WPxJopsVPAxK7w6gbcy+v7GmYnUalGtDXZg0k
-         FamjCwUVcVkiPLreiV/BysQCb41oyOsCtH8ssS4G9alkxW/1oF4SMxPfHSSR5VZA7oxh
-         Ae8SMpjUQsa00nOgCDUoWKB+SItHz1k8C8mSs4MU+kO7ER2q9cZRh8mxys2gxgAGhgUO
-         flVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717014838; x=1717619638;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0Fauxb3a9woYVSVleH2HKCsQTUw+gla+mpZmCxLA2Jw=;
-        b=qRpOkVr6PE8dyIULO6fQsRYNblpmUuHKTqytpxz/YnkwMV9Ci7aUb/MQuLQ/gyGki9
-         2dFV5LvXpTEZlmGs+OmTybGWKQ0gcvpMnPxl4CiRDPm3m61rBTJWdqjL06kwnoNwedgy
-         aPXl694aw1GuzJJCok+AeOv9PqvBMbCSza3nTQCxXD+ECopCROM9j+C6FiBB/p8+MAOr
-         UWgkAjQ1LVPXinUrhTZMh1Ev7n3g17WIxMPkqkBeuegqWsOvvcbxxJTZhjfxnhg3naph
-         IijHl4py+B7fQqRGVtCJSbDFw/+HwGqoNIcYaG9hV9eBPBv3IeLzOnG6nKQgEyKwvhRA
-         NQug==
-X-Forwarded-Encrypted: i=1; AJvYcCUCAeAvtHjEWGSFeFdrlPb4FtpUzyQ3U7SafjlFr2wAzuVdAWpO9bIacaAuA2Z+w15cGvwFvbzFgR0icQRLc55suFe9lUQdsA6acwTdXXi4A5W19wYqrE+qPshR/Xi+r70M1Zx+7Ygb8EH2IfYV0OJTdJ9n8qQfEJF3jsA88Dd4zZ6c2WLPvxVj+IkTIbLXYBQ9nyB/ml5xTNPp4VRYJIUgpInFDMdTWQ==
-X-Gm-Message-State: AOJu0Yx0wCTqnSAIrIqoMEIlHUkXIqL6STvNNJC/TtbR14ww8/11BJfW
-	BxGIIwiemqopk9RdktQMACiqLjVsNka+eHsDLi9TTdx5J2qOeC6FOJm+8VL4QLli4DiAfbec0Cd
-	TQUMm7qXBcfcHnrs+FIRDdGOZHvc=
-X-Google-Smtp-Source: AGHT+IFsQR1NmU2V7AWQVOp1FsXFS6oy+GYj2U5Mi1Q111IlxexDo/ZZDcfAukfBerkLeWrBoM6iOAFX+kYpCkGdvfs=
-X-Received: by 2002:a05:6122:368f:b0:4d4:872:c68a with SMTP id
- 71dfb90a1353d-4eaf216c287mr237868e0c.1.1717014838126; Wed, 29 May 2024
- 13:33:58 -0700 (PDT)
+	s=arc-20240116; t=1717016446; c=relaxed/simple;
+	bh=O8Ahk0wXb6gkuLSSopcEywFTrHvPk1/FUlRKiJClcAI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f/3dUersQ/zVpIRGGFTamd8zbIXwTpBl5B2Q6d2oMeDYynSEwp6dY6ll4mGmoGMUu3aeC5EFMwLqEn48eRwXHdxUxQjHb7YiF+Hvu/Ni8EIc6IsCvxQwcJhN8cwH+zdn6RQJ5eRWyNHXWNqfi+n8IgWu4lQU0HipX6GRGPHS57U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 7ed9edfc-1dfe-11ef-80c4-005056bdfda7;
+	Thu, 30 May 2024 00:00:36 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 30 May 2024 00:00:35 +0300
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v7] gpio: virtuser: new virtual driver
+Message-ID: <ZleXc6tLbiWQ59i-@surfacebook.localdomain>
+References: <20240527144054.155503-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423175900.702640-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240423175900.702640-14-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVig3M_UY8i=+gJD-gkW90tQiS_cNDJqdRe5e-Z8kNoDg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVig3M_UY8i=+gJD-gkW90tQiS_cNDJqdRe5e-Z8kNoDg@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 29 May 2024 21:32:39 +0100
-Message-ID: <CA+V-a8v_g4u4VEks+T8VQnWfNwrnAeXNGhgW4Nz+Ty3Ohk8Kcg@mail.gmail.com>
-Subject: Re: [PATCH v2 13/13] pinctrl: renesas: pinctrl-rzg2l: Add support for
- RZ/V2H SoC
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240527144054.155503-1-brgl@bgdev.pl>
 
-Hi Geert,
+Mon, May 27, 2024 at 04:40:54PM +0200, Bartosz Golaszewski kirjoitti:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> The GPIO subsystem used to have a serious problem with undefined behavior
+> and use-after-free bugs on hot-unplug of GPIO chips. This can be
+> considered a corner-case by some as most GPIO controllers are enabled
+> early in the boot process and live until the system goes down but most
+> GPIO drivers do allow unbind over sysfs, many are loadable modules that
+> can be (force) unloaded and there are also GPIO devices that can be
+> dynamically detached, for instance CP2112 which is a USB GPIO expender.
+> 
+> Bugs can be triggered both from user-space as well as by in-kernel users.
+> We have the means of testing it from user-space via the character device
+> but the issues manifest themselves differently in the kernel.
+> 
+> This is a proposition of adding a new virtual driver - a configurable
+> GPIO consumer that can be configured over configfs (similarly to
+> gpio-sim) or described on the device-tree.
+> 
+> This driver is aimed as a helper in spotting any regressions in
+> hot-unplug handling in GPIOLIB.
 
-Thank you for the review.
+...
 
-On Wed, May 22, 2024 at 4:30=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, Apr 23, 2024 at 7:59=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
-.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add pinctrl driver support for RZ/V2H(P) SoC.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > RFC->v2
-> > - Renamed renesas-rzv2h,output-impedance -> renesas,output-impedance
-> > - Dropped IOLH groups
-> > - Fixed dedicated pin configs
-> > - Updated r9a09g057_variable_pin_cfg
-> > - Added support OEN
-> > - Added support for bias settings
-> > - Added function pointers for pwpr (un)lock
-> > - Added support for slew-rate
->
-> Thanks for the update!
->
-> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > @@ -59,6 +59,10 @@
-> >  #define PIN_CFG_OEN                    BIT(15)
-> >  #define PIN_CFG_VARIABLE               BIT(16)
-> >  #define PIN_CFG_NOGPIO_INT             BIT(17)
-> > +#define PIN_CFG_OPEN_DRAIN             BIT(18)
->
-> Or PIN_CFG_NOD, to match the docs?
-> You can always add a comment if the meaning is unclear:
-> /* N-ch Open Drain */
->
-Agreed, I will update as above.
+> User must pass exactly the number of values that the array contains
 
-> > +#define PIN_CFG_SCHMIT_CTRL            BIT(19)
->
-> SCHMITT (double T). Or just call it PIN_CFG_SMT, to match the docs?
-> /* Schmitt-trigger input control */
->
-Agreed, I will update as above.
+Can't we assume non-active values for the rest if less than needed were
+provided? For more than that, why do we care?
 
-> > +#define PIN_CFG_ELC                    BIT(20)
->
-> /* Event Link Control */
->
-> > +#define PIN_CFG_IOLH_RZV2H             BIT(21)
-> >
-> >  #define RZG2L_MPXED_COMMON_PIN_FUNCS(group) \
-> >                                         (PIN_CFG_IOLH_##group | \
-> > @@ -73,6 +77,10 @@
-> >  #define RZG3S_MPXED_PIN_FUNCS(group)   (RZG2L_MPXED_COMMON_PIN_FUNCS(g=
-roup) | \
-> >                                          PIN_CFG_SOFT_PS)
-> >
-> > +#define RZV2H_MPXED_PIN_FUNCS          (RZG2L_MPXED_COMMON_PIN_FUNCS(R=
-ZV2H) | \
-> > +                                        PIN_CFG_OPEN_DRAIN | \
-> > +                                        PIN_CFG_SR)
->
-> I think you can include PIN_CFG_SCHMIT_CTRL here, and thus drop it
-> from all tables below?
->
-Agreed.
+...
 
-> > +
-> >  #define RZG2L_MPXED_ETH_PIN_FUNCS(x)   ((x) | \
-> >                                          PIN_CFG_FILONOFF | \
-> >                                          PIN_CFG_FILNUM | \
-> > @@ -128,13 +136,15 @@
-> >  #define ETH_POC(off, ch)       ((off) + (ch) * 4)
-> >  #define QSPI                   (0x3008)
-> >  #define ETH_MODE               (0x3018)
-> > +#define PFC_OEN                        (0x3C40) /* known on RZ/V2H(P) =
-only */
-> >
-> >  #define PVDD_2500              2       /* I/O domain voltage 2.5V */
-> >  #define PVDD_1800              1       /* I/O domain voltage <=3D 1.8V=
- */
-> >  #define PVDD_3300              0       /* I/O domain voltage >=3D 3.3V=
- */
-> >
-> >  #define PWPR_B0WI              BIT(7)  /* Bit Write Disable */
->
-> FWIW, this should be PWPR_BOWI (O like in Oscar, not 0 =3D Zero).
->
-Indeed, I'll make a seperate patch for this.
+> +#include <linux/atomic.h>
+> +#include <linux/bitmap.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/completion.h>
+> +#include <linux/configfs.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/gpio/machine.h>
 
-> > -#define PWPR_PFCWE             BIT(6)  /* PFC Register Write Enable */
-> > +#define              BIT(6)  /* PFC (and PMC on RZ/V2H) Register Write=
- Enable */
->
-> As this bit is called differently on RZ/V2H, and there are different
-> code paths to handle PWPR on RZ/V2H vs. RZ/G2L, please add an extra
-> definition for PWPR_REGWE_A, and use that in RZ/V2H-specific
-> functions.
->
-Agreed, I will add PWPR_REGWE_A.
+> +#include <linux/idr.h>
 
-> > +#define PWPR_REGWE_B           BIT(5)  /* OEN Register Write Enable, k=
-nown only in RZ/V2H(P) */
-> >
-> >  #define PM_MASK                        0x03
-> >  #define PFC_MASK               0x07
->                                    \
-> > @@ -330,6 +353,8 @@ struct rzg2l_pinctrl {
-> >         spinlock_t                      lock; /* lock read/write regist=
-ers */
-> >         struct mutex                    mutex; /* serialize adding grou=
-ps and functions */
-> >
-> > +       raw_spinlock_t                  pwpr_lock; /* serialize PWPR re=
-gister access */
->
-> Do you need this lock?
-> I.e. can't you use the existing .lock above instead? (see below)
->
-> > +
-> >         struct rzg2l_pinctrl_pin_settings *settings;
-> >         struct rzg2l_pinctrl_reg_cache  *cache;
-> >         struct rzg2l_pinctrl_reg_cache  *dedicated_cache;
->
-> > @@ -480,6 +538,19 @@ static void rzg2l_pmc_writeb(struct rzg2l_pinctrl =
-*pctrl, u8 val, void __iomem *
-> >         writeb(val, addr);
-> >  }
-> >
-> > +static void rzv2h_pmc_writeb(struct rzg2l_pinctrl *pctrl, u8 val, void=
- __iomem *addr)
-> > +{
-> > +       const struct rzg2l_register_offsets *regs =3D &pctrl->data->hwc=
-fg->regs;
-> > +       u8 pwpr;
-> > +
-> > +       raw_spin_lock(&pctrl->pwpr_lock);
->
-> rzg2l_pinctrl_data.pmc_write() is always called with rzg2l_pinctrl.lock
-> held.
->
-> > +       pwpr =3D readb(pctrl->base + regs->pwpr);
-> > +       writeb(pwpr | PWPR_PFCWE, pctrl->base + regs->pwpr);
->
-> PWPR_REGWE_A
->
-> > +       writeb(val, addr);
-> > +       writeb(pwpr & ~PWPR_PFCWE, pctrl->base + regs->pwpr);
->
-> PWPR_REGWE_A
->
-> > +       raw_spin_unlock(&pctrl->pwpr_lock);
-> > +}
-> > +
-> >  static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
-> >                                        u8 pin, u8 off, u8 func)
-> >  {
->
-> > +static u8 rzv2h_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, u32 offset=
-)
-> > +{
-> > +       static const char * const pin_names[] =3D { "ET0_TXC_TXCLK", "E=
-T1_TXC_TXCLK",
-> > +                                                 "XSPI0_RESET0N", "XSP=
-I0_CS0N",
-> > +                                                 "XSPI0_CKN", "XSPI0_C=
-KP" };
->
->         static const char * const pin_names[] =3D {
->                 "ET0_TXC_TXCLK", "ET1_TXC_TXCLK", "XSPI0_RESET0N",
->                 "XSPI0_CS0N", "XSPI0_CKN", "XSPI0_CKP"
->         };
->
-> > +       const struct pinctrl_pin_desc *pin_desc =3D &pctrl->desc.pins[o=
-ffset];
-> > +       u8 bit_array[] =3D { 0, 1, 2, 3, 4, 5 };
->
-> Do you need this identity-transforming array? ;-)
->
-Oops, it can be simplified.
+> +#include <linux/interrupt.h>
+> +#include <linux/irq_work.h>
 
-> > +       unsigned int i;
-> > +
-> > +       for (i =3D 0; i < ARRAY_SIZE(bit_array); i++) {
->
-> ARRAY_SIZE(pin_names)
->
-> > +               if (!strcmp(pin_desc->name, pin_names[i]))
-> > +                       return bit_array[i];
->
-> return i;
->
-> > +       }
-> > +
-> > +       /* Should not happen. */
-> > +       return 0;
-> > +}
-> > +
-> > +static u32 rzv2h_read_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 o=
-ffset, u8 pin)
-> > +{
-> > +       u8 bit;
-> > +
-> > +       if (!(caps & PIN_CFG_OEN))
-> > +               return 0;
-> > +
-> > +       bit =3D rzv2h_pin_to_oen_bit(pctrl, offset);
-> > +
-> > +       return !(readb(pctrl->base + PFC_OEN) & BIT(bit));
-> > +}
-> > +
-> > +static int rzv2h_write_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 =
-offset, u8 pin, u8 oen)
-> > +{
-> > +       const struct rzg2l_hwcfg *hwcfg =3D pctrl->data->hwcfg;
-> > +       const struct rzg2l_register_offsets *regs =3D &hwcfg->regs;
-> > +       unsigned long flags;
-> > +       u8 val, bit;
-> > +       u8 pwpr;
-> > +
-> > +       if (!(caps & PIN_CFG_OEN))
-> > +               return -EINVAL;
-> > +
-> > +       bit =3D rzv2h_pin_to_oen_bit(pctrl, offset);
-> > +       spin_lock_irqsave(&pctrl->lock, flags);
-> > +       val =3D readb(pctrl->base + PFC_OEN);
-> > +       if (oen)
-> > +               val &=3D ~BIT(bit);
-> > +       else
-> > +               val |=3D BIT(bit);
-> > +
-> > +       raw_spin_lock(&pctrl->pwpr_lock);
->
-> rzg2l_pinctrl.lock is taken above.
->
-> > +       pwpr =3D readb(pctrl->base + regs->pwpr);
-> > +       writeb(pwpr | PWPR_REGWE_B, pctrl->base + regs->pwpr);
-> > +       writeb(val, pctrl->base + PFC_OEN);
-> > +       writeb(pwpr & ~PWPR_REGWE_B, pctrl->base + regs->pwpr);
-> > +       raw_spin_unlock(&pctrl->pwpr_lock);
-> > +       spin_unlock_irqrestore(&pctrl->lock, flags);
-> > +
-> > +       return 0;
-> > +}
->
-> > @@ -2747,6 +3098,32 @@ static void rzg2l_pwpr_pfc_lock(struct rzg2l_pin=
-ctrl *pctrl)
-> >         writel(PWPR_B0WI, pctrl->base + regs->pwpr);    /* B0WI=3D1, PF=
-CWE=3D0 */
-> >  }
-> >
-> > +static void rzv2h_pwpr_pfc_unlock(struct rzg2l_pinctrl *pctrl)
-> > +{
-> > +       const struct rzg2l_register_offsets *regs =3D &pctrl->data->hwc=
-fg->regs;
-> > +       u8 pwpr;
-> > +
-> > +       /*
-> > +        * lock is acquired in pfc unlock call back and then released i=
-n
-> > +        * pfc lock callback
-> > +        */
-> > +       raw_spin_lock(&pctrl->pwpr_lock);
->
-> Except for rzg2l_pinctrl_pm_setup_pfc(), this function is always
-> called while holding rzg2l_pinctrl.lock.  So I think you can just
-> take rzg2l_pinctrl.lock in rzg2l_pinctrl_pm_setup_pfc(), and get rid
-> of pwpr_lock?
->
-Agreed.
+> +#include <linux/kernel.h>
 
-Cheers,
-Prabhakar
+Do you need this?
+
+> +#include <linux/limits.h>
+> +#include <linux/list.h>
+> +#include <linux/lockdep.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/notifier.h>
+> +#include <linux/of.h>
+> +#include <linux/overflow.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/printk.h>
+> +#include <linux/property.h>
+> +#include <linux/slab.h>
+
+> +#include <linux/string.h>
+
+Implied by string_helpers.h
+
+> +#include <linux/string_helpers.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/types.h>
+
+...
+
+> +struct gpio_virtuser_line_array_data {
+> +	struct gpio_descs *descs;
+> +	struct kobject *kobj;
+> +	struct attribute_group *attr_group;
+> +};
+> +
+> +struct gpio_virtuser_line_data {
+> +	struct gpio_desc *desc;
+> +	struct kobject *kobj;
+> +	struct attribute_group *attr_group;
+> +	char consumer[GPIO_CONSUMER_NAME_MAX_LEN];
+> +	struct mutex consumer_lock;
+> +	unsigned int debounce;
+> +	atomic_t irq;
+> +	atomic_t irq_count;
+> +};
+
+Maybe
+
+struct gpio_virtuser_sysfs_data {
+	union {
+		struct gpio_desc *desc;
+		struct gpio_descs *descs;
+	};
+	struct kobject *kobj;
+	struct attribute_group *attr_group;
+};
+
+struct gpio_virtuser_line_array_data {
+	struct gpio_virtuser_sysfs_data sd;
+};
+
+struct gpio_virtuser_line_data {
+	struct gpio_virtuser_sysfs_data sd;
+	char consumer[GPIO_CONSUMER_NAME_MAX_LEN];
+	struct mutex consumer_lock;
+	unsigned int debounce;
+	atomic_t irq;
+	atomic_t irq_count;
+};
+
+?
+
+...
+
+> +struct gpio_virtuser_attr_ctx {
+> +	struct device_attribute dev_attr;
+> +	void *data;
+> +};
+
+struct dev_ext_attribute ?
+
+...
+
+> +struct gpio_virtuser_attr_descr {
+> +	const char *name;
+> +	ssize_t (*show)(struct device *, struct device_attribute *, char *);
+> +	ssize_t (*store)(struct device *, struct device_attribute *,
+> +			 const char *, size_t);
+> +};
+
+struct device_attribute ? (Yes, I know that that one is a bit bigger but
+benefit is that we have some code that you may reuse)
+
+...
+
+> +static ssize_t gpio_virtuser_sysfs_emit_value_array(char *buf,
+> +						    unsigned long *values,
+> +						    size_t num_values)
+> +{
+> +	ssize_t len = 0;
+> +	size_t i;
+> +
+> +	for (i = 0; i < num_values; i++)
+> +		len += sysfs_emit_at(buf, len, "%d",
+> +				     test_bit(i, values) ? 1 : 0);
+> +	return len + sysfs_emit_at(buf, len, "\n");
+
+Why not use %pb?
+
+> +}
+
+...
+
+> +static int gpio_virtuser_sysfs_parse_value_array(const char *buf, size_t len,
+> +						 unsigned long *values)
+> +{
+> +	size_t i;
+> +
+> +	for (i = 0; i < len; i++) {
+
+Perhaps
+
+		bool val;
+		int ret;
+
+		ret = kstrtobool(...);
+		if (ret)
+			return ret;
+
+		assign_bit(...); // btw, why atomic?
+
+> +		if (buf[i] == '0')
+> +			clear_bit(i, values);
+> +		else if (buf[i] == '1')
+> +			set_bit(i, values);
+> +		else
+> +			return -EINVAL;
+
+> +	}
+
+BUT, why not bitmap_parse()?
+
+> +	return 0;
+> +}
+
+...
+
+> +	unsigned long *values __free(bitmap) = bitmap_alloc(descs->ndescs,
+> +							    GFP_KERNEL);
+
+Perhaps
+
+	unsigned long *values __free(bitmap) =
+		 bitmap_alloc(descs->ndescs, GFP_KERNEL);
+
+...
+
+> +	unsigned long *values __free(bitmap) = bitmap_zalloc(descs->ndescs,
+> +							     GFP_KERNEL);
+
+In the similar way?
+
+...
+
+> +	unsigned long *values __free(bitmap) = bitmap_zalloc(descs->ndescs,
+> +							     GFP_KERNEL);
+
+Ditto.
+
+...
+
+> +{
+> +	return sysfs_emit(buf, "%s\n",
+> +			  dir == GPIO_LINE_DIRECTION_IN ? "input" : "output");
+
+I think this maybe transformed to something like str_input_output() in
+string_choices.h (and you don't even need to include that as it's implied by
+string_helpers.h)
+
+> +}
+
+...
+
+> +static int gpio_virtuser_parse_direction(const char *buf, int *dir, int *val)
+> +{
+> +	if (sysfs_streq(buf, "input")) {
+> +		*dir = GPIO_LINE_DIRECTION_IN;
+> +		return 0;
+> +	}
+> +
+> +	if (sysfs_streq(buf, "output-high"))
+> +		*val = 1;
+> +	else if (sysfs_streq(buf, "output-low"))
+> +		*val = 0;
+> +	else
+> +		return -EINVAL;
+> +
+> +	*dir = GPIO_LINE_DIRECTION_OUT;
+
+This can be transformed to use sysfs_match_string() with
+
+static const char * const dirs[] = { "output-low", "output-high", "input" };
+
+	int ret;
+
+	ret = sysfs_match_string(...);
+	if (ret < 0)
+		return ret;
+
+	*val = ret;
+	*dir = ret == 2 ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
+
+And with this approach it even not clear why do you need dir and val to be
+separated here (esp. if we add a enum like
+
+	GPIO_VIRTUSER_OUT_LOW,
+	GPIO_VIRTUSER_OUT_HIGH,
+	GPIO_VIRTUSER_IN,
+
+(with it the string array can also be indexed).
+
+> +	return 0;
+> +}
+
+...
+
+> +static int gpio_virtuser_parse_value(const char *buf)
+> +{
+> +	int value, ret;
+> +
+> +	value = sysfs_match_string(gpio_virtuser_sysfs_value_strings, buf);
+> +	if (value < 0) {
+> +		/* Can be 0 or 1 too. */
+> +		ret = kstrtoint(buf, 0, &value);
+> +		if (ret)
+> +			return ret;
+
+> +		if (value != 0 && value != 1)
+> +			return -EINVAL;
+
+Why not kstrtobool()?
+
+> +	}
+> +
+> +	return value;
+> +}
+
+...
+
+> +	ret = kstrtouint(buf, 10, &debounce);
+
+Why restrict to decimal?
+
+> +	if (ret)
+> +		return ret;
+
+...
+
+> +static ssize_t
+> +gpio_virtuser_sysfs_consumer_store(struct device *dev,
+> +				   struct device_attribute *attr,
+> +				   const char *buf, size_t len)
+> +{
+> +	struct gpio_virtuser_line_data *data = to_gpio_virtuser_data(attr);
+> +	int ret;
+
+> +	if (strlen(buf) > GPIO_CONSUMER_NAME_MAX_LEN)
+> +		return -EINVAL;
+
+You don't need this if you use strscpy() below and check its returned value.
+
+> +	guard(mutex)(&data->consumer_lock);
+> +
+> +	ret = gpiod_set_consumer_name(data->desc, buf);
+> +	if (ret)
+> +		return ret;
+> +
+> +	sprintf(data->consumer, buf);
+> +
+> +	return len;
+> +}
+
+...
+
+> +	data->attr_group->name = devm_kasprintf(dev, GFP_KERNEL,
+> +						"gpiod:%s", id);
+
+Why two lines?
+
+> +	if (!data->attr_group->name)
+> +		return -ENOMEM;
+
+...
+
+> +	ret = devm_add_action_or_reset(dev, gpio_virtuser_mutex_destroy,
+> +				       &data->consumer_lock);
+
+Don't we have devm_mutex_init() (`git tag --contains` shows v6.10-rc1 to me)
+
+> +		return ret;
+
+...
+
+> +static int gpio_virtuser_prop_is_gpio(struct property *prop)
+> +{
+> +	char *dash = strpbrk(prop->name, "-");
+
+Why not strrchr() ?
+
+> +	return dash && strcmp(dash, "-gpios") == 0;
+
+Can't we reuse the suffix from the array from the gpiolib internal header?
+Also I don't like the form of '-' in the line. "gpios" is good and chance
+that linker deduplicates the same string if it occurs somewhere else in the
+binary (in case this goes with =y in .config).
+
+> +}
+
+...
+
+> +/*
+> + * If this is an OF-based system, then we iterate over properties and consider
+> + * all whose names end in "-gpios". For configfs we expect an additional string
+> + * array property - "gpio-virtuser,ids" - containing the list of all GPIO IDs
+> + * to request.
+
+Why not any other system? What's wrong for having this available for ACPI, for
+example? Okay, I see that this is probably due to absence of API.
+
+OTOH the last call in the function assumes non-OF cases. Why can't we have the
+same approach in both?
+
+> + */
+> +static int gpio_virtuser_count_ids(struct device *dev)
+> +{
+> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
+
+Why? This function is mostly OF one, make it simpler.
+
+	struct device_node *np = dev_of_node(dev);
+
+> +	struct property *prop;
+> +	int ret = 0;
+
+> +	if (is_of_node(fwnode)) {
+
+Instead of this check...
+
+	if (np) {
+
+...can be used.
+
+
+> +		for_each_property_of_node(to_of_node(fwnode), prop) {
+
+	for_each_property_of_node(np, prop) {
+
+> +			if (gpio_virtuser_prop_is_gpio(prop))
+> +				++ret;
+
+Why pre-increment?
+
+> +		}
+
+> +		return ret;
+> +	}
+
+> +	return device_property_string_array_count(dev, "gpio-virtuser,ids");
+> +}
+
+...
+
+> +static int gpio_virtuser_get_ids(struct device *dev, const char **ids,
+> +				 int num_ids)
+> +{
+> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
+> +	struct property *prop;
+> +	size_t pos = 0, diff;
+> +	char *dash, *tmp;
+> +
+> +	if (is_of_node(fwnode)) {
+> +		for_each_property_of_node(to_of_node(fwnode), prop) {
+
+As per above function.
+
+> +			if (!gpio_virtuser_prop_is_gpio(prop))
+> +				continue;
+> +
+> +			dash = strpbrk(prop->name, "-");
+> +			diff = dash - prop->name;
+> +
+> +			tmp = devm_kmemdup(dev, prop->name, diff + 1,
+> +					   GFP_KERNEL);
+
+devm_kstrndup() is not okay? Okay, we don't have it (yet?), but at least I
+would rather expect wrapped kstrndup() than this.
+
+> +			if (!tmp)
+> +				return -ENOMEM;
+> +
+> +			tmp[diff] = '\0';
+> +			ids[pos++] = tmp;
+> +		}
+> +
+> +		return 0;
+> +	}
+> +
+> +	return device_property_read_string_array(dev, "gpio-virtuser,ids",
+> +						 ids, num_ids);
+> +}
+
+...
+
+> +static int gpio_virtuser_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct gpio_descs *descs;
+> +	int ret, num_ids = 0, i;
+> +	const char **ids;
+> +	unsigned int j;
+> +
+> +	num_ids = gpio_virtuser_count_ids(dev);
+> +	if (num_ids < 0)
+> +		return dev_err_probe(dev, num_ids,
+> +				     "Failed to get the number of GPIOs to request\n");
+> +
+> +	if (num_ids == 0) {
+> +		dev_err(dev, "No GPIO IDs specified\n");
+> +		return -EINVAL;
+
+It's okay to
+
+		return dev_err_probe(...);
+
+with know error code.
+
+> +	}
+> +
+> +	ids = devm_kcalloc(dev, num_ids, sizeof(*ids), GFP_KERNEL);
+> +	if (!ids)
+> +		return -ENOMEM;
+> +
+> +	ret = gpio_virtuser_get_ids(dev, ids, num_ids);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret,
+> +				     "Failed to get the IDs of GPIOs to request\n");
+> +
+> +	for (i = 0; i < num_ids; i++) {
+> +		descs = devm_gpiod_get_array(dev, ids[i], GPIOD_ASIS);
+> +		if (IS_ERR(descs))
+> +			return dev_err_probe(dev, PTR_ERR(descs),
+> +					     "Failed to request the '%s' GPIOs\n",
+> +					     ids[i]);
+> +
+> +		ret = gpio_virtuser_sysfs_init_line_array_attrs(dev, descs,
+> +								ids[i]);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					     "Failed to setup the sysfs array interface for the '%s' GPIOs\n",
+> +					     ids[i]);
+> +
+> +		for (j = 0; j < descs->ndescs; j++) {
+> +			ret = gpio_virtuser_sysfs_init_line_attrs(dev,
+> +							descs->desc[j],
+> +							ids[i], j);
+> +			if (ret)
+> +				return dev_err_probe(dev, ret,
+> +						     "Failed to setup the sysfs line interface for the '%s' GPIOs\n",
+> +						     ids[i]);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int gpio_virtuser_bus_notifier_call(struct notifier_block *nb,
+> +					   unsigned long action, void *data)
+> +{
+> +	struct gpio_virtuser_device *vdev;
+> +	struct device *dev = data;
+> +	char devname[32];
+> +
+> +	vdev = container_of(nb, struct gpio_virtuser_device, bus_notifier);
+> +	snprintf(devname, sizeof(devname), "gpio-virtuser.%d", vdev->id);
+> +
+> +	if (strcmp(dev_name(dev), devname))
+
+	if (!device_match_name(...))
+
+> +		return NOTIFY_DONE;
+> +
+> +	switch (action) {
+> +	case BUS_NOTIFY_BOUND_DRIVER:
+> +		vdev->driver_bound = true;
+> +		break;
+> +	case BUS_NOTIFY_DRIVER_NOT_BOUND:
+> +		vdev->driver_bound = false;
+> +		break;
+> +	default:
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	complete(&vdev->probe_completion);
+> +	return NOTIFY_OK;
+> +}
+
+...
+
+> +static ssize_t
+> +gpio_virtuser_lookup_entry_config_key_store(struct config_item *item,
+> +					    const char *page, size_t count)
+> +{
+> +	struct gpio_virtuser_lookup_entry *entry =
+> +					to_gpio_virtuser_lookup_entry(item);
+> +	struct gpio_virtuser_device *dev = entry->parent->parent;
+> +
+> +	char *key = kstrndup(skip_spaces(page), count, GFP_KERNEL);
+
+Missing __free() ?
+
+> +	if (!key)
+> +		return -ENOMEM;
+
+> +	strim(key);
+
+> +	guard(mutex)(&dev->lock);
+> +
+> +	if (gpio_virtuser_device_is_live(dev))
+> +		return -EBUSY;
+> +
+> +	kfree(entry->key);
+> +	entry->key = no_free_ptr(key);
+> +
+> +	return count;
+> +}
+
+...
+
+> +	if (sysfs_streq(page, "pull-up")) {
+> +		entry->flags &= ~(GPIO_PULL_DOWN | GPIO_PULL_DISABLE);
+> +		entry->flags |= GPIO_PULL_UP;
+> +	} else if (sysfs_streq(page, "pull-down")) {
+> +		entry->flags &= ~(GPIO_PULL_UP | GPIO_PULL_DISABLE);
+> +		entry->flags |= GPIO_PULL_DOWN;
+> +	} else if (sysfs_streq(page, "pull-disabled")) {
+> +		entry->flags &= ~(GPIO_PULL_UP | GPIO_PULL_DOWN);
+> +		entry->flags |= GPIO_PULL_DISABLE;
+> +	} else if (sysfs_streq(page, "as-is")) {
+> +		entry->flags &= ~(GPIO_PULL_UP | GPIO_PULL_DOWN |
+> +				  GPIO_PULL_DISABLE);
+> +	} else {
+> +		count = -EINVAL;
+
+		return -EINVAL won't (ab)use count semantics.
+> +	}
+> +
+> +	return count;
+
+...
+
+> +	return sprintf(page, "%s\n", flags & GPIO_ACTIVE_LOW ? "1" : "0");
+
+Somewhere above you used %d for very similar situation, why %s here?
+Or why "5d" there?
+
+...
+
+> +	return sprintf(page, "%s\n", flags & GPIO_TRANSITORY ? "1" : "0");
+
+Ditto.
+
+...
+
+> +	return sprintf(page, "%c\n", live ? '1' : '0');
+
+Wow! Third type of the same.
+
+...
+
+> +	struct gpiod_lookup_table *table __free(kfree) =
+> +		kzalloc(struct_size(table, table, num_entries + 1), GFP_KERNEL);
+> +	if (!table)
+> +		return -ENOMEM;
+
+> +	table->dev_id = kasprintf(GFP_KERNEL, "gpio-virtuser.%d",
+> +				  dev->id);
+
+Perfectly one line in comparison with the few lines above).
+
+> +	if (!table->dev_id)
+> +		return -ENOMEM;
+
+...
+
+> +			curr->chip_hwnum = entry->offset < 0
+> +						? U16_MAX : entry->offset;
+
+Can we leave ? on the previous line?
+
+...
+
+> +			++i;
+
+Why pre-increment?
+
+...
+
+> +static struct fwnode_handle *
+> +gpio_virtuser_make_device_swnode(struct gpio_virtuser_device *dev)
+> +{
+> +	struct property_entry properties[2];
+> +	struct gpio_virtuser_lookup *lookup;
+> +	size_t num_ids;
+> +	int i = 0;
+
+Why signed? And in all this kind of case, I would split assignment...
+
+> +	memset(properties, 0, sizeof(properties));
+> +
+> +	num_ids = list_count_nodes(&dev->lookup_list);
+> +	char **ids __free(kfree) = kcalloc(num_ids + 1, sizeof(*ids),
+> +					   GFP_KERNEL);
+> +	if (!ids)
+> +		return ERR_PTR(-ENOMEM);
+> +
+
+To be here, that the reader will see immediately (close enough) what is the
+initial values. Moreover this code will be robuse against changes in between
+(if i become reusable).
+
+> +	list_for_each_entry(lookup, &dev->lookup_list, siblings)
+> +		ids[i++] = lookup->con_id;
+> +
+> +	properties[0] = PROPERTY_ENTRY_STRING_ARRAY_LEN("gpio-virtuser,ids",
+> +							ids, num_ids);
+> +
+> +	return fwnode_create_software_node(properties, NULL);
+> +}
+
+...
+
+> +	guard(mutex)(&dev->lock);
+> +
+> +	if (live == gpio_virtuser_device_is_live(dev))
+> +		ret = -EPERM;
+
+With guard in place, just return directly, ...
+
+> +	else if (live)
+
+...drop 'else'...
+
+> +		ret = gpio_virtuser_device_activate(dev);
+> +	else
+
+...ditto...
+
+> +		gpio_virtuser_device_deactivate(dev);
+> +
+> +	return ret ?: count;
+
+...and simply return count here.
+
+
+...
+
+> +	struct gpio_virtuser_device *dev __free(kfree) = kzalloc(sizeof(*dev),
+> +								 GFP_KERNEL);
+
+	struct gpio_virtuser_device *dev __free(kfree) =
+		kzalloc(sizeof(*dev), GFP_KERNEL);
+
+> +	if (!dev)
+> +		return ERR_PTR(-ENOMEM);
+
+...
+
+> +	ret = platform_driver_register(&gpio_virtuser_driver);
+> +	if (ret) {
+
+> +		pr_err("Failed to register the platform driver: %d\n",
+> +		       ret);
+
+I would keep one line.
+
+> +		return ret;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
