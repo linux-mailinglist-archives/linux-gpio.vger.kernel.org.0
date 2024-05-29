@@ -1,68 +1,68 @@
-Return-Path: <linux-gpio+bounces-6804-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6805-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 273D28D2ED8
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:48:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67A1A8D2EDA
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:48:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D21E528C3F0
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 07:48:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FB711C20DAF
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 07:48:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22A0F16A363;
-	Wed, 29 May 2024 07:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40B1416A387;
+	Wed, 29 May 2024 07:47:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="U6RTjOMJ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="AbbykAQk"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="PnQzSDY+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="ZJT8jAYg"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8DD168C37;
-	Wed, 29 May 2024 07:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EBE169361;
+	Wed, 29 May 2024 07:47:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716968824; cv=none; b=uMvl4N/EeRX0c+iq0zry/2HOQY6iofrZp6V0OEYaGVYHXLupeao+d4lmjBQlithojwUV+pZ33ihz9ntwL1UuqD+E4U/aematSOZpDdIPkFfzaTuis34rWobec7dc7+B+2/ECBEW54bJt54Z8DarGlwpLORAR55AfW1ehf73ud3U=
+	t=1716968828; cv=none; b=fy98l+0fyviINDIa82LpnMCM8poMAVQi9oW5OIH7rc4OAAlKXxSrDob/W9UJc1J8YVDxOXYhkLc9FrTb4SluNtSNQJ+2w0ouLcDrtrfJZLByQgNcLBRuRMXxJSd7HKbw8YFguy7etss3v6XZ3IrGlbFzCbpTqmJLHUwNSmDR4sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716968824; c=relaxed/simple;
-	bh=3QHuTILnJdSRl5pi75xZK9x5MRDmej8FTxrGOuEg8Pc=;
+	s=arc-20240116; t=1716968828; c=relaxed/simple;
+	bh=ye0+AjR4xMDKiF5PJH1197PGAb/qUvHf1ZXJ3sOWkFU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D7w3+O4igq/156FQAQdTmqtBn4yKW0EHX9URptq4e9b6EgTya1PDAgfkOwhad85QAr18kax/7mfiP5dViElrS5/3avrfZzme0NcXL/HkOgNwByXhXhxTAN+gWWi8TL12f2kRGz6rz1m+K4TiPuSlD/8DhcBRuGDAJkjLVhg+i70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=U6RTjOMJ; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=AbbykAQk reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+	 MIME-Version:Content-Type; b=j8jwnNWyBfqMsM52WeZ/r97R4M4KUnSvLsaqNAq7k81QpRg3LCepf/aZv2d5ZDw+98nYYAvmvZyKrzyccOMB8E7t7Odn6U2v4KpnqkVuTeVMB/J6yLdRpKMoimQsZ57g49FuFouRt7L5x4e+7rfajwql/1EDcgJLHiW8hmX8svM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=PnQzSDY+; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=ZJT8jAYg reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1716968823; x=1748504823;
+  t=1716968826; x=1748504826;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=caOZbQUWt+zI8G+ePC5/yzmPLu8LPl6qOM0XKEOKGSI=;
-  b=U6RTjOMJUvj4bJIdrU3+jULbFQ2tRgOEB6Yi5LGs4/wK/1/vl9WCAHa0
-   hRpSVE14t0XMwKmwlJ9Gem134wiyzN8KhaSVEfGu6WmfDX2Qtkwtr8wCa
-   M6tt/ZOHs8XDyLGeJrImQyCd1u3rqbS3N1D9k1Uf3IhJD235FcqsorJoA
-   pGx26LVqEQ65aY4PyyKSRiKpi2UxmvP0d9CjUNPWk3ANMu8uCqHvi3Btr
-   xjK1PukJvM7/3uJDPPm8sUH+Yv0OgIAiHHtb21iltMG06qVKrilEN+PGj
-   omQI6NGznTdfsrWKYiFWXiSDUry/A0DbB5NtsGuOYpfwdQ4jNMCV7JcK/
-   g==;
-X-CSE-ConnectionGUID: NkF9IZlsRPa7UV+p6zylWw==
-X-CSE-MsgGUID: kwSqeFqeTCmONvzNVtEpyw==
+  bh=jr7fCGaDvK5T7b6qLgLPpM6rhJVmlldtFLw2mTSr8uw=;
+  b=PnQzSDY+eAjLbSBkd+iGcCQejpclTbywUcpshXCvBhkGLz0MA6OoNj5K
+   dylc0zIaiiSRDzGg6EL/EoMN0uE9t4+Cs1xzDrSfvXhdCtfqI3fRNXKBg
+   91DRhn3DJQYQ1hSuGckJKQMTw3WnHjBH2WAshGRdClJQMDuV/gAwwE1Uu
+   DHR1T8a6ECAQAMfgAvCZioSqWFpDiZI8kV8fiB2VSsOm2DaKaAQY9o5wg
+   xfCYTn/bsVjr49lU/8o0vMawMqobPUwqwElZEsl0DcUfrQI1PYpqj8Wne
+   ZYCZscw8m4FUS2SzNHfzuCM9EFMdHXXX+e9kF07XyxnJtpin3Lx0azL+q
+   A==;
+X-CSE-ConnectionGUID: EaU7X7mNTratvwXWAZb0Zg==
+X-CSE-MsgGUID: qdE9Eec3SjmEOzh16s/Hzg==
 X-IronPort-AV: E=Sophos;i="6.08,197,1712613600"; 
-   d="scan'208";a="37119690"
+   d="scan'208";a="37119692"
 Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 29 May 2024 09:47:00 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5100E1653AF;
-	Wed, 29 May 2024 09:46:56 +0200 (CEST)
+  by mx1.tq-group.com with ESMTP; 29 May 2024 09:47:05 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A57421653AB;
+	Wed, 29 May 2024 09:47:00 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1716968816;
+	s=dkim; t=1716968821;
 	h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=caOZbQUWt+zI8G+ePC5/yzmPLu8LPl6qOM0XKEOKGSI=;
-	b=AbbykAQk48vIParFn5Hv0sDBd8BoQxx74naZyfBOFuokIRfaFADSgqH1YeoIoQoUBMyhPn
-	XjOxCwcXXXvuLVxyuCvYKINBDdhJO0NtyhqTvmy8ZTJakyJBVIl4CQKmB1UPjCBuS9OPxy
-	xdCbLkUTRlnA0PcfGz9SiOqzu4OJWFpBS6LmY1Md42W/t4iCPgYPXNRe+4SZhoCvCUxKAI
-	zH1z8iHt2x0T9cuo/zGfi9QFGAfws38x9Yp8iIGC2ShFyHQ9WKmDzOC1sOh9jidWpBLuWC
-	koVYIfSqt+A3tcKMJJLvcxtuTT/cEcUmZN9+vncwWK5QtEXFwFD+NqUzuVBfDA==
+	bh=jr7fCGaDvK5T7b6qLgLPpM6rhJVmlldtFLw2mTSr8uw=;
+	b=ZJT8jAYgmnnSI475P0T/ckUTC6jaFyiPh64UJh1ZT9s64k+6C0ONUO1/Abtyo7oEYqe7DG
+	wgO6hr8Nmt/4TKH0U2ao19npBheotBq8XzfOHjoLWB74K05l9h9qdsptvMVle/096Sw6cG
+	czQP3n4S4X7dY2qiIJM7CzZg3dWNfxvWJjsZ2MbYsxoIYXnQkyLkplZfQ032phth0cb4ls
+	e7WXKbmBWo36qosA/6K2abBpg1jc0rFrn/b5+2xfUGUAFg4X1cDnIdFkpxVRwpHDI3Ex0t
+	ltteaWNrrqMBzGGyv6pyHs4ExEs8u5VupCZzSuhvpN8oMHni4gv7Onslh5FVpQ==
 From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
@@ -72,9 +72,9 @@ Cc: Andrew Lunn <andrew@lunn.ch>,
 	Gregor Herburger <gregor.herburger@tq-group.com>,
 	linux@ew.tq-group.com,
 	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH 7/8] gpio: tqmx86: store IRQ trigger type and unmask status separately
-Date: Wed, 29 May 2024 09:45:19 +0200
-Message-ID: <c0b01bce7758847916e7b12000ab1e02025c23f4.1716967982.git.matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH 8/8] gpio: tqmx86: fix broken IRQ_TYPE_EDGE_BOTH interrupt type
+Date: Wed, 29 May 2024 09:45:20 +0200
+Message-ID: <2c265b6bcfcde7d2327b94c4f6e3ad6d4f1e2de7.1716967982.git.matthias.schiffer@ew.tq-group.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <cover.1716967982.git.matthias.schiffer@ew.tq-group.com>
 References: <cover.1716967982.git.matthias.schiffer@ew.tq-group.com>
@@ -88,123 +88,87 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-irq_set_type() should not implicitly unmask the IRQ.
-
-All accesses to the interrupt configuration register are moved to a new
-helper _tqmx86_gpio_irq_config(). We also introduce the new rule that
-accessing irq_type must happen while locked, which will become
-significant for fixing EDGE_BOTH handling.
+The TQMx86 GPIO controller only supports falling and rising edge
+triggers, but not both. Fix this by implementing a software both-edge
+mode that toggles the edge type after every interrupt.
 
 Fixes: b868db94a6a7 ("gpio: tqmx86: Add GPIO from for this IO controller")
+Co-developed-by: Gregor Herburger <gregor.herburger@tq-group.com>
+Signed-off-by: Gregor Herburger <gregor.herburger@tq-group.com>
 Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 ---
- drivers/gpio/gpio-tqmx86.c | 41 +++++++++++++++++++++++---------------
- 1 file changed, 25 insertions(+), 16 deletions(-)
+ drivers/gpio/gpio-tqmx86.c | 42 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 39 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpio/gpio-tqmx86.c b/drivers/gpio/gpio-tqmx86.c
-index 4b37cc3bdd455..c957be3341774 100644
+index c957be3341774..400415676ad5d 100644
 --- a/drivers/gpio/gpio-tqmx86.c
 +++ b/drivers/gpio/gpio-tqmx86.c
-@@ -34,6 +34,7 @@
- #define TQMX86_INT_TRIG_RISING	0x2
- #define TQMX86_INT_TRIG_BOTH	0x3
- #define TQMX86_INT_TRIG_MASK	0x3
-+#define TQMX86_INT_UNMASKED	BIT(2)
+@@ -126,9 +126,15 @@ static void _tqmx86_gpio_irq_config(struct tqmx86_gpio_data *gpio, int hwirq)
+ 	unsigned int offset = hwirq - TQMX86_NGPO;
+ 	u8 type = TQMX86_INT_TRIG_NONE, mask, val;
  
- #define TQMX86_GPII_CONFIG(i, v)	((v) << (2 * (i)))
- #define TQMX86_GPII_MASK(i)		TQMX86_GPII_CONFIG(i, TQMX86_INT_TRIG_MASK)
-@@ -42,6 +43,7 @@ struct tqmx86_gpio_data {
- 	struct gpio_chip	chip;
- 	void __iomem		*io_base;
- 	int			irq;
-+	/* Lock must be held for accessing output and irq_type fields */
- 	raw_spinlock_t		spinlock;
- 	DECLARE_BITMAP(output, TQMX86_NGPIO);
- 	u8			irq_type[TQMX86_NGPIO];
-@@ -119,17 +121,28 @@ static int tqmx86_gpio_get_direction(struct gpio_chip *chip,
- 	return GPIO_LINE_DIRECTION_OUT;
- }
+-	if (gpio->irq_type[hwirq] & TQMX86_INT_UNMASKED)
++	if (gpio->irq_type[hwirq] & TQMX86_INT_UNMASKED) {
+ 		type = gpio->irq_type[hwirq] & TQMX86_INT_TRIG_MASK;
  
-+static void _tqmx86_gpio_irq_config(struct tqmx86_gpio_data *gpio, int hwirq)
-+{
-+	unsigned int offset = hwirq - TQMX86_NGPO;
-+	u8 type = TQMX86_INT_TRIG_NONE, mask, val;
++		if (type == TQMX86_INT_TRIG_BOTH)
++			type = tqmx86_gpio_get(&gpio->chip, hwirq)
++				? TQMX86_INT_TRIG_FALLING
++				: TQMX86_INT_TRIG_RISING;
++	}
 +
-+	if (gpio->irq_type[hwirq] & TQMX86_INT_UNMASKED)
-+		type = gpio->irq_type[hwirq] & TQMX86_INT_TRIG_MASK;
+ 	mask = TQMX86_GPII_MASK(offset);
+ 	val = TQMX86_GPII_CONFIG(offset, type);
+ 	_tqmx86_gpio_update_bits(gpio, TQMX86_GPIIC, mask, val);
+@@ -200,8 +206,8 @@ static void tqmx86_gpio_irq_handler(struct irq_desc *desc)
+ 	struct gpio_chip *chip = irq_desc_get_handler_data(desc);
+ 	struct tqmx86_gpio_data *gpio = gpiochip_get_data(chip);
+ 	struct irq_chip *irq_chip = irq_desc_get_chip(desc);
+-	unsigned long irq_bits;
+-	int i = 0;
++	unsigned long irq_bits, flags;
++	int i, hwirq;
+ 	u8 irq_status;
+ 
+ 	chained_irq_enter(irq_chip, desc);
+@@ -210,6 +216,36 @@ static void tqmx86_gpio_irq_handler(struct irq_desc *desc)
+ 	tqmx86_gpio_write(gpio, TQMX86_GPIIS, irq_status);
+ 
+ 	irq_bits = irq_status;
 +
-+	mask = TQMX86_GPII_MASK(offset);
-+	val = TQMX86_GPII_CONFIG(offset, type);
-+	_tqmx86_gpio_update_bits(gpio, TQMX86_GPIIC, mask, val);
-+}
++	raw_spin_lock_irqsave(&gpio->spinlock, flags);
++	for_each_set_bit(i, &irq_bits, TQMX86_NGPI) {
++		hwirq = i + TQMX86_NGPO;
 +
- static void tqmx86_gpio_irq_mask(struct irq_data *data)
- {
--	unsigned int offset = (data->hwirq - TQMX86_NGPO);
- 	struct tqmx86_gpio_data *gpio = gpiochip_get_data(
- 		irq_data_get_irq_chip_data(data));
- 	unsigned long flags;
--	u8 mask;
- 
--	mask = TQMX86_GPII_MASK(offset);
- 	raw_spin_lock_irqsave(&gpio->spinlock, flags);
--	_tqmx86_gpio_update_bits(gpio, TQMX86_GPIIC, mask, 0);
-+	gpio->irq_type[data->hwirq] &= ~TQMX86_INT_UNMASKED;
-+	_tqmx86_gpio_irq_config(gpio, data->hwirq);
- 	raw_spin_unlock_irqrestore(&gpio->spinlock, flags);
- 
- 	gpiochip_disable_irq(&gpio->chip, irqd_to_hwirq(data));
-@@ -137,18 +150,15 @@ static void tqmx86_gpio_irq_mask(struct irq_data *data)
- 
- static void tqmx86_gpio_irq_unmask(struct irq_data *data)
- {
--	unsigned int offset = (data->hwirq - TQMX86_NGPO);
- 	struct tqmx86_gpio_data *gpio = gpiochip_get_data(
- 		irq_data_get_irq_chip_data(data));
- 	unsigned long flags;
--	u8 mask, val;
- 
- 	gpiochip_enable_irq(&gpio->chip, irqd_to_hwirq(data));
- 
--	mask = TQMX86_GPII_MASK(offset);
--	val = TQMX86_GPII_CONFIG(offset, gpio->irq_type[data->hwirq]);
- 	raw_spin_lock_irqsave(&gpio->spinlock, flags);
--	_tqmx86_gpio_update_bits(gpio, TQMX86_GPIIC, mask, val);
-+	gpio->irq_type[data->hwirq] |= TQMX86_INT_UNMASKED;
-+	_tqmx86_gpio_irq_config(gpio, data->hwirq);
- 	raw_spin_unlock_irqrestore(&gpio->spinlock, flags);
- }
- 
-@@ -156,10 +166,9 @@ static int tqmx86_gpio_irq_set_type(struct irq_data *data, unsigned int type)
- {
- 	struct tqmx86_gpio_data *gpio = gpiochip_get_data(
- 		irq_data_get_irq_chip_data(data));
--	unsigned int offset = (data->hwirq - TQMX86_NGPO);
- 	unsigned int edge_type = type & IRQF_TRIGGER_MASK;
- 	unsigned long flags;
--	u8 new_type, mask, val;
-+	u8 new_type;
- 
- 	switch (edge_type) {
- 	case IRQ_TYPE_EDGE_RISING:
-@@ -175,12 +184,12 @@ static int tqmx86_gpio_irq_set_type(struct irq_data *data, unsigned int type)
- 		return -EINVAL; /* not supported */
- 	}
- 
--	gpio->irq_type[data->hwirq] = new_type;
--
--	mask = TQMX86_GPII_MASK(offset);
--	val = TQMX86_GPII_CONFIG(offset, new_type);
- 	raw_spin_lock_irqsave(&gpio->spinlock, flags);
--	_tqmx86_gpio_update_bits(gpio, TQMX86_GPIIC, mask, val);
++		/*
++		 * Edge-both triggers are implemented by flipping the edge
++		 * trigger after each interrupt, as the controller only supports
++		 * either rising or falling edge triggers, but not both.
++		 *
++		 * Internally, the TQMx86 GPIO controller has separate status
++		 * registers for rising and falling edge interrupts. GPIIC
++		 * configures which bits from which register are visible in the
++		 * interrupt status register GPIIS and defines what triggers the
++		 * parent IRQ line. Writing to GPIIS always clears both rising
++		 * and falling interrupt flags internally, regardless of the
++		 * currently configured trigger.
++		 *
++		 * In consequence, we can cleanly implement the edge-both
++		 * trigger in software by first clearing the interrupt and then
++		 * setting the new trigger based on the current GPIO input in
++		 * _tqmx86_gpio_irq_config() - even if an edge arrives between
++		 * reading the input and setting the trigger, we will have a new
++		 * interrupt pending.
++		 */
++		if ((gpio->irq_type[hwirq] & TQMX86_INT_TRIG_MASK) == TQMX86_INT_TRIG_BOTH)
++			_tqmx86_gpio_irq_config(gpio, hwirq);
++	}
++	raw_spin_unlock_irqrestore(&gpio->spinlock, flags);
 +
-+	gpio->irq_type[data->hwirq] &= ~TQMX86_INT_TRIG_MASK;
-+	gpio->irq_type[data->hwirq] |= new_type;
-+	_tqmx86_gpio_irq_config(gpio, data->hwirq);
-+
- 	raw_spin_unlock_irqrestore(&gpio->spinlock, flags);
- 
- 	return 0;
+ 	for_each_set_bit(i, &irq_bits, TQMX86_NGPI)
+ 		generic_handle_domain_irq(gpio->chip.irq.domain,
+ 					  i + TQMX86_NGPO);
 -- 
 TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
 Amtsgericht München, HRB 105018
