@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-6873-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6875-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 174BA8D3CB1
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 18:34:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 660838D3CBF
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 18:35:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 467D71C252BD
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 16:34:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97B611C210B0
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 16:35:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9250D1C8FD4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF9371C9EC9;
 	Wed, 29 May 2024 16:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pZ+7vg+b"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XRxff3Si"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA6A190684;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A48F194C66;
 	Wed, 29 May 2024 16:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717000236; cv=none; b=QhtmQdy0XOnw/0r+j52J+j9nQCX+lgsiUgAquVj22qyq+ubuIr8cHrMpPYn9MMOVIRaSowwvqNry7IO6mzHb0b9foL+AzSKrEGHkFOQ1Ss/micr7Xf7D64JzGpcEpHExbSBhgVoAHEp1ksVOdnRGF6mSsQ9z3JZHPACLi4TuIEI=
+	t=1717000236; cv=none; b=L5Tlqn/0krb5PP2Hb9mazOZ+P/P1hu1K86fb2lQY+GIEJmCMKLUedqxBxyp2YUasPSze5K3eGIGppbqjZ9zGo4XBkbgwfDx02Q7QqfIyMv2JmY747L3axz4I2HjCnclTH+gExmTA7qV7ccvumyt8TT/4r2qV7ISnmE7sxkxxVJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717000236; c=relaxed/simple;
-	bh=lga3d+eXyDGzWJge8vvnwfcv1gyBqqWJmkYtkVpaX6M=;
+	bh=9D6ySfgbWhQOFK6PfMLujLLbbQCJ9ljTc4OjiKugm44=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tkzajrZre9/uAf+zcHIOnrhJFIerr8vxu5ps7gXm3DN+kN7HA4gtQICHRIiYdSGjoPjz9kw0YgSlD3BSy/hxPH9asm76A231RwSpaXZcCVWFcp67HsL/fqqAIqswOZ6Sk3xoovZtuUJhPXGLq3/YtBnnP+JuVfW6Fa5rq3Pp3Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pZ+7vg+b; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3F71C4DDE2;
+	 MIME-Version; b=lz4XkRXZWNQ6+28QwWPSyEHFm30tsnpGf2hZzOebxZWiKkIQMqta/VD8WP7FvsdvMjrviirh6GGvB9FFZf10VioxENxE9O2f3jELjVWrH4hxI9WHQsHjyGs9wj5ZiDiThnVAyxAytfAhz2fmgyYm5/BT4QyfQz5jAxOXB0dta7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XRxff3Si; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF042C4AF0A;
 	Wed, 29 May 2024 16:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717000235;
-	bh=lga3d+eXyDGzWJge8vvnwfcv1gyBqqWJmkYtkVpaX6M=;
+	s=k20201202; t=1717000236;
+	bh=9D6ySfgbWhQOFK6PfMLujLLbbQCJ9ljTc4OjiKugm44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pZ+7vg+baXHSYPaOi0WCGDW/RzsM6T0n59YPjj+DfPiAFJ89kLgRFQxk43lDah0Cv
-	 A7M/w7pFpq9EJzarS9ED9a8bcEC36L+GDRz1tlXBuRWPw5zQL87X6ZnDEc3cVugyEA
-	 UyeVZtl4G9/BH+hpaMjaMYswwHmgKqpJVblM8YgF6mGdwgmPxriH279kXWIrUQsf9z
-	 AY7vr2HBNbvlWUOFKuqYHCLp9nzFMxKOKvxNqn0/gUBIU/nCMMxTKXn3jjZMAPRY6p
-	 l6++qcAYMzi+P4fjnnCFY7Fo3j9w1UlNbnQr7oDv100widQfbsI2Lm/wGt7PDunz35
-	 fWvSran9qZ82A==
+	b=XRxff3Si8T3w4EsMM+jiwSbHJVXoKYJr7+4jRhq3FPMhNW8MOd8WDyhOP0DYIdwQZ
+	 cze326C+SxHZmRMLRVEjwPB18DrmdxVnZTN7xvFpyG7MZv+pAdak4wbw22dReMM6Dr
+	 p+2vwxrYWkjDNC/i5ESOAwZcwC1ESIo1M341EYYoNFOFWyrma/ZDLCY7zivkxs7peu
+	 bdL0ZnDvV2ZykombcCouuP1hECvifMYyutR7DDtqmies3nB2gjSah77s8t+9gAG+E1
+	 vtQTmPBYVC+DftcQypp0td+11f7Jm45ov4/mis/vTfBvYk2DiAA4lV94LqMgRWto4L
+	 Nj150dMoCm9EA==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1sCMCB-000000004is-36OJ;
+	id 1sCMCB-000000004iu-3Qlj;
 	Wed, 29 May 2024 18:30:35 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Lee Jones <lee@kernel.org>,
@@ -65,9 +65,9 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 06/14] mfd: pm8008: rename irq chip
-Date: Wed, 29 May 2024 18:29:50 +0200
-Message-ID: <20240529162958.18081-7-johan+linaro@kernel.org>
+Subject: [PATCH v2 07/14] mfd: pm8008: drop unused driver data
+Date: Wed, 29 May 2024 18:29:51 +0200
+Message-ID: <20240529162958.18081-8-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.44.1
 In-Reply-To: <20240529162958.18081-1-johan+linaro@kernel.org>
 References: <20240529162958.18081-1-johan+linaro@kernel.org>
@@ -79,28 +79,29 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Drop the redundant "irq" suffix from the irq chip name.
+The i2c client driver data pointer has never been used so drop the
+unnecessary assignment.
 
 Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/mfd/qcom-pm8008.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/qcom-pm8008.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/mfd/qcom-pm8008.c b/drivers/mfd/qcom-pm8008.c
-index 18173c7a7e7b..bab17417aeec 100644
+index bab17417aeec..72199840231e 100644
 --- a/drivers/mfd/qcom-pm8008.c
 +++ b/drivers/mfd/qcom-pm8008.c
-@@ -130,7 +130,7 @@ static int pm8008_set_type_config(unsigned int **buf, unsigned int type,
- }
+@@ -167,8 +167,6 @@ static int pm8008_probe(struct i2c_client *client)
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
  
- static const struct regmap_irq_chip pm8008_irq_chip = {
--	.name			= "pm8008_irq",
-+	.name			= "pm8008",
- 	.main_status		= I2C_INTR_STATUS_BASE,
- 	.num_main_regs		= 1,
- 	.irqs			= pm8008_irqs,
+-	i2c_set_clientdata(client, regmap);
+-
+ 	reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+ 	if (IS_ERR(reset))
+ 		return PTR_ERR(reset);
 -- 
 2.44.1
 
