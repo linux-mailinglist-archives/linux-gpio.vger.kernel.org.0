@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-6792-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6793-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10A278D2E29
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:27:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DC808D2E2E
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:27:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9FEF28C9D9
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 07:27:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5EB931C240C5
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 07:27:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5D9167288;
-	Wed, 29 May 2024 07:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E045167283;
+	Wed, 29 May 2024 07:27:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="je673Etj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3mPUk74"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83257167275;
-	Wed, 29 May 2024 07:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E796C16726D;
+	Wed, 29 May 2024 07:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716967618; cv=none; b=p66cBGYZQq+U3qi6RGMBRtuqwRwjjeHftIyfzmnB9EzxRsxlEE8jbQWnlYO2MJxA7LBtEIqkAk4vVqrLDr3lzbQNQTe7UJWpIieqjGX+4hY1tHAyTFpAsZJVWQ2eJpGGIfRI4xPyEnfTtBsp7LsKCxvTIX9zUZvGI7TGveiNhXY=
+	t=1716967673; cv=none; b=YaBUftrw7Ujq867Hh/N7gpewrlRCnDEdzTGN18LFGL/nONgNHtPj+StnfOZPUo3Tr/1NmPvqmsPhHVkD2dQ/aKtux64OQ7YIXwvySxTIBzQOUZiZjVfy8qug4yOnLBZ8fA2t0l/qCTkb3aF/JogbiihQOze1wUQL9ht3ARrJzUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716967618; c=relaxed/simple;
-	bh=7rrG1rJKUVNczGau5dyk9TuLGcfgsrCcrXb8cFo1LMQ=;
+	s=arc-20240116; t=1716967673; c=relaxed/simple;
+	bh=/PDtNByBs4ZFNDB9S5UffsbT2dqU3IHApnVnLAw/iTA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LIpSGjY8R7wLGJ8irDH5K6w18XyvqlXWIb2Jgv5LFjgwtLs7LSXaADiinUjVX38ZwFFLeosSnCCbHYGWA2bEliVpL4POdlgV7y1J240jPBth+0o+0SdLdEqA+2OLHOcBYvANMsSMrHihNLDwboyEm8m2fkupckySU3OTHWisnpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=je673Etj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88078C2BD10;
-	Wed, 29 May 2024 07:26:54 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Ufk7v/pOpwSdst+Llk+L+PQA2Yl2uMoO4FSEn2vgAKiZH9M+DwqMvtSl01afDCT1emhrzX8hvM/Le2QRmGP+NcpDLjX1tKMWZ1Y0lyacQm0Ifx8Bmk+c1lkdG9Dpu5RW0hD+ctgz3fmFkP+GPJiou2WbL6yVM/pKvUP+PEX0DU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3mPUk74; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E108AC32789;
+	Wed, 29 May 2024 07:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716967618;
-	bh=7rrG1rJKUVNczGau5dyk9TuLGcfgsrCcrXb8cFo1LMQ=;
+	s=k20201202; t=1716967672;
+	bh=/PDtNByBs4ZFNDB9S5UffsbT2dqU3IHApnVnLAw/iTA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=je673Etj8yHcqijlAvaeRB3ePWC7uvP0tlrCApZ2shO0+StOhoS8ROJFHPtQ4f1x3
-	 KR7R34NXamjUDvD/6/PqxYw6oSv2iOO3XJrX1aRYX2x9gJimfAp5G0trzQifZ9TemA
-	 0uPkoejD9u/2C+lsw1vHlkKdYCtZ2mAHdec3M8QWUuRXaPbtxjYuw5imB0WyZkiONb
-	 aiaVu18Weh0mgkYfnYpYqb3n7IVlp4lyW4B68+L2+nj4bL68moH8Yr8zo0J2xF9sgT
-	 PI/TuPjnKAAp4d+P/x9DVV55f1yACnsBDOzzH4AW4ZgFQCepwWQxf99ktgbaykDhKa
-	 bKCwTOGY3fDNg==
-Message-ID: <080c4c05-e795-49d8-a547-d39d10ed8333@kernel.org>
-Date: Wed, 29 May 2024 09:26:52 +0200
+	b=O3mPUk74HVM8AbJZnpZ9TumvY4eEixxkWmeLl/RAzEIA6VJO+dgMQOzNedWEWY/5d
+	 09OLjBGHq+MaQCJR1PdvLEN9p/b4/0uyn7U9X30f+5O/zh0I/8ER4+UiKOqBQW9Cbs
+	 e2trzRsz4HMwVdLzkz72jVlUM5Fnje9nJDiaGFe4RCnFRaeYHfNgLml8AlO4XeoenY
+	 SXTIFkPa9fg9XBku/cmaVYuHynm4uoC2eG8x0jMLL/OnNDU9cs4pdI/wXC8jZE6/rk
+	 FCJfbr1e0+6Fby1GZhkJDnyP4KjNEt1dJcLA4OcpwXDDv91Nocn7hPuO4HPvY0/jBy
+	 w3MGYPIa0eEfg==
+Message-ID: <5d0016f1-ccdc-4645-9840-6f8c2870ef6c@kernel.org>
+Date: Wed, 29 May 2024 09:27:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: gpio: aspeed,sgpio: Order properties by
- DTS style
+Subject: Re: [PATCH 2/4] dt-bindings: gpio: aspeed,sgpio: Specify
+ gpio-line-names
 To: Andrew Jeffery <andrew@codeconstruct.com.au>,
  Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
  <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
@@ -61,9 +61,9 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
  linux-kernel@vger.kernel.org
 References: <20240529-dt-warnings-gpio-sgpio-interrupt-cells-v1-0-91c42976833b@codeconstruct.com.au>
- <20240529-dt-warnings-gpio-sgpio-interrupt-cells-v1-1-91c42976833b@codeconstruct.com.au>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <20240529-dt-warnings-gpio-sgpio-interrupt-cells-v1-2-91c42976833b@codeconstruct.com.au>
 Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -107,60 +107,24 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240529-dt-warnings-gpio-sgpio-interrupt-cells-v1-1-91c42976833b@codeconstruct.com.au>
+In-Reply-To: <20240529-dt-warnings-gpio-sgpio-interrupt-cells-v1-2-91c42976833b@codeconstruct.com.au>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 29/05/2024 07:13, Andrew Jeffery wrote:
-> Tidy up the list of required properties and the example node by ordering
-> the properties in terms of the DTS coding style.
+> Some devicetrees specify gpio-line-names in the sgpio node despite it
+> not being defined by the binding. It's a reasonable thing to do, so
+> define the property to squash warnings such as:
 > 
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> ---
->  Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> index 46bb121360dc..6b15a3a3fb66 100644
-> --- a/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/aspeed,sgpio.yaml
-> @@ -51,12 +51,12 @@ properties:
->  required:
->    - compatible
->    - reg
-> -  - gpio-controller
-> -  - '#gpio-cells'
-> +  - clocks
->    - interrupts
->    - interrupt-controller
-> +  - gpio-controller
-> +  - '#gpio-cells'
->    - ngpios
-> -  - clocks
->    - bus-frequency
+> ```
 
-No, this should have the same order as properties are listed.
+No need for ```
 
-Don't change it.
+This is just commit log. Not markdown.
 
->  
->  additionalProperties: false
-> @@ -65,13 +65,13 @@ examples:
->    - |
->      #include <dt-bindings/clock/aspeed-clock.h>
->      sgpio: sgpio@1e780200 {
-> -        #gpio-cells = <2>;
->          compatible = "aspeed,ast2500-sgpio";
-> -        gpio-controller;
-> -        interrupts = <40>;
->          reg = <0x1e780200 0x0100>;
->          clocks = <&syscon ASPEED_CLK_APB>;
-> +        interrupts = <40>;
->          interrupt-controller;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
 
-That's just example. I don't find this change useful but churn.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 
 Best regards,
 Krzysztof
