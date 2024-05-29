@@ -1,107 +1,122 @@
-Return-Path: <linux-gpio+bounces-6796-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6797-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0ABF18D2E58
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:36:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16CE98D2ECB
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:46:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB6A62888E6
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 07:36:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8F98EB2120C
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 07:46:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6F2F167295;
-	Wed, 29 May 2024 07:36:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96026167D80;
+	Wed, 29 May 2024 07:46:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eXm8Rrb2"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="kkSRPxZg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="MP0C026J"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EE21E86E
-	for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 07:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DC215FCE6;
+	Wed, 29 May 2024 07:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716968178; cv=none; b=TF6zg8SYipfK0srMAdk1UhUjrKtg2EwmwIgwvfrvVbcnmdgiDLEnD/7D0Dzk+qcAMGrQ4tMOEd0cZTbn8eRXAe2PzNb732RZmhctwOBnJe0QnCuzwiZFo7cS0VKywDhd+YlzYkcBPwmFp9II8sYbcv1Jpi0HUP1+jOsFWZOIiqI=
+	t=1716968796; cv=none; b=hey67oTKsssVbW0pp0cQvd+cUUiLYq4JxhuURC5zJSik620D5sPZnY9sz6UndHEpyBF3Hn7ZTCWvxApYuDSWFXe3IzMNO8HR6XMJhKnKzIvaWgCs75UuUKwPD6fugGD3RcBXheNfhCRogc4jHAoGnoFSmLw6SN5AcnYtLU2O3nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716968178; c=relaxed/simple;
-	bh=Q/nLvZ9ebMbKWDAfuBKkm9DIkm0SWKJ80JMb41SoLPI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BMlAsTcI5/8F8hFR8I20YUsgTvRvHHXdZQxDcd62xD933vG0lJXYY+NGzh+21yw7aImvaiSgIe3M9Y0vSf/YDds5VIyJLSUin5NpA5ZsalHnkEfeLbj6IlLDhQ2eDtfEiBITGzn8+b0/0Me5e38G/TsJbD3cKkmftTIjNshKOv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eXm8Rrb2; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-df771b6cc9cso1773903276.3
-        for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 00:36:17 -0700 (PDT)
+	s=arc-20240116; t=1716968796; c=relaxed/simple;
+	bh=wIX0I6dBNzJ3YcP9RZ5r6rw6vXpVJT0HcPQ8BSXtYpk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jmnpVv2o6DXADqOWM+0fGBNWY1lZJTJooafhhd3zhjVU6bau5jX3Oz7vT6QDPL38alIdW45ln3eawyolpp67zEpgLI59TM/E2BU/T6nAR+w4/Gc549IqmVRMUHuncOttiHUaHwe0/pJDhKPcbkslU5RdrT60pHEYqk9WYLF8QSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=kkSRPxZg; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=MP0C026J reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716968176; x=1717572976; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q/nLvZ9ebMbKWDAfuBKkm9DIkm0SWKJ80JMb41SoLPI=;
-        b=eXm8Rrb24Zqthic8ztxHVQWmSOGnrOUgcg3lSdJXsNtag7kMVCAIN6GJA4nHNZkYKl
-         xRNIocG+GS0Nx/M7qYDv5XQB5QpAQ7ecUY31K4GWhaV0f+46po2Vz2WYlp8n7CYMo/1L
-         KPUqjG3F6En/zOshpPuv6S/Fe625tUIio0lNfAmuyEG5KGX5eg6naYCfSUGOLo7GYFYz
-         7bc8b0JZ3A7lSab0JlxBeRKHR1QlfGAnU/4o+ARiiKjOns1sDWUJFr6ooawzM0SnMbxj
-         O00bHcn4/2JAnK+A1TW6SU2PJMBg7fNi4Zm5wJoZzxJuvQxKAkkqefx9NY0yHVICOMpX
-         0Eug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716968176; x=1717572976;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q/nLvZ9ebMbKWDAfuBKkm9DIkm0SWKJ80JMb41SoLPI=;
-        b=i9DpSzOWHZD8Iou9IbW8+vRpho9ehbrvbA26lPZV18YKUGFi6/4/ausg96HUg9pf43
-         195ylfoFbfiE8JLdzhATpPEHL/dFyJucxV6GaaiGN/w73NxRtu2nCsRijzZiDN/1JotT
-         gsBK1iFxrJm00KcRsQrCspDHW49y3QUpaKgeARXFKhNie3buvpL4anjdMYpn+yy02X2m
-         ZcUcNGZjAzNICUaluV/T3FQdQLXshmPaEeYcfzeItgpJkzWNHVIqEaTYo7UnTulCDyi9
-         RybQUE55wB02/OgKF/pxh2LbayStXE5S10pT9krIA1FsPk8W54MpvTA3riamFWGc5e3C
-         II9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUi6kWLEDBH1cmMLKcLlk/lGcEwkAphRW1Mzh0ZIbtuAOzHMbc3ZvWNbDVyMkhzCSNBqcEEn4TTiNASK7ddcL55hVuAe0N8Ph7cfQ==
-X-Gm-Message-State: AOJu0YybFiNOhDvT/CpB+wxYDLJI30UdbrwYM8Tvkc3Q4WzziGr4MwUe
-	/ZK+8Fl8x2W6gm4OZgnNjDKeorXqZF5f+GZuGA4pXPSJE9D5cpNeY8U/GFrV8UAnDZG0lPXj8+U
-	wuBUWSxho+ZI5AKQf3u/dsvywYeGCo/37kL9kDw==
-X-Google-Smtp-Source: AGHT+IFlX+rjINhP6rj5KImP86n2ckidVC+rBC7U7ObxqdZfbojFCSZHlagJ/LaoPf753xBgaalezz/mT4lgUB82gz0=
-X-Received: by 2002:a25:ce8b:0:b0:df4:978c:3794 with SMTP id
- 3f1490d57ef6-df772167874mr17998282276.1.1716968176161; Wed, 29 May 2024
- 00:36:16 -0700 (PDT)
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1716968792; x=1748504792;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=12wb6dLYGNieP4dY03eNUQA0kPAmzHw0zvX0b6aijck=;
+  b=kkSRPxZgFW+YgMYdYNn85y8ksIjH2Rns59tpbkCRTlNgT9oQvTEh41/o
+   aJTV/b8G3aWZOfxeRNl80GLkSIvfnJaXphJOpbVa9qjHRsBc7AlrFkND+
+   YHmrY70cia3jAbZXj/Wg/BkWpFr42uxpxjBLoIyoMA0Bi7jCKK4HuxQHT
+   WTv0aYUpobArWVtT1QkhamoGt3So8UqTJLLwMFcd0wLEOES4AzXQ9Jivk
+   wU7NqXD3DEQUDTcSm5jxAJt64eWDnZXEsIzLZQlvfDrYkZ+CQoTHoq65n
+   m6VKWl+hM+NA2F3MiA3f3Vt3JZQ5tMiRL3nxfZ8kEB1veIE+vm5LN74hv
+   g==;
+X-CSE-ConnectionGUID: 6G5bPbjYTamegbHe0LjysA==
+X-CSE-MsgGUID: /xezvZ0jR06T9aAwPC+5PA==
+X-IronPort-AV: E=Sophos;i="6.08,197,1712613600"; 
+   d="scan'208";a="37119668"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 29 May 2024 09:46:30 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 975321652F9;
+	Wed, 29 May 2024 09:46:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1716968785;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=12wb6dLYGNieP4dY03eNUQA0kPAmzHw0zvX0b6aijck=;
+	b=MP0C026Jl0Yj++4/bGAdN5sSvfMn1mwiBF1OlvPktvTdemoE20t6LNQbV/sR3+CcjbqMAD
+	z7g9tO1ERu+9UrwCWIJFRaiqrJSLsALzOalheAA/Qelk2x8IMtbAl1TVOQ0nzUuZ5BCziY
+	qoo4LKRsEABr3qaTjNCDxpjBYC6TN05+4sdozT9951pG4KEAjwgmiH3gTLbH4XOg/VW2Cb
+	Jo/muKPPERF/sMssQYCQ4NPK2pL3ykpO8ph0/VVh5iqb69Afjs8Uul9PQD62cpXT1tVU0q
+	/tH6TDv0z7dNSYyhnGWqjtD8hNb6U+Vv1dH5CfEkyAYyayVzQl7dm7oqrtRoQw==
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Gregor Herburger <gregor.herburger@tq-group.com>,
+	linux@ew.tq-group.com,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH 0/8] gpio-tqmx86 fixes
+Date: Wed, 29 May 2024 09:45:12 +0200
+Message-ID: <cover.1716967982.git.matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2413a1f99278d70313960f13daecda9ef54172d8.1716807432.git.michal.simek@amd.com>
-In-Reply-To: <2413a1f99278d70313960f13daecda9ef54172d8.1716807432.git.michal.simek@amd.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 29 May 2024 09:36:04 +0200
-Message-ID: <CACRpkdYsWjCmK82P=fqxSJX9WstF7HEYUBR2fUYJEDzfGrV11A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: pinctrl-zynqmp: Use pin numbers stored in pin descriptor
-To: Michal Simek <michal.simek@amd.com>
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com, 
-	git@xilinx.com, Swati Agarwal <swati.agarwal@amd.com>, 
-	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon, May 27, 2024 at 12:57=E2=80=AFPM Michal Simek <michal.simek@amd.com=
-> wrote:
+This is the first series of improvements to the tqmx86 GPIO driver,
+which fixes some long-standing bugs - in particular, IRQ_TYPE_EDGE_BOTH
+can never have worked correctly.
 
-> From: Swati Agarwal <swati.agarwal@amd.com>
->
-> Use pin numbers stored in the pin descriptors instead of index value whil=
-e
-> creating the pin groups. Pin Id's are not same as Index values for Xilinx
-> Versal platform, so use the pin values from descriptor which works for bo=
-th
-> ZynqMP and Versal platforms.
->
-> Signed-off-by: Swati Agarwal <swati.agarwal@amd.com>
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
+Other patches in the series are code cleanup, which is included as it
+makes the actual fixes much nicer. I have included the same Fixes tag in
+all commits, as they will need to be cherry-picked together.
 
-Patch applied!
+A second series with new features (changing GPIO directions, support
+more GPIOs on SMARC TQMx86 modules) will be submitted when the fixes
+have been reviewed and merged.
 
-Yours,
-Linus Walleij
+Gregor Herburger (1):
+  gpio: tqmx86: fix typo in Kconfig label
+
+Matthias Schiffer (7):
+  gpio: tqmx86: introduce shadow register for GPIO output value
+  gpio: tqmx86: change tqmx86_gpio_write() order of arguments to match
+    regmap API
+  gpio: tqmx86: introduce _tqmx86_gpio_update_bits() helper
+  gpio: tqmx86: add macros for interrupt configuration
+  gpio: tqmx86: store IRQ triggers without offsetting index
+  gpio: tqmx86: store IRQ trigger type and unmask status separately
+  gpio: tqmx86: fix broken IRQ_TYPE_EDGE_BOTH interrupt type
+
+ drivers/gpio/Kconfig       |   2 +-
+ drivers/gpio/gpio-tqmx86.c | 151 ++++++++++++++++++++++++++-----------
+ 2 files changed, 106 insertions(+), 47 deletions(-)
+
+-- 
+TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht München, HRB 105018
+Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
+https://www.tq-group.com/
+
 
