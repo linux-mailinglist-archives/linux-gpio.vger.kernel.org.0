@@ -1,249 +1,177 @@
-Return-Path: <linux-gpio+bounces-6882-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6884-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B19FC8D3CD3
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 18:35:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EF38C8D3D2E
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 19:02:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E29261C24974
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 16:35:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1DFB61C21376
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 17:02:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0764A1CB31F;
-	Wed, 29 May 2024 16:30:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B5F015B559;
+	Wed, 29 May 2024 17:02:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eM8qB6El"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pe7ryYxe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0A61C9EAD;
-	Wed, 29 May 2024 16:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983231591FC
+	for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 17:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717000236; cv=none; b=FH5TqmmQI3oMb1mbIZ8wh4hxnftENw1FGldUuMnQiWHKBoFg0QVtrTK9vKom+Cu9bXhmfY9EwHZlS37S8jX0NZK0Y6ESwqf41Wzze56lEMy+mL72Z6ELC/aTCu+FTGhK7fMZ//INainSgakpxZ2YjdjTIeV2eJujdT0b8LkmEXA=
+	t=1717002174; cv=none; b=CHcvMOdC5k4tT6V6HXaR7LPJVj8wV/QaUrGnyEXbP6q0x1Iu05FsjqRuAeAuQP7pplaw9FXgc/XZ8Z9J2nDfjlx2+8DkMU2vGaSpkLlVxZtXxQ7I/S7mn5ACZJnTzOYrNKN0n3qT0Ygwtj3DN87fRpLsHaPFz2Wx45P2fRtKXv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717000236; c=relaxed/simple;
-	bh=S6aeLtZ42VmRPSWmwBSU9jwSLOYm/1m5zx2/rVNYkTQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GVvHCMPiCubk23qtGhy138xDP4UvM7sbOFNeZi7GNSpXJOL94o9hJYAlMzxq3ynuNY8WnlC8RTzBKoXXcmDQSJf/vKkaNQgnDnaJ6HsyAxMCyWyZ01nXdtok4zPfmlkQ1MvfZNKS8n5nAxx6CpxPswOfzkNx8uCa1DzjQVU3bIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eM8qB6El; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79D25C116B1;
-	Wed, 29 May 2024 16:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717000236;
-	bh=S6aeLtZ42VmRPSWmwBSU9jwSLOYm/1m5zx2/rVNYkTQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eM8qB6ElvIIDWQkOLsl3ARiA5/b7a62/sr6Zioe7lvAiQImQeuiVPxI2VMN2vPq3e
-	 r/o6mGoyOexMHyhkAK+QL1wDPVAKcFh3n1l1QcCGbYLyijE5WNi0k77NaT1W5BmhRf
-	 QIr+cI9af7q2zfLrH1w7Vk4NJwILsO519a2Gqk+7lri5LgcFyiY5qq+XHY9qODlFoi
-	 Gcf+I0OIF7oYdY0FSnXStwhn9suzle1RsXk6vfFI2nHlrTbMUzlqEGi+x3TfSzZt5X
-	 /zpmxTHpmS11juaAgfAdOxIxUGnwpcixO7inolXdxwJZITPoyD/fod8PNCKIniyYPG
-	 C1iONtL5R9Llg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1sCMCC-000000004jH-1qP2;
-	Wed, 29 May 2024 18:30:36 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Lee Jones <lee@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-	Stephen Boyd <swboyd@chromium.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 14/14] arm64: dts: qcom: sc8280xp-x13s: enable pm8008 camera pmic
-Date: Wed, 29 May 2024 18:29:58 +0200
-Message-ID: <20240529162958.18081-15-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.44.1
-In-Reply-To: <20240529162958.18081-1-johan+linaro@kernel.org>
-References: <20240529162958.18081-1-johan+linaro@kernel.org>
+	s=arc-20240116; t=1717002174; c=relaxed/simple;
+	bh=yso4DYrEah/Rv0x0bfNLq31tpGpqSOL8WNY+uGf+GgQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CvdAGtFweYIr8JjoY2l6kgNj4qtZeow9Td/eXy32NBRLLBTwa/Lw6Ti41/BQfEUvms0hxWoUvMAGchkoLCr75BH1RpXlv4DHUMp4JLwauTVXIWwHayXMCW0/FuY+N4+CHt/JDTkzZMRh926L02qa4lzmZNMprcemj+RfwFw/iQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pe7ryYxe; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f47784a2adso16650445ad.1
+        for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 10:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717002172; x=1717606972; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tJ11yAE1AZ/NGiwg3bOvn6m5bmAMX+k6Wgxg3rUKKyE=;
+        b=pe7ryYxectMmG4Y8xlPO6pX0e+9YXxZPnbkVOYbBzZTC/DbyeO1T9tnNlaZGI6NZb+
+         sAG58TmKgYWdMRFNB6on1AyP2OuMfNwjPr67zTTA348nnecTDuVJevuZ4OP7fNbxXq9T
+         Xc+u+VdRYniHq6mbj8vntEc/8oo9VKGG6hzuMOimxSbqIXj+IZSd9RCbTvKYRz3mf2Sf
+         ojWziHoJm79K4AOSdZHv7EmDA3YoYEEfRahh6roSpqTVVEk9agthg2AlhuCh9GuH3BVa
+         0ZTSGs0gbtI7kVeE4+6emplX6x1i4XEivnhstdHI5XnW87griKIIM6mue4gPVnmPFUcz
+         7quA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717002172; x=1717606972;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tJ11yAE1AZ/NGiwg3bOvn6m5bmAMX+k6Wgxg3rUKKyE=;
+        b=NIhEmatnuRC3aI6OVhvLRfobfC7aWYVVWF36byZGzPHf89IuvhiT6snLowKPC5PEnA
+         KIgyIMnpJwnGxPC3uxpqzT0gKH4qTy3wSjhxtyn+mc3AELR4v8U3fDUaSljtTeTYL+k9
+         l44OABfi8RpAcrZqQi9RrNenAAnvu4Rn9X7p32AZWQtrIzgQrU8vYqxVQqSBO6RZDPxn
+         +oR4RDSiEW1e884WLFA8PuUMSeoMKCCqWQ/2ooXyMHP76ShYHjSkhzJlNm4hQN89BVIf
+         z5Hw5b3vv6DXc0t04Z+CqvLCaMnojjiUJrAC4VCv8rHvzEfpW7FSCjDIjPb8jd1iAryw
+         BN2g==
+X-Forwarded-Encrypted: i=1; AJvYcCWpzMl+BS/gsOsMQNRCFvsHv8aQIc7QNei8PgRDH+NFwxokvuTHKND4B/ijQkBnnVXv+LPctCCtOmJua7OoFGFMrAuhBMRElTJdDQ==
+X-Gm-Message-State: AOJu0Yx4DkzR/Kyj8WMznGtnrMb67715s+SuZAeBPdX7TnviNgCuNjS4
+	kkzvss6vullsL3tMuFQnqF98jIHXihLptFJ1R/LHUL5vnC0bgr90ZfAp2zqHJreCE2I6TxHJHqg
+	ehG1r7JifbmYn3dhdyieyISlQ5Kwq/oWyCrwrS8dMFmkdCiE6
+X-Google-Smtp-Source: AGHT+IGrfB/he0jCbHbbJ6A2q9OhGyPALOwpt53PatulLMy5CE4gNOXTAQDaCb7V6WYHo14fNTd8drOUSt1bZ59pNNQ=
+X-Received: by 2002:a17:902:c40c:b0:1f3:1200:ceb3 with SMTP id
+ d9443c01a7336-1f4494f2e70mr173493005ad.51.1717002171704; Wed, 29 May 2024
+ 10:02:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1716967982.git.matthias.schiffer@ew.tq-group.com>
+ <CAMRc=MeN+QzzSy1BwiD57Y3vTF9Ups=6dtWuFbPmxzOxic=arQ@mail.gmail.com> <ad4dee46c4e0e508c54dd79bab7f45060099ef9b.camel@ew.tq-group.com>
+In-Reply-To: <ad4dee46c4e0e508c54dd79bab7f45060099ef9b.camel@ew.tq-group.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 29 May 2024 19:02:38 +0200
+Message-ID: <CAMRc=Mfrcx1nPwoN8YJ+Hp_Z33oWDTsSHhOyOSdqjzy3RLcPLQ@mail.gmail.com>
+Subject: Re: [PATCH 0/8] gpio-tqmx86 fixes
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andrew Lunn <andrew@lunn.ch>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Gregor Herburger <gregor.herburger@tq-group.com>, linux@ew.tq-group.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Enable the PM8008 PMIC which is used to power the camera sensors.
+On Wed, May 29, 2024 at 2:55=E2=80=AFPM Matthias Schiffer
+<matthias.schiffer@ew.tq-group.com> wrote:
+>
+> On Wed, 2024-05-29 at 14:08 +0200, Bartosz Golaszewski wrote:
+> > On Wed, May 29, 2024 at 9:46=E2=80=AFAM Matthias Schiffer
+> > <matthias.schiffer@ew.tq-group.com> wrote:
+> > >
+> > > This is the first series of improvements to the tqmx86 GPIO driver,
+> > > which fixes some long-standing bugs - in particular, IRQ_TYPE_EDGE_BO=
+TH
+> > > can never have worked correctly.
+> > >
+> > > Other patches in the series are code cleanup, which is included as it
+> > > makes the actual fixes much nicer. I have included the same Fixes tag=
+ in
+> > > all commits, as they will need to be cherry-picked together.
+> > >
+> > > A second series with new features (changing GPIO directions, support
+> > > more GPIOs on SMARC TQMx86 modules) will be submitted when the fixes
+> > > have been reviewed and merged.
+> > >
+> > > Gregor Herburger (1):
+> > >   gpio: tqmx86: fix typo in Kconfig label
+> > >
+> > > Matthias Schiffer (7):
+> > >   gpio: tqmx86: introduce shadow register for GPIO output value
+> > >   gpio: tqmx86: change tqmx86_gpio_write() order of arguments to matc=
+h
+> > >     regmap API
+> > >   gpio: tqmx86: introduce _tqmx86_gpio_update_bits() helper
+> > >   gpio: tqmx86: add macros for interrupt configuration
+> > >   gpio: tqmx86: store IRQ triggers without offsetting index
+> > >   gpio: tqmx86: store IRQ trigger type and unmask status separately
+> > >   gpio: tqmx86: fix broken IRQ_TYPE_EDGE_BOTH interrupt type
+> > >
+> > >  drivers/gpio/Kconfig       |   2 +-
+> > >  drivers/gpio/gpio-tqmx86.c | 151 ++++++++++++++++++++++++++---------=
+--
+> > >  2 files changed, 106 insertions(+), 47 deletions(-)
+> > >
+> > > --
+> > > TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld=
+, Germany
+> > > Amtsgericht M=C3=BCnchen, HRB 105018
+> > > Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stef=
+an Schneider
+> > > https://www.tq-group.com/
+> > >
+> >
+> > Hi Matthias!
+> >
+> > Not all patches in this series are fixes (as in: warrant being sent
+> > upstream outside of the merge window). Please split the series into
+> > two with the first one containing actual fixes to real bugs and the
+> > second for any refactoring and improvements.
+> >
+> > Bart
+>
+>
+> Hi Bartosz,
+>
+> as explained in the cover letter, I've found that the fixes become much n=
+icer to implement (and to
+> review) if they are based on the refactoring. I can leave out _tqmx86_gpi=
+o_update_bits for now, but
+> removing "add macros for interrupt configuration" and "store IRQ triggers=
+ without offsetting index"
+> does make the actual fixes "store IRQ trigger type and unmask status sepa=
+rately" and "fix broken
+> IRQ_TYPE_EDGE_BOTH interrupt type" somewhat uglier.
+>
+> That being said, you're the maintainer, and I will structure this series =
+in any way you prefer. I
+> can remove the mentioned refactoring, even though it makes the fixes less=
+ pleasant. Another option
+> would be that I can submit just the refactoring for -next for now, and le=
+ave the fixes for a future
+> series. Let me know how you want to proceed.
+>
+> Thanks,
+> Matthias
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- .../qcom/sc8280xp-lenovo-thinkpad-x13s.dts    | 123 ++++++++++++++++++
- 1 file changed, 123 insertions(+)
+The question is: do you want these fixes to be backported into stable
+branches? Because if not then it's true that the ordering doesn't
+matter. But if you do, then it makes more sense to put fixes first,
+send them to Torvalds, get them backported and then add refactoring
+changes on top.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-index 98c1b75513be..93a44f803e8d 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-@@ -295,6 +295,27 @@ linux,cma {
- 	};
- 
- 	thermal-zones {
-+		pm8008-thermal {
-+			polling-delay-passive = <100>;
-+			polling-delay = <0>;
-+
-+			thermal-sensors = <&pm8008>;
-+
-+			trips {
-+				trip0 {
-+					temperature = <95000>;
-+					hysteresis = <0>;
-+					type = "passive";
-+				};
-+
-+				trip1 {
-+					temperature = <115000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
- 		skin-temp-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <0>;
-@@ -669,6 +690,85 @@ touchscreen@10 {
- 	};
- };
- 
-+&i2c11 {
-+	clock-frequency = <400000>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c11_default>;
-+
-+	status = "okay";
-+
-+	pm8008: pmic@c {
-+		compatible = "qcom,pm8008";
-+		reg = <0xc>;
-+
-+		interrupts-extended = <&tlmm 41 IRQ_TYPE_EDGE_RISING>;
-+		reset-gpios = <&tlmm 42 GPIO_ACTIVE_LOW>;
-+
-+		vdd-l1-l2-supply = <&vreg_s11b>;
-+		vdd-l3-l4-supply = <&vreg_bob>;
-+		vdd-l5-supply = <&vreg_bob>;
-+		vdd-l6-supply = <&vreg_bob>;
-+		vdd-l7-supply = <&vreg_bob>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pm8008_default>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-ranges = <&pm8008 0 0 2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		#thermal-sensor-cells = <0>;
-+
-+		regulators {
-+			vreg_l1q: ldo1 {
-+				regulator-name = "vreg_l1q";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+			};
-+
-+			vreg_l2q: ldo2 {
-+				regulator-name = "vreg_l2q";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+			};
-+
-+			vreg_l3q: ldo3 {
-+				regulator-name = "vreg_l3q";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+			};
-+
-+			vreg_l4q: ldo4 {
-+				regulator-name = "vreg_l4q";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+			};
-+
-+			vreg_l5q: ldo5 {
-+				regulator-name = "vreg_l5q";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+			};
-+
-+			vreg_l6q: ldo6 {
-+				regulator-name = "vreg_l6q";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+			};
-+
-+			vreg_l7q: ldo7 {
-+				regulator-name = "vreg_l7q";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+			};
-+		};
-+	};
-+};
-+
- &i2c21 {
- 	clock-frequency = <400000>;
- 
-@@ -1367,6 +1467,13 @@ i2c4_default: i2c4-default-state {
- 		bias-disable;
- 	};
- 
-+	i2c11_default: i2c11-default-state {
-+		pins = "gpio18", "gpio19";
-+		function = "qup11";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+
- 	i2c21_default: i2c21-default-state {
- 		pins = "gpio81", "gpio82";
- 		function = "qup21";
-@@ -1470,6 +1577,22 @@ wake-n-pins {
- 		};
- 	};
- 
-+	pm8008_default: pm8008-default-state {
-+		int-pins {
-+			pins = "gpio41";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+
-+		reset-n-pins {
-+			pins = "gpio42";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
-+
- 	spkr_1_sd_n_default: spkr-1-sd-n-default-state {
- 		perst-n-pins {
- 			pins = "gpio178";
--- 
-2.44.1
-
+Bart
 
