@@ -1,45 +1,45 @@
-Return-Path: <linux-gpio+bounces-6817-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6815-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 880208D3303
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 11:30:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CEC618D32FC
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 11:30:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 11BD0B26A72
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:30:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6BE6EB261D1
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:30:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A160F17083C;
-	Wed, 29 May 2024 09:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4771B16A37A;
+	Wed, 29 May 2024 09:29:48 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [195.130.132.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A91B16A379
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1B216A37D
 	for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 09:29:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716974989; cv=none; b=pvzm3ZsHZSSse2oxKQdI3XinD/zfaZhIC7F1IKEd1lOyzLXzOukrY3La4PO1FPIx6O6UokQBJzJ2HIpHx6xKACE2XYRH+K4rJvU30jY2a5kZG6ELBuFLV2dNH49FAFFnLoeEQd6z/o6Uf/CPSnPbJ7nisi0p7dK2ntCroJ1q7J8=
+	t=1716974988; cv=none; b=ocTEImOShMQHOi2d8h3LTWrdt+Kbrmb1gXVJmALrLF2TzSM9mJ0qnt+OaMR/RZw/DwpQgbV6cuEkPKFsj9L0G3U2034pdeMH+8efxBUyuVgiK+8OhEj+Kmt4iA93ik+6hSwB9nOcmqh8LGehawJPjSVJFCfz5nxBlccoy050zFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716974989; c=relaxed/simple;
-	bh=K9JbpboeEVGszs4uTMo3Rfibhk0VjLLtBuNKn9PsLKY=;
+	s=arc-20240116; t=1716974988; c=relaxed/simple;
+	bh=Fimg7RAC7/UiTVwu8Mu0fP7Gwstf2zrA/lN7Pjti7Oc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QAL3VV+EUEsQVmCvxeujSrCj9sK8wlItCWOoYFOmY4QgBBq43L2XTsG3lecT4VyT7iGxZN7GQto8JEz2A0x+9zHBDHpWE0vmI3HmHOhs3dqA0SdZVChmHzBxcx76lJRfdZpVkJfzGlRzdSU1ZLINEDSrmU5g1hfBRJgv6NnoFPU=
+	 MIME-Version; b=e1LEaEg5ldzIXbiezhKTDFAOYElDz/chQ+URC7jBbOQ92cQZ2SFecyGjNqB8U1EJ4XHT5HfkDh8bdSJAaDH22PuE+Vw52Y4Vh0/dKZJhdpiXcOmFt2KglUIrDTNoK2NQlmyg12/KNhB4kXyailRpnh+K67FUnGicrQZCd/FSjJ4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:1b01:1838:131c:4de4])
 	by baptiste.telenet-ops.be with bizsmtp
-	id UxVg2C00g3VPV9V01xVgkh; Wed, 29 May 2024 11:29:43 +0200
+	id UxVg2C00i3VPV9V01xVgkg; Wed, 29 May 2024 11:29:43 +0200
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1sCFbt-00GHKZ-Vo;
+	id 1sCFbt-00GHKc-WE;
 	Wed, 29 May 2024 11:29:40 +0200
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1sCFcq-008wRu-Cd;
+	id 1sCFcq-008wRx-DK;
 	Wed, 29 May 2024 11:29:40 +0200
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Rob Herring <robh@kernel.org>,
@@ -54,9 +54,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 1/8] dt-bindings: fuse: Document R-Car E-FUSE / PFC
-Date: Wed, 29 May 2024 11:29:30 +0200
-Message-Id: <03e43e97941df238ef1a618852aecd7be68adbb0.1716974502.git.geert+renesas@glider.be>
+Subject: [PATCH v2 2/8] dt-bindings: fuse: Document R-Car E-FUSE / OTP_MEM
+Date: Wed, 29 May 2024 11:29:31 +0200
+Message-Id: <436506babe4ce468fda19380d9373470468e3752.1716974502.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1716974502.git.geert+renesas@glider.be>
 References: <cover.1716974502.git.geert+renesas@glider.be>
@@ -68,8 +68,8 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document support for E-FUSE non-volatile memory accessible through PFC
-on R-Car V3U and S4-8.
+Document support for E-FUSE non-volatile memory accessible through
+OTP_MEM on R-Car V4H and V4M.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
@@ -77,70 +77,53 @@ Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 v2:
   - Add Reviewed-by.
 ---
- .../bindings/fuse/renesas,rcar-efuse.yaml     | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fuse/renesas,rcar-efuse.yaml
+ .../bindings/fuse/renesas,rcar-otp.yaml       | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fuse/renesas,rcar-otp.yaml
 
-diff --git a/Documentation/devicetree/bindings/fuse/renesas,rcar-efuse.yaml b/Documentation/devicetree/bindings/fuse/renesas,rcar-efuse.yaml
+diff --git a/Documentation/devicetree/bindings/fuse/renesas,rcar-otp.yaml b/Documentation/devicetree/bindings/fuse/renesas,rcar-otp.yaml
 new file mode 100644
-index 0000000000000000..d7e289244e72cce1
+index 0000000000000000..d74872ae9ff378f9
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/fuse/renesas,rcar-efuse.yaml
-@@ -0,0 +1,55 @@
++++ b/Documentation/devicetree/bindings/fuse/renesas,rcar-otp.yaml
+@@ -0,0 +1,38 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/fuse/renesas,rcar-efuse.yaml#
++$id: http://devicetree.org/schemas/fuse/renesas,rcar-otp.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: R-Car E-FUSE connected to PFC
++title: R-Car E-FUSE connected to OTP_MEM
 +
 +maintainers:
 +  - Geert Uytterhoeven <geert+renesas@glider.be>
 +
 +description:
 +  The E-FUSE is a type of non-volatile memory, which is accessible through the
-+  Pin Function Controller (PFC) on some R-Car Gen4 SoCs.
++  One-Time Programmable Memory (OTP_MEM) module on some R-Car Gen4 SoCs.
 +
 +properties:
 +  compatible:
 +    enum:
-+      - renesas,r8a779a0-efuse # R-Car V3U
-+      - renesas,r8a779f0-efuse # R-Car S4-8
++      - renesas,r8a779g0-otp # R-CarV4H
++      - renesas,r8a779h0-otp # R-CarV4M
 +
 +  reg:
-+    maxItems: 1
-+    description: PFC System Group Fuse Control and Monitor register block
-+
-+  clocks:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
++    items:
++      - description: OTP_MEM_0
++      - description: OTP_MEM_1
 +
 +required:
 +  - compatible
 +  - reg
-+  - clocks
-+  - power-domains
-+  - resets
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/clock/r8a779a0-cpg-mssr.h>
-+    #include <dt-bindings/power/r8a779a0-sysc.h>
-+
-+    fuse: fuse@e6078800 {
-+            compatible = "renesas,r8a779a0-efuse";
-+            reg = <0xe6078800 0x100>;
-+            clocks = <&cpg CPG_MOD 916>;
-+            power-domains = <&sysc R8A779A0_PD_ALWAYS_ON>;
-+            resets = <&cpg 916>;
++    otp: otp@e61be000 {
++            compatible = "renesas,r8a779g0-otp";
++            reg = <0xe61be000 0x1000>, <0xe61bf000 0x1000>;
 +    };
 -- 
 2.34.1
