@@ -1,153 +1,114 @@
-Return-Path: <linux-gpio+bounces-6822-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6823-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CE758D3393
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 11:48:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DBFE8D33A6
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 11:50:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3BEDA1C22885
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:48:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0E76284D02
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 09:50:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 695D1179954;
-	Wed, 29 May 2024 09:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eTc91OrI"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8956417799F;
+	Wed, 29 May 2024 09:49:58 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7F216EC12;
-	Wed, 29 May 2024 09:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD66316EBF2
+	for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 09:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716976085; cv=none; b=d5oxhNmwlN4KD5B3nhDb0h/ztEQB/23bD1mwKJigl8Q8osOzm+03F7IJs9RvdPRYnzizblWg+A0GOEzKF7Ki2n8zVeVHLEzpNQ3mTzqZ7slTiLIL491Njf6J+3g2lfZcdMRn3p6WAHrFR/RUxcMCJU8670m4sU7XFmclEzPGdfA=
+	t=1716976198; cv=none; b=IvrIJjnTF1TuD6xRNe7F+AJ2xB8gWdB6Ya0k6K/eQPROGzkugrraJxOKgbQyn3cgI5VJpfevkBYvWXcnO5YPmFn4yFtCM8SmEEx+QRADQDshkSuKkLtkwExGn9nVsXiKYSEaejOXMSbkbRRG/5O6vMtwRV+EqS203Kq5AOHn/NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716976085; c=relaxed/simple;
-	bh=YJCG99S3w4sz2B1YAn/661fbrZ/2LxeGIP01KqD9fR8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pddXulKTjpVmgLHdKzBrROpOz/ikdcJCjE0T6gHcykdTX55djyRKi3MRLn5y1HCwqYPvZ7S+Ur735H2pZ6lGg/rAlNVAUMjuprcYfgNRuP++8uFCkMStzZP+BsGVxy18puFPZYtQ+qSkGcnzgQy/O8cnGci4kEdWz9Psdi3T49w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=eTc91OrI; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6B0959CA;
-	Wed, 29 May 2024 11:47:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1716976078;
-	bh=YJCG99S3w4sz2B1YAn/661fbrZ/2LxeGIP01KqD9fR8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eTc91OrIThKOVtEu/O83Gq9yxh9jAQlhvGa7u6xEZmoQrL8z4Xoczla4s+geeFJLt
-	 56UAmtlaAwGWX3AwvCxQQut0Zs97u9n3F0yUk++9W0QJa/1iHuqYyll/apFQc2Xltg
-	 qLELpNi8s9wbWTk7OQ7xPb6JwlY4XJ2jxd40maYc=
-Date: Wed, 29 May 2024 12:47:48 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
+	s=arc-20240116; t=1716976198; c=relaxed/simple;
+	bh=3xeT2DhUhqJQwOqvnLicYhAeyGJj28gG9xrLyTarXVA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hXwVC6CdDe5X4Ky5DrSzQe6j6A61jzJqhmOZcP0u0BMOYW7GIH69WFZYh/A87QleZwT6xR84HQ8JE7B+SlRZmWAqfo81R1zzeS3cWIjSmVI8FapXVBA9ONhRxq2pLCntykkpZlQg2VK68tSSayGxFEkI9LgH3EYq7CV/9T+zZYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:1b01:1838:131c:4de4])
+	by laurent.telenet-ops.be with bizsmtp
+	id Uxps2C00A3VPV9V01xpsY1; Wed, 29 May 2024 11:49:53 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sCFvR-00GJsN-PV;
+	Wed, 29 May 2024 11:49:52 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sCFwO-008wnD-50;
+	Wed, 29 May 2024 11:49:52 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH v2 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
-Message-ID: <20240529094748.GM1436@pendragon.ideasonboard.com>
-References: <20240528190315.3865-1-laurent.pinchart@ideasonboard.com>
- <20240528190315.3865-4-laurent.pinchart@ideasonboard.com>
- <ZlYyJpLeDLD_T5V6@surfacebook.localdomain>
- <20240528202044.GB8500@pendragon.ideasonboard.com>
- <CAHp75Vc2-jOMybL7vwJHgrvb_434p094tgdLo1SyK4i_RXYiDw@mail.gmail.com>
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] regulator: gpio: Correct default GPIO state to LOW
+Date: Wed, 29 May 2024 11:49:51 +0200
+Message-Id: <b80d65600641e6dcf00da53ae797f4a40a80e2d0.1716976062.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vc2-jOMybL7vwJHgrvb_434p094tgdLo1SyK4i_RXYiDw@mail.gmail.com>
 
-On Wed, May 29, 2024 at 09:16:43AM +0300, Andy Shevchenko wrote:
-> On Tue, May 28, 2024 at 11:20 PM Laurent Pinchart wrote:
-> > On Tue, May 28, 2024 at 10:36:06PM +0300, Andy Shevchenko wrote:
-> 
-> ...
-> 
-> > > > +   bit = off * 2 + (off > 5 ? 4 : 0);
-> > >
-> > > Right, but can you use >= 6 here which immediately follows to the next
-> > > question, i.e. why not use bank in this conditional?
-> >
-> > The ADP5585_BANK() macro is meant to be used with ADP5585_BIT(), for a
-> > set of registers with the same layout. Here the layout is different, the
-> > registers contain multi-bit fields. I can't use ADP5585_BIT(), so I'd
-> > rather not use ADP5585_BANK() either. I have decided to use > 5 instead
-> > of >= 6 to match the R5 field name in the comment above:
-> >
-> >         /*
-> >          * The bias configuration fields are 2 bits wide and laid down in
-> >          * consecutive registers ADP5585_RPULL_CONFIG_*, with a hole of 4 bits
-> >          * after R5.
-> >          */
-> 
-> First of all, the 5 sounds misleading as one needs to think about "how
-> many are exactly per the register" and the answer AFAIU is 6. >= 6
-> shows this. Second, I haven't mentioned _BANK(), what I meant is
-> something to
-> 
->   unsigned int bank = ... >= 6 ? : ;
+According to the GPIO regulator DT bindings[1], the default GPIO state
+is LOW.  However, the driver defaults to HIGH.
 
-That doesn't reflect the organisation of the bits in the registers. If
-you're interested, please check the datasheet.
+Before the conversion to descriptors in commit d6cd33ad71029a3f
+("regulator: gpio: Convert to use descriptors"), the default state used
+by the driver was rather ill-defined, too:
+  - If the "gpio-states" property was missing or empty, the default was
+    low, matching the bindings.
+  - If the "gpio-states" property was present, the default for missing
+    entries was the value of the last present entry.
 
-> ...
-> 
-> > > > +   struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
-> > >
-> > > (see below)
-> > >
-> > > > +   struct adp5585_gpio_dev *adp5585_gpio;
-> > > > +   struct device *dev = &pdev->dev;
-> > >
-> > >       struct adp5585_dev *adp5585 = dev_get_drvdata(dev->parent);
-> >
-> > I prefer keeping the current ordering, with long lines first, I think
-> > that's more readable.
-> 
-> Does the compiler optimise these two?
+Fix this by making the driver adhere to the DT bindings, i.e. default to
+LOW.
 
-If anyone is interested in figuring out, I'll let them test :-)
+[1] Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
 
-> > > > +   struct gpio_chip *gc;
-> > > > +   int ret;
-> 
-> ...
-> 
-> > > > +   device_set_of_node_from_dev(dev, dev->parent);
-> > >
-> > > Why not device_set_node()?
-> >
-> > Because device_set_of_node_from_dev() is meant for this exact use case,
-> > where the same node is used for multiple devices. It also puts any
-> > previous dev->of_node, ensuring proper refcounting when devices are
-> > unbound and rebound, without being deleted.
-> 
-> When will the refcount be dropped (in case of removal of this device)?
-> Or you mean it shouldn't?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+---
+I have no idea if this has any impact.
+I guess most/all DTS files have proper gpios-states properties?
 
-Any refcount taken on the OF node needs to be dropped. The device core
-only drops the refcount when the device is being deleted, not when
-there's an unbind-rebind cycle without deletion of the device (as
-happens for instance when the module is unloaded and reloaded). This has
-to be handled by the driver. device_set_of_node_from_dev() handles it.
+v2:
+  - Add Acked-by.
+---
+ drivers/regulator/gpio-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
+index 65927fa2ef161cda..5dfed8bae0c4cfdc 100644
+--- a/drivers/regulator/gpio-regulator.c
++++ b/drivers/regulator/gpio-regulator.c
+@@ -176,9 +176,9 @@ of_get_gpio_regulator_config(struct device *dev, struct device_node *np,
+ 			ret = of_property_read_u32_index(np, "gpios-states", i,
+ 							 &val);
+ 
+-			/* Default to high per specification */
++			/* Default to low per specification */
+ 			if (ret)
+-				config->gflags[i] = GPIOD_OUT_HIGH;
++				config->gflags[i] = GPIOD_OUT_LOW;
+ 			else
+ 				config->gflags[i] =
+ 					val ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
 -- 
-Regards,
+2.34.1
 
-Laurent Pinchart
 
