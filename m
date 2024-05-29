@@ -1,110 +1,117 @@
-Return-Path: <linux-gpio+bounces-6885-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6886-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCEF28D3E91
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 20:53:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30F8C8D3F00
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 21:46:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B3351F24C38
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 18:53:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E2285283675
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 May 2024 19:46:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CE131C2300;
-	Wed, 29 May 2024 18:52:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76CCF1C2330;
+	Wed, 29 May 2024 19:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zM9fjI1P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUTNrFkf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742FA15B552
-	for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 18:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1246219FC;
+	Wed, 29 May 2024 19:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717008775; cv=none; b=EFsGRY6ny8eGjmghyu28NUksld2aMMXF7mZ7KXROIG3ImUvLnxGrAGMVPZnK+ademSvVmw+TSQmHJVxggVB1CblF0DG2dQSgTdaFHdp3bmFFdkCwnHz4q1B2g4SADuD4eimt3ip2ggL4zvtTERFbtJTtvXyDJBS2LfFonTq9KOk=
+	t=1717011981; cv=none; b=O3apx1YPhqxuGNFXi7x+I+Hx8g4uifEl8Q7IwgqhME2ZhIxMnmeXAsvaMFTTFmK3x34l/SMzYpLGkN3aRZ336lMIp0PDuWXxcP8wnGXUFSArAPUwRoVTebVQEccLQrdLIuT2hsEf8XU5VuV9x9CuQAqGJYwUC2Csmg9vNd47vaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717008775; c=relaxed/simple;
-	bh=VCyLXfQw+vODJ+gWUnxnJTmwZOqAzSvyZikbefhPOtA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MXXXCQ5C5ReTkiP/kb73wRxr6VeH92diXV0sf1SJPOIXK9Edq82CTVPamYz8tAYE92LxfbzopAnavTx+hTQcth5yW8eR/trK52cxGCDZDGFGU9OlDfnaWWWP/qngL62jlyGc3u3xX1SH+L6if/9Pm+r8w5VI8QXvXa2MTMpxnHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zM9fjI1P; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42121d28664so306195e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 29 May 2024 11:52:53 -0700 (PDT)
+	s=arc-20240116; t=1717011981; c=relaxed/simple;
+	bh=JiLCa4M+GV+8Ik9X1BrNHTYYxtfnMvl7ikNZHguaXnk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EXkiORAQgUUaqjijDL7/+MxhBXLuNFXRfUw0CTbJAQ6Yx0xXp5gWdekBIEesTY1YDNCpwCXpZEJsFk0Zb01BIBMZTXMtV0qhDZJ+LaT423aKzfe5yHVlnwfuHJLDGywr9e1jOeTRKV4aV8bGNAUZajoKiFXFRnyTLaRvvC+zGfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MUTNrFkf; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a6265d48ec3so3992466b.0;
+        Wed, 29 May 2024 12:46:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717008772; x=1717613572; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VCyLXfQw+vODJ+gWUnxnJTmwZOqAzSvyZikbefhPOtA=;
-        b=zM9fjI1PJgVf3I5U58hFLJCvNWRJPeAU3ubFCxPJ/C9i/YmkT9YCRB3CyX8sJWXFwt
-         7PhBoBOIT6GLphMoAKOcmOJ4kyREu4XIDyZJeiHB6T233Cv/6fQHvH1iFc4u7kLmyuwH
-         Sc+VWcZxbgT7cNajydCbpt//Z35CXhMcVsesb0wRJi/keZ8Nq3WJkjjvYk703g3JHrtK
-         7augOOp21v0kxpHbqJjMJ/zDJNIcbD4+Ck+f4TYhpF3/VXDeLIS3IWmtnV++c7qAsE1Z
-         eGw7UsXgVpAfcqpMFIoTwMqp1CbWZxxKWU/xi9P5b5KkBpavQkpF7KhlW6ZZUZfXidZJ
-         xJXg==
+        d=gmail.com; s=20230601; t=1717011978; x=1717616778; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V9K3L66JrsQxxCHcyJ7DUl2BI/mquF1TDYKxyl3bERI=;
+        b=MUTNrFkfD90J3EGlPuWLhrM5iJwk5B7ogQAVF/M6ljMQx1Kz8WEe5xr/+Y7ftzfsCQ
+         53BHTIiF+10W4G3XP0xwzcXKASKnakC9K8haT3g+G05pBrNl5WTOgQUKanVjIelU2dIf
+         mu2+yMcgQ6hNWWl0iIYVhksFQz/acZDfiJnGzYTfVOsINxER78MwXdqj2XLDYl1v49oc
+         MOKgZAptfXOSxKkCXt+Qa613NKeMWhiSRpZjix0L1gqOhsrbJvEBdSaVzdceXImUCbhz
+         sCRT6fkv0fJ7CVGIWjjIROi2PA/X5NUDZF7kqSp6lIw3HUOIOKywidGksdWaMyeIsHuw
+         Dyuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717008772; x=1717613572;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VCyLXfQw+vODJ+gWUnxnJTmwZOqAzSvyZikbefhPOtA=;
-        b=TzkrHknpkifBEZETnrOAcu9LV3SA1P4z76h7rNT8LtrBHRwCmI9O0pFM62WVYmcLsQ
-         9lGZ4ncfOgpQ6XQiKyB8Hzt+OZ99E6VUOuWW+pLLhGMNOsMF/sgpYvXK3VA3YO3HyziF
-         JQFPHTiAc8NePdkiy/4yLi3K00DbDt9NtiEMa06EIEzmTlFJSa/2Z7KtZtDjeHrW99VL
-         tIWowj8PVio/WdVAQv8BkSHTL/31SRR0GMqCzwjLaDt7ndM8wP5YyI04Fz5reN2Zjm5S
-         E7rrtsZeok4xIXcCex/uqeq3lBFSWFx7QtrIjwcHlG253MENOfsElb8KT/ddjyTUB45v
-         AKjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqQ40XKVKM6flNNpI0K3dVE/BMUBhV3tJhVfbGJNNssr1Z3tcPYebtiVZYpEbl0ZnbCFjnHpAVIqj1XblvtAAt3d/uMZNqSx8COg==
-X-Gm-Message-State: AOJu0Yy/BAKP9V0C0VlhdNzPi+y8LwavjnxfzCfVvZ6e9aQ6RTBjPSmD
-	O8wmqXHToHfuWiVqYMJVv098yYfFy6b9imiSD88RfySH7y+QMopL/mS/0WFQveQ=
-X-Google-Smtp-Source: AGHT+IFYV8lOdAq8BVnBAdwANSNE1at77ft2iuhi77Gbpa36U2AS+eGe4gpkadqc9c7yNfvtjizhyQ==
-X-Received: by 2002:a05:600c:4ecd:b0:420:1fd2:e611 with SMTP id 5b1f17b1804b1-421279294dcmr155055e9.27.1717008771805;
-        Wed, 29 May 2024 11:52:51 -0700 (PDT)
-Received: from [192.168.0.31] ([176.61.106.227])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-356c8daef27sm13465928f8f.115.2024.05.29.11.52.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 May 2024 11:52:51 -0700 (PDT)
-Message-ID: <6caa0d27-3abf-4198-97a9-42b0e564bbba@linaro.org>
-Date: Wed, 29 May 2024 19:52:48 +0100
+        d=1e100.net; s=20230601; t=1717011978; x=1717616778;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V9K3L66JrsQxxCHcyJ7DUl2BI/mquF1TDYKxyl3bERI=;
+        b=EjtIlM34eX8WYWRQUy0XGvuXI46b2LZKXyQToH5nSUH1rvAHIE18P8Q8pYe2i/N4VH
+         zJ5ltsF+k9P6uZPDDkBC5tryVEINqAJotKQHBbV4KWDRkTtLuzKadfsO+mGJAnTwSH6X
+         dIySfQzsI0ZRs8jlgKLFqY5SIgtqQBE1hLJk5NVqYhnJoFdIPtk0mhcljNSFfo1qrw0O
+         YVWxYdpZ5j7tjQOjsorlIzxiSzZ0WXEPcQp0eRi5d2TdIVAbTWFZSWp67SoV2IbxPSrO
+         y1+78G31j1feT+tSte2nWsIGkqnD8tVlbsIrfibQJu71k4TW8GXHTBjIcO9OULcngRb8
+         Ypgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUu4nHGoovA2ngAGKV8AELxohNYvWzQclpXSvEHpbM+RbqAG1EC5V3bY7xnXF+dCn4/oJ6kplT1dfW0q9PN7QIsgQkZzv6Q7YumynQB4XJTs8VFodmpO5YAp3kKxi5vOLsu2gw+U+r/0crNje5odYzxZ5T1AOmmN2lBVwb/3hH0Y1jwURCIJQo6SAwVinOMRoeiXH9diugHZSrqCzif4ZLmQUbM
+X-Gm-Message-State: AOJu0Yy8cpBHVC+PaBkxBI/52fl7FXlPtsdCGs7MxHsGL0D5F8FkOkN5
+	hpRK7wmzf5huuNZV4Y/dw6HU/AU0sG+NxtYbinM+4C/3m/UZNH0ubMkbHw9yl15hem0503/Xr38
+	PSFMwOXtezf7GRbv4mWFoL5kSSyk=
+X-Google-Smtp-Source: AGHT+IFy1DdHPnET3S5rcX1wtUxbPXXfhSd7llDP1hK79djSGp3pk2YgfuRmMSb2EbQGo/xN3MRP6wolQFA6ZiC5toY=
+X-Received: by 2002:a17:906:8744:b0:a62:196c:b2af with SMTP id
+ a640c23a62f3a-a65e90f503emr10431666b.52.1717011977944; Wed, 29 May 2024
+ 12:46:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/13] mfd: pm8008: deassert reset on probe
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Das Srinagesh <quic_gurus@quicinc.com>,
- Satya Priya <quic_c_skakit@quicinc.com>, Stephen Boyd <swboyd@chromium.org>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-4-johan+linaro@kernel.org>
- <4468becb-dc03-4832-aa03-5f597023fcb2@linaro.org>
- <ZjyX6iBqc50ic_oI@hovoldconsulting.com>
- <ZldU_LqjkU-4uphO@hovoldconsulting.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <ZldU_LqjkU-4uphO@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240529162958.18081-1-johan+linaro@kernel.org> <20240529162958.18081-4-johan+linaro@kernel.org>
+In-Reply-To: <20240529162958.18081-4-johan+linaro@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 29 May 2024 22:45:40 +0300
+Message-ID: <CAHp75VdnTQJFfqOdxC99gWckxebdUr4hV0wp3ZTs1Pey7q_fsA@mail.gmail.com>
+Subject: Re: [PATCH v2 03/14] mfd: pm8008: deassert reset on probe
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Das Srinagesh <quic_gurus@quicinc.com>, 
+	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, Stephen Boyd <swboyd@chromium.org>, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 29/05/2024 17:17, Johan Hovold wrote:
-> The irqchip registration will also fail if there's no from reply from
-> this address.
+On Wed, May 29, 2024 at 7:30=E2=80=AFPM Johan Hovold <johan+linaro@kernel.o=
+rg> wrote:
+>
+> Request and deassert any (optional) reset gpio during probe in case it
+> has been left asserted by the boot firmware.
+>
+> Note the reset line is not asserted to avoid reverting to the default
+> I2C address in case the firmware has configured an alternate address.
 
-That's acceptable too.
+...
 
----
-bod
+> +       /*
+> +        * The PMIC does not appear to require a post-reset delay, but wa=
+it
+> +        * for a millisecond for now anyway.
+> +        */
+
+> +       usleep_range(1000, 2000);
+
+fsleep() ?
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
