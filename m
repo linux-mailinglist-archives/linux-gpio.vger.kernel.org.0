@@ -1,156 +1,117 @@
-Return-Path: <linux-gpio+bounces-6928-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6927-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 505F58D4851
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 11:22:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 748478D484C
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 11:21:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC0A71F23D67
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 09:22:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1469D1F22160
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 09:21:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87A211534E1;
-	Thu, 30 May 2024 09:21:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 552C36F314;
+	Thu, 30 May 2024 09:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="C1N+N03H"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B6C14B967;
-	Thu, 30 May 2024 09:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CE16F300
+	for <linux-gpio@vger.kernel.org>; Thu, 30 May 2024 09:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717060915; cv=none; b=Y0tj7O+i5L+L6f3crUrVfDAr2eacBOzU8TS9Kg8y6HrqEFyGelhmiqzYh2jBPHW0vaj+2/kJGruqITJgL2MhJaPcBfUZ//51wyAF/sr1YMuUTtcuvOi8MuETKbQ1443zN83c4dvI6miJhshwg2iKrcrQPd8vi5QaE9ycUFnOLIU=
+	t=1717060909; cv=none; b=KO8kL9Vvjug5t901Ez6kSg+FTXOQuwyuscpOb/CcmxYuzfuonVFuWMGl5cYoP09Zqn9uaRUeWxtG51clAI5ZBwUEgwLAG5ypZHOn/XhiJjRzBKgZM0Hx6gepcfUDUWAJuv94ttwkcPBEuuJhjtg6cn0eE/Yc59s6wnoliHB7J3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717060915; c=relaxed/simple;
-	bh=6FVSMp5UzL317G0j5W9LunE9q3jEg6QzEPMtdCTKcKA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f3dlzHHWA0MKUvkiOZGquWLB8705fJN69OtYKO3RHmLzbqp3N23yosnYVrh2lpyplERdJ19/iBwFYbsTAchKaVxu37FPWSII+7MsYcF0ECyOqiLD+5cAEgKqXmKzv1R7B/FVBLOsBY7sbYUbrnCWIZEivYMRYfDCUYER5uH03KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-794ab0eb68cso76595885a.0;
-        Thu, 30 May 2024 02:21:53 -0700 (PDT)
+	s=arc-20240116; t=1717060909; c=relaxed/simple;
+	bh=LOuk5ngQgDvwGWmTqF8UHa1uZEIcOdoIOKhJeBC24z0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oYA6Ey/cb52ZKuBRr+uXnJ+CodBDTwfZI3+sxDVYiZ/XwlbBelKhomv6+RgKev5eeQKl30/VJ7O7frseKPFHy8FuY+U8FBM1tRzw58dKldJnUCgKq2J1KS07z4mcnAziTlHH98sJND3Wj5P6j8gAWHJvP36dO/+jqhbgcsTTYG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=C1N+N03H; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4202cea9a2fso6441895e9.3
+        for <linux-gpio@vger.kernel.org>; Thu, 30 May 2024 02:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717060906; x=1717665706; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J2NdMUTFKCND4TuQAML2rnvjKT/jKwjKz+oofuCTZRU=;
+        b=C1N+N03HSClTf7HDAbAg03esAG0+Hm8TAvrIXn0xEH5owaeDI0RbU8q4kXwKvam6YH
+         6rJ25m5X9RKo1K1EwEidkD4JpcmHehhR3FabH2EOxdr7aBtp/vEiD0wzYkrgcO4HSGRA
+         gKvs/fZ1Cf+zJJDnvOLovhlC9TwqeK0vtppkz6ArotbeipU1Am/gsSuBZIpOnLIYZcPz
+         Yx2squZ9tT4c9XLq1T1swEm9+fYB6X7re+6inPYBToqzoiuiJuDx5PFCMiw5St/bhrbm
+         yygowueKgj/KrRX7pqC55WDPsqKeiAWcESt0Xy6l3iKjpZxqM/OasJU/xJWUpVoVw6V/
+         qsYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717060911; x=1717665711;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1717060906; x=1717665706;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FWN78EB24MX6Q0HZqErBr8t9tcr4nbKt3etlWVHkE68=;
-        b=KP/n8SXmLoudi6c7yimkqVKUIgeyV3IktwUchm+433df3AH85xnBLG7zMlxtlFutNL
-         2urTIAR7vEFsGB9nMqouMvZdN6hwgMiVWPya8NNrUCmazpwt9gWsmc12Dv2gmMwcNehP
-         Y4XrJ8t9NZGz8KhOHZvgaNVrM36U4tybruoYGPQq9Cek0gOQuy+R5mlsZooUOK57B950
-         TSE3BgXc9Ei1AJeauunr6UkswDqK0jLRxqIMwP7QERtkWGhri6Kp8CjEXqC27KdWdN9F
-         FhgPsbcHC0MSs60p6BFj4O3Shrd6F0zBhRQe7ieTlwKgUUDdhXxj11yV+Z2cvOMddgDj
-         XmxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYVO0tsHpG6+aB6i2peHETpTL69Iha2J+Zr/oMSeJnHHx/Q5E160/PfULGdxb+yWMa/ijDgNCLqSYRGuxucdnsqkTgfsL28MQOpElKuIgnKe0ucPW1PP6OMCDH6GTKC0NaiD+tWH7ptYpNviwb7apRA/pHVGHOuDvAnHU33vCbrkDQsRfJtcmi2j3u/8tkoTNQcCukT+FmFyddvZ/seWCpmA/cuR6sg9KJF9ZvmY7Hd6qeJYwlpu73vd7VUtsg7B+mHN4kFDojM76SWw==
-X-Gm-Message-State: AOJu0YxJ0vnLsK0zrecA6297Efu8TNDMoQQQ+2n17bZ4q/P5s15Lqxle
-	0vdJVMKykTXPV5lMckEtLS71QPoq76Y08nU0xQo8PkgrhU+msp5hEpzrsLEE
-X-Google-Smtp-Source: AGHT+IFnOeVdl75ED81mRu+QfJiqXLb14x/cckQKLw4UCGtpWB3AWmqQNs7Osz4Top3dnRcPBr82+w==
-X-Received: by 2002:a05:6214:c49:b0:6ad:7573:acb9 with SMTP id 6a1803df08f44-6ae0e0e573dmr21350226d6.0.1717060911088;
-        Thu, 30 May 2024 02:21:51 -0700 (PDT)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com. [209.85.222.172])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ad6ebd52d5sm49108846d6.54.2024.05.30.02.21.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 May 2024 02:21:50 -0700 (PDT)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-792bdf626beso58529285a.1;
-        Thu, 30 May 2024 02:21:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX+Jom2LoG3rmXq9o3tjgZqFaV7K3vHk2TXRM1NG36mS6B7+B/AukWsKEZe9RBTpHy9J7vkSgllDkEIqaFmpPNZUm5knvpxl01S3RmbMFFkFbtu6xo60toploMIOfC3ojgx2BznRpO9PTH4l3xhhZIlYxUWugcqr31tEs9cVlEeYpPBhin3I3QfIyBmctndTSmtHuN5J+S3loS8K1MtC2x7VBqzKZYFdIbOyrMFtkrTylHQeD0Sq0tHDbPZJW5iANZgXyoweELMItVBAg==
-X-Received: by 2002:a25:8c84:0:b0:dd1:6cad:8fd3 with SMTP id
- 3f1490d57ef6-dfa5dcdc800mr946343276.27.1717060889311; Thu, 30 May 2024
- 02:21:29 -0700 (PDT)
+        bh=J2NdMUTFKCND4TuQAML2rnvjKT/jKwjKz+oofuCTZRU=;
+        b=TMJFbAJ3thRJ8GE/3x5zxLO9hdMv8dIWfcV+2oHdr1sfEcKG8RvO5U1i/75mXGIcWD
+         XzrjQS8Jkd582HgeI0tCuTVLXRKoftECqOVF1prhx6wmtmzd4fHl4CAMdKvqaBt36sQg
+         CvQn31yGB+jG+YhikqTP3LJUwhV8ay/jhYX6UucKF7RYs8NhR348lvBU/BYaIPVKCRTD
+         CRJ8FlFZC7Aipc/Ihkq8HtEaydFLYJkJAy+LbgC1L38UJq2XiKEXIZWt7i/t40Lr+X3H
+         H1GHR32ZdHsMAKr1cHN0WGUfVxuoxx5rxQ7SFZNAc2imDe/R6ddhoTGG8MjjaXW4ymcr
+         PNcA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6J/HWhFruZ8DUZqiD9pgDjSMQEB3b215pNfH0hRh+IkgudJvWPby1SwYSXLQOKGHXdi0aWYMGwqSkc19Q8jLJRDjsicgYg8+cOg==
+X-Gm-Message-State: AOJu0YxCJhY+bFbYk7/gmcs9o9mx8IV9iTFDdegZbNK5anemqb8Bydc3
+	dAyjCnzHgY91nM2PG0LzQIPO0hZVtnpELliv3oz5EdUXviEbMFnjUt/aHhk26dU=
+X-Google-Smtp-Source: AGHT+IGvEkCdARfpYJn7j9uuA7yNxUbgpb8AAl+3ZNngODEN/Wqw/TiTEIYw1nqx7Q6osL9EIgQc7Q==
+X-Received: by 2002:a05:600c:154f:b0:421:b79:93fd with SMTP id 5b1f17b1804b1-4212781b4a7mr13857215e9.21.1717060905592;
+        Thu, 30 May 2024 02:21:45 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:aae:8a32:91fa:6bf5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212706c46fsm19043935e9.28.2024.05.30.02.21.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 02:21:45 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Baryshkov <dbaryshkov@gmail.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] gpio: amd8111: Convert PCIBIOS_* return codes to errnos
+Date: Thu, 30 May 2024 11:21:43 +0200
+Message-ID: <171706089866.32720.4484394923188699673.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240527132345.13956-1-ilpo.jarvinen@linux.intel.com>
+References: <20240527132345.13956-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240504-pinctrl-cleanup-v2-0-26c5f2dc1181@nxp.com>
- <20240504-pinctrl-cleanup-v2-7-26c5f2dc1181@nxp.com> <CAMuHMdUD=1rpns_mLF2rMM-x5EnOK7TExaJxoJVkbXjVz1H8uQ@mail.gmail.com>
- <ZlhAm-giX6jNaUKr@surfacebook.localdomain>
-In-Reply-To: <ZlhAm-giX6jNaUKr@surfacebook.localdomain>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 May 2024 11:21:17 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXqXVT3Y7N8pTb_68E23RkLGi=ySOSDkAWX4MOpP09Q4g@mail.gmail.com>
-Message-ID: <CAMuHMdXqXVT3Y7N8pTb_68E23RkLGi=ySOSDkAWX4MOpP09Q4g@mail.gmail.com>
-Subject: Re: [PATCH v2 07/20] pinctrl: renesas: Use scope based of_node_put() cleanups
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
-	Hal Feng <hal.feng@starfivetech.com>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
-	Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Patrice Chotard <patrice.chotard@foss.st.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Damien Le Moal <dlemoal@kernel.org>, Ludovic Desroches <ludovic.desroches@microchip.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Chester Lin <chester62515@gmail.com>, 
-	Matthias Brugger <mbrugger@suse.com>, Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, 
-	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	Joel Stanley <joel@jms.id.au>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-samsung-soc@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	imx@lists.linux.dev, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
-	Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Andy,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On Thu, May 30, 2024 at 11:03=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> Mon, May 13, 2024 at 01:59:03PM +0200, Geert Uytterhoeven kirjoitti:
-> > On Sat, May 4, 2024 at 3:14=E2=80=AFPM Peng Fan (OSS) <peng.fan@oss.nxp=
-.com> wrote:
-> > You missed one trivial conversion, presumably because no error handling
-> > and thus no of_node_put() is involved?
->
-> Nothing is missed. The below is a redundant change.
->
-> ...
->
-> > -       for_each_child_of_node(np, child) {
-> > +       for_each_child_of_node_scoped(np, child) {
-> >                 if (of_property_count_u32_elems(child, RZN1_PINS_PROP) =
-> 0)
-> >                         count++;
-> >         }
-> >
-> > If you prefer not to include this
->
-> I prefer this not to be included as it will give a misleading signals to =
-the
-> use of the original API(s).
 
-Thank you for reminding me to send this out as a separate patch :-)
+On Mon, 27 May 2024 16:23:44 +0300, Ilpo Järvinen wrote:
+> amd_gpio_init() uses pci_read_config_dword() that returns PCIBIOS_*
+> codes. The return code is then returned as is but amd_gpio_init() is
+> a module init function that should return normal errnos.
+> 
+> Convert PCIBIOS_* returns code using pcibios_err_to_errno() into normal
+> errno before returning it from amd_gpio_init().
+> 
+> [...]
 
-https://lore.kernel.org/r/c0a28f466c42d5d59c7fadfa1fd05fd512d43b6f.17170607=
-08.git.geert+renesas@glider.be
+Applied, thanks!
 
-Gr{oetje,eeting}s,
+[1/2] gpio: amd8111: Convert PCIBIOS_* return codes to errnos
+      commit: d4cde6e42f2eb56436cab6d1931738ec09e64f74
+[2/2] gpio: rdc321x: Convert PCIBIOS_* return codes to errnos
+      commit: 9a73e037f4b5eb45c9ecccb191d39c280abe7cbd
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
