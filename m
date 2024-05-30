@@ -1,115 +1,97 @@
-Return-Path: <linux-gpio+bounces-6983-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6985-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 345948D5223
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 21:14:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C39B08D53E8
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 22:36:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 667581C22153
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 19:14:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 730E828328F
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 20:36:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 954DD762D0;
-	Thu, 30 May 2024 19:14:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E2F46A8D2;
+	Thu, 30 May 2024 20:36:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DO4NWRG2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZqRM5LkS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6F77404A;
-	Thu, 30 May 2024 19:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE8725634
+	for <linux-gpio@vger.kernel.org>; Thu, 30 May 2024 20:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717096465; cv=none; b=SW9JUO3julmq412PuDzVLcMTCPBHaifQ3PzlDzcbBD/yzb+R9rizxKufoyI+tZQSs+O9MvinLBXOxkKurRwFcOrzFF4BuSDG2qRuYQgEwmhbJ2CV9fBLDtDNguXH8XNOvjSzNsk5tVwraUQXCB8w7VAG2zqCm9unHLZsoUx/IDg=
+	t=1717101410; cv=none; b=WERM4yY1eXsMwXYNrEV83vymtqbnAypNh7jQStwyEVItRQ2sb/t/a+WYSmgDj5OFL782EUN2w/2c/5guQQW7wRWRzq0hs7jaYkx42GRbIyFrrpqPd/DMgZc4Zdu3Hxua50NTK8m5EpjxQVMX9hyBtvRJ3DtZAiyE7uT4kEaopCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717096465; c=relaxed/simple;
-	bh=bTZetfqb1NfzJHtwqCZfewEzdYTNjg6XvxSMuxbnkGc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d4W9Mj5wr2kzdF3izVEnXraQLL8eMpURhiou1f5ueFDbWYWNbaE1e4LtH/hpKb3y+3peI7g56CmWCvXDZynj1eYBSC/SxJCxZ9R3j84Lj9LX1+dZ1dPKYfUBEMh8YM8WNTfo35UzTn+GWVufktPp5KLKxbuova/RdrAnOEG6Szs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DO4NWRG2; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717096463; x=1748632463;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=bTZetfqb1NfzJHtwqCZfewEzdYTNjg6XvxSMuxbnkGc=;
-  b=DO4NWRG2xlPWOsLdlQwZjWVwfk/BaiG01MGk+oEf0D+H89Bu6AZoeyMB
-   caCU1K6Bxn0793FAIxw3AmlKyL3JFIhN9wmVJr+KMOqXHKB3wOqUVlu+m
-   +SoYPySxPP12ArcGgxD9so/7bI582snlg0bbNKVH58FibsRTOCPer6Err
-   glI8WjeaQ3NPmyiOcIVz/utjB6AAeAhMFXI4D6S3/xfdEOte6pGEvZmG9
-   rvEGEnud8y1I0H4rJHXl9G8XvwX7cstKg379XA6MiwQSMCEnWXhH3Y7NG
-   EiakMI5WO/qjhi8mTOF9ZWldxY8KP6LwqQQpmE08INw/auVxqtdeY1plW
-   w==;
-X-CSE-ConnectionGUID: qs+WE00TRSuDYymwVHbIcQ==
-X-CSE-MsgGUID: 1HMUi8svTLaMu83gz9CfmQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13373173"
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="13373173"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 12:14:22 -0700
-X-CSE-ConnectionGUID: WNpwOOQSQ2u3u49/nHmUzg==
-X-CSE-MsgGUID: 5s+sYH/mQRu/+KUFg0QqsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="40362460"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 30 May 2024 12:14:20 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id BB9A337D; Thu, 30 May 2024 22:14:19 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 2/2] gpiolib: Show more info for interrupt only lines in debugfs
-Date: Thu, 30 May 2024 22:12:30 +0300
-Message-ID: <20240530191418.1138003-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20240530191418.1138003-1-andriy.shevchenko@linux.intel.com>
-References: <20240530191418.1138003-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1717101410; c=relaxed/simple;
+	bh=iJwEJherlKlOV6qTkyS2BYX8gB3rWYKja6wTdoW8HnQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dKBZwiRf3SpL9Op/qzvZL2x5PD7VnC8zFFD5LMTWYqgaihmGzxIV/v3ZVBqsHXnHd6JHX4/XjB1gRPsxkiACMhkXme52KkaHgSNM74NKr2v5RU6YbG3zkcGjicjLFgZrmcsoQJZRw/Aa5hcSAuBCK4ke5Tcx3HWFavN2qMQtenU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZqRM5LkS; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dfa6e0add60so403602276.3
+        for <linux-gpio@vger.kernel.org>; Thu, 30 May 2024 13:36:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717101407; x=1717706207; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iJwEJherlKlOV6qTkyS2BYX8gB3rWYKja6wTdoW8HnQ=;
+        b=ZqRM5LkSADwhH+3ogSw6FzOyQfqFmjhIgb44vEwTX8dqOyPkwH9ZiT4RjQvNATlEn+
+         +UbjMXK8ZThyxSuJIEwZyxFUlMDPM99oFUdGrhKVDm6ds7CL3GBMQSyVdKPDUx9WSHGM
+         xm4h+nP1E9K/LWKxrUAKYQNcgtxT8ewQXN9ogr5OXMOq0UNZY9ngrCnx//gv1SgbWHDD
+         8gSoNQ4ivl5QvHq6B2FP8W7YDNBfPROV2DFrohI00R4aEbxwbcFUFq+dN4fHctWwvOx5
+         n8aTIIxTtCSS+yZH7C5lcAmYDzhxDORGcSsfduydfvdLO6tQHRx3zYo4cN/oN3H+cres
+         D0IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717101407; x=1717706207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iJwEJherlKlOV6qTkyS2BYX8gB3rWYKja6wTdoW8HnQ=;
+        b=vf0tOJTnKfWR1zT10g0BdxT0PZwnlt0qTSULRZ0VDqancGkvK/kvzWYxN/YIgDv1sh
+         qJ/Auq4axjM8Vd5baBo38cmE72PyZR1TlIxpAv2ozJuCp+9eNnbLVicNkfmHdWQeh9Es
+         bVszvsBEyES5Ukk/CvLxGmj5JBwPxu/kyFvoEfCQ5Ggdav4a3hClxdp4x9gcn67eJW8j
+         hoNKbCG9ZOOFm1f7EUTXX1T7PqcF4k3bxvKDxfRLAdA74FpkX7hDwPOKlSKtnM4mQ57G
+         hFlnIci9khcmY0d7x9yh0W52VPz1ulP9Qx/J0iqWWVmIZAyZ2IdWuxlGPvMCACiur3Gu
+         fGPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOKUmF+FoNdQ2S4G3FkW6zpyQy98OQcL/b3Wy8jGPquJTc7VyJvltpeiGyrjjyYkonalzBa42HO+D5zvmLbiP1kGB+8Uqfi43WEQ==
+X-Gm-Message-State: AOJu0Yy8JVZOmOpFoxrzyjT+D57+OVjguvoJSN5eCuaHl2z7GHqPTdsN
+	YY/VtUaE0DGd4msGrkfb6gSjVdinnpyQhPcLW0ltsnJ/DnqfV6hp9TxDlsOzjgzYexjKlNq1NO9
+	n0s8tDrPouo3X+20N/3qFdgIn5anhN1P/yMnK/Q==
+X-Google-Smtp-Source: AGHT+IFyFYEIiP6jhM/fF1lcS4qUV/laMscSSmd6de+DpyxvaYBk9NFI2+ATV+p4QGNWsM3TQN+qTlLODP6Nnv3HFJU=
+X-Received: by 2002:a05:6902:1368:b0:df4:8ed0:221a with SMTP id
+ 3f1490d57ef6-dfa5a7cbcf9mr3468064276.55.1717101407160; Thu, 30 May 2024
+ 13:36:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240530181737.1261450-1-pbrobinson@gmail.com>
+In-Reply-To: <20240530181737.1261450-1-pbrobinson@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 30 May 2024 22:36:35 +0200
+Message-ID: <CACRpkdaVnSHVcAqff7dFT0k0ce5G50y4iCH=e3EBAALtK=-OsQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: brcmstb: Allow building driver for ARCH_BCM2835
+To: Peter Robinson <pbrobinson@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Show more info for interrupt only lines in debugfs. It's useful
-to monitor the lines that have been never requested as GPIOs,
-but IRQs.
+On Thu, May 30, 2024 at 8:17=E2=80=AFPM Peter Robinson <pbrobinson@gmail.co=
+m> wrote:
+
+> The GPIO_BRCMSTB hardware IP is also included in the bcm2712
+> SoC so enable the driver to also be built for ARCH_BCM2835.
+>
+> Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index a6032b84ba98..f3b2f5c4781d 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4888,11 +4888,11 @@ static void gpiolib_dbg_show(struct seq_file *s, struct gpio_device *gdev)
- 
- 	for_each_gpio_desc(gc, desc) {
- 		guard(srcu)(&desc->gdev->desc_srcu);
--		if (test_bit(FLAG_REQUESTED, &desc->flags)) {
-+		is_irq = test_bit(FLAG_USED_AS_IRQ, &desc->flags);
-+		if (is_irq || test_bit(FLAG_REQUESTED, &desc->flags)) {
- 			gpiod_get_direction(desc);
- 			is_out = test_bit(FLAG_IS_OUT, &desc->flags);
- 			value = gpio_chip_get_value(gc, desc);
--			is_irq = test_bit(FLAG_USED_AS_IRQ, &desc->flags);
- 			active_low = test_bit(FLAG_ACTIVE_LOW, &desc->flags);
- 			seq_printf(s, " gpio-%-3u (%-20.20s|%-20.20s) %s %s %s%s\n",
- 				   gpio, desc->name ?: "", gpiod_get_label(desc),
--- 
-2.43.0.rc1.1336.g36b5255a03ac
-
+Yours,
+Linus Walleij
 
