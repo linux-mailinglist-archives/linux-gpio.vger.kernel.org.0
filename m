@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-6902-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6903-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 133E18D46AF
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 10:08:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59F4F8D46BD
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 10:09:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4495C1C2106E
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 08:08:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED7F11F22A73
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 08:09:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C24F9146A9E;
-	Thu, 30 May 2024 08:08:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC97914884F;
+	Thu, 30 May 2024 08:09:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVZjzg/B"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5dDGIVS"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCC3176AD2;
-	Thu, 30 May 2024 08:08:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A7D147C71;
+	Thu, 30 May 2024 08:09:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717056480; cv=none; b=d0Ib0/BE9YpLb7oEniJMgkxFTmbHMzAZx8oNB/ySCV6wf5xaArubd7k3Y1FNjHKNwUk8clj7LpoImKZx0EEZL1gZhS20NI/h3BMEcNuyqImcjo6jcgsTp5GSEo9i9344hj15kQ47ykwBcVC1AlOXAesadqAyvn9tpEwD+0nv4SM=
+	t=1717056555; cv=none; b=gkLPWakPl8zrYRSsskLN8koiYs4iYMzyhKinfkS7jgAznWCJnTS46Q5rRzJnpp/Ryugqpf/gwfNmAjuRHZXF75YqhZlRlhfjJDSVTkZrip5uUOjs+RFQ6RUMSNDLrPlSCbthbzL9meyf/012rbKfN692evM3nF8DdYUEisaF/4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717056480; c=relaxed/simple;
-	bh=w3n/45oEbfFxqAimcpQO8TVqfQH0H9GcJTD+Mjl8Uws=;
+	s=arc-20240116; t=1717056555; c=relaxed/simple;
+	bh=hKn7oFMCnOZVKPyympTibzQkvUmq/EUgiG5cwPu4Avc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D3i24oARTvVji0EYkVfeBegea1fPx2sXqebE4NoJqIbpYLvL378ufqy/EZjprD5BOPA7M+Jf6uc/YJWMg5j3N/fQ88cHTGKwP5rNJecH9Q2HqK/6AkAmZ74m2UGcnF13WugnHs459aWTlK0wZkfUUvp4nmP9Ksd7U+3pWsh/iWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVZjzg/B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBCF6C2BBFC;
-	Thu, 30 May 2024 08:07:59 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=DyYfSJU7Xt29vBUfEE54Pxm5ud9vwIyV1QBbpA444waaDAg9KjQOjQi2ndEdzbN+GYuK0XETPHnElnHq4jvjvOV85K+7MQ70GqMYxNnC/Xn3OThSL1c/m2LFlz4iFdukvX1apsG8tj6qwkJXh4cZqTgStLHnmOpctjQlwVT+//A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5dDGIVS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C8E2C2BBFC;
+	Thu, 30 May 2024 08:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717056480;
-	bh=w3n/45oEbfFxqAimcpQO8TVqfQH0H9GcJTD+Mjl8Uws=;
+	s=k20201202; t=1717056555;
+	bh=hKn7oFMCnOZVKPyympTibzQkvUmq/EUgiG5cwPu4Avc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QVZjzg/BAZiQfiiRbD6Qnn+nr/J4kHDWwHOuGGXaQ7T0c2FqPKxSm8/+MOVVZ2Rl4
-	 h3rGiyv/30nVz38en6eL9wOF2Y7r81592fYEEP+VYzdgMA34WO5vquzfFUJdBDRJPN
-	 nc/wB6n9uW2gRyCiu+Z3t5xa3e2zssCiXEJy/KkaVxsH4XcTdkvMQF9/9uY8R6UxEp
-	 wiJph6hi9dTWGhqPFxfn1uQ0G2MCh+CEw14P1vdZ/RcQz+WLexI0jAZzJM8rnQjMnu
-	 mcra1kbWhcbWxe9KVipWDqYbBKtZKXKWbeFOq8jIW6EL+ieg1B7eIEptH4/VGU6k8g
-	 Etj13hWw9nkqA==
+	b=e5dDGIVSsyafnDcC1uJFPdZbdKM5Hw9oPJSfySKJ4D/FNIQUzL4RydD+vGp+xRMgP
+	 sQVsKY1BVJjQ4j3mbUc4MDCvrF+J5C+xXHgMpgbamhxByzUqsup6yHkyg3aAqTIh/P
+	 njSCf/r0oNxMGo6V9Bq79HGUammLhszPTvUaVSDXkU7uuCo+kGs1/cL6PupwdaMoRI
+	 lOa+bmzZ7bD6h/OOdKFp3t6etPn9M5jkvupGrFj88IpnhXsNtI8By1gGh9XLNVJYTL
+	 BJyFNhbioB1h7GW8eTA+nOlGGMJ8X6MKDyOXiz90h3QI6zTYKxbcp4GzyIXEQS9uL1
+	 fkQvhh+sS2Bgg==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan@kernel.org>)
-	id 1sCapK-0000000041N-3p0D;
-	Thu, 30 May 2024 10:07:59 +0200
-Date: Thu, 30 May 2024 10:07:58 +0200
+	id 1sCaqY-0000000042S-3YHu;
+	Thu, 30 May 2024 10:09:14 +0200
+Date: Thu, 30 May 2024 10:09:14 +0200
 From: Johan Hovold <johan@kernel.org>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
@@ -63,11 +63,11 @@ Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
 	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
 	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 03/14] mfd: pm8008: deassert reset on probe
-Message-ID: <Zlgz3nDjfRO5LYnY@hovoldconsulting.com>
+Subject: Re: [PATCH v2 12/14] mfd: pm8008: rework driver
+Message-ID: <Zlg0Kn8gI1zKhPct@hovoldconsulting.com>
 References: <20240529162958.18081-1-johan+linaro@kernel.org>
- <20240529162958.18081-4-johan+linaro@kernel.org>
- <CAHp75VdnTQJFfqOdxC99gWckxebdUr4hV0wp3ZTs1Pey7q_fsA@mail.gmail.com>
+ <20240529162958.18081-13-johan+linaro@kernel.org>
+ <CAHp75Vcww07EkUDVSMSd+RviQ9_uku=w4pkCWUt8iGTW580eXg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,29 +77,26 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VdnTQJFfqOdxC99gWckxebdUr4hV0wp3ZTs1Pey7q_fsA@mail.gmail.com>
+In-Reply-To: <CAHp75Vcww07EkUDVSMSd+RviQ9_uku=w4pkCWUt8iGTW580eXg@mail.gmail.com>
 
-On Wed, May 29, 2024 at 10:45:40PM +0300, Andy Shevchenko wrote:
+On Wed, May 29, 2024 at 10:53:09PM +0300, Andy Shevchenko wrote:
 > On Wed, May 29, 2024 at 7:30 PM Johan Hovold <johan+linaro@kernel.org> wrote:
-> >
-> > Request and deassert any (optional) reset gpio during probe in case it
-> > has been left asserted by the boot firmware.
-> >
-> > Note the reset line is not asserted to avoid reverting to the default
-> > I2C address in case the firmware has configured an alternate address.
-> 
-> ...
-> 
-> > +       /*
-> > +        * The PMIC does not appear to require a post-reset delay, but wait
-> > +        * for a millisecond for now anyway.
-> > +        */
-> 
-> > +       usleep_range(1000, 2000);
-> 
-> fsleep() ?
 
-No, I'd only use fsleep() when the argument is variable.
+> > +       ret = devm_regmap_add_irq_chip_fwnode(dev, fwnode, regmap, client->irq,
+> >                                 IRQF_SHARED, 0, &pm8008_irq_chip, &irq_data);
+> > +       if (ret) {
+> > +               dev_err(dev, "failed to add IRQ chip: %d\n", ret);
+> > +               return ret;
+> >         }
+> 
+> I believe there is no harm to use
+> 
+>   return dev_err_probe(...);
+> 
+> for these. But it seems you don't like that API. Whatever, no-one will
+> die, just additional work for the future :-)
+
+Correct. And there's no additional work for the future here either.
 
 Johan
 
