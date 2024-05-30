@@ -1,334 +1,202 @@
-Return-Path: <linux-gpio+bounces-6963-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6964-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 267FC8D503A
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 18:55:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66AF68D5092
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 19:08:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7616EB21CC2
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 16:55:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D48D41F25DD6
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 17:08:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 577A53FBA5;
-	Thu, 30 May 2024 16:54:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1D24437F;
+	Thu, 30 May 2024 17:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LV3s6NAO"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aAj+TQZX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2066.outbound.protection.outlook.com [40.107.20.66])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AC24776F;
-	Thu, 30 May 2024 16:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717088085; cv=fail; b=JcIDPVJSiBPGSPBFVw+l/5POZkgGT6sHcr7eZKMl2IQRm+cTA+VTzzf/G4kligDnxxqYxns3L6JIyXkT6wG238RLel3rLv96KTJqyv8tDTYiXHwS6ueUy9RW6tENz+JRJ4fd5yJO5sBFzWaKkm0WPgEFP6k4PBve09OLgzhbXcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717088085; c=relaxed/simple;
-	bh=BlAMvXoPbWfAXZpcX917YxtYn7HH1nWDwnOe5GPK9I0=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Q6ZDZMViGdhKhD60h4dYN5/ngBiz5rBHdzrTX958SU9GnGBhHMZQvPbVQ46fqrdIpkPKtfSMkQ8SQPeeBMzy1YqaHGzkgyFxduWivtdTqXtCH3YEZBIbO4E7rg0C64DrSSzyUoayBWVWbrvRA6BZaLrt8k++HwQzMIZHXzDkJF0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=LV3s6NAO; arc=fail smtp.client-ip=40.107.20.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FL9IiJ4eM49XjTvvZdj66z9QcN4HZDom3HVVxEexy+3kkc+HCDEbHfzyGZcWCRUNaMTuT85cUD7tNCPORMQz4WEgVvAaF+eX+csw6i84aPV8CGkP2s4iIwpr2mafP3lXC4GVZbnvpHRjBHobK0buGqPsVZElv2HUfEwK94tqU3Jgep+olpdHI/c44ISn5RCNo/JD82f5ae7htAiQ+bvTMx7sA8zVAc5nkkXXl00Vy00ftGlKKn2pTZijqgmo3QJtK7BbF7OGUZFdwYJcbjUyeSEROOXrBV7tfVjYv8/eZsafgpkdbumGSCOUyBIjnOpkb002phWo/iGdci5tKyTXUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3iEEgiDfLuU24gK0/aTuNkWwHhNv7Cyr53ift2m412o=;
- b=EAZu8O+JBP5VBjkfMghFRhUOxt4D6feLlDg2XlIV2+mNhSh75lgUhRFypBi+ocOk+WCHCA7a+WZwFLW41Rda+MEdMOPfi/fbxB6aH9iutQMCBAXKvy7DW1KwrccKsxxfTmTv5ReRTfN5mKvdFYS6WbRkcyMSwaZsokQWr/D89vWg5pD8uiFYew5k/eNVJtdwqIAE2OYTyiooTyXbU2f1dbIVYOl3v0Hhb9jPRXHQS/ce9n5Rf6oLEQwMNNqMdWaRSWH5DipNG2vd0PCQUiFrFWUSiR33EYW90ciKzyZJKnow5zX/hCqr0W0EIGQlxJoSqPMUzgy7nEmWr35kARAyhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3iEEgiDfLuU24gK0/aTuNkWwHhNv7Cyr53ift2m412o=;
- b=LV3s6NAOXAgemq2ZUeP/bdBdm9BMld7m+KWLfSIhrhBHQwIdUOMobWpPqGB5KfHZVIwYEhJBmIVbtAvQryg5lGOsnj91BapscWOHmyRgklvOpyZchGB1zTQUzIsb1fxqBILEb1J30nzCeNm8H/ZRqwfVUDVLKS+qZDS2rJdicvw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB7653.eurprd04.prod.outlook.com (2603:10a6:20b:299::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.21; Thu, 30 May
- 2024 16:54:39 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7633.018; Thu, 30 May 2024
- 16:54:39 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: robh@kernel.org
-Cc: Frank.Li@nxp.com,
-	brgl@bgdev.pl,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	krzk+dt@kernel.org,
-	linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] dt-bindings: gpio: mpc8xxx: Convert to yaml format
-Date: Thu, 30 May 2024 12:54:24 -0400
-Message-Id: <20240530165424.3173673-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SA0PR11CA0010.namprd11.prod.outlook.com
- (2603:10b6:806:d3::15) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B1C433CF;
+	Thu, 30 May 2024 17:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717088910; cv=none; b=Om/GPwRbZ/48m09AD0CKEJrnUVjM86yQR8BqJTJeOrmB7nEBpgn8r5oxcNjbnNSG6uFFifYGuhzGO5cnh76kvBn76U4nTQGypPVzGjhSIYjiXiYNF0xh+KFCstRAh+qOpS3NPcRABuQh3yYfbhXF0lAT15Q7IlN5tfyMxmRndqQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717088910; c=relaxed/simple;
+	bh=axAu5FB6oF/a31axn3i0S5B3VLMnmWlh6gWO546FsOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EpWW2nr5aqKcqgWOhAkIrxYuluuL5Fs8Q2xyfB6MEcJM22lz7DTRTdORFbrILhsvenCafT7HWqjH+Vwph0Kky9YMBRzkgm91PcMprzWAFsdJTa0zl85CdSQUnr4444dxPTlcaDxDVuasLTINzZAJDAI3NPXbJuMOUjs5zELRPRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aAj+TQZX; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Envelope-To: linus.walleij@linaro.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1717088906;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FBh+z6/yWJorKMpQpXCLn6sR3W5MP5Dz7vo6P7gzhF8=;
+	b=aAj+TQZXMbCj/68/EOx9VjszJzO4L1tmYYpDzuj4yKfaj30lTBYxoUuaa9Yr0wTfajdgbv
+	URn9I+u8nX0PemlZ2aubI7b9BGULtPT49pqvwYJKE4fFdBute9CjKyu5uq4lYM75nmEgCO
+	xmHpVIy18JXS9KdF9RGGj/zP1mSeDrA=
+X-Envelope-To: michal.simek@amd.com
+X-Envelope-To: linux-gpio@vger.kernel.org
+X-Envelope-To: sai.krishna.potthuri@amd.com
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: conor+dt@kernel.org
+X-Envelope-To: krzk+dt@kernel.org
+X-Envelope-To: robh@kernel.org
+X-Envelope-To: devicetree@vger.kernel.org
+Message-ID: <e4972a07-18d6-4a8b-bb5a-4b832aa2d20e@linux.dev>
+Date: Thu, 30 May 2024 13:08:23 -0400
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7653:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4a0d5cf3-c125-4529-6d31-08dc80c93201
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|376005|52116005|366007|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YR1dihWCJh5WhgUElmEagi0F6gc0x9kL9iZ3dwxbLHAI16Xqa0mFi2lhU6QY?=
- =?us-ascii?Q?TtXBqAfhCLNUc7PI8qpgaHHrOxkhIuOptonQHqHGBLT9k7ApjorpJeTP92vz?=
- =?us-ascii?Q?+J+o0Srl78dHm3GUDEl5i8qZCFMVPZ+8w5qSn2kAQV4xaz/yj7JhibuvlDNC?=
- =?us-ascii?Q?GJh2yOY8ldl3c80RqkE8e0TmzWjJ15M201y4R+gFHzn7ZQGFGHeg1QI3orLb?=
- =?us-ascii?Q?7FpjJ0CZQtwT2JHw37E3p75DHq9x/81Z/WkZLJIPesgzu1jlG13z0RACrRrL?=
- =?us-ascii?Q?42o0uezds+CDmcoQRNqQUNsKZ/ajALkQJFdnhHI0lOYgckP8eU6z16FiXv5i?=
- =?us-ascii?Q?5JHSOttuVi3xLTyCcxlCj2je/K0fwNcX7cGEyxLSOVmOmJRIII1EpwcDEwWG?=
- =?us-ascii?Q?bkXETx55ktu2TRryRM4Eh2y8+EDFkSnh5Anx3N0G5bkLPp+Xl3gHQpZG2Djw?=
- =?us-ascii?Q?qlYx7iT9h0WCmaqmMg5Bhp/KVfkH7N+J9GVPPAjV+Thi6Iz6qrmKPsw27jFZ?=
- =?us-ascii?Q?9qVIbiTRPiGigDl5W1lUr1R1AZ0E2CTbsRfx3ruNuC/bHg2ra+nE2tBCQDvB?=
- =?us-ascii?Q?EUjoXDkU2MgosCHOqvNJzu3Asm8NpnU8DuK9KhK0Rz/O+kmvW2F+eijqNELj?=
- =?us-ascii?Q?zWD3Qwk5c/oVoYg2S6STiJQih9WWV19rPj5JvDKrjF9PjORjwcEyuwRdyRTi?=
- =?us-ascii?Q?5tgihXMgB5UkEkLyUCX4O4NzJbdKBIiM/5MFFz7IpRCYmw8jQ/E72s4DI0TU?=
- =?us-ascii?Q?N1aBWgglJOY8aefWK6GMpSp1d0gf0lDH5tWi4y3GqDZ5U9aSsLUR7XlHcZ5r?=
- =?us-ascii?Q?DLseUo3QvroMiosoU8XXeyYeLjhatHC98eBol7ohDlFiMS3gbAuwWNenVnux?=
- =?us-ascii?Q?9qgdz1VIzjHXAQ9/ofNSZvCPPo0IDXKycuxPSUjqpQdR9HMEU3WSuZ9unbT7?=
- =?us-ascii?Q?93zT4sPOK/dlbLQhlA+Vzt/AFPnj7Kmo2OFDmzC1b+DBOCdSMWA8QTg/sAU5?=
- =?us-ascii?Q?Q/vcyUr/bm71rH909sFqusnFT+qO9iwpI8umVfB9BHA7Aku6ZGJ8olyR5scH?=
- =?us-ascii?Q?IeWTrdp0iVaFZ9sKv9mT/kLhuETOBIWqd9OkzZHGHbxoJqdIyMuDkV/lcBid?=
- =?us-ascii?Q?NhQCrR/WM4wOU1yg0/69+tpe3Y2sNGL2LhIz94BwfOqAZWRDqoIWxjvr0jcD?=
- =?us-ascii?Q?ZqP+5doKvamHZzFT4pJ3woefOYJUogRhIQldnJW/D02Z6iEDbB42YnyS2QXX?=
- =?us-ascii?Q?WwHl5EBrxMy9MfN/rczV2m+ZLvGtpj+YU9xGUGkYKXZdQBhPfSY5ninlKigH?=
- =?us-ascii?Q?KxM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(52116005)(366007)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?xs1DGavOiE5HH5e7vUlsHm7kTWWICXDrQgzpKTbOXt4UXJMBtRrGWTQL/hEA?=
- =?us-ascii?Q?M/muUi9aKrNEKQDZzs1rW+1XgSdXsgpQBYzblcUV5U5/dvAwQbOMnLw77yNQ?=
- =?us-ascii?Q?HiIDBSK3/X45fVuPvcKmdaiq2deFkuwnyVPWlky6WmLAaRzzKvMtmQzME0pq?=
- =?us-ascii?Q?0e5kQrd/tTE0F/RpvHweaKMj8xhDeRb07oxqqFDfXKh1WH077RFmMIm02agR?=
- =?us-ascii?Q?XAPtizNTugoRmGOuHnFVP5ZC8HvdaEVNtEqsECcF0iBpavpcyXRQIFFszYPS?=
- =?us-ascii?Q?L9UZTte8foAg9bEuOZz78unk+Pd01y9NRDDK6HYzhfnpoXRy/v99T7eZEkp3?=
- =?us-ascii?Q?QkbSNYCOKrt2zD/f1NYXO0HTaeYCNPc6a/xBevAe5MnjrB0n6CUKrV4Oymdt?=
- =?us-ascii?Q?VqKeCL9nUselTOpHBraH0NM4hsBKtZ7OeW91HPJvbYOGMKhjVvkP7MO46IOh?=
- =?us-ascii?Q?SNzH9jJgUwC01wD9WQ8tT22aF93taBI4N8KZ8yfiSwKWKdqU9rKCacy52hSh?=
- =?us-ascii?Q?uEifxfN7dwiS0ERHThmCfX+wZz+EudFF818ssqlDfPe8R51Y5+64GiYwS1hD?=
- =?us-ascii?Q?HBzTlFvQ00Nnb6yRB43ky8Bn06GRxEr7xocy5RmvS8+EtTyDzQvVLS50ZsAH?=
- =?us-ascii?Q?jy3P3VYH32bftCt6oeA+bSNugzCfVgySAXJ/XMsEUQxScUmPQEPJFZ1H2Zs8?=
- =?us-ascii?Q?swzNCXoLGdTvBUmnjpeZAcnbNBHVo0t4VZP4UlORgw4I84eOgur7l3hiM+6q?=
- =?us-ascii?Q?l/H1lM0HFoJBad9LpUylaAOdx1qKBzqJ272YNpzvljY9YgnvgSNcfEzt3NdI?=
- =?us-ascii?Q?Rr1kLjsJy17KyP9gwFnCPEuF5pGtc/dz6XHUnPjliRLcmOSFYhZvBDTS9g4L?=
- =?us-ascii?Q?xVuaF5aOE/90AyfTgl9xUNesNFQJZDm17ESz6jLBnlPsDjVNgillWDugqYwf?=
- =?us-ascii?Q?NzFstZbUcWhRkQ9aKVBVIdO0ABumXgC1Jnf7n05ogSQvWEoGIMq5iAv/1L40?=
- =?us-ascii?Q?T6gSP+cgp+AROgiP++ogOEQz7aYe0+Vupa8m/NIyYUzQqEH+hxkWDHQME8i3?=
- =?us-ascii?Q?YPscRwi1BjcY0djJ2U4EnlOp2i5hcqP5okKbSFinPdcoAY0yMbjxEP3O98u4?=
- =?us-ascii?Q?HcH/E0sTtMuxv853SOR5Zeer07rgWCimEpIP1QPVu9XjOOfp4DJ+Ym/4B1c5?=
- =?us-ascii?Q?PAim/wPb9Yv8CffBSodUsY2ym7YZ+GMcs7UOJvgj9I/GI4pxdHDqwfPRwKZs?=
- =?us-ascii?Q?fS8fjeEWK5fvFGcWiW79U6lfxnhEvp1dlAnQNnEHbYxRMs6jO6S+j+qXpu8p?=
- =?us-ascii?Q?pXxF2AinMpXeuXxVyGgHGwBFIz/RgHqa274fWGPfrTQcbu1nLfueiDVy3KdA?=
- =?us-ascii?Q?yRlYGAN4SSCRvzoIL99rozNhGCya0Rj/9IYLNxCyszi2lJrCF4+hTex0A1OE?=
- =?us-ascii?Q?mRFH39yzetwYAH16Wg31QKPhdQk1Bkd8w1/Nef9hxr6i6WEbxXDW2/MIHb8V?=
- =?us-ascii?Q?++CUpCTCv4nu4U8K54MkHHWkpKho3OUnSGSzXk7XTBR7ecsQy6cUIhQWe6k2?=
- =?us-ascii?Q?MeqNkYzih2mKUhPDFdOlskfTQSg1xo/1pR+48xY+?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a0d5cf3-c125-4529-6d31-08dc80c93201
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2024 16:54:39.6511
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LryE0VQ2zqmC+rFUAvTwvpqrSDEaKtRnxyxp1bVhdaOpcxkvhQhHaYgEBgsdguxSs5dKLbCpLOKoHEVeJ5mKyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7653
+Subject: Re: [PATCH 0/2] pinctrl: zynqmp: Support muxing individual pins
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org,
+ Krishna Potthuri <sai.krishna.potthuri@amd.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org
+References: <20240503162217.1999467-1-sean.anderson@linux.dev>
+ <CACRpkdbOAoSDNFhXfz3djUZh1_MQ_T75CC+-LmojRXvyCbUusA@mail.gmail.com>
+ <06a4e5fd-3d26-4923-bcbf-0bdd66d756c4@linux.dev>
+ <CACRpkdbSsgxtKqF6ORXubufTaegjysHU7zH-tJfDfKNd=Kdoeg@mail.gmail.com>
+ <51d984f5-896e-469f-914d-2c902be91748@linux.dev>
+ <CACRpkdZ19+zUCEBCJJ+MBnnaF+caZKFTDxYiWZ0BRGx+PxN3bw@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <CACRpkdZ19+zUCEBCJJ+MBnnaF+caZKFTDxYiWZ0BRGx+PxN3bw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Convert binding doc from txt to yaml.
+On 5/29/24 04:38, Linus Walleij wrote:
+> On Tue, May 28, 2024 at 4:28 PM Sean Anderson <sean.anderson@linux.dev> wrote:
+> 
+>> Well, perhaps you should have reviewed the original driver more
+>> closely.
+> 
+> Do you want to push me down and increase my work related
+> stress? Because that is the effect of such statements.
+> 
+> It looks like criticism of me as a person, so explain yourself.
+> 
+> Writing this kind of things looks to me like some kind of abusive way
+> to express your desire and that is what burns maintainers out, so
+> if that is what you are doing, stop doing that, adjust your behaviour
+> and focus on technical issues.
 
-Remove redundated "gpio1: gpio@2300000" example.
-Add gpio-controller at example "gpio@1100".
+The technical issue is that the driver does not match the hardware. We
+must maintain the existing set of groups for backwards-compatibility.
+But this should not prevent improvement.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
+Saying that we cannot have both group styles means that the driver is
+permanently stuck with whatever was picked when it was submitted. Hence,
+if you want to have only one style you had better review new drivers
+very carefully.
 
-Notes:
-    Change from v1 to v2
-     - Add gpio-controller at example "gpio@1100". to fix bot error.
-    Strangely, I can't reproduce locally.
-    
-    Pass dt_binding_check
-    make dt_binding_check DT_SCHEMA_FILES=fsl,qoriq-gpio.yaml
-      SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-      CHKDT   Documentation/devicetree/bindings
-      LINT    Documentation/devicetree/bindings
-      DTC_CHK Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.example.dtb
+>> > If you want to mux individual pins instead of groups and functions, by
+>> > all means, but please do not mix the two approaches in the same
+>> > driver, I'm just trying to save Xilinx from themselves here.
+>>
+>> I see no point in creating thousands of groups
+> 
+> Please share your calculations for figures like "thousands".
+> 
+> In my experience, groups are usually in the tens, perhaps
+> hundreds, physically restricted by the number of pins
+> underneath a BGA. A Micro-FCBGA has 479 balls and many
+> are GND and power, so that sets a ballpark figure.
 
- .../bindings/gpio/fsl,qoriq-gpio.yaml         | 82 +++++++++++++++++++
- .../devicetree/bindings/gpio/gpio-mpc8xxx.txt | 53 ------------
- 2 files changed, 82 insertions(+), 53 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+There are 78 muxable pins on this hardware, and around 40 groups, each
+with signals that can be muxed to each pin. If we were to create groups
+for each combination of signals and pins, there would literally be
+thousands of groups.
 
-diff --git a/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-new file mode 100644
-index 0000000000000..adc955679d066
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-@@ -0,0 +1,82 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/fsl,qoriq-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale MPC512x/MPC8xxx/QorIQ/Layerscape GPIO controller
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - fsl,mpc5121-gpio
-+          - fsl,mpc5125-gpio
-+          - fsl,mpc8349-gpio
-+          - fsl,mpc8572-gpio
-+          - fsl,mpc8610-gpio
-+          - fsl,pq3-gpio
-+      - items:
-+          - enum:
-+              - fsl,ls1021a-gpio
-+              - fsl,ls1028a-gpio
-+              - fsl,ls1043a-gpio
-+              - fsl,ls1088a-gpio
-+              - fsl,ls2080a-gpio
-+          - const: fsl,qoriq-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  little-endian:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      GPIO registers are used as little endian. If not
-+      present registers are used as big endian by default.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#gpio-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio@1100 {
-+        compatible = "fsl,mpc5125-gpio";
-+        reg = <0x1100 0x080>;
-+        interrupts = <78 0x8>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+    };
-+
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    gpio@2300000 {
-+        compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
-+        reg = <0x2300000 0x10000>;
-+        interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+        gpio-controller;
-+        little-endian;
-+        #gpio-cells = <2>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+    };
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-deleted file mode 100644
-index cd28e932bf50e..0000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-+++ /dev/null
-@@ -1,53 +0,0 @@
--* Freescale MPC512x/MPC8xxx/QorIQ/Layerscape GPIO controller
--
--Required properties:
--- compatible : Should be "fsl,<soc>-gpio"
--  The following <soc>s are known to be supported:
--	mpc5121, mpc5125, mpc8349, mpc8572, mpc8610, pq3, qoriq,
--	ls1021a, ls1043a, ls2080a, ls1028a, ls1088a.
--- reg : Address and length of the register set for the device
--- interrupts : Should be the port interrupt shared by all 32 pins.
--- #gpio-cells : Should be two.  The first cell is the pin number and
--  the second cell is used to specify the gpio polarity:
--      0 = active high
--      1 = active low
--
--Optional properties:
--- little-endian : GPIO registers are used as little endian. If not
--                  present registers are used as big endian by default.
--
--Example of gpio-controller node for a mpc5125 SoC:
--
--gpio0: gpio@1100 {
--	compatible = "fsl,mpc5125-gpio";
--	#gpio-cells = <2>;
--	reg = <0x1100 0x080>;
--	interrupts = <78 0x8>;
--};
--
--Example of gpio-controller node for a ls2080a SoC:
--
--gpio0: gpio@2300000 {
--	compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
--	reg = <0x0 0x2300000 0x0 0x10000>;
--	interrupts = <0 36 0x4>; /* Level high type */
--	gpio-controller;
--	little-endian;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--};
--
--
--Example of gpio-controller node for a ls1028a/ls1088a SoC:
--
--gpio1: gpio@2300000 {
--	compatible = "fsl,ls1028a-gpio", "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
--	reg = <0x0 0x2300000 0x0 0x10000>;
--	interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
--	gpio-controller;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--	little-endian;
--};
--- 
-2.34.1
+>> for every combination of pin musings
+> 
+> It is clear from the documentation that the point if the pinmux
+> groups and pins are not to present all possible options (known as
+> a "phone exchange" solution) but those that are used in practice,
+> i.e. these representing real world use cases. See below.
+> 
+>> when we could just switch to the solution in this (or v2 of)
+>> patch. For compatibility we cannot be rid of the old situation, but we
+>> can at least fix it. There is no technical problem with them coexisting.
+> 
+> Historically there are  ~2 camps:
+> 
+> - One camp want to use groups and
+> functions to combine pins in groups with functions to form usecases.
+> 
+> In some cases (such as pinctrl-gemini.c or the very latest
+> pinctrl-scmi.c merged for v6.10) this reflects how the hardware
+> actually looks: it does not make individual pins available for muxing,
+> but you poke bits or send messages to change entire
+> groups-to-function mappings, so it is necessary for some hardware.
+> 
+> So when you write that "groups are a Linux-only concept" this
+> is because you probably haven't seen this part of the world.
+> Groups exist in hardware, and in the SCMI specification.
 
+What I mean is that, for this hardware, groups are a Linux only concept.
+Neither the firmware nor the hardware itself has a concept of groups.
+While other hardware may have this concept, it does not apply here.
+
+I do not object to groups where that is the hardware reality, but they
+are unnecessarily constraining for this part.
+
+> There are systems with individual control of the muxing
+> of every pin, such that e.g. every pin has a muxing register.
+> 
+> These are again not really phone exchanges: I am yet to see
+> a system where any function can be mapped to any pin. These
+> just do not exist.
+
+Canaan K210.
+
+> What exists in practice is that each pin can be mapped to 2-4
+> functions, in extreme cases some more. Often these functions are
+> mapped to adjacent pins, and the "chessboard" picture in the
+> documentation for the subsystem reflects this.
+> 
+> For this reason, it is often helpful for driver writers to group
+> adjacent pins into groups, so an iterator can walk over the
+> pins and poke their registers in order, instead of treating each
+> pin as a unique entity.
+> 
+> - Then there is the camp that just by habit *want* to control
+> each pin individually. The extreme example is pinctrl-single.c
+> which is named like such because each pin is controlled by
+> a single register. TI wanted this solution mainly because their
+> hardware wasn't described in manuals, but in other HW
+> description files, and they needed to process large volumes
+> of data into DT-form.
+> 
+> I didn't like this solution initially because it makes it hard for
+> people without datasheets to understand what is going on.
+> But I was convinced to let this coexist with the group and function
+> mapping, which is fine: maybe one size doesn't fit all.
+> 
+> i.MX and others also do this approach but with large sets of
+> defines in the <dt-bindings/*> files.
+> 
+> Combining these two approaches is not something I recommend.
+
+Well, the former approach is wrong for this hardware, but we must
+support it for backwards-compatibility. A combination is the obvious
+solution.
+
+--Sean
 
