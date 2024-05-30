@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-6957-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6958-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34F738D4D3A
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 15:52:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 98B888D4D3E
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 15:52:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8A261F235A6
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 13:52:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B6691F217B3
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 13:52:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68DC7176259;
-	Thu, 30 May 2024 13:51:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBEE7186E2B;
+	Thu, 30 May 2024 13:51:53 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EBD186E23;
-	Thu, 30 May 2024 13:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4362C186E25;
+	Thu, 30 May 2024 13:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717077094; cv=none; b=Kveejus5rd1aZYjBT0Vxbork7gWAYqTxZlOTgqPrAisPb7o6E5piB3a4ojIilyQR4chIiZOQAaYhcC3wgI4QVLr+L+L61dY5RaPO+5deYKxMcLVJME29ZYdyQpFvgUTvUTsqo94ZWLmMNDtr0anWsHef51ePenTSQb6e+z/oHpk=
+	t=1717077113; cv=none; b=phu+mMbqfLX9i7gelzgdlCI4kVJSKzejrJOyykesZh2zyVfd7Th4gZUworfv3ij7Sme7Odcr3/S5RlRg5hHSV4rhNE17VpNLQdnyXg+/Q7eXl6zHkyAhLQk1wA8oLEG1SeSl1oh7o1yLsjlFQQcaERBcN5P2/CZisvaGcKXgezk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717077094; c=relaxed/simple;
-	bh=WXRwnyYB7bDSA9Rx69zvpF0BJZUOYwJ0tzSvsjM9vCA=;
+	s=arc-20240116; t=1717077113; c=relaxed/simple;
+	bh=TENyqI46mKoX4HW6cS3EUxgz9yy9L6nCArFeuE0PxXE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rbURecUEY3pAJ+wEahM3GdUVIF5VsrtnAL0xVBoDDMDT0k5uD0+hjk0PZtogxVTZw30XqpAX3yHa58UBdYalIf1Pg9gWs57Q4ahEiz9h+a+icQ1cy86C1RR6PNIO0viSx1Itrcznu3yAWC879H+Xn/sZWcc9XkQLjlISMqtmLao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
+	 To:Cc:Content-Type; b=p2Tkt1/ozOj8lWfGJGvCFhUS2AUAiPOj9CVosSRWYaxg3cmocsPrYQpFv3qIFYjjLOGFHn81ANPMdj4ilC9uLWber+1Jh7+HafA46KwhJBvSrJx4xRJVwvDwwQu64L0F12tDcGijaH25kwM53TitAupMv7snqwbEuO1iD+C5IK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-62a08b1a81bso6881427b3.3;
-        Thu, 30 May 2024 06:51:32 -0700 (PDT)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-62a2424ed01so9206927b3.1;
+        Thu, 30 May 2024 06:51:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717077091; x=1717681891;
+        d=1e100.net; s=20230601; t=1717077111; x=1717681911;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=74wpAuguCpnWBbRGbhRHB1PlEAvRSrtZrMo9vggtinU=;
-        b=pUP1gEpgfpA65vT8nm3hP6rAoJgRapMp8S++ntRqXVwXc/NQH8V1ksSDwQC+z/m71g
-         NBd9SsVZMNQzqB9br92tVWvX7kMmwXfSh8rK2WBNparyS0F+lS1L/C6WvXlFiiqPhEz7
-         g/r336nFwYOcbph4lMwdU9wsvPtL6eM7HM19Fl+3P0d1ywn4w1CT8B1NHLr+uZ7Jhsch
-         pxlJRT3qT9ar8+9FVVnKZ9qzFiLX9S7hAeyys3z7vIiEro5jBW1She/uY1xaefw/zrQW
-         ZTAAC4/ygTRxRR3MlUsFSWJWAUMjpDD3yy95jF1LS48KUw0jv+PpbjHcKaEUwvq9edV4
-         o8Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCUV+x5lJAGiIJ/P5t0I0iV0MK9Fmh2EaLrl6yjkVi1S7+SNGBBC176kYuTO+0Z+im0pkhef01xXsnXcjOk+qc3jFzF4AwDKtc6pCyvIlxWZe2YQmYFYi+GzXRmyMUviHP6uffHDDR2B8Do09fJTJt1boZe8z0PcaVPh3QXRRrbFVKt3BUqPCBjO2CuQxX+pTOqdXXTqjLB7FmCxz5Se3g2XlmLRpy0yuQ==
-X-Gm-Message-State: AOJu0YwpRoZoSlyFoF+lyqbYIaO+PmoRR482fHx1RR43tVG6ipsWimp9
-	WvD6atq0IEYD4uqLxOF4/1rv1VZdCVhFUmp/tBJ8oDN5n5/ZWQfmcABLPpZw
-X-Google-Smtp-Source: AGHT+IExGP+dcLiiFcfq/YaN5DeVrQ0IW53fG1D9ZEU8tF69fo+M7qZGSOclJv05inzxQOJ8jM5oaA==
-X-Received: by 2002:a0d:d997:0:b0:61b:330e:3f25 with SMTP id 00721157ae682-62c6bc1492bmr24330317b3.30.1717077090645;
-        Thu, 30 May 2024 06:51:30 -0700 (PDT)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a37ef12sm27875517b3.2.2024.05.30.06.51.28
+        bh=S3mjT3pgErBe5r6cUWu1N9HPpsJoEoQwYcTXRgzlr9g=;
+        b=NLZgPLBDFIATfL8npaXyB6nYwyp5wgXnhMkpRcUgijLr3E8DBP1pSGK8d41G0cOnwn
+         9abm868h8ROGd26ZCILTQuHJLpAt7NHdRzSFTPV0qIp6bXIgQCEs+L+SVlNY3KnGgilj
+         CuFNg0AnnSgDymtJ7NwhXEgqbcuTKh9SvjQZTQC1PpfC4QdkyzKHz0I1JlIO4M4f/PXm
+         zLgvNhDeLwNckPPkY3P4cQFJznbNHqJDRi1I2Gmy1WMZhRHrPBIYJ58k1Yz0nUd4ZMA5
+         7nEs3KEHJ/ixPaPdIDOUEDHHNFQlai7Ot3Ru39+6M9qxFZgOpEp2K5wYms+62P3YD9tq
+         5xxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTVjNLldM6bmYkaiPD+JKkKC+QMhF2FEusYlhLPJGiej5+rTAY5RnJkE5wUEcP8jW4C3qtNWzKJcFpfqC3RRtmmM/l2EsF0jNnVxodpbBUaaa5Ql/nyGV6RYOv6SXz6gESRxsNTWjQu+NzjjncQDpAgbe6it3dyQIEsTIjzOrK0++vpCkI2CS3FHoLBv+EKprW5jarCht9xdTgZ0o/RaUsee+bZDJwFw==
+X-Gm-Message-State: AOJu0YxH5cC5oBpWFpk+Pl1/ShCfiVGePE3gCeDwFtWfblifbpVJSzuj
+	UslVts5lqO5e8DB66OOJyhOOlQP5dkaLkRTHjPcytZexMz2h83R3aZmKmQmJ
+X-Google-Smtp-Source: AGHT+IFdaHexAjRL9bynRfe0kcVbD8zg4JW+tyyzjc9+iM4iqse2MjrEFdSNwdMabZNrm8OapnQFDQ==
+X-Received: by 2002:a0d:c182:0:b0:617:cbc7:26fe with SMTP id 00721157ae682-62c6bc2e9a3mr22990817b3.16.1717077110677;
+        Thu, 30 May 2024 06:51:50 -0700 (PDT)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a3db0b8sm27690447b3.43.2024.05.30.06.51.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 May 2024 06:51:28 -0700 (PDT)
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dfa67a3e702so454765276.1;
-        Thu, 30 May 2024 06:51:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXi6LTssxsmQXMv4F0JYmVSRII8ylY45cbqCmzyzWdTKAgq0LEhXupS16TF9mDhNKAIOA8V1GRNNizIxrQYMg8MTmoXwof2akSm+8o1lMBKD/dOKHJ1K1vu71x3UrO+DR46+t/UCysJ5LCi4DQWX9SK9uCCzaB16CLkrLhQDfIC7avo1nSv8UC0DlUwDfQzI2bV0f4cf9TT05wO3lsZxWEjJZ2xzqiCTQ==
-X-Received: by 2002:a25:6852:0:b0:df7:8291:d109 with SMTP id
- 3f1490d57ef6-dfa5a80f6demr2470600276.59.1717077088152; Thu, 30 May 2024
- 06:51:28 -0700 (PDT)
+        Thu, 30 May 2024 06:51:50 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-df481bf6680so855279276.3;
+        Thu, 30 May 2024 06:51:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUPTGyTOGwyP9av7Ct7etquq3mw7nk8NvXccgm4nW1pWa6TAWBxTR90Uzh76m5P9OheVFAZoKfXBEh76rke1V0/53Yk0YWzD6SAQ48F+XZcFsLQYTvm3zVVpSVX9YpxjaoXzurFaosVctEkyQaVH201BN4tWUm5dX5Q3VaCyMoIc7lw1DM7LbTJt4R9tr9U/ZvSlhYR5+sbECMDHRHqQtqcou38RKfHaQ==
+X-Received: by 2002:a25:a285:0:b0:df4:df14:61bc with SMTP id
+ 3f1490d57ef6-dfa5a60d114mr2487651276.29.1717077110129; Thu, 30 May 2024
+ 06:51:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524094603.988-1-paul.barker.ct@bp.renesas.com> <20240524094603.988-8-paul.barker.ct@bp.renesas.com>
-In-Reply-To: <20240524094603.988-8-paul.barker.ct@bp.renesas.com>
+References: <20240524094603.988-1-paul.barker.ct@bp.renesas.com> <20240524094603.988-9-paul.barker.ct@bp.renesas.com>
+In-Reply-To: <20240524094603.988-9-paul.barker.ct@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 May 2024 15:51:16 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUMmBCkZdL1Buzp_AE3j0efAR6Q0MH998tm9Z+kTLQ4zQ@mail.gmail.com>
-Message-ID: <CAMuHMdUMmBCkZdL1Buzp_AE3j0efAR6Q0MH998tm9Z+kTLQ4zQ@mail.gmail.com>
-Subject: Re: [PATCH 7/9] arm64: dts: renesas: rzg2l: Set Ethernet PVDD to 1.8V
+Date: Thu, 30 May 2024 15:51:38 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVTc9DHtjaFpRBzYRrvKe_6Suxe2WppHroircjdv8o7+Q@mail.gmail.com>
+Message-ID: <CAMuHMdVTc9DHtjaFpRBzYRrvKe_6Suxe2WppHroircjdv8o7+Q@mail.gmail.com>
+Subject: Re: [PATCH 8/9] arm64: dts: renesas: rzg2lc: Set Ethernet PVDD to 1.8V
 To: Paul Barker <paul.barker.ct@bp.renesas.com>
 Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -83,8 +83,8 @@ Content-Transfer-Encoding: quoted-printable
 
 On Fri, May 24, 2024 at 11:47=E2=80=AFAM Paul Barker
 <paul.barker.ct@bp.renesas.com> wrote:
-> On the RZ/G2L & RZ/V2L SMARC SOMs, the RGMII interface between the SoC
-> and the Ethernet PHY operates at 1.8V.
+> On the RZ/G2LC SMARC SOM, the RGMII interface between the SoC and the
+> Ethernet PHY operates at 1.8V.
 >
 > The power supply for this interface may be correctly configured in
 > u-boot, but the kernel should not be relying on this. Now that the
