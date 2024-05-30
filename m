@@ -1,75 +1,98 @@
-Return-Path: <linux-gpio+bounces-6911-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6924-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B15FB8D478F
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 10:56:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FD5F8D4804
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 11:05:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E28261C20EB4
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 08:56:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B70091C241EA
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 09:05:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C70A96F316;
-	Thu, 30 May 2024 08:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MrDPeC2x"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ABA317E46E;
+	Thu, 30 May 2024 09:02:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BB76F301;
-	Thu, 30 May 2024 08:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D58317E46B
+	for <linux-gpio@vger.kernel.org>; Thu, 30 May 2024 09:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717059388; cv=none; b=VcVybITCTwQgDal5FhlCFXx3rguDG3Pq3KIMziBMArBd94PyjXXbFzw2SKkT0wgMMwZUWLYWOKKAZH+e8Q/3nrJbeAvrszJZWFkgjxHoZOC/GaTWsoQ14EkVf0rYQvkasn4q/m22s839HFLd1VEROKIX5CfCg7FtXAenOnNBPfQ=
+	t=1717059749; cv=none; b=egL7lsPocSuan58hwyP/f5calpERNmRc8SJIvO935Zz4x1au1gqGrfry3NKVYrZMS7GqsGpRK3qr7PtFScEr4ln9wS0sQJorUYhmFQ5plgBtAZo087P57cA80y0T/OWTdbO3r/v+WnEKeg6Ln6I8tenO0i9wiJe/ezS+IJShglw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717059388; c=relaxed/simple;
-	bh=fum/BPvWuDHoboZhfPtwEwo9cUCkLkyCgJcO+Gf/NjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pwi6T4Jb12nZ0Xrz8CyaasEanfmkrQLXYPMuPs6hrDzjpYHbPFcw62KSgu9cruCv4AJjogdbqmfiZqG8c5+KfzLTZFD0FLye65RRhWY/xZKzj/wF5WsdwKki151BUb/bskXIY8B5E6Tiiz4zzMo7wAPdfTKIj+TevZtPsinLkaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MrDPeC2x; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED5B2C32786;
-	Thu, 30 May 2024 08:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717059388;
-	bh=fum/BPvWuDHoboZhfPtwEwo9cUCkLkyCgJcO+Gf/NjA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MrDPeC2xAruMf0dsLELM9FoeYWMHVJCNCBGH8lb4co9Con9cFEHZl3zEt26HxOX8T
-	 wv5V3SUq47QQghlMVGMwD8CnghcgGDPdi4zmEr9c8WuXg+Lln3jXBRoQipd/aGL8ZP
-	 eJoNUKhq1dJZIPdSRcI3plFu8KT/4nF7XHpDS6lgqYAfmARlrH7Eic/3Bwb4nq5PPE
-	 y5vEzRHuvWd49tf3Qhq7Qv68aDHDVq8RIXizIQqPSxm0Q0oXvE2VZSIih4F0VgfgCB
-	 MU5L1amHuAmAPgNUsKyEi88dsPNotrHJwnerM5k+0fwZy6TOXzgQzXdI4xW6fMZ1eA
-	 gafO4//xKUfIg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sCbaG-000000004kF-0kIr;
-	Thu, 30 May 2024 10:56:28 +0200
-Date: Thu, 30 May 2024 10:56:28 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
+	s=arc-20240116; t=1717059749; c=relaxed/simple;
+	bh=F2UL5a5lNnRgjZ1mIiR2YUOReGq+mkXTrOgzg/TJ45E=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z0BwKOu2wmFeNK/Ao+4ZWwl7vbYm11YrayzrxGofw9rvp0gmIMk0/uxbrZAZc7H6l6WH1oEaHiAyygataiptloZK0sL5UBTl5zEQv7UIcsE6mBpwdWnRPt1R+ukcPNohA+fzY+TS9F8nO+B0CMgNe0BUls5xXYgJHO9SiLSfDR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 51e6d162-1e63-11ef-80c8-005056bdfda7;
+	Thu, 30 May 2024 12:02:22 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 30 May 2024 12:02:19 +0300
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-	Stephen Boyd <swboyd@chromium.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 13/14] regulator: add pm8008 pmic regulator driver
-Message-ID: <Zlg_PP3PomxYGJ8A@hovoldconsulting.com>
-References: <20240529162958.18081-1-johan+linaro@kernel.org>
- <20240529162958.18081-14-johan+linaro@kernel.org>
- <CAHp75VcC5t1FynFeHGd+57=AeXKE8u0uduzOfozsG3MEzCPpDQ@mail.gmail.com>
- <Zlg1bGOs3V3TkHck@hovoldconsulting.com>
- <CAHp75VeiVSxJwjxXyNueinudOfj-WHZEUg32VBTW4PfCfB9Q+g@mail.gmail.com>
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Chester Lin <chester62515@gmail.com>,
+	Matthias Brugger <mbrugger@suse.com>,
+	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Joel Stanley <joel@jms.id.au>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Tony Lindgren <tony@atomide.com>,
+	Stephen Warren <swarren@wwwdotorg.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-samsung-soc@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, imx@lists.linux.dev,
+	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v2 07/20] pinctrl: renesas: Use scope based of_node_put()
+ cleanups
+Message-ID: <ZlhAm-giX6jNaUKr@surfacebook.localdomain>
+References: <20240504-pinctrl-cleanup-v2-0-26c5f2dc1181@nxp.com>
+ <20240504-pinctrl-cleanup-v2-7-26c5f2dc1181@nxp.com>
+ <CAMuHMdUD=1rpns_mLF2rMM-x5EnOK7TExaJxoJVkbXjVz1H8uQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,70 +102,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VeiVSxJwjxXyNueinudOfj-WHZEUg32VBTW4PfCfB9Q+g@mail.gmail.com>
+In-Reply-To: <CAMuHMdUD=1rpns_mLF2rMM-x5EnOK7TExaJxoJVkbXjVz1H8uQ@mail.gmail.com>
 
-On Thu, May 30, 2024 at 11:46:12AM +0300, Andy Shevchenko wrote:
-> On Thu, May 30, 2024 at 11:14 AM Johan Hovold <johan@kernel.org> wrote:
-> > On Wed, May 29, 2024 at 11:02:57PM +0300, Andy Shevchenko wrote:
-> > > On Wed, May 29, 2024 at 7:30 PM Johan Hovold <johan+linaro@kernel.org> wrote:
-> 
-> ...
-> 
-> > > > +#include <linux/array_size.h>
-> > > > +#include <linux/bits.h>
-> > > > +#include <linux/device.h>
-> > > > +#include <linux/math.h>
-> > > > +#include <linux/module.h>
-> > >
-> > > > +#include <linux/of.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +#include <linux/regmap.h>
-> > > > +#include <linux/regulator/driver.h>
-> > >
-> > > + types.h
-> >
-> > This one is already pulled in indirectly and I'm not going to respin for
-> > this.
-> >
-> > > + asm/byteorder.h
-> >
-> > Already explicitly included in the code you left out.
-> 
-> Is there any guarantee it will be like this? I don't think so. That's
-> why there is an IWYU principle to give more flexibility of reshuffling
-> the (core) headers. And I believe you know that we have way too far
-> dependency hell in the headers in the kernel. Have you seen what Ingo
-> tried to do and what the potential achievements are?
+Mon, May 13, 2024 at 01:59:03PM +0200, Geert Uytterhoeven kirjoitti:
+> On Sat, May 4, 2024 at 3:14 PM Peng Fan (OSS) <peng.fan@oss.nxp.com> wrote:
 
-The driver is using cpu_to_le16() from asm/byteorder.h so the __le16
-type definition will be pulled in.
+...
 
-> 
-> ...
-> 
-> > > > +               rdev = devm_regulator_register(dev, desc, &config);
-> > > > +               if (IS_ERR(rdev)) {
-> > > > +                       ret = PTR_ERR(rdev);
-> > > > +                       dev_err(dev, "failed to register regulator %s: %d\n",
-> > > > +                                       desc->name, ret);
-> > > > +                       return ret;
-> > >
-> > > It's possible to use
-> > >
-> > >   return dev_err_probe(...);
-> > >
-> > > even for non-probe functions.
-> 
-> (this should be "non-probe deferred functions")
-> 
-> > This is a probe function(), but as I've told you repeatedly I'm not
-> > going to use dev_err_probe() here.
-> 
-> Yeah, I got it, some developers are leaving in the previous decades to
-> make code very verbose for no benefit, no problem.
+> You missed one trivial conversion, presumably because no error handling
+> and thus no of_node_put() is involved?
 
-And some developers write unreadable code just to save a few lines of
-code. I prefer clarity.
+Nothing is missed. The below is a redundant change.
 
-Johan
+...
+
+> -       for_each_child_of_node(np, child) {
+> +       for_each_child_of_node_scoped(np, child) {
+>                 if (of_property_count_u32_elems(child, RZN1_PINS_PROP) > 0)
+>                         count++;
+>         }
+> 
+> If you prefer not to include this
+
+I prefer this not to be included as it will give a misleading signals to the
+use of the original API(s).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
