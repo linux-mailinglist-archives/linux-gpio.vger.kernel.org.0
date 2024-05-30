@@ -1,202 +1,178 @@
-Return-Path: <linux-gpio+bounces-6964-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6965-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66AF68D5092
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 19:08:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EE8078D512D
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 19:41:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D48D41F25DD6
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 17:08:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 51EA91F2322D
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 17:41:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1D24437F;
-	Thu, 30 May 2024 17:08:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69134482D7;
+	Thu, 30 May 2024 17:41:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aAj+TQZX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qzq7Py3N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B1C433CF;
-	Thu, 30 May 2024 17:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E934AEFD;
+	Thu, 30 May 2024 17:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717088910; cv=none; b=Om/GPwRbZ/48m09AD0CKEJrnUVjM86yQR8BqJTJeOrmB7nEBpgn8r5oxcNjbnNSG6uFFifYGuhzGO5cnh76kvBn76U4nTQGypPVzGjhSIYjiXiYNF0xh+KFCstRAh+qOpS3NPcRABuQh3yYfbhXF0lAT15Q7IlN5tfyMxmRndqQ=
+	t=1717090903; cv=none; b=c4FBXHpuZYdE/nHj7VotXQPwyKKFEXSy+an7+QEfkOJ2WcJikDLUfVbTX6T1r1Lcjpg0/dUj68M69DftG3IUY5Yuf/Ow2XhTWcFQ+3a1iHOk6lc+rR0FnBHWTxcpjoPR36o8kVkMWgIIqnQt9NqWMIJWxyFHfu2qlUNBo0KeZ0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717088910; c=relaxed/simple;
-	bh=axAu5FB6oF/a31axn3i0S5B3VLMnmWlh6gWO546FsOQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EpWW2nr5aqKcqgWOhAkIrxYuluuL5Fs8Q2xyfB6MEcJM22lz7DTRTdORFbrILhsvenCafT7HWqjH+Vwph0Kky9YMBRzkgm91PcMprzWAFsdJTa0zl85CdSQUnr4444dxPTlcaDxDVuasLTINzZAJDAI3NPXbJuMOUjs5zELRPRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aAj+TQZX; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Envelope-To: linus.walleij@linaro.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717088906;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FBh+z6/yWJorKMpQpXCLn6sR3W5MP5Dz7vo6P7gzhF8=;
-	b=aAj+TQZXMbCj/68/EOx9VjszJzO4L1tmYYpDzuj4yKfaj30lTBYxoUuaa9Yr0wTfajdgbv
-	URn9I+u8nX0PemlZ2aubI7b9BGULtPT49pqvwYJKE4fFdBute9CjKyu5uq4lYM75nmEgCO
-	xmHpVIy18JXS9KdF9RGGj/zP1mSeDrA=
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: linux-gpio@vger.kernel.org
-X-Envelope-To: sai.krishna.potthuri@amd.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: krzk+dt@kernel.org
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: devicetree@vger.kernel.org
-Message-ID: <e4972a07-18d6-4a8b-bb5a-4b832aa2d20e@linux.dev>
-Date: Thu, 30 May 2024 13:08:23 -0400
+	s=arc-20240116; t=1717090903; c=relaxed/simple;
+	bh=J5HoT6wvLCEP6PKrxjLxadfzILQKD5XkS7lncw08i3o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rAPbnZQem1UayBmBDWkcZiDN/8VLfcpf0bEEEVhExaHqES52wGCBhXAbRmoEWR2YrL7tFMj0a6Scls7lgPRSUiBgss2iJxYhspgT+LTuVa9bTQJuRlVE9wtE6p0171aHErSkEsrgKW00yoQC8oDvDSYwuPWirYU48LE9lBUbEjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qzq7Py3N; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f62217f806so7246765ad.2;
+        Thu, 30 May 2024 10:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717090901; x=1717695701; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m/ota4vn2GS8aqgXje2STBimgM+Hm93FTRCKMqODBkA=;
+        b=Qzq7Py3NyH1N6ugUBy/k45yVvskWtppUUHAxDsRWfFWwZVaIQCyFJgjTgZl0WGV51o
+         TK5d/GBDpPGJs4JW7MhxWn9/Qjm9ZARsWrIlvMQ3HadOPunpMeASrj3Y0/0b9aJUJh+h
+         HkFFjs3EJpQfPuRk2bPo0Wbh3CxxaB4LkMIhuskyTtXM8ZmG7pb4tpKagTtfUsMgzmPa
+         dIZ+rd6Mu7BJoO2/+obI2rxBnjhDVj1WvQMvnRAkq5DSzVhwPu7oxrHsGoZCjJ1LKmL3
+         1ax4XyjP9EyuYI/7QMZMLuHwxK5vhB0pmqCXPuagcXLyhx6fMMKRr4cwfArWxczWwm6x
+         y9OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717090901; x=1717695701;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m/ota4vn2GS8aqgXje2STBimgM+Hm93FTRCKMqODBkA=;
+        b=i8DO3hTWeV1iFmWmyvYJMov4M+dYTYIcTFSbWZdtvag+uf8HOChfoMaa88E6d8huYF
+         qZ/3VblfsNcEDflsAac2NJ+HJZqwXbbem4bXotihCQnOg3dhF66nCYfIltN/vY1X/Y3u
+         GxiSnK8wNSdG9gkvzCN8BvAGEhxfu0FgZV1k0Lt8sjEiWYbN6MCzBb99e1joW7vPjcBA
+         nzJYRXaE9aD6tKdPHUxUk6bl0ayHichY/FrxWCNvRSYlCvjfZ5FABr2kAYGPi3iu4+zS
+         XoyPn+IeIMVchYYVQUPBJ0Qhi9j21xA1HfX2oNsXhgFUYLvm5lhiQUEjPYA9UanKlL5f
+         CQZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVOD3H4/v3u38FI3wbn0rWZAwEDi9AtGMEfAd0IHo95jjr7FnxJJyDTx8ZMfh+c0/UlH0xqrpOQ4vg5sB+cFx8LxlMSR10XNdGSQOU/pmFzjZgmuBNLbRrxZJXXCm2+4Q1wBS5Z5MBWfGW31cxSvAXesFtwTJxf3ZzMKPUFo9GQ9BH9x4s=
+X-Gm-Message-State: AOJu0YzmS/qXZ/OAyuYW0+aJLZpBdFE6qRFu/csQ0z6/0qatdVuVbQIn
+	4R2Q+aDjOyFGMU7J3nj7UY92jTgDUuoCxmZiGuB/FvXwVYnWCd3h
+X-Google-Smtp-Source: AGHT+IHZ0dDmSPfX+xofX/WmcrGuZDwcUggoaa+ft3XatTCOde0yruag4R9avDoOo4qe8Wvx6gsKpw==
+X-Received: by 2002:a17:902:c943:b0:1f4:9474:e44d with SMTP id d9443c01a7336-1f61961bcd0mr37074115ad.21.1717090901019;
+        Thu, 30 May 2024 10:41:41 -0700 (PDT)
+Received: from prasmi.. ([2401:4900:1c07:3bcb:e05d:a577:9add:a9ce])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f63240c947sm450105ad.269.2024.05.30.10.41.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 10:41:40 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Paul Barker <paul.barker.ct@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 00/15] Add PFC support for Renesas RZ/V2H(P) SoC
+Date: Thu, 30 May 2024 18:38:42 +0100
+Message-Id: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] pinctrl: zynqmp: Support muxing individual pins
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org,
- Krishna Potthuri <sai.krishna.potthuri@amd.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- devicetree@vger.kernel.org
-References: <20240503162217.1999467-1-sean.anderson@linux.dev>
- <CACRpkdbOAoSDNFhXfz3djUZh1_MQ_T75CC+-LmojRXvyCbUusA@mail.gmail.com>
- <06a4e5fd-3d26-4923-bcbf-0bdd66d756c4@linux.dev>
- <CACRpkdbSsgxtKqF6ORXubufTaegjysHU7zH-tJfDfKNd=Kdoeg@mail.gmail.com>
- <51d984f5-896e-469f-914d-2c902be91748@linux.dev>
- <CACRpkdZ19+zUCEBCJJ+MBnnaF+caZKFTDxYiWZ0BRGx+PxN3bw@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <CACRpkdZ19+zUCEBCJJ+MBnnaF+caZKFTDxYiWZ0BRGx+PxN3bw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 5/29/24 04:38, Linus Walleij wrote:
-> On Tue, May 28, 2024 at 4:28 PM Sean Anderson <sean.anderson@linux.dev> wrote:
-> 
->> Well, perhaps you should have reviewed the original driver more
->> closely.
-> 
-> Do you want to push me down and increase my work related
-> stress? Because that is the effect of such statements.
-> 
-> It looks like criticism of me as a person, so explain yourself.
-> 
-> Writing this kind of things looks to me like some kind of abusive way
-> to express your desire and that is what burns maintainers out, so
-> if that is what you are doing, stop doing that, adjust your behaviour
-> and focus on technical issues.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-The technical issue is that the driver does not match the hardware. We
-must maintain the existing set of groups for backwards-compatibility.
-But this should not prevent improvement.
+Hi All,
 
-Saying that we cannot have both group styles means that the driver is
-permanently stuck with whatever was picked when it was submitted. Hence,
-if you want to have only one style you had better review new drivers
-very carefully.
+This patch series aims to add PFC (Pin Function Controller) support for
+Renesas RZ/V2H(P) SoC. The PFC block on RZ/V2H(P) is almost similar to
+one found on the RZ/G2L family with couple of differences. To able to
+re-use the use the existing driver for RZ/V2H(P) SoC function pointers
+are introduced based on the SoC changes.
 
->> > If you want to mux individual pins instead of groups and functions, by
->> > all means, but please do not mix the two approaches in the same
->> > driver, I'm just trying to save Xilinx from themselves here.
->>
->> I see no point in creating thousands of groups
-> 
-> Please share your calculations for figures like "thousands".
-> 
-> In my experience, groups are usually in the tens, perhaps
-> hundreds, physically restricted by the number of pins
-> underneath a BGA. A Micro-FCBGA has 479 balls and many
-> are GND and power, so that sets a ballpark figure.
+v2->v3
+- Dropped patch 1/13 [0] as its been already queued up.
+- Updated description for renesas,output-impedance property
+- Added three new patches 02/15, 04/15 and 14/15
+- Updated size for cfg in struct rzg2l_variable_pin_cfg
+- Included RB tags
+- Introduced single function pointer to (un)lock PFC
+- Now passing offset to pmc_writeb() instead of virtual address
+- Renamed read_oen->oen_read
+- Renamed write_oen->oen_write
+- Renamed get_bias_param -> hw_to_bias_param
+- Renamed get_bias_val -> bias_param_to_hw
+- Dropped un-necessary block {}
+- Now reading arg before calling hw_to_bias_param()
+- Added gaurd for custom_conf_items in struct rzg2l_pinctrl_data
+- Renamed PIN_CFG_OPEN_DRAIN->PIN_CFG_NOD
+- Renamed PIN_CFG_SCHMIT_CTRL->PIN_CFG_SMT
+- Introduced PWPR_REGWE_A instead of using PWPR_PFCWE
+- Dropped using pwpr_lock
+- Optimized rzv2h_pin_to_oen_bit()
 
-There are 78 muxable pins on this hardware, and around 40 groups, each
-with signals that can be muxed to each pin. If we were to create groups
-for each combination of signals and pins, there would literally be
-thousands of groups.
+RFC->v2
+- Fixed review comments pointed by Rob
+- Incorporated changes suggested by Claudiu
+- Fixed build error reported for m68K
+- Dropped IOLH groups as we will be passing register values
+- Fixed configs for dedicated pins
+- Added support for slew-rate and bias settings
+- Added support for OEN
 
->> for every combination of pin musings
-> 
-> It is clear from the documentation that the point if the pinmux
-> groups and pins are not to present all possible options (known as
-> a "phone exchange" solution) but those that are used in practice,
-> i.e. these representing real world use cases. See below.
-> 
->> when we could just switch to the solution in this (or v2 of)
->> patch. For compatibility we cannot be rid of the old situation, but we
->> can at least fix it. There is no technical problem with them coexisting.
-> 
-> Historically there are  ~2 camps:
-> 
-> - One camp want to use groups and
-> functions to combine pins in groups with functions to form usecases.
-> 
-> In some cases (such as pinctrl-gemini.c or the very latest
-> pinctrl-scmi.c merged for v6.10) this reflects how the hardware
-> actually looks: it does not make individual pins available for muxing,
-> but you poke bits or send messages to change entire
-> groups-to-function mappings, so it is necessary for some hardware.
-> 
-> So when you write that "groups are a Linux-only concept" this
-> is because you probably haven't seen this part of the world.
-> Groups exist in hardware, and in the SCMI specification.
+RFC: https://patchwork.kernel.org/project/linux-renesas-soc/cover/20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
-What I mean is that, for this hardware, groups are a Linux only concept.
-Neither the firmware nor the hardware itself has a concept of groups.
-While other hardware may have this concept, it does not apply here.
+[0] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20240423175900.702640-2-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
-I do not object to groups where that is the hardware reality, but they
-are unnecessarily constraining for this part.
+Cheers,
+Prabhakar
 
-> There are systems with individual control of the muxing
-> of every pin, such that e.g. every pin has a muxing register.
-> 
-> These are again not really phone exchanges: I am yet to see
-> a system where any function can be mapped to any pin. These
-> just do not exist.
+Lad Prabhakar (15):
+  dt-bindings: pinctrl: renesas: Document RZ/V2H(P) SoC
+  pinctrl: renesas: pinctrl-rzg2l: Rename B0WI to BOWI
+  pinctrl: renesas: pinctrl-rzg2l: Allow more bits for pin configuration
+  pinctrl: renesas: pinctrl-rzg2l: Drop struct rzg2l_variable_pin_cfg
+  pinctrl: renesas: pinctrl-rzg2l: Allow parsing of variable
+    configuration for all architectures
+  pinctrl: renesas: pinctrl-rzg2l: Validate power registers for SD and
+    ETH
+  pinctrl: renesas: pinctrl-rzg2l: Add function pointer for
+    locking/unlocking the PFC register
+  pinctrl: renesas: pinctrl-rzg2l: Add function pointer for writing to
+    PMC register
+  pinctrl: renesas: pinctrl-rzg2l: Add function pointers for
+    reading/writing OEN register
+  pinctrl: renesas: pinctrl-rzg2l: Add support to configure the
+    slew-rate
+  pinctrl: renesas: pinctrl-rzg2l: Add support to set pulling up/down
+    the pins
+  pinctrl: renesas: pinctrl-rzg2l: Pass pincontrol device pointer to
+    pinconf_generic_parse_dt_config()
+  pinctrl: renesas: pinctrl-rzg2l: Add support for custom parameters
+  pinctrl: renesas: pinctrl-rzg2l: Acquire lock in
+    rzg2l_pinctrl_pm_setup_pfc()
+  pinctrl: renesas: pinctrl-rzg2l: Add support for RZ/V2H SoC
 
-Canaan K210.
+ .../pinctrl/renesas,rzg2l-pinctrl.yaml        |  23 +-
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 773 ++++++++++++++----
+ 2 files changed, 619 insertions(+), 177 deletions(-)
 
-> What exists in practice is that each pin can be mapped to 2-4
-> functions, in extreme cases some more. Often these functions are
-> mapped to adjacent pins, and the "chessboard" picture in the
-> documentation for the subsystem reflects this.
-> 
-> For this reason, it is often helpful for driver writers to group
-> adjacent pins into groups, so an iterator can walk over the
-> pins and poke their registers in order, instead of treating each
-> pin as a unique entity.
-> 
-> - Then there is the camp that just by habit *want* to control
-> each pin individually. The extreme example is pinctrl-single.c
-> which is named like such because each pin is controlled by
-> a single register. TI wanted this solution mainly because their
-> hardware wasn't described in manuals, but in other HW
-> description files, and they needed to process large volumes
-> of data into DT-form.
-> 
-> I didn't like this solution initially because it makes it hard for
-> people without datasheets to understand what is going on.
-> But I was convinced to let this coexist with the group and function
-> mapping, which is fine: maybe one size doesn't fit all.
-> 
-> i.MX and others also do this approach but with large sets of
-> defines in the <dt-bindings/*> files.
-> 
-> Combining these two approaches is not something I recommend.
+-- 
+2.34.1
 
-Well, the former approach is wrong for this hardware, but we must
-support it for backwards-compatibility. A combination is the obvious
-solution.
-
---Sean
 
