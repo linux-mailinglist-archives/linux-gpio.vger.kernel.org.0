@@ -1,116 +1,114 @@
-Return-Path: <linux-gpio+bounces-6953-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6954-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73CCB8D4CE6
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 15:37:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 228F78D4CF3
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 15:40:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A510E1C220C1
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 13:37:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B707F1F22BBD
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 13:40:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F52A17107B;
-	Thu, 30 May 2024 13:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGoum1wg"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8120517D37E;
+	Thu, 30 May 2024 13:40:50 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2B917C203;
-	Thu, 30 May 2024 13:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B1B17C200;
+	Thu, 30 May 2024 13:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717076259; cv=none; b=H7GiU7flwl8x8edv7m8erbJ2PsGNwBLaIzhzsEo7Rw8/icnW6dZzu2ZsIikHInaZGFJelSnggIuDLOnI0O5tZtlcO4ww4EWnV+OLvDYhJP6DzqpTRHvs2V9G5qPSCmowOjPsZLAgbA0a9F+otffYctjAuDzYdhcY+pWDmKT1uy4=
+	t=1717076450; cv=none; b=M6LUKk288jLu0Tc7e7i6Lz2u7PcqrYGavUCN/vhh3AId28zhgm+/nSAmVZpymbsCUw0eexP3LfXqea7d6aTkG60YLUzpaIg6XTCew6EDFLVXB8rsS9HNCeT2oyWYZKokBIzVxDysLbxMCvH5D+X4eFXAdvKSSBpj3Q+TaRHZySo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717076259; c=relaxed/simple;
-	bh=oqjWBx6PDbgINMHWnjQpfH26p1ixUJktWtD7O9TLhj8=;
+	s=arc-20240116; t=1717076450; c=relaxed/simple;
+	bh=lIlSzIWS5g2c9h1l/ma0n9X4Gfu2m+/T7kpjxSo5BXA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J3ehZkDmb0cE9ol90M6npLItSE+nc+aaNBfatgRMik/vqBpc146dWHPv2srHViN6GQ3EENPy1VE4yn6iBZhzUEyqWEwqEj+tAyP+tM310uI8KwtKWkfE9iy2Deea5wx+z/TkAPyrHO/zpYtZJnBhHHX9NaoQSeyjj821lOEyggY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OGoum1wg; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=okLpfuw8SMbUzqXyr+6fm6hXScKc1Olzms61JkdEyeUgahmxPEszaIp0y3CWjWzMsd8U2bUvAKRV9JWTYVlxni92fZIeeqX/51uQ8FO1mGCf9be+wRaJ9t8jlyIhwfk5AvHutNDTJjsE8WwBehCms2bqBgyQtJ7pB5kG72ZpHdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52ad8230bb9so993133e87.3;
-        Thu, 30 May 2024 06:37:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717076256; x=1717681056; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oqjWBx6PDbgINMHWnjQpfH26p1ixUJktWtD7O9TLhj8=;
-        b=OGoum1wg3dxy0uS5Gsszzq4vDgFnWMt+J54/n75Av+nET9iAKjfzMkg8PsKEirRoBS
-         zpumgU1BUxzA4pONd8hnwpIv4heX5AdeC6hWhZuunJAfKU7xDIah7ORZbIf3tMn7gNv1
-         empeDj4j6db2C2b8/o0TGMIDdvcKK1G1yPFK6rUr605m25KLHzbq3NF7n5n/k1V7nbp9
-         3k/fw9AJ8tKMKGmhK6wDACbh9v0WN4gmQfoAM7Uzl7OJqZCwuUlV6OPrjbDGMt29bnm1
-         qByeOeBu1Xt1C8/7R6dGk08auefeggcN++cB1xZkEHQqie/gkPTaUsDB2gmnTokqphBe
-         tKQw==
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-62c5fd61d2bso9348017b3.3;
+        Thu, 30 May 2024 06:40:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717076256; x=1717681056;
+        d=1e100.net; s=20230601; t=1717076447; x=1717681247;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oqjWBx6PDbgINMHWnjQpfH26p1ixUJktWtD7O9TLhj8=;
-        b=hFFU5HsdWyKdigY4YQDdqh4xjt+7YGyAI+o+5bzCD6PhO6hKhr6L7EZ2gS1Ul/Zji8
-         4/DPPrdp40tmYVUNu/ZcsNnPhYl3QX5nAGftEDXlTYWcy0sRju4+390TenrPhD7aJKQE
-         myVKHTW+O2fXwn48C09pC7544bzxDWHNKY0iD9d4UlnwlAoXLaHaM6K4lhebxB2dSiR4
-         J+Y9Ur8YZhZHGBhfiCEctEGqNWMlgZT8eQ4gOUjtu/9IqgKg8JEalPgJJZ26atFJ4zB9
-         rQI+UYDn722iwf9PsNS6S+ybDth/0gY2c0uuE/y5A2/jxQDX7loea5Y04lQBx9wrcRTU
-         /hlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhRREuYIKiXZc8tD8uTa8aSgCuzru/NK0ubW3xN7bekvwkN1MhZdr9pXL/yCYH9SsWykcT1qG4D9BqRDl52l3Wa/d5Wtete/jFp0Snx+ymuLpbhsL+J4aeqo0/WuMZSkk6sjiZF4LeQbenET8X
-X-Gm-Message-State: AOJu0YxgMsI87H44NHUVrxhqr0h2knfUsVgu3/10fpWhPlJfW+eEdBzv
-	+h0BtsLsU5RH/Hreb6hGZq021unNgCiBQdAbuzWhjy4hmqkapSBrVY+b5oKZ9F0knRPHjEMjQf7
-	LKH8hQmRBCzEF16JbXyyvhem0v9uJNPRg
-X-Google-Smtp-Source: AGHT+IH6Wk+7Pxtnc7LbHEUnBVnJDrQiQxm5LEV/2kvexa+KpwwWI4YfEvVf+XgRdSH1//HZGctXD+Jk6g1uF582pzc=
-X-Received: by 2002:a05:6512:48c1:b0:529:b734:ebc9 with SMTP id
- 2adb3069b0e04-52b7d428b76mr1502110e87.38.1717076255424; Thu, 30 May 2024
- 06:37:35 -0700 (PDT)
+        bh=yJ3f9+fUvgkfKQ2kx2UNWzarW6FXRaKbEJ3+LcKge+U=;
+        b=qzT6aWEL0JdhT6ILSAGlwOI4ec46kVp3by8HRBe6zDW+hzX4zyVH7p9rN3Y3GOQla5
+         N5u/9PtQ63DbyP6H0idsTcnmDLRf9R4sSJtWJAWPuMBv+KLGzzW2pWhIglZyB8cigwtt
+         IJlPBy7TwkGgDOJWpm/13gNqzjxU8Lfgeus69+aL6Wbems/2gbUCeg5xKhE5F+KV02rV
+         w/L6SOgYHlubaa+wrMCmYCtZuu0VLJKjYDcFqvsypJHCRFJLdcf6yU4sj9k6gb+JTX6+
+         DQt1Xl018NshY8E2sdD1tNo3Rt1kS3+1Gr2RFgkX6KBLnkmBVDzhhD8mxN2DoFTx05Ti
+         FO5w==
+X-Forwarded-Encrypted: i=1; AJvYcCX/lnuqMsn1chpkfE1VOxjgcZEzh8lD9olhM1JgjUytp8tW1xhLfkEP8nWjmW9oqSJeEyQvjNF1TlBMcb5UU8CkLrbTOk6qyrP7ZoLDznvn+j8Lqbf8KDn5+33UZMWMqCHrphk3H/tQEJyCjCYk0CilicHaPF3yUb3A8DyFmAph9P3IiHtBb7ZTUlfFPYoO+Daf3yLswkwyrCCeRvFQF+CC1+186O5sOg==
+X-Gm-Message-State: AOJu0YzR35wFNEjFC8ahAzyYhJ87M272SX1VeZG7ZxbkfARTdCc7G2Yl
+	kBhzqA6AGUY2GizPbYcyM9/rdVJkaMdjQjkGiup5brCnSJgFwnhQty9yo89w
+X-Google-Smtp-Source: AGHT+IEBb+XMp90PbUvwx7Dx5ZpFDUvPTdcOZ8kmjQZcL6HUm5sl7Sd9cFCinRNSV0/RoC7qm8A9eg==
+X-Received: by 2002:a0d:c047:0:b0:61b:3304:b702 with SMTP id 00721157ae682-62c6bbceadfmr19685677b3.5.1717076447043;
+        Thu, 30 May 2024 06:40:47 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a3f056esm27910387b3.50.2024.05.30.06.40.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 May 2024 06:40:46 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-df4dda88ce9so667518276.3;
+        Thu, 30 May 2024 06:40:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWdhVFquytfzdc6g4T63qzTrmxcZQEfsMMcpiVtl+a91k3he3hF/H+Uk+gJZL6vifceS8nvTpfE5o97xhmLVbGy+22vuqvbuzMW0knF7bdI4Vn5NOVraYa4MbkusyYzKX7hKcJc807R5W/57XSdS4QNaIXrxIwhK8DUI9BH4T4VXCOFS+fBMGbmJOEOeMj0Tlenamch7pVvB4vGcXte+6wknTqFGg849A==
+X-Received: by 2002:a25:bf91:0:b0:df2:43dd:f7a3 with SMTP id
+ 3f1490d57ef6-dfa5a7ce1f4mr2347623276.58.1717076446347; Thu, 30 May 2024
+ 06:40:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <c0a28f466c42d5d59c7fadfa1fd05fd512d43b6f.1717060708.git.geert+renesas@glider.be>
- <ZlhGYFM6iVlGjZk-@surfacebook.localdomain> <CAMuHMdU6V4Ooit7P5pqUFXOZawiZj7TjXY7t=KVk84xPZ0PR+A@mail.gmail.com>
-In-Reply-To: <CAMuHMdU6V4Ooit7P5pqUFXOZawiZj7TjXY7t=KVk84xPZ0PR+A@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 30 May 2024 16:36:59 +0300
-Message-ID: <CAHp75Vd3ke3_bxwsxzSVzjnNW-6aYDTYHvZ-+B9nJtAJR1fX=g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rzn1: Use for_each_child_of_node_scoped()
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
+References: <20240524094603.988-1-paul.barker.ct@bp.renesas.com> <20240524094603.988-5-paul.barker.ct@bp.renesas.com>
+In-Reply-To: <20240524094603.988-5-paul.barker.ct@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 30 May 2024 15:40:34 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVFayjKtnJpkH5iFy_UT4uXCh48-9zJOJkiyu5pT7vcBA@mail.gmail.com>
+Message-ID: <CAMuHMdVFayjKtnJpkH5iFy_UT4uXCh48-9zJOJkiyu5pT7vcBA@mail.gmail.com>
+Subject: Re: [PATCH 4/9] arm64: dts: renesas: rzg2l: Enable Ethernet TXC output
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 30, 2024 at 2:52=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
-> On Thu, May 30, 2024 at 11:26=E2=80=AFAM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > Thu, May 30, 2024 at 11:19:29AM +0200, Geert Uytterhoeven kirjoitti:
-> > > Use the scoped variant of for_each_child_of_node() to simplify the co=
-de.
-> >
-> > I do not see the point of this patch. This makes code actually more
-> > complicated, and I'm not sure the code generation is the same and not w=
-orse.
->
-> On arm32, a conversion to for_each_child_of_node_scoped() seems to
-> cost ca. 48 bytes of additional code.
->
-> BTW, the same is true for cases where the conversion does simplify
-> cleanup.
->
-> I checked "pinctrl: renesas: Use scope based of_node_put() cleanups",
-> and all but the conversions in *_dt_node_to_map() cost 48 bytes each.
+Hi Paul,
 
-Yeah. so for the cases where there are no returns from inside the loop
-I prefer not to use _scoped.
+On Fri, May 24, 2024 at 11:47=E2=80=AFAM Paul Barker
+<paul.barker.ct@bp.renesas.com> wrote:
+> Configure ET0_TXC and ET1_TXC as outputs on the Renesas RZ/[GV]2L SMARC
+> SoMs, as per RGMII specification.
+>
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 
-P.S. Thank you for checking, btw!
+Yep, TXC is MAC-to-PHY for RGMII, but PHY-to-MAC for MII.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+I believe this has a hard dependency on the driver patches, as a
+failure to configure pin settings will cause the device to fail to probe?
+Hence to avoid regressions, this has to wait one cycle...
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --=20
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
