@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-6967-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6968-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B5AE8D5135
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 19:42:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 624FC8D5139
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 19:42:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 042431C230F3
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 17:42:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85C031C231FC
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 17:42:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30B1B4E1C8;
-	Thu, 30 May 2024 17:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FBA1482D7;
+	Thu, 30 May 2024 17:41:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fu48Eltv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VxWF5Qrc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8141C4DA0C;
-	Thu, 30 May 2024 17:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFEB4F5FE;
+	Thu, 30 May 2024 17:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717090913; cv=none; b=egMDa6U/WinAoSNxIsxMuVjXM7He0+43P2iSY0FKhTry0vJScaiVZGkSLi6WbPb0OL8pB/+xZJcm/RSVTcrg2p8gaEqMXflH3C7J3Gy9OFU0hjbqCuOwA1pnYwe8wX7le+1YRf/tVF7KcIdgjJVeqMw9EhfgyeF3fWkBLJwkkSA=
+	t=1717090917; cv=none; b=K0Xcj6a2NiTo6Y8TkMYi5+uySh8DOpEhDM5y3/12aBLFrLjhc6Y9DNBbXp99dbhtTtZJ6o05N1pfg5KzOz4T00X6LSa63OCR3cVreil1Lt4DsoJRdoT8UU6AHRGJhvfweyeoBn2kuX3vknUfsr9f+lWMKclPMLLQlxjIsP+lJ6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717090913; c=relaxed/simple;
-	bh=j9tL9gpfy7OkyOe6iOCK7oh07vHPJnmcOh9104/JG0o=;
+	s=arc-20240116; t=1717090917; c=relaxed/simple;
+	bh=3+wWWlylxn2raLlyLx8WctR838XlUJwYs3q4PDxMLKw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NLcdPRgIulwMsd/FLFRVU55CQ1Jyrkx3pKxse6ZFvjwkQ7cR4GqPMYEsJ/rmOeQFZVBJ6ikrp+zQYQi4/9OFNzJbBNcUP1OteXd+kV5NzidRiXNp24LO6GEs+knnfAS4kpkGW89fdzJtzECpJQUQ+kGCmp4oHEczWVBKpU37ndg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fu48Eltv; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=ZegrfOY7ppDSQwMW0Sq90VOcWq3xS82X4QigaX0qc+wx7ad0PnHMxjJTeUSVW/XAaBp8v5JF1A69dshIf0CbxPVEkUG+RaELWB1/KDLYFygRk3CbMUJ9kxgBXmc+8mZtEKB2XlJeSdkO9GEkIAChRPdhBrpzzxfCazmS+hQC3a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VxWF5Qrc; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f480624d04so10463825ad.2;
-        Thu, 30 May 2024 10:41:51 -0700 (PDT)
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7022bfbb329so955295b3a.0;
+        Thu, 30 May 2024 10:41:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717090911; x=1717695711; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717090916; x=1717695716; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x0V+JT9uI7tYaLEbdfGiVY2aTzIUtUtzYX+9IgVQ/4A=;
-        b=fu48Eltv3vqO/OrW0fNsK6OWyRSdbkLq6Cou+ddUjKL4tp0aPJcJT6EZyoSvcl/ZjM
-         lsODRxsP7RlN0EDKFujlpIhPN6IxZQ1kE5591ETEv3f+/nZEMir0oYoXNwL3AbDG58y5
-         CEG4ezkZd3mjEvCgCBV4FqJx8/L4gofSRpwAFBrcjO1dte7vMh5h+Zz0DN2WJ21ZAWbl
-         MWF+ELYfG9l2EWdxK6c9/RmWf5KP0G3n0wa/lRvv7cOD1hEnWlKNYnAgISNz0W1vosfs
-         veW31MqalEQ+yth87qbHo0dwQKMfxgNj5Gb+oU1KMSPELMg8aDsJuFXp+MVsBqL5xepX
-         QAZA==
+        bh=8dl4efaMd6PG7V2ds0yvRn9ev5wtsAt+KazWwpZSZig=;
+        b=VxWF5QrcWOwCVTDXfkfzHFW5SvH4pWNyWtDKnUiNxQDqMa/A+VfprT5ruLgIuIo6hq
+         LA8LGZjoNT5eFKh3+09k34zRF7Y+6XvB5UMauRfh9IVoFW0pbf5K9l/N3W7C8Rmh3Fsk
+         ShVY2kcvzzV3AMPPcx8fPv+Ds83piMw15Uempjs+IJC5v3zjR4vW1medtjYXT9rYKvFb
+         2Oh1ykWlaypZGuvQVBGDe4McZ8jIrGqQ9JcYRWrp74d39b1J/oiErUq711V3ocEwri5b
+         AAmUso70AReY72Bjhsz94nz0wNtU7iHNs8LdXQ38IVgYqI62vcq1fLQLHlZnl1kLc5ie
+         2IZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717090911; x=1717695711;
+        d=1e100.net; s=20230601; t=1717090916; x=1717695716;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x0V+JT9uI7tYaLEbdfGiVY2aTzIUtUtzYX+9IgVQ/4A=;
-        b=U/XaltW/a57wBXLbshErXeDJY4Lhb+0U1HgMDci543G2ufYO7hhny20vB4s3J/rPCl
-         P+4skPlfKIpFPHwBk4KQwYmZTBk/IubNQh5gRgU621VLXEapNbjjwUMdT0+jvXfzgKLZ
-         HFGb6rJsbRwnKV/43lKNt3fYWpq/HkVAJjik5vibf8of2QWP8uWfpwsWKMbTIZ6QXv7N
-         NIG9AJyAfENCMn1URkNbT8tm69pX4nCIX1mtnrwjI1tkmo547K6YyxlIkmMvAMUqN8Ng
-         0TJ25neeRO/SaWtL9JIaTdnTIiDfRV/+/0SZ/DuQHMDaKscu0Ah+ZifEoIM0SDxXuj2a
-         Lx6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUpZtuhJC0KBA7YYqoxr4wrPwifL6xEx0mzNxp2Gm8NIG2+BO7+zGXT8ST953eBiDTuAOqtUf+5RCkrOTKy/JIjrtNsGOXplkJmt4VF0VoxlhmfxmEAlp0OJLWVUd463XVB3T8bZRJ8gAxHfBQIsLz2wZkXte32qDrDfJ4/LlcgKzzQGDk=
-X-Gm-Message-State: AOJu0Yx50n2jrkBUCvYescaUhQNKZrl677MNnCi3AJ8umwYqKVPZgm9D
-	Ru/KLWTOap64NcLtXamNe+Cqlob0hiFhKPhu5jUtRUd7IFTTOkJ9
-X-Google-Smtp-Source: AGHT+IHvsc5SBJFpJUXgUv4v0815qZj0FyTxP6YUrK6X3vXHGF1PDTeQxjh6AfACXTLjlIeBo5yU/g==
-X-Received: by 2002:a17:903:2352:b0:1f4:be9b:d30d with SMTP id d9443c01a7336-1f61960610bmr29089735ad.25.1717090910691;
-        Thu, 30 May 2024 10:41:50 -0700 (PDT)
+        bh=8dl4efaMd6PG7V2ds0yvRn9ev5wtsAt+KazWwpZSZig=;
+        b=wsHv8BRpBJmSiU0jyTbElj7zWo0N84YA12wLuzbfztM7cuQgPkxHFSYlfrCCtJDSfl
+         IrwEx0doh57qLep2I3sxbMZe+J510SpnopfhOIjL+tMjgVDwgl/zIxXb6m5O52qRgPCe
+         CUXt+TTq+qR8U456hvwh0favEtMMOgmSUfsr9+mmKZY0tw0Cw7CdYzzEZD85dvPthpQ4
+         VelqeEm5CH02rvmR1EmPLqt6VfapeYuB4suPwn/Hasd8G2z6X09Cw8XmdeaI/v7jKLDu
+         Nur1jRIVn7093jEzB4LrOtzz4+4Vua8nBhMvCG4wpdnyj2IIKk/OvkVNfaTzYG/Kai49
+         0Xzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvgJd0jHYwIZ+091UjGYQdMdRxLMb02j0BXCn8YefaXHcnRZ0msmZJBNKn9ZhOoeZzwUmZbuqiav8jRljZjF1HictiO6lAGJcmwa9i/RIu7XDGHA0VvXQAu7sbK+f/ecrVd+dURgBWXAh3yZ2GJIsRSExAq6dn8S+mj7GIszMFTsx0+JU=
+X-Gm-Message-State: AOJu0YzuPQTz2ClNF3I7K9FnZ9FWNv8nq5hId1ubQrHV5KSUenAEJNAa
+	L55ehcXt4fqLP1abNC9FqNJJFh+1mt7BQ66UhiMpXw6WcVXdiuIE
+X-Google-Smtp-Source: AGHT+IEKZ4ZALznb5HGONKn7x8aCOFbdDf8+QAoeuT36TK5j+2lREX+ESCaT2IWmu9cA0wsELnF1UA==
+X-Received: by 2002:a17:902:680e:b0:1f4:af80:7a3a with SMTP id d9443c01a7336-1f61bf8fa40mr37336795ad.25.1717090915572;
+        Thu, 30 May 2024 10:41:55 -0700 (PDT)
 Received: from prasmi.. ([2401:4900:1c07:3bcb:e05d:a577:9add:a9ce])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f63240c947sm450105ad.269.2024.05.30.10.41.46
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f63240c947sm450105ad.269.2024.05.30.10.41.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 10:41:50 -0700 (PDT)
+        Thu, 30 May 2024 10:41:55 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -85,9 +85,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Paul Barker <paul.barker.ct@bp.renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3 02/15] pinctrl: renesas: pinctrl-rzg2l: Rename B0WI to BOWI
-Date: Thu, 30 May 2024 18:38:44 +0100
-Message-Id: <20240530173857.164073-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 03/15] pinctrl: renesas: pinctrl-rzg2l: Allow more bits for pin configuration
+Date: Thu, 30 May 2024 18:38:45 +0100
+Message-Id: <20240530173857.164073-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -101,74 +101,116 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Fix the typo B0WI -> BOWI to match with the RZ/G2L HW manual.
+The pin configuration bits have been growing for every new SoCs being
+added for the pinctrl-rzg2l driver which would mean updating the macros
+every time for each new configuration. To avoid this allocate additional
+bits for pin configuration by relocating the known fixed bits to the very
+end of the configuration.
 
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Also update the size of 'cfg' to 'u64' to allow more configuration bits in
+the 'struct rzg2l_variable_pin_cfg'.
+
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
 v2->v3
-- New patch
+- Updated size for cfg in struct rzg2l_variable_pin_cfg
+
+RFC->v2
+- Merged the macros and rzg2l_variable_pin_cfg changes into single patch
+- Updated types for the config changes
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 30 ++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index f784169abf11..169986022a73 100644
+index 169986022a73..fe810d8dfa58 100644
 --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -131,7 +131,7 @@
- #define PVDD_1800		1	/* I/O domain voltage <= 1.8V */
- #define PVDD_3300		0	/* I/O domain voltage >= 3.3V */
+@@ -78,9 +78,9 @@
+ 					 PIN_CFG_FILNUM | \
+ 					 PIN_CFG_FILCLKSEL)
  
--#define PWPR_B0WI		BIT(7)	/* Bit Write Disable */
-+#define PWPR_BOWI		BIT(7)	/* Bit Write Disable */
- #define PWPR_PFCWE		BIT(6)	/* PFC Register Write Enable */
+-#define PIN_CFG_PIN_MAP_MASK		GENMASK_ULL(35, 28)
+-#define PIN_CFG_PIN_REG_MASK		GENMASK(27, 20)
+-#define PIN_CFG_MASK			GENMASK(19, 0)
++#define PIN_CFG_PIN_MAP_MASK		GENMASK_ULL(62, 55)
++#define PIN_CFG_PIN_REG_MASK		GENMASK_ULL(54, 47)
++#define PIN_CFG_MASK			GENMASK_ULL(46, 0)
  
- #define PM_MASK			0x03
-@@ -478,8 +478,8 @@ static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
- 	writeb(reg & ~BIT(pin), pctrl->base + PMC(off));
+ /*
+  * m indicates the bitmap of supported pins, a is the register index
+@@ -102,8 +102,8 @@
+  * (b * 8) and f is the pin configuration capabilities supported.
+  */
+ #define RZG2L_SINGLE_PIN		BIT_ULL(63)
+-#define RZG2L_SINGLE_PIN_INDEX_MASK	GENMASK(30, 24)
+-#define RZG2L_SINGLE_PIN_BITS_MASK	GENMASK(22, 20)
++#define RZG2L_SINGLE_PIN_INDEX_MASK	GENMASK_ULL(62, 56)
++#define RZG2L_SINGLE_PIN_BITS_MASK	GENMASK_ULL(55, 53)
  
- 	/* Set the PWPR register to allow PFC register to write */
--	writel(0x0, pctrl->base + regs->pwpr);		/* B0WI=0, PFCWE=0 */
--	writel(PWPR_PFCWE, pctrl->base + regs->pwpr);	/* B0WI=0, PFCWE=1 */
-+	writel(0x0, pctrl->base + regs->pwpr);		/* BOWI=0, PFCWE=0 */
-+	writel(PWPR_PFCWE, pctrl->base + regs->pwpr);	/* BOWI=0, PFCWE=1 */
+ #define RZG2L_SINGLE_PIN_PACK(p, b, f)	(RZG2L_SINGLE_PIN | \
+ 					 FIELD_PREP_CONST(RZG2L_SINGLE_PIN_INDEX_MASK, (p)) | \
+@@ -241,9 +241,9 @@ struct rzg2l_dedicated_configs {
+  * @pin: port pin
+  */
+ struct rzg2l_variable_pin_cfg {
+-	u32 cfg:20;
+-	u32 port:5;
+-	u32 pin:3;
++	u64 cfg:47;
++	u64 port:5;
++	u64 pin:3;
+ };
  
- 	/* Select Pin function mode with PFC register */
- 	reg = readl(pctrl->base + PFC(off));
-@@ -487,8 +487,8 @@ static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
- 	writel(reg | (func << (pin * 4)), pctrl->base + PFC(off));
+ struct rzg2l_pinctrl_data {
+@@ -1081,7 +1081,8 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+ 	const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[_pin];
+ 	u64 *pin_data = pin->drv_data;
+ 	unsigned int arg = 0;
+-	u32 off, cfg;
++	u32 off;
++	u64 cfg;
+ 	int ret;
+ 	u8 bit;
  
- 	/* Set the PWPR register to be write-protected */
--	writel(0x0, pctrl->base + regs->pwpr);		/* B0WI=0, PFCWE=0 */
--	writel(PWPR_B0WI, pctrl->base + regs->pwpr);	/* B0WI=1, PFCWE=0 */
-+	writel(0x0, pctrl->base + regs->pwpr);		/* BOWI=0, PFCWE=0 */
-+	writel(PWPR_BOWI, pctrl->base + regs->pwpr);	/* BOWI=1, PFCWE=0 */
+@@ -1185,7 +1186,8 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
+ 	u64 *pin_data = pin->drv_data;
+ 	enum pin_config_param param;
+ 	unsigned int i, arg, index;
+-	u32 cfg, off;
++	u32 off;
++	u64 cfg;
+ 	int ret;
+ 	u8 bit;
  
- 	/* Switch to Peripheral pin function with PMC register */
- 	reg = readb(pctrl->base + PMC(off));
-@@ -2520,8 +2520,8 @@ static void rzg2l_pinctrl_pm_setup_pfc(struct rzg2l_pinctrl *pctrl)
- 	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
+@@ -2413,9 +2415,9 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
  
- 	/* Set the PWPR register to allow PFC register to write. */
--	writel(0x0, pctrl->base + regs->pwpr);		/* B0WI=0, PFCWE=0 */
--	writel(PWPR_PFCWE, pctrl->base + regs->pwpr);	/* B0WI=0, PFCWE=1 */
-+	writel(0x0, pctrl->base + regs->pwpr);		/* BOWI=0, PFCWE=0 */
-+	writel(PWPR_PFCWE, pctrl->base + regs->pwpr);	/* BOWI=0, PFCWE=1 */
- 
- 	/* Restore port registers. */
  	for (u32 port = 0; port < nports; port++) {
-@@ -2565,8 +2565,8 @@ static void rzg2l_pinctrl_pm_setup_pfc(struct rzg2l_pinctrl *pctrl)
- 	}
+ 		bool has_iolh, has_ien;
+-		u32 off, caps;
++		u64 cfg, caps;
+ 		u8 pincnt;
+-		u64 cfg;
++		u32 off;
  
- 	/* Set the PWPR register to be write-protected. */
--	writel(0x0, pctrl->base + regs->pwpr);		/* B0WI=0, PFCWE=0 */
--	writel(PWPR_B0WI, pctrl->base + regs->pwpr);	/* B0WI=1, PFCWE=0 */
-+	writel(0x0, pctrl->base + regs->pwpr);		/* BOWI=0, PFCWE=0 */
-+	writel(PWPR_BOWI, pctrl->base + regs->pwpr);	/* BOWI=1, PFCWE=0 */
- }
+ 		cfg = pctrl->data->port_pin_configs[port];
+ 		off = RZG2L_PIN_CFG_TO_PORT_OFFSET(cfg);
+@@ -2459,12 +2461,14 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
+ static void rzg2l_pinctrl_pm_setup_dedicated_regs(struct rzg2l_pinctrl *pctrl, bool suspend)
+ {
+ 	struct rzg2l_pinctrl_reg_cache *cache = pctrl->dedicated_cache;
++	u64 caps;
++	u32 i;
  
- static int rzg2l_pinctrl_suspend_noirq(struct device *dev)
+ 	/*
+ 	 * Make sure entries in pctrl->data->n_dedicated_pins[] having the same
+ 	 * port offset are close together.
+ 	 */
+-	for (u32 i = 0, caps = 0; i < pctrl->data->n_dedicated_pins; i++) {
++	for (i = 0, caps = 0; i < pctrl->data->n_dedicated_pins; i++) {
+ 		bool has_iolh, has_ien;
+ 		u32 off, next_off = 0;
+ 		u64 cfg, next_cfg;
 -- 
 2.34.1
 
