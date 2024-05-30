@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-6956-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6957-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42DAB8D4D33
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 15:52:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34F738D4D3A
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 15:52:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E8E74284C72
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 13:52:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8A261F235A6
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 13:52:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B3B4176231;
-	Thu, 30 May 2024 13:51:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68DC7176259;
+	Thu, 30 May 2024 13:51:34 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0ECE1DA53;
-	Thu, 30 May 2024 13:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EBD186E23;
+	Thu, 30 May 2024 13:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717077070; cv=none; b=SJ2FbEQCofbWyGMx+j8yeKxjR1f7/oZBxs4fhZ4rSYi/wGjl2wEBpSLTe4sq+ABFDi1/JOLsm8y3v//2IMjnegd73eeFnG9pTeVy2zq8QXGLbREEBkNIB8y3u+1vRghhbCoi99RCNupL46FDtT5WNQU4onvqaSoOWDiAwvaULyU=
+	t=1717077094; cv=none; b=Kveejus5rd1aZYjBT0Vxbork7gWAYqTxZlOTgqPrAisPb7o6E5piB3a4ojIilyQR4chIiZOQAaYhcC3wgI4QVLr+L+L61dY5RaPO+5deYKxMcLVJME29ZYdyQpFvgUTvUTsqo94ZWLmMNDtr0anWsHef51ePenTSQb6e+z/oHpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717077070; c=relaxed/simple;
-	bh=AwfheB8YvTRY6Oj6aJlK6shjFou68IRyTgmwVHSTJ9c=;
+	s=arc-20240116; t=1717077094; c=relaxed/simple;
+	bh=WXRwnyYB7bDSA9Rx69zvpF0BJZUOYwJ0tzSvsjM9vCA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BdF5TemMxdL8LXIbfe0+RJLqdDIOIeZlKXrj8KTXDHT/REdwdZK7pleMRmwygbm9Mr6EENiQxL4iwkIibBlBwam+56aL3zJavQ27Ah0sHSxokVHAGiwH3J8LO9a3FbO+OBz/kuM4IqhPDhwEhl/1VdepUPc889FR/KzYoz7oz1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.176
+	 To:Cc:Content-Type; b=rbURecUEY3pAJ+wEahM3GdUVIF5VsrtnAL0xVBoDDMDT0k5uD0+hjk0PZtogxVTZw30XqpAX3yHa58UBdYalIf1Pg9gWs57Q4ahEiz9h+a+icQ1cy86C1RR6PNIO0viSx1Itrcznu3yAWC879H+Xn/sZWcc9XkQLjlISMqtmLao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dfa5b9274feso1018557276.2;
-        Thu, 30 May 2024 06:51:08 -0700 (PDT)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-62a08b1a81bso6881427b3.3;
+        Thu, 30 May 2024 06:51:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717077067; x=1717681867;
+        d=1e100.net; s=20230601; t=1717077091; x=1717681891;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=T20NehVNKoFFwjOVqsaNMSQgwHMrrhnMmNO218IGYgU=;
-        b=amfifomLm7idxTsMHFo1f4wKPloMb9NoMJ/av7YboZ+JHiNl3QWA+dQiWTfdU0haK1
-         WcSFFDa7QOy2ShieG8FUms4tpahuB9vao/HJNJ+bgUzKSytdqhMLBt16RqlQy4FPVBkb
-         QQQ+OmMHkDVKQdwSxk0pF8yv+Y/cW15AVvVTP2X5u6k/XaXdwT6qhWM+5VSfbHA5YqKP
-         q7Bj8SwEbGAtXlCt09TdJ47OgGuO5eZXZhf1VXixcF5UZu1QAkT0UQNxuYhZwVkFm0HQ
-         boYkTCERmMp1d31VSG5gHty6u8c+9M+9h2jhdFTsmCszwl2LQS62sWjvaOmdGbb07KCy
-         NmlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvCSrce3lK0xCaerOmFaPG/ijDTMUOQq1GsJKmD8Fz0WCKZ47GqfcZZrTa0KQi6Z2zg9tHX4LJ2Q2J1rYdpJ1ePllBbogQ9lbKj7zVIq1jargBrKbXSba4hwPEqhG4iQrbJY9Ucio6/iIgOn67ezDPuyyISPPKPYpKHSuQSWgLtgrGQF5nmKQpO6yWVcb4cd58o1Y2Ml2kvY8I5tRGTdlJim/4Rd8PQw==
-X-Gm-Message-State: AOJu0YwQfz0sD5eMVVSd5ZArseWaYju1aXVp9VBUp0f68wKxMa5ah43O
-	fvz0vKrE7KlWCLxd4tIAK2PWydgGsIZn1cKbAYZkpbswaJqXBSoPedQM9vMK
-X-Google-Smtp-Source: AGHT+IGBciRhhIb2e1hDLIObx+JyUpUdeuVCLdkNLTtWKC45s5f+HV9N896piQIbOlR5+mBeeWDO3A==
-X-Received: by 2002:a25:b18b:0:b0:dfa:57e2:8190 with SMTP id 3f1490d57ef6-dfa5a7db71bmr2359048276.52.1717077066988;
-        Thu, 30 May 2024 06:51:06 -0700 (PDT)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-df7747258e3sm1875849276.45.2024.05.30.06.51.06
+        bh=74wpAuguCpnWBbRGbhRHB1PlEAvRSrtZrMo9vggtinU=;
+        b=pUP1gEpgfpA65vT8nm3hP6rAoJgRapMp8S++ntRqXVwXc/NQH8V1ksSDwQC+z/m71g
+         NBd9SsVZMNQzqB9br92tVWvX7kMmwXfSh8rK2WBNparyS0F+lS1L/C6WvXlFiiqPhEz7
+         g/r336nFwYOcbph4lMwdU9wsvPtL6eM7HM19Fl+3P0d1ywn4w1CT8B1NHLr+uZ7Jhsch
+         pxlJRT3qT9ar8+9FVVnKZ9qzFiLX9S7hAeyys3z7vIiEro5jBW1She/uY1xaefw/zrQW
+         ZTAAC4/ygTRxRR3MlUsFSWJWAUMjpDD3yy95jF1LS48KUw0jv+PpbjHcKaEUwvq9edV4
+         o8Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCUV+x5lJAGiIJ/P5t0I0iV0MK9Fmh2EaLrl6yjkVi1S7+SNGBBC176kYuTO+0Z+im0pkhef01xXsnXcjOk+qc3jFzF4AwDKtc6pCyvIlxWZe2YQmYFYi+GzXRmyMUviHP6uffHDDR2B8Do09fJTJt1boZe8z0PcaVPh3QXRRrbFVKt3BUqPCBjO2CuQxX+pTOqdXXTqjLB7FmCxz5Se3g2XlmLRpy0yuQ==
+X-Gm-Message-State: AOJu0YwpRoZoSlyFoF+lyqbYIaO+PmoRR482fHx1RR43tVG6ipsWimp9
+	WvD6atq0IEYD4uqLxOF4/1rv1VZdCVhFUmp/tBJ8oDN5n5/ZWQfmcABLPpZw
+X-Google-Smtp-Source: AGHT+IExGP+dcLiiFcfq/YaN5DeVrQ0IW53fG1D9ZEU8tF69fo+M7qZGSOclJv05inzxQOJ8jM5oaA==
+X-Received: by 2002:a0d:d997:0:b0:61b:330e:3f25 with SMTP id 00721157ae682-62c6bc1492bmr24330317b3.30.1717077090645;
+        Thu, 30 May 2024 06:51:30 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a37ef12sm27875517b3.2.2024.05.30.06.51.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 May 2024 06:51:06 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dfa5b9274feso1018517276.2;
-        Thu, 30 May 2024 06:51:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUxuoWACqvmpvqOfd/8MJR44xUqsorc9jyoADbDW8AlRGK2ctLXYONdIyLGvP3LSHT1/yQpNDeErboRbPP3NSoQGXA6yVCZH3J3plKynhlYhXrh4h8hSpMm3ipUODduTgx0Qqs78Vy3MkiRjaQiSFPcePwKw6YF5XtH8x08O4DyjYh1rs2R5AcWHilLhqtsRBAbWyYThh9rsOdh4LwGWzhkHPLHs+hHeQ==
-X-Received: by 2002:a25:86c7:0:b0:dcc:d694:b4a6 with SMTP id
- 3f1490d57ef6-dfa5a5e9c3cmr2324044276.15.1717077066050; Thu, 30 May 2024
- 06:51:06 -0700 (PDT)
+        Thu, 30 May 2024 06:51:28 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dfa67a3e702so454765276.1;
+        Thu, 30 May 2024 06:51:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXi6LTssxsmQXMv4F0JYmVSRII8ylY45cbqCmzyzWdTKAgq0LEhXupS16TF9mDhNKAIOA8V1GRNNizIxrQYMg8MTmoXwof2akSm+8o1lMBKD/dOKHJ1K1vu71x3UrO+DR46+t/UCysJ5LCi4DQWX9SK9uCCzaB16CLkrLhQDfIC7avo1nSv8UC0DlUwDfQzI2bV0f4cf9TT05wO3lsZxWEjJZ2xzqiCTQ==
+X-Received: by 2002:a25:6852:0:b0:df7:8291:d109 with SMTP id
+ 3f1490d57ef6-dfa5a80f6demr2470600276.59.1717077088152; Thu, 30 May 2024
+ 06:51:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524094603.988-1-paul.barker.ct@bp.renesas.com> <20240524094603.988-7-paul.barker.ct@bp.renesas.com>
-In-Reply-To: <20240524094603.988-7-paul.barker.ct@bp.renesas.com>
+References: <20240524094603.988-1-paul.barker.ct@bp.renesas.com> <20240524094603.988-8-paul.barker.ct@bp.renesas.com>
+In-Reply-To: <20240524094603.988-8-paul.barker.ct@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 May 2024 15:50:54 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVSji2e7KCwBaHZpxnY6C8ok1XqF4A5Py8xe_G+nP=enA@mail.gmail.com>
-Message-ID: <CAMuHMdVSji2e7KCwBaHZpxnY6C8ok1XqF4A5Py8xe_G+nP=enA@mail.gmail.com>
-Subject: Re: [PATCH 6/9] arm64: dts: renesas: rzg2ul: Enable Ethernet TXC output
+Date: Thu, 30 May 2024 15:51:16 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUMmBCkZdL1Buzp_AE3j0efAR6Q0MH998tm9Z+kTLQ4zQ@mail.gmail.com>
+Message-ID: <CAMuHMdUMmBCkZdL1Buzp_AE3j0efAR6Q0MH998tm9Z+kTLQ4zQ@mail.gmail.com>
+Subject: Re: [PATCH 7/9] arm64: dts: renesas: rzg2l: Set Ethernet PVDD to 1.8V
 To: Paul Barker <paul.barker.ct@bp.renesas.com>
 Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -83,8 +83,13 @@ Content-Transfer-Encoding: quoted-printable
 
 On Fri, May 24, 2024 at 11:47=E2=80=AFAM Paul Barker
 <paul.barker.ct@bp.renesas.com> wrote:
-> Configure ET0_TXC and ET1_TXC as outputs on the Renesas RZ/G2UL SMARC
-> SoM, as per RGMII specification.
+> On the RZ/G2L & RZ/V2L SMARC SOMs, the RGMII interface between the SoC
+> and the Ethernet PHY operates at 1.8V.
+>
+> The power supply for this interface may be correctly configured in
+> u-boot, but the kernel should not be relying on this. Now that the
+> RZ/G2L pinctrl driver supports configuring the Ethernet power supply
+> voltage, we can simply specify the desired voltage in the device tree.
 >
 > Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 
