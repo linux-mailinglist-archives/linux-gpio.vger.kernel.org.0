@@ -1,113 +1,116 @@
-Return-Path: <linux-gpio+bounces-6952-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6953-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 325468D4C54
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 15:13:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73CCB8D4CE6
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 15:37:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B58F4B22885
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 13:13:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A510E1C220C1
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 13:37:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD2318306E;
-	Thu, 30 May 2024 13:13:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F52A17107B;
+	Thu, 30 May 2024 13:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGoum1wg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5750017C9ED;
-	Thu, 30 May 2024 13:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2B917C203;
+	Thu, 30 May 2024 13:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717074826; cv=none; b=sjOACGyaD61LkIlbDzPv8tc/79V2tu7yvhzshaxwart4iDEq8fdBHa7o8Doa66OC8UtQ1mabx9DqackLGquuetXAwCBsZDQvoTjqGiZQEsbU3EHTjR1h0DSZFhP+JxkqJyIu/Qyo0ElbYrXa0MQBKf2R6mJHYWH8QE3WOIiOdYQ=
+	t=1717076259; cv=none; b=H7GiU7flwl8x8edv7m8erbJ2PsGNwBLaIzhzsEo7Rw8/icnW6dZzu2ZsIikHInaZGFJelSnggIuDLOnI0O5tZtlcO4ww4EWnV+OLvDYhJP6DzqpTRHvs2V9G5qPSCmowOjPsZLAgbA0a9F+otffYctjAuDzYdhcY+pWDmKT1uy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717074826; c=relaxed/simple;
-	bh=J0TnULNmCjGi0W3Tfv4zobeVNCY/UF/0qmAcf1XUOY4=;
+	s=arc-20240116; t=1717076259; c=relaxed/simple;
+	bh=oqjWBx6PDbgINMHWnjQpfH26p1ixUJktWtD7O9TLhj8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PoHMJlDy65ZbhDYkzQ5dGeOKnQEsup58LQ1dHeeGCl88EWr72qqOMT19fx13RZDCckVJcW2N7MlUHcul+s7b9WdNAKvfvzMCuf2OE9l/O4+6R97N1vug8zOVr7kYKWEB3gVAONEG5BWQD9dSlgAHhaXRk0g/GKLMJNKP0ahs7Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=J3ehZkDmb0cE9ol90M6npLItSE+nc+aaNBfatgRMik/vqBpc146dWHPv2srHViN6GQ3EENPy1VE4yn6iBZhzUEyqWEwqEj+tAyP+tM310uI8KwtKWkfE9iy2Deea5wx+z/TkAPyrHO/zpYtZJnBhHHX9NaoQSeyjj821lOEyggY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OGoum1wg; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-62c6dc63880so6221437b3.2;
-        Thu, 30 May 2024 06:13:44 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52ad8230bb9so993133e87.3;
+        Thu, 30 May 2024 06:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717076256; x=1717681056; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oqjWBx6PDbgINMHWnjQpfH26p1ixUJktWtD7O9TLhj8=;
+        b=OGoum1wg3dxy0uS5Gsszzq4vDgFnWMt+J54/n75Av+nET9iAKjfzMkg8PsKEirRoBS
+         zpumgU1BUxzA4pONd8hnwpIv4heX5AdeC6hWhZuunJAfKU7xDIah7ORZbIf3tMn7gNv1
+         empeDj4j6db2C2b8/o0TGMIDdvcKK1G1yPFK6rUr605m25KLHzbq3NF7n5n/k1V7nbp9
+         3k/fw9AJ8tKMKGmhK6wDACbh9v0WN4gmQfoAM7Uzl7OJqZCwuUlV6OPrjbDGMt29bnm1
+         qByeOeBu1Xt1C8/7R6dGk08auefeggcN++cB1xZkEHQqie/gkPTaUsDB2gmnTokqphBe
+         tKQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717074823; x=1717679623;
+        d=1e100.net; s=20230601; t=1717076256; x=1717681056;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lsessgsG3LDyhnHOJmtjAcMau6j+AdsxfuHG+J8Bk10=;
-        b=PuetMktEzuZmdKZhfz5YOikc8mKpeK5+ycV0foGOF6E99A1LbbMFd5tZdP4IEBLY5x
-         fYRcemwXIOZbI/+r2naYlpa3ZBpggfFUNA5nHbJit14K+cShCVEWwFWzQ8uApQC4jcLG
-         AyXDVtQrrjNG9zqoR4uV2XFGqlCUoVYGbwuPOs/r0FCZ1AZuGyumn5uWwFWGCBySJrQb
-         rDzaoSXIsjVJ1RUvrxBnp1CmrJkE3NZvCOkKh4AwgxmJCdJbuLXc9pCNykvvsYA9J/Mh
-         +UEB6XNygIWyEWfoTCnEJ5Yez4isqswYq+TuSz4uvD5vpw4GHuojwjzf7vOERBZ24ENT
-         TXNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxVZqLTFlg2oLlJEJfNWnigS2Grfs6v19vlKZDanCatiQz9RsZHNjZzXHARdsf2mU5Hw8U5weTGq3eToFUCE6FFEovDG1Pj+DsuqqUdbsw1dCpB9punIGXnfytdPhwTCXHe0PxJzHyQsJuvg9Lu59lZkCl4iwLN1Pm2kvwlGIb/3LqswfRvRKJduwxpuhaYjFBC9ZE5/0A0KXWrGPm8D5utBh+fMLEIA==
-X-Gm-Message-State: AOJu0YzUMiYw46TK+ziTR0sdPdiQD2nCG6o02ITqykfRdiXAgiF1VQ5U
-	kIa43AqStwyHBxHuQeOEWV+Ofmu7VtCsFCQ1fsS+U4OPU5mp/IkLlSfoKY6q
-X-Google-Smtp-Source: AGHT+IFrqEpCXksjtGYB37b3rAABx4zaoHtQW3MsmUG8KDmNRgy8R2iw7EmFQjRAJ4TKRkZE2HGKxw==
-X-Received: by 2002:a81:b1c9:0:b0:61d:fd3e:8e8f with SMTP id 00721157ae682-62c6bc1252fmr26955707b3.25.1717074822789;
-        Thu, 30 May 2024 06:13:42 -0700 (PDT)
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a56e0b3sm27642687b3.132.2024.05.30.06.13.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 May 2024 06:13:42 -0700 (PDT)
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dfa59545e0fso836965276.0;
-        Thu, 30 May 2024 06:13:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUmW3MDY+b7fzrcu0k9YlnlDjfvyVENpWmbjntusPN5mt1ldpowAXK9fYH0CcD1YNYwTusjKI+CnkTV5HuOBWV0j6yHwqTh+cK0zUq8NPu3zR5+9yqfU0BsZvTRYJsNSP+bZo6L5s/YX5PJ5YPUgUnai6OeJpyvj5xmG+MdVcPp8vIODmAQm1wp97pX/esyrWFbPzms3SC/nzlhnKYnH83nces9NgXA2w==
-X-Received: by 2002:a5b:d0e:0:b0:de6:1a66:3e4d with SMTP id
- 3f1490d57ef6-dfa5a7cd26amr2767861276.59.1717074821376; Thu, 30 May 2024
- 06:13:41 -0700 (PDT)
+        bh=oqjWBx6PDbgINMHWnjQpfH26p1ixUJktWtD7O9TLhj8=;
+        b=hFFU5HsdWyKdigY4YQDdqh4xjt+7YGyAI+o+5bzCD6PhO6hKhr6L7EZ2gS1Ul/Zji8
+         4/DPPrdp40tmYVUNu/ZcsNnPhYl3QX5nAGftEDXlTYWcy0sRju4+390TenrPhD7aJKQE
+         myVKHTW+O2fXwn48C09pC7544bzxDWHNKY0iD9d4UlnwlAoXLaHaM6K4lhebxB2dSiR4
+         J+Y9Ur8YZhZHGBhfiCEctEGqNWMlgZT8eQ4gOUjtu/9IqgKg8JEalPgJJZ26atFJ4zB9
+         rQI+UYDn722iwf9PsNS6S+ybDth/0gY2c0uuE/y5A2/jxQDX7loea5Y04lQBx9wrcRTU
+         /hlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhRREuYIKiXZc8tD8uTa8aSgCuzru/NK0ubW3xN7bekvwkN1MhZdr9pXL/yCYH9SsWykcT1qG4D9BqRDl52l3Wa/d5Wtete/jFp0Snx+ymuLpbhsL+J4aeqo0/WuMZSkk6sjiZF4LeQbenET8X
+X-Gm-Message-State: AOJu0YxgMsI87H44NHUVrxhqr0h2knfUsVgu3/10fpWhPlJfW+eEdBzv
+	+h0BtsLsU5RH/Hreb6hGZq021unNgCiBQdAbuzWhjy4hmqkapSBrVY+b5oKZ9F0knRPHjEMjQf7
+	LKH8hQmRBCzEF16JbXyyvhem0v9uJNPRg
+X-Google-Smtp-Source: AGHT+IH6Wk+7Pxtnc7LbHEUnBVnJDrQiQxm5LEV/2kvexa+KpwwWI4YfEvVf+XgRdSH1//HZGctXD+Jk6g1uF582pzc=
+X-Received: by 2002:a05:6512:48c1:b0:529:b734:ebc9 with SMTP id
+ 2adb3069b0e04-52b7d428b76mr1502110e87.38.1717076255424; Thu, 30 May 2024
+ 06:37:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524094603.988-1-paul.barker.ct@bp.renesas.com> <20240524094603.988-4-paul.barker.ct@bp.renesas.com>
-In-Reply-To: <20240524094603.988-4-paul.barker.ct@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 May 2024 15:13:29 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXhag176AuWj5YvNjttniPGa_PhnTmkFPWT+o_F4uxMuA@mail.gmail.com>
-Message-ID: <CAMuHMdXhag176AuWj5YvNjttniPGa_PhnTmkFPWT+o_F4uxMuA@mail.gmail.com>
-Subject: Re: [PATCH 3/9] pinctrl: renesas: rzg2l: Support output enable on RZ/G2L
-To: Paul Barker <paul.barker.ct@bp.renesas.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <c0a28f466c42d5d59c7fadfa1fd05fd512d43b6f.1717060708.git.geert+renesas@glider.be>
+ <ZlhGYFM6iVlGjZk-@surfacebook.localdomain> <CAMuHMdU6V4Ooit7P5pqUFXOZawiZj7TjXY7t=KVk84xPZ0PR+A@mail.gmail.com>
+In-Reply-To: <CAMuHMdU6V4Ooit7P5pqUFXOZawiZj7TjXY7t=KVk84xPZ0PR+A@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 30 May 2024 16:36:59 +0300
+Message-ID: <CAHp75Vd3ke3_bxwsxzSVzjnNW-6aYDTYHvZ-+B9nJtAJR1fX=g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzn1: Use for_each_child_of_node_scoped()
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 24, 2024 at 11:46=E2=80=AFAM Paul Barker
-<paul.barker.ct@bp.renesas.com> wrote:
-> On the RZ/G2L SoC family, the direction of the Ethernet TXC/TX_CLK
-> signal is selectable to support an Ethernet PHY operating in either MII
-> or RGMII mode. By default, the signal is configured as an input and MII
-> mode is supported. The ETH_MODE register can be modified to configure
-> this signal as an output to support RGMII mode.
+On Thu, May 30, 2024 at 2:52=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+> On Thu, May 30, 2024 at 11:26=E2=80=AFAM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > Thu, May 30, 2024 at 11:19:29AM +0200, Geert Uytterhoeven kirjoitti:
+> > > Use the scoped variant of for_each_child_of_node() to simplify the co=
+de.
+> >
+> > I do not see the point of this patch. This makes code actually more
+> > complicated, and I'm not sure the code generation is the same and not w=
+orse.
 >
-> As this signal is by default an input, and can optionally be switched to
-> an output, it maps neatly onto an `output-enable` property in the device
-> tree.
+> On arm32, a conversion to for_each_child_of_node_scoped() seems to
+> cost ca. 48 bytes of additional code.
 >
-> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> BTW, the same is true for cases where the conversion does simplify
+> cleanup.
+>
+> I checked "pinctrl: renesas: Use scope based of_node_put() cleanups",
+> and all but the conversions in *_dt_node_to_map() cost 48 bytes each.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Yeah. so for the cases where there are no returns from inside the loop
+I prefer not to use _scoped.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+P.S. Thank you for checking, btw!
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+With Best Regards,
+Andy Shevchenko
 
