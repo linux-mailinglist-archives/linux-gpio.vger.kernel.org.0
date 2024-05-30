@@ -1,109 +1,84 @@
-Return-Path: <linux-gpio+bounces-6948-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6949-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 727928D4B30
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 13:59:51 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08DC98D4B5A
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 14:13:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F5C8285F8B
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 11:59:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 582FBB215A4
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 12:13:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9876B17FAD6;
-	Thu, 30 May 2024 11:59:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F423E1822D5;
+	Thu, 30 May 2024 12:13:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mqg3IB16"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="D7KoizyL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5FA339AC;
-	Thu, 30 May 2024 11:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92BF15B979;
+	Thu, 30 May 2024 12:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717070384; cv=none; b=VxphU/Vn/VwdJTrrlQ/1rANEuuZwUPr/A97mRLQz4eqNzBR8ENc44v8L2PzNZaELxZJu9iYuBTdyl9QpufmHaZ75e3jKxr4nm5BCay040ssF4JfXp0KM46ViaxI2f66RbzpxyNa8tETB6WyK6zQdWduhQrdwhNeEBalVCcdImSA=
+	t=1717071216; cv=none; b=ETfkEwg4Tv6gW3Kd3Ptqqh/WQaZr6hjIicGiQasSoYzAjJW3/7fLfp49CqUOaWlXniN/638wffAChbBJvxsQ7i7aLSQN6H8tJQK9QCOXXd7hQrDIOIKeloxbscxPTe2kKh2yWmnVL9xHwii9auiATn0mxVemTQ736K0g9imt++Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717070384; c=relaxed/simple;
-	bh=8kTTWP9KKerLOBH7sOJ6kRkd4l+zeLLm8E8cdaSboqw=;
+	s=arc-20240116; t=1717071216; c=relaxed/simple;
+	bh=FhjFGspdyvHbjBhX6O/1GSnPkUuNlBcQYSFV7ga+EmM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pj7qrUk4UuS3nHWiDev6yzIYiCr29dwQd4wU5ktywrhg1nuua13BWaIRdH+ZFb9il7hczE8o1D6RmiNt4+tlH93ZybovlS4zy7zkY1FF8AoZ+UVkaypCyOXiJKA//eYM7JOVIkKfavZtmyO2HOwHbZTdxI91uF9LSajvG2SVtvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mqg3IB16; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 234A9C2BBFC;
-	Thu, 30 May 2024 11:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717070383;
-	bh=8kTTWP9KKerLOBH7sOJ6kRkd4l+zeLLm8E8cdaSboqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mqg3IB16KCl4iVocK2ANNDet9sKxP/D79issOs52V4nylRTLMcYW5Sadf2dCM89Ea
-	 oe+lEU+VT8Ne+JUOwW78a/nnoTjigbrxhc+G85t00kpKd6qYFCIALfsI7o5rpaowvU
-	 GKK4GnibMg+2ejVQZlQVG9AOA1d6OsVe0oxGqpob+iwjhZrA/dRYbNyd5j+xMtj9MV
-	 XP+RAidre1R6cTdhwoVkuf5gdGCac2GfSM/jTbiHHHE4AvTQ+hu5G+npa7bbxH7fDs
-	 fyE2rtDDApUdFRI/kuSYfr+qnAJXo7lLYpYP0PlYd8UC0Kshzb5ZA18Koo7WAjT3N3
-	 99NH0dFwBvqzg==
-Date: Thu, 30 May 2024 12:59:37 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-	Stephen Boyd <swboyd@chromium.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 13/14] regulator: add pm8008 pmic regulator driver
-Message-ID: <9f126943-2d73-491a-9267-6585e10aea8d@sirena.org.uk>
-References: <20240529162958.18081-1-johan+linaro@kernel.org>
- <20240529162958.18081-14-johan+linaro@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SctyLYxBKZ0W3YQwDjC52dpqUVC/C71G0Js+p7DCHt0C0GN5Y6Q13KIHgGz3yvEbkaRaOtBa1PNzpW1QiNz3U1i6zPZHzBAQ4KGIGKj1Qh5XWBogaB7FFghCOfY58B3SapbEi030WKUrn368I5jUkj+ExcU0iBksuFACx1NexdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=D7KoizyL; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=kagvJUvLZ8HGDcrz3C6I73rh/WuqRfvQQKO8Bga9nvc=; b=D7KoizyLmXhOvLhPvQLB47tnmt
+	Zr7Pd9pHd/ysaLl6n7GeXaPSdDk2z7vg5VhRqYs6ddABQVhoeXQ+WRtot71Rosxc23CbHHoQTRKSZ
+	vz9vCxx/l25jRuu5orIiWdRWGThqmq/a++iZI8Bk2VlKmUbr6W13iCHu7M/yR6FD7wJ4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sCeer-00GLNR-4M; Thu, 30 May 2024 14:13:25 +0200
+Date: Thu, 30 May 2024 14:13:25 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Gregor Herburger <gregor.herburger@tq-group.com>,
+	linux@ew.tq-group.com
+Subject: Re: [PATCH 8/8] gpio: tqmx86: fix broken IRQ_TYPE_EDGE_BOTH
+ interrupt type
+Message-ID: <df1ba591-fb7f-49c3-bad6-78390f0f2317@lunn.ch>
+References: <cover.1716967982.git.matthias.schiffer@ew.tq-group.com>
+ <2c265b6bcfcde7d2327b94c4f6e3ad6d4f1e2de7.1716967982.git.matthias.schiffer@ew.tq-group.com>
+ <8689fbcd-3fa3-410b-8fc9-7a699bf163b8@moroto.mountain>
+ <0e971f0b885bd360e33ef472d96e3d9e0ab56405.camel@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0mJZbpVe58dxAH3V"
-Content-Disposition: inline
-In-Reply-To: <20240529162958.18081-14-johan+linaro@kernel.org>
-X-Cookie: To err is human, to moo bovine.
-
-
---0mJZbpVe58dxAH3V
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0e971f0b885bd360e33ef472d96e3d9e0ab56405.camel@ew.tq-group.com>
 
-On Wed, May 29, 2024 at 06:29:57PM +0200, Johan Hovold wrote:
-> The Qualcomm PM8008 is an I2C-controlled PMIC containing seven LDO
-> regulators.
->=20
-> The driver is based on a driver submitted by Satya Priya, but it has
-> been cleaned up and reworked to match the new devicetree binding which
-> no longer describes each regulator as a separate device.
+> Currently, the driver only supports COM Express modules, where IRQs 0-3 correspond to GPIOs 4-7,
+> while GPIOs 0-3 don't have interrupt support. We will soon be mainlining support for our SMARC
+> modules, which have up to 14 GPIOs, and (on some families) IRQ support for all GPIOs (IRQs 0-13
+> correspond to GPIOs 0-13).
+> 
+> New interrupt config and status registers have been introduced to support more IRQs - up to 4 config
+> registers (2 bits for each IRQ) and 3 status registers (IRQs 0-3 in the first one, 4-11 in the
+> second one, 12-13 in the third one... so this part is a bit more convoluted than just "hwirq % 4") 
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+Depending on how different it is, you could consider a second driver,
+rather than make this driver more complex.
 
---0mJZbpVe58dxAH3V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZYaigACgkQJNaLcl1U
-h9DPVQf/XpPDBDoyoV/qBv6jdSFnaUIVIhIJ4t3WR8qJ42MxLVJrRWkbEAhgShfN
-vsROxh3DsaBpC64ahrFPKK7Opv61SdIVtfAf6anp/jYW1yxFaHZa8GKyATVvgRYp
-iC+iwOY6AiJKtVjXRc6a4cXbWUclQ1bqDOTgLaGeZ/HkrAB8mAXEOM+vaX4JXqPN
-TAFCxBWMzBdeOFAghdfOukV0024rkqMKNw1BqOFLkdk0IKtzvt+/34eq/6kgD3V7
-2ALbIM/GdGcU+9VRj+YVsh8TOXKPchwSnBNnYPGWBca9X/83i5jgNIz1HpqNfJDd
-0RziAuWoiECj/mAekCSP56G4wjnRVg==
-=VPPI
------END PGP SIGNATURE-----
-
---0mJZbpVe58dxAH3V--
+	Andrew
 
