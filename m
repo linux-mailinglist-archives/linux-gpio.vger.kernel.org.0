@@ -1,130 +1,91 @@
-Return-Path: <linux-gpio+bounces-6925-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6926-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EECAD8D480D
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 11:05:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7E508D4841
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 11:19:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A6651C23F83
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 09:05:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 57DD81F218B4
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 09:19:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AE1D14D6E9;
-	Thu, 30 May 2024 09:04:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97B0A6F301;
+	Thu, 30 May 2024 09:19:44 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDB96F316
-	for <linux-gpio@vger.kernel.org>; Thu, 30 May 2024 09:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B102B9A6
+	for <linux-gpio@vger.kernel.org>; Thu, 30 May 2024 09:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717059880; cv=none; b=gqzel/WtF8D/TYexATCvhnwMb9TbTBV4Mr8k8HGIXeB6SyN9ISg2qAtOLr4Bm6oySnkiGgZ27/WwhcUmGhd1VAqfzvTuG0VX6jEzyGxHiQ22jy13T9bZPShzLHE27hkO74fifeytTQfdDaAiGN8QAuRF24Jw8cEMf/E6rLRmfac=
+	t=1717060784; cv=none; b=EVDRFKzDbn8vfoovL2OdcPRBLM7gzsCNWdtfWUCUx0ArEEF/lCrMeaehaqfPiMw7m5rxet1zJSI5cv8vQMoRGgVi96zzAEgFIXevSG4oiFGc9SO7DZinaOtQkZer+JjJ3aBRsYFX0f19wVbl+iknBFK8qLiXp5zppWKjRHPxpkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717059880; c=relaxed/simple;
-	bh=hRYXJybvTCdX1i87a/CbDN1b+MJo2gYTetWMREEWjI4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SF3UrmzWj+xMTySX5xYfwacNbrdqSlop94szrY4RaFwF2oFfbGIujlo2pSzoJjWqN/8vm4ay47W+QTqNakbA5OqQQTV+8zxMXzr2uAR3pYR2rwaSE6DnCehInV4vqTaOKx8yCnDwT5zEyWim23eVtcXAk1zXb0sxpwv4/qiC6Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
-	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id a254b3f7-1e63-11ef-aaf9-005056bdd08f;
-	Thu, 30 May 2024 12:04:35 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 30 May 2024 12:04:34 +0300
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Viresh Kumar <vireshk@kernel.org>,
-	Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Patrice Chotard <patrice.chotard@foss.st.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Ludovic Desroches <ludovic.desroches@microchip.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Chester Lin <chester62515@gmail.com>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Joel Stanley <joel@jms.id.au>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Tony Lindgren <tony@atomide.com>,
-	Stephen Warren <swarren@wwwdotorg.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-samsung-soc@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, imx@lists.linux.dev,
-	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 08/20] pinctrl: st: Use scope based of_node_put()
- cleanups
-Message-ID: <ZlhBImaUrnddkm-r@surfacebook.localdomain>
-References: <20240504-pinctrl-cleanup-v2-0-26c5f2dc1181@nxp.com>
- <20240504-pinctrl-cleanup-v2-8-26c5f2dc1181@nxp.com>
+	s=arc-20240116; t=1717060784; c=relaxed/simple;
+	bh=T0jmtYHHSMPtDQE4PpIt/OUcXb9+vWLEEcBAfOJfEk8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IsR8w4xxQmcHjrzI3+TJkJnE0y60LgC4lfANKjEWAUJ5LGlumpsqVfFTuBv9oW1fpEcI1EGhJf+Kz/Gh02QOpMZxVjaVcYJX4YJVJ0xLZ9PB8tcBF0BQcPJbGGm8TRa6zWC1NXj3byuL1xPqDAgFEj1jxKIPvHE3rKB8LzjE9dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:d4b9:349f:44ea:8b43])
+	by andre.telenet-ops.be with bizsmtp
+	id VMKa2C0052Aokgh01MKajb; Thu, 30 May 2024 11:19:34 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sCbvf-000nZB-EY;
+	Thu, 30 May 2024 11:19:33 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sCbwb-00ALoP-Pa;
+	Thu, 30 May 2024 11:19:33 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] pinctrl: renesas: rzn1: Use for_each_child_of_node_scoped()
+Date: Thu, 30 May 2024 11:19:29 +0200
+Message-Id: <c0a28f466c42d5d59c7fadfa1fd05fd512d43b6f.1717060708.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240504-pinctrl-cleanup-v2-8-26c5f2dc1181@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-Sat, May 04, 2024 at 09:20:06PM +0800, Peng Fan (OSS) kirjoitti:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Use scope based of_node_put() cleanup to simplify code.
+Use the scoped variant of for_each_child_of_node() to simplify the code.
 
-...
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+To be queued in renesas-pinctrl for v6.11.
 
->  	struct property *pp;
->  	struct device *dev = info->dev;
->  	struct st_pinconf *conf;
-> -	struct device_node *pins;
-> +	struct device_node *pins __free(device_node) = NULL;
+ drivers/pinctrl/renesas/pinctrl-rzn1.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-It's better to move it upper to follow reversed xmas tree order (okay, to some
-extent in this case).
-
->  	phandle bank;
->  	unsigned int offset;
-> -	int i = 0, npins = 0, nr_props, ret = 0;
-> +	int i = 0, npins = 0, nr_props;
-
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzn1.c b/drivers/pinctrl/renesas/pinctrl-rzn1.c
+index e1b4203c66c6f836..39af1fe79c8462eb 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzn1.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzn1.c
+@@ -737,13 +737,12 @@ static int rzn1_pinctrl_parse_groups(struct device_node *np,
+ 
+ static int rzn1_pinctrl_count_function_groups(struct device_node *np)
+ {
+-	struct device_node *child;
+ 	int count = 0;
+ 
+ 	if (of_property_count_u32_elems(np, RZN1_PINS_PROP) > 0)
+ 		count++;
+ 
+-	for_each_child_of_node(np, child) {
++	for_each_child_of_node_scoped(np, child) {
+ 		if (of_property_count_u32_elems(child, RZN1_PINS_PROP) > 0)
+ 			count++;
+ 	}
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
 
