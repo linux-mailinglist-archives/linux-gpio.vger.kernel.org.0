@@ -1,84 +1,122 @@
-Return-Path: <linux-gpio+bounces-6949-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6950-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08DC98D4B5A
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 14:13:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8D6F8D4BF1
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 14:48:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 582FBB215A4
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 12:13:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 79C5C28433D
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 May 2024 12:48:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F423E1822D5;
-	Thu, 30 May 2024 12:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="D7KoizyL"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D207D132128;
+	Thu, 30 May 2024 12:48:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92BF15B979;
-	Thu, 30 May 2024 12:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADBA1E515;
+	Thu, 30 May 2024 12:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717071216; cv=none; b=ETfkEwg4Tv6gW3Kd3Ptqqh/WQaZr6hjIicGiQasSoYzAjJW3/7fLfp49CqUOaWlXniN/638wffAChbBJvxsQ7i7aLSQN6H8tJQK9QCOXXd7hQrDIOIKeloxbscxPTe2kKh2yWmnVL9xHwii9auiATn0mxVemTQ736K0g9imt++Q=
+	t=1717073291; cv=none; b=MQmrE3+3o5CoZiNXqIPVCKeYtsK/A2QIQ1r+6vIgXHLxZUs8fvCilwR+EEKUDVJH3gKH++1iB4kCjIdvGynR20IcuxW1GhutTr9DddNUnaYGGrsbDxKJW8ZbhpigiBqC3CaGgl24tvNM/DxiatDgP/NGLhA44w/w0j1dZpmM7m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717071216; c=relaxed/simple;
-	bh=FhjFGspdyvHbjBhX6O/1GSnPkUuNlBcQYSFV7ga+EmM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SctyLYxBKZ0W3YQwDjC52dpqUVC/C71G0Js+p7DCHt0C0GN5Y6Q13KIHgGz3yvEbkaRaOtBa1PNzpW1QiNz3U1i6zPZHzBAQ4KGIGKj1Qh5XWBogaB7FFghCOfY58B3SapbEi030WKUrn368I5jUkj+ExcU0iBksuFACx1NexdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=D7KoizyL; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=kagvJUvLZ8HGDcrz3C6I73rh/WuqRfvQQKO8Bga9nvc=; b=D7KoizyLmXhOvLhPvQLB47tnmt
-	Zr7Pd9pHd/ysaLl6n7GeXaPSdDk2z7vg5VhRqYs6ddABQVhoeXQ+WRtot71Rosxc23CbHHoQTRKSZ
-	vz9vCxx/l25jRuu5orIiWdRWGThqmq/a++iZI8Bk2VlKmUbr6W13iCHu7M/yR6FD7wJ4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sCeer-00GLNR-4M; Thu, 30 May 2024 14:13:25 +0200
-Date: Thu, 30 May 2024 14:13:25 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Gregor Herburger <gregor.herburger@tq-group.com>,
-	linux@ew.tq-group.com
-Subject: Re: [PATCH 8/8] gpio: tqmx86: fix broken IRQ_TYPE_EDGE_BOTH
- interrupt type
-Message-ID: <df1ba591-fb7f-49c3-bad6-78390f0f2317@lunn.ch>
-References: <cover.1716967982.git.matthias.schiffer@ew.tq-group.com>
- <2c265b6bcfcde7d2327b94c4f6e3ad6d4f1e2de7.1716967982.git.matthias.schiffer@ew.tq-group.com>
- <8689fbcd-3fa3-410b-8fc9-7a699bf163b8@moroto.mountain>
- <0e971f0b885bd360e33ef472d96e3d9e0ab56405.camel@ew.tq-group.com>
+	s=arc-20240116; t=1717073291; c=relaxed/simple;
+	bh=8Tpa2UifMKplXpTbrMd4Foz89z0hWoO5ZMVosaocsac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=amEQFJSib7W+cAaxbWAFZBWA/Ojen/xCKJoVmpca/XVlPDBjKN5UqYaoaTGRtksVXZ+Y4vf9HqyAVacAnEXdzOj7v/VIQ5oUHH2o2Pnujs5/dBD6J1kLK9yOtcQ23FYc3mms5bAc4zoPboQ8z6nOleob52jrbyeypv4z0e7zDXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-628c1f09f5cso7284477b3.1;
+        Thu, 30 May 2024 05:48:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717073288; x=1717678088;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9bjFTQ5FA0ZUbYPMdPEv9X789dR7gzTPPFD376qEwI0=;
+        b=Hllr2KNgDhRg3HYkmPNBr2qenZSZ+as5hlSB3JV7SUyld95dLCRZA526dVRhJ/1HBL
+         xphXNTpqDB0qBLFk0gcxa4YgkGeFiY3jYSKWZm0lw+SegYLG9k9xzcJw8f92u9EcfSqV
+         yS7YDvZYJnx5jibsMpEik4BQLVxwNRQ9ClbDKow5w2grjkWwxYYIF0GY21BePn6uJh+v
+         MWobtzzD6KKv/1o9jk2gk29wsf89pDtMWh852mPGME+RiqzQ2FyzoucnuLT+7RGspNDG
+         29vUb9HOwbldo3AW2ZfIJTz3WMOXv9QMTGQgweHhHwwq9Z72ixSRoKWoXMV52SwM4fue
+         01wg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWzyiR8InXS+iqKulYToIfOm8XMBcLHzS2XuvgfYD/K30r1lMSkyF3q1zMWsnWhPkRw4IpfUu+hWwvDfFyMdu5FhFKzqs1tpkYgRCPe4cVy3CEaQk8IM5bOD47C+KCS2uX5Kay539QejtAdqLVgJRX7gYVsq+jViAWJidhsD17fYzOVjwmlY/kaT9tPPaPHl70C7v7bGjM2mlvhBcLzhJ01pq7Gpeqlw==
+X-Gm-Message-State: AOJu0Yxq69WzvEfPA11GH5OHs+eOL2kp2NAqlJCk2KNluxhZPCek4tka
+	K3fWYm8HLEupFRxlWoT+ik4/RpgInguJWaqsEwaTei9cZGTTBerT478ekx8T
+X-Google-Smtp-Source: AGHT+IEoB0l42AYow5tt9IPmrAizPvxsL5NMzau0vtSu5rLDi9410qmliT7bRKUfw+M5+AyYwhlQqw==
+X-Received: by 2002:a0d:e650:0:b0:627:74ee:931b with SMTP id 00721157ae682-62c6bbc8b42mr27447877b3.6.1717073288384;
+        Thu, 30 May 2024 05:48:08 -0700 (PDT)
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a3bf74esm28034217b3.37.2024.05.30.05.48.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 May 2024 05:48:08 -0700 (PDT)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-62c6dc63880so5931127b3.2;
+        Thu, 30 May 2024 05:48:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUx8giaVFolIdWrAVGpAgJpL+vZJex/RFFoIEG9+set5TpCxzQ4+4ooGids48KQ0/UhC+BsB1z7dKfqL4eiN7Pugt4nJGPyHJFY+7KzTCYNlm0yG1FNTKJVM037GgJ+IQhs6VC6jePRQKISsJR39s0xVWT94GdzXmUq2/+pE3QeU5etBYUCQtfWzZs1sOqgifccaxiOey1RBbT9Kniq10S6nd200yd4jw==
+X-Received: by 2002:a5b:d0e:0:b0:de6:1a66:3e4d with SMTP id
+ 3f1490d57ef6-dfa5a7cd26amr2691878276.59.1717073287803; Thu, 30 May 2024
+ 05:48:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0e971f0b885bd360e33ef472d96e3d9e0ab56405.camel@ew.tq-group.com>
+References: <20240524094603.988-1-paul.barker.ct@bp.renesas.com> <20240524094603.988-2-paul.barker.ct@bp.renesas.com>
+In-Reply-To: <20240524094603.988-2-paul.barker.ct@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 30 May 2024 14:47:55 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUkmMGU=S_6B=h+TLH3E=M0BhVCJn03axGsq_FPOKiDJQ@mail.gmail.com>
+Message-ID: <CAMuHMdUkmMGU=S_6B=h+TLH3E=M0BhVCJn03axGsq_FPOKiDJQ@mail.gmail.com>
+Subject: Re: [PATCH 1/9] pinctrl: renesas: rzg2l: Fix variable names in OEN functions
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	"Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Currently, the driver only supports COM Express modules, where IRQs 0-3 correspond to GPIOs 4-7,
-> while GPIOs 0-3 don't have interrupt support. We will soon be mainlining support for our SMARC
-> modules, which have up to 14 GPIOs, and (on some families) IRQ support for all GPIOs (IRQs 0-13
-> correspond to GPIOs 0-13).
-> 
-> New interrupt config and status registers have been introduced to support more IRQs - up to 4 config
-> registers (2 bits for each IRQ) and 3 status registers (IRQs 0-3 in the first one, 4-11 in the
-> second one, 12-13 in the third one... so this part is a bit more convoluted than just "hwirq % 4") 
+Hi Paul,
 
-Depending on how different it is, you could consider a second driver,
-rather than make this driver more complex.
+On Fri, May 24, 2024 at 11:46=E2=80=AFAM Paul Barker
+<paul.barker.ct@bp.renesas.com> wrote:
+> The variable naming in the various OEN functions has been confusing. We
+> were passing the _pin variable from rzg2l_pinctrl_pinconf_get() and
+> rzg2l_pinctrl_pinconf_set() as the offset argument to rzg2l_read_oen()
+> and rzg2l_write_oen(), when this is not a register offset.
+>
+> What we actually need here is the port index, so that we can compare
+> this to oen_max_port.
+>
+> We can also clean up rzg2l_pin_to_oen_bit(), removing an unnecessary
+> branch and clarifying the variable naming.
+>
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 
-	Andrew
+I think this makes sense.
+It will impact Prabhakar's RZ/V2H series, which demultiplexes
+these for RZ/V2H vs. RZ/G2L (G3S).
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
