@@ -1,256 +1,342 @@
-Return-Path: <linux-gpio+bounces-6999-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7000-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FFC58D5E28
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 11:23:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25FCA8D6039
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 13:06:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4C31FB24A2D
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 09:23:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1464281D16
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 11:06:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADDD97C6DF;
-	Fri, 31 May 2024 09:23:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCD03156F5B;
+	Fri, 31 May 2024 11:05:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XUBhUB/t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpZOJktQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D8378C6C
-	for <linux-gpio@vger.kernel.org>; Fri, 31 May 2024 09:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACA8153BC1;
+	Fri, 31 May 2024 11:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717147415; cv=none; b=aRnMY4eRrp4YhngLycJVd0oX6O5IygcWSpd1bWKwix9h3KXdPu5WpjBu0icqRt27AOKfM9rjJmeMMYOXMJbXX99G1D+bQlPgTDQ3D2Z9Kv6O9QOBQ0nhQ9UP0SbU5JP/BuKp6qUK3nEVW9bpQmMb4es+YbBwB2iJXzjzFZ+gotA=
+	t=1717153558; cv=none; b=TbmCYq84Uf6cKdauquTU2tuVElCSlr0ODIHUu37JCkxjSFM0Pj6QV7O5x+80YYD6T6O7UXHdKSYjDqNoKQKOile1OSh7iITvZIUCpSyApD1Q52Oi6b3T5wXEyru9udi6O3AZsUR7VI/35mahmkcBwHUPUe9aj1S7WUvbs8IkdVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717147415; c=relaxed/simple;
-	bh=f88INHhRUhHzmYkM2PobCjiZ/eed+HUDfysZaj0HZC0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=nfNMjjybmT0KitPS5O6QTmJdiGM+1Hgf3BtLUMyBAEiYhKTAP2s74vNnYK/sG4U/YGIZ4rn4tBcamWXA1MORszqA5xMu6KHiVueF8eU9ayllx4BXYX+4NEKTWymThuPpqWj0SAq5+WN0hkek7ns3xiF8r/sAekF6ME67UD3bvPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XUBhUB/t; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717147414; x=1748683414;
-  h=date:from:to:cc:subject:message-id;
-  bh=f88INHhRUhHzmYkM2PobCjiZ/eed+HUDfysZaj0HZC0=;
-  b=XUBhUB/ty0lcP2727Ik75gckKysEGZQ7XypBeEAmvdYJ3Y9Hr0goMohJ
-   on+9D0HivjEHxR32ApcgtOE5JjB7L5y5FUiB9X/jTpGOMsAp1q8IzK9Nj
-   SrNzNyH5V5eOtpR0HU7m4jvbSYWe+152dUhmBKiguTBnVUgoX/NeG6ucH
-   Fk/rSeogoeCtqR7MFtexlLj1AetmNL7xJsoRufL7WiFgebng5ur8IMaLT
-   wbOsAt6iYJXIgNtdUTQEN80o7OdxjVBQ6TGMwt+YrFul58A9BX5UJrxGY
-   LbP4DZBg9NcJ0kzf2KaAAi34sp6a/GRx03rde3LUDYdR5HlA1XJEfUxJn
-   w==;
-X-CSE-ConnectionGUID: tW83iFE5ReSCn+nJdDY0LA==
-X-CSE-MsgGUID: 89FLsUKtRjKHZPc0Mlfh4w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="17513680"
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="17513680"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 02:23:34 -0700
-X-CSE-ConnectionGUID: mPzEL/yOT72DnqxmdbRMBQ==
-X-CSE-MsgGUID: CMC2inksSd+bwLgXXKrS/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="36058577"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 31 May 2024 02:23:31 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sCyTe-000GqZ-14;
-	Fri, 31 May 2024 09:23:16 +0000
-Date: Fri, 31 May 2024 17:21:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 2ba4746b418dcffadb3b135657fea8d3e62b4c30
-Message-ID: <202405311736.wbvKDoyI-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1717153558; c=relaxed/simple;
+	bh=jduYK+IkE5H/UmTDzJBdVFl6pnfSyIqLlyC96vaz1kE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IUP3DPLTwO8gjIKdzB8Dh5aIxYBvf6VZpQf2dAY3L6tQTnjWwZ6i5SV6vvv6epql/O6c0IAgosozUVdRUhM1df8i5XqqcOBcA65h4FekgI810R2/+IxxPzaC3nJN2W8AFSK2FcnDahPgwzFNqklzEPlTVR1Qxz5h4SK0XxzXo2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpZOJktQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7A46C116B1;
+	Fri, 31 May 2024 11:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717153558;
+	bh=jduYK+IkE5H/UmTDzJBdVFl6pnfSyIqLlyC96vaz1kE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gpZOJktQL3e+5T6Ai787a8gkJ9B+HxqmeGnrR5gBb8fBHn2nOLXoKLaUtjm83vT4n
+	 Sg1y2FGUkUhKIT7h1pNhs7d1FfoCXZ9XUVXJ0I2jcFHNpLRXXFsqb68q23ojptccjp
+	 fvrDJUrg5NDqfJuWPTTcTrahRmic3zU1ONdBrLVWIKciZ49NcTiOou0NchWB1FMETf
+	 SFM78RRUlrwHAerco41jqW6PzzFvVG70zy6X3r0VVqXdhhIpFIsMFT+ZR701GxiHCw
+	 5PI0k2OgnD2VFQIr6G0glzib6q9YG/SB2Jkbv5GuvhQOxOE54HFEZdlCVLzv09UfkX
+	 juCRgqwfJdeog==
+Date: Fri, 31 May 2024 12:05:50 +0100
+From: Lee Jones <lee@kernel.org>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Subject: Re: [PATCH v2 06/11] mfd: olb: Add support for Mobileye OLB
+ system-controller
+Message-ID: <20240531110550.GE1005600@google.com>
+References: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
+ <20240503-mbly-olb-v2-6-95ce5a1e18fe@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240503-mbly-olb-v2-6-95ce5a1e18fe@bootlin.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 2ba4746b418dcffadb3b135657fea8d3e62b4c30  gpiolib: cdev: Cleanup kfifo_out() error handling
+On Fri, 03 May 2024, Théo Lebrun wrote:
 
-elapsed time: 1396m
+> Mobileye OLB system-controller gets used in EyeQ5, EyeQ6L and EyeQ6H
+> platforms. It hosts clock, reset and pinctrl functionality.
+> 
+> Tiny iomem resources are declared for all cells. Some features are
+> spread apart. Pinctrl is only used on EyeQ5.
+> 
+> EyeQ6H is special: it hosts seven OLB controllers, each with a
+> compatible. That means many clock and reset cells. Use cell->devname
+> for explicit device names rather than clk-eyeq.ID or clk-eyeq.ID.auto.
+> 
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> ---
+>  drivers/mfd/Kconfig        |  10 +++
+>  drivers/mfd/Makefile       |   2 +
+>  drivers/mfd/mobileye-olb.c | 180 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 192 insertions(+)
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 4b023ee229cf..d004a3f4d493 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1030,6 +1030,16 @@ config MFD_OCELOT
+>  
+>  	  If unsure, say N.
+>  
+> +config MFD_OLB
+> +	bool "Mobileye EyeQ OLB System Controller Support"
+> +	select MFD_CORE
+> +	depends on MACH_EYEQ5 || MACH_EYEQ6H || COMPILE_TEST
+> +	default MACH_EYEQ5 || MACH_EYEQ6H
+> +	help
+> +	  Say yes here to add support for EyeQ platforms (EyeQ5, EyeQ6L and
+> +	  EyeQ6H). This core MFD platform driver provides clock, reset and
+> +	  pinctrl (only EyeQ5) support.
+> +
+>  config EZX_PCAP
+>  	bool "Motorola EZXPCAP Support"
+>  	depends on SPI_MASTER
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index c66f07edcd0e..d872833966a8 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -120,6 +120,8 @@ obj-$(CONFIG_MFD_CORE)		+= mfd-core.o
+>  ocelot-soc-objs			:= ocelot-core.o ocelot-spi.o
+>  obj-$(CONFIG_MFD_OCELOT)	+= ocelot-soc.o
+>  
+> +obj-$(CONFIG_MFD_OLB)		+= mobileye-olb.o
+> +
+>  obj-$(CONFIG_EZX_PCAP)		+= ezx-pcap.o
+>  obj-$(CONFIG_MFD_CPCAP)		+= motorola-cpcap.o
+>  
+> diff --git a/drivers/mfd/mobileye-olb.c b/drivers/mfd/mobileye-olb.c
+> new file mode 100644
+> index 000000000000..1640d63a3ddd
+> --- /dev/null
+> +++ b/drivers/mfd/mobileye-olb.c
+> @@ -0,0 +1,180 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * System controller multi-function device for EyeQ platforms.
+> + *
+> + * Mobileye EyeQ5, EyeQ6L and EyeQ6H platforms have MMIO mapped registers
+> + * controlling core platform clocks, resets and pin control. Many other
+> + * features are present and not yet exposed.
+> + *
+> + * Declare cells for each compatible. Only EyeQ5 has pinctrl.
+> + * EyeQ6H has seven OLB instances; each has a name which we propagate to
+> + * sub-devices using cell->devname.
+> + *
+> + * Copyright (C) 2024 Mobileye Vision Technologies Ltd.
+> + */
+> +
+> +#include <linux/array_size.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/ioport.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +
+> +#define OLB_MFD_CELL(_name, _res, _devname) \
+> +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, false, NULL, _devname)
 
-configs tested: 163
-configs skipped: 3
+The reason we provide generic MACROs is so that you don't have to define
+your own.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +struct olb_match_data {
+> +	const struct mfd_cell	*cells;
+> +	int			nb_cells; /* int to match devm_mfd_add_devices() argument */
+> +};
+> +
+> +#define OLB_DATA(_cells) { .cells = (_cells), .nb_cells = ARRAY_SIZE(_cells) }
+> +
+> +static int olb_probe(struct platform_device *pdev)
+> +{
+> +	const struct olb_match_data *match_data;
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +
+> +	match_data = device_get_match_data(dev);
+> +	if (!match_data)
+> +		return -ENODEV;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -ENODEV;
+> +
+> +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
+> +				    match_data->cells, match_data->nb_cells,
+> +				    res, 0, NULL);
+> +}
+> +
+> +static const struct resource olb_eyeq5_clk_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(0x02C, 10 * 8, "pll"),
+> +	DEFINE_RES_MEM_NAMED(0x11C, 1 * 4, "ospi"),
+> +};
+> +
+> +static const struct resource olb_eyeq5_reset_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(0x004, 2 * 4, "d0"),
+> +	DEFINE_RES_MEM_NAMED(0x200, 13 * 4, "d1"),
+> +	DEFINE_RES_MEM_NAMED(0x120, 1 * 4, "d2"),
+> +};
+> +
+> +static const struct resource olb_eyeq5_pinctrl_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(0x0B0, 12 * 4, "pinctrl"),
+> +};
+> +
+> +static const struct mfd_cell olb_eyeq5_cells[] = {
+> +	OLB_MFD_CELL("clk-eyeq", olb_eyeq5_clk_resources, NULL),
+> +	OLB_MFD_CELL("reset-eyeq", olb_eyeq5_reset_resources, NULL),
+> +	OLB_MFD_CELL("eyeq5-pinctrl", olb_eyeq5_pinctrl_resources, NULL),
+> +};
+> +
+> +static const struct olb_match_data olb_eyeq5_match_data = OLB_DATA(olb_eyeq5_cells);
+> +
+> +static const struct resource olb_eyeq6l_clk_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(0x02C, 4 * 8, "pll"),
+> +};
+> +
+> +static const struct resource olb_eyeq6l_reset_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(0x004, 2 * 4, "d0"),
+> +	DEFINE_RES_MEM_NAMED(0x200, 13 * 4, "d1"),
+> +};
+> +
+> +static const struct mfd_cell olb_eyeq6l_cells[] = {
+> +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6l_clk_resources, NULL),
+> +	OLB_MFD_CELL("reset-eyeq", olb_eyeq6l_reset_resources, NULL),
+> +};
+> +
+> +static const struct olb_match_data olb_eyeq6l_match_data = OLB_DATA(olb_eyeq6l_cells);
+> +
+> +static const struct resource olb_eyeq6h_acc_clk_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(0x040, 7 * 8, "pll"),
+> +};
+> +
+> +static const struct resource olb_eyeq6h_acc_reset_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(0x000, 15 * 4, "d0"),
+> +};
+> +
+> +static const struct mfd_cell olb_eyeq6h_acc_cells[] = {
+> +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_acc_clk_resources, "clk-eyeq-acc"),
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240531   gcc  
-arc                   randconfig-002-20240531   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240531   clang
-arm                   randconfig-002-20240531   clang
-arm                   randconfig-003-20240531   clang
-arm                   randconfig-004-20240531   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240531   clang
-arm64                 randconfig-002-20240531   clang
-arm64                 randconfig-003-20240531   gcc  
-arm64                 randconfig-004-20240531   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240531   gcc  
-csky                  randconfig-002-20240531   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240531   clang
-hexagon               randconfig-002-20240531   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240530   gcc  
-i386         buildonly-randconfig-002-20240530   gcc  
-i386         buildonly-randconfig-003-20240530   clang
-i386         buildonly-randconfig-004-20240530   clang
-i386         buildonly-randconfig-005-20240530   clang
-i386         buildonly-randconfig-006-20240530   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240530   gcc  
-i386                  randconfig-002-20240530   clang
-i386                  randconfig-003-20240530   gcc  
-i386                  randconfig-004-20240530   clang
-i386                  randconfig-005-20240530   gcc  
-i386                  randconfig-006-20240530   gcc  
-i386                  randconfig-011-20240530   clang
-i386                  randconfig-012-20240530   gcc  
-i386                  randconfig-013-20240530   clang
-i386                  randconfig-014-20240530   clang
-i386                  randconfig-015-20240530   gcc  
-i386                  randconfig-016-20240530   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240531   gcc  
-loongarch             randconfig-002-20240531   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240531   gcc  
-nios2                 randconfig-002-20240531   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240531   gcc  
-parisc                randconfig-002-20240531   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc               randconfig-001-20240531   clang
-powerpc               randconfig-002-20240531   clang
-powerpc               randconfig-003-20240531   gcc  
-powerpc64             randconfig-001-20240531   clang
-powerpc64             randconfig-002-20240531   clang
-powerpc64             randconfig-003-20240531   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240531   clang
-riscv                 randconfig-002-20240531   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240531   gcc  
-s390                  randconfig-002-20240531   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240531   gcc  
-sh                    randconfig-002-20240531   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240531   gcc  
-sparc64               randconfig-002-20240531   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240531   gcc  
-um                    randconfig-002-20240531   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240531   clang
-x86_64       buildonly-randconfig-002-20240531   gcc  
-x86_64       buildonly-randconfig-003-20240531   clang
-x86_64       buildonly-randconfig-004-20240531   clang
-x86_64       buildonly-randconfig-005-20240531   gcc  
-x86_64       buildonly-randconfig-006-20240531   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240531   gcc  
-x86_64                randconfig-002-20240531   clang
-x86_64                randconfig-003-20240531   gcc  
-x86_64                randconfig-004-20240531   gcc  
-x86_64                randconfig-005-20240531   gcc  
-x86_64                randconfig-006-20240531   gcc  
-x86_64                randconfig-011-20240531   clang
-x86_64                randconfig-012-20240531   gcc  
-x86_64                randconfig-013-20240531   gcc  
-x86_64                randconfig-014-20240531   clang
-x86_64                randconfig-015-20240531   gcc  
-x86_64                randconfig-016-20240531   gcc  
-x86_64                randconfig-071-20240531   clang
-x86_64                randconfig-072-20240531   gcc  
-x86_64                randconfig-073-20240531   gcc  
-x86_64                randconfig-074-20240531   gcc  
-x86_64                randconfig-075-20240531   clang
-x86_64                randconfig-076-20240531   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240531   gcc  
-xtensa                randconfig-002-20240531   gcc  
+The point of enumerating platform device names is to identify devices
+that are identical.  We lose this with bespoke naming.
+
+If you want to identify devices either define a value to pass to .id or
+adapt the first parameter and make the clk-eyeq driver accept different
+device names.
+
+> +	OLB_MFD_CELL("reset-eyeq", olb_eyeq6h_acc_reset_resources, "reset-eyeq-acc"),
+> +};
+> +
+> +static const struct olb_match_data olb_eyeq6h_acc_match_data = OLB_DATA(olb_eyeq6h_acc_cells);
+> +
+> +static const struct resource olb_eyeq6h_we_clk_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(0x074, 1 * 8, "pll"),
+> +};
+> +
+> +static const struct resource olb_eyeq6h_we_reset_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(0x004, 4 * 4, "d0"),
+> +};
+> +
+> +static const struct mfd_cell olb_eyeq6h_west_cells[] = {
+> +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_we_clk_resources, "clk-eyeq-west"),
+> +	OLB_MFD_CELL("reset-eyeq", olb_eyeq6h_we_reset_resources, "reset-eyeq-west"),
+> +};
+> +
+> +static const struct olb_match_data olb_eyeq6h_west_match_data = OLB_DATA(olb_eyeq6h_west_cells);
+> +
+> +static const struct mfd_cell olb_eyeq6h_east_cells[] = {
+> +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_we_clk_resources, "clk-eyeq-east"),
+> +	OLB_MFD_CELL("reset-eyeq", olb_eyeq6h_we_reset_resources, "reset-eyeq-east"),
+> +};
+> +
+> +static const struct olb_match_data olb_eyeq6h_east_match_data = OLB_DATA(olb_eyeq6h_east_cells);
+> +
+> +static const struct resource olb_eyeq6h_south_clk_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(0x000, 4 * 8, "pll"),
+> +	DEFINE_RES_MEM_NAMED(0x070, 1 * 4, "emmc"),
+> +	DEFINE_RES_MEM_NAMED(0x090, 1 * 4, "ospi"),
+> +	DEFINE_RES_MEM_NAMED(0x098, 1 * 4, "tsu"),
+> +};
+> +
+> +static const struct mfd_cell olb_eyeq6h_south_cells[] = {
+> +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_south_clk_resources, "clk-eyeq-south"),
+> +};
+> +
+> +static const struct olb_match_data olb_eyeq6h_south_match_data = OLB_DATA(olb_eyeq6h_south_cells);
+> +
+> +static const struct resource olb_eyeq6h_ddr_clk_resources[] = {
+> +	DEFINE_RES_MEM_NAMED(0x074, 1 * 8, "pll"),
+> +};
+> +
+> +static const struct mfd_cell olb_eyeq6h_ddr0_cells[] = {
+> +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_ddr_clk_resources, "clk-eyeq-ddr0"),
+> +};
+> +
+> +static const struct olb_match_data olb_eyeq6h_ddr0_match_data = OLB_DATA(olb_eyeq6h_ddr0_cells);
+> +
+> +static const struct mfd_cell olb_eyeq6h_ddr1_cells[] = {
+> +	OLB_MFD_CELL("clk-eyeq", olb_eyeq6h_ddr_clk_resources, "clk-eyeq-ddr1"),
+> +};
+> +
+> +static const struct olb_match_data olb_eyeq6h_ddr1_match_data = OLB_DATA(olb_eyeq6h_ddr1_cells);
+> +
+> +static const struct of_device_id olb_of_match[] = {
+> +	{ .compatible = "mobileye,eyeq5-olb", .data = &olb_eyeq5_match_data },
+
+We're not passing MFD init data through the OF API, sorry.
+
+Pass defined identifiers through instead and match on those please.
+
+> +	{ .compatible = "mobileye,eyeq6l-olb", .data = &olb_eyeq6l_match_data },
+> +	{ .compatible = "mobileye,eyeq6h-acc-olb", .data = &olb_eyeq6h_acc_match_data },
+> +	/* No central: it only has an early clock handled using CLK_OF_DECLARE_DRIVER(). */
+> +	{ .compatible = "mobileye,eyeq6h-east-olb", .data = &olb_eyeq6h_east_match_data },
+> +	{ .compatible = "mobileye,eyeq6h-west-olb", .data = &olb_eyeq6h_west_match_data },
+> +	{ .compatible = "mobileye,eyeq6h-south-olb", .data = &olb_eyeq6h_south_match_data },
+> +	{ .compatible = "mobileye,eyeq6h-ddr0-olb", .data = &olb_eyeq6h_ddr0_match_data },
+> +	{ .compatible = "mobileye,eyeq6h-ddr1-olb", .data = &olb_eyeq6h_ddr1_match_data },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, olb_of_match);
+> +
+> +static struct platform_driver olb_driver = {
+> +	.probe =  olb_probe,
+> +	.driver = {
+> +		.name = "olb",
+> +		.of_match_table = olb_of_match,
+> +	},
+> +};
+> +builtin_platform_driver(olb_driver);
+> 
+> -- 
+> 2.45.0
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Lee Jones [李琼斯]
 
