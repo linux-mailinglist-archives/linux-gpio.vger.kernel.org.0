@@ -1,122 +1,127 @@
-Return-Path: <linux-gpio+bounces-6994-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6995-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 565C48D5C54
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 10:08:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F2C98D5CA1
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 10:20:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 037C01F2551F
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 08:08:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8EC31F2B9BA
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 08:20:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58AEF8062A;
-	Fri, 31 May 2024 08:07:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44A8776413;
+	Fri, 31 May 2024 08:20:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rqGodKff"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrluU7t+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6D078274;
-	Fri, 31 May 2024 08:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8940E33993;
+	Fri, 31 May 2024 08:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717142875; cv=none; b=qaFlr8xFGTyu1DSkTXmEojQD7oiEuT7QOkt2XIqHleA9tWZa/INjIp0Yaoh0lTyQYhUURjYcmYivz/DA2Oq2JgFsBV2blbcFqr2ywZ79DBF5RdRC8LZtUKVsV+/hy2RKxA/jUibvo77TZlxSf6BY1mmvOT/dsssQH7S9RcuuYds=
+	t=1717143606; cv=none; b=uNoOqGJ7jT6wSsk8amjzuwlBEsuwYwDNOg2dclzCe6pfMFONmcbwtz/n+SEi0oJgqaJH4D1JkoARBCD80OjwUxkhFq6KczbyigbEgyT1MfJtO3yTwlB2v8FdDYyOQv/D34pl6jIuXidLPaTAaMo0TiMycBl10UymbA2cDAKV8Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717142875; c=relaxed/simple;
-	bh=VxI4hfrXrXA0xAIuC3B7s0C6dsDYxzaR+hTj2hBKvgw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sG7+2+WTN9LnWnIhYagH9Lh9J9SFwFDhLdWLAGy4u4pNBtmL4C8FQHCUq7DFEWsJXzyIktlgmb5VDUO04dezLfzGBFCjRm9AuV9GCtsNYBT/NmrVw9aELqy6p7FSBnF4/a/Bw1ukXfcK+RAn01/IA8sNyuhIXYqPc4EAJUZm490=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rqGodKff; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24086C116B1;
-	Fri, 31 May 2024 08:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717142874;
-	bh=VxI4hfrXrXA0xAIuC3B7s0C6dsDYxzaR+hTj2hBKvgw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rqGodKffy4jUR2w3TxDrYqMeBHRujhARMAlSjWmFmL1v2ZBR0qoltU95Q5k4bkcVW
-	 lup6BccLpopaRKfolfGkCYoe0L07DQmIZ208c87zHJwM0QbFAyF2ou5/jIHXLa8Lwb
-	 VL6SjGo7jB8UPbVOi8vLWkDCiS8+H6jGt2spn7TmuIz7RiUDdBIfWvgjfhzGvTFRiS
-	 YjMa1FJbZHkOqlPwGT1ROk9PobG9S5zMCkDA6I/Vzbt8eHaXoMN/WFWR/47CLoEmQQ
-	 C8iCbQ1WHrvQKPWRhOmBkBmPvASwP0yfo8+aV9hZjCSEG8I3JKsUp+pUAnTx2xDQpY
-	 /oYjqOdxQFJtw==
-Message-ID: <9f3603d2-daff-435e-866d-ca07e47c3ccc@kernel.org>
-Date: Fri, 31 May 2024 10:07:50 +0200
+	s=arc-20240116; t=1717143606; c=relaxed/simple;
+	bh=VXQ8PcecW3eeUBZGPs6f0AS25gyhiZbpcxJ39NVWeCM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gyEDK595KOAF4qhNZWLuR1MpQMVLB6TCUOUxTDh2pP7xEsG9KpD9wYFbe/84R04/0hYOAdzhp2yjsLuYP4rzfIKeKCeCi1Lnr44xqRqrM2nU4rMee7EKb/wuqlQOizQu7dUIcrkm/j3+rpEvsZIGq4HbgAClPvU/v1+MFkYzJIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DrluU7t+; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a66e9eac48fso109561666b.2;
+        Fri, 31 May 2024 01:20:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717143603; x=1717748403; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t1rHDPos9NoMkAAFHgrzRHdcQt/E5yu09sQPK/y3CdI=;
+        b=DrluU7t+Rdao1bRMsGnVDWoqdDteLni/C29HeTu9aD1mRWlBPm4xREX3+KvB8hEdgv
+         b0mi0q8slabU7htwlvX4eyeNxodMB3RziPge6VgvkfWW9kL5YujMcOPcKcQzqR0eV3P2
+         rqvDnT8pPilcGtO8lYaIqyx+uxunwukPvDAf5dTQRr/3Yvh7PSJlSSOFVAAJ2eUan/46
+         RSKp3oEoPd+lFDm6zefXGGFZsvrFRejt20doP64IjmnUKcRhGbUqbGXF+QVl9BbbjzFo
+         YBL0PC0FYXibBbFc16RRgwmVb9pSFgh+A9mQ9EiOrLGLhhifwmC13tGwxXR/RvU1tuPY
+         tgdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717143603; x=1717748403;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t1rHDPos9NoMkAAFHgrzRHdcQt/E5yu09sQPK/y3CdI=;
+        b=lGjfow96o67BAijyLp6+VIyWJpuI16XTOc0dgJtTuK9os88JhaBrFiNUkntkkKuH3G
+         wUSdL4ySnMPyStWggtNknSB9zt+YQOlrvooXp5Zv2CAD4n9yKylc3Vzx+XnayB1280dc
+         6VCnBeZs8fbsvIJCSrK0oBvy8hZ4sZfYMS1zVvipNXJg2VEUa6WX+lqRp10x9gFeJOMB
+         k4cFNcsUQ9wIMJfwLOf54IDLB0+2rLg1lvpx469pGxa5+6Yhr3p4/PXutTmH2suvHy+D
+         k+OlLPamrQl/0E+P/1Kqxpygh7bjwxSGEb4nMVPTDg729+eo/aaJelxN+Keg4IrQnA9N
+         s5qA==
+X-Forwarded-Encrypted: i=1; AJvYcCWln6nLU2Rar5TBnh0jOshB2cpxtZs/pqOxI+wv8awo2i8zRsvuYyfgKp37Gk1N2IKZpgnWDGc4WofMQ4mIhLCmCwNVwSfnwQXMSqSbMCdH972IBpLvYLJRnizkc5+kVhFaxKRjGUzDtGcQ/xMu
+X-Gm-Message-State: AOJu0YxQcIl/PknZjlgk+fe8OsZ5a8UYbPGL1SukBzDQ7+JzRQUIeIeX
+	ktVxy3zfG3kKvx8gjY+VgW8g/tHalXILE92AclZxxSb3+dnbJqSslAodxKbAiCUS1MJQIiy9EgX
+	mfeDQEatg8S8WpCXMeqtLoOjAC6TXP5qJKZs=
+X-Google-Smtp-Source: AGHT+IFzXBIeWUSH5TDhfeYEvpfdWrJ/1MzyDvt5ksDmR49GILouqyMH3LnNb6BDjFzvNmMvPX7RfYYrDX6rJU1ou8I=
+X-Received: by 2002:a17:906:cf8f:b0:a66:5064:cc73 with SMTP id
+ a640c23a62f3a-a6821f4e311mr87690766b.55.1717143602449; Fri, 31 May 2024
+ 01:20:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] dt-bindings: gpio: mpc8xxx: Convert to yaml format
-To: Frank Li <Frank.Li@nxp.com>, robh@kernel.org
-Cc: brgl@bgdev.pl, conor+dt@kernel.org, devicetree@vger.kernel.org,
- imx@lists.linux.dev, krzk+dt@kernel.org, linus.walleij@linaro.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240530165424.3173673-1-Frank.Li@nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240530165424.3173673-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <c0a28f466c42d5d59c7fadfa1fd05fd512d43b6f.1717060708.git.geert+renesas@glider.be>
+ <ZlhGYFM6iVlGjZk-@surfacebook.localdomain> <CAMuHMdU6V4Ooit7P5pqUFXOZawiZj7TjXY7t=KVk84xPZ0PR+A@mail.gmail.com>
+ <CAHp75Vd3ke3_bxwsxzSVzjnNW-6aYDTYHvZ-+B9nJtAJR1fX=g@mail.gmail.com> <7f4ef893-5ab6-4a9e-ad54-4b3587516bcf@moroto.mountain>
+In-Reply-To: <7f4ef893-5ab6-4a9e-ad54-4b3587516bcf@moroto.mountain>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 31 May 2024 11:19:26 +0300
+Message-ID: <CAHp75VdZXs-XCOZaG48dsLEVNsUKiL0rhtf56dnqJKycDMByuQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzn1: Use for_each_child_of_node_scoped()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30/05/2024 18:54, Frank Li wrote:
-> Convert binding doc from txt to yaml.
-> 
-> Remove redundated "gpio1: gpio@2300000" example.
-> Add gpio-controller at example "gpio@1100".
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
+On Fri, May 31, 2024 at 11:01=E2=80=AFAM Dan Carpenter <dan.carpenter@linar=
+o.org> wrote:
+> On Thu, May 30, 2024 at 04:36:59PM +0300, Andy Shevchenko wrote:
+> > On Thu, May 30, 2024 at 2:52=E2=80=AFPM Geert Uytterhoeven <geert@linux=
+-m68k.org> wrote:
+> > > On Thu, May 30, 2024 at 11:26=E2=80=AFAM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > Thu, May 30, 2024 at 11:19:29AM +0200, Geert Uytterhoeven kirjoitti=
+:
+> > > > > Use the scoped variant of for_each_child_of_node() to simplify th=
+e code.
+> > > >
+> > > > I do not see the point of this patch. This makes code actually more
+> > > > complicated, and I'm not sure the code generation is the same and n=
+ot worse.
+> > >
+> > > On arm32, a conversion to for_each_child_of_node_scoped() seems to
+> > > cost ca. 48 bytes of additional code.
+> > >
+> > > BTW, the same is true for cases where the conversion does simplify
+> > > cleanup.
+> > >
+> > > I checked "pinctrl: renesas: Use scope based of_node_put() cleanups",
+> > > and all but the conversions in *_dt_node_to_map() cost 48 bytes each.
+> >
+> > Yeah. so for the cases where there are no returns from inside the loop
+> > I prefer not to use _scoped.
+>
+> Eventually _scoped() loops will become the norm.  Leaving some unscoped
+> loops will be a fun surprise for the first person to introduce a return
+> -EINVAL.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+It makes no sense when we have no return / goto semantics from inside
+of the loop. I don't know why we should do worse binary code for no
+benefit.
 
-Best regards,
-Krzysztof
-
+--=20
+With Best Regards,
+Andy Shevchenko
 
