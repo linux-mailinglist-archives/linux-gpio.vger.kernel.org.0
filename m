@@ -1,137 +1,119 @@
-Return-Path: <linux-gpio+bounces-7001-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7002-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 055748D6085
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 13:20:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7835B8D618B
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 14:18:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B49E6283047
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 11:20:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ED4CEB2472C
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 12:18:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D238156F46;
-	Fri, 31 May 2024 11:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C88115748B;
+	Fri, 31 May 2024 12:18:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="S6/XqAY7";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="hcQ3Gwxo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dx16CZzo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A9E15746B;
-	Fri, 31 May 2024 11:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1981D53E2B;
+	Fri, 31 May 2024 12:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717154408; cv=none; b=MHvRhIi+qvZaqlyPs5Z2sF8X869oxjJWdwaSpBlyXbfFOhbObkZ0OLSST7pYjmxMSYH8TXoXsB7pYGLoGAE7DdRBKbQmr2LmI2EwWWa2qohXnoX2XtlsCKZdvYRZVkBmOYpJnFKuetAi4Z+27nbJYRTa3mj9Lcdg7glX01XZmjM=
+	t=1717157901; cv=none; b=tyxWj4JVew1N7ST2yxzS/7NCj5kFDCkcR5iAwrJhUu0S0dhZLBR30euMDOQhrFHVecJAR77p+YvMu1+xC82of8CszM0wMDRT6ehYDUgvj4W0gwEgdtb/JUP528lEEjiPrzPko9pM9/JRe2weIvXSA1n9qADZ2z7KHKBL5iJzttw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717154408; c=relaxed/simple;
-	bh=yK/9zuweDOypzYDJEBoGAgQ/cyW+LWy0AQZxqNE129s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Md8eG7v4aJjdCqaqw4e/T1avGTjTuGrllGpXBMxQLo0oTyoTGoCEBhYSXxQXb2maHb86VUesGC0ij48cz6dXAd3waS42oU/n8DpQiPG3W2WtcmUo632G4gvj4K7D7YUQ2WHCa5rfZB8Ji72zsBMr8crbzbonzc2XNAiv584TWHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=S6/XqAY7; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=hcQ3Gwxo reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1717157901; c=relaxed/simple;
+	bh=72+twdy4AxOnOPyDRjYOgaYzHoulDPP6vRPlQqXns+8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a5AaKB5RREz6Ti2y9dvix5VOdokjJnaX6tFNMS4sCQGuRCMT3itbIu9KcqZjBEsCwKVKknCWQxio8DhN2gfvVOY2hmsq5qwb6Mt8YjnAkB623STUHsE3/uNUmWjkCZDygiNfIFZO8AKTtjYjDob8cvascWRmON15XYGI5rPybXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dx16CZzo; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6f8e9876117so122631b3a.1;
+        Fri, 31 May 2024 05:18:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1717154404; x=1748690404;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dBKf2zZ6ISHeCjN/chmz4IF4IvJbZqScCFwFIMuTRXM=;
-  b=S6/XqAY7IA7MuOe1R4LPK2qkd/XL2MkJLYuccHCXw0cUzNwvx6l08zkZ
-   Bw5iDw5ZWTKR/mhdKlwBbtwN0LJlJHYx2N6ia+Y0nMb00hztMtlszDo/m
-   0SimSNXSXV9oPoFkCm2WbPsukP1v0ShOUWhPkZU2VHYsGl+gqqc7E8sJ5
-   /oEP9BiaKBCIrTVpsEDlPPn3/HNO228ca7jUPHptxbslAjAjUEHwuAwPw
-   Vf/1/W0aBEHXXGoEi49td1pixK+jOsGSpLieZZVvhh+G1EC7TmBqRIwub
-   tRU62Bvy3fnmksXUaRFCL2k1F/hzdOLtmuImPE47S+HHGjgb/MMKbQpbI
-   g==;
-X-CSE-ConnectionGUID: VjAggmQpSy615veur+5o+w==
-X-CSE-MsgGUID: 9j/bxm4oQeWL8attay58SQ==
-X-IronPort-AV: E=Sophos;i="6.08,204,1712613600"; 
-   d="scan'208";a="37159682"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 31 May 2024 13:20:02 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7A44E1664A0;
-	Fri, 31 May 2024 13:19:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1717154397;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=dBKf2zZ6ISHeCjN/chmz4IF4IvJbZqScCFwFIMuTRXM=;
-	b=hcQ3GwxoQ6Dq+OVdklHuJTT67XqYyfbQL0wxRqo7nbnt/8OfGyP2wYg/R0Fqvy9sDljz/k
-	xDSfZNsmsYGJG9NVdKUjaQwM/Ifd5OL/YVsjn+UJWNIzZSMAHK8rlSalq1JoVrJnABkY6h
-	a5xyFx+BeRswdkRz3jXZGiN1kh1Vg/uvUF0/bQj/VNByKquZkLnQyKIjuGo5Js/bHhJoL8
-	1AGeVp2xSSDxBXDshVOQBjVUkzcoArUmt5zuIPUBRXYSQcsmKP/566RMOo1C7BuxPhNzNv
-	lMP5dbQrfkgI2NHi3zM1arZr3YmaW3qSA3WGb63tnMazMMI6lezkV2UdYTE9MQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] gpiolib: Show more info for interrupt only lines in debugfs
-Date: Fri, 31 May 2024 13:19:56 +0200
-Message-ID: <7750850.EvYhyI6sBW@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20240530191418.1138003-3-andriy.shevchenko@linux.intel.com>
-References: <20240530191418.1138003-1-andriy.shevchenko@linux.intel.com> <20240530191418.1138003-3-andriy.shevchenko@linux.intel.com>
+        d=gmail.com; s=20230601; t=1717157899; x=1717762699; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=36JkXqEuAbW7QUbf4OJMhQCdmtv1HnbYTLnjYfq4N6k=;
+        b=dx16CZzomdJ2q0oGwcQ8XBoouh+es/BukmxqRWI01njPM/xRJb/IV3X+Q2wpAPdh/d
+         w6J5VRxK+Q29u42LCfQJwuFnEWmTlI/j7VdqOYA4kGnaOgJSRtQeoRr9wXC4wTeW6kaL
+         VYotYMyy3wCh/fa8hJQuvBDl4VrZYF9PyShmKrjbYPVwkh3agkF7jSe7ru8lVdqeG5wS
+         o4aZKuXX57ePyb3FwZpkdNZ2xEmJ4lAe6jmWAFfPHgsKmiQ8kjkMz9qVkyRndXaRnq2G
+         OFzu9Zuccjt7uEowf9oORiQhCrSIz+I1Cr55bvniEDiAaqXSVh7by09dY8fwkhjiYVdZ
+         wrog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717157899; x=1717762699;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=36JkXqEuAbW7QUbf4OJMhQCdmtv1HnbYTLnjYfq4N6k=;
+        b=tretorPphsJd60WoajSqhuNKQjG50NC3eY4apo++OfKArQ7NrJckgi9ZSSPXOmQ1cV
+         /keI0c4qsXHAHd2pfIfVOz3dtjoDqs+AR+jHcYiXbPX8ddWu/Zm0hPUrRIsxT9hV3mvW
+         d2VsP0H2xHGg33e+EgLUemnyxHsVGXPWhFJxy101EkJsR9me+u8/QgLogYBmYkACSrXi
+         sqe5B2e9tNGpB0TSHSwVGxCclC6CSuYApTqFBYBM1mNLKj+OUqxV+qMp65IFR4oc/Uf8
+         SNdpQbo6e8HF3VMBkO4BEBW2Uk+a8So/toWKHxulVbNyAf6pe7XG1eD3m7QNwtRXGKm9
+         oUwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ8kJtpsg5DXCfUMWhl9vFwt/HQk6jA8RGGxoiEOjaBR1YstMyh7XWgOPHL7TFQsZi2yJb8d7qH0Bi/S3HPpCwoYQlIjrggUMbI/byL6RwnaRx7UxvC0smQMtmW/YBfXmXrPoX1bU=
+X-Gm-Message-State: AOJu0YzG+0DT+kq3DqyTpYW4XZOipGn6z08rskitgcwe9vHqtBCCRBSD
+	Q4357m6qrPnhRY6acs8yFrMQSnxYD/aV91vblE2PLFaX0WoqAHyg
+X-Google-Smtp-Source: AGHT+IHUNzKCyjwY004jSeyhKW9qvTJ4GzAdj3tYR/MPERjmNnCyxOzoB1SzCdPL+FLvip50QZ/Hhw==
+X-Received: by 2002:a17:902:db0d:b0:1f2:f73c:c442 with SMTP id d9443c01a7336-1f63695ef71mr18592235ad.0.1717157899280;
+        Fri, 31 May 2024 05:18:19 -0700 (PDT)
+Received: from fabio-Precision-3551.. ([2804:14c:485:4b61:7c3c:8970:23ae:7bcd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323e8ad6sm14918425ad.185.2024.05.31.05.18.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 05:18:18 -0700 (PDT)
+From: Fabio Estevam <festevam@gmail.com>
+To: brgl@bgdev.pl
+Cc: linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 1/2] gpio: pca953x: Add support for TI TCA9535 variant
+Date: Fri, 31 May 2024 09:18:00 -0300
+Message-Id: <20240531121801.2161154-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Add support for the TI TCA9535 variant.
 
-Am Donnerstag, 30. Mai 2024, 21:12:30 CEST schrieb Andy Shevchenko:
-> Show more info for interrupt only lines in debugfs. It's useful
-> to monitor the lines that have been never requested as GPIOs,
-> but IRQs.
+The NXP PCA9535 is already supported by the driver.
 
-I was trying to test this on TQMa8MPQL (i.MX8MP) using gpio-mxc.c.
-But apparently this series only has an effect when gpiochip_lock_as_irq()
-is called eventually. I'm wondering what needs to be done so IRQ only
-GPIOs are listed in debugfs. Using irq_request_resources/irq_release_resour=
-ces
-similar to what pinctrl-at91.c is doing?
+TCA9535 supports lower voltage operation (down to 1.65V VCC)
+compared to PCA (down to 2.3V VCC).
 
-Best regards,
-Alexander
+From a software perspective, these models are equivalent as they
+have the same register map.
 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpiolib.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index a6032b84ba98..f3b2f5c4781d 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -4888,11 +4888,11 @@ static void gpiolib_dbg_show(struct seq_file *s, =
-struct gpio_device *gdev)
-> =20
->  	for_each_gpio_desc(gc, desc) {
->  		guard(srcu)(&desc->gdev->desc_srcu);
-> -		if (test_bit(FLAG_REQUESTED, &desc->flags)) {
-> +		is_irq =3D test_bit(FLAG_USED_AS_IRQ, &desc->flags);
-> +		if (is_irq || test_bit(FLAG_REQUESTED, &desc->flags)) {
->  			gpiod_get_direction(desc);
->  			is_out =3D test_bit(FLAG_IS_OUT, &desc->flags);
->  			value =3D gpio_chip_get_value(gc, desc);
-> -			is_irq =3D test_bit(FLAG_USED_AS_IRQ, &desc->flags);
->  			active_low =3D test_bit(FLAG_ACTIVE_LOW, &desc->flags);
->  			seq_printf(s, " gpio-%-3u (%-20.20s|%-20.20s) %s %s %s%s\n",
->  				   gpio, desc->name ?: "", gpiod_get_label(desc),
->=20
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+ drivers/gpio/gpio-pca953x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 77a2812f2974..1f2bc29cb15e 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -1313,6 +1313,7 @@ static const struct of_device_id pca953x_dt_ids[] = {
+ 	{ .compatible = "ti,tca6408", .data = OF_953X( 8, PCA_INT), },
+ 	{ .compatible = "ti,tca6416", .data = OF_953X(16, PCA_INT), },
+ 	{ .compatible = "ti,tca6424", .data = OF_953X(24, PCA_INT), },
++	{ .compatible = "ti,tca9535", .data = OF_953X(16, PCA_INT), },
+ 	{ .compatible = "ti,tca9538", .data = OF_953X( 8, PCA_INT), },
+ 	{ .compatible = "ti,tca9539", .data = OF_953X(16, PCA_INT), },
+ 
+-- 
+2.34.1
 
 
