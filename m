@@ -1,117 +1,122 @@
-Return-Path: <linux-gpio+bounces-7003-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7004-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB8A98D618C
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 14:18:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 988438D6304
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 15:31:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 750711F250C2
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 12:18:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38AA41F26789
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 13:31:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EC13158217;
-	Fri, 31 May 2024 12:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C26C9158D8C;
+	Fri, 31 May 2024 13:31:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJZ58x4/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bTOKIfKk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26BF53E2B;
-	Fri, 31 May 2024 12:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7A233CF1;
+	Fri, 31 May 2024 13:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717157905; cv=none; b=DZVfelUiFaiNXL6PP9ddmpWLtlpeN/KvR5fWYCHiPZDrTD2yhLscmUPrIdpkoZ8r2SahBFQchiepIAfFdcDh2ihKIe182ZVQAvb9y6GDTM3c+NGDn6ndLIAUYzZajWss9taxJmEVPnh95LLz419Nh12Skvmfe+/y4S2Mme6ZoLs=
+	t=1717162265; cv=none; b=PNQ36m9aDEyILUx68qbwH0LsXSpoQuDt8kJWQlGtPXZ9AANvjXB6pzg0PZywa9nt/PZHjUsUnK6OnP0C9Z8GieR4rZNfQY3By87VALJ0BYe0HBheEK7hDHTIdRgpvEBqWEk2Y1Jhoeo7dJxju90VFL4Wl+LG7mLV7+PzuCh8njs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717157905; c=relaxed/simple;
-	bh=zevBtrAlxwk7eCbz5TmrxVmKUYzp5ZJ8ZLsSZvn6/kc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Yww3DnDtkdO7MGzcarJ5vhePIeXoery+Z5u2rvc30gQezEiT7Vfy+D0DrYRO6GP8+e27Benzre8Y/s2O/+EDJZFpqWm6ErCepv8vE8iOJesmlNPoxn/P5vazxm9xVd7hUj0hVqDdfhOyX+NSYMQPRJp1GCNDqkRiPrY1S8pJVF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bJZ58x4/; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6f8ea3eaa67so52926b3a.2;
-        Fri, 31 May 2024 05:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717157903; x=1717762703; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k6nN55NaGFHk/st+B+hMw10D6rHDhXDIUegK+8U7JQ8=;
-        b=bJZ58x4/zWGJNmreEjt7hjfM1Courb5ERDrR5TD064X8XgNcdAaAs4Uuhqz9b9X6tT
-         Ac7BWl06Ap3bWr5RHAG3c/9ILtSYVbmaT4kzTqIQyAWmRvN2ATNlLN+E0qZNM1aj91Ch
-         JogbgK/2MbRh18rM2lOh9ZPbVyKU9Pvz14nwaBGzzt89ah0ILGHVdjTMptjP9XcNSJXy
-         ew/e7es2uu+Nsn9wjW2mlvzprBLwbJr+G+xZxobgXx0NMlMTu6Lq3U8Ic2ixaBhgHok0
-         V7LG99F+sgZKH8dmRh2nRb0/vn2vunE9j92lHylsUwezyqbUdVe7JPPiVXOf0veBs75O
-         mfEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717157903; x=1717762703;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k6nN55NaGFHk/st+B+hMw10D6rHDhXDIUegK+8U7JQ8=;
-        b=pOFBO4RhE1aUJ8FPV+/F7nffHg2kQKUY/CSXmKRSLjqwg6NZBA85tbHcjGue00wpq0
-         EfWvHnR+SOufk9L8uFYwNOKPPlDt8ZvzT8QRJ8e/iPY2KEScxRdX6PlQJaQfYWzfcbgO
-         ZUAkGL6Wwo18xcMQA4KvfG1ryYiqJro3Pd5ybcteC9oxASnKK00+rasTJtJL0x1ecAzA
-         aHA9yxf4/T/6hnF1moIZwnrdZlhjoG3Z1xFT8mrqf3rXUXme3rNCSPQQFpoF7ObxNb/M
-         kdS3BgmbSryPgLCXmgdFTgXoFbcs6CTQ3+eGDChdt8T1H0XMFxParzlSaUFruCD9cQRX
-         uXWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVa1TxNhodNuArS07i9H8ZLP5sqd7VQspjDlTZuDMHEDRwP/7Tw/5BQ1m9nh7fceMWuIv/5/nXq0mZswCRTQI6Qyfokide/63URd8RD/Dz/CBEhe6Xsuu+ikQHJnf8HHu+F/KVmcYU=
-X-Gm-Message-State: AOJu0YwRQ6y24CUsQD/qb23IksPb25V9z/oui+Dh+vKEgIMkFdv4xGKp
-	NbkoCjf05OGiP+c0/WGw2u8wE1hJTsFdKIGr4rf5D/uBj2Ynx7rz
-X-Google-Smtp-Source: AGHT+IF+XZwG1dgxpM/NvvlZm/aKkfIoW/JFo+08OMFpoBIlWaI2yCmfAx3HbK89JhkuIhXT9XWwpQ==
-X-Received: by 2002:a17:902:e54c:b0:1f5:e635:21eb with SMTP id d9443c01a7336-1f63695268emr18626495ad.0.1717157902955;
-        Fri, 31 May 2024 05:18:22 -0700 (PDT)
-Received: from fabio-Precision-3551.. ([2804:14c:485:4b61:7c3c:8970:23ae:7bcd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323e8ad6sm14918425ad.185.2024.05.31.05.18.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 May 2024 05:18:22 -0700 (PDT)
-From: Fabio Estevam <festevam@gmail.com>
-To: brgl@bgdev.pl
-Cc: linus.walleij@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: gpio: pca95xx: Document the TI TCA9535 variant
-Date: Fri, 31 May 2024 09:18:01 -0300
-Message-Id: <20240531121801.2161154-2-festevam@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240531121801.2161154-1-festevam@gmail.com>
-References: <20240531121801.2161154-1-festevam@gmail.com>
+	s=arc-20240116; t=1717162265; c=relaxed/simple;
+	bh=UIVFtugpdDW7odcIGQclSJsckzuuU62m9nGLP2gc+Q4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mh7RNo7bSPSOVkc5r+IqHUc8sIEO8LeK3RxRPB9KXmIfa268CC+iQwtq0E90RFE6SJFnVFROpTXzVN1xiit89rYJWEBPiuZT3quNcvz4436fcwYxzHDbhml5RnqreXicJLDpZAyrCZUwoHKihRcQEsb2q4iQ17CqNPKIX+TrlKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bTOKIfKk; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717162264; x=1748698264;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UIVFtugpdDW7odcIGQclSJsckzuuU62m9nGLP2gc+Q4=;
+  b=bTOKIfKkbwE5QvB4OT/bu7zGcXYKStGK4fIJGv7m+aEkd1o9N7rQBlqs
+   AWGr/bH3mHRrm7qGIvUmuMzFOjTgNSz6JMYHm3UpOsdAq/zE1ENgfJBGM
+   yVYUnwNRcfOqsyr/H8x1YNpHKaybq4VrRH54CUd1D9XJn7BBESXBYY90O
+   R00JoIgXDBW+TKCI0VrnYnJapafg1Sdqhwfe3tBN5DZJ4NXhIo892LMcH
+   PhIl2t0wdjYlgzm7pKqtPmZbihYloiLJpuaHX3/d2ozDQU8QDb/4+Vk4c
+   UOcDwWcSXNg127bF7arDzAs0C3vURex/mjmHAkF8foLUAWy6XE+V5wDl0
+   g==;
+X-CSE-ConnectionGUID: h/nqHZrGSH2JwqkitKrhqw==
+X-CSE-MsgGUID: cSxzTceHRD2i5GtGxhtqPg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="17534273"
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="17534273"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 06:31:03 -0700
+X-CSE-ConnectionGUID: q3+gWuuzT/CLe6wlNwW5nA==
+X-CSE-MsgGUID: efiSrgHZQ/GwxKNayJXjZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="36260869"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 06:31:01 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1sD2LS-0000000CTTc-3L96;
+	Fri, 31 May 2024 16:30:58 +0300
+Date: Fri, 31 May 2024 16:30:58 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v2 2/2] gpiolib: Show more info for interrupt only lines
+ in debugfs
+Message-ID: <ZlnREkzvS0rnMUDv@smile.fi.intel.com>
+References: <20240530191418.1138003-1-andriy.shevchenko@linux.intel.com>
+ <20240530191418.1138003-3-andriy.shevchenko@linux.intel.com>
+ <7750850.EvYhyI6sBW@steina-w>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7750850.EvYhyI6sBW@steina-w>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The TI TCA9535 variant has the same programming model as the NXP PCA9535.
+On Fri, May 31, 2024 at 01:19:56PM +0200, Alexander Stein wrote:
+> Am Donnerstag, 30. Mai 2024, 21:12:30 CEST schrieb Andy Shevchenko:
+> > Show more info for interrupt only lines in debugfs. It's useful
+> > to monitor the lines that have been never requested as GPIOs,
+> > but IRQs.
+> 
+> I was trying to test this on TQMa8MPQL (i.MX8MP) using gpio-mxc.c.
 
-Document the "ti,tca9535" compatible string.
+Thank you for trying!
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 1 +
- 1 file changed, 1 insertion(+)
+> But apparently this series only has an effect when gpiochip_lock_as_irq()
+> is called eventually. I'm wondering what needs to be done so IRQ only
+> GPIOs are listed in debugfs. Using irq_request_resources/irq_release_resources
+> similar to what pinctrl-at91.c is doing?
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-index 99febb8ea1b6..51e8390d6b32 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-@@ -66,6 +66,7 @@ properties:
-               - ti,tca6408
-               - ti,tca6416
-               - ti,tca6424
-+              - ti,tca9535
-               - ti,tca9538
-               - ti,tca9539
-               - ti,tca9554
+I haven't looked deeply into this and I don't know if it's relevant, but...
+
+The idea is that GPIO driver has an IRQ chip that announces handle_bad_irq()
+as a handler and IRQ_TYPE_NONE as default type at probe stage. It also needs
+to implement ->set_irq_type() callback where actual handler is going to be
+locked.
+
+That's what I do not see implemented in the driver. Moreover, I do see it
+implements its own ->to_irq() callback which shouldn't be there.
+
+Taking all above into consideration _I think_ the drivers need a bit of
+refreshments.
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
 
