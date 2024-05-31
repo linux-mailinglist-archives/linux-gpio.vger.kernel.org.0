@@ -1,122 +1,121 @@
-Return-Path: <linux-gpio+bounces-7004-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7005-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 988438D6304
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 15:31:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AB6408D634D
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 15:45:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38AA41F26789
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 13:31:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 439E11F25EF8
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 13:45:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C26C9158D8C;
-	Fri, 31 May 2024 13:31:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FEB6158DB3;
+	Fri, 31 May 2024 13:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bTOKIfKk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJUvLPWO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7A233CF1;
-	Fri, 31 May 2024 13:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020AF7440B
+	for <linux-gpio@vger.kernel.org>; Fri, 31 May 2024 13:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717162265; cv=none; b=PNQ36m9aDEyILUx68qbwH0LsXSpoQuDt8kJWQlGtPXZ9AANvjXB6pzg0PZywa9nt/PZHjUsUnK6OnP0C9Z8GieR4rZNfQY3By87VALJ0BYe0HBheEK7hDHTIdRgpvEBqWEk2Y1Jhoeo7dJxju90VFL4Wl+LG7mLV7+PzuCh8njs=
+	t=1717163131; cv=none; b=ZNoJ5WsI+2goXhCh7OsHx7BqqlitVVt9p0S4EnAb1zxaRm7H/AXAyGmeEysyD7CkCfUCZYmBp98TfRwHVKV4k+CBit2AylUF2LVy8FTTiG++nCUy1ZeEh1Lv/JL+SP2lgjeVz8pks+NzKdutmN8OZqtyeAVVS34Js+Bd9QewjPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717162265; c=relaxed/simple;
-	bh=UIVFtugpdDW7odcIGQclSJsckzuuU62m9nGLP2gc+Q4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mh7RNo7bSPSOVkc5r+IqHUc8sIEO8LeK3RxRPB9KXmIfa268CC+iQwtq0E90RFE6SJFnVFROpTXzVN1xiit89rYJWEBPiuZT3quNcvz4436fcwYxzHDbhml5RnqreXicJLDpZAyrCZUwoHKihRcQEsb2q4iQ17CqNPKIX+TrlKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bTOKIfKk; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717162264; x=1748698264;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UIVFtugpdDW7odcIGQclSJsckzuuU62m9nGLP2gc+Q4=;
-  b=bTOKIfKkbwE5QvB4OT/bu7zGcXYKStGK4fIJGv7m+aEkd1o9N7rQBlqs
-   AWGr/bH3mHRrm7qGIvUmuMzFOjTgNSz6JMYHm3UpOsdAq/zE1ENgfJBGM
-   yVYUnwNRcfOqsyr/H8x1YNpHKaybq4VrRH54CUd1D9XJn7BBESXBYY90O
-   R00JoIgXDBW+TKCI0VrnYnJapafg1Sdqhwfe3tBN5DZJ4NXhIo892LMcH
-   PhIl2t0wdjYlgzm7pKqtPmZbihYloiLJpuaHX3/d2ozDQU8QDb/4+Vk4c
-   UOcDwWcSXNg127bF7arDzAs0C3vURex/mjmHAkF8foLUAWy6XE+V5wDl0
-   g==;
-X-CSE-ConnectionGUID: h/nqHZrGSH2JwqkitKrhqw==
-X-CSE-MsgGUID: cSxzTceHRD2i5GtGxhtqPg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="17534273"
-X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="17534273"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 06:31:03 -0700
-X-CSE-ConnectionGUID: q3+gWuuzT/CLe6wlNwW5nA==
-X-CSE-MsgGUID: efiSrgHZQ/GwxKNayJXjZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="36260869"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 06:31:01 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sD2LS-0000000CTTc-3L96;
-	Fri, 31 May 2024 16:30:58 +0300
-Date: Fri, 31 May 2024 16:30:58 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 2/2] gpiolib: Show more info for interrupt only lines
- in debugfs
-Message-ID: <ZlnREkzvS0rnMUDv@smile.fi.intel.com>
-References: <20240530191418.1138003-1-andriy.shevchenko@linux.intel.com>
- <20240530191418.1138003-3-andriy.shevchenko@linux.intel.com>
- <7750850.EvYhyI6sBW@steina-w>
+	s=arc-20240116; t=1717163131; c=relaxed/simple;
+	bh=P5CQGEgu113Q8Zu7roHFjlaQln9M6sGVkhOIZohe1eg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SDIugi4gqCHYsSobbWguji1KWYWOJyIxITd28h0dQSSUhxxGvcX6dStk5QmwRd+h8/Y8LEybNkrCHEbnZLh8gpMGOkTCtYfTebjSYru6/Fxr6/Mc2kaWbQpQAyr9UsEHNMGFZHJ8IADv8Ss6YII6WeM0RnDkB1aWKWEs7KxmSxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZJUvLPWO; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7024e7e55f7so332898b3a.2
+        for <linux-gpio@vger.kernel.org>; Fri, 31 May 2024 06:45:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717163129; x=1717767929; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mxPssS+aoodjMf/CHVK/+6aZv/oU/M7auyscCvQ4eIY=;
+        b=ZJUvLPWOWSJ2lYtTDH9Y9Ybgaem8U9gGFJAJFy4dvQc+1L8Vu2iOMTcEKo7cvNRlqD
+         bgWj0Lc73kJVNLllxzo2sM6zKYszV9owmrCSBrydwz6fR+VpbwASElxt4E0OP5YhkbTN
+         WG/nkyDX0T7Gx3dMfqmYVvgHWpohg4+dO/s6L8n1Cr5qssD2Zl4IM02LPHd6P7hJJS7c
+         04jR209yYELL2K14wiXuddPw4M4BXZzpwynA31iBEjN5ZR+ePzXWLShg84PhBkFwgD+W
+         L4Z2azjeXwF2EX82hQdAQBRl2+8pqHy+228wa1S4BT9PRQtsKv7h/SaPGT27IOwOgPkF
+         YhuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717163129; x=1717767929;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mxPssS+aoodjMf/CHVK/+6aZv/oU/M7auyscCvQ4eIY=;
+        b=uD/TDDF3NkuM9Yp5kVQZaECEPvkv5TNy0JvLr5PhWxwyXIyzXdmMJjj5j6lwT0WjFM
+         ovLSCYRX4TStDa/8k7K5RbLfvt8D/c8QC78pigaFHB5UoL/L81xB1s1GzKa2d7CNxP4n
+         4RWAm1Akr91T5LoxMwbxVT26vx9zBLJkd6kQgkqfP0Y4B9yzhSKqEbrDPa1xLMtkSaX8
+         PIFzcwejBce/eF0x+DAJbDUPy3qTsBKWtXLQb5vTJMhvuE+T8Wn45DCf1rP98QgMOhO3
+         CYdD8pFU25b7z9Q2oh0YEVAnBmYQ5tSegOE3HAMAsmqpUjAFdLlJ4UYZVAZU8XrMNLrF
+         huLg==
+X-Gm-Message-State: AOJu0YyOpeA5duyKMhwQHHPuJ8QPv61ehhTPJSroTf87EZ6oveMMHpEP
+	OzxOYXQodYERw9YB07WHH2GuqcH8OFYsY98yvPuz3sYJE4rOtog1965QNw==
+X-Google-Smtp-Source: AGHT+IHJWM5jWBdvO1KeqFjnQKYxHN0s/zwIX+5hXjE4xg5NjM+b4kXiN7OfBKKyLdJKyeF0kizDXQ==
+X-Received: by 2002:a05:6a00:1c93:b0:6ea:e2fd:6100 with SMTP id d2e1a72fcca58-702478daf36mr1947249b3a.30.1717163129011;
+        Fri, 31 May 2024 06:45:29 -0700 (PDT)
+Received: from rigel.home.arpa (110-175-132-92.tpgi.com.au. [110.175.132.92])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-702423c7bf0sm1389825b3a.42.2024.05.31.06.45.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 06:45:28 -0700 (PDT)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH 0/8] tools: tests: fix shellcheck warnings
+Date: Fri, 31 May 2024 21:45:04 +0800
+Message-Id: <20240531134512.443850-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7750850.EvYhyI6sBW@steina-w>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 31, 2024 at 01:19:56PM +0200, Alexander Stein wrote:
-> Am Donnerstag, 30. Mai 2024, 21:12:30 CEST schrieb Andy Shevchenko:
-> > Show more info for interrupt only lines in debugfs. It's useful
-> > to monitor the lines that have been never requested as GPIOs,
-> > but IRQs.
-> 
-> I was trying to test this on TQMa8MPQL (i.MX8MP) using gpio-mxc.c.
+Following up on recent discussions, this series fixes all the warnings
+detected by shellcheck.  The resulting tools test script is now clean,
+at least from the perspective of shellcheck.
 
-Thank you for trying!
+These fixes do not correct any known issue, other than shellcheck
+reporting them as potential problems, the intent is to remove common
+shell issues that may impact future changes, and to simplify checking
+that any subsequent changes to the test script constitute "good" shell.
 
-> But apparently this series only has an effect when gpiochip_lock_as_irq()
-> is called eventually. I'm wondering what needs to be done so IRQ only
-> GPIOs are listed in debugfs. Using irq_request_resources/irq_release_resources
-> similar to what pinctrl-at91.c is doing?
+All the patches other than Patch 8 address a particular warning.
+They are reasonably self-explanatory, but each commit comment includes a
+link to the relevant warning(s) which describes the issue and the
+appropriate corrections.
 
-I haven't looked deeply into this and I don't know if it's relevant, but...
+Patch 8 addresses a number of warnings, all related to word splitting
+and globbing, and those constitute the bulk of the changes.
+Some of the earlier patches also address trivial splitting/globbing
+issues where that would prevent a line being modified multiple times.
 
-The idea is that GPIO driver has an IRQ chip that announces handle_bad_irq()
-as a handler and IRQ_TYPE_NONE as default type at probe stage. It also needs
-to implement ->set_irq_type() callback where actual handler is going to be
-locked.
+Cheers,
+Kent.
 
-That's what I do not see implemented in the driver. Moreover, I do see it
-implements its own ->to_irq() callback which shouldn't be there.
+Kent Gibson (8):
+  tools: tests: don't mix string and array
+  tools: tests: don't declare and assign separately
+  tools: tests: fix unused variables
+  tools: tests: use read -r to avoid mangling backslashes
+  tools: tests: don't use variables in printf format string
+  tools: tests: check exit code directly
+  tools: tests: shellcheck don't follow sourced file
+  tools: tests: avoid splitting and globbing
 
-Taking all above into consideration _I think_ the drivers need a bit of
-refreshments.
+ tools/gpio-tools-test.bash | 459 +++++++++++++++++++------------------
+ 1 file changed, 234 insertions(+), 225 deletions(-)
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+--
+2.39.2
 
 
