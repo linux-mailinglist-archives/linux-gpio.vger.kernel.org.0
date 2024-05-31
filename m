@@ -1,173 +1,122 @@
-Return-Path: <linux-gpio+bounces-6992-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-6993-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED8868D5B37
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 09:07:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A372B8D5C2B
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 10:01:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BCCC1C23BA9
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 07:07:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F0C45B22246
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 08:01:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 535BF8120A;
-	Fri, 31 May 2024 07:07:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC7F7762DF;
+	Fri, 31 May 2024 08:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O0INGMgJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D27A18756E;
-	Fri, 31 May 2024 07:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1842F7407B
+	for <linux-gpio@vger.kernel.org>; Fri, 31 May 2024 08:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717139227; cv=none; b=mb4KrZfbwK5o8YGGdVx4+e4R3j6FarTcNFRZ1gPMAViKHNLhoUotfnJuMDSVAXknoXk6pbnxq/m2x0+uJxALIhqCcWbD+ZlvHSfYgr6pL7xutzqzf6Agyt+nyFdAmccb62wYktN8KKSO3OhHOiso6uGlu2gHSU4pi7WGWsRmd2Y=
+	t=1717142508; cv=none; b=FMDL5CbZsi9md58We1vrMZCbLWbDnZHbzXGEt+9oFWsDDMF9fJ4FpbxdRxN2hKANIZ5qNqKIKWrp9SUMm9pgE5JzYDRsaM/EyaPKIxOtRaEEQcqYbQSe4S6IujYN9s5VrArQufYBF/Ojbd+4WEzRhTz2yW29Vhj4KtrTwL/7IIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717139227; c=relaxed/simple;
-	bh=GwpopD7I++CEt2GXRSjw+x35z0xYtVzunPiCuEMRxwU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p76JIb5FUdEObREHs3fETjRgjdA0z9CFLRNkUjCPb8iDlpBUIWyHY3Vadvj0gBaXLYMFmwpiIMr0k5dTMVvP9csTdI0fVK6hawWs3h0jECnv2JjXuFeKljKWNGID1MCBH51Ot7ugKPSXJD2HQ4oS1bY05tCnxTKr8Wm/e9s0Zs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7e25bf84b58so68104939f.0;
-        Fri, 31 May 2024 00:07:05 -0700 (PDT)
+	s=arc-20240116; t=1717142508; c=relaxed/simple;
+	bh=kvVPwSeJwasT8CK/Asv91/QGbkrXxOSg5SN57SDZ6Ww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tNNQza/cFO1a0r58Pr1gwDWdSEDWmhhANPg02D6ClZ52Dblm+8ZNRGatM6LZsfMq71bVYyPMHdFoM6XmsPyGvm1ht0LMdUnn7qJ06jAZSjMnkNQCPsdA1lKyOVaZsdnU32qE+bBfuju2ZH1LUzGlPF5OTAVAmwrdOLb7dh/Fr8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O0INGMgJ; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a62ef52e837so187274666b.3
+        for <linux-gpio@vger.kernel.org>; Fri, 31 May 2024 01:01:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717142505; x=1717747305; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kws+h4+u90sJL9kYZ453YSqIAF3ITKBvVIj77h37Npo=;
+        b=O0INGMgJvZmu5iwpGBcNZNlV+h/Id5mAIJGnwnpNJLzvxOALnL6jkRQy/CAlgRgDEx
+         +wVWLpi+NBzwfMTEyeBKT1ShQncyh6mj6RFSuc5e0eNcRv31E0mOMnx4kx/xbaVY/+03
+         RFSYTjAQ76YWWh7Bc3i2AI/vt77nJ61V2L+CVOSCdkXZNcOw5uJdRGO3UUsxdRgs2VzE
+         b0x5Qqu9yjmwP+E0uSk4AfVM4WrNYFpO/bGC3uKfPqp6FZeqDYQXPeTB3LsPfeRTGuf1
+         INP8oXUVcRLBIHlfhEEK/OxYBb5j2yLu8L1QHDgd1E2znDLcaphCA7PTY89bz3VKQYpg
+         dOew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717139224; x=1717744024;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ayp9OTJcx8xBTEOWGr76ffez+fesdX+4XqGBVIDxEaQ=;
-        b=PTgJ2WUYwotIbe7ewO0uKtKm39embI28Yli7rwZIku6v2tPFHbAzI8gkML9UHd5yCP
-         eYGYw9Pj4tDiGJw0DNPBN0boAPZIQkwSupHtu2mdbUpqxr4mjFFudrS228R/97A05NZx
-         iGL6HJfZNf6L2rxWZ/mRmcQgoAHUtxoRibYSPToqEd+yP7eAgUI9RWwNMK1Z4WVnFLwH
-         Y8i5VLXnOHvIUlZxAukjqn2p0mc4y3V6uP4wCb2VCkXZo1iuV3/Wr093DTx9Z3ZBxQmp
-         jUsAMLBiazolBOzr+IsPWrKShwIuKUyzRLGnZZIBcikPZ8yHsYTjh2ks+vmaoLrodiHx
-         Ta+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVtf4rxAtHNtJW8haKIfJ9rRvoUc+/LOU16ZHr79YDNicvvlRuU+zfk6k8z13MXPdETx23UgwQWfRssLTan80OKJo3SHfug45V4CdzgiFU6epW/iAjjoYzZtfcyOT9QzEDJPpMBp2CzRk6lvZCzmBb3a4eKm1QY/ZPTaKtugscf9UtIbprFvZ5qOUe/BjtQSfwSEzB+dmwKVxmrka5TSQOD+IOVnljFzn2/q5DUCP9+j6cZtQQA5jaP/QVL3QstGDJxsTyhsKlmYb2wLg==
-X-Gm-Message-State: AOJu0YysvB5Xr32d2jpNV00CYkUtUbCT2pMwrV9pZLv/qNZYjmN23ZCu
-	uhqfO4/oa1UPONyjlYQ5DylTnMbVJ3w2pfsAZ+HUTNyLvLDGxkXVz/EiSOor
-X-Google-Smtp-Source: AGHT+IGij+kYqVFs41UcqZH//8OOscUL4EID/HB5qa0s/CMrcPSab4QvqdFAaAQ/JQ/o9dKBUPpRKQ==
-X-Received: by 2002:a05:6602:2b89:b0:7ea:ffac:b7b7 with SMTP id ca18e2360f4ac-7eafff24acdmr151093439f.17.1717139223772;
-        Fri, 31 May 2024 00:07:03 -0700 (PDT)
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com. [209.85.166.46])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b48764e4c3sm339234173.20.2024.05.31.00.07.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 May 2024 00:07:03 -0700 (PDT)
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7e9515b0ea9so72651239f.1;
-        Fri, 31 May 2024 00:07:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCViA+WKIEd/uOdLhHp5T4VvObySH0GYNjbL43LPxBJYBcYuzOwiQ7Uxlq+I6A3KUZe68H76zfsnzbRFbKC0y8zZMSLsFLHwg2PpR7zfEPyE/DQ1h1+AiB8GrVrIayHu3Ckop2nHsKVUTGEoqkaOOtQAK6cgW0DXYK3Jt05g/aNhLPV6WCZ95895gf4Vlibp/XxNEH2kGQrwQLBOVCoh0z2q0RqAHbKmWjNE94OTVGVpRL0CkFBfv0EC8VaNSiMZ4kZDTGpdBI27tOIwkg==
-X-Received: by 2002:a25:5f46:0:b0:df4:f149:1fc7 with SMTP id
- 3f1490d57ef6-dfa73dc4a2dmr974775276.58.1717139203004; Fri, 31 May 2024
- 00:06:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717142505; x=1717747305;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kws+h4+u90sJL9kYZ453YSqIAF3ITKBvVIj77h37Npo=;
+        b=YpIZ7X+BVgfRTIXNcILjnx4G1V89RQVnAG0cCmbR309YHMsERASzoCyXLqh4R1NB49
+         JTjmDvZG3hWLNY654VZIrqZoKosZ+t0mcpQ5W3NrRE4Q9wvcTgu/FwtIOclXE0+l6RDY
+         N/a0tRwQJCnBMnPRMirz9UT13U5YCI/0WkvnD1w5YmYERaV+kMpXkrX3fY05pE+WgDW+
+         pBEoSRNGXlJ8A90Mcj4lSDwtvSWNHQ11g/7vXO+dMpV/497VQcYWKNOTSAn5ZzdIuB85
+         6yrXu4d1N1+ohkDD/VXwsp1a8GYOU5DFUfNc2teIpUqhp8lLqWawm7mA1JGnXVUGGxNf
+         T5LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVKrJ+l0q6bnzglS6XJTNE0pIGgJI7NG/tpM4T/zG/tvBc9yE4ZUzb9axrj4VgVMDxOMqNANadWKxTYCAof+bNx2aNfwM6x4jFCdQ==
+X-Gm-Message-State: AOJu0Yy+MffSFrTFqZcKKAsC8uUmPT7kq+LksDWT2CzagFHe2DF2leyc
+	mC+hfML6RMAcSo2qpvwpCkgRbJz0Tdw1hqJuDngfWwrz4m+gAH0P2BH0uqlofZg=
+X-Google-Smtp-Source: AGHT+IFgs2Y0mRlpN9fAzbrNITytfa2iiTCw/kxq4cb2oAWQMnnGOPxnJQdkRcoUaMHrA/saWequpw==
+X-Received: by 2002:a17:907:9158:b0:a65:dea3:bbbd with SMTP id a640c23a62f3a-a6821f4e379mr60730666b.60.1717142505160;
+        Fri, 31 May 2024 01:01:45 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67e6f03b71sm59616566b.9.2024.05.31.01.01.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 01:01:44 -0700 (PDT)
+Date: Fri, 31 May 2024 11:01:40 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: renesas: rzn1: Use
+ for_each_child_of_node_scoped()
+Message-ID: <7f4ef893-5ab6-4a9e-ad54-4b3587516bcf@moroto.mountain>
+References: <c0a28f466c42d5d59c7fadfa1fd05fd512d43b6f.1717060708.git.geert+renesas@glider.be>
+ <ZlhGYFM6iVlGjZk-@surfacebook.localdomain>
+ <CAMuHMdU6V4Ooit7P5pqUFXOZawiZj7TjXY7t=KVk84xPZ0PR+A@mail.gmail.com>
+ <CAHp75Vd3ke3_bxwsxzSVzjnNW-6aYDTYHvZ-+B9nJtAJR1fX=g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240504-pinctrl-cleanup-v2-0-26c5f2dc1181@nxp.com>
- <CAMuHMdVprgpjDP6PDn7appofJv8Tv30nRA4+7n4sR8n6n4qy+g@mail.gmail.com> <DU0PR04MB9417FF2632A278BF6605AE1F88FC2@DU0PR04MB9417.eurprd04.prod.outlook.com>
-In-Reply-To: <DU0PR04MB9417FF2632A278BF6605AE1F88FC2@DU0PR04MB9417.eurprd04.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 31 May 2024 09:06:30 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW01HtY7d+L=44czH_dqV6bresLeF=SRqyn9p=jk3MTAw@mail.gmail.com>
-Message-ID: <CAMuHMdW01HtY7d+L=44czH_dqV6bresLeF=SRqyn9p=jk3MTAw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/20] pinctrl: Use scope based of_node_put() cleanups
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
-	Hal Feng <hal.feng@starfivetech.com>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
-	Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, 
-	"soc@kernel.org" <soc@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Patrice Chotard <patrice.chotard@foss.st.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Damien Le Moal <dlemoal@kernel.org>, 
-	Ludovic Desroches <ludovic.desroches@microchip.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Aisheng Dong <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Chester Lin <chester62515@gmail.com>, 
-	Matthias Brugger <mbrugger@suse.com>, 
-	"Ghennadi Procopciuc (OSS)" <ghennadi.procopciuc@oss.nxp.com>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	Joel Stanley <joel@jms.id.au>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, 
-	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, 
-	"imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, 
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vd3ke3_bxwsxzSVzjnNW-6aYDTYHvZ-+B9nJtAJR1fX=g@mail.gmail.com>
 
-Hi Peng,
-
-On Fri, May 31, 2024 at 5:07=E2=80=AFAM Peng Fan <peng.fan@nxp.com> wrote:
-> > Subject: Re: [PATCH v2 00/20] pinctrl: Use scope based of_node_put()
-> > cleanups
-> > On Sat, May 4, 2024 at 3:12=E2=80=AFPM Peng Fan (OSS) <peng.fan@oss.nxp=
-.com>
-> > wrote:
-> > > Use scope based of_node_put() to simplify code. It reduces the chance
-> > > of forgetting of_node_put(), and also simplifies error handling path.
-> > > I not able to test the changes on all the hardwares, so driver owners=
-,
-> > > please help review when you have time.
+On Thu, May 30, 2024 at 04:36:59PM +0300, Andy Shevchenko wrote:
+> On Thu, May 30, 2024 at 2:52 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Thu, May 30, 2024 at 11:26 AM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > Thu, May 30, 2024 at 11:19:29AM +0200, Geert Uytterhoeven kirjoitti:
+> > > > Use the scoped variant of for_each_child_of_node() to simplify the code.
 > > >
-> > > This patchset was inspired from Dan's comments on pinctrl-scmi-imx.c,
-> > > thanks.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > I do not see the point of this patch. This makes code actually more
+> > > complicated, and I'm not sure the code generation is the same and not worse.
 > >
-> > Andy's question about code generation on a related patch made me wonder=
-,
-> > too.
+> > On arm32, a conversion to for_each_child_of_node_scoped() seems to
+> > cost ca. 48 bytes of additional code.
 > >
-> > On arm32, a conversion to for_each_child_of_node_scoped() seems to cost=
- ca.
-> > 48 bytes of additional code, regardless of whether there were explicit
-> > cleanups before or not.
+> > BTW, the same is true for cases where the conversion does simplify
+> > cleanup.
 > >
-> > I checked "pinctrl: renesas: Use scope based of_node_put() cleanups", a=
-nd all
-> > but the conversions in *_dt_node_to_map() cost 48 bytes each.
->
-> I am not sure this is an issue or else. What would you suggest me to do?
-> If you think extra 48bytes consumption is not good here, feel free to dro=
-p the
-> patch.
+> > I checked "pinctrl: renesas: Use scope based of_node_put() cleanups",
+> > and all but the conversions in *_dt_node_to_map() cost 48 bytes each.
+> 
+> Yeah. so for the cases where there are no returns from inside the loop
+> I prefer not to use _scoped.
 
-I suggest doing nothing about this.  I just wanted people to be aware
-of the impact.  I guess it's just part of the slow but steady increase
-of kernel size (ca. 20-30 KiB/release)... ;-)
+Eventually _scoped() loops will become the norm.  Leaving some unscoped
+loops will be a fun surprise for the first person to introduce a return
+-EINVAL.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+regards,
+dan carpenter
 
