@@ -1,78 +1,78 @@
-Return-Path: <linux-gpio+bounces-7027-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7028-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 519D68D7168
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2024 19:49:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2A368D7172
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2024 20:04:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F27971F21B61
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2024 17:49:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C86E281EEF
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2024 18:04:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E4CE74418;
-	Sat,  1 Jun 2024 17:49:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6A4F153BD9;
+	Sat,  1 Jun 2024 18:04:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pb/7z6vP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lZG/FzW6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FF9AD48
-	for <linux-gpio@vger.kernel.org>; Sat,  1 Jun 2024 17:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB598AD48
+	for <linux-gpio@vger.kernel.org>; Sat,  1 Jun 2024 18:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717264140; cv=none; b=Tid61/5vyQqpv8KNyG8Lj7U8feGnZ3kWwrVB9tS/4HHw2MhdADB980ef5eNaR7G0iaIftRixObjeP0xNPCymuWqbNyvnRLKJvF0WZ54wINaSjztzjCZs9YkAw8PV+/orJr/XewsrNHKcw7afTtv5gqeyzTfBR/ZKH48ceHUzsaI=
+	t=1717265041; cv=none; b=ReW+C3q9DWMWrzGBOvlyBs8LZrUEU2ihh/j5HfG/c3GzDxMEzDh4xKjTERwU8I+f2z9E5txQOzMRGlYG/D4K/3tw5VKKSAPpEarsWnBf4Anf7r1s/aFqyx+LbXWEXCAEPrptsx65sAOkaC5k7Vo8ZEjgbh3y9Jd7emczlUT7Qlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717264140; c=relaxed/simple;
-	bh=ip5UXAgwAlEKzI7uRlw1QVMwoLAc0kIa4iK+wIevpD0=;
+	s=arc-20240116; t=1717265041; c=relaxed/simple;
+	bh=NA111BhLEg5n4W8iT9QTnuKMw/+r+bGgXoAgn3oAnYY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qHUuh7uMOG1yfdOlsh9wHpPb61i4HCFVtOSklqklWK5pYK5bPLL88KWMJDO46Cao81D0sNTvrg8c8fB7dfb8gKKBknIz1RcCPPMB7GwnFPm16+l+HsN1PO3OByQgfcWxSfs6hMRa5NJdSgiJHw5OhJRHqdQDkNY78euxhKQNCoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Pb/7z6vP; arc=none smtp.client-ip=209.85.218.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=HuSKTc9yTlyXZ03z9MzchCdyFdJM8XM0SSTp3Y+nOxW6qJx2sZOsnxoEuCdL1ggGAECIR9R/bN0BFod6XQWIv4+0KKB1cbmFXVavhR3/L1IroeqVQ3bqswHEOMnJ6H3AoSvmaYvLn5tQiwS9qCYoTl2tC6RW7GFEWQ/F5RITRCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lZG/FzW6; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6341cf2c99so329189966b.0
-        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2024 10:48:57 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a689b034b02so116207566b.2
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2024 11:03:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717264136; x=1717868936; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1717265038; x=1717869838; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Fxu9VC3T9/qx8H16vFRNG081fza+27USfBVMKFlVeY=;
-        b=Pb/7z6vPmoxpRm6bfTF05QzwpNvPb/021qtIJHNkkh7G30LqzlsJj5yepjqOElPEum
-         Y6KcLHlGEyqpTyVVBEWiXTskMX0OcfH49rSa9Cy0rd/WBF9iNRc8z6cKRSzl1P85Bcq4
-         VuJkCfG3FuopMu5dCCtD4vIRB+I5aE8+Ub7m0cnYwOZPu/2z38OeoWzcRPdI1TaZ1F3h
-         gxqnHSJIQHArQMqapp0aBHHhHhvY7zmK1PUE4lI10j863sOZ1dKN2yNAi0fU0IPCgftJ
-         YhBRyKcI/hxbCJfFpHGy5tu7ZgNs83d2goWZ/aYBC/yr5PvR9BzZPKBFRjEhIcXMqmvV
-         a04A==
+        bh=J27XynmV7A1h5aKbXxYPVmU9LKEnoCGVw4qLSFhb7vc=;
+        b=lZG/FzW6rJ9gX63KfXxUm8+j8nGi7VXLSrE1AiIMB0Cg6quYbnsICNyZZNuAJOTIwa
+         vfcQytsp1EEnnzgXMrxohZT2Cvm6prkt7bGtWBPv5+7vbPFaKdqQkgAypoVK4VwBQFaB
+         ZL5+53osySAs5kQcKBsGBEL2rLKvXy/vttoYZUN8yM+FRKP2n9zBZ95gPR/NHut3M1Fl
+         FWnSnIc6qZW9X61gAUGc0mes3mG8NgJGgKxOlhJ9qzsQnCGNntKmjiJgzQAaFioJOneL
+         7v+b/jDQdJlD4n0pW9vvHAPJniVaTvBU1cSn/n6OKIc125bnkC+14+Pw7WlUvBi1kkVC
+         OgNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717264136; x=1717868936;
+        d=1e100.net; s=20230601; t=1717265038; x=1717869838;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+Fxu9VC3T9/qx8H16vFRNG081fza+27USfBVMKFlVeY=;
-        b=I98LjB9oUEF8xV3b0Wb9TeMvBFPLDa243CNrPgMNGs4maE5TROinjrlR/86YbJkep+
-         u3SSSUw/ALlNnuQ2hhde6fVxhgUBPe/CdNyAMWGvOr3y9EtJL8y28+AgZzutk+79hBq1
-         ZzoqIoFYB7OVahvlnHVAyyLcwP8UheYe3iLors+SO7pTaFAlNQSDe+GgCosEz7kO/AT/
-         1vkksf6jQm9tOrhftOChSdmvXcX1zG+YwwKG5DXdumodlmxtbYqeNwyLJ/cjDqWzo8rw
-         ciEzadEN005oWgEVT9ieqNQ2Ba+ZSyaEiBPlnj4RAWrZR1MMciuN69SYBuo101/ChTGW
-         MPOw==
-X-Gm-Message-State: AOJu0Yz+Wus9nELfFBcWCA3rplGhDxkN4BjkyHjSWlOjCqJJ23LFadXc
-	OgIJ7SWOgDlWrz5BlF38/mweRa8x4/0y0yyfHGSIf8CoSA6NDJQL4IY0iJ80TBo=
-X-Google-Smtp-Source: AGHT+IEGarZWvSDqTneXnvPAajOOg66chGsw9JCom2tlYHYdGNwnGCjC78xkaDPBdEAob+RGJNKnzw==
-X-Received: by 2002:a17:906:3282:b0:a64:a091:91f2 with SMTP id a640c23a62f3a-a6820519e2cmr325194766b.37.1717264136002;
-        Sat, 01 Jun 2024 10:48:56 -0700 (PDT)
+        bh=J27XynmV7A1h5aKbXxYPVmU9LKEnoCGVw4qLSFhb7vc=;
+        b=Te4peGul7Fa12YMdXT2DntMqtYEko2blJq78Vzemb3/eYtJhRTdXzLGfVLraiUlaW1
+         6+eqogZ1ID3bLaLBlSnX+ANNKOSOJ3qmGC52nda9m7RQ3OxVeoXNX9ZoDwEU6gvR0dMb
+         kmgbXPty58XQibeDNjYOqjqDWUYLqMooK9Tcl6mh6k/usG3A3jDQws30bu1CH/Xqa0Sh
+         Qw+NVBleNhhGPFIdXKx6aO6VNf0PoaascUFF1GTd5C+An8eiueVBdbGiThV+/trAzSJl
+         LqTLLtC5+0sMB3dxRhEPc3XMrvtQFwurbyKGcJA7CexLccRJKLhk8eZgw7klMpuZuBZ6
+         KJJA==
+X-Gm-Message-State: AOJu0YzXYqKQ4Zh59K0d0XCSH+OM/9WYmJOj+YRDNA7n2sslkUsbMA22
+	c8ISZplXQZa7YLLa02hWrDFPpBaTEZrXSI3swD7X+4pyKE6a4KGwi3/A8Z+AQDU=
+X-Google-Smtp-Source: AGHT+IFI8r9ZeZTeW2j4Bg+UMVIXmESg5WFb8+JxLiwq7IY1Uwvo4bYomJgNtl9UqzyHc6vu3FAHdA==
+X-Received: by 2002:a17:906:a10b:b0:a5a:34ae:10ea with SMTP id a640c23a62f3a-a682272f34amr324665466b.76.1717265037973;
+        Sat, 01 Jun 2024 11:03:57 -0700 (PDT)
 Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68a552c902sm116032966b.191.2024.06.01.10.48.54
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68b4b09cb9sm95687966b.178.2024.06.01.11.03.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Jun 2024 10:48:55 -0700 (PDT)
-Date: Sat, 1 Jun 2024 20:48:51 +0300
+        Sat, 01 Jun 2024 11:03:57 -0700 (PDT)
+Date: Sat, 1 Jun 2024 21:03:54 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
 To: Yang Yingliang <yangyingliang@huawei.com>
 Cc: linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
 	liwei391@huawei.com
 Subject: Re: [PATCH] pinctrl: core: fix possible memory leak in error path in
  pinctrl_enable()
-Message-ID: <23343dd5-d6f9-4ca0-87bc-4d26dbfcfde6@moroto.mountain>
+Message-ID: <bab8eaca-3e96-4ed4-a63c-bccd39816c88@moroto.mountain>
 References: <20240601113502.2709597-1-yangyingliang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -117,11 +117,34 @@ On Sat, Jun 01, 2024 at 07:35:02PM +0800, Yang Yingliang wrote:
 > +			kfree(pctldev);
 > +		}
 
-Why not do this free in pinctrl_register()?  It's a layering violation
-to do it here.  It's not where you expect the free to be.  It will
-just lead to double free bugs.
+The other thing is, this should be done in a function.
+
+ti_iodelay_probe() would have to call uninit as well.  The error
+handling in ti_iodelay_probe() was already messed up.  They probably
+assumed that pinctrl_enable() would do the cleanup so they forgot to
+call of_node_put(np).
 
 regards,
 dan carpenter
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 9fcb9d913556..704541385397 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -2090,6 +2090,13 @@ pinctrl_init_controller(struct pinctrl_desc *pctldesc, struct device *dev,
+ 	return ERR_PTR(ret);
+ }
+ 
++void pinctrl_uninit_controller(struct pinctrl_dev *pctldev)
++{
++	pinctrl_free_pindescs(pctldev, pctldev->desc->pins, pctldev->desc->npins);
++	mutex_destroy(&pctldev->mutex);
++	kfree(pctldev);
++}
++
+ static int pinctrl_claim_hogs(struct pinctrl_dev *pctldev)
+ {
+ 	pctldev->p = create_pinctrl(pctldev->dev, pctldev);
+
 
 
