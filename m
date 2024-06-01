@@ -1,108 +1,130 @@
-Return-Path: <linux-gpio+bounces-7024-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7025-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C677E8D6929
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 20:45:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BF608D6F82
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2024 13:37:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8172B28582C
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 May 2024 18:45:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CCCC01C20B0B
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2024 11:37:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73DB67E78E;
-	Fri, 31 May 2024 18:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdXAuIEy"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489E2335A7;
+	Sat,  1 Jun 2024 11:37:36 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8501CA89;
-	Fri, 31 May 2024 18:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D3A1878
+	for <linux-gpio@vger.kernel.org>; Sat,  1 Jun 2024 11:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717181117; cv=none; b=WhLRfFHV0NFAb+m6OZFBjZSHz6WkhGWbhJs1ymo6PMO+jz7dyC+cbKiJwykSHhc2pL0YIiAbt+X5O1gunGeAXaeYjRfayevmgU/ZdlArDl5zZIhtOT9+EOmnyDGlKtk1LKcz6QVylepHQUJ85HdpcoO8EHn1qX0VB0dc0ODHMOM=
+	t=1717241856; cv=none; b=Gu2C5lxb4NgwgQoUOAAyVpsOe+ZHzLESFh7xNo9n+Z5OHSzTb6+S3cwI2t5Y5hedgf56ts6bBcyJ8t0ZfibSaYGVCt4pc3YJIhKSvT4wwootwp8RGcVxiSDiZI3jDp4GFeWo5lj2LmdWlwUumAhRF5OH7m3wl+lLvAyyZJ/6kZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717181117; c=relaxed/simple;
-	bh=SCjsIE5+zvS9rP3n0m54mGHXZqab+yIT8w0uoj6U6sw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mfJ3Qdw3+xfWXXWLjvruac50E+fBd2hAoh7A38TaVNF7c7YB8ycxWPgxnJCYDo3OuEjfUMJvcNqyPMGLCOmFPwzgyshvdAHlL65VBD2EhIUHEKd8TREwQltVAfXhrGKcS1QeBo0nVWv3ESeihXDVlC8SI2nrJUhUwW7PNTjsu5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bdXAuIEy; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52b894021cbso1312562e87.0;
-        Fri, 31 May 2024 11:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717181114; x=1717785914; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SCjsIE5+zvS9rP3n0m54mGHXZqab+yIT8w0uoj6U6sw=;
-        b=bdXAuIEyGLKzCFri4i8auI032pLiV3ZTKkpVRUEQJAxDAIvNIcSZhqEQMWD/ODWQSl
-         lOAqn5Qp8JbknC3vEAA5bAjUAk20oo4veAExuJmD3TUROeWNHiKeYqV7DQTNxqcs4RY6
-         1E78I2Oh3m1LQsjZZ9M5rorILs2WO8tBRe2/VS2g7xpo1cJDV8Neo1etoGsmOM6GnIFg
-         N6XbrpNrD+vjt0y+X5rM4kmAOqbfLkA7CifR+6ppHlXBUPNSRLDMjiHXMJaEbRIGkOD3
-         Rhtq/FFU9znwC3R9FI9/Eug4bx8+kZ37bPCYfr+lvD25vWfd2w1wtrqBhgRHD1YE79Dp
-         XT7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717181114; x=1717785914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SCjsIE5+zvS9rP3n0m54mGHXZqab+yIT8w0uoj6U6sw=;
-        b=JPEXv1qvpELcn5w1+yei8x4MAmNr0ETGLymKW2tfv75CsFiDXiIsffDkeYxPZOkRen
-         uwKLqWUqTUsnCvgue5FxPe5a13A8nAPAtG2VIYE4lv6lCsSQAXHwRGwGRWLB9YUJ6OvT
-         0SPWiBYmVaX1kS1VDODXb5fPmNqitE0s6ILQwi+DUcCdZuze5ML6E1CtTL+jaoWDli4E
-         5BZUexNgkQNKsGGzdtEzsGIDxH3yQTtTwRoIkfZxqv1IjBCF3tY8YtB14VEVzKfUzYBO
-         dKwz6cRkQ/l/sRr5FaCOvDz0xzcM82XyYOETLrdi8nKy13tZD7KU7mof9UlsEoMiJsOS
-         kt8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW3xAPZ6Y36CedVV66wEgi+JuKaJgvw86t3k1HNu7vyh2n66I0Cr3O8FJ9e+YzhChWU0j0aXqC9oN14pafA91o0r9qgx/NlfV+CwiOjG1BGPTxK66y9Hk3X8VtcA4JF5DkkeZuAU5GM66bQaV2yG5qM/r5BAVKhMFBaOGOMpnz1PJ3fh6lKRNrJZ7ZwXfKIW9tIgapY9CSXM8dsYhmOl66ZRWSM
-X-Gm-Message-State: AOJu0YxN0fSrrhZ9K17pGtGh7eAXo4GnvqqLo3FnYzF518a49U9WuAdX
-	785EvKHMDf3tAEqqNtwTwto41yLhXHbl3lLRtopufM3eQLtxxjyYJtBLXcIX1bea4Sy3dYGLelx
-	IcEptuL17+qkhjqiZkuLNZ3jVsfEAokea9Oo=
-X-Google-Smtp-Source: AGHT+IGPFx3SbX46u6FcgWqP3HyDQn7qBgWc59dS9IF2/z8xp+8k/UHwXL/kVWGoHL5Vft+Iz0XBX4M1m/N2R+4uAmc=
-X-Received: by 2002:a05:6512:250a:b0:52b:8728:5ea6 with SMTP id
- 2adb3069b0e04-52b89596257mr2511384e87.19.1717181113392; Fri, 31 May 2024
- 11:45:13 -0700 (PDT)
+	s=arc-20240116; t=1717241856; c=relaxed/simple;
+	bh=IVlaZKj+r9rplCnCEkCeN4eTGtjXZDbzUQbItAPkyz0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TEaUMyndRyorJcm1uWzt3bVynAEQgIf5j/uXSnzgGxo8JuY97gI+bEQ6XeNjApxI2EAuBJCpCgbZAkf8R2VD7VBnojuaRWlf1Hdntw+7h+NxQhxN7iVItXP7KzsWEizGl3/F0Zl4y9Wg34KSaob9OT8msakFeEGBdeab0bNJkjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VryXb4rXFzmWrS;
+	Sat,  1 Jun 2024 19:33:03 +0800 (CST)
+Received: from dggpemm500021.china.huawei.com (unknown [7.185.36.109])
+	by mail.maildlp.com (Postfix) with ESMTPS id D9681180A9C;
+	Sat,  1 Jun 2024 19:37:30 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sat, 1 Jun 2024 19:37:30 +0800
+Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
+ (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Sat, 1 Jun
+ 2024 19:37:30 +0800
+From: Yang Yingliang <yangyingliang@huawei.com>
+To: <linux-gpio@vger.kernel.org>
+CC: <linus.walleij@linaro.org>, <dan.carpenter@linaro.org>,
+	<yangyingliang@huawei.com>, <liwei391@huawei.com>
+Subject: [PATCH] pinctrl: core: fix possible memory leak in error path in pinctrl_enable()
+Date: Sat, 1 Jun 2024 19:35:02 +0800
+Message-ID: <20240601113502.2709597-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240529162958.18081-1-johan+linaro@kernel.org>
- <20240529162958.18081-13-johan+linaro@kernel.org> <20240531170837.GC1204315@google.com>
-In-Reply-To: <20240531170837.GC1204315@google.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 31 May 2024 21:44:36 +0300
-Message-ID: <CAHp75VfMS8dYbG=bmzkaq2M8SMXu+HbT6D+BP_iY9Ep3VsR2wQ@mail.gmail.com>
-Subject: Re: [PATCH v2 12/14] mfd: pm8008: rework driver
-To: Lee Jones <lee@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Das Srinagesh <quic_gurus@quicinc.com>, 
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, Stephen Boyd <swboyd@chromium.org>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
 
-On Fri, May 31, 2024 at 8:08=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> Please improve the subject line.
->
-> I'll come back to review the whole set once Andy has had his wicked way w=
-ith you!
+In devm_pinctrl_register(), if pinctrl_enable() fails in pinctrl_register(),
+the "pctldev" has not been added to dev resources, so devm_pinctrl_dev_release()
+can not be called, it leads memory leak.
 
-I guess we came to the equilibrium, I still disagree on some points,
-but Johan has a strong opinion to not follow my comments. So, it's up
-to you now :)
+And some driver calls pinctrl_register_and_init() which is not devm_ managed,
+it also leads memory leak if pinctrl_enable() fails.
 
---=20
-With Best Regards,
-Andy Shevchenko
+To fix this, add a flag devm_allocated to struct pinctrl_dev, free the memory
+by checking this flag.
+
+Fixes: 5038a66dad01 ("pinctrl: core: delete incorrect free in pinctrl_enable()")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ drivers/pinctrl/core.c | 9 +++++++++
+ drivers/pinctrl/core.h | 1 +
+ 2 files changed, 10 insertions(+)
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index cffeb869130d..374c36f5c759 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -2125,6 +2125,13 @@ int pinctrl_enable(struct pinctrl_dev *pctldev)
+ 	error = pinctrl_claim_hogs(pctldev);
+ 	if (error) {
+ 		dev_err(pctldev->dev, "could not claim hogs: %i\n", error);
++		if (!pctldev->devm_allocated) {
++			pinctrl_free_pindescs(pctldev, pctldev->desc->pins,
++					      pctldev->desc->npins);
++			mutex_destroy(&pctldev->mutex);
++			kfree(pctldev);
++		}
++
+ 		return error;
+ 	}
+ 
+@@ -2283,6 +2290,7 @@ struct pinctrl_dev *devm_pinctrl_register(struct device *dev,
+ 		return pctldev;
+ 	}
+ 
++	pctldev->devm_allocated = true;
+ 	*ptr = pctldev;
+ 	devres_add(dev, ptr);
+ 
+@@ -2319,6 +2327,7 @@ int devm_pinctrl_register_and_init(struct device *dev,
+ 		return error;
+ 	}
+ 
++	(*pctldev)->devm_allocated = true;
+ 	*ptr = *pctldev;
+ 	devres_add(dev, ptr);
+ 
+diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+index 837fd5bd903d..bf57ce4fe927 100644
+--- a/drivers/pinctrl/core.h
++++ b/drivers/pinctrl/core.h
+@@ -72,6 +72,7 @@ struct pinctrl_dev {
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *device_root;
+ #endif
++	bool devm_allocated;
+ };
+ 
+ /**
+-- 
+2.25.1
+
 
