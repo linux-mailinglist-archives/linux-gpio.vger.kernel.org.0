@@ -1,150 +1,128 @@
-Return-Path: <linux-gpio+bounces-7028-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7029-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2A368D7172
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2024 20:04:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14A268D742E
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Jun 2024 09:49:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C86E281EEF
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jun 2024 18:04:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4F04281C67
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Jun 2024 07:49:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6A4F153BD9;
-	Sat,  1 Jun 2024 18:04:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D1371CD23;
+	Sun,  2 Jun 2024 07:49:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lZG/FzW6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i42COLZ8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB598AD48
-	for <linux-gpio@vger.kernel.org>; Sat,  1 Jun 2024 18:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8A2171D8;
+	Sun,  2 Jun 2024 07:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717265041; cv=none; b=ReW+C3q9DWMWrzGBOvlyBs8LZrUEU2ihh/j5HfG/c3GzDxMEzDh4xKjTERwU8I+f2z9E5txQOzMRGlYG/D4K/3tw5VKKSAPpEarsWnBf4Anf7r1s/aFqyx+LbXWEXCAEPrptsx65sAOkaC5k7Vo8ZEjgbh3y9Jd7emczlUT7Qlg=
+	t=1717314571; cv=none; b=D4Lt9eImN6MqLZvT5AykF4EG3oHxO9FK+wx16Sv0FU7oXY/T0lQgMH9agqv3h4oyz6N7JHA74JGf8YxzJFPMhcwXfSBA3tcEPWF4AKEmK7JEiBT3hC/7ZAE+VYS7CUcPLzvoBPIvceoEV3+CffI788jvQuftsnLWpTcaFB9ETWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717265041; c=relaxed/simple;
-	bh=NA111BhLEg5n4W8iT9QTnuKMw/+r+bGgXoAgn3oAnYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HuSKTc9yTlyXZ03z9MzchCdyFdJM8XM0SSTp3Y+nOxW6qJx2sZOsnxoEuCdL1ggGAECIR9R/bN0BFod6XQWIv4+0KKB1cbmFXVavhR3/L1IroeqVQ3bqswHEOMnJ6H3AoSvmaYvLn5tQiwS9qCYoTl2tC6RW7GFEWQ/F5RITRCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lZG/FzW6; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a689b034b02so116207566b.2
-        for <linux-gpio@vger.kernel.org>; Sat, 01 Jun 2024 11:03:59 -0700 (PDT)
+	s=arc-20240116; t=1717314571; c=relaxed/simple;
+	bh=HXkGmZ/GnlRwvhJ8fMoCShaf1AxsyT+wSG63skO4HzY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BqJJYDf5jmVmxti/rfRanLxEaKgpn4KPdF+BJRF8et3nc6Oe2zurmd+dejskAvvHIYkwIAVMr/qLz/7UqmY4NcMXT3XeNuzkvvLr2puEEE2B8l/TP4r/ryaAA3irwB1Abewy2Uw1HOO6exlhrJu+a9WZ+SQHyqcEOfeqSwR3GzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i42COLZ8; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f661450af5so4917345ad.3;
+        Sun, 02 Jun 2024 00:49:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717265038; x=1717869838; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=J27XynmV7A1h5aKbXxYPVmU9LKEnoCGVw4qLSFhb7vc=;
-        b=lZG/FzW6rJ9gX63KfXxUm8+j8nGi7VXLSrE1AiIMB0Cg6quYbnsICNyZZNuAJOTIwa
-         vfcQytsp1EEnnzgXMrxohZT2Cvm6prkt7bGtWBPv5+7vbPFaKdqQkgAypoVK4VwBQFaB
-         ZL5+53osySAs5kQcKBsGBEL2rLKvXy/vttoYZUN8yM+FRKP2n9zBZ95gPR/NHut3M1Fl
-         FWnSnIc6qZW9X61gAUGc0mes3mG8NgJGgKxOlhJ9qzsQnCGNntKmjiJgzQAaFioJOneL
-         7v+b/jDQdJlD4n0pW9vvHAPJniVaTvBU1cSn/n6OKIc125bnkC+14+Pw7WlUvBi1kkVC
-         OgNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717265038; x=1717869838;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1717314569; x=1717919369; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=J27XynmV7A1h5aKbXxYPVmU9LKEnoCGVw4qLSFhb7vc=;
-        b=Te4peGul7Fa12YMdXT2DntMqtYEko2blJq78Vzemb3/eYtJhRTdXzLGfVLraiUlaW1
-         6+eqogZ1ID3bLaLBlSnX+ANNKOSOJ3qmGC52nda9m7RQ3OxVeoXNX9ZoDwEU6gvR0dMb
-         kmgbXPty58XQibeDNjYOqjqDWUYLqMooK9Tcl6mh6k/usG3A3jDQws30bu1CH/Xqa0Sh
-         Qw+NVBleNhhGPFIdXKx6aO6VNf0PoaascUFF1GTd5C+An8eiueVBdbGiThV+/trAzSJl
-         LqTLLtC5+0sMB3dxRhEPc3XMrvtQFwurbyKGcJA7CexLccRJKLhk8eZgw7klMpuZuBZ6
-         KJJA==
-X-Gm-Message-State: AOJu0YzXYqKQ4Zh59K0d0XCSH+OM/9WYmJOj+YRDNA7n2sslkUsbMA22
-	c8ISZplXQZa7YLLa02hWrDFPpBaTEZrXSI3swD7X+4pyKE6a4KGwi3/A8Z+AQDU=
-X-Google-Smtp-Source: AGHT+IFI8r9ZeZTeW2j4Bg+UMVIXmESg5WFb8+JxLiwq7IY1Uwvo4bYomJgNtl9UqzyHc6vu3FAHdA==
-X-Received: by 2002:a17:906:a10b:b0:a5a:34ae:10ea with SMTP id a640c23a62f3a-a682272f34amr324665466b.76.1717265037973;
-        Sat, 01 Jun 2024 11:03:57 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68b4b09cb9sm95687966b.178.2024.06.01.11.03.57
+        bh=ALYWCpUDuYWk0GU9FVb+DQcrxr3IhUEIFATuvwfg2ks=;
+        b=i42COLZ8sCd0kL+N+ZtkBghdO0TmmvPG64WdwvJGTnxpXihpQkkgTglowfR95HL5Pq
+         h2l5j0MnX3onjDu02DbF9rLugQCpa8zIn/G3A02/f4iUTXk1jw4qiJ66Ia7EQTmxlWIa
+         5wHcp+aDK6r28a+yqCh2FaB538IT6l8Sv1MKyuIHdjZwNhMDyB2gjYKXq+eN7g4zlNjw
+         NNXRlwhVtYdUB2t/UoNT62a3xQ5hUpq+Jgm5jM7NKx9TgwC97t3gEcFsq1koNia1vLBi
+         5Czro4BS28AmLt89LcAE2yaTmmeydhVTEIgvWQ0Al4i6knOTBi8NEfRZB3hybkHC2+un
+         oLyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717314569; x=1717919369;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ALYWCpUDuYWk0GU9FVb+DQcrxr3IhUEIFATuvwfg2ks=;
+        b=sUcVpPj9FkrGPf2YHIYFQvw7pzNwH8qKtWn6KFUM+fXx2P074KRRIKqdwqY28dCrhL
+         /ZeeXTIVSPKl8sDkU9EaiIhubr62K0sCh77bGLO2uBDY/n4GikGE6NIWwd0g3UhcKlwp
+         kqAeJ0uM9hxmm4zxul100iH20HKUXnwLHv52fS/A9zvb4gA/dpstk0D2NhB3lfewmH9C
+         AQt/joB8ixOuHw0iOwQXuVHtmM8LXc7s0/xO7uL1wuh5rwQfl5OcXHpeWCaPxaO5kEh5
+         RmTF4yhi4r6xHCVWWQlLwqYYIj64HJVvR4PkgcQtTxwAW/bz3ToEr+IZ/wCG0bLt2rXT
+         cdhw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzDAoEZYodJK8/t8x4vJMaVb0MOYeS9R7/hSUWSHut0qguwy3U1afemcmXDRiTwrXLMCtAWK81xwRUERuBocH9vw1H6jXXjqlPZ9lpCVGzxZ6M13nMwboqecM0Y4/KkinsnZpFx74JgvkkaB1sOIg+mB7c8VymJ4vpVE+FlTigQklYwQ==
+X-Gm-Message-State: AOJu0YzOuCAYovRzYUA9MFu1AwyFrxSAEwD4KfxEGJY0NL1DnWIMjS7D
+	c2Xfgg2aOqguQmUYwUV+RhRUB9h8er3TbSgfxkZ8rpPM7rJCNOoQlX6BRDG7kaA=
+X-Google-Smtp-Source: AGHT+IHJtiZeiaBOB96Skvc71cfyD3AyoB9wAMjZifP2KldTzPbqd6WEpo9DeS4TdjrTWsRnCCUriQ==
+X-Received: by 2002:a17:903:230f:b0:1f6:73a9:ec9a with SMTP id d9443c01a7336-1f673a9eff1mr3619375ad.12.1717314569021;
+        Sun, 02 Jun 2024 00:49:29 -0700 (PDT)
+Received: from Kuiu.. (220-138-66-78.dynamic-ip.hinet.net. [220.138.66.78])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f632338ca4sm43234815ad.50.2024.06.02.00.49.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Jun 2024 11:03:57 -0700 (PDT)
-Date: Sat, 1 Jun 2024 21:03:54 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Yang Yingliang <yangyingliang@huawei.com>
-Cc: linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-	liwei391@huawei.com
-Subject: Re: [PATCH] pinctrl: core: fix possible memory leak in error path in
- pinctrl_enable()
-Message-ID: <bab8eaca-3e96-4ed4-a63c-bccd39816c88@moroto.mountain>
-References: <20240601113502.2709597-1-yangyingliang@huawei.com>
+        Sun, 02 Jun 2024 00:49:28 -0700 (PDT)
+From: Huichun Feng <foxhoundsk.tw@gmail.com>
+To: brgl@bgdev.pl
+Cc: corbet@lwn.net,
+	foxhoundsk.tw@gmail.com,
+	linus.walleij@linaro.org,
+	linux-doc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	warthog618@gmail.com
+Subject: [PATCH] docs: gpio: prefer pread(2) for interrupt reading
+Date: Sun,  2 Jun 2024 15:49:25 +0800
+Message-Id: <20240602074925.2489486-1-foxhoundsk.tw@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <CAMRc=MeuHpu4_QbgW-6Kc-TGzhcBim7Eb-TZhPax6G2SZHR5iw@mail.gmail.com>
+References: <CAMRc=MeuHpu4_QbgW-6Kc-TGzhcBim7Eb-TZhPax6G2SZHR5iw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240601113502.2709597-1-yangyingliang@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 01, 2024 at 07:35:02PM +0800, Yang Yingliang wrote:
-> In devm_pinctrl_register(), if pinctrl_enable() fails in pinctrl_register(),
-> the "pctldev" has not been added to dev resources, so devm_pinctrl_dev_release()
-> can not be called, it leads memory leak.
-> 
-> And some driver calls pinctrl_register_and_init() which is not devm_ managed,
-> it also leads memory leak if pinctrl_enable() fails.
-> 
-> To fix this, add a flag devm_allocated to struct pinctrl_dev, free the memory
-> by checking this flag.
-> 
-> Fixes: 5038a66dad01 ("pinctrl: core: delete incorrect free in pinctrl_enable()")
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> ---
->  drivers/pinctrl/core.c | 9 +++++++++
->  drivers/pinctrl/core.h | 1 +
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-> index cffeb869130d..374c36f5c759 100644
-> --- a/drivers/pinctrl/core.c
-> +++ b/drivers/pinctrl/core.c
-> @@ -2125,6 +2125,13 @@ int pinctrl_enable(struct pinctrl_dev *pctldev)
->  	error = pinctrl_claim_hogs(pctldev);
->  	if (error) {
->  		dev_err(pctldev->dev, "could not claim hogs: %i\n", error);
-> +		if (!pctldev->devm_allocated) {
-> +			pinctrl_free_pindescs(pctldev, pctldev->desc->pins,
-> +					      pctldev->desc->npins);
-> +			mutex_destroy(&pctldev->mutex);
-> +			kfree(pctldev);
-> +		}
+In legacy sysfs GPIO, when using poll(2) on the sysfs GPIO value for
+state change awaiting, a subsequent read(2) is required for consuming
+the event, which the doc recommends the use of lseek(2) or
+close-and-reopen to reset the file offset afterwards.
 
-The other thing is, this should be done in a function.
+The recommendations however, require at least 2 syscalls to consume
+the event. Gladly, use of pread(2) require only 1 syscall for the
+consumption. Let's advertise this usage by prioritizing its placement.
 
-ti_iodelay_probe() would have to call uninit as well.  The error
-handling in ti_iodelay_probe() was already messed up.  They probably
-assumed that pinctrl_enable() would do the cleanup so they forgot to
-call of_node_put(np).
+Signed-off-by: Huichun Feng <foxhoundsk.tw@gmail.com>
+---
+ Documentation/userspace-api/gpio/sysfs.rst | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-regards,
-dan carpenter
-
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 9fcb9d913556..704541385397 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -2090,6 +2090,13 @@ pinctrl_init_controller(struct pinctrl_desc *pctldesc, struct device *dev,
- 	return ERR_PTR(ret);
- }
+diff --git a/Documentation/userspace-api/gpio/sysfs.rst b/Documentation/userspace-api/gpio/sysfs.rst
+index 116921048..bd64896de 100644
+--- a/Documentation/userspace-api/gpio/sysfs.rst
++++ b/Documentation/userspace-api/gpio/sysfs.rst
+@@ -97,9 +97,10 @@ and have the following read/write attributes:
+ 		poll(2) will return whenever the interrupt was triggered. If
+ 		you use poll(2), set the events POLLPRI and POLLERR. If you
+ 		use select(2), set the file descriptor in exceptfds. After
+-		poll(2) returns, either lseek(2) to the beginning of the sysfs
+-		file and read the new value or close the file and re-open it
+-		to read the value.
++		poll(2) returns, use pread(2) to read the value at offset
++		zero. Alternatively, either lseek(2) to the beginning of the
++		sysfs file and read the new value or close the file and
++		re-open it to read the value.
  
-+void pinctrl_uninit_controller(struct pinctrl_dev *pctldev)
-+{
-+	pinctrl_free_pindescs(pctldev, pctldev->desc->pins, pctldev->desc->npins);
-+	mutex_destroy(&pctldev->mutex);
-+	kfree(pctldev);
-+}
-+
- static int pinctrl_claim_hogs(struct pinctrl_dev *pctldev)
- {
- 	pctldev->p = create_pinctrl(pctldev->dev, pctldev);
-
+ 	"edge" ...
+ 		reads as either "none", "rising", "falling", or
+-- 
+2.34.1
 
 
