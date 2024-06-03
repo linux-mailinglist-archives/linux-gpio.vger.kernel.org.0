@@ -1,107 +1,116 @@
-Return-Path: <linux-gpio+bounces-7055-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7056-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98E788D7F20
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 11:44:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2879A8D8030
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 12:38:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9D8D1C2151A
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 09:44:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D73742850D8
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 10:38:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1754984FAF;
-	Mon,  3 Jun 2024 09:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5414F82D64;
+	Mon,  3 Jun 2024 10:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gXHd0TWp"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KOiLMFG0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03811B667
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 09:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BE944C6F
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 10:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717407536; cv=none; b=sTYi9QSFPXGPd8y24u8LgKWIPxWib5o3PDDN6OzI75WQddVrBbIdVweF6CSZCwdzrzupOs33zsseci0KrzmdyX5Iow1PrkTvS084lhBNDFZhBtzf7yX05jNiWfk4ZyQlxhastOlCfAzk2rhcI+zveR+ttX74fGg7MY0W0Ukdu9o=
+	t=1717411105; cv=none; b=tPB9NIQXivvh2Guhcqwj0MjlpmMRQ8OqagyVcShKPxewM+cp6YE2deOZYYKqwMYK+zOXZv4NQhtGn4WuXBAfsLFHwnn7YWBKzLxfQ2Ia9W8iPJj9Nsxrzo6Lgal9HVR0Nqd96UYejnr9Yw5WdBkSMLUHCCrACcrqdfnBGFQuQOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717407536; c=relaxed/simple;
-	bh=ddnxqBrzYel3dnv1DWlgZ8rF1bgffe5ajZec1rSIlRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VRsxVto/4zNo+njSEeaMR2CSR/LGnORunXZTxxHorftVCTPEWSOtvdaghzMXwhZlsfZJH9DxX8UOpU3AYgXRhW0H/jAehjxNsYgmiPxIQtEzpdagrBuEMmKVv1MhMDE1iz9oRlrBYNB0EYodEALTE86nJSy9wrhKP7mCTy02Oxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gXHd0TWp; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1717411105; c=relaxed/simple;
+	bh=Lwm0YV4fK66WSeYPLKqyFGEIRfvD5qrutpg3z+fQgNk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YuP9i5bAFozirfAGc8GYI1jFUCaBpWfUbSY4WpiAesEY/R7lfQKhh1sSFwsT7BsHE2y9jJYiVbLfgGhxYzU8b9IEYrYvAEEf6iB/wU7aWjFcJev33H5qRvnsCoFQQrgY7OfoURF8keNa4YTO75i38FYW9zPKBjP+7lmN5IiOW2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KOiLMFG0; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-421396e3918so13694375e9.0
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 02:38:54 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eaad2c673fso13687001fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 03:38:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717407533; x=1718012333; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717411101; x=1718015901; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oLremGQ0sNyS/jZjt3mbSnSabu05Q+H+GToTYpUKOW4=;
-        b=gXHd0TWpQvUHPvuWG19kgnv+a0T47v2vs+lb674lYf5G+fKtObuZIsmfC5RhaDFHuB
-         YaTQ5rgAbDS9e8tnRagGxccwepRUsR4XVMDYG256WtpxXBcRH8MNjzhd2eZEIglI94XN
-         4HSsuVqUcZ42pYXggw5NH0ICVpku0/KJ0tgFExNYT9M/cwT/6Z/oXw3Zi7bTnUyKZFrM
-         dZjrEwVbFm7EUG/q1fEPqxmIn/w+33XvSeUDDCEjQzuWJxBIMOYe+Q+sjXKAWioXuUuk
-         kBIeQYzx7sXpeo3n1Eo6nVJvbQlJyWp9Od2SKeirBvyapzwkmnsiil7XPWxGELco+Io2
-         bODw==
+        bh=Lwm0YV4fK66WSeYPLKqyFGEIRfvD5qrutpg3z+fQgNk=;
+        b=KOiLMFG0/sHl4jL4H32SKS460B5HPPFhqCbWgCRUDtxwGTXj8v4VmtTG8uhStJBU01
+         6rTZb5hj5KdOAI03gut7ET4uVxFICciJkCxWAUe+ArkmNdi6nbOSu/oiNy586Q+JdC5R
+         DaFzr0babcLxCBROSta/tAy2ATXhnFnRLWSFWvwnUowQd6haVSAZ24ENpiRJS8ofFV5K
+         6069mi1pe4XRy5hUeydohpNeh/DPW1Q46I5Kphvm4QxcB38Jc67cgZZgkXj/0oagprF2
+         +IA0lLHD9R7JUNyD2zqEx1DZyKefBfo3AY9GRGsq8RwG0eqeEeYzDqVjnHZg/5lssAA1
+         S//A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717407533; x=1718012333;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1717411101; x=1718015901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oLremGQ0sNyS/jZjt3mbSnSabu05Q+H+GToTYpUKOW4=;
-        b=GmDi/0pVpm//vwEZA4jQQ2LlZFsmgRkPvBXfW3XGkGxrKQCszJuBQLmtZz0AkvCVxL
-         F3/TFaIRGCTHaJh3OlOduy31vS9y7NtJzFpk8cams8af+jSAKxjB2eYPqxlB+mu2OsQY
-         X1GmYNEIFYvX51Swv2JPv130+zJbbqN6oJE3mUHdxyOalyZVPgNUV/npUOgTMdK/U+3T
-         zATifNvj6a1/F2BEKWuqGfVm05jBDE+U2S0NxCM/W0Q8WA6+pYSjMdLwxSPa713FTBKx
-         iPJ82OKyAxwfZ7drwPY+1dhqQEPo7b3b0ghw2vmdW3BC715uQsUCD0QBDRL6Fc7u4B4M
-         F9MA==
-X-Gm-Message-State: AOJu0YzNLTs9NNZxQv7LiZiP2K4EaKKx/wNmukFrTKNpYlEl/BvzVOPZ
-	uiIAhfP4MclaCsCj2O2UWeiA8Am2VqFnbcW4zM+okarGz8TALx0meZDJmgCeVlHq0Rq+MxpC3ca
-	q
-X-Google-Smtp-Source: AGHT+IF9vc5hM3/oy4C3NGJ8jl8bxBzaA5Zsn2Q8ryEaBAKT8o2+nM/Rn9cGNOi4mrAGj3AkR+QRgQ==
-X-Received: by 2002:a5d:64ad:0:b0:35d:c988:6bd7 with SMTP id ffacd0b85a97d-35e0f281d6fmr9998049f8f.32.1717407532841;
-        Mon, 03 Jun 2024 02:38:52 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:5b1:48e9:27a3:7085])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd064afe3sm8191744f8f.97.2024.06.03.02.38.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 02:38:52 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
-	Khem Raj <raj.khem@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH] bindings: cxx: Migrate C++ tests to use Catch2 v3
-Date: Mon,  3 Jun 2024 11:38:50 +0200
-Message-ID: <171740752753.36958.11202089472351032248.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240531184223.3949069-1-raj.khem@gmail.com>
-References: <20240531184223.3949069-1-raj.khem@gmail.com>
+        bh=Lwm0YV4fK66WSeYPLKqyFGEIRfvD5qrutpg3z+fQgNk=;
+        b=xIKmV1XX85m8lQNBUwx4pdw1UlNLTzpSKmcWa5i8TqcaLdFFnRBWwSNpfkoLtpa1AZ
+         Gawa+Yv6scUS9aMeZc78tfRZzObTqgDaIeSrqdCM3L+8XzZ4xvDhuuRnh1tT2icqOgnM
+         pIaAf5lem2ToojOrPqPUthTWnEGcsm6SV63ReiF0Fv+cpvAIyPU6PoIS5ytdeXHvOkM3
+         U20wvparVbO7eSynveyZtNwFq7LVI2EHuTFieT17Tv//7sIGK4ntEYcUTF9WlwCzdHF2
+         kAk26mFnrkPH8p3WcBPq2Icg/YC9+hgAmLrS9SiY/x98kAG+NLkZbEoKj2uuEiFgBSe0
+         1X7A==
+X-Gm-Message-State: AOJu0YzpWnO9uyYlvPoVkmJHgmtj7/OjRTgTFS+nubrYW0i/UoPfTN38
+	eEaao0QtbSm3JZRynxd4EmHsp9SboeQEMHBAldet9n7qKdZpTYpNACMeM4BH8iQWxjAZsVrLKo8
+	UDe9tm1DsiSWiUdQwlO0SEMuveTXOmfF+7nUD1g==
+X-Google-Smtp-Source: AGHT+IHDeXv6ZuLG0OcJRYWCbxWwdWR7J5leN3WG7gawQxodJtssM3exK21Ob+ZvfsD3/wsW1czdTD663tfUSrOkNI8=
+X-Received: by 2002:a2e:9f05:0:b0:2ea:91c1:f3d5 with SMTP id
+ 38308e7fff4ca-2ea9510e39cmr69488901fa.15.1717411101214; Mon, 03 Jun 2024
+ 03:38:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20240531134512.443850-1-warthog618@gmail.com> <20240531134512.443850-3-warthog618@gmail.com>
+ <CAMRc=MfHwp8Lj_5rFiqo61E__Y9+o4n3Bu5e4KSF0P6n0DR-0Q@mail.gmail.com> <20240603085844.GA78808@rigel>
+In-Reply-To: <20240603085844.GA78808@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 3 Jun 2024 12:38:09 +0200
+Message-ID: <CAMRc=MdKTXeLWMkaRqg6z-iTeThWWCYcr4En2UgbM-81BXPFpg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 2/8] tools: tests: don't declare and assign separately
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jun 3, 2024 at 10:58=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Mon, Jun 03, 2024 at 10:52:39AM +0200, Bartosz Golaszewski wrote:
+> > On Fri, May 31, 2024 at 3:45=E2=80=AFPM Kent Gibson <warthog618@gmail.c=
+om> wrote:
+> > >
+> > > Fix shellcheck SC2155[1] - declare and assign separately to avoid
+> > > masking return values.
+> > >
+> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > >
+> > > [1] https://www.shellcheck.net/wiki/SC2155
+> > > ---
+> >
+> > Shouldn't the commit message say "*do* declare and assign separately"?
+> >
+>
+> That is wrong, my bad.
+>
+> I think I was going to change it to "don't declare and assign together"
+> and got distracted mid-edit.
+> So either that or simply "declare and assign separately".
+> A leading "do" would be redundant.
+>
+> You ok to fix that, or would you like a re-spin?
+>
 
+I'll fix it, others look good.
 
-On Fri, 31 May 2024 11:42:23 -0700, Khem Raj wrote:
-> Catch2 v3.x has API changes which needs to be addressed
-> in the tests themselves, hence this changeset is to fix
-> those.
-> 
-> 
-
-Applied, thanks!
-
-[1/1] bindings: cxx: Migrate C++ tests to use Catch2 v3
-      commit: 95a2eb76bf634264e56523d3215d1be6c42761f0
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Bart
 
