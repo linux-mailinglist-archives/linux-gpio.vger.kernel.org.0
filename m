@@ -1,83 +1,88 @@
-Return-Path: <linux-gpio+bounces-7071-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7072-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70A878D81E9
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 14:09:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B89D8D822A
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 14:24:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 077A71F264F3
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 12:09:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A8DDCB25BFC
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 12:24:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF3A128815;
-	Mon,  3 Jun 2024 12:08:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F0A712BF23;
+	Mon,  3 Jun 2024 12:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ICUF52fN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ThatlpO7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85B1127E21
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 12:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DE382D7C
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 12:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717416487; cv=none; b=ZRDxiIyU3+xqt/IONLqwF3Wag9FUT27eaKicyOMI+O/V69xYDIYnXTt0JbLcYch9PHwYrE/SfCNldOp0ATjkhNVssflwdFCl1aRY/KQ2Ooc+qjd/hMAgLjCYoBM9KL/8BX4HqI5716Q+7xY/+3hWq/SNxqkZFgP6mWxAw0wEdOo=
+	t=1717417442; cv=none; b=HM61X0X2yMnSCLZqzhHShfNQ5fz6BkrmD0BZHXLntGf/xiF41oheNqGlHMK8FQieSo363xsi8tmjTiZvN85D4FzumGqwSxbpHvG/GfK3RjWhrrxv0JTasqwxG7nU6WwdzTj+TlqNai95NRdH6zFJasffRR80dO+tYXDESKd+3XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717416487; c=relaxed/simple;
-	bh=fttvHlF2MF8yOE/UjAkVeACPcsh9zjGwu0goS8Eavcw=;
+	s=arc-20240116; t=1717417442; c=relaxed/simple;
+	bh=sdzFus9iWb7MdyLcKMzB2O+os0H1yvpL3U23jpmxnik=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MozU6IFYHLI8tXW3lxzRwZVuWvPTdfd+svWT7J99xBamYXxQtRDLeGSMwGPTZmZGZ9SI9s2+a/mtT9syZiBUekjQu7v23IF9GGRS6VtV4ZLlGqSgG/xypyNFVTEr3j0MSzgrGntUbrYP+Ef4z93smsTyJB5cqk+5G2jcxaVJcvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ICUF52fN; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version:Content-Type; b=imm6SLw9duLBjsTQlorXLvvXMWJf9PL+WQ1Wljq8VC5A8NGE+bno2TkLeNuyvmBOGdvcdGX4/f6zyLpkGk+ku1XnWcgTAZr0KFc4ZDdOkURtgwca+Bj5UQ7/omWjIig+44G8xRpwwr+K40QHQyn/Sp1m5ay2WvPm9ZPUfFyxBGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ThatlpO7; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42120fc8d1dso40490625e9.2
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 05:08:05 -0700 (PDT)
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-35dcc681f70so2052840f8f.0
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 05:24:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717416483; x=1718021283; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717417439; x=1718022239; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hcW2DRNhU+MUelSnk5wNhyz3teLQv+XfKABuV97aTCg=;
-        b=ICUF52fNpnaBKsQHO0e8UNGwrxSez2l+8+eRdeINp3W4FbiOrLAgGd4HCnlW+oOI50
-         NFJ8HylUlAEa4YvKdPT9eXygRDY/0w+aYSF47/AbJZIjo4VqguEtzF1XP9UdQap328eD
-         JeJoKdO9EJPYztaMgZ1uukRh2CMq3U42h3B0Ke4q1roKRsnE8EbsPXxOPTdv9gThXI7U
-         kQ3PlEb8vrEV1mvkF9WUYp1W/1l7saXlY8PMLfC1u5Mjc+F/zn0P5sDgukmrWRhbAju6
-         YT1cJOGzDEVDEURrT5N2xPTgKHaM80EvMicBNYOvnzVPfSrvodGxgisYVDJFNYj1CRlC
-         4l0Q==
+        bh=vR46fXcoXv6ChkybX1LtRgF9jjoOYKn8LfgvVCf8DkE=;
+        b=ThatlpO71mXGVfaR864SxLJtMTFtkn+s93FIUPbRCIsqBDoSrOUWBNomjsQQxpnbBv
+         PuSRVO4RrPktNLGOY2e6Zycfx012WnQX+0zcKn9+jvo14RXqgIAKpP1UIWPEUzOLHCt9
+         bjqvv5UMqkLhsYhdVaKC+aSw+2n+wvtLmCzksDxf0wTeOaa6Kwfuood6yK3H06A5FI4b
+         rHnOazVm4lkQlNPwcIyUL0yxf4hPiWqZv8M+N3Q8hUPhNfrCsrav3ejQY8dX5Z0GH5uA
+         E85v84043aDhJflDgP9JPKl33TSqFWNFPH8U+b8f8xKgjutd1Yc8Vtkj9MYufe6nhOy+
+         /efg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717416483; x=1718021283;
+        d=1e100.net; s=20230601; t=1717417439; x=1718022239;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hcW2DRNhU+MUelSnk5wNhyz3teLQv+XfKABuV97aTCg=;
-        b=JYd6EBOEwVVi+X2TU7BZs4VDpOyncxmT++9yND2m1ktUbHPKr6WCaKLerf0ka789cP
-         aQf1ar+Bs5R1No9Ll3mXJAVA6wJ0+n8U5YbvtgXcHYwWSBkKmSiazXYx/6HJJXK0Y1U9
-         DluTdWhAWPS1209ItS0vTtwAUviVSQk/ghDPUzxpyaJGMIsx2KyDxm6xM3Iow/45NGuS
-         7PrT97++NhyAI+u0PBxgSgw/aT5MWpu6XOYf9MalvGZ4iz74+5vMuuDSguzmJVhXZomx
-         PDrQXs5PfG1r8FBsXEDGugvY5YgHqQ0WQSXI30GcN3f5PGLDWLSstT04NZuGNi9I94qN
-         76tA==
-X-Gm-Message-State: AOJu0Yx4PlrP1j2fyr7dcYPwFKziCeyrYVC1ugA/fVeVmd7F8KhpP4Ir
-	xgkVzMv/GfD3z0T6gKfS759qqzJZRKOEoeuyH67BJnBqmT0mDicGxJDzTqAU2ph8fvUUVYrAX2m
-	9
-X-Google-Smtp-Source: AGHT+IHFNo8RP4hl3xT4tXXjTURKVv///mSclhYgsz77pbZ8HpqpD4LZJ0VNSCvs2DEQ26Er6PsWFQ==
-X-Received: by 2002:adf:eace:0:b0:354:f190:9eb8 with SMTP id ffacd0b85a97d-35e0f285c44mr6088646f8f.29.1717416482876;
-        Mon, 03 Jun 2024 05:08:02 -0700 (PDT)
+        bh=vR46fXcoXv6ChkybX1LtRgF9jjoOYKn8LfgvVCf8DkE=;
+        b=dajOrbH15h+4Ltk47L+85TKxSiarse+t1/Ziouw0wcqaBtkTz0HPD1auwZnPAXf4s5
+         Nw0vb/+isKW7Qz7O6ijyL4IZiUEZ/+d9O9m2UTyTm4UkhcOCrslC67qUozlKFrYgdcLA
+         Tyri3qAXp+I6V4X9OepZYpz67hp8P7KCjATuaG8IGNqvS6DbQ+sLTKoxFPPDapBsGflr
+         KKcxhL0O4bpW+9ymGVYug5tKbvH7WI21YopKfL6xdDJG8OI/uRkJtE8VHBfsIi0xg4iN
+         8GLhPAbtg6phNt5oj6y4H5qgwDT0ZD8G75bfJUlw/CWPqooH10e2W1MrdB+ISK8GRkDR
+         PPBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTEAz+A/vxUa3lS0xyHtzHmDe1ks530uhJ0ijLanF6W+Sjt2bnpALMU6ySG4nEvwQFTdavjMxot94RJIjoQgTkXMAcxRoglf6DuQ==
+X-Gm-Message-State: AOJu0Yy42qkkHUGI24vyzUUaphkveQDesBJkgzvE2BbOGEe2NVOc9nz0
+	dwI+L4XAYPj/A4PNr0wjt/CAX6mZXeNcWi8xD0tgbMIAqHWzsd9DTicc1JD9bOk=
+X-Google-Smtp-Source: AGHT+IHB3TUN3a1VvRb01F02ldgZaivCRHBmm9DVppPgU9/moWf5g70KbShoONHjFApsB7/wMVBgRw==
+X-Received: by 2002:a5d:5f8b:0:b0:355:796:15ef with SMTP id ffacd0b85a97d-35e0f25e488mr7585207f8f.10.1717417438990;
+        Mon, 03 Jun 2024 05:23:58 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:5b1:48e9:27a3:7085])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04d9c89sm8606667f8f.60.2024.06.03.05.08.02
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c0e8fsm8687533f8f.2.2024.06.03.05.23.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 05:08:02 -0700 (PDT)
+        Mon, 03 Jun 2024 05:23:58 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl,
-	Kent Gibson <warthog618@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH v2 0/8] tools: tests: fix shellcheck warnings
-Date: Mon,  3 Jun 2024 14:08:01 +0200
-Message-ID: <171741646963.62402.3218304292601785718.b4-ty@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Gregor Herburger <gregor.herburger@tq-group.com>,
+	linux@ew.tq-group.com
+Subject: Re: [PATCH v2 1/4] gpio: tqmx86: fix typo in Kconfig label
+Date: Mon,  3 Jun 2024 14:23:57 +0200
+Message-ID: <171741742898.63658.2302976335873675404.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240603115628.102616-1-warthog618@gmail.com>
-References: <20240603115628.102616-1-warthog618@gmail.com>
+In-Reply-To: <e0e38c9944ad6d281d9a662a45d289b88edc808e.1717063994.git.matthias.schiffer@ew.tq-group.com>
+References: <e0e38c9944ad6d281d9a662a45d289b88edc808e.1717063994.git.matthias.schiffer@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -90,36 +95,21 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Mon, 03 Jun 2024 19:56:20 +0800, Kent Gibson wrote:
-> Following up on recent discussions, this series fixes all the warnings
-> detected by shellcheck.  The resulting tools test script is now clean,
-> at least from the perspective of shellcheck.
+On Thu, 30 May 2024 12:19:59 +0200, Matthias Schiffer wrote:
+> Fix description for GPIO_TQMX86 from QTMX86 to TQMx86.
 > 
-> These fixes do not correct any known issue, other than shellcheck
-> reporting them as potential problems, the intent is to remove common
-> shell issues that may impact future changes, and to simplify checking
-> that any subsequent changes to the test script constitute "good" shell.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/8] tools: tests: don't mix string and array
-      commit: ee9751a07dee230229e4b85dde14c600397e026d
-[2/8] tools: tests: declare and assign separately
-      commit: 57ed5cfe66f03d0a30f34aa319560e9079bbcee3
-[3/8] tools: tests: fix unused variables
-      commit: a88ed2f9bfbf3b73c156f8db45b6b6af62291c53
-[4/8] tools: tests: use read -r to avoid mangling backslashes
-      commit: 48f634ab57e8b2c0173a4138737895bee070c493
-[5/8] tools: tests: don't use variables in printf format string
-      commit: 45f2d4ba38852b611bc4bf622b2582de85b0ab91
-[6/8] tools: tests: check exit code directly
-      commit: 934adda1339707f4721af0a7a128e20737ed9986
-[7/8] tools: tests: shellcheck don't follow sourced file
-      commit: 2f140aed7d3cebb3dd67a31f8fd6846f3c5a480d
-[8/8] tools: tests: avoid splitting and globbing
-      commit: 37f3676cef721e6909ea84cd6c4ada5dab84f4fb
+[1/4] gpio: tqmx86: fix typo in Kconfig label
+      commit: 8c219e52ca4d9a67cd6a7074e91bf29b55edc075
+[2/4] gpio: tqmx86: introduce shadow register for GPIO output value
+      commit: 9d6a811b522ba558bcb4ec01d12e72a0af8e9f6e
+[3/4] gpio: tqmx86: store IRQ trigger type and unmask status separately
+      commit: 08af509efdf8dad08e972b48de0e2c2a7919ea8b
+[4/4] gpio: tqmx86: fix broken IRQ_TYPE_EDGE_BOTH interrupt type
+      commit: 90dd7de4ef7ba584823dfbeba834c2919a4bb55b
 
 Best regards,
 -- 
