@@ -1,113 +1,100 @@
-Return-Path: <linux-gpio+bounces-7041-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7042-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39C608D7D22
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 10:17:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 995888D7D2D
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 10:21:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD49D1F21503
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 08:17:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2EFB1C2166B
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 08:21:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB8258203;
-	Mon,  3 Jun 2024 08:17:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F24CB56458;
+	Mon,  3 Jun 2024 08:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oo5FhNmx"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kJcZnF1n"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78C04AEF5
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 08:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E854AEF5;
+	Mon,  3 Jun 2024 08:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717402637; cv=none; b=DqJ9FFYsczXnJqm488hi6n+OVBD7bZYUCpB21EDc5jbEdgDrnF6zT0RKuk9si3gAjlr+XATkYrPH1xwhQJ0NeOvTcPVIFAU58x8sOMirhtKoz+xM6hgq0wqLEB+D55+s15PIDfp9wws4V3JpZSfQA6x7+c9x4ccQ3q/q/B6mRfM=
+	t=1717402897; cv=none; b=D+KN/cE+PyabmZZanO5OPXQiNN7baGdo0XmRe3egWXDlAHBNesKOU8p+lCl04NfmBig1XOtzpIERVT3TnXYztsDms6u/40uQqvyf1uL97gUgTGK39k89jMlB9RPBG65010Eift2K/nMPJk+pLCymq65McoYXzkrhomdIDvr/mAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717402637; c=relaxed/simple;
-	bh=ydnxOWl2dBIzZnuKszypKD1rZv/wX9sApZtO89araoc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GWuUAcBii+6Y/f3r2vQcEpb0w+KIY7PX5l+Ge+SPZ1nVaDRFz3Hi3DY7+IsPVUWtLyu6+jJAKRrVIcmxwXiKLmO9dVxqnXGkdgViI8vJchjXg7+XWjtwv9AKRIgS+em15k511V4d9AhE5FugO83hIhPJf42AzfWJJ8nk5t2m32I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oo5FhNmx; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2eaac465915so8347281fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 01:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717402633; x=1718007433; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ydnxOWl2dBIzZnuKszypKD1rZv/wX9sApZtO89araoc=;
-        b=oo5FhNmxxzh2dMF5RV7SrdfAw6w7RcUnRHpzcUPNfWvP4zbTgcYRRv3QGcQK7Gw/al
-         HiiLXBseusuD82VihyZWi/VE93QrZBoojyPofZ7qmP9Mwi5iB8rh1soFf+wJMgL5x4sS
-         xi49gGMsttsbN0vj73s1hUHgBcK8eCpMLNXnFGqKsy4mTZzszuOiO/AzF9NmKyU1yTel
-         jUQcaFLzt1yzJn3wqxjlrx3j+SZF9Pego5V0MBBd6+McZMn3JR/wiIzKMO8QAHsoOrXg
-         XkPe/cX7L7IrdukY5uLsqAQ2ldKCLwM0F6ppc1NfqUMr35OOwbFS0sbd6p62kdfL64dW
-         PJTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717402633; x=1718007433;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ydnxOWl2dBIzZnuKszypKD1rZv/wX9sApZtO89araoc=;
-        b=DLAH8/5zZHyLX2b+rD3bLMjdoJNpMmy+o6FHbHjYqqFJfbb0iL1oV+tg8l/5rNDjRf
-         scgxmCIElgoZ/S8yFjPjwjeR4uQ8+FPEDS8oAPivDQt67Qbt2x/E+mpOxWB+5zO82flA
-         HyoU6jWRPTlYynDQ8IAchu2AC+Mi04L5yRjRpdiz7vOgHwEbCzGw+9NOn5gVOqWllw+Z
-         pVG2maOEOt0WnhEzHsS1LIj35Vg8P1a6KBquxWtXGdR2weA02H69cq3HLJJM5o728DJE
-         ncpGOWlMt7Z7Nn7Iflv9TboYG13Gq1o/XFADez2K0vTkLyJORgDH7lgLxWyCyB2DjFNs
-         K5Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCX8z7FmQgAVMVskghP+kOBCL5gcjOr1VqWc0wnix6k00njxuQPQs/b/7QoHIoiwqz2ucoMRzfPzo0ZwnZFln4xD6Wv2btT4881dsw==
-X-Gm-Message-State: AOJu0Yw+XmHWddmtYnCP8FVFkRQxFg/0+kkJfhTYk08Y/7NLdh5czSbj
-	Pcv3izq4faZCxQNidnykv8l92/UmcrFpbEH28YdNaDPwgzRLbhplwax2q378rs/dcjeJ2tf7TxX
-	fbq5tBT+22dRKvPCcI/Be0bfLY5AoQmYDpenTCw==
-X-Google-Smtp-Source: AGHT+IHxDcGbTZJ+j/v1oZ/GQHP2RF96XIwK01e+mgVay6TTL5rBsuo7fofO8lBQV2LFWa+1TGNl44QNh0Hovok1bb8=
-X-Received: by 2002:a2e:96ce:0:b0:2e7:5bdd:7d4c with SMTP id
- 38308e7fff4ca-2ea95162ae9mr53835021fa.30.1717402632671; Mon, 03 Jun 2024
- 01:17:12 -0700 (PDT)
+	s=arc-20240116; t=1717402897; c=relaxed/simple;
+	bh=OfJ1v8LmA6mNpHYBeRjLRPtYp398TYQP1NikawbZ4jY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kuNKzo1raFdgzVgrtYwsSpBfuz5mDBLyC3MZy5AfRHgpeKEi0dM9xE0W8i/R3yodIQNvJGm45O9Vi7gkhnvSJkvvnUr3MDlKjwaE0xJSuxg71xYdJK+oiq5VEkzr52EMx2sDG9gl27aE4crG9NdyntWrO92CpZ+ZWXV+9sSDMoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kJcZnF1n; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 34227C0011;
+	Mon,  3 Jun 2024 08:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717402888;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Gu2XHe19XSpb+VgVm3wUODziOEYkalPD1w4V/84MF8c=;
+	b=kJcZnF1n3JOnk/MuEuZ3dn0jMOkEUPkoA0y6a3fiqJKuiYG7mKAiV+UysAK0+OFxrnaxam
+	l2zvuoKGM1M6zNAYuzOvd0JeSHuYftBF42IkMbC0RVwM/xiDO7u/7XT3SCB6YCRq2vY2jg
+	o2QqP2QJ8+TAVEUEGnM1P6o3m0OFldV30Zr4jY5qwgLDu2842RzR8bdPlRP2PP7pCUbrqU
+	8lNFn/BN5ZsJKa058PVdubPh7GdONG8ZtmUTqn7oUNPtz+fHAOlojCfXD8BIqhJmECtBoY
+	VKamKtM1e6FWe0b96A7McX9Z9IyHPhFpCpFzHCKJqpwjNDiAt0UwkkycajMwuw==
+From: Thomas Richard <thomas.richard@bootlin.com>
+To: linus.walleij@linaro.org
+Cc: m.nirmaladevi@ltts.com,
+	bhargav.r@ltts.com,
+	lee@kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	u-kumar1@ti.com,
+	gregory.clement@bootlin.com,
+	thomas.petazzoni@bootlin.com,
+	Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH] pinctrl: tps6594: add missing support for LP8764 PMIC
+Date: Mon,  3 Jun 2024 10:21:10 +0200
+Message-Id: <20240603082110.2104977-1-thomas.richard@bootlin.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240602152412.29136-1-laurent.pinchart@ideasonboard.com> <20240602152412.29136-4-laurent.pinchart@ideasonboard.com>
-In-Reply-To: <20240602152412.29136-4-laurent.pinchart@ideasonboard.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 3 Jun 2024 10:17:01 +0200
-Message-ID: <CAMRc=MeG_BN_A2p_F1UtTSafn0=kK9wCcaDYrYg6XN2DHR47vg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Haibo Chen <haibo.chen@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Sun, Jun 2, 2024 at 5:24=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> From: Haibo Chen <haibo.chen@nxp.com>
->
-> The ADP5585 is a 10/11 input/output port expander with a built in keypad
-> matrix decoder, programmable logic, reset generator, and PWM generator.
-> This driver supports the GPIO function using the platform device
-> registered by the core MFD driver.
->
-> The driver is derived from an initial implementation from NXP, available
-> in commit 451f61b46b76 ("MLK-25917-2 gpio: adp5585-gpio: add
-> adp5585-gpio support") in their BSP kernel tree. It has been extensively
-> rewritten.
->
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
+Add missing support for LP8764 PMIC in the probe().
 
-If it goes through the MFD tree:
+Fixes: 208829715917 (pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO)
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Issue detected with v6.10-rc1 (and reproduced with 6.10-rc2) using a TI
+J7200 EVM board.
+
+tps6594-pinctrl tps6594-pinctrl.8.auto: error -EINVAL: Couldn't register gpio_regmap driver
+tps6594-pinctrl tps6594-pinctrl.8.auto: probe with driver tps6594-pinctrl failed with error -22
+
+ drivers/pinctrl/pinctrl-tps6594.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-tps6594.c
+index 085047320853..5e7c7cf93445 100644
+--- a/drivers/pinctrl/pinctrl-tps6594.c
++++ b/drivers/pinctrl/pinctrl-tps6594.c
+@@ -486,6 +486,7 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
+ 		break;
+ 	case TPS6593:
+ 	case TPS6594:
++	case LP8764:
+ 		pctrl_desc->pins = tps6594_pins;
+ 		pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
+ 
+-- 
+2.39.2
+
 
