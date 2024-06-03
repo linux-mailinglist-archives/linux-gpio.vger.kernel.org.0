@@ -1,141 +1,124 @@
-Return-Path: <linux-gpio+bounces-7046-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7047-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE6298D7D61
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 10:32:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C99E68D7D66
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 10:34:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B6DB1C2187D
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 08:32:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7ED821F23068
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 08:34:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E38705BACF;
-	Mon,  3 Jun 2024 08:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67D865FBB7;
+	Mon,  3 Jun 2024 08:34:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="k6ZltS/1"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GRmfC4BF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6895477A
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 08:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D204759B71
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 08:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717403526; cv=none; b=cfFLm70gdI/l3wkFNyyPHo0x3wTLy5zxKEhd7ki5fXhBaac+VZGkx1tzkmTpKW0ARk8y0gl18p0oF5XIuMmukZzpNBRe7NQnv7glKFTXD0yKGnKcPdMzNNKRuMdXwKB4wSFof4xiB2+s4YKVb0KgoDb3RPVricq0T1l7qBo4GFQ=
+	t=1717403644; cv=none; b=IQ1vSykKGvso4yjfDMDmzXzJ5NA92nmRHVmY0MV9kLW9NlZkLbU66Q/2FyJCru2ogGkn+3aWBySVLH9YY27Jzd+iCKqMfRpHvZrsko8J1EnSKOeUMDc/Ql/9cwYXkRSrNoVEdrNzIon5nD2ZbS/i3hFlKwhZIvmUOqAKSPBqgTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717403526; c=relaxed/simple;
-	bh=YRW7PjUYem427Q9e1TQrMgKat4e5UnvaCX8B8ou59PM=;
+	s=arc-20240116; t=1717403644; c=relaxed/simple;
+	bh=Ikj/DBN/g9Zt5L5G7xLVPzrxbxEC+dxcwFUKg868Muk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S239ALhOi2soSEtIqBt2ixMJeZI4rkXZeSiBCaQKf4L+XTHqGdUbV4JrTSzNnhtyoo9b6rgcJYI2iQ4SiMOl7cAoRPkCcAYLS98WP4zQa1rrpm4zOVFY8Chl10tNu2annpSIUOBkOXNLT7raCU2/mEcWfu/wW2KfWxmINGp0YfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=k6ZltS/1; arc=none smtp.client-ip=209.85.208.169
+	 To:Cc:Content-Type; b=KxRTMD2Zj6CjW9qDGHi5sA7+BR9ic9ohmRUq261R2v9+CO3EI9UFPxJXrxZae1Tgs8PEXnsezzGqgkVUeDIWAAz4IWTDst1Co3hR+l31hY5Z9htkb1YtSd+hhNKlMzubadZRq8m7+P64ZpjB4+Wr7dD5EPkbScJVE5bX8SBW7r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GRmfC4BF; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e6f2534e41so33005171fa.0
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 01:32:04 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso8723271fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 01:34:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717403523; x=1718008323; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717403641; x=1718008441; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3SR+OQhYkTg9lzBQDK1gFJ8R3TWRUSp36xtonngLD3E=;
-        b=k6ZltS/1TUQYlHTdWHBAOsvrJ6kWb3rWAGST7FpFhrsS2b1/4I0yxn1TyFbrMcTPnZ
-         9hfDiWWUmDuN9sNKrAVxuKXNhuVWh0K6N0eJzn3BPm6GDAarKkVzgNBObpVaZxJwTAjn
-         Z/ln1i+WlL4WCpPrBJ/5d2xsYA3FTHWEZgv4GDDViQ0ViswCAbrAojB+q8ABZq2wAYoD
-         vfRtQt27iBtnTB3EFElLgreiecE9vgHOv0bFhXRk0Yhlbwp8epT0JQl8xLwXvgym5sJj
-         8NFQT078BQL4pFh9jACikdOHZEcGPy4m/BqpBmqIW3skJZEGYLzEQLYm2/hNf1/A7lMf
-         OgKg==
+        bh=Ikj/DBN/g9Zt5L5G7xLVPzrxbxEC+dxcwFUKg868Muk=;
+        b=GRmfC4BFA9yPv9NPmjaK/C9/ocYPvfmpmbB45hSEzr5AGRs7MKe6K3Pjo3ZBJ1687K
+         ekxBHa6FlJbTzHEyKZyqbSlq2eKpXlQbUlIkHShatQ7O9KUJHWVhbcnfd1irbrAQmbAs
+         aFVdLCWajN533bhkvgyt2AaDjpCzLXF0zX2iEf3mlDb/PHKO3sOd/BkBGV8tmWu4IWQ7
+         l9amNU1RqLiycPPsNgoPsMVM9JRdppH1VyJbeRsb4HkzXYzo1OhHv4QayN/4/w4MlrD1
+         D6Uy76cocWqlS3NaYSRydnNVNRnFW+x6LUSYhGU7SkFghcOizgN1dfBwjvU3MmsQbt/F
+         01dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717403523; x=1718008323;
+        d=1e100.net; s=20230601; t=1717403641; x=1718008441;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3SR+OQhYkTg9lzBQDK1gFJ8R3TWRUSp36xtonngLD3E=;
-        b=lMi1jsKnItLZ+KGV3cYL8wT5ujtW0kN9nOXI4enTWGhT0iMP+YWPHu7mBB3WvVnxS8
-         qj5h8zy+8ClK/8D/RILy4OAOWjxMOJaiWJMvE1VKnRigh14NyW+6/MTrQ8ayeJpSf0DA
-         2bFJwaM8BIPUwZvedf/xG0BaWYFBcVd5/AV/JBZMpUVdf9OUtZF4ccj2S+PCS4+4gC0W
-         lo1TqF2MjUl4m5uiTxo0L70MECOrTKWMAPd69yuBGa8lyS+30ZuZh+Rz3GLU2v3SB+9u
-         beK84InQ/rXOSLZPa30FIX9HkyKoCZkw6z4ap7ZvPZ4qsZif3AFhWdVFoT33TjxTp37B
-         mcLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVH+uQ46noHYILYzZqMl5jYMROYlH18s2wD4ANyxJgSUE20F/OVVR4Xovi1sN9BpX4XrAvJENU33gtYrgMMgJqBgasNCKMIZwLFZA==
-X-Gm-Message-State: AOJu0Yxt74F6x5tHzG6f4qNKxLZoHOmhNPVh6kcfK3XSCIo5KBdCv0Ji
-	B8xH8PVja+xo9pBVMJD/RFAEfcywuTvwo4aXSedw7S17NlPVnBHATxWfJVUead6vZQKS0/DulGu
-	hBPTICipPpNauyZltRCifHGO7YM/Ei+m0SXNKBw==
-X-Google-Smtp-Source: AGHT+IHi9yjpUlPhgtMP/rJ1TwiT9Pgl1w5h9NUwXWE9BRNbLXghRbcFU1ELKIElO3GnO3g+03dEs9aHNStPGm5fR2Q=
-X-Received: by 2002:a2e:870d:0:b0:2e9:8a16:fe31 with SMTP id
- 38308e7fff4ca-2ea950aee36mr62217721fa.2.1717403523221; Mon, 03 Jun 2024
- 01:32:03 -0700 (PDT)
+        bh=Ikj/DBN/g9Zt5L5G7xLVPzrxbxEC+dxcwFUKg868Muk=;
+        b=QwSavbzxHFH3vnH+C8itvt5yK8PXqRimrsYsxu7+E4LpQ6u35bZCoz8/5sik8vodWh
+         OZE/x3uINK9DdiN1mdMEut48fT041ZkZ8XAJgPoI+drvcpoo1ZJy7bPRicYPNDwOCLLS
+         lisWSNztjnJaXI9KkaJTL37kUwi3QfpvlDVRR3SFeMTQTf794hm4A3r0HiaRH7fdoD13
+         Upz0GFsUzeXm8mrmTGBfOaCJG0VQhkvButG0NvvW7bZrz5LbnEKDOCZu4faOOUsIOE/U
+         nIBI6yyPkmqFwhnzXIWqAIuZ6X5ENh4Q3o/FZvSDUsN/IHgpRt5/Stcolzx53PuFXP7s
+         1e4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXRQdkaTdIoh/jHwsObUInhushvO2Mf8ZHkRteTzBDqV/ssPfceMxmiWTjhHNM+ZwBV2TAtrSZ7kuzrVygZQb026KQbTdlK3lKZmw==
+X-Gm-Message-State: AOJu0YwNQABIujU4vyRg/pKpAKoimdZYKcztevNOgZAvadNKs2qBYBd9
+	Az6/gl9fPAgr1w1GwoDUR+sJWNjb5FkloWmTk1TWWR5VV1Auw6vowqt/YJHzBZHCAeZkxjoE9RN
+	qGA7xhk3nLeH/Yg4EtmS4vjMQVnUMEPUYtfGSoA==
+X-Google-Smtp-Source: AGHT+IGnNHHMISpzPygIalsotaJP07IzKe4++9Y4RTlc22DVE2oCaNXkvhBDC8IiyrnfA9GfomhAV8qL4SXbYv7PEQM=
+X-Received: by 2002:a2e:9141:0:b0:2e5:1dae:1789 with SMTP id
+ 38308e7fff4ca-2ea9512f6d0mr59194391fa.22.1717403641151; Mon, 03 Jun 2024
+ 01:34:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=MeuHpu4_QbgW-6Kc-TGzhcBim7Eb-TZhPax6G2SZHR5iw@mail.gmail.com>
- <20240602074925.2489486-1-foxhoundsk.tw@gmail.com>
-In-Reply-To: <20240602074925.2489486-1-foxhoundsk.tw@gmail.com>
+References: <20240102-j7200-pcie-s2r-v6-0-4656ef6e6d66@bootlin.com> <42affba4-4600-4c44-ad88-926597cc2225@bootlin.com>
+In-Reply-To: <42affba4-4600-4c44-ad88-926597cc2225@bootlin.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 3 Jun 2024 10:31:52 +0200
-Message-ID: <CAMRc=Me+J89_WcrRFyfyapDN2jyeiGad3uoTRN_N3vnP2puv2Q@mail.gmail.com>
-Subject: Re: [PATCH] docs: gpio: prefer pread(2) for interrupt reading
-To: Huichun Feng <foxhoundsk.tw@gmail.com>
-Cc: corbet@lwn.net, linus.walleij@linaro.org, linux-doc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	warthog618@gmail.com
+Date: Mon, 3 Jun 2024 10:33:50 +0200
+Message-ID: <CAMRc=MftX7Sk5OknNhGrZuT1f+w496+jD3pX4LN014L_ojUtqg@mail.gmail.com>
+Subject: Re: [PATCH v6 00/12] Add suspend to ram support for PCIe on J7200
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, Vignesh R <vigneshr@ti.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Siddharth Vadapalli <s-vadapalli@ti.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com, 
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Francesco Dolcini <francesco.dolcini@toradex.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 2, 2024 at 9:49=E2=80=AFAM Huichun Feng <foxhoundsk.tw@gmail.co=
-m> wrote:
+On Fri, May 31, 2024 at 6:55=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 >
-> In legacy sysfs GPIO, when using poll(2) on the sysfs GPIO value for
-> state change awaiting, a subsequent read(2) is required for consuming
-> the event, which the doc recommends the use of lseek(2) or
-> close-and-reopen to reset the file offset afterwards.
+> On 5/15/24 12:01, Thomas Richard wrote:
+> > This adds suspend to ram support for the PCIe (RC mode) on J7200 platfo=
+rm.
+> >
 >
-> The recommendations however, require at least 2 syscalls to consume
-> the event. Gladly, use of pread(2) require only 1 syscall for the
-> consumption. Let's advertise this usage by prioritizing its placement.
+> Hello,
 >
-> Signed-off-by: Huichun Feng <foxhoundsk.tw@gmail.com>
-> ---
->  Documentation/userspace-api/gpio/sysfs.rst | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> Gentle ping.
+> No merge conflict with 6.10-rc1.
+> I know the patch for the gpio-pca953x driver causes a regression for one
+> other platform.
+> But most of the patches could be applied.
 >
-> diff --git a/Documentation/userspace-api/gpio/sysfs.rst b/Documentation/u=
-serspace-api/gpio/sysfs.rst
-> index 116921048..bd64896de 100644
-> --- a/Documentation/userspace-api/gpio/sysfs.rst
-> +++ b/Documentation/userspace-api/gpio/sysfs.rst
-> @@ -97,9 +97,10 @@ and have the following read/write attributes:
->                 poll(2) will return whenever the interrupt was triggered.=
- If
->                 you use poll(2), set the events POLLPRI and POLLERR. If y=
-ou
->                 use select(2), set the file descriptor in exceptfds. Afte=
-r
-> -               poll(2) returns, either lseek(2) to the beginning of the =
-sysfs
-> -               file and read the new value or close the file and re-open=
- it
-> -               to read the value.
-> +               poll(2) returns, use pread(2) to read the value at offset
-> +               zero. Alternatively, either lseek(2) to the beginning of =
-the
-> +               sysfs file and read the new value or close the file and
-> +               re-open it to read the value.
+> Best Regards,
 >
->         "edge" ...
->                 reads as either "none", "rising", "falling", or
-> --
-> 2.34.1
+> Thomas
 >
 
-Please don't send new versions of a patch as responses in an email
-thread. Otherwise tools such as b4 cannot tell if it's a new version
-or part of a larger series. Please always start a new thread with get
-send-email or - better yet - start using b4 and let it manage the
-series for you. Please resend this correctly.
+If the patches targeting different subsystems don't depend on each
+other then you'd have more chance of getting them picked up by
+splitting the series up and sending individual bits and pieces to
+appropriate maintainers separately.
 
 Bart
 
