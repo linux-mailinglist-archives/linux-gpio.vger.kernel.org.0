@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-7085-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7084-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BF028D8884
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 20:20:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E08CB8D8882
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 20:20:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D1071C21C2B
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 18:20:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A1921C21C12
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 18:20:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C55F21386AB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D3E91384B3;
 	Mon,  3 Jun 2024 18:20:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Sr+KVKPt"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="OU1e1pZU"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C20813440A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B458219E8
 	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 18:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717438824; cv=none; b=ejPQxtw0qYUFul8tT9zQa6YVm3evjK9e3TMtLDvsrqZEM4m5Ux2e+rVZDcL5KKxBAIpP/4QejDBHGnlZAvZNrFRctqTsC9CGdEE/QqiRh42Njnui/9vPq7cO9vYQ5/ftKlakbltGSXbpBD7uHnZu3ESv7rRc/GG2/GF9CG8o2pA=
+	t=1717438824; cv=none; b=QungwICis6lrKEdJfZlHtFqBd6vS7eBFXzrn8JUBhix25g0MmyNgEs0oEsZpchz1wmVEB0ASoSGoJ6UcuOCjIQCGfmnyuxhmnS1u3p/9IAuqa846hUz+hkspDZBTdVJnYi0HBBtkc50fWPIbWCiw6mawRJgatV+RPqLEPUr6LoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717438824; c=relaxed/simple;
-	bh=6bUdGXU2A6onMeytnb3GO73q7Ar8QShjy7dwB5dI9sQ=;
+	bh=P4y1PcJNsD1asujoTElXfHs92xT6aaL4JMRc56G2aFw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FKulT6Cq+MQeU637+xCFoxofKCKRpIAiuRo+cbBUYzLYDgx2+MFRHCMkOndckUQPqzRJw8xWeWIoXp9mFHITRy1MODF435Ppo7u3lWCyE+5o7h1YE0EQ8JNtfZAQhHkUl1fNGluZZSg7H8fF8EWwY/xbZJARGxY3P7gc4QnGFig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Sr+KVKPt; arc=none smtp.client-ip=212.227.15.18
+	 MIME-Version; b=AkkonG5puksIxYenr4DxDNCHb+bZN7zSpA+zd4wQ/m9U1X7Wpr6Fdph6Mk1aIUbksurQsELLgFJnbeGQjbYK+JRmLUAd7vdiBdDQ90ku/wxp/aQqfbS5aWrqo4kE6gruhPILb18xg8QS34VLodRVm788cQqp3NNiP5Ri/HSpZfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=OU1e1pZU; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1717438809; x=1718043609; i=wahrenst@gmx.net;
-	bh=6bUdGXU2A6onMeytnb3GO73q7Ar8QShjy7dwB5dI9sQ=;
+	s=s31663417; t=1717438810; x=1718043610; i=wahrenst@gmx.net;
+	bh=hhK6Is3cDAiDl4ndjZfZ42wPw5HnZ06D3SDVvba8LHQ=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=Sr+KVKPtdIg5/TA9Xht3YbJDTYP+ri6PMEdkK9N+4ICk8sJEy9AzA/0Uld9ce9/t
-	 xWY8H6OcfWzKBxRHodJ2zZlEGtxKP9wqkNzywOibrvs5vWsF9Mi/gBzkvUnQNU6hy
-	 sJM/Xe+We+18dIXP3aUwF8iNWN3ZfXh29Z6pHoNExukUEAFK0pb0oK+QVIY6Rxj6q
-	 VcWnqXT5Iy5IIoXOqCHPgzOpVIL+zkU5rlHiA+jOYMz7kOBYBJN5pFRyQxG45NZPl
-	 DCqlIbPSI0zhaymEPr/IsSim2tdQP2Gwfdr+vbcArHPP5t74GNhtA27CxvRvdN1EW
-	 ZGh+54JJ0pPKHCdTjg==
+	b=OU1e1pZUVbXIIPXGwQsdMLDKc4z/1rEGlSVGt2cgJsdOOfyV/TDMhuMmKc7jGjy5
+	 Xwi26iSV4tnJQZilbUy9BY7pOrJ5q4NEU2BpvGozIkubK6DjDlAioETesycX61BOO
+	 SmsxZnQIQtNwX6r7wYqx/XW+PMvqT64Ux2T9nBK6Lc8c6FbJXc78+tMic9/Il4zqV
+	 evfitpRZNCGUWBYqzpmAeQa+p4r7YI1MwSWrjhxoBuoCbNA3nL6n3QwIBQM+6pBNy
+	 4GUKGcUiYQqnQMv4K/TvR0DacGLaI2RepFnGHVnYUDHEdsP8pENFYSv6t2d0jO8Qo
+	 lxfPqgTNWApON76S5A==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MjjCL-1stsu21qrD-00kBK8; Mon, 03
- Jun 2024 20:20:09 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MCsPy-1sN1zd3r5k-00CEDP; Mon, 03
+ Jun 2024 20:20:10 +0200
 From: Stefan Wahren <wahrenst@gmx.net>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Florian Fainelli <florian.fainelli@broadcom.com>
@@ -61,9 +61,9 @@ Cc: bcm-kernel-feedback-list@broadcom.com,
 	Kent Gibson <warthog618@gmail.com>,
 	Andy Shevchenko <andy.shevchenko@gmail.com>,
 	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH 1/2] pinctrl: bcm2835: Fix permissions of persist_gpio_outputs
-Date: Mon,  3 Jun 2024 20:19:37 +0200
-Message-Id: <20240603181938.76047-2-wahrenst@gmx.net>
+Subject: [PATCH 2/2] pinctrl: bcm2835: Use string_choices API instead of ternary operator
+Date: Mon,  3 Jun 2024 20:19:38 +0200
+Message-Id: <20240603181938.76047-3-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240603181938.76047-1-wahrenst@gmx.net>
 References: <20240603181938.76047-1-wahrenst@gmx.net>
@@ -74,56 +74,67 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:kSJyPk7F/4DwdX9PvDTr/PmZ6Qa/w7uaaHLq9hcbz6gkB4wmbr/
- vDOSDCGdatKPxpmW1taxJJK7UWU14ImSGtqK7LcoIozqxqXRaRIia03hPoGL8GVz797M0qy
- BBjQo7azAe5yafxzME7RGUwBBYMFEFqZVyLIAFrlyZlIzF7HrhFX/HLk0e7Zt2HiZek5ks+
- kc7yl/vPxe043lHTaRhqg==
+X-Provags-ID: V03:K1:HDl2Ih3YeCwkBD/w1c8HQ/NTCcphaAxOv086EBo71k6RNdpDxns
+ b//+NXHLxh85/NxzXu2i7+vooAf25IOVRIitJXx3hqwuoNYURPZad76lrlZlX1irt7xv2ux
+ f0v1MUKrSZEU9v1oufpV3OmqoY9Gf+h8l1lQSPD2Yol4MFOEJCqLVPaBaDd/LhP2x8FWovQ
+ Axc0tRTbkN8RWyeb3NpdQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:6riRGvs0ng8=;02FUQSx1yhxhC5w7bcubTvWBIPe
- Fp9lRPLspi64sKc6G/25kmiwDuKMoRhbOSuD2bCYhwl8gGo11ZPmA33NKLGOdpkgauiPzmF24
- gw5oqOyC/c/zajapqWelFlGIWRoUJGcJGxapTcHOeqNFB2D4sYbU1hnmXpNFbIj3O72S/tatm
- Hg2UVIoNzuj9veXkP5oMgUuRq18DWYITs4JXVINsda/sTUnAu/Gvd0Jw3eUF496eQPEka3Abo
- BpPbAkefDUkQzbfNsHGXCpLqHyGVovCSQI7rY2NL2mO2wjFM1tvUudeC3f6msTXhVPsQO+HYU
- FrN4J3trw4GWcbM8TLldDhKk63XiyZJmL8fpp5CBgUthDwMpS/79suShhccR98fIWkIRCspR6
- FwG2LkH7LMIL/QhCq0ysxE6ziLe20ynUJums42ji/MpsTjmzz/cgWH4BHBfK7eVFaK1bDr0Pv
- ffBT8In739q8AEWr3I3OKYIKSWa0vcTdKLdNNNtX4FORAKRptK8ec5AUWrUvsEIyUGvn1Z87p
- K590xOB4zpcGyFjUarqORHUqcRRSJrEflbQIeKrX609feXnQ+kT84DbWvpy83cqEdZxilAtOH
- IZ4YpullkQFjyQ+IdIQOUoJu971DZwP3ENDawqfbxOLk6e5ZQg+9PcZJ2ZAXIabIlg2tLSdO1
- LVmWABFiSZ+/kUAI+FO1hKfNTpcmBbZjhJ0L+3tFotQ5/dMt11yvP6Hd4vSV+YasyE6K8iti2
- r9S2dv3kIj09Xx/ybpCSRCAZf4zQt5G/+YGi9gV99ksBOWvKfPqHIiGnDJb+O55C5mLBWNqR7
- muH9bNvYCDww2NpchH8KVe9r4ZnEg2+ZunKE+JukQTSXc=
+UI-OutboundReport: notjunk:1;M01:P0:SfMnocnIi48=;Xe6eCxEVPHu6wbf8r/kjTuWcNqK
+ yZLs/iHFnEn/isxLFZ7HySmAhWY620ZWYF+bBwAE2WiMt4hw306Py11aMiq5awIeovx9Vm51S
+ hSjWZM+g+LdV89bBIJJe1xMUGm5TB29OwsmYo2wY5mAAV8kP7p2MD5F068bsPIaZz0nt/xnev
+ 87QgfxyL5aF3TcfUWekwb1j6DvnoaMY1h8tN9hZsrgeIo43RBo4p+hENCzE3ieSY1sDtrxj0+
+ LWT3ZqO88ZHSJqMtCmBvKb1qILN5kI6729KRzbdENBtmYgdM3QJewe4c2yk3cnvqj9A5JkxUT
+ XtBfDOz/gxt9Gj1LA6QqEtCvt53VoQ3dHm/MOoX3DXah+GC4NGNeoCp/3Iu0mo9P0GgzW/Soy
+ IyV2yZUaCY1KhIwicRiasZ6QTHL+k9Vqwr8fKcjN08zv2AzjARG4N8PqclFI75Wur9frYUJKC
+ iZyYxSeuB4r/NxqwT/1k7WMxfCs838ifrDMmIRmWDRvUmCUg404k5Y62JFbqmggvmBXPbY9PS
+ ob+0WweDYzOvWkEtDA7gd8xldc73a5LpeGL8AHxLcDPId4nNkQd8xMq9dR74qM/9a0vxDFiZh
+ UWICf1DTQMCgm+iwVd8VnqknQ2hgLnLBpX8KqqodoOWur16o77DISNZpwCz2VGMSqXhHAX78q
+ ZSwxlvuY7oLU9ww4vAtRYgev16qoNzW0l6ylg/nhIhtxHb89xfZwwGa9IuhpDHzBT+05CcJY3
+ BZ6KGtFSPWlvGYOjHjPjJqi66Dos9AYeju8wX46VqhPcHRjdTAHC3d+wnOeJEWYyFKpmCKSZJ
+ AM6NVxgnC3o9P+5ijQUA0ZuZeCY2UNVPtM4kRtarTZzwk=
 
-The commit 8ff05989b44e ("pinctrl: bcm2835: Make pin freeing behavior
-configurable") unintentionally made the module parameter
-persist_gpio_outputs changeable at runtime. So drop the write permission
-in order to make the freeing behavior predictable for user applications.
+Use modern string_choices API instead of manually determining the
+output using ternary operator.
 
-Fixes: 8ff05989b44e ("pinctrl: bcm2835: Make pin freeing behavior configur=
-able")
-Reported-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Closes: https://lore.kernel.org/linux-gpio/Zjk-C0nLmlynqLAE@surfacebook.lo=
-caldomain/
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 =2D--
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/p=
 inctrl-bcm2835.c
-index 7178a38475cc..27fd54795791 100644
+index 27fd54795791..184641e221d4 100644
 =2D-- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
 +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -245,7 +245,7 @@ static const char * const irq_type_names[] =3D {
- };
+@@ -34,6 +34,7 @@
+ #include <linux/seq_file.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/string_choices.h>
+ #include <linux/types.h>
+ #include <dt-bindings/pinctrl/bcm2835.h>
 
- static bool persist_gpio_outputs;
--module_param(persist_gpio_outputs, bool, 0644);
-+module_param(persist_gpio_outputs, bool, 0444);
- MODULE_PARM_DESC(persist_gpio_outputs, "Enable GPIO_OUT persistence when =
-pin is freed");
+@@ -752,7 +753,7 @@ static void bcm2835_pctl_pin_dbg_show(struct pinctrl_d=
+ev *pctldev,
+ 	int irq =3D irq_find_mapping(chip->irq.domain, offset);
 
- static inline u32 bcm2835_gpio_rd(struct bcm2835_pinctrl *pc, unsigned re=
-g)
+ 	seq_printf(s, "function %s in %s; irq %d (%s)",
+-		fname, value ? "hi" : "lo",
++		fname, str_hi_lo(value),
+ 		irq, irq_type_names[pc->irq_type[offset]]);
+ }
+
+@@ -1428,7 +1429,7 @@ static int bcm2835_pinctrl_probe(struct platform_dev=
+ice *pdev)
+ 	}
+
+ 	dev_info(dev, "GPIO_OUT persistence: %s\n",
+-		 persist_gpio_outputs ? "yes" : "no");
++		 str_yes_no(persist_gpio_outputs));
+
+ 	return 0;
+
 =2D-
 2.34.1
 
