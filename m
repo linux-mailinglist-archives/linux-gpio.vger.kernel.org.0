@@ -1,90 +1,113 @@
-Return-Path: <linux-gpio+bounces-7040-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7041-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3770B8D7A2F
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 04:51:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39C608D7D22
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 10:17:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 67F781C20D84
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 02:51:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD49D1F21503
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 08:17:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 743AB8C1E;
-	Mon,  3 Jun 2024 02:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB8258203;
+	Mon,  3 Jun 2024 08:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="hNL/uz0l"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oo5FhNmx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA1297E8;
-	Mon,  3 Jun 2024 02:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78C04AEF5
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 08:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717383114; cv=none; b=ELqNT3ZJ+Xo+s70t+Qd28Bxnt5FYBtF9IYZ0UiekQ2hIyjpAsbDxvtitdm4mMtdB5R7V01yXLECTaKDR3X4RnsKYICK55ko8bGgrA3weWKB5EPScemda73fUkJ8wHKvmVVSK/+0zMpnzXz9SKnwfDdGxdyHUD/EqnWzlEc9P46Y=
+	t=1717402637; cv=none; b=DqJ9FFYsczXnJqm488hi6n+OVBD7bZYUCpB21EDc5jbEdgDrnF6zT0RKuk9si3gAjlr+XATkYrPH1xwhQJ0NeOvTcPVIFAU58x8sOMirhtKoz+xM6hgq0wqLEB+D55+s15PIDfp9wws4V3JpZSfQA6x7+c9x4ccQ3q/q/B6mRfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717383114; c=relaxed/simple;
-	bh=NiytJ2AMYvegxaHKEXtaqWHe+4LqIoAAvBf48/InMtc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pp40kpbi4Fb2LIg2Caa8ZqQF11/q6MBG02uMGMP65vKWUca2IVUSXOrawinB7cB334i8H5LUGgJGBi7EqaPv4SsNgvvs9hzgJ4wK1Hp+dblvW2TCwB6M7zmN8LuGmSLWIKVD75TGwg5+AtcTh3XkNG8hs0KSMBHRI9tfiIbNkLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=hNL/uz0l; arc=none smtp.client-ip=123.58.177.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=DYwujD+kR84TKzaju2fXFZQwbc6+rq3fIhZZ+IH4RxQ=;
-	b=hNL/uz0lTLcW0fj3f3834Wn/lAEWEiXics/TiypTkmOf0aAZcSgaAUknSiatXt
-	mtgRdnXaDTnjUJ9919cQoMnd9ie9pwEJ+za5BFsedm10HneqEkZ3El1TsTws1TID
-	oHSwc9VoAKeg8PFQOF1cYgWcktZEbJScgrGLqLbUoVmxU=
-Received: from dragon (unknown [114.216.76.201])
-	by smtp1 (Coremail) with SMTP id ClUQrACHZu9rL11mpM4xBw--.38460S3;
-	Mon, 03 Jun 2024 10:50:20 +0800 (CST)
-Date: Mon, 3 Jun 2024 10:50:19 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Esben Haabendal <esben@geanix.com>
-Cc: Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] ARM: imx: Allow user to disable pinctrl
-Message-ID: <Zl0va6yv2VY4ky0l@dragon>
-References: <20240506-imx-pinctrl-optional-v2-0-bdff75085156@geanix.com>
- <20240506-imx-pinctrl-optional-v2-1-bdff75085156@geanix.com>
+	s=arc-20240116; t=1717402637; c=relaxed/simple;
+	bh=ydnxOWl2dBIzZnuKszypKD1rZv/wX9sApZtO89araoc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GWuUAcBii+6Y/f3r2vQcEpb0w+KIY7PX5l+Ge+SPZ1nVaDRFz3Hi3DY7+IsPVUWtLyu6+jJAKRrVIcmxwXiKLmO9dVxqnXGkdgViI8vJchjXg7+XWjtwv9AKRIgS+em15k511V4d9AhE5FugO83hIhPJf42AzfWJJ8nk5t2m32I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oo5FhNmx; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2eaac465915so8347281fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 01:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717402633; x=1718007433; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ydnxOWl2dBIzZnuKszypKD1rZv/wX9sApZtO89araoc=;
+        b=oo5FhNmxxzh2dMF5RV7SrdfAw6w7RcUnRHpzcUPNfWvP4zbTgcYRRv3QGcQK7Gw/al
+         HiiLXBseusuD82VihyZWi/VE93QrZBoojyPofZ7qmP9Mwi5iB8rh1soFf+wJMgL5x4sS
+         xi49gGMsttsbN0vj73s1hUHgBcK8eCpMLNXnFGqKsy4mTZzszuOiO/AzF9NmKyU1yTel
+         jUQcaFLzt1yzJn3wqxjlrx3j+SZF9Pego5V0MBBd6+McZMn3JR/wiIzKMO8QAHsoOrXg
+         XkPe/cX7L7IrdukY5uLsqAQ2ldKCLwM0F6ppc1NfqUMr35OOwbFS0sbd6p62kdfL64dW
+         PJTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717402633; x=1718007433;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ydnxOWl2dBIzZnuKszypKD1rZv/wX9sApZtO89araoc=;
+        b=DLAH8/5zZHyLX2b+rD3bLMjdoJNpMmy+o6FHbHjYqqFJfbb0iL1oV+tg8l/5rNDjRf
+         scgxmCIElgoZ/S8yFjPjwjeR4uQ8+FPEDS8oAPivDQt67Qbt2x/E+mpOxWB+5zO82flA
+         HyoU6jWRPTlYynDQ8IAchu2AC+Mi04L5yRjRpdiz7vOgHwEbCzGw+9NOn5gVOqWllw+Z
+         pVG2maOEOt0WnhEzHsS1LIj35Vg8P1a6KBquxWtXGdR2weA02H69cq3HLJJM5o728DJE
+         ncpGOWlMt7Z7Nn7Iflv9TboYG13Gq1o/XFADez2K0vTkLyJORgDH7lgLxWyCyB2DjFNs
+         K5Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCX8z7FmQgAVMVskghP+kOBCL5gcjOr1VqWc0wnix6k00njxuQPQs/b/7QoHIoiwqz2ucoMRzfPzo0ZwnZFln4xD6Wv2btT4881dsw==
+X-Gm-Message-State: AOJu0Yw+XmHWddmtYnCP8FVFkRQxFg/0+kkJfhTYk08Y/7NLdh5czSbj
+	Pcv3izq4faZCxQNidnykv8l92/UmcrFpbEH28YdNaDPwgzRLbhplwax2q378rs/dcjeJ2tf7TxX
+	fbq5tBT+22dRKvPCcI/Be0bfLY5AoQmYDpenTCw==
+X-Google-Smtp-Source: AGHT+IHxDcGbTZJ+j/v1oZ/GQHP2RF96XIwK01e+mgVay6TTL5rBsuo7fofO8lBQV2LFWa+1TGNl44QNh0Hovok1bb8=
+X-Received: by 2002:a2e:96ce:0:b0:2e7:5bdd:7d4c with SMTP id
+ 38308e7fff4ca-2ea95162ae9mr53835021fa.30.1717402632671; Mon, 03 Jun 2024
+ 01:17:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240506-imx-pinctrl-optional-v2-1-bdff75085156@geanix.com>
-X-CM-TRANSID:ClUQrACHZu9rL11mpM4xBw--.38460S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrCFWxur43GF45Wrykur1fCrg_yoWxWFcE9F
-	Wkta1kAryDCw42qr1kKF43Xryvka17WF9Y9ryqqry5Ka95Zwn7AFn5Jw45Cwn8tw4rW3sr
-	Z3ZYqrn8tryavjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0QdbUUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiBQzyZVsVCm9ZPwAAsT
+References: <20240602152412.29136-1-laurent.pinchart@ideasonboard.com> <20240602152412.29136-4-laurent.pinchart@ideasonboard.com>
+In-Reply-To: <20240602152412.29136-4-laurent.pinchart@ideasonboard.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 3 Jun 2024 10:17:01 +0200
+Message-ID: <CAMRc=MeG_BN_A2p_F1UtTSafn0=kK9wCcaDYrYg6XN2DHR47vg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Haibo Chen <haibo.chen@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 06, 2024 at 12:23:53PM +0200, Esben Haabendal wrote:
-> Making pinctrl drivers and subsequently the pinctrl framework
-> user-controllable, allows building a kernel without this.
-> While in many (most) cases, this could make the system unbootable, it
-> does allow building smaller kernels for those situations where picntrl
-> is not needed.
-> 
-> One such situation is when building a kernel for NXP LS1021A systems,
-> which does not have run-time controllable pinctrl, so pinctrl framework
-> and drivers are 100% dead-weight.
-> 
-> 
-> Signed-off-by: Esben Haabendal <esben@geanix.com>
+On Sun, Jun 2, 2024 at 5:24=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> From: Haibo Chen <haibo.chen@nxp.com>
+>
+> The ADP5585 is a 10/11 input/output port expander with a built in keypad
+> matrix decoder, programmable logic, reset generator, and PWM generator.
+> This driver supports the GPIO function using the platform device
+> registered by the core MFD driver.
+>
+> The driver is derived from an initial implementation from NXP, available
+> in commit 451f61b46b76 ("MLK-25917-2 gpio: adp5585-gpio: add
+> adp5585-gpio support") in their BSP kernel tree. It has been extensively
+> rewritten.
+>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
 
-Acked-by: Shawn Guo <shawnguo@kernel.org>
+If it goes through the MFD tree:
 
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
