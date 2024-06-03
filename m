@@ -1,115 +1,151 @@
-Return-Path: <linux-gpio+bounces-7051-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7052-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BEBB8D7DF7
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 10:59:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A1278D7E00
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 11:02:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 479962823A8
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 08:59:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 120481F210E8
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 09:02:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC8EB763E6;
-	Mon,  3 Jun 2024 08:58:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83DE258AA5;
+	Mon,  3 Jun 2024 09:02:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtIdQN7d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A4X+8xUo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB893BBF3
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 08:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84460537E7
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 09:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717405131; cv=none; b=gt7eXpgHdpXHPi7PaoiSdEEehjp8A+QkpIINd/q55FzlxRnAQDgN6bg/RNCMqCjBn5HGeAVQPq2wRzQkKY7X15brJ1v5Z6fKLkZ+H+wPwFk/92nHUAaXigcIjuueBIKN2gCo6QHbkR+e0e4/D4mltn3YBCS2ZaEAucb1CziNCU8=
+	t=1717405344; cv=none; b=Caq3Dck0tfhLj9/MsPJdExTIZQfYVs5T0NMc6JmFB+lfBzA7GhH5SkhrzMw+iBKrchDk+vX+16F7P5xbinPpWymI7YN+HagVtEd6EzxP3aTMmbT0NfAANzOQMWuDAkdv6FEu3gM8bV+WffkyQdV7+TtaQs4KYC2H24F8revcirE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717405131; c=relaxed/simple;
-	bh=71O7+w8h7V0ZA+AFV80dvLIt4YDwh7Ouf0pSxCLVGRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dhQBnxwQHyoTDGvH0X1SY8FxSnVNdRRsojzN2NBVsCL7c5WAyH2ZRoKOGi65Nol9mUCv11w0bQo6rZP8EFqH47ede/9+2SQYhPaV6I2z0LuxJCREghw/HPGJYK7CgZv+KOXAacL7XoHzL/lPlTRAIMmQMDv8gr+x5aWkIxDyRc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PtIdQN7d; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3c9d70d93dbso2721134b6e.3
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 01:58:49 -0700 (PDT)
+	s=arc-20240116; t=1717405344; c=relaxed/simple;
+	bh=AcydM7QsoGt9wsjKnGfhQXGfHg0USww1QuCKbjHudHs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uiyIFre0X4rD3ljzEg8RZrLSEgXad/D9gkDRvBo/1++VWkA4hBOKy4gCyN5WoX0NHdr+brOMJA39j2mEQxcsLskRYsJVl6HVD8KtU+S29OP1+6C7Ir7POgYZXlH5fz+ozHP2tS7pE0+dJyADi8xFOxm1szH5XhvvIQMlNwmeuuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A4X+8xUo; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ea9386cde0so38010971fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 02:02:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717405129; x=1718009929; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=71O7+w8h7V0ZA+AFV80dvLIt4YDwh7Ouf0pSxCLVGRc=;
-        b=PtIdQN7dXD749Co/R+1oX8gUNI2s9kID+YHJwSUwNiEtLu63vUqe5Z+WYg8iKCEpO1
-         y2bQxGaDsOF+E0wn7gJ1PnSFTLW6EugeVLXr6MOufI4zpTszjLi0o4Y3u3SYY40e1yQ2
-         2I6aFr4plDKu9KEOPIHnG5oviT+gPkvr9tpG3yjicA80hh87pI4f3TjMkDZEUcXje74B
-         oDwp9guOQclR0Wxgud9ZxY1Pk751OjmvyRmzJort0lJWoXn0hbOxFHnWZMpu2xs2NPkq
-         BA+yJzPjwuDr7AFfATv0D/bOd6kN3KphVag//q0G+H9BLFKfHyaexezx7krQd1UrxyT3
-         klsw==
+        d=linaro.org; s=google; t=1717405341; x=1718010141; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AcydM7QsoGt9wsjKnGfhQXGfHg0USww1QuCKbjHudHs=;
+        b=A4X+8xUokr0JXk57wO3Lo3dxNBUuwPKtS3mKsYy3xPmJzSbPgSt4ofBkH2teDZV0VI
+         G6cm6B2ztHoLC57IHKeQ9/cLGMTmiTHyXs0xEirJt8A4cRa7pwmZ3hgkACs2DTdIT0yt
+         YPdKVO090l00ubcmpWFNWtg6VMiW6EbM9Qiyu7PxTATxbsYoOpoHKQWBX0sBYgwKBaY4
+         8mZ9r4Fjut3qTBPNaO/178EkoxLm9koObr6OfXbg5zqx9imLh0D1KBSvSPX2c8icauYs
+         HUnwjC5Q0U5g0fvojJ9MmtQZWseFwEI/dCikyq7uPtw1IGwZj/wAP4QNW0tJt0eRg0nc
+         AOZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717405129; x=1718009929;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=71O7+w8h7V0ZA+AFV80dvLIt4YDwh7Ouf0pSxCLVGRc=;
-        b=Qe/kgYYOotH/fBxGjn7xSwYekWLWbdmCgIrvbNuSaUXzL27UPcys9ywAiYPoc1LRxN
-         HAhhZJIKYwEAotKBzIajdptNg6tdKKs6SHlRegqK5vkfeccgulPPe1Xyaz10x0/nC7QB
-         CayMWkzwLpt9MHbdXoYBN7qw4GTnK6sEpNQ29ha9KiRVfXg9hUtYWdxVVd7iXOm1cFG8
-         BEM/OGFs5cg9giB2Hd/Cdp/+OQRtZK/EetKp8+gJIulxMz5CazXsGhBYH/f+NkIHb3r+
-         ZtKzexXPeftpI6XlCb7VVAR5+eSRnwZw3BeDxvUzhe7r8NbwmkGGafSJKwPf8S+olYtn
-         D0uA==
-X-Gm-Message-State: AOJu0Yyme7raMZ7xz3Fch9/f1HmZRem3EZm5/s9ny8W36bDYp2et8ZB6
-	xEYRl39tkY+hbDliHtDqWkayRMaiQRrHi/hmin3s5XAWsTzboB3sdJMsEg==
-X-Google-Smtp-Source: AGHT+IGEBY8WIuO2rfotEc3SXzB85X82Yj9PqRFeW4OM2nag0K3n94hS9XuRypYV6gIS6l0pf0b43Q==
-X-Received: by 2002:a05:6870:f202:b0:24f:db4a:bc02 with SMTP id 586e51a60fabf-2508c1b9444mr8708586fac.52.1717405129056;
-        Mon, 03 Jun 2024 01:58:49 -0700 (PDT)
-Received: from rigel (14-203-42-154.tpgi.com.au. [14.203.42.154])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-702423cedccsm5051285b3a.24.2024.06.03.01.58.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 01:58:48 -0700 (PDT)
-Date: Mon, 3 Jun 2024 16:58:44 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod][PATCH 2/8] tools: tests: don't declare and assign
- separately
-Message-ID: <20240603085844.GA78808@rigel>
-References: <20240531134512.443850-1-warthog618@gmail.com>
- <20240531134512.443850-3-warthog618@gmail.com>
- <CAMRc=MfHwp8Lj_5rFiqo61E__Y9+o4n3Bu5e4KSF0P6n0DR-0Q@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1717405341; x=1718010141;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AcydM7QsoGt9wsjKnGfhQXGfHg0USww1QuCKbjHudHs=;
+        b=OgcNATPUulO9sLJOkZ3lWo2yPaL27FfTT0iTxLpg2n3zOPZEyBWat5G5/bfyYD48q4
+         TYzkEuWY00WaYiTLufJEguvR8n2be5Ym+FIfwzgJkbBzmmkQwOlKdQrAE938z0UXR1Fa
+         qcCyYLEXFYDiW4OvZz4r6if+yDzVQY+x7BW/bvlQQBB3O2yKwcukrxUaMx4J3xy4550U
+         6kuZbM5B4Nm8YP1rnca39sPm+CcFskTERtTdhwAJzSD8Yd86I1r9myo/nzloDvr7Ttf6
+         dX02KcPiXKT/oE4Q3/KdtaVpHojCqLFqIgWpKui4umxg2TmCAm3ulcO6K2IsgLi7Z8bf
+         3+Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAvZ87I9/5wp48yZ7xuAxhxmvEQKGSXTXh9QwE9rQWg6SIsFsrOanY8Hw38TbprwL0Quv4K3mc60IRWsSZ9BspnSBMvTYGCrTciA==
+X-Gm-Message-State: AOJu0YyuJffOV9gEkaWxcVWpbBP4SR72Ad47NHRpAA/7pYly+Uuv4d9m
+	bHNVeX4K/wgnafHZcLtyS4pO33fJoqOwN43b0Le8HU953VMERL2oTw1ZS4LRiVWq7dgQwldKXaN
+	ey6tCzPRxhv2IReSRP+JiRqE64kc4AIz9HK80XA==
+X-Google-Smtp-Source: AGHT+IEVI3F0oXXlsedQRXHnOmAZNvZf/Ix2jmEABaS7X8f8bO9zDtlbkikRksb5ReaaWxEFK9ztgDuFWCd8m7IkxTE=
+X-Received: by 2002:a2e:9f14:0:b0:2ea:83b5:40cf with SMTP id
+ 38308e7fff4ca-2ea950c8010mr49046331fa.3.1717405340591; Mon, 03 Jun 2024
+ 02:02:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfHwp8Lj_5rFiqo61E__Y9+o4n3Bu5e4KSF0P6n0DR-0Q@mail.gmail.com>
+References: <20240503162217.1999467-1-sean.anderson@linux.dev>
+ <CACRpkdbOAoSDNFhXfz3djUZh1_MQ_T75CC+-LmojRXvyCbUusA@mail.gmail.com>
+ <06a4e5fd-3d26-4923-bcbf-0bdd66d756c4@linux.dev> <CACRpkdbSsgxtKqF6ORXubufTaegjysHU7zH-tJfDfKNd=Kdoeg@mail.gmail.com>
+ <51d984f5-896e-469f-914d-2c902be91748@linux.dev> <CACRpkdZ19+zUCEBCJJ+MBnnaF+caZKFTDxYiWZ0BRGx+PxN3bw@mail.gmail.com>
+ <e4972a07-18d6-4a8b-bb5a-4b832aa2d20e@linux.dev>
+In-Reply-To: <e4972a07-18d6-4a8b-bb5a-4b832aa2d20e@linux.dev>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 3 Jun 2024 11:02:08 +0200
+Message-ID: <CACRpkdbL63ZWcopgBbANKzr476rO6_cwZL6JLqkvTDXbzzpkpw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pinctrl: zynqmp: Support muxing individual pins
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org, 
+	Krishna Potthuri <sai.krishna.potthuri@amd.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 03, 2024 at 10:52:39AM +0200, Bartosz Golaszewski wrote:
-> On Fri, May 31, 2024 at 3:45 PM Kent Gibson <warthog618@gmail.com> wrote:
+On Thu, May 30, 2024 at 7:08=E2=80=AFPM Sean Anderson <sean.anderson@linux.=
+dev> wrote:
+> On 5/29/24 04:38, Linus Walleij wrote:
+> > On Tue, May 28, 2024 at 4:28=E2=80=AFPM Sean Anderson <sean.anderson@li=
+nux.dev> wrote:
 > >
-> > Fix shellcheck SC2155[1] - declare and assign separately to avoid
-> > masking return values.
+> >> Well, perhaps you should have reviewed the original driver more
+> >> closely.
 > >
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > Do you want to push me down and increase my work related
+> > stress? Because that is the effect of such statements.
 > >
-> > [1] https://www.shellcheck.net/wiki/SC2155
-> > ---
+> > It looks like criticism of me as a person, so explain yourself.
+> >
+> > Writing this kind of things looks to me like some kind of abusive way
+> > to express your desire and that is what burns maintainers out, so
+> > if that is what you are doing, stop doing that, adjust your behaviour
+> > and focus on technical issues.
 >
-> Shouldn't the commit message say "*do* declare and assign separately"?
+> The technical issue is that the driver does not match the hardware. We
+> must maintain the existing set of groups for backwards-compatibility.
+> But this should not prevent improvement.
 >
+> Saying that we cannot have both group styles means that the driver is
+> permanently stuck with whatever was picked when it was submitted. Hence,
+> if you want to have only one style you had better review new drivers
+> very carefully.
 
-That is wrong, my bad.
+Actually I did say you can rewrite it to the other style, it's just work.
 
-I think I was going to change it to "don't declare and assign together"
-and got distracted mid-edit.
-So either that or simply "declare and assign separately".
-A leading "do" would be redundant.
+If the previous approach was wrong, just redo it as it should be,
+and rewrite the DT bindings and the existing device trees. If
+backward-compatibility is so important, add a new driver with a new
+unique Kconfig CONFIG_PINCTRL_ZYNQMP_V2 and new bindings
+on the side and select one from a new compatible such as
+"xlnx,zynqmp-pinctrl-v2", problem solved:
+new driver new bindings, can be used on a per-board basis,
+can be compiled into the same kernel image.
 
-You ok to fix that, or would you like a re-spin?
+It may be embarrassing to have to tell the device tree maintainers
+that the bindings got wrong three years ago and now we need to roll
+a v2, but worse things have happened.
 
-Cheers,
-Kent.
+I don't like the approach
+"this was done so we cannot redo it", we can always redo things,
+it is even expected as proven by Fred Brooks timeless statement
+in "The Mythical Man-Month": any team *will* always design
+a throw-away system whether they intend it or not, there will be
+a second version.
+
+This approach will be more clean, I think? Also it will be
+possible to phase over more boards and perhaps eventually
+drop the old driver and the old bindings.
+
+I'd like to hear from Xilinx/AMD how they want to solve this
+going forward.
+
+Yours,
+Linus Walleij
 
