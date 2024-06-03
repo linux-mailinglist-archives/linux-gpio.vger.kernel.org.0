@@ -1,106 +1,266 @@
-Return-Path: <linux-gpio+bounces-7089-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7090-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47C528FA510
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 23:58:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 927D28FA54C
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 00:00:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F50B1C20E23
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 21:58:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55094281985
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 22:00:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE34613C827;
-	Mon,  3 Jun 2024 21:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 859D213C9CD;
+	Mon,  3 Jun 2024 22:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aiil5IpI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JWil5/qF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54D612E1FF
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 21:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09EE42ABE;
+	Mon,  3 Jun 2024 22:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717451923; cv=none; b=CFrwF07jc7q3NZk2EFZBHeEr8Ueh/8wDDaWIBnsOu+VtPTxchV0dOZHrpXlugp2Ki8V0muTXt7E00J0+hFYnHIE1ksLdcOTFSyrgZGVQ/yX5J+uz4sWPZS2v121eW6dtFjRteY3CSu/40xNcCDU3d7bN94dhBKEMrqCtuBgfM+Q=
+	t=1717452036; cv=none; b=Qmiy+bHclC020GV5PTKL0M7TjSTJz60lSY7LvoVgW3fN0//zhnp8yMqdOJWTXRBxToecG2CYX5vsfAepkfFd6LWcwUlKry86vdUaViPLdNa6jYu/gApGEuxHFk0HHF2lTKxbzePXIxMJhQDsyzDJYwuQBCnvQb+i/a/sw8Ny+pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717451923; c=relaxed/simple;
-	bh=wN4/WFcqfAe5c9eAQkw7+lyUpzRnR6hK12SvuT5DsQQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fXTsfwVR8k30wQEBu2778WaF9j95Lm5G8wJNIEPX1GnBLYMmZgjCawv1+Fc5HVN1Xm6a2oP2cRFDDUsnhrqoXCyoTPmvrxALVhopwV0KEGCMAaL3Tic4W6KHZKVxhJJNoR08rp1DTodo7FMFohFNNPHXz5VVlXOd1OnZyf2jp7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aiil5IpI; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2e73441edf7so53409781fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 14:58:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717451919; x=1718056719; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JNRpufp1GdPfpkj//wG2tsrExygVRim0BWrgMX4dCYU=;
-        b=aiil5IpIDOrtEu2OOJNkm4+9GNOBy0YzCj8b8rl5unuaBhbq2UsvwwvZIq7826Y4XF
-         q49KR4GUOwKAiMeowTvXUvEoODTI/MrEpLIklUn0H+yCGNb7B64W76IL1tK082/ibrQT
-         SmArIBa3NViPKI2X2vZJ0dWVVaDwEySFTOfTcY0urPK34DAMDOxbwbdZZ+SZdmHlS+Dn
-         Wt6HSdlFxqFJoCduzkVrhbmvwpJHVB3Pv3JPuM7wk2XD6btLOwf1gDEmub6PwCpEJcnn
-         +Hv+vdqAzwRHpOmYtqW2U1CXKE/Ok/NxyO/qu9QtQTvpA4eJANrs8WE5gn7AQwjxsNB9
-         0xeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717451919; x=1718056719;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JNRpufp1GdPfpkj//wG2tsrExygVRim0BWrgMX4dCYU=;
-        b=YL02NHND4vKQOlP7D3g+OHSiHNyk/Cucc7z4ZuiupCrF1LpQlfPiPppnVFfMXFASsz
-         sxhUwbWb8l2bNKnd3Ms0gEUBl8tzBpyTZinhpq5nxDinZgQURU6STRpliJV/yzNbm01W
-         FA/PrAY9EDwQdQ3Yo7JW3un8O5YKuB0KirmXrTbervRKi3WZIrYJb+671Oo9n/ZEOv0t
-         0pfrQewUdw29x+DRVMf4XTCpnUiIKivjRKt4FQnEs2a3214oMgIwlImdd3Fr610dN2T8
-         iPpuGOAkdL1PLJKYHNcfc5I2n+Ki6n6Rysmwum85D6vqFyTOqU2APLjbrBOgqRn5md/8
-         NxFA==
-X-Gm-Message-State: AOJu0YxqO3tW4BJ4a3tRRoInSRVGIt/Oo8fkFoslOJQj1Tox0tsKTqsy
-	158M8RKeendWoR02ccjf0OA+3nlMdS2KtWyVQx3yBiQssqXnWRKBpsZ88BtmUs9UdJfVxLvWnU/
-	lglzl6pQJfZD1YW/XOMnUyjiZRLzazgFQjRMk8Upox7aT8az01e8=
-X-Google-Smtp-Source: AGHT+IEwezwI+tCkg8w1+8oR19Y3NC5bC9ftWzVF4mS0Qz28LE1PFLM3HZhbKd3pRtQ7vvGLHJ2n10uLYgbQ+xgQPDA=
-X-Received: by 2002:a05:651c:1502:b0:2ea:b44c:c47c with SMTP id
- 38308e7fff4ca-2eab44cd30fmr20093811fa.46.1717451918871; Mon, 03 Jun 2024
- 14:58:38 -0700 (PDT)
+	s=arc-20240116; t=1717452036; c=relaxed/simple;
+	bh=ZMS/4Gp6hXyd9fPwx/y5x+q7VhsaGgJvMHFGFXB2aCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=a2bSp2lBcMD5U+Pc9BUsgl1djkPrpriT7AcT+RfCTl6uKrunUFTkiy3iYymKORe2OBXfIeheKRElca4GmfAx3hXgs9HduZ0GkTYfTfCSuaf5lljQfQmGNnGtnjv3S9EqL8KTCox1f5yj99UmN06yFhCU5Wd+I3a0fergGuQWmyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JWil5/qF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54BDEC2BD10;
+	Mon,  3 Jun 2024 22:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717452035;
+	bh=ZMS/4Gp6hXyd9fPwx/y5x+q7VhsaGgJvMHFGFXB2aCI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=JWil5/qFuymosoPDATfZqx6FJDnMlkeS59q6fSB+oGtZnzLWlZsOYK17IUuX1oHS1
+	 +ZGbOlO5XGTxStebKzleLLdP/ku6ByksYgWD6+z1Mv7KGjnwR3GMzWiuZo1J++YQBe
+	 YnonzpNdWoLK+5fnowMqG8M5MeJ10EV/gsKGvDpIY4wVIBC1HO+F/kfe8gBd+/QboZ
+	 BrnDQ+EAlvw7Yi4J9eZ6M1GbDt3y6+iqhqMKYxUzNtAOVfJ3SN/iHY1B0HdRGk77/Z
+	 OryQ3BNvB0McYwdX86nz7FOZKP/BNHRMgHpGVTqXr+aaBtJCcPNM0ORUNnE3rDopfE
+	 4lfytT5yAufhQ==
+Date: Mon, 3 Jun 2024 17:00:32 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Corey Minyard <minyard@acm.org>,
+	Allen Pais <apais@linux.microsoft.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Perry Yuan <perry.yuan@amd.com>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Nuno Sa <nuno.sa@analog.com>, Guenter Roeck <linux@roeck-us.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>, Lee Jones <lee@kernel.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Elad Nachman <enachman@marvell.com>,
+	Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Robert Richter <rrichter@amd.com>, Vinod Koul <vkoul@kernel.org>,
+	Chunfeng Yun <chunfeng.yun@mediatek.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Nikita Kravets <teackot@gmail.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Stanley Chang <stanley_chang@realtek.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Abdel Alkuor <abdelalkuor@geotab.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Eric Biggers <ebiggers@google.com>,
+	Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>, Abel Wu <wuyun.abel@bytedance.com>,
+	John Johansen <john.johansen@canonical.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Mark Brown <broonie@kernel.org>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-ide@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net, linux-clk@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-pm@vger.kernel.org, qat-linux@intel.com,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev,
+	linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org,
+	linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-usb@vger.kernel.org,
+	linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	David Howells <dhowells@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Peter De Schrijver <pdeschrijver@nvidia.com>,
+	Prashant Gaikwad <pgaikwad@nvidia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Huang Rui <ray.huang@amd.com>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Pavel Machek <pavel@ucw.cz>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Hu Ziji <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Potnuri Bharat Teja <bharat@chelsio.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	JC Kuo <jckuo@nvidia.com>, Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Helge Deller <deller@gmx.de>, Brian Foster <bfoster@redhat.com>,
+	Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Clemens Ladisch <clemens@ladisch.de>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with
+ sysfs_match_string()
+Message-ID: <20240603220032.GA701908@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1717403902.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1717403902.git.geert+renesas@glider.be>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 3 Jun 2024 23:58:27 +0200
-Message-ID: <CACRpkdahageYBWPw3N3vWOMMFnggkD-9wT5NJQPBxg9oABTXgg@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: renesas: Fixes for v6.10
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
 
-On Mon, Jun 3, 2024 at 10:39=E2=80=AFAM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Sun, Jun 02, 2024 at 06:57:12PM +0300, Andy Shevchenko wrote:
+> Make two APIs look similar. Hence convert match_string() to be
+> a 2-argument macro. In order to avoid unneeded churn, convert
+> all users as well. There is no functional change intended.
 
-> The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfab=
-d0:
->
->   Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
- tags/renesas-pinctrl-fixes-for-v6.10-tag1
->
-> for you to fetch changes up to a39741d38c048a48ae0d65226d9548005a088f5f:
->
->   pinctrl: renesas: rzg2l: Use spin_{lock,unlock}_irq{save,restore} (2024=
--05-27 17:13:31 +0200)
+Looks nice, thanks for doing this.
 
-Pulled in for fixes, thanks!
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index ac6293c24976..2d317c7e1cea 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -210,7 +210,7 @@ void pcie_ecrc_get_policy(char *str)
+>  {
+>  	int i;
+>  
+> -	i = match_string(ecrc_policy_str, ARRAY_SIZE(ecrc_policy_str), str);
+> +	i = match_string(ecrc_policy_str, str);
+>  	if (i < 0)
+>  		return;
+>  
 
-Yours,
-Linus Walleij
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci/
+
+> +++ b/mm/vmpressure.c
+> @@ -388,7 +388,7 @@ int vmpressure_register_event(struct mem_cgroup *memcg,
+>  
+>  	/* Find required level */
+>  	token = strsep(&spec, ",");
+> -	ret = match_string(vmpressure_str_levels, VMPRESSURE_NUM_LEVELS, token);
+> +	ret = match_string(vmpressure_str_levels, token);
+
+VMPRESSURE_NUM_LEVELS looks like it's no longer used?
+
+>  	if (ret < 0)
+>  		goto out;
+>  	level = ret;
+> @@ -396,7 +396,7 @@ int vmpressure_register_event(struct mem_cgroup *memcg,
+>  	/* Find optional mode */
+>  	token = strsep(&spec, ",");
+>  	if (token) {
+> -		ret = match_string(vmpressure_str_modes, VMPRESSURE_NUM_MODES, token);
+> +		ret = match_string(vmpressure_str_modes, token);
+
+Ditto.
+
+>  		if (ret < 0)
+>  			goto out;
+>  		mode = ret;
 
