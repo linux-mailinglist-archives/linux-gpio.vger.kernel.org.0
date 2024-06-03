@@ -1,86 +1,110 @@
-Return-Path: <linux-gpio+bounces-7083-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7086-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C11C8D86C8
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 17:59:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E31C58D8885
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 20:20:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D8491F2187D
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 15:59:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FE751C21902
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 18:20:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F58D133402;
-	Mon,  3 Jun 2024 15:59:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB3611386D7;
+	Mon,  3 Jun 2024 18:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qi1lSgGb"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="FkwZbjeN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9472132804;
-	Mon,  3 Jun 2024 15:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724291384BD
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 18:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717430353; cv=none; b=ToBVuepACggjEgzZgH9MN6y8WV9pdGWtYpS1iDtjfg2rjKUOEbjk/EbuhTapHPb80xTcvee/a7k3tVbktZPuEE15zKkWyidXbNdcrpg5kByv2P+bTqGH2lGztuMWXAYhVBZKC3cn1PzlFojhVxX/6L3C7OaX7I08izzd2zY4E0Y=
+	t=1717438826; cv=none; b=eWuskjpb4zrvkPrpGgKTdVA6/n9WFjMvR1DODRNUP7GZ6nrauYTAKAcnf+zgNLUF/2fvBb0zP9GqKoAADHUsN0CJZ9S015TUI8zqcK4G0x/om466SPPb5HxPKowlytwzrORO4FgOHvgEAAF/Mbcb2+jdpnm6iLDMytcfFphCaFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717430353; c=relaxed/simple;
-	bh=+IPbDiNKupe/tKYGz7GWLMWlSz+9XHPXjaXZt0CTwMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L2MWu7lWti7I0d+QOEahE48DXDKcn+n14E2oNvTwl1LfXJf29GNjN8ajHZD3ODBWCEDaQis7M5zPOZx7MMv3oXvnCxgILNvFBC1V0KZGsQ0tRTR/i+5fXJQiyGA7Uiv0XVj09kbg/a9dAGKa4xqyWaJU1ezUzjqp3BEo0V5k/7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qi1lSgGb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61EDEC2BD10;
-	Mon,  3 Jun 2024 15:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717430353;
-	bh=+IPbDiNKupe/tKYGz7GWLMWlSz+9XHPXjaXZt0CTwMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qi1lSgGbv/3NtwsuMgIES6YLUXnJdWSaB3aOkCHTK+FFI+WyRtC7qR1JzdMrfcFMy
-	 i71OnJidcfw3jkgtqWBtYs3DXzw2+9ftCy3s24WDTtWJqyuolfhKNzAc3G11InrKEu
-	 we1NiObPEJq2oWoHZ2H+KeFDTZVrWbRgpZ5kZva2wZR1lc1c7naRbIQeyw6vOLqp3V
-	 onkNWutbwNYiEAEjV12rrm18lr0Olecp163wdAAMpH8EgAOoxhHXrho3Fr7bFCslyO
-	 N/eEBQqkSuIfcjw+fd2V2hAX6EVTlHoe1+u8sPClPNucWrcphWYPYtDuilyAYVOhqZ
-	 SeU+VjBE05pcA==
-Date: Mon, 3 Jun 2024 10:59:11 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/8] dt-bindings: fuse: Document R-Car E-FUSE / OTP_MEM
-Message-ID: <171743034904.513055.5269054083345878989.robh@kernel.org>
-References: <cover.1716974502.git.geert+renesas@glider.be>
- <436506babe4ce468fda19380d9373470468e3752.1716974502.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1717438826; c=relaxed/simple;
+	bh=UCb1oxLOGJzH/ZitH8t6qvhy9EFhpnUBiqfrMm7NZR8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bOUC4/WpmLuvOrKkkUCT7HjcazKA4fywPp7eRO0YGuXp+pmbPFMybdKj9fZ/O/LYVIRm9xjJhgV0AHFdj/StDPMDGSzQdOx7lXsE9SC7/tFAJe9/MnfaPEM/F6g+2Ncs90oAa+zsldTfyco99Jf03TX/TCJa+/APnDFx32HrPR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=FkwZbjeN; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1717438809; x=1718043609; i=wahrenst@gmx.net;
+	bh=mLilu4oDs1cQpEMdL21n/1Egwu8dlRtQxoYeJeOd6Qc=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=FkwZbjeNo4o6ArBnEzlC5PzYVhUYnBinlAAT+PebhwNMRQ/FtA7bejTbiMXRZF7+
+	 UK4/CAwB5hmX8ZKVPHM+NfKJwXPf647ImVDQQFs0UgTxHFlx2e123VGbWjm0UgjWE
+	 sJVPP3swEu6GjpDvwBXxmiXKApQJx2+DEfR9lBQyu6AJGXxPgYg1+TfgihZsebAvb
+	 0OezGZRkz3CzasRLYMbFOC63kFDI0Rutje5odyDDWm0ibzY9CLrv6HEGfRtCYxGgN
+	 jV3ZP557UQCDVUc2R8lgT+C2JH8a3iZcZbcpZJ+8LTmAMI/waNZfhNAa8Shxxxf/q
+	 wVz+jWOrTqnChODX4g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M59C2-1sD6MO3sgO-002Ib5; Mon, 03
+ Jun 2024 20:20:09 +0200
+From: Stefan Wahren <wahrenst@gmx.net>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Kent Gibson <warthog618@gmail.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH 0/2] pinctrl: bcm2835: persist_gpio_outputs follow-up
+Date: Mon,  3 Jun 2024 20:19:36 +0200
+Message-Id: <20240603181938.76047-1-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <436506babe4ce468fda19380d9373470468e3752.1716974502.git.geert+renesas@glider.be>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DfNlYMDdoezmpLYhZlyEa8iHTA2jUbg5yuYhAjkP8oM8OSQ1BlF
+ 9GyE3OYDQstSVcx0gLBZ+/VFjYqQApkrrDHN9wXjaRTPabCmT9HDJavRIvCN+RqN/u0z89e
+ vVwH5vn5NFlQL6AEOcwC1+1uKsPTDpCZxePdgJ0S431Fhqm22fVqnORByGhJkTsOha5RkgR
+ 4F9TMjHvnXL4rfb5hODTw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:T+ICGM8kC5I=;Twd+JlyVBKevyo4RsdxGj52QTeO
+ bfvdJ/465ZSa28RmTmG5z3SmDco2iJXm9+GddiY4qxhwsSGlk5wu3qdqMJDgORhHbvlMILHHJ
+ 7B95HAr545FsZqroDfj85G5F0Lt1Bjza/l+R7/ozTVSwU+eSQh5d8clGGCZOzzNL6cSuJ0N+r
+ p3UaG4l4WRCapJg/++LNkK3cm6P+thusT1f8yWFYuc2hsv6IfLpdbAtRCOsFiavJc8Wfud7B7
+ tIf31uE7kjxmTS7U62BztuT+hgwa2n3+TeuBlbJgAazoaPV/LwpKTvx5xwEItD7OW/K8jleVY
+ gK0YVAMKV7mqp8a6zuM0XLRBue8GW3nypI2sIhbVlmJiTF+AZ4QI/GYxBi1bOIVjBBrCE93Wr
+ k+fWfsVSGuPmUPP/h5kv7ouZH8j9DLnvCmrYV/eMJ/Csud682dYJnHDzhl5s+SZA1hR77Pt58
+ yM0TlZ3T3qus/dUKHEvMkuNqCXQRtRUSgC00h4uM1V9rGBnm72qUtd5s3vEuNcmemhPNbxyOI
+ Anq7/wrs74yvukHVXDB7e1U8nMWvNO0nKs/EjyKNlCdTTJoYfmZEHOGkFpPSo0uvFlzpnkPoq
+ PE5NFTxbRA/Qr2Kv3gSXPAXa4uzmn2XtgG6oonoJvP91Iat7NBF7uJUbDjbImk3qE5pFQgTYQ
+ Z/acXecH8VxgrMhfzKCgffaOHBrb6yWjA+YT6L0VvMuL4xDu2KxgoSeL/26ItLWFgN7BkPLP0
+ iBnF/LvnKS6oTEv89NaReVKOA8M0bfRJE2ZlwLOsPqlkuQp+7QWoiY7I6CCXU7k0ywgjFQr1M
+ t6EFjOFxEIYvcJj9fOsPGvLiqR7e+R/1FgeXvVant4lRM=
 
+After the patch "pinctrl: bcm2835: Make pin freeing behavior configurable"
+has been applied for 6.10-rc1, Andy Shevchenko submitted two comments [1].
+So this small series address them.
 
-On Wed, 29 May 2024 11:29:31 +0200, Geert Uytterhoeven wrote:
-> Document support for E-FUSE non-volatile memory accessible through
-> OTP_MEM on R-Car V4H and V4M.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
-> v2:
->   - Add Reviewed-by.
-> ---
->  .../bindings/fuse/renesas,rcar-otp.yaml       | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fuse/renesas,rcar-otp.yaml
-> 
+[1] - https://lore.kernel.org/linux-gpio/Zjk-C0nLmlynqLAE@surfacebook.loca=
+ldomain/
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Stefan Wahren (2):
+  pinctrl: bcm2835: Fix permissions of persist_gpio_outputs
+  pinctrl: bcm2835: Use string_choices API instead of ternary operator
+
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+=2D-
+2.34.1
 
 
