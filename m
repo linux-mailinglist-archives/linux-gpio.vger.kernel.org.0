@@ -1,95 +1,87 @@
-Return-Path: <linux-gpio+bounces-7081-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7082-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C32B8D8674
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 17:50:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 73D048D86C1
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 17:58:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC8A81C20953
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 15:50:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 846561C21857
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 15:58:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A51131E2D;
-	Mon,  3 Jun 2024 15:50:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96D3D132811;
+	Mon,  3 Jun 2024 15:58:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QEERog17"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NnE7AxB4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DDB6F2F2;
-	Mon,  3 Jun 2024 15:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABCD1E525;
+	Mon,  3 Jun 2024 15:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717429821; cv=none; b=nBxbg26kHQyQquQRWDXuFOYF7/aWe+zKfiXmDZwPqzngfE/JGsjbsx14WRkKygu/qNJA6VzrCXFRnNmgwtl1tBHt8I2x2Z/uQ+/CM01cfDqI+lEuageRXWzKnC+ACx2bQAkGyeFuxUuBTJoToI0ga3uUokd9McjJfFU0gGAjTOY=
+	t=1717430330; cv=none; b=ZvS90qS9V+4aUhxNtYQEqPg+PE6rFgs7gu+liRi8lU7BI3NrxxNxJBEX+rLfyhz91rq92vEm0Uf5hNfnY6EfbWfZ0LcoKQIlEMCiXnJb1I2w8FGPPAZB3AdGaDaMsCx0k+pzWaXlXYWA5kSIog06E28/qVuuXw0rhNdlrdzMYsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717429821; c=relaxed/simple;
-	bh=Rx5a8gcjyJ7ZSiIv7XBAZ+Rj0nWbBdD3FbeUn6UvyrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sH3Ai1zPAvkvxeh7vKvnl6OC+Xty+cAD6rmwJ7jvlf3ZDq8PcZ/TBCZucDBv9u4P+uZFv+DZl6vQzpSW3QdJaTsSNLGYydQKxUJPe5HomqxSd+M6LNY9hIJUGZVtIk1v+hWsI2p/gh2SpR/HlCTJy+0xleqf7nLPcE/bmPZGxTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QEERog17; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7E50EE0007;
-	Mon,  3 Jun 2024 15:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1717429817;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GwTcq4IedeHLQXBXk1rloGqIPerrvErDu7RrUmu96H8=;
-	b=QEERog173eXk5OmgCX0zfGMBQMH3arOVasSjUWavLnk15brrZBeEFC8Oz8XDZQjNCkHsjR
-	sehVeAFHi50SOMGY1ea9upKz1box4M7r2hc5W/y6lx0PVzZiaBem4vgk8nLXlR3PjYKVvO
-	amy7jNuAtd8FPrH9koat0csVnxFiYiEEWXTMv/Sihxm/3y188V+Ntp+IkrBkWnbIcZkjGr
-	SUmsSY1MzbRPp5V1W09OKcHTsKdriPH2aOdFUw/Z0NB5dZgr+BTLncObHzBoZf6N7iATxp
-	BmN0CbyEQtYfnKT1LU4Mo1pS+rJF+sCWSNsRX5ZjNu3p605utwp2CfqYcqQJ5A==
-Date: Mon, 3 Jun 2024 17:50:14 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Dmitry Yashin <dmt.yashin@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Jianqun Xu <jay.xu@rock-chips.com>, Jonas Karlman
- <jonas@kwiboo.se>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] pinctrl: rockchip: add rk3308b SoC support
-Message-ID: <20240603175014.6a41d3d8@booty>
-In-Reply-To: <20240529143534.32402-3-dmt.yashin@gmail.com>
-References: <20240529143534.32402-1-dmt.yashin@gmail.com>
-	<20240529143534.32402-3-dmt.yashin@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717430330; c=relaxed/simple;
+	bh=jr5KtcQkjBceRa2Ci2HL75FOws1f+xvpDE3Fj2u3hG4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HhcBwcV4m+jmkocrJz3lzZZbzErxYHClhDABRSBu4PSb/eFrBbHsImK5MNAi/wsmSqVleq5E+0TIpAq6U0pm1kUYuFIg0019DcEgZ094JtDzUo0FQiVO80WnEfJN1EqxbZUaEQncAxBoisKu0+9fZCvy75sOLdovDUrxDKf9Ox4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NnE7AxB4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CF9BC2BD10;
+	Mon,  3 Jun 2024 15:58:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717430329;
+	bh=jr5KtcQkjBceRa2Ci2HL75FOws1f+xvpDE3Fj2u3hG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NnE7AxB4O2JNJKnAW8Njm+7GaoNEIHTH1wmKepsGp1wiIoK0gyEfBTizpq8gN9VaG
+	 aTFA79SEQDDGzD6oLeh9i+znquudhE4nVp438GlWcNGpOqUSa+EIHhSvYZL/6Hhx/4
+	 DdWFkShVC8JD7yvqQ5leTxr7JLjlwWDL5R2qp8IMzWWm1Hj6NS9o7HapY+u0rksG7W
+	 mvJkXm98AAvkzo5yXRgYOi0/riRuy5EWV6taBeFrEJG6TRQPtqMl/A51aZS9sVDF23
+	 mAvl9/1opM9sndUJnrbkJt3qnJDS1+j7krJJvd0DRxSx0QFr6YoZfZHpHpr6J3VtZY
+	 husY7cOS8z0bw==
+Date: Mon, 3 Jun 2024 10:58:47 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: fuse: Document R-Car E-FUSE / PFC
+Message-ID: <171743032508.512428.16482464723039405455.robh@kernel.org>
+References: <cover.1716974502.git.geert+renesas@glider.be>
+ <03e43e97941df238ef1a618852aecd7be68adbb0.1716974502.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03e43e97941df238ef1a618852aecd7be68adbb0.1716974502.git.geert+renesas@glider.be>
 
-Hello Dmitry,
 
-On Wed, 29 May 2024 19:35:34 +0500
-Dmitry Yashin <dmt.yashin@gmail.com> wrote:
-
-> Add pinctrl support for rk3308b. This pin controller much the same as
-> rk3308's, but with additional iomux routes and 3bit iomuxes selected
-> via gpio##_sel_src_ctrl registers. Set them up in the function
-> rk3308b_soc_sel_src_init to use new 3bit iomuxes over some 2bit old
-> ones and update iomux_recalced and iomux_routes for the new SoC's.
+On Wed, 29 May 2024 11:29:30 +0200, Geert Uytterhoeven wrote:
+> Document support for E-FUSE non-volatile memory accessible through PFC
+> on R-Car V3U and S4-8.
 > 
-> Fixes: 1f3e25a06883 ("pinctrl: rockchip: fix RK3308 pinmux bits")
-> Signed-off-by: Dmitry Yashin <dmt.yashin@gmail.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+> v2:
+>   - Add Reviewed-by.
+> ---
+>  .../bindings/fuse/renesas,rcar-efuse.yaml     | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fuse/renesas,rcar-efuse.yaml
+> 
 
-Thank you for adding runtime chip ID detection!
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
 
