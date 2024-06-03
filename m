@@ -1,85 +1,88 @@
-Return-Path: <linux-gpio+bounces-7043-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7044-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE78E8D7D39
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 10:23:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83B518D7D44
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 10:25:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 24824B22B03
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 08:23:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 410E5282E5E
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 08:25:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9661559B4A;
-	Mon,  3 Jun 2024 08:23:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1FE36D1A4;
+	Mon,  3 Jun 2024 08:24:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EssOUEOl"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="n0u0wsn5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1ECE5EE80
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 08:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F256EB5B
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 08:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717402980; cv=none; b=vDy1PV1ZSO2FKkD3TMamnPBeYCunl2+Bv1XU1I1ujvT/bxfL2+2hNIO0XG5NHl4cbl10jeFH6FkSBuBx6CVck6A+P4tH2PH3RjpsUCoBHMpl6DI+ZkOgIVm5SS4ZHSw52lDCxyFf+v9UmigxYlq1qMvn8vid+fC1acqANGSAw/g=
+	t=1717403078; cv=none; b=mLH3fIIA4Vs4pxv1FYBjTNygqpT82PjfvpAq/qThCwzD7ANDDJwOwXqHVU9fNs74c7mQPPslpmTb5r9Sg5QGbR2Cg3CaEoyFfG5ppa68OKDlKZHni7OHRb+XlWkHeOfsfFGY8WjLsg8RjaQ/fA4+qWeadxvTaGUPMhERDGQefW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717402980; c=relaxed/simple;
-	bh=5TmUo93oyC3+9iXo3/Sa/czVGNwc4D1J8jA2mGio+7o=;
+	s=arc-20240116; t=1717403078; c=relaxed/simple;
+	bh=w8Flzgxr6omuysxB/zVDD/Wv2MRLsDhFqe+NdyAOjgc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pdsttI6nAEOe9jDsee5Z0zRP5Xea5y151df2upr6axZm0Dp9bDrDuvinni/FDZoP1vyhhA7B7yBsCICtZrLo0EVi7XMM16jjGHVGgYLGoBR6cAuDTUU21QkoP1ereBkFTJi4MM973ysR5oAr2T4yX4SNMOklOjHkRNOGEpsg7CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EssOUEOl; arc=none smtp.client-ip=209.85.167.45
+	 MIME-Version:Content-Type; b=oGgLcOmQxzsVIRT4W83z2dnSQnn2ndhYDlDYi1WMe1tNEjcMkzjjFWBdCLs32jv/kPDuWvsfbi88XjSUcyB8GdliDMzdqBdt/wbFDnLxg+1mxx1othqH/pLQDwVFrD7UToIAQu+d3cdTtQZMpnn7JkhYdz1QCLhl5hxysLSimrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=n0u0wsn5; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52b950aa47bso1709440e87.1
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 01:22:58 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-42133f8432aso12847575e9.3
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 01:24:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717402977; x=1718007777; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717403075; x=1718007875; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=V23ToOPtriLmuBIE6vEf0wOOURxTZ8OOI45GzHXOxMc=;
-        b=EssOUEOlMm3o8wumrzCFmKS/Rx/D3aPYMOZDHuU2aSz3a90XeftE6tS23yLcTlMZGg
-         vH2eQsO4Vtuex71XMe10g503y1Qa4/pZFdKCgJYk5bt4lRxbrnUkpTt5iwAijwlbl85z
-         PZcTA7YcCdQwA0dElQsu1Ewc1CzyIfReRNE6Xyt1tT/MUVdFnk4B5lFCklDorjF3jfTj
-         /bllpKA5ApmZSV6rTOSOzMap2EFLbjYTm1DAJ12a12qU39lNyCaLWYa792716gHpezAi
-         1Kx4s3SxL2hBahuR/dJmVeVSkc+RKgJduSdjeET1H0YKwoyyvQ2SQYtD5x8GlqZp4xtw
-         8wfg==
+        bh=DYoD7NRleroa5h8G1WvcKj1uz39B0Rluk/+UjUyZroE=;
+        b=n0u0wsn5bsRDbK3i/YSikL1yA6QxzPexQRuCBRZe0LCF64BxLcz0PLy5Fjj/xiU41p
+         HIieliiI33pynf0t3nCLxG/1F1IkDhz4IE7EBLP73ZYKD1YwHEd+RA3OYmc9Qp1MmuMp
+         n74n/yVCZRR2KeLdJyp1fgxz8R/9LaBcpM28rDOSralgcZ6CfPreXLdKOHbSRPCdzSfc
+         V0pCOh+T+jC83cBIMk94+Oe8Rt3vtqbVmosevg5LxYuhomJ64iL7I0yOX1LiM4gO+OL4
+         Oksfu/DokF8qEl+bwvxYm2tGwW963b21AeQyN5XPG5TdUGGFjL2/L5rDxaCc/RfLLyri
+         /rZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717402977; x=1718007777;
+        d=1e100.net; s=20230601; t=1717403075; x=1718007875;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V23ToOPtriLmuBIE6vEf0wOOURxTZ8OOI45GzHXOxMc=;
-        b=Fdg92t514NVHUE2Vv1dqEOwovq9tpXVYE1MiA83oN7azTGjTJjakh7PONXMlO2Nzq5
-         0tF3NXOIZFAZ74/5/Gm9WGi0DbtwezntHKqPm9ec3uPVo8j9HBAIH3SRyHxIe6qeNo1A
-         7xjs3qo3h+qvvfDg4fB7eRdYgE7E7DDAH7k/VFXgLqaVNlx7SijAVMNogafdcqNTVLn3
-         SDDfblufJNt9kVRHNyi2xXXvDZAFfp0frYg77aLJKtAKE/AUu4385h/4JtfyasGeGtfY
-         S1LyqNm+zljG89FhA1U0eEzyVJO52zAIZGjFarjNGKVVucDSn/BVbzSfBCiAbRjb2Bhl
-         IZng==
-X-Forwarded-Encrypted: i=1; AJvYcCWsGarHlhR7Hij8miRD2j5N8B3wh4zHsM2zg76ZTUTzYwqlheKYDMVXkgOR1XrTAGc10e0vM/UtBTM9VELVPagt3FGrg3LGx0JAag==
-X-Gm-Message-State: AOJu0YxoPCkbiTtk08PNDEyyV5voX2vywJKNdYdtcUPkQIKdwp7ankMJ
-	QNC1nqVnwHBn8xL6cy63/hLdiavpNcZRYDsCovXED26j2XhbhMqPGHTgNsOYDk7DyXVIaGCsOQC
-	4
-X-Google-Smtp-Source: AGHT+IH6fyhRP0uUNvSHwtEX0xg97rrGsIJCHIOAvbM0KmDQjlqppkhVzkgN180N3d4h5VEUrTnYBQ==
-X-Received: by 2002:a19:6a09:0:b0:52b:86d7:5c67 with SMTP id 2adb3069b0e04-52b896af23amr4695197e87.26.1717402976836;
-        Mon, 03 Jun 2024 01:22:56 -0700 (PDT)
+        bh=DYoD7NRleroa5h8G1WvcKj1uz39B0Rluk/+UjUyZroE=;
+        b=GKkUbQCxBwkNWizgeYSFvMNwmmOg8ov4ZauIBgM+KgmGjC5bmjXvUA/0T9je5r7qbZ
+         e7oou3/OVhV4+dNgsdV1qoLLWYS3zkvrLGNJLzDWcFXubwfYvQcBImcpeRYRqd9lSwQs
+         ZAhpJxjOE+mYpOO38ljghOEfEBRIl9zkoz0iB9Ph9yddkuQjf3aCx7Up9WXwps1x9faK
+         vrYItWFq+ErsmOZhrMFCsQtiPrDi7t3DQqWqkHusfDlUPmLV0LOQwXvOhzJEB6ftHvgX
+         KSWXNsEnG+jXMUwYMXANCCQEkBkvhCToIGQfhswJTwaIExWkwoDwd1hcx1HTuqCuSYOi
+         4Wlw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIAU8tjZFDxu4sSVCWY4Q/FbEFpl8qmnTp4SCNRRAn0X4RDmUomqbzGVDG07of9LEfFKqrRnDCkDaJAKU0HQf3zy5cY/Nky/TGgQ==
+X-Gm-Message-State: AOJu0YxUNJVmYC7qxE00l0h/p5HtN1JnaIu26mUg3plYbkTKm+atMkf2
+	eWZgvG01zzwpU3jvO6+2qQoP6ChFHWQbdyoJoyYQ9PessqxSoWYuEg+yqnAzpyE=
+X-Google-Smtp-Source: AGHT+IHKi8KVVVFqdZsWLfi9GAnJoyzakWoKYzj9dIPgMV835EZmE5hRnkcNH43kvujeh06Rzu/jOg==
+X-Received: by 2002:a05:600c:46d3:b0:41f:e4ad:9ae4 with SMTP id 5b1f17b1804b1-4212e076433mr60992745e9.23.1717403075098;
+        Mon, 03 Jun 2024 01:24:35 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:5b1:48e9:27a3:7085])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4213411b25dsm85063515e9.40.2024.06.03.01.22.56
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4213e75eef3sm17299255e9.6.2024.06.03.01.24.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 01:22:56 -0700 (PDT)
+        Mon, 03 Jun 2024 01:24:34 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
+To: brgl@bgdev.pl,
+	Fabio Estevam <festevam@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
 	linux-gpio@vger.kernel.org,
-	Peter Robinson <pbrobinson@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpio: brcmstb: Allow building driver for ARCH_BCM2835
-Date: Mon,  3 Jun 2024 10:22:54 +0200
-Message-ID: <171740296569.11000.17572807996742705741.b4-ty@linaro.org>
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] gpio: pca953x: Add support for TI TCA9535 variant
+Date: Mon,  3 Jun 2024 10:24:33 +0200
+Message-ID: <171740307062.11155.18104329080684685270.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240530181737.1261450-1-pbrobinson@gmail.com>
-References: <20240530181737.1261450-1-pbrobinson@gmail.com>
+In-Reply-To: <20240531121801.2161154-1-festevam@gmail.com>
+References: <20240531121801.2161154-1-festevam@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -92,16 +95,22 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Thu, 30 May 2024 19:17:31 +0100, Peter Robinson wrote:
-> The GPIO_BRCMSTB hardware IP is also included in the bcm2712
-> SoC so enable the driver to also be built for ARCH_BCM2835.
+On Fri, 31 May 2024 09:18:00 -0300, Fabio Estevam wrote:
+> Add support for the TI TCA9535 variant.
 > 
+> The NXP PCA9535 is already supported by the driver.
 > 
+> TCA9535 supports lower voltage operation (down to 1.65V VCC)
+> compared to PCA (down to 2.3V VCC).
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] gpio: brcmstb: Allow building driver for ARCH_BCM2835
-      commit: e7ba9d11e9fd97fbfb4ebbade04d09c23f90e3d2
+[1/2] gpio: pca953x: Add support for TI TCA9535 variant
+      commit: 82466bb622e921fb1a3dc552c9e3d20b3c1da8ad
+[2/2] dt-bindings: gpio: pca95xx: Document the TI TCA9535 variant
+      commit: 8fce7727a70e037002800eb5b70995a7cd337c7a
 
 Best regards,
 -- 
