@@ -1,125 +1,132 @@
-Return-Path: <linux-gpio+bounces-7057-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7058-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 190E98D8031
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 12:39:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C2FC8D8035
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 12:40:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A2B81C23410
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 10:39:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3865528A76A
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 10:40:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AADD682D64;
-	Mon,  3 Jun 2024 10:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E85782D89;
+	Mon,  3 Jun 2024 10:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajLVMkgG"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2yw8/vR6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DA744C6F
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 10:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A7B19F
+	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 10:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717411150; cv=none; b=ZhHE0J7eKh1YBgOg6Y68+hcWODIoUQskhDk5GgK7xlQwqrSNFkRlgiP6UmAMSv8/qX8Qj7gJuSNDiHX7sKQMcZDf3rFUEEn/2l0jr1A22O37J2SA5f6a4JX40mThHbVZCpRXwOQQccOuCI9F/RvRCRPNFJ/hJB62lrtx5NwfM0s=
+	t=1717411252; cv=none; b=rxJAaOgKy9JorKDRePs8AiDwt+QuPVTxctw1O/5qgRNdfmxrrwTfB8jLX/uyVaS3AKKMaFN++yb0S5zmyvc81TNjlM/5wfwbhC/MQqp1MlIt5UAH+aaTnndlkFOZ4DSTViK0nWqlOZ8MqRGQQ5QLh5DEcuj9yAWvX1IUXm3BMwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717411150; c=relaxed/simple;
-	bh=7PGLHGZUlDuGoDZugtL8S56qGpVqh/+LUwFVrilyLII=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M5nlZyF3s8z30hft2BakdNxhKHzsyKB3xyNuxXIHtnysXQKTTSX3iX8vcvxSi53frsL7V6v8MKWxE8A5xZu7riXAkbiNx7FKkuj0VZbAcEVqTa6e33t7Iq6sDdHxzd6WR0JzDpNrxVOdt+UOuQv3Co42aQvcTAzvhEKDWTgxpzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ajLVMkgG; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f44b5b9de6so24385995ad.3
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 03:39:08 -0700 (PDT)
+	s=arc-20240116; t=1717411252; c=relaxed/simple;
+	bh=TwOinyiMCJk+IGLP/YYC7bbbpupY/taT+Zo1Z7KRpjs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vto5SdgE1wSRsB228DL9VFPrnxjf4F6zxtpb+jDjNEweln6oD0QnebMEJILfv3OWISWixlEmd/9NlwCBPvZyPf3QhsgFkeO+rbLyWKOLjNMqRz+Q+71wiYLVLLP9lOYGUcc+zE4RalN9u6dIjL6AZPKigdQbdAVdlNzt0Vuleh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2yw8/vR6; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2eaa80cb573so20727011fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 03:40:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717411148; x=1718015948; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7PGLHGZUlDuGoDZugtL8S56qGpVqh/+LUwFVrilyLII=;
-        b=ajLVMkgGb8o03VuvIfaDL6H8bqLu+s4MzFet45+wrCAer3NRr5Br5FoftyPR9U/TSh
-         3pq1pQdi78jfW4e2skpBdX4y2Qz4O4McgCLPQ8+/CJ0qLlmyb2wwbhW/MP1bGEhMeHbQ
-         e/T/HxT7FEBeHuWlJF/OGT0RhU16+XfVcOGa+xlSdzOXdXkbT/NiF0cuRep4sl4XQI65
-         8W3QeW1TYm4gWM2IS4B3uHIw81NG01Tg2RTjEthQBZmFeLpfxh58yxSZPko2ag+/8TQz
-         VbhH56hWjOvDEcf83YgaZtK1lVyiHSlDY2IzzaBNgervp5Jr7j1rrVkMdM0L77nv7lJP
-         xG5w==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717411248; x=1718016048; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7zoZi7yneno1k5sGVOx0ritgLeRd+HM63br4D20bk6c=;
+        b=2yw8/vR6ZC5ViNCKLiCjophp/ZmMmIWpqbflCgGRtBk6Iqeegylwtff/WNCzpcbiy2
+         XdDBnZVNWCu+TCvTJXQDCf1xWanDvlQzXYdC/vKm5SExV+vmYEzEkMGmwO+L4KLZsMGc
+         uzWbNmiEf8opDAONsraubv3hmJa7dq/rJGyMNdpjGNNV2ViAkYYaXr9RR04rhF2odzRl
+         9APKfeK9dg0VR6VPbT5Lbemy9KHQXZmL028WYzPS2fwQt3Q5OKV6grg2WTu3X6wdSTFW
+         ivGdQ4BR0Au1owFERMBAHAEJIFy7wrdYR8dkohn97llNyaD7KKN52oMKlstRncTSzQ7L
+         1Isg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717411148; x=1718015948;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7PGLHGZUlDuGoDZugtL8S56qGpVqh/+LUwFVrilyLII=;
-        b=dE336QgVIwetmaZk7vBoX4UjZP+jdM78orUokCSBl21EpSKZAwqUKV0Voq29sitmvs
-         QMlQHrCJ1/L4jSqDgwHUudQFspdxvZ0u6IdUYJEBaVho2Wah9t6JWAagCDag68gFkU4G
-         PPazkDuM5pcvbX28h+qE0ObmPd9VkG5hPvmPCizapI1CY0yFt1kkTcIPFI+nX3eeSIJ8
-         VNtobfBzbGJ4Op/3JXjo4pTvN30XYSCN45wlxLZhYwSToEjwIOXIkcAMKEGFvSwlMvCU
-         cv/4PCQXMBQ2RTGv69OxMiYfLwp9moIi8nbxsifoZpY1WKkWOCc+H8aKV4d9sKeaLQDm
-         yGig==
-X-Gm-Message-State: AOJu0YyJogztRVkbIUmRqATj8ygmoLNwZLhYi/T4C+M+WaWUhvbZ+rhG
-	u7C3BYroQ5zYATth9JrCmsCYwfyReJ+3GQWlRPirOGMha6Ky8KD1
-X-Google-Smtp-Source: AGHT+IHjzJAF2w+t14kRjxqqvxl1UINflE1AQbd56vZEjpcHpFVEKMLqMWdHqCWYjjOEQm6HeyjMFA==
-X-Received: by 2002:a17:902:d512:b0:1f6:782e:da40 with SMTP id d9443c01a7336-1f6782ee2f3mr31474635ad.62.1717411148374;
-        Mon, 03 Jun 2024 03:39:08 -0700 (PDT)
-Received: from rigel (14-203-42-154.tpgi.com.au. [14.203.42.154])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f63241550bsm62345435ad.277.2024.06.03.03.39.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 03:39:08 -0700 (PDT)
-Date: Mon, 3 Jun 2024 18:39:04 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod][PATCH 2/8] tools: tests: don't declare and assign
- separately
-Message-ID: <20240603103904.GA95158@rigel>
-References: <20240531134512.443850-1-warthog618@gmail.com>
- <20240531134512.443850-3-warthog618@gmail.com>
- <CAMRc=MfHwp8Lj_5rFiqo61E__Y9+o4n3Bu5e4KSF0P6n0DR-0Q@mail.gmail.com>
- <20240603085844.GA78808@rigel>
- <CAMRc=MdKTXeLWMkaRqg6z-iTeThWWCYcr4En2UgbM-81BXPFpg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1717411248; x=1718016048;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7zoZi7yneno1k5sGVOx0ritgLeRd+HM63br4D20bk6c=;
+        b=mgdfSAO7aO9GiR+PTSaIpcWLJhoFihKx9VMWX+fdgAwybRcz7JF8Vb20Go8L0s+tyX
+         fl3KxmcBajBiwidKT3RS6D8iXwKDOYb9vS8f3aKje8+qQVJ5TLv5lh5HDAfIifjwdrBO
+         Nu+bxkq6DY4PkeXi0gJ2Kvjg45o9hPqygHtB019hbT+ndx7tsGgXOc8qjDuGzC33BMyJ
+         NUCox+8Pemm+zEROi/HpZkQrmo35zMHbgBpRZFBx0Y9U+XJkZ4xhf05t4rpdC+DRClmW
+         AlTPEbrBnMQpG72rSeLFBWRHW6P0ccK44ZZR2eoPA6kIuCeQZFlj1+giO7Y689lb5Uq7
+         jQJA==
+X-Gm-Message-State: AOJu0Yx+ddrOjKeRpDHtLazAFvVYrN5NFEKtqTHd3pxCWAx8xtWSLMsu
+	CFx16ZslPlG+X94tjFUaaFLJdKlYH+PzfG5RghNEqg3rJnZoHav1d+W5mKAIg7ub6yDJOdda0PW
+	3Ke2tJ86tIH4LyYfWvFrGI3eSexpoikvPS9ZGckWC1n9yRCHO
+X-Google-Smtp-Source: AGHT+IEbm18vmyhyJ85JwfzcMm5imfJFh6sCiA9fi4zUq7CoCCmxk0qz+RitNXadgMzd0JsHCNvKj+/JDvDKgZZSVUE=
+X-Received: by 2002:a05:651c:1a28:b0:2e9:768a:12ae with SMTP id
+ 38308e7fff4ca-2ea95121319mr73459831fa.22.1717411247848; Mon, 03 Jun 2024
+ 03:40:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdKTXeLWMkaRqg6z-iTeThWWCYcr4En2UgbM-81BXPFpg@mail.gmail.com>
+References: <20240531134512.443850-1-warthog618@gmail.com>
+In-Reply-To: <20240531134512.443850-1-warthog618@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 3 Jun 2024 12:40:37 +0200
+Message-ID: <CAMRc=McChxEY2cnbzmHY1LAwSAxT5+irRWtbv3KqW8anDgfL4Q@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 0/8] tools: tests: fix shellcheck warnings
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 03, 2024 at 12:38:09PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Jun 3, 2024 at 10:58 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Mon, Jun 03, 2024 at 10:52:39AM +0200, Bartosz Golaszewski wrote:
-> > > On Fri, May 31, 2024 at 3:45 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
-> > > > Fix shellcheck SC2155[1] - declare and assign separately to avoid
-> > > > masking return values.
-> > > >
-> > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > > >
-> > > > [1] https://www.shellcheck.net/wiki/SC2155
-> > > > ---
-> > >
-> > > Shouldn't the commit message say "*do* declare and assign separately"?
-> > >
-> >
-> > That is wrong, my bad.
-> >
-> > I think I was going to change it to "don't declare and assign together"
-> > and got distracted mid-edit.
-> > So either that or simply "declare and assign separately".
-> > A leading "do" would be redundant.
-> >
-> > You ok to fix that, or would you like a re-spin?
-> >
+On Fri, May 31, 2024 at 3:45=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
 >
-> I'll fix it, others look good.
+> Following up on recent discussions, this series fixes all the warnings
+> detected by shellcheck.  The resulting tools test script is now clean,
+> at least from the perspective of shellcheck.
+>
+> These fixes do not correct any known issue, other than shellcheck
+> reporting them as potential problems, the intent is to remove common
+> shell issues that may impact future changes, and to simplify checking
+> that any subsequent changes to the test script constitute "good" shell.
+>
+> All the patches other than Patch 8 address a particular warning.
+> They are reasonably self-explanatory, but each commit comment includes a
+> link to the relevant warning(s) which describes the issue and the
+> appropriate corrections.
+>
+> Patch 8 addresses a number of warnings, all related to word splitting
+> and globbing, and those constitute the bulk of the changes.
+> Some of the earlier patches also address trivial splitting/globbing
+> issues where that would prevent a line being modified multiple times.
+>
+> Cheers,
+> Kent.
+>
+> Kent Gibson (8):
+>   tools: tests: don't mix string and array
+>   tools: tests: don't declare and assign separately
+>   tools: tests: fix unused variables
+>   tools: tests: use read -r to avoid mangling backslashes
+>   tools: tests: don't use variables in printf format string
+>   tools: tests: check exit code directly
+>   tools: tests: shellcheck don't follow sourced file
+>   tools: tests: avoid splitting and globbing
+>
+>  tools/gpio-tools-test.bash | 459 +++++++++++++++++++------------------
+>  1 file changed, 234 insertions(+), 225 deletions(-)
+>
+> --
+> 2.39.2
 >
 
-Thanks.
+Ugh, you added links after the SoB and it messes up with b4. Can you
+resend it with links before any tags? Or better yet: make [x] into
+Link: [x] so that b4 can interpret it correctly?
 
-Kent.
+Thanks
+Bart
 
