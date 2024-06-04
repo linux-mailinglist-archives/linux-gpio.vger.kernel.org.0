@@ -1,195 +1,221 @@
-Return-Path: <linux-gpio+bounces-7131-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7132-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D3658FB786
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 17:36:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B1F28FB81C
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 17:54:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E31D1C22B4C
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 15:36:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50FF5283B52
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 15:54:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EB82143C6B;
-	Tue,  4 Jun 2024 15:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HQxOU+l8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8494B149C4D;
+	Tue,  4 Jun 2024 15:53:26 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4543615E83;
-	Tue,  4 Jun 2024 15:36:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA463148FE6;
+	Tue,  4 Jun 2024 15:53:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717515375; cv=none; b=HwRZjQRWDEaEhpqMaQrUf0ABBVBgE4QAYRBqRE/rYaXVy1FaG2D+RyWiL+wwrd7MuNeVg1JuHuxHNn+o6GYy9uwOTnAH6FIL79/FDKyUD+knNNRcntV5Rsi17Ai9EWF/lI6X9mSv9l+oxEo6qkJjG12lG5dwV3E+lZJJromiMRY=
+	t=1717516406; cv=none; b=J/ElMn9fnrAqKHj3Q04mRBprYqY+wqNGifUYyZiyMFLQLHCTS25Uj41KAD7XE06esu1IlUxJft+wyaIdDyTdhp7T/FBd6BJAtIa87svht6SR53OFyPuN5s0Fk6Vej4j+uOOzbygcSuA+kTNL5UlecU3UpWXjznFhBuuFSNTcJ7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717515375; c=relaxed/simple;
-	bh=4rMfVnXDULUZCwBnw5F1W1y6pVj9F8WIuK0q0yEsV8s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P4O/OIj6Ug7ndKhIxo+rB4P8bX25sxYcWtRCl8o9y1LOm0bY/Usmwbg3aoEe4VvMnK06yTpZrIaoJsYe1P+VcsMjMBIMciwnB1rNEVSsSZelOmk176HVwpG1KjbFgqwwpgGCQHnZ17RYkWUSWt7BM9srQM1C7nvlhxRCi2zQyVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HQxOU+l8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80A13C2BBFC;
-	Tue,  4 Jun 2024 15:36:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717515374;
-	bh=4rMfVnXDULUZCwBnw5F1W1y6pVj9F8WIuK0q0yEsV8s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HQxOU+l8yAScZCmZLUyMFk7yaYYMb8CHKKLgXoYs4N3ZNX9ILogCN/Z11xyXc7JDx
-	 P0sV1E+2P4uExY6RV66r7CbU1Ypo82FJ/x8bS3Sjbgy0mK4qbqfclALzmUBc+hWwx8
-	 uhltP3d+tNOZixOn0XOe8NDobpnCXQ4GsFk8I4Bo/aEbOJLJuQVuEVdJ5aKu+iTmsm
-	 DP+sMRuQtc7SVQIL9ZKDEEg6FVTTwwMyQU15mv17LbYnjiqY23JqT3ttapieGLf2dT
-	 PYcq3KaNQ2FHYscEX9suzjSLgKSBu3w3/YK75r0H5PF2GUXcEAKIPKs42bKTrhwGRA
-	 KP8wXGs3z9qMg==
-Date: Tue, 4 Jun 2024 10:36:12 -0500
-From: Rob Herring <robh@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Paul Barker <paul.barker.ct@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v3 01/15] dt-bindings: pinctrl: renesas: Document
- RZ/V2H(P) SoC
-Message-ID: <20240604153612.GA839371-robh@kernel.org>
-References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240530173857.164073-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	s=arc-20240116; t=1717516406; c=relaxed/simple;
+	bh=jqzyU34fAZG4/WHYtSv7WuekoSVYXVRfGb6ve0icGKI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p24aUvh2sK+xxHKdgy6Nsc5etRY5CTEgKo1l4S7OjdgLXzMcnrN24i2KecpeN4cQrCEo2G5nkOI5AFT/v/bN9IbHUJb2/eqkeQWsl4pHDIpZORyG//m5nc3Wva1nnddlD6cegodt4qLjznDIf8yAzGpYSrbrXWn6acFsy+qIupw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D41BC2BBFC;
+	Tue,  4 Jun 2024 15:52:38 +0000 (UTC)
+Date: Tue, 4 Jun 2024 11:52:35 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Rafael J. Wysocki"
+ <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Corey Minyard <minyard@acm.org>, Allen Pais
+ <apais@linux.microsoft.com>, Sebastian Reichel
+ <sebastian.reichel@collabora.com>, Perry Yuan <perry.yuan@amd.com>,
+ Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Nuno Sa <nuno.sa@analog.com>, Guenter Roeck
+ <linux@roeck-us.net>, Randy Dunlap <rdunlap@infradead.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Lee Jones
+ <lee@kernel.org>, Samuel Holland <samuel@sholland.org>, Elad Nachman
+ <enachman@marvell.com>, Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
+ Johannes Berg <johannes.berg@intel.com>, Gregory Greenman
+ <gregory.greenman@intel.com>, Benjamin Berg <benjamin.berg@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Robert Richter <rrichter@amd.com>,
+ Vinod Koul <vkoul@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Hans de Goede
+ <hdegoede@redhat.com>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
+ <ilpo.jarvinen@linux.intel.com>, Nikita Kravets <teackot@gmail.com>, Jiri
+ Slaby <jirislaby@kernel.org>, Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>, Stanley Chang
+ <stanley_chang@realtek.com>, Heikki Krogerus
+ <heikki.krogerus@linux.intel.com>, Abdel Alkuor <abdelalkuor@geotab.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>, Eric Biggers
+ <ebiggers@google.com>, Kees Cook <keescook@chromium.org>, Ingo Molnar
+ <mingo@kernel.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, Andrew
+ Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>, Abel
+ Wu <wuyun.abel@bytedance.com>, John Johansen <john.johansen@canonical.com>,
+ Mimi Zohar <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>,
+ Roberto Sassu <roberto.sassu@huawei.com>, Eric Snowberg
+ <eric.snowberg@oracle.com>, Takashi Iwai <tiwai@suse.de>, Takashi Sakamoto
+ <o-takashi@sakamocchi.jp>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+ Mark Brown <broonie@kernel.org>, Kuninori Morimoto
+ <kuninori.morimoto.gx@renesas.com>, linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-ide@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+ linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, qat-linux@intel.com,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev,
+ linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+ linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
+ linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-usb@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+ linux-hardening@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+ linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
+ <naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, David Howells <dhowells@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+ <lenb@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal
+ <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Daniel Scally
+ <djrscally@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Broadcom
+ internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Heiko
+ Stuebner <heiko@sntech.de>, Peter De Schrijver <pdeschrijver@nvidia.com>,
+ Prashant Gaikwad <pgaikwad@nvidia.com>, Thierry Reding
+ <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Huang
+ Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>, Viresh Kumar
+ <viresh.kumar@linaro.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, Karol Herbst <kherbst@redhat.com>, Lyude Paul
+ <lyude@redhat.com>, Danilo Krummrich <dakr@redhat.com>, Jean Delvare
+ <jdelvare@suse.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Pavel Machek <pavel@ucw.cz>, Chen-Yu
+ Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Tony
+ Lindgren <tony@atomide.com>, Adrian Hunter <adrian.hunter@intel.com>, Hu
+ Ziji <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, Miquel
+ Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Potnuri Bharat Teja
+ <bharat@chelsio.com>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Miri Korenblit
+ <miriam.rachel.korenblit@intel.com>, Kalle Valo <kvalo@kernel.org>, Mahesh
+ J Salgaonkar <mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, JC Kuo <jckuo@nvidia.com>,
+ Andrew Lunn <andrew@lunn.ch>, Gregory Clement
+ <gregory.clement@bootlin.com>, Sebastian Hesselbarth
+ <sebastian.hesselbarth@gmail.com>, Sebastian Reichel <sre@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui
+ <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Thinh Nguyen
+ <Thinh.Nguyen@synopsys.com>, Helge Deller <deller@gmx.de>, Brian Foster
+ <bfoster@redhat.com>, Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo
+ <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner
+ <hannes@cmpxchg.org>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
+ <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel Bristot de
+ Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jason Baron <jbaron@akamai.com>, Jim
+ Cromie <jim.cromie@gmail.com>, Paul Moore <paul@paul-moore.com>, James
+ Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Dmitry
+ Kasatkin <dmitry.kasatkin@gmail.com>, Clemens Ladisch <clemens@ladisch.de>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam
+ Girdwood <lgirdwood@gmail.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with
+ sysfs_match_string()
+Message-ID: <20240604115235.044acfd6@gandalf.local.home>
+In-Reply-To: <87tti9cfry.fsf@intel.com>
+References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+	<87tti9cfry.fsf@intel.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240530173857.164073-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 30, 2024 at 06:38:43PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> Add documentation for the pin controller found on the Renesas RZ/V2H(P)
-> (R9A09G057) SoC. The RZ/V2H PFC varies slightly compared to the RZ/G2L
-> family:
-> - Additional bits need to be set during pinmuxing.
-> - The GPIO pin count is different.
-> 
-> Hence, a SoC-specific compatible string, 'renesas,r9a09g057-pinctrl', is
-> added for the RZ/V2H(P) SoC.
-> 
-> Also, add the 'renesas,output-impedance' property. The drive strength
-> setting on RZ/V2H(P) depends on the different power rails coming out from
-> the PMIC (connected via I2C). These power rails (required for drive
-> strength) can be 1.2V, 1.8V, or 3.3V.
-> 
-> Pins are grouped into 4 groups:
-> 
-> Group 1: Impedance
-> - 150/75/38/25 ohms (at 3.3V)
-> - 130/65/33/22 ohms (at 1.8V)
-> 
-> Group 2: Impedance
-> - 50/40/33/25 ohms (at 1.8V)
-> 
-> Group 3: Impedance
-> - 150/75/37.5/25 ohms (at 3.3V)
-> - 130/65/33/22 ohms (at 1.8V)
-> 
-> Group 4: Impedance
-> - 110/55/30/20 ohms (at 1.8V)
-> - 150/75/38/25 ohms (at 1.2V)
-> 
-> The 'renesas,output-impedance' property, as documented, can be
-> [0, 1, 2, 3], these correspond to register bit values that can
-> be set in the PFC_IOLH_mn register, which adjusts the drive
-> strength value and is pin-dependent.
-> 
-> As power rail information may not be available very early in the boot
-> process, the 'renesas,output-impedance' property is added instead of
-> reusing the 'output-impedance-ohms' property.
-> 
-> Also, allow bias-disable, bias-pull-down and bias-pull-up properties
-> as these can be used to configure the pins.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v2->v3
-> - Updated description for renesas,output-impedance property
-> - Updated commit description
-> 
-> RFC->v2
-> - Renamed renesas-rzv2h,output-impedance -> renesas,output-impedance
-> - Updated values for renesas,output-impedance
-> - Added bias properties
-> ---
->  .../pinctrl/renesas,rzg2l-pinctrl.yaml        | 23 +++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-> index 881e992adca3..957b9f7e7de5 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-> @@ -26,6 +26,7 @@ properties:
->                - renesas,r9a07g043-pinctrl # RZ/G2UL{Type-1,Type-2} and RZ/Five
->                - renesas,r9a07g044-pinctrl # RZ/G2{L,LC}
->                - renesas,r9a08g045-pinctrl # RZ/G3S
-> +              - renesas,r9a09g057-pinctrl # RZ/V2H(P)
->  
->        - items:
->            - enum:
-> @@ -66,10 +67,14 @@ properties:
->      maxItems: 1
->  
->    resets:
-> -    items:
-> -      - description: GPIO_RSTN signal
-> -      - description: GPIO_PORT_RESETN signal
-> -      - description: GPIO_SPARE_RESETN signal
-> +    oneOf:
-> +      - items:
-> +          - description: GPIO_RSTN signal
-> +          - description: GPIO_PORT_RESETN signal
-> +          - description: GPIO_SPARE_RESETN signal
-> +      - items:
-> +          - description: PFC main reset
-> +          - description: Reset for the control register related to WDTUDFCA and WDTUDFFCM pins
+On Tue, 04 Jun 2024 10:45:37 +0300
+Jani Nikula <jani.nikula@linux.intel.com> wrote:
 
-You need a conditional schema for ensuring the length is 2 for RZ/V2H 
-and 3 otherwise.
-
->  
->  additionalProperties:
->    anyOf:
-> @@ -111,6 +116,16 @@ additionalProperties:
->          output-high: true
->          output-low: true
->          line-name: true
-> +        bias-disable: true
-> +        bias-pull-down: true
-> +        bias-pull-up: true
-> +        renesas,output-impedance:
-> +          description: |
-
-Don't need '|'.
-
-> +            Output impedance for pins on the RZ/V2H(P) SoC. Values 0, 1, 2, and 3
-
-Don't repeat values in free form text.
-
-> +            correspond to register bit values that can be set in the PFC_IOLH_mn
-> +            register, which adjusts the drive strength value and is pin-dependent.
-> +          $ref: /schemas/types.yaml#/definitions/uint32
-> +          enum: [0, 1, 2, 3]
->  
->      - type: object
->        additionalProperties:
-> -- 
-> 2.34.1
+> On Sun, 02 Jun 2024, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > Make two APIs look similar. Hence convert match_string() to be
+> > a 2-argument macro. In order to avoid unneeded churn, convert
+> > all users as well. There is no functional change intended.  
 > 
+> Why do we think it's a good idea to increase and normalize the use of
+> double-underscore function names across the kernel, like
+> __match_string() in this case? It should mean "reserved for the
+> implementation, not to be called directly".
+> 
+> If it's to be used directly, it should be named accordingly, right?
+> 
+> Being in line with __sysfs_match_string() isn't a great argument alone,
+> because this adds three times the number of __match_string() calls than
+> there are __sysfs_match_string() calls. It's not a good model to follow.
+> Arguably both should be renamed.
+
+Agreed. I want to get rid of any functions starting with an underscore
+except for those that are basically the same function used internally for
+convenience.
+
+Perhaps "match_string_dynamic()"? Where it is used for dynamically
+allocated arrays without known size. Or, allow a third parameter for
+dynamic arrays.
+
+#define match_string(_a, _s, ...)
+	char _______STR[] = __stringify((__VA_ARGS__));	\
+	if (sizeof(_______STR) > 3)			\
+		__match_string(_a, _s, ##__VA_ARGS__);  \
+	else						\
+		__match_string(_a, _s, ARRAY_SIZE(_a));
+
+What the above stringify((__VA_ARGS__)) does is to check the size of any
+args added to match_string(). if there isn't any, it will turn into:
+"()\0", which is of size 3. If you add an argument, it will be:
+"(<arg>)\0", which will have a size greater than three.
+
+(trace_printk() does this trick in include/linux/kernel.h).
+
+This way, both:
+
+ match_string(array, sting);
+
+or
+
+ match_string(array, string, size);
+
+will work.
+
+-- Steve
+
 
