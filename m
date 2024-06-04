@@ -1,75 +1,48 @@
-Return-Path: <linux-gpio+bounces-7099-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7100-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E56D58FAAA2
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 08:21:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC3A48FAB0C
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 08:44:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A42A528549B
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 06:21:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E81E51C21EEE
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 06:44:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 385F913D8B5;
-	Tue,  4 Jun 2024 06:21:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2AC714037D;
+	Tue,  4 Jun 2024 06:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rO3ufyh7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3Bnsh4/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEF665F
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Jun 2024 06:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A1B12E1F9;
+	Tue,  4 Jun 2024 06:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717482098; cv=none; b=klqnADy/2VcbtphIWSjuOJDFsV74p2oo9R7R4y5xXCEDc0mz2+vloQXrzouIBqh4/DN8zASdTe9Ub+n/kS6vVD3HhT1JW4F41b3iWVpTUoZm7UmvH/VWRtH14r8PPgUX/VktSeB8I8zpvsOpysGLHbgktWS5n+Xj9nH1mANJYyw=
+	t=1717483445; cv=none; b=dW0QPcvy6moppI33UV1T4+KgXXlxlBSaHhc4t4qh3OqDZCoNqgo3b3qJvQAODwNQyr2qIXasyqCgJj0PzUtZJqCvEtGi9XnASmAVs3Ap+GzN9hWHeTC++toE4SwT3brMQaCT3GnepYsPe1TLzXDRzM5QcqZ52m1gdw2Dlkz7V1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717482098; c=relaxed/simple;
-	bh=J5zHaQEN6XB6maQnaeWhn5cEjh5SQBvkBxWJC/aJGK4=;
+	s=arc-20240116; t=1717483445; c=relaxed/simple;
+	bh=0b2B21EDLznmxz0+PWaGRMUp9XLDYqlFaMbkmYh70KU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TF/Xu84gg5r51udgRtm/RKtgEe3fsP/wPzDC4bNDGtWHExqLQuchVIK/gLyD0OioBOGAO4U8roQs9TcQaKmTCmd8n4NWfnKlzf5xs5Ql1TXE4Yynroe5XnwRedBTSK74phgeEjA/rKoGVvJC4USxb7ofoPse1ggbXh1PFjas/oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rO3ufyh7; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42153115c65so1044885e9.0
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 23:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717482095; x=1718086895; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=B8sQahDrjoScfm+agbtuJV1P0Pe7NzGDpTACbPs++zE=;
-        b=rO3ufyh7xdaD6Ombiy8IQO9Clo9bZHzwmGPddzVdFtEN0Onp6JUdiebCsvwVivQqF3
-         rf1ckpeHx6vBgrqa6cCMPmzkUXvj1aJZWDG+/zKCuWTdVwz/7QNipL+4HghO5X69Qrkp
-         QrTXqIER9A1R8p5q8oBXuehidIu0gm8Q/oKJdABlKl8iQcIxY4FJGzv0WDvWJB7kEJw1
-         SQfT/VJFFYbGAXuYhdqSiNfAyVXz3kr7NmoxBx3GXkPuQMkLJdXLSiD4XYalzuEgLPz/
-         V9umW8NpeX+igME0a9VH3GG5V90cQ3pGIwHrNCICh5ZQ7yBqIDLWwgd1rATZreHBb/9D
-         +s1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717482095; x=1718086895;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B8sQahDrjoScfm+agbtuJV1P0Pe7NzGDpTACbPs++zE=;
-        b=QgbWzumjPrS/lmfUc7kdVFAqHmJHTTfkD1caW4fJit4uVzI50qSAFHUoNy1eZw8bfQ
-         lTstGpLXS6r1Y+ZJ5BHmm6cuH/T8k2tVuy7rUsJ39kI0m0e4b+7+Hdf0Vc3KKLNfTGVY
-         X8STxdgFE/ohSjMheceQNCEtEMshcyHHMjmRl6l4sfIIldDVw8bB5iJk9Z8Mt4MSVsyI
-         bsIvqez8kGawezUD2azbtj+9H5xFlzg1k8rlQR6wmTBkuKYOk9bGnFeg28vssjnFvKtE
-         1mHhnHBeJrJLaWl0vJ+a7WjPC/bDFamXSgzRYyaEKUHVZgd43CBBe0q1be+zW11HF5R1
-         darw==
-X-Forwarded-Encrypted: i=1; AJvYcCWoM2zFDeJIaSeSWi6T1RkyjiApGqVQDHXOw0/ZEcbwtoe+Qe5mDui7XcxH2qprHJ9chzBY5XOonni7xKWw76/k+UmTYDwvNU7ppQ==
-X-Gm-Message-State: AOJu0YzAQIpt19c8GyOEKcwK3EcZ+aIe8SIkb3cm+kBO9XcoLWg/kqgg
-	ID9WTynh7Ibpv/u669GmXHODpjjGaV5wQZKTxCHsESmxJNRhrY0QmCzraMzcYks=
-X-Google-Smtp-Source: AGHT+IGkWze3aEaY4p9PZJ0+1RmUPt4m0uQfE2go1PTOPTix1pzyVk58KjJsHEiWk1lCngpkWpdC4w==
-X-Received: by 2002:a05:600c:3550:b0:420:1853:68c3 with SMTP id 5b1f17b1804b1-421417bd9aemr22587885e9.20.1717482094637;
-        Mon, 03 Jun 2024 23:21:34 -0700 (PDT)
-Received: from [192.168.2.24] ([110.93.11.116])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42139688d82sm83185485e9.3.2024.06.03.23.21.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jun 2024 23:21:33 -0700 (PDT)
-Message-ID: <1edbcf6d-92b7-4971-b8b2-a88cc96995e9@linaro.org>
-Date: Tue, 4 Jun 2024 08:21:32 +0200
+	 In-Reply-To:Content-Type; b=GMXdiYJbEtZvSzSmVwxhCXGpUjwk4sHACb4FbMRCet0ulSUxuD93Vta1r/KH7dfcJyW81Cj808dSSRxhnWVb5Y0P1l4+NwOJFnJHNLyJnUff7u2MsO+ZPfYODnpcbUm9wm32r1pkE0VumL52s+wKFHzYsvvNbr7pJI4Sho0HUy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3Bnsh4/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE40C2BBFC;
+	Tue,  4 Jun 2024 06:43:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717483444;
+	bh=0b2B21EDLznmxz0+PWaGRMUp9XLDYqlFaMbkmYh70KU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=N3Bnsh4/tGU8oGO2cyjLj6gwijbDQqjQqTW5Tg/DmHdTVa26xfvhgUduiUEpWgRMJ
+	 jaeytFwbW0xoivR5RT/pTnNOSj5zJCz1gRI5uHTyT23hKQaEPMg6zYZNAYLSVrm+cF
+	 dgtT6Ckdr0n7pQPkMZfSOYfG4dbSrh4eCdGcQSZqGLBkhMtMzlutm6bOFIcoAV1FZe
+	 9+EEQixoc3BG4phFKrga/REGqRRoaGpUMtJZl8B1M8iUMVe2WYDBm1ZLCQyqhB9Aaq
+	 FIJcQ95prB9DQQ/heINrJ6uwiWuSaSLO60BeDil3P6g6e+XxFflXroV097o5ECrDeb
+	 TDd+kVE/p/o6g==
+Message-ID: <0ea564fa-5405-444a-befb-ca4372817e33@kernel.org>
+Date: Tue, 4 Jun 2024 08:42:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,82 +50,170 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] dt-bindings: pwm: Add pwm-gpio
-To: Kent Gibson <warthog618@gmail.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com,
- Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>,
- Chris Morgan <macromorgan@hotmail.com>, Stefan Wahren <wahrenst@gmx.net>,
- linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, Nicola Di Lieto <nicola.dilieto@gmail.com>,
- Dhruva Gole <d-gole@ti.com>
-References: <20240602-pwm-gpio-v6-0-e8f6ec9cc783@linaro.org>
- <20240602-pwm-gpio-v6-1-e8f6ec9cc783@linaro.org>
- <20240604025137.GA107618@rigel>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240604025137.GA107618@rigel>
+Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with
+ sysfs_match_string()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Corey Minyard <minyard@acm.org>, Allen Pais <apais@linux.microsoft.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Perry Yuan <perry.yuan@amd.com>,
+ Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Nuno Sa <nuno.sa@analog.com>,
+ Guenter Roeck <linux@roeck-us.net>, Randy Dunlap <rdunlap@infradead.org>,
+ Andi Shyti <andi.shyti@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Lee Jones <lee@kernel.org>, Samuel Holland <samuel@sholland.org>,
+ Elad Nachman <enachman@marvell.com>,
+ Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
+ Johannes Berg <johannes.berg@intel.com>,
+ Gregory Greenman <gregory.greenman@intel.com>,
+ Benjamin Berg <benjamin.berg@intel.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Robert Richter <rrichter@amd.com>,
+ Vinod Koul <vkoul@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Hans de Goede
+ <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Nikita Kravets <teackot@gmail.com>,
+ Jiri Slaby <jirislaby@kernel.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Stanley Chang <stanley_chang@realtek.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Abdel Alkuor <abdelalkuor@geotab.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ Eric Biggers <ebiggers@google.com>, Kees Cook <keescook@chromium.org>,
+ Ingo Molnar <mingo@kernel.org>, "Steven Rostedt (Google)"
+ <rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Hugh Dickins <hughd@google.com>, Abel Wu <wuyun.abel@bytedance.com>,
+ John Johansen <john.johansen@canonical.com>, Mimi Zohar
+ <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>,
+ Roberto Sassu <roberto.sassu@huawei.com>,
+ Eric Snowberg <eric.snowberg@oracle.com>, Takashi Iwai <tiwai@suse.de>,
+ Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+ Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+ Mark Brown <broonie@kernel.org>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-ide@vger.kernel.org,
+ openipmi-developer@lists.sourceforge.net, linux-clk@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
+ linux-pm@vger.kernel.org, qat-linux@intel.com,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev,
+ linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+ linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
+ linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-usb@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+ linux-hardening@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+ linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ David Howells <dhowells@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
+ Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Daniel Scally <djrscally@gmail.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Heiko Stuebner <heiko@sntech.de>,
+ Peter De Schrijver <pdeschrijver@nvidia.com>,
+ Prashant Gaikwad <pgaikwad@nvidia.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Huang Rui <ray.huang@amd.com>,
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, Karol Herbst <kherbst@redhat.com>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@redhat.com>,
+ Jean Delvare <jdelvare@suse.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Pavel Machek <pavel@ucw.cz>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Tony Lindgren <tony@atomide.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Hu Ziji <huziji@marvell.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Potnuri Bharat Teja <bharat@chelsio.com>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+ Kalle Valo <kvalo@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ JC Kuo <jckuo@nvidia.com>, Andrew Lunn <andrew@lunn.ch>,
+ Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Sebastian Reichel <sre@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ Helge Deller <deller@gmx.de>, Brian Foster <bfoster@redhat.com>,
+ Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo <tj@kernel.org>,
+ Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Clemens Ladisch <clemens@ladisch.de>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US, pt-BR, it-IT
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04/06/2024 04:51, Kent Gibson wrote:
-> On Sun, Jun 02, 2024 at 10:33:08PM +0200, Linus Walleij wrote:
->> From: Nicola Di Lieto <nicola.dilieto@gmail.com>
->>
->> Add bindings for PWM modulated by GPIO.
->>
-> 
-> Shouldn't the bindings be added after the driver?
+On 6/2/24 17:57, Andy Shevchenko wrote:
+> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+> index a8e28f9b9271..7bed499effd3 100644
+> --- a/kernel/trace/trace_osnoise.c
+> +++ b/kernel/trace/trace_osnoise.c
+> @@ -2230,9 +2230,9 @@ static ssize_t osnoise_options_write(struct file *filp, const char __user *ubuf,
+>  		enable = false;
+>  	}
+>  
+> -	option = match_string(osnoise_options_str, OSN_MAX, option_str);
+> +	option = match_string(osnoise_options_str, option_str);
+>  	if (option < 0)
+> -		return -EINVAL;
+> +		return option;
+>  
+>  	/*
+>  	 * trace_types_lock is taken to avoid concurrency on start/stop.
 
-No. See submitting patches document.
+Acked-by: Daniel Bristot de Oliveira <bristot@kernel.org>
 
-Best regards,
-Krzysztof
-
+Thanks!
+-- Daniel
 
