@@ -1,268 +1,187 @@
-Return-Path: <linux-gpio+bounces-7113-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7114-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98F2C8FAD73
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 10:24:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39AD68FAD89
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 10:26:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BBFEF1C225EC
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 08:24:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC6601F22851
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 08:26:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AB48142912;
-	Tue,  4 Jun 2024 08:24:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AD4C14290A;
+	Tue,  4 Jun 2024 08:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IitjdYcP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C3NdYkn6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3186E1420D1;
-	Tue,  4 Jun 2024 08:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A1D142E7A
+	for <linux-gpio@vger.kernel.org>; Tue,  4 Jun 2024 08:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717489445; cv=none; b=gvKAmwW6btrBicZM3gQu/iofdRP/u5ZihE1R7JTZHEGUEQuE4qt3hJJTmFDHBCSJv+pr/P2I2g+OrlRGz8M46W3qaeEiI+IwpZDeyMVAZlVYTKJRWDh5SIqeNO8HPqOJVf7c1Z+m7AWxREodXADh2WJC2KSEanWuRyS5w7ygh1E=
+	t=1717489577; cv=none; b=P4VSDlujcvvKKld9poHfJiuFP4GM5e0kkouFM1N/BpQHfEaJO5LT25M8cptoA86wpZYQwwS1F5Sg6wPnHA3O+kZ3Fbub1X40QFCmDBDm3cTwvdiukTaTNz9WsO5O6yHVvzoVuQ5VzI475i/YmDnyMcgY89lJPR8tGpq0ats75a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717489445; c=relaxed/simple;
-	bh=+++E6PT7Ikl/BMgbDWFQCaPzsOD33MgC2YSDizKZxfM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QqlbedD5MAGQp99ktE6uzAVLarU2pVoZP5vSzeFelBvs9V3syq+chNB8JAxET8mvK2t2tZqgMarqmZRMIjEgaQuJ0OU3TWibiRt9LXNxLZG69eMPfgW0dCloOM2po0yapORYsUX5Q7b8PKgVgvXohMf3d7XQ6prR3DasubzA9xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IitjdYcP; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717489444; x=1749025444;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+++E6PT7Ikl/BMgbDWFQCaPzsOD33MgC2YSDizKZxfM=;
-  b=IitjdYcPpBzq+fZkQQNKOAMUqveUQpb7i1jl4ycreuOo5N+NnTiLqonm
-   RCcxFRJSZP8HUOvU389RDqwvtYX74zR9bXz76A/z4dCUdlTTJOCZAbFUg
-   UYcCmxV3rb9zKVhZbjhjC4iT4Sqrdkha9FoACtcNmBvu0WzJIAlGW+et6
-   dIRiEjQ6LQ64+yv0S+Lt5sohlEs5s1eD5FOrKKz6Q6rTIjoy5ESizfa/x
-   tuyRLYYHCg+rw6XUFRONNOdRtIE7Lz5Qtt33YBnM8nWv+pWyJ65t/1E7x
-   T2mvg01vurEP5QPP4D14jibUJVnRzNpH2rqrQlNsVYxrT2BhZlRAbpFEF
-   Q==;
-X-CSE-ConnectionGUID: 5ps8KeItQuypl83130Tsyg==
-X-CSE-MsgGUID: k2k5XTirTtqeICWL7sqr6A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="25418722"
-X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
-   d="scan'208";a="25418722"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 01:24:02 -0700
-X-CSE-ConnectionGUID: SaGOs7oWSj2T67Ew7u1o3Q==
-X-CSE-MsgGUID: 2kjhQQDYTrW+61xRFDzEnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
-   d="scan'208";a="37030222"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 01:23:51 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id E1B7911FA4A;
-	Tue,  4 Jun 2024 11:23:48 +0300 (EEST)
-Date: Tue, 4 Jun 2024 08:23:48 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Corey Minyard <minyard@acm.org>,
-	Allen Pais <apais@linux.microsoft.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Perry Yuan <perry.yuan@amd.com>,
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Nuno Sa <nuno.sa@analog.com>, Guenter Roeck <linux@roeck-us.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>, Lee Jones <lee@kernel.org>,
-	Samuel Holland <samuel@sholland.org>,
-	Elad Nachman <enachman@marvell.com>,
-	Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Gregory Greenman <gregory.greenman@intel.com>,
-	Benjamin Berg <benjamin.berg@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Robert Richter <rrichter@amd.com>, Vinod Koul <vkoul@kernel.org>,
-	Chunfeng Yun <chunfeng.yun@mediatek.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Nikita Kravets <teackot@gmail.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Stanley Chang <stanley_chang@realtek.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Abdel Alkuor <abdelalkuor@geotab.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Eric Biggers <ebiggers@google.com>,
-	Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>, Abel Wu <wuyun.abel@bytedance.com>,
-	John Johansen <john.johansen@canonical.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Stefan Berger <stefanb@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Takashi Iwai <tiwai@suse.de>,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Mark Brown <broonie@kernel.org>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-ide@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net, linux-clk@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-pm@vger.kernel.org, qat-linux@intel.com,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org,
-	linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
-	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-usb@vger.kernel.org,
-	linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-	linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	David Howells <dhowells@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Peter De Schrijver <pdeschrijver@nvidia.com>,
-	Prashant Gaikwad <pgaikwad@nvidia.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Huang Rui <ray.huang@amd.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Pavel Machek <pavel@ucw.cz>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Hu Ziji <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	JC Kuo <jckuo@nvidia.com>, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	Helge Deller <deller@gmx.de>, Brian Foster <bfoster@redhat.com>,
-	Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with
- sysfs_match_string()
-Message-ID: <Zl7PFGprypdZi6ql@kekkonen.localdomain>
-References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1717489577; c=relaxed/simple;
+	bh=C0NttUi7bk+qnq6tjHZ3W69g1kZG9ZqBS+YTOPy5s8s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TaeOg8LIDceI+5ErB+WUFiB8jCE3zmPzITcFkublVIEcOdWVbVrrFfRy9/zOQbynrNyodX1mEQWdz5+Zgqkkyqel8D+dK42x09NBsWQO8vtPxMsiNUwRHYhlqWmZcBiHVkB21aVvx9wFVzXTVUSQjdTHqPQcUugr+92RA4QIWik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C3NdYkn6; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42121d27861so7911745e9.0
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Jun 2024 01:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717489574; x=1718094374; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=wlKZ403FDWNGF/aP6AfR2xSYQMCc2kz5Co6V9DrQwhI=;
+        b=C3NdYkn6EY6LLvu4tsoie+ncdbMp+KVlfpXB6MnLJ5W2y4pYHbiOMSa2qQdrf4HGjo
+         7mK7KQkP3qF5BG05T8lKfppzLlO2Nfgmxn4yhZ8v0m4dVH/j4fZM1kmp0uKCBmsxydWv
+         XqgPuh72Y/rHhfNXsGYjxceMOEKwWsRrOQdgzrO0dwkbPbI9Jkl6PApvfZRU4o/Xwo12
+         rA6k0ub1iv3V5NvsGLZnCKv3XaEu1HChSCpblSTtYsYBGffofGIrDoF/8SSvGFjyPB2o
+         U4NMQMh2yNx8XKtcaShwjyiG97B6OOPAEp/o6oVkUgYYaeWkBRfk87b/bxjvt/v07/IY
+         iriw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717489574; x=1718094374;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wlKZ403FDWNGF/aP6AfR2xSYQMCc2kz5Co6V9DrQwhI=;
+        b=D9Rm8qqqR0R1fW1g9NsKuuEo4gvTJ+ayWBSBO3hrKRrD63YuMw5kGou5aNspFvweA7
+         C3p38adgsUelThFHmXmRIBHwvhNn/UlVH+wE5cnxUHFbmDGEVYiYuJ/1GOu8M/aPPs6Q
+         r6WEulVNO71wDfjG1oTVNm43aKsg8m1p2+8VnLOfFSsCU1hNQsF0CIHGJEjsIz+nXgP5
+         AJusjot+QHev3zssp9aIOYJ4hiBkSBBR4v0r0AQRqz+TFua/mwjFlt+sbKJ0uCfp+xCJ
+         CXqPga8nrUfNcg6mBN+MIb7PX0oAYzB4Ch97ZZS6WpKKhjggib5ONVHHWxVh9u95+hhX
+         ZOCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXejA9NQtYN9fG/Vc35SKhDhl0RR9R+jwV7Q4db2f6Mwr/mJg7qXhFlo0CCSyYmKSt7NxWdJr5FY9naWUV5m7paHfyHYNlhGT38nw==
+X-Gm-Message-State: AOJu0Yyv+lWYl0yDvmhnhin5T7YDMIhLwnDZbzSgYldhn4Uga3zxs047
+	Hzg5YGKZvfefupjFezQbCHjAr2+Z2RoSXqD0OZIW4Dl8ZMAjXOGgkE+EQYIu3Po=
+X-Google-Smtp-Source: AGHT+IF3q/rSSBJYgi5/GHq+1ec4MdDY2wrRXpjAhUx6h40+LiYqbHtT/peszUz53CUMLnHpTv0ECg==
+X-Received: by 2002:a05:600c:3547:b0:421:276d:a0df with SMTP id 5b1f17b1804b1-4212e0c191amr74807615e9.41.1717489573998;
+        Tue, 04 Jun 2024 01:26:13 -0700 (PDT)
+Received: from [192.168.2.24] ([110.93.11.116])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42127062f0dsm173211795e9.17.2024.06.04.01.26.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 01:26:13 -0700 (PDT)
+Message-ID: <73dee17b-b2ae-4e43-9bad-28cbbf4a978b@linaro.org>
+Date: Tue, 4 Jun 2024 10:26:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/2] dt-bindings: pwm: Add pwm-gpio
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com,
+ Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>,
+ Chris Morgan <macromorgan@hotmail.com>, Stefan Wahren <wahrenst@gmx.net>,
+ linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, Nicola Di Lieto <nicola.dilieto@gmail.com>,
+ Dhruva Gole <d-gole@ti.com>
+References: <20240602-pwm-gpio-v6-0-e8f6ec9cc783@linaro.org>
+ <20240602-pwm-gpio-v6-1-e8f6ec9cc783@linaro.org>
+ <20240604025137.GA107618@rigel>
+ <1edbcf6d-92b7-4971-b8b2-a88cc96995e9@linaro.org>
+ <20240604073413.GA137333@rigel>
+ <7679dd6f-c952-44de-8863-2f0fd12f372a@linaro.org>
+ <20240604081632.GA147954@rigel>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240604081632.GA147954@rigel>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Andy,
+On 04/06/2024 10:16, Kent Gibson wrote:
+> On Tue, Jun 04, 2024 at 09:42:25AM +0200, Krzysztof Kozlowski wrote:
+>> On 04/06/2024 09:34, Kent Gibson wrote:
+>>> On Tue, Jun 04, 2024 at 08:21:32AM +0200, Krzysztof Kozlowski wrote:
+>>>> On 04/06/2024 04:51, Kent Gibson wrote:
+>>>>> On Sun, Jun 02, 2024 at 10:33:08PM +0200, Linus Walleij wrote:
+>>>>>> From: Nicola Di Lieto <nicola.dilieto@gmail.com>
+>>>>>>
+>>>>>> Add bindings for PWM modulated by GPIO.
+>>>>>>
+>>>>>
+>>>>> Shouldn't the bindings be added after the driver?
+>>>>
+>>>> No. See submitting patches document.
+>>>>
+>>>
+>>> Hmmm, ok, so "5. The Documentation/ portion of the patch should come in
+>>> the series before the code implementing the binding."[1]?
+>>>
+>>> It just seems odd that you document something that doesn't exist yet.
+>>
+>> It's logical. First you define the ABI for every user, then you
+>> implement the ABI. Do you first implement software and then design? Or
+>> first implement then write interface (API) for it?
+>>
+> 
+> I don't see the relevance of your analogy.
+> This isn't design, this is roll out, i.e. publishing.
+>
+> Not publishing the ABI until the implementation is available seems more
+> logical to me. But as long as it is all in the same series then whatever.
 
-On Sun, Jun 02, 2024 at 06:57:12PM +0300, Andy Shevchenko wrote:
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 503773707e01..9cb350de30f0 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -798,7 +798,7 @@ static bool acpi_info_matches_ids(struct acpi_device_info *info,
->  	if (!(info->valid & ACPI_VALID_HID))
->  		return false;
->  
-> -	index = match_string(ids, -1, info->hardware_id.string);
-> +	index = __match_string(ids, -1, info->hardware_id.string);
->  	if (index >= 0)
->  		return true;
->  
-> @@ -809,7 +809,7 @@ static bool acpi_info_matches_ids(struct acpi_device_info *info,
->  		return false;
->  
->  	for (i = 0; i < cid_list->count; i++) {
-> -		index = match_string(ids, -1, cid_list->ids[i].string);
-> +		index = __match_string(ids, -1, cid_list->ids[i].string);
->  		if (index >= 0)
->  			return true;
->  	}
+Anyway, that's how Bindings and kernel development works. First you
+document the ABI, then you implement it. Not the other way around.
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com> # drivers/acpi
 
--- 
-Sakari Ailus
+Best regards,
+Krzysztof
+
 
