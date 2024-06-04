@@ -1,200 +1,333 @@
-Return-Path: <linux-gpio+bounces-7091-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7092-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1A638FA608
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 00:48:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AEBB18FA6D1
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 02:10:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 18C9DB22373
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jun 2024 22:48:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0BCA7B23071
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 00:10:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADCDA13C9C9;
-	Mon,  3 Jun 2024 22:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415D1633;
+	Tue,  4 Jun 2024 00:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bAqLfiT6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HY6ST8IK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEB5135A46
-	for <linux-gpio@vger.kernel.org>; Mon,  3 Jun 2024 22:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFFF384;
+	Tue,  4 Jun 2024 00:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717454889; cv=none; b=PjR+RbS7BqrsucNH0KknlHIrKg/FAYyEpnhETxpHTkbQhP1IOksq1MbRxbyy7h0d8gPTw4v8E9S0qxIV+AT7tgdk65y4BfM/yq5Ud2x3LIPSIgF0bY0G/EK4tvEecQ9QBdZrOTQh+1R37gINPE0+hWPqKStq/zoDl1ne5R7iIOc=
+	t=1717459828; cv=none; b=eReN3PhNOpfsAzn+32zhaRYZ1kcdd+s8/PKcX0qJ39LdFbgxBbiKbie/AfuNjRtlYUEmqZnRga4GPp65zobyZEH7rKTDcavPmiPYfy5+OKYVLTe6GbHuFdKMsUNAT5cfOOAKknb/IjKQTLp4N/rs9+zME3F2D9RHbA2z7p+sp9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717454889; c=relaxed/simple;
-	bh=1Yu1xxIQHb6rFjdM0Wiq4Q+vgdF+kCEc9dWTLnj2qlY=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=Xt0tBJMLfUHquDwvRsFS9JrdkKPsQUWhudtcHS4Uiq11iAd52zKq5Cv5LkXxgWlVjolGROLHpGGwouiAF5eodg2C41W840DQJb0ajZs2t/pG4y8NiGpiGpvrbRpBx1i2p0yvL1XVHx9HNXYOmfgGGzy6EQHfuci7HrS/yNaZ3nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bAqLfiT6; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2508320e62dso1866565fac.3
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jun 2024 15:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717454887; x=1718059687; darn=vger.kernel.org;
-        h=content-transfer-encoding:disposition-notification-to:subject:from
-         :content-language:to:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=CsS54hqwzPnYlBGCDoQf1upjUKAeqKwaL1FX0n56hLs=;
-        b=bAqLfiT6PREZcHdmwKax9P52zIIf2Fx2UdSTpntwDQCSTGj60LTySIt2jfLzzOv7dG
-         Kq+yahvPwfMBzNfO5uXEUCLdFJb5ihCRxU3XIYaglA889aoNYOUmEZXxEBg3qus3NOkN
-         8EZnPjxIY+2vGh+TFCkaNEP5z7w2JL0T00Rr9STYsIOYtWij1LKyD3kiCByOOgrrL34G
-         iujH9IOcH9gJw4x7krmFRI0Je+VghqDZ5QRqM2Y0wbgFMTISdLGO9xc4A8YpoBiIefil
-         9MnnXTEZdzndXX1KDi7PEM+03zTJeOQCVUAAV89dIYN3TQcOlaBR3hoOu0a5Y8l1wz+x
-         yueg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717454887; x=1718059687;
-        h=content-transfer-encoding:disposition-notification-to:subject:from
-         :content-language:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CsS54hqwzPnYlBGCDoQf1upjUKAeqKwaL1FX0n56hLs=;
-        b=XWqBxNt871ADafaWXmak8oYSHVimctZl/6sFRd4C9FaayHXmks034VcOdRYL2y5Jz5
-         RDLXZJ5XeMmb2McVdzyX/c13fmo/3W/FASmZKsYLUlrYRW5WmQ5k5t25NekCNIKQg8Jm
-         crGtIMWBWfIVdUpiRh6cT1KnQnGz2fV4Iq3Tx/u2uPeQ2f1A9LncAm56noc3pqxYq/Bs
-         rAaC8hrmNz0qZBNBbW8/MZPyeZfiqHBMv30mDbD79PSKiVfLFxNPNF0K83V4CYD0WU0M
-         HET4gTpBHiJYLmZFLvb8qelnlIISfaU/MXKiEhZNjtP3Imgw8mPiLt4MgUIk/w2Fo65V
-         PKLg==
-X-Gm-Message-State: AOJu0YzzD3m8Tj2JLOLvWEJ7Q6C0fz9fUG24HHKtj0EUZP26BnEDT/rl
-	lLJIs4pUSDiDlRNNSSbS/YBHlwhuOOKKxPAhbjOcSlo56Nt5+DW5ICI2ZqR7
-X-Google-Smtp-Source: AGHT+IFzNWv4G49+oIKF+9ylCRW1PB0ysos53uJy0aREJVj04SJsVCNEY5tWMR+qFZCas6dLHhTOiA==
-X-Received: by 2002:a05:6870:e40f:b0:24f:c241:4d16 with SMTP id 586e51a60fabf-2508bc2ba99mr12028231fac.50.1717454886450;
-        Mon, 03 Jun 2024 15:48:06 -0700 (PDT)
-Received: from [192.168.6.104] (mail.3111skyline.com. [66.76.46.195])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-25085023811sm2767815fac.32.2024.06.03.15.48.05
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jun 2024 15:48:05 -0700 (PDT)
-Message-ID: <d82c276f-fade-4b23-9617-206c4cf0796e@gmail.com>
-Date: Mon, 3 Jun 2024 17:48:05 -0500
+	s=arc-20240116; t=1717459828; c=relaxed/simple;
+	bh=UnZP8hTxJqNQKBXlQ6Yjy1MXD2T4EGPiF4S7k9wGFSg=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=Dg2ppSX+Pe9NPAvIJZ3EKxAOoghSBAuNs/V6JWCxoCU7CGGI/u+xgV2Mm7BqM2nQbo5psJpJY0YkV5blNz1L5bPH84VB/QOLwUfv2FiMzUlWUE/wiZFzWmBBb+y7RzGJQMmcixsfhQSCQM33u88OEUZrjQoMmtg3yFOOq8db+LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HY6ST8IK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A99EC2BD10;
+	Tue,  4 Jun 2024 00:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717459827;
+	bh=UnZP8hTxJqNQKBXlQ6Yjy1MXD2T4EGPiF4S7k9wGFSg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=HY6ST8IK5UWhR0hRot1g38azQUr9oyF17qxp+LOxv8q+7KMnYN+vZXvW/Q79AAj5b
+	 lpYejqrtRCnSUFNrRFk9G1ZDCwvE9OYyK1abre8em4OHt07PbM+uV7cjqDe8Ty6qVN
+	 mwi+wyg9Nge//d+hy+O2GZHHJwJ+93Ftg9TVlARIbem0MFG+LCMW4IkjypNyHq8B+b
+	 wju0Er2rj8HtQVxlNX82BFnAc+Kvvj9CtWRJvJzZQcYCnzntXFGj5g6KRMVKH39H5U
+	 /3JGEvq0y0PhoXV57OstJSggR5wyr6mId88RvkzKg8qOqUrg8PFIGIFk6HRm34Q+4I
+	 TTQuNVL4j5VFQ==
+Message-ID: <8e6fcde41671b0a1e8365214e6df4ec2.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-gpio@vger.kernel.org
-Content-Language: en-US
-From: "David C. Rankin" <drankinatty@gmail.com>
-Subject: Documentation for line_config PULL_UP, effect on line_event edges and
- line_request values?
-Disposition-Notification-To: "David C. Rankin" <drankinatty@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240517-a2b-v1-8-b8647554c67b@bang-olufsen.dk>
+References: <20240517-a2b-v1-0-b8647554c67b@bang-olufsen.dk> <20240517-a2b-v1-8-b8647554c67b@bang-olufsen.dk>
+Subject: Re: [PATCH 08/13] clk: add AD24xx clock driver
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Emil Svendsen <emas@bang-olufsen.dk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sound@vger.kernel.org, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, Alvin =?utf-8?q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>
+To: Alvin =?utf-8?q?=C5=A0ipraga?= <alvin@pqrs.dk>, Andi Shyti <andi.shyti@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jaroslav Kysela <perex@perex.cz>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rafael J. Wysocki <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Takashi Iwai <tiwai@suse.com>
+Date: Mon, 03 Jun 2024 17:10:25 -0700
+User-Agent: alot/0.10
 
-All,
+Quoting Alvin =C5=A0ipraga (2024-05-17 06:02:15)
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 3e9099504fad..a3d54b077e68 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -257,6 +257,13 @@ config COMMON_CLK_LAN966X
+>           LAN966X SoC. GCK generates and supplies clock to various periph=
+erals
+>           within the SoC.
+> =20
+> +config COMMON_CLK_AD24XX
+> +       bool "Clock driver for Analog Devices Inc. AD24xx"
 
-   First post, so only shoot me once if the rational is documented somewhere. 
-I've been working with the gpio_v2 uABI (fantastic piece of work), but I've 
-run into a very confusing combination using gpio_line_get_values where the 
-line is PULL_UP makes going down "RISING" and going up "FALLING" and a .bits 
-value of 1 is for zero voltage and a value of 0 for normal line voltage. I 
-think I've digested it correctly, but I'm wondering if there is a better way 
-to handle this and whether the chardev.html doc should be updated to further 
-explain this behavior?
+tristate
 
-   The confusing part comes from what is defined as "active" and what is 
-defined as "inactive" when the line is active low, e.g.
+> +       depends on A2B_AD24XX_NODE
 
-  /* gpio_v2 line config, line request and line values, read defaults set */
-   struct gpio_v2_line_config linecfg = {
-                               .flags =  GPIO_V2_LINE_FLAG_ACTIVE_LOW      |
-                                         GPIO_V2_LINE_FLAG_INPUT           |
-                                         GPIO_V2_LINE_FLAG_EDGE_RISING     |
-                                         GPIO_V2_LINE_FLAG_EDGE_FALLING    |
-                                         GPIO_V2_LINE_FLAG_BIAS_PULL_UP,
-                               .num_attrs = 1 };
+Please make it be COMPILE_TESTed as well?
 
-   In this case the configured line_request is passed to a thread for reading 
-where the interest is in both the edges and the line_values.
+> +       help
+> +         This driver supports the clock output functionality of AD24xx s=
+eries
+> +         A2B transceiver chips.
+> +
+>  config COMMON_CLK_ASPEED
+>         bool "Clock driver for Aspeed BMC SoCs"
+>         depends on ARCH_ASPEED || COMPILE_TEST
+> diff --git a/drivers/clk/clk-ad24xx.c b/drivers/clk/clk-ad24xx.c
+> new file mode 100644
+> index 000000000000..ed227c317faa
+> --- /dev/null
+> +++ b/drivers/clk/clk-ad24xx.c
+> @@ -0,0 +1,341 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * AD24xx clock driver
+> + *
+> + * Copyright (c) 2023 Alvin =C5=A0ipraga <alsi@bang-olufsen.dk>
+> + */
+> +
+> +#include <linux/a2b/a2b.h>
+> +#include <linux/a2b/ad24xx.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
 
-   The documentation at 
-https://docs.kernel.org/userspace-api/gpio/chardev.html is helpful, but it is 
-silent on how the ...FLAG_ACTIVE_LOW/...PULL_UP basically inverts everything 
-so that catching the ...FLAG_EDGE_RISING is actually the edge going from 
-normal line voltage to zero (normally the falling edge of a waveform), how the 
-value retrieved by gpio_line_get_values() then reports bit Hi (1) for the zero 
-voltage state. The ...FLAG_EDGE_FALLING is then triggered when voltage goes 
-from zero back to normal line voltage (normally the rising edge) and the value 
-reported by gpio_line_get_values() is then Lo (0) at line voltage.
+Include header for static_assert() at least. There's probably more that
+are needed, please check.
 
-   The header gpio.h does provide more help. There the description of the 
-attribute flags does indicate that rising will trigger on transition from 
-(inactive to active) edges and falling will trigger on (active to inactive) 
-edges, e.g.
+> +
+> +#define AD24XX_NUM_CLKS 2
+> +
+> +/* Define some safe macros to make the code more readable */
+> +#define A2B_CLKCFG(_idx)        (!(_idx) ? A2B_CLK1CFG : A2B_CLK2CFG)
+> +
+> +#define A2B_CLKCFG_DIV_SHIFT    A2B_CLK1CFG_CLK1DIV_SHIFT
+> +#define A2B_CLKCFG_PDIV_SHIFT   A2B_CLK1CFG_CLK1PDIV_SHIFT
+> +
+> +#define A2B_CLKCFG_DIV_MASK     A2B_CLK1CFG_CLK1DIV_MASK
+> +#define A2B_CLKCFG_PDIV_MASK    A2B_CLK1CFG_CLK1PDIV_MASK
+> +#define A2B_CLKCFG_INV_MASK     A2B_CLK1CFG_CLK1INV_MASK
+> +#define A2B_CLKCFG_EN_MASK      A2B_CLK1CFG_CLK1EN_MASK
+> +
+> +static_assert(A2B_CLK1CFG_CLK1DIV_MASK  =3D=3D A2B_CLK2CFG_CLK2DIV_MASK);
+> +static_assert(A2B_CLK1CFG_CLK1PDIV_MASK =3D=3D A2B_CLK2CFG_CLK2PDIV_MASK=
+);
+> +static_assert(A2B_CLK1CFG_CLK1INV_MASK  =3D=3D A2B_CLK2CFG_CLK2INV_MASK);
+> +static_assert(A2B_CLK1CFG_CLK1EN_MASK   =3D=3D A2B_CLK2CFG_CLK2EN_MASK);
+> +
+> +struct ad24xx_clkout {
+> +       struct clk_hw hw;
+> +       unsigned int idx;
+> +       bool registered;
+> +};
+> +
+> +struct ad24xx_clk {
+> +       struct device *dev;
 
-/**
-  * enum gpio_v2_line_flag - &struct gpio_v2_line_attribute.flags values
-  ...
-  * @GPIO_V2_LINE_FLAG_ACTIVE_LOW: line active state is physical low
-  ...
+Is this used?
 
-  * @GPIO_V2_LINE_FLAG_EDGE_RISING: line detects rising (inactive to active)
-  * edges
-  * @GPIO_V2_LINE_FLAG_EDGE_FALLING: line detects falling (active to
-  * inactive) edges
-  ...
+> +       struct a2b_func *func;
 
-   Where there is a little ambiguity is in the comment for gpio_v2_line_values 
-related to active/inactive .bits values. Taken together with the flags comment 
-it's reasonably clear that active/inactive are as used in flags and not as 
-commonly used (e.g. inactive - zero - low, active - non-zero - high). The 
-comment reads:
+Is this used?
 
-/**
-  * struct gpio_v2_line_values - Values of GPIO lines
-  * @bits: a bitmap containing the value of the lines, set to 1 for active
-  * and 0 for inactive.
-  ...
+> +       struct a2b_node *node;
 
-   To make sure I was interpreting "active"/"inactive" and the effect on what 
-is RISING and FALLING edge and .bits values I wrote a short program for the 
-Raspberry Pi to catch the edges and values on button press and release and 
-display the results. The results were indeed that the active RISING edge was 
-the transition from line-voltage to zero, with a .bits value of 1 (Hi) for 
-voltage zero, and on button release the inactive FALLING edge was the 
-transition from zero to line-voltage with a .bits value of 0 (Lo) for line 
-voltage.
+Is this used?
 
-   (if interested the short test program and Makefile for the Pi are at 
-https://github.com/drankinatty/pi-wo-root/tree/master/tst/gpio_v2_button_value)
+> +       struct regmap *regmap;
+> +       struct clk_hw *pll_hw;
 
-   My questions are:
+Is this used outside of probe?
 
-  1. is there any thread or document squirreled away that contains a 
-discussion of how this rational was arrived at?
+> +       struct ad24xx_clkout clkouts[AD24XX_NUM_CLKS];
+> +};
+> +
+[..]
+> +
+> +static const struct regmap_config ad24xx_clk_regmap_config =3D {
+> +       .reg_bits =3D 8,
+> +       .val_bits =3D 8,
+> +       .cache_type =3D REGCACHE_RBTREE,
 
-  2. should the documentation at 
-https://docs.kernel.org/userspace-api/gpio/chardev.html be updated to add the 
-behavior for "active"/"inactive" and what flag this is dependent on (PULL_UP, 
-ACTIVE_LOW or BOTH?) If so, I'd be glad to take a crack at the write-up and 
-pass it to whoever for review and revision. (just let me know who the right 
-person is to send it to if interested) The chardev.html seems like the right 
-place for it rather than having to also locate and read gpio.h to find 
-"active" and "inactive" (especially for newer users using latest libgpio for 
-Pi, etc.. based on gpio_v2)
+No max_register?
 
-  3. is the expected programming approach to query the line config so that the 
-.bits values can be interpreted as either 1 (Hi or Lo), or 0 (Lo or Hi)?
+> +};
+> +
+> +static struct clk_hw *ad24xx_clk_of_get(struct of_phandle_args *clkspec,=
+ void *data)
+> +{
+> +       struct ad24xx_clk *adclk =3D data;
+> +       unsigned int idx =3D clkspec->args[0];
+> +
+> +       if (idx >=3D AD24XX_NUM_CLKS)
+> +               return ERR_PTR(-EINVAL);
+> +
+> +       if (!adclk->clkouts[idx].registered)
+> +               return ERR_PTR(-ENOENT);
+> +
+> +       return &adclk->clkouts[idx].hw;
+> +}
+> +
+> +static int ad24xx_clk_probe(struct device *dev)
+> +{
+> +       struct a2b_func *func =3D to_a2b_func(dev);
+> +       struct a2b_node *node =3D func->node;
+> +       struct device_node *np =3D dev->of_node;
+> +       char *pll_name;
+> +       const char *sync_clk_name;
+> +       struct ad24xx_clk *adclk;
+> +       int num_clks;
+> +       int ret;
+> +       int i;
+> +
+> +       /*
+> +        * Older series AD240x and AD241x chips have a single discrete
+> +        * A2B_CLKCFG register that behaves differently to the A2B_CLKnCFG
+> +        * registers of the later AD242x series. This driver only support=
+s the
+> +        * latter right now.
+> +        */
+> +       if (!(node->chip_info->caps & A2B_CHIP_CAP_CLKOUT))
+> +               return -ENODEV;
 
-  (I guess that was where the biggest confusion was -- that a .bits value 0 
-didn't mean no voltage, and vice-versa)
+Maybe print a warning message to make it more obvious.
 
-   Don't take this as a knock on the implementation, I think gpio_v2 is a 
-stroke of genius, especially the debounce, but rather these were the parts 
-that really were a bit difficult to suss out of the documentation and it may 
-be helpful to include further explanation in the chardev.html pages explaining 
-this a bit further.
+> +
+> +       adclk =3D devm_kzalloc(dev, sizeof(*adclk), GFP_KERNEL);
+> +       if (!adclk)
+> +               return -ENOMEM;
+> +
+> +       adclk->regmap =3D
+> +               devm_regmap_init_a2b_func(func, &ad24xx_clk_regmap_config=
+);
 
-NOTE Also:
+Put it on one line please .
 
-   Links for the lists in 
-https://docs.kernel.org/process/submitting-patches.html under the "Select the 
-recipients for your patch" heading still point to 
-http://vger.kernel.org/vger-lists.html (Majordomo)
+> +       if (IS_ERR(adclk->regmap))
+> +               return PTR_ERR(adclk->regmap);
+> +
+> +       adclk->dev =3D dev;
+> +       adclk->func =3D func;
+> +       adclk->node =3D node;
+> +       dev_set_drvdata(dev, adclk);
+> +
+> +       num_clks =3D of_property_count_strings(np, "clock-output-names");
+> +       if (num_clks < 0 || num_clks > AD24XX_NUM_CLKS)
+> +               return -EINVAL;
 
--- 
-David C. Rankin, J.D.,P.E.
+Please register all the clks provided by this chip.
+
+> +
+> +       /*
+> +        * Register the PLL internally to use it as the parent of the CLK=
+OUTs.
+> +        * The PLL runs at 2048 times the SYNC clock rate.
+> +        */
+> +       pll_name =3D
+> +               devm_kasprintf(dev, GFP_KERNEL, "%s_pll", dev_name(&node-=
+>dev));
+> +       if (!pll_name)
+> +               return -ENOMEM;
+> +       sync_clk_name =3D __clk_get_name(a2b_node_get_sync_clk(func->node=
+));
+> +       adclk->pll_hw =3D devm_clk_hw_register_fixed_factor(
+> +               dev, pll_name, sync_clk_name, 0, 2048, 1);
+
+I think this should be devm_clk_hw_register_fixed_factor_fwname().
+
+> +       if (IS_ERR(adclk->pll_hw))
+> +               return PTR_ERR(adclk->pll_hw);
+> +
+> +       for (i =3D 0; i < num_clks; i++) {
+> +               struct clk_init_data init =3D { };
+> +               const char *parent_names =3D clk_hw_get_name(adclk->pll_h=
+w);
+
+Please use struct clk_parent_data instead of strings to describe
+topology.
+
+> +               unsigned int idx =3D i;
+> +
+> +               /* Clock outputs can be skipped with the clock-indices pr=
+operty */
+> +               of_property_read_u32_index(np, "clock-indices", i, &idx);
+> +               if (idx > AD24XX_NUM_CLKS)
+> +                       return -EINVAL;
+> +
+> +               ret =3D of_property_read_string_index(np, "clock-output-n=
+ames", i,
+> +                                                   &init.name);
+
+The name should only be for debug purposes. Please don't use
+clock-output-names DT property. If you need to make it unique perhaps
+you can add in the device name or something like that?
+
+> +               if (ret)
+> +                       return ret;
+> +
+> +               init.ops =3D &ad24xx_clk_ops;
+> +               init.parent_names =3D &parent_names;
+> +               init.num_parents =3D 1;
+> +
+> +               adclk->clkouts[idx].hw.init =3D &init;
+> +               adclk->clkouts[idx].idx =3D idx;
+> +               adclk->clkouts[idx].registered =3D true;
+> +
+> +               ret =3D devm_clk_hw_register(dev, &adclk->clkouts[idx].hw=
+);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       ret =3D devm_of_clk_add_hw_provider(dev, ad24xx_clk_of_get, adclk=
+);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return 0;
+
+Please just return devm_of_clk_add_hw_provider(...) to prevent the
+cleanup crews from sending a followup patch.
+
+> +}
+> +
+> +static const struct of_device_id ad24xx_clk_of_match_table[] =3D {
+> +       { .compatible =3D "adi,ad2420-clk" },
+> +       { .compatible =3D "adi,ad2421-clk" },
+> +       { .compatible =3D "adi,ad2422-clk" },
+> +       { .compatible =3D "adi,ad2425-clk" },
+> +       { .compatible =3D "adi,ad2426-clk" },
+> +       { .compatible =3D "adi,ad2427-clk" },
+> +       { .compatible =3D "adi,ad2428-clk" },
+> +       { .compatible =3D "adi,ad2429-clk" },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ad24xx_clk_of_match_table);
+> +
+> +static struct a2b_driver ad24xx_clk_driver =3D {
+
+I guess because this isn't a platform driver I can't merge this through
+the clk tree? Is there any difference from the platform bus?
+
+> +       .driver =3D {
+> +               .name =3D "ad24xx-clk",
+> +               .of_match_table =3D ad24xx_clk_of_match_table,
+> +               .probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +       },
+> +       .probe =3D ad24xx_clk_probe,
+> +};
+> +module_a2b_driver(ad24xx_clk_driver);
 
