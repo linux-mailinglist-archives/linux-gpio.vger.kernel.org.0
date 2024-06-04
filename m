@@ -1,181 +1,115 @@
-Return-Path: <linux-gpio+bounces-7121-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7122-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC7FF8FB31F
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 15:04:28 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E6608FB416
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 15:42:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5A4CCB2AC90
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 12:55:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D7C38B292BD
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jun 2024 13:41:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3E2A146A94;
-	Tue,  4 Jun 2024 12:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B37B1494D6;
+	Tue,  4 Jun 2024 13:38:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZ+NQfiy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YHq9PdCy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CB11465A8
-	for <linux-gpio@vger.kernel.org>; Tue,  4 Jun 2024 12:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC63014885E
+	for <linux-gpio@vger.kernel.org>; Tue,  4 Jun 2024 13:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717505568; cv=none; b=rEowN/j0/uDW0GcAKAkXHGs6TW3lQ8cJU0WbJbN1x2fzUyvBMJJAW0UvMmKC9kEpJQOECnQuOUuAV2c0aux9hn/4TRvTwYsDFV8UIr9dwEgIP5RxjgyIBhktbrB17LdASm8T+GRYheltcMm+H9SPorNnJZgDiQ8tC46Bey45Wss=
+	t=1717508336; cv=none; b=YjKQTAJuKHmr6NIqDluHoyXkhfmhc1GDocck851uvR63tmumAWyy5PjUkGn4/awLivwBLBs2kmnqvUU2rSu+QfyRzW8QVH+NLc+bZsNWRaY94TZFqlgNLlr7ieCYr3INdkTw5GkpG29A2+GPGf31NBOENMfGNx04REdtV+39/iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717505568; c=relaxed/simple;
-	bh=EzzKMQrhCwyYKh9hdJxi3hM2htnoQbHTyEncuCjHan4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t4hKOIuUbHkBWq/LYfSVY8fgyo/HaL7rW/VVhOSBB2BGVjI0yAvAOxzo9OmowZGVn7Q0PybHe2ZwKmvD65W5bZocrpTv1t8vgc8GjYD2r6jELx0HZrS7Lv78drgdCeLhcucrXsrm9sRtUpo/AWXHFkthqSFSffgrve0g4eawu98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kZ+NQfiy; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-6c4f3e0e407so2811770a12.1
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Jun 2024 05:52:47 -0700 (PDT)
+	s=arc-20240116; t=1717508336; c=relaxed/simple;
+	bh=+BBeFQRRuSQe7oyiSZua1p7eLPFD+XkIH8GqvQOls00=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bSAy8CMjbOMzm/WNDvy0iNMbzzQTIZiGbsfEYjVDl3TgVCtsKUIE++rJE4AkelfircAuz8p561uX9qTwBA5BoqqPFjKAlMZsexfN96Vy2WIANIOj61RIEiZBaIoXHLRfEls1MMhxh/e73hAqlux3GhDsxEgB2En0KN9wnw9fEqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YHq9PdCy; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2eaa80cb573so41730851fa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Jun 2024 06:38:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717505566; x=1718110366; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GHOytmQcmBNW5xM0P2p1kKm+NQ9LFO+8ic9E2+NFcP0=;
-        b=kZ+NQfiy5qadHbbI977l5isXxgWGjmr8Jdg9ktm9ZmYyrIMrp8bigeZ2A9fcoQzL1C
-         PI0DxSImHe5VqDcBUtLTGJlZXn4avIQY3Uv31+f4/Y4iRQTX/2EqYwBroGdnzN4RVA1Z
-         sSFehQo7CZ1qwRnDLYEjE+ipLWTxYuHwuoII1p/vHyiz6TvhIwYRCq9ludlwtuk60xVj
-         qsOBnTyTTxUeoakD/fCSAhigwwDU0HHseo1M+z9ZNmYbMnJpq7Jh+L7zIhv6/YfAfuuV
-         D3KNa8HPAez8jL5RB37k0JPCTH63oc/Oh26m++OXRH2IiXe/enrVVSJryI1lGH7BqBO6
-         62Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717505566; x=1718110366;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1717508333; x=1718113133; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GHOytmQcmBNW5xM0P2p1kKm+NQ9LFO+8ic9E2+NFcP0=;
-        b=nWNF4WGSM86XO/r4iabhCDVIOnpMVEIgz+CeSVFwRB47Njx+Uo7p56aMMQaus6Is6F
-         yQVbLZgJ4kvVT4riVAeljG+cRwplQRCeT5XQd/cWJfD1n12hdsbWNZwGewNFAMYpivtp
-         Ew0A5x8s8Jj5sfb/s0i0zBEjDCfPa9/UitJlUc/ipGvxuKfCXXuUqNQ4IpVUGm1k/FVD
-         BjXrxnOAs5SgpVTsZT9WWkdw6rAFCxb9y+J7Rc9LWSnElfGoQ8Hi6m1lbvSSqHE+7xJM
-         3oBCpaRx7ZrDH6yvx8VPMiWhbg6s1TrlKCeJ/vZcGcdIkaFZZOzqOX7CAWTTKzo+los5
-         ZEIA==
-X-Gm-Message-State: AOJu0YxpY791gIIBMBQtfVSJX+3h4lUgiS6dQOyVLx6DIC1Kr5yKELKP
-	RGvy2YpWlfgPcRQAkFw+nmcefqzp0MpyUtYCxo22N2o0SWnW7aGFllzv5w==
-X-Google-Smtp-Source: AGHT+IFUSypABqkDGhqGh3NOCgpS7E7JdrU0YDS2zI+L/VFou7y4HQ7+W7XRONE+6ewe+FzC9ZUaXg==
-X-Received: by 2002:a17:90b:e84:b0:2c1:a6e1:6a7 with SMTP id 98e67ed59e1d1-2c1dc5c8af6mr10661053a91.31.1717505566451;
-        Tue, 04 Jun 2024 05:52:46 -0700 (PDT)
-Received: from rigel (14-203-42-154.tpgi.com.au. [14.203.42.154])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c254a76729sm1604783a91.0.2024.06.04.05.52.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 05:52:46 -0700 (PDT)
-Date: Tue, 4 Jun 2024 20:52:41 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: "David C. Rankin" <drankinatty@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Subject: Re: Documentation for line_config PULL_UP, effect on line_event
- edges and line_request values?
-Message-ID: <20240604125241.GA295468@rigel>
-References: <d82c276f-fade-4b23-9617-206c4cf0796e@gmail.com>
- <20240604024322.GA45268@rigel>
- <2b815f80-5bc1-499c-9f7c-38749e112269@gmail.com>
+        bh=RJ24ia6Wzp2Pqb0kKz0O+mmt3fEDNuHDHYJjjdm6g9Y=;
+        b=YHq9PdCy9Kc320U8m7DVAAPEDTZJqOBNc2nOUBM0TxxwO3QQOQR3Gib1sfVFezMF1j
+         MJiWVCVVz60K7CkMJ3eQCseirht7wUUH4jxYKbQhD9N263xhEetOVyDu9mLhwYw2AQqQ
+         Ki2d2PujJtAK2hJpeGAyAb6H77dV8LHB6qWZMuJ/3Y68lCzhE8EjgicICwCnIwlrgCA+
+         5+ZnLoYmI6vZZWvSSuFqVB2yMAxj8aY7WmypDiyqtp2JQTISmTNtVARix9d1DnaMzdUT
+         yW16uAAmhek466pAjDjbWIKwlmH5UC3Fl+yoidAERiApkkcBmb4u58btbJ3LR/i2/nIi
+         /Nrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717508333; x=1718113133;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RJ24ia6Wzp2Pqb0kKz0O+mmt3fEDNuHDHYJjjdm6g9Y=;
+        b=an6/0gAQDdA662sgewekQ6jZ1lhMRrAFlXgxv9ZMdWttv88N5DdxNProvXCOEHJ7/9
+         Grx3seRgk1RxI0d2GgaZLQ7h5d3YTQS95oHdqfbAZC7I+PSsbabY6h3r+FexqifGlUF/
+         DA82Iqw5KV9tFJEATiGtr9TnQjaDqmHPgRf9uqRq7aCAu3a/IFnL4Iin+kKjkTQ2gCmU
+         nFye1LBbqj5SaVJ16ydDHZX8eKlEGd3FO9B/rTGStHVWevYjnSgpuROxBSbb4iJzfMkQ
+         BAoM4pMtyQtfkTsIac84hw1smxJ8PF9rGF7t+ctvs29dzrXiJEmq0UIdajkkmIhxwLSa
+         z1aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6T6gGyb9NzZ4FbE65+lDA+kZ7aair6gjLRBD+3EExUAcMpjIFX5c6ZD6zOt6pbqt7h7QtirxnHB5K8M2Zl/u9CjuXvktlo8ANFA==
+X-Gm-Message-State: AOJu0YwDNYUYxnKmMg/993AgFqUBfd6d/E8ikLijW/JeT8gYuAxLy0Mi
+	yiXGq5EgZshGDKnESNYO8NysX/LIYed5TB5gJUsTGJlirOQOnU1JbQrsqP/f2thum60DGH8mjqc
+	qHe5VBZxqyXGJuqXVOkFZACVoeH1oH2+RYg8oENFgrTBRF95odeTDnQ==
+X-Google-Smtp-Source: AGHT+IELseZkVoEmrnH9ygVfhk2FPI8hjQQ2ghS5fnHMvCo1SZ3J4jQxHmw+jA+8Hu7yKI7d8hScgJSrKdCzuHVgw/s=
+X-Received: by 2002:a2e:2401:0:b0:2e6:be3c:9d37 with SMTP id
+ 38308e7fff4ca-2ea950f70b4mr73997061fa.14.1717508332946; Tue, 04 Jun 2024
+ 06:38:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b815f80-5bc1-499c-9f7c-38749e112269@gmail.com>
+References: <20240602-pwm-gpio-v6-0-e8f6ec9cc783@linaro.org> <20240602-pwm-gpio-v6-1-e8f6ec9cc783@linaro.org>
+In-Reply-To: <20240602-pwm-gpio-v6-1-e8f6ec9cc783@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 4 Jun 2024 15:38:41 +0200
+Message-ID: <CACRpkdbPGEx9QSazVfP7rbkM7x2MnJbrACdTi3zyniQhZSyTbw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: pwm: Add pwm-gpio
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	andy.shevchenko@gmail.com, Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>, 
+	Chris Morgan <macromorgan@hotmail.com>, Stefan Wahren <wahrenst@gmx.net>, linux-gpio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Nicola Di Lieto <nicola.dilieto@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Dhruva Gole <d-gole@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 03, 2024 at 11:39:16PM -0500, David C. Rankin wrote:
-> On 6/3/24 21:43, Kent Gibson wrote:
-> > Does highlighting that line values are logical help?
->
-> Thank you Kent for the reply!
->
+Some buzz around the patch made me notice this:
 
-Btw, when replying to the list, reply-all so all included in the thread
-get a copy directly rather than having to check the list - I only just
-noticed this one now, some eight hours after you posted.
+On Sun, Jun 2, 2024 at 10:33=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
 
->   Chuckling... yes, flashing attributes too and a sledge-hammer waiting to
-> fall on my head may also help.
->
->   All kidding aside, the reason I bring it up, is if this is something that
-> I scratched my head about after reading the documentation and the header,
-> then I'm not alone. It's always the case with documenting code, when you are
-> the author (or closely involved in creating the code), everything seems very
-> clear and obvious -- you've lived with the code for months or years...
->
->   However, on the other end of the understanding continuum, is the person
-> looking to use the v2 uABI for the first time, without any familiarity with
-> the code, that reads the chardev.html document will likely never appreciate
-> the careful use of the words active/inactive. The comments in gpio.h header
-> really do seem to just make that point more clear despite having the same
-> text. I know it was that way for me.
->
->   It may not take much of an addition at all to emphasize the logical edge
-> and value relationship. In fact, just what you explained in your reply would
-> make a perfect addition to help clarify and bridge the gap between those who
-> know the uABI inside and out and those who just start working with it.
->
->   Without looking at the code (or isolating the PULL and ACTIVE_LOW) it
-> wasn't immediately clear which one was flipping the logical relationship.
-> From a hardware standpoint it would make sense that either one could do it.
-> Your explanation of bias being physical and the ACTIVE_LOW flag being the
-> one that sets the logic makes that point clear. That would be a great
-> addition to the doc as well.
->
+> +  "#pwm-cells":
+> +    const: 3
 
-Agreed - I'm looking into adding some clarification to the docs.
+I guess we should document these three cells:
+- First cell must be 0 - just the one PWM on the one GPIO pin
+- Second cell should be the default period that can be changed by software
+- Third cell is polarity, 0 or PWM_POLARITY_INVERTED
 
-> > >
-> > >  * @GPIO_V2_LINE_FLAG_EDGE_RISING: line detects rising (inactive to active)
-> > >  * edges
-> > >  * @GPIO_V2_LINE_FLAG_EDGE_FALLING: line detects falling (active to
-> > >  * inactive) edges
-> > >  ...
-> >
-> > So that does not makes it clear that the edge definitions are based on
-> > logical values?
-> >
->
->   That does make it clear, but for whatever human-factors reason, it is not
-> as apparent in the enum gpio_v2_line_flag section of the chardev.html web
-> page. Maybe it just has to do with the way the web-page puts the explanation
-> on a separate line below in smaller serif font? But it almost seems the
-> header screams "Pay attention to this!" while the doc just reads "Here is
-> some other info too". Your idea of highlighting or at least bolding the
-> "(inactive to active)" and "(active to inactive)" would certainly help
-> there.
->
->   In chardev.html, adding your explanation on the logical/physical
-> difference would work great as a "Note: ...." right before the enum
-> gpio_v2_line_flag block (or right after whichever you prefer)
->
+I guess this is 3 not 2 because the maintainers previously said they wanted
+it like this? (I haven't read all old mail, nor do I remember...)
 
-I'm not sure that is possible, given the way the documentation is generated
-from reST.
+The #pwm-cells are currently not properly specified in the bindings: for ex=
+ample
+pwm-tiecap.yaml says "See pwm.yaml in this directory for a description
+of the cells format."
+and that file says nothing about the cells and what they are for, should
+I send a separate patch for that?
 
-And, given the way the html documentation is structured, my preference would
-be to expand the documentation of the relevant ioctls and reads, as that is
-where a reader trying to understand what the function is doing would be
-looking.
-
->   Anyway, all just good ideas intended to improve the ease of initial
-> understanding for what is a great improvement over the v1 uABI. I'll leave
-> the rest in your hands, you provided a great, short and concise explanation
-> of the logical verses physical implementation of edge detection and value
-> behavior. I'd only ask that you give serious thought to adding a few
-> sentences or a paragraph precisely as you did in the reply. That really can
-> make all the difference in understanding for someone coming anew to the
-> gpio_v2 ABI.
->
->   Thanks again for your reply.
-
-Thanks for the feedback.
-
-Oh, and are you ok with me adding you as suggesting the patch?
-
-Cheers,
-Kent.
-
+Yours,
+Linus Walleij
 
