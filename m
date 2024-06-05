@@ -1,82 +1,78 @@
-Return-Path: <linux-gpio+bounces-7191-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7192-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E2218FD4F5
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 20:03:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC9718FD509
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 20:05:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2663E28B53E
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 18:03:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C77D51C209F3
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 18:05:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAC6B13A888;
-	Wed,  5 Jun 2024 18:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C61CA1474AD;
+	Wed,  5 Jun 2024 18:02:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BoWahOKK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bosRmD0V"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFB913AD31
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Jun 2024 18:00:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAE1143C54
+	for <linux-gpio@vger.kernel.org>; Wed,  5 Jun 2024 18:02:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717610441; cv=none; b=emtlKl4y9ruMwrDABlL5u7QQJXrSnBhUU3x2wjhSLXn5KDuMHKiaTZeCE+gS/YNUH04jKBbDYBdnkrXFJzOmv1wbGIUSk4c2EhvKA9qWvDyc3zwKSf7/hokhxrpenqmGYCB6H5yyX0yhxvpnE02Ab6YfauvGVYZbrLZniZENTFA=
+	t=1717610567; cv=none; b=qAEmbhwDJOCLpXe3qgtfuIdEvjX6Ezx15KwPQv/euITInHVRuO8UTTW3DRjXfEuapRZBY5f5C8pe3ZqEG5+aDGuY060jAJUG7tiIBuZVAQilVno2mZzXshDfbI5DV39iHm/XoN52FokSIpqVPZ/6h/dfmZpo1yZ2wyZUQWeVqJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717610441; c=relaxed/simple;
-	bh=W5M28gmX2P2bsv2kzALbrb00qFmArQmOjGRUC+k0KS4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JWaL5QkNFqqr396Yxj4oznsIy4y8Rwytqup0BoERT2lGhd94WgJAGMDf4nrCk/hFH8rwPUlRV1M7i0+8wm+xyX/BtaBaEYndDirvELPU7vQjtBj+kGINxfD2oDotpvPMfCG+zn3kUOmezlW/VDn7iCfuYBZIgQtM30QE3N0nVpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BoWahOKK; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1717610567; c=relaxed/simple;
+	bh=eF30gjQEDuHJ/IYGm6d82rKPYlogi0y1Le1+CTBv8es=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=cU0BT3PLpQFZmVqkSuxMCBZLIUvoty1nizTaeXaWI7avo93RLyzgEzw6CEfY3Z27C/Je3TM5f4s75mVM6xIFkGft8qI6JIZkqcUbr/ii76Q026LQWaR1VPx5XTxlIqF7aqbn76Jx+hgT/T0bYYu6F57mqWHi2+xl4b0VJy8iAno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bosRmD0V; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a23864df0so560987b3.0
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Jun 2024 11:00:39 -0700 (PDT)
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-627e7f0ca54so338687b3.3
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Jun 2024 11:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717610439; x=1718215239; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+5/Bg969zZ0eVFu5myprHh5fQqxMXbek8nDgGOBzWoA=;
-        b=BoWahOKKkJ1D7kfGtrnP0cUxpIrNaZ2suLddLewzR2oz4u7CWziBpzwFHQ+ftzncIs
-         eFtpB/1H9zyQlzicoMJtoEWPK3DPjQzpefAzkEwD6qaiDFV3B0gWZlDhSKPFv0kyzLES
-         mK3VwWf9UebiINpOs4Y5YKaafb1YFVHMwQk3QrRe8v5CIiNxI1jeF5dttXUDVWoM7CnG
-         Marjrxai/k2CObkQx8B/L/3vNKpz1bxj4bvREXGRI3sEGkj1WJCLGHIzNySao6ORHqDb
-         qzF5yPhaXQSrvk1jdn3p9DrUhYQfLvZ2MNZglt0siqP5RZkjDQWbJGwgpmIA/iYYcKMP
-         XYxA==
+        d=google.com; s=20230601; t=1717610564; x=1718215364; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=y5YxZkBMx7xM0lBc97o2/iv7RwAsHr+ZFIuj4hushzk=;
+        b=bosRmD0VAZb+uNeHi7HIWEvwXg4aQpu6UokJkBAlLIP/mwUBkraTcuWQxK3I7oKf92
+         IUqNEgKeAor+QlQfrxVSX46Wr8qSmnre7Lod1wkkTeP1WiYmtzlXHsm6O3NcweNaf3ya
+         Qandj21eqkSssUvIpP1j/ByVvuTqh/97jqaJeYq3PTsSsF6edkETmP9wm72ftlMYpBuP
+         miYX+L6h9T7WRJYqPenCfll5CtFtSZIBP1XQjvu5Eg6N2CYzUGIsxekAXrrCObtum9/3
+         0mZb0apPgAHlNJwLvOjE2WR6cA9sNf2aU7/wo0Eq6mAi9yMTDLfZS5nu4m+yBkRZ20EB
+         ZVAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717610439; x=1718215239;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+5/Bg969zZ0eVFu5myprHh5fQqxMXbek8nDgGOBzWoA=;
-        b=uZdgn9KR3o14Sq6AUvestJEMy2OK4Fj3yhGsngYJbXIlIXi+cSQM5bgWWejjgDdvCR
-         mf8QkkI4TJl4dZPQM0QdEswWey3CKi7K+Al/7L53F3VzbIrJs0tviMPuIKhPDmsyPZJc
-         kvijyprCEMi0sJD+R7FZqK0pS8EqmYUIOuyWkISiP+RJ7A6kMnjtF70n+nRPUJ+ND/d/
-         AIVy5bwVQy52lmy0hzIbuWGVnBgwGY7tQrxsRM/Txvy43WmxCkzBEHAYtEsGZxv022k4
-         YgVd8wRFGOZ/WtG0yWvDOS5zthEVg40JKVC5gRPDhDjnPQxyqh9M323L8WhvxPFSvd0B
-         TS3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXfH/hSHMnxCOAqh3RANUUJm5JQVz7CnJ3vxgNSiolOJFxBseyJf80ojT9yKbU48u+BS+Yyb325dtO/QZGWq796oEQ0rBvUMZ4Sow==
-X-Gm-Message-State: AOJu0YyUy62BRXysyTJWkMf3Dj2EUxwRc417PUtFdKogYV27NLlUYI4k
-	o+Av3ZAX3tlxu97GoyMYidq17xlk3G2kv2UjqEt1ql9yGOz1GIn7oEvSfZJo4CO7H8b13CJduJ7
-	2IRadVrd+4Q==
-X-Google-Smtp-Source: AGHT+IFfzGEzBdG0mJIzkY83NzFi7HVUzu/maRQ4zPj2TdB+TSZFtwNCtZCm0+GEQSlNaviP1mxKnEiXfVn+VQ==
+        d=1e100.net; s=20230601; t=1717610564; x=1718215364;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y5YxZkBMx7xM0lBc97o2/iv7RwAsHr+ZFIuj4hushzk=;
+        b=H8QUbWzztlLJ3cJAY/yrjRnP4WIyXzDZXZURD5Z6fBrxcld2x+JdDZxekEy59O9dTX
+         nYFj68C1TirT5/KOpjbczVosp+fCHYyVWnaTdxth4CQWsnD9O2omoVJCsDY5CUwI9dPZ
+         L5FKp7JZesL0m0LeREsI8SE1jmMErRMfixUTGDtorzQiNezR4WagcrfK83ly/OfBn79v
+         OJ9JzJwpX895mpZ7YzeKDQsM7XBmxLkt2IrhB7PLoNw2iLRlMGivL7HrvcmxsEYq9GMu
+         BYvvKDFwUR+xlgNFtfIWgHNGSn0T5l/pF+Bt0AxDnJk2NgWt8b6cifFdmOhORerE5U7+
+         wVgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGZAFcY6yvYTKDBAvxYUKHKcWwsTNmxYa0Q53kcWnnfuyUTMlq6wlrmUxDlzOC44Ku9YY7jeI1q5gIvglQp5C8tjs8MdCFhc0wEQ==
+X-Gm-Message-State: AOJu0YyO3yhBqu2pBHRO2JeQgQrKhlF7oL5LuXaltXzBXsI4IWLNHoNK
+	RVDBRg/VxuB5ndlsBzb4RJzQ+BXiA95G1qCsjiqe1ZLKeJLh8Tv8yI+tYEy6HrnCCsHqjhibWmF
+	8EvhUtxuutg==
+X-Google-Smtp-Source: AGHT+IGCU+GmK3Rf3XT5eiVn8GBJTqffr6kRhdYR5C7W1ubGEWJe6ysf+n1fV0SHLE+oXrcbvgWtj6KwbrbfFQ==
 X-Received: from joychakr.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:6ea])
- (user=joychakr job=sendgmr) by 2002:a05:690c:d90:b0:62c:efc:38b7 with SMTP id
- 00721157ae682-62cbb4a22a0mr7561267b3.1.1717610438615; Wed, 05 Jun 2024
- 11:00:38 -0700 (PDT)
-Date: Wed,  5 Jun 2024 17:59:53 +0000
-In-Reply-To: <20240605175953.2613260-1-joychakr@google.com>
+ (user=joychakr job=sendgmr) by 2002:a05:690c:884:b0:61d:3304:c25e with SMTP
+ id 00721157ae682-62cbb5b3bc3mr8573737b3.7.1717610564108; Wed, 05 Jun 2024
+ 11:02:44 -0700 (PDT)
+Date: Wed,  5 Jun 2024 18:02:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240605175953.2613260-1-joychakr@google.com>
 X-Mailer: git-send-email 2.45.1.467.gbab1589fc0-goog
-Message-ID: <20240605175953.2613260-10-joychakr@google.com>
-Subject: [PATCH v1 09/17] misc: mchp_pci1xxxx: Change nvmem reg_read/write
- return type
+Message-ID: <20240605180238.2617808-1-joychakr@google.com>
+Subject: [PATCH v1 10/17] mtd: core: Change nvmem reg_read/write return type
 From: Joy Chakraborty <joychakr@google.com>
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -92,64 +88,77 @@ Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
 	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, 
 	linux-usb@vger.kernel.org, manugautam@google.com, 
-	Joy Chakraborty <joychakr@google.com>
+	Joy Chakraborty <joychakr@google.com>, kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
 Change nvmem read/write function definition return type to ssize_t.
 
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202406050200.8BOdZUla-lkp@intel.com/
 Signed-off-by: Joy Chakraborty <joychakr@google.com>
 ---
- .../misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c    | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/mtd/mtdcore.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
-index 16695cb5e69c..817382c342d3 100644
---- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
-+++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
-@@ -117,8 +117,8 @@ static bool is_eeprom_responsive(struct pci1xxxx_otp_eeprom_device *priv)
- 	return true;
+diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+index 724f917f91ba..b13752ec2f1c 100644
+--- a/drivers/mtd/mtdcore.c
++++ b/drivers/mtd/mtdcore.c
+@@ -530,8 +530,8 @@ int mtd_pairing_groups(struct mtd_info *mtd)
+ }
+ EXPORT_SYMBOL_GPL(mtd_pairing_groups);
+ 
+-static int mtd_nvmem_reg_read(void *priv, unsigned int offset,
+-			      void *val, size_t bytes)
++static ssize_t mtd_nvmem_reg_read(void *priv, unsigned int offset,
++				  void *val, size_t bytes)
+ {
+ 	struct mtd_info *mtd = priv;
+ 	size_t retlen;
+@@ -541,7 +541,7 @@ static int mtd_nvmem_reg_read(void *priv, unsigned int offset,
+ 	if (err && err != -EUCLEAN)
+ 		return err;
+ 
+-	return retlen == bytes ? 0 : -EIO;
++	return retlen;
  }
  
--static int pci1xxxx_eeprom_read(void *priv_t, unsigned int off,
--				void *buf_t, size_t count)
-+static ssize_t pci1xxxx_eeprom_read(void *priv_t, unsigned int off,
-+				    void *buf_t, size_t count)
- {
- 	struct pci1xxxx_otp_eeprom_device *priv = priv_t;
- 	void __iomem *rb = priv->reg_base;
-@@ -159,8 +159,8 @@ static int pci1xxxx_eeprom_read(void *priv_t, unsigned int off,
- 	return ret;
+ static int mtd_nvmem_add(struct mtd_info *mtd)
+@@ -919,8 +919,8 @@ static struct nvmem_device *mtd_otp_nvmem_register(struct mtd_info *mtd,
+ 	return nvmem;
  }
  
--static int pci1xxxx_eeprom_write(void *priv_t, unsigned int off,
--				 void *value_t, size_t count)
-+static ssize_t pci1xxxx_eeprom_write(void *priv_t, unsigned int off,
-+				     void *value_t, size_t count)
+-static int mtd_nvmem_user_otp_reg_read(void *priv, unsigned int offset,
+-				       void *val, size_t bytes)
++static ssize_t mtd_nvmem_user_otp_reg_read(void *priv, unsigned int offset,
++					   void *val, size_t bytes)
  {
- 	struct pci1xxxx_otp_eeprom_device *priv = priv_t;
- 	void __iomem *rb = priv->reg_base;
-@@ -214,8 +214,8 @@ static void otp_device_set_address(struct pci1xxxx_otp_eeprom_device *priv,
- 	writew(hi, priv->reg_base + MMAP_OTP_OFFSET(OTP_ADDR_HIGH_OFFSET));
+ 	struct mtd_info *mtd = priv;
+ 	size_t retlen;
+@@ -930,11 +930,11 @@ static int mtd_nvmem_user_otp_reg_read(void *priv, unsigned int offset,
+ 	if (ret)
+ 		return ret;
+ 
+-	return retlen == bytes ? 0 : -EIO;
++	return retlen;
  }
  
--static int pci1xxxx_otp_read(void *priv_t, unsigned int off,
--			     void *buf_t, size_t count)
-+static ssize_t pci1xxxx_otp_read(void *priv_t, unsigned int off,
-+				 void *buf_t, size_t count)
+-static int mtd_nvmem_fact_otp_reg_read(void *priv, unsigned int offset,
+-				       void *val, size_t bytes)
++static ssize_t mtd_nvmem_fact_otp_reg_read(void *priv, unsigned int offset,
++					   void *val, size_t bytes)
  {
- 	struct pci1xxxx_otp_eeprom_device *priv = priv_t;
- 	void __iomem *rb = priv->reg_base;
-@@ -264,8 +264,8 @@ static int pci1xxxx_otp_read(void *priv_t, unsigned int off,
- 	return ret;
+ 	struct mtd_info *mtd = priv;
+ 	size_t retlen;
+@@ -944,7 +944,7 @@ static int mtd_nvmem_fact_otp_reg_read(void *priv, unsigned int offset,
+ 	if (ret)
+ 		return ret;
+ 
+-	return retlen == bytes ? 0 : -EIO;
++	return retlen;
  }
  
--static int pci1xxxx_otp_write(void *priv_t, unsigned int off,
--			      void *value_t, size_t count)
-+static ssize_t pci1xxxx_otp_write(void *priv_t, unsigned int off,
-+				  void *value_t, size_t count)
- {
- 	struct pci1xxxx_otp_eeprom_device *priv = priv_t;
- 	void __iomem *rb = priv->reg_base;
+ static int mtd_otp_nvmem_add(struct mtd_info *mtd)
 -- 
 2.45.1.467.gbab1589fc0-goog
 
