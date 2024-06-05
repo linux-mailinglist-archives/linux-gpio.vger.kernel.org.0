@@ -1,124 +1,132 @@
-Return-Path: <linux-gpio+bounces-7169-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7170-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F3FE8FCE44
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 15:05:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CCE18FCE6E
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 15:08:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 031B71C24213
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 13:05:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EEF0F1F24B90
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 13:08:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F1CB1B5812;
-	Wed,  5 Jun 2024 12:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcql6x10"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 800571BD50B;
+	Wed,  5 Jun 2024 12:23:23 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7BE1990D3;
-	Wed,  5 Jun 2024 12:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18E5194134;
+	Wed,  5 Jun 2024 12:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717590044; cv=none; b=Vh8KgJYfwTy2jdJldNOnAKcp/PRorF9RSxBN9DQDvj+OLZGrOM+MjlwBD790BsR5HjPxBtPVR+WDDtlibsVltr1umJ59M9qusrUBjOvcC2c1D/83I5Vg5aix7oELT25jvbG8ys7M6kV7DSeK9PkAlTgLMYKHk4wtK3VUq7umT/8=
+	t=1717590203; cv=none; b=Ho8KUlPSIhrds1Ue8uQ36BZ5xvbflF2w3IjhAv9jWMijMMjUXNukl89wPcoLsZaOBfMVSwO2xfs9LoJasT8aOpmu0sGpje8AvJE3jMbwcUmF6PbEZnjp5+NEnQrwJeJ/spxSMUXe4jg8XHvdhrYfPfsDZUxLzSjio6B0QQAQ4ZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717590044; c=relaxed/simple;
-	bh=i3VLYMzKIaICAGV7f8C0S0h6QHeKK4+fALp3AGcGmaA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VrF6v8CcJ14Z4ny3fb5Z/yXTA3MHPWaCiNmW04Isg+BYyPXNQnuNACxyVenytHl8Hz5VIXIMlIU1rq3NKnJkBnllVsLHhWRNiNwK4AeMkwB4z7+P4qXHqyAinN/NiZOxYpQtkijkpZZkn92vTTv8Rpum+4J3kDBwkNyNLFsu/qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dcql6x10; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1717590203; c=relaxed/simple;
+	bh=ORlbWIIpJw0HagFTlitUdIs16MJk0Dl44His+lVbrQA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uYwfSZDIvsb7HNvolscRZ/irmTUH2BkPcMYEzox6uWGJooPBRqrjWkXO5kH+YTeQy3IuP8vMIXesEcgvkhkxUdR+Pvle3ktLvYWyt3/3XMWXwU+s52njoLWyjEReM/tbP0mNDWelehXVbXs7OvBVw+crak1+tKa90tO+CAO1nXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso22430431fa.3;
-        Wed, 05 Jun 2024 05:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717590041; x=1718194841; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fzL5TdturJIplpKua1xxlH8v79ArVex/tipueVIZFrs=;
-        b=dcql6x10Q5rir5YB/spHn/DztfGdGsLom3Wn7vNWGsmDM7RVBJzxfQLLzD9p2XGTxa
-         ChaGzZ95Bff3vzjafVxJoN74uEEh8/KA6DQMUDXh59SEImMeD2lVWYydZjsouDzv1oqs
-         JpvsnFptsLqX7kbZpA3gEOFq5rE6y/A6mTa0oVYAJJZnPt8h/mrvlLcamswYOBH7IXcS
-         WRskHFf5I3jNdZl+ugaJTlmZq40HbFPbM6ryzz7JRRf9QwXq9z0ibtHYXrto3S++bXHK
-         Ng5XTfcw/sVeS1kSpAvaxOIW3IXh7ImS47V1VgYL0iAq1fA4okKRhjvr06ZHPAS0rFL6
-         qwmw==
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dfa584ea2ffso1802472276.1;
+        Wed, 05 Jun 2024 05:23:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717590041; x=1718194841;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fzL5TdturJIplpKua1xxlH8v79ArVex/tipueVIZFrs=;
-        b=ETHeog6XaZRzFROdEjlWO4MnMrGvjUOGnBabOKG/oGlP7F7Qt2qarsY+yAZDdZ6QIx
-         0jeeU7DZ1EaVYzk1EcOGVsJea662RwzEYpedBqMwtGC8skKFOr5kxgZ9OfjVGlvCLjfn
-         9j3eeMpTmpOznbdzHgj9ImvNI8kA7R8A6My0ZPXAWzeJzc4dQIY/A8g6JT0OqwuGaN7v
-         3Nd1DuItpKiqACWBmYFN+Hsmw0Z2H0HJiraVpO89NDUK31h0VC+qATdlAX699r/vhhb0
-         z5vWmKpsbT2fyeHsZhX2dS6xXWAFJhki7kh4uMr+jEP4CFv9OXCyk8hDhTZwOEKP4wMp
-         N4RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXcFcWmvQZxTfXfKT03tMrCw7l7454Gv/2k/dkn/zJndn00Yui1ep0qOw+3oiAa8rIWiyHl9bOgrGKlMAJa346CRuVq+i70NYhCGmwbASsKeW7k+cv20PdCJYNzbP2hVSgIn/0nJLWg4LrLktQTHqn3ZCOVnW8jIqEMQrzek/YqoYza/2o=
-X-Gm-Message-State: AOJu0Yx76RsojtS+ArDo+moesr+5ZuKxq/6okS+SavDUvS9zdEWqL3U2
-	FRCTbhEyX0v+oNgbPdLvjzgExIcdzNo57Sh+tg/M3L2z48aRi4T6dmj56w==
-X-Google-Smtp-Source: AGHT+IE4hji9mQWX96BplfNb7FUkKIGLYY97JNL2eWEW7amoMmibpGvRa7KTdcjWH1WS3/HP0hIS3A==
-X-Received: by 2002:a2e:804b:0:b0:2e5:685a:cd24 with SMTP id 38308e7fff4ca-2eac798a96dmr13488171fa.6.1717590040880;
-        Wed, 05 Jun 2024 05:20:40 -0700 (PDT)
-Received: from [10.20.30.169] ([178.218.200.115])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ea91bb4c07sm17493291fa.45.2024.06.05.05.20.39
+        d=1e100.net; s=20230601; t=1717590200; x=1718195000;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yl35AQl2+NnXi3840SGV5tyFSlF+7tO6QF/Co15JM5k=;
+        b=NnYLwujb46BFKZG3p9s2agvMj5ig+OZBRirODQx3nHk2Niw5fg1bBkgdIuwivWWbxq
+         FI4MIypAqQZY6/IZjkuHq0dtb+vvOPFjbhzkSArtvscviLo5+wPAWwTz+4QW2vi6ditg
+         87P5n71W6/wQcVSnt15FhYDLCfBEpeeQrjUQAqGBdBhuhqa9hlukTcmJyX2Bj54QME9+
+         42M6yXLNEq7SUy8dHONbipWrwUU4UZoGnYj48cROx0oJsxoIXVdd/KkID/h5IWwpxSTB
+         /rNDAH+1s+xrDAH2o1ptXsrQFXcjpx2yZCvoLrjkH+Vc7gZ0TG9A8cGj1SZUz0QHxNvT
+         uicA==
+X-Forwarded-Encrypted: i=1; AJvYcCUt06iG9D5mLiT7+BJNapnlE35p3tVdDYnJ0BKnha4A3NV0hFybBOv3Jv9nY9D9zF5LMqCFZ5WTRJhTawUHhbq9WLvUUJrwybz815jnbVLkoXH7Q7qWihCdD9nQQhF1rcuieri1DyvWdPgA/ydo3gCDm9jgGw3HC7Z3YFAg1JiL7P0vT5eahob7ag2YjAS9tD3SX8Xk0R+fR385AqXh26CD4wuto/kJ2Q==
+X-Gm-Message-State: AOJu0YzGvJwraqt7nE0njo/fJw+MNiPgRVeL1GU56dRT1RZaKAgyhgPX
+	H+SOPD9cwptPMC4CW4l6s/IcTrp5DmrOV8PQbpPAApaIasjO3uEv/U3PtBXr
+X-Google-Smtp-Source: AGHT+IG6y//UKYiukGGkzrSkcXiCM5zLBeC1WiJzP7fVwVgJdZF5DsJoe8Pz4Ci2Q9WNEviM7x6+bQ==
+X-Received: by 2002:a25:ab0b:0:b0:deb:cfcb:507e with SMTP id 3f1490d57ef6-dfacac604d2mr2227726276.35.1717590199804;
+        Wed, 05 Jun 2024 05:23:19 -0700 (PDT)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dfac4dbfb39sm480611276.24.2024.06.05.05.23.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 05:20:40 -0700 (PDT)
-Message-ID: <8b2f681c-444a-4201-9004-e12b9482d1a7@gmail.com>
-Date: Wed, 5 Jun 2024 17:20:38 +0500
+        Wed, 05 Jun 2024 05:23:19 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dfa59c35e44so2267872276.3;
+        Wed, 05 Jun 2024 05:23:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXiGB6B9uCy56abF9VYZ+KIiEH19lTXGb/T7VakMkoEo1h8t1PKFpOmt2mMsErqgal0get/TFh0yHmCaBmT6XDuqOzDeBKvmPnO0iffw/Rbsg1cz7Uofo/jfv2K7pFmVmgp2e0f07GO6sXy+nx3dyrQBAnqgdEuFu6rsozIWZA134xwt1AqZVuMQwPd4tP4bPuIJ3xjYpCHIq8KlNB6W5hJVHQh81zdog==
+X-Received: by 2002:a05:6902:2503:b0:de5:9d13:591b with SMTP id
+ 3f1490d57ef6-dfacac5f766mr2499181276.32.1717590198854; Wed, 05 Jun 2024
+ 05:23:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Dmitry Yashin <dmt.yashin@gmail.com>
-Subject: Re: [PATCH v3 2/2] pinctrl: rockchip: add rk3308b SoC support
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Jianqun Xu <jay.xu@rock-chips.com>, Jonas Karlman <jonas@kwiboo.se>,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, Dmitry Yashin <dmt.yashin@gmail.com>
-References: <20240604141020.21725-1-dmt.yashin@gmail.com>
- <20240604141020.21725-3-dmt.yashin@gmail.com>
- <b5d2d914-0c2b-4cd1-b894-f894a93a54f9@moroto.mountain>
-Content-Language: en-US
-In-Reply-To: <b5d2d914-0c2b-4cd1-b894-f894a93a54f9@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240530173857.164073-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240530173857.164073-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 5 Jun 2024 14:23:06 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUea9MxNi4HHRFO4rTWyrMbY73G7564zNqtG+Ts4r7-4Q@mail.gmail.com>
+Message-ID: <CAMuHMdUea9MxNi4HHRFO4rTWyrMbY73G7564zNqtG+Ts4r7-4Q@mail.gmail.com>
+Subject: Re: [PATCH v3 11/15] pinctrl: renesas: pinctrl-rzg2l: Add support to
+ set pulling up/down the pins
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Paul Barker <paul.barker.ct@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dan,
-
-On 6/5/24 12:22 PM, Dan Carpenter wrote:
-> On Tue, Jun 04, 2024 at 07:10:20PM +0500, Dmitry Yashin wrote:
-> Why does this one have a Fixes tag?  Isn't this new hardware support?
-> Possibly patch 1/2 was not actually a fix but just preparation for this
-> patch?
+On Thu, May 30, 2024 at 7:42=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> regards,
-> dan carpenter
+> Add support to configure bias-disable, bias-pull-up, and bias-pull-down
+> properties of the pin.
+>
+> Two new function pointers, hw_to_bias_param() and bias_param_to_hw(), are
+> introduced in the struct rzg2l_pinctrl_data to configure bias settings,
+> as the values in the PUPD register differ when compared to the RZ/G2L
+> family and the RZ/V2H(P) SoC.
+>
+> Value | RZ/G2L        | RZ/V2H
+> ---------------------------------
+> 00b:  | Bias Disabled | Pull up/down disabled
+> 01b:  | Pull-up       | Pull up/down disabled
+> 10b:  | Pull-down     | Pull-down
+> 11b:  | Prohibited    | Pull-up
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v2->v3
+> - Updated commit message
+> - Renamed get_bias_param -> hw_to_bias_param
+> - Renamed get_bias_val -> bias_param_to_hw
+> - Dropped un-necessary block {}
+> - Now reading arg before calling hw_to_bias_param()
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Initial pinctrl support for rk3308 included registers for rk3308b variant,
-which didn't work well with some pins of the first SoC and these reg's
-were fixed in the patch mentioned in the tag. So I added Fixes tag as this
-patch brings back proper setup for rk3308b and 1/2 indeed
-is the preparation.
+Gr{oetje,eeting}s,
 
-Thank you for taking your time on it. Perhaps I should describe such
-moments better next time.
+                        Geert
 
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-(resend without broken new line sorry)
-
--- 
-Thanks,
-Dmitry
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
