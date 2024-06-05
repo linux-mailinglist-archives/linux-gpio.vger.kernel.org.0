@@ -1,162 +1,160 @@
-Return-Path: <linux-gpio+bounces-7177-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7178-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B90CA8FD25C
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 18:02:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D29878FD2B2
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 18:19:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD0EE1C237DA
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 16:02:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E62DB1C23747
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 16:19:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5CC01494BD;
-	Wed,  5 Jun 2024 16:02:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D75E815351A;
+	Wed,  5 Jun 2024 16:19:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ovx20g2s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnfPkxKL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC7C39FC5;
-	Wed,  5 Jun 2024 16:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8489219D899;
+	Wed,  5 Jun 2024 16:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717603333; cv=none; b=N2ibU+46EZXxS1U36Aqnj8YuD8Md1ACmjZGpGcveqJxu+t2RsdOMmNrOmcVvirpm3YOqQCSPeDipY3NC9vTQU7uCIwN/8rOCujGecwzMe5Mv3loumuFd1ePQb/eGiJFF7H6Gh23fFEvzaFSHPmDDgYJN5/MXHl0gKhoteNqlcDI=
+	t=1717604340; cv=none; b=O3OSWMxWF+Z00eEodE8I8eaVjJSHrMqkns4P1dI9xW5jt8ExLEV39XPfwJNl+imCUFI4O1DdBP/GLe7YF5Y9lERwKFPkjigmYq3d3EA/91vP2hH4YkbGwUrmrb2Zonps9objBMvLJWsswPPug0YsMBRkKdumVjZgh/1trLQl/kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717603333; c=relaxed/simple;
-	bh=XsCDIQqWFIAtkoUuO/wschw4i+ZQG0aINPMpmAnYKaE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=MME/iF6qg3arE7102TPcxPeJBgSEVkZfYBBM4QcF1SYjzjypvcFz/h5cglc3LDleU62ZuG/kHup0/75At5LMPRO3iq0uNl89LnV3ZahfWvUBLM3A3Fa/YAyCzVFR70K1oT9gGsWZaJYfROEFqnRbsz9BGdbJOWUWgNzRlA1sN7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ovx20g2s; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1717603327; x=1718208127; i=markus.elfring@web.de;
-	bh=vwdXzxZFphgllAmGQX7gyl/IZ9Ketxl+VMFIZDnDGDc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ovx20g2s/J9C5oKkYJvjucrfVQDP/rxhCRXM5ltGrMGV4qnSaAiBpaqFgGUtG0Th
-	 y+S5Fm8K4FYXzmfwKBbWOt6agZw4pi8QJDKaf3IyNID4ezzO1li+BGYhKIXle5wAp
-	 mhowIdiZnOaDDLpLlNfNw/T7i7YFEda+YwAyR1LpohAZdHLVGsarMvJx6ckw3TSb6
-	 nZR6hcQLFqE5e2TxboIDAORTtlMznOWc8GBcLWUi13wEDLKj2dt6BoByBQtwjtANn
-	 RKbm/lpXax3xZ/dA+8qhn7WeUBK76R2FfTQSEMzZj6zmFbnMAk5BiPKXWG2h939X+
-	 tl8pQ+IPkUhXyx9WMA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M7Nmq-1sMbFT2FrQ-00FC4x; Wed, 05
- Jun 2024 18:02:07 +0200
-Message-ID: <3f6fc17e-2ab4-43f2-b166-2393a369a263@web.de>
-Date: Wed, 5 Jun 2024 18:02:01 +0200
+	s=arc-20240116; t=1717604340; c=relaxed/simple;
+	bh=d9PcXS9wR/nOoRRiAvG4FkxSp+KRRqjONneR9KkC3gY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aSEu/MeLlNTa+NYPTnCg7e4+uZaquZYcHfNmpfRGtgbYZCfVoBYCXXbeTHJOBuSbP+vLHaWwgj7E0dc4/X1MW159hdSwH0LqdXNxWxNz6H54eTytmQarzs/nYcjonazDN3Mo/sWcBNVgcLfZfKmdUx4XWqk5xewfaGX27FsR1Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnfPkxKL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0872C2BD11;
+	Wed,  5 Jun 2024 16:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717604340;
+	bh=d9PcXS9wR/nOoRRiAvG4FkxSp+KRRqjONneR9KkC3gY=;
+	h=From:List-Id:To:Cc:Subject:Date:From;
+	b=UnfPkxKL5Zr114qlcR5Qchkr1sVs3mTtZA1h+LiiqqglR+r5G67w3jb813oqy1PMj
+	 PZC9FxMypkWYFe85OrGvVRfF7Tsz1NKf3JDdYzF6bg01Gm22gdJGDpLauEaUaXqkD0
+	 WUruC42a12kVefgrUZmqyzfFsSHFOSRQLj22KsSl2QKTrpGQ/vvLPNoUeFx7Jruwqx
+	 IpytmlCwOQ20wHNIVEZpooEGd5c2BtX1XqOtSd3ptBO5H/IeaLT09xOnEbWljz77ca
+	 TTKBiD5AOl4DWmH7hbExhmhgjOMuqd3Ng1mL9Lvh5rkcCgkD41LNnTBluEI0j63q9P
+	 xlsq43aWf1o/g==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	soc@kernel.org,
+	arm@kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	devicetree@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-crypto@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	Olivia Mackall <olivia@selenic.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Subject: [PATCH v11 0/8] Turris Omnia MCU driver
+Date: Wed,  5 Jun 2024 18:18:43 +0200
+Message-ID: <20240605161851.13911-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] pinctrl: pistachio: Use scope-based resource management in
- pistachio_gpio_register()
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9RDbEdHu7QE+PQrS0bke8C0f3VIemBmJCM40WoU9RNTOSkdcDoX
- Q/RV8FNC3fG8N+/9BB6imsFsz+tM3fI8AaoK6YUk0bKTIJdAsLQJWY9LzaGhE1/BzLutQ1n
- pA8g/nLVkcihD8yJZ8szRjWPYwVz5Czo6vZIJfjpgTFhY3gghAlgXK1cRWKeUu/Dw3bPrsf
- Wl6uc3i9VT26XBCAhQuQA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:V197F1Xci9c=;Qc4P3jy9vLPsU3CtCsJeEmLb9Jh
- Xq3lNwgUCV4/WLg42MAeuVn+YLFHCh38ZhSfn3nthnTb0Ukmsq+vucObPL12J1FVirKfkvPXX
- DDl0MSYIIDDS2a5ZzOCGG7+KEPqq6HrhWwmWA9uCi3KBzYVuf89JI4cNuYaz7q5MUPxYYiR6m
- Ep3k39wuzjzx/TNsaVjOCjaptbwm1bQoovvUe02yFHrVyAnepzBMtkMbUKiwKMwh/+qtmH7cW
- WjbSjQzn7ZH5gbqDyKHG6NoP3QWtuFODPthRi1zsDbZaDn2IJak8npf/9J+ZhPORdCwlp0VDQ
- FdrlmKWqAgZvPLkk60Wtkza83O15twEQdKZwTkDeKz0u0VNFllKzJxhCy6IoYEE3Qmc1veZMy
- ZmfPgNxNcV6YBdPUUbZw3rsz3EOUdoijwEFkJHY0kbsqlwMbymKnOvzCf6YwQpaPh+SFpQZra
- Yc5TA/pE0t7umnGPn5E0Y0sosy3o1tgRtH6KGh7qdWeIgVAlKR7paMXW785fB3vA3FOBVkD67
- Y5kC7WTJ58M1VpcvSWOvXiPAgA/01CgXALorUf3Lkst3AVKq9Bw9eg5GO42AHFz2i4/xFgESp
- 47bd6obChhWTfGVMcZoe5dUsga8aNAC8jqWrNKTLT6sB8dxjhgTUebhsfJBLj0ckF3IXqN6N0
- MpvTIh7fboKokH0z/2t3OH0vfvqZFuaCXyi1G4P0v7IFuShKuPgZjBNRL9R+8m+4kCAwJWZpG
- k6lBvHyCriDY5L8QK36GAUr/HvFd5tR4PnSOyvrWrJ9uw/OG7kXMdIzgWgeYjLiV1X8AzUiQ4
- lS9gg8hHxOrNQgWJf/sae+gNgYg/kLE5F9NjErM7JVG/8=
+Content-Transfer-Encoding: 8bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 5 Jun 2024 17:46:52 +0200
+Hello Andy, Hans, Ilpo, Arnd, Gregory, and others,
 
-Scope-based resource management became supported also for another
-programming interface by contributions of Jonathan Cameron on 2024-02-17.
-See also the commit 59ed5e2d505bf5f9b4af64d0021cd0c96aec1f7c ("device
-property: Add cleanup.h based fwnode_handle_put() scope based cleanup.").
+this is v11 of the series adding Turris Omnia MCU driver.
 
-* Thus use the attribute =E2=80=9C__free(fwnode_handle)=E2=80=9D.
+Changes since v10:
+- dropped patch 7 from v10 ("Add support for digital message signing via
+  debugfs"). This must be done via different kernel API (should be
+  doable via keyctl), but this requires more work which I currently
+  don't have, unfortunately
+- in patch 3 where I introduce support for MCU connected GPIOs
+  changed u32 types to unsigned long where it made sense, in order
+  to be able to use __assign_bit(), __set_bit(), test_bit().
+  This was suggested by Andy.
+- in patch 3 deduplicated code in omnia_gpio_get_multiple()
+- moved the "fixing" in patch 3 of functions introduced in patch 2
+  to patch 2, this was a rebasing error in v10
+- changed date to September 2024 and KernelVersion to 6.11 in
+  Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu
 
-* Reduce the scope for the local variable =E2=80=9Cchild=E2=80=9D.
+Links to previous cover letters (v1 to v10):
+  https://patchwork.kernel.org/project/linux-soc/cover/20230823161012.6986-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20230919103815.16818-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231023143130.11602-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231026161803.16750-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240323164359.21642-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240418121116.22184-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240424173809.7214-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240430115111.3453-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240508103118.23345-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240510101819.13551-1-kabel@kernel.org/
 
-* Omit explicit fwnode_handle_put() calls accordingly.
+Marek Behún (8):
+  dt-bindings: firmware: add cznic,turris-omnia-mcu binding
+  platform: cznic: Add preliminary support for Turris Omnia MCU
+  platform: cznic: turris-omnia-mcu: Add support for MCU connected GPIOs
+  platform: cznic: turris-omnia-mcu: Add support for poweroff and wakeup
+  platform: cznic: turris-omnia-mcu: Add support for MCU watchdog
+  platform: cznic: turris-omnia-mcu: Add support for MCU provided TRNG
+  ARM: dts: turris-omnia: Add MCU system-controller node
+  ARM: dts: turris-omnia: Add GPIO key node for front button
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/pinctrl/pinctrl-pistachio.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ .../sysfs-bus-i2c-devices-turris-omnia-mcu    |  113 ++
+ .../firmware/cznic,turris-omnia-mcu.yaml      |   86 ++
+ MAINTAINERS                                   |    4 +
+ .../dts/marvell/armada-385-turris-omnia.dts   |   35 +-
+ drivers/platform/Kconfig                      |    2 +
+ drivers/platform/Makefile                     |    1 +
+ drivers/platform/cznic/Kconfig                |   48 +
+ drivers/platform/cznic/Makefile               |    8 +
+ .../platform/cznic/turris-omnia-mcu-base.c    |  407 +++++++
+ .../platform/cznic/turris-omnia-mcu-gpio.c    | 1071 +++++++++++++++++
+ .../cznic/turris-omnia-mcu-sys-off-wakeup.c   |  257 ++++
+ .../platform/cznic/turris-omnia-mcu-trng.c    |  103 ++
+ .../cznic/turris-omnia-mcu-watchdog.c         |  128 ++
+ drivers/platform/cznic/turris-omnia-mcu.h     |  194 +++
+ include/linux/turris-omnia-mcu-interface.h    |  249 ++++
+ 15 files changed, 2705 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu
+ create mode 100644 Documentation/devicetree/bindings/firmware/cznic,turris-omnia-mcu.yaml
+ create mode 100644 drivers/platform/cznic/Kconfig
+ create mode 100644 drivers/platform/cznic/Makefile
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-base.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-gpio.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-sys-off-wakeup.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-trng.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-watchdog.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu.h
+ create mode 100644 include/linux/turris-omnia-mcu-interface.h
 
-diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl=
--pistachio.c
-index 53408344927a..d0a18296fb27 100644
-=2D-- a/drivers/pinctrl/pinctrl-pistachio.c
-+++ b/drivers/pinctrl/pinctrl-pistachio.c
-@@ -1368,11 +1368,12 @@ static int pistachio_gpio_register(struct pistachi=
-o_pinctrl *pctl)
-
- 	for (i =3D 0; i < pctl->nbanks; i++) {
- 		char child_name[sizeof("gpioXX")];
--		struct fwnode_handle *child;
- 		struct gpio_irq_chip *girq;
-
- 		snprintf(child_name, sizeof(child_name), "gpio%d", i);
--		child =3D device_get_named_child_node(pctl->dev, child_name);
-+
-+		struct fwnode_handle *child __free(fwnode_handle)
-+					    =3D device_get_named_child_node(pctl->dev, child_name);
- 		if (!child) {
- 			dev_err(pctl->dev, "No node for bank %u\n", i);
- 			ret =3D -ENODEV;
-@@ -1380,7 +1381,6 @@ static int pistachio_gpio_register(struct pistachio_=
-pinctrl *pctl)
- 		}
-
- 		if (!fwnode_property_present(child, "gpio-controller")) {
--			fwnode_handle_put(child);
- 			dev_err(pctl->dev,
- 				"No gpio-controller property for bank %u\n", i);
- 			ret =3D -ENODEV;
-@@ -1389,12 +1389,10 @@ static int pistachio_gpio_register(struct pistachi=
-o_pinctrl *pctl)
-
- 		ret =3D fwnode_irq_get(child, 0);
- 		if (ret < 0) {
--			fwnode_handle_put(child);
- 			dev_err(pctl->dev, "Failed to retrieve IRQ for bank %u\n", i);
- 			goto err;
- 		}
- 		if (!ret) {
--			fwnode_handle_put(child);
- 			dev_err(pctl->dev, "No IRQ for bank %u\n", i);
- 			ret =3D -EINVAL;
- 			goto err;
-@@ -1406,7 +1404,7 @@ static int pistachio_gpio_register(struct pistachio_=
-pinctrl *pctl)
- 		bank->base =3D pctl->base + GPIO_BANK_BASE(i);
-
- 		bank->gpio_chip.parent =3D pctl->dev;
--		bank->gpio_chip.fwnode =3D child;
-+		bank->gpio_chip.fwnode =3D no_free_ptr(child);
-
- 		girq =3D &bank->gpio_chip.irq;
- 		gpio_irq_chip_set_chip(girq, &pistachio_gpio_irq_chip);
-=2D-
-2.45.1
+-- 
+2.44.2
 
 
