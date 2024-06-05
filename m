@@ -1,77 +1,78 @@
-Return-Path: <linux-gpio+bounces-7162-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7163-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 362218FCA8C
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 13:39:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 440CE8FCAAF
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 13:43:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A88E4B21F94
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 11:39:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 53C821C2350B
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 11:43:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1965018C325;
-	Wed,  5 Jun 2024 11:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50F9A194A71;
+	Wed,  5 Jun 2024 11:41:48 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C687346E;
-	Wed,  5 Jun 2024 11:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5662194A64;
+	Wed,  5 Jun 2024 11:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717587587; cv=none; b=ZNN/j6Zse48Z/b3X0JKpPjUBKY+y60LT2B5KbmQ6hWHNUB+61a8QzQcVwLK0ofmi4Eed7GbhWi1m1NlU5XBLWomMzyX+rsJGlTSX611DYdJhRIaseqpPQcGnUYFEI6eAFfddCEb7UsBnh0LVkLKnnanzgdAKc+TyJ92qPYv6CeA=
+	t=1717587708; cv=none; b=N4HRFvFxvgBVO7dwaG2WHvc5XCtwtEaXXLh5beFy9ZuW1SyGePcDwmjXyob1oPh42gp4GoleElHQYOB1+NX+9dlEzp26iw9L3MyiQqSUnu60G6UZdZUZezVHrX9eYhcGS8gGNcqasEeI/ZC970kSf/IjWqrZejDBOVLzURkC4Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717587587; c=relaxed/simple;
-	bh=QIdMPvRUV/iW8tgmVykAUwTW86GBixqbzUfSTWX5mw0=;
+	s=arc-20240116; t=1717587708; c=relaxed/simple;
+	bh=zEbjA5mQs7E8AU4s6oIaI0OIqqfAgw+mFjJG+HRylTA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uPEbvMRi1suxI5o4SG5a+JEvBl1j+KV9htrcg/t+ldJFydHswN/GMclL/7RQNFSzami3wWjjbrP9b2gtRvhhqC9Gcv+PF7CljtOvGxNs/zMV5Kfhd/EZsbA9mGP0m7fhTzpGXH0qqyY59oYAOPl9fwd1aYfRK3J2miFRvUqCoIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.174
+	 To:Cc:Content-Type; b=ZkuAbx+3vn/dToCzcRcTA0AOcJISDBN9w58qyiyDp1IFsicm6mcxH/aibM3Son3AfISQCzinzNL04GLXgxhR/SsWCm3bxxpnkiA36cGS5q2HLUSNWCcyHxbZ4Fggmmgfo+FTyJwM81ZwWt6T1XG7k3GmXGjOk8WiuF92aNIQmco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dfab4375f94so2784729276.1;
-        Wed, 05 Jun 2024 04:39:45 -0700 (PDT)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-62a08b250a2so23025377b3.3;
+        Wed, 05 Jun 2024 04:41:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717587584; x=1718192384;
+        d=1e100.net; s=20230601; t=1717587704; x=1718192504;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9ocNukeStRfqnDvkiMwT8a2HHUpIF8MI3vRxZB4NsmU=;
-        b=P0Z1vz1QTBT04rzwPx0fdH4RBj9TTOm6P1hwQnCJkEMOG3tNduCCGt39YxZn8NymYV
-         2npZJwy0P7gYd8jXmSoyYlcItU5Yu5mk2Kj3zJXQxKP6Vq+BD9yvHKPkjshct3OY7jVm
-         dH5S/37GaZF2FUoTz7yXQ4SVYO9kdIav1Wg5NbpLI1KEqn6sU7RQEkxf1hvhhPWpGt9U
-         q/7i/cqVPWeG4Hxj4Jjo5CO3nujPUDmOUXM9Uz4GS+2ckyMfyo0xylEsg0lkU9BaN1+2
-         ayhOt3ulJi3F3DGanx18JhWjKYORtLrmCdRZV4JtEU6bFkeFnRQ1bP/p9rQykr9uyRkq
-         /6DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVUz6HxUsNGtJfw1Op4SQX1GfrPhxj5HGwslGEqktzpsM+xYSjwLj1baNq9OxoS7ODyf9feO+HSLKkSNsUB20abhchRcY2gzQik1l/jsh+dGRqXAh9i5bkvguzOqUDx/NCkwVGAj6S5TTrDOYLpWWkiuucyRGguJF2/4h5nSctCOlZQLqE6sOAMU0nT8r3MzC6d/BfAhAvaHhwmsYtc9ab5/l+Htod4DQ==
-X-Gm-Message-State: AOJu0Yz95J2FqT/IOC7xZNVW+r7hFugXx9xT1yxHhJtjujFRLAhDGWup
-	9sOH12okiI/2uo+6SJgEHABZ49nox/zESMZ1m5VCqm6aNqTWEmCOmroG5P1X
-X-Google-Smtp-Source: AGHT+IGFrLKORaAAq1V7LItSndmuiFm6cniIOCIrdjJl8cUIV1cGKe0DV2O2/ZZ8CzL0POaUbDfGSQ==
-X-Received: by 2002:a25:68cf:0:b0:dcc:bea8:8335 with SMTP id 3f1490d57ef6-dfacad2a782mr2041171276.62.1717587583715;
-        Wed, 05 Jun 2024 04:39:43 -0700 (PDT)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dfa884bb84bsm2104059276.10.2024.06.05.04.39.43
+        bh=/oUtIFNxSgveJx6lCLtu8yauokqZ9PR7YV0F5ie91Lc=;
+        b=BIV+ppdBvWYYAZGKcatfm/auKF32lz/4pBfxs9t77E+BrAJpZzHVkC2WL//1gevjkN
+         IeY98zdCV+q5WZ1++lAgZ3uwNuI/BM5WNB2lyVbAWet4jMKe192BedrRLfNyk6XJDntI
+         nVq/mURWHe1O8ODqRx6JA1+mOxBwa4yh+F77FpN6hWGBuSH59Pwhq7TeJrOdHPqyeZaf
+         idsxq1LV5krRlVt1X2yXZNIXB0ozSGDSkwI92vjSenvccFqAm5HzPG3Cn5+KTkqLiJ8m
+         uAw1ut/4pEcisUUKbqwNT9tTPZBx5zWW+LJJshgUJku0hxliPbP/n7IHLwesStPXoF5Z
+         7Bqw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVtjwjLODpz7JxGjMObaX4NjWc0LgJHmR67R3wKpAx1G4hVEuiyR7Zgc3k18UJb6st9Vp7JRZrH72tln7jlwr7+Y1oUjTIKZPTHCP5lPyaxwtTUSkdFSFLFNzgmcI/rBD/B8GA/vdnmC+R5R+svz+p9LaF1DeC7Z2MNRrmMeLM2Jxbac1y4we1D8dsOefuk/FIVQs6wT0DlMDgbtlB707uZNUOTEPc5w==
+X-Gm-Message-State: AOJu0YwYswXMLlbI2wqqnGMzaXGbe0A7XmK9BTGlX/CO4DN1/8vz/edH
+	iQn53gONvtRPDOY1Z4h5Yy+n3oepQLKiNQ14nn3NoAe0zyTmaoTr8C90GHV0
+X-Google-Smtp-Source: AGHT+IFpycvC68AYrUU5baS4vx8rUmQM2q3JxeMxlJjgTaJyYzV7ALN0tQHMWSNGb+EroviDtFtNuA==
+X-Received: by 2002:a81:e20e:0:b0:61b:1c6f:830e with SMTP id 00721157ae682-62cbb5ce7a6mr21734347b3.43.1717587704529;
+        Wed, 05 Jun 2024 04:41:44 -0700 (PDT)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62c766afffcsm21823707b3.108.2024.06.05.04.41.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 04:39:43 -0700 (PDT)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-df7722171bcso6676817276.3;
-        Wed, 05 Jun 2024 04:39:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWuYQq55tapaIlIjMcHrnV180b2RNh1e0CDaoJowwQuwPCn2RlpiPuasNNJRsfSrP+Qcp2MHiJf7Ynzep3ehap89brJRLWvrCLp4IGyquevjtvcPIWr/VzZJsf5AKBanVCgGqB0iR0vulfDgwLN6laA6X3JcJ78I1QVXsJ0dow/tWWC79+pHvUBhBdCQBY5ubBGDEgd1DMaoSqZGw8CjL6ucbzHLyHWRQ==
-X-Received: by 2002:a25:c7c1:0:b0:dfa:5a2a:b75f with SMTP id
- 3f1490d57ef6-dfacab32061mr2387013276.10.1717587582865; Wed, 05 Jun 2024
- 04:39:42 -0700 (PDT)
+        Wed, 05 Jun 2024 04:41:44 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-df771b45e13so2219655276.2;
+        Wed, 05 Jun 2024 04:41:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWoDYmsVGzfDZxbGpHb0eRmxCxMYRvReu6Vfvmyi8GDq1T7zvOVp+j2WNejprlvxTtSVZxvILRXZUA/8jomB1OnUIbQ61xE++VglI8LV/Rj38zw7OwzXatFqVFwpp3MfkuPK5tMBtDcDGtQ2pCQD/rdVBgpXk886T9iE7Xo6z7UPvoBR0bMKHVaZowAuUb+1RUV9A5Ch4nBJPbgPsszxpGCKRaCXK1Z9g==
+X-Received: by 2002:a05:6902:4ce:b0:dfa:b47b:e9fb with SMTP id
+ 3f1490d57ef6-dfacaceda90mr2104197276.52.1717587703941; Wed, 05 Jun 2024
+ 04:41:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240530173857.164073-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240530173857.164073-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240530173857.164073-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240530173857.164073-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 5 Jun 2024 13:39:31 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX2F=PzmPhPyGFs_kZZBuTYjBQ-n88pEqo3aQh4=-oHiA@mail.gmail.com>
-Message-ID: <CAMuHMdX2F=PzmPhPyGFs_kZZBuTYjBQ-n88pEqo3aQh4=-oHiA@mail.gmail.com>
-Subject: Re: [PATCH v3 02/15] pinctrl: renesas: pinctrl-rzg2l: Rename B0WI to BOWI
+Date: Wed, 5 Jun 2024 13:41:31 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU8Anov0Z5=fsXY7DxVDKU8TFc-vRNvx6SYf2ej1X7=9Q@mail.gmail.com>
+Message-ID: <CAMuHMdU8Anov0Z5=fsXY7DxVDKU8TFc-vRNvx6SYf2ej1X7=9Q@mail.gmail.com>
+Subject: Re: [PATCH v3 03/15] pinctrl: renesas: pinctrl-rzg2l: Allow more bits
+ for pin configuration
 To: Prabhakar <prabhakar.csengg@gmail.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -85,33 +86,26 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
-
 On Thu, May 30, 2024 at 7:41=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
 om> wrote:
 > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Fix the typo B0WI -> BOWI to match with the RZ/G2L HW manual.
+> The pin configuration bits have been growing for every new SoCs being
+> added for the pinctrl-rzg2l driver which would mean updating the macros
+> every time for each new configuration. To avoid this allocate additional
+> bits for pin configuration by relocating the known fixed bits to the very
+> end of the configuration.
 >
-> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Also update the size of 'cfg' to 'u64' to allow more configuration bits i=
+n
+> the 'struct rzg2l_variable_pin_cfg'.
+>
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
 > v2->v3
-> - New patch
+> - Updated size for cfg in struct rzg2l_variable_pin_cfg
 
-Thanks for your patch!
-
-I had a deeper look, as the name "B0WI" (with zero) is also present
-in drivers/pinctrl/renesas/pinctrl-rza2.c, and because Section 41.4.2
-("Operation for Peripheral Function") in the RZ/G2L Group Hardware
-User's Manual does talk about the "B0WI" (with zero) bit.
-
-Apparently Rev. 0.51 of the RZ/A2M Group Hardware User's Manual used
-both variants. Later (Rev. 1.00) revisions replaced the O-based
-variant by the zero-based variant. So it looks like "B0WI" (with
-zero) is correct, and the RZ/G2L, RZ/V2L, RZ/G2UL, and RZ/Five HW
-manuals should be fixed instead. The RZ/G3S manual already uses
-the correct naming.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
 
