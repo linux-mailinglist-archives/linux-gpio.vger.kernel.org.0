@@ -1,134 +1,162 @@
-Return-Path: <linux-gpio+bounces-7176-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7177-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B50768FD1EE
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 17:43:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B90CA8FD25C
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 18:02:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6700E1F26050
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 15:43:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD0EE1C237DA
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 16:02:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B09F3143C76;
-	Wed,  5 Jun 2024 15:43:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5CC01494BD;
+	Wed,  5 Jun 2024 16:02:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+yKihqw"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ovx20g2s"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1221319D8B5;
-	Wed,  5 Jun 2024 15:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC7C39FC5;
+	Wed,  5 Jun 2024 16:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717602211; cv=none; b=g6NLKwsSEh51TK1kFyso+cAUIz3npvQFaOnePDu9yFmlCBixLbds0R2ca+cQ+LTqk3X65+HpfYW01nDuLj3G3a6Yz0bPkM74uD824na0w6kPEKMuFaAeVmuic8bsOWmiMe6mxb1ynx6NsT5S0DxBXhHq03+zRS01kzlCsbCzPfc=
+	t=1717603333; cv=none; b=N2ibU+46EZXxS1U36Aqnj8YuD8Md1ACmjZGpGcveqJxu+t2RsdOMmNrOmcVvirpm3YOqQCSPeDipY3NC9vTQU7uCIwN/8rOCujGecwzMe5Mv3loumuFd1ePQb/eGiJFF7H6Gh23fFEvzaFSHPmDDgYJN5/MXHl0gKhoteNqlcDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717602211; c=relaxed/simple;
-	bh=L9Xf6PXsxrK28lKVkxl+Fbpc9v74XyBLrtMzS4Zf/eU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ncsYJu2nqFvhy0OlicjgbUAeHwtnaywMJa9n3cdAITtu22LPNYlCKRjsIH0a77c5EY4+xiO1SptEnOeWNX8ZC7fylZXHxOZ6uGaPsSWTzLiqGUBrk+isNHvVGzKijI5gUvhop4+uT9iDAu8uVxjK4ZhzPd5He5feSh2tGo73Duo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N+yKihqw; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4eafded3c66so1253e0c.0;
-        Wed, 05 Jun 2024 08:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717602209; x=1718207009; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L9Xf6PXsxrK28lKVkxl+Fbpc9v74XyBLrtMzS4Zf/eU=;
-        b=N+yKihqw7vBYAZzJr76IeTZzyuPpA+ecvUsvlrDDDkP3rt1djEi9g1CXtf0kt516J8
-         uGCcaPKwH5zw6OerukWDDcAKzPCy+yLe5ljeaOlHX4GP6ugckdn5e3MrQWyyH8V+4Z6/
-         DH8d/M4BXmFqfkCupzFfahrQO18pHPQATKKrDLorXUVyvxJ5kluI6v22Q1W+auV+Tg8Z
-         36TUkV/BnrXbbReDdHFZ6kVVYQIuL9YumYN3eGlTvvt4pkXWodT2IKNok3/q845eEchx
-         KWWca1bG4cs63lEALWH4ScaYDHuPP/ZqBV12MBt6Jd47kKqJdT+RPuIYEzZYjXfuwGDI
-         3Paw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717602209; x=1718207009;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L9Xf6PXsxrK28lKVkxl+Fbpc9v74XyBLrtMzS4Zf/eU=;
-        b=ncJjUZZsZasNWL48A022ZcEtN7mObNC1/lFwKkn/fMyJ0SCge60KtwLye3oPSCdQM1
-         KXuOPGfXYMH8L0ZX+iw/4QZe7cHSclMdsFcOWtsnpJhJynA0xpNPi73Z9haP9m9rXmpc
-         iPPZICBRngbxTEfHGk2NCh9cbmm07qyFhA8O+LEVLzX7K69nvJ/mxRGWAMywwfMzS0d8
-         4cpTB/AurP74GR+FO5HBM+uy05jADXnhebZw/ekMoAUPuLsD8EP+BTRkDpRP+HQwr+HI
-         nKA2bPcCd7cdJwzc+vINxjEgmOg7A3eZCsAkD2Ayg5KSRbSn3uhhwNRsyri+Kc591b7M
-         Mt4g==
-X-Forwarded-Encrypted: i=1; AJvYcCWtr1NcJgRsXteFn1gR9U5dCmhFqtqojIYmfcMfH1sCm9eYdMyQ2/eE21qmOFRoUb4M8IfBCj+OEETXusIkSjuNgdowEOG5MmPjNp9Di2GteJbE26Ksd9j/+PfHqRWLsYSUywdrgHGQ/kuO8v0f8K0h+VUp7zJ8uY4wqIx10VxtWM47uZnaRcm4ISWQLDNJtikeWuE47GB86g6K2HjVjN1MyjQmvcexaw==
-X-Gm-Message-State: AOJu0YzfABnnlo4A5QpcdCE3jMVTV4BJHUIqQBgdj7iGHWG+NDfvO0gd
-	yzI97sXsPlz/HqdteJ0MK4ChwCpvA7MsvGB4N9h6tvrtOCTMPZUcgP9xbfuDmrhWYn/Dng1YU0R
-	Hs+GnzjIYakP9RegtWa1Lu6+qfek=
-X-Google-Smtp-Source: AGHT+IFbKVGpxnWyLukW0L51CPBZAE2I91fvGI5gnu4wKwcHZDQJqT47u6gvVpFdG9lysjKyfMMpNCv7OK8tnXQewdk=
-X-Received: by 2002:a05:6122:2669:b0:4e4:ecf6:c7fa with SMTP id
- 71dfb90a1353d-4eb3a51434fmr2555298e0c.15.1717602207449; Wed, 05 Jun 2024
- 08:43:27 -0700 (PDT)
+	s=arc-20240116; t=1717603333; c=relaxed/simple;
+	bh=XsCDIQqWFIAtkoUuO/wschw4i+ZQG0aINPMpmAnYKaE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=MME/iF6qg3arE7102TPcxPeJBgSEVkZfYBBM4QcF1SYjzjypvcFz/h5cglc3LDleU62ZuG/kHup0/75At5LMPRO3iq0uNl89LnV3ZahfWvUBLM3A3Fa/YAyCzVFR70K1oT9gGsWZaJYfROEFqnRbsz9BGdbJOWUWgNzRlA1sN7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ovx20g2s; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1717603327; x=1718208127; i=markus.elfring@web.de;
+	bh=vwdXzxZFphgllAmGQX7gyl/IZ9Ketxl+VMFIZDnDGDc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=ovx20g2s/J9C5oKkYJvjucrfVQDP/rxhCRXM5ltGrMGV4qnSaAiBpaqFgGUtG0Th
+	 y+S5Fm8K4FYXzmfwKBbWOt6agZw4pi8QJDKaf3IyNID4ezzO1li+BGYhKIXle5wAp
+	 mhowIdiZnOaDDLpLlNfNw/T7i7YFEda+YwAyR1LpohAZdHLVGsarMvJx6ckw3TSb6
+	 nZR6hcQLFqE5e2TxboIDAORTtlMznOWc8GBcLWUi13wEDLKj2dt6BoByBQtwjtANn
+	 RKbm/lpXax3xZ/dA+8qhn7WeUBK76R2FfTQSEMzZj6zmFbnMAk5BiPKXWG2h939X+
+	 tl8pQ+IPkUhXyx9WMA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M7Nmq-1sMbFT2FrQ-00FC4x; Wed, 05
+ Jun 2024 18:02:07 +0200
+Message-ID: <3f6fc17e-2ab4-43f2-b166-2393a369a263@web.de>
+Date: Wed, 5 Jun 2024 18:02:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240530173857.164073-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdX2F=PzmPhPyGFs_kZZBuTYjBQ-n88pEqo3aQh4=-oHiA@mail.gmail.com>
-In-Reply-To: <CAMuHMdX2F=PzmPhPyGFs_kZZBuTYjBQ-n88pEqo3aQh4=-oHiA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 5 Jun 2024 16:42:59 +0100
-Message-ID: <CA+V-a8t5SO-iGJA5CT8ZY_C0z8yYoiRiCNBEiBHLWuA5dDem5g@mail.gmail.com>
-Subject: Re: [PATCH v3 02/15] pinctrl: renesas: pinctrl-rzg2l: Rename B0WI to BOWI
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Paul Barker <paul.barker.ct@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] pinctrl: pistachio: Use scope-based resource management in
+ pistachio_gpio_register()
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:9RDbEdHu7QE+PQrS0bke8C0f3VIemBmJCM40WoU9RNTOSkdcDoX
+ Q/RV8FNC3fG8N+/9BB6imsFsz+tM3fI8AaoK6YUk0bKTIJdAsLQJWY9LzaGhE1/BzLutQ1n
+ pA8g/nLVkcihD8yJZ8szRjWPYwVz5Czo6vZIJfjpgTFhY3gghAlgXK1cRWKeUu/Dw3bPrsf
+ Wl6uc3i9VT26XBCAhQuQA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:V197F1Xci9c=;Qc4P3jy9vLPsU3CtCsJeEmLb9Jh
+ Xq3lNwgUCV4/WLg42MAeuVn+YLFHCh38ZhSfn3nthnTb0Ukmsq+vucObPL12J1FVirKfkvPXX
+ DDl0MSYIIDDS2a5ZzOCGG7+KEPqq6HrhWwmWA9uCi3KBzYVuf89JI4cNuYaz7q5MUPxYYiR6m
+ Ep3k39wuzjzx/TNsaVjOCjaptbwm1bQoovvUe02yFHrVyAnepzBMtkMbUKiwKMwh/+qtmH7cW
+ WjbSjQzn7ZH5gbqDyKHG6NoP3QWtuFODPthRi1zsDbZaDn2IJak8npf/9J+ZhPORdCwlp0VDQ
+ FdrlmKWqAgZvPLkk60Wtkza83O15twEQdKZwTkDeKz0u0VNFllKzJxhCy6IoYEE3Qmc1veZMy
+ ZmfPgNxNcV6YBdPUUbZw3rsz3EOUdoijwEFkJHY0kbsqlwMbymKnOvzCf6YwQpaPh+SFpQZra
+ Yc5TA/pE0t7umnGPn5E0Y0sosy3o1tgRtH6KGh7qdWeIgVAlKR7paMXW785fB3vA3FOBVkD67
+ Y5kC7WTJ58M1VpcvSWOvXiPAgA/01CgXALorUf3Lkst3AVKq9Bw9eg5GO42AHFz2i4/xFgESp
+ 47bd6obChhWTfGVMcZoe5dUsga8aNAC8jqWrNKTLT6sB8dxjhgTUebhsfJBLj0ckF3IXqN6N0
+ MpvTIh7fboKokH0z/2t3OH0vfvqZFuaCXyi1G4P0v7IFuShKuPgZjBNRL9R+8m+4kCAwJWZpG
+ k6lBvHyCriDY5L8QK36GAUr/HvFd5tR4PnSOyvrWrJ9uw/OG7kXMdIzgWgeYjLiV1X8AzUiQ4
+ lS9gg8hHxOrNQgWJf/sae+gNgYg/kLE5F9NjErM7JVG/8=
 
-Hi Geert,
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Wed, 5 Jun 2024 17:46:52 +0200
 
-Thank you for the review.
+Scope-based resource management became supported also for another
+programming interface by contributions of Jonathan Cameron on 2024-02-17.
+See also the commit 59ed5e2d505bf5f9b4af64d0021cd0c96aec1f7c ("device
+property: Add cleanup.h based fwnode_handle_put() scope based cleanup.").
 
-On Wed, Jun 5, 2024 at 12:39=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Thu, May 30, 2024 at 7:41=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
-.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Fix the typo B0WI -> BOWI to match with the RZ/G2L HW manual.
-> >
-> > Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > v2->v3
-> > - New patch
->
-> Thanks for your patch!
->
-> I had a deeper look, as the name "B0WI" (with zero) is also present
-> in drivers/pinctrl/renesas/pinctrl-rza2.c, and because Section 41.4.2
-> ("Operation for Peripheral Function") in the RZ/G2L Group Hardware
-> User's Manual does talk about the "B0WI" (with zero) bit.
->
-> Apparently Rev. 0.51 of the RZ/A2M Group Hardware User's Manual used
-> both variants. Later (Rev. 1.00) revisions replaced the O-based
-> variant by the zero-based variant. So it looks like "B0WI" (with
-> zero) is correct, and the RZ/G2L, RZ/V2L, RZ/G2UL, and RZ/Five HW
-> manuals should be fixed instead. The RZ/G3S manual already uses
-> the correct naming.
->
-Ok I'll drop this patch and create a request with the HW manual team
-to correct it.
+* Thus use the attribute =E2=80=9C__free(fwnode_handle)=E2=80=9D.
 
-Cheers,
-Prabhakar
+* Reduce the scope for the local variable =E2=80=9Cchild=E2=80=9D.
+
+* Omit explicit fwnode_handle_put() calls accordingly.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/pinctrl/pinctrl-pistachio.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl=
+-pistachio.c
+index 53408344927a..d0a18296fb27 100644
+=2D-- a/drivers/pinctrl/pinctrl-pistachio.c
++++ b/drivers/pinctrl/pinctrl-pistachio.c
+@@ -1368,11 +1368,12 @@ static int pistachio_gpio_register(struct pistachi=
+o_pinctrl *pctl)
+
+ 	for (i =3D 0; i < pctl->nbanks; i++) {
+ 		char child_name[sizeof("gpioXX")];
+-		struct fwnode_handle *child;
+ 		struct gpio_irq_chip *girq;
+
+ 		snprintf(child_name, sizeof(child_name), "gpio%d", i);
+-		child =3D device_get_named_child_node(pctl->dev, child_name);
++
++		struct fwnode_handle *child __free(fwnode_handle)
++					    =3D device_get_named_child_node(pctl->dev, child_name);
+ 		if (!child) {
+ 			dev_err(pctl->dev, "No node for bank %u\n", i);
+ 			ret =3D -ENODEV;
+@@ -1380,7 +1381,6 @@ static int pistachio_gpio_register(struct pistachio_=
+pinctrl *pctl)
+ 		}
+
+ 		if (!fwnode_property_present(child, "gpio-controller")) {
+-			fwnode_handle_put(child);
+ 			dev_err(pctl->dev,
+ 				"No gpio-controller property for bank %u\n", i);
+ 			ret =3D -ENODEV;
+@@ -1389,12 +1389,10 @@ static int pistachio_gpio_register(struct pistachi=
+o_pinctrl *pctl)
+
+ 		ret =3D fwnode_irq_get(child, 0);
+ 		if (ret < 0) {
+-			fwnode_handle_put(child);
+ 			dev_err(pctl->dev, "Failed to retrieve IRQ for bank %u\n", i);
+ 			goto err;
+ 		}
+ 		if (!ret) {
+-			fwnode_handle_put(child);
+ 			dev_err(pctl->dev, "No IRQ for bank %u\n", i);
+ 			ret =3D -EINVAL;
+ 			goto err;
+@@ -1406,7 +1404,7 @@ static int pistachio_gpio_register(struct pistachio_=
+pinctrl *pctl)
+ 		bank->base =3D pctl->base + GPIO_BANK_BASE(i);
+
+ 		bank->gpio_chip.parent =3D pctl->dev;
+-		bank->gpio_chip.fwnode =3D child;
++		bank->gpio_chip.fwnode =3D no_free_ptr(child);
+
+ 		girq =3D &bank->gpio_chip.irq;
+ 		gpio_irq_chip_set_chip(girq, &pistachio_gpio_irq_chip);
+=2D-
+2.45.1
+
 
