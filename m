@@ -1,179 +1,113 @@
-Return-Path: <linux-gpio+bounces-7203-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7204-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABD268FD62C
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 21:04:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A975B8FD638
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 21:06:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3BA4DB21F5E
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 19:04:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A3412821BC
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 19:06:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 216D445030;
-	Wed,  5 Jun 2024 19:04:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1696F13B2B9;
+	Wed,  5 Jun 2024 19:06:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+OcAXir"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUTu3Zy5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D73C133
-	for <linux-gpio@vger.kernel.org>; Wed,  5 Jun 2024 19:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6379945030;
+	Wed,  5 Jun 2024 19:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717614255; cv=none; b=KLCNeKqT4s8mTT4A5g9DkvV60PQWnFHdR3OLDEMLJAQQDiy+CEe5yRlq4Aajskl2h8lAt7har+chRvfeeTpn1M372DZvan8M4rr3wG+7kSKjEzQwTcjM5GITv+VRsai4Hri4US+yRdYPL3916UuvCPqUOLS5k0eGeu+ZbUwtOCg=
+	t=1717614377; cv=none; b=QbQu18V8qiua+aOhcHhX/ilCAKrhrMuxXr33h8lf6/pCYIu4tmBjZB1JpSwkio3hJGaEbj4IOy8d6ADNV6AmMkyvH8yICjLNVE7sjnNHccVXl4MzGCvdzVIwzFqoX3Md1XeinRghHzZDAaTSaASlR1OvE0u9zi5cjrN15ZQe734=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717614255; c=relaxed/simple;
-	bh=cxPz0mLgERFA0WC5mtFFg/LPxhSxDHo5FdX6jgZRRIU=;
+	s=arc-20240116; t=1717614377; c=relaxed/simple;
+	bh=qq+M2c9YegqKnpKKBqVK3MQB5Dp/Y/BO95wVLDILlOU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=relbEQa7f7MjFgg0e5fwzHfo0qKdyf9ww4Quia5ekLplh4k6SXuyHPO7IYc+vWO12WnBX/DG4We5Cq/UQbWeR4ROzegEttGqGPqzMORhHNMwreFw2MJNMRcjq/wvXKEdIcXZYVVnMzD59H7PoUCCpmRy58gclJO+m/K3TMC7d7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+OcAXir; arc=none smtp.client-ip=209.85.218.52
+	 To:Cc:Content-Type; b=LkyHTolEQPRoqoCmVTBuKym4wSH+iXomCtiyJwCW2uUuyY8vwgskFDWyeMhNIaC0iG39X9HY82/72cpf4vZqN6QTUCEWOpUbrfBkuTcqzzjvC43d1E3WDKsQNjpawfzdKhuGq2UI8klU10k5jE3Rm5+lo+4weFLo0tyR2eHZm0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hUTu3Zy5; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a63359aaaa6so22266466b.2
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Jun 2024 12:04:14 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57a526c6a2cso165894a12.2;
+        Wed, 05 Jun 2024 12:06:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717614253; x=1718219053; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717614375; x=1718219175; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Xh71ZSxxFua5UsJmiWrAn4VvcZX7vPDfF1OxNk1pmOQ=;
-        b=T+OcAXirEzG61pQYBjOGgto0g5Rg4WO9jVO2p3cyMCmG4OJKzEUnH8jCpoSbjPdMNA
-         LCkxoTbxp0hyqCKD1H/m0j9iq2QZ2ggD1uAANxgcaWpXW3Qzrh/e00GpEkv/dsCk5Wwm
-         i4ziwcyuTOXPEvxhLdeXc+qUQki+EyFS0apbcKJbIPlg1QYDoOfwXhsDIMZ1vT6mw++d
-         w1AeMGSdYkzoqhsV0MQdaPTrXVKPx/uVeWIPsg2XUBwnvkXOeyiCAIitBnQlvZfZ5ntr
-         cnOAF2Dc5Mhz2EANFisIIJUIXO2sDgWpKOq1iDYmo2vm+S9H+yaH2xFnMLMVEOIbd8X8
-         eC4A==
+        bh=qq+M2c9YegqKnpKKBqVK3MQB5Dp/Y/BO95wVLDILlOU=;
+        b=hUTu3Zy5LfZ9RnyTpy3s5nvS6uuvCF+tIx+bYsfJpV31BzgcOL3/kQXOuFAebIl2om
+         voBfGC8M5FVFOjacoKZhBCwzLkpiAmJsEyTGEHRCYqMOYypsJhYzKvs/F4L6EFOjadyW
+         c6LcrYruqRtlKzry0BdZTxeW8oC2iyfreVvCXUw+XONFhTLnE3cJ2EmzZ8GEBk6z+4Bq
+         5uYSnnNMdXDaDXl0N0zmI1IG6MTRpMtXgALd8KJcT4fsjRGGZQdgafBxQm6rBcQND6kN
+         mhqbo20NBMdUUSj2s5DFK45XQw4pCXF3xRk3QU1WJQ6UmtSHa1a7tV6PQIi6dnoat0zK
+         Y9QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717614253; x=1718219053;
+        d=1e100.net; s=20230601; t=1717614375; x=1718219175;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Xh71ZSxxFua5UsJmiWrAn4VvcZX7vPDfF1OxNk1pmOQ=;
-        b=LuBWOy0Fx8hrjGcu4fS/YMkUHyd4WFrdpSO1sPmNksUdU2bMcS+zwbqGVJRt3P7ifb
-         RIPDuIWYmEaDTNG75nc8EmgBlbE6s0xXUBz5smKMQCTTgoGK2UGWPdF8XKHLgva/jmyC
-         QRkaheCL1v5Lh64i2slAyutebxulfu5IoXYzna02hFOIHna4D66Vm95Cz9LXkHY7Bj04
-         Fhz09HVz+5/Q3QaVJQNkUil9+alpW83D3BEdfSLZzQrGuDuHJUrONH4Afs3adCGNXMak
-         xWjHfXqxJ+6JulB+GE/6SSqSlUvKUjhJOM/t5bNdhUclTu2wvXQ3tZ2Pu8R6giRzVzCZ
-         sRPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXRukekOuU8uAH1bgFK9oVeO5bAQu7YoxJMC/9b3v4oi+6riZzPgybWCa29XNSA/486cS2s34zx61WmdP6U0FMxbajSsZsVG8R2sA==
-X-Gm-Message-State: AOJu0YwhD59cqa6HRtjVeIs7tSMNW8I1dnT0ltT/TMSE4BbeC6KS9Ej0
-	5nbfbIJjp33wdlUg0tkLm2O+jjJhZWggOHx71CHbIb2sP6WW3dULFRNt9of5T7UpVeuII7JNRE4
-	rOl6g8Yh9Vr3DxCelK6RVr/Pfeds=
-X-Google-Smtp-Source: AGHT+IFV7sCTmuoMWxPwMTfZ7pw9ClPnGKlQdVQc1LeidomVOKHdzQe2DOE0iWJKDVSFs9zC8IM4SqejPBDSD9wMOfI=
-X-Received: by 2002:a17:906:3516:b0:a68:cc6f:cb5a with SMTP id
- a640c23a62f3a-a699fdfe2abmr224118766b.68.1717614252579; Wed, 05 Jun 2024
- 12:04:12 -0700 (PDT)
+        bh=qq+M2c9YegqKnpKKBqVK3MQB5Dp/Y/BO95wVLDILlOU=;
+        b=ByrRE66cNCSegrBi7cX9JJapxhQV/nTWDvucGxfnyZ3oR7xQ3L1WHVMHS/J1oGwLJa
+         tKvdMmQqHI3WJSya4w2G0udtwnjknT+UzpJE8+o2GPL3TGuknzye6V33DkZ/TndwvstM
+         kuHP3PjuG3ke6W2tXSN+/9vWYcDXTIsOlWLweNTEmt8rJPU6Uzg/dfqYvBlu8rR+1e7T
+         HoXeCPKpze3qQonpwtGslFMXmgegYiRM45qB+Oek4HeBn6flGCy67yvpqxrkCWwoIFEn
+         GRGhfR4SY3vLPL+XT2Z+nP0KHLCyEUulLwfpeJl4GE4YSivrdPOhXa+bLNND23EMtlcD
+         nSbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXD5Trbok52z8HoGZMavmpNff8BslFm5kBoYw8hVSyliQOkKYq2cllt2Ncle2HOAZ+bYwIlJDMKW/DeZmo7JwUpimV8mcC9uaOFIPrwuEgvIfypexIBUbsSjbkmF4jyG+nhtX29S5yOcyBS2qd5BYabJc9k2HA/4R74suk5ADBfyIFtlV/4RerYCg9RFWBZOft57sTB2u23jGXJpW2x3lddaNJz3U1f02wsUX7qGTJNHObocjEvCDpeIiJqKVJvPg==
+X-Gm-Message-State: AOJu0YwvZni4S/X+J8xsZkHEVBX51WnY6CZzgf9IET3fzS4ETCXY9ifw
+	VK/ITy/2RwsJCu/1VQE73v/XjbQ+EkpG40wxiR+5IqVij1aZ4DlHpqo2aYBTIkVGl5kMfgWwjqT
+	XQnlgQNdKFPdDfxQOlyDeOAeP06M=
+X-Google-Smtp-Source: AGHT+IF23/xRdP7P8N5y6TuoTb7yn/vvqWaiOXqdpB/ZldVT0IhlV6YfTjVPOUivLO9r24Qx7V84qrwKXUOA6fxB//M=
+X-Received: by 2002:a17:906:4816:b0:a58:e3d9:e2d6 with SMTP id
+ a640c23a62f3a-a69a024cf61mr221021566b.56.1717614374459; Wed, 05 Jun 2024
+ 12:06:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605161851.13911-1-kabel@kernel.org> <20240605161851.13911-4-kabel@kernel.org>
- <CAHp75VfsUZ=1u4dk-YniFpOSwWVSo6Qg124RBJAikBwu2Hj1vw@mail.gmail.com>
-In-Reply-To: <CAHp75VfsUZ=1u4dk-YniFpOSwWVSo6Qg124RBJAikBwu2Hj1vw@mail.gmail.com>
+References: <20240605161851.13911-1-kabel@kernel.org>
+In-Reply-To: <20240605161851.13911-1-kabel@kernel.org>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 5 Jun 2024 22:03:36 +0300
-Message-ID: <CAHp75VfrRMXi2HkVESe7HaLfwNd+6dhDiis_ZvOebUiVzumF9w@mail.gmail.com>
-Subject: Re: [PATCH v11 3/8] platform: cznic: turris-omnia-mcu: Add support
- for MCU connected GPIOs
+Date: Wed, 5 Jun 2024 22:05:37 +0300
+Message-ID: <CAHp75VdGQUBnbZ2G4tLYBBCD+PeiY4G6HZ6U9ammSMg72TNX7Q@mail.gmail.com>
+Subject: Re: [PATCH v11 0/8] Turris Omnia MCU driver
 To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
 Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, 
 	arm@kernel.org, Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
 	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+	Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, devicetree@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-crypto@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, Olivia Mackall <olivia@selenic.com>, 
+	Rob Herring <robh+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 5, 2024 at 9:29=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Jun 5, 2024 at 7:19=E2=80=AFPM Marek Beh=C3=BAn <kabel@kernel.org=
-> wrote:
+On Wed, Jun 5, 2024 at 7:19=E2=80=AFPM Marek Beh=C3=BAn <kabel@kernel.org> =
+wrote:
+>
+> Hello Andy, Hans, Ilpo, Arnd, Gregory, and others,
+>
+> this is v11 of the series adding Turris Omnia MCU driver.
 
-...
-
-> > +/**
-> > + * omnia_mask_interleave - Interleaves the bytes from @rising and @fal=
-ling
-> > + *     @dst: the destination u8 array of interleaved bytes
-> > + *     @rising: rising mask
-> > + *     @falling: falling mask
->
-> Why so many spaces before @? One is enough.
->
-> > + *
-> > + * Interleaves the little-endian bytes from @rising and @falling words=
-.
-> > + *
-> > + * If @rising =3D (r0, r1, r2, r3) and @falling =3D (f0, f1, f2, f3), =
-the result is
-> > + * @dst =3D (r0, f0, r1, f1, r2, f2, r3, f3).
-> > + *
-> > + * The MCU receives an interrupt mask and reports a pending interrupt =
-bitmap in
-> > + * this interleaved format. The rationale behind this is that the low-=
-indexed
-> > + * bits are more important - in many cases, the user will be intereste=
-d only in
-> > + * interrupts with indexes 0 to 7, and so the system can stop reading =
-after
-> > + * first 2 bytes (r0, f0), to save time on the slow I2C bus.
-> > + *
-> > + * Feel free to remove this function and its inverse, omnia_mask_deint=
-erleave,
-> > + * and use an appropriate bitmap_*() function once such a function exi=
-sts.
-> > + */
-> > +static void
-> > +omnia_mask_interleave(u8 *dst, unsigned long rising, unsigned long fal=
-ling)
-
-> But rising and failing should be either u64 or unsigned long *.
-
-Ah, sorry, I misread the use, discard this single comment.
-
-> > +{
-> > +       for (int i =3D 0; i < sizeof(u32); ++i) {
->
-> In other cases you use:
-> 1) unsigned
-> 2) post-increment
->
-> What makes this one special?
->
-> > +               dst[2 * i] =3D rising >> (8 * i);
-> > +               dst[2 * i + 1] =3D falling >> (8 * i);
-> > +       }
-> > +}
->
-> ...
->
-> > +/**
-> > + * omnia_mask_deinterleave - Deinterleaves the bytes into @rising and =
-@falling
-> > + *     @src: the source u8 array containing the interleaved bytes
-> > + *     @rising: pointer where to store the rising mask gathered from @=
-src
-> > + *     @falling: pointer where to store the falling mask gathered from=
- @src
-> > + *
-> > + * This is the inverse function to omnia_mask_interleave.
-> > + */
-> > +static void omnia_mask_deinterleave(const u8 *src, unsigned long *risi=
-ng,
-> > +                                   unsigned long *falling)
-> > +{
-> > +       *rising =3D *falling =3D 0;
-> > +
-> > +       for (int i =3D 0; i < sizeof(u32); ++i) {
-> > +               *rising |=3D src[2 * i] << (8 * i);
-> > +               *falling |=3D src[2 * i + 1] << (8 * i);
-> > +       }
-> > +}
->
-> Same comments as per above function.
+Thank you!
+There are a few small issues here and there, but overall LGTM. The
+only one main question is what to do with gpiochip_get_desc(). I Cc'ed
+Bart for this.
 
 --=20
 With Best Regards,
