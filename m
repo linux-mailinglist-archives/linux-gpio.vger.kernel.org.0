@@ -1,119 +1,94 @@
-Return-Path: <linux-gpio+bounces-7173-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7174-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0A7C8FCED9
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 15:17:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3F488FCFB4
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 15:42:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B6388B25130
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 13:15:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD2671C2400E
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jun 2024 13:42:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F32919924E;
-	Wed,  5 Jun 2024 12:39:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3C3E188CB3;
+	Wed,  5 Jun 2024 13:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EGnVRj1w";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J8MR58X/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD840192B98;
-	Wed,  5 Jun 2024 12:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CFB19D892;
+	Wed,  5 Jun 2024 13:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717591163; cv=none; b=FXXLmCQctBXIsgKfvy6MAaKCx7xXQ7zVpQtkveC5yQ+ODhZmlDzTw7+jzMW7eaIC81NNCx1kXVf1NY4lSBHJlOs9Uu/M5uid8ihYKDKOw8R3UYX4UULGM5PDhNZY/KsFFoq25IAKhU1hJ59wiUrAkLmbGDJ2/QtE6y2hVC86/hw=
+	t=1717593980; cv=none; b=QtEiJwcXc/XRgEEbcbWLK09nr2b59ArUsPXtpuYH1uYtZX2SuZUs4TFSbCv3h29zjjJwZe18A1TPabLNFUbUQ9Y6TwW0ii5r8R53iS6ZhP7PZI0bP848acZHzBaMW5sC9eCTuX8pIltTKVBdmMcgsIJSIBNJcFh1zRnVAZlHOqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717591163; c=relaxed/simple;
-	bh=fECiDaMb4F1kMdlJ53fEzmA/KWwVjlDq+a1cu8tfqZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fho8fxBzYk93/k1Jsj5n7tNgdDIS3ruZLt7I7zZ6Vfnj4siBIhLDWyOoTKa3zBrDuQo/SBENxjEkEwV50nLpy7GE0vGfy3Vgz2NPnybCkrdIcKd3Kt6qVzL0DUBSu0FUC74WmNptG9MX/MbuNuSU6tsyWvQhH4dwj6+0HntTEdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-62a145e0bb2so66578657b3.0;
-        Wed, 05 Jun 2024 05:39:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717591160; x=1718195960;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F4h29fdB+cnJRLBhs8OVkcXiYefk6YXDuyr3Sq5hSqc=;
-        b=iF27VcF7FTzWeB/RFf1MeiIP6PohIc8pWZ8M4zjvmH7s7CqrpjRTq3jpQekKa+8XWc
-         AHQ1+kxuuFE6KRRq3FA91xSPvSohkIQiY4uUG91Pql8iE+Pk3TodhN7+2vqYERGYoW4a
-         sSRlnnLiE+iCn0k7k52VuTITiS1XsnYYDzsbLqcKDAt/qhVVSAZZdXKExx74KrdimqFQ
-         k6MTzhZjnApzzkzSiQvBOYxyHEJq8lKvTQ6Q47UkQmTQrNTBAVXwNPNvcxd1SXnt8kA3
-         ci4xOsXYI/V6SezS19oJcURr1IlRYLVaCEsf0QcBao5c5NvcMR9zWhyNB5GTQSLrCJ/J
-         o4/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVPDcsLaRJnIw7WSqB9UyUrf/kqPu9GNsyR0S/qbbqx3YBLgCC2eO897Xea/lPIRqjvonM3Cz8uqFVuG1nB+dRepxQBFFQEP+S0L1FAcUgPS1Jff+PngGfoJwueBQeKhpe9InsZ0OwQOxEGfSjaxg6inY19qh1UPbVnDk/mrI8kXJfXydMTV7WbBiuC+LmCwGHI7ZI/wwIOIEAqiZJPJOfMD2EdiyIgaw==
-X-Gm-Message-State: AOJu0YyBcAC39fzkvhkoCH9M09uf19AxhScT2tMRoLMJRBXF8ktoicHK
-	wltqdFj5a8mRGmtJENhLD4+1jUub9rkOFHeq3Rq4zt1HdCdZfDpgLwAP9Z1m
-X-Google-Smtp-Source: AGHT+IGRGEmazPxZajP7SNGEMm4USOakuizHfYTBsD0XeiL8mFCI4UYH0L9bHZ67vQl1O/ISKYwzqg==
-X-Received: by 2002:a81:c604:0:b0:615:10f8:124a with SMTP id 00721157ae682-62cbb510b16mr21269527b3.29.1717591159670;
-        Wed, 05 Jun 2024 05:39:19 -0700 (PDT)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62c765b8c28sm22024947b3.28.2024.06.05.05.39.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 05:39:19 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dfa5b9274feso7351607276.2;
-        Wed, 05 Jun 2024 05:39:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVEIs2CIIMKPpKf2qhjYiURPDkPPtcyo7To1uEITvOETkuMcFdJmXW/JuDhIZ0f+3FRKJChTEjP3Aug0sP6jlZItPlx0wpibK1uCHdi9pA8jV3fQ86avo7h3vrv4k1uQnH7vuX/HBOvk/VFcSRK3AXqW/ICq/12zDPn/lS+1YmU+Hdab1Sf77TZtQi0zf7TpLPTQ5swa7DKd2ZLv+EQAUfRcgsVCPU8Xw==
-X-Received: by 2002:a25:d8c3:0:b0:dfa:5a2f:9e56 with SMTP id
- 3f1490d57ef6-dfacab2efefmr2435803276.6.1717591159339; Wed, 05 Jun 2024
- 05:39:19 -0700 (PDT)
+	s=arc-20240116; t=1717593980; c=relaxed/simple;
+	bh=ncz+ligIKhEj1oj7jLWdMzG3iPF7E5rmhPWp56cV3VM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YupdOITGmnqOPnuQ0mesxEqib+DhkHfKGwEQgN7ecIqli/DYUNVUAEass2XRTpwbeSTMFq8ACyMCNm0uGdRVgVLFDWp8nof1CGWfIBu74ZOvOxzCREScVSa/u2qxKtum8CWI/oQmSbzMOVfSp0WlrK/Mg64PuB05MmIwW/SaHHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EGnVRj1w; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J8MR58X/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Date: Wed, 5 Jun 2024 15:26:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717593975;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BeNik7y353W0nFwxiPZ2Ge3lwhP6PEQ+G3Hoyd4oGzs=;
+	b=EGnVRj1wAhnnOCqtNhT/s4mtRcxv5Oj3cqvD0/7t+xFQboXqmiz2+dQZuFNZRGiSDGsPWF
+	CM+XGlVP2NXh5yrNxLNdxZj47EMKM5A9A4i3w5uRLFFDDYJLRg637OnMngO88zjEjRc948
+	7J6FMmUvWKbUaJRLwKkCHrRJDh+BB48V0+SDLXFRQ2i5LWlfmhGEXJCGwWgnMGPpAaKpS9
+	pxSyMjXW/EepDp8oKN+m4jML7cYPDeUAGevzEldIHoJFmtlH3fpFca23p5W7cJ7zS+tCzg
+	s4dYScnk4E8w8R1QqfMwxiqtnCsBLSEA7u0C2/3fns/q2rceyCp4+WIpTLA/lA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717593975;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BeNik7y353W0nFwxiPZ2Ge3lwhP6PEQ+G3Hoyd4oGzs=;
+	b=J8MR58X/xrnG0FwDVen1xS5c1UKelfoa+z2TJB4UfWiuCr2y59p/HYCeqOo55Xb0TF5v9W
+	eavWpMkMFCJesmAg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Claudiu <claudiu.beznea@tuxon.dev>, linus.walleij@linaro.org,
+	didi.debian@cknow.org, efault@gmx.de,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v2] pinctrl: renesas: rzg2l: Use
+ spin_{lock,unlock}_irq{save,restore}
+Message-ID: <20240605132614.LeDWp2GR@linutronix.de>
+References: <20240522055421.2842689-1-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdVN3O2O4VYmyXKAsUp=19-1=J8BU2NJ3PLaCYdgV98VyQ@mail.gmail.com>
+ <20240605110008.eVmntWev@linutronix.de>
+ <CAMuHMdXMnuDSs5fg7iuciqCDSKidJ7hUxo5VxzOaZrUwqSjvog@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240530173857.164073-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240530173857.164073-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 5 Jun 2024 14:39:07 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXbDiP6g5CvHj+LJqcP+1yMzWADz0eZ50-jZbNqogiXxw@mail.gmail.com>
-Message-ID: <CAMuHMdXbDiP6g5CvHj+LJqcP+1yMzWADz0eZ50-jZbNqogiXxw@mail.gmail.com>
-Subject: Re: [PATCH v3 15/15] pinctrl: renesas: pinctrl-rzg2l: Add support for
- RZ/V2H SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Paul Barker <paul.barker.ct@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXMnuDSs5fg7iuciqCDSKidJ7hUxo5VxzOaZrUwqSjvog@mail.gmail.com>
 
-On Thu, May 30, 2024 at 7:42=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add pinctrl driver support for RZ/V2H(P) SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v2->v3
-> - Renamed PIN_CFG_OPEN_DRAIN->PIN_CFG_NOD
-> - Renamed PIN_CFG_SCHMIT_CTRL->PIN_CFG_SMT
-> - Introduced PWPR_REGWE_A instead of using PWPR_PFCWE
-> - Dropped using pwpr_lock
-> - Optimized rzv2h_pin_to_oen_bit()
+On 2024-06-05 13:22:50 [+0200], Geert Uytterhoeven wrote:
+> Hi Sebastian,
+Hi Geert,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> I have already sent a pull request for it to LinusW, and it is now part
+> of pinctrl/for-next.  I assume LinusW will send a PR to Linus(T ;-)
+> in time later.
 
-Gr{oetje,eeting}s,
+Thanks for the update.
 
-                        Geert
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Sebastian
 
