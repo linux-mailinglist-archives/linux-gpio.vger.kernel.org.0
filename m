@@ -1,216 +1,163 @@
-Return-Path: <linux-gpio+bounces-7237-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7238-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 304468FE54C
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 13:25:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0269A8FE5E9
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 13:58:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EF211C22E0A
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 11:25:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84D0A2878E2
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 11:58:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45A4B1957EF;
-	Thu,  6 Jun 2024 11:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=eh5.me header.i=@eh5.me header.b="feYgjcSG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91BB61957FC;
+	Thu,  6 Jun 2024 11:57:56 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.eh5.me (mail.eh5.me [45.76.111.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2525A160865;
-	Thu,  6 Jun 2024 11:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.76.111.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C17C195967;
+	Thu,  6 Jun 2024 11:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717673126; cv=none; b=Yl8ldJcJZgHIyoeW15BI8T2/COpBu3Cg1TBFAKN7eo4OiUkeNZErCP0c7vBue9a0heLgVNlKA/X4OuhLkB+dikfK7IlpxUoNM3d2MFxvF5BnW9KFpLdvjAMiAUwYkan7dZv2AWtdVBrx0Z8FSGk/BksKlumUTQTMXNe6CxfuV8M=
+	t=1717675076; cv=none; b=hdIUeBnAeWqflCyqg8yrtUbXs1pnRSJjq1k45u0WuX8KcsMLkviakuU5qvwrCjMpqc4zagTsuZMnIiqnKc2xiO4OWUcYoC3MaKHTpKcnme/ttTsHyySVv0EA7Or39Vzyp9nxUtAklvCAjnZMSj9VLn8OFbTbxTbjv3kQXxeZL7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717673126; c=relaxed/simple;
-	bh=h/xa4eI3k6X86KwGTxpdw1YXWi5nn9xiWeQAYUex1Ts=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=icdoBuxR0H2nuWPhMEPImXtxO9TvE9KdURhlzmPagxjCV+ONMj/BrcjCiW3WkJ0gbu1OaUa2QID39vOoEZAyrJVuXXxKVXquIegV7uTvWVZ0cQq/LZmlaewKttoeLxU7bmxnMuoUjtiNYSkCk5n3GWedzzjrFoVfqgMeppkp6B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=eh5.me; spf=pass smtp.mailfrom=eh5.me; dkim=pass (1024-bit key) header.d=eh5.me header.i=@eh5.me header.b=feYgjcSG; arc=none smtp.client-ip=45.76.111.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=eh5.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eh5.me
-Message-ID: <a4e639fa-090c-481f-ae36-7d04d7a2cc17@eh5.me>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eh5.me; s=dkim;
-	t=1717673121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=00XnzfKyvFc8UCi5vg7ycZAPYKRfP4qnEUVe/4uYGYc=;
-	b=feYgjcSGrXSBzYcCMRnEjsfaeVtDHixqKtJOI1H6dUdgZP5sOU+sqNyV+fB+P6b5td39fw
-	FbmOs60EQFuB978YYMf8NrV1egw8JdOO5l55Asl8TGbu1gVuT/Q0ZwrekbhJAke2iY08EU
-	/K+WNCJxAfJ/gaYnrpOV3DhLkFlNsng=
-Date: Thu, 6 Jun 2024 19:25:13 +0800
+	s=arc-20240116; t=1717675076; c=relaxed/simple;
+	bh=GOMW/FwNhUYau4q4SHpghUB5HgRQmmWpXYy8yblL6Mc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EpM3CKDiZOyZVnq74eMOuq5dV2wMADHTC+xUw4KIFbYivtXmW5xRvnxOpVdB1d3OYg5GOq2+ZjDE8H8vwl0BgzD4TTkG5zqT94BSjJ7dQQ+/HqfkWv5Z9F75m1W9irbtEpujTY1ZcZYMxLF3XOTs5V6Lp141ztVRSzJzBhaXDiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-62a08091c2bso8409767b3.0;
+        Thu, 06 Jun 2024 04:57:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717675072; x=1718279872;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JW29ScnmlrzACbU2zNoMRoUdfE+x9Aisx6QLidUI4l4=;
+        b=SMbHAMMzj/KO8hfuiTCBE1yGHAB47n9mTb391CutuXHA86yHbPY/b9fZ0jlvNqfj+N
+         n8HwCqh+iY4ZUfyl/vgJp3DlL7VhxiyKz9D8/NXM93bVn4Swy4iYb6kL2sf+uswRTa/o
+         /tZk6d2aOgH91xTn37AAR1WsSKmNRnzwHz584L4ZdLBR04R6TuaZ/P1rlWT/f+yuvxtZ
+         gf9aLKG70CGmG8KTJz91WqKCK62uxAuxI3kzfRgMKKQHZDuYn9z81lR1CKaCd/HPZQCc
+         G+HBY4KdLCPxx+TCOEdvSKw5ZYgD+O5sIwPwIP5KEGcbP04ZkOxHwlpb3CBq7uDvH+81
+         o9Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpMxd8Y0mVuypAoQFfiBrT1cW5+I1k3XjrzgOAN648eELNbsO0UV0ide6xBZwP00kf8RWVqKrCsDgwuK4QCOwVOhEAM/UP7moYfN4eZiWREiUvPlrJAGVLB9X51IC0CEfO3XcRFAOdTNVRLynJbv8oKG7jjW5PYMi5N4N01K+WZAhJzt92KYieRe00s1RgwwM/3XIZ1VKbdI7y07r3MB5H7hftSHqPSQ==
+X-Gm-Message-State: AOJu0Ywl5GJRq18gFchbchid1sND21WMJrHQtIaj4kHHvz/ciXSa1JV6
+	QB4Sm1w0a3jaFXn5xP1lOhtK0313y46k87zYix6ktw/WnnpZusWoe342a4Ca
+X-Google-Smtp-Source: AGHT+IGO9mA6vXfOFRblu46UTFef4m4DKibuGUgH9GSY1vpQnC2W/4LoFnRmTgYGB3XLGiFDNpy5xg==
+X-Received: by 2002:a81:ad04:0:b0:627:24d0:5037 with SMTP id 00721157ae682-62cbb310351mr54258387b3.0.1717675072115;
+        Thu, 06 Jun 2024 04:57:52 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62ccacadca4sm2206077b3.18.2024.06.06.04.57.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jun 2024 04:57:51 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dfa682a4025so980579276.2;
+        Thu, 06 Jun 2024 04:57:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVQ+Ev+Dh+oGOrZAosHwR+5gDEIXkzerjoINl5nb/M6B+bkkTKBII7AlCcF/h/PkyAp06mxs2E6QBPhovLD9O6BUVix8sBmoQQHv9IJLojhgS3/LTFnCqz0hBD9mOVBQ7riTj/yy4WDRNgyPTRys58+44oGQBwJsPIZfes+qIj+RgRqpmvvUYVjtIMaMMG0jp3URVtJqcdGMOh/qFlJYc8g1DNRoCmiQQ==
+X-Received: by 2002:a5b:64b:0:b0:dfa:7bcd:efc0 with SMTP id
+ 3f1490d57ef6-dfacacec42bmr5433758276.43.1717675071297; Thu, 06 Jun 2024
+ 04:57:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] pinctrl: rockchip: fix RK3328 pinmux bits
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240606060435.765716-1-i@eh5.me>
- <20240606060435.765716-2-i@mail.eh5.me> <3862456.FjKLVJYuhi@diego>
-Content-Language: en-US
-From: Huang-Huang Bao <i@eh5.me>
-In-Reply-To: <3862456.FjKLVJYuhi@diego>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240606085133.632307-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240606085133.632307-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 6 Jun 2024 13:57:39 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXrR7ymDBvLywYF1YYf894gUTGsQkC+M-1+uxxAEoS+xA@mail.gmail.com>
+Message-ID: <CAMuHMdXrR7ymDBvLywYF1YYf894gUTGsQkC+M-1+uxxAEoS+xA@mail.gmail.com>
+Subject: Re: [PATCH v4] dt-bindings: pinctrl: renesas: Document RZ/V2H(P) SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jun 6, 2024 at 10:51=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Add documentation for the pin controller found on the Renesas RZ/V2H(P)
+> (R9A09G057) SoC. The RZ/V2H PFC varies slightly compared to the RZ/G2L
+> family:
+> - Additional bits need to be set during pinmuxing.
+> - The GPIO pin count is different.
+>
+> Hence, a SoC-specific compatible string, 'renesas,r9a09g057-pinctrl', is
+> added for the RZ/V2H(P) SoC.
+>
+> Also, add the 'renesas,output-impedance' property. The drive strength
+> setting on RZ/V2H(P) depends on the different power rails coming out from
+> the PMIC (connected via I2C). These power rails (required for drive
+> strength) can be 1.2V, 1.8V, or 3.3V.
+>
+> Pins are grouped into 4 groups:
+>
+> Group 1: Impedance
+> - 150/75/38/25 ohms (at 3.3V)
+> - 130/65/33/22 ohms (at 1.8V)
+>
+> Group 2: Impedance
+> - 50/40/33/25 ohms (at 1.8V)
+>
+> Group 3: Impedance
+> - 150/75/37.5/25 ohms (at 3.3V)
+> - 130/65/33/22 ohms (at 1.8V)
+>
+> Group 4: Impedance
+> - 110/55/30/20 ohms (at 1.8V)
+> - 150/75/38/25 ohms (at 1.2V)
+>
+> The 'renesas,output-impedance' property, as documented, can be
+> [0, 1, 2, 3], these correspond to register bit values that can
+> be set in the PFC_IOLH_mn register, which adjusts the drive
+> strength value and is pin-dependent.
+>
+> As power rail information may not be available very early in the boot
+> process, the 'renesas,output-impedance' property is added instead of
+> reusing the 'output-impedance-ohms' property.
+>
+> Also, allow bias-disable, bias-pull-down and bias-pull-up properties
+> as these can be used to configure the pins.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> Sending just the binding patch of series [0] as reset of the patches have
+> been Reviewed.
+>
+> [0] https://patchwork.kernel.org/project/linux-renesas-soc/cover/20240530=
+173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+>
+> v3->v4
+> - Added a conditional schema for ensuring the reset length
+>   is 2 for RZ/V2H and 3 otherwise
+> - Updated description for renesas,output-impedance property
+> - Dropped '|'
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl for v6.11.
 
-On 6/6/24 18:08, Heiko Stübner wrote:
-> Hi,
-> 
-> Am Donnerstag, 6. Juni 2024, 08:04:33 CEST schrieb Huang-Huang Bao:
->> The pinmux bits for GPIO2-B0 to GPIO2-B6 actually have 2 bits width,
->> correct the bank flag for GPIO2-B. The pinmux bits for GPIO2-B7 is
->> recalculated so it remain unchanged.
-> 
-> I've verified the gpio2-related pin settings via the TRM, so this part
-> looks good :-)
-> 
-> 
->> The pinmux bits for GPIO3-B1 to GPIO3-B6 have different register offset
->> than common rockhip pinmux, set the correct value for those pins in
->> rk3328_mux_recalced_data.
->>
->> The pinmux bits for those pins are not explicitly specified in RK3328
->> TRM, however we can get hint from pad name and its correspinding IOMUX
->> setting for pins in interface descriptions, e.g.
->> IO_SPIclkm0_GPIO2B0vccio5 with GRF_GPIO2B_IOMUX[1:0]=2'b01 setting.
->>
->> This fix has been tested on NanoPi R2S for fixing confliting pinmux bits
->> between GPIO2-15 with GPIO2-13.
-> 
-> As you said, the gpio3-based pins are not documented in the TRM,
-> but in your description above you're talking about pins in the gpio2-
-> group?
-> 
-> So where did the gpio3-related pin information come from?
+Gr{oetje,eeting}s,
 
-Sorry I didn't explained it clearly, gpio3 information is inferred from
-pad name in interface descriptions similar to gpio2's, all those pad
-name has format of "*GPIO<bank><pin number>*". So I just search up
-interface description rows with pad name from "GPIO2B0" to "GPIO2B6" and
-from "GPIO3B1" to "GPIO4B7" to find potential IOMUX bits definitions.
-For example, there is IO_TSPd5m0_CIFdata5m0_GPIO3B1vccio6 with
-GRF_GPIO3BH_iomux[3:2] = 2'b01 setting for GPIO3B1.
+                        Geert
 
-Maybe I can list all these occurrences in v2.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-> 
-> Also, could you please split this patch in two pieces, one fixing the
-> gpio2-area and one for the new gpio3 pins please?
-
-Sure.
-
-> 
-> 
-> Thanks
-> Heiko
-> 
->> Signed-off-by: Huang-Huang Bao <i@eh5.me>
->> ---
->>   drivers/pinctrl/pinctrl-rockchip.c | 59 ++++++++++++++++++++++++++----
->>   1 file changed, 52 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
->> index 3bedf36a0019..23531ea0d088 100644
->> --- a/drivers/pinctrl/pinctrl-rockchip.c
->> +++ b/drivers/pinctrl/pinctrl-rockchip.c
->> @@ -634,23 +634,68 @@ static struct rockchip_mux_recalced_data rk3308_mux_recalced_data[] = {
->>   
->>   static struct rockchip_mux_recalced_data rk3328_mux_recalced_data[] = {
->>   	{
->> -		.num = 2,
->> -		.pin = 12,
->> -		.reg = 0x24,
->> -		.bit = 8,
->> -		.mask = 0x3
->> -	}, {
->> +		/* gpio2_b7_sel */
->>   		.num = 2,
->>   		.pin = 15,
->>   		.reg = 0x28,
->>   		.bit = 0,
->>   		.mask = 0x7
->>   	}, {
->> +		/* gpio2_c7_sel */
->>   		.num = 2,
->>   		.pin = 23,
->>   		.reg = 0x30,
->>   		.bit = 14,
->>   		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b1_sel */
->> +		.num = 3,
->> +		.pin = 9,
->> +		.reg = 0x44,
->> +		.bit = 2,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b2_sel */
->> +		.num = 3,
->> +		.pin = 10,
->> +		.reg = 0x44,
->> +		.bit = 4,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b3_sel */
->> +		.num = 3,
->> +		.pin = 11,
->> +		.reg = 0x44,
->> +		.bit = 6,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b4_sel */
->> +		.num = 3,
->> +		.pin = 12,
->> +		.reg = 0x44,
->> +		.bit = 8,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b5_sel */
->> +		.num = 3,
->> +		.pin = 13,
->> +		.reg = 0x44,
->> +		.bit = 10,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b6_sel */
->> +		.num = 3,
->> +		.pin = 14,
->> +		.reg = 0x44,
->> +		.bit = 12,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b7_sel */
->> +		.num = 3,
->> +		.pin = 15,
->> +		.reg = 0x44,
->> +		.bit = 14,
->> +		.mask = 0x3
->>   	},
->>   };
->>   
->> @@ -3763,7 +3808,7 @@ static struct rockchip_pin_bank rk3328_pin_banks[] = {
->>   	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
->>   	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
->>   	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", 0,
->> -			     IOMUX_WIDTH_3BIT,
->> +			     0,
->>   			     IOMUX_WIDTH_3BIT,
->>   			     0),
->>   	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3",
->>
-> 
-> 
-> 
-> 
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
