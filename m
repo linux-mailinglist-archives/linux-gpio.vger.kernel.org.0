@@ -1,191 +1,167 @@
-Return-Path: <linux-gpio+bounces-7232-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7233-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A6868FE3CE
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 12:08:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 563368FE3F7
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 12:14:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F268E1F21685
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 10:08:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DD127B24433
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 10:11:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEE0318F2E4;
-	Thu,  6 Jun 2024 10:08:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9822190671;
+	Thu,  6 Jun 2024 10:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D2q20lej"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F5017D36B;
-	Thu,  6 Jun 2024 10:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE02918FDD9
+	for <linux-gpio@vger.kernel.org>; Thu,  6 Jun 2024 10:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717668520; cv=none; b=e9VIKk87wXuSU7BuTbfVPzp+BxPAJnWY0hCD9zvV6a0Bq/FGv28pFEOIjNEPzuJz3Bb/SX8ZDyXXnXTxMxtUgD3cXL+NMlgeCkLWsNftEAcKy028p75pgcmXR6caag9m7yWTiLV+zeljj0LHtIkaxyEiWHzJT3D5JqtWL0vk6Gc=
+	t=1717668667; cv=none; b=CXPf7EPdGIkwFf/dPjgsPF23aerrz/3Gpcl+xjv+GThAaxHFSnnWA0cWDPnUZH+QovIoGAKnHe3oC8+FqtednHfZz67UwJ2xP3+2QDQt80fcrhiq9l/PukqMfKXjFwvgSxi++MgPYU2kkd2AqsTN51Ygy4p+RrkixGX5U74G1jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717668520; c=relaxed/simple;
-	bh=O4Hl1CJ9U+tfQkDb3eVAbFT3e6iHQs+MpqFGSGK4EgM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TIuVqsSktVHt3ByYAIeeVDzoRMjyyaIgIvuc05vYPBDgrHO+VKRZDGtdPOFqjA/Jr8dJ4xfML5rxfxTVc1YHkT1mFlXxhnKUaNw7SV0dfNdtA+EuyC9sSRuYER0sqvfXzogiUUhJ5Q6ctfGiTMN9oAtXv9ahu77zZTEjCzn87p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875b65.versanet.de ([83.135.91.101] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sFA2t-0007q0-Lu; Thu, 06 Jun 2024 12:08:35 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>, Huang-Huang Bao <i@eh5.me>
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Huang-Huang Bao <i@eh5.me>
-Subject: Re: [PATCH 1/3] pinctrl: rockchip: fix RK3328 pinmux bits
-Date: Thu, 06 Jun 2024 12:08:34 +0200
-Message-ID: <3862456.FjKLVJYuhi@diego>
-In-Reply-To: <20240606060435.765716-2-i@mail.eh5.me>
-References:
- <20240606060435.765716-1-i@eh5.me> <20240606060435.765716-2-i@mail.eh5.me>
+	s=arc-20240116; t=1717668667; c=relaxed/simple;
+	bh=b7Zwm8tYyK4TmWiUeSfOZCpOhR0FISw4INShYVYJW7I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bfvua+xpJlInGyt3YCVTjA7m3fZSNKo09Sob5+fpJCA/nv83YsYeyt8I+xoMcvJduq8UtWk8L8sNxUy/DglFxRxjC+iBPrqj0wsNjm8bI8rQ+nufpl4UkMEL+KS2WBNTI+x0KGqSMMtTD0LHPRY+iCZvCY47uOCxjeeCWt68DoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D2q20lej; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57a2ed9af7dso1082450a12.1
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Jun 2024 03:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717668664; x=1718273464; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aSSVkWNzaMpCFwtFKNictH+j9mKED2uTD+OcWRnyLEc=;
+        b=D2q20lej//O4Ig5uQBbj9vAnyH0T1qieMUsxo6PmrX64iwhnr0TxxAl1NcBfCT24rZ
+         A67yuBK8wJTcqRNkVpbzgegQtcsvhntr3Vqv1dwUskU+8wyp3AqL1kjy3MI80NEu6Aw7
+         u4l8F/nNctlaZGkxTPkHOmttdevvYP04dEZ59bOXzjVQoOEuyzucY+gEm0KbVXq7zv0/
+         Tc3PQHAFfyK84O7HixMMsImZuzFQ4jgRV3lqsxjxnZ0JeZr2MeEn+1SM2CKAW5FopqAV
+         /BqNkrxPLNZAVPt9BmZi4HRB5HIEKXlWm4g6YP0jIDqLSM/cGaczjuZsf+W3PAr2JaQ/
+         4EmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717668664; x=1718273464;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aSSVkWNzaMpCFwtFKNictH+j9mKED2uTD+OcWRnyLEc=;
+        b=lDwPxDKADDyvNK8GsOIz65+of7Rt1PKJEvli1iJJWkkWlq1NpMUNi+wmBuKderXe/j
+         8Q6aseKy7zOCz9lc/Y2e/skjeri6Tgev2187LeUqtuNPVMo8IXtbe4JmS2ovTJEVpsSA
+         vE5NifZ0jdt+Apl/mK2gnQGbckXm3eogA0XN+FPBnpb7QYXQt/XUFU2MNOZrj3xemHIt
+         GObfSxTY3p0jorFqOrJ77/WShP9YwqmDAbKMc64FshEZ6oABEuR6WojkgNd3w3b16Zte
+         3K+PD962fMtORfoky4CbqL3szjughzJVRUlNB2W2v1d6eE9nucVfKmfJIHhlO/pAoYSq
+         cgFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNV4JLey+ssvOv6+MqqhXxUA1k0tVtSNu/47nOIvGvYXmAnpoV114V+InmCcj1i0HFgc/BkH/WNRs3ztEid2P3ze4NF6u1KgE7iQ==
+X-Gm-Message-State: AOJu0YxufFQQduIruKK/f/UMZwGiPaDbJqlp7+LJOJT6xgxVJIkDhV3C
+	i+a0hjtE1vgErKsvY+YSiPPBlS52sresjwiOJBoTlLZbQWes16PU6dCvaR1iTiY=
+X-Google-Smtp-Source: AGHT+IHgvRJe1RUkX2wfx8nHAOigl0CQ6MgWP7QQ3TJu55eCj7i7cFlbxalhn3Ifzf+AU3sxSjybWA==
+X-Received: by 2002:a17:906:3544:b0:a6c:71d2:3311 with SMTP id a640c23a62f3a-a6c71d23352mr224386166b.65.1717668664006;
+        Thu, 06 Jun 2024 03:11:04 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c84aa8351sm49462166b.142.2024.06.06.03.11.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 03:11:03 -0700 (PDT)
+Date: Thu, 6 Jun 2024 13:10:58 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Joy Chakraborty <joychakr@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
+	manugautam@google.com
+Subject: Re: [PATCH v1 07/17] misc: eeprom: at25: Change nvmem reg_read/write
+ return type
+Message-ID: <2b979aa4-3a63-4010-9670-294ce7624e18@moroto.mountain>
+References: <20240605175953.2613260-1-joychakr@google.com>
+ <20240605175953.2613260-8-joychakr@google.com>
+ <f98a1d8f-e936-4798-8447-c642e8fe11d5@moroto.mountain>
+ <CAOSNQF0Qj2CnRDWAGM8Y1wyEdgWP04RDJx1TKO-Ge4nUH=qxoQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOSNQF0Qj2CnRDWAGM8Y1wyEdgWP04RDJx1TKO-Ge4nUH=qxoQ@mail.gmail.com>
 
-Hi,
-
-Am Donnerstag, 6. Juni 2024, 08:04:33 CEST schrieb Huang-Huang Bao:
-> The pinmux bits for GPIO2-B0 to GPIO2-B6 actually have 2 bits width,
-> correct the bank flag for GPIO2-B. The pinmux bits for GPIO2-B7 is
-> recalculated so it remain unchanged.
-
-I've verified the gpio2-related pin settings via the TRM, so this part
-looks good :-)
-
-
-> The pinmux bits for GPIO3-B1 to GPIO3-B6 have different register offset
-> than common rockhip pinmux, set the correct value for those pins in
-> rk3328_mux_recalced_data.
+On Thu, Jun 06, 2024 at 03:12:03PM +0530, Joy Chakraborty wrote:
+> > These functions are used internally and exported to the user through
+> > sysfs via bin_attr_nvmem_read/write().  For internal users partial reads
+> > should be treated as failure.  What are we supposed to do with a partial
+> > read?  I don't think anyone has asked for partial reads to be supported
+> > from sysfs either except Greg was wondering about it while reading the
+> > code.
+> >
+> > Currently, a lot of drivers return -EINVAL for partial read/writes but
+> > some return success.  It is a bit messy.  But this patchset doesn't
+> > really improve anything.  In at24_read() we check if it's going to be a
+> > partial read and return -EINVAL.  Below we report a partial read as a
+> > full read.  It's just a more complicated way of doing exactly what we
+> > were doing before.
 > 
-> The pinmux bits for those pins are not explicitly specified in RK3328
-> TRM, however we can get hint from pad name and its correspinding IOMUX
-> setting for pins in interface descriptions, e.g.
-> IO_SPIclkm0_GPIO2B0vccio5 with GRF_GPIO2B_IOMUX[1:0]=2'b01 setting.
+> Currently what drivers return is up to their interpretation of int
+> return type, there are a few drivers which also return the number of
+> bytes written/read already like
+> drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c .
+
+Returning non-zero is a bug.  It won't break bin_attr_nvmem_read/write()
+but it will break other places like nvmem_access_with_keepouts(),
+__nvmem_cell_read() and nvmem_cell_prepare_write_buffer() where all
+non-zero returns from nvmem_reg_read() are treated as an error.
+
+> The objective of the patch was to handle partial reads and errors at
+> the nvmem core and instead of leaving it up to each nvmem provider by
+> providing a better return value to nvmem providers.
 > 
-> This fix has been tested on NanoPi R2S for fixing confliting pinmux bits
-> between GPIO2-15 with GPIO2-13.
-
-As you said, the gpio3-based pins are not documented in the TRM,
-but in your description above you're talking about pins in the gpio2-
-group?
-
-So where did the gpio3-related pin information come from?
-
-Also, could you please split this patch in two pieces, one fixing the
-gpio2-area and one for the new gpio3 pins please?
-
-
-Thanks
-Heiko
-
-> Signed-off-by: Huang-Huang Bao <i@eh5.me>
-> ---
->  drivers/pinctrl/pinctrl-rockchip.c | 59 ++++++++++++++++++++++++++----
->  1 file changed, 52 insertions(+), 7 deletions(-)
+> Regarding drivers/misc/eeprom/at25.c which you pointed below, that is
+> a problem in my code change. I missed that count was modified later on
+> and should initialize bytes_written to the new value of count, will
+> fix that when I come up with the new patch.
 > 
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index 3bedf36a0019..23531ea0d088 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -634,23 +634,68 @@ static struct rockchip_mux_recalced_data rk3308_mux_recalced_data[] = {
->  
->  static struct rockchip_mux_recalced_data rk3328_mux_recalced_data[] = {
->  	{
-> -		.num = 2,
-> -		.pin = 12,
-> -		.reg = 0x24,
-> -		.bit = 8,
-> -		.mask = 0x3
-> -	}, {
-> +		/* gpio2_b7_sel */
->  		.num = 2,
->  		.pin = 15,
->  		.reg = 0x28,
->  		.bit = 0,
->  		.mask = 0x7
->  	}, {
-> +		/* gpio2_c7_sel */
->  		.num = 2,
->  		.pin = 23,
->  		.reg = 0x30,
->  		.bit = 14,
->  		.mask = 0x3
-> +	}, {
-> +		/* gpio3_b1_sel */
-> +		.num = 3,
-> +		.pin = 9,
-> +		.reg = 0x44,
-> +		.bit = 2,
-> +		.mask = 0x3
-> +	}, {
-> +		/* gpio3_b2_sel */
-> +		.num = 3,
-> +		.pin = 10,
-> +		.reg = 0x44,
-> +		.bit = 4,
-> +		.mask = 0x3
-> +	}, {
-> +		/* gpio3_b3_sel */
-> +		.num = 3,
-> +		.pin = 11,
-> +		.reg = 0x44,
-> +		.bit = 6,
-> +		.mask = 0x3
-> +	}, {
-> +		/* gpio3_b4_sel */
-> +		.num = 3,
-> +		.pin = 12,
-> +		.reg = 0x44,
-> +		.bit = 8,
-> +		.mask = 0x3
-> +	}, {
-> +		/* gpio3_b5_sel */
-> +		.num = 3,
-> +		.pin = 13,
-> +		.reg = 0x44,
-> +		.bit = 10,
-> +		.mask = 0x3
-> +	}, {
-> +		/* gpio3_b6_sel */
-> +		.num = 3,
-> +		.pin = 14,
-> +		.reg = 0x44,
-> +		.bit = 12,
-> +		.mask = 0x3
-> +	}, {
-> +		/* gpio3_b7_sel */
-> +		.num = 3,
-> +		.pin = 15,
-> +		.reg = 0x44,
-> +		.bit = 14,
-> +		.mask = 0x3
->  	},
->  };
->  
-> @@ -3763,7 +3808,7 @@ static struct rockchip_pin_bank rk3328_pin_banks[] = {
->  	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
->  	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
->  	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", 0,
-> -			     IOMUX_WIDTH_3BIT,
-> +			     0,
->  			     IOMUX_WIDTH_3BIT,
->  			     0),
->  	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3",
-> 
+> I agree that it does not improve anything for a lot of nvmem providers
+> for example the ones which call into other reg_map_read/write apis
+> which do not return the number of bytes read/written but it does help
+> us do better error handling at the nvmem core layer for nvmem
+> providers who can return the valid number of bytes read/written.
 
+If we're going to support partial writes, then it needs to be done all
+the way.  We need to audit functions like at24_read() and remove the
+-EINVAL lines.
 
+   440          if (off + count > at24->byte_len)
+   441                  return -EINVAL;
 
+It should be:
+
+	if (off + count > at24->byte_len)
+		count = at24->byte_len - off;
+
+Some drivers handle writing zero bytes as -EINVAL and some return 0.
+Those changes could be done before we change the API.
+
+You updated nvmem_access_with_keepouts() to handle negative returns but
+not zero returns so it could lead to a forever loop.
+
+regards,
+dan carpenter
 
 
