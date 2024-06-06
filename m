@@ -1,118 +1,135 @@
-Return-Path: <linux-gpio+bounces-7210-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7211-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D7A68FDCE1
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 04:39:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D5798FDD83
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 05:31:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A8D0285F3E
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 02:39:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 755E51C22239
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 03:31:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51E9E199B9;
-	Thu,  6 Jun 2024 02:39:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7667C17C68;
+	Thu,  6 Jun 2024 03:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="yqQ0yIQ8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63231B285
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Jun 2024 02:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E10119D8B9
+	for <linux-gpio@vger.kernel.org>; Thu,  6 Jun 2024 03:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717641589; cv=none; b=d5DR4ICne887Khq3YMfW8zmz9YPbYtIgufQxqA2fK1zxbH4ZHHYZTJSH/8qOtpnmLcWMkCU+nZx5eo3BDkyyOQNYbjvRvb6Lf8XOqbzTpBHnKLv5MrM2g9uHC5UZo5YYXYyHApBoIzQJOtjPEwqNCkmTE3+S/j1dQgBy7od8DbY=
+	t=1717644704; cv=none; b=PzD7DItnJgINn+wrWbvgFh7n9zH4QmWnTqJvJzev156YpayqNoaoZdnaejCADQiqs7wal2jo4oQauuUrKXuYhyp9Pe5NivTsv5bdnYJosEIaFeNfoW1mc9L8nijQpsGTAI5Y2nQLf8H1g/+V5F6LNHRgsZpZ+lcK4P25OKSwhD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717641589; c=relaxed/simple;
-	bh=DHpacmr+1+C1jw2cfTs7qg1owQWJx+BzIC9c0gbL28Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VLz43mJAdlxWjommE259I4GWfYHny6UJGlWf41q7wQ6iOu0lLL53r5FP9NzvLNr1YVYmhTPmQpxhboXogkWJV1q42b7mN11sRSHJm+cr1xYM7a/scGnz1jjl2+xhiK2M84xj3RcBOJxk7DaEN5ZLUjbh8WFK4ZC/7lsNc7tSRh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VvpNL4XzzzwRV1;
-	Thu,  6 Jun 2024 10:35:46 +0800 (CST)
-Received: from dggpemm100019.china.huawei.com (unknown [7.185.36.251])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1B41D18006D;
-	Thu,  6 Jun 2024 10:39:44 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm100019.china.huawei.com (7.185.36.251) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 6 Jun 2024 10:39:43 +0800
-Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Jun
- 2024 10:39:43 +0800
-From: Yang Yingliang <yangyingliang@huawei.com>
-To: <linux-gpio@vger.kernel.org>
-CC: <linus.walleij@linaro.org>, <dan.carpenter@linaro.org>,
-	<tony@atomide.com>, <haojian.zhuang@linaro.org>, <yangyingliang@huawei.com>,
-	<liwei391@huawei.com>
-Subject: [PATCH v2 3/3] pinctrl: ti: ti-iodelay: fix possible memory leak when pinctrl_enable() fails
-Date: Thu, 6 Jun 2024 10:37:04 +0800
-Message-ID: <20240606023704.3931561-4-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240606023704.3931561-1-yangyingliang@huawei.com>
-References: <20240606023704.3931561-1-yangyingliang@huawei.com>
+	s=arc-20240116; t=1717644704; c=relaxed/simple;
+	bh=OCL3Ex+PVBpmHW3XOiYtWSJwCKPoCASw0+8i+V5i7Rg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WwbGgeYzRdhylSUpFanxVPgtI3XdGZACHKGajHljA/fxtXxiTwqpfwuJ9pWK8sStnHjvq8K0Ru1C3IItcJz1sCFtdQFRkNdYy133uUIq81SJvtY4PwOhXLSzKwGeJuXijvoquXVONZHI6kUo3MN4fmgnKUtZ21LTxQQxHxDT/9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=yqQ0yIQ8; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id F2AA12C0240;
+	Thu,  6 Jun 2024 15:31:38 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1717644698;
+	bh=gaiZFPnhd6tKrZth0IDXYD7yP/yybZPgjqK3haH70o4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=yqQ0yIQ8wyNBOrcq4Omg3cgCDEgz6Ek03EfmzrwUHkC9NXIGeRFSYLg/Q5bW+IG4K
+	 YCIOTq+rNpPeWpYsb6pQdBHGYxtlXjkuRrQW3r1urL6InA16Z7B4nukRhnxgo9CSxe
+	 PH7+H5r7B6wtS6eAv82zGMlujLP4lSrE04cutkex9Ys+vOmfgy5pQHw+a4m+/WXLio
+	 hhyIcoKSJF2ILXn0NoFkoHmGN/cxk/97vEmApCkaHblavo3ecqir1XQEy2Qi0OMzft
+	 qJvHAHvWm/MSEHJMAfPhUYrOpR3qmklGOxddEJJJ2EByEMCC+bHTjYpiniR8rSyRXr
+	 MSGtq1Ysf9y0g==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B66612d9a0000>; Thu, 06 Jun 2024 15:31:38 +1200
+Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.16])
+	by pat.atlnz.lc (Postfix) with ESMTP id BDE3313EE2B;
+	Thu,  6 Jun 2024 15:31:38 +1200 (NZST)
+Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
+	id BB23E41522; Thu,  6 Jun 2024 15:31:38 +1200 (NZST)
+From: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Subject: [PATCH] gpio: pca953x: Improve interrupt support
+Date: Thu,  6 Jun 2024 15:31:02 +1200
+Message-ID: <20240606033102.2271916-1-mark.tomlinson@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500007.china.huawei.com (7.185.36.183)
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=F9L0dbhN c=1 sm=1 tr=0 ts=66612d9a a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=T1WGqf2p2xoA:10 a=g5V-TlOs_q8Ilh9uUIgA:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-This driver calls pinctrl_register_and_init() which is not
-devm_ managed, it will leads memory leak if pinctrl_enable()
-fails. Replace it with devm_pinctrl_register_and_init().
-And add missing of_node_put() in the error path.
+The GPIO drivers with latch interrupt support (typically types starting
+with PCAL) have interrupt status registers to determine which particular
+inputs have caused an interrupt. Unfortunately there is no atomic
+operation to read these registers and clear the interrupt. Clearing the
+interrupt is done by reading the input registers.
 
-Fixes: 5038a66dad01 ("pinctrl: core: delete incorrect free in pinctrl_enable()")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+The code was reading the interrupt status registers, and then reading
+the input registers. If an input changed between these two events it was
+lost.
+
+The solution in this patch is to revert to the non-latch version of
+code, i.e. remembering the previous input status, and looking for the
+changes. This system results in no more I2C transfers, so is no slower.
+The latch property of the device still means interrupts will still be
+noticed if the input changes back to its initial state.
+
+Fixes: 44896beae605 ("gpio: pca953x: add PCAL9535 interrupt support for G=
+alileo Gen2")
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 ---
- drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
-diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-index 040f2c46a868..ef9758638501 100644
---- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-+++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-@@ -876,7 +876,7 @@ static int ti_iodelay_probe(struct platform_device *pdev)
- 	iod->desc.name = dev_name(dev);
- 	iod->desc.owner = THIS_MODULE;
- 
--	ret = pinctrl_register_and_init(&iod->desc, dev, iod, &iod->pctl);
-+	ret = devm_pinctrl_register_and_init(dev, &iod->desc, iod, &iod->pctl);
- 	if (ret) {
- 		dev_err(dev, "Failed to register pinctrl\n");
- 		goto exit_out;
-@@ -884,7 +884,11 @@ static int ti_iodelay_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, iod);
- 
--	return pinctrl_enable(iod->pctl);
-+	ret = pinctrl_enable(iod->pctl);
-+	if (ret)
-+		goto exit_out;
-+
-+	return 0;
- 
- exit_out:
- 	of_node_put(np);
-@@ -899,9 +903,6 @@ static void ti_iodelay_remove(struct platform_device *pdev)
- {
- 	struct ti_iodelay_device *iod = platform_get_drvdata(pdev);
- 
--	if (iod->pctl)
--		pinctrl_unregister(iod->pctl);
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 77a2812f2974..14b80cb00274 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -839,25 +839,6 @@ static bool pca953x_irq_pending(struct pca953x_chip =
+*chip, unsigned long *pendin
+ 	DECLARE_BITMAP(trigger, MAX_LINE);
+ 	int ret;
+=20
+-	if (chip->driver_data & PCA_PCAL) {
+-		/* Read the current interrupt status from the device */
+-		ret =3D pca953x_read_regs(chip, PCAL953X_INT_STAT, trigger);
+-		if (ret)
+-			return false;
 -
- 	ti_iodelay_pinconf_deinit_dev(iod);
- 
- 	/* Expect other allocations to be freed by devm */
--- 
-2.25.1
+-		/* Check latched inputs and clear interrupt status */
+-		ret =3D pca953x_read_regs(chip, chip->regs->input, cur_stat);
+-		if (ret)
+-			return false;
+-
+-		/* Apply filter for rising/falling edge selection */
+-		bitmap_replace(new_stat, chip->irq_trig_fall, chip->irq_trig_raise, cu=
+r_stat, gc->ngpio);
+-
+-		bitmap_and(pending, new_stat, trigger, gc->ngpio);
+-
+-		return !bitmap_empty(pending, gc->ngpio);
+-	}
+-
+ 	ret =3D pca953x_read_regs(chip, chip->regs->input, cur_stat);
+ 	if (ret)
+ 		return false;
+--=20
+2.45.2
 
 
