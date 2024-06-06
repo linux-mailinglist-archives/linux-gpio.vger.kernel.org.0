@@ -1,183 +1,216 @@
-Return-Path: <linux-gpio+bounces-7236-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7237-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 246888FE454
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 12:32:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 304468FE54C
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 13:25:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 386C21C25232
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 10:32:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EF211C22E0A
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jun 2024 11:25:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF2B2194C8D;
-	Thu,  6 Jun 2024 10:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45A4B1957EF;
+	Thu,  6 Jun 2024 11:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ij9/iU/U"
+	dkim=pass (1024-bit key) header.d=eh5.me header.i=@eh5.me header.b="feYgjcSG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.eh5.me (mail.eh5.me [45.76.111.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08541194AF7
-	for <linux-gpio@vger.kernel.org>; Thu,  6 Jun 2024 10:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2525A160865;
+	Thu,  6 Jun 2024 11:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.76.111.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717669926; cv=none; b=i5Iwk8D6ZK3kRlLE9UgWHYm/Nm9Vsk7OTx/uQ6iaKvU38YIwr/X2lRVqc/YYUOXMkdEQSDwKJy1ydl1U6GBaPgFQdSLAfsKWaOlzNpROr0HUlT9TJgaQ1JaM+E0lS9K3d4ut/pGgHVIepFAx964oIwm5E8RmdUW1lgruLjotcMM=
+	t=1717673126; cv=none; b=Yl8ldJcJZgHIyoeW15BI8T2/COpBu3Cg1TBFAKN7eo4OiUkeNZErCP0c7vBue9a0heLgVNlKA/X4OuhLkB+dikfK7IlpxUoNM3d2MFxvF5BnW9KFpLdvjAMiAUwYkan7dZv2AWtdVBrx0Z8FSGk/BksKlumUTQTMXNe6CxfuV8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717669926; c=relaxed/simple;
-	bh=n0hrzdYnBksW+DamHG6BupTO1J0YAJybs/VDL2sugrE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uov7lggP/0YGwIvBHiIfFjDEWi42ZJFL98ws2FeWrQZ3w3tfNv89+MeZOz3y9h2K5LMhzXe3UrgwGo9wiXVadHDl+1YmIbSMA8nRwc6R15o7kz8dzcLMPoMAPrsH1h/yDpT8p7tjgeou0RIeXelIBRWV/jnEf0iLIAfAbOSPVns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ij9/iU/U; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2eabd22d441so11701671fa.2
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Jun 2024 03:32:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717669923; x=1718274723; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2yOK4FlQCW+JMOCwnWP72jJymCtr5dD6IgIpna60BCY=;
-        b=Ij9/iU/Uyo6fcf8LONJ7xC09lvYBG8qaaeEz4vBXq2BTPZbQ2/pF3yyQBM4fRbFGfh
-         G2YVI79pdecNzRewdbn8sACLDUSzd7rOjlh6zMMORYPcVD1QveoeZ2kHNSsE+9FRNNbv
-         STcLcfiwZHhGsSEvRFW5mX9h4B8YphLBoSkl78uJsHCRnl9eDwrE59GFqtGknBB9mMy1
-         OSPuYgWTVQS8j2w3KVuq+5S7UftcTUbs1qQVWVzbjEhqRqb3+fKICTURvn7oWD734yHM
-         ft1saZpU5WP1Di0/lkFYY358dTnV3FFIlPJYisX1EUMUoYuw+wFXKiytWhGLxoNHAlTO
-         IcBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717669923; x=1718274723;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2yOK4FlQCW+JMOCwnWP72jJymCtr5dD6IgIpna60BCY=;
-        b=gD2LW6qL6GnMzEmnhL5Nhq7sJiQ/c4X7oClt3ptBhoJTbZ0C+ZhkuDu2whoIXKap0s
-         548S/+xUhxg1YTXcmQ/pxprADA+wurTt8vzKXUYtWO796SRat44L87lSJmGctHIdJPVA
-         xdtcm84UkcK3rHcI/MSvWKTqjhJVzn9C3qrNPABWVmoB/tuLfPtFV9sKm5Atlft3fTyg
-         hmgk/RhwPkK/kCi1ZCqTSIhYaqrbF/qgyjKcLmtrv2sLsfThUcyp8mZypzfzhLfBpL16
-         C3fBJcR4q1fJpohzO21XKswIr+8KIXoOuhQPk5sJ1Ag61vH93+jWT9Y3aCbCwvnPubyV
-         hb0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXSXv8NMT2/Fo6a51sac1PzERPuY19AgE8fgiFR+Ub5YSyFvhn9w+BgE/kTjf0x/G92JxPk+CTyv9VIygcslUv+uPDs0xON0W5o6A==
-X-Gm-Message-State: AOJu0YxVaFWzckbfDMragMABWMcUZoUC+mAoycHk71xxNT0kyUuPjzqE
-	EYaxa0z3jJ20oGXTsXVAU1H4diUrUATalwpzwUZUWOisWDMaUFEEGKJeD+kWQBLZFRmbWFyiDcT
-	AdY+X6tDA0Ev4SaRk7UAMqGETIwLKAx0OCWP9
-X-Google-Smtp-Source: AGHT+IHb92CvWzY0UMLIO3bnYXJ9lrbqmbf5jFApgNniI36TJ0LubnwynaglXsT5ps/3HCuaPh8FvkYR0EYkfnbTRiI=
-X-Received: by 2002:a2e:9643:0:b0:2e1:9c57:195a with SMTP id
- 38308e7fff4ca-2eac7a5fd4dmr33302121fa.32.1717669922881; Thu, 06 Jun 2024
- 03:32:02 -0700 (PDT)
+	s=arc-20240116; t=1717673126; c=relaxed/simple;
+	bh=h/xa4eI3k6X86KwGTxpdw1YXWi5nn9xiWeQAYUex1Ts=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=icdoBuxR0H2nuWPhMEPImXtxO9TvE9KdURhlzmPagxjCV+ONMj/BrcjCiW3WkJ0gbu1OaUa2QID39vOoEZAyrJVuXXxKVXquIegV7uTvWVZ0cQq/LZmlaewKttoeLxU7bmxnMuoUjtiNYSkCk5n3GWedzzjrFoVfqgMeppkp6B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=eh5.me; spf=pass smtp.mailfrom=eh5.me; dkim=pass (1024-bit key) header.d=eh5.me header.i=@eh5.me header.b=feYgjcSG; arc=none smtp.client-ip=45.76.111.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=eh5.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eh5.me
+Message-ID: <a4e639fa-090c-481f-ae36-7d04d7a2cc17@eh5.me>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eh5.me; s=dkim;
+	t=1717673121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=00XnzfKyvFc8UCi5vg7ycZAPYKRfP4qnEUVe/4uYGYc=;
+	b=feYgjcSGrXSBzYcCMRnEjsfaeVtDHixqKtJOI1H6dUdgZP5sOU+sqNyV+fB+P6b5td39fw
+	FbmOs60EQFuB978YYMf8NrV1egw8JdOO5l55Asl8TGbu1gVuT/Q0ZwrekbhJAke2iY08EU
+	/K+WNCJxAfJ/gaYnrpOV3DhLkFlNsng=
+Date: Thu, 6 Jun 2024 19:25:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605175953.2613260-1-joychakr@google.com> <20240605175953.2613260-8-joychakr@google.com>
- <f98a1d8f-e936-4798-8447-c642e8fe11d5@moroto.mountain> <CAOSNQF0Qj2CnRDWAGM8Y1wyEdgWP04RDJx1TKO-Ge4nUH=qxoQ@mail.gmail.com>
- <2b979aa4-3a63-4010-9670-294ce7624e18@moroto.mountain>
-In-Reply-To: <2b979aa4-3a63-4010-9670-294ce7624e18@moroto.mountain>
-From: Joy Chakraborty <joychakr@google.com>
-Date: Thu, 6 Jun 2024 16:01:42 +0530
-Message-ID: <CAOSNQF02nUPZ=8re=uyruhxReQSjPoc8L-9yTnWMe4EfJ0-huA@mail.gmail.com>
-Subject: Re: [PATCH v1 07/17] misc: eeprom: at25: Change nvmem reg_read/write
- return type
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Bingbu Cao <bingbu.cao@intel.com>, Zhihao Cheng <chengzhihao1@huawei.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-hwmon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, manugautam@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/3] pinctrl: rockchip: fix RK3328 pinmux bits
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240606060435.765716-1-i@eh5.me>
+ <20240606060435.765716-2-i@mail.eh5.me> <3862456.FjKLVJYuhi@diego>
+Content-Language: en-US
+From: Huang-Huang Bao <i@eh5.me>
+In-Reply-To: <3862456.FjKLVJYuhi@diego>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 6, 2024 at 3:41=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro.=
-org> wrote:
->
-> On Thu, Jun 06, 2024 at 03:12:03PM +0530, Joy Chakraborty wrote:
-> > > These functions are used internally and exported to the user through
-> > > sysfs via bin_attr_nvmem_read/write().  For internal users partial re=
-ads
-> > > should be treated as failure.  What are we supposed to do with a part=
-ial
-> > > read?  I don't think anyone has asked for partial reads to be support=
-ed
-> > > from sysfs either except Greg was wondering about it while reading th=
-e
-> > > code.
-> > >
-> > > Currently, a lot of drivers return -EINVAL for partial read/writes bu=
-t
-> > > some return success.  It is a bit messy.  But this patchset doesn't
-> > > really improve anything.  In at24_read() we check if it's going to be=
- a
-> > > partial read and return -EINVAL.  Below we report a partial read as a
-> > > full read.  It's just a more complicated way of doing exactly what we
-> > > were doing before.
-> >
-> > Currently what drivers return is up to their interpretation of int
-> > return type, there are a few drivers which also return the number of
-> > bytes written/read already like
-> > drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c .
->
-> Returning non-zero is a bug.  It won't break bin_attr_nvmem_read/write()
-> but it will break other places like nvmem_access_with_keepouts(),
-> __nvmem_cell_read() and nvmem_cell_prepare_write_buffer() where all
-> non-zero returns from nvmem_reg_read() are treated as an error.
->
 
-Yes, I will resend the patch to fix that.
 
-> > The objective of the patch was to handle partial reads and errors at
-> > the nvmem core and instead of leaving it up to each nvmem provider by
-> > providing a better return value to nvmem providers.
-> >
-> > Regarding drivers/misc/eeprom/at25.c which you pointed below, that is
-> > a problem in my code change. I missed that count was modified later on
-> > and should initialize bytes_written to the new value of count, will
-> > fix that when I come up with the new patch.
-> >
-> > I agree that it does not improve anything for a lot of nvmem providers
-> > for example the ones which call into other reg_map_read/write apis
-> > which do not return the number of bytes read/written but it does help
-> > us do better error handling at the nvmem core layer for nvmem
-> > providers who can return the valid number of bytes read/written.
->
-> If we're going to support partial writes, then it needs to be done all
-> the way.  We need to audit functions like at24_read() and remove the
-> -EINVAL lines.
->
->    440          if (off + count > at24->byte_len)
->    441                  return -EINVAL;
->
-> It should be:
->
->         if (off + count > at24->byte_len)
->                 count =3D at24->byte_len - off;
->
-> Some drivers handle writing zero bytes as -EINVAL and some return 0.
-> Those changes could be done before we change the API.
->
+On 6/6/24 18:08, Heiko Stübner wrote:
+> Hi,
+> 
+> Am Donnerstag, 6. Juni 2024, 08:04:33 CEST schrieb Huang-Huang Bao:
+>> The pinmux bits for GPIO2-B0 to GPIO2-B6 actually have 2 bits width,
+>> correct the bank flag for GPIO2-B. The pinmux bits for GPIO2-B7 is
+>> recalculated so it remain unchanged.
+> 
+> I've verified the gpio2-related pin settings via the TRM, so this part
+> looks good :-)
+> 
+> 
+>> The pinmux bits for GPIO3-B1 to GPIO3-B6 have different register offset
+>> than common rockhip pinmux, set the correct value for those pins in
+>> rk3328_mux_recalced_data.
+>>
+>> The pinmux bits for those pins are not explicitly specified in RK3328
+>> TRM, however we can get hint from pad name and its correspinding IOMUX
+>> setting for pins in interface descriptions, e.g.
+>> IO_SPIclkm0_GPIO2B0vccio5 with GRF_GPIO2B_IOMUX[1:0]=2'b01 setting.
+>>
+>> This fix has been tested on NanoPi R2S for fixing confliting pinmux bits
+>> between GPIO2-15 with GPIO2-13.
+> 
+> As you said, the gpio3-based pins are not documented in the TRM,
+> but in your description above you're talking about pins in the gpio2-
+> group?
+> 
+> So where did the gpio3-related pin information come from?
 
-Sure, we can do it in a phased manner like you suggested in another
-reply by creating new pointers and slowly moving each driver to the
-new pointer and then deprecating the old one.
+Sorry I didn't explained it clearly, gpio3 information is inferred from
+pad name in interface descriptions similar to gpio2's, all those pad
+name has format of "*GPIO<bank><pin number>*". So I just search up
+interface description rows with pad name from "GPIO2B0" to "GPIO2B6" and
+from "GPIO3B1" to "GPIO4B7" to find potential IOMUX bits definitions.
+For example, there is IO_TSPd5m0_CIFdata5m0_GPIO3B1vccio6 with
+GRF_GPIO3BH_iomux[3:2] = 2'b01 setting for GPIO3B1.
 
-> You updated nvmem_access_with_keepouts() to handle negative returns but
-> not zero returns so it could lead to a forever loop.
->
+Maybe I can list all these occurrences in v2.
 
-Yes, that is a possible case. Will rework it.
+> 
+> Also, could you please split this patch in two pieces, one fixing the
+> gpio2-area and one for the new gpio3 pins please?
 
-> regards,
-> dan carpenter
->
-Thanks
-Joy
+Sure.
+
+> 
+> 
+> Thanks
+> Heiko
+> 
+>> Signed-off-by: Huang-Huang Bao <i@eh5.me>
+>> ---
+>>   drivers/pinctrl/pinctrl-rockchip.c | 59 ++++++++++++++++++++++++++----
+>>   1 file changed, 52 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+>> index 3bedf36a0019..23531ea0d088 100644
+>> --- a/drivers/pinctrl/pinctrl-rockchip.c
+>> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+>> @@ -634,23 +634,68 @@ static struct rockchip_mux_recalced_data rk3308_mux_recalced_data[] = {
+>>   
+>>   static struct rockchip_mux_recalced_data rk3328_mux_recalced_data[] = {
+>>   	{
+>> -		.num = 2,
+>> -		.pin = 12,
+>> -		.reg = 0x24,
+>> -		.bit = 8,
+>> -		.mask = 0x3
+>> -	}, {
+>> +		/* gpio2_b7_sel */
+>>   		.num = 2,
+>>   		.pin = 15,
+>>   		.reg = 0x28,
+>>   		.bit = 0,
+>>   		.mask = 0x7
+>>   	}, {
+>> +		/* gpio2_c7_sel */
+>>   		.num = 2,
+>>   		.pin = 23,
+>>   		.reg = 0x30,
+>>   		.bit = 14,
+>>   		.mask = 0x3
+>> +	}, {
+>> +		/* gpio3_b1_sel */
+>> +		.num = 3,
+>> +		.pin = 9,
+>> +		.reg = 0x44,
+>> +		.bit = 2,
+>> +		.mask = 0x3
+>> +	}, {
+>> +		/* gpio3_b2_sel */
+>> +		.num = 3,
+>> +		.pin = 10,
+>> +		.reg = 0x44,
+>> +		.bit = 4,
+>> +		.mask = 0x3
+>> +	}, {
+>> +		/* gpio3_b3_sel */
+>> +		.num = 3,
+>> +		.pin = 11,
+>> +		.reg = 0x44,
+>> +		.bit = 6,
+>> +		.mask = 0x3
+>> +	}, {
+>> +		/* gpio3_b4_sel */
+>> +		.num = 3,
+>> +		.pin = 12,
+>> +		.reg = 0x44,
+>> +		.bit = 8,
+>> +		.mask = 0x3
+>> +	}, {
+>> +		/* gpio3_b5_sel */
+>> +		.num = 3,
+>> +		.pin = 13,
+>> +		.reg = 0x44,
+>> +		.bit = 10,
+>> +		.mask = 0x3
+>> +	}, {
+>> +		/* gpio3_b6_sel */
+>> +		.num = 3,
+>> +		.pin = 14,
+>> +		.reg = 0x44,
+>> +		.bit = 12,
+>> +		.mask = 0x3
+>> +	}, {
+>> +		/* gpio3_b7_sel */
+>> +		.num = 3,
+>> +		.pin = 15,
+>> +		.reg = 0x44,
+>> +		.bit = 14,
+>> +		.mask = 0x3
+>>   	},
+>>   };
+>>   
+>> @@ -3763,7 +3808,7 @@ static struct rockchip_pin_bank rk3328_pin_banks[] = {
+>>   	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
+>>   	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
+>>   	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", 0,
+>> -			     IOMUX_WIDTH_3BIT,
+>> +			     0,
+>>   			     IOMUX_WIDTH_3BIT,
+>>   			     0),
+>>   	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3",
+>>
+> 
+> 
+> 
+> 
 
