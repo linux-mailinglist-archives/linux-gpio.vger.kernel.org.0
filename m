@@ -1,115 +1,125 @@
-Return-Path: <linux-gpio+bounces-7246-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7247-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A67AF8FFDC3
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2024 10:06:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05FDA900072
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2024 12:14:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2DCDF289AD2
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2024 08:05:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6324928978B
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2024 10:14:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC12015AD86;
-	Fri,  7 Jun 2024 08:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dzGUdEI8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7876015B969;
+	Fri,  7 Jun 2024 10:14:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5440155321
-	for <linux-gpio@vger.kernel.org>; Fri,  7 Jun 2024 08:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80A013F016
+	for <linux-gpio@vger.kernel.org>; Fri,  7 Jun 2024 10:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717747555; cv=none; b=CS2s0ptoYQBEP7sURmsTTFg7qN/tUqK7x7FUqlfFUt0FsBstMnGzTvbGREAFfl5ajqTRHCjV5tP10MaoISDe0yXNjKSw6ioRYPN9vGL0Yyf7qOc1DJ5CRhvkPPoCMVzYtz79z+IKOQo6kMWMhDMFnN5CIxFMhmp7rGncbevtBeM=
+	t=1717755251; cv=none; b=mpOEj+B2eI35fV2t8aot7+hD+RDcyXgrBgkQO5YLaBWuUrUL7hv2T9d/OouNUiCsb7xUA+w0ocKlknLxr9d1RvRAS45b1wQH/7nUe7LG04iUrslROahgZis7AZt8QCHMnHHWcRnUeZk/1zOy2yNTez6dbdvtOwz+IOvmHzNC8RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717747555; c=relaxed/simple;
-	bh=gnlAq205GQPusvDIjdvBcbL3y/ncq5aXSIijyUU7/FU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NAxUrMksyuIqmyAoJYUSo9+oRYn4p8ebvKdcYNmzfJ89JjNRWu79mH7EoQY2tNvUg3GwFTqdgyzvVDcNYQdcNwxEetIUaKPx5g7CDI8bCBlR9JjzmJnSF1h4qPIwQE249mwTDS12Zp2ps92YxmulEACGUSS62ocV5QZdMScgpMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dzGUdEI8; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4215f694749so12055415e9.2
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2024 01:05:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717747552; x=1718352352; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7rk5BY9qiJfHIXWxmctnqBMHu2thNQ/7XaWFUtMhjgs=;
-        b=dzGUdEI88pN2l52x+EMbIvc2BWd3PMM+d7MRcVHSoPvgpF4I6yniRVXgK/yWDaCCiH
-         UKmb0kzwMgICPjK+pyGY5l4EGthLJpU5x5mePn4+MKjjao9IK2b3EplsXheZyBsEKSwf
-         y9+V5msrKNN0NZOD8yzXN1b0SZg4XmmIRIKEvIJ/ib8kcGZ6CyHyuzVKhSVWlhDDUCZ3
-         bvJDycg+ruRPOYkNtNJXrcXu3U+Qtf4XWvWyAjJ2ffFP7lvXib5Gn9kXnoULvN8aL99f
-         1LTjyxm/xQpzByq/qvDolwcor9ZUlRT3Lj4WMYytASr7PJDpnzCnkinp5ICsj8Dbw/Rj
-         Fn5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717747552; x=1718352352;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7rk5BY9qiJfHIXWxmctnqBMHu2thNQ/7XaWFUtMhjgs=;
-        b=aFUyk4Ac5qmdeccVB2U8s6lHT0yDwY5hi7Uzwe4i8u002Oed2O3ILvMx4xlq34Ve/0
-         DI/JLefp96PTTXHn9nya/q4caerQzRuTWNYOIbLALLVCNFPrlhgaytfDAmW489AU12xC
-         j1EZCa/H8VQJJbe5iNTI+yi8aSv8XrWmtE032f/FnPYxz9xsg5BXwHCIGGjwXj70IuM/
-         dSG4FLcHGkMQShvCndaMqRlwXJY46HZqMljheLyC47vKJPjQnNvfY3IQ/SPi6eSE0K4D
-         nDNb3W4ni3rfMT/JT68nX/Deh4Gu3Uk4YxgPnDcGb67gCP1m6pJZZFm1ucwB6z6bFGYW
-         jMFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZLXFrHRWNMWXWAD2FSpeEyMisgXpWOBrxRqw5usUXP57acbZz/s57QMC8NcAAUfcGsL39ZgXXqhXCosmYyDrQH8UdDqhi8NRR/g==
-X-Gm-Message-State: AOJu0Yx9IG1D3hkA0FqSpGOoS1Rxd8MUSNOmaemd4vfcLO43tdWRZK+i
-	G6MCHPVVnF6wV3ZMmhdsogHBUgX1EuxzDje84xdZHn0aDzQRh0e3kDt9oNxvwCA=
-X-Google-Smtp-Source: AGHT+IF+s0BOL1jUgPRca9EA8yczStlqMhBoMMl5RAdNkRjoKuYWcZMJItMNW5eUaRT9inHyhM87cQ==
-X-Received: by 2002:a05:600c:350f:b0:41f:e10f:889a with SMTP id 5b1f17b1804b1-421649ea055mr14134335e9.7.1717747551951;
-        Fri, 07 Jun 2024 01:05:51 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:69a7:93d5:5355:af67])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215814e7cbsm79119225e9.39.2024.06.07.01.05.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 01:05:51 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
+	s=arc-20240116; t=1717755251; c=relaxed/simple;
+	bh=4TY0fau/yTVqLJLKEXa5oVIqmFvR5rt54q0zSz91W20=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OL42Wm/xakhdi2Z/S21G6fiCsDOjwJEA7FXOFfdxxUJjBndfqrchG0rBcRzmtDBGlNi+7h9r37zk3KPv/f/VFUIk2HAsReNXyKhIcbVbR+1f7VBPOJ0xhWP5JD141cteEl3swuzw2wuJXr0tXE4yngXJgujAsczNI+A0QElCjyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:5ffd:9c1a:d9c:cf6])
+	by xavier.telenet-ops.be with bizsmtp
+	id YaDz2C00N45NznL01aDzVt; Fri, 07 Jun 2024 12:14:01 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sFWad-00ECgG-Ut;
+	Fri, 07 Jun 2024 12:13:59 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sFWbf-00200U-C8;
+	Fri, 07 Jun 2024 12:13:59 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Takeshi Kihara <takeshi.kihara.df@renesas.com>,
+	LUU HOAI <hoai.luu.ub@renesas.com>,
+	Kazuya Mizuguch <kazuya.mizuguchi.ks@renesas.com>,
+	Phong Hoang <phong.hoang.wz@renesas.com>,
+	CongDang <cong.dang.xn@renesas.com>,
+	Thanh Quan <thanh.quan.xn@renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] gpio: add missing MODULE_DESCRIPTION() macros
-Date: Fri,  7 Jun 2024 10:05:50 +0200
-Message-ID: <171774754776.5536.13807607706868576187.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240606-md-drivers-gpio-v1-1-cb42d240ca5c@quicinc.com>
-References: <20240606-md-drivers-gpio-v1-1-cb42d240ca5c@quicinc.com>
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/8] pinctrl: renesas: r8a779g0: Fix pin group suffixes
+Date: Fri,  7 Jun 2024 12:13:47 +0200
+Message-Id: <cover.1717754960.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+	Hi all,
 
+On R-Car SoCs, pin group names usually have a suffix ("_a", "_b", ...)
+if and only if there are alternate pin groups for the same function.
+At the time initial pin control support for the R-Car V4H (R8A779G0) SoC
+was introduced, there were lots of ambiguities and inconsistencies in
+the naming of pin groups in the documentation, violating this convention:
+  1. Some alternate pin groups may be named identically, without any
+     suffix to differentiate,
+  2. In case of two alternate pin groups, the primary may not carry a
+     suffix, while the alternate may carry an "_a" or "_b" suffix,
+  3. A pin group without an alternate may have an "_a" or even a "_b"
+     suffix.
+So far the driver followed the documentation, except for case 1, where
+an "_x" suffix was added to one of the alternates.  The plan was to
+update the pin group names when they were clarified in the documentation.
+As technically these names are part of the ABI, they were clearly marked
+with "suffix might be updated" in the driver.
 
-On Thu, 06 Jun 2024 20:23:50 -0700, Jeff Johnson wrote:
-> On x86, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpio/gpio-gw-pld.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpio/gpio-mc33880.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpio/gpio-pcf857x.o
-> 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro,
-> including the one missing in gpio-pl061.c, which is not built for x86.
-> 
-> [...]
+Unfortunately the pin group names are still not updated in the latest
+revision (Rev.1.10) of the R-Car V4H Series Hardware User's Manual.
+However, the newer R-Car V4M (R8A779H0) SoC is mostly signal-compatible
+with R-Car V4H (they are not pin-compatible, as R-Car V4H has many more
+pins).  Hence this series bites the bullet, and fixes the ambiguities
+and inconsistencies by adopting R-Car V4M pin group naming (from Rev.0.51
+of the R-Car V4M Series Hardware User's Manual), and following the
+traditional naming convention.
 
-Applied, thanks!
+Note that this does not affect any upstream DTS files.
 
-[1/1] gpio: add missing MODULE_DESCRIPTION() macros
-      commit: 64054eb716db52e4246527dc9414377c5bc5b01d
+Thanks for your comments!
 
-Best regards,
+Geert Uytterhoeven (8):
+  pinctrl: renesas: r8a779g0: Fix CANFD5 suffix
+  pinctrl: renesas: r8a779g0: Fix FXR_TXEN[AB] suffixes
+  pinctrl: renesas: r8a779g0: Fix (H)SCIF1 suffixes
+  pinctrl: renesas: r8a779g0: Fix (H)SCIF3 suffixes
+  pinctrl: renesas: r8a779g0: Fix IRQ suffixes
+  pinctrl: renesas: r8a779g0: FIX PWM suffixes
+  pinctrl: renesas: r8a779g0: Fix TCLK suffixes
+  pinctrl: renesas: r8a779g0: Fix TPU suffixes
+
+ drivers/pinctrl/renesas/pfc-r8a779g0.c | 712 ++++++++++++-------------
+ 1 file changed, 348 insertions(+), 364 deletions(-)
+
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.34.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 
