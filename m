@@ -1,199 +1,127 @@
-Return-Path: <linux-gpio+bounces-7259-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7260-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BEBD90079D
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2024 16:54:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C07DE900940
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2024 17:37:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1AD1128C879
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2024 14:54:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5998C1F2302D
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2024 15:37:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB11C19B3F9;
-	Fri,  7 Jun 2024 14:46:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D191D197A99;
+	Fri,  7 Jun 2024 15:37:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=eh5.me header.i=@eh5.me header.b="P3P6vckA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="juK0y2aV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.eh5.me (mail.eh5.me [45.76.111.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE87919752F;
-	Fri,  7 Jun 2024 14:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.76.111.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A89926AE0
+	for <linux-gpio@vger.kernel.org>; Fri,  7 Jun 2024 15:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717771604; cv=none; b=Ooj05DezlXFCAhXZyZOBik8TT1Gn52X7jVuFUWWi5TGRXJ6HJXae/UtOONG56iPJwlK5Sq4U+0mnSg8GNR0LLGauP3zTKKXq+jVmFSeye4UTAlFVd+CM7Te0/nWX8121d7Ci6dPyCjnqkz1D/IFoSj0V5c67c9JCJxpFj3PENE8=
+	t=1717774620; cv=none; b=PgFGOVK45/De5wfyHX8qk1/nORICXRHdmZ1riK9MSALw+EeU8p7MIr1oWvTV7ovoSTWa2k0gAAh9VGG+AeKWQSddwuaeMKW7YEHX5hdp2NlXA1LICHdeWu8urLLI1pjXMYATq6aBsYVedVlzQj6xDkE1wX6vbvTAEYBCFYBJk3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717771604; c=relaxed/simple;
-	bh=Gt0HkIEfUxbCWkwENOJ1j6PQBdm4XvC9znlgCeBcdyw=;
+	s=arc-20240116; t=1717774620; c=relaxed/simple;
+	bh=njFwS84yyP3Xwr02JnamX7Dhu6AzJdZO+TJ88+ClOI0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QLH9AXn07y8vERh7BeTh4ugCDP1wi4K2soYWZ4nRPf+DhOuSCU7UFI3jFDHDj9mz3Z9qScTmAQGz7Qo4/dMUmworffmika24jBRPvz8cpr/hyCN4yrFa7bdUGOK8hIdoKTriMnELJQeiY+tPMR7tj3gQedj/tlXDLwUlzCaOZbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=eh5.me; spf=pass smtp.mailfrom=eh5.me; dkim=pass (1024-bit key) header.d=eh5.me header.i=@eh5.me header.b=P3P6vckA; arc=none smtp.client-ip=45.76.111.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=eh5.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eh5.me
-Message-ID: <3dab2269-a048-4750-bea8-cce245df075a@eh5.me>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eh5.me; s=dkim;
-	t=1717771593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=706MONW8kwoOXWqy8lP/xTe9KGJQQ7km3fno9upjptk=;
-	b=P3P6vckAe+9O51qpHIr+vhuqx+or43Mdi2J3KmjjDmpZdnZ5GpVvg0ejQr1GkPyGv9t9sz
-	uv0N/Q/MYxWm8fBGq0HkyUT5HN1lGOE5xQHeJa23B1/QS5p1EdRK3+ckhKGVQkvNWGlzjT
-	LD0u9azQVehcATSjJhF8ueFykN0P8ps=
-Date: Fri, 7 Jun 2024 22:46:19 +0800
+	 In-Reply-To:Content-Type; b=Wp7CyNpwBrqGbJOarxoliUG8MZxXqSpg2h655/4kHfcl1hx+CRhaMh48QGWnkgBUUBlPUUWHCLpW16nmkhIBSRoly/CI5Tw1jLXr+aD2Bu5sFro7lHXASFxocdvwgZ6A1W0a+bDIFHjaFTfbIOrYSB+0hadwxYjtQubCSDMGQ6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=juK0y2aV; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-421798185f0so1107945e9.1
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2024 08:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717774617; x=1718379417; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4WFHGyOf2WCg/AHCXQoRe0OOLDlNcvfZjAFHn1msRSw=;
+        b=juK0y2aV4TYboAh8nEXjMFk5fN3uC3FwvkzbSNZxHs6DWC3/Q+8c7UQRkyGOGg0GbQ
+         1DN58wUt79ajkREwHVoLA4TCG38OF5JSoywS9PmoYSjra8jY1jLLFq5MCIuxJYnpgZPX
+         6lTfweu+Crph9x5sCOcF+AwY4TgZFdyzgT7Mp3JEmbseYqmNz9HURCFLyVYhZ9FGdCbm
+         6ISPzY+0I2OfOHfXuOTmn0dGWCDcp+DaKcZR6jxWYDugYn1epGEbvCW1mkz8XJiIcYpH
+         u0ZE7wPmp/bTjc6xjt1S9dhsXb2/OFfG27ReP+LcejxTkFg0TA0x2EhDrVgnSTj+KuGo
+         Hl5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717774617; x=1718379417;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4WFHGyOf2WCg/AHCXQoRe0OOLDlNcvfZjAFHn1msRSw=;
+        b=OKKKpELxde1QDo16MzyOLGl2vVAgVcBlAOpuhr3r7/oVUUQVQSudQUMILSmHBqkIPJ
+         erhVJeYLBcAbBZH2uIz/fvPuowJ9QpcpdEnWsF8kh53fRptGCC7Yb/GAdfDQIJlYZqcJ
+         7eLO5lbXRG74UjtCu1+gXJgH7pYqqEducoSdz/Ms+zGf/FPYjyBtYnsm6XnW98hT0n4F
+         6mrPuCPCA4wSSr6rhHMQ9ru7/ko/swr+8gzr/wIGF8kKJ7THpfkXLdA6RZdLIWYiKhdJ
+         0PqyMZv42gNBeivNgSNV8L7QzMHlQlvpDTItHtZ3crwjRLz5+pJ4ossdUkZs9uYhYjkW
+         uqJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUhzyh13WXuZz8oMfPLM+Q+GhuZtDFPIrAmTk1n7vHkauJx1LpXAFDKAwqnkHMFyBzM+ADbx5+DeZABCh/GUeRn8r6ts+/JT3vhSg==
+X-Gm-Message-State: AOJu0Yxo7vN2sbd7Jo+6O/+GfNcH93xrMYvqqn4IBSIWKKvLZ+ZrRJDz
+	MsL+8dKRWcE1+2ZL63p51Ud5TdFXX3VQvA4oFEMMgE0Xw+7auJPFQRzNDAaKCv0=
+X-Google-Smtp-Source: AGHT+IEDldfKJ9oi/vJP0wgtmawveExjpCYHaZ1+MQjCvlUC+KOjWN7/r5DIQyvHKU1HK5ctc+JgNw==
+X-Received: by 2002:a05:600c:444b:b0:420:29a8:ff5e with SMTP id 5b1f17b1804b1-42164a0c1c9mr25925175e9.19.1717774617356;
+        Fri, 07 Jun 2024 08:36:57 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4215f89aacfsm48862905e9.42.2024.06.07.08.36.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Jun 2024 08:36:56 -0700 (PDT)
+Message-ID: <7cc32596-8af0-43ff-91fd-59264d0a29ac@linaro.org>
+Date: Fri, 7 Jun 2024 16:36:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 2/4] pinctrl: rockchip: fix pinmux bits for RK3328
- GPIO3-B pins
-To: Heiko Stuebner <heiko@sntech.de>, Linus Walleij
- <linus.walleij@linaro.org>, kever.yang@rock-chips.com
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240606125755.53778-1-i@eh5.me>
- <20240606125755.53778-3-i@eh5.me> <4786379.ElGaqSPkdT@phil>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 07/17] misc: eeprom: at25: Change nvmem reg_read/write
+ return type
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Joy Chakraborty <joychakr@google.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Bingbu Cao <bingbu.cao@intel.com>, Zhihao Cheng <chengzhihao1@huawei.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+ linux-usb@vger.kernel.org, manugautam@google.com
+References: <20240605175953.2613260-1-joychakr@google.com>
+ <20240605175953.2613260-8-joychakr@google.com>
+ <f98a1d8f-e936-4798-8447-c642e8fe11d5@moroto.mountain>
 Content-Language: en-US
-From: Huang-Huang Bao <i@eh5.me>
-In-Reply-To: <4786379.ElGaqSPkdT@phil>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <f98a1d8f-e936-4798-8447-c642e8fe11d5@moroto.mountain>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 6/7/24 20:32, Heiko Stuebner wrote:
-> Am Donnerstag, 6. Juni 2024, 14:57:53 CEST schrieb Huang-Huang Bao:
->> The pinmux bits for GPIO3-B1 to GPIO3-B6 pins are not explicitly
->> specified in RK3328 TRM, however we can get hint from pad name and its
->> correspinding IOMUX setting for pins in interface descriptions. The
->> correspinding IOMIX settings for these pins can be found in the same
->> row next to occurrences of following pad names in RK3328 TRM.
->>
->> GPIO3-B1:  IO_TSPd5m0_CIFdata5m0_GPIO3B1vccio6
->> GPIO3-B2: IO_TSPd6m0_CIFdata6m0_GPIO3B2vccio6
->> GPIO3-B3: IO_TSPd7m0_CIFdata7m0_GPIO3B3vccio6
->> GPIO3-B4: IO_CARDclkm0_GPIO3B4vccio6
->> GPIO3-B5: IO_CARDrstm0_GPIO3B5vccio6
->> GPIO3-B6: IO_CARDdetm0_GPIO3B6vccio6
->>
->> Add pinmux data to rk3328_mux_recalced_data as mux register offset for
->> these pins does not follow rockchip convention.
->>
->> Signed-off-by: Huang-Huang Bao <i@eh5.me>
+On 06/06/2024 09:41, Dan Carpenter wrote:
+> So the original bug was that rmem_read() is returning positive values
+> on success instead of zero[1].  That started a discussion about partial
+> reads which resulted in changing the API to support partial reads[2].
+> That patchset broke the build.  This patchset is trying to fix the
+> build breakage.
 > 
-> This matches the information that I found in my TRM, thanks to your
-> detailed explanation.
+> [1]https://lore.kernel.org/all/20240206042408.224138-1-joychakr@google.com/
+> [2]https://lore.kernel.org/all/20240510082929.3792559-2-joychakr@google.com/
 > 
-> Though I of course can't say if the TRM is just wrong or the hardware
-> changed after the pads-description was written.
-> 
-> Did you test the usage of these pins on your board?
-> 
+> The bug in rmem_read() is still not fixed.  That needs to be fixed as
+> a stand alone patch.  We can discuss re-writing the API separately.
+I agree with Dan, Lets fix the rmem_read and start working on the API 
+rework in parallel.
 
-My board(NanoPi R2S) is kinda integrated and does not have GPIO3 pins so
-I can't test these pins directly.
+Am happy to pick the [1].
 
- From DTS for RK3328(arch/arm64/boot/dts/rockchip/rk3328*.dts*), there is
-pinctrl/cif-0/dvp_d2d9_m0 referencing part of GPIO3-B1+ pins(GPIO3-B1 to
-GPIO3-B4) that indeed matches "Table 15-1 TSP interface description"
-which contains hint pad names. And this DTS node exists from
-initial commit to add RK3328 dtsi
-(52e02d377a72 "arm64: dts: rockchip: add core dtsi file for RK3328 SoCs").
 
-Though this node is not actually used in any RK3328 DTSs. So I can't
-test indirectly either.
-
-Huang-Huang
-
-> 
-> Heiko
-> 
-> 
-> 
->> ---
->>   drivers/pinctrl/pinctrl-rockchip.c | 51 ++++++++++++++++++++++++++++++
->>   1 file changed, 51 insertions(+)
->>
->> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
->> index 78dcf4daccde..23531ea0d088 100644
->> --- a/drivers/pinctrl/pinctrl-rockchip.c
->> +++ b/drivers/pinctrl/pinctrl-rockchip.c
->> @@ -634,17 +634,68 @@ static struct rockchip_mux_recalced_data rk3308_mux_recalced_data[] = {
->>   
->>   static struct rockchip_mux_recalced_data rk3328_mux_recalced_data[] = {
->>   	{
->> +		/* gpio2_b7_sel */
->>   		.num = 2,
->>   		.pin = 15,
->>   		.reg = 0x28,
->>   		.bit = 0,
->>   		.mask = 0x7
->>   	}, {
->> +		/* gpio2_c7_sel */
->>   		.num = 2,
->>   		.pin = 23,
->>   		.reg = 0x30,
->>   		.bit = 14,
->>   		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b1_sel */
->> +		.num = 3,
->> +		.pin = 9,
->> +		.reg = 0x44,
->> +		.bit = 2,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b2_sel */
->> +		.num = 3,
->> +		.pin = 10,
->> +		.reg = 0x44,
->> +		.bit = 4,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b3_sel */
->> +		.num = 3,
->> +		.pin = 11,
->> +		.reg = 0x44,
->> +		.bit = 6,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b4_sel */
->> +		.num = 3,
->> +		.pin = 12,
->> +		.reg = 0x44,
->> +		.bit = 8,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b5_sel */
->> +		.num = 3,
->> +		.pin = 13,
->> +		.reg = 0x44,
->> +		.bit = 10,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b6_sel */
->> +		.num = 3,
->> +		.pin = 14,
->> +		.reg = 0x44,
->> +		.bit = 12,
->> +		.mask = 0x3
->> +	}, {
->> +		/* gpio3_b7_sel */
->> +		.num = 3,
->> +		.pin = 15,
->> +		.reg = 0x44,
->> +		.bit = 14,
->> +		.mask = 0x3
->>   	},
->>   };
->>   
->>
-> 
-> 
-> 
-> 
+--srini
 
