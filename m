@@ -1,110 +1,79 @@
-Return-Path: <linux-gpio+bounces-7269-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7270-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A09FF900D41
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2024 22:54:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B229900ECC
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 02:16:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 56241284C36
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jun 2024 20:54:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F06121F23298
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 00:16:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D35431552F9;
-	Fri,  7 Jun 2024 20:53:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06AAB28FA;
+	Sat,  8 Jun 2024 00:15:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gLhmRyXN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UlIgXRaO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0705014658E
-	for <linux-gpio@vger.kernel.org>; Fri,  7 Jun 2024 20:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B663379F3;
+	Sat,  8 Jun 2024 00:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717793636; cv=none; b=d9RIT78erCpOutbtsc6wNY743ovbdxKKPlIQmHU4k+almroIK2sbX++zoJGZPmgpqBimS55fXnQTNeBDy/YR0AW4DQMp39OnrkXGSIG84QT3LoMfsu5eOP3nGRYg2AFA53Nu8+BKsoTiayinddhvXSwewLnXEISWXfqonb3shrY=
+	t=1717805755; cv=none; b=ZGeb2lsnYTSxQp7FdbWK7K++XMg1Cf+O+lZqK857Zd7/v8dQWOC3hC1TgUtqLLZAHEKtBGj3p8Y0vtB4eeWB9AT+9wy1Lwx0OYTSu1uw6DDojDdtHNR54k6JosIggsQK/zCy54ISNAuZv7/SCDm30NOEvAV3vla7fmpT72Yab2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717793636; c=relaxed/simple;
-	bh=p6tMfLMEfPy9ylv7zqzbxmkBmy9bIJ2z7b+jtJTZiz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZhQ/04vEUHnSPqtspDBKQ3Vrcu1png+PGyQYGuIESg3iAtMFB/I5+cotxvG175f5Pqto4v7yKZlMT0282HLIAsQ8pE3mwbgkKFtcZfmzAphr/65E4IK8haRuH4SRE8jpCN6lv0YII8PWz0OVRUpOCL0o8VgFP3VvF6ow6XbP3oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gLhmRyXN; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52b8b7b8698so3186007e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jun 2024 13:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717793633; x=1718398433; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p6tMfLMEfPy9ylv7zqzbxmkBmy9bIJ2z7b+jtJTZiz8=;
-        b=gLhmRyXNFICiRNwKRwlVTd3iWM7nI6D5b0XVxaN6gpaVl0nTk194vQY9+NTaXN+wOs
-         pmnyw9gtY+Glq6/sg/tCVdxPFZ6Ldh8kE3t73SzemLROC8HeKD7d8+bKSzLQJEFr0QVb
-         Vy5UTHpjNBzlC1A1GgZPwkRJsjllHN5FFs6cJF5T447c5y8cFRm8gQ71o+Y8+Sp6YCpI
-         6n6KA/yqF9KuPOwKSzvmpnHbeoP6WudxUPfLsV8qIhLoJd/v/glSmmusglV7SHRVS7Un
-         WttuuyAcrTfgvNi9qE7S8uYxutb2EYTzproqZ5vwG20szuhyJNAhOjhmmlrJneZgagWl
-         qr0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717793633; x=1718398433;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p6tMfLMEfPy9ylv7zqzbxmkBmy9bIJ2z7b+jtJTZiz8=;
-        b=UrByBsI1PSpF5rRuRcp2Uzd3w8BLaKE9n9LDQDgIZ81lt+Bl7qGSk/vd2jbKuhsjZ6
-         DyyTMrArclaAFnSFHPjl7XBq07mkJnb7oSQc19aocFg98vf1/ZwtOh1amAOWN0De+7N3
-         5Cf0PYHyA66osZxtC+s1ToJ6r6NFRu/k8GfwVTW0qvHWt2G6Uj5YrLu8S+cqkKihkHT6
-         ZLlvJFCeAP0KJaGKaewHkbsNhZDmk4CSzdj0YYnFcfZmVdlQHnjoFGQLHAVr12UGpaUY
-         ytQ5JOWYgMqmrK525I+N3JF46Lo/sYQiLSrkCDyndi7k0EYjChmcnoVwyPEziHF7GrKa
-         JfTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnbWzgbLRYiJaAsNKr1HXiJFEZAkomisXriPI2mpko8wBZUJsBrL54kKUBbWODgbrWzUtMh/qVvBFmRRzLY1URm5rIPKwUzHLI+w==
-X-Gm-Message-State: AOJu0YyMoA/0U6OuOpFOpIfwmbj6Twgz1Hwh7EFbb5dOczmqBXUa/S+n
-	qkQV8bv6fNB9zgThBIXqOagM8JyVrLKd1AWmiq0RdfJcR4w9iJoxI0mMOFHu4BD9uKjuTz5v0NV
-	xpxD1yEm1KSQ/2H9J1JBhhHHYDccijECJrNQ0Yg==
-X-Google-Smtp-Source: AGHT+IEvks17nJR8asjH8PhomcF1cey1wjkOU+SX7E9Lzp4zBUKn/Z+T817IqPLPi5qKBO3N5uckPU9YtHMMXQXgWSI=
-X-Received: by 2002:ac2:5588:0:b0:523:a924:3268 with SMTP id
- 2adb3069b0e04-52bb9f5d4afmr2200384e87.6.1717793633140; Fri, 07 Jun 2024
- 13:53:53 -0700 (PDT)
+	s=arc-20240116; t=1717805755; c=relaxed/simple;
+	bh=0hNzXTDWe/ctRtWO5OYNVVZhVpwSJ+70obsQNJ8K5M0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=K/Uwv8WZ9DooMvggGpShbpyHNCkDBTKrylrGDmLwihKnUdqwNutC5NbtaktNj1lL6Qi4fylDanSbvY2evuVbihy/4FDPIURpORBybeg6Wq6c8fr5ZsvsB/MXw49Hg+02FnbUBtjBFQ5dx9yK1vqt4n1mx7JI1E59Oiihl58fs9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UlIgXRaO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 97C06C32782;
+	Sat,  8 Jun 2024 00:15:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717805755;
+	bh=0hNzXTDWe/ctRtWO5OYNVVZhVpwSJ+70obsQNJ8K5M0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=UlIgXRaODuA0oFE7ggLcLolTyWFagJhmV2I3TXukUz2dJ7YuO7mgz+TfExoByDfdA
+	 gDVAllRDzRQZIQ+yO9RBSG6gKv6YWr+bHVoaS1XxuH2kCPpt4zT1qao1tKBqOZ2XEq
+	 S68qa0pM4MI27hNVXlEUJq24kd46c1yfyQjnaF+YrIwiTdoC58dYanw7Nzy8Sm/O17
+	 umt9jwaMkIW4fjz/lCX7X4QUbL0CAWAucwtfnWuzcxmQYYEP+mdkjkM0PSDDuuzft7
+	 4lOlDEJJovPXY8woUoRH22tDMOgGSknT/FhLyEjvEcAMRvgzOfj247vSAte3C/T6GZ
+	 WC+k4Kc/XpRGQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8E3F2C43168;
+	Sat,  8 Jun 2024 00:15:55 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: fixes for v6.10-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240607190540.30622-1-bartosz.golaszewski@linaro.org>
+References: <20240607190540.30622-1-bartosz.golaszewski@linaro.org>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240607190540.30622-1-bartosz.golaszewski@linaro.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.10-rc3
+X-PR-Tracked-Commit-Id: 64054eb716db52e4246527dc9414377c5bc5b01d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e60721bf3ccaebcaff8dec3548a2daa6578f9361
+Message-Id: <171780575557.4241.2081000257414743958.pr-tracker-bot@kernel.org>
+Date: Sat, 08 Jun 2024 00:15:55 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240529162958.18081-1-johan+linaro@kernel.org> <20240529162958.18081-10-johan+linaro@kernel.org>
-In-Reply-To: <20240529162958.18081-10-johan+linaro@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 7 Jun 2024 22:53:42 +0200
-Message-ID: <CACRpkdasVHEgqDLs_CdAJ3YAQPA7k95TsT22ErcU7TwdaSTy6w@mail.gmail.com>
-Subject: Re: [PATCH v2 09/14] dt-bindings: pinctrl: qcom,pmic-gpio: drop pm8008
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Das Srinagesh <quic_gurus@quicinc.com>, 
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, Stephen Boyd <swboyd@chromium.org>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 29, 2024 at 6:30=E2=80=AFPM Johan Hovold <johan+linaro@kernel.o=
-rg> wrote:
+The pull request you sent on Fri,  7 Jun 2024 21:05:40 +0200:
 
-> The binding for PM8008 is being reworked so that internal details like
-> interrupts and register offsets are no longer described. This
-> specifically also involves dropping the gpio child node and its
-> compatible string which is no longer needed.
->
-> Note that there are currently no users of the upstream binding and
-> driver.
->
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.10-rc3
 
-This patch applied to pinctrl fixes.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e60721bf3ccaebcaff8dec3548a2daa6578f9361
 
-Yours,
-Linus Walleij
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
