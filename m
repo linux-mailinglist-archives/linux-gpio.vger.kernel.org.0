@@ -1,106 +1,170 @@
-Return-Path: <linux-gpio+bounces-7280-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7281-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A81AB9011F9
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 16:22:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C12C6901215
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 16:37:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4BB6B2813FB
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 14:21:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB9491C20D56
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 14:37:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8469317A918;
-	Sat,  8 Jun 2024 14:21:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FBB724B29;
+	Sat,  8 Jun 2024 14:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a63OleYZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBD927457;
-	Sat,  8 Jun 2024 14:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7B918E1D
+	for <linux-gpio@vger.kernel.org>; Sat,  8 Jun 2024 14:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717856516; cv=none; b=b2+gPp9qAyMFk84pksLpg0SNiSAsnXb/uhIb0nOdOACBPTUfrst8OgObnTUfL9XOmd44dXHcHks5m73B8UbYS1haQ4qJxAzmVELBr45MlZFxoqg/M0niO3Gr91ZoAVgRKRTDmkLCStXKs1ZyNRz3IuqtnvDkWYJNoNV1+NCCum4=
+	t=1717857421; cv=none; b=m6UUsLWmyTl8HdXhsvD9VWbfdByhTg4ngu5r4CtxSp5GeHJnl+8v0mpYo9rcNGoGGNyw9/wTsQmVfolpQcxg5c3Lnkx1etgYdkGsrHgRaBe/6AEGoGeVfi1JI4LAUXS9REdxkfk3MMPf267h5uyEtGUkbQ3X0mJx3SM4oYAKiQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717856516; c=relaxed/simple;
-	bh=fZKzObTQo0GxnaEwl/4M+G9KFYepsIumuA+Sh7vMUGc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xi+fl9L4+eit/0DGtZsj0tCXTUNS+eOzvd1S2BkqaUPZXD7JZGkLxNf0TPYgNaW18EL/TIKJ1FOQD6c6L0IMhbhKWqZkoHmQZVlsw/cMh6fxA9q69WAdFcok3YgBJrnY/5WoJf8kJcVGbRuuRb0DvQlDpmdDQ4oJRLcxYiNgZp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from [194.95.143.137] (helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1sFwwy-0008KS-CO; Sat, 08 Jun 2024 16:21:44 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>, kever.yang@rock-chips.com,
- Huang-Huang Bao <i@eh5.me>
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v2 2/4] pinctrl: rockchip: fix pinmux bits for RK3328 GPIO3-B pins
-Date: Sat, 08 Jun 2024 16:21:43 +0200
-Message-ID: <5759165.44csPzL39Z@phil>
-In-Reply-To: <3dab2269-a048-4750-bea8-cce245df075a@eh5.me>
-References:
- <20240606125755.53778-1-i@eh5.me> <4786379.ElGaqSPkdT@phil>
- <3dab2269-a048-4750-bea8-cce245df075a@eh5.me>
+	s=arc-20240116; t=1717857421; c=relaxed/simple;
+	bh=3R2GaduFe9QbM+h19L8j1z1AEtbUvk0Uq/FZ+KXa8lQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=VGhHWGVqC3o/sUU8SgMb83KjKR+BpPA4i4tXV+o2BPGqN6vtraX+TfazMIhLLdGpKfoObQLVj8XlpxMmr3ow6OeOlsf7Ej6OqfGjNeT/Q8vPzDjOTvaRWVlsMGKqHBAuPqGX/MsKbAMZfZhBkAZ4VXtUpyo6ibeVZZyq79Qa3OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a63OleYZ; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717857419; x=1749393419;
+  h=date:from:to:cc:subject:message-id;
+  bh=3R2GaduFe9QbM+h19L8j1z1AEtbUvk0Uq/FZ+KXa8lQ=;
+  b=a63OleYZCEqze5QIybcKPskowAuDHTzUk13p+u2T4WpEIQc2BVd0rTPD
+   DoRc2rhKxYbL+UEUWOIWXRmMEj91XKXCtp3MWLP2Pgixuhd9uL9VLb6xB
+   Gg0KEb8DNANjgpWuxZNMWdCGPioolePpjYQquJUr7HVsIFbZTO9jc71dC
+   zT4z6xSuw690zv4Kh9f8Nt9p3k4jZi5RRvd1aY38EWjO0rm//kuPqbEwV
+   aQGYBpwwtNKwydqsQ02qPfFT6M/o6aiP8EhqniE1q5kxRlUwKjORA9R3s
+   HLt0ehO75p5T9lKRrCRVP1IposnhFpDXJYTebqE4pPCZVwAMTWa2fPceo
+   Q==;
+X-CSE-ConnectionGUID: 6Gj4Jw9KTkuFhn++SQgPow==
+X-CSE-MsgGUID: AsYVihpKQOC9NUbcx0ZE5Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11097"; a="14526973"
+X-IronPort-AV: E=Sophos;i="6.08,223,1712646000"; 
+   d="scan'208";a="14526973"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2024 07:36:59 -0700
+X-CSE-ConnectionGUID: 8bDPTGCdSoOvqxyjBcuwwg==
+X-CSE-MsgGUID: RHaD/BLiRI2lCnCeiz973w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,223,1712646000"; 
+   d="scan'208";a="38548904"
+Received: from lkp-server01.sh.intel.com (HELO 8967fbab76b3) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 08 Jun 2024 07:36:58 -0700
+Received: from kbuild by 8967fbab76b3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sFxBf-000038-2s;
+	Sat, 08 Jun 2024 14:36:55 +0000
+Date: Sat, 08 Jun 2024 22:36:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-current] BUILD SUCCESS
+ 64054eb716db52e4246527dc9414377c5bc5b01d
+Message-ID: <202406082241.FPimcsXa-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
 
-Am Freitag, 7. Juni 2024, 16:46:19 CEST schrieb Huang-Huang Bao:
-> 
-> On 6/7/24 20:32, Heiko Stuebner wrote:
-> > Am Donnerstag, 6. Juni 2024, 14:57:53 CEST schrieb Huang-Huang Bao:
-> >> The pinmux bits for GPIO3-B1 to GPIO3-B6 pins are not explicitly
-> >> specified in RK3328 TRM, however we can get hint from pad name and its
-> >> correspinding IOMUX setting for pins in interface descriptions. The
-> >> correspinding IOMIX settings for these pins can be found in the same
-> >> row next to occurrences of following pad names in RK3328 TRM.
-> >>
-> >> GPIO3-B1:  IO_TSPd5m0_CIFdata5m0_GPIO3B1vccio6
-> >> GPIO3-B2: IO_TSPd6m0_CIFdata6m0_GPIO3B2vccio6
-> >> GPIO3-B3: IO_TSPd7m0_CIFdata7m0_GPIO3B3vccio6
-> >> GPIO3-B4: IO_CARDclkm0_GPIO3B4vccio6
-> >> GPIO3-B5: IO_CARDrstm0_GPIO3B5vccio6
-> >> GPIO3-B6: IO_CARDdetm0_GPIO3B6vccio6
-> >>
-> >> Add pinmux data to rk3328_mux_recalced_data as mux register offset for
-> >> these pins does not follow rockchip convention.
-> >>
-> >> Signed-off-by: Huang-Huang Bao <i@eh5.me>
-> > 
-> > This matches the information that I found in my TRM, thanks to your
-> > detailed explanation.
-> > 
-> > Though I of course can't say if the TRM is just wrong or the hardware
-> > changed after the pads-description was written.
-> > 
-> > Did you test the usage of these pins on your board?
-> > 
-> 
-> My board(NanoPi R2S) is kinda integrated and does not have GPIO3 pins so
-> I can't test these pins directly.
-> 
->  From DTS for RK3328(arch/arm64/boot/dts/rockchip/rk3328*.dts*), there is
-> pinctrl/cif-0/dvp_d2d9_m0 referencing part of GPIO3-B1+ pins(GPIO3-B1 to
-> GPIO3-B4) that indeed matches "Table 15-1 TSP interface description"
-> which contains hint pad names. And this DTS node exists from
-> initial commit to add RK3328 dtsi
-> (52e02d377a72 "arm64: dts: rockchip: add core dtsi file for RK3328 SoCs").
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
+branch HEAD: 64054eb716db52e4246527dc9414377c5bc5b01d  gpio: add missing MODULE_DESCRIPTION() macros
 
-thanks for digging up this information, that makes sense and stuff looks
-pretty much correct with everything combined.
+elapsed time: 1818m
 
-Heiko
+configs tested: 77
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240608   gcc  
+arc                   randconfig-002-20240608   gcc  
+arm                               allnoconfig   clang
+arm                                 defconfig   clang
+arm                   randconfig-001-20240608   gcc  
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386         buildonly-randconfig-001-20240608   gcc  
+i386         buildonly-randconfig-002-20240608   clang
+i386         buildonly-randconfig-003-20240608   gcc  
+i386         buildonly-randconfig-004-20240608   gcc  
+i386         buildonly-randconfig-005-20240608   clang
+i386         buildonly-randconfig-006-20240608   gcc  
+i386                  randconfig-001-20240608   clang
+i386                  randconfig-002-20240608   gcc  
+i386                  randconfig-003-20240608   gcc  
+i386                  randconfig-004-20240608   clang
+i386                  randconfig-005-20240608   gcc  
+i386                  randconfig-006-20240608   gcc  
+i386                  randconfig-011-20240608   clang
+i386                  randconfig-012-20240608   clang
+i386                  randconfig-013-20240608   clang
+i386                  randconfig-014-20240608   gcc  
+i386                  randconfig-015-20240608   clang
+i386                  randconfig-016-20240608   clang
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   clang
+s390                              allnoconfig   clang
+s390                                defconfig   clang
+sh                                allnoconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64       buildonly-randconfig-001-20240608   clang
+x86_64       buildonly-randconfig-002-20240608   gcc  
+x86_64       buildonly-randconfig-003-20240608   clang
+x86_64       buildonly-randconfig-004-20240608   gcc  
+x86_64       buildonly-randconfig-005-20240608   gcc  
+x86_64                              defconfig   gcc  
+xtensa                            allnoconfig   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
