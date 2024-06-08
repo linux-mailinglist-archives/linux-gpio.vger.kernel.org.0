@@ -1,87 +1,129 @@
-Return-Path: <linux-gpio+bounces-7273-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7274-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B10890112B
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 11:44:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A63819011DA
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 16:17:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09D42281D2E
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 09:44:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90D071C212C3
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 14:17:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FB7E1552FA;
-	Sat,  8 Jun 2024 09:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 650CE179652;
+	Sat,  8 Jun 2024 14:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FWeJ52Y6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E56825740
-	for <linux-gpio@vger.kernel.org>; Sat,  8 Jun 2024 09:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2187C17A93C;
+	Sat,  8 Jun 2024 14:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717839890; cv=none; b=n6978JhvzyGu2PTDeX4TkxltkNstovNTiQ6f8gy+f7rpaaHoF+tCc3enfU5rekHA8Yp0veyVDn2xCXaFUBcwdG3YmwF1ulI//YpeDVOnjhYYO4JFDeaUrLhNWq/V8XA9biIq5Af5znHyD+FH+8I2bubihpbkr5llpybTNrMoaLs=
+	t=1717856216; cv=none; b=ufuoxQLVDcqzrp7UrAOWwCIJqRAeA2fqht++beF55JX6s5Hpg7Qnm3xCkHAv1LBZ+pemHAU7xbM3F+AGMvV4qlY/IWnqCuISIwncHQvEIg6zGY4gUr/avO6Zhiyg0Dni4Zyu8y6KKUT8P0Ksqz4Nd/hiYn57BgDn5KbecguoCcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717839890; c=relaxed/simple;
-	bh=540A8R/1TpIFNPJ/N/OR1orqd1BnHCt4N1sRFu3by+o=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fnwf46mp7WiluzCn+Y0x/WKsxZjjoc6dxS0Q4nVqpmLzeCh60hh3fF4Y34nxBAfc6kl4dkDqW3j0C6b2zpfXoayK6CZ6lT7Ld0xKUwsFyinlbb7KRxoAL5o8wF6cB5Gajp0EDZqzE2tg/OqDE6nz5PpbYlH3zNZLKIqY5tlKs7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id bbaf993f-257b-11ef-80e2-005056bdfda7;
-	Sat, 08 Jun 2024 12:44:46 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 8 Jun 2024 12:44:43 +0300
-To: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: pca953x: Improve interrupt support
-Message-ID: <ZmQoCwLFuJNyuRG6@surfacebook.localdomain>
-References: <20240606033102.2271916-1-mark.tomlinson@alliedtelesis.co.nz>
+	s=arc-20240116; t=1717856216; c=relaxed/simple;
+	bh=3ZQeW8xyCfO0mF0Lz2gwAXBPIFqpW8xq/6Un+XG7dl8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aOM4Xy6cn/KGSbjDtvF0lgGtDIJRlONVlljfpr24iRJ+Dr2cASniX0DYRxf7/dfoCD1BvwdAaPZSu73J0yuMi9W2XDS/EkAP6WVj1tU1fbEjdKQXpaoGOb7Elr5Qo8sy+A+gnMk0uYg13KG7zwtul9lW9XFj/jpXur6QganRRq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=FWeJ52Y6; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 74E1CC67;
+	Sat,  8 Jun 2024 16:16:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1717856201;
+	bh=3ZQeW8xyCfO0mF0Lz2gwAXBPIFqpW8xq/6Un+XG7dl8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FWeJ52Y6LvaMBC28vCdJ58rQuBqpU4C8SI6PL+y5U7gcVCPyg/xD9Wh+0/noL3RNZ
+	 F0zWQwqw6U5C/7jrvkGhZBwNGWrx5YLstlnRWCUchdrLw/hu1MXTlitnV3hDyaCnDt
+	 MlW03w20sCD+5MGzOGdiN9XkuXGxb/Ze1oo376ds=
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Subject: [PATCH v4 0/4] ADP5585 GPIO expander, PWM and keypad controller support
+Date: Sat,  8 Jun 2024 17:16:29 +0300
+Message-ID: <20240608141633.2562-1-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606033102.2271916-1-mark.tomlinson@alliedtelesis.co.nz>
+Content-Transfer-Encoding: 8bit
 
-Thu, Jun 06, 2024 at 03:31:02PM +1200, Mark Tomlinson kirjoitti:
-> The GPIO drivers with latch interrupt support (typically types starting
-> with PCAL) have interrupt status registers to determine which particular
-> inputs have caused an interrupt. Unfortunately there is no atomic
-> operation to read these registers and clear the interrupt. Clearing the
-> interrupt is done by reading the input registers.
+Hello,
 
-What you are describing sounds to me like the case without latch enabled.
-Can you elaborate a bit more?
+This patch series introduces support for the Analog Devices ADP5585, a
+GPIO expander, PWM and keyboard controller. It models the chip as an MFD
+device, and includes DT bindings (1/4), an MFD driver (2/4) and drivers
+for the GPIO (3/4) and PWM (4/4) functions.
 
-> The code was reading the interrupt status registers, and then reading
-> the input registers. If an input changed between these two events it was
-> lost.
+Support for the keypad controller is left out, as I have no means to
+test it at the moment. The chip also includes a tiny reset controller,
+as well as a 3-bit input programmable logic block, which I haven't tried
+to support (and also have no means to test).
 
-I don't see how. If there is a short pulse or a series of pulses between
-interrupt latching and input reading, the second+ will be lost in any case.
-This is HW limitation as far as I can see.
+The driver is based on an initial version from the NXP BSP kernel, then
+extensively and nearly completely rewritten, with added DT bindings. I
+have nonetheless retained original authorship. Clark, Haibo, if you
+would prefer not being credited and/or listed as authors, please let me
+know.
 
-> The solution in this patch is to revert to the non-latch version of
-> code, i.e. remembering the previous input status, and looking for the
-> changes. This system results in no more I2C transfers, so is no slower.
-> The latch property of the device still means interrupts will still be
-> noticed if the input changes back to its initial state.
+Compared to v3, this version addresses small review comments. I believe
+it is ready to go, pending another review of the PWM side (Uwe reviewed
+a previous version, and to the best of my knowledge, I've addressed all
+his concerns) and the MFD driver. Once the PWM driver gets reviewed, I
+think the simplest course of action is to merge the whole series through
+the MFD tree.
 
-Again, can you elaborate? Is it a real use case? If so, can you provide the
-chart of the pin sginalling against the time line and depict where the problem
-is?
+Clark Wang (1):
+  pwm: adp5585: Add Analog Devices ADP5585 support
 
+Haibo Chen (2):
+  mfd: adp5585: Add Analog Devices ADP5585 core support
+  gpio: adp5585: Add Analog Devices ADP5585 support
+
+Laurent Pinchart (1):
+  dt-bindings: mfd: Add Analog Devices ADP5585
+
+ .../devicetree/bindings/mfd/adi,adp5585.yaml  |  90 +++++++
+ .../devicetree/bindings/trivial-devices.yaml  |   4 -
+ MAINTAINERS                                   |  11 +
+ drivers/gpio/Kconfig                          |   7 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-adp5585.c                   | 231 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |  12 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/adp5585.c                         | 199 +++++++++++++++
+ drivers/pwm/Kconfig                           |   7 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-adp5585.c                     | 189 ++++++++++++++
+ include/linux/mfd/adp5585.h                   | 126 ++++++++++
+ 13 files changed, 875 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+ create mode 100644 drivers/gpio/gpio-adp5585.c
+ create mode 100644 drivers/mfd/adp5585.c
+ create mode 100644 drivers/pwm/pwm-adp5585.c
+ create mode 100644 include/linux/mfd/adp5585.h
+
+
+base-commit: c3f38fa61af77b49866b006939479069cd451173
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
+Laurent Pinchart
 
 
