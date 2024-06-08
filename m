@@ -1,136 +1,113 @@
-Return-Path: <linux-gpio+bounces-7283-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7284-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2BDE901267
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 17:48:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E5459013B4
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 23:45:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7AF071C217BD
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 15:48:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19E011C20B52
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jun 2024 21:45:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D9C1179675;
-	Sat,  8 Jun 2024 15:48:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEE6320B12;
+	Sat,  8 Jun 2024 21:45:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCxojzbv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bLwhp0EG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04791E888;
-	Sat,  8 Jun 2024 15:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AF11C696
+	for <linux-gpio@vger.kernel.org>; Sat,  8 Jun 2024 21:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717861722; cv=none; b=Xp3acWZV8HP1vFxtjRYLkNawOpcnOZxu4NFxSaM5F7UzkeTqGf5Ehaci6EcG6DgxeEiL8YAwfjySSGAI6Y2nVrTis/NZ9GXbEbRa5rD0aEgL5BMAossolwwm2aoPNrsjoHg7qOOUOeFtq4uYZ4e94o0jW6pftgjZc84JVfHmEeo=
+	t=1717883128; cv=none; b=OJqPOByfCwW7ZTUmGAoRDVsuAOUr9HX+SrqHPSFKVyRCsT45LJ2AmuCcPeMCbiW6rpDpvrftg88OYafAoHNyjdssVplfaVw2HW/iTclBIKtbpTnBXS78s7RVWI8Ve5didANpOzs9THyzGgBbQaI/JXKjJVtbKtTFx+pmXhsN8a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717861722; c=relaxed/simple;
-	bh=F6G10TvIr1xk/bTQReGFkBEnFiIvv8ayWvgKRiPGwd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PB+fQbPl4cbjjQgMs1WcyWi1q5SF7rUKGz+bvgxNHVBgQAflG/hsbTNBrmzqb7RM7dnuaQttngt+URSRAib4b1EqCpg/deXJjWEmVMFp2bc6GXv20hqwzR23l7bb6xAp/ceYSWqcPo0x0dzxIkOPYdo4sXuSeJv7TYn7WEct0NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCxojzbv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 250B5C2BD11;
-	Sat,  8 Jun 2024 15:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717861721;
-	bh=F6G10TvIr1xk/bTQReGFkBEnFiIvv8ayWvgKRiPGwd4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SCxojzbvL9nMzgK7dtOPD2e5Em0HDmEJU/hSWbVBrXqQnG0EPP9qQcE485nXFbuzo
-	 H8tCfZQOecPU+RWidiZmWXQBAVLNrJqedn/30YrViuqG0UCJfv+vh1k4Z4dcGFgR8G
-	 KpZBw4qSzvlb1IKTupLAHS52aBOVy9S+JQoQyAWGrO82bpO/kamPR668sHoeGrS9YX
-	 oPhLhs5tDioJr42P3SZv5tzgvJA39ATd6E4KDJSsKoIoJLSqRdi/v9wsEypxtGrrTk
-	 KE2BBWj6DqA6x4nI2RefVV56L90jQ+1x6i0pBEMulgjyQqWwxHmNO69HEGBaNZLwoF
-	 pmWNxxGc3yreg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sFyJ5-000000003GJ-1CTP;
-	Sat, 08 Jun 2024 17:48:40 +0200
-Date: Sat, 8 Jun 2024 17:48:39 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Lee Jones <lee@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-	Stephen Boyd <swboyd@chromium.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 02/14] mfd: pm8008: fix regmap irq chip initialisation
-Message-ID: <ZmR9VwiVjKaaQJLl@hovoldconsulting.com>
-References: <20240529162958.18081-1-johan+linaro@kernel.org>
- <20240529162958.18081-3-johan+linaro@kernel.org>
- <20240531170353.GB1204315@google.com>
+	s=arc-20240116; t=1717883128; c=relaxed/simple;
+	bh=1PM9KOizsidQQyP2x7DKMaDOjMdF7CDMFUkT3qeUJmM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=QeVwuNQsM/+V6QHGCnrG4c8a/RitIqrjFIv/aL3AFIN7uVw9zdLAwd0QCQgFdnD/1HLJ7Scp/ff47SK9O+I20GPhpO31pKHygTeTVgTXJRlM4795S81RVpnOLfOh+7EhD51tnF09V7jpycG9ManPaCG+JsBlew3kUs7241swcfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bLwhp0EG; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717883127; x=1749419127;
+  h=date:from:to:cc:subject:message-id;
+  bh=1PM9KOizsidQQyP2x7DKMaDOjMdF7CDMFUkT3qeUJmM=;
+  b=bLwhp0EGlkU/7esMAksPMqpufR6Yefw9wGllsy+i90588MPT/T6cwI9k
+   OHK7fxLiStX7Mol9IoAQmSVZPqeThdZyfS2m/ekcIU18p0Z20Keo1n/tM
+   f2YGmkxT9Fv1yXrB38Ik33gnCP7i72KOO6rl/aG26rRSiIAc0osx2u+zI
+   zkdcAW/r7nfSLNzjnbpOzfqnPn4qlryuGVgqoUhGEBojOg8B+bCYaGDNK
+   wdciO3GjI5us4iYDxIGbmUz/Nr4mpD+wkyuhUKGGUFVzx6CajKTYLecoZ
+   uhKD2XV40NoG4uudOvHlsaMdaABG5DKFWYseQ9PWbw+j+joeh7Vnb3SOQ
+   w==;
+X-CSE-ConnectionGUID: ahTxnUqhRL6/AnfDamI+NQ==
+X-CSE-MsgGUID: HU0nXpvpT/y8/2q+KiZAEw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11097"; a="14464574"
+X-IronPort-AV: E=Sophos;i="6.08,224,1712646000"; 
+   d="scan'208";a="14464574"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2024 14:45:26 -0700
+X-CSE-ConnectionGUID: Wfp9vd8HT6yHMA4MzXMf+g==
+X-CSE-MsgGUID: 0Bi45oT6SSCBe+5pwmil1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,224,1712646000"; 
+   d="scan'208";a="43217990"
+Received: from lkp-server01.sh.intel.com (HELO 8967fbab76b3) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 08 Jun 2024 14:45:25 -0700
+Received: from kbuild by 8967fbab76b3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sG3sJ-0000Vm-1U;
+	Sat, 08 Jun 2024 21:45:23 +0000
+Date: Sun, 09 Jun 2024 05:44:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
+ 08a9a6cd229db4b325fa5861049de268e24f6309
+Message-ID: <202406090542.OyWRY4KE-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240531170353.GB1204315@google.com>
 
-On Fri, May 31, 2024 at 06:03:53PM +0100, Lee Jones wrote:
-> On Wed, 29 May 2024, Johan Hovold wrote:
-> 
-> > The regmap irq array is potentially shared between multiple PMICs and
-> > should only contain static data.
-> > 
-> > Use a custom macro to initialise also the type fields and drop the
-> > unnecessary updates on each probe.
-> > 
-> > Fixes: 6b149f3310a4 ("mfd: pm8008: Add driver for QCOM PM8008 PMIC")
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
- 
-> > -static struct regmap_irq pm8008_irqs[] = {
-> > -	REGMAP_IRQ_REG(PM8008_IRQ_MISC_UVLO,	PM8008_MISC,	BIT(0)),
-> > -	REGMAP_IRQ_REG(PM8008_IRQ_MISC_OVLO,	PM8008_MISC,	BIT(1)),
-> > -	REGMAP_IRQ_REG(PM8008_IRQ_MISC_OTST2,	PM8008_MISC,	BIT(2)),
-> > -	REGMAP_IRQ_REG(PM8008_IRQ_MISC_OTST3,	PM8008_MISC,	BIT(3)),
-> > -	REGMAP_IRQ_REG(PM8008_IRQ_MISC_LDO_OCP,	PM8008_MISC,	BIT(4)),
-> > -	REGMAP_IRQ_REG(PM8008_IRQ_TEMP_ALARM,	PM8008_TEMP_ALARM, BIT(0)),
-> > -	REGMAP_IRQ_REG(PM8008_IRQ_GPIO1,	PM8008_GPIO1,	BIT(0)),
-> > -	REGMAP_IRQ_REG(PM8008_IRQ_GPIO2,	PM8008_GPIO2,	BIT(0)),
-> > +#define _IRQ(_irq, _off, _mask, _types)			\
-> > +	[_irq] = {					\
-> > +		.reg_offset = (_off),			\
-> > +		.mask = (_mask),			\
-> > +		.type = {				\
-> > +			.type_reg_offset = (_off),	\
-> > +			.types_supported = (_types),	\
-> > +		},					\
-> > +	}
-> 
-> Any reason why this can't be generic and be tucked away somewhere in a
-> header file?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: 08a9a6cd229db4b325fa5861049de268e24f6309  dt-bindings: pinctrl: qcom,pmic-gpio: drop pm8008
 
-These macros tend to be quite driver specific so not sure it makes sense
-to try to generalise beyond the basic ones already provided by regmap.
+elapsed time: 1448m
 
-Either way, I don't think that should be a prerequisite for fixing this
-driver.
+configs tested: 20
+configs skipped: 1
 
-I'm also considering replacing the current irq chip implementation as
-part of unifying with the SPMI implementation.
- 
-> > +static const struct regmap_irq pm8008_irqs[] = {
-> > +	_IRQ(PM8008_IRQ_MISC_UVLO,    PM8008_MISC,	BIT(0), IRQ_TYPE_EDGE_RISING),
-> > +	_IRQ(PM8008_IRQ_MISC_OVLO,    PM8008_MISC,	BIT(1), IRQ_TYPE_EDGE_RISING),
-> > +	_IRQ(PM8008_IRQ_MISC_OTST2,   PM8008_MISC,	BIT(2), IRQ_TYPE_EDGE_RISING),
-> > +	_IRQ(PM8008_IRQ_MISC_OTST3,   PM8008_MISC,	BIT(3), IRQ_TYPE_EDGE_RISING),
-> > +	_IRQ(PM8008_IRQ_MISC_LDO_OCP, PM8008_MISC,	BIT(4), IRQ_TYPE_EDGE_RISING),
-> > +	_IRQ(PM8008_IRQ_TEMP_ALARM,   PM8008_TEMP_ALARM,BIT(0), IRQ_TYPE_SENSE_MASK),
-> > +	_IRQ(PM8008_IRQ_GPIO1,	      PM8008_GPIO1,	BIT(0), IRQ_TYPE_SENSE_MASK),
-> > +	_IRQ(PM8008_IRQ_GPIO2,	      PM8008_GPIO2,	BIT(0), IRQ_TYPE_SENSE_MASK),
-> >  };
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Johan
+tested configs:
+openrisc                          allnoconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   clang
+s390                              allnoconfig   clang
+s390                                defconfig   clang
+sh                                allnoconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                             defconfig   gcc  
+um                                allnoconfig   clang
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+xtensa                            allnoconfig   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
