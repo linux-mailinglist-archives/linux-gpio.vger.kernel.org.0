@@ -1,144 +1,119 @@
-Return-Path: <linux-gpio+bounces-7309-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7310-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B847902345
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 15:59:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 038A5902364
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 16:03:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C1D4B1C20BDF
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 13:59:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94DDA284AC6
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 14:03:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F98014387C;
-	Mon, 10 Jun 2024 13:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD59B13D8BF;
+	Mon, 10 Jun 2024 14:01:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R5dpanIH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7IMglbi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7744B85624;
-	Mon, 10 Jun 2024 13:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAEE12FB31
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2024 14:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718027606; cv=none; b=ongnuZp8AvVRRZ0/eVZd5btkHncN0yZ/ZMbY1p5lfjksjA+fKsG1II2a0DcqvRXZBZjpI7lJNXngIdwCXyiy4MhCjugz1HPKPz/tyyk19yw3a3QyhNPWKInyrysHrX70E16ZUFq2vCiav/Cj8MtkJjFLk8LON8Mphvxkhl3XTGU=
+	t=1718028119; cv=none; b=IKMbAcI+rr4ossAKCwVR2+RmY7BzCvV/uuMl0/dleJjCtBFDP4gBFn0/jtyyrjbn1p0IiJmF2W2Zb00hG3DA9ov2i8yUkL6w7uulPYHw9SYFLUED3LVsq0xbd0ZHKyN8CXXQ2NNJmDsS6bV3mNW2rOuWGcevtKMpwjDhTCR6Un8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718027606; c=relaxed/simple;
-	bh=9hYa8l5lfGSwkKmbgb18J6D8KUzmTZxbQJnlzz7hNZM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ffp44rWIQ5KuwgRp08ATTh40mKIJYu0uMrFsY74yUro/1vSl/UnvyyjbuBxFPK96F/uCWGB+Vd1BlQL1hVdulBw/c0LINizjvpWlDyz5iZoJcdyQ/Iin0RgLo++S786MlYIPYALkDTyW7ISuQ36ZIISI5OEt5avAno0RYPIVU8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=R5dpanIH; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45ADrEnM106139;
-	Mon, 10 Jun 2024 08:53:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718027595;
-	bh=N1OeRdjzW2BDag8v1tJ9PaBomBTrv4HOdNeEt9jOvL4=;
-	h=From:To:CC:Subject:Date;
-	b=R5dpanIHD8xp+zZ9FCfRboABUCL0j8vAM+IngPcWLc5WWLJi3tWixDRewaPa9XouT
-	 xj6IwZL4zBbtIlCFWCJCGoQijtQWIlU2SCvNC9/GgcEw7XvitmqqNm08rm1I1ml3RF
-	 b1E5MJS1TlMZBC20LTH6zfu3GFmkJ6BRGRvhYa8w=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45ADrEWN099130
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 10 Jun 2024 08:53:14 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
- Jun 2024 08:53:14 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 10 Jun 2024 08:53:14 -0500
-Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45ADrEoG032480;
-	Mon, 10 Jun 2024 08:53:14 -0500
-From: Andrew Davis <afd@ti.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>, Jonathan Corbet <corbet@lwn.net>,
-        Rui Miguel Silva
-	<rmfrfs@gmail.com>, Johan Hovold <johan@kernel.org>,
-        Alex Elder
-	<elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <greybus-dev@lists.linaro.org>,
-        Andrew Davis
-	<afd@ti.com>
-Subject: [PATCH] gpiolib: Remove data-less gpiochip_add() function
-Date: Mon, 10 Jun 2024 08:53:13 -0500
-Message-ID: <20240610135313.142571-1-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1718028119; c=relaxed/simple;
+	bh=GEd8aJcEFmDnV+9rKkpV5YqOgMOwPygYCLFyrRcb8kk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=X2dZvbMF5cTx3dz/IPfh/5p3nuVpGLwyP97nLY0pBlkVGUS2oG2Cyk8UOgK3oXE4wuwOteoeELUbSrpJY0OVP7khSqT138/UeosX8dDUYAcv8d6i1KIA0pwEQ7gR6H8slvTXIYrj7AD5t5j0au233lpo/e5IkPI+HW9XL9lHQrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7IMglbi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D634C2BBFC;
+	Mon, 10 Jun 2024 14:01:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718028119;
+	bh=GEd8aJcEFmDnV+9rKkpV5YqOgMOwPygYCLFyrRcb8kk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=I7IMglbi6IwBfw2h6KOYMO9QPN5owMLaHwFRoM0t+/guwjP/EWTopxarlXNa1X6Zy
+	 VEhd7v3nu4EC3CKXdhQ43F65yU8EPxMiFFMvrohND89bvLRac/yDlRPyEqTL1+TmAr
+	 pAmkeRFg16yrpxkMDGS0Bmf9uVkuA9vZW6MIm/GFUc0t8lDiveQPMEDBCWTi9DyXx4
+	 BQ1P4FRXErJojhSNutWdeSBbv9kG+RbKISVGPHAkPZJonb2cujie3ni/EfKixyb7Rk
+	 xok5pJqyeGzBFAMhNAbIYODKyYSLjoMzL646np76y0dAc8fmv7XiIXlvzVqLEhfO7p
+	 xGHHTyyULQlDw==
+Date: Mon, 10 Jun 2024 16:01:55 +0200
+From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, linux-gpio@vger.kernel.org
+Subject: how to request gpiochip line which is only valid as an interrupt?
+Message-ID: <20240610160155.5ca7e0d7@dellmb>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-GPIO chips should be added with driver-private data associated with the
-chip. If none is needed, NULL can be used. All users already do this
-except one, fix that here. With no more users of the base gpiochip_add()
-we can drop this function so no more users show up later.
+Hello Bartosz,
 
-Signed-off-by: Andrew Davis <afd@ti.com>
----
- Documentation/driver-api/gpio/driver.rst | 5 ++---
- drivers/staging/greybus/gpio.c           | 2 +-
- include/linux/gpio/driver.h              | 4 ----
- 3 files changed, 3 insertions(+), 8 deletions(-)
+I would like to ask you if you could find some time to look at
 
-diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
-index e541bd2e898b5..ae433261e11a0 100644
---- a/Documentation/driver-api/gpio/driver.rst
-+++ b/Documentation/driver-api/gpio/driver.rst
-@@ -69,9 +69,8 @@ driver code:
- 
- The code implementing a gpio_chip should support multiple instances of the
- controller, preferably using the driver model. That code will configure each
--gpio_chip and issue gpiochip_add(), gpiochip_add_data(), or
--devm_gpiochip_add_data().  Removing a GPIO controller should be rare; use
--gpiochip_remove() when it is unavoidable.
-+gpio_chip and issue gpiochip_add_data() or devm_gpiochip_add_data(). Removing
-+a GPIO controller should be rare; use gpiochip_remove() when it is unavoidable.
- 
- Often a gpio_chip is part of an instance-specific structure with states not
- exposed by the GPIO interfaces, such as addressing, power management, and more.
-diff --git a/drivers/staging/greybus/gpio.c b/drivers/staging/greybus/gpio.c
-index 2a115a8fc263f..5217aacfcf54c 100644
---- a/drivers/staging/greybus/gpio.c
-+++ b/drivers/staging/greybus/gpio.c
-@@ -579,7 +579,7 @@ static int gb_gpio_probe(struct gbphy_device *gbphy_dev,
- 	if (ret)
- 		goto exit_line_free;
- 
--	ret = gpiochip_add(gpio);
-+	ret = gpiochip_add_data(gpio, NULL);
- 	if (ret) {
- 		dev_err(&gbphy_dev->dev, "failed to add gpio chip: %d\n", ret);
- 		goto exit_line_free;
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 0032bb6e7d8fe..6d31388dde0ab 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -632,10 +632,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	devm_gpiochip_add_data_with_key(dev, gc, data, NULL, NULL)
- #endif /* CONFIG_LOCKDEP */
- 
--static inline int gpiochip_add(struct gpio_chip *gc)
--{
--	return gpiochip_add_data(gc, NULL);
--}
- void gpiochip_remove(struct gpio_chip *gc);
- int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc,
- 				    void *data, struct lock_class_key *lock_key,
--- 
-2.39.2
+  [PATCH v11 6/8] platform: cznic: turris-omnia-mcu: Add support for
+                  MCU provided TRNG
 
+  https://lore.kernel.org/soc/20240605161851.13911-7-kabel@kernel.org/
+
+Andy Shevchenko added you to that conversation asking you about how to
+correctly do the following part:
+
+  irq = gpiod_to_irq(gpiochip_get_desc(&mcu->gc, irq_idx));
+
+I am writing this to give some more light into the problem. What is
+going on:
+- the turris-omnia-mcu driver provides a gpio chip with interrupts
+- some lines are gpio + irq, but some lines are interrupt only
+- later, after the gpiochip is registered, another part of the
+  turris-omnia-mcu driver wants to use one interrupt only line
+
+To use the gpiod_to_irq() function, I need gpio descriptor for that
+line. I can get that with gpiochip_get_desc(), since this is within the
+driver, I have access to the gpiochip. But this is semantically a
+little weird, because
+
+  1. gpiochip_get_desc() is supposed to be used by gpio driver, not
+     consumer (and the trng part of the turris-omnia-mcu code is a
+     consumer of the gpio)
+
+  2. reference counting?
+
+Looking at gpiolib, maybe the better function to use would be
+gpiochip_request_own_desc(). This also is defined in
+include/gpio/driver.c instead of include/gpio/consumer.c, but at least
+it's name suggests that it is used by code that also owns the
+gpiochip...
+
+One problem is that gpiochip_request_own_desc() won't work, because the
+gpiochip initializes valid masks for both gpios and irqs, and the 
+gpiochip_request_own_desc() function calls gpiod_request_commit(),
+which executes the following code
+
+  if (guard.gc->request) {
+    offset = gpio_chip_hwgpio(desc);
+    if (gpiochip_line_is_valid(guard.gc, offset))
+      ret = guard.gc->request(guard.gc, offset);
+    else
+      ret = -EINVAL;
+    ...
+  }
+
+So if a gpiochip line is not valid GPIO, only valid IRQchip line, then
+the GPIO cannot be requested, even for interrupts.
+
+What is the proper solution here?
+
+Thank you
+
+Marek
 
