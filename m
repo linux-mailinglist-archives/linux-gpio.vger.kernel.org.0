@@ -1,111 +1,118 @@
-Return-Path: <linux-gpio+bounces-7299-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7300-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57083901B15
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 08:21:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B47B9901BF9
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 09:38:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 092B01F22399
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 06:21:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0F581C2192C
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 07:38:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB9B6168C7;
-	Mon, 10 Jun 2024 06:21:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B37C28DBC;
+	Mon, 10 Jun 2024 07:38:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maD5NkFL"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DQmSOd6N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9F117556;
-	Mon, 10 Jun 2024 06:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F44C224DD
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2024 07:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718000475; cv=none; b=pQmW/SeFD0rAPz0RVUM4EyQjPnxOpMUBiJjSKU4yXgCCIXjFPTi0TZsXsSz+JZe1+oBiXEfQoUcXfQeq7HlPNSrQsZz1VfNW3OqRofGOuPVjOxg/AyQNl76ohcGe9yWqfIFEp/zpQYKgMRAOrTLahG1S0HCJ/fbJge8GQCRTztk=
+	t=1718005121; cv=none; b=OnhTrvTT+jtLuYE68htzwNt+90hNF2CA/HmGzCMInnenmwaJASAGMHJI2e96LzAhhw+W1D1TVYWEjCWcL1GBQFBCtwSc6M4LQyV1D1IAs7jCWKqZOc6UYKb8DFNwu7dQdSafuxx7qb3w+FIMV+bBps0qZJQ2bIISjbeXbsdbuic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718000475; c=relaxed/simple;
-	bh=htMYL62EBgOyd3NO98KvEswQedQdv3hijD5lAZErPDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=L1wOuq4BYxJRDle2gqKs4EvkKW1Rhgjh/Sa2Mq4fed4yOsnBmGV4jKCerjcUNBHLp1ZND9Ep77WHYm7WI5PDOSxqnDBXiHe5yiPe/sIfymUSlKRTHV2rIHlddXmYG/lESsB+jnncKk/X29J3dCEEAwDACIXfngRWS06N2dWiT/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=maD5NkFL; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6f21ff4e6dso29384366b.3;
-        Sun, 09 Jun 2024 23:21:13 -0700 (PDT)
+	s=arc-20240116; t=1718005121; c=relaxed/simple;
+	bh=J3TJUg5+q7YP0MGTuE4DpuCVtIoec/4jlVQ+5HhQKFQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EdkUU/9YHtVJWm2dGQ4KR0AD+ouygYHHoSuCubMek5+gV7DzqXwDK/xuKqajL1y5UEPjcv66SNXvaFUCgURuyVs1ZBeA3hhbTISftSw6Aqfq7ONpK5FTZI+9zH3LC7Eyakb+IO2RP+8wczyGhuuAWtM00zexgfmmuAkqmLcUgQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DQmSOd6N; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4210aa012e5so38759655e9.0
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2024 00:38:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718000472; x=1718605272; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qswQsB6GG8jzu3P/wsKzIrL88cPkFRyaSp1SLy9L8Mg=;
-        b=maD5NkFLfZrBb7/OzLIZXmcXUF1IDNvRVZg4wMMpXKtL+36dGruk61Rki8WIWB/6bv
-         L0/bSxCnXRnTfzOa/jKtJebo6XLtH4sfTxxJwTPuTOeBVtBOqYLrejYQmABAErL8uGS0
-         zQgkfD4aWiYO1m6SILrvLfCX+dEG2cpA45PaLFijd1tFXiifagMo03/K6bD6unoJiA9Y
-         oSflNH0BGOx/wvLPQgn9iQFacCC/G9Zm3O09AebRegQQw+w14SRgbDHlrSYjIG3T8nAW
-         LNJxNc5Uzy18HLV2R/DpmE9LYnZlkzIBXxFmsMyaFs7pEl3TBlrh9nleuXxbiMS++8Ux
-         Mp9g==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718005118; x=1718609918; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m3sXZnTrFx1FLNku3UarqNq102veh5s5DlicL0ytOPY=;
+        b=DQmSOd6NrsPxmPI9wUvdC34r+48+kXctKUkQSLIt62iTcVnng2BBOajz00JROXCrIK
+         H+UiCAAg3lnkwNCVIOtEbAHd7Fojb1VMTayHugyLaUtJJpUP+tfRVaxTHr5dUJV62B0G
+         eLHT3Zz9S61VLepVcyBSsSR71apioNOFgs+jn9ZVEGn6HciNj4vbAT0un7OZ8Aigpb6t
+         yYceJYG9ZWvaMIFKXfXoMoN9cgg2ZEhzyFupzvwjGQKMID7SVoDlMb1rFeOIF9MGiWS4
+         zj/ZJPCjUDjgjW+ZeOZvqodl8leEvlBEYL9GBkFA02lZZCIcku+JFQ3LNCCMitzLGsw4
+         MSdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718000472; x=1718605272;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qswQsB6GG8jzu3P/wsKzIrL88cPkFRyaSp1SLy9L8Mg=;
-        b=fGeL40Sx/FAVvfWSY1FG7Hh1HtzbhsJsYqdmKb+BA3OeHkwGvo5nJeAgUATYyaB5gw
-         +nHMqC9LGXBF+/Jc9G6No+SlFn7BMP+joH9PlQCnHPfuMyAVwF4/VDhPZDpBsv7wMape
-         fC21Ixpw3iuA8nznu9n/eqSs2RIrOHnPJMmcDeTgNQSvn9LoNtHN8D+a91dyNfqWcTYK
-         cFAtbXT0wpULw4izlb0NnkYX6flncr8TMxRLCbYuPetduhKXxlp9mN1IVrXwP2klZfyq
-         XJI5MpYoK/8rYAHVmLJUcluo8ILU0B2rZLlGm82Q0RjgJrXmw+Mez8rXQT2IgHRkPj87
-         gwtA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ/Pb1Wu34Biu/fbituRiJlselWwKFm4dZcGzgocrm964kNMK8EmutXYw1m84AUwOJaS8dzH9X6xPdUVn5YdmwWSrqbSDaXrABUMY5dyg1evn5kH+B9yKRlYivlRHZjAvI8VjUvY2U6vo5rZBQQErUph2ivZn89XEyU3iq7MB/fpVwn8wwZNNeiBSz4zG3BxixaXvpT8GEI8XqtFcyISM=
-X-Gm-Message-State: AOJu0YwYdLJ+Z2dMha6zdiTljbMiuc+7n57F7yumvecssZ/7+Ahb8oIi
-	NgTqVeMeuZFg50dMMzDkccTX/zvVXOEYtdS/b2Z9G5wXuC4NK7d3
-X-Google-Smtp-Source: AGHT+IFqLPALWZIZIbUadkqAjMgHaOSVsBi7G9vJUL51aSZdsu42FcyFDDDbBNSEzUxFl7u7eCdaIg==
-X-Received: by 2002:a17:906:46da:b0:a6f:2dd9:1449 with SMTP id a640c23a62f3a-a6f2dd91a59mr849466b.49.1718000472082;
-        Sun, 09 Jun 2024 23:21:12 -0700 (PDT)
-Received: from standask-GA-A55M-S2HP (lu-nat-113-247.ehs.sk. [188.123.113.247])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c805cc38csm600798666b.71.2024.06.09.23.21.11
+        d=1e100.net; s=20230601; t=1718005118; x=1718609918;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m3sXZnTrFx1FLNku3UarqNq102veh5s5DlicL0ytOPY=;
+        b=fBs6fRTCXmCkFc5/K9nJ/TiRgatNeBao6l67a1HuAYE/1C5sV81qjHxXOgrDQl5uat
+         spw3yvgcW19XStJgUExB8T+kfN4+eOSsB2T1aiiohWHXEow+SDbeVyLpwIkz7kQow113
+         CBvDZUv/1LxZWaj/NGy29waJxTrsjpXvSQcj2jpnVhnzMPhP5+LTxUAWIM7FOhpGxzmo
+         i07KpW1MpXq2e16SYGZgb7ikaQVr6wZvo3PcoTlg2kUP6eMRkMRjdFJz/14qDZAWyLxx
+         ppLpbQWRaEmXxcsNNoqRmfpubYfzmSj0w8KRPEcgsO3vL44bP1ICHHa+C4wvzlO1eHw4
+         7EDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXZoQ5cuMUXNZh5h7mVHAf0J8wCI26gbhIFkPCCVa6/RfPU3uuH//VXNAqESYEKshzOM4itZTBXfpshwhX8xj2QeKtYPvpARSKLkQ==
+X-Gm-Message-State: AOJu0YwJMfUJBiqiDroevCLTKIYRha7pN29LEctPplLAAHaa8rlPCRnP
+	mGzUNdoYZRhuO/K3yQ3xdD6B7b3EU9JDiplDRiF2xtOea+nd/lXFdb33Om6lt9I=
+X-Google-Smtp-Source: AGHT+IGv6yWdP8pzscvWRA8dl/BXTGiMUSwmqHfHi0M+GCIMctO8PARtwXxuupJU4okqHnTCWtagZQ==
+X-Received: by 2002:a05:600c:3c94:b0:41a:b54a:9ad8 with SMTP id 5b1f17b1804b1-4216499c726mr75618785e9.0.1718005117749;
+        Mon, 10 Jun 2024 00:38:37 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:b790:b49b:9038:8e99])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421580fe371sm166778035e9.1.2024.06.10.00.38.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jun 2024 23:21:11 -0700 (PDT)
-Date: Mon, 10 Jun 2024 08:21:09 +0200
-From: Stanislav Jakubek <stano.jakubek@gmail.com>
-To: laurent.pinchart@ideasonboard.com
-Cc: brgl@bgdev.pl, conor+dt@kernel.org, devicetree@vger.kernel.org,
-	krzk+dt@kernel.org, lee@kernel.org, linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, robh@kernel.org, ukleinek@kernel.org
-Subject: Re: [PATCH v4 1/4] dt-bindings: mfd: Add Analog Devices ADP5585
-Message-ID: <ZmabVXaztPbp1ENV@standask-GA-A55M-S2HP>
+        Mon, 10 Jun 2024 00:38:37 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: brgl@bgdev.pl,
+	Huichun Feng <foxhoundsk.tw@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	corbet@lwn.net,
+	linus.walleij@linaro.org,
+	linux-doc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	warthog618@gmail.com
+Subject: Re: [PATCH v2] docs: gpio: prefer pread(2) for interrupt reading
+Date: Mon, 10 Jun 2024 09:38:36 +0200
+Message-ID: <171800510952.16671.14245266233040448666.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240609173728.2950808-1-foxhoundsk.tw@gmail.com>
+References: <20240609173728.2950808-1-foxhoundsk.tw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240608141633.2562-2-laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Laurent,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> index 0a419453d183..91e62df4b296 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> @@ -39,10 +39,6 @@ properties:
->              # AD5110 - Nonvolatile Digital Potentiometer
->            - adi,ad5110
->              # Analog Devices ADP5585 Keypad Decoder and I/O Expansion
-> -          - adi,adp5585
-> -            # Analog Devices ADP5585 Keypad Decoder and I/O Expansion with support for Row5
-> -          - adi,adp5585-02
-> -            # Analog Devices ADP5589 Keypad Decoder and I/O Expansion
->            - adi,adp5589
->              # Analog Devices LT7182S Dual Channel 6A, 20V PolyPhase Step-Down Silent Switcher
->            - adi,lt7182s
 
-seems like you removed the wrong comment here? With this, ADP5589 would have
-a comment describing ADP5585.
+On Mon, 10 Jun 2024 01:37:28 +0800, Huichun Feng wrote:
+> In legacy sysfs GPIO, when using poll(2) on the sysfs GPIO value for
+> state change awaiting, a subsequent read(2) is required for consuming
+> the event, which the doc recommends the use of lseek(2) or
+> close-and-reopen to reset the file offset afterwards.
+> 
+> The recommendations however, require at least 2 syscalls to consume
+> the event. Gladly, use of pread(2) require only 1 syscall for the
+> consumption. Let's advertise this usage by prioritizing its placement.
+> 
+> [...]
 
-Regards,
-Stanislav
+Applied, thanks!
+
+[1/1] docs: gpio: prefer pread(2) for interrupt reading
+      commit: 7f1e45f4ae7671550e15354ef87194bccd99ecec
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
