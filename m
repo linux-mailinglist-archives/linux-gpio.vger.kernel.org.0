@@ -1,153 +1,177 @@
-Return-Path: <linux-gpio+bounces-7288-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7289-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB763901878
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 00:13:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D652901A77
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 07:54:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1DC9F1F211D0
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jun 2024 22:13:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12CF41F23030
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 05:54:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A513C54673;
-	Sun,  9 Jun 2024 22:13:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BFDB10A22;
+	Mon, 10 Jun 2024 05:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="uAP0Kik5"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="q1qeIBRm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF621CD00
-	for <linux-gpio@vger.kernel.org>; Sun,  9 Jun 2024 22:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437FC107B3
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2024 05:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717971220; cv=none; b=u4P3TXLK0Z6wBwlhrn/3vxARYNV8HMx0JQS5V9teqdbr/1q+4WhLrkxszun8ZrvHQn72mCbG1uQ0rkjtXumUv4diy1/9zCrWIXI5TPaPd3cDJhv14KIgMLZtBOBnFfLwjar0pv3zS+HL1VscRT6I/safD+1bN1qHspignpcLsmU=
+	t=1717998735; cv=none; b=drOC7sNrl97iSzk43NhnLLm7mVQmizQOJi5YG2oMvKMFOzt15B/RFWPqSQzTUWRLGRAW4RpED/FRJ2c5r2owzr7Q4mDW+HcgAMHLdKZdaUDLOVJZDWKLqgaH64ys25eYarF15T9gsQesEzXSC6Hhuf/0ANa2/cxu58Ou1K42mF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717971220; c=relaxed/simple;
-	bh=hbL/pdZIv5Dp0rCVGhg8oan6rPug4SJHwJnZVrisT2g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UeVD1TNTAf/ErADD1IrMHZTsRFRAgV9S3Da2wsjRFP65uJ1H8nbxoj+6dXm701lp1rUa1c0C6eT0+1e54OmXLbc0dgNS1iGM49QKrvP0MZF/tKxaAbNlyR3z4GO1u6+A3yKjzjiXYfYLPiisMXt48YmfpsS3eDQffAVCaPENyS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=uAP0Kik5; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id AD0422C08BD;
-	Mon, 10 Jun 2024 10:13:28 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1717971208;
-	bh=hbL/pdZIv5Dp0rCVGhg8oan6rPug4SJHwJnZVrisT2g=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=uAP0Kik559ZH9Wc3yJGsVD/3ed0OsFSq5pnQH87QjSBZfULdH0TxLPSw9Iz/aJlqC
-	 OzSqe7R/r6B6CRWzUQQwhbVDNwSf1LrTYyiRkl/CjUaMGIclWgAZunjktTeoO5b6CZ
-	 fqhxlGIuVO2TqGanvS9HU8sUAFqgdNh7aEdV3wawUAZGePlj+jVlRcdiRVe+P9hJUg
-	 E9OTkd8tCJZXD5ND/IfsQXUVBKKUx6mF2DzvAPt7UzERN+XgdeoDzn/mZKgyLrdYVT
-	 /E3jo90Qck8DfITddmyLQYTZ3Fprfo1kkZYD/ZzqHwrFCUSYEUNmDxfwn7kNY77FTX
-	 +sNqWOR/tFlNA==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B666629080001>; Mon, 10 Jun 2024 10:13:28 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1544.11; Mon, 10 Jun 2024 10:13:28 +1200
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.48; Mon, 10 Jun 2024 10:13:28 +1200
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1544.011; Mon, 10 Jun 2024 10:13:28 +1200
-From: Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>
-To: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
-CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "brgl@bgdev.pl"
-	<brgl@bgdev.pl>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linus.walleij@linaro.org"
-	<linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: pca953x: Improve interrupt support
-Thread-Topic: [PATCH] gpio: pca953x: Improve interrupt support
-Thread-Index: AQHat8IKrnq78xh9RkCOMGJXNt7JBLG82EyAgAJjhoA=
-Date: Sun, 9 Jun 2024 22:13:27 +0000
-Message-ID: <e407b7b58c966ee35e023618ad428a21f979e761.camel@alliedtelesis.co.nz>
-References: <20240606033102.2271916-1-mark.tomlinson@alliedtelesis.co.nz>
-	 <ZmQoCwLFuJNyuRG6@surfacebook.localdomain>
-In-Reply-To: <ZmQoCwLFuJNyuRG6@surfacebook.localdomain>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F331E2EA68419549A37805A254B08F2C@atlnz.lc>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1717998735; c=relaxed/simple;
+	bh=tEJxMcM+9LsI3fPhwfesCOt0sMgwAzDck8CgZrCSzgM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OYn9uw7L7Pt2KceCeAVVNYIDO5DAvn/Q9c6dQUX/vYEC4okyRMfIIcnU2elgH2CfRXuIRuVCyEHQ5FpMqWqEYgLKwuYiqUyX9jD6cScZEaYBtSimj7/RHn9j/aIw4oWd4J/zmy2WDDfRXup2VspE0kXD7u22Il1LMZiO+iFAi4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=q1qeIBRm; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42178999284so14570635e9.0
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Jun 2024 22:52:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1717998731; x=1718603531; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ulf+Zjzfa5s1kwopkqk/sw8N1ZWmHS8sAwU7zWlXXq4=;
+        b=q1qeIBRmV2xg2Sroqt/zEst9c4FYVpLF+etXkV0mAg1/I2pf7YDiFHI0gtzp7F9q9F
+         oCIRFqqA9RQUJtKG292L8/c8YzFaIvUOIXljISLroC+o8Z6xBnQYkNx1D9sT3nRAGBic
+         I+XO9Yw0TixFw0sYu0DfgB8pG45KiqxCKHoMV+89tdbHMjxW3YbdUvhI1qlazTYnXrhU
+         z0AbRYEyMsUdlOLJzifiUz6eectfHiWmgTFZVWP6XpCyw+SxfEWiKY+mKpT1CmqzkU4E
+         bXlucYzsNoTGoV2PjQO8Bb+PYkWf3npRGsPgU+ejwyPyHtImyvIPaLJ1+Tk4tRZHus7K
+         RF7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717998731; x=1718603531;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ulf+Zjzfa5s1kwopkqk/sw8N1ZWmHS8sAwU7zWlXXq4=;
+        b=GF8YFppeQzYRmGAaeUejzX3Ym+5Q+WXz9akk1eJ16mBL5OLtjys2dEhbRul7OwL/LB
+         ase1EdThRjXupTtfmdQA4m56ImxYx3dlq8yrIUcBpQHOXUrTGbE95kPZhfBrtgKZwrlU
+         8WsK6ZNQzDzN9u1J7+FoqmIhlA/Gbp2jaotMT4iPjmupMbCCR64AT8C0oEI2cRnvUjpN
+         5vGyUcRh93IKOtDAaYYT/5v1spxN1cHgGs9SCTYXy1SN3RVfyv/Q4CJR85z2ryYs+TW2
+         a2vv2Qid1ejTrtmylf6uoEKAVrkRg2yAiXf0JazLOrPnKtsz1PbwS9anpkTpOVAR61TH
+         a9MA==
+X-Forwarded-Encrypted: i=1; AJvYcCXcJ5G19IjyW8KUnUBD5tjaSrTuWsIazI6D52PPifkngu2Q52BXpyCQtbwp1WfMWNJoOZfjJZBJTRuxpD7oFR1GIwyvyHLbDQujtQ==
+X-Gm-Message-State: AOJu0YwtAhWTu6oTBIBfqqColq60bT0ECVpa7RKhvRi+zzjVOhwKSUyA
+	vNdCjGAPpnVdNZUxUSmHAa3dVKgjGFeDs9DavBZ5FMazpQEpg1tjy8oECHH4f4o=
+X-Google-Smtp-Source: AGHT+IEr8LsxGh5AtfyyS0a/VJvNay3v21KtD4xp8rzGfwrFFB2jCTneu+QwIAFkZhP6LQiVmKRkuQ==
+X-Received: by 2002:a05:600c:470f:b0:41b:d8ef:8dcd with SMTP id 5b1f17b1804b1-42164a2e9fcmr53880555e9.28.1717998731427;
+        Sun, 09 Jun 2024 22:52:11 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.189])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421cc89e055sm25464975e9.13.2024.06.09.22.52.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Jun 2024 22:52:09 -0700 (PDT)
+Message-ID: <0c8f65e0-866d-4858-9acb-521003198c5e@tuxon.dev>
+Date: Mon, 10 Jun 2024 08:52:07 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=F9L0dbhN c=1 sm=1 tr=0 ts=66662908 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=KE40CbAq34oA:10 a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=UDBL-DoJI6aJ5C6zNTwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 02/15] pinctrl: renesas: pinctrl-rzg2l: Rename B0WI to
+ BOWI
+Content-Language: en-US
+To: Prabhakar <prabhakar.csengg@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Biju Das <biju.das.jz@bp.renesas.com>,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ Paul Barker <paul.barker.ct@bp.renesas.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240530173857.164073-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <20240530173857.164073-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-T24gU2F0LCAyMDI0LTA2LTA4IGF0IDEyOjQ0ICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
-DQo+IFRodSwgSnVuIDA2LCAyMDI0IGF0IDAzOjMxOjAyUE0gKzEyMDAsIE1hcmsgVG9tbGluc29u
-IGtpcmpvaXR0aToNCj4gPiBUaGUgR1BJTyBkcml2ZXJzIHdpdGggbGF0Y2ggaW50ZXJydXB0IHN1
-cHBvcnQgKHR5cGljYWxseSB0eXBlcyBzdGFydGluZw0KPiA+IHdpdGggUENBTCkgaGF2ZSBpbnRl
-cnJ1cHQgc3RhdHVzIHJlZ2lzdGVycyB0byBkZXRlcm1pbmUgd2hpY2gNCj4gPiBwYXJ0aWN1bGFy
-DQo+ID4gaW5wdXRzIGhhdmUgY2F1c2VkIGFuIGludGVycnVwdC4gVW5mb3J0dW5hdGVseSB0aGVy
-ZSBpcyBubyBhdG9taWMNCj4gPiBvcGVyYXRpb24gdG8gcmVhZCB0aGVzZSByZWdpc3RlcnMgYW5k
-IGNsZWFyIHRoZSBpbnRlcnJ1cHQuIENsZWFyaW5nIHRoZQ0KPiA+IGludGVycnVwdCBpcyBkb25l
-IGJ5IHJlYWRpbmcgdGhlIGlucHV0IHJlZ2lzdGVycy4NCj4gDQo+IFdoYXQgeW91IGFyZSBkZXNj
-cmliaW5nIHNvdW5kcyB0byBtZSBsaWtlIHRoZSBjYXNlIHdpdGhvdXQgbGF0Y2ggZW5hYmxlZC4N
-Cj4gQ2FuIHlvdSBlbGFib3JhdGUgYSBiaXQgbW9yZT8NCg0KVGhlIGxhdGNoIGlzIHVzZWZ1bCB3
-aGVuIGFuIGlucHV0IGNoYW5nZXMgc3RhdGUsIGJ1dCBjaGFuZ2VzIGJhY2sgYWdhaW4NCmJlZm9y
-ZSB0aGUgaW5wdXQgaXMgcmVhZC4gVXNpbmcgdGhlIGxhdGNoIGNhdXNlcyB0aGUgaW5wdXQgcmVn
-aXN0ZXIgdG8gc2hvdw0Kd2hhdCBjYXVzZWQgdGhlIGludGVycnVwdCwgcmF0aGVyIHRoYW4gdGhl
-IGN1cnJlbnQgc3RhdGUgb2YgdGhlIHBpbi4NCg0KVGhlIHByb2JsZW0gSSBoYXZlIGlzIG5vdCBy
-ZWxhdGVkIHRvIHRoZSBsYXRjaCBhcyB0aGUgaW5wdXRzIGFyZSBub3QNCmNoYW5naW5nIGJhY2sg
-dG8gdGhlaXIgb3JpZ2luYWwgc3RhdGUuIEkgaGF2ZSB0d28gaW5wdXRzIHdoaWNoIGNoYW5nZSBz
-dGF0ZQ0KYXQgYWxtb3N0IHRoZSBzYW1lIHRpbWUuIFdoZW4gdGhlIGZpcnN0IGlucHV0IGNoYW5n
-ZXMgc3RhdGUsIGFuIGludGVycnVwdA0Kb2NjdXJzLiBQcmlvciB0byBteSBwYXRjaCwgdGhlIGlu
-dGVycnVwdCBzdGF0dXMgcmVnaXN0ZXIgd2FzIHJlYWQsIGFuZCBvbmx5DQp0aGlzIG9uZSBpbnRl
-cnJ1cHQgaXMgc2hvd24gYXMgcGVuZGluZy4gVGhlIHNlY29uZCBpbnB1dCBjaGFuZ2VzIHN0YXRl
-DQpiZXR3ZWVuIHJlYWRpbmcgdGhlIGludGVycnVwdCBzdGF0dXMgYW5kIHJlYWRpbmcgdGhlIGlu
-cHV0ICh3aGljaCBjbGVhcnMNCmJvdGggaW50ZXJydXB0IHNvdXJjZXMpLiBTbyBJIG9ubHkgZ2V0
-IHRoZSBvbmUgaW50ZXJydXB0IGFuZCBub3QgYm90aC4NCg0KPiA+IFRoZSBjb2RlIHdhcyByZWFk
-aW5nIHRoZSBpbnRlcnJ1cHQgc3RhdHVzIHJlZ2lzdGVycywgYW5kIHRoZW4gcmVhZGluZw0KPiA+
-IHRoZSBpbnB1dCByZWdpc3RlcnMuIElmIGFuIGlucHV0IGNoYW5nZWQgYmV0d2VlbiB0aGVzZSB0
-d28gZXZlbnRzIGl0DQo+ID4gd2FzDQo+ID4gbG9zdC4NCj4gDQo+IEkgZG9uJ3Qgc2VlIGhvdy4g
-SWYgdGhlcmUgaXMgYSBzaG9ydCBwdWxzZSBvciBhIHNlcmllcyBvZiBwdWxzZXMgYmV0d2Vlbg0K
-PiBpbnRlcnJ1cHQgbGF0Y2hpbmcgYW5kIGlucHV0IHJlYWRpbmcsIHRoZSBzZWNvbmQrIHdpbGwg
-YmUgbG9zdCBpbiBhbnkNCj4gY2FzZS4NCj4gVGhpcyBpcyBIVyBsaW1pdGF0aW9uIGFzIGZhciBh
-cyBJIGNhbiBzZWUuDQoNCkkgZmVlbCB5b3UncmUgdGhpbmtpbmcgb2YgdGhlIHNpbmdsZSBpbnB1
-dCBwaW4gY2FzZS4gVGhlcmUgaXMgbm8gaXNzdWUgd2l0aA0KYSBzaW5nbGUgcGluIHB1bHNpbmcg
-YXMgdGhlIGxhdGNoIHdpbGwga2VlcCB0aGUgdmFsdWUgd2hpY2ggY2F1c2VkIHRoZQ0KaW50ZXJy
-dXB0IHVudGlsIGl0IGlzIHJlYWQuIFRoZSBpbnRlcnJ1cHQgc3RhdHVzIHJlZ2lzdGVyIHdpbGwg
-aGF2ZSB0aGUNCmNvcnJlY3QgdmFsdWUgdG9vLg0KPiANCj4gPiBUaGUgc29sdXRpb24gaW4gdGhp
-cyBwYXRjaCBpcyB0byByZXZlcnQgdG8gdGhlIG5vbi1sYXRjaCB2ZXJzaW9uIG9mDQo+ID4gY29k
-ZSwgaS5lLiByZW1lbWJlcmluZyB0aGUgcHJldmlvdXMgaW5wdXQgc3RhdHVzLCBhbmQgbG9va2lu
-ZyBmb3IgdGhlDQo+ID4gY2hhbmdlcy4gVGhpcyBzeXN0ZW0gcmVzdWx0cyBpbiBubyBtb3JlIEky
-QyB0cmFuc2ZlcnMsIHNvIGlzIG5vIHNsb3dlci4NCj4gPiBUaGUgbGF0Y2ggcHJvcGVydHkgb2Yg
-dGhlIGRldmljZSBzdGlsbCBtZWFucyBpbnRlcnJ1cHRzIHdpbGwgc3RpbGwgYmUNCj4gPiBub3Rp
-Y2VkIGlmIHRoZSBpbnB1dCBjaGFuZ2VzIGJhY2sgdG8gaXRzIGluaXRpYWwgc3RhdGUuDQo+IA0K
-PiBBZ2FpbiwgY2FuIHlvdSBlbGFib3JhdGU/IElzIGl0IGEgcmVhbCB1c2UgY2FzZT8gSWYgc28s
-IGNhbiB5b3UgcHJvdmlkZQ0KPiB0aGUNCj4gY2hhcnQgb2YgdGhlIHBpbiBzZ2luYWxsaW5nIGFn
-YWluc3QgdGhlIHRpbWUgbGluZSBhbmQgZGVwaWN0IHdoZXJlIHRoZQ0KPiBwcm9ibGVtDQo+IGlz
-Pw0KDQpZZXMsIHRoaXMgaXMgcmVhbC4gSG9wZWZ1bGx5IHRoZSBhYm92ZSBkZXNjcmlwdGlvbiBl
-eHBsYWlucyB3aGF0IHdlJ3JlDQpzZWVpbmcsIGJ1dCBhcyBhIHBpY3R1cmUgaXMgd29ydGggMTAw
-MCB3b3JkcywgaGVyZSdzIGEgdGltZWxpbmU6DQoNCiAgICAgICAgLS0tLS0tLS0rDQpJbnB1dCAx
-ICAgICAgICAgfA0KICAgICAgICAgICAgICAgICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0NCiAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLSsNCklucHV0IDIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwNCiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICstLS0tLS0tLS0tLS0tLS0tLS0t
-DQogICAgICAgIC0tLS0tLS0tKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAr
-LS0tLS0tLQ0KSVJRICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfA0KICAgICAgICAgICAgICAgICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tKw0KDQpJbnRlcnJ1cHQgc3RhdHVzICAgICAgICAgICAgICAqDQpSZWdpc3RlciBSZWFk
-DQoNCklucHV0IFJlZ2lzdGVyICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICoNClJlYWQNCg0KTm90ZSB0aGF0IHRoZSBpbnRlcnJ1cHQgc3RhdHVzIHJlYWQgb25seSBzZWVz
-IG9uZSBldmVudCwgYnV0IGJvdGggYXJlDQpjbGVhcmVkIGxhdGVyLiBBcyB0aGVzZSB0d28gcmVh
-ZHMgYXJlIEkyQyBidXMgdHJhbnNmZXJzLCB0aGV5IGFyZSBtb3JlIHRoYW4NCjEwMMK1cyBhcGFy
-dCwgc28gdGhpcyBldmVudCBvY2N1cnMgcXVpdGUgZnJlcXVlbnRseSBpbiBvdXIgc3lzdGVtLg0K
-DQoNClRoYW5rcyBmb3IgcmV2aWV3aW5nIHRoaXMuDQpCZXN0IFJlZ2FyZHMsDQoNCg==
+
+
+On 30.05.2024 20:38, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> Fix the typo B0WI -> BOWI to match with the RZ/G2L HW manual.
+> 
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com> # on RZ/G3S
+
+> ---
+> v2->v3
+> - New patch
+> ---
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> index f784169abf11..169986022a73 100644
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -131,7 +131,7 @@
+>  #define PVDD_1800		1	/* I/O domain voltage <= 1.8V */
+>  #define PVDD_3300		0	/* I/O domain voltage >= 3.3V */
+>  
+> -#define PWPR_B0WI		BIT(7)	/* Bit Write Disable */
+> +#define PWPR_BOWI		BIT(7)	/* Bit Write Disable */
+>  #define PWPR_PFCWE		BIT(6)	/* PFC Register Write Enable */
+>  
+>  #define PM_MASK			0x03
+> @@ -478,8 +478,8 @@ static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
+>  	writeb(reg & ~BIT(pin), pctrl->base + PMC(off));
+>  
+>  	/* Set the PWPR register to allow PFC register to write */
+> -	writel(0x0, pctrl->base + regs->pwpr);		/* B0WI=0, PFCWE=0 */
+> -	writel(PWPR_PFCWE, pctrl->base + regs->pwpr);	/* B0WI=0, PFCWE=1 */
+> +	writel(0x0, pctrl->base + regs->pwpr);		/* BOWI=0, PFCWE=0 */
+> +	writel(PWPR_PFCWE, pctrl->base + regs->pwpr);	/* BOWI=0, PFCWE=1 */
+>  
+>  	/* Select Pin function mode with PFC register */
+>  	reg = readl(pctrl->base + PFC(off));
+> @@ -487,8 +487,8 @@ static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
+>  	writel(reg | (func << (pin * 4)), pctrl->base + PFC(off));
+>  
+>  	/* Set the PWPR register to be write-protected */
+> -	writel(0x0, pctrl->base + regs->pwpr);		/* B0WI=0, PFCWE=0 */
+> -	writel(PWPR_B0WI, pctrl->base + regs->pwpr);	/* B0WI=1, PFCWE=0 */
+> +	writel(0x0, pctrl->base + regs->pwpr);		/* BOWI=0, PFCWE=0 */
+> +	writel(PWPR_BOWI, pctrl->base + regs->pwpr);	/* BOWI=1, PFCWE=0 */
+>  
+>  	/* Switch to Peripheral pin function with PMC register */
+>  	reg = readb(pctrl->base + PMC(off));
+> @@ -2520,8 +2520,8 @@ static void rzg2l_pinctrl_pm_setup_pfc(struct rzg2l_pinctrl *pctrl)
+>  	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
+>  
+>  	/* Set the PWPR register to allow PFC register to write. */
+> -	writel(0x0, pctrl->base + regs->pwpr);		/* B0WI=0, PFCWE=0 */
+> -	writel(PWPR_PFCWE, pctrl->base + regs->pwpr);	/* B0WI=0, PFCWE=1 */
+> +	writel(0x0, pctrl->base + regs->pwpr);		/* BOWI=0, PFCWE=0 */
+> +	writel(PWPR_PFCWE, pctrl->base + regs->pwpr);	/* BOWI=0, PFCWE=1 */
+>  
+>  	/* Restore port registers. */
+>  	for (u32 port = 0; port < nports; port++) {
+> @@ -2565,8 +2565,8 @@ static void rzg2l_pinctrl_pm_setup_pfc(struct rzg2l_pinctrl *pctrl)
+>  	}
+>  
+>  	/* Set the PWPR register to be write-protected. */
+> -	writel(0x0, pctrl->base + regs->pwpr);		/* B0WI=0, PFCWE=0 */
+> -	writel(PWPR_B0WI, pctrl->base + regs->pwpr);	/* B0WI=1, PFCWE=0 */
+> +	writel(0x0, pctrl->base + regs->pwpr);		/* BOWI=0, PFCWE=0 */
+> +	writel(PWPR_BOWI, pctrl->base + regs->pwpr);	/* BOWI=1, PFCWE=0 */
+>  }
+>  
+>  static int rzg2l_pinctrl_suspend_noirq(struct device *dev)
 
