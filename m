@@ -1,145 +1,107 @@
-Return-Path: <linux-gpio+bounces-7331-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7332-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E7EB902B3C
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 00:01:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59F2A902BC4
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 00:37:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 381751F238CF
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 22:01:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80E101C216B4
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 22:37:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3FD314D6FF;
-	Mon, 10 Jun 2024 22:00:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61B2915098E;
+	Mon, 10 Jun 2024 22:37:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="huEybc9Y"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bpWvbY2Z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0055337F;
-	Mon, 10 Jun 2024 22:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49EB5466B
+	for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2024 22:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718056852; cv=none; b=eDsAjj4UwCI5H0Q72E7p5ilxFbAYEiUOtvopCjydDxxWlVKaE8KDdPvGlP1Noz5tiGFa3MrAgQGZzkUS/Xequ/Tkz5KRSSbDJaHQBBi2q4oVKCuYnDq0R7V6SNxfy6BmcXghVSMV87BoRUS1EOS6hvveMcgzB3vUblj6hGhqHNw=
+	t=1718059029; cv=none; b=u8Of3HL+puLJkkUE6lt2g24dRcwDJQY4pJHId4XUh/Qlz3EDBBi0fI9MW0/xwYR0/EXhh1qtDpJMRdiVJ97vMNK+0fm+fK5LIG6JF22dljHlJO6I6nj/2JlgdVJIeU6M1n9MOoAq8VVjVYzHB71XzMpKyAaTkcg7sIFgNFp0g9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718056852; c=relaxed/simple;
-	bh=4hNrFc5LQ7zPOmlhF4e5T18BjWyq+GThHayn0/NaZ8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e2A3br9f0Q1kxS2i1Z36i6WRY4ROghP29UlGvHbT84Q8w6k4HNZPnMFmRbxEhfanmYu9P/GBZ3KBjS9oG1QdsYhdyR742hQ1MwnLLfZfbamazEei1AqPwQSbCpoG7AojgS5oROM1sEPeSbnO1lHsKlmUXp+ZxsYfAHiZIJUYb2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=huEybc9Y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B717CC2BBFC;
-	Mon, 10 Jun 2024 22:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718056852;
-	bh=4hNrFc5LQ7zPOmlhF4e5T18BjWyq+GThHayn0/NaZ8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=huEybc9YuEj0AZwnpmz5EXvHdpAREfdtqHkySmqqhzG3SNpEtBUesnoPIL6ndf4P1
-	 UNxE7hu5V0shaT0L8hhi+YeUmp2us+aHrr3XY/CTcTBc3j+TuA4QD5MDAkK9Q0p4i6
-	 Laij4U3VHDklXrUH8YhDxMzV2vbetKGgxts5PCtWsfxAiumelUv8f+tLnDp4Xydj8E
-	 G2c+p0kiKlssgBeLTXH0G/eFMG/1e7gm3Y2i+3Xsji4CQhdd9hjU3A2ruFzwZ8X/d4
-	 dpOpbN8xy+GXEGdlGVFEddOdZiLLzjoF8P5dcbLawM0H1pivb57o0et6/9woy7Noo4
-	 ADSX+cTDtdVcg==
-Date: Mon, 10 Jun 2024 16:00:50 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: devicetree@vger.kernel.org,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
+	s=arc-20240116; t=1718059029; c=relaxed/simple;
+	bh=UUjGE1dIt3wWHQK4CxFnESTgMlrvmbty3Vi61/QzSVY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A1Z58raimuYaaTmStuYmbs2K6j3f6zAlBmd6bO7/TVhCt9onaxS3UiL/wlFfJsYuKmFA75WUwHuiZrba9dxQ15A5NiiBvFUu7++PG2DozbOOeuexfEv+EzkRx2AVvtrms+TgHUbloAVGsWjzpkZe3Kp695SFIgpDPWDMEFTdJlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bpWvbY2Z; arc=none smtp.client-ip=91.218.175.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+X-Envelope-To: linus.walleij@linaro.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1718059024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=BTtVyjqMEOKamwROfc4Uav8Qw2izbw3MOKMVpFlCw1o=;
+	b=bpWvbY2Zo9ZZ0d/80dKuV323LLrIOyzoDfyi2p235pdmXX0u1tiSnVwjooaFiFvCQw0X0P
+	ihP6lagDjt8iryw33TT7lVLOrDX6marvKLp8oeNnb5ha+U9QkgHWEgFEBrZvbPf8dIf1fu
+	MI2xh1rbi04uUKT8UHSDzBdRZRKZCTM=
+X-Envelope-To: michal.simek@amd.com
+X-Envelope-To: linux-gpio@vger.kernel.org
+X-Envelope-To: andy.shevchenko@gmail.com
+X-Envelope-To: sai.krishna.potthuri@amd.com
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: sean.anderson@linux.dev
+X-Envelope-To: conor+dt@kernel.org
+X-Envelope-To: krzk+dt@kernel.org
+X-Envelope-To: robh@kernel.org
+X-Envelope-To: devicetree@vger.kernel.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Michal Simek <michal.simek@amd.com>,
+	linux-gpio@vger.kernel.org
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Krishna Potthuri <sai.krishna.potthuri@amd.com>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4] dt-bindings: pinctrl: renesas: Document RZ/V2H(P) SoC
-Message-ID: <171805684854.3144242.13947017914816663654.robh@kernel.org>
-References: <20240606085133.632307-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	Sean Anderson <sean.anderson@linux.dev>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	devicetree@vger.kernel.org
+Subject: [PATCH v3 0/2] pinctrl: zynqmp: Support muxing individual pins
+Date: Mon, 10 Jun 2024 18:35:48 -0400
+Message-Id: <20240610223550.2449230-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606085133.632307-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+This series adds support for muxing individual pins, instead of
+requiring groups to be muxed together. See [1] for additional
+discussion.
 
-On Thu, 06 Jun 2024 09:51:33 +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> Add documentation for the pin controller found on the Renesas RZ/V2H(P)
-> (R9A09G057) SoC. The RZ/V2H PFC varies slightly compared to the RZ/G2L
-> family:
-> - Additional bits need to be set during pinmuxing.
-> - The GPIO pin count is different.
-> 
-> Hence, a SoC-specific compatible string, 'renesas,r9a09g057-pinctrl', is
-> added for the RZ/V2H(P) SoC.
-> 
-> Also, add the 'renesas,output-impedance' property. The drive strength
-> setting on RZ/V2H(P) depends on the different power rails coming out from
-> the PMIC (connected via I2C). These power rails (required for drive
-> strength) can be 1.2V, 1.8V, or 3.3V.
-> 
-> Pins are grouped into 4 groups:
-> 
-> Group 1: Impedance
-> - 150/75/38/25 ohms (at 3.3V)
-> - 130/65/33/22 ohms (at 1.8V)
-> 
-> Group 2: Impedance
-> - 50/40/33/25 ohms (at 1.8V)
-> 
-> Group 3: Impedance
-> - 150/75/37.5/25 ohms (at 3.3V)
-> - 130/65/33/22 ohms (at 1.8V)
-> 
-> Group 4: Impedance
-> - 110/55/30/20 ohms (at 1.8V)
-> - 150/75/38/25 ohms (at 1.2V)
-> 
-> The 'renesas,output-impedance' property, as documented, can be
-> [0, 1, 2, 3], these correspond to register bit values that can
-> be set in the PFC_IOLH_mn register, which adjusts the drive
-> strength value and is pin-dependent.
-> 
-> As power rail information may not be available very early in the boot
-> process, the 'renesas,output-impedance' property is added instead of
-> reusing the 'output-impedance-ohms' property.
-> 
-> Also, allow bias-disable, bias-pull-down and bias-pull-up properties
-> as these can be used to configure the pins.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> Sending just the binding patch of series [0] as reset of the patches have
-> been Reviewed.
-> 
-> [0] https://patchwork.kernel.org/project/linux-renesas-soc/cover/20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
-> 
-> v3->v4
-> - Added a conditional schema for ensuring the reset length
->   is 2 for RZ/V2H and 3 otherwise
-> - Updated description for renesas,output-impedance property
-> - Dropped '|'
-> 
-> v2->v3
-> - Updated description for renesas,output-impedance property
-> - Updated commit description
-> 
-> RFC->v2
-> - Renamed renesas-rzv2h,output-impedance -> renesas,output-impedance
-> - Updated values for renesas,output-impedance
-> - Added bias properties
-> ---
->  .../pinctrl/renesas,rzg2l-pinctrl.yaml        | 37 +++++++++++++++++--
->  1 file changed, 33 insertions(+), 4 deletions(-)
-> 
+[1] https://lore.kernel.org/linux-arm-kernel/5bb0dc7e-4c89-4f3d-abc6-41ae9ded5ae9@linux.dev/
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Changes in v3:
+- Express groups/pins exclusivity using oneOf
+- Fix zynqmp_pinmux_set_mux and zynqmp_pinconf_group_set not handling
+  "pin" groups (thanks Sai Krishna).
+
+Changes in v2:
+- Use __set_bit instead of set_bit
+- Use size_add when calculating the number of kcalloc members
+- Expand commit message with some more motivation
+
+Sean Anderson (2):
+  dt-bindings: pinctrl: xilinx: Add support for function with pins
+  pinctrl: zynqmp: Support muxing individual pins
+
+ .../bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml | 349 +++++++++---------
+ drivers/pinctrl/pinctrl-zynqmp.c              |  83 +++--
+ 2 files changed, 234 insertions(+), 198 deletions(-)
+
+-- 
+2.35.1.1320.gc452695387.dirty
 
 
