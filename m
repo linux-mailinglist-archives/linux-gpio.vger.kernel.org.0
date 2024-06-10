@@ -1,89 +1,62 @@
-Return-Path: <linux-gpio+bounces-7330-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7331-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F4D4902875
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 20:13:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E7EB902B3C
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 00:01:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97AA6288F57
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 18:13:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 381751F238CF
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 22:01:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A73C314EC6D;
-	Mon, 10 Jun 2024 18:12:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3FD314D6FF;
+	Mon, 10 Jun 2024 22:00:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FBXCreDw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="huEybc9Y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7AF1482F6
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2024 18:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0055337F;
+	Mon, 10 Jun 2024 22:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718043158; cv=none; b=aGGQvHzKCtsL+DqVmUHI0lxdDXU1MnwBS67BpwQryQeKSQCNVnzjclJloz/RaCCV001Vq3SCA3+Gocfn/xRaBZqwsUznoxukLd4l8eO8PWHSWPVjLsgWqErGfCgh8RaxTQfzHpwTc8KJAda2BSZ3o6I4p5oLdGUWG/ATttnu6/8=
+	t=1718056852; cv=none; b=eDsAjj4UwCI5H0Q72E7p5ilxFbAYEiUOtvopCjydDxxWlVKaE8KDdPvGlP1Noz5tiGFa3MrAgQGZzkUS/Xequ/Tkz5KRSSbDJaHQBBi2q4oVKCuYnDq0R7V6SNxfy6BmcXghVSMV87BoRUS1EOS6hvveMcgzB3vUblj6hGhqHNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718043158; c=relaxed/simple;
-	bh=TmYk8AQTt77I88b8Jz/JLqc7LmxM/K3bVUUXLSf/MFc=;
+	s=arc-20240116; t=1718056852; c=relaxed/simple;
+	bh=4hNrFc5LQ7zPOmlhF4e5T18BjWyq+GThHayn0/NaZ8I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BzAW738MOb9K/yYy3y4u2hhdmNrmjSCV/UOv4CnHAl42PpjOsRUmAchDrTZCaJfGQ+/DwYe/zN5VpjkRaFNDHRO+eRisEFbueoM6cplFqTUVgZrcEj8+rNormfbNi/Mt8e9R3HQVUC3bks1prvkRde1nuVSPD8lVvKevVsmORcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FBXCreDw; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ebeefb9a7fso10487161fa.0
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2024 11:12:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718043155; x=1718647955; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1eyvHhcPEWgM5aVu/hiZDwHX5cRNXDZircOMLa2sfD8=;
-        b=FBXCreDwKRje1BUo9+JZHZ4h2eZdb1N+LWmBD9aJ5BeG+IR11JSevZMHBPx6iCfofz
-         EMSXDQtmBr/LI7Q/zYFMJ8XOwBomBMQVvNaf9OkVIUObHD0Mtej95R7ip8HePz5LXFo0
-         NgOf8D0ZbWZtjVAOvfLiPaQWE82Q6uxvmYzkKzglZuthY3bDhXZMtL5Mj8igygbQTOeU
-         XbLKQh+OuWHqG04eTSwlhjdZPhaNSxCQqQsERxudy74+L0EDgabacbD98GozqR2kCLjX
-         teVRCizsbWgxgkHcQCh5pKlBeZC1gGS7dFBOi6vFZPHIifpUFZ/MWWdcaCG4+7hGk2Rc
-         t67A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718043155; x=1718647955;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1eyvHhcPEWgM5aVu/hiZDwHX5cRNXDZircOMLa2sfD8=;
-        b=hy5+guss5wzdUlrcNl3XiP9JCPhM6JJirktgrYAp/GtpBYhidwuiTVd+o3jmXCPjtg
-         gTHQds40z/ikbfgV2VNpFOoR3vzpeP0J6MBjlyPx4eDnCVh6fyoASJW7kF4PEvtMyure
-         bwTaBabxCWGdeFckGmGGRPnkU4OwFHd7Ka9bsjf/NkNP6ia+9VuyiZRqS10K/w2JLvle
-         M5eM/5+mwKC4wduIACGBGLVn3b5D72+7pcQweTR39jC4Qf53z0Yk4eBILaQ5KC9fPayx
-         lD8j/E2d/XcMiLSWlQLMICNSRRi42Ru3bXH5dAkvvn8n22egvfx7BKWx2uNo39ugORbF
-         z4FA==
-X-Forwarded-Encrypted: i=1; AJvYcCXmig4PwAk+J3DiOzzXDHaU+9VldBxydVi9zyhPh/++rZTjhug38caEX/0tShTq8gPieay14EOxIUQh9c+YgoO835lTVE1ROgD26Q==
-X-Gm-Message-State: AOJu0Yz0CjvO9UkHW2ucozFnRXjwXRhfxW/yhnBXwMgPEeSOyWDurMWi
-	CjALn0XIcaPk5z6Gl30zRBAqN2UPm7JdezdvZKJG3/h9IQrqAqwU+5ZLZbiBjHU=
-X-Google-Smtp-Source: AGHT+IHptFF4qjzY9OneEo387ydgbKnCmTpXLrXWpOn78SwqX3YAdGo0qVjscWhklES7rFVJ6YV8jg==
-X-Received: by 2002:a2e:9eca:0:b0:2eb:e634:fee6 with SMTP id 38308e7fff4ca-2ebe634ff29mr24562661fa.18.1718043155042;
-        Mon, 10 Jun 2024 11:12:35 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ebdf286a1dsm9815661fa.65.2024.06.10.11.12.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 11:12:34 -0700 (PDT)
-Date: Mon, 10 Jun 2024 21:12:32 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Das Srinagesh <quic_gurus@quicinc.com>, Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, 
-	Stephen Boyd <swboyd@chromium.org>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 11/14] dt-bindings: mfd: pm8008: rework binding
-Message-ID: <5ecytnzonh2m4p2zpw5ms6ljjvlo3zkasce6tnhmal2twlo4i3@trf3f53bwdxt>
-References: <20240529162958.18081-1-johan+linaro@kernel.org>
- <20240529162958.18081-12-johan+linaro@kernel.org>
- <d5omeycp4l3mrzgswga2jkgxydpiayqfdjavwnfswcojawiqkt@zuol3vvkao5r>
- <ZmR6hPVZsYlyC5o5@hovoldconsulting.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=e2A3br9f0Q1kxS2i1Z36i6WRY4ROghP29UlGvHbT84Q8w6k4HNZPnMFmRbxEhfanmYu9P/GBZ3KBjS9oG1QdsYhdyR742hQ1MwnLLfZfbamazEei1AqPwQSbCpoG7AojgS5oROM1sEPeSbnO1lHsKlmUXp+ZxsYfAHiZIJUYb2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=huEybc9Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B717CC2BBFC;
+	Mon, 10 Jun 2024 22:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718056852;
+	bh=4hNrFc5LQ7zPOmlhF4e5T18BjWyq+GThHayn0/NaZ8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=huEybc9YuEj0AZwnpmz5EXvHdpAREfdtqHkySmqqhzG3SNpEtBUesnoPIL6ndf4P1
+	 UNxE7hu5V0shaT0L8hhi+YeUmp2us+aHrr3XY/CTcTBc3j+TuA4QD5MDAkK9Q0p4i6
+	 Laij4U3VHDklXrUH8YhDxMzV2vbetKGgxts5PCtWsfxAiumelUv8f+tLnDp4Xydj8E
+	 G2c+p0kiKlssgBeLTXH0G/eFMG/1e7gm3Y2i+3Xsji4CQhdd9hjU3A2ruFzwZ8X/d4
+	 dpOpbN8xy+GXEGdlGVFEddOdZiLLzjoF8P5dcbLawM0H1pivb57o0et6/9woy7Noo4
+	 ADSX+cTDtdVcg==
+Date: Mon, 10 Jun 2024 16:00:50 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: devicetree@vger.kernel.org,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4] dt-bindings: pinctrl: renesas: Document RZ/V2H(P) SoC
+Message-ID: <171805684854.3144242.13947017914816663654.robh@kernel.org>
+References: <20240606085133.632307-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -92,45 +65,81 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZmR6hPVZsYlyC5o5@hovoldconsulting.com>
+In-Reply-To: <20240606085133.632307-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Sat, Jun 08, 2024 at 05:36:36PM +0200, Johan Hovold wrote:
-> On Wed, Jun 05, 2024 at 11:43:16AM +0300, Dmitry Baryshkov wrote:
-> > On Wed, May 29, 2024 at 06:29:55PM +0200, Johan Hovold wrote:
-> > > Rework the pm8008 binding by dropping internal details like register
-> > > offsets and interrupts and by adding the missing regulator and
-> > > temperature alarm properties.
-> > > 
-> > > Note that child nodes are still used for pinctrl and regulator
-> > > configuration.
-> > > 
-> > > Also note that the pinctrl state definition will be extended later and
-> > > could eventually also be shared with other PMICs (e.g. by breaking out
-> > > bits of qcom,pmic-gpio.yaml).
-> > 
-> > Obviously we want to adapt this style of bindings for the other PMICs
-> > too. My main concern here are PMICs which have two kinds of controlled
-> > pins: GPIOs and MPPs. With the existing bindings style those are
-> > declared as two subdevices. What would be your suggested way to support
-> > MPPs with the proposed kind of bindings?
+
+On Thu, 06 Jun 2024 09:51:33 +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> As far as I understand newer PMICs do not have MPP blocks and we do not
-> necessarily want to convert the existing bindings.
+> Add documentation for the pin controller found on the Renesas RZ/V2H(P)
+> (R9A09G057) SoC. The RZ/V2H PFC varies slightly compared to the RZ/G2L
+> family:
+> - Additional bits need to be set during pinmuxing.
+> - The GPIO pin count is different.
+> 
+> Hence, a SoC-specific compatible string, 'renesas,r9a09g057-pinctrl', is
+> added for the RZ/V2H(P) SoC.
+> 
+> Also, add the 'renesas,output-impedance' property. The drive strength
+> setting on RZ/V2H(P) depends on the different power rails coming out from
+> the PMIC (connected via I2C). These power rails (required for drive
+> strength) can be 1.2V, 1.8V, or 3.3V.
+> 
+> Pins are grouped into 4 groups:
+> 
+> Group 1: Impedance
+> - 150/75/38/25 ohms (at 3.3V)
+> - 130/65/33/22 ohms (at 1.8V)
+> 
+> Group 2: Impedance
+> - 50/40/33/25 ohms (at 1.8V)
+> 
+> Group 3: Impedance
+> - 150/75/37.5/25 ohms (at 3.3V)
+> - 130/65/33/22 ohms (at 1.8V)
+> 
+> Group 4: Impedance
+> - 110/55/30/20 ohms (at 1.8V)
+> - 150/75/38/25 ohms (at 1.2V)
+> 
+> The 'renesas,output-impedance' property, as documented, can be
+> [0, 1, 2, 3], these correspond to register bit values that can
+> be set in the PFC_IOLH_mn register, which adjusts the drive
+> strength value and is pin-dependent.
+> 
+> As power rail information may not be available very early in the boot
+> process, the 'renesas,output-impedance' property is added instead of
+> reusing the 'output-impedance-ohms' property.
+> 
+> Also, allow bias-disable, bias-pull-down and bias-pull-up properties
+> as these can be used to configure the pins.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> Sending just the binding patch of series [0] as reset of the patches have
+> been Reviewed.
+> 
+> [0] https://patchwork.kernel.org/project/linux-renesas-soc/cover/20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+> 
+> v3->v4
+> - Added a conditional schema for ensuring the reset length
+>   is 2 for RZ/V2H and 3 otherwise
+> - Updated description for renesas,output-impedance property
+> - Dropped '|'
+> 
+> v2->v3
+> - Updated description for renesas,output-impedance property
+> - Updated commit description
+> 
+> RFC->v2
+> - Renamed renesas-rzv2h,output-impedance -> renesas,output-impedance
+> - Updated values for renesas,output-impedance
+> - Added bias properties
+> ---
+>  .../pinctrl/renesas,rzg2l-pinctrl.yaml        | 37 +++++++++++++++++--
+>  1 file changed, 33 insertions(+), 4 deletions(-)
+> 
 
-Well, I definitely want to do so.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-> That said, if there is ever a need to describe two separate gpio blocks
-> this can, for example, be done using subnodes on those PMICs.
-
-This creates an asymmetry between older and newer PMICs. Wouldn't it be
-better to always use gpios subnode for GPIO pins? This way older PMICS
-will use the same approach _plus_ mpps {} subnode instead of having
-either nothing or two subnodes.
-
-The same approach probably applies to some other subdevices: temp-alarm
-vs adc-tm, etc.
-
--- 
-With best wishes
-Dmitry
 
