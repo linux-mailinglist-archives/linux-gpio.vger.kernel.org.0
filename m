@@ -1,86 +1,118 @@
-Return-Path: <linux-gpio+bounces-7326-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7327-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA84C9026AE
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 18:27:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 661AD9026BC
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 18:30:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1E84283F43
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 16:27:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 625FD1C22A9B
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jun 2024 16:30:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4E3143734;
-	Mon, 10 Jun 2024 16:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 637B314535A;
+	Mon, 10 Jun 2024 16:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EbpC3E39"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787C082495
-	for <linux-gpio@vger.kernel.org>; Mon, 10 Jun 2024 16:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2FF1459EF;
+	Mon, 10 Jun 2024 16:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718036815; cv=none; b=RSPS3hB3/Mqwb945uY0OSIpbjlXfyPllBgjCyXFpbHW/IZELDcg7NiKFpj9/NpAE0Nm7KJUdvKXQ16T+2LkhLKtWNZMXpLgLNMaes9Dit7owD4nt0GfET1E5kYuX58F34jKduLnrpS0BlNYD10cI+HlksGlmmrs9pokT/fO7D8s=
+	t=1718036990; cv=none; b=XnWtXzjr0VT+S8bgN91CJN3afcLUVzTHLISkLgo75FbkEppOzDlQ0Xk1nvz2rpTfCT8hNoIwtAiq/CDdN3vPkBNSWbybHeMUCEtTDWekAMvqF9rTuKNaAGarhCMH8MwAzrEkS/C22Odn+hJWU9oCqhX2SMJ/Z//5gY1pUdS1zQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718036815; c=relaxed/simple;
-	bh=FI/wVHjKj34tChqQy8HHa/5WtYMvhKm8Zf2HyqoEwOA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s1f4sLjLuoNK1ZHV3PnZytVVn4YPCQXhsRw73lCRsFn11I0kMLGqDBLLVenDCdc0Ux0wxZEQRa443uGOrI29Vabv5t/ZfTJ92nTDlwYhYqnFqO1I4kSAHH1hmiOg8V3LiKaVokJc0UVRMdBVFOEctUfqg/SVSdfKrOVhEr+nzbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-25-87.elisa-laajakaista.fi [88.113.25.87])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 3e002fc3-2746-11ef-80e9-005056bdfda7;
-	Mon, 10 Jun 2024 19:26:51 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 10 Jun 2024 19:26:51 +0300
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 3/3] gpio: sim: use devm_mutex_init()
-Message-ID: <ZmcpS24AmXG_QERb@surfacebook.localdomain>
-References: <20240610140548.35358-1-brgl@bgdev.pl>
- <20240610140548.35358-4-brgl@bgdev.pl>
- <CAHp75VczROHVKwAi8j4fxR=L3oKJ_5om6rEAriDNFxh1dMRxRw@mail.gmail.com>
- <CAMRc=Mc593Zgt-jkx7T_D4s2gAFeccA9SdguM4vtFc9H701bUQ@mail.gmail.com>
+	s=arc-20240116; t=1718036990; c=relaxed/simple;
+	bh=hG+WGtxwsZuR+f62hkW67KZ+t1AQjeby7UbLM/4qRZ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qTX2I0kx+coJrHZx0GgDDAHad6iBx4oq0Lur/f7O9w14uw33n2MhyN90CZ8Dr5lLaXdnwm1/kEZoOrXfozQzXMQPvfmVNSzZvILvxbMU0MvOtUoeipgoOowroGJ7IzLxMjLttbSNA0Iat9ELKWy7B4NK9ubV0rLt07tfKk80ol4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EbpC3E39; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a6f0c3d0792so12177166b.3;
+        Mon, 10 Jun 2024 09:29:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718036987; x=1718641787; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tTzeLr/JnQOlBuaDILNqwfiL1947Rz1K+v45ebNmSsw=;
+        b=EbpC3E39qikKu1ZxQoypZu1ouOA5bTytnAxdB8IicHjlQaSgHsoPGJOhRnL3LcZAwx
+         1H78zS8eOGbLeJ+d6O2xGI98rAV8qfOO1tvZ4DmfaxSFFQPor8+18Lf8ZuPXXoPO4jyR
+         voxKsnu1/OpUTqTyeY3q5B78OK/aOVGK81uVq6GYf3c8uaS2zwilDYGWArytteuUeiEy
+         Wep4vXKLjFXfb5aY32m0kLSNQye1hlvyAU8Uc9sxtnbZdy4qshCiS5BD9F4MqMGxOeab
+         8gP5szihmt5l8HuBRshFL/jFv0M55idtY9vwFfaGXswEBDj0T+/g/3yS8sFP/CDefbck
+         c3eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718036987; x=1718641787;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tTzeLr/JnQOlBuaDILNqwfiL1947Rz1K+v45ebNmSsw=;
+        b=IWYeDmxRxByXkIof7JqWt797DaAe+QtlgFQEEpTxeJ5mzs6wWaU/SDm/Rl0FJImXM2
+         js2S7zg7AlKTXKx/siMRTmflGJNA1e+A74pyK5mkxTABPWgRXIHcRe+k+denA8082VDa
+         Rmbj6xkoS+JiLx3Q5QbP75yzzU8UnxhKrgV+tXkBMoisLyF9Ix0g3TBYS3NzuT9rY5IQ
+         pYw9/ZqagN0oYvstVejGWgEzUYNQEAGtObFDwo3p66Qa/pTWQ4OWqFzEO/2zJyJtG1y3
+         AwXJ16zzNzWgd07+pkxyINi6SmKZJabBdezHW6OpTByIulJCfTvv9Ww1aaplJw/KBGYj
+         +iUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIRFWeuQ0gtpZVQgXhCZHF4X7lcP9lpneyk6YCthd8MRV3JYdVPOb7n9/ZgtzZE01S6f3TNIiF8W4hBIujlb3CJshlHDp/x1FTwzOXBOO0LeCv9tizpQiolGulVGPhgnNlwUspU0YMrvAXDlmdW/yIukw0C4bvrKofPRERJpgPSN0=
+X-Gm-Message-State: AOJu0YxBDo+xamtqujK1ikRITTx4fDv5CbqaclyZr1sM1lqo7RnY9bu9
+	Aw4IOo+VqdF7Vo8ZisY8d7Xixkh651mbRQ1IGghhY8dHnkqVkaBDIeSt841/zq6vF/Ctm4XI/QC
+	zaaxSHC7P8Xg3YMZjMJcXEtvx4L4=
+X-Google-Smtp-Source: AGHT+IH+aJ31YhcT+XCnHzzB7ZwuqIPk0c7mJiRny1L23ls65d4QvH+gFk0LcdXDK0qX9slKWat8i3itVJ7PacbDWEY=
+X-Received: by 2002:a17:906:2844:b0:a6f:1d3e:d1af with SMTP id
+ a640c23a62f3a-a6f1d3ed202mr254217966b.5.1718036986539; Mon, 10 Jun 2024
+ 09:29:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mc593Zgt-jkx7T_D4s2gAFeccA9SdguM4vtFc9H701bUQ@mail.gmail.com>
+References: <20240608141633.2562-1-laurent.pinchart@ideasonboard.com>
+ <20240608141633.2562-4-laurent.pinchart@ideasonboard.com> <ZmcYnDf0YIWA9A85@surfacebook.localdomain>
+ <20240610152555.GV18479@pendragon.ideasonboard.com>
+In-Reply-To: <20240610152555.GV18479@pendragon.ideasonboard.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 10 Jun 2024 19:29:09 +0300
+Message-ID: <CAHp75Vd-TZYsm+fe+o1XvDYGHO6sDqZhMFqojowRx2scwxEhLw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Haibo Chen <haibo.chen@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Mon, Jun 10, 2024 at 05:31:44PM +0200, Bartosz Golaszewski kirjoitti:
-> On Mon, 10 Jun 2024 at 17:24, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Mon, Jun 10, 2024 at 6:26=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Mon, Jun 10, 2024 at 06:15:40PM +0300, Andy Shevchenko wrote:
+> > Sat, Jun 08, 2024 at 05:16:32PM +0300, Laurent Pinchart kirjoitti:
+
+...
+
+> > > +static const struct platform_device_id adp5585_gpio_id_table[] =3D {
+> > > +   { "adp5585-gpio" },
 > >
-> > On Mon, Jun 10, 2024 at 5:05 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > >
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Drop the hand-coded devres action callback for destroying the mutex in
-> > > favor of devm_mutex_init().
+> > > +   { /* Sentinel */ },
 > >
-> > All three LGTM,
-> 
-> Can you leave your tags under the cover letter in such cases? This
-> will make b4 pick it up for all patches automatically.
+> > Drop the comma.
+>
+> I prefer keeping it.
 
-For some reason I was thinking there is no cover letter.
-But okay, done now.
+For what reason?
+The sentinel should be runtime and compile time one. Why should we
+make our lives worse by neglecting help from a compiler?
 
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Thanks!
+> > > +};
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
-
-
 
