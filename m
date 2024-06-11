@@ -1,258 +1,232 @@
-Return-Path: <linux-gpio+bounces-7377-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7378-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 816799045F7
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 22:51:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB01E9046A5
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2024 00:02:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 015871F24C0A
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 20:51:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 769501F24D90
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 22:02:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3871584A21;
-	Tue, 11 Jun 2024 20:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EC83153823;
+	Tue, 11 Jun 2024 22:02:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4uFiaxd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mZuq/p3I"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5881EB657
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2024 20:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B0218EAB;
+	Tue, 11 Jun 2024 22:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718139084; cv=none; b=LHCDVKGWWC2t/sA/TS0uW+EXRD7+SqSyoiUwH/nnyWJvg5PyzshGNGviiuIQngHQnD6i+TnfRdiaD5/729Ly014n1CTxHWfu3Up0prdmXMDwvMXyGAH7AlNXGYDQpGTi2hf5rXQMJWm8OQrIyuV9/zPnNEDtcpGVvdjjcSymOw4=
+	t=1718143336; cv=none; b=AFIuJ7mZ1fcmEm91ewK54Nil935t88rJdU+f9xc9CQ2EBEp17MaY33TvezdG0Fpa4fMMhE56Ei3i4jehanLlsTSQAFnelKbnjVssxn7wGwfFE/s/BmeqqdKP2l/Nj7gXLQg1WqWHw5HsYvnlf+SX885XXoyclPDHpvBi4i123W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718139084; c=relaxed/simple;
-	bh=jw9vZ49L4qN6iMInv3qR05Q04ixvX6tKrMepPZA7aDg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IPcQ76bGNla8hO+eqddWmYeQLkBOhLJJLzgir2ytiPcPAPdS6kCBkmWM5euhM7rfth80QryOXsRmqCATzAg1Z2GsMUx4fU6rTYaG5R0m0e9Pp5YRvfnZStTSfxopn20kwBYF4DPVu3cTTKk+J0+yCyrHkdABdAW3dzbgJh4CQ+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4uFiaxd; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4ecf00ea4fbso550984e0c.3
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2024 13:51:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718139081; x=1718743881; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qfwXcmO7oypckS8716gVNLV9tDvxrdzwXeJR2SMMLsk=;
-        b=S4uFiaxd8ldhTUaaVFzHhTgn5AcZjnlThdx4AHFb454z/6uCY1qgriGsvZVm7ehEa4
-         IEt2c5gZtF3BlhcCl0yJdSyWP1MRxTTw/JYIEpMmL37DOKrCsDkg+qAayL1FtdJfrhU2
-         KyclU9I7j6pSZiwHz1eLopPUOxDCmrJ3LrNWtEbFcsKZbDVdCR3J8LGejDdlgLfGVUXx
-         DrJMoZhotwC8z/y8Du/2fc43IsuXBdbUmFiNRBdoXQ8NliAj2k6e4P86l0Yqm28ruStX
-         K/MN6wGg8PCABxbldIJy1h996Lh0WvBVP2KwPtCAH/8vBFeaiXOxI/fFmxEQl4qUltS+
-         kXhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718139081; x=1718743881;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qfwXcmO7oypckS8716gVNLV9tDvxrdzwXeJR2SMMLsk=;
-        b=foKEFJaQeeHF+z7pW0eitcZevqXeou30ZYmYRdEkgKA1O9EAXnJKEBP7+DNqk2yZM8
-         S6+/jUOcATvQPzj9nmnbDGOU07llxvbJtU31yx9lql2lB46AJRWb0Ql1UpJ366T91BjB
-         7dmrzPogn2uRrHbTrIhOmUt++BGT/DfFeoBwucbj45uFPxfINMS6Xc9z2EgecBj8Osrt
-         Yj+XLlv/1s4mQj9YmtSlik+xClm6fM0zNNqxM/4zpfpZ+PN7+HqRZrDBljFScX3bkh3A
-         7bOydQBLZjCSePQAkRb514Sen73s2Z/jY3ZoEkP9tK+PDKhFEkL8iJIch+8x2EaqIYDy
-         RgRA==
-X-Gm-Message-State: AOJu0YzFyewn72oIyMkOt8BG+Y09qvuth5mwMt80SzLRfmuTN6kDhW7C
-	oD1BaJOkW+0R2xy3kUMpbczdEkQ7ffdUAQZsAKavikofrm9HlsFQNWU9cg==
-X-Google-Smtp-Source: AGHT+IFytvtJwzIMaoKAB8oe7bPfLrCON/+b7a+wt4ELCbmSIZQNFjNix48ZGTjc9NRlbl9nxXuKqA==
-X-Received: by 2002:a05:6122:c90:b0:4ec:f402:a849 with SMTP id 71dfb90a1353d-4ecf402af0emr4142438e0c.16.1718139080810;
-        Tue, 11 Jun 2024 13:51:20 -0700 (PDT)
-Received: from vfazio4.xes-mad.com (mail.xes-mad.com. [162.248.234.2])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-795eb92c6f3sm223660785a.108.2024.06.11.13.51.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 13:51:20 -0700 (PDT)
-From: Vincent Fazio <vfazio@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: Vincent Fazio <vfazio@gmail.com>
-Subject: [libgpiod][PATCH v3] bindings: python: add script to generate sdist and wheels
-Date: Tue, 11 Jun 2024 15:50:41 -0500
-Message-Id: <20240611205041.1448276-1-vfazio@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718143336; c=relaxed/simple;
+	bh=VCkLZ01qOLE/saYjvRrwh7cmZYLpNQtFPwMS6/R0+hs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KgEw0UfPq4gECs72HhXtsyAH236wvpiapkrkq+CmwZzPU6SS/8j8pEicEq+W+AjJbUHcevW3HWKElVIxoFpL7gZnNzZoVvZVrdx4B8j6SUazxvTZse5yMpZcBy0lHGDHlow/x5y5J3osHyzV1dOXJb8X7EKiogi7kM7A0NkTVK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mZuq/p3I; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718143334; x=1749679334;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VCkLZ01qOLE/saYjvRrwh7cmZYLpNQtFPwMS6/R0+hs=;
+  b=mZuq/p3I851ilVtc871Zg9zUCdiWgdN4uD6qd4W0HubWOE34voXyb13P
+   QO+Q2puYTcfwmg/t9ieQoyBwRPz0s4f9R9v5WeLB1MbsqMJBqx9tAAzAF
+   3uTavUsMLw8OdULXYJyGi7FHWDiRMaPZGRiC0DTLnLdoyGXcuDZcQikJ7
+   u1OSxpbCQPSyX3tU3gPgWUKqB0hfBwRbpbir/7hb6AvvGAyA37/cBHtSe
+   6buxX4thHLKvrQEamFJ9FYI316UId43muY64/zpeMmLryMz99C/0eCgW0
+   1QVgRcKk7d2BXM8FnlzEs5RvHTmJIvt0EeMLMqrQ9ZgDL7yIWWPZUsq7w
+   Q==;
+X-CSE-ConnectionGUID: cE0vML+ZR2m1Uev2EMK9qg==
+X-CSE-MsgGUID: BOXQ4o+zTgm5XVY0IN0YDg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="18715908"
+X-IronPort-AV: E=Sophos;i="6.08,231,1712646000"; 
+   d="scan'208";a="18715908"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 15:02:13 -0700
+X-CSE-ConnectionGUID: GbQSit22SReXVL13gzWa8g==
+X-CSE-MsgGUID: AEPqZNkDQPiA2C8YR3rH4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,231,1712646000"; 
+   d="scan'208";a="44121748"
+Received: from lkp-server01.sh.intel.com (HELO 628d7d8b9fc6) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 11 Jun 2024 15:02:10 -0700
+Received: from kbuild by 628d7d8b9fc6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sH9Z9-0000wk-20;
+	Tue, 11 Jun 2024 22:02:07 +0000
+Date: Wed, 12 Jun 2024 06:01:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Tomer Maimon <tmaimon77@gmail.com>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Shan-Chun Hung <schung@nuvoton.com>,
+	Avi Fishman <avifishman70@gmail.com>,
+	Tali Perry <tali.perry1@gmail.com>,
+	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>,
+	Benjamin Fair <benjaminfair@google.com>,
+	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH v1 3/4] pinctrl: nuvoton: Convert to use struct group_desc
+Message-ID: <202406120534.9nmyKZwv-lkp@intel.com>
+References: <20240611093127.90210-4-andy.shevchenko@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240611093127.90210-4-andy.shevchenko@gmail.com>
 
-Introduce a shell script that generates an sdist tarball and PEP 600/656
-conformant wheels.
+Hi Andy,
 
-The wheels are generated via cibuildwheel, a tool provided by the Python
-Packaging Authority (PyPA) [0]. The tool leverages toolchains within
-containers maintained by PyPA [1] to generate wheels that are runnable
-on hosts that meet the platform compatibility tag [2] requirements.
+kernel test robot noticed the following build errors:
 
-By default, the script creates X86_64 and AArch64 CPython 3.9-3.12
-wheels for glibc and musl libc based systems.
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on linusw-pinctrl/for-next next-20240611]
+[cannot apply to linus/master v6.10-rc3]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-These defaults can be overridden via CIBW_* environment variables [3].
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-nuvoton-Convert-to-use-struct-pingroup-and-PINCTRL_PINGROUP/20240611-173545
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20240611093127.90210-4-andy.shevchenko%40gmail.com
+patch subject: [PATCH v1 3/4] pinctrl: nuvoton: Convert to use struct group_desc
+config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20240612/202406120534.9nmyKZwv-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 4403cdbaf01379de96f8d0d6ea4f51a085e37766)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240612/202406120534.9nmyKZwv-lkp@intel.com/reproduce)
 
-[0]: https://cibuildwheel.pypa.io/en/stable/
-[1]: https://github.com/pypa/manylinux/
-[2]: https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/
-[3]: https://cibuildwheel.pypa.io/en/stable/options/#options-summary
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406120534.9nmyKZwv-lkp@intel.com/
 
-Signed-off-by: Vincent Fazio <vfazio@gmail.com>
----
-Changes v2 -> v3:
- - Add SPDX header
+All errors (new ones prefixed by >>):
 
-Changes v1 -> v2:
- - spaces -> tabs
- - conform to `shellcheck -oall` recommendations
- - simplify in-script documentation
- - miscellaneous grammar fixups
----
- bindings/python/generate_pypi_artifacts.sh | 134 +++++++++++++++++++++
- 1 file changed, 134 insertions(+)
- create mode 100755 bindings/python/generate_pypi_artifacts.sh
+   In file included from drivers/pinctrl/nuvoton/pinctrl-ma35.c:13:
+   In file included from include/linux/gpio/driver.h:8:
+   In file included from include/linux/irqchip/chained_irq.h:10:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:14:
+   In file included from arch/hexagon/include/asm/io.h:328:
+   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     548 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+         |                                                   ^
+   In file included from drivers/pinctrl/nuvoton/pinctrl-ma35.c:13:
+   In file included from include/linux/gpio/driver.h:8:
+   In file included from include/linux/irqchip/chained_irq.h:10:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:14:
+   In file included from arch/hexagon/include/asm/io.h:328:
+   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+         |                                                   ^
+   In file included from drivers/pinctrl/nuvoton/pinctrl-ma35.c:13:
+   In file included from include/linux/gpio/driver.h:8:
+   In file included from include/linux/irqchip/chained_irq.h:10:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:14:
+   In file included from arch/hexagon/include/asm/io.h:328:
+   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     585 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+>> drivers/pinctrl/nuvoton/pinctrl-ma35.c:228:23: error: no member named 'npins' in 'struct group_desc'
+     228 |         for (i = 0; i < grp->npins; i++) {
+         |                         ~~~  ^
+   drivers/pinctrl/nuvoton/pinctrl-ma35.c:287:23: error: no member named 'npins' in 'struct group_desc'
+     287 |         for (i = 0; i < grp->npins; i++) {
+         |                         ~~~  ^
+   6 warnings and 2 errors generated.
 
-diff --git a/bindings/python/generate_pypi_artifacts.sh b/bindings/python/generate_pypi_artifacts.sh
-new file mode 100755
-index 0000000..c2fb79f
---- /dev/null
-+++ b/bindings/python/generate_pypi_artifacts.sh
-@@ -0,0 +1,134 @@
-+#!/usr/bin/env sh
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2024 Vincent Fazio <vfazio@gmail.com>
-+#
-+# This is a script to generate an sdist and wheels for publishing to PyPI.
-+#
-+# This script requires:
-+#   * Python3 + venv or virtualenv + pip
-+#   * Docker or Podman (https://cibuildwheel.pypa.io/en/stable/options/#container-engine)
-+#   * binfmt support and qemu-user-static for AArch64 registered as Fixed
-+#     (https://docs.kernel.org/admin-guide/binfmt-misc.html)
-+#
-+# On Debian based systems, AArch64 binfmt support can be checked via:
-+#   cat /proc/sys/fs/binfmt_misc/qemu-aarch64
-+#
-+# The entry should be enabled and "F" should be in the list of flags.
-+#
-+
-+usage()
-+{
-+	printf "\n"
-+	printf "Usage: %s -v <libgpiod_source_version> [-o <output_directory>] [-s <source_directory>] [-cfh]\n" "$0"
-+	printf "\t-v Version of libgpiod sources to bundle in sdist. Overrides LIBGPIOD_VERSION\n"
-+	printf "\t-o Directory to store outputs\n"
-+	printf "\t-s Directory with python binding sources\n"
-+	printf "\t-c Calculate checksums for generated outputs\n"
-+	printf "\t-f Forcibly remove old files from output directory\n"
-+	printf "\t-h Show this help output\n"
-+	exit 1
-+}
-+
-+src_version=${LIBGPIOD_VERSION:-} # Default to environment specified library version
-+output_dir=$(pwd) # Default to putting outputs in the current directory
-+source_dir=$(pwd) # Assume the current directory has the python binding sources
-+calc_hash=0 # Do not calculate hashes by default
-+force=0 # Do not forcibly remove files by default
-+
-+while getopts :hv:o:s:cf value; do
-+	case ${value} in
-+		c)
-+			calc_hash=1
-+			;;
-+		f)
-+			force=1
-+			;;
-+		o)
-+			output_dir=${OPTARG}
-+			;;
-+		s)
-+			source_dir=${OPTARG}
-+			;;
-+		v)
-+			src_version=${OPTARG}
-+			;;
-+		h | *)
-+			usage
-+			;;
-+	esac
-+done
-+
-+if [ -z "${source_dir}" ] || [ ! -d "${output_dir}" ]; then
-+	printf "Invalid source directory %s.\n" "${source_dir}"
-+	exit 1
-+fi
-+
-+if [ -z "${output_dir}" ] || [ ! -w "${output_dir}" ]; then
-+	printf "Output directory %s is not writable.\n" "${output_dir}"
-+	exit 1
-+fi
-+
-+if [ -z "${src_version}" ]; then
-+	printf "The libgpiod source version must be specified.\n"
-+	exit 1
-+fi
-+
-+shift $((OPTIND-1))
-+
-+# We require Python3 for building artifacts
-+if ! command -v python3 >/dev/null 2>&1; then
-+	printf "Python3 is required to generate PyPI artifacts.\n"
-+	exit 1
-+fi
-+
-+# Pip is necessary for installing build dependencies
-+if ! python3 -m pip -h >/dev/null 2>&1; then
-+	printf "The pip module is required to generate wheels.\n"
-+	exit 1
-+fi
-+
-+# Check for a virtual environment tool to not pollute user installed packages
-+has_venv=$(python3 -m venv -h >/dev/null 2>&1 && echo 1 || echo 0)
-+has_virtualenv=$(python3 -m virtualenv -h >/dev/null 2>&1 && echo 1 || echo 0)
-+
-+if ! { [ "${has_venv}" -eq 1 ] || [ "${has_virtualenv}" -eq 1 ]; }; then
-+	printf "A virtual environment module is required to generate wheels.\n"
-+	exit 1
-+fi
-+
-+venv_module=$([ "${has_virtualenv}" -eq 1 ] && echo "virtualenv" || echo "venv" )
-+
-+# Stage the build in a temp directory.
-+cur_dir=$(pwd)
-+temp_dir=$(mktemp -d)
-+cd "${temp_dir}" || { printf "Failed to enter temp directory.\n"; exit 1; }
-+
-+# Setup a virtual environment
-+python3 -m "${venv_module}" .venv
-+venv_python="${temp_dir}/.venv/bin/python"
-+
-+# Install build dependencies
-+# cibuildwheel 2.18.1 pins the toolchain containers to 2024-05-13-0983f6f
-+${venv_python} -m pip install build==1.2.1 cibuildwheel==2.18.1
-+
-+LIBGPIOD_VERSION=${src_version} ${venv_python} -m build --sdist --outdir ./dist "${source_dir}"
-+sdist=$(find ./dist -name '*.tar.gz')
-+
-+# Target only CPython and X86_64 + AArch64 Linux wheels unless specified otherwise via environment variables
-+CIBW_BUILD=${CIBW_BUILD:-"cp*"} CIBW_ARCHS=${CIBW_ARCHS:-"x86_64,aarch64"} \
-+	${venv_python} -m cibuildwheel --platform linux "${sdist}" --output-dir dist/
-+
-+if [ "${force}" -eq 1 ]; then
-+	printf "\nRemoving files from %s/dist/\n" "${output_dir}"
-+	rm -rf "${output_dir}/dist/"
-+fi
-+
-+cp -fa dist/ "${output_dir}/"
-+
-+if [ "${calc_hash}" -eq 1 ]; then
-+	printf "\nHashes for generated outputs:\n"
-+	sha256sum "${output_dir}/dist/"*
-+fi
-+
-+cd "${cur_dir}" || { printf "Failed to return to previous working directory.\n"; exit 1; }
-+rm -rf "${temp_dir}"
+
+vim +228 drivers/pinctrl/nuvoton/pinctrl-ma35.c
+
+ecc5bf86867344 Jacky Huang     2024-05-21  184  
+ecc5bf86867344 Jacky Huang     2024-05-21  185  static int ma35_pinctrl_dt_node_to_map_func(struct pinctrl_dev *pctldev,
+ecc5bf86867344 Jacky Huang     2024-05-21  186  					    struct device_node *np,
+ecc5bf86867344 Jacky Huang     2024-05-21  187  					    struct pinctrl_map **map,
+ecc5bf86867344 Jacky Huang     2024-05-21  188  					    unsigned int *num_maps)
+ecc5bf86867344 Jacky Huang     2024-05-21  189  {
+ecc5bf86867344 Jacky Huang     2024-05-21  190  	struct ma35_pinctrl *npctl = pinctrl_dev_get_drvdata(pctldev);
+888aa25ee6ce72 Andy Shevchenko 2024-06-11  191  	struct ma35_pin_setting *setting;
+ecc5bf86867344 Jacky Huang     2024-05-21  192  	struct pinctrl_map *new_map;
+ecc5bf86867344 Jacky Huang     2024-05-21  193  	struct device_node *parent;
+888aa25ee6ce72 Andy Shevchenko 2024-06-11  194  	struct group_desc *grp;
+ecc5bf86867344 Jacky Huang     2024-05-21  195  	int map_num = 1;
+ecc5bf86867344 Jacky Huang     2024-05-21  196  	int i;
+ecc5bf86867344 Jacky Huang     2024-05-21  197  
+ecc5bf86867344 Jacky Huang     2024-05-21  198  	/*
+ecc5bf86867344 Jacky Huang     2024-05-21  199  	 * first find the group of this node and check if we need create
+ecc5bf86867344 Jacky Huang     2024-05-21  200  	 * config maps for pins
+ecc5bf86867344 Jacky Huang     2024-05-21  201  	 */
+ecc5bf86867344 Jacky Huang     2024-05-21  202  	grp = ma35_pinctrl_find_group_by_name(npctl, np->name);
+ecc5bf86867344 Jacky Huang     2024-05-21  203  	if (!grp) {
+ecc5bf86867344 Jacky Huang     2024-05-21  204  		dev_err(npctl->dev, "unable to find group for node %s\n", np->name);
+ecc5bf86867344 Jacky Huang     2024-05-21  205  		return -EINVAL;
+ecc5bf86867344 Jacky Huang     2024-05-21  206  	}
+ecc5bf86867344 Jacky Huang     2024-05-21  207  
+888aa25ee6ce72 Andy Shevchenko 2024-06-11  208  	map_num += grp->grp.npins;
+ecc5bf86867344 Jacky Huang     2024-05-21  209  	new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map), GFP_KERNEL);
+ecc5bf86867344 Jacky Huang     2024-05-21  210  	if (!new_map)
+ecc5bf86867344 Jacky Huang     2024-05-21  211  		return -ENOMEM;
+ecc5bf86867344 Jacky Huang     2024-05-21  212  
+ecc5bf86867344 Jacky Huang     2024-05-21  213  	*map = new_map;
+ecc5bf86867344 Jacky Huang     2024-05-21  214  	*num_maps = map_num;
+ecc5bf86867344 Jacky Huang     2024-05-21  215  	/* create mux map */
+ecc5bf86867344 Jacky Huang     2024-05-21  216  	parent = of_get_parent(np);
+ecc5bf86867344 Jacky Huang     2024-05-21  217  	if (!parent)
+ecc5bf86867344 Jacky Huang     2024-05-21  218  		return -EINVAL;
+ecc5bf86867344 Jacky Huang     2024-05-21  219  
+888aa25ee6ce72 Andy Shevchenko 2024-06-11  220  	setting = grp->data;
+888aa25ee6ce72 Andy Shevchenko 2024-06-11  221  
+ecc5bf86867344 Jacky Huang     2024-05-21  222  	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
+ecc5bf86867344 Jacky Huang     2024-05-21  223  	new_map[0].data.mux.function = parent->name;
+ecc5bf86867344 Jacky Huang     2024-05-21  224  	new_map[0].data.mux.group = np->name;
+ecc5bf86867344 Jacky Huang     2024-05-21  225  	of_node_put(parent);
+ecc5bf86867344 Jacky Huang     2024-05-21  226  
+ecc5bf86867344 Jacky Huang     2024-05-21  227  	new_map++;
+ecc5bf86867344 Jacky Huang     2024-05-21 @228  	for (i = 0; i < grp->npins; i++) {
+ecc5bf86867344 Jacky Huang     2024-05-21  229  		new_map[i].type = PIN_MAP_TYPE_CONFIGS_PIN;
+888aa25ee6ce72 Andy Shevchenko 2024-06-11  230  		new_map[i].data.configs.group_or_pin = pin_get_name(pctldev, grp->grp.pins[i]);
+888aa25ee6ce72 Andy Shevchenko 2024-06-11  231  		new_map[i].data.configs.configs = setting[i].configs;
+888aa25ee6ce72 Andy Shevchenko 2024-06-11  232  		new_map[i].data.configs.num_configs = setting[i].nconfigs;
+ecc5bf86867344 Jacky Huang     2024-05-21  233  	}
+ecc5bf86867344 Jacky Huang     2024-05-21  234  	dev_dbg(pctldev->dev, "maps: function %s group %s num %d\n",
+ecc5bf86867344 Jacky Huang     2024-05-21  235  		(*map)->data.mux.function, (*map)->data.mux.group, map_num);
+ecc5bf86867344 Jacky Huang     2024-05-21  236  
+ecc5bf86867344 Jacky Huang     2024-05-21  237  	return 0;
+ecc5bf86867344 Jacky Huang     2024-05-21  238  }
+ecc5bf86867344 Jacky Huang     2024-05-21  239  
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
