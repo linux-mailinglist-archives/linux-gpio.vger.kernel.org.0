@@ -1,191 +1,136 @@
-Return-Path: <linux-gpio+bounces-7371-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7372-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD072904475
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 21:22:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB9CF9044EA
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 21:36:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4BE071F232D9
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 19:22:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 42890B2233C
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 19:36:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C37F68004E;
-	Tue, 11 Jun 2024 19:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DADBC84E18;
+	Tue, 11 Jun 2024 19:35:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="h+yPVw8g"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="I+vXeC90"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3177F49B
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2024 19:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFBD4D8BB
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2024 19:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718133773; cv=none; b=ZCu8d+QdBsHYkprhS5+DRIVkTV89yBr+1dAj5XeICVmfUoebvCe7BcBEvck6cFbPR8GKQLnlHhquEcYTEWsBtZc/PFbIsqcT//p3Tldti4tr+EjU+hT7yLiHipjAOeQOiro/1jTdXMzh0/aEogMVivswJYOvaMO5zAZk6j3VQ/s=
+	t=1718134545; cv=none; b=IobxjgBUHsp/m2+dA6kV2DeCFLg+EQ78jZ1S2k3BP63mBOLtR7cgwLNq3EWw82UwgUPyE8s9Wn8Iw7P+4YcW6YXpFchkx3zn09q1ZW5XM32F35672os9EPazVG/BElLUjTNDD2yUx2FNKgwdHlwvdVdTAtHqnvVKt96tKS1ekGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718133773; c=relaxed/simple;
-	bh=g32DqZ4Zw2NT9rCy5U0Tm8ZCkQUe0pbtli78Z4pIEI8=;
+	s=arc-20240116; t=1718134545; c=relaxed/simple;
+	bh=UihAQMm+FcJJTawnUL9q7pMbGjD7d0lXPw28piV7hpY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oxfCK/Cx7+mL3lhGcGq72x3zmjwJxJ+90hGIYqw9jeBaeHRjRfBvHa6FCn3vfyZ3PrKrgsGLvXUmGbnWv/F9vtDHOU/DSFnaL09kGLG2GgWCBdE8B0g5TC4Q5aXuOFgqYQXfH24N9Cpo2pYnTrCJs+Zp4SH7DuOUE1eJ6n48mM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=h+yPVw8g; arc=none smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=VIyI9jeVZ6eC7AM0LH2zTv/fgBZn/T9WXLL2N3k51ibAMwd9MMx4xpyk8l8FYw3hr/j6iZQt7icU/QLZjg5Gm2NuxLD76iZanOi6kUgixGJGvUBwhYO1tzH91bZ0A30/YOGgWGEJJppLsMFxPwMRYRV+laJVHIJGto7hyUdXkPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=I+vXeC90; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52c8c0d73d3so3177469e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2024 12:22:51 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52c7f7fdd24so1927504e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2024 12:35:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718133769; x=1718738569; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718134542; x=1718739342; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9RP9lrgWPxfxWq9LmJMbygDqOUO8YvAmutBVOITuNW4=;
-        b=h+yPVw8gDiKJTLAWZDffzAhvdWiLfg6+3TMi31DIwRwvX+X8O2VIyplrfSWBaE3lhW
-         RG2q17UN1dpmt5zUTLy2KtIp4LNYwBtQhOU7TeCmguz5/biWr7bEanr0WA/awvjNfc/v
-         X/egyIsPkqihJCJ43Xhs3lBiuhwDDAfras25hVeJja6+rDoqMjoaix8DL8TG5ISXvuNH
-         417C3bxcvsSp+8ELv+piywygCtLmQ8ArEKtSEUdujRrOAgzTGyHxITZvlD+LHCYQv8hX
-         BnHzYz7ORdMhmy+QjkpeCtraKw5nlvQXZPUtbzDfRhqn3N0TL8TSipd0NNpeM7N8Kt5J
-         zKUQ==
+        bh=atPtHtmfTYnBfoJzYt90iCXz8itpK/Lpg375kmIri/k=;
+        b=I+vXeC905Y5xuKB58FdvEnLbqYwcvfqHyEW+LW9aqLHc587ltIhT0JdMdSv+14vhtA
+         yTRWs0w+0NfhB7yO5lMTxDzbpbU9b+7h8/q3xzIWxVZidJ2muKqoNvcgn2dHiCfymhjb
+         ouI6nUht6Phcm0dSeTpKWNgj+ytOd2mijSgerEeuj4dIcWAWQi7REkYjESg6oSbICDx3
+         jkk6yfIGvuqRGvoglH1Q134NGB7FE0iOVOByJVfR8vfC+6kdRhDI8gjAha2LRbkqOdlQ
+         3cqpQMWoSBAhzY+RytC+yS9eZQXJd62+NpUSZyLgcQBcwRMrAHZBQYyoZCPuxnKum9Yc
+         DAVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718133769; x=1718738569;
+        d=1e100.net; s=20230601; t=1718134542; x=1718739342;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9RP9lrgWPxfxWq9LmJMbygDqOUO8YvAmutBVOITuNW4=;
-        b=alnyRz3udj6Whn9tCeZWzUOLvchYRxT5Qjds0G9jdcvqMphe/UzF5zntuf8Ylp7vY0
-         4Thc+9g5Dtso2AweeslJuY5yVjzE6s4/9dPznI4QGgVw1vwatGkeF52KbUA4QVhX0Sqh
-         tbEtnA4u/uFLrtFaYrLuDCbNAIgoqT/3GCJ1YuYqUFAY1tjbZPt6dsgpitU9Wlt6b0pG
-         YtMvjGccMfrHbXDC8whATdxqNusVV604cRlSMbyVaDb56AsECPBqZXn7c8XuSSGqrOXn
-         ZQm0MIozgGHNxJAPhB+10u0jjRlkGlT+b8T+nmcbgnMqpBH7YaVXsIkdHyfpEbRaK4X1
-         bcYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTm9zlBhjatjN+xgpECKeczl5Zthl2gyaDbffROk3X5hXvzMSyNp14VsXxOxDpJb7qvAcpm/+c8wT3SosmEoNANx9BKYIY2JH5oA==
-X-Gm-Message-State: AOJu0Yx9rf4n6JLdVKWv7JdGMQvHGTmMsX+6Duox1GOhdbrKum9uQQ0R
-	HYBoUWUzIawX5yhmlkEJHQCAwPEPr36ZbVZ7G9JHAZMVEChZn84yMK3EF9ZphUs5rxtxwKGX2Z1
-	8CcD5zIcWhb6Ki3FBYzr9lvkozlUVsIfvZt4JjUZnzEuWV4Cd
-X-Google-Smtp-Source: AGHT+IG/zzFcnEDvVaiNZ7/Ob7cxnQKiX8tR6SELrnFYKmUKk20ciCp2uYjvABIXIQOKgQdU/2gqoFnEkWJDwM0GxG0=
-X-Received: by 2002:a05:6512:3d15:b0:52c:96d1:dc79 with SMTP id
- 2adb3069b0e04-52c96d1de3emr1740750e87.14.1718133769435; Tue, 11 Jun 2024
- 12:22:49 -0700 (PDT)
+        bh=atPtHtmfTYnBfoJzYt90iCXz8itpK/Lpg375kmIri/k=;
+        b=s6wx6cP8mClV3zZPaEqOOKqRuCTt+cAGJULKx3FxrmXzvHJbF5e3vxATwUHVYU+RHZ
+         riosyxlqUpnvcW4cUYRDs2djkwZhNz/1hcqPCj2bF17URzBHCl6PoMT84F5VsS1YoeNw
+         vCf8AWXI/7J4zXeTcVxLgmQhC/TBye6DFHhw5FoS9bnIuXeJNfPzWa/LgfBK4ST60u5I
+         ErhmAUkj3yS8eNZVa3RBg7dgYmdabRX2Yt9/wOfqqi9nRsj2nz2WavGxSqV994hS/Lxs
+         hH1PYNyJxul5VPriNO8eCYU6UaHkAMwfN8CcVs7g+zWAnBl0awmcwkQ+775NETZN32Kg
+         bJIA==
+X-Gm-Message-State: AOJu0YxKAxbe3tmWk8GcPxKiWnMrlGcbnlH14dkXTGN2mgcgGknkVTYL
+	uS4eknnCgSK3Laib36CczFtvKkmd4jiKq4K2Yli3vAZ4ZaLmzNu7+QlZ4ciwQSyMCqzjQkG+SWi
+	L+cx0luE8lFSuL4u2SX4TMSnIIIjmfvvaDg4CWZSGooj1JDOc
+X-Google-Smtp-Source: AGHT+IFe/RlYbR/DO+/akyxYAtI/EJ5X599VvGZ9dpv7xRl3rVaOFsQkW2ZJTPlUZfzXniLgAn5xJnp/8bJtxrQnoS0=
+X-Received: by 2002:a05:6512:3b9c:b0:52c:99ed:4c9a with SMTP id
+ 2adb3069b0e04-52c99ed55acmr45137e87.59.1718134541746; Tue, 11 Jun 2024
+ 12:35:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610160155.5ca7e0d7@dellmb> <20240611110305.0f0c5b1f@dellmb>
-In-Reply-To: <20240611110305.0f0c5b1f@dellmb>
+References: <20240606181309.476805-1-vfazio@gmail.com>
+In-Reply-To: <20240606181309.476805-1-vfazio@gmail.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 11 Jun 2024 21:22:38 +0200
-Message-ID: <CAMRc=McoyXp1v7fmOJffob4BWgrTV9he05JNTAx4JBBzOxV8sA@mail.gmail.com>
-Subject: Re: how to request gpiochip line which is only valid as an interrupt?
-To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, linux-gpio@vger.kernel.org
+Date: Tue, 11 Jun 2024 21:35:31 +0200
+Message-ID: <CAMRc=MeMmC_tYRXk3xUXR4P3et=UpF171vrwhPyiVNuMoP=Ppg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v2] bindings: python: add script to generate
+ sdist and wheels
+To: Vincent Fazio <vfazio@gmail.com>
+Cc: linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 11, 2024 at 11:03=E2=80=AFAM Marek Beh=C3=BAn <kabel@kernel.org=
-> wrote:
+On Thu, Jun 6, 2024 at 8:13=E2=80=AFPM Vincent Fazio <vfazio@gmail.com> wro=
+te:
 >
-> On Mon, 10 Jun 2024 16:01:55 +0200
-> Marek Beh=C3=BAn <kabel@kernel.org> wrote:
+> Introduce a shell script that generates an sdist tarball and PEP 600/656
+> conformant wheels.
 >
-> > Hello Bartosz,
-> >
-> > I would like to ask you if you could find some time to look at
-> >
-> >   [PATCH v11 6/8] platform: cznic: turris-omnia-mcu: Add support for
-> >                   MCU provided TRNG
-> >
-> >   https://lore.kernel.org/soc/20240605161851.13911-7-kabel@kernel.org/
-> >
-> > Andy Shevchenko added you to that conversation asking you about how to
-> > correctly do the following part:
-> >
-> >   irq =3D gpiod_to_irq(gpiochip_get_desc(&mcu->gc, irq_idx));
-> >
-> > I am writing this to give some more light into the problem. What is
-> > going on:
-> > - the turris-omnia-mcu driver provides a gpio chip with interrupts
-> > - some lines are gpio + irq, but some lines are interrupt only
-> > - later, after the gpiochip is registered, another part of the
-> >   turris-omnia-mcu driver wants to use one interrupt only line
-> >
-> > To use the gpiod_to_irq() function, I need gpio descriptor for that
-> > line. I can get that with gpiochip_get_desc(), since this is within the
-> > driver, I have access to the gpiochip. But this is semantically a
-> > little weird, because
-> >
-> >   1. gpiochip_get_desc() is supposed to be used by gpio driver, not
-> >      consumer (and the trng part of the turris-omnia-mcu code is a
-> >      consumer of the gpio)
-> >
-> >   2. reference counting?
-> >
-> > Looking at gpiolib, maybe the better function to use would be
-> > gpiochip_request_own_desc(). This also is defined in
-> > include/gpio/driver.c instead of include/gpio/consumer.c, but at least
-> > it's name suggests that it is used by code that also owns the
-> > gpiochip...
-> >
-> > One problem is that gpiochip_request_own_desc() won't work, because the
-> > gpiochip initializes valid masks for both gpios and irqs, and the
-> > gpiochip_request_own_desc() function calls gpiod_request_commit(),
-> > which executes the following code
-> >
-> >   if (guard.gc->request) {
-> >     offset =3D gpio_chip_hwgpio(desc);
-> >     if (gpiochip_line_is_valid(guard.gc, offset))
-> >       ret =3D guard.gc->request(guard.gc, offset);
-> >     else
-> >       ret =3D -EINVAL;
-> >     ...
-> >   }
-> >
-> > So if a gpiochip line is not valid GPIO, only valid IRQchip line, then
-> > the GPIO cannot be requested, even for interrupts.
-> >
-> > What is the proper solution here?
-> >
-> > Thank you
-> >
-> > Marek
+> The wheels are generated via cibuildwheel, a tool provided by the Python
+> Packaging Authority (PyPA) [0]. The tool leverages toolchains within
+> containers maintained by PyPA [1] to generate wheels that are runnable
+> on hosts that meet the platform compatibility tag [2] requirements.
 >
-> Bart, Andy,
+> By default, the script creates X86_64 and AArch64 CPython 3.9-3.12
+> wheels for glibc and musl libc based systems.
 >
-> it seems that if I write the mcu DT node interrupt property which
-> refers to self, i.e.:
+> These defaults can be overridden via CIBW_* environment variables [3].
 >
->   mcu: system-controller@2a {
->     ...
+> [0]: https://cibuildwheel.pypa.io/en/stable/
+> [1]: https://github.com/pypa/manylinux/
+> [2]: https://packaging.python.org/en/latest/specifications/platform-compa=
+tibility-tags/
+> [3]: https://cibuildwheel.pypa.io/en/stable/options/#options-summary
 >
->     interrupts-extended =3D <&gpio1 11 IRQ_TYPE_NONE>,
->                           <&mcu 13 IRQ_TYPE_NONE>;
->     interrupt-names =3D "irq", "trng";
+> Signed-off-by: Vincent Fazio <vfazio@gmail.com>
+> ---
+> Changes v1 -> v2:
+>  - spaces -> tabs
+>  - conform to `shellcheck -oall` recommendations
+>  - simplify in-script documentation
+>  - miscellaneous grammar fixups
+> ---
+>  bindings/python/generate_pypi_artifacts.sh | 132 +++++++++++++++++++++
+>  1 file changed, 132 insertions(+)
+>  create mode 100755 bindings/python/generate_pypi_artifacts.sh
 >
->     ...
->   };
->
-> it seems to work and I can use
->
->   irq =3D fwnode_irq_get_byname(dev_fwnode(dev), "trng");
->
-> even if this is called from the mcu probe method.
->
-> Do you think this is a proper solution?
->
-> I find it a little bit weird that the mcu DT node refers to itself in
-> it's interrupt properties.
->
-> Marek
+> diff --git a/bindings/python/generate_pypi_artifacts.sh b/bindings/python=
+/generate_pypi_artifacts.sh
+> new file mode 100755
+> index 0000000..5e526be
+> --- /dev/null
+> +++ b/bindings/python/generate_pypi_artifacts.sh
+> @@ -0,0 +1,132 @@
+> +#!/usr/bin/env sh
+> +#
+> +# This is a script to generate an sdist and wheels for publishing to PyP=
+I.
+> +#
 
-Do I understand correctly that this is an I2C device visible under a
-single address (and represented by a single device-tree node) that
-registers with several kernel subsystems (among others: GPIO and RNG)?
-
-If so then the interrupts should not be visible as a device property.
-If you have access to the GPIO chip, can you simply call
-gpiochip_lock_as_irq() and then request the interrupt? Users can still
-read the value of this pin but won't be able to set direction to
-output.
+One more nit: can you add SPDX headers for the license and copyright,
+so that it passes the `reuse lint` check?
 
 Bart
 
