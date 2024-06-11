@@ -1,38 +1,38 @@
-Return-Path: <linux-gpio+bounces-7349-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7350-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BA1A9037DE
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 11:32:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D5AA9037E1
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 11:32:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 41D8D1C23519
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 09:32:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 949D7287C09
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 09:32:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3134917A93C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B64EE17B414;
 	Tue, 11 Jun 2024 09:31:39 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151B01779AB
-	for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2024 09:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A6D1791FC
+	for <linux-gpio@vger.kernel.org>; Tue, 11 Jun 2024 09:31:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718098299; cv=none; b=NpceOHrXRogRzf8H4A0jcHFj+sFBlV6xnexAU0rttZ5gAnU1fgv3vDahLGRlcTCqqlLHPiUz1NYmYzuLlsNpHXSwXMoJ97a6BgPNvULVsLstpqXtOvDUv50VQjvy16CBtSm8pxg9HaUX88ZemsSTAh1AGsxs3gS8v5VzsoxZPUY=
+	t=1718098299; cv=none; b=eD1kHDyt8h9piiimQFQBx5jE+b4mwQqdBquCOwZBetdyKeZ1/OuTbP8Tdze4bmdaDF4wc6RYmsHXKq1pJLGU7FATG/9W5b469J3fKzdTvfiWI7j00OdxusQZ5U3Ngnv8auPlCOzvS2QcnYjsZbvum0ZcacbZWjj1lKbjxW994F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718098299; c=relaxed/simple;
-	bh=FC2Kl+hbpeiZTZFGRoCBKZ3Bw50AAGllg4iHaBq5Tm4=;
+	bh=mMVL8afWJZyH/lJQmN80I97zDhgRVPAlN2XpKsFbxs0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SOhYj19SI7cvDx8ExrDp2UsqpRIkb1S2RjszlPbvrnIypjMhkfhpo2LHTfkOqT+f3SuqTi7JUk3eR69SvSdw+G70OH8wOASkiGuCJRR7x31+yZhesTPi0pqlUjZlAhTE9z5ToSb71pj5+PoYCF/WgZzEn/Y0u2s6dInQCUCCIGU=
+	 MIME-Version; b=Oyc8ASLtdcXW7gXB03R6/FGs8bf//OKlGMKbsQhf2kDnf6sMvQvmz5wMZRoVB7pz5DUsXtq7hruZp9KnA88iYmyFNxuNbOKCI6AYNGLd+O3THd8g7RjlwOAj+TmGdToIdic+cPAT212/QHQKsu62M+wHs2RDk7N5AnQt8e4TicM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-25-87.elisa-laajakaista.fi [88.113.25.87])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id 6519693c-27d5-11ef-8d69-005056bd6ce9;
-	Tue, 11 Jun 2024 12:31:34 +0300 (EEST)
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id 657d3fe3-27d5-11ef-ab0f-005056bdd08f;
+	Tue, 11 Jun 2024 12:31:35 +0300 (EEST)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>,
 	Jacky Huang <ychuang3@nuvoton.com>,
@@ -48,11 +48,10 @@ Cc: Shan-Chun Hung <schung@nuvoton.com>,
 	Patrick Venture <venture@google.com>,
 	Nancy Yuen <yuenn@google.com>,
 	Benjamin Fair <benjaminfair@google.com>,
-	=?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 3/4] pinctrl: nuvoton: Convert to use struct group_desc
-Date: Tue, 11 Jun 2024 12:30:24 +0300
-Message-ID: <20240611093127.90210-4-andy.shevchenko@gmail.com>
+	=?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH v1 4/4] pinctrl: nuvoton: Reduce use of OF-specific APIs
+Date: Tue, 11 Jun 2024 12:30:25 +0300
+Message-ID: <20240611093127.90210-5-andy.shevchenko@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240611093127.90210-1-andy.shevchenko@gmail.com>
 References: <20240611093127.90210-1-andy.shevchenko@gmail.com>
@@ -64,205 +63,199 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-The pin control core header provides struct group_desc.
-Utilize it instead of open coded variants in the driver.
+Some drivers are using device property APIs along with OF-specific ones.
+At the same time few of the latter can be converted to device property
+calls. Reduce use of OF-specific APIs in order to bring a bit more consistency
+into the drivers.
 
 Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/pinctrl/nuvoton/pinctrl-ma35.c | 66 ++++++++++++--------------
- 1 file changed, 31 insertions(+), 35 deletions(-)
+ drivers/pinctrl/nuvoton/pinctrl-ma35.c    | 35 +++++++++++------------
+ drivers/pinctrl/nuvoton/pinctrl-ma35d1.c  |  1 -
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 16 ++---------
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c |  2 +-
+ 4 files changed, 21 insertions(+), 33 deletions(-)
 
 diff --git a/drivers/pinctrl/nuvoton/pinctrl-ma35.c b/drivers/pinctrl/nuvoton/pinctrl-ma35.c
-index 62e877b76a25..7c2b0039d1e4 100644
+index 7c2b0039d1e4..2bb0bdbc881a 100644
 --- a/drivers/pinctrl/nuvoton/pinctrl-ma35.c
 +++ b/drivers/pinctrl/nuvoton/pinctrl-ma35.c
-@@ -106,13 +106,6 @@ struct ma35_pin_setting {
- 	unsigned int		nconfigs;
- };
- 
--struct ma35_pin_group {
--	const char		*name;
--	unsigned int		npins;
--	unsigned int		*pins;
--	struct ma35_pin_setting	*settings;
--};
--
- struct ma35_pin_bank {
- 	void __iomem		*reg_base;
- 	struct clk		*clk;
-@@ -141,7 +134,7 @@ struct ma35_pinctrl {
- 	struct pinctrl_dev	*pctl;
- 	const struct ma35_pinctrl_soc_info *info;
- 	struct regmap		*regmap;
--	struct ma35_pin_group	*groups;
-+	struct group_desc	*groups;
- 	unsigned int		ngroups;
- 	struct pinfunction	*functions;
- 	unsigned int		nfunctions;
-@@ -160,7 +153,7 @@ static const char *ma35_get_group_name(struct pinctrl_dev *pctldev, unsigned int
- {
- 	struct ma35_pinctrl *npctl = pinctrl_dev_get_drvdata(pctldev);
- 
--	return npctl->groups[selector].name;
-+	return npctl->groups[selector].grp.name;
- }
- 
- static int ma35_get_group_pins(struct pinctrl_dev *pctldev, unsigned int selector,
-@@ -171,19 +164,19 @@ static int ma35_get_group_pins(struct pinctrl_dev *pctldev, unsigned int selecto
- 	if (selector >= npctl->ngroups)
- 		return -EINVAL;
- 
--	*pins = npctl->groups[selector].pins;
--	*npins = npctl->groups[selector].npins;
-+	*pins = npctl->groups[selector].grp.pins;
-+	*npins = npctl->groups[selector].grp.npins;
- 
- 	return 0;
- }
- 
--static struct ma35_pin_group *ma35_pinctrl_find_group_by_name(
--			      const struct ma35_pinctrl *npctl, const char *name)
-+static struct group_desc *
-+ma35_pinctrl_find_group_by_name(const struct ma35_pinctrl *npctl, const char *name)
- {
- 	int i;
- 
- 	for (i = 0; i < npctl->ngroups; i++) {
--		if (!strcmp(npctl->groups[i].name, name))
-+		if (!strcmp(npctl->groups[i].grp.name, name))
- 			return &npctl->groups[i];
- 	}
- 	return NULL;
-@@ -195,9 +188,10 @@ static int ma35_pinctrl_dt_node_to_map_func(struct pinctrl_dev *pctldev,
- 					    unsigned int *num_maps)
- {
- 	struct ma35_pinctrl *npctl = pinctrl_dev_get_drvdata(pctldev);
--	struct ma35_pin_group *grp;
-+	struct ma35_pin_setting *setting;
- 	struct pinctrl_map *new_map;
- 	struct device_node *parent;
-+	struct group_desc *grp;
- 	int map_num = 1;
- 	int i;
- 
-@@ -211,7 +205,7 @@ static int ma35_pinctrl_dt_node_to_map_func(struct pinctrl_dev *pctldev,
- 		return -EINVAL;
- 	}
- 
--	map_num += grp->npins;
-+	map_num += grp->grp.npins;
- 	new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map), GFP_KERNEL);
- 	if (!new_map)
- 		return -ENOMEM;
-@@ -223,6 +217,8 @@ static int ma35_pinctrl_dt_node_to_map_func(struct pinctrl_dev *pctldev,
- 	if (!parent)
- 		return -EINVAL;
- 
-+	setting = grp->data;
-+
- 	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
- 	new_map[0].data.mux.function = parent->name;
- 	new_map[0].data.mux.group = np->name;
-@@ -231,9 +227,9 @@ static int ma35_pinctrl_dt_node_to_map_func(struct pinctrl_dev *pctldev,
- 	new_map++;
- 	for (i = 0; i < grp->npins; i++) {
- 		new_map[i].type = PIN_MAP_TYPE_CONFIGS_PIN;
--		new_map[i].data.configs.group_or_pin = pin_get_name(pctldev, grp->pins[i]);
--		new_map[i].data.configs.configs = grp->settings[i].configs;
--		new_map[i].data.configs.num_configs = grp->settings[i].nconfigs;
-+		new_map[i].data.configs.group_or_pin = pin_get_name(pctldev, grp->grp.pins[i]);
-+		new_map[i].data.configs.configs = setting[i].configs;
-+		new_map[i].data.configs.num_configs = setting[i].nconfigs;
- 	}
- 	dev_dbg(pctldev->dev, "maps: function %s group %s num %d\n",
- 		(*map)->data.mux.function, (*map)->data.mux.group, map_num);
-@@ -281,12 +277,12 @@ static int ma35_pinmux_set_mux(struct pinctrl_dev *pctldev, unsigned int selecto
- 			       unsigned int group)
- {
- 	struct ma35_pinctrl *npctl = pinctrl_dev_get_drvdata(pctldev);
--	struct ma35_pin_group *grp = &npctl->groups[group];
--	struct ma35_pin_setting *setting = grp->settings;
-+	struct group_desc *grp = &npctl->groups[group];
-+	struct ma35_pin_setting *setting = grp->data;
- 	u32 i, regval;
- 
- 	dev_dbg(npctl->dev, "enable function %s group %s\n",
--		npctl->functions[selector].name, npctl->groups[group].name);
-+		npctl->functions[selector].name, grp->grp.name);
- 
- 	for (i = 0; i < grp->npins; i++) {
- 		regmap_read(npctl->regmap, setting->offset, &regval);
-@@ -980,17 +976,16 @@ static const struct pinconf_ops ma35_pinconf_ops = {
+@@ -519,7 +519,6 @@ static int ma35_gpiolib_register(struct platform_device *pdev, struct ma35_pinct
+ 		bank->irqtype = 0;
+ 		bank->irqinten = 0;
+ 		bank->chip.label = bank->name;
+-		bank->chip.of_gpio_n_cells = 2;
+ 		bank->chip.parent = &pdev->dev;
+ 		bank->chip.request = ma35_gpio_core_to_request;
+ 		bank->chip.direction_input = ma35_gpio_core_direction_in;
+@@ -976,9 +975,10 @@ static const struct pinconf_ops ma35_pinconf_ops = {
  	.is_generic = true,
  };
  
--static int ma35_pinctrl_parse_groups(struct device_node *np, struct ma35_pin_group *grp,
-+static int ma35_pinctrl_parse_groups(struct device_node *np, struct group_desc *grp,
+-static int ma35_pinctrl_parse_groups(struct device_node *np, struct group_desc *grp,
++static int ma35_pinctrl_parse_groups(struct fwnode_handle *fwnode, struct group_desc *grp,
  				     struct ma35_pinctrl *npctl, u32 index)
  {
++	struct device_node *np = to_of_node(fwnode);
  	struct ma35_pin_setting *pin;
  	unsigned long *configs;
  	unsigned int nconfigs;
-+	unsigned int *pins;
- 	int i, j, count, ret;
- 	u32 *elems;
- 
--	grp->name = np->name;
--
- 	ret = pinconf_generic_parse_dt_config(np, NULL, &configs, &nconfigs);
+@@ -990,7 +990,7 @@ static int ma35_pinctrl_parse_groups(struct device_node *np, struct group_desc *
  	if (ret)
  		return ret;
-@@ -1003,21 +998,22 @@ static int ma35_pinctrl_parse_groups(struct device_node *np, struct ma35_pin_gro
- 	if (!elems)
- 		return -ENOMEM;
  
-+	grp->grp.name = np->name;
-+
- 	ret = of_property_read_u32_array(np, "nuvoton,pins", elems, count);
+-	count = of_property_count_elems_of_size(np, "nuvoton,pins", sizeof(u32));
++	count = fwnode_property_count_u32(fwnode, "nuvoton,pins");
+ 	if (!count || count % 3)
+ 		return -EINVAL;
+ 
+@@ -1000,7 +1000,7 @@ static int ma35_pinctrl_parse_groups(struct device_node *np, struct group_desc *
+ 
+ 	grp->grp.name = np->name;
+ 
+-	ret = of_property_read_u32_array(np, "nuvoton,pins", elems, count);
++	ret = fwnode_property_read_u32_array(fwnode, "nuvoton,pins", elems, count);
  	if (ret)
  		return -EINVAL;
-+	grp->grp.npins = count / 3;
- 
--	grp->npins = count / 3;
--
--	grp->pins = devm_kcalloc(npctl->dev, grp->npins, sizeof(*grp->pins), GFP_KERNEL);
--	if (!grp->pins)
-+	pins = devm_kcalloc(npctl->dev, grp->grp.npins, sizeof(*pins), GFP_KERNEL);
-+	if (!pins)
- 		return -ENOMEM;
-+	grp->grp.pins = pins;
- 
--	grp->settings = devm_kcalloc(npctl->dev, grp->npins, sizeof(*grp->settings), GFP_KERNEL);
--	if (!grp->settings)
-+	pin = devm_kcalloc(npctl->dev, grp->grp.npins, sizeof(*pin), GFP_KERNEL);
-+	if (!pin)
- 		return -ENOMEM;
--
--	pin = grp->settings;
-+	grp->data = pin;
- 
- 	for (i = 0, j = 0; i < count; i += 3, j++) {
- 		pin->offset = elems[i] * MA35_MFP_REG_SZ_PER_BANK + MA35_MFP_REG_BASE;
-@@ -1025,7 +1021,7 @@ static int ma35_pinctrl_parse_groups(struct device_node *np, struct ma35_pin_gro
- 		pin->muxval = elems[i + 2];
- 		pin->configs = configs;
- 		pin->nconfigs = nconfigs;
--		grp->pins[j] = npctl->info->get_pin_num(pin->offset, pin->shift);
-+		pins[j] = npctl->info->get_pin_num(pin->offset, pin->shift);
- 		pin++;
- 	}
+ 	grp->grp.npins = count / 3;
+@@ -1027,10 +1027,11 @@ static int ma35_pinctrl_parse_groups(struct device_node *np, struct group_desc *
  	return 0;
-@@ -1036,7 +1032,7 @@ static int ma35_pinctrl_parse_functions(struct device_node *np, struct ma35_pinc
+ }
+ 
+-static int ma35_pinctrl_parse_functions(struct device_node *np, struct ma35_pinctrl *npctl,
++static int ma35_pinctrl_parse_functions(struct fwnode_handle *fwnode, struct ma35_pinctrl *npctl,
+ 					u32 index)
  {
- 	struct device_node *child;
+-	struct device_node *child;
++	struct device_node *np = to_of_node(fwnode);
++	struct fwnode_handle *child;
  	struct pinfunction *func;
--	struct ma35_pin_group *grp;
-+	struct group_desc *grp;
+ 	struct group_desc *grp;
  	static u32 grp_index;
- 	const char **groups;
- 	u32 ret, i = 0;
+@@ -1050,12 +1051,14 @@ static int ma35_pinctrl_parse_functions(struct device_node *np, struct ma35_pinc
+ 	if (!groups)
+ 		return -ENOMEM;
+ 
+-	for_each_child_of_node(np, child) {
+-		groups[i] = child->name;
++	fwnode_for_each_child_node(fwnode, child) {
++		struct device_node *node = to_of_node(child);
++
++		groups[i] = node->name;
+ 		grp = &npctl->groups[grp_index++];
+ 		ret = ma35_pinctrl_parse_groups(child, grp, npctl, i++);
+ 		if (ret) {
+-			of_node_put(child);
++			fwnode_handle_put(child);
+ 			return ret;
+ 		}
+ 	}
+@@ -1066,13 +1069,12 @@ static int ma35_pinctrl_parse_functions(struct device_node *np, struct ma35_pinc
+ 
+ static int ma35_pinctrl_probe_dt(struct platform_device *pdev, struct ma35_pinctrl *npctl)
+ {
++	struct device *dev = &pdev->dev;
+ 	struct fwnode_handle *child;
+ 	u32 idx = 0;
+ 	int ret;
+ 
+-	device_for_each_child_node(&pdev->dev, child) {
+-		if (fwnode_property_present(child, "gpio-controller"))
+-			continue;
++	for_each_gpiochip_node(dev, child) {
+ 		npctl->nfunctions++;
+ 		npctl->ngroups += of_get_child_count(to_of_node(child));
+ 	}
+@@ -1090,11 +1092,8 @@ static int ma35_pinctrl_probe_dt(struct platform_device *pdev, struct ma35_pinct
+ 	if (!npctl->groups)
+ 		return -ENOMEM;
+ 
+-	device_for_each_child_node(&pdev->dev, child) {
+-		if (fwnode_property_present(child, "gpio-controller"))
+-			continue;
+-
+-		ret = ma35_pinctrl_parse_functions(to_of_node(child), npctl, idx++);
++	for_each_gpiochip_node(dev, child) {
++		ret = ma35_pinctrl_parse_functions(child, npctl, idx++);
+ 		if (ret) {
+ 			fwnode_handle_put(child);
+ 			dev_err(&pdev->dev, "failed to parse function\n");
+@@ -1139,7 +1138,7 @@ int ma35_pinctrl_probe(struct platform_device *pdev, const struct ma35_pinctrl_s
+ 	npctl->info = info;
+ 	npctl->dev = &pdev->dev;
+ 
+-	npctl->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "nuvoton,sys");
++	npctl->regmap = syscon_regmap_lookup_by_phandle(dev_of_node(dev), "nuvoton,sys");
+ 	if (IS_ERR(npctl->regmap))
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(npctl->regmap),
+ 				     "No syscfg phandle specified\n");
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-ma35d1.c b/drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
+index 8bb9a5a35954..eafa06ca0879 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
+@@ -9,7 +9,6 @@
+ #include <linux/io.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+-#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm.h>
+ 
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+index c6b11a198c76..d9245aa55d65 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+@@ -7,10 +7,8 @@
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/mfd/syscon.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+-#include <linux/of.h>
+-#include <linux/of_address.h>
+-#include <linux/of_irq.h>
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
+ #include <linux/regmap.h>
+@@ -1839,15 +1837,7 @@ static int npcm7xx_gpio_of(struct npcm7xx_pinctrl *pctrl)
+ 	int id = 0;
+ 
+ 	for_each_gpiochip_node(dev, child) {
+-		struct device_node *np = to_of_node(child);
+-
+-		ret = of_address_to_resource(np, 0, &res);
+-		if (ret < 0) {
+-			dev_err(dev, "Resource fail for GPIO bank %u\n", id);
+-			return ret;
+-		}
+-
+-		pctrl->gpio_bank[id].base = ioremap(res.start, resource_size(&res));
++		pctrl->gpio_bank[id].base = fwnode_iomap(child, 0);
+ 		if (!pctrl->gpio_bank[id].base)
+ 			return -EINVAL;
+ 
+@@ -1869,7 +1859,7 @@ static int npcm7xx_gpio_of(struct npcm7xx_pinctrl *pctrl)
+ 			return ret;
+ 		}
+ 
+-		ret = irq_of_parse_and_map(np, 0);
++		ret = fwnode_irq_get(child, 0);
+ 		if (!ret) {
+ 			dev_err(dev, "No IRQ for GPIO bank %u\n", id);
+ 			return -EINVAL;
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+index 7c37d2cda9f1..4410077615df 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+@@ -2421,7 +2421,7 @@ static int npcm8xx_pinctrl_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, pctrl);
+ 
+ 	pctrl->gcr_regmap =
+-		syscon_regmap_lookup_by_phandle(dev->of_node, "nuvoton,sysgcr");
++		syscon_regmap_lookup_by_phandle(dev_of_node(dev), "nuvoton,sysgcr");
+ 	if (IS_ERR(pctrl->gcr_regmap))
+ 		return dev_err_probe(dev, PTR_ERR(pctrl->gcr_regmap),
+ 				      "Failed to find nuvoton,sysgcr property\n");
 -- 
 2.45.2
 
