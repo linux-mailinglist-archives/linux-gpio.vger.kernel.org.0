@@ -1,408 +1,251 @@
-Return-Path: <linux-gpio+bounces-7341-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7342-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F113C903331
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 09:04:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B19C9033B2
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 09:31:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 700091F28695
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 07:04:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B593228F737
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jun 2024 07:31:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D209D171E66;
-	Tue, 11 Jun 2024 07:03:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9196172BB2;
+	Tue, 11 Jun 2024 07:31:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="o5kPC3tf"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mEkR7rMN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2042.outbound.protection.outlook.com [40.107.94.42])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2073.outbound.protection.outlook.com [40.107.220.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960F8B657;
-	Tue, 11 Jun 2024 07:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E589172BAF;
+	Tue, 11 Jun 2024 07:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.73
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718089437; cv=fail; b=asS4Yh2yyHD9rpLsjGa4D8uLDlEqyF9Qu8yYXQM92KMzJLuWuhuhvNfgUkQa7OvxgXQSXY+TIMn1x0t2djPVleF7u93p3JgWfxMrbbxnUPjj+jfq3HytSMsr6hs/bucvQFaReM0bD9bB1Js7AfRGdR2oqYxhyVTom3a8+hNmh9Q=
+	t=1718091061; cv=fail; b=unQvqErJlw713EhBtlSKbaaX7dXK8mZBkX/aJsSV4Fmq2b2xBd8fxrYmqr3xq19EcDnsmBm3gnIK5krbt7Ltvf8PodzVkegaY4TPkB5Dhtnbk9KGEmxcMlS0H+EB751WeN52o8v+931zbj2PexNddL8NUSVpoNqXcn5odkUPRMs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718089437; c=relaxed/simple;
-	bh=gQk46frN4avYq9OXJ2JRxZFK88ZpE1xVwPqMjidjudc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VOcW1fl75uAsy5WuzCZNFMhl2Q25ec9wzHWuFUuLxLvz4Q363aV1mI6vNKEOz3AE2N5+jHh8APOaebW4zGDprlfIVT5Uw4F0NAoiOWrk7lPY3bAq79wIElh7BESkZwxBK2wJgnbbbVUGH8+sZU9FAHWLci34CzM5JSyBzDentmg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=o5kPC3tf; arc=fail smtp.client-ip=40.107.94.42
+	s=arc-20240116; t=1718091061; c=relaxed/simple;
+	bh=R6sjNI26weJDqe5cKPaJkEYexBRB6dWgzNS+vc/4Jcc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=CIvw4d+nMfr/LIsZz3Ewi7hJinPctNT4CeLKx09e8geworA33vhqbKzrmyGcqdsCA5+1due/BB2mssNcAljzUp0MgVZLFCeIXKRJr4ghkihbFdlugvlliKmmWTphDlAArdxCP47kTZFleghly60dEyLrekezpKPuL/iYBxGuO00=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mEkR7rMN; arc=fail smtp.client-ip=40.107.220.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f7EBWWD1c8tMEXmmLktrkYmWbTkxxifGcJYyCe/CP1vr20jPRImXqWz3BUy2UVwDS+D2XmyR3VrYY0uQxmZSOo2dzBDHBSImIl03bXZtGAIGTP7hNLotWC6fzZ0mcev3tFg8CtjLV1DkCIhKdwDBF0sKYjA8f4pRGOy176pchZ9NqJm5qanS9Nl6/eMSKGPGFp9Pwa+26kpxIIRzw0ReSHSlBCgwO9hoG9b5J8hjmUgvgmdIClW2YRUu1RGwywycSH5Qw7q+aPTRe8utxOhz66uFH3d53+oPK2FaYbwEPxLnw92RT+YQ9G0M6ofdXWH1GwXt0ISEC51WWfkT7iRBOg==
+ b=NZN75OIeNDYCQ+Q7flba0SPenS2N1augvJTB+j3cZnfHZ6eaotviH1FmZs3BYsbvhdznBSpIBCPODYPXttXr1rlRWbfm8xNLkYMhcjWhXsUnSz588yP91Id0x6VZOvtIxE+3UK3tLCISEGBbcQxPCIWie/R0kS+u25bCC4qmM+CwZSFokGQcI/UUMOKVejyZXEuba7UXhGF/9kzSknkENfCMqp8BkYn9SklEjhBdFKmm/ZvSB3smjOYwL8rqCcrIR6806lx6MGcwqPgpERDwrpVEp2CViSZab9ZYGatk/u9TkM6pDZJqt2YSatRHRmA1gkuFpE5EZ7leKy6xK2FXKA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BNlcmB5uJk5cP3/KGgVvZLwERuGC3ChIxJZ8uI4Fnuo=;
- b=aWkJUkJCMEx4huwLeyD/+phiZEJ821njL8JF/2LDSYzMS0XqFXyC30ydSCPqR74yuZkUUhpnWTRN/TX5E5+OK/llJTnFju8bPJofDsrM3IsTpViO1mA3jOTgWutQ9YhflQi3lY7KUT232b6c6SjD/J9FVjSEqOWaNAgBI4zoMPYXMH9b4ozXHI75D8d65OVwB1Bvinfu6LwM+nUlixLRyntk5Lr8cRjLRVuWQdaKS8zO9WeXgr4dM3P0vRUWc/phQuSPcrSX1sgDaC8N9n2xws4pEwaIEvg011VIgAuWIq7yBuu4iVwu4falcZ8E3KTKUYysXphbjE3tKV/vaZBzrQ==
+ bh=9pjUcWOV1ndNKzB7EXmqJPecM32yzhK4Dw9v7EMm+pQ=;
+ b=OWuKP66poMSn7/5KnL2hvjot0P6aBsK6zzl7ebOLnvJL00ND7bW3039rBazjd6L7Rx2cR/3kd0Iom/oJGu7vuHg3MFoXg5PT7/Tl+5ry2QCN+Q9jHpV1dS+kkoCVJC6VgDgDOUO+ittKelmAlbQCAK+cxwScFNUwQzCfWkuCLKDWSu0HIsh0L8TDl2c9DlfT1HX4UQ6bFyTU2DGrqkaVWaYSNwuqQ3TMvtY9h0S8MB21H1jWHa03Rr525u6v7TxWC8i4KpIRK6nrvb2iGArm7/ZLNQs8UTrFgPrcb7SwD6eyQ2x+uU3kGmwzxTjIaonoLX9L6TxtWehZ1zCYPUfMWA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BNlcmB5uJk5cP3/KGgVvZLwERuGC3ChIxJZ8uI4Fnuo=;
- b=o5kPC3tfYVjA95Icxfmbyl5e6EE1krjTTC4otEA23Lux/iiFwEEre8sBcmeAEFIjzP0X0D4Ea+peZYJW5+MK66WlutxOXvfsxl4/6SUBg9lmgQbwQJtMvK+kHxBrZzKRcO0HByYvgwYEBMq0ShfL0Fdq1EvBji86zNDU9XxIcBc=
-Received: from BY5PR12MB4258.namprd12.prod.outlook.com (2603:10b6:a03:20d::10)
- by SA1PR12MB6993.namprd12.prod.outlook.com (2603:10b6:806:24c::22) with
+ bh=9pjUcWOV1ndNKzB7EXmqJPecM32yzhK4Dw9v7EMm+pQ=;
+ b=mEkR7rMNmqhwLtm9pnvOK/YwzGeqH1+nFW8jXkRN8f3sDTQJl6pqSn2Xr+INP6lFmaPxMhxs01sup/n+JWCdnCE9nOVAIe+cKeJIV/cqym0ut3KLUiUSGDRi5p2hquxVZ1JAQ5T31mWwheDX+vmB5deZylP00b8FKoZUMlXWsZM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com (2603:10b6:a03:4f5::8)
+ by SJ1PR12MB6051.namprd12.prod.outlook.com (2603:10b6:a03:48a::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Tue, 11 Jun
- 2024 07:03:52 +0000
-Received: from BY5PR12MB4258.namprd12.prod.outlook.com
- ([fe80::3228:a925:2191:98b3]) by BY5PR12MB4258.namprd12.prod.outlook.com
- ([fe80::3228:a925:2191:98b3%5]) with mapi id 15.20.7633.036; Tue, 11 Jun 2024
- 07:03:51 +0000
-From: "Potthuri, Sai Krishna" <sai.krishna.potthuri@amd.com>
-To: Sean Anderson <sean.anderson@linux.dev>
-CC: Linus Walleij <linus.walleij@linaro.org>, "Simek, Michal"
-	<michal.simek@amd.com>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 2/2] pinctrl: zynqmp: Support muxing individual pins
-Thread-Topic: [PATCH v3 2/2] pinctrl: zynqmp: Support muxing individual pins
-Thread-Index: AQHau4a+n7chh+OvrkKaNvEZeTD4j7HCIzTw
-Date: Tue, 11 Jun 2024 07:03:51 +0000
-Message-ID:
- <BY5PR12MB4258577B994214AA6A509288DBC72@BY5PR12MB4258.namprd12.prod.outlook.com>
+ 2024 07:30:58 +0000
+Received: from SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::7f35:efe7:5e82:5e30]) by SJ2PR12MB8109.namprd12.prod.outlook.com
+ ([fe80::7f35:efe7:5e82:5e30%7]) with mapi id 15.20.7633.036; Tue, 11 Jun 2024
+ 07:30:58 +0000
+Message-ID: <0c244236-8bfb-4349-828e-0774091eda99@amd.com>
+Date: Tue, 11 Jun 2024 09:30:43 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] pinctrl: zynqmp: Support muxing individual pins
+To: Sean Anderson <sean.anderson@linux.dev>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Krishna Potthuri <sai.krishna.potthuri@amd.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org
 References: <20240610223550.2449230-1-sean.anderson@linux.dev>
- <20240610223550.2449230-3-sean.anderson@linux.dev>
-In-Reply-To: <20240610223550.2449230-3-sean.anderson@linux.dev>
-Accept-Language: en-US
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BY5PR12MB4258:EE_|SA1PR12MB6993:EE_
-x-ms-office365-filtering-correlation-id: ac3e0cd8-7841-41e4-e6a1-08dc89e4a67a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|366007|376005|1800799015|38070700009;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?UL5mpXVF41NPgNmxLezP9unFBn84E5AbZ5R6xhxl3MYIwOGXdQTIqBWq15Dx?=
- =?us-ascii?Q?dDrsioumwdowRqbHdflwjj6wJzU1NL/t5oEH+53To+1y76A6ygJzRtKhs31w?=
- =?us-ascii?Q?fYwfFEp1YDbSxrShyh6IIAKJF0hgjaMI7P5CdCEbaf1wr1pSE9HweCAWQOh9?=
- =?us-ascii?Q?8ZQwIfMqS66YxgoNmR+YcFZAuHKmkv15X9z0DVMGov0ox+xCJhxu/z5avkHR?=
- =?us-ascii?Q?9xABS34mUjRHNd1Ip6NNvtpa6ycrVEVFou21JwN/jfSHjUq12C8iqjHjS+0b?=
- =?us-ascii?Q?jDhLJSzoDURZ3yqhvP4pKV1q41XNziUdkQQkmtjuU/Z0reGEc26WnIgKtBIg?=
- =?us-ascii?Q?3eQixy70D3tWZqdujDQ7Ip2c5SdrIbCwzDMofhBM+2qV6pf1YcgSZQF+59eT?=
- =?us-ascii?Q?wkoo9D2J27LrbF5PSePsDhEmX5RRKmQ5hUd2xvo6lRKTRF02vjDSXu+JG42g?=
- =?us-ascii?Q?23HksczLzUArYXfZDiXGi+UvsVuJ6O6pBUOq22eLo81hjt509L8ElSnXYmPR?=
- =?us-ascii?Q?ym72ZGWNcYp/5XVxRDcmBxcYpK6lbaJdxUfaVYvoziHvT3nYZZBsZYW52ww4?=
- =?us-ascii?Q?yLl7K66w+iKykrw5NDw9Ojgf4MT5bxdLUDGTpQ+D+saH9vuuymBbeWKzRXUb?=
- =?us-ascii?Q?ed32sKsBcr+vyFFEcStmJYLqh/QgyY1OyKz4ROyJWf0xNVmpD5wnCzSmcSHi?=
- =?us-ascii?Q?nNFaG2KDvojN3ZVxOgHPd50fSdkfkwmJYbqS3qMnB8uijUeNLe5XDPzKvTtI?=
- =?us-ascii?Q?hrLp5CWodflzXqEak/miCu9Fekq8yjt2Mt8Wf22rwvLOFI/NODL30i5Of95W?=
- =?us-ascii?Q?oPdh+FNAwV9LCoSa8Q7RfTxqGuFVYFYo/7k4v+49i/KPkJ8bngh4fC5Xg79B?=
- =?us-ascii?Q?fLCYZdIPat9YFg+yfHH1/pleLCT9ETAokXSxu1NNZ4oOaU9Wkk7Kk+wnLtPz?=
- =?us-ascii?Q?AtvtYB2giN4ABpidubJUia5dRqJmDJ6FSpNc8/xSZN5D1EZ40UPm8GCRHaXT?=
- =?us-ascii?Q?eq+QyNONPvjaPyKfCBLd9ldzTomOLc05kkKD8oZbbabhrYuA7e9vALocrCua?=
- =?us-ascii?Q?W0Yuco1Ka9PBK6eP6IdTrrCUsVfgeS8kEEwkrDJeEjxQBIBtvxjdyQMicDfg?=
- =?us-ascii?Q?KlAojhpd3LROKmTrMFD4thNLOm34YjS8xKT4ENftStPbKaDMGMCiRK0IoPAV?=
- =?us-ascii?Q?z28Sq35U8eKtv2lC1aQJRtCICsQ8pvE+c7/OqdhPiy/2WEOlCIzj8iMX+hsu?=
- =?us-ascii?Q?JUElswCYaNMXM/JDSMfOKXD6ThlLiDfCwX6nrRB7qQo3/fAHsmoPJB/RvBki?=
- =?us-ascii?Q?KFdMBjhR9Rl053ir+1ys93cPYnDtCllfXWIrVMvsOjo/5vSq+ncHj7azGukT?=
- =?us-ascii?Q?YIyALuw=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4258.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?5WeVjC0iWkuEGCPcsPRuvDjJagHjzbRfPf1FVnEObyxjx7Aj5E7LgPXcTefo?=
- =?us-ascii?Q?N9OXkMq44ETRwMZmh5dcE0p5zF4VKKIRckHZC+dk/63vfQpsKaBpUbj2tq9j?=
- =?us-ascii?Q?/UGRTnU6z07t8rMImeOWl34F4+L9xNWHeWFVeoVfchodBuWkAvsHKjJyhFMk?=
- =?us-ascii?Q?IkVxvgXfjlbv3aqRnwmkg3CHJq5B6tFcKxex6utG7cDgpHcd02/Ey9LFNHhM?=
- =?us-ascii?Q?Jdc10GNRc3bTAUKVuM9+TNh3lnKHrEelgvz0ewJrEKm9CrHMVUyzQnM/Jizi?=
- =?us-ascii?Q?J3OxJSPeO9JHnVSapnquG9ku869PHtRrHHuW9fFEhxA+ebZ2W8mJPPXrjyDf?=
- =?us-ascii?Q?mlaJ1dDF5xtlx2/wpUPiWktJfeLXJty4b7/OdWmD4iTR8jStCA3sKiFm8B1K?=
- =?us-ascii?Q?dmvFWSLK516cBuHWWrVzciET4Hfj5cqR51GUZi7RdjHdGFWyyWBiO0cCDkGO?=
- =?us-ascii?Q?HeKbok7+DZ6s0kZcvOtkrL/3ErUC67ZYrXeHylugFHkGTj+9FNXMjUyMhiOK?=
- =?us-ascii?Q?c/5DtmJrbPBQd3ajkLue2YHhAMI9aJRez0gHgfCwzEOuXL0gRuMb83RFkNTX?=
- =?us-ascii?Q?rd+qkxlXoLlOv6tA+Bi/sts7Og1jRgY8CGjnTafBgLU1adiudQNByT/nIYuz?=
- =?us-ascii?Q?kgj7cfvZbFD/tqpY92JcF8uCybSsq/Y8t1GiMBx1l32dUExqqV4rpMbF6mFh?=
- =?us-ascii?Q?XBATPryTsbEb6PBVwDrmNCLntrI+3/4egh4cQupsRHlLY3xg52Wpw1OxBnOP?=
- =?us-ascii?Q?jz6WfJODXLPTtDdDdVS1fIYcZHokYEgqw4mpUtnx8FlmjFhg8TckrL17ANjv?=
- =?us-ascii?Q?A6UzSoVXH/4TBCZpxfu4ztdpAPNTEF36F9kHp9WBtzpq990VdNdA2E1xLmKm?=
- =?us-ascii?Q?XeCnobdQYR/FAIlJuMLZDu/uOszz+D4GuAntvpZdHDb4VYgbTKUknWiUuza5?=
- =?us-ascii?Q?CHiTSzvBW6MfTcKZ46Pzvjw595Kn4uLDyndm9XZGq6jU3CTiw6Hr/i7ApWKF?=
- =?us-ascii?Q?LAmDi+xu1UdP1cqV2EFuX5iuUeQ+pzuU9u1htrt4lj53T9rFr5PLxzAE5tSQ?=
- =?us-ascii?Q?9iyJHi/T78xwUCnJuPTYVWXrxHfUHBO+OjQUW6Jr82qQLmbtMahyg12bMatP?=
- =?us-ascii?Q?kTPif8vhWjIpwHm1wfw7+gIKYMTTwwHGq9Odd/WEYaEhRFCgED2AY0bevTna?=
- =?us-ascii?Q?l4YT0AfnF1RxloF6l1ldGshGgSpPPLVq39FMd0nb7r5g9Gb6dTTKDnD6Wujc?=
- =?us-ascii?Q?R+eOVsSiwhe9/8HdKqR9+teddAW3hsXmhnGiBe3lALOeOUwjnQsAU8YlPFzp?=
- =?us-ascii?Q?0H+tnocuRUKy8jLNpJ+pmAPEGDJMHaNMx/fQcIbGWQsh9GmhebbtIUSwo/Jg?=
- =?us-ascii?Q?y9CLIhjDQPkVH49KWQvWjyBGZTEt7SKvY0pKVLc6IqrOSM0hFoLexaGFNUas?=
- =?us-ascii?Q?qmcqPQ+m3LRGH8cia16iAkiVXCF4ZRaBXoZhsSwjphWAYua4GQ6OlD40PlY+?=
- =?us-ascii?Q?qwx9sXxVELD3mcf0H778Zhwnn8+uHrpRxsdpgXMT91FODSXMzYpFW3RYZ+s0?=
- =?us-ascii?Q?mNvKsGuZEN10xPnybQY=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Michal Simek <michal.simek@amd.com>
+Autocrypt: addr=michal.simek@amd.com; keydata=
+ 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
+ 3i3l5DA=
+In-Reply-To: <20240610223550.2449230-1-sean.anderson@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1P195CA0093.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:802:59::46) To SJ2PR12MB8109.namprd12.prod.outlook.com
+ (2603:10b6:a03:4f5::8)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8109:EE_|SJ1PR12MB6051:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e8f06d1-cc33-4e01-d0d0-08dc89e86f9d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|7416005|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VnQ1RXJsbUR2UDY4a2gwbzRlT3dXWEtVS0MzNmREU1JyOGJvS3p2eXFFSGVY?=
+ =?utf-8?B?NGVlVGtlSDJLNlhYQUxvazNvSVd3Zk5oakhTK1lVTXNrRjVHaENUaTlyeWM5?=
+ =?utf-8?B?MTBQVEExWktlK0UwNUw3RUZhbDU0M245alJpUGl5Y0N5bW5CQkFKN05jem41?=
+ =?utf-8?B?c1R3SSsrNVVJcUtWTlZlWWgwN01HM2hDd1FYekZCbU90STRsQzk2M2s1cWVZ?=
+ =?utf-8?B?TlVVUlZnWUYzRlZBcEJQb2U0MVVuL2V6dHpxUXA0eFRFWTBmSDhONGh0Mit3?=
+ =?utf-8?B?VlpoaDhnNzRaTjdXTkRFaXhNajRrYWlkYkJYSnJuODUrYW54dDcwZitEdlVI?=
+ =?utf-8?B?MXl0ODc3Tzdlc1ZiQWFGY2xJaU5kaDNtSDNiNVUvRVZhQjRjaGUvRlMxSER1?=
+ =?utf-8?B?SmxiaUswZW5BdFNJbStxYXJpNmJzcDd4YnR1YkpSM0VrZVRlK2h5K0tSb2FQ?=
+ =?utf-8?B?R0FrRDcvb3NwVExDTnBxRkh5MkF0MVlkT2xJTEFKVlBCN1YraVFaNUNibmUy?=
+ =?utf-8?B?bWdBQlZ5ZHJETk9CU0owaEFxN0tPaUdjWEVxMTBaODNUSzhVY1NZUmZ0dFB6?=
+ =?utf-8?B?YjEzTWVRR2dhMFV1UERKNnByQUdLbjhpNGM2S3FiTnljR0gwYUxOV3VjVXp3?=
+ =?utf-8?B?Ykc1LzM3MHBTYjRXYnE1aUl5NlFiSXdCVEJaeHhCTldvSmh6WS9ITFQ2Z1lF?=
+ =?utf-8?B?V1gydzloSUxlNGRIbU1jbHFlelZSbjVqRzE5UEhqWlFDRFhQeno0b2dOV3oy?=
+ =?utf-8?B?NTNWUDBFdFRQZVE0bXF2WXVTTDVpUUxjaEUzWGpUOUFpeEVpalNSazdibUYw?=
+ =?utf-8?B?U09jMkF0djUraHcxNWg5MUhMaGZjSU4vSHJjNUZTZmlob3I4VVJ0MlJJNGJo?=
+ =?utf-8?B?aEZYWUNKNjZOcS9FelhrWGY0OHhqNmVRcXg3dnhBaWtTejhxNkhPNFVFL2FR?=
+ =?utf-8?B?WWprbHJwU0loeXJLZVpFanBNMkh0emlXN2J0WVd4M3dNTjNxN1Q2eHd3TEEy?=
+ =?utf-8?B?WnBlRFgyVlNSVWc1bFluaFVuQitpRDNFdTVTUkdYa1VDVHQwQmFUYU9GY0ZY?=
+ =?utf-8?B?cytXZFIyOEcyVm5JTUZDbG5Ea2UyTGNLc29sR3pWSUR1TklaUGNPakJobnFu?=
+ =?utf-8?B?dUp5VnhOVjlNWlpXZWxheHFrdThmTnp5VE1vTFRLSjFHU1A3MUdFL0RLSTVB?=
+ =?utf-8?B?cDBSTFZZbHp4VlV6MGFoc2hhcEVMdm85bHN6NUVmSjhIRGhWaVF0ajlpUWFQ?=
+ =?utf-8?B?OWJPdGFQSEs0Tk51MVBDb1QvbUFhNndGeGx4a2laZVF0ZE9pbi9waWx6YVFW?=
+ =?utf-8?B?S3RTUkk3TkNRZUZpb1ZaYnlJeTJta1NXTnlSODZxS1VBQlpLQ3N2ZW1PdkJU?=
+ =?utf-8?B?QlRpV0VwYUd5VmFiOHg5U0M5dDdqcUROVHNkeHA1M3ptbWFVK1dqOFk4Nk1n?=
+ =?utf-8?B?NWwxeGxsb2VDMXArQ0ZHTXc5TEFLcWwxL3pORHoxQkZMQWwyYVVUZytmT2sw?=
+ =?utf-8?B?T2IrRlQrMHNCUHAzaFpETGdtVXg3clpwSk9lbTRkMTFDM3g3ZUM4YU9FbDVR?=
+ =?utf-8?B?UDdPclBKSnk3M2V3aTRLajd2YWs0K1ZaUVczNGZ4aFVLV05QNzg2TzFtT3ky?=
+ =?utf-8?B?NFNKWlJJdEFTekZNZnpzMEtnTE42NVNtQk1TMGI2aHB3eForRVdSNEMvbjZB?=
+ =?utf-8?B?OWRtTWROZno1eEM0MkdZcHQ5OGgvVDBDWnJsU0FyNm0wL0dFRUZhSlkrTmNU?=
+ =?utf-8?Q?tMhhDr9MCwjBCZRvogpM6rF+4ejrymb9k4btf/W?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(7416005)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OWtHU1JiSi9IRCtlVVovR09LVXdBR3ZBM01HckVIRldIRGI4Y1FtWW9oV2JP?=
+ =?utf-8?B?Z3I2WDJYZXZuekppbDhlbS9JUDdXMUpSQXpDM0k4Qjc5WTFYaHZBb21udktk?=
+ =?utf-8?B?NVIvQ0NFaStoWHBkenV5U0pXMkpjTk5LOXZJNkNxaGIvVDFvQ1ZTZmtYR1ZX?=
+ =?utf-8?B?eGFlOC95ZG5zMGFwMjlIaVQ1Zm5rUVI2dEVUUzhkZjZUdThYbityWlFpNnhj?=
+ =?utf-8?B?SlA5Nms1UTI3bGU0SXdhcmp5QTdBdFp1WFhtY0tjMVE0QjZVUEI2VTAzU0lW?=
+ =?utf-8?B?d2tNMDZjR3IxVjBYZWVva2lHTWJjY0VpcTFqa0o0ZDNhZDdJNkRZVXUvenk2?=
+ =?utf-8?B?MFZKWms2MU40dVJkV2dZeElnbm9YQVFZcjlnVVZyd1RkZ2xjd0lFM082Zkc1?=
+ =?utf-8?B?ZHJIZW9VeFhWa2hueERycys0TDBnOWc2UkVhN0lheW0xcjdxcjZHWW00bGZI?=
+ =?utf-8?B?OXlhQnVLVVBzamdyVnpLV3MwcXg0Mmw1N2ZBMnFPMUdBMFFrVVhvT1ZmWnpT?=
+ =?utf-8?B?VlI3U0oyaGhHTDF2UjJmaUVaZ2owdUc1dVdKb0JlYll1eXdhdEFJVTBQOFJ2?=
+ =?utf-8?B?eGc0bjNZaHlXbmQ3WW9wNzJoVWpneGNHcjFiZGkzb1YrOTZ6QldrM3VJRFB2?=
+ =?utf-8?B?S2xpR2EzVjNjVkZWeURDNUVXMlJiWGFTNy8zemZQcWZ1QXpvcnpEVTFDVTZE?=
+ =?utf-8?B?UTY5SzYwb1VsWXRsdk5YREhaM1B2K3BhYXdZQWVJcGUvZ2dDS1o0NkRMbGt6?=
+ =?utf-8?B?QkpVay9leTVFODk1UG9vdGNkUXo2aW5KWUlXNnpIaHg2N1pYZG8yUmJPWUdB?=
+ =?utf-8?B?YWNNRDdJbDJ6M3FrdVVnY2pqS3luc3JKZ3Y3eDFzY3hkdkpnYmtZOVhuL0FL?=
+ =?utf-8?B?M0lzcURhYmt5bHhyZDczVWk0OFpMblFQbFRxV1MreWRtaHJNd3orVjN4azZR?=
+ =?utf-8?B?YVM5WEZoY3ZuZGRGWWdJQUNGamFieHlPNCtuSDc1ckF0eDJscFFvZnczWWFj?=
+ =?utf-8?B?Q1V1ZGZLZC9leFpGbXh0d0tseURUZ29zNzE1YXRBZHZXb2N4YkhMYnZGWkl3?=
+ =?utf-8?B?VzhlS1FWcDhiaUlPaS9LdDBObG9UQmVZZEwzbVRhZElQaFJINkxLaXREV3hi?=
+ =?utf-8?B?ZXE2Ym9SZUtEQjlBZE9wWTVTMXdSb2lqeHRKWFV0cjZFcExqSjJNVzVyU1dD?=
+ =?utf-8?B?Mjh3MU56V1AwRUJ1WFVnaU8xVWNXMVRodmJXWlhUWlNORDZlQ1NqWHVyckdQ?=
+ =?utf-8?B?dS9jbmFqQVJxQmxBN2x0ZVFwVWhqYmhRQis3TjZxem1YNU1ZWThWS2JFTFUr?=
+ =?utf-8?B?K1NURXJqUUZSZU1tNXVTL25Mc0F6alFreWNwRk5IYXZFemd0VUUyVlZtTUtz?=
+ =?utf-8?B?bzRKR1N2Y0JNVG5nQVhVeHV3MmFidEtjeG9Yc3hpNTdvcTVsTSt2bGtaZHFG?=
+ =?utf-8?B?WWRyT3dBbkJDekxhN2RDci9hbHQvQW5EbjB1T08yRVp3WTFFN2p2NlRNNTVM?=
+ =?utf-8?B?NHhoUlZXTTJXdCtCVkN0WnFIU3BZOUY0b2lvY2JzUWhpTzRCdk1WRyt0R2I5?=
+ =?utf-8?B?WU9KeDErSDIyRi8wSHhCd2s1MUpRaGhjWXFHWG1rTlprRUhHTS9RNFF2VGta?=
+ =?utf-8?B?RHBZZ1NJYUtyVisvVG9laWhRVkw1ZmJySU5zT1Fwa2F5dDI3bjd2ZzNlVjdt?=
+ =?utf-8?B?bUNmNWo2RjVHUlF5RHNNZkcvbGNwdHl1UW1FMW5TWmFCMEtSUVBLTXJLK0dh?=
+ =?utf-8?B?cTVBUDlPV0V6bnNteHFIKzZ2RHNTM01Yc1pBU2I1MUlUdWRCd0RBUWtaQS96?=
+ =?utf-8?B?Ukg5WUVzaUJnVDNpNHJubGprdUx4RHlVNlFsUzR2R1NQMFRLQXlVWHpxTDFW?=
+ =?utf-8?B?MnNsK0VkZmVQbklIQUd2U0NyNHFUVGJQM0Z0VVRkREE0TGVjdFUwS2pXYW4v?=
+ =?utf-8?B?YWVtRjRwanFmZHFWU0w5SVIyZWplL2tXZUV1WTJmTGlDRkcwY0FPZ0JtZTVz?=
+ =?utf-8?B?dlkvQ2luTjREZFBvTTYxU2tBYWVQRjRYYUg4L3FUYWN1aTVOS0F5MGxKU0Zn?=
+ =?utf-8?B?VjBGUlF4N3cxMkpDOXJZWVRpOXRRL0NUVVNzMll5MllNNnVrS1NhbytaVy9r?=
+ =?utf-8?Q?BUS9UJr4M8xnPfcpOZvpdp0au?=
 X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e8f06d1-cc33-4e01-d0d0-08dc89e86f9d
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8109.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4258.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac3e0cd8-7841-41e4-e6a1-08dc89e4a67a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2024 07:03:51.8359
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2024 07:30:58.0165
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: w2WTdBV254j8da4vPQrmSF/15/tUsJyDJYpil/M92S2okrehLLLkvmLi/ijfX86/q3A2m0qeQZKgGLS3R/Ryjg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6993
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nqhSLfWO2gskfm2RDrgDLW1otkWCQkWpcyVo5lxU7Gr0oXXftpVBxRvqmQ4ggH+q
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6051
 
 
 
-> -----Original Message-----
-> From: Sean Anderson <sean.anderson@linux.dev>
-> Sent: Tuesday, June 11, 2024 4:06 AM
-> To: Linus Walleij <linus.walleij@linaro.org>; Simek, Michal
-> <michal.simek@amd.com>; linux-gpio@vger.kernel.org
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; Potthuri, Sai Krishna
-> <sai.krishna.potthuri@amd.com>; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org; Sean Anderson <sean.anderson@linux.dev>
-> Subject: [PATCH v3 2/2] pinctrl: zynqmp: Support muxing individual pins
->=20
-> While muxing groups of pins at once can be convenient for large interface=
-s,
-> it can also be rigid. This is because the group is set to all pins which =
-support
-> a particular function, even though not all pins may be used. For example,
-> the sdhci0 function may be used with a 8-bit eMMC, 4-bit SD card, or even=
- a
-> 1-bit SD card. In these cases, the extra pins may be repurposed for other
-> uses, but this is not currently allowed.
->=20
-> There is not too much point in pin "groups" when there are not actual pin
-> groups at the hardware level. The pins can all be muxed individually, so
-> there's no point in adding artificial groups on top.
-> Just mux the pins like the hardware allows.
->=20
-> To this effect, add a new group for each pin which can be muxed. These
-> groups are part of each function the pin can be muxed to. We treat group
-> selectors beyond the number of groups as "pin" groups. To set this up, we
-> initialize groups before functions, and then create a bitmap of used pins=
- for
-> each function. These used pins are appended to the function's list of
-> groups.
->=20
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-Reviewed-by: Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
-
-Regards
-Sai Krishna
-
-> ---
->=20
+On 6/11/24 00:35, Sean Anderson wrote:
+> This series adds support for muxing individual pins, instead of
+> requiring groups to be muxed together. See [1] for additional
+> discussion.
+> 
+> [1] https://lore.kernel.org/linux-arm-kernel/5bb0dc7e-4c89-4f3d-abc6-41ae9ded5ae9@linux.dev/
+> 
 > Changes in v3:
-> - Fix zynqmp_pinmux_set_mux and zynqmp_pinconf_group_set not
-> handling
->   "pin" groups (thanks Sai Krishna).
->=20
+> - Express groups/pins exclusivity using oneOf
+> - Fix zynqmp_pinmux_set_mux and zynqmp_pinconf_group_set not handling
+>    "pin" groups (thanks Sai Krishna).
+> 
 > Changes in v2:
 > - Use __set_bit instead of set_bit
 > - Use size_add when calculating the number of kcalloc members
 > - Expand commit message with some more motivation
->=20
->  drivers/pinctrl/pinctrl-zynqmp.c | 83 +++++++++++++++++++++-----------
->  1 file changed, 54 insertions(+), 29 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-zynqmp.c b/drivers/pinctrl/pinctrl-
-> zynqmp.c
-> index 5c46b7d7ebcb..e4ff3c55b87d 100644
-> --- a/drivers/pinctrl/pinctrl-zynqmp.c
-> +++ b/drivers/pinctrl/pinctrl-zynqmp.c
-> @@ -10,6 +10,7 @@
->=20
->  #include <dt-bindings/pinctrl/pinctrl-zynqmp.h>
->=20
-> +#include <linux/bitmap.h>
->  #include <linux/init.h>
->  #include <linux/module.h>
->  #include <linux/of_address.h>
-> @@ -97,7 +98,7 @@ static int zynqmp_pctrl_get_groups_count(struct
-> pinctrl_dev *pctldev)  {
->  	struct zynqmp_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
->=20
-> -	return pctrl->ngroups;
-> +	return pctrl->ngroups + zynqmp_desc.npins;
->  }
->=20
->  static const char *zynqmp_pctrl_get_group_name(struct pinctrl_dev
-> *pctldev, @@ -105,7 +106,10 @@ static const char
-> *zynqmp_pctrl_get_group_name(struct pinctrl_dev *pctldev,  {
->  	struct zynqmp_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
->=20
-> -	return pctrl->groups[selector].name;
-> +	if (selector < pctrl->ngroups)
-> +		return pctrl->groups[selector].name;
-> +
-> +	return zynqmp_desc.pins[selector - pctrl->ngroups].name;
->  }
->=20
->  static int zynqmp_pctrl_get_group_pins(struct pinctrl_dev *pctldev, @@ -
-> 115,8 +119,13 @@ static int zynqmp_pctrl_get_group_pins(struct
-> pinctrl_dev *pctldev,  {
->  	struct zynqmp_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
->=20
-> -	*pins =3D pctrl->groups[selector].pins;
-> -	*npins =3D pctrl->groups[selector].npins;
-> +	if (selector < pctrl->ngroups) {
-> +		*pins =3D pctrl->groups[selector].pins;
-> +		*npins =3D pctrl->groups[selector].npins;
-> +	} else {
-> +		*pins =3D &zynqmp_desc.pins[selector - pctrl-
-> >ngroups].number;
-> +		*npins =3D 1;
-> +	}
->=20
->  	return 0;
->  }
-> @@ -197,17 +206,16 @@ static int zynqmp_pinmux_set_mux(struct
-> pinctrl_dev *pctldev,
->  				 unsigned int function,
->  				 unsigned int group)
->  {
-> -	struct zynqmp_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
-> -	const struct zynqmp_pctrl_group *pgrp =3D &pctrl->groups[group];
-> +	const unsigned int *pins;
-> +	unsigned int npins;
->  	int ret, i;
->=20
-> -	for (i =3D 0; i < pgrp->npins; i++) {
-> -		unsigned int pin =3D pgrp->pins[i];
-> -
-> -		ret =3D zynqmp_pm_pinctrl_set_function(pin, function);
-> +	zynqmp_pctrl_get_group_pins(pctldev, group, &pins, &npins);
-> +	for (i =3D 0; i < npins; i++) {
-> +		ret =3D zynqmp_pm_pinctrl_set_function(pins[i], function);
->  		if (ret) {
->  			dev_err(pctldev->dev, "set mux failed for pin %u\n",
-> -				pin);
-> +				pins[i]);
->  			return ret;
->  		}
->  	}
-> @@ -467,12 +475,13 @@ static int zynqmp_pinconf_group_set(struct
-> pinctrl_dev *pctldev,
->  				    unsigned long *configs,
->  				    unsigned int num_configs)
->  {
-> +	const unsigned int *pins;
-> +	unsigned int npins;
->  	int i, ret;
-> -	struct zynqmp_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
-> -	const struct zynqmp_pctrl_group *pgrp =3D &pctrl->groups[selector];
->=20
-> -	for (i =3D 0; i < pgrp->npins; i++) {
-> -		ret =3D zynqmp_pinconf_cfg_set(pctldev, pgrp->pins[i], configs,
-> +	zynqmp_pctrl_get_group_pins(pctldev, selector, &pins, &npins);
-> +	for (i =3D 0; i < npins; i++) {
-> +		ret =3D zynqmp_pinconf_cfg_set(pctldev, pins[i], configs,
->  					     num_configs);
->  		if (ret)
->  			return ret;
-> @@ -560,10 +569,12 @@ static int
-> zynqmp_pinctrl_prepare_func_groups(struct device *dev, u32 fid,  {
->  	u16 resp[NUM_GROUPS_PER_RESP] =3D {0};
->  	const char **fgroups;
-> -	int ret, index, i;
-> +	int ret, index, i, pin;
-> +	unsigned int npins;
-> +	unsigned long *used_pins __free(bitmap) =3D
-> +		bitmap_zalloc(zynqmp_desc.npins, GFP_KERNEL);
->=20
-> -	fgroups =3D devm_kcalloc(dev, func->ngroups, sizeof(*fgroups),
-> GFP_KERNEL);
-> -	if (!fgroups)
-> +	if (!used_pins)
->  		return -ENOMEM;
->=20
->  	for (index =3D 0; index < func->ngroups; index +=3D
-> NUM_GROUPS_PER_RESP) { @@ -578,23 +589,37 @@ static int
-> zynqmp_pinctrl_prepare_func_groups(struct device *dev, u32 fid,
->  			if (resp[i] =3D=3D RESERVED_GROUP)
->  				continue;
->=20
-> -			fgroups[index + i] =3D devm_kasprintf(dev,
-> GFP_KERNEL,
-> -							    "%s_%d_grp",
-> -							    func->name,
-> -							    index + i);
-> -			if (!fgroups[index + i])
-> -				return -ENOMEM;
-> -
->  			groups[resp[i]].name =3D devm_kasprintf(dev,
-> GFP_KERNEL,
->  							      "%s_%d_grp",
->  							      func->name,
->  							      index + i);
->  			if (!groups[resp[i]].name)
->  				return -ENOMEM;
-> +
-> +			for (pin =3D 0; pin < groups[resp[i]].npins; pin++)
-> +				__set_bit(groups[resp[i]].pins[pin],
-> used_pins);
->  		}
->  	}
->  done:
-> +	npins =3D bitmap_weight(used_pins, zynqmp_desc.npins);
-> +	fgroups =3D devm_kcalloc(dev, size_add(func->ngroups, npins),
-> +			       sizeof(*fgroups), GFP_KERNEL);
-> +	if (!fgroups)
-> +		return -ENOMEM;
-> +
-> +	for (i =3D 0; i < func->ngroups; i++) {
-> +		fgroups[i] =3D devm_kasprintf(dev, GFP_KERNEL, "%s_%d_grp",
-> +					    func->name, i);
-> +		if (!fgroups[i])
-> +			return -ENOMEM;
-> +	}
-> +
-> +	pin =3D 0;
-> +	for_each_set_bit(pin, used_pins, zynqmp_desc.npins)
-> +		fgroups[i++] =3D zynqmp_desc.pins[pin].name;
-> +
->  	func->groups =3D fgroups;
-> +	func->ngroups +=3D npins;
->=20
->  	return 0;
->  }
-> @@ -772,6 +797,10 @@ static int
-> zynqmp_pinctrl_prepare_function_info(struct device *dev,
->  	if (!groups)
->  		return -ENOMEM;
->=20
-> +	ret =3D zynqmp_pinctrl_prepare_group_pins(dev, groups, pctrl-
-> >ngroups);
-> +	if (ret)
-> +		return ret;
-> +
->  	for (i =3D 0; i < pctrl->nfuncs; i++) {
->  		ret =3D zynqmp_pinctrl_prepare_func_groups(dev, i, &funcs[i],
->  							 groups);
-> @@ -779,10 +808,6 @@ static int
-> zynqmp_pinctrl_prepare_function_info(struct device *dev,
->  			return ret;
->  	}
->=20
-> -	ret =3D zynqmp_pinctrl_prepare_group_pins(dev, groups, pctrl-
-> >ngroups);
-> -	if (ret)
-> -		return ret;
-> -
->  	pctrl->funcs =3D funcs;
->  	pctrl->groups =3D groups;
->=20
-> --
-> 2.35.1.1320.gc452695387.dirty
+> 
+> Sean Anderson (2):
+>    dt-bindings: pinctrl: xilinx: Add support for function with pins
+>    pinctrl: zynqmp: Support muxing individual pins
+> 
+>   .../bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml | 349 +++++++++---------
+>   drivers/pinctrl/pinctrl-zynqmp.c              |  83 +++--
+>   2 files changed, 234 insertions(+), 198 deletions(-)
+> 
 
+Acked-by: Michal Simek <michal.simek@amd.com>
+
+Thanks,
+Michal
 
