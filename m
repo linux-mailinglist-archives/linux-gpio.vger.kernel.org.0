@@ -1,560 +1,185 @@
-Return-Path: <linux-gpio+bounces-7404-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7405-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AF12905B2C
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2024 20:38:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B69AE905B70
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2024 20:48:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13F5F28A0C9
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2024 18:38:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFEDD1C227FF
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2024 18:48:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BC7E4AEF2;
-	Wed, 12 Jun 2024 18:38:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 347524CDF9;
+	Wed, 12 Jun 2024 18:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XzWw7Ews"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KaAWPsH0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E514597A
-	for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2024 18:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE3247A6C
+	for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2024 18:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718217509; cv=none; b=XmeoVxY9x0FEQVTQh+oMaV2xeftPM5u+JFBaX9moAU4K5EkJStxh6HDCreieTgQYcDYNnuz5a59ot31TQSyChdXaXdIVyv52ZCcifKXSXWT48jx/e5TSM3sz7J312Kvb86JpkL1rZo5KDmiRK7e9M8RUNYs5TgGSxQtOob+blgo=
+	t=1718218117; cv=none; b=A/jt43hadv0jyjRFRfeyeyFeaLGZfjOXJ6hwJAt/lahkCwzMqT05yzzx7DAkiV/3UYApiYWyAFq601svB5ZB8qq8ubXt9uXzZTfXyNN3EMKpkqgqakZ27Hgwo4d4vU9kj3iGgSdz3e42D2h4AdU24C+k8UPgqjP/DM9vHJr4ip4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718217509; c=relaxed/simple;
-	bh=eEoCMvafOUroA2LzRkSDgFQPGWLzmeZMU/Qpu50wCCo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YNfH1RJgYkp8JSJ2uXYey9GCRKvOZ/PLpdH+Fckgk+izkgwl/Pe4iHVmpq33g3si0NtJ98cUO8oAAVSScK77D3xUCd7M3cuCUm5zUn81PTJixNEPLLnei1cPsAuQ7QqBk8qhhSQVZIkFMR4sjSkPYIRyvY+NQbwnLLYWIHYgjGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XzWw7Ews; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1718218117; c=relaxed/simple;
+	bh=zzetqvw9rE3z6luIaQuIn5l8rk0hobL8f1wgIozEpBk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B0D51aP5RGgbHhMrSJFuaB19LfqJKrDU7YqXd0u8a9bwA1THPr5xkcS/JXr8HmsZ95qckz6cE8EgPet+iHRdvA5QjfCeTZ50GBAADIENvlWTqdILvZ4coR3QtZg7XAUirOTZJ2Gh0KrsOVlxxZMrkobuXAKvXXII22PLbFmKYk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KaAWPsH0; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f4a5344ec7so1297485ad.1
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2024 11:38:27 -0700 (PDT)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42179dafd6bso8528675e9.0
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2024 11:48:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718217507; x=1718822307; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L5MjpIfnFC+/yhugwVSUtGBFX+NWlpkUODCD7ykEcrk=;
-        b=XzWw7Ews9WpMQ3SJa4sqwIlvjTwcmaQZ/fe9FkzW9HAvzXhnD4LVHIPRi9vpegPLxE
-         j8adbOC4BN7jQvXNByVw9zPyYq9vp5x5na6OnstvTXSUZmZys0tV8sc9oyJ3f/jy3Jg7
-         jv5oyFlhtGCTlSCmfQ8O4+ByQaeEpCI0FXMEGR9OhHvh985LNueijsqqAMTi36Xj91Bm
-         Sc0VzFiAlYUJ7YYFNsRKTBwjLhhTABPgTbstqBrdiaz147rwM2ffh2jOWkKaIzeB1s1H
-         v4AcQfYIIxJXfyuFLdo3m1tNGbLmjrXIvfOuhZQYgWwcZgJc5ZBXu7IY3rmz2ZPG1Dhq
-         2AuA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718218112; x=1718822912; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cmew680A86e6P0TJ/CSWiTzW4h4Q5bXUMWdZRLFG580=;
+        b=KaAWPsH0iWi05MR3CjibinOnyUfKs6Vrjk5z1YFfhxvwb4xtWBQvS8mgsDpFbekVuZ
+         VVrEqT456Ak+f14gxTiYuTHpVVoyqkPUzJ5o9b8Snot4o3ExzEOaGq7DAC+a/DzZMu3C
+         yWjBZmYlHa0zo6d6nXxA/HP0Q3udWAFi8baG+z45q2782bletBp/HuBzgQDlSlU6N4no
+         RE8ihe6S4vVLxO4lfCjjQwRHaAcgdxQU7dN7jkGWLI+c/Zuz+ugpsT7Vgo98RB2G4SER
+         xFyOS81/IFleLfNRTnVTvMYgOVs+IgmckIZjRp39l+18sNi0gDkEeKzD7WcVVUQYcF0I
+         Y6qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718217507; x=1718822307;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L5MjpIfnFC+/yhugwVSUtGBFX+NWlpkUODCD7ykEcrk=;
-        b=AIHjOUW5MBNmxn8XfPSmIX+LrEefZZviILcU+xYIWR8JU7DuLzNUAyV5oxfyID/DH2
-         FZ+uBbYwapHgUSWVtdFu9NeevwelwhqzE0sIVS6VJg2NUR5c1U9w+9G9hnvykF/tkHAb
-         LWFjWarWA0mNVKFT4ZU4p/OaNDbxgJTOBP0Hz7WfsW7qYm7hnjj3ceNkoibH+GRUpum9
-         VFH3ae4oqTgDHdbnVAv9sWTBFnq5nOq5trsAwtHpUl/uMWFRMg1f2QXAFVsGX9zTgZOX
-         pNiQbU6yzB5wlI82+7vnjRH+9WVekMXP7k3eDAMypvmBK3lUQl1QoSxag4q1gUohxtdn
-         iFiw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFQ+xHt1L1h0+n0eHHNT1vMBpcn/9EqizqNQis4RYvVF762ZP3sn14NkKObuHF/A/hRH4LQOt/oADc3jbX+RCzKVm1uGrghtgbmQ==
-X-Gm-Message-State: AOJu0YwAGwd2Uyy3DyUCjbn9durdn7+fS0ubN42pt2fIp+e48UTveyUW
-	Uy4SD1pdsn6f/1F1PEhzpV6OFr3HfkLp3ShfESQe34gljHt+PUOScRp59Qpb6NHRsS7uJ5rofv0
-	2G/KryfKawwa0hEJiYH+IpOOguKEMsQm/1Mvl8w==
-X-Google-Smtp-Source: AGHT+IFWIIgdF8K4XMGFWEjbR2SBhBXtFm6zX/rmou0r0omVeaE2RT7IJQPemyPZiA/HCzqNlL/M/H4mA1itAoWRA2o=
-X-Received: by 2002:a17:903:22c2:b0:1f6:ef8b:c366 with SMTP id
- d9443c01a7336-1f84df9b5b8mr6823955ad.4.1718217507154; Wed, 12 Jun 2024
- 11:38:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718218112; x=1718822912;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Cmew680A86e6P0TJ/CSWiTzW4h4Q5bXUMWdZRLFG580=;
+        b=KEGJ52jB1ATfh0h9DJ4wJ21NCRvqywu0LWxW3N+5/c3CGYBEtkXuZdnEb4TZTT4cCj
+         38K1rjkJimiR/v9Fxf4L8xkjyHjrJ7NAQaHV1jcz7Ktd/psCBuytU/sIJGXJI5wu9kL9
+         N58OX/q7mWO1VpeBSW6Sti6qnxSLd5geeuMInV74uAs8E0IbEeXndPrj7va94mhm5LbG
+         oodMW18Gv4BPL6/1F9WcGTRCEnKAl4yLxrg5EjuyPbVRZl/thz8fj/lCzzGiIV/+dc1j
+         cQMoyT1VzjDBEwFm8CaUwzYpNtEaUBft2/FyhnO8je8BZ6I0wJMMuLZVuVVF65Vvb1cV
+         HgXQ==
+X-Gm-Message-State: AOJu0YwKoxy1PwyRHsvO50eVvkdn7kofOlPWB5u5eTOXDY6kGXv1Y7dx
+	5tI+jOgntuOZg4O45iwO5X760jnUuhir6YyafcmhCPJUtyLTQ/ZBEHKqTaUtiQo=
+X-Google-Smtp-Source: AGHT+IGxdz1Bzt3Q1KQfzBP7LkJlIATQ89AuIi4xcYpUyaYS13i760yEF6S1V720g/EmquCWrHrsvw==
+X-Received: by 2002:adf:e646:0:b0:35f:e890:fbe1 with SMTP id ffacd0b85a97d-360718df02amr480736f8f.19.1718218111541;
+        Wed, 12 Jun 2024 11:48:31 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:8d3:3800:a172:4e8b:453e:2f03])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5fc1c77sm17147058f8f.95.2024.06.12.11.48.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 11:48:30 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpiolib: put gpio_suffixes in a single compilation unit
+Date: Wed, 12 Jun 2024 20:48:21 +0200
+Message-ID: <20240612184821.58053-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527144054.155503-1-brgl@bgdev.pl> <ZleXc6tLbiWQ59i-@surfacebook.localdomain>
- <CAMRc=MftW0y7GicBy4vwABomUYuMndsJBUTdsQzZijDtgX1ohQ@mail.gmail.com> <ZmcUbe1aQfezZy5B@surfacebook.localdomain>
-In-Reply-To: <ZmcUbe1aQfezZy5B@surfacebook.localdomain>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 12 Jun 2024 20:38:14 +0200
-Message-ID: <CAMRc=McjAAFX1R4wAbLu5bcUkpPuy8rf=fwDOqCiUY1hbjmhMg@mail.gmail.com>
-Subject: Re: [PATCH v7] gpio: virtuser: new virtual driver
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 10, 2024 at 4:57=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> Mon, Jun 10, 2024 at 03:22:32PM +0200, Bartosz Golaszewski kirjoitti:
-> > On Wed, May 29, 2024 at 11:00=E2=80=AFPM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > Mon, May 27, 2024 at 04:40:54PM +0200, Bartosz Golaszewski kirjoitti:
->
-> ...
->
-> > > > User must pass exactly the number of values that the array contains
-> > >
-> > > Can't we assume non-active values for the rest if less than needed we=
-re
-> > > provided? For more than that, why do we care?
-> >
-> > Honestly, what good would it do? It would just be more confusing IMO.
->
-> Let's say you can leave documentation as is, but relax the code. That's t=
-he
-> benefit, less complex checks in the code.
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Actually this is more ambiguity in the code. I'm against it.
+The gpio_suffixes array is defined in the gpiolib.h header. This means
+the array is stored in .rodata of every compilation unit that includes
+it. Put the definition for the array in gpiolib.c and export just the
+symbol in the header. We need the size of the array so expose it too.
 
-> ...
->
-> > > > +#include <linux/atomic.h>
-> > > > +#include <linux/bitmap.h>
-> > > > +#include <linux/cleanup.h>
-> > > > +#include <linux/completion.h>
-> > > > +#include <linux/configfs.h>
-> > > > +#include <linux/device.h>
-> > > > +#include <linux/err.h>
-> > > > +#include <linux/gpio/consumer.h>
-> > > > +#include <linux/gpio/driver.h>
-> > > > +#include <linux/gpio/machine.h>
-> > >
-> > > > +#include <linux/idr.h>
-> > >
-> > > > +#include <linux/interrupt.h>
-> > > > +#include <linux/irq_work.h>
-> > >
-> > > > +#include <linux/kernel.h>
-> > >
-> > > Do you need this?
-> >
-> > ARRAY_SIZE() used to live here when I first wrote this but it was
-> > since moved. I'll drop this.
->
-> Rather replace with array_size.h.
->
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib-acpi.c | 4 ++--
+ drivers/gpio/gpiolib-of.c   | 4 ++--
+ drivers/gpio/gpiolib.c      | 4 ++++
+ drivers/gpio/gpiolib.h      | 3 ++-
+ 4 files changed, 10 insertions(+), 5 deletions(-)
 
-Yeah this is what I did.
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index bb063b81cee6..69cd2be9c7f3 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -976,7 +976,7 @@ __acpi_find_gpio(struct fwnode_handle *fwnode, const char *con_id, unsigned int
+ 	int i;
+ 
+ 	/* Try first from _DSD */
+-	for (i = 0; i < ARRAY_SIZE(gpio_suffixes); i++) {
++	for (i = 0; i < gpio_suffix_count; i++) {
+ 		if (con_id) {
+ 			snprintf(propname, sizeof(propname), "%s-%s",
+ 				 con_id, gpio_suffixes[i]);
+@@ -1453,7 +1453,7 @@ int acpi_gpio_count(const struct fwnode_handle *fwnode, const char *con_id)
+ 	unsigned int i;
+ 
+ 	/* Try first from _DSD */
+-	for (i = 0; i < ARRAY_SIZE(gpio_suffixes); i++) {
++	for (i = 0; i < gpio_suffix_count; i++) {
+ 		if (con_id)
+ 			snprintf(propname, sizeof(propname), "%s-%s",
+ 				 con_id, gpio_suffixes[i]);
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index d75f6ee37028..49d533df2cd9 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -103,7 +103,7 @@ int of_gpio_count(const struct fwnode_handle *fwnode, const char *con_id)
+ 	if (ret > 0)
+ 		return ret;
+ 
+-	for (i = 0; i < ARRAY_SIZE(gpio_suffixes); i++) {
++	for (i = 0; i < gpio_suffix_count; i++) {
+ 		if (con_id)
+ 			snprintf(propname, sizeof(propname), "%s-%s",
+ 				 con_id, gpio_suffixes[i]);
+@@ -676,7 +676,7 @@ struct gpio_desc *of_find_gpio(struct device_node *np, const char *con_id,
+ 	unsigned int i;
+ 
+ 	/* Try GPIO property "foo-gpios" and "foo-gpio" */
+-	for (i = 0; i < ARRAY_SIZE(gpio_suffixes); i++) {
++	for (i = 0; i < gpio_suffix_count; i++) {
+ 		if (con_id)
+ 			snprintf(prop_name, sizeof(prop_name), "%s-%s", con_id,
+ 				 gpio_suffixes[i]);
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 0ec82ac7f0f4..ed620442f32c 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ #include <linux/acpi.h>
++#include <linux/array_size.h>
+ #include <linux/bitmap.h>
+ #include <linux/cleanup.h>
+ #include <linux/compat.h>
+@@ -89,6 +90,9 @@ DEFINE_STATIC_SRCU(gpio_devices_srcu);
+ static DEFINE_MUTEX(gpio_machine_hogs_mutex);
+ static LIST_HEAD(gpio_machine_hogs);
+ 
++const char *const gpio_suffixes[] = { "gpios", "gpio" };
++const size_t gpio_suffix_count = ARRAY_SIZE(gpio_suffixes);
++
+ static void gpiochip_free_hogs(struct gpio_chip *gc);
+ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+ 				struct lock_class_key *lock_key,
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 48e086c2f416..a75635891c6f 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -90,7 +90,8 @@ static inline struct gpio_device *to_gpio_device(struct device *dev)
+ }
+ 
+ /* gpio suffixes used for ACPI and device tree lookup */
+-static __maybe_unused const char * const gpio_suffixes[] = { "gpios", "gpio" };
++extern const char *const gpio_suffixes[];
++extern const size_t gpio_suffix_count;
+ 
+ /**
+  * struct gpio_array - Opaque descriptor for a structure of GPIO array attributes
+-- 
+2.43.0
 
-> > > > +#include <linux/limits.h>
-> > > > +#include <linux/list.h>
-> > > > +#include <linux/lockdep.h>
-> > > > +#include <linux/mod_devicetable.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/mutex.h>
-> > > > +#include <linux/notifier.h>
-> > > > +#include <linux/of.h>
-> > > > +#include <linux/overflow.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +#include <linux/printk.h>
-> > > > +#include <linux/property.h>
-> > > > +#include <linux/slab.h>
-> > >
-> > > > +#include <linux/string.h>
-> > >
-> > > Implied by string_helpers.h
-> >
-> > Yeah, but we still use symbols directly from string.h, we shouldn't
-> > depend on implicit includes.
->
-> string_helpers.h is and will continue guranteening inclusion of string.h.
-> It's the same as we drop bits.h when we include, for instance, bitmap.h.
->
-
-Whatever, ok.
-
-> > > > +#include <linux/string_helpers.h>
-> > > > +#include <linux/sysfs.h>
-> > > > +#include <linux/types.h>
->
-> ...
->
-> > > > +struct gpio_virtuser_attr_descr {
-> > > > +     const char *name;
-> > > > +     ssize_t (*show)(struct device *, struct device_attribute *, c=
-har *);
-> > > > +     ssize_t (*store)(struct device *, struct device_attribute *,
-> > > > +                      const char *, size_t);
-> > > > +};
-> > >
-> > > struct device_attribute ? (Yes, I know that that one is a bit bigger =
-but
-> > > benefit is that we have some code that you may reuse)
-> >
-> > Not sure what you mean here, these are callbacks for sysfs.
->
-> I mean to replace your custom data type with the existing device_attribut=
-e.
->
-
-Doesn't make sense here. struct device_attribute has lots of cruft we
-don't need here. It's just the name and the callback pointers.
-
-> ...
->
-> > > > +static ssize_t gpio_virtuser_sysfs_emit_value_array(char *buf,
-> > > > +                                                 unsigned long *va=
-lues,
-> > > > +                                                 size_t num_values=
-)
-> > > > +{
-> > > > +     ssize_t len =3D 0;
-> > > > +     size_t i;
-> > > > +
-> > > > +     for (i =3D 0; i < num_values; i++)
-> > > > +             len +=3D sysfs_emit_at(buf, len, "%d",
-> > > > +                                  test_bit(i, values) ? 1 : 0);
-> > > > +     return len + sysfs_emit_at(buf, len, "\n");
-> > >
-> > > Why not use %pb?
-> >
-> > Because it outputs hex? I want to output binary, can I do it?
->
-> But why do you need that? You can also print a list of numbers of bits th=
-at
-> set (%pbl).
->
-> We have a few ABIs in the kernel that works nice and people are familiar =
-with
-> (CPU sets, IRQ affinity masks, etc). Why to reinvent the wheel?
-
-If I see "11001011" as output, I can immediately convert that to pins
-in my head. If I see 0xcb, I need to use a calculator.
-
->
-> > > > +}
->
-> ...
->
-> > > > +static int gpio_virtuser_sysfs_parse_value_array(const char *buf, =
-size_t len,
-> > > > +                                              unsigned long *value=
-s)
-> > > > +{
-> > > > +     size_t i;
-> > > > +
-> > > > +     for (i =3D 0; i < len; i++) {
-> > >
-> > > Perhaps
-> > >
-> > >                 bool val;
-> > >                 int ret;
-> > >
-> > >                 ret =3D kstrtobool(...);
-> >
-> > kstrtobool() accepts values we don't want here like [Tt]rue and [Ff]als=
-e.
->
-> Yes, see below.
->
-> > >                 if (ret)
-> > >                         return ret;
-> > >
-> > >                 assign_bit(...); // btw, why atomic?
-> > >
-> > > > +             if (buf[i] =3D=3D '0')
-> > > > +                     clear_bit(i, values);
-> > > > +             else if (buf[i] =3D=3D '1')
-> > > > +                     set_bit(i, values);
-> > > > +             else
-> > > > +                     return -EINVAL;
-> > >
-> > > > +     }
-> > >
-> > > BUT, why not bitmap_parse()?
-> >
-> > Because it parses hex, not binary.
->
-> So, why do we reinvent a wheel? Wouldn't be better that users may apply t=
-he
-> knowledge they familiar with (and I believe the group of the users who kn=
-ow
-> about bitmaps is much bigger than those who will use this driver).
->
-> > > > +     return 0;
-> > > > +}
->
-> ...
->
-> > > > +     return sysfs_emit(buf, "%s\n",
-> > > > +                       dir =3D=3D GPIO_LINE_DIRECTION_IN ? "input"=
- : "output");
-> > >
-> > > I think this maybe transformed to something like str_input_output() i=
-n
-> > > string_choices.h (and you don't even need to include that as it's imp=
-lied by
-> > > string_helpers.h)
-> >
-> > These helpers take bool as argument. Hard to tell whether input or
-> > output should correspond to true. I'd leave it as is.
->
-> There is a convention: str_TRUE_FALSE().
->
-> ...
->
-> > > > +static int gpio_virtuser_parse_direction(const char *buf, int *dir=
-, int *val)
-> > > > +{
-> > > > +     if (sysfs_streq(buf, "input")) {
-> > > > +             *dir =3D GPIO_LINE_DIRECTION_IN;
-> > > > +             return 0;
-> > > > +     }
-> > > > +
-> > > > +     if (sysfs_streq(buf, "output-high"))
-> > > > +             *val =3D 1;
-> > > > +     else if (sysfs_streq(buf, "output-low"))
-> > > > +             *val =3D 0;
-> > > > +     else
-> > > > +             return -EINVAL;
-> > > > +
-> > > > +     *dir =3D GPIO_LINE_DIRECTION_OUT;
-> > >
-> > > This can be transformed to use sysfs_match_string() with
-> > >
-> > > static const char * const dirs[] =3D { "output-low", "output-high", "=
-input" };
-> > >
-> > >         int ret;
-> > >
-> > >         ret =3D sysfs_match_string(...);
-> > >         if (ret < 0)
-> > >                 return ret;
-> > >
-> > >         *val =3D ret;
-> > >         *dir =3D ret =3D=3D 2 ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DI=
-RECTION_OUT;
-> > >
-> > > And with this approach it even not clear why do you need dir and val =
-to be
-> > > separated here (esp. if we add a enum like
-> >
-> > We do want them to be separated not for better UX but to be able to
-> > test all kernel APIs (gpiod_direction_input|output() and
-> > gpiod_set_value()).
->
-> Still you can do some optimisations I proposed above.
->
-
-IMO they are much less readable and you don't gain anything. NAK on this on=
-e.
-
-> > >         GPIO_VIRTUSER_OUT_LOW,
-> > >         GPIO_VIRTUSER_OUT_HIGH,
-> > >         GPIO_VIRTUSER_IN,
-> > >
-> > > (with it the string array can also be indexed).
-> > >
-> > > > +     return 0;
-> > > > +}
->
-> ...
->
-> > > > +static int gpio_virtuser_parse_value(const char *buf)
-> > > > +{
-> > > > +     int value, ret;
-> > > > +
-> > > > +     value =3D sysfs_match_string(gpio_virtuser_sysfs_value_string=
-s, buf);
-> > > > +     if (value < 0) {
-> > > > +             /* Can be 0 or 1 too. */
-> > > > +             ret =3D kstrtoint(buf, 0, &value);
-> > > > +             if (ret)
-> > > > +                     return ret;
-> > >
-> > > > +             if (value !=3D 0 && value !=3D 1)
-> > > > +                     return -EINVAL;
-> > >
-> > > Why not kstrtobool()?
-> >
-> > I don't want to accept all the other strings kstrtobool() is fine with.
->
-> What's wrong with other strings?
->
-
-A line is False? I mean sure, you can map that to inactive but it's
-not a naming convention associated with GPIOs very often.
-
-> At bare minumum you can reduce the range by using kstrtou8().
->
-
-As opposed to just checking '0' and '1'? Meh...
-
-> > > > +     }
-> > > > +
-> > > > +     return value;
-> > > > +}
->
-> ...
->
-> > > > +     ret =3D kstrtouint(buf, 10, &debounce);
-> > >
-> > > Why restrict to decimal?
-> >
-> > Not sure what you gain from passing a period in hex?
->
-> For example, if I compare this to the real HW, I might be able to do some=
-thing
-> like 0x1234 (let's say it's debounce step) and shifting it by 4 bits will=
- give
-> me something I want. But despite that quite unlikely case the restriction=
- here
-> doesn't bring us much.
->
-
-Ok, whatever.
-
-> > > > +     if (ret)
-> > > > +             return ret;
->
-> ...
->
-> > > > +     return dash && strcmp(dash, "-gpios") =3D=3D 0;
-> > >
-> > > Can't we reuse the suffix from the array from the gpiolib internal he=
-ader?
-> > > Also I don't like the form of '-' in the line. "gpios" is good and ch=
-ance
-> > > that linker deduplicates the same string if it occurs somewhere else =
-in the
-> > > binary (in case this goes with =3Dy in .config).
-> >
-> > I'm not sure I follow what you're saying here. Please rephrase.
->
-> Do strcmp() against one from the gpio_suffixes array.
->
-
-I don't want to accept the "gpio" suffix. Also: I don't want to
-include gpiolib.h.
-
-> ...
->
-> > > > +/*
-> > > > + * If this is an OF-based system, then we iterate over properties =
-and consider
-> > > > + * all whose names end in "-gpios". For configfs we expect an addi=
-tional string
-> > > > + * array property - "gpio-virtuser,ids" - containing the list of a=
-ll GPIO IDs
-> > > > + * to request.
-> > >
-> > > Why not any other system? What's wrong for having this available for =
-ACPI, for
-> > > example? Okay, I see that this is probably due to absence of API.
-> > >
-> > > OTOH the last call in the function assumes non-OF cases. Why can't we=
- have the
-> > > same approach in both?
-> >
-> > Again: I have no idea what you mean. We support device-tree and
-> > configfs as sources of configuration for these virtual consumers. If
-> > you want to add something more, be my guest once it's upstream.
-> >
-> > The reason to use a different approach is to not require the
-> > "gpio-virtuser,ids" property in device-tree.
->
-> Yes, and I'm asking why can't we unify and require it there as well?
-> But okay, I might give up on the trying of the DT/ACPI property unificati=
-on.
->
-> > > > + */
->
-> ...
->
-> > > > +                     if (gpio_virtuser_prop_is_gpio(prop))
-> > > > +                             ++ret;
-> > >
-> > > Why pre-increment?
-> >
-> > Why not?
->
-> Because we have a pattern. Pre-increment adds into additional questioning
-> "why?". I.e. What does make this case special? When I read such a code I =
-need
-> more brain power to parse it.
->
-
-Ok whatever.
-
-> ...
->
-> > > > +                     dash =3D strpbrk(prop->name, "-");
->
-> Btw, don't you want strrchr() here? (Note 'r' variant).
-
-Already changed.
-
->
-> > > > +                     diff =3D dash - prop->name;
-> > > > +
-> > > > +                     tmp =3D devm_kmemdup(dev, prop->name, diff + =
-1,
-> > > > +                                        GFP_KERNEL);
-> > >
-> > > devm_kstrndup() is not okay? Okay, we don't have it (yet?), but at le=
-ast I
-> > > would rather expect wrapped kstrndup() than this.
-> >
-> > Meh, this logic is fine as we know the range exactly. IMO kstrndup()
-> > here would be overkill. I'd leave it for now.
-> >
-> > > > +                     if (!tmp)
-> > > > +                             return -ENOMEM;
->
-> > > > +                     tmp[diff] =3D '\0';
->
-> This line will gone with kstrndup(). I think we will benefit from it.
->
-
-I'll allow myself to keep my version here.
-
-> ...
->
-> > > > +     int i =3D 0;
-> > >
-> > > Why signed? And in all this kind of case, I would split assignment...
->
-> (1)
->
-> > > > +     memset(properties, 0, sizeof(properties));
-> > > > +
-> > > > +     num_ids =3D list_count_nodes(&dev->lookup_list);
-> > > > +     char **ids __free(kfree) =3D kcalloc(num_ids + 1, sizeof(*ids=
-),
-> > > > +                                        GFP_KERNEL);
-> > > > +     if (!ids)
-> > > > +             return ERR_PTR(-ENOMEM);
-> > > > +
-> > >
-> > > To be here, that the reader will see immediately (close enough) what =
-is the
-> > > initial values. Moreover this code will be robuse against changes in =
-between
-> > > (if i become reusable).
-> >
-> > Sorry, I can't parse it.
->
-> I meant to see here
->
->         i =3D 0;
->
-> instead of the above (1).
->
-
-Why? I see no good reason.
-
-> > > > +     list_for_each_entry(lookup, &dev->lookup_list, siblings)
-> > > > +             ids[i++] =3D lookup->con_id;
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
-
-Bart
 
