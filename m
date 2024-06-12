@@ -1,139 +1,111 @@
-Return-Path: <linux-gpio+bounces-7402-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7403-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFB61905818
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2024 18:06:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FF28905A95
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2024 20:17:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1EB11C2152E
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2024 16:06:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27F2A1C21C4D
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jun 2024 18:17:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43951836CC;
-	Wed, 12 Jun 2024 16:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A06439FEC;
+	Wed, 12 Jun 2024 18:16:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="CQwRuXXG"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Uo96lmR8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C65F183093
-	for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2024 16:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330763D967
+	for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2024 18:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718208209; cv=none; b=pzsWYbPpxQOqWzLg2/ZWTdL5usr+yBN1RKOsvlbafPF6sEAF/ltyLjdoJG+SsxaeomEZ4awbpMBMy/506Sq35/i7BF9XusUVYMUBAZg7dz512PTeCoFvLDx6qoUNRMlVrQHhghn1tTobUmobtiO8pY2UrsZmF2rLLjOFM0P48Fs=
+	t=1718216192; cv=none; b=c8Kdth7EUSwiH70o2UqnE7xxbI/w/6+C6NGzclaIbospuWlNhMVMhGuxUj22oyojRxSx2HKOIojkxyA6lqNPko/Rh+OOL7iLXwSPHgNMx5UnhqB6fr9VvwIoINjDZ+WHtFj1oktZ8mU2Naz9S5teG1VcmC3owyQFIzz72dUNrhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718208209; c=relaxed/simple;
-	bh=332UBS0prHxkyUP4CYQFP5s8Gc011jBYVWz+9XPLa9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pCe5Po3SvntLI5qF05t5PCdNPXmWvTHXs9Rz4AklE9jeKXgWWPcXkxhckMEsD+oo5Il1/LqJnbMCj8SUz5jYUS1ZzPBAxVkFmrH8wIEmSxc27cCki/SPrzJ0SdhMxIaoWssMCByc1Ig81iKFyqW6XESF/jF0NK2aXzq1ZW/drKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=CQwRuXXG; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=B54B
-	e83JNs7nl+rMReElF3H5ROq4XTJOopa9NkI4U9s=; b=CQwRuXXGQsXzbkMKeRef
-	BiEfLsMYDRrCKtKab3BTsl82biB8MvTwjBnrYoiycs8RjW7gmPyvazaDPOcnl6U0
-	aFlBgPwJ1xdNtW0DCrCYwB9VuQz5miQRl2aRdNYdIPQCW6k+HTsi2GEnQGyTw5B5
-	6TfsnUgfV1AadDA872fkj+330NTsC/wGUOJsLEG1WhiUxkFlISXTM9glWndbUI/w
-	ZHfVmgx4NjSOY0mch35Z1s0NCXSTlfHqCWJIK9n/o2e6dg2bvDx4FGOJUdo1bARW
-	0pTR6G//LlAPF0ruOVOY6NCE1sJce3YmBDdpT/jCall9c8/I/iTvfrtJ9W3DlhPE
-	mQ==
-Received: (qmail 864170 invoked from network); 12 Jun 2024 18:03:22 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 Jun 2024 18:03:22 +0200
-X-UD-Smtp-Session: l3s3148p1@fkR/hbMa7DNtKPIY
-Date: Wed, 12 Jun 2024 18:03:20 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-renesas-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
-	Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
-Message-ID: <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-renesas-soc@vger.kernel.org, 
-	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
-	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
- <20240610112700.80819-2-wsa+renesas@sang-engineering.com>
- <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
+	s=arc-20240116; t=1718216192; c=relaxed/simple;
+	bh=S5HZWxddfgi+SEMgm+98zdrKnVwYUBU9vRQKyM07BVE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d8KVzuateCxVRWry/ZtT1tUt/nMU9bBzSAn1gfSYbjCNxD/olHu3iu7vrcfuz7b28zaZ+G4YOJeieydVUAbbmDJpCAdYu8WxHtS8guXulIF2VKjxbPE9I5hJdzGrNZDEZNY3J7SMrE6QKSvlMwztfQI+4HhgwUoiXWgW8i7Wp7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Uo96lmR8; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-421cd1e5f93so1460245e9.0
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jun 2024 11:16:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718216187; x=1718820987; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=daCM+Ahbd90e4miZHKBtV2v+dtY5C7Shxw/FivV53G4=;
+        b=Uo96lmR8CHf9F55WcSdhvOy82XUz4ohdurJ0oX+eIAa50+FobD85EDS0qsF5sn3w4C
+         rhBKDAPTMuxEKV9mmfdCX5Su8v1S+y8Hb1JGxc8OlshB63EolFhG8LQrKuhdFRoLT7i5
+         ox2QongN8qeO8jLuzC6r9WSTSj31oVsSvWQCgpcvgte1s4ud750l67CLQmC6tQ70GSF+
+         TgApFdK0qRCJx4XC1uas4Pc6c8Ay/kw4J5CERemzJRn1+Z+1p1xns/Np2j5/prImRE9o
+         zTkyZUO2cUKiLBvZ1wIoxiRzCXp9RfsmVdU23b1/Oc2VgrBvGL7Qv7xUkjxNTreqMHL2
+         bo0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718216187; x=1718820987;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=daCM+Ahbd90e4miZHKBtV2v+dtY5C7Shxw/FivV53G4=;
+        b=VdfYCHFb1ZchFi2PDhmoNJx+JjYcpHGNRi0PeG/jCetecxn/4Ps2SmYIzCzBmu5f+6
+         Ddw5KVdFtC3uSRMkEfnXhv/BStQfLTXNgEZvRlVE7n4eIP6XuUIGG8hwrLN9POPf5ptz
+         Os6xK0DMeXldRbcBtOLOFkWbQ25FSnrVBKlowoZaBWf9cN34nT3iytrPndYX/ZkFQg6O
+         7k/0jfsZV1itYChax9EgEwVgCeLbS5oaH7XEa5FH38kNWrlGO5aiOqICFQAudqg7IYgx
+         kjb6YZw7nkmYC7PZyxJ16TydFqgD2BBDC+dz2Re+3Jg2ORLWgqu8Jql6oVXZ1xDk4ycr
+         YAnw==
+X-Gm-Message-State: AOJu0YxpKZlDkM/Zji5RSO+5mHVOL3NYoiqWtAdpfuF+wzYlrsbaCiyq
+	XOVcf6EbPH9lhx26qmB/jwTQbJRj6qhwH0KcP7HG4rfb8DtteMfOPxePOUr/D0Zqm2UAXG9MAn7
+	f
+X-Google-Smtp-Source: AGHT+IFGWw/vmi3Fw1GPpO28E1BIHb8ehzoc21vxWSNa3wVOgEBuDj3m4kwv+yawOuZeoTBAc/zpnA==
+X-Received: by 2002:a05:600c:1ca7:b0:421:8143:6206 with SMTP id 5b1f17b1804b1-42285c6bc0amr28469205e9.0.1718216187085;
+        Wed, 12 Jun 2024 11:16:27 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:8d3:3800:a172:4e8b:453e:2f03])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4228801dfd9sm33621165e9.30.2024.06.12.11.16.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 11:16:25 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	Vincent Fazio <vfazio@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH v3] bindings: python: add script to generate sdist and wheels
+Date: Wed, 12 Jun 2024 20:16:24 +0200
+Message-ID: <171821618069.51271.13809961248339118777.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240611205041.1448276-1-vfazio@gmail.com>
+References: <20240611205041.1448276-1-vfazio@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pvtrej2bwhzfyplx"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
---pvtrej2bwhzfyplx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 11 Jun 2024 15:50:41 -0500, Vincent Fazio wrote:
+> Introduce a shell script that generates an sdist tarball and PEP 600/656
+> conformant wheels.
+> 
+> The wheels are generated via cibuildwheel, a tool provided by the Python
+> Packaging Authority (PyPA) [0]. The tool leverages toolchains within
+> containers maintained by PyPA [1] to generate wheels that are runnable
+> on hosts that meet the platform compatibility tag [2] requirements.
+> 
+> [...]
 
-Hi Bart,
+Applied, thanks!
 
-> I really dislike drivers being called in an ambiguous way like
-> "simple" or - in this case "sloppy". I understand why it is - in fact
-> - sloppy but can we call it anything else? Like
-> "gpio-logic-analyzer.c"?
+[1/1] bindings: python: add script to generate sdist and wheels
+      commit: 72d2fa01a2c1ed8b13d54a5a33f54babe979eacc
 
-Sure, we can if you prefer. I named it like this to make the limitations
-super-clear. And even with that in place, I still got a private email
-where someone wanted to build a 400MHz-RPi-based logic analyzer device
-with it. Which would not only have the latency problems, but also
-likely have a max sampling speed of whopping 400kHz.
-
-> > +Note that you must provide a name for every GPIO specified. Currently a
-> > +maximum of 8 probes are supported. 32 are likely possible but are not
-> > +implemented yet.
-> > +
->=20
-> What happens on non-DT systems? Can you still create an analyzer in a
-> different way? Can I maybe interest you in configfs for the purpose of
-> device configuration like what gpio-sim and the upcoming gpio-virtuser
-> does?
-
-Frankly, I'd like to leave this to the person needing it. I've been
-working on this for way too long already and am not up to major changes
-anymore. Minor stuff, okay, I'll go one or two more rounds.
-
-The GPIO analyzer is a debug tool aimed for development boards in remote
-labs, and all boards I have access to use DT. Furthermore, debugfs is nice
-because it is clear there is no stable ABI. It has been useful as-is in
-the past. That's what I am offering. If that's not enough, no hard
-feelings, but someone else needs to continue then.
-
-All the best,
-
-   Wolfram
-
-
---pvtrej2bwhzfyplx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZpxsEACgkQFA3kzBSg
-Kbb5LhAAq7J+u9AU3h27i893hHfBUdMFaOWvXvYAUCE7Ihm1awM4jeRX7zVMZ2v/
-NbXFUj7xY4aM40fIEhcHfv4+eESY5ba72+3w8n8xkUgepmYCbzirZ2CetqgA4R6S
-y7bnz8Zb32bQAEPtLOeDc138+UOlI11LwYLk9aF5hdkRLGja0GVy8vXUb6N8Ioy9
-ChOdx3OSqnhdkUOWHemErPpFC5QbtOVkXusvpdhSh3ixT+CMIXBAINHBeFgax8Z3
-suaRT0jxA/F8utd3uGQZmW3BJTjpdJpPuzoRRD91TvfI4ZOTRmMSIJz+9nJlTfYw
-0MIiNgRdIyD4xSjTIzOj5R2aZi6RgeJeqeyc9ILYoVaLG4/SGcZ0/LfE5IrJ/9rO
-VqrPcndc5MgzNexkacS9jG+x0StUTD6FXpePN9xAJ8Mz9lvZU51kGo3KNNWFYmlV
-TVqdLu73GdsCdn2IddJJ6L0lqb2pn+obcX1Hpjb/pcIn76swDehemGGEScmV4J65
-pKRdc/5DrRf/jtlWVnU5Er+pKEL72nU7VyfQjfom62fQ5wRZVgyD6j0mp6jd63fZ
-h7JzLl2rbr0+JaGDn6eZLhjpvv5JFnb9uWnoL5CJSexICOYLJ8pbk89y6aZ5gxl2
-wm4SK454E0Hs5Lz2qWkn63OOWHCMg+7Mqu4MslSH9dHBT1i5e64=
-=PsWW
------END PGP SIGNATURE-----
-
---pvtrej2bwhzfyplx--
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
