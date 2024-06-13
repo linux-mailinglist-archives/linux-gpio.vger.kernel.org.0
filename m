@@ -1,117 +1,141 @@
-Return-Path: <linux-gpio+bounces-7410-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7412-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78A49906635
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 10:09:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7648C90665E
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 10:17:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1941D282729
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 08:09:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9DBF51C23FCE
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 08:17:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C485613D249;
-	Thu, 13 Jun 2024 08:09:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D89E13D50E;
+	Thu, 13 Jun 2024 08:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kqLqVpOn"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KeAa/uha"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3AC13BC0D
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 08:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A20F13D2B5
+	for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 08:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718266180; cv=none; b=nebwJ/Sm5jtMXz6nizGSIFH8IpkTyej3CW2IoPi6l6yM91D68sEynPkx30brdVfrt9iS/ZX2DevNsK+/v6DTVFaU6fu6CrNKYZIw8WiLBT+YEd4HFRP54Czs+kmx/zJjk2vieOLorG+pcZ+3CuvWqy8NZkOFAEiFPZ/Nc8DZuJc=
+	t=1718266663; cv=none; b=XNGaAhTatKuKjIrY7Us2NeQy59XE3MyqhO7ePmCPnENQgQJsci2tSJ9po9OliN45bk1G7pKN9U+u9TZjZnU8/miW37/ldHvAVG8Nw2Jfuml+q8Awo7KKogjRsFhryf+D6Z0ZHO7EqZC1HeiACWAkje3y7D4gxLBXSE+z43jF2Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718266180; c=relaxed/simple;
-	bh=uyzErR0jfrSwe/0i9vmgqsTZP67TNvMZucGWdnL0p6M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cyDb/eAZmYFN2rmWAouHkoRXyzL/COBkLkxBsKwGzLB16PuzKgu+sG+uS/m2rFKHYiJ4Hgy9Vr0gg1COXyWh/Nl6ownlj4SVmZiN1O6ozVTQTfvYSwvLKkkYrs+rgTHZBMjlj/jlRgR6JXBsl7UiBP3QfH2KugzFkDwJJNr5e7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kqLqVpOn; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52c7f7fdd24so1081018e87.1
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 01:09:38 -0700 (PDT)
+	s=arc-20240116; t=1718266663; c=relaxed/simple;
+	bh=zlvVmXkKPR9E+W2TnsSBwpqbO54sU4MAevzrEpoPNYQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=S1HIWhsNv3qbaWVx2xPGAF8wm8PkFy8OYOX6mce9QjIqyplu5iFll86Ql05KJCYPSukoBmPSIcWrg19vGXkrXmYCvHNrIPPGAKGpY/zJwhvlTaqRrsi0p4YOj+7+HqxyHgaE8tsTPDAKTjSa8mtBFaGa9DR43osqjcMWQ0bNcTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KeAa/uha; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52bc274f438so1025056e87.0
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 01:17:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718266177; x=1718870977; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AJh8Ir0vft1w9SzxkS2NwBCQ6TB5aAmszybTHTdUIC0=;
-        b=kqLqVpOnSpuHSXd14aZ2Tf6kk+doyakn5dhtoeXJ/scyl90eDMr3b60Qe+jrMmJywg
-         iDdqAicwcEzAuNitNj1/YBSthasas1+L/ixFL/s9MgL2LDt3lQRMIEz/0KJw6TwdsJnr
-         yaNcYH8Z5eiqS4LaWn0Ew2vtJNK+/RYal3golw36Cc8HmT2vZj/XszI8KJGlK6Z4AobQ
-         UDESy0eG+rP9AkUyKhnlFUpPKsAFL5S5t2OoHdHunedaoRE5ixmsjkwad6SRh94Yleh9
-         YCr3IpHWBKXXZdppb99VhEjIvKPUbipwRPKydN2NrJGHHye7FHtfWB6NDhBX7OARjbtd
-         5mDg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718266659; x=1718871459; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zlvVmXkKPR9E+W2TnsSBwpqbO54sU4MAevzrEpoPNYQ=;
+        b=KeAa/uhaqRNyu8h4ZW48hm8whf2rJDlk2f25Zsg/t797/gvg+VkjQvI4x0FbCdBb8l
+         dm5S4BQcFhv7xRF4LXgTddDSNNQMKe/L4AKyFmgSOtqtr9Tob8oA3oetMqfx6lvj/rFi
+         QhkHwApi+5+YoDLSMJV4X0w8nNX6wFlKPorDTkNhcRw4e1fkesuxAkzoJKW3M2gYGMuN
+         GfurmCh/zzx+dM1NkUxi8ADC68zJyTYo6HjRgZGbWcfCr9eioUby8D7qdTQCFLaoBeN6
+         ivom7HfesIbe7gFMVrYQpuz+Hu74JZIMQCaBEwS8ZkJgJZrMhQVz1uSOOAFHTEMkavab
+         5FDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718266177; x=1718870977;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AJh8Ir0vft1w9SzxkS2NwBCQ6TB5aAmszybTHTdUIC0=;
-        b=cSKOgw2qlb0lq4saw/hApPNHJdH0oYnV2iCcJbuTYxwgM6jfq3qPEspiKLraLDwCEc
-         EHQ4OHj+1eGP6htVer2f0g15W3lhnKef6C3Chbw7Fmk7NUBcepKkpDoPAVv/7UcHLdqA
-         XsCNCZOx5aSK3+llQ5Lkrazi3Q3B3i53uKJJcd7qC5JjR/ACgM9K6XO0dFmKP0ikrJGb
-         Vq+O6z2Yn7swphxPPTR/kySM43AXUWSsS/Qs4HwEOgehOjNuymN3Iw9ekM/4VobRQYXh
-         VZDOaONx4WsQirrKIF/aJDl6RJ3h9wwWsvWOJiE2B0X49v/Xc7+Ns2JyEiofLDu4+x4k
-         gfGQ==
-X-Gm-Message-State: AOJu0YxkgOa0EvZAUcOdq6rx2CWyMyzM72Roqwd5iZVbMMuorfEokwLX
-	h7YRfqxNS3Z0HMGB40PNHR1eZGIk8OTPponRvdXyOEOobFIqoFX0z5xxm/CcNTM=
-X-Google-Smtp-Source: AGHT+IEZwNcXIVSt8akb+2YlU9hx0rkua5ijXT0WGfgKSe0eSzfvU3jfJnPuXkVAhZFxxJls0r5DeQ==
-X-Received: by 2002:ac2:4344:0:b0:52c:89ff:10bf with SMTP id 2adb3069b0e04-52c9a406871mr2129646e87.67.1718266176783;
-        Thu, 13 Jun 2024 01:09:36 -0700 (PDT)
-Received: from lino.lan ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca2825b38sm120532e87.24.2024.06.13.01.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 01:09:36 -0700 (PDT)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 13 Jun 2024 10:09:36 +0200
-Subject: [PATCH] pinctrl: keembay: Fixed missing member check
+        d=1e100.net; s=20230601; t=1718266659; x=1718871459;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zlvVmXkKPR9E+W2TnsSBwpqbO54sU4MAevzrEpoPNYQ=;
+        b=li/RFzmILxA3O6M/5cSHyF3eQ2zQrhvAqPblta4+sVpWvgM0pvkGlKgiDoHfC56JOs
+         OVcxljxUV0gKA9hv/Jq0y8cKxhTdP8jigizI/SCyotNP/0hNCItaAGXM7SX/mqE16o5q
+         rZOvaP4ANzcDUGXNSdyrK7MRNTBRMK6/e1gcvWMUqZrHGJvzFuvO1w303V+pfpD8vye1
+         ADjBVvVJVh4VcNnLxNbCcGDyu88gfGewNPKZYL5jBvPO6hD3rA6mlZq8bmbus9olnXAN
+         qTJRZdLJKgPphKN++ycKSXLKIWvNwcdnJYRYDDnyTMqejdcciOdbTszKHqQ3Ut4Lcu2b
+         eqpg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmdC3LYH6KiTwLeDEo7O8a0+GNAaVJ3QF6LXDuhnc352pPBdrciyaSiPEeYXdQQQwrUn758q0LdXBv09bsFiZQXBHeJmY8WNfPiw==
+X-Gm-Message-State: AOJu0YxhZgOqplMWF0aa+zGvDNtXGto5VIKT45cR8tWPBvhRJO593Rza
+	zfsKm+bC8addE7A9aLwe9RD9W2wShsJc07VCtplUgPJz3dczAUX2eteCd9RTvM1oqv7rqIyW4kI
+	8EfFrGWVXbohfg/lZcb5jfVfsoxwH3BGVKs9+wA==
+X-Google-Smtp-Source: AGHT+IF34CrOTybVWCj97ZpeobyHJQSkJMauKqII8oRwBz2/SBJ0ILVCcG1q56HSZLX2R+nPr6vogyE1smxAWIap5as=
+X-Received: by 2002:ac2:5f8a:0:b0:52c:50ff:6567 with SMTP id
+ 2adb3069b0e04-52c9a3c6f80mr2693323e87.22.1718266658942; Thu, 13 Jun 2024
+ 01:17:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240613-fix-keembay-v1-1-5c188f900214@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAD+pamYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDM0Nj3bTMCt3s1NTcpMRK3WRzU9M0YwNLU0szQyWgjoKiVKA02LTo2Np
- aABwUrU9dAAAA
-To: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.13.0
+References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
+ <20240610112700.80819-2-wsa+renesas@sang-engineering.com> <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
+ <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
+In-Reply-To: <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 13 Jun 2024 10:17:27 +0200
+Message-ID: <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
+Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-renesas-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+	Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A bug in a refactoring caused a build failure, fix it up.
+On Wed, Jun 12, 2024 at 6:03=E2=80=AFPM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> Hi Bart,
+>
+> > I really dislike drivers being called in an ambiguous way like
+> > "simple" or - in this case "sloppy". I understand why it is - in fact
+> > - sloppy but can we call it anything else? Like
+> > "gpio-logic-analyzer.c"?
+>
+> Sure, we can if you prefer. I named it like this to make the limitations
+> super-clear. And even with that in place, I still got a private email
+> where someone wanted to build a 400MHz-RPi-based logic analyzer device
+> with it. Which would not only have the latency problems, but also
+> likely have a max sampling speed of whopping 400kHz.
+>
+> > > +Note that you must provide a name for every GPIO specified. Currentl=
+y a
+> > > +maximum of 8 probes are supported. 32 are likely possible but are no=
+t
+> > > +implemented yet.
+> > > +
+> >
+> > What happens on non-DT systems? Can you still create an analyzer in a
+> > different way? Can I maybe interest you in configfs for the purpose of
+> > device configuration like what gpio-sim and the upcoming gpio-virtuser
+> > does?
+>
+> Frankly, I'd like to leave this to the person needing it. I've been
+> working on this for way too long already and am not up to major changes
+> anymore. Minor stuff, okay, I'll go one or two more rounds.
+>
+> The GPIO analyzer is a debug tool aimed for development boards in remote
+> labs, and all boards I have access to use DT. Furthermore, debugfs is nic=
+e
+> because it is clear there is no stable ABI. It has been useful as-is in
+> the past. That's what I am offering. If that's not enough, no hard
+> feelings, but someone else needs to continue then.
+>
+> All the best,
 
-Fixes: 15d34374182a ("pinctrl: pinmux: Remove unused members from struct function_desc")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/pinctrl-keembay.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I see. I don't want to stop it from going upstream. On second thought
+though: are you sure drivers/gpio/ is the right place for it? This
+directory is for GPIO *providers* - mostly drivers for real HW and
+some "virtual" GPIO providers (gpio-aggregator, gpio-sim, gpio-latch).
+In general: modules that export their own gpio_chip. This module is a
+consumer of GPIOs exclusively. May I suggest moving it over to
+drivers/misc/? I think it's a better place for it and I wouldn't mind
+keeping the "sloppy" in the name then.
 
-diff --git a/drivers/pinctrl/pinctrl-keembay.c b/drivers/pinctrl/pinctrl-keembay.c
-index 245a74ed97ee..b693f4787044 100644
---- a/drivers/pinctrl/pinctrl-keembay.c
-+++ b/drivers/pinctrl/pinctrl-keembay.c
-@@ -1627,7 +1627,7 @@ static int keembay_build_functions(struct keembay_pinctrl *kpc)
- 			}
- 
- 			/* Setup new function for this mux we didn't see before */
--			if (!fdesc->name) {
-+			if (!fdesc->func.name) {
- 				fdesc->func.name = mux->name;
- 				fdesc->func.ngroups = 1;
- 				fdesc->data = &mux->mode;
-
----
-base-commit: 1e37f761d0163cf99567fb81d9c59860ef255d9d
-change-id: 20240613-fix-keembay-c755f3095961
-
-Best regards,
--- 
-Linus Walleij <linus.walleij@linaro.org>
-
+Bart
 
