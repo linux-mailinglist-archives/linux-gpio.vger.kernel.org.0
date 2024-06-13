@@ -1,137 +1,161 @@
-Return-Path: <linux-gpio+bounces-7429-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7430-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10B1C90747E
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 16:01:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53D35907513
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 16:21:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A25628516F
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 14:01:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFB50288619
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 14:21:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D11273FC;
-	Thu, 13 Jun 2024 14:01:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4A2A145A12;
+	Thu, 13 Jun 2024 14:20:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yImyc6Ld"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="zjyxAfm9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l6Fhe4CJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346C0ECC
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 14:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEA412C530;
+	Thu, 13 Jun 2024 14:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718287284; cv=none; b=h/hc0s97EiWuTHM2aO4lVvNzHOM5W2c4NpKR4+PYCxm1CsCNDdkiwZRJsvIUtsgiKFVaJtpb7LQLCQJs3el1ruPsahcZNi1D8/EeXsmQ1broXkbtpFWPizpT4QX/VR3/GqfB2Gh8xqNW+igFodmdiyBJ8axeEN+KNVVKR8Zt+KQ=
+	t=1718288458; cv=none; b=qkpv0cG6nIObuf2tWfVpfZ9IP4J0nC6cF3g99qOmWYtCCbsO7gZ3URO/OObFhLmwNFur47rSYlPYYbzbxH/P0SV3OOy/3nYZBNNcbEgmmejfIqlDvtgJu1ZAHPaLtDLZ8CC0JefSjj7WaowUv7LzZBgfICNM7MyL4rXZcFWLsRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718287284; c=relaxed/simple;
-	bh=by8Xwx8UcUqeJO640qsAzMJcMky+jPAd5JWuChsdINg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XCtrqDwyLAoyRagKJPUegiqLiPMZ8jqQSjAJkZFEqwxyHdBEBAL45t6BotsJ9m63NpFwqpjx0vielf3ohBMhtyrEWKWod5pncddlcm2FTScKkqxMxIyyxwVO/EIhi3f6XVofUekmk8616KuySnwgxIchO707OeJ+g1KOE0jfDaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yImyc6Ld; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2e724bc466fso11630911fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 07:01:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718287280; x=1718892080; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d56pDegUDledTaRRJ2Dci64L2O7V0m4uOemE0vUQxU8=;
-        b=yImyc6LdOmxj5flzY9nDCxSQnPXZeiewepYK1Lom3KhEMez0ZY82zOMUwOl97L3GGz
-         wd27FlXgGSanGA/1sTQfwZjCE/Gw+Tm7f0ZeHYlAfnX8r738U5AaAdSMADBWCbTkexXg
-         P0Apx+SRSlwt9eesI1Dn+X9Yp5DZaesRQRazuUeMG+SD26hKHY8gTSbl10zZPU1KAHQW
-         zt+et6MFAmNDxJoU72D1erZjbgkbo2KdbUs/hJpfApjrGJA6Tco8RZXllQTJQMR9v2Rs
-         690THGM2IpEosjcU7r1pYHS5VAJ+3yjPPPjh/+WQKDS+fL3PhHpVAgF8JxKaO8241BSL
-         D+zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718287280; x=1718892080;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d56pDegUDledTaRRJ2Dci64L2O7V0m4uOemE0vUQxU8=;
-        b=eYc5TpQSW9UWAbG9rV6ys4wC0l2L/7+p13xpHNVE7ktmOgJTbwUscb3yK+4tcVyFeF
-         nWIW452VWrI4kPJaOa0dbuF3oT0v2mHr3pNNrjDi8VRxeFGeTcFeEzRBmPZbJDALFf9Y
-         pxbhmDZq4BvraUz5CrBUHVUUQfd7Vx3nlLqe5kRloNiGRN4BGHzZg8W4YQZ+R9B32zks
-         Z9uBOGbdV58YThxV66hU9aX9g+4sYXOZiDxQlorBDdImGB2eB1ESp7GpljD9hWV48kwj
-         W+doU5lnP9hy03Ogv41sC/givWFFwgRJxxxXWzU/jqxfoknalYLiDhSGjYB1wyLXTqlp
-         Zjrw==
-X-Gm-Message-State: AOJu0YyQcw5ySLbhoKW5zStrQRKNfBDdT8bVsM8ldsmHGoQUKbtFJ5Z5
-	N3Ffsagc+1BAoS70iACbjHb31P0uEWpmVB35Mr6Dd0t58elr00ucHdj4fh3KI5zGuxcldxQK8Wx
-	3
-X-Google-Smtp-Source: AGHT+IGC1PmbRw3ue0Nl1jK7MXX/HtQNPN5r7oWKzR9bXvFIm84k4dMY2Wf1miHuEP3j88YiqbexLQ==
-X-Received: by 2002:a2e:b6ce:0:b0:2eb:daae:65dc with SMTP id 38308e7fff4ca-2ebfc99f5eemr41425881fa.48.1718287280364;
-        Thu, 13 Jun 2024 07:01:20 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:8d3:3800:875c:e292:3280:ccac])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de5d5sm63303585e9.33.2024.06.13.07.01.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jun 2024 07:01:20 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Vincent Fazio <vfazio@gmail.com>,
-	Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH] README: add mentions on shellcheck and reuse
-Date: Thu, 13 Jun 2024 16:01:17 +0200
-Message-ID: <20240613140117.39048-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1718288458; c=relaxed/simple;
+	bh=gOepHru+/EFmlPSQIh9I26p7iOh4irfzA8xkM0Gj5N8=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=diOdz9yCBFaxC44Eiu+CE6GxwnW+/8Uiay71tFmVtQ9q22T1ClGxqp4LDqMBpt3StFi6pAjkp7clleoLzHF538dRNCioPZIfwZKGM9I7vpAyJjg+u0o1L2BgB2kzwgb/u9lTXGemLVddyw3lvJXui5/jJY3Xb177O5fNjwkUXRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=zjyxAfm9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=l6Fhe4CJ; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 464DB1380198;
+	Thu, 13 Jun 2024 10:20:55 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 13 Jun 2024 10:20:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1718288455;
+	 x=1718374855; bh=X1wXGY8fY6VS092pn7rTbaQrNyXNXzEIWMfaJZJaLSk=; b=
+	zjyxAfm9GQUxpC7XjcqZ9lM0/MsYJTm+1xw6djPAV18PPOXFUl+RkC1+1xbcqttf
+	sw+QphvEvbpcuYUVc6anrYDF7+CbM3eBAyffyA9IJsJDK51oOrjDRXCja2GlEbIC
+	Q69xZv1YJUGAK05jrMxM1tJ5FboueV6+4SH1yf82vkNoqiazMQzntIvhrkdQXokt
+	HGas9//U7yA/3YOY/Eijsega7ObtY8NHO9XkC6SvbbzNJbrCOXWXd8oGU8QsLroi
+	DXUIvyIXWWZ/hw6YtPAy3cwHeYtQGRbooc0eS44axhEy4lZFa6vEbURGHjLxjxSy
+	Bd83QPfZQF6Hr0nHLbWg9A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1718288455; x=
+	1718374855; bh=X1wXGY8fY6VS092pn7rTbaQrNyXNXzEIWMfaJZJaLSk=; b=l
+	6Fhe4CJ0rRpOpyHTeBPthkqTdK0adOo77CVimUc9Sxy5Z9TDzDNKck1cgiFse1US
+	rbJUBh0wpBcFYj4OD6dK4YxO55A1adlud9i3gx1O6kNm/xnHtBeqex9dK3MalRqK
+	fDAWJL3RDQCXYpiEIoYMNAHZJ/e/+ZhUmuMsfzRd8+dN3ddSkvqftb9Ei+qxnZQo
+	qfCYAlLwizmlOkxp+5cIw2/GBm1mvLgHGUVyyCQ4OJ9fuEkBshmreJek95VWaIMD
+	MSXT/4T7Gq9tMsk5t7dudKUSrWHFgBo6p/3yJr0lOiv18RA+IXTcdkvTD+h3ZFMd
+	VKPQQ5rqLYRPL2U8MizRA==
+X-ME-Sender: <xms:RgBrZlMdu8-tv8UWHLYBj0JTsGMAFiSCg5giNedmBvMrJMQoRP_O7Q>
+    <xme:RgBrZn8qftkkxq7vnKUTkQ0C2imAWPgxqu17wtj0m0a_LqENFTXN5CKhSE69CFEHr
+    8NY24GGAIZFzhmVfcQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedujedgjeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
+    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:RgBrZkSKWjv_yY_cwS2UN2pwPodhKZTDwwKjl5ihgcv5n9ZX1KnVTw>
+    <xmx:RgBrZhtjWVEHqrKsF_Ro5O6DGH8V1X2Cv3ZuGHxejINV9dAP9Ht9tQ>
+    <xmx:RgBrZtc4QfXtqdZyU-fScnUru0u_EaSNzUeT-9URqGPsc4zL8x853A>
+    <xmx:RgBrZt358F5sttmCeu8qEi4V7wMQ2AEBgvElqmqJjuZZ3I50fvFX4g>
+    <xmx:RwBrZsyLkCWqCOna_CLxF3uxGtLHcUu7mwThfdbFJYjtuqZ14xMYeJNt>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 55B1AB6008D; Thu, 13 Jun 2024 10:20:54 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-515-g87b2bad5a-fm-20240604.001-g87b2bad5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <a7463c6e-2801-4d0e-b723-fc1cf77a04ed@app.fastmail.com>
+In-Reply-To: 
+ <CAMRc=Mem6HN13FOA_Ru8zC-GqGGLTsQiktLWs5bN4JD1aM3gHQ@mail.gmail.com>
+References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
+ <20240610112700.80819-2-wsa+renesas@sang-engineering.com>
+ <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
+ <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
+ <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
+ <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
+ <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com>
+ <CAMRc=McpRjQO8mUrOA4bU_YqO8Tc9-Ujytfy1fcjGUEgH9NW0A@mail.gmail.com>
+ <CACRpkdYtLDA3518uSYiTpu1PJuqNErHr9YMAKuar0CeFbfECPA@mail.gmail.com>
+ <CAMRc=Mem6HN13FOA_Ru8zC-GqGGLTsQiktLWs5bN4JD1aM3gHQ@mail.gmail.com>
+Date: Thu, 13 Jun 2024 16:20:34 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Linus Walleij" <linus.walleij@linaro.org>
+Cc: "Wolfram Sang" <wsa+renesas@sang-engineering.com>,
+ Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Kent Gibson" <warthog618@gmail.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Jun 13, 2024, at 15:51, Bartosz Golaszewski wrote:
+> On Thu, Jun 13, 2024 at 3:47=E2=80=AFPM Linus Walleij <linus.walleij@l=
+inaro.org> wrote:
+>>
+>> On Thu, Jun 13, 2024 at 11:43=E2=80=AFAM Bartosz Golaszewski <brgl@bg=
+dev.pl> wrote:
+>>
+>> > To prove this point, I even moved the gpio-virtuser driver I'm work=
+ing
+>> > on to drivers/misc/ too as it isn't a GPIO provider either and mere=
+ly
+>> > a GPIO consumer with a one-shot user-space interface not conforming=
+ to
+>> > any standards.
+>>
+>> We *could* just create drivers/gpio/consumers/* and an entry into the
+>> top-level drivers/Kconfig to have those appear right under the GPIO
+>> providers...
+>>
+>> Yours,
+>> Linus Walleij
+>
+> That would just add to confusion. GPIO consumers are all over the tree
+> after all.
+>
+> Whatever, let's keep it in drivers/gpio/. Greg KH just shot down my
+> idea of putting gpio-virtuser in drivers/misc/.
 
-Extend the "Contributing" section of the README to include mentions of
-shell scripts having to pass the `shellcheck` test and the entire tree
-having to conform to `reuse lint` requirements.
+I could imagine treating both gpio-virtuser and this code as
+a gpiolib extension rather than a consumer (which is usually
+part of some other subsystem's driver).
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- README | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+It would also make sense to me to separate gpio providers
+from gpiolib in a way, moving one or both of them into a
+subdirectory of drivers/gpio/.
 
-diff --git a/README b/README
-index 7a92a49..a6f24d1 100644
---- a/README
-+++ b/README
-@@ -284,7 +284,9 @@ to send plain text[3].
- 
- Code submissions should stick to the linux kernel coding style[4] and
- follow the kernel patch submission process[5] as applied to the libgpiod
--source tree.
-+source tree. All shell scripts must pass `shellcheck` tests[9]. All files
-+must have a license and copyright SPDX headers and the repo is expected to
-+pass the `reuse lint` check[10].
- 
- The mailing list archive[6] contains all the historical mails to the list,
- and is the place to check to ensure your e-mail has been received.
-@@ -300,11 +302,13 @@ tarballs should be fetched from kernel.org[8].
- 
- For more information, refer to CONTRIBUTING.md in this repository.
- 
--[1] https://github.com/kward/shunit2
--[2] http://vger.kernel.org/vger-lists.html#linux-gpio
--[3] https://docs.kernel.org/process/email-clients.html
--[4] https://docs.kernel.org/process/coding-style.html
--[5] https://docs.kernel.org/process/submitting-patches.html
--[6] https://lore.kernel.org/linux-gpio/
--[7] https://github.com/brgl/libgpiod
--[8] https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
-+[1]  https://github.com/kward/shunit2
-+[2]  http://vger.kernel.org/vger-lists.html#linux-gpio
-+[3]  https://docs.kernel.org/process/email-clients.html
-+[4]  https://docs.kernel.org/process/coding-style.html
-+[5]  https://docs.kernel.org/process/submitting-patches.html
-+[6]  https://lore.kernel.org/linux-gpio/
-+[7]  https://github.com/brgl/libgpiod
-+[8]  https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
-+[9]  https://www.shellcheck.net/
-+[10] https://reuse.software/
--- 
-2.43.0
+It's probably not worth the pain of moving files, but at
+least in Kconfig and filenames, they could be named
+gpiolib-virtuser.c and gpiolib-sloppy-logic-analyzer.c
+to make it clear that these are not gpio provider drivers
+but something else, more along the lines of gpiolib-cdev.c
+and gpiolib-sysfs.c.
 
+     Arnd
 
