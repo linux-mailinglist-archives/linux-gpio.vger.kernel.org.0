@@ -1,77 +1,111 @@
-Return-Path: <linux-gpio+bounces-7421-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7422-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCBC990698C
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 12:02:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 822C8906ADA
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 13:18:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CA921C22B7A
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 10:02:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 803A21C21A93
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 11:18:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2FB21411D3;
-	Thu, 13 Jun 2024 10:02:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93C2613C9C0;
+	Thu, 13 Jun 2024 11:18:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wjFovTTG"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NVPA4wvU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9FB13E3E4;
-	Thu, 13 Jun 2024 10:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFEE1422DD
+	for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 11:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718272969; cv=none; b=C4F3Vr2i61kmiGc97oLniheU0lpn8a/9YnGQrZoSeThwjzB77pQh+VZTrTBMD1UxjRHG7SM+HpcLbFGvJV/xPYUd1qxEZ3hln+iYe3YmUUC8voMLBQrrwBhwLQzmz1DFlG6R0pprkqXOarSaOR6Rh4zR6/n63rLLgQsuRsxIV9E=
+	t=1718277506; cv=none; b=fOWlUVhjGHcsD658Rk0yQgo6O+KtxuZkH5bdXmEjE/quw4rKf4ouYEtpdA+nbDT4wHeLlofOsCftGELstIWRedU6CrgrNaOTM3AJ6dvwxT/YyBqVc7FyTJdCtcKTrg7osOJeDGJCVA6YSwX6137uegZUCxjVCxAjJ1FPNsntapY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718272969; c=relaxed/simple;
-	bh=dmAgdhlc7Gnm/ltgQqlFO1EFzEj4GRIQgQbICwLzST8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GqOr3n32TJ/yJjooS4zJ0XQ5Y1ArVlExp0wByOuIfH5kTZ+19SX1Cn9uLsq270rwgw43q4VVm3tkkz5hEJAQ9213DNk/1hjVy7NHbaxBM+KzdXG2+2+u9id1Oy0zNBsqe6SzLNdbktR1EZjAY796RogCKpgfgdOpJpXKU8TrepA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wjFovTTG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB3FEC2BBFC;
-	Thu, 13 Jun 2024 10:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718272969;
-	bh=dmAgdhlc7Gnm/ltgQqlFO1EFzEj4GRIQgQbICwLzST8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wjFovTTGE/hRHbavqCKGnoyUSGeQb1ZTJt/Q59XK+5haCIQevZ6/10MMsdrA4o1tE
-	 jVqPLsckgVY1v7kQscD5dgE6gTB/IhSMCSTUuO3yqWiNg3YKNxUhl/8RzaWZpr0+Gl
-	 cR1tc/Ddi4d21UQnhzo/7EtBG+ELHZoyin6CYcPQ=
-Date: Thu, 13 Jun 2024 12:02:46 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v8 1/2] drivers: export to_ext_attr()
-Message-ID: <2024061330-clarinet-favorable-02da@gregkh>
-References: <20240613092830.15761-1-brgl@bgdev.pl>
- <20240613092830.15761-2-brgl@bgdev.pl>
+	s=arc-20240116; t=1718277506; c=relaxed/simple;
+	bh=HBFcO3MnDbEgvd9n1zufKisPAvQ+5EkOfA3eyt/cemA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=futBZ/jnR6kC/y8qADuQRB8pnCorPWpCBzQO0dqV+kL8E9mAuh0untooR9Q96q/iwGod/HS9kjlmhIfHgdR2PX+njHe7B1HFI29DoeUTgUxzuaNFn50Tg9IMUBgVw8OttmxdJ7Y/tsTvKnajMFXTbP0nNhVzABN5kbJ7/z9Wkdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NVPA4wvU; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52bc121fb1eso1261257e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 04:18:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718277503; x=1718882303; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HBFcO3MnDbEgvd9n1zufKisPAvQ+5EkOfA3eyt/cemA=;
+        b=NVPA4wvUQ6PZGYycD7ersd3mzlNbhyMnJuiEascfPCY+WdRa+vGieO2XPZITu4iTnA
+         ic+xnl9MqTgGnyAxu70Fnt1UMVo+G98EwhMh5raKtjuHVN9grDRiSFEKiqVmGc+BS6yI
+         EeJkQwZynWdNqFx3JVScoMiPn2ZqkipMRy/wd4CGi1jBr4G9hV27PMNUU15L0Bn4lszK
+         MiwuiDqqHDDlbZWHT4+xG0flTt8DvddWTXaiJTj4/rG2EI/uJz13Hk8mr7xDecZg+gVE
+         BrQqEuVN7daXlkOTSCPrsnMuu/clBxl1e3PcYjtc1cRvcnxPtPqFF7yKRBsbY8Wkny1s
+         gV7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718277503; x=1718882303;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HBFcO3MnDbEgvd9n1zufKisPAvQ+5EkOfA3eyt/cemA=;
+        b=QkShfZIUJvB560RR7513AQCrkOqVi90iLyTscfU7/oYiFnzd6vh3g9eeQnbyP1wsCa
+         AEGE5Jc2ZmCU9HYumTlor8M3/dOPycdHGA1mUdy85qrH/Qcfc7V91MuNM8P/fHYLyP4k
+         9YsqkS9mU2jZr1hoNe3ILsd42urfiPGAyAfSeeCNQqEygTa0RL2yY7GEQYcFPw4soP6B
+         saGSK+G5RbCIYnfOh3KDNtii+XNmEW3Bo/PWTvpznSjOBKXY6/A0NBy1DLbTPAGGP2Zf
+         pvAGee4nWNizEKfEIJT+quvGb0xsRDVjbPmsCZBZFSz3m5JRULY//lURcb/PbgfQ+cxW
+         2YWA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqmcBCWd1jhLxYozp09MKCz7yeHOfo5Ikfe6gtJRf50lTUmB2ojd2y1P2Ll8gbg0Ar2Wb/PtGChXevKONZLDmSSVx7VCQ+ve3Jrw==
+X-Gm-Message-State: AOJu0YzHJyA0ONN0afrMde/qO+J7Czpns4/XbOIkUXYpHM/Va1FP1cZf
+	is+YI3nG64wmkP1w8JZDfo31JY7O+8G8TFDAaXL6IxHh66XGaX6t8qbg6o9mi/Ntgq19tj6WfWy
+	BCMpIOum2Wxor+7C28wLZj5ZlsCKOmQ1anOsThw==
+X-Google-Smtp-Source: AGHT+IH+kLDQa0quCXRnsDwlpEst6OqWiTKg4mLICk/r9wtgXQ3OKkeStQzc8ULsG04CJKTsmjwSqQNEA4SjszvNw2Q=
+X-Received: by 2002:a05:6512:3ca4:b0:52c:a465:c61f with SMTP id
+ 2adb3069b0e04-52ca465c7d1mr482771e87.56.1718277502785; Thu, 13 Jun 2024
+ 04:18:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613092830.15761-2-brgl@bgdev.pl>
+References: <20240613092830.15761-1-brgl@bgdev.pl> <20240613092830.15761-2-brgl@bgdev.pl>
+ <2024061330-clarinet-favorable-02da@gregkh>
+In-Reply-To: <2024061330-clarinet-favorable-02da@gregkh>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 13 Jun 2024 13:18:11 +0200
+Message-ID: <CAMRc=MfzVxucpLBn4fdOghBvLQFazc28Q8Zt+wzuKbrkrnzW4w@mail.gmail.com>
+Subject: Re: [PATCH v8 1/2] drivers: export to_ext_attr()
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jonathan Corbet <corbet@lwn.net>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 13, 2024 at 11:28:29AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Make to_ext_attr() available to code that wants to reuse struct
-> dev_ext_attribute. While at it: make it into a static inline function.
+On Thu, Jun 13, 2024 at 12:02=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jun 13, 2024 at 11:28:29AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Make to_ext_attr() available to code that wants to reuse struct
+> > dev_ext_attribute. While at it: make it into a static inline function.
+>
+> Please don't use this, why is it needed?
+>
+> thanks,
+>
+> greg k-h
 
-Please don't use this, why is it needed?
+I had a struct in the gpio-virtuser module that consisted of a
+device_attribute and a void pointer. Andy suggested reusing struct
+dev_ext_attribute for that but I need this macro to access it when
+only having the embedded struct device_attribute address.
 
-thanks,
-
-greg k-h
+Bart
 
