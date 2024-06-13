@@ -1,148 +1,109 @@
-Return-Path: <linux-gpio+bounces-7424-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7425-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D23B906B0C
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 13:34:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BF77F906C15
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 13:46:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1B4F1B2243F
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 11:33:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D934B2489A
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 11:46:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD60B143897;
-	Thu, 13 Jun 2024 11:33:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA2101448EB;
+	Thu, 13 Jun 2024 11:45:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BxvJ92s9"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="M9oMaEfe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFC713791B;
-	Thu, 13 Jun 2024 11:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782C3143870
+	for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 11:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718278420; cv=none; b=cKM6r04GNYQ7/YRGMcaUJRQrD20lfnflw0RbPXCdAsrWQXsjwdu4IWCBkSCnRFFdkAIZdvM977Tz4JAWD4du8kJd/HKa4XrCsbG8yvBWxYffhzZ7I71UONoEWGcpZWwo/NBtB4a/OtiD6OqzYM7rPMhv4Y5PJ8bKqJH2vi7g9fM=
+	t=1718279157; cv=none; b=YENuqz22HFwNhQvaJxD/6zbE4F6jbnyVmHfP4girlPfzrP0GO8z7oiOBX/+OGkuXgHcJEJls1oujGmm/dAAO5U2yIAWDidM70GWzRNbDVGEPxQ3X16qhQnT9F22ti542WfOBuQdI4eJP/rpbTn52ggnkrWxsrB8UAvI9YcRVJJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718278420; c=relaxed/simple;
-	bh=tYDOTnZN4WaMj/eRey1nKzm34RYJ/l/vK+gS9mH/eLg=;
+	s=arc-20240116; t=1718279157; c=relaxed/simple;
+	bh=Qa+5tsjQ/bWxNqR4apitZPhLGQVDWmyu06aJiU9YzWY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q7htQS8KLoqO3z2KAysj7vKTm0iOjJSV/uyWadmkk7MKVIvYGw1PjOlqnkWE3Xbn6DUprGYEF5w1OIV07OE1knww5n3t0r+G3iblimujyP7EA1PXXwWrDNGCHojCvO49xbTuuMqx/6eKo/BjIr9YDBQho4ur28bai0Ro87mj8mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BxvJ92s9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADBB5C2BBFC;
-	Thu, 13 Jun 2024 11:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718278420;
-	bh=tYDOTnZN4WaMj/eRey1nKzm34RYJ/l/vK+gS9mH/eLg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BxvJ92s90ZNTNMAoWAKt2fgASuD522HcKk4RnTPwXX/bbP5uSA7bW0D9lW3D1cVWc
-	 icfLjlRNOVbLiUlFXnepLSwWxqbrLzPn0RhNwB4ABsZdSH3RcbEKzh5bd6RobMeGtf
-	 JdpIhGpIREndf1numOH4L2xJLOeQSo5KXty5ipvk=
-Date: Thu, 13 Jun 2024 13:33:37 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v8 2/2] misc: gpio-virtuser: new virtual testing driver
- for the GPIO API
-Message-ID: <2024061336-scooter-immortal-ec5f@gregkh>
-References: <20240613092830.15761-1-brgl@bgdev.pl>
- <20240613092830.15761-3-brgl@bgdev.pl>
- <2024061356-uptake-ideology-e57b@gregkh>
- <CAMRc=MfjQdFR_8ALGibxQnr5tzoHykCBpkBxjH78c5HuD43rBg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=oevltXt3oqmDjG5ZNu+0iq7mxJkYN84RlXeZETogBeIb3B8l7Jp7PBpHHGFyYexqdJBP8KGaH+mmgz8Oq1HcK3lK1WCHQ4cs/qygB2rZ8+QgaNhLn6NsmJI8dM3J9BrYt3KQHrLy1Fyue10VBPRvjZ6NPhPbyyT5ld4952dctSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=M9oMaEfe; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=Qa+5
+	tsjQ/bWxNqR4apitZPhLGQVDWmyu06aJiU9YzWY=; b=M9oMaEfeYi7Jffs1G0dJ
+	r/xKT0b+DkaPSGJpbJ3AxwH2q0skr5XCb5y7hyc5awQ6z1qDrpgmSdr9UKhulc41
+	gk4B7qEoN4EUedxN9gSB5d4onvcDsZYWNk3vRT9L9Ll1/Yg6faxLWP4owfJa2NSS
+	VzwIB3fnnNCGUvFuUToibVmUVB2PgnyrD/8lKZThNC+BpPJmmBIITS841ENV2f0m
+	/kj/i7a9W7PRa4eO9z5Bo6UMI6QaoMYXEWjweD5EBLDhlIrm+UhMfWb1P0vHhRZA
+	mgOW5brG9aSrV5+zQ4BG7oWQEcvQQgkUf+KmDRGrOSs0rw/cghSP3QaS59juQ5m4
+	9w==
+Received: (qmail 1158433 invoked from network); 13 Jun 2024 13:45:44 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jun 2024 13:45:44 +0200
+X-UD-Smtp-Session: l3s3148p1@YygLCsQa7s8gAwDPXzjQABqqX1QYyOSW
+Date: Thu, 13 Jun 2024 13:45:44 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-renesas-soc@vger.kernel.org, 
+	Jonathan Corbet <corbet@lwn.net>, Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <dke5qpn2opfd32jjsla3iwveg7rq3vzo6fxo4axxxkssl5umyd@hbbjtaosxbbs>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-renesas-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
+ <20240610112700.80819-2-wsa+renesas@sang-engineering.com>
+ <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
+ <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
+ <CACRpkdYYy_0QnzO-qPusYPFK2qFs=NG-t-X=GRjLg5DHX_k82w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="almjs3lru6qbslqr"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfjQdFR_8ALGibxQnr5tzoHykCBpkBxjH78c5HuD43rBg@mail.gmail.com>
+In-Reply-To: <CACRpkdYYy_0QnzO-qPusYPFK2qFs=NG-t-X=GRjLg5DHX_k82w@mail.gmail.com>
 
-On Thu, Jun 13, 2024 at 01:22:58PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Jun 13, 2024 at 12:02 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Jun 13, 2024 at 11:28:30AM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > The GPIO subsystem used to have a serious problem with undefined behavior
-> > > and use-after-free bugs on hot-unplug of GPIO chips. This can be
-> > > considered a corner-case by some as most GPIO controllers are enabled
-> > > early in the boot process and live until the system goes down but most
-> > > GPIO drivers do allow unbind over sysfs, many are loadable modules that
-> > > can be (force) unloaded and there are also GPIO devices that can be
-> > > dynamically detached, for instance CP2112 which is a USB GPIO expender.
-> > >
-> > > Bugs can be triggered both from user-space as well as by in-kernel users.
-> > > We have the means of testing it from user-space via the character device
-> > > but the issues manifest themselves differently in the kernel.
-> > >
-> > > This is a proposition of adding a new virtual driver - a configurable
-> > > GPIO consumer that can be configured over configfs (similarly to
-> > > gpio-sim) or described on the device-tree.
-> > >
-> > > This driver is aimed as a helper in spotting any regressions in
-> > > hot-unplug handling in GPIOLIB.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > ---
-> > >  .../admin-guide/gpio/gpio-virtuser.rst        |  176 ++
-> > >  Documentation/admin-guide/gpio/index.rst      |    1 +
-> >
-> > sysfs documentation needs to go in Documentation/ABI/ not in a random
-> > .rst file where the tools that check this will not catch it.
-> >
-> 
-> This is a testing driver, not representing real hardware. Do we hold
-> such modules to the same standard?
 
-Yes.
+--almjs3lru6qbslqr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > >  MAINTAINERS                                   |    8 +
-> > >  drivers/misc/Kconfig                          |    8 +
-> > >  drivers/misc/Makefile                         |    1 +
-> > >  drivers/misc/gpio-virtuser.c                  | 1790 +++++++++++++++++
-> >
-> > Why not put this in drivers/gpio/?  Why misc?
-> >
-> 
-> Because it's quite... well "misc". It's not a GPIO chip provider
-> (drivers/gpio/ is for GPIO providers), it's only a GPIO consumer. It
-> also has an interface that doesn't fit any particular subsystem.
 
-but it's gpio-specific, please put it there.
+> It says what it is, not really sloppy but really low-fi.
 
-> > > +Both attributes allow to read and set arrays of GPIO values. User must pass
-> > > +exactly the number of values that the array contains in the form of a string
-> > > +containing zeroes and ones representing inactive and active GPIO states
-> > > +respectively. In this example: ``echo 11 > values``.
-> >
-> > sysfs is "one value per file", so why are there multiple values here?
-> >
-> > If you want to just use this for testing, and want to put whatever you
-> > want in the files, just use debugfs, that's what it is there for, not
-> > sysfs.
-> >
-> 
-> Debugfs doesn't allow me to attach attributes to a particular device
-> which is what I want here.
+I think it is sloppy because it cannot guarantee equi-distant sample
+points.
 
-Yes it does, you just have to create the tree yourself.  Many subsystems
-do this today just fine.
 
-Please do not abuse sysfs for something that it is not designed for,
-please use debugfs, that is EXACTLY what it is designed for.
+--almjs3lru6qbslqr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-thanks,
+-----BEGIN PGP SIGNATURE-----
 
-greg k-h
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZq2+QACgkQFA3kzBSg
+KbYkwBAAs/f9/Phxgen69SUCMHYk1w26Fee0FREXM7V3tJ47fypaFbQyVhJ7evAb
+AlWtL018wsazFdzU3RYAhkmNqfceiDUisxQzZoAS65gYb27EIfjYfUVJw3f2eGxx
+QBj/AAZK101lcWxB78Fvj1kGL+ROU5JSyG3zKbgzweOWM3jyJV59lSYwrj/4JM9b
+ACn9/t+CJkqbIh2FAIYF9biBjH8+j209+UKtIaeSAJWbJWORXJvRhBS1HRuuStO+
+eT2qOtwuRLHacR4kR215ybVm48yXSuHa30yMY5p+ZsiyyIdSlkhxljXaFht+jO4H
+SPEFZMgScx7iveVihG152V2OSztxsBbMoC5xTjcVQ9D0eHFYezzALmDRji1rIS8Y
+qAvfhrEdOeRBCWIo7JdQ8AYjqf7U24jQ5Az07BPRNVFApyde+EACLZuIGOkoMQuX
+gYl2vxfGjdgD6lVmhAtO3ijpOnK6OIPHn9BcMZoPcYjfvlKcHGyZrtKoSybpveMr
+zytywxfiRyGXZWOfvXT3i/UQo9QRNhW4WAIL9VrfAmaCH5eFTGJnXHb3ldOneD0b
+rAbTw0vsI5AAZvVJmruLrUYZcXdYK2CikAPVailFj/HD9wwAqn+rrqc76R2ARF5/
+zbdVOe2CpwAd3Kdqbgmd6s6V7m5OiJoehhYGggq3wlXM6QbZjRU=
+=JglD
+-----END PGP SIGNATURE-----
+
+--almjs3lru6qbslqr--
 
