@@ -1,120 +1,137 @@
-Return-Path: <linux-gpio+bounces-7428-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7429-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5556907463
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 15:53:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10B1C90747E
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 16:01:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D26F11C244B8
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 13:53:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A25628516F
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 14:01:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63223145B20;
-	Thu, 13 Jun 2024 13:52:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D11273FC;
+	Thu, 13 Jun 2024 14:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="B04IwCKD"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yImyc6Ld"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1A0144D18
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 13:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346C0ECC
+	for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 14:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718286734; cv=none; b=O0Exbulsw8aG+pu0sX4u3ErsgI8O4xD0fGSH41WrhbqVrkjPszjG6RjEzgey5rKezHceCdu1+5hI3S76zls8IqsKRZ5Flla/2s0OIxYuDLBI53FW9PpYlmkHhERwKhteebeFov1XnSPrTaBGgzOD2je9x5XWMjVKeIkLc9+TEBU=
+	t=1718287284; cv=none; b=h/hc0s97EiWuTHM2aO4lVvNzHOM5W2c4NpKR4+PYCxm1CsCNDdkiwZRJsvIUtsgiKFVaJtpb7LQLCQJs3el1ruPsahcZNi1D8/EeXsmQ1broXkbtpFWPizpT4QX/VR3/GqfB2Gh8xqNW+igFodmdiyBJ8axeEN+KNVVKR8Zt+KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718286734; c=relaxed/simple;
-	bh=Drw+bh0vFOGcaS/1pHzqey5YbazBzVY0YTip6dwSx54=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oyfAcVy6cdj4WsI2GVaQfTg0t/gX6qEl+PQjeR6vdcAnOxWzV9MOzuLygHbavIg1uw8qqzixAlMaJlGL21CmJnorj3ayOnjq1CZLfMa48s7WM4EhZMM2yDw9ih2uxxyVl8uiCFGUaEq6RFTvKpXr2oe/5lYbH0BKZkk4ASFyvQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=B04IwCKD; arc=none smtp.client-ip=209.85.167.41
+	s=arc-20240116; t=1718287284; c=relaxed/simple;
+	bh=by8Xwx8UcUqeJO640qsAzMJcMky+jPAd5JWuChsdINg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XCtrqDwyLAoyRagKJPUegiqLiPMZ8jqQSjAJkZFEqwxyHdBEBAL45t6BotsJ9m63NpFwqpjx0vielf3ohBMhtyrEWKWod5pncddlcm2FTScKkqxMxIyyxwVO/EIhi3f6XVofUekmk8616KuySnwgxIchO707OeJ+g1KOE0jfDaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yImyc6Ld; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52962423ed8so1310124e87.2
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 06:52:12 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2e724bc466fso11630911fa.3
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 07:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718286730; x=1718891530; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Drw+bh0vFOGcaS/1pHzqey5YbazBzVY0YTip6dwSx54=;
-        b=B04IwCKDjg/tg2e9IGGzOrQ5wmROWb8oVRR3FGyae9jkSvexAMBHD6uxf4u9F+v7F5
-         hdPmxYA5aNPUPcXmmg9bdoZnVx/uPwH/S5Ha/iO233m3Ef38JloMZ6Hv7UyBvvsHNt5O
-         YqDWBMpa/uBFlDBKT15fNDVD/nRVIa16injiY4hhYAsywt1w49MupC07nnjKMCl2/hKG
-         cB+/EKFKaPxzv24hG4rm6W3NRibwm3PwVZmLX7DOscGePHpWAyR1gC4PtFqo+pE+14Q/
-         KPVFv3hpLiDNzuhGX1Yp2gP6iEQwtYYrkq3hLXR7596eTdexxp16vmbNQrZWoqzVTjUI
-         ZJTQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718287280; x=1718892080; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d56pDegUDledTaRRJ2Dci64L2O7V0m4uOemE0vUQxU8=;
+        b=yImyc6LdOmxj5flzY9nDCxSQnPXZeiewepYK1Lom3KhEMez0ZY82zOMUwOl97L3GGz
+         wd27FlXgGSanGA/1sTQfwZjCE/Gw+Tm7f0ZeHYlAfnX8r738U5AaAdSMADBWCbTkexXg
+         P0Apx+SRSlwt9eesI1Dn+X9Yp5DZaesRQRazuUeMG+SD26hKHY8gTSbl10zZPU1KAHQW
+         zt+et6MFAmNDxJoU72D1erZjbgkbo2KdbUs/hJpfApjrGJA6Tco8RZXllQTJQMR9v2Rs
+         690THGM2IpEosjcU7r1pYHS5VAJ+3yjPPPjh/+WQKDS+fL3PhHpVAgF8JxKaO8241BSL
+         D+zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718286730; x=1718891530;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Drw+bh0vFOGcaS/1pHzqey5YbazBzVY0YTip6dwSx54=;
-        b=JOyfXd3/BFPD5aP5CTuw1I5aLBG2mP5OzSY6RDEeLxVfwdRYw7HvGOJSmqW9IBPI0E
-         lvb0Vg6lrg12eYt2fWiBMsINXign4Z5ep5wOATZIMSxQZbVkC4Xonq7Qj/kgl/p9DRya
-         TFEvIiuLAT4+UfOyqHiHmGwE614Zp8Q6jeWF9ujE4ZKfPq/3rppFJMRRonyfKhWAcvh2
-         xWKuCB5D6WO+1t6wmxOVjAJm5uko8vzNPzjQGYPy1cJFCM/XYG87YxDRjZu6KwRNoPVV
-         l6bs3tc4kEZH/LhH7POM0AQTlyHAiCUh05I9AOkCr1lQjKLdnPybD/oOmgtnC+wyOcVt
-         JSTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7/TPPufKbqSOuzMUNNCWkXR6MXaMhKjzj8IkmuJ+g6juCElji+yiRpMNh+qXhiONPQE049MyocPDQaaTrcyspS/xm2EJDlrAUZA==
-X-Gm-Message-State: AOJu0YwSACYPFpALez27Y6kcW+51BCsb6AFcBaKmOAmu1V6zf7vtZdPT
-	MebOiQnQml5v6E+PQJJDzWi0f5lF7CoC1YCUN4qyWKmdsSKVm+o0LXBlEMbD9oTN79EPTHgvd4o
-	Nlo668xXRDCqcjuKOIUbeFlgM73G9wj/ErqETNg==
-X-Google-Smtp-Source: AGHT+IG0YXfW5J48LhqDyLUpQ92RDHLHqz9rgqm6jSFjDn0RmWaxIXpuWTs4/nVwj+KKnHLtEzbv/tMmMCsmcr7MsEs=
-X-Received: by 2002:a05:6512:b24:b0:52c:9ced:7508 with SMTP id
- 2adb3069b0e04-52c9ced7552mr3490962e87.13.1718286730432; Thu, 13 Jun 2024
- 06:52:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718287280; x=1718892080;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d56pDegUDledTaRRJ2Dci64L2O7V0m4uOemE0vUQxU8=;
+        b=eYc5TpQSW9UWAbG9rV6ys4wC0l2L/7+p13xpHNVE7ktmOgJTbwUscb3yK+4tcVyFeF
+         nWIW452VWrI4kPJaOa0dbuF3oT0v2mHr3pNNrjDi8VRxeFGeTcFeEzRBmPZbJDALFf9Y
+         pxbhmDZq4BvraUz5CrBUHVUUQfd7Vx3nlLqe5kRloNiGRN4BGHzZg8W4YQZ+R9B32zks
+         Z9uBOGbdV58YThxV66hU9aX9g+4sYXOZiDxQlorBDdImGB2eB1ESp7GpljD9hWV48kwj
+         W+doU5lnP9hy03Ogv41sC/givWFFwgRJxxxXWzU/jqxfoknalYLiDhSGjYB1wyLXTqlp
+         Zjrw==
+X-Gm-Message-State: AOJu0YyQcw5ySLbhoKW5zStrQRKNfBDdT8bVsM8ldsmHGoQUKbtFJ5Z5
+	N3Ffsagc+1BAoS70iACbjHb31P0uEWpmVB35Mr6Dd0t58elr00ucHdj4fh3KI5zGuxcldxQK8Wx
+	3
+X-Google-Smtp-Source: AGHT+IGC1PmbRw3ue0Nl1jK7MXX/HtQNPN5r7oWKzR9bXvFIm84k4dMY2Wf1miHuEP3j88YiqbexLQ==
+X-Received: by 2002:a2e:b6ce:0:b0:2eb:daae:65dc with SMTP id 38308e7fff4ca-2ebfc99f5eemr41425881fa.48.1718287280364;
+        Thu, 13 Jun 2024 07:01:20 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:8d3:3800:875c:e292:3280:ccac])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de5d5sm63303585e9.33.2024.06.13.07.01.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 07:01:20 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Vincent Fazio <vfazio@gmail.com>,
+	Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [libgpiod][PATCH] README: add mentions on shellcheck and reuse
+Date: Thu, 13 Jun 2024 16:01:17 +0200
+Message-ID: <20240613140117.39048-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
- <20240610112700.80819-2-wsa+renesas@sang-engineering.com> <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
- <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
- <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
- <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
- <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com> <CAMRc=McpRjQO8mUrOA4bU_YqO8Tc9-Ujytfy1fcjGUEgH9NW0A@mail.gmail.com>
- <CACRpkdYtLDA3518uSYiTpu1PJuqNErHr9YMAKuar0CeFbfECPA@mail.gmail.com>
-In-Reply-To: <CACRpkdYtLDA3518uSYiTpu1PJuqNErHr9YMAKuar0CeFbfECPA@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 13 Jun 2024 15:51:59 +0200
-Message-ID: <CAMRc=Mem6HN13FOA_Ru8zC-GqGGLTsQiktLWs5bN4JD1aM3gHQ@mail.gmail.com>
-Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 13, 2024 at 3:47=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Thu, Jun 13, 2024 at 11:43=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
-pl> wrote:
->
-> > To prove this point, I even moved the gpio-virtuser driver I'm working
-> > on to drivers/misc/ too as it isn't a GPIO provider either and merely
-> > a GPIO consumer with a one-shot user-space interface not conforming to
-> > any standards.
->
-> We *could* just create drivers/gpio/consumers/* and an entry into the
-> top-level drivers/Kconfig to have those appear right under the GPIO
-> providers...
->
-> Yours,
-> Linus Walleij
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-That would just add to confusion. GPIO consumers are all over the tree
-after all.
+Extend the "Contributing" section of the README to include mentions of
+shell scripts having to pass the `shellcheck` test and the entire tree
+having to conform to `reuse lint` requirements.
 
-Whatever, let's keep it in drivers/gpio/. Greg KH just shot down my
-idea of putting gpio-virtuser in drivers/misc/.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ README | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-Bart
+diff --git a/README b/README
+index 7a92a49..a6f24d1 100644
+--- a/README
++++ b/README
+@@ -284,7 +284,9 @@ to send plain text[3].
+ 
+ Code submissions should stick to the linux kernel coding style[4] and
+ follow the kernel patch submission process[5] as applied to the libgpiod
+-source tree.
++source tree. All shell scripts must pass `shellcheck` tests[9]. All files
++must have a license and copyright SPDX headers and the repo is expected to
++pass the `reuse lint` check[10].
+ 
+ The mailing list archive[6] contains all the historical mails to the list,
+ and is the place to check to ensure your e-mail has been received.
+@@ -300,11 +302,13 @@ tarballs should be fetched from kernel.org[8].
+ 
+ For more information, refer to CONTRIBUTING.md in this repository.
+ 
+-[1] https://github.com/kward/shunit2
+-[2] http://vger.kernel.org/vger-lists.html#linux-gpio
+-[3] https://docs.kernel.org/process/email-clients.html
+-[4] https://docs.kernel.org/process/coding-style.html
+-[5] https://docs.kernel.org/process/submitting-patches.html
+-[6] https://lore.kernel.org/linux-gpio/
+-[7] https://github.com/brgl/libgpiod
+-[8] https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
++[1]  https://github.com/kward/shunit2
++[2]  http://vger.kernel.org/vger-lists.html#linux-gpio
++[3]  https://docs.kernel.org/process/email-clients.html
++[4]  https://docs.kernel.org/process/coding-style.html
++[5]  https://docs.kernel.org/process/submitting-patches.html
++[6]  https://lore.kernel.org/linux-gpio/
++[7]  https://github.com/brgl/libgpiod
++[8]  https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
++[9]  https://www.shellcheck.net/
++[10] https://reuse.software/
+-- 
+2.43.0
+
 
