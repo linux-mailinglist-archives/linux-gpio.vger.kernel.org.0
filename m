@@ -1,115 +1,87 @@
-Return-Path: <linux-gpio+bounces-7434-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7435-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D92FE907858
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 18:33:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C33069078E1
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 18:56:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F02331C204DA
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 16:33:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D648286733
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jun 2024 16:56:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC0561474CC;
-	Thu, 13 Jun 2024 16:33:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 923891494D6;
+	Thu, 13 Jun 2024 16:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="BOgPACwX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I4Xvw7Bg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AB9131BDD
-	for <linux-gpio@vger.kernel.org>; Thu, 13 Jun 2024 16:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4926C146A7B;
+	Thu, 13 Jun 2024 16:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718296403; cv=none; b=RkUd0vAGcOHSdrkicsraNkg8AnnRCA9bOav0EkBadJG15K82PBubbbKkEAEKaxUi88BThjqHfjl+d4G9Wpb+9jB+pWhj2zIZcrE9+Qb58sojjdYsxIf902wDQ0e7RYeqEB25yjUHZWX3VTsZY/rxMLOhbGSv0zyFqJw8T+8ci58=
+	t=1718297764; cv=none; b=tR+9bOEsDV/Dsc2xG4ywnjpTneyWU0M8I2rXnIKdfxJ3AwBU/VcsSVuUnBjq/BJHm4FDNpCtO2f6fpqCwylMZiW6AWhlyzLZYL0FXoYrEptZuNpDRT4PrYsTLoxc4m0CRFDPCXws6yhQBuDa9FnN8bHX60Kgw7EHwR9QJr23r9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718296403; c=relaxed/simple;
-	bh=KxVEzA57tlb7dePRLlN+bW+GJrzbV4oxzQQUaG/sQzc=;
+	s=arc-20240116; t=1718297764; c=relaxed/simple;
+	bh=j9VKT+5uLDR/9V3z3CWPlahYa1LVlU+XKjjYY+mzRPY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oid6Cfu44GqpNwrjQ55oWpo0XqqvVhY1trIbGVK7x2XW7xnX/pVddVp8oy3IXI+LOQYkLlFLOy83iXn80rKU5xvUAHEy1H9pjO8/WMk/XcEFgVWW21H7hWClf9y3lep2nyCnuJcpza6q2Lwmeztwt58jSuBGvGQFyBkzwOx1R+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=BOgPACwX; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=KxVE
-	zA57tlb7dePRLlN+bW+GJrzbV4oxzQQUaG/sQzc=; b=BOgPACwX0ANo0oMadmpD
-	Yr73nPBZBmp7baH6guSP1DC5TFWUORAgxUxptrAZbAoojBaCvMpiNnrdn6XSrttI
-	C3YfitgxzPkE+oyxXwgZWWYmurG4f+Mj90F2XHtxT797WYT3yqYo/wikxb7KLVQD
-	UowlqX1K2rlKQJ3sSEcs94sp+sh5c2425J+1jqf5Azt5LmhUy6mlUa64rJB1mKo6
-	aW3hAiRfskBGmfhmZekPpaZuaLoYzTFw8ipSPtESgiXs1wzSeMbNpvpqt1YitGvy
-	meOmYslB+gqk6oDnWrrdITiHhOASFBE/r8bsnf6Sbq8M28Tyx5pZYj7QbBAGHKO7
-	5Q==
-Received: (qmail 1241039 invoked from network); 13 Jun 2024 18:33:17 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jun 2024 18:33:17 +0200
-X-UD-Smtp-Session: l3s3148p1@ERVcDsgaVe5ehh9j
-Date: Thu, 13 Jun 2024 18:33:16 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
-Message-ID: <7mkl7su47jqoagphc5daaonhndfw2xuap37z6yu4afdg3zvezb@5raeuolqflmo>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
- <20240610112700.80819-2-wsa+renesas@sang-engineering.com>
- <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
- <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
- <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
- <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
- <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com>
- <CAMuHMdXmtXcOQ1SibKFh3M+X-syEyEHfxjvSmtDoDNqU40MPVg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=p/MX8htWAdV0ikO8YRzX8GSbnuaECO79rXv5gP85GD5rpLPtPJqOxAvzZ5uCFS57WNR64cPT4WXZYkqc8hHIq1ersbmo6Kup15N2lHy5vi8pQlLPLkeTa+tWDA8Lv9a9ZscyiwzHjS4xTQK6EzaSQEkekc8VJmKyECYbGcgoHP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I4Xvw7Bg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAA8AC2BBFC;
+	Thu, 13 Jun 2024 16:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718297764;
+	bh=j9VKT+5uLDR/9V3z3CWPlahYa1LVlU+XKjjYY+mzRPY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I4Xvw7Bge6TLJ4L6tzwg58eqzAlvAmp3tCERy+VkJBbXTpl+GisshBcA0hwSox2DH
+	 QVMogq717E0lGUPBOzW5oV4XBoqJVDi79siVvbClwp6WKQIxocJZ8bBmPbdpNc4C16
+	 HvvuRJRxPew+X64K965+jkSS5TRhHqG01Pv5qZEBclhgiB154fe4HKcm7X5HmWIxAT
+	 yaGXEMtU2GVKRWl9JWVdo0Dl1yK8P1FK6Kk011hr0GoIneB+GkGrCo1p5t7wC9Qr9B
+	 sgRp3nDLHm/I6AfuYzvgWPoTrH7TA+PkMWAx3yNJU2l1YIeUa/It9UaBxUj+JSi/hE
+	 yJZm7KK//3JFQ==
+Date: Thu, 13 Jun 2024 10:56:02 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Krishna Potthuri <sai.krishna.potthuri@amd.com>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Michal Simek <michal.simek@amd.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: xilinx: Add support for
+ function with pins
+Message-ID: <171829776082.2018524.17283616546345596945.robh@kernel.org>
+References: <20240610223550.2449230-1-sean.anderson@linux.dev>
+ <20240610223550.2449230-2-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6en6wjrd5s6y4t3r"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXmtXcOQ1SibKFh3M+X-syEyEHfxjvSmtDoDNqU40MPVg@mail.gmail.com>
-
-
---6en6wjrd5s6y4t3r
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240610223550.2449230-2-sean.anderson@linux.dev>
 
 
-> Hmm, I like the iio idea.
-> Sorry, Wolfram ;-)
+On Mon, 10 Jun 2024 18:35:49 -0400, Sean Anderson wrote:
+> Support specifying the function per-pin. The driver doesn't care
+> whether you use pins or groups for this purpose.
+> 
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+> ---
+> 
+> Changes in v3:
+> - Express groups/pins exclusivity using oneOf
+> 
+>  .../bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml | 349 +++++++++---------
+>  1 file changed, 180 insertions(+), 169 deletions(-)
+> 
 
-Ah, no worries, Geert. I am happy you want to take over :)
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-
---6en6wjrd5s6y4t3r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZrH0gACgkQFA3kzBSg
-KbZxsg/8Czee6rn0dAMoaq7pD7T9gQoEh/Dk9CRXW6AGY0vj+qUesC6L9lSFBmBf
-lx63HJJRrjpckhXn4Knk7UBJXWYMASxXpbiE+YcKhZJZn+Or/EuviyWVZWdxYwuH
-ItHH7kwQSLoWykJcRA6+AX6AwRF67qFD1Ff5omCJHjYYbMrF3t4znzgazdIIGDaN
-9W8EG37tdJqEHFC+lBb7gVjt5V/rnH1dDNLIOWFgt3geBP8UE5ea/rqDCxierBcG
-/1pb9t2aiwCs8HeikQKFLQsY+W+mE1s0dz0+FNuxYdfo3LF8bl0kLJoaAnOjUqX6
-Wujft6kYjhbHRGpJFu2Rknxban81mk3Qw1svKC8JH8LacspvjMVmZVkRaqPHeXWI
-nR6bUdkCtGMldW//gD0maQSI9iJvIBFXS6gUbMrdDrIPm/d5625J6w0VIkr/yGhX
-bqG/EyMqXQu57leV3YqCm1JyVYbW/Hgm3eUU4CrrLcIa76b9q8O9R5fpIlUUumT1
-48LsZmHGA9j+B6cgPYUCYrU8zLpXuIJpxLjuJGQ9an/cfuih9T1YeK/K29jaUH84
-zqm9Le5J1QPS2VZsccMD/h2HKjzJrXHqxdz8IH4Od/E5JjRWSsRC1moKJ+adh7Rl
-8vYZWsa0sFjv6iCArYP088FF77qgdkMtBqth4bD/JlR2aqMPY9E=
-=zpkZ
------END PGP SIGNATURE-----
-
---6en6wjrd5s6y4t3r--
 
