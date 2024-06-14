@@ -1,254 +1,116 @@
-Return-Path: <linux-gpio+bounces-7459-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7460-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3555908EC1
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2024 17:30:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA6F1908F7C
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2024 18:01:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CD07283AFC
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2024 15:30:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0AB421C212C1
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jun 2024 16:01:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65F0615FA72;
-	Fri, 14 Jun 2024 15:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C04D15ECC8;
+	Fri, 14 Jun 2024 16:01:31 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [195.130.132.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78111154457
-	for <linux-gpio@vger.kernel.org>; Fri, 14 Jun 2024 15:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E72946C;
+	Fri, 14 Jun 2024 16:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718378998; cv=none; b=i7wr6Qe1dp23NtGJhzavDflmOyot6ffpLdmL5AuYkU2tsuHe6cowFxsH3QYNBxapCqX9djDmQaXJhPwBovKR1qWke0WJfx68KuaPLYVJVBzdQnhilik0aJGRHYVtBQ6K9qQxkH6KPhzQl3oqQCztbLgvLELcSIF2TwcMcHwPlsc=
+	t=1718380891; cv=none; b=Gb+A9sJzmNyDQ5K5dljjAo+3iSgY42jBwqRJ3CV39eppMuy9nRAhw0/qB5lwazOSpARmUnMRo+JPbUDEaMybOWIcFRFbd4isJDj312wcAzz1MXSWm3S3KcYujupqDYDtJIo7tQvJBRmVeHy4ZyNZd+SaSNf1rgupI7g5MSghx2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718378998; c=relaxed/simple;
-	bh=G7N4LBPEen+i7Rk41ia8YsIvM9JUaIHDchoyeXscCEI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cQ0GP0qI2dsZ4ToH/rMzFIR57FPKgQxAw8+F9zOhlsQ37FcM2cyr+ymdQRdi5sstnzjeELuN499tSsytpX1lMqgYsEakg6yg+rqcT1P41/qVzYxQPJE18hqOoMlGe/HQXP1oJxZiQSA3SNY5QcDwP8kpl6S48ZHJmxmcV8/l2gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:be2a:f066:50f0:dff7])
-	by baptiste.telenet-ops.be with bizsmtp
-	id bTVw2C0073w30qz01TVw3i; Fri, 14 Jun 2024 17:29:56 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1sI8r9-00CeH9-T9;
-	Fri, 14 Jun 2024 17:29:54 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1sI8sE-00FqOS-Ed;
-	Fri, 14 Jun 2024 17:29:54 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] pinctrl: renesas: r8a779h0: Remove unneeded separators
-Date: Fri, 14 Jun 2024 17:29:53 +0200
-Message-Id: <1fcd4f8734d063c9a691d9ab8ca0543892eb8388.1718378979.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718380891; c=relaxed/simple;
+	bh=PF06UVAUwNRTBfsiJ21LK7Zw9YpeWoI6dp0UuAuGFXs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iC9DD7Y5sI8QiQFqt1PxpR9o3/UEZcFw7hZ33EqpZjm0oXuvuYD6E+HY71yjJt4AOZK80fcSogk34PReVfAVGLVBTFAVKgeeoQ6T0d/9bbIWSCYAxubRTQrGsBbwejU3NfLhU/kZg9BW3/FVqYVAUTqgM6u3lVTgGxH36LwQegY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W13rc72Q9z6H7Wv;
+	Sat, 15 Jun 2024 00:00:00 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 690CF140D26;
+	Sat, 15 Jun 2024 00:01:25 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Jun
+ 2024 17:01:24 +0100
+Date: Fri, 14 Jun 2024 17:01:23 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "Sascha
+ Hauer" <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Abel Vesa
+	<abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>, Frank Li
+	<Frank.Li@nxp.com>, <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<linux-i2c@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+	<linux-pwm@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <linux-watchdog@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: drop stale Anson Huang from maintainers
+Message-ID: <20240614170123.00002e0f@Huawei.com>
+In-Reply-To: <20240614095927.88762-1-krzysztof.kozlowski@linaro.org>
+References: <20240614095927.88762-1-krzysztof.kozlowski@linaro.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Usually there are no separators between alternate functions.
-Remove them to increase uniformity.
+On Fri, 14 Jun 2024 11:59:27 +0200
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-To be queued in renesas-pinctrl for v6.11.
----
- drivers/pinctrl/renesas/pfc-r8a779h0.c | 30 ++++++++------------------
- 1 file changed, 9 insertions(+), 21 deletions(-)
+> Emails to Anson Huang bounce:
+> 
+>   Diagnostic-Code: smtp; 550 5.4.1 Recipient address rejected: Access denied.
+> 
+> Add IMX platform maintainers for bindings which would become orphaned.
+That doesn't make much sense for the magnetometer which has nothing to do with
+imx.
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a779h0.c b/drivers/pinctrl/renesas/pfc-r8a779h0.c
-index 944bf927449ddc1b..48b1eef250d950dd 100644
---- a/drivers/pinctrl/renesas/pfc-r8a779h0.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a779h0.c
-@@ -1557,7 +1557,7 @@ static const unsigned int hscif0_ctrl_mux[] = {
- 	HRTS0_N_MARK, HCTS0_N_MARK,
- };
- 
--/* - HSCIF1_A ----------------------------------------------------------------- */
-+/* - HSCIF1 ------------------------------------------------------------------- */
- static const unsigned int hscif1_data_a_pins[] = {
- 	/* HRX1_A, HTX1_A */
- 	RCAR_GP_PIN(0, 15), RCAR_GP_PIN(0, 14),
-@@ -1580,7 +1580,6 @@ static const unsigned int hscif1_ctrl_a_mux[] = {
- 	HRTS1_N_A_MARK, HCTS1_N_A_MARK,
- };
- 
--/* - HSCIF1_B ---------------------------------------------------------------- */
- static const unsigned int hscif1_data_b_pins[] = {
- 	/* HRX1_B, HTX1_B */
- 	RCAR_GP_PIN(1, 7), RCAR_GP_PIN(1, 6),
-@@ -1626,7 +1625,7 @@ static const unsigned int hscif2_ctrl_mux[] = {
- 	HRTS2_N_MARK, HCTS2_N_MARK,
- };
- 
--/* - HSCIF3_A ----------------------------------------------------------------- */
-+/* - HSCIF3 ------------------------------------------------------------------- */
- static const unsigned int hscif3_data_a_pins[] = {
- 	/* HRX3_A, HTX3_A */
- 	RCAR_GP_PIN(1, 24), RCAR_GP_PIN(1, 28),
-@@ -1649,7 +1648,6 @@ static const unsigned int hscif3_ctrl_a_mux[] = {
- 	HRTS3_N_A_MARK, HCTS3_N_A_MARK,
- };
- 
--/* - HSCIF3_B ----------------------------------------------------------------- */
- static const unsigned int hscif3_data_b_pins[] = {
- 	/* HRX3_B, HTX3_B */
- 	RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 0),
-@@ -2109,7 +2107,7 @@ static const unsigned int pcie0_clkreq_n_mux[] = {
- 	PCIE0_CLKREQ_N_MARK,
- };
- 
--/* - PWM0_A ------------------------------------------------------------------- */
-+/* - PWM0 --------------------------------------------------------------------- */
- static const unsigned int pwm0_a_pins[] = {
- 	/* PWM0_A */
- 	RCAR_GP_PIN(1, 15),
-@@ -2118,7 +2116,6 @@ static const unsigned int pwm0_a_mux[] = {
- 	PWM0_A_MARK,
- };
- 
--/* - PWM0_B ------------------------------------------------------------------- */
- static const unsigned int pwm0_b_pins[] = {
- 	/* PWM0_B */
- 	RCAR_GP_PIN(1, 14),
-@@ -2127,7 +2124,7 @@ static const unsigned int pwm0_b_mux[] = {
- 	PWM0_B_MARK,
- };
- 
--/* - PWM1_A ------------------------------------------------------------------- */
-+/* - PWM1 --------------------------------------------------------------------- */
- static const unsigned int pwm1_a_pins[] = {
- 	/* PWM1_A */
- 	RCAR_GP_PIN(3, 13),
-@@ -2136,7 +2133,6 @@ static const unsigned int pwm1_a_mux[] = {
- 	PWM1_A_MARK,
- };
- 
--/* - PWM1_B ------------------------------------------------------------------- */
- static const unsigned int pwm1_b_pins[] = {
- 	/* PWM1_B */
- 	RCAR_GP_PIN(2, 13),
-@@ -2145,7 +2141,6 @@ static const unsigned int pwm1_b_mux[] = {
- 	PWM1_B_MARK,
- };
- 
--/* - PWM1_C ------------------------------------------------------------------- */
- static const unsigned int pwm1_c_pins[] = {
- 	/* PWM1_C */
- 	RCAR_GP_PIN(2, 17),
-@@ -2154,7 +2149,7 @@ static const unsigned int pwm1_c_mux[] = {
- 	PWM1_C_MARK,
- };
- 
--/* - PWM2_A ------------------------------------------------------------------- */
-+/* - PWM2 --------------------------------------------------------------------- */
- static const unsigned int pwm2_a_pins[] = {
- 	/* PWM2_A */
- 	RCAR_GP_PIN(3, 14),
-@@ -2163,7 +2158,6 @@ static const unsigned int pwm2_a_mux[] = {
- 	PWM2_A_MARK,
- };
- 
--/* - PWM2_B ------------------------------------------------------------------- */
- static const unsigned int pwm2_b_pins[] = {
- 	/* PWM2_B */
- 	RCAR_GP_PIN(2, 14),
-@@ -2172,7 +2166,6 @@ static const unsigned int pwm2_b_mux[] = {
- 	PWM2_B_MARK,
- };
- 
--/* - PWM2_C ------------------------------------------------------------------- */
- static const unsigned int pwm2_c_pins[] = {
- 	/* PWM2_C */
- 	RCAR_GP_PIN(2, 19),
-@@ -2181,7 +2174,7 @@ static const unsigned int pwm2_c_mux[] = {
- 	PWM2_C_MARK,
- };
- 
--/* - PWM3_A ------------------------------------------------------------------- */
-+/* - PWM3 --------------------------------------------------------------------- */
- static const unsigned int pwm3_a_pins[] = {
- 	/* PWM3_A */
- 	RCAR_GP_PIN(4, 14),
-@@ -2190,7 +2183,6 @@ static const unsigned int pwm3_a_mux[] = {
- 	PWM3_A_MARK,
- };
- 
--/* - PWM3_B ------------------------------------------------------------------- */
- static const unsigned int pwm3_b_pins[] = {
- 	/* PWM3_B */
- 	RCAR_GP_PIN(2, 15),
-@@ -2199,7 +2191,6 @@ static const unsigned int pwm3_b_mux[] = {
- 	PWM3_B_MARK,
- };
- 
--/* - PWM3_C ------------------------------------------------------------------- */
- static const unsigned int pwm3_c_pins[] = {
- 	/* PWM3_C */
- 	RCAR_GP_PIN(1, 22),
-@@ -2276,7 +2267,7 @@ static const unsigned int scif0_ctrl_mux[] = {
- 	RTS0_N_MARK, CTS0_N_MARK,
- };
- 
--/* - SCIF1_A ------------------------------------------------------------------ */
-+/* - SCIF1 -------------------------------------------------------------------- */
- static const unsigned int scif1_data_a_pins[] = {
- 	/* RX1_A, TX1_A */
- 	RCAR_GP_PIN(0, 15), RCAR_GP_PIN(0, 14),
-@@ -2299,7 +2290,6 @@ static const unsigned int scif1_ctrl_a_mux[] = {
- 	RTS1_N_A_MARK, CTS1_N_A_MARK,
- };
- 
--/* - SCIF1_B ------------------------------------------------------------------ */
- static const unsigned int scif1_data_b_pins[] = {
- 	/* RX1_B, TX1_B */
- 	RCAR_GP_PIN(1, 7), RCAR_GP_PIN(1, 6),
-@@ -2322,7 +2312,7 @@ static const unsigned int scif1_ctrl_b_mux[] = {
- 	RTS1_N_B_MARK, CTS1_N_B_MARK,
- };
- 
--/* - SCIF3_A ------------------------------------------------------------------ */
-+/* - SCIF3 -------------------------------------------------------------------- */
- static const unsigned int scif3_data_a_pins[] = {
- 	/* RX3_A, TX3_A */
- 	RCAR_GP_PIN(1, 27), RCAR_GP_PIN(1, 28),
-@@ -2345,7 +2335,6 @@ static const unsigned int scif3_ctrl_a_mux[] = {
- 	RTS3_N_A_MARK, CTS3_N_A_MARK,
- };
- 
--/* - SCIF3_B ------------------------------------------------------------------ */
- static const unsigned int scif3_data_b_pins[] = {
- 	/* RX3_B, TX3_B */
- 	RCAR_GP_PIN(1, 1), RCAR_GP_PIN(1, 0),
-@@ -2424,7 +2413,7 @@ static const unsigned int ssi_ctrl_mux[] = {
- 	SSI_SCK_MARK, SSI_WS_MARK,
- };
- 
--/* - TPU_A ------------------------------------------------------------------- */
-+/* - TPU --------------------------------------------------------------------- */
- static const unsigned int tpu_to0_a_pins[] = {
- 	/* TPU0TO0_A */
- 	RCAR_GP_PIN(2, 8),
-@@ -2454,7 +2443,6 @@ static const unsigned int tpu_to3_a_mux[] = {
- 	TPU0TO3_A_MARK,
- };
- 
--/* - TPU_B ------------------------------------------------------------------- */
- static const unsigned int tpu_to0_b_pins[] = {
- 	/* TPU0TO0_B */
- 	RCAR_GP_PIN(1, 25),
--- 
-2.34.1
+Make that one my problem under my jic23@kernel.org address.
+
+Thanks,
+
+Jonathan
+
+
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml b/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml
+> index 6b54d32323fc..467002a5da43 100644
+> --- a/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml
+> +++ b/Documentation/devicetree/bindings/iio/magnetometer/fsl,mag3110.yaml
+> @@ -7,7 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+
+Not sure the new maintainers make sense here.
+
+Flip it to me if no one else volunteers.
+
+>  title: Freescale MAG3110 magnetometer sensor
+>  
+>  maintainers:
+> -  - Anson Huang <Anson.Huang@nxp.com>
+> +  - Shawn Guo <shawnguo@kernel.org>
+> +  - Sascha Hauer <s.hauer@pengutronix.de>
+> +  - Fabio Estevam <festevam@gmail.com>
+>  
+>  properties:
+>    compatible:
+
 
 
