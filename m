@@ -1,168 +1,155 @@
-Return-Path: <linux-gpio+bounces-7508-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7511-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F64790B788
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 19:11:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6B2090B6FC
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 18:49:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28363B3034C
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 15:50:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E7DF7B3F741
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 15:52:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E9BA1D9508;
-	Mon, 17 Jun 2024 15:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C8B176036;
+	Mon, 17 Jun 2024 15:33:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t2oiHeLT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UycHgLwK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193AE1D950A;
-	Mon, 17 Jun 2024 15:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379BC6A33B
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2024 15:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718637976; cv=none; b=AcyOvRJd50lvIDRlqG7sTo9/I5Y+hwb+jXrBwfwS4w0e3w+v+sOB1RbpZeMhwZ5Y/Cyvq/Wd8tS8FzGJlb2kQKTuzNM4yc73B252EAzhETJ5De0aEDhm84PcCAw8OL8fPDgtgYG0la7R7pIHSX+TGSKKEeeiEqLE3zEZbjUZips=
+	t=1718638400; cv=none; b=gkhf/Aho/Egq3G3ZEDLe0uexS4TIxqVJqG9irqGxu/ngYRBjdGaPJiqDokLLGt+ICmrl6qZacaPMFSLExzBlqwmOozUyGaJb2rlpzizCwede0sxF8SVa+RfMBnfStNOun5vcXg8sw94e7V5s8kp3aLnMytghyG63PoWOK68XbDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718637976; c=relaxed/simple;
-	bh=oTLnHaJiK0vL379Jvi0C5I8jRbSEsC+C/G9nLiN/JrU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WLeQBhlFlwIkaEGZ9yk+Bp3Dm0O9P/MtNzfQYC62tTTyikrbS/pSTqcUsOdfGfBBCmpBF2a8NeVViT4gPFV0D3/sqxFU/7mgpfb+6Fm26VCNfHZAlSCSpiae3+D9q1KsXgRiLH1hIu32NLpNhTIUviT9+5CskoHwUkOLllb034Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t2oiHeLT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3F42C4AF1D;
-	Mon, 17 Jun 2024 15:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718637975;
-	bh=oTLnHaJiK0vL379Jvi0C5I8jRbSEsC+C/G9nLiN/JrU=;
-	h=From:List-Id:To:Cc:Subject:Date:From;
-	b=t2oiHeLTMzGOLktbuoAtTLfTMFQnFcXpJpK8aeHYSXd0xYrRiHyM0wUqsTX+pe49V
-	 8JcpnNSXsZuwoL/BDt1Oibr1eU9Hlr5WX4gHrATBfkfF3CA0qKQ2sW06Krivhf4Ycq
-	 ec2fA3q/6YtwuIGE6f80bijoFepLOOpGYMSkOIsArx4ypDq0sHCKBrcACoHw7uY7pe
-	 n+MoZYZVWvF1Mifp9pUMxnCEXkrbq0qj8Z1bK+3j4QhzaWJoPpJETsEqe0KZq/A2au
-	 M+SCsU4eLAbLmITuMXPPAxw92K2hoa38bdAA9kTdjpkNoUHlqiuBTLjozzMfNuivkb
-	 JQ+n+KXGofBXw==
-From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-To: Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	soc@kernel.org,
-	arm@kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	devicetree@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	s=arc-20240116; t=1718638400; c=relaxed/simple;
+	bh=zRLVH4u75lo1LsfTZsvtvLBPfA04Bhho287DqXSPVw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=j8ORDAOeGokDLLrBhWBE7YZ2bGCSrQmv12I1R1TBkqLmxL0JtYFtLRULFCvZDxwS2gruubsoKMqSHdys5eTDjgKGZ6PS+WaCSe66kpbNJ3kDg4C6/c0h9wblKHH4WjauxcxlZlP+TU5ugvrL2s10ud1VWsYKd2bRWXg58l8JBjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UycHgLwK; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718638398; x=1750174398;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=zRLVH4u75lo1LsfTZsvtvLBPfA04Bhho287DqXSPVw0=;
+  b=UycHgLwK7zn9us2f7gqrIb399lHcL80lWfqxYEfDrHTGhd2vmt6NmJAX
+   i3xqkmbB/uES9fXyJwcY5/mWQODFP8k7dQv+AeE2YhVYuAPEwKotAfZuh
+   UAOQ9SWi9Bo1LDM7ttoD2ia34bVxCL8N7CyrlBpno3jzx2SEssM6P4Paa
+   Q7hjtZSl3eBHMhLuNnAQxfC+UGlfFsl1IE/JvXtmVLH706vqrE/HakvHG
+   da7mA6ocZ1S6pnZICujZRUK0qbYxBughfX+fXuqn3aMBXPMOlLYTtU6tO
+   ryH61/lxTrQXZjyzZoqfZ9BtxHyD5GU24RXzfxr9pNVvYxxuwGGFCn2of
+   g==;
+X-CSE-ConnectionGUID: sTmXWVMdRWGqyfjUcYFVlg==
+X-CSE-MsgGUID: gkfgRmybRAe9t63YnA8xtA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="18386811"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="18386811"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 08:33:18 -0700
+X-CSE-ConnectionGUID: /R4Lr+fqTQeBFtRvrhY88w==
+X-CSE-MsgGUID: T3KlqN1RRUid0+x2tgYCfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="46345152"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 17 Jun 2024 08:33:16 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sJEM5-0004d6-2C;
+	Mon, 17 Jun 2024 15:33:13 +0000
+Date: Mon, 17 Jun 2024 23:32:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
 	Linus Walleij <linus.walleij@linaro.org>,
-	linux-crypto@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-rtc@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	Olivia Mackall <olivia@selenic.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Subject: [PATCH v12 0/8] Turris Omnia MCU driver
-Date: Mon, 17 Jun 2024 17:25:58 +0200
-Message-ID: <20240617152606.26191-1-kabel@kernel.org>
-X-Mailer: git-send-email 2.44.2
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [linusw-pinctrl:devel 33/34]
+ drivers/pinctrl/freescale/pinctrl-imx-scmi.c:151:29: error:
+ 'pinctrl_generic_get_group_count' undeclared here (not in a function)
+Message-ID: <202406172317.Sds860AS-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello Andy, Hans, Ilpo, Arnd, Gregory, and others,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+head:   fb5e8e47a0e5e960e699e1d65b85618a5572543a
+commit: 1e37f761d0163cf99567fb81d9c59860ef255d9d [33/34] pinctrl: imx: support SCMI pinctrl protocol for i.MX95
+config: sh-randconfig-r133-20240617 (https://download.01.org/0day-ci/archive/20240617/202406172317.Sds860AS-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 13.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20240617/202406172317.Sds860AS-lkp@intel.com/reproduce)
 
-this is v12 of the series adding Turris Omnia MCU driver.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406172317.Sds860AS-lkp@intel.com/
 
-Changes since v11:
-- fixed some includes, suggested by Andy
-- moved #include <linux/turris-omnia-mcu-interface.h> after the other
-  includes, since it is domain specific, suggested by Andy
-- in patch 2, use sizeof() of dest buffer in memcpy call, instead of
-  ETH_ALEN constant, as suggested by Andy
-- in patch 3, dropped the .has_int member of omnia GPIO definition
-  structure, and added is_int_bit_valid() function instead, as suggested
-  by Andy
-- in patch 3, changed int to unsigned int where appropriate, as
-  suggested by Andy
-- in patch 3, fixed docstring indentation, suggested by Andy
-- in patch 4 dropped #include <linux/rtc.h>, and instead declared struct
-  rtc_device, it is only used as a pointer, suggested by Andy
-- in patch 5, renamed the completion from trng_completion to
-  trng_entropy_available
-- in patch 5, use gpio_device_get_desc() instead of gpiochip_get_desc()
-  when mapping IRQ (as discussed with Andy and Bart)
-- in patch 5, dropped setting the priv member of hwrng, and instead use
-  container_of() to get the driver private structure, suggested by
-  Herbert
+All errors (new ones prefixed by >>):
 
-Links to previous cover letters (v1 to v11):
-  https://patchwork.kernel.org/project/linux-soc/cover/20230823161012.6986-1-kabel@kernel.org/
-  https://patchwork.kernel.org/project/linux-soc/cover/20230919103815.16818-1-kabel@kernel.org/
-  https://patchwork.kernel.org/project/linux-soc/cover/20231023143130.11602-1-kabel@kernel.org/
-  https://patchwork.kernel.org/project/linux-soc/cover/20231026161803.16750-1-kabel@kernel.org/
-  https://patchwork.kernel.org/project/linux-soc/cover/20240323164359.21642-1-kabel@kernel.org/
-  https://patchwork.kernel.org/project/linux-soc/cover/20240418121116.22184-1-kabel@kernel.org/
-  https://patchwork.kernel.org/project/linux-soc/cover/20240424173809.7214-1-kabel@kernel.org/
-  https://patchwork.kernel.org/project/linux-soc/cover/20240430115111.3453-1-kabel@kernel.org/
-  https://patchwork.kernel.org/project/linux-soc/cover/20240508103118.23345-1-kabel@kernel.org/
-  https://patchwork.kernel.org/project/linux-soc/cover/20240510101819.13551-1-kabel@kernel.org/
-  https://patchwork.kernel.org/project/linux-soc/cover/20240605161851.13911-1-kabel@kernel.org/
+>> drivers/pinctrl/freescale/pinctrl-imx-scmi.c:151:29: error: 'pinctrl_generic_get_group_count' undeclared here (not in a function)
+     151 |         .get_groups_count = pinctrl_generic_get_group_count,
+         |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/freescale/pinctrl-imx-scmi.c:152:27: error: 'pinctrl_generic_get_group_name' undeclared here (not in a function)
+     152 |         .get_group_name = pinctrl_generic_get_group_name,
+         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/freescale/pinctrl-imx-scmi.c:153:27: error: 'pinctrl_generic_get_group_pins' undeclared here (not in a function); did you mean 'pinctrl_get_group_pins'?
+     153 |         .get_group_pins = pinctrl_generic_get_group_pins,
+         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                           pinctrl_get_group_pins
+>> drivers/pinctrl/freescale/pinctrl-imx-scmi.c:170:32: error: 'pinmux_generic_get_function_count' undeclared here (not in a function); did you mean 'pinmux_generic_free_functions'?
+     170 |         .get_functions_count = pinmux_generic_get_function_count,
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                pinmux_generic_free_functions
+>> drivers/pinctrl/freescale/pinctrl-imx-scmi.c:171:30: error: 'pinmux_generic_get_function_name' undeclared here (not in a function); did you mean 'pinmux_generic_free_functions'?
+     171 |         .get_function_name = pinmux_generic_get_function_name,
+         |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                              pinmux_generic_free_functions
+>> drivers/pinctrl/freescale/pinctrl-imx-scmi.c:172:32: error: 'pinmux_generic_get_function_groups' undeclared here (not in a function); did you mean 'pinmux_generic_free_functions'?
+     172 |         .get_function_groups = pinmux_generic_get_function_groups,
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                                pinmux_generic_free_functions
 
-Marek Behún (8):
-  dt-bindings: firmware: add cznic,turris-omnia-mcu binding
-  platform: cznic: Add preliminary support for Turris Omnia MCU
-  platform: cznic: turris-omnia-mcu: Add support for MCU connected GPIOs
-  platform: cznic: turris-omnia-mcu: Add support for poweroff and wakeup
-  platform: cznic: turris-omnia-mcu: Add support for MCU watchdog
-  platform: cznic: turris-omnia-mcu: Add support for MCU provided TRNG
-  ARM: dts: turris-omnia: Add MCU system-controller node
-  ARM: dts: turris-omnia: Add GPIO key node for front button
 
- .../sysfs-bus-i2c-devices-turris-omnia-mcu    |  113 ++
- .../firmware/cznic,turris-omnia-mcu.yaml      |   86 ++
- MAINTAINERS                                   |    4 +
- .../dts/marvell/armada-385-turris-omnia.dts   |   35 +-
- drivers/platform/Kconfig                      |    2 +
- drivers/platform/Makefile                     |    1 +
- drivers/platform/cznic/Kconfig                |   48 +
- drivers/platform/cznic/Makefile               |    8 +
- .../platform/cznic/turris-omnia-mcu-base.c    |  408 +++++++
- .../platform/cznic/turris-omnia-mcu-gpio.c    | 1088 +++++++++++++++++
- .../cznic/turris-omnia-mcu-sys-off-wakeup.c   |  260 ++++
- .../platform/cznic/turris-omnia-mcu-trng.c    |  103 ++
- .../cznic/turris-omnia-mcu-watchdog.c         |  130 ++
- drivers/platform/cznic/turris-omnia-mcu.h     |  194 +++
- include/linux/turris-omnia-mcu-interface.h    |  249 ++++
- 15 files changed, 2728 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu
- create mode 100644 Documentation/devicetree/bindings/firmware/cznic,turris-omnia-mcu.yaml
- create mode 100644 drivers/platform/cznic/Kconfig
- create mode 100644 drivers/platform/cznic/Makefile
- create mode 100644 drivers/platform/cznic/turris-omnia-mcu-base.c
- create mode 100644 drivers/platform/cznic/turris-omnia-mcu-gpio.c
- create mode 100644 drivers/platform/cznic/turris-omnia-mcu-sys-off-wakeup.c
- create mode 100644 drivers/platform/cznic/turris-omnia-mcu-trng.c
- create mode 100644 drivers/platform/cznic/turris-omnia-mcu-watchdog.c
- create mode 100644 drivers/platform/cznic/turris-omnia-mcu.h
- create mode 100644 include/linux/turris-omnia-mcu-interface.h
+vim +/pinctrl_generic_get_group_count +151 drivers/pinctrl/freescale/pinctrl-imx-scmi.c
+
+   149	
+   150	static const struct pinctrl_ops pinctrl_scmi_imx_pinctrl_ops = {
+ > 151		.get_groups_count = pinctrl_generic_get_group_count,
+ > 152		.get_group_name = pinctrl_generic_get_group_name,
+ > 153		.get_group_pins = pinctrl_generic_get_group_pins,
+   154		.dt_node_to_map = pinctrl_scmi_imx_dt_node_to_map,
+   155		.dt_free_map = pinctrl_scmi_imx_dt_free_map,
+   156	};
+   157	
+   158	static int pinctrl_scmi_imx_func_set_mux(struct pinctrl_dev *pctldev,
+   159						 unsigned int selector, unsigned int group)
+   160	{
+   161		/*
+   162		 * For i.MX SCMI PINCTRL , postpone the mux setting
+   163		 * until config is set as they can be set together
+   164		 * in one IPC call
+   165		 */
+   166		return 0;
+   167	}
+   168	
+   169	static const struct pinmux_ops pinctrl_scmi_imx_pinmux_ops = {
+ > 170		.get_functions_count = pinmux_generic_get_function_count,
+ > 171		.get_function_name = pinmux_generic_get_function_name,
+ > 172		.get_function_groups = pinmux_generic_get_function_groups,
+   173		.set_mux = pinctrl_scmi_imx_func_set_mux,
+   174	};
+   175	
 
 -- 
-2.44.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
