@@ -1,78 +1,77 @@
-Return-Path: <linux-gpio+bounces-7500-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7501-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27BE990AD8B
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 14:02:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 32C3990ADC3
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 14:15:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 394AA1C22E2F
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 12:02:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 353D91C2325F
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 12:15:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3BE8194C69;
-	Mon, 17 Jun 2024 12:02:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07E421940A5;
+	Mon, 17 Jun 2024 12:15:46 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FE517FAA2;
-	Mon, 17 Jun 2024 12:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181BD2F32;
+	Mon, 17 Jun 2024 12:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718625754; cv=none; b=U3vt4K7qxq8vvZGBj6R0GwXxU/BLdZ3H/yGSPrAOCpUovzxM6rb3S3D2Ts6GlsSfAU59ltYeprPVespQqY/8RI9tSV475vcC9u4N8vTBEcnsblqhvzQb8ds4P3GB+tahgQfSf4v4G1GC6gFV9/pRB0m7xdPZsj04LL9IdV/Tp40=
+	t=1718626545; cv=none; b=MzuJTAKCJC6Plvs2SIzX2vM/WcI0L+uwtUm27Zg1pSynduOxOONpB0E8hml61kXTgDfHs54Elxz9WwWYpf/LfdFT3/GIzNN2hpsPvVehnUyAvyvv4wTN7XFn9IllgBjZ5M6J9Btxa/KUGE88SVHteu6Eh9RvhGZUd70O/8ZSlQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718625754; c=relaxed/simple;
-	bh=dtNkuBV2A349eNviC6SuKzrMSB8wD5WUXwBXkHuTxOA=;
+	s=arc-20240116; t=1718626545; c=relaxed/simple;
+	bh=AWQ35KpayndOCVI1ag4/S3eM6Bocg203IdjyV7oVxGg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lyyHcg/LNa/KQB2gWxMUVuYOOXT8SEAbNsBMphVvMEPQfsNRkKgUb+v5jyZjcB93UdFFmpYIHG7wLD8u9dKD6zlW8rnEWyq/rZXwr9eV4bzDKlfVFWUdH/Csx50dEZLcJiKBEtde2uZaHhsa//HN3dJTHrB54pYlsaLUotc+cWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.178
+	 To:Cc:Content-Type; b=YkRf7F93Zb/De9dNzA6UNKdrNtOUUlAXL8ZwdZ1NlyFgJKst4rw7YzawXwd16NGY4qpFeC7pTEHVtDG3TPHtwxLvX8FwAlT4GQLnn9Z5M9eHuUCvPZVc8bi0mzAyHugYpQ6mkMPVUUi8AgIwwopSs7BWnFqDZ94Nt6PPOus2YZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dff302847a8so1751644276.0;
-        Mon, 17 Jun 2024 05:02:32 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6326f1647f6so26308087b3.0;
+        Mon, 17 Jun 2024 05:15:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718625751; x=1719230551;
+        d=1e100.net; s=20230601; t=1718626542; x=1719231342;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=j0ex/OBXkM0YaYw4ebPeo5bpa3LK+wkN4LK4vxw7MQc=;
-        b=PKh1CCp2WG61YSn5wbyClfyKwldXw+dD7+7tvEk71C7+xLwtCsOf77jNlQC3vUiTjy
-         EuSdWFMuBpeqcYdJCcWp955vbUufwv/k8G6AzI5KX0xtxBkQ1AQKu92B57s+6Btth53o
-         dwpKrx1FCswevo56duK7ygPwtWTK3BKZY8ejVMwvqenf1a9nlpVYNG7dAnIAKRT6n9gm
-         Wl0gmbfU2Gus0vaa8RSNrW0A1z6BEw6OdNZ/gBHC4C2OXwbx7/bbAnIuhL/HprlbNHoT
-         BCOD0DpgL2akoSL2EDmy0V+bRrLg+Sk18VuvLuRSXAm/MnuoysWusTE+/HE9co4R00jY
-         DvpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyjoEWdUbA+ajgcCwOJIzvFRZ+fNYxPEQKriu4eFV87ZiiI4Y2WGPzDZFSpNgv8+q4cSjOPM0f7ypkwLZeNxITFC/5rbeg+wbIYboKhFR9SIHSudaAehfJPIlt3AUaczhAM4AvWfebVNszP6YuM+xmJtyIQFBTKGI0thuYvuq2Sj30siGDrlDxSzCJBa/SjjKILO63ytdkYCbjlLkZmddrbPQ6VhPh9w==
-X-Gm-Message-State: AOJu0Yx7+rB+EohnSK4/D15hDDUK1UDBEmzk79pypOiO6ViE1IRis6sO
-	DTyTtzeUKaRSTXnJpGOgrI6OkI743ovBbNFHpzk7XfZ+tOt4Ht9vefVpPpK7
-X-Google-Smtp-Source: AGHT+IHZaTv+Be3x/sQ8URZD3zng9ZoU2KUE2qdsdzXf5bttFdVaQmYiarXPIAtHrLec72Qaxg+6gA==
-X-Received: by 2002:a25:4c81:0:b0:dfa:ac81:38eb with SMTP id 3f1490d57ef6-dff153b1745mr8176615276.27.1718625750837;
-        Mon, 17 Jun 2024 05:02:30 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dff048bd22csm1880974276.34.2024.06.17.05.02.30
+        bh=1g4X1nRnxWYP7yqfEl8cswCfU85i+/AuoKwcpOm05Ts=;
+        b=Nh+PtMpHyfOQ6nychHSadmTtkbuox8IS9q8i1Fp7Gd4obTwgC1OINTa3InU8AIyjem
+         lVaKxQxI1TTLjPlh5l5L+OsQeE4FqQrw9iz6ebr+oKsaWgYKJ4fEZjU+gFp80RRkKzdF
+         YbHRzfw1lS3sCvwk+mVmxqgbCN7ksKrs2y1GJ3o4jh9POFP3e6+Pcd9hSh75z4/81M6s
+         +5CTX5BcssV8Sa2qrNIAsOpbZgJNlUhppJi0/N/Gn/Lk9iUhB3EcM8ZtAkWm4dfsAgm7
+         xHtaSrSrPG7B1KoG/hTUNTPNBEtpldU1eCEcZvigxo9NOkK9TdHRbRBV19epKGRWts1R
+         /iQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXqVAnKU8A+TwpyR00+FQbkPMpG7QqPX6GgfhUKotOX9T5jaFwwyXUMKQ7KtUjMVlu2/4+t0jK0TBVl2sq4XfsNdRFqW17f2yaWlm9yf9xrvmyboGY4/H67+vHOXCovDlrWrxhMm0gwHUinqdHe7OB7mqpnPRAOi7YhYT2Vnd53zoX74H4QvnfBiFqSSwg6J/25IAVf/ja8n26s8BdnX7hsrJ1Tz0BW/A==
+X-Gm-Message-State: AOJu0YzCp5nLlYbpsFQ6O8hFzphRhQ/vknIL7v6sQ9sTVUjNGQyHDR3+
+	sh6Q/W+/DbWoLsNI7Qgn0qLHamMjmfY4Q6QsZ5oc+o3QhewcNCqZFAfkzxb/
+X-Google-Smtp-Source: AGHT+IGqOFkkms6qXLd1nnBoJfN9n8yXsvei6L9uqb4/bf9DEAoVIl22ZjE0s0N8kH1Tb8vYoNDM+A==
+X-Received: by 2002:a81:a849:0:b0:627:d23a:4505 with SMTP id 00721157ae682-632225565c4mr87103277b3.3.1718626541908;
+        Mon, 17 Jun 2024 05:15:41 -0700 (PDT)
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-631188b312bsm14043877b3.34.2024.06.17.05.15.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 05:02:30 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dff36345041so1246397276.3;
-        Mon, 17 Jun 2024 05:02:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXDrCt2qPFZ3NwLkL1AeCvOLDZvIGraaPomTHIXcyJVusQc3ZbMDbKakrg6yLRNhlweQ5BzZB3C7y7gSTbDvyy43SdAOQN3TaQdSlGHtqfTXrFfboLhiNJqqzvulfydDG8KrpgN08Xp+QU+0QfarY22ymrao3FtYlEZJteyZutz8GVv12qKLs8Zm/6l0X4p84r5u9NzfLoIon5uPD7A3+aZX+3o/5Likw==
-X-Received: by 2002:a25:a285:0:b0:dff:2d99:9c3c with SMTP id
- 3f1490d57ef6-dff2d99a245mr5109438276.57.1718625750352; Mon, 17 Jun 2024
- 05:02:30 -0700 (PDT)
+        Mon, 17 Jun 2024 05:15:41 -0700 (PDT)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-63186c222eeso37883557b3.2;
+        Mon, 17 Jun 2024 05:15:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV2eExOPfkLMTuAzl89h8YYWHqZX3el+xUsobuBMZDaABbhBWRKouuSo8KYP9RRUIE3WJnwBc3ArM9t7QsKaUNzIhJmJmgTAUdgA5rZAa4tpHwOyB7NqrSLJ6sKYgQiSYf9b43AGNx4M7uGXz5AYlbmH6nl2Ka7pty8sPjoRhbraaW1AjjW6TrTDLnngHcGUD/CYBSuInXS70vKsZ6oSm1mHQI27MytQw==
+X-Received: by 2002:a81:b2c2:0:b0:627:7e65:979 with SMTP id
+ 00721157ae682-632230507f4mr90233747b3.24.1718626541245; Mon, 17 Jun 2024
+ 05:15:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com> <20240611113204.3004-3-paul.barker.ct@bp.renesas.com>
-In-Reply-To: <20240611113204.3004-3-paul.barker.ct@bp.renesas.com>
+References: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com> <20240611113204.3004-4-paul.barker.ct@bp.renesas.com>
+In-Reply-To: <20240611113204.3004-4-paul.barker.ct@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 17 Jun 2024 14:02:17 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXe8aaweQJ2=V7ksKTqcJCnqewKhSrrO4h7X924Vbk-_Q@mail.gmail.com>
-Message-ID: <CAMuHMdXe8aaweQJ2=V7ksKTqcJCnqewKhSrrO4h7X924Vbk-_Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/9] pinctrl: renesas: rzg2l: Clean up and refactor OEN
- read/write functions
+Date: Mon, 17 Jun 2024 14:15:29 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUgbnFoHWsB8NPu+Whn+FBkQ_EogS3yH+g-1wGTxensgQ@mail.gmail.com>
+Message-ID: <CAMuHMdUgbnFoHWsB8NPu+Whn+FBkQ_EogS3yH+g-1wGTxensgQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/9] pinctrl: renesas: rzg2l: Support output enable on RZ/G2L
 To: Paul Barker <paul.barker.ct@bp.renesas.com>
 Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -87,72 +86,75 @@ Hi Paul,
 
 On Tue, Jun 11, 2024 at 1:33=E2=80=AFPM Paul Barker
 <paul.barker.ct@bp.renesas.com> wrote:
-> The variable naming in the various OEN functions has been confusing. We
-> were passing the _pin & bit variables from rzg2l_pinctrl_pinconf_get()
-> and rzg2l_pinctrl_pinconf_set() as the offset & pin argument to the
-> read_oen() and write_oen() functions. This doesn't make sense, the first
-> of these isn't actually an offset and the second is not needed for
-> RZ/V2H but leads to confusion with the bit variable used within these
-> functions.
+> On the RZ/G2L SoC family, the direction of the Ethernet TXC/TX_CLK
+> signal is selectable to support an Ethernet PHY operating in either MII
+> or RGMII mode. By default, the signal is configured as an input and MII
+> mode is supported. The ETH_MODE register can be modified to configure
+> this signal as an output to support RGMII mode.
 >
-> To tidy this up, instead pass the _pin variable directly to the
-> read_oen() and write_oen() functions with consistent naming. Then
-> rzg3s_read_oen() and rzg3s_write_oen() can use macros to get the port
-> and pin numbers it needs.
->
-> Also, merge rzg3s_oen_is_supported() into rzg3s_pin_to_oen_bit() to give
-> a single translation function which returns an error if the pin doesn't
-> support OEN. While we're here, remove an unnecessary branch and clarify
-> the variable naming.
+> As this signal is by default an input, and can optionally be switched to
+> an output, it maps neatly onto an `output-enable` property in the device
+> tree.
 >
 > Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 > ---
 > Changes v1->v2:
->   * Merged patches 1 & 2 from the previous series, updated to be
->     compatible with recent patches adding RZ/V2H support.
+>   * Use oen_read and oen_write function pointers to be compatible with
+>     recent patches adding RZ/V2H support.
 
 Thanks for your patch!
 
 > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-
-> @@ -994,53 +994,43 @@ static bool rzg2l_ds_is_supported(struct rzg2l_pinc=
-trl *pctrl, u32 caps,
+> @@ -994,6 +994,61 @@ static bool rzg2l_ds_is_supported(struct rzg2l_pinct=
+rl *pctrl, u32 caps,
 >         return false;
 >  }
 >
-> -static bool rzg3s_oen_is_supported(u32 caps, u8 pin, u8 max_pin)
-> +static int rzg3s_pin_to_oen_bit(const struct rzg2l_hwcfg *hwcfg, u32 cap=
-s, u32 port, u8 pin)
->  {
-> -       if (!(caps & PIN_CFG_OEN))
-> -               return false;
-> +       u8 bit =3D pin * 2;
->
-> -       if (pin > max_pin)
-> -               return false;
+> +static int rzg2l_pin_to_oen_bit(const struct rzg2l_hwcfg *hwcfg, u32 cap=
+s,
+> +                               u32 port, u8 pin)
+> +{
 > +       if (!(caps & PIN_CFG_OEN) || pin > hwcfg->oen_max_pin)
 > +               return -EINVAL;
->
-> -       return true;
-> +       if (port =3D=3D hwcfg->oen_max_port)
-> +               bit +=3D 1;
 > +
-> +       return bit;
->  }
->
-> -static u8 rzg3s_pin_to_oen_bit(u32 offset, u8 pin, u8 max_port)
-> +static u32 rzg3s_read_oen(struct rzg2l_pinctrl *pctrl, u32 caps, unsigne=
+> +       /*
+> +        * We can determine which Ethernet interface we're dealing with f=
+rom
+> +        * the caps.
+> +        */
+> +       if (caps & PIN_CFG_IO_VMC_ETH0)
+> +               return 0;
+> +       if (caps & PIN_CFG_IO_VMC_ETH1)
+> +               return 1;
+> +
+> +       return -EINVAL;
+> +}
+> +
+> +static u32 rzg2l_read_oen(struct rzg2l_pinctrl *pctrl, u32 caps, unsigne=
 d int _pin)
->  {
-> -       if (pin)
-> -               pin *=3D 2;
+
+rzg2l_oen_read()
+
+> +{
 > +       u32 port =3D RZG2L_PIN_ID_TO_PORT(_pin);
 > +       u8 pin =3D RZG2L_PIN_ID_TO_PIN(_pin);
+> +       int bit;
+> +
+> +       bit =3D rzg2l_pin_to_oen_bit(pctrl->data->hwcfg, caps, port, pin)=
+;
+> +       if (bit < 0)
+> +               return 0;
+> +
+> +       return !(readb(pctrl->base + ETH_MODE) & BIT(bit));
+> +}
+> +
+> +static int rzg2l_write_oen(struct rzg2l_pinctrl *pctrl, u32 caps, unsign=
+ed int _pin, u8 oen)
 
-It's OK to use RZG2L_PIN_ID_TO_PIN() unconditionally, as RZ/G3S does
-not have any dedicated pins with the OEN capability, right?
+rzg2l_oen_write()
 
+With these fixed:
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
