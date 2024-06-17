@@ -1,205 +1,262 @@
-Return-Path: <linux-gpio+bounces-7505-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7506-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE34F90B1C6
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 16:25:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC33E90B375
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 17:08:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6F991C20D15
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 14:25:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3483B1F24169
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 15:08:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88EEC1AB8EF;
-	Mon, 17 Jun 2024 13:36:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12A92152164;
+	Mon, 17 Jun 2024 14:22:33 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A31D1AB52F;
-	Mon, 17 Jun 2024 13:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13556150999;
+	Mon, 17 Jun 2024 14:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631389; cv=none; b=V2Iy/GxELzTrpnn1SL+YBnTSkmEgbMDk/DQUfNqoWHlw9kooiqTmeP69fGUOaCKgSm9Yy2s0WapAeLmcwatvEano0OEeDR5rbIbEk0xAIlpaHh5eEr841kWYXUiQQG2K9fWIbl2BnFcmhi4xPuPmq7jDDrGxpB1KVCaSSf0Nbts=
+	t=1718634152; cv=none; b=jF188jNLUx84vZ2nEJ4FKLbyx9rC+ms8VfOUZ2I3IHlGOs2l89wJuFHx0/Jj090g3ymFwcNFWrlMt088uu3q0PoD/uVpCUCV4m/F44eooJC/Tg3asPm1YLdmbWwJozccwHM7dC4gFJfh7Jxk243bDNS4s9mXf0zcl3qnYnbmo5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631389; c=relaxed/simple;
-	bh=w2U5pZAt/84qA8S9DUJyXOujch5rtf8ctaEYUOJ+FZE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CfAF76ljm3IVrBROOfGVQi9g4noDulDN8pkFFLF+5pAX/e+APNY0iSRL0oeDO2OZ4HsMr3vJRqSXru8hG7OX4WG2aCg2ABaAvvhJLjASKYaSWpg3jUTH/10uj8kuuDARirPmOTZJkV0yoO0E0t1Ht0lC1UrGacDyMOXHcj+OgN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-627e3368394so44818407b3.2;
-        Mon, 17 Jun 2024 06:36:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718631385; x=1719236185;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eL05cXLA28sNYHpBmwXcBiu29znRtT0jenJjusxIxa8=;
-        b=YkJ/3XtkrymD7AAgwQKzRsU+r/gYQDDCOAV/oihO3z78YrRsT1wUQKKIPQ+E3M12z5
-         J67hh67EKesEb9ViV5uCBvFOXCPwjW00j6Z01mBp7RSfjYncZyNy3iTowEm8r39tqFoc
-         Zmak49+yg6rZaAbyX2hDxAqn9SORDkG0Mzx+Be8xpHyHm+h5dz0LgncXO13Gj5iF6yQi
-         Kco8GiJ1HF64eZpzRNZm1vGdYRKK0uxgzzCdJqVWHc/loY9pnBjMzv/YddQg2qs1wh0n
-         isERVXTrEjiB6Jeq4jN+qJSAIoGzjm+/qet3gefWxU96wF8V33aUbydmc2Q6gFbxEtiq
-         qPLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCwLv7SA3u03S0pDHSOSHV4zliWIa0EmSpNOIIjx2fKSgdGb8EXCx38KH9lVIn02L1SV1CSvzyRlgwUJnr4iQHijPDdgecLi/uVhMY0/e/RIEvpihPDrkovXOY6cvnGDxc3zSB5pq0dd2ZhOMOC2mw/yDi8mvrqJ8aNC37V+aVdT6tMUK2DgG0cV4j
-X-Gm-Message-State: AOJu0YxUjNRCTxDaZvGP8yYJZNznWORUAv92PyamlGxUdLM3U2AAhgaD
-	mwXMfJ2j0gQaPzKsvf0gPMB30hmwzAb0ATA26V7ZTKo8t5R+oZOvqnBmpWGl
-X-Google-Smtp-Source: AGHT+IGMSQjnNkuWJmtMrGtNAkNAZFvqVgJJQ7j8gYXtGuw3GNFVUT6Sg4bNQ23KeUR+jYdMaa2GAg==
-X-Received: by 2002:a81:7cd5:0:b0:632:b827:a1ba with SMTP id 00721157ae682-6333082fb6bmr70717947b3.7.1718631384796;
-        Mon, 17 Jun 2024 06:36:24 -0700 (PDT)
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-631189a7d28sm14116197b3.40.2024.06.17.06.36.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 06:36:24 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dff1ccdc17bso2987246276.0;
-        Mon, 17 Jun 2024 06:36:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVvGbtZ+94Ybijwe1JZNAMDUkTWCBvOYD8bOTsfHOtHmRg2grcZJWp1hNwdzXt1QVMEiKCG7WtC387G6G2Nov+AJLNxnp6PIFoQGS238S3x4sr1pxL88GIh8k08cUt5PCTNGf8h4Vpeoj+QVuSxTPcEqYFLosYo3zkHeWTEPrdrbWPqbRT402Lm8079
-X-Received: by 2002:a25:df01:0:b0:dfb:1b5:6e6a with SMTP id
- 3f1490d57ef6-dff1549049fmr8747190276.43.1718631384061; Mon, 17 Jun 2024
- 06:36:24 -0700 (PDT)
+	s=arc-20240116; t=1718634152; c=relaxed/simple;
+	bh=6OxWMUg3yA5WcTolc8+8/GvGqWIxjQzsKph93I8gX/A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PLjtuuvaTqCqc895D5yzTPIeFe3hjah4NvwPlcyAgr2RXl3N58GdtWb1Xz7h8RVQD4bY9CmNS1tgfxQKgM+EpzS5/juqzqnbA5gNDFY02AINV/ntWVefPNnvvKZHu1WTWEii9amPjQaXEi3shjLui6tbhHXbvbOAl8b2lA88vxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.08,244,1712588400"; 
+   d="asc'?scan'208";a="208262901"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 17 Jun 2024 23:22:28 +0900
+Received: from [10.226.92.92] (unknown [10.226.92.92])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 405BB439D056;
+	Mon, 17 Jun 2024 23:22:24 +0900 (JST)
+Message-ID: <fa470a75-84e8-4924-9e1c-365cb397a391@bp.renesas.com>
+Date: Mon, 17 Jun 2024 15:22:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617131511.160877-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240617131511.160877-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 17 Jun 2024 15:36:12 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUDDfOeQUwmuYKPvAXaXBJCB17ecH8sfpC4=7dTVKthhw@mail.gmail.com>
-Message-ID: <CAMuHMdUDDfOeQUwmuYKPvAXaXBJCB17ecH8sfpC4=7dTVKthhw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Use BIT_ULL for PIN_CFG_* macros
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/9] pinctrl: renesas: rzg2l: Clarify OEN read/write
+ support
+Content-Language: en-GB
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com>
+ <20240611113204.3004-2-paul.barker.ct@bp.renesas.com>
+ <CAMuHMdW-BrHBt9eDw_GaW7JwJ+TP6Q+68EN1Tpp2Z5H00Dq+3g@mail.gmail.com>
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+Organization: Renesas Electronics Corporation
+In-Reply-To: <CAMuHMdW-BrHBt9eDw_GaW7JwJ+TP6Q+68EN1Tpp2Z5H00Dq+3g@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------C6QDSlgQSws9A1j2aMg0KGw0"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------C6QDSlgQSws9A1j2aMg0KGw0
+Content-Type: multipart/mixed; boundary="------------RbiozDZ0z6VG00rUxljqUKph";
+ protected-headers="v1"
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <fa470a75-84e8-4924-9e1c-365cb397a391@bp.renesas.com>
+Subject: Re: [PATCH v2 1/9] pinctrl: renesas: rzg2l: Clarify OEN read/write
+ support
+References: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com>
+ <20240611113204.3004-2-paul.barker.ct@bp.renesas.com>
+ <CAMuHMdW-BrHBt9eDw_GaW7JwJ+TP6Q+68EN1Tpp2Z5H00Dq+3g@mail.gmail.com>
+In-Reply-To: <CAMuHMdW-BrHBt9eDw_GaW7JwJ+TP6Q+68EN1Tpp2Z5H00Dq+3g@mail.gmail.com>
+
+--------------RbiozDZ0z6VG00rUxljqUKph
+Content-Type: multipart/mixed; boundary="------------fv908Zin3VFkRAE20i5xZIp2"
+
+--------------fv908Zin3VFkRAE20i5xZIp2
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
+On 17/06/2024 12:52, Geert Uytterhoeven wrote:
+> Hi Paul,
+>=20
+> On Tue, Jun 11, 2024 at 1:32=E2=80=AFPM Paul Barker
+> <paul.barker.ct@bp.renesas.com> wrote:
+>> We currently support OEN read/write for the RZ/G3S SoC but not the
+>> RZ/G2L SoC family (consisting of RZ/G2L, RZ/G2LC, RZ/G2UL, RZ/V2L &
+>> RZ/Five). The appropriate functions are renamed to clarify this.
+>>
+>> We should also only set the oen_read and oen_write function pointers f=
+or
+>> the devices which support these operations. This requires us to check
+>> that these function pointers are valid before calling them.
+>>
+>> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+>> ---
+>> Changes v1->v2:
+>>   * New patch to clarify function names.
+>=20
+> Thanks for your patch!
+>=20
+>> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+>> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+>=20
+>> @@ -1016,31 +1016,31 @@ static u8 rzg2l_pin_to_oen_bit(u32 offset, u8 =
+pin, u8 max_port)
+>>         return pin;
+>>  }
+>>
+>> -static u32 rzg2l_read_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 =
+offset, u8 pin)
+>> +static u32 rzg3s_read_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 =
+offset, u8 pin)
+>=20
+>> -static int rzg2l_write_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32=
+ offset, u8 pin, u8 oen)
+>> +static int rzg3s_write_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32=
+ offset, u8 pin, u8 oen)
+>=20
+> As commit 7d566a4d270c52ff ("pinctrl: renesas: rzg2l: Add function
+> pointers for OEN register access") did not rename
+> rzg2l_{read,write}_oen() to rzg2l_oen_{read,write}(), to match the
+> .oen_{read,write}() callback names, this is a good opportunity to fix
+> that oversight.
 
-On Mon, Jun 17, 2024 at 3:15=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Commit 13a8cae6e561 ("pinctrl: renesas: rzg2l: Drop struct
-> rzg2l_variable_pin_cfg") introduced a Smatch static checker warning:
->
->     drivers/pinctrl/renesas/pinctrl-rzg2l.c:374 rzg2l_pinctrl_get_variabl=
-e_pin_cfg()
->     warn: was expecting a 64 bit value instead of '~((((1))) << (16))'
->
-> The function `rzg2l_pinctrl_get_variable_pin_cfg` attempts to mask out
-> `PIN_CFG_VARIABLE` using `BIT(16)`. However, since `pincfg` is a `u64`,
-> this inadvertently masks the high 32 bits as well, which is unintended
-> (on non 64-bit platforms). To correct this, `PIN_CFG_VARIABLE` should
-> be defined using `BIT_ULL(16)`, ensuring proper 64-bit masking.
->
-> To avoid such issues, update `PIN_CFG_*` macros to use `BIT_ULL()`.
->
-> Fixes: 13a8cae6e561 ("pinctrl: renesas: rzg2l: Drop struct rzg2l_variable=
-_pin_cfg")
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/all/5c1bf20b-7e94-4b06-95e5-da9f99750203@=
-moroto.mountain/
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Ack.
 
-Thanks for your patch!
+>=20
+> The v2h variants already match the callback names.
+>=20
+>> @@ -1215,6 +1215,8 @@ static int rzg2l_pinctrl_pinconf_get(struct pinc=
+trl_dev *pctldev,
+>>                 break;
+>>
+>>         case PIN_CONFIG_OUTPUT_ENABLE:
+>> +               if (!pctrl->data->oen_read)
+>> +                       return -EOPNOTSUPP;
+>=20
+> Perhaps the check for PIN_CFG_OEN in each of the .oen_read()
+> callbacks should be moved here?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Ack.
 
-I would like to brainstorm a bit about this, though. See below...
+>=20
+>>                 arg =3D pctrl->data->oen_read(pctrl, cfg, _pin, bit);
+>>                 if (!arg)
+>>                         return -EINVAL;
+>> @@ -1354,6 +1356,8 @@ static int rzg2l_pinctrl_pinconf_set(struct pinc=
+trl_dev *pctldev,
+>>
+>>                 case PIN_CONFIG_OUTPUT_ENABLE:
+>>                         arg =3D pinconf_to_config_argument(_configs[i]=
+);
+>> +                       if (!pctrl->data->oen_write)
+>> +                               return -EOPNOTSUPP;
+>=20
+> Likewise.
 
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -41,28 +41,28 @@
->  #define MUX_FUNC_MASK          GENMASK(31, 16)
->
->  /* PIN capabilities */
-> -#define PIN_CFG_IOLH_A                 BIT(0)
-> -#define PIN_CFG_IOLH_B                 BIT(1)
-> -#define PIN_CFG_SR                     BIT(2)
-> -#define PIN_CFG_IEN                    BIT(3)
-> -#define PIN_CFG_PUPD                   BIT(4)
-> -#define PIN_CFG_IO_VMC_SD0             BIT(5)
-> -#define PIN_CFG_IO_VMC_SD1             BIT(6)
-> -#define PIN_CFG_IO_VMC_QSPI            BIT(7)
-> -#define PIN_CFG_IO_VMC_ETH0            BIT(8)
-> -#define PIN_CFG_IO_VMC_ETH1            BIT(9)
-> -#define PIN_CFG_FILONOFF               BIT(10)
-> -#define PIN_CFG_FILNUM                 BIT(11)
-> -#define PIN_CFG_FILCLKSEL              BIT(12)
-> -#define PIN_CFG_IOLH_C                 BIT(13)
-> -#define PIN_CFG_SOFT_PS                        BIT(14)
-> -#define PIN_CFG_OEN                    BIT(15)
-> -#define PIN_CFG_VARIABLE               BIT(16)
-> -#define PIN_CFG_NOGPIO_INT             BIT(17)
-> -#define PIN_CFG_NOD                    BIT(18) /* N-ch Open Drain */
-> -#define PIN_CFG_SMT                    BIT(19) /* Schmitt-trigger input =
-control */
-> -#define PIN_CFG_ELC                    BIT(20)
-> -#define PIN_CFG_IOLH_RZV2H             BIT(21)
-> +#define PIN_CFG_IOLH_A                 BIT_ULL(0)
-> +#define PIN_CFG_IOLH_B                 BIT_ULL(1)
-> +#define PIN_CFG_SR                     BIT_ULL(2)
-> +#define PIN_CFG_IEN                    BIT_ULL(3)
-> +#define PIN_CFG_PUPD                   BIT_ULL(4)
-> +#define PIN_CFG_IO_VMC_SD0             BIT_ULL(5)
-> +#define PIN_CFG_IO_VMC_SD1             BIT_ULL(6)
-> +#define PIN_CFG_IO_VMC_QSPI            BIT_ULL(7)
-> +#define PIN_CFG_IO_VMC_ETH0            BIT_ULL(8)
-> +#define PIN_CFG_IO_VMC_ETH1            BIT_ULL(9)
-> +#define PIN_CFG_FILONOFF               BIT_ULL(10)
-> +#define PIN_CFG_FILNUM                 BIT_ULL(11)
-> +#define PIN_CFG_FILCLKSEL              BIT_ULL(12)
-> +#define PIN_CFG_IOLH_C                 BIT_ULL(13)
-> +#define PIN_CFG_SOFT_PS                        BIT_ULL(14)
-> +#define PIN_CFG_OEN                    BIT_ULL(15)
-> +#define PIN_CFG_VARIABLE               BIT_ULL(16)
+Ack.
 
-PIN_CFG_VARIABLE looks a bit misplaced here, in between all the flags
-indicating actual capabilities of a pin.
+I'll fix these in v3.
 
-What about relocating it to the "high" half, and moving it next to
-RZG2L_SINGLE_PIN? Perhaps even renaming it to RZG2L_CFG_VARIABLE?
-
-> +#define PIN_CFG_NOGPIO_INT             BIT_ULL(17)
-> +#define PIN_CFG_NOD                    BIT_ULL(18)     /* N-ch Open Drai=
-n */
-> +#define PIN_CFG_SMT                    BIT_ULL(19)     /* Schmitt-trigge=
-r input control */
-> +#define PIN_CFG_ELC                    BIT_ULL(20)
-> +#define PIN_CFG_IOLH_RZV2H             BIT_ULL(21)
->
->  #define RZG2L_MPXED_COMMON_PIN_FUNCS(group) \
->                                         (PIN_CFG_IOLH_##group | \
-
-Then the other PIN_CFG_* definitions can keep on using BIT().
-To make that safer, PIN_CFG_MASK should be restricted to 32-bit:
-
-    -#define PIN_CFG_MASK                    GENMASK_ULL(46, 0)
-    +#define PIN_CFG_MASK                    GENMASK_ULL(31, 0)
-
-and several u64 variables can be changed to u32 again.
-
-What do you think?
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Thanks,
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Paul Barker
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--------------fv908Zin3VFkRAE20i5xZIp2
+Content-Type: application/pgp-keys; name="OpenPGP_0x27F4B3459F002257.asc"
+Content-Disposition: attachment; filename="OpenPGP_0x27F4B3459F002257.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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3D
+=3DsIIN
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------fv908Zin3VFkRAE20i5xZIp2--
+
+--------------RbiozDZ0z6VG00rUxljqUKph--
+
+--------------C6QDSlgQSws9A1j2aMg0KGw0
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQSiu8gv1Xr0fIw/aoLbaV4Vf/JGvQUCZnBGoAUDAAAAAAAKCRDbaV4Vf/JGvWna
+AP9p5/HCOBqF1h5FzmOYXHErfMIof0KDoob4zUjs8p/KCAD9Hf5RswcQh+KbvcqZyOQOn3S/gh/S
+sTeHdqwyzdUaHgk=
+=wkPW
+-----END PGP SIGNATURE-----
+
+--------------C6QDSlgQSws9A1j2aMg0KGw0--
 
