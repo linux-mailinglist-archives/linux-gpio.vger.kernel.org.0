@@ -1,112 +1,163 @@
-Return-Path: <linux-gpio+bounces-7471-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7472-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02DC890A087
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 00:38:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A63F790A511
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 08:16:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D5101F2180C
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jun 2024 22:38:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C18828AAE6
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 06:16:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05EF061FDE;
-	Sun, 16 Jun 2024 22:37:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CA7C187323;
+	Mon, 17 Jun 2024 06:11:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ew4Wp9qB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iropJvpB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D80414AA0
-	for <linux-gpio@vger.kernel.org>; Sun, 16 Jun 2024 22:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAFB1862B2
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2024 06:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718577476; cv=none; b=D7wV4P+AbNny6Tkww4JfMXD/4StMWcuR1BWoAoyOLHElLc9rSfw/P/EA950uK2GZz4XjyvBFiS+3R/i/khAGRfzGkP9QrEpjq1c2DOplYhk4m51BAFqutgxM+PeNtSgwW25Yi9259zTIe6wjeilXVx8oVm9cSR2gTMPCMd/wVM8=
+	t=1718604702; cv=none; b=HPrD0ta0cr2f6AwF2K//bvn2Xe+RVVDdcfvmLgdvzJQqhwbgJUuOnfZdbNOB8ZjAsp3bsW+CoEKQnHcRk4AUJCmzxpfFw7ZHiJc4GWChQvkrNxSKMcnDdqovFRpsEoZlIGj0UM0ZIAdrn3GQpweV0EZYzak9O2DT6f5ftPyMW08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718577476; c=relaxed/simple;
-	bh=SQym0ka5edFkGH9GW0Q/RKr7Gzcy3p89cc6csKQ9GtI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kfYAlu2B4v99TMkAtASVWfZCAAiLTJPh/svWOWnQrfqUDRNf16UCLTgGO37mUYrkffcRtAYkuGlwqOy9BXv+NVLxOakzIvxSzyAaTq8PyW26tXzpNtiP4u/89FPUchutEuwNW1tWy6LjHEKVxX542Ta8UWbPGiE0VjRIje/vrtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ew4Wp9qB; arc=none smtp.client-ip=209.85.167.52
+	s=arc-20240116; t=1718604702; c=relaxed/simple;
+	bh=vpGyn37HoKQU9ZCMZp6hhzA0NMH1CjBNZyXDjfo6eko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D44K6i9Hk76Pe27LPsasAOE79/tXsOEe5rWEUxtVVSUlVAz8N4EGF8WN09ChpmrHMZ2G5LCyrInEozsNOSLaq0Eic4oBBhKGZ8SdK7sT0Whpyxd3ydhbxeM9oVcyx0ttyh9GlE1qap3K1+Jg2uGjBavtelYURfD/geaN0haprOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iropJvpB; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52c9034860dso4707234e87.2
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jun 2024 15:37:54 -0700 (PDT)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6f0c3d0792so456672566b.3
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jun 2024 23:11:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718577473; x=1719182273; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GJmULIbWb285fO6OZ+xt9ZdoZq+h0NtQ/msZb57jBI0=;
-        b=ew4Wp9qBwEOectoS8pABL/iEcma6YocSbuu37bqmY35yNLxkQOr/sb6PPCEdoMyPnp
-         4Qnx4fjxosXi47szJvITvreWVKSJwGl38XQI9jLZY0MBomjOQDhWMiNOsAwFXRY8G0jp
-         6SdhW1BuT+pErgfuF+yxu3svUw0h5fvQUd6PnO0Dui2rQ3x+edH4y3SFvcGX3KanF+8E
-         /fICMWMLi8W5+x3jQrMM8JFUhXF0IuHyQ9OrHKkni+IwUykBLVdC0wXHi1ADwqs2yEoc
-         Lls73Fcc1FXKSiy8Z6FgN8rGg/Po2IKbdGq4JSNxtuNmeDmPtFG7dy3frYK0zFHTr2RM
-         NMBw==
+        d=linaro.org; s=google; t=1718604698; x=1719209498; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=9kdEToaRtEtLTBxGmIJLoLouOnpDnXZ/+scsxAQ6PL4=;
+        b=iropJvpB80NHSkPQ+AK1Vck1hKZY+2H1OvP6BngXOAGFHZjzKjKL5FHs9LyReeCnGx
+         fAd5v++dzQkw6tqifub5aMpjA+TYKW3dhc8m4zFi4BCF+B8p288hzmXhlaYLjMv5D+tC
+         Jhb3P3tkzMOwR2rzyODk2gPJkGXd+a3+GS4IuXSTdpamJD93G8n6Fd8C/+DuaXdrg8fV
+         h3H88wbrl3b4CN/7/NO5TtH9fdDaS0FhbUHDM8/fVt1Xi/zn0g3lUXleiwvPcglyDiaE
+         YedlA0x6Pt//N/9jE7hDK4JRcv2s4CR48lfLJl/VwSfR7CaDZJnJqic1CAb/6NK7BrnB
+         A7Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718577473; x=1719182273;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GJmULIbWb285fO6OZ+xt9ZdoZq+h0NtQ/msZb57jBI0=;
-        b=A29jsqoXLu7J3LKRYMR/GORy5pu7BRuKJHIdHyhVF6G3QiJGffaRAasJJJHT9qz6/I
-         p3wMxWgRXE4iQNcoZLObihsc/sJJpfydDVG2JzBkJoXmyPvCQdTHAIJ7zRRxoNxDNkfF
-         OvGXFYHTYLo5D0v400EpOnZe+EsI8/edMvijh5JjUQOtT6g8OekU6OjcldEfumSO3wRC
-         TFfpdl1brasx+IuTdDeU1RnNzI2ZAEd+3gUWiBi7ridhNACwv/+AY6uT8nyEpcyHuuYI
-         7fXYk31go4jGk0PAA/9+eZtOZIJqG7z2wLL40B1NQnrCV2x/iPrCws3YfQIPbZLZNtIe
-         UO5w==
-X-Forwarded-Encrypted: i=1; AJvYcCWN9LFysI44yK+hevGqpQYE7wB/AmbXIIGfz95T2AZDWmhqbYPLPNygKJHN0Jhol/rbW6qnDcA69Ogoab4nID6zYeCEibEHIRG2nA==
-X-Gm-Message-State: AOJu0YzoASf5DDc1Hr7x0C8B4zoXPnZpbyf7UW9yZa2r6stPPsM+wqtX
-	FpKk9laYvtSJIrb0qBTbaq8SlgN3rHu6+DIN6Pl/SxtD7o2ad+1RNoS2BjarWgsLRLSQO632YAX
-	xmUpDlGgBzuXz1bb4wG2Is8DeaX1MzLOF0d/lVQ==
-X-Google-Smtp-Source: AGHT+IEBmjTYQaGafJ86WIDi2Cr5cBGdo70co+/vV8OZw5CTIbsccdUAgyRfLgyO7Zi+9wG5Gih6EPt0y2U5e8e7ak0=
-X-Received: by 2002:a05:6512:34d9:b0:52c:993d:b462 with SMTP id
- 2adb3069b0e04-52ca6e6e25amr5706964e87.29.1718577472498; Sun, 16 Jun 2024
- 15:37:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718604698; x=1719209498;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9kdEToaRtEtLTBxGmIJLoLouOnpDnXZ/+scsxAQ6PL4=;
+        b=DaFisVSxHhQ49mM04Q5mWHzAuf0c3LuFjQbthdoXc/U+XXKkxHO7zqMW3sdfEsn69N
+         3opsspl8A8UpSato2y6q3solGEVD0ANVmj+SIGnVaL5ol/kQpqxIEf5uoafpYvqxzgkX
+         CjexW1uSKyCYvNHPM76/FufPYNXbPo5ub/BkXcr9KUM+mtMx/DIxWPmAv7sQtFiZv07A
+         Ml0nOolD8ETV7X4TFxnSeW1296mMSIpfp4B62afgceKacDYryQTaU/us+NReeWeuYOsY
+         rtGgnHdHmZTDQQ9K9mj+akS5T023KH2HtgxVyuwdJ4cJeh13LTTppqTuIB7FnNrHOUKf
+         naXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUUk36yS3ZTRJcjypMrBZLTOUkD9dwfHyJ1FZ2GKmV34QiWsvuwZlNNbp8zbFAw3g+9DC0K35DT1gpzBpSa2sqAFcACgN64FBYCAw==
+X-Gm-Message-State: AOJu0YxCa0k0DO/rgnXg6voTgcAGO2drz8yHuRQ3sh1BeJipNbJnt+/n
+	7gyEIBb/BOORyNMtPk1bfffCE68Nb0QtQmwB72M+R4Cq+Py9nbIMhpuB/0IECDs=
+X-Google-Smtp-Source: AGHT+IFRvJX2rYvRV7Pzan0qIx7xvzoBrqprat8773thSOqIPo4ExMRRUq3jvVxaxcAt7mqtQO0Mkg==
+X-Received: by 2002:a17:906:c29a:b0:a6f:5957:7b8f with SMTP id a640c23a62f3a-a6f60cefc2bmr570704666b.11.1718604698066;
+        Sun, 16 Jun 2024 23:11:38 -0700 (PDT)
+Received: from [192.168.0.18] ([78.10.207.147])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56db67e5sm480498766b.66.2024.06.16.23.11.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Jun 2024 23:11:37 -0700 (PDT)
+Message-ID: <0fa211df-5786-4447-9c8e-1c57528e8582@linaro.org>
+Date: Mon, 17 Jun 2024 08:11:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611-pinctrl-keembay-fix-func-conversion-v1-1-3197f2ded3f7@kernel.org>
-In-Reply-To: <20240611-pinctrl-keembay-fix-func-conversion-v1-1-3197f2ded3f7@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 17 Jun 2024 00:37:41 +0200
-Message-ID: <CACRpkdbcCLSUjUaYoUi+mVMBOrcELRe_XExs-zB9417ttPaHVQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: keembay: Fix func conversion in keembay_build_functions()
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, linux-gpio@vger.kernel.org, 
-	patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: drop stale Anson Huang from maintainers
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>,
+ Peng Fan <peng.fan@nxp.com>, Frank Li <Frank.Li@nxp.com>,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20240614095927.88762-1-krzysztof.kozlowski@linaro.org>
+ <Zm9ZUWpievH+P8Yc@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <Zm9ZUWpievH+P8Yc@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 11, 2024 at 8:13=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
+On 16/06/2024 23:29, Abel Vesa wrote:
+>>  
+>>  maintainers:
+>> -  - Anson Huang <Anson.Huang@nxp.com>
+>> +  - Shawn Guo <shawnguo@kernel.org>
+>> +  - Sascha Hauer <s.hauer@pengutronix.de>
+>> +  - Fabio Estevam <festevam@gmail.com>
+>>  
+> 
+> For the clocks, please add me as well. Don't mind having more help from
+> the others :-) . But i.MX clock bindings usually go through my tree.
 
-> A recent refactoring to use the func member in struct function_desc
-> missed converting one uses of name in keembay_build_functions(),
-> resulting in a build failure:
->
->   drivers/pinctrl/pinctrl-keembay.c: In function 'keembay_build_functions=
-':
->   drivers/pinctrl/pinctrl-keembay.c:1630:35: error: 'struct function_desc=
-' has no member named 'name'
->    1630 |                         if (!fdesc->name) {
->         |                                   ^~
->
-> Perform the same conversion to resolve the build error.
->
-> Fixes: 73ee52205e5a ("pinctrl: keembay: Convert to use func member")
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Sure, makes sense.
 
-I had cooked my own version of this fix but this came first so I applied th=
-is
-instead.
+Best regards,
+Krzysztof
 
-Yours,
-Linus Walleij
 
