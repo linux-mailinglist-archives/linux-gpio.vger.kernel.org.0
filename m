@@ -1,109 +1,108 @@
-Return-Path: <linux-gpio+bounces-7474-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7475-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7B6890A6E5
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 09:21:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FD8590A714
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 09:28:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44B42281621
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 07:21:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE6FC1F23CD1
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 07:28:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 730AF18F2C0;
-	Mon, 17 Jun 2024 07:21:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E525618FDAB;
+	Mon, 17 Jun 2024 07:28:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="TbMb/VLB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h9TWqKA4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3F318C326;
-	Mon, 17 Jun 2024 07:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E537D18C34A
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2024 07:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718608877; cv=none; b=ZGRjxyQIgjc7sJPfhX/qT5Aqqj/I2ji5LlmFQ7rSrhsGhnPj2mwWX6lxC0ug+E/d7d2YH13miGtH2gdxh7nnecItYgpJLYqyh19PTWB3lXPOnrzLOkN4C7riSodk6/OVGUg/PVj1D+1EDiNIAWlgdZLJqEuX+bHgh4eEOOcqxFY=
+	t=1718609318; cv=none; b=WI0wU8LhJrpasH4Y+w63kv1daGAsMTsxjtXvBSi7CscvyVIGbU8Dr0M20gmVqShF9SMIdP36m3qJmHbRApiO8OQwx5WsOQ59ESVk4odLqetjAvxPhjQT6dVVCXiTEOuV7XHUD8jkPo81YOID0Nqz42KpjDvgHd3yO67DRja4RXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718608877; c=relaxed/simple;
-	bh=4O1Yg19zvG/1BCea2tUlqBSAUzPuV9/WXaIGbdGrvU4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MY7mO/5X/bEwg2ojmNgzbgRewP8bdcYK/JFNcpy7cOjUjJL496mntWKx5zGjTjHFn7aKUj8ug1ZoMG4eyYMkXxyWyNWzaCwwNDKkzc48cHCVC/K0EQOLEPhQPA+0C8YgEEGLEiMpSHHs5OUbXJQ4UZI4+46eiFvkeDUjMK2NAcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=TbMb/VLB; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-Received: from [192.168.68.112] (ppp118-210-79-194.adl-adc-lon-bras32.tpg.internode.on.net [118.210.79.194])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 70DCB2014A;
-	Mon, 17 Jun 2024 15:21:03 +0800 (AWST)
+	s=arc-20240116; t=1718609318; c=relaxed/simple;
+	bh=RjqBKeGOSxgGBf7S3OsZ85a5sdG5XhMRG6WOllvDOTI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h9tac4LSCXg7nbXi7MRwEk0e0XprF1URxWedMvLN8SVpCJ7lHyTwdR6UbsHI6WRlOQatf7nR3/oh25I8RAzq2S8c7cBi1k/gjIMddvZcX7Z2826QaoA7ZZpMUFxu1FJcYzxygOR6c4IYgLFvJc0UNz3JdF+VVWM7q6HEI08Mimw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h9TWqKA4; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52c7fbad011so4816704e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2024 00:28:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1718608866;
-	bh=4O1Yg19zvG/1BCea2tUlqBSAUzPuV9/WXaIGbdGrvU4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=TbMb/VLBPIZdVWKQv6Pq9BqQTf63/B5/EwG7UiyQeT6z/FyqQMMCXEuD6jHztfmnI
-	 hRM+73HNO1WNHiqbdoqNEQs7f4IRbdIG85AVhD2gwl1YFcMixfCAvZeRTT3DeFZulV
-	 8JWH+T80+ubT0cmjz6FGC6QhdVYi27VhGNjICtzcp/R2kTY/Rgwm6Ox0qEiHejcpT7
-	 ebC52k8USG+7lwkrqjB9zoSpyL9nIitIcPRaB4ZbfEQmBCqhsikgkQhAGtxsvSe/Eh
-	 tE0u7IfUr34rKVJ9CehcdC0bP/M4Wg7euA2bQVZe8hjRD2V2jXbN7abOkzU31PeYDK
-	 YUC3YIpy0DMBw==
-Message-ID: <5bf8e1dddd2b958a102e7b1b9f9c080a34f9deff.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: aspeed: Use block syntax for
- function and groups
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
- linux-aspeed@lists.ozlabs.org,  openbmc@lists.ozlabs.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date: Mon, 17 Jun 2024 16:51:00 +0930
-In-Reply-To: <0908995dfd2181e687181bd1b075c4cb27624e94.camel@codeconstruct.com.au>
-References: 
-	<20240531-dt-warnings-gpio-ast2600-pinctrl-funcs-groups-v1-0-a6fe2281a1b8@codeconstruct.com.au>
-	 <20240531-dt-warnings-gpio-ast2600-pinctrl-funcs-groups-v1-1-a6fe2281a1b8@codeconstruct.com.au>
-	 <20240604192755.GA1065421-robh@kernel.org>
-	 <0908995dfd2181e687181bd1b075c4cb27624e94.camel@codeconstruct.com.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+        d=linaro.org; s=google; t=1718609315; x=1719214115; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yq4fscHRPtrzf745XjM2Gn6nzaK5dlrVOgHk/n3Bln8=;
+        b=h9TWqKA4wENbajE2nMWlOpXsS5ciHwVHEVq97KZdyqwqQb5iV6RI815puG6hwuSZoj
+         /Quj0zOY196fZN0yK7Kne2c5onRft41DidlRsPr1LPwvgMsPYwMw3kJ8giOO58By7rqf
+         ZY8S3owA0uk2LlgRxvCUPNA2F7V8MYoiP+TXuUGX+XCcDzil5o5apRdNaC6lknB6B0uY
+         53PF7tJ7hotoqv7NVaLSFBd959B4m/8CftCEPKaRq5k2YuX4NKVn/TA5ENsNKT8okHen
+         Mte56ZB20jvQ4a8arIggjJFPifCsSj0CzEt5cDrB/XuGEU5CtkrQgZt5Rv3xhjdasKNb
+         avzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718609315; x=1719214115;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yq4fscHRPtrzf745XjM2Gn6nzaK5dlrVOgHk/n3Bln8=;
+        b=EvPlV7y/kYrP7PBhhraAJ5O9pIUyabOX1aNWcC/ZpUG87QDUnrlLGO5yatfZXPLzPs
+         plPRBJVRHOvUnziEQxFA65d6oX3Y+VoQslr7LT7B34OuzHmTZFh1ddUG80XybLriT+c2
+         Ixl1DZb6e8/QGVIzWFSwX4LOJ1fA19HRPpqWzTzOSx/zy8COJL6CAgPg8Dl2jzdhPItQ
+         ykRK8l43HAiHu0EbSbAxWhV6ooFUrt/wWo6ONlLyfeKMrSaTggOWePqu86DWDnevIu0u
+         WjeipbNYhaZW5pe1FRukQndUNE7iRuJ+G06IWwLiHvmMwb64+5P7mV+vfOvtLF/ycHN3
+         rDjA==
+X-Gm-Message-State: AOJu0YwwGuh2SPB56RWzBmcJlr9cNKGvzxzAkV/JLFmd1NfTagA9qrcy
+	pMKvBzk3183VDjY0AbyNvEPtmZ/t9FX04Jk6QSI9VWymWoYgfTa2tngJ2lODXYZBcUmUseWTUv1
+	L5klk+9D2kSZ36aT+2riWEf56nw2pzkdrnOCwlQ==
+X-Google-Smtp-Source: AGHT+IGpK3NHOO8C8rUcsresgTT9K/Yx1lfadCHo9dfWB+YwtCNKlaQDh4zm+laBNu5XTG4oLXwtw63W+7bcb0Y/Jr0=
+X-Received: by 2002:ac2:514f:0:b0:52c:7fc7:f40d with SMTP id
+ 2adb3069b0e04-52ca6e6585bmr5668159e87.21.1718609315006; Mon, 17 Jun 2024
+ 00:28:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <cover.1718355498.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1718355498.git.geert+renesas@glider.be>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 17 Jun 2024 09:28:23 +0200
+Message-ID: <CACRpkdaK0DqRyouzTD4Qp_jJ+fx6MLXjBDNC7=661s8AeSt=Rw@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.11
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Fri, Jun 14, 2024 at 11:07=E2=80=AFAM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-On Wed, 2024-06-05 at 10:17 +0930, Andrew Jeffery wrote:
-> On Tue, 2024-06-04 at 14:27 -0500, Rob Herring wrote:
-> > On Fri, May 31, 2024 at 12:32:47PM +0930, Andrew Jeffery wrote:
-> > > The expansion makes the documents a lot longer, but it's easier to
-> > > review changes to functions and groups when we're not having to deal
-> > > with line wrapping.
-> >=20
-> > Do you really expect to be updating this frequently? I would leave it=
-=20
-> > as-is, but whatever you decide.
->=20
-> I don't expect to be updating it frequently. However it's happened
-> occasionally in the past and the diff chaos irks me. So I prefer we
-> explode it.
->=20
-> >=20
-> > > Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> > > ---
-> >=20
-> > Acked-by: Rob Herring (Arm) <robh@kernel.org>
->=20
-> Thanks.
->=20
+> The following changes since commit a39741d38c048a48ae0d65226d9548005a088f=
+5f:
+>
+>   pinctrl: renesas: rzg2l: Use spin_{lock,unlock}_irq{save,restore} (2024=
+-05-27 17:13:31 +0200)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
+ tags/renesas-pinctrl-for-v6.11-tag1
+>
+> for you to fetch changes up to 9bd95ac86e700ab8b1a6c225685e0e5afe426b4e:
+>
+>   pinctrl: renesas: rzg2l: Add support for RZ/V2H SoC (2024-06-11 09:50:2=
+5 +0200)
 
-Are you okay to apply these (I see they're not yet in linux-pinctrl.git
-for-next)? Turns out there's another concern lurking in the AST2600
-RMII pin groups[1], and it would be nice if we could rework the patch
-for that on top of this series.
+Pulled in, thanks Geert!
+Excellent work as usual.
 
-[1]: https://lore.kernel.org/linux-gpio/20240613080725.2531580-1-potin.lai.=
-pt@gmail.com/
-
-Andrew
+Yours,
+Linus Walleij
 
