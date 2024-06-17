@@ -1,91 +1,109 @@
-Return-Path: <linux-gpio+bounces-7485-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7486-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F1E590A89E
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 10:38:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E27790A8BB
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 10:48:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C2922841C3
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 08:38:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51A661C21607
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jun 2024 08:48:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BEDF190493;
-	Mon, 17 Jun 2024 08:38:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56950190479;
+	Mon, 17 Jun 2024 08:48:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oc9LBP4f"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M/3fepbZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FF8F50F
-	for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2024 08:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F05DD52F
+	for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2024 08:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718613490; cv=none; b=gri8DtPBekWhqNoR7LTad/7dOxFczmBVIrx6KRpvaU8PGh39KoCnb7eHgByLS+zx+TQjjCI/MwnUYbQQ7Wnx1UxXZILMrzTZpNqhBgcybFSCSu9O/LNiJtKA/mY2Br/QQ1yK87S3vdnfOUu8YuKJRWLxdt4MRX90bz7ctPmREXQ=
+	t=1718614096; cv=none; b=cido+lOPBYbdL/W2OQTieh6KYSt5I6QvfhGjMaSH67yVwAusRMyNca8WZSRqlF36HbFzNe7B4S34jLdLEErtSzgZER9UiIrh6SlegcgQsvBfNL4bDL+b8YADZMNgt8Zm7hxT0NaZRBdJczgvzHjn9yd7wG6DSAbVYfkLgi8VmZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718613490; c=relaxed/simple;
-	bh=Ad+DEAJ96q3Mb3dlvrA9VWDHz1PLJ9uuY9NHcvPv2lQ=;
+	s=arc-20240116; t=1718614096; c=relaxed/simple;
+	bh=2kM/oHxrBScBuC7PXXmXDeLBNjTC/Qxpp/mhHadLs20=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WpihvtDcEOKDDkfyS6GzLoekv7Bg+mgnKBLz3fLbws/KuMy64dv6vEq1KP6/v7aHCDTUvp7sseW6CDRQjSTF4LbNwPlIkzQObDln9q7jAC+tZItI3YGcHdO5YGMsRkG4ME5EVTe1fLXJi80cW4jX1Z42/5IpSA++FYjH+T016sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Oc9LBP4f; arc=none smtp.client-ip=209.85.167.42
+	 To:Cc:Content-Type; b=iWygLwDz4evQNTvu4Fe9bnCBzJpy+6OwUewqcGLR4nSvMkAv3vy4wM0776NR/1eQo9l3XwI3m/g7fbnEQ0bmdPM4CcAcujpmzEhiNqXiFFqNkuAv5JKy6YrnE6QAmA9tADBhMzCtE+16EOoISHb8nCZphXc7b8lzZ8EpIbUeyAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M/3fepbZ; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52cc129c78fso62464e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2024 01:38:08 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52cc14285b1so25566e87.2
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jun 2024 01:48:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718613487; x=1719218287; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ad+DEAJ96q3Mb3dlvrA9VWDHz1PLJ9uuY9NHcvPv2lQ=;
-        b=Oc9LBP4f3MrrZ2v2Q4OBaiPp4mjevzAlyGTLP4X4mtfpSv509//To8fNPMPuULQEqu
-         3buGaLszW1BSx19Y8QKs/+k03hyaMZ89tlhkzBPhwr2MHRZF60XSw7g+REB7cVyNhDFh
-         adYLwwZTY7ag3p/TBzc0SZb6Gt0ci3Twv3JbQLyiHE2OkGhxkwm2Ui+Sn1kJho417gpf
-         Dg8NoWyiVUI+1XgqMdXofX3BjngiQ5AE4Qu2JvR29YKYnOzyUouBz69c/FdRSKdDFyAU
-         hIzw82w2h2TZwNnqss/E1AfKmlgMlIUtNmZhOKs4Ds6G/eUTjKFme4iRQNrxlKlBXEaM
-         fb5Q==
+        d=linaro.org; s=google; t=1718614093; x=1719218893; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BgNy9aSeOjtMvdyT2zIBjwfBSokXxGif772o4A37SX8=;
+        b=M/3fepbZr7BzTtn0VmT54aEdY/22PexeLFOZkIdqLJ4un6jVMjOHZGky5v5Rcgb5GY
+         LgbtTUIMLEbS6rCoRq2niWAxBj4NxCt4jkJyopnvLrFSHgQzcn1dy4QGWjQkqvXqxpdW
+         l9sxl8JSdaDbUCaL6O2kqnzVXEbk4K4QnVhTRG18FLqtcANTLRrwcZni7ubjVeXgaSsa
+         SCor4erZtwJrip1Qwuzs5/DdzWON62G/O3dpkll4tRWVRCDXAMFnxkvaY9NW9VmFKyKn
+         82iFvkFsLaZR9V/ZRYotAO3Y/WqS69hj/BlvUvhccXPZcW9v3tmZzPYhWXuKvTXySooV
+         txnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718613487; x=1719218287;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ad+DEAJ96q3Mb3dlvrA9VWDHz1PLJ9uuY9NHcvPv2lQ=;
-        b=Vd8UMj0Woz3QhqNVfEntXaH+Zzk+GLK8Rwlt6s8WhcSbLuS5S605Mgy70WoXiomTx1
-         Z7xocgErgztDF2jTjJmLRTnKH1Ay/gbXJuHX8+PENb6kT4+QZF8PNkwNVF6ilNcBWeUo
-         kosd4d2hFql7FM3mzF4godd2ENoRzefDMjDcu9ct8sjQOUsYwaREOp3WGMdpxBAk4iA9
-         wC7cARzXZ4DaHhgHuBxiGIY6/1PHtp78kavPO40Y/WlK+JhEBMtoKiwniynhLFKZ797q
-         klGnbjfDF3p0kXHkJgHBj0jqALgBMJln3vgKp7kdQ7x4LSxGvl8l4iwPGDeSrcJeKGB8
-         6nxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDk8KT1NXC42y8brYvyEwDPdZysj+ZWRfduxpj1v333mS0PlYyxLzBRK3ju8Ec8bKoylLrrW4yTdIP0/iTjmxAfhLS0zknPoYVxQ==
-X-Gm-Message-State: AOJu0YzDgTIMruJBqBomapNsZHTRWFXdranQuZavv7QXur8hjcaAC22N
-	JBQwUlVejSQlwkinqllOMjwjfaLiZ1mGMO4sa22b6ZmR6wWOIzkVHXFInXEsVFyAfDvFDQnJGjf
-	+TO/ht+ZmxDp+I6zUI7muxL0yFeBaKOfAnL1bMA==
-X-Google-Smtp-Source: AGHT+IFutrW6UzBgAviJa/d7uO/iq8C5wSF7SgFGox1gHdBAGL1yUWbpxRacXxzbupfXHiyhG6WNRXED7ADEqQ0l7ZA=
-X-Received: by 2002:a19:c515:0:b0:52c:8479:21fb with SMTP id
- 2adb3069b0e04-52ca6e64c25mr6506284e87.27.1718613486857; Mon, 17 Jun 2024
- 01:38:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718614093; x=1719218893;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BgNy9aSeOjtMvdyT2zIBjwfBSokXxGif772o4A37SX8=;
+        b=EhsAvDDmAElWsZG8yyJ/WETvsdVzDbezjMGisjsKSlcHUkVuXuzawBQoA1qBeZRL8x
+         4ZvYlOGNZOTUkew5xi+O+FAgB2MR9xM6bKOwvvaRFcow+0py/eSRzwGO4tWXcdlW2yHC
+         Jnf/a4eo+9eMzsKnDlpmsta/6K09MTSeVonB9mk4wLGJULDPIRNwgQyA/cQRqMQ/7LTa
+         PbZK6Qr/JLgfhaJv2jNyWbBjWKmxBZVhmZSEJDBFsT5m/iQZR0t6C/YSqhzAXdQk5DL8
+         pmMa8Ki1dcrZD5HHdNA8muLwPNmMmI0Q99OHb4a47dJ+u2dtd9LAHEa91tR4mxxutEeb
+         gaRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfamceMILAGBB7B7OwL3Ur9ZHQ9cUnZtxz5/IdOzaaqL7dVBKyb+J/F4behSt+gWAHjvGRCkTqpj+J2+o3diUZ5ukRa1wEZMZQWQ==
+X-Gm-Message-State: AOJu0YzbwID6IXLgBYp+5cfexfV0syOa4NCo4MIt/ko/H0NM5MF32bX7
+	d9QnDpzkzdwgN8/vaCP7hTx/86Dmxp4or1T9BxYVD2IbFQIy65OUlRfE/RKRXgGGN5MbsODddX/
+	OJvmfDDOYV7ck7hA85Syhpde2ZLQ/WaH8ZkeTsg==
+X-Google-Smtp-Source: AGHT+IHbOKQhcmgxz7j/vSxObsm+6bA1uZav4s2Z4EB/68U7Rs3mQDLz30rV9Ja8l7chB7w8ej9DjSMq6TxD8gV+Sik=
+X-Received: by 2002:ac2:5e22:0:b0:52c:9725:b32b with SMTP id
+ 2adb3069b0e04-52ca6e6572amr5414563e87.17.1718614092791; Mon, 17 Jun 2024
+ 01:48:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606125755.53778-1-i@eh5.me> <20240606125755.53778-2-i@eh5.me>
-In-Reply-To: <20240606125755.53778-2-i@eh5.me>
+References: <20240610223550.2449230-1-sean.anderson@linux.dev>
+In-Reply-To: <20240610223550.2449230-1-sean.anderson@linux.dev>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 17 Jun 2024 10:37:56 +0200
-Message-ID: <CACRpkdYv3DTqJD1dtgLO7rxn-34ZpyfXCygwvgeJpEFWhyKQrg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] pinctrl: rockchip: fix pinmux bits for RK3328
- GPIO2-B pins
-To: Huang-Huang Bao <i@eh5.me>
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+Date: Mon, 17 Jun 2024 10:48:01 +0200
+Message-ID: <CACRpkdakB0vekDYaWYacfvo9DaGzJfXAqT97aG=x2g4eku2CbA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] pinctrl: zynqmp: Support muxing individual pins
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Michal Simek <michal.simek@amd.com>, linux-gpio@vger.kernel.org, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, Krishna Potthuri <sai.krishna.potthuri@amd.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+	devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Huang-Huang, Heiko,
+On Tue, Jun 11, 2024 at 12:37=E2=80=AFAM Sean Anderson <sean.anderson@linux=
+.dev> wrote:
 
-all four patches applied for fixes!
+> This series adds support for muxing individual pins, instead of
+> requiring groups to be muxed together. See [1] for additional
+> discussion.
+>
+> [1] https://lore.kernel.org/linux-arm-kernel/5bb0dc7e-4c89-4f3d-abc6-41ae=
+9ded5ae9@linux.dev/
+>
+> Changes in v3:
+> - Express groups/pins exclusivity using oneOf
+> - Fix zynqmp_pinmux_set_mux and zynqmp_pinconf_group_set not handling
+>   "pin" groups (thanks Sai Krishna).
+
+OK Xilinx are happy, I'm OK with it.
+
+Patches applied!
 
 Yours,
 Linus Walleij
