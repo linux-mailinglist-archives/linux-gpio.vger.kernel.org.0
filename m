@@ -1,121 +1,164 @@
-Return-Path: <linux-gpio+bounces-7546-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7547-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98BFA90D857
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 18:10:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E098790D90A
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 18:22:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB04A1C236EF
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 16:10:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8FD022820F5
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 16:21:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F262150297;
-	Tue, 18 Jun 2024 16:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37FCA4F5EA;
+	Tue, 18 Jun 2024 16:21:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="i8MEH4C+"
+	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="puzpn+qw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from forward502b.mail.yandex.net (forward502b.mail.yandex.net [178.154.239.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31214D8A4
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2024 16:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6879274070;
+	Tue, 18 Jun 2024 16:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718726995; cv=none; b=UxF62ecEA/tYs3admctNnXDVvW53yQYq0KqvSHdYZBCTRCVNz42amucxes/7jJRiQt8w5aOUkoU6znVQVKV27WSx/h8JfdzQQNO2Hz9COSlxs7gKuppIuJUt+DFr4Mf0GC4VvXKoklFwFvR2ifQZUPaVweS8Ru+EYhMgtPUEYBM=
+	t=1718727685; cv=none; b=VoGA4FuZOzDWgQ0l0bZg3fYHuUviVdZ6jndsygfUqeWYuyVVdrKyldDgMLGhAGkGpHZlpnicjgZKj9IhEDFkpIKs7sNbiBwHEHm4xT5UVAXiiC3RGcFgYYGKek6VPLyAdilFZfrc5OKL1P50aDG2HTBfuHwX5TqqjlfzxHmNB0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718726995; c=relaxed/simple;
-	bh=b9bXeRoJpbw3v2jWIi5RGRiSok5QY8bOI/A5YxVa18M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W4T6V8NxVoBuSqAJ1xpX07C7NofAbnaWjp1Ye2FyKmULrbwfJ8BE52p/MNtjtotm0Br+fY9Mf/fcuIJYhJLpVTA3LTcGDQO+HA9ck0qk5f84d8kpz7f9SQeeC+ToRjtbeIlC/VWDAmNixsUt9SxkFXa88lDaW7qwhG8nh3nV0Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=i8MEH4C+; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=b9bX
-	eRoJpbw3v2jWIi5RGRiSok5QY8bOI/A5YxVa18M=; b=i8MEH4C+KhQrmah/GsWt
-	YohMHFdrtjifBFIvfyEkECENzHCGiFqJkQ1UGAAv+RduAH4TGmBxw+WAFApjGHGr
-	yax9HqsewdTs4Qz/IxPEipUh8cbSfWcaFwx1QGQTXPYft7H7jpkhie2+14oAnsaJ
-	uvpHd+BRwbqFnWQGqmzQW0jd51U8qn+AfXsYDwoCPH2bGadKM+N7CHred1BQUg5X
-	4aCowllIPE6uQwFYV7jFDaFqzRUq19dVdU4cnOICGiIMIKtBClAFlSMbQBv3q+3M
-	Tq8pIdNj/DHfq6oj3hfaRCAAR9mqwmCGpdkb6R9F6Q9YFGYj046IMRFuoaQ0+mGg
-	kg==
-Received: (qmail 283759 invoked from network); 18 Jun 2024 18:09:47 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Jun 2024 18:09:47 +0200
-X-UD-Smtp-Session: l3s3148p1@hlyRTywbJohehh9j
-Date: Tue, 18 Jun 2024 18:09:47 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
-	Linus Walleij <linus.walleij@linaro.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
-Message-ID: <ekuchwcgvggsriqodasx6pneybqbwe3cc2j3huisb7mnacnj3z@mhx4snzwbbqj>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>, 
-	Linus Walleij <linus.walleij@linaro.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
- <20240610112700.80819-2-wsa+renesas@sang-engineering.com>
- <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
- <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
- <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
- <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
- <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com>
- <CAMRc=McpRjQO8mUrOA4bU_YqO8Tc9-Ujytfy1fcjGUEgH9NW0A@mail.gmail.com>
- <3h63msxchuuxqa5liufoivss4raqtzjlusjn7ufti5nyjkshcb@pqevlpuvrm5q>
- <CAMRc=Mff2L_M=zkxQTqoFjMxbi4ZXBHPxm48UGnYFEnwfDWFHQ@mail.gmail.com>
+	s=arc-20240116; t=1718727685; c=relaxed/simple;
+	bh=3ZVPPTGo8cq6QNmgKbHqK8ZqZExCe+h2ikFe65E6vfw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=C+cVVwJFl2dTdkeSdzCDsYdoI8HTsIbtSgyYGAJEqrCvaEN9r5tm+eg5U9YMwM6GJTELLp0sCA01+xYm8kR6RgG72gmwNN62OQ9peIxi5CpghJ2w16BAGcWHz1O1l5YIMJGRJbefCcDphWQkkE1allMdRIvnN5F6njlRybDzvvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=puzpn+qw; arc=none smtp.client-ip=178.154.239.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+Received: from mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net [IPv6:2a02:6b8:c16:2014:0:640:2712:0])
+	by forward502b.mail.yandex.net (Yandex) with ESMTPS id CAAFA5F059;
+	Tue, 18 Jun 2024 19:21:08 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id xKLHl69CYiE0-BWlTE6hu;
+	Tue, 18 Jun 2024 19:21:06 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
+	t=1718727666; bh=3ZVPPTGo8cq6QNmgKbHqK8ZqZExCe+h2ikFe65E6vfw=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=puzpn+qwZpDWr34Mz2VDbCLKw+CF3X4x7FJmlcrAAYOz4Dezeyqid/LQR6ZMsxokZ
+	 7Lly2NZd33KM9/c+ruY7aecmDl3Muygsbv231bG9Mdy1tKuDl4h48bTcb1nYvZrRgL
+	 GDbEpeWFZbA42dWJbNJtICRIsfhgB5fX4MxOwzTY=
+Authentication-Results: mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
+Message-ID: <48c242838c77034485a9e667dc0e867207c5beed.camel@maquefel.me>
+Subject: Re: [PATCH v10 00/38] ep93xx device tree conversion
+From: Nikita Shubin <nikita.shubin@maquefel.me>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann
+ <arnd@arndb.de>,  Stephen Boyd <sboyd@kernel.org>, Vinod Koul
+ <vkoul@kernel.org>
+Cc: Hartley Sweeten <hsweeten@visionengravers.com>, Alexander Sverdlin
+ <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>,
+ Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Sebastian Reichel
+ <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley <conor+dt@kernel.org>,
+ Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Thierry Reding
+ <thierry.reding@gmail.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
+ <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Miquel Raynal
+ <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh
+ Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, Sergey
+ Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>,  "Wu,
+ Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, Olof Johansson
+ <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-pm@vger.kernel.org,  devicetree@vger.kernel.org,
+ dmaengine@vger.kernel.org,  linux-watchdog@vger.kernel.org,
+ linux-pwm@vger.kernel.org,  linux-spi@vger.kernel.org,
+ netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-sound@vger.kernel.org, Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>,  Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>
+Date: Tue, 18 Jun 2024 19:20:58 +0300
+In-Reply-To: <CAHp75VfSC9gAD9ipeWRPdQOxUp4FXqYYei-cJTs38nbz0cHpkg@mail.gmail.com>
+References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
+	 <CAHp75VfSC9gAD9ipeWRPdQOxUp4FXqYYei-cJTs38nbz0cHpkg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="t6vvdwno3oriajiw"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mff2L_M=zkxQTqoFjMxbi4ZXBHPxm48UGnYFEnwfDWFHQ@mail.gmail.com>
+
+Hello Andy!
+On Mon, 2024-06-17 at 12:58 +0200, Andy Shevchenko wrote:
+> On Mon, Jun 17, 2024 at 11:38=E2=80=AFAM Nikita Shubin via B4 Relay
+> <devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
+> >=20
+> > The goal is to recieve ACKs for all patches in series to merge it
+> > via Arnd branch.
+>=20
+> 'receive'
+>=20
+> > Unfortunately, CLK subsystem suddenly went silent on clk portion of
+> > series V2 reroll,
+> > tried to ping them for about a month but no luck.
+> >=20
+> > Link:
+> > https://lore.kernel.org/r/20240408-ep93xx-clk-v2-1-adcd68c13753@maquefe=
+l.me
+> >=20
+> > Some changes since last version (v9) - see "Changes in v10", mostly
+> > cosmetic.
+>=20
+> ...
+>=20
+> > Patches should be formated with '--histogram'
+>=20
+> 'formatted'
+>=20
+> ...
+>=20
+> > Changes in v10:
+> >=20
+> > Reordered SoB tags to make sure they appear before Rb and Acked
+> > tags.
+>=20
+> This is not required. The importance is only the order of SoBs
+> themselves. If they are interleaved with other tags, it's fine.
+
+Ah - ok. Just saw someone was complaining about b4 reordering them.=20
+
+>=20
+> ...
+>=20
+>=20
+> Hopefully to see this series being eventually applied soon.
+> Arnd? (Do we have all necessary subsystem maintainers' tags, btw?)
+>=20
+>=20
+
+As i see from my perspective only three left:
+
+Clk subsystem:
+
+- clk: ep93xx: add DT support for Cirrus EP93xx
+
+DMA subsystem (but the only request from Vinod, as far as i remember,
+was fixing commits titles):
+
+- dmaengine: cirrus: Convert to DT for Cirrus EP93xx
+- dmaengine: cirrus: remove platform code
+
+Beside that tags missing on platform code removal (which can be Acked
+by Arnd himself i believe) and dtsi/dts files (same ?).
 
 
---t6vvdwno3oriajiw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
 
-> You mean configfs? Please take a look at my proposed gpio-virtuser
-
-Oops, yes, configfs.
-
-> module, it should do what you want:
-> https://lore.kernel.org/linux-gpio/20240613092830.15761-1-brgl@bgdev.pl/
-
-Thank you! Exactly what I was looking for. What I like is the symmetry
-of instantiating GPIOs in either DT or configfs. Very elegant for the
-user. But boy, this is a lot of non-trivial code for it.
-
-
---t6vvdwno3oriajiw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZxsUsACgkQFA3kzBSg
-KbYV8RAAmlV7dakmx/ZeWbYLcZ7onJJ62V7CTKNFPwN28NQpGyBK9yTWVMRhBwF/
-vQS2johY+4ah2/f8h8/6NnShb8EBZ+Zco6nfb2bAAC4+RfHZ3S7PXYJSDn+VE+Pu
-wt3Y1toC6yWKhPA6n0bQXwC5YlbSIc2fp9X/R+FjTw1nUV9sHkNiOOmPeThdm6E6
-j7lgSe8Z2/F9wvigbormsMyfqxEvl2f9mTi3MWKNiWivwYUu7+NmMtARHu8lDaIW
-s5K/Xf+/SLoM/UFGkeCI6guz5nkSBFvWDruxQZDCiLFE/hFaTTLo3XDMf84nUg9y
-QEelfrCeBtUztvPy/THkbTOzOEapJ1tk299NzQwUF2ppa0hgQ/Eudq3pAHMO49QA
-FZ63984Ge7TQGLD1yNmsnGcCa1b1Jblv8kW3Ksv9K88rOmmr8VqCUbctWd3PmQmT
-GLqKCL6/oVxN6RX5gko5D7oQJ2phvte4HRphQ1VD9kqSh+R/FruWyURr92jT6pF+
-Qwr9js0ksCd/6d5wITPnYp7vZZe1YjedZYbGVNR8w3wHnUEzt9JniHXdmJN4qyDs
-CFBFv5fkCnuEjOWcRSxtOS61w9b9kd+H+lsFFCtt5RmJg30DFVmnHJITJ2jw9zm0
-IKGGIRfr01M7YYU67OqxdK/2pc1pP9COtbVpvvjAa2lPNHbwA/g=
-=zQ52
------END PGP SIGNATURE-----
-
---t6vvdwno3oriajiw--
 
