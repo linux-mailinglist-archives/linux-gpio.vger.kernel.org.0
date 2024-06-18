@@ -1,114 +1,130 @@
-Return-Path: <linux-gpio+bounces-7549-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7550-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D86C90D95C
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 18:34:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1F8590D9E2
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 18:51:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62DFC1C251EE
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 16:34:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83F8728A238
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 16:51:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 960B313AA51;
-	Tue, 18 Jun 2024 16:34:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7FDC13C8F0;
+	Tue, 18 Jun 2024 16:51:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="Oni59Gvd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="peWq96JO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [178.154.239.145])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BE68120A;
-	Tue, 18 Jun 2024 16:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1792813C683;
+	Tue, 18 Jun 2024 16:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718728450; cv=none; b=OVmWgbFhyxXonv+u5KvMkl3hve83CJ71g2Q015o6yl++hBybK5aGVXu8NIGDnGHInEwBUNpFLW1jY25rz12kQzPqK3gG0mWDk8LnNpPcWZpkqQbf3oXzVJQLNkgfHmB36WKSrc1XfWcV73a2LS2liolp1Dg6dYvY2uUc7h3I1r0=
+	t=1718729488; cv=none; b=jEJDp6s3PoDNajXcDS9raA/XuQ4YzA1Vf74pcQS8G5tjZa6uwaa633IYQ9qYvXPRLT0VTIRax0IzLKo20iIoAf2xHfhrFNBKSE0E6yGDOzLuaumTFLtgI6yVXgdny5ikSs0dcKI+i0LfRyx5netffXDqv7wyO2Ms41+MgsRNNbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718728450; c=relaxed/simple;
-	bh=9Ya0AF+I5kZB8f0I6QI7f8yC9CILQ3Sjw0vL1wBTNqU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iVRYx69THeYwYXpv/APFRoZcrjyxZYrKsk4iXhPmjZUWcRSnTYMUvxkYMrnwRsru+OfCtVZD9U5UWOKuGjK9qIrM60PD4f20+DIk3J2wHBfWYJRfixyzSJ3JgBYD94CEec1OXN5T1HutnsL/ejDUiFbFxVtFJM6KGN2FvWDw8H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=Oni59Gvd; arc=none smtp.client-ip=178.154.239.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
-Received: from mail-nwsmtp-smtp-production-canary-88.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-canary-88.sas.yp-c.yandex.net [IPv6:2a02:6b8:c14:3483:0:640:1715:0])
-	by forward501b.mail.yandex.net (Yandex) with ESMTPS id A79C76123C;
-	Tue, 18 Jun 2024 19:33:57 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-canary-88.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id nXLBadKCSCg0-WTnPBLbY;
-	Tue, 18 Jun 2024 19:33:55 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1718728435; bh=9Ya0AF+I5kZB8f0I6QI7f8yC9CILQ3Sjw0vL1wBTNqU=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=Oni59GvdWxSFXVUm0FOyYIVzjEV0JRSU9Ip08bwMplFAtgBKjmuy5Yh1eldJeqi17
-	 Pa6h6Z/eehgezUl2WVdUScufJqePeWWaxGT7OxfJGM46bfE7df2u7mV+2/KLa+XOrw
-	 p+oLGi6VA8aTuPSROzXtOw+f362fnP6+ig6AeZ8c=
-Authentication-Results: mail-nwsmtp-smtp-production-canary-88.sas.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <eb3e6c0b883f408fed68e725a23b54854701ce9e.camel@maquefel.me>
-Subject: Re: [PATCH v10 00/38] ep93xx device tree conversion
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: Jakub Kicinski <kuba@kernel.org>, Nikita Shubin via B4 Relay
-	 <devnull+nikita.shubin.maquefel.me@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Hartley Sweeten
- <hsweeten@visionengravers.com>, Alexander Sverdlin
- <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>,
- Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
- Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>,
- Guenter Roeck <linux@roeck-us.net>, Thierry Reding
- <thierry.reding@gmail.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>,  Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
- <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>, "Wu, Aaron"
- <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, Olof Johansson
- <olof@lixom.net>,  Niklas Cassel <cassel@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org,  devicetree@vger.kernel.org,
- dmaengine@vger.kernel.org,  linux-watchdog@vger.kernel.org,
- linux-pwm@vger.kernel.org,  linux-spi@vger.kernel.org,
- netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-sound@vger.kernel.org, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>,  Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Andy Shevchenko
- <andy.shevchenko@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-Date: Tue, 18 Jun 2024 19:33:49 +0300
-In-Reply-To: <20240618073339.499a7fd2@kernel.org>
-References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
-	 <20240618073339.499a7fd2@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	s=arc-20240116; t=1718729488; c=relaxed/simple;
+	bh=N7GfkgAKpubybyIPqNrNcWjaVoJe0OB6dqcWUjT03NI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b/wCcD9NfJavh6dHAyj5qdTKDQ3TyE22pkMozQRPQcJINHxgf6v/c1D1x29ic2CIBtt1hMRzaXM9aE3/YTcJ9QwdP7z3MY+FtT31VAa1v7rEus3BArfbvI/PmzbZr6a6Rka/0xpphfZtyttJ8YziGEqeOBwPfBcjGt1/efvSIB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=peWq96JO; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45IGpDMF076556;
+	Tue, 18 Jun 2024 11:51:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718729473;
+	bh=Lskly1cpf/KK45sXXzIGa0MObnom7s5TrJAIodueiVc=;
+	h=From:To:CC:Subject:Date;
+	b=peWq96JOt2s62Np7PdA1WTiiX3iRmEThy5SJtE28l8lEq/RCwP/HJQfCPRIYfHLFI
+	 0cEICnC4gsAlmI+O1E0RuNcBvJ74NdE0vfgGZnIOVYinKhuJOk7OVvNKhzQdECYkEg
+	 0x5Zo59rVI+1/tbmLABybEPYOGqdnqPP41iNpl44=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45IGpDGA003937
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 18 Jun 2024 11:51:13 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
+ Jun 2024 11:51:13 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 18 Jun 2024 11:51:13 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45IGpDWx008333;
+	Tue, 18 Jun 2024 11:51:13 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Tony Lindgren <tony@atomide.com>, Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        Nishanth Menon <nm@ti.com>
+Subject: [PATCH] dt-bindings: pinctrl: pinctrl-single: Define a max count for "pinctrl-single,gpio-range"
+Date: Tue, 18 Jun 2024 11:51:02 -0500
+Message-ID: <20240618165102.2380159-1-nm@ti.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Organization: Texas Instruments, Inc.
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Tue, 2024-06-18 at 07:33 -0700, Jakub Kicinski wrote:
-> On Mon, 17 Jun 2024 12:36:34 +0300 Nikita Shubin via B4 Relay wrote:
-> > The goal is to recieve ACKs for all patches in series to merge it
-> > via Arnd branch.
->=20
-> Why? The usual process is for every subsystem to accept the relevant
-> patches, and then they converge during the merge window.
+"pinctrl-single,gpio-range" allows us to define a dis-contiguous
+range of pinctrl registers that can have different mux settings for
+GPIO mode of operation. However, the maxItems seem to be set to 1 in
+processed schema for some reason. This is incorrect. For example:
+arch/arm64/boot/dts/hisilicon/hi6220.dtsi and others have more than
+one dis-contiguous range.
 
-It was decided from the very beginning of these series, mostly because
-it's a full conversion of platform code to DT and it seemed not
-convenient to maintain compatibility with both platform and DT.
+Arbitrarily define a max 100 count to override the defaults.
 
-Generally i think it's too late to ask such a question, when just a few
-patches left.
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+I am not sure if I should call this RFC or not.. and if this is even the
+right solution.. I am on 2024.05 dt-schema for this check.
+
+I noticed this when adding gpio-ranges for am62p platform:
+https://gist.github.com/nmenon/7019cd2f24be47997640df5db60a7544
+
+It is possible that this is a bug in dt-schema, but I have'nt been able
+to track it down either.
+
+behavior seen is the following:
+pinctrl-single,gpio-range = <&mcu_pmx_range 0 21 7>;
+generates no warning
+However,
+pinctrl-single,gpio-range = <&mcu_pmx_range 0 21 7>, <&mcu_pmx_range 32 2 7>;
+
+generates "is too long" warning.
+
+
+ Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+index c11495524dd2..416a70db14af 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+@@ -74,6 +74,7 @@ properties:
+   pinctrl-single,gpio-range:
+     description: Optional list of pin base, nr pins & gpio function
+     $ref: /schemas/types.yaml#/definitions/phandle-array
++    maxItems: 100
+     items:
+       - items:
+           - description: phandle of a gpio-range node
+
+base-commit: 76db4c64526c5e8ba0f56ad3d890dce8f9b00bbc
+-- 
+2.43.0
+
 
