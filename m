@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-7539-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7540-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74F0A90CB46
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 14:10:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D5CC90CB47
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 14:10:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 753DC1C225BA
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 12:10:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E9BE21F27B40
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 12:10:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F4BC142652;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 608F3143722;
 	Tue, 18 Jun 2024 12:09:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="txMEMokh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dsxkibue"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF90113C9B3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB5413CA97;
 	Tue, 18 Jun 2024 12:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718712557; cv=none; b=qiGbeeNimt3GCT2VcYWwu9YeWagAmW/r+GtEFYblROQVajkKJOEFLAoYm9XsxcqXFm0doW5GzdCaFQSo3jOaco5I1Xwe1bFznUhy+50enpFXNF4SvXK7SnBIdWGR+UBM3mwN9F11EgNn3asqDhaUL8M7USYsm4Ys9paf62V0Yxk=
+	t=1718712557; cv=none; b=bBH3c3FJvpxHh0bvvjnZqZUZd33fbmcP9nhnr11ME6q6CqGTZbrzjsp3TSX3yzvWighz1gS4buyVo30k5LaAvOBrLSJintXuhepnby9VvTFrQdu9cC5mbYnLrsBqXdUUYSFin73tsoz6p4eLOhFWdpo2rXKcte8ez2DsnQFQvGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718712557; c=relaxed/simple;
-	bh=yfoG8mqn/X97sdC5spzqwus+gtROE5wIfNQiUg05Vcg=;
+	bh=TThR+6llJ32HA+OdlH3DB3QYC0ntkDpP2gTGZIn0jkc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dAya/qnS0X3uDNXmUMKp28hqtZtEmQE1kkTSOEfrCpBLqoOfiKkXoNIaTDLuzFVyB/invTs9oj40+HmGL6ZwNosciyWxsnhr1j8xFz9WjZSmlAlKQerZGhPtis7NpDDi7vUkpl2svdfAMB2qRAytuMj15Ybj5ytxQcYRatf1cXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=txMEMokh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 91C38C4DE02;
+	 In-Reply-To:To:Cc; b=C5pb8DlCzGWNNxWRcvDk/f1C4rmpiyb+B93fLtYdvc/VjwqY9lzwB6MqzGxN7VPmS3kyPNUYd6X6GHZb/Jcrmt7nvVyThZTQBrldAvNWsLv6UUiQKvtWztzJZU446Nvo4Z3j2ORfRHsYLbHXBYS/9mGXY1YHjkb4r6WyHSYzy1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dsxkibue; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A02FDC3277B;
 	Tue, 18 Jun 2024 12:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1718712556;
-	bh=yfoG8mqn/X97sdC5spzqwus+gtROE5wIfNQiUg05Vcg=;
+	bh=TThR+6llJ32HA+OdlH3DB3QYC0ntkDpP2gTGZIn0jkc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=txMEMokhgZq734kf7HteODNkeXMdh3sV9+Ox0qn+H/Up93AQvRHw7TreDLeCBayxB
-	 1enHbEhCHF5lDp5+kp5+EszxVA09HtCPitAJzitG1Muo2wBhSoEEXynOBvNHlIQtR7
-	 n5ADeYR1HIOhyjPzbONl6B/0u+956KvYhYpYrADGlUHpPBFW/JnC4hSPkYknd0RGmG
-	 w6kVP9EVTlFVtconSzrkKxWMtXqRZpFPvZ7NzJfXJa0azfujboOVv7UX1YXh2cvfts
-	 EdhKHyrq3tAXj2C770R/JseUybEPOo5V7xSxXoeGtHxOJ9HJQGNO0EZGuqod7Juc1d
-	 o3a80NGqXi6ig==
+	b=DsxkibueYKSTSPZYYVdV0GlN5P55phXbuLWpcjojWxiDpVbfHOu8wTMxijHpjDuUj
+	 F4aKs3PWuCRQGUVFjupFeNJxxTnrvhzMLyF29GO8dSNETpKPWYMz6bpMh1vr0e0plK
+	 gsXAM8BKKHZa1Le1RbAT7JgyHJnBrxCL7IkyDfQpbqisNyrZzP6jlapxDtg7azoUyb
+	 6uRvidjKVTKZBKirugMfsG6qWQieIq5rjXbGQE/b7XZpXY2gEXbjuJxZBHb9VSqqZC
+	 fUidpPCwErT0NP1dK6m8BPX+GFUZ6xIz95a2kjQ+ohsTCfTgayF4iBJTZU2PeSoI2P
+	 1wj0OktGzV74w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8849BC2BA1A;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9680CC2BB85;
 	Tue, 18 Jun 2024 12:09:16 +0000 (UTC)
 From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
-Date: Tue, 18 Jun 2024 14:08:20 +0200
-Subject: [PATCH RESEND v10 09/12] dt-bindings: marvell: Document PXA1908
- SoC
+Date: Tue, 18 Jun 2024 14:08:21 +0200
+Subject: [PATCH RESEND v10 10/12] arm64: Kconfig.platforms: Add config for
+ Marvell PXA1908 platform
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240618-pxa1908-lkml-v10-9-754e5ece9078@skole.hr>
+Message-Id: <20240618-pxa1908-lkml-v10-10-754e5ece9078@skole.hr>
 References: <20240618-pxa1908-lkml-v10-0-754e5ece9078@skole.hr>
 In-Reply-To: <20240618-pxa1908-lkml-v10-0-754e5ece9078@skole.hr>
 To: Michael Turquette <mturquette@baylibre.com>, 
@@ -74,24 +74,23 @@ Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
  Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
  linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ linux-arm-kernel@lists.infradead.org
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=890;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=855;
  i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=sKkIzhW7HxgO/mwjme6nrHzJLLNyn3Ni8Blvn7ov2qY=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBmcXjSmDe4RK5IUJ00M+M7KHJRka8cD3nxrs29K
- JZdzl66DVGJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZnF40gAKCRCaEZ6wQi2W
- 4TczEACcGHC/FbESIR7UQzur4xcp9cz1kY+6ci3KLdG4mULEXIXK8gfmGJb4CHwFIXzYCpZB/c8
- cCwiUF8NJq3C46vAZSQ3oXjFsC7OXUWzuVxqOgJn4DSFtKNgVBDVxk30pjnBCi7+z9kWy28Yom9
- ed22QBR6A3snS+5AM7ukq4OrKCQKb7T8tWAaAhbfqOJY4Tsk6mzRx56ryF1nCAVx74/p+N+f+0f
- 58/6LsjODLyXotsWhbNz+JTb5sKPgHJ0Vzs7c+/PKXJK6zfenZGKsmK8B33JZQI5m6WTm8ULG1/
- TdOQK0iRdkjh5l9Bhr2Lrq4BhT0UkTbQ3Gl7Pa8JjOEVbcFSMdfbxRoBAB9GmsihVi+bffVS4rx
- sZFChC0s2eF4q/hmdJeyad0B6chrtXVdX9HB6RiNRp6o+D+iUHoBBf06tn9kpgKM3WYVERR9KnF
- Jchdup0CeSvrd86RJOzfSWtYNPD4cgdXJFeG9jryFbOXlrvI7+F+1AXKfEaQAPeg1WYZR5vROfQ
- ZHen7IMoHjzWUHqn7m+fXhCJioVJD5BZrEmBacJ7CZMIUWO1hvND3mqeGSZGdjiVPsbhYs5ObyF
- euZ/L4srlFjCdMO2jPwt3XtRLOC41Ka2hJbM+/J+K+NXKh49oCwZNwJa1hBCABkrOSROCqgUC3u
- t62+w4NE2rJvZxA==
+ bh=/weGD6zZ+XyXeVQbi6D5jQYi2yqAzdUWcmbRjG7aBy0=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBmcXjSx3UgRFn9yAkD1C8zTieIUAZnV7ogVifaT
+ jRBrokHInqJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZnF40gAKCRCaEZ6wQi2W
+ 4cmfEACF2iqUZQtq/7/WYuCyPTliDob26KKmFjZVICvZd1pdhaW+nf+c8v55PFq2NnGM7sLsNMr
+ 9DhfWySt28bkVoQDvkquiieGyC9VcPobDdXAzEMt36+LSfXi8MP0dn6oAbUkBOMVETnusCnn2tA
+ Q6BDWr8w/3KoXM4dSvAI4FXt6lLXp6hKyknghZIdTLwogRWaKHP1PTE23iNd/WSn/PjgrZk/WwB
+ kQVOZtvmetpJnQEtuwWjlMWLZ9on1RZ9BUDBwccn5jalQPpI3LSRDKII9Bfj1s1gAbq21DwDdFx
+ DwIrfJ5zTmD9EvKmFlvEtx2t/QtHrsHs7Tgs2rf045XHECEUZCSKCKcP/rscWFJRz3mVQ9d7sJ9
+ gaLJzqJlTVmkVFrMdcFL0KSCm4nUjIUcgSw+3gnMc+6HzQfqHLKrwPdDa7ZdlaHLZ75/z+W97H2
+ VZR9B/pPj7MahsMrmXPqt1NsZfOC8H9IIUy59tb74GJQDHhzMCzMelZOLqWJvduDeIcT+wQwN3Q
+ QzBdbk96kh3Bmlr8W0ALNtOEHiFsNyg4McLhttpHI6+gR2/xzsvSW6nlqlm6aQMuO0Usuvk5S35
+ Qb3+oojydj3CwWEHGo0DH4QTC2hY+ujK6cPWvJ1SjC6wXeAd9qWaDNMdw5g5o/iEGleD8AwlBIr
+ BB0Mk7csaRROsIw==
 X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
  fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
 X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/default with
@@ -101,30 +100,32 @@ Reply-To: duje.mihanovic@skole.hr
 
 From: Duje Mihanović <duje.mihanovic@skole.hr>
 
-Add dt binding for the Marvell PXA1908 SoC.
+Add ARCH_MMP configuration option for Marvell PXA1908 SoC.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
- Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/Kconfig.platforms | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
-index 4c43eaf3632e..f73bb8ec3a1a 100644
---- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
-+++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
-@@ -35,6 +35,11 @@ properties:
-           - enum:
-               - dell,wyse-ariel
-           - const: marvell,mmp3
-+      - description: PXA1908 based boards
-+        items:
-+          - enum:
-+              - samsung,coreprimevelte
-+          - const: marvell,pxa1908
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 24335565bad5..d71b0b6e75aa 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -168,6 +168,14 @@ config ARCH_MESON
+ 	  This enables support for the arm64 based Amlogic SoCs
+ 	  such as the s905, S905X/D, S912, A113X/D or S905X/D2
  
- additionalProperties: true
- 
++config ARCH_MMP
++	bool "Marvell MMP SoC Family"
++	select PINCTRL
++	select PINCTRL_SINGLE
++	help
++	  This enables support for Marvell MMP SoC family, currently
++	  supporting PXA1908 aka IAP140.
++
+ config ARCH_MVEBU
+ 	bool "Marvell EBU SoC Family"
+ 	select ARMADA_AP806_SYSCON
 
 -- 
 2.45.2
