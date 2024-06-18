@@ -1,135 +1,121 @@
-Return-Path: <linux-gpio+bounces-7541-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7542-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CB7790CB49
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 14:10:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56ACC90CFC5
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 15:28:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8176E28A31D
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 12:10:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D9C31F20F0C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 13:28:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E66143876;
-	Tue, 18 Jun 2024 12:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05B1815FCFE;
+	Tue, 18 Jun 2024 12:51:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kz4ASy8x"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sSiIw4OK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC93A13D8BC;
-	Tue, 18 Jun 2024 12:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CE615FD03
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2024 12:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718712557; cv=none; b=f0T6TZYJ03NBKyDLkZZSbSecr550rnY8NohMZ4Kw0EIVtfmeiY/+AoJ/Q9tKJrPvYlUmihbepz8gemHYZs46lFeKBQ/Bg+HF6GpxCotYYiRMcQzJH5jlazp5qu92HTHOEgWMuEGvx7Ov3HTubDANqjmmLKhLZ8iuA4tiv00q1Ko=
+	t=1718715070; cv=none; b=rbHqGUFu07wu8mQBVMQRq7CHOmQHE0bdmX4c8vNaVLMwvQXDrI9Gdqz+/PA7WpHAHmaxBuLGrLE2Z8cAOl3mQIh4FUq0+UQYAD/1m6XeQ6Xw5dRYtiqSwtcyldJbhMCxgw83kw+SBFlsYWHuccv0RzBwpEvEfjQ2Nv0RAsfFLcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718712557; c=relaxed/simple;
-	bh=RURqcQtjHLH2c5A0WLEPpX1plb41Y006qE3w0sIwd10=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jK42oAWSHiSyjId0QhxIGSoLiZupHL+Wxi3FvblL19i3HZ4GZbXRKvGkubMLogWMl9rnEubiewp5wrlS7995fzYeS2qwgeWbBVGrgq9kV2BbBXGVF8m5+6z/parqIDHnmFA+CbX1MlzvgbCXEp6r1q6HVk/a9ndg0LDCQq4q3gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kz4ASy8x; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C4936C4DE1E;
-	Tue, 18 Jun 2024 12:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718712556;
-	bh=RURqcQtjHLH2c5A0WLEPpX1plb41Y006qE3w0sIwd10=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=kz4ASy8xWl4bc28uk5Alnc58hmjGB4rA92alaVUxjafHFH8Ewnd7XXl2ZTpX6muAg
-	 JHyX9S0ICo6zLxz63PtIKvmN4qshFa+77yI4r7a/9+iR6eorj5Lg/2fV01W/m4VMdt
-	 RnTUUqrT/73Eb0sCkY05NL1qWD+3gPJZ/PfC5c/2dgiKZMjTHUUOrmlfqobX6L5lY6
-	 WJv8IfAQHJQVY/sVGw1mqK3+TFXw+Dy2AzT4PE75c6+7CX49HHiVQlX9KEhZfjvvvc
-	 SuC6AVblJ1o4SS1JqGkShmbTPKcvU14tfsttJiEcYK4VgB5d0Oz7WUfw2Ozj4cRdB+
-	 mnH2T/6hOErdQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC05C27C4F;
-	Tue, 18 Jun 2024 12:09:16 +0000 (UTC)
-From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
-Date: Tue, 18 Jun 2024 14:08:23 +0200
-Subject: [PATCH RESEND v10 12/12] MAINTAINERS: add myself as Marvell
- PXA1908 maintainer
+	s=arc-20240116; t=1718715070; c=relaxed/simple;
+	bh=uF5ZFn1MuaQXkgdPUExdYFF3srBleOHLlC/tZBYzGmw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=sBSVGhozaJFppa45mRiXxxCEOFRez5Q524FsojR5IqU5DrCY3cXm5E+cKtHfxId4wRCNM3hf3bkJlFrGld3FAUTbL5fkocZuCXspa77GYZ/7ItfoV/Ev3O175A+We7zeOgkaIq3ojaA3I2NG8V8FVVRubQNL0qjC4nurul9QCD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sSiIw4OK; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52c32d934c2so5799160e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2024 05:51:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718715067; x=1719319867; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=54+Eo/LVJRF3kfpmwpcFaWiseOLh0OIeZ4ykbGjRcKM=;
+        b=sSiIw4OK6sz7xlKMy+dcz7vHWPSEHFWwee3S2ULKY+239pWD6qstEHEw4CfdwiVPou
+         +J9fbn0fCLYDXSGrUHv3bnGy3jf/jtIkHM5y2B1h7CPblFIVSuzcBVKxp6EKOH7ZIsWj
+         VTLSEjpM2cII18YEfHbbU1V4N0XKLUZ0+dgUUssuBQoXQ7CHFUl0P1wulh0DyPpoV9Bf
+         2te7hvOJHeYM1H30Enw1H6b7lVv4IJ6Yq1582qVkHOWZTHybpP7nQh92xKqygzHDV1DE
+         mhNZ3pSz/16gy2u87QUujsIO1/V6BGVEnkjk3Nk0MqPVQxpm0qJf5QRCX+TIxznGd2xW
+         nxcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718715067; x=1719319867;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=54+Eo/LVJRF3kfpmwpcFaWiseOLh0OIeZ4ykbGjRcKM=;
+        b=e0/71W2wpxSZPcc0X7l26D5uMHHqZbwaMiiQlBXr3VtIoeSI91LunPEMRzmcfF30lF
+         gthEYA6gOaH+cLciNLzYGApVml/BWAhU8UUqG18E/YWUF8kVQg5gqAWtcJudGjfhl2f7
+         GBjYtbxX7pv2/00toyjLvjHBY2F44oEzlYCjVouKW5T7EmflOaJbk1A7obXCb7JEvRbN
+         JPRYgJc5TvzoaABRGVK/JLjhcd3m/J+WoooXKKWpHDFNcRQC8AU0Hrt2trfNT6uWpaiX
+         JkAQxe6zOTpwWKr/lBRQeJPUJx8TXAPEGLt0l7y3ZwAZTuIqInWCHMxrn5flqlTRSiRA
+         2ESg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/LpEyu34ziTW5VZx2oh9ZUPzFJGezuiJaMRSMckIrtRs1tze3vSoL6sFH1YHLmDPlltCR5d7kWygEgPuKXdng0QIOmCvEX0zrfw==
+X-Gm-Message-State: AOJu0YyMqVTMqTo3pD8ItjJZh74qajnMLnaqhVR80eXLkQoXvgdCw3Iq
+	HYsQKwyI9L+CQlunPzvKJHpW1j8Jf0IK/zWE/CciHbjHJOTFQ7H8KZM315Amqs+brzPGonzwEtI
+	0Wuk6pUNRbu+gBbIoSKfZwXigScuIoZ+Pcr4NMLg74+xrZ0OZEag=
+X-Google-Smtp-Source: AGHT+IGGpskF6WxgH5a2LFZlhA8ClFYD/WRffkI42oeSbQsIHgrks0hi8KL6Kb06PDgQHBC6H90LZisqtHNXYzFlrVQ=
+X-Received: by 2002:a19:5e49:0:b0:52c:83c2:9676 with SMTP id
+ 2adb3069b0e04-52ca6e65414mr6747554e87.20.1718715066987; Tue, 18 Jun 2024
+ 05:51:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240618-pxa1908-lkml-v10-12-754e5ece9078@skole.hr>
-References: <20240618-pxa1908-lkml-v10-0-754e5ece9078@skole.hr>
-In-Reply-To: <20240618-pxa1908-lkml-v10-0-754e5ece9078@skole.hr>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
- Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Rob Herring <robh@kernel.org>, 
- Kees Cook <kees@kernel.org>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=906;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=60K3FrnypIaQAvLz7O5bioEXx//y4S3+gFksHisDh74=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBmcXjSOS2p/8rQZm7yByMQ4Nd1bGlAhS7uPLxlC
- EYrHx1yZ/WJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZnF40gAKCRCaEZ6wQi2W
- 4SReD/0R+w8r1SQk27VkYmuF17pC3bOJfVr3ndxV4wp9r/gwPZkmNhSb3DioagOAqfkwsydp/6/
- asykAUecEIC5PFjwlwybZt5cKG6ivRGymWe6/zJSRznLNqrAlde39TfsBVsseaqBk9ACvRzr0Qt
- aikYJ+/ih9dTTooNlMwZZfpkK9pqa0htORPEXED5lsum20iGhZG5crI4QEKa2vaD2AAaMT3rfNH
- XbwXb5dWgYgYTfXcq+qFJ44T3tzdiuPsCAP43qjNSqvNNOfloEaCWm0shSLWIygbI9TAGChrre3
- x4qv6CpDEoX0cy6CTQ3ryolx5sB80VPnfhnC4u1dlhpzH3uQ9bv8UDQ6eVxyPgiuZLGy2Iz9ATb
- cwU2J5fjSYZwq9XOTP6t/e+MmAdaxHZN7OIRtNi2bowpcn2NxTg4McekOoJb0i0KYSAdiuOPqP0
- QGi5/msfk4GuAPTDBBF62/+LvA5LMzEoNETRVDzlWFkHFAhoy59Rx/KGcsWJBwWW0Oia+49nMXV
- fr4VxRq7hWzJgxiz9M0S4/NyZIzFyMlyIKAG9yR5kyqgUWUE8I8az+FTD861xkavzzIDCMm8C6k
- 302wJb7EUMzdqWMej10EGXp53jGSbEFjRrQu/KYg/F03DXy4CrbFwFethYGNkbxX47Xxos9ABC0
- TQge00coxSI+qYA==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
-X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/default with
- auth_id=112
-X-Original-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Reply-To: duje.mihanovic@skole.hr
+References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
+ <20240610112700.80819-2-wsa+renesas@sang-engineering.com> <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
+ <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
+ <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
+ <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
+ <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com> <CAMRc=McpRjQO8mUrOA4bU_YqO8Tc9-Ujytfy1fcjGUEgH9NW0A@mail.gmail.com>
+ <3h63msxchuuxqa5liufoivss4raqtzjlusjn7ufti5nyjkshcb@pqevlpuvrm5q>
+In-Reply-To: <3h63msxchuuxqa5liufoivss4raqtzjlusjn7ufti5nyjkshcb@pqevlpuvrm5q>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 18 Jun 2024 14:50:55 +0200
+Message-ID: <CAMRc=Mff2L_M=zkxQTqoFjMxbi4ZXBHPxm48UGnYFEnwfDWFHQ@mail.gmail.com>
+Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Duje Mihanović <duje.mihanovic@skole.hr>
+On Tue, Jun 18, 2024 at 11:23=E2=80=AFAM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> Hi Bart,
+>
+> > I could see it using configfs instead of DT for configuration and iio
+> > for presenting the output but - from what Wolfram said - insisting on
+> > this will simply result in this development being dropped entirely.
+>
+> How do you assign a GPIO via debugfs? I only found the out-of-tree
+> pwm-gpio driver[1] which uses a GPIO number. But those are deprecated
+> these days, or? Any other driver doing this you can point me to?
+>
 
-Add myself as the maintainer for Marvell PXA1908 SoC support.
+You mean configfs? Please take a look at my proposed gpio-virtuser
+module, it should do what you want:
+https://lore.kernel.org/linux-gpio/20240613092830.15761-1-brgl@bgdev.pl/
 
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Bart
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ebf03f5f0619..5d48ac9801df 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2370,6 +2370,15 @@ F:	drivers/irqchip/irq-mvebu-*
- F:	drivers/pinctrl/mvebu/
- F:	drivers/rtc/rtc-armada38x.c
- 
-+ARM/Marvell PXA1908 SOC support
-+M:	Duje Mihanović <duje.mihanovic@skole.hr>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+T:	git https://gitlab.com/LegoLivesMatter/linux
-+F:	arch/arm64/boot/dts/marvell/pxa1908*
-+F:	drivers/clk/mmp/clk-pxa1908*.c
-+F:	include/dt-bindings/clock/marvell,pxa1908.h
-+
- ARM/Mediatek RTC DRIVER
- M:	Eddie Huang <eddie.huang@mediatek.com>
- M:	Sean Wang <sean.wang@mediatek.com>
-
--- 
-2.45.2
-
-
+> Thanks and happy hacking,
+>
+>    Wolfram
+>
+> [1] https://lore.kernel.org/lkml/1301630392-20793-3-git-send-email-bgat@b=
+illgatliff.com/raw
 
