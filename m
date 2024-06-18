@@ -1,101 +1,120 @@
-Return-Path: <linux-gpio+bounces-7522-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7523-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CA1990CA9A
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 13:56:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CC1B90CAC0
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 13:59:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8CD4288439
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 11:56:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2745F1F21F45
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 11:59:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1978415ADAB;
-	Tue, 18 Jun 2024 11:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12BD72139D4;
+	Tue, 18 Jun 2024 11:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QaXabhMz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jb1bX24K"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8893213A401
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2024 11:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DC82139A4
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2024 11:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718710888; cv=none; b=p6SrfKhbMBMB0YNkTqK+vhesMZ5alB5qADZ966zSeFu4Fu34x4RFsBr70Gvm8owRIvBR9VLg6Ejc5XbzQpPML1GnfbRL4QUSiCHzKEaLLvzpXedgfxpV82/JKBfoFPcmjQ5R7zK33JaWrQ5rBnzOduQSTP5jV61+yspOrQ3pz/Q=
+	t=1718711388; cv=none; b=YFC2hkHChAX4viTXNhxZvjy5cwzGtbXhkVfinIAgK5h6yaUmWlLoYoh+LoFUMkxs11/w1VlseIaPwvm2XPpYV7QGOFZeyG7Y7QwzINzXGRR2imPlQRMMrTpyTxcpyrukWWoBy1LaKiT4YKgxs4YLDCFwJnwhc1EYeORKW8oxz7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718710888; c=relaxed/simple;
-	bh=sbJtr336s1UhU7qkbnOi2lIzbuIg1Sjdx1C00OBGp0A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wji2qKGtNSd9qellr77bhPwle72wGtJVMwfAx6Ma+u767tTCpnCkwHKqeOZPvhlg/i5ZFa3ucKSRr2rHYUoKMEvAmfwID2F1oJY1luWEtKL3e3lAXhwPn4BSxfw8DOIWbe3aMEWw58IGAo2YX1Eh3rXdoQY4kQd43GTIbLIC3gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QaXabhMz; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c70878c54aso123081a91.2
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2024 04:41:27 -0700 (PDT)
+	s=arc-20240116; t=1718711388; c=relaxed/simple;
+	bh=2hIo05tCUTPAFIRPPe6FAtdYmihwk6dkPz/hXvGOkPI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SHSIRZmHZUOgc/6ceVkhr+SOvNEC7fz3tReaFWcX2PgQe0XCAMWCsn0xIidk0/cuEqAHxIORzCnhUOZXMId4G+OjP6ZYLm3Ef+3BdAgaI1mnJmp+7dLCNhy4q4UY3Via2W/yQrEPeS1prEDXUPT5sDF/rdbqjUQbjcN3TnMQUMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jb1bX24K; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57cbc2a2496so5678826a12.0
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2024 04:49:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718710887; x=1719315687; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sbJtr336s1UhU7qkbnOi2lIzbuIg1Sjdx1C00OBGp0A=;
-        b=QaXabhMzTsrNbLItb+PsXJ2bW01kTa/G8LohZ8DXLue6B0kBW0IpjAYX3FYjXD28SW
-         6HJ1WjVTzisZVIUADDxw8sKax56CcgjdZz8KSpwQYA3gwpCJ9KlTZrnyxu1xIeI59tvB
-         lK6cpCddkrIiZRbWf0/xPNenOjLtcz+waPZNA0AlP9ALy599AH7JbDCMSp9DsIMqpLCI
-         by94jDufN20NOYlwF5QBE6FXId07C3WdDNWq6EVwLHbDNfoAFqEKPS21hn0Iplq9Knsm
-         COJTU94r1HgcUtb27LUt+g8urYzaymvlwcIhF1pUG12IRearExuLtbTQrVsJvZHyZzci
-         67Qg==
+        d=linaro.org; s=google; t=1718711385; x=1719316185; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pKiWUiO1H/ACz4Ax5OKPh9Z7evBNHdBNqnuTlAaiBA8=;
+        b=jb1bX24KacQ+ZcgP19Ly1YAY2FNYEJSA6mpa+5Nt+9p0laeVI7GOnIbmXK0HhYHx/1
+         0wQGffp8lQW1y76bikgofHuw4onAABzt3bTdQ/lAHlqxNA6qUFHZDy5H1pNmL/52cngA
+         2xdJcJDEfdyBv/GswBYQJw8SQxyb6OTwuJpkp7xXiJxkPj0UD4JrPAIHUIwf9LeKw+PN
+         np+fNTBuUd49/OUSK84T0g7S3BuiR6MFGK+iC89V0TLR7/Ji5EE+Gjx39ZuH/OBsPbTX
+         IpV4GGralxJ3H6QaKiLugAlVrgNBJ6h2EwawUAskoElIM1m8Nz+8CHEFlZYjfo53XDb9
+         0e5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718710887; x=1719315687;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sbJtr336s1UhU7qkbnOi2lIzbuIg1Sjdx1C00OBGp0A=;
-        b=sqjBfqCiSDSDJGB64GialXsD1BymQczDm7qkHdcO/JglQSy773KBnnNfK1apoRIkdd
-         FXaOBJdEfPx+h/YkkGfsibeQPpgslnJJ82gL7yL9BJZhoBr0ZgWYsh10QYkGX5OYiAmN
-         TLV3SO+AhfXJ48iiBEjArKftqhcbTdAJoROxTmIrHeN0z/EKTwmAZOH0/2XIzB/JFH/P
-         S0BpTXn/ARF/afA2qG6wOYC1+xSBILEFYCbHD9msZ0m80oCrfdrf2cgXRfc4f0zAuQBF
-         F1tHCR0FF8cWVTZNILXXq5CryN25mbV6ZR8M5x6BxASSuR0PYWfl3AGxgzmz4h2CiMgi
-         xB/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUrHHN8RNSVpCHptEMbDDDNjdF4hmL9L0i4N5fmNL23Y4aOu8N6iR+kWY8ZdSaBqRux8mE6oCe6+j6YB7pXQAchty5UY4FKqvEmtw==
-X-Gm-Message-State: AOJu0YzZo1yej0ET+vHoWZRcD/LpLV0RiYMZeAFAeDI2b4uMlVSK+DTT
-	mNouyOvAB6JlF3035Lzx4WgWeZXgtE9MrvHGGyPEXNaw38o0GViMhBHXaU81Up7GPDTH5KCTFTQ
-	UjsNKkloprkfCUOacu0KMzdmgrNs=
-X-Google-Smtp-Source: AGHT+IHwRuuqMvw/TDZYYiV28wWTGk+dny3ggfM3e0y3v9H3lIwEnr47m8PFYijGOeeINxzr8ADkFabxNqzCRU0GXyQ=
-X-Received: by 2002:a17:90b:1107:b0:2c4:da1f:3f6e with SMTP id
- 98e67ed59e1d1-2c4db9563c8mr12161525a91.2.1718710886687; Tue, 18 Jun 2024
- 04:41:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718711385; x=1719316185;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pKiWUiO1H/ACz4Ax5OKPh9Z7evBNHdBNqnuTlAaiBA8=;
+        b=E/wt9cphXj21ZD0s3OKILSu2F3gnI+jLeQbBcfrPY72kSMX0tRtwKsD2+QjEU5pQNj
+         cinnHYSso4xbmrn5VcUncyzK4JSS+j2fKAo6yV5mt9fm04pm/8Dluh1tSQhbZEGDmPsf
+         x73fA+VxwHx4NNIevM8oBCQZB9j3t/xUHjzPbO4CQRFoB+EUDW7dAFlQu/98JXJTbGtG
+         I0ktcyhF5S3CAXyAycW17dOax7ekT7IX1s40YSqJjC+QEUYTZJVcNPD76nhfEQoykmIp
+         D/a+mU2YiuAl3UdSb+sGGa5C8iAe4/4x5ROreLW9KvNJu9+Eb/MG06yxdS3j7qb9fEb+
+         aQbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXa5Qao0E2p6PvTdlxcwvYtru08CVs3RiNciR5dB7+ENyjhsLTBQ80X9EfiYFbQuyfT9CzDsIZwhpAmmZ4tL89xpCxEvnhoyXynow==
+X-Gm-Message-State: AOJu0Yxv82OrSp1tRzzTuqBbbv2M7GKtZeLXQN5xLywYspf+OHrMuhRP
+	JBNE2sVwRUqj8W0N3So1mPoKOCPQ3Qoiq5ypmaDYFu9gJYM5CpnqXxbfZrOgmVo=
+X-Google-Smtp-Source: AGHT+IFcJAnLDP0RCcx8fANvtIZTqrzyrZMXPlLyqSV5EPVm4qM43BQNRnz6ZYrtuyp8gP218NPPig==
+X-Received: by 2002:a05:6402:2293:b0:57c:c125:d638 with SMTP id 4fb4d7f45d1cf-57cc125dc2fmr8952918a12.39.1718711385488;
+        Tue, 18 Jun 2024 04:49:45 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57cb743890dsm7659259a12.83.2024.06.18.04.49.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jun 2024 04:49:44 -0700 (PDT)
+Message-ID: <ad6f4838-78f9-4b1c-b0e9-850458194ce8@linaro.org>
+Date: Tue, 18 Jun 2024 12:49:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618-imx-scmi-generic-v1-1-67808a48beac@linaro.org>
-In-Reply-To: <20240618-imx-scmi-generic-v1-1-67808a48beac@linaro.org>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Tue, 18 Jun 2024 08:41:15 -0300
-Message-ID: <CAOMZO5BWOZZjhFEr6sUq_HM+n_pU_SUSG-W0wdL4Mg0tyjx0fw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: freescale: Select missing features
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Jacky Bai <ping.bai@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-gpio@vger.kernel.org, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SM4250 pinctrl
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240612-sm4250-lpi-v1-0-f19c33e1cc6e@linaro.org>
+ <20240612-sm4250-lpi-v1-1-f19c33e1cc6e@linaro.org>
+ <e10eda85-68cf-4f66-ba34-3e746d286fa2@kernel.org>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <e10eda85-68cf-4f66-ba34-3e746d286fa2@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 18, 2024 at 8:26=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> Fix the compile problem for pinctrl-imx-scmi by selecting the
-> right core features so the symbols resolve.
->
-> Fixes: 1e37f761d016 ("pinctrl: imx: support SCMI pinctrl protocol for i.M=
-X95")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202406172317.Sds860AS-lkp@i=
-ntel.com/
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+
+On 13/06/2024 08:15, Krzysztof Kozlowski wrote:
+> On 12/06/2024 13:55, Srinivas Kandagatla wrote:
+>> +
+>> +description:
+>> +  Top Level Mode Multiplexer pin controller in the Low Power Audio SubSystem
+>> +  (LPASS) Low Power Island (LPI) of Qualcomm SM4250 SoC.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: qcom,sm4250-lpass-lpi-pinctrl
+>> +
+>> +  reg:
+>> +    maxItems: 2
+> 
+> Nothing changed.
+
+Looks like I messed up something here, Will send out v3 with this fixed.
+
+--srini
+> 
+> Best regards,
+> Krzysztof
+> 
 
