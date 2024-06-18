@@ -1,123 +1,121 @@
-Return-Path: <linux-gpio+bounces-7545-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7546-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3ED190D63A
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 16:55:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98BFA90D857
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 18:10:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D084E2873CE
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 14:52:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB04A1C236EF
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 16:10:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E78C768E1;
-	Tue, 18 Jun 2024 14:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F262150297;
+	Tue, 18 Jun 2024 16:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="lytISdkA"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="i8MEH4C+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7024E2139DB;
-	Tue, 18 Jun 2024 14:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31214D8A4
+	for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2024 16:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718721939; cv=none; b=B8IB8fIUDEdVTG7wGbOhXX/udVvzQOYk19s2f+OximddBBPapY/gCo9j1ERuS/z13X5Te+BU66eX1FkTp47uowfh7WTAsQ2pA3fYFmHGnYzqsFQzZpq7nKxTQtDPf8+30XkRJP2fZHgZpvZdlgDD0bRNBlxPnY6qNg/0ee+AxCg=
+	t=1718726995; cv=none; b=UxF62ecEA/tYs3admctNnXDVvW53yQYq0KqvSHdYZBCTRCVNz42amucxes/7jJRiQt8w5aOUkoU6znVQVKV27WSx/h8JfdzQQNO2Hz9COSlxs7gKuppIuJUt+DFr4Mf0GC4VvXKoklFwFvR2ifQZUPaVweS8Ru+EYhMgtPUEYBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718721939; c=relaxed/simple;
-	bh=4yMZjbqyortOGO62oRy9tFToIlzpFEbqV+s8Ppu12O4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FxF89Y13TkY+k6SE9M2ElQdF+aYDMIzElF4PjmmZOgAKcK2/BNCmERaIdXfNzMBGSiurJMFzue+HoNTitI6L8/a5relYzzJIJjJm0NxLUIEwG0euJqn4D4kcwWQP3rQ1CxmDLgr8xVgFeo9EL4sA5TFw/LgAjAk9gl4QF+uWmac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=lytISdkA; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 9412D100002;
-	Tue, 18 Jun 2024 17:45:08 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1718721908; bh=SoquFa1edqrv14w1JgAqEyQzfSLztJhALwMOpgTEqNo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=lytISdkAjnCC/VvV6yIOTeaF8FvWWus8tQxADwXqKXlXoC9KgJb8W7ZhY7xkn03F2
-	 +nDm6zCBxL2xniDITldHn36O3gygOyec/mT0JieGqgYTb6l36AeoE9Mp2+LeXbWOlX
-	 YdwV3vc9qDKdxoD1gipjO4QOOfzEUpIjZ4KeGliJi9WPcI83PklZWaiw7pVTh9ocrS
-	 HAubFNdf+b3QNwOxhimKjWe/D5/fJtmwBJE0yCnG1hlMGcL7VMQHedojImS19xpWKG
-	 3Vu1qxGPBD2iRKM+MYnZCaAf0vDA6iTuNvErqnj2KwXqgXLjhTRN088ufj9Tx4rDdi
-	 ilyf/0zL90YoA==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Tue, 18 Jun 2024 17:44:24 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 18 Jun
- 2024 17:44:04 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Keerthy <j-keerthy@ti.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Linus Walleij
-	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Grygorii
- Strashko <grygorii.strashko@ti.com>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] gpio: davinci: Validate the obtained number of IRQs
-Date: Tue, 18 Jun 2024 17:43:44 +0300
-Message-ID: <20240618144344.16943-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1718726995; c=relaxed/simple;
+	bh=b9bXeRoJpbw3v2jWIi5RGRiSok5QY8bOI/A5YxVa18M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W4T6V8NxVoBuSqAJ1xpX07C7NofAbnaWjp1Ye2FyKmULrbwfJ8BE52p/MNtjtotm0Br+fY9Mf/fcuIJYhJLpVTA3LTcGDQO+HA9ck0qk5f84d8kpz7f9SQeeC+ToRjtbeIlC/VWDAmNixsUt9SxkFXa88lDaW7qwhG8nh3nV0Os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=i8MEH4C+; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=b9bX
+	eRoJpbw3v2jWIi5RGRiSok5QY8bOI/A5YxVa18M=; b=i8MEH4C+KhQrmah/GsWt
+	YohMHFdrtjifBFIvfyEkECENzHCGiFqJkQ1UGAAv+RduAH4TGmBxw+WAFApjGHGr
+	yax9HqsewdTs4Qz/IxPEipUh8cbSfWcaFwx1QGQTXPYft7H7jpkhie2+14oAnsaJ
+	uvpHd+BRwbqFnWQGqmzQW0jd51U8qn+AfXsYDwoCPH2bGadKM+N7CHred1BQUg5X
+	4aCowllIPE6uQwFYV7jFDaFqzRUq19dVdU4cnOICGiIMIKtBClAFlSMbQBv3q+3M
+	Tq8pIdNj/DHfq6oj3hfaRCAAR9mqwmCGpdkb6R9F6Q9YFGYj046IMRFuoaQ0+mGg
+	kg==
+Received: (qmail 283759 invoked from network); 18 Jun 2024 18:09:47 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Jun 2024 18:09:47 +0200
+X-UD-Smtp-Session: l3s3148p1@hlyRTywbJohehh9j
+Date: Tue, 18 Jun 2024 18:09:47 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+	Linus Walleij <linus.walleij@linaro.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <ekuchwcgvggsriqodasx6pneybqbwe3cc2j3huisb7mnacnj3z@mhx4snzwbbqj>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>, 
+	Linus Walleij <linus.walleij@linaro.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
+ <20240610112700.80819-2-wsa+renesas@sang-engineering.com>
+ <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
+ <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
+ <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
+ <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
+ <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com>
+ <CAMRc=McpRjQO8mUrOA4bU_YqO8Tc9-Ujytfy1fcjGUEgH9NW0A@mail.gmail.com>
+ <3h63msxchuuxqa5liufoivss4raqtzjlusjn7ufti5nyjkshcb@pqevlpuvrm5q>
+ <CAMRc=Mff2L_M=zkxQTqoFjMxbi4ZXBHPxm48UGnYFEnwfDWFHQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185989 [Jun 18 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/06/18 13:19:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/18 13:21:00 #25648410
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t6vvdwno3oriajiw"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mff2L_M=zkxQTqoFjMxbi4ZXBHPxm48UGnYFEnwfDWFHQ@mail.gmail.com>
 
-Value of pdata->gpio_unbanked is taken from Device Tree. In case of broken
-DT due to any error this value can be any. Without this value validation
-there can be out of chips->irqs array boundaries access in
-davinci_gpio_probe().
 
-Validate the obtained nirq value so that it won't exceed the maximum
-number of IRQs per bank.
+--t6vvdwno3oriajiw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Fixes: eb3744a2dd01 ("gpio: davinci: Do not assume continuous IRQ numbering")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/gpio/gpio-davinci.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> You mean configfs? Please take a look at my proposed gpio-virtuser
 
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index bb499e362912..1d0175d6350b 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -225,6 +225,11 @@ static int davinci_gpio_probe(struct platform_device *pdev)
- 	else
- 		nirq = DIV_ROUND_UP(ngpio, 16);
- 
-+	if (nirq > MAX_INT_PER_BANK) {
-+		dev_err(dev, "Too many IRQs!\n");
-+		return -EINVAL;
-+	}
-+
- 	chips = devm_kzalloc(dev, sizeof(*chips), GFP_KERNEL);
- 	if (!chips)
- 		return -ENOMEM;
--- 
-2.30.2
+Oops, yes, configfs.
 
+> module, it should do what you want:
+> https://lore.kernel.org/linux-gpio/20240613092830.15761-1-brgl@bgdev.pl/
+
+Thank you! Exactly what I was looking for. What I like is the symmetry
+of instantiating GPIOs in either DT or configfs. Very elegant for the
+user. But boy, this is a lot of non-trivial code for it.
+
+
+--t6vvdwno3oriajiw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZxsUsACgkQFA3kzBSg
+KbYV8RAAmlV7dakmx/ZeWbYLcZ7onJJ62V7CTKNFPwN28NQpGyBK9yTWVMRhBwF/
+vQS2johY+4ah2/f8h8/6NnShb8EBZ+Zco6nfb2bAAC4+RfHZ3S7PXYJSDn+VE+Pu
+wt3Y1toC6yWKhPA6n0bQXwC5YlbSIc2fp9X/R+FjTw1nUV9sHkNiOOmPeThdm6E6
+j7lgSe8Z2/F9wvigbormsMyfqxEvl2f9mTi3MWKNiWivwYUu7+NmMtARHu8lDaIW
+s5K/Xf+/SLoM/UFGkeCI6guz5nkSBFvWDruxQZDCiLFE/hFaTTLo3XDMf84nUg9y
+QEelfrCeBtUztvPy/THkbTOzOEapJ1tk299NzQwUF2ppa0hgQ/Eudq3pAHMO49QA
+FZ63984Ge7TQGLD1yNmsnGcCa1b1Jblv8kW3Ksv9K88rOmmr8VqCUbctWd3PmQmT
+GLqKCL6/oVxN6RX5gko5D7oQJ2phvte4HRphQ1VD9kqSh+R/FruWyURr92jT6pF+
+Qwr9js0ksCd/6d5wITPnYp7vZZe1YjedZYbGVNR8w3wHnUEzt9JniHXdmJN4qyDs
+CFBFv5fkCnuEjOWcRSxtOS61w9b9kd+H+lsFFCtt5RmJg30DFVmnHJITJ2jw9zm0
+IKGGIRfr01M7YYU67OqxdK/2pc1pP9COtbVpvvjAa2lPNHbwA/g=
+=zQ52
+-----END PGP SIGNATURE-----
+
+--t6vvdwno3oriajiw--
 
