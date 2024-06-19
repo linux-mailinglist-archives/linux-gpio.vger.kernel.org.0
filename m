@@ -1,136 +1,164 @@
-Return-Path: <linux-gpio+bounces-7561-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7562-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E06A190DCBB
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 21:47:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6558090E955
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jun 2024 13:25:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 71BCE1F23D9B
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jun 2024 19:47:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE4CD1F240A1
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jun 2024 11:25:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24C2716D4F2;
-	Tue, 18 Jun 2024 19:46:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DABA13C679;
+	Wed, 19 Jun 2024 11:24:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pXN2msVV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDGEUrHg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099DB15ECED
-	for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2024 19:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF0E13AA44;
+	Wed, 19 Jun 2024 11:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718740013; cv=none; b=Ojzpsz9TYm8UIuv+yrwFElh5anSUIbgbtku6tvzAnt8Isen8M9PdLjiq3pR9Pmn4ariLWekoD6x+N/70WsuICB43WE5392CMKQPi+dTVyTYOjy5qcbHaDQJus7GCLvTpL0tOvwvS9eQU7UG7kdctY4J7QgX5iIEbduTepDDoxiM=
+	t=1718796259; cv=none; b=i+rVb3eoUYSVRa9aH9o7y1brMoMVynGfi/HqaJ2RoH3ACTcnSvr0cyztQWUJhzN0FLzVlFAei+lpurGldjKZ3/+NrUue71JeyNNEFHaaGDHpp8icrA1di5unvSNuNpdu6M/1DrHhsoDnXdbisAY5DVTFVeup6AV6///I3txRXKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718740013; c=relaxed/simple;
-	bh=cCA6VLX62IDjCPZsqkeLgA2nW91IT5j8nl7XYymOaCs=;
+	s=arc-20240116; t=1718796259; c=relaxed/simple;
+	bh=QiNpfz9gXpNGbgWK+SSf6RLJwU4D6RbIRzy7KzqMSu4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rr6ap8634tOHHdFuPwOWwlkp/csmNZTrjxp0e1KtRJywh4ZaUwHb+JOg8tWcYFrHlgjK/yZFxn3V1EDrBmJDqt99lMnclNJu3sktztyvbZ4SANjUNA6I9Gc64O++bqoCDmPzfYFNGcVveI28HaIbd3885yh5LtJT6JKEZHrtBR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pXN2msVV; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c815e8e9eso5732425e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jun 2024 12:46:51 -0700 (PDT)
+	 To:Cc:Content-Type; b=r5KyiDNJQ+2rjAN0NWnB5xpySNlbBa+kT4vaB3/144aFJplj5ETIN7ofd/NYb7GSzL1fJrXqsmPEaPTIUctLmFJIVHfe/jmdRShP6FyikmpQ1NLrq0TatqZWqhp9kAyebAv6gnz9/GpEz0n93vLRfKC5PsgSp58Q4VzvyJrTeHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cDGEUrHg; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2eaa89464a3so73318991fa.3;
+        Wed, 19 Jun 2024 04:24:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718740010; x=1719344810; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718796255; x=1719401055; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ho7/Qs26KEYzkDAAbDAFYeryla1DX+NBsAS+13y4jlk=;
-        b=pXN2msVVLJtSMxl9K4ff9tcFkr8F6WorAKurVHEJgUprvKZs19Cam06XJHGVNfW896
-         vAtI5qUrZ8TvEW9J5kYqw2yMHx67FNttzk+YCVAnz4Ovo1iYUj76DuKOGrjWtQuGY1ag
-         OnzB9Hzh6WI/xFm/VztfYI5OcRiUOkMEM5aUtWrvRIltW3aw2sa8M8q86c1OJOQ0PJmW
-         wLnlHF8COmWDx53m4SggtmGSGBuqtHwkW3jiU9oePs5o3fGkebEV0Xp/mtDpyM6QVBxr
-         75RUNtmcTH2AdbuGo/rpCNVYc5va8TC5Fb+rRShFjKZhd6ne7A4iJVl2FiZcRr3DpoEg
-         62Ag==
+        bh=4AhLMVJiVMssdXrymxDZSsXEoYz8lpEaRocGgJePhUg=;
+        b=cDGEUrHgW68M0mI5vAofXCTVPuFXxNXZiBPWshQEHajFIlOt1papTvJOHR4TmEINa4
+         a5sAy1VbWDKCrQB6lw3KeTyLXXeLaIwf8eLk/ktxDTCi2fRbh7pvWeSBu+4gIC70qPo0
+         IwFwdM8e4zxmGTlvi5/bnjx0epzxxv0Dp6samdpVhRLP2oD6z8YBy7GHCBuYBp23npRQ
+         pya1/tzxNL3gKIEScKWQgdZiTN5uf/zqfQQyqnHxVork6n1Au02vryaEfOk5rFLZVWaI
+         c+2BfAlpZhzoHO9TiL9ZOd6eVbiAI+KyOwd7Gr4oH0DsOKGT9u9qbMUJK6+Se/CHfNZ6
+         RFaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718740010; x=1719344810;
+        d=1e100.net; s=20230601; t=1718796255; x=1719401055;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ho7/Qs26KEYzkDAAbDAFYeryla1DX+NBsAS+13y4jlk=;
-        b=gow/iMZVFGIcbUdOujhobYKQjIr2P238T3cOJ7KAMt5nx61a+FBFkiU6RB2uR3jIZ1
-         cFN8e21PG1PIBVIW7l+TXBlIFjOD8bwVUPsAjgPWMBuJxiESjys3zQRhMZt6txQNUZf0
-         yASbODTqUsUOQ7bhK4/wFLyU4tJRchzuUFuEZBxnK9tFLj3pz62om1+wj2UZVeVWz0H3
-         wi1kWIljbEUADC0BQdlSpoKYUGzwTxUSuH8sYkWflh69xQYSBjbXpnfspqvhV+JOe/NE
-         GAg/TMkNLraOKQ57lAWy/QyUx2qGmDf6+n+K/bmWbf8sUeV3AmD3KZb3f2yNE4Kt7bqi
-         gv/w==
-X-Forwarded-Encrypted: i=1; AJvYcCU5oDuIHVefw0mt4av+h4VDznQZlaR+Jn3k8RfdgG44ybBNxaSjnl2pRfGCRSWAhw7NMowK+RHxssggaDrHALJTcYQtZPKS2s+6kw==
-X-Gm-Message-State: AOJu0YzTEn0bHn2upXntN7JSS88/Thfdi3wMu7mgUrUihtG4vx6pWXdu
-	n2YX/o4+bOB8Mt4+A02nYTyE6KUIhGc/JHHeLQqgfUdncc7EfUMU96hQ/aPaRGn2d+Xu1i4a/m1
-	L9eIMpRDhTqPqN4QMf6gmqTpgL9jAorIwxiEL1Q==
-X-Google-Smtp-Source: AGHT+IFJweTCkdsgLEObHJA+yL+W9iel1opmGVNUxb9kenTWp/3n7/A86NF6dmRjIE6Abrtq21WliDB0UVutHnR03wM=
-X-Received: by 2002:ac2:4d84:0:b0:52b:5451:996a with SMTP id
- 2adb3069b0e04-52ccaa3768cmr253147e87.31.1718740009929; Tue, 18 Jun 2024
- 12:46:49 -0700 (PDT)
+        bh=4AhLMVJiVMssdXrymxDZSsXEoYz8lpEaRocGgJePhUg=;
+        b=T2YYzWlNKn+llhyF7RoouWxsF/yntXSXOoya/ZPDKlNypQoHwm0Xhm7c9jsowljGKs
+         GWox3gVWUUGSwgR0SvrLU8A2zExikOa5WWBGBe6Qw3rIuguiW6v9Rgy5jXblNbic3mYW
+         bYCI4PWnNPbS0iNBF7moC5Yga9a1TgBHW8BbVwlQp4Ght3RkQ+hCjQu8dnEgz7P9aO69
+         4zVaG7sDJiZkKMjN0NF6oXA1d7ew4liP2E/Kw7WO0ChwtbdZ3ZN1UEJUlEGjCCUty/Ub
+         5SKJA1ZMu91tQxmennJsQGVb2VJIg6VnNeUIBIgOMuKBFxUXvSlxys/B103AKvJd1E5X
+         zwXg==
+X-Forwarded-Encrypted: i=1; AJvYcCU414d00RXPUhTyWATGT07fYu2QvLu0O+NnaPyIq5Lc7MXUhMoZGjiqZKBM9I8ahsdgkO2mL36v2KCQqAu0hevPmKtnB0NYOLLQ+cqUU+7jL+4CDtob9LTaPJ48y8UYyo2aFjYfidpG2Q==
+X-Gm-Message-State: AOJu0YwGA4k4G+R7INg/r2YElzpVbeDGXzpgQf9uGPuwJuTyKz3MFZjt
+	YbjQ/qM1nLS+6Sn4pYWkCsMWdjcWMl+jV99ntQKV/ni1Dc8zQ4EWP9RXWFLlaI3xdFBMBUoN67i
+	Z7bOCsqe58GUK559ma/itpTQWfUk=
+X-Google-Smtp-Source: AGHT+IEQww8Sc0Jg4gCddWh2kVTEqz+WZu5WTjkaJSzaRVJjX7JNi6gjqMvrxWj14/018FjLROHZoPp/GakSEWmq+uw=
+X-Received: by 2002:a2e:9b08:0:b0:2ec:21f3:b67b with SMTP id
+ 38308e7fff4ca-2ec3cfd6744mr15635501fa.37.1718796255250; Wed, 19 Jun 2024
+ 04:24:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
- <20240610112700.80819-2-wsa+renesas@sang-engineering.com> <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
- <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
- <CAMRc=Mc4__0zzJZG3BPnmbua88SLuEbX=Wk=EZnKH5HQvB+JPg@mail.gmail.com>
- <CACRpkda==5S75Bw6F3ZLUmf7kwgi_JkByiizR=m-61nrMDWuvQ@mail.gmail.com>
- <ce1d8150-c595-44d5-b19a-040920481709@app.fastmail.com> <CAMRc=McpRjQO8mUrOA4bU_YqO8Tc9-Ujytfy1fcjGUEgH9NW0A@mail.gmail.com>
- <3h63msxchuuxqa5liufoivss4raqtzjlusjn7ufti5nyjkshcb@pqevlpuvrm5q> <CAMuHMdW5oiD93ng0fVotMKoGMavs0G3DV93GW6qEQVhGxLCK5Q@mail.gmail.com>
-In-Reply-To: <CAMuHMdW5oiD93ng0fVotMKoGMavs0G3DV93GW6qEQVhGxLCK5Q@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 18 Jun 2024 21:46:38 +0200
-Message-ID: <CAMRc=McWEAx5v5BUyw_ZKcU_SxONZnkM-otge9HPRCP_z28nhw@mail.gmail.com>
-Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20240613080725.2531580-1-potin.lai.pt@gmail.com> <946f44526e3016f595bfe463cf0a7f5b4eaa084a.camel@codeconstruct.com.au>
+In-Reply-To: <946f44526e3016f595bfe463cf0a7f5b4eaa084a.camel@codeconstruct.com.au>
+From: Potin Lai <potin.lai.pt@gmail.com>
+Date: Wed, 19 Jun 2024 19:24:03 +0800
+Message-ID: <CAGfYmwVJvyEJ6sbvr=_OqNkiRSDBXn2uqMr28gN949NZd=5dcA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pinctrl: aspeed-g6: Add NCSI pin group config
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, 
+	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Patrick Williams <patrick@stwcx.xyz>, 
+	Cosmo Chou <cosmo.chou@quantatw.com>, Potin Lai <potin.lai@quantatw.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 18, 2024 at 8:58=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
+On Mon, Jun 17, 2024 at 3:33=E2=80=AFPM Andrew Jeffery
+<andrew@codeconstruct.com.au> wrote:
 >
-> Hi Wolfram,
->
-> On Tue, Jun 18, 2024 at 12:54=E2=80=AFPM Wolfram Sang
-> <wsa+renesas@sang-engineering.com> wrote:
-> > > I could see it using configfs instead of DT for configuration and iio
-> > > for presenting the output but - from what Wolfram said - insisting on
-> > > this will simply result in this development being dropped entirely.
+> On Thu, 2024-06-13 at 16:07 +0800, Potin Lai wrote:
+> > In the NCSI pin table, the reference clock output pin (RMIIXRCLKO) is n=
+ot
+> > needed on the management controller side.
 > >
-> > How do you assign a GPIO via debugfs? I only found the out-of-tree
-> > pwm-gpio driver[1] which uses a GPIO number. But those are deprecated
-> > these days, or? Any other driver doing this you can point me to?
+> > To optimize pin usage, add new NCSI pin groupis that excludes RMIIXRCLK=
+O,
+> > reducing the number of required pins.
 >
-> Do you really need debugfs (or configfs)?
-> I guess you can just write GPIO line names or GPIO chip
-> labels + offsets to the new_device file, like gpio-aggregator does?
+> Hmm, I'm not convinced this is specific to NCSI (and it's an
+> unfortunate mistake on my part), but we do need to call the groups
+> something different than RMII[34]. Did you have any other suggestions?
 >
-> Documentation/admin-guide/gpio/gpio-aggregator.rst
->
+I don't have better name for now.
+In ast2600 data sheet, it also mentioned "RMII" & "NCSI" together most
+of the time, is it ok to use "NCSI" as a new group name?
 
-IMO that adds a lot of custom string parsing in kernel for no reason.
-TBH Today I'd NAK this interface and propose configfs instead as well.
-
-Bart
-
-> Gr{oetje,eeting}s,
+Best regards,
+Potin
+> >
+> > Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
+> > ---
+> >  drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinct=
+rl/aspeed/pinctrl-aspeed-g6.c
+> > index 7938741136a2c..31e4e0b342a00 100644
+> > --- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+> > +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+> > @@ -249,7 +249,9 @@ PIN_DECL_2(E26, GPIOD3, RGMII3RXD3, RMII3RXER);
+> >
+> >  FUNC_GROUP_DECL(RGMII3, H24, J22, H22, H23, G22, F22, G23, G24, F23, F=
+26, F25,
+> >               E26);
+> > -FUNC_GROUP_DECL(RMII3, H24, J22, H22, H23, G23, F23, F26, F25, E26);
+> > +GROUP_DECL(RMII3, H24, J22, H22, H23, G23, F23, F26, F25, E26);
+> > +GROUP_DECL(NCSI3, J22, H22, H23, G23, F23, F26, F25, E26);
+> > +FUNC_DECL_2(RMII3, RMII3, NCSI3);
+> >
+> >  #define F24 28
+> >  SIG_EXPR_LIST_DECL_SESG(F24, NCTS3, NCTS3, SIG_DESC_SET(SCU410, 28));
+> > @@ -355,7 +357,9 @@ FUNC_GROUP_DECL(NRTS4, B24);
+> >
+> >  FUNC_GROUP_DECL(RGMII4, F24, E23, E24, E25, D26, D24, C25, C26, C24, B=
+26, B25,
+> >               B24);
+> > -FUNC_GROUP_DECL(RMII4, F24, E23, E24, E25, C25, C24, B26, B25, B24);
+> > +GROUP_DECL(RMII4, F24, E23, E24, E25, C25, C24, B26, B25, B24);
+> > +GROUP_DECL(NCSI4, E23, E24, E25, C25, C24, B26, B25, B24);
+> > +FUNC_DECL_2(RMII4, RMII4, NCSI4);
+> >
+> >  #define D22 40
+> >  SIG_EXPR_LIST_DECL_SESG(D22, SD1CLK, SD1, SIG_DESC_SET(SCU414, 8));
+> > @@ -1976,6 +1980,8 @@ static const struct aspeed_pin_group aspeed_g6_gr=
+oups[] =3D {
+> >       ASPEED_PINCTRL_GROUP(MDIO2),
+> >       ASPEED_PINCTRL_GROUP(MDIO3),
+> >       ASPEED_PINCTRL_GROUP(MDIO4),
+> > +     ASPEED_PINCTRL_GROUP(NCSI3),
+> > +     ASPEED_PINCTRL_GROUP(NCSI4),
 >
->                         Geert
+> You will need to update the binding document as well. I've poked Linus
+> W about a series I sent that re-formats the binding function and group
+> lists - it would be nice if you rework the patch on top of that:
 >
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
+> https://lore.kernel.org/lkml/5bf8e1dddd2b958a102e7b1b9f9c080a34f9deff.cam=
+el@codeconstruct.com.au/
 >
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+> Cheers,
+>
+> Andrew
 
