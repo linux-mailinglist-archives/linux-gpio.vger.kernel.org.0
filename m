@@ -1,112 +1,97 @@
-Return-Path: <linux-gpio+bounces-7563-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7564-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B27D390E95F
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jun 2024 13:26:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C038A90EB25
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jun 2024 14:31:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E93F8B2362A
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jun 2024 11:26:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67E171F24713
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jun 2024 12:31:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F7B113C3E6;
-	Wed, 19 Jun 2024 11:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91CAE7F484;
+	Wed, 19 Jun 2024 12:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Du+dh5j3"
+	dkim=pass (1024-bit key) header.d=yngvason.is header.i=@yngvason.is header.b="a0jG0Meg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D01C13A263;
-	Wed, 19 Jun 2024 11:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0335B13B290
+	for <linux-gpio@vger.kernel.org>; Wed, 19 Jun 2024 12:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718796330; cv=none; b=tclf3A4Sfu2h0yImarDDynnRNahRqgWXLETEQh6HwCk+BHG9GY7qTA6fL9TXCjQky15VuYx4r5Qfm6wzGqO1JnPhle0Xn4FSOUCnZW4A/UxprrEgrhZNxdqO3PoyNfQs7Y0NKcXADL7uHM2kNPFs9Z2SIfVLwI2HP8s63ROoYqE=
+	t=1718800315; cv=none; b=WP15m9lL/BD9jvBbSwEToKBWPe1f3EOXc6aiM6hIEE+u/hdVk2Lx+jMVprTc/49voAcDYoGTl6DB2hkC7L6IBKHufY62f6Z3Zbk8rz3SGU0poKqnzwFgqEjeb22Q+L8tTtS4XOfsRP+6v48o9I415bd8F0Q+wxaarN8yN5HT6Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718796330; c=relaxed/simple;
-	bh=wzgwyeFbIPVmN/m2LlPsgW89UGP112++2zLlQoa6br0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SYef2zjdyKcavrR8ShSqjW/HYcZwy3GUzXSJpbpuNe/V1Xf+LPFBVQzF/kiidF4Vyn7k67cZON6kqDrhUWzFGNeaixRUKqL7GBW7AOwhdW0CfJ7+bHBgtWSF9+Ukg6sraHExOO8xAmLvmwgVRsogfadykuWKArMVKrX7ctZ1bxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Du+dh5j3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94BDFC4AF53;
-	Wed, 19 Jun 2024 11:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718796329;
-	bh=wzgwyeFbIPVmN/m2LlPsgW89UGP112++2zLlQoa6br0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Du+dh5j3HHzpa9yey8zGx6MNBhRSP5yQXWuWgd8fZ+2wjMfn2vfuZQWDvD6mfzdDE
-	 ALVAAyypHvZYwZ7gQLIbC6J2/lDVDvJDeXsXPtcoshRW+qweIlKecxXE+xXw1latK0
-	 295u5iSD3QMCimGrhNLiv7f2uBLI/v0yKTZxlMS2mDfY2XsuKPrWFz/lrKGNnw2/fy
-	 OZvO4Q0gC+SetiNpSZ6ZN1vcJ9u8CRoSpaGcKqJJWIfIWAJlXkTRxzn/Dy8jeW38ee
-	 90nqDKny33ACfjWnYETbC+ZOw9mtfcELCdxvaLuYHAXfRzbVQOHsIXmGOzLsGvuq3b
-	 lRykQ6JA79PhQ==
-From: Conor Dooley <conor@kernel.org>
-To: linux-riscv@lists.infradead.org,
-	Conor Dooley <conor@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Jamie Gibbons <jamie.gibbons@microchip.com>,
-	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	=?utf-8?q?Daire_McNamara_=3Cdaire=2Emcnamara=40microchip=2Ecom=3E=2C_Jam?=@web.codeaurora.org,
-	=?utf-8?q?ie_Gibbons_=3Cjamie=2Egibbons=40microchip=2Ecom=3E=2C_Valentina_F?=@web.codeaurora.org,
-	=?utf-8?q?ernandez_=3Cvalentina=2Efernandezalanis=40microchip=2Ecom=3E=2C_L?=@web.codeaurora.org,
-	=?utf-8?q?inus_Walleij_=3Clinus=2Ewalleij=40linaro=2Eorg=3E=2C_Bartosz_Gola?=@web.codeaurora.org,
-	=?utf-8?q?szewski_=3Cbrgl=40bgdev=2Epl=3E=2C_Rob_Herring_=3Crobh=40kernel?=@web.codeaurora.org,
-	=?utf-8?q?=2Eorg=3E=2C_Krzysztof_Kozlowski_=3Ckrzysztof=2Ekozlowski+dt=40li?=@web.codeaurora.org,
-	=?utf-8?q?naro=2Eorg=3E=2C_Lorenzo_Pieralisi_=3Clpieralisi=40kernel=2Eorg?=@web.codeaurora.org,
-	=?utf-8?q?=3E=2C_Krzysztof_Wilczy=C5=84ski_=3Ckw=40linux=2Ecom=3E=2C_Bjorn_?=@web.codeaurora.org,
-	=?utf-8?q?Helgaas_=3Cbhelgaas=40google=2Ecom=3E=2C_linux-gpio=40vger=2Ekern?=@web.codeaurora.org,
-	=?utf-8?q?el=2Eorg=2C_devicetree=40vger=2Ekernel=2Eorg=2C_linux-kernel=40vg?=@web.codeaurora.org,
-	=?utf-8?q?er=2Ekernel=2Eorg=2C_linux-pci=40vger=2Ekernel=2Eorg?=@web.codeaurora.org
-Subject: Re: (subset) [PATCH v1 0/5] BeagleV Fire support
-Date: Wed, 19 Jun 2024 12:24:48 +0100
-Message-ID: <20240619-tightly-stuffed-a91e32ae9fc3@spud>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240327-parkway-dodgy-f0fe1fa20892@spud>
-References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
+	s=arc-20240116; t=1718800315; c=relaxed/simple;
+	bh=U0PcU3qCwgkEf/ycmHkzzhIWuTZZFxA5cTFeUmLgtWU=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=uvUI9uRIXZ2c74OeXqcL/AGnuHR5EdIK9wWCYR89Hf6uuQzIcSynqhIqWVAVTGok2Pc9AJmIQPq84/elEwabz7h95Rpb/mPF6Wjf+zTlgWMRTiE/3ipPjMdxXk6/x3k5HZv5XVa6FSAxRbICOqwe1TAIlARCZWhtEE3kVPAmCOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yngvason.is; spf=pass smtp.mailfrom=yngvason.is; dkim=pass (1024-bit key) header.d=yngvason.is header.i=@yngvason.is header.b=a0jG0Meg; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=yngvason.is
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yngvason.is
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-63258caaa91so49255037b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jun 2024 05:31:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=yngvason.is; s=google; t=1718800312; x=1719405112; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=U0PcU3qCwgkEf/ycmHkzzhIWuTZZFxA5cTFeUmLgtWU=;
+        b=a0jG0Meg/3J0hpMQa3q1DMTRnuJO5I8Lm76aOgybkGgKxsFgmpV4OfVKvmacL2JkZQ
+         VM75UiXRnVtDXi6Ib8wwZs5xMtCCMBuhqAKtzCSFpKzEnohf4jyg+j4snWwkIaTqgLZp
+         m1EnoGxCCjWkVSeOU/InLJcpGRa9Wy4Ica+ww=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718800312; x=1719405112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U0PcU3qCwgkEf/ycmHkzzhIWuTZZFxA5cTFeUmLgtWU=;
+        b=vc9kwLIR2HYdOtA2e++7rJBN9mixtbPhNPxeE6PFwW5ySZ7hIoOavmkDPAffUIklqR
+         y/cSNIEx5xvl8axTSRiIpNsFkgrBtAuZdHKtzB/b4bEq/GEDrSV+JHn+ki0/WdUYXec8
+         bqLN3vXXZGuvRNsejGP62B1gc75yRsiei2vsd8R0IqLMqspWlwAQU6mW25XWbc0qY89f
+         ekFBW9fpcKZfeFg2UgmasWoGnTV/35kiRO7dx79Cp16fFZd/dvxgA7MkJVeoGTSE8QWg
+         o/Y/plJ9IpI0s9r1nqptyUyQlty7j2bxdcZDkNd3sGZhKv/K8tz/VdU5TW7D65Cnnw89
+         e9dg==
+X-Forwarded-Encrypted: i=1; AJvYcCXYyt/l3QRu6XQWmnsVfUSrrceGvLJwOhejpzzrs5UAdxZ0VsMpBdEMK7qemdOBs8RfYbBehcUJBNqaQ3ZMhsBfNsHND0RxuhV+ZA==
+X-Gm-Message-State: AOJu0YzmhtpPguL+to4b341G/SDomFlWoPNDiDGuIkah43qG3j30yZ//
+	FLWJOFyB9K8FSeSAOeroF/Am5RRRAwTOc7dO14PSiQWp75HfO4WaVqaVsbEcfvRTccSenGDL4/i
+	/tuJ/VJzNsR5eDDmkOb9h6FYTgWQbfKtvODVgRg==
+X-Google-Smtp-Source: AGHT+IFGix6mQLKgzrkUVw8RNYlyzxQI6VbTV0zwmJhwHnDVr9NiNo7iny7WHWW+pODFlAxYmm9a9PrHsp6XqodJJGc=
+X-Received: by 2002:a0d:ebc5:0:b0:630:3061:c22 with SMTP id
+ 00721157ae682-63a8dd044femr26139767b3.20.1718800311802; Wed, 19 Jun 2024
+ 05:31:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=693; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=W31/LXvbm3p0gQHN+AHn/iS7bX0lEsjhbAHyFzbXYq0=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGlFBxh8f6/zXfjC9NGcM4ltLn98vHsktk+Z/fxqdsDvr bOvnM6b3lHKwiDGwSArpsiSeLuvRWr9H5cdzj1vYeawMoEMYeDiFICJfAxhZDga2nAq+VdN38M/ d2wvNudvOpjAbmnDcl+8d6Z2N5OBdx3DP+3M/hvHV+4K+s9a98Ofad+XBEtuwxk72msy7u6t2Li 7lREA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+From: Andri Yngvason <andri@yngvason.is>
+Date: Wed, 19 Jun 2024 12:31:16 +0000
+Message-ID: <CAFNQBQzOZhOns6EfO9XJP3f=e0h8E=PBVxFxaC3QZsbBqiRh0A@mail.gmail.com>
+Subject: Wrong GPIO mapping for Alder Lake U?
+To: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Conor Dooley <conor.dooley@microchip.com>
+Hi,
 
-On Wed, 27 Mar 2024 12:24:35 +0000, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> Yo,
-> 
-> Wee series adding support for the BeagleV Fire. I've had a dts sitting
-> locally for this for over a year for testing Auto Update and I meant to
-> submit something to mainline once the board got announced publicly, but
-> only got around to that now.
-> 
-> [...]
+I'm trying to use GPIO on an Alder Lake U processor with a ACPI device
+id INTC1055.
 
-Applied to riscv-dt-for-next, thanks!
+Commit 0e793a4e283487378e9a5b7db37bc1781bc72fd7 added this device id
+to drivers/pinctrl/intel/pinctrl-tigerlake.c and states that Alder
+Lake P uses the same PCH. However, I am having a very hard time
+matching pin names from the schematics that I was given with names in
+the source file or with names from the dataheet for P-PCH 500.
 
-[1/5] dt-bindings: riscv: microchip: document beaglev-fire
-      https://git.kernel.org/conor/c/76ed031dc750
-[5/5] riscv: dts: microchip: add an initial devicetree for the BeagleV Fire
-      https://git.kernel.org/conor/c/9e2569c28589
+Based on Intel's web page [1], I have been able to ascertain that
+Alder Lake U has P-PCH 600, for which the pin names in the datasheet
+do indeed match what I see on my schematics.
 
-I've applied this with the incorrect PCIe root port node removed.
+Is it correct to conclude that this is simply wrong as is?
 
-Cheers,
-Conor.
+Best regards,
+Andri
+
+[1]: https://edc.intel.com/content/www/us/en/design/ipla/software-development-platforms/client/platforms/alder-lake-desktop/12th-generation-intel-core-processors-datasheet-volume-1-of-2/
 
