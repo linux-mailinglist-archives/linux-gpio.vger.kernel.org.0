@@ -1,138 +1,166 @@
-Return-Path: <linux-gpio+bounces-7568-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7569-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F06E290F8E3
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2024 00:15:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 441A090F9AF
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2024 01:15:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 54446B22955
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jun 2024 22:15:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC9051F236CB
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jun 2024 23:15:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C177F7D3;
-	Wed, 19 Jun 2024 22:14:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A25D815B14F;
+	Wed, 19 Jun 2024 23:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3XGt1WT"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="d3M+8Hi0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12olkn2068.outbound.protection.outlook.com [40.92.21.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42CD74068
-	for <linux-gpio@vger.kernel.org>; Wed, 19 Jun 2024 22:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718835295; cv=none; b=H3OpAz1zLKK/D7ReApqbJnz0PAd4OWRZaU7tgE+a+iGLwOJrxMM7YFiFL+AzLOV8jKnnj2U8DyZwVF0zPXS5oc+vz0njr4TS2nlzSb8xj13WbmRr+qcQq0rUI3ZOOPcW7xFRXjK4m88vuCz9aakPVDWVReZ/lNX8aCVdFLVGxps=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718835295; c=relaxed/simple;
-	bh=dj6Nsz28vNju1uQAVmnbRM3gkhFQ28vgZ/khAr1X4iQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F3FCxvKJDli54FBRMisEz0aAO5ngfxy+XbRBK3VuZhITINq2lRL120tjexqC9cNvwlTFhkunhYgE6d517clZqt0BMzJr4cL7ckhZT5FvorKv/F/IGrcGItYyfRQqsuT7DGlkQqw7JW3OFlTrhKibvJ4wv6He00zcWwIit3wBKXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3XGt1WT; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52c8342af5eso264509e87.3
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jun 2024 15:14:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718835292; x=1719440092; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dj6Nsz28vNju1uQAVmnbRM3gkhFQ28vgZ/khAr1X4iQ=;
-        b=V3XGt1WT0eKKhJh93U5rwj9XhS/whXls82QEdnYXCJ3zw5U9CtRyXrAGEEKhFoQ5GY
-         285QSx4VqgwogkWU7cJyBDxLVYJ29h+ngAyPxKK4a1xaGwCPzW0fu/aOtCD8+SMtV2Yw
-         pYk1IVO8MNBgUwy900tixNEHjuCnQ0Xs6dXU3Oubx/YWfIiZEIA4XtXvtNR7ENcILy5X
-         yBl69ie151xENuaurXvQp/Lg+5Rq1u605YL8OBvHYbmdk9Kn4M0cjOyr2EVMlmXoNkG6
-         Y9/nkLS6eFc7Xiw6cPUQ5et9F71m+Iyw35K939FpduliTE5Z0io9a/+6ChL9U5o3c0iA
-         102Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718835292; x=1719440092;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dj6Nsz28vNju1uQAVmnbRM3gkhFQ28vgZ/khAr1X4iQ=;
-        b=BNTxlIakJPbke6gQEmckxfVgZK7Xu8QUCwegp00GyjcG2nqVuHfL7OI05dXIQG3xpY
-         ZEVt9bF/wINDerh1TfMuv/JVYWmUOT2jp/ya5iGdBvq6VOu5JOqfS5Sh8ffHnmrgXkmw
-         Tk8DEuFo7iRJxaKzGU0G9TUFr+1s9mwNSkiuaNAqhKRLwoP7Y4PB491AGcdYFbQIdBJW
-         +QTNFTLWY+tz7TPJ8bCxl0m370JWXWRuNHFRfC5AGlXWGFmalrVI/YCCa10b2z9vKLDQ
-         LD14VM5iVDAtUlG9KCu1N0wHmBY2EXvtpACoAAEv7jhgzlTMIQoW6wVRXgRH+bj2Rp8n
-         O3VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXLdvkGnYnrpOx0IkZXRePjNg2w9XBM6DZ3UHATFPwYUo6lCiw7SedExrP6gADVsTW0nV4rkAnZtsL/ZWW21OfvyMbwQ8uYa2lcjw==
-X-Gm-Message-State: AOJu0YxAnV+azEFadOQuk5/NA5UVnjxq8XMB+9jWOgFMIW140ppFe8uK
-	kYiFwc0MgaOjm4lH07tWp5oXFe1Fgh/h3RwvaUGXxpM1KNzTOMEt09SMM84G+n6x5iqv1sh2NTA
-	8vD1tf9Ww6/xd+k4g4MrDwNKTIgI=
-X-Google-Smtp-Source: AGHT+IFtKo+rjhbJeSNhMWzchpB59htKhNsvAbsq2onNPY72PiWHfP5yvSg4G2ex+5ZHtcpf2RBVaOIF4cIQvCgUWJ8=
-X-Received: by 2002:a19:f017:0:b0:52c:81b2:ad2a with SMTP id
- 2adb3069b0e04-52ccaa32dd1mr2107583e87.24.1718835291339; Wed, 19 Jun 2024
- 15:14:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B42015ADA4;
+	Wed, 19 Jun 2024 23:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.21.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718838911; cv=fail; b=Zl4IRCLdMO+7Gd/ZqdfKaUtlTU4hDlXkAj7o/gE2Xt3rQORT6VPHqUkyfrb9vKKGmS+9nJoJ3Almv37QVSwvpfMj9SelYRfLa+40E3sQ6Drm+2zjfIZhJ68UsqCeiMXnW3y4Xn9O0hlKY7Kn1C4bZxH+2mXoqtu6CTiulBWPvPY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718838911; c=relaxed/simple;
+	bh=tIMrqqVHt9kDH3mVracyhK/P7fubOlUBMUXbo10F8DE=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=D76APhJShAflateOr/PUcYenMFlJa0KaHrsRF411A/Je9B9e90W5iTP3PVtCiNIU3B6Zt8juxwGxTg+6mPbmK1u4g5ijHJB84g+xcBH292vEObDUSvzZa099OT5e8aJ2MoMQvLwBMcdqVkp0gvEOI0gcNHcGRrMTHJ0ORAyzXV8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=d3M+8Hi0; arc=fail smtp.client-ip=40.92.21.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MB4KqPmmPI+6ASzTOAVcSVUNij9hS9UcxbNtIuNSEW+NRY5/nIPtuOLgIAUDNEiEbfhB3fnog40cr+7QW8QaN69WZPDlY2xNufAG//un2SyiCq1owd2U2cNXcVEpNW0X9s6zsdB0F841QJIyYbRTNUy1drhZx7MZqsJRTQfKfoJl80Ciz/fD5CSwnt+91ycy9OJMKNjer4dK+Api0T0ZnwWABhKJFceD4XvOqf59J0+vNlMRVTQ36MLGreP0l8P5J9Zurp1qcKx3K7n6SoX8Ty1kjYZakKChiXG6G5rQqU0lEUgZiDUuEazsLLVJH9NsLxGqM6YB3gciAdyGPZOr6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hxeXzRd5S6663KaNU9eSVpJuXPKnETHitpwkPbzzPUA=;
+ b=eaPQvpAGjdXcnhTVRN7OdNWZNN0GQCYkb/S8sRMgfN5gTiFBrkgaxLDhFr+mtUqnYRCfpJ4fpuq/96EF6dMT1Mvw8d4CRjWLjY4gR2VLFiGyEJUO4Hhec3CKp6YQTg5XVhWpFVLMwZJ3GfheimZHREWexImjrl8c9E3hshAtGqt0mGVhHi1sp0YeWWoLnHQ84tHVvtCmczTkImpg+VPzBpXbQHgY64JobQ5T3r9Nd13dkznA8ZhB9TmFQqgC2BhMemHGJMGh6AF06rf32SDyJecWxgn5DP6s+TgPK/18xDTdjaOVNhBAV0D0bAcgtWjcjPa13sjTcCbfw7lxYTMmfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hxeXzRd5S6663KaNU9eSVpJuXPKnETHitpwkPbzzPUA=;
+ b=d3M+8Hi03UuY4/hHGiz6qLhdMu55Hs7csKomvwefYbP+b1fs62HVnZgwAr3GGkYn4L+hxVoaort9/uBiChuDKvXAlEoJEB7Cpbbq0TvdYl2C2fXD+1c9jWUkzPjNnsE6z4dhbhv44oYbmkxbY4ZOLXk5d/GzT77CLbrhlvA2OpK0Kvh+oVXEAcQrLHzy+bN5PbSmOAyGUoKRnzlUlXNzwjX0UO0WQLzusHClxA641YLyfCB3f6HbKrzqJYYEEb4zXoF1mtibwQ4HRlTDDD69fyvG8rBIlUI74JUcBogxOyFnqeZ4wacgFDSSO7LuaIXykWzH3GOa0nYweJKQ1X2yXA==
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
+ by DM4PR20MB4602.namprd20.prod.outlook.com (2603:10b6:8:5d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.19; Wed, 19 Jun
+ 2024 23:15:07 +0000
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::ab0b:c0d3:1f91:d149]) by IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::ab0b:c0d3:1f91:d149%6]) with mapi id 15.20.7698.017; Wed, 19 Jun 2024
+ 23:15:07 +0000
+From: Inochi Amaoto <inochiama@outlook.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tony Lindgren <tony@atomide.com>
+Cc: Inochi Amaoto <inochiama@outlook.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: pinctrl: pinctrl-single: fix schmitt related properties
+Date: Thu, 20 Jun 2024 07:14:47 +0800
+Message-ID:
+ <IA1PR20MB4953D5E7D7D68DDCE31C0031BBCF2@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-Mailer: git-send-email 2.45.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [NAaDRh0PTPJJNj502VRUcT2cvotVMIU6q9p/B87NR7g=]
+X-ClientProxiedBy: TYCP286CA0272.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c9::18) To IA1PR20MB4953.namprd20.prod.outlook.com
+ (2603:10b6:208:3af::19)
+X-Microsoft-Original-Message-ID:
+ <20240619231448.171000-1-inochiama@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFNQBQzOZhOns6EfO9XJP3f=e0h8E=PBVxFxaC3QZsbBqiRh0A@mail.gmail.com>
- <CAHp75VfGW8by7UW04x7ciqQnVPGL_nOKHrEn7vhb+WC40pWm3w@mail.gmail.com> <CAFNQBQyg-oR+RZVCWnGCLRC922ZET0AN-44BWd-695BBvjeYiw@mail.gmail.com>
-In-Reply-To: <CAFNQBQyg-oR+RZVCWnGCLRC922ZET0AN-44BWd-695BBvjeYiw@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 20 Jun 2024 00:14:14 +0200
-Message-ID: <CAHp75VcfgGz0wb0Ce5HPdntmZKtupXa87w4U_Wj6YvMi-iHkww@mail.gmail.com>
-Subject: Re: Wrong GPIO mapping for Alder Lake U?
-To: Andri Yngvason <andri@yngvason.is>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|DM4PR20MB4602:EE_
+X-MS-Office365-Filtering-Correlation-Id: c7bdfff3-417f-4c0f-365b-08dc90b5a86f
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199025|3412199022|440099025|1710799023;
+X-Microsoft-Antispam-Message-Info:
+	XFZO3azER8BcuIhQuXpsAY+PFFm6+zXrPYE192yMSwS8CnLdnJnI71KEaX0wJarZ9ORiIDEgXSBvLHagbAH00drDPJltsgRxqkCf47gJItSXfQlL9NLFlQ9JP6aeoOYCBhEfLfF/ONfmTPd5LS4MRVvONIHpkYriQ2NRXTzIc9z+jMxy9PdQZbwvXY4Hwmzl+y52y3PssACnKRXlLWH1+TxuqSX2RQJriVggbpXE3o795+CRiU3cVTnevCPJHu0hlVPLoG/qbKEtXvpqq/Frr2rBgX0JrsripluPXEMsHOvJInpwPLlJQvSiEjet4kfQ0IX1PHIVLFtR8g+lWhc6AlqKhUhde2YHlpbUzBXJqTN7EdFsPFKjBt0lOqZrSzoD6wcQl81RZeElf93RwvRW3OwQDsfFe95pkUsk439J4cavsVvmR1VDUgPOpJ/henCZxchhM4Oj/wqMINaY9Gwekldh6Aw4XKF/ud3a+YP8O2awOFc8U4yyT+9WqZsCKBZMedRjtrybf9HlBAsSnvwKnyKWjHLLu9RFwptikwjTHtMa/3ZGFZBW1dqK8F9gIhmp3FFMRkV4qrbg/2nwj8OlSSMvd3fvOaMya25gLOnP+sEQ4RVsThmcuoBQB4+Dfqmq
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tdgnJXCGkRTJ6YkZugJyypwlnhVKVPgyJMiF8CRCT6mzCBTNLq7w/DY+QoIG?=
+ =?us-ascii?Q?YuAOdn7aIlyI7LR7baQejbm4pRZjazBlpNzNZtE8rNPySnu7udbiFbSl1HUG?=
+ =?us-ascii?Q?nOf2R3LlW1xaRM4Wpv22/o/GHpYBYQ1PiQmiWIJyXtWMeB+qZYiBl4vsUmjb?=
+ =?us-ascii?Q?iik/eFG7DNHu5osaRxpr10sIc0FQsy1vskbGSuA6GoesH8BWvIAxNj887nzy?=
+ =?us-ascii?Q?9NQ27wcd84bLjakuRMmy/DRxJgsJj2+8h3R+RydWBq8nCrBbqbjbqUotUsdb?=
+ =?us-ascii?Q?r5W7k1rrpD2RVNc7r35/DSg2O41WRBqCJwDjls3rlg95CuZKqTyra2vpqESu?=
+ =?us-ascii?Q?BG7cjx8yUwWqbpHbBc/SnKANsMIHyLMqHccn0bX8tp4+nVX0jsnwVLVmWpqK?=
+ =?us-ascii?Q?tAP31gWCcMx/C0DzTq5BbELmOzTWsSUoPe4s8/vwl1wCIM8yLywU6QfqHmms?=
+ =?us-ascii?Q?gDlUSpuau8owMzZ6KC50/oFMTdcrDOzfjy9ockeskEA1MGgznFt66rwCjhjX?=
+ =?us-ascii?Q?bdH5DpCadi0xatH9SjZ7dKivHB7+g284DwVEpvsPKuefZ4HGO5zqFRJV8Ogl?=
+ =?us-ascii?Q?2mJWDL88/8nOg0OhGuhnG9J5EWtB8jYF0/Qdji0qX3+K/jTkqb3JuEnQfAqW?=
+ =?us-ascii?Q?n93ophAMDLN3WP5eTzbjvZRUwB7w5dnyNjxo5dOlEg2qDV2QabRiQTcYu7SS?=
+ =?us-ascii?Q?CmmDDPt6hd0KzxPro+UNDv9/1HkxliWLjmavVczXjKJOgsJry7NKAakE/ag/?=
+ =?us-ascii?Q?CRjcWzLYUBKUJTYCc1T0YQgd+etmIXF/T+7F4e/fO9SeveRhtzlS6tWQPEsU?=
+ =?us-ascii?Q?TWL7ohs2qva92QnZzlI+Tv5bK/W9ywPSZA3qQIm+9wRzXH3E2QSQcHawKHrI?=
+ =?us-ascii?Q?csl6u2fvym0G22Bcg1pKllPKqMXbdOOwmjwDUJL3KhxODr2jcW6EnVJEkZMw?=
+ =?us-ascii?Q?qP3hWwG0LdMB0WKZIesf2GyYZ1A6y8mLjbQnNGG//+LZtgOm/jeuB6WSsTUj?=
+ =?us-ascii?Q?U23tlLATk0lea0OgSI5nDMYWIVejlXqgjf8SjXgbB1cG+VfQw056I5ZSdZYg?=
+ =?us-ascii?Q?zKs8UKPpOPtFts2+EQVPO5P7kkR5xZLSqulAdKvZaakisCWfLBkiu+nBw0cz?=
+ =?us-ascii?Q?yFymFIvZnOY0NCtYllcqTgy4Ans0D0MNCfMfHSPJotjhim8hT8ICbIADE+Wa?=
+ =?us-ascii?Q?0MQCU4YYJIpLEZrB4khqoQQzdFvqZoVSr3gVJv9qehkQMFz9KTIVhPLcstGK?=
+ =?us-ascii?Q?EQO1HX+AXqLtrUpmgGzG?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7bdfff3-417f-4c0f-365b-08dc90b5a86f
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2024 23:15:07.1340
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR20MB4602
 
-On Wed, Jun 19, 2024 at 11:36=E2=80=AFPM Andri Yngvason <andri@yngvason.is>=
- wrote:
-> mi=C3=B0., 19. j=C3=BAn. 2024 kl. 19:18 skrifa=C3=B0i Andy Shevchenko
-> <andy.shevchenko@gmail.com>:
-> > On Wed, Jun 19, 2024 at 2:31=E2=80=AFPM Andri Yngvason <andri@yngvason.=
-is> wrote:
+The "pinctrl-single,input-schmitt" have four arguments in the bindings
+but the driver needs two. According to the meaning of other properties
+and driver, it should have "enable" suffix. Fortunately, there is no
+dts using this property, so it is safe to correct this property with the
+right name.
 
-> > > I'm trying to use GPIO on an Alder Lake U processor with a ACPI devic=
-e
-> > > id INTC1055.
-> > >
-> > > Commit 0e793a4e283487378e9a5b7db37bc1781bc72fd7 added this device id
-> > > to drivers/pinctrl/intel/pinctrl-tigerlake.c and states that Alder
-> > > Lake P uses the same PCH. However, I am having a very hard time
-> > > matching pin names from the schematics that I was given with names in
-> > > the source file or with names from the dataheet for P-PCH 500.
-> > >
-> > > Based on Intel's web page [1], I have been able to ascertain that
-> > > Alder Lake U has P-PCH 600, for which the pin names in the datasheet
-> > > do indeed match what I see on my schematics.
-> > >
-> > > Is it correct to conclude that this is simply wrong as is?
-> >
-> > TL:DR; Do you have any issues in practice with any of the GPIOs on
-> > this board? If not, then there are no problems with the code :-)
-> >
-> > The Linux ideology of device drivers is to avoid code duplication.
-> > Since we have the same IP, we reuse the driver, however in the
-> > original one the pin names were used for different PCH. So, if the
-> > issue is only with the naming, you need to find a mapping between
-> > schematics and the standard form of GPP_X_nn (where 'X' is a group
-> > name, and 'nn' is the relative number of the pin) that is used in all
-> > of those chips. You may follow the comments in the code which starts
-> > the groups of pins followed by the pin names and numbers. As long as
-> > you know the basic (or "normalized") form of the pin you may easily
-> > associate it with Linux pin number via the source of the driver.
->
-> Thanks. I can work with that.
->
-> Maybe you've already thought of this, but if the pins all used the
-> canonical names in the first place, they'd be correct for any PCH with
-> the same IP. Of course, you can't change it now, but it's an idea for
-> future pinctrls.
+Rename existed property "pinctrl-single,input-schmitt" to
+"pinctrl-single,input-schmitt-enable" and add the right description for
+property "pinctrl-single,input-schmitt" used by the driver.
 
-Thank you for your input, that's what has been already implemented in
-pinctrl-intel-platform.c for the SoC and PCH starting from Intel Lunar
-Lake.
+Fixes: 677a62482bd6 ("dt-bindings: pinctrl: Update pinctrl-single to use yaml")
+Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+---
+ .../devicetree/bindings/pinctrl/pinctrl-single.yaml        | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+index c11495524dd2..e8177cc1115c 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+@@ -144,6 +144,13 @@ patternProperties:
+           - description: drive strength mask
+
+       pinctrl-single,input-schmitt:
++        description: Optional schmitt strength configuration
++        $ref: /schemas/types.yaml#/definitions/uint32-array
++        items:
++          - description: schmitt strength current
++          - description: schmitt strength mask
++
++      pinctrl-single,input-schmitt-enable:
+         description: Optional input schmitt configuration
+         $ref: /schemas/types.yaml#/definitions/uint32-array
+         items:
+--
+2.45.2
+
 
