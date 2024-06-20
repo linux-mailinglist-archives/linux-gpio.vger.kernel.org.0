@@ -1,209 +1,225 @@
-Return-Path: <linux-gpio+bounces-7584-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7585-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E5A8910D79
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2024 18:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E866B910E94
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2024 19:31:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D71E0285FDD
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2024 16:48:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0D7928610E
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2024 17:31:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 279D71B47A9;
-	Thu, 20 Jun 2024 16:47:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CCA71B3F36;
+	Thu, 20 Jun 2024 17:31:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HgOSsepB"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JQcKX1kz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657351B3F2D
-	for <linux-gpio@vger.kernel.org>; Thu, 20 Jun 2024 16:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EBE1DDEE;
+	Thu, 20 Jun 2024 17:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718902037; cv=none; b=YnsVmFNRX+fMjjvL4U14dJyL1QwtR2v4LUMkxlp094UGejTEcUbt1BMkwuNGU0PQUyvi8LfyMdjTV11ilc2jDrvbFCdzG9eMUXsrp/+GLuSBkMn4ye/aYktMe9tIKtQsDjkfZblh/iQhhLlAKfjMDN+zyz9UBl1xisfJjNMY+dE=
+	t=1718904705; cv=none; b=T3iLENnB+mRz/XrmwTq5kKqbp713TdRZBVj7Y5HrSELHLLNC/CK02jMvN2LhKCzSIJadhNC3C2hQlD69r+YXamKYQDL4t5VXmQmop7N9ECMYfpSXzv2sqajPLEVyJW8u5MzCC0osKfSmoKpI+1l2KXjnPOlRfR3s2mLEPNuA5HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718902037; c=relaxed/simple;
-	bh=1REQZf5l2c8q8yBMVV7ETw9PfIdltLaNzSZhKMEhPL0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=NwyjXBLQTsdsXy6orxiUQIilbmx5qqiSdAIJNKxxNqfHiAaq6M5mXB5lmb937jmCHjZ1lHJzFpJlM94eOqC+DViZTOCyXfO9ePvM3dPvT/nCmVPZgvD3yiIp3ag9lT9k52gnar+6Rg7RlvzbQmrCITvH49+O0ztegUfQnivcztY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HgOSsepB; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718902035; x=1750438035;
-  h=date:from:to:cc:subject:message-id;
-  bh=1REQZf5l2c8q8yBMVV7ETw9PfIdltLaNzSZhKMEhPL0=;
-  b=HgOSsepBY9HSLezNMBmPFObSSSkgVXCCiyL0dpt96jihJITy+Q7mhhER
-   V5utnmRO5RvyIXpkgjywaRkSAfxZRLUElwS26zODD7ncR6NxL4yKO6yZF
-   wDxPyDt71bJrxH9pmHt9XawjPz8FZXPXi+jgNqFWGXNMko3kOnUWBbEWX
-   j35TWt4MN1SK4ReQqI7lE5pqz4HjXSFhqTpEFC1VsCEL9TAqBSH7I54Cs
-   GPjCBFC5+PYffKLiV2CEGXrXgVRpGwf55DOBYtP+CKrGURIcaIkPnMeg/
-   LsLvZ3VIxZTWuPmQWH1mebq69I+SDpc49JR8/8oD+GgQQWFjlWhJrn+bc
-   Q==;
-X-CSE-ConnectionGUID: ASjrAadxSYKSLXak5lDT2A==
-X-CSE-MsgGUID: kEWAVQWsRQqvecD2xp40CQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="38415564"
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="38415564"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 09:47:15 -0700
-X-CSE-ConnectionGUID: s6HABV7NQla4aKUR77Cffw==
-X-CSE-MsgGUID: TS/2zl+ASkeH5Q47nUtbmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="42406362"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 20 Jun 2024 09:47:14 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sKKwJ-0007mG-1w;
-	Thu, 20 Jun 2024 16:47:11 +0000
-Date: Fri, 21 Jun 2024 00:46:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- f8b4fbb83820ee1787c1ea91cba392c2ffa96098
-Message-ID: <202406210028.HOtBYH2A-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1718904705; c=relaxed/simple;
+	bh=2msHhaArGXUII7vZvDX3RYqIVT0kPBHzS6JmMaEg6GE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BBTB4Jef+egVrkJRGzCZ72aIKLW/y2buj/uhLiafPTgytbrv89tHcMDubGf/WpcbGCWd9NK+ynsuqGuD6fteQjv7wm9KcfIptM0Z0efWkIXZ5i6Gwu9BYrYNhIlSuC/HtJpEClSyWHjPnHZOGGpR6A5lARNuH/VGdorQhsyJJEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JQcKX1kz; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5C1B11C0002;
+	Thu, 20 Jun 2024 17:31:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718904700;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5jSCf/ll+OHO3qhGzh3F7nih4V1BJIM+0UihWsXUkgU=;
+	b=JQcKX1kzSltdO6ex4hv/5gRrFQNcH1sKg05NfkmPYeH6lXHOf1hOxvhY3gpTY1DXVmnU8S
+	PtRx55Iv3Bdf/h0HM49kb31L3/CUuaLsz3C9JC5qXCZL6QHuhyQaqk9ArmOFdsl7/xGU2z
+	7sRLTr1scLtERtmvGeCYdgZMcNjXVcpntSHHAeDQiG69/+1kf0EwG/5p8A8KjXVZ5OAdps
+	v2yVJJH5OFd2pdDSrLx3/8HjkgEiRDW3eBeeDSt9p9UEtY/RAHIXS/82ju/vHgtYRIKYw8
+	8K/WiXByCjpXAkZ6bJyWSIj137L0gnI4k5ON9dLaqgQ6E1JFfkkxsCHCK9hp8A==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: [PATCH v3 0/9] Add Mobileye EyeQ system controller support (clk,
+ reset, pinctrl)
+Date: Thu, 20 Jun 2024 19:30:52 +0200
+Message-Id: <20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAExndGYC/1WMywqDMBQFf0Xuuil5mKpd9T9KFybe1ICakkioS
+ P69UQq2yzmcmRUCeosBrsUKHqMN1k0ZxKkA3bfTE4ntMgOnvKQlrcmohoW4QZFKtrU0UpsOBeT
+ 7y6Ox7z11f2TubZidX/ZyZNv6jTB6RCIjlAghsWwuXaVQ3JRz82Cns3YjbJnID1VS8aPyrDZSo
+ 2wZstrgv5pS+gCcsC7Q3QAAAA==
+To: Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.14.0
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: f8b4fbb83820ee1787c1ea91cba392c2ffa96098  Merge branch 'devel' into for-next
+Hello,
 
-elapsed time: 3184m
+This builds on previous Mobileye EyeQ system-controller revisions,
+supporting EyeQ5, EyeQ6L and EyeQ6H. We expose a few OLB
+system-controller features here:
+ - Clocks: some read-only PLLs derived from main crystal and some
+   divider clocks based on PLLs.
+ - Resets.
+ - Pin controller, only on EyeQ5 (others will use pinctrl-single).
 
-configs tested: 116
-configs skipped: 2
+EyeQ6H is special in that it has seven instances of this
+system-controller. Those are spread around and cannot be seen as a
+single device, hence are exposed as seven DT nodes and seven
+unique compatibles.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Following feedback (that took time to reach my brain, sorry about that):
+ - We expose each system-controller as a single devicetree node. This
+   means reverting previously accepted dt-bindings that described a
+   one-node-per-feature approach.
+ - We use auxiliary devices infrastructure to split functionality into
+   separate drivers. Clock is the platform driver that spawns child
+   auxdevs. They get an iomem pointer to the OLB region as
+   platform_data. They know which behavior to implement by matching
+   compatible on their parent device's OF node.
 
-tested configs:
-arc                        nsim_700_defconfig   gcc-13.2.0
-arc                   randconfig-001-20240619   gcc-13.2.0
-arc                   randconfig-002-20240619   gcc-13.2.0
-arm                      footbridge_defconfig   clang-19
-arm                           h3600_defconfig   gcc-13.2.0
-arm                   randconfig-001-20240619   clang-19
-arm                   randconfig-002-20240619   clang-19
-arm                   randconfig-003-20240619   clang-19
-arm                   randconfig-004-20240619   gcc-13.2.0
-arm                         wpcm450_defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240619   clang-19
-arm64                 randconfig-002-20240619   clang-19
-arm64                 randconfig-003-20240619   clang-19
-arm64                 randconfig-004-20240619   clang-19
-csky                  randconfig-001-20240619   gcc-13.2.0
-csky                  randconfig-002-20240619   gcc-13.2.0
-hexagon               randconfig-001-20240619   clang-15
-hexagon               randconfig-002-20240619   clang-19
-i386         buildonly-randconfig-001-20240619   clang-18
-i386         buildonly-randconfig-002-20240619   clang-18
-i386         buildonly-randconfig-003-20240619   clang-18
-i386         buildonly-randconfig-004-20240619   clang-18
-i386         buildonly-randconfig-005-20240619   gcc-7
-i386         buildonly-randconfig-006-20240619   gcc-7
-i386                  randconfig-001-20240619   gcc-7
-i386                  randconfig-002-20240619   gcc-7
-i386                  randconfig-003-20240619   clang-18
-i386                  randconfig-004-20240619   gcc-7
-i386                  randconfig-005-20240619   clang-18
-i386                  randconfig-006-20240619   gcc-9
-i386                  randconfig-011-20240619   clang-18
-i386                  randconfig-012-20240619   clang-18
-i386                  randconfig-013-20240619   gcc-13
-i386                  randconfig-014-20240619   clang-18
-i386                  randconfig-015-20240619   clang-18
-i386                  randconfig-016-20240619   gcc-13
-loongarch             randconfig-001-20240619   gcc-13.2.0
-loongarch             randconfig-002-20240619   gcc-13.2.0
-mips                 decstation_r4k_defconfig   gcc-13.2.0
-mips                           gcw0_defconfig   clang-19
-mips                          malta_defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240619   gcc-13.2.0
-nios2                 randconfig-002-20240619   gcc-13.2.0
-openrisc                          allnoconfig   gcc-13.2.0
-openrisc                            defconfig   gcc-13.2.0
-openrisc                    or1ksim_defconfig   gcc-13.2.0
-parisc                            allnoconfig   gcc-13.2.0
-parisc                              defconfig   gcc-13.2.0
-parisc                randconfig-001-20240619   gcc-13.2.0
-parisc                randconfig-002-20240619   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                           allnoconfig   gcc-13.2.0
-powerpc                     kilauea_defconfig   clang-19
-powerpc               mpc834x_itxgp_defconfig   clang-14
-powerpc                      obs600_defconfig   clang-14
-powerpc               randconfig-001-20240619   gcc-13.2.0
-powerpc               randconfig-002-20240619   clang-15
-powerpc               randconfig-003-20240619   gcc-13.2.0
-powerpc                     tqm5200_defconfig   gcc-13.2.0
-powerpc                      walnut_defconfig   gcc-13.2.0
-powerpc64             randconfig-001-20240619   gcc-13.2.0
-powerpc64             randconfig-002-20240619   gcc-13.2.0
-powerpc64             randconfig-003-20240619   clang-19
-riscv                             allnoconfig   gcc-13.2.0
-riscv                               defconfig   clang-19
-riscv                 randconfig-001-20240619   clang-15
-riscv                 randconfig-002-20240619   clang-19
-s390                              allnoconfig   clang-19
-s390                                defconfig   clang-19
-s390                  randconfig-001-20240619   clang-19
-s390                  randconfig-002-20240619   gcc-13.2.0
-sh                                allnoconfig   gcc-13.2.0
-sh                         ap325rxa_defconfig   gcc-13.2.0
-sh                                  defconfig   gcc-13.2.0
-sh                    randconfig-001-20240619   gcc-13.2.0
-sh                    randconfig-002-20240619   gcc-13.2.0
-sh                           se7343_defconfig   gcc-13.2.0
-sparc                             allnoconfig   gcc-13.2.0
-sparc                               defconfig   gcc-13.2.0
-sparc                       sparc32_defconfig   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-sparc64               randconfig-001-20240619   gcc-13.2.0
-sparc64               randconfig-002-20240619   gcc-13.2.0
-um                                allnoconfig   clang-17
-um                                  defconfig   clang-19
-um                             i386_defconfig   gcc-13
-um                    randconfig-001-20240619   clang-19
-um                    randconfig-002-20240619   clang-19
-um                           x86_64_defconfig   clang-15
-x86_64       buildonly-randconfig-001-20240619   clang-18
-x86_64       buildonly-randconfig-002-20240619   clang-18
-x86_64       buildonly-randconfig-003-20240619   gcc-11
-x86_64       buildonly-randconfig-004-20240619   clang-18
-x86_64       buildonly-randconfig-005-20240619   clang-18
-x86_64       buildonly-randconfig-006-20240619   gcc-13
-x86_64                randconfig-001-20240619   gcc-13
-x86_64                randconfig-002-20240619   clang-18
-x86_64                randconfig-003-20240619   gcc-8
-x86_64                randconfig-004-20240619   clang-18
-x86_64                randconfig-005-20240619   clang-18
-x86_64                randconfig-006-20240619   gcc-13
-x86_64                randconfig-011-20240619   gcc-13
-x86_64                randconfig-012-20240619   gcc-13
-x86_64                randconfig-013-20240619   gcc-13
-x86_64                randconfig-014-20240619   clang-18
-x86_64                randconfig-015-20240619   clang-18
-x86_64                randconfig-016-20240619   gcc-11
-x86_64                randconfig-071-20240619   clang-18
-x86_64                randconfig-072-20240619   clang-18
-x86_64                randconfig-073-20240619   gcc-9
-x86_64                randconfig-074-20240619   gcc-9
-x86_64                randconfig-075-20240619   clang-18
-x86_64                randconfig-076-20240619   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                randconfig-001-20240619   gcc-13.2.0
-xtensa                randconfig-002-20240619   gcc-13.2.0
+Patches are targeting MIPS, clk, reset and pinctrl:
 
+MIPS:
+ - dt-bindings: soc: mobileye: add EyeQ OLB system controller
+ - MIPS: mobileye: eyeq5: add OLB system-controller node
+
+clk:
+ - Revert "dt-bindings: clock: mobileye,eyeq5-clk: add bindings"
+ - clk: divider: Introduce CLK_DIVIDER_EVEN_INTEGERS flag
+ - clk: eyeq: add driver
+
+reset:
+ - Revert "dt-bindings: reset: mobileye,eyeq5-reset: add bindings"
+ - reset: eyeq: add platform driver
+
+pinctrl:
+ - Revert "dt-bindings: pinctrl: mobileye,eyeq5-pinctrl: add bindings"
+ - pinctrl: eyeq5: add platform driver
+
+Have a nice day,
+Théo
+
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+Changes in v3:
+- Drivers: Switch to using auxiliary devices. Drop the MFD patches.
+  Consequent changes to the clk driver that now spawns its auxdevs.
+  Reset and pinctrl switch from being platform driver to auxdevs.
+- dt-bindings and EyeQ5 DTS: remove "simple-mfd" compatible from all OLB
+  nodes.
+- dt-bindings: rewrite commit title and messages. Title now takes the
+  standard revert format.
+- dt-bindings: revert pinctrl dt-bindings as well; this was forgotten in
+  the previous revision.
+- clk driver: fix overflow of factors; they get stored in 32-bit ints in
+  fixed-factor which we overflowed when spread-spectrum is enabled.
+- Link to v2: https://lore.kernel.org/r/20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com
+
+Changes in v2:
+- dt-bindings:
+  - Drop mobileye,eyeq5-clk and mobileye,eyeq5-reset bindings.
+  - Update OLB bindings to handle clk/reset/pinctrl from OLB node.
+- MFD:
+  - Add core driver and MFD patches to allow setting sub-devices names
+    from MFD cell.
+  - Add MFD OLB driver.
+- clk:
+  - Change type of eqc_pll->reg64 from u32 to unsigned int.
+  - Use resource indexes rather than names for iomem resources.
+  - Put early PLLs into a separate match data table. Also, have store
+    number of late clocks in early match data to properly alloc cells.
+  - Pre-acquire all divclk resources first, then register them.
+    This simplifies code.
+  - Extract PLLs and divclks init to two separate functions.
+  - Avoid variable declarations in loop bodies.
+  - Do not register match data table to platform driver. It gets probed
+    as MFD sub-device matching on driver name. Match data table is
+    matched against parent OF node compatible.
+  - Fix ugly memory corruption bug when clk count == 1.
+- reset:
+  - EQR_EYEQ5_SARCR and EQR_EYEQ6H_SARCR did not use offset 0x0: do
+    minus four to all their offsets and reduce resource sizes.
+  - Remove resource names. Reset i uses iomem resource index i.
+  - Simplify xlate: have two implementations for of_reset_n_cells==1 and
+    of_reset_n_cells==2. Both call the same helper internal function.
+  - Do not register match data table to platform driver. It gets probed
+    as MFD sub-device matching on driver name. Match data table is
+    matched against parent OF node compatible.
+- pinctrl:
+  - Remove match data table to platform driver. It gets probed as MFD
+    sub-device matching on driver name. Driver has single compatible.
+  - Drop "Reviewed-by: Linus Walleij" as driver changed approach.
+- MIPS DTS:
+  - Squash all commits together into a single one.
+  - Adapt to new approach: OLB is now a single OF node.
+- Link to v1: https://lore.kernel.org/r/20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com
+
+---
+Théo Lebrun (9):
+      Revert "dt-bindings: clock: mobileye,eyeq5-clk: add bindings"
+      Revert "dt-bindings: reset: mobileye,eyeq5-reset: add bindings"
+      Revert "dt-bindings: pinctrl: mobileye,eyeq5-pinctrl: add bindings"
+      dt-bindings: soc: mobileye: add EyeQ OLB system controller
+      clk: divider: Introduce CLK_DIVIDER_EVEN_INTEGERS flag
+      clk: eyeq: add driver
+      reset: eyeq: add platform driver
+      pinctrl: eyeq5: add platform driver
+      MIPS: mobileye: eyeq5: add OLB system-controller node
+
+ .../bindings/clock/mobileye,eyeq5-clk.yaml         |  51 --
+ .../bindings/reset/mobileye,eyeq5-reset.yaml       |  43 --
+ .../mobileye/mobileye,eyeq5-olb.yaml}              | 168 ++++-
+ MAINTAINERS                                        |   5 +
+ .../{eyeq5-fixed-clocks.dtsi => eyeq5-clocks.dtsi} |  54 +-
+ arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi        | 125 ++++
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi             |  22 +-
+ drivers/clk/Kconfig                                |  12 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-divider.c                          |  12 +-
+ drivers/clk/clk-eyeq.c                             | 789 +++++++++++++++++++++
+ drivers/pinctrl/Kconfig                            |  15 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-eyeq5.c                    | 576 +++++++++++++++
+ drivers/reset/Kconfig                              |  14 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-eyeq.c                         | 563 +++++++++++++++
+ include/dt-bindings/clock/mobileye,eyeq5-clk.h     |  21 +
+ include/linux/clk-provider.h                       |  11 +-
+ 19 files changed, 2326 insertions(+), 158 deletions(-)
+---
+base-commit: 061f2865f17c038f04a71ccdd6c90746381d63a8
+change-id: 20240408-mbly-olb-75a85f5cfde3
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Théo Lebrun <theo.lebrun@bootlin.com>
+
 
