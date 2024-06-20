@@ -1,95 +1,60 @@
-Return-Path: <linux-gpio+bounces-7580-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7582-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D5B590FF57
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2024 10:49:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAC9A91009E
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2024 11:42:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4698F1F21AB9
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2024 08:49:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2F221C2121B
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jun 2024 09:42:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 928FC1AB91F;
-	Thu, 20 Jun 2024 08:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89DB81A8C36;
+	Thu, 20 Jun 2024 09:42:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BflZkvXV"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="AimULBvV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BBF1AB90F;
-	Thu, 20 Jun 2024 08:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982561A4F20
+	for <linux-gpio@vger.kernel.org>; Thu, 20 Jun 2024 09:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718873161; cv=none; b=Gg+/QYHkZiHcOJXbeiQpgAbfuwlmntMQ6Q+7wMlPDnO7dGPWOe9e5iu1s8TTnHC4qrtVaGiwH7fQSeUir3lGosfvoQLncjnxEZekdiUxxv/FGhHVbPpi9H0YhXagZzayjd7UNZYsse3t97ulfmRw3+lEnrsWUK7X2UyIxnTPhXI=
+	t=1718876533; cv=none; b=lpMxPATsEkcGVskP6Qa9fBXsIwrd40HkroVlH1okvjg84UgWqaz0I4yBZkhYwt0U7gyP8y3fwaA0rkMU07WWEBsJxAGJ83oW0nzfFdvhBgxAf60fgwzPyrX2LArNcJnuffj7xBFACVquxEcnT4WPRFpQ4j6ZPxru11XFi4dm2Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718873161; c=relaxed/simple;
-	bh=IYpgjkNJ+3p8GkMwRIoKvBaYq1yJLDn4XIpVSdU6z7c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tVv3TiXXM8x41FsZpNSpPTibtMnLNEC6hztSwBbMgYprVQKk4SmOg2P7/0EsSCeLS6v+XmT6AvKU6/c7B4TdqRd2i2XLyHrpvaW/ywVhthpOGVi8lURRx0j5FhrFCEvCwTGnb7c9EukwSl0bY6OOwpoK3N0dYromEbfK5qq74qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BflZkvXV; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3d229826727so415095b6e.1;
-        Thu, 20 Jun 2024 01:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718873159; x=1719477959; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EiJfmKO8nNBSX1oUuFOSypNRXVZPBtzmshynKzoPzUw=;
-        b=BflZkvXVDni/8Fe0N+z2Z8DLQuUNjyMcMWyzW+dJF+oWSVN91xQVh4x2VynCyg6yzl
-         yxjUDrpSHrnqCXddmb3YE6qx0ufR/s3S6Ej4S3xEKFbMvWaucL4a2j7QGcCcxV1MKw8h
-         peDBy5AvkW1/tdOrqh+fLgg2LyZwQAl+M/jE4s2eKUA3Y8SWuSnruiTOeZvc3YYcfpSP
-         +d2hcA54oaK4+XqQQK2Ka5GnyweTBMTGHEzzDsjhHc6dB1466q2W77CyXKTJj/LPIk0g
-         /wseu0IF+c0ojhSH66dJwkLzVXNbkwElj2RlN/dPKUmvvGcGq8zyHaYXVltLBQHmNxQn
-         Pd6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718873159; x=1719477959;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EiJfmKO8nNBSX1oUuFOSypNRXVZPBtzmshynKzoPzUw=;
-        b=j/ynDyrMNaym+x4f84RTqM71aOvVJdjV83TYRxREukbIIP4zDft1uqpwC7WzZhJQiL
-         oRfs2znSIQ6kh70wbG4Uum7Kf7fFhCIujbv/OcWDCxUU17B+dT4SK9ATFLMLaUprCCGq
-         xYtq9xRpJB1kQgM3EPsUiPwtZOdLOGHOgFvqD/7gEHTCa4thMiOpe0yonmYgP+hCAjpD
-         beyJopnNHmdWyZEuNAmtxWRH9EeI4Abm44pwJ9oTWOuyhyimb8yOmKw+zjgRF+9cAlOe
-         N/gjynXhBcUScsxS5EpGzoI3DwCIXpNlue9ZoPl7okehzZ7wAdB+/476B+D4TzN3py2D
-         CsoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHiB0IJ4wla4OpOlzmtIAhOZluzi28I9B+602RmQvH7gdFkRHaqrToNFjLTCA1VymMptmQ0luOCkSsNwMXEquGj18bfOaGluaviVSapjDe21HTC29JAOJCiNm6IA7m/fGl4MiVHeG27PblppL5dPXz/gkbL+f0SMB46JvHcEgOCBHo1nw=
-X-Gm-Message-State: AOJu0YwTGWFuIiZAtmLK2JTg9d2eTHocqK8zcQH836EIN8UCFjItt3ZN
-	hh5uCB79CHqd1bvSW4QDAvNpUVtww6aVz1cbxRyz+P9rvJY/3mSX
-X-Google-Smtp-Source: AGHT+IGhGDKSgAv0T6Xql5g7csBDAeTCcq8i/P2W7WhnsCqa2jWpcloUNmsMrFYRH/C43jnjpNWvwg==
-X-Received: by 2002:a05:6808:199c:b0:3d2:1e98:cb04 with SMTP id 5614622812f47-3d51b9824c4mr5393367b6e.7.1718873157886;
-        Thu, 20 Jun 2024 01:45:57 -0700 (PDT)
-Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb6b9besm11895592b3a.165.2024.06.20.01.45.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 01:45:57 -0700 (PDT)
-From: Potin Lai <potin.lai.pt@gmail.com>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>,
+	s=arc-20240116; t=1718876533; c=relaxed/simple;
+	bh=M464FrXG1BzMSxJoRLmhb8x64qRh6UQOdAL9CWcr+44=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ueLWvpPMgP9ZW1ABNKUMOtEXcz+jtHzNlyQepcx3AFXG6hMrD1XUDHEWsB6SMJ2SH9dTJly3T2fu5V+ZQfK85my5jhenpLvnn6YBIiwI5kM9KZjIl6xiC6H4YRoCxX4JqJv0Lj7ZB1OwY9PgMNzsEA3FVSlTH3HbHUwGB8qFIPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=AimULBvV; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=B1z8o3F64A+DCT
+	XstfVDYp/68n3Z/j5/2uQhMYJiAuA=; b=AimULBvVdvlYFkN7X0xpWDxwRoLpTu
+	a+/Q0BoDct/2TWNbFRCIlHQQt0nsy6IvDKNQkQZKoyFnU5g+veiOy2TgZ0IaDw3m
+	eZnRdV7O6bR6TL2KA+8KsQkatIWD8iRp6Ek7HgYFWVLTLcIlsYJWDEFdb9Wuc7ha
+	Y8yfha7niZBttr6pDo3jeip5dzf/zSFO8L1h7OjQq94V5KaBL3Kc2u/leFkqmmz2
+	HvGg8UAfN7AZQDg0ft094PKEuCf/N0woc+0pGTaNBE7OZcFBMTQ+Zn0IWOgCXQzJ
+	82YKQOTcoXN7ezrUK2ZIYAPSYZZDjWSssZE2yNnTsVDwL5/Zs7l/7M0Q==
+Received: (qmail 964825 invoked from network); 20 Jun 2024 11:42:06 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 20 Jun 2024 11:42:06 +0200
+X-UD-Smtp-Session: l3s3148p1@SUi6IE8bCtAgAwDPXzjQABqqX1QYyOSW
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jonathan Corbet <corbet@lwn.net>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>
-Cc: linux-aspeed@lists.ozlabs.org,
-	openbmc@lists.ozlabs.org,
+	linux-doc@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Patrick Williams <patrick@stwcx.xyz>,
-	Cosmo Chou <cosmo.chou@quantatw.com>,
-	Potin Lai <potin.lai@quantatw.com>,
-	Potin Lai <potin.lai.pt@gmail.com>
-Subject: [PATCH v3 2/2] pinctrl: aspeed-g6: Add NCSI pin group config
-Date: Thu, 20 Jun 2024 16:43:37 +0800
-Message-Id: <20240620084337.3525690-3-potin.lai.pt@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240620084337.3525690-1-potin.lai.pt@gmail.com>
-References: <20240620084337.3525690-1-potin.lai.pt@gmail.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v10 0/1] gpio: add simple logic analyzer using polling
+Date: Thu, 20 Jun 2024 11:41:57 +0200
+Message-ID: <20240620094159.6785-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -98,56 +63,56 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Based on the NCSI pin table (Table 181) in NCSI spec[1], the reference
-clock output pin (RMIIXRCLKO) is not needed on the management controller
-side.
+Changes since v9:
+* add comment why late_initcall is used
+* use .remove_new instead of .remove
+* add needed includes
+* use devm for allocating mutex
+* remove stray ',' in compatible-array
+* remove success message in probe()
 
-To optimize pin usage, add new NCSI pin group that excludes RMIIXRCLKO,
-reducing the number of required pins.
+Thank you everyone for the valuable feedback so far. Thing is, I am not
+sure anymore if this is suitable for upstream. Maybe it is a tad too
+hackish. v9 had some ideas for improvements (IIO interface, configfs
+support) which I am not going to tackle. For me, it is (and has been)
+useful as is, but I need to move on. The latest version of what I use
+can be found here:
 
-LINK: [1] https://www.dmtf.org/sites/default/files/standards/documents/DSP0222_1.2.0a.pdf
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/topic/gpio-logic-analyzer
 
-Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+If someone wants to continue from here, I am all for it. If that thing
+is useful or educational for someone, I am happy. And for those who
+don't know what this is about, here is an old coverletter:
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index 7938741136a2c..31e4e0b342a00 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -249,7 +249,9 @@ PIN_DECL_2(E26, GPIOD3, RGMII3RXD3, RMII3RXER);
- 
- FUNC_GROUP_DECL(RGMII3, H24, J22, H22, H23, G22, F22, G23, G24, F23, F26, F25,
- 		E26);
--FUNC_GROUP_DECL(RMII3, H24, J22, H22, H23, G23, F23, F26, F25, E26);
-+GROUP_DECL(RMII3, H24, J22, H22, H23, G23, F23, F26, F25, E26);
-+GROUP_DECL(NCSI3, J22, H22, H23, G23, F23, F26, F25, E26);
-+FUNC_DECL_2(RMII3, RMII3, NCSI3);
- 
- #define F24 28
- SIG_EXPR_LIST_DECL_SESG(F24, NCTS3, NCTS3, SIG_DESC_SET(SCU410, 28));
-@@ -355,7 +357,9 @@ FUNC_GROUP_DECL(NRTS4, B24);
- 
- FUNC_GROUP_DECL(RGMII4, F24, E23, E24, E25, D26, D24, C25, C26, C24, B26, B25,
- 		B24);
--FUNC_GROUP_DECL(RMII4, F24, E23, E24, E25, C25, C24, B26, B25, B24);
-+GROUP_DECL(RMII4, F24, E23, E24, E25, C25, C24, B26, B25, B24);
-+GROUP_DECL(NCSI4, E23, E24, E25, C25, C24, B26, B25, B24);
-+FUNC_DECL_2(RMII4, RMII4, NCSI4);
- 
- #define D22 40
- SIG_EXPR_LIST_DECL_SESG(D22, SD1CLK, SD1, SIG_DESC_SET(SCU414, 8));
-@@ -1976,6 +1980,8 @@ static const struct aspeed_pin_group aspeed_g6_groups[] = {
- 	ASPEED_PINCTRL_GROUP(MDIO2),
- 	ASPEED_PINCTRL_GROUP(MDIO3),
- 	ASPEED_PINCTRL_GROUP(MDIO4),
-+	ASPEED_PINCTRL_GROUP(NCSI3),
-+	ASPEED_PINCTRL_GROUP(NCSI4),
- 	ASPEED_PINCTRL_GROUP(NCTS1),
- 	ASPEED_PINCTRL_GROUP(NCTS2),
- 	ASPEED_PINCTRL_GROUP(NCTS3),
+===
+Here is the next update of the in-kernel logic analyzer based on GPIO
+polling with local irqs disabled. It has been tested locally and
+remotely. It provided satisfactory results. Besides the driver, there is
+also a script which isolates a CPU to achieve the best possible result.
+I am aware of the latency limitations. However, the intention is for
+debugging only, not mass production. Especially for remote debugging and
+to get a first impression, this has already been useful. Documentation
+is within the patch, to get a better idea what this is all about.
+
+And an eLinux-wiki page with a picture of a result is here:
+https://elinux.org/Kernel_GPIO_Logic_analyzer
+===
+
+Wolfram Sang (1):
+  gpio: add sloppy logic analyzer using polling
+
+ .../dev-tools/gpio-sloppy-logic-analyzer.rst  |  93 +++++
+ Documentation/dev-tools/index.rst             |   1 +
+ drivers/gpio/Kconfig                          |  17 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-sloppy-logic-analyzer.c     | 344 ++++++++++++++++++
+ tools/gpio/gpio-sloppy-logic-analyzer.sh      | 246 +++++++++++++
+ 6 files changed, 702 insertions(+)
+ create mode 100644 Documentation/dev-tools/gpio-sloppy-logic-analyzer.rst
+ create mode 100644 drivers/gpio/gpio-sloppy-logic-analyzer.c
+ create mode 100755 tools/gpio/gpio-sloppy-logic-analyzer.sh
+
 -- 
-2.31.1
+2.43.0
 
 
