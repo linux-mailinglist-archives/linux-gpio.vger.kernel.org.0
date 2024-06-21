@@ -1,117 +1,111 @@
-Return-Path: <linux-gpio+bounces-7612-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7613-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B770912587
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 14:36:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AA1A9126BF
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 15:36:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 560B3B29276
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 12:36:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 043201F26A0B
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 13:36:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2ADB15AAA6;
-	Fri, 21 Jun 2024 12:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5F2C79D8;
+	Fri, 21 Jun 2024 13:36:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A4szMWK/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hQZiExZy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661F2156F2E;
-	Fri, 21 Jun 2024 12:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF314A20;
+	Fri, 21 Jun 2024 13:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718973285; cv=none; b=MneeH9CAqXD5RtItO/Y7lCpee8PEhwKbI/bqR2C40XpJdD7azpsIjnZku2m8vWn2M2t4bs0AyWHmCWZqhA9DeweXmhCR2gO2siZAYvk09rQWbi7lK41YIRFXRGI+XNCUU+pqgIXFAhYObQHGGaKBK/oEeXA1TOGzjGqD16H0WnQ=
+	t=1718977011; cv=none; b=gDctmPRNIpB1MuVnm0Zl0K8knlBjDIOe2ZKjwbKlVBkTnlfiQSiHAH7vYJjwmMRRphW0dlWPokbR+hKqNcXxTYYIS8lia6bBnME+0PI/XnokDL1aC9MLTdqUHAdQ83iCHxbjCwuuOWwea8JWC/zZ5qft9BmABbUca6/yZL00PfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718973285; c=relaxed/simple;
-	bh=CIgDx30yAa1sR8deuaj4qk9N2731ImBGhxLurlUpk6Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iTVDe0u7bMIrdjLm8hQ9HCxv3OkGo759Lxrount+DoTygVljm/yqiRrWMD4oQkzw/cwZ3duk8ZAIRQzKl4VT0nj+K24RjtIPMc/lzM2rFuO+XztDjXoPy06BF5NpqbUCj03Jm5gGQIvWuK1vUynD09cKf+h47q3Io2g6MG2U/0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A4szMWK/; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-25cc2eb593bso860780fac.2;
-        Fri, 21 Jun 2024 05:34:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718973283; x=1719578083; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CIgDx30yAa1sR8deuaj4qk9N2731ImBGhxLurlUpk6Y=;
-        b=A4szMWK/bqHZZwfcLqyeyuDLpa7zSKN6j50eVsCrZA6Y2Gxu3GN5bHPqyXWQ/VW7VH
-         Bus+kUb1FBISMfakAKsmKIW+59Wsyty5xwM6iQY/DfYDdeYapb/sFPw9PszcI1cmlAPT
-         4P/xmG/OMsR+mx1rFpzNe4m7EHNe9wUZtvpX6bAYAfneWIOncb3SRRHuSvig6FCnv/sB
-         t8MVmQ9CIO9qiBCHnw3qzYpLWB9XvkUKs4jb3IOmbXfEmFOarfu5+YV+eJGewOKXl6er
-         ooNPw87w97GO1ybsDt9nRfnuJ5Dv+kdGpf6BI2i6mn33P8havpzKGqClZ8yTYXteVRui
-         OWfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718973283; x=1719578083;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CIgDx30yAa1sR8deuaj4qk9N2731ImBGhxLurlUpk6Y=;
-        b=gHZa5lHZAhGz6+k9WdqU0mQ2HjyEo/EFuagHMZ7pRNZp80B43XaPZjlI22htLjjFcj
-         8mvJqLSNXuNzUt6z202HjfrMv1IHr3Zmi4kO5KiLrmZi3s1Hyov0BsOsXaoRft0p19t3
-         4sJ0fcTW9cDmDTVRnrQagqUfoJWtFp7YsGClOm7iZYFruwyTRoWO/WgiDcqNy3kz0oA3
-         Wfi1pAn7rrU0Ry/So8nkYMvGD9O+ujXguMebmkOJdejoyQVPr4K9gd7UjnzsnZiMrfpy
-         oqNSIgULm4+6z5/7P0XJKAneF6JQIU/zschxrLi2Z6lDB/tn/tZTrrwnRHo6tCVq7/QY
-         vUTA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSgbjXtQ5ZE/TvC5HPYohEPZP6oiZzwRhLF6fXSY2VgNOGmbFlbFuvUawTMRjTEYtec5rgi8hoDoN62LTjkANU745hfwx4Jx+r8vg0GAAXS1ghKi7I46KXxIvO2KY5/MOL3105/fle2sbx+lCCyD+aQpr/jmuaOExO987KDUAi3A+7ulu3O7nlci4Z
-X-Gm-Message-State: AOJu0YwZX1ShEbuCJyA7f0vmMUOyDz1GL4ogrBWeyxhvTdkDO9ajb/LV
-	2qT+j5dQTmqdCBPiLzIPdODH2HvHJAUqePk+Rf6lkAzCBkDbWz4B5a0qmj2kP8Ofr/zEEOQbTwV
-	kTD8yw6nCTNT1GQhKo2gbrqjelsU=
-X-Google-Smtp-Source: AGHT+IE+61U/C9byz53CAsKSRKq4MjgZrMsonDyrzzk/HDDAS2EqT33hCN2usyYYuYOjPubvfE2BlsadvhfbbzmRD7g=
-X-Received: by 2002:a05:6870:f110:b0:254:b299:47b with SMTP id
- 586e51a60fabf-25c94d74c77mr8724920fac.58.1718973283445; Fri, 21 Jun 2024
- 05:34:43 -0700 (PDT)
+	s=arc-20240116; t=1718977011; c=relaxed/simple;
+	bh=VmXZW32hCjidF+0Rl4VnEUEIwG58npl0O0ibS45psjc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLhGi9jdtwKNltfHt+YaImXw20pwbbFf1RTNyQETbHrumdiK9BkudRJPym3FKCXlasnzMUP7PFwN56TBRQQKcfzgI8hJAEFSrGdBO0DSyyw4r00CUFCev1u+5gPxT9+CDV1ZE5m27KgedAVOzAa/+mDYN01qpc+yPOuAcNmjGgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hQZiExZy; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45LDaaHF052343;
+	Fri, 21 Jun 2024 08:36:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718976997;
+	bh=jO3qwjFYPAmtp5fMhPJin8eIQO27BhIN/9LFR+mQksc=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=hQZiExZykvjBDt1MV47J8d9I4eFKrjr17jRdtU4Ywo/91qcZIBeNznGf8lKO/KxO0
+	 mTO8cMQEVjxwrECF2v2K1DlKwObvifb+fkES+dL7p3vnZOmjpBygnKVicgemiYOZBN
+	 ef70Z9Yu3xqMZnyWKFfjhN1vYdw/kbvRMKZDT8do=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45LDaarA114465
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 21 Jun 2024 08:36:36 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 21
+ Jun 2024 08:36:36 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 21 Jun 2024 08:36:36 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45LDaaHQ046592;
+	Fri, 21 Jun 2024 08:36:36 -0500
+Date: Fri, 21 Jun 2024 08:36:36 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Andrew Davis <afd@ti.com>, Linus Walleij <linus.walleij@linaro.org>
+CC: "Rob Herring (Arm)" <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tony
+ Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: pinctrl-single: Define a max count
+ for "pinctrl-single,gpio-range"
+Message-ID: <20240621133636.wfy3ucf2qkcqphdf@lantern>
+References: <20240618165102.2380159-1-nm@ti.com>
+ <171873566448.3500109.16734660300499772836.robh@kernel.org>
+ <20240618185705.5fwevm7drphgvwl2@dilation>
+ <c1b7a47e-cb05-4701-9766-d1fc13612f34@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240618174831.415583-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240618174831.415583-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdV16Sd5HoJr-td+OJJ8gCesbCzz3BSXNFpBpd1iR9=u4w@mail.gmail.com>
-In-Reply-To: <CAMuHMdV16Sd5HoJr-td+OJJ8gCesbCzz3BSXNFpBpd1iR9=u4w@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 21 Jun 2024 13:34:17 +0100
-Message-ID: <CA+V-a8scaP2uBV7u-BH3WE+3_eOOQv7Z+_7is2ohh+aGNpM1JA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] pinctrl: renesas: rzg2l: Reorganize variable
- configuration macro
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <c1b7a47e-cb05-4701-9766-d1fc13612f34@ti.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Geert,
+On 11:19-20240619, Andrew Davis wrote:
+[...]
 
-On Fri, Jun 21, 2024 at 1:17=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> Thanks for your patch!
->
-> On Tue, Jun 18, 2024 at 7:48=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
-.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > The `PIN_CFG_VARIABLE` macro did not indicate the capabilities of a pin
-> > but served as a flag indicating that the pins of a port have different
-> > capabilities.
-> >
-> > To better reflect its purpose, move the `PIN_CFG_VARIABLE` macro beside
-> > `RZG2L_SINGLE_PIN` and rename it to `RZG2L_CFG_VARIABLE`. Additionally,
->
-> Do you mind me renaming it to RZG2L_VARIABLE_CFG while applying?
->
-Fine by me.
+> 
+> This binding is a bit of a mess, the phandle is always a pointer to
+> a node with the cells length hard-coded to 3. This looks to have been done
+> to allow the driver to use the function "of_parse_phandle_with_args" which
+> needs a property name for to find the cell count. But that makes no sense
+> as the count is always 3, the driver cannot accept any other value. The
+> driver should have just looped of_get_property() 3 times but wanted to
+> use the helper. So a silly driver mistake has turned into a binding issue.
+> 
+> We should drop the "pinctrl-single,gpio-range" from the binding and
+> fix the driver.
 
-Cheers,
-Prabhakar
+Linus W: pinctrl-single,gpio-range -> any thoughts here? I think it is a
+valid (if a bit too flexible design looking at the existing users who
+just use a single mux value mapping for all modes)
+
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
 
