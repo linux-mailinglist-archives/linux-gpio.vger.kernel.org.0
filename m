@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-7606-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7607-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C09819120B3
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 11:34:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 973DF9120B6
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 11:34:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1AB41C2211A
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 09:34:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D3561F238B2
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 09:34:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F20416EBFC;
-	Fri, 21 Jun 2024 09:34:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F253F16F0C4;
+	Fri, 21 Jun 2024 09:34:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKrkwuOC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtNa0mZI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903B616EB59;
-	Fri, 21 Jun 2024 09:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D10B16EC0B;
+	Fri, 21 Jun 2024 09:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718962443; cv=none; b=asr+00kKIEu8l8ocL3puTakvopyMbKfdUse2GbzIoJ3p7tYq4tHzomN3rNUhtdHaeFzjUc2HTfgM8zOw8lWbdJ2VQqoQJdReGtW7I+PDgo4aVf9fiGq/DsVpPxH3rM4rBtR+QoWm2scLlMeXRbTbij1uNz6XlQEq2fEqKxTotXc=
+	t=1718962446; cv=none; b=G45jEeWv53wk2FVmnCIC5LKGTu5miCxKeJpvA4IwSt8xzO4jrUOP9Ddyuv9AookaTnvHkhg+lHj4FPCvlKF+QfRzP7qoFWIOW0jC0xbaBM2k96w9oEM9M8Bw7TXyTR3S2WOry4PXJjbRxe2KK5jz/9mrFEdJ8UVTD2077FrIxAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718962443; c=relaxed/simple;
-	bh=UqYRi/GaolvudqALEwC29tW05IGWxmXQBo31+fOWj5M=;
+	s=arc-20240116; t=1718962446; c=relaxed/simple;
+	bh=IYpgjkNJ+3p8GkMwRIoKvBaYq1yJLDn4XIpVSdU6z7c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CrzyQuWrrz0YxC219DseYGr0umfcA8d3yoQsnjPQok2lZIkysDaKaRdI3jBJByQxbMUBkOCq/PEtSFE4GLxpmvg5fk9qhddxVYhR8Qg8Dy4IXDyA374wwC7WyYuhWNt9b8a4x86OfVg2/vOLQjl/PAvDopxUdDDr06wPqZyppJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iKrkwuOC; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=qPXVJfgmsKev+w1Rpi7QMjYOhZvReUk/eEhJGbO1or4Y+SIqeaynSOteJsAMLDq9NnIJ9Ric1QRMXW6MSaPJK6EcJRetXjGk/iH0v8acv2jlU0DA1kjwU63udYqCHmG76asDUw/o0+j33aNtZBZA6zXfsGwDl9miI9sW8Qal3H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FtNa0mZI; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f6559668e1so13671235ad.3;
-        Fri, 21 Jun 2024 02:34:02 -0700 (PDT)
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f6a837e9a3so11724915ad.1;
+        Fri, 21 Jun 2024 02:34:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718962442; x=1719567242; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718962444; x=1719567244; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BlPyR2DwNKIhgYcJR7RVlheTP0T99OY10zKkh8vPfJo=;
-        b=iKrkwuOCC+5e3xjJ54g3ehgzNQWjjKWGpYW+e3w3mKXYcIyQsG9FJ5P7s+Ny2E7Anc
-         J8/VuXVV513JnOlwTt0hn5SyNhZnt0UgrhiYPS5fl0tCcrJEU0oS09lRW7cdlBQIKbW4
-         SdAvM+oDKEQdd/05x0/4IcY1wvPe+tnOJDlwn4Nri3DyY6eoz4m0F0rcHkc0q5fCiHpM
-         4N+yFzQJjdqRtXRDDy7UhMOpesurgJUtkAEKahuIimRl5WKwA7sKjWz/cvJcenYOo1Am
-         Kf21fgVRk8MvWWWW/5TMrwrzxZyltJuQfNZt4xdBdbQppMeeB2Oxl1LoBgrnRye5SKvP
-         UV/Q==
+        bh=EiJfmKO8nNBSX1oUuFOSypNRXVZPBtzmshynKzoPzUw=;
+        b=FtNa0mZIFdfiZLdN/bQxlIE6Z51Ltp9jLDCGd/ZAOGHnOplYpKNCu4UtjAWnIX+vT7
+         py2WeCst/TflQXQNOGHKMHrXrA/KHw0Nv4qmVOdK/YhGcKcIKdPkevVgMMTQkZL8oqbR
+         r8tKDbh5AlQ/YteZVkZ58HOx6/she0wuuREkhkR8dVvnRB5JInFQlfVUXmuPPsihJTjy
+         u3OQFrFjrBTcDEfW6J8u9Az7w6v40pd5/+B1kQS66Y7wiU0xK2v+PoHpMu3/fobWONme
+         c5ag5WKY1vkgKzz9T7jZaa4vCEiUQ4k18VJVmJcj7zF3hoKJ4w8q2wBAFK2cat019f7k
+         8F/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718962442; x=1719567242;
+        d=1e100.net; s=20230601; t=1718962444; x=1719567244;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BlPyR2DwNKIhgYcJR7RVlheTP0T99OY10zKkh8vPfJo=;
-        b=aIOzkGch2ClGMIQUvkzkNGe/+e0ihq0Q+Ld6Is0W1jTaOz2hsQiThK/9ORnCET+qPB
-         k1xqfoxp33e99vVg5MvPKZVP6YEn90IhiuTseqHu9iNfBgaw9jlCm9xAbJG7p309lCtE
-         iaDhw7HK9G+mx1af47XmqRSm+ne7TWFGR9m7suJS2uMih49vIiSQi5G7kF4V60U/TFj6
-         92m5Bu3y1SAaZzOC3Bjz2bbzkjxdzwjF1qN2lCZpV38cIXGNP3O1pvP/F2aXWFVfTdUf
-         I1oDTQuHQOdaE6dn/7qQchu3LXHwfK8s2SJ9W6hGQN15t0jbxjs4n63dNMTj2OpQ2bNv
-         3gyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFlFFit5O+CBA3uzeeJGWp/Ec4VqgdV4oaI32gW5Ik+qZU1imcGNg2Hselkj3UZ2sTIpEoMV1nc8gwWzBTF2ddfHGsh+0BOqlXDaLbvodC5O9ODlaWJXopYqxXiYO7QSVBMePOCppVoLpkF+FVApuXRGMWngqVeGqS5y3kaYTiaZ9jeeI=
-X-Gm-Message-State: AOJu0YzBu+C8GUW9naspLJxwmKDHpnc2TNqGc6Q8Vb0vVt4El1rz5rGh
-	fNXyhVE7gFgmLNdwE2yrS/6GVtFA2PgGIOnw676F7Xgyqt0+fZgE
-X-Google-Smtp-Source: AGHT+IFfA7C54egHwv68x+7wV7g0a7OIDYQlMXJVlMpjxHZw9f4QfFjmcMgrvV4MeiBayo09KJSZQg==
-X-Received: by 2002:a17:902:cec1:b0:1f8:67e4:398a with SMTP id d9443c01a7336-1f9aa3bcab8mr82874115ad.13.1718962441726;
-        Fri, 21 Jun 2024 02:34:01 -0700 (PDT)
+        bh=EiJfmKO8nNBSX1oUuFOSypNRXVZPBtzmshynKzoPzUw=;
+        b=OlYvuDcEKKcDcHEkEl1Rv2f5JrXPEoMe6Uzdq4n+2HRo+DiuMeyp5+7VeykmcVj+wa
+         iRHh0EUDKKD8lc9IVg/nCIB39xi9t+yJEKltOes7DFcxZT7CPnFQgkR1+ZxLhtTwgPfE
+         VsG7pu+i+rL7NELGXsgym6+GgHCiB0kAWTL7jWcWsZYvuAfbROJPbz1vxZFTwn9e8SZg
+         DjWyC50QIUcFY8utPiHCYRHTS/kMnd2g8fcX+ZtE/GeB7sZSxTedy62VpUCIObpyyJyU
+         1oC2q3rYzwLh7gKjcpeZdNxWe1kQtn2Ja7nZE/YKu/PLiXrPlHoaccwe9PSILezC5uHT
+         lyJg==
+X-Forwarded-Encrypted: i=1; AJvYcCWTgDCZSy18Ackm4egr/Gg9qDUB21Utinpbkr4CiNZ53u3q2wDn9qhDHqGuOaw9WgMs21iMsugQSnxm5XMVeO5wdUp5CpnlDoulOqpOmHmqIrcvjyPJYQHLYhT3ArRyLYYE+9RoWxxdhS2NdCun3QaykLwRA4t+meVFYzk2mIxiLXIYgkM=
+X-Gm-Message-State: AOJu0Yx/HtoCKCFPX26hvdj6lhZXJFxNitt2wi/4NqVEe24MkiputqnS
+	o5QkRMdtTwyifR4nPARfk6COCxPLsbCEPZuLOXZfocIRdI5QGsTZ
+X-Google-Smtp-Source: AGHT+IFOKXrh2SxGVKHFT+5si9TabUQXPaizDpK8J7kyQ+x11v7jWslxqA6il5ABG6GwYYLtHI0tSA==
+X-Received: by 2002:a17:902:d4c1:b0:1f6:7f8f:65c7 with SMTP id d9443c01a7336-1f9aa3e9e54mr90810285ad.26.1718962444561;
+        Fri, 21 Jun 2024 02:34:04 -0700 (PDT)
 Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9ebbc72e9sm9810365ad.296.2024.06.21.02.33.59
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9ebbc72e9sm9810365ad.296.2024.06.21.02.34.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jun 2024 02:34:01 -0700 (PDT)
+        Fri, 21 Jun 2024 02:34:04 -0700 (PDT)
 From: Potin Lai <potin.lai.pt@gmail.com>
 To: Andrew Jeffery <andrew@codeconstruct.com.au>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -83,9 +83,9 @@ Cc: linux-aspeed@lists.ozlabs.org,
 	Patrick Williams <patrick@stwcx.xyz>,
 	Cosmo Chou <cosmo.chou@quantatw.com>,
 	Potin Lai <potin.lai@quantatw.com>
-Subject: [PATCH v4 1/2] dt-bindings: pinctrl: aspeed,ast2600-pinctrl: add NCSI groups
-Date: Fri, 21 Jun 2024 17:31:41 +0800
-Message-Id: <20240621093142.698529-2-potin.lai.pt@gmail.com>
+Subject: [PATCH v4 2/2] pinctrl: aspeed-g6: Add NCSI pin group config
+Date: Fri, 21 Jun 2024 17:31:42 +0800
+Message-Id: <20240621093142.698529-3-potin.lai.pt@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240621093142.698529-1-potin.lai.pt@gmail.com>
 References: <20240621093142.698529-1-potin.lai.pt@gmail.com>
@@ -97,43 +97,55 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In the NCSI pin table, the reference clock output pin (RMIIXRCLKO) is not
-needed on the management controller side.
+Based on the NCSI pin table (Table 181) in NCSI spec[1], the reference
+clock output pin (RMIIXRCLKO) is not needed on the management controller
+side.
 
-Add "NCSI" pin groups that are equivalent to the RMII pin groups, but
-without the RMIIXRCLKO pin.
+To optimize pin usage, add new NCSI pin group that excludes RMIIXRCLKO,
+reducing the number of required pins.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+LINK: [1] https://www.dmtf.org/sites/default/files/standards/documents/DSP0222_1.2.0a.pdf
+
 Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
 ---
- .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml           | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-index 00b6974a5ed3d..80974c46f3ef9 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-@@ -19,6 +19,11 @@ description: |+
-   Refer to the bindings described in
-   Documentation/devicetree/bindings/mfd/syscon.yaml
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+index 7938741136a2c..31e4e0b342a00 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+@@ -249,7 +249,9 @@ PIN_DECL_2(E26, GPIOD3, RGMII3RXD3, RMII3RXER);
  
-+  Note: According to the NCSI specification, the reference clock output pin
-+  (RMIIXRCLKO) is not required on the management controller side. To optimize
-+  pin usage, add "NCSI" pin groups that are equivalent to the RMII pin groups,
-+  but without the RMIIXRCLKO pin.
-+
- properties:
-   compatible:
-     const: aspeed,ast2600-pinctrl
-@@ -337,6 +342,8 @@ additionalProperties:
-         - MDIO2
-         - MDIO3
-         - MDIO4
-+        - NCSI3
-+        - NCSI4
-         - NCTS1
-         - NCTS2
-         - NCTS3
+ FUNC_GROUP_DECL(RGMII3, H24, J22, H22, H23, G22, F22, G23, G24, F23, F26, F25,
+ 		E26);
+-FUNC_GROUP_DECL(RMII3, H24, J22, H22, H23, G23, F23, F26, F25, E26);
++GROUP_DECL(RMII3, H24, J22, H22, H23, G23, F23, F26, F25, E26);
++GROUP_DECL(NCSI3, J22, H22, H23, G23, F23, F26, F25, E26);
++FUNC_DECL_2(RMII3, RMII3, NCSI3);
+ 
+ #define F24 28
+ SIG_EXPR_LIST_DECL_SESG(F24, NCTS3, NCTS3, SIG_DESC_SET(SCU410, 28));
+@@ -355,7 +357,9 @@ FUNC_GROUP_DECL(NRTS4, B24);
+ 
+ FUNC_GROUP_DECL(RGMII4, F24, E23, E24, E25, D26, D24, C25, C26, C24, B26, B25,
+ 		B24);
+-FUNC_GROUP_DECL(RMII4, F24, E23, E24, E25, C25, C24, B26, B25, B24);
++GROUP_DECL(RMII4, F24, E23, E24, E25, C25, C24, B26, B25, B24);
++GROUP_DECL(NCSI4, E23, E24, E25, C25, C24, B26, B25, B24);
++FUNC_DECL_2(RMII4, RMII4, NCSI4);
+ 
+ #define D22 40
+ SIG_EXPR_LIST_DECL_SESG(D22, SD1CLK, SD1, SIG_DESC_SET(SCU414, 8));
+@@ -1976,6 +1980,8 @@ static const struct aspeed_pin_group aspeed_g6_groups[] = {
+ 	ASPEED_PINCTRL_GROUP(MDIO2),
+ 	ASPEED_PINCTRL_GROUP(MDIO3),
+ 	ASPEED_PINCTRL_GROUP(MDIO4),
++	ASPEED_PINCTRL_GROUP(NCSI3),
++	ASPEED_PINCTRL_GROUP(NCSI4),
+ 	ASPEED_PINCTRL_GROUP(NCTS1),
+ 	ASPEED_PINCTRL_GROUP(NCTS2),
+ 	ASPEED_PINCTRL_GROUP(NCTS3),
 -- 
 2.31.1
 
