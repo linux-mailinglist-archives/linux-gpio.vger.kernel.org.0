@@ -1,185 +1,106 @@
-Return-Path: <linux-gpio+bounces-7603-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7604-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17849911F68
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 10:54:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BCC191204A
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 11:17:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0F1328D5F5
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 08:54:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C25B1C208FA
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 09:17:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17CE916D9BF;
-	Fri, 21 Jun 2024 08:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SIhxydNv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A302F16DEC1;
+	Fri, 21 Jun 2024 09:17:02 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CF216C856;
-	Fri, 21 Jun 2024 08:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB05116C698;
+	Fri, 21 Jun 2024 09:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718960035; cv=none; b=csnA7YIthm9orDnObyN3YSjKqoTjgAnC3koFr9v2hPZE4EE7jyaGFkhFKTvusP240sJkVsXmArEAaWrssXzL141XbN/lncslqQJiw5f8DjDkCKvMnMUqo+Ms6dNhMUfCgNfp4IXIudWMPaYfj4fAMZL/ZsHnbX7yhC8lagmlxV0=
+	t=1718961422; cv=none; b=YDjLVQUeDWMZdpaWXhui3nUE4enzp+HXpYJgCFHTsWD9CfRn6uYHTsQMZVqKAiFNrVSquqicHCWmuFjRNjRCspfnJs3MQcHxvXvZa1PVGnmuiIIpqOfZB6XhSJLdm5qsMrWw81ezJrqqHNNbQvckOm1Rv6c1m64zEGwXljevgY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718960035; c=relaxed/simple;
-	bh=AtFinZsMgiIIHjA21Sc0KoGjJvdqQ5HCKFk1uDEBWL8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=keoybxCJL/8c6tRu4x/qFvj6wJpg3eVB0AdZBxfoW/07H9Ju1mNL44P+VQaUk1j46+6cBm/uoAZJQ320c0E9vwG024qhUIpRkh0C9enWrXYomwF00b5Fk3eLF/LbM6byf0YlaZwInysOdXxLr2ii7YiHzylfelNDYACXUFsH8iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SIhxydNv; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eaae2a6dc1so33362471fa.0;
-        Fri, 21 Jun 2024 01:53:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718960032; x=1719564832; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C2NbmAeSPtr+VJPCDZGzIPSzbzCrEPpKv2Ul8cjGJpg=;
-        b=SIhxydNvnzMqk3equVSf3SmEblz7poLkj2sOUODgHPrQCp0b6UH1FjdtWqZlWDkInn
-         dsNV7j+5IQnjWu4N6tvTJoPJFi1RP0m+VkcBStpmy/hM9inb+hB5R2hXj8zx4NNL6EKJ
-         /9HRCCxLpYzBH65ynnFYddhj9wNTqrw7FeBOmlkJIx3IA6T1FH57YJdxiuduh0Xn+q77
-         NrnoHaKTAqPqcRDqWRMEZs+310Bpz5rlekx6DExnLyTh+65LZfHhGiEf0xuR4xx2idq2
-         M7L3yVYb4uM41sPBaJcdQIFL3HfSdDkV4kk6cKD+0/ovfm5xluBc6bceDeJbZHOEaCdW
-         ovzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718960032; x=1719564832;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C2NbmAeSPtr+VJPCDZGzIPSzbzCrEPpKv2Ul8cjGJpg=;
-        b=HIJvuOKuFT/y+/AjN3tY9Z6re0w+Q61vjuznDYghELeeiIy7tsYMWbre98jokbTTiT
-         SwxuetjZuCtWRU7mXoUCnKsNctRg8vFMxVE9XZ+Qj/v8NPuiWf8ivci/3J47mtGa8lUu
-         icT/4SK+rU6GTA/vtVvzw/4r25f7sQR7HsE9wzWPTGnYW8A2wMs6QvzMsMlSUEFdN8Qw
-         3LwzGMP4GHpb6lwbp1OKDLNhv8zSQDbcK97OkKAEZ+SrE6mvTdXxVJq2a9DKHMaWWzDe
-         n3MZLIhUYHFLsSTyvaWznVvckNjQoQKwqHYjKXk+KXPu2q1RZwSkKgphCsonHYfSU//o
-         w68A==
-X-Forwarded-Encrypted: i=1; AJvYcCVM+ok2BcItshtC/UV/psOD98unBrN27uK23KqQIKS5sETpxVbev0HxGBUkOdxbhnNJb1U21eTWkNxIOXHGcP04GUmDZYq3tp5cat7vVrWr4Z3ym4uigLeOQR4hY+KiMUNV7mWA8NyrW1xBDa8lvJwzjyVhFosQky6gipSzd1NVWf3Ly0I=
-X-Gm-Message-State: AOJu0YxjvpdR1eywBn1NNZJn21RQk6pOjRSmlujCbum/qCiDCmn9B8N0
-	a2UoTPfRu++9k7Sm7UJF5NNLiqGT2viwLZ1dTUDakbk0Pw7twDrzQxmIrX85xOvbFmgxL0k0gIp
-	hEXYCtjPSVF248j9iDnEcm/SQdc8=
-X-Google-Smtp-Source: AGHT+IFACBZJL/JrK568qW0O9LvAd+FrY4FSuAOLFmRWXPL7E3VDBY2O378p7oDlZU5U3E2pPeP3u6Glqf31Mu/d0J0=
-X-Received: by 2002:a05:6512:4ca:b0:52c:d5e4:9a99 with SMTP id
- 2adb3069b0e04-52cd5e49ccfmr1025377e87.17.1718960031907; Fri, 21 Jun 2024
- 01:53:51 -0700 (PDT)
+	s=arc-20240116; t=1718961422; c=relaxed/simple;
+	bh=61p25ATK1e0R9fBYFveQbbb+jL+lpz6dGVy/tPsjI6s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IZO+pH4OKrSL0UxG/kIBPRI3pWYDRXFAy1uauBZnzmR9JSOSbW2RM/qitOOPMBmsA7h1P67ik/5uy1Bv65YRQIeZQY1aDUEvn39A+4VO7ZbKEXKrHSqxoNhbaJw7CuL4nz3K+Rto+p2zzMncD4sjAsKn89AR/TSPMhTFsv85kk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-01 (Coremail) with SMTP id qwCowADHzhICRXVmgfDqCw--.8650S2;
+	Fri, 21 Jun 2024 17:16:50 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] pinctrl: mlxbf3: Fix return value check for devm_platform_ioremap_resource
+Date: Fri, 21 Jun 2024 17:16:37 +0800
+Message-Id: <20240621091637.2299310-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240620084337.3525690-1-potin.lai.pt@gmail.com>
- <20240620084337.3525690-2-potin.lai.pt@gmail.com> <cb55efedaef63e4580c11415aa2e29606edcaf9f.camel@codeconstruct.com.au>
-In-Reply-To: <cb55efedaef63e4580c11415aa2e29606edcaf9f.camel@codeconstruct.com.au>
-From: Potin Lai <potin.lai.pt@gmail.com>
-Date: Fri, 21 Jun 2024 16:53:40 +0800
-Message-ID: <CAGfYmwWp2dayGvySdYvU+nmtxZ-x3PPW_j69ZoBD4mxzPMQAzg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: aspeed,ast2600-pinctrl: add
- NCSI group
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Patrick Williams <patrick@stwcx.xyz>, Cosmo Chou <cosmo.chou@quantatw.com>, 
-	Potin Lai <potin.lai@quantatw.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADHzhICRXVmgfDqCw--.8650S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uryUGr1UJFy5JF1kZr1fZwb_yoW8GF18p3
+	93ZF4fJr98JFWDtryxtw13XFy3Ca1xKa15Ka4UX3s3Z3ZxAry5Gw1FgrW5tFZxKrZ0vF45
+	t3y3AFW5uF40vFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkq14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4f
+	MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+	cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUj_WrJUUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Fri, Jun 21, 2024 at 8:46=E2=80=AFAM Andrew Jeffery
-<andrew@codeconstruct.com.au> wrote:
->
-> Hi Potin,
->
-> On Thu, 2024-06-20 at 16:43 +0800, Potin Lai wrote:
-> > In the NCSI pin table, the reference clock output pin (RMIIXRCLKO) is n=
-ot
-> > needed on the management controller side.
-> >
-> > Add NCSI group to distinguish the pin group between RMII and NCSI.
-> >
-> > - RMII pins:
-> >   - RMIIXRCLKI
-> >   - RMIIXRXD0
-> >   - RMIIXRXD1
-> >   - RMIIXCRSDV
-> >   - RMIIXRXER
-> >   - RMIIXRCLKO
-> >   - RMIIXTXEN
-> >   - RMIIXTXD0
-> >   - RMIIXTXD1
-> >
-> > - NCSI pins:
-> >   - RMIIXRCLKI
-> >   - RMIIXRXD0
-> >   - RMIIXRXD1
-> >   - RMIIXCRSDV
-> >   - RMIIXRXER
-> >   - RMIIXTXEN
-> >   - RMIIXTXD0
-> >   - RMIIXTXD1
->
-> I think listing all the pins for both groups obscures the fact that
-> there aren't more changes than removing RMIIXRCLKO.
->
-> Can we instead drop these lists and replace
->
-> > Add NCSI group to distinguish the pin group between RMII and NCSI.
->
-> With:
->
-> > Add "NCSI" pin groups that are equivalent to the RMII pin groups,
-> > but without the RMIIXRCLKO pin
->
-> ?
->
-Got it, will update it in the next version.
+Fix return value check for devm_platform_ioremap_resource() in
+mlxbf3_pinctrl_probe().
 
-> >
-> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
-> > ---
-> >  .../devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml     | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-p=
-inctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinc=
-trl.yaml
-> > index 00b6974a5ed3d..3f02dc94a7ce2 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.=
-yaml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.=
-yaml
-> > @@ -337,6 +337,8 @@ additionalProperties:
-> >          - MDIO2
-> >          - MDIO3
-> >          - MDIO4
-> > +        - NCSI3
-> > +        - NCSI4
->
-> Can we also do this for RMII{1,2}RCLKO (and in the driver patch as
-> well)?
->
-The power of RMII{1,2} is 1.8v, which does not meet NCSI requirements.
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/pinctrl/pinctrl-mlxbf3.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-> >          - NCTS1
-> >          - NCTS2
-> >          - NCTS3
->
-> Overall, what I was hoping for with the comment on the earlier patch
-> was that you would add the discussion in the commit message to the
-> "description" entry in the binding YAML. Can you please do so? That way
-> the information is always present for people reading the binding
-> without them having to look at the binding's change history.
->
-Got it, I will add note into aspeed,ast2600-pinctrl.yaml.
+diff --git a/drivers/pinctrl/pinctrl-mlxbf3.c b/drivers/pinctrl/pinctrl-mlxbf3.c
+index 7d1713824a89..ffb5dda364dc 100644
+--- a/drivers/pinctrl/pinctrl-mlxbf3.c
++++ b/drivers/pinctrl/pinctrl-mlxbf3.c
+@@ -259,16 +259,16 @@ static int mlxbf3_pinctrl_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->fw_ctrl_set0);
+ 
+ 	priv->fw_ctrl_clr0 = devm_platform_ioremap_resource(pdev, 1);
+-	if (IS_ERR(priv->fw_ctrl_set0))
+-		return PTR_ERR(priv->fw_ctrl_set0);
++	if (IS_ERR(priv->fw_ctrl_clr0))
++		return PTR_ERR(priv->fw_ctrl_clr0);
+ 
+ 	priv->fw_ctrl_set1 = devm_platform_ioremap_resource(pdev, 2);
+-	if (IS_ERR(priv->fw_ctrl_set0))
+-		return PTR_ERR(priv->fw_ctrl_set0);
++	if (IS_ERR(priv->fw_ctrl_set1))
++		return PTR_ERR(priv->fw_ctrl_set1);
+ 
+ 	priv->fw_ctrl_clr1 = devm_platform_ioremap_resource(pdev, 3);
+-	if (IS_ERR(priv->fw_ctrl_set0))
+-		return PTR_ERR(priv->fw_ctrl_set0);
++	if (IS_ERR(priv->fw_ctrl_clr1))
++		return PTR_ERR(priv->fw_ctrl_clr1);
+ 
+ 	ret = devm_pinctrl_register_and_init(dev,
+ 					     &mlxbf3_pin_desc,
+-- 
+2.25.1
 
-> Thanks,
->
-> Andrew
 
