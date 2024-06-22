@@ -1,123 +1,125 @@
-Return-Path: <linux-gpio+bounces-7624-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7625-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82C77913579
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jun 2024 19:58:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3147C9135A7
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jun 2024 20:38:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 472D8283BA8
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jun 2024 17:58:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ABE95B23207
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jun 2024 18:38:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFAA72209B;
-	Sat, 22 Jun 2024 17:58:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 573C239FCE;
+	Sat, 22 Jun 2024 18:38:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uE+4aBgl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nbZ35PAH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5F517BD9;
-	Sat, 22 Jun 2024 17:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0B4381CC
+	for <linux-gpio@vger.kernel.org>; Sat, 22 Jun 2024 18:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719079127; cv=none; b=MJRUL7a2Q9tbkrVHcUJN1j1qNOX9SAdRdpFJJ09rOYEC2kBYTiHH6VOsYyLN2OS8/fC0NA+m+Al6pRh2PKRS342MA+zBE/p3Eu2vE30aEBR07gCCqHUxmud7UYU6vDqfdnmSKD+i0jyMyb9pPL+OttZQrhpvvm/aVtbEj42rVfc=
+	t=1719081490; cv=none; b=gtnFsBjtCl5CXZTPZ0bUlc9vZUQglmV9GnlHvCBqF1xz33QSsNKyN+CUm/mwOP207DZU0XVNOfe43t+7jowjqNjK66lUPLE78MyRCWbjh03lWkysiLuSGao9n1o69UBswc3EnwQAfx1iS7xR7uTlNpPDZliIGptJ24WCI3SSLbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719079127; c=relaxed/simple;
-	bh=iCxU9Lg+B4ZYzeBB67kAwZ0f5PTrMC61+RLI0VNyXCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kAvHNSKqrPG+MrkFmQ0GJbhxAqybTYBsNs8C7dtqChZT6HMpUyQQse9e/wO8pJBYraVUn4bYwdToqKAh7TVEPeH4hk1kX9XUm/pvh5cX22riWIfRlKskI8mVDjsO1N0xTESvkkGZz8UDirQgnoMdYnlN32WXsK/0AQWBIuAiV9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uE+4aBgl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23BDC3277B;
-	Sat, 22 Jun 2024 17:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719079126;
-	bh=iCxU9Lg+B4ZYzeBB67kAwZ0f5PTrMC61+RLI0VNyXCQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uE+4aBglJ1sOAoBWfR1XoI6RSitbJ/B0z/iGaJAGb6en9lcfbOBY7YQyDeblrwkAE
-	 9dyLoxdkhevARc5D1MAD6iFLPUWXOEQd4nPOFHeKeIrznmVly7CcmoK6ijHnRVAVzO
-	 28Z5ulsIHYiTe5cLrxk0/qbIpuOHGzk2n280NbEDqK3RhHWa0XpyG0P07ek3ciSUVo
-	 D9k/AG9nCznG7hNieVzL9Eri5WTVvxmBkSi+1Ya40BkY35UUDycKDISrTidsNafakm
-	 VMNjui1KOt2cunZLEyNRcVxwH5a6GfMyFZ/sNAiEQxUtnkypZvG8kBfwTa4Hp85+Od
-	 Slnfeaxmy8o/g==
-Message-ID: <cf606542-6f19-4ec2-9f99-69b8d521ed2e@kernel.org>
-Date: Sat, 22 Jun 2024 19:58:39 +0200
+	s=arc-20240116; t=1719081490; c=relaxed/simple;
+	bh=XprxxKi4nH3ux1IldwjlVV6pMOzZgnnTZu083kyco3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XHwnylJ1LfmO1uO8+dGH9CyiyNU2eGoK2tMiEPZzcKjeQavIDsZYgfaYeyj7/rt4z7H6IJd/zkc9b9Q5w8fMjQFm4JCZvMReOTgr5kErH7q97Plnpk4JqAQl2nJOwh50YF5pTP45V+JcBKHZ5cxUaq6Y0jaQBzAoWq0E+QNpacM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nbZ35PAH; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52cdcd26d61so1070531e87.2
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Jun 2024 11:38:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719081487; x=1719686287; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=p4RGUKMXR6U/kfqJgLddn64F4Sj74iOHtksTWWn76wo=;
+        b=nbZ35PAHjYh1pVnNRBfOakFBRiqLLYfj/mqz7McCqrbkNpXyqc2wgS5TslH9FkTnhR
+         3vwDBiNL2bCOQPPcPQlXkpn/nogkvu711eIZ1F1CBmmCWDqPdIJiaQY3L8PNiJjfLjym
+         8ZT3vy53Td2PQwbUztBKn4csEiYmc70WPRoRA5wcaOtEMt3BDh091mDtMcu3oyT/IPbv
+         eGyF/peohLZvrojl5d7jVpR0T2F2TcIEfi7H+tmuiyqXMswF5rY135uxkVIM37ZWf1Gs
+         8d8DQ9w3v5HwqIRJd3j5veQz+efu4Ky6lSthPZhzEX4W5FAip4A1OyobPr9Vr5BIFN6l
+         W2Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719081487; x=1719686287;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p4RGUKMXR6U/kfqJgLddn64F4Sj74iOHtksTWWn76wo=;
+        b=RKQ6fgWpH9YUEaBJRPVI2zsFQPVvCTa6pXq7mQSeZZvAQ8y2cloUl6sWyF5MuRmQyc
+         yZawA+4jgItINiloXVQQZ4GrWCwRbpWILAJW/3Fx4MpVdCD+SxYbAzSevwh6P5UPT3lo
+         pc1oWktvODl5Vb4dmsDNiKRwMShh1+lozG4s+3yj3WBlscUmH0J4kbFqRuCYyly0QMjl
+         VxI+IYWZjHHIa4dr6NB2abVupW0NlP5uw31Jo1B8SwXkgdjep+F8wrYEeRBlt2Sizf2Z
+         QT9jGYIjjVYMudZlSN5TEgzjsRocKDd8HeBYVb6hA+JslBuVv0WDeYE6mS3xaUrXl1E4
+         223A==
+X-Forwarded-Encrypted: i=1; AJvYcCUz/9+USYUzCRP9EfOOpV2EPydDa6DVxL5z53TP1iOMyWGohjcwRfRqi3IQMZkL4dvRfnRkG3U4WNkTX61kp0L7cdY7SU2lDspaKQ==
+X-Gm-Message-State: AOJu0YzBW2W6yUvPsbpiwXj6j0QXMT7HV/m9TKQs8KUPykoOZ1tcykgP
+	QsKhAledWNOhkDlKgdAVU4JMia+T1UnGK4xx6GdDqI5kMq0MkFTEfVAsm2A0O8U=
+X-Google-Smtp-Source: AGHT+IHsxhrNhIR65HoPxmCkVQzWKS4RrwSOq9plmThcSZXJPsQejQltbmjT9lWjcBGQ3Wlzdvyp9A==
+X-Received: by 2002:ac2:4a89:0:b0:52c:e09c:b747 with SMTP id 2adb3069b0e04-52ce18345b1mr268182e87.27.1719081486595;
+        Sat, 22 Jun 2024 11:38:06 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ce16e61f9sm64317e87.261.2024.06.22.11.38.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Jun 2024 11:38:06 -0700 (PDT)
+Date: Sat, 22 Jun 2024 21:38:04 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, alexey.klimov@linaro.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 0/2] pinctrl: qcom: add sm4250 lpi pinctrl
+Message-ID: <qmerqhj3d7xhmt2tz7ijnqlv5anxb2l7eqdonsnv32o3jn7pri@dai6qc42dqd7>
+References: <20240612-sm4250-lpi-v4-0-a0342e47e21b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 v4 1/2] dt-bindings: pinctrl: qcom: Add SM4250 pinctrl
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- alexey.klimov@linaro.org
-References: <20240612-sm4250-lpi-v4-0-a0342e47e21b@linaro.org>
- <20240612-sm4250-lpi-v4-1-a0342e47e21b@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240612-sm4250-lpi-v4-1-a0342e47e21b@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240612-sm4250-lpi-v4-0-a0342e47e21b@linaro.org>
 
-On 22/06/2024 18:49, Srinivas Kandagatla wrote:
-> Add device tree binding Documentation details for Qualcomm SM4250 LPASS
-> LPI(Low power Island) pinctrl device.
+On Sat, Jun 22, 2024 at 05:49:29PM GMT, Srinivas Kandagatla wrote:
+> Add support for sm4250 lpi pinctrl.
 > 
 > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+> Changes in v4:
+> - update dt binding coding style
+> - Link to v3: https://lore.kernel.org/r/20240612-sm4250-lpi-v3-0-a8dce28f20a2@linaro.org
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Please keep previous changelog entries too.
 
-Best regards,
-Krzysztof
+> 
+> ---
+> Srinivas Kandagatla (2):
+>       dt-bindings: pinctrl: qcom: Add SM4250 pinctrl
+>       pinctrl: qcom: Introduce SM4250 LPI pinctrl driver
+> 
+>  .../pinctrl/qcom,sm4250-lpass-lpi-pinctrl.yaml     | 118 +++++++++++
+>  drivers/pinctrl/qcom/Kconfig                       |   9 +
+>  drivers/pinctrl/qcom/Makefile                      |   1 +
+>  drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c    | 236 +++++++++++++++++++++
+>  4 files changed, 364 insertions(+)
+> ---
+> base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+> change-id: 20240612-sm4250-lpi-b1ab26b3b050
+> 
+> Best regards,
+> -- 
+> Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> 
 
+-- 
+With best wishes
+Dmitry
 
