@@ -1,146 +1,133 @@
-Return-Path: <linux-gpio+bounces-7620-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7622-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1530912D8C
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 20:52:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B93CE913536
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jun 2024 18:49:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D72561C21423
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jun 2024 18:52:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D7A40B21821
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jun 2024 16:49:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE0E8179957;
-	Fri, 21 Jun 2024 18:52:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4714115E97;
+	Sat, 22 Jun 2024 16:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="DLFr7q3X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vPJUr+j9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E138C1E;
-	Fri, 21 Jun 2024 18:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B138F68
+	for <linux-gpio@vger.kernel.org>; Sat, 22 Jun 2024 16:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718995951; cv=none; b=Gqdlrt0jtCAjU4waovkU55lWvCbLXw51KsWA57SATT9uFRCZa/9YuOhyBwYl4mXxP/o04eg/9ZUWiPEhzU1pLAhPXP776lgjz5yW11XZApu+a+nraJDR8C300U0e7bA8/hwwSUy5paynSYOt2uddqyUbVfg8TyfL5jXQSFHfCFM=
+	t=1719074985; cv=none; b=D4qsBuwze7ewo+T1DHEps+UYAtsonzyl1ecp0bezzcXDZX10jUcnULa+MkOVNIhuPX+vhFoB/CHrrSgQdy9QlgX9ojx7VRYLC7S36CULpk+rLudFbbCm1GkGBa9VpmrmQR4wgnkpwyIhDLwpCnmlmTm1XlVilxFmCrSiY5+tHy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718995951; c=relaxed/simple;
-	bh=ecwtGev0KvQNSzwp35e+yNAtAWdvf51o9B6zM/n6gQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZSTfifgJfjPGpmWXZNp75Pq2B4pZs3LgQI6JT7lU7xlXEMt9AERvpJ+q+UcBQ537V6W2qgQL1O8kvPZ4ys9Nuwv/j2+ebO561ze1cig64jSnOJrbHUu36Es+5D/03+FWXwvmP1iGVYoFWAKIRD78QWxhRoDSfpWphjqmAxfCXP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=DLFr7q3X; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id F1A7E100002;
-	Fri, 21 Jun 2024 21:52:06 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1718995927; bh=xUGHglTcHE+deAdqIJapo1+7Zs90p4nFF+okhK8BfmI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=DLFr7q3XqgXTXr8TWhGqMLSnWx9ePg6/0RHwcWOPy/aN9NbwSWHhW7VYR14E/MLy4
-	 PeaVMvdZyyVhEcmRX8CSaXCDgVHkly8Algcff7NTayOXz8WDeqdN4f34rDGZebLBOj
-	 wUwoFG7smwZv7r57Ts7v+aJ8KOSIU6j4CcoyYEyUp4bZscbCOpXBWo+2BfACFqCoZG
-	 wypmMpU6jIX/QDPOgoU4LAwRw3JEhe5EPEQ/Ke2WreHizKdObcWhRxt8AXv97WdX+V
-	 i3ftbSvyMbAsi4iyZq/tbeiF5QLSGKXMOVljzvAXbrklTc38U2sibVBZHzblbquySs
-	 aPNGBjzBGW4xQ==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Fri, 21 Jun 2024 21:51:10 +0300 (MSK)
-Received: from [172.17.214.6] (172.17.214.6) by ta-mail-02 (172.17.13.212)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 21 Jun
- 2024 21:50:50 +0300
-Message-ID: <f6b0e5fb-c692-4d67-ac0e-36ddbbc0a784@t-argos.ru>
-Date: Fri, 21 Jun 2024 21:47:27 +0300
+	s=arc-20240116; t=1719074985; c=relaxed/simple;
+	bh=Cm4xtFCjfl8FjuIbqKYI5P4CIm9sATlD66G+/fziS7w=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=O+75x3WyFN8Pp99gIOH2AEIiibacxP4smsEfpm+x1I2cRIV879ma2oqfGZ21IrKC0KA7WI96Bm0JJ7MI/L47xVbGZ4gkxADbN2XFxhDACiMv2SEhtXSP111DhnAVus3J/jiS2G2kD519gLpydkl604/hujo4aWc/grUKWo7gKkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vPJUr+j9; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-365663f51adso1903062f8f.1
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Jun 2024 09:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719074981; x=1719679781; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AybB+i8KbWZol+RgTqOdU1jMctlQSQjp11xSLGocANo=;
+        b=vPJUr+j9wT/rqE4FOjB6LnLf+M9F/skXdSdILiwq5o8rDw/rCGdVGe6jIrlEtwcCoN
+         TJ+/S5g3pjCvNQ4dWLO6QRunVmvGg5acjd/+V91VB3erEHZmuh57XSN/+78mH709CMJu
+         DLvWyXJL+Nx7P95tIm48lJEt92ShNBBxLV0yjHiJE6fXdIMM+Mcz7PiRYe1J68YG5AOw
+         8IZ1s0RCj0/i8mjxYDyWG7j0ZuVlwbLldLRwbsZSKnD1Wu4QS90cGVId4WBjnEwehqPY
+         B+CCRSoVarStguKqf4fViXBCMh9igroqbSdPT19WP/KGFxGyCT6Z3usowdCcUY8ci4x+
+         y0Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719074981; x=1719679781;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AybB+i8KbWZol+RgTqOdU1jMctlQSQjp11xSLGocANo=;
+        b=T7+mU5YTvJ0V0i0fsEhUBjPjWJ7MgVqYcUmyCA4HhO0IsbsQEOjeQwckXLn2tBGjY+
+         N0l2nYGb5O6MF+D6DVgt1jA1zzz4AClSHWS4XG4KeijcEqWtF39VY4wMHprLUyFi2xuD
+         99NxVNocZ/nUcALz9aSIDpYMBBMMPpxiaVfjnvCwTlaMIMrRR4B9ppUp6D3JVmBMv+7C
+         T4pTrl5g/yVYBuuuDU8JmyimK0ePBj+nnX5kWBfT5zKkTGFKoG4kxpmWgHejChAo/tue
+         684nzvNfEzuVsGgESJjDYbUdoYHyFzjGqj37tzub8uucnsSYzEpsmmfTpMWtP8gxeNeh
+         IXrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWEQuQV7EMpvdhlwqdgnsQAPut4+uc0takGth4u7F9iRiReNYfVXOMiX9V8G0vrO8pwwaafvfKvdfLNhvBqKGgLuoAFcf05256jRA==
+X-Gm-Message-State: AOJu0Yzce9s1mgNUPHM0wS+KWbilTqR6o7ZKlOa3lyXPWKHL1ibn72cz
+	aVyIhQusMngNSPXNBQBpNLF791z5nw7GFeK2XtgD9lt5NezXZUtDXFJx7nb5Pog=
+X-Google-Smtp-Source: AGHT+IGCZNmB3+OJV1zZoaz9wAZGIff/t9rY8ypSFM5zHuYIrouzpWW39eMRCaYe8lgy8HauU8Hsxg==
+X-Received: by 2002:adf:ee0a:0:b0:364:4b4e:9304 with SMTP id ffacd0b85a97d-366e4f00af7mr885071f8f.43.1719074980562;
+        Sat, 22 Jun 2024 09:49:40 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663a8c8b27sm5030730f8f.104.2024.06.22.09.49.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Jun 2024 09:49:39 -0700 (PDT)
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v4 0/2] pinctrl: qcom: add sm4250 lpi pinctrl
+Date: Sat, 22 Jun 2024 17:49:29 +0100
+Message-Id: <20240612-sm4250-lpi-v4-0-a0342e47e21b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: davinci: Validate the obtained number of IRQs
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-CC: Keerthy <j-keerthy@ti.com>, Linus Walleij <linus.walleij@linaro.org>,
-	Grygorii Strashko <grygorii.strashko@ti.com>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-References: <20240618144344.16943-1-amishin@t-argos.ru>
- <CAMRc=Me5R+YLmx6mh_mfszRj7TKx25cL9Vx3J-7mvRTuat8Puw@mail.gmail.com>
-Content-Language: ru
-From: Aleksandr Mishin <amishin@t-argos.ru>
-In-Reply-To: <CAMRc=Me5R+YLmx6mh_mfszRj7TKx25cL9Vx3J-7mvRTuat8Puw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 186064 [Jun 21 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, git.kernel.org:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/06/21 15:05:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/21 14:39:00 #25651428
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJkAd2YC/3WNwQrCMBBEf0VyNpJs2lI9+R/iIUm37UJNy0aCU
+ vrvprkJepwZ3rxVRGTCKC6HVTAmijSHHKrjQfjRhgEldTkLUFCpRoOMjwpqJaeFpNPWQeOMU7U
+ SGXA2onRsgx93hB3s7cLY06sobiKBuOdupPic+V2sSZfllyBpqWSvz94Y1N43eJ0oWJ5PMw/lJ
+ 5n/rMmsbTuP0PagLHyx27Z9AK1wDaD7AAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ alexey.klimov@linaro.org, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=892;
+ i=srinivas.kandagatla@linaro.org; h=from:subject:message-id;
+ bh=Cm4xtFCjfl8FjuIbqKYI5P4CIm9sATlD66G+/fziS7w=;
+ b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBmdwCic81DKE1HKHDvWoZmgC3iyEvANPsBheNPm
+ kCvtmp+G4qJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZncAogAKCRB6of1ZxzRV
+ N90fCACxvihJ5l4s/krZLSV3F0J1sWihMzT2yuFvQV04aXnYm6tE8Yvpnp1DyOcqS9P7L+zuw/b
+ K4siOG/6i63A/rEK6JahrGr9/PDNji2E5dSEzTzxGVBVGfJDg2R1FfIO7xPOklhQWtNc8pFwS8s
+ +mbiF9qykLuPD6b9QGFHbBV3VVdUGVcplrBs2zJldg/8xMZaSxTfL/fR4RERXvJsXKWblqgthNv
+ Kib5uY7PDllrdAN3jTCIx5+LFfX6TOlV2AAb4G5L/bBHjp9WF8MX17EtaOHYwy8fEpBHsXaeHbF
+ mSX3RN0+OG22BeJ/H+qjMnEQwI4pPDAoAzhrGGRJPaRZpAcF
+X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp;
+ fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
 
+Add support for sm4250 lpi pinctrl.
 
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+Changes in v4:
+- update dt binding coding style
+- Link to v3: https://lore.kernel.org/r/20240612-sm4250-lpi-v3-0-a8dce28f20a2@linaro.org
 
-On 21.06.2024 16:59, Bartosz Golaszewski wrote:
-> On Tue, Jun 18, 2024 at 4:45 PM Aleksandr Mishin <amishin@t-argos.ru> wrote:
->>
->> Value of pdata->gpio_unbanked is taken from Device Tree. In case of broken
->> DT due to any error this value can be any. Without this value validation
->> there can be out of chips->irqs array boundaries access in
->> davinci_gpio_probe().
->>
->> Validate the obtained nirq value so that it won't exceed the maximum
->> number of IRQs per bank.
->>
->> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->>
-> 
-> Why not Reported-by: ?
+---
+Srinivas Kandagatla (2):
+      dt-bindings: pinctrl: qcom: Add SM4250 pinctrl
+      pinctrl: qcom: Introduce SM4250 LPI pinctrl driver
 
-It is an established practice for our project, you can find 700+ applied
-patches with similar line:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=linuxtesting.org
+ .../pinctrl/qcom,sm4250-lpass-lpi-pinctrl.yaml     | 118 +++++++++++
+ drivers/pinctrl/qcom/Kconfig                       |   9 +
+ drivers/pinctrl/qcom/Makefile                      |   1 +
+ drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c    | 236 +++++++++++++++++++++
+ 4 files changed, 364 insertions(+)
+---
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+change-id: 20240612-sm4250-lpi-b1ab26b3b050
 
-> 
-> Bart
-> 
->> Fixes: eb3744a2dd01 ("gpio: davinci: Do not assume continuous IRQ numbering")
->> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
->> ---
->>   drivers/gpio/gpio-davinci.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
->> index bb499e362912..1d0175d6350b 100644
->> --- a/drivers/gpio/gpio-davinci.c
->> +++ b/drivers/gpio/gpio-davinci.c
->> @@ -225,6 +225,11 @@ static int davinci_gpio_probe(struct platform_device *pdev)
->>          else
->>                  nirq = DIV_ROUND_UP(ngpio, 16);
->>
->> +       if (nirq > MAX_INT_PER_BANK) {
->> +               dev_err(dev, "Too many IRQs!\n");
->> +               return -EINVAL;
->> +       }
->> +
->>          chips = devm_kzalloc(dev, sizeof(*chips), GFP_KERNEL);
->>          if (!chips)
->>                  return -ENOMEM;
->> --
->> 2.30.2
->>
-
+Best regards,
 -- 
-Kind regards
-Aleksandr
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
 
