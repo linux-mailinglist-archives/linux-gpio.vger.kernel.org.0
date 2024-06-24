@@ -1,122 +1,117 @@
-Return-Path: <linux-gpio+bounces-7646-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7647-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03DEA914890
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 13:25:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E535E914939
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 13:59:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7DAFFB25CF1
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 11:25:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7F4AAB2255F
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 11:59:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7298213B5B6;
-	Mon, 24 Jun 2024 11:24:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 100B513B2AF;
+	Mon, 24 Jun 2024 11:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VHr3nDiD"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nddFDd10"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0CA13B59C;
-	Mon, 24 Jun 2024 11:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C0513B280
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2024 11:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719228272; cv=none; b=MKOee3T8X/rO430dQhudHKHlPTIRohE8rWEleldSpcHK32VaGACfc+jKU57rCNflLANFwdJVhtr9eu7jkg0DPgdh/R++D9VIvo5CNr6POEWr7s46Vwd0ckaEhyGWq1Wys3tG/8FWdyPYGkP/7ax31M1Bfpv+K8qHgqEDfm/iyqw=
+	t=1719230334; cv=none; b=DFAcow+6g8Jawmv4h5LbhxfUMx0bPidMM4QW7q9TBwvWRpSonVxA+zBxY2vn/afVK+Yqo8dsT09Q290jxx+tz94Bz8xsZ4OZ6NwFt0pvtWPQ/oim1r5dBhfjkgCBG4YuWbnQBeMC7Xcqo8fO02J2UwIQ0yl6u8fP759ok9BVDKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719228272; c=relaxed/simple;
-	bh=VZYpS8Qko/tJCe+83RS2/zT1QgITqLuMJJGSXP7WR9s=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=c0bEsPvelCK3cn4TNtvSRb1LzxJh05vriKv36QNlLwwOiJFE3GufzjUAuHtYJ1lKHLNRkGMUNHgzjDC5f7ih4aaXPbUHgRg0LvGciK552XJpDZTbIv6r2OF6t0C4CWhbu2RLfueSoxAqr2Px+0NPlFQc9BLVgw8ETfkblOID+io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VHr3nDiD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E3EDC32781;
-	Mon, 24 Jun 2024 11:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719228271;
-	bh=VZYpS8Qko/tJCe+83RS2/zT1QgITqLuMJJGSXP7WR9s=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=VHr3nDiDsuB9x0eQfc6/Y+A+I0kKeE1dYpqo2+E0ysvuvmodvqQMxf0hERYop/CqR
-	 vwbSqzw3N4GWZJt9Ez5Rq3sNOVhcAoTGL9L5lieGUUb0uGIA2qiVZpNcP4rfi4HbhG
-	 ezlfm/9sJ/BI0wVJ2yBaphyUtn7JoHePkWcs7pl+d5lk0NywrXGpLFH6nVzPeqrPft
-	 p/T+xnU4MKXCvoGbFdrzo5+fyeWJJBprBefTFfyY5Q2WuHHDe0wb9xXlXqJONvyhCL
-	 tZ8VtgtDGPRSuexGKUP9o4GyY0ZIXohsPHFCsqctX6NIwjf3XQ5R/a6zXLxmSEMzr3
-	 K6U238iCPDKCw==
-Date: Mon, 24 Jun 2024 05:24:30 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1719230334; c=relaxed/simple;
+	bh=ET5PzTiR8CY5wEXgR04qOswY/PTwSdgvSu+f3g6W0dw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uGrXitz75DScTxgf8UARIDCSI3EZo8A+UoT2gDtc7Fsnb94UxG3uOeOw6L8ctySUTMHUzGifwQL1ZxvO8Kla2VTZBTiRg8dH0NDfY1NEzv2PZZMnoCF3+K3JpsmEPQc2VyOY51DWFO71vOx2iUBl0ayNbOZeE8Rs/XAVjfJbzLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nddFDd10; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-424798859dfso35330515e9.0
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2024 04:58:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719230331; x=1719835131; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SZ+EYada3M+DhI5bO4cal9W3HfNJ6HHzkYenkSYv3p4=;
+        b=nddFDd10egwhr1HnPDQJbdPmc/6lydulfzH38sFpw7XNWMXnBoiBi7geYu8gWXGs0s
+         yo92WDY9mKcJz8E3FYHWmrZ18ULrLpnUKipAmST/cAAzqW/EfSRdwQzvCQMJgyd0E2vm
+         Iumt9BaMPaXm2eUmSKNLVB8kgKzAP9mJDn21GExUcKM/6ucuhsFxZBnuCryff2n0TNMF
+         sqOQQQASpdtKpPnU1hAFTbbejzSVuTlK96N8CQPQiY89N6eSlJ2Hr1GcH5z94Li6HqQ7
+         AwCb2CiRekHCkAvW0k5YitBtZ0XuWIjKOFE1VZ+QrkDu1PVyeUv/ijn4Aza2gTEyGwEQ
+         +0KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719230331; x=1719835131;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SZ+EYada3M+DhI5bO4cal9W3HfNJ6HHzkYenkSYv3p4=;
+        b=dplpN4m2OneaRz3+ebqnP9IbdkMrjwi/78RSzd1K2dYQwO6tOh2CCJLQjR5b4RKkeo
+         +Yq1qF6GSX9yckt0V4cFB91WU0GKe7bp8YSI3/NU0l/HR7WUUQNwFZYJlNgLkfEUWvRr
+         HWOd2cVprqs4oB68edoq8382CqG0WIIY9PcsJ5t0VwEELsb9RRH7BuR6nsYB8ngOD7MA
+         S+2UsCWAuBBGaXDkxV3VUR7NL4rjS6VH6nuXVMri5CDWRPiysMowJcZf6oFHFALKEsw8
+         c+qg80EycoBHQf3mVb06ATyPNUESFqnf4iZ97sfPODGkQQsT0n2BHtK7AeV1jazmOKkj
+         90RA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOqjUyxhKi1vz+f4JcSJEfWGWXxYw46ePHVbol8gJW/tiys8N+15XOO+Ibrp006DwecJxdwOHZ3YmwG8e6En4fYnYRih6lCrPL3Q==
+X-Gm-Message-State: AOJu0YyNpW+rMLww2TjcQkMGfEVMX5fKVUhCZoVkj6CKBi2i/umrhuOc
+	ubCDkqQzTF4E74N4YyypE5Fjg7zBBi93pTf2OZEjL2ySw0xsqHLEsx27KI6m7r4=
+X-Google-Smtp-Source: AGHT+IFQOBs9Q9kpMeeHwkTkEiiPNuh/i80msIiQi2SNMcPI3xuZe6BNwdB4fNnKSvKyF9UVAU+u4A==
+X-Received: by 2002:a7b:ce99:0:b0:424:7d6a:dd2e with SMTP id 5b1f17b1804b1-4248cc34efamr29712005e9.19.1719230331193;
+        Mon, 24 Jun 2024 04:58:51 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b80e:a46a:7fb3:4e3a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4247cf5272esm174612045e9.0.2024.06.24.04.58.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 04:58:50 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Keerthy <j-keerthy@ti.com>,
+	Aleksandr Mishin <amishin@t-argos.ru>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Grygorii Strashko <grygorii.strashko@ti.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: Re: [PATCH] gpio: davinci: Validate the obtained number of IRQs
+Date: Mon, 24 Jun 2024 13:58:49 +0200
+Message-ID: <171923031937.22973.12976812748644513949.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240618144344.16943-1-amishin@t-argos.ru>
+References: <20240618144344.16943-1-amishin@t-argos.ru>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Manikandan Muralidharan <manikandan.m@microchip.com>
-Cc: Balamanikandan.Gunasundar@microchip.com, conor+dt@kernel.org, 
- alexandre.belloni@bootlin.com, Charan.Pedumuru@microchip.com, 
- devicetree@vger.kernel.org, linus.walleij@linaro.org, 
- Dharma.B@microchip.com, arnd@arndb.de, Varshini.Rajendran@microchip.com, 
- krzk+dt@kernel.org, Balakrishnan.S@microchip.com, 
- durai.manickamkr@microchip.com, nicolas.ferre@microchip.com, 
- claudiu.beznea@tuxon.dev, brgl@bgdev.pl, linux-gpio@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, Durai.ManickamKR@microchip.com, 
- Nayabbasha.Sayed@microchip.com, Hari.PrasathGE@microchip.com, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240624100431.191172-6-manikandan.m@microchip.com>
-References: <20240624100431.191172-1-manikandan.m@microchip.com>
- <20240624100431.191172-6-manikandan.m@microchip.com>
-Message-Id: <171922826737.2823150.8347884175806280966.robh@kernel.org>
-Subject: Re: [PATCH 5/5] dt-bindings: pinctrl: Convert Atmel PIO3 pinctrl
- to json-schema
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Mon, 24 Jun 2024 15:34:31 +0530, Manikandan Muralidharan wrote:
-> Convert Atmel PIO3 pinctrl binding document to DT schema format
-> json-schema.
+On Tue, 18 Jun 2024 17:43:44 +0300, Aleksandr Mishin wrote:
+> Value of pdata->gpio_unbanked is taken from Device Tree. In case of broken
+> DT due to any error this value can be any. Without this value validation
+> there can be out of chips->irqs array boundaries access in
+> davinci_gpio_probe().
 > 
-> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
-> ---
->  .../bindings/pinctrl/atmel,at91-pinctrl.txt   | 178 ----------------
->  .../pinctrl/atmel,at91rm9200-pinctrl.yaml     | 194 ++++++++++++++++++
->  2 files changed, 194 insertions(+), 178 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
+> Validate the obtained nirq value so that it won't exceed the maximum
+> number of IRQs per bank.
 > 
+> [...]
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Applied, thanks!
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml:145:11: [error] string value is redundantly quoted with any quotes (quoted-strings)
+[1/1] gpio: davinci: Validate the obtained number of IRQs
+      commit: 7aa9b96e9a73e4ec1771492d0527bd5fc5ef9164
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.example.dtb: pinctrl@fffff400: gpio@fffff400:compatible: 'oneOf' conditional failed, one must be fixed:
-	['atmel,at91rm9200-gpio'] is too short
-	'atmel,at91rm9200-gpio' is not one of ['atmel,at91sam9x5-gpio', 'microchip,sam9x60-gpio']
-	'atmel,at91rm9200-gpio' is not one of ['microchip,sam9x7-gpio']
-	from schema $id: http://devicetree.org/schemas/pinctrl/atmel,at91rm9200-pinctrl.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.example.dtb: pinctrl@fffff400: gpio@fffff400: Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/pinctrl/atmel,at91rm9200-pinctrl.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.example.dtb: gpio@fffff400: compatible: 'oneOf' conditional failed, one must be fixed:
-	['atmel,at91rm9200-gpio'] is too short
-	'atmel,at91rm9200-gpio' is not one of ['atmel,at91sam9x5-gpio', 'microchip,sam9x60-gpio']
-	'atmel,at91rm9200-gpio' is not one of ['microchip,sam9x7-gpio']
-	from schema $id: http://devicetree.org/schemas/gpio/atmel,at91rm9200-gpio.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240624100431.191172-6-manikandan.m@microchip.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
