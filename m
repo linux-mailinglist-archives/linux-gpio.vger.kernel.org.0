@@ -1,150 +1,171 @@
-Return-Path: <linux-gpio+bounces-7650-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7651-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98694914F44
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 15:55:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF375914F4E
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 15:56:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 192C31F23015
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 13:55:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7AE001F22E68
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 13:56:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF7061422D2;
-	Mon, 24 Jun 2024 13:55:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 125801422D2;
+	Mon, 24 Jun 2024 13:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WzKvr4BI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEB113A894;
-	Mon, 24 Jun 2024 13:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFF913A894;
+	Mon, 24 Jun 2024 13:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719237322; cv=none; b=CEavXy0Pw4sUbIoWMWlUEp3ZTo9UmtSV8p67ITmvkAIocDxawyur7dV8YMg4RND57zr01uux8JDVeUhi3eyGaJTrCgH83YKMwMoPsFy6pdNA2dLM1Cny6DcH8BrO9k9dULY6tTo2WFn0w5DyCW3wuKpDRKCIDpE+3JJorHgKwJc=
+	t=1719237404; cv=none; b=lAdUgbMvKD9UPnIZ+ejWyiGrJAXwkqJkU0QBk3v2ECIs95yZo1ycKanSMaFAiAiiEVnJ9/eqvqe81B15/o+L8+yYuUTp+IX1bty4OgS+2a9Mfim2sJN6MB2WQgHXV02mBfbmbsU1WGT1OTpKHG/f6FsWvR51Ip3XEA1IEE7pYXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719237322; c=relaxed/simple;
-	bh=BZFUuflI2rt5qDzRo1hJ9iNczov2fZ28ct7WuAUVQZU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dNaMpIKRuJzEsnRz7yRWX3kKt4m+8zpI6EOi2vZb5vl4EntWjQhnmTRRaevV6UOoh6r5eHOAoLU4GBSehlW316TKKdSOhQ6n6Y7OhW0zMy2J2YKDa+L/jvwJ6iSQ1+yhZr9LAbaB2wpbjfTMEw7ozOKNUbuv1YW0vPF7k2O3F2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-63036fa87dbso34394657b3.1;
-        Mon, 24 Jun 2024 06:55:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719237319; x=1719842119;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=86JZrQvm++3Ut9SWrAYYU+OyHNvZFlbwr3DIXcudg9E=;
-        b=KDiFa/0G26eJTMFX124afEwx6x2LbdzzpqW4vJvVgT+TZgJ5x73ACPOsIdwsRjFL5l
-         Y6h2E5TVlmfiC/Bz3+Ls4upLrS3T4SznBdTv8whJbunNPjXvuzkhWy9I6aS4xsXAGJ2i
-         85u3XSjDAg1rynjg8rCKOxAe77d+I1J3uENxU0a27fgh0gby+2nnk7oXfX7FkXeLuH8g
-         2dv/l2AREhsZs3VUa7bZlNg3CI37sZKSLeIQ/qulPdz0chIg0Qac16LJPKslVHDHUCn2
-         TpHalJeMBubUs/1ig5M9CK3kvxi+xDMDZyEXhqO80Ya5flpNiLZW8AEu6JkagltWD7xp
-         MIdA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzCnJ6wNV0bngXbsqESSi5Ahxsu8jmyWstRQxyos4K/TTIktR786TBkUnIIQjMpa3oBtzgaOWB63Qf1LbR9ktL86O0+8px37UdArI2km5XZKKO58det0ybyJGzFm6Xkl8ToKj2ec97BVMKX4sYb/uBbu5nlYPItoLaX+POxU8ukGhJ5iCjtnB42CYf7J+VkxmcD/sK4rrpy+7JryseS7EvMLlhl+B12A==
-X-Gm-Message-State: AOJu0YylOMuExREgIJ4BBPZxTPDanuSQZWVEtcIBUvwuEYV/PZJa2Eo0
-	z+RMVYsVCjxKOEItT6kIj+8DPu6gjlCBjlhveqZ/g6FzOk4UIQe5vf2L12ex
-X-Google-Smtp-Source: AGHT+IHZTjk2LJYgW/me3bBQBc74ptlMmaYYFi/pk94B8+07T3oyZmjgYSQf1dQzbA9uF/7BRBSAFA==
-X-Received: by 2002:a81:d809:0:b0:61b:153:8d98 with SMTP id 00721157ae682-6424c9eea51mr34621717b3.21.1719237319360;
-        Mon, 24 Jun 2024 06:55:19 -0700 (PDT)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-63f12699541sm27799567b3.66.2024.06.24.06.55.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jun 2024 06:55:18 -0700 (PDT)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-63bce128c70so31207627b3.0;
-        Mon, 24 Jun 2024 06:55:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWr6D8PWeQu59XCJqHFykQ3SrKiCZNpH/pMzwQdxQkFVV98Q6SPCADELX/ImpG4x3lqQiQqLBInqZsXQU08t2tg9mlQq9bvIBUk9BS+lcmowQeKVqowkN0nrTi8+F6kY3HgNu9qdsabPwvWx8CL85sTnbStQhM8s4ChrkS3/lVjVEnDa5kEGdER4lmrINDzm6xtJVpskDtSvz+daZy0qIE4USZtneZG/Q==
-X-Received: by 2002:a81:8d4d:0:b0:631:399f:2e87 with SMTP id
- 00721157ae682-6424bf5370emr31660657b3.16.1719237318457; Mon, 24 Jun 2024
- 06:55:18 -0700 (PDT)
+	s=arc-20240116; t=1719237404; c=relaxed/simple;
+	bh=vANFnAG99ZBTN3omjVOHPVKZ4v5CDIJKSoOFmkpqaaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P5zZKbf/6HCJ1GyXvH9nmDmPX2tHNlGBgFm/RGZ/HsM8xkus9O9NnAssJXyKRwLJxbCzLiK/2JSRVHzz8BG7yWxQVGMThicFovf4Uuoef50iQk6tdSUVRPYKRZ7GcF1ejjnJA4H3Biw69oZGQGrFgvBpvg/9QMJdq/kfwSVhcO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WzKvr4BI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2DAEC32782;
+	Mon, 24 Jun 2024 13:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719237404;
+	bh=vANFnAG99ZBTN3omjVOHPVKZ4v5CDIJKSoOFmkpqaaY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WzKvr4BIYYeJNYN7pmnaYzA156L39ahzJVJZFD3Y2s27lJCVJM5tGcf0Tk6uCblwW
+	 baqIw9Ftz3SaOj4td3QGdf8NtMT38vlP/qnfA5S8g0Xo3FP2UL56YgPoYHCJk/k+B+
+	 PBk+E9UciwJ0fpxpQYL8+JJBoMopIqvf0VzNfmf1Cm84Xjk4Ibf22N+MyNBtWsDcyx
+	 7TrKd/5PzmeLIXipHq/sIER9Qurvmga2CNde/RWDTp8aZUNTpMQXcSfqTqqqOwM3gC
+	 VlkdhI6wuL55g24oZZCYqVW08KdxDBSlIcS0ytxTyL4f/a7Gq5MJvL+P/cV+DlnoVP
+	 mvtBV6Tf02gyA==
+Message-ID: <38fae674-f672-46e0-a44e-1278deaaf36a@kernel.org>
+Date: Mon, 24 Jun 2024 15:56:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1716974502.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1716974502.git.geert+renesas@glider.be>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 24 Jun 2024 15:55:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWQo6y+6Be1cu=3qRuQ5BDB6_8is0C6T0eVgvHkN+8fJA@mail.gmail.com>
-Message-ID: <CAMuHMdWQo6y+6Be1cu=3qRuQ5BDB6_8is0C6T0eVgvHkN+8fJA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/8] Add R-Car fuse support
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pinctrl: samsung: Add support for pull-up and
+ pull-down
+To: Vishnu Reddy <vishnu.reddy@samsung.com>, krzysztof.kozlowski@linaro.org,
+ s.nawrocki@samsung.com, alim.akhtar@samsung.com, linus.walleij@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
+References: <CGME20240620103950epcas5p10514d4a19bdfd505d7d92ceb1fe10cc7@epcas5p1.samsung.com>
+ <20240620103410.35786-1-vishnu.reddy@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240620103410.35786-1-vishnu.reddy@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 29, 2024 at 11:29=E2=80=AFAM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> R-Car Gen3/Gen4 SoCs contain fuses indicating hardware support or
-> hardware parameters.  Unfortunately the various SoCs require different
-> mechanisms to read the state of the fuses:
->   - On R-Car Gen3, the fuse monitor registers are in the middle of the
->     Pin Function Controller (PFC) register block,
->   - On R-Car V3U and S4-8, the E-FUSE non-volatile memory is accessible
->     through a separate register block in the PFC,
->   - On R-Car V4H and V4M, the E-FUSE non-volatile memory is accessible
->     through the second register block of OTP_MEM.
->
-> This patch series adds support for all 3 variants.  It provides an
-> in-kernel API to read the fuses' states, as well as userspace access
-> through the nvmem subsystem and sysfs:
->   - R-Car Gen3:    /sys/bus/platform/devices/rcar_fuse/fuse/nvmem
->   - R-Car V3U/S4:  /sys/bus/platform/devices/e6078800.fuse/fuse/nvmem
->   - R-Car V4H/V4M: /sys/bus/platform/devices/e61be000.otp/fuse/nvmem
->
-> This has been tested on R-Car H3 ES2.0, M3-W and M3-W+, M3-N, V3M, V3H
-> and V3H2, D3, E3, V3U, S4-8 ES1.0 and ES1.2, V4H, and V4M.
->
-> For SoCs where E-FUSE is accessed through the PFC, it is not clear from
-> the documentation if any PFC module clock needs to be enabled for fuse
-> access.  According to experiments on R-Car S4-8, the module clock and
-> reset only impact the GPIO functionality of the PFC, not the pinmux or
-> fuse monitor functionalities.  So perhaps the clock/power-domains/resets
-> properties should be dropped from the DT bindings and DTS, as well as
-> the Runtime PM handling from the driver?
->
-> Changes compared to v1[1]:
->   - Drop RFC state and broaden audience,
->   - Fix typo in one-line summary,
->   - Add Reviewed-by.
->
-> Thanks for your comments!
->
-> [1] https://lore.kernel.org/r/cover.1714642390.git.geert+renesas@glider.b=
-e
->
-> Geert Uytterhoeven (8):
->   dt-bindings: fuse: Document R-Car E-FUSE / PFC
->   dt-bindings: fuse: Document R-Car E-FUSE / OTP_MEM
->   soc: renesas: Add R-Car fuse driver
->   pinctrl: renesas: Add R-Car Gen3 fuse support
->   arm64: dts: renesas: r8a779a0: Add E-FUSE node
->   arm64: dts: renesas: r8a779f0: Add E-FUSE node
->   arm64: dts: renesas: r8a779g0: Add OTP_MEM node
->   arm64: dts: renesas: r8a779h0: Add OTP_MEM node
+On 20/06/2024 12:34, Vishnu Reddy wrote:
+> gpiolib framework has the implementation of setting up the
+> PUD configuration for GPIO pins but there is no driver support.
+> 
+> Add support to handle the PUD configuration request from the
+> userspace in samsung pinctrl driver.
+> 
+> Signed-off-by: Vishnu Reddy <vishnu.reddy@samsung.com>
+> ---
+> Verified the offset from the user manual of following Exynos SoC series
+> and found the current code is taking care of correct offset for pull-up
+> and pull-down
+> 
+> Exynos-3250
+> Exynos-3470
+> Exynos-4412
+> Exynos-4415
+> Exynos-5250
+> Exynos-5260
+> Exynos-5410
+> Exynos-5420
+> Exynos-5422
+> Exynos-7420
+> Exynos-7580
+> Exynos-7880
+> Exynos-9820
+> Exynos-9830
+> Exynos-4210
+> Exynos-S5PC210
+> Exynos-S5PV310
+> 
+> This patch is tested on FSD platform
 
-I plan to queue these in renesas-devel/pinctrl for v6.11.
+You verified but...
 
-Gr{oetje,eeting}s,
+> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
+> index d50ba6f07d5d..758b623a4bea 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-samsung.h
+> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
+> @@ -61,6 +61,13 @@ enum pincfg_type {
+>  #define PIN_CON_FUNC_INPUT		0x0
+>  #define PIN_CON_FUNC_OUTPUT		0x1
+>  
+> +/*
+> + * Values for the pin PUD register.
+> + */
+> +#define PIN_PUD_PULL_UP_DOWN_DISABLE	0x0
+> +#define PIN_PUD_PULL_DOWN_ENABLE	0x1
+> +#define PIN_PUD_PULL_UP_ENABLE		0x3
 
-                        Geert
+... I said it is not correct, so you send the same? If you think I was
+wrong, then please respond and keep discussion going. Sending the same
+suggests you just ignored my comment.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Look at two headers s5pv210-pinctrl.h and s3c64xx-pinctrl.h. How did you
+resolve these?
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
+
 
