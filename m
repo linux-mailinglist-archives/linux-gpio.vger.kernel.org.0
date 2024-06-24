@@ -1,83 +1,78 @@
-Return-Path: <linux-gpio+bounces-7637-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7639-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11EAC914690
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 11:40:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3373E9146F8
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 12:05:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42FDB1C225F2
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 09:40:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A211AB23B26
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 10:05:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2442413440A;
-	Mon, 24 Jun 2024 09:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C280813665F;
+	Mon, 24 Jun 2024 10:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VmcDwblC"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="OlX1y/UX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B34D132120
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2024 09:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D086F134410;
+	Mon, 24 Jun 2024 10:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719221987; cv=none; b=Nvnhu/QGQIbCCve4MRn6E1j1PKLOh0HLlfBakNxofZHbDka2AxD91xIhxbMENnJtSCEZgwOQz1ggBoutcgm67aVX0l58vXek+QBTh9+OIqVNPWzMZonw011WjPKyrE3DdQT24Mu0DOJvUR5orLYAcpjnB6OWbJK8ulBoY96eFAc=
+	t=1719223531; cv=none; b=D3vrKZtNqWSJaRk21LvTwwxfgzu9xfjkfanMA++uM1zI9GYIXTLJj7wA5tTir6ICkc0J1y84yj1MN7BdxT4wb29pWzPmo9jJfBbXQB2caJRNwmsTszWKlCXMXW6LIKXYmw3X7P93IBnNvfA3oDkYfW2otJ0yiVo5tz8u+iJD87M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719221987; c=relaxed/simple;
-	bh=ZToJsqy3HaH/2CQ4Ri3rb7/ITG47bOqRmRyHXkIcB9E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BzGT/w4ibSa379MoiDNptUxC6A8za05c7U2mmxFrg2iujU4lUWUnuDBru8SQvcsaCs1ndY0v01BA55Nl0qonFW2Dxky8tye32NUlrwjzbxPhfZ8TeNgnb3ymB1E74i6ecoWtCjXZ/SLJJaNl6tsBHzVVtDmIYcLZHVrjvCn0EIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VmcDwblC; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3620ee2cdf7so2610315f8f.3
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2024 02:39:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719221985; x=1719826785; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VBNm9BKUEMH7BT7HuL0JVF8taCtuzuPG7CgzS2A8+KI=;
-        b=VmcDwblCPY/JqLpra5GW1JOJMI4cFf8IJsYrfChKPclUObpHJ9OeYNtLI9Nltv0UyO
-         enSOJTskDS2VlzxLz1wkI70Z/2UcIwDMi7NKUm6ug74jaSsY7+cSeYsMrytMZvzn0Zxr
-         f+RNFCuP8mFYxXXVNHGmLUafJbEeDvfSMATlxnROhZMOtiBiyrhs76A3oMXjdd0HyBuC
-         Tk+eMqqtl4riKQfF+/9o20OT5lsX2FrY7RE9AXolFxRAttrpwr/kzWjEY6fwBmSZJbc2
-         AtOP0aIzUFBcshB38QGXVoUbJbKYJD6cGNArDKdDPACcqVFHbk/3W0iRbzBjCSGCAwDf
-         anPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719221985; x=1719826785;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VBNm9BKUEMH7BT7HuL0JVF8taCtuzuPG7CgzS2A8+KI=;
-        b=Mmz8vw2i9fLbPcT2u58+C2Dd72GL/ntDZqtBdtXtVwNNBLj1LhHb8YN/266JmSXo5b
-         INwIVfc7uOM7RpIolKaIPZHaOyF8giLCuhh8sYdvql4wZkOvllWeL8cqtrxkTgYj0aDk
-         SBR135vnbYnUdKHVBM1tR5oEFda1k2kgm1n2liDQ16/r2TnXTU+8rwnIHADBcUwXqv2D
-         CfnV9zzm7knBQatnS6iY1N4xd2rkG+NTMlrjtjE1eRbhF7zYRNhBarhOwisXamENrdqW
-         1Cgh6sPa96IteZXdVHVWfAsT7KA5o2Oh9UOHO8rVLIZQUes8a3HQLyu+OlAB8wvc6Ix4
-         p0fA==
-X-Gm-Message-State: AOJu0Ywazz7Nf5mEhqKQAPLzP9XfgGAgC33xnw7cjU0m++Cg1+okbfsf
-	+4sL9W9oxoeK8T8vH0nRXaN0pMu8Dym1du8J+nnAnAhHnCuElxkFsvm+/VHEFT0=
-X-Google-Smtp-Source: AGHT+IEIIGHqe+Y5cI+4HYZZmg5AfyBiSyyrpJdmK2y3V900vYjwih+OvsIkiER4BOomFOwkOnxQ2Q==
-X-Received: by 2002:a5d:6487:0:b0:362:5a6e:2649 with SMTP id ffacd0b85a97d-366e7a56dedmr4598801f8f.56.1719221984625;
-        Mon, 24 Jun 2024 02:39:44 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b80e:a46a:7fb3:4e3a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36638d9c1aasm9433138f8f.55.2024.06.24.02.39.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jun 2024 02:39:43 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2 2/2] gpio: sim: lock GPIOs as interrupts when they are requested
-Date: Mon, 24 Jun 2024 11:39:33 +0200
-Message-ID: <20240624093934.17089-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240624093934.17089-1-brgl@bgdev.pl>
-References: <20240624093934.17089-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1719223531; c=relaxed/simple;
+	bh=9OBXqXej2eo/ECybGZRzr+GyjPbUTDTKV+S2IMIaRsk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iVPMMInRBezyhFreYzxl6nsYNB7jh+wEAf67ScbzTh7SoUcoaj6wVrW26Nu7PtkQ0Oz8je+3xefU/35bK8XlzmiVW6zVz9az9gffSseYQ4YupVi1lQrIcrvebRItMcpMpbtVgHXyCfLvAQ0xC/Qp11IxegUl776kxaNkiVsoTVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=OlX1y/UX; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1719223530; x=1750759530;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9OBXqXej2eo/ECybGZRzr+GyjPbUTDTKV+S2IMIaRsk=;
+  b=OlX1y/UXPfAEqCtktSE0Zvzkx/AJRORyxhj1HKVhHQBIgfMybepC8CF0
+   bI5CFBvKS88QsLVwMjUwhos7+w5j8kESc4pgglTG9oapDewNcNDMfm9wN
+   9ew6ARxjLU2VUXfjg4U4VreHLHN49WC5Vqk/AUg21mxi6nFmjzYnz8gUK
+   Bl+hPi/wknYNqKPN9Dk73xOQpE2ih4ObltHP8dLv7mvOMIgS7dYRvXld7
+   m8Ssc6JkuLY4Agt0rBUrwD6CXQsr5CHuuNPy/k+sQys0/cTwhOqq64XyT
+   XR0JfyvSR2xDdF9PxYF1MKgutB5Rzs1nq5PPRIaxpb3IpH0ZCZHDwAjNz
+   w==;
+X-CSE-ConnectionGUID: 3dTUNmvLQy2rS/y02F+uOA==
+X-CSE-MsgGUID: wFd8GrMXQ9Sy/unGB633Gw==
+X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
+   d="scan'208";a="259283588"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2024 03:05:23 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 24 Jun 2024 03:04:42 -0700
+Received: from che-lt-i67131.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Mon, 24 Jun 2024 03:04:34 -0700
+From: Manikandan Muralidharan <manikandan.m@microchip.com>
+To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>, <arnd@arndb.de>,
+	<durai.manickamkr@microchip.com>, <linux-gpio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <Hari.PrasathGE@microchip.com>, <Balamanikandan.Gunasundar@microchip.com>,
+	<Durai.ManickamKR@microchip.com>, <Nayabbasha.Sayed@microchip.com>,
+	<Dharma.B@microchip.com>, <Varshini.Rajendran@microchip.com>,
+	<Balakrishnan.S@microchip.com>, <Charan.Pedumuru@microchip.com>, "Manikandan
+ Muralidharan" <manikandan.m@microchip.com>
+Subject: [PATCH 0/5] Convert Atmel PIO3 Pinctrl and GPIO bindings to yaml
+Date: Mon, 24 Jun 2024 15:34:26 +0530
+Message-ID: <20240624100431.191172-1-manikandan.m@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -85,62 +80,50 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+This patch series cleans-up the compatible property of PIO3 Pinctrl
+and GPIO bank nodes in DT and includes the text to yaml conversion of
+Atmel PIO3 Pinctrl and GPIO bindings.
 
-Use the extended irq_sim interface to supply the simulated interrupt
-domain with callbacks allowing the GPIO sim to lock/unlock GPIOs
-requested as interrupts.
+yaml files are validated using the following commands
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-sim.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+make dt_binding_check DT_SCHEMA_FILES=<converted_yaml_file>
 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 4157735ea791..dcca1d7f173e 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -227,6 +227,27 @@ static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
- 	}
- }
- 
-+static int gpio_sim_irq_requested(struct irq_domain *domain,
-+				  irq_hw_number_t hwirq, void *data)
-+{
-+	struct gpio_sim_chip *chip = data;
-+
-+	return gpiochip_lock_as_irq(&chip->gc, hwirq);
-+}
-+
-+static void gpio_sim_irq_released(struct irq_domain *domain,
-+				  irq_hw_number_t hwirq, void *data)
-+{
-+	struct gpio_sim_chip *chip = data;
-+
-+	gpiochip_unlock_as_irq(&chip->gc, hwirq);
-+}
-+
-+static const struct irq_sim_ops gpio_sim_irq_sim_ops = {
-+	.irq_sim_irq_requested = gpio_sim_irq_requested,
-+	.irq_sim_irq_released = gpio_sim_irq_released,
-+};
-+
- static void gpio_sim_dbg_show(struct seq_file *seq, struct gpio_chip *gc)
- {
- 	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
-@@ -443,7 +464,9 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
- 	if (!chip->pull_map)
- 		return -ENOMEM;
- 
--	chip->irq_sim = devm_irq_domain_create_sim(dev, swnode, num_lines);
-+	chip->irq_sim = devm_irq_domain_create_sim_full(dev, swnode, num_lines,
-+							&gpio_sim_irq_sim_ops,
-+							chip);
- 	if (IS_ERR(chip->irq_sim))
- 		return PTR_ERR(chip->irq_sim);
- 
+make CHECK_DTBS=y DT_SCHEMA_FILES=<converted_yaml_file>
+
+Manikandan Muralidharan (5):
+  ARM: dts: microchip: change to simple-mfd from simple-bus for PIO3
+    pinumux controller
+  ARM: dts: microchip: Remove additional compatible string from PIO3
+    pinctrl nodes
+  ARM: dts: microchip: sam9x60: Remove additional compatible string from
+    GPIO node
+  dt-bindings: gpio: convert Atmel GPIO to json-schema
+  dt-bindings: pinctrl: Convert Atmel PIO3 pinctrl to json-schema
+
+ .../bindings/gpio/atmel,at91rm9200-gpio.yaml  |  78 +++++++
+ .../devicetree/bindings/gpio/gpio_atmel.txt   |  31 ---
+ .../bindings/pinctrl/atmel,at91-pinctrl.txt   | 178 ----------------
+ .../pinctrl/atmel,at91rm9200-pinctrl.yaml     | 194 ++++++++++++++++++
+ arch/arm/boot/dts/microchip/at91rm9200.dtsi   |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9260.dtsi  |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9261.dtsi  |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9263.dtsi  |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9g45.dtsi  |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9n12.dtsi  |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9rl.dtsi   |   2 +-
+ arch/arm/boot/dts/microchip/at91sam9x5.dtsi   |   2 +-
+ arch/arm/boot/dts/microchip/sam9x60.dtsi      |  10 +-
+ arch/arm/boot/dts/microchip/sama5d3.dtsi      |   2 +-
+ arch/arm/boot/dts/microchip/sama5d4.dtsi      |   2 +-
+ 15 files changed, 287 insertions(+), 224 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/atmel,at91rm9200-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio_atmel.txt
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
+
 -- 
-2.43.0
+2.25.1
 
 
