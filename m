@@ -1,130 +1,138 @@
-Return-Path: <linux-gpio+bounces-7649-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7650-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2142914F3B
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 15:54:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98694914F44
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 15:55:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E31901C231DA
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 13:54:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 192C31F23015
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 13:55:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6B2C1419A0;
-	Mon, 24 Jun 2024 13:54:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF7061422D2;
+	Mon, 24 Jun 2024 13:55:22 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E13414199C;
-	Mon, 24 Jun 2024 13:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEB113A894;
+	Mon, 24 Jun 2024 13:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719237272; cv=none; b=Hob10lwcHgt3UcQ4au1OV6z9Cxt9QVc1U7Yx7mkZoDYHXs9IhXlyufzXKq8DYfLDZg+FrC/7YugRiu9exKip92etOvYJ9EKcXy/UCiPB+5K/rnroU8b740h+9xoaWUjbZMwBN1Vu8kZkCbuabp9uYWOT6A4yJCa03v1TzA5hjhU=
+	t=1719237322; cv=none; b=CEavXy0Pw4sUbIoWMWlUEp3ZTo9UmtSV8p67ITmvkAIocDxawyur7dV8YMg4RND57zr01uux8JDVeUhi3eyGaJTrCgH83YKMwMoPsFy6pdNA2dLM1Cny6DcH8BrO9k9dULY6tTo2WFn0w5DyCW3wuKpDRKCIDpE+3JJorHgKwJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719237272; c=relaxed/simple;
-	bh=bSuD+8D7Rz+hm5eVrQsl9osZv3K6KDZA9Wtay1ky1vA=;
+	s=arc-20240116; t=1719237322; c=relaxed/simple;
+	bh=BZFUuflI2rt5qDzRo1hJ9iNczov2fZ28ct7WuAUVQZU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eA64j9CqYD/Cq/n5ry6mtIDMxNlPc9TFMdfx/7F7uZe0Fa5uzg+jMVGZG6SfkGwy3VHBF6GIX1DLbvIQ1j/0BXPCqOmZ3Epreqey03Wm7aiJbpC83MQHwdVqvsPcPn3lqLvjFTwfx2SyZFkSuSU6KF1massq2rUoz86ivnDsXn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
+	 To:Cc:Content-Type; b=dNaMpIKRuJzEsnRz7yRWX3kKt4m+8zpI6EOi2vZb5vl4EntWjQhnmTRRaevV6UOoh6r5eHOAoLU4GBSehlW316TKKdSOhQ6n6Y7OhW0zMy2J2YKDa+L/jvwJ6iSQ1+yhZr9LAbaB2wpbjfTMEw7ozOKNUbuv1YW0vPF7k2O3F2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-63bdb089ffdso33478827b3.3;
-        Mon, 24 Jun 2024 06:54:30 -0700 (PDT)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-63036fa87dbso34394657b3.1;
+        Mon, 24 Jun 2024 06:55:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719237269; x=1719842069;
+        d=1e100.net; s=20230601; t=1719237319; x=1719842119;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RfAlnFTJHlQKWIhVQFUuWrbtwp9vlom9Wv0aMSus9tA=;
-        b=nqkhIdkR5Jd5htvwMxZQJxpgPQJKju4iZb9Cg7vLrsx0vzTBR9l0ZTuxBjUE6/n46A
-         0l2L0k8Uwp5mgeWyeFdX7vDb6RW1GdGZjl/aQaT380VUSRtsLjZcal0wrXAk2//0oE/e
-         Kz1kWOqjdd9q9jhFa78Fob/wioeXPxiREE2SKt+loJDlM5Pb5QIm+UV3c3J1t2UnDL4Y
-         /HzT/iuK+HOJFeZhCVmGyK6g6SwA8lvwySgvNFDeCrWu6lLCDVB5MDSpV0a5GE4uFeo6
-         jDaeT4Q2WMBde5axDpXx6eOYdGc/cDZLc9ZN6yT872/08hOMZ9W7adEjClK3sLkJD26A
-         UciQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwhDNr+P1NWuR9uEcrYz3JXjYVPd1QXRKXXkFVzGnoHN10RYEbDC6gzAl88JPCEuE4ivPHAjnMNhN+wP/fC44LPvPxJsZsq9SaqQp3Zlo8ndVNu6wwi78GkjLdGmq8vNFHsmE1Y4SHbXKgUuGo
-X-Gm-Message-State: AOJu0Yw2UeSTTp5Ef9xphrJlAtS9hhYKGbLtoNO20hVFst2vKGGOJHu2
-	zVdl+Cqp2mKI/7Nv/cuSlDohtA4WEN7gCJDFoywU/ijnh9glY6gCzFIZ1Zbl
-X-Google-Smtp-Source: AGHT+IFj2iqKo6IwSGSTKMxP1hl7lvCh/4I86/czEEPTycv9qlQ0zrWAnDukQl86y1ZiJn1aFkP5dA==
-X-Received: by 2002:a0d:d047:0:b0:61d:fcf7:3377 with SMTP id 00721157ae682-64343efc76dmr32323797b3.44.1719237268590;
-        Mon, 24 Jun 2024 06:54:28 -0700 (PDT)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-63f156c307dsm28442057b3.124.2024.06.24.06.54.28
+        bh=86JZrQvm++3Ut9SWrAYYU+OyHNvZFlbwr3DIXcudg9E=;
+        b=KDiFa/0G26eJTMFX124afEwx6x2LbdzzpqW4vJvVgT+TZgJ5x73ACPOsIdwsRjFL5l
+         Y6h2E5TVlmfiC/Bz3+Ls4upLrS3T4SznBdTv8whJbunNPjXvuzkhWy9I6aS4xsXAGJ2i
+         85u3XSjDAg1rynjg8rCKOxAe77d+I1J3uENxU0a27fgh0gby+2nnk7oXfX7FkXeLuH8g
+         2dv/l2AREhsZs3VUa7bZlNg3CI37sZKSLeIQ/qulPdz0chIg0Qac16LJPKslVHDHUCn2
+         TpHalJeMBubUs/1ig5M9CK3kvxi+xDMDZyEXhqO80Ya5flpNiLZW8AEu6JkagltWD7xp
+         MIdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzCnJ6wNV0bngXbsqESSi5Ahxsu8jmyWstRQxyos4K/TTIktR786TBkUnIIQjMpa3oBtzgaOWB63Qf1LbR9ktL86O0+8px37UdArI2km5XZKKO58det0ybyJGzFm6Xkl8ToKj2ec97BVMKX4sYb/uBbu5nlYPItoLaX+POxU8ukGhJ5iCjtnB42CYf7J+VkxmcD/sK4rrpy+7JryseS7EvMLlhl+B12A==
+X-Gm-Message-State: AOJu0YylOMuExREgIJ4BBPZxTPDanuSQZWVEtcIBUvwuEYV/PZJa2Eo0
+	z+RMVYsVCjxKOEItT6kIj+8DPu6gjlCBjlhveqZ/g6FzOk4UIQe5vf2L12ex
+X-Google-Smtp-Source: AGHT+IHZTjk2LJYgW/me3bBQBc74ptlMmaYYFi/pk94B8+07T3oyZmjgYSQf1dQzbA9uF/7BRBSAFA==
+X-Received: by 2002:a81:d809:0:b0:61b:153:8d98 with SMTP id 00721157ae682-6424c9eea51mr34621717b3.21.1719237319360;
+        Mon, 24 Jun 2024 06:55:19 -0700 (PDT)
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-63f12699541sm27799567b3.66.2024.06.24.06.55.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jun 2024 06:54:28 -0700 (PDT)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-643603b1feaso15191917b3.0;
-        Mon, 24 Jun 2024 06:54:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWhsEMp81+t+SHoXwiQ3aziRy9kEjxYoYATMjWZ3TbjBQk2fXqTi/5McDP9XVvOPMjrh4mSJ1dWAXAckphGKjkJ+uIRikjctv/e8iyrxfN68IzXB+KkMTw0Lhm91TRh9dCWEl6AZX/k2sc7IejR
-X-Received: by 2002:a81:c741:0:b0:61b:e62e:82a2 with SMTP id
- 00721157ae682-64342e91b81mr35950887b3.34.1719237267852; Mon, 24 Jun 2024
- 06:54:27 -0700 (PDT)
+        Mon, 24 Jun 2024 06:55:18 -0700 (PDT)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-63bce128c70so31207627b3.0;
+        Mon, 24 Jun 2024 06:55:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWr6D8PWeQu59XCJqHFykQ3SrKiCZNpH/pMzwQdxQkFVV98Q6SPCADELX/ImpG4x3lqQiQqLBInqZsXQU08t2tg9mlQq9bvIBUk9BS+lcmowQeKVqowkN0nrTi8+F6kY3HgNu9qdsabPwvWx8CL85sTnbStQhM8s4ChrkS3/lVjVEnDa5kEGdER4lmrINDzm6xtJVpskDtSvz+daZy0qIE4USZtneZG/Q==
+X-Received: by 2002:a81:8d4d:0:b0:631:399f:2e87 with SMTP id
+ 00721157ae682-6424bf5370emr31660657b3.16.1719237318457; Mon, 24 Jun 2024
+ 06:55:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1717754960.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1717754960.git.geert+renesas@glider.be>
+References: <cover.1716974502.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1716974502.git.geert+renesas@glider.be>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 24 Jun 2024 15:54:15 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVu5iNSZLALBasS6vSzMrPT-Cba8wXO5X-_xSF-xyRUHw@mail.gmail.com>
-Message-ID: <CAMuHMdVu5iNSZLALBasS6vSzMrPT-Cba8wXO5X-_xSF-xyRUHw@mail.gmail.com>
-Subject: Re: [PATCH 0/8] pinctrl: renesas: r8a779g0: Fix pin group suffixes
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Takeshi Kihara <takeshi.kihara.df@renesas.com>, LUU HOAI <hoai.luu.ub@renesas.com>, 
-	Kazuya Mizuguch <kazuya.mizuguchi.ks@renesas.com>, Phong Hoang <phong.hoang.wz@renesas.com>, 
-	CongDang <cong.dang.xn@renesas.com>, Thanh Quan <thanh.quan.xn@renesas.com>, 
+Date: Mon, 24 Jun 2024 15:55:05 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWQo6y+6Be1cu=3qRuQ5BDB6_8is0C6T0eVgvHkN+8fJA@mail.gmail.com>
+Message-ID: <CAMuHMdWQo6y+6Be1cu=3qRuQ5BDB6_8is0C6T0eVgvHkN+8fJA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/8] Add R-Car fuse support
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
 	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Geert Uytterhoeven <geert+renesas@glider.be>
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 7, 2024 at 12:14=E2=80=AFPM Geert Uytterhoeven
+On Wed, May 29, 2024 at 11:29=E2=80=AFAM Geert Uytterhoeven
 <geert+renesas@glider.be> wrote:
-> On R-Car SoCs, pin group names usually have a suffix ("_a", "_b", ...)
-> if and only if there are alternate pin groups for the same function.
-> At the time initial pin control support for the R-Car V4H (R8A779G0) SoC
-> was introduced, there were lots of ambiguities and inconsistencies in
-> the naming of pin groups in the documentation, violating this convention:
->   1. Some alternate pin groups may be named identically, without any
->      suffix to differentiate,
->   2. In case of two alternate pin groups, the primary may not carry a
->      suffix, while the alternate may carry an "_a" or "_b" suffix,
->   3. A pin group without an alternate may have an "_a" or even a "_b"
->      suffix.
-> So far the driver followed the documentation, except for case 1, where
-> an "_x" suffix was added to one of the alternates.  The plan was to
-> update the pin group names when they were clarified in the documentation.
-> As technically these names are part of the ABI, they were clearly marked
-> with "suffix might be updated" in the driver.
+> R-Car Gen3/Gen4 SoCs contain fuses indicating hardware support or
+> hardware parameters.  Unfortunately the various SoCs require different
+> mechanisms to read the state of the fuses:
+>   - On R-Car Gen3, the fuse monitor registers are in the middle of the
+>     Pin Function Controller (PFC) register block,
+>   - On R-Car V3U and S4-8, the E-FUSE non-volatile memory is accessible
+>     through a separate register block in the PFC,
+>   - On R-Car V4H and V4M, the E-FUSE non-volatile memory is accessible
+>     through the second register block of OTP_MEM.
 >
-> Unfortunately the pin group names are still not updated in the latest
-> revision (Rev.1.10) of the R-Car V4H Series Hardware User's Manual.
-> However, the newer R-Car V4M (R8A779H0) SoC is mostly signal-compatible
-> with R-Car V4H (they are not pin-compatible, as R-Car V4H has many more
-> pins).  Hence this series bites the bullet, and fixes the ambiguities
-> and inconsistencies by adopting R-Car V4M pin group naming (from Rev.0.51
-> of the R-Car V4M Series Hardware User's Manual), and following the
-> traditional naming convention.
+> This patch series adds support for all 3 variants.  It provides an
+> in-kernel API to read the fuses' states, as well as userspace access
+> through the nvmem subsystem and sysfs:
+>   - R-Car Gen3:    /sys/bus/platform/devices/rcar_fuse/fuse/nvmem
+>   - R-Car V3U/S4:  /sys/bus/platform/devices/e6078800.fuse/fuse/nvmem
+>   - R-Car V4H/V4M: /sys/bus/platform/devices/e61be000.otp/fuse/nvmem
 >
-> Note that this does not affect any upstream DTS files.
+> This has been tested on R-Car H3 ES2.0, M3-W and M3-W+, M3-N, V3M, V3H
+> and V3H2, D3, E3, V3U, S4-8 ES1.0 and ES1.2, V4H, and V4M.
+>
+> For SoCs where E-FUSE is accessed through the PFC, it is not clear from
+> the documentation if any PFC module clock needs to be enabled for fuse
+> access.  According to experiments on R-Car S4-8, the module clock and
+> reset only impact the GPIO functionality of the PFC, not the pinmux or
+> fuse monitor functionalities.  So perhaps the clock/power-domains/resets
+> properties should be dropped from the DT bindings and DTS, as well as
+> the Runtime PM handling from the driver?
+>
+> Changes compared to v1[1]:
+>   - Drop RFC state and broaden audience,
+>   - Fix typo in one-line summary,
+>   - Add Reviewed-by.
 >
 > Thanks for your comments!
 >
+> [1] https://lore.kernel.org/r/cover.1714642390.git.geert+renesas@glider.b=
+e
+>
 > Geert Uytterhoeven (8):
->   pinctrl: renesas: r8a779g0: Fix CANFD5 suffix
->   pinctrl: renesas: r8a779g0: Fix FXR_TXEN[AB] suffixes
->   pinctrl: renesas: r8a779g0: Fix (H)SCIF1 suffixes
->   pinctrl: renesas: r8a779g0: Fix (H)SCIF3 suffixes
->   pinctrl: renesas: r8a779g0: Fix IRQ suffixes
->   pinctrl: renesas: r8a779g0: FIX PWM suffixes
->   pinctrl: renesas: r8a779g0: Fix TCLK suffixes
->   pinctrl: renesas: r8a779g0: Fix TPU suffixes
+>   dt-bindings: fuse: Document R-Car E-FUSE / PFC
+>   dt-bindings: fuse: Document R-Car E-FUSE / OTP_MEM
+>   soc: renesas: Add R-Car fuse driver
+>   pinctrl: renesas: Add R-Car Gen3 fuse support
+>   arm64: dts: renesas: r8a779a0: Add E-FUSE node
+>   arm64: dts: renesas: r8a779f0: Add E-FUSE node
+>   arm64: dts: renesas: r8a779g0: Add OTP_MEM node
+>   arm64: dts: renesas: r8a779h0: Add OTP_MEM node
 
-Unless someone objects, I plan to queue these in renesas-pinctrl for v6.11.
+I plan to queue these in renesas-devel/pinctrl for v6.11.
 
 Gr{oetje,eeting}s,
 
