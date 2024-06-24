@@ -1,74 +1,74 @@
-Return-Path: <linux-gpio+bounces-7632-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7633-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CB18914186
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 06:57:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB430914187
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 06:57:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 48E5F1F23241
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 04:57:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC0981C223A8
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 04:57:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3503712B63;
-	Mon, 24 Jun 2024 04:57:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80C3310A1E;
+	Mon, 24 Jun 2024 04:57:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="krcq+8Gs"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="BxXvXiZ2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68BA179A7
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2024 04:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA5217552
+	for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2024 04:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719205040; cv=none; b=Wogp9yDxz0q2kgu5OEWJ8zR4/2cSV7oUx09vmmuqnIQ4qzOdGpw4RR8mx7sO1SwekGo7mmNbFLf/TPG635T40kWidfFF3shx5xrvYOPrBXgWU+jT+NYfNPVk77yrKsVEBUMchWl6vw5Lo8CqZDIlPSa8JepJlPCoIfs+D1S9hIg=
+	t=1719205048; cv=none; b=dzKPzyNFByMgAh2EqU6NcA/5r440Abx3YyI5nVt8SOJbMhfpns6hVg1QA1QHCC+COxt0ixier9RieSrCiV1BBnFBSCLE0/H4D4VOqTjTKiuC40kAheqn9kkDJWmnCQZXjNjErtYbVLpmLYKgSBFy9CLN2BhFqOLoHExCs9Xwf08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719205040; c=relaxed/simple;
-	bh=RQS/xnRPJYl85/khVKO0/IszCWpI/UWhH+0merh4Jec=;
+	s=arc-20240116; t=1719205048; c=relaxed/simple;
+	bh=phiJ6SmQt4PGVhxlzteKdz4Tx9PzcGXSswl3QDBWW2Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oRU11dgJB+1d3I70yfuBLEUlD3JZnWABfy90LsGy8oVJ4a1Swb23+ztn+/ZullLL9t8kike8frKM6HXLhR5oLBy/Hb1IKPo9AEaZBg49iL0krAE/WpaHnPOmrgiWnBEXBSPn26hrLoBce07lMsMCHzNTwmTyQtE6TvICMXUtbvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=krcq+8Gs; arc=none smtp.client-ip=209.85.208.46
+	 In-Reply-To:Content-Type; b=bxMzJufEOxRQbZH1XJ+OhDjG4A7ISTQMqqKQA2lc0u6PsIksnS9OrnC4fVcVTwq1f1Rmgw+FgFa4UcobpCz1Atfi7M67Aas8oRCYgHhwtLFPw3vsLje1mnJuONZ4bP6pAZggWHeqBy08wacv8la88Mz0wSH60ljdueJbVvdvFVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=BxXvXiZ2; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57d0eca877cso4476922a12.2
-        for <linux-gpio@vger.kernel.org>; Sun, 23 Jun 2024 21:57:17 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57d06101d76so3966298a12.3
+        for <linux-gpio@vger.kernel.org>; Sun, 23 Jun 2024 21:57:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1719205036; x=1719809836; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1719205045; x=1719809845; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ohlkAFRMQEfc+goI/NqcWImo6WTjyKLJAJ4QQ/QxOaI=;
-        b=krcq+8GsCdbRlWi0qhbpkwCM4WNbbtykJYqSSIIHK+3rKK97U4VTIs9o5aSziS7ksr
-         dmWNxLN/pFKxlfGrhHLY6NPcjAE6bfWk/r4ZOh7nS0Xzhgq+coGM95K7qICMT9gRjoI+
-         bcdEuHLoagP+0okiS0GFmDoEW0rksqe+wzd7d28eVMw/2DhuSRV8h4D71f1O1e8QpKJn
-         DdCJolxUZp2kVgrBArZXRhKWJU/pImz9eybV0SOw/wnVWroK4uUVhD5J5RdOMRRiAsVK
-         gBq5l4Z+ZJCgVLW2MA441NvmYCi9xW/V5+CBTAoIwFuLl3SSMEAcJb7grpeGDg85OotP
-         nbkw==
+        bh=n81hC2mURHX4tBeWsNYtjmTYadrSB2qqFxnJH1xgsRQ=;
+        b=BxXvXiZ2Po9/j4eL7OwoucTQTwk1hr8PHkXjiJUMVCVOwbTJ9fy0dwuOpwSJZrvT1V
+         eabirO7G4cOg7ydZoCVL2fdpS8B/2MX2ZH5UliXcXJsI67x4I6oKKxA1F/uXOMrIVPzK
+         diYrbqd5JRmNwKHkDIdIpZij65qj+F2X97JQ4uCJH0NZRupWYAVylWB5DhehXWfWAt3F
+         68USNEEruixoy+euD4ZBaZbsEnG5NE8+gFoO0JxULOCJahsbmS5ofv9+in5/i9O59deq
+         hcSZqRgXw7H85x15lj75qWvOiA2HOEQHGIKPCOUCKllcnEtiM0Nv+VwoY02m5EyzNtaW
+         0kGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719205036; x=1719809836;
+        d=1e100.net; s=20230601; t=1719205045; x=1719809845;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ohlkAFRMQEfc+goI/NqcWImo6WTjyKLJAJ4QQ/QxOaI=;
-        b=m6Gs2rsmniUqmi+5LxKCTS7RdrKuuiRfnfZR3auzZKcsJK7qRbvhl1XjA3KFG+HpOJ
-         IFhqsJWjY7d7te1BPF58+1UXCyg5XPwJUgjQfMpH5eOCs74ABfLOE3FJVQ9cIm4vDsvY
-         jSNSuFR6NkQ+GFo4HioITdFpPzMAM0TyecwMdM4HmGkVOv9oGqwwKfCO3Wwvm1MsBPKN
-         dGtXV2AZTAl0u9/d0tuKHF5lOzXz3Q+L0F4ptUG9ZAp1Ak/EjwKUe/Pfci89Hzu2eQ++
-         pc+3s1hlysQGncmb6U5J7qmqP9RJMGVuydBoFzcBOf2k6KuJYHod3k53w6W7k7p9MyHR
-         BRbA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhF4MwvBFf/qnSVuG8cyxMhPz7bUNUijVot3IAO8L2X7DWeOLn75FqndPDBvPamlJiJE1GW2tvk1eDaI+YFOWDgRCwezYE60A3lg==
-X-Gm-Message-State: AOJu0YxLOmNqzPHCt1px+Sze8QWbDeLNhm6hRX3tzfDthtCLAjxQkwUN
-	Faj0uoOWS+BOk0O5BfMu93916FB/0T2V6sQWnNzAB+T9BkZe3utclTgWKpzFOSA=
-X-Google-Smtp-Source: AGHT+IE6vgU1QtCbosxprgy3+2vqnzOl54xK/Up6rxm39ABPLyAtmfvPFkFv7O9F9eu23nt8CCSZcQ==
-X-Received: by 2002:a50:d703:0:b0:57c:9d54:67cf with SMTP id 4fb4d7f45d1cf-57d4bd79da4mr2599999a12.21.1719205036154;
-        Sun, 23 Jun 2024 21:57:16 -0700 (PDT)
+        bh=n81hC2mURHX4tBeWsNYtjmTYadrSB2qqFxnJH1xgsRQ=;
+        b=eR/UnWt6J4ACbxYzLg9f9Q7fWgDxEcdi8CKwBQjLcIJ1C9aq003sKoocUtIyQZxZW5
+         lsaoEnb41wb3OvHyVX/nasPkiCfORSlzKHgD1KWyqC4YYT+8GWABBsJ+mVzAkxh3/wvF
+         WlUxe0muvaAEywNruW3wo3vdMDvfBMsMiQXete2gljj+FEeFqabRd/1v4/AYQicOUztv
+         o+DD1mg3DCC8+Q/tGmcfq/yyoNJxTfSJh/t8o55WpR4kFFDCWaeK9PDspN22nrREZ95z
+         Y8T5ru6hpMneZBPm0HEeTx0+iUsndAF3QLc6yaHjS1E9lHqnz4gSf9cCjNbBdPJF4Blj
+         oCYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXwaznzgUkPYnDhA+ylU0C9rzZjdRIN2UsqLHaRHWLKDiTFw7qsDfsuemfLO680GzLQFLUSPAKljNjgzhOoljfCh4Kj+HHvbmgXgg==
+X-Gm-Message-State: AOJu0YxVmc3Zt2aY6sMdPc331Ds2OISJ3rtUXLtJeIirrDrcapbft9Uy
+	MOnhWSP35MyVvRX167rVTF93OAtgV+ZMZOJebl51byAOIfEO03y0kxx0P+GO47Y=
+X-Google-Smtp-Source: AGHT+IH29Wte+fcyhuRsKCPqSiaTew5pLfA8h8FdKKj6z0S4WRk8AFcfmziFTtXwiLY7lgiU/PX/XQ==
+X-Received: by 2002:a50:d504:0:b0:57c:749f:f5ef with SMTP id 4fb4d7f45d1cf-57d4a020170mr2321012a12.34.1719205045172;
+        Sun, 23 Jun 2024 21:57:25 -0700 (PDT)
 Received: from [192.168.50.4] ([82.78.167.70])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d303d7aecsm4209761a12.20.2024.06.23.21.57.14
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d303d7aecsm4209761a12.20.2024.06.23.21.57.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Jun 2024 21:57:15 -0700 (PDT)
-Message-ID: <65dcadf2-9247-4c65-84fa-ef982bfe79b0@tuxon.dev>
-Date: Mon, 24 Jun 2024 07:57:14 +0300
+        Sun, 23 Jun 2024 21:57:24 -0700 (PDT)
+Message-ID: <e66c9670-f7cb-4f3c-9e10-ef210bf73719@tuxon.dev>
+Date: Mon, 24 Jun 2024 07:57:23 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,8 +76,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] pinctrl: renesas: rzg2l: Adjust bit masks for
- PIN_CFG_VARIABLE to use BIT(62)
+Subject: Re: [PATCH 3/4] pinctrl: renesas: rzg2l: Move RZG2L_SINGLE_PIN
+ definition to top of the file
 Content-Language: en-US
 To: Prabhakar <prabhakar.csengg@gmail.com>,
  Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -87,9 +87,9 @@ Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
  Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
  Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20240618174831.415583-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240618174831.415583-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240618174831.415583-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20240618174831.415583-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240618174831.415583-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -98,37 +98,53 @@ Content-Transfer-Encoding: 7bit
 On 18.06.2024 20:48, Prabhakar wrote:
 > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> Shift the bit masks for `PIN_CFG_PIN_MAP_MASK` and `PIN_CFG_PIN_REG_MASK`,
-> to accommodate `PIN_CFG_VARIABLE` using `BIT(62)`.
+> Define `RZG2L_SINGLE_PIN` at the top of the file to clarify its use for
+> dedicated pins for improved readability.
 > 
-> Previously, these bit masks were placed higher up in the bit range, which
-> did not leave room for `PIN_CFG_VARIABLE` at `BIT(62)`. By adjusting these
-> masks, we ensure that `PIN_CFG_VARIABLE` can occupy `BIT(62)` without any
-> conflicts. The updated masks are now:
-> - `PIN_CFG_PIN_MAP_MASK`: `GENMASK_ULL(61, 54)` (was `GENMASK_ULL(62, 55)`)
-> - `PIN_CFG_PIN_REG_MASK`: `GENMASK_ULL(53, 46)` (was `GENMASK_ULL(54, 47)`)
+> While at it update the comment for `RZG2L_SINGLE_PIN_PACK` macro and place
+> it just above the macro for clarity.
 > 
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
 Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
+
 > ---
->  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 > 
 > diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> index bfaeeb00ac4a..b79dd1ea2616 100644
+> index b79dd1ea2616..37a99d33400d 100644
 > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -87,8 +87,8 @@
->  					 PIN_CFG_FILNUM | \
->  					 PIN_CFG_FILCLKSEL)
+> @@ -64,6 +64,8 @@
+>  #define PIN_CFG_ELC			BIT(20)
+>  #define PIN_CFG_IOLH_RZV2H		BIT(21)
 >  
-> -#define PIN_CFG_PIN_MAP_MASK		GENMASK_ULL(62, 55)
-> -#define PIN_CFG_PIN_REG_MASK		GENMASK_ULL(54, 47)
-> +#define PIN_CFG_PIN_MAP_MASK		GENMASK_ULL(61, 54)
-> +#define PIN_CFG_PIN_REG_MASK		GENMASK_ULL(53, 46)
->  #define PIN_CFG_MASK			GENMASK_ULL(31, 0)
+> +#define RZG2L_SINGLE_PIN		BIT_ULL(63)	/* Dedicated pin */
+> +
+>  #define RZG2L_MPXED_COMMON_PIN_FUNCS(group) \
+>  					(PIN_CFG_IOLH_##group | \
+>  					 PIN_CFG_PUPD | \
+> @@ -105,15 +107,13 @@
+>   */
+>  #define RZG2L_GPIO_PORT_PACK(n, a, f)	RZG2L_GPIO_PORT_SPARSE_PACK((1ULL << (n)) - 1, (a), (f))
 >  
->  /*
+> -/*
+> - * BIT(63) indicates dedicated pin, p is the register index while
+> - * referencing to SR/IEN/IOLH/FILxx registers, b is the register bits
+> - * (b * 8) and f is the pin configuration capabilities supported.
+> - */
+> -#define RZG2L_SINGLE_PIN		BIT_ULL(63)
+>  #define RZG2L_SINGLE_PIN_INDEX_MASK	GENMASK_ULL(62, 56)
+>  #define RZG2L_SINGLE_PIN_BITS_MASK	GENMASK_ULL(55, 53)
+> -
+> +/*
+> + * p is the register index while referencing to SR/IEN/IOLH/FILxx
+> + * registers, b is the register bits (b * 8) and f is the pin
+> + * configuration capabilities supported.
+> + */
+>  #define RZG2L_SINGLE_PIN_PACK(p, b, f)	(RZG2L_SINGLE_PIN | \
+>  					 FIELD_PREP_CONST(RZG2L_SINGLE_PIN_INDEX_MASK, (p)) | \
+>  					 FIELD_PREP_CONST(RZG2L_SINGLE_PIN_BITS_MASK, (b)) | \
 
