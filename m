@@ -1,163 +1,142 @@
-Return-Path: <linux-gpio+bounces-7648-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7649-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC8E3914DDF
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 15:05:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2142914F3B
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 15:54:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 86BD51F24202
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 13:05:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E31901C231DA
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jun 2024 13:54:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7196B13D520;
-	Mon, 24 Jun 2024 13:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+Ml0eDa"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6B2C1419A0;
+	Mon, 24 Jun 2024 13:54:32 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E8C13D613
-	for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2024 13:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E13414199C;
+	Mon, 24 Jun 2024 13:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719234315; cv=none; b=Y2gIhBlzwaAb7zaxAH50EdXOGJlh24gfJcLxqNCUHh7XDoOHAe85XCB9CpUUr7GJHyvazHxdvWStPVpotLNQNpiyrK2haPXk7+fJtr3bpL9tglf9B5IRqNY5ezvQSZa6xQ/uR8VzrFF/TZHItivGYgb7VoKhmqJAf+kb1p3ptqA=
+	t=1719237272; cv=none; b=Hob10lwcHgt3UcQ4au1OV6z9Cxt9QVc1U7Yx7mkZoDYHXs9IhXlyufzXKq8DYfLDZg+FrC/7YugRiu9exKip92etOvYJ9EKcXy/UCiPB+5K/rnroU8b740h+9xoaWUjbZMwBN1Vu8kZkCbuabp9uYWOT6A4yJCa03v1TzA5hjhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719234315; c=relaxed/simple;
-	bh=is7TCxCshLLufRyQogRDzT33Qf+QekprGx1wND1gJvw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=iAH1gt0anmVLWtzdWqc44QJlCwOdI6sDRgSSB26qp+XAnsLu3I0LoIwxrz6R6YM+tMkhnqyYPYUbkcLCGH1XTso9S/RYIuqqch1XppFsjdgs2PsojbwvSv3DoLsz5L/a4h5rzPcRNcOMH4l4Cti37+LDcCDOWEM+KU/iL0xxilU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C+Ml0eDa; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ec1620a956so51544071fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2024 06:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719234312; x=1719839112; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ibe9dWNRlLxFg/ehewdQrXBLVeDGrTx5jXWvFDy8968=;
-        b=C+Ml0eDaMBnsP8BZgabNoCLgamqfNLt5ESsyxaYA0rtgeb7nh/bG3mp0eS0LDyHPwH
-         /WNuEcrUFb0VV2ejWwLgUZqhxCwXM1J7zwcFuQVTpTbI1KTIabfUHnCIQr+/W+3YV3wh
-         jwwG3Zowcjc2CxXGHF3Q84AoBDUdnKPfpDUbHKKrmPGvDW/7thw6OUOvv5yup0otYiGx
-         34fCDmLRKaKo3pTXPc1iLK/8ihjIwD3iOMMQzCMw4k04Vt8OayRtBzjeoHffIK+TrOiv
-         zpCyCq6o8KHx87ik93l6gjmBgJQ4w3Bi8A3uVtgF5XK8db3U2K1Fc2+yrV6j6t9PRJjH
-         Unmg==
+	s=arc-20240116; t=1719237272; c=relaxed/simple;
+	bh=bSuD+8D7Rz+hm5eVrQsl9osZv3K6KDZA9Wtay1ky1vA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eA64j9CqYD/Cq/n5ry6mtIDMxNlPc9TFMdfx/7F7uZe0Fa5uzg+jMVGZG6SfkGwy3VHBF6GIX1DLbvIQ1j/0BXPCqOmZ3Epreqey03Wm7aiJbpC83MQHwdVqvsPcPn3lqLvjFTwfx2SyZFkSuSU6KF1massq2rUoz86ivnDsXn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-63bdb089ffdso33478827b3.3;
+        Mon, 24 Jun 2024 06:54:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719234312; x=1719839112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ibe9dWNRlLxFg/ehewdQrXBLVeDGrTx5jXWvFDy8968=;
-        b=NlaqBklEAjELkrAeA0dc+HpD2scCM0fnG7jI0jh37pT8oP5WBvVhWBkpcafN4POhY/
-         9WcSsNCP5Osq9rm/jLqC8jf7ySWax/rLRja/yDLC4R8m85CgwlKfAmFybOIFV/Mrgre1
-         xgXpbVv2mOVFuARrhV+1f6xtaTN8BpMujUg5bjGHj8ey0Svf37FTFylddZUwLEqPAxxH
-         eA/CPDot12C7b1b9cyhx15j35UKA0Sf7cVLaXDbjv4gJLMFKlXbDoPu1hz6SX6h+sL4/
-         /t3Fyuv54E+whYP/9OX+3vZ8vmEDkuYhaJXZrtRkSCvnIbbxK9PamdWYM5qUivoWCAaL
-         I7+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXMtIT6pIY+Dxt3efbAoccOlTIB7uqgHOgPJGL6maX1B0Q6zdIkWGcaLV6xCgxt7OHh+qVjgKXiw9LXG3G1I2HodvS7ZXRHaCNhZA==
-X-Gm-Message-State: AOJu0YyBVbRp2rzHjF3UvD6BYCIsf0SIteLYnFXTtW1EBPbMYjyXQ137
-	1edPGx4q6qt7mZY28QJi+uCr7RZs8Ul+mwT6LuvkbDTBBzufPd+3BZraDk/eied3k0H5GXTbN3L
-	HuUAPxTMURyOQ9uYNsJlY3kujhS9ZAavNLz240A==
-X-Google-Smtp-Source: AGHT+IGbXX62MuanBZyg06Ty61pAiJ5rSJpXKlv7RL2Y0oriTxD4MpUJGGGU/eDChNuXorpVr6HsC+YSRF/MPvrl6Mk=
-X-Received: by 2002:a2e:80d5:0:b0:2ec:4fe0:38bc with SMTP id
- 38308e7fff4ca-2ec5b388418mr24793131fa.35.1719234311609; Mon, 24 Jun 2024
- 06:05:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719237269; x=1719842069;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RfAlnFTJHlQKWIhVQFUuWrbtwp9vlom9Wv0aMSus9tA=;
+        b=nqkhIdkR5Jd5htvwMxZQJxpgPQJKju4iZb9Cg7vLrsx0vzTBR9l0ZTuxBjUE6/n46A
+         0l2L0k8Uwp5mgeWyeFdX7vDb6RW1GdGZjl/aQaT380VUSRtsLjZcal0wrXAk2//0oE/e
+         Kz1kWOqjdd9q9jhFa78Fob/wioeXPxiREE2SKt+loJDlM5Pb5QIm+UV3c3J1t2UnDL4Y
+         /HzT/iuK+HOJFeZhCVmGyK6g6SwA8lvwySgvNFDeCrWu6lLCDVB5MDSpV0a5GE4uFeo6
+         jDaeT4Q2WMBde5axDpXx6eOYdGc/cDZLc9ZN6yT872/08hOMZ9W7adEjClK3sLkJD26A
+         UciQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwhDNr+P1NWuR9uEcrYz3JXjYVPd1QXRKXXkFVzGnoHN10RYEbDC6gzAl88JPCEuE4ivPHAjnMNhN+wP/fC44LPvPxJsZsq9SaqQp3Zlo8ndVNu6wwi78GkjLdGmq8vNFHsmE1Y4SHbXKgUuGo
+X-Gm-Message-State: AOJu0Yw2UeSTTp5Ef9xphrJlAtS9hhYKGbLtoNO20hVFst2vKGGOJHu2
+	zVdl+Cqp2mKI/7Nv/cuSlDohtA4WEN7gCJDFoywU/ijnh9glY6gCzFIZ1Zbl
+X-Google-Smtp-Source: AGHT+IFj2iqKo6IwSGSTKMxP1hl7lvCh/4I86/czEEPTycv9qlQ0zrWAnDukQl86y1ZiJn1aFkP5dA==
+X-Received: by 2002:a0d:d047:0:b0:61d:fcf7:3377 with SMTP id 00721157ae682-64343efc76dmr32323797b3.44.1719237268590;
+        Mon, 24 Jun 2024 06:54:28 -0700 (PDT)
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-63f156c307dsm28442057b3.124.2024.06.24.06.54.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 06:54:28 -0700 (PDT)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-643603b1feaso15191917b3.0;
+        Mon, 24 Jun 2024 06:54:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWhsEMp81+t+SHoXwiQ3aziRy9kEjxYoYATMjWZ3TbjBQk2fXqTi/5McDP9XVvOPMjrh4mSJ1dWAXAckphGKjkJ+uIRikjctv/e8iyrxfN68IzXB+KkMTw0Lhm91TRh9dCWEl6AZX/k2sc7IejR
+X-Received: by 2002:a81:c741:0:b0:61b:e62e:82a2 with SMTP id
+ 00721157ae682-64342e91b81mr35950887b3.34.1719237267852; Mon, 24 Jun 2024
+ 06:54:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 24 Jun 2024 15:05:00 +0200
-Message-ID: <CACRpkdaa2OM1=Buz9pY2+HRAZHQnDoRqZDX2VWNoG_Fj=UbsUQ@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v6.10
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <cover.1717754960.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1717754960.git.geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 24 Jun 2024 15:54:15 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVu5iNSZLALBasS6vSzMrPT-Cba8wXO5X-_xSF-xyRUHw@mail.gmail.com>
+Message-ID: <CAMuHMdVu5iNSZLALBasS6vSzMrPT-Cba8wXO5X-_xSF-xyRUHw@mail.gmail.com>
+Subject: Re: [PATCH 0/8] pinctrl: renesas: r8a779g0: Fix pin group suffixes
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Takeshi Kihara <takeshi.kihara.df@renesas.com>, LUU HOAI <hoai.luu.ub@renesas.com>, 
+	Kazuya Mizuguch <kazuya.mizuguchi.ks@renesas.com>, Phong Hoang <phong.hoang.wz@renesas.com>, 
+	CongDang <cong.dang.xn@renesas.com>, Thanh Quan <thanh.quan.xn@renesas.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Geert Uytterhoeven <geert+renesas@glider.be>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Fri, Jun 7, 2024 at 12:14=E2=80=AFPM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> On R-Car SoCs, pin group names usually have a suffix ("_a", "_b", ...)
+> if and only if there are alternate pin groups for the same function.
+> At the time initial pin control support for the R-Car V4H (R8A779G0) SoC
+> was introduced, there were lots of ambiguities and inconsistencies in
+> the naming of pin groups in the documentation, violating this convention:
+>   1. Some alternate pin groups may be named identically, without any
+>      suffix to differentiate,
+>   2. In case of two alternate pin groups, the primary may not carry a
+>      suffix, while the alternate may carry an "_a" or "_b" suffix,
+>   3. A pin group without an alternate may have an "_a" or even a "_b"
+>      suffix.
+> So far the driver followed the documentation, except for case 1, where
+> an "_x" suffix was added to one of the alternates.  The plan was to
+> update the pin group names when they were clarified in the documentation.
+> As technically these names are part of the ABI, they were clearly marked
+> with "suffix might be updated" in the driver.
+>
+> Unfortunately the pin group names are still not updated in the latest
+> revision (Rev.1.10) of the R-Car V4H Series Hardware User's Manual.
+> However, the newer R-Car V4M (R8A779H0) SoC is mostly signal-compatible
+> with R-Car V4H (they are not pin-compatible, as R-Car V4H has many more
+> pins).  Hence this series bites the bullet, and fixes the ambiguities
+> and inconsistencies by adopting R-Car V4M pin group naming (from Rev.0.51
+> of the R-Car V4M Series Hardware User's Manual), and following the
+> traditional naming convention.
+>
+> Note that this does not affect any upstream DTS files.
+>
+> Thanks for your comments!
+>
+> Geert Uytterhoeven (8):
+>   pinctrl: renesas: r8a779g0: Fix CANFD5 suffix
+>   pinctrl: renesas: r8a779g0: Fix FXR_TXEN[AB] suffixes
+>   pinctrl: renesas: r8a779g0: Fix (H)SCIF1 suffixes
+>   pinctrl: renesas: r8a779g0: Fix (H)SCIF3 suffixes
+>   pinctrl: renesas: r8a779g0: Fix IRQ suffixes
+>   pinctrl: renesas: r8a779g0: FIX PWM suffixes
+>   pinctrl: renesas: r8a779g0: Fix TCLK suffixes
+>   pinctrl: renesas: r8a779g0: Fix TPU suffixes
 
-here are some accumulated fixes for the v6.10 kernel cycle.
-A bit late because midsummer.
+Unless someone objects, I plan to queue these in renesas-pinctrl for v6.11.
 
-A bit of brief details in the signed tag as usual.
+Gr{oetje,eeting}s,
 
-Please pull it in!
+                        Geert
 
-Yours,
-Linus Walleij
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
-
-  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.10-2
-
-for you to fetch changes up to 4ea4d4808e342ddf89ba24b93ffa2057005aaced:
-
-  pinctrl: rockchip: fix pinmux reset in rockchip_pmx_set (2024-06-17
-10:36:56 +0200)
-
-----------------------------------------------------------------
-Pin control fixes for the v6.10 series:
-
-- Use flag saving spinlocks in the Renesas rzg2l driver.
-  This fixes up PREEMPT_RT problems.
-
-- Remove broken Qualcomm PM8008 that clearly was never
-  working. A new version will arrive in the next merge window.
-
-- Add a quirk for LP8764 regmap that was missed and made the TI
-  J7200 board unusable.
-
-- Fix persistance on the BCM2835 GPIO outputs kernel parameter
-  so this remains consisten across a booted kernel.
-
-- Fix a potential deadlock in create_pinctrl()
-
-- Fix some erroneous bitfields and pinmux reset in the Rockchip
-  RK3328 driver.
-
-----------------------------------------------------------------
-Claudiu Beznea (1):
-      pinctrl: renesas: rzg2l: Use spin_{lock,unlock}_irq{save,restore}
-
-Hagar Hemdan (1):
-      pinctrl: fix deadlock in create_pinctrl() when handling -EPROBE_DEFER
-
-Huang-Huang Bao (4):
-      pinctrl: rockchip: fix pinmux bits for RK3328 GPIO2-B pins
-      pinctrl: rockchip: fix pinmux bits for RK3328 GPIO3-B pins
-      pinctrl: rockchip: use dedicated pinctrl type for RK3328
-      pinctrl: rockchip: fix pinmux reset in rockchip_pmx_set
-
-Johan Hovold (2):
-      pinctrl: qcom: spmi-gpio: drop broken pm8008 support
-      dt-bindings: pinctrl: qcom,pmic-gpio: drop pm8008
-
-Linus Walleij (1):
-      Merge tag 'renesas-pinctrl-fixes-for-v6.10-tag1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers
-into fixes
-
-Stefan Wahren (1):
-      pinctrl: bcm2835: Fix permissions of persist_gpio_outputs
-
-Thomas Richard (1):
-      pinctrl: tps6594: add missing support for LP8764 PMIC
-
- .../bindings/pinctrl/qcom,pmic-gpio.yaml           |  3 -
- drivers/pinctrl/bcm/pinctrl-bcm2835.c              |  2 +-
- drivers/pinctrl/core.c                             |  2 +-
- drivers/pinctrl/pinctrl-rockchip.c                 | 68 +++++++++++++++++++---
- drivers/pinctrl/pinctrl-rockchip.h                 |  1 +
- drivers/pinctrl/pinctrl-tps6594.c                  |  1 +
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |  1 -
- drivers/pinctrl/renesas/pinctrl-rzg2l.c            |  4 +-
- 8 files changed, 65 insertions(+), 17 deletions(-)
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
