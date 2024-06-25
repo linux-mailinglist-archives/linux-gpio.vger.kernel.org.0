@@ -1,161 +1,104 @@
-Return-Path: <linux-gpio+bounces-7676-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7677-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59B739167E3
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 14:32:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28517916980
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 15:54:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1586D282C69
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 12:32:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A9371C23387
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 13:54:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E4114B091;
-	Tue, 25 Jun 2024 12:32:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 431E5163A9B;
+	Tue, 25 Jun 2024 13:54:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0xVbEJ4f"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K3lG/Qs1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7196314831F
-	for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2024 12:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABC5161936;
+	Tue, 25 Jun 2024 13:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719318765; cv=none; b=R6k0usySZrJ8F17oWa1RjJEkUZ7o+uAcY9Yk6P6BYj76+VlHWThZAp/bUVWPmTOQA7N4cYOC9CAyYuJ1w3sw1SOswgzvUczjU7Q/YDyF9OXl/MWVyI/b9TiXAfk/sGIzRRPm7UWFIZicNCqIlB4gP160t2nji2XyTknMT31HSA8=
+	t=1719323643; cv=none; b=jpXaonDsch1lh6pO3XWjORt/MyXfzSmy2bXoXngE3INKqBYb0Mb8LwwmA7Sbuk8mW4emYS0HoLAfbCv3Gz2GPC0WIOvGQ44mVYrxrBqUBCyL/MNCwWLo9frvgRdx/sgtr9YCu3ikj1eYLMU1TbQUTpJY/kfHtCqTSXzjleTdFOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719318765; c=relaxed/simple;
-	bh=npuxaR5wpDYRwn3JioQC88IjTmpRt2yu92SORcY/zxU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UOE34bF59j3D9SEi3GnCxVRtwu9IThKB4E8XYJ6w2KtI4ud+Cn4XVfSiNx5QXW8VQpjF7Y9ImChpciaumtk2cR2UkSnvhHR5PNJXfJL8NldSus9lxCH3j+z6JFH42zad1taOHyK+gP7TVBzEtkTppjhydBGedvmIAA0DxotaufA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0xVbEJ4f; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2eaae2a6dc1so88516531fa.0
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2024 05:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719318761; x=1719923561; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s9FMhJDihsQQ6Ae5Ho8T7MCq3Dz9EZHsXL+elGLqK9g=;
-        b=0xVbEJ4fwGpELAl9Lh3Q+DUjhop6qc2eeAY3OWbh9uINd35pBakTo5A1dbnQPlkx37
-         nQJT3RJZpb8ckll6QFg+pl29XBSIvOwo0kNmejRgPDe/swlAM/E7Kk0P0IsicMABep+3
-         3KGdc2B7mN1EJB0SjrAfnkzID0vDoHTGqVHlVQ3uBzgJARt/EbbV1mu0Jjk9fA0GaXzo
-         iWh2Anm1Xb8AglX4hhfXtYrBQGwOiBbQKb56nK9c8U5X7PN4Kc0RNG99yvxxfKRs0Zkz
-         bFOpzOT3VrPRAyx967ImxpxIwumF18dMExdtCbAz1B23MTjUeUbPWa6GQeJANyRFiIod
-         pARQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719318761; x=1719923561;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s9FMhJDihsQQ6Ae5Ho8T7MCq3Dz9EZHsXL+elGLqK9g=;
-        b=JDmnoPXRuJaQGQR1a7yefRUAq0/OyehOuHQyEuMdJ36oLUanzFuqLOrph2EXo6UcPZ
-         ymsdyTo89x91NQHk9wQrBPedjS6vxR+WkfmS3cH51VHbqz4iScamUikYOMiYlsJUir8i
-         381VxOYe80O1SPCXXuBQAZnB4iCxXN6kKHB8TvqoVt9cXgU+KnsB2mp0tfcbaMFX5A6H
-         opZagIlYa6qXv0W6sW/MF0nMKekOQtCyo1HrUL3icyOtMcX5CrCiG8l4hPg56jQ7CIlg
-         PhvXHXl+wDPabd6zCsrwGbT7yX7RwnoBk5fqeoAfM5UDpOGLklo3eVeQvCeuhRNMXSmf
-         aZKQ==
-X-Gm-Message-State: AOJu0Yx9U+NupwRZGx07u0ZfSUB/NrXGfBEqC5ZBqj4jDTH54hZ4cS/J
-	Pgf+10zugA7dYZVg2RwNmb+CpI6gaCP6oDqGEJRIH2R/O5dRHtUfLlSlsrj1PoEU/eWFDQu93Rv
-	7eazrRxocEb+dKlYDdSvFXc4MGHBUkugXtW0Lpw==
-X-Google-Smtp-Source: AGHT+IGvK8CYQZTUnrMePYCsOgUHOwp9rPTJM0BfnXig4JtkQ6Ugs+N1U77l4Hcsd8xxw6r5wWOPA5L31l21sZ259Zs=
-X-Received: by 2002:a05:651c:22f:b0:2ec:1708:4db5 with SMTP id
- 38308e7fff4ca-2ec5b339debmr46243171fa.51.1719318761404; Tue, 25 Jun 2024
- 05:32:41 -0700 (PDT)
+	s=arc-20240116; t=1719323643; c=relaxed/simple;
+	bh=2kbTAXhRUmVmGDhPH6GBeh4zbZRFYCFfhlPRHIRhXns=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SNJP57JItVpa5+A4ScNZF1MZHVrFX76YQeN8vflR2zQ4BmKuvJ0DIoPtiJIKn5BCjbW3Tn9dyKsVg54I+qcrOxcQboIz2SAAiCCE5qwNaDWEXrxLduvjui9M6ODWD0BcpabuuGe6c4seEsBQbqSDbhr81nyPoKxbekVy0EE4vUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K3lG/Qs1; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719323642; x=1750859642;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2kbTAXhRUmVmGDhPH6GBeh4zbZRFYCFfhlPRHIRhXns=;
+  b=K3lG/Qs1+mlz5Ld4igsZKMrV8A176ojhzWygeVVURa4lPMC5Ok+pwhi6
+   IxgTZ6SSOW5WLV2LM/LcVxGmBmBM+9GdN+ERZhrWkozeIwFbzweClC8Vh
+   zd7RmHMPv/hlE4jHy9nrefIJsVFkSNogi7Z2omB7+wtHsjx2EOhE9QxiR
+   b52I9ECfyaAhohoDXWC/ORgEnd8blMlC+gs/YqfKYatQI4oKOvO6hG6uR
+   iroPGxFaV4M4k6UlCvRhlyAWuKJf3tv5w5oeG9CrPz+KQ8CZqVO1hL9dz
+   MWAAcd9Nm7OJRN5RXXYunvH5bfOuZn0fGMimZVummimst9SsEzuPCiD8x
+   g==;
+X-CSE-ConnectionGUID: 9H9rgny8TZuU7M/NTaFHcg==
+X-CSE-MsgGUID: IqFXQROgTMiY6YFzPeGEhA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16486129"
+X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
+   d="scan'208";a="16486129"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 06:54:01 -0700
+X-CSE-ConnectionGUID: +8dQsUuzRhGxUFtS2/ywkA==
+X-CSE-MsgGUID: OR4bIOYhRlmhcz5qpBlbOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
+   d="scan'208";a="44364751"
+Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.31])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 06:53:59 -0700
+From: Aapo Vienamo <aapo.vienamo@linux.intel.com>
+To: Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Aapo Vienamo <aapo.vienamo@linux.intel.com>
+Subject: [PATCH] gpio: graniterapids: Add missing raw_spinlock_init()
+Date: Tue, 25 Jun 2024 16:53:43 +0300
+Message-ID: <20240625135343.673745-1-aapo.vienamo@linux.intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625011522.1470733-1-chuang+git@melty.land>
-In-Reply-To: <20240625011522.1470733-1-chuang+git@melty.land>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 25 Jun 2024 14:32:29 +0200
-Message-ID: <CAMRc=McqwTYXVgoKGEv5gN+paeZq=HumA5gzOdhbsXh=e+etfQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] bindings: python: fix LineRequest.set_value
- only works for the last entry
-To: chuang+git@melty.land
-Cc: linux-gpio@vger.kernel.org, Chuang Zhu <git@chuang.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 25, 2024 at 3:25=E2=80=AFAM <chuang+git@melty.land> wrote:
->
-> From: Chuang Zhu <git@chuang.cz>
->
-> When multiple entries are requested using line names in
-> Chip.request_lines, only the the last entry is added to
-> LineRequest._name_map, causing a ValueError when trying to use
-> LineRequest.set_value on any former entries.
->
-> >>> import gpiod
-> >>> lr =3D gpiod.Chip('/dev/gpiochip0').request_lines(
-> ...     config=3D{
-> ...         'LINE0': gpiod.LineSettings(direction=3Dgpiod.line.Direction.=
-OUTPUT,
-> ...                                     output_value=3Dgpiod.line.Value.I=
-NACTIVE),
-> ...         'LINE2': gpiod.LineSettings(direction=3Dgpiod.line.Direction.=
-OUTPUT, active_low=3DTrue,
-> ...                                     output_value=3Dgpiod.line.Value.A=
-CTIVE),
-> ...     }
-> ... )
-> >>> lr._name_map
-> {'LINE2': 2}
-> >>> lr.set_value('LINE0', gpiod.line.Value.ACTIVE)
-> Traceback (most recent call last):
->   File "<stdin>", line 1, in <module>
->   File ".../gpiod/line_request.py", line 126, in set_value
->     self.set_values({line: value})
->   File ".../gpiod/line_request.py", line 138, in set_values
->     mapped =3D {
->              ^
->   File ".../gpiod/line_request.py", line 139, in <dictcomp>
->     self._name_map[line] if self._check_line_name(line) else line: values=
-[line]
->                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
->   File ".../gpiod/line_request.py", line 82, in _check_line_name
->     raise ValueError("unknown line name: {}".format(line))
-> ValueError: unknown line name: LINE0
->
-> Signed-off-by: Chuang Zhu <git@chuang.cz>
-> ---
->  bindings/python/gpiod/chip.py | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.p=
-y
-> index b3d8e61..ce77d27 100644
-> --- a/bindings/python/gpiod/chip.py
-> +++ b/bindings/python/gpiod/chip.py
-> @@ -279,11 +279,12 @@ class Chip:
->          else:
->              mapped_output_values =3D None
->
-> +        offsets =3D list()
-> +        name_map =3D dict()
-> +        offset_map =3D dict()
-> +        global_output_values =3D list()
-> +
->          for lines, settings in config.items():
-> -            offsets =3D list()
-> -            name_map =3D dict()
-> -            offset_map =3D dict()
-> -            global_output_values =3D list()
->
->              if isinstance(lines, int) or isinstance(lines, str):
->                  lines =3D (lines,)
-> --
-> 2.44.0
->
->
+Add the missing raw_spin_lock_init() call to gnr_gpio_probe().
 
-Thanks! Please rework the commit message as advised by Kent.
-Especially: explain what effect the changes have.
+Fixes: ecc4b1418e23 ("gpio: Add Intel Granite Rapids-D vGPIO driver")
+Signed-off-by: Aapo Vienamo <aapo.vienamo@linux.intel.com>
+---
+ drivers/gpio/gpio-graniterapids.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Bart
+diff --git a/drivers/gpio/gpio-graniterapids.c b/drivers/gpio/gpio-graniterapids.c
+index c693fe05d50f..f2e911a3d2ca 100644
+--- a/drivers/gpio/gpio-graniterapids.c
++++ b/drivers/gpio/gpio-graniterapids.c
+@@ -296,6 +296,8 @@ static int gnr_gpio_probe(struct platform_device *pdev)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
++	raw_spin_lock_init(&priv->lock);
++
+ 	regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(regs))
+ 		return PTR_ERR(regs);
+-- 
+2.45.2
+
 
