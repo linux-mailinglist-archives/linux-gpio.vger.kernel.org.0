@@ -1,39 +1,39 @@
-Return-Path: <linux-gpio+bounces-7685-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7686-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04A7D91722D
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 22:04:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69580917231
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 22:04:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7AB2B1F26CC5
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 20:04:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21265289C92
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 20:04:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A56CE17D88E;
-	Tue, 25 Jun 2024 20:03:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6B8717E8E6;
+	Tue, 25 Jun 2024 20:03:52 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C71117D37B;
-	Tue, 25 Jun 2024 20:03:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9983117E46C;
+	Tue, 25 Jun 2024 20:03:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719345829; cv=none; b=DlgrYx3X8gfD/jVP9Oo6Xf+xrQSwZJ/F627sczk1X4ThRIN/SjVNlHNZilMdGwe7M1JPbvugvuguTUkyUEtt/jBqcZ3N13v45gj5EQHWIaOIBkDWrV46SED010DvuiGbx/j6g/Zul6xZ9hzDZc2y+zN8Wgzq1sJImjYRo5GbdC0=
+	t=1719345832; cv=none; b=lxFe+uwFKt8aOz6DgTVOCL9nUBknEd1ZhIdtGuDFaioDMv+ffEg9U2yg2ejmlhDvWNl+2g4TD8a4/goE4GIs0+1c+lv6Ihfp7wLTRpLNfss9KJ3BcoHUln6Clj/xb1VHJAsEmHobdVwkRC3C8Wfs4VjrJvE+Q0hba0Zjby0MME4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719345829; c=relaxed/simple;
-	bh=2qcuXwTcNTNWG4Ocum2vc+5BhuHX0y7V7er6hSHKHf0=;
+	s=arc-20240116; t=1719345832; c=relaxed/simple;
+	bh=7xxw6rvJC4TO9dM01dnie1j6RTE1E8s5GK1adp+hTLo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Lq2++ZUYifBtG24srM67D1bwOhb6sgEmXvL7/CmCUw8O3yGZmWIBodrkfRBe4snPSd9Sbplv46VChOQt1kEcfq9PDDQypnezgoja9EN+HwZbqZfcJCYY7i76y/RL2Arv1fFbThGLFwh5zdUWnay536//df3DSrnMhN0dvqICOyI=
+	 MIME-Version; b=pFUwts5pGEig20KB0EZUBV48sCxUo274UPk6btkZfkpfVnpHESP4mzipsVrSWlOT8yS66znmJnydIG7JNAXjawEXBRwQP6/gFd7HikvfEXgI9GZpFpuXGGUnRwkfxU3ztkdUNRQqzLzzmQK4CfhZUY7kq86pU6t3aSviZJy2H9o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 X-IronPort-AV: E=Sophos;i="6.08,264,1712588400"; 
-   d="scan'208";a="213220620"
+   d="scan'208";a="213220628"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 26 Jun 2024 05:03:45 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 26 Jun 2024 05:03:50 +0900
 Received: from renesas-deb12.mshome.net (unknown [10.226.92.125])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 8516740078B4;
-	Wed, 26 Jun 2024 05:03:41 +0900 (JST)
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 42BB8400C4E6;
+	Wed, 26 Jun 2024 05:03:45 +0900 (JST)
 From: Paul Barker <paul.barker.ct@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
 	Magnus Damm <magnus.damm@gmail.com>,
@@ -47,9 +47,9 @@ Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
 	devicetree@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/9] pinctrl: renesas: rzg2l: Support output enable on RZ/G2L
-Date: Tue, 25 Jun 2024 21:03:10 +0100
-Message-Id: <20240625200316.4282-4-paul.barker.ct@bp.renesas.com>
+Subject: [PATCH v3 4/9] arm64: dts: renesas: rzg2l: Enable Ethernet TXC output
+Date: Tue, 25 Jun 2024 21:03:11 +0100
+Message-Id: <20240625200316.4282-5-paul.barker.ct@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240625200316.4282-1-paul.barker.ct@bp.renesas.com>
 References: <20240625200316.4282-1-paul.barker.ct@bp.renesas.com>
@@ -61,158 +61,111 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On the RZ/G2L SoC family, the direction of the Ethernet TXC/TX_CLK
-signal is selectable to support an Ethernet PHY operating in either MII
-or RGMII mode. By default, the signal is configured as an input and MII
-mode is supported. The ETH_MODE register can be modified to configure
-this signal as an output to support RGMII mode.
-
-As this signal is by default an input, and can optionally be switched to
-an output, it maps neatly onto an `output-enable` property in the device
-tree.
+Configure ET0_TXC and ET1_TXC as outputs on the Renesas RZ/[GV]2L SMARC
+SoMs, as per RGMII specification.
 
 Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
 Changes v2->v3:
-  * Picked up Linus W's Acked-by tag & Geert's Reviewed-by tag.
-  * Simplify arguments to rzg2l_pin_to_oen_bit() and decode pin/caps
-    inside this function. No check is needed for dedicated pins as no
-    dedicated pins support OEN in the RZ/G2L family.
+  * Picked up Linus W's Acked-by tag.
 Changes v1->v2:
-  * Use oen_read and oen_write function pointers to be compatible with
-    recent patches adding RZ/V2H support.
+  * Picked up Geert's Reviewed-by tag.
 
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 68 +++++++++++++++++++++++--
- 1 file changed, 64 insertions(+), 4 deletions(-)
+ .../boot/dts/renesas/rzg2l-smarc-som.dtsi     | 76 +++++++++++--------
+ 1 file changed, 44 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 737d8d0064c4..b7d1cfb023b2 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -994,6 +994,61 @@ static bool rzg2l_ds_is_supported(struct rzg2l_pinctrl *pctrl, u32 caps,
- 	return false;
- }
+diff --git a/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi
+index 4409c47239b9..2b5e037ea9fa 100644
+--- a/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi
++++ b/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi
+@@ -180,41 +180,53 @@ adc_pins: adc {
+ 	};
  
-+static int rzg2l_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
-+{
-+	u64 *pin_data = pctrl->desc.pins[_pin].drv_data;
-+	u64 caps = FIELD_GET(PIN_CFG_MASK, *pin_data);
-+	u8 max_pin = pctrl->data->hwcfg->oen_max_pin;
-+	u8 pin = RZG2L_PIN_ID_TO_PIN(_pin);
+ 	eth0_pins: eth0 {
+-		pinmux = <RZG2L_PORT_PINMUX(28, 1, 1)>, /* ET0_LINKSTA */
+-			 <RZG2L_PORT_PINMUX(27, 1, 1)>, /* ET0_MDC */
+-			 <RZG2L_PORT_PINMUX(28, 0, 1)>, /* ET0_MDIO */
+-			 <RZG2L_PORT_PINMUX(20, 0, 1)>, /* ET0_TXC */
+-			 <RZG2L_PORT_PINMUX(20, 1, 1)>, /* ET0_TX_CTL */
+-			 <RZG2L_PORT_PINMUX(20, 2, 1)>, /* ET0_TXD0 */
+-			 <RZG2L_PORT_PINMUX(21, 0, 1)>, /* ET0_TXD1 */
+-			 <RZG2L_PORT_PINMUX(21, 1, 1)>, /* ET0_TXD2 */
+-			 <RZG2L_PORT_PINMUX(22, 0, 1)>, /* ET0_TXD3 */
+-			 <RZG2L_PORT_PINMUX(24, 0, 1)>, /* ET0_RXC */
+-			 <RZG2L_PORT_PINMUX(24, 1, 1)>, /* ET0_RX_CTL */
+-			 <RZG2L_PORT_PINMUX(25, 0, 1)>, /* ET0_RXD0 */
+-			 <RZG2L_PORT_PINMUX(25, 1, 1)>, /* ET0_RXD1 */
+-			 <RZG2L_PORT_PINMUX(26, 0, 1)>, /* ET0_RXD2 */
+-			 <RZG2L_PORT_PINMUX(26, 1, 1)>, /* ET0_RXD3 */
+-			 <RZG2L_PORT_PINMUX(1, 0, 1)>;  /* IRQ2 */
++		txc {
++			pinmux = <RZG2L_PORT_PINMUX(20, 0, 1)>; /* ET0_TXC */
++			output-enable;
++		};
 +
-+	if (pin > max_pin)
-+		return -EINVAL;
-+
-+	/*
-+	 * We can determine which Ethernet interface we're dealing with from
-+	 * the caps.
-+	 */
-+	if (caps & PIN_CFG_IO_VMC_ETH0)
-+		return 0;
-+	if (caps & PIN_CFG_IO_VMC_ETH1)
-+		return 1;
-+
-+	return -EINVAL;
-+}
-+
-+static u32 rzg2l_read_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
-+{
-+	int bit;
-+
-+	bit = rzg2l_pin_to_oen_bit(pctrl, _pin);
-+	if (bit < 0)
-+		return 0;
-+
-+	return !(readb(pctrl->base + ETH_MODE) & BIT(bit));
-+}
-+
-+static int rzg2l_write_oen(struct rzg2l_pinctrl *pctrl, unsigned int _pin, u8 oen)
-+{
-+	unsigned long flags;
-+	int bit;
-+	u8 val;
-+
-+	bit = rzg2l_pin_to_oen_bit(pctrl, _pin);
-+	if (bit < 0)
-+		return bit;
-+
-+	spin_lock_irqsave(&pctrl->lock, flags);
-+	val = readb(pctrl->base + ETH_MODE);
-+	if (oen)
-+		val &= ~BIT(bit);
-+	else
-+		val |= BIT(bit);
-+	writeb(val, pctrl->base + ETH_MODE);
-+	spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return 0;
-+}
-+
- static int rzg3s_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
- {
- 	u64 *pin_data = pctrl->desc.pins[_pin].drv_data;
-@@ -1772,7 +1827,7 @@ static const u64 r9a07g044_gpio_configs[] = {
- 	RZG2L_GPIO_PORT_PACK(3, 0x21, RZG2L_MPXED_PIN_FUNCS),
- 	RZG2L_GPIO_PORT_PACK(2, 0x22, RZG2L_MPXED_PIN_FUNCS),
- 	RZG2L_GPIO_PORT_PACK(2, 0x23, RZG2L_MPXED_PIN_FUNCS),
--	RZG2L_GPIO_PORT_PACK(3, 0x24, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
-+	RZG2L_GPIO_PORT_PACK(3, 0x24, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0) | PIN_CFG_OEN),
- 	RZG2L_GPIO_PORT_PACK(2, 0x25, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
- 	RZG2L_GPIO_PORT_PACK(2, 0x26, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
- 	RZG2L_GPIO_PORT_PACK(2, 0x27, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
-@@ -1781,7 +1836,7 @@ static const u64 r9a07g044_gpio_configs[] = {
- 	RZG2L_GPIO_PORT_PACK(2, 0x2a, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
- 	RZG2L_GPIO_PORT_PACK(2, 0x2b, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
- 	RZG2L_GPIO_PORT_PACK(2, 0x2c, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
--	RZG2L_GPIO_PORT_PACK(2, 0x2d, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
-+	RZG2L_GPIO_PORT_PACK(2, 0x2d, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1) | PIN_CFG_OEN),
- 	RZG2L_GPIO_PORT_PACK(2, 0x2e, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
- 	RZG2L_GPIO_PORT_PACK(2, 0x2f, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
- 	RZG2L_GPIO_PORT_PACK(2, 0x30, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
-@@ -1805,13 +1860,13 @@ static const u64 r9a07g044_gpio_configs[] = {
++		mux {
++			pinmux = <RZG2L_PORT_PINMUX(28, 1, 1)>, /* ET0_LINKSTA */
++				 <RZG2L_PORT_PINMUX(27, 1, 1)>, /* ET0_MDC */
++				 <RZG2L_PORT_PINMUX(28, 0, 1)>, /* ET0_MDIO */
++				 <RZG2L_PORT_PINMUX(20, 1, 1)>, /* ET0_TX_CTL */
++				 <RZG2L_PORT_PINMUX(20, 2, 1)>, /* ET0_TXD0 */
++				 <RZG2L_PORT_PINMUX(21, 0, 1)>, /* ET0_TXD1 */
++				 <RZG2L_PORT_PINMUX(21, 1, 1)>, /* ET0_TXD2 */
++				 <RZG2L_PORT_PINMUX(22, 0, 1)>, /* ET0_TXD3 */
++				 <RZG2L_PORT_PINMUX(24, 0, 1)>, /* ET0_RXC */
++				 <RZG2L_PORT_PINMUX(24, 1, 1)>, /* ET0_RX_CTL */
++				 <RZG2L_PORT_PINMUX(25, 0, 1)>, /* ET0_RXD0 */
++				 <RZG2L_PORT_PINMUX(25, 1, 1)>, /* ET0_RXD1 */
++				 <RZG2L_PORT_PINMUX(26, 0, 1)>, /* ET0_RXD2 */
++				 <RZG2L_PORT_PINMUX(26, 1, 1)>, /* ET0_RXD3 */
++				 <RZG2L_PORT_PINMUX(1, 0, 1)>;  /* IRQ2 */
++		};
+ 	};
  
- static const u64 r9a07g043_gpio_configs[] = {
- 	RZG2L_GPIO_PORT_PACK(4, 0x10, RZG2L_MPXED_PIN_FUNCS),
--	RZG2L_GPIO_PORT_PACK(5, 0x11, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
-+	RZG2L_GPIO_PORT_PACK(5, 0x11, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0) | PIN_CFG_OEN),
- 	RZG2L_GPIO_PORT_PACK(4, 0x12, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
- 	RZG2L_GPIO_PORT_PACK(4, 0x13, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
- 	RZG2L_GPIO_PORT_PACK(6, 0x14, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
- 	RZG2L_GPIO_PORT_PACK(5, 0x15, RZG2L_MPXED_PIN_FUNCS),
- 	RZG2L_GPIO_PORT_PACK(5, 0x16, RZG2L_MPXED_PIN_FUNCS),
--	RZG2L_GPIO_PORT_PACK(5, 0x17, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
-+	RZG2L_GPIO_PORT_PACK(5, 0x17, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1) | PIN_CFG_OEN),
- 	RZG2L_GPIO_PORT_PACK(5, 0x18, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
- 	RZG2L_GPIO_PORT_PACK(4, 0x19, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
- 	RZG2L_GPIO_PORT_PACK(5, 0x1a, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
-@@ -3004,6 +3059,7 @@ static const struct rzg2l_hwcfg rzg2l_hwcfg = {
- 		[RZG2L_IOLH_IDX_3V3] = 2000, 4000, 8000, 12000,
- 	},
- 	.iolh_groupb_oi = { 100, 66, 50, 33, },
-+	.oen_max_pin = 0,
- };
+ 	eth1_pins: eth1 {
+-		pinmux = <RZG2L_PORT_PINMUX(37, 2, 1)>, /* ET1_LINKSTA */
+-			 <RZG2L_PORT_PINMUX(37, 0, 1)>, /* ET1_MDC */
+-			 <RZG2L_PORT_PINMUX(37, 1, 1)>, /* ET1_MDIO */
+-			 <RZG2L_PORT_PINMUX(29, 0, 1)>, /* ET1_TXC */
+-			 <RZG2L_PORT_PINMUX(29, 1, 1)>, /* ET1_TX_CTL */
+-			 <RZG2L_PORT_PINMUX(30, 0, 1)>, /* ET1_TXD0 */
+-			 <RZG2L_PORT_PINMUX(30, 1, 1)>, /* ET1_TXD1 */
+-			 <RZG2L_PORT_PINMUX(31, 0, 1)>, /* ET1_TXD2 */
+-			 <RZG2L_PORT_PINMUX(31, 1, 1)>, /* ET1_TXD3 */
+-			 <RZG2L_PORT_PINMUX(33, 1, 1)>, /* ET1_RXC */
+-			 <RZG2L_PORT_PINMUX(34, 0, 1)>, /* ET1_RX_CTL */
+-			 <RZG2L_PORT_PINMUX(34, 1, 1)>, /* ET1_RXD0 */
+-			 <RZG2L_PORT_PINMUX(35, 0, 1)>, /* ET1_RXD1 */
+-			 <RZG2L_PORT_PINMUX(35, 1, 1)>, /* ET1_RXD2 */
+-			 <RZG2L_PORT_PINMUX(36, 0, 1)>, /* ET1_RXD3 */
+-			 <RZG2L_PORT_PINMUX(1, 1, 1)>;  /* IRQ3 */
++		txc {
++			pinmux = <RZG2L_PORT_PINMUX(29, 0, 1)>; /* ET1_TXC */
++			output-enable;
++		};
++
++		mux {
++			pinmux = <RZG2L_PORT_PINMUX(37, 2, 1)>, /* ET1_LINKSTA */
++				 <RZG2L_PORT_PINMUX(37, 0, 1)>, /* ET1_MDC */
++				 <RZG2L_PORT_PINMUX(37, 1, 1)>, /* ET1_MDIO */
++				 <RZG2L_PORT_PINMUX(29, 1, 1)>, /* ET1_TX_CTL */
++				 <RZG2L_PORT_PINMUX(30, 0, 1)>, /* ET1_TXD0 */
++				 <RZG2L_PORT_PINMUX(30, 1, 1)>, /* ET1_TXD1 */
++				 <RZG2L_PORT_PINMUX(31, 0, 1)>, /* ET1_TXD2 */
++				 <RZG2L_PORT_PINMUX(31, 1, 1)>, /* ET1_TXD3 */
++				 <RZG2L_PORT_PINMUX(33, 1, 1)>, /* ET1_RXC */
++				 <RZG2L_PORT_PINMUX(34, 0, 1)>, /* ET1_RX_CTL */
++				 <RZG2L_PORT_PINMUX(34, 1, 1)>, /* ET1_RXD0 */
++				 <RZG2L_PORT_PINMUX(35, 0, 1)>, /* ET1_RXD1 */
++				 <RZG2L_PORT_PINMUX(35, 1, 1)>, /* ET1_RXD2 */
++				 <RZG2L_PORT_PINMUX(36, 0, 1)>, /* ET1_RXD3 */
++				 <RZG2L_PORT_PINMUX(1, 1, 1)>;  /* IRQ3 */
++		};
+ 	};
  
- static const struct rzg2l_hwcfg rzg3s_hwcfg = {
-@@ -3058,6 +3114,8 @@ static struct rzg2l_pinctrl_data r9a07g043_data = {
- #endif
- 	.pwpr_pfc_lock_unlock = &rzg2l_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzg2l_pmc_writeb,
-+	.oen_read = &rzg2l_read_oen,
-+	.oen_write = &rzg2l_write_oen,
- 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
- 	.bias_param_to_hw = &rzg2l_bias_param_to_hw,
- };
-@@ -3073,6 +3131,8 @@ static struct rzg2l_pinctrl_data r9a07g044_data = {
- 	.hwcfg = &rzg2l_hwcfg,
- 	.pwpr_pfc_lock_unlock = &rzg2l_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzg2l_pmc_writeb,
-+	.oen_read = &rzg2l_read_oen,
-+	.oen_write = &rzg2l_write_oen,
- 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
- 	.bias_param_to_hw = &rzg2l_bias_param_to_hw,
- };
+ 	gpio-sd0-pwr-en-hog {
 -- 
 2.39.2
 
