@@ -1,114 +1,119 @@
-Return-Path: <linux-gpio+bounces-7678-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7679-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B6DD9169D9
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 16:08:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C861C9169F9
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 16:16:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E7E31F2182A
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 14:08:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82B45286380
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 14:16:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6876515FCE9;
-	Tue, 25 Jun 2024 14:08:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABFEA149E05;
+	Tue, 25 Jun 2024 14:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NdrqBK+X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6I4TT89"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858651B7F7;
-	Tue, 25 Jun 2024 14:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3FB39FD6;
+	Tue, 25 Jun 2024 14:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719324484; cv=none; b=I90DyAVzMaGOzWMuOEGGLEYg8UQmkSFwqEKQK7Hsl3rUvbgFKFlIw4I9wmyNrAWmnnib/hmTs32IEaBRie4b6pd4fqMD3zhS6cD/4qdtnou++sCr1kzHKhM2a3zwM5I972ZHtALtWbDwpHDcTJyeW91JVgNlxJxOcib4LihEAPM=
+	t=1719324974; cv=none; b=lWyEl6q8VnhzU85YMGDt2+AEN2r45Sc9KHwM7Z4PGTgQVNvbaNQzkiFlywgLrCCKFecYUKtBRZ5xBKebgBnU/2Z3cyXwe3jr4tVTAiyAZFDqS3KelXpGmpyxDHEjqJ1f6M7+hVmf55oASuug/gneGwWiD+GKFGYOCUIf/AKGlWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719324484; c=relaxed/simple;
-	bh=/zUFtZIZeDqCZmg2bLovLTDoYyRMpRKMLFnhpzZz4Ko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LQXa+1gWR5sitAzI3qfCNidGDs8KHvTvqnfUQaR7RNOD0d1S0Mo/siJWLKjpyM4FAqGiEPqoyJQB7XDkRQDTysuSkMYikM43NXn0UnBG5FKC+XGQJnAf9kDSuA8UTsWm/6cXXUcHproVeX84WxWAHnifR7qHJ7vFd8kWIBU6ao8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NdrqBK+X; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719324482; x=1750860482;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/zUFtZIZeDqCZmg2bLovLTDoYyRMpRKMLFnhpzZz4Ko=;
-  b=NdrqBK+Xk4naks2YZ8JPe4Ggx/DcQAhZ7X2uZvBpEaf+sJbFzCjucIcp
-   +SpKhQJs8Wn3X4m82hn9Qf4aIsF4g34suihOyXaV14q5m0iz9QW0puKGZ
-   LLql+wdd/gNDInQnRQrpAmnCMlQA/ZOktKDMPkxr0CL3+Rz6s71HlkEHi
-   8DoVZUXPccXGSqOzonHLsar5XaVgqDiyGvbgFg8XJOTMAb5Cq4dcs1Xiz
-   D6njJk1m0DrJmyn7EvpVckEQaMF/fulPEUrCNOPbDuJLiuhT6euUs9WUe
-   TqnRCRuRpnBz0WYB781tBOzOZBXyAmZfZvHuUOghdR1PPd0ClB5iavb/p
-   g==;
-X-CSE-ConnectionGUID: mNnL1xX6R32tJxWt3uNsxg==
-X-CSE-MsgGUID: MHngs37/TA2YW8YvARgOVQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16488633"
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="16488633"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 07:07:39 -0700
-X-CSE-ConnectionGUID: YAPSikMWSHOQCK5CMfhtAg==
-X-CSE-MsgGUID: YRWR93OnTlWlnb/zDvkXaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="43764953"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 25 Jun 2024 07:07:37 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 4C29C346; Tue, 25 Jun 2024 17:07:36 +0300 (EEST)
-Date: Tue, 25 Jun 2024 17:07:36 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Aapo Vienamo <aapo.vienamo@linux.intel.com>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: graniterapids: Add missing raw_spinlock_init()
-Message-ID: <20240625140736.GV1532424@black.fi.intel.com>
-References: <20240625135343.673745-1-aapo.vienamo@linux.intel.com>
+	s=arc-20240116; t=1719324974; c=relaxed/simple;
+	bh=z1UzPtvslhBpVxo5WSG7nm/GYB6eBaY5tYPAElx7+jA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rSSLhwrCj28PFoktI/QkoJKLyMDGkeCJSZpH6vy5dwXmanVon1mIDNoVC+PvxerwWka9Mb/P3lzqWROy0ri4j4G1+ajgl85NFGt+8bT8FUssB7crp7qL5RQx2DPC0e9o4sDWgXLBAwz3fmEeBUceYSYWrU0s0kSDjtayAZWtV7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l6I4TT89; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2c85ca2dc5cso1850558a91.0;
+        Tue, 25 Jun 2024 07:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719324972; x=1719929772; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=D36Db5Y4m8FIowfP6/u5lOf2LPz4KaZVqsBszQTJ+Qc=;
+        b=l6I4TT89NFVDT7j9CE3+CPkTX4nddvJ1bOEM9BOSwreXAOBdP07MGaHh+bHsHv3h1K
+         MVz2B2wydLLiV8029rIPKdikM7KkLASNJgOcsxbw9OZzdWx323fFOgRFsQVF9dDZvihA
+         5JvmtFOXwpS0eUelH3basidBWTDKtQwDyiQq9hIUc4QJ3JJQM6VFSEzvk5iElxRhCrVi
+         nFgy5Bkk7M4MBIBFZr+N7sz0W/N0Gq4m+KseNTxjJFy/LJTdiuQoudYzja+eT3j5zyv/
+         62c5IOcgeG/MMs76yoq3/chmCbz8SIOZevtEMU48yrxorIWYS/Phkocp28MWQCbSJCkL
+         M92g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719324972; x=1719929772;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D36Db5Y4m8FIowfP6/u5lOf2LPz4KaZVqsBszQTJ+Qc=;
+        b=u17mXGp0iiWgHLM5PDOnNW5IHYjXp2cH7OSt4ixZpZ1W2X9sJxBF29A//oKlDflwXo
+         i98cMEEI2vKCP7Uu4Hb6zi2Ip0fPsllPO39mzgiUoYq0BF+PsAdn5gimXdcBIHPbaTm7
+         HxrucHx5uqF0K5qxaLkEUvmZxNSxLq6tKuoq8sgsEgR5syY8hYjWJEQPOoA4WyipOrNo
+         Bv+2YKd2sf9n1iFRmD9AvwKMVCBbGjaowMcDzJ/0bb3V10jeoGAEpdrZfftmsTX5KSDs
+         41bQPR1qD4Rnew/jh0Cq4idkOwninHth5RyeyngsW7c9OKrqlc8DICdYz89Y6s6p1FyT
+         LmkA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsmPlyjvvXNnYdmWKLl7Qey9vEDf5qGs2vJmUxBVM+8dQNG837FfKYJbMx37Cj8LdEM6x73/OD+gfvq0B6JHcrT0VShaKMX+XrRYPN
+X-Gm-Message-State: AOJu0YzyIcJYK2ZxUIcNe0CW26lLTykTiFcLQJHm7GiiiBa6dl/gMmXo
+	2mUA0eEL6Mic61yI6CXR/hd1Ufk1BWr7w9wPuaEif3HhzoeCUK0my2KOGj6Wydnkaml+hsecpf3
+	Q1dRRNbtfXub99TvujTn/IJqLPlE=
+X-Google-Smtp-Source: AGHT+IH5DEVfJgmMc19bVNyOA8LEJHSKR4JLkDQJij/6Jbf/sVBB2fFjrm82j5ImwwK+HJLrJMJvEJaNb7Lr/hRz1ww=
+X-Received: by 2002:a17:90b:1288:b0:2c8:3c59:263 with SMTP id
+ 98e67ed59e1d1-2c8a237a727mr5659409a91.12.1719324972423; Tue, 25 Jun 2024
+ 07:16:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240625135343.673745-1-aapo.vienamo@linux.intel.com>
+References: <TYCP286MB08958A751BD29BB5B04485D9BCD52@TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM>
+In-Reply-To: <TYCP286MB08958A751BD29BB5B04485D9BCD52@TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Date: Tue, 25 Jun 2024 16:16:01 +0200
+Message-ID: <CAOiHx==oBMZiVaZ_ra0ren-sea+D4znXQA8wq-dA+5sC0dav5w@mail.gmail.com>
+Subject: Re: [PATCH] gpio: ath79: convert to dynamic GPIO base allocation
+To: Shiji Yang <yangshiji66@outlook.com>
+Cc: linux-gpio@vger.kernel.org, Alban Bedel <albeu@free.fr>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 25, 2024 at 04:53:43PM +0300, Aapo Vienamo wrote:
-> Add the missing raw_spin_lock_init() call to gnr_gpio_probe().
-> 
-> Fixes: ecc4b1418e23 ("gpio: Add Intel Granite Rapids-D vGPIO driver")
-> Signed-off-by: Aapo Vienamo <aapo.vienamo@linux.intel.com>
+Hi,
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-
-Linus/Bartosz, I wonder if you can take this one directly? Andy is
-currently on vacation and mine starts after this week so there is nobody
-handling these until August. Thanks!
-
+On Tue, 25 Jun 2024 at 03:09, Shiji Yang <yangshiji66@outlook.com> wrote:
+>
+> ath79 target has already been converted to device tree based
+> platform. Using dynamic GPIO numberspace base to suppress the
+> warning:
+>
+> gpio gpiochip0: Static allocation of GPIO base is deprecated, use dynamic allocation.
+>
+> Tested on Atheros AR7241 and AR9344.
+>
+> Signed-off-by: Shiji Yang <yangshiji66@outlook.com>
 > ---
->  drivers/gpio/gpio-graniterapids.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-graniterapids.c b/drivers/gpio/gpio-graniterapids.c
-> index c693fe05d50f..f2e911a3d2ca 100644
-> --- a/drivers/gpio/gpio-graniterapids.c
-> +++ b/drivers/gpio/gpio-graniterapids.c
-> @@ -296,6 +296,8 @@ static int gnr_gpio_probe(struct platform_device *pdev)
->  	if (!priv)
->  		return -ENOMEM;
->  
-> +	raw_spin_lock_init(&priv->lock);
-> +
->  	regs = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(regs))
->  		return PTR_ERR(regs);
-> -- 
-> 2.45.2
+>  drivers/gpio/gpio-ath79.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
+> index f0c0c0f77eb0..d986424a661e 100644
+> --- a/drivers/gpio/gpio-ath79.c
+> +++ b/drivers/gpio/gpio-ath79.c
+> @@ -273,8 +273,8 @@ static int ath79_gpio_probe(struct platform_device *pdev)
+>                 dev_err(dev, "bgpio_init failed\n");
+>                 return err;
+>         }
+> -       /* Use base 0 to stay compatible with legacy platforms */
+> -       ctrl->gc.base = 0;
+> +       /* Dynamic allocation */
+> +       ctrl->gc.base = -1;
+
+bgpip_init() will already have set gc.base to -1, so you can just drop
+the assignment.
+
+Best Regards,
+Jonas
 
