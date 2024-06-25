@@ -1,487 +1,330 @@
-Return-Path: <linux-gpio+bounces-7669-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7670-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 667E4915DB4
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 06:37:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AAEE915E84
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 07:59:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D95831F226D8
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 04:37:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1DBC1F2279B
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jun 2024 05:59:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADBF913C918;
-	Tue, 25 Jun 2024 04:36:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CA3C145B32;
+	Tue, 25 Jun 2024 05:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bVylyGc7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r0a/wpd7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5DC143738;
-	Tue, 25 Jun 2024 04:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9131D145B23
+	for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2024 05:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719290206; cv=none; b=oXhHH8+2D1kFOi/9j4y8Bc89AyglyyQ+6PTMtBa5Ka9m3VJXQMaL84441XWDXDEPAGIFucNIcODhW7YHz13arVnKLFowBJ0w+c2bQJKl/89O8TmF+fHa9lqJmoC+jklfMwV9pzx0Jnpjovld/ak9b4/TOIP/f107f3J/aWLNoAY=
+	t=1719295136; cv=none; b=eM3Qi4bieFBCI9EkLUFYCg9zQ9PeXXRL3OFbEVWKtGV5hr+sM/ver45oCpFpjt0iwj4qza3MtwMI+Rj+8n7NY0DbhpA3NXahPdadK7aeMTTfI/53/FAQsqrzKsmdBrRwVSLID+7O+LtClptA2sIvRUkI0Na9OfPesd3dvUeW8rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719290206; c=relaxed/simple;
-	bh=rYqlsSuW6saKXMi6LSo6kxfaONSlcK6I/Zw9nMD1n6Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qKlivu1mKi4P3fsL6Z6/+05gVZrl1pknPvElfCsBmyP3PnEn97xh/B5ZK/evj/Km0YGm7yaCIk844Hrh+h7j1iSmH2j1JzXyjTvqZAH9PA99b6SysyLJ+agkGj+E+VC70joJ8QIO46Yy4/J15reGXELoXIczpM1FXnI4xlP4Jfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=bVylyGc7; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1719290204; x=1750826204;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rYqlsSuW6saKXMi6LSo6kxfaONSlcK6I/Zw9nMD1n6Y=;
-  b=bVylyGc7XDL3TaT5eAc9mvPY5EykrAUgDRMe4WvwuEhewqO1v26+GoEF
-   DDXp+VqsdnAypInoC2VjfZp+kNXG4zMWeZbZg5/cb1SEU16ImGuIYFGsz
-   EW3oVy3INLcwTN8Su2Kaklgk+LcuSB2cLUsi6TjMrpG4bsT7NCRhhrkWp
-   1kdWPA0N2NDKcDqZqvekSAyjPBAFafj4akYwf7opqk4o6wGkBEqR47M1W
-   /YHixQQOmidys9yo93mqpv+jJCytRHXl5sl+xFwXc06n/fFBc3ddJFRkx
-   /YrHXDsz5TlMpcCb9U6ZM7pCuCK97poQxn+fzjOqiyLvulagQ+0q6jM+F
-   w==;
-X-CSE-ConnectionGUID: b+IvN4n7SVm7JJetPdkZzA==
-X-CSE-MsgGUID: 9DFmeEXfSruD3rvJUUoDKg==
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="29087618"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2024 21:36:43 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 24 Jun 2024 21:36:11 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 24 Jun 2024 21:36:04 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>, <arnd@arndb.de>,
-	<durai.manickamkr@microchip.com>, <linux-gpio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <manikandan.m@microchip.com>
-Subject: [PATCH v2 5/5] dt-bindings: pinctrl: Convert Atmel PIO3 pinctrl to json-schema
-Date: Tue, 25 Jun 2024 10:05:25 +0530
-Message-ID: <20240625043525.279711-6-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240625043525.279711-1-manikandan.m@microchip.com>
-References: <20240625043525.279711-1-manikandan.m@microchip.com>
+	s=arc-20240116; t=1719295136; c=relaxed/simple;
+	bh=XQCmf27Ylxkt/CeNjMw9wYOcCNe/zvY4fjCovTUwlhg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JP4lGP/aY4TMoXUfpG445AVZjkrZIsOHfI+4kaB7ZiOpb1bJma16U/Bq9nD7ApFnUqhP3Jk8ElqZJYHzFfApqPNCca2JJ/xugC/vuiROl51SszSKFd4jhqt0Rz0aPerhM8bmm/AnVetF/PntgZH26leNaeQE4OK1BUgcMFK2Gt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r0a/wpd7; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3621ac606e1so3609037f8f.1
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jun 2024 22:58:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719295133; x=1719899933; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MEh/17Aqb0CF0XY9Y7f3T5FZpR/u2UEtrCW8T4woPmU=;
+        b=r0a/wpd7SN0MxdFR2oZPhcOSe3U/YvAuJ0aBrjaE+i/P8KfQd6hlwGFjCpIyNrcIAs
+         qP3mlKHv1LvNctxvJBq+rqldUT8M1Fc8/53lPuUe7keeHkYoX/0DHpKTh655gL/BMkJs
+         o/sRJlgwUC2GNbZVYZpRgacpobxjmB1GDKmI54TyRxvAYESQ5SBdFmjN2iOtPvZKC4Ti
+         +qE6y+Ja/R0Nw6QGSrIceu9y8HHJMbkE7A0D6M/FXCh8EzC8yhnC07jcdV2VnSx5Y2eM
+         pASl/g7hwj2J2IJDbv8a0kvZSrkG+LkVhSIffCBmeZH+pbM4MGybGGtNYS5TL/o+nKfX
+         GJiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719295133; x=1719899933;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MEh/17Aqb0CF0XY9Y7f3T5FZpR/u2UEtrCW8T4woPmU=;
+        b=DUecyodwGdIY4WTmhAimpojhUJ4aAkmhrV8YDzOwVsVcOih9HUaeFn81tcKdmtA5+o
+         sysgCyRwccLMhPvery7dm2+mDL4eazoQpHIQIbH6W/V0gxVtM6o0wv66toAoZjNm+NB+
+         m5MVrcVm/FzG4gugahXdoCRZrz89F6+XB63IYEvLviADTx9XpiCGZhvyazoYjCgIkfw6
+         2oanPisBwGnTyHZfre0oOnwkA1TcvSDBqbh6rPTgHrSkVSpuF2d7sOe85ccX/RowY42a
+         9jRQbLouZYjuaBeCvylu6yR7NZ34PJARRb9C91at7XwgD5WCdbB/nMCaOhmPfXMGW22G
+         cBRw==
+X-Forwarded-Encrypted: i=1; AJvYcCWpv2ee2RU4EvEQPjSKpwZLqq0cbV7TGlRKUy3/CP1LSbqhcOsCQyi27crijic7HqpiBQiPU149MAy08xFtcTAQGdt+Oqzaq72ZPA==
+X-Gm-Message-State: AOJu0Yx6sLCRPU1+2TD/azekD8q70CDu4D+tiuCJJgQBw8qAf5TKVmOa
+	VDxhmIFAo8LAbU7rESxw3qJ9gpD0yNdl6TZXuLZVf/tAbcA6qVOoodOe1b/vGX58dOaPIunY2az
+	jxLU=
+X-Google-Smtp-Source: AGHT+IFJxOVQ6z/UnneNaFNFir8Cu23IX66luADI6AV5R2+EvI6fqlxEn0zeZSz/k+uUdK2EqMLxRA==
+X-Received: by 2002:a5d:63c5:0:b0:366:dee6:a9ea with SMTP id ffacd0b85a97d-366e32f6c82mr5877092f8f.26.1719295132720;
+        Mon, 24 Jun 2024 22:58:52 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-366389b861bsm11819109f8f.29.2024.06.24.22.58.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 22:58:52 -0700 (PDT)
+Message-ID: <0bfcbf2e-9082-4287-9821-acd85a7024b9@linaro.org>
+Date: Tue, 25 Jun 2024 06:58:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 v4 2/2] pinctrl: qcom: Introduce SM4250 LPI pinctrl
+ driver
+To: Alexey Klimov <alexey.klimov@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20240612-sm4250-lpi-v4-0-a0342e47e21b@linaro.org>
+ <20240612-sm4250-lpi-v4-2-a0342e47e21b@linaro.org>
+ <CANgGJDqJZ-qUB4XOTEhRQrzim_-ecf6evbM=zz4SiEKMSBObzQ@mail.gmail.com>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <CANgGJDqJZ-qUB4XOTEhRQrzim_-ecf6evbM=zz4SiEKMSBObzQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Convert Atmel PIO3 pinctrl binding document to DT schema format
-json-schema.
+Thanks Alexey,
 
-Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
----
-changes in v2:
+On 24/06/2024 22:36, Alexey Klimov wrote:
+> Hi Srini,
+> 
+> On Sat, 22 Jun 2024 at 17:49, Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+>>
+>> Add support for the pin controller block on SM4250 Low Power Island.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
+>>   drivers/pinctrl/qcom/Kconfig                    |   9 +
+>>   drivers/pinctrl/qcom/Makefile                   |   1 +
+>>   drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c | 236 ++++++++++++++++++++++++
+>>   3 files changed, 246 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+>> index 24619e80b2cc..dd9bbe8f3e11 100644
+>> --- a/drivers/pinctrl/qcom/Kconfig
+>> +++ b/drivers/pinctrl/qcom/Kconfig
+>> @@ -68,6 +68,15 @@ config PINCTRL_SC7280_LPASS_LPI
+>>            Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
+>>            (Low Power Island) found on the Qualcomm Technologies Inc SC7280 platform.
+>>
+>> +config PINCTRL_SM4250_LPASS_LPI
+>> +       tristate "Qualcomm Technologies Inc SM4250 LPASS LPI pin controller driver"
+>> +       depends on ARM64 || COMPILE_TEST
+>> +       depends on PINCTRL_LPASS_LPI
+>> +       help
+>> +         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+>> +         Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
+>> +         (Low Power Island) found on the Qualcomm Technologies Inc SM4250 platform.
+>> +
+>>   config PINCTRL_SM6115_LPASS_LPI
+>>          tristate "Qualcomm Technologies Inc SM6115 LPASS LPI pin controller driver"
+>>          depends on ARM64 || COMPILE_TEST
+>> diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
+>> index e2e76071d268..eb04297b6388 100644
+>> --- a/drivers/pinctrl/qcom/Makefile
+>> +++ b/drivers/pinctrl/qcom/Makefile
+>> @@ -43,6 +43,7 @@ obj-$(CONFIG_PINCTRL_SDM845) += pinctrl-sdm845.o
+>>   obj-$(CONFIG_PINCTRL_SDX55) += pinctrl-sdx55.o
+>>   obj-$(CONFIG_PINCTRL_SDX65) += pinctrl-sdx65.o
+>>   obj-$(CONFIG_PINCTRL_SDX75) += pinctrl-sdx75.o
+>> +obj-$(CONFIG_PINCTRL_SM4250_LPASS_LPI) += pinctrl-sm4250-lpass-lpi.o
+>>   obj-$(CONFIG_PINCTRL_SM4450) += pinctrl-sm4450.o
+>>   obj-$(CONFIG_PINCTRL_SM6115) += pinctrl-sm6115.o
+>>   obj-$(CONFIG_PINCTRL_SM6115_LPASS_LPI) += pinctrl-sm6115-lpass-lpi.o
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c
+>> new file mode 100644
+>> index 000000000000..2d2c636a3e20
+>> --- /dev/null
+>> +++ b/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c
+>> @@ -0,0 +1,236 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+>> + * Copyright (c) 2020, 2023 Linaro Ltd.
+>> + */
+>> +
+>> +#include <linux/gpio/driver.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#include "pinctrl-lpass-lpi.h"
+>> +
+>> +enum lpass_lpi_functions {
+>> +       LPI_MUX_dmic01_clk,
+>> +       LPI_MUX_dmic01_data,
+>> +       LPI_MUX_dmic23_clk,
+>> +       LPI_MUX_dmic23_data,
+>> +       LPI_MUX_dmic4_clk,
+>> +       LPI_MUX_dmic4_data,
+>> +       LPI_MUX_ext_mclk0_a,
+>> +       LPI_MUX_ext_mclk0_b,
+>> +       LPI_MUX_ext_mclk1_a,
+>> +       LPI_MUX_ext_mclk1_b,
+>> +       LPI_MUX_ext_mclk1_c,
+>> +       LPI_MUX_i2s1_clk,
+>> +       LPI_MUX_i2s1_data,
+>> +       LPI_MUX_i2s1_ws,
+>> +       LPI_MUX_i2s2_clk,
+>> +       LPI_MUX_i2s2_data,
+>> +       LPI_MUX_i2s2_ws,
+>> +       LPI_MUX_i2s3_clk,
+>> +       LPI_MUX_i2s3_data,
+>> +       LPI_MUX_i2s3_ws,
+>> +       LPI_MUX_qup_io_00,
+>> +       LPI_MUX_qup_io_01,
+>> +       LPI_MUX_qup_io_05,
+>> +       LPI_MUX_qup_io_10,
+>> +       LPI_MUX_qup_io_11,
+>> +       LPI_MUX_qup_io_25,
+>> +       LPI_MUX_qup_io_21,
+>> +       LPI_MUX_qup_io_26,
+>> +       LPI_MUX_qup_io_31,
+>> +       LPI_MUX_qup_io_36,
+>> +       LPI_MUX_qua_mi2s_data,
+>> +       LPI_MUX_qua_mi2s_sclk,
+>> +       LPI_MUX_qua_mi2s_ws,
+>> +       LPI_MUX_slim_clk,
+>> +       LPI_MUX_slim_data,
+>> +       LPI_MUX_sync_out,
+>> +       LPI_MUX_swr_rx_clk,
+>> +       LPI_MUX_swr_rx_data,
+>> +       LPI_MUX_swr_tx_clk,
+>> +       LPI_MUX_swr_tx_data,
+>> +       LPI_MUX_swr_wsa_clk,
+>> +       LPI_MUX_swr_wsa_data,
+>> +       LPI_MUX_gpio,
+>> +       LPI_MUX__,
+>> +};
+>> +
+>> +static const struct pinctrl_pin_desc sm4250_lpi_pins[] = {
+>> +       PINCTRL_PIN(0, "gpio0"),
+>> +       PINCTRL_PIN(1, "gpio1"),
+>> +       PINCTRL_PIN(2, "gpio2"),
+>> +       PINCTRL_PIN(3, "gpio3"),
+>> +       PINCTRL_PIN(4, "gpio4"),
+>> +       PINCTRL_PIN(5, "gpio5"),
+>> +       PINCTRL_PIN(6, "gpio6"),
+>> +       PINCTRL_PIN(7, "gpio7"),
+>> +       PINCTRL_PIN(8, "gpio8"),
+>> +       PINCTRL_PIN(9, "gpio9"),
+>> +       PINCTRL_PIN(10, "gpio10"),
+>> +       PINCTRL_PIN(11, "gpio11"),
+>> +       PINCTRL_PIN(12, "gpio12"),
+>> +       PINCTRL_PIN(13, "gpio13"),
+>> +       PINCTRL_PIN(14, "gpio14"),
+>> +       PINCTRL_PIN(15, "gpio15"),
+>> +       PINCTRL_PIN(16, "gpio16"),
+>> +       PINCTRL_PIN(17, "gpio17"),
+>> +       PINCTRL_PIN(18, "gpio18"),
+>> +       PINCTRL_PIN(19, "gpio19"),
+>> +       PINCTRL_PIN(20, "gpio20"),
+>> +       PINCTRL_PIN(21, "gpio21"),
+>> +       PINCTRL_PIN(22, "gpio22"),
+>> +       PINCTRL_PIN(23, "gpio23"),
+>> +       PINCTRL_PIN(24, "gpio24"),
+>> +       PINCTRL_PIN(25, "gpio25"),
+>> +       PINCTRL_PIN(26, "gpio26"),
+>> +};
+> 
+> This doesn't probe() on qrb4210 RB2 for me with the following trace:
+> 
+> [   10.709014] ------------[ cut here ]------------
+> [   10.719085] WARNING: CPU: 1 PID: 56 at
+> drivers/pinctrl/qcom/pinctrl-lpass-lpi.c:446
+> lpi_pinctrl_probe+0x308/0x388 [pinctrl_lpass_lpi]
+> [   10.719108] Modules linked in: btqca qrtr btbcm qcom_q6v5_pas
+> libarc4 qcom_pil_info llcc_qcom bluetooth snd_soc_sm8250 ocmem
+> qcom_q6v5 snd_soc_qcom_sdw cfg80211 drm_exec qcom_sysmon
+> snd_soc_qcom_common gpu_sched crct10dif_ce qcom_common soundwire_bus
+> ecdh_generic qcom_glink_smem pinctrl_sm4250_lpass_lpi qcom_pmic_tcpm
+> drm_dp_aux_bus ecc mdt_loader qcom_wdt pinctrl_lpass_lpi
+> drm_display_helper qmi_helpers tcpm dispcc_sm6115 rfkill gpucc_sm6115
+> aux_hpd_bridge qcom_usb_vbus_regulator nvmem_qcom_spmi_sdam
+> qcom_spmi_temp_alarm qcom_pbs qcom_pon qcom_spmi_adc5 qcom_vadc_common
+> spi_geni_qcom gpi qcom_stats icc_bwmon qcom_rng qcrypto authenc
+> phy_qcom_qmp_usbc display_connector rpmsg_ctrl libdes typec rpmsg_char
+> phy_qcom_qusb2 drm_kms_helper rmtfs_mem socinfo i2c_gpio fuse drm
+> backlight dm_mod ip_tables x_tables ipv6
+> [   10.719238] CPU: 1 PID: 56 Comm: kworker/u33:0 Not tainted
+> 6.10.0-rc2-00012-ge45ddb1f8d34-dirty #7
+> [   10.719245] Hardware name: Qualcomm Technologies, Inc. QRB4210 RB2 (DT)
+> [   10.719250] Workqueue: events_unbound deferred_probe_work_func
+> [   10.719265] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [   10.719271] pc : lpi_pinctrl_probe+0x308/0x388 [pinctrl_lpass_lpi]
+> [   10.719278] lr : lpi_pinctrl_probe+0x44/0x388 [pinctrl_lpass_lpi]
+> [   10.719284] sp : ffff80008035bb40
+> [   10.719286] x29: ffff80008035bb40 x28: 0000000000000000 x27: 0000000000000000
+> [   10.719294] x26: ffff7eea83029428 x25: ffffa0c480a67510 x24: ffff7eea83be5800
+> [   10.719301] x23: ffff7eea83be5810 x22: 0000000000000000 x21: ffffa0c480a64030
+> [   10.719308] x20: ffff7eea83be5810 x19: ffff7eea89e59880 x18: ffffffffffffffff
+> [   10.719315] x17: 0000000000000000 x16: ffffa0c4f34949a4 x15: ffff80008035b7f0
+> [   10.719321] x14: ffffffffffffffff x13: 006c7274636e6970 x12: 2e30303030633761
+> [   10.719329] x11: 0101010101010101 x10: ffffa0c4f4b28ff2 x9 : 0000000000000008
+> [   10.719335] x8 : 0000000000000008 x7 : ffffa0c4f3cfa640 x6 : 0000000000000020
+> [   10.719342] x5 : 0000000000000020 x4 : 0000000000000000 x3 : ffffa0c480a67448
+> [   10.719348] x2 : ffffa0c480a67468 x1 : ffff7eea838b8000 x0 : 000000000000001b
+> [   10.719357] Call trace:
+> [   10.719361]  lpi_pinctrl_probe+0x308/0x388 [pinctrl_lpass_lpi]
 
-- Fix bot errors by fixing issues in 4/5 
-- remove qoutes from $ref
----
- .../bindings/pinctrl/atmel,at91-pinctrl.txt   | 178 ----------------
- .../pinctrl/atmel,at91rm9200-pinctrl.yaml     | 194 ++++++++++++++++++
- 2 files changed, 194 insertions(+), 178 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-deleted file mode 100644
-index 0aa1a53012d6..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-+++ /dev/null
-@@ -1,178 +0,0 @@
--* Atmel AT91 Pinmux Controller
--
--The AT91 Pinmux Controller, enables the IC
--to share one PAD to several functional blocks. The sharing is done by
--multiplexing the PAD input/output signals. For each PAD there are up to
--8 muxing options (called periph modes). Since different modules require
--different PAD settings (like pull up, keeper, etc) the controller controls
--also the PAD settings parameters.
--
--Please refer to pinctrl-bindings.txt in this directory for details of the
--common pinctrl bindings used by client devices, including the meaning of the
--phrase "pin configuration node".
--
--Atmel AT91 pin configuration node is a node of a group of pins which can be
--used for a specific device or function. This node represents both mux and config
--of the pins in that group. The 'pins' selects the function mode(also named pin
--mode) this pin can work on and the 'config' configures various pad settings
--such as pull-up, multi drive, etc.
--
--Required properties for iomux controller:
--- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinctrl"
--		or "atmel,sama5d3-pinctrl" or "microchip,sam9x60-pinctrl"
--		or "microchip,sam9x7-pinctrl", "microchip,sam9x60-pinctrl"
--- atmel,mux-mask: array of mask (periph per bank) to describe if a pin can be
--  configured in this periph mode. All the periph and bank need to be describe.
--
--How to create such array:
--
--Each column will represent the possible peripheral of the pinctrl
--Each line will represent a pio bank
--
--Take an example on the 9260
--Peripheral: 2 ( A and B)
--Bank: 3 (A, B and C)
--=>
--
--  /*    A         B     */
--  0xffffffff 0xffc00c3b  /* pioA */
--  0xffffffff 0x7fff3ccf  /* pioB */
--  0xffffffff 0x007fffff  /* pioC */
--
--For each peripheral/bank we will describe in a u32 if a pin can be
--configured in it by putting 1 to the pin bit (1 << pin)
--
--Let's take the pioA on peripheral B
--From the datasheet Table 10-2.
--Peripheral B
--PA0	MCDB0
--PA1	MCCDB
--PA2
--PA3	MCDB3
--PA4	MCDB2
--PA5	MCDB1
--PA6
--PA7
--PA8
--PA9
--PA10	ETX2
--PA11	ETX3
--PA12
--PA13
--PA14
--PA15
--PA16
--PA17
--PA18
--PA19
--PA20
--PA21
--PA22	ETXER
--PA23	ETX2
--PA24	ETX3
--PA25	ERX2
--PA26	ERX3
--PA27	ERXCK
--PA28	ECRS
--PA29	ECOL
--PA30	RXD4
--PA31	TXD4
--
--=> 0xffc00c3b
--
--Required properties for pin configuration node:
--- atmel,pins: 4 integers array, represents a group of pins mux and config
--  setting. The format is atmel,pins = <PIN_BANK PIN_BANK_NUM PERIPH CONFIG>.
--  The PERIPH 0 means gpio, PERIPH 1 is periph A, PERIPH 2 is periph B...
--  PIN_BANK 0 is pioA, PIN_BANK 1 is pioB...
--
--Bits used for CONFIG:
--PULL_UP		(1 << 0): indicate this pin needs a pull up.
--MULTIDRIVE	(1 << 1): indicate this pin needs to be configured as multi-drive.
--			Multi-drive is equivalent to open-drain type output.
--DEGLITCH	(1 << 2): indicate this pin needs deglitch.
--PULL_DOWN	(1 << 3): indicate this pin needs a pull down.
--DIS_SCHMIT	(1 << 4): indicate this pin needs to the disable schmitt trigger.
--DRIVE_STRENGTH (3 << 5): indicate the drive strength of the pin using the
--			following values:
--				00 - No change (reset state value kept)
--				01 - Low
--				10 - Medium
--				11 - High
--OUTPUT		(1 << 7): indicate this pin need to be configured as an output.
--OUTPUT_VAL	(1 << 8): output val (1 = high, 0 = low)
--SLEWRATE	(1 << 9): slew rate of the pin: 0 = disable, 1 = enable
--DEBOUNCE	(1 << 16): indicate this pin needs debounce.
--DEBOUNCE_VAL	(0x3fff << 17): debounce value.
--
--NOTE:
--Some requirements for using atmel,at91rm9200-pinctrl binding:
--1. We have pin function node defined under at91 controller node to represent
--   what pinmux functions this SoC supports.
--2. The driver can use the function node's name and pin configuration node's
--   name describe the pin function and group hierarchy.
--   For example, Linux at91 pinctrl driver takes the function node's name
--   as the function name and pin configuration node's name as group name to
--   create the map table.
--3. Each pin configuration node should have a phandle, devices can set pins
--   configurations by referring to the phandle of that pin configuration node.
--4. The gpio controller must be describe in the pinctrl simple-bus.
--
--For each bank the required properties are:
--- compatible: "atmel,at91sam9x5-gpio" or "atmel,at91rm9200-gpio" or
--  "microchip,sam9x60-gpio"
--  or "microchip,sam9x7-gpio", "microchip,sam9x60-gpio", "atmel,at91rm9200-gpio"
--- reg: physical base address and length of the controller's registers
--- interrupts: interrupt outputs from the controller
--- interrupt-controller: marks the device node as an interrupt controller
--- #interrupt-cells: should be 2; refer to ../interrupt-controller/interrupts.txt
--  for more details.
--- gpio-controller
--- #gpio-cells: should be 2; the first cell is the GPIO number and the second
--  cell specifies GPIO flags as defined in <dt-bindings/gpio/gpio.h>.
--- clocks: bank clock
--
--Examples:
--
--pinctrl@fffff400 {
--	#address-cells = <1>;
--	#size-cells = <1>;
--	ranges;
--	compatible = "atmel,at91rm9200-pinctrl", "simple-bus";
--	reg = <0xfffff400 0x600>;
--
--	pioA: gpio@fffff400 {
--		compatible = "atmel,at91sam9x5-gpio";
--		reg = <0xfffff400 0x200>;
--		interrupts = <2 IRQ_TYPE_LEVEL_HIGH 1>;
--		#gpio-cells = <2>;
--		gpio-controller;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--		clocks = <&pmc PMC_TYPE_PERIPHERAL 2>;
--	};
--
--	atmel,mux-mask = <
--	      /*    A         B     */
--	       0xffffffff 0xffc00c3b  /* pioA */
--	       0xffffffff 0x7fff3ccf  /* pioB */
--	       0xffffffff 0x007fffff  /* pioC */
--	      >;
--
--	/* shared pinctrl settings */
--	dbgu {
--		pinctrl_dbgu: dbgu-0 {
--			atmel,pins =
--				<1 14 0x1 0x0	/* PB14 periph A */
--				 1 15 0x1 0x1>;	/* PB15 periph A with pullup */
--		};
--	};
--};
--
--dbgu: serial@fffff200 {
--	compatible = "atmel,at91sam9260-usart";
--	reg = <0xfffff200 0x200>;
--	interrupts = <1 4 7>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_dbgu>;
--};
-diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
-new file mode 100644
-index 000000000000..0ed71e22384c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91rm9200-pinctrl.yaml
-@@ -0,0 +1,194 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/atmel,at91rm9200-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip PIO3 Pinmux Controller
-+
-+maintainers:
-+  - Manikandan Muralidharan <manikandan.m@microchip.com>
-+
-+description:
-+  The AT91 Pinmux Controller, enables the IC to share one PAD to several
-+  functional blocks. The sharing is done by multiplexing the PAD input/output
-+  signals. For each PAD there are up to 8 muxing options (called periph modes).
-+  Since different modules require different PAD settings (like pull up, keeper,
-+  etc) the controller controls also the PAD settings parameters.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - atmel,at91rm9200-pinctrl
-+              - atmel,at91sam9x5-pinctrl
-+              - atmel,sama5d3-pinctrl
-+              - microchip,sam9x60-pinctrl
-+          - const: simple-mfd
-+      - items:
-+          - enum:
-+              - microchip,sam9x7-pinctrl
-+          - const: microchip,sam9x60-pinctrl
-+          - const: simple-mfd
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+  ranges: true
-+
-+  atmel,mux-mask:
-+    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+    description: |
-+      Array of mask (periph per bank) to describe if a pin can be
-+      configured in this periph mode. All the periph and bank need to
-+      be described.
-+
-+      #How to create such array:
-+
-+      Each column will represent the possible peripheral of the pinctrl
-+      Each line will represent a pio bank
-+
-+      #Example:
-+
-+      In at91sam9260.dtsi,
-+      Peripheral: 2 ( A and B)
-+      Bank: 3 (A, B and C)
-+
-+      #    A          B
-+      0xffffffff 0xffc00c3b  # pioA
-+      0xffffffff 0x7fff3ccf  # pioB
-+      0xffffffff 0x007fffff  # pioC
-+
-+      For each peripheral/bank we will describe in a u32 if a pin can be
-+      configured in it by putting 1 to the pin bit (1 << pin)
-+
-+      Let's take the pioA on peripheral B whose value is 0xffc00c3b
-+      From the datasheet Table 10-2.
-+      Peripheral B
-+      PA0     MCDB0
-+      PA1     MCCDB
-+      PA2
-+      PA3     MCDB3
-+      PA4     MCDB2
-+      PA5     MCDB1
-+      PA6
-+      PA7
-+      PA8
-+      PA9
-+      PA10    ETX2
-+      PA11    ETX3
-+      PA12
-+      PA13
-+      PA14
-+      PA15
-+      PA16
-+      PA17
-+      PA18
-+      PA19
-+      PA20
-+      PA21
-+      PA22    ETXER
-+      PA23    ETX2
-+      PA24    ETX3
-+      PA25    ERX2
-+      PA26    ERX3
-+      PA27    ERXCK
-+      PA28    ECRS
-+      PA29    ECOL
-+      PA30    RXD4
-+      PA31    TXD4
-+
-+patternProperties:
-+  '^[a-z0-9-_]+$':
-+    description:
-+      A pinctrl node should contain at least one subnode representing the
-+      pinctrl group available on the machine.
-+    additionalProperties: false
-+
-+    patternProperties:
-+      '^[a-z0-9-_]+$':
-+        type: object
-+        properties:
-+          atmel,pins:
-+            $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+            description: |
-+              Each entry consists of 4 integers and represents the pins
-+              mux and config setting.The format is
-+              atmel,pins = <PIN_BANK PIN_BANK_NUM PERIPH CONFIG>.
-+              Supported pin number and mux varies for different SoCs, and
-+              are defined in <include/dt-bindings/pinctrl/at91.h>.
-+              items:
-+                items:
-+                  - description:
-+                      Pin bank
-+                  - description:
-+                      Pin bank index
-+                  - description:
-+                      Peripheral function
-+                  - description:
-+                      Pad configuration
-+
-+        required:
-+          - atmel,pins
-+
-+        additionalProperties: false
-+
-+  'gpio@[0-9a-f]*$':
-+    $ref: "/schemas/gpio/atmel,at91rm9200-gpio.yaml"
-+    unevaluatedProperties: false
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+required:
-+  - compatible
-+  - ranges
-+  - "#address-cells"
-+  - "#size-cells"
-+  - atmel,mux-mask
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/at91.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/pinctrl/at91.h>
-+
-+    pinctrl@fffff400 {
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      compatible = "atmel,at91rm9200-pinctrl", "simple-mfd";
-+      ranges = <0xfffff400 0xfffff400 0x600>;
-+
-+      atmel,mux-mask = <
-+        /*    A         B     */
-+        0xffffffff 0xffc00c3b  /* pioA */
-+        0xffffffff 0x7fff3ccf  /* pioB */
-+        0xffffffff 0x007fffff  /* pioC */
-+        >;
-+
-+      dbgu {
-+        pinctrl_dbgu: dbgu-0 {
-+                        atmel,pins =
-+                          <AT91_PIOB 14 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
-+                           AT91_PIOB 15 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+        };
-+      };
-+
-+      pioA: gpio@fffff400 {
-+              compatible = "atmel,at91rm9200-gpio";
-+              reg = <0xfffff400 0x200>;
-+              interrupts = <2 IRQ_TYPE_LEVEL_HIGH 1>;
-+              #gpio-cells = <2>;
-+              gpio-controller;
-+              interrupt-controller;
-+              #interrupt-cells = <2>;
-+              clocks = <&pmc PMC_TYPE_PERIPHERAL 2>;
-+      };
-+    };
-+...
--- 
-2.25.1
+For some reason the common library seems to have a bit mask of 23 which 
+is why we are seeing this error.
 
+Can you try this change,
+
+--------------------------------------->cut<-------------------------------
+diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c 
+b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+index 0d98008e33ee..7366aba5a199 100644
+--- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
++++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+@@ -20,7 +20,7 @@
+
+  #include "pinctrl-lpass-lpi.h"
+
+-#define MAX_NR_GPIO            23
++#define MAX_NR_GPIO            32
+  #define GPIO_FUNC              0
+  #define MAX_LPI_NUM_CLKS       2
+
+--------------------------------------->cut<-------------------------------
+
+> [   10.719369]  platform_probe+0x68/0xc4
+> [   10.719378]  really_probe+0xbc/0x29c
+> [   10.719384]  __driver_probe_device+0x78/0x12c
+> [   10.719390]  driver_probe_device+0xd8/0x15c
+> [   10.719395]  __device_attach_driver+0xb8/0x134
+> [   10.719401]  bus_for_each_drv+0x88/0xe8
+> [   10.719407]  __device_attach+0xa0/0x190
+> [   10.719412]  device_initial_probe+0x14/0x20
+> [   10.719418]  bus_probe_device+0xac/0xb0
+> [   10.719423]  deferred_probe_work_func+0x88/0xc0
+> [   10.719429]  process_one_work+0x150/0x294
+> [   10.719439]  worker_thread+0x2f8/0x408
+> [   10.719445]  kthread+0x110/0x114
+> [   10.719452]  ret_from_fork+0x10/0x20
+> [   10.719459] ---[ end trace 0000000000000000 ]---
+> [   10.719589] qcom-sm4250-lpass-lpi-pinctrl a7c0000.pinctrl: probe
+> with driver qcom-sm4250-lpass-lpi-pinctrl failed with error -22
+> 
+> 
+> [...]
+> 
+> Thanks,
+> Alexey
 
