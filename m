@@ -1,167 +1,139 @@
-Return-Path: <linux-gpio+bounces-7703-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7704-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C50F91783D
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 07:39:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 545719178CB
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 08:19:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27524281446
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 05:39:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85EF31C2227E
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 06:19:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74578145FEB;
-	Wed, 26 Jun 2024 05:39:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 539BB13A869;
+	Wed, 26 Jun 2024 06:19:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOhA4EKe"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="entcXhZ6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEF413A88A
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2024 05:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895BA13A88B
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2024 06:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719380349; cv=none; b=FmZdLSmZ2Pv7JF4Kg80J6LV7haAHbDWI5ZDA3jyo4T6xBcox9ixHB5AHw8C9w7Dw3xmXvfO8CIhOPSVKup9vjtqxTvg26xmCsFGIx7kgGt+277QF3v/hwJQayUuLoJKW7e4g8oGN6moKMIjCoIz96MH95spwy2gbUaN0RVE+NkA=
+	t=1719382750; cv=none; b=Q5YDYf0d5HpgVHFWaucirGvcXiK5p7TGAuJ8OAHoYVlIv1jm5dePpuXBUB4uK+h4JcrvdXSphFgA5gg6U7xFurxe1WEQA6cZbLICKT7qCvsVWdAFZR8OlTmgjqXOweY61MsmDZi4STB4LdlTbdCf5S+JUqD+PojxMUbCmZnWdPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719380349; c=relaxed/simple;
-	bh=MeMfu367/5cTcGcy3hiEtQ6Cgy2S13CUdYI5Fp3I9uA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GJOhCQt12OPDbbgsuvDGdliRBG8wa6B9+lh9nkGdNeJ5LDohjsEOdPG2+SUnO+Y63kUWl1lev4dGTeAzjhCTKUO+1NBBpOuV3R+nqqaHOnWg+apz4YSAbGD0RZkn7v/SVx8YdgIf3DkrVbMYx8sZPMz8HLqAhwzYd10tv+1pHnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iOhA4EKe; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2c70c372755so5006231a91.1
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2024 22:39:07 -0700 (PDT)
+	s=arc-20240116; t=1719382750; c=relaxed/simple;
+	bh=RQgSOJkMb9wk/66oDuy8ptZw9rvSHU+xcTyKg1i/qb4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ale85ymA0WczSPfWWSXcZ3Mmyglp3mnU71QmEuWW25cjGn52BGJ2CVTIw7Keo9bgxQIij4ZWQ8UMhUiyH+NwVQNclIAwBERB7ZP0mc/cEnXd7GYa62MgQE0zmANIZ13Nx/eCiT8JiIY6NIoNGXfD+1E+u41x3G4a102K2h06Fb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=entcXhZ6; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-366df217347so3465827f8f.0
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jun 2024 23:19:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719380347; x=1719985147; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aHbbhYphv1rn2xxMEGHnkWsU6wFQsZJUelXBc9q19C4=;
-        b=iOhA4EKeiV6bfFUyKW6gfonubCrgOCtuzLn+iLxc14lVHPylln8qM3/3JfgXe3Ej+8
-         NNzG/+pcZHN0TNpMpVLdDEzkSqN6riiaElM2xpsci54AiNUDqrcqmnc/Dntokf7U/lxb
-         9TLzqeabVP8BNTPrMQIynpJQz9QuDWJCfzHI7LDHGGXFJ7Aq2vD6jffsPoy28WdbuCWm
-         LdHDJLRka9mwkEv86TB7DBG9C6EkfZ+soHm4kOkSeKOQgLefXQlDwn+El2jLyA+04qXs
-         Q4xIsYyyIChq/Gc5SJoEFuU6N/lZOQVeIQRAiV04xoX/k16t9KwAfN4CWkQ/RvRn6mr/
-         6MJg==
+        d=tuxon.dev; s=google; t=1719382747; x=1719987547; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hkDCCBpCvvJAl1mues32HQC3JjD1PKnxT92s3ylApLc=;
+        b=entcXhZ6g5YpyCxPkyEcOiNTr1piy+QzhF14cuLNh2BHyrIpS/r3CxO54Ite4pE9Yk
+         Eb8CLiveJarL9Jj9I/gb62edkiYoc2Cfifx7w1PAmscVkutI0jRZO4lwBYv8j9b1MEm7
+         v3SZVUDhFY8I1UW4w/lEQXKs/95iEEG6ABestoDT0ZX5Wi+8ucC6hQ1o5f+z0u6MD24o
+         /17fO/vv1DbgASJtJDBdh/1ohxjOGqKCWNVXUvqxqS8nyqjdXgBaLOTIJdl0x1OAjLo3
+         UAU76e+1pz1Cudyr82pc52n3r7UU+fYwrVfbVQkW4jrvVApjhpSuEJVBIOWYIqbC+VeZ
+         aVYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719380347; x=1719985147;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aHbbhYphv1rn2xxMEGHnkWsU6wFQsZJUelXBc9q19C4=;
-        b=PSu8nZze9SGJlS+eLawGwm3XYdmz7DGMt942i3eJ62dXrjqNPZ0mgQG04LDTiEOrdD
-         Jyr7YDu9UelnYluCf4y4GgvtmKCM23GBz0/1FRZtfmbzWQKt2XHKXvOJXar/thMbItaD
-         U7S9z/PvGl7bEsXLfOTRo4XCW+UzwmBMH52cI5+IIYNzmOxSWyhf3Fuh/+t2R0V0CqoY
-         3LFcnkN17lAYb+Vna2xvWGXoCK4QFUFK195eAe53BY8SKnuIHaeujye8P7Jk+6dW9/hU
-         J9S5rnPfDsSaE9Nc74Ei5lhyW1FKmRQ0NynfxBq5rxs296i7iZ7SF2DjzRUpZcKwM4f0
-         Q8Xg==
-X-Gm-Message-State: AOJu0Yxn+sZH7tTAKXbECdcl7UIYT+7gla5jB22qCLAaeq5pBLbpnC+D
-	bTCcJxfPiIL3zfxC59PjWkWgrXcbHzmiAAq9B9VJQBdZhIr9U5gYmtBpMA==
-X-Google-Smtp-Source: AGHT+IGMxIdQW40RENsICTouBM2EV3vk99OsDAwNGkpbyUU/WONFoVzZb/KYwRIu3zutmt1HV6Z+jA==
-X-Received: by 2002:a17:90a:2f41:b0:2c7:db01:c9ad with SMTP id 98e67ed59e1d1-2c8612a60f5mr7768786a91.18.1719380346895;
-        Tue, 25 Jun 2024 22:39:06 -0700 (PDT)
-Received: from rigel.home.arpa ([118.209.204.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c8d7b4f821sm674370a91.0.2024.06.25.22.39.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 22:39:06 -0700 (PDT)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH 3/3] bindings: python: tests: add coverage of kernel reconfigure as-is behaviour
-Date: Wed, 26 Jun 2024 13:38:08 +0800
-Message-Id: <20240626053808.179457-4-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240626053808.179457-1-warthog618@gmail.com>
-References: <20240626053808.179457-1-warthog618@gmail.com>
+        d=1e100.net; s=20230601; t=1719382747; x=1719987547;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hkDCCBpCvvJAl1mues32HQC3JjD1PKnxT92s3ylApLc=;
+        b=U3M5HoMhTi5OfFraoauZ4/8TNKs7Jl5tlPodTozzXVvYY/j+Ibq6ZBu9tnlOqGMg0E
+         jP+or4aQTDHIlqzgDY12NRTpBaIUh1l0OIaogVjMpfloZPf9l52OF0Cw5D/RuIFaLbMA
+         zWiu06iJU796GagWMLwS6HA9ZksTUHxnQRkU26wc2Y3mYC2Brkjj6JmmWlhqSwtW3BBo
+         Ib4aj9J/QAiXsNDLj+sIW3Rm5CPlPIFEAewGXrLr5WGJvuQN2lce09b2S8BZDHapE3HQ
+         tExgT+wWcpqjAR0Fet0X5MHosv3NKIsQ/pynnjKysdrLy0fZlcQ1pHkIV+Eml99PCcoK
+         8z4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWi30yBO6fGZGcMbtDkYSkYWhAbP62rsJ4uylkCCu2Rlv0Z5c8/5xfiKQW0d9Q83sncdUW333CXxPBZSNA+nV5jfF8OOS9h5drtvA==
+X-Gm-Message-State: AOJu0YyVDGiTJvuvtKyElVFQyfCYFTuu0DOh58arxoGruhMH6kOEA8nn
+	qY8vWnHRP3+hpz+yfP6Xm5ao90dlMGVStizxbLdLGej0DDB/H53LV3nwhQXW2SM=
+X-Google-Smtp-Source: AGHT+IElg9j81NmwVS1BHYzIBgjJfkqTeofPf8r35hmT1PYbcAE7HyZz9tEX7CppD5OTfr/qatZgzQ==
+X-Received: by 2002:a5d:64c4:0:b0:366:f64b:289 with SMTP id ffacd0b85a97d-366f64b03f8mr5631215f8f.33.1719382746927;
+        Tue, 25 Jun 2024 23:19:06 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.70])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3663a8c7499sm14792850f8f.90.2024.06.25.23.19.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jun 2024 23:19:06 -0700 (PDT)
+Message-ID: <dda01e59-3172-449c-9f2f-574a82b94a4f@tuxon.dev>
+Date: Wed, 26 Jun 2024 09:19:05 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/9] pinctrl: renesas: rzg2l: Clean up and refactor OEN
+ read/write functions
+Content-Language: en-US
+To: Paul Barker <paul.barker.ct@bp.renesas.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com>
+ <20240611113204.3004-3-paul.barker.ct@bp.renesas.com>
+ <CAMuHMdXe8aaweQJ2=V7ksKTqcJCnqewKhSrrO4h7X924Vbk-_Q@mail.gmail.com>
+ <6416f18e-f4cd-41da-9b46-b3b1f67d7170@bp.renesas.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <6416f18e-f4cd-41da-9b46-b3b1f67d7170@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The kernel's handling of reconfigure with default values, as is the
-case for providing a None value as the settings to the Python bindings'
-reconfigure_lines(), resets any flags set to non-default values when the
-line is requested to their default values.  While the flags are cleared,
-the kernel makes no corresponding change to the electrical settings -
-though subsequent calls to get and set values will apply the updated
-flags.
 
-The tests for missing or None settings are extended to demonstrate the
-issue for active_low and drive flags, though the issue applies to all
-flags.
 
-The tests fail unless the kernel is patched to ignore reconfiguration
-of lines without direction set.
+On 25.06.2024 22:56, Paul Barker wrote:
+> On 17/06/2024 13:02, Geert Uytterhoeven wrote:
+>> Hi Paul,
+>>
+>> On Tue, Jun 11, 2024 at 1:33 PM Paul Barker
+>> <paul.barker.ct@bp.renesas.com> wrote:
+>>> -static u8 rzg3s_pin_to_oen_bit(u32 offset, u8 pin, u8 max_port)
+>>> +static u32 rzg3s_read_oen(struct rzg2l_pinctrl *pctrl, u32 caps, unsigned int _pin)
+>>>  {
+>>> -       if (pin)
+>>> -               pin *= 2;
+>>> +       u32 port = RZG2L_PIN_ID_TO_PORT(_pin);
+>>> +       u8 pin = RZG2L_PIN_ID_TO_PIN(_pin);
+>>
+>> It's OK to use RZG2L_PIN_ID_TO_PIN() unconditionally, as RZ/G3S does
+>> not have any dedicated pins with the OEN capability, right?
+> 
+> I thought about this a bit and came to the conclusion that no, it's not
+> ok.
+> 
+> For RZ/G2L, only mux'd pins have OEN capability (Ethernet TXC/TX_CLK
+> only).
+> 
+> For RZ/G3S, OEN capability also exists on XSPI/OCTA pins which are
+> dedicated pins. We don't currently support OEN for these pins in the
+> driver, but we should put a check in place now to be safe.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- bindings/python/tests/tests_line_request.py | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+Just my preference: I would avoid adding code that is not currently used or
+cannot be properly tested.
 
-diff --git a/bindings/python/tests/tests_line_request.py b/bindings/python/tests/tests_line_request.py
-index 2f375d6..79167f1 100644
---- a/bindings/python/tests/tests_line_request.py
-+++ b/bindings/python/tests/tests_line_request.py
-@@ -5,7 +5,7 @@ import errno
- import gpiod
- 
- from . import gpiosim
--from gpiod.line import Direction, Edge, Value
-+from gpiod.line import Direction, Drive, Edge, Value
- from unittest import TestCase
- 
- Pull = gpiosim.Chip.Pull
-@@ -462,7 +462,9 @@ class ReconfigureRequestedLines(TestCase):
-         self.sim = gpiosim.Chip(num_lines=8, line_names={3: "foo", 4: "bar", 6: "baz"})
-         self.chip = gpiod.Chip(self.sim.dev_path)
-         self.req = self.chip.request_lines(
--            {(0, 2, "foo", "baz"): gpiod.LineSettings(direction=Direction.OUTPUT)}
-+            {(0, 2, "foo", "baz"): gpiod.LineSettings(direction=Direction.OUTPUT,
-+                                                      active_low=True,
-+                                                      drive=Drive.OPEN_DRAIN)}
-         )
- 
-     def tearDown(self):
-@@ -511,6 +513,8 @@ class ReconfigureRequestedLines(TestCase):
-     def test_reconfigure_with_default(self):
-         info = self.chip.get_line_info(2)
-         self.assertEqual(info.direction, Direction.OUTPUT)
-+        self.assertTrue(info.active_low)
-+        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
-         self.req.reconfigure_lines({
-             0: gpiod.LineSettings(direction=Direction.INPUT),
-             2: None,
-@@ -520,10 +524,14 @@ class ReconfigureRequestedLines(TestCase):
-         self.assertEqual(info.direction, Direction.INPUT)
-         info = self.chip.get_line_info(2)
-         self.assertEqual(info.direction, Direction.OUTPUT)
-+        self.assertTrue(info.active_low)
-+        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
- 
-     def test_reconfigure_missing_offsets(self):
-         info = self.chip.get_line_info(2)
-         self.assertEqual(info.direction, Direction.OUTPUT)
-+        self.assertTrue(info.active_low)
-+        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
-         self.req.reconfigure_lines(
-                 {(6, 0): gpiod.LineSettings(direction=Direction.INPUT)}
-             )
-@@ -531,6 +539,8 @@ class ReconfigureRequestedLines(TestCase):
-         self.assertEqual(info.direction, Direction.INPUT)
-         info = self.chip.get_line_info(2)
-         self.assertEqual(info.direction, Direction.OUTPUT)
-+        self.assertTrue(info.active_low)
-+        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
- 
-     def test_reconfigure_extra_offsets(self):
-         info = self.chip.get_line_info(2)
--- 
-2.39.2
+Thank you,
+Claudiu Beznea
 
+> I've done
+> this in v3 which I'm about to send...
+> 
+> Thanks,
+> 
 
