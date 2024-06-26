@@ -1,80 +1,84 @@
-Return-Path: <linux-gpio+bounces-7695-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7696-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC29591781F
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 07:29:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53305917820
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 07:29:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C191B21811
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 05:29:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7700D1C20E40
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 05:29:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 073DD143C70;
-	Wed, 26 Jun 2024 05:29:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0304143C70;
+	Wed, 26 Jun 2024 05:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9yJSgqx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8bzT3gV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815A014036F;
-	Wed, 26 Jun 2024 05:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A1E3C463;
+	Wed, 26 Jun 2024 05:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719379779; cv=none; b=NlTHPtIavIxit5d1QquSXxc1vdZGyjKlK+6vsJxgYvFMvzeTxtrk+I1DV691VUF2bTikOvmyzHll2s8jofHDIBrek8RrUBXcFgdS5CeuCWr7OI1ClKMVSjeZYqGqzARAFeUnziSsrBpL4bj9tuH47wTRCE0+8Yq6KKmkz+5bmKI=
+	t=1719379788; cv=none; b=gRPQPnZA6ftiqqB2F/CSzbbmrCEJj6kWYUQygf+sMRT4+Gxx4hayQK+ngyNgFv9wNm22mXJuF9YP6KIyVEDSusfd0/DmZS4H94RSCNKwDtkHgq4K7C0vg71HELuH8S/Rg6oNh+0zUgGA+uRUD7hoDOvFFcvR6lwwiRm1tC8Znhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719379779; c=relaxed/simple;
-	bh=uFUDHfOATdCQfctrUYTO/i+6L8wVIn6qHVPmAPKlvhM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hMR0p7RPBxvf8fZQpKZRMwA2j5KJNbwVnoR8+LUVKGAEPYILZzTmmNfPnfV93pHNVUo5J8+rrJlhtCbWv+YY3/qwZOoRoZpZ4klfmheqiySfVTtjDPo4G3fdvsC2guoY63akN7SyLKODcCWVRvyyCAL04z3Z0mfRNonKf4wTUBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R9yJSgqx; arc=none smtp.client-ip=209.85.210.170
+	s=arc-20240116; t=1719379788; c=relaxed/simple;
+	bh=d1Ru6Gtk5I3b0V5nJ36RVm63btvPvgdVLQTAwHf0MPs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KRWkC2YZFya6ihw/TrOwNv59pehO2vbAo9ZqY+8x8GD0JLiuRlR6lT2EyJAdA/pMv5ci3R2sMkOxzxc0j1BkqvSMeiYlW+I24VVFxv4I0Xp/CtNgFiEHcwWez1FCd6SybeZTWuM0tuwzmwWAqlFtVWjUeWJA2zQh9sOiz2pO6iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a8bzT3gV; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70675977d0eso2968274b3a.0;
-        Tue, 25 Jun 2024 22:29:38 -0700 (PDT)
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7065e2fe7d9so3396427b3a.3;
+        Tue, 25 Jun 2024 22:29:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719379777; x=1719984577; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z1UMNR3lBOm9dLCk3YB9oRVcUY1hRbwOIUju5ln0iPk=;
-        b=R9yJSgqxWqzfPB3y7FnOB1LXs0SqE7ax084RjDe/p7uC2bz7k0ccuI9/l+kwl1pw/N
-         9Wm35Uq5/Bha2avJM8Bq8pDwDlnZSaspdUyxktyEnP2Pd4DbsdfPrlyB/YPlLa0is553
-         yxCY4VxfsD20GQKHDKwIkB4t9Uo0WlA1KAwCPsc3KGv79x5DsLR9VOZG9e+oVqhVJfxe
-         t86tr4eBoI9cqnu59b0l4b+pt4j3EKc3XleSoEIak70MxGCuXmKhxXTvjuRlL2G+ajyN
-         2zry33/byirllvE2hxr8QDZhTf1gIKt6Rsh0S0ZkXprst3yTTAbRBUzQJYJg7ApI+m9k
-         PskA==
+        d=gmail.com; s=20230601; t=1719379786; x=1719984586; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B5nqx7BHy6rJlWMySteyHdWT11os3qiUN4VHjcEhwA4=;
+        b=a8bzT3gVshlwHelomzZK910fhB+QrsD6yJbLEjil2POVppzESVaodM02aBuPPN5Ixb
+         UlNpGpOIMZi6vD6GhtX2+M5Hchy23LuScsetOXs9qBbUYOW9d6wOY/or8PpVHjAPG/e+
+         j4tRGlLg6IYrIE1Ef4QcWRNQoB+xo6rnPwsZocKwRAU7gqEzMsIRMOXgo8QKqHh4gO0X
+         wV2ZBsfSQPdkCywvZkqTZ8GfLdGneRPRze6D8oHifDZlKoy2B2oJsYZ2/rx2uFs4nBpk
+         HiVC8BAto9vV3of7y0HH+NEzLKnL0Qf7CHQqa2tfZxxMIesXc8fjiCsB/LW7BGFlme1X
+         573w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719379777; x=1719984577;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z1UMNR3lBOm9dLCk3YB9oRVcUY1hRbwOIUju5ln0iPk=;
-        b=NEg8zu3hJFBIDKlWHy/D81Y4N6edmHVBBzgeOSrghgVct9lojUhRs8jod18fQgHbuV
-         1gxc5IEH9ig+uaopb8rjSlVFEtOtS+nUqmzL6ZOQzUVk63RmANkfmFT3rlwzVunpkbVb
-         Lan36UVc2n1Gs9kavz61s7YVwFBPFpblLsUZxGXeu7s8s9xCTUsKE4FyPmJL+4YjQE0B
-         8SBwFAjw+ZEK79+HOx4i505+1Lq45oa99GKlNLrL/HDC42uqO8S9hyFdQDepZGm5VeVp
-         YXz5BeK1gYfCCWKANmDGiLjeAkPzNy2iVRD0dVb1OQqmaAFhbW5mmQvl/aT1Ho95LLG2
-         XDOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtp4mNarHQwE0coj/lDxMvNcYu5V8FFFa+S9S4y9AyDAOEWxh+RCYXmELgSAFSea13aVRkvVYAeTeuHRXHTJl9Y+y0ol2EvE+4/g==
-X-Gm-Message-State: AOJu0YzzecqOa5vHrcsphB2tsTiQw0jq418j+zbCRtbwbqWtsVbtPDo4
-	PJkCf1ssLxdBBpjt//vluXMaZZdT4FR6BfzFR1J5OtyQBMdNVjvO9Ruopw==
-X-Google-Smtp-Source: AGHT+IHLo7afNRBB4dWnC4QnsXtYuzvf67ZizJ8Q7nl2hrFrF+F3rv5aZW3KtuJVwdcsY24kW6IxTw==
-X-Received: by 2002:a05:6a00:3cc8:b0:706:8ce7:d582 with SMTP id d2e1a72fcca58-7068ce7dbeemr8374473b3a.17.1719379777465;
-        Tue, 25 Jun 2024 22:29:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719379786; x=1719984586;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B5nqx7BHy6rJlWMySteyHdWT11os3qiUN4VHjcEhwA4=;
+        b=DQVRuxAQsXF0TWMkTHCmCki6RpWjxUwNnY0YJqf8tMMn6+WEVJuSnnAuxfXzFHF35r
+         L9dAArMnDOGb0toUcsFPlsCSyN0ZaEIZGF/9sViF8pd79yr2UEUnC29uLlJr54m4Cilv
+         IdaMFt1pnhOGXT2TMJeZvTNMVkQ/huh8L5R8Ip0FLqvYshCE8vJBJevuPvLZ5OHnblrt
+         KQm+uvejMw8rW/wHMkT7utzEjmxeZFdF1s7HPXwDKhq7LoI3Edhk5y2CtZ2Pvsu0hL1l
+         jijLYimm2CS/2XdNkYb1ibrvxc/Nmd215pHaONmpsET34t4z0j9cFn9ne/KznQAjObkG
+         CqjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGfzPlv+VxJB4I0tKn0yibqIF4Bij4PSHGelyRoHg52vBytuvQG5z3QRpBAYp/eo5mbcjZrF2qG+0BeDJaMVopCSXpGtM12dbzHA==
+X-Gm-Message-State: AOJu0YwvOaVjCrBexUhuNsD4Oxbvec5qj6zJ6AxFL1iLhEjlRoKH6JJ+
+	xQ32ARqdh6tGSKdDZA1AXse10Z0d0KeUs2JEn0gGucZUgVtZsHwQgEE+Iw==
+X-Google-Smtp-Source: AGHT+IG7o63rWxast+RVPWKxgBIQwtxFTHyWsdOgJ2HHBFpRmEj/ETj31UDVDezt3PUk75LBD1ejqg==
+X-Received: by 2002:a05:6a00:138a:b0:706:381e:318c with SMTP id d2e1a72fcca58-7067459db3amr13473558b3a.7.1719379786089;
+        Tue, 25 Jun 2024 22:29:46 -0700 (PDT)
 Received: from rigel.home.arpa ([118.209.204.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70661b9f2f6sm7804000b3a.187.2024.06.25.22.29.34
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70661b9f2f6sm7804000b3a.187.2024.06.25.22.29.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 22:29:37 -0700 (PDT)
+        Tue, 25 Jun 2024 22:29:45 -0700 (PDT)
 From: Kent Gibson <warthog618@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	brgl@bgdev.pl,
 	linus.walleij@linaro.org
 Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 0/4] gpiolib: cdev: directionless line reconfiguration
-Date: Wed, 26 Jun 2024 13:29:21 +0800
-Message-Id: <20240626052925.174272-1-warthog618@gmail.com>
+Subject: [PATCH 1/4] gpiolib: cdev: Disallow reconfiguration without direction (uAPI v1)
+Date: Wed, 26 Jun 2024 13:29:22 +0800
+Message-Id: <20240626052925.174272-2-warthog618@gmail.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240626052925.174272-1-warthog618@gmail.com>
+References: <20240626052925.174272-1-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,54 +87,79 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The behaviour of request reconfiguration without a direction flag set is
-ill-defined and badly behaved, for both uAPI v1 and v2.  I'll will refer
-to such a configuration as 'directionless' here.  That refers to the
-configuration requested, not the actual state of the line.
+linehandle_set_config() behaves badly when direction is not set.
+The configuration validation is borrowed from linehandle_create(), where,
+to verify the intent of the user, the direction must be set to in order
+to effect a change to the electrical configuration of a line. But, when
+applied to reconfiguration, that validation does not allow for the unset
+direction case, making it possible to clear flags set previously without
+specifying the line direction.
 
-The configuration validation used during reconfiguration is borrowed from
-the line request operation, where, to verify the intent of the user, the
-direction must be set to in order to effect a change to the electrical
-configuration of a line. But that validation does not allow for the
-directionless case, making it possible to clear flags set previously
-without specifying the line direction.
+Adding to the inconsistency, those changes are not immediately applied by
+linehandle_set_config(), but will take effect when the line value is next
+get or set.
 
-Adding to the inconsistency, those changes are not immediately applied,
-but will take effect when the line value is next get or set.
+For example, by requesting a configuration with no flags set, an output
+line with GPIOHANDLE_REQUEST_ACTIVE_LOW and GPIOHANDLE_REQUEST_OPEN_DRAIN
+requested could have those flags cleared, inverting the sense of the line
+and changing the line drive to push-pull on the next line value set.
 
-For example, by requesting a reconfiguration with no flags set, an output
-line requested with active low and open drain flags set could have those
-flags cleared, inverting the sense of the line and changing the line drive
-to push-pull on the next line value set.
+Ensure the intent of the user by disallowing configurations which do not
+have direction set, returning an error to userspace to indicate that the
+configuration is invalid.
 
-This series addresses directionless reconfiguration behaviour for both
-uAPI versions.
+And, for clarity, use lflags, a local copy of gcnf.flags, throughout when
+dealing with the requested flags, rather than a mixture of both.
 
-Patch 1 disallows reconfiguration without direction for uAPI v1.
+Fixes: e588bb1eae31 ("gpio: add new SET_CONFIG ioctl() to gpio chardev")
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ drivers/gpio/gpiolib-cdev.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-Patch 2 ignores reconfiguration of a line without direction for uAPI v2.
-A different approach is used, compared to uAPI v1, as v2 allows for
-reconfiguration of multiple lines with different configurations.
-It is more useful to skip directionless lines rather than returning an
-error, as it allows for reconfiguration of a subset of requested lines.
-
-Patches 3 and 4 update the documentation for uAPI v1 and v2, respectively,
-to describe the updated behaviour.
-
-Cheers,
-Kent.
-
-Kent Gibson (4):
-  gpiolib: cdev: Disallow reconfiguration without direction (uAPI v1)
-  gpiolib: cdev: Ignore reconfiguration without direction
-  Documentation: gpio: Reconfiguration with unset direction (uAPI v1)
-  Documentation: gpio: Reconfiguration with unset direction (uAPI v2)
-
- .../gpio/gpio-handle-set-config-ioctl.rst     |  5 +++-
- .../gpio/gpio-v2-line-set-config-ioctl.rst    |  7 +++--
- drivers/gpio/gpiolib-cdev.c                   | 28 +++++++++++--------
- 3 files changed, 26 insertions(+), 14 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 1cb952daacfb..f7a129d67b7d 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -89,6 +89,10 @@ struct linehandle_state {
+ 	GPIOHANDLE_REQUEST_OPEN_DRAIN | \
+ 	GPIOHANDLE_REQUEST_OPEN_SOURCE)
+ 
++#define GPIOHANDLE_REQUEST_DIRECTION_FLAGS \
++	(GPIOHANDLE_REQUEST_INPUT | \
++	 GPIOHANDLE_REQUEST_OUTPUT)
++
+ static int linehandle_validate_flags(u32 flags)
+ {
+ 	/* Return an error if an unknown flag is set */
+@@ -169,21 +173,21 @@ static long linehandle_set_config(struct linehandle_state *lh,
+ 	if (ret)
+ 		return ret;
+ 
++	/* Lines must be reconfigured explicitly as input or output. */
++	if (!(lflags & GPIOHANDLE_REQUEST_DIRECTION_FLAGS))
++		return -EINVAL;
++
+ 	for (i = 0; i < lh->num_descs; i++) {
+ 		desc = lh->descs[i];
+-		linehandle_flags_to_desc_flags(gcnf.flags, &desc->flags);
++		linehandle_flags_to_desc_flags(lflags, &desc->flags);
+ 
+-		/*
+-		 * Lines have to be requested explicitly for input
+-		 * or output, else the line will be treated "as is".
+-		 */
+ 		if (lflags & GPIOHANDLE_REQUEST_OUTPUT) {
+ 			int val = !!gcnf.default_values[i];
+ 
+ 			ret = gpiod_direction_output(desc, val);
+ 			if (ret)
+ 				return ret;
+-		} else if (lflags & GPIOHANDLE_REQUEST_INPUT) {
++		} else {
+ 			ret = gpiod_direction_input(desc);
+ 			if (ret)
+ 				return ret;
 -- 
 2.39.2
 
