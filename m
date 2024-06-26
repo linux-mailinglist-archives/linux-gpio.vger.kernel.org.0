@@ -1,75 +1,76 @@
-Return-Path: <linux-gpio+bounces-7730-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7731-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1294191818C
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 15:01:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2277E9182D8
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 15:42:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 57DD2B231EA
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 13:01:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0714282481
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 13:42:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78E3813CFBC;
-	Wed, 26 Jun 2024 13:01:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1072B1849D0;
+	Wed, 26 Jun 2024 13:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nmPy9O41"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kndbby9u"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AEF522A
-	for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2024 13:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9B2184108
+	for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2024 13:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719406885; cv=none; b=WNWCkXSDZQo8PHPm6No2JLtc40INpgYo86OPA35eBeqXDufWLELnqKGvLMidMasrfdxRyrmoxgxDW0TixrL0QvVENg5oJBSwicOuyiqwgarhzh/pCnCPnv+lipyoIoHivW3TbwpU50eqt/iMcEOitmMgMJHvl8YmGOcfRnmxRGE=
+	t=1719409340; cv=none; b=QaP5bkNmvi8V46+1ky/S2hH35fXe2xBDqG9qk6tEClTf5UqYTe+2OqKT3oGlvEu/JUlo8BlAyqLqdyXln9ZQ4YoSDcaoAcWnOVfsB0vWk/GXAyQK2PerFe9p1u5N/MirvkDdkDJFHTDlTVDs/EMWLFHf1OyDK4qvUmIZaSxijRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719406885; c=relaxed/simple;
-	bh=I/uNc12OLLg3sMNR9wlPVb1BEcJvfnZ6/FvyL0WVpSM=;
+	s=arc-20240116; t=1719409340; c=relaxed/simple;
+	bh=G6GyLrPxIJA6BepJXCLQUuFU9Oo5t/0slMuFQKBEb9o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IUjtluXBLdH22w2o6B0ckxVyGDYBN/8Whh0cvj32Z3LVrCae0ZYAxDXQVw+igWngZ6Q+ZmP9ps6r0DAdsMRP1b2kXuVX5NocCPjbtf3OQy00sPUJDc4huygfwcT/JmXf9DtRuxFxJPAJ45SFabLxAOkoFC/QbSQ7Qx2SwavSpS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nmPy9O41; arc=none smtp.client-ip=209.85.218.50
+	 In-Reply-To:Content-Type; b=eR5N2OivoHmuiCPO7c5Ab2yBMUJLJLn0HpLtGD1MUD3A2iYY/NUBTdZrthjvL8UaOa21w1VGG7A9BgMXYi7ogFccJNKltZda8gaMGhDJyu/U8k6aDITH7dfDtxroQ+uIhgZ87iC/JHZ8a1hN+AyRU/IddQKoYK+CHr/um0aR7ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kndbby9u; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a7194ce90afso534631066b.2
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2024 06:01:23 -0700 (PDT)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a7252bfe773so426970166b.1
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Jun 2024 06:42:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719406882; x=1720011682; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1719409337; x=1720014137; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ryLKnkzMXQJySebb8qmcApYN70ZrgnJgQwTJDqpQHkY=;
-        b=nmPy9O41KHBrH/RHRI+iG5k1JJoAsx5wyTfoat0SqqpbCJttgTyq/Rh9HzuU1Hd0GK
-         whyyAV3h/G2o7zAvcvEuC0AtFOwtO0gZYNZD1KJt9C6tDWUsuXXooMRrDkPXwGyVzs1b
-         vUw8qDEiQy9a/bYfwgMAaGY28/nokWbTjXgrk24jlh0DSnkM0px6GkHxlxiQcdP3giKM
-         aK1yJE2+vlx775f2H+CTT0H2iVq/+pMlz+0hssBf2//tsoemcGMiQ34pFkFSjURJ7rw2
-         J8ePGPIRwTONzAkeLVw89oerVzngW/Zigb14gior5ou8Te0FnQkyeLOIKe6d5xmx9MVw
-         47OA==
+        bh=jTXxPmLrWcDLxWQcA61tAzuHvB6N4vS5qqMUk8CYcTE=;
+        b=kndbby9uCmbEX7dC/xprFEAUpW03mjpHvmUdZ3AFGWIHfCqxUfoFDuWZIz2nD8FflB
+         Cdqu7ErCtAcxeDsaK0ReOg30OdVZs8KT/GXlUoZphG8BQMBaVJKJ2OOlQqjmef4Lw3SK
+         OHTEeNkXUdUVVzVpX3a6EwUBPw8ESH7LvtG870Y2XsyaY3+Fv/XW2tTNm/p41ECmoyDL
+         ZbFmGwLv10Xge2IAcg1ZAIuqWpUcbEvEc84aGFE5+tPKBtj7PDnddUuJdRTEpJUdvJP+
+         bP/pwbWZ82/CIhvQkveSafiNZCI1eNEHiNxhU5x+WdOPKqwBxzwK8r5+foyl7mGFVn7y
+         VkGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719406882; x=1720011682;
+        d=1e100.net; s=20230601; t=1719409337; x=1720014137;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ryLKnkzMXQJySebb8qmcApYN70ZrgnJgQwTJDqpQHkY=;
-        b=OPGGM60RAt9Iy0IyW/rndXgKombSeS5heO6VwCpkMmJVaMkSkr54AgZYK4lGcwF9IM
-         hmfIf+6F2ff5jiHEga3DOUxD8e55AySW0vycsqNg7kOhZgfy+PJDuylUnspDXxhdKMcl
-         WI4XbSKnlQVmRwRIShgFI1d6NYfc6UlQQYmbvJ79IcZtkEJQnphP/bsbXpJDMu4j8eQB
-         /4i8tmlY62cSWijjA8CbiXE8P8SfqwhnuprMiBki+rLQlf0ZdQ+vBxCbbyT+2D3Z+MDK
-         YXLWAlotm87kmLZQQD6r03ZZEg/hMcRx4PAFz0TrgNkCECozFz6nGT6FvQOUYNJrhq8z
-         W4Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCUW4D7GbqpGbpB/TXYbm2d2sWtikCs9sFQG10PXBds62WWZ/xf/RkMWP8Dl74zau7/iUKY/wsPEhTamUCdYXeThuVW7ZZbyc02ebQ==
-X-Gm-Message-State: AOJu0YzxpUVX/Bl41YBIKSrRqnvwnP6eiG9fXRJx1SHgfA36e8Lvbdxd
-	lDZM5QuhNtf77zD1L48eOP9/35ceohAl28C0GokshIpshPF06KWm8VxQdwXkmBM=
-X-Google-Smtp-Source: AGHT+IFlLo0JH1gGo+HH1mWhsMDl0o3hYjx83DFQ+FDkMSeL7kdoVNdHaP78qL1EHT4N4rVF0SHhGA==
-X-Received: by 2002:a17:907:c249:b0:a72:6b08:ab27 with SMTP id a640c23a62f3a-a726b08acdamr348934666b.36.1719406881782;
-        Wed, 26 Jun 2024 06:01:21 -0700 (PDT)
+        bh=jTXxPmLrWcDLxWQcA61tAzuHvB6N4vS5qqMUk8CYcTE=;
+        b=nYrEdXTVHWImJS0eNl+QuTO/90Jkjj8RfyPT+bgkj4HEDeKfeKQ02f0xEa+g5mT/6i
+         fBcy78eRcOz3haufanAvSwRtIy9DZRTCS+DyKWp/4HergcexuIdvmeggueFzRqubsiHo
+         FTv8qmRdhL7V0NbvOEEpsIzRqiGLMdU6v+1Mw/SRldxDPh4yeVKFqu7hkuFy6ZA46/CA
+         x5ivL+sypwQKueZdrlLdd6orQUKYyVePM1rukf/MOiUXLmEIcUDx0VxNKUHWAywnLY7n
+         /JKM/2Ho8STYyr1gO7B4WYsxB0sEQ55I7ARWp5Tph/Pe+p64IlZjZsR/GtJXhNqB3DLS
+         UJNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWj1y/Xus2h2hoDDhA9deCmMZBhjI8IS+Ao2xu+ZnQiGl7AxfCuTYMMmlqhjDrGTpBo1KU2yLZ7Ben+jCn4KvGNzSip7u7qt6KoZw==
+X-Gm-Message-State: AOJu0YwFMS/hocNBLLm4labB7e1VNdU7IkysPKUoQ78K7oFtXX/bqO2s
+	/iq4ehv5fVxi+hlyCm5TnTe32MksH0zEwFEzGNgb602ync8ES6J+STYYLT3LcLt7+XNNT1Onf7q
+	e
+X-Google-Smtp-Source: AGHT+IHbbmYwAFIwJdfdBQVcmTumFs5wYR9NHjq2jWwg2REG+VKa/MnbYMvIunoF4rA5s/OlT7Mkxg==
+X-Received: by 2002:a17:906:e085:b0:a6f:b7d5:f80c with SMTP id a640c23a62f3a-a7245c85a4amr627079366b.15.1719409337359;
+        Wed, 26 Jun 2024 06:42:17 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7250712ca5sm344543266b.100.2024.06.26.06.01.20
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a725fe640ebsm243709466b.196.2024.06.26.06.42.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 06:01:21 -0700 (PDT)
-Message-ID: <4efb51f3-4600-4d88-a5df-e7be43294d53@linaro.org>
-Date: Wed, 26 Jun 2024 15:01:19 +0200
+        Wed, 26 Jun 2024 06:42:16 -0700 (PDT)
+Message-ID: <4106f2be-be0b-4263-9e61-c3a29e837a7c@linaro.org>
+Date: Wed, 26 Jun 2024 15:42:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,18 +78,16 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pinctrl: samsung: Add support for pull-up and
- pull-down
-To: Vishnu Reddy <vishnu.reddy@samsung.com>,
- 'Krzysztof Kozlowski' <krzk@kernel.org>, s.nawrocki@samsung.com,
- alim.akhtar@samsung.com, linus.walleij@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
-References: <CGME20240620103950epcas5p10514d4a19bdfd505d7d92ceb1fe10cc7@epcas5p1.samsung.com>
- <20240620103410.35786-1-vishnu.reddy@samsung.com>
- <38fae674-f672-46e0-a44e-1278deaaf36a@kernel.org>
- <07f201dac7be$e81317d0$b8394770$@samsung.com>
+Subject: Re: [PATCH v4 0/2] pinctrl: qcom: add sm4250 lpi pinctrl
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, alexey.klimov@linaro.org
+References: <20240612-sm4250-lpi-v4-0-a0342e47e21b@linaro.org>
+ <CACRpkdZyupZmV+e=L0KR8ospH9P=wdUrMFvBnGXyfhLhW3-=PQ@mail.gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -135,90 +134,23 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <07f201dac7be$e81317d0$b8394770$@samsung.com>
+In-Reply-To: <CACRpkdZyupZmV+e=L0KR8ospH9P=wdUrMFvBnGXyfhLhW3-=PQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 26/06/2024 13:49, Vishnu Reddy wrote:
+On 26/06/2024 12:04, Linus Walleij wrote:
+> On Sat, Jun 22, 2024 at 6:49 PM Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
 > 
+>> Add support for sm4250 lpi pinctrl.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > 
->> -----Original Message-----
->> From: Krzysztof Kozlowski [mailto:krzk@kernel.org]
->> Sent: 24 June 2024 19:27
->> To: Vishnu Reddy <vishnu.reddy@samsung.com>;
->> krzysztof.kozlowski@linaro.org; s.nawrocki@samsung.com;
->> alim.akhtar@samsung.com; linus.walleij@linaro.org
->> Cc: linux-arm-kernel@lists.infradead.org; linux-samsung-
->> soc@vger.kernel.org; linux-gpio@vger.kernel.org; linux-
->> kernel@vger.kernel.org; pankaj.dubey@samsung.com;
->> ravi.patel@samsung.com; gost.dev@samsung.com
->> Subject: Re: [PATCH v2] pinctrl: samsung: Add support for pull-up and pull-
->> down
->>
->> On 20/06/2024 12:34, Vishnu Reddy wrote:
->>> gpiolib framework has the implementation of setting up the
->>> PUD configuration for GPIO pins but there is no driver support.
->>>
->>> Add support to handle the PUD configuration request from the
->>> userspace in samsung pinctrl driver.
->>>
->>> Signed-off-by: Vishnu Reddy <vishnu.reddy@samsung.com>
->>> ---
->>> Verified the offset from the user manual of following Exynos SoC series
->>> and found the current code is taking care of correct offset for pull-up
->>> and pull-down
->>>
->>> Exynos-3250
->>> Exynos-3470
->>> Exynos-4412
->>> Exynos-4415
->>> Exynos-5250
->>> Exynos-5260
->>> Exynos-5410
->>> Exynos-5420
->>> Exynos-5422
->>> Exynos-7420
->>> Exynos-7580
->>> Exynos-7880
->>> Exynos-9820
->>> Exynos-9830
->>> Exynos-4210
->>> Exynos-S5PC210
->>> Exynos-S5PV310
->>>
->>> This patch is tested on FSD platform
->>
->> You verified but...
->>
->>> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h
->> b/drivers/pinctrl/samsung/pinctrl-samsung.h
->>> index d50ba6f07d5d..758b623a4bea 100644
->>> --- a/drivers/pinctrl/samsung/pinctrl-samsung.h
->>> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
->>> @@ -61,6 +61,13 @@ enum pincfg_type {
->>>  #define PIN_CON_FUNC_INPUT		0x0
->>>  #define PIN_CON_FUNC_OUTPUT		0x1
->>>
->>> +/*
->>> + * Values for the pin PUD register.
->>> + */
->>> +#define PIN_PUD_PULL_UP_DOWN_DISABLE	0x0
->>> +#define PIN_PUD_PULL_DOWN_ENABLE	0x1
->>> +#define PIN_PUD_PULL_UP_ENABLE		0x3
->>
->> ... I said it is not correct, so you send the same? If you think I was
->> wrong, then please respond and keep discussion going. Sending the same
->> suggests you just ignored my comment.
->>
->> Look at two headers s5pv210-pinctrl.h and s3c64xx-pinctrl.h. How did you
->> resolve these?
-> Thank you for sharing the s5pv210-pinctrl.h and s3c64xx-pinctrl.h  file names for the pin value information.
-> I have not ignored your comment. Unfortunately, I don't have the user manuals for the s3c64xx and s5pv210 series.
-> I have an idea to handle the PIN_PULL_UP value of the s3c64xx and s5pv210 series by checking the compatibility with the of_device_is_compatible API.
-> Will it be okay or do you have any other suggestions?
+> No major protests against v4 so patches applied!
 
-I don't remember the code used here, but usually such choices are
-determined by driver match data (and flags or value customized per variant).
+There was a protest from Alexey, that driver does not probe correctly.
+Can you still drop it? Not sure if worth revert, though, better to fix
+incrementally.
 
 Best regards,
 Krzysztof
