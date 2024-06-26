@@ -1,81 +1,83 @@
-Return-Path: <linux-gpio+bounces-7697-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7698-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B72E2917823
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 07:30:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCD35917825
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 07:30:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 46904B22A0E
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 05:30:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96128281FFA
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jun 2024 05:30:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E41D514534D;
-	Wed, 26 Jun 2024 05:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5A561448EA;
+	Wed, 26 Jun 2024 05:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTntpJMS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WPDXONG9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A62143882;
-	Wed, 26 Jun 2024 05:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6EF143882;
+	Wed, 26 Jun 2024 05:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719379799; cv=none; b=YvXXmJ70YvbdYJQ/lyjvXXL4toThisD9kYNVF0uZcQwACUo+HHeGBaKA9QkzYURGTVv0N2ZL4jXMdndcShsZD0h/iXvwJTbtXEjkFqVBZqotrl5N7C6R2p8CJQ2ZuU+MMN/zfHrOopXWjJpSYn1+Nckch9nMq4jr+lONtPaD34Q=
+	t=1719379810; cv=none; b=fPGW6Zh/NjKE2O2Wuqt/azDiDWaD2lUyLXwdzd2mR5JLQOftV1xi3PZ85O9WUaigZoQP0AmwQm+6S40K/pHdTDhnHGADHBjktTLhfnLhlQaUVzwUsEYBOznYjtd45exBmkVNVfNlBVMCj7RkLfzJ9f3tJsWhtNaBSOHTkrhOpZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719379799; c=relaxed/simple;
-	bh=OIEjf1PmNuRJQdMYjG/K8J0cSTFB4cdxAArbfqrK5vw=;
+	s=arc-20240116; t=1719379810; c=relaxed/simple;
+	bh=FsKp+orMRlKLPXvYpe9KT8WdKvix6GklcVgngmT3RMY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jf95FCkGANphO/7kMBU/2R9WfRZnE1AGNqPlz3YPh7uafILqaVhaugnQGnaODkeFLjo37rwnwYFwO5cmg45OlHTkOCGVhl1M4EKemky5NpkKbGUEIxwHe6bYpn4EaRBQNlm4zRhDk4MX9jWmsWPRWCXSLxn9TnTq3eZKFtFaZdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UTntpJMS; arc=none smtp.client-ip=209.85.210.177
+	 MIME-Version; b=NoP0X5nCwrJV4vePjnAVP6KGp2tsu37RbU9SxXo2eaX28N3Wrnh54yNNw2YfBysmkWwPCh6W9hwdVjW0HtgFYGRV58MB9l+pvsBmqgLXC5VZUDeqpLZsY5QvJjdAkXVd/kSMKqz8JqzR/4huEqvKKLoTMyN4zPZPzPoMIMOaz/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WPDXONG9; arc=none smtp.client-ip=209.85.167.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70666ac8f81so159064b3a.1;
-        Tue, 25 Jun 2024 22:29:58 -0700 (PDT)
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3d562b35fb6so67468b6e.3;
+        Tue, 25 Jun 2024 22:30:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719379797; x=1719984597; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1719379808; x=1719984608; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F2HewnJ2y3xpq3HKpApD6R+6vfVQF+cUrNl05u8p3oY=;
-        b=UTntpJMS3VwxwuNoegKGPEq2g/4hodZWAUnvDa5eJEWUN5vW0fWU9TkDyZhPQl55is
-         L70fmjLSaXxQAm+1yEoW3D8tH1hlTjtaufrZZGiIicsVcP3pnF95I8te6PuMbaZncWnR
-         lRY/+iKAsbx0QS5ixht2DziS1SKaxVbbggjaK+AQa7zlNFgKYaiMcRdMCj7qmjqVHB0h
-         WsBLzGv+uGn7H6DyE+OTB5S4PJH8eOeg4UsMIS+1Lh0lTVOys/HKRq/W7qivSRDwD/nr
-         nWufa4p72hfF0BYBjpqGYCMdoIKoKDu0kewoNkH4/Nvg7DKyfM7rIv0aH03x/r8r9spj
-         KX4Q==
+        bh=u8JRA8YA8hNKryyYG9sIN3Q3e47oeZv1yWhHnRlL+LQ=;
+        b=WPDXONG9BVWJw67mPU4C6JmBopBRUjvK49hudF0wRpMVcquUF829v8hLVTG53oIm/O
+         Xo01g90IlTKjfch3FYYkyHQHce0g1Q1vqCgmuxTwn+/AaEUrpdIdDbHb/pe4BXMDte1R
+         Z0GvcyeLbhifBwWNTVGn6p4iwceG5iyyX7pnqSdfHjyueDgyeATXGIMuKJfYQwFyB9MY
+         ohSjTl3IfQXOvBE74U5cWmtDDFZD34GZzbcvnS21FKLU0nalRhFExeLdOjmeTOzgRoY4
+         QLFV10x4UWRDO7rBaaKDwpCL1MWuUY8PqXaSQgRKUiHCiWcnU2SFpPkwSZVxUKu09edH
+         6+pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719379797; x=1719984597;
+        d=1e100.net; s=20230601; t=1719379808; x=1719984608;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=F2HewnJ2y3xpq3HKpApD6R+6vfVQF+cUrNl05u8p3oY=;
-        b=ICBD0aor8tuca6FSEo0ipNttzS2Fh8ugsDTpFiMR0v5tT0Kp8TqkjrrBWwyDS8ZsGA
-         xo1aCOZ9hawpqzHL6IB3XXAKGg0z1U8xQzOBtE8NloxsZr2q9jc9q7i0D/InZCQCHr63
-         B01NWlcxRzVSaT204q3edXrXOMkgcGkDspi5MpeHbCNeqxb3uYhlsZkziCagRsaENSE9
-         /3VtRqAp2frjDbe7n6Okis02mY2H+X8I3nUNCUW+1R2HD7d7B/cOaW0UD666xl5VaNSy
-         HNTfZeyYg9VngCo6gT0zCn15hHPdTMvgpMvJunQT6ko3CF0n/2ksmSBNZ7H41LvMUcrd
-         z4Dw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1oVwb0yLOCK4ONJApJUE2vs0Pscd1lVLqmEvONlFypNWKHqb+bg6ra4367wtUnhWuSdDzNju7fN023zchauYXhsZNm1yWODrHgA==
-X-Gm-Message-State: AOJu0YzkcopI9PerpmQBDxY3LUGtflURvIfa4Iyof7Qu5LDPII/twpBu
-	f1E8e7qqbo6rsQ+cnPliKE5DF1UqsU1M7tsaAArXrfVteutfyB2Wlhd4Qw==
-X-Google-Smtp-Source: AGHT+IG31733UcUI+4wlncV0gMyPhtutHGo8Sw2LufM7FncAEos4V2X1raZr9gthAU8YfZ1lupAnMg==
-X-Received: by 2002:a05:6a20:4694:b0:1bd:2cb0:2e8e with SMTP id adf61e73a8af0-1bd2cb0325dmr1471901637.12.1719379797292;
-        Tue, 25 Jun 2024 22:29:57 -0700 (PDT)
+        bh=u8JRA8YA8hNKryyYG9sIN3Q3e47oeZv1yWhHnRlL+LQ=;
+        b=mxQelca5rnZ6jEQJo5P9KV5zUmOOV5zsc5cbcT9/5jffTy/p83Z+oWiu8H7Ll8ONWX
+         Bh72OrB/ONTI/8HcNlubNLFfYnNc6ntd08CWpXFMTTACZXnVO4sDpMJ1cTSqj21OOlzv
+         +CYx60ssJyihcnSYgVn5gI0CsKZcZJgl8jBNxW8swkABmGaRI+Drwx2Gnk+vHlsZ1mTl
+         8zlRaL0Ihnx+VMUo4LayMWvaABsHqH0t5NdyDxjwy/1eWndouscetDqdgNzQ2395QSZI
+         nPx+gT4fnPAdLevs7AzlkwerFiM76qSR0ODK9XjAxd6Z45cbLzDPjFoyQQwfEF2+knrl
+         oGYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBmvgnNQHfahsPo5g5yaIgAjbWie6kbEAnOMJN8SHtnq0VrUYllb7Z7j/9nIfNq4kdkQWZ9WGUf8UuIOnzoaV1Qvm2ttq6yRq0rhews1pqiRe6Re+ezclbnfPhxOjWSRkaNlvgkg==
+X-Gm-Message-State: AOJu0YxGkh1HfPRw7JcI9e2zgdkeo3zH6r0EnB5eDsiunnyEHtpUlSlN
+	6QzG1ty4TwpwIvzWh4ly9SaR29bbirfICRvIEOI22sS2NcURY/HsJefI8g==
+X-Google-Smtp-Source: AGHT+IHwqt4wrcjc9eDBmy5l3JxEyb57OHWlFtqiCMH4L2axjSe8UpafpNzs7kK24+MUPgwLSdkREA==
+X-Received: by 2002:a05:6808:4497:b0:3d5:376c:f9b2 with SMTP id 5614622812f47-3d541c50615mr11571432b6e.2.1719379807914;
+        Tue, 25 Jun 2024 22:30:07 -0700 (PDT)
 Received: from rigel.home.arpa ([118.209.204.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70661b9f2f6sm7804000b3a.187.2024.06.25.22.29.54
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70661b9f2f6sm7804000b3a.187.2024.06.25.22.30.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jun 2024 22:29:56 -0700 (PDT)
+        Tue, 25 Jun 2024 22:30:07 -0700 (PDT)
 From: Kent Gibson <warthog618@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	brgl@bgdev.pl,
 	linus.walleij@linaro.org
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 2/4] gpiolib: cdev: Ignore reconfiguration without direction
-Date: Wed, 26 Jun 2024 13:29:23 +0800
-Message-Id: <20240626052925.174272-3-warthog618@gmail.com>
+Cc: Kent Gibson <warthog618@gmail.com>,
+	corbet@lwn.net,
+	linux-doc@vger.kernel.org
+Subject: [PATCH 3/4] Documentation: gpio: Reconfiguration with unset direction (uAPI v1)
+Date: Wed, 26 Jun 2024 13:29:24 +0800
+Message-Id: <20240626052925.174272-4-warthog618@gmail.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240626052925.174272-1-warthog618@gmail.com>
 References: <20240626052925.174272-1-warthog618@gmail.com>
@@ -87,64 +89,30 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-linereq_set_config() behaves badly when direction is not set.
-The configuration validation is borrowed from linereq_create(), where,
-to verify the intent of the user, the direction must be set to in order to
-effect a change to the electrical configuration of a line. But, when
-applied to reconfiguration, that validation does not allow for the unset
-direction case, making it possible to clear flags set previously without
-specifying the line direction.
+Update description of reconfiguration rules, adding requirement that a
+direction flag be set or the configuration is considered invalid.
 
-Adding to the inconsistency, those changes are not immediately applied by
-linereq_set_config(), but will take effect when the line value is next get
-or set.
-
-For example, by requesting a configuration with no flags set, an output
-line with GPIO_V2_LINE_FLAG_ACTIVE_LOW and GPIO_V2_LINE_FLAG_OPEN_DRAIN
-set could have those flags cleared, inverting the sense of the line and
-changing the line drive to push-pull on the next line value set.
-
-Skip the reconfiguration of lines for which the direction is not set, and
-only reconfigure the lines for which direction is set.
-
-Fixes: a54756cb24ea ("gpiolib: cdev: support GPIO_V2_LINE_SET_CONFIG_IOCTL")
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- drivers/gpio/gpiolib-cdev.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ .../userspace-api/gpio/gpio-handle-set-config-ioctl.rst      | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index f7a129d67b7d..ef08b23a56e2 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -1534,12 +1534,14 @@ static long linereq_set_config(struct linereq *lr, void __user *ip)
- 		line = &lr->lines[i];
- 		desc = lr->lines[i].desc;
- 		flags = gpio_v2_line_config_flags(&lc, i);
-+		/*
-+		 * Lines not explicitly reconfigured as input or output
-+		 * are left unchanged.
-+		 */
-+		if (!(flags & GPIO_V2_LINE_DIRECTION_FLAGS))
-+			continue;
- 		gpio_v2_line_config_flags_to_desc_flags(flags, &desc->flags);
- 		edflags = flags & GPIO_V2_LINE_EDGE_DETECTOR_FLAGS;
--		/*
--		 * Lines have to be requested explicitly for input
--		 * or output, else the line will be treated "as is".
--		 */
- 		if (flags & GPIO_V2_LINE_FLAG_OUTPUT) {
- 			int val = gpio_v2_line_config_output_value(&lc, i);
+diff --git a/Documentation/userspace-api/gpio/gpio-handle-set-config-ioctl.rst b/Documentation/userspace-api/gpio/gpio-handle-set-config-ioctl.rst
+index d002a84681ac..a03f30db63ab 100644
+--- a/Documentation/userspace-api/gpio/gpio-handle-set-config-ioctl.rst
++++ b/Documentation/userspace-api/gpio/gpio-handle-set-config-ioctl.rst
+@@ -43,7 +43,10 @@ The configuration applies to all requested lines.
  
-@@ -1547,7 +1549,7 @@ static long linereq_set_config(struct linereq *lr, void __user *ip)
- 			ret = gpiod_direction_output(desc, val);
- 			if (ret)
- 				return ret;
--		} else if (flags & GPIO_V2_LINE_FLAG_INPUT) {
-+		} else {
- 			ret = gpiod_direction_input(desc);
- 			if (ret)
- 				return ret;
+ The same :ref:`gpio-get-linehandle-config-rules` and
+ :ref:`gpio-get-linehandle-config-support` that apply when requesting the
+-lines also apply when updating the line configuration.
++lines also apply when updating the line configuration, with the additional
++restriction that a direction flag must be set. Requesting an invalid
++configuration, including without a direction flag set, is an error
++(**EINVAL**).
+ 
+ The motivating use case for this command is changing direction of
+ bi-directional lines between input and output, but it may be used more
 -- 
 2.39.2
 
