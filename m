@@ -1,135 +1,192 @@
-Return-Path: <linux-gpio+bounces-7761-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7762-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40DBC91AA7D
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2024 17:07:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC82291AB00
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2024 17:20:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 730D11C2425D
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2024 15:07:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 668951F2285B
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2024 15:20:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54349198E73;
-	Thu, 27 Jun 2024 15:06:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B2B198827;
+	Thu, 27 Jun 2024 15:20:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C+GMefX+"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="d2lZXacc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C2213C821;
-	Thu, 27 Jun 2024 15:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F2D198A08
+	for <linux-gpio@vger.kernel.org>; Thu, 27 Jun 2024 15:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719500789; cv=none; b=j0+SWqXT5sTiLoKX1rztbRtVft1Us4eShGdT6a2mUEf9oiAMWJ/7Vnc8aDIg40BLLRxQvSaajxNGUknQOgt+AHsQRsXHT7O3jwCXDL044HYw5+Wdc7MfoxxhXc9G5eHl4LW2QL44c3JMnx0f9noWQA9yYjjv3/Ou6bsDSo4Sz5A=
+	t=1719501628; cv=none; b=YGWaeIWwBZpd5pLJsyIqjdY5OipH/t5GVg4047x7HuxhgqxZTGXgzlLbP+xbDEtwNVSdklsxgTwx5YGl8T7/KmE8wxTQCn3LYMicUGwL5eQZayZUk13a1ebPaDMqb42X3jL2hJaNWjty5xYZ83gENBBCdx9QA7cYlXBiFWLfJxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719500789; c=relaxed/simple;
-	bh=Q6CNiPkkdNu7gSD02dlZ4a+giT7+eN+yTgHoayf3dXY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KHOqfddMwRnou/NvSkJO6PvJuYNRp6uEbt6JdYCZ6MaRuTTIxBQo+ouF6AAGSr9WNkDyuiFat63Js3fYetnl+PobTWuZhIRTs5Ik1PKQdX7hPQCSewQcogMoEV9Udj8LP6eESWJ5uMypsfOIpIfblf1KNNxN+HWdP5KYuSATAq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=C+GMefX+; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45RF6BXQ004455;
-	Thu, 27 Jun 2024 10:06:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1719500771;
-	bh=AA7CCvsy3fGdZWB/58CmRJN2Df5l8paTg5EoWlnMJ1o=;
-	h=From:To:CC:Subject:Date;
-	b=C+GMefX+Z+LXjfKt1Xk5de2oyQNswMN6blN7w29ecMgukSinYs0STHdV1KIs9yg9E
-	 a8F9Q5RS9lzVf//XQfH/TO8dWr3im+ac+2m3x8dKKKE3ouBFqKsF69Z1qThkfh/28w
-	 7BMuyTSTR+c5pZImmYFI3RxuWkJpkOaI8HfsBis0=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45RF6Bgd033898
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 27 Jun 2024 10:06:11 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
- Jun 2024 10:06:11 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 27 Jun 2024 10:06:11 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45RF6BHV001943;
-	Thu, 27 Jun 2024 10:06:11 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Tony Lindgren <tony@atomide.com>, Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2] dt-bindings: pinctrl: pinctrl-single: Fix pinctrl-single,gpio-range description
-Date: Thu, 27 Jun 2024 10:06:10 -0500
-Message-ID: <20240627150610.469645-1-nm@ti.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1719501628; c=relaxed/simple;
+	bh=qn2ixVyyXCsO5ePVgLbp+ysoST/ZQZXuTgQsgzdlUy8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i23v58XCPg+dj3KElCD3NN7hMMplliRMSTS6y+aoC5yZEjMnzRq6Bj9FMRrKsUQKAot/Kbu0lN9OcBMt6FTZkJhak9LgkB1G67y2qSGPFglR3viv9o6uB7J2Mx3KdwqQRvGtCBGW6hFXT94rsNpdbKoHx5AvLMqBSraqVYsNwVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=d2lZXacc; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ec6635aa43so42326081fa.1
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Jun 2024 08:20:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719501624; x=1720106424; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lkhnq0v84BAno+eELTF4Xfc6TkBd4owtSQ6dO7TeZAs=;
+        b=d2lZXaccIxsURDxSCxs7OBObdFBEgCTxGuUUVkRU75Ba4ot3l0n1wh88HFCDvQIKL9
+         2w59R1iaYtgKtyqUMTS/H1atWPNnIJD3N33VArG+iNFJ+E+SupXUzn7oCMTXbpZsFPUF
+         libpdE0SeyQrBBDFD8WkULaZw9x2qStlrpNcrl8GhjCRukQfjmeCJcRu0oIf73e1sJYm
+         a2IiGFEdlEJ6/Uj6Th7j+lIMirM4F9ZhJ5U0CrdYInimuBSlluiLQ+nvAYWRVl5r7SW+
+         PceefAWgP//bhODL1O7kX3U/2kWmmVcuULKNw+dAX6LkZIzdf5Ei99qGwjvsVphFaMlx
+         uGTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719501624; x=1720106424;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lkhnq0v84BAno+eELTF4Xfc6TkBd4owtSQ6dO7TeZAs=;
+        b=bddGW88y5qSbd+MjE2b/z4q1PwX7dInkGxhafIUXQilsb3kF3+O5Kd1fYKooe+jTc8
+         ZapY4K13NLaT8K9qw8FEpH6TFtwaCysGst88eI+VOp+mm1uDvxQxThgSZBVGuXm8dx8K
+         lzQtCdz74Cem5KV4LJOkZh+hk9r1T744ivE8anBI5xfsractHBUywUVmNcVRTO1lj+Yb
+         SJJhMPacL5b4UdW8b0a6axUN0Zx4FeHnXg6nUXVtc7g6gltlKCe2S2s53AxRLgD+xoVM
+         csocRstx8nuWEer2kux9VmtOFubFpQLPxL+Y5UzNpdelZnHnDN4ER85IguSXBnU+K+z/
+         BOeQ==
+X-Gm-Message-State: AOJu0Yw+LVYmKuJyNZAiFfUWdocU1uZSb1VPgeZHa1EVCVjpfPgyKtNV
+	qkiYDAcxf9DwtBpSR4mgiqDuPyHyvx3jN3klBbz+McrHDgrGGKd2/0y+ZyC9Ir7DfXApqfxpKN7
+	5ApGRSCayNq0L6QMHnVieAnry3+hjCOjubX4LhsJXFi8KDMD4
+X-Google-Smtp-Source: AGHT+IGOA1yGPscbCHp2nabwa9RwJq/yr9BhXQe/HWvmeh3vTxkd8FzzmI+lsd2sFoyqlbvPSaguTTwxle0vI3eq9CQ=
+X-Received: by 2002:a2e:8795:0:b0:2ec:4399:9bff with SMTP id
+ 38308e7fff4ca-2ec579c8da8mr91408281fa.42.1719501624170; Thu, 27 Jun 2024
+ 08:20:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Texas Instruments, Inc.
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240626053808.179457-1-warthog618@gmail.com> <20240626053808.179457-4-warthog618@gmail.com>
+ <CAMRc=MdcdUJOU7uPY5Yu2dppvOBfLY_QbEuWH8Zdz28Pki7BSA@mail.gmail.com>
+In-Reply-To: <CAMRc=MdcdUJOU7uPY5Yu2dppvOBfLY_QbEuWH8Zdz28Pki7BSA@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 27 Jun 2024 17:20:13 +0200
+Message-ID: <CAMRc=MfsV3B4SG73GRtusnKfHPtRA7mmQEo0DHRxG_bqYkWNTg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 3/3] bindings: python: tests: add coverage of
+ kernel reconfigure as-is behaviour
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The binding is supposed to describe the properties of each element
-of the pinctrl-single,gpio-range array entry, however when we use
-"- items:" instead of "items:", it explicitly describes that there
-is just a single entry in the array.
+On Thu, Jun 27, 2024 at 5:06=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> On Wed, Jun 26, 2024 at 7:39=E2=80=AFAM Kent Gibson <warthog618@gmail.com=
+> wrote:
+> >
+> > The kernel's handling of reconfigure with default values, as is the
+> > case for providing a None value as the settings to the Python bindings'
+> > reconfigure_lines(), resets any flags set to non-default values when th=
+e
+> > line is requested to their default values.  While the flags are cleared=
+,
+> > the kernel makes no corresponding change to the electrical settings -
+> > though subsequent calls to get and set values will apply the updated
+> > flags.
+> >
+> > The tests for missing or None settings are extended to demonstrate the
+> > issue for active_low and drive flags, though the issue applies to all
+> > flags.
+> >
+> > The tests fail unless the kernel is patched to ignore reconfiguration
+> > of lines without direction set.
+> >
+>
+> Does it mean the kernel patches (at least the first two in the series)
+> are meant to be backported?
+>
+> Bart
 
-The pinctrl-single,gpio-range property should describe more than one
-entry in the array. Fix the typo and adjust the alignment of the
-description of the entries appropriately.
+Well, that was a stupid question, they both have the Fixes: tag...
 
-Fixes: 677a62482bd6 ("dt-bindings: pinctrl: Update pinctrl-single to use yaml")
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-Symptom:
-pinctrl-single,gpio-range = <&range 0 21 7>;
-generates no warning
-However,
-pinctrl-single,gpio-range = <&range 0 21 7>, <&range 32 2 7>;
-generates "is too long" warning.
+Bart
 
-This is just an attempt to fix the binding that is existing.
-
-V1: https://lore.kernel.org/all/20240618165102.2380159-1-nm@ti.com/
-
-Patch is based on next-20240626
-
- .../devicetree/bindings/pinctrl/pinctrl-single.yaml    | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-index c11495524dd2..4e7fd00d602a 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-@@ -75,11 +75,11 @@ properties:
-     description: Optional list of pin base, nr pins & gpio function
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     items:
--      - items:
--          - description: phandle of a gpio-range node
--          - description: pin base
--          - description: number of pins
--          - description: gpio function
-+      items:
-+        - description: phandle of a gpio-range node
-+        - description: pin base
-+        - description: number of pins
-+        - description: gpio function
- 
-   '#gpio-range-cells':
-     description: No longer needed, may exist in older files for gpio-ranges
-
-base-commit: df9574a57d02b265322e77fb8628d4d33641dda9
--- 
-2.43.0
-
+>
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > ---
+> >  bindings/python/tests/tests_line_request.py | 14 ++++++++++++--
+> >  1 file changed, 12 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/bindings/python/tests/tests_line_request.py b/bindings/pyt=
+hon/tests/tests_line_request.py
+> > index 2f375d6..79167f1 100644
+> > --- a/bindings/python/tests/tests_line_request.py
+> > +++ b/bindings/python/tests/tests_line_request.py
+> > @@ -5,7 +5,7 @@ import errno
+> >  import gpiod
+> >
+> >  from . import gpiosim
+> > -from gpiod.line import Direction, Edge, Value
+> > +from gpiod.line import Direction, Drive, Edge, Value
+> >  from unittest import TestCase
+> >
+> >  Pull =3D gpiosim.Chip.Pull
+> > @@ -462,7 +462,9 @@ class ReconfigureRequestedLines(TestCase):
+> >          self.sim =3D gpiosim.Chip(num_lines=3D8, line_names=3D{3: "foo=
+", 4: "bar", 6: "baz"})
+> >          self.chip =3D gpiod.Chip(self.sim.dev_path)
+> >          self.req =3D self.chip.request_lines(
+> > -            {(0, 2, "foo", "baz"): gpiod.LineSettings(direction=3DDire=
+ction.OUTPUT)}
+> > +            {(0, 2, "foo", "baz"): gpiod.LineSettings(direction=3DDire=
+ction.OUTPUT,
+> > +                                                      active_low=3DTru=
+e,
+> > +                                                      drive=3DDrive.OP=
+EN_DRAIN)}
+> >          )
+> >
+> >      def tearDown(self):
+> > @@ -511,6 +513,8 @@ class ReconfigureRequestedLines(TestCase):
+> >      def test_reconfigure_with_default(self):
+> >          info =3D self.chip.get_line_info(2)
+> >          self.assertEqual(info.direction, Direction.OUTPUT)
+> > +        self.assertTrue(info.active_low)
+> > +        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
+> >          self.req.reconfigure_lines({
+> >              0: gpiod.LineSettings(direction=3DDirection.INPUT),
+> >              2: None,
+> > @@ -520,10 +524,14 @@ class ReconfigureRequestedLines(TestCase):
+> >          self.assertEqual(info.direction, Direction.INPUT)
+> >          info =3D self.chip.get_line_info(2)
+> >          self.assertEqual(info.direction, Direction.OUTPUT)
+> > +        self.assertTrue(info.active_low)
+> > +        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
+> >
+> >      def test_reconfigure_missing_offsets(self):
+> >          info =3D self.chip.get_line_info(2)
+> >          self.assertEqual(info.direction, Direction.OUTPUT)
+> > +        self.assertTrue(info.active_low)
+> > +        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
+> >          self.req.reconfigure_lines(
+> >                  {(6, 0): gpiod.LineSettings(direction=3DDirection.INPU=
+T)}
+> >              )
+> > @@ -531,6 +539,8 @@ class ReconfigureRequestedLines(TestCase):
+> >          self.assertEqual(info.direction, Direction.INPUT)
+> >          info =3D self.chip.get_line_info(2)
+> >          self.assertEqual(info.direction, Direction.OUTPUT)
+> > +        self.assertTrue(info.active_low)
+> > +        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
+> >
+> >      def test_reconfigure_extra_offsets(self):
+> >          info =3D self.chip.get_line_info(2)
+> > --
+> > 2.39.2
+> >
 
