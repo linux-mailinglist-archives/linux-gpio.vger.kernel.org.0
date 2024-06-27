@@ -1,192 +1,142 @@
-Return-Path: <linux-gpio+bounces-7762-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7763-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC82291AB00
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2024 17:20:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71D6391AB0E
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2024 17:22:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 668951F2285B
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2024 15:20:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B6E32828F6
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jun 2024 15:22:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B2B198827;
-	Thu, 27 Jun 2024 15:20:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8E28198A20;
+	Thu, 27 Jun 2024 15:22:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="d2lZXacc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjbVpYgq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F2D198A08
-	for <linux-gpio@vger.kernel.org>; Thu, 27 Jun 2024 15:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F04B1591F0;
+	Thu, 27 Jun 2024 15:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719501628; cv=none; b=YGWaeIWwBZpd5pLJsyIqjdY5OipH/t5GVg4047x7HuxhgqxZTGXgzlLbP+xbDEtwNVSdklsxgTwx5YGl8T7/KmE8wxTQCn3LYMicUGwL5eQZayZUk13a1ebPaDMqb42X3jL2hJaNWjty5xYZ83gENBBCdx9QA7cYlXBiFWLfJxg=
+	t=1719501753; cv=none; b=aUA6JF6Qu1CJs7hbf7r14pmaL+baOMP6gXi8tf0WydMY4mkj98BA3oWH9ATZKPW+Vpm6gWyQoFIJtsUswhvhct4MXke3lzjswbZHvSJSMGnQxE8LJxZ+GSJAm8h5SOKJFExYOvev2e65WM7R5IxMwvjIpuSKGs4mStq0QQO9sqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719501628; c=relaxed/simple;
-	bh=qn2ixVyyXCsO5ePVgLbp+ysoST/ZQZXuTgQsgzdlUy8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i23v58XCPg+dj3KElCD3NN7hMMplliRMSTS6y+aoC5yZEjMnzRq6Bj9FMRrKsUQKAot/Kbu0lN9OcBMt6FTZkJhak9LgkB1G67y2qSGPFglR3viv9o6uB7J2Mx3KdwqQRvGtCBGW6hFXT94rsNpdbKoHx5AvLMqBSraqVYsNwVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=d2lZXacc; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ec6635aa43so42326081fa.1
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Jun 2024 08:20:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719501624; x=1720106424; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lkhnq0v84BAno+eELTF4Xfc6TkBd4owtSQ6dO7TeZAs=;
-        b=d2lZXaccIxsURDxSCxs7OBObdFBEgCTxGuUUVkRU75Ba4ot3l0n1wh88HFCDvQIKL9
-         2w59R1iaYtgKtyqUMTS/H1atWPNnIJD3N33VArG+iNFJ+E+SupXUzn7oCMTXbpZsFPUF
-         libpdE0SeyQrBBDFD8WkULaZw9x2qStlrpNcrl8GhjCRukQfjmeCJcRu0oIf73e1sJYm
-         a2IiGFEdlEJ6/Uj6Th7j+lIMirM4F9ZhJ5U0CrdYInimuBSlluiLQ+nvAYWRVl5r7SW+
-         PceefAWgP//bhODL1O7kX3U/2kWmmVcuULKNw+dAX6LkZIzdf5Ei99qGwjvsVphFaMlx
-         uGTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719501624; x=1720106424;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lkhnq0v84BAno+eELTF4Xfc6TkBd4owtSQ6dO7TeZAs=;
-        b=bddGW88y5qSbd+MjE2b/z4q1PwX7dInkGxhafIUXQilsb3kF3+O5Kd1fYKooe+jTc8
-         ZapY4K13NLaT8K9qw8FEpH6TFtwaCysGst88eI+VOp+mm1uDvxQxThgSZBVGuXm8dx8K
-         lzQtCdz74Cem5KV4LJOkZh+hk9r1T744ivE8anBI5xfsractHBUywUVmNcVRTO1lj+Yb
-         SJJhMPacL5b4UdW8b0a6axUN0Zx4FeHnXg6nUXVtc7g6gltlKCe2S2s53AxRLgD+xoVM
-         csocRstx8nuWEer2kux9VmtOFubFpQLPxL+Y5UzNpdelZnHnDN4ER85IguSXBnU+K+z/
-         BOeQ==
-X-Gm-Message-State: AOJu0Yw+LVYmKuJyNZAiFfUWdocU1uZSb1VPgeZHa1EVCVjpfPgyKtNV
-	qkiYDAcxf9DwtBpSR4mgiqDuPyHyvx3jN3klBbz+McrHDgrGGKd2/0y+ZyC9Ir7DfXApqfxpKN7
-	5ApGRSCayNq0L6QMHnVieAnry3+hjCOjubX4LhsJXFi8KDMD4
-X-Google-Smtp-Source: AGHT+IGOA1yGPscbCHp2nabwa9RwJq/yr9BhXQe/HWvmeh3vTxkd8FzzmI+lsd2sFoyqlbvPSaguTTwxle0vI3eq9CQ=
-X-Received: by 2002:a2e:8795:0:b0:2ec:4399:9bff with SMTP id
- 38308e7fff4ca-2ec579c8da8mr91408281fa.42.1719501624170; Thu, 27 Jun 2024
- 08:20:24 -0700 (PDT)
+	s=arc-20240116; t=1719501753; c=relaxed/simple;
+	bh=dzYnLX0ofV348/ikNHktNilDa/Whpr7p2KqpvFijEkA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jJqr9+GSYwI87u85MC30mrJpSEuAYHpUToYBKIhrb4PAPpXTe15M/anU4ymRyryzZWKvpP4Ufz42w08Tf3d85Yt76Al/dbtDtRwz7VydM1V+5E+nfQVNTriqRQoeGP4HmbqAGbze5WATVnkn3Y0ihgaHJOExqjo1C6SjjnntaTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjbVpYgq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2093C2BBFC;
+	Thu, 27 Jun 2024 15:22:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719501753;
+	bh=dzYnLX0ofV348/ikNHktNilDa/Whpr7p2KqpvFijEkA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cjbVpYgqgIXYJnCEvdeaZCCwJAARjGbN5gPemtbhVjxZMSSMTaqprKACo7c2nnLQs
+	 HFHdlpgZfHucfrrvV5es81uasb82gSvbeRxl1DwecrjZ3RkoFdQ4LTQRoSiOMLhdY0
+	 nUk7uFJ/ufGzGl/MXfvqf3LfdfR8sYcY86c6rPUaA08PI4CpqgMsGd5hU1LhKpJIqk
+	 NA691Rym2+GwaEi1PQ6N7WjcU4grUIaf/5g9XdS4w4mIuBWV48J6nL+BnLE+DzYQ9u
+	 HgnAwqTdt5GxXHDV7bxKJ20UmUauLvvIl+lauMDufsJWFXj7aLQhUI1sSPN1PKIkIG
+	 kG/AUoXair8Nw==
+Message-ID: <dbe55275-a13e-46a3-8b45-b08c301088d4@kernel.org>
+Date: Thu, 27 Jun 2024 17:22:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626053808.179457-1-warthog618@gmail.com> <20240626053808.179457-4-warthog618@gmail.com>
- <CAMRc=MdcdUJOU7uPY5Yu2dppvOBfLY_QbEuWH8Zdz28Pki7BSA@mail.gmail.com>
-In-Reply-To: <CAMRc=MdcdUJOU7uPY5Yu2dppvOBfLY_QbEuWH8Zdz28Pki7BSA@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 27 Jun 2024 17:20:13 +0200
-Message-ID: <CAMRc=MfsV3B4SG73GRtusnKfHPtRA7mmQEo0DHRxG_bqYkWNTg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 3/3] bindings: python: tests: add coverage of
- kernel reconfigure as-is behaviour
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pinctrl: samsung: Add support for pull-up and
+ pull-down
+To: Vishnu Reddy <vishnu.reddy@samsung.com>,
+ 'Krzysztof Kozlowski' <krzysztof.kozlowski@linaro.org>,
+ s.nawrocki@samsung.com, alim.akhtar@samsung.com, linus.walleij@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
+References: <CGME20240620103950epcas5p10514d4a19bdfd505d7d92ceb1fe10cc7@epcas5p1.samsung.com>
+ <20240620103410.35786-1-vishnu.reddy@samsung.com>
+ <38fae674-f672-46e0-a44e-1278deaaf36a@kernel.org>
+ <07f201dac7be$e81317d0$b8394770$@samsung.com>
+ <4efb51f3-4600-4d88-a5df-e7be43294d53@linaro.org>
+ <086b01dac896$e988fed0$bc9afc70$@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <086b01dac896$e988fed0$bc9afc70$@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 27, 2024 at 5:06=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> On Wed, Jun 26, 2024 at 7:39=E2=80=AFAM Kent Gibson <warthog618@gmail.com=
-> wrote:
-> >
-> > The kernel's handling of reconfigure with default values, as is the
-> > case for providing a None value as the settings to the Python bindings'
-> > reconfigure_lines(), resets any flags set to non-default values when th=
-e
-> > line is requested to their default values.  While the flags are cleared=
-,
-> > the kernel makes no corresponding change to the electrical settings -
-> > though subsequent calls to get and set values will apply the updated
-> > flags.
-> >
-> > The tests for missing or None settings are extended to demonstrate the
-> > issue for active_low and drive flags, though the issue applies to all
-> > flags.
-> >
-> > The tests fail unless the kernel is patched to ignore reconfiguration
-> > of lines without direction set.
-> >
->
-> Does it mean the kernel patches (at least the first two in the series)
-> are meant to be backported?
->
-> Bart
+On 27/06/2024 15:35, Vishnu Reddy wrote:
+>>
+>> I don't remember the code used here, but usually such choices are
+>> determined by driver match data (and flags or value customized per variant).
+> Hi, Thanks for suggestion.
+> I have gone through this and found that driver match data in this driver is stored in the __initconst section, which is freed up after kernel initialization. So we have two options:
+> 1: Keep this platform specific data in driver match data and then populate driver_data field in probe function. 
+> 2: Use compatible matching and set different values during set_config. 
+> 
+> First approach will result in many changes, such as populating  driver match data for all platforms and then storing the same in driver_data in probe.
+> 
+> In the second approach, we can handle this using simple if/else based on a compatible match. 
+> 
+> IMO, second approach would be simpler and introduce less changes. Any suggestions from your end?
 
-Well, that was a stupid question, they both have the Fixes: tag...
+Please wrap your email according to mailing list style.
 
-Bart
+Both options are not the way because you introduce a new, different
+style of handling per-variant customization. The driver already parses
+match data and stores such per-variant-details in different places, like
+samsung_pin_bank or samsung_pinctrl_drv_data. This seems like a value
+fixed per entire device, so could go to samsung_pinctrl_drv_data.
 
->
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > ---
-> >  bindings/python/tests/tests_line_request.py | 14 ++++++++++++--
-> >  1 file changed, 12 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/bindings/python/tests/tests_line_request.py b/bindings/pyt=
-hon/tests/tests_line_request.py
-> > index 2f375d6..79167f1 100644
-> > --- a/bindings/python/tests/tests_line_request.py
-> > +++ b/bindings/python/tests/tests_line_request.py
-> > @@ -5,7 +5,7 @@ import errno
-> >  import gpiod
-> >
-> >  from . import gpiosim
-> > -from gpiod.line import Direction, Edge, Value
-> > +from gpiod.line import Direction, Drive, Edge, Value
-> >  from unittest import TestCase
-> >
-> >  Pull =3D gpiosim.Chip.Pull
-> > @@ -462,7 +462,9 @@ class ReconfigureRequestedLines(TestCase):
-> >          self.sim =3D gpiosim.Chip(num_lines=3D8, line_names=3D{3: "foo=
-", 4: "bar", 6: "baz"})
-> >          self.chip =3D gpiod.Chip(self.sim.dev_path)
-> >          self.req =3D self.chip.request_lines(
-> > -            {(0, 2, "foo", "baz"): gpiod.LineSettings(direction=3DDire=
-ction.OUTPUT)}
-> > +            {(0, 2, "foo", "baz"): gpiod.LineSettings(direction=3DDire=
-ction.OUTPUT,
-> > +                                                      active_low=3DTru=
-e,
-> > +                                                      drive=3DDrive.OP=
-EN_DRAIN)}
-> >          )
-> >
-> >      def tearDown(self):
-> > @@ -511,6 +513,8 @@ class ReconfigureRequestedLines(TestCase):
-> >      def test_reconfigure_with_default(self):
-> >          info =3D self.chip.get_line_info(2)
-> >          self.assertEqual(info.direction, Direction.OUTPUT)
-> > +        self.assertTrue(info.active_low)
-> > +        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
-> >          self.req.reconfigure_lines({
-> >              0: gpiod.LineSettings(direction=3DDirection.INPUT),
-> >              2: None,
-> > @@ -520,10 +524,14 @@ class ReconfigureRequestedLines(TestCase):
-> >          self.assertEqual(info.direction, Direction.INPUT)
-> >          info =3D self.chip.get_line_info(2)
-> >          self.assertEqual(info.direction, Direction.OUTPUT)
-> > +        self.assertTrue(info.active_low)
-> > +        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
-> >
-> >      def test_reconfigure_missing_offsets(self):
-> >          info =3D self.chip.get_line_info(2)
-> >          self.assertEqual(info.direction, Direction.OUTPUT)
-> > +        self.assertTrue(info.active_low)
-> > +        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
-> >          self.req.reconfigure_lines(
-> >                  {(6, 0): gpiod.LineSettings(direction=3DDirection.INPU=
-T)}
-> >              )
-> > @@ -531,6 +539,8 @@ class ReconfigureRequestedLines(TestCase):
-> >          self.assertEqual(info.direction, Direction.INPUT)
-> >          info =3D self.chip.get_line_info(2)
-> >          self.assertEqual(info.direction, Direction.OUTPUT)
-> > +        self.assertTrue(info.active_low)
-> > +        self.assertEqual(info.drive, Drive.OPEN_DRAIN)
-> >
-> >      def test_reconfigure_extra_offsets(self):
-> >          info =3D self.chip.get_line_info(2)
-> > --
-> > 2.39.2
-> >
+Best regards,
+Krzysztof
+
 
