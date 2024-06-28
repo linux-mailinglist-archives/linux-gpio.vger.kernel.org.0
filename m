@@ -1,712 +1,210 @@
-Return-Path: <linux-gpio+bounces-7805-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7806-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0787391C371
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 18:12:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1CF191C39A
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 18:16:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65520B23D2F
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 16:12:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E4D781C218DC
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 16:16:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 679BF1CCCC7;
-	Fri, 28 Jun 2024 16:11:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A29A1C8FDF;
+	Fri, 28 Jun 2024 16:16:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o5/oW67J"
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="k+2qA++t"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2057.outbound.protection.outlook.com [40.107.20.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D861C2328;
-	Fri, 28 Jun 2024 16:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719591100; cv=none; b=MvkNFt6zPfDxJwdmwGbszXq/VP/Zo9IwaFrS99oXqDjzM81rEDYIoL47n62vTILAvocL8fryUtAKtZa3gadsGy/Gim4VMF9Z4735v01fZI7eyGBFmO3BSGjZiz4SyQISaJy3AvN8geFi4YY5dRE6m2pzf3OKGWjNsK3bkhmkaVg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719591100; c=relaxed/simple;
-	bh=F+u6b5lljMSomhEOb5cZFt4tFgc/TZn2r7XlKRFeKZg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=e2qgwUUQSgdXKtHklAUXQKsw9Y95vzVoRs/cfsNdqDo54jv9X/uUI+CX1atsm67sdiTysEVtM/Mn0g4QR9ilM5DuTk5YTO7LGRrmk3ofgWDtHc1fSbseRTSQK0iIJADq917GVTHdWFZmO3qYJg+yd7W0JY58qWYfJTwkOm1PrmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o5/oW67J; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CD3E260004;
-	Fri, 28 Jun 2024 16:11:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1719591095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3Io8LagjIrFJlocCbrZi5GPYA+iHiHyaxj79YJ3BD1w=;
-	b=o5/oW67JTZEupKscJOS2w5dgsyCWceyY52Q48pwiUddBY/On7jDflhCIU4T/4QGw8gI3zN
-	Nh7gV/QAEDE/DD211b+tbdh5mHLNiR9yvIQMLxheLOdeHyFNmLMb0zQOiwpIU1xmS6k+Aa
-	zqt6coHk+vkYPbQ180uIWSoyBWVWpRDABQGDBejEbd4Wl3kN+nxRaGSmJHw0SY+2B0BJel
-	/w2tObLa9lpLWT3PnECTPkxNVeox27MVkxWe3oEAUnYWeRE1ZcZS/1AmG/396VIeEH4Lba
-	ALigFcnKPHKu6UHqa6Y1Rusu5EBWTOMajm/Bu84nHwVSqnN3IlIL1bzvoJ3kDQ==
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Fri, 28 Jun 2024 18:11:32 +0200
-Subject: [PATCH 2/2] pinctrl: eyeq5: add platform driver
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED47A1BE876
+	for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2024 16:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719591402; cv=fail; b=Gpdq1OFbLGc3dYqN4pOGzesgpvdjYD5Zw/geiMJqXAevjwQRgW3kF5uoEYGhhN5Ztu6n/EXwIF221kgxmpqm6FUFh8TKP4dgWH9Vs0T0cbxRuIeWMWeTDCpKu2sxHmgdO1qF1B92tS7nrW0FRtsP55H4OJ6h7SHjIU+Qgpr/ESE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719591402; c=relaxed/simple;
+	bh=7I321TsMS3x1xbF5QrMqe+csIWYEFcXUPQooECln3Ag=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UkQ2qzX2x4r1ZmZI0Pn2yyiyyWM9BpO7wTskj3tgnKrG5dEQYHjKpBUUsn4hQiOaRnEiTB0h3IuhFjh1oEQK6LNUmNTtyNC7LMLtUlQ6aAO5+qtdjT0C8aiBLh7xm/buTBWrePCnrAdxuEcjk+ne3W13Bo9bubAKK4PP8IK8L8o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=k+2qA++t; arc=fail smtp.client-ip=40.107.20.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DryFv/T1NLhKtvETsX7ybRZ1xkdbAdZBQyrN0aHUgoaRKUXlNtRP7R0mfA7SZKjAPe5X2lxKe57b27/86TXBxzYsElrdPsrHjutdHMVlR2+7n0K+UJi5Xa1k2Xvp8+T1gnvpFqxVPkxdYkQUq3PrAdj4uTKw9V7hxMNLi4el+ENMeKh/K4wy/4Dcff6LdIr6M2sVzV9PBPByI3RrtPmfOpCk/DZ3MhhaAaO0pfj97xglPTtx4OaQgztdOz4mVOxYbs+xh2if7IS6QrqvN3KmF/ZfLef5Bnn78OjuyRz598pZIoDyoc5eJLY6sgTOfXK52DQgDBtTWa3n9hnhGI5P4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7I321TsMS3x1xbF5QrMqe+csIWYEFcXUPQooECln3Ag=;
+ b=VAuhc9mdUhBUoXClE3QtloCxIuJ/bczmk7WomR4Q9Dm5FdYAwUVDR2YDd33BKAUG4VIENdMfhSXj7O3i4RgzJzhSUvtayH+2z3TmjZiJVtw8gxHiu0QTKUCaStO+QR24k16FH8YNW3uFUwdeNpXDmnojcZ/cZmpvy3WH8JDDCjIppWJIaky7e3FqSCCKgD3Qq9UhlkPna2+n8E6qrU6/JKCfxz4Lw+fGoF8bkY22wxR6kMnsqhHzEXTXoqTpLSUkX43SNjW0Mxt/Qb0RRdICxN2lr14mDHVfLKRMTNoRrfRlyVdL7D4tJ9zzc+Fq39UEWHgx7gDlPn1A398lb8RL3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7I321TsMS3x1xbF5QrMqe+csIWYEFcXUPQooECln3Ag=;
+ b=k+2qA++tJMeqE2h1R+Q5aBMvhfhoe62Jl4zhC0WSVNGGzplav5rQXy/qoxnDYa5Djc9MtX859uGbcfiKjuADbGsvWlFox1ktO+8yKT8D43QctAwoqzdmBB7Ih6WGe3c+6fIedA3EIHY9EldkcI8IrIpT7ycSG6v70qhojWDr12svS7oe8Un7qmQmzbiNJ+m9cfoK42/e8X9v5X6csLwoIzbYaQqiUMq56suTJdqYmh2TdNuP0OjF+SAZeVzX0oq4QXPszeRvBzvoN1WmatlkWL3A73yymrvxk1RJ6fqVd/zwxA5eFhJNSmVSOrgL2MbFZZP/cb2b3noWWuhPQgkDlw==
+Received: from AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:5b6::22)
+ by PAWPR10MB7747.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:366::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.26; Fri, 28 Jun
+ 2024 16:16:32 +0000
+Received: from AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::baa6:3ada:fbe6:98f4]) by AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::baa6:3ada:fbe6:98f4%3]) with mapi id 15.20.7698.025; Fri, 28 Jun 2024
+ 16:16:32 +0000
+From: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
+To: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+	"warthog618@gmail.com" <warthog618@gmail.com>, "erik.schilling@linaro.org"
+	<erik.schilling@linaro.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
+	"phil@gadgetoid.com" <phil@gadgetoid.com>, "linus.walleij@linaro.org"
+	<linus.walleij@linaro.org>, "viresh.kumar@linaro.org"
+	<viresh.kumar@linaro.org>
+CC: "bartosz.golaszewski@linaro.org" <bartosz.golaszewski@linaro.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod][RFC/RFT 00/18] dbus: add GLib-based DBus daemon and
+ command-line client
+Thread-Topic: [libgpiod][RFC/RFT 00/18] dbus: add GLib-based DBus daemon and
+ command-line client
+Thread-Index: AQHayXVq4AecSp9hRUOtDY3BO7RdKrHdWiiA
+Date: Fri, 28 Jun 2024 16:16:32 +0000
+Message-ID: <d0c6ebd25dfe75aae0c44ac1a0f937ae74f8f1ec.camel@siemens.com>
+References: <20240412122804.109323-1-brgl@bgdev.pl>
+In-Reply-To: <20240412122804.109323-1-brgl@bgdev.pl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR10MB6867:EE_|PAWPR10MB7747:EE_
+x-ms-office365-filtering-correlation-id: 4ab216ff-ef9c-47d6-97d9-08dc978dacad
+x-ms-exchange-atpmessageproperties: SA
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?bmNnMjVqWjg3WjZlbWpwWW90cDNWelNvZS9vV3A1bmVJVjJNSlhiYkxMaG9D?=
+ =?utf-8?B?Uk4wS1FKNlpjZVhoaVJrbzRxRmE4d0s4WDV6cllGTHlNU1UrdnFXUisvTUJk?=
+ =?utf-8?B?TmhkZ1FZVXNHZGQzSFp5Q1BlekNoL0hBTWxjd3RWSEExTUZkUDJqNlFWb1Bk?=
+ =?utf-8?B?R1EzZXZIN09kbm5wMFlub05yd2twN2xRamR0SCtaNTNRb2s5dFdaY2MwVTJF?=
+ =?utf-8?B?cmsrUi9xZGFLc2RvdUFQSTcxU01TeXVpSlF4L3F1VHoxcDNVR1FXTW91MFk1?=
+ =?utf-8?B?TGJKVmdwQ2lZSFhVV0JRK2swcUJPWGRtNmtBVWhheWVEcW8yUDVsc3MyTmVx?=
+ =?utf-8?B?MlZnTHdtNytORWUvNkQ5N3hONDJGSnZvdUdqYTlRQmQzeTBiUUVDY25nMTBk?=
+ =?utf-8?B?ZEp6TStsS3dKaDNLTDNsRmxpZW1yaTdWbVFkTi8wOWUvaVhWK2ZxditxUWNU?=
+ =?utf-8?B?UzZnSHk0NW9EM1cwNmpaSkloN3RWNzAram9vZUR1eWxMYS83L2JxbExmL1BB?=
+ =?utf-8?B?bGZLU3psazFxTXFHcDRsYVdiV0FDV05mUmFZakE0RnkyNjIyNmZSb05tNWNw?=
+ =?utf-8?B?MHFXbUcwWHZQVnk5RTlWUGJsMHVvVnROK2ZtdHVxL0ZUSTZISTcyTytUYkR5?=
+ =?utf-8?B?UW13SHNLV2tyWXR3Ui9obXpOcFIvbG96R2N6TTE5aUFPakVVbUJmQ3NHSmxN?=
+ =?utf-8?B?cHpCeE54ZCt4SklwRGlxc0EvYVlsNDQ2RFZiaURqRUVQbDVINjR6d0dXQ0F2?=
+ =?utf-8?B?cjFFb0x3RUpOM1dMbUdhdEhHbENKa3lIeVZBM2E0NE40RUFtM0lxY3hOOTFp?=
+ =?utf-8?B?bGUxSmlCay8vakdaNXRlUWNybXdyNm5UOHltN214VTNoRjdzclZ5ZU1qL3g5?=
+ =?utf-8?B?TDhtZStxL0pLdWd4WXdKTk1Iby9IdEpFYkpsem1IQk02bXhGZ2owdVZqejdS?=
+ =?utf-8?B?NkYyMXlRNStNU3M1UFNYdzZNOTlhTDhkTldzcGVPYkkwV0VzV01QQUU0MUR5?=
+ =?utf-8?B?VTJFSGNsUG1tbk1semgzN3hiam8wLzB0b01Da1k3VkJpd1VKc3pIUmd4Rzgz?=
+ =?utf-8?B?SDhycnNGOWJEbVBJRGR5VkNpVHphcnkwVWV4VVhEL2I1UXhHZHBJMGw4R0VO?=
+ =?utf-8?B?cHFpZVNjNURSb3cyZ1NOSHFzdlkwdXZpZUFJUWZSZDMwUW9CYURmZCtmSlBa?=
+ =?utf-8?B?WXBueGVuL0VHb3ZhZXlsbFZHSFN3Q3IvWVRVK1I0cDhONVNHb1BqL0t4MU5x?=
+ =?utf-8?B?eVFWalZ5enRNRGk1MnYwN2RLWkJpZ09udko5T3pSYk00Q09sdXFjU0s5RXV3?=
+ =?utf-8?B?S0lITzBSdEM0VFNkVU0zdS9qUk5PN3h4RERCRkhKSS9Vek9pbzdNTkxpN3Q3?=
+ =?utf-8?B?cnlZdklDOHhST3U2L2E5d3VvSFpSU0sveDl0VDhmUml1L1YwYWVBRTVwZm9Q?=
+ =?utf-8?B?QnBPeThVTkFSaXI4WWpER2tjS3lBL0RyR0UxT2lmV2hBZXczQksyMWRTOFpu?=
+ =?utf-8?B?ejFqenV3UkU0OVViR3lTUUtkMlFib2J6ZStaSXRna2RSaFhYVW9hd3Q2NlZq?=
+ =?utf-8?B?S1l5ZUpsWU5tTTNSK2RxbDRtL1Vtd0dOL0hIQUkvVlZqUFpsanlCRm81blVM?=
+ =?utf-8?B?am04UFlWQW1CMEpQcHFEQUtBQjMwMDY2U003MC9ubW5ic0VubTVaSnlyOVV2?=
+ =?utf-8?B?THJkWm5SNU1FODVRRzRIL2pNc2tqQmdnSXVsKzZXbWx5ZzdqdG1SbVJ6cnhS?=
+ =?utf-8?B?MTRwL3hiemk1c0MwWWI5OEIwbEc5NW01K0lMOTZwVmZBM0pFZk92TnJUL1Uw?=
+ =?utf-8?Q?1LA7lf98F3rbJ2X08cQIbdVnYkSJsUQorNqaw=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?c0NyVU00SWVvaVg2dEYwRFZReVdwbXZERTgvT2M4TnI2YWFkdWxhTmtlMitZ?=
+ =?utf-8?B?RzdzUkJ4TGtiOGlhaWJydkNzMkhFMjMvQWJaanVqL0xOVldVdE9laWhrVWRx?=
+ =?utf-8?B?YTFYK2p3eFFZRFZ2RENnbHBsZU9mK3Q2aHhyYVNlTFFMNitUZDAwOWdTU01a?=
+ =?utf-8?B?aEJpbVQ5K0FJeHBWNTA2VitTb3Jmei9Gc2RsM0dnbVY0bmRQaVZHQW9kTi9V?=
+ =?utf-8?B?Q1JpVFI2bzJKckRhV1FpS2xNNnpMeU9hS0pYQnQ1R01GTXYyNzY4WG8wYlFL?=
+ =?utf-8?B?dUZqN2NSSTlxQkdZdXdaUGdwRnN5Qis4am9PR09oeGZXVFJpa2t6NVM3Z2R5?=
+ =?utf-8?B?YnRkOGRObVpaZUZJUEJucUFVVEN4SExWSWphNGlRaWRXbEloL2lJZHE1MGpj?=
+ =?utf-8?B?NXlVQ2NnYm5VMmtLVzNzT3ZjMHdTd2NWalJGVzAwVTlOcnZqamV5THY3VlM4?=
+ =?utf-8?B?TXI4SlFzM2JZZ3VtNlZpMm9OYWhBck1CbUZocUZTbnZ4NjVNcWV5U04rS2RU?=
+ =?utf-8?B?M04rT2cyTVRCRFlwOEdTMlZaK3lzcnZNN3hnMHgyVkdCS3M0YUl3eTdKUlNJ?=
+ =?utf-8?B?eWlXaEh0bTh5djB6S3Y4cktaakV5S282S3JnQUYzWi8rOWRWMlRyQUZvZnU4?=
+ =?utf-8?B?cWpKaytqa3ZmVDV6WUZleHVXVXY2L0xoSVpUQ2NsL2RlYTZZQTlQZ1BST2JH?=
+ =?utf-8?B?U3NjL3VKeVl2MXY1QytaN0FhK1FNUDczdC8rUFZyQnY1RXlKL0ZhNkFuZTI4?=
+ =?utf-8?B?VHJGczJHZzQyc0lDamliRjluQ0FNV2x4VGRHeGk2ZHNtTEhGSFRKYXdIUkpI?=
+ =?utf-8?B?ZFZ2N1pvL2pyWHdRTzluZC9CRXczbUdMQTZSOUNxendBbnE5RVhGVUlMbk8y?=
+ =?utf-8?B?N040K21VRXhTQkN3R0FMMFo1MEZ3R1Q0R1JoOHZES3RYM0VxTTFyWllZUXFT?=
+ =?utf-8?B?MEVqTmpEVTdLenUrYTU2QkU2UGNteWovZkFDRXNUdlBLYXp1bjhuaGYrRGIw?=
+ =?utf-8?B?a0ZFVHdkOGRFdkdhZHNVc3JtS1VYREM2SUkyZGFWWjU0eHNGQlU5Zlp4eEND?=
+ =?utf-8?B?ZUhkanZyUmFBUzEzN2l0cmpoTTB6RlVyRmFzaFZaaFQvQnc1Q1ZVUk1FZUpG?=
+ =?utf-8?B?Vzd5Y3pxcVdMUkxROWx0YzJPMzRaWHlXWkl0S3I5Vm9VaUY1K2NJR05NVmhx?=
+ =?utf-8?B?elozUmpzQkZza1c1MzBLSitxSXVvcURQbnE2SEVScU1FdGhPZzE3emxKdy9M?=
+ =?utf-8?B?ZGhGWTNvUlB4YSs3QVhnUVpzcnlSYk9RME1URmFkL0ZGZTNmb2ZrdFdCMWpS?=
+ =?utf-8?B?QmdlM3NvRWFlSERkb1QyK3dYdFoxdzJUV3V1d3hVRmdWaldjcStmd29VaXpU?=
+ =?utf-8?B?Qit0Qk1hWWdyQU1FM05Fa3NFVmgzQTNnRjdXQ0ExRmZsYmZIZlhaL2k0Zlg5?=
+ =?utf-8?B?TlRiY0FZOVVjSENoWjZUdHdnYkJQY2w0M2FhUFVOVVoyR0p6emtLenpSTElB?=
+ =?utf-8?B?aXFOSXhoVXRtR2hmYXl3bGJ1NjBkTUtzWUJiMTZVZE5RVEp5ck5PYTM5OGRn?=
+ =?utf-8?B?ZkYxenFMZ2pYcFpxcHNOcEdLdi9tcmRUTy8zS3FjS0w0STQwT1JmMHlHTmgz?=
+ =?utf-8?B?STZhUU82SlVrelA5S0NncXYwRFdRMkgxWmRDakhUTFFRUkxFeCsxeUVld3hO?=
+ =?utf-8?B?Q2cwczRvRDBzNkhRS1hyL3ArM2hSTHBIWXRlOXNQeVJtMTZNTDgvZVJ0S1d0?=
+ =?utf-8?B?V1VZdFFjN3ppcStDU0xocGtVVE5OazYxck12MmhPd29pMkR4bGhTeFdnRGxN?=
+ =?utf-8?B?WVVGSmFrNytOa1ExcFJXOGlBSkRIV2JGd0FWbEVneTM1V2FabE1ieTVLUlFi?=
+ =?utf-8?B?NEErNFV6N2dVWjVxZWVwV01JeEhlWEQ4TlQxMnZEZUxvdXpOTG1qRXU3YlFr?=
+ =?utf-8?B?dFZ4SEpIL2Z6REpqTk5RL2xCR2FBTm9IZlp5Qjd2T1lWbWswdUJnVEdlSUVB?=
+ =?utf-8?B?RzYwdVVYMytwZVhxSDNoMERQUmhkMWUrQkN6SHJDNFNuQ09uQk1TempIcHFP?=
+ =?utf-8?B?SUxmM1BSSUdEQVdmNU4zWjdZSGo2aFhaUnlxeTJDa1pFd1FMNWtTeG92OVMr?=
+ =?utf-8?B?S2NSMU5pSHNlVmMzQm5IR2dTWEpMRFBpTTBBejNmdUpJenhXODZQdFJjRUFw?=
+ =?utf-8?B?K0E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A64C774569829747B03787DFBE5FFE36@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240628-mbly-pinctrl-v1-2-c878192d6b0a@bootlin.com>
-References: <20240628-mbly-pinctrl-v1-0-c878192d6b0a@bootlin.com>
-In-Reply-To: <20240628-mbly-pinctrl-v1-0-c878192d6b0a@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: b4 0.15-dev-13183
-X-GND-Sasl: theo.lebrun@bootlin.com
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR10MB6867.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ab216ff-ef9c-47d6-97d9-08dc978dacad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2024 16:16:32.2391
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JGTblULyWUsrRla6JZkvasxnil1LZWhX24f1q+RKmQjk7tFgKaGE+imUWZijz9x8VZl5HOe+ddYj9lYgXwhKN7JESFSoECR/DcNJgQkRhzc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR10MB7747
 
-Add the Mobileye EyeQ5 pin controller driver. It belongs to a syscon
-region called OLB and gets spawned as auxiliary device to the platform
-driver for clock.
-
-Existing pins and their function live statically in the driver code
-rather than in the devicetree, see compatible match data.
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
----
- drivers/pinctrl/Kconfig         |  14 +
- drivers/pinctrl/Makefile        |   1 +
- drivers/pinctrl/pinctrl-eyeq5.c | 575 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 590 insertions(+)
-
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 7e4f93a3bc7a..89d9552d9aae 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -213,6 +213,20 @@ config PINCTRL_EQUILIBRIUM
- 	  desired pin functions, configure GPIO attributes for LGM SoC pins.
- 	  Pin muxing and pin config settings are retrieved from device tree.
- 
-+config PINCTRL_EYEQ5
-+	bool "Mobileye EyeQ5 pinctrl driver"
-+	depends on AUXILIARY_BUS
-+	depends on MACH_EYEQ5 || COMPILE_TEST
-+	select PINMUX
-+	select GENERIC_PINCONF
-+	default MACH_EYEQ5
-+	help
-+	  Pin controller driver for the Mobileye EyeQ5 platform. It does both
-+	  pin config & pin muxing. It does not handle GPIO.
-+
-+	  Pin muxing supports two functions for each pin: first is GPIO, second
-+	  is pin-dependent. Pin config is about bias & drive strength.
-+
- config PINCTRL_GEMINI
- 	bool
- 	depends on ARCH_GEMINI
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index cc809669405a..08b8f75ed51e 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_PINCTRL_DA850_PUPD) += pinctrl-da850-pupd.o
- obj-$(CONFIG_PINCTRL_DA9062)	+= pinctrl-da9062.o
- obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
- obj-$(CONFIG_PINCTRL_EQUILIBRIUM)   += pinctrl-equilibrium.o
-+obj-$(CONFIG_PINCTRL_EYEQ5)	+= pinctrl-eyeq5.o
- obj-$(CONFIG_PINCTRL_GEMINI)	+= pinctrl-gemini.o
- obj-$(CONFIG_PINCTRL_INGENIC)	+= pinctrl-ingenic.o
- obj-$(CONFIG_PINCTRL_K210)	+= pinctrl-k210.o
-diff --git a/drivers/pinctrl/pinctrl-eyeq5.c b/drivers/pinctrl/pinctrl-eyeq5.c
-new file mode 100644
-index 000000000000..8ffa4e2f54f3
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-eyeq5.c
-@@ -0,0 +1,575 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Pinctrl driver for the Mobileye EyeQ5 platform.
-+ *
-+ * The registers are located in a syscon region called OLB. There are two pin
-+ * banks, each being controlled by 5 registers (see enum eq5p_regs) for
-+ * pull-down, pull-up, drive strength and muxing.
-+ *
-+ * For each pin, muxing is between two functions: (0) GPIO or (1) another one
-+ * that is pin-dependent. Functions are declared statically in this driver.
-+ *
-+ * We create pinctrl groups that are 1:1 equivalent to pins: each group has a
-+ * single pin, and its index/selector is the pin number.
-+ *
-+ * We use eq5p_ as prefix, as-in "EyeQ5 Pinctrl", but way shorter.
-+ *
-+ * Copyright (C) 2024 Mobileye Vision Technologies Ltd.
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/auxiliary_bus.h>
-+#include <linux/bits.h>
-+#include <linux/bug.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/seq_file.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+
-+#include "core.h"
-+#include "pinctrl-utils.h"
-+
-+struct eq5p_pinctrl {
-+	struct pinctrl_desc	desc;
-+	void __iomem		*base;
-+};
-+
-+enum eq5p_bank {
-+	EQ5P_BANK_A,
-+	EQ5P_BANK_B,
-+
-+	EQ5P_BANK_COUNT,
-+};
-+
-+enum eq5p_regs {
-+	EQ5P_PD,
-+	EQ5P_PU,
-+	EQ5P_DS_LOW,
-+	EQ5P_DS_HIGH,
-+	EQ5P_IOCR,
-+
-+	EQ5P_REG_COUNT,
-+};
-+
-+static const unsigned int eq5p_regs[EQ5P_BANK_COUNT][EQ5P_REG_COUNT] = {
-+	[EQ5P_BANK_A] = {0x0C0, 0x0C4, 0x0D0, 0x0D4, 0x0B0},
-+	[EQ5P_BANK_B] = {0x0C8, 0x0CC, 0x0D8, 0x0DC, 0x0B4},
-+};
-+
-+/*
-+ * Drive strength; two bits per pin.
-+ */
-+#define EQ5P_DS_MASK	GENMASK(1, 0)
-+
-+/*
-+ * Comments to the right of each pin are the "signal name" in the datasheet.
-+ */
-+static const struct pinctrl_pin_desc eq5p_pins[] = {
-+	/* Bank A */
-+	PINCTRL_PIN(0,  "PA0"),  /* A0_TIMER0_CK */
-+	PINCTRL_PIN(1,  "PA1"),  /* A1_TIMER0_EOC */
-+	PINCTRL_PIN(2,  "PA2"),  /* A2_TIMER1_CK */
-+	PINCTRL_PIN(3,  "PA3"),  /* A3_TIMER1_EOC */
-+	PINCTRL_PIN(4,  "PA4"),  /* A4_TIMER2_CK */
-+	PINCTRL_PIN(5,  "PA5"),  /* A5_TIMER2_EOC */
-+	PINCTRL_PIN(6,  "PA6"),  /* A6_TIMER5_EXT_INCAP1 */
-+	PINCTRL_PIN(7,  "PA7"),  /* A7_TIMER5_EXT_INCAP2 */
-+	PINCTRL_PIN(8,  "PA8"),  /* A8_TIMER5_EXT_OUTCMP1 */
-+	PINCTRL_PIN(9,  "PA9"),  /* A9_TIMER5_EXT_OUTCMP2 */
-+	PINCTRL_PIN(10, "PA10"), /* A10_UART_0_TX */
-+	PINCTRL_PIN(11, "PA11"), /* A11_UART_0_RX */
-+	PINCTRL_PIN(12, "PA12"), /* A12_UART_1_TX */
-+	PINCTRL_PIN(13, "PA13"), /* A13_UART_1_RX */
-+	PINCTRL_PIN(14, "PA14"), /* A14_CAN_0_TX */
-+	PINCTRL_PIN(15, "PA15"), /* A15_CAN_0_RX */
-+	PINCTRL_PIN(16, "PA16"), /* A16_CAN_1_TX */
-+	PINCTRL_PIN(17, "PA17"), /* A17_CAN_1_RX */
-+	PINCTRL_PIN(18, "PA18"), /* A18_SPI_0_DO */
-+	PINCTRL_PIN(19, "PA19"), /* A19_SPI_0_DI */
-+	PINCTRL_PIN(20, "PA20"), /* A20_SPI_0_CK */
-+	PINCTRL_PIN(21, "PA21"), /* A21_SPI_0_CS0 */
-+	PINCTRL_PIN(22, "PA22"), /* A22_SPI_0_CS1 */
-+	PINCTRL_PIN(23, "PA23"), /* A23_SPI_1_DO */
-+	PINCTRL_PIN(24, "PA24"), /* A24_SPI_1_DI */
-+	PINCTRL_PIN(25, "PA25"), /* A25_SPI_1_CK */
-+	PINCTRL_PIN(26, "PA26"), /* A26_SPI_1_CS0 */
-+	PINCTRL_PIN(27, "PA27"), /* A27_SPI_1_CS1 */
-+	PINCTRL_PIN(28, "PA28"), /* A28_REF_CLK0 */
-+
-+#define EQ5P_PIN_OFFSET_BANK_B	29
-+
-+	/* Bank B */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 0,  "PB0"),  /* B0_TIMER3_CK */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 1,  "PB1"),  /* B1_TIMER3_EOC */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 2,  "PB2"),  /* B2_TIMER4_CK */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 3,  "PB3"),  /* B3_TIMER4_EOC */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 4,  "PB4"),  /* B4_TIMER6_EXT_INCAP1 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 5,  "PB5"),  /* B5_TIMER6_EXT_INCAP2 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 6,  "PB6"),  /* B6_TIMER6_EXT_OUTCMP1 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 7,  "PB7"),  /* B7_TIMER6_EXT_OUTCMP2 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 8,  "PB8"),  /* B8_UART_2_TX */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 9,  "PB9"),  /* B9_UART_2_RX */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 10, "PB10"), /* B10_CAN_2_TX */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 11, "PB11"), /* B11_CAN_2_RX */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 12, "PB12"), /* B12_SPI_2_DO */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 13, "PB13"), /* B13_SPI_2_DI */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 14, "PB14"), /* B14_SPI_2_CK */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 15, "PB15"), /* B15_SPI_2_CS0 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 16, "PB16"), /* B16_SPI_2_CS1 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 17, "PB17"), /* B17_SPI_3_DO */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 18, "PB18"), /* B18_SPI_3_DI */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 19, "PB19"), /* B19_SPI_3_CK */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 20, "PB20"), /* B20_SPI_3_CS0 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 21, "PB21"), /* B21_SPI_3_CS1 */
-+	PINCTRL_PIN(EQ5P_PIN_OFFSET_BANK_B + 22, "PB22"), /* B22_MCLK0 */
-+};
-+
-+static const char * const gpio_groups[] = {
-+	/* Bank A */
-+	"PA0",  "PA1",  "PA2",  "PA3",  "PA4",  "PA5",  "PA6",  "PA7",
-+	"PA8",  "PA9",  "PA10", "PA11", "PA12", "PA13", "PA14", "PA15",
-+	"PA16", "PA17", "PA18", "PA19", "PA20", "PA21", "PA22", "PA23",
-+	"PA24", "PA25", "PA26", "PA27", "PA28",
-+
-+	/* Bank B */
-+	"PB0",  "PB1",  "PB2",  "PB3",  "PB4",  "PB5",  "PB6",  "PB7",
-+	"PB8",  "PB9",  "PB10", "PB11", "PB12", "PB13", "PB14", "PB15",
-+	"PB16", "PB17", "PB18", "PB19", "PB20", "PB21", "PB22",
-+};
-+
-+/* Groups of functions on bank A */
-+static const char * const timer0_groups[] = { "PA0", "PA1" };
-+static const char * const timer1_groups[] = { "PA2", "PA3" };
-+static const char * const timer2_groups[] = { "PA4", "PA5" };
-+static const char * const timer5_groups[] = { "PA6", "PA7", "PA8", "PA9" };
-+static const char * const uart0_groups[] = { "PA10", "PA11" };
-+static const char * const uart1_groups[] = { "PA12", "PA13" };
-+static const char * const can0_groups[] = { "PA14", "PA15" };
-+static const char * const can1_groups[] = { "PA16", "PA17" };
-+static const char * const spi0_groups[] = { "PA18", "PA19", "PA20", "PA21", "PA22" };
-+static const char * const spi1_groups[] = { "PA23", "PA24", "PA25", "PA26", "PA27" };
-+static const char * const refclk0_groups[] = { "PA28" };
-+
-+/* Groups of functions on bank B */
-+static const char * const timer3_groups[] = { "PB0", "PB1" };
-+static const char * const timer4_groups[] = { "PB2", "PB3" };
-+static const char * const timer6_groups[] = { "PB4", "PB5", "PB6", "PB7" };
-+static const char * const uart2_groups[] = { "PB8", "PB9" };
-+static const char * const can2_groups[] = { "PB10", "PB11" };
-+static const char * const spi2_groups[] = { "PB12", "PB13", "PB14", "PB15", "PB16" };
-+static const char * const spi3_groups[] = { "PB17", "PB18", "PB19", "PB20", "PB21" };
-+static const char * const mclk0_groups[] = { "PB22" };
-+
-+static const struct pinfunction eq5p_functions[] = {
-+	/* GPIO having a fixed index is depended upon, see GPIO_FUNC_SELECTOR. */
-+	PINCTRL_PINFUNCTION("gpio", gpio_groups, ARRAY_SIZE(gpio_groups)),
-+#define GPIO_FUNC_SELECTOR 0
-+
-+	/* Bank A functions */
-+	PINCTRL_PINFUNCTION("timer0", timer0_groups, ARRAY_SIZE(timer0_groups)),
-+	PINCTRL_PINFUNCTION("timer1", timer1_groups, ARRAY_SIZE(timer1_groups)),
-+	PINCTRL_PINFUNCTION("timer2", timer2_groups, ARRAY_SIZE(timer2_groups)),
-+	PINCTRL_PINFUNCTION("timer5", timer5_groups, ARRAY_SIZE(timer5_groups)),
-+	PINCTRL_PINFUNCTION("uart0", uart0_groups, ARRAY_SIZE(uart0_groups)),
-+	PINCTRL_PINFUNCTION("uart1", uart1_groups, ARRAY_SIZE(uart1_groups)),
-+	PINCTRL_PINFUNCTION("can0", can0_groups, ARRAY_SIZE(can0_groups)),
-+	PINCTRL_PINFUNCTION("can1", can1_groups, ARRAY_SIZE(can1_groups)),
-+	PINCTRL_PINFUNCTION("spi0", spi0_groups, ARRAY_SIZE(spi0_groups)),
-+	PINCTRL_PINFUNCTION("spi1", spi1_groups, ARRAY_SIZE(spi1_groups)),
-+	PINCTRL_PINFUNCTION("refclk0", refclk0_groups, ARRAY_SIZE(refclk0_groups)),
-+
-+	/* Bank B functions */
-+	PINCTRL_PINFUNCTION("timer3", timer3_groups, ARRAY_SIZE(timer3_groups)),
-+	PINCTRL_PINFUNCTION("timer4", timer4_groups, ARRAY_SIZE(timer4_groups)),
-+	PINCTRL_PINFUNCTION("timer6", timer6_groups, ARRAY_SIZE(timer6_groups)),
-+	PINCTRL_PINFUNCTION("uart2", uart2_groups, ARRAY_SIZE(uart2_groups)),
-+	PINCTRL_PINFUNCTION("can2", can2_groups, ARRAY_SIZE(can2_groups)),
-+	PINCTRL_PINFUNCTION("spi2", spi2_groups, ARRAY_SIZE(spi2_groups)),
-+	PINCTRL_PINFUNCTION("spi3", spi3_groups, ARRAY_SIZE(spi3_groups)),
-+	PINCTRL_PINFUNCTION("mclk0", mclk0_groups, ARRAY_SIZE(mclk0_groups)),
-+};
-+
-+static void eq5p_update_bits(const struct eq5p_pinctrl *pctrl,
-+			     enum eq5p_bank bank, enum eq5p_regs reg,
-+			     u32 mask, u32 val)
-+{
-+	void __iomem *ptr = pctrl->base + eq5p_regs[bank][reg];
-+
-+	writel((readl(ptr) & ~mask) | (val & mask), ptr);
-+}
-+
-+static bool eq5p_test_bit(const struct eq5p_pinctrl *pctrl,
-+			  enum eq5p_bank bank, enum eq5p_regs reg, int offset)
-+{
-+	u32 val = readl(pctrl->base + eq5p_regs[bank][reg]);
-+
-+	if (WARN_ON(offset > 31))
-+		return false;
-+
-+	return (val & BIT(offset)) != 0;
-+}
-+
-+static enum eq5p_bank eq5p_pin_to_bank(unsigned int pin)
-+{
-+	if (pin < EQ5P_PIN_OFFSET_BANK_B)
-+		return EQ5P_BANK_A;
-+	else
-+		return EQ5P_BANK_B;
-+}
-+
-+static unsigned int eq5p_pin_to_offset(unsigned int pin)
-+{
-+	if (pin < EQ5P_PIN_OFFSET_BANK_B)
-+		return pin;
-+	else
-+		return pin - EQ5P_PIN_OFFSET_BANK_B;
-+}
-+
-+static int eq5p_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	return ARRAY_SIZE(eq5p_pins);
-+}
-+
-+static const char *eq5p_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
-+					       unsigned int selector)
-+{
-+	return pctldev->desc->pins[selector].name;
-+}
-+
-+static int eq5p_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
-+				       unsigned int selector,
-+				       const unsigned int **pins,
-+				       unsigned int *num_pins)
-+{
-+	*pins = &pctldev->desc->pins[selector].number;
-+	*num_pins = 1;
-+	return 0;
-+}
-+
-+static int eq5p_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
-+			    unsigned long *config)
-+{
-+	enum pin_config_param param = pinconf_to_config_param(*config);
-+	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned int offset = eq5p_pin_to_offset(pin);
-+	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-+	u32 val_ds, arg;
-+	bool pd, pu;
-+
-+	pd = eq5p_test_bit(pctrl, bank, EQ5P_PD, offset);
-+	pu = eq5p_test_bit(pctrl, bank, EQ5P_PU, offset);
-+
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		arg = !(pd || pu);
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		arg = pd;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		arg = pu;
-+		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH:
-+		offset *= 2; /* two bits per pin */
-+		if (offset >= 32) {
-+			val_ds = readl(pctrl->base + eq5p_regs[bank][EQ5P_DS_HIGH]);
-+			offset -= 32;
-+		} else {
-+			val_ds = readl(pctrl->base + eq5p_regs[bank][EQ5P_DS_LOW]);
-+		}
-+		arg = (val_ds >> offset) & EQ5P_DS_MASK;
-+		break;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+
-+	*config = pinconf_to_config_packed(param, arg);
-+	return 0;
-+}
-+
-+static void eq5p_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
-+				      struct seq_file *s,
-+				      unsigned int pin)
-+{
-+	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const char *pin_name = pctrl->desc.pins[pin].name;
-+	unsigned int offset = eq5p_pin_to_offset(pin);
-+	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-+	const char *func_name, *bias;
-+	unsigned long ds_config;
-+	u32 drive_strength;
-+	bool pd, pu;
-+	int i, j;
-+
-+	/*
-+	 * First, let's get the function name. All pins have only two functions:
-+	 * GPIO (IOCR == 0) and something else (IOCR == 1).
-+	 */
-+	if (eq5p_test_bit(pctrl, bank, EQ5P_IOCR, offset)) {
-+		func_name = NULL;
-+		for (i = 0; i < ARRAY_SIZE(eq5p_functions); i++) {
-+			if (i == GPIO_FUNC_SELECTOR)
-+				continue;
-+
-+			for (j = 0; j < eq5p_functions[i].ngroups; j++) {
-+				/* Groups and pins are the same thing for us. */
-+				const char *x = eq5p_functions[i].groups[j];
-+
-+				if (strcmp(x, pin_name) == 0) {
-+					func_name = eq5p_functions[i].name;
-+					break;
-+				}
-+			}
-+
-+			if (func_name)
-+				break;
-+		}
-+
-+		/*
-+		 * We have not found the function attached to this pin, this
-+		 * should never occur as all pins have exactly two functions.
-+		 */
-+		if (!func_name)
-+			func_name = "unknown";
-+	} else {
-+		func_name = eq5p_functions[GPIO_FUNC_SELECTOR].name;
-+	}
-+
-+	/* Second, we retrieve the bias. */
-+	pd = eq5p_test_bit(pctrl, bank, EQ5P_PD, offset);
-+	pu = eq5p_test_bit(pctrl, bank, EQ5P_PU, offset);
-+	if (pd && pu)
-+		bias = "both";
-+	else if (pd && !pu)
-+		bias = "pulldown";
-+	else if (!pd && pu)
-+		bias = "pullup";
-+	else
-+		bias = "none";
-+
-+	/* Third, we get the drive strength. */
-+	ds_config = pinconf_to_config_packed(PIN_CONFIG_DRIVE_STRENGTH, 0);
-+	eq5p_pinconf_get(pctldev, pin, &ds_config);
-+	drive_strength = pinconf_to_config_argument(ds_config);
-+
-+	seq_printf(s, "function=%s bias=%s drive_strength=%d",
-+		   func_name, bias, drive_strength);
-+}
-+
-+static const struct pinctrl_ops eq5p_pinctrl_ops = {
-+	.get_groups_count	= eq5p_pinctrl_get_groups_count,
-+	.get_group_name		= eq5p_pinctrl_get_group_name,
-+	.get_group_pins		= eq5p_pinctrl_get_group_pins,
-+	.pin_dbg_show		= eq5p_pinctrl_pin_dbg_show,
-+	.dt_node_to_map		= pinconf_generic_dt_node_to_map_pin,
-+	.dt_free_map		= pinctrl_utils_free_map,
-+};
-+
-+static int eq5p_pinmux_get_functions_count(struct pinctrl_dev *pctldev)
-+{
-+	return ARRAY_SIZE(eq5p_functions);
-+}
-+
-+static const char *eq5p_pinmux_get_function_name(struct pinctrl_dev *pctldev,
-+						 unsigned int selector)
-+{
-+	return eq5p_functions[selector].name;
-+}
-+
-+static int eq5p_pinmux_get_function_groups(struct pinctrl_dev *pctldev,
-+					   unsigned int selector,
-+					   const char * const **groups,
-+					   unsigned int *num_groups)
-+{
-+	*groups = eq5p_functions[selector].groups;
-+	*num_groups = eq5p_functions[selector].ngroups;
-+	return 0;
-+}
-+
-+static int eq5p_pinmux_set_mux(struct pinctrl_dev *pctldev,
-+			       unsigned int func_selector, unsigned int pin)
-+{
-+	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const char *func_name = eq5p_functions[func_selector].name;
-+	const char *group_name = pctldev->desc->pins[pin].name;
-+	bool is_gpio = func_selector == GPIO_FUNC_SELECTOR;
-+	unsigned int offset = eq5p_pin_to_offset(pin);
-+	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-+	u32 mask, val;
-+
-+	dev_dbg(pctldev->dev, "func=%s group=%s\n", func_name, group_name);
-+
-+	mask = BIT(offset);
-+	val = is_gpio ? 0 : mask;
-+	eq5p_update_bits(pctrl, bank, EQ5P_IOCR, mask, val);
-+	return 0;
-+}
-+
-+static int eq5p_pinmux_gpio_request_enable(struct pinctrl_dev *pctldev,
-+					   struct pinctrl_gpio_range *range,
-+					   unsigned int pin)
-+{
-+	/* Pin numbers and group selectors are the same thing in our case. */
-+	return eq5p_pinmux_set_mux(pctldev, GPIO_FUNC_SELECTOR, pin);
-+}
-+
-+static const struct pinmux_ops eq5p_pinmux_ops = {
-+	.get_functions_count	= eq5p_pinmux_get_functions_count,
-+	.get_function_name	= eq5p_pinmux_get_function_name,
-+	.get_function_groups	= eq5p_pinmux_get_function_groups,
-+	.set_mux		= eq5p_pinmux_set_mux,
-+	.gpio_request_enable	= eq5p_pinmux_gpio_request_enable,
-+	.strict			= true,
-+};
-+
-+static int eq5p_pinconf_set_drive_strength(struct pinctrl_dev *pctldev,
-+					   unsigned int pin, u32 arg)
-+{
-+	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned int offset = eq5p_pin_to_offset(pin);
-+	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-+	unsigned int reg;
-+	u32 mask, val;
-+
-+	if (arg & ~EQ5P_DS_MASK) {
-+		dev_err(pctldev->dev, "Unsupported drive strength: %u\n", arg);
-+		return -EINVAL;
-+	}
-+
-+	offset *= 2; /* two bits per pin */
-+
-+	if (offset >= 32) {
-+		reg = EQ5P_DS_HIGH;
-+		offset -= 32;
-+	} else {
-+		reg = EQ5P_DS_LOW;
-+	}
-+
-+	mask = EQ5P_DS_MASK << offset;
-+	val = arg << offset;
-+	eq5p_update_bits(pctrl, bank, reg, mask, val);
-+	return 0;
-+}
-+
-+static int eq5p_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+			    unsigned long *configs, unsigned int num_configs)
-+{
-+	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const char *pin_name = pctldev->desc->pins[pin].name;
-+	unsigned int offset = eq5p_pin_to_offset(pin);
-+	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-+	struct device *dev = pctldev->dev;
-+	u32 val = BIT(offset);
-+	unsigned int i;
-+
-+	for (i = 0; i < num_configs; i++) {
-+		enum pin_config_param param = pinconf_to_config_param(configs[i]);
-+		u32 arg = pinconf_to_config_argument(configs[i]);
-+
-+		switch (param) {
-+		case PIN_CONFIG_BIAS_DISABLE:
-+			dev_dbg(dev, "pin=%s bias_disable\n", pin_name);
-+
-+			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, 0);
-+			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, 0);
-+			break;
-+
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			dev_dbg(dev, "pin=%s bias_pull_down arg=%u\n",
-+				pin_name, arg);
-+
-+			if (arg == 0) /* cannot connect to GND */
-+				return -ENOTSUPP;
-+
-+			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, val);
-+			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, 0);
-+			break;
-+
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+			dev_dbg(dev, "pin=%s bias_pull_up arg=%u\n",
-+				pin_name, arg);
-+
-+			if (arg == 0) /* cannot connect to VDD */
-+				return -ENOTSUPP;
-+
-+			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, 0);
-+			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, val);
-+			break;
-+
-+		case PIN_CONFIG_DRIVE_STRENGTH:
-+			dev_dbg(dev, "pin=%s drive_strength arg=%u\n",
-+				pin_name, arg);
-+
-+			eq5p_pinconf_set_drive_strength(pctldev, pin, arg);
-+			break;
-+
-+		default:
-+			dev_err(dev, "Unsupported pinconf %u\n", param);
-+			return -ENOTSUPP;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinconf_ops eq5p_pinconf_ops = {
-+	.is_generic = true,
-+	.pin_config_get = eq5p_pinconf_get,
-+	.pin_config_set = eq5p_pinconf_set,
-+	/* Pins and groups are equivalent in this driver. */
-+	.pin_config_group_get = eq5p_pinconf_get,
-+	.pin_config_group_set = eq5p_pinconf_set,
-+};
-+
-+static int eq5p_probe(struct auxiliary_device *adev,
-+		      const struct auxiliary_device_id *id)
-+{
-+	struct device *dev = &adev->dev;
-+	struct pinctrl_dev *pctldev;
-+	struct eq5p_pinctrl *pctrl;
-+	int ret;
-+
-+	pctrl = devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
-+	if (!pctrl)
-+		return -ENOMEM;
-+
-+	pctrl->base = dev_get_platdata(dev);
-+	pctrl->desc.name = dev_name(dev);
-+	pctrl->desc.pins = eq5p_pins;
-+	pctrl->desc.npins = ARRAY_SIZE(eq5p_pins);
-+	pctrl->desc.pctlops = &eq5p_pinctrl_ops;
-+	pctrl->desc.pmxops = &eq5p_pinmux_ops;
-+	pctrl->desc.confops = &eq5p_pinconf_ops;
-+	pctrl->desc.owner = THIS_MODULE;
-+
-+	ret = devm_pinctrl_register_and_init(dev, &pctrl->desc, pctrl, &pctldev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed registering pinctrl device\n");
-+
-+	ret = pinctrl_enable(pctldev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed enabling pinctrl device\n");
-+
-+	return 0;
-+}
-+
-+static const struct auxiliary_device_id eq5p_id_table[] = {
-+	{ .name = "clk_eyeq.pinctrl" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(auxiliary, eq5p_id_table);
-+
-+static struct auxiliary_driver eq5p_driver = {
-+	.probe = eq5p_probe,
-+	.id_table = eq5p_id_table,
-+};
-+module_auxiliary_driver(eq5p_driver);
-
--- 
-2.45.2
-
+SGVsbG8gQmFydG9zeiENCg0KT24gRnJpLCAyMDI0LTA0LTEyIGF0IDE0OjI3ICswMjAwLCBCYXJ0
+b3N6IEdvbGFzemV3c2tpIHdyb3RlOg0KPiBUaGlzIGhhcyBiZWVuIGluIHRoZSB3b3JrcyBmb3Ig
+YSBsb25nIHRpbWUgYnV0IEknbSBmaW5hbGx5IHJlYWR5IHRvIHNoYXJlIGl0DQo+IHdpdGggdGhl
+IHdvcmxkLiBUaGlzIGludHJvZHVjZXMgdGhlIERCdXMgQVBJIGRlZmluaXRpb24gYW5kIGl0cyBp
+bXBsZW1lbnRhdGlvbg0KPiBpbiB0aGUgZm9ybSBvZiBhIEdQSU8gbWFuYWdlciBkYWVtb24gYW5k
+IGEgY29tcGFuaW9uIGNvbW1hbmQtbGluZSBjbGllbnQgYXMNCj4gd2VsbCBhcyBHTGliIGJpbmRp
+bmdzIHRvIGxpYmdwaW9kIHdoaWNoIGZvcm0gdGhlIGJhc2Ugb24gd2hpY2ggdGhlIGZvcm1lciBh
+cmUNCj4gYnVpbHQuDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBlZmZvcnRzIQ0KDQo+IEZpbmFs
+bHkgd2UgYWRkIHRoZSBEQnVzIGNvZGUgdGhhdCdzIHNwbGl0IGludG8gdGhlIGRhZW1vbiBhbmQg
+Y29tbWFuZC1saW5lDQo+IGNsaWVudC4gSSBhZGRlZCBzb21lIGV4YW1wbGVzIHRvIHRoZSBSRUFE
+TUUgYW5kIGRvY3VtZW50ZWQgdGhlIGJlaGF2aW9yIGluDQo+IHRoZSBoZWxwIHRleHQgb2YgdGhl
+IHByb2dyYW1zIGFzIHdlbGwgYXMgZG9jdW1lbnRlZCB0aGUgaW50ZXJmYWNlIGZpbGUgd2l0aA0K
+PiBYTUwgY29tbWVudHMgdGhhdCBnZGJ1cy1jb2RlZ2VuIGNhbiBwYXJzZSBhbmQgdXNlIHRvIGdl
+bmVyYXRlIGRvY2Jvb2sgb3V0cHV0Lg0KDQpUbyBtZSBpdCBsb29rcyBsaWtlIHRoZSBsb25nIHRp
+bWUgYW50aWNpcGF0ZWQgcmVwbGFjZW1lbnQgb2YgW3BlcnNpc3RlbnRdDQpTWVNGUyB1c2Vyc3Bh
+Y2UgQVBJIGZpbmFsbHkgbGFuZGVkIGFuZCBvbmUgY2FuIHN0YXJ0IHRoaW5raW5nIGFib3V0IHBo
+YXNpbmcNCm91dCB0aGUgQVBJIGRlY2xhcmVkIG9ic29sZXRlIGluIExpbnV4IHY0LjggOy0pDQoN
+CkkndmUgY29tcGlsZWQgZ3Bpby1tYW5hZ2VyIGFuZCBncGlvY2xpIGZvciBUSSBhbTYyNSAoYXJt
+NjQpIGFuZCB0ZXN0ZWQgb24NCnNvbWUgSFcgb25lIG1heSBjb21wYXJlIHRvIEJlYWdsZSBQbGF5
+Lg0KDQpUbyBtZSBpdCBsb29rcyBzb2xpZCwgbm8gcHJvYmxlbXMgd2hhdHNvZXZlciBub3RpY2Vk
+IHVwIHRvIG5vdywgZXZlbiB0aG91Z2gNCnNvbWUgbm9uLW9idmlvdXMgbGltaXRhdGlvbnMgZG8g
+ZXhpc3QNCigiZ3Bpb2NsaSByZXF1ZXN0OiBhbGwgcmVxdWVzdGVkIGxpbmVzIG11c3QgYmVsb25n
+IHRvIHRoZSBzYW1lIGNoaXAiKSwgYnV0DQp0aGlzIHByb2JhYmx5IGNhbiBlaXRoZXIgYmUganVz
+dGlmaWVkIGluIGRvY3VtZW50YXRpb24gb3IgaW1wcm92ZWQgZXZlbg0KYWZ0ZXIgbWVyZ2luZy4N
+Cg0KV2lsbCBiZSBoYXBweSB0byBwcm92aWRlIFRlc3RlZC1ieTogYXMgc29vbiBhcyB5b3Ugc2Vu
+ZCB0aGUgc2VyaWVzIGZvcg0KbWVyZ2luZyENCg0KLS0gDQpBbGV4YW5kZXIgU3ZlcmRsaW4NClNp
+ZW1lbnMgQUcNCnd3dy5zaWVtZW5zLmNvbQ0K
 
