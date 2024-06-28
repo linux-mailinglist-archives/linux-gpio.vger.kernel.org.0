@@ -1,75 +1,75 @@
-Return-Path: <linux-gpio+bounces-7792-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7794-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F94F91C1BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 16:53:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B16791C1C0
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 16:54:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D85F71F24E18
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 14:53:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 25DB91C22A76
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 14:53:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8087A1C0DE6;
-	Fri, 28 Jun 2024 14:53:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A111C0DF3;
+	Fri, 28 Jun 2024 14:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="btmnLP3Q"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lu2hoPMV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EF41C0DEE
-	for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2024 14:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165881BF31A
+	for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2024 14:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719586436; cv=none; b=WBI3tZPV+c93pP+6xmn2aF1kptbFr0N5unl8RWAjzpvXnmV6REjydsPDGaWpYrCcWhwwzJ+bsZOS4Cl8BYDHtUghSaQ37MGFH3VivWHEOb/rVh/c+RJgE4556BDEMC8Ng8GKVo/QfT0K3rr47snjc1UIcoZuB367sSU14LreSbk=
+	t=1719586437; cv=none; b=hY5mc444lghd4B/ZzgupZhCoiMTZ/szshxYRMubalL1SKRbJlR60qju5tCAv3B7dq8dvh3WEfjTWxwJhmYIrQHmJENGv4tGvATnc3Ff1ZKgQK6rQDSJdPKWIwrHV8kvu4a2zjZ74QuUIZgPtQZG725dp7MU4yy70QTp7K95OmL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719586436; c=relaxed/simple;
-	bh=12WLLf11vHaGYUlNSI4OwRQi/+2kHPE8Pe20WHXjABA=;
+	s=arc-20240116; t=1719586437; c=relaxed/simple;
+	bh=RfnFsRFxKoRbW6HwXAxSlUxfZmidHUhysONb+hRaFuw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UFwqjzxrUMoLtfd77qzvY856mfn7N0pBEFAJ3YJ/yYf9NsaKb/MTOnnSDMfKpRqHYxNr8J2/SSUfyTGClU/pGLwOyCZkrVGzV8WCBpAVSCeWF2NzVNZQJ90vpj4Izw8mQkvxHE69eBbveEuIqPM32eMhpG2ovMSef5fcSJzzAxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=btmnLP3Q; arc=none smtp.client-ip=209.85.221.50
+	 In-Reply-To:To:Cc; b=m5QqrbgRz4LfCL+DA6SHjK2BdUIp0cTiS+YTu5Kz+Yhsh2L1bBRgjM5tFnvgXAeABAOKj9hAmJ5dDGl+SGKEVhlDl+DcnPHJZCV7l89CkbInbMOYnomg4TSETaxk4lRXU7XVKquHuWyxGhlrJFPjlhOX62rM8Pxln/wnflcijzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lu2hoPMV; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-364c9ec17d1so401437f8f.0
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2024 07:53:54 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ebe0a81dc8so9567581fa.2
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2024 07:53:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719586433; x=1720191233; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719586434; x=1720191234; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fr78fWiEH3X+jXUcAWkuN6d8PZAgF7LiprLtGRT8qbU=;
-        b=btmnLP3Q0OW6HxYV50+mdmkf7jOC30thNhEgJKIi58iIahvMOwSIbk2G+NF/VBqjvX
-         QfjwLqQSrUcu2zeKch7ANW8f4o61Xv6m30vxj7UQQrT+bxuJqqAh6ljb9jaGCaWJ2n+U
-         IzJrmySbSjNYwpqHVJwf2Vc3d7oWk9HAw0aTJMY8Twavpzsuzge85q2Ns4/zrdBgxnvw
-         Ns/pvVIiacOdbdCHeDC36gUizqMwsqPjTNe312pQ7xiKwAHGrJzCWrzLppqUm3KStw1I
-         yJgOv47RumO7WTyeQTGxW7mj/1OhjGyT2nRHWoUF3kPHoO9ITNz06z0wFnwngWotWtYm
-         /vYQ==
+        bh=neKXPs3bOvwzNiGHUhG9IGSZVWPySB8qQPyLZxnqDjI=;
+        b=lu2hoPMVtlSVwqrPJ/41CRfScwj0o1krYMJs6ZmoiRdkK+aYANnAl1s6B6VEa/d0eq
+         PSfRE8ZU7vlvXqhOSlbuLQJ7iRj91uPvQ6pwOAloUhuPTQgIFffTrAE68tdEBly47+Qi
+         SSVNSoIJQHdqbaw2bQNEo41Aqak+4lmd/VK27v7cGo5ezgdZzL5QtXWnuNFVRhx+WDeB
+         PPCuC+I23N44qQfsq9SDWyh4Chn03Wv1qL1FrpHr8Cv+zEkVyiHzisXkYx339ErK4/2F
+         sVaGsBV7Omy7aIcricN8SoTftYHki80U3e5umw7WaFV4wAZFrO0MNjr7dl/dbTTJHQ2e
+         bThg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719586433; x=1720191233;
+        d=1e100.net; s=20230601; t=1719586434; x=1720191234;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fr78fWiEH3X+jXUcAWkuN6d8PZAgF7LiprLtGRT8qbU=;
-        b=XFQklz3R1Khiasy/JWXRUr/8h0eRr0oWcLy1+Xv4lnCQ7dS5+iEcSI1qmxeH3+Tn4N
-         8vroYiOp82AAYOI5TlmnDTJQ2B7g8rI4Roc/xFZB6u1HD9GXMR3Yr04k5u4gO+9F6iGz
-         fQZxjnjw8h6uHPti+zAf9WrfaOwky0oNC62cZmEglMGVJBpEFNRbu6dZuRVZgbBaZvXs
-         9mG1/AARVmrUvCTU+AHlsDVaMSndpBgjUVjgA5F6j6tOq6RcN8RGh+Cy9rnUcTgUonbo
-         AGRJCvueOT2nuw7hVA4n7yGJZImeph3De/he902FatN9eVEo1WQfEn0BA75OuqClWQ0Q
-         VKfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVL3DfPpMqvyjib7CGuVtKy9yosrI6av+K6gfTqxrdOghDquz3NGkEMjzAkRW/Q1rW69RUo7+8yKk49cVitOEAEjCLfNx8Kb8fzw==
-X-Gm-Message-State: AOJu0YxktP1jUT5lVrkT1MfVaevyFoy8vIIF3ZoNon9hZfpcEK3j2yLC
-	9y2lPDu+HNfj86AvK78aCFpV/n/auacqG6mcYP2nviGSeWaFnD5nkGO6QCH284Q=
-X-Google-Smtp-Source: AGHT+IEkWgIHGlfezBOXsQn816YRRoBodQrmo0gCdIxfsHXWdI3Ly08i1XPnESULhD3uU7AwEMrPFA==
-X-Received: by 2002:a05:6000:178a:b0:360:7887:31ae with SMTP id ffacd0b85a97d-366e95d37d3mr15874989f8f.54.1719586433055;
-        Fri, 28 Jun 2024 07:53:53 -0700 (PDT)
+        bh=neKXPs3bOvwzNiGHUhG9IGSZVWPySB8qQPyLZxnqDjI=;
+        b=irzBs9SrZDgOp2v37I5rzzTYwnDq8ETuyz5z+vSCeMCc+om9CmK+LICLvx8/Y+GDGc
+         YZY75HF1rqK6a/dT7WPsRHJFDwwgByHnl1XE9hrPGhBd+o0R4gK35BtmcoZ05wPMYTEy
+         qrA5KU+eL44oiY+6JiLvC9JW+UCWVaHDuymHAbZeAbSlxffTQf2nkPMqvvc590W2zky1
+         oPz9by3k2fIpC9LJaUezWUTfANDfDA6uYpT2h4lsHlrniQeC3Wy52hnNih1AuLOPqHjM
+         /wszcT61nIGFBbpHgKj2hf+2PTB8CpMkp4SE6YC8NvFJoufaF7aCXCrlJXfLcm0xiy0+
+         c+uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUx+NDUnrqlAEkQ6FoZ+F0O6KU4o5enbCQyYi4FN8/GzCa1AwKJDfjLHXFBI7WBpbMZH+Tzr85zo/EsmBO7dORQhOPdsVc8Qu5u/Q==
+X-Gm-Message-State: AOJu0YzctBNFQjwLWNWtfC6SO8a3WsznWRSSKAEdZeqZOdXD5AiV0zkn
+	pj8Q4sh/2KUYIsq/8cSLwPjdln/oTOMugxWWnyGUtcI1f9DQRTSVvOEvRIQADo0=
+X-Google-Smtp-Source: AGHT+IErbUp+sI4UPopSvUYt/nHcM99SN3N2M1h3HdMEc0H4n4K+jCWPeri18oj1CbCrIQM0BFmk6g==
+X-Received: by 2002:a05:651c:907:b0:2ee:4af7:d78e with SMTP id 38308e7fff4ca-2ee4af7db43mr49141911fa.34.1719586434195;
+        Fri, 28 Jun 2024 07:53:54 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:cb0e:590a:642a:e1f9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0fba4fsm2518124f8f.85.2024.06.28.07.53.51
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0fba4fsm2518124f8f.85.2024.06.28.07.53.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 07:53:51 -0700 (PDT)
+        Fri, 28 Jun 2024 07:53:53 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 28 Jun 2024 16:53:25 +0200
-Subject: [PATCH libgpiod v2 09/18] dbus: add build files
+Date: Fri, 28 Jun 2024 16:53:26 +0200
+Subject: [PATCH libgpiod v2 10/18] dbus: add the API definitions
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,7 +78,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240628-dbus-v2-9-e42336efe2d3@linaro.org>
+Message-Id: <20240628-dbus-v2-10-e42336efe2d3@linaro.org>
 References: <20240628-dbus-v2-0-e42336efe2d3@linaro.org>
 In-Reply-To: <20240628-dbus-v2-0-e42336efe2d3@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -92,325 +92,357 @@ Cc: "As advised by Dan Carpenter - I'm CC'ing dbus"@lists.freedesktop.orgto,
  linux-gpio@vger.kernel.org, dbus@lists.freedesktop.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9626;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10373;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=p2WgCOijJiXb3jPeXwEP5qvNWIHa5FbcqmlFZm3DyaQ=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmfs5yRLzbDeIIe2ow8T5Qc9OnkE7NliDsRm2Hp
- flPrwVDZeyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZn7OcgAKCRARpy6gFHHX
- co66EAC/CIlIVkRSaF5FsxOiec8kaOvKOqN8lrRx4NA3yRsugIfw3EBFNwtMqY3AoBt+BNSppJq
- xIQEpCeu7oC9uXNhZHNQqnOuvjFLwEI83PAaX9BIyggFkHIO1BZnQz1Vt7bjXYWYwXpnCovVGae
- fqxP92Mke2voty8fNOGdrdjX6YJ5FHqV9Q6QXH0847TZbEfjPztiw7N6VuBQrm0Ye/V8r2E/Rhr
- pHdqAICbRnM0LocIv+fGm5SeGQeR21GHClpADTEMFADcrJMne9ShCbdvGeyxrbhxhX1GRxfl2Sj
- iz198V9tau/2GDiQ5/POMIp7w0tHi+e0ayILfz8sHkv61Kih4tYE3DxlXTXXVSxKKGe5P4B6I71
- 7OXQ0ZPBlfqNQgiLtuTp4pitXGKkbCbN8cV/y0UdONseMmrEC6xg9rWSHBq84F2fhvBHePO1QIi
- 73ziGCTpKb07RlOX4CNsbMcnexyiNBucRP1D1KJofXbz5Eiz9xHt4+kWgvrzFZ66N32nn3Rpz7V
- HSNgF+isKF9GqgoW65ksLeMa5J6j0zbt9R/5jAc550b8J5uE9Eb+9ZiZcQ/4QSj+hjSrHBqYhxn
- ux3ITT37qiWzlcbF/AOrfyICFSHNEQkHPAZHwz7ZjHlOUssRAO4O8tZir3iz+LccHiDMyC/U0fm
- JJmfo9z8Q+BDDxA==
+ bh=9YSC6tCMsudc40rcjXLYANsSvgN0Thlim+M3w+pdRjw=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmfs5yUBfY0f4gsPXgzWMpPx3gPFPrahylwgGGY
+ V/HSZ/PPBGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZn7OcgAKCRARpy6gFHHX
+ csOlD/wPHDlkP0/alXufobQ1rElOZYW5Db7Q3UrvJTdNbJBoPqjVe82ZAt2C59wTEMbwHjJuo8K
+ uBITUq4AuMTdZHSt1BDg3yk3yB8unKnktc5NlhEO1chQ/YJKMPOS/jNaJYdHaTIHfIGRgN/1xn/
+ vedHOj3r/AIBOQvOVV7Q92fC6UbqS0blvAqVEMX+P9d/9xijW/Wuyh9W09zyYuyaUONu5aGtZ5y
+ Rs7OFT6l+b577Q3cG1LClCb2C5XoF77cFrY84kxixtUQX1oT0TBwxjVfGeDJ4XP0iZyYtm8HEIZ
+ NiCn6mi+e5bB8o4oiEDuSbeX9rexj7WVoKs38GQ/Wk5BOuxRHTn+xWkUSY8j4U15SENRc7kjXOK
+ c5LaPJQZ4u7sxXZHZiugY1OGcdpE1w4AM0sOp1Ela+egcbKryLSl+9q1LT10HzX4BMsejqoWu37
+ VRFjnTncIn7NLRSpId6i3eahCPMmYGmHvhUyPnWb4gb9Jwjh2wmb2wtmBn+r+angWRYsszr7hE8
+ lqavic4X2LCPxwMFA31utKWCv48upmpSrxfkt8SIwULx6TGiamugq81YKImJRUBIlahGwBs/jd0
+ C1LqXvBfn91fnvWe+xCeBePK8F8n//kXUli6FfgbLyRxnIyW70JoOoM8ro6Aw/SzAJmHQOvlC+x
+ OH/zUbw+DVCHmwA==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add the directory structure and build files as well as changes to
-.gitignore for the DBus API.
+Add the XML file defining all the interfaces for the io.gpiod1 service.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- Makefile.am              |  7 +++++++
- configure.ac             | 45 +++++++++++++++++++++++++++++++++++++++++++++
- dbus/Makefile.am         | 10 ++++++++++
- dbus/client/.gitignore   |  4 ++++
- dbus/client/Makefile.am  | 31 +++++++++++++++++++++++++++++++
- dbus/data/Makefile.am    | 13 +++++++++++++
- dbus/lib/Makefile.am     | 28 ++++++++++++++++++++++++++++
- dbus/manager/.gitignore  |  4 ++++
- dbus/manager/Makefile.am | 21 +++++++++++++++++++++
- dbus/tests/.gitignore    |  4 ++++
- dbus/tests/Makefile.am   | 25 +++++++++++++++++++++++++
- 11 files changed, 192 insertions(+)
+ dbus/lib/io.gpiod1.xml | 318 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 318 insertions(+)
 
-diff --git a/Makefile.am b/Makefile.am
-index 2ace901..c824dc4 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
- 
- ACLOCAL_AMFLAGS = -I m4
- AUTOMAKE_OPTIONS = foreign
-@@ -37,6 +38,12 @@ endif
- # libgpiosim to be already present.
- SUBDIRS += bindings
- 
-+if WITH_DBUS
-+
-+SUBDIRS += dbus
-+
-+endif
-+
- if HAS_DOXYGEN
- 
- doc: Doxyfile
-diff --git a/configure.ac b/configure.ac
-index 74ba004..0b6a9f9 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -267,6 +267,45 @@ then
- 		AC_MSG_ERROR([glib-mkenums not found - needed to build GLib bindings]))
- fi
- 
-+# Depends on GLib bindings so must come after
-+AC_ARG_ENABLE([dbus],
-+	[AS_HELP_STRING([--enable-dbus], [build dbus daemon [default=no]])],
-+	[if test "x$enableval" == xyes; then with_dbus=true; fi],
-+	[with_dbus=false])
-+AM_CONDITIONAL([WITH_DBUS], [test "x$with_dbus" = xtrue])
-+
-+AC_DEFUN([FUNC_NOT_FOUND_DBUS],
-+	[ERR_NOT_FOUND([$1()], [dbus daemon])])
-+
-+if test "x$with_dbus" = xtrue && test "x$with_bindings_glib" != xtrue
-+then
-+	AC_MSG_ERROR([GLib bindings are required to build the dbus daemon - use --enable-bindings-glib])
-+fi
-+
-+if test "x$with_dbus" = xtrue
-+then
-+	AC_CHECK_FUNC([daemon], [], [FUNC_NOT_FOUND_DBUS([daemon])])
-+	AC_CHECK_FUNC([strverscmp], [], [FUNC_NOT_FOUND_DBUS([strverscmp])])
-+	PKG_CHECK_MODULES([GUDEV], [gudev-1.0 >= 230])
-+	AC_CHECK_PROG([has_gdbus_codegen], [gdbus-codegen], [true], [false])
-+	if test "x$has_gdbus_codegen" = xfalse
-+	then
-+		AC_MSG_ERROR([gdbus-codegen not found - needed to build dbus daemon])
-+	fi
-+fi
-+
-+AC_ARG_ENABLE([systemd],
-+	[AS_HELP_STRING([--enable-systemd], [enable systemd support [default=no]])],
-+	[if test "x$enableval" == xyes; then with_systemd=true; fi],
-+	[with_systemd=false])
-+AM_CONDITIONAL([WITH_SYSTEMD], [test "x$with_systemd" = xtrue])
-+
-+if test "x$with_systemd" = xtrue
-+then
-+	PKG_CHECK_VAR([systemdsystemunitdir], [systemd], [systemdsystemunitdir], [],
-+		      AC_MSG_ERROR([systemdsystemunitdir not found - needed to enable systemd support]))
-+fi
-+
- AC_CHECK_PROG([has_doxygen], [doxygen], [true], [false])
- AM_CONDITIONAL([HAS_DOXYGEN], [test "x$has_doxygen" = xtrue])
- if test "x$has_doxygen" = xfalse
-@@ -325,6 +364,12 @@ AC_CONFIG_FILES([Makefile
- 		 bindings/rust/Makefile
- 		 bindings/rust/gpiosim-sys/src/Makefile
- 		 bindings/rust/gpiosim-sys/Makefile
-+		 dbus/Makefile
-+		 dbus/client/Makefile
-+		 dbus/data/Makefile
-+		 dbus/lib/Makefile
-+		 dbus/manager/Makefile
-+		 dbus/tests/Makefile
- 		 man/Makefile])
- 
- AC_OUTPUT
-diff --git a/dbus/Makefile.am b/dbus/Makefile.am
+diff --git a/dbus/lib/io.gpiod1.xml b/dbus/lib/io.gpiod1.xml
 new file mode 100644
-index 0000000..7868a96
+index 0000000..ca95302
 --- /dev/null
-+++ b/dbus/Makefile.am
-@@ -0,0 +1,10 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++++ b/dbus/lib/io.gpiod1.xml
+@@ -0,0 +1,318 @@
++<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
++<!-- SPDX-FileCopyrightText: 2022-2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org> -->
 +
-+SUBDIRS = data lib manager client
++<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
++ "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 +
-+if WITH_TESTS
++<node>
 +
-+SUBDIRS += tests
++  <!--
++    io.gpiod1.Chip:
++    @short_description: Represents a single GPIO chip in the system.
++  -->
++  <interface name='io.gpiod1.Chip'>
 +
-+endif
-diff --git a/dbus/client/.gitignore b/dbus/client/.gitignore
-new file mode 100644
-index 0000000..08ec6c8
---- /dev/null
-+++ b/dbus/client/.gitignore
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: CC0-1.0
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++    <!--
++      Name:
 +
-+gpiocli
-diff --git a/dbus/client/Makefile.am b/dbus/client/Makefile.am
-new file mode 100644
-index 0000000..1f99daf
---- /dev/null
-+++ b/dbus/client/Makefile.am
-@@ -0,0 +1,31 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022-2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++      Name of the chip as represented in the kernel.
++    -->
++    <property name='Name' type='s' access='read'/>
 +
-+AM_CFLAGS = -include $(top_builddir)/config.h
-+AM_CFLAGS += -I$(top_builddir)/dbus/lib/ -I$(top_srcdir)/dbus/lib/
-+AM_CFLAGS += -Wall -Wextra -g
-+AM_CFLAGS += $(GLIB_CFLAGS) $(GIO_CFLAGS) $(GIO_UNIX_CFLAGS)
-+AM_CFLAGS += -DG_LOG_DOMAIN=\"gpiocli\"
-+AM_LDFLAGS = $(GLIB_LIBS) $(GIO_LIBS) $(GIO_UNIX_LIBS)
-+LDADD = $(top_builddir)/dbus/lib/libgpiodbus.la
++    <!--
++      Label:
 +
-+bin_PROGRAMS = gpiocli
++      Label of the chip as represented in the kernel.
++    -->
++    <property name='Label' type='s' access='read'/>
 +
-+gpiocli_SOURCES = \
-+	common.c \
-+	common.h \
-+	detect.c \
-+	find.c \
-+	get.c \
-+	gpiocli.c \
-+	info.c \
-+	monitor.c \
-+	notify.c \
-+	reconfigure.c \
-+	release.c \
-+	request.c \
-+	requests.c \
-+	set.c \
-+	wait.c
++    <!--
++      NumLines:
 +
-+noinst_SCRIPTS = gpiocli-test.bash
-diff --git a/dbus/data/Makefile.am b/dbus/data/Makefile.am
-new file mode 100644
-index 0000000..3d5c2e1
---- /dev/null
-+++ b/dbus/data/Makefile.am
-@@ -0,0 +1,13 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++      Number of GPIO lines exposed by this chip.
++    -->
++    <property name='NumLines' type='u' access='read'/>
 +
-+EXTRA_DIST = gpio-manager.service
++    <!--
++      Path:
 +
-+dbusdir = $(sysconfdir)/dbus-1/system.d/
-+dbus_DATA = io.gpiod1.conf
++      Filesystem path used to open this chip.
++    -->
++    <property name='Path' type='s' access='read'/>
 +
-+if WITH_SYSTEMD
++    <!--
++      RequestLines:
++      @line_config: Line configuration. See below for details.
++      @request_config: Request configuration. See below for details.
++      @request_path: Object path pointing to the newly added request.
 +
-+systemdsystemunit_DATA = gpio-manager.service
++      Requests a set of lines and makes it possible for the users of this API
++      to manipulate them depending on the line configuration.
 +
-+endif
-diff --git a/dbus/lib/Makefile.am b/dbus/lib/Makefile.am
-new file mode 100644
-index 0000000..c7cbc13
---- /dev/null
-+++ b/dbus/lib/Makefile.am
-@@ -0,0 +1,28 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++      Line configuration is a tuple of two arrays. The first one contains
++      mappings of arrays of line offsets to sets of line settings. The second
++      contains the list of default output values which are only used in output
++      mode.
 +
-+libgpiodbus_la_CFLAGS = -include $(top_builddir)/config.h -Wall -Wextra -g
-+libgpiodbus_la_CFLAGS += $(GLIB_CFLAGS) $(GIO_CFLAGS)
-+libgpiodbus_la_CFLAGS += -DG_LOG_DOMAIN=\"gpiodbus\"
-+libgpiodbus_la_LDFLAGS = -version-info 1
++      Available line config options:
 +
-+generated-gpiodbus.h generated-gpiodbus.c: io.gpiod1.xml
-+	$(AM_V_GEN)gdbus-codegen \
-+		--interface-prefix io.gpiod1 \
-+		--c-namespace GPIODBus \
-+		--generate-c-code generated-gpiodbus \
-+		--c-generate-object-manager \
-+		--c-generate-autocleanup=all \
-+		$(srcdir)/io.gpiod1.xml
++        "direction" => String representing the line direction. Accepts the
++                       following values: "input", "output".
++        "edge" => String representing the edge detection setting. Accepts the
++                  following values: "falling", "rising", "both".
++        "active-low" => Boolean representing the active-low setting.
++        "drive" => String representing the drive settings. Accepts the
++                   following values: "push-pull", "open-drain", "open-source".
++        "bias" => String representing the internal bias settings. Accepts the
++                  following values: "disabled", "pull-up", "pull-down", "as-is".
++        "debounce-period" => Debounce period in milliseconds represented as a
++                             signed, 64-bit integer.
++        "event-clock" => String representing the clock used to timestamp edge
++                         events. Accepts the following values: "monotonic",
++                         "realtime", "hte".
 +
-+lib_LTLIBRARIES = libgpiodbus.la
-+include_HEADERS = \
-+	generated-gpiodbus.h \
-+	gpiodbus.h
-+libgpiodbus_la_SOURCES = generated-gpiodbus.c
++      Output values are applied to the lines in the order they appear in the
++      settings mappings.
 +
-+BUILT_SOURCES = generated-gpiodbus.c generated-gpiodbus.h
-+CLEANFILES = $(BUILT_SOURCES)
++      Example variant that allows to request lines at offsets 1, 5 and 11 in
++      output, push-pull and active-low modes and specifies the output values
++      as active (as visualized with g_variant_print()):
 +
-+dbusdir = $(datadir)/dbus-1/interfaces
-+dbus_DATA = io.gpiod1.xml
-diff --git a/dbus/manager/.gitignore b/dbus/manager/.gitignore
-new file mode 100644
-index 0000000..5507c6d
---- /dev/null
-+++ b/dbus/manager/.gitignore
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: CC0-1.0
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++        // Line config tuple
++        (
++          // Array of line settings mappings
++          [
++            // Single mapping tuple
++            (
++              // Offsets to map
++              [1, 5, 11],
++              // Line settings dict
++              {
++                'direction': <'output'>,
++                'drive': <'push-pull'>,
++                'active-low': <true>
++              }
++            )
++          ],
++          // Output values
++          [1, 1, 1]
++        )
 +
-+gpio-manager
-diff --git a/dbus/manager/Makefile.am b/dbus/manager/Makefile.am
-new file mode 100644
-index 0000000..d1cef8e
---- /dev/null
-+++ b/dbus/manager/Makefile.am
-@@ -0,0 +1,21 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++      Request configuration is a hashmap mapping names of the available config
++      options to their values wrapped in a variant.
 +
-+AM_CFLAGS = -I$(top_srcdir)/bindings/glib/ -include $(top_builddir)/config.h
-+AM_CFLAGS += -Wall -Wextra -g
-+AM_CFLAGS += -I$(top_builddir)/dbus/lib/ -I$(top_srcdir)/dbus/lib/
-+AM_CFLAGS += $(GLIB_CFLAGS) $(GIO_CFLAGS) $(GIO_UNIX_CFLAGS) $(GUDEV_CFLAGS)
-+AM_CFLAGS += -DG_LOG_DOMAIN=\"gpio-manager\"
-+AM_CFLAGS += $(PROFILING_CFLAGS)
-+AM_LDFLAGS = $(GLIB_LIBS) $(GIO_LIBS) $(GIO_UNIX_LIBS) $(GUDEV_LIBS)
-+AM_LDFLAGS += $(PROFILING_LDFLAGS)
-+LDADD = $(top_builddir)/bindings/glib/libgpiod-glib.la
-+LDADD += $(top_builddir)/dbus/lib/libgpiodbus.la
++      Available request config options:
 +
-+bin_PROGRAMS = gpio-manager
-+gpio_manager_SOURCES = \
-+	daemon.c \
-+	daemon.h \
-+	helpers.c \
-+	helpers.h \
-+	gpio-manager.c
-diff --git a/dbus/tests/.gitignore b/dbus/tests/.gitignore
-new file mode 100644
-index 0000000..19f64af
---- /dev/null
-+++ b/dbus/tests/.gitignore
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: CC0-1.0
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++        "consumer" => Consumer name as a string
++        "event-buffer-size" => Requested size of the in-kernel edge event
++                               buffer as an unsigned 32-bit integer.
 +
-+gpiodbus-test
-diff --git a/dbus/tests/Makefile.am b/dbus/tests/Makefile.am
-new file mode 100644
-index 0000000..ec4e26c
---- /dev/null
-+++ b/dbus/tests/Makefile.am
-@@ -0,0 +1,25 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++      The object path to the new request is returned on success. The user
++      should wait for it to appear before trying to use the requested lines in
++      any way.
++    -->
++    <method name='RequestLines'>
++      <arg name='line_config' direction='in' type='(a(aua{sv})ai)'/>
++      <arg name='request_config' direction='in' type='a{sv}'/>
++      <arg name='request_path' direction='out' type='o'/>
++    </method>
 +
-+noinst_PROGRAMS = gpiodbus-test
-+gpiodbus_test_SOURCES = \
-+	daemon-process.c \
-+	daemon-process.h \
-+	helpers.c \
-+	helpers.h \
-+	tests-chip.c \
-+	tests-line.c \
-+	tests-request.c
++  </interface>
 +
-+AM_CFLAGS = -I$(top_srcdir)/tests/gpiosim-glib/
-+AM_CFLAGS += -I$(top_builddir)/dbus/lib/ -I$(top_srcdir)/dbus/lib/
-+AM_CFLAGS += -I$(top_srcdir)/tests/harness/
-+AM_CFLAGS += -include $(top_builddir)/config.h
-+AM_CFLAGS += -Wall -Wextra -g -std=gnu89
-+AM_CFLAGS += $(GLIB_CFLAGS) $(GIO_CFLAGS)
-+AM_CFLAGS += -DG_LOG_DOMAIN=\"gpiodbus-test\"
-+LDADD = $(top_builddir)/tests/gpiosim/libgpiosim.la
-+LDADD += $(top_builddir)/tests/gpiosim-glib/libgpiosim-glib.la
-+LDADD += $(top_builddir)/tests/harness/libgpiod-test-harness.la
-+LDADD += $(top_builddir)/dbus/lib/libgpiodbus.la
-+LDADD += $(GLIB_LIBS) $(GIO_LIBS)
++  <!--
++    io.gpiod1.Line:
++    @short_description: Represents a single GPIO line on a chip.
++  -->
++  <interface name='io.gpiod1.Line'>
++
++    <!--
++      Offset:
++
++      Uniquely identifies the line on the chip.
++    -->
++    <property name='Offset' type='u' access='read'/>
++
++    <!--
++      Name:
++
++      Name of the GPIO line as represented in the kernel.
++    -->
++    <property name='Name' type='s' access='read'/>
++
++    <!--
++      Used:
++
++      True if line is busy.
++
++      Line can be used by gpio-manager, another user-space process, a kernel
++      driver or is hogged. The exact reason a line is busy cannot be determined
++      from user-space unless it's known to be managed by gpio-manager (see:
++      the Managed property of this interface).
++    -->
++    <property name='Used' type='b' access='read'/>
++
++    <!--
++      Consumer:
++
++      Name of the consumer of the line.
++    -->
++    <property name='Consumer' type='s' access='read'/>
++
++    <!--
++      Direction:
++
++      Direction of the line. Returns "input" or "output".
++    -->
++    <property name='Direction' type='s' access='read'/>
++
++    <!--
++      EdgeDetection:
++
++      Edge detection settings of the line. Returns: "none", "falling",
++      "rising" or "both".
++    -->
++    <property name='EdgeDetection' type='s' access='read'/>
++
++    <!--
++      Bias:
++
++      Bias setting of the line. Returns: "unknown", "disabled, "pull-up" or
++      "pull-down".
++    -->
++    <property name='Bias' type='s' access='read'/>
++
++    <!--
++      Drive:
++
++      Drive setting of the line. Returns "push-pull", "open-source" or
++      "open-drain".
++    -->
++    <property name='Drive' type='s' access='read'/>
++
++    <!--
++      ActiveLow:
++
++      True if the line is active-low. False for active-high.
++    -->
++    <property name='ActiveLow' type='b' access='read'/>
++
++    <!--
++      Debounced:
++
++      True if line is being debounced on interrupts. Can only be true with
++      edge-detection enabled.
++    -->
++    <property name='Debounced' type='b' access='read'/>
++
++    <!--
++      DebouncePeriodUs:
++
++      Debounce period in milliseconds. 0 if the line is not debounced. Can
++      only be non-zero with edge-detection enabled.
++    -->
++    <property name='DebouncePeriodUs' type='t' access='read'/>
++
++    <!--
++      EventClock:
++
++      System clock used to timestamp edge events on this line. Returns:
++      "monotonic", "realtime" or "hte".
++    -->
++    <property name='EventClock' type='s' access='read'/>
++
++    <!--
++      Managed:
++
++      True if the line is managed by gpio-manager.
++    -->
++    <property name='Managed' type='b' access='read'/>
++
++    <!--
++      RequestPath:
++
++      If this line is managed by gpio-manager then this property will contain
++      the DBus object path pointing to the managing request object.
++    -->
++    <property name='RequestPath' type='o' access='read'/>
++
++    <!--
++      EdgeEvent:
++      @event_data: Contains the edge (1 for rising, 0 for falling), timestamp
++                   in milliseconds and the global & line-local sequence numbers.
++
++      If the line is managed by the gpio-manager and is requested with edge
++      detection enabled then this signal will be emitted for every edge event
++      registered on this line.
++    -->
++    <signal name='EdgeEvent'>
++      <arg name='event_data' type='(ittt)'/>
++    </signal>
++
++  </interface>
++
++  <!--
++    io.gpiod1.Request:
++    @short_description: Represents a set of requested GPIO lines.
++  -->
++  <interface name='io.gpiod1.Request'>
++
++    <!--
++      ChipPath:
++
++      DBus object path pointing to the chip exposing the lines held by this
++      request.
++    -->
++    <property name='ChipPath' type='o' access='read'/>
++
++    <!--
++      LinePaths:
++
++      Array of DBus object paths pointing to the lines held by this request.
++    -->
++    <property name='LinePaths' type='ao' access='read'/>
++
++    <!--
++      Release:
++
++      Release the requested lines. After this method returns successfully, the
++      request object on which it was called will be destroyed.
++    -->
++    <method name='Release'/>
++
++    <!--
++      ReconfigureLines:
++      @line_config: Line configuration. Refer to the RequestLines method of
++                    the io.gpiod1.Chip interface for details.
++
++      Change the configuration of lines held by this request object without
++      releasing them.
++    -->
++    <method name='ReconfigureLines'>
++      <arg name='line_config' direction='in' type='(a(aua{sv})ai)'/>
++    </method>
++
++    <!--
++      GetValues:
++      @offsets: Array of line offsets within the request to read values for.
++      @values: Array of values in the order lines were specified in @offsets.
++
++      Read the values for a set of lines held by the request.
++    -->
++    <method name='GetValues'>
++      <arg name='offsets' direction='in' type='au'/>
++      <arg name='values' direction='out' type='ai'/>
++    </method>
++
++    <!--
++      SetValues:
++      @values: Array of mappings from line offsets to desired output values.
++
++      Set the values for a set of lines held by the request.
++    -->
++    <method name='SetValues'>
++      <arg name='values' direction='in' type='a{ui}'/>
++    </method>
++
++  </interface>
++
++</node>
 
 -- 
 2.43.0
