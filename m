@@ -1,75 +1,75 @@
-Return-Path: <linux-gpio+bounces-7814-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7815-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB51D91C633
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 20:59:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82B3591C634
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 20:59:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB81C1C23335
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 18:59:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A83028689A
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jun 2024 18:59:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4375B57CB1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6306157CBE;
 	Fri, 28 Jun 2024 18:59:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zE8wxzoD"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pV/q0HzU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4ACA57CAC
-	for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2024 18:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CBB55887
+	for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2024 18:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719601149; cv=none; b=APK5TtBH4wkUc8FsDVYRqzAc36qija6y/EA1I/ehBmSa4nCgLzRSRb823ySbU9C3Z9UkVnnO6JKCy6F+goFk1y28a7QfGw9Oan10d6c9cVFX/plXRQ0enl+FN8sbvUNoqq7Z2RO5GSNS+twd+QhsTV8MgWffljGtogTxRSDjka8=
+	t=1719601149; cv=none; b=KwzzrcsYXUJGbJq5E88EJ0H1uQW5AwiI7kZAfQd2V5/AXDZq3kjzL3RJNsoP9KS9wa9m1tDR0tLSs8MIScWrydWpfTFKrUXTttXChSlpKlgm4SQjvlysfQ9MVbk8gvslRy4rDcCQvF5pwAzwvshaYroP/dVovRnkbCYY9aVJZMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719601149; c=relaxed/simple;
-	bh=mdjjl2IMNF3Ssf4wGz9H2i6AZ0zD2QLj2X7GbvaPJ1c=;
+	bh=SlzY/eobVZbAqEQnhELAbpVvIf4+tFvg5l6GcSa0cPU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AX6YHG7qEoSW6/mZnywdCyxKPvITTqlNxMZopnNYEBb+uH4eg0Ush7dvVBHSs/kFE3EDvR6yFwtOf/lTiNYCw09HLbWrNfvdYl+aW6MG2gx7QMPYyOBHTkN8N6dgTTFuosYZKIAAm2ROeG5HPhV7xfnHAouie0WBwnqmWqOtg4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zE8wxzoD; arc=none smtp.client-ip=209.85.221.41
+	 In-Reply-To:To:Cc; b=pzL2NNBYwRkFjbZ0pzKqFhpuKeTIr6+cDeTIrfw4WRrcuXVkfhmP1Bj1mMKYdRer08ZAejsuhR5ZZxmkH7Yn+iO9R92/m4vhPlOXHvJ0iWZnc3ORm9g2nCZxvkf26T5XadhCrqEYgJeuY200bTpUEXNGpMte3AwZjdULdJESy0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pV/q0HzU; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-364a39824baso557570f8f.1
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2024 11:59:04 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-425680b1d3aso6583465e9.2
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Jun 2024 11:59:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719601143; x=1720205943; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719601145; x=1720205945; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kb2Yln08TMSFxQEfIChyrOakYjsGVTl77vIFUgXk0fg=;
-        b=zE8wxzoDVUXzzISxuUxBCio+w/Y0KttyFRQS8fRUdrer4WXY2/AAvxDkwFSyjbqrvO
-         G/Ls0oslCSI2jcsObhYWRRaP0errlFsoOHp4bSKaznzozuq0arxCQtXDnvwq9Ce1w/M2
-         GxoOUcAyyJWwjm6Yaj+VqRzSZHoBxLqttqEWmjCpyJzD/h5oP7YQjxZxPDFJ8tdJWA0J
-         D+mM6P8wY3qvCXn590eFYkIy24OZYNoq92OG+vSP2OAStyO8N5xz/EbVDXNyS+XjktmZ
-         zn+o0Ge6hCpNhQUGakrvnBtT8imI8pojQXRAvAWy3nvrsSKRo079Ag4OX8LmuXA3CXBf
-         Lu/g==
+        bh=5TxxKDw6lFxix32iMlWY5Xj3wDy40LO1W4xF7xjBoQs=;
+        b=pV/q0HzUncLa/HDIv8plXtGFhBbV+5CgnZvcfMcIK/oHlzJj2qHigtBIfkqn58PIKx
+         A3o9OiGdyoJixkOhAJRdRfmWkFqpPsQYD//cGzCra4SEp/5P+X0RctghM66nCDMpwtCM
+         zqGJj6gPIvqDxMU1tK5VJY7L1dGfebRGtUzmL2HJb2dNgYGw+A2nvEpDZWPofKlaqoTD
+         BqgnYeDhUd3mC91J6NKgjCAVmP5x4JkvCaLcRngvAyJQHVzrixM957xsAoka6F6SGKJD
+         +KnRsuw0nWVdaxUA1qH7cPbbiURlDZreb718YEs1OMVjC7tpyI1GqzOKz7kWwT/X8fZM
+         u9ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719601143; x=1720205943;
+        d=1e100.net; s=20230601; t=1719601145; x=1720205945;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kb2Yln08TMSFxQEfIChyrOakYjsGVTl77vIFUgXk0fg=;
-        b=cWntIGcWvk6bd+3oK0CxKOIH7wnLnsfQXQAvdbWb0MdbHbpVRuU4k4ZPDzTK5BnMvi
-         YkBM1TZBOoUzoYTvZyyRO5eRfpJtPv2aQ3WX1MNYYZNXdOBZ0iPt0E7Lx4btD4mIhpYG
-         xmZLRAIPVEmYCZzA6/kvZLLCCu9lL4tqDNdwppHu68hmmbhQ3fMjRDCisNWy0Qa/77FU
-         k9cL6IfMhNkn00b1ci+uJ2Ilu5cVgiK0gQ6p1d4pgGtLRXhMBB+U9dqaDKNYvokILLrA
-         F6g3PtmpmfMT/TUuvWhLQyGUXDpxGvRrgaIfRGUL4lujp1zxEJjZDtnGry65L6e13MG5
-         YlAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWC2jEYJrYBlWAJQEsTxxOQeqt47XImrjP1EIuXp2RddGE7AqBLUGWCXWQaVyDnmwBXqJQbas+kl+r7DpfNcl2Jb252hgvTZg3ZEA==
-X-Gm-Message-State: AOJu0Yx8jbhu99HV+Dft7Yq9xfSOiBrmbiFyHa0Gr95+8xyQ0sISxdJR
-	jyLJeDCaF9A970vrSUQDSgKFcWmU3co9mTp7wOKpn/CYzfeKdHdcNRJLP7U+bH0=
-X-Google-Smtp-Source: AGHT+IHg+PLBcwMXs2JaOVHX5cjPY5UADYYWRj2+xFY8vepXxvU7YIUDDy1KJw6UXezV/q7HDrqQJA==
-X-Received: by 2002:adf:e742:0:b0:367:43ce:9c9a with SMTP id ffacd0b85a97d-36743ce9f84mr3679830f8f.37.1719601142973;
-        Fri, 28 Jun 2024 11:59:02 -0700 (PDT)
+        bh=5TxxKDw6lFxix32iMlWY5Xj3wDy40LO1W4xF7xjBoQs=;
+        b=Aztnd3FHIGkXHIvPG4BcwpROdKnUxYx+fZoITXDJ+B0kynIQeOukTQub1D6rgZNYe9
+         u1sv2sb731+J3Z74fJGdxzMXaMxAU2Nvxz8j06O6e9Tch/khtvH094jCSVu6+nJttGv2
+         RfFCrBYmuBpcCUlM0NPGsiJzX7pNMr5zcLZ7g6MWLhFEFjUBB4O3EujrHqDOGXgNV7Nw
+         uzZFRLLvczofmlKNn0QJO+U41ODoClX63iGE/3qO46SK/VQEB4HPkgLtqChUKJR2g90f
+         ICV3KhxLGHeAFQrS+X5AWwMSUtBCW6XnZp4a/tK55F0SYqjW3994YK/mk4sQTboM3Vfq
+         GUeg==
+X-Forwarded-Encrypted: i=1; AJvYcCWN9klb4VDRP7xbCO231M1VUxJkJOtRFH1kWGp/Ri5IUFn0K85/G4ZSguo1iOjbUK5X9ykHQuXJmZ+EmJJZiDHmV82FYGFzMX58+Q==
+X-Gm-Message-State: AOJu0YzT8a8NW7ZWVuy44JHbvrkbm2IwuGshyGFNrEOk7XoFZfZfCKt6
+	PzcwCCoUkDg/Dtvna+Njz18qzo+zn4BBv1lL6JroXgiKGZ7mEr6UuBac8JDbWBo=
+X-Google-Smtp-Source: AGHT+IEubA+6EKVJwOoYNecPKFmEPUqCHTRQdzvA7WehmxQBzPQtKf7Ot7A1lFqRaRzKGKiyZeH0ng==
+X-Received: by 2002:adf:f782:0:b0:35f:2725:7ae2 with SMTP id ffacd0b85a97d-366e9628e80mr12292776f8f.57.1719601144693;
+        Fri, 28 Jun 2024 11:59:04 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:cb0e:590a:642a:e1f9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a103d00sm3097336f8f.99.2024.06.28.11.59.02
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a103d00sm3097336f8f.99.2024.06.28.11.59.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jun 2024 11:59:02 -0700 (PDT)
+        Fri, 28 Jun 2024 11:59:03 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 28 Jun 2024 20:58:24 +0200
-Subject: [PATCH RESEND libgpiod v2 05/18] bindings: glib: add core code
+Date: Fri, 28 Jun 2024 20:58:25 +0200
+Subject: [PATCH RESEND libgpiod v2 06/18] bindings: glib: add examples
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,7 +78,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240628-dbus-v2-5-c1331ac17cb8@linaro.org>
+Message-Id: <20240628-dbus-v2-6-c1331ac17cb8@linaro.org>
 References: <20240628-dbus-v2-0-c1331ac17cb8@linaro.org>
 In-Reply-To: <20240628-dbus-v2-0-c1331ac17cb8@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -92,2875 +92,1016 @@ Cc: "As advised by Dan Carpenter - I'm CC'ing dbus"@lists.freedesktop.orgto,
  linux-gpio@vger.kernel.org, dbus@lists.freedesktop.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=84166;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=30641;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=EPRdoubmRD3R0jNUbrrU9qS18PAMcHhZTpuMMM6JC2w=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmfwfqpRloYX+zJ2vY2cSq4bxnr13HLi726zkPB
- LXjJlIubmWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZn8H6gAKCRARpy6gFHHX
- clecEADNFMSftpkVjfVaSMKcg+MenCxWHW4e8SC6fpGO61YvzuuMv/2I65oKbJYM5OfzyK6vYDC
- inLY8gLV/E+/65RN4L1X02tZelUvS0NJap4W+RDbN9gwA3WCIVnxn78ncU9GGzlD4wv5GQHvzKy
- w2+pvNMVItwwtHBkr8GrVIAJ/NmekmAzjGUGdXjOFNZtaB37ehpdZ0a8HLjaRAUW69G/14+b4+x
- MHdNm61AUD2SVZha2i8JJEOFP4ST4NUakXZGtq1omsyKNrRK4NI3tOXIdxc8EnQePRHc5Cl/FWg
- DwUlPMY8JXK1CnSEokWDgCAgYfy/tIO1db8dPFQvgzHJlGxALDbjf6yqYpB9PgbsPJ9TP71TqgW
- DUB//d1s4KMF9hCOPRFGtgTcDjO1F2i1gXjpqDovXoow+oykE+3kMhm59I8O0mfR//YV3M5klNt
- 9/rgH95h6eFYLlh2Nl59B/6LnqXGQDqTseGYDMlSXZcq9a2HZLe055M5v59hGHFq41mBKayJyOK
- uXOVmxWbps3Av1aR3+XIPyI7Pbjy8jGYhXIiTk0KXmE/DU+y2vcOAGZYJUIkr+pcF572OtdPPIv
- EEsS4wbRobjCCTYS/IYbVYjJHdfBcClMRzotrn9ThGOcmVsnXUoWoy1wiurjq2QnBEdIedmTwXs
- QcMMG76yCkQgJPQ==
+ bh=LIJC546j181NYtljHCaPFJ+KtgQfVmiCJZfnYLabPyY=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmfwfre+HHgYbww0p3+i+Hr0uqnOZHeqSLbQleb
+ I1t1bTwXlqJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZn8H6wAKCRARpy6gFHHX
+ cs7qEADQb1rL9gvvQxijDLGNTaas/7iprK4TkN1NrTolBptKxgd0JwcwG3J7JRQhvIuNkTUHcxf
+ nFoWrsqiR6TJFAHSLZ1hnLTB0OMgyhd1DeojL60dYqG2sqlnrgwn//nDiWUVmzROpoo5Eal9cM6
+ L0cJPBtz3YBE96Z+aHFiTi4AHRM9FmqJzZxQDKOaHWNKIcA27jrge9vx+qp38pl9C5jWkEXPBOU
+ NqY/seHGgZXZUMnsQ5ccUldAuY43GR88E4N/iRduXOZ6JH7jjVzOi9ctRjIRrB4nFDijqJSmIH4
+ ER3DcVwqr0qF+ZL0N7VS2z55tLZumuUux+Utr5jWXqHEYG1mKDo1xT//C0bnEDQsS32u3DHuTcx
+ 1bVi5OGeW8p/u4SksTU/rjbo/wNHrRrbpsNbZZx7rYbZKZCByVgsshphjW7azcWaCJAo0okXd3K
+ gaEntxAzfL4PKeZM/4rPbB5ZvrFb1Q/12CEn+cgEE9tu1pIFQGMmrTnob8si4M43MHIqKccNNBq
+ NyljzQBY8bfgNjWqbbVLEea9f5dW6J49asY5aeKxQ54HB+zAoD1N4dT5aClohiIhNqGb++tnpAv
+ nrGJpgw9XbpwiLJcHW0H4ui3+3LzOvU0ypntUa76cybaTeu040QTPc675uMWvirZYeFaMwjNbcj
+ +nVo2PVOBvK/gIg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add the files implementing the public API of the GLib bindings to
-libgpiod.
+Add example programs showcasing the usage of GLib bindings to libgpiod.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- bindings/glib/chip-info.c                | 118 +++++++++
- bindings/glib/chip.c                     | 396 ++++++++++++++++++++++++++++
- bindings/glib/edge-event.c               | 158 +++++++++++
- bindings/glib/error.c                    |  67 +++++
- bindings/glib/generated-enums.c.template |  43 +++
- bindings/glib/info-event.c               | 150 +++++++++++
- bindings/glib/internal.c                 | 334 ++++++++++++++++++++++++
- bindings/glib/internal.h                 |  54 ++++
- bindings/glib/line-config.c              | 186 +++++++++++++
- bindings/glib/line-info.c                | 274 +++++++++++++++++++
- bindings/glib/line-request.c             | 434 +++++++++++++++++++++++++++++++
- bindings/glib/line-settings.c            | 359 +++++++++++++++++++++++++
- bindings/glib/misc.c                     |  17 ++
- bindings/glib/request-config.c           | 155 +++++++++++
- 14 files changed, 2745 insertions(+)
+ bindings/glib/examples/find_line_by_name_glib.c    |  68 +++++++++++
+ bindings/glib/examples/get_chip_info_glib.c        |  39 ++++++
+ bindings/glib/examples/get_line_info_glib.c        |  79 ++++++++++++
+ bindings/glib/examples/get_line_value_glib.c       |  67 +++++++++++
+ .../glib/examples/get_multiple_line_values_glib.c  |  72 +++++++++++
+ .../examples/reconfigure_input_to_output_glib.c    | 103 ++++++++++++++++
+ bindings/glib/examples/toggle_line_value_glib.c    |  99 ++++++++++++++++
+ .../examples/toggle_multiple_line_values_glib.c    | 132 +++++++++++++++++++++
+ bindings/glib/examples/watch_line_info_glib.c      |  63 ++++++++++
+ bindings/glib/examples/watch_line_value_glib.c     |  91 ++++++++++++++
+ .../examples/watch_multiple_edge_rising_glib.c     |  95 +++++++++++++++
+ 11 files changed, 908 insertions(+)
 
-diff --git a/bindings/glib/chip-info.c b/bindings/glib/chip-info.c
+diff --git a/bindings/glib/examples/find_line_by_name_glib.c b/bindings/glib/examples/find_line_by_name_glib.c
 new file mode 100644
-index 0000000..a2038c6
+index 0000000..46a193e
 --- /dev/null
-+++ b/bindings/glib/chip-info.c
-@@ -0,0 +1,118 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <gio/gio.h>
-+#include <gpiod.h>
-+#include <gpiod-glib.h>
-+
-+#include "internal.h"
-+
-+struct _GPIODChipInfo {
-+	GObject parent_instance;
-+	struct gpiod_chip_info *handle;
-+};
-+
-+enum {
-+	G_GPIOD_CHIP_INFO_PROP_HANDLE = 1,
-+	G_GPIOD_CHIP_INFO_PROP_NAME,
-+	G_GPIOD_CHIP_INFO_PROP_LABEL,
-+	G_GPIOD_CHIP_INFO_PROP_NUM_LINES,
-+};
-+
-+G_DEFINE_TYPE(GPIODChipInfo, g_gpiod_chip_info, G_TYPE_OBJECT);
-+
-+static void g_gpiod_chip_info_get_property(GObject *obj, guint prop_id,
-+					   GValue *val, GParamSpec *pspec)
-+{
-+	GPIODChipInfo *self = G_GPIOD_CHIP_INFO_OBJ(obj);
-+
-+	switch (prop_id) {
-+	case G_GPIOD_CHIP_INFO_PROP_NAME:
-+		g_value_set_static_string(val,
-+			gpiod_chip_info_get_name(self->handle));
-+		break;
-+	case G_GPIOD_CHIP_INFO_PROP_LABEL:
-+		g_value_set_static_string(val,
-+			gpiod_chip_info_get_label(self->handle));
-+		break;
-+	case G_GPIOD_CHIP_INFO_PROP_NUM_LINES:
-+		g_value_set_uint(val,
-+			gpiod_chip_info_get_num_lines(self->handle));
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_chip_info_set_property(GObject *obj, guint prop_id,
-+					   const GValue *val, GParamSpec *pspec)
-+{
-+	GPIODChipInfo *self = G_GPIOD_CHIP_INFO_OBJ(obj);
-+
-+	switch (prop_id) {
-+	case G_GPIOD_CHIP_INFO_PROP_HANDLE:
-+		self->handle = g_value_get_pointer(val);
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_chip_info_finalize(GObject *obj)
-+{
-+	GPIODChipInfo *self = G_GPIOD_CHIP_INFO_OBJ(obj);
-+
-+	g_clear_pointer(&self->handle, gpiod_chip_info_free);
-+
-+	G_OBJECT_CLASS(g_gpiod_chip_info_parent_class)->finalize(obj);
-+}
-+
-+static void g_gpiod_chip_info_class_init(GPIODChipInfoClass *chip_info_class)
-+{
-+	GObjectClass *class = G_OBJECT_CLASS(chip_info_class);
-+
-+	class->set_property = g_gpiod_chip_info_set_property;
-+	class->get_property = g_gpiod_chip_info_get_property;
-+	class->finalize = g_gpiod_chip_info_finalize;
-+
-+	g_object_class_install_property(class, G_GPIOD_CHIP_INFO_PROP_HANDLE,
-+		g_param_spec_pointer("handle", "Handle",
-+			"GPIO Chip information object.",
-+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
-+
-+	g_object_class_install_property(class, G_GPIOD_CHIP_INFO_PROP_NAME,
-+		g_param_spec_string("name", "Name",
-+			"Name of this GPIO chip device.", NULL,
-+			G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class, G_GPIOD_CHIP_INFO_PROP_LABEL,
-+		g_param_spec_string("label", "Label",
-+			"Label of this GPIO chip device.", NULL,
-+			G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class, G_GPIOD_CHIP_INFO_PROP_NUM_LINES,
-+		g_param_spec_uint("num-lines", "NumLines",
-+			"Number of GPIO lines exposed by this chip.",
-+			1, G_MAXUINT, 1,
-+			G_PARAM_READABLE));
-+}
-+
-+static void g_gpiod_chip_info_init(GPIODChipInfo *self)
-+{
-+	self->handle = NULL;
-+}
-+
-+const gchar *g_gpiod_chip_info_get_name(GPIODChipInfo *self)
-+{
-+	return g_gpiod_get_prop_string(G_OBJECT(self), "name");
-+}
-+
-+const gchar *g_gpiod_chip_info_get_label(GPIODChipInfo *self)
-+{
-+	return g_gpiod_get_prop_string(G_OBJECT(self), "label");
-+}
-+
-+guint g_gpiod_chip_info_get_num_lines(GPIODChipInfo *self)
-+{
-+	return g_gpiod_get_prop_uint(G_OBJECT(self), "num-lines");
-+}
-diff --git a/bindings/glib/chip.c b/bindings/glib/chip.c
-new file mode 100644
-index 0000000..bd8495b
---- /dev/null
-+++ b/bindings/glib/chip.c
-@@ -0,0 +1,396 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <gio/gio.h>
-+#include <gpiod.h>
-+#include <gpiod-glib.h>
-+
-+#include "internal.h"
-+
-+struct _GPIODChip {
-+	GObject parent_instance;
-+	GString *path;
-+	GError *construct_err;
-+	struct gpiod_chip *handle;
-+	GSource *info_event_src;
-+	guint info_event_src_id;
-+};
-+
-+enum {
-+	G_GPIOD_CHIP_PROP_PATH = 1,
-+	G_GPIOD_CHIP_PROP_HANDLE,
-+};
-+
-+enum {
-+	G_GPIOD_CHIP_SIGNAL_INFO_EVENT,
-+	G_GPIOD_CHIP_SIGNAL_LAST,
-+};
-+
-+static guint signals[G_GPIOD_CHIP_SIGNAL_LAST];
-+
-+static void g_string_free_complete(GString *str)
-+{
-+	g_string_free(str, TRUE);
-+}
-+
-+static gboolean g_gpiod_chip_on_info_event(GIOChannel *source G_GNUC_UNUSED,
-+					   GIOCondition condition G_GNUC_UNUSED,
-+					   gpointer data)
-+{
-+	g_autoptr(GPIODInfoEvent) event = NULL;
-+	struct gpiod_info_event *event_handle;
-+	GPIODChip *self = data;
-+
-+	event_handle = gpiod_chip_read_info_event(self->handle);
-+	if (!event_handle)
-+		return TRUE;
-+
-+	event = G_GPIOD_INFO_EVENT_OBJ(g_object_new(G_GPIOD_INFO_EVENT_TYPE,
-+						    "handle", event_handle,
-+						    NULL));
-+
-+	g_signal_emit(self,
-+		      signals[G_GPIOD_CHIP_SIGNAL_INFO_EVENT],
-+		      0,
-+		      event);
-+
-+	return TRUE;
-+}
-+
-+static gboolean
-+g_gpiod_chip_initable_init(GInitable *initable,
-+			   GCancellable *cancellable G_GNUC_UNUSED,
-+			   GError **err)
-+{
-+	GPIODChip *self = G_GPIOD_CHIP_OBJ(initable);
-+
-+	if (self->construct_err) {
-+		g_propagate_error(err, self->construct_err);
-+		self->construct_err = NULL;
-+		return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
-+static void g_gpiod_chip_initable_iface_init(GInitableIface *iface)
-+{
-+	iface->init = g_gpiod_chip_initable_init;
-+}
-+
-+G_DEFINE_TYPE_WITH_CODE(GPIODChip, g_gpiod_chip, G_TYPE_OBJECT,
-+			G_IMPLEMENT_INTERFACE(
-+				G_TYPE_INITABLE,
-+				g_gpiod_chip_initable_iface_init));
-+
-+static void g_gpiod_chip_constructed(GObject *obj)
-+{
-+	GPIODChip *self = G_GPIOD_CHIP_OBJ(obj);
-+	g_autoptr(GIOChannel) channel = NULL;
-+
-+	g_assert(!self->handle);
-+	g_assert(self->path);
-+
-+	self->handle = gpiod_chip_open(self->path->str);
-+	if (!self->handle) {
-+		g_gpiod_set_error_from_errno(&self->construct_err,
-+					     "unable to open GPIO chip '%s'",
-+					     self->path->str);
-+		return;
-+	}
-+
-+	channel = g_io_channel_unix_new(gpiod_chip_get_fd(self->handle));
-+	self->info_event_src = g_io_create_watch(channel, G_IO_IN);
-+	g_source_set_callback(self->info_event_src,
-+			      G_SOURCE_FUNC(g_gpiod_chip_on_info_event),
-+			      self, NULL);
-+	self->info_event_src_id = g_source_attach(self->info_event_src, NULL);
-+
-+	G_OBJECT_CLASS(g_gpiod_chip_parent_class)->constructed(obj);
-+}
-+
-+static void g_gpiod_chip_get_property(GObject *obj, guint prop_id,
-+				      GValue *val, GParamSpec *pspec)
-+{
-+	GPIODChip *self = G_GPIOD_CHIP_OBJ(obj);
-+
-+	switch (prop_id) {
-+	case G_GPIOD_CHIP_PROP_PATH:
-+		g_value_set_static_string(val, self->path->str);
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_chip_set_property(GObject *obj, guint prop_id,
-+				      const GValue *val, GParamSpec *pspec)
-+{
-+	GPIODChip *self = G_GPIOD_CHIP_OBJ(obj);
-+
-+	switch (prop_id) {
-+	case G_GPIOD_CHIP_PROP_PATH:
-+		self->path = g_string_new(g_value_get_string(val));
-+		break;
-+	case G_GPIOD_CHIP_PROP_HANDLE:
-+		self->handle = g_value_get_pointer(val);
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+void g_gpiod_chip_close(GPIODChip *self)
-+{
-+	g_clear_pointer(&self->info_event_src, g_source_unref);
-+	g_clear_pointer(&self->handle, gpiod_chip_close);
-+}
-+
-+static void g_gpiod_chip_dispose(GObject *obj)
-+{
-+	GPIODChip *self = G_GPIOD_CHIP_OBJ(obj);
-+
-+	if (self->info_event_src_id)
-+		g_source_remove(self->info_event_src_id);
-+
-+	g_gpiod_chip_close(self);
-+
-+	G_OBJECT_CLASS(g_gpiod_chip_parent_class)->dispose(obj);
-+}
-+
-+static void g_gpiod_chip_finalize(GObject *obj)
-+{
-+	GPIODChip *self = G_GPIOD_CHIP_OBJ(obj);
-+
-+	g_clear_error(&self->construct_err);
-+	g_clear_pointer(&self->path, g_string_free_complete);
-+
-+	G_OBJECT_CLASS(g_gpiod_chip_parent_class)->finalize(obj);
-+}
-+
-+static void g_gpiod_chip_class_init(GPIODChipClass *chip_class)
-+{
-+	GObjectClass *class = G_OBJECT_CLASS(chip_class);
-+
-+	class->constructed = g_gpiod_chip_constructed;
-+	class->get_property = g_gpiod_chip_get_property;
-+	class->set_property = g_gpiod_chip_set_property;
-+	class->dispose = g_gpiod_chip_dispose;
-+	class->finalize = g_gpiod_chip_finalize;
-+
-+	g_object_class_install_property(class, G_GPIOD_CHIP_PROP_PATH,
-+		g_param_spec_string("path", "Path",
-+			"Path to the GPIO chip device used to create this chip.",
-+			NULL, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
-+
-+	g_object_class_install_property(class, G_GPIOD_CHIP_PROP_HANDLE,
-+		g_param_spec_pointer("handle", "Handle",
-+			"Open GPIO chip handle as returned by gpiod_chip_open().",
-+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
-+
-+	signals[G_GPIOD_CHIP_SIGNAL_INFO_EVENT] =
-+				g_signal_new("info-event",
-+					     G_TYPE_FROM_CLASS(chip_class),
-+					     G_SIGNAL_RUN_LAST,
-+					     0,
-+					     NULL,
-+					     NULL,
-+					     g_cclosure_marshal_generic,
-+					     G_TYPE_NONE,
-+					     1,
-+					     G_GPIOD_INFO_EVENT_TYPE);
-+}
-+
-+static void g_gpiod_chip_init(GPIODChip *self)
-+{
-+	self->path = NULL;
-+	self->construct_err = NULL;
-+	self->handle = NULL;
-+	self->info_event_src = NULL;
-+	self->info_event_src_id = 0;
-+}
-+
-+GPIODChip *g_gpiod_chip_new(const gchar *path, GError **err)
-+{
-+	return G_GPIOD_CHIP_OBJ(g_initable_new(G_GPIOD_CHIP_TYPE, NULL, err,
-+					       "path", path, NULL));
-+}
-+
-+gboolean g_gpiod_chip_is_closed(GPIODChip *self)
-+{
-+	return !self->handle;
-+}
-+
-+const gchar *g_gpiod_chip_get_path(GPIODChip *self)
-+{
-+	return g_gpiod_get_prop_string(G_OBJECT(self), "path");
-+}
-+
-+static void set_err_chip_closed(GError **err)
-+{
-+	g_set_error(err, G_GPIOD_ERROR, G_GPIOD_ERR_CHIP_CLOSED,
-+		    "Chip was closed and cannot be used");
-+}
-+
-+GPIODChipInfo *g_gpiod_chip_get_info(GPIODChip *self, GError **err)
-+{
-+	struct gpiod_chip_info *info;
-+
-+	g_assert(self);
-+
-+	if (g_gpiod_chip_is_closed(self)) {
-+		set_err_chip_closed(err);
-+		return NULL;
-+	}
-+
-+	info = gpiod_chip_get_info(self->handle);
-+	if (!info) {
-+		g_gpiod_set_error_from_errno(err,
-+			"unable to retrieve GPIO chip information");
-+		return NULL;
-+	}
-+
-+	return G_GPIOD_CHIP_INFO_OBJ(g_object_new(G_GPIOD_CHIP_INFO_TYPE,
-+						  "handle", info, NULL));
-+}
-+
-+static GPIODLineInfo *
-+g_gpiod_chip_do_get_line_info(GPIODChip *self, guint offset, GError **err,
-+			struct gpiod_line_info *(*func)(struct gpiod_chip *,
-+							unsigned int),
-+			const gchar *err_action)
-+{
-+	struct gpiod_line_info *info;
-+
-+	g_assert(self);
-+
-+	if (g_gpiod_chip_is_closed(self)) {
-+		set_err_chip_closed(err);
-+		return NULL;
-+	}
-+
-+	info = func(self->handle, offset);
-+	if (!info) {
-+		g_gpiod_set_error_from_errno(err, "unable to %s for offset %u",
-+					     err_action, offset);
-+		return NULL;
-+	}
-+
-+	return G_GPIOD_LINE_INFO_OBJ(g_object_new(G_GPIOD_LINE_INFO_TYPE,
-+						  "handle", info, NULL));
-+		
-+}
-+
-+GPIODLineInfo *
-+g_gpiod_chip_get_line_info(GPIODChip *self, guint offset, GError **err)
-+{
-+	return g_gpiod_chip_do_get_line_info(self, offset, err,
-+					     gpiod_chip_get_line_info,
-+					     "retrieve GPIO line-info");
-+}
-+
-+GPIODLineInfo *
-+g_gpiod_chip_watch_line_info(GPIODChip *self, guint offset, GError **err)
-+{
-+	return g_gpiod_chip_do_get_line_info(self, offset, err,
-+					     gpiod_chip_watch_line_info,
-+					     "setup a line-info watch");
-+}
-+
-+gboolean
-+g_gpiod_chip_unwatch_line_info(GPIODChip *self, guint offset, GError **err)
-+{
-+	int ret;
-+
-+	g_assert(self);
-+
-+	if (g_gpiod_chip_is_closed(self)) {
-+		set_err_chip_closed(err);
-+		return FALSE;
-+	}
-+
-+	ret = gpiod_chip_unwatch_line_info(self->handle, offset);
-+	if (ret) {
-+		g_gpiod_set_error_from_errno(err,
-+			    "unable to unwatch line-info events for offset %u",
-+			    offset);
-+		return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
-+gboolean
-+g_gpiod_chip_get_line_offset_from_name(GPIODChip *self, const gchar *name,
-+				       guint *offset, GError **err)
-+{
-+	gint ret;
-+
-+	g_assert(self);
-+
-+	if (g_gpiod_chip_is_closed(self)) {
-+		set_err_chip_closed(err);
-+		return FALSE;
-+	}
-+
-+	if (!name) {
-+		g_set_error(err, G_GPIOD_ERROR, G_GPIOD_ERR_INVAL,
-+			    "name must not be NULL");
-+		return FALSE;
-+	}
-+
-+	ret = gpiod_chip_get_line_offset_from_name(self->handle, name);
-+	if (ret < 0) {
-+		if (errno != ENOENT)
-+			g_gpiod_set_error_from_errno(err,
-+				    "failed to map line name to offset");
-+		else
-+			errno = 0;
-+
-+		return FALSE;
-+	}
-+
-+	if (offset)
-+		*offset = ret;
-+
-+	return TRUE;
-+}
-+
-+GPIODLineRequest *g_gpiod_chip_request_lines(GPIODChip *self,
-+					     GPIODRequestConfig *req_cfg,
-+					     GPIODLineConfig *line_cfg,
-+					     GError **err)
-+{
-+	struct gpiod_request_config *req_cfg_handle;
-+	struct gpiod_line_config *line_cfg_handle;
-+	struct gpiod_line_request *req;
-+
-+	g_assert(self);
-+
-+	if (g_gpiod_chip_is_closed(self)) {
-+		set_err_chip_closed(err);
-+		return NULL;
-+	}
-+
-+	if (!line_cfg) {
-+		g_set_error(err, G_GPIOD_ERROR, G_GPIOD_ERR_INVAL,
-+			    "line-config is required for request");
-+		return NULL;
-+	}
-+
-+	req_cfg_handle = req_cfg ?
-+		g_gpiod_get_prop_pointer(G_OBJECT(req_cfg), "handle") : NULL;
-+	line_cfg_handle = g_gpiod_get_prop_pointer(G_OBJECT(line_cfg),
-+						   "handle");
-+
-+	req = gpiod_chip_request_lines(self->handle,
-+				       req_cfg_handle, line_cfg_handle);
-+	if (!req) {
-+		g_gpiod_set_error_from_errno(err,
-+				"failed to request GPIO lines");
-+		return NULL;
-+	}
-+
-+	return G_GPIOD_LINE_REQUEST_OBJ(g_object_new(G_GPIOD_LINE_REQUEST_TYPE,
-+						     "handle", req, NULL));
-+}
-diff --git a/bindings/glib/edge-event.c b/bindings/glib/edge-event.c
-new file mode 100644
-index 0000000..c732138
---- /dev/null
-+++ b/bindings/glib/edge-event.c
-@@ -0,0 +1,158 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
++++ b/bindings/glib/examples/find_line_by_name_glib.c
+@@ -0,0 +1,68 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 +
-+#include <gio/gio.h>
-+#include <gpiod.h>
-+#include <gpiod-glib.h>
++/* Minimal example of finding a line with the given name. */
 +
-+#include "internal.h"
-+
-+struct _GPIODEdgeEvent {
-+	GObject parent_instance;
-+	struct gpiod_edge_event *handle;
-+};
-+
-+enum {
-+	G_GPIOD_EDGE_EVENT_PROP_HANDLE = 1,
-+	G_GPIOD_EDGE_EVENT_PROP_EVENT_TYPE,
-+	G_GPIOD_EDGE_EVENT_PROP_TIMESTAMP_NS,
-+	G_GPIOD_EDGE_EVENT_PROP_LINE_OFFSET,
-+	G_GPIOD_EDGE_EVENT_PROP_GLOBAL_SEQNO,
-+	G_GPIOD_EDGE_EVENT_PROP_LINE_SEQNO,
-+};
-+
-+G_DEFINE_TYPE(GPIODEdgeEvent, g_gpiod_edge_event, G_TYPE_OBJECT);
-+
-+static void g_gpiod_edge_event_get_property(GObject *obj, guint prop_id,
-+					    GValue *val, GParamSpec *pspec)
-+{
-+	GPIODEdgeEvent *self = G_GPIOD_EDGE_EVENT_OBJ(obj);
-+	GPIODEdgeEventType type;
-+
-+	switch (prop_id) {
-+	case G_GPIOD_EDGE_EVENT_PROP_EVENT_TYPE:
-+		type = g_gpiod_edge_event_type_from_library(
-+				gpiod_edge_event_get_event_type(self->handle));
-+		g_value_set_enum(val, type);
-+		break;
-+	case G_GPIOD_EDGE_EVENT_PROP_TIMESTAMP_NS:
-+		g_value_set_uint64(val,
-+			gpiod_edge_event_get_timestamp_ns(self->handle));
-+		break;
-+	case G_GPIOD_EDGE_EVENT_PROP_LINE_OFFSET:
-+		g_value_set_uint(val,
-+			gpiod_edge_event_get_line_offset(self->handle));
-+		break;
-+	case G_GPIOD_EDGE_EVENT_PROP_GLOBAL_SEQNO:
-+		g_value_set_ulong(val,
-+			gpiod_edge_event_get_global_seqno(self->handle));
-+		break;
-+	case G_GPIOD_EDGE_EVENT_PROP_LINE_SEQNO:
-+		g_value_set_ulong(val,
-+			gpiod_edge_event_get_line_seqno(self->handle));
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_edge_event_set_property(GObject *obj, guint prop_id,
-+					    const GValue *val,
-+					    GParamSpec *pspec)
-+{
-+	GPIODEdgeEvent *self = G_GPIOD_EDGE_EVENT_OBJ(obj);
-+
-+	switch (prop_id) {
-+	case G_GPIOD_EDGE_EVENT_PROP_HANDLE:
-+		self->handle = g_value_get_pointer(val);
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_edge_event_finalize(GObject *obj)
-+{
-+	GPIODEdgeEvent *self = G_GPIOD_EDGE_EVENT_OBJ(obj);
-+
-+	g_clear_pointer(&self->handle, gpiod_edge_event_free);
-+
-+	G_OBJECT_CLASS(g_gpiod_edge_event_parent_class)->finalize(obj);
-+}
-+
-+static void g_gpiod_edge_event_class_init(GPIODEdgeEventClass *edge_event_class)
-+{
-+	GObjectClass *class = G_OBJECT_CLASS(edge_event_class);
-+
-+	class->set_property = g_gpiod_edge_event_set_property;
-+	class->get_property = g_gpiod_edge_event_get_property;
-+	class->finalize = g_gpiod_edge_event_finalize;
-+
-+	g_object_class_install_property(class, G_GPIOD_EDGE_EVENT_PROP_HANDLE,
-+		g_param_spec_pointer("handle", "Handle",
-+			"GPIO info event object.",
-+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_EDGE_EVENT_PROP_EVENT_TYPE,
-+		g_param_spec_enum("event-type", "Event Type",
-+			"Type of the edge event.",
-+			G_GPIOD_EDGE_EVENT_TYPE_TYPE,
-+			G_GPIOD_EDGE_EVENT_RISING_EDGE,
-+			G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_EDGE_EVENT_PROP_TIMESTAMP_NS,
-+		g_param_spec_uint64("timestamp-ns",
-+			"Timestamp (in nanoseconds)",
-+			"Timestamp of the edge event expressed in nanoseconds.",
-+			0, G_MAXUINT64, 0, G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_EDGE_EVENT_PROP_LINE_OFFSET,
-+		g_param_spec_uint("line-offset", "Line Offset",
-+			"Offset of the line on which this event was registered.",
-+			0, G_MAXUINT, 0, G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_EDGE_EVENT_PROP_GLOBAL_SEQNO,
-+		g_param_spec_ulong("global-seqno", "Global Sequence Number",
-+			"Global sequence number of this event",
-+			0, G_MAXULONG, 0, G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_EDGE_EVENT_PROP_LINE_SEQNO,
-+		g_param_spec_ulong("line-seqno", "Line Sequence Number",
-+			"Event sequence number specific to the line.",
-+			0, G_MAXULONG, 0, G_PARAM_READABLE));
-+}
-+
-+static void g_gpiod_edge_event_init(GPIODEdgeEvent *self)
-+{
-+	self->handle = NULL;
-+}
-+
-+GPIODEdgeEventType g_gpiod_edge_event_get_event_type(GPIODEdgeEvent *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "event-type");
-+}
-+
-+guint64 g_gpiod_edge_event_get_timestamp_ns(GPIODEdgeEvent *self)
-+{
-+	return g_gpiod_get_prop_uint64(G_OBJECT(self), "timestamp-ns");
-+}
-+
-+guint g_gpiod_edge_event_get_line_offset(GPIODEdgeEvent *self)
-+{
-+	return g_gpiod_get_prop_uint(G_OBJECT(self), "line-offset");
-+}
-+
-+gulong g_gpiod_edge_event_get_global_seqno(GPIODEdgeEvent *self)
-+{
-+	return g_gpiod_get_prop_ulong(G_OBJECT(self), "global-seqno");
-+}
-+
-+gulong g_gpiod_edge_event_get_line_seqno(GPIODEdgeEvent *self)
-+{
-+	return g_gpiod_get_prop_ulong(G_OBJECT(self), "line-seqno");
-+}
-diff --git a/bindings/glib/error.c b/bindings/glib/error.c
-new file mode 100644
-index 0000000..6a1dc00
---- /dev/null
-+++ b/bindings/glib/error.c
-@@ -0,0 +1,67 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <errno.h>
 +#include <glib.h>
 +#include <gpiod-glib.h>
-+#include <stdarg.h>
++#include <stdlib.h>
 +
-+G_DEFINE_QUARK(g-gpiod-error, g_gpiod_error)
-+
-+static GPIODError error_from_errno(void)
++int main(void)
 +{
-+	switch (errno) {
-+	case EPERM:
-+		return G_GPIOD_ERR_PERM;
-+	case ENOENT:
-+		return G_GPIOD_ERR_NOENT;
-+	case EINTR:
-+		return G_GPIOD_ERR_INTR;
-+	case EIO:
-+		return G_GPIOD_ERR_IO;
-+	case ENXIO:
-+		return G_GPIOD_ERR_NXIO;
-+	case E2BIG:
-+		return G_GPIOD_ERR_E2BIG;
-+	case EBADFD:
-+		return G_GPIOD_ERR_BADFD;
-+	case ECHILD:
-+		return G_GPIOD_ERR_CHILD;
-+	case EAGAIN:
-+		return G_GPIOD_ERR_AGAIN;
-+	case ENOMEM:
-+		/* Special case - as a convention GLib just aborts on ENOMEM. */
-+		g_error("out of memory");
-+	case EACCES:
-+		return G_GPIOD_ERR_ACCES;
-+	case EFAULT:
-+		return G_GPIOD_ERR_FAULT;
-+	case EBUSY:
-+		return G_GPIOD_ERR_BUSY;
-+	case EEXIST:
-+		return G_GPIOD_ERR_EXIST;
-+	case ENODEV:
-+		return G_GPIOD_ERR_NODEV;
-+	case EINVAL:
-+		return G_GPIOD_ERR_INVAL;
-+	case ENOTTY:
-+		return G_GPIOD_ERR_NOTTY;
-+	case EPIPE:
-+		return G_GPIOD_ERR_PIPE;
-+	default:
-+		return G_GPIOD_ERR_FAILED;
++	/* Example configuration - customize to suit your situation. */
++	static const gchar *const line_name = "GPIO0";
++
++	g_autoptr(GPIODChipInfo) info = NULL;
++	g_autoptr(GError) err = NULL;
++	g_autoptr(GDir) dir = NULL;
++	const gchar *filename;
++	gboolean ret;
++	guint offset;
++
++	dir = g_dir_open("/dev", 0, &err);
++	if (err) {
++		g_printerr("Unable to open /dev: %s\n", err->message);
++		return EXIT_FAILURE;
 +	}
-+}
-+
-+void g_gpiod_set_error_from_errno(GError **err, const gchar *fmt, ...)
-+{
-+	g_autofree gchar *msg = NULL;
-+	va_list va;
-+
-+	va_start(va, fmt);
-+	msg = g_strdup_vprintf(fmt, va);
-+	va_end(va);
-+
-+	g_set_error(err, G_GPIOD_ERROR, error_from_errno(),
-+		    "%s: %s", msg, g_strerror(errno));
-+}
-diff --git a/bindings/glib/generated-enums.c.template b/bindings/glib/generated-enums.c.template
-new file mode 100644
-index 0000000..c124eb7
---- /dev/null
-+++ b/bindings/glib/generated-enums.c.template
-@@ -0,0 +1,43 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+/*** BEGIN file-header ***/
-+
-+#include <gpiod-glib.h>
-+
-+/*** END file-header ***/
-+
-+/*** BEGIN file-production ***/
-+
-+/* enumerations from "@basename@" */
-+
-+/*** END file-production ***/
-+
-+/*** BEGIN value-header ***/
-+
-+GType @enum_name@_get_type(void)
-+{
-+	static gsize static_g_@type@_type_id;
-+
-+	if (g_once_init_enter(&static_g_@type@_type_id)) {
-+		static const G@Type@Value values[] = {
-+/*** END value-header ***/
-+
-+/*** BEGIN value-production ***/
-+			{@VALUENAME@, "@VALUENAME@", "@valuenick@"},
-+/*** END value-production ***/
-+
-+/*** BEGIN value-tail ***/
-+			{ 0, NULL, NULL }
-+		};
-+
-+		GType g_@type@_type_id = g_@type@_register_static(
-+				g_intern_static_string("@EnumName@"), values);
-+
-+		g_once_init_leave (&static_g_@type@_type_id, g_@type@_type_id);
-+	}
-+
-+	return static_g_@type@_type_id;
-+}
-+
-+/*** END value-tail ***/
-diff --git a/bindings/glib/info-event.c b/bindings/glib/info-event.c
-new file mode 100644
-index 0000000..4abaee3
---- /dev/null
-+++ b/bindings/glib/info-event.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <gio/gio.h>
-+#include <gpiod.h>
-+#include <gpiod-glib.h>
-+
-+#include "internal.h"
-+
-+struct _GPIODInfoEvent {
-+	GObject parent_instance;
-+	struct gpiod_info_event *handle;
-+	GPIODLineInfo *info;
-+};
-+
-+enum {
-+	G_GPIOD_INFO_EVENT_PROP_HANDLE = 1,
-+	G_GPIOD_INFO_EVENT_PROP_EVENT_TYPE,
-+	G_GPIOD_INFO_EVENT_PROP_TIMESTAMP,
-+	G_GPIOD_INFO_EVENT_PROP_LINE_INFO,
-+};
-+
-+G_DEFINE_TYPE(GPIODInfoEvent, g_gpiod_info_event, G_TYPE_OBJECT);
-+
-+static void g_gpiod_info_event_get_property(GObject *obj, guint prop_id,
-+					    GValue *val, GParamSpec *pspec)
-+{
-+	GPIODInfoEvent *self = G_GPIOD_INFO_EVENT_OBJ(obj);
-+	struct gpiod_line_info *info, *cpy;
-+	GPIODInfoEventType type;
-+
-+	switch (prop_id) {
-+	case G_GPIOD_INFO_EVENT_PROP_EVENT_TYPE:
-+		type = g_gpiod_info_event_type_from_library(
-+				gpiod_info_event_get_event_type(self->handle));
-+		g_value_set_enum(val, type);
-+		break;
-+	case G_GPIOD_INFO_EVENT_PROP_TIMESTAMP:
-+		g_value_set_uint64(val,
-+			gpiod_info_event_get_timestamp_ns(self->handle));
-+		break;
-+	case G_GPIOD_INFO_EVENT_PROP_LINE_INFO:
-+		if (!self->info) {
-+			info = gpiod_info_event_get_line_info(self->handle);
-+			cpy = gpiod_line_info_copy(info);
-+			if (!cpy)
-+				g_error("Failed to allocate memory for line-info object");
-+
-+			self->info = G_GPIOD_LINE_INFO_OBJ(
-+				g_object_new(G_GPIOD_LINE_INFO_TYPE,
-+					"handle", cpy, NULL));
-+		}
-+
-+		g_value_set_object(val, g_object_ref(self->info));
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_info_event_set_property(GObject *obj, guint prop_id,
-+					    const GValue *val,
-+					    GParamSpec *pspec)
-+{
-+	GPIODInfoEvent *self = G_GPIOD_INFO_EVENT_OBJ(obj);
-+
-+	switch (prop_id) {
-+	case G_GPIOD_INFO_EVENT_PROP_HANDLE:
-+		self->handle = g_value_get_pointer(val);
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_info_event_dispose(GObject *obj)
-+{
-+	GPIODInfoEvent *self = G_GPIOD_INFO_EVENT_OBJ(obj);
-+
-+	g_clear_object(&self->info);
-+
-+	G_OBJECT_CLASS(g_gpiod_info_event_parent_class)->dispose(obj);
-+}
-+
-+static void g_gpiod_info_event_finalize(GObject *obj)
-+{
-+	GPIODInfoEvent *self = G_GPIOD_INFO_EVENT_OBJ(obj);
-+
-+	g_clear_pointer(&self->handle, gpiod_info_event_free);
-+
-+	G_OBJECT_CLASS(g_gpiod_info_event_parent_class)->finalize(obj);
-+}
-+
-+static void g_gpiod_info_event_class_init(GPIODInfoEventClass *info_event_class)
-+{
-+	GObjectClass *class = G_OBJECT_CLASS(info_event_class);
-+
-+	class->set_property = g_gpiod_info_event_set_property;
-+	class->get_property = g_gpiod_info_event_get_property;
-+	class->dispose = g_gpiod_info_event_dispose;
-+	class->finalize = g_gpiod_info_event_finalize;
-+
-+	g_object_class_install_property(class, G_GPIOD_INFO_EVENT_PROP_HANDLE,
-+		g_param_spec_pointer("handle", "Handle",
-+			"GPIO info event object.",
-+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_INFO_EVENT_PROP_EVENT_TYPE,
-+		g_param_spec_enum("event-type", "Event Type",
-+			"Type of the info event.",
-+			G_GPIOD_INFO_EVENT_TYPE_TYPE,
-+			G_GPIOD_INFO_EVENT_LINE_REQUESTED,
-+			G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_INFO_EVENT_PROP_TIMESTAMP,
-+		g_param_spec_uint64("timestamp-ns",
-+			"Timestamp (in nanoseconds)",
-+			"Timestamp of the info event expressed in nanoseconds.",
-+			0, G_MAXUINT64, 0, G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_INFO_EVENT_PROP_LINE_INFO,
-+		g_param_spec_object("line-info", "Line Info",
-+			"New line-info snapshot associated with this info event.",
-+			G_GPIOD_LINE_INFO_TYPE, G_PARAM_READABLE));
-+}
-+
-+static void g_gpiod_info_event_init(GPIODInfoEvent *self)
-+{
-+	self->handle = NULL;
-+	self->info = NULL;
-+}
-+
-+GPIODInfoEventType g_gpiod_info_event_get_event_type(GPIODInfoEvent *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "event-type");
-+}
-+
-+guint64 g_gpiod_info_event_get_timestamp_ns(GPIODInfoEvent *self)
-+{
-+	return g_gpiod_get_prop_uint64(G_OBJECT(self), "timestamp-ns");
-+}
-+
-+GPIODLineInfo *g_gpiod_info_event_get_line_info(GPIODInfoEvent *self)
-+{
-+	return G_GPIOD_LINE_INFO_OBJ(
-+			g_gpiod_get_prop_object(G_OBJECT(self), "line-info"));
-+}
-diff --git a/bindings/glib/internal.c b/bindings/glib/internal.c
-new file mode 100644
-index 0000000..40192a4
---- /dev/null
-+++ b/bindings/glib/internal.c
-@@ -0,0 +1,334 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include "internal.h"
-+
-+#define get_prop(_obj, _prop, _type, _vtype, _get_func) \
-+	({ \
-+		g_auto(GValue) _val = G_VALUE_INIT; \
-+		_type _ret; \
-+		g_value_init(&_val, _vtype); \
-+		g_object_get_property(_obj, _prop, &_val); \
-+		_ret = _get_func(&_val); \
-+		_ret; \
-+	})
-+
-+G_GNUC_INTERNAL const gchar *
-+g_gpiod_get_prop_string(GObject *obj, const gchar *prop)
-+{
-+	return get_prop(obj, prop, const gchar *, G_TYPE_STRING,
-+			g_value_get_string);
-+}
-+
-+G_GNUC_INTERNAL gboolean g_gpiod_get_prop_bool(GObject *obj, const gchar *prop)
-+{
-+	return get_prop(obj, prop, gboolean, G_TYPE_BOOLEAN,
-+			g_value_get_boolean);
-+}
-+
-+G_GNUC_INTERNAL gint g_gpiod_get_prop_enum(GObject *obj, const gchar *prop)
-+{
-+	return get_prop(obj, prop, gint, G_TYPE_ENUM, g_value_get_enum);
-+}
-+
-+G_GNUC_INTERNAL guint g_gpiod_get_prop_uint(GObject *obj, const gchar *prop)
-+{
-+	return get_prop(obj, prop, guint, G_TYPE_UINT, g_value_get_uint);
-+}
-+
-+G_GNUC_INTERNAL guint64 g_gpiod_get_prop_uint64(GObject *obj, const gchar *prop)
-+{
-+	return get_prop(obj, prop, guint64, G_TYPE_UINT64, g_value_get_uint64);
-+}
-+
-+G_GNUC_INTERNAL gulong g_gpiod_get_prop_ulong(GObject *obj, const gchar *prop)
-+{
-+	return get_prop(obj, prop, gulong, G_TYPE_ULONG, g_value_get_ulong);
-+}
-+
-+G_GNUC_INTERNAL GTimeSpan
-+g_gpiod_get_prop_timespan(GObject *obj, const gchar *prop)
-+{
-+	return get_prop(obj, prop, GTimeSpan, G_TYPE_INT64, g_value_get_int64);
-+}
-+
-+G_GNUC_INTERNAL GObject *
-+g_gpiod_get_prop_object(GObject *obj, const gchar *prop)
-+{
-+	return G_OBJECT(get_prop(obj, prop, gpointer, G_TYPE_OBJECT,
-+			g_value_get_object));
-+}
-+
-+G_GNUC_INTERNAL gpointer
-+g_gpiod_get_prop_pointer(GObject *obj, const gchar *prop)
-+{
-+	return get_prop(obj, prop, gpointer, G_TYPE_POINTER,
-+			g_value_get_pointer);
-+}
-+
-+G_GNUC_INTERNAL gpointer
-+g_gpiod_get_prop_boxed_array(GObject *obj, const gchar *prop)
-+{
-+	return get_prop(obj, prop, gpointer, G_TYPE_ARRAY, g_value_get_boxed);
-+}
-+
-+#define set_prop(_obj, _prop, _set_func, _vtype, _val) \
-+	do { \
-+		g_auto(GValue) _gval = G_VALUE_INIT; \
-+		g_value_init(&_gval, _vtype); \
-+		_set_func(&_gval, _val); \
-+		g_object_set_property(_obj, _prop, &_gval); \
-+	} while (0)
-+
-+G_GNUC_INTERNAL void
-+g_gpiod_set_prop_uint(GObject *obj, const gchar *prop, guint val)
-+{
-+	set_prop(obj, prop, g_value_set_uint, G_TYPE_UINT, val);
-+}
-+
-+G_GNUC_INTERNAL void
-+g_gpiod_set_prop_string(GObject *obj, const gchar *prop, const gchar *val)
-+{
-+	set_prop(obj, prop, g_value_set_string, G_TYPE_STRING, val);
-+}
-+
-+G_GNUC_INTERNAL void
-+g_gpiod_set_prop_enum(GObject *obj, const gchar *prop, gint val)
-+{
-+	set_prop(obj, prop, g_value_set_enum, G_TYPE_ENUM, val);
-+}
-+
-+G_GNUC_INTERNAL void
-+g_gpiod_set_prop_bool(GObject *obj, const gchar *prop, gboolean val)
-+{
-+	set_prop(obj, prop, g_value_set_boolean, G_TYPE_BOOLEAN, val);
-+}
-+
-+G_GNUC_INTERNAL void
-+g_gpiod_set_prop_timespan(GObject *obj, const gchar *prop, GTimeSpan val)
-+{
-+	set_prop(obj, prop, g_value_set_int64, G_TYPE_INT64, val);
-+}
-+
-+G_GNUC_INTERNAL GPIODLineDirection
-+g_gpiod_line_direction_from_library(enum gpiod_line_direction direction,
-+				    gboolean allow_as_is)
-+{
-+	switch (direction) {
-+	case GPIOD_LINE_DIRECTION_AS_IS:
-+		if (allow_as_is)
-+			return G_GPIOD_LINE_DIRECTION_AS_IS;
-+		break;
-+	case GPIOD_LINE_DIRECTION_INPUT:
-+		return G_GPIOD_LINE_DIRECTION_INPUT;
-+	case GPIOD_LINE_DIRECTION_OUTPUT:
-+		return G_GPIOD_LINE_DIRECTION_OUTPUT;
-+	}
-+
-+	g_error("invalid line direction value returned by libgpiod");
-+}
-+
-+G_GNUC_INTERNAL GPIODLineEdge
-+g_gpiod_line_edge_from_library(enum gpiod_line_edge edge)
-+{
-+	switch (edge) {
-+	case GPIOD_LINE_EDGE_NONE:
-+		return G_GPIOD_LINE_EDGE_NONE;
-+	case GPIOD_LINE_EDGE_RISING:
-+		return G_GPIOD_LINE_EDGE_RISING;
-+	case GPIOD_LINE_EDGE_FALLING:
-+		return G_GPIOD_LINE_EDGE_FALLING;
-+	case GPIOD_LINE_EDGE_BOTH:
-+		return G_GPIOD_LINE_EDGE_BOTH;
-+	}
-+
-+	g_error("invalid line edge value returned by libgpiod");
-+}
-+
-+G_GNUC_INTERNAL GPIODLineBias
-+g_gpiod_line_bias_from_library(enum gpiod_line_bias bias, gboolean allow_as_is)
-+{
-+	switch (bias) {
-+	case GPIOD_LINE_BIAS_AS_IS:
-+		if (allow_as_is)
-+			return G_GPIOD_LINE_BIAS_AS_IS;
-+		break;
-+	case GPIOD_LINE_BIAS_UNKNOWN:
-+		return G_GPIOD_LINE_BIAS_UNKNOWN;
-+	case GPIOD_LINE_BIAS_DISABLED:
-+		return G_GPIOD_LINE_BIAS_DISABLED;
-+	case GPIOD_LINE_BIAS_PULL_UP:
-+		return G_GPIOD_LINE_BIAS_PULL_UP;
-+	case GPIOD_LINE_BIAS_PULL_DOWN:
-+		return G_GPIOD_LINE_BIAS_PULL_DOWN;
-+	}
-+
-+	g_error("invalid line bias value returned by libgpiod");
-+}
-+
-+G_GNUC_INTERNAL GPIODLineDrive
-+g_gpiod_line_drive_from_library(enum gpiod_line_drive drive)
-+{
-+	switch (drive) {
-+	case GPIOD_LINE_DRIVE_PUSH_PULL:
-+		return G_GPIOD_LINE_DRIVE_PUSH_PULL;
-+	case GPIOD_LINE_DRIVE_OPEN_DRAIN:
-+		return G_GPIOD_LINE_DRIVE_OPEN_DRAIN;
-+	case GPIOD_LINE_DRIVE_OPEN_SOURCE:
-+		return G_GPIOD_LINE_DRIVE_OPEN_SOURCE;
-+	}
-+
-+	g_error("invalid line drive value returned by libgpiod");
-+}
-+
-+G_GNUC_INTERNAL GPIODLineClock
-+g_gpiod_line_clock_from_library(enum gpiod_line_clock event_clock)
-+{
-+	switch (event_clock) {
-+	case GPIOD_LINE_CLOCK_MONOTONIC:
-+		return G_GPIOD_LINE_CLOCK_MONOTONIC;
-+	case GPIOD_LINE_CLOCK_REALTIME:
-+		return G_GPIOD_LINE_CLOCK_REALTIME;
-+	case GPIOD_LINE_CLOCK_HTE:
-+		return G_GPIOD_LINE_CLOCK_HTE;
-+	}
-+
-+	g_error("invalid line event clock value returned by libgpiod");
-+}
-+
-+G_GNUC_INTERNAL GPIODLineValue
-+g_gpiod_line_value_from_library(enum gpiod_line_value value)
-+{
-+	switch (value) {
-+	case GPIOD_LINE_VALUE_INACTIVE:
-+		return G_GPIOD_LINE_VALUE_INACTIVE;
-+	case GPIOD_LINE_VALUE_ACTIVE:
-+		return G_GPIOD_LINE_VALUE_ACTIVE;
-+	default:
-+		break;
-+	}
-+
-+	g_error("invalid line value returned by libgpiod");
-+}
-+
-+G_GNUC_INTERNAL GPIODInfoEventType
-+g_gpiod_info_event_type_from_library(enum gpiod_info_event_type type)
-+{
-+	switch (type) {
-+	case GPIOD_INFO_EVENT_LINE_REQUESTED:
-+		return G_GPIOD_INFO_EVENT_LINE_REQUESTED;
-+	case GPIOD_INFO_EVENT_LINE_RELEASED:
-+		return G_GPIOD_INFO_EVENT_LINE_RELEASED;
-+	case GPIOD_INFO_EVENT_LINE_CONFIG_CHANGED:
-+		return G_GPIOD_INFO_EVENT_LINE_CONFIG_CHANGED;
-+	}
-+	
-+	g_error("invalid info-event type returned by libgpiod");
-+}
-+
-+G_GNUC_INTERNAL GPIODEdgeEventType
-+g_gpiod_edge_event_type_from_library(enum gpiod_edge_event_type type)
-+{
-+	switch (type) {
-+	case GPIOD_EDGE_EVENT_RISING_EDGE:
-+		return G_GPIOD_EDGE_EVENT_RISING_EDGE;
-+	case GPIOD_EDGE_EVENT_FALLING_EDGE:
-+		return G_GPIOD_EDGE_EVENT_FALLING_EDGE;
-+	}
-+
-+	g_error("invalid edge-event type returned by libgpiod");
-+}
-+
-+G_GNUC_INTERNAL enum gpiod_line_direction
-+g_gpiod_line_direction_to_library(GPIODLineDirection direction)
-+{
-+	switch (direction) {
-+	case G_GPIOD_LINE_DIRECTION_AS_IS:
-+		return GPIOD_LINE_DIRECTION_AS_IS;
-+	case G_GPIOD_LINE_DIRECTION_INPUT:
-+		return GPIOD_LINE_DIRECTION_INPUT;
-+	case G_GPIOD_LINE_DIRECTION_OUTPUT:
-+		return GPIOD_LINE_DIRECTION_OUTPUT;
-+	}
-+
-+	g_error("invalid line direction value");
-+}
-+
-+G_GNUC_INTERNAL enum gpiod_line_edge
-+g_gpiod_line_edge_to_library(GPIODLineEdge edge)
-+{
-+	switch (edge) {
-+	case G_GPIOD_LINE_EDGE_NONE:
-+		return GPIOD_LINE_EDGE_NONE;
-+	case G_GPIOD_LINE_EDGE_RISING:
-+		return GPIOD_LINE_EDGE_RISING;
-+	case G_GPIOD_LINE_EDGE_FALLING:
-+		return GPIOD_LINE_EDGE_FALLING;
-+	case G_GPIOD_LINE_EDGE_BOTH:
-+		return GPIOD_LINE_EDGE_BOTH;
-+	}
-+
-+	g_error("invalid line edge value");
-+}
-+
-+G_GNUC_INTERNAL enum gpiod_line_bias
-+g_gpiod_line_bias_to_library(GPIODLineBias bias)
-+{
-+	switch (bias) {
-+	case G_GPIOD_LINE_BIAS_AS_IS:
-+		return GPIOD_LINE_BIAS_AS_IS;
-+	case G_GPIOD_LINE_BIAS_DISABLED:
-+		return GPIOD_LINE_BIAS_DISABLED;
-+	case G_GPIOD_LINE_BIAS_PULL_UP:
-+		return GPIOD_LINE_BIAS_PULL_UP;
-+	case G_GPIOD_LINE_BIAS_PULL_DOWN:
-+		return GPIOD_LINE_BIAS_PULL_DOWN;
-+	default:
-+		break;
-+	}
-+
-+	g_error("invalid line bias value");
-+}
-+
-+G_GNUC_INTERNAL enum gpiod_line_drive
-+g_gpiod_line_drive_to_library(GPIODLineDrive drive)
-+{
-+	switch (drive) {
-+	case G_GPIOD_LINE_DRIVE_PUSH_PULL:
-+		return GPIOD_LINE_DRIVE_PUSH_PULL;
-+	case G_GPIOD_LINE_DRIVE_OPEN_SOURCE:
-+		return GPIOD_LINE_DRIVE_OPEN_SOURCE;
-+	case G_GPIOD_LINE_DRIVE_OPEN_DRAIN:
-+		return GPIOD_LINE_DRIVE_OPEN_DRAIN;
-+	}
-+
-+	g_error("invalid line drive value");
-+}
-+
-+G_GNUC_INTERNAL enum gpiod_line_clock
-+g_gpiod_line_clock_to_library(GPIODLineClock event_clock)
-+{
-+	switch (event_clock) {
-+	case G_GPIOD_LINE_CLOCK_MONOTONIC:
-+		return GPIOD_LINE_CLOCK_MONOTONIC;
-+	case G_GPIOD_LINE_CLOCK_REALTIME:
-+		return GPIOD_LINE_CLOCK_REALTIME;
-+	case G_GPIOD_LINE_CLOCK_HTE:
-+		return GPIOD_LINE_CLOCK_HTE;
-+	}
-+
-+	g_error("invalid line clock value");
-+}
-+
-+G_GNUC_INTERNAL enum gpiod_line_value
-+g_gpiod_line_value_to_library(GPIODLineValue value)
-+{
-+	switch (value) {
-+	case G_GPIOD_LINE_VALUE_INACTIVE:
-+		return GPIOD_LINE_VALUE_INACTIVE;
-+	case G_GPIOD_LINE_VALUE_ACTIVE:
-+		return GPIOD_LINE_VALUE_ACTIVE;
-+	}
-+
-+	g_error("invalid line value");
-+}
-diff --git a/bindings/glib/internal.h b/bindings/glib/internal.h
-new file mode 100644
-index 0000000..a1fa516
---- /dev/null
-+++ b/bindings/glib/internal.h
-@@ -0,0 +1,54 @@
-+/* SPDX-License-Identifier: LGPL-2.1-or-later */
-+/* SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org> */
-+
-+#ifndef __GPIOD_GLIB_INTERNAL_H__
-+#define __GPIOD_GLIB_INTERNAL_H__
-+
-+#include <glib.h>
-+#include <glib-object.h>
-+#include <gpiod.h>
-+#include <gpiod-glib.h>
-+
-+void g_gpiod_set_error_from_errno(GError **err, const gchar *fmt, ...);
-+
-+const gchar *g_gpiod_get_prop_string(GObject *obj, const gchar *prop);
-+gboolean g_gpiod_get_prop_bool(GObject *obj, const gchar *prop);
-+gint g_gpiod_get_prop_enum(GObject *obj, const gchar *prop);
-+guint g_gpiod_get_prop_uint(GObject *obj, const gchar *prop);
-+guint64 g_gpiod_get_prop_uint64(GObject *obj, const gchar *prop);
-+gulong g_gpiod_get_prop_ulong(GObject *obj, const gchar *prop);
-+GTimeSpan g_gpiod_get_prop_timespan(GObject *obj, const gchar *prop);
-+GObject *g_gpiod_get_prop_object(GObject *obj, const gchar *prop);
-+gpointer g_gpiod_get_prop_pointer(GObject *obj, const gchar *prop);
-+gpointer g_gpiod_get_prop_boxed_array(GObject *obj, const gchar *prop);
-+
-+void g_gpiod_set_prop_uint(GObject *obj, const gchar *prop, guint val);
-+void g_gpiod_set_prop_string(GObject *obj, const gchar *prop, const gchar *val);
-+void g_gpiod_set_prop_enum(GObject *obj, const gchar *prop, gint val);
-+void g_gpiod_set_prop_bool(GObject *obj, const gchar *prop, gboolean val);
-+void g_gpiod_set_prop_timespan(GObject *obj, const gchar *prop, GTimeSpan val);
-+
-+GPIODLineDirection
-+g_gpiod_line_direction_from_library(enum gpiod_line_direction direction,
-+				    gboolean allow_as_is);
-+GPIODLineEdge g_gpiod_line_edge_from_library(enum gpiod_line_edge edge);
-+GPIODLineBias g_gpiod_line_bias_from_library(enum gpiod_line_bias bias,
-+					     gboolean allow_as_is);
-+GPIODLineDrive g_gpiod_line_drive_from_library(enum gpiod_line_drive drive);
-+GPIODLineClock
-+g_gpiod_line_clock_from_library(enum gpiod_line_clock event_clock);
-+GPIODLineValue g_gpiod_line_value_from_library(enum gpiod_line_value value);
-+GPIODInfoEventType
-+g_gpiod_info_event_type_from_library(enum gpiod_info_event_type type);
-+GPIODEdgeEventType
-+g_gpiod_edge_event_type_from_library(enum gpiod_edge_event_type type);
-+
-+enum gpiod_line_direction
-+g_gpiod_line_direction_to_library(GPIODLineDirection direction);
-+enum gpiod_line_edge g_gpiod_line_edge_to_library(GPIODLineEdge edge);
-+enum gpiod_line_bias g_gpiod_line_bias_to_library(GPIODLineBias bias);
-+enum gpiod_line_drive g_gpiod_line_drive_to_library(GPIODLineDrive drive);
-+enum gpiod_line_clock g_gpiod_line_clock_to_library(GPIODLineClock event_clock);
-+enum gpiod_line_value g_gpiod_line_value_to_library(GPIODLineValue value);
-+
-+#endif /* __GPIOD_GLIB_INTERNAL_H__ */
-diff --git a/bindings/glib/line-config.c b/bindings/glib/line-config.c
-new file mode 100644
-index 0000000..4fc1585
---- /dev/null
-+++ b/bindings/glib/line-config.c
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <gio/gio.h>
-+#include <gpiod.h>
-+#include <gpiod-glib.h>
-+
-+#include "internal.h"
-+
-+struct _GPIODLineConfig {
-+	GObject parent_instance;
-+	struct gpiod_line_config *handle;
-+};
-+
-+enum {
-+	G_GPIOD_LINE_CONFIG_PROP_HANDLE = 1,
-+	G_GPIOD_LINE_CONFIG_PROP_CONFIGURED_OFFSETS,
-+};
-+
-+G_DEFINE_TYPE(GPIODLineConfig, g_gpiod_line_config, G_TYPE_OBJECT);
-+
-+static void g_gpiod_line_config_get_property(GObject *obj, guint prop_id,
-+					     GValue *val, GParamSpec *pspec)
-+{
-+	GPIODLineConfig *self = G_GPIOD_LINE_CONFIG_OBJ(obj);
-+	g_autofree guint *offsets = NULL;
-+	gsize num_offsets, i;
-+	GArray *boxed;
-+
-+	switch (prop_id) {
-+	case G_GPIOD_LINE_CONFIG_PROP_HANDLE:
-+		g_value_set_pointer(val, self->handle);
-+		break;
-+	case G_GPIOD_LINE_CONFIG_PROP_CONFIGURED_OFFSETS:
-+		num_offsets = gpiod_line_config_get_num_configured_offsets(
-+								self->handle);
-+		offsets = g_malloc0(num_offsets * sizeof(guint));
-+		gpiod_line_config_get_configured_offsets(self->handle, offsets,
-+							 num_offsets);
-+
-+		boxed = g_array_new(FALSE, TRUE, sizeof(guint));
-+		for (i = 0; i < num_offsets; i++)
-+			g_array_append_val(boxed, offsets[i]);
-+
-+		g_value_set_boxed(val, boxed);
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_line_config_finalize(GObject *obj)
-+{
-+	GPIODLineConfig *self = G_GPIOD_LINE_CONFIG_OBJ(obj);
-+
-+	g_clear_pointer(&self->handle, gpiod_line_config_free);
-+
-+	G_OBJECT_CLASS(g_gpiod_line_config_parent_class)->finalize(obj);
-+}
-+
-+static void
-+g_gpiod_line_config_class_init(GPIODLineConfigClass *line_config_class)
-+{
-+	GObjectClass *class = G_OBJECT_CLASS(line_config_class);
-+
-+	class->get_property = g_gpiod_line_config_get_property;
-+	class->finalize = g_gpiod_line_config_finalize;
-+
-+	g_object_class_install_property(class, G_GPIOD_LINE_CONFIG_PROP_HANDLE,
-+		g_param_spec_pointer("handle", "Handle",
-+			"GPIO line config object.",
-+			G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+				G_GPIOD_LINE_CONFIG_PROP_CONFIGURED_OFFSETS,
-+		g_param_spec_boxed("configured-offsets", "Configured Offsets",
-+			"Array of offsets for which line settings have been set.",
-+			G_TYPE_ARRAY,
-+			G_PARAM_READABLE));
-+}
-+
-+static void g_gpiod_line_config_init(GPIODLineConfig *self)
-+{
-+	self->handle = gpiod_line_config_new();
-+	if (!self->handle)
-+		/* The only possible error is ENOMEM. */
-+		g_error("Failed to allocate memory for the request-config object.");
-+}
-+
-+GPIODLineConfig *g_gpiod_line_config_new(void)
-+{
-+	return G_GPIOD_LINE_CONFIG_OBJ(
-+			g_object_new(G_GPIOD_LINE_CONFIG_TYPE, NULL));
-+}
-+
-+void g_gpiod_line_config_reset(GPIODLineConfig *self)
-+{
-+	g_assert(self);
-+
-+	gpiod_line_config_reset(self->handle);
-+}
-+
-+gboolean g_gpiod_line_config_add_line_settings(GPIODLineConfig *self,
-+					       const GArray *offsets,
-+					       GPIODLineSettings *settings,
-+					       GError **err)
-+{
-+	struct gpiod_line_settings *settings_handle;
-+	int ret;
-+
-+	g_assert(self);
-+
-+	if (!offsets || !offsets->len) {
-+		g_set_error(err, G_GPIOD_ERROR, G_GPIOD_ERR_INVAL,
-+			    "at least one offset must be specified when adding line settings");
-+		return FALSE;
-+	}
-+
-+	settings_handle = settings ?
-+		g_gpiod_get_prop_pointer(G_OBJECT(settings), "handle") : NULL;
-+	ret = gpiod_line_config_add_line_settings(self->handle,
-+						  (unsigned int *)offsets->data,
-+						  offsets->len,
-+						  settings_handle);
-+	if (ret) {
-+		g_gpiod_set_error_from_errno(err,
-+			"failed to add line settings to line config");
-+		return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
-+GPIODLineSettings *
-+g_gpiod_line_config_get_line_settings(GPIODLineConfig *self, guint offset)
-+{
-+	struct gpiod_line_settings *settings;
-+
-+	g_assert(self);
-+
-+	settings = gpiod_line_config_get_line_settings(self->handle, offset);
-+	if (!settings) {
-+		if (errno == ENOENT)
-+			return NULL;
-+
-+		/* Let's bail-out on ENOMEM/ */
-+		g_error("failed to retrieve line settings for offset %u: %s",
-+			offset, g_strerror(errno));
-+	}
-+
-+	return G_GPIOD_LINE_SETTINGS_OBJ(
-+		g_object_new(G_GPIOD_LINE_SETTINGS_TYPE,
-+			     "handle", settings, NULL));
-+}
-+
-+gboolean g_gpiod_line_config_set_output_values(GPIODLineConfig *self,
-+					       const GArray *values,
-+					       GError **err)
-+{
-+	g_autofree enum gpiod_line_value *vals = NULL;
-+	gint ret;
-+	guint i;
-+
-+	g_assert(self);
-+
-+	vals = g_malloc0(sizeof(*vals) * values->len);
-+	for (i = 0; i < values->len; i++)
-+		vals[i] = g_gpiod_line_value_to_library(
-+				g_array_index(values, GPIODLineValue, i));
-+
-+	ret = gpiod_line_config_set_output_values(self->handle, vals,
-+						  values->len);
-+	if (ret) {
-+		g_gpiod_set_error_from_errno(err,
-+				"unable to set output values");
-+		return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
-+GArray *g_gpiod_line_config_get_configured_offsets(GPIODLineConfig *self)
-+{
-+	return g_gpiod_get_prop_boxed_array(G_OBJECT(self),
-+					    "configured-offsets");
-+}
-diff --git a/bindings/glib/line-info.c b/bindings/glib/line-info.c
-new file mode 100644
-index 0000000..38b332f
---- /dev/null
-+++ b/bindings/glib/line-info.c
-@@ -0,0 +1,274 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <gio/gio.h>
-+#include <gpiod.h>
-+#include <gpiod-glib.h>
-+
-+#include "internal.h"
-+
-+struct _GPIODLineInfo {
-+	GObject parent_instance;
-+	struct gpiod_line_info *handle;
-+};
-+
-+enum {
-+	G_GPIOD_LINE_INFO_PROP_HANDLE = 1,
-+	G_GPIOD_LINE_INFO_PROP_OFFSET,
-+	G_GPIOD_LINE_INFO_PROP_NAME,
-+	G_GPIOD_LINE_INFO_PROP_USED,
-+	G_GPIOD_LINE_INFO_PROP_CONSUMER,
-+	G_GPIOD_LINE_INFO_PROP_DIRECTION,
-+	G_GPIOD_LINE_INFO_PROP_EDGE_DETECTION,
-+	G_GPIOD_LINE_INFO_PROP_BIAS,
-+	G_GPIOD_LINE_INFO_PROP_DRIVE,
-+	G_GPIOD_LINE_INFO_PROP_ACTIVE_LOW,
-+	G_GPIOD_LINE_INFO_PROP_DEBOUNCED,
-+	G_GPIOD_LINE_INFO_PROP_DEBOUNCE_PERIOD,
-+	G_GPIOD_LINE_INFO_PROP_EVENT_CLOCK,
-+};
-+
-+G_DEFINE_TYPE(GPIODLineInfo, g_gpiod_line_info, G_TYPE_OBJECT);
-+
-+static void g_gpiod_line_info_get_property(GObject *obj, guint prop_id,
-+					   GValue *val, GParamSpec *pspec)
-+{
-+	GPIODLineInfo *self = G_GPIOD_LINE_INFO_OBJ(obj);
-+
-+	switch (prop_id) {
-+	case G_GPIOD_LINE_INFO_PROP_OFFSET:
-+		g_value_set_uint(val, gpiod_line_info_get_offset(self->handle));
-+		break;
-+	case G_GPIOD_LINE_INFO_PROP_NAME:
-+		g_value_set_static_string(val,
-+			gpiod_line_info_get_name(self->handle));
-+		break;
-+	case G_GPIOD_LINE_INFO_PROP_USED:
-+		g_value_set_boolean(val, gpiod_line_info_is_used(self->handle));
-+		break;
-+	case G_GPIOD_LINE_INFO_PROP_CONSUMER:
-+		g_value_set_static_string(val,
-+			gpiod_line_info_get_consumer(self->handle));
-+		break;
-+	case G_GPIOD_LINE_INFO_PROP_DIRECTION:
-+		g_value_set_enum(val,
-+			g_gpiod_line_direction_from_library(
-+				gpiod_line_info_get_direction(self->handle),
-+				FALSE));
-+		break;
-+	case G_GPIOD_LINE_INFO_PROP_EDGE_DETECTION:
-+		g_value_set_enum(val,
-+			g_gpiod_line_edge_from_library(
-+				gpiod_line_info_get_edge_detection(
-+					self->handle)));
-+		break;
-+	case G_GPIOD_LINE_INFO_PROP_BIAS:
-+		g_value_set_enum(val,
-+			g_gpiod_line_bias_from_library(
-+				gpiod_line_info_get_bias(self->handle),
-+				FALSE));
-+		break;
-+	case G_GPIOD_LINE_INFO_PROP_DRIVE:
-+		g_value_set_enum(val,
-+			g_gpiod_line_drive_from_library(
-+				gpiod_line_info_get_drive(self->handle)));
-+		break;
-+	case G_GPIOD_LINE_INFO_PROP_ACTIVE_LOW:
-+		g_value_set_boolean(val,
-+			gpiod_line_info_is_active_low(self->handle));
-+		break;
-+	case G_GPIOD_LINE_INFO_PROP_DEBOUNCED:
-+		g_value_set_boolean(val,
-+			gpiod_line_info_is_debounced(self->handle));
-+		break;
-+	case G_GPIOD_LINE_INFO_PROP_DEBOUNCE_PERIOD:
-+		g_value_set_int64(val,
-+			gpiod_line_info_get_debounce_period_us(self->handle));
-+		break;
-+	case G_GPIOD_LINE_INFO_PROP_EVENT_CLOCK:
-+		g_value_set_enum(val,
-+			g_gpiod_line_clock_from_library(
-+				gpiod_line_info_get_event_clock(self->handle)));
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_line_info_set_property(GObject *obj, guint prop_id,
-+					   const GValue *val, GParamSpec *pspec)
-+{
-+	GPIODLineInfo *self = G_GPIOD_LINE_INFO_OBJ(obj);
-+
-+	switch (prop_id) {
-+	case G_GPIOD_LINE_INFO_PROP_HANDLE:
-+		self->handle = g_value_get_pointer(val);
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_line_info_finalize(GObject *obj)
-+{
-+	GPIODLineInfo *self = G_GPIOD_LINE_INFO_OBJ(obj);
-+
-+	g_clear_pointer(&self->handle, gpiod_line_info_free);
-+
-+	G_OBJECT_CLASS(g_gpiod_line_info_parent_class)->finalize(obj);
-+}
-+
-+static void g_gpiod_line_info_class_init(GPIODLineInfoClass *line_info_class)
-+{
-+	GObjectClass *class = G_OBJECT_CLASS(line_info_class);
-+
-+	class->set_property = g_gpiod_line_info_set_property;
-+	class->get_property = g_gpiod_line_info_get_property;
-+	class->finalize = g_gpiod_line_info_finalize;
-+
-+	g_object_class_install_property(class, G_GPIOD_LINE_INFO_PROP_HANDLE,
-+		g_param_spec_pointer("handle", "Handle",
-+			"GPIO line information object.",
-+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
-+
-+	g_object_class_install_property(class, G_GPIOD_LINE_INFO_PROP_OFFSET,
-+		g_param_spec_uint("offset", "Offset",
-+			"Offset of the GPIO line.",
-+			0, G_MAXUINT, 0, G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class, G_GPIOD_LINE_INFO_PROP_NAME,
-+		g_param_spec_string("name", "Name",
-+			"Name of the GPIO line, if named.",
-+			NULL, G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class, G_GPIOD_LINE_INFO_PROP_USED,
-+		g_param_spec_boolean("used", "Is Used",
-+			"Indicates whether the GPIO line is requested for exclusive usage",
-+			FALSE, G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class, G_GPIOD_LINE_INFO_PROP_CONSUMER,
-+		g_param_spec_string("consumer", "Consumer",
-+			"Name of the consumer of the GPIO line, if requested.",
-+			NULL, G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class, G_GPIOD_LINE_INFO_PROP_DIRECTION,
-+		g_param_spec_enum("direction", "Direction",
-+			"Direction of the GPIO line.",
-+			G_GPIOD_LINE_DIRECTION_TYPE,
-+			G_GPIOD_LINE_DIRECTION_INPUT,
-+			G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_LINE_INFO_PROP_EDGE_DETECTION,
-+		g_param_spec_enum("edge-detection", "Edge Detection",
-+			"Edge detection setting of the GPIO line.",
-+			G_GPIOD_LINE_EDGE_TYPE,
-+			G_GPIOD_LINE_EDGE_NONE,
-+			G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class, G_GPIOD_LINE_INFO_PROP_BIAS,
-+		g_param_spec_enum("bias", "Bias",
-+			"Bias setting of the GPIO line.",
-+			G_GPIOD_LINE_BIAS_TYPE,
-+			G_GPIOD_LINE_BIAS_UNKNOWN,
-+			G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class, G_GPIOD_LINE_INFO_PROP_DRIVE,
-+		g_param_spec_enum("drive", "Drive",
-+			"Drive setting of the GPIO line.",
-+			G_GPIOD_LINE_DRIVE_TYPE,
-+			G_GPIOD_LINE_DRIVE_PUSH_PULL,
-+			G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_LINE_INFO_PROP_ACTIVE_LOW,
-+		g_param_spec_boolean("active-low", "Is Active-Low",
-+			"Indicates whether the signal of the line is inverted.",
-+			FALSE, G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class, G_GPIOD_LINE_INFO_PROP_DEBOUNCED,
-+		g_param_spec_boolean("debounced", "Is Debounced",
-+			"Indicates whether the line is debounced (by hardware or by the kernel software debouncer).",
-+			FALSE, G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_LINE_INFO_PROP_DEBOUNCE_PERIOD,
-+		g_param_spec_int64("debounce-period-us",
-+			"Debounce Period (in microseconds)",
-+			"Debounce period of the line (expressed in microseconds).",
-+			0, G_MAXINT64, 0,
-+			G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_LINE_INFO_PROP_EVENT_CLOCK,
-+		g_param_spec_enum("event-clock", "Event Clock",
-+			"Event clock used to timestamp the edge events of the line.",
-+			G_GPIOD_LINE_CLOCK_TYPE,
-+			G_GPIOD_LINE_CLOCK_MONOTONIC,
-+			G_PARAM_READABLE));
-+}
-+
-+static void g_gpiod_line_info_init(GPIODLineInfo *self)
-+{
-+	self->handle = NULL;
-+}
-+
-+guint g_gpiod_line_info_get_offset(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_uint(G_OBJECT(self), "offset");
-+}
-+
-+const gchar *g_gpiod_line_info_get_name(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_string(G_OBJECT(self), "name");
-+}
-+
-+gboolean g_gpiod_line_info_is_used(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_bool(G_OBJECT(self), "used");
-+}
-+
-+const gchar *g_gpiod_line_info_get_consumer(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_string(G_OBJECT(self), "consumer");
-+}
-+
-+GPIODLineDirection g_gpiod_line_info_get_direction(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "direction");
-+}
-+
-+GPIODLineEdge g_gpiod_line_info_get_edge_detection(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "edge-detection");
-+}
-+
-+GPIODLineBias g_gpiod_line_info_get_bias(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "bias");
-+}
-+
-+GPIODLineDrive g_gpiod_line_info_get_drive(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "drive");
-+}
-+
-+gboolean g_gpiod_line_info_is_active_low(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_bool(G_OBJECT(self), "active-low");
-+}
-+
-+gboolean g_gpiod_line_info_is_debounced(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_bool(G_OBJECT(self), "debounced");
-+}
-+
-+GTimeSpan g_gpiod_line_info_get_debounce_period_us(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_timespan(G_OBJECT(self), "debounce-period-us");
-+}
-+
-+GPIODLineClock g_gpiod_line_info_get_event_clock(GPIODLineInfo *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "event-clock");
-+}
-diff --git a/bindings/glib/line-request.c b/bindings/glib/line-request.c
-new file mode 100644
-index 0000000..d26dd9c
---- /dev/null
-+++ b/bindings/glib/line-request.c
-@@ -0,0 +1,434 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <gio/gio.h>
-+#include <gpiod.h>
-+#include <gpiod-glib.h>
-+
-+#include "internal.h"
-+
-+static const gsize event_buf_size = 64;
-+
-+struct _GPIODLineRequest {
-+	GObject parent_instance;
-+	struct gpiod_line_request *handle;
-+	struct gpiod_edge_event_buffer *event_buf;
-+	GSource *edge_event_src;
-+	guint edge_event_src_id;
-+	enum gpiod_line_value *val_buf;
-+};
-+
-+enum {
-+	G_GPIOD_LINE_REQUEST_PROP_HANDLE = 1,
-+	G_GPIOD_LINE_REQUEST_PROP_CHIP_NAME,
-+	G_GPIOD_LINE_REQUEST_PROP_REQUESTED_OFFSETS,
-+};
-+
-+enum {
-+	G_GPIOD_LINE_REQUEST_SIGNAL_EDGE_EVENT,
-+	G_GPIOD_LINE_REQUEST_SIGNAL_LAST,
-+};
-+
-+static guint signals[G_GPIOD_LINE_REQUEST_SIGNAL_LAST];
-+
-+G_DEFINE_TYPE(GPIODLineRequest, g_gpiod_line_request, G_TYPE_OBJECT);
-+
-+static gboolean
-+g_gpiod_line_request_on_edge_event(GIOChannel *source G_GNUC_UNUSED,
-+				   GIOCondition condition G_GNUC_UNUSED,
-+				   gpointer data)
-+{
-+	struct gpiod_edge_event *event_handle, *event_copy;
-+	GPIODLineRequest *self = data;
-+	gint ret, i;
-+
-+	ret = gpiod_line_request_read_edge_events(self->handle,
-+						  self->event_buf,
-+						  event_buf_size);
-+	if (ret < 0)
-+		return TRUE;
-+
-+	for (i = 0; i < ret; i++) {
-+		g_autoptr(GPIODEdgeEvent) event = NULL;
-+
-+		event_handle = gpiod_edge_event_buffer_get_event(
-+						self->event_buf, i);
-+		event_copy = gpiod_edge_event_copy(event_handle);
-+		if (!event_copy)
-+			g_error("failed to copy the edge event");
-+
-+		event = G_GPIOD_EDGE_EVENT_OBJ(
-+				g_object_new(G_GPIOD_EDGE_EVENT_TYPE,
-+					     "handle", event_copy, NULL));
-+
-+		g_signal_emit(self,
-+			      signals[G_GPIOD_LINE_REQUEST_SIGNAL_EDGE_EVENT],
-+			      0,
-+			      event);
-+	}
-+
-+	return TRUE;
-+}
-+
-+static void g_gpiod_line_request_constructed(GObject *obj)
-+{
-+	GPIODLineRequest *self = G_GPIOD_LINE_REQUEST_OBJ(obj);
-+	g_autoptr(GIOChannel) channel = NULL;
-+	gsize num_lines;
-+
-+	self->event_buf = gpiod_edge_event_buffer_new(event_buf_size);
-+	if (!self->event_buf)
-+		g_error("failed to allocate the edge event buffer");
-+
-+	channel = g_io_channel_unix_new(
-+			gpiod_line_request_get_fd(self->handle));
-+	self->edge_event_src = g_io_create_watch(channel, G_IO_IN);
-+	g_source_set_callback(self->edge_event_src,
-+			      G_SOURCE_FUNC(g_gpiod_line_request_on_edge_event),
-+			      self, NULL);
-+	self->edge_event_src_id = g_source_attach(self->edge_event_src, NULL);
-+
-+	num_lines = gpiod_line_request_get_num_requested_lines(self->handle);
-+	self->val_buf = g_malloc0(sizeof(enum gpiod_line_value) * num_lines);
-+
-+	G_OBJECT_CLASS(g_gpiod_line_request_parent_class)->constructed(obj);
-+}
-+
-+static void g_gpiod_line_request_get_property(GObject *obj, guint prop_id,
-+						GValue *val, GParamSpec *pspec)
-+{
-+	GPIODLineRequest *self = G_GPIOD_LINE_REQUEST_OBJ(obj);
-+	g_autofree guint *offsets = NULL;
-+	gsize num_offsets;
-+	GArray *boxed;
-+
-+	switch (prop_id) {
-+	case G_GPIOD_LINE_REQUEST_PROP_CHIP_NAME:
-+		g_value_set_static_string(val,
-+			gpiod_line_request_get_chip_name(self->handle));
-+		break;
-+	case G_GPIOD_LINE_REQUEST_PROP_REQUESTED_OFFSETS:
-+		boxed = g_array_new(FALSE, TRUE, sizeof(guint));
-+
-+		if (!g_gpiod_line_request_is_released(self)) {
-+			num_offsets =
-+				gpiod_line_request_get_num_requested_lines(
-+								self->handle);
-+			offsets = g_malloc0(num_offsets * sizeof(guint));
-+			gpiod_line_request_get_requested_offsets(self->handle,
-+								 offsets,
-+								 num_offsets);
-+			g_array_append_vals(boxed, offsets, num_offsets);
-+		}
-+
-+		g_value_set_boxed(val, boxed);
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_line_request_set_property(GObject *obj, guint prop_id,
-+					       const GValue *val, GParamSpec *pspec)
-+{
-+	GPIODLineRequest *self = G_GPIOD_LINE_REQUEST_OBJ(obj);
-+
-+	switch (prop_id) {
-+	case G_GPIOD_LINE_REQUEST_PROP_HANDLE:
-+		self->handle = g_value_get_pointer(val);
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_line_request_dispose(GObject *obj)
-+{
-+	GPIODLineRequest *self = G_GPIOD_LINE_REQUEST_OBJ(obj);
-+
-+	if (self->edge_event_src_id)
-+		g_source_remove(self->edge_event_src_id);
-+
-+	G_OBJECT_CLASS(g_gpiod_line_request_parent_class)->dispose(obj);
-+}
-+
-+static void g_gpiod_line_request_finalize(GObject *obj)
-+{
-+	GPIODLineRequest *self = G_GPIOD_LINE_REQUEST_OBJ(obj);
-+
-+	g_gpiod_line_request_release(self);
-+	g_clear_pointer(&self->event_buf, gpiod_edge_event_buffer_free);
-+	g_clear_pointer(&self->val_buf, g_free);
-+
-+	G_OBJECT_CLASS(g_gpiod_line_request_parent_class)->finalize(obj);
-+}
-+
-+static void g_gpiod_line_request_class_init(GPIODLineRequestClass *line_request_class)
-+{
-+	GObjectClass *class = G_OBJECT_CLASS(line_request_class);
-+
-+	class->constructed = g_gpiod_line_request_constructed;
-+	class->set_property = g_gpiod_line_request_set_property;
-+	class->get_property = g_gpiod_line_request_get_property;
-+	class->dispose = g_gpiod_line_request_dispose;
-+	class->finalize = g_gpiod_line_request_finalize;
-+
-+	g_object_class_install_property(class, G_GPIOD_LINE_REQUEST_PROP_HANDLE,
-+		g_param_spec_pointer("handle", "Handle",
-+			"GPIO line request object.",
-+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE));
-+
-+	g_object_class_install_property(class,
-+				G_GPIOD_LINE_REQUEST_PROP_CHIP_NAME,
-+		g_param_spec_string("chip-name", "Chip Name",
-+			"Name of the GPIO chip this request was made on.",
-+			NULL, G_PARAM_READABLE));
-+
-+	g_object_class_install_property(class,
-+				G_GPIOD_LINE_REQUEST_PROP_REQUESTED_OFFSETS,
-+		g_param_spec_boxed("requested-offsets", "Requested offsets",
-+			"Array of requested offsets.",
-+			G_TYPE_ARRAY,
-+			G_PARAM_READABLE));
-+
-+	signals[G_GPIOD_LINE_REQUEST_SIGNAL_EDGE_EVENT] =
-+			g_signal_new("edge-event",
-+				     G_TYPE_FROM_CLASS(line_request_class),
-+				     G_SIGNAL_RUN_LAST,
-+				     0,
-+				     NULL,
-+				     NULL,
-+				     g_cclosure_marshal_generic,
-+				     G_TYPE_NONE,
-+				     1,
-+				     G_GPIOD_EDGE_EVENT_TYPE);
-+}
-+
-+static void g_gpiod_line_request_init(GPIODLineRequest *self)
-+{
-+	self->handle = NULL;
-+	self->event_buf = NULL;
-+	self->edge_event_src = NULL;
-+}
-+
-+void g_gpiod_line_request_release(GPIODLineRequest *self)
-+{
-+	g_assert(self);
-+
-+	g_clear_pointer(&self->edge_event_src, g_source_unref);
-+	g_clear_pointer(&self->handle, gpiod_line_request_release);
-+}
-+
-+gboolean g_gpiod_line_request_is_released(GPIODLineRequest *self)
-+{
-+	g_assert(self);
-+
-+	return !self->handle;
-+}
-+
-+static void set_err_request_released(GError **err)
-+{
-+	g_set_error(err, G_GPIOD_ERROR, G_GPIOD_ERR_REQUEST_RELEASED,
-+		    "line request was released and cannot be used");
-+}
-+
-+const gchar *g_gpiod_line_request_get_chip_name(GPIODLineRequest *self)
-+{
-+	return g_gpiod_get_prop_string(G_OBJECT(self), "chip-name");
-+}
-+
-+GArray *g_gpiod_line_request_get_requested_offsets(GPIODLineRequest *self)
-+{
-+	return g_gpiod_get_prop_boxed_array(G_OBJECT(self),
-+					    "requested-offsets");
-+}
-+
-+gboolean g_gpiod_line_request_reconfigure_lines(GPIODLineRequest *self,
-+						GPIODLineConfig *config,
-+						GError **err)
-+{
-+	struct gpiod_line_config *config_handle;
-+	gint ret;
-+
-+	g_assert(self);
-+
-+	if (g_gpiod_line_request_is_released(self)) {
-+		set_err_request_released(err);
-+		return FALSE;
-+	}
-+
-+	if (!config) {
-+		g_set_error(err, G_GPIOD_ERROR, G_GPIOD_ERR_INVAL,
-+			    "line-config is required to reconfigure lines");
-+		return FALSE;
-+	}
-+
-+	config_handle = g_gpiod_get_prop_pointer(G_OBJECT(config), "handle");
-+
-+	ret = gpiod_line_request_reconfigure_lines(self->handle, config_handle);
-+	if (ret) {
-+		g_gpiod_set_error_from_errno(err,
-+					     "failed to reconfigure lines");
-+		return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
-+gboolean
-+g_gpiod_line_request_get_value(GPIODLineRequest *self, guint offset,
-+			       GPIODLineValue *value, GError **err)
-+{
-+	enum gpiod_line_value val;
-+
-+	g_assert(self);
-+
-+	if (g_gpiod_line_request_is_released(self)) {
-+		set_err_request_released(err);
-+		return FALSE;
-+	}
-+
-+	val = gpiod_line_request_get_value(self->handle, offset);
-+	if (val == GPIOD_LINE_VALUE_ERROR) {
-+		g_gpiod_set_error_from_errno(err,
-+			    "failed to get line value for offset %u", offset);
-+		return FALSE;
-+	}
-+
-+	*value = g_gpiod_line_value_from_library(val);
-+	return TRUE;
-+}
-+
-+gboolean g_gpiod_line_request_get_values_subset(GPIODLineRequest *self,
-+						const GArray *offsets,
-+						GArray **values,
-+						GError **err)
-+{
-+	guint i;
-+	int ret;
-+
-+	g_assert(self);
-+
-+	if (g_gpiod_line_request_is_released(self)) {
-+		set_err_request_released(err);
-+		return FALSE;
-+	}
-+
-+	if (!offsets || !values) {
-+		g_set_error(err, G_GPIOD_ERROR, G_GPIOD_ERR_INVAL,
-+			    "offsets and values must not be NULL");
-+		return FALSE;
-+	}
-+
-+	ret = gpiod_line_request_get_values_subset(self->handle, offsets->len,
-+					(const unsigned int *)offsets->data,
-+					self->val_buf);
-+	if (ret) {
-+		g_gpiod_set_error_from_errno(err, "failed to read line values");
-+		return FALSE;
-+	}
-+
-+	if (!(*values)) {
-+		*values = g_array_sized_new(FALSE, TRUE,
-+					    sizeof(GPIODLineValue),
-+					    offsets->len);
-+	}
-+
-+	g_array_set_size(*values, offsets->len);
-+
-+	for (i = 0; i < offsets->len; i++) {
-+		GPIODLineValue *val = &g_array_index(*values, GPIODLineValue, i);
-+		*val = g_gpiod_line_value_from_library(self->val_buf[i]);
-+	}
-+
-+	return TRUE;
-+}
-+
-+gboolean g_gpiod_line_request_get_values(GPIODLineRequest *self,
-+					 GArray **values, GError **err)
-+{
-+	g_autoptr(GArray) offsets = NULL;
-+
-+	offsets = g_gpiod_line_request_get_requested_offsets(self);
-+
-+	return g_gpiod_line_request_get_values_subset(self, offsets,
-+						      values, err);
-+}
-+
-+gboolean g_gpiod_line_request_set_value(GPIODLineRequest *self, guint offset,
-+					GPIODLineValue value, GError **err)
-+{
-+	int ret;
-+
-+	g_assert(self);
-+
-+	if (g_gpiod_line_request_is_released(self)) {
-+		set_err_request_released(err);
-+		return FALSE;
-+	}
-+
-+	ret = gpiod_line_request_set_value(self->handle, offset,
-+				g_gpiod_line_value_to_library(value));
-+	if (ret) {
-+		g_gpiod_set_error_from_errno(err,
-+			"failed to set line value for offset: %u", offset);
-+		return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
-+gboolean g_gpiod_line_request_set_values_subset(GPIODLineRequest *self,
-+						const GArray *offsets,
-+						const GArray *values,
-+						GError **err)
-+{
-+	guint i;
-+	int ret;
-+
-+	g_assert(self);
-+
-+	if (g_gpiod_line_request_is_released(self)) {
-+		set_err_request_released(err);
-+		return FALSE;
-+	}
-+
-+	if (!offsets || !values) {
-+		g_set_error(err, G_GPIOD_ERROR, G_GPIOD_ERR_INVAL,
-+			    "offsets and values must not be NULL");
-+		return FALSE;
-+	}
-+
-+	if (offsets->len != values->len) {
-+		g_set_error(err, G_GPIOD_ERROR, G_GPIOD_ERR_INVAL,
-+			    "offsets and values must have the sme size");
-+		return FALSE;
-+	}
-+
-+	for (i = 0; i < values->len; i++)
-+		self->val_buf[i] = g_gpiod_line_value_to_library(
-+					g_array_index(values,
-+						      GPIODLineValue, i));
-+
-+	ret = gpiod_line_request_set_values_subset(self->handle,
-+						offsets->len,
-+						(unsigned int *)offsets->data,
-+						self->val_buf);
-+	if (ret) {
-+		g_gpiod_set_error_from_errno(err, "failed to set line values");
-+		return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
-+gboolean g_gpiod_line_request_set_values(GPIODLineRequest *self,
-+					 GArray *values, GError **err)
-+{
-+	g_autoptr(GArray) offsets = NULL;
-+
-+	offsets = g_gpiod_line_request_get_requested_offsets(self);
-+
-+	return g_gpiod_line_request_set_values_subset(self, offsets,
-+						      values, err);
-+}
-diff --git a/bindings/glib/line-settings.c b/bindings/glib/line-settings.c
-new file mode 100644
-index 0000000..612a17e
---- /dev/null
-+++ b/bindings/glib/line-settings.c
-@@ -0,0 +1,359 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <gio/gio.h>
-+#include <gpiod.h>
-+#include <gpiod-glib.h>
-+#include <stdarg.h>
-+
-+#include "internal.h"
-+
-+struct _GPIODLineSettings {
-+	GObject parent_instance;
-+	struct gpiod_line_settings *handle;
-+};
-+
-+enum {
-+	G_GPIOD_LINE_SETTINGS_PROP_HANDLE = 1,
-+	G_GPIOD_LINE_SETTINGS_PROP_DIRECTION,
-+	G_GPIOD_LINE_SETTINGS_PROP_EDGE_DETECTION,
-+	G_GPIOD_LINE_SETTINGS_PROP_BIAS,
-+	G_GPIOD_LINE_SETTINGS_PROP_DRIVE,
-+	G_GPIOD_LINE_SETTINGS_PROP_ACTIVE_LOW,
-+	G_GPIOD_LINE_SETTINGS_PROP_DEBOUNCE_PERIOD_US,
-+	G_GPIOD_LINE_SETTINGS_PROP_EVENT_CLOCK,
-+	G_GPIOD_LINE_SETTINGS_PROP_OUTPUT_VALUE,
-+};
-+
-+G_DEFINE_TYPE(GPIODLineSettings, g_gpiod_line_settings, G_TYPE_OBJECT);
-+
-+static void g_gpiod_line_settings_constructed(GObject *obj)
-+{
-+	GPIODLineSettings *self = G_GPIOD_LINE_SETTINGS_OBJ(obj);
 +
 +	/*
-+	 * If we still haven't created the handle at this point, do it now.
-+	 * This is normal if called did g_gpiod_line_settings_new(NULL).
++	 * Names are not guaranteed unique, so this finds the first line with
++	 * the given name.
 +	 */
-+	if (!self->handle) {
-+		self->handle = gpiod_line_settings_new();
-+		if (!self->handle)
-+			g_error("failed to allocate line settings");
++	while ((filename = g_dir_read_name(dir))) {
++		g_autoptr(GPIODChip) chip = NULL;
++		g_autofree gchar *path = NULL;
++
++		path = g_strdup_printf("/dev/%s", filename);
++		if (!g_gpiod_is_gpiochip_device(path))
++			continue;
++
++		chip = g_gpiod_chip_new(path, &err);
++		if (err) {
++			g_printerr("Failed to open the GPIO chip at '%s': %s\n",
++				   path, err->message);
++			return EXIT_FAILURE;
++		}
++
++		ret = g_gpiod_chip_get_line_offset_from_name(chip, line_name,
++							     &offset, &err);
++		if (!ret) {
++			g_printerr("Failed to map the line name '%s' to offset: %s\n",
++				   line_name, err->message);
++			return EXIT_FAILURE;
++		}
++
++		info = g_gpiod_chip_get_info(chip, &err);
++		if (!info) {
++			g_printerr("Failed to get chip info: %s\n",
++				   err->message);
++			return EXIT_FAILURE;
++		}
++
++		g_print("%s %u\n", g_gpiod_chip_info_get_name(info), offset);
 +	}
 +
-+	G_OBJECT_CLASS(g_gpiod_line_settings_parent_class)->constructed(obj);
++	g_print("line '%s' not found\n", line_name);
++
++	return EXIT_SUCCESS;
 +}
-+
-+static void g_gpiod_line_settings_get_property(GObject *obj, guint prop_id,
-+					       GValue *val, GParamSpec *pspec)
-+{
-+	GPIODLineSettings *self = G_GPIOD_LINE_SETTINGS_OBJ(obj);
-+
-+	switch (prop_id) {
-+	case G_GPIOD_LINE_SETTINGS_PROP_HANDLE:
-+		g_value_set_pointer(val, self->handle);
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_DIRECTION:
-+		g_value_set_enum(val,
-+			g_gpiod_line_direction_from_library(
-+				gpiod_line_settings_get_direction(
-+							self->handle), TRUE));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_EDGE_DETECTION:
-+		g_value_set_enum(val,
-+			g_gpiod_line_edge_from_library(
-+				gpiod_line_settings_get_edge_detection(
-+							self->handle)));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_BIAS:
-+		g_value_set_enum(val,
-+			g_gpiod_line_bias_from_library(
-+				gpiod_line_settings_get_bias(self->handle),
-+				TRUE));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_DRIVE:
-+		g_value_set_enum(val,
-+			g_gpiod_line_drive_from_library(
-+				gpiod_line_settings_get_drive(self->handle)));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_ACTIVE_LOW:
-+		g_value_set_boolean(val,
-+			gpiod_line_settings_get_active_low(self->handle));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_DEBOUNCE_PERIOD_US:
-+		g_value_set_int64(val,
-+			gpiod_line_settings_get_debounce_period_us(
-+							self->handle));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_EVENT_CLOCK:
-+		g_value_set_enum(val,
-+			g_gpiod_line_clock_from_library(
-+				gpiod_line_settings_get_event_clock(
-+							self->handle)));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_OUTPUT_VALUE:
-+		g_value_set_enum(val,
-+			g_gpiod_line_value_from_library(
-+				gpiod_line_settings_get_output_value(
-+							self->handle)));
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_line_settings_set_property(GObject *obj, guint prop_id,
-+					       const GValue *val,
-+					       GParamSpec *pspec)
-+{
-+	GPIODLineSettings *self = G_GPIOD_LINE_SETTINGS_OBJ(obj);
-+
-+	if (!self->handle && prop_id != G_GPIOD_LINE_SETTINGS_PROP_HANDLE) {
-+		self->handle = gpiod_line_settings_new();
-+		if (!self->handle)
-+			/* The only possible error is ENOMEM. */
-+			g_error("Failed to allocate memory for the line-settings object.");
-+	}
-+
-+	switch (prop_id) {
-+	case G_GPIOD_LINE_SETTINGS_PROP_HANDLE:
-+		self->handle = g_value_get_pointer(val);
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_DIRECTION:
-+		gpiod_line_settings_set_direction(self->handle,
-+			g_gpiod_line_direction_to_library(
-+				g_value_get_enum(val)));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_EDGE_DETECTION:
-+		gpiod_line_settings_set_edge_detection(self->handle,
-+			g_gpiod_line_edge_to_library(g_value_get_enum(val)));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_BIAS:
-+		gpiod_line_settings_set_bias(self->handle,
-+			g_gpiod_line_bias_to_library(g_value_get_enum(val)));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_DRIVE:
-+		gpiod_line_settings_set_drive(self->handle,
-+			g_gpiod_line_drive_to_library(g_value_get_enum(val)));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_ACTIVE_LOW:
-+		gpiod_line_settings_set_active_low(self->handle,
-+						   g_value_get_boolean(val));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_DEBOUNCE_PERIOD_US:
-+		gpiod_line_settings_set_debounce_period_us(self->handle,
-+						g_value_get_int64(val));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_EVENT_CLOCK:
-+		gpiod_line_settings_set_event_clock(self->handle,
-+			g_gpiod_line_clock_to_library(g_value_get_enum(val)));
-+		break;
-+	case G_GPIOD_LINE_SETTINGS_PROP_OUTPUT_VALUE:
-+		gpiod_line_settings_set_output_value(self->handle,
-+			g_gpiod_line_value_to_library(g_value_get_enum(val)));
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
-+	}
-+}
-+
-+static void g_gpiod_line_settings_finalize(GObject *obj)
-+{
-+	GPIODLineSettings *self = G_GPIOD_LINE_SETTINGS_OBJ(obj);
-+
-+	g_clear_pointer(&self->handle, gpiod_line_settings_free);
-+
-+	G_OBJECT_CLASS(g_gpiod_line_settings_parent_class)->finalize(obj);
-+}
-+
-+static void
-+g_gpiod_line_settings_class_init(GPIODLineSettingsClass *line_settings_class)
-+{
-+	GObjectClass *class = G_OBJECT_CLASS(line_settings_class);
-+
-+	class->constructed = g_gpiod_line_settings_constructed;
-+	class->set_property = g_gpiod_line_settings_set_property;
-+	class->get_property = g_gpiod_line_settings_get_property;
-+	class->finalize = g_gpiod_line_settings_finalize;
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_LINE_SETTINGS_PROP_HANDLE,
-+		g_param_spec_pointer("handle", "Handle",
-+			"GPIO line settings object.",
-+			G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_LINE_SETTINGS_PROP_DIRECTION,
-+		g_param_spec_enum("direction", "Direction",
-+			"Line direction setting.",
-+			G_GPIOD_LINE_DIRECTION_TYPE,
-+			G_GPIOD_LINE_DIRECTION_AS_IS,
-+			G_PARAM_READWRITE));
-+
-+	g_object_class_install_property(class,
-+				G_GPIOD_LINE_SETTINGS_PROP_EDGE_DETECTION,
-+		g_param_spec_enum("edge-detection", "Edge Detection",
-+			"Line edge detection setting.",
-+			G_GPIOD_LINE_EDGE_TYPE,
-+			G_GPIOD_LINE_EDGE_NONE,
-+			G_PARAM_READWRITE));
-+
-+	g_object_class_install_property(class,
-+				G_GPIOD_LINE_SETTINGS_PROP_BIAS,
-+		g_param_spec_enum("bias", "Bias",
-+			"Line bias setting.",
-+			G_GPIOD_LINE_BIAS_TYPE,
-+			G_GPIOD_LINE_BIAS_AS_IS,
-+			G_PARAM_READWRITE));
-+
-+	g_object_class_install_property(class,
-+				G_GPIOD_LINE_SETTINGS_PROP_DRIVE,
-+		g_param_spec_enum("drive", "Drive",
-+			"Line drive setting.",
-+			G_GPIOD_LINE_DRIVE_TYPE,
-+			G_GPIOD_LINE_DRIVE_PUSH_PULL,
-+			G_PARAM_READWRITE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_LINE_SETTINGS_PROP_ACTIVE_LOW,
-+		g_param_spec_boolean("active-low", "Active-Low",
-+			"Line active-low settings.",
-+			FALSE, G_PARAM_READWRITE));
-+
-+	g_object_class_install_property(class,
-+				G_GPIOD_LINE_SETTINGS_PROP_DEBOUNCE_PERIOD_US,
-+		g_param_spec_int64("debounce-period-us",
-+			"Debounce Period (in microseconds)",
-+			"Line debounce period (expressed in microseconds).",
-+			0, G_MAXINT64, 0, G_PARAM_READWRITE));
-+
-+	g_object_class_install_property(class,
-+					G_GPIOD_LINE_SETTINGS_PROP_EVENT_CLOCK,
-+		g_param_spec_enum("event-clock", "Event Clock",
-+			"Clock used to timestamp edge events.",
-+			G_GPIOD_LINE_CLOCK_TYPE,
-+			G_GPIOD_LINE_CLOCK_MONOTONIC,
-+			G_PARAM_READWRITE));
-+
-+	g_object_class_install_property(class,
-+				G_GPIOD_LINE_SETTINGS_PROP_OUTPUT_VALUE,
-+		g_param_spec_enum("output-value", "Output Value",
-+			"Line output value.",
-+			G_GPIOD_LINE_VALUE_TYPE,
-+			G_GPIOD_LINE_VALUE_INACTIVE,
-+			G_PARAM_READWRITE));
-+}
-+
-+static void g_gpiod_line_settings_init(GPIODLineSettings *self)
-+{
-+	self->handle = NULL;
-+}
-+
-+GPIODLineSettings *g_gpiod_line_settings_new(const gchar *first_prop, ...)
-+{
-+	GPIODLineSettings *settings;
-+	va_list va;
-+
-+	va_start(va, first_prop);
-+	settings = G_GPIOD_LINE_SETTINGS_OBJ(
-+			g_object_new_valist(G_GPIOD_LINE_SETTINGS_TYPE,
-+					    first_prop, va));
-+	va_end(va);
-+
-+	return settings;
-+}
-+
-+void g_gpiod_line_settings_reset(GPIODLineSettings *self)
-+{
-+	g_assert(self);
-+
-+	gpiod_line_settings_reset(self->handle);
-+}
-+
-+void g_gpiod_line_settings_set_direction(GPIODLineSettings *self,
-+					 GPIODLineDirection direction)
-+{
-+	g_gpiod_set_prop_enum(G_OBJECT(self), "direction", direction);
-+}
-+
-+GPIODLineDirection g_gpiod_line_settings_get_direction(GPIODLineSettings *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "direction");
-+}
-+
-+void g_gpiod_line_settings_set_edge_detection(GPIODLineSettings *self,
-+					      GPIODLineEdge edge)
-+{
-+	g_gpiod_set_prop_enum(G_OBJECT(self), "edge-detection", edge);
-+}
-+
-+GPIODLineEdge g_gpiod_line_settings_get_edge_detection(GPIODLineSettings *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "edge-detection");
-+}
-+
-+void g_gpiod_line_settings_set_bias(GPIODLineSettings *self, GPIODLineBias bias)
-+{
-+	g_gpiod_set_prop_enum(G_OBJECT(self), "bias", bias);
-+}
-+
-+GPIODLineBias g_gpiod_line_settings_get_bias(GPIODLineSettings *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "bias");
-+}
-+
-+void g_gpiod_line_settings_set_drive(GPIODLineSettings *self,
-+				     GPIODLineDrive drive)
-+{
-+	g_gpiod_set_prop_enum(G_OBJECT(self), "drive", drive);
-+}
-+
-+GPIODLineDrive g_gpiod_line_settings_get_drive(GPIODLineSettings *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "drive");
-+}
-+
-+void g_gpiod_line_settings_set_active_low(GPIODLineSettings *self,
-+					  gboolean active_low)
-+{
-+	g_gpiod_set_prop_bool(G_OBJECT(self), "active-low", active_low);
-+}
-+
-+gboolean g_gpiod_line_settings_get_active_low(GPIODLineSettings *self)
-+{
-+	return g_gpiod_get_prop_bool(G_OBJECT(self), "active-low");
-+}
-+
-+void g_gpiod_line_settings_set_debounce_period_us(GPIODLineSettings *self,
-+						  GTimeSpan period)
-+{
-+	g_gpiod_set_prop_timespan(G_OBJECT(self),
-+				  "debounce-period-us", period);
-+}
-+
-+GTimeSpan g_gpiod_line_settings_get_debounce_period_us(GPIODLineSettings *self)
-+{
-+	return g_gpiod_get_prop_timespan(G_OBJECT(self), "debounce-period-us");
-+}
-+
-+void g_gpiod_line_settings_set_event_clock(GPIODLineSettings *self,
-+					   GPIODLineClock event_clock)
-+{
-+	g_gpiod_set_prop_enum(G_OBJECT(self), "event-clock", event_clock);
-+}
-+
-+GPIODLineClock g_gpiod_line_settings_get_event_clock(GPIODLineSettings *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "event-clock");
-+}
-+
-+void g_gpiod_line_settings_set_output_value(GPIODLineSettings *self,
-+					    GPIODLineValue value)
-+{
-+	g_gpiod_set_prop_enum(G_OBJECT(self), "output-value", value);
-+}
-+
-+GPIODLineValue g_gpiod_line_settings_get_output_value(GPIODLineSettings *self)
-+{
-+	return g_gpiod_get_prop_enum(G_OBJECT(self), "output-value");
-+}
-diff --git a/bindings/glib/misc.c b/bindings/glib/misc.c
+diff --git a/bindings/glib/examples/get_chip_info_glib.c b/bindings/glib/examples/get_chip_info_glib.c
 new file mode 100644
-index 0000000..139efed
+index 0000000..1f1811a
 --- /dev/null
-+++ b/bindings/glib/misc.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
-+// SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <gpiod.h>
-+#include <gpiod-glib.h>
-+
-+gboolean g_gpiod_is_gpiochip_device(const gchar *path)
-+{
-+	g_assert(path);
-+
-+	return gpiod_is_gpiochip_device(path);
-+}
-+
-+const gchar *g_gpiod_api_version(void)
-+{
-+	return gpiod_api_version();
-+}
-diff --git a/bindings/glib/request-config.c b/bindings/glib/request-config.c
-new file mode 100644
-index 0000000..05c903b
---- /dev/null
-+++ b/bindings/glib/request-config.c
-@@ -0,0 +1,155 @@
-+// SPDX-License-Identifier: LGPL-2.1-or-later
++++ b/bindings/glib/examples/get_chip_info_glib.c
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 +
-+#include <gio/gio.h>
-+#include <gpiod.h>
++/* Minimal example of reading the info for a chip. */
++
++#include <glib.h>
 +#include <gpiod-glib.h>
-+#include <stdarg.h>
++#include <stdlib.h>
 +
-+#include "internal.h"
-+
-+struct _GPIODRequestConfig {
-+	GObject parent_instance;
-+	struct gpiod_request_config *handle;
-+};
-+
-+enum {
-+	G_GPIOD_REQUEST_CONFIG_PROP_HANDLE = 1,
-+	G_GPIOD_REQUEST_CONFIG_PROP_CONSUMER,
-+	G_GPIOD_REQUEST_CONFIG_PROP_EVENT_BUFFER_SIZE,
-+};
-+
-+G_DEFINE_TYPE(GPIODRequestConfig, g_gpiod_request_config, G_TYPE_OBJECT);
-+
-+static void g_gpiod_request_config_get_property(GObject *obj, guint prop_id,
-+						GValue *val, GParamSpec *pspec)
++int main(void)
 +{
-+	GPIODRequestConfig *self = G_GPIOD_REQUEST_CONFIG_OBJ(obj);
++	/* Example configuration - customize to suit your situation. */
++	static const gchar *const chip_path = "/dev/gpiochip0";
 +
-+	switch (prop_id) {
-+	case G_GPIOD_REQUEST_CONFIG_PROP_HANDLE:
-+		g_value_set_pointer(val, self->handle);
-+		break;
-+	case G_GPIOD_REQUEST_CONFIG_PROP_CONSUMER:
-+		g_value_set_static_string(val,
-+			gpiod_request_config_get_consumer(self->handle));
-+		break;
-+	case G_GPIOD_REQUEST_CONFIG_PROP_EVENT_BUFFER_SIZE:
-+		g_value_set_uint(val,
-+			gpiod_request_config_get_event_buffer_size(
-+				self->handle));
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
++	g_autoptr(GPIODChipInfo) info = NULL;
++	g_autoptr(GPIODChip) chip = NULL;
++	g_autoptr(GError) err = NULL;
++
++	chip = g_gpiod_chip_new(chip_path, &err);
++	if (err) {
++		g_printerr("Failed to open the GPIO chip at '%s': %s\n",
++			   chip_path, err->message);
++		return EXIT_FAILURE;
++	}
++
++	info = g_gpiod_chip_get_info(chip, &err);
++	if (err) {
++		g_printerr("Failed to retrieve GPIO chip info: %s\n",
++			   err->message);
++		return EXIT_FAILURE;
++	}
++
++	g_print("%s [%s] (%u lines)\n",
++		g_gpiod_chip_info_get_name(info),
++		g_gpiod_chip_info_get_label(info),
++		g_gpiod_chip_info_get_num_lines(info));
++
++	return EXIT_SUCCESS;
++}
+diff --git a/bindings/glib/examples/get_line_info_glib.c b/bindings/glib/examples/get_line_info_glib.c
+new file mode 100644
+index 0000000..f3da267
+--- /dev/null
++++ b/bindings/glib/examples/get_line_info_glib.c
+@@ -0,0 +1,79 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++/* Minimal example of reading the info for a line. */
++
++#include <glib.h>
++#include <gpiod-glib.h>
++#include <stdlib.h>
++
++static GString *make_flags(GPIODLineInfo *info)
++{
++	g_autofree gchar *drive_str = NULL;
++	g_autofree gchar *edge_str = NULL;
++	g_autofree gchar *bias_str = NULL;
++	GPIODLineDrive drive;
++	GPIODLineEdge edge;
++	GPIODLineBias bias;
++	GString *ret;
++
++	edge = g_gpiod_line_info_get_edge_detection(info);
++	bias = g_gpiod_line_info_get_bias(info);
++	drive = g_gpiod_line_info_get_drive(info);
++
++	edge_str = g_enum_to_string(G_GPIOD_LINE_EDGE_TYPE, edge);
++	bias_str = g_enum_to_string(G_GPIOD_LINE_BIAS_TYPE, bias);
++	drive_str = g_enum_to_string(G_GPIOD_LINE_DRIVE_TYPE, drive);
++
++	ret = g_string_new(NULL);
++	g_string_printf(ret, "%s, %s, %s", edge_str, bias_str, drive_str);
++	g_string_replace(ret, "G_GPIOD_LINE_", "", 0);
++
++	return ret;
++}
++
++int main(void)
++{
++	/* Example configuration - customize to suit your situation. */
++	static const gchar *const chip_path = "/dev/gpiochip0";
++	static const guint line_offset = 4;
++
++	g_autoptr(GPIODLineInfo) info = NULL;
++	g_autoptr(GPIODChip) chip = NULL;
++	g_autoptr(GString) flags = NULL;
++	const gchar *name, *consumer;
++	GPIODLineDirection direction;
++	g_autoptr(GError) err = NULL;
++	gboolean active_low;
++
++	chip = g_gpiod_chip_new(chip_path, &err);
++	if (err) {
++		g_printerr("Failed to open the GPIO chip at '%s': %s\n",
++			   chip_path, err->message);
++		return EXIT_FAILURE;
++	}
++
++	info = g_gpiod_chip_get_line_info(chip, line_offset, &err);
++	if (err) {
++		g_printerr("Failed to retrieve GPIO line info: %s\n",
++			   err->message);
++		return EXIT_FAILURE;
++	}
++
++	name = g_gpiod_line_info_get_name(info);
++	consumer = g_gpiod_line_info_get_consumer(info);
++	direction = g_gpiod_line_info_get_direction(info);
++	active_low = g_gpiod_line_info_is_active_low(info);
++	flags = make_flags(info);
++
++	g_print("\tline: %u %s %s %s %s [%s]\n",
++		line_offset,
++		name ?: "unnamed",
++		consumer ?: "unused",
++		direction == G_GPIOD_LINE_DIRECTION_INPUT ?
++					"input" : "output",
++		active_low ? "active-low" : "active-high",
++		flags->str);
++
++	return EXIT_SUCCESS;
++}
+diff --git a/bindings/glib/examples/get_line_value_glib.c b/bindings/glib/examples/get_line_value_glib.c
+new file mode 100644
+index 0000000..614390e
+--- /dev/null
++++ b/bindings/glib/examples/get_line_value_glib.c
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++/* Minimal example of reading a single line. */
++
++#include <glib.h>
++#include <gpiod-glib.h>
++#include <stdlib.h>
++
++int main(void)
++{
++	/* Example configuration - customize to suit your situation. */
++	static const gchar *const chip_path = "/dev/gpiochip1";
++	static const guint line_offset = 5;
++
++	g_autoptr(GPIODRequestConfig) req_cfg = NULL;
++	g_autoptr(GPIODLineSettings) settings = NULL;
++	g_autoptr(GPIODLineRequest) request = NULL;
++	g_autoptr(GPIODLineConfig) line_cfg = NULL;
++	g_autoptr(GArray) offsets = NULL;
++	g_autoptr(GPIODChip) chip = NULL;
++	g_autoptr(GError) err = NULL;
++	guint offset;
++	gboolean ret;
++
++	chip = g_gpiod_chip_new(chip_path, &err);
++	if (!chip) {
++		g_printerr("unable to open %s: %s\n", chip_path, err->message);
++		return EXIT_FAILURE;
++	}
++
++	offsets = g_array_new(FALSE, TRUE, sizeof(guint));
++	g_array_append_val(offsets, line_offset);
++
++	settings = g_gpiod_line_settings_new(
++			"direction", G_GPIOD_LINE_DIRECTION_INPUT,
++			NULL);
++
++	line_cfg = g_gpiod_line_config_new();
++	ret = g_gpiod_line_config_add_line_settings(line_cfg, offsets,
++						    settings, &err);
++	if (!ret) {
++		g_printerr("failed to add line settings to line config: %s\n",
++			   err->message);
++		return EXIT_FAILURE;
++	}
++
++	req_cfg = g_gpiod_request_config_new("consumer", "get-line-value-glib",
++					     NULL);
++
++	request = g_gpiod_chip_request_lines(chip, req_cfg, line_cfg, &err);
++	if (!request) {
++		g_printerr("failed to request lines: %s\n", err->message);
++		return EXIT_FAILURE;
++	}
++
++	ret = g_gpiod_line_request_get_value(request, line_offset,
++					     &offset, &err);
++	if (!ret) {
++		g_printerr("failed to read line values: %s\n", err->message);
++		return EXIT_FAILURE;
++	}
++
++	g_print("%u\n", offset);
++
++	return EXIT_SUCCESS;
++}
+diff --git a/bindings/glib/examples/get_multiple_line_values_glib.c b/bindings/glib/examples/get_multiple_line_values_glib.c
+new file mode 100644
+index 0000000..c65d45e
+--- /dev/null
++++ b/bindings/glib/examples/get_multiple_line_values_glib.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++/* Minimal example of reading multiple lines. */
++
++#include <glib.h>
++#include <gpiod-glib.h>
++#include <stdlib.h>
++
++int main(void)
++{
++	/* Example configuration - customize to suit your situation. */
++	static const gchar *const chip_path = "/dev/gpiochip1";
++	static const guint line_offsets[] = { 5, 3, 7 };
++	static const gsize num_lines = 3;
++
++	g_autoptr(GPIODRequestConfig) req_cfg = NULL;
++	g_autoptr(GPIODLineSettings) settings = NULL;
++	g_autoptr(GPIODLineRequest) request = NULL;
++	g_autoptr(GPIODLineConfig) line_cfg = NULL;
++	g_autoptr(GArray) offsets = NULL;
++	g_autoptr(GPIODChip) chip = NULL;
++	g_autoptr(GArray) values = NULL;
++	g_autoptr(GError) err = NULL;
++	gboolean ret;
++	guint i, j;
++
++	offsets = g_array_new(FALSE, TRUE, sizeof(guint));
++	for (i = 0; i < num_lines; i++)
++		g_array_append_val(offsets, line_offsets[i]);
++
++	chip = g_gpiod_chip_new(chip_path, &err);
++	if (!chip) {
++		g_printerr("unable to open %s: %s\n", chip_path, err->message);
++		return EXIT_FAILURE;
++	}
++
++	settings = g_gpiod_line_settings_new(
++			"direction", G_GPIOD_LINE_DIRECTION_INPUT,
++			NULL);
++
++	line_cfg = g_gpiod_line_config_new();
++	ret = g_gpiod_line_config_add_line_settings(line_cfg, offsets,
++						    settings, &err);
++	if (!ret) {
++		g_printerr("failed to add line settings to line config: %s\n",
++			   err->message);
++		return EXIT_FAILURE;
++	}
++
++	req_cfg = g_gpiod_request_config_new(
++			"consumer", "get-multiple-line-values", NULL);
++
++	request = g_gpiod_chip_request_lines(chip, req_cfg, line_cfg, &err);
++	if (!request) {
++		g_printerr("failed to request lines: %s\n", err->message);
++		return EXIT_FAILURE;
++	}
++
++	ret = g_gpiod_line_request_get_values_subset(request, offsets,
++						     &values, &err);
++	if (!ret) {
++		g_printerr("failed to read line values: %s\n", err->message);
++		return EXIT_FAILURE;
++	}
++
++	for (j = 0; j < values->len; j++)
++		g_print("%d ", g_array_index(values, GPIODLineValue, j));
++	g_print("\n");
++
++	return EXIT_SUCCESS;
++}
+diff --git a/bindings/glib/examples/reconfigure_input_to_output_glib.c b/bindings/glib/examples/reconfigure_input_to_output_glib.c
+new file mode 100644
+index 0000000..896b19f
+--- /dev/null
++++ b/bindings/glib/examples/reconfigure_input_to_output_glib.c
+@@ -0,0 +1,103 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++/*
++ * Example of a bi-directional line requested as input and then switched
++ * to output.
++ */
++
++#include <glib.h>
++#include <gpiod-glib.h>
++#include <stdlib.h>
++
++int main(void)
++{
++	/* Example configuration - customize to suit your situation */
++	static const gchar *const chip_path = "/dev/gpiochip1";
++	static const guint line_offset = 5;
++
++	g_autoptr(GPIODRequestConfig) req_cfg = NULL;
++	g_autoptr(GPIODLineSettings) settings = NULL;
++	g_autoptr(GPIODLineRequest) request = NULL;
++	g_autoptr(GPIODLineConfig) line_cfg = NULL;
++	g_autoptr(GArray) offsets = NULL;
++	g_autoptr(GPIODChip) chip = NULL;
++	g_autoptr(GError) err = NULL;
++	GPIODLineValue value;
++	gboolean ret;
++
++	offsets = g_array_new(FALSE, TRUE, sizeof(guint));
++	g_array_append_val(offsets, line_offset);
++
++	chip = g_gpiod_chip_new(chip_path, &err);
++	if (!chip) {
++		g_printerr("unable to open %s: %s\n", chip_path, err->message);
++		return EXIT_FAILURE;
++	}
++
++	settings = g_gpiod_line_settings_new(
++			"direction", G_GPIOD_LINE_DIRECTION_INPUT,
++			NULL);
++
++	line_cfg = g_gpiod_line_config_new();
++	ret = g_gpiod_line_config_add_line_settings(line_cfg, offsets,
++						    settings, &err);
++	if (!ret) {
++		g_printerr("failed to add line settings to line config: %s\n",
++			   err->message);
++		return EXIT_FAILURE;
++	}
++
++	req_cfg = g_gpiod_request_config_new(
++			"consumer", "reconfigure-input-to-output", NULL);
++
++	request = g_gpiod_chip_request_lines(chip, req_cfg, line_cfg, &err);
++	if (!request) {
++		g_printerr("failed to request lines: %s\n", err->message);
++		return EXIT_FAILURE;
++	}
++
++	/* Read the current line value. */
++	ret = g_gpiod_line_request_get_value(request, line_offset,
++					     &value, &err);
++	if (!ret) {
++		g_printerr("failed to read line value: %s\n", err->message);
++		return EXIT_FAILURE;
++	}
++
++	g_print("%s (input)\n",
++		value == G_GPIOD_LINE_VALUE_ACTIVE ? "Active" : "Inactive");
++
++	/* Switch the line to an output and drive it high. */
++	g_gpiod_line_settings_set_direction(settings,
++					    G_GPIOD_LINE_DIRECTION_OUTPUT);
++	g_gpiod_line_settings_set_output_value(settings,
++					       G_GPIOD_LINE_VALUE_ACTIVE);
++	ret = g_gpiod_line_config_add_line_settings(line_cfg, offsets,
++						    settings, &err);
++	if (!ret) {
++		g_printerr("failed to add line settings to line config: %s\n",
++			   err->message);
++		return EXIT_FAILURE;
++	}
++
++	/* Reconfigure lines. */
++	ret = g_gpiod_line_request_reconfigure_lines(request, line_cfg, &err);
++	if (!ret) {
++		g_printerr("failed to reconfigure lines: %s\n", err->message);
++		return EXIT_FAILURE;
++	}
++
++	/* Report the current driven value. */
++	ret = g_gpiod_line_request_get_value(request, line_offset,
++					     &value, &err);
++	if (!ret) {
++		g_printerr("failed to read line value: %s\n", err->message);
++		return EXIT_FAILURE;
++	}
++
++	g_print("%s (output)\n",
++		value == G_GPIOD_LINE_VALUE_ACTIVE ? "Active" : "Inactive");
++
++	return EXIT_SUCCESS;
++}
+diff --git a/bindings/glib/examples/toggle_line_value_glib.c b/bindings/glib/examples/toggle_line_value_glib.c
+new file mode 100644
+index 0000000..f11f121
+--- /dev/null
++++ b/bindings/glib/examples/toggle_line_value_glib.c
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++/* Minimal example of periodically toggling a single line. */
++
++#include <glib.h>
++#include <gpiod-glib.h>
++#include <stdlib.h>
++
++typedef struct {
++	GPIODLineRequest *request;
++	guint line_offset;
++	GPIODLineValue value;
++} ToggleData;
++
++static gboolean toggle_line(gpointer user_data)
++{
++	ToggleData *data = user_data;
++	g_autoptr(GError) err = NULL;
++	gboolean ret;
++
++	data->value = data->value == G_GPIOD_LINE_VALUE_ACTIVE ?
++				G_GPIOD_LINE_VALUE_INACTIVE :
++				G_GPIOD_LINE_VALUE_ACTIVE;
++
++	ret = g_gpiod_line_request_set_value(data->request, data->line_offset,
++					     data->value, &err);
++	if (!ret) {
++		g_printerr("failed to set line value: %s\n", err->message);
++		exit(EXIT_FAILURE);
++	}
++
++	g_print("%u=%s\n",
++		data->line_offset,
++		data->value == G_GPIOD_LINE_VALUE_ACTIVE ?
++					"active" : "inactive");
++
++	return G_SOURCE_CONTINUE;
++}
++
++int main(void)
++{
++	/* Example configuration - customize to suit your situation. */
++	static const gchar *const chip_path = "/dev/gpiochip1";
++	static const guint line_offset = 5;
++
++	g_autoptr(GPIODRequestConfig) req_cfg = NULL;
++	g_autoptr(GPIODLineSettings) settings = NULL;
++	g_autoptr(GPIODLineRequest) request = NULL;
++	g_autoptr(GPIODLineConfig) line_cfg = NULL;
++	g_autoptr(GArray) offsets = NULL;
++	g_autoptr(GPIODChip) chip = NULL;
++	g_autoptr(GMainLoop) loop = NULL;
++	g_autoptr(GError) err = NULL;
++	ToggleData data;
++	gboolean ret;
++
++	offsets = g_array_new(FALSE, TRUE, sizeof(guint));
++	g_array_append_val(offsets, line_offset);
++
++	chip = g_gpiod_chip_new(chip_path, &err);
++	if (!chip) {
++		g_printerr("unable to open %s: %s\n", chip_path, err->message);
++		return EXIT_FAILURE;
++	}
++
++	settings = g_gpiod_line_settings_new(
++			"direction", G_GPIOD_LINE_DIRECTION_OUTPUT,
++			NULL);
++	line_cfg = g_gpiod_line_config_new();
++	ret = g_gpiod_line_config_add_line_settings(line_cfg, offsets,
++						    settings, &err);
++	if (!ret) {
++		g_printerr("failed to add line settings to line config: %s\n",
++			   err->message);
++		return EXIT_FAILURE;
++	}
++
++	req_cfg = g_gpiod_request_config_new("consumer", "toggle-line-value",
++					     NULL);
++
++	request = g_gpiod_chip_request_lines(chip, req_cfg, line_cfg, &err);
++	if (!request) {
++		g_printerr("failed to request lines: %s\n", err->message);
++		return EXIT_FAILURE;
++	}
++
++	data.request = request;
++	data.line_offset = line_offset;
++	data.value = G_GPIOD_LINE_VALUE_INACTIVE;
++
++	loop = g_main_loop_new(NULL, FALSE);
++	/* Do the GLib way: add a callback to be invoked from the main loop. */
++	g_timeout_add_seconds(1, toggle_line, &data);
++
++	g_main_loop_run(loop);
++
++	return EXIT_SUCCESS;
++}
+diff --git a/bindings/glib/examples/toggle_multiple_line_values_glib.c b/bindings/glib/examples/toggle_multiple_line_values_glib.c
+new file mode 100644
+index 0000000..24ee7fa
+--- /dev/null
++++ b/bindings/glib/examples/toggle_multiple_line_values_glib.c
+@@ -0,0 +1,132 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++/* Minimal example of periodically toggling multiple lines. */
++
++#include <glib.h>
++#include <gpiod-glib.h>
++#include <stdlib.h>
++
++typedef struct {
++	GPIODLineRequest *request;
++	GArray *offsets;
++	GArray *values;
++} ToggleData;
++
++static void toggle_values(GArray *values)
++{
++	GPIODLineValue *value;
++	guint i;
++
++	for (i = 0; i < values->len; i++) {
++		value = &g_array_index(values, GPIODLineValue, i);
++		*value = *value == G_GPIOD_LINE_VALUE_ACTIVE ?
++					G_GPIOD_LINE_VALUE_INACTIVE :
++					G_GPIOD_LINE_VALUE_ACTIVE;
 +	}
 +}
 +
-+static void g_gpiod_request_config_set_property(GObject *obj, guint prop_id,
-+						const GValue *val,
-+						GParamSpec *pspec)
++static gboolean toggle_lines(gpointer user_data)
 +{
-+	GPIODRequestConfig *self = G_GPIOD_REQUEST_CONFIG_OBJ(obj);
++	ToggleData *data = user_data;
++	g_autoptr(GError) err = NULL;
++	gboolean ret;
++	guint i;
 +
-+	switch (prop_id) {
-+	case G_GPIOD_REQUEST_CONFIG_PROP_CONSUMER:
-+		gpiod_request_config_set_consumer(self->handle,
-+						  g_value_get_string(val));
-+		break;
-+	case G_GPIOD_REQUEST_CONFIG_PROP_EVENT_BUFFER_SIZE:
-+		gpiod_request_config_set_event_buffer_size(self->handle,
-+							g_value_get_uint(val));
-+		break;
-+	default:
-+		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
++	toggle_values(data->values);
++
++	ret = g_gpiod_line_request_set_values_subset(data->request,
++						     data->offsets,
++						     data->values, &err);
++	if (!ret) {
++		g_printerr("failed to set line values: %s\n", err->message);
++		exit(EXIT_FAILURE);
 +	}
++
++	for (i = 0; i < data->offsets->len; i++)
++		g_print("%u=%s ",
++			g_array_index(data->offsets, guint, i),
++			g_array_index(data->values,
++				      GPIODLineValue,
++				      i) == G_GPIOD_LINE_VALUE_ACTIVE ?
++						"active" : "inactive");
++	g_print("\n");
++
++	return G_SOURCE_CONTINUE;
 +}
 +
-+static void g_gpiod_request_config_finalize(GObject *obj)
++int main(void)
 +{
-+	GPIODRequestConfig *self = G_GPIOD_REQUEST_CONFIG_OBJ(obj);
++	/* Example configuration - customize to suit your situation. */
++	static const gchar *const chip_path = "/dev/gpiochip1";
++	static const guint line_offsets[] = { 5, 3, 7 };
++	static const GPIODLineValue line_values[] = {
++		G_GPIOD_LINE_VALUE_ACTIVE,
++		G_GPIOD_LINE_VALUE_ACTIVE,
++		G_GPIOD_LINE_VALUE_INACTIVE
++	};
++	static const gsize num_lines = 3;
 +
-+	g_clear_pointer(&self->handle, gpiod_request_config_free);
++	g_autoptr(GPIODRequestConfig) req_cfg = NULL;
++	g_autoptr(GPIODLineSettings) settings = NULL;
++	g_autoptr(GPIODLineRequest) request = NULL;
++	g_autoptr(GPIODLineConfig) line_cfg = NULL;
++	g_autoptr(GArray) offsets = NULL;
++	g_autoptr(GPIODChip) chip = NULL;
++	g_autoptr(GMainLoop) loop = NULL;
++	g_autoptr(GArray) values = NULL;
++	g_autoptr(GError) err = NULL;
++	ToggleData data;
++	gboolean ret;
 +
-+	G_OBJECT_CLASS(g_gpiod_request_config_parent_class)->finalize(obj);
++	offsets = g_array_new(FALSE, TRUE, sizeof(guint));
++	g_array_append_vals(offsets, line_offsets, num_lines);
++
++	values = g_array_new(FALSE, TRUE, sizeof(GPIODLineValue));
++	g_array_append_vals(values, line_values, num_lines);
++
++	chip = g_gpiod_chip_new(chip_path, &err);
++	if (!chip) {
++		g_printerr("unable to open %s: %s\n", chip_path, err->message);
++		return EXIT_FAILURE;
++	}
++
++	settings = g_gpiod_line_settings_new(
++			"direction", G_GPIOD_LINE_DIRECTION_OUTPUT,
++			NULL);
++	line_cfg = g_gpiod_line_config_new();
++	ret = g_gpiod_line_config_add_line_settings(line_cfg, offsets,
++						    settings, &err);
++	if (!ret) {
++		g_printerr("failed to add line settings to line config: %s\n",
++			   err->message);
++		return EXIT_FAILURE;
++	}
++
++	ret = g_gpiod_line_config_set_output_values(line_cfg, values, &err);
++	if (!ret) {
++		g_printerr("failed to set output values: %s\n", err->message);
++		return EXIT_FAILURE;
++	}
++
++	req_cfg = g_gpiod_request_config_new("consumer", "toggle-line-value",
++					     NULL);
++
++	request = g_gpiod_chip_request_lines(chip, req_cfg, line_cfg, &err);
++	if (!request) {
++		g_printerr("failed to request lines: %s\n", err->message);
++		return EXIT_FAILURE;
++	}
++
++	data.request = request;
++	data.offsets = offsets;
++	data.values = values;
++
++	loop = g_main_loop_new(NULL, FALSE);
++	/* Do the GLib way: add a callback to be invoked from the main loop. */
++	g_timeout_add_seconds(1, toggle_lines, &data);
++
++	g_main_loop_run(loop);
++
++	return EXIT_SUCCESS;
++}
+diff --git a/bindings/glib/examples/watch_line_info_glib.c b/bindings/glib/examples/watch_line_info_glib.c
+new file mode 100644
+index 0000000..e05d020
+--- /dev/null
++++ b/bindings/glib/examples/watch_line_info_glib.c
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++/* Minimal example of watching for requests on particular lines. */
++
++#include <glib.h>
++#include <gpiod-glib.h>
++#include <stdlib.h>
++
++static void on_info_event(GPIODChip *chip G_GNUC_UNUSED,
++			  GPIODInfoEvent *event,
++			  gpointer data G_GNUC_UNUSED)
++{
++	g_autoptr(GPIODLineInfo) info = NULL;
++	g_autoptr(GString) event_name = NULL;
++	guint offset;
++
++	event_name = g_string_new(
++			g_enum_to_string(G_GPIOD_INFO_EVENT_TYPE_TYPE,
++				g_gpiod_info_event_get_event_type(event)));
++	g_string_replace(event_name, "G_GPIOD_INFO_EVENT_LINE_", "", 0);
++	info = g_gpiod_info_event_get_line_info(event);
++	offset = g_gpiod_line_info_get_offset(info);
++
++	g_print("%s %u\n", event_name->str, offset);
 +}
 +
-+static void
-+g_gpiod_request_config_class_init(GPIODRequestConfigClass *request_config_class)
++int main(void)
 +{
-+	GObjectClass *class = G_OBJECT_CLASS(request_config_class);
++	static const gchar *const chip_path = "/dev/gpiochip1";
++	static const guint line_offsets[] = { 5, 3, 7 };
++	static const gsize num_lines = 3;
 +
-+	class->set_property = g_gpiod_request_config_set_property;
-+	class->get_property = g_gpiod_request_config_get_property;
-+	class->finalize = g_gpiod_request_config_finalize;
++	g_autoptr(GMainLoop) loop = NULL;
++	g_autoptr(GPIODChip) chip = NULL;
++	g_autoptr(GError) err = NULL;
++	guint i;
 +
-+	g_object_class_install_property(class,
-+					G_GPIOD_REQUEST_CONFIG_PROP_HANDLE,
-+		g_param_spec_pointer("handle", "Handle",
-+			"GPIO request config object.",
-+			G_PARAM_READABLE));
++	chip = g_gpiod_chip_new(chip_path, &err);
++	if (!chip) {
++		g_printerr("unable to open %s: %s\n", chip_path, err->message);
++		return EXIT_FAILURE;
++	}
 +
-+	g_object_class_install_property(class,
-+					G_GPIOD_REQUEST_CONFIG_PROP_CONSUMER,
-+		g_param_spec_string("consumer", "Consumer",
-+			"Name of the request consumer.",
-+			NULL, G_PARAM_READWRITE));
++	for (i = 0; i < num_lines; i++) {
++		g_autoptr(GPIODLineInfo) info =
++			g_gpiod_chip_watch_line_info(chip, line_offsets[i],
++						     &err);
++		if (!info) {
++			g_printerr("unable to watch line info for offset %u: %s",
++				   line_offsets[1], err->message);
++			return EXIT_FAILURE;
++		}
++	}
 +
-+	g_object_class_install_property(class,
-+				G_GPIOD_REQUEST_CONFIG_PROP_EVENT_BUFFER_SIZE,
-+		g_param_spec_uint("event-buffer-size", "Event Buffer Size",
-+			"Size of the kernel event buffer size of the request.",
-+			0, G_MAXUINT, 64, G_PARAM_READWRITE));
++	loop = g_main_loop_new(NULL, FALSE);
++
++	g_signal_connect(chip, "info-event", G_CALLBACK(on_info_event), NULL);
++
++	g_main_loop_run(loop);
++
++	return EXIT_SUCCESS;
++}
+diff --git a/bindings/glib/examples/watch_line_value_glib.c b/bindings/glib/examples/watch_line_value_glib.c
+new file mode 100644
+index 0000000..0f3933e
+--- /dev/null
++++ b/bindings/glib/examples/watch_line_value_glib.c
+@@ -0,0 +1,91 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++/* Minimal example of asynchronously watching for edges on a single line. */
++
++#include <glib.h>
++#include <gpiod-glib.h>
++#include <stdlib.h>
++
++static void on_edge_event(GPIODLineRequest *request G_GNUC_UNUSED,
++			  GPIODEdgeEvent *event,
++			  gpointer data G_GNUC_UNUSED)
++{
++	g_autoptr(GString) event_name = NULL;
++	guint64 timestamp;
++	guint offset;
++
++	event_name = g_string_new(
++			g_enum_to_string(G_GPIOD_EDGE_EVENT_TYPE_TYPE,
++				g_gpiod_edge_event_get_event_type(event)));
++	g_string_replace(event_name, "G_GPIOD_EDGE_EVENT_", "", 0);
++	timestamp = g_gpiod_edge_event_get_timestamp_ns(event);
++	offset = g_gpiod_edge_event_get_line_offset(event);
++
++	g_print("%s %lu %u\n", event_name->str, timestamp, offset);
 +}
 +
-+static void g_gpiod_request_config_init(GPIODRequestConfig *self)
++int main(void)
 +{
-+	self->handle = gpiod_request_config_new();
-+	if (!self->handle)
-+		/* The only possible error is ENOMEM. */
-+		g_error("Failed to allocate memory for the request-config object.");
++	/* Example configuration - customize to suit your situation. */
++	static const gchar *const chip_path = "/dev/gpiochip1";
++	static const guint line_offset = 5;
++
++	g_autoptr(GPIODRequestConfig) req_cfg = NULL;
++	g_autoptr(GPIODLineSettings) settings = NULL;
++	g_autoptr(GPIODLineRequest) request = NULL;
++	g_autoptr(GPIODLineConfig) line_cfg = NULL;
++	g_autoptr(GArray) offsets = NULL;
++	g_autoptr(GMainLoop) loop = NULL;
++	g_autoptr(GPIODChip) chip = NULL;
++	g_autoptr(GError) err = NULL;
++	gboolean ret;
++
++	offsets = g_array_new(FALSE, TRUE, sizeof(guint));
++	g_array_append_val(offsets, line_offset);
++
++	chip = g_gpiod_chip_new(chip_path, &err);
++	if (!chip) {
++		g_printerr("unable to open %s: %s\n", chip_path, err->message);
++		return EXIT_FAILURE;
++	}
++
++	/*
++	 * Assume a button connecting the pin to ground, so pull it up and
++	 * provide some debounce.
++	 */
++	settings = g_gpiod_line_settings_new(
++			"direction", G_GPIOD_LINE_DIRECTION_INPUT,
++			"edge-detection", G_GPIOD_LINE_EDGE_BOTH,
++			"bias", G_GPIOD_LINE_BIAS_PULL_UP,
++			"debounce-period-us", 1000,
++			NULL);
++
++	line_cfg = g_gpiod_line_config_new();
++	ret = g_gpiod_line_config_add_line_settings(line_cfg, offsets,
++						    settings, &err);
++	if (!ret) {
++		g_printerr("failed to add line settings to line config: %s",
++			   err->message);
++		return EXIT_FAILURE;
++	}
++
++	req_cfg = g_gpiod_request_config_new("consumer", "watch-line-value",
++					     NULL);
++
++	request = g_gpiod_chip_request_lines(chip, req_cfg, line_cfg, &err);
++	if (!request) {
++		g_printerr("failed to request lines: %s", err->message);
++		return EXIT_FAILURE;
++	}
++
++	loop = g_main_loop_new(NULL, FALSE);
++
++	/* Connect to the edge-event signal on the line-request. */
++	g_signal_connect(request, "edge-event",
++			 G_CALLBACK(on_edge_event), NULL);
++
++	g_main_loop_run(loop);
++
++	return EXIT_SUCCESS;
++}
+diff --git a/bindings/glib/examples/watch_multiple_edge_rising_glib.c b/bindings/glib/examples/watch_multiple_edge_rising_glib.c
+new file mode 100644
+index 0000000..e99b58a
+--- /dev/null
++++ b/bindings/glib/examples/watch_multiple_edge_rising_glib.c
+@@ -0,0 +1,95 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++/*
++ * Minimal example of asynchronously watching for rising edges on multiple
++ * lines.
++ */
++
++#include <glib.h>
++#include <gpiod-glib.h>
++#include <stdlib.h>
++
++static void on_edge_event(GPIODLineRequest *request G_GNUC_UNUSED,
++			  GPIODEdgeEvent *event,
++			  gpointer data G_GNUC_UNUSED)
++{
++	g_autoptr(GString) event_name = NULL;
++	guint64 timestamp;
++	guint offset;
++
++	event_name = g_string_new(
++			g_enum_to_string(G_GPIOD_EDGE_EVENT_TYPE_TYPE,
++				g_gpiod_edge_event_get_event_type(event)));
++	g_string_replace(event_name, "G_GPIOD_EDGE_EVENT_", "", 0);
++	timestamp = g_gpiod_edge_event_get_timestamp_ns(event);
++	offset = g_gpiod_edge_event_get_line_offset(event);
++
++	g_print("%s %lu %u\n", event_name->str, timestamp, offset);
 +}
 +
-+GPIODRequestConfig *g_gpiod_request_config_new(const gchar *first_prop, ...)
++int main(void)
 +{
-+	GPIODRequestConfig *settings;
-+	va_list va;
++	/* Example configuration - customize to suit your situation. */
++	static const gchar *const chip_path = "/dev/gpiochip1";
++	static const guint line_offsets[] = { 5, 3, 7 };
++	static const gsize num_lines = 3;
 +
-+	va_start(va, first_prop);
-+	settings = G_GPIOD_REQUEST_CONFIG_OBJ(
-+			g_object_new_valist(G_GPIOD_REQUEST_CONFIG_TYPE,
-+					    first_prop, va));
-+	va_end(va);
++	g_autoptr(GPIODRequestConfig) req_cfg = NULL;
++	g_autoptr(GPIODLineSettings) settings = NULL;
++	g_autoptr(GPIODLineRequest) request = NULL;
++	g_autoptr(GPIODLineConfig) line_cfg = NULL;
++	g_autoptr(GArray) offsets = NULL;
++	g_autoptr(GMainLoop) loop = NULL;
++	g_autoptr(GPIODChip) chip = NULL;
++	g_autoptr(GError) err = NULL;
++	gboolean ret;
 +
-+	return settings;
-+}
++	offsets = g_array_new(FALSE, TRUE, sizeof(guint));
++	g_array_append_vals(offsets, line_offsets, num_lines);
 +
-+void g_gpiod_request_config_set_consumer(GPIODRequestConfig *self,
-+					 const gchar *consumer)
-+{
-+	g_assert(self);
++	chip = g_gpiod_chip_new(chip_path, &err);
++	if (!chip) {
++		g_printerr("unable to open %s: %s\n", chip_path, err->message);
++		return EXIT_FAILURE;
++	}
 +
-+	g_gpiod_set_prop_string(G_OBJECT(self), "consumer", consumer);
-+}
++	/*
++	 * Assume a button connecting the pin to ground, so pull it up and
++	 * provide some debounce.
++	 */
++	settings = g_gpiod_line_settings_new(
++			"direction", G_GPIOD_LINE_DIRECTION_INPUT,
++			"edge-detection", G_GPIOD_LINE_EDGE_RISING,
++			"bias", G_GPIOD_LINE_BIAS_PULL_UP,
++			"debounce-period-us", 1000,
++			NULL);
 +
-+const gchar *g_gpiod_request_config_get_consumer(GPIODRequestConfig *self)
-+{
-+	g_assert(self);
++	line_cfg = g_gpiod_line_config_new();
++	ret = g_gpiod_line_config_add_line_settings(line_cfg, offsets,
++						    settings, &err);
++	if (!ret) {
++		g_printerr("failed to add line settings to line config: %s",
++			   err->message);
++		return EXIT_FAILURE;
++	}
 +
-+	return g_gpiod_get_prop_string(G_OBJECT(self), "consumer");
-+}
++	req_cfg = g_gpiod_request_config_new(NULL);
++	g_gpiod_request_config_set_consumer(req_cfg, "watch-multiline-value");
 +
-+void g_gpiod_request_config_set_event_buffer_size(GPIODRequestConfig *self,
-+						  guint event_buffer_size)
-+{
-+	g_assert(self);
++	request = g_gpiod_chip_request_lines(chip, req_cfg, line_cfg, &err);
++	if (!request) {
++		g_printerr("failed to request lines: %s", err->message);
++		return EXIT_FAILURE;
++	}
 +
-+	g_gpiod_set_prop_uint(G_OBJECT(self), "event-buffer-size",
-+			      event_buffer_size);
-+}
++	loop = g_main_loop_new(NULL, FALSE);
 +
-+guint g_gpiod_request_config_get_event_buffer_size(GPIODRequestConfig *self)
-+{
-+	g_assert(self);
++	/* Connect to the edge-event signal on the line-request. */
++	g_signal_connect(request, "edge-event",
++			 G_CALLBACK(on_edge_event), NULL);
 +
-+	return g_gpiod_get_prop_uint(G_OBJECT(self), "event-buffer-size");
++	g_main_loop_run(loop);
++
++	return EXIT_SUCCESS;
 +}
 
 -- 
