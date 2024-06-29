@@ -1,162 +1,195 @@
-Return-Path: <linux-gpio+bounces-7832-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7833-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD39091CB91
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2024 10:08:46 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6D5D91CC6B
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2024 13:36:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE6B11C20F85
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2024 08:08:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A682283010
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2024 11:36:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8A9D38FA5;
-	Sat, 29 Jun 2024 08:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2o+yKsnI"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8841F4EB2B;
+	Sat, 29 Jun 2024 11:35:56 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE811109
-	for <linux-gpio@vger.kernel.org>; Sat, 29 Jun 2024 08:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F6F1CF8D;
+	Sat, 29 Jun 2024 11:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719648519; cv=none; b=OCiZBdRy7tfS1oIHDAq/eGoJXawV2h35lkqmhUyECwPHidCGaY6M+uH0G8Gn5zHAnQtnvx/w24CScLzQhDch+fb13nmzICWX0/LYfYyUKOlieMrRwC1mZHMAAfyelZQwblDtRep+Qg66ZOksqQqKi7//jCtP5hqYSV6w53ioU6o=
+	t=1719660956; cv=none; b=tfp2xG0/BIEgHk+S2J5KsHZ0xITj21MZ2qUEMHBEBsefTfzGGAcgJiuoHDTYREmdzJkatsBZ9esYOvYVL7PzTWPhakpWFsCx9xZ3gAwUWG3xixaSFIrWyYgamKIQHcuetAbzQZYIF2wGHaU7S/5736L1xc9fkFmxbIcTYq5ZRSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719648519; c=relaxed/simple;
-	bh=BBCyaQxLREiLslktbppCVuX5IJLqgoO4r239wd0ABN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lDj7lGGh9rBnboEkh6WDlZQrL2t+VK2KY8R5wOdOSJRwjCpQaF/4uWQDL/+gmspUZS5zzO3lXCKuEgjoDZrdnQ+aYV7re3l8g4WwrQRxthp7X11fsmw1WBruPCfiex/V831I70FGhu/n8UIWKUUJU5dZJdVJx5kSMd2/Fwy0Bps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2o+yKsnI; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52e7d2278d8so1982164e87.3
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jun 2024 01:08:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719648513; x=1720253313; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=O+ZkvhHwk7750FqBEhJS3DcahoN5BOHgNv+lFscO4cQ=;
-        b=2o+yKsnIodi6PgVHPFXIJ0BMDl0L+arGFPJF4OilTyeyIFYb+fkuM74L0H1y4grh0y
-         8LAc4Vdqm6w/BpmZDsdpqq7vfQA2Gifxq1bmTdKFotYW7H3e8jboEzsotm10LH8NRR9W
-         MbdQqxfOgZWIb/fv0xUYD/uyl5sP+f71e63iXI2+DjfCWDVw7PdEDQGlszhundQnRbB1
-         Ay0O0itysZGqF6oZsGyvXj0QMvL8gdWv0SEaJ+5pLS+QpEWuL2MsqqKTIWl/6huT1vmh
-         LzfHfcKoNrpDbTfk+wMSrBfPz+XEKfSfBKv8tBLE2jeHIV0O4LCz0EYsHNAnx2g036CM
-         LpWQ==
+	s=arc-20240116; t=1719660956; c=relaxed/simple;
+	bh=KHYsi4NzdHdqcK0JtApKxfLj2hbF4AXMBZAsTJbNacE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g2xUs1+OkvE7B9iaBcR64E91EdWxDC4Ylozjk0N8N2Obs7tnNuqcV0IRiPTo85HeW3QJc9BViXleNvrmByzLYmp6G5QSNq1lhqXsdep9G3uwSn2FZ+UleUOoiwnQfQzuCKY/hLC3W9xKnzgG5uR7Fl7esFhGiVKaUhPlK/SlbNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-64b5617ba47so11617137b3.3;
+        Sat, 29 Jun 2024 04:35:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719648513; x=1720253313;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O+ZkvhHwk7750FqBEhJS3DcahoN5BOHgNv+lFscO4cQ=;
-        b=W8hsMVc3r6Oq4oM+M26gX36raSnJdTT4Dd1np0418K8Zkj/l1N8la7JkrBwZTEZfun
-         bE+JNHiyKoAHZ85izhw11YrJe2XIEA3IuInLpFTfvGORN+dU/4/IhAEY3sTS0Fi1u53m
-         lP9Blfkpsu1AxjTr/IbqeP3zDEoRKnTJ0T23sG2iqhg+/YYTosKwlCw1Hvm/nnhIdamf
-         nUVp1Is6yGOCF4KZSqb4rbf2vk8Wlzl2OAwdGFfY0oBoemNxzav1TwsghD5N7wAKcof5
-         Zo2sJusVT95VAd0lHIe4aArVv9eSbuOKbGFRSw7GPsvH0igZgSwgPXwmD9aRAxKq4hhh
-         j1tw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTISsBjSaXkjhAsV6wFac5P2cvAP1/f4DiuaoT6VRqJXqFf/8oj6wp0BGgtSl6pKtjPjkE21QrDZvi/PZMgM8U1OtJu2pFGto2Wg==
-X-Gm-Message-State: AOJu0YxXxexBxiraS8Ic25/YyzqDRiOfbCNNz+KAqo40EHDBpNIqbND4
-	vyOlnjdj7HtQNQJ2HRJpC5G9cjI5ALm7QQrBxglCyEpx+Q9I8MXzYOwWEcTTnqI=
-X-Google-Smtp-Source: AGHT+IHSv5ihn1P8nevgMRliFhmUKmMh5e2Mdjl2yEP3hmMQ7slo4hojvW0p6v4hYOoAt+gWbx6ylA==
-X-Received: by 2002:a05:6512:6cf:b0:52c:83c7:936a with SMTP id 2adb3069b0e04-52e8270b86bmr434039e87.42.1719648511415;
-        Sat, 29 Jun 2024 01:08:31 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:850d:6139:5a25:72d0])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a75101e4f76sm35601466b.192.2024.06.29.01.08.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Jun 2024 01:08:30 -0700 (PDT)
-Date: Sat, 29 Jun 2024 10:08:29 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, 
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>, "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	Aisheng Dong <aisheng.dong@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, 
-	"shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH V3 1/3] pinctrl: ti: iodelay: Use scope based
- of_node_put() cleanups
-Message-ID: <vy2jjh73agfhbovxt3isc626dru3daxwxba7gql6cj3ftpq2qx@pye5xiepzdc4>
-References: <20240627131721.678727-1-peng.fan@oss.nxp.com>
- <20240627131721.678727-2-peng.fan@oss.nxp.com>
- <dldl7dkdcsuajjjpg2pczfnupqrsghmpz27i45xi5beeou5ntg@y2ysounw3pqq>
- <DB7PR04MB59481B0994BE9D1175C4949A88D12@DB7PR04MB5948.eurprd04.prod.outlook.com>
+        d=1e100.net; s=20230601; t=1719660952; x=1720265752;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1S1yRV7C3FxWUhUHxRqIh6Hp71QQxiOPCiDvVMr4BEA=;
+        b=QO8cDSZhCQd/9ksx2LaA4FIqDJpcj9lKLR8fTB3QW0MCGZK8GVqOvu5Jm6RDFj8ruJ
+         LctctJ+nsZaQ25ZePrGMLLhsgCeg6sRrb5FTf/9BrLbuo3olp7WxD2jc1bGSX75s7n2l
+         l+Uz+vmad4sD97H2oAUurmEKXRleyCvmtOGcLuBdkTOzyezPnpxqHkU9dhYfd3USkDTW
+         PaMZ7Fbi5VmgNnS2ww3gjsblDtwAFTlhVtDPOmxg63XzXX4bH+jbUONZjfJQibO8xROB
+         WdTRP+20HhZpoAY0pEh6SjybXYjeNrL0CYrGD8vpIXYUFhHMiNUMKDirK7YDpE+AjWwh
+         6C0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVPzJfaQHuEPxKOdMSaXoh1JJIMQbgAul+JxR8DQx0YoRJYVBrO+q3G43Sg6fYEyIDPk5wQq+S88NM+vyjK+gck4iWEQ6kYtGWa+wR1i5pffjZq51O8XmTm3zAZme6qyZM9O90ZrpFMfsAPn7wG834m22aqh9rdDSNOkz8si40lhtdyRwVL9Gy/d4ZukNm69hV/sgbC2eBybrsw5nJxuj+xlz99lapgdg==
+X-Gm-Message-State: AOJu0YwmSsTZh040Q4eWlpVtUopj+eJXmIjQmQvB/+wNv98wM1QiQwfs
+	6OpOpiyqlKmu2ScqXHklH2jBsgizS0M4eNKXalQFZdQXAtIxLTGoEBUNzPNA
+X-Google-Smtp-Source: AGHT+IGr4jG4lHbu9IjBZo6YNejiX7X18+BSleKOGoND+8h1/4MeKbOM50Mdc0RjsghZLgUnNOVnPQ==
+X-Received: by 2002:a05:690c:a9d:b0:647:7782:421a with SMTP id 00721157ae682-64c73ae898amr5641387b3.45.1719660952388;
+        Sat, 29 Jun 2024 04:35:52 -0700 (PDT)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-64a9c405db0sm6520217b3.130.2024.06.29.04.35.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Jun 2024 04:35:51 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-64a6bf15db9so13936047b3.0;
+        Sat, 29 Jun 2024 04:35:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV16s/rWF9eNg7VOH5iuoPGFCBano1zzZ1dHO2gkXUs96XwQ1+wzZCfKn29FX6EdkFnSaZvH868xSlh0HCCycyNNMcWXVnoKKeDPCj8/chkgnvqe/VRX6qZRUzEdRXTEwD7fWS/sa1G0BGNa1P/+Qe3Qgwefo/suLkQqr9wzYhep0GHmmi3SzsLl4IKe0rD4xBF+FOblGVBwXqNmpbKKlMytCaLJZasSA==
+X-Received: by 2002:a05:690c:24f:b0:647:e079:da73 with SMTP id
+ 00721157ae682-64c7114570bmr6412747b3.10.1719660951106; Sat, 29 Jun 2024
+ 04:35:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fntpmbabhhgn6lo3"
-Content-Disposition: inline
-In-Reply-To: <DB7PR04MB59481B0994BE9D1175C4949A88D12@DB7PR04MB5948.eurprd04.prod.outlook.com>
-
-
---fntpmbabhhgn6lo3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <cover.1716974502.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1716974502.git.geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Sat, 29 Jun 2024 13:35:38 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXtAPebwHkEcp+PcAxP-BfP8wqmX4BYOc1TC7mCex7Fsw@mail.gmail.com>
+Message-ID: <CAMuHMdXtAPebwHkEcp+PcAxP-BfP8wqmX4BYOc1TC7mCex7Fsw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/8] Add R-Car fuse support
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Srinivas,
 
-On Sat, Jun 29, 2024 at 01:32:15AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH V3 1/3] pinctrl: ti: iodelay: Use scope based
-> > of_node_put() cleanups
-> >=20
-> > Hello Peng,
-> >=20
-> > On Thu, Jun 27, 2024 at 09:17:19PM +0800, Peng Fan (OSS) wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > Use scope based of_node_put() cleanup to simplify code.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >  drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 43
-> > > +++++++++----------------
-> > >  1 file changed, 15 insertions(+), 28 deletions(-)
-> > >
-> > > diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> > > b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> > > index ef9758638501..f5e5a23d2226 100644
-> > > --- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> > > +++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> > > @@ -822,53 +822,48 @@ MODULE_DEVICE_TABLE(of,
-> > ti_iodelay_of_match);
-> > > static int ti_iodelay_probe(struct platform_device *pdev)  {
-> > >  	struct device *dev =3D &pdev->dev;
-> > > -	struct device_node *np =3D of_node_get(dev->of_node);
-> > > +	struct device_node *np __free(device_node) =3D
-> > > +of_node_get(dev->of_node);
-> >=20
-> > of_node_put? -------------------------------------------^
->=20
-> You mean use of_node_put here?
-> of_node_get should be used here. The __free will automatically
-> do of_node_put when function return.
+On Wed, May 29, 2024 at 11:29=E2=80=AFAM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> R-Car Gen3/Gen4 SoCs contain fuses indicating hardware support or
+> hardware parameters.  Unfortunately the various SoCs require different
+> mechanisms to read the state of the fuses:
+>   - On R-Car Gen3, the fuse monitor registers are in the middle of the
+>     Pin Function Controller (PFC) register block,
+>   - On R-Car V3U and S4-8, the E-FUSE non-volatile memory is accessible
+>     through a separate register block in the PFC,
+>   - On R-Car V4H and V4M, the E-FUSE non-volatile memory is accessible
+>     through the second register block of OTP_MEM.
+>
+> This patch series adds support for all 3 variants.  It provides an
+> in-kernel API to read the fuses' states, as well as userspace access
+> through the nvmem subsystem and sysfs:
+>   - R-Car Gen3:    /sys/bus/platform/devices/rcar_fuse/fuse/nvmem
+>   - R-Car V3U/S4:  /sys/bus/platform/devices/e6078800.fuse/fuse/nvmem
+>   - R-Car V4H/V4M: /sys/bus/platform/devices/e61be000.otp/fuse/nvmem
+>
+> This has been tested on R-Car H3 ES2.0, M3-W and M3-W+, M3-N, V3M, V3H
+> and V3H2, D3, E3, V3U, S4-8 ES1.0 and ES1.2, V4H, and V4M.
+>
+> For SoCs where E-FUSE is accessed through the PFC, it is not clear from
+> the documentation if any PFC module clock needs to be enabled for fuse
+> access.  According to experiments on R-Car S4-8, the module clock and
+> reset only impact the GPIO functionality of the PFC, not the pinmux or
+> fuse monitor functionalities.  So perhaps the clock/power-domains/resets
+> properties should be dropped from the DT bindings and DTS, as well as
+> the Runtime PM handling from the driver?
+>
+> Changes compared to v1[1]:
+>   - Drop RFC state and broaden audience,
+>   - Fix typo in one-line summary,
+>   - Add Reviewed-by.
+>
+> Thanks for your comments!
+>
+> [1] https://lore.kernel.org/r/cover.1714642390.git.geert+renesas@glider.b=
+e
+>
+> Geert Uytterhoeven (8):
+>   dt-bindings: fuse: Document R-Car E-FUSE / PFC
+>   dt-bindings: fuse: Document R-Car E-FUSE / OTP_MEM
+>   soc: renesas: Add R-Car fuse driver
+>   pinctrl: renesas: Add R-Car Gen3 fuse support
+>   arm64: dts: renesas: r8a779a0: Add E-FUSE node
+>   arm64: dts: renesas: r8a779f0: Add E-FUSE node
+>   arm64: dts: renesas: r8a779g0: Add OTP_MEM node
+>   arm64: dts: renesas: r8a779h0: Add OTP_MEM node
+>
+>  .../bindings/fuse/renesas,rcar-efuse.yaml     |  55 +++++
+>  .../bindings/fuse/renesas,rcar-otp.yaml       |  38 ++++
+>  arch/arm64/boot/dts/renesas/r8a779a0.dtsi     |   8 +
+>  arch/arm64/boot/dts/renesas/r8a779f0.dtsi     |   8 +
+>  arch/arm64/boot/dts/renesas/r8a779g0.dtsi     |   5 +
+>  arch/arm64/boot/dts/renesas/r8a779h0.dtsi     |   5 +
+>  drivers/pinctrl/renesas/core.c                |  18 ++
+>  drivers/pinctrl/renesas/pfc-r8a77951.c        |   2 +
+>  drivers/pinctrl/renesas/pfc-r8a7796.c         |   4 +
+>  drivers/pinctrl/renesas/pfc-r8a77965.c        |   2 +
+>  drivers/pinctrl/renesas/pfc-r8a77970.c        |   2 +
+>  drivers/pinctrl/renesas/pfc-r8a77980.c        |  14 +-
+>  drivers/pinctrl/renesas/pfc-r8a77990.c        |   2 +
+>  drivers/pinctrl/renesas/pfc-r8a77995.c        |   2 +
+>  drivers/pinctrl/renesas/sh_pfc.h              |   4 +-
+>  drivers/soc/renesas/Kconfig                   |   8 +
+>  drivers/soc/renesas/Makefile                  |   1 +
+>  drivers/soc/renesas/rcar-fuse.c               | 201 ++++++++++++++++++
+>  include/linux/platform_data/rcar_fuse.h       |  11 +
+>  include/linux/soc/renesas/rcar-fuse.h         |  41 ++++
+>  20 files changed, 429 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/fuse/renesas,rcar-e=
+fuse.yaml
+>  create mode 100644 Documentation/devicetree/bindings/fuse/renesas,rcar-o=
+tp.yaml
+>  create mode 100644 drivers/soc/renesas/rcar-fuse.c
+>  create mode 100644 include/linux/platform_data/rcar_fuse.h
+>  create mode 100644 include/linux/soc/renesas/rcar-fuse.h
 
-Ah, I misinterpreted the syntax. I thought your code registers
-of_node_get() as cleanup handler.
+Arnd pointed out on IRC this should probably be an nvmem driver instead
+of an soc driver.  I had mimicked this after the Tegra fuse driver,
+which is also an soc driver.  The in-kernel user would be its main
+user. The nvmem interface exists just because the tegra driver did
+the same.
 
-Sorry for the noise,
-Uwe
+After some investigation, it looks like this should use
+Documentation/devicetree/bindings/nvmem/nvmem-consumer.yaml
+instead, and handle it like e.g.
+Documentation/devicetree/bindings/nvmem/sprd-efuse.txt?
 
---fntpmbabhhgn6lo3
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks for your guidance!
 
------BEGIN PGP SIGNATURE-----
+Link to this series:
+https://lore.kernel.org/all/cover.1716974502.git.geert+renesas@glider.be/
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ/wPoACgkQj4D7WH0S
-/k49FQf6A1ST0ozfIDojlpA4JikoIS8wCnOr+3tnyb+aUL93oVwWgcctdiBPIUPr
-yBotdPy4myrfd3Rducnik2BvhkbGUe+pxRGBMxrXdPm7MtUyADJOJVsOzQFhfE5h
-MtGrbEKpBVWbDM/8XU6p7KrwfZ/43y3AxVIlT/GsGHcvYkftuelV4kadao6hOK45
-sPaOQaWQt0z3nYySrs/0O1VvDoK2NphgcFJ74TDmLhaU/7AMdlJD83gjtcFnIE9T
-jA91hOEmeLk87SBFq54xGBZkVtbSGjOszbAnYF1nGx0KsRJy2RV6U9g0q91w/HB5
-1WeFWctqcbTZ9vkWz3HL6m4004cIRA==
-=TJVm
------END PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
---fntpmbabhhgn6lo3--
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
