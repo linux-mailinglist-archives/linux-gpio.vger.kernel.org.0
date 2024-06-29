@@ -1,211 +1,162 @@
-Return-Path: <linux-gpio+bounces-7831-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7832-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 607F091CA0A
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2024 03:32:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD39091CB91
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2024 10:08:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D4B46283A86
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2024 01:32:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE6B11C20F85
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jun 2024 08:08:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF78B1859;
-	Sat, 29 Jun 2024 01:32:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8A9D38FA5;
+	Sat, 29 Jun 2024 08:08:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XR8EXPLH"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2o+yKsnI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2083.outbound.protection.outlook.com [40.107.21.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBDF628;
-	Sat, 29 Jun 2024 01:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719624741; cv=fail; b=m/BIBB6WSCosdvH0ofB+bITtzZ1/SyzFkoVjDsvfLw+Abu3y5f648KyeHTW2hszuWeqrK6UswUMvBJFxcpG273SvWmNncWI8lKJpO7srVPaMdGQcOIH+3/cJui1Z57cnewqwI2Tb8/h6Gvb8OI3oWcKhLmNrB1kcP/MriiThXEo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719624741; c=relaxed/simple;
-	bh=trV1WNi4cpjCU/+j/p0oX38ccLM8OG+b7zkzplPFeLE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FxSloXrKKbr3p8SMIOFfja+zr99VyYSXp5FAFi1+g9lIC/D01TO5ZXpNMAV7sb6lPiCgRgog/2k8DmgiyebZhu8I7yE+1y34GSP6khh0asjuWW1Kw0N7tUvoP4/uWjdbuj79UC4VaR8pof+/f4GimGV+bZmxjrjWIAq7CQ9hmPw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=XR8EXPLH; arc=fail smtp.client-ip=40.107.21.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YDCRg7iaXMTWHpmppbOsaaGt4ZjceQbv09NQbeVragmxc2+JwvQ9ofL+jaOw3/VkkbOkURqFZyBBqyc/1i3ttconlFWgs2D/vXbE7D4o/C0GYkVS6qcFpFehH3qRapm7Mm0PzZUlPYKRAiyfkQCMMjR6KOuFL/78yUwT2oyXF8WIW+ajOWYbiL5tCzHWaC0trXKKojWrDmyRbNoLUQIp9qt/Hk4L2lzkfg3x8IH9lfNFM8o1MNX/esInroiKOD7iHAqY8wDCaGx2yasv9xzsY12hLTW4RRots3xtvYNI41Eh1PFCpoN+cG6khDICvVPAtb4Rb/nKaKzd6C1GL+HOiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TFDZXnNc2XUjRovE13jI4JetQy2LmSKNXQDYtZhPtfo=;
- b=RZ5+Spdg6sCn1e0gUJdT1uI7VkAC/P7XCSDarpd8317qerdqzx7E9RYyqCsStjVtnUBtylhgkXQ73QfARMgPa+aiu9mDWHoNpyBL5gfRgojAxcsMwVY9bRK3bgALgj3kHVRWnjVMqa+ssjKbn8kKlQKsOHfBUwXwkb3gg2OWWbzER+6qI+8IsMlWJ6NYzVEeyVD+soCl01dwFIw+HP3sDK1NMQoOUfQJX88nwgGHG6aFPQ2D9vE90/ERvdm3PrxaUjf5CCkWq61stFc14oycPoHmGNe/mqnj1iWreOqjobpvLkpccLETHdFFVj27buqVbziHMSXIYLeEoDff/9UkHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TFDZXnNc2XUjRovE13jI4JetQy2LmSKNXQDYtZhPtfo=;
- b=XR8EXPLHv/qD9x59o8quSFFsqBqJ11wCrwBY0z0EofZbdQgdJ4rBTqunda8pjWmlhUruwahB8k2m4xQuaRYBMB7I3cGT+2ulHD9N98wuNgbmtp5ng/wwquohR1ijwUbimbVYblE0ZJ86TTPR58qek7QM0DuonQXCKFtha39n6JA=
-Received: from DB7PR04MB5948.eurprd04.prod.outlook.com (2603:10a6:10:8b::21)
- by AS8PR04MB8199.eurprd04.prod.outlook.com (2603:10a6:20b:3f6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.26; Sat, 29 Jun
- 2024 01:32:16 +0000
-Received: from DB7PR04MB5948.eurprd04.prod.outlook.com
- ([fe80::c0af:95ea:134a:5cda]) by DB7PR04MB5948.eurprd04.prod.outlook.com
- ([fe80::c0af:95ea:134a:5cda%6]) with mapi id 15.20.7719.022; Sat, 29 Jun 2024
- 01:32:15 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, "Peng
- Fan (OSS)" <peng.fan@oss.nxp.com>
-CC: "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>,
-	"festevam@gmail.com" <festevam@gmail.com>, "shawnguo@kernel.org"
-	<shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [PATCH V3 1/3] pinctrl: ti: iodelay: Use scope based
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE811109
+	for <linux-gpio@vger.kernel.org>; Sat, 29 Jun 2024 08:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719648519; cv=none; b=OCiZBdRy7tfS1oIHDAq/eGoJXawV2h35lkqmhUyECwPHidCGaY6M+uH0G8Gn5zHAnQtnvx/w24CScLzQhDch+fb13nmzICWX0/LYfYyUKOlieMrRwC1mZHMAAfyelZQwblDtRep+Qg66ZOksqQqKi7//jCtP5hqYSV6w53ioU6o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719648519; c=relaxed/simple;
+	bh=BBCyaQxLREiLslktbppCVuX5IJLqgoO4r239wd0ABN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lDj7lGGh9rBnboEkh6WDlZQrL2t+VK2KY8R5wOdOSJRwjCpQaF/4uWQDL/+gmspUZS5zzO3lXCKuEgjoDZrdnQ+aYV7re3l8g4WwrQRxthp7X11fsmw1WBruPCfiex/V831I70FGhu/n8UIWKUUJU5dZJdVJx5kSMd2/Fwy0Bps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2o+yKsnI; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52e7d2278d8so1982164e87.3
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jun 2024 01:08:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1719648513; x=1720253313; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O+ZkvhHwk7750FqBEhJS3DcahoN5BOHgNv+lFscO4cQ=;
+        b=2o+yKsnIodi6PgVHPFXIJ0BMDl0L+arGFPJF4OilTyeyIFYb+fkuM74L0H1y4grh0y
+         8LAc4Vdqm6w/BpmZDsdpqq7vfQA2Gifxq1bmTdKFotYW7H3e8jboEzsotm10LH8NRR9W
+         MbdQqxfOgZWIb/fv0xUYD/uyl5sP+f71e63iXI2+DjfCWDVw7PdEDQGlszhundQnRbB1
+         Ay0O0itysZGqF6oZsGyvXj0QMvL8gdWv0SEaJ+5pLS+QpEWuL2MsqqKTIWl/6huT1vmh
+         LzfHfcKoNrpDbTfk+wMSrBfPz+XEKfSfBKv8tBLE2jeHIV0O4LCz0EYsHNAnx2g036CM
+         LpWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719648513; x=1720253313;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O+ZkvhHwk7750FqBEhJS3DcahoN5BOHgNv+lFscO4cQ=;
+        b=W8hsMVc3r6Oq4oM+M26gX36raSnJdTT4Dd1np0418K8Zkj/l1N8la7JkrBwZTEZfun
+         bE+JNHiyKoAHZ85izhw11YrJe2XIEA3IuInLpFTfvGORN+dU/4/IhAEY3sTS0Fi1u53m
+         lP9Blfkpsu1AxjTr/IbqeP3zDEoRKnTJ0T23sG2iqhg+/YYTosKwlCw1Hvm/nnhIdamf
+         nUVp1Is6yGOCF4KZSqb4rbf2vk8Wlzl2OAwdGFfY0oBoemNxzav1TwsghD5N7wAKcof5
+         Zo2sJusVT95VAd0lHIe4aArVv9eSbuOKbGFRSw7GPsvH0igZgSwgPXwmD9aRAxKq4hhh
+         j1tw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTISsBjSaXkjhAsV6wFac5P2cvAP1/f4DiuaoT6VRqJXqFf/8oj6wp0BGgtSl6pKtjPjkE21QrDZvi/PZMgM8U1OtJu2pFGto2Wg==
+X-Gm-Message-State: AOJu0YxXxexBxiraS8Ic25/YyzqDRiOfbCNNz+KAqo40EHDBpNIqbND4
+	vyOlnjdj7HtQNQJ2HRJpC5G9cjI5ALm7QQrBxglCyEpx+Q9I8MXzYOwWEcTTnqI=
+X-Google-Smtp-Source: AGHT+IHSv5ihn1P8nevgMRliFhmUKmMh5e2Mdjl2yEP3hmMQ7slo4hojvW0p6v4hYOoAt+gWbx6ylA==
+X-Received: by 2002:a05:6512:6cf:b0:52c:83c7:936a with SMTP id 2adb3069b0e04-52e8270b86bmr434039e87.42.1719648511415;
+        Sat, 29 Jun 2024 01:08:31 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:850d:6139:5a25:72d0])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a75101e4f76sm35601466b.192.2024.06.29.01.08.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Jun 2024 01:08:30 -0700 (PDT)
+Date: Sat, 29 Jun 2024 10:08:29 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, 
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>, "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	Aisheng Dong <aisheng.dong@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, 
+	"shawnguo@kernel.org" <shawnguo@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH V3 1/3] pinctrl: ti: iodelay: Use scope based
  of_node_put() cleanups
-Thread-Topic: [PATCH V3 1/3] pinctrl: ti: iodelay: Use scope based
- of_node_put() cleanups
-Thread-Index: AQHayJMbdLsb0Iqn7kOQP85Gdz5bhLHdAS2AgAD1oBA=
-Date: Sat, 29 Jun 2024 01:32:15 +0000
-Message-ID:
- <DB7PR04MB59481B0994BE9D1175C4949A88D12@DB7PR04MB5948.eurprd04.prod.outlook.com>
+Message-ID: <vy2jjh73agfhbovxt3isc626dru3daxwxba7gql6cj3ftpq2qx@pye5xiepzdc4>
 References: <20240627131721.678727-1-peng.fan@oss.nxp.com>
  <20240627131721.678727-2-peng.fan@oss.nxp.com>
  <dldl7dkdcsuajjjpg2pczfnupqrsghmpz27i45xi5beeou5ntg@y2ysounw3pqq>
-In-Reply-To: <dldl7dkdcsuajjjpg2pczfnupqrsghmpz27i45xi5beeou5ntg@y2ysounw3pqq>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB7PR04MB5948:EE_|AS8PR04MB8199:EE_
-x-ms-office365-filtering-correlation-id: 5727aba1-8976-4f23-9e14-08dc97db4ece
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?FPQ7KNu/OnWIxATvmLK7dqIfoUrPenbEO1MbhAb3QzrGf/nlxyXEc+xOoZ?=
- =?iso-8859-1?Q?yWNpFSDYCV9n59K00gxpF85REuRPZSp+iyKcUwh1nSS8N1o1ld21Hg1sax?=
- =?iso-8859-1?Q?tYm+DEdBHtXRGwLd5gG+hBGFyLF9dxjL96rmscha/PrIZWqQX9/MwPdgwu?=
- =?iso-8859-1?Q?NC63b3COQ4Nvdvm7qoya2e7fEXcJEbVvXsLWESMgUaSPVLpVfWnp7tv2KF?=
- =?iso-8859-1?Q?C0jkn95edjr6UptTxdsjK4wiO2eRofVLSHPtFH25jJ+1Ly3t140b+hcPb/?=
- =?iso-8859-1?Q?YRaIyd8EVpucWutH+Q8NqUy2jFiVgA4to5sMJgihwCFsI72/P98yfb7old?=
- =?iso-8859-1?Q?QSH+zdIfaFASkUiD3baO/Eawe+KzsEBx+2cCD9hr8a8bcq2M+ViTEBcWya?=
- =?iso-8859-1?Q?DAiwstrxThF0RfcHTG1PZ2HXcWVuP5HPsPoffZhA8HzZWm2DRiIlenVhcl?=
- =?iso-8859-1?Q?tYd8t4XeGsgOGBnZqiI3Bf7cG1lyUn4fNz/Ul6nClaNh01NxxofpFFdf7C?=
- =?iso-8859-1?Q?pa2Ni8SG6sdG9mVKy/Rbeqt6jqjbNZPAou7zyHIGSfLcag+3hpx+olKTxZ?=
- =?iso-8859-1?Q?xQhDAQuHXOCMWmdY84VyHDjbXxQSAjlcPc3lGpGl79iUjyqaR9oyQdwn32?=
- =?iso-8859-1?Q?Pdop8KxwzFPqPtRI/IYdKpjEFxDX4L/neiLxMPNaQ0A2aCsOtUn2UIyvsv?=
- =?iso-8859-1?Q?qhkhjowI1hZYHvK+qKYw22J+DwE37nMHRHjQbbNApaTGvZDRzj5rUSIU82?=
- =?iso-8859-1?Q?DbFS5DWQ1twVuWmHpjzmlvsG/fRU7/u+HUG85gTqi/KLXVDVMjgkDZUGy4?=
- =?iso-8859-1?Q?5s0QQyicg1hgZYgCWd0zjHconCVJFbsdqxUrUJLs67XcEXW1vGAN76WYr4?=
- =?iso-8859-1?Q?LEAWVCXQ716SMYa8ObQj7mlPCgEVGjIfNI3EkBh5nsPWIt9I8NvuyhZegF?=
- =?iso-8859-1?Q?TsLM6qfkBPzx+xntdN1XoXWuEmqw7YRr9jEGnRwCOnjQ2MpyhZE21Y80VS?=
- =?iso-8859-1?Q?dkfttEHNtci8EEArwGd66Jp2znFjUnoN6EX14s0vLNpNLSjNdFZzg8UfgN?=
- =?iso-8859-1?Q?MnZsuxQFj2qFyj9v8MAjuDj8dw6BchP6uvaRFYIzMG7zRcWasPceF/NoFo?=
- =?iso-8859-1?Q?uOEfxQLOcmpRPuS5xtqnyCqB/KwYPJ0EjkFhX+yuhM5/n9QUcH7DXIWYz+?=
- =?iso-8859-1?Q?a/oh+U1PhlEl3nDYJcfx3zMRKWtzhCzskqTpUC9WWqjhya/jzyEa7mP3jl?=
- =?iso-8859-1?Q?qud39mvTIpssZlqsZfg1CmkP3xVQaRJrtUHOXjs9NLyH7wZkBhoUp1IxxL?=
- =?iso-8859-1?Q?GSG9LDVEFv0nTtCu0bpO0CVWsOZmF0tH+NO/jpURo8kmp4cveECnHCGrzn?=
- =?iso-8859-1?Q?ZCboMtXXgEhaSdl2G1p05Vke5NpvLR6MmR2nHqIDwq7uTZGosrjXYuLnDZ?=
- =?iso-8859-1?Q?joigmCXHV3ZMtOkkGhnpmfoV/bjvemd9c+BqVA=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB5948.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?bH4aJH1McFsdUU+bmhXeN6a+VRLc2ywLlRUzpccIeVbpbEGrlo1IbntiwN?=
- =?iso-8859-1?Q?ksN4l8q3ddoYtpD/GpWJLbk3UR2WezX6Ym6VVLqKN5AxgfXV/KOsQzU7LB?=
- =?iso-8859-1?Q?aXFYWRnebDQIBosQu3NFz20tihxHIH7CkuII89MYszv5VSYkZiwf0omnZV?=
- =?iso-8859-1?Q?ZgDADxyhXZmAwYMkjP2Z0porAymKPxrDN1np8hNftExDqWy5W6Z64aGNBN?=
- =?iso-8859-1?Q?opeIWBgDKXD8CtWG8/Bdtg5vPrYEa2Hv3/A2FJGH54jrMg+1mtqeoEAMHx?=
- =?iso-8859-1?Q?rgzcu3H+D+QXKm0PSk+orLlu6B3mISXkbc1IOVmfH6JtFNNJjx3lYw8Uaz?=
- =?iso-8859-1?Q?W35k1QwsYcCbCSdiNqQ9xCovETR984j5oSkQ1nDy5smMParlaHIP/lSfiz?=
- =?iso-8859-1?Q?ByUMQwLeI84gTugs0w/bNAtal/G34fK41Gs0vgjXSVEXnEPnNv3KVSQGe2?=
- =?iso-8859-1?Q?8N4byhdBkdakP/7PJyC/7ST+WznK/E1aHxfjvt3vNny4xOm66p5oVjYI/7?=
- =?iso-8859-1?Q?JW41uu+qs0EOhNUTr5dzniYJdV++WjmM/IQfA9d+I9YoPIUWGCAYubrUFp?=
- =?iso-8859-1?Q?E7W5R0GgXEvPemGK/7dVIWN2JwAe2p68pqV73hy78qy719ZxQrk21Dh3bX?=
- =?iso-8859-1?Q?9LkyWPChr+uSKKU9jOgCTLYaujCb3sEkBoBcTwPT5GsDeoN/sSAx7p3gGE?=
- =?iso-8859-1?Q?FAM9fky4+GuuWqDoxTBN5HANyrd8oFn2QgcBnbttmXxEEwEJ0J1eWTtlcA?=
- =?iso-8859-1?Q?d40Idux9PYg/hZQ/R6P8RaaXoakNIzGZWsQwBPtTUIBBfcwsKnbY/X5vET?=
- =?iso-8859-1?Q?IMyjwG0Cg9u6qRKtpHMxR1SY6HsPXLErKMsaxfQpc78oF2ljydAe/W/FOP?=
- =?iso-8859-1?Q?AVPiahh627tZydOCwtC9d6NdF7+80R8lVd+RSnJmLfHR7Juop66VKvV2r+?=
- =?iso-8859-1?Q?VEfsED1uIrMYOquPAwUq78z+AMPP0ZybylDnl7UjHNfQRXFrmv8rXlUMIf?=
- =?iso-8859-1?Q?peRCms353MlqNO96CcgKUXJdREjl67tftbCgFBQMOLiyEyZpUBNubQbgEV?=
- =?iso-8859-1?Q?2XIPNEmMPLrLYhmNGSgTKm/jMNESwQyMM0dpWuGj+NM2mrNUXkzaK9TRwn?=
- =?iso-8859-1?Q?zQOOtfkfpyT64jbqnmEeKWY1xsD/L8+e4lV3ioZDU29bOfUfV3ZrB57DT9?=
- =?iso-8859-1?Q?g8yp4ipqJnRcmwjYBiUxdKH7FesejJxUZF+pohDYconc0dSNLEVFOF2MOU?=
- =?iso-8859-1?Q?/atfllCgywDCcaLCQpAmhZuUmn9fqg3YHNwo8eXtoU3RAoRWvrPEvp5VMt?=
- =?iso-8859-1?Q?ooUpb11f6rlGZDrudJIexnbPvMiR7YsjhuzKmJvIkPUlxg6tnAS0gPVjLn?=
- =?iso-8859-1?Q?8DpC1zSLXPXnlIXm96Avn7hNuAIrbd9HrQx9T7iHbCNdRzFOxuTPTpIPTS?=
- =?iso-8859-1?Q?F34m+qEJWngtK+rHMUIB8IeFyjRQrslqsmSqPDDqDFTYiHuWFSOsAi/TR+?=
- =?iso-8859-1?Q?LkzSUE5np7DlUFxJl6whVP2EeMf6JHdpxj2fSXgyHGIhiQt/gwF/oTBbvP?=
- =?iso-8859-1?Q?moQvYX8HiORcS40RzyU2oXsCsYUvaHwL9pzxK7UpWmz9WKeymvNeKTEEKL?=
- =?iso-8859-1?Q?J6h8ZWnHO4m3w=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+ <DB7PR04MB59481B0994BE9D1175C4949A88D12@DB7PR04MB5948.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB5948.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5727aba1-8976-4f23-9e14-08dc97db4ece
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2024 01:32:15.5401
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: c9Y8U1By8a3VE3rR/0y16vrbjbaFQDSCeVh9Iy4aN4d9CRt9lXzJb3Fswm327HFxN93LMMSG8DruCUfDFTwuTA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8199
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fntpmbabhhgn6lo3"
+Content-Disposition: inline
+In-Reply-To: <DB7PR04MB59481B0994BE9D1175C4949A88D12@DB7PR04MB5948.eurprd04.prod.outlook.com>
 
-> Subject: Re: [PATCH V3 1/3] pinctrl: ti: iodelay: Use scope based
-> of_node_put() cleanups
->=20
-> Hello Peng,
->=20
-> On Thu, Jun 27, 2024 at 09:17:19PM +0800, Peng Fan (OSS) wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > Use scope based of_node_put() cleanup to simplify code.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 43
-> > +++++++++----------------
-> >  1 file changed, 15 insertions(+), 28 deletions(-)
-> >
-> > diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> > b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> > index ef9758638501..f5e5a23d2226 100644
-> > --- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> > +++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> > @@ -822,53 +822,48 @@ MODULE_DEVICE_TABLE(of,
-> ti_iodelay_of_match);
-> > static int ti_iodelay_probe(struct platform_device *pdev)  {
-> >  	struct device *dev =3D &pdev->dev;
-> > -	struct device_node *np =3D of_node_get(dev->of_node);
-> > +	struct device_node *np __free(device_node) =3D
-> > +of_node_get(dev->of_node);
->=20
-> of_node_put? -------------------------------------------^
 
-You mean use of_node_put here?
-of_node_get should be used here. The __free will automatically
-do of_node_put when function return.
+--fntpmbabhhgn6lo3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Peng.
+Hello,
 
+On Sat, Jun 29, 2024 at 01:32:15AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH V3 1/3] pinctrl: ti: iodelay: Use scope based
+> > of_node_put() cleanups
+> >=20
+> > Hello Peng,
+> >=20
+> > On Thu, Jun 27, 2024 at 09:17:19PM +0800, Peng Fan (OSS) wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > Use scope based of_node_put() cleanup to simplify code.
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >  drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 43
+> > > +++++++++----------------
+> > >  1 file changed, 15 insertions(+), 28 deletions(-)
+> > >
+> > > diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+> > > b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+> > > index ef9758638501..f5e5a23d2226 100644
+> > > --- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+> > > +++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+> > > @@ -822,53 +822,48 @@ MODULE_DEVICE_TABLE(of,
+> > ti_iodelay_of_match);
+> > > static int ti_iodelay_probe(struct platform_device *pdev)  {
+> > >  	struct device *dev =3D &pdev->dev;
+> > > -	struct device_node *np =3D of_node_get(dev->of_node);
+> > > +	struct device_node *np __free(device_node) =3D
+> > > +of_node_get(dev->of_node);
+> >=20
+> > of_node_put? -------------------------------------------^
 >=20
-> Best regards
-> Uwe
+> You mean use of_node_put here?
+> of_node_get should be used here. The __free will automatically
+> do of_node_put when function return.
+
+Ah, I misinterpreted the syntax. I thought your code registers
+of_node_get() as cleanup handler.
+
+Sorry for the noise,
+Uwe
+
+--fntpmbabhhgn6lo3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZ/wPoACgkQj4D7WH0S
+/k49FQf6A1ST0ozfIDojlpA4JikoIS8wCnOr+3tnyb+aUL93oVwWgcctdiBPIUPr
+yBotdPy4myrfd3Rducnik2BvhkbGUe+pxRGBMxrXdPm7MtUyADJOJVsOzQFhfE5h
+MtGrbEKpBVWbDM/8XU6p7KrwfZ/43y3AxVIlT/GsGHcvYkftuelV4kadao6hOK45
+sPaOQaWQt0z3nYySrs/0O1VvDoK2NphgcFJ74TDmLhaU/7AMdlJD83gjtcFnIE9T
+jA91hOEmeLk87SBFq54xGBZkVtbSGjOszbAnYF1nGx0KsRJy2RV6U9g0q91w/HB5
+1WeFWctqcbTZ9vkWz3HL6m4004cIRA==
+=TJVm
+-----END PGP SIGNATURE-----
+
+--fntpmbabhhgn6lo3--
 
