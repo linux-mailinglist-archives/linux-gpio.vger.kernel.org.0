@@ -1,160 +1,118 @@
-Return-Path: <linux-gpio+bounces-7846-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7847-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94B9F91DAA6
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 10:56:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A4C091DAB7
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 10:57:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B42C71C2193D
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 08:56:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 14D42285908
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 08:57:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A24E149C7C;
-	Mon,  1 Jul 2024 08:51:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D875013AD04;
+	Mon,  1 Jul 2024 08:54:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hGBlxvwO"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2QOLny48"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB9F1494BB
-	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 08:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED3812C491
+	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 08:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823874; cv=none; b=qaDNMeonS9CBjP9PLvSuqjGfaNM25Z50ZbW10cHnrxGrV2sRoviW35Zl+gq2wxmMaIVYeBF3vqfzeI3y8gRidTxoTokiZ8ajsBXQVfD5C07AOK33LXzQLrc6uJ/CrDbyWehzha88WiXuIVkc5hKXYcmGTGoUv2YemyJDBZTSZ8o=
+	t=1719824082; cv=none; b=rg6ZGgeqcQdt4oFVx6JVWmhXmDrcc3y3T+D2GRyLBPUUebyWBtce9Vo3vczlSsQw5d9+LYdTVj4sT6C95gjY7NYeZo/vipI2byS7nzEWLXnroQFODzauF6/ssKNV6xhqcgljIDTYVWKhncmjVlQaPkkUcxtTmHqJiebiY5ZqtkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823874; c=relaxed/simple;
-	bh=rL247NBQSvqiNNQkTDaaFdrDHdJWz/2L3qB0qtsNmAc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lzf2WdzQ/DyczrA6H0HJzW54Ufyw1I2s7YIiaN/0tRUVXUeqsa5INl3FYTZKJkSlR49GGn4pJGXVEQE5UBuH9OLwY1AXd+x8gMh70ty2D0kFzZFEeMZ1QWE3KUDcROUkdrE4+9TfxvHPpEMtmZ9tIZBWJ8WfB28DWStTh4w8gBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hGBlxvwO; arc=none smtp.client-ip=209.85.208.169
+	s=arc-20240116; t=1719824082; c=relaxed/simple;
+	bh=r0qZrtxSrp94FXSfPxju8ybAs8t+CAZoLq166dR+hP0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uAzu0w9x7PwRdoO9WD0v11wmfSVJNsIT681RSB7984XUwmaWGrA2AkOkyfj1Ftm4IJs1ByajWwwe2EU94bu3O4x4YtcTnCGICJOAHJNes+wr4Q2B94YOxFpbdKIPLrMZQaEwHtoVygb/rAdMHMCOOZXIqYbee1S0tpGqpdYJfrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2QOLny48; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ebe785b234so26765001fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2024 01:51:12 -0700 (PDT)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-362f62ae4c5so1501251f8f.1
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2024 01:54:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719823871; x=1720428671; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719824079; x=1720428879; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y6IGt/O8Ag/DD0EC0oRxl+iz1s9f79lZeasOTV/wsyo=;
-        b=hGBlxvwOoQNQriY16ha0YAk1En+lQ+IlUUSFNTZR6mqtec5iKlmTfWkndr1A6wt5Ad
-         83jdVPYfbskA24f6WzNe2reQwu+BwiLjsPcrRZc6J23fKtDZ7oIlQ+JTQ4bOFWBtq4WP
-         Jw+wfvgHOrcI8wrY/Y23sG5fvleSKWWkHONY4y4qlAus6Hs/l/gvm3iYRrRffJk/QoRO
-         yYZ4IPspkvYKcpFq5oOaAgkBQZatZc/6ca19a899qHUuWjOmy0q3S7q2jWUmEmPa6Pmq
-         ELd5Az9XZkQZFWNA84Kcykh+5Pg7lDST4kde2bQvCfJFEzu2C25io9KyLg4QZ7tABSuk
-         eXfw==
+        bh=u7PYE4fR5mHYdhnN6/gjsaLL3PDggXsWQnnwmWozp1U=;
+        b=2QOLny48L32/JtQuNj5F4k6wu5WIJDSzP7nyn1pu78wn4vfp38nikl6PYeIj9jy46e
+         eM0Dz7L+OcIWlmYyy1vXlPxodLfL4smWdG5CdOGVhZXoaeqgE57vX87sNDbLNF7ke2NZ
+         6IfupzxoBajMPfLJcKNYy47H1JUBCdVO7RubZLR+k96VyS7ZYfaEKDHY76r9JmN1zWOe
+         u94bVddIhY7PgnR7PL0o8PaTiMAdXV5phi+GB0ifriPYjQQW9C3BzvUz2jEgFyG2UoNx
+         sapS2thaVYBx/a5xyLp61+tYfO7srMyu6GqB4Hl5fnB1/gvXuOnwQ62CX/OBZeS4gyaE
+         I3DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719823871; x=1720428671;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1719824079; x=1720428879;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y6IGt/O8Ag/DD0EC0oRxl+iz1s9f79lZeasOTV/wsyo=;
-        b=BbbZUPlCYAvrHch9nyoPDYqvMtD+bBbPk63nJ/MGb88lP4GzUWwDQ7MEfWd6pxiYY6
-         l4KGyL7rrGTQ0XGhr94EvclmNRCH6A899Mq0bJNmvbqn1kQxm/8SGERDWgAx9bbnbx+J
-         WZlAHN7fw9Olsh5gIiK1LH1k4Y/i0ORZNz8oSEIukw33bbTK5WXsC4aTm4RJ+oFBWuso
-         /YGtgipJK3M1KcAKUDcNsB2SHcLqkQVc25zBhOa7xy+XHUVZkbTsOxg9yJepZQn6wOhB
-         JOoRQ+tZxl9fHTNAc06Od+pQHj5zUp5ew5PCh6iEnJzhpHnx9F1CyPDEz7eUPcOSbEA4
-         3bMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVuyEoxPGPSMHIlOmUOQz1wG6vFLfTx+Xp7vnFQcbHxb8wURtvtV5JCBPcxo5kiR70GNQXaHWH/Sa1zuFN6KRJiw+j7cdaDrKrkA==
-X-Gm-Message-State: AOJu0YztVEQU0pZIQuH+CK4bOtxzeZ3b5lrkWuYKz0+mAxy+y0lTzz9M
-	Sf0drZxw+BGYJl1fA32dLRw+gNJgQ0uLoB2W+of9ZdBfO8JVqpwOuIUcZz4oJyuwGgpI/Fz5M5h
-	twyuGRvy1Y53HflbUgEJ01ATiCb7fN7bXWnILfQ==
-X-Google-Smtp-Source: AGHT+IE6uf6X0BVJtjc0lpScjbHL3mLZ3oOMkPXkzRVM0rIYzzSA8+bdRnk3JdXUel7lmANqoMpQprqBLY10Y4VGEAc=
-X-Received: by 2002:a2e:8883:0:b0:2e1:2169:a5cc with SMTP id
- 38308e7fff4ca-2ee5e3ad770mr33275651fa.15.1719823870802; Mon, 01 Jul 2024
- 01:51:10 -0700 (PDT)
+        bh=u7PYE4fR5mHYdhnN6/gjsaLL3PDggXsWQnnwmWozp1U=;
+        b=CZmH4kQuPoaPC5PS44xwOdqqpUlQz0kdhq+J7xOjUUjnqix2eTHYT3uqC8VHhfUzTQ
+         FF+Z4CshnYNJmDCrdooqmFTd/I7gE84dIkyTCuPWMtcu9m3EPo8sxl7XCVWZykw5khrT
+         rUeGuwIaJ3XLeG3F4EJFVsdnqeGetNz9sm/SO5cKftg34MB+PSrlKSN4mNXBlHLSk0PI
+         cNxBVtzl7jURjOqEEUXUGPzz0p97HASakGmjsokmJ8jIMKuuNWicpP/gIcgmykGDHjaO
+         6V9LVUgMFcA+PmNfZ+TQXeptiKM1VwCv3TYZ0Fkn/52vWJf6IBHMYY8Wp4rvLY7KBanD
+         ypGg==
+X-Forwarded-Encrypted: i=1; AJvYcCWV7rz1+676xJKXzKg7SDhE6uzlRuhkfuaFq820+Gl3/uQw/3WAdSNOttviVC9zNUndbHbY2mGnjKJvaBygZGWp/HmAaAg9Tibgnw==
+X-Gm-Message-State: AOJu0Yws7gBTAWwbAWngnDVb8vX7/519uizZ+6UrQaYh5rwmckCG0EFX
+	azcPC7FOvDynG217flT3aScINGpFiUXMeGWvoaCMWxLPqkqOwcLEZoovFd6aibRsLsIvhmNKxUC
+	g
+X-Google-Smtp-Source: AGHT+IGa1wF8TP+oCBu6+VQx/YOP72EWk9wpmg6zSpP6/dtCHSuNQs4iuGhYWxcyhosvHjS3WEAEcQ==
+X-Received: by 2002:a05:6000:154e:b0:367:42ce:f004 with SMTP id ffacd0b85a97d-36760aa2ec0mr8279760f8f.23.1719824079645;
+        Mon, 01 Jul 2024 01:54:39 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:1c2d:13b2:676b:59c2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256af376f5sm144045935e9.6.2024.07.01.01.54.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 01:54:39 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-renesas-soc@vger.kernel.org,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-doc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 0/1] gpio: add simple logic analyzer using polling
+Date: Mon,  1 Jul 2024 10:54:37 +0200
+Message-ID: <171982407462.12671.10169460529375303678.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240620094159.6785-1-wsa+renesas@sang-engineering.com>
+References: <20240620094159.6785-1-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zn8CZ47e3LFncrDP@google.com>
-In-Reply-To: <Zn8CZ47e3LFncrDP@google.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 1 Jul 2024 10:51:00 +0200
-Message-ID: <CAMRc=McMn6k7QMXLHphNS03BtO=i9xKBwxa71MeVXhtNSFdiXA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: of: fix lookup quirk for MIPS Lantiq
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Martin Schiller <ms@dev.tdt.de>, 
-	Hauke Mehrtens <hauke@hauke-m.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 28, 2024 at 8:35=E2=80=AFPM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> As it turns out, there is a large number of out-of-tree DTSes (in
-> OpenWrt project) that used to specify incorrect (active high) polarity
-> for the Lantiq reset GPIO, so to keep compatibility while they are
-> being updated a quirk for force the polarity low is needed. Luckily
-> these old DTSes used nonstandard name for the property ("gpio-reset" vs
-> "reset-gpios") so the quirk will not hurt if there are any new devices
-> that need inverted polarity as they can specify the right polarity in
-> their DTS when using the standard "reset-gpios" property.
->
-> Additionally the condition to enable the translation from standard to
-> non-standard reset GPIO property name was inverted and the replacement
-> name for the property was not correct. Fix this as well.
->
-> Fixes: fbbbcd177a27 ("gpiolib: of: add quirk for locating reset lines wit=
-h legacy bindings")
-> Fixes: 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using gpiod API")
-> Reported-by: Martin Schiller <ms@dev.tdt.de>
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/gpio/gpiolib-of.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index 59c7f8a2431a..d21085830632 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -203,6 +203,16 @@ static void of_gpio_try_fixup_polarity(const struct =
-device_node *np,
->                  */
->                 { "qi,lb60",            "rb-gpios",     true },
->  #endif
-> +#if IS_ENABLED(CONFIG_PCI_LANTIQ)
-> +               /*
-> +                * According to the PCI specification, the RST# pin is an
-> +                * active-low signal. However, most of the device trees t=
-hat
-> +                * have been widely used for a long time incorrectly desc=
-ribe
-> +                * reset GPIO as active-high, and were also using wrong n=
-ame
-> +                * for the property.
-> +                */
-> +               { "lantiq,pci-xway",    "gpio-reset",   false },
-> +#endif
->  #if IS_ENABLED(CONFIG_TOUCHSCREEN_TSC2005)
->                 /*
->                  * DTS for Nokia N900 incorrectly specified "active high"
-> @@ -512,9 +522,9 @@ static struct gpio_desc *of_find_gpio_rename(struct d=
-evice_node *np,
->                 { "reset",      "reset-n-io",   "marvell,nfc-uart" },
->                 { "reset",      "reset-n-io",   "mrvl,nfc-uart" },
->  #endif
-> -#if !IS_ENABLED(CONFIG_PCI_LANTIQ)
-> +#if IS_ENABLED(CONFIG_PCI_LANTIQ)
->                 /* MIPS Lantiq PCI */
-> -               { "reset",      "gpios-reset",  "lantiq,pci-xway" },
-> +               { "reset",      "gpio-reset",   "lantiq,pci-xway" },
->  #endif
->
->                 /*
-> --
-> 2.45.2.803.g4e1b14247a-goog
->
->
-> --
-> Dmitry
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Can you rebase it on top of v6.10-rc6? It doesn't apply to my fixes branch.
 
-Bart
+On Thu, 20 Jun 2024 11:41:57 +0200, Wolfram Sang wrote:
+> Changes since v9:
+> * add comment why late_initcall is used
+> * use .remove_new instead of .remove
+> * add needed includes
+> * use devm for allocating mutex
+> * remove stray ',' in compatible-array
+> * remove success message in probe()
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] gpio: add sloppy logic analyzer using polling
+      commit: 7828b7bbbf2074dd7dd14d87f50bc5ce9036d692
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
