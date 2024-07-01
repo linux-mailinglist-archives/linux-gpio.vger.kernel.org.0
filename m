@@ -1,139 +1,120 @@
-Return-Path: <linux-gpio+bounces-7841-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7842-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D2C691D7E6
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 08:12:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EAEAA91D920
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 09:39:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D50151F22A21
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 06:12:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9665B1F21C61
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 07:39:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E067241C85;
-	Mon,  1 Jul 2024 06:12:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62A9A54765;
+	Mon,  1 Jul 2024 07:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="D8IRHPW6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D0333FE;
-	Mon,  1 Jul 2024 06:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F8A5FB9B
+	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 07:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719814355; cv=none; b=sIDzSBmLCFkFfJSP0+/L309u5CbA1M6PdO253aMl2pPhU8E0UuzSwMqgWGV4OJ3/CTeNwS0F/Pd+YWAFbBDrzqypHaS8SEhnJcfzuGKAxCQEdaEiYbLYgUzzpm1q/oD+UE4SjrKN0KGUsk8JBJDPk8I7dR1rph4Ux7lcxvpUTf0=
+	t=1719819552; cv=none; b=JYJ39LMurDuYb9vvLP9hcLGr1gj9MZaa/jfjaRjLW/UbDH3qScPVAbp0Im5H95s9khidmvZsp2PcMDTwA/4qjPmTyNnmBwPofsvqG1/6gTm0lmNIG0ZehYLf9nPfpULdfPv6MUFvzMnyDpsror8HfLj+/GQRyPJNvtWMDSuJ08o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719814355; c=relaxed/simple;
-	bh=leRdL9TIL27DeazUKkscwZ4eVccvWI29q1x4++5ggTU=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=FWgusiSQOQ1rCV0S00x2ReY2kjhDgLdtKQEALaMlxLIxeRmpITKW92J7i/oJhsSl4cYe0vgJraFkNo6BwCbVQAKNzjgF1g9vMhA7kpbSqWDFQT75BYqhAnyToN9HtlWP+DrBM41Ld4iBUNjjNwqmfoMzLrrikT+9aZ9Gp1LCUOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=0926ff46b5=ms@dev.tdt.de>)
-	id 1sOAGx-002Ih1-QJ; Mon, 01 Jul 2024 08:12:19 +0200
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1sOAGx-0081tm-0F; Mon, 01 Jul 2024 08:12:19 +0200
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id B005B240053;
-	Mon,  1 Jul 2024 08:12:18 +0200 (CEST)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id 2FFDB240050;
-	Mon,  1 Jul 2024 08:12:18 +0200 (CEST)
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-	by mail.dev.tdt.de (Postfix) with ESMTP id 9AF8538201;
-	Mon,  1 Jul 2024 08:12:17 +0200 (CEST)
+	s=arc-20240116; t=1719819552; c=relaxed/simple;
+	bh=dkYEAXIYXVQLMENqeRXWiEaGrupUhLNU8N2paeczWJs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aT8b7c/GdiQqKx7hdcDgMO0VBAcEpauFRzSLgTqDKob43csAYr8ADMx+tybziHtRitG5aav5jVOf3dR5TmTi59tWpjZo289MhYQAO52YqwiUp/ZifeRc/V0ZxcbISV5KFo29lRTLQVUpdlRPjWjBMt6NbsGvWnSTCiLylPy1DWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=D8IRHPW6; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-354b722fe81so1868482f8f.3
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2024 00:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719819549; x=1720424349; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7fgIgufC6sWYVbWr++Melz5Zaf+Cm5Y66Rpu0DCSBjw=;
+        b=D8IRHPW6266MB2L5Gevthpv6l8AZb2uhApvEiT1kOEO+fMnRivnbCSpDg09QSsmQtg
+         +s2BQCKPvyEcGTgD3ZuYy4N8zoqEDNHkio9yY2e2J71UJjXMDXd2aPrC98T9M8SrFju3
+         OmxDXQT+tCDpqG4VEhHhz1tom0sapMjvrB9ovvLybrQoEsO2rM7pmJCk+h9I1qBL/Oj/
+         X6RJZRNPGD6QHYUTvsp0ihdhXU3S4deVkt7ngtKSnb0xomjFTnhu2yRNbSrwW5USqRrl
+         Cu2VIe/j9/MKMmfTawvMUufz9Tdag+8BJTtHagxigmgUJ9RrKpQl9Sohijik3HswjPyl
+         XNxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719819549; x=1720424349;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7fgIgufC6sWYVbWr++Melz5Zaf+Cm5Y66Rpu0DCSBjw=;
+        b=nPnnNVVTSjEZF/B8qiVMyAGMNoSS15lz538pKLR/UjB8eTgHupRzpVg43GMmxkSMGR
+         NyQ2WyYvMcksvHw0l3riQclG98sWlgQboQTuMsh0CPBbT2+ssVGVPgR0c39VnzB/dK6o
+         lxe+5Kcsrl5KUvqHKl/EJui/OLRr/vbfhvNVgOfOkB5HGc8CSqyjka4NzBEpGHJy0Fxk
+         LFItJwDDsb+JD74TpGDIh8R8QXkJ9flhdqfoircud4zyg95i0cmBxbYX/ZtFE63DFSBv
+         Q9Pl5p4wYNLluS/XOKOFZa5UlsYzmX7WiNcOLcpcvLi8u6ZSTWOmM9iiCoOgzE9lF+d7
+         /eLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4jIMOSuek0BtJYcPid63SkNXOkGHAgE0Jtk5/n7mz8avHN3vbPdhw2H1Gn75cFcHZO+RCka68KpWEGqTf/lZcf8W8yzMxG2v4/g==
+X-Gm-Message-State: AOJu0YxkbMhFt8rcN6ypEbjjYYqUIcRZISYzbHbLN6tufkfvN1Bxy6m5
+	q1CsRdLUpFaS1X+CA8yQG+Az9wva9CmLsRYFMIx00jQZ7d/Hb9U616p5ktA3tBA=
+X-Google-Smtp-Source: AGHT+IHNc+7+N9eC1OCeqWD0tq/0TARqW46iTGahOqldEck4UMOaczS4cTl8rIDye8WekS0QF9nrHw==
+X-Received: by 2002:a05:6000:136f:b0:367:1da6:e419 with SMTP id ffacd0b85a97d-3677571c211mr4067290f8f.46.1719819548998;
+        Mon, 01 Jul 2024 00:39:08 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:1c2d:13b2:676b:59c2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0d9ca8sm9249029f8f.43.2024.07.01.00.39.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 00:39:08 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl,
+	linus.walleij@linaro.org,
+	Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 0/4] gpiolib: cdev: directionless line reconfiguration
+Date: Mon,  1 Jul 2024 09:39:07 +0200
+Message-ID: <171981953255.7947.3008231579681723957.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240626052925.174272-1-warthog618@gmail.com>
+References: <20240626052925.174272-1-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Mon, 01 Jul 2024 08:12:17 +0200
-From: Martin Schiller <ms@dev.tdt.de>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Hauke Mehrtens <hauke@hauke-m.de>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: of: fix lookup quirk for MIPS Lantiq
-Organization: TDT AG
-In-Reply-To: <Zn8CZ47e3LFncrDP@google.com>
-References: <Zn8CZ47e3LFncrDP@google.com>
-Message-ID: <6e07aee09188e241b79e141c532b632b@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.3.17
-X-purgate-ID: 151534::1719814339-81CB1642-F0BC8056/0/0
-X-purgate: clean
-X-purgate-type: clean
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 2024-06-28 20:35, Dmitry Torokhov wrote:
-> As it turns out, there is a large number of out-of-tree DTSes (in
-> OpenWrt project) that used to specify incorrect (active high) polarity
-> for the Lantiq reset GPIO, so to keep compatibility while they are
-> being updated a quirk for force the polarity low is needed. Luckily
-> these old DTSes used nonstandard name for the property ("gpio-reset" vs
-> "reset-gpios") so the quirk will not hurt if there are any new devices
-> that need inverted polarity as they can specify the right polarity in
-> their DTS when using the standard "reset-gpios" property.
-> 
-> Additionally the condition to enable the translation from standard to
-> non-standard reset GPIO property name was inverted and the replacement
-> name for the property was not correct. Fix this as well.
-> 
-> Fixes: fbbbcd177a27 ("gpiolib: of: add quirk for locating reset lines
-> with legacy bindings")
-> Fixes: 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using gpiod API")
-> Reported-by: Martin Schiller <ms@dev.tdt.de>
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/gpio/gpiolib-of.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index 59c7f8a2431a..d21085830632 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -203,6 +203,16 @@ static void of_gpio_try_fixup_polarity(const
-> struct device_node *np,
->  		 */
->  		{ "qi,lb60",		"rb-gpios",	true },
->  #endif
-> +#if IS_ENABLED(CONFIG_PCI_LANTIQ)
-> +		/*
-> +		 * According to the PCI specification, the RST# pin is an
-> +		 * active-low signal. However, most of the device trees that
-> +		 * have been widely used for a long time incorrectly describe
-> +		 * reset GPIO as active-high, and were also using wrong name
-> +		 * for the property.
-> +		 */
-> +		{ "lantiq,pci-xway",	"gpio-reset",	false },
-> +#endif
->  #if IS_ENABLED(CONFIG_TOUCHSCREEN_TSC2005)
->  		/*
->  		 * DTS for Nokia N900 incorrectly specified "active high"
-> @@ -512,9 +522,9 @@ static struct gpio_desc
-> *of_find_gpio_rename(struct device_node *np,
->  		{ "reset",	"reset-n-io",	"marvell,nfc-uart" },
->  		{ "reset",	"reset-n-io",	"mrvl,nfc-uart" },
->  #endif
-> -#if !IS_ENABLED(CONFIG_PCI_LANTIQ)
-> +#if IS_ENABLED(CONFIG_PCI_LANTIQ)
->  		/* MIPS Lantiq PCI */
-> -		{ "reset",	"gpios-reset",	"lantiq,pci-xway" },
-> +		{ "reset",	"gpio-reset",	"lantiq,pci-xway" },
->  #endif
-> 
->  		/*
-> --
-> 2.45.2.803.g4e1b14247a-goog
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Acked-by: Martin Schiller <ms@dev.tdt.de>
+
+On Wed, 26 Jun 2024 13:29:21 +0800, Kent Gibson wrote:
+> The behaviour of request reconfiguration without a direction flag set is
+> ill-defined and badly behaved, for both uAPI v1 and v2.  I'll will refer
+> to such a configuration as 'directionless' here.  That refers to the
+> configuration requested, not the actual state of the line.
+> 
+> The configuration validation used during reconfiguration is borrowed from
+> the line request operation, where, to verify the intent of the user, the
+> direction must be set to in order to effect a change to the electrical
+> configuration of a line. But that validation does not allow for the
+> directionless case, making it possible to clear flags set previously
+> without specifying the line direction.
+> 
+> [...]
+
+Applied, thanks!
+
+[3/4] Documentation: gpio: Reconfiguration with unset direction (uAPI v1)
+      commit: e48fe75afa539d110753f7420aa398ef89f8e383
+[4/4] Documentation: gpio: Reconfiguration with unset direction (uAPI v2)
+      commit: 6a9c15083b1662a4b7b36e787272deb696d72c24
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
