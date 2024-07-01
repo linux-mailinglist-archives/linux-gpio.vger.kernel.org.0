@@ -1,120 +1,146 @@
-Return-Path: <linux-gpio+bounces-7842-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7843-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAEAA91D920
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 09:39:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52D2C91DA2C
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 10:41:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9665B1F21C61
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 07:39:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0F741F22480
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 08:41:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62A9A54765;
-	Mon,  1 Jul 2024 07:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ED5C59155;
+	Mon,  1 Jul 2024 08:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="D8IRHPW6"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SFhiiU9H"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F8A5FB9B
-	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 07:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005675C614
+	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 08:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719819552; cv=none; b=JYJ39LMurDuYb9vvLP9hcLGr1gj9MZaa/jfjaRjLW/UbDH3qScPVAbp0Im5H95s9khidmvZsp2PcMDTwA/4qjPmTyNnmBwPofsvqG1/6gTm0lmNIG0ZehYLf9nPfpULdfPv6MUFvzMnyDpsror8HfLj+/GQRyPJNvtWMDSuJ08o=
+	t=1719823254; cv=none; b=fBYuj4/pDPW8AlJQ5hhvBWQ1/uOU0ymmsdDEinip8Q0tOUHpNhafHq0FTKGRYElW/k4IMAcTKjkgz8eTqXSzY9xX1LVDI0mmqEeaUYvDeFVvdQU0wZZ1AIseqEc5CH2uiXVH01XJIkNHOGKeiQKBsg8SI7n48nWQVmCXAUhO6yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719819552; c=relaxed/simple;
-	bh=dkYEAXIYXVQLMENqeRXWiEaGrupUhLNU8N2paeczWJs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aT8b7c/GdiQqKx7hdcDgMO0VBAcEpauFRzSLgTqDKob43csAYr8ADMx+tybziHtRitG5aav5jVOf3dR5TmTi59tWpjZo289MhYQAO52YqwiUp/ZifeRc/V0ZxcbISV5KFo29lRTLQVUpdlRPjWjBMt6NbsGvWnSTCiLylPy1DWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=D8IRHPW6; arc=none smtp.client-ip=209.85.221.45
+	s=arc-20240116; t=1719823254; c=relaxed/simple;
+	bh=2+Fe9hoW4AploGFoNLLdaAGPuHsWe2F4DTPv9YEapUU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P83OvbDDTyC8j4GLKg8x9oJqk0An/R1fQG2e52y4LTCnoeOw0r2SPCAcgdmS+oRx516NYFDPKaEmw+3tmBOtiX0BP4kvOpL4TYtfMPJmO4Lh+wK5d0svxsY+1LUrYB/P/ZcXJ2BfDa0iG2f8nU6XaDEAGZItKqlu0CifxjwEbTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SFhiiU9H; arc=none smtp.client-ip=209.85.208.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-354b722fe81so1868482f8f.3
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2024 00:39:10 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2e72224c395so30119921fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2024 01:40:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719819549; x=1720424349; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719823250; x=1720428050; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7fgIgufC6sWYVbWr++Melz5Zaf+Cm5Y66Rpu0DCSBjw=;
-        b=D8IRHPW6266MB2L5Gevthpv6l8AZb2uhApvEiT1kOEO+fMnRivnbCSpDg09QSsmQtg
-         +s2BQCKPvyEcGTgD3ZuYy4N8zoqEDNHkio9yY2e2J71UJjXMDXd2aPrC98T9M8SrFju3
-         OmxDXQT+tCDpqG4VEhHhz1tom0sapMjvrB9ovvLybrQoEsO2rM7pmJCk+h9I1qBL/Oj/
-         X6RJZRNPGD6QHYUTvsp0ihdhXU3S4deVkt7ngtKSnb0xomjFTnhu2yRNbSrwW5USqRrl
-         Cu2VIe/j9/MKMmfTawvMUufz9Tdag+8BJTtHagxigmgUJ9RrKpQl9Sohijik3HswjPyl
-         XNxQ==
+        bh=hRWkczDzQtD/lCQ/Lqw1rFZHPlIxUqfjMcVfnTyOvBc=;
+        b=SFhiiU9HWEPzD941u14FfzHys1Fbmk/A7XqYxhcPglAeDeF8hEjNE/yB3fziwpwOvi
+         OC4uSGtymqWNzyoawujLLD9WtPB726zw1b/fJE3tHgAVKcysKmDVZAPYwxdJ6rAFLKfP
+         PvDZ4Z2bXeE0obYr4b2l/8HQZ4grSGvDGHwrAvasZHRRFBSqMyNimQAKcxlbjEiSfGu4
+         tS3ESJmcR8WVMuiTyib3yXBRFjmGzuXY+rLFiZ5ucodTZSSee/lZCp1emN69GfsZD28p
+         duBNYhmWLHIZ0X1Dp/iCBP++j969nTNlfcaC5FO6K0rtcVPcPP/g/kXW1SGJSxCb5I6K
+         NLBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719819549; x=1720424349;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1719823250; x=1720428050;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7fgIgufC6sWYVbWr++Melz5Zaf+Cm5Y66Rpu0DCSBjw=;
-        b=nPnnNVVTSjEZF/B8qiVMyAGMNoSS15lz538pKLR/UjB8eTgHupRzpVg43GMmxkSMGR
-         NyQ2WyYvMcksvHw0l3riQclG98sWlgQboQTuMsh0CPBbT2+ssVGVPgR0c39VnzB/dK6o
-         lxe+5Kcsrl5KUvqHKl/EJui/OLRr/vbfhvNVgOfOkB5HGc8CSqyjka4NzBEpGHJy0Fxk
-         LFItJwDDsb+JD74TpGDIh8R8QXkJ9flhdqfoircud4zyg95i0cmBxbYX/ZtFE63DFSBv
-         Q9Pl5p4wYNLluS/XOKOFZa5UlsYzmX7WiNcOLcpcvLi8u6ZSTWOmM9iiCoOgzE9lF+d7
-         /eLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4jIMOSuek0BtJYcPid63SkNXOkGHAgE0Jtk5/n7mz8avHN3vbPdhw2H1Gn75cFcHZO+RCka68KpWEGqTf/lZcf8W8yzMxG2v4/g==
-X-Gm-Message-State: AOJu0YxkbMhFt8rcN6ypEbjjYYqUIcRZISYzbHbLN6tufkfvN1Bxy6m5
-	q1CsRdLUpFaS1X+CA8yQG+Az9wva9CmLsRYFMIx00jQZ7d/Hb9U616p5ktA3tBA=
-X-Google-Smtp-Source: AGHT+IHNc+7+N9eC1OCeqWD0tq/0TARqW46iTGahOqldEck4UMOaczS4cTl8rIDye8WekS0QF9nrHw==
-X-Received: by 2002:a05:6000:136f:b0:367:1da6:e419 with SMTP id ffacd0b85a97d-3677571c211mr4067290f8f.46.1719819548998;
-        Mon, 01 Jul 2024 00:39:08 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:1c2d:13b2:676b:59c2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0d9ca8sm9249029f8f.43.2024.07.01.00.39.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 00:39:08 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl,
-	linus.walleij@linaro.org,
-	Kent Gibson <warthog618@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 0/4] gpiolib: cdev: directionless line reconfiguration
-Date: Mon,  1 Jul 2024 09:39:07 +0200
-Message-ID: <171981953255.7947.3008231579681723957.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240626052925.174272-1-warthog618@gmail.com>
-References: <20240626052925.174272-1-warthog618@gmail.com>
+        bh=hRWkczDzQtD/lCQ/Lqw1rFZHPlIxUqfjMcVfnTyOvBc=;
+        b=wjyCNG22C4zoAXk4JZfM++c0T0Abawr67VW93U4W+Ng2nN8RV5I6x72Jgrm2GtfKPK
+         SskdgNN9mOVHxl6fBqATn+9x9/HKWRmYMkaU4ZeQVa96VpbmkSV6ZAih6rfPm/QbD6Bt
+         gFLu01rMuEl/wzHxwF80T79ldCMHhPYv6FzvGvraKKlgz4ZKWBAnUN8iKf2B0QqoKmVP
+         L2hX0Wbo6T3h8cW6xcKNeOR6Or6Buw3yc+4Zp+BtkH1ZVOQYDMbGZBJ5leb231RV5lUh
+         jIMRunxctcmzvwgnXVLgPEVFQg5zefMAOT0Rs2rrKxhoQ6ZShsN75IKGdX6oQKvOtgzg
+         Bs6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXvkm0+vU3ySF/EpB4nRXVqJDkffhf/jPjp1gaj4CtvIQyYDCYvx0/P3NF/zfTEvpno1JjfEkSKhuXrCCABdzkLJGxaNm63ruK0qg==
+X-Gm-Message-State: AOJu0YynuYuJRs39INCTD36BIltkA+m9bWJKyppxwj5uQcpU+glrdZab
+	v8/JfCjkHrCK3XFWiBVmtTTu1bv9pYeJwsWkvXNEOMLUWCz3T+FJfHD/Znassz5N3m/I5xQPkCe
+	DTIdGjPBmXRpi5T/Bt3Ekjtwcpl38tgrRGEjoCA==
+X-Google-Smtp-Source: AGHT+IHJ3vYW9K7jTUWan128mluHZpqXoJ3aFYNVKbmvv+OBMVjSpnJHPcrhrtAnqwO9dkDyPYWw8xMydt+7vIMNaLE=
+X-Received: by 2002:a2e:a1c5:0:b0:2ec:4eda:6b55 with SMTP id
+ 38308e7fff4ca-2ee5e6d74c4mr30333941fa.50.1719823250042; Mon, 01 Jul 2024
+ 01:40:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20240628-dbus-v2-0-c1331ac17cb8@linaro.org> <20240628-dbus-v2-10-c1331ac17cb8@linaro.org>
+ <1917470.LkxdtWsSYb@tjmaciei-mobl5>
+In-Reply-To: <1917470.LkxdtWsSYb@tjmaciei-mobl5>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 1 Jul 2024 10:40:39 +0200
+Message-ID: <CAMRc=MctT4bQpCy+M=RRtAHM4Z7L1SjEq7Pm_N9TsjeKNir=6Q@mail.gmail.com>
+Subject: Re: [PATCH RESEND libgpiod v2 10/18] dbus: add the API definitions
+To: Thiago Macieira <thiago@kde.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	Erik Schilling <erik.schilling@linaro.org>, Phil Howard <phil@gadgetoid.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, dbus@lists.freedesktop.org, 
+	linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Sun, Jun 30, 2024 at 6:49=E2=80=AFPM Thiago Macieira <thiago@kde.org> wr=
+ote:
+>
+> On Friday 28 June 2024 11:58:29 GMT-7 Bartosz Golaszewski wrote:
+> > +    <!--
+> > +      Used:
+> > +
+> > +      True if line is busy.
+> > +
+> > +      Line can be used by gpio-manager, another user-space process, a
+> > kernel +      driver or is hogged. The exact reason a line is busy cann=
+ot
+> > be determined +      from user-space unless it's known to be managed by
+> > gpio-manager (see: +      the Managed property of this interface).
+> > +    -->
+> > +    <property name=3D'Used' type=3D'b' access=3D'read'/>
+>
+> What's the point of this property? It looks racy, as the user (whichever =
+it
+> is) can stop using it soon after a true read, or the line can become used
+> right after a false read? The latter could lead to TOCTOU problems.
+>
 
+It can be used to inspect the state of the line without requesting it
+for exclusive usage. Please take a look at how `gpiocli info` uses it
+(dbus/client/info.c). There's no reason we'd want to force any real
+action on the HW just to check if a line is busy.
 
-On Wed, 26 Jun 2024 13:29:21 +0800, Kent Gibson wrote:
-> The behaviour of request reconfiguration without a direction flag set is
-> ill-defined and badly behaved, for both uAPI v1 and v2.  I'll will refer
-> to such a configuration as 'directionless' here.  That refers to the
-> configuration requested, not the actual state of the line.
-> 
-> The configuration validation used during reconfiguration is borrowed from
-> the line request operation, where, to verify the intent of the user, the
-> direction must be set to in order to effect a change to the electrical
-> configuration of a line. But that validation does not allow for the
-> directionless case, making it possible to clear flags set previously
-> without specifying the line direction.
-> 
-> [...]
+> Wouldn't it be better to force users to RequestLine and get an error if t=
+he
+> line is busy? Because if it wasn't busy, now the calling application know=
+s
+> nothing else can grab it.
+>
 
-Applied, thanks!
+No because the user may want to just inspect the state. It's not racy:
+if the user wants to request the line, they will do it right away and
+see an error if the line is busy.
 
-[3/4] Documentation: gpio: Reconfiguration with unset direction (uAPI v1)
-      commit: e48fe75afa539d110753f7420aa398ef89f8e383
-[4/4] Documentation: gpio: Reconfiguration with unset direction (uAPI v2)
-      commit: 6a9c15083b1662a4b7b36e787272deb696d72c24
+> Speaking of, RequestLine should document the errors it may return.
+>
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+That could be said about all of the methods but the error messages
+returned on failures are quite descriptive and by looking at the many
+DBus .xml on my system I can tell it's not that common to have a list
+of all possible errors in the docs.
+
+Bart
+
+> --
+> Thiago Macieira - thiago (AT) macieira.info - thiago (AT) kde.org
+>   Principal Engineer - Intel DCAI Platform & System Engineering
+>
+>
+>
 
