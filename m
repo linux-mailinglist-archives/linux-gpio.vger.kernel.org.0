@@ -1,121 +1,160 @@
-Return-Path: <linux-gpio+bounces-7845-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7846-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D573F91DA3E
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 10:42:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94B9F91DAA6
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 10:56:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 968722822A6
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 08:42:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B42C71C2193D
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 08:56:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A785582D94;
-	Mon,  1 Jul 2024 08:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A24E149C7C;
+	Mon,  1 Jul 2024 08:51:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gE7HuV6/"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hGBlxvwO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D79184D04
-	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 08:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB9F1494BB
+	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 08:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719823309; cv=none; b=RJK2J4+TlMkNV5DRRk94Ss4rFIHuAmp/NfXBlVDYKWPAjHWqEAf14SkOJettFRen/tb0N57ufGXEoXDTGzzoOpyZ2Rg/oCtcO+mWn/MK2Z6K9FL2zdBBsUfmOY2Y532PB5EkBuV6h4S28QclDLPQaYNf2/rc0f6ZnkjYvog+mGs=
+	t=1719823874; cv=none; b=qaDNMeonS9CBjP9PLvSuqjGfaNM25Z50ZbW10cHnrxGrV2sRoviW35Zl+gq2wxmMaIVYeBF3vqfzeI3y8gRidTxoTokiZ8ajsBXQVfD5C07AOK33LXzQLrc6uJ/CrDbyWehzha88WiXuIVkc5hKXYcmGTGoUv2YemyJDBZTSZ8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719823309; c=relaxed/simple;
-	bh=A5Zg1PRYfzfOHOtP83qHfhhvwMY5XoJvZFi2Uh3VW3c=;
+	s=arc-20240116; t=1719823874; c=relaxed/simple;
+	bh=rL247NBQSvqiNNQkTDaaFdrDHdJWz/2L3qB0qtsNmAc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HuZaFEGpl0L6H3lxO9R13OYYaZKYqnl7bmOEZc36ja+YIMGZc84gRGGfMXma1u5je8sOVSK8vGFFKnL1pGpLCbhFtlzMpN39gJ4C7Stfk0poHtYRcGDbm6huhg5Z2yQpPazQm/0TwUIMKZ0DYUbbyzx/tejdUtLFenIeafIgfyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gE7HuV6/; arc=none smtp.client-ip=209.85.208.171
+	 To:Cc:Content-Type; b=Lzf2WdzQ/DyczrA6H0HJzW54Ufyw1I2s7YIiaN/0tRUVXUeqsa5INl3FYTZKJkSlR49GGn4pJGXVEQE5UBuH9OLwY1AXd+x8gMh70ty2D0kFzZFEeMZ1QWE3KUDcROUkdrE4+9TfxvHPpEMtmZ9tIZBWJ8WfB28DWStTh4w8gBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hGBlxvwO; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ec002caf3eso43386321fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2024 01:41:47 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ebe785b234so26765001fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2024 01:51:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719823305; x=1720428105; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719823871; x=1720428671; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z9juGhjHfVWoUy99hHa5hPCw3ioXYAtyhRKhN5Xhpo8=;
-        b=gE7HuV6/aBhndsvb6GGSFHcRWDsrAMazeBWrMS14OtOmgzj+Bo5s+LtMsCWcWoPXBH
-         fsz2sHtTLpafqCW4KsiYOq7fl4P2NKIpvA5IEkkuj80qTEIRj27jRc0WQllgvsAaMjL+
-         qXAURu6AFLrn5uvljIn0jUQIQr9l1hXJ7F1t6DaKDMQrOqz4DXPgDnRvCcHiNhCZU8Yn
-         65XRzRrEhe8QhEib0L3Y3n7KhEh47HqSgecGjbqcy1cMG5ertSbqCBKmVzmcr+VhXa+2
-         jM8gT0gXXSASbKNs/LhkjBeZCdT8Rgblvx3OYC2tmtoxGIdif+mG65yS0297zhA/WJv3
-         i0wg==
+        bh=Y6IGt/O8Ag/DD0EC0oRxl+iz1s9f79lZeasOTV/wsyo=;
+        b=hGBlxvwOoQNQriY16ha0YAk1En+lQ+IlUUSFNTZR6mqtec5iKlmTfWkndr1A6wt5Ad
+         83jdVPYfbskA24f6WzNe2reQwu+BwiLjsPcrRZc6J23fKtDZ7oIlQ+JTQ4bOFWBtq4WP
+         Jw+wfvgHOrcI8wrY/Y23sG5fvleSKWWkHONY4y4qlAus6Hs/l/gvm3iYRrRffJk/QoRO
+         yYZ4IPspkvYKcpFq5oOaAgkBQZatZc/6ca19a899qHUuWjOmy0q3S7q2jWUmEmPa6Pmq
+         ELd5Az9XZkQZFWNA84Kcykh+5Pg7lDST4kde2bQvCfJFEzu2C25io9KyLg4QZ7tABSuk
+         eXfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719823305; x=1720428105;
+        d=1e100.net; s=20230601; t=1719823871; x=1720428671;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z9juGhjHfVWoUy99hHa5hPCw3ioXYAtyhRKhN5Xhpo8=;
-        b=NOZ+go/pS0m1HJTyIUD6pcdnfGsqCfLI1ku34M9bsFRNVAAXAY5auuC87mkJL1D+x7
-         JAYyFZn4kJNEFWH1ynpmBSZ8Dq3+ofyJ8bMMwi7qwRhzgKIuMk6R7SWaU/glrDJEzAV8
-         fQjmDvE8tiy1bk4gamBZbiO8nw1km5K7kqHxLWMOARSZ1HE0sfAicCqHNDmN1ofzRTCd
-         ChNCjSfYlnQ/OFLhK2xrYTW6s68CfqBv1eu2J7ci4BKpoqAUzixusnrX6PhA9B5xFZUI
-         LcusddlL6Z9QjztFfQGRoWv4cfDxZ7V17mtvqD9vj34ezaL7NDMcbyErSmnQ5l64kX8K
-         LAKw==
-X-Gm-Message-State: AOJu0Yx80xYTA4v0wk08qtVUlSuIyl1rylqhh/NDVh3v1RQeUvseoQPK
-	P+Ot5i5AgIKtuIDsMHqi64XycYTeA5i8/vBR82pDsS91KGqIhuvop8eAyDk+VqsPdhyFfmurT28
-	QYtoRNzGSisMxDjmK84gEY8wqmEN6d+lH3Fe/8A==
-X-Google-Smtp-Source: AGHT+IEsCWgMx9DJFYAcQiyEJw4++CwfBQYA9g4zZOE5DaBcnPejbFFLGbW4vhjuhsfFCmyeaoej8jPIhz7E2M6qR/Y=
-X-Received: by 2002:a2e:96c6:0:b0:2ec:2038:925d with SMTP id
- 38308e7fff4ca-2ee5e37ffa9mr42312751fa.1.1719823305729; Mon, 01 Jul 2024
- 01:41:45 -0700 (PDT)
+        bh=Y6IGt/O8Ag/DD0EC0oRxl+iz1s9f79lZeasOTV/wsyo=;
+        b=BbbZUPlCYAvrHch9nyoPDYqvMtD+bBbPk63nJ/MGb88lP4GzUWwDQ7MEfWd6pxiYY6
+         l4KGyL7rrGTQ0XGhr94EvclmNRCH6A899Mq0bJNmvbqn1kQxm/8SGERDWgAx9bbnbx+J
+         WZlAHN7fw9Olsh5gIiK1LH1k4Y/i0ORZNz8oSEIukw33bbTK5WXsC4aTm4RJ+oFBWuso
+         /YGtgipJK3M1KcAKUDcNsB2SHcLqkQVc25zBhOa7xy+XHUVZkbTsOxg9yJepZQn6wOhB
+         JOoRQ+tZxl9fHTNAc06Od+pQHj5zUp5ew5PCh6iEnJzhpHnx9F1CyPDEz7eUPcOSbEA4
+         3bMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVuyEoxPGPSMHIlOmUOQz1wG6vFLfTx+Xp7vnFQcbHxb8wURtvtV5JCBPcxo5kiR70GNQXaHWH/Sa1zuFN6KRJiw+j7cdaDrKrkA==
+X-Gm-Message-State: AOJu0YztVEQU0pZIQuH+CK4bOtxzeZ3b5lrkWuYKz0+mAxy+y0lTzz9M
+	Sf0drZxw+BGYJl1fA32dLRw+gNJgQ0uLoB2W+of9ZdBfO8JVqpwOuIUcZz4oJyuwGgpI/Fz5M5h
+	twyuGRvy1Y53HflbUgEJ01ATiCb7fN7bXWnILfQ==
+X-Google-Smtp-Source: AGHT+IE6uf6X0BVJtjc0lpScjbHL3mLZ3oOMkPXkzRVM0rIYzzSA8+bdRnk3JdXUel7lmANqoMpQprqBLY10Y4VGEAc=
+X-Received: by 2002:a2e:8883:0:b0:2e1:2169:a5cc with SMTP id
+ 38308e7fff4ca-2ee5e3ad770mr33275651fa.15.1719823870802; Mon, 01 Jul 2024
+ 01:51:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240624093934.17089-1-brgl@bgdev.pl>
-In-Reply-To: <20240624093934.17089-1-brgl@bgdev.pl>
+References: <Zn8CZ47e3LFncrDP@google.com>
+In-Reply-To: <Zn8CZ47e3LFncrDP@google.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 1 Jul 2024 10:41:34 +0200
-Message-ID: <CAMRc=MfH8ZuA2pK3bzSw5mitsFE9wUnoD4iG4Tg8_83SJm-poQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpio: sim: lock simulated GPIOs as interrupts
-To: Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Mon, 1 Jul 2024 10:51:00 +0200
+Message-ID: <CAMRc=McMn6k7QMXLHphNS03BtO=i9xKBwxa71MeVXhtNSFdiXA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: of: fix lookup quirk for MIPS Lantiq
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Martin Schiller <ms@dev.tdt.de>, 
+	Hauke Mehrtens <hauke@hauke-m.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 24, 2024 at 11:39=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+On Fri, Jun 28, 2024 at 8:35=E2=80=AFPM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 >
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> As it turns out, there is a large number of out-of-tree DTSes (in
+> OpenWrt project) that used to specify incorrect (active high) polarity
+> for the Lantiq reset GPIO, so to keep compatibility while they are
+> being updated a quirk for force the polarity low is needed. Luckily
+> these old DTSes used nonstandard name for the property ("gpio-reset" vs
+> "reset-gpios") so the quirk will not hurt if there are any new devices
+> that need inverted polarity as they can specify the right polarity in
+> their DTS when using the standard "reset-gpios" property.
 >
-> I realized that the gpio-sim module doesn't lock the GPIOs as interrupts
-> when they are requested from the irq_sim. This leads to users being able
-> to change the direction of GPIOs that should remain as inputs to output.
-> This series extends the irq_sim interface and allows users to supply
-> callbacks that will be executed to inform users about interrupts being
-> requested and released so that they can act accordingly. The gpio-sim is
-> made to use this new API and lock GPIOs as interrupts when needed.
+> Additionally the condition to enable the translation from standard to
+> non-standard reset GPIO property name was inverted and the replacement
+> name for the property was not correct. Fix this as well.
 >
-> Thomas: if this is fine with you, can you Ack it so that I can take it
-> through the GPIO tree for the next merge window?
+> Fixes: fbbbcd177a27 ("gpiolib: of: add quirk for locating reset lines wit=
+h legacy bindings")
+> Fixes: 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using gpiod API")
+> Reported-by: Martin Schiller <ms@dev.tdt.de>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/gpio/gpiolib-of.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
 >
-> Changes since v1:
-> - drop the notifier in favor of specific callbacks
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index 59c7f8a2431a..d21085830632 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -203,6 +203,16 @@ static void of_gpio_try_fixup_polarity(const struct =
+device_node *np,
+>                  */
+>                 { "qi,lb60",            "rb-gpios",     true },
+>  #endif
+> +#if IS_ENABLED(CONFIG_PCI_LANTIQ)
+> +               /*
+> +                * According to the PCI specification, the RST# pin is an
+> +                * active-low signal. However, most of the device trees t=
+hat
+> +                * have been widely used for a long time incorrectly desc=
+ribe
+> +                * reset GPIO as active-high, and were also using wrong n=
+ame
+> +                * for the property.
+> +                */
+> +               { "lantiq,pci-xway",    "gpio-reset",   false },
+> +#endif
+>  #if IS_ENABLED(CONFIG_TOUCHSCREEN_TSC2005)
+>                 /*
+>                  * DTS for Nokia N900 incorrectly specified "active high"
+> @@ -512,9 +522,9 @@ static struct gpio_desc *of_find_gpio_rename(struct d=
+evice_node *np,
+>                 { "reset",      "reset-n-io",   "marvell,nfc-uart" },
+>                 { "reset",      "reset-n-io",   "mrvl,nfc-uart" },
+>  #endif
+> -#if !IS_ENABLED(CONFIG_PCI_LANTIQ)
+> +#if IS_ENABLED(CONFIG_PCI_LANTIQ)
+>                 /* MIPS Lantiq PCI */
+> -               { "reset",      "gpios-reset",  "lantiq,pci-xway" },
+> +               { "reset",      "gpio-reset",   "lantiq,pci-xway" },
+>  #endif
 >
-> Bartosz Golaszewski (2):
->   genirq/irq_sim: add an extended irq_sim initializer
->   gpio: sim: lock GPIOs as interrupts when they are requested
+>                 /*
+> --
+> 2.45.2.803.g4e1b14247a-goog
 >
->  drivers/gpio/gpio-sim.c | 25 ++++++++++++++++-
->  include/linux/irq_sim.h | 17 ++++++++++++
->  kernel/irq/irq_sim.c    | 60 ++++++++++++++++++++++++++++++++++++++---
->  3 files changed, 98 insertions(+), 4 deletions(-)
 >
 > --
-> 2.43.0
->
+> Dmitry
 
-Without any objections, I'd like to take it through the GPIO tree by
-the end of this week.
+Can you rebase it on top of v6.10-rc6? It doesn't apply to my fixes branch.
 
 Bart
 
