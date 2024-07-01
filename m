@@ -1,145 +1,130 @@
-Return-Path: <linux-gpio+bounces-7855-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7856-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7243B91DFF6
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 14:54:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41D4291DFFD
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 14:56:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D6A1284E94
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 12:54:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72B8E1C20F3C
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 12:56:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9766F15A849;
-	Mon,  1 Jul 2024 12:54:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2421215A85A;
+	Mon,  1 Jul 2024 12:56:39 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00910145B09;
-	Mon,  1 Jul 2024 12:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4AB145B09
+	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 12:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719838486; cv=none; b=GZxGPJfpZ4D56DvGiux1o/uEtNm4RtHcFfa+SA75qWB/ERJ05Kj1e2naMpdTwGHmrvAn+ZrcLxrHTa/RFyG6Jh8B0Yn7JynMpRsBWBm9LMqoiThqhSP21EDhITKobeoLc/JFUF+MkzGLWBBYMZFhOA3zkpjMAitETZrFgekJUSs=
+	t=1719838599; cv=none; b=PfNsVQpm1QhrW9FOde2G5xLB25GXD4cWIr/kBssGitRT6DlV9HNG0eHps042q4SB73HYMYB3y9dk7VUecgqo9eaycO4Z6Iqyzgw7sdqyrHS2jrW6txrN/1odgqdAn/INbQUnmRJLgL1rwm/3he0UIv64aOH1PAI3VyEjQmvV+6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719838486; c=relaxed/simple;
-	bh=fpklSivkHqBgwZ+MA54wZ0oce/H9M9AHo8SsHJoYIEc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zyi9yismZyNjJvM4bLDLSIZ4k+c1rySarQDI4HL2gwrVImT7aSNPkeran4Sk310KgGYrbRx1jJ4N4g+AlOnEJhP7gG4GOAY4hQvqTa7LFTiyF8NAjGN8Tuhfa5Ig1RnZOXUHFpqeohIx/vo5B56BKr7jAxLg2CTJTwKjbBI+T7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4WCQtq2TVNz6K9Wd;
-	Mon,  1 Jul 2024 20:52:51 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1D953140B3C;
-	Mon,  1 Jul 2024 20:54:41 +0800 (CST)
-Received: from localhost (10.203.174.77) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 1 Jul
- 2024 13:54:40 +0100
-Date: Mon, 1 Jul 2024 13:54:40 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-CC: <linus.walleij@linaro.org>, <dan.carpenter@linaro.org>,
-	<linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <aisheng.dong@nxp.com>, <festevam@gmail.com>,
-	<shawnguo@kernel.org>, <kernel@pengutronix.de>,
-	<u.kleine-koenig@pengutronix.de>, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH V3 1/3] pinctrl: ti: iodelay: Use scope based
- of_node_put() cleanups
-Message-ID: <20240701135440.00004d67@Huawei.com>
-In-Reply-To: <20240627131721.678727-2-peng.fan@oss.nxp.com>
-References: <20240627131721.678727-1-peng.fan@oss.nxp.com>
-	<20240627131721.678727-2-peng.fan@oss.nxp.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1719838599; c=relaxed/simple;
+	bh=XBx0EW8nqpZVqVLCtRcejcPGgY91HlhnKUyXuarXNNs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=H6l2egpB/nXOhxyEnWjmIgTW6GhBT2tdF+nS0nEkAoH5Atxj83SSmaqgzOjstLemEgIkHgcQtRLBzLZaamfx8cZCkf3r2QexX28BlZ23EeXofIOBVrwaRmVf2lgRhYSmNNWIL64Jymf22skPJxVRMsyRQyt0nOptu2MFqKkvzU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:1c8a:3990:9784:a231])
+	by albert.telenet-ops.be with bizsmtp
+	id iCwU2C00L4bcH3806CwUhY; Mon, 01 Jul 2024 14:56:29 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sOGZw-000oEx-Sc;
+	Mon, 01 Jul 2024 14:56:28 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1sOGa4-001GZI-DW;
+	Mon, 01 Jul 2024 14:56:28 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL v2] pinctrl: renesas: Updates for v6.11 (take two)
+Date: Mon,  1 Jul 2024 14:56:27 +0200
+Message-Id: <cover.1719837986.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 27 Jun 2024 21:17:19 +0800
-"Peng Fan (OSS)" <peng.fan@oss.nxp.com> wrote:
+	Hi Linus,
 
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Use scope based of_node_put() cleanup to simplify code.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-A couple of comments on additional cleanups - primarily
-using return dev_err_probe() - enabled by using scope based
-cleanup to avoid the goto dance.
+This is v2 of "[GIT PULL] pinctrl: renesas: Updates for v6.11 (take
+two)".
 
-Either way LGTM
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Changes compared to v1:
+  - Back out all R-Car fuse commits.
 
-> ---
->  drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 43 +++++++++----------------
->  1 file changed, 15 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> index ef9758638501..f5e5a23d2226 100644
-> --- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> +++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-> @@ -822,53 +822,48 @@ MODULE_DEVICE_TABLE(of, ti_iodelay_of_match);
->  static int ti_iodelay_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> -	struct device_node *np = of_node_get(dev->of_node);
-> +	struct device_node *np __free(device_node) = of_node_get(dev->of_node);
->  	struct resource *res;
->  	struct ti_iodelay_device *iod;
-> -	int ret = 0;
-> +	int ret;
->  
->  	if (!np) {
-> -		ret = -EINVAL;
->  		dev_err(dev, "No OF node\n");
-> -		goto exit_out;
-> +		return -EINVAL;
-Whilst you are here can use more compact
-		return dev_err_probe(dev, -EINVAL, "No OF node\n");
-for all error prints in a probe() function.
-They do various nice things on deferred probe but are
-useful more generally.
+The following changes since commit 9bd95ac86e700ab8b1a6c225685e0e5afe426b4e:
 
->  	}
->  
->  	iod = devm_kzalloc(dev, sizeof(*iod), GFP_KERNEL);
-> -	if (!iod) {
-> -		ret = -ENOMEM;
-> -		goto exit_out;
-> -	}
-> +	if (!iod)
-> +		return -ENOMEM;
-> +
->  	iod->dev = dev;
->  	iod->reg_data = device_get_match_data(dev);
->  	if (!iod->reg_data) {
-> -		ret = -EINVAL;
->  		dev_err(dev, "No DATA match\n");
-> -		goto exit_out;
-> +		return -EINVAL;
+  pinctrl: renesas: rzg2l: Add support for RZ/V2H SoC (2024-06-11 09:50:25 +0200)
 
-return dev_err_probe() works here as well and in 
-other cases below. It's an added bonus __free() magic often enables.
+are available in the Git repository at:
 
-No idea why DATA is in capitals and to be honest it's not
-a particularly useful error message.  What data? :)
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.11-tag2-v2
 
->  	}
+for you to fetch changes up to 71062e52fc0aea0f3477aaaaa789226388a7eeaf:
 
+  pinctrl: renesas: r8a779h0: Remove unneeded separators (2024-07-01 11:27:39 +0200)
 
->  }
->  
->  /**
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v6.11 (take two)
 
+  - Fix ambiguous and inconsistent pin group names on R-Car V4H,
+  - Add MII Ethernet PHY and external interrupt pin groups on R-Car V4H,
+  - Miscellaneous fixes and improvements.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Geert Uytterhoeven (12):
+      pinctrl: renesas: r8a779g0: Fix CANFD5 suffix
+      pinctrl: renesas: r8a779g0: Fix FXR_TXEN[AB] suffixes
+      pinctrl: renesas: r8a779g0: Fix (H)SCIF1 suffixes
+      pinctrl: renesas: r8a779g0: Fix (H)SCIF3 suffixes
+      pinctrl: renesas: r8a779g0: Fix IRQ suffixes
+      pinctrl: renesas: r8a779g0: FIX PWM suffixes
+      pinctrl: renesas: r8a779g0: Fix TCLK suffixes
+      pinctrl: renesas: r8a779g0: Fix TPU suffixes
+      pinctrl: renesas: r8a779h0: Add AVB MII pins and groups
+      pinctrl: renesas: r8a779g0: Remove unneeded separators
+      pinctrl: renesas: r8a779g0: Add INTC-EX pins, groups, and function
+      pinctrl: renesas: r8a779h0: Remove unneeded separators
+
+Lad Prabhakar (4):
+      pinctrl: renesas: rzg2l: Update PIN_CFG_MASK() macro to be 32-bit wide
+      pinctrl: renesas: rzg2l: Adjust bit masks for PIN_CFG_VARIABLE to use BIT(62)
+      pinctrl: renesas: rzg2l: Move RZG2L_SINGLE_PIN definition to top of the file
+      pinctrl: renesas: rzg2l: Reorganize variable configuration macro
+
+Michał Mirosław (1):
+      pinctrl: renesas: sh73a0: Use rdev_get_drvdata()
+
+ drivers/pinctrl/renesas/pfc-r8a779g0.c  | 830 ++++++++++++++++++--------------
+ drivers/pinctrl/renesas/pfc-r8a779h0.c  |  82 +++-
+ drivers/pinctrl/renesas/pfc-sh73a0.c    |   4 +-
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c |  59 +--
+ 4 files changed, 557 insertions(+), 418 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 
