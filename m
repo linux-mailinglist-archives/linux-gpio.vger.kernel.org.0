@@ -1,170 +1,151 @@
-Return-Path: <linux-gpio+bounces-7848-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7849-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 846EF91DB9C
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 11:38:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E2C0191DDDE
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 13:30:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BE1928177E
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 09:38:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96FD8282098
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 11:30:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04A2E82C63;
-	Mon,  1 Jul 2024 09:37:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B2BF13D509;
+	Mon,  1 Jul 2024 11:30:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TISHuZEk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nng7Ietv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27455524C9
-	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 09:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC75D4AEF2;
+	Mon,  1 Jul 2024 11:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719826678; cv=none; b=Dp3lDlTcJJakrGqbJS0koFS5J4mbUoyDK5ws1u/LaSlkBXJXCPAlHzYrc1ETi4xGk8dmb/ZtIfV5zSmym52QRM39Cl0NynsQfJRnDjckeL8TVxiYTnutMTMeUMxfk4LiPD8Dr//GVzRUBHgbLwDn8m7k49G46Z8cdwD1c0R/62k=
+	t=1719833424; cv=none; b=NBaEBMvHVrYshYlhg2xcbjdrx+VVW7I3aIjEXYz5LKwuflVvficaTmN+xqra4Oh9CQOWvMexequehAoHj0ziIrTixw1Qpt1qR0Ce0iqW5v8undvKbt+pTGyD8hbRqAJdL3Od+YKX2N0ISTCd5uvvhPlHLD0VWf55zLXXyQ1uhwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719826678; c=relaxed/simple;
-	bh=hKv6tVc8E4BqXQaKNnCLDLpa8PnRPM3zy9QZ6JydbS0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hTGHtn33s+wYffi2Wrr00AIr6MSPPZW+T1a//g5jJLthZfhItfS30e9aK5eG7Ai9gP4hoQNps+hjsUA5egXNpgwv5w4cdwcM2tPJLvELq/RncxQVSgb/n82aXLHDMBy1Ckw0C+ov/Wa+ZrIQPd8ohMcyoQbySLr275H8YznIpBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=TISHuZEk; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ec4eefbaf1so28110631fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2024 02:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719826675; x=1720431475; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O4aHITYnWjEob+PIw1d85o31l+wtm6yxDVioQ0T5OqA=;
-        b=TISHuZEkgvHFY3Gwoa6zom7sFDIzI4gXyf/31h3d1OsFmPAB7FDGfGvjvU1tbbD6Nx
-         hqq4HXeieXP6peauE95xHNyJUuD2T8GADSlxToRZ8UvnHD36WegwcCgLtBWpVhsnsW4s
-         0Yh/TcxMVSo/AQi/PB8J8bHRJgkQs9ta3GtKQKNkmzBNZwclwnFDVmMGAadv+Rsb4jmY
-         tds/gvLFYdy5Q2HVDPqy0x4c3Zm4EtvRO2pktCTrWlleYkWGUfFE3UwvrCQUlxTZWxig
-         g/U+CuIzxq62zXKSR/un8XMBNeqBQWY/Lbj28nqNkAFBIU+29UEOJlv9g0zI1Jl13tdg
-         gY0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719826675; x=1720431475;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O4aHITYnWjEob+PIw1d85o31l+wtm6yxDVioQ0T5OqA=;
-        b=Krpr88X3VJpOL1yZ2UhuVzOd8A6UntDdt8HYamaB5qTBktOz+zRDgii9RBL1pzxc9s
-         FKBE6mPuQ56mb+U4mQhL96m+wR6fYV0trXSBjTdJeC5jZkU9aYVodQSjDomdVZECCp1u
-         NTwOdD5XK/WpUfYCYf3pFWyfhxiRSt6oompEBeACfpui4zMCPgWZAmVGAy4weyXTyD84
-         TTuzQOx8HJ64PvrdoFBEFFsX9pqtNPB+cBk0LsYjdBY5JxPmVIq/5wsTz+QUg/T+thDV
-         /Qx7TS5hOoM6N9oc6JY4yI4TDOpDbRLxdwmlB0KEjob+fbolE26IKOxbtwGVJkqG3t1T
-         14WA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5tqBZByg2Bwcvq1fFuAUErcjwCbj0NQoRnUq2W7GAlo1RjEv/gMumoNxB/sCTplrK8U0MJSjZ6bq4A4uyuiEqn13UBulAH3sr4A==
-X-Gm-Message-State: AOJu0YxkKJI2cCae/i8PN3SUvs4ESyxAXrcXVQ64w3LLJK5lN2cY5wza
-	vYHR5PxdJA+Kt1MeAQA7q1pCrHrC602pnn4eU4BLMClej2AY9Mbi4BtYuOPah1W97tZ7a2UZ1OV
-	ttsPIHu/7urHHtpFTCJMLE/UFrPiyIpqtPZoqK9icDteHnDFt
-X-Google-Smtp-Source: AGHT+IGWQc4j04RztvOmse4AZ4bShLtupsMufuAyVAsdQbExrN0Lj9/vRc0YERxQFIZn9VrJ9JEpW/4r9cPoyO0SUjA=
-X-Received: by 2002:a05:651c:4cf:b0:2ec:4aac:8fd6 with SMTP id
- 38308e7fff4ca-2ee5e3458e5mr38833761fa.10.1719826675288; Mon, 01 Jul 2024
- 02:37:55 -0700 (PDT)
+	s=arc-20240116; t=1719833424; c=relaxed/simple;
+	bh=+OWOpDrJZchPfmLK+I6MmT9xsjGXnDm/PgEQ5i8jc7g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I5HpTyKv9HQagvfVJoI6LhTzaND7dvDd9pZN1Z7w7wMUorf/vAQSHBQIob4AzfqPdBO2S7lJyp9YRIe2JsNNlvoomqubDXG9ZSwTbLWQ4CYyXEH9CXiILFRf5wpowtqJAjmZ6NULpb1SQ5rfYyRkcX0HnxBY6iafDuFU0Tr0zC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nng7Ietv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A73DC116B1;
+	Mon,  1 Jul 2024 11:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719833424;
+	bh=+OWOpDrJZchPfmLK+I6MmT9xsjGXnDm/PgEQ5i8jc7g=;
+	h=From:List-Id:To:Cc:Subject:Date:From;
+	b=nng7Ietv8746Qmyk72eF6HkQfwN868Cn+LOeGd0kofGmb1dcmN/o+kvc/ZdzQ0hpE
+	 MmWEAGGTemyge+t/O5M6+0zCngJIZ2T0uv3fIcvIjPf5qLdV+AUCupt1BnCRLA0v7O
+	 gP2zGelCxlD6fgIu+7PuJIVjULtjb1RXsX8OOGub3s/lSVZI6GHI28dy9RxST6Yo/B
+	 7fcMQ6uFKdJtsylPzgT8cl/skkyQf7/9+di6Kx+xNM7RixDT7Ke76Z2vU5ABBZ/bnj
+	 o4TRg53Qoug1INfKWRYsDfdj+oa1rljDzxF5AZlRHXwT25MJRzZCFp3tE2eiEExb8l
+	 tLB6rvtF/JJBA==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	soc@kernel.org,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	devicetree@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-crypto@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	Olivia Mackall <olivia@selenic.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	arm@kernel.org,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Subject: [PATCH v13 0/8] Turris Omnia MCU driver
+Date: Mon,  1 Jul 2024 13:30:02 +0200
+Message-ID: <20240701113010.16447-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617152606.26191-1-kabel@kernel.org> <20240617152606.26191-4-kabel@kernel.org>
-In-Reply-To: <20240617152606.26191-4-kabel@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 1 Jul 2024 11:37:44 +0200
-Message-ID: <CAMRc=MdpJUaJ3B64TTdt8B=PeJwR+BjiCx1SJj+SJGOT=LtT9A@mail.gmail.com>
-Subject: Re: [PATCH v12 3/8] platform: cznic: turris-omnia-mcu: Add support
- for MCU connected GPIOs
-To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, 
-	arm@kernel.org, Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 17, 2024 at 5:26=E2=80=AFPM Marek Beh=C3=BAn <kabel@kernel.org>=
- wrote:
->
-> Add support for GPIOs connected to the MCU on the Turris Omnia board.
->
-> This includes:
-> - front button pin
-> - enable pins for USB regulators
-> - MiniPCIe / mSATA card presence pins in MiniPCIe port 0
-> - LED output pins from WAN ethernet PHY, LAN switch and MiniPCIe ports
-> - on board revisions 32+ also various peripheral resets and another
->   voltage regulator enable pin
->
-> Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
+Hello Arnd et al.
 
-This is one heck of a complex GPIO driver!
+this is v13 of the series adding Turris Omnia MCU driver.
 
-> +
-> +#define _DEF_GPIO(_cmd, _ctl_cmd, _bit, _ctl_bit, _int_bit, _feat, _feat=
-_mask) \
-> +       {                                                               \
-> +               .cmd =3D _cmd,                                           =
- \
-> +               .ctl_cmd =3D _ctl_cmd,                                   =
- \
-> +               .bit =3D _bit,                                           =
- \
-> +               .ctl_bit =3D _ctl_bit,                                   =
- \
-> +               .int_bit =3D (_int_bit) < 0 ? OMNIA_GPIO_INVALID_INT_BIT =
- \
-> +                                         : (_int_bit),                 \
-> +               .feat =3D _feat,                                         =
- \
-> +               .feat_mask =3D _feat_mask,                               =
- \
-> +       }
-> +#define _DEF_GPIO_STS(_name) \
-> +       _DEF_GPIO(OMNIA_CMD_GET_STATUS_WORD, 0, __bf_shf(OMNIA_STS_ ## _n=
-ame), \
-> +                 0, __bf_shf(OMNIA_INT_ ## _name), 0, 0)
-> +#define _DEF_GPIO_CTL(_name) \
-> +       _DEF_GPIO(OMNIA_CMD_GET_STATUS_WORD, OMNIA_CMD_GENERAL_CONTROL, \
-> +                 __bf_shf(OMNIA_STS_ ## _name), __bf_shf(OMNIA_CTL_ ## _=
-name), \
-> +                 -1, 0, 0)
-> +#define _DEF_GPIO_EXT_STS(_name, _feat) \
-> +       _DEF_GPIO(OMNIA_CMD_GET_EXT_STATUS_DWORD, 0, \
-> +                 __bf_shf(OMNIA_EXT_STS_ ## _name), 0, \
-> +                 __bf_shf(OMNIA_INT_ ## _name), \
-> +                 OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS, \
-> +                 OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS)
-> +#define _DEF_GPIO_EXT_STS_LED(_name, _ledext) \
-> +       _DEF_GPIO(OMNIA_CMD_GET_EXT_STATUS_DWORD, 0, \
-> +                 __bf_shf(OMNIA_EXT_STS_ ## _name), 0, \
-> +                 __bf_shf(OMNIA_INT_ ## _name), \
-> +                 OMNIA_FEAT_LED_STATE_ ## _ledext, \
-> +                 OMNIA_FEAT_LED_STATE_EXT_MASK)
-> +#define _DEF_GPIO_EXT_STS_LEDALL(_name) \
-> +       _DEF_GPIO(OMNIA_CMD_GET_EXT_STATUS_DWORD, 0, \
-> +                 __bf_shf(OMNIA_EXT_STS_ ## _name), 0, \
-> +                 __bf_shf(OMNIA_INT_ ## _name), \
-> +                 OMNIA_FEAT_LED_STATE_EXT_MASK, 0)
-> +#define _DEF_GPIO_EXT_CTL(_name, _feat) \
-> +       _DEF_GPIO(OMNIA_CMD_GET_EXT_CONTROL_STATUS, OMNIA_CMD_EXT_CONTROL=
-, \
-> +                 __bf_shf(OMNIA_EXT_CTL_ ## _name), \
-> +                 __bf_shf(OMNIA_EXT_CTL_ ## _name), -1, \
-> +                 OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS, \
-> +                 OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS)
-> +#define _DEF_INT(_name) \
-> +       _DEF_GPIO(0, 0, 0, 0, __bf_shf(OMNIA_INT_ ## _name), 0, 0)
-> +
+Changes since v12:
+- added blank lines between _DEF_GPIO macro definitions in patch 3,
+  requested by Bart
 
-One coding-style nit: can you add newlines between these macros?
+Links to previous cover letters (v1 to v12):
+  https://patchwork.kernel.org/project/linux-soc/cover/20230823161012.6986-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20230919103815.16818-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231023143130.11602-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231026161803.16750-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240323164359.21642-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240418121116.22184-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240424173809.7214-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240430115111.3453-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240508103118.23345-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240510101819.13551-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240605161851.13911-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20240617152606.26191-1-kabel@kernel.org/
 
-I'm having a hard-time understanding the entire architecture of this
-MCU but the code overall looks good to me so I trust you know what
-you're doing.
+Marek Behún (8):
+  dt-bindings: firmware: add cznic,turris-omnia-mcu binding
+  platform: cznic: Add preliminary support for Turris Omnia MCU
+  platform: cznic: turris-omnia-mcu: Add support for MCU connected GPIOs
+  platform: cznic: turris-omnia-mcu: Add support for poweroff and wakeup
+  platform: cznic: turris-omnia-mcu: Add support for MCU watchdog
+  platform: cznic: turris-omnia-mcu: Add support for MCU provided TRNG
+  ARM: dts: turris-omnia: Add MCU system-controller node
+  ARM: dts: turris-omnia: Add GPIO key node for front button
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ .../sysfs-bus-i2c-devices-turris-omnia-mcu    |  113 ++
+ .../firmware/cznic,turris-omnia-mcu.yaml      |   86 ++
+ MAINTAINERS                                   |    4 +
+ .../dts/marvell/armada-385-turris-omnia.dts   |   35 +-
+ drivers/platform/Kconfig                      |    2 +
+ drivers/platform/Makefile                     |    1 +
+ drivers/platform/cznic/Kconfig                |   48 +
+ drivers/platform/cznic/Makefile               |    8 +
+ .../platform/cznic/turris-omnia-mcu-base.c    |  408 ++++++
+ .../platform/cznic/turris-omnia-mcu-gpio.c    | 1095 +++++++++++++++++
+ .../cznic/turris-omnia-mcu-sys-off-wakeup.c   |  260 ++++
+ .../platform/cznic/turris-omnia-mcu-trng.c    |  103 ++
+ .../cznic/turris-omnia-mcu-watchdog.c         |  130 ++
+ drivers/platform/cznic/turris-omnia-mcu.h     |  194 +++
+ include/linux/turris-omnia-mcu-interface.h    |  249 ++++
+ 15 files changed, 2735 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu
+ create mode 100644 Documentation/devicetree/bindings/firmware/cznic,turris-omnia-mcu.yaml
+ create mode 100644 drivers/platform/cznic/Kconfig
+ create mode 100644 drivers/platform/cznic/Makefile
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-base.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-gpio.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-sys-off-wakeup.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-trng.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-watchdog.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu.h
+ create mode 100644 include/linux/turris-omnia-mcu-interface.h
+
+-- 
+2.44.2
+
 
