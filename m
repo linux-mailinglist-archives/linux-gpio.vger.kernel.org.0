@@ -1,118 +1,170 @@
-Return-Path: <linux-gpio+bounces-7847-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7848-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A4C091DAB7
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 10:57:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 846EF91DB9C
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 11:38:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 14D42285908
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 08:57:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BE1928177E
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 09:38:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D875013AD04;
-	Mon,  1 Jul 2024 08:54:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04A2E82C63;
+	Mon,  1 Jul 2024 09:37:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2QOLny48"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TISHuZEk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED3812C491
-	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 08:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27455524C9
+	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 09:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719824082; cv=none; b=rg6ZGgeqcQdt4oFVx6JVWmhXmDrcc3y3T+D2GRyLBPUUebyWBtce9Vo3vczlSsQw5d9+LYdTVj4sT6C95gjY7NYeZo/vipI2byS7nzEWLXnroQFODzauF6/ssKNV6xhqcgljIDTYVWKhncmjVlQaPkkUcxtTmHqJiebiY5ZqtkY=
+	t=1719826678; cv=none; b=Dp3lDlTcJJakrGqbJS0koFS5J4mbUoyDK5ws1u/LaSlkBXJXCPAlHzYrc1ETi4xGk8dmb/ZtIfV5zSmym52QRM39Cl0NynsQfJRnDjckeL8TVxiYTnutMTMeUMxfk4LiPD8Dr//GVzRUBHgbLwDn8m7k49G46Z8cdwD1c0R/62k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719824082; c=relaxed/simple;
-	bh=r0qZrtxSrp94FXSfPxju8ybAs8t+CAZoLq166dR+hP0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uAzu0w9x7PwRdoO9WD0v11wmfSVJNsIT681RSB7984XUwmaWGrA2AkOkyfj1Ftm4IJs1ByajWwwe2EU94bu3O4x4YtcTnCGICJOAHJNes+wr4Q2B94YOxFpbdKIPLrMZQaEwHtoVygb/rAdMHMCOOZXIqYbee1S0tpGqpdYJfrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2QOLny48; arc=none smtp.client-ip=209.85.221.43
+	s=arc-20240116; t=1719826678; c=relaxed/simple;
+	bh=hKv6tVc8E4BqXQaKNnCLDLpa8PnRPM3zy9QZ6JydbS0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hTGHtn33s+wYffi2Wrr00AIr6MSPPZW+T1a//g5jJLthZfhItfS30e9aK5eG7Ai9gP4hoQNps+hjsUA5egXNpgwv5w4cdwcM2tPJLvELq/RncxQVSgb/n82aXLHDMBy1Ckw0C+ov/Wa+ZrIQPd8ohMcyoQbySLr275H8YznIpBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=TISHuZEk; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-362f62ae4c5so1501251f8f.1
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2024 01:54:40 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ec4eefbaf1so28110631fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 01 Jul 2024 02:37:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719824079; x=1720428879; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1719826675; x=1720431475; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u7PYE4fR5mHYdhnN6/gjsaLL3PDggXsWQnnwmWozp1U=;
-        b=2QOLny48L32/JtQuNj5F4k6wu5WIJDSzP7nyn1pu78wn4vfp38nikl6PYeIj9jy46e
-         eM0Dz7L+OcIWlmYyy1vXlPxodLfL4smWdG5CdOGVhZXoaeqgE57vX87sNDbLNF7ke2NZ
-         6IfupzxoBajMPfLJcKNYy47H1JUBCdVO7RubZLR+k96VyS7ZYfaEKDHY76r9JmN1zWOe
-         u94bVddIhY7PgnR7PL0o8PaTiMAdXV5phi+GB0ifriPYjQQW9C3BzvUz2jEgFyG2UoNx
-         sapS2thaVYBx/a5xyLp61+tYfO7srMyu6GqB4Hl5fnB1/gvXuOnwQ62CX/OBZeS4gyaE
-         I3DA==
+        bh=O4aHITYnWjEob+PIw1d85o31l+wtm6yxDVioQ0T5OqA=;
+        b=TISHuZEkgvHFY3Gwoa6zom7sFDIzI4gXyf/31h3d1OsFmPAB7FDGfGvjvU1tbbD6Nx
+         hqq4HXeieXP6peauE95xHNyJUuD2T8GADSlxToRZ8UvnHD36WegwcCgLtBWpVhsnsW4s
+         0Yh/TcxMVSo/AQi/PB8J8bHRJgkQs9ta3GtKQKNkmzBNZwclwnFDVmMGAadv+Rsb4jmY
+         tds/gvLFYdy5Q2HVDPqy0x4c3Zm4EtvRO2pktCTrWlleYkWGUfFE3UwvrCQUlxTZWxig
+         g/U+CuIzxq62zXKSR/un8XMBNeqBQWY/Lbj28nqNkAFBIU+29UEOJlv9g0zI1Jl13tdg
+         gY0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719824079; x=1720428879;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1719826675; x=1720431475;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=u7PYE4fR5mHYdhnN6/gjsaLL3PDggXsWQnnwmWozp1U=;
-        b=CZmH4kQuPoaPC5PS44xwOdqqpUlQz0kdhq+J7xOjUUjnqix2eTHYT3uqC8VHhfUzTQ
-         FF+Z4CshnYNJmDCrdooqmFTd/I7gE84dIkyTCuPWMtcu9m3EPo8sxl7XCVWZykw5khrT
-         rUeGuwIaJ3XLeG3F4EJFVsdnqeGetNz9sm/SO5cKftg34MB+PSrlKSN4mNXBlHLSk0PI
-         cNxBVtzl7jURjOqEEUXUGPzz0p97HASakGmjsokmJ8jIMKuuNWicpP/gIcgmykGDHjaO
-         6V9LVUgMFcA+PmNfZ+TQXeptiKM1VwCv3TYZ0Fkn/52vWJf6IBHMYY8Wp4rvLY7KBanD
-         ypGg==
-X-Forwarded-Encrypted: i=1; AJvYcCWV7rz1+676xJKXzKg7SDhE6uzlRuhkfuaFq820+Gl3/uQw/3WAdSNOttviVC9zNUndbHbY2mGnjKJvaBygZGWp/HmAaAg9Tibgnw==
-X-Gm-Message-State: AOJu0Yws7gBTAWwbAWngnDVb8vX7/519uizZ+6UrQaYh5rwmckCG0EFX
-	azcPC7FOvDynG217flT3aScINGpFiUXMeGWvoaCMWxLPqkqOwcLEZoovFd6aibRsLsIvhmNKxUC
-	g
-X-Google-Smtp-Source: AGHT+IGa1wF8TP+oCBu6+VQx/YOP72EWk9wpmg6zSpP6/dtCHSuNQs4iuGhYWxcyhosvHjS3WEAEcQ==
-X-Received: by 2002:a05:6000:154e:b0:367:42ce:f004 with SMTP id ffacd0b85a97d-36760aa2ec0mr8279760f8f.23.1719824079645;
-        Mon, 01 Jul 2024 01:54:39 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:1c2d:13b2:676b:59c2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256af376f5sm144045935e9.6.2024.07.01.01.54.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jul 2024 01:54:39 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-renesas-soc@vger.kernel.org,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-doc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 0/1] gpio: add simple logic analyzer using polling
-Date: Mon,  1 Jul 2024 10:54:37 +0200
-Message-ID: <171982407462.12671.10169460529375303678.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240620094159.6785-1-wsa+renesas@sang-engineering.com>
-References: <20240620094159.6785-1-wsa+renesas@sang-engineering.com>
+        bh=O4aHITYnWjEob+PIw1d85o31l+wtm6yxDVioQ0T5OqA=;
+        b=Krpr88X3VJpOL1yZ2UhuVzOd8A6UntDdt8HYamaB5qTBktOz+zRDgii9RBL1pzxc9s
+         FKBE6mPuQ56mb+U4mQhL96m+wR6fYV0trXSBjTdJeC5jZkU9aYVodQSjDomdVZECCp1u
+         NTwOdD5XK/WpUfYCYf3pFWyfhxiRSt6oompEBeACfpui4zMCPgWZAmVGAy4weyXTyD84
+         TTuzQOx8HJ64PvrdoFBEFFsX9pqtNPB+cBk0LsYjdBY5JxPmVIq/5wsTz+QUg/T+thDV
+         /Qx7TS5hOoM6N9oc6JY4yI4TDOpDbRLxdwmlB0KEjob+fbolE26IKOxbtwGVJkqG3t1T
+         14WA==
+X-Forwarded-Encrypted: i=1; AJvYcCU5tqBZByg2Bwcvq1fFuAUErcjwCbj0NQoRnUq2W7GAlo1RjEv/gMumoNxB/sCTplrK8U0MJSjZ6bq4A4uyuiEqn13UBulAH3sr4A==
+X-Gm-Message-State: AOJu0YxkKJI2cCae/i8PN3SUvs4ESyxAXrcXVQ64w3LLJK5lN2cY5wza
+	vYHR5PxdJA+Kt1MeAQA7q1pCrHrC602pnn4eU4BLMClej2AY9Mbi4BtYuOPah1W97tZ7a2UZ1OV
+	ttsPIHu/7urHHtpFTCJMLE/UFrPiyIpqtPZoqK9icDteHnDFt
+X-Google-Smtp-Source: AGHT+IGWQc4j04RztvOmse4AZ4bShLtupsMufuAyVAsdQbExrN0Lj9/vRc0YERxQFIZn9VrJ9JEpW/4r9cPoyO0SUjA=
+X-Received: by 2002:a05:651c:4cf:b0:2ec:4aac:8fd6 with SMTP id
+ 38308e7fff4ca-2ee5e3458e5mr38833761fa.10.1719826675288; Mon, 01 Jul 2024
+ 02:37:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20240617152606.26191-1-kabel@kernel.org> <20240617152606.26191-4-kabel@kernel.org>
+In-Reply-To: <20240617152606.26191-4-kabel@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 1 Jul 2024 11:37:44 +0200
+Message-ID: <CAMRc=MdpJUaJ3B64TTdt8B=PeJwR+BjiCx1SJj+SJGOT=LtT9A@mail.gmail.com>
+Subject: Re: [PATCH v12 3/8] platform: cznic: turris-omnia-mcu: Add support
+ for MCU connected GPIOs
+To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, 
+	arm@kernel.org, Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jun 17, 2024 at 5:26=E2=80=AFPM Marek Beh=C3=BAn <kabel@kernel.org>=
+ wrote:
+>
+> Add support for GPIOs connected to the MCU on the Turris Omnia board.
+>
+> This includes:
+> - front button pin
+> - enable pins for USB regulators
+> - MiniPCIe / mSATA card presence pins in MiniPCIe port 0
+> - LED output pins from WAN ethernet PHY, LAN switch and MiniPCIe ports
+> - on board revisions 32+ also various peripheral resets and another
+>   voltage regulator enable pin
+>
+> Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
 
+This is one heck of a complex GPIO driver!
 
-On Thu, 20 Jun 2024 11:41:57 +0200, Wolfram Sang wrote:
-> Changes since v9:
-> * add comment why late_initcall is used
-> * use .remove_new instead of .remove
-> * add needed includes
-> * use devm for allocating mutex
-> * remove stray ',' in compatible-array
-> * remove success message in probe()
-> 
-> [...]
+> +
+> +#define _DEF_GPIO(_cmd, _ctl_cmd, _bit, _ctl_bit, _int_bit, _feat, _feat=
+_mask) \
+> +       {                                                               \
+> +               .cmd =3D _cmd,                                           =
+ \
+> +               .ctl_cmd =3D _ctl_cmd,                                   =
+ \
+> +               .bit =3D _bit,                                           =
+ \
+> +               .ctl_bit =3D _ctl_bit,                                   =
+ \
+> +               .int_bit =3D (_int_bit) < 0 ? OMNIA_GPIO_INVALID_INT_BIT =
+ \
+> +                                         : (_int_bit),                 \
+> +               .feat =3D _feat,                                         =
+ \
+> +               .feat_mask =3D _feat_mask,                               =
+ \
+> +       }
+> +#define _DEF_GPIO_STS(_name) \
+> +       _DEF_GPIO(OMNIA_CMD_GET_STATUS_WORD, 0, __bf_shf(OMNIA_STS_ ## _n=
+ame), \
+> +                 0, __bf_shf(OMNIA_INT_ ## _name), 0, 0)
+> +#define _DEF_GPIO_CTL(_name) \
+> +       _DEF_GPIO(OMNIA_CMD_GET_STATUS_WORD, OMNIA_CMD_GENERAL_CONTROL, \
+> +                 __bf_shf(OMNIA_STS_ ## _name), __bf_shf(OMNIA_CTL_ ## _=
+name), \
+> +                 -1, 0, 0)
+> +#define _DEF_GPIO_EXT_STS(_name, _feat) \
+> +       _DEF_GPIO(OMNIA_CMD_GET_EXT_STATUS_DWORD, 0, \
+> +                 __bf_shf(OMNIA_EXT_STS_ ## _name), 0, \
+> +                 __bf_shf(OMNIA_INT_ ## _name), \
+> +                 OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS, \
+> +                 OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS)
+> +#define _DEF_GPIO_EXT_STS_LED(_name, _ledext) \
+> +       _DEF_GPIO(OMNIA_CMD_GET_EXT_STATUS_DWORD, 0, \
+> +                 __bf_shf(OMNIA_EXT_STS_ ## _name), 0, \
+> +                 __bf_shf(OMNIA_INT_ ## _name), \
+> +                 OMNIA_FEAT_LED_STATE_ ## _ledext, \
+> +                 OMNIA_FEAT_LED_STATE_EXT_MASK)
+> +#define _DEF_GPIO_EXT_STS_LEDALL(_name) \
+> +       _DEF_GPIO(OMNIA_CMD_GET_EXT_STATUS_DWORD, 0, \
+> +                 __bf_shf(OMNIA_EXT_STS_ ## _name), 0, \
+> +                 __bf_shf(OMNIA_INT_ ## _name), \
+> +                 OMNIA_FEAT_LED_STATE_EXT_MASK, 0)
+> +#define _DEF_GPIO_EXT_CTL(_name, _feat) \
+> +       _DEF_GPIO(OMNIA_CMD_GET_EXT_CONTROL_STATUS, OMNIA_CMD_EXT_CONTROL=
+, \
+> +                 __bf_shf(OMNIA_EXT_CTL_ ## _name), \
+> +                 __bf_shf(OMNIA_EXT_CTL_ ## _name), -1, \
+> +                 OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS, \
+> +                 OMNIA_FEAT_ ## _feat | OMNIA_FEAT_EXT_CMDS)
+> +#define _DEF_INT(_name) \
+> +       _DEF_GPIO(0, 0, 0, 0, __bf_shf(OMNIA_INT_ ## _name), 0, 0)
+> +
 
-Applied, thanks!
+One coding-style nit: can you add newlines between these macros?
 
-[1/1] gpio: add sloppy logic analyzer using polling
-      commit: 7828b7bbbf2074dd7dd14d87f50bc5ce9036d692
+I'm having a hard-time understanding the entire architecture of this
+MCU but the code overall looks good to me so I trust you know what
+you're doing.
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
