@@ -1,175 +1,139 @@
-Return-Path: <linux-gpio+bounces-7840-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7841-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BFC491D793
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 07:42:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D2C691D7E6
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 08:12:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0CABB28587D
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 05:42:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D50151F22A21
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jul 2024 06:12:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CAB837708;
-	Mon,  1 Jul 2024 05:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SdnCP3L6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E067241C85;
+	Mon,  1 Jul 2024 06:12:35 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEAC2A8E5
-	for <linux-gpio@vger.kernel.org>; Mon,  1 Jul 2024 05:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D0333FE;
+	Mon,  1 Jul 2024 06:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719812526; cv=none; b=fcIPBRWxbDHyI5Xnidd97yjnnMPy23LXNEAByFXEI4Y+YI7kyW9jd7om2wvBbCgq9GO2bGm8nWWJDqpxUt5s/OY4c4RZGo9ABokesvyICF2UXOZsqU1XDNEMk9kvXGhxG83Ci0O4h5K4vPsE5Iu2OQe0Ozjr1Y4fo3NPoneUDhk=
+	t=1719814355; cv=none; b=sIDzSBmLCFkFfJSP0+/L309u5CbA1M6PdO253aMl2pPhU8E0UuzSwMqgWGV4OJ3/CTeNwS0F/Pd+YWAFbBDrzqypHaS8SEhnJcfzuGKAxCQEdaEiYbLYgUzzpm1q/oD+UE4SjrKN0KGUsk8JBJDPk8I7dR1rph4Ux7lcxvpUTf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719812526; c=relaxed/simple;
-	bh=URBql0tdkG8weo7qslMgXtQqS7z1an3iLJvVeKwFk6E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SSF7yk9jUIgow5eHg0Vibb6duWAiHIOj7F3rdKuZtZ9Nw360aZMoOy+KMO/JwGH0iOm/AZMthwgIYaR54S2T8QnvX3bvBbjO4NeHvtQZwHSApSBKYJiP96jDTQfYWMqO6qKrlS8t+QaaGCMg4h1Lka9yjx/wDlTj4dUV5+XP2+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SdnCP3L6; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-362bc731810so2129935f8f.1
-        for <linux-gpio@vger.kernel.org>; Sun, 30 Jun 2024 22:42:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719812523; x=1720417323; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=K1RP7Fpk8x/fLqAOvJCm2fvlERvfv14/xhETHMn8PzY=;
-        b=SdnCP3L6fLRyDuWCSl2PrHaSybYB1c8hyciiYFPAn3OBIyVs77uVYSo/gsc18XJvn0
-         1GVs3lgubddxKwegjInCCOwumPOU8GZI3lEuRRhLBYCEx7hoPnBznkhyb78UIv5ae1/8
-         ekY7LSt/cQRiIsE0cMmL1wT8irmB+6LhkQwiTeTy6CRjiGvQRqnTS5mhy5RMquzvr6kN
-         7dfAbFIW5Xm2bephIUEnfSTcaHQQNlH5dnBRwBDjzzuqypem4zDU6yQKzrGAn6UMXwH2
-         RP1dad90jW+xBi5DjgkL2GsT2UbDKZnl+POnhFRaZciGEtH5bX78kMn8CV1n+Uxx2gc/
-         g4tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719812523; x=1720417323;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K1RP7Fpk8x/fLqAOvJCm2fvlERvfv14/xhETHMn8PzY=;
-        b=XVBIDqtS2zEdCXpKieCZY33elK/8oUiqWzzfFpqxHOgY6QxzF3bf4438QRKWSuPAYi
-         OAEgmd/GLV+mayWo8g4ncawW1EMJyLhy2ONQYTfh7d/XSJs8VicZkyVpqVjHUsj7Zi/h
-         uwl1U9G1603901zTBCl++ssPxUdJ5tJkNpNDVSF6L7HtfhGQ/1elb3ovruf3GGV3w6St
-         9GxvoEzvGvGalVY93wNqTtNTLNvPlMtowM44MGTdZYMk9Qzf0BWRTDIEIJ9X+ldJqYr5
-         vH3qZjH9DEMA8ebx4wSK9ChGvq0/D7B5Gs1m89aD1uCMfL1D0zB4Rx7oAPoyQl/DTDiE
-         Ak8A==
-X-Forwarded-Encrypted: i=1; AJvYcCW4MSP5cjymurSlGTuyfRPwOUnwT+oImTgroetJUA/bO5yBbzBuZuBw8uD34HaOLLcWCvoao6teRBGVmNoOb9yoyDXwo+cffglPzg==
-X-Gm-Message-State: AOJu0YwXR1UAk5x0ob++/I2ajqsfJGVbJJPdOPWfNxp/JMbFCCsbFi0E
-	M5fWjr57vokFxS6AT/bGCHV0LgGRSz7Y3wpNQCQOhf25H1VJxucvVhKd3lgFwS8=
-X-Google-Smtp-Source: AGHT+IHSKBmHrhw/AYhWM82y6sx7nEDDCK+Cj+oGMZFjhX97MXohzQV+8dJGlqZohNNB2+Ja+HNgaA==
-X-Received: by 2002:a5d:47c6:0:b0:367:2d2f:e634 with SMTP id ffacd0b85a97d-367757249a4mr5411546f8f.55.1719812522948;
-        Sun, 30 Jun 2024 22:42:02 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0cd687sm9063218f8f.14.2024.06.30.22.42.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Jun 2024 22:42:02 -0700 (PDT)
-Message-ID: <9f1fa742-28c1-428a-9f85-2d3b352abb44@linaro.org>
-Date: Mon, 1 Jul 2024 07:42:00 +0200
+	s=arc-20240116; t=1719814355; c=relaxed/simple;
+	bh=leRdL9TIL27DeazUKkscwZ4eVccvWI29q1x4++5ggTU=;
+	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
+	 References:Message-ID; b=FWgusiSQOQ1rCV0S00x2ReY2kjhDgLdtKQEALaMlxLIxeRmpITKW92J7i/oJhsSl4cYe0vgJraFkNo6BwCbVQAKNzjgF1g9vMhA7kpbSqWDFQT75BYqhAnyToN9HtlWP+DrBM41Ld4iBUNjjNwqmfoMzLrrikT+9aZ9Gp1LCUOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+Received: from [127.0.0.1] (helo=localhost)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <prvs=0926ff46b5=ms@dev.tdt.de>)
+	id 1sOAGx-002Ih1-QJ; Mon, 01 Jul 2024 08:12:19 +0200
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ms@dev.tdt.de>)
+	id 1sOAGx-0081tm-0F; Mon, 01 Jul 2024 08:12:19 +0200
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+	by securemail.tdt.de (Postfix) with ESMTP id B005B240053;
+	Mon,  1 Jul 2024 08:12:18 +0200 (CEST)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+	by securemail.tdt.de (Postfix) with ESMTP id 2FFDB240050;
+	Mon,  1 Jul 2024 08:12:18 +0200 (CEST)
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+	by mail.dev.tdt.de (Postfix) with ESMTP id 9AF8538201;
+	Mon,  1 Jul 2024 08:12:17 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: intel,lgm: drop inactive maintainers from
- intel
-To: Rob Herring <robh@kernel.org>, Chuanhua Lei <lchuanhua@maxlinear.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Rahul Tanwar <rtanwar@maxlinear.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-leds@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-phy@lists.infradead.org,
- linux-gpio@vger.kernel.org
-References: <20240626101809.25227-1-krzysztof.kozlowski@linaro.org>
- <20240628215350.GA267712-robh@kernel.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240628215350.GA267712-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date: Mon, 01 Jul 2024 08:12:17 +0200
+From: Martin Schiller <ms@dev.tdt.de>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Hauke Mehrtens <hauke@hauke-m.de>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: of: fix lookup quirk for MIPS Lantiq
+Organization: TDT AG
+In-Reply-To: <Zn8CZ47e3LFncrDP@google.com>
+References: <Zn8CZ47e3LFncrDP@google.com>
+Message-ID: <6e07aee09188e241b79e141c532b632b@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.3.17
+X-purgate-ID: 151534::1719814339-81CB1642-F0BC8056/0/0
+X-purgate: clean
+X-purgate-type: clean
 
-On 28/06/2024 23:53, Rob Herring wrote:
-> On Wed, Jun 26, 2024 at 12:18:09PM +0200, Krzysztof Kozlowski wrote:
->> Emails to chuanhua.lei@intel.com, mallikarjunax.reddy@intel.com,
->> yixin.zhu@intel.com and vadivel.muruganx.ramuthevar@linux.intel.com
->> bounce with the same message:
->>
->>   Your message wasn't delivered to Yixin.zhu@intel.com because the
->>   address couldn't be found or is unable to receive email.
->>
->> The Intel LGM SoC was apparently part of Home Gateway division which was
->> acquired by Maxlinear, so switch maintenance of affected bindings to the
->> only known non-bouncing Maxlinear address: Rahul Tanwar.
->>
->> I do not know if Rahul Tanwar or Maxlinear want to maintain the
->> bindings, so regardless of this change we should consider bindings
->> abandoned and probably drop soon.
+On 2024-06-28 20:35, Dmitry Torokhov wrote:
+> As it turns out, there is a large number of out-of-tree DTSes (in
+> OpenWrt project) that used to specify incorrect (active high) polarity
+> for the Lantiq reset GPIO, so to keep compatibility while they are
+> being updated a quirk for force the polarity low is needed. Luckily
+> these old DTSes used nonstandard name for the property ("gpio-reset" vs
+> "reset-gpios") so the quirk will not hurt if there are any new devices
+> that need inverted polarity as they can specify the right polarity in
+> their DTS when using the standard "reset-gpios" property.
 > 
-> No bounces on this? According to this[1], Rahul is not with Maxlinear 
-> any more. Maybe an address in that thread will work. But seems like it 
-> is abandoned.
+> Additionally the condition to enable the translation from standard to
+> non-standard reset GPIO property name was inverted and the replacement
+> name for the property was not correct. Fix this as well.
+> 
+> Fixes: fbbbcd177a27 ("gpiolib: of: add quirk for locating reset lines
+> with legacy bindings")
+> Fixes: 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using gpiod API")
+> Reported-by: Martin Schiller <ms@dev.tdt.de>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/gpio/gpiolib-of.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index 59c7f8a2431a..d21085830632 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -203,6 +203,16 @@ static void of_gpio_try_fixup_polarity(const
+> struct device_node *np,
+>  		 */
+>  		{ "qi,lb60",		"rb-gpios",	true },
+>  #endif
+> +#if IS_ENABLED(CONFIG_PCI_LANTIQ)
+> +		/*
+> +		 * According to the PCI specification, the RST# pin is an
+> +		 * active-low signal. However, most of the device trees that
+> +		 * have been widely used for a long time incorrectly describe
+> +		 * reset GPIO as active-high, and were also using wrong name
+> +		 * for the property.
+> +		 */
+> +		{ "lantiq,pci-xway",	"gpio-reset",	false },
+> +#endif
+>  #if IS_ENABLED(CONFIG_TOUCHSCREEN_TSC2005)
+>  		/*
+>  		 * DTS for Nokia N900 incorrectly specified "active high"
+> @@ -512,9 +522,9 @@ static struct gpio_desc
+> *of_find_gpio_rename(struct device_node *np,
+>  		{ "reset",	"reset-n-io",	"marvell,nfc-uart" },
+>  		{ "reset",	"reset-n-io",	"mrvl,nfc-uart" },
+>  #endif
+> -#if !IS_ENABLED(CONFIG_PCI_LANTIQ)
+> +#if IS_ENABLED(CONFIG_PCI_LANTIQ)
+>  		/* MIPS Lantiq PCI */
+> -		{ "reset",	"gpios-reset",	"lantiq,pci-xway" },
+> +		{ "reset",	"gpio-reset",	"lantiq,pci-xway" },
+>  #endif
+> 
+>  		/*
+> --
+> 2.45.2.803.g4e1b14247a-goog
 
-I did not get any bounces, maybe there is some sort of redirection
-within Maxlinear. I can change the maintainer to Chuanhua Lei.
-
-Best regards,
-Krzysztof
-
+Acked-by: Martin Schiller <ms@dev.tdt.de>
 
