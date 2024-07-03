@@ -1,90 +1,52 @@
-Return-Path: <linux-gpio+bounces-8012-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8013-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD1BC9261DB
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 15:30:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99D4892621B
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 15:47:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 59C751F21F76
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 13:30:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55744285353
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 13:47:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 983C517DA1B;
-	Wed,  3 Jul 2024 13:28:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7119317C7AB;
+	Wed,  3 Jul 2024 13:46:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MlVdVK6/"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="moCHim05"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A66717D35E
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 13:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C6517B50E;
+	Wed,  3 Jul 2024 13:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720013314; cv=none; b=o+YD9T7RoKuDIElYryjXIWpDEMqdXNBcLpLdNXmgn7rhgow5hKTa5zXD3AgGWuk7ThtVVACYXpRInYEGIOtd2d6XaX/0LrsO+PF88pSz3SkMASeeMGUFy5JyWGUfoyiP7PpA9fTrtjecbV8MMM+DoUXoIQfK+ncCv/se68kiBlY=
+	t=1720014413; cv=none; b=oU7N29DfSApWcbQ70Bz+xgSdtc7y6SiKlIeTXr1TMsFWA5TUyq5QcGOuyKUkAVX9q2O3y/ImLL0NX7ShuzIsJaSc1z/mpjDOjFAd67dQNF0pa0ggnkDjfVnHSs2EfrbQM9Hj8TGd9VZYmxAjMnykMiufaNY+cQBHG5PoZqudIEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720013314; c=relaxed/simple;
-	bh=eXeh+odNiG8x4cyW9ttyv7RVPgMeH+bDRXBp/ntb5AQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Njur2tRkqiSLhozmzCMs+sHXsMmejxH144UEHFXyFxUt24jUp1I93LgPEHfjpkCQGUcfTm3/F0MNM1h6o1kEx08g5NLYIDG7hSmhE2GH9fQZG7wCVcPJnfDi+I3f3Hmyc+/hTMIxgp876etfpaBIywTKg456pRUNnuJEfz7Gdcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MlVdVK6/; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ec5fad1984so73938791fa.0
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2024 06:28:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720013307; x=1720618107; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XH47RNmUX1AGSr0QbImyT9elpUv6h36gp7mCFp6MkqA=;
-        b=MlVdVK6/beA4npbdCAzgMv39IjfvLx8k+mcrNqaXj3Us5koXQIDlN/i+hVkL1qiXTU
-         rO/b9EO5NbZte2k3jZKftE/UzZbzF1RXW18eXm8YFjjoSMX7dAfobuHeFFH8gcJLlqnC
-         p87YjnNp4vtpBQPaAC3/AgyCZjxCmqsG+zvCKeeBU9b8bk6bdomaqud/b3KJNj10xo1N
-         fzdOIir+XJxnfulwj4jUEF6rFk146Y5SCYRtBN/hgh4afvOcYeDupeIrv+Ch3KtovCls
-         15Sa5v4hFj8OGjhAWdCTW6Zin+os6ED6ma19gYGMSfZv2upGyxC7CbT5PDcs0rUDIMto
-         1EIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720013307; x=1720618107;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XH47RNmUX1AGSr0QbImyT9elpUv6h36gp7mCFp6MkqA=;
-        b=X0Q9/Mp0v7lmjvt1/oJRu1EQYOsJbFCK5mlJr3AXYyZ5OCO0FFjQlH+P1c2m2/uqhP
-         CWZpTRM3X3VpdPia+6CvN7lKJjibTNAWapXdOKyAGpxwOA7f2nC0IfbLDbwkHTujdojX
-         a2IYVxFx08Gbx+6mcZ1usWnLw06P6dsF0A/+pTxPIPQmcRabK5RVDgVkkB5WvVsuFj5b
-         /RGo9/r8jbw13jP+13bNJbL68GrMJnzJJyCHuicum2OWexXADl6pJ6t25fIliHQfQbcy
-         JC/RFPcizFuwsDt59mFJT2fHIG2ujqZcoLx4dA/mYHPwAqpDvY9miydijSrcpMKf/K9H
-         7YlQ==
-X-Gm-Message-State: AOJu0YzkggPMjq97fdxiLgKEiZjiIvZVOZm8H0YmwXnbpSRfJ1R8vIdX
-	wkgiatEVXI9jSlUx3SkXLB51PvPeJefY/MmPuBIrWgJnnsDj3rIGqqVvQLzsMgMj2k7jR4lMXED
-	q
-X-Google-Smtp-Source: AGHT+IF8+t0W+Jxcef2zPEJhg/UHQYLfiKh8V3SIvq9COfdpuCwDUDYiE5vlgZ1/wChFAeIeucnstg==
-X-Received: by 2002:a2e:9d44:0:b0:2ec:57c7:c737 with SMTP id 38308e7fff4ca-2ee5e6e60fbmr73030221fa.40.1720013307158;
-        Wed, 03 Jul 2024 06:28:27 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:c37f:195e:538f:bf06])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4258036d034sm137144915e9.43.2024.07.03.06.28.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 06:28:23 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
-	Shiji Yang <yangshiji66@outlook.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Asmaa Mnebhi <asmaa@nvidia.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Mark Mentovai <mark@mentovai.com>,
-	Jonas Gorski <jonas.gorski@gmail.com>,
-	=?UTF-8?q?L=C3=B3r=C3=A1nd=20Horv=C3=A1th?= <lorand.horvath82@gmail.com>
-Subject: Re: [PATCH] gpio: mmio: do not calculate bgpio_bits via "ngpios"
-Date: Wed,  3 Jul 2024 15:28:20 +0200
-Message-ID: <172001329822.19609.1796927408061216237.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <TYCP286MB089577B47D70F0AB25ABA6F5BCD52@TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM>
-References: <TYCP286MB089577B47D70F0AB25ABA6F5BCD52@TYCP286MB0895.JPNP286.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1720014413; c=relaxed/simple;
+	bh=nu1tNQkTVLU7Ya4bLMrb5FRJPuYZJI5uK4FTnTbBLpo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DN6/YLEgmbk/dfccTlHMfwXgq49BCaY+S2cof1PEtWHzBdDO1YMUrQABC0YqJ9cGvxhMnqzMKxkRRChqxZbQgBpe31oOJFY4nuNqwQSSX4zgEc8ykcEnhugUn2NB8oatijLLFFHtj/OBIMSjzKaHEKFlCbbDHPp7dI8woOcPMUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=moCHim05; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 920C61C0003;
+	Wed,  3 Jul 2024 13:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720014409;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ztq3xYiUAHRYqYmVghJuHU6InRmUrnOPuEKwBJVsIWU=;
+	b=moCHim054x+A4xuomiAEjt3JRF9ifcfaZSOByPlA4VGfKfaRcQdzhJnPEMHiUeaQhUakTF
+	gBYsuXBW7TOQH5EtegRwy6urhE9mC07hr4PFXc1VR+NHaItsYBXp1/tNNgQBx+0cRgf8Nb
+	kEvqpedZb4MnNg5r8/6H7rhMdcw0YmqqPD1HMqlgCuoT7B6pialZkt8HYsC6z0KOEuMQgK
+	TAVqZG7EsVn3cidQ+mD0uMD81+9Dz67mv/d2VEAdDPJyl81HsS1cyLYYACGCoBxeQx1k7x
+	29V8MPAQ29sLOwSTKH9vZdXnxHVEbMm2xOXyTbrGIGSB/6HgfS+GjsB/BuDS1g==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: [PATCH v2 0/2] Add Mobileye EyeQ5 pinctrl support
+Date: Wed, 03 Jul 2024 15:46:46 +0200
+Message-Id: <20240703-mbly-pinctrl-v2-0-eab5f69f1b01@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -93,31 +55,81 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAEZWhWYC/3XMSwrDIBSF4a2EO+4takseHXUfJQM12lxINKhIQ
+ 3DvtZl3+B843wHRBDIRHs0BwWSK5F0NcWlAz9K9DdJUGwQTd9aKHle17LiR0yksqGzXKnsbmOw
+ 01MsWjKXPyb3G2jPF5MN+6pn/1j9Q5shQ913PBzG1ismn8j4t5K7arzCWUr44Mv7kqgAAAA==
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.15-dev-13183
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+This is a new iteration on the Mobileye system-controller series. It
+used to be sent as a single series [0], but has been split in the
+previous revision (see [1], [2], [3], [4]) to faciliate merging.
 
+This series adds a driver handling EyeQ5 (and only EyeQ5, not EyeQ6L nor
+EyeQ6H) SoC pin config and muxing. It is an auxiliary driver being
+instantiated by the platform clk driver.
 
-On Tue, 25 Jun 2024 09:19:49 +0800, Shiji Yang wrote:
-> bgpio_bits must be aligned with the data bus width. For example, on a
-> 32 bit big endian system and we only have 16 GPIOs. If we only assume
-> bgpio_bits=16 we can never control the GPIO because the base address
-> is the lowest address.
-> 
-> low address                          high address
-> -------------------------------------------------
-> |   byte3   |   byte2   |   byte1   |   byte0   |
-> -------------------------------------------------
-> |    NaN    |    NaN    |  gpio8-15 |  gpio0-7  |
-> -------------------------------------------------
-> 
-> [...]
+Related series are targeted at clk [5], reset [6] and MIPS [4]. The
+first two are receiving a second version. The last one has no change
+and stays at its V1.
 
-Applied, thanks!
+Have a nice day,
+Théo
 
-[1/1] gpio: mmio: do not calculate bgpio_bits via "ngpios"
-      commit: f07798d7bb9c46d17d80103fb772fd2c75d47919
+[0]: https://lore.kernel.org/lkml/20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com/
+
+[1]: https://lore.kernel.org/lkml/20240628-mbly-clk-v1-0-edb1e29ea4c1@bootlin.com/
+[2]: https://lore.kernel.org/lkml/20240628-mbly-reset-v1-0-2a8294fd4392@bootlin.com/
+[3]: https://lore.kernel.org/lkml/20240628-mbly-pinctrl-v1-0-c878192d6b0a@bootlin.com/
+[4]: https://lore.kernel.org/lkml/20240628-mbly-mips-v1-0-f53f5e4c422b@bootlin.com/
+
+[5]: https://lore.kernel.org/lkml/20240703-mbly-clk-v2-0-fe8c6199a579@bootlin.com/
+[6]: https://lore.kernel.org/lkml/20240703-mbly-reset-v2-0-3fe853d78139@bootlin.com/
+
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+Changes in v2:
+- Kconfig: replace "depends on AUXILIARY_BUS" by "select AUXILIARY_BUS".
+- Kconfig: add "depends on OF" for pinconf_generic_dt_node_to_map_pin().
+- driver: cast dev_get_platdata()'s return value to (void __iomem *).
+- Link to v1: see [3]
+
+Changes since OLB v3 [0]:
+ - MAINTAINERS: Move changes into a separate commit to avoid merge
+   conflicts. This commit is in the MIPS series [3].
+ - dt-bindings: Take Reviewed-by: Rob Herring and Linus Walleij.
+ - Kconfig: do not depend on COMMON_CLK_EYEQ. This symbol is not defined
+   in this series, it is defined in the clk series [1].
+ - Kconfig: do depend on AUXILIARY_BUS.
+ - Kconfig: remove outdated "select MFD_SYSCON".
+ - driver: remove "#include <linux/platform_device.h>".
+
+---
+Théo Lebrun (2):
+      Revert "dt-bindings: pinctrl: mobileye,eyeq5-pinctrl: add bindings"
+      pinctrl: eyeq5: add platform driver
+
+ .../bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml   | 242 ---------
+ drivers/pinctrl/Kconfig                            |  15 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-eyeq5.c                    | 575 +++++++++++++++++++++
+ 4 files changed, 591 insertions(+), 242 deletions(-)
+---
+base-commit: f2661062f16b2de5d7b6a5c42a9a5c96326b8454
+change-id: 20240628-mbly-pinctrl-bf76bf390a7c
 
 Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Théo Lebrun <theo.lebrun@bootlin.com>
+
 
