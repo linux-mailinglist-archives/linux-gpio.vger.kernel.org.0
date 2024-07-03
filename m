@@ -1,103 +1,107 @@
-Return-Path: <linux-gpio+bounces-8006-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8007-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6755D9260AC
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 14:42:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 762959260C7
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 14:46:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 99A0F1C21D68
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 12:42:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D37C92843C6
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 12:46:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0477176FD3;
-	Wed,  3 Jul 2024 12:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B69A1741C0;
+	Wed,  3 Jul 2024 12:46:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="coALAr6d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xS+NbOsK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8A017625D
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 12:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A0E1E4A9
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 12:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720010538; cv=none; b=iFX65dPLFLELN5xFYtkMl5d0HhRKjDihibZV9/11G36mWz6dmlUX1ugoXJKldp5MxbjPeanDWJw5lBzKrCtAvqxdyC5fN0KGgpDRyZUT+mT1gMVT9Gj3Oxgouu+bpFbAuuJlqpsG1YfIB3bXiiNy70OBQ3Pn4l3UEIvBbRKlHN8=
+	t=1720010783; cv=none; b=dsxSlLA7nqOABXR5XOUw9ag1VMNufegnTgUpsEpDZ6gcoztpAjaDaWH3uHwKgFyA1CNL/5UokiRQMnMjbjpkrYbEA26u2OCqJ9SHeEDjAgWg2GGffPW9qFZCCnSxajD23A44OC7IYXbH4ohGOJ/FJS9iX+nVEMG8KcoJxQLLEYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720010538; c=relaxed/simple;
-	bh=WGy9HnHtG0sk7gbF5+taydKdEFXh/w2zbWiiG26OMSQ=;
+	s=arc-20240116; t=1720010783; c=relaxed/simple;
+	bh=Ut68rqDrN1TwpAu4QkfYXs+IX6JiITiQUrIaV3hssN4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O66JROOb5G+cOKYQk3Nn63g3vq++jMOzzgFTNBj8iuosiBwkv0DBXbzp5nz3Z9cCqHNjviePKsF+ThSDNyTDyNIIsc5Bf2E7URFwZGrOXH73i90PR73KLUNWzkMSeb51AtMDAGoVM7n9UhxxZaS2ywEssmrV+JxvW/hdm3yu7qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=coALAr6d; arc=none smtp.client-ip=209.85.128.174
+	 To:Cc:Content-Type; b=J4dja+A7122MXyc64NyWjEv6avviKqlvZnjErTNqTHCb1e6NlhKgY4vnEhPZ35Zc0c3ZBd7IECYUz8dDiBGoAOpfJ8pVh06hK0ALAkMNLpYKiCBCFQ5QgglHqU/VoMfkzRbV8NBXnVA7VSKWhhO54tv62kiLPMlqwGVuGPC3zNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xS+NbOsK; arc=none smtp.client-ip=209.85.219.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6519528f44fso5182107b3.1
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2024 05:42:17 -0700 (PDT)
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e03a6c1741eso1245828276.3
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2024 05:46:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720010536; x=1720615336; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1720010781; x=1720615581; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WGy9HnHtG0sk7gbF5+taydKdEFXh/w2zbWiiG26OMSQ=;
-        b=coALAr6dH1P0fxAyBGJOf+nG7m+tqGwxvOfmJ2OX1DyaGkoHFFc6fM4iVyKRG1QkMF
-         +Ski73Y2v4uIuMytuaLENrMyOw4sxhAfesoT3iKmk5+M2Zd1QPhYOaSy7l3vr86JgwWs
-         Dp8okJ1WU6agFZrilJrwOm9wc7D46zTRJldhB8ed4II27nELhz0Jg7bxjPpkjp1z/JNS
-         4ap+Hkc1MD69RucY0v3hINjqft+5OawznOirGHHVK89CD3p9d3B9jzWabXqrwhHErQWN
-         rUCQ8SZuAllqy3enWEldTr1EA4GLAwWkbxtACPt8wQCpDTlHyyyPRz5zbOZLli1ofBWa
-         d+qw==
+        bh=Ut68rqDrN1TwpAu4QkfYXs+IX6JiITiQUrIaV3hssN4=;
+        b=xS+NbOsK1LrdxBZz+P4dkUeZWg73cc3q8EQrnykGnmaFz1Db9fOf9J2SWq3SQSQblW
+         uUvC9rKZf3EcHJT3ghE5RKTSDjGG8ZNSVEiNRTDN2kvH02CLZ/EJ7K9oFs044ajXUhJC
+         BxxgbR1tnhKKvgNJ7nD4NoGYYb46CaE1LcmEWwG4hJkLlqxb3hSFbIe40O3sZu9WHGjW
+         soChqzGtfiMdsHeeX43pYgnRMPQwmAZxs060bX2JSXekCIyRUwLe3rw5pn2lOspt225Q
+         VWvkwLa5lpjYBTnPcba9bUbNFgh1/S0rxiA1Qn4KruOI5r5yLJwLNdpvB2cDWlMPiZrw
+         VyZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720010536; x=1720615336;
+        d=1e100.net; s=20230601; t=1720010781; x=1720615581;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WGy9HnHtG0sk7gbF5+taydKdEFXh/w2zbWiiG26OMSQ=;
-        b=ePoAO2h3fEaijuTsUCer0QB3xGyblxlQ2r9hsdD5WMukK8cDCcko/ap08Q04RnQSA7
-         jCGdgKF+Dd8EIsiFNr22akJgtjyJHdCv5RE5nSCbdW+cSA8JwXbZaEyV4etYskhbHIBM
-         9L0Y7yI/hsvaZ0gmTnqVQmpk3jGfh97a5adRqYXBzyu0utPaFG8cl0T9YDUsF5aLTg/v
-         7in7xH0ap9uN5NgPE1fePrWDZ1Rt4RYv62JviIHUmRtaqnzKK/GarEHKMyuAAJgr26Dp
-         iaDXLP8L28Hs1OGWC6/cfSU1nD79r0WUOqP4yMZqnnxHCL3IRUfAFZh3tNgvDfi/wR84
-         WTwg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMw8HXVcSXOizf67pUQN+m9rlysl1YORUYw3QWLw5qklAyso4MBxjE995BGvD6QBVg08TCz/VA7MjBz8tOxPUsG++Ky+XelNQkYg==
-X-Gm-Message-State: AOJu0YyLgwFdHtLy8obybVXLX/PnJoJ1Lo9gcIpu335ZE0rOi5L/vSaE
-	5PKQfHqSRNZHdBfhB86z1wZE+HTn/Tefyc09xCCmkQZRGfJcv1odenHhKaueCIP477TlJ1fepeQ
-	TDXINEhQz3OvbKpO2OvkJ8PYhDNxE8rH2k5fcsg==
-X-Google-Smtp-Source: AGHT+IExCk5Vq7oaEX9hYErcWNt/jn8F8v/b3cmMK80gc7WrrgnGrV1BBcszUD1l2ZP+IAdB1HfikZckPy1bcw1vcGo=
-X-Received: by 2002:a25:df16:0:b0:e03:229d:69f5 with SMTP id
- 3f1490d57ef6-e036ead1e52mr12491370276.3.1720010536270; Wed, 03 Jul 2024
- 05:42:16 -0700 (PDT)
+        bh=Ut68rqDrN1TwpAu4QkfYXs+IX6JiITiQUrIaV3hssN4=;
+        b=uChAfrhowuly0HcK3TgI7p/C5cafxmnuuWXgPnuJHF0Em21QUcFyL9upJebD3GGEEO
+         lG0YVOasXxgZkjDR4VlYoaqNr74HJFC/72GSfpl1PoA0w+bYBccPL1jBw+Swkt8NAofp
+         /N1AapsN8eVjPX77bqEcXDY5o6IQWzdhjv57SX+DqlgFzrNtZ8nHc22ZZxCWtisxoElZ
+         2uhZPb6niMQgUwm4B9eI7NGn2rCrpEvH7lplJ4Kf3GX8ofwUW7AM4HOWX5tH+N3mkVHe
+         YO4tV8vo6SnwONTUkbgRBBK0+5JY8Hgrf+seZ0Xk45kYrvPabemJBSwfoZZgotPmf9yg
+         Z+Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9ybkii6hASAddfGOtPNYYr1w4tkq5T0tBlYSQcYRTvqNTV8kcKyD7tzAItyOQ9Kcmjzmv++iWR+F4+Rx7bEffW/Paup5M67AmJQ==
+X-Gm-Message-State: AOJu0Yzvf2JnHoGAB11tcO9t0I69OjQYlqb56Th2Oc/09E75cip3uSys
+	9uENq5zXom8CENicLke53d7VkG3My65UbYi0E+b2qAaQouYS7IpsTQtDgnlIasIcrgE39eDUpYj
+	jUyvVCO8h4gPoQR1LIwIZn8kfLlBk8iyJypvV0w==
+X-Google-Smtp-Source: AGHT+IGx0EtqF24mwZRqfU+d7OwAJMjAo8uBkj9IVIYdq7kjT6pCMEr0hMuMUufGQFu/0P086qoqyzdlDDqlq5KxMEs=
+X-Received: by 2002:a25:c5c7:0:b0:dfe:73d8:4593 with SMTP id
+ 3f1490d57ef6-e036ec454b4mr11736791276.48.1720010780692; Wed, 03 Jul 2024
+ 05:46:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627131721.678727-1-peng.fan@oss.nxp.com>
-In-Reply-To: <20240627131721.678727-1-peng.fan@oss.nxp.com>
+References: <IA1PR20MB4953D5E7D7D68DDCE31C0031BBCF2@IA1PR20MB4953.namprd20.prod.outlook.com>
+In-Reply-To: <IA1PR20MB4953D5E7D7D68DDCE31C0031BBCF2@IA1PR20MB4953.namprd20.prod.outlook.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 3 Jul 2024 14:42:04 +0200
-Message-ID: <CACRpkdYzg8jE0F7SHo9-WoyfvHgEwkL5ouxX3vSj-qdq1JX97g@mail.gmail.com>
-Subject: Re: [PATCH V3 0/3] pinctrl: use scope based of_node_put
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: dan.carpenter@linaro.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org, 
-	kernel@pengutronix.de, u.kleine-koenig@pengutronix.de, 
-	Peng Fan <peng.fan@nxp.com>
+Date: Wed, 3 Jul 2024 14:46:08 +0200
+Message-ID: <CACRpkdYJCnTXHMwUi1-uhdrBjt=dukyJNGCZM2pLfN+tbw8bmw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: pinctrl-single: fix schmitt related properties
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 27, 2024 at 3:08=E2=80=AFPM Peng Fan (OSS) <peng.fan@oss.nxp.co=
+On Thu, Jun 20, 2024 at 1:15=E2=80=AFAM Inochi Amaoto <inochiama@outlook.co=
 m> wrote:
 
-> From: Peng Fan <peng.fan@nxp.com>
+> The "pinctrl-single,input-schmitt" have four arguments in the bindings
+> but the driver needs two. According to the meaning of other properties
+> and driver, it should have "enable" suffix. Fortunately, there is no
+> dts using this property, so it is safe to correct this property with the
+> right name.
 >
-> This is to send the non-applied ones of [1] after rebase, no more changes
+> Rename existed property "pinctrl-single,input-schmitt" to
+> "pinctrl-single,input-schmitt-enable" and add the right description for
+> property "pinctrl-single,input-schmitt" used by the driver.
+>
+> Fixes: 677a62482bd6 ("dt-bindings: pinctrl: Update pinctrl-single to use =
+yaml")
+> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
 
-Last three patches applied!
-
-Thanks for doing this work Peng, it's really nice because this kind of
-stuff tend to end up on the backburner for me, but now it gets done
-with proper attention and focus!
+Patch applied!
 
 Yours,
 Linus Walleij
