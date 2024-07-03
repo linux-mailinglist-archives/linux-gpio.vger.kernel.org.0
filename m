@@ -1,133 +1,115 @@
-Return-Path: <linux-gpio+bounces-8021-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8022-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85A99926823
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 20:26:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C08E92689E
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 20:50:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F6B9B260CA
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 18:26:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BAC42B23FF7
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 18:50:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12219187549;
-	Wed,  3 Jul 2024 18:26:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BE051891DE;
+	Wed,  3 Jul 2024 18:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mI+L0vWq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQ7eo1Ak"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C322186E2D;
-	Wed,  3 Jul 2024 18:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F04217A5B0;
+	Wed,  3 Jul 2024 18:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720031174; cv=none; b=A8nl3CGgfZWZFsTb1IQx/TyD8ON4i5aoQfYLYeKXclxxsMw37GIRU8VgoQoFx7iM1FXSNtx86GsgJiobkf+PJfThIgzQhvnwF52zSYFWavXOIQmy5j4xF5U4fipfmaFCmhcgw3aQkLstWfOyMzhKHeuU/CHeYUyw1vDQWiQu+Do=
+	t=1720032597; cv=none; b=WE22ywmJmHRtS6u/MFaxb+9nO+2vFc7NhL8o/LpFMpzUKOKrWOJD9w0uM0GjMwZMS7Y8kQaPlF7AdFRcZHJ0xTMAg1HmG1jTH21c98pMFBgn18EDfNCEBm1ck8Hdrn0H0s8rk2NgKsC1fsVpt9PLOZHFrlDoCwF3PshI5WHxgd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720031174; c=relaxed/simple;
-	bh=zEyr6WVfLE3xaWnwlabZXzwIk4eydgBvGHM50aLVa4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=vBAnDoZnBrL69gnkADVdipYpFvKUgljQx3GDSpe+aYxxnMYJgrO3FW7FmUEUjrCt/MdBNM4o476x39xleWwXGOVGkLWo0Q3McPxEQkv8dpCHNSozwbVf4pzxz5LS4WVtOIQUYX4Ds/T+JYh4v4gml1HzHgBraNhhRbjbyFJ8t4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mI+L0vWq; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-652fd0bb5e6so3921501a12.0;
-        Wed, 03 Jul 2024 11:26:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720031173; x=1720635973; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7VkRH+KMFMQGxARCBkVlgc5hZU+6gk0WysqWggyfzFs=;
-        b=mI+L0vWqGeNw0UsDG0EZaA32VYcaNOYpQZokdhTYUnctlSnapQQY2vH1RzFSYm901L
-         kfNRljjJXRuy/RKbu1Id5nqH0Iu3V6pYkpjcpBo7mlpSCkJqlq2wUlbnXRj/sy+l+Cgn
-         7a646jlhnh6vKCbkwCzPBc4coPpmYS75f4q4sCcgyvNmXLtbsr9ZjBC2LPmM5Q9+K7zA
-         coV4PvuMz7IAAq7AOw0KL7sN/l5nFbl/CtK0tulXwcVFKwj78DSa7J9Z4T2PYyyPNl99
-         Oy0dyfyK+KqQjOOAE+CX0YMLhmYJtA7YeIBelP6jo6czWmMSyoN3g+5DXZ8GzsIC8Pem
-         ZYRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720031173; x=1720635973;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7VkRH+KMFMQGxARCBkVlgc5hZU+6gk0WysqWggyfzFs=;
-        b=oFgi710zn1LTh4pb1TZc7MajKhRr3VG6g1wNb12PnxqieTnpGEpGLkzDzLuL6P3NFP
-         WfSjaZcI80Oooz/E6eBb71hdFaxduNOKUGzuzxVSg2Bfpp8YKUae2gCKN8z1a1QdMcIh
-         7ZBQiCD7//jr1zI3rDoc3f+IxMIplasJTV5doRBKJqv3/OQPssGZ/tu03wbAZ/LfY93o
-         u81Ho4kyIXD8H7XVWt9geNF9GPCiq2KsFcX+hFxulZyDxLCMt6ZqqFoMb9bxvoiG9Ros
-         xheOyu0j6rmhCV7ATsjsBT2RbnFBsU2AVAYKtvKj6rBHuXIum61H/zXA7XvqCs/W3xSF
-         qW8w==
-X-Forwarded-Encrypted: i=1; AJvYcCW4wFil2oDzJaUQkKH0vuVvdRj8pN8tF/gVi9HGwV6VZ/Eovph/Y1xbrkyIvuv64USFwmOPd2Gc5HMG2W7IdGQAjXVmtAXuftGDHvyGsdwB2vIUKK/ASKUZLbsFdoaGqzeqjaD2UTrlIw==
-X-Gm-Message-State: AOJu0Ywyv7Sz+dclV6cstheZgUCGakeL+bzkYPvcNwel4SM4QNXpfpql
-	XFy/tKlUBFaDIc+4BSuvBjd+kcn/9HfP8AXZFWBEes402Gsqsm5f
-X-Google-Smtp-Source: AGHT+IEraCPwSRhGWVbSF/yeeYvvKY0k9BBqSWTg8q5G5VtWr5y+Fg33zdHBOu7H9RxSpWXuCcPpDQ==
-X-Received: by 2002:a05:6a20:12c3:b0:1bd:2870:f9de with SMTP id adf61e73a8af0-1bef60fc49amr16240570637.3.1720031172452;
-        Wed, 03 Jul 2024 11:26:12 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:6993:3d0b:ab92:3a8d])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70804a95fc4sm10696108b3a.215.2024.07.03.11.26.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 11:26:12 -0700 (PDT)
-Date: Wed, 3 Jul 2024 11:26:09 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] gpiolib: of: add polarity quirk for TSC2005
-Message-ID: <ZoWXwYtwgJIxi-hD@google.com>
+	s=arc-20240116; t=1720032597; c=relaxed/simple;
+	bh=tL3e/ur6/KMkg7mh3t7r3ZIFeZQ4xi5Q34S/7FlZ2qA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SLq2w25GpHpJBUellizhaTjqXXk76DXYVeBiRdvDL7I8h7/vRs3pjJ1J40oIPwxA/uls4pJOVx7u1tzsLEceO+TuGQgjyA1/QA+yKbeX5uuaueX724HZHO5boF25b4Bkxs49NUb2f8Y7/MrgRLdac44sLslW72RIbiIdV51tqBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQ7eo1Ak; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82B6EC2BD10;
+	Wed,  3 Jul 2024 18:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720032596;
+	bh=tL3e/ur6/KMkg7mh3t7r3ZIFeZQ4xi5Q34S/7FlZ2qA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SQ7eo1AkC8LjRWberzbfTrXdEmn8AVAPTH1nI5h830+ubxo1C5MaKmEtPRy9gsG1o
+	 M8aW67LDGZEnsrCM4Q/GRKRYn+r39JIjjMUn4+wwhQ4mb+Nyw7/6h4NQGIjateXcmW
+	 XAfTSrhx2kUyLwJweon5gGjsH9sMGD6YpKO/TIf9EwzO/u3UL14SYAuIKAMoMlbYkK
+	 bxKEJlfNCtFdikjht8PVx57e+Ez2TZA0kY1xDB4xr5o96jrOLhYPq5oX8riaz0aLMe
+	 pQxRIT/WAYj12CgJvmnxQibErDTaKj3syhCujN4MjJ27ACtbE6kpJopp6TU3GIN89Q
+	 vkEmm7DBvS+3g==
+Date: Wed, 3 Jul 2024 11:49:52 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: patchwork-bot+netdevbpf@kernel.org
+Cc: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com,
+ sboyd@kernel.org, jassisinghbrar@gmail.com, herbert@gondor.apana.org.au,
+ davem@davemloft.net, manivannan.sadhasivam@linaro.org, will@kernel.org,
+ joro@8bytes.org, conor@kernel.org, tglx@linutronix.de, amitk@kernel.org,
+ thara.gopinath@gmail.com, linus.walleij@linaro.org, wim@linux-watchdog.org,
+ linux@roeck-us.net, rafael@kernel.org, viresh.kumar@linaro.org,
+ vkoul@kernel.org, edumazet@google.com, pabeni@redhat.com,
+ mcoquelin.stm32@gmail.com, robimarko@gmail.com, quic_gurus@quicinc.com,
+ bartosz.golaszewski@linaro.org, kishon@kernel.org, quic_wcheng@quicinc.com,
+ alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
+ agross@kernel.org, gregkh@linuxfoundation.org, quic_tdas@quicinc.com,
+ robin.murphy@arm.com, daniel.lezcano@linaro.org, rui.zhang@intel.com,
+ lukasz.luba@arm.com, quic_rjendra@quicinc.com, ulf.hansson@linaro.org,
+ quic_sibis@quicinc.com, otto.pflueger@abscue.de, quic_rohiagar@quicinc.com,
+ luca@z3ntu.xyz, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+ bhupesh.sharma@linaro.org, alexandre.torgue@foss.st.com,
+ peppe.cavallaro@st.com, joabreu@synopsys.com, netdev@vger.kernel.org,
+ lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ ahalaney@redhat.com, krzysztof.kozlowski@linaro.org,
+ u.kleine-koenig@pengutronix.de, dmitry.baryshkov@linaro.org,
+ quic_cang@quicinc.com, danila@jiaxyga.com, quic_nitirawa@quicinc.com,
+ mantas@8devices.com, athierry@redhat.com, quic_kbajaj@quicinc.com,
+ quic_bjorande@quicinc.com, quic_msarkar@quicinc.com,
+ quic_devipriy@quicinc.com, quic_tsoni@quicinc.com,
+ quic_rgottimu@quicinc.com, quic_shashim@quicinc.com,
+ quic_kaushalk@quicinc.com, quic_tingweiz@quicinc.com,
+ quic_aiquny@quicinc.com, srinivas.kandagatla@linaro.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-crypto@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ kernel@quicinc.com
+Subject: Re: [PATCH 00/47] arm64: qcom: dts: add QCS9100 support
+Message-ID: <20240703114952.6013f05e@kernel.org>
+In-Reply-To: <171998042970.21654.12559535993133117436.git-patchwork-notify@kernel.org>
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+	<171998042970.21654.12559535993133117436.git-patchwork-notify@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-DTS for Nokia N900 incorrectly specifies "active high" polarity for
-the reset line, while the chip documentation actually specifies it as
-"active low".  In the past the driver fudged gpiod API and inverted
-the logic internally, but it was changed in d0d89493bff8.
+On Wed, 03 Jul 2024 04:20:29 +0000 patchwork-bot+netdevbpf@kernel.org
+wrote:
+> This series was applied to netdev/net-next.git (main)
+> by Jakub Kicinski <kuba@kernel.org>:
 
-Fixes: d0d89493bff8 ("Input: tsc2004/5 - switch to using generic device properties")
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+> Here is the summary with links:
+>   - [01/47] dt-bindings: arm: qcom: Document QCS9100 SoC and RIDE board
+>     (no matching commit)
+>   - [02/47] arm64: dts: qcom: qcs9100: Introduce QCS9100 SoC dtsi
+>     (no matching commit)
+>   - [03/47] arm64: dts: qcom: qcs9100: Introduce QCS9100 PMIC dtsi
+>     https://git.kernel.org/netdev/net-next/c/df18948d331e
 
-This was located purely by inspecting code and DTS, I have not tested
-this on hardware, so copying folks who have been involved in n900 as far
-as I know.
-
-OTOH if this was indeed broken, then it was broken for ~7 years
-(d0d89493bff8 went in 4.11-rc1), so maybe the best way is not to worry
-about compatibility with old DTS, update
-arch/arm/boot/dts/ti/omap/omap3-n900.dts in the tree and call it a day.
-
- drivers/gpio/gpiolib-of.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 38679cf1969f..89d5e64cf68b 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -212,6 +212,14 @@ static void of_gpio_try_fixup_polarity(const struct device_node *np,
- 		 * for the property.
- 		 */
- 		{ "lantiq,pci-xway",	"gpio-reset",	false },
-+#endif
-+#if IS_ENABLED(CONFIG_TOUCHSCREEN_TSC2005)
-+		/*
-+		 * DTS for Nokia N900 incorrectly specified "active high"
-+		 * polarity for the reset line, while the chip actually
-+		 * treats it as "active low".
-+		 */
-+		{ "ti,tsc2005",		"reset-gpios",	false },
- #endif
- 	};
- 	unsigned int i;
--- 
-2.45.2.803.g4e1b14247a-goog
-
-
--- 
-Dmitry
+This is some bug / false positive in the bot, to be clear.
+Commit df18948d331e is ("Merge branch 'device-memory-tcp'").
+No idea how it got from that to DTS.
 
