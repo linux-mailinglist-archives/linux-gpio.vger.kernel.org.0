@@ -1,152 +1,196 @@
-Return-Path: <linux-gpio+bounces-8010-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8011-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71B1D92616C
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 15:09:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5B8A9261A4
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 15:18:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2771F1F227C8
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 13:09:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CFE6282A61
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 13:18:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 568D917A58B;
-	Wed,  3 Jul 2024 13:09:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39A4116F827;
+	Wed,  3 Jul 2024 13:18:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Rj5CV6gj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZJI9BEsO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2482B13DDA6;
-	Wed,  3 Jul 2024 13:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B4F171095
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 13:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720012168; cv=none; b=nv7MEfG3FNCOvPbqzTVUwEgyghlZVtsMysLpL3piHkRemeXN5sJ1tCOX4hnnhvFxqhe0k83Dodi+BS1h44qpmNT2xrdkArfhaR6Ix7573N4sPpToFh4foNitjEJhThlngUsqXYS65ncUntsCzSFOUqEfRuO52fvw9WnEqSP582c=
+	t=1720012721; cv=none; b=hiixbcIJJ0rPOw8KicmGRRTce9fMt+t81+Yb/hUd08+UX/xmEee7JmJWYHhFuvVJsFPVs8kVnSR86/MeiEwUfEXiRMoNIme1tDivHhmA7dF/olUIirHBc1fn4ESeDkvXyCfdnT4b3xIy/ujpsGtybuVNzvchlneP7Cf+rrpz/3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720012168; c=relaxed/simple;
-	bh=W8KnSELxoOeLFO4Bkg8ypBzvhOg9ofBU1heW/xaRe4k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KUhXTWIBUcGJyrpGl9mRkHUag8woUY3otXdtjRNvvabYEdY73vcDJFBl9fA5XE6aFhbD2PrzCDHV6YWjq+3eFALhAP5PAzno3U2KyHs+nA2KruyiT3S8xqQIqoXyOGO7HSJLYrEnTXLOlP0GiTNkrw03jVXoNrDDzfwqmEgEo7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=fail smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Rj5CV6gj; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1720012721; c=relaxed/simple;
+	bh=dEgwjX/awsP8M0cKoVOJ9S1Fh+QNjWp1e9QPLdWaceY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=lTAFPsTPZwT3i94lblrkz4y+4POihd07aDBbqT/tNvVGMKjBy6+4So792l/PP7yRBnldPEzQxrXHMPU3c3HXLFFua59p3xmn+mzWp/uFv1DszsF4iqJE13bkOWhbXDnFCM+wZLQ6txyZ9KwjjTsJK3MIAW2AyMEIsbFzo/dnn24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZJI9BEsO; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1720012167; x=1751548167;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=W8KnSELxoOeLFO4Bkg8ypBzvhOg9ofBU1heW/xaRe4k=;
-  b=Rj5CV6gjA7bdouczrb90jR05EmC8s1gMOWvzhsKmCBE2E7JT4vVZzOdS
-   uBUAswn6AJt3J0nSb+5FoxsxGyLZ8Qjxbfu2zmiNjjSxvu3WcD7WYWqAw
-   oaL948Izy4XK6SU6PNJj+gGWNskvdmGM16iSYixj+uE9bizQTgIeC96WQ
-   jjhud9EqkR3dkpschvbXGcx6IIodTZym3NgjEus87t6wVzF7FWhj8WJbu
-   N9q0TBlMOh7Imj2TJnnXptonwil+6DUI/YFI1Gcz2Bxy0O0NlYYzOOR1K
-   jJPxapoEb0zIRrd1OwkSQ3tjgKtWYGanpCYw+DuuPYiytBf/vuZz1EKfX
-   Q==;
-X-CSE-ConnectionGUID: EqW5S7eWRE2aTexdHZiS+A==
-X-CSE-MsgGUID: NasQoXC7S5Kaxo5UL3Vsag==
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720012719; x=1751548719;
+  h=date:from:to:cc:subject:message-id;
+  bh=dEgwjX/awsP8M0cKoVOJ9S1Fh+QNjWp1e9QPLdWaceY=;
+  b=ZJI9BEsO4s/2h1FhgfM5fjOFLQQfvK6RIWSDFjJWHqonnNS7qnR+RcOg
+   knDBfNcaQo+FKZrG6pS2K+QyOFcB7pLroN8eVElr9Ai6ZNzH8NhRNDnmd
+   z6dz98hhxFeAt1+BS6IAxJAzB35Pg/jHWckL9dtMZxZJ9qjVefl7HYuCH
+   Ks9hfwjyrtc/8WyP4kQowxBpp9tp45oX2qus47PyCsW+vzLAIU1EwwgIZ
+   aT0EDgvlDCFNr1i+cEVTl00r/u0OfZfFd7FxdzJfwzwr1RuQS9EE4gkfK
+   tSdH1VfBm9FkS43mCRU/2QZNejx37mJMwOYE47g3rEt2DToxYtwZLoMQH
+   w==;
+X-CSE-ConnectionGUID: E/1BKNLLQfOQYTAT1SBnVA==
+X-CSE-MsgGUID: VU+9L5wcTkqpY4TXFjc6cg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="17449832"
 X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
-   d="scan'208";a="28777735"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Jul 2024 06:09:24 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jul 2024 06:09:03 -0700
-Received: from [10.180.116.202] (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Wed, 3 Jul 2024 06:08:46 -0700
-Message-ID: <a8cc31a9-d58f-4a4e-98fb-a7ba47bc744e@microchip.com>
-Date: Wed, 3 Jul 2024 15:09:07 +0200
+   d="scan'208";a="17449832"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 06:18:39 -0700
+X-CSE-ConnectionGUID: +VegVMwARlaHSMHqTzMMXQ==
+X-CSE-MsgGUID: oi/8/rJHQVCl7rEpJWxs/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="50691958"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 03 Jul 2024 06:18:38 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sOzsa-000Pks-0L;
+	Wed, 03 Jul 2024 13:18:36 +0000
+Date: Wed, 03 Jul 2024 21:17:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-current] BUILD SUCCESS
+ 3645ffaf2b334abaf5f53e5ca0f47465d91e69d2
+Message-ID: <202407032155.EHlIKS7c-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/20] irqchip/atmel-aic: convert to
- of_property_for_each_u32_new()
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>, Miguel Ojeda
-	<ojeda@kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan
-	<saravanak@google.com>, Nathan Chancellor <nathan@kernel.org>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tony
- Lindgren <tony@atomide.com>, Bjorn Andersson <andersson@kernel.org>,
-	=?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>, Chen-Yu Tsai
-	<wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
-	<samuel@sholland.org>, Krzysztof Kozlowski <krzk@kernel.org>, Daniel Lezcano
-	<daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Florian
- Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review
- list <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij
-	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan
- Cameron <jic23@kernel.org>, Lee Jones <lee@kernel.org>, Shawn Guo
-	<shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>,
-	=?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Richard
- Leitner <richard.leitner@linux.dev>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
-	<christophe.leroy@csgroup.eu>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Damien Le Moal <dlemoal@kernel.org>
-CC: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Thomas Petazzoni
-	<thomas.petazzoni@bootlin.com>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
-	<linux-clk@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-	<linux-arm-msm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-	<linux-pwm@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-	<linux-usb@vger.kernel.org>, <patches@opensource.cirrus.com>,
-	<linux-sound@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>
-References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
- <20240703-of_property_for_each_u32-v1-11-42c1fc0b82aa@bootlin.com>
-Content-Language: en-US, fr-FR
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-In-Reply-To: <20240703-of_property_for_each_u32-v1-11-42c1fc0b82aa@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 03/07/2024 at 12:36, Luca Ceresoli wrote:
-> Simplify code using of_property_for_each_u32_new() as the two additional
-> parameters in of_property_for_each_u32() are not used here.
-> 
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
+branch HEAD: 3645ffaf2b334abaf5f53e5ca0f47465d91e69d2  gpiolib: of: fix lookup quirk for MIPS Lantiq
 
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+elapsed time: 1802m
 
-> ---
->   drivers/irqchip/irq-atmel-aic-common.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-atmel-aic-common.c b/drivers/irqchip/irq-atmel-aic-common.c
-> index 072bd227b6c6..543ea249df53 100644
-> --- a/drivers/irqchip/irq-atmel-aic-common.c
-> +++ b/drivers/irqchip/irq-atmel-aic-common.c
-> @@ -111,8 +111,6 @@ static void __init aic_common_ext_irq_of_init(struct irq_domain *domain)
->          struct device_node *node = irq_domain_get_of_node(domain);
->          struct irq_chip_generic *gc;
->          struct aic_chip_data *aic;
-> -       struct property *prop;
-> -       const __be32 *p;
->          u32 hwirq;
-> 
->          gc = irq_get_domain_generic_chip(domain, 0);
-> @@ -120,7 +118,7 @@ static void __init aic_common_ext_irq_of_init(struct irq_domain *domain)
->          aic = gc->private;
->          aic->ext_irqs |= 1;
-> 
-> -       of_property_for_each_u32(node, "atmel,external-irqs", prop, p, hwirq) {
-> +       of_property_for_each_u32_new(node, "atmel,external-irqs", hwirq) {
->                  gc = irq_get_domain_generic_chip(domain, hwirq);
->                  if (!gc) {
->                          pr_warn("AIC: external irq %d >= %d skip it\n",
-> 
-> --
-> 2.34.1
-> 
+configs tested: 103
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc-13.2.0
+alpha                               defconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                         haps_hs_defconfig   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.2.0
+arm                          collie_defconfig   gcc-13.2.0
+arm                                 defconfig   gcc-13.2.0
+arm                          gemini_defconfig   gcc-13.2.0
+arm                           imxrt_defconfig   gcc-13.2.0
+arm                       netwinder_defconfig   gcc-13.2.0
+arm                        spear3xx_defconfig   gcc-13.2.0
+arm                         wpcm450_defconfig   gcc-13.2.0
+arm64                            allmodconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+i386                             allmodconfig   clang-18
+i386                              allnoconfig   clang-18
+i386                             allyesconfig   clang-18
+i386         buildonly-randconfig-001-20240703   clang-18
+i386         buildonly-randconfig-002-20240703   gcc-13
+i386         buildonly-randconfig-003-20240703   gcc-13
+i386         buildonly-randconfig-004-20240703   gcc-13
+i386         buildonly-randconfig-005-20240703   clang-18
+i386         buildonly-randconfig-006-20240703   gcc-13
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240703   gcc-13
+i386                  randconfig-002-20240703   clang-18
+i386                  randconfig-003-20240703   gcc-13
+i386                  randconfig-004-20240703   gcc-11
+i386                  randconfig-005-20240703   clang-18
+i386                  randconfig-006-20240703   gcc-7
+i386                  randconfig-011-20240703   gcc-13
+i386                  randconfig-012-20240703   gcc-13
+i386                  randconfig-013-20240703   gcc-13
+i386                  randconfig-014-20240703   gcc-13
+i386                  randconfig-015-20240703   gcc-13
+i386                  randconfig-016-20240703   clang-18
+loongarch                        allmodconfig   gcc-13.2.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+m68k                             allmodconfig   gcc-13.2.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-13.2.0
+m68k                                defconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-13.2.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                         allyesconfig   gcc-13.2.0
+openrisc                            defconfig   gcc-13.2.0
+parisc                           allmodconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                           allyesconfig   gcc-13.2.0
+parisc                              defconfig   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc                          allyesconfig   gcc-13.2.0
+powerpc                   motionpro_defconfig   gcc-13.2.0
+powerpc                 mpc8315_rdb_defconfig   gcc-13.2.0
+riscv                            allmodconfig   gcc-13.2.0
+riscv                             allnoconfig   gcc-13.2.0
+riscv                            allyesconfig   gcc-13.2.0
+riscv                               defconfig   gcc-13.2.0
+s390                             allmodconfig   clang-19
+s390                              allnoconfig   clang-19
+s390                              allnoconfig   gcc-13.2.0
+s390                             allyesconfig   clang-19
+s390                                defconfig   gcc-13.2.0
+sh                                allnoconfig   gcc-13.2.0
+sh                         ap325rxa_defconfig   gcc-13.2.0
+sh                                  defconfig   gcc-13.2.0
+sh                          polaris_defconfig   gcc-13.2.0
+sh                   rts7751r2dplus_defconfig   gcc-13.2.0
+sh                              ul2_defconfig   gcc-13.2.0
+sparc                       sparc64_defconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-13.2.0
+um                               allmodconfig   gcc-13.2.0
+um                                allnoconfig   clang-17
+um                                allnoconfig   gcc-13.2.0
+um                               allyesconfig   gcc-13.2.0
+um                                  defconfig   gcc-13.2.0
+um                             i386_defconfig   gcc-13.2.0
+um                           x86_64_defconfig   gcc-13.2.0
+x86_64                           alldefconfig   gcc-13.2.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64                              defconfig   clang-18
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                       common_defconfig   gcc-13.2.0
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
