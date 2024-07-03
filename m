@@ -1,98 +1,133 @@
-Return-Path: <linux-gpio+bounces-7999-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8000-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F5B1926023
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 14:21:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 61345926076
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 14:36:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A1B4AB303B9
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 12:02:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BE962B2AE64
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 12:18:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E885F16DEAC;
-	Wed,  3 Jul 2024 12:01:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86998175560;
+	Wed,  3 Jul 2024 12:18:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kde.org header.i=@kde.org header.b="X8ycZc6C"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KCbVUmnt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from letterbox.kde.org (letterbox.kde.org [46.43.1.242])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64EF155A30
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 12:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.43.1.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB9313B5B2;
+	Wed,  3 Jul 2024 12:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720008116; cv=none; b=m5gwuFdZ+/96VRGgiRa4JbpGoFYevPwxJ3CLq1uqsw8OQHWYxi2rUwUvR8TFjFGfHurfblx2gxm8bCfZBfqDm1A+MiquKNKYf8tNbuM9he4xkrzgiRcDanffXy4RIzy4BhX6ImNtIMhBQsOJs2CxhN370Of042F4pv8If/R91SU=
+	t=1720009105; cv=none; b=kaYdWvJLFZH0hyFWDmZKPoaWcfFFxnpFkt0S3wJiR4AKJZf1vOeNZfZc2S5AX4UQGwr6vnZrSXDgqgJ3hO6swwQGseKoh5U7nr8VjD/p8GHSucMRsUUh6Flew54XvhoSPATcJ7lxKF5KgO7FsvkX+wt0ccRSbvv9k3p1j4y/HS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720008116; c=relaxed/simple;
-	bh=9dAVyCHJUbpgsOwKttgwckaAuEHsLYcRK6wZ/498yis=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D49Y6Zw5h9kh3zMjk5RYUuiw/rzBjAA+9z69tON8OjdL3M2BC7YXm/Rol2aXslZpIrTTZ5pok7LUv3RcK2oLLbAdew4iG+l5vsKgUt44ztYgTRsWqbnyVkPCjhbRrUIbBuFB13j8LbHFB3PZw+hD5y5XpMtIeGlJaxdbmdkYunQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kde.org; spf=pass smtp.mailfrom=kde.org; dkim=pass (2048-bit key) header.d=kde.org header.i=@kde.org header.b=X8ycZc6C; arc=none smtp.client-ip=46.43.1.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kde.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kde.org
-Received: from tjmaciei-mobl5.localnet (unknown [131.254.253.210])
-	(Authenticated sender: thiago)
-	by letterbox.kde.org (Postfix) with ESMTPSA id 4AC793277C9;
-	Wed,  3 Jul 2024 13:01:46 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kde.org; s=users;
-	t=1720008107; bh=ecKTykRRJYwwpDqE3efwVdHznyRH7/FxVk8kx07r2S4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X8ycZc6CSnLhgRBB/MBez4RWKc3Kj+Tc5ECz36JavRPGABDJUDgZURbr6b40bpD4i
-	 h2bde3Lwp+5FwMjFEPsaB4rty/cH8q7iitgY+F5g2/D943uN4IoyaGCHMwzaO+bXRD
-	 a0L8teHUvDUl1g+W6b0CaKdIK7g6MtGa39l+TjpOP/qXO/x7dfYp9stYWR6MIcq3MV
-	 chCAEJJL1Zm6tOl0C9hLUZgWLJe0Rb7MGPv4HGlKfN9NMja+6JyLIudeUOS8RvTNB+
-	 DwChWyFgKV+mD+a2nD3ncZKCiC0R4exYKHGfXkoeRKa3mMDLnsE2YtDaOYyj2Zfms6
-	 MLriG77H9MvLA==
-From: Thiago Macieira <thiago@kde.org>
-To: dbus@lists.freedesktop.org
-Cc: "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
- "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
- "warthog618@gmail.com" <warthog618@gmail.com>,
- "erik.schilling@linaro.org" <erik.schilling@linaro.org>,
- "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
- "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
- "dbus@lists.freedesktop.org" <dbus@lists.freedesktop.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "phil@gadgetoid.com" <phil@gadgetoid.com>,
- "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>,
- "bartosz.golaszewski@linaro.org" <bartosz.golaszewski@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH RESEND libgpiod v2 10/18] dbus: add the API definitions
-Date: Wed, 03 Jul 2024 12:53:52 +0200
-Message-ID: <16081423.fTUFtlzNnI@tjmaciei-mobl5>
-In-Reply-To:
- <CAMRc=McaFTy+csg+1McRjMNDkYond74VSrJsQ3mETp7dJoNtnQ@mail.gmail.com>
-References:
- <20240628-dbus-v2-0-c1331ac17cb8@linaro.org>
- <1867994.25eIC5XRat@tjmaciei-mobl5>
- <CAMRc=McaFTy+csg+1McRjMNDkYond74VSrJsQ3mETp7dJoNtnQ@mail.gmail.com>
+	s=arc-20240116; t=1720009105; c=relaxed/simple;
+	bh=Xz7XmnRcHbAH6WxQfIQCBQ5wwm0Koi8PJNYau32jfTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RNNMDOBvdjiHMhZLj66w5UNwRWceYeu+8bzgXnjNTMTIflhwOGZANT49CYmnPn1GPtNUY6MWP/wRz08i/0F8+1FSA8gWYUxm7PlPjMqGQHI6EUQrmEeQYKgzQVEk+B/QLKhfVElueJraSzCTmKtWQTUPj78jtnd7oS1OvB1ZDO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KCbVUmnt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36F95C32781;
+	Wed,  3 Jul 2024 12:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720009104;
+	bh=Xz7XmnRcHbAH6WxQfIQCBQ5wwm0Koi8PJNYau32jfTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KCbVUmnt6oKYedEVrXZokdmKNt/p56purKTjCPdu0I8notvhvSyIsFOxSIKsFqou5
+	 15hwrXirnYeswH2fOKq4ePLXX/YqLrncJb+P2lL+FSGeV+lT+Ugb7jGGB8N/GemJUs
+	 +s6AUvm4uXUiUubO2m8SRwgfVqiVI3bvHoZti8n9IfR1YWhDri+qAhR2D7CazE1WSi
+	 DYXxisSjZuUy2EQgUJ11OqsC/jJ7WgMnwY5ys4wyKQgby7dbRQmA+Q6M3Sd7ECpY3T
+	 6Yqt2c9ssuH177wbJ9Lx55K8mWXoPJt5OCcSCJr0+WBF71zu9mH49RClhXFAnHdpSc
+	 2Pv2Acp8/4HDQ==
+Date: Wed, 3 Jul 2024 13:18:08 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Richard Leitner <richard.leitner@linux.dev>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	llvm@lists.linux.dev, linux-clk@vger.kernel.org,
+	linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+	patches@opensource.cirrus.com, linux-sound@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 17/20] ASoC: arizona: convert to
+ of_property_for_each_u32_new()
+Message-ID: <7f057c8b-9b76-4e31-a3cf-b82e52618529@sirena.org.uk>
+References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
+ <20240703-of_property_for_each_u32-v1-17-42c1fc0b82aa@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-
-On Tuesday 2 July 2024 11:15:11 CEST Bartosz Golaszewski wrote:
->  Therefore, my advice is to not have the API that can lead to TOCTOU, even
-> if
-> > by accident.
-> 
-> Unfortunately there's one issue with the above: requesting a line
-> (even as input) may result in the kernel driver triggering a physical
-> change in hardware which may be undesirable. Inspecting the "Used"
-> property only results in fetching a flag from the kernel and will
-> never make the driver act upon HW.
-
-Ah, that makes sense. Thank you for the explanation.
-
--- 
-Thiago Macieira - thiago (AT) macieira.info - thiago (AT) kde.org
-  Principal Engineer - Intel DCAI Platform & System Engineering
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="NvGtanZygkHeLcw1"
+Content-Disposition: inline
+In-Reply-To: <20240703-of_property_for_each_u32-v1-17-42c1fc0b82aa@bootlin.com>
+X-Cookie: There is a fly on your nose.
 
 
+--NvGtanZygkHeLcw1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Jul 03, 2024 at 12:37:01PM +0200, Luca Ceresoli wrote:
+> Simplify code using of_property_for_each_u32_new() as the two additional
+> parameters in of_property_for_each_u32() are not used here.
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--NvGtanZygkHeLcw1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmaFQYAACgkQJNaLcl1U
+h9AylQf9G8/SGzOMtUK0KB/AFXzHYIfp3WpSO5hnxcx+E5C7ZK4bjWCUH/uunXlj
+F4Jf8unGlljKf05YliMJQdU+V6rteVrAjhbODBpOyO3KgNcahTjDSsdel5a8kNxy
+xs3TjgeAoSA6aWSldnG9epfMTrso4U2krM6J7EpllETpHMhVEr19Tk/DczdltAFA
+mqPoVSFfTNlYtiXK1/0dRLf9DiwVXVKh0Pg13G8lYTkxUb51nVwvoBAxCQ0kLhYc
+whKK5upczFTpJCDEyHz17yMu3fWXyZaYCDCzPbqLkycwsy6u21KKM5tAvMr8o2Xd
+zlsu2XFciX4F1nPtsj9mR7UcMVjyRw==
+=W6f6
+-----END PGP SIGNATURE-----
+
+--NvGtanZygkHeLcw1--
 
