@@ -1,207 +1,176 @@
-Return-Path: <linux-gpio+bounces-8023-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8024-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B936E9268EF
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 21:19:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC93D926A27
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 23:23:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC18F1C2442F
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 19:19:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A3211F22B6A
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 21:23:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABE9A18A952;
-	Wed,  3 Jul 2024 19:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F25BE191F90;
+	Wed,  3 Jul 2024 21:23:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="RPoRTLfc"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="nXfomUYn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A0418754E
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 19:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABF3191F6C
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 21:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720034393; cv=none; b=Hp3oTHcXtXwV6Env4Bedj42D7A0MIRWBLbvv6WPOGi/cP/RmiattgvKD99hLTA1FHeGnM2yjwcYJhyx+6+kOS5dsHWOzwg13+FutBoaXYFCKwR3jV9avdLBjtnNyydFqQY/mGFDKcBpxwR07ZyWSTMbz4b7yZOSZYr1eNGX9nKI=
+	t=1720041808; cv=none; b=DfAWLQtlmB1volgzDkHDw+sr2ptdpnqrGFJt7rogP9pIepohWl8HcYejQUYJLJ3uJgV4T17LBRzp/wvrFl3jH/zOcbpCnEeqysCg0b0hraQ2Xf3VOMoMaFAXAxi8z+i8ripyxd2pMztmfy8JjNkwOA6zhsjCKfo31//kF9u0O8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720034393; c=relaxed/simple;
-	bh=BJ6RC6onlGGX/XDQEkORvB1LJgrzC5L7WRNwulU/o9o=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IeRDgRNLf4iM/t9JqXqKq8B2r1Ifk0VYekNc4gY8ZiSB6QXPr5MA2BAGGT/LN4WpnqPpUX2ngqwIixsFxb1fIntB+KKC5X5bSOb0mzqZ2sWNcxKz242erx474YdQhiEiFpk0rIJw3mExxnlUl3sxAeLrFJYV3FE6EEKf7/QhZmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=RPoRTLfc; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 655133FD42
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 19:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1720034384;
-	bh=4AL8Q8t5GvaSDcDlTv2xvRzLk0BHc20eWebGxrnXzHw=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=RPoRTLfcfq+jMTLG2h1dXkBX7EkZr/zBB9s0Wx7ItaVrUSzDGfjsoPk9tIErmTrpf
-	 dBm5nyYhLD1rXf9gQ/ob0at+cgEacw/C0gI4/aQqrhLhHHY5zG5GygvCagZXOjs0Ic
-	 C2C5MrIMPbIFWsWciFn+aPiMpRfFjwcQJnd2v4agOFMdRi9YpOVHDCcaoZx/om/Nla
-	 druJi5bYPGfSKL3LzI4LBd8W2Zogw1z/OaaIihiqC/c7D4zcBtoJWeVY93GJZWf6W9
-	 DmkrCFAq1uxR+Qutq5SGHgAEv8Ijwsjmm+JXtH4Z4nQns+68MjKF7d/Yp17U8YdTyb
-	 yOUZaHpRBNJWA==
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-446102c711bso68751661cf.2
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2024 12:19:44 -0700 (PDT)
+	s=arc-20240116; t=1720041808; c=relaxed/simple;
+	bh=1yCUJShNVEleKhhq5ttC7d+C2KlI7KvONMEvrwhI5X0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Siq8mOAljeb2pVCBevrvw36FmvU9mAJpz8qHdzURwS4Pp/exUBLOt3k20+ina5nSOOn64tf5zVwNMnwyqOY4bf87vk87QajWhPImthjrv4N0tKkUzgkAyUUUe1BO1DKMu67X3EkKc/OoXuvWU7haUlZB7SBiWD6fieG5NTPqwEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=nXfomUYn; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-58b3fee65d8so3453065a12.3
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2024 14:23:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720041805; x=1720646605; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rmKjZalCS3qgqBNUJ2X1ny0z1S/+Ouz6++2zspqi0Zc=;
+        b=nXfomUYnbzj9LIVMPNRYyGPrGSgzQo3TYNnoG9X6sbtMdvka2gkBTWeWFH82v3YY6y
+         FpKutlnlUYALdpJAw5zXMSlyPvSu9EOBXKZO6nM48K2lmmuMVaihjB2V4N8NIAeLICoA
+         8Uu26Fln/UY28RYLPeehl3Nqzi8hopZLB4IgW8EaEqF9COvqp8YTsl4SWDtCjS2PFUzL
+         tygWBTwykzO88IpSKXeemkGeoic+DrezgiZcsHKtkACDRstfeu+ctDVlME2MjqdFZz+x
+         j8jWMtVy55HHvUxAKVW7SN1SWTLn/M5rn5xatBJuTs1sdL2Mq/8rTtvNj3n3KPEq2RrC
+         6LzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720034383; x=1720639183;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4AL8Q8t5GvaSDcDlTv2xvRzLk0BHc20eWebGxrnXzHw=;
-        b=cMQAX2WaHNUHjVNby8KgbK/+yB/6eT90hplScghTb6S2nJL5uwr/SYnQVWVH85aaPM
-         JQVJdet6N6O4gRFQxF1RKVFkQNnFYgEt92/IGZpFy+cuiNiufW581zvfgeSVGmUkY4qk
-         ZvVwbm4ajd2JQME01NduuC/nK0lGKxuAC0zfBSESNLcZ5bAwoolGTK1IUH+dSAW4pEY9
-         vFzEVxTwmV1yCAi3EnERZIPSs9f33NRNFGs279cwEerhpgCEV0l9MazCADr1mpKGAAZQ
-         GoSgyIyDxfE9kC47wEkZ2co9prpE/zGWJdTMYRD8HByB+tR7ZFqoioeOHyyHo8/Bz3y6
-         bQtw==
-X-Forwarded-Encrypted: i=1; AJvYcCWqc4ft5woAZUWiMKB8zu7L9HmTNzdACx+MDXhmdtGy5NlZb9Nla0sS5NA5rwlQ1QJphLjhJYgWzCBGt6/Bbt+UOuteYu/+tTdaxA==
-X-Gm-Message-State: AOJu0YwUn/mFLhSXOepBqENdfjA4M1WgKf2DDpd2+dljVUtNplL7OIKm
-	hcmafmUK+UnHcSfp2PGuDrAqQd9ig00TiJzVvgo2KwVRgmgl5d9d69BQoY03IBrdSrIkT1iPUcX
-	Q0Vsn5g3RqwgzcPuMY1aDUT6cPffnMCfbV5LFTK4qN5y97rJEZL8j/6eC8iOLBE9HwThln2x2B8
-	85fwzyCW5i15yOO/TuT8Ix6Z1y6hKF/cxCOWB4O4J2yYj8er4Nog==
-X-Received: by 2002:a05:622a:4c6:b0:441:58c7:92fb with SMTP id d75a77b69052e-44662e48d9fmr131261081cf.47.1720034382933;
-        Wed, 03 Jul 2024 12:19:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGac9ZwuaiHgni0ADiKooLH8mMTml1Wkk3i3pPQYN7kaucLcuApVxgidfFEb5Qy7OVYNbEL6OKn20MHspRgJho=
-X-Received: by 2002:a05:622a:4c6:b0:441:58c7:92fb with SMTP id
- d75a77b69052e-44662e48d9fmr131260881cf.47.1720034382502; Wed, 03 Jul 2024
- 12:19:42 -0700 (PDT)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 3 Jul 2024 12:19:41 -0700
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20240703135303.GA56155-robh@kernel.org>
-References: <20240103132852.298964-1-emil.renner.berthing@canonical.com>
- <20240103132852.298964-2-emil.renner.berthing@canonical.com>
- <20240115173657.GA999912-robh@kernel.org> <CAJM55Z9xF6_WCcg02xJJfu=UCOj=4m64BXvJTaV4vX09WLhc0w@mail.gmail.com>
- <20240703135303.GA56155-robh@kernel.org>
+        d=1e100.net; s=20230601; t=1720041805; x=1720646605;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rmKjZalCS3qgqBNUJ2X1ny0z1S/+Ouz6++2zspqi0Zc=;
+        b=WL5T0dlhdmJ4UEpgrQA1sjDwCbjqiBstDgJ6WPCvtzjo1BjaRygBRtb90QyjCsoLzc
+         VdGQAUdfgXvOjD/uRi1DNvfJN6+Lq+pMiFo2yEw4fe2duYX+Do818LCbKFbOrdfWjWVY
+         RlMgPNfhsXur1Zek4bcMJKQgElXx98X0U/SMc0s6nSH0+kACyvIMCEKa+IFOW9gw0sbe
+         Pe8eAOPyKCnidretgt0OG53H5iV4fGlHqo2DzTwx0eleMFM9wqvlvgIP0FzbbDdMdKs6
+         FjHVR6Wa3pdHkIcnOKeT9PqwaW/028X8lu1Sv7Tkv/UfIfivUi8K23oCTULM5C/Mw3K3
+         TH7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWs4ABbgRAgPCkpN6YgsHWdElL06xyoJwKSYLlmNppJWTMJ1ZNKx54ObFPf4ancV9TdFG4nqLNoiEfmgro9YuYPtBFHDrV7B+VLNg==
+X-Gm-Message-State: AOJu0YxQGtIuV1vYu2PobCvVehmnciqvazMesSGy81r/HCLbl6iKfAYK
+	UmoTW75qvUZh1c5iIpuPlOs1UNgh9IkhVVPJMRMF+tdv2Oa2BQsDP7H+03/skG4=
+X-Google-Smtp-Source: AGHT+IEiDeirJZbiRR9WOgvKVRp5lPoOHJBTmQD67pQvhrzI/8nB0fQNgTn38F10sD2qUfAawYddVg==
+X-Received: by 2002:a17:907:1c15:b0:a72:883f:f3dd with SMTP id a640c23a62f3a-a75144a8a02mr1042146966b.56.1720041804879;
+        Wed, 03 Jul 2024 14:23:24 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:5696:f293:6e5e:98bf])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab0651c0sm541105666b.123.2024.07.03.14.23.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 14:23:24 -0700 (PDT)
+Date: Wed, 3 Jul 2024 23:23:22 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Tony Lindgren <tony@atomide.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Emilio =?utf-8?B?TMOzcGV6?= <emilio@elopez.com.ar>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Richard Leitner <richard.leitner@linux.dev>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-usb@vger.kernel.org, patches@opensource.cirrus.com, linux-sound@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 13/20] pwm: samsung: convert to
+ of_property_for_each_u32_new()
+Message-ID: <l2xret6kx4qwee3c3abmmhz5uop7zuobxath2eou2utklztkgl@c7lskt3xk3wj>
+References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
+ <20240703-of_property_for_each_u32-v1-13-42c1fc0b82aa@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Wed, 3 Jul 2024 12:19:41 -0700
-Message-ID: <CAJM55Z-ntP55uaTQob_=P-8ud43YNh7Gy0XgUfQ7-O8zPpuGxg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] dt-bindings: pinctrl: Add thead,th1520-pinctrl bindings
-To: Rob Herring <robh@kernel.org>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Drew Fustini <dfustini@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3uu6b6ybcnfri4lk"
+Content-Disposition: inline
+In-Reply-To: <20240703-of_property_for_each_u32-v1-13-42c1fc0b82aa@bootlin.com>
 
-Rob Herring wrote:
-> On Fri, May 17, 2024 at 07:48:17AM -0500, Emil Renner Berthing wrote:
-> > Rob Herring wrote:
-> > > On Wed, Jan 03, 2024 at 02:28:38PM +0100, Emil Renner Berthing wrote:
-> > > > Add bindings for the pin controllers on the T-Head TH1520 RISC-V SoC.
-> > > >
-> > > > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> > > > ---
-> > > >  .../pinctrl/thead,th1520-pinctrl.yaml         | 372 ++++++++++++++++++
-> > > >  1 file changed, 372 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..d3ad7a7cfdd1
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
-> > > > @@ -0,0 +1,372 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/pinctrl/thead,th1520-pinctrl.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: T-Head TH1520 SoC pin controller
-> > > > +
-> > > > +maintainers:
-> > > > +  - Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> > > > +
-> > > > +description: |
-> > > > +  Pinmux and pinconf controller in the T-Head TH1520 RISC-V SoC.
-> > > > +
-> > > > +  The TH1520 has 3 groups of pads each controlled from different memory ranges.
-> > > > +  Confusingly the memory ranges are named
-> > > > +    PADCTRL_AOSYS  -> PAD Group 1
-> > > > +    PADCTRL1_APSYS -> PAD Group 2
-> > > > +    PADCTRL0_APSYS -> PAD Group 3
-> > > > +
-> > > > +  Each pad can be muxed individually to up to 6 different functions. For most
-> > > > +  pads only a few of those 6 configurations are valid though, and a few pads in
-> > > > +  group 1 does not support muxing at all.
-> > > > +
-> > > > +  Pinconf is fairly regular except for a few pads in group 1 that either can't
-> > > > +  be configured or has some special functions. The rest have configurable drive
-> > > > +  strength, input enable, schmitt trigger, slew rate, pull-up and pull-down in
-> > > > +  addition to a special strong pull up.
-> > > > +
-> > > > +  Certain pads in group 1 can be muxed to AUDIO_PA0 - AUDIO_PA30 functions and
-> > > > +  are then meant to be used by the audio co-processor. Each such pad can then
-> > > > +  be further muxed to either audio GPIO or one of 4 functions such as UART, I2C
-> > > > +  and I2S. If the audio pad is muxed to one of the 4 functions then pinconf is
-> > > > +  also configured in different registers. All of this is done from a different
-> > > > +  AUDIO_IOCTRL memory range and is left to the audio co-processor for now.
-> > >
-> > > It is still not clear to me if each instance is a different programming
-> > > model or the same with just different connections. The latter should
-> > > be the same compatible string. That needs to be answered in *this*
-> > > patch, not a reply.
-> >
-> > Hi Rob,
-> >
-> > Sorry for the late response. I honestly don't know exactly what you mean by
-> > differenty programming models and what the difference is, so I'll need a bit of
-> > help with what you want me to write here.
->
-> Is the register interface of each instance the same? Looks like it is
-> from the driver. So normally that's 3 instances of the same compatible.
->
-> > Any driver for the TH1520 SoC (not just Linux) would need some way to discern
-> > between the 3 pin controllers so they know how many pins to control and what
-> > pinmux settings are valid. Basically they'd need the data in the three
-> > th1520_group{1,2,3}_pins arrays in the driver and a way to know which of them
-> > to use.
-> >
-> > https://lore.kernel.org/linux-riscv/20240103132852.298964-3-emil.renner.berthing@canonical.com/
->
-> Why do you need to know how many pins? The DT says configure a pin and
-> you just configure it. It's not the kernel's job to validate that the DT
-> is correct.
->
-> Aren't the pin names globally unique? So you just look up the pin name
-> across all the arrays. Or you can just look up one pin from each
-> instance to find which th1520_groupN_pins array goes with the instance.
-> Or just have 1 array.
 
-Just to be clear, do you mean to add just one node for all 3 instances like
-this?
+--3uu6b6ybcnfri4lk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-padctrl: pinctrl@ffe7f3c000 {
-    compatible = "thead,th1520-pinctrl";
-    reg = <0xff 0xe7f3c000 0x0 0x1000>,
-          <0xff 0xec007000 0x0 0x1000>,
-          <0xff 0xfff4a000 0x0 0x2000>;
-    reg-names = "group2", "group3", "group1";
-    clocks = <&apb_clk>, <&apb_clk>, <&aonsys_clk>;
-    clock-names = "group2", "group3", "group1";
-};
+Hello,
 
-That will work since we can then register all pins at the same time. But I
-can't see how it will work when keeping the 3 different nodes since each
-instance needs to register the pins they control at probe time. So there will
-need to be some way to tell the 3 different nodes apart.
+On Wed, Jul 03, 2024 at 12:36:57PM +0200, Luca Ceresoli wrote:
+> Simplify code using of_property_for_each_u32_new() as the two additional
+> parameters in of_property_for_each_u32() are not used here.
+>=20
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> ---
+>  drivers/pwm/pwm-samsung.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-samsung.c b/drivers/pwm/pwm-samsung.c
+> index efb60c9f0cb3..fef02a0b023e 100644
+> --- a/drivers/pwm/pwm-samsung.c
+> +++ b/drivers/pwm/pwm-samsung.c
+> @@ -510,8 +510,6 @@ static int pwm_samsung_parse_dt(struct pwm_chip *chip)
+>  	struct samsung_pwm_chip *our_chip =3D to_samsung_pwm_chip(chip);
+>  	struct device_node *np =3D pwmchip_parent(chip)->of_node;
+>  	const struct of_device_id *match;
+> -	struct property *prop;
+> -	const __be32 *cur;
+>  	u32 val;
+> =20
+>  	match =3D of_match_node(samsung_pwm_matches, np);
+> @@ -520,7 +518,7 @@ static int pwm_samsung_parse_dt(struct pwm_chip *chip)
+> =20
+>  	memcpy(&our_chip->variant, match->data, sizeof(our_chip->variant));
+> =20
+> -	of_property_for_each_u32(np, "samsung,pwm-outputs", prop, cur, val) {
+> +	of_property_for_each_u32_new(np, "samsung,pwm-outputs", val) {
+>  		if (val >=3D SAMSUNG_PWM_NUM) {
+>  			dev_err(pwmchip_parent(chip),
+>  				"%s: invalid channel index in samsung,pwm-outputs property\n",
+>=20
 
-/Emil
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+
+Feel free to merge this together with the change from the first patch.
+
+Best regards
+Uwe
+
+--3uu6b6ybcnfri4lk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaFwUcACgkQj4D7WH0S
+/k6PuggAu8WCVFGH6QIMKU3X2rf+i2w61Hm9yGoz/E1JXjYYwhvN07D9QQrg3lFk
+uuvOlwgkdfuIHAsZupm4B503z6Cr+9e1c0yd2UsXZkR+Y5e5uAcWpFrqQPpsUjg6
+K4y5iO46KFiNdoyIw5vaEqa9r+2MGaV/6utEBzK71uNVzWWnYAxGJSrp9BXXUlRN
+ZUz4u7b3Yp+kmsIoFWF2SYjPB08bXS+XlNegSLFuhFLAklD1WtMgdfiyFyqVm20f
+wxAtUX4pOe9E7HV+9qcyWKkbxhOVOOD6iG1CnatgtZoAeRfvmcNx+o2M4x8H0qXK
+hetCnR7IsLL80SX5lvKiYYw2At4OEA==
+=UQNH
+-----END PGP SIGNATURE-----
+
+--3uu6b6ybcnfri4lk--
 
