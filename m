@@ -1,181 +1,414 @@
-Return-Path: <linux-gpio+bounces-7878-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7879-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7671E9248F1
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jul 2024 22:17:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E386D924E0C
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 05:00:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2DD2D2819FE
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jul 2024 20:17:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 650801F269B9
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 03:00:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A66E91CE0B0;
-	Tue,  2 Jul 2024 20:17:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD18FC2C8;
+	Wed,  3 Jul 2024 03:00:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BNxoVtqi"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HfM1dZTm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012063.outbound.protection.outlook.com [52.101.66.63])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3F7282E1;
-	Tue,  2 Jul 2024 20:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719951467; cv=fail; b=MhViKQg0DNRACnqjfiGyj7WASIiLgaS9h+QuvnP8oNb1SFSBRSjz3HeAH3c5MWtA5b3R1wE8tMbqdw5VAEx16TfnQUl78kgQ+Duc4i+rNcYG8qoVuZFSQbKMGavixgYOeyzV4oCFBw+/3bOMnQ0UjML50VIK+i+ZP+oVf78VU9k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719951467; c=relaxed/simple;
-	bh=7Ky4M1c3rQ8JYbTlvMMaH5nZ/opDyrN+NOjp5VuDIEE=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=NyVPSgXkUd4OAm/duv1PS0F3HKqAelNrWrzvYd0kcfTX6k6/wT0xo/GcpSNu/1WAMaFzHv+Pt/hQdEc77J25a2MeQS1UU4J576FRRnm84DUwqv1bVK4095Mtga60HMQNm5zW+UYmdccIGeu56U/T0EdAkCf4W/EnAIB0NthlIQk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=BNxoVtqi; arc=fail smtp.client-ip=52.101.66.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OOauuoJyknkc+aYjBHlmpKlbS9AKdUmdRes9epxIQgj2BZ7qqFyZmCYB+euZGhlM3R1bLaI6ljoU5JhkvK+1j1UZncrqOmLIP3VTy8MZTSwt5kn8A0cE+du7lbKZxlNs6YZUksg1Hx7x1ibQnYVtcCiXmhcVgbOpW04bjLLYTcd4D360XX/XS0W4ajM7g0DFg3Xj3Pf0fBSqPcYkWNzoPq9JSyCZPLuLjKoE/jWr7fKjghfLhiS9H2cHEaLgBfPH1RlMk+7PtCgR27nvoQEjNv6AXU09n2w2MSXdw5YHNj1qg8EQHafbIapwO0Jr5XVjasHqmzzlsqZ3wGYMTQi/lA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HFgAzfBFbQ/BPIIV9rrQCit8jFoAhjuExsaf6Dwl328=;
- b=TRl7ndl9ZNt3j4mEwRCwyy7VbIscajBhsxRfTOs/1jjyw2rz6O/nfdjZ3gWm4zZHU3ozVovcPJNcoMyGyij+dReZLdet+DUauscGJCkDFdeJvWZz9LIHR6aGGwAboNrMxIo1ZuAyFuEW+xA/nm80vRHha2YjsO/6xP+ReP9lw9g5agE2nTNLjXyzUlQIHCAE6fsS91HMxlE2uuUDzZRXoEYvsHg9rvg19tfpujsk26tvXRr3rHqDyJpc67f/dqEIGJHAr75GBVY8j9iQ4aLrDULUkZZZKa5xjWLljPHxwekjJ+t/vByO3hJbYtJcNLHXpBaOuddRwTvlptW3U0YOAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HFgAzfBFbQ/BPIIV9rrQCit8jFoAhjuExsaf6Dwl328=;
- b=BNxoVtqiJx67Rr18fEYg41ZgIX1Zf7MRrIeurEouPtuKYq1K0WEcer6MxiWRIQFkjRUeDIIdNIDQO4u96OCauvOiqdzWWokQAubmATHnBKSUToe9ofr2562/3dqtiMR/I8nU8UwA2z4dj1gp00udGgJbIc9WK+hJWdPQGmUA1rI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAXPR04MB8864.eurprd04.prod.outlook.com (2603:10a6:102:20f::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.28; Tue, 2 Jul
- 2024 20:17:41 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7719.029; Tue, 2 Jul 2024
- 20:17:41 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] dt-bindings: gpio: fsl,qoriq-gpio: Add compatible string fsl,ls1046a-gpio
-Date: Tue,  2 Jul 2024 16:17:24 -0400
-Message-Id: <20240702201724.96681-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0091.namprd03.prod.outlook.com
- (2603:10b6:a03:333::6) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9849D4A3D;
+	Wed,  3 Jul 2024 03:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719975644; cv=none; b=PTwTVoVK7/bdQupsH1jfE4zRaZQS4Z5zPPbsM6L1DElPMrtEU6knFeT1rmx/ewDxmXa/Jr8R1U8ifz1oV/x5yIMCnoOXHPJ+mzruEbH9+nnhLtFM/Hza3y2D3jO4+Oyr9LbwchRG5K5OXVoBm75nOiyDzHS0am83ijbc7I0x4V8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719975644; c=relaxed/simple;
+	bh=KSSlOH0xqUSEcdk3D5AAbABk7tJOOY5aXvwPP4l6PUg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lj9IE+ogRovqjXBWdNz4OyFPyovcZrhMSDhZgmc16qVreBCxSU5KP04XXX6tWA7/NRMZJTb6uVy/zEHVWbA2ux25aXFeRzA5oYt0jc59S/J+/Al8WAIWO0iaQ41BmD3+efEOCrhFaBdepJYEIVWNmqHLUSqyu33Vb5qBAptZIw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HfM1dZTm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462NWM6Z005551;
+	Wed, 3 Jul 2024 02:59:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=O92o6x8MI3tbjaQRL6XDQc
+	qlyifVOQWVm1bVLaysjDA=; b=HfM1dZTmf7tb9EZO24dvevJ/BlvIGhoMHHst1h
+	1yEBtWLq8P4Ww3YBdpS9Uml6IFGuW6kz98HkOT+BgKpyTqLUJf3ESgGSbx4lZ5Di
+	4VNoRSMPOnYpfHH5K+/7N4K+FoKZYD+GlEW5VPB9DhmXGaKwSBdgXG2Qd+Qhwqj7
+	pcmSnDPQAQp5RgFYHCIe1vEKniI6L2BfGRc+Hbws4Yo1qCGwLp5T57sOUx5cmZ2N
+	7oHTktQbjiop6It20JR29smXpRnstNNGMs5c5HE1WmN965sxt1URjIK6+j5mVdhb
+	QIh2C/387pO1P2G9SjvQ09uk2nS3SAixOHGseeHlyDvz3YZA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4027yfah86-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jul 2024 02:59:35 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4632xYXk013518
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Jul 2024 02:59:34 GMT
+Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 2 Jul 2024 19:59:11 -0700
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <djakov@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <jassisinghbrar@gmail.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <manivannan.sadhasivam@linaro.org>,
+        <will@kernel.org>, <joro@8bytes.org>, <conor@kernel.org>,
+        <tglx@linutronix.de>, <amitk@kernel.org>, <thara.gopinath@gmail.com>,
+        <linus.walleij@linaro.org>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
+        <vkoul@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <mcoquelin.stm32@gmail.com>
+CC: <robimarko@gmail.com>, <quic_gurus@quicinc.com>,
+        <bartosz.golaszewski@linaro.org>, <kishon@kernel.org>,
+        <quic_wcheng@quicinc.com>, <alim.akhtar@samsung.com>,
+        <avri.altman@wdc.com>, <bvanassche@acm.org>, <agross@kernel.org>,
+        <gregkh@linuxfoundation.org>, <quic_tdas@quicinc.com>,
+        <robin.murphy@arm.com>, <daniel.lezcano@linaro.org>,
+        <rui.zhang@intel.com>, <lukasz.luba@arm.com>,
+        <quic_rjendra@quicinc.com>, <ulf.hansson@linaro.org>,
+        <quic_sibis@quicinc.com>, <otto.pflueger@abscue.de>,
+        <quic_rohiagar@quicinc.com>, <luca@z3ntu.xyz>,
+        <neil.armstrong@linaro.org>, <abel.vesa@linaro.org>,
+        <bhupesh.sharma@linaro.org>, <alexandre.torgue@foss.st.com>,
+        <peppe.cavallaro@st.com>, <joabreu@synopsys.com>,
+        <netdev@vger.kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <ahalaney@redhat.com>,
+        <krzysztof.kozlowski@linaro.org>, <u.kleine-koenig@pengutronix.de>,
+        <dmitry.baryshkov@linaro.org>, <quic_cang@quicinc.com>,
+        <danila@jiaxyga.com>, <quic_nitirawa@quicinc.com>,
+        <mantas@8devices.com>, <athierry@redhat.com>,
+        <quic_kbajaj@quicinc.com>, <quic_bjorande@quicinc.com>,
+        <quic_msarkar@quicinc.com>, <quic_devipriy@quicinc.com>,
+        <quic_tsoni@quicinc.com>, <quic_rgottimu@quicinc.com>,
+        <quic_shashim@quicinc.com>, <quic_kaushalk@quicinc.com>,
+        <quic_tingweiz@quicinc.com>, <quic_aiquny@quicinc.com>,
+        <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-crypto@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+        <linux-riscv@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <kernel@quicinc.com>,
+        Tengfei Fan <quic_tengfan@quicinc.com>
+Subject: [PATCH 00/47] arm64: qcom: dts: add QCS9100 support
+Date: Wed, 3 Jul 2024 10:58:03 +0800
+Message-ID: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8864:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1d1c5d1a-b6bc-409b-99c6-08dc9ad40686
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?JymYb+kg2TBg1W/tP8ZUhLvFadzIC2mIDMOdmCjhojsjf7vy/0gMGd9RNH3c?=
- =?us-ascii?Q?5aVwfjt96FRApI59xYbVo4vE6Ti0l9oby4SYhZ16jeDFU+i9Wvneuyl94guW?=
- =?us-ascii?Q?GmjXiTIQoIPBXV7oitBP9wp4dVr9MYwMAvWtwYsKw4LsbyDq4FbCrw/wHXu7?=
- =?us-ascii?Q?ulmbodjJNzwj0SE7bxmvBeQ213AG+hX4WMxjCsUH+p7k/KZ5VrKR0Gk+zOGK?=
- =?us-ascii?Q?gzWhDbUFIJdC4l85jKyq95wRJGAOd/4FRn2Xfc2AnNXWLP7FkiHJUOsVKAZC?=
- =?us-ascii?Q?HglC0t+32y86iUVF4/b5d+77wF+wKb9MxWc8vhDFAmG/3j6gxcYhVikd5VgP?=
- =?us-ascii?Q?/HRLi0cUsWi+ReqGwQtgjp86DuxEAxkAblcEMfzmpZWWyBGNUvodArBdyhqN?=
- =?us-ascii?Q?vfEi9FrULr34FA27ngdUxxOHWDFZgKK0zQ7KXkElpdQAorFJS+nqbbXYjdG9?=
- =?us-ascii?Q?seAbg4Fz8i+nYfzDNvXSED0vtV/b8h6ONVTX+fHh7QpZ3zDPNgD3iq/c0n+E?=
- =?us-ascii?Q?EfN6dyiYpR6ZsgppxZirhVtyZFZ0v9jdrzse3SyZnJvSGTzavLS00MqNGB4I?=
- =?us-ascii?Q?gpnaXbxrdVHlRNjWJDKn7NVjzOs0SVMQmXRIA+uyaOAY0EQI6Og6XUb2iPGY?=
- =?us-ascii?Q?sdbMA0vLQErkl9GV2IOCnpB74jgrGidVhB3Q0gcDP7ny8S+mC97n0tmhXF4c?=
- =?us-ascii?Q?Q/yyJih6KI//gOPLhCd6ZebQImqtc55zNeOn3zG4pDlXRUyA/JDEn3FiJZQH?=
- =?us-ascii?Q?xYE9frz0Q9Z1RAczFbuqXEqfvKFJ93pLXQM+gmAVP09fjpCbQZe8iubJr/f8?=
- =?us-ascii?Q?L2q821sI6INTRnwICkN65sCHEudagzz4Orih2beNdMee77VIpydR9EmCBs8A?=
- =?us-ascii?Q?tWPu26wIdKWqDaUZQK34BIt4ZqfamB1p1kPB7dkXQyJPgefFNNy3IN4s7CNS?=
- =?us-ascii?Q?qJuhy6mZ1HeS0Oi3vmCSM16T4hBJonWlbwPLQYGDza8rJhJsoGNOIOqTDKN6?=
- =?us-ascii?Q?Vq/7foLXeCvi6HQYWel7dWCv/PW0vrOq10g2hsKiECdp4pLY9ptQm/rHzr73?=
- =?us-ascii?Q?cOpk7Ix0HXCCrhqb7U7Om01jrHUMQWjXZmZD00vUv0uP75h4Mk6Rg2JAs848?=
- =?us-ascii?Q?HRjZqKbCVxDYz6NKneofezwG999QPrxnCH5FQVjeTyOAZ3kWyGFwLEC2Yq2Q?=
- =?us-ascii?Q?jlEdVREMh4+lj3U/mvD3eufRO1plO1u8I3zqkFaVTon6K9Fo2pDKOPzUydSQ?=
- =?us-ascii?Q?gvOywGfgBc50KBuALFXrip71AWTWcR5pRo3iE8yDf7jpZf9wEDxlQ+Qln9Tc?=
- =?us-ascii?Q?WdDWJ/PQvBUDxGDZssE7bHmM3YaZ0840K0GWcx/javXZANcAX4ZRFOEUsgiu?=
- =?us-ascii?Q?vDOwIWrf74KyJeNxBrsw9zXkF16w0To9hdZ8ckDE7deC6IwsBg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?PCb9d8MGZQ0pqbe2veqN0bQKa0+9nJtDXWy+BoThtgJAq8Z89pxkYeT7Vyd4?=
- =?us-ascii?Q?3PfVUJ6BFhWEls/Br3+By4zEI6QiWMygMF/WMWkJPGzkNCvuVI3E8wjetpwt?=
- =?us-ascii?Q?piUW8uS4GwZAe8fB1KO4k5mo69QHCtUSwjaCsDiC78hzNBiJ+IbkeczXgJWn?=
- =?us-ascii?Q?+Es1CZaF1HiemEMp+U9AmyqijIVQ9YHSO6I6iWxGbmuqtFDt/tTbtMwwXW+P?=
- =?us-ascii?Q?MnSJCgL6xXHfL+MqtsxQMFrNDfZQa48xoMmtxIDTumz73snxk9rAquaqoI8b?=
- =?us-ascii?Q?68t9veoMsa7dNlNVHM9XcY9iMNiviZpFkguboBx+HHfhQDTn0Lc7rSTODAYn?=
- =?us-ascii?Q?qgSu15UF/fXkagc7XizngDOHfOWxiNumfNLFsJAkznC3OkWapxlWq7NGk2/+?=
- =?us-ascii?Q?Pk8T/PifEa2A+VlKUoMnKtPWGIUGfBBR3vg1Gz2wWhdNfe37+gDYP9CuD9rD?=
- =?us-ascii?Q?gBqf2lNQ/ymX63X631KfeZ6p3vAv+Z9JwSEGpftOCWfUOw1oIj2qI2tm7y19?=
- =?us-ascii?Q?/JRPaItkAY6SKur6rNLYiRuPDX4Mh8lTuSTppLcugX+XWaKOMNqgeXtFrvKA?=
- =?us-ascii?Q?1OjT1MOH5VPBgsi3pBTB3JK78AuLpjcbQMAHmQ3nNHGGDxJbIx6qjgRts4VC?=
- =?us-ascii?Q?Xqx7QqBNCtngaVy2B5r0t4iQbs9YpsXgaS8ipquZ74hrogY+D7s0vkZ4EeKy?=
- =?us-ascii?Q?BMMx1tVy4VnuaOU9CqX5p43fCSWYU7N2njOCmuFyrbTeuPCrxqoAyyMlV7kn?=
- =?us-ascii?Q?a1PLVo3fWhFo7n39/Nhsw50dwCOiWkGJG1e66efeHOwwMwVh/TCmhg0y8UZ2?=
- =?us-ascii?Q?biZzwNbo6T0WNsNhbN0STBbyow4OS8Kyuhy3jJ5IZXnbBiyfYNu9y00GjzDI?=
- =?us-ascii?Q?F6TYK8WLrLOiJCiQFjbIGjIfAfNB/YBvd0LKBZtNkXLJqaAi5vDbH1qmKguE?=
- =?us-ascii?Q?OjO1V55E9Ntw/1ZP/BFRvoI6GCRjXaJ2UiykDSQuUz9JWn5rs97krXV8TqYg?=
- =?us-ascii?Q?FilEayWLvN9KesXodh05EpCJgQfcwk4ewd10WzPmNufSnbEyd7U0RsvR2u0h?=
- =?us-ascii?Q?Wtqy/sgbyZFaFtqOuROAI19KLh9dY7T3LVST+WXHPiK+QLG4RFwkL1WH9uo+?=
- =?us-ascii?Q?wAsKM69lIVF0pbmDmP9izKutZ0muInte+ly6qXMm7G3ayxXJD4X0f236lgbR?=
- =?us-ascii?Q?DdKZ90H1hCkNz7twWNmgCvB98RLw4CymxQPJy9zsMoqKVmyhzbeXON9LdCKS?=
- =?us-ascii?Q?9jlBCrN82pOM4xBiesfLqd2KkwJnp8YxFeffCvfOfUKuo80PLT53Z1E91PO8?=
- =?us-ascii?Q?y29bOvBDsx9tXXN5t1LxyY4/itfP9rp+yVhT+KY9TyYwi15h3kZDnkn1r9+0?=
- =?us-ascii?Q?QvaGkR0xOpyklFwl31ItsVgRknZ8jDxRd7b2pnK6rMOgEvTIL2oZdJXJbD2D?=
- =?us-ascii?Q?8zH2bZkbZchfcQ6SHwzZpq497MZkOdINMGH5ceVyQME0oLWitrXRTcLwpbLL?=
- =?us-ascii?Q?S6c954qkRVYxZB1rMuXp/zWU7llj/4474WoPpEjCB5mpMhg6zhiYgaFfl6nr?=
- =?us-ascii?Q?8zeoYTmkQ27hUUh6uNU=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d1c5d1a-b6bc-409b-99c6-08dc9ad40686
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2024 20:17:41.5695
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9qsQBbKhPSEAv4eKt6xXTwJuyE3tQ5ot+bO+4J00QewKP3lHBzRqbBOD4K1+Aa1Fc6RvoB4ueXVJas5eymP5/w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8864
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vlpWLipQCruqIxkQ0Vv5rOzN-wZRA5Do
+X-Proofpoint-ORIG-GUID: vlpWLipQCruqIxkQ0Vv5rOzN-wZRA5Do
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-02_18,2024-07-02_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 mlxlogscore=999 phishscore=0 impostorscore=0
+ clxscore=1011 malwarescore=0 suspectscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407030021
 
-Add compatible string for chip ls1046 to fix below warning.
-arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dtb: /soc/gpio@2300000: failed to match any schema with compatible: ['fsl,ls1046a-gpio', 'fsl,qoriq-gpio']
+Introduce support for the QCS9100 SoC device tree (DTSI) and the
+QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
+While the QCS9100 platform is still in the early design stage, the
+QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
+mounts the QCS9100 SoC instead of the SA8775p SoC.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
+The QCS9100 SoC DTSI was directly renamed from the SA8775p SoC DTSI. In
+the upcoming weeks, Nikunj Kela will develop a new device tree related
+to SA8775p, specifically supporting the SCMI resource firmware solution
+for the SA8775p platform. If you're already familiar with the
+background, feel free to skip part[2], which provides a detailed
+explanation.
+
+All compatible strings have been updated from “SA8775P” to “QCS9100.”
+If you’re already aware of the context, feel free to skip part[3], which
+provides a detailed explanation of various other options.
+
+Here’s the reason and background: Bjorn Andersson, Nikunj Kela,
+Srinivas Kandagatla, and other Qualcomm engineers contributed to the
+current design, and we’ve finalized this series for broader audience
+review.
+
+*This patch series aligns with upstream efforts toward a new design
+solution: “Using logical performance and power domains to achieve
+resource abstraction over SCMI.” For more details, refer to [1]:
+[1]https://resources.linaro.org/en/resource/wfnfEwBhRjLV1PEAJoDDte
+
+*The SA8775p-RIDE will transition to using SCMI resources. This involves
+migrating to SCMI power and performance protocols for requesting and
+configuring peripheral resources such as clocks, regulators,
+interconnects, and PHYs. Consequently, most devices in the SA8775p-RIDE
+will require updates to drivers, bindings, and device trees.
+
+*The QCS9100-RIDE project will continue using the existing resources.
+It will rely on the current kernel infrastructure for clocks, regulators,
+interconnects, PHYs, and APIs.
+
+[2] The reason of qcs9100.dtsi renamed from sa8775.dtsi:
+The proposal is to maintain two separate platform.dtsi files.
+qcs9100.dtsi for non-scmi resources and sa8775p.dtsi for SCMI resources.
+Currently, the upstream sa8775p.dtsi contains 176 nodes with specified
+“compatible” strings. Among these, 142 nodes require distinct properties
+for SCMI and non-SCMI. As the IoT target is being upstreamed, both node
+counts are expected to increase for the IoT/QCS platform.
+
+If we do not implement platform separation, any modifications to the
+base sa8775p.dtsi-whether for automotive or IoT purposes-must consider
+the other platform. Each node(e.g., remoteproc, multimedia) added should
+be countered with an overlay that disables it in the automotive context.
+Care must be taken to avoid introducing changes that inferfere with the
+automotive system design, This structure poses challenges for human
+reasioning, leading to issues during development, code review, and
+maintenance.
+
+Furthermore, we are addressing the complexity of resuing marketing names
+accross both the IoT(QCS9100) and automotive(SA8775p) platforms. This
+decision has significations throughout DeviceTree and the kernel.
+Consequently, renameing the QCS9100 device tree files from the SA8775p
+device files is our definitive choice.
+
+[3] The reason of All Compatible Strings Changed from “SA8775P” to
+“QCS9100”:
+During discussions, three options were considered. Ultimately, Option
+B was chosen as the best approach for separating QCS projects from SA
+projects. This decision simplifies the reviewer’s task by focusing on
+each platform independently. Developers only need to verify the
+affected platform.
+
+*Option A: “And” (qcs9100+sa8775):
+
+Add all qcs9100-compatible strings alongside the current
+sa8775p-compatible strings in each binding file. For example:
+aggre1_noc: interconnect-aggre1-noc {
+-    compatible = "qcom,sa8775p-aggre1-noc";
++    compatible = "qcom,qcs9100-aggre1-noc", "qcom,sa8775p-aggre1-noc";
+    #interconnect-cells = <2>;
+    qcom,bcm-voters = <&apps_bcm_voter>; };
+
+Some device tree (DT) nodes may share common compatibles. For instance:
+firmware {
+    scm {
+-        compatible = "qcom,scm-sa8775p", "qcom,scm";
++        compatible = "qcom,scm-qcs9100", "qcom,scm";
+    };
+};
+
+Approximately 50+ sa8775p-related compatible names need to be changed
+to qcs9100-compatible names in the binding files and DT nodes.
+When the SCMI resource driver owner adds SCMI support, they need to
+update both the qcs9100 DT (non-SCMI resource) and the sa8775 DT (SCMI
+resource) simultaneously.
+For this option:
+
+DT and binding changes are needed.
+No driver C file changes are required at this time.
+Technical driver owners must handle both the qcs DT and sa DT.
+
+*Option B: “Or” (qcs9100 or sa8775):
+
+Replace all qcs9100-compatible strings with the current
+sa8775p-compatible strings in the qcs9100 DT. For example:
+aggre1_noc: interconnect-aggre1-noc {
+-    compatible = "qcom,sa8775p-aggre1-noc";
++    compatible = "qcom,qcs9100-aggre1-noc";
+    #interconnect-cells = <2>;
+    qcom,bcm-voters = <&apps_bcm_voter>; };
+
+Add the necessary “qcs9100” compatible strings to the C driver. In
+drivers/interconnect/qcom/sa8775p.c:
+static const struct of_device_id qnoc_of_match[] = {
+    { .compatible = "qcom,sa8775p-aggre1-noc", .data = &sa8775p_aggre1_noc },
++   { .compatible = "qcom,qcs9100-aggre1-noc", .data =
+&sa8775p_aggre1_noc },
+    { .compatible = "qcom,sa8775p-aggre2-noc", .data = &sa8775p_aggre2_noc },
++   { .compatible = "qcom,qcs9100-aggre2-noc", .data =
+&sa8775p_aggre2_noc },
+    // ...
+};
+
+Some DT nodes may share common compatibles, similar to the example above.
+Approximately 50+ sa8775p-related compatible names need to be changed to
+qcs9100-compatible names in the binding files and DT nodes.
+When the SCMI resource driver owner adds SCMI support, they only need to
+update the sa8775 DT (SCMI resource).
+For this option:
+DT, binding, and C driver changes are needed.
+Technical driver owners only need to handle the sa DT.
+
+*Option C: “Depends” (sa8775 in qcs9100, depends on driver to change
+necessary driver + DT later):
+This option depends on the SCMI resource solution and requires minimal
+driver changes.
+
+Change common compatibles to “qcs9100,” as shown in the example:
+firmware {
+    scm {
+-        compatible = "qcom,scm-sa8775p", "qcom,scm";
++        compatible = "qcom,scm-qcs9100", "qcom,scm";
+    };
+};
+
+Approximately 30+ sa8775p-related compatible names need to be changed
+to qcs9100-compatible names in the binding files and DT nodes.
+When the SCMI resource driver owner adds SCMI support, they must
+update both the qcs9100 DT and the sa8775 DT (SCMI resource)
+simultaneously.
+For example:
+
+{ .compatible = "qcom,sa8775p-aggre1-noc", .data = &sa8775p_aggre1_noc },
++ { .compatible = "qcom,qcs9100-aggre1-noc", .data = &qcs9100_aggre1_noc
++ },
+{ .compatible = "qcom,sa8775p-aggre2-noc", .data = &sa8775p_aggre2_noc },
++ { .compatible = "qcom,qcs9100-aggre2-noc", .data = &qcs9100_aggre2_noc
++ },
+// ...
+
+For this option:
+DT changes are needed.
+Technical driver owners are responsible for making the final different
+driver changes and ensuring the exact binding of qcs9100 and sa8775
+with different compatibles.
+
+In summary, the current solution primarily targets SCMI-based resource
+transactions. However, both the qcs project and the SA project, which
+are in the development stage, require independent development processes.
+
+Co-developed-by: Maria Yu <quic_aiquny@quicinc.com>
+Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 ---
- Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-index f386ff3df6a8b..84fd82291ee40 100644
---- a/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-@@ -24,6 +24,7 @@ properties:
-               - fsl,ls1021a-gpio
-               - fsl,ls1028a-gpio
-               - fsl,ls1043a-gpio
-+              - fsl,ls1046a-gpio
-               - fsl,ls1088a-gpio
-               - fsl,ls2080a-gpio
-           - const: fsl,qoriq-gpio
+Tengfei Fan (47):
+  dt-bindings: arm: qcom: Document QCS9100 SoC and RIDE board
+  arm64: dts: qcom: qcs9100: Introduce QCS9100 SoC dtsi
+  arm64: dts: qcom: qcs9100: Introduce QCS9100 PMIC dtsi
+  arm64: dts: qcom: qcs9100: Add QCS9100 RIDE board dts
+  dt-bindings: firmware: qcom,scm: document SCM on QCS9100 SoC
+  dt-bindings: interconnect: qcom: document the interconnect compatibles
+    for QCS9100
+  dt-bindings: clock: document QCS9100 GCC compatible
+  dt-bindings: mailbox: qcom-ipcc: Document the QCS9100 IPCC
+  dt-bindings: phy: Add QMP UFS PHY comptible for QCS9100
+  dt-bindings: crypto: ice: Document QCS9100 inline crypto engine
+  dt-bindings: crypto: qcom,prng: document QCS9100
+  dt-bindings: phy: qcom,usb-snps-femto-v2: Add bindings for QCS9100
+  dt-bindings: ufs: qcom: document QCS9100 UFS
+  dt-bindings: phy: qcom,qmp-usb: Add QCS9100 USB3 PHY
+  dt-bindings: usb: dwc3: Add QCS9100 compatible
+  dt-bindings: clock: qcom: describe the GPUCC clock for QCS9100
+  dt-bindings: arm-smmu: Document QCS9100 GPU SMMU
+  dt-bindings: phy: describe the Qualcomm SGMII PHY for QCS9100
+  dt-bindings: cache: qcom,llcc: Add QCS9100 description
+  dt-bindings: interrupt-controller: qcom,pdc: document pdc on QCS9100
+  dt-bindings: thermal: qcom-tsens: document the QCS9100 Temperature
+    Sensor
+  dt-bindings: soc: qcom,aoss-qmp: Document the QCS9100 AOSS channel
+  dt-bindings: pinctrl: add qcs9100-tlmm compatible
+  dt-bindings: soc: qcom: add qcom,qcs9100-imem compatible
+  dt-bindings: watchdog: qcom-wdt: document QCS9100
+  dt-bindings: clock: qcom-rpmhcc: Add RPMHCC bindings for QCS9100
+  dt-bindings: cpufreq: cpufreq-qcom-hw: Add QCS9100 compatibles
+  dt-bindings: power: qcom,rpmpd: document the QCS9100 RPMh Power
+    Domains
+  dt-bindings: net: qcom,ethqos: add description for qcs9100
+  dt-bindings: PCI: Document compatible for QCS9100
+  dt-bindings: PCI: qcom-ep: Add support for QCS9100 SoC
+  dt-bindings: phy: qcom,qmp: Add qcs9100 QMP PCIe PHY
+  interconnect: qcom: add driver support for qcs9100
+  clk: qcom: add the GCC driver support for QCS9100
+  phy: qcom-qmp-ufs: Add QCS9100 support
+  phy: qcpm-qmp-usb: Add support for QCS9100
+  clk: qcom: add the GPUCC driver support for QCS9100
+  phy: qcom: add the SGMII SerDes PHY driver support
+  soc: qcom: llcc: Add llcc configuration support for the QCS9100
+    platform
+  pinctrl: qcom: add the tlmm driver support for qcs9100 platform
+  clk: qcom: rpmh: Add support for QCS9100 rpmh clocks
+  soc: qcom: rmphpd: add power domains for QCS9100
+  net: stmmac: dwmac-qcom-ethqos: add support for emac4 on qcs9100
+    platforms
+  PCI: qcom: Add support for QCS9100 SoC
+  PCI: qcom-ep: Add HDMA support for QCS9100 SoC
+  cpufreq: qcom-nvmem: add support for QCS9100
+  phy: qcom-qmp-pcie: add x4 lane EP support for QCS9100
+
+ .../devicetree/bindings/arm/qcom.yaml         |   3 +
+ .../devicetree/bindings/cache/qcom,llcc.yaml  |   2 +
+ .../devicetree/bindings/clock/qcom,gpucc.yaml |   1 +
+ .../bindings/clock/qcom,rpmhcc.yaml           |   1 +
+ .../bindings/clock/qcom,sa8775p-gcc.yaml      |   5 +-
+ .../bindings/cpufreq/cpufreq-qcom-hw.yaml     |   1 +
+ .../crypto/qcom,inline-crypto-engine.yaml     |   1 +
+ .../devicetree/bindings/crypto/qcom,prng.yaml |   1 +
+ .../bindings/firmware/qcom,scm.yaml           |   1 +
+ .../interconnect/qcom,sa8775p-rpmh.yaml       |  14 +++
+ .../interrupt-controller/qcom,pdc.yaml        |   1 +
+ .../devicetree/bindings/iommu/arm,smmu.yaml   |   3 +
+ .../bindings/mailbox/qcom-ipcc.yaml           |   1 +
+ .../devicetree/bindings/net/qcom,ethqos.yaml  |   1 +
+ .../devicetree/bindings/net/snps,dwmac.yaml   |   3 +
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml |   2 +
+ .../bindings/pci/qcom,pcie-sa8775p.yaml       |   5 +-
+ .../phy/qcom,sa8775p-dwmac-sgmii-phy.yaml     |   5 +-
+ .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   4 +
+ .../phy/qcom,sc8280xp-qmp-ufs-phy.yaml        |   2 +
+ .../phy/qcom,sc8280xp-qmp-usb3-uni-phy.yaml   |   3 +
+ .../bindings/phy/qcom,usb-snps-femto-v2.yaml  |   1 +
+ .../bindings/pinctrl/qcom,sa8775p-tlmm.yaml   |   5 +-
+ .../devicetree/bindings/power/qcom,rpmpd.yaml |   1 +
+ .../bindings/soc/qcom/qcom,aoss-qmp.yaml      |   1 +
+ .../devicetree/bindings/sram/qcom,imem.yaml   |   1 +
+ .../bindings/thermal/qcom-tsens.yaml          |   1 +
+ .../devicetree/bindings/ufs/qcom,ufs.yaml     |   2 +
+ .../devicetree/bindings/usb/qcom,dwc3.yaml    |   3 +
+ .../bindings/watchdog/qcom-wdt.yaml           |   1 +
+ arch/arm64/boot/dts/qcom/Makefile             |   2 +-
+ ...{sa8775p-pmics.dtsi => qcs9100-pmics.dtsi} |   0
+ .../{sa8775p-ride.dts => qcs9100-ride.dts}    |   8 +-
+ .../dts/qcom/{sa8775p.dtsi => qcs9100.dtsi}   | 112 +++++++++---------
+ drivers/clk/qcom/clk-rpmh.c                   |   1 +
+ drivers/clk/qcom/gcc-sa8775p.c                |   1 +
+ drivers/clk/qcom/gpucc-sa8775p.c              |   1 +
+ drivers/cpufreq/cpufreq-dt-platdev.c          |   1 +
+ drivers/interconnect/qcom/sa8775p.c           |  14 +++
+ .../stmicro/stmmac/dwmac-qcom-ethqos.c        |   1 +
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |   1 +
+ drivers/pci/controller/dwc/pcie-qcom.c        |   1 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      |   6 +
+ drivers/phy/qualcomm/phy-qcom-qmp-ufs.c       |   3 +
+ drivers/phy/qualcomm/phy-qcom-qmp-usb.c       |   3 +
+ drivers/phy/qualcomm/phy-qcom-sgmii-eth.c     |   1 +
+ drivers/pinctrl/qcom/pinctrl-sa8775p.c        |   1 +
+ drivers/pmdomain/qcom/rpmhpd.c                |   1 +
+ drivers/soc/qcom/llcc-qcom.c                  |   1 +
+ 49 files changed, 170 insertions(+), 65 deletions(-)
+ rename arch/arm64/boot/dts/qcom/{sa8775p-pmics.dtsi => qcs9100-pmics.dtsi} (100%)
+ rename arch/arm64/boot/dts/qcom/{sa8775p-ride.dts => qcs9100-ride.dts} (99%)
+ rename arch/arm64/boot/dts/qcom/{sa8775p.dtsi => qcs9100.dtsi} (97%)
+
+
+base-commit: 82e4255305c554b0bb18b7ccf2db86041b4c8b6e
 -- 
-2.34.1
+2.25.1
 
 
