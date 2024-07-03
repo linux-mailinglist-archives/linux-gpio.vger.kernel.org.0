@@ -1,135 +1,200 @@
-Return-Path: <linux-gpio+bounces-7973-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7974-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEB769258C1
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 12:35:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B73D9258DA
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 12:37:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0AB891C20B04
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 10:35:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F0061C20D7D
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 10:37:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7126B173347;
-	Wed,  3 Jul 2024 10:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FFDD16DECF;
+	Wed,  3 Jul 2024 10:37:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tTSCYIFC"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="foJzSM9R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F102F17165D
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 10:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10182142904;
+	Wed,  3 Jul 2024 10:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720002797; cv=none; b=SP26cP5ctuOvPgGjggJfRVRmLe26G6kGrO8ih3MKVGv/doocKswcGMxtnKqWTQ03vWLPx9TZvLrRtfnGwHUr2RpcZ8mPkb4KM55VM87YhvBvRx3UEERYeIFqET85Mq/DbTfZYwq96Ay6TSxA3t8t0l1WpOKtqZnnxOu6WOZYhvo=
+	t=1720003051; cv=none; b=raZXsFvvD4ILQMylTRE6f8waMrU+FPHiYvKlL/HiXfZldruX4VeTZSLAVx+sSwpbLOQ327NmImlcaFxb6xibdMKYjolDgTWqLUSWLNGpz5SIdH+zw2hNRVkIxNr5kdUuENk1N5LjC/+yW6ksrdLzNbQOyN7MjLiNjwKHjLO2kAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720002797; c=relaxed/simple;
-	bh=4H5haDE7k64EWfuCw7wYQ8GiPFESg0dfVMdT8ZwOa9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kXR10wZrA1enZGjDxmvy3u3jHKGCtTYL6L8TBwmkhyKXx/B74Efe4g1iv8qTeQ02mub6LwrpUAqR32BXoa1BiOgrtgLhMU9lsM+nn5shb/RKnDfVHxnsEKwSkOI3Yg6Ey+nYNPntRYZuT20G/e3QHqHPIrOt1p+vastyPIQ5WXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tTSCYIFC; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ee4ae13aabso54975991fa.2
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2024 03:33:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720002793; x=1720607593; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TrB2TnPNBgt+WbBBIM4+5QWbIuhtFAqbg6qcHUZxaco=;
-        b=tTSCYIFCM9x8KJGViFEBb8Yb5gQu4qmjLgpYZIcAL+qddS7kr1YwE08ziXob92ubaN
-         jxwD7gNYXoEj3AeZROLmWOwijpOpfqfBXc2P+7Dht3CxYPwt5vhIgE43AFlyaK07WbxK
-         TRFYQ9/ANP7dDnvh5t9BZ8XTSbhu29pRLUA1RiRPZ/iCaFwjuCpzi4/1zo+lFAlUc2K3
-         plULoOR7vKDyLMKkjdHppqmbIhlsuapIo/NEcwnCqu+RY+Bo5OoBm/6++/W4tCQbVgfv
-         Q6iUhl4RNXmOAskcjO2HChzJOSHudruVGwoOSq7Fu0Ib6liCFbyS3zkuviBR0ja5g3iz
-         n4XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720002793; x=1720607593;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TrB2TnPNBgt+WbBBIM4+5QWbIuhtFAqbg6qcHUZxaco=;
-        b=XM+TTi2gmLqnybhcyjot8eFxkA1XmT+g3DArSG5tLF97pfn7M4VQgCj9gl0dfCm8X2
-         0SADEdMgRqMQMV7s4c72vLitQMQMtYq60LfxQiCPKF7jd6rjDEV06pbs0IaXrJKp7QWr
-         T073DmHflZ/zmtUvtEna7bA3LNfrHWY0HPaZ4IAYdKFPcjfIaceEK9p3ewZdQpuWUxWE
-         w+u/73Rr9D2Ihd+dH6MBW007qvYPyf/dn/ADn3zW9w0NF13Vn+PScSMegjliXHXecUmr
-         DQ1qpQSjMCLXdC2gQH7jwkVBZUNR+ogfQMPZMvpM0MfbwMs2jlhdi+3w/8WrKUxkMtwl
-         bPdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPRxMZ4VtcT2wBTeo8OnSLFT4cdKaccRnkjXBMovSMcbTyocY+aAjawqHMB8w3A4lokxpqW3Tahsw/BjOGRhSF38jh4COEUx87ag==
-X-Gm-Message-State: AOJu0YxdE3cs7AEWOEcYThd6IBp9o/EIkFW0vey3dk8iyNSZyj80+mai
-	jpXgcW+nm6Y9ZxJQqeyZo00KrIPjdTFKMvvMUFmpo3YX/T/OpgiZ0OB+0To/ZVE=
-X-Google-Smtp-Source: AGHT+IEgLYgf/SDysaV48RHAuwJ+VgK2M5e2XinMD5byEgw07GiQwTlTQD6QPmY0VgdHWS5AezImMg==
-X-Received: by 2002:a05:651c:49b:b0:2eb:d9a3:2071 with SMTP id 38308e7fff4ca-2ee5e6c9cd8mr61398201fa.50.1720002792033;
-        Wed, 03 Jul 2024 03:33:12 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ee51696991sm18684511fa.136.2024.07.03.03.33.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 03:33:11 -0700 (PDT)
-Date: Wed, 3 Jul 2024 13:33:09 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Tengfei Fan <quic_tengfan@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com, 
-	sboyd@kernel.org, jassisinghbrar@gmail.com, herbert@gondor.apana.org.au, 
-	davem@davemloft.net, manivannan.sadhasivam@linaro.org, will@kernel.org, 
-	joro@8bytes.org, conor@kernel.org, tglx@linutronix.de, amitk@kernel.org, 
-	thara.gopinath@gmail.com, linus.walleij@linaro.org, wim@linux-watchdog.org, 
-	linux@roeck-us.net, rafael@kernel.org, viresh.kumar@linaro.org, vkoul@kernel.org, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com, 
-	robimarko@gmail.com, quic_gurus@quicinc.com, bartosz.golaszewski@linaro.org, 
-	kishon@kernel.org, quic_wcheng@quicinc.com, alim.akhtar@samsung.com, 
-	avri.altman@wdc.com, bvanassche@acm.org, agross@kernel.org, 
-	gregkh@linuxfoundation.org, quic_tdas@quicinc.com, robin.murphy@arm.com, 
-	daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com, 
-	quic_rjendra@quicinc.com, ulf.hansson@linaro.org, quic_sibis@quicinc.com, 
-	otto.pflueger@abscue.de, quic_rohiagar@quicinc.com, luca@z3ntu.xyz, 
-	neil.armstrong@linaro.org, abel.vesa@linaro.org, bhupesh.sharma@linaro.org, 
-	alexandre.torgue@foss.st.com, peppe.cavallaro@st.com, joabreu@synopsys.com, 
-	netdev@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
-	ahalaney@redhat.com, krzysztof.kozlowski@linaro.org, u.kleine-koenig@pengutronix.de, 
-	quic_cang@quicinc.com, danila@jiaxyga.com, quic_nitirawa@quicinc.com, 
-	mantas@8devices.com, athierry@redhat.com, quic_kbajaj@quicinc.com, 
-	quic_bjorande@quicinc.com, quic_msarkar@quicinc.com, quic_devipriy@quicinc.com, 
-	quic_tsoni@quicinc.com, quic_rgottimu@quicinc.com, quic_shashim@quicinc.com, 
-	quic_kaushalk@quicinc.com, quic_tingweiz@quicinc.com, quic_aiquny@quicinc.com, 
-	srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-crypto@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, kernel@quicinc.com
-Subject: Re: [PATCH 00/47] arm64: qcom: dts: add QCS9100 support
-Message-ID: <43nktnqp6mthafojiph7ouzfchmudtht634gtxwg7gmutb5l7y@a5j27mpl7d23>
-References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
- <20240703035735.2182165-1-quic_tengfan@quicinc.com>
+	s=arc-20240116; t=1720003051; c=relaxed/simple;
+	bh=9D0oFgRed8MuxGxSMJGRs4O77WGIRnK3b9TAv6iBcRo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dZq1Hb7A7jL/XOKmywazgwWbZu6vQsAOXUz3RMFZZRUIAt7Yb93YqxU85xdTJIHuTKFXPe3jNvZILMU5luatsNcb9gY5zUfvTRA+LDCRcBxlJPI9GaSwiS/0nUflrHr+FPZmvK8uYVGsGLva25RhuvgpW/FQmRmLYWFyDhuaeJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=foJzSM9R; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3ECA340002;
+	Wed,  3 Jul 2024 10:37:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1720003045;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Y9dKIY8UF+nReYR3bpF9Pb7TJp7WLPLWK/B5oYjjbq8=;
+	b=foJzSM9RuZQOf/VPApRW0lmUGrQblXobu0gWcMfK3rdR7fFeSllw9HZtvDHamCZSnVeAQd
+	xl3StvV0X9RM6zrGGH8rKfTVgGj2rxAQ/FXj4AoPA7jwEAAykHOnYYQdsWoKj0Z5qT9EbI
+	NJSgM2y4fGFlocfqLTtmMbWZcFSesBLFVfvUvMOxSvZzRHYiHre2aVkplOJXZ8APv8zjRO
+	yRmCwXsRILqubrSOViPCck2qs6VXTOpPU1Zh2pkMz/CDpauRr4KYDvJCL2P3T9WnVnXRPw
+	Yp49tSFnocZKud9kw1tjEbXpKeoo3s6qbV/lMc9MWdp1PkDr10Ce8YagcplEvA==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: [PATCH 00/20] Simplify of_property_for_each_u32()
+Date: Wed, 03 Jul 2024 12:36:44 +0200
+Message-Id: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703035735.2182165-1-quic_tengfan@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALwphWYC/x3MTQqEMAxA4atI1lOI9Q+8igyltKlmY0uqw4j07
+ haX3+K9GzIJU4a5uUHox5njXtF+GnCb3VdS7KtBo+5xwlbFYJLERHJcJkQxZN1mzk6rfsTgUdv
+ Bo4OaJ6HA/3e9fEt5ALUFP0BqAAAA
+To: Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Saravana Kannan <saravanak@google.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Tony Lindgren <tony@atomide.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ =?utf-8?q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan Cameron <jic23@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, 
+ Richard Leitner <richard.leitner@linux.dev>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+ Damien Le Moal <dlemoal@kernel.org>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ llvm@lists.linux.dev, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org, 
+ linux-usb@vger.kernel.org, patches@opensource.cirrus.com, 
+ linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-riscv@lists.infradead.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.14.0
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Wed, Jul 03, 2024 at 11:56:48AM GMT, Tengfei Fan wrote:
-> Introduce support for the QCS9100 SoC device tree (DTSI) and the
-> QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
-> While the QCS9100 platform is still in the early design stage, the
-> QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
-> mounts the QCS9100 SoC instead of the SA8775p SoC.
+[Note: to reduce the noise I have trimmed the get_maintainers list
+manually. Should you want to be removed, or someone else added, to future
+versions, just tell me. Sorry for the noise.]
 
-Your patch series includes a second copy of your patches, wich have
-different Message-IDs:
+This series aims at simplifying of_property_for_each_u32() as well as
+making it more difficult to misuse it in the future.
 
-20240703035735.2182165-1-quic_tengfan@quicinc.com vs
-20240703025850.2172008-1-quic_tengfan@quicinc.com
+The long-term goal is changing this pattern:
 
-Please consider switching to the b4 tool or just
-checking what is being sent.
+  struct property *prop;
+  const __be32 *p;
+  u32 val;
+ 
+  of_property_for_each_u32(np, "xyz", prop, p, val) { ... }
 
+to this:
+
+  u32 val;
+
+  of_property_for_each_u32(np, "xyz", val) { ... }
+
+So, removing the 3rd and 4th arguments which are typically meant to be
+internal. Those two parameters used to be unavoidable until the kernel
+moved to building with the C11 standard unconditionally. Since then, it is
+now possible to get rid of them. However a few users of
+of_property_for_each_u32() do actually use those arguments, which
+complicates the transition. For this reason this series does the following:
+
+ * Add of_property_for_each_u32_new(), which does not have those two
+   arguments (patch 1)
+ * Convert _almost_ every usage to of_property_for_each_u32_new()
+ * Rename of_property_for_each_u32() to of_property_for_each_u32_old() and
+   deprecate it, as a incentive to code not (yet) in mainline to upgrade
+   to the *_new() version (last patch)
+
+The plan for the next series is to additionally:
+
+ * Convert the few remaining of_property_for_each_u32_old() instantes to
+   of_property_for_each_u32_new()
+ * Remove of_property_for_each_u32_old()
+ * Rename of_property_for_each_u32_new() to of_property_for_each_u32()
+
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+---
+Luca Ceresoli (20):
+      of: add of_property_for_each_u32_new()
+      clk: convert to of_property_for_each_u32_new()
+      clk: qcom: convert to of_property_for_each_u32_new()
+      clk: sunxi: clk-simple-gates: convert to of_property_for_each_u32_new()
+      clk: sunxi:  clk-sun8i-bus-gates: convert to of_property_for_each_u32_new()
+      clocksource/drivers/samsung_pwm: convert to of_property_for_each_u32_new()
+      bus: ti-sysc: convert to of_property_for_each_u32_new()
+      lk: clk-conf: convert to of_property_for_each_u32_new()
+      gpio: brcmstb: convert to of_property_for_each_u32_new()
+      pinctrl: s32cc: convert to of_property_for_each_u32_new()
+      irqchip/atmel-aic: convert to of_property_for_each_u32_new()
+      iio: adc: ti_am335x_adc: convert to of_property_for_each_u32_new()
+      pwm: samsung: convert to of_property_for_each_u32_new()
+      tty: sysrq: convert to of_property_for_each_u32_new()
+      usb: usb251xb: convert to of_property_for_each_u32_new()
+      mfd: ti_am335x_tscadc: convert to of_property_for_each_u32_new()
+      ASoC: arizona: convert to of_property_for_each_u32_new()
+      powerpc/xive: convert to of_property_for_each_u32_new()
+      powerpc/xive: convert to of_property_for_each_u32_new()
+      of: deprecate and rename of_property_for_each_u32()
+
+ .clang-format                           |  3 ++-
+ arch/powerpc/sysdev/xive/native.c       |  4 +---
+ arch/powerpc/sysdev/xive/spapr.c        |  3 +--
+ drivers/bus/ti-sysc.c                   |  4 +---
+ drivers/clk/clk-conf.c                  |  4 +---
+ drivers/clk/clk-si5351.c                |  4 ++--
+ drivers/clk/clk.c                       |  6 ++----
+ drivers/clk/qcom/common.c               |  4 +---
+ drivers/clk/sunxi/clk-simple-gates.c    |  4 +---
+ drivers/clk/sunxi/clk-sun8i-bus-gates.c |  4 +---
+ drivers/clocksource/samsung_pwm_timer.c |  4 +---
+ drivers/gpio/gpio-brcmstb.c             |  5 +----
+ drivers/iio/adc/ti_am335x_adc.c         |  4 +---
+ drivers/irqchip/irq-atmel-aic-common.c  |  4 +---
+ drivers/irqchip/irq-pic32-evic.c        |  2 +-
+ drivers/mfd/ti_am335x_tscadc.c          |  4 +---
+ drivers/pinctrl/nxp/pinctrl-s32cc.c     |  4 +---
+ drivers/pinctrl/pinctrl-k210.c          |  2 +-
+ drivers/pwm/pwm-samsung.c               |  4 +---
+ drivers/tty/sysrq.c                     |  4 +---
+ drivers/usb/misc/usb251xb.c             |  4 +---
+ include/linux/of.h                      | 14 ++++++++++----
+ sound/soc/codecs/arizona.c              | 12 +++++-------
+ 23 files changed, 39 insertions(+), 68 deletions(-)
+---
+base-commit: e937d48ed96381e9620d9c81fbc1ce666f5b7358
+change-id: 20240701-of_property_for_each_u32-460fd02a5d0c
+
+Best regards,
 -- 
-With best wishes
-Dmitry
+Luca Ceresoli <luca.ceresoli@bootlin.com>
+
 
