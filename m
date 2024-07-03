@@ -1,189 +1,208 @@
-Return-Path: <linux-gpio+bounces-7908-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7909-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 812AB924F6A
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 05:21:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F2AC924F8A
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 05:28:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0329F1F287F6
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 03:21:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9064281DCA
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 03:28:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4756A174EFC;
-	Wed,  3 Jul 2024 03:10:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5865C749A;
+	Wed,  3 Jul 2024 03:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LRSOVJie"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mIrf6RdE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F20131BDF;
-	Wed,  3 Jul 2024 03:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E197134B6
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 03:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719976204; cv=none; b=LJYeenGadaSgj5vGvecvxOqlOrWBHTVcfwaWLjWbixq/nK5t29D6B6foHhTNlGAcOHTcSIShteICT2IVI3ZMVrbz0x9xNpIFR7JaC5jjVjENPhjcUwQeWSWSCed3HKNb/Hn8GbrcVJva/jCI5fho2RDhPKiAxrzhqsraA2a4bPg=
+	t=1719977285; cv=none; b=QbIQ/yMRru9M+RzjHzlqC8mTEfAtVMcnlVEa1iHJ98AMpqrXAf7NDHKFy4EA2YZfBKDPddET1UWvJUMPsAHf5Fevr9K501j6tGIodteQD3IW01zgYoNwnMnem9QIpGZ7nSBACHtofJkEvP+lHB+su+uaNaWqMpgoSNNkaLGK0TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719976204; c=relaxed/simple;
-	bh=ZjYpvBu6Iql9RmhRtU2+a4cofMcdQZwdlMpDAXB9y6s=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lcfWVI1uJ+wwcgRKi/pGZn++eZQ8LzKDB3uJO+dY+oyqUwtw0mN9CNATc5yX7cKmlj1D05+lmQvCfmW0G2BuzLsgBel4DG3mrP5se0qOERyq9yqS23C8YHao5XYWa+W5ZZuLFTSQnRIVtA8kYXcYUyu9TKRry4uuriq8bIULyPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LRSOVJie; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 462HE6Rl016465;
-	Wed, 3 Jul 2024 03:09:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/oSxM1GRn7V3lrTwxdGth+tnKwY/ctZ54CPcSpojck8=; b=LRSOVJiedcro8zdJ
-	C7snUQoT2KiZsJPJ4qZ1WkQybAkgOiy0GbDmvEGG5YkB+r2nhVzVFhjNXyF5pqNG
-	m8M6JME1E6OKvVeRCTr4w3io8iB7JfsRr8YshpXOOl8J7ZI8E7JralktuZdlZdCV
-	zlNu8GabvtWcaoNkqm4O9cVTMHr16kwrVUBNEijdMkC6M/4e8Xo9Xe/ZQcuvOfqk
-	mBl1YFezHGVQzbBvDmuEDPBLxmnIUICKuFUcb8OakbOvrOC+Y/UleXAKjSwFK9sm
-	ViWwIYaaW7QFgJtJg6K9jPOO+cCbuG1giJFgYbyHHWZnehJdv8DL4ylg8LbgoNWp
-	x+ridA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 402an77fs0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 03:09:08 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4633973M021497
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Jul 2024 03:09:07 GMT
-Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 2 Jul 2024 20:08:46 -0700
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <djakov@kernel.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <jassisinghbrar@gmail.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <manivannan.sadhasivam@linaro.org>,
-        <will@kernel.org>, <joro@8bytes.org>, <conor@kernel.org>,
-        <tglx@linutronix.de>, <amitk@kernel.org>, <thara.gopinath@gmail.com>,
-        <linus.walleij@linaro.org>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
-        <vkoul@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <mcoquelin.stm32@gmail.com>
-CC: <robimarko@gmail.com>, <quic_gurus@quicinc.com>,
-        <bartosz.golaszewski@linaro.org>, <kishon@kernel.org>,
-        <quic_wcheng@quicinc.com>, <alim.akhtar@samsung.com>,
-        <avri.altman@wdc.com>, <bvanassche@acm.org>, <agross@kernel.org>,
-        <gregkh@linuxfoundation.org>, <quic_tdas@quicinc.com>,
-        <robin.murphy@arm.com>, <daniel.lezcano@linaro.org>,
-        <rui.zhang@intel.com>, <lukasz.luba@arm.com>,
-        <quic_rjendra@quicinc.com>, <ulf.hansson@linaro.org>,
-        <quic_sibis@quicinc.com>, <otto.pflueger@abscue.de>,
-        <quic_rohiagar@quicinc.com>, <luca@z3ntu.xyz>,
-        <neil.armstrong@linaro.org>, <abel.vesa@linaro.org>,
-        <bhupesh.sharma@linaro.org>, <alexandre.torgue@foss.st.com>,
-        <peppe.cavallaro@st.com>, <joabreu@synopsys.com>,
-        <netdev@vger.kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <ahalaney@redhat.com>,
-        <krzysztof.kozlowski@linaro.org>, <u.kleine-koenig@pengutronix.de>,
-        <dmitry.baryshkov@linaro.org>, <quic_cang@quicinc.com>,
-        <danila@jiaxyga.com>, <quic_nitirawa@quicinc.com>,
-        <mantas@8devices.com>, <athierry@redhat.com>,
-        <quic_kbajaj@quicinc.com>, <quic_bjorande@quicinc.com>,
-        <quic_msarkar@quicinc.com>, <quic_devipriy@quicinc.com>,
-        <quic_tsoni@quicinc.com>, <quic_rgottimu@quicinc.com>,
-        <quic_shashim@quicinc.com>, <quic_kaushalk@quicinc.com>,
-        <quic_tingweiz@quicinc.com>, <quic_aiquny@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-crypto@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-        <linux-riscv@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <kernel@quicinc.com>,
-        Tengfei Fan <quic_tengfan@quicinc.com>
-Subject: [PATCH 29/47] dt-bindings: net: qcom,ethqos: add description for qcs9100
-Date: Wed, 3 Jul 2024 10:58:32 +0800
-Message-ID: <20240703025850.2172008-30-quic_tengfan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
-References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+	s=arc-20240116; t=1719977285; c=relaxed/simple;
+	bh=ARIekpQhnYUhnUdT7waA6yqvrIk0lhX19I1MkT48bIE=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=dwYVK2bfuLnfZUzlCpD08lIjFEL02rek3QF5BeGD/1p3gCnx8zxvuBNGVdYRc50dyDdtEkT8Muc9vM8ICL0GM5UStI6TEngcfBcAK8w54jWSIzoncT955E7OF4dyEyrgMU5tFCds/T+PzUbXGY53wdxATX2LDfOAXRTx4xcBY/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=mIrf6RdE; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240703032755epoutp0180c100225141caa8f7c9eae2329fe3b0~eljgZuDYs1653016530epoutp01x
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 03:27:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240703032755epoutp0180c100225141caa8f7c9eae2329fe3b0~eljgZuDYs1653016530epoutp01x
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1719977275;
+	bh=HiRFalHcuRme+HURIVkjBw2o+/SorePbdcpWdvn9xfE=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=mIrf6RdEnURk1ZBNTYtFozbrjpP+1xwGbJ5cWZrCOqEJPmJ/GhhJP4Mu4wu4QWqyT
+	 Pu7D8E3NTBnPtNaezSxICQtJXOvAQ1vfZ3GoXd+PEHgu3vP+NQQ7HsQKVe9c7lLQn8
+	 6P4PM12sAhO54QbMW78wU31Mqi94/fzj6nQwylKU=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20240703032754epcas5p179aa6584fe4821edfadcc4cdb043ffab~eljf9x6K_0829008290epcas5p1I;
+	Wed,  3 Jul 2024 03:27:54 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4WDQFz1mgnz4x9Px; Wed,  3 Jul
+	2024 03:27:51 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	78.C1.11095.735C4866; Wed,  3 Jul 2024 12:27:51 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240703031925epcas5p3b3b59bf3c981597a49e3be1776005b19~elcFvsxUg1894018940epcas5p3f;
+	Wed,  3 Jul 2024 03:19:25 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240703031925epsmtrp16da8fa8b4fc7452099065d1f26784fa6~elcFuk9-U0703407034epsmtrp1q;
+	Wed,  3 Jul 2024 03:19:25 +0000 (GMT)
+X-AuditID: b6c32a49-423b770000012b57-55-6684c537847b
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	32.01.07412.D33C4866; Wed,  3 Jul 2024 12:19:25 +0900 (KST)
+Received: from FDSFTE582 (unknown [107.122.82.121]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240703031923epsmtip14d94ef010ea2fa15582f42e7bdc5533d~elcEB80fm2713527135epsmtip1H;
+	Wed,  3 Jul 2024 03:19:23 +0000 (GMT)
+From: "Vishnu Reddy" <vishnu.reddy@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, "'Krzysztof Kozlowski'"
+	<krzysztof.kozlowski@linaro.org>, <s.nawrocki@samsung.com>,
+	<alim.akhtar@samsung.com>, <linus.walleij@linaro.org>
+Cc: <linux-arm-kernel@lists.infradead.org>,
+	<linux-samsung-soc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <pankaj.dubey@samsung.com>,
+	<ravi.patel@samsung.com>, <gost.dev@samsung.com>
+In-Reply-To: <b1b6ccc8-ab83-4d4e-8902-769e12975580@kernel.org>
+Subject: RE: [PATCH v2] pinctrl: samsung: Add support for pull-up and
+ pull-down
+Date: Wed, 3 Jul 2024 08:49:22 +0530
+Message-ID: <00e601daccf7$ce1d5c30$6a581490$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: rf9GvDWOl2XEWCVOa-5Pvf8dezTH3_Xm
-X-Proofpoint-ORIG-GUID: rf9GvDWOl2XEWCVOa-5Pvf8dezTH3_Xm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-02_18,2024-07-02_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- clxscore=1015 adultscore=0 malwarescore=0 mlxlogscore=666 suspectscore=0
- phishscore=0 bulkscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2407030022
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJsl4iGk1jvO+hY9fFKxJSBqey3YQJX8oCQAbw/7GgCIZ1lJgH0CiQ3AUxadNACwAZFAwIN5Vo7sE6fCKA=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIJsWRmVeSWpSXmKPExsWy7bCmlq750ZY0g0fN3BYP5m1js7h5YCeT
+	xfnzG9gt9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWM87vY7JYtPULu8XDD3vYLQ6/aWd1
+	4PHYtKqTzePOtT1sHpuX1Hv0bVnF6PF5k1wAa1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7yp
+	mYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QeUoKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XU
+	gpScApMCveLE3OLSvHS9vNQSK0MDAyNToMKE7Iwtx04xFxwRrth9vbSBsVWgi5GTQ0LAROJ9
+	12vmLkYuDiGB3YwSf/9OZ4NwPjFKXNnyjQXC+cYosfThCjaYlrWfZkNV7WWUODbpNFT/C0aJ
+	1RfXAmU4ONgE9CWab0iAxEUE9jBK3Lz6FqyIWeAho8TE+59YQYo4Bewkrn73AJkqLBAo0fzq
+	PguIzSKgIvH98Q5WEJtXwFJi6r3tTBC2oMTJmU/AapgFtCWWLQQ5HOQiBYmfT5eB1YsIJEnM
+	2vSKFaJGXOLozx6omj0cEjcWsUDYLhK3/++EigtLvDq+hR3ClpJ42d8GZSdLrP99ih3kTAmB
+	HImeaQoQYXuJA1fmsICEmQU0Jdbv0ocIy0pMPbWOCWIrn0Tv7ydMEHFeiR3zYGw1YFBNZ4Ww
+	ZSQ6V9xgnMCoNAvJY7OQPDYLyQOzELYtYGRZxSiZWlCcm55abFpgmJdaDo/u5PzcTYzgtKvl
+	uYPx7oMPeocYmTgYDzFKcDArifBKvW9OE+JNSaysSi3Kjy8qzUktPsRoCgzticxSosn5wMSf
+	VxJvaGJpYGJmZmZiaWxmqCTO+7p1boqQQHpiSWp2ampBahFMHxMHp1QDk6za3cezOWIPeE/4
+	7FsZHsZ3l1Xs2rqG2Y/myW+fWhaxcmp3y9VAj0Nmtw2rxb7t1xCszBXm2d3e3Lny/Mva9Zee
+	76i+neofPr+arU/ELsVm86PzSgYxsdyFZ+/rbDa6vm/KvP3B/CVrfbrvJZZqiCl43fG2OiG7
+	h0eCR91775Mbi5o4pH69EbgpmuR1n08iXPnWIellC9tnlnrITtv8IyxI483SKVx3O6+K7op+
+	Xa/4Mrif5/TxioB/vze2uUguOVDtKCzw88w6n53xbRdzV0hPUvwhVSy6x8H3TvlTwylnXKql
+	fhVpVismvQxZpjZ96dWO+8pxlfsmLOi/tYZT9d7zMy/u71/c+bZKOC5CRYmlOCPRUIu5qDgR
+	AFZL7mlEBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSnK7t4ZY0g6u71SwezNvGZnHzwE4m
+	i/PnN7Bb7H29ld1iyp/lTBabHl9jtdg8/w+jxeVdc9gsZpzfx2SxaOsXdouHH/awWxx+087q
+	wOOxaVUnm8eda3vYPDYvqffo27KK0ePzJrkA1igum5TUnMyy1CJ9uwSujEfrtrEUbBeuOH38
+	I2MD4yv+LkZODgkBE4m1n2azdTFycQgJ7GaUuLP8PCNEQkbiw50tzBC2sMTKf8/ZQWwhgWeM
+	Ep83O3cxcnCwCehLNN+QAAmLCBxglDg2XQRkDrPAc0aJTS/mMUEM3cws8atjFhNIA6eAncTV
+	7x4gprCAv8SEwzogvSwCKhLfH+9gBbF5BSwlpt7bzgRhC0qcnPmEBcRmFtCW6H3YyghjL1v4
+	Guo0BYmfT5exQtyQJDFr0ytWiBpxiaM/e5gnMArPQjJqFpJRs5CMmoWkZQEjyypGydSC4tz0
+	3GTDAsO81HK94sTc4tK8dL3k/NxNjODY09LYwXhv/j+9Q4xMHIyHGCU4mJVEeKXeN6cJ8aYk
+	VlalFuXHF5XmpBYfYpTmYFES5zWcMTtFSCA9sSQ1OzW1ILUIJsvEwSnVwNTfo7H/X/m13qxZ
+	0y+vZ8nPD/hw+P9aOcHSL/cjpeOqOZ89XHGnLHlC3h2b6rPrJ6h97RNhiOTfrWLlcs1oSUSc
+	9tz7XF1BK9k5Djl4TNaWrXGWbRQ94b9Wba7YmS+m8+J7J8wPnxO3wXSV89a0XWF/Fyg4GvwL
+	eTqlwrtlZqjwvfWHZJnmuEYLxzXUCrFHTI1Sa1l11vxIKpPmphd2P1Sdih0ktfTtWvbt81i8
+	+sLd9hqJbwm8c44vO7m7R4v53Cb5fSEmSYbeLLFr1lxvYjRkMPGoevXu3/or2zumq4SVnUj2
+	uWK1MPDqSt8+/Y/z32yImGuwROz/jR11R602Be/ZpXz1bL+90dOLMbornZVYijMSDbWYi4oT
+	AWpttJksAwAA
+X-CMS-MailID: 20240703031925epcas5p3b3b59bf3c981597a49e3be1776005b19
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240620103950epcas5p10514d4a19bdfd505d7d92ceb1fe10cc7
+References: <CGME20240620103950epcas5p10514d4a19bdfd505d7d92ceb1fe10cc7@epcas5p1.samsung.com>
+	<20240620103410.35786-1-vishnu.reddy@samsung.com>
+	<38fae674-f672-46e0-a44e-1278deaaf36a@kernel.org>
+	<07f201dac7be$e81317d0$b8394770$@samsung.com>
+	<4efb51f3-4600-4d88-a5df-e7be43294d53@linaro.org>
+	<086b01dac896$e988fed0$bc9afc70$@samsung.com>
+	<dbe55275-a13e-46a3-8b45-b08c301088d4@kernel.org>
+	<b1b6ccc8-ab83-4d4e-8902-769e12975580@kernel.org>
 
-Add the compatible for the MAC controller on qcs9100 platforms. This MAC
-works with a single interrupt so add minItems to the interrupts property.
-The fourth clock's name is different here so change it. Enable relevant
-PHY properties. Add the relevant compatibles to the binding document for
-snps,dwmac as well.
 
-Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
----
- Documentation/devicetree/bindings/net/qcom,ethqos.yaml | 1 +
- Documentation/devicetree/bindings/net/snps,dwmac.yaml  | 3 +++
- 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
-index 6672327358bc..8ab11e00668c 100644
---- a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
-+++ b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
-@@ -20,6 +20,7 @@ properties:
-   compatible:
-     enum:
-       - qcom,qcs404-ethqos
-+      - qcom,qcs9100-ethqos
-       - qcom,sa8775p-ethqos
-       - qcom,sc8280xp-ethqos
-       - qcom,sm8150-ethqos
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index 3bab4e1f3fbf..269c21779396 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -67,6 +67,7 @@ properties:
-         - loongson,ls2k-dwmac
-         - loongson,ls7a-dwmac
-         - qcom,qcs404-ethqos
-+        - qcom,qcs9100-ethqos
-         - qcom,sa8775p-ethqos
-         - qcom,sc8280xp-ethqos
-         - qcom,sm8150-ethqos
-@@ -582,6 +583,7 @@ allOf:
-               - ingenic,x1600-mac
-               - ingenic,x1830-mac
-               - ingenic,x2000-mac
-+              - qcom,qcs9100-ethqos
-               - qcom,sa8775p-ethqos
-               - qcom,sc8280xp-ethqos
-               - snps,dwmac-3.50a
-@@ -639,6 +641,7 @@ allOf:
-               - ingenic,x1830-mac
-               - ingenic,x2000-mac
-               - qcom,qcs404-ethqos
-+              - qcom,qcs9100-ethqos
-               - qcom,sa8775p-ethqos
-               - qcom,sc8280xp-ethqos
-               - qcom,sm8150-ethqos
--- 
-2.25.1
+> -----Original Message-----
+> From: Krzysztof Kozlowski =5Bmailto:krzk=40kernel.org=5D
+> Sent: 27 June 2024 20:58
+> To: Vishnu Reddy <vishnu.reddy=40samsung.com>; 'Krzysztof Kozlowski'
+> <krzysztof.kozlowski=40linaro.org>; s.nawrocki=40samsung.com;
+> alim.akhtar=40samsung.com; linus.walleij=40linaro.org
+> Cc: linux-arm-kernel=40lists.infradead.org; linux-samsung-
+> soc=40vger.kernel.org; linux-gpio=40vger.kernel.org; linux-
+> kernel=40vger.kernel.org; pankaj.dubey=40samsung.com;
+> ravi.patel=40samsung.com; gost.dev=40samsung.com
+> Subject: Re: =5BPATCH v2=5D pinctrl: samsung: Add support for pull-up and=
+ pull-
+> down
+>=20
+> On 27/06/2024 17:22, Krzysztof Kozlowski wrote:
+> > On 27/06/2024 15:35, Vishnu Reddy wrote:
+> >>>
+> >>> I don't remember the code used here, but usually such choices are
+> >>> determined by driver match data (and flags or value customized per
+> variant).
+> >> Hi, Thanks for suggestion.
+> >> I have gone through this and found that driver match data in this driv=
+er is
+> stored in the __initconst section, which is freed up after kernel initial=
+ization.
+> So we have two options:
+> >> 1: Keep this platform specific data in driver match data and then popu=
+late
+> driver_data field in probe function.
+> >> 2: Use compatible matching and set different values during set_config.
+> >>
+> >> First approach will result in many changes, such as populating  driver
+> match data for all platforms and then storing the same in driver_data in
+> probe.
+> >>
+> >> In the second approach, we can handle this using simple if/else based =
+on
+> a compatible match.
+> >>
+> >> IMO, second approach would be simpler and introduce less changes. Any
+> suggestions from your end?
+> >
+> > Please wrap your email according to mailing list style.
+> >
+> > Both options are not the way because you introduce a new, different
+> > style of handling per-variant customization. The driver already parses
+> > match data and stores such per-variant-details in different places, lik=
+e
+> > samsung_pin_bank or samsung_pinctrl_drv_data. This seems like a value
+> > fixed per entire device, so could go to samsung_pinctrl_drv_data.
+>=20
+> ... although maybe this matches your first option? Not sure.
+My understanding is same that the value is fixed per entire device. We can
+add the pud data into samsung_pinctrl_drv_data and then fetch the pud
+values during probe.
+I will test this and submit v3 soon.
+>=20
+> Best regards,
+> Krzysztof
+
 
 
