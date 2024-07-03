@@ -1,65 +1,115 @@
-Return-Path: <linux-gpio+bounces-8016-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8017-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67B98926252
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 15:54:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F30C4926468
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 17:10:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 145211F232B3
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 13:54:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A990A28C4B1
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 15:10:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D41B617B429;
-	Wed,  3 Jul 2024 13:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3C48181B8C;
+	Wed,  3 Jul 2024 15:09:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZrqbGcY3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e52F586N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD8217A59A;
-	Wed,  3 Jul 2024 13:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD6A17FADC
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jul 2024 15:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720014784; cv=none; b=aNU/nJ0Hg8cEqeOn7iKYIYXtldFClqQmu5GV+jR6onquK52yajkLtVtL5W/H9SgDIJg8ZhqiRUpbnGoSK4WGZcCsJXxlZobfGcnvoUzYAas4TOO1Dkf51CO4xbry/pWQqZu/+1I2TfD0PAgY+8ZBKonM0CWuNCiv5S11Zos2OR0=
+	t=1720019392; cv=none; b=KZQQ5lXjueFm6T0qtEejpudjh+qDb8tFHAYGvjlljtCDn87Hscbr+zOzLMYQKhSdic60LgBBiALKmExGJGLtmmvs0z+2T3M3CeN4Dy8a8L4pd+51smH+AGQWLFjsLDUtq8ZjwJjAhj56zJxfTQFZO78RCO8N4TjBe4yxrRI8kGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720014784; c=relaxed/simple;
-	bh=9N8yVPzno2N9d24Snv1GHc+eDBmXHT41IhW0UTd1FJY=;
+	s=arc-20240116; t=1720019392; c=relaxed/simple;
+	bh=fhpejWcF/vfLe6nwrakqQTsElpgre49BCBgEinb2+BE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o/l/nbY/fqO3iEFm6y8cwyVHuKWEmpF+2zy+d48R4rXgXiS3nSvMNqhdZA4T5EWbrELzV/Zhv4Qs6vTWk6up3QzotAG1tWZH8fDTOm4aQoWYc4qqdptYwdPQzqCIygWKBTZCtwqZhTNuCLxcaloS/pPcYdxRvEIdjCBPIY9Vg9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrqbGcY3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C281C2BD10;
-	Wed,  3 Jul 2024 13:53:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720014784;
-	bh=9N8yVPzno2N9d24Snv1GHc+eDBmXHT41IhW0UTd1FJY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZrqbGcY3PeLUqWFqLP2gHFfZQA13YUIpyeXzzFEC527S9yHYTXpj7UrJ03Qr6BOVj
-	 VBobvRhHTBQIKsICEEbwdFeW6uAjLdXE0Joi+VMxUsgIO0nKeU1oi6uEd3vaJfHdzq
-	 G2EaD/EVYqXIuTJDbnvdZLNJ/39FmVAUpPoYy9zWM637U6qgZsEFiWCUlEF5DmLU1+
-	 zPbP6jgYhL8mXfAlW4v7ysfqpNYDQHDcKb+s0aQ8otboVeJ3esWgKULvFi3Ak2dVuQ
-	 /lhsTRxvFHKDePcBeE9Cb2HFwDm4amrtJ5+iimlQNSIgenNmvc9DiJkZrTot1g/izx
-	 M7x41TvzJ60dg==
-Date: Wed, 3 Jul 2024 07:53:03 -0600
-From: Rob Herring <robh@kernel.org>
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Drew Fustini <dfustini@baylibre.com>
-Subject: Re: [PATCH v2 1/8] dt-bindings: pinctrl: Add thead,th1520-pinctrl
- bindings
-Message-ID: <20240703135303.GA56155-robh@kernel.org>
-References: <20240103132852.298964-1-emil.renner.berthing@canonical.com>
- <20240103132852.298964-2-emil.renner.berthing@canonical.com>
- <20240115173657.GA999912-robh@kernel.org>
- <CAJM55Z9xF6_WCcg02xJJfu=UCOj=4m64BXvJTaV4vX09WLhc0w@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hy6agEkzcclMrJEADqlXH1J3rfgCXoldYrxWvASeeXYWGRQ4EalNn63JzcuAVKMPlOxHzrFYsdWaIMmEUT+wRZNBY5p+fErODgHE2iirUpNS511xngjP78b7yIRv6ShtHkRmtRNPRLwkGtIFKfG+TRJ3Oiy3irknjYlmKeG226w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e52F586N; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720019388;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OwJT/oF0rqnt+S31sg05vpTbadEupYIHlD2ocZCHgDI=;
+	b=e52F586NIB84ITfcy2V8nSvLTtElmJHPUfmPuuDiZd9zwPiNVk1909O1xNXgGTzV8Le+fH
+	NfFAbc7XZZDP6ym/1mQt81SWERqw/d1OeHPN3skISyh8yjK4EOlfgPJwLOywaShql0/OFx
+	kkwLXl5vT8l40vYZifvcvwpdCCsqzEM=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-632-8xTOgepDPiK9JQVp0a-iFg-1; Wed, 03 Jul 2024 11:09:47 -0400
+X-MC-Unique: 8xTOgepDPiK9JQVp0a-iFg-1
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-44505dd2221so67659731cf.0
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jul 2024 08:09:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720019382; x=1720624182;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OwJT/oF0rqnt+S31sg05vpTbadEupYIHlD2ocZCHgDI=;
+        b=dc8Izvy6l/LEv1eR+6QDyqdI64va0TH2ERdAHfc5Quj6rX2iYWbD64e5MDXJpWJ8jJ
+         qh4db/DFjoS6VrKZqhu6EcdAZSnxtQwVuS6UGtNvH4BAdH9gmmfOxG/3Q8nyHTDoioDj
+         /NymDqF4l9YMO2aU1QIKjZx5vxn65VikRzLGerUJtt/xnw/eQKuUZzdHHBpS6bizLjb4
+         CjUSkXqhPen6vy6AwEqmhXkMCCLt4BoA+C8rhGtVRtO5g84pjQ7WhGgEhlXCSEjGbtz8
+         c1z8nGsTIWByPyIwGFN99065M4jLx5E5YKQFVTpJflMuCcvBWTnBmrVNrqXzcE3RNdZs
+         jzAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1uOKjVFhE5icg0/lr/9Edluy4iRTIKN+tVBwbKF3VXJZrfrqEx5ZDXg1luYjECi6wI7aiOm8dojX/ZLXDYl3O3P47IJVks3ix3A==
+X-Gm-Message-State: AOJu0Yw4TlUCuSIYnu8JD3/GnLq85mbVZTY52K+V/aHKiCafi8D9tPks
+	AtObe/PGNKkvFX65EFlpqIzNbdXtyfMO3vQXcxuyOhZKeibTQaHL1UM7FDTwybGwvM3P6Wx/WH9
+	qV3fZJRVVNGEwWPD+bY/d0/LiK0dOFWlkRI2dXxVo0md2xo1KNBpShXTH+8A=
+X-Received: by 2002:ac8:7d84:0:b0:444:b495:e94d with SMTP id d75a77b69052e-44662c99f4bmr119753221cf.3.1720019381988;
+        Wed, 03 Jul 2024 08:09:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE8jWmpy5/3+Y1qV1pkAlEofbtK+RF6spB2E3wXQKII8gdILaaxSAxoLFic14g5Q4iTwcc7CA==
+X-Received: by 2002:ac8:7d84:0:b0:444:b495:e94d with SMTP id d75a77b69052e-44662c99f4bmr119751991cf.3.1720019381501;
+        Wed, 03 Jul 2024 08:09:41 -0700 (PDT)
+Received: from x1gen2nano ([2600:1700:1ff0:d0e0::40])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4465c4bf7ecsm43222571cf.80.2024.07.03.08.09.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jul 2024 08:09:41 -0700 (PDT)
+Date: Wed, 3 Jul 2024 10:09:36 -0500
+From: Andrew Halaney <ahalaney@redhat.com>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com, 
+	sboyd@kernel.org, jassisinghbrar@gmail.com, herbert@gondor.apana.org.au, 
+	davem@davemloft.net, manivannan.sadhasivam@linaro.org, will@kernel.org, 
+	joro@8bytes.org, conor@kernel.org, tglx@linutronix.de, amitk@kernel.org, 
+	thara.gopinath@gmail.com, linus.walleij@linaro.org, wim@linux-watchdog.org, 
+	linux@roeck-us.net, rafael@kernel.org, viresh.kumar@linaro.org, vkoul@kernel.org, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com, 
+	robimarko@gmail.com, quic_gurus@quicinc.com, bartosz.golaszewski@linaro.org, 
+	kishon@kernel.org, quic_wcheng@quicinc.com, alim.akhtar@samsung.com, 
+	avri.altman@wdc.com, bvanassche@acm.org, agross@kernel.org, 
+	gregkh@linuxfoundation.org, quic_tdas@quicinc.com, robin.murphy@arm.com, 
+	daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com, 
+	quic_rjendra@quicinc.com, ulf.hansson@linaro.org, quic_sibis@quicinc.com, 
+	otto.pflueger@abscue.de, quic_rohiagar@quicinc.com, luca@z3ntu.xyz, 
+	neil.armstrong@linaro.org, abel.vesa@linaro.org, bhupesh.sharma@linaro.org, 
+	alexandre.torgue@foss.st.com, peppe.cavallaro@st.com, joabreu@synopsys.com, 
+	netdev@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
+	krzysztof.kozlowski@linaro.org, u.kleine-koenig@pengutronix.de, dmitry.baryshkov@linaro.org, 
+	quic_cang@quicinc.com, danila@jiaxyga.com, quic_nitirawa@quicinc.com, 
+	mantas@8devices.com, athierry@redhat.com, quic_kbajaj@quicinc.com, 
+	quic_bjorande@quicinc.com, quic_msarkar@quicinc.com, quic_devipriy@quicinc.com, 
+	quic_tsoni@quicinc.com, quic_rgottimu@quicinc.com, quic_shashim@quicinc.com, 
+	quic_kaushalk@quicinc.com, quic_tingweiz@quicinc.com, quic_aiquny@quicinc.com, 
+	srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-crypto@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, kernel@quicinc.com
+Subject: Re: [PATCH 29/47] dt-bindings: net: qcom,ethqos: add description for
+ qcs9100
+Message-ID: <u5ekupjqvgoehkl76pv7ljyqqzbnnyh6ci2dilfxfkcdvdy3dp@ehdujhkul7ow>
+References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
+ <20240703025850.2172008-30-quic_tengfan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,91 +118,69 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJM55Z9xF6_WCcg02xJJfu=UCOj=4m64BXvJTaV4vX09WLhc0w@mail.gmail.com>
+In-Reply-To: <20240703025850.2172008-30-quic_tengfan@quicinc.com>
 
-On Fri, May 17, 2024 at 07:48:17AM -0500, Emil Renner Berthing wrote:
-> Rob Herring wrote:
-> > On Wed, Jan 03, 2024 at 02:28:38PM +0100, Emil Renner Berthing wrote:
-> > > Add bindings for the pin controllers on the T-Head TH1520 RISC-V SoC.
-> > >
-> > > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> > > ---
-> > >  .../pinctrl/thead,th1520-pinctrl.yaml         | 372 ++++++++++++++++++
-> > >  1 file changed, 372 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
-> > > new file mode 100644
-> > > index 000000000000..d3ad7a7cfdd1
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
-> > > @@ -0,0 +1,372 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pinctrl/thead,th1520-pinctrl.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: T-Head TH1520 SoC pin controller
-> > > +
-> > > +maintainers:
-> > > +  - Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> > > +
-> > > +description: |
-> > > +  Pinmux and pinconf controller in the T-Head TH1520 RISC-V SoC.
-> > > +
-> > > +  The TH1520 has 3 groups of pads each controlled from different memory ranges.
-> > > +  Confusingly the memory ranges are named
-> > > +    PADCTRL_AOSYS  -> PAD Group 1
-> > > +    PADCTRL1_APSYS -> PAD Group 2
-> > > +    PADCTRL0_APSYS -> PAD Group 3
-> > > +
-> > > +  Each pad can be muxed individually to up to 6 different functions. For most
-> > > +  pads only a few of those 6 configurations are valid though, and a few pads in
-> > > +  group 1 does not support muxing at all.
-> > > +
-> > > +  Pinconf is fairly regular except for a few pads in group 1 that either can't
-> > > +  be configured or has some special functions. The rest have configurable drive
-> > > +  strength, input enable, schmitt trigger, slew rate, pull-up and pull-down in
-> > > +  addition to a special strong pull up.
-> > > +
-> > > +  Certain pads in group 1 can be muxed to AUDIO_PA0 - AUDIO_PA30 functions and
-> > > +  are then meant to be used by the audio co-processor. Each such pad can then
-> > > +  be further muxed to either audio GPIO or one of 4 functions such as UART, I2C
-> > > +  and I2S. If the audio pad is muxed to one of the 4 functions then pinconf is
-> > > +  also configured in different registers. All of this is done from a different
-> > > +  AUDIO_IOCTRL memory range and is left to the audio co-processor for now.
-> >
-> > It is still not clear to me if each instance is a different programming
-> > model or the same with just different connections. The latter should
-> > be the same compatible string. That needs to be answered in *this*
-> > patch, not a reply.
+On Wed, Jul 03, 2024 at 10:58:32AM GMT, Tengfei Fan wrote:
+> Add the compatible for the MAC controller on qcs9100 platforms. This MAC
+> works with a single interrupt so add minItems to the interrupts property.
+> The fourth clock's name is different here so change it. Enable relevant
+> PHY properties. Add the relevant compatibles to the binding document for
+> snps,dwmac as well.
+
+This description doesn't match what was done in this patch, its what
+Bart did when he made changes to add the sa8775 changes. Please consider
+using a blurb indicating that this is the same SoC as sa8775p, just with
+different firmware strategies or something along those lines?
+
 > 
-> Hi Rob,
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/net/qcom,ethqos.yaml | 1 +
+>  Documentation/devicetree/bindings/net/snps,dwmac.yaml  | 3 +++
+>  2 files changed, 4 insertions(+)
 > 
-> Sorry for the late response. I honestly don't know exactly what you mean by
-> differenty programming models and what the difference is, so I'll need a bit of
-> help with what you want me to write here.
-
-Is the register interface of each instance the same? Looks like it is 
-from the driver. So normally that's 3 instances of the same compatible.
-
-> Any driver for the TH1520 SoC (not just Linux) would need some way to discern
-> between the 3 pin controllers so they know how many pins to control and what
-> pinmux settings are valid. Basically they'd need the data in the three
-> th1520_group{1,2,3}_pins arrays in the driver and a way to know which of them
-> to use.
+> diff --git a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> index 6672327358bc..8ab11e00668c 100644
+> --- a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> +++ b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+> @@ -20,6 +20,7 @@ properties:
+>    compatible:
+>      enum:
+>        - qcom,qcs404-ethqos
+> +      - qcom,qcs9100-ethqos
+>        - qcom,sa8775p-ethqos
+>        - qcom,sc8280xp-ethqos
+>        - qcom,sm8150-ethqos
+> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> index 3bab4e1f3fbf..269c21779396 100644
+> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+> @@ -67,6 +67,7 @@ properties:
+>          - loongson,ls2k-dwmac
+>          - loongson,ls7a-dwmac
+>          - qcom,qcs404-ethqos
+> +        - qcom,qcs9100-ethqos
+>          - qcom,sa8775p-ethqos
+>          - qcom,sc8280xp-ethqos
+>          - qcom,sm8150-ethqos
+> @@ -582,6 +583,7 @@ allOf:
+>                - ingenic,x1600-mac
+>                - ingenic,x1830-mac
+>                - ingenic,x2000-mac
+> +              - qcom,qcs9100-ethqos
+>                - qcom,sa8775p-ethqos
+>                - qcom,sc8280xp-ethqos
+>                - snps,dwmac-3.50a
+> @@ -639,6 +641,7 @@ allOf:
+>                - ingenic,x1830-mac
+>                - ingenic,x2000-mac
+>                - qcom,qcs404-ethqos
+> +              - qcom,qcs9100-ethqos
+>                - qcom,sa8775p-ethqos
+>                - qcom,sc8280xp-ethqos
+>                - qcom,sm8150-ethqos
+> -- 
+> 2.25.1
 > 
-> https://lore.kernel.org/linux-riscv/20240103132852.298964-3-emil.renner.berthing@canonical.com/
 
-Why do you need to know how many pins? The DT says configure a pin and 
-you just configure it. It's not the kernel's job to validate that the DT 
-is correct.
-
-Aren't the pin names globally unique? So you just look up the pin name 
-across all the arrays. Or you can just look up one pin from each 
-instance to find which th1520_groupN_pins array goes with the instance. 
-Or just have 1 array.
-
-Rob
 
