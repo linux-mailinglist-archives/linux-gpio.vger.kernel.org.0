@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-7957-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-7958-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 722DB9252A8
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 06:45:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 029B99252CC
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 07:10:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13A202848C1
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 04:45:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 34EAA1C23467
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jul 2024 05:10:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 554FE49641;
-	Wed,  3 Jul 2024 04:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C6BA4963B;
+	Wed,  3 Jul 2024 05:10:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lGCvU4O7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vk0p8w2a"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF32A17BCE;
-	Wed,  3 Jul 2024 04:45:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEE43AC2B;
+	Wed,  3 Jul 2024 05:10:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719981934; cv=none; b=hbLkvVlcax+ngdEH2AUGAKh4EonDjTw/CFo2MoK0TcNNBnY9u56mLgSF7wL/Y06Sscx9s0G9oQVGL/zO9UEI3E570JZ4TlL6nNBgO0GftoWRmuJ933jkESxaRI3chFkzwzXfhBV6+Ao77ot7H9SEO4oqO7DKvi6O6ECKsH0d4MA=
+	t=1719983414; cv=none; b=qUmI5F8pQE65uBvGLxk75gnlrenHFq8ipefs1+pAsxKmZdjySBTYLW8BknrKBHZtmLSPidfXRMzfU0EQDh6JnKuka9i0EJPjvUgPmXbYJOgBuoEQxXAeuz8x8oWHDXOwM8onhBflvHlGnfMmpu8lLnZy42eYgNJ4/G4aynd0syQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719981934; c=relaxed/simple;
-	bh=ivVCeA51TNNPsWY2k1Ev7Ipke2mr3itsaOxAPyIsJRE=;
+	s=arc-20240116; t=1719983414; c=relaxed/simple;
+	bh=ZKID8yQjJeutkGffhz+1E1HSYpHQ7cWND4WzW5u3Lfc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pyas6SVPRlvXgcWxITJcxUSbkN4RC84oFIZsSRN/Dv2EkAWS8D9cuyumvf3YnC+tVl8fh4FuNrI9w8xyAfuIOuWFyjlOxp/l4DE/x0EMAZfQ1pFwh3hqStAWEZ0BFpPsbLil7lEoFoyuF/2dhX6k1fAAw/S1SIVYDMgGYyVN/G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lGCvU4O7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7995AC32781;
-	Wed,  3 Jul 2024 04:45:03 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=DAer76uivMlsQfvyJDU8mLsfU8BUB6wx607Gtj2vXnE0DEm9Pul8seQcRJPtHG1Key8tMUiLTlQ/rLRMzrkb1zoyDmrqvLtuqMy+kjIhSqFUvsETl2oTLHIT/dy5YDfZaYosEnYUQFZuIF64AR0tjlgiuoJA7I35F5onFoJkSJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vk0p8w2a; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86CB9C32781;
+	Wed,  3 Jul 2024 05:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719981933;
-	bh=ivVCeA51TNNPsWY2k1Ev7Ipke2mr3itsaOxAPyIsJRE=;
+	s=k20201202; t=1719983413;
+	bh=ZKID8yQjJeutkGffhz+1E1HSYpHQ7cWND4WzW5u3Lfc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lGCvU4O78jSX5Z/RvG6MGLCGu3VOiw/KJ2zd+NsxhJmZchr9MD2NOK9ST1AXns3zX
-	 rFdrprQoXklrYc5cA1+pUDI9IvxmL/IQ2hB09EahjNP5/wgwVSdJra3s8dNHsqRC1B
-	 hoMZicWiuJEvPMM+AwB8EfChaaHBfGYrgIRbEbI/xEy4w74/FddnT6Hf23grJEmXGz
-	 ErXgLMKa0MbGdZPh7ia42T9Ig9ISFxM60Ok45BRjDoq59SjS2WzP4Xn8qeFMPOt6bX
-	 cM40OSOiTGUo3wxiCxPkfxfNqzHVkXWWf9RT6A7oicjlQ0rIXXSj8b8Af6YEdf71dQ
-	 qiRerIFmh0gtg==
-Message-ID: <7417fd8c-e852-45ee-bac9-d92921036e2f@kernel.org>
-Date: Wed, 3 Jul 2024 06:45:00 +0200
+	b=Vk0p8w2a5FU/xaoBf0vyMNFrfou7vl7Fh+wUR8Fk64qT76MHjEjVglqcBq8w6q9cX
+	 bzUJBrqMzMLbOZfXhp0nRcVltgWw9135Als2Zkily73YGMz22nJERYff7/SRjxDEbJ
+	 UExHPxUDDRVIQgzikI9CepBd+WjJZ619G/oR9zNHzvfRG6UY1PNfHHZqOTspg11OMB
+	 fOpXmtuJ8S8YyDVFNBkyaVih2yBMgrr72ztP2zbGAAZ9uDg/U+iWWn8d6YVoGM+YBn
+	 gsX5Bpx9/clnE57AN0+Gx51wJN73Ni40+uFd/afUWB8qYIEOMcvWib/NOj2Mmehty4
+	 qr/B1uK21Hhmw==
+Message-ID: <bd84c34b-259f-404c-82ac-bf82e0e17d20@kernel.org>
+Date: Wed, 3 Jul 2024 07:10:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,48 +50,17 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/47] arm64: qcom: dts: add QCS9100 support
-To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
- konrad.dybcio@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, djakov@kernel.org, mturquette@baylibre.com,
- sboyd@kernel.org, jassisinghbrar@gmail.com, herbert@gondor.apana.org.au,
- davem@davemloft.net, manivannan.sadhasivam@linaro.org, will@kernel.org,
- joro@8bytes.org, conor@kernel.org, tglx@linutronix.de, amitk@kernel.org,
- thara.gopinath@gmail.com, linus.walleij@linaro.org, wim@linux-watchdog.org,
- linux@roeck-us.net, rafael@kernel.org, viresh.kumar@linaro.org,
- vkoul@kernel.org, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- mcoquelin.stm32@gmail.com
-Cc: robimarko@gmail.com, quic_gurus@quicinc.com,
- bartosz.golaszewski@linaro.org, kishon@kernel.org, quic_wcheng@quicinc.com,
- alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
- agross@kernel.org, gregkh@linuxfoundation.org, quic_tdas@quicinc.com,
- robin.murphy@arm.com, daniel.lezcano@linaro.org, rui.zhang@intel.com,
- lukasz.luba@arm.com, quic_rjendra@quicinc.com, ulf.hansson@linaro.org,
- quic_sibis@quicinc.com, otto.pflueger@abscue.de, quic_rohiagar@quicinc.com,
- luca@z3ntu.xyz, neil.armstrong@linaro.org, abel.vesa@linaro.org,
- bhupesh.sharma@linaro.org, alexandre.torgue@foss.st.com,
- peppe.cavallaro@st.com, joabreu@synopsys.com, netdev@vger.kernel.org,
- lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- ahalaney@redhat.com, krzysztof.kozlowski@linaro.org,
- u.kleine-koenig@pengutronix.de, dmitry.baryshkov@linaro.org,
- quic_cang@quicinc.com, danila@jiaxyga.com, quic_nitirawa@quicinc.com,
- mantas@8devices.com, athierry@redhat.com, quic_kbajaj@quicinc.com,
- quic_bjorande@quicinc.com, quic_msarkar@quicinc.com,
- quic_devipriy@quicinc.com, quic_tsoni@quicinc.com,
- quic_rgottimu@quicinc.com, quic_shashim@quicinc.com,
- quic_kaushalk@quicinc.com, quic_tingweiz@quicinc.com,
- quic_aiquny@quicinc.com, srinivas.kandagatla@linaro.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-crypto@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- iommu@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- kernel@quicinc.com
-References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
- <20240703035735.2182165-1-quic_tengfan@quicinc.com>
+Subject: Re: [PATCH 1/1] dt-bindings: gpio: fsl,qoriq-gpio: Add compatible
+ string fsl,ls1046a-gpio
+To: Frank Li <Frank.Li@nxp.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, "open list:GPIO SUBSYSTEM"
+ <linux-gpio@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: imx@lists.linux.dev
+References: <20240702201724.96681-1-Frank.Li@nxp.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -137,41 +106,18 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240703035735.2182165-1-quic_tengfan@quicinc.com>
+In-Reply-To: <20240702201724.96681-1-Frank.Li@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 03/07/2024 05:56, Tengfei Fan wrote:
-> Introduce support for the QCS9100 SoC device tree (DTSI) and the
-> QCS9100 RIDE board DTS. The QCS9100 is a variant of the SA8775p.
-> While the QCS9100 platform is still in the early design stage, the
-> QCS9100 RIDE board is identical to the SA8775p RIDE board, except it
-> mounts the QCS9100 SoC instead of the SA8775p SoC.
+On 02/07/2024 22:17, Frank Li wrote:
+> Add compatible string for chip ls1046 to fix below warning.
+> arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dtb: /soc/gpio@2300000: failed to match any schema with compatible: ['fsl,ls1046a-gpio', 'fsl,qoriq-gpio']
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
 
-The same huge patchset, to huge number of recipients was sent twice.
-First, sorry, this is way too big. Second, it has way too many
-recipients, but this is partially a result of first point. Only
-partially because you put here dozen of totally unrelated emails. Sorry,
-that does not make even sense. See form letter at the end how this
-works. Third, sending it to everyone twice is a way to annoy them off
-twice... Fourth,
-
-Please split your work and do not cc dozen of unrelated folks.
-
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC (and consider --no-git-fallback argument). It might
-happen, that command when run on an older kernel, gives you outdated
-entries. Therefore please be sure you base your patches on recent Linux
-kernel.
-
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline), work on fork of kernel
-(don't, instead use mainline) or you ignore some maintainers (really
-don't). Just use b4 and everything should be fine, although remember
-about `b4 prep --auto-to-cc` if you added new patches to the patchset.
-</form letter>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
