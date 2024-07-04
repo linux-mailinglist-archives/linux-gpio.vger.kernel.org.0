@@ -1,59 +1,59 @@
-Return-Path: <linux-gpio+bounces-8032-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8033-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38864926F0C
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 07:47:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48408926F0E
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 07:48:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B2971C21AA0
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 05:47:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F326B2867DD
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 05:48:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B119B1A072A;
-	Thu,  4 Jul 2024 05:47:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BAF41A073D;
+	Thu,  4 Jul 2024 05:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ustYbkGE"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="n6YKops5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10olkn2058.outbound.protection.outlook.com [40.92.41.58])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10olkn2081.outbound.protection.outlook.com [40.92.41.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1298E1A071E;
-	Thu,  4 Jul 2024 05:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.41.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C75F1A0737;
+	Thu,  4 Jul 2024 05:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.41.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720072059; cv=fail; b=VUw0ToG+IWKK25JJbZIkW6E2uT3mgNnmmMdiKVDDyXGvShljivLqgjLoV9PwRY00ISmRJVI2Ysgoq6lLEn1INE9ZV1YH1DkGEzEl33Svw/0cp0OMn11YtOb6HSPDUFeEWrya+QOGq50S5miCFew3J80LC63uGYLBaFf9qZd4YsU=
+	t=1720072065; cv=fail; b=rDADift4cxwge0WnsMJ80SZ4ll55UkzZw5VMyDtpxg6s6aucdWPX+Kv4/lH3A+L9zySTKsh+f9j2v3ddw+sojwhWsAveR8X04Xf4/EaEkqTq5kUwvo1zV0XwJcR0SmNxnPsbF6BnOtkdwKQTfHmuDpmqtmJ475x1R6fyZVFZpZU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720072059; c=relaxed/simple;
-	bh=EgYua++b99ZAqJZsF63sjDofeSiGE6ysvkWuEMOGtGY=;
+	s=arc-20240116; t=1720072065; c=relaxed/simple;
+	bh=1WZq64vpji9ZSTJCTts1rxGnMb0srZ1ka2MuNVLJ+9M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TmJrDNGCCivIXe2XE4QsxXRr3S/vie+pBm86x/IkJp867qkrkO3Rw4qpvJxOAY77dT+Tf7GQ4KQPsRVDpXNIDX/DRIV7CTEHJVgnHh78FCxwrdMA8d2r1ChUVeDYiqnUodaLieNZ/IWGUDXrwXReTOEAKsh8wasGpKK/eykTlbI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ustYbkGE; arc=fail smtp.client-ip=40.92.41.58
+	 Content-Type:MIME-Version; b=pnU46kLE9e+24H9Mz9frhZnFqK+fEYc/mNreXz4N3j5xmeOx2HOOuNuO7C+AZeLd8Z0lqIY+MjgM2p4InmEH+dVrtxBGU3LYzno5vx/2iCToGzfmkjnqzMnnHlD7ENebiAk9QiWJo2IW0KNFH+ws+5i0j84cfAigNV2PD5fE9+8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=n6YKops5; arc=fail smtp.client-ip=40.92.41.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eC4wVA905tx2k4jXurfrjFs6YAYAqXYJsdkKorvZbtDT74Aez+MclsjCMXQDQZq0NAp1Yi3Z2YZ1PERFT/4p/B+adEfn+kjYNb8L2sumas60E7jjLKWKGh71p3kLqpfx5Uq8U6u3oec6VK0e8nRtTSiFhDwLTVjVzHHPCGkX7c6DfAUAQKVej6E/fO8QZXJG5+EQ9CUbd+5bSs3ED6NGTEfNV/btyE9T80+Ars02ur8FzEdUUrkj7xbU87T46K8DhmSOajL0tPv3BWNnXiZa/GWHG7WgpQeMvZkumOjh52tYBywvvlNmvEqLPYi8U8gGjCz9S5XnLyB3TNzLITNy+A==
+ b=ZtlPcMNjVkoHWfar+CEptJ4DkVhbLLyDB9/5o9NIf0tT6u7dkjUXGRlFiCS+QuPebo9z8vbEm23tn3wH6Xte2zX2MT+nBb/kwaEmUKeDSyg1CB0OZofq44YbyB2gStHPVkCnQN/b8dbsGknNtk9IHHVFen93pPFrIXNQUvr56+MRpziWwSTA6qHpUNCDZ/UALXz8X5HcmbVY3UrqLd0Rja27b9OnYYrzht79f6pWMi9fVA1QxWi/4FUP9LdcH6swDk8GItTd0xNLu0SJvfdxJ7iILJxyrdQGM05NbSvZITZzM1Ww8rVA4LV3/800z4VeSMTfwWdpHJ6imRYehX83eQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JMM0uT6eBFk1LXm488xyT1fDIAOjt5uBBNYgFMmC7LI=;
- b=TQ8o1IQl5KruBja+x4EyZX17TNvt8IwqHemp7EdsQB82x2M0epiZM9nI4KghPjedxyQloB3Br3MW2/S7IoCIOiXPSvqd4TSikfvFnOGrM7MxjdYnuUfeYiacDyqs9tdSTRAl7B5zqMoF2OY1KqpUlP7ljag5rqmEoV41Vk0tmoefQkERF7/LiTTUb/taO1bFuTL2ZtvqoNGOsrF5bTYeavFT1Evx61p4T/WOn8/MngrHtTZpsqyQI9AquM0eXAkOV81AfYw6OkjyqOmfKJbIvW3bn8o3p7sw/W60M2TylSiimw5Uu8jUlSdzEF3tJ5i4HmR2pwOKCKrvDbsQNVv5dw==
+ bh=zdJNuyAPPvrOBDH/Bs1+Q9BnhCO6JBsN66OqYY1SFHc=;
+ b=TRb4Bc5568LAZO4mClKFmmYQ29mnxtX3VryyVhrVUrnW/jwbjkaNrpcFruvlhIwvFIKGCgrIxJIdUrKw4JOnGoF2oKjE5TSybUY+Xn8TL8dg7jevF0kUHLiWIYMvr5WsvZq15ckwB0GHq3Gsq1r0I48PYm41jK6ZDbiArJM9dEM6ySs5NfQuTqz4OCFt7m5rSZDf3YtQ4VbstHSCP1I+QgDgnC5IY3Ycc972RJxw4r1hEh+necbnvLTOxmDu2kEZoHZszhlnlQanyF7eUqlC6lAV/v4Hbl1buBKfVkXl44m9c1YpFqLcjZBUppv/AJwb008lXU78AYf1ntwEFJOFXw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JMM0uT6eBFk1LXm488xyT1fDIAOjt5uBBNYgFMmC7LI=;
- b=ustYbkGEVQMyp23hiRFfz6W2LWT2pBzQuel+pBzKUdB+d90PMI+wd8GKDGmQbbNRXGC4k5Pez6OE1Q3VLZ0Wmu5sigULUH4eBgT6XIHmbxoaozbiZj7q9LPTGo47z8CHk+6emvNx3P21ivSipkVUdtnVkpQH/3f8TOgwzqJr1riRXpIz89FTvIaxcIIxfmT4tj4Us0XFwanOoiN+wU14N9F3eudMOs05j8ehUF72MQmGZ2rjo/ExROt1VPhaiof3s96Zlcw/of3CBLXoFSd6OWV34oMUxsnptzh0cQWbeEGNOmBwimIZcux1xFM0EMX0sN8DPwdEsNU+2HuEKs5u+w==
+ bh=zdJNuyAPPvrOBDH/Bs1+Q9BnhCO6JBsN66OqYY1SFHc=;
+ b=n6YKops5ahkgsv7qjbpo0Jbv7Gtp3SdaA6arv6A2ysl2NFt8bzud1gnOnuU7g76iqseCBoABXbwq7qh2qe87pKzHz+1z3/4B3YODKVBSEc24hiOBTI2iGB5oj041DsHJR4IKEkftfromdxsk783+yZ2YTQoS1NUB19AuNUPeJHF+XLzMAJoirg/Ogxtu/sU8j0vgO6F/RDtXSp0sQ4dgLN82rniJs3kkBfctdSO7EzWWSgQ3tdxV0fZlCronX5oVgoR0Yor7FBeCvMe9NqTUXCC+I+yo2rau9u+YsQm4gzKvF7byHrObPar6v+rc54ky4zDCUwAYlQYiiH6X09AjvQ==
 Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
  by MW4PR20MB4293.namprd20.prod.outlook.com (2603:10b6:303:184::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.33; Thu, 4 Jul
- 2024 05:47:34 +0000
+ 2024 05:47:40 +0000
 Received: from IA1PR20MB4953.namprd20.prod.outlook.com
  ([fe80::ab0b:c0d3:1f91:d149]) by IA1PR20MB4953.namprd20.prod.outlook.com
  ([fe80::ab0b:c0d3:1f91:d149%6]) with mapi id 15.20.7741.017; Thu, 4 Jul 2024
- 05:47:33 +0000
+ 05:47:40 +0000
 From: Inochi Amaoto <inochiama@outlook.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
@@ -72,21 +72,21 @@ Cc: linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH 3/7] pinctrl: sophgo: add support for CV1812H SoC
-Date: Thu,  4 Jul 2024 13:46:39 +0800
+Subject: [PATCH 4/7] pinctrl: sophgo: add support for SG2000 SoC
+Date: Thu,  4 Jul 2024 13:46:40 +0800
 Message-ID:
- <IA1PR20MB4953F94FC1ED10D3151E1A79BBDE2@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB49531169C77A6820324F0200BBDE2@IA1PR20MB4953.namprd20.prod.outlook.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <IA1PR20MB49530F0476B98DBB835B344FBBDE2@IA1PR20MB4953.namprd20.prod.outlook.com>
 References: <IA1PR20MB49530F0476B98DBB835B344FBBDE2@IA1PR20MB4953.namprd20.prod.outlook.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TMN: [gpfVbqGlynaCHTd4/FyH1mHgDmFoDZzHrHvhxtRYRf8=]
-X-ClientProxiedBy: SI2PR02CA0027.apcprd02.prod.outlook.com
- (2603:1096:4:195::14) To IA1PR20MB4953.namprd20.prod.outlook.com
+X-TMN: [ELf87PzKvBLhrq/82vZUrQ6+HGziTw2wQVEcdddIMvQ=]
+X-ClientProxiedBy: SI1PR02CA0003.apcprd02.prod.outlook.com
+ (2603:1096:4:1f7::20) To IA1PR20MB4953.namprd20.prod.outlook.com
  (2603:10b6:208:3af::19)
 X-Microsoft-Original-Message-ID:
- <20240704054647.1747392-3-inochiama@outlook.com>
+ <20240704054647.1747392-4-inochiama@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -96,40 +96,40 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|MW4PR20MB4293:EE_
-X-MS-Office365-Filtering-Correlation-Id: 97666bc0-18eb-41f5-482a-08dc9beccd06
+X-MS-Office365-Filtering-Correlation-Id: 0c4d3cae-a69d-47d7-14b4-08dc9becd0a7
 X-Microsoft-Antispam:
 	BCL:0;ARA:14566002|8060799006|461199028|440099028|3412199025|1710799026;
 X-Microsoft-Antispam-Message-Info:
-	kLgloJwsjqWjQlrjg3NyNjHqr0ynBSts3KZT0HsUOW6JvSA1Ht+MKXz+SokvXyTymoWrKbbIwnIzIylcvbqmWKOo6A6Adg+o/CccJgn8GAIm9bDeweoX9T+/T6XioiwFskn8to5qDbofaRYu83CRyk5AUGOx0Z5cwyhhawMDy+F5Igc7SmQakBaPyAzMTxK0h2HIIn4eWqJkCrEd352P3F++Mi4sp2p3w0zxh7FmkuL+N3l8DIKGDCVZByLYgjDV7lCLybGOn7iYXU692Nqx0UZF0ul4b8MHs0Bn4WtdexKnJxStG96AjDQewr09LggkAAUU+lJUanNSYr1g3iqSBrhzDvJNb3HOLsbx9sL31o7D/iO1cKNZXyQdyLrI9lLiJ9nOWrB6fu0QMfvyHEygt4FW+EgFHDucFB5TVih+1gNXT8Dg4cmewFTFvIh1vHZDfPlJ9K2C4/2ItxK25735LehAIA2QUna7JXDafde1gAYtUQBXYGkJHtsNiQzBVYxN41pcLNy1p+KHjtEwep/SL+pfqaf3w+5V7rJkfW12atYqyxGe+3rSrqpJ+EYiRHVBTDDbJUoC1oKgLI35WbKDy1TBs5GZZWjNPvyTkRzmrE5aNbzy7UAsKjPPNaKknDXVecfaQ4arQvTHSVlGulxtrw==
+	xZ38N7SSKZvuCL3c9NPxJ/+FN7lLxOjCTLVgizNHNtNxwBGbPdJR7RpTT+GLpMg5mdcy1RFzqQ4XqtNmWdEGAktqqOklYga8INFRrnBp5bOInk4PglAWT1KU7Sef3nyBI3kxK3+m18rMZZfphnXYXEr2PS7Oaljfiw23mj2R1Jx/gqHBDVxiojd2AkadxL0Kd/tQnylu99YJzubJhRXEdAXvueZK1H7QYTpZiAPZ6lR4RT3Zv+C+3gdS4z6bzv+QvRdIdE99eFuh3JHZEF94GDIOE8S7AikmtbMtdQYSu2SNEGJ6Aadqo7ThUqCwXRtOL9YvTkWmhZ2/Vi8wkhh8GoYKWxjVhHUiATfbZofWRjOvrDjXzOjJ3ndqNALlhFRj4+wCKMHbGm5fWJPa6p00CkfYM35iCNrVNpmCjkyAccY/p9K804isSL9YjgdjNTfY9Cno3+aeS6+G+AGSozhm0eqiAB6mW+KEDQdUd7WqJjNPDzkH9sPO8ZsclHJhmH8wAAt/Z8NC4BfbmlO6ajbpeOFkL9m/z6KQlTwhoe3pqOsbQerbzcGfx4JQ3Ct4hGkty8inpR8I4Z1kGJx5sILNVBS77NrqT+CnmFgec8eWMXyFTA4kAyvAIz2jxqtveAd/ajNwddtTSm/GypHPGj7tmQ==
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/+2e0AcsuBNzW2v5Ks2JglbF4WCttg1aC21YLqvMIf+3/9glREVMn+uAPakG?=
- =?us-ascii?Q?avkgXX5+I/qMpoum/BEufomA6BSFxPo9KGL6rfKmZPSdT39GylrIZfZ1UBKS?=
- =?us-ascii?Q?xE5BTIRoQCq6JDSHAUShLOi4ullM2tiJuzs/F2RFckpKG/2jVi/X83qM/Veo?=
- =?us-ascii?Q?oxYyuh6cumbGwcOcCejMZcUBeT34EzbmPEyAQ1ukJuy5mnGqRgb1YANQ1V8i?=
- =?us-ascii?Q?67q1pdpA0y+LXBjDjlmY5ZCJTgCxg35I5ek/gfmIOg479JcnOpDmD1KUrk3I?=
- =?us-ascii?Q?U7FkW6fbyHeNZhiIw2S3qjPpUyaIcOdIV/MVX7XQMWd8TY8wkLkxbK28hIFj?=
- =?us-ascii?Q?bb0TsJ4ZdqPaaLSWuAFthfIDukCpBwHoiG9SMSlb4pGKJBcEjWObTblro3od?=
- =?us-ascii?Q?DQNQNcXt7v0ITbJqi+K1OU8VxtIiofxgLOe4giUhbbGKL+hRY9OMF18IRpNc?=
- =?us-ascii?Q?KRAW64fOv0S7+6qXPOdTKPrfiC6B1pwxdpRNnp7pBosStJC2SQcn/D0M5mjk?=
- =?us-ascii?Q?Tts2SCGvI4gq/SYKugHrThu2emPal8bEW23mF/lUat1it1kMN9eZc/iqOIMS?=
- =?us-ascii?Q?3gwfMvIeqYsuBHFaHoimZoUgoxsCTmiRKD/oCNMrjVQjgqbjTSX1nrlIb1BK?=
- =?us-ascii?Q?QcaVfuiiTClrjV4tkqTUF9MJox4W8BTJxhV2PsLPl43p1ec0+bEqt9a9h03J?=
- =?us-ascii?Q?XxfxXbkQVwl/a02qYhReQTv/KR2G/QLhp4LTLj2d7gfYOPXBsBd0lthVY6xF?=
- =?us-ascii?Q?EltSlvggBc8+hQthIg8wcAzz4KL5QEIdV8g8ZU981HJ+a0FgMX4jWSeHd7UX?=
- =?us-ascii?Q?WMXsqUNhjVduVVPIikAk2/+FYZPO7tea7gTiqL20ND8hanFkKky4pU6g0bpH?=
- =?us-ascii?Q?+XQ9kEEZ6bhnQZouEXdCJr95Bm9j191p5268egK0VC6azwfpMTgE3RaWCilJ?=
- =?us-ascii?Q?twj+u2lG/wKmDGOlTEw9IzjChSq8CI0SlBQtqJU+ZZn5Vl+ETDAG4oXGSKtT?=
- =?us-ascii?Q?PIwk5692X4F3He5pv/TC5mJEj4oMZNXntRUefWcoqGhyvSGoXV6sIuiTyvIH?=
- =?us-ascii?Q?iPuxg3jaeUv664mqVzodwRfkRrQEURXUX8Cr+6b9x1/IvuIORt+EiF54ZDDL?=
- =?us-ascii?Q?LVAVIwnhsYPFH8LFkv2SStLF00/AExE1C2Gy42K4mVqCWhH6f4hnX0t09djJ?=
- =?us-ascii?Q?dRoRay5SusI+UgaDDn8gZE25ZuDbJOxvLnPi3igWlBmGG/QsnDJcuud6J0OR?=
- =?us-ascii?Q?WtLiKJo2c473GgeJcO4q?=
+	=?us-ascii?Q?kZp9pIaBPmild1SLnNOVVDJHEPcqbfOhdUML58HrDa/NcAB6cg60ClrXa2zO?=
+ =?us-ascii?Q?wkt2ZohKap19DpQ4OuFjlMMxQGk8xYa/eqg8N7U/37vY1HWkkl1IuOqaG8In?=
+ =?us-ascii?Q?s+qHHlZwmM+TFetpwoTj+Trgjd+dhDpr6mfv5vr9BE2cI938iaMQHOOuBxzS?=
+ =?us-ascii?Q?5XaY0qKKnUnDsGbsd2c2KPmxlbY+X7iaxCcHvb1OqVyh+yWHarvBeykkqAp6?=
+ =?us-ascii?Q?Gb1HAXIcSbWF1FhYKcTpua6/tZ7Nit4x0Pr99lzhG2FH/3c/nN+yBd/P//zm?=
+ =?us-ascii?Q?DI7SvHFjSQyAyPk9ZA1q8hBq2LDA0pvA/4C2QZaajgIdjmnjYEXB4XfeGFdr?=
+ =?us-ascii?Q?HinNaSxlUoItMGJzfOIJHADFCm9a1qz9eG96G4lYHRgxR7KRmJRAypE+140o?=
+ =?us-ascii?Q?5woGfKWKfDQCcb26m5OTu4kLpa18cCjKDBqVroK4TRN5HZOjGhIHK1aNd3Kp?=
+ =?us-ascii?Q?1NETlbHwJXCbj9mZSI6jU3jEBHEnlVOiCT8iQClDT2LqiIP/cf6DJVdSQ9A7?=
+ =?us-ascii?Q?IyU+EC/H7YXae9naqfFvr/KNRx8zPcIb37nVeXtr2fEGjVaAyfb1ZozvESFW?=
+ =?us-ascii?Q?/yPNLRJrnjQEOPQqwiZf0Y8U5pjvvXAiuFdBy4/YTAGD6gU9Axe2QlosKPHo?=
+ =?us-ascii?Q?d0vMDGrop85jzETI+2knsdk3nqmyokfPb+1xfESCKEFoF/KTWnLaUva+cI2v?=
+ =?us-ascii?Q?2upl8sTZFunKGJltH211mlWEQKtjVOzDbIgGj35o8VIHr0xsB2kb7y7+lNT0?=
+ =?us-ascii?Q?LWfovBSRBLU9DC4XPUXvr/8kGDXs2A8gfrmy8S2u6VktfWYkYDnY8sMYbL5G?=
+ =?us-ascii?Q?SgZtCumh7LbmpOf6gEZQ9CayLjZ6LcpUkm1+gPbO7kKeQFWJPH0aLQEiDDGl?=
+ =?us-ascii?Q?JxDndZOeV97zpaJi5LgmqLGfRH0MC6MKpfWk4yLBNSqkyGez/Jzcf8lgXgb7?=
+ =?us-ascii?Q?MyEVCahBaF27tH2+gvGHfCs1ZovfQ7kGwVlKTDI0Er8PGFIEG1INiLj7H0bw?=
+ =?us-ascii?Q?z28ba+YS7jMpBZz2Z4LjYtNvq0AFvJ4sR44Q+7fBAE7I3OTtMAxREMGrut65?=
+ =?us-ascii?Q?FKNT8uBjMSsKgnzXPq94CZ2emAhxrRgV8yphAViih8XEMTsGSKrqxBIKR8n3?=
+ =?us-ascii?Q?zRym4PdJqI4MnRF3fQz0HDU1sYxqVcgUaihNukhPQMFkm5G4M4oShVl9pP3m?=
+ =?us-ascii?Q?qOhR7Qt2HZ/TLHJ5y3xgr5dlzJdthuB6tz+AwblcBLRVmnOCazNxY5mYahli?=
+ =?us-ascii?Q?EB3A28lsHobErbfgADra?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97666bc0-18eb-41f5-482a-08dc9beccd06
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c4d3cae-a69d-47d7-14b4-08dc9becd0a7
 X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2024 05:47:33.8486
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2024 05:47:39.8795
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -137,53 +137,53 @@ X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR20MB4293
 
-Add pin definition driver of CV1812H.
+Add pin definition driver of SG2000.
 
 Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
 ---
- drivers/pinctrl/sophgo/Kconfig           |  11 +
- drivers/pinctrl/sophgo/Makefile          |   1 +
- drivers/pinctrl/sophgo/pinctrl-cv1812h.c | 596 +++++++++++++++++++++++
+ drivers/pinctrl/sophgo/Kconfig          |  11 +
+ drivers/pinctrl/sophgo/Makefile         |   1 +
+ drivers/pinctrl/sophgo/pinctrl-sg2000.c | 596 ++++++++++++++++++++++++
  3 files changed, 608 insertions(+)
- create mode 100644 drivers/pinctrl/sophgo/pinctrl-cv1812h.c
+ create mode 100644 drivers/pinctrl/sophgo/pinctrl-sg2000.c
 
 diff --git a/drivers/pinctrl/sophgo/Kconfig b/drivers/pinctrl/sophgo/Kconfig
-index d91dcdf13e60..1bd0770c1201 100644
+index 1bd0770c1201..000351566fcf 100644
 --- a/drivers/pinctrl/sophgo/Kconfig
 +++ b/drivers/pinctrl/sophgo/Kconfig
-@@ -19,3 +19,14 @@ config PINCTRL_SOPHGO_CV1800B
+@@ -30,3 +30,14 @@ config PINCTRL_SOPHGO_CV1812H
  	  This pin controller allows selecting the mux function for
  	  each pin. This driver can also be built as a module called
- 	  pinctrl-cv1800b.
+ 	  pinctrl-cv1812h.
 +
-+config PINCTRL_SOPHGO_CV1812H
-+	tristate "Sophgo CV1812H SoC Pinctrl driver"
++config PINCTRL_SOPHGO_SG2000
++	tristate "Sophgo SG2000 SoC Pinctrl driver"
 +	depends on ARCH_SOPHGO || COMPILE_TEST
 +	depends on OF
 +	select PINCTRL_SOPHGO_CV18XX
 +	help
-+	  Say Y to select the pinctrl driver for CV1812H SoC.
++	  Say Y to select the pinctrl driver for SG2000 SoC.
 +	  This pin controller allows selecting the mux function for
 +	  each pin. This driver can also be built as a module called
-+	  pinctrl-cv1812h.
++	  pinctrl-sg2000.
 diff --git a/drivers/pinctrl/sophgo/Makefile b/drivers/pinctrl/sophgo/Makefile
-index 1add0d794122..571e0a64f29a 100644
+index 571e0a64f29a..16e923e3f77b 100644
 --- a/drivers/pinctrl/sophgo/Makefile
 +++ b/drivers/pinctrl/sophgo/Makefile
-@@ -2,3 +2,4 @@
-
+@@ -3,3 +3,4 @@
  obj-$(CONFIG_PINCTRL_SOPHGO_CV18XX)	+= pinctrl-cv18xx.o
  obj-$(CONFIG_PINCTRL_SOPHGO_CV1800B)	+= pinctrl-cv1800b.o
-+obj-$(CONFIG_PINCTRL_SOPHGO_CV1812H)	+= pinctrl-cv1812h.o
-diff --git a/drivers/pinctrl/sophgo/pinctrl-cv1812h.c b/drivers/pinctrl/sophgo/pinctrl-cv1812h.c
+ obj-$(CONFIG_PINCTRL_SOPHGO_CV1812H)	+= pinctrl-cv1812h.o
++obj-$(CONFIG_PINCTRL_SOPHGO_SG2000)	+= pinctrl-sg2000.o
+diff --git a/drivers/pinctrl/sophgo/pinctrl-sg2000.c b/drivers/pinctrl/sophgo/pinctrl-sg2000.c
 new file mode 100644
-index 000000000000..ac60d5659921
+index 000000000000..34531b13c545
 --- /dev/null
-+++ b/drivers/pinctrl/sophgo/pinctrl-cv1812h.c
++++ b/drivers/pinctrl/sophgo/pinctrl-sg2000.c
 @@ -0,0 +1,596 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Sophgo CV1812H SoC pinctrl driver.
++ * Sophgo SG2000 SoC pinctrl driver.
 + *
 + * Copyright (C) 2024 Inochi Amaoto <inochiama@outlook.com>
 + *
@@ -197,11 +197,11 @@ index 000000000000..ac60d5659921
 +#include <linux/pinctrl/pinctrl.h>
 +#include <linux/pinctrl/pinmux.h>
 +
-+#include <dt-bindings/pinctrl/pinctrl-cv1812h.h>
++#include <dt-bindings/pinctrl/pinctrl-sg2000.h>
 +
 +#include "pinctrl-cv18xx.h"
 +
-+static const struct pinctrl_pin_desc cv1812h_pins[] = {
++static const struct pinctrl_pin_desc sg2000_pins[] = {
 +	PINCTRL_PIN(PIN_MIPI_TXM4,	"MIPI_TXM4"),
 +	PINCTRL_PIN(PIN_MIPIRX0N,	"MIPIRX0N"),
 +	PINCTRL_PIN(PIN_MIPIRX3P,	"MIPIRX3P"),
@@ -314,7 +314,7 @@ index 000000000000..ac60d5659921
 +	PINCTRL_PIN(PIN_XTAL_XIN,	"XTAL_XIN"),
 +};
 +
-+static const struct cv1800_pin cv1812h_pin_data[ARRAY_SIZE(cv1812h_pins)] = {
++static const struct cv1800_pin sg2000_pin_data[ARRAY_SIZE(sg2000_pins)] = {
 +	CV1800_GENERAL_PIN(PIN_MIPI_TXM4, "VDD18A_MIPI",
 +			   IO_TYPE_1V8_ONLY,
 +			   CV1800_PINCONF_AREA_SYS, 0x194, 7,
@@ -753,29 +753,29 @@ index 000000000000..ac60d5659921
 +			   CV1800_PINCONF_AREA_RTC, 0x028),
 +};
 +
-+static const struct cv1800_pinctrl_data cv1812h_pindata = {
-+	.pins = cv1812h_pins,
-+	.pindata = cv1812h_pin_data,
-+	.npins = ARRAY_SIZE(cv1812h_pins),
++static const struct cv1800_pinctrl_data sg2000_pindata = {
++	.pins = sg2000_pins,
++	.pindata = sg2000_pin_data,
++	.npins = ARRAY_SIZE(sg2000_pins),
 +};
 +
-+static const struct of_device_id cv1812h_pinctrl_ids[] = {
-+	{ .compatible = "sophgo,cv1812h-pinctrl", .data = &cv1812h_pindata },
++static const struct of_device_id sg2000_pinctrl_ids[] = {
++	{ .compatible = "sophgo,sg2000-pinctrl", .data = &sg2000_pindata },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, cv1812h_pinctrl_ids);
++MODULE_DEVICE_TABLE(of, sg2000_pinctrl_ids);
 +
-+static struct platform_driver cv1812h_pinctrl_driver = {
++static struct platform_driver sg2000_pinctrl_driver = {
 +	.probe	= cv1800_pinctrl_probe,
 +	.driver	= {
-+		.name			= "cv1812h-pinctrl",
++		.name			= "sg2000-pinctrl",
 +		.suppress_bind_attrs	= true,
-+		.of_match_table		= cv1812h_pinctrl_ids,
++		.of_match_table		= sg2000_pinctrl_ids,
 +	},
 +};
-+module_platform_driver(cv1812h_pinctrl_driver);
++module_platform_driver(sg2000_pinctrl_driver);
 +
-+MODULE_DESCRIPTION("Pinctrl driver for the CV1812H series SoC");
++MODULE_DESCRIPTION("Pinctrl driver for the SG2000 series SoC");
 +MODULE_LICENSE("GPL");
 --
 2.45.2
