@@ -1,285 +1,189 @@
-Return-Path: <linux-gpio+bounces-8048-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8049-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C64D8927AE3
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 18:13:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F305927C3B
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 19:31:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E3C3285BB1
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 16:13:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05BC5280A76
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 17:31:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ABBD1B29BB;
-	Thu,  4 Jul 2024 16:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHu2YoIt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0CF4481DD;
+	Thu,  4 Jul 2024 17:28:40 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AF61B29B4
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Jul 2024 16:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0F646447;
+	Thu,  4 Jul 2024 17:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720109611; cv=none; b=b/tTXejOdxF6fGpDmNqvjmPfTtco1u04UC0eCCv8FmMlIcBvFkOxO46FgO9dBTans0lzo5DBf4wDmrHQmOAe7tcdUP0bgvzYkD/3UWhVKy04nDTMJlbSrCm4xSHSWNEUWlLCJcHpsahYKEEg14RBgKbHjvRGfhtqj0d56fc5R3Y=
+	t=1720114120; cv=none; b=pVT7kc2NA1SUTwOe6AmHgCimrYJK9bsIHu2p4HRZM17637Qt2cb5TUsAS94g+HxF+zPgra2bdWyML9PYKSoZdHsFKUYWopCm5n/UVg6wIzC9fzW7y5ipNBplk2rCRc4rK6R4ueSR9wjEcVyEmV2Tu6RypmFHOC6auqBKyPZH6bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720109611; c=relaxed/simple;
-	bh=plXvsie4m8xArg7/YoTB7KLNLXGelGTo5cY1dLeuB2o=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=DBKA761zLi3zDVvm4v9cKbF1X1ttp1zHo8HWBO8PXsLHTpd7GFp2AfX0a0Le6DpSjVdxOFXAuIxDPBz03Oksvd3JoPoikdrmJjhQlU4WqvmK/atsHh+m93z2Rmrx0oZ9fYdJUd8ARe8sX7UHr2aZm1ZMgRw8reOay425C+82wT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NHu2YoIt; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720109609; x=1751645609;
-  h=date:from:to:cc:subject:message-id;
-  bh=plXvsie4m8xArg7/YoTB7KLNLXGelGTo5cY1dLeuB2o=;
-  b=NHu2YoIt+MR03gNtnpN8GgaIHfaS1MhTDE3uAisHgQn56kWHgAPynfWf
-   cp7iHRSxWfdXCuRMRbfISDK8s0h5dAz8/u5KDo8GMuMksTyfIrw4PUFad
-   MLCkoCh9fG67Q8V6wepDOUbZNJ/IKBCG5oypiy/kw/KpmCHF3FAGJU2fs
-   P6ZhyXpuWipuI3lYo9mZgEUdZt1Stj8fioE7Bbhm4sJ324mjcn3WCovw/
-   dqF9US+jOCfWIjQH11cvjF3F3uZqYF0i/icWkQsYolzPGmFipn48i6OiM
-   vK6FEGGhIXPAWiSknRfSkvgqW7BTqzpvjFOsI7WwWiYy7o2/LZrU2Jpjm
-   Q==;
-X-CSE-ConnectionGUID: 2jUcAavaSgukM5HcnQHQvw==
-X-CSE-MsgGUID: KcbXUdtPRcO4oWV90CQaVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="17123525"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="17123525"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 09:13:28 -0700
-X-CSE-ConnectionGUID: XcmeS82bRCawWGcfluwgYw==
-X-CSE-MsgGUID: BUm8ST41SfydhOLvtQxqqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="51819463"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 04 Jul 2024 09:13:27 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sPP5I-000RB4-2u;
-	Thu, 04 Jul 2024 16:13:24 +0000
-Date: Fri, 05 Jul 2024 00:13:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- f07798d7bb9c46d17d80103fb772fd2c75d47919
-Message-ID: <202407050005.hsgHnyXo-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1720114120; c=relaxed/simple;
+	bh=k90wRWSNtXsHHg1DxapLwrN3QXfr/aKyoh7wMXQ/E8c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gEo4T8CBbhixq2NErLoJnKN9y5dUI3QF+4xEKNBX6rDtR5j9bVW6uBzSX2aazg7kBIVv2AaoNEjoey/j2ezO1xV0sHslI3JmOCC23XOOJqeCPzGBPjZHplAis/vxHkfc+qH8gEYJR2HOv9qnmg7pjsPcsOejw3A2tAW3qxHRFhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-64b5617ba47so8045047b3.3;
+        Thu, 04 Jul 2024 10:28:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720114117; x=1720718917;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qR61nMwSwM6cVFAnAbtSvi4Auo1YFRorV0GSWe+xw9k=;
+        b=nisAMJlLL6SI/5+upq2IF+cMsgfL0ebC4NYnbooXhzCX1vBNW+YfpVQzlt1DsYk3hI
+         PTNTqyfVw5X+XuKmdvO8kciFm5CrCplVH25/WwoKNSSaMMdiQKjpR5bxEIs+6Sz/aGZ+
+         scRyqruh/wEDRMrSvEkNjNpRTRGzn6X7x0sz3nXtONUza8aFw4Bx7imSaOP/k6QVOLIt
+         q4pkGaWv8DNrguFbMd+67TyF98FpR2/C4A2JhbtrFV/YE+emxdP+acSl3TPk21oTWoFx
+         0LUWicXFDRSiO/RPc+HMcji5H38cY7OY1ApsO8opfipzlcLQFbUBo8BE0XZhMQwb2T5J
+         ZOsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnFl+KwGS5NTkktojMgghTImyTmpbxQ1umYHNeNnjpZpV2K7CU5PfVD5LkPiJjCZi1UwHOe4qb+h2cb1H7F9mfbEMxn7Hpw1ov4PCM6uxeGVoxKPNHX0mwchvrsuUKWgX/LoOtmJc4qV1Fs21shysP/tXByMgdxhOIKhaU+gYfxfLkLXJ90CbEXQZmri6dYyGTOtXT2wmkDoiQqyWk6/ZE8PRy9l7kqw==
+X-Gm-Message-State: AOJu0Yyw1Uw5dOxctB+Mizji0GpRXx09dFCGcv2+4Xfs6JjpwHJZxwao
+	CgPZgp3CH3+SxHJewydI6EiG/TPeVhDJ7riFVpuBiVoAwqgY4FUNfhbj4/xj
+X-Google-Smtp-Source: AGHT+IG4rmnI6tzdIpaZGrZGOlyCAXKjNpsFd9zECWXLb5g00KGkMsOI4J2B4yYhIV9IUit1mC3+BA==
+X-Received: by 2002:a0d:ea8c:0:b0:61d:fcf7:3377 with SMTP id 00721157ae682-652d85369abmr22209757b3.44.1720114116969;
+        Thu, 04 Jul 2024 10:28:36 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-64b3a625488sm23794837b3.43.2024.07.04.10.28.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jul 2024 10:28:36 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e0360f8901aso875778276.2;
+        Thu, 04 Jul 2024 10:28:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUqc8Znx3b6XQvn+mY3usrq0h1sFUTqmEk8n5nZSEPaumn99FNx+yX2sz26lXTV1kOba9igQUmqvTPTQWLrJ+6JC2X8pY2HkEpK70dUsfF1KifioZ3BGq0DPqRkkIlwdZqyvfpIxmiAd55hKMWSLo0iKaFt3pHWxg6OMLYh6EDdpCzZuiDeRkymcF4mikxVh2X88Cg1LqZFqil1X58Oj2L9CSqkzKV3dg==
+X-Received: by 2002:a81:8450:0:b0:648:857c:1530 with SMTP id
+ 00721157ae682-652d803a2bamr21894747b3.34.1720114116374; Thu, 04 Jul 2024
+ 10:28:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240625200316.4282-1-paul.barker.ct@bp.renesas.com> <20240625200316.4282-3-paul.barker.ct@bp.renesas.com>
+In-Reply-To: <20240625200316.4282-3-paul.barker.ct@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 4 Jul 2024 19:28:24 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWKUq=Tf9zTx2LDr_gkbsxBPnQeK=buDSsQ__-QUHX5Gw@mail.gmail.com>
+Message-ID: <CAMuHMdWKUq=Tf9zTx2LDr_gkbsxBPnQeK=buDSsQ__-QUHX5Gw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/9] pinctrl: renesas: rzg2l: Clean up and refactor OEN
+ read/write functions
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: f07798d7bb9c46d17d80103fb772fd2c75d47919  gpio: mmio: do not calculate bgpio_bits via "ngpios"
+Hi Paul,
 
-elapsed time: 1456m
+On Tue, Jun 25, 2024 at 10:03=E2=80=AFPM Paul Barker
+<paul.barker.ct@bp.renesas.com> wrote:
+> The variable naming in the various OEN functions has been confusing. We
+> were passing the _pin & bit variables from rzg2l_pinctrl_pinconf_get()
+> and rzg2l_pinctrl_pinconf_set() as the offset & pin argument to the
+> oen_read() and oen_write() functions. This doesn't make sense, the first
+> of these isn't actually an offset and the second is not needed for
+> RZ/V2H but leads to confusion with the bit variable used within these
+> functions.
+>
+> To tidy this up, instead pass the _pin variable directly to the
+> oen_read() and oen_write() functions with consistent naming. Then
+> rzg3s_read_oen() and rzg3s_write_oen() can use macros to get the port
+> and pin numbers it needs.
+>
+> Instead of passing the pin capabilities into oen_read() and oen_write(),
+> we can check that the pin supports OEN before calling these functions.
+>
+> Also, merge rzg3s_oen_is_supported() into rzg3s_pin_to_oen_bit() to give
+> a single translation function which returns an error if the pin doesn't
+> support OEN. While we're here, remove an unnecessary branch and clarify
+> the variable naming. Lastly, check that we are not dealing with a
+> dedicated pin before calling RZG2L_PIN_ID_TO_{PORT,PIN}().
+>
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Changes v2->v3:
+>   * Picked up Linus W's Acked-by tag.
+>   * Skipped Geert's Reviewed-by tag as I've made a few changes here and
+>     want another review.
+>   * Check pin caps before calling oen_{read,write}() so we can drop the
+>     caps argument to those functions.
+>   * Simplify arguments to rzg3s_pin_to_oen_bit() and decode
+>     pin_data/port/pin inside this function.
+>   * Check for dedicated pin before calling RZG2L_PIN_ID_TO_{PORT,PIN}().
 
-configs tested: 192
-configs skipped: 7
+Thanks for the update!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                            allyesconfig   gcc-13.2.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                 nsimosci_hs_smp_defconfig   gcc-13.2.0
-arc                   randconfig-001-20240704   gcc-13.2.0
-arc                   randconfig-002-20240704   gcc-13.2.0
-arc                        vdk_hs38_defconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                     am200epdkit_defconfig   gcc-13.2.0
-arm                                 defconfig   gcc-13.2.0
-arm                            hisi_defconfig   gcc-13.2.0
-arm                         lpc18xx_defconfig   gcc-13.2.0
-arm                         mv78xx0_defconfig   gcc-13.2.0
-arm                             mxs_defconfig   gcc-13.2.0
-arm                         orion5x_defconfig   gcc-13.2.0
-arm                          pxa168_defconfig   gcc-13.2.0
-arm                   randconfig-001-20240704   gcc-13.2.0
-arm                   randconfig-002-20240704   gcc-13.2.0
-arm                   randconfig-003-20240704   gcc-13.2.0
-arm                   randconfig-004-20240704   gcc-13.2.0
-arm                             rpc_defconfig   gcc-13.2.0
-arm                         s5pv210_defconfig   gcc-13.2.0
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240704   gcc-13.2.0
-arm64                 randconfig-002-20240704   gcc-13.2.0
-arm64                 randconfig-003-20240704   gcc-13.2.0
-arm64                 randconfig-004-20240704   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240704   gcc-13.2.0
-csky                  randconfig-002-20240704   gcc-13.2.0
-i386                             allmodconfig   clang-18
-i386                              allnoconfig   clang-18
-i386                             allyesconfig   clang-18
-i386         buildonly-randconfig-001-20240704   clang-18
-i386         buildonly-randconfig-002-20240704   clang-18
-i386         buildonly-randconfig-003-20240704   clang-18
-i386         buildonly-randconfig-004-20240704   clang-18
-i386         buildonly-randconfig-005-20240704   clang-18
-i386         buildonly-randconfig-006-20240704   clang-18
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240704   clang-18
-i386                  randconfig-002-20240704   clang-18
-i386                  randconfig-003-20240704   clang-18
-i386                  randconfig-004-20240704   clang-18
-i386                  randconfig-005-20240704   clang-18
-i386                  randconfig-006-20240704   clang-18
-i386                  randconfig-011-20240704   clang-18
-i386                  randconfig-012-20240704   clang-18
-i386                  randconfig-013-20240704   clang-18
-i386                  randconfig-014-20240704   clang-18
-i386                  randconfig-015-20240704   clang-18
-i386                  randconfig-016-20240704   clang-18
-loongarch                        allmodconfig   gcc-13.2.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240704   gcc-13.2.0
-loongarch             randconfig-002-20240704   gcc-13.2.0
-m68k                             allmodconfig   gcc-13.2.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-13.2.0
-m68k                         apollo_defconfig   gcc-13.2.0
-m68k                       bvme6000_defconfig   gcc-13.2.0
-m68k                                defconfig   gcc-13.2.0
-m68k                        m5307c3_defconfig   gcc-13.2.0
-microblaze                       alldefconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-13.2.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                      bmips_stb_defconfig   gcc-13.2.0
-mips                         db1xxx_defconfig   gcc-13.2.0
-mips                 decstation_r4k_defconfig   gcc-13.2.0
-mips                            gpr_defconfig   gcc-13.2.0
-mips                           ip22_defconfig   gcc-13.2.0
-mips                           ip27_defconfig   gcc-13.2.0
-mips                           ip28_defconfig   gcc-13.2.0
-mips                  maltasmvp_eva_defconfig   gcc-13.2.0
-mips                    maltaup_xpa_defconfig   gcc-13.2.0
-nios2                         3c120_defconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240704   gcc-13.2.0
-nios2                 randconfig-002-20240704   gcc-13.2.0
-openrisc                          allnoconfig   gcc-13.2.0
-openrisc                         allyesconfig   gcc-13.2.0
-openrisc                            defconfig   gcc-13.2.0
-openrisc                  or1klitex_defconfig   gcc-13.2.0
-openrisc                       virt_defconfig   gcc-13.2.0
-parisc                           allmodconfig   gcc-13.2.0
-parisc                            allnoconfig   gcc-13.2.0
-parisc                           allyesconfig   gcc-13.2.0
-parisc                              defconfig   gcc-13.2.0
-parisc                randconfig-001-20240704   gcc-13.2.0
-parisc                randconfig-002-20240704   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-13.2.0
-powerpc                           allnoconfig   gcc-13.2.0
-powerpc                          allyesconfig   gcc-13.2.0
-powerpc                  iss476-smp_defconfig   gcc-13.2.0
-powerpc                     ksi8560_defconfig   gcc-13.2.0
-powerpc                    mvme5100_defconfig   gcc-13.2.0
-powerpc               randconfig-001-20240704   gcc-13.2.0
-powerpc                    sam440ep_defconfig   gcc-13.2.0
-powerpc                     sequoia_defconfig   gcc-13.2.0
-powerpc64             randconfig-001-20240704   gcc-13.2.0
-powerpc64             randconfig-002-20240704   gcc-13.2.0
-powerpc64             randconfig-003-20240704   gcc-13.2.0
-riscv                            allmodconfig   gcc-13.2.0
-riscv                             allnoconfig   gcc-13.2.0
-riscv                            allyesconfig   gcc-13.2.0
-riscv                               defconfig   gcc-13.2.0
-riscv                 randconfig-001-20240704   gcc-13.2.0
-riscv                 randconfig-002-20240704   gcc-13.2.0
-s390                             allmodconfig   clang-19
-s390                              allnoconfig   clang-19
-s390                              allnoconfig   gcc-13.2.0
-s390                             allyesconfig   clang-19
-s390                             allyesconfig   gcc-13.2.0
-s390                          debug_defconfig   gcc-13.2.0
-s390                                defconfig   gcc-13.2.0
-s390                  randconfig-001-20240704   gcc-13.2.0
-s390                  randconfig-002-20240704   gcc-13.2.0
-sh                               allmodconfig   gcc-13.2.0
-sh                                allnoconfig   gcc-13.2.0
-sh                               allyesconfig   gcc-13.2.0
-sh                         ap325rxa_defconfig   gcc-13.2.0
-sh                                  defconfig   gcc-13.2.0
-sh                             espt_defconfig   gcc-13.2.0
-sh                            migor_defconfig   gcc-13.2.0
-sh                    randconfig-001-20240704   gcc-13.2.0
-sh                    randconfig-002-20240704   gcc-13.2.0
-sh                          sdk7786_defconfig   gcc-13.2.0
-sh                           se7619_defconfig   gcc-13.2.0
-sh                           se7750_defconfig   gcc-13.2.0
-sh                           sh2007_defconfig   gcc-13.2.0
-sh                        sh7757lcr_defconfig   gcc-13.2.0
-sparc                            allmodconfig   gcc-13.2.0
-sparc                       sparc64_defconfig   gcc-13.2.0
-sparc64                             defconfig   gcc-13.2.0
-sparc64               randconfig-001-20240704   gcc-13.2.0
-sparc64               randconfig-002-20240704   gcc-13.2.0
-um                               allmodconfig   gcc-13.2.0
-um                                allnoconfig   clang-17
-um                                allnoconfig   gcc-13.2.0
-um                               allyesconfig   gcc-13.2.0
-um                                  defconfig   gcc-13.2.0
-um                             i386_defconfig   gcc-13.2.0
-um                    randconfig-001-20240704   gcc-13.2.0
-um                    randconfig-002-20240704   gcc-13.2.0
-um                           x86_64_defconfig   gcc-13.2.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240704   clang-18
-x86_64       buildonly-randconfig-002-20240704   clang-18
-x86_64       buildonly-randconfig-003-20240704   clang-18
-x86_64       buildonly-randconfig-004-20240704   clang-18
-x86_64       buildonly-randconfig-005-20240704   clang-18
-x86_64       buildonly-randconfig-006-20240704   clang-18
-x86_64                              defconfig   clang-18
-x86_64                randconfig-001-20240704   clang-18
-x86_64                randconfig-002-20240704   clang-18
-x86_64                randconfig-003-20240704   clang-18
-x86_64                randconfig-004-20240704   clang-18
-x86_64                randconfig-005-20240704   clang-18
-x86_64                randconfig-006-20240704   clang-18
-x86_64                randconfig-011-20240704   clang-18
-x86_64                randconfig-012-20240704   clang-18
-x86_64                randconfig-013-20240704   clang-18
-x86_64                randconfig-014-20240704   clang-18
-x86_64                randconfig-015-20240704   clang-18
-x86_64                randconfig-016-20240704   clang-18
-x86_64                randconfig-071-20240704   clang-18
-x86_64                randconfig-072-20240704   clang-18
-x86_64                randconfig-073-20240704   clang-18
-x86_64                randconfig-074-20240704   clang-18
-x86_64                randconfig-075-20240704   clang-18
-x86_64                randconfig-076-20240704   clang-18
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                  nommu_kc705_defconfig   gcc-13.2.0
-xtensa                randconfig-001-20240704   gcc-13.2.0
-xtensa                randconfig-002-20240704   gcc-13.2.0
+> -static u32 rzg3s_oen_read(struct rzg2l_pinctrl *pctrl, u32 caps, u32 off=
+set, u8 pin)
+> +static int rzg3s_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned in=
+t _pin)
+>  {
+> +       u64 *pin_data =3D pctrl->desc.pins[_pin].drv_data;
+>         u8 max_port =3D pctrl->data->hwcfg->oen_max_port;
+>         u8 max_pin =3D pctrl->data->hwcfg->oen_max_pin;
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+As max_port and max_pin are used only once...
+
+> -       u8 bit;
+> +       u8 port, pin, bit;
+>
+> -       if (!rzg3s_oen_is_supported(caps, pin, max_pin))
+> -               return 0;
+> +       if (*pin_data & RZG2L_SINGLE_PIN)
+> +               return -EINVAL;
+>
+> -       bit =3D rzg3s_pin_to_oen_bit(offset, pin, max_port);
+> +       port =3D RZG2L_PIN_ID_TO_PORT(_pin);
+> +       pin =3D RZG2L_PIN_ID_TO_PIN(_pin);
+> +       if (pin > max_pin)
+
+... I'd rather use their origins here...
+
+> +               return -EINVAL;
+> +
+> +       bit =3D pin * 2;
+> +       if (port =3D=3D max_port)
+
+... and here.
+I can do that while applying.
+
+> +               bit +=3D 1;
+> +
+> +       return bit;
+> +}
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+I'll check with Linus whether I can still queue this in renesas-pinctrl
+for v6.11.  As the first three patches of this series are a hard
+dependency for the DTS parts, it would be good to get them in sooner
+rather than later.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
