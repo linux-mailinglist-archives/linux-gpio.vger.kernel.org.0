@@ -1,59 +1,59 @@
-Return-Path: <linux-gpio+bounces-8030-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8031-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A78E4926F05
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 07:47:33 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7C7A926F08
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 07:47:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAB041C219AB
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 05:47:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1314DB21E78
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 05:47:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 858E91A00FA;
-	Thu,  4 Jul 2024 05:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AE8B1A070E;
+	Thu,  4 Jul 2024 05:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Lvr2Uzl+"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="sDYp22R3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10olkn2043.outbound.protection.outlook.com [40.92.41.43])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10olkn2032.outbound.protection.outlook.com [40.92.41.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6154748F;
-	Thu,  4 Jul 2024 05:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.41.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC191A01D8;
+	Thu,  4 Jul 2024 05:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.41.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720072048; cv=fail; b=V7M0hv/aSXkvX/omqI8fjiltbdm2Xo0YycmfNCgsfrJaEbpeJ2bGcYpYOS7R6tjlnQE4+5KvZbXKS35xGFdwf73l1dVB5yz8zMfg2oauLn+F7CwdIqrRmXWBNpqmeeLvOQ6he7Fas+k9ITbdSEU77g8mylP4C5BwxBFKW2s65Uw=
+	t=1720072054; cv=fail; b=UIK2L729uVxnd842En9VJIe+wXBGfLzZWFKDmMriHf104LAVVfmBClF/6Zq2TqN5qFPwmUtz9VkN7nDyU6fLLeTAkvovbDF8gsdIEgIUUxXQE5nVScR1icGYEFyGAOAE+g1KeohOEGVSUo3q4Swa90JHsMNBiCpmC4/RoFfBG2k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720072048; c=relaxed/simple;
-	bh=airqL60FN6+xHFkV0S2XWHuAzVMimnu8VeMBbDrV0UU=;
+	s=arc-20240116; t=1720072054; c=relaxed/simple;
+	bh=I6rkhK4UR99sS20FwaKXZ40kfGNwlZfah3+CYkiPLUc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uuGS+c/0yIND4hhSzEQGGUqxtPcS/Y4KuKdBHZqK7gFjcoV3BeOyI3x/1Ma9uDYSGh03OC5apNSZ1VTYCENhipHdXvnHv2s3spcnpbWByLltwszzdthdIHnSzgnEyO/CKYU9XHFiMuMFcQZvFc1os6ezYRKo8SeqeGLB/VgTBac=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Lvr2Uzl+; arc=fail smtp.client-ip=40.92.41.43
+	 Content-Type:MIME-Version; b=aLXJw5bh9Qq/6Jtq72f8+DfaRDPAwvEfYhQ5Fn/RK929b+JD4/7a86Ck/cbpXGh8jNJDGKcv1XXReoVRNjNQfg0f08J0pttLP4wB6UGqB65XeeVNW/t7eAfuFB3k46nyi2W12dGJOOSRx2YBIh7rYVJCNEb4VxZhhfBCbqnKitU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=sDYp22R3; arc=fail smtp.client-ip=40.92.41.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RxnJzBc02oJM4KE8aEZrfuKXz61j8VmTNoG3XjIFc/ORN3ds+r0TbDic8Gopq9i+3OMA/L8RYwVtTe7+pyvGtFdYio+66aU+JK0exWzqrS4dObkwDnp5C6tl1srWxyI5sexqMpEIwHtuhPKRtxx/ackPqoJqxLwb6XlhG6PiUrkiVVDFOdLxpr1tC2YxBl68YUZPWNvY1lFDhQb7l3293Q/rjhnhFxSHP0XcMdTdztmLd/cEF4ifSSdEHtpNPGJvJwlo6UL31u2A9TiFjbSXlxy/Gpzz8nl2byGCicMEq7l2hW5x8lUdYUf7AvKbpRIRzWPixUjyquPcFtUBx3596g==
+ b=gkhESY1Gg/lMNmQ21c0bIz8se22aHtXW0lmyx2EyF01ahn+5wZF/zsaPd9lIrNU4BWBauoJBdyPiD468NrvAue/gvc7zO9WBCFI725+bdR763bhD92jl2siR7y2GzGi8Kyx/gdVw7xpvdBXplrbRvFhy4o2sDGAqw/Aqr15RVWwSAz/qN9FeiAoZQmQ65aKT3MD1+dt9ApuBByBIyhUksjntwLju39iEr9rigALu6scdO5/InZsewbjR7uhNM2UE10gjuZZYvn6dNH3/wyrH/YJQaO8qRLXR89sKOF1pSzSSdXaj+ttR2uO/fatyY0DUxdQg8AzyhV7Mfd5l0hJiVQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3EQaV7LdNqaoeKfGetYjm+aztjSyPYmu/cGGZo/gs44=;
- b=LZVEVMaPuMvQOy7hStG/ja8hZqxeoMtpKAlBy86BBF7m+/Tmjcj283eR//TtuVHw1bfWEsrNneNqyqnbGtXW2OT7pfX+yC88EXf8kZVaE80k7e8ZR28N597UZw8ymd/uieR8mKOk5idYkC0tDJjyn6Sc16rP2PpY7BxFMg1oBIw3hmbXUm/PgfGcxmTwDdxl+2d2MMUI/IMX07AAdDSr2/CYvJH591qkmNY6xpJGhd8Dx49vMryCUjBACzjJnHUYgAWtZJAwbRtbK5JF4IIrzq15yBR+fPLbOUqdVLpXDcfiuk5Gh+oy1o8rkeVdBQEmeNz+9mk8Jd8yFhSwj05/TA==
+ bh=y9kjtT1F0NUHr0XUctm7cyAThPA5MAFAlvQd3a/dS5g=;
+ b=CojJ93e3DXjE9fddECKSbpum1Nzcmxu1t+qxi6yuEUZHvo4/SXP09rGPnRaI2kdnGHNbDrd77jxM+YCgiIM6H7lOzCKMp/0w8em+XaVOqnDCXITA7KjMFoVzRGQzsocGN9aSMW29tkhj0FkJGZT+HZtLv66GpbUfDGa5YvBLO2U9eqUW0GstrcjNXqvtMgnE83yrZFHsatr5Oh8EBDNz/gPoeEioLC9fYA2fqqpe8yq2J9hzBic+RFTETf3BAIwVqzvzc/AhSapB7xis2uvThuFlzhkqMXh50mJA4W2Li3vGnfrWWBwiYmBU7sPlkajJmV4RoeLh9mznJaBLG6ZgKw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3EQaV7LdNqaoeKfGetYjm+aztjSyPYmu/cGGZo/gs44=;
- b=Lvr2Uzl+Xkjn3v+3vj5buxS6N9WonERs4I28/Ybhrm0Wa/yMKaeqp0ciZ2BPZS6qsaH3OMRW9BdHvjQFGEHXLKkv8BsG6wPHLUzrbGFLwgl2uM9oojILUGiVSbtrPIBr1QBpgqNx74t/uD9/zJIoS78bhfFlkMnUBHR0QR1zkR9MUkx/LlpJ03JIOjpuCePxThdNd7gpcsBVRkHo9SOEsRWR7fIKB/u37e04ed/xOoXvtu0SBmjgpB8xs77UbHNYystHN6zumcqPJnRDf7/8fqziSdAPfHnaSUavYo7qOfpRdB0OQ/uRYqY9OpgwqXKVNU9MtR6op94lSLIa9nTScA==
+ bh=y9kjtT1F0NUHr0XUctm7cyAThPA5MAFAlvQd3a/dS5g=;
+ b=sDYp22R3qCcv9//qBYKlC6equKcX/X+WHH4/8ml+FrtSyxltOyaL0Uz8ugMzmhB5oPmLkecj5v1X9VWpupOdssHRzvlISOIRfEBo8nhfuw25eXk4goQrOlFGUQL8k3GLK0emDFRxpxNVgsjNC0r+UlDlbw240FTpaHngUiQUE9v4y96wUstypR0DdEFgTlQ//6qLxPX3+sBNme3r5YjyuEpLwPfS4UaqqAByYPNst9GWttIN++JEUN8WzZwhgFcJtjKoPm8gCSXqczCAbG+boJG5ZBfey/xxzmXI+nNBt/oXkP8BrVtM7ZhXTdhwSd8c5HfrOOUIueKYFXYjcIcJgg==
 Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
  by MW4PR20MB4293.namprd20.prod.outlook.com (2603:10b6:303:184::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.33; Thu, 4 Jul
- 2024 05:47:22 +0000
+ 2024 05:47:28 +0000
 Received: from IA1PR20MB4953.namprd20.prod.outlook.com
  ([fe80::ab0b:c0d3:1f91:d149]) by IA1PR20MB4953.namprd20.prod.outlook.com
  ([fe80::ab0b:c0d3:1f91:d149%6]) with mapi id 15.20.7741.017; Thu, 4 Jul 2024
- 05:47:22 +0000
+ 05:47:28 +0000
 From: Inochi Amaoto <inochiama@outlook.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
@@ -72,21 +72,21 @@ Cc: linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH 1/7] dt-bindings: pinctrl: Add pinctrl for Sophgo CV1800 series SoC.
-Date: Thu,  4 Jul 2024 13:46:37 +0800
+Subject: [PATCH 2/7] pinctrl: sophgo: add support for CV1800B SoC
+Date: Thu,  4 Jul 2024 13:46:38 +0800
 Message-ID:
- <IA1PR20MB49530D9BC6C8011B730433C2BBDE2@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB4953BB3EE164E9D0DCE5525EBBDE2@IA1PR20MB4953.namprd20.prod.outlook.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <IA1PR20MB49530F0476B98DBB835B344FBBDE2@IA1PR20MB4953.namprd20.prod.outlook.com>
 References: <IA1PR20MB49530F0476B98DBB835B344FBBDE2@IA1PR20MB4953.namprd20.prod.outlook.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TMN: [i8kgN8U909w0+iM85t0oYzZdqFlnNM9vNZSj/SxNYCw=]
-X-ClientProxiedBy: TYWP286CA0030.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:262::20) To IA1PR20MB4953.namprd20.prod.outlook.com
+X-TMN: [AUd6glbqjuMO2ajXfd5S6d07wO1DKwf6sV19nULiR3g=]
+X-ClientProxiedBy: SI2PR04CA0005.apcprd04.prod.outlook.com
+ (2603:1096:4:197::16) To IA1PR20MB4953.namprd20.prod.outlook.com
  (2603:10b6:208:3af::19)
 X-Microsoft-Original-Message-ID:
- <20240704054647.1747392-1-inochiama@outlook.com>
+ <20240704054647.1747392-2-inochiama@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -96,40 +96,40 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|MW4PR20MB4293:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3acf4d76-b595-4512-3f94-08dc9becc652
+X-MS-Office365-Filtering-Correlation-Id: 0975fbc2-7a61-41ec-2eb7-08dc9becc99d
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8060799006|461199028|4302099013|440099028|3412199025|1602099012|1710799026;
+	BCL:0;ARA:14566002|8060799006|461199028|440099028|3412199025|1710799026;
 X-Microsoft-Antispam-Message-Info:
-	JTJogxsgue3RxyaM3b0GGOBKNMkrRE3jnFZTEGOx7TBh2unalIzn1FYMUDum/KF6FWqYShpU3R+riCTP1lNFckTvuEOpKkdJD/8hoBqQOgGk+ao2JPVDdVs/SgNfX8JTC6ynn9vCnGMXZU6bJBc6GcRP5UPpwx9C+mgHa4zMQLxnREHfyBMEm7UVDv0/JgtQNK8pb34uW/FSO9Qx6UZ13qLSkLZKDWaWMOJWp4l0iT9kmh4hr2JLvs/dO3k5pitQrTGgwgnrhmO9Aa2UL2nX1X6VDoLt6Zerl+ETk2/uO1HzrDrH4EWAfemwjRmtWaxUtxJXNaV2zex8YhWVO80Mb2CkwYvQqGrFJJcyLyVpSkAHZAarUsjHrlN3XqyrIrbOPQLN2WKIc52AT+yTPSbOz25Gq3TbYesNwUHQw1xxOlpDuBxbQGWXPXc8PdmFVpi9W0Abg5wOb1nnYt/YCJ9dGtoVKkR1eyer+ifln0X33SSbSja42HJvmm6d6CM5V0raj0UYxGsryYbhsMAaY1tCXJ16B/70g8n2eDCen0DxQqXgRZcROx0jP2MIiUFgZHvfxc35OdRized87xkdVOCPTHwbjUB6c/UDRF0GN6YLhlxxkViXzj7Lv+aKy2ts1XDjd6MjGDwKwK7wCviasx4n5nYOhqQmUD73pwb9eU5+T+BaUXT+OLQlRl9WYTXrIDcY5ulxAfaMmIcoSuhWcTVYWmvganuOhVb2DfkqHcFyJ1px7GQ/BCBfMwFLKBqZIyvRoSPYSuRU/X40r+7jX95ODQ==
+	aWpVtBwY0SneVnjPky3/sFfrlotn3lzAR1/mCRY2K11xhJzw7M6aRlgnxtiR3DEqweiXArGabKDJQj6jd1zutMw9zLzigLv9YMJnp7zctMIVvct/xiihkOomWoK4H4IX/5TVpkbh+2IVHLHha2l/43L5tjOmJSohSQV7AyiCr1yXXtSqBCy1piDV7d/SK8Kac6Z3Rm1Sba39BcvrkZi0xbbqF6mtv5I+O4UaZNa0x5ohRDeoCLd+iLttpChJ4u6Aq71dG52cp3/RKCBSpAz51FH54VM977z48dVbh0y67+69q0Un7BfhU8urxYVbT+DH7PotRMPC7754P0NuqaE/i7Wf6XaZ4+pxR/rlCb3NeidamK4Egh1FP9vJxC+HwEjQ6VSxEUkehqOM/82M1JOZpWaxsoHYFxtkkVxDKs6c2jPi2WY9gLCvJ84vajBKcpIymJRHq683AtJGYqkvjLCslphvu9B3KvOK+6VoB3mlqYRzZ0NnUS+htc4sA4zGcJSHz48KWzQ3YsQfIATG7Edz68bQnSg/6rwNzfHvkJX6kizboxBRq7oq7ABQd/O9YmXjYM71xLgm+GVt+VJIxaeMK9+N/1CDAO8ojU1KtAmUFCyUJ7UhmrHiSgtMAuBt47RgGaFpMFK3MEAye5EDtRWHAA==
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?r9nyZqueH1+MVp5yP7GIMZHgf5/LRBN+3iP4HaHsRFKWGV0tnxT2p6BYeq1I?=
- =?us-ascii?Q?cS0/gE8Fop+HZxPjrt6km7irZ40FVEXt6vha5y+lPZHn24rvIBDsCFfxwx/3?=
- =?us-ascii?Q?dcZyuAh7ylvg/13PvgsSTzvUfL45BQnLa+U/n7O46SyAI/3qvWI6JEVSWs19?=
- =?us-ascii?Q?TazEGF2m3u5uSOGAuvA4oOS9w9B3q+fP/yyhoVJEgJjQF+5qCVE9pqTAwkXY?=
- =?us-ascii?Q?q93mtvti3C7hbR30DmjjoDbPC2g/Ml5mbvf5NC6OvUIL8CG0RTaCCniFhL/5?=
- =?us-ascii?Q?1rTXgtz1SQZy2PCAouBaT6xdh5w4chrI8gv0MAuxZS1d+GDVliXOMVlOZxtM?=
- =?us-ascii?Q?+u1EReVr6ozipG/42j3RbwsTgxNOFDNleg2o9qQ3vaDQ97C5QD1d/U7ngqBX?=
- =?us-ascii?Q?ZQsD874dfHvxcxAmHztE5Ha6Fhs7rJ2/gsE7jV01+75A73AyY1dCfoQcY9vn?=
- =?us-ascii?Q?cZ41zoQZHSBmwTmjViUPUbJzZ3ZHrQctDfnNEuSQWv0B3yaXdtRVK5wenVJN?=
- =?us-ascii?Q?cBFCxYh5vvtAm3p1Mnm0UFAir2Mz9VEqq+nKDUqEZRRUuSKiyIXTMM6vFy9R?=
- =?us-ascii?Q?srrZaFUFUYz0snNhbHvyoDOUQM4DAAXENBLfig0cwEK2nC39OTDfgGJhLyzI?=
- =?us-ascii?Q?Fp8kriUhmF7r8pkPIMiBX68Pds2y/4pC70pGhEKfqMQADvopJ4rsLWYutwyI?=
- =?us-ascii?Q?DSQA4u/Po8Ti+vwX9n/oak/npc9Uk9c7mtvxSKHbcajuUjp9fwa7sJHt/qfy?=
- =?us-ascii?Q?laCLanjmGyqBZofU6nnW+9HO9+usoM2a6pSQPTnsDBQXgzCe+X8lrRtYcaAU?=
- =?us-ascii?Q?53IRey8nbrXHy885sIz5OH4JWYwBKdtPhEmbPQYgF7is41ZSBFmyUBbIKRPE?=
- =?us-ascii?Q?GpfZiYY0y5Bt8N4+Jd05ix210sioFRR3cTGNMVGwICP76fbiA+Vnsfkohy+A?=
- =?us-ascii?Q?WDtL/zCHw3J1kZjsC2UQSCTIXdw+bkIfluPoO+a38W41dIHhSBAZka5y4HYK?=
- =?us-ascii?Q?dR5M+0HsUrAAmKdNlqotHeHVSXQYRkVMrLd4KY6FUY49g59v11ZnMBaMj+cc?=
- =?us-ascii?Q?rH/W7Vi6OkzRrUBovkQA6abNWUBFDVD/PuCVkTnbf2otbvKSjBMxxN3eiWC0?=
- =?us-ascii?Q?rrt8Vx79y0Y3s1SHaMXWV195A0XvOagVO+ws1GiMkiH9eugMI/HlH1tuP5Nm?=
- =?us-ascii?Q?nMwt/GFTKyuf3cniX/Y0VDTjng1kUngvgknTpszHSrMwcVmCTjqNqiVvZKkN?=
- =?us-ascii?Q?2Tr6+9ZjOzoH6SpOfc8D?=
+	=?us-ascii?Q?ZV+4ya1LmCR01INFJV+x5xs9Nh6NDJfVyODlB6o7KoYLbetbGBsqL/u8k1vx?=
+ =?us-ascii?Q?18z+xfzKfmT+43AzhghCTJ+AVxwlp9yzjXzoex9s6JZ9lO9zutzL4F0QS3GL?=
+ =?us-ascii?Q?9bcAcUEyT87j2pf1thsGa2qgGzOd/w5oergWnoOaj7iYnLqCeKpU4NsG5FBm?=
+ =?us-ascii?Q?M3aWJqHREjSj1iKJIJj/MiXaTc0PBfrMBVQGYORit3WUx9nID12Bm8OSUTmw?=
+ =?us-ascii?Q?wgPDQw4YePIkR032AlgyPx5gvRaWJEf7fT8T2SaenvxAov5hzdAsOnYNlIRG?=
+ =?us-ascii?Q?owA7q8+hvt2/R5UTO1vRiz5RlxmPC/DdFOSzr+nAHUNhjycCamjnZ5rjX9eV?=
+ =?us-ascii?Q?Vy8yr8Fie08IisZYKnnfh83QSzf3TjNNv4pZ0qhXFfLzkz42GzvVE7DA5/os?=
+ =?us-ascii?Q?yHth4mHjiXUClapdTwwryd1zXMUlF90HLz/iiXqgcsaT/u35Nd21aH7GiKlU?=
+ =?us-ascii?Q?bYep9rtmYIyn0YKoJQXbChZKAJ1F1455ZF6iWrJGrSsCx2uJwBGlw+6/X/Jr?=
+ =?us-ascii?Q?0mg8ddZk4Og3thTw7TZlYyj0m9iV/C9yRuwXiW2EYqWq68bMABcS+odGu5mD?=
+ =?us-ascii?Q?/ceuvy8OgFq7nlnYqFH5QoAdh7vFn8G6IJMMLxNNLhiVfD7xOJ9Auz1IV4AN?=
+ =?us-ascii?Q?nJce7l6I7X1mKkXr5ubrC3Xs+y41W/3mZ8q7FEpkyHnFp5k711xSZYXOdQ0F?=
+ =?us-ascii?Q?yU/KV2vYl3n9KwFALdXZMkyeZzU2fC3IuVZdlPKRBf3Dxz6yCGYgRPXkxvfk?=
+ =?us-ascii?Q?5KXvvzx1XQA4YS+LIHYEHk7DfDwMbunPXXffwEBwrK4NaoR8v7zFH5+16MxM?=
+ =?us-ascii?Q?CoYQaJwkwd+bO8yJ0F/ge8xUpfAwXqm94Vu91l5c9NkNNIlhNVv6jDue9TV3?=
+ =?us-ascii?Q?cQPKDVyUQCF3PtgMOVc324TWJhUHMu2MO7mEp779Ybr7yItdZfox9CbVWRKf?=
+ =?us-ascii?Q?uQH2cd1B+WQmwfAQDV3g+O5oJrP6oFGjQ3TUm/dJBiAFusz/3dH5Qj7aAEIS?=
+ =?us-ascii?Q?aLdcBl9brwfVDh1C2EGwW5zI/k2nrREBDk65DGeJtDLkaYtgZiNCFwEUO4gO?=
+ =?us-ascii?Q?x4Wu6RRnRkpVvFq7EUj2teCAMdnfmngpCb7r76KNDxDTkt/0712O/ofcgqIV?=
+ =?us-ascii?Q?WVMHHDBXEc6En+pd7AfRyHd/MoM0YFM2K/xk5nDbrBSNTuOEiEqhBxgDZv2R?=
+ =?us-ascii?Q?gVMMaPe837BJ9zmmncLNe5MKcszxGJhuqYKqZ9axrOOJ94uGQjBGrCNiPnkg?=
+ =?us-ascii?Q?p7K/gU6ET0uuEjABu5i+?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3acf4d76-b595-4512-3f94-08dc9becc652
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0975fbc2-7a61-41ec-2eb7-08dc9becc99d
 X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2024 05:47:22.4756
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2024 05:47:28.1303
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -137,595 +137,1169 @@ X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR20MB4293
 
-Add pinctrl support for Sophgo CV1800 series SoC.
+Sophgo CV1800 series SoCs share common control logic but have
+different register mapping. For maintenance, split the driver
+and pin definition of the SoC.
+
+Add base driver for CV1800 series SoC and pin definition of
+CV1800B.
 
 Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
 ---
- .../pinctrl/sophgo,cv1800-pinctrl.yaml        | 120 +++++++++++++++++
- include/dt-bindings/pinctrl/pinctrl-cv1800b.h |  63 +++++++++
- include/dt-bindings/pinctrl/pinctrl-cv1812h.h | 127 ++++++++++++++++++
- include/dt-bindings/pinctrl/pinctrl-cv18xx.h  |  19 +++
- include/dt-bindings/pinctrl/pinctrl-sg2000.h  | 127 ++++++++++++++++++
- include/dt-bindings/pinctrl/pinctrl-sg2002.h  |  79 +++++++++++
- 6 files changed, 535 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml
- create mode 100644 include/dt-bindings/pinctrl/pinctrl-cv1800b.h
- create mode 100644 include/dt-bindings/pinctrl/pinctrl-cv1812h.h
- create mode 100644 include/dt-bindings/pinctrl/pinctrl-cv18xx.h
- create mode 100644 include/dt-bindings/pinctrl/pinctrl-sg2000.h
- create mode 100644 include/dt-bindings/pinctrl/pinctrl-sg2002.h
+ drivers/pinctrl/Kconfig                  |   1 +
+ drivers/pinctrl/Makefile                 |   1 +
+ drivers/pinctrl/sophgo/Kconfig           |  21 +
+ drivers/pinctrl/sophgo/Makefile          |   4 +
+ drivers/pinctrl/sophgo/pinctrl-cv1800b.c | 293 +++++++++++
+ drivers/pinctrl/sophgo/pinctrl-cv18xx.c  | 642 +++++++++++++++++++++++
+ drivers/pinctrl/sophgo/pinctrl-cv18xx.h  | 126 +++++
+ 7 files changed, 1088 insertions(+)
+ create mode 100644 drivers/pinctrl/sophgo/Kconfig
+ create mode 100644 drivers/pinctrl/sophgo/Makefile
+ create mode 100644 drivers/pinctrl/sophgo/pinctrl-cv1800b.c
+ create mode 100644 drivers/pinctrl/sophgo/pinctrl-cv18xx.c
+ create mode 100644 drivers/pinctrl/sophgo/pinctrl-cv18xx.h
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 7e4f93a3bc7a..9c5def3268b7 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -583,6 +583,7 @@ source "drivers/pinctrl/qcom/Kconfig"
+ source "drivers/pinctrl/realtek/Kconfig"
+ source "drivers/pinctrl/renesas/Kconfig"
+ source "drivers/pinctrl/samsung/Kconfig"
++source "drivers/pinctrl/sophgo/Kconfig"
+ source "drivers/pinctrl/spear/Kconfig"
+ source "drivers/pinctrl/sprd/Kconfig"
+ source "drivers/pinctrl/starfive/Kconfig"
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index cc809669405a..a4d45051a49f 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -73,6 +73,7 @@ obj-y				+= qcom/
+ obj-$(CONFIG_ARCH_REALTEK)      += realtek/
+ obj-$(CONFIG_PINCTRL_RENESAS)	+= renesas/
+ obj-$(CONFIG_PINCTRL_SAMSUNG)	+= samsung/
++obj-y				+= sophgo/
+ obj-$(CONFIG_PINCTRL_SPEAR)	+= spear/
+ obj-y				+= sprd/
+ obj-$(CONFIG_SOC_STARFIVE)	+= starfive/
+diff --git a/drivers/pinctrl/sophgo/Kconfig b/drivers/pinctrl/sophgo/Kconfig
 new file mode 100644
-index 000000000000..b7e4084b78d6
+index 000000000000..d91dcdf13e60
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml
-@@ -0,0 +1,120 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/sophgo,cv1800-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/pinctrl/sophgo/Kconfig
+@@ -0,0 +1,21 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Sophgo SoC PINCTRL drivers
++#
 +
-+title: Sophgo CV1800 Pin Controller
++config PINCTRL_SOPHGO_CV18XX
++	bool
++	select GENERIC_PINCTRL_GROUPS
++	select GENERIC_PINMUX_FUNCTIONS
++	select GENERIC_PINCONF
 +
-+maintainers:
-+  - Inochi Amaoto <inochiama@outlook.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sophgo,cv1800b-pinctrl
-+      - sophgo,cv1812h-pinctrl
-+      - sophgo,sg2000-pinctrl
-+      - sophgo,sg2002-pinctrl
-+
-+  reg:
-+    items:
-+      - description: pinctrl for system domain
-+      - description: pinctrl for rtc domain
-+
-+  reg-names:
-+    items:
-+      - const: sys
-+      - const: rtc
-+
-+  resets:
-+    maxItems: 1
-+
-+patternProperties:
-+  '-cfg$':
-+    type: object
-+    patternProperties:
-+      '-pins$':
-+        type: object
-+        description: |
-+          A pinctrl node should contain at least one subnode representing the
-+          pinctrl groups available on the machine. Each subnode will list the
-+          pins it needs, and how they should be configured, with regard to
-+          muxer configuration, bias, input enable/disable, input schmitt
-+          trigger enable/disable, slew-rate and drive strength.
-+        $ref: /schemas/pinctrl/pincfg-node.yaml
-+
-+        properties:
-+          pinmux:
-+            description: |
-+              The list of GPIOs and their mux settings that properties in the
-+              node apply to. This should be set using the GPIOMUX or GPIOMUX2
-+              macro.
-+            $ref: /schemas/pinctrl/pinmux-node.yaml#/properties/pinmux
-+
-+          bias-pull-up:
-+            type: boolean
-+
-+          bias-pull-down:
-+            type: boolean
-+
-+          drive-strength:
-+            $ref: /schemas/types.yaml#/definitions/uint32
-+            minimum: 0
-+            maximum: 7
-+
-+          input-schmitt:
-+            $ref: /schemas/types.yaml#/definitions/uint32
-+            minimum: 0
-+            maximum: 7
-+
-+          slew-rate:
-+            enum: [ 0, 1 ]
-+
-+          sophgo,bus-holder:
-+            description: enable bus holder
-+            type: boolean
-+
-+        additionalProperties: false
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/pinctrl/pinctrl-cv1800b.h>
-+
-+    soc {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        pinctrl@3001000 {
-+            compatible = "sophgo,cv1800b-pinctrl";
-+            reg = <0x03001000 0x1000>,
-+                  <0x05027000 0x1000>;
-+            reg-names = "sys", "rtc";
-+
-+            uart0_cfg: uart0-cfg {
-+                uart0-pins {
-+                    pinmux = <PINMUX(PIN_UART0_TX, 0)>,
-+                             <PINMUX(PIN_UART0_RX, 0)>;
-+                    bias-pull-up;
-+                    drive-strength = <2>;
-+                    slew-rate = <0>;
-+                };
-+            };
-+        };
-+
-+        uart0 {
-+            pinctrl-0 = <&uart0_cfg>;
-+            pinctrl-names = "default";
-+        };
-+    };
-+
-+...
-diff --git a/include/dt-bindings/pinctrl/pinctrl-cv1800b.h b/include/dt-bindings/pinctrl/pinctrl-cv1800b.h
++config PINCTRL_SOPHGO_CV1800B
++	tristate "Sophgo CV1800B SoC Pinctrl driver"
++	depends on ARCH_SOPHGO || COMPILE_TEST
++	depends on OF
++	select PINCTRL_SOPHGO_CV18XX
++	help
++	  Say Y to select the pinctrl driver for CV1800B SoC.
++	  This pin controller allows selecting the mux function for
++	  each pin. This driver can also be built as a module called
++	  pinctrl-cv1800b.
+diff --git a/drivers/pinctrl/sophgo/Makefile b/drivers/pinctrl/sophgo/Makefile
 new file mode 100644
-index 000000000000..0593fc33d470
+index 000000000000..1add0d794122
 --- /dev/null
-+++ b/include/dt-bindings/pinctrl/pinctrl-cv1800b.h
-@@ -0,0 +1,63 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
++++ b/drivers/pinctrl/sophgo/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
++
++obj-$(CONFIG_PINCTRL_SOPHGO_CV18XX)	+= pinctrl-cv18xx.o
++obj-$(CONFIG_PINCTRL_SOPHGO_CV1800B)	+= pinctrl-cv1800b.o
+diff --git a/drivers/pinctrl/sophgo/pinctrl-cv1800b.c b/drivers/pinctrl/sophgo/pinctrl-cv1800b.c
+new file mode 100644
+index 000000000000..c8ebcce773d3
+--- /dev/null
++++ b/drivers/pinctrl/sophgo/pinctrl-cv1800b.c
+@@ -0,0 +1,293 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
++ * Sophgo CV1800B SoC pinctrl driver.
++ *
 + * Copyright (C) 2024 Inochi Amaoto <inochiama@outlook.com>
 + *
 + * This file is generated from vendor pinout definition.
 + */
 +
-+#ifndef _DT_BINDINGS_PINCTRL_CV1800B_H
-+#define _DT_BINDINGS_PINCTRL_CV1800B_H
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
 +
-+#include <dt-bindings/pinctrl/pinctrl-cv18xx.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
 +
-+#define PIN_AUD_AOUTR			1
-+#define PIN_SD0_CLK			3
-+#define PIN_SD0_CMD			4
-+#define PIN_SD0_D0			5
-+#define PIN_SD0_D1			7
-+#define PIN_SD0_D2			8
-+#define PIN_SD0_D3			9
-+#define PIN_SD0_CD			11
-+#define PIN_SD0_PWR_EN			12
-+#define PIN_SPK_EN			14
-+#define PIN_UART0_TX			15
-+#define PIN_UART0_RX			16
-+#define PIN_SPINOR_HOLD_X		17
-+#define PIN_SPINOR_SCK			18
-+#define PIN_SPINOR_MOSI			19
-+#define PIN_SPINOR_WP_X			20
-+#define PIN_SPINOR_MISO			21
-+#define PIN_SPINOR_CS_X			22
-+#define PIN_IIC0_SCL			23
-+#define PIN_IIC0_SDA			24
-+#define PIN_AUX0			25
-+#define PIN_PWR_VBAT_DET		30
-+#define PIN_PWR_SEQ2			31
-+#define PIN_XTAL_XIN			33
-+#define PIN_SD1_GPIO0			35
-+#define PIN_SD1_GPIO1			36
-+#define PIN_SD1_D3			38
-+#define PIN_SD1_D2			39
-+#define PIN_SD1_D1			40
-+#define PIN_SD1_D0			41
-+#define PIN_SD1_CMD			42
-+#define PIN_SD1_CLK			43
-+#define PIN_ADC1			44
-+#define PIN_USB_VBUS_DET		45
-+#define PIN_ETH_TXP			47
-+#define PIN_ETH_TXM			48
-+#define PIN_ETH_RXP			49
-+#define PIN_ETH_RXM			50
-+#define PIN_MIPIRX4N			56
-+#define PIN_MIPIRX4P			57
-+#define PIN_MIPIRX3N			58
-+#define PIN_MIPIRX3P			59
-+#define PIN_MIPIRX2N			60
-+#define PIN_MIPIRX2P			61
-+#define PIN_MIPIRX1N			62
-+#define PIN_MIPIRX1P			63
-+#define PIN_MIPIRX0N			64
-+#define PIN_MIPIRX0P			65
-+#define PIN_AUD_AINL_MIC		67
++#include <dt-bindings/pinctrl/pinctrl-cv1800b.h>
 +
-+#endif /* _DT_BINDINGS_PINCTRL_CV1800B_H */
-diff --git a/include/dt-bindings/pinctrl/pinctrl-cv1812h.h b/include/dt-bindings/pinctrl/pinctrl-cv1812h.h
++#include "pinctrl-cv18xx.h"
++
++static const struct pinctrl_pin_desc cv1800b_pins[] = {
++	PINCTRL_PIN(PIN_AUD_AOUTR,	"AUD_AOUTR"),
++	PINCTRL_PIN(PIN_SD0_CLK,	"SD0_CLK"),
++	PINCTRL_PIN(PIN_SD0_CMD,	"SD0_CMD"),
++	PINCTRL_PIN(PIN_SD0_D0,		"SD0_D0"),
++	PINCTRL_PIN(PIN_SD0_D1,		"SD0_D1"),
++	PINCTRL_PIN(PIN_SD0_D2,		"SD0_D2"),
++	PINCTRL_PIN(PIN_SD0_D3,		"SD0_D3"),
++	PINCTRL_PIN(PIN_SD0_CD,		"SD0_CD"),
++	PINCTRL_PIN(PIN_SD0_PWR_EN,	"SD0_PWR_EN"),
++	PINCTRL_PIN(PIN_SPK_EN,		"SPK_EN"),
++	PINCTRL_PIN(PIN_UART0_TX,	"UART0_TX"),
++	PINCTRL_PIN(PIN_UART0_RX,	"UART0_RX"),
++	PINCTRL_PIN(PIN_SPINOR_HOLD_X,	"SPINOR_HOLD_X"),
++	PINCTRL_PIN(PIN_SPINOR_SCK,	"SPINOR_SCK"),
++	PINCTRL_PIN(PIN_SPINOR_MOSI,	"SPINOR_MOSI"),
++	PINCTRL_PIN(PIN_SPINOR_WP_X,	"SPINOR_WP_X"),
++	PINCTRL_PIN(PIN_SPINOR_MISO,	"SPINOR_MISO"),
++	PINCTRL_PIN(PIN_SPINOR_CS_X,	"SPINOR_CS_X"),
++	PINCTRL_PIN(PIN_IIC0_SCL,	"IIC0_SCL"),
++	PINCTRL_PIN(PIN_IIC0_SDA,	"IIC0_SDA"),
++	PINCTRL_PIN(PIN_AUX0,		"AUX0"),
++	PINCTRL_PIN(PIN_PWR_VBAT_DET,	"PWR_VBAT_DET"),
++	PINCTRL_PIN(PIN_PWR_SEQ2,	"PWR_SEQ2"),
++	PINCTRL_PIN(PIN_XTAL_XIN,	"XTAL_XIN"),
++	PINCTRL_PIN(PIN_SD1_GPIO0,	"SD1_GPIO0"),
++	PINCTRL_PIN(PIN_SD1_GPIO1,	"SD1_GPIO1"),
++	PINCTRL_PIN(PIN_SD1_D3,		"SD1_D3"),
++	PINCTRL_PIN(PIN_SD1_D2,		"SD1_D2"),
++	PINCTRL_PIN(PIN_SD1_D1,		"SD1_D1"),
++	PINCTRL_PIN(PIN_SD1_D0,		"SD1_D0"),
++	PINCTRL_PIN(PIN_SD1_CMD,	"SD1_CMD"),
++	PINCTRL_PIN(PIN_SD1_CLK,	"SD1_CLK"),
++	PINCTRL_PIN(PIN_ADC1,		"ADC1"),
++	PINCTRL_PIN(PIN_USB_VBUS_DET,	"USB_VBUS_DET"),
++	PINCTRL_PIN(PIN_ETH_TXP,	"ETH_TXP"),
++	PINCTRL_PIN(PIN_ETH_TXM,	"ETH_TXM"),
++	PINCTRL_PIN(PIN_ETH_RXP,	"ETH_RXP"),
++	PINCTRL_PIN(PIN_ETH_RXM,	"ETH_RXM"),
++	PINCTRL_PIN(PIN_MIPIRX4N,	"MIPIRX4N"),
++	PINCTRL_PIN(PIN_MIPIRX4P,	"MIPIRX4P"),
++	PINCTRL_PIN(PIN_MIPIRX3N,	"MIPIRX3N"),
++	PINCTRL_PIN(PIN_MIPIRX3P,	"MIPIRX3P"),
++	PINCTRL_PIN(PIN_MIPIRX2N,	"MIPIRX2N"),
++	PINCTRL_PIN(PIN_MIPIRX2P,	"MIPIRX2P"),
++	PINCTRL_PIN(PIN_MIPIRX1N,	"MIPIRX1N"),
++	PINCTRL_PIN(PIN_MIPIRX1P,	"MIPIRX1P"),
++	PINCTRL_PIN(PIN_MIPIRX0N,	"MIPIRX0N"),
++	PINCTRL_PIN(PIN_MIPIRX0P,	"MIPIRX0P"),
++	PINCTRL_PIN(PIN_AUD_AINL_MIC,	"AUD_AINL_MIC"),
++};
++
++static const struct cv1800_pin cv1800b_pin_data[ARRAY_SIZE(cv1800b_pins)] = {
++	CV1800_FUNC_PIN(PIN_AUD_AOUTR, "VDD18A_AUD",
++			IO_TYPE_AUDIO,
++			CV1800_PINCONF_AREA_SYS, 0x12c, 6),
++	CV1800_GENERAL_PIN(PIN_SD0_CLK, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x000, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xa00),
++	CV1800_GENERAL_PIN(PIN_SD0_CMD, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x004, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xa04),
++	CV1800_GENERAL_PIN(PIN_SD0_D0, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x008, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xa08),
++	CV1800_GENERAL_PIN(PIN_SD0_D1, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x00c, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xa0c),
++	CV1800_GENERAL_PIN(PIN_SD0_D2, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x010, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xa10),
++	CV1800_GENERAL_PIN(PIN_SD0_D3, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x014, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xa14),
++	CV1800_GENERAL_PIN(PIN_SD0_CD, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x018, 3,
++			   CV1800_PINCONF_AREA_SYS, 0x900),
++	CV1800_GENERAL_PIN(PIN_SD0_PWR_EN, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x01c, 3,
++			   CV1800_PINCONF_AREA_SYS, 0x904),
++	CV1800_GENERAL_PIN(PIN_SPK_EN, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x020, 3,
++			   CV1800_PINCONF_AREA_SYS, 0x908),
++	CV1800_GENERAL_PIN(PIN_UART0_TX, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x024, 7,
++			   CV1800_PINCONF_AREA_SYS, 0x90c),
++	CV1800_GENERAL_PIN(PIN_UART0_RX, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x028, 7,
++			   CV1800_PINCONF_AREA_SYS, 0x910),
++	CV1800_GENERAL_PIN(PIN_SPINOR_HOLD_X, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x02c, 3,
++			   CV1800_PINCONF_AREA_SYS, 0x914),
++	CV1800_GENERAL_PIN(PIN_SPINOR_SCK, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x030, 3,
++			   CV1800_PINCONF_AREA_SYS, 0x918),
++	CV1800_GENERAL_PIN(PIN_SPINOR_MOSI, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x034, 3,
++			   CV1800_PINCONF_AREA_SYS, 0x91c),
++	CV1800_GENERAL_PIN(PIN_SPINOR_WP_X, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x038, 3,
++			   CV1800_PINCONF_AREA_SYS, 0x920),
++	CV1800_GENERAL_PIN(PIN_SPINOR_MISO, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x03c, 3,
++			   CV1800_PINCONF_AREA_SYS, 0x924),
++	CV1800_GENERAL_PIN(PIN_SPINOR_CS_X, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x040, 3,
++			   CV1800_PINCONF_AREA_SYS, 0x928),
++	CV1800_GENERAL_PIN(PIN_IIC0_SCL, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x04c, 7,
++			   CV1800_PINCONF_AREA_SYS, 0x934),
++	CV1800_GENERAL_PIN(PIN_IIC0_SDA, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x050, 7,
++			   CV1800_PINCONF_AREA_SYS, 0x938),
++	CV1800_GENERAL_PIN(PIN_AUX0, "VDDIO_SD0_SPI",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x054, 7,
++			   CV1800_PINCONF_AREA_SYS, 0x93c),
++	CV1800_GENERAL_PIN(PIN_PWR_VBAT_DET, "VDDIO_RTC",
++			   IO_TYPE_1V8_ONLY,
++			   CV1800_PINCONF_AREA_SYS, 0x05c, 0,
++			   CV1800_PINCONF_AREA_RTC, 0x004),
++	CV1800_GENERAL_PIN(PIN_PWR_SEQ2, "VDDIO_RTC",
++			   IO_TYPE_1V8_ONLY,
++			   CV1800_PINCONF_AREA_SYS, 0x068, 3,
++			   CV1800_PINCONF_AREA_RTC, 0x010),
++	CV1800_GENERAL_PIN(PIN_XTAL_XIN, "VDDIO_RTC",
++			   IO_TYPE_1V8_ONLY,
++			   CV1800_PINCONF_AREA_SYS, 0x074, 0,
++			   CV1800_PINCONF_AREA_RTC, 0x020),
++	CV1800_GENERAL_PIN(PIN_SD1_GPIO0, "VDD33A_ETH_USB_SD1",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x088, 7,
++			   CV1800_PINCONF_AREA_RTC, 0x034),
++	CV1800_GENERAL_PIN(PIN_SD1_GPIO1, "VDD33A_ETH_USB_SD1",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x084, 7,
++			   CV1800_PINCONF_AREA_RTC, 0x030),
++	CV1800_GENERAL_PIN(PIN_SD1_D3, "VDD33A_ETH_USB_SD1",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x08c, 7,
++			   CV1800_PINCONF_AREA_RTC, 0x038),
++	CV1800_GENERAL_PIN(PIN_SD1_D2, "VDD33A_ETH_USB_SD1",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x090, 7,
++			   CV1800_PINCONF_AREA_RTC, 0x03c),
++	CV1800_GENERAL_PIN(PIN_SD1_D1, "VDD33A_ETH_USB_SD1",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x094, 7,
++			   CV1800_PINCONF_AREA_RTC, 0x040),
++	CV1800_GENERAL_PIN(PIN_SD1_D0, "VDD33A_ETH_USB_SD1",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x098, 7,
++			   CV1800_PINCONF_AREA_RTC, 0x044),
++	CV1800_GENERAL_PIN(PIN_SD1_CMD, "VDD33A_ETH_USB_SD1",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x09c, 7,
++			   CV1800_PINCONF_AREA_RTC, 0x048),
++	CV1800_GENERAL_PIN(PIN_SD1_CLK, "VDD33A_ETH_USB_SD1",
++			   IO_TYPE_1V8_OR_3V3,
++			   CV1800_PINCONF_AREA_SYS, 0x0a0, 7,
++			   CV1800_PINCONF_AREA_RTC, 0x04c),
++	CV1800_GENERAL_PIN(PIN_ADC1, "VDD18A_USB_PLL_ETH_CSI",
++			   IO_TYPE_1V8_ONLY,
++			   CV1800_PINCONF_AREA_SYS, 0x0a8, 6,
++			   CV1800_PINCONF_AREA_SYS, 0x804),
++	CV1800_GENERAL_PIN(PIN_USB_VBUS_DET, "VDD18A_USB_PLL_ETH_CSI",
++			   IO_TYPE_1V8_ONLY,
++			   CV1800_PINCONF_AREA_SYS, 0x0ac, 6,
++			   CV1800_PINCONF_AREA_SYS, 0x808),
++	CV1800_FUNC_PIN(PIN_ETH_TXP, "VDD18A_USB_PLL_ETH_CSI",
++			IO_TYPE_ETH,
++			CV1800_PINCONF_AREA_SYS, 0x0c0, 7),
++	CV1800_FUNC_PIN(PIN_ETH_TXM, "VDD18A_USB_PLL_ETH_CSI",
++			IO_TYPE_ETH,
++			CV1800_PINCONF_AREA_SYS, 0x0c4, 7),
++	CV1800_FUNC_PIN(PIN_ETH_RXP, "VDD18A_USB_PLL_ETH_CSI",
++			IO_TYPE_ETH,
++			CV1800_PINCONF_AREA_SYS, 0x0c8, 7),
++	CV1800_FUNC_PIN(PIN_ETH_RXM, "VDD18A_USB_PLL_ETH_CSI",
++			IO_TYPE_ETH,
++			CV1800_PINCONF_AREA_SYS, 0x0cc, 7),
++	CV1800_GENERATE_PIN_MUX2(PIN_MIPIRX4N, "VDD18A_USB_PLL_ETH_CSI",
++				 IO_TYPE_1V8_ONLY,
++				 CV1800_PINCONF_AREA_SYS, 0x0d4, 7,
++				 CV1800_PINCONF_AREA_SYS, 0x0bc, 7,
++				 CV1800_PINCONF_AREA_SYS, 0xc04),
++	CV1800_GENERATE_PIN_MUX2(PIN_MIPIRX4P, "VDD18A_USB_PLL_ETH_CSI",
++				 IO_TYPE_1V8_ONLY,
++				 CV1800_PINCONF_AREA_SYS, 0x0d8, 7,
++				 CV1800_PINCONF_AREA_SYS, 0x0b8, 7,
++				 CV1800_PINCONF_AREA_SYS, 0xc08),
++	CV1800_GENERATE_PIN_MUX2(PIN_MIPIRX3N, "VDD18A_USB_PLL_ETH_CSI",
++				 IO_TYPE_1V8_ONLY,
++				 CV1800_PINCONF_AREA_SYS, 0x0dc, 7,
++				 CV1800_PINCONF_AREA_SYS, 0x0b0, 7,
++				 CV1800_PINCONF_AREA_SYS, 0xc0c),
++	CV1800_GENERATE_PIN_MUX2(PIN_MIPIRX3P, "VDD18A_USB_PLL_ETH_CSI",
++				 IO_TYPE_1V8_ONLY,
++				 CV1800_PINCONF_AREA_SYS, 0x0e0, 7,
++				 CV1800_PINCONF_AREA_SYS, 0x0b4, 7,
++				 CV1800_PINCONF_AREA_SYS, 0xc10),
++	CV1800_GENERAL_PIN(PIN_MIPIRX2N, "VDD18A_USB_PLL_ETH_CSI",
++			   IO_TYPE_1V8_ONLY,
++			   CV1800_PINCONF_AREA_SYS, 0x0e4, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xc14),
++	CV1800_GENERAL_PIN(PIN_MIPIRX2P, "VDD18A_USB_PLL_ETH_CSI",
++			   IO_TYPE_1V8_ONLY,
++			   CV1800_PINCONF_AREA_SYS, 0x0e8, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xc18),
++	CV1800_GENERAL_PIN(PIN_MIPIRX1N, "VDD18A_USB_PLL_ETH_CSI",
++			   IO_TYPE_1V8_ONLY,
++			   CV1800_PINCONF_AREA_SYS, 0x0ec, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xc1c),
++	CV1800_GENERAL_PIN(PIN_MIPIRX1P, "VDD18A_USB_PLL_ETH_CSI",
++			   IO_TYPE_1V8_ONLY,
++			   CV1800_PINCONF_AREA_SYS, 0x0f0, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xc20),
++	CV1800_GENERAL_PIN(PIN_MIPIRX0N, "VDD18A_USB_PLL_ETH_CSI",
++			   IO_TYPE_1V8_ONLY,
++			   CV1800_PINCONF_AREA_SYS, 0x0f4, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xc24),
++	CV1800_GENERAL_PIN(PIN_MIPIRX0P, "VDD18A_USB_PLL_ETH_CSI",
++			   IO_TYPE_1V8_ONLY,
++			   CV1800_PINCONF_AREA_SYS, 0x0f8, 7,
++			   CV1800_PINCONF_AREA_SYS, 0xc28),
++	CV1800_FUNC_PIN(PIN_AUD_AINL_MIC, "VDD18A_AUD",
++			IO_TYPE_AUDIO,
++			CV1800_PINCONF_AREA_SYS, 0x120, 5),
++};
++
++static const struct cv1800_pinctrl_data cv1800b_pindata = {
++	.pins = cv1800b_pins,
++	.pindata = cv1800b_pin_data,
++	.npins = ARRAY_SIZE(cv1800b_pins),
++};
++
++static const struct of_device_id cv1800b_pinctrl_ids[] = {
++	{ .compatible = "sophgo,cv1800b-pinctrl", .data = &cv1800b_pindata },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, cv1800b_pinctrl_ids);
++
++static struct platform_driver cv1800b_pinctrl_driver = {
++	.probe	= cv1800_pinctrl_probe,
++	.driver	= {
++		.name			= "cv1800b-pinctrl",
++		.suppress_bind_attrs	= true,
++		.of_match_table		= cv1800b_pinctrl_ids,
++	},
++};
++module_platform_driver(cv1800b_pinctrl_driver);
++
++MODULE_DESCRIPTION("Pinctrl driver for the CV1800B series SoC");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/pinctrl/sophgo/pinctrl-cv18xx.c b/drivers/pinctrl/sophgo/pinctrl-cv18xx.c
 new file mode 100644
-index 000000000000..2908de347919
+index 000000000000..49e1c7760646
 --- /dev/null
-+++ b/include/dt-bindings/pinctrl/pinctrl-cv1812h.h
-@@ -0,0 +1,127 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
++++ b/drivers/pinctrl/sophgo/pinctrl-cv18xx.c
+@@ -0,0 +1,642 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
++ * Sophgo CV18XX SoCs pinctrl driver.
++ *
 + * Copyright (C) 2024 Inochi Amaoto <inochiama@outlook.com>
 + *
-+ * This file is generated from vendor pinout definition.
 + */
 +
-+#ifndef _DT_BINDINGS_PINCTRL_CV1812H_H
-+#define _DT_BINDINGS_PINCTRL_CV1812H_H
++#include <linux/bitfield.h>
++#include <linux/export.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/bsearch.h>
++#include <linux/seq_file.h>
++#include <linux/spinlock.h>
++
++#include <linux/pinctrl/consumer.h>
++#include <linux/pinctrl/machine.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
 +
 +#include <dt-bindings/pinctrl/pinctrl-cv18xx.h>
 +
-+#define PINPOS(row, col)			\
-+	((((row) - 'A' + 1) << 8) + ((col) - 1))
++#include "../core.h"
++#include "../pinctrl-utils.h"
++#include "../pinconf.h"
++#include "../pinmux.h"
++#include "pinctrl-cv18xx.h"
 +
-+#define PIN_MIPI_TXM4			PINPOS('A', 2)
-+#define PIN_MIPIRX0N			PINPOS('A', 4)
-+#define PIN_MIPIRX3P			PINPOS('A', 6)
-+#define PIN_MIPIRX4P			PINPOS('A', 7)
-+#define PIN_VIVO_D2			PINPOS('A', 9)
-+#define PIN_VIVO_D3			PINPOS('A', 10)
-+#define PIN_VIVO_D10			PINPOS('A', 12)
-+#define PIN_USB_VBUS_DET		PINPOS('A', 13)
-+#define PIN_MIPI_TXP3			PINPOS('B', 1)
-+#define PIN_MIPI_TXM3			PINPOS('B', 2)
-+#define PIN_MIPI_TXP4			PINPOS('B', 3)
-+#define PIN_MIPIRX0P			PINPOS('B', 4)
-+#define PIN_MIPIRX1N			PINPOS('B', 5)
-+#define PIN_MIPIRX2N			PINPOS('B', 6)
-+#define PIN_MIPIRX4N			PINPOS('B', 7)
-+#define PIN_MIPIRX5N			PINPOS('B', 8)
-+#define PIN_VIVO_D1			PINPOS('B', 9)
-+#define PIN_VIVO_D5			PINPOS('B', 10)
-+#define PIN_VIVO_D7			PINPOS('B', 11)
-+#define PIN_VIVO_D9			PINPOS('B', 12)
-+#define PIN_USB_ID			PINPOS('B', 13)
-+#define PIN_ETH_RXM			PINPOS('B', 15)
-+#define PIN_MIPI_TXP2			PINPOS('C', 1)
-+#define PIN_MIPI_TXM2			PINPOS('C', 2)
-+#define PIN_CAM_PD0			PINPOS('C', 3)
-+#define PIN_CAM_MCLK0			PINPOS('C', 4)
-+#define PIN_MIPIRX1P			PINPOS('C', 5)
-+#define PIN_MIPIRX2P			PINPOS('C', 6)
-+#define PIN_MIPIRX3N			PINPOS('C', 7)
-+#define PIN_MIPIRX5P			PINPOS('C', 8)
-+#define PIN_VIVO_CLK			PINPOS('C', 9)
-+#define PIN_VIVO_D6			PINPOS('C', 10)
-+#define PIN_VIVO_D8			PINPOS('C', 11)
-+#define PIN_USB_VBUS_EN			PINPOS('C', 12)
-+#define PIN_ETH_RXP			PINPOS('C', 14)
-+#define PIN_GPIO_RTX			PINPOS('C', 15)
-+#define PIN_MIPI_TXP1			PINPOS('D', 1)
-+#define PIN_MIPI_TXM1			PINPOS('D', 2)
-+#define PIN_CAM_MCLK1			PINPOS('D', 3)
-+#define PIN_IIC3_SCL			PINPOS('D', 4)
-+#define PIN_VIVO_D4			PINPOS('D', 10)
-+#define PIN_ETH_TXM			PINPOS('D', 14)
-+#define PIN_ETH_TXP			PINPOS('D', 15)
-+#define PIN_MIPI_TXP0			PINPOS('E', 1)
-+#define PIN_MIPI_TXM0			PINPOS('E', 2)
-+#define PIN_CAM_PD1			PINPOS('E', 4)
-+#define PIN_CAM_RST0			PINPOS('E', 5)
-+#define PIN_VIVO_D0			PINPOS('E', 10)
-+#define PIN_ADC1			PINPOS('E', 13)
-+#define PIN_ADC2			PINPOS('E', 14)
-+#define PIN_ADC3			PINPOS('E', 15)
-+#define PIN_AUD_AOUTL			PINPOS('F', 2)
-+#define PIN_IIC3_SDA			PINPOS('F', 4)
-+#define PIN_SD1_D2			PINPOS('F', 14)
-+#define PIN_AUD_AOUTR			PINPOS('G', 2)
-+#define PIN_SD1_D3			PINPOS('G', 13)
-+#define PIN_SD1_CLK			PINPOS('G', 14)
-+#define PIN_SD1_CMD			PINPOS('G', 15)
-+#define PIN_AUD_AINL_MIC		PINPOS('H', 1)
-+#define PIN_RSTN			PINPOS('H', 12)
-+#define PIN_PWM0_BUCK			PINPOS('H', 13)
-+#define PIN_SD1_D1			PINPOS('H', 14)
-+#define PIN_SD1_D0			PINPOS('H', 15)
-+#define PIN_AUD_AINR_MIC		PINPOS('J', 1)
-+#define PIN_IIC2_SCL			PINPOS('J', 13)
-+#define PIN_IIC2_SDA			PINPOS('J', 14)
-+#define PIN_SD0_CD			PINPOS('K', 2)
-+#define PIN_SD0_D1			PINPOS('K', 3)
-+#define PIN_UART2_RX			PINPOS('K', 13)
-+#define PIN_UART2_CTS			PINPOS('K', 14)
-+#define PIN_UART2_TX			PINPOS('K', 15)
-+#define PIN_SD0_CLK			PINPOS('L', 1)
-+#define PIN_SD0_D0			PINPOS('L', 2)
-+#define PIN_SD0_CMD			PINPOS('L', 3)
-+#define PIN_CLK32K			PINPOS('L', 14)
-+#define PIN_UART2_RTS			PINPOS('L', 15)
-+#define PIN_SD0_D3			PINPOS('M', 1)
-+#define PIN_SD0_D2			PINPOS('M', 2)
-+#define PIN_UART0_RX			PINPOS('M', 4)
-+#define PIN_UART0_TX			PINPOS('M', 5)
-+#define PIN_JTAG_CPU_TRST		PINPOS('M', 6)
-+#define PIN_PWR_ON			PINPOS('M', 11)
-+#define PIN_PWR_GPIO2			PINPOS('M', 12)
-+#define PIN_PWR_GPIO0			PINPOS('M', 13)
-+#define PIN_CLK25M			PINPOS('M', 14)
-+#define PIN_SD0_PWR_EN			PINPOS('N', 1)
-+#define PIN_SPK_EN			PINPOS('N', 3)
-+#define PIN_JTAG_CPU_TCK		PINPOS('N', 4)
-+#define PIN_JTAG_CPU_TMS		PINPOS('N', 6)
-+#define PIN_PWR_WAKEUP1			PINPOS('N', 11)
-+#define PIN_PWR_WAKEUP0			PINPOS('N', 12)
-+#define PIN_PWR_GPIO1			PINPOS('N', 13)
-+#define PIN_EMMC_DAT3			PINPOS('P', 1)
-+#define PIN_EMMC_DAT0			PINPOS('P', 2)
-+#define PIN_EMMC_DAT2			PINPOS('P', 3)
-+#define PIN_EMMC_RSTN			PINPOS('P', 4)
-+#define PIN_AUX0			PINPOS('P', 5)
-+#define PIN_IIC0_SDA			PINPOS('P', 6)
-+#define PIN_PWR_SEQ3			PINPOS('P', 10)
-+#define PIN_PWR_VBAT_DET		PINPOS('P', 11)
-+#define PIN_PWR_SEQ1			PINPOS('P', 12)
-+#define PIN_PWR_BUTTON1			PINPOS('P', 13)
-+#define PIN_EMMC_DAT1			PINPOS('R', 2)
-+#define PIN_EMMC_CMD			PINPOS('R', 3)
-+#define PIN_EMMC_CLK			PINPOS('R', 4)
-+#define PIN_IIC0_SCL			PINPOS('R', 6)
-+#define PIN_GPIO_ZQ			PINPOS('R', 10)
-+#define PIN_PWR_RSTN			PINPOS('R', 11)
-+#define PIN_PWR_SEQ2			PINPOS('R', 12)
-+#define PIN_XTAL_XIN			PINPOS('R', 13)
++struct cv1800_pinctrl {
++	struct device				*dev;
++	struct pinctrl_dev			*pctl_dev;
++	const struct cv1800_pinctrl_data	*data;
++	struct pinctrl_desc			pdesc;
 +
-+#endif /* _DT_BINDINGS_PINCTRL_CV1812H_H */
-diff --git a/include/dt-bindings/pinctrl/pinctrl-cv18xx.h b/include/dt-bindings/pinctrl/pinctrl-cv18xx.h
++	struct mutex				mutex;
++	raw_spinlock_t				lock;
++
++	void __iomem				*regs[2];
++};
++
++struct cv1800_pin_mux_config {
++	struct cv1800_pin	*pin;
++	u32			config;
++};
++
++static unsigned int cv1800_dt_get_pin(u32 value)
++{
++	return value & GENMASK(15, 0);
++}
++
++static unsigned int cv1800_dt_get_pin_mux(u32 value)
++{
++	return (value >> 16) & GENMASK(7, 0);
++}
++
++static unsigned int cv1800_dt_get_pin_mux2(u32 value)
++{
++	return (value >> 24) & GENMASK(7, 0);
++}
++
++#define cv1800_pinctrl_get_component_addr(pctrl, _comp)		\
++	((pctrl)->regs[(_comp)->area] + (_comp)->offset)
++
++static int cv1800_cmp_pin(const void *key, const void *pivot)
++{
++	const struct cv1800_pin *pin = pivot;
++	int pin_id = (long)key;
++	int pivid = pin->pin;
++
++	return pin_id - pivid;
++}
++
++static struct cv1800_pin *cv1800_get_pin(struct cv1800_pinctrl *pctrl,
++					 unsigned long pin)
++{
++	return bsearch((void *)pin, pctrl->data->pindata, pctrl->data->npins,
++		       sizeof(struct cv1800_pin), cv1800_cmp_pin);
++}
++
++static enum cv1800_pin_io_type cv1800_pin_io_type(struct cv1800_pin *pin)
++{
++	return FIELD_GET(CV1800_PIN_IO_TYPE, pin->flags);
++}
++
++#define PIN_BGA_ID_OFFSET		8
++#define PIN_BGA_ID_MASK			0xff
++
++static const char * const io_type_desc[] = {
++	"1V8",
++	"18OD33",
++	"AUDIO",
++	"ETH"
++};
++
++static void cv1800_pctrl_dbg_show(struct pinctrl_dev *pctldev,
++				  struct seq_file *seq, unsigned int pin_id)
++{
++	struct cv1800_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct cv1800_pin *pin = cv1800_get_pin(pctrl, pin_id);
++	enum cv1800_pin_io_type type = cv1800_pin_io_type(pin);
++	u32 value;
++	void *reg;
++
++	if (pin->pin >> PIN_BGA_ID_OFFSET)
++		seq_printf(seq, "pos: %c%u ",
++				'A' + (pin->pin >> PIN_BGA_ID_OFFSET) - 1,
++				pin->pin & PIN_BGA_ID_MASK);
++	else
++		seq_printf(seq, "pos: %u ", pin->pin);
++
++	seq_printf(seq, "power-domain: %s ", pin->pd);
++	seq_printf(seq, "type: %s ", io_type_desc[type]);
++
++	reg = cv1800_pinctrl_get_component_addr(pctrl, &pin->mux);
++	value = readl(reg);
++	seq_printf(seq, "mux: 0x%08x ", value);
++
++	if (pin->flags & CV1800_PIN_HAVE_MUX2) {
++		reg = cv1800_pinctrl_get_component_addr(pctrl, &pin->mux2);
++		value = readl(reg);
++		seq_printf(seq, "mux2: 0x%08x ", value);
++	}
++
++	if (type == IO_TYPE_1V8_ONLY || type == IO_TYPE_1V8_OR_3V3) {
++		reg = cv1800_pinctrl_get_component_addr(pctrl, &pin->conf);
++		value = readl(reg);
++		seq_printf(seq, "conf: 0x%08x ", value);
++	}
++}
++
++static int cv1800_verify_pinmux_config(const struct cv1800_pin_mux_config *config)
++{
++	unsigned int mux = cv1800_dt_get_pin_mux(config->config);
++	unsigned int mux2 = cv1800_dt_get_pin_mux2(config->config);
++
++	if (mux > config->pin->mux.max)
++		return -EINVAL;
++
++	if (config->pin->flags & CV1800_PIN_HAVE_MUX2) {
++		if (mux != config->pin->mux2.pfunc)
++			return -EINVAL;
++
++		if (mux2 > config->pin->mux2.max)
++			return -EINVAL;
++	} else {
++		if (mux2 != PIN_MUX_INVALD)
++			return -EOPNOTSUPP;
++	}
++
++	return 0;
++}
++
++static int cv1800_pin_max_drive(enum cv1800_pin_io_type type)
++{
++	switch (type) {
++	case IO_TYPE_1V8_ONLY:
++		return 3;
++	case IO_TYPE_1V8_OR_3V3:
++		return 7;
++	default:
++		return -1;
++	}
++}
++
++static int cv1800_pin_max_scmitt(enum cv1800_pin_io_type type)
++{
++	switch (type) {
++	case IO_TYPE_1V8_ONLY:
++		return 3;
++	case IO_TYPE_1V8_OR_3V3:
++		return 1;
++	default:
++		return -1;
++	}
++}
++
++static int cv1800_verify_pin_config(const struct cv1800_pin_mux_config *mux,
++				    unsigned long npins,
++				    const unsigned long *configs,
++				    unsigned long nconfigs)
++{
++	int i, j;
++
++	for (i = 0; i < npins; i++) {
++		enum cv1800_pin_io_type type = cv1800_pin_io_type(mux[i].pin);
++
++		if ((type == IO_TYPE_AUDIO || type == IO_TYPE_ETH) && nconfigs)
++			return -EINVAL;
++
++		for (j = 0; j < nconfigs; j++) {
++			int param = pinconf_to_config_param(configs[i]);
++			int arg = pinconf_to_config_argument(configs[i]);
++
++			if (param == PIN_CONFIG_DRIVE_STRENGTH) {
++				if (arg > cv1800_pin_max_drive(type))
++					return -EINVAL;
++			} else if (param == PIN_CONFIG_INPUT_SCHMITT) {
++				if (arg > cv1800_pin_max_scmitt(type))
++					return -EINVAL;
++			}
++		}
++	}
++
++	return 0;
++}
++
++static int cv1800_pctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
++				       struct device_node *np,
++				       struct pinctrl_map **maps,
++				       unsigned int *num_maps)
++{
++	struct cv1800_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct device *dev = pctrl->dev;
++	struct device_node *child;
++	struct pinctrl_map *map;
++	const char **grpnames;
++	const char *grpname;
++	int ngroups = 0;
++	int nmaps = 0;
++	int ret;
++
++	for_each_available_child_of_node(np, child)
++		ngroups += 1;
++
++	grpnames = devm_kcalloc(dev, ngroups, sizeof(*grpnames), GFP_KERNEL);
++	if (!grpnames)
++		return -ENOMEM;
++
++	map = devm_kcalloc(dev, ngroups * 2, sizeof(*map), GFP_KERNEL);
++	if (!map)
++		return -ENOMEM;
++
++	ngroups = 0;
++	mutex_lock(&pctrl->mutex);
++	for_each_available_child_of_node(np, child) {
++		int npins = of_property_count_u32_elems(child, "pinmux");
++		unsigned int *pins;
++		struct cv1800_pin_mux_config *pinmuxs;
++		u32 config;
++		int i;
++
++		if (npins < 1) {
++			dev_err(dev, "invalid pinctrl group %pOFn.%pOFn\n",
++				np, child);
++			ret = -EINVAL;
++			goto dt_failed;
++		}
++
++		grpname = devm_kasprintf(dev, GFP_KERNEL, "%pOFn.%pOFn",
++					 np, child);
++		if (!grpname) {
++			ret = -ENOMEM;
++			goto dt_failed;
++		}
++
++		grpnames[ngroups++] = grpname;
++
++		pins = devm_kcalloc(dev, npins, sizeof(*pins), GFP_KERNEL);
++		if (!pins) {
++			ret = -ENOMEM;
++			goto dt_failed;
++		}
++
++		pinmuxs = devm_kcalloc(dev, npins, sizeof(*pinmuxs), GFP_KERNEL);
++		if (!pinmuxs) {
++			ret = -ENOMEM;
++			goto dt_failed;
++		}
++
++		for (i = 0; i < npins; i++) {
++			ret = of_property_read_u32_index(child, "pinmux",
++							 i, &config);
++			if (ret)
++				goto dt_failed;
++
++			pins[i] = cv1800_dt_get_pin(config);
++			pinmuxs[i].config = config;
++			pinmuxs[i].pin = cv1800_get_pin(pctrl, pins[i]);
++
++			if (!pinmuxs[i].pin) {
++				dev_err(dev, "failed to get pin %d\n", pins[i]);
++				ret = -ENODEV;
++				goto dt_failed;
++			}
++
++			ret = cv1800_verify_pinmux_config(&pinmuxs[i]);
++			if (ret) {
++				dev_err(dev, "group %s pin %d is invalid\n",
++					grpname, i);
++				goto dt_failed;
++			}
++		}
++
++		map[nmaps].type = PIN_MAP_TYPE_MUX_GROUP;
++		map[nmaps].data.mux.function = np->name;
++		map[nmaps].data.mux.group = grpname;
++		nmaps += 1;
++
++		ret = pinctrl_generic_add_group(pctldev, grpname,
++						pins, npins, pinmuxs);
++		if (ret < 0) {
++			dev_err(dev, "failed to add group %s: %d\n", grpname, ret);
++			goto dt_failed;
++		}
++
++		ret = pinconf_generic_parse_dt_config(child, pctldev,
++						      &map[nmaps].data.configs.configs,
++						      &map[nmaps].data.configs.num_configs);
++		if (ret) {
++			dev_err(dev, "failed to parse pin config of group %s: %d\n",
++				grpname, ret);
++			goto dt_failed;
++		}
++
++		ret = cv1800_verify_pin_config(pinmuxs, npins,
++					       map[nmaps].data.configs.configs,
++					       map[nmaps].data.configs.num_configs);
++		if (ret) {
++			dev_err(dev, "pin config of group %s is invalid\n",
++				grpname);
++			goto dt_failed;
++		}
++
++		/* don't create a map if there are no pinconf settings */
++		if (map[nmaps].data.configs.num_configs == 0)
++			continue;
++
++		map[nmaps].type = PIN_MAP_TYPE_CONFIGS_GROUP;
++		map[nmaps].data.configs.group_or_pin = grpname;
++		nmaps += 1;
++	}
++
++	ret = pinmux_generic_add_function(pctldev, np->name,
++					  grpnames, ngroups, NULL);
++	if (ret < 0) {
++		dev_err(dev, "error adding function %s: %d\n", np->name, ret);
++		goto function_failed;
++	}
++
++	*maps = map;
++	*num_maps = nmaps;
++	mutex_unlock(&pctrl->mutex);
++
++	return 0;
++
++dt_failed:
++	of_node_put(child);
++function_failed:
++	pinctrl_utils_free_map(pctldev, map, nmaps);
++	mutex_unlock(&pctrl->mutex);
++	return ret;
++}
++
++static const struct pinctrl_ops cv1800_pctrl_ops = {
++	.get_groups_count	= pinctrl_generic_get_group_count,
++	.get_group_name		= pinctrl_generic_get_group_name,
++	.get_group_pins		= pinctrl_generic_get_group_pins,
++	.pin_dbg_show		= cv1800_pctrl_dbg_show,
++	.dt_node_to_map		= cv1800_pctrl_dt_node_to_map,
++	.dt_free_map		= pinctrl_utils_free_map,
++};
++
++static int cv1800_pmx_set_mux(struct pinctrl_dev *pctldev,
++			      unsigned int fsel, unsigned int gsel)
++{
++	struct cv1800_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct group_desc *group;
++	const struct cv1800_pin_mux_config *configs;
++	unsigned int i;
++
++	group = pinctrl_generic_get_group(pctldev, gsel);
++	if (!group)
++		return -EINVAL;
++
++	configs = group->data;
++
++	for (i = 0; i < group->grp.npins; i++) {
++		const struct cv1800_pin *pin = configs[i].pin;
++		u32 value = configs[i].config;
++		void __iomem *reg_mux;
++		void __iomem *reg_mux2;
++		unsigned long flags;
++		u32 mux;
++		u32 mux2;
++
++		reg_mux = cv1800_pinctrl_get_component_addr(pctrl, &pin->mux);
++		reg_mux2 = cv1800_pinctrl_get_component_addr(pctrl, &pin->mux2);
++		mux = cv1800_dt_get_pin_mux(value);
++		mux2 = cv1800_dt_get_pin_mux2(value);
++
++		raw_spin_lock_irqsave(&pctrl->lock, flags);
++		writel_relaxed(mux, reg_mux);
++		if (mux2 != PIN_MUX_INVALD)
++			writel_relaxed(mux2, reg_mux2);
++		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
++	}
++
++	return 0;
++}
++
++static const struct pinmux_ops cv1800_pmx_ops = {
++	.get_functions_count	= pinmux_generic_get_function_count,
++	.get_function_name	= pinmux_generic_get_function_name,
++	.get_function_groups	= pinmux_generic_get_function_groups,
++	.set_mux		= cv1800_pmx_set_mux,
++	.strict			= true,
++};
++
++#define PIN_CONFIG_CV1800_BUS_HOLDER	(PIN_CONFIG_END + 1)
++
++#define PIN_IO_PULLUP		BIT(2)
++#define PIN_IO_PULLDOWN		BIT(3)
++#define PIN_IO_DRIVE		GENMASK(7, 5)
++#define PIN_IO_SCHMITT		GENMASK(9, 8)
++#define PIN_IO_BUS_HOLDER	BIT(10)
++#define PIN_IO_OUT_FAST_SLEW	BIT(11)
++
++static const struct pinconf_generic_params cv1800_pinconf_custom_params[] = {
++	{ "sophgo,bus-holder", PIN_CONFIG_CV1800_BUS_HOLDER, 1 },
++};
++
++static int cv1800_pconf_get(struct pinctrl_dev *pctldev,
++			    unsigned int pin_id, unsigned long *config)
++{
++	struct cv1800_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	int param = pinconf_to_config_param(*config);
++	struct cv1800_pin *pin = cv1800_get_pin(pctrl, pin_id);
++	u32 value;
++	u32 arg;
++
++	if (!pin)
++		return -EINVAL;
++
++	value = readl(cv1800_pinctrl_get_component_addr(pctrl, &pin->conf));
++
++	switch (param) {
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		arg = FIELD_GET(PIN_IO_PULLDOWN, value);
++		break;
++	case PIN_CONFIG_BIAS_PULL_UP:
++		arg = FIELD_GET(PIN_IO_PULLUP, value);
++		break;
++	case PIN_CONFIG_DRIVE_STRENGTH:
++		arg = FIELD_GET(PIN_IO_DRIVE, value);
++		break;
++	case PIN_CONFIG_INPUT_SCHMITT:
++		arg = FIELD_GET(PIN_IO_SCHMITT, value);
++		break;
++	case PIN_CONFIG_SLEW_RATE:
++		arg = FIELD_GET(PIN_IO_OUT_FAST_SLEW, value);
++		break;
++	case PIN_CONFIG_CV1800_BUS_HOLDER:
++		arg = FIELD_GET(PIN_IO_BUS_HOLDER, value);
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	*config = pinconf_to_config_packed(param, arg);
++
++	return 0;
++}
++
++static int cv1800_pinconf_compute_config(unsigned long *configs,
++					 unsigned int num_configs,
++					 u32 *value)
++{
++	int i;
++	u32 v = 0;
++
++	for (i = 0; i < num_configs; i++) {
++		int param = pinconf_to_config_param(configs[i]);
++		u32 arg = pinconf_to_config_argument(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_BIAS_PULL_DOWN:
++			v &= ~PIN_IO_PULLDOWN;
++			v |= FIELD_PREP(PIN_IO_PULLDOWN, arg);
++			break;
++		case PIN_CONFIG_BIAS_PULL_UP:
++			v &= ~PIN_IO_PULLUP;
++			v |= FIELD_PREP(PIN_IO_PULLUP, arg);
++			break;
++		case PIN_CONFIG_DRIVE_STRENGTH:
++			v &= ~PIN_IO_DRIVE;
++			v |= FIELD_PREP(PIN_IO_DRIVE, arg);
++			break;
++		case PIN_CONFIG_INPUT_SCHMITT:
++			v &= ~PIN_IO_SCHMITT;
++			v |= FIELD_PREP(PIN_IO_SCHMITT, arg);
++			break;
++		case PIN_CONFIG_SLEW_RATE:
++			v &= ~PIN_IO_OUT_FAST_SLEW;
++			v |= FIELD_PREP(PIN_IO_OUT_FAST_SLEW, arg);
++			break;
++		case PIN_CONFIG_CV1800_BUS_HOLDER:
++			v &= ~PIN_IO_BUS_HOLDER;
++			v |= FIELD_PREP(PIN_IO_BUS_HOLDER, arg);
++			break;
++		default:
++			return -EOPNOTSUPP;
++		}
++	}
++
++	*value = v;
++
++	return 0;
++}
++
++static int cv1800_pin_set_config(struct cv1800_pinctrl *pctrl,
++				 unsigned int pin_id,
++				 u32 value)
++{
++	struct cv1800_pin *pin = cv1800_get_pin(pctrl, pin_id);
++	unsigned long flags;
++	void __iomem *addr;
++
++	if (!pin)
++		return -EINVAL;
++
++	addr = cv1800_pinctrl_get_component_addr(pctrl, &pin->conf);
++
++	raw_spin_lock_irqsave(&pctrl->lock, flags);
++	writel(value, addr);
++	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
++
++	return 0;
++}
++
++static int cv1800_pconf_set(struct pinctrl_dev *pctldev,
++			    unsigned int pin, unsigned long *configs,
++			    unsigned int num_configs)
++{
++	struct cv1800_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	u32 value;
++
++	if (cv1800_pinconf_compute_config(configs, num_configs, &value))
++		return -EOPNOTSUPP;
++
++	return cv1800_pin_set_config(pctrl, pin, value);
++}
++
++static int cv1800_pconf_group_set(struct pinctrl_dev *pctldev,
++				  unsigned int gsel,
++				  unsigned long *configs,
++				  unsigned int num_configs)
++{
++	struct cv1800_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct group_desc *group;
++	u32 value;
++	int i;
++
++	group = pinctrl_generic_get_group(pctldev, gsel);
++	if (!group)
++		return -EINVAL;
++
++	if (cv1800_pinconf_compute_config(configs, num_configs, &value))
++		return -EOPNOTSUPP;
++
++	for (i = 0; i < group->grp.npins; i++)
++		cv1800_pin_set_config(pctrl, group->grp.pins[i], value);
++
++	return 0;
++}
++
++static void cv1800_pinconf_dbg_show(struct pinctrl_dev *pctldev,
++				    struct seq_file *seq, unsigned int pin_id)
++{
++	struct cv1800_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct cv1800_pin *pin = cv1800_get_pin(pctrl, pin_id);
++	enum cv1800_pin_io_type type = cv1800_pin_io_type(pin);
++	void *reg;
++
++	if (type == IO_TYPE_ETH || type == IO_TYPE_AUDIO)
++		return;
++
++	reg = cv1800_pinctrl_get_component_addr(pctrl, &pin->conf);
++	seq_printf(seq, "reg=%u\n", readl(reg));
++}
++
++static const struct pinconf_ops cv1800_pconf_ops = {
++	.pin_config_get			= cv1800_pconf_get,
++	.pin_config_set			= cv1800_pconf_set,
++	.pin_config_group_set		= cv1800_pconf_group_set,
++	.pin_config_dbg_show		= cv1800_pinconf_dbg_show,
++	.is_generic			= true,
++};
++
++int cv1800_pinctrl_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cv1800_pinctrl *pctrl;
++	const struct cv1800_pinctrl_data *pctrl_data;
++	int ret;
++
++	pctrl_data = device_get_match_data(dev);
++	if (!pctrl_data)
++		return -ENODEV;
++
++	if (pctrl_data->npins == 0)
++		return dev_err_probe(dev, -EINVAL, "invalid pin data\n");
++
++	pctrl = devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
++	if (!pctrl)
++		return -ENOMEM;
++
++	pctrl->regs[0] = devm_platform_ioremap_resource_byname(pdev, "sys");
++	if (IS_ERR(pctrl->regs[0]))
++		return PTR_ERR(pctrl->regs[0]);
++
++	pctrl->regs[1] = devm_platform_ioremap_resource_byname(pdev, "rtc");
++	if (IS_ERR(pctrl->regs[1]))
++		return PTR_ERR(pctrl->regs[1]);
++
++	pctrl->pdesc.name = dev_name(dev);
++	pctrl->pdesc.pins = pctrl_data->pins;
++	pctrl->pdesc.npins = pctrl_data->npins;
++	pctrl->pdesc.pctlops = &cv1800_pctrl_ops;
++	pctrl->pdesc.pmxops = &cv1800_pmx_ops;
++	pctrl->pdesc.confops = &cv1800_pconf_ops;
++	pctrl->pdesc.owner = THIS_MODULE;
++
++	pctrl->data = pctrl_data;
++	pctrl->dev = dev;
++	raw_spin_lock_init(&pctrl->lock);
++	mutex_init(&pctrl->mutex);
++
++	platform_set_drvdata(pdev, pctrl);
++
++	ret = devm_pinctrl_register_and_init(dev, &pctrl->pdesc,
++					     pctrl, &pctrl->pctl_dev);
++	if (ret)
++		return dev_err_probe(dev, ret,
++				     "fail to register pinctrl driver\n");
++
++	return pinctrl_enable(pctrl->pctl_dev);
++}
++EXPORT_SYMBOL_GPL(cv1800_pinctrl_probe);
+diff --git a/drivers/pinctrl/sophgo/pinctrl-cv18xx.h b/drivers/pinctrl/sophgo/pinctrl-cv18xx.h
 new file mode 100644
-index 000000000000..bc92ad1067ec
+index 000000000000..8ae320ea9374
 --- /dev/null
-+++ b/include/dt-bindings/pinctrl/pinctrl-cv18xx.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-+/*
-+ * Copyright (C) 2023 Sophgo Ltd.
-+ *
-+ * Author: Inochi Amaoto <inochiama@outlook.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_PINCTRL_CV18XX_H
-+#define _DT_BINDINGS_PINCTRL_CV18XX_H
-+
-+#define PIN_MUX_INVALD				0xff
-+
-+#define PINMUX2(pin, mux, mux2)	\
-+	(((pin) & 0xffff) | (((mux) & 0xff) << 16) | (((mux2) & 0xff) << 24))
-+
-+#define PINMUX(pin, mux) \
-+	PINMUX2(pin, mux, PIN_MUX_INVALD)
-+
-+#endif /* _DT_BINDINGS_PINCTRL_CV18XX_H */
-diff --git a/include/dt-bindings/pinctrl/pinctrl-sg2000.h b/include/dt-bindings/pinctrl/pinctrl-sg2000.h
-new file mode 100644
-index 000000000000..4871f9a7c6c1
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/pinctrl-sg2000.h
-@@ -0,0 +1,127 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
++++ b/drivers/pinctrl/sophgo/pinctrl-cv18xx.h
+@@ -0,0 +1,126 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
 + * Copyright (C) 2024 Inochi Amaoto <inochiama@outlook.com>
-+ *
-+ * This file is generated from vendor pinout definition.
 + */
 +
-+#ifndef _DT_BINDINGS_PINCTRL_SG2000_H
-+#define _DT_BINDINGS_PINCTRL_SG2000_H
++#ifndef _PINCTRL_SOPHGO_CV18XX_H
++#define _PINCTRL_SOPHGO_CV18XX_H
 +
-+#include <dt-bindings/pinctrl/pinctrl-cv18xx.h>
++#include <linux/bits.h>
++#include <linux/bitfield.h>
++#include <linux/device.h>
++#include <linux/mutex.h>
++#include <linux/spinlock.h>
++#include <linux/platform_device.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinconf.h>
 +
-+#define PINPOS(row, col)			\
-+	((((row) - 'A' + 1) << 8) + ((col) - 1))
++enum cv1800_pin_io_type {
++	IO_TYPE_1V8_ONLY = 0,
++	IO_TYPE_1V8_OR_3V3 = 1,
++	IO_TYPE_AUDIO = 2,
++	IO_TYPE_ETH = 3
++};
 +
-+#define PIN_MIPI_TXM4			PINPOS('A', 2)
-+#define PIN_MIPIRX0N			PINPOS('A', 4)
-+#define PIN_MIPIRX3P			PINPOS('A', 6)
-+#define PIN_MIPIRX4P			PINPOS('A', 7)
-+#define PIN_VIVO_D2			PINPOS('A', 9)
-+#define PIN_VIVO_D3			PINPOS('A', 10)
-+#define PIN_VIVO_D10			PINPOS('A', 12)
-+#define PIN_USB_VBUS_DET		PINPOS('A', 13)
-+#define PIN_MIPI_TXP3			PINPOS('B', 1)
-+#define PIN_MIPI_TXM3			PINPOS('B', 2)
-+#define PIN_MIPI_TXP4			PINPOS('B', 3)
-+#define PIN_MIPIRX0P			PINPOS('B', 4)
-+#define PIN_MIPIRX1N			PINPOS('B', 5)
-+#define PIN_MIPIRX2N			PINPOS('B', 6)
-+#define PIN_MIPIRX4N			PINPOS('B', 7)
-+#define PIN_MIPIRX5N			PINPOS('B', 8)
-+#define PIN_VIVO_D1			PINPOS('B', 9)
-+#define PIN_VIVO_D5			PINPOS('B', 10)
-+#define PIN_VIVO_D7			PINPOS('B', 11)
-+#define PIN_VIVO_D9			PINPOS('B', 12)
-+#define PIN_USB_ID			PINPOS('B', 13)
-+#define PIN_ETH_RXM			PINPOS('B', 15)
-+#define PIN_MIPI_TXP2			PINPOS('C', 1)
-+#define PIN_MIPI_TXM2			PINPOS('C', 2)
-+#define PIN_CAM_PD0			PINPOS('C', 3)
-+#define PIN_CAM_MCLK0			PINPOS('C', 4)
-+#define PIN_MIPIRX1P			PINPOS('C', 5)
-+#define PIN_MIPIRX2P			PINPOS('C', 6)
-+#define PIN_MIPIRX3N			PINPOS('C', 7)
-+#define PIN_MIPIRX5P			PINPOS('C', 8)
-+#define PIN_VIVO_CLK			PINPOS('C', 9)
-+#define PIN_VIVO_D6			PINPOS('C', 10)
-+#define PIN_VIVO_D8			PINPOS('C', 11)
-+#define PIN_USB_VBUS_EN			PINPOS('C', 12)
-+#define PIN_ETH_RXP			PINPOS('C', 14)
-+#define PIN_GPIO_RTX			PINPOS('C', 15)
-+#define PIN_MIPI_TXP1			PINPOS('D', 1)
-+#define PIN_MIPI_TXM1			PINPOS('D', 2)
-+#define PIN_CAM_MCLK1			PINPOS('D', 3)
-+#define PIN_IIC3_SCL			PINPOS('D', 4)
-+#define PIN_VIVO_D4			PINPOS('D', 10)
-+#define PIN_ETH_TXM			PINPOS('D', 14)
-+#define PIN_ETH_TXP			PINPOS('D', 15)
-+#define PIN_MIPI_TXP0			PINPOS('E', 1)
-+#define PIN_MIPI_TXM0			PINPOS('E', 2)
-+#define PIN_CAM_PD1			PINPOS('E', 4)
-+#define PIN_CAM_RST0			PINPOS('E', 5)
-+#define PIN_VIVO_D0			PINPOS('E', 10)
-+#define PIN_ADC1			PINPOS('E', 13)
-+#define PIN_ADC2			PINPOS('E', 14)
-+#define PIN_ADC3			PINPOS('E', 15)
-+#define PIN_AUD_AOUTL			PINPOS('F', 2)
-+#define PIN_IIC3_SDA			PINPOS('F', 4)
-+#define PIN_SD1_D2			PINPOS('F', 14)
-+#define PIN_AUD_AOUTR			PINPOS('G', 2)
-+#define PIN_SD1_D3			PINPOS('G', 13)
-+#define PIN_SD1_CLK			PINPOS('G', 14)
-+#define PIN_SD1_CMD			PINPOS('G', 15)
-+#define PIN_AUD_AINL_MIC		PINPOS('H', 1)
-+#define PIN_RSTN			PINPOS('H', 12)
-+#define PIN_PWM0_BUCK			PINPOS('H', 13)
-+#define PIN_SD1_D1			PINPOS('H', 14)
-+#define PIN_SD1_D0			PINPOS('H', 15)
-+#define PIN_AUD_AINR_MIC		PINPOS('J', 1)
-+#define PIN_IIC2_SCL			PINPOS('J', 13)
-+#define PIN_IIC2_SDA			PINPOS('J', 14)
-+#define PIN_SD0_CD			PINPOS('K', 2)
-+#define PIN_SD0_D1			PINPOS('K', 3)
-+#define PIN_UART2_RX			PINPOS('K', 13)
-+#define PIN_UART2_CTS			PINPOS('K', 14)
-+#define PIN_UART2_TX			PINPOS('K', 15)
-+#define PIN_SD0_CLK			PINPOS('L', 1)
-+#define PIN_SD0_D0			PINPOS('L', 2)
-+#define PIN_SD0_CMD			PINPOS('L', 3)
-+#define PIN_CLK32K			PINPOS('L', 14)
-+#define PIN_UART2_RTS			PINPOS('L', 15)
-+#define PIN_SD0_D3			PINPOS('M', 1)
-+#define PIN_SD0_D2			PINPOS('M', 2)
-+#define PIN_UART0_RX			PINPOS('M', 4)
-+#define PIN_UART0_TX			PINPOS('M', 5)
-+#define PIN_JTAG_CPU_TRST		PINPOS('M', 6)
-+#define PIN_PWR_ON			PINPOS('M', 11)
-+#define PIN_PWR_GPIO2			PINPOS('M', 12)
-+#define PIN_PWR_GPIO0			PINPOS('M', 13)
-+#define PIN_CLK25M			PINPOS('M', 14)
-+#define PIN_SD0_PWR_EN			PINPOS('N', 1)
-+#define PIN_SPK_EN			PINPOS('N', 3)
-+#define PIN_JTAG_CPU_TCK		PINPOS('N', 4)
-+#define PIN_JTAG_CPU_TMS		PINPOS('N', 6)
-+#define PIN_PWR_WAKEUP1			PINPOS('N', 11)
-+#define PIN_PWR_WAKEUP0			PINPOS('N', 12)
-+#define PIN_PWR_GPIO1			PINPOS('N', 13)
-+#define PIN_EMMC_DAT3			PINPOS('P', 1)
-+#define PIN_EMMC_DAT0			PINPOS('P', 2)
-+#define PIN_EMMC_DAT2			PINPOS('P', 3)
-+#define PIN_EMMC_RSTN			PINPOS('P', 4)
-+#define PIN_AUX0			PINPOS('P', 5)
-+#define PIN_IIC0_SDA			PINPOS('P', 6)
-+#define PIN_PWR_SEQ3			PINPOS('P', 10)
-+#define PIN_PWR_VBAT_DET		PINPOS('P', 11)
-+#define PIN_PWR_SEQ1			PINPOS('P', 12)
-+#define PIN_PWR_BUTTON1			PINPOS('P', 13)
-+#define PIN_EMMC_DAT1			PINPOS('R', 2)
-+#define PIN_EMMC_CMD			PINPOS('R', 3)
-+#define PIN_EMMC_CLK			PINPOS('R', 4)
-+#define PIN_IIC0_SCL			PINPOS('R', 6)
-+#define PIN_GPIO_ZQ			PINPOS('R', 10)
-+#define PIN_PWR_RSTN			PINPOS('R', 11)
-+#define PIN_PWR_SEQ2			PINPOS('R', 12)
-+#define PIN_XTAL_XIN			PINPOS('R', 13)
++#define CV1800_PINCONF_AREA_SYS		0
++#define CV1800_PINCONF_AREA_RTC		1
 +
-+#endif /* _DT_BINDINGS_PINCTRL_SG2000_H */
-diff --git a/include/dt-bindings/pinctrl/pinctrl-sg2002.h b/include/dt-bindings/pinctrl/pinctrl-sg2002.h
-new file mode 100644
-index 000000000000..3c36cfa0a550
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/pinctrl-sg2002.h
-@@ -0,0 +1,79 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-+/*
-+ * Copyright (C) 2024 Inochi Amaoto <inochiama@outlook.com>
-+ *
-+ * This file is generated from vendor pinout definition.
-+ */
++struct cv1800_pinmux {
++	u16	offset;
++	u8	area;
++	u8	max;
++};
 +
-+#ifndef _DT_BINDINGS_PINCTRL_SG2002_H
-+#define _DT_BINDINGS_PINCTRL_SG2002_H
++struct cv1800_pinmux2 {
++	u16	offset;
++	u8	area;
++	u8	max;
++	u8	pfunc;
++};
 +
-+#include <dt-bindings/pinctrl/pinctrl-cv18xx.h>
++struct cv1800_pinconf {
++	u16	offset;
++	u8	area;
++};
 +
-+#define PIN_AUD_AINL_MIC		2
-+#define PIN_AUD_AOUTR			4
-+#define PIN_SD0_CLK			6
-+#define PIN_SD0_CMD			7
-+#define PIN_SD0_D0			8
-+#define PIN_SD0_D1			10
-+#define PIN_SD0_D2			11
-+#define PIN_SD0_D3			12
-+#define PIN_SD0_CD			14
-+#define PIN_SD0_PWR_EN			15
-+#define PIN_SPK_EN			17
-+#define PIN_UART0_TX			18
-+#define PIN_UART0_RX			19
-+#define PIN_EMMC_DAT2			20
-+#define PIN_EMMC_CLK			21
-+#define PIN_EMMC_DAT0			22
-+#define PIN_EMMC_DAT3			23
-+#define PIN_EMMC_CMD			24
-+#define PIN_EMMC_DAT1			25
-+#define PIN_JTAG_CPU_TMS		26
-+#define PIN_JTAG_CPU_TCK		27
-+#define PIN_IIC0_SCL			28
-+#define PIN_IIC0_SDA			29
-+#define PIN_AUX0			30
-+#define PIN_GPIO_ZQ			35
-+#define PIN_PWR_VBAT_DET		38
-+#define PIN_PWR_RSTN			39
-+#define PIN_PWR_SEQ1			40
-+#define PIN_PWR_SEQ2			41
-+#define PIN_PWR_WAKEUP0			43
-+#define PIN_PWR_BUTTON1			44
-+#define PIN_XTAL_XIN			45
-+#define PIN_PWR_GPIO0			47
-+#define PIN_PWR_GPIO1			48
-+#define PIN_PWR_GPIO2			49
-+#define PIN_SD1_D3			51
-+#define PIN_SD1_D2			52
-+#define PIN_SD1_D1			53
-+#define PIN_SD1_D0			54
-+#define PIN_SD1_CMD			55
-+#define PIN_SD1_CLK			56
-+#define PIN_PWM0_BUCK			58
-+#define PIN_ADC1			59
-+#define PIN_USB_VBUS_DET		60
-+#define PIN_ETH_TXP			62
-+#define PIN_ETH_TXM			63
-+#define PIN_ETH_RXP			64
-+#define PIN_ETH_RXM			65
-+#define PIN_GPIO_RTX			67
-+#define PIN_MIPIRX4N			72
-+#define PIN_MIPIRX4P			73
-+#define PIN_MIPIRX3N			74
-+#define PIN_MIPIRX3P			75
-+#define PIN_MIPIRX2N			76
-+#define PIN_MIPIRX2P			77
-+#define PIN_MIPIRX1N			78
-+#define PIN_MIPIRX1P			79
-+#define PIN_MIPIRX0N			80
-+#define PIN_MIPIRX0P			81
-+#define PIN_MIPI_TXM2			83
-+#define PIN_MIPI_TXP2			84
-+#define PIN_MIPI_TXM1			85
-+#define PIN_MIPI_TXP1			86
-+#define PIN_MIPI_TXM0			87
-+#define PIN_MIPI_TXP0			88
++#define	CV1800_PIN_HAVE_MUX2		BIT(0)
++#define CV1800_PIN_IO_TYPE		GENMASK(2, 1)
 +
-+#endif /* _DT_BINDINGS_PINCTRL_SG2002_H */
++#define CV1800_PIN_FLAG_IO_TYPE(type)		\
++	FIELD_PREP_CONST(CV1800_PIN_IO_TYPE, type)
++
++struct cv1800_pin {
++	u16				pin;
++	u16				flags;
++	const char			*pd;
++	struct cv1800_pinmux		mux;
++	struct cv1800_pinmux2		mux2;
++	struct cv1800_pinconf		conf;
++};
++
++struct cv1800_pinctrl_data {
++	const struct pinctrl_pin_desc   *pins;
++	const struct cv1800_pin		*pindata;
++	u16				npins;
++};
++
++int cv1800_pinctrl_probe(struct platform_device *pdev);
++
++#define CV1800_FUNC_PIN(_id, _pd, _type,				\
++			_mux_area, _mux_offset, _mux_func_max)		\
++	{								\
++		.pin = (_id),						\
++		.pd = (_pd),						\
++		.flags = CV1800_PIN_FLAG_IO_TYPE(_type),		\
++		.mux = {						\
++			.area = (_mux_area),				\
++			.offset = (_mux_offset),			\
++			.max = (_mux_func_max),				\
++		},							\
++	}
++
++#define CV1800_GENERAL_PIN(_id, _pd, _type,				\
++			   _mux_area, _mux_offset, _mux_func_max,	\
++			   _conf_area, _conf_offset)			\
++	{								\
++		.pin = (_id),						\
++		.pd = (_pd),						\
++		.flags = CV1800_PIN_FLAG_IO_TYPE(_type),		\
++		.mux = {						\
++			.area = (_mux_area),				\
++			.offset = (_mux_offset),			\
++			.max = (_mux_func_max),				\
++		},							\
++		.conf = {						\
++			.area = (_conf_area),				\
++			.offset = (_conf_offset),			\
++		},							\
++	}
++
++#define CV1800_GENERATE_PIN_MUX2(_id, _pd, _type,			\
++				 _mux_area, _mux_offset, _mux_func_max,	\
++				 _mux2_area, _mux2_offset,		\
++				 _mux2_func_max,			\
++				 _conf_area, _conf_offset)		\
++	{								\
++		.pin = (_id),						\
++		.pd = (_pd),						\
++		.flags = CV1800_PIN_FLAG_IO_TYPE(_type) |		\
++				CV1800_PIN_HAVE_MUX2,			\
++		.mux = {						\
++			.area = (_mux_area),				\
++			.offset = (_mux_offset),			\
++			.max = (_mux_func_max),				\
++		},							\
++		.mux2 = {						\
++			.area = (_mux2_area),				\
++			.offset = (_mux2_offset),			\
++			.max = (_mux2_func_max),			\
++		},							\
++		.conf = {						\
++			.area = (_conf_area),				\
++			.offset = (_conf_offset),			\
++		},							\
++	}
++
++#endif
 --
 2.45.2
 
