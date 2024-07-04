@@ -1,144 +1,116 @@
-Return-Path: <linux-gpio+bounces-8050-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8051-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9881D927C47
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 19:33:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 977BA927D39
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 20:37:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 505601F23F5E
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 17:33:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5362E282236
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 18:37:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2F5514037D;
-	Thu,  4 Jul 2024 17:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 251917346E;
+	Thu,  4 Jul 2024 18:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUvrfPY4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4F04964E;
-	Thu,  4 Jul 2024 17:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CE045979;
+	Thu,  4 Jul 2024 18:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720114189; cv=none; b=ayq6hKh4l7gIksWc5er2XfLiY2fFOCSfHXiF1gJZVEEA4shuzbDUGlOCgkBEdoa9qt0ODuDeNPZdoxVz53jeWTVQAnyWVWXfEj5uHspw5gcDbZwbJcS5kTusYa0ITASsuK/2hrx40EjIJiTMu1kF4hiUA1A9IFY6wndxcaRh9MA=
+	t=1720118216; cv=none; b=owyqrKXXnB8GO8SNiW/uwnPD6V4Ud/52izUnKFvXzpxVvy9qpN3DLjW9YDou6Ly8trgGED7l5FRg8OQ9STzWSyIzsrh4OkbqiMwHNxGaxs7v0BrlgkpfR7u27Llwgeq57l2B/I4/ORlxSaecW+osM30ifO/qPqWK2XVrea7H/ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720114189; c=relaxed/simple;
-	bh=4Wsbr2NxsRTX2OtbK42P57QdvwytpLHmffqyJLEMNlA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ke3EyGN0H+6F9tC85HcKFLqYTP/EdDuIjRZZKnAANwNvNM08YSF1DtXIBsrMuOUMs34fkm+wpuFnFWXL930dCdbExW10z2T3JzP+QiBsmgAdobuS+fS3JBONIHIJvfc1kR7HTB5AabTr5awRgsyThjmdJl/KiW2r1++tN15Id8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1720118216; c=relaxed/simple;
+	bh=2+vWKkD6NaDssBT+shr8RNi81lkdPvXcuXk+iWlx8No=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rHQHHF8qdJ1HEdggSi97AuvFtiUa0O71yC9fsWVsoOL1PWxFXhrjJnFmshelw+fkCMej1swwwDQwahizhOa34DvWSVDQ4iFHOinvSw0btAngiejKgAj4A/FjtJPfsv3PZja2VBwUQT4kTvwmQMEJmVk1rKMzcGWDtDpmLzUiKwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FUvrfPY4; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e03a17a50a9so905747276.1;
-        Thu, 04 Jul 2024 10:29:47 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-425809eef0eso5940985e9.3;
+        Thu, 04 Jul 2024 11:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720118214; x=1720723014; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FpkFfjiADJS0EPLlwf7BKxwjayUopZBP/ZK8yqdHasY=;
+        b=FUvrfPY4OAo9wDP0DlLr011I4i3MyxiKiNPxi2431X8UvopzpznH6IrJW8r95GN0J1
+         FZDNldh+SGs0plTDGgc3X2fCoEfJCEWfVTeIQyduSK3fOING8hlA2xsSTH2H8XO4lmZU
+         sqL/q0YAt9mCtEGFMxQ/Bnrad2t5gtJQjIKkuSXfsoqH1tPSjnOpv3IKaNASv6vF4EIn
+         ymTkZXLYK+kBX9JgvQYI3B6gOKjtdyNoe+tV8t/0BiZ6IbEM7CSMQ8183QEfnmYDk9yZ
+         5G0uSr7Rk4DoNttfDZ8+KiTSP8AKTK/XzNlG9siXvAx4IrGbGHRpFeLd+IcNJ2uPC41N
+         OZQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720114186; x=1720718986;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RgbAK2gmsO/PF4jPJxOEopv4w1e21JKoV2IL1BCw5Go=;
-        b=UKWhNAiwF6oXMfUC8eDVzR774bDPv60zJ8TIfhWMuloW/R32i9TvV5tt/GazHazSlz
-         bPtiZnW1LJImMJWzkdKs1pnys+c65kzv3Kv5VL+H7YfztpmBEtAcOLJIiAqOAsj26vON
-         cxyAs1yB1OF1JTTXLvZ1U9nKDdMSGOIG8Jz9d0F+HwrXxK5MgjBV8tMT4ia8/YsOe6EF
-         vLRUUJiZnFFGvkNwFkKCfmvxy7Qn6GSV8dnlEglYPyV9p0FbZfsRjC8GRubZ/5mXBDs8
-         y4A15kJBRbwzj6n4Th9r1QTQG+1BvxNcsqT6IYI8MgHjigOnr8+Mbj58Zf+3Vktk33+4
-         F9tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpZQgAGH10Zw3+wD0PabTbJ0hLLWjm8zkysCjAzkDGadvh8ygpBlIRVqqcTJCcTLPrluCcis0k+Tcgo0skK1s3SHcBJUNX+6pU5M586DXH46+QPn1+ZRbWUrX7ATrttyKOU3KQHPVVxtLtnmv2ilqtTzCwrUgS8tzxTrPoO9fkNyRRn8yBzHYKn4q0cXmUzBceXrBmcGXQXhxGn/+9ilOp39uwDE2s2g==
-X-Gm-Message-State: AOJu0Yyn9ZgcIhPLQhm7DU2AleiDV1qTfni7UAHzyQthb/qdycoHuAXz
-	vt0VUaEzH+6sgTIQBV/J53UnEDRC2o+h3vTXXF8/hV78nF8IHlh3TkiqJp70
-X-Google-Smtp-Source: AGHT+IFZjsO9ewiEjzbgBpzemu3XQvaSNNPVO6kLW3HNuSidg0ssPZtMGo+f9sd+cX1cuGQfWH2KAA==
-X-Received: by 2002:a25:aa71:0:b0:e03:adcb:f8e8 with SMTP id 3f1490d57ef6-e03c1934e9emr2503622276.30.1720114186257;
-        Thu, 04 Jul 2024 10:29:46 -0700 (PDT)
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e037fc7a070sm1564902276.51.2024.07.04.10.29.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jul 2024 10:29:45 -0700 (PDT)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-650469f59d7so7798887b3.2;
-        Thu, 04 Jul 2024 10:29:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWFG5ZkEK472Np8QaqEpEkEfBtf6AKNM24b4ZBadS1iYYpV1N0muAtF+BOpw7iTr7P/rd0c55BFJpwKFRqea3tQksAEM+SceUd/vBm/7J0e7SlX5A/npKwWhiTjLxaROJ+7eoRTXHzP5xPyE66vGa0Zw1CeziE94u5YmtgrpaE4cDWT/LuxYu8zDIe/BlXzP5ILorxK3E6Xq7MnqvGg1+xNYNA5b6apRA==
-X-Received: by 2002:a05:690c:498a:b0:646:25c7:178e with SMTP id
- 00721157ae682-652d53481d4mr26390677b3.5.1720114185422; Thu, 04 Jul 2024
- 10:29:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720118214; x=1720723014;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FpkFfjiADJS0EPLlwf7BKxwjayUopZBP/ZK8yqdHasY=;
+        b=fNRveeBdkXfNzgmKlWjL3pTzS9cLsYSIZkMz9TvRUWEOtAPn1YZvqX763rvnXmc8fh
+         CRMCKobjDN64g3uZHDP0G3VPTyyOBmexMcFJW2WMns4yih178MYaeduw8HiKzIXG4aRP
+         mizM/6dXO/WdU+CD0MHYwhf2OuoLdgVpLtuhnS5xnJNIxunNYsNUTUi2/AIW9Sx8/DjR
+         hbCD7HHFjDVrRI2V7KoAmDjidTi91pNoQZnJLkc+n++enDJxfZnFDxvG+1NvgTlQ58J+
+         FeUZ8akv03BvQyEGm4sbFp66cofAt0QMYwHKaPB4tl1GAh7C2h7rgS3FGiEc+SJuTC9Z
+         jALg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8bCMfZ19UjXJN83Ubbya/BwWwo6Mb2DcJUTA1MWdQX7uh2dDP+SBggOilG4bO7xYjqXZrwpv7A7QkublNHpq63Q+tLUzTT1eIUynQ
+X-Gm-Message-State: AOJu0Yxa3C6bt/cAiUcn/nRyGT9prcpErj1L7iaHNt2i9dcGrzvPbu91
+	tLKijUoEjK+1n2I42Fx96E3NDLDJmHOne6XdkQ5KtazdNR1OMtoe
+X-Google-Smtp-Source: AGHT+IHiXwZAu0cOxOthEcXTh6/WJTUfeUSNnFNQp/JPkIEBDAtNLGaseVXSBW8/Rts72j1TS7dk0g==
+X-Received: by 2002:a05:600c:6a0a:b0:425:65b2:76b3 with SMTP id 5b1f17b1804b1-4264a3e7c28mr19267625e9.17.1720118213699;
+        Thu, 04 Jul 2024 11:36:53 -0700 (PDT)
+Received: from [127.0.1.1] (2a02-8389-41cf-e200-0b06-a203-2f25-a0f6.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:b06:a203:2f25:a0f6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a28333dsm33823075e9.40.2024.07.04.11.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 11:36:53 -0700 (PDT)
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Subject: [PATCH 0/2] pinctrl: Constify read-only struct regmap_config
+Date: Thu, 04 Jul 2024 20:36:42 +0200
+Message-Id: <20240704-pinctrl-const-regmap_config-v1-0-9d5570f0b9f3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240625200316.4282-1-paul.barker.ct@bp.renesas.com> <20240625200316.4282-4-paul.barker.ct@bp.renesas.com>
-In-Reply-To: <20240625200316.4282-4-paul.barker.ct@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 4 Jul 2024 19:29:32 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWbq_L1o3WxeHoD4n12DjEYV_k9RzGQbYP1EzhX6tr6_A@mail.gmail.com>
-Message-ID: <CAMuHMdWbq_L1o3WxeHoD4n12DjEYV_k9RzGQbYP1EzhX6tr6_A@mail.gmail.com>
-Subject: Re: [PATCH v3 3/9] pinctrl: renesas: rzg2l: Support output enable on RZ/G2L
-To: Paul Barker <paul.barker.ct@bp.renesas.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALrrhmYC/x3MSwqAIBAA0KvErBuwr9FVIkJssoEyGSOC6O5Jy
+ 7d5D0QSpgh99oDQxZEPn1DkGdjVeEfIczKUqqyVVjUG9vaUDe3h44lCbjdhSljYYVe1ptOzJk0
+ NpCEILXz/+zC+7wcYXQJpbQAAAA==
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1720118212; l=763;
+ i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
+ bh=2+vWKkD6NaDssBT+shr8RNi81lkdPvXcuXk+iWlx8No=;
+ b=5IDbA41awAubEdhhKiqXOvRCEpEq9QB0YfRpzhjS0sV4xF6z1bD13sRLI0yuiqQgBXFnyK5Ar
+ xiin2JX4DV7BXYxabVYQJVjbjUv1fS4lUz/jgS+ttvmF6dyK9DyAd3M
+X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
+ pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
 
-Hi Paul,
+This series adds the const modifier to the remaining regmap_config
+structs in the pinctrl subsystem that are effectively used as const
+(i.e., only read after their declaration), but kept ad writtable data.
 
-On Tue, Jun 25, 2024 at 10:03=E2=80=AFPM Paul Barker
-<paul.barker.ct@bp.renesas.com> wrote:
-> On the RZ/G2L SoC family, the direction of the Ethernet TXC/TX_CLK
-> signal is selectable to support an Ethernet PHY operating in either MII
-> or RGMII mode. By default, the signal is configured as an input and MII
-> mode is supported. The ETH_MODE register can be modified to configure
-> this signal as an output to support RGMII mode.
->
-> As this signal is by default an input, and can optionally be switched to
-> an output, it maps neatly onto an `output-enable` property in the device
-> tree.
->
-> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Changes v2->v3:
->   * Picked up Linus W's Acked-by tag & Geert's Reviewed-by tag.
->   * Simplify arguments to rzg2l_pin_to_oen_bit() and decode pin/caps
->     inside this function. No check is needed for dedicated pins as no
->     dedicated pins support OEN in the RZ/G2L family.
+Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+---
+Javier Carrasco (2):
+      pinctrl: ti-iodelay: Constify struct regmap_config
+      pinctrl: realtek: Constify struct regmap_config
 
-Thanks for the update!
+ drivers/pinctrl/realtek/pinctrl-rtd.c   | 2 +-
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+---
+base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
+change-id: 20240704-pinctrl-const-regmap_config-836a87d7e7e5
 
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -994,6 +994,61 @@ static bool rzg2l_ds_is_supported(struct rzg2l_pinct=
-rl *pctrl, u32 caps,
->         return false;
->  }
->
-> +static int rzg2l_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned in=
-t _pin)
-> +{
-> +       u64 *pin_data =3D pctrl->desc.pins[_pin].drv_data;
-> +       u64 caps =3D FIELD_GET(PIN_CFG_MASK, *pin_data);
-> +       u8 max_pin =3D pctrl->data->hwcfg->oen_max_pin;
-> +       u8 pin =3D RZG2L_PIN_ID_TO_PIN(_pin);
-> +
-> +       if (pin > max_pin)
+Best regards,
+-- 
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
 
-Likewise 2/9, just use the original directly.
-No need to resend, I can do this while applying.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
