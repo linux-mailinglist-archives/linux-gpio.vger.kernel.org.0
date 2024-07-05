@@ -1,152 +1,110 @@
-Return-Path: <linux-gpio+bounces-8055-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8056-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B7C1927E9D
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 23:34:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90A6492804B
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 04:18:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 14D42283F7F
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jul 2024 21:34:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C53C284018
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 02:18:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59E7314389F;
-	Thu,  4 Jul 2024 21:34:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C7CD41C93;
+	Fri,  5 Jul 2024 02:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OW87Yyqx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntimj0Ai"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9D06EB7D;
-	Thu,  4 Jul 2024 21:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D8F49632
+	for <linux-gpio@vger.kernel.org>; Fri,  5 Jul 2024 02:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720128846; cv=none; b=T7gwvFceKmXueK1W0WUoBG0O+0vaURCAz3mHHC/I8L2TEA4j9loSogbsiDmBjzWic9381U8EB+gHpOGKXpzQ5V7aeavTxWxQo26LCUrtIg9v8viqKCng+n35xD+TLhCGPb72HHoVAiopg/K8olaiLAeRXBG1Bt23FHpgUDsrqi4=
+	t=1720145862; cv=none; b=lXTzJi9hG0w9u+/0zeAg8I5Ws6yVDCHyglQ3cR701O5PjiwR28FQVRU2GLQUfrRjk3TUC5x8EXqIAPQhLgPgbzYzgEebv3c/yQ0lMdFuqYmErm4TZuDWJfy4cNtoNrvkR79zpsW/6jRy/LfEu/eZgUiN2bRi6nSwq+F5i+TMAIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720128846; c=relaxed/simple;
-	bh=3vfbqv9gQQpm1LW9Dts5ISDGsd5fjFLtPgac8Es5wPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uQxQjDowf0w6HFYDNPTI+AlfN8d4qzPBvgbt/gzyo0wfcLIZ33sGgmMbX3z5DA9DbDTGXy9nAt5ELsGI4xtA4ZWK2QCZUqhtlaaBndO3SX4fZpqYpmU8ahxat2jNTTg7qlGJGd65f8aVo2C97321R4fsr7Z3q46A/lh0T7sCoaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OW87Yyqx; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2FECD240006;
-	Thu,  4 Jul 2024 21:33:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1720128840;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q5IBUlpk519TSgD6Osr1ZyaFchjMZnggQfjeK80Zda4=;
-	b=OW87YyqxfC/aisrIaK1t9t5rNi1tv8W2h+PNzPy/mbY2MLmPV40lXp/tAQHoWvKu4AWsjJ
-	t1azANkvi0z3C8c1zRY+dEwMFTe4IitMjntGqs0weShRTHE6S9YLuTRM50bq5PQggOGH3h
-	VTb1TQxTb2kbXJ5aFHoZUbrXoTHiCyUiMq8h02kLT12CEGs/CoF9H4DdX4VqNE0u4czR5l
-	eyYcAzvCetxJAj9pUcmrGPPibpICDtqgs90easLdjOXXyAP4rPd46IcoQOzY7rAZwcoezR
-	bPShL3nDBJRC3irR8YI4aF7W8jyTpxGZxv27dKpKX4ap2xqwkURoZOagKsVprQ==
-Date: Thu, 4 Jul 2024 23:33:46 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Nathan Chancellor <nathan@kernel.org>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tony Lindgren
- <tony@atomide.com>, Bjorn Andersson <andersson@kernel.org>, Emilio
- =?UTF-8?Q?L=C3=B3pez?= <emilio@elopez.com.ar>, Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Krzysztof Kozlowski <krzk@kernel.org>, Daniel
- Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel
- review list <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan
- Cameron <jic23@kernel.org>, Lee Jones <lee@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Uwe
- =?UTF-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Richard
- Leitner <richard.leitner@linux.dev>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, "Naveen N. Rao"
- <naveen.n.rao@linux.ibm.com>, Damien Le Moal <dlemoal@kernel.org>, "Peng
- Fan (OSS)" <peng.fan@oss.nxp.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, llvm@lists.linux.dev,
- linux-clk@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-usb@vger.kernel.org, patches@opensource.cirrus.com,
- linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 20/20] of: deprecate and rename
- of_property_for_each_u32()
-Message-ID: <20240704233346.478431f8@booty>
-In-Reply-To: <20240703180111.GA1245093-robh@kernel.org>
-References: <20240703-of_property_for_each_u32-v1-0-42c1fc0b82aa@bootlin.com>
-	<20240703-of_property_for_each_u32-v1-20-42c1fc0b82aa@bootlin.com>
-	<20240703180111.GA1245093-robh@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1720145862; c=relaxed/simple;
+	bh=O6zGnu8+G258cbZUELfeQT8SFTGrnn0/650oCYATsSU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IvHwP6cszOPvUq6JqiaucxJGyELFgjxDpc0yamgizTm0eNS2SNUZDiv/iy7LwrAxiINaiZy0bqVCdKQQc1AA4whh/evVzHtCNDyPxN/Q2oxkGlxSv2awtrjPYNAb8nWibjAdT0FgMSqbpU4r7MNHvNE4eFGkjsPaKH+bva+/HU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ntimj0Ai; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-75ee39f1ffbso756246a12.2
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Jul 2024 19:17:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720145860; x=1720750660; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/H81/vnGlj02uvWLHxrqfAY2uzznqwKfIpChpXaBmTI=;
+        b=ntimj0Ai6CzIWSUTR72RlSycKNryZdxUHfZYSmxgzTRqMoG/EcBcKzC6WBXazmnw4W
+         Eo/LkCdvo7RoP04WkNOvhO67xN5YkXO4B3+R0S55TSf8nzs663fk5z38flU40MV9h2uH
+         LDQfRm+tOU8VfKC3ysr2kFgrdN3j8019r1BVfK6VgdRLq+ruieV6SUqy9bau5uGxZf8Y
+         J8C7HSIXt0qEkIS1dt8uzvPY6v7f2KTE50fPzsNtKfmuma16J/rWyyrnCxMWmwL+K63g
+         oY5S5HPwBLyvoTZrUbXFOOBJK3K91LfVSWRiJxoLrPbxLpHmhxXKQckPa/DupoaAU92A
+         +c2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720145860; x=1720750660;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/H81/vnGlj02uvWLHxrqfAY2uzznqwKfIpChpXaBmTI=;
+        b=SQ/cR7StCKmwp63aIOfl/OZe8nCsDN5fCHA+u6dReEsO7WNx6Lw26MZVYOFkdKHgR9
+         yNMFo/qo1vClyhmhj+sOjyQWF2M4CqbHnRrZ1/QoM2OaokIbhaAjeBfigCSf6XxUeLzR
+         Z4jyhkqEonbaRmde4JU9/S55hScDzmMDDZg214AYqHMfSeoGz2lthKQ8B1jIzMEzLan4
+         jpaDIQvQPpbr+otv+XYpTsWAERLs/ZUm04ReYMCnG839VwkPXJQc1SiCjnaDMnm6Tt3o
+         unoFrFVEk9P6PLml506Hem4pl9Jpk85b9CtPEQ7iw7boNpZ61lE0ZeSkHqR1J/8iPd+/
+         tcAg==
+X-Gm-Message-State: AOJu0YzmuOgJBDSd0q/ZCcq58tNT1dZc11qBNHWrbe90XG0hgWLJ2r3Q
+	CwB1jeLBd5okEKnyZG7DbfjWat5oW+GJ3FaMdrLFD/E3G8xOGjtWcpmfSw==
+X-Google-Smtp-Source: AGHT+IGI4qhPuH2czX2pgybQXsBC3moYROEui7ggLGIiBX4iStQEPHnYrmJ0fqQt6PiTrQfCBYx1oA==
+X-Received: by 2002:a05:6a20:2450:b0:1be:c63d:302b with SMTP id adf61e73a8af0-1c0cc73e621mr4057903637.21.1720145859843;
+        Thu, 04 Jul 2024 19:17:39 -0700 (PDT)
+Received: from rigel.home.arpa ([118.209.204.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99aa6220dsm2222964a91.38.2024.07.04.19.17.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jul 2024 19:17:39 -0700 (PDT)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH] bindings: python: correct spelling of repetitions
+Date: Fri,  5 Jul 2024 10:17:31 +0800
+Message-Id: <20240705021731.43143-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hello Rob,
+In another one of those spelling quirks, 'repetitions', which is
+indicative of something being repeated, is not a direct extension of
+'repeat'.
 
-On Wed, 3 Jul 2024 12:01:11 -0600
-Rob Herring <robh@kernel.org> wrote:
+Correct the spelling of 'repetitions'.
 
-> On Wed, Jul 03, 2024 at 12:37:04PM +0200, Luca Ceresoli wrote:
-> > of_property_for_each_u32() is meant to disappear. All the call sites not
-> > using the 3rd and 4th arguments have already been replaced by
-> > of_property_for_each_u32_new().
-> > 
-> > Deprecate the old macro. Also rename it to minimize the number of new
-> > usages and encourage conversion to the of_property_for_each_u32_new() macro
-> > in not(-yet)-upstream code.
-> > 
-> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> > 
-> > ---
-> > 
-> > Notes:
-> > 
-> >  * The following files have not been build-tested simply because I haven't
-> >    managed to have a config that enables them so far:
-> > 
-> >      drivers/irqchip/irq-pic32-evic.c
-> >      drivers/pinctrl/pinctrl-k210.c
-> > 
-> >  * These have not been converted yet as they are not trivial, and they will
-> >    need to use a more specific function that does the lookup they need and
-> >    returns the result:
-> > 
-> >      drivers/clk/clk-si5351.c  
-> 
-> I would do something like this:
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ bindings/python/gpiod/chip.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for the suggestions.
-
-I literally did not even try to look at what the code does in these few
-places, and still haven't, simply due to time availability. But I wanted
-to get a first series out as soon as possible as it would probably be
-useful to Peng [0]. Yours will be a good starting point for when I
-tackle those few remaining usages of the "old" macro. Thanks.
-
-[0] https://lore.kernel.org/all/20240628161617.6bc9ca3c@booty/
-
-Luca
-
+diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
+index 19c62cd..47bda11 100644
+--- a/bindings/python/gpiod/chip.py
++++ b/bindings/python/gpiod/chip.py
+@@ -252,7 +252,7 @@ class Chip:
+ 
+         line_cfg = _ext.LineConfig()
+ 
+-        # Sanitize lines - don't allow offset repeatitions or offset-name conflicts.
++        # Sanitize lines - don't allow offset repetitions or offset-name conflicts.
+         for offset, count in Counter(
+             [
+                 self.line_offset_from_id(line)
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.39.2
+
 
