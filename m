@@ -1,233 +1,388 @@
-Return-Path: <linux-gpio+bounces-8066-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8067-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34BEF928504
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 11:21:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6500928541
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 11:38:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67937B23AEB
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 09:21:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DD512839B0
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 09:38:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A562146D7C;
-	Fri,  5 Jul 2024 09:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 023D8146D71;
+	Fri,  5 Jul 2024 09:38:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="BHxXWldj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yBtx7k4Q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EDD1465A2
-	for <linux-gpio@vger.kernel.org>; Fri,  5 Jul 2024 09:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF39146A8E
+	for <linux-gpio@vger.kernel.org>; Fri,  5 Jul 2024 09:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720171291; cv=none; b=NHXYpnkwnpfojfksOAGMoHA6KGvGjGk42zBLh2iVzCTVx7wVprpPDPyENN1YE12tdbA/TGUyNZy1KRZAJSeAnIZaEgQ9ckKusW4mr59pGanGWIQxOSDlkVWXi47nY/geYAsJ8A7wDn68GcFqI6x3FcP1RmvVoNJ54SdN7mshZis=
+	t=1720172316; cv=none; b=K3WXwbQRLjD9QLYWIFqzIpw4rYcx9z8e0iqLZedrVeT5RnfySvSLfNnv4C/p8EE6huZtlSnxQRa2uOZH9YqzzhXdM0bSjay1p0dPhNzcwnFm92KWuPDonPfr5pISFnJxH4vHaj98F6AbeLPVKby25HTHQyZ4gUgE/hfN9no32ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720171291; c=relaxed/simple;
-	bh=DAsvD8/mLkcQAkkYRWz+VC5gPXf282xVyAGgndXBPhk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UYlR8qDknNPMAzaZ/JPu/6cd08IhbOdoAQ7JjcQG2yE+t8SnZSIhA+JdZ6AMSfgOzwefWVli4z7eNrmkG2q6ad0RbJSVyIOmGP8ACmQ6nMnHAcrRSKlj7/mCLJjACjovQXc/rk9mCYruBP0EAnr8+JUu9alphFLMbe56Mig/GDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=BHxXWldj; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a77b4387302so179096566b.1
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Jul 2024 02:21:27 -0700 (PDT)
+	s=arc-20240116; t=1720172316; c=relaxed/simple;
+	bh=H3LIhSNZQKMYtlqW8KsC915SQX2x44dGDfWPEwylGvs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lHW70ASTS2d5V0GaiwhMZ3huzy22zJHjU9+ZaqTmlGPHmj+9yE0WlOFYQP6z5zt7xBJbNGG9AWL9VcaTUvoHvIoEH6W5qxpe1c//Rtnzps2VgPuVOjNB1zLrigKXb45yI64Z78KMVIlTT2EmZeO+TTUv6uZDvB4liZiNJH/uRJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yBtx7k4Q; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-425809eef0eso9586205e9.3
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Jul 2024 02:38:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720171286; x=1720776086; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DAsvD8/mLkcQAkkYRWz+VC5gPXf282xVyAGgndXBPhk=;
-        b=BHxXWldj+hHqE2ns8S7/HAU42Z7MkYBmemSuhBWSrNKLJElFlh+Q7FcO+aA+P9LbaA
-         EAYq1RdO44rOCVBQIN7NgVzw5+vw9GZXvknaG0YFg/JZExIY6Ex6YAvsSbvIyrCbT1Fk
-         SymdVF1FI8op/8C6GBynndXKuBvrUlCd7+Orq+SdWWRrmREve0aOYgn+m9F7lNz8pCmy
-         FX7mtN7hJUMBz7mmYMIbddHt6ohOM24jP83x4BCkktmhK91m4j7HsLvHwH7jy1VI5k4S
-         M7Qyb+ARd26QRITXmUIfMXUvfuVm+MhhkaFkNiZglCxndpvv5En9S08MJPo8WpnSxewy
-         oRRQ==
+        d=linaro.org; s=google; t=1720172313; x=1720777113; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ObbfnTF/ig6JDQuTygy6iiFA4DAAf48nruHQbJOCnXQ=;
+        b=yBtx7k4Q3uK3VpOPEwQMi5t7cpws53I91OTxKLZNFFDrBGPosQJ029jue6g9wJI+gp
+         TV8m0fD36HVzk+MYoAgrDtppiyl4vEAwSVzGbGKJLwIDDCArME2hlCBkN6svIv6abrnW
+         UaXDVtytnJEVZBT8NVZBHPG/SgkoHLFd41FLUVFYQCvxsT0pBXv1dhJxD7CDpWOGtu2B
+         tIFSxpfDrRSDJeqwpnkaErQ2gIlb2Zks3rOAsbvyS0ZVZnbXIokQ/rlBjuDPAMAnaWUm
+         p3gFRzytVAznJUMsdnmTfy+IImI5k3Z+WzdkgrxoSq4gqsxFmABtrGWpoMWjAz05kpdX
+         FJbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720171286; x=1720776086;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DAsvD8/mLkcQAkkYRWz+VC5gPXf282xVyAGgndXBPhk=;
-        b=MzAom1RHZrSBkXQrnHuV515VnccVWKsPQrrqxahIVzBQaYh5VGRrUGXbWfEch1OjR/
-         +l4636UP6r7Um4Nl6nTwaPk9h/wcyHLsvKtKzHy3UDQ3kLRdBgv7g+YguEOMJv4mPtfV
-         hc2x7mQLveKR5EgfpbXMmxOdEELzpgdRp0lT623wAaEqz5iUMuNKA2R35oq/Hi/8HNwi
-         j5tSdx69SDpzhXPmVXDFmKfRfh7BXHf29GF98oRv8p+Q9s7My9qzI3q6whVJFRq+4Q8c
-         pbwKzVcoTf73Cr3UJEYrYfwPWiVoRnB5ZbGMYeWkcuZnaswRITEsdXteGVN2KaVbpel/
-         B0uw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBvlx3f9AiotkS6Es+3gMUJTsDfqLjS/Ms7xeF8jE38piwdL2C4wsLvMJcYvfaWAn/76i56FR7TSkHIt6e+u3Qu7hBh8WQHSXH4Q==
-X-Gm-Message-State: AOJu0Yw5mpwWnfHgzLj6v8OnvpvWrOedFBbG+/RCfl2WXrv0S16SIYtW
-	mKS0KP/dRy6qI+iYkKXjBObE+5oPO/9Xcr6i3MJtAAEsy9DlmY6ndlr650RR9Zo=
-X-Google-Smtp-Source: AGHT+IH5GBzifj2YL+uV1tph7kmD/UU37Fput+e22tUxmHwQFDW0cLo/eN2fRQ1OiC6xRmZjvtbAaw==
-X-Received: by 2002:a17:906:fb95:b0:a6f:b400:4751 with SMTP id a640c23a62f3a-a77ba46ccffmr181755366b.22.1720171286291;
-        Fri, 05 Jul 2024 02:21:26 -0700 (PDT)
-Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77d9cdf337sm10855266b.53.2024.07.05.02.21.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 02:21:25 -0700 (PDT)
-Date: Fri, 5 Jul 2024 11:21:25 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Nikita Shubin <nikita.shubin@maquefel.me>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, 
-	Hartley Sweeten <hsweeten@visionengravers.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Thierry Reding <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Sergey Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Ralf Baechle <ralf@linux-mips.org>, "Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
-	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-spi@vger.kernel.org, netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-ide@vger.kernel.org, linux-input@vger.kernel.org, linux-sound@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v10 00/38] ep93xx device tree conversion
-Message-ID: <jyvlqfvqn5bp3jmvxvwyrcqmihjohuq3o757mfph7x37kbwvtq@gtgyh4fca4fq>
-References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
- <CAHp75VfSC9gAD9ipeWRPdQOxUp4FXqYYei-cJTs38nbz0cHpkg@mail.gmail.com>
- <48c242838c77034485a9e667dc0e867207c5beed.camel@maquefel.me>
- <241a4cf9830b0118f01e8fcf2853c62527636049.camel@maquefel.me>
+        d=1e100.net; s=20230601; t=1720172313; x=1720777113;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ObbfnTF/ig6JDQuTygy6iiFA4DAAf48nruHQbJOCnXQ=;
+        b=NW9MgqGgvGXOSdTaeOUK+MzI19J2WSCaWeSPiQ9LuUaSfahotVSXBdWtUA5+PjbxlV
+         CYXXjdYYcPHaiz69K58SOiduIpOEKweqfx32a0FwiU0CGCgANmOFRvU76/IKhD9uBFFr
+         iRB0iNI2YBdG3Ujh6iJmynnn1T6zYp3NDMV41F/dCIkrla1MSo1gqLZhZzGF/PAFqRky
+         PxV9PCv0/NL0FUklr8NortcxZ1C+qJPvX/dqzFNNtSLIRFZQx+8B9tOv/LAIYNp6Vnhi
+         1m0RgaY/I4dCIKJvrrj9FVwEU35pK0QHA+o0I6pGhY+Rqf9HvgeQ+E33LyxwrOKPIS1l
+         JKMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWe+ctSFfyzd45EK8RGXiuqC0mw2VFqiT+C8xvcFS0+fFLRmfRpZMkQQWQALBTuNQ9jMT1BdupFwxCBKz+O/qorb/btCXQw+PseGg==
+X-Gm-Message-State: AOJu0Yw3wi0dKXwaD/ZGs6c7KBfemoRNSwrruwEO4PbBNIssJrTOMT5T
+	XzzfhVqZnoavSQI4x4Ltp9i+QcsLV2nv1ydd/KyLZdCerPCRqU6M1zGbxfQJ/Ew=
+X-Google-Smtp-Source: AGHT+IENEoehOBqKgKCrQHFL2ATAv5msu6AWrdhCuFQer5ew34/sZeVqsGuzLlH59WB4CY92L/619w==
+X-Received: by 2002:a5d:5184:0:b0:363:e0e2:eeff with SMTP id ffacd0b85a97d-3679dd3cb6cmr2609570f8f.20.1720172313033;
+        Fri, 05 Jul 2024 02:38:33 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367957d3451sm5781084f8f.101.2024.07.05.02.38.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jul 2024 02:38:32 -0700 (PDT)
+Message-ID: <4781d95e-a44c-423b-97b6-973c1826a1ab@linaro.org>
+Date: Fri, 5 Jul 2024 11:38:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="icynwgj6p72h37hs"
-Content-Disposition: inline
-In-Reply-To: <241a4cf9830b0118f01e8fcf2853c62527636049.camel@maquefel.me>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] pinctrl: samsung: Add support for pull-up and
+ pull-down
+To: Vishnu Reddy <vishnu.reddy@samsung.com>, s.nawrocki@samsung.com,
+ alim.akhtar@samsung.com, linus.walleij@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
+References: <CGME20240704043358epcas5p282acd174113c7baf3f7a3472ba4c39ff@epcas5p2.samsung.com>
+ <20240704042629.26151-1-vishnu.reddy@samsung.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240704042629.26151-1-vishnu.reddy@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 04/07/2024 06:26, Vishnu Reddy wrote:
+> gpiolib framework has the implementation of setting up the
+> PUD configuration for GPIO pins but there is no driver support.
+> 
+> Add support to handle the PUD configuration request from the
+> userspace in samsung pinctrl driver.
+> 
+> Signed-off-by: Vishnu Reddy <vishnu.reddy@samsung.com>
+> ---
+>  drivers/pinctrl/samsung/pinctrl-exynos-arm.c | 15 ++++
+>  drivers/pinctrl/samsung/pinctrl-s3c64xx.c    | 15 ++++
+>  drivers/pinctrl/samsung/pinctrl-samsung.c    | 80 ++++++++++++++++++++
+>  drivers/pinctrl/samsung/pinctrl-samsung.h    | 24 ++++++
+>  4 files changed, 134 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
+> index 85ddf49a5188..426d1daacef2 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
+> +++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
+> @@ -40,6 +40,20 @@ static const struct samsung_pin_bank_type bank_type_alive = {
+>  #define S5P_OTHERS_RET_MMC		(1 << 29)
+>  #define S5P_OTHERS_RET_UART		(1 << 28)
+>  
+> +/*
+> + * s5pv210_pud_value_init: initialize the drvdata pud_val with s5pv210 pud values
+> + * s5pv210_pull_disable:	0
+> + * s5pv210_pull_down_enable:	1
+> + * s5pv210_pull_up_enable:	2
+
+Please use proper defines, e.g. S5P_PIN_PUD_PULL_DISABLE
 
 
---icynwgj6p72h37hs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> + */
+> +static void s5pv210_pud_value_init(struct samsung_pinctrl_drv_data *drvdata)
+> +{
+> +	unsigned int i, *pud_val = drvdata->pud_val;
+> +
+> +	for (i = 0; i < PUD_MAX; i++)
+> +		pud_val[i] = i;
 
-Hello,
+pud_val[PUD_PULL_DISABLE] = PROPER_DEFINE
 
-On Thu, Jun 27, 2024 at 11:29:44AM +0300, Nikita Shubin wrote:
-> On Tue, 2024-06-18 at 19:20 +0300, Nikita Shubin wrote:
-> > Hello Andy!
-> > On Mon, 2024-06-17 at 12:58 +0200, Andy Shevchenko wrote:
-> > > On Mon, Jun 17, 2024 at 11:38=E2=80=AFAM Nikita Shubin via B4 Relay
-> > > <devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
-> > > >=20
-> > > > The goal is to recieve ACKs for all patches in series to merge it
-> > > > via Arnd branch.
-> > >=20
-> > > 'receive'
-> > >=20
-> > > > Unfortunately, CLK subsystem suddenly went silent on clk portion
-> > > > of
-> > > > series V2 reroll,
-> > > > tried to ping them for about a month but no luck.
-> > > >=20
-> > > > Link:
-> > > > https://lore.kernel.org/r/20240408-ep93xx-clk-v2-1-adcd68c13753@maq=
-uefel.me
-> > > >=20
-> > > > Some changes since last version (v9) - see "Changes in v10",
-> > > > mostly
-> > > > cosmetic.
-> > >=20
-> > > ...
-> > >=20
-> > > > Patches should be formated with '--histogram'
-> > >=20
-> > > 'formatted'
-> > >=20
-> > > ...
-> > >=20
-> > > > Changes in v10:
-> > > >=20
-> > > > Reordered SoB tags to make sure they appear before Rb and Acked
-> > > > tags.
-> > >=20
-> > > This is not required. The importance is only the order of SoBs
-> > > themselves. If they are interleaved with other tags, it's fine.
-> >=20
-> > Ah - ok. Just saw someone was complaining about b4 reordering them.=20
-> >=20
-> > >=20
-> > > ...
-> > >=20
-> > >=20
-> > > Hopefully to see this series being eventually applied soon.
-> > > Arnd? (Do we have all necessary subsystem maintainers' tags, btw?)
-> > >=20
-> > >=20
-> >=20
-> > As i see from my perspective only three left:
-> >=20
-> > Clk subsystem:
-> >=20
-> > - clk: ep93xx: add DT support for Cirrus EP93xx
-> >=20
-> > DMA subsystem (but the only request from Vinod, as far as i remember,
-> > was fixing commits titles):
-> >=20
-> > - dmaengine: cirrus: Convert to DT for Cirrus EP93xx
-> > - dmaengine: cirrus: remove platform code
-> >=20
-> > Beside that tags missing on platform code removal (which can be Acked
-> > by Arnd himself i believe) and dtsi/dts files (same ?).
->=20
-> Vinod acked the above two patches:
->=20
-> https://lore.kernel.org/all/ZnkIp8bOcZK3yVKP@matsya/
-> https://lore.kernel.org/all/ZnkImp8BtTdxl7O3@matsya/
->=20
-> so only:
->=20
-> - clk: ep93xx: add DT support for Cirrus EP93xx
->=20
-> https://lore.kernel.org/all/20240617-ep93xx-v10-3-662e640ed811@maquefel.m=
-e/
->=20
-> left.
->=20
-> Hope Stephen will find some time for this one.
+> +}
+> +
+>  static void s5pv210_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
+>  {
+>  	void __iomem *clk_base = (void __iomem *)drvdata->retention_ctrl->priv;
+> @@ -133,6 +147,7 @@ static const struct samsung_pin_ctrl s5pv210_pin_ctrl[] __initconst = {
+>  		.nr_banks	= ARRAY_SIZE(s5pv210_pin_bank),
+>  		.eint_gpio_init = exynos_eint_gpio_init,
+>  		.eint_wkup_init = exynos_eint_wkup_init,
+> +		.pud_value_init	= s5pv210_pud_value_init,
+>  		.suspend	= exynos_pinctrl_suspend,
+>  		.resume		= exynos_pinctrl_resume,
+>  		.retention_data	= &s5pv210_retention_data,
+> diff --git a/drivers/pinctrl/samsung/pinctrl-s3c64xx.c b/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
+> index c5d92db4fdb1..cf57b0f16999 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
+> +++ b/drivers/pinctrl/samsung/pinctrl-s3c64xx.c
+> @@ -255,6 +255,20 @@ static int s3c64xx_irq_get_trigger(unsigned int type)
+>  	return trigger;
+>  }
+>  
+> +/*
+> + * s3c64xx_pud_value_init: initialize the drvdata pud_val with s3c64xx pud values
+> + * s3c64xx_pull_disable:	0
+> + * s3c64xx_pull_down_enable:	1
+> + * s3c64xx_pull_up_enable:	2
 
-As we're approaching the merge window and this is still unclear, I
-applied the pwm bits (i.e. patches 12, 13). If I understand correctly,
-patch 33 isn't suitable for application yet as it has a dependency on
-pinctrl changes in that series.
+Use proper defines. Comments are not the place to define magic values.
 
-(side note: Your patches are signed, but that doesn't bring any benefit
-if the receivers don't have your key. I didn't find it neither on
-keys.openpgp.org nor in the kernel pgp key collection.)
 
-Best regards
-Uwe
+> + */
+> +static void s3c64xx_pud_value_init(struct samsung_pinctrl_drv_data *drvdata)
+> +{
+> +	unsigned int i, *pud_val = drvdata->pud_val;
+> +
+> +	for (i = 0; i < PUD_MAX; i++)
+> +		pud_val[i] = i;
+> +}
+> +
+>  static void s3c64xx_irq_set_handler(struct irq_data *d, unsigned int type)
+>  {
+>  	/* Edge- and level-triggered interrupts need different handlers */
+> @@ -797,6 +811,7 @@ static const struct samsung_pin_ctrl s3c64xx_pin_ctrl[] __initconst = {
+>  		.nr_banks	= ARRAY_SIZE(s3c64xx_pin_banks0),
+>  		.eint_gpio_init = s3c64xx_eint_gpio_init,
+>  		.eint_wkup_init = s3c64xx_eint_eint0_init,
+> +		.pud_value_init	= s3c64xx_pud_value_init,
+>  	},
+>  };
+>  
+> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> index 623df65a5d6f..7d7e924c1fdb 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
+> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> @@ -997,6 +997,80 @@ static int samsung_pinctrl_unregister(struct platform_device *pdev,
+>  	return 0;
+>  }
+>  
+> +/*
+> + *samsung_pud_value_init: initialize the drvdata pud_val
 
---icynwgj6p72h37hs
-Content-Type: application/pgp-signature; name="signature.asc"
+You use some weird style of comments. It's not kerneldoc, it's not a
+proper neither useful comment. Either use proper kerneldoc (and test
+it!) or drop duplicated function names. They are not helping. This
+applies everywhere.
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaHuxIACgkQj4D7WH0S
-/k63agf/ctyXHUSwirhdvMJNeHEME1eqwJPf8P71cxUigi0cvcf0NrTT4jEqglzC
-BqT8dRZCw6LKUShZlhwO7ymRXcAjNYTvFLuJKQYOGuVQZQEtoK7PDa80NeQjFhZP
-r0CwuOQfcg2ovACIA1T/iSX2APqGatvsO4Ke7h2u5kawsGxQIu2TZnfPDhwTIdqj
-Ib33BChvzlU45YrMZrQUHKE3/3XOHyxVvZSutJmaHLtSdIOE/fPr/U5anDzjdWFS
-gxrbDGE0Z3LyDIb0OB8iZiVIeyXDjysmlTdYpfPQi3/4JT+ohaNXgpSC5dmYo/s+
-R6QHGSe+ahTTQGyCjdYkOM/hMh/CiQ==
-=1/WB
------END PGP SIGNATURE-----
+> + */
+> +static void samsung_pud_value_init(struct samsung_pinctrl_drv_data *drvdata)
+> +{
+> +	unsigned int  *pud_val = drvdata->pud_val;
+> +
+> +	pud_val[PUD_PULL_DISABLE] = PIN_PUD_PULL_UP_DOWN_DISABLE;
+> +	pud_val[PUD_PULL_DOWN] = PIN_PUD_PULL_DOWN_ENABLE;
+> +	pud_val[PUD_PULL_UP] = PIN_PUD_PULL_UP_ENABLE;
+> +}
+> +
+> +/*
+> + * samsung_gpio_set_pud will enable or disable the pull-down and
+> + * pull-up for the gpio pins in the PUD register.
+> + */
+> +static void samsung_gpio_set_pud(struct gpio_chip *gc, unsigned int offset,
+> +				 unsigned int value)
+> +{
+> +	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
+> +	const struct samsung_pin_bank_type *type = bank->type;
+> +	void __iomem *reg;
+> +	unsigned int data, mask;
+> +
+> +	reg = bank->pctl_base + bank->pctl_offset;
+> +	data = readl(reg + type->reg_offset[PINCFG_TYPE_PUD]);
+> +	mask = (1 << type->fld_width[PINCFG_TYPE_PUD]) - 1;
+> +	data &= ~(mask << (offset * type->fld_width[PINCFG_TYPE_PUD]));
+> +	data |= value << (offset * type->fld_width[PINCFG_TYPE_PUD]);
+> +	writel(data, reg + type->reg_offset[PINCFG_TYPE_PUD]);
+> +}
+> +
+> +/*
+> + * samsung_gpio_set_config will identify the type of PUD config based
+> + * on the gpiolib request to enable or disable the PUD configuration.
+> + */
+> +static int samsung_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+> +				   unsigned long config)
+> +{
+> +	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
+> +	struct samsung_pinctrl_drv_data *drvdata = bank->drvdata;
+> +	unsigned int value;
+> +	int ret = 0;
+> +	unsigned long flags;
+> +
+> +	switch (pinconf_to_config_param(config)) {
+> +	case PIN_CONFIG_BIAS_DISABLE:
+> +		value = drvdata->pud_val[PUD_PULL_DISABLE];
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> +		value = drvdata->pud_val[PUD_PULL_DOWN];
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_UP:
+> +		value = drvdata->pud_val[PUD_PULL_UP];
+> +		break;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	ret = clk_enable(drvdata->pclk);
+> +	if (ret) {
+> +		dev_err(drvdata->dev, "failed to enable clock\n");
+> +		return ret;
+> +	}
+> +
+> +	raw_spin_lock_irqsave(&bank->slock, flags);
+> +	samsung_gpio_set_pud(gc, offset, value);
+> +	raw_spin_unlock_irqrestore(&bank->slock, flags);
+> +
+> +	clk_disable(drvdata->pclk);
+> +
+> +	return ret;
+> +}
+> +
+>  static const struct gpio_chip samsung_gpiolib_chip = {
+>  	.request = gpiochip_generic_request,
+>  	.free = gpiochip_generic_free,
+> @@ -1006,6 +1080,7 @@ static const struct gpio_chip samsung_gpiolib_chip = {
+>  	.direction_output = samsung_gpio_direction_output,
+>  	.to_irq = samsung_gpio_to_irq,
+>  	.add_pin_ranges = samsung_add_pin_ranges,
+> +	.set_config = samsung_gpio_set_config,
+>  	.owner = THIS_MODULE,
+>  };
+>  
+> @@ -1237,6 +1312,11 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
+>  	if (ctrl->eint_wkup_init)
+>  		ctrl->eint_wkup_init(drvdata);
+>  
+> +	if (ctrl->pud_value_init)
+> +		ctrl->pud_value_init(drvdata);
+> +	else
+> +		samsung_pud_value_init(drvdata);
+> +
+>  	ret = samsung_gpiolib_register(pdev, drvdata);
+>  	if (ret)
+>  		goto err_unregister;
+> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
+> index d50ba6f07d5d..61384096b6d7 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-samsung.h
+> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
+> @@ -61,6 +61,28 @@ enum pincfg_type {
+>  #define PIN_CON_FUNC_INPUT		0x0
+>  #define PIN_CON_FUNC_OUTPUT		0x1
+>  
+> +/*
+> + * Values for the pin PUD register.
+> + */
+> +#define PIN_PUD_PULL_UP_DOWN_DISABLE	0x0
 
---icynwgj6p72h37hs--
+EXYNOS_PIN_PUD_PULL_DISABLE
+
+> +#define PIN_PUD_PULL_DOWN_ENABLE	0x1
+
+EXYNOS_PIN_PID_PULL_DOWN
+
+> +#define PIN_PUD_PULL_UP_ENABLE		0x3
+
+EXYNOS_PIN_PID_PULL_UP
+
+> +
+> +/*
+> + * enum pud_index: Index values to access the pud_val array in
+> + *	struct samsung_pinctrl_drv_data.
+> + * @PUD_PULL_DISABLE: Index for value of pud disable
+> + * @PUD_PULL_DOWN: Index for the value of pull down enable
+> + * @PUD_PULL_UP: Index for the value of pull up enable
+> + * @PUD_MAX: Maximun value of the index
+
+Typo: Maximum
+
+> + */
+> +enum pud_index {
+> +	PUD_PULL_DISABLE,
+> +	PUD_PULL_DOWN,
+> +	PUD_PULL_UP,
+> +	PUD_MAX,
+> +};
+
+Best regards,
+Krzysztof
+
 
