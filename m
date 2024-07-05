@@ -1,159 +1,125 @@
-Return-Path: <linux-gpio+bounces-8072-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8073-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A72689289F4
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 15:42:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C52B928A77
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 16:16:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D9C581C22C41
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 13:42:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC40328691B
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 14:15:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B62A814D71E;
-	Fri,  5 Jul 2024 13:42:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47FD416A94A;
+	Fri,  5 Jul 2024 14:15:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cxj4bz5J"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="mJAu40VO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F0514A614
-	for <linux-gpio@vger.kernel.org>; Fri,  5 Jul 2024 13:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C841146A69
+	for <linux-gpio@vger.kernel.org>; Fri,  5 Jul 2024 14:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720186949; cv=none; b=Zk/q9LnzuKU6TYezRtEp5+Da+7SsZ/3lLltZuTK3cYQLRMReYM4wFQhlwO3pdLSJNRPndusFjMUe0DRzBptlYEzHKU6x6raQXm07LESpTIO6ycs5DVO/EvsyjPEQOiu0fbvzqq8ATVDgcW/lzysDTeWMN41KcWwgdgfiTfIyjGQ=
+	t=1720188954; cv=none; b=mwzMoZef1C8CCgcV1WA9dmE7ehwSc85ML5WkjlHqudqV6re5JRxxEolGbhTBcHaixHQKZqJTkxOLefAKuaj21Who3818e/t1x26/EK7ET9Xz//qLyfo8TDzsaXQB6YL4z6sOnPH9d+y9YDOhrq9t8c3idOTsDgNxyf6D4VLUgK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720186949; c=relaxed/simple;
-	bh=xAiLtazfBXSZFhUCuJv5iLA8GUS2Erahe3O/6nbCjGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UB+QFOeYb99vvprnMbBvGiSkQ0tlgPnB0joCiyDWI/ELeIVcP9Q8TtEVAufD39HLp2kqFLeQJHOQBBuUp8kaHLJaKkZq+mlCGGrjY7IRLvo8bOZl0gqREit+kt1/iNasOD+mRpib8osGdGrHWm5agtorCjc18uDXMHNPW5ri3I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cxj4bz5J; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720186946;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lNWQiXa5WTonO6VnFXHoZW4uvs/niJejriJYafDuJeE=;
-	b=cxj4bz5JmsotFFslY1NW/t9fdOC8FwQQHhvmncDBCllpsDVlTncZF881ABMAOxcBmB/uZP
-	Ik/geTb1L0w2eM+PjmSsSiRRORa7qDScEQgyD7eBQmrjTLGKuHIHD/8mehD5C73ekhu8ga
-	jRZQusc0/fAEky/WeZ8mKr5e3ZmYkww=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-73-MrYSXrccM7aZI3HJYYQ2kQ-1; Fri, 05 Jul 2024 09:42:25 -0400
-X-MC-Unique: MrYSXrccM7aZI3HJYYQ2kQ-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-79efed0e796so25755585a.1
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Jul 2024 06:42:25 -0700 (PDT)
+	s=arc-20240116; t=1720188954; c=relaxed/simple;
+	bh=csMbNIXYbDs8teffXzD2GvgCq5Qy1ZwmaOAcEOMsHVw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f0eKOl/a2KXQmGBBqw7jFTUQ5wYBWNo0IuthUpmKEdG+nP4el/nhH+5levzSY/bdl1Ex+kv19rG2jIN3OXBNswHt7No+PX4OGyX7tj1IPISa1s7aCtinZm1E/WbxMUlok+QLA2P+2x8WL1p5Jq8L2GMyoNsbIvKEEubKToIdSSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=mJAu40VO; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ee88c4443eso19641981fa.3
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Jul 2024 07:15:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720188949; x=1720793749; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vB+CDmf4yU1/047AzwbsEow70avL0EmzWRISr/VcnH8=;
+        b=mJAu40VOb5FmxRqjtCmVTQz43Tp+ETykR4DnpdARa12BsgOkyRVepMN7CNFTP2lfEY
+         tvQLwlNEUzKUDKBH6G1JM+1enmZETp+0eXKf0Rv2PCKfezGYbAcBiQuZX7jawVZvKUBP
+         oYoLtISfmsTHemU0aw3jeYPaHNmfkl0aRrlOASqMpKFQgjUMzVi39Y2Kk4I1xlvdV2O1
+         y5QrHnO2lLlVT30NYVobJxLu6vWXtS6+SX7NJr6vPv+BBQZ2S1ndvUFm/JfqjyrUciel
+         oxKYYtIaCtmuQq2C+Q9SaTgLvlrB73ky8RsqpOWKjs8tZEhW9c3Q8BVNFU/nTjq+ao0F
+         kErQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720186945; x=1720791745;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lNWQiXa5WTonO6VnFXHoZW4uvs/niJejriJYafDuJeE=;
-        b=WUYo5RoguTHzhIeA5BLoiHRU5xKWcpLwV7x6glDTj/HggG492I88i3Lw1LnLIzNjtB
-         vZYqiwqi4APNdNRWhQzg6PTfbId10GDoYr7hOqnHeBVM4xL4W/tmIoURsdUn3jZR+A9C
-         RvfDB/mX7gvu77JIhxINTXWma5Pt+M4ctV7onGNuAeVsLx3JOJtFpX9eyaGzS3gefygH
-         +xeOCQ9pEBWQTTjkRuXlaW+kNCJkpzqnAjC/7AMO6ly5w0thu1DqZ7n44wbgMX28WTbb
-         b0/SdmD/S/+CnhCza5MVYP0B5VgbmfQlFaFcdS3Khb4h2XAlIpzcgra4GtQZe5JtpdtB
-         FnXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNP9UutvrYUzGNObnHp2mUCA4+UfU/DRfNV2cO54HSBU+DB3wtKt1kLoMs9mC+LUf0CTwoLQXA+wHzvQK3jjG3lxsdX5ERcwuxIA==
-X-Gm-Message-State: AOJu0Yyzv1dQ2jaSAsRLqJO4uaHYm6f30ipq0J5IwNfmnGxldLXy7vle
-	D/FqRAaYR8285xBDbDOYamAUKNHBmFimLMyHIcY8TYXoCqpIifedSevbSX0vkEy89KDlh7XzOEr
-	VOrACMH16eGWiyp4tMvOQzdt80e59utx8Iv+Y3hB10IX26XVmFU/SAl3uonI=
-X-Received: by 2002:a05:620a:13d2:b0:79d:7e5a:d044 with SMTP id af79cd13be357-79eef4c0f06mr737798785a.28.1720186944980;
-        Fri, 05 Jul 2024 06:42:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHzRoLCo4GeRRFCdesL0t0J6Xc2rhP3ZGCRDtPGGaxotQxYNzT1wzmgDzK5ccFskQ+43Nbdxg==
-X-Received: by 2002:a05:620a:13d2:b0:79d:7e5a:d044 with SMTP id af79cd13be357-79eef4c0f06mr737789985a.28.1720186944583;
-        Fri, 05 Jul 2024 06:42:24 -0700 (PDT)
-Received: from x1gen2nano ([2600:1700:1ff0:d0e0::b])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79d69299b81sm773174785a.71.2024.07.05.06.42.21
+        d=1e100.net; s=20230601; t=1720188949; x=1720793749;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vB+CDmf4yU1/047AzwbsEow70avL0EmzWRISr/VcnH8=;
+        b=kPod7xBk21S9td9xtVgWVco+K6bzgDUDhykT91+RmiDAGG7xiE/y23sBJ6RR+Hric8
+         yCfYN3Q8uAQm6TPYfoqa8BHCmd0HL51OUvoz7nbZrYXmGUemByA0y/i6uwiXP+AVzvNe
+         u7YbjxF/gaFqItWB8cT8r7LDwpaqasXq7alBwuIujXs9Eg1HbXSdBarYeKfm+vkoYwqS
+         yFs8Nlfa7FYz0TaOldAKNRwKAr9MVqC7XD1eCLNjYbcPJJzVe897X7W1nhcHxu4chBVP
+         a4oFZochL6MApoFOAmxhcuKi/H94X9ME4V3Jg4OUtU8JD7LlPtGa4MR0ps5r2iTczDPX
+         wYtg==
+X-Forwarded-Encrypted: i=1; AJvYcCX4zSvjTjywoNjXYyOQJdJ+cQVEHlGhWgerkmJcl5KrUJSI8A5o7D8GcWrivN4TRGruha6au9xKnDUE2T1b1gxs/+aWMs6NYujUsw==
+X-Gm-Message-State: AOJu0YyPNdowg6cAPZt2MhUTDJoEE6sEVitGwxD+FdKEtt9NTwVbfj1k
+	GSobUU8FzObK1yTyjxNePdjV4AMUjp+qTKNiKWakwNIQM/iioApVCqCd9GQh0Lg7DtoMgRKqzee
+	C
+X-Google-Smtp-Source: AGHT+IH3FYEYcatWMaLhI+Grsy+GgqRs9QH35DHFk1d7q1MrhiTUsoNESzzybKPztgIRAGXv5IONAg==
+X-Received: by 2002:a2e:8656:0:b0:2ec:3e02:9737 with SMTP id 38308e7fff4ca-2ee8ed69b9cmr34232481fa.2.1720188949395;
+        Fri, 05 Jul 2024 07:15:49 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:c688:2842:8675:211])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3678f41116bsm8041805f8f.116.2024.07.05.07.15.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 06:42:24 -0700 (PDT)
-Date: Fri, 5 Jul 2024 08:42:19 -0500
-From: Andrew Halaney <ahalaney@redhat.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org, 
-	konrad.dybcio@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	djakov@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	jassisinghbrar@gmail.com, herbert@gondor.apana.org.au, davem@davemloft.net, 
-	manivannan.sadhasivam@linaro.org, will@kernel.org, joro@8bytes.org, conor@kernel.org, 
-	tglx@linutronix.de, amitk@kernel.org, thara.gopinath@gmail.com, 
-	linus.walleij@linaro.org, wim@linux-watchdog.org, linux@roeck-us.net, rafael@kernel.org, 
-	viresh.kumar@linaro.org, vkoul@kernel.org, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, mcoquelin.stm32@gmail.com, robimarko@gmail.com, 
-	bartosz.golaszewski@linaro.org, kishon@kernel.org, quic_wcheng@quicinc.com, 
-	alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org, agross@kernel.org, 
-	gregkh@linuxfoundation.org, quic_tdas@quicinc.com, robin.murphy@arm.com, 
-	daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com, 
-	quic_rjendra@quicinc.com, ulf.hansson@linaro.org, quic_sibis@quicinc.com, 
-	otto.pflueger@abscue.de, luca@z3ntu.xyz, neil.armstrong@linaro.org, abel.vesa@linaro.org, 
-	bhupesh.sharma@linaro.org, alexandre.torgue@foss.st.com, peppe.cavallaro@st.com, 
-	joabreu@synopsys.com, netdev@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com, 
-	bhelgaas@google.com, krzysztof.kozlowski@linaro.org, u.kleine-koenig@pengutronix.de, 
-	dmitry.baryshkov@linaro.org, quic_cang@quicinc.com, danila@jiaxyga.com, 
-	quic_nitirawa@quicinc.com, mantas@8devices.com, athierry@redhat.com, 
-	quic_kbajaj@quicinc.com, quic_bjorande@quicinc.com, quic_msarkar@quicinc.com, 
-	quic_devipriy@quicinc.com, quic_tsoni@quicinc.com, quic_rgottimu@quicinc.com, 
-	quic_shashim@quicinc.com, quic_kaushalk@quicinc.com, quic_tingweiz@quicinc.com, 
-	quic_aiquny@quicinc.com, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-phy@lists.infradead.org, linux-crypto@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	iommu@lists.linux.dev, linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, kernel@quicinc.com
-Subject: Re: [PATCH 29/47] dt-bindings: net: qcom,ethqos: add description for
- qcs9100
-Message-ID: <gt35pxlulfowpbca3sb6nf5ble4lhq3kolmjyc275vtdcmeixx@gkctewz6tbwv>
-References: <20240703025850.2172008-1-quic_tengfan@quicinc.com>
- <20240703025850.2172008-30-quic_tengfan@quicinc.com>
- <u5ekupjqvgoehkl76pv7ljyqqzbnnyh6ci2dilfxfkcdvdy3dp@ehdujhkul7ow>
- <f4162b7f-d957-4dd6-90a0-f65c1cbc213a@quicinc.com>
- <add1bdda-2321-4c47-91ef-299f99385bc8@lunn.ch>
+        Fri, 05 Jul 2024 07:15:49 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+X-Google-Original-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: fixes for v6.10-rc7
+Date: Fri,  5 Jul 2024 16:15:44 +0200
+Message-ID: <20240705141544.20101-1-bartosz.golaszewski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <add1bdda-2321-4c47-91ef-299f99385bc8@lunn.ch>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 04, 2024 at 06:03:14PM GMT, Andrew Lunn wrote:
-> On Thu, Jul 04, 2024 at 09:13:59AM +0800, Tengfei Fan wrote:
-> > 
-> > 
-> > On 7/3/2024 11:09 PM, Andrew Halaney wrote:
-> > > On Wed, Jul 03, 2024 at 10:58:32AM GMT, Tengfei Fan wrote:
-> > > > Add the compatible for the MAC controller on qcs9100 platforms. This MAC
-> > > > works with a single interrupt so add minItems to the interrupts property.
-> > > > The fourth clock's name is different here so change it. Enable relevant
-> > > > PHY properties. Add the relevant compatibles to the binding document for
-> > > > snps,dwmac as well.
-> > > 
-> > > This description doesn't match what was done in this patch, its what
-> > > Bart did when he made changes to add the sa8775 changes. Please consider
-> > > using a blurb indicating that this is the same SoC as sa8775p, just with
-> > > different firmware strategies or something along those lines?
-> > 
-> > I will update this commit message as you suggested.
-> 
-> Hi Andrew, Tengfei
-> 
-> Please trim emails when replying to just the needed context.
-> 
+Linus,
 
-Sorry, I'm always a little guilty of this. In this case I didn't trim
-since the patch was small and trimming the diff out would then make it
-tough to see how my comment about the description relates to the body of
-the patch. But I'll try and trim when appropriate. Just replying here to
-explain myself as this isn't the first time I've been suggested to trim
-more aggressively and I don't want folks to think I'm completely ignoring them.
+Please pull the following set of fixes for the next RC. There are two OF
+lookup quirks and one fix for an issue in the generic gpio-mmio driver.
 
-Thanks,
-Andrew
+Best Regards,
+Bartosz Golaszewski
 
+The following changes since commit 22a40d14b572deb80c0648557f4bd502d7e83826:
+
+  Linux 6.10-rc6 (2024-06-30 14:40:44 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.10-rc7
+
+for you to fetch changes up to f8d76c2c313c56d5cb894a243dff4550f048278d:
+
+  gpiolib: of: add polarity quirk for TSC2005 (2024-07-05 11:00:45 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.10-rc7
+
+- add two OF lookup quirks for TSC2005 and MIPS Lantiq
+- don't try to figure out bgpio_bits from the "ngpios" property in gpio-mmio
+
+----------------------------------------------------------------
+Dmitry Torokhov (2):
+      gpiolib: of: fix lookup quirk for MIPS Lantiq
+      gpiolib: of: add polarity quirk for TSC2005
+
+Shiji Yang (1):
+      gpio: mmio: do not calculate bgpio_bits via "ngpios"
+
+ drivers/gpio/gpio-mmio.c  |  2 --
+ drivers/gpio/gpiolib-of.c | 22 ++++++++++++++++++++--
+ 2 files changed, 20 insertions(+), 4 deletions(-)
 
