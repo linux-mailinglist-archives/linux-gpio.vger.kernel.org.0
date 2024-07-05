@@ -1,135 +1,111 @@
-Return-Path: <linux-gpio+bounces-8059-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8060-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2C6E9282C4
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 09:35:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4A839282F5
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 09:43:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DDA42893E6
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 07:35:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D64101C243E1
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 07:42:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95EE413BAE4;
-	Fri,  5 Jul 2024 07:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BE5E14535B;
+	Fri,  5 Jul 2024 07:41:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cUp5w5w3"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="x+kEQv3G"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6215E1F61C
-	for <linux-gpio@vger.kernel.org>; Fri,  5 Jul 2024 07:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893EE14533F
+	for <linux-gpio@vger.kernel.org>; Fri,  5 Jul 2024 07:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720164907; cv=none; b=jlnvUzYRDEHJqa3yFOEn+t9mBIwQurqo7e/fiT+NV49B2sfLwKBpAQ8Kh81AQ2IO/4weasRj9UfBJRGQxWXz1rnvpg21iztmedwO9cllRYy3S4+LqUpKwOMYsiIr5RGcQj4EnmF7Czc9RDeBHD8MyHRcIF6YWgL3Cb1G6W1h6CQ=
+	t=1720165298; cv=none; b=eIBcumNpi15xFftBXPCJFsX5b2xqNCgghOBePk7p0eSbOyE1a8CG1XD9WlLTeGWHpZ4vpt0betSujLZZcTPJR+F8TTffULxHZJh8E06MtGx48K0JIvloCKMj0NE/TQm0Cjw+upCcTyWhG+XQeHrYhlskwTbednZOAoDNxTgAGao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720164907; c=relaxed/simple;
-	bh=Wrk92or+O+A80qs6NjXd3fn2VQaq5O/hCvP18AjsoBw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rw/4W/4+2YIEsQkSg3jrejgKZW07G73eBrI6+cli82LdP4D/MTJtD1/obdKPS8CX3h7wfydnDbjHg/jUpM+lZddCM1zfzD7D6VW22kcWSInR3ncAZXBd0YfwfBErNkTasedbNMRob1a51d7SmROnF2aU12yGg9se7IQPdO80HCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cUp5w5w3; arc=none smtp.client-ip=209.85.208.178
+	s=arc-20240116; t=1720165298; c=relaxed/simple;
+	bh=QhpaGGWteXFElMH7jcluYeoEpLhQ1WjMx//bGvzH6T0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A2Qx1y6iheWlHKnxU8NFFpwXdHshdEpOiyjlQujNCQEUiSABpLa71t5iWtjcgWOyqJOEt3EtMsuIjyZFOhIHs+hyuUPQxa6M4EapQzq/8RzB7LG3EhVCL/c5CJw2y1DCGwUPOHpp1MReJybEOc0ETtkGBqB1UAKpXmyFulGtaic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=x+kEQv3G; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ee7a1ad286so14476311fa.2
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Jul 2024 00:35:05 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4256742f67fso9082015e9.3
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Jul 2024 00:41:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720164903; x=1720769703; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720165294; x=1720770094; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OVxEhWZFC9uqfiiNqY5+iT6YbrsToC8wp1kf0BxdkEk=;
-        b=cUp5w5w342MRYLoq8s1NB7ZKGxZ+vzGIL9/+QVwdq5tAX9KT8mywzH1pLt1tgdITCV
-         5yJW7+S+m96u12/Q91ySHEoIC7FC25mm9xaA+SkjSdXfpmT/c6LQEAgV08Jj82ETb8mo
-         rtumB87Y4wvZevGtOxpAUqXCBxlqTTG5BNbUJbFNt1F9aI4sZMrd7GJdcDsPew9MKnOu
-         Mwq2ShM9vX/JQHbHiqxKjl8IbuNTTUJkiBx+cI+WyGPCo3ytsvwRWC/0M1yVbCMBZwWI
-         fAtJj3y4ZaUqIIP6P1Q2SK5uq1+eYQY65xfFdsHWCTSiZpWyzALUCArtD50iiZ8XYY6l
-         uPNw==
+        bh=LWBpRkAHJA341wIm+idz1ihwKmrdjtmhzxdKDl080Lg=;
+        b=x+kEQv3GNvZv+aWDt5WRWlvGyHWKSKxo8eOjP3OZHm1OViE9UU9rXpDPEtAvFwFnvH
+         T65ysUzM1SXzs3T9f58xUMhorjkTOq64rUPLeBV9X3z08OTlTsGCPHFH8R+bwbBK/WMR
+         QfA5Xwkjaj3yL6ncVbvYLdVapd5r+jh1biGV8I8R/3AbkQNLmK7td6dq+yMTu8SH5fRi
+         zh4PTKT3cc29d/F1cKfQxtypTgIsuXAEsc4vfSz/YtsbcZvCVE7yYWe2V4UpGvdQHYxV
+         g0aUFMooebh10v4kP4MpviweMS74UEAWX8NCcvXW6Py19r4po8kc7nrT/FjdmgT/ddIZ
+         WH2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720164903; x=1720769703;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1720165294; x=1720770094;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OVxEhWZFC9uqfiiNqY5+iT6YbrsToC8wp1kf0BxdkEk=;
-        b=F5XFkc3NkNAG2DsDKp4fg/R8wPNe961obR8l3sTBXSFIPl/yiUB8zrics/5m5rxvlo
-         lDemCtxUJLT9ejPEsad3ZdGlH6ULUMlXEPluO5MkcJhQIG/uNjVlHI6GWzLs9iNRKKov
-         tRIimbDrkqtW/2hdJhjSvn7/pd7NCVl2U7W+t7PsdAJcnEp61VoqcciryoGGoYgPNUGA
-         CuOnBn4sScet9icS42tu/8y/VE1/skj05KIpwc2Ot4hQ2UC3y+0NyIzPDi8LSy1xmeOw
-         xb9IbEr0Pqq/G3N0MWfLPVQuA8xpUKyca4j2YMvjS49qfziO4MduF/0ARDHIGq9E41OM
-         MA8g==
-X-Gm-Message-State: AOJu0YxOHt402KqA3PQs5TjrIl0ERecscJ8RqWMI8OZyDBVGUfz8wd/T
-	8G6QpSlaRDB2VsajQh17As0OmmuOlFHAGb83UOl4/fw6xEsNR4EyvgtYZzCIMwqpGRvQoAxtcdu
-	OwNaWNgaBL33jrC+ssWNKWjoLLyZlkzAt4FIaxSOMBh4JGQUB
-X-Google-Smtp-Source: AGHT+IHUeIAJ+/KJBfFMTBM2DWT8+4IBIYyW6VjLMPu91DaX+bXrP5YKF8HfjH8K+c8FO9Rq0VBzTcluhNL4P2OR788=
-X-Received: by 2002:a2e:9006:0:b0:2e9:768a:12b0 with SMTP id
- 38308e7fff4ca-2ee8ee13b14mr25500011fa.50.1720164903364; Fri, 05 Jul 2024
- 00:35:03 -0700 (PDT)
+        bh=LWBpRkAHJA341wIm+idz1ihwKmrdjtmhzxdKDl080Lg=;
+        b=jUgLB/SVhkCKRp9DVqgRCR3vOjrE4N7dh9njhdl7mk2m4Fy2UL+PdP9xzS+YebjbAq
+         sAybR6kGo9pLXW1FxeOAJO6H6jlDh2mM6OXFV0gfwURSM337AQufk4h8rYlg15eMZqdH
+         QPYeKFu+NX8Y/rwNKYETuHDH2e6geux4eByDzIQptukxzWQ7Y02AXRH67GP+uapTl3x9
+         X9dNaGBPWNpmrJ/+FfvCab1J9I9MiybN1r45gevH96OLS8rBfYU9y5RUrmZP9pOdBUaQ
+         HTLrZdb4RROJJYyR7/3VdQkEy3nx2fmyD5cjI/OgLL/95SCayNBTrbswuU32goM/clPT
+         VEAg==
+X-Gm-Message-State: AOJu0YxayMxYHKfkPOdRtW7um56KCI+fX6TlWsHLREyMnTfUwCtTMoSx
+	UxpOAzclN0n+ES9G7/mWqOhzUZy9iclVeJQO+jr6gEv/Bp1AmsGffagA7yy0mcfgEgnN8HH4lLf
+	j
+X-Google-Smtp-Source: AGHT+IHi8ddO5no9eVqGKViFSPlnurWh55TU2ipEPL9MHhoAaPgMDXHJQYvp9eMRKpPV36IoHl2UXQ==
+X-Received: by 2002:a5d:62d2:0:b0:367:9c46:19c with SMTP id ffacd0b85a97d-3679dd3133cmr2314000f8f.31.1720165293857;
+        Fri, 05 Jul 2024 00:41:33 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:c688:2842:8675:211])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3679744be1fsm5065329f8f.2.2024.07.05.00.41.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 00:41:33 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl,
+	Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH] bindings: python: correct spelling of repetitions
+Date: Fri,  5 Jul 2024 09:41:30 +0200
+Message-ID: <172016528818.6599.3383963670424737763.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240705021731.43143-1-warthog618@gmail.com>
+References: <20240705021731.43143-1-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626053808.179457-1-warthog618@gmail.com>
-In-Reply-To: <20240626053808.179457-1-warthog618@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 5 Jul 2024 09:34:52 +0200
-Message-ID: <CAMRc=Mdb5_F3oQ1JU5imCSyNfxPrkTciKw9MGuBafTbexHLeLg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 0/3] bindings: python: more flexible reconfigure_lines()
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 26, 2024 at 7:38=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> This series addresses issue #54[1], making reconfigure_lines() less
-> restrictive in the configurations it will accept, allowing for
-> misordered configurations and reconfiguring a subset of lines.
->
-> Patch 1 adds a set of tests for the new behaviour.  These all fail with
-> the existing bindings, but pass after patch 2 is applied.
->
-> Patch 2 is the change to reconfigure_lines() itself.
->
-> The reconfiguration of a subset of lines works better with a change to th=
-e
-> kernel to ignore reconfiguration of lines without a direction set,
-> i.e. a default LineSettings.
-> With existing kernels, if a line has been requested with flags set to
-> non-default values those flags will be reset to default values, though
-> that may not become evident electrically until subsequent operations are
-> performed on the line.
->
-> Patch 3 extends the tests to demonstrate that kernel issue.  A kernel
-> patch addressing that issue has been submitted[2], and the test passes
-> with that patch applied.
->
-> Cheers,
-> Kent.
->
-> [1] https://github.com/brgl/libgpiod/issues/54
-> [2] https://lore.kernel.org/linux-gpio/20240626052925.174272-3-warthog618=
-@gmail.com
->
-> Kent Gibson (3):
->   bindings: python: tests: extend reconfiguration tests
->   bindings: python: more flexible reconfigure_lines()
->   bindings: python: tests: add coverage of kernel reconfigure as-is
->     behaviour
->
->  bindings/python/gpiod/line_request.py       | 17 +++---
->  bindings/python/tests/tests_line_request.py | 64 ++++++++++++++++++++-
->  2 files changed, 72 insertions(+), 9 deletions(-)
->
-> --
-> 2.39.2
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-FYI I did not forget about this series - I'm just waiting for the next
-stable kernel release so that changes required for the new test cases
-to pass become available.
 
-Bart
+On Fri, 05 Jul 2024 10:17:31 +0800, Kent Gibson wrote:
+> In another one of those spelling quirks, 'repetitions', which is
+> indicative of something being repeated, is not a direct extension of
+> 'repeat'.
+> 
+> Correct the spelling of 'repetitions'.
+> 
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] bindings: python: correct spelling of repetitions
+      commit: 6ee321061e9ede45614bc79e6712961379648ebc
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
