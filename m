@@ -1,76 +1,76 @@
-Return-Path: <linux-gpio+bounces-8056-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8057-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90A6492804B
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 04:18:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65B6C92804C
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 04:18:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C53C284018
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 02:18:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1AC601F21DCC
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jul 2024 02:18:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C7CD41C93;
-	Fri,  5 Jul 2024 02:17:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADED91172C;
+	Fri,  5 Jul 2024 02:18:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntimj0Ai"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pb0kbyi5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D8F49632
-	for <linux-gpio@vger.kernel.org>; Fri,  5 Jul 2024 02:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E6545978
+	for <linux-gpio@vger.kernel.org>; Fri,  5 Jul 2024 02:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720145862; cv=none; b=lXTzJi9hG0w9u+/0zeAg8I5Ws6yVDCHyglQ3cR701O5PjiwR28FQVRU2GLQUfrRjk3TUC5x8EXqIAPQhLgPgbzYzgEebv3c/yQ0lMdFuqYmErm4TZuDWJfy4cNtoNrvkR79zpsW/6jRy/LfEu/eZgUiN2bRi6nSwq+F5i+TMAIg=
+	t=1720145880; cv=none; b=QuTVyKyyODv2qBNTIRhaJGZxj4wsVykVif26RetinWsrH6fb96BLunKqJX1edh4C4uytZgjEoirF6S6FZgyicHftmpAkZm5b/y45j3iNiPdzcoEPzzU21uYXlUai5vrYGl7Pr8pLYxZH5bj+033pk34c+HBhLZWAYtQFLNBoOKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720145862; c=relaxed/simple;
-	bh=O6zGnu8+G258cbZUELfeQT8SFTGrnn0/650oCYATsSU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IvHwP6cszOPvUq6JqiaucxJGyELFgjxDpc0yamgizTm0eNS2SNUZDiv/iy7LwrAxiINaiZy0bqVCdKQQc1AA4whh/evVzHtCNDyPxN/Q2oxkGlxSv2awtrjPYNAb8nWibjAdT0FgMSqbpU4r7MNHvNE4eFGkjsPaKH+bva+/HU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ntimj0Ai; arc=none smtp.client-ip=209.85.215.172
+	s=arc-20240116; t=1720145880; c=relaxed/simple;
+	bh=AWoJ6suU1MWW3DDG8XEyakVI5KwBQnfzfeq2DnGkHuI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OWk6wKsaYTHE1R9fzr0UP+88i67T41cQ5FgJ/4iybyEKyWemcErmehiWwLwmNXZ14P4RUT6HYbDgHlLEk+v7w/sO6+vkvAkTZ6YqROe5XRTSGLIlvRSbew/Sw3z0q/bHRSBXJYEUM6AQsbtQZ8HLCeJEsTDB+USdk8fF2fe1C/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pb0kbyi5; arc=none smtp.client-ip=209.85.210.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-75ee39f1ffbso756246a12.2
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Jul 2024 19:17:40 -0700 (PDT)
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-70b0ebd1ef9so92369b3a.2
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Jul 2024 19:17:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720145860; x=1720750660; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720145878; x=1720750678; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/H81/vnGlj02uvWLHxrqfAY2uzznqwKfIpChpXaBmTI=;
-        b=ntimj0Ai6CzIWSUTR72RlSycKNryZdxUHfZYSmxgzTRqMoG/EcBcKzC6WBXazmnw4W
-         Eo/LkCdvo7RoP04WkNOvhO67xN5YkXO4B3+R0S55TSf8nzs663fk5z38flU40MV9h2uH
-         LDQfRm+tOU8VfKC3ysr2kFgrdN3j8019r1BVfK6VgdRLq+ruieV6SUqy9bau5uGxZf8Y
-         J8C7HSIXt0qEkIS1dt8uzvPY6v7f2KTE50fPzsNtKfmuma16J/rWyyrnCxMWmwL+K63g
-         oY5S5HPwBLyvoTZrUbXFOOBJK3K91LfVSWRiJxoLrPbxLpHmhxXKQckPa/DupoaAU92A
-         +c2g==
+        bh=iq/G41w0QogcyICNmS8VuszjnekBEu0foJ9QhMLjsiM=;
+        b=Pb0kbyi5Rpx7aP6WtZfI0UCSDEVuORi/0FpXhzEjLRySkwOpG8d64kpgBdixhiSKa1
+         pqwutfR0VC/L65GYjxjw81OZ6DR8p+BxzywTS2kLKsNjt9g9LSvo0+zHDqBatKs4I6F+
+         hIMB06dCWtPHKQfIhfKtbJUVv+qPmsWvBhlb4xOTE004TRhN65xjxaC3LxO8ztZBtONL
+         rjyBgoGs5LGaAnvH6gMArZE64+WHpXEzxxsSvhvzk1uVAx+qRERShA7lcw5z/2ucVDh7
+         QeYpiNbyW7VSORPx2OA8CdVFPwWh34sg5oOcZbPVpcpSKMlaBEKE4Auk4w54/pKmdKuY
+         Ek4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720145860; x=1720750660;
+        d=1e100.net; s=20230601; t=1720145878; x=1720750678;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/H81/vnGlj02uvWLHxrqfAY2uzznqwKfIpChpXaBmTI=;
-        b=SQ/cR7StCKmwp63aIOfl/OZe8nCsDN5fCHA+u6dReEsO7WNx6Lw26MZVYOFkdKHgR9
-         yNMFo/qo1vClyhmhj+sOjyQWF2M4CqbHnRrZ1/QoM2OaokIbhaAjeBfigCSf6XxUeLzR
-         Z4jyhkqEonbaRmde4JU9/S55hScDzmMDDZg214AYqHMfSeoGz2lthKQ8B1jIzMEzLan4
-         jpaDIQvQPpbr+otv+XYpTsWAERLs/ZUm04ReYMCnG839VwkPXJQc1SiCjnaDMnm6Tt3o
-         unoFrFVEk9P6PLml506Hem4pl9Jpk85b9CtPEQ7iw7boNpZ61lE0ZeSkHqR1J/8iPd+/
-         tcAg==
-X-Gm-Message-State: AOJu0YzmuOgJBDSd0q/ZCcq58tNT1dZc11qBNHWrbe90XG0hgWLJ2r3Q
-	CwB1jeLBd5okEKnyZG7DbfjWat5oW+GJ3FaMdrLFD/E3G8xOGjtWcpmfSw==
-X-Google-Smtp-Source: AGHT+IGI4qhPuH2czX2pgybQXsBC3moYROEui7ggLGIiBX4iStQEPHnYrmJ0fqQt6PiTrQfCBYx1oA==
-X-Received: by 2002:a05:6a20:2450:b0:1be:c63d:302b with SMTP id adf61e73a8af0-1c0cc73e621mr4057903637.21.1720145859843;
-        Thu, 04 Jul 2024 19:17:39 -0700 (PDT)
+        bh=iq/G41w0QogcyICNmS8VuszjnekBEu0foJ9QhMLjsiM=;
+        b=m+OLZUKLrzVCeIqOJr2HcnXuQXZorBz+n0TmbiLIKxxmbtor883KhhAF4a+6GI/QY3
+         8Tt5KhVGJGFDFcgA4LKe/O5Tx3IlM2cUUnbNQN4uatbP5Tbyb47j4/AqyAdp9+c0Dk91
+         KYfFvbWm5o+bAAUuJlq/O+mNhpljV3jEglCNJjh0r2/8Gb09wzdCNMdrOsKzjkMN+BhB
+         aFYWUfmLSBVoe9+bMNfoukaOCAFqFsSwj4UvzuJ9oCN1Y/iWmtsCzfdh9KGeZRerr2Ug
+         Ir4TXizVTacioO98/6KvAcrdWXCYo9UojALc4TOJt/wnU+C/fcGuqB8W97OpPZvC3bKm
+         FlKA==
+X-Gm-Message-State: AOJu0Yy2bgUY9SmNeVg1EIM7GemVXu6vj7cMMuUzSmiV5DFGKQoWdNf/
+	NbQehwhtdLZjCV59OaHxmfB6aYHACPJ01hmyB28WkGd3Lgh/0eSNyY69uA==
+X-Google-Smtp-Source: AGHT+IGOZExRQTusQnpHYvbFVM5zS8/56ACmdiZN5MPY2osZr8dIb/dEEuHDrik5fGWpzE/UWCrQGw==
+X-Received: by 2002:a05:6a00:1f10:b0:70a:ec36:9332 with SMTP id d2e1a72fcca58-70b00957552mr3072179b3a.16.1720145878226;
+        Thu, 04 Jul 2024 19:17:58 -0700 (PDT)
 Received: from rigel.home.arpa ([118.209.204.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99aa6220dsm2222964a91.38.2024.07.04.19.17.37
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-708029582fasm12898354b3a.88.2024.07.04.19.17.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 19:17:39 -0700 (PDT)
+        Thu, 04 Jul 2024 19:17:57 -0700 (PDT)
 From: Kent Gibson <warthog618@gmail.com>
 To: linux-gpio@vger.kernel.org,
 	brgl@bgdev.pl
 Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH] bindings: python: correct spelling of repetitions
-Date: Fri,  5 Jul 2024 10:17:31 +0800
-Message-Id: <20240705021731.43143-1-warthog618@gmail.com>
+Subject: [libgpiod][PATCH] doc: fix sphinx config for rtd
+Date: Fri,  5 Jul 2024 10:17:50 +0800
+Message-Id: <20240705021750.43197-1-warthog618@gmail.com>
 X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -80,30 +80,37 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In another one of those spelling quirks, 'repetitions', which is
-indicative of something being repeated, is not a direct extension of
-'repeat'.
+Generating the latest documentation on readthedocs is broken as the
+index.html generated by Doxygen is now being overwritten by one
+generated by Sphinx.
 
-Correct the spelling of 'repetitions'.
+Make Sphinx generate a differently named root page that does not
+conflict with the index.html generated by Doxygen.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- bindings/python/gpiod/chip.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sphinx/conf.py                     | 2 ++
+ sphinx/{index.rst => contents.rst} | 0
+ 2 files changed, 2 insertions(+)
+ rename sphinx/{index.rst => contents.rst} (100%)
 
-diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
-index 19c62cd..47bda11 100644
---- a/bindings/python/gpiod/chip.py
-+++ b/bindings/python/gpiod/chip.py
-@@ -252,7 +252,7 @@ class Chip:
+diff --git a/sphinx/conf.py b/sphinx/conf.py
+index 51ae3e9..043dc79 100644
+--- a/sphinx/conf.py
++++ b/sphinx/conf.py
+@@ -53,6 +53,8 @@ exclude_patterns = []
  
-         line_cfg = _ext.LineConfig()
+ # -- Options for HTML output -------------------------------------------------
  
--        # Sanitize lines - don't allow offset repeatitions or offset-name conflicts.
-+        # Sanitize lines - don't allow offset repetitions or offset-name conflicts.
-         for offset, count in Counter(
-             [
-                 self.line_offset_from_id(line)
++root_doc = 'contents'
++
+ # The theme to use for HTML and HTML Help pages.  See the documentation for
+ # a list of builtin themes.
+ #
+diff --git a/sphinx/index.rst b/sphinx/contents.rst
+similarity index 100%
+rename from sphinx/index.rst
+rename to sphinx/contents.rst
 -- 
 2.39.2
 
