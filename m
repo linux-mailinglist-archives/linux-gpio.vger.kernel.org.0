@@ -1,142 +1,125 @@
-Return-Path: <linux-gpio+bounces-8076-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8077-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D8B6929015
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jul 2024 04:35:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1639F92901B
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jul 2024 04:55:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E9E71C213E7
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jul 2024 02:35:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 345DF1C20D6B
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jul 2024 02:55:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAF97BA4D;
-	Sat,  6 Jul 2024 02:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41A6F8825;
+	Sat,  6 Jul 2024 02:55:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UV5MWDUi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHHPaq3Y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C4228F0
-	for <linux-gpio@vger.kernel.org>; Sat,  6 Jul 2024 02:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD495C138
+	for <linux-gpio@vger.kernel.org>; Sat,  6 Jul 2024 02:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720233337; cv=none; b=apAeFOdAFw0fYi9xUogkevh1ZP7KhrlpQ8hP1r46J6WSWnMIyNaBX70SUn1ED6UulVJC96ct2y2jx1Uqy9/XeadxR51yRGIUN+sJ1L7FdyP0F9miXY41ieaeVYVLyx7sR4lXRUPG7sNO7kdxwoXdZZuEIaVcgCUHkEihJB+cQtk=
+	t=1720234503; cv=none; b=ps0Nf128RxUBawbvcuzl+vCVdB/MYE4GRsgKxnHJyPW7VCoTjo2TdFaMOFpt2bqkhZWHX8T4+sznmvtCdx6JVrmql7ZbjvIRtpVNxlrE3ejdLj5NUe3yOWm4R70RN9/sooCDVl9s11cjYzrJFA7wZA55RELrri20D9L4DUHY/rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720233337; c=relaxed/simple;
-	bh=ZGo8qSqlMwkBaPmOX2UrYVUbb7x/zjxxmt7LkxEdda8=;
+	s=arc-20240116; t=1720234503; c=relaxed/simple;
+	bh=etbY4pmGTsOeVXnGAXGM1jgkLCvPWOu1z/ZjxcVZy6Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l9oRe0LLg4ILu4TDkGZG2XHRNMX8EPa/HhNKCdsLKSXSzkyTJD6RHPVoyUnay2XypbpR9gSuhItP6/x9KB3TmNaWJQpPLH/gTG5L7eUuD5YyKFitDixu8aa/UfxzV8aj8vUilyJZmCK9KYrVWl5QukecJIX7sntKujXBxpEEaAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UV5MWDUi; arc=none smtp.client-ip=209.85.166.169
+	 Content-Type:Content-Disposition:In-Reply-To; b=WzsdqOP8EToeML7tsbU9jd0GroWiqtEUiweDFnrd8x6spU6zATuzYhtRXOSpJf4npd7y7wZa89rzXXqQB8nWgDEJCd0BSi03P2UuBTquFbJWmLlWzpkMLAf2KYH8AGfjtvQCgCGCnqpqHbvC/2dLzMBVi52ctzw3emMhnUfKb/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AHHPaq3Y; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3818c2d364cso8879895ab.1
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Jul 2024 19:35:36 -0700 (PDT)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70b03ffbb3aso1577994b3a.0
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Jul 2024 19:55:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720233335; x=1720838135; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=h9KDQaiyqp6a6saq7ikUbu6ICMT0dz74LNtPokipRHI=;
-        b=UV5MWDUiwwuBhr2Pn/2NstmGxLCKXdxj2lAbm7W5vlWhzhQCmBbxP/bliCJCH5mYY6
-         SO/d5tCdjIfyVNuU42kSqKtX1Kz5EmGWc9x+S6FWGb6EvJj6bsYWYlPQN1CNt2IG+0bB
-         bwWQyw18/SOzset8IKBu83g2NrZOEv+ykrdVSyBb7bSJMkRQQb1RzbBLHyCc268ym/jg
-         7D2aws7rDduACPXTj9ExhEKvVARP3FOzId/ACF32DOsumdAndiUqY/aNA4ftsSGJ8IOl
-         w1YHmxynXyyjpOvUQkFeSKAfHO5QyDicYClSwuJKyd6HNLyX02Jre4Z53KI8Jx+kkQJK
-         3h0A==
+        d=gmail.com; s=20230601; t=1720234501; x=1720839301; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xydNOIhuPfsa8lHWcDz6Li4LYbgz9rUd7S4Mx7keng0=;
+        b=AHHPaq3YvmwHqPCCT8HMAiE1ZiHXVvlEpNmH89qNTp2DGdJgLSCk9wuxwsM3U2yXPG
+         xGfDJXoiEb1cd/HM2ySg2072c+ukUgyYVNEXFKbdbKSRqKKLKacUyxVXICr0aco9L8Af
+         By5SotPiVkF12oROHx4ujMEF8DOLvOWhqXcCv4AiU6Rv4Q883FSE3Aey4PJ8NKwErbIv
+         WARwv6Q8ZfhscjYWkeTne+gu0YPAyYc5fY6vsMbRzll2TA09ZIorgNMFjhYQQcR07tlq
+         4BO8qv+rXHLZ4dxb5F2K8ro7ZAOOpyxOjrSx6VG3SviQz6ezCxUVDGhJDLNaBvTlAo61
+         4Ysg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720233335; x=1720838135;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h9KDQaiyqp6a6saq7ikUbu6ICMT0dz74LNtPokipRHI=;
-        b=hlTRjqoBg0yrmgVDKnSotNB88PQXQQKm94rjtom3QK1LY21GxAY0R5zIP8JBEVIw1Z
-         6vaYYVB94AivMS6gOPsGj26r5SMp+GU55VD9r9ZTf2QiYTiJgtSsWBWLka4u4AkGwPSG
-         eCFdkt63KnqKZBNej/A0bGTJuSHqfUVbehREBkm62JCwPSPIlbAmr0QSnKk6979oK3cB
-         a9eiYzmNKedu2z3e6Q6tqKLHlbCuV+hsCPZ8YXPwT0e/wxsgcUzAmqZ/5UPhlg2tustR
-         ffg2Fuw9B5xPG9pZw+u1QD7sjNoLwd0k5uhWng0LTq1isZk/P/KV5UjwbtudtzOhz4fA
-         E3/w==
-X-Gm-Message-State: AOJu0YyqXX0OG74wjO/7I40yz4JPyUb4LNTkN1LDBTtUQ0oxD2aN9KXW
-	5Xmc/VWX00b9GmQgMSXSAuMk9Rr5IULtQmx0KlJAzSd18mcI/yztGojgJg==
-X-Google-Smtp-Source: AGHT+IHvRu4FiQt2/q25pzpfgu8NM7aEovcly9w9VQ5oFK5NjqmVi0gUx3uS42VVogPvLLHYJ5LR3w==
-X-Received: by 2002:a05:6e02:1a41:b0:382:759d:60f1 with SMTP id e9e14a558f8ab-38399a6ac47mr75250685ab.18.1720233335312;
-        Fri, 05 Jul 2024 19:35:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720234501; x=1720839301;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xydNOIhuPfsa8lHWcDz6Li4LYbgz9rUd7S4Mx7keng0=;
+        b=Prp5gZ977CajH3LRQ4mXi+gJXGWRfg0w8JRLa3WJ72COSAAUjz03D09PTHtZOZsEtr
+         nkLYgw2naNq1az1VeMatNhL4ooACpRMQvUXT5QlSZfLi4OYdLTGa1xcoXJdfKIGMpeUs
+         mgaahyuGAMrIW5P5ZZt3W6nprODMbgJRZnxCIJAzIlTp5+5bjvNQcEGURCmoxe/ecmnV
+         TjrCzyTfwwa0bllSn50TaLe23Pt1EbXd29BNzNEJewPFZoVYwVu2xfPyPuCnXXtwhaRw
+         QzW8h2g+vg32NuUi7OtDNfSm1a/zNiFKNvCXDrI9mgViu7S6iJ2PEsF8ph0Zm2O2DamL
+         7kww==
+X-Gm-Message-State: AOJu0Yw+23iwtz/REDFH4zReJdm6mMwsBqOhhEqSJtw+f8QNWRY2v8Zq
+	FeszcneZ/NlGEXTQ3xFCVvcnAcw5u0k0zDZfi4HPyASRKkPwkRVw
+X-Google-Smtp-Source: AGHT+IFJRf/2nyt2gpocXcTorfR4VpGDCblUhUtDEo3CspVXX3JSTpMnuHWcNIGJ2ppvkcihaGhqUQ==
+X-Received: by 2002:a05:6a00:2e16:b0:70a:f38c:74cc with SMTP id d2e1a72fcca58-70b00a7f1d5mr8320951b3a.8.1720234500848;
+        Fri, 05 Jul 2024 19:55:00 -0700 (PDT)
 Received: from rigel ([118.209.204.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb15217780sm59741705ad.109.2024.07.05.19.35.33
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b14f7e7d6sm1079293b3a.81.2024.07.05.19.54.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 19:35:34 -0700 (PDT)
-Date: Sat, 6 Jul 2024 10:35:31 +0800
+        Fri, 05 Jul 2024 19:55:00 -0700 (PDT)
+Date: Sat, 6 Jul 2024 10:54:56 +0800
 From: Kent Gibson <warthog618@gmail.com>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod][PATCH 0/3] bindings: python: more flexible
- reconfigure_lines()
-Message-ID: <20240706023531.GB12657@rigel>
-References: <20240626053808.179457-1-warthog618@gmail.com>
- <CAMRc=Mdb5_F3oQ1JU5imCSyNfxPrkTciKw9MGuBafTbexHLeLg@mail.gmail.com>
+Cc: linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH] doc: fix sphinx config for rtd
+Message-ID: <20240706025456.GA13007@rigel>
+References: <20240705021750.43197-1-warthog618@gmail.com>
+ <172016528819.6599.11422057058966562764.b4-ty@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mdb5_F3oQ1JU5imCSyNfxPrkTciKw9MGuBafTbexHLeLg@mail.gmail.com>
+In-Reply-To: <172016528819.6599.11422057058966562764.b4-ty@linaro.org>
 
-On Fri, Jul 05, 2024 at 09:34:52AM +0200, Bartosz Golaszewski wrote:
-> On Wed, Jun 26, 2024 at 7:38 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > This series addresses issue #54[1], making reconfigure_lines() less
-> > restrictive in the configurations it will accept, allowing for
-> > misordered configurations and reconfiguring a subset of lines.
-> >
-> > Patch 1 adds a set of tests for the new behaviour.  These all fail with
-> > the existing bindings, but pass after patch 2 is applied.
-> >
-> > Patch 2 is the change to reconfigure_lines() itself.
-> >
-> > The reconfiguration of a subset of lines works better with a change to the
-> > kernel to ignore reconfiguration of lines without a direction set,
-> > i.e. a default LineSettings.
-> > With existing kernels, if a line has been requested with flags set to
-> > non-default values those flags will be reset to default values, though
-> > that may not become evident electrically until subsequent operations are
-> > performed on the line.
-> >
-> > Patch 3 extends the tests to demonstrate that kernel issue.  A kernel
-> > patch addressing that issue has been submitted[2], and the test passes
-> > with that patch applied.
-> >
-> > Cheers,
-> > Kent.
-> >
-> > [1] https://github.com/brgl/libgpiod/issues/54
-> > [2] https://lore.kernel.org/linux-gpio/20240626052925.174272-3-warthog618@gmail.com
-> >
-> > Kent Gibson (3):
-> >   bindings: python: tests: extend reconfiguration tests
-> >   bindings: python: more flexible reconfigure_lines()
-> >   bindings: python: tests: add coverage of kernel reconfigure as-is
-> >     behaviour
-> >
-> >  bindings/python/gpiod/line_request.py       | 17 +++---
-> >  bindings/python/tests/tests_line_request.py | 64 ++++++++++++++++++++-
-> >  2 files changed, 72 insertions(+), 9 deletions(-)
-> >
-> > --
-> > 2.39.2
-> >
+On Fri, Jul 05, 2024 at 09:41:31AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> FYI I did not forget about this series - I'm just waiting for the next
-> stable kernel release so that changes required for the new test cases
-> to pass become available.
+>
+> On Fri, 05 Jul 2024 10:17:50 +0800, Kent Gibson wrote:
+> > Generating the latest documentation on readthedocs is broken as the
+> > index.html generated by Doxygen is now being overwritten by one
+> > generated by Sphinx.
+> >
+> > Make Sphinx generate a differently named root page that does not
+> > conflict with the index.html generated by Doxygen.
+> >
+> > [...]
+>
+> Applied, thanks!
+>
+> [1/1] doc: fix sphinx config for rtd
+>       commit: 824c1f39347c2ef46919dfc45e8247441b908827
 >
 
-No problem - I assumed that was the case.
+Btw, I ran across this while updating RTD to v2.1 - their default build
+config has changed since I last updated, so that didn't go as smoothly
+as I had anticipated (the plan was to switch the branch the generation
+uses from my fork to your github repo, but now that can wait til v2.2).
+
+I am also looking at reworking the documentation to use Sphinx/Breathe
+to generate the html from the xml that Doxygen generates, and
+incorporting documentation for the Python bindings, but looking is
+about as far as I've gotten so far.
+
+Not sure what to do about the Rust bindings.  I was assuming I could
+just link to docs.rs, but the build there[1] is broken.
+Can we fix that?
 
 Cheers,
 Kent.
+
+[1] https://docs.rs/crate/libgpiod/latest
 
