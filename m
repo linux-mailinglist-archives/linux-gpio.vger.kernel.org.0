@@ -1,117 +1,173 @@
-Return-Path: <linux-gpio+bounces-8103-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8104-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6B3E92A52D
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2024 16:53:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E584392A576
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2024 17:15:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 33DE51F237BD
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2024 14:53:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 101C41C20E31
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jul 2024 15:15:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDA991419B5;
-	Mon,  8 Jul 2024 14:53:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C84BB80045;
+	Mon,  8 Jul 2024 15:15:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XL1CqNZw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSVjGWf8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1914B13FD69
-	for <linux-gpio@vger.kernel.org>; Mon,  8 Jul 2024 14:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8751E4A6
+	for <linux-gpio@vger.kernel.org>; Mon,  8 Jul 2024 15:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720450430; cv=none; b=BDvu13hlUo/6QaJlqcEYOo1QpW+RtzgvujGeuzil7t9rzCoM+N0wxAvK+NWo1w6w4eRGiFjV2sRQxYtnl6gIK5Z+JZm9QYKHgbeXsBRMY7pg4XXzqyIiDUBC6Iko75BhEHiDS3a49ogHLxrwQB9rRFI/GBtUculhG2mL+/x2doY=
+	t=1720451724; cv=none; b=XuZnoRb4Je6AyrnNI/lAc2ARO6rJuvDFDiaZ42zDcn9DfdY5MYaJK9ekbn1E2rtJ/9Pic0syG7PexyE7RIpvJw37u4AYnzXowH11g8IWjTdT3u6sGAMC6OJ0gmcAuh0cDeUiLpOSPmTYLf1goWo4yWawlbKke/sqH8kL2xHsrD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720450430; c=relaxed/simple;
-	bh=oS/9j3dsYpP59idtGgIC4uuWK33USwlviNFf2Yb9edY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UbBYsw0BztKTzR0w5PWK95UQrgXZEohx0zgzhT3jgDKFDDraM/x3h6d6fLAA00RDqYA+r/WkbYtlIvcPzRt630Vm6FVC8B24IjKAvFzQe/Upy7JAKeIvk9iZw6iLsfaXgPJQ+GbM8kGh0q5/NosmF8rQLUzQ0vXyf2SbFepEaBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XL1CqNZw; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4266ea6a488so3440695e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Jul 2024 07:53:48 -0700 (PDT)
+	s=arc-20240116; t=1720451724; c=relaxed/simple;
+	bh=/N7AbQNznOLvH/admeEuES+189H99niWcnqJEpQIuz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CB9kGcoDp8fLCKcveI0QBkpXhAORnBYvWCmeF6CrZDgKYvw2ev8CkOtN0tOskwduXAUCHRtyFf8G1505yiynw9THmbncKp5TkYO3ZzHNKqlNljBJ2kQiMefLwKLxd2QyocumLtJrVYrZrNi9ILwRE4YkjWo4P3ZvaAHjlVmCfms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSVjGWf8; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1fb0d88fdc8so16934035ad.2
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Jul 2024 08:15:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720450427; x=1721055227; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EyqFib4M3rqlBFw/ZGzz1LaByQHFqZPSGdvyPY+IPB0=;
-        b=XL1CqNZwkkWELRYJEe9haeA07ZsDwWWm3PbUZF6DzOWI9yTLS72PRr5QecEoUmuh8J
-         0GfgCfxRnSi6ULMkKakl8H2DB0negyPnLI8hfGTZvLI3lSBGAkWJZBgKhItFFd6FxT6U
-         tiqxTPMdbygQQGo7b8KysReMrE0+rAWzf8LiS65c59/lIRE0p38E8ug9RD/XlqCysSzO
-         KkeNopZ0pVr3RHd4LKMrZ6SaMdohrnT1BaxughNmfw4DP3+5Xlq/lw+ybwLZIYiB3xk4
-         sX3yM4vAQYNhJjAeivmQL1nxKvH4oghdPG2rng5EehQHriKFJe0dFTyL/RRV7Oi8KShr
-         HNuw==
+        d=gmail.com; s=20230601; t=1720451722; x=1721056522; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JTtS+I2hQhM16tvM8TNPX92Jp71BPjuTCXen21HZsTg=;
+        b=OSVjGWf8JVypv8OCNmwIlrqmP+l8aIXEMfQMeTM35P/S2IWhR+zUhBAtdI8oTiEZFH
+         iE/PnAocrg+cFc+5EhvassxyuCMVIYHrgXpaKN8d04bFaYcNcujX3hHsMybBuYeG1sDP
+         6r7OqIUSh7v4teLr6zBYQOHBhV+5uSgmTYWHSOcWZ2kAjgls9gJ5dRZgChl2UKOAmso+
+         K3b9kFqu/vfYUw6aKypYmq6ObXkAVcgZtv0QSOj3UU56yo8IoReNU1u1ZvyrUielxkUs
+         w7oo1kKE12keCPuBvxCm4UmPsqL9AtaCmxW8FTtb65MR0NezIEs7tD9XF7DzqQiTkUi6
+         GRuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720450427; x=1721055227;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EyqFib4M3rqlBFw/ZGzz1LaByQHFqZPSGdvyPY+IPB0=;
-        b=fv9lJ+RzJlx5CFC/zgEHe4HVZdB65iLV9IHbRAKM6ft/be+IFexD1uIeMc9FEDZ9k6
-         5Ml5BBMKmG8EhXVwKKpMvMvCPsqhPZRz8jEtzv7mZe6LB3JItdanrEryCEqWzIFWA0+G
-         83fnmzmXA74thk9YNIERN1c5verPGzRPpgF0WDZmI4Asc1KlUaFz768Nf2rypkKKMBLA
-         R4pf3lSvNf5KYoDBO47IA+7Q4LagaHWKtl054TMyJ5krHEF2tQ1T5ca8td9OuzZrNnVn
-         wzLKDvMqNipovTnNrI3e7qcFIG3e1LLaD51ekhMPV0sokG6B/gFRKsw1rcTO2zHExboi
-         8OMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhzfdsDOgiQJUu09psVJubwIHQ0l9+G88TCKHLZU6fszPLdk1dXHbCv3xyTZnsx13ZAgMnAhLVs0999kZ+Yg89vJxN/TFElq4DSw==
-X-Gm-Message-State: AOJu0YypH4mNM48y/h7q/X6le6/68ic7EjEOkFShVevps74RDutCuVCk
-	Jk1aHKmQXIT3NHza7bL3kZiylumqhamfzzQoQFRPhnHCSmgY0Kv6vp3934164JM=
-X-Google-Smtp-Source: AGHT+IEBuhdhAHUYp56NAUgYnKaRIraX3CZBvDDbgKXiz0kpyc8NLn1O5Tq1/i1agiHJxKvs5l9b7Q==
-X-Received: by 2002:a05:600c:378b:b0:426:6f87:65fc with SMTP id 5b1f17b1804b1-4266f876712mr488425e9.17.1720450427358;
-        Mon, 08 Jul 2024 07:53:47 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:a2a3:9ebc:2cb5:a86a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6e09fcsm1933645e9.4.2024.07.08.07.53.46
+        d=1e100.net; s=20230601; t=1720451722; x=1721056522;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JTtS+I2hQhM16tvM8TNPX92Jp71BPjuTCXen21HZsTg=;
+        b=rED8We7iRfgDqDSZAG+NRTDsZMGZ6idxzIkhczAsqOlh5x8jQmGsYByuTkalG3c8C+
+         vce66Ibn9bJtc62hX8O/alwBh6n5VXtb/OLbTCB9vBNJfeaubdJf7Drnm44bNEC4BcT8
+         9c5BWtzEgoizMDBRGoI+9Wioq4FB0ZYEhLv3xnvoF8ySlE8kzC/tCuGr5EuCGIll4DZR
+         ujRWscQCsYcaWSUHx+NQgl/sQ+paFbFYDMtC4jdzkFgRkUxzfD1hpRR0OXNyxOgW9W9s
+         5G9LZ23CMTT3JZeG8soyrDoEd/gwwFMSo9tJI9B3cbpZ9sf4Mi9iWJRKliWUAP8ZhBVt
+         4/QA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjbILEqi8A7s71OZL8njMvZ/LJvQWVQ/xdJ5t3IVlAuvvy06CHUW0cSs84h+0oAion8u2KxeKmKpZ1tGFFVcXLQ79D7+Tg6Wnguw==
+X-Gm-Message-State: AOJu0YxIXaOBjxRqiLzc4Q/nZ08jcKWod/eA71zCnZIVFOZhnM9ewXKC
+	9CeKspk3TX666u5JihquErvkmieqfwzMwatEztud7ixILQaAO9IO
+X-Google-Smtp-Source: AGHT+IGzNV4iOKrVupwJL5FxRovAQOwG/LoDCRo729tgmhZFcMKPy7O4Aw1J5WNuCfaiqsve7ImPmA==
+X-Received: by 2002:a17:902:da8b:b0:1fb:74b3:53df with SMTP id d9443c01a7336-1fb74b35a58mr28577385ad.36.1720451722212;
+        Mon, 08 Jul 2024 08:15:22 -0700 (PDT)
+Received: from rigel ([118.209.204.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb9482caccsm20940685ad.154.2024.07.08.08.15.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 07:53:47 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Stefan Agner <stefan@agner.ch>,
-	Frieder Schrempf <frieder@fris.de>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: gpio: vf610: Allow gpio-line-names to be set
-Date: Mon,  8 Jul 2024 16:53:45 +0200
-Message-ID: <172045041379.123415.15663684790489482699.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240708084107.38986-2-frieder@fris.de>
-References: <20240708084107.38986-1-frieder@fris.de> <20240708084107.38986-2-frieder@fris.de>
+        Mon, 08 Jul 2024 08:15:21 -0700 (PDT)
+Date: Mon, 8 Jul 2024 23:15:17 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH] doc: fix sphinx config for rtd
+Message-ID: <20240708151517.GA355364@rigel>
+References: <20240705021750.43197-1-warthog618@gmail.com>
+ <172016528819.6599.11422057058966562764.b4-ty@linaro.org>
+ <20240706025456.GA13007@rigel>
+ <CAMRc=MeUmk5Q_9whx-fHFqRL3Z_wp0L66_kErnq1J6CGotsYJw@mail.gmail.com>
+ <20240708124331.GA255037@rigel>
+ <CAMRc=Me-43__rZEFSafdq+YVjgB-mJxsuMMXgZvgKDmyi0n8qg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Me-43__rZEFSafdq+YVjgB-mJxsuMMXgZvgKDmyi0n8qg@mail.gmail.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jul 08, 2024 at 03:50:45PM +0200, Bartosz Golaszewski wrote:
+> On Mon, Jul 8, 2024 at 2:43 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Mon, Jul 08, 2024 at 01:48:11PM +0200, Bartosz Golaszewski wrote:
+> > > On Sat, Jul 6, 2024 at 4:55 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > > > On Fri, Jul 05, 2024 at 09:41:31AM +0200, Bartosz Golaszewski wrote:
+> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > >
+> > > > >
+> > > > > On Fri, 05 Jul 2024 10:17:50 +0800, Kent Gibson wrote:
+> > > > > > Generating the latest documentation on readthedocs is broken as the
+> > > > > > index.html generated by Doxygen is now being overwritten by one
+> > > > > > generated by Sphinx.
+> > > > > >
+> > > > > > Make Sphinx generate a differently named root page that does not
+> > > > > > conflict with the index.html generated by Doxygen.
+> > > > > >
+> > > > > > [...]
+> > > > >
+> > > > > Applied, thanks!
+> > > > >
+> > > > > [1/1] doc: fix sphinx config for rtd
+> > > > >       commit: 824c1f39347c2ef46919dfc45e8247441b908827
+> > > > >
+> > > >
+> > > > Btw, I ran across this while updating RTD to v2.1 - their default build
+> > > > config has changed since I last updated, so that didn't go as smoothly
+> > > > as I had anticipated (the plan was to switch the branch the generation
+> > > > uses from my fork to your github repo, but now that can wait til v2.2).
+> > > >
+> > > > I am also looking at reworking the documentation to use Sphinx/Breathe
+> > > > to generate the html from the xml that Doxygen generates, and
+> > > > incorporting documentation for the Python bindings, but looking is
+> > > > about as far as I've gotten so far.
+> > >
+> > > YES please! We really need this and I've had it on my TODO list for
+> > > far too long.
+> > >
+> >
+> > IIRC we last discussed it a couple years ago while working on libgpiod v2,
+> > and then it dropped off my radar.
+> > I was looking for something I can work on from time to time in small
+> > chunks, and it seemed a good fit.
+> >
+> > My current WIP is here[1].  It is generating C, C++ and Python docs ok.
+> > Still need to workout how to handle the Rust bindings.
+> > Once I'm satisfied with the outline I'll back fill some additional text to
+> > tie it all together.
+> >
+> > It is currently generated by libgpiod/sphinx/docs.sh, which is a
+> > rough approximation of how it will be called on rtd, with the resulting
+> > documentation entry point being sphinx/_readthedocs/html/index.html.
+> > That is run in a venv with sphinx and sphinx-rtd-theme installed with pip.
+> >
+> > It is totally independent of the existing doxygen doc generation/make
+> > doc, which I didn't want to mess with.
+> >
+> > Cheers,
+> > Kent.
+> >
+> > [1]https://github.com/warthog618/libgpiod/tree/doc_revamp
+> >
+> >
+>
+> Would we be able to then have a proper RTD website with a version
+> selector etc? That would be awesome and it's one of the last big
+> missing bits for libgpiod to be more available to beginners.
+>
 
+Going forwards for sure.
 
-On Mon, 08 Jul 2024 10:40:31 +0200, Frieder Schrempf wrote:
-> Describe common "gpio-line-names" property to allow DTs to
-> specify names for GPIO lines.
-> 
-> 
+Going backwards is more problematic, particularly if changes to the code
+docs are required to get them to render properly.  I've got a few of
+those lined up already.  Should be able to work out something to patch
+older versions, but haven't put much thought into it at this point.
 
-Applied, thanks!
-
-[1/5] dt-bindings: gpio: vf610: Allow gpio-line-names to be set
-      commit: 8060be2489f9bfa0c603373fa71cc2f93e46e462
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cheers,
+Kent.
 
