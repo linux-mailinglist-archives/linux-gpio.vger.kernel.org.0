@@ -1,168 +1,120 @@
-Return-Path: <linux-gpio+bounces-8130-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8131-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A23CE92BE2E
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 17:22:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D422A92BE9C
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 17:39:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20F5B1F2700E
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 15:22:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1A3EBB2128C
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 15:39:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0336719D087;
-	Tue,  9 Jul 2024 15:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89F9F19D089;
+	Tue,  9 Jul 2024 15:39:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="EkV/fz5J"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KjNJ1Gz/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA1F15EFBD
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Jul 2024 15:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC36E1891C4
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jul 2024 15:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720538533; cv=none; b=B53qBnmIE9H7K+ccwc/ElUk/BZE51f/SPTAyfbmh3qy/PCpnifPUDqeFLpQpbnv2HgJ8+NI0dJIXS1bEASaFsIJzaHnVsVqs3sydlSQG76nVbaWvzfdKpOPfkAYxz28c0vRZvenf2BGGMdmaCVkS+HFTGlAPVjeq4Ttn+iIaJI0=
+	t=1720539555; cv=none; b=evs0ZmHkXU5ibxoEOJwgzqnem9p4iA5DyRXo+ZlRt3lA/o3dM6GB0Hcr7OMZr1/iI56rIDFf22bGX5HF8/CvwMA5mK5ZNZ0iEqGOBZ8qOMetnJvGwm763YJrmDBBubZtnD944hsUBjJTrHa6trqbxgr9teT0BJlheu1UaMFicUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720538533; c=relaxed/simple;
-	bh=JWAQLFqZkuWOfZpZyTRyc8jygVtPln2o1M5TZCpyi7E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZNyzH0IPcpKY66M1MiJ53rsNCAzsLjtZx6rGcb+eco1hHIbcJ+iOKZAiIEoxRkhb5PWEBd8OG98TNIjElRFc75cQbSfEMBWnmyz5tyggOfFYrrGZTt4AIqhY0N7yy+0ousuhmdWD7O54XuSjyU8Do30mZiOUYX/1hAS3Ym8yy5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=EkV/fz5J; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so32368775e9.1
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2024 08:22:10 -0700 (PDT)
+	s=arc-20240116; t=1720539555; c=relaxed/simple;
+	bh=iM7dP4+UBWQBZxTzBsXQgEJRsca+txEglysSJ98yCAs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MXDD4gQ6haWk/GCZWynwJV4etX5VClaoYyycDbmtIlcttJPYfqkD3kP380J35rNQRNa03OwueOcLUYGmzA0P4oCsHiX1Aco2tBz7WN4JRSZIE/XX9Wle8do6doI8JNuWy18gNfHif9/raEzD+NxAGZD01oS5mTdKrajRKMwoFSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KjNJ1Gz/; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-64f4fb6ce65so44966617b3.2
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2024 08:39:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720538529; x=1721143329; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jfUB9ZJ69EL9GipUtbkxGBaJaIV82ecNhY+j5SzQ2gM=;
-        b=EkV/fz5JvvHmnnNHgq4YBGewGglZkbZNa2fXIL2HdY63vneGnl6IzcUIQrksC9fkk/
-         6v3opD75UBPoSNI/KtCHYFOEnw7OgYVBWRREW/oIUtl7vaXPOkkMmG9HZrakDH/E3/wT
-         AAv5y0kbebSyBPwOHK3auUFmOBjVElMRxmQ91soA6aOy2DUPXRqvytsQX5MU+1TW6s1D
-         ee+F6JjwCPNJlKf4yhsjIkNAGD3mQRc9B/V3TXOGssh95SVNZ1cDJ3rn+/xui/u2Y0kz
-         9RD6hXVj8Y3GfLtcRuwI/NQRz+mArYfTC2pAnm41DrP7QwtFEOb6h1OlYfXR4LF6/q50
-         TgEw==
+        d=linaro.org; s=google; t=1720539553; x=1721144353; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yf9OSDzYDVAe/q1Sw42NKjpmTZk3nIkNTh+ppL03zVc=;
+        b=KjNJ1Gz/Wgbxl6/8xucIIB1ZotHtguC6thJahNV3n4IupooYfrg2/HIrRd2jgdIhtp
+         zolPDQD08zsbQu4/rJ+a+Mg+/kcauSQGw1WN5uaFw2h+9Xt++v6zd+oGcLI4BkxG/QQP
+         8fSibLSzgPW6y0kS/NXAEhibTb1bj2+Xou4WLZwUnd7oDIwWE3wd56Jhvv2lsAF4RlFg
+         ArQiDTvZc7oNSYb+buDoLY7mgKAjrgAswYWU6iR7VpXjdmrc+mioEg+4vnuA4p+AzgLN
+         DdnKQPW+iNBc2zyvKCKfbx471FPwGveQmaKOgBpXJcr29G3pehl70CbEMbuJ+9F+xKa6
+         v77w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720538529; x=1721143329;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jfUB9ZJ69EL9GipUtbkxGBaJaIV82ecNhY+j5SzQ2gM=;
-        b=tBEjvQixAM6O3EhbJZ+Uov4XUCP00jdMYOaOXyvB7TPAiNi4bGhOtcN5qe/LFs2NDk
-         /y4yoVVGfMLZaxcrwmA1zBVXmK+qTUkM+/2qjrlIIJdiPvLnT+KTxzZ83n/H9lEmTljq
-         kHkE024ZjAtivbJb/MjrKNSsgsdMFOJrCiF181KepwYdb22LLVqJq+nlFcrTPmPgxwCY
-         RVYYr8E1w6Kh51ny2GEFI7Mganh2MWz/p2IUNgoFnIloBvi90MMRwI0GJ10inmMPHRsN
-         NZRKLafahwbxeKJnVjIESqALtu+v9TscO2deCdwtQ9Pr6JX2IJqyzKyn8wBqL/AuNocv
-         JxvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUZclqH1PWb+l01MLcqckZc9UOVQaOg7bGkQUB/dj5v3oeco7IhWJwKaN/hoMfO0ABxumbCJ/bPzn6pdumTws6lcX8XuRaqSs7Kw==
-X-Gm-Message-State: AOJu0YxFgWhOl/WpevYhO0mJ3UBPl/YQVT8+7PEZfMPuDKtKVEd7GNf8
-	T6xBAcgOAayo/peU2IRdj5xB/Ncm2Ep+GKuN3YmFO/V/3EKJDj38HkGQHAI3QwQ=
-X-Google-Smtp-Source: AGHT+IFKyuCi8F65Rnjy2ONu9WDc7c8zSBudZGwZQkQFlY9b9EBnNysV/fwsOhCmIH3gVuNNKX3o0A==
-X-Received: by 2002:a05:600c:4ba4:b0:424:aa83:ef27 with SMTP id 5b1f17b1804b1-426722c11a1mr22876765e9.1.1720538528867;
-        Tue, 09 Jul 2024 08:22:08 -0700 (PDT)
-Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f6f5f51sm46910255e9.25.2024.07.09.08.22.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 08:22:08 -0700 (PDT)
-Date: Tue, 9 Jul 2024 17:22:07 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Nikita Shubin <nikita.shubin@maquefel.me>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, 
-	Hartley Sweeten <hsweeten@visionengravers.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Sebastian Reichel <sre@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Ralf Baechle <ralf@linux-mips.org>, "Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
-	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-spi@vger.kernel.org, netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-ide@vger.kernel.org, linux-input@vger.kernel.org, linux-sound@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v10 00/38] ep93xx device tree conversion
-Message-ID: <fjbvn3p7nqtvllcohtmcwlyv45blulb47t62gz3xey37wrbie5@ke6xcrfq2ztq>
-References: <20240617-ep93xx-v10-0-662e640ed811@maquefel.me>
- <CAHp75VfSC9gAD9ipeWRPdQOxUp4FXqYYei-cJTs38nbz0cHpkg@mail.gmail.com>
- <48c242838c77034485a9e667dc0e867207c5beed.camel@maquefel.me>
- <241a4cf9830b0118f01e8fcf2853c62527636049.camel@maquefel.me>
- <jyvlqfvqn5bp3jmvxvwyrcqmihjohuq3o757mfph7x37kbwvtq@gtgyh4fca4fq>
- <CAL_Jsq+9Jk90HovH8bwzgCHwwh9j4mBm_Aaiq+EOj1HT3R17_Q@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1720539553; x=1721144353;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Yf9OSDzYDVAe/q1Sw42NKjpmTZk3nIkNTh+ppL03zVc=;
+        b=t4WnfXc7AXt0YWetFLuQciEykJarg6XOi3R8+DngerPyZf/h7OgXrz8FZWonLIG4BF
+         9Gk57s+8SmmFm020x3eQ39oiomnNHhvJlnWUZIA5no33CsMZKVPl10BI5u7ENxhOSSsx
+         MR14okR0pEmNPzHxjsVYOXQavCSnbWETrPYeK+5uBomc/LvWOl8iTteE/nBm7hm/ICRv
+         x3Zw+FflDvR7/l24GLq+jHVnKVy2TeHCY1MzteyajPiTaj1O4PzYnQgu7NlKNqtn8+jl
+         +W55MOBE65Ywj8V7CBOs5htF5By9FQ7m2H63Tr3Nhjq3VDzWTiUpunMrMFE/dVy/knHn
+         G57Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWzTW160r+/Jny8nL5Pa0FiPlarsD/T7SRIlHoafvqJsfYMtBio74yoCVjZTWKDnzm4+VbrSOlNtGf6DlV5BE1/LOaIx4sA2nfDKQ==
+X-Gm-Message-State: AOJu0Yw5UGPBWvt9lKOr/eF1mWeniQYlRqCXDDxVRZNW+GojD0JF2/cG
+	E8+foboCeqp5KC/KpR3Mxntnp24y0httDcs4DPXU/NFXB7CwW2f5vJAZTvG7ZVHdq4pngsq/Rh/
+	opcyVxd9uXfCsRURfN97ra7/W7xKzOOH6ahltLg==
+X-Google-Smtp-Source: AGHT+IELN6BrB1l1a+7hxJEdA4r49wyMBZ63w0/xGG40B6OA89/EbeiJJj84Igc7BT/S0i6zEg+VHQ94rm+Er6yb3lk=
+X-Received: by 2002:a05:690c:6681:b0:64a:4728:ef1 with SMTP id
+ 00721157ae682-658f02f5ea0mr39620207b3.39.1720539552828; Tue, 09 Jul 2024
+ 08:39:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="piveefpjjxp5n6ob"
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+9Jk90HovH8bwzgCHwwh9j4mBm_Aaiq+EOj1HT3R17_Q@mail.gmail.com>
+References: <20240709-add_qcs9100_tlmm_compatible-v2-0-d025b58ea196@quicinc.com>
+ <20240709-add_qcs9100_tlmm_compatible-v2-2-d025b58ea196@quicinc.com>
+In-Reply-To: <20240709-add_qcs9100_tlmm_compatible-v2-2-d025b58ea196@quicinc.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Tue, 9 Jul 2024 17:39:02 +0200
+Message-ID: <CACMJSevpinkT+jFTK6ijpRF2ULEeAFiWLkWEmQ6bJfJdofyO8g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: qcom: add the tlmm driver support for
+ qcs9100 platform
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	kernel@quicinc.com, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 9 Jul 2024 at 15:05, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
+>
+> Add the tlmm driver support for QCS9100 platform.
+> QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
+> platform use non-SCMI resource. In the future, the SA8775p platform will
+> move to use SCMI resources and it will have new sa8775p-related device
+> tree. Consequently, introduce "qcom,qcs9100-tlmm" to the pinctrl device
+> match table.
+>
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-sa8775p.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
+> index 5459c0c681a2..4687e11dfe75 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
+> @@ -1519,6 +1519,7 @@ static int sa8775p_pinctrl_probe(struct platform_device *pdev)
+>  }
+>
+>  static const struct of_device_id sa8775p_pinctrl_of_match[] = {
+> +       { .compatible = "qcom,qcs9100-tlmm", },
+>         { .compatible = "qcom,sa8775p-tlmm", },
+>         { },
+>  };
+>
+> --
+> 2.25.1
+>
 
---piveefpjjxp5n6ob
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Rob,
-
-On Tue, Jul 09, 2024 at 07:58:42AM -0600, Rob Herring wrote:
-> On Fri, Jul 5, 2024 at 3:21=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@baylibre.com> wrote:
-> > As we're approaching the merge window and this is still unclear, I
-> > applied the pwm bits (i.e. patches 12, 13). If I understand correctly,
-> > patch 33 isn't suitable for application yet as it has a dependency on
-> > pinctrl changes in that series.
->=20
-> Now causing an error in linux-next:
->=20
-> Documentation/devicetree/bindings/pwm/cirrus,ep9301-pwm.example.dts:18:18:
-> fatal error: dt-bindings/clock/cirrus,ep9301-syscon.h: No such file or
-> directory
->    18 |         #include <dt-bindings/clock/cirrus,ep9301-syscon.h>
->       |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[2]: *** [scripts/Makefile.lib:442:
-> Documentation/devicetree/bindings/pwm/cirrus,ep9301-pwm.example.dtb]
-> Error 1
-
-Oh, I thought I had tested that, but obviously I didn't. I'll drop them
-again.
-
-Thanks for letting me know.
-
-Best regards
-Uwe
-
---piveefpjjxp5n6ob
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaNVZwACgkQj4D7WH0S
-/k4myggAuVPCnTKtBso6CgCuYoUSZB8cGFx1+fM36OQ0B75EHfb+T+oujbdiO1op
-Q/3NTb3vIUE2+lHn6n/WxHLdeKE1vhmOgiaHW3UabNSZZyT360OZNjin7rLPlQEy
-r1DW1w3QOUIS4g8P/v7skKSis2rOiAkICHLcRdDbW5K5dHLInEshegSKVLo+4McU
-8SqKoYP4acYJFTxAC+gPkDS663k7UCsJbnbHDLstfUnuxPbtKpbDx2z8zB9IXh89
-DMwNeZq7tszOWVZ3i0QEX9fZ/DBoFWY+lSL62ZKsQgh3fJucnwXkwqCdLWahNY0k
-Wth32xU/Xhmh//FAw+1Q2VDgLI37Kw==
-=z8zY
------END PGP SIGNATURE-----
-
---piveefpjjxp5n6ob--
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
