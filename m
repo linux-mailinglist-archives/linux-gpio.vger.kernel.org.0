@@ -1,115 +1,147 @@
-Return-Path: <linux-gpio+bounces-8110-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8111-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF19892B163
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 09:42:15 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D601792B204
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 10:23:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B1551C2144B
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 07:42:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9281E280DC7
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 08:23:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C83E9143752;
-	Tue,  9 Jul 2024 07:42:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F9F1152537;
+	Tue,  9 Jul 2024 08:22:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ydv5RTag"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yfGq3CPB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CA613BC30
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Jul 2024 07:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D08E14D6F6
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jul 2024 08:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720510925; cv=none; b=XFGITYOhoBg/OE9lrDynA1DxIU6Zt0du0JFCtOART0Pw09GWdDVjlaXHGbOuJafIVNIM0zKjSKUL/i8kO4LJvuPHHnzt7r24etQXTODQ/l13CkUZjTx3vvC7Dp1fbbMxX26QFTjGthQuq+NyQOPTJlkYO2sh3RevYZZ4XQ+/5Lg=
+	t=1720513357; cv=none; b=VNRSdAA0hmbmhqoFQiCi+bjlGeVCorvvdaPKljkSLBMs+Zb0RfU+RzVG92vEXZ42YJFPS12WHm5uMG74uYdcgePOKV0emVThWLvOG+Ki522PTgzhovBVWuQpYZK2nqcBVNVUyfJxwQGzkPbXIHNZJhKcr9Hwz6mRkLnBMkpD/qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720510925; c=relaxed/simple;
-	bh=xJRLCzKoNDhkeYwYcPWKixASKx8FB9va7pEq5MrqI0U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kTBpD8lK2n28sHCMg02UKx54CIi7TrtITlzXb8hA8UjFQu13eb3cl2FdKpz6FmaFEWBvvqZ8qQ6S459uFvAZT+rRbna4vvvCu4hYXyl0DSOXQZHk1xcrVS54WDb/1TWjwXcel1upnW3E08EmmyP7xBJfK9hoiJ1RHaL4WCyZzWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ydv5RTag; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52ea952ce70so2998051e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2024 00:42:02 -0700 (PDT)
+	s=arc-20240116; t=1720513357; c=relaxed/simple;
+	bh=pdKj5Sl+RDmoDv7MTpHjK15cyv/vvLz5hzJEr5LKyD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EhisbSl5gt8Wcl0dLXMcG27mXmN9KPvasWDefXUDjS9Z1caRr9l2CdxM0XuwSMm1BAxu5AhRqMm9J9DzUwBBds0Gr6pesRWf0lY/ac9qFNndGxiztzqopHrRi1Q5kydJ3XaJKYe/WU0xUVMh6rG7kYpwZ3Q2Mfy6WM2eO0cQPVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yfGq3CPB; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-75cda3719efso2347414a12.3
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2024 01:22:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720510921; x=1721115721; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JalcFjrpq0ahXu3HtCTQVi+o1I/12oWKnc8ukzoGtKY=;
-        b=Ydv5RTagbNhpnQsERG8J8pZnx9ZuFH5wXQHhmS0PpacOhVMFQmhuFx8emRIc8oQWNE
-         JkZ0Crwv0hJSFH2Fn2AgDb63jIOyESOD/p293DOWXZSOpOQmy4JWSuGcGMvMsRIL6k4p
-         XU1S28cUOiSuorKhkRiVqOga+8uPaTlFg4n1jlBOln3sYzcLELVJhGLV2zxGR7wTdmLB
-         pMAKPdvHOLpM2ozdA+xKkhS2LskIDTG0yNqvxxtygPyE3dk/Df9mSGuFpeO2XUDM42t9
-         6A6BOmLmKNiZ6+l8TazCWtOFNbKgfUDHllEVq3VXsEc69pM1fHjqD0KLIhMKWiuKlHpS
-         QrNA==
+        d=linaro.org; s=google; t=1720513355; x=1721118155; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6A2sGpkLoR44q9qvpfYuhNZHWZy20BYVikC6QQBRMWc=;
+        b=yfGq3CPBvERSL6WW76zovqy9U6lxgVcOm2Y1DixnerkqlQk5UACkjCJCTitulQkFPv
+         xA1RWtW8wmDiS0h8mk64oqjMp+759TS+H01WHET9h7qBHSW/fysmiv29vLnpXdbiJqhi
+         cq98FIncWTSdNveF/hARi2QdCcMBlLd1GdZ8pEzHb3qQoDrqhsxie3kFB1TyVYjw/qQO
+         3ZRUInHlkFToF7DqlDuoWnRlahn8iw1I4T+mantPjLJGQs9B6rcdn4fm/09CjMklD7Lx
+         xqzRRkHY6AuCGEdfFmXkrpXBU9L2wmtsygyo9UiKVQ9Ux7/AjNtGXCL7rFQyj7ckFxqd
+         NySA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720510921; x=1721115721;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JalcFjrpq0ahXu3HtCTQVi+o1I/12oWKnc8ukzoGtKY=;
-        b=Dne2QBCvcohWHp9VH9VWQppqrfH9CmPBRdPY3FGM/d00h00jiiAWWY55VcQKlmIAIW
-         fcSd17tx148DnSRiXZlN3n1nItupH7JnJ3qDpXBlYEjskl6XH2J4uhZ/usRZfVCDiPBV
-         9JUoVyZQUx3aG1krtpgfCTP5bhBAbg/zW5jKuTCnqHDW4knfiq9jKo0le+uQNA6dJd7t
-         djNk7y5bMJ/gXURL0DqwibRDUAhLJBbtudqyx/VWMttAlXZBHRf/6uBVyymUOjNJ3OiY
-         uv0By8cFMzdYyU1ociqTTZ31WpPYUaYdXaKsGTXbqxvcwjJAFdvc5jsL9zg0fqpTaZ/U
-         hKrg==
-X-Forwarded-Encrypted: i=1; AJvYcCULRdxBXAfTrG1kJV6JnBcvywuSp/sWFJ5NtoxwjzH/6JFL1nz9IUzVcqjLu5vjjruqnANr4quDruyhJbiZktMgWxvuKPm3A/82/A==
-X-Gm-Message-State: AOJu0YxeSYwQWu2i2mdC/rowBJCUE0DhUpfOf3b5id6xWJ7J98vIKMaR
-	R9NPX++F2Cd9qDZQShbqDcrA7P9lpKgx4o44oPOdvv/Flg8bmVi+bFhLN/81yq8=
-X-Google-Smtp-Source: AGHT+IFzgDVpkTFnErT06UxOVfkF7s4Xx81NBC6zg9ksoy0SIYXBWXCUEC3KtDW6Olt3ymjJu1TieA==
-X-Received: by 2002:a05:6512:3d01:b0:52b:88c3:b2bc with SMTP id 2adb3069b0e04-52eb99d151bmr1214588e87.48.1720510921137;
-        Tue, 09 Jul 2024 00:42:01 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:c270:70c:8581:7be])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42667720667sm83291675e9.33.2024.07.09.00.42.00
+        d=1e100.net; s=20230601; t=1720513355; x=1721118155;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6A2sGpkLoR44q9qvpfYuhNZHWZy20BYVikC6QQBRMWc=;
+        b=NvldHOgRh2FlEI08vOgGo2BeBpAzGg5wVzhaJ+nTy6Asi7SJwQLyYClbqWYHgN0RtT
+         1PdQfscPp78cgLeH0wT0gSZlPalqgQAedER49LIWl1Fusk2HTNSQXAGQIpM+Hb22HpLa
+         r9y9wJ5msYcDTehs1tgItInfH8O/D5pTmDu9c29+HIG4o9fz7UdJSt56FoLy90e7OcWt
+         fScHB6Ym3fy1uk8uMs8pLQRPY3QKlgUY8/B6tklox2TmWVvR3WWxvD0mie7ldWrjVZN3
+         d31VgwCwrIOyUxF0J36T5lb0F80ChK2r5SkGuFMOH5/f+6sr7bfFmOSPs49oDNnyxKOa
+         sjBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnvmOXwsPDIiK1V7C/T0quhNlM/LhytPw9H7vO1nwId3CSsOzlR9Cbhoqnkmg546hK8sl2owa2KRkF+dO976CVweipwFVxw20V1w==
+X-Gm-Message-State: AOJu0Yy62ejFFrlZ78CB6cVz/AxMvZL5YCWaegpH+kYYZCoAN5qGXmTo
+	PEeWJVWXS5QLAYwSxMIzGc7RNexWE5kEs2caSzyHT4QrC26OMTlb0DxwDS2RSUo=
+X-Google-Smtp-Source: AGHT+IF+2oTYitTG2y/n1s9GD0vzoYrzfBt3TQ/PpdeTquco5XIzyIuGebiVTZPAncjqLsKvlaplYQ==
+X-Received: by 2002:a05:6a20:7485:b0:1c2:97cd:94d8 with SMTP id adf61e73a8af0-1c298223d92mr1831621637.20.1720513355542;
+        Tue, 09 Jul 2024 01:22:35 -0700 (PDT)
+Received: from localhost ([122.172.84.129])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a9977cfsm9387109a91.34.2024.07.09.01.22.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 00:42:00 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
+        Tue, 09 Jul 2024 01:22:34 -0700 (PDT)
+Date: Tue, 9 Jul 2024 13:52:32 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Erik Schilling <erik.schilling@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10] gpio: virtuser: new virtual testing driver for the GPIO API
-Date: Tue,  9 Jul 2024 09:41:59 +0200
-Message-ID: <172051091644.6169.4337890998290511696.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240708142912.120570-1-brgl@bgdev.pl>
-References: <20240708142912.120570-1-brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
+Subject: Re: [libgpiod][PATCH] doc: fix sphinx config for rtd
+Message-ID: <20240709082232.bf4qvzo6oswgsfad@vireshk-i7>
+References: <20240705021750.43197-1-warthog618@gmail.com>
+ <172016528819.6599.11422057058966562764.b4-ty@linaro.org>
+ <20240706025456.GA13007@rigel>
+ <CAMRc=MeUmk5Q_9whx-fHFqRL3Z_wp0L66_kErnq1J6CGotsYJw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeUmk5Q_9whx-fHFqRL3Z_wp0L66_kErnq1J6CGotsYJw@mail.gmail.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++Erik,
 
-
-On Mon, 08 Jul 2024 16:29:12 +0200, Bartosz Golaszewski wrote:
-> The GPIO subsystem used to have a serious problem with undefined behavior
-> and use-after-free bugs on hot-unplug of GPIO chips. This can be
-> considered a corner-case by some as most GPIO controllers are enabled
-> early in the boot process and live until the system goes down but most
-> GPIO drivers do allow unbind over sysfs, many are loadable modules that
-> can be (force) unloaded and there are also GPIO devices that can be
-> dynamically detached, for instance CP2112 which is a USB GPIO expender.
+On 08-07-24, 13:48, Bartosz Golaszewski wrote:
+> On Sat, Jul 6, 2024 at 4:55 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Fri, Jul 05, 2024 at 09:41:31AM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > >
+> > > On Fri, 05 Jul 2024 10:17:50 +0800, Kent Gibson wrote:
+> > > > Generating the latest documentation on readthedocs is broken as the
+> > > > index.html generated by Doxygen is now being overwritten by one
+> > > > generated by Sphinx.
+> > > >
+> > > > Make Sphinx generate a differently named root page that does not
+> > > > conflict with the index.html generated by Doxygen.
+> > > >
+> > > > [...]
+> > >
+> > > Applied, thanks!
+> > >
+> > > [1/1] doc: fix sphinx config for rtd
+> > >       commit: 824c1f39347c2ef46919dfc45e8247441b908827
+> > >
+> >
+> > Btw, I ran across this while updating RTD to v2.1 - their default build
+> > config has changed since I last updated, so that didn't go as smoothly
+> > as I had anticipated (the plan was to switch the branch the generation
+> > uses from my fork to your github repo, but now that can wait til v2.2).
+> >
+> > I am also looking at reworking the documentation to use Sphinx/Breathe
+> > to generate the html from the xml that Doxygen generates, and
+> > incorporting documentation for the Python bindings, but looking is
+> > about as far as I've gotten so far.
 > 
-> [...]
+> YES please! We really need this and I've had it on my TODO list for
+> far too long.
+> 
+> >
+> > Not sure what to do about the Rust bindings.  I was assuming I could
+> > just link to docs.rs, but the build there[1] is broken.
+> > Can we fix that?
+> >
+> 
+> I don't know. Viresh?
 
-Applied, thanks!
+Erik, since you did the whole pkg manager thing (where it seems to be
+failing right now), can you take a look at this please ?
 
-[1/1] gpio: virtuser: new virtual testing driver for the GPIO API
-      commit: 91581c4b3f29e2e22aeb1a62e842d529ca638b2d
+> > [1] https://docs.rs/crate/libgpiod/latest
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+viresh
 
