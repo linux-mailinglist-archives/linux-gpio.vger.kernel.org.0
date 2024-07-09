@@ -1,114 +1,113 @@
-Return-Path: <linux-gpio+bounces-8146-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8147-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CBF992C35E
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 20:39:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7981C92C37D
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 20:47:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6D9B1F2325F
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 18:39:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 31B4D2835B6
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 18:47:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C6C180046;
-	Tue,  9 Jul 2024 18:39:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CC28180036;
+	Tue,  9 Jul 2024 18:47:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQbqTxig"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKxaEiiZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229A21B86D8;
-	Tue,  9 Jul 2024 18:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AC51B86C0;
+	Tue,  9 Jul 2024 18:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720550368; cv=none; b=VicHInCUEfOXkFfmPY4fn2fbuuO0Ju1VJ8+t0AuuPIPsMyk9FCTwHV4QdiUNBWKAkL0DFY3FHF2D32y1C8jfw2IqE47ec5C+kffOcSR4GjtfQGmp22byeJ8emBGGclB6DGsqiNke+DhVttENDta+QvoBEqScMDRWmZwVRGzq37c=
+	t=1720550853; cv=none; b=NtCFklFE9t4mzL5EX0/MQrAF5BrGCwk1+ZQTZaG8DmlafjAu2BFxxqB40T3JxMEbRKEtYYnOCxWXph1WVnCMuDzxb4YIPrm/Bno+7n2YbKAN7UksAY6k2ODJSxHGwe7SF97yUdeMlRFhYw/xXN7oyD9GhTALS1oo4JBaR1vtKF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720550368; c=relaxed/simple;
-	bh=GuVzNLsoQwJbKQVwyFFDE4OTya1MyIR+LWxxvZmGsxA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PZNP379GMfBvvR8vhapnP6Ba2vexW1h/Z7vUyVNDpDoNOg+MvJ7aS1wJoxyxBjNOrg2CWacXUecY8Cv/AjbgOnYn45ycfk1oi+7tpenmngv1Ym2+E7Xh7/0ATxXCsepZ7NpO3HiA91azt1ha732O3pR22k0r+50dEg+RNBQpBMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQbqTxig; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-36799fb93baso3714459f8f.0;
-        Tue, 09 Jul 2024 11:39:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720550365; x=1721155165; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qnXLCo5LjE1ZlgJSfy+TjflOFTnxFUmr8lQoh5O2fgs=;
-        b=RQbqTxigpDah2lmQ7GIkq2mNrol5WXoT7Ao/AxmlsBn6Qmp+KLNQjRcT2oSA6ZWOEe
-         Ra9+zBOXU0VuTbBJ7fr0ylrepE35D5XTnivZWz8HOPlFFIiLphOxUrggrD66pl/PJhmT
-         h8gSQnrknc24xJOSK2CosMTdD0B6n9eHWx0mGRozJwfJShvbbCDfet6D4t2RNm+WgJlq
-         DlXZz3OXFrqdtN5EhAQru9UAY0T/lZuW4+wbG44QbAVOUzkPTR31jzErhYx62LpFUTvt
-         D6E8eapHpFVkJgi2DsKZGruKRQaHu8Zxa3QiSAJgTX25tmJAXYkjz99TGEhJP3qj1Cg7
-         90Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720550365; x=1721155165;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qnXLCo5LjE1ZlgJSfy+TjflOFTnxFUmr8lQoh5O2fgs=;
-        b=Ba0P8XoLnjMw/oWFPS0XRsQxJvpfSEDxZZAjf5rz9SmWIR/rFw5cNoGilEWmTkeJZF
-         neqrLEiTY+qJLuuaqbD6bDFFIM1az99wzIP1SbNXhz5+xWqMifUDWfo8f43csulL3Esj
-         w4kO6/kp0Jwvc+FXtUb2zgIrmEDjqkhKlP2u3oysrcJU+Y4RDG8NjhS9jpnz8LzqYxWU
-         hX6CaJ7Rhfj7mil4HVn0777GHefzUbhD+ZjxZV1uppxDa98taMXg/ccdvBjWa0M1f4ST
-         PHHGm9V7v70XkZiuano7HMCFl2wBhLjHTjAt0NMCQg5KCzBnCQCIay7ZlwpOK9tfJQ9X
-         BzyA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSg3VcprNAyC0+cVb2RpvRSAp+AaKJ4TKVQOlHO4bCtn2irGzQE2ySzhyviCG0j81TJ53tPFC++XWmft4rbskb1DZfegSJ4FvY8QXf127iooqNLwasAfsV1a4kQetwJpcSpQ+TJ/Oqw2gjQS/pfX7wxHNcmhCeg7C66/drtPD8ZRlDLA==
-X-Gm-Message-State: AOJu0YxD5j03/UbMEGRONFKwyQagvPe7SkqWpEu0usmrpi4bfmt8kDXb
-	4KMNPg1zN25nrMSd+F1fZH9HjGdI5V0FWSQsgBq3pkZfm3IdV2Qu
-X-Google-Smtp-Source: AGHT+IFd7bwx5sb5axX5KrYBbNNdY99ASqrFU3SwYaujqk+tOLXKqRPB78vy/SeE2h37i8kPZdFH2w==
-X-Received: by 2002:a5d:62cb:0:b0:362:8201:fa3 with SMTP id ffacd0b85a97d-367cea963e0mr2147186f8f.34.1720550365011;
-        Tue, 09 Jul 2024 11:39:25 -0700 (PDT)
-Received: from mfe-desktop.Sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-367cde7deeasm3325993f8f.8.2024.07.09.11.39.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 11:39:24 -0700 (PDT)
-From: marc.ferland@gmail.com
-X-Google-Original-From: marc.ferland@sonatest.com
-To: linus.walleij@linaro.org
-Cc: corbet@lwn.net,
-	linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Marc Ferland <marc.ferland@sonatest.com>
-Subject: [PATCH] docs/pinctrl: fix typo in mapping example
-Date: Tue,  9 Jul 2024 14:39:19 -0400
-Message-Id: <20240709183919.3337131-1-marc.ferland@sonatest.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1720550853; c=relaxed/simple;
+	bh=7ye7ltyXbYOYYi8uAxpAmR2GIyPSMjM7g8VmAI3m74Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yn3TwIHbyKUWQ+9zxGtLGCXYYlvp2dgEER0t3RSFuuJpDqjnkjFJi8eJkpstRvQ/juckxTKgGJz9Q2kQkk2iAAYYFp+UAQFyU0vzduy2MXREND/jgSA4dodyp7FGEr0uDqN6GCWbae8PT2StyX6JHqw8BNhnD4e5eTW+ly8/ZRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKxaEiiZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59F36C3277B;
+	Tue,  9 Jul 2024 18:47:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720550850;
+	bh=7ye7ltyXbYOYYi8uAxpAmR2GIyPSMjM7g8VmAI3m74Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AKxaEiiZdtZv72eh/8HcEMtgL6askaomDjzh73Zmd585jJ9eTgjA8y605uew+GyXq
+	 BjVzXnTa25OtDMbvRzghMEoaZSm1+ncjkNet75r5zoxZdl3TOyqPMDXXFj0NIZcmzC
+	 C4TEBMPOgR9YjvEpUd1osYwGFrbsBKmsco8O8DLXeeGY//0GxFhujmJCxeaPez7SW3
+	 WY4tI7PURsponiYKUn94muFFNDz0CzfCfgnXc5TRN8r9d6r6uwy6hsgp8bN34Pg5IP
+	 8AfY1UR94wrAFkDc1hKCm/h/s4EFN8h2XUmt2OBSc8FAslyq0lyh2M84LHzJmnqQaF
+	 Wkys6UfkIASfA==
+Date: Tue, 9 Jul 2024 13:47:14 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Rayyan Ansari <rayyan.ansari@linaro.org>
+Cc: devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 0/4] dt-bindings: pinctrl: convert remaining qcom
+ bindings to yaml
+Message-ID: <yyxc3ldrgphgp65fydziyswbvrhdkcacsnpw5mfqddglxecpun@rjrxj3ffpxnw>
+References: <20240709162009.5166-1-rayyan.ansari@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240709162009.5166-1-rayyan.ansari@linaro.org>
 
-From: Marc Ferland <marc.ferland@sonatest.com>
+On Tue, Jul 09, 2024 at 05:17:52PM GMT, Rayyan Ansari wrote:
+> Hi,
+> The following patches convert all remaining old text bindings for
+> Qualcomm pinctrl to yaml, so device trees can be validated against the
+> schema.
+> 
 
-Small typo. The device name in the example should be "foo-i2c.0" and
-not "foo-i2c.o".
+Thanks for fixing these up!
 
-Signed-off-by: Marc Ferland <marc.ferland@sonatest.com>
----
- Documentation/driver-api/pin-control.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think it would have been good to use andersson@kernel.org as the
+maintainer address, but I see the other bindings have the broken address
+as well, so I can follow up with a patch to change them all.
 
-diff --git a/Documentation/driver-api/pin-control.rst b/Documentation/driver-api/pin-control.rst
-index 4639912dc9cc..27ea1236307e 100644
---- a/Documentation/driver-api/pin-control.rst
-+++ b/Documentation/driver-api/pin-control.rst
-@@ -1002,7 +1002,7 @@ it even more compact which assumes you want to use pinctrl-foo and position
- .. code-block:: c
- 
- 	static struct pinctrl_map mapping[] __initdata = {
--		PIN_MAP_MUX_GROUP("foo-i2c.o", PINCTRL_STATE_DEFAULT,
-+		PIN_MAP_MUX_GROUP("foo-i2c.0", PINCTRL_STATE_DEFAULT,
- 				  "pinctrl-foo", NULL, "i2c0"),
- 	};
- 
--- 
-2.34.1
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
+Regards,
+Bjorn
+
+> Thanks,
+> Rayyan
+> 
+> Rayyan Ansari (4):
+>   dt-bindings: pinctrl: qcom,apq8064-pinctrl: convert to dtschema
+>   dt-bindings: pinctrl: qcom,ipq8064-pinctrl: convert to dtschema
+>   dt-bindings: pinctrl: qcom,ipq4019-pinctrl: convert to dtschema
+>   dt-bindings: pinctrl: qcom,apq8084-pinctrl: convert to dtschema
+> 
+>  .../bindings/pinctrl/qcom,apq8064-pinctrl.txt |  95 ---------
+>  .../pinctrl/qcom,apq8064-pinctrl.yaml         | 110 ++++++++++
+>  .../bindings/pinctrl/qcom,apq8084-pinctrl.txt | 188 ------------------
+>  .../pinctrl/qcom,apq8084-pinctrl.yaml         | 129 ++++++++++++
+>  .../bindings/pinctrl/qcom,ipq4019-pinctrl.txt |  85 --------
+>  .../pinctrl/qcom,ipq4019-pinctrl.yaml         | 102 ++++++++++
+>  .../bindings/pinctrl/qcom,ipq8064-pinctrl.txt | 101 ----------
+>  .../pinctrl/qcom,ipq8064-pinctrl.yaml         | 108 ++++++++++
+>  8 files changed, 449 insertions(+), 469 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.yaml
+> 
+> -- 
+> 2.45.2
+> 
 
