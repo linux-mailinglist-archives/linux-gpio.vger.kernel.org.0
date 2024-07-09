@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-8138-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8139-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F69092BFC7
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 18:25:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D95492BFD9
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 18:27:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A1F81F21EFE
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 16:25:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A10371C21E3A
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 16:27:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9E9F1A3BB4;
-	Tue,  9 Jul 2024 16:20:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 739941ABCB2;
+	Tue,  9 Jul 2024 16:20:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fWjla2uf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SCcHm8LD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9201A2FCA
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Jul 2024 16:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A931ABC43
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jul 2024 16:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542048; cv=none; b=ux6/bSzUrH8C8dVC3B3VyLghFyG6QkrrcZ3QzloxndrB9BWv6CzyoRGIFw/iPbSB0nYi8Z/MiXGmDTqcWbzsFltaRsn7n9RbT6JL3nb7rA3RVjntOyKhZzr5lvohEyCZeS3DUbwmbk6p+qgq/rlNpOTNUwRaAxJRWVJ/SZOIlIk=
+	t=1720542055; cv=none; b=maHvTXBKDg2XPZbxwRcVO7l+/tR7hs2D7VLQ3UMhxlS8O5+k0lnHdZ2kajcJt0kqlnMMNQ7JYchq+tm4offR5syj86aB8h76JHnYumP8D2zmxPDkPKfkUWSguDu/YGDRxsypC9TWT1jnh0NhjL04QSjbhXSq/YLtlbXaTk53u6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542048; c=relaxed/simple;
-	bh=I+e/Ru/F7i8s3g90eMaGWGwVgP3LUnUVxX5/u8fkRVE=;
+	s=arc-20240116; t=1720542055; c=relaxed/simple;
+	bh=15/G0KHqA0dKur8q9uAiEUuJzQ4VCnWfgrKNlUgEpsU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y4JrNov3aQdxGt72r7i7f1dFbeI0cFvJpt1s49INyL3oUrPbIXFHGdNYNwUrzGz8hH91snN2StjMLJUMicMWEZNVly/L2z94Q6DEW+DK3lSyAkW+t4VBqMKr6QnRpj6PeRHmxe/Q5Qt0X1OwT8b0XJtlICdsC6hqNNBg/ASm47U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fWjla2uf; arc=none smtp.client-ip=209.85.208.169
+	 MIME-Version; b=TsnInSEbdTV7Nr+2QGJBTqqY8UyURIO9I3vw0BBJphFGPm2qTPx00CbxshlJvcpKGxAXzNUb9RNzt3mgbFl8i0+flEPVVMv0dffnfR6GDw6sYTz618cSsU2SCUGlkfhjrI0u3FLalL2c8Gj2IeFWFWUEOMUQX4AfW8bVpmDirGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SCcHm8LD; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2eeb2d60efbso17889511fa.1
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2024 09:20:46 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4266ea6a488so14041855e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2024 09:20:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720542045; x=1721146845; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1720542052; x=1721146852; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N0znxVwwjji/DUtWTLARmbZTFvr2yZL9kSRXuxBRwMw=;
-        b=fWjla2ufZu3a5Gm6xIE89vs0qzrwL2iAGtlnsYfc2JGZRg739GK7YWdVpwFi6NWinz
-         5X/GRwkEalkzqw26LaFNTp2BWfnJcR6BRJSMG7g7H5USMIjTdY0hpoU0/Q1+0ifv237/
-         LZYHDCvB0J/iqZMHSXnTNDCARBrqzv1qa4Bk8nRSnoqI3/qzuKKaiHKTgCYj1wurXKbf
-         xnrP8AOZdkKTckwZmnde8yIDxw/DdLyvYZEoko994o+2hXgpxEQFQDxEehk0xLNaWMP6
-         zAP/7A62QwuBcpbMhvvAXKti3CpKBjBzKdk9kUDZXZTdHaQAh9wbH6AU9H+QaMaLp5ng
-         qj/g==
+        bh=hMw3Csc91xG1Dn/+t3HCdPJHIoD7h/vcI/ofAzBjPNA=;
+        b=SCcHm8LDHvWkys6gqbLWNlSFyT19UrsfdvzG3hW2mlYtufwbdsFj815jQgPHajFJ0u
+         +PjxPPH/+a4Mwd7FIx08BunxzkwqBLgri4Xm/s/EBJNU7O1u83h1Ky7Cg48gwBol3rEK
+         1u0ixegOf9kEX1oP9mp0LzAhjYScpOn11/pwzB41SD7vT/J6FPSYm/4FRgzA0+e4fhzR
+         vO2eCwmiWkt4MiYaxf2CzSjts0KS2ymL+HFZxbqD3VsRitX2AkdzX+dP+zz6HXxAcpFp
+         Lbd2rRsNrARNqeOFONJJCJuiN+/+0i3EZuTMa/59i9XWuIQrO8fivXzYiCuL5HyLJRzc
+         pDuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720542045; x=1721146845;
+        d=1e100.net; s=20230601; t=1720542052; x=1721146852;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=N0znxVwwjji/DUtWTLARmbZTFvr2yZL9kSRXuxBRwMw=;
-        b=Sz08/sQP3nmO3aOT4PVPebZogrDJYARo603TpC4afF5G9Nwm7QrimkoWTfA/oZRZmi
-         LaOiy6Z4hnlr8S8fFAUaWSO7zAJ+hRy8pB9/pHuFxUoe0QuZAk78l/sNHqrFfNJQVswX
-         D0EZKxumE/70QGRCOf2RyCVTLftRpnN6GNasec7PWpjnDRmvKFBNn5eMEhiCvZ3/rdln
-         jE8h4Iw29bsM7oXh3nTfcd9USTYEzullnzJdVniOU1c25+HjQKCeaQGpdyGkaL1M2ZuF
-         8shoPXoUgMDzEUh7lswo2wX1Gmn/NE5hZI68sCJzIVuoCRlzQu/bBpnAMWNN2xaNXZuc
-         OAQw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0ys8c1kjLmBfKdUY8ZAbH2zp39ZGYa/bfb6581H8LhFb4UZHta7dyWk0P7YWR7mD8rfKJoSGiXVnurJ9hZhU+3pv9bZl5Q2hcyA==
-X-Gm-Message-State: AOJu0YxujXLw+PtBBvOGRE5UZoe5PslkOZSUAF8PxtCse5cicJJBjJDU
-	L3ZBFOV2vStcaKjMLHaApTD4aziU72ANDHsKbK41l+yx6ScQWq180q5/FCBNQmo=
-X-Google-Smtp-Source: AGHT+IGEHZyHATXkbM3yaENJpeHbND/G7r/St/XcvgZYZHmV6fJy0I7tDkNlNpGUDeCi6fZCEeDukA==
-X-Received: by 2002:a05:6512:78c:b0:52c:c5c4:43d4 with SMTP id 2adb3069b0e04-52eb99caf68mr1644174e87.53.1720542044950;
-        Tue, 09 Jul 2024 09:20:44 -0700 (PDT)
+        bh=hMw3Csc91xG1Dn/+t3HCdPJHIoD7h/vcI/ofAzBjPNA=;
+        b=CeunMWKlMRshbZL90tMHm6cd1tZ6RcJVeRFZRGhr69+5oB0oTqPV5ng6XpcmMDZTbL
+         0QiVp5v72/DhshVgZiKHXIbiMJkSIToX1Pen+9pjFp1a0p2xzDZp2So3ilivj87OTFXj
+         IsPecpMKUbaAHMTa505QJ+AvWCD+cXjpss9KfQsMr/VWFSZBjn6/bJ2szu0FoBX9mIFH
+         pT5zXXmqa3uVXfORUPmeidSU9I7atb7y6FNzuczDCkMQA41Z1ZAOP3QbQeyseep1BdfL
+         m//n7CI/CLcufvmGnDW35qrV255jYi5pFNeDXX3AuB1j9d8o2zPve/bnooEy9S8tGern
+         5n+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWVdH9taZJJYRmJQ2fSK3SFYccuTjs1KnD6WF07KRgrGsmOfKjHHEi1qDv2s+rIwopSiskuVhievBWoqckfoWvDkm4Q8BYt40lwMA==
+X-Gm-Message-State: AOJu0YxY0/Q5vVLV6tcH6f33Dj3r5Gy1d6i5YMXrbr84DeDzB6p38xhA
+	Np0xxfoEOPAsx0SVV9HHlnYCrgLX6PBU5amsLmvXUvVaxIAXl0gXIJ8lvqztJtM=
+X-Google-Smtp-Source: AGHT+IFe6PkqhiCDDJSXx6ob8a+E7JGUWgUrvxr1A9IgPNb3EmRBtZ3lIkQmLc8Rpz+Jj7CtmBiJDw==
+X-Received: by 2002:a5d:64c4:0:b0:366:efbd:8aa3 with SMTP id ffacd0b85a97d-367cea46767mr3526398f8f.2.1720542051822;
+        Tue, 09 Jul 2024 09:20:51 -0700 (PDT)
 Received: from rayyan-pc.broadband ([2a0a:ef40:ee7:2401:197d:e048:a80f:bc44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e07fsm2966955f8f.17.2024.07.09.09.20.44
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cde7e07fsm2966955f8f.17.2024.07.09.09.20.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 09:20:44 -0700 (PDT)
+        Tue, 09 Jul 2024 09:20:51 -0700 (PDT)
 From: Rayyan Ansari <rayyan.ansari@linaro.org>
 To: devicetree@vger.kernel.org
 Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
@@ -78,9 +78,9 @@ Cc: Rayyan Ansari <rayyan.ansari@linaro.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/4] dt-bindings: pinctrl: qcom,ipq8064-pinctrl: convert to dtschema
-Date: Tue,  9 Jul 2024 17:17:54 +0100
-Message-ID: <20240709162009.5166-3-rayyan.ansari@linaro.org>
+Subject: [PATCH 3/4] dt-bindings: pinctrl: qcom,ipq4019-pinctrl: convert to dtschema
+Date: Tue,  9 Jul 2024 17:17:55 +0100
+Message-ID: <20240709162009.5166-4-rayyan.ansari@linaro.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240709162009.5166-1-rayyan.ansari@linaro.org>
 References: <20240709162009.5166-1-rayyan.ansari@linaro.org>
@@ -92,27 +92,30 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Qualcomm IPQ8064 TLMM block bindings from text to yaml dt
+Convert the Qualcomm IPQ4019 TLMM block bindings from text to yaml dt
 schema format.
 
 Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
 ---
- .../bindings/pinctrl/qcom,ipq8064-pinctrl.txt | 101 ----------------
- .../pinctrl/qcom,ipq8064-pinctrl.yaml         | 108 ++++++++++++++++++
- 2 files changed, 108 insertions(+), 101 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.yaml
+ .../bindings/pinctrl/qcom,ipq4019-pinctrl.txt |  85 ---------------
+ .../pinctrl/qcom,ipq4019-pinctrl.yaml         | 102 ++++++++++++++++++
+ 2 files changed, 102 insertions(+), 85 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
 deleted file mode 100644
-index a7aaaa7db83b..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+index 97858a7c07a2..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
 +++ /dev/null
-@@ -1,101 +0,0 @@
--Qualcomm IPQ8064 TLMM block
+@@ -1,85 +0,0 @@
+-Qualcomm Atheros IPQ4019 TLMM block
+-
+-This is the Top Level Mode Multiplexor block found on the Qualcomm IPQ8019
+-platform, it provides pinctrl, pinmux, pinconf, and gpiolib facilities.
 -
 -Required properties:
--- compatible: "qcom,ipq8064-pinctrl"
+-- compatible: "qcom,ipq4019-pinctrl"
 -- reg: Should be the base address and length of the TLMM block.
 -- interrupts: Should be the parent IRQ of the TLMM block.
 -- interrupt-controller: Marks the device node as an interrupt controller.
@@ -134,7 +137,7 @@ index a7aaaa7db83b..000000000000
 -common pinctrl bindings used by client devices, including the meaning of the
 -phrase "pin configuration node".
 -
--Qualcomm's pin configuration nodes act as a container for an arbitrary number of
+-The pin configuration nodes act as a container for an arbitrary number of
 -subnodes. Each of these subnodes represents some desired configuration for a
 -pin, a group, or a list of pins or groups. This configuration can include the
 -mux function to select on those pin(s)/group(s), and various pin configuration
@@ -152,90 +155,71 @@ index a7aaaa7db83b..000000000000
 -
 -The following generic properties as defined in pinctrl-bindings.txt are valid
 -to specify in a pin configuration subnode:
--
-- pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-strength,
-- output-low, output-high.
+- pins, function, bias-disable, bias-pull-down, bias-pull-up, drive-open-drain,
+- drive-strength.
 -
 -Non-empty subnodes must specify the 'pins' property.
+-Note that not all properties are valid for all pins.
+-
 -
 -Valid values for qcom,pins are:
--  gpio0-gpio68
--   Supports mux, bias, and drive-strength
+-  gpio0-gpio99
+-    Supports mux, bias and drive-strength
 -
--  sdc3_clk, sdc3_cmd, sdc3_data
--   Supports bias and drive-strength
--
--
--Valid values for function are:
--  mdio, mi2s, pdm, ssbi, spmi, audio_pcm, gpio, gsbi1, gsbi2, gsbi4, gsbi5,
--  gsbi5_spi_cs1, gsbi5_spi_cs2, gsbi5_spi_cs3, gsbi6, gsbi7, nss_spi, sdc1,
--  spdif, nand, tsif1, tsif2, usb_fs_n, usb_fs, usb2_hsic, rgmii2, sata,
--  pcie1_rst, pcie1_prsnt, pcie1_pwren_n, pcie1_pwren, pcie1_pwrflt,
--  pcie1_clk_req, pcie2_rst, pcie2_prsnt, pcie2_pwren_n, pcie2_pwren,
--  pcie2_pwrflt, pcie2_clk_req, pcie3_rst, pcie3_prsnt, pcie3_pwren_n,
--  pcie3_pwren, pcie3_pwrflt, pcie3_clk_req, ps_hold
+-Valid values for qcom,function are:
+-aud_pin, audio_pwm, blsp_i2c0, blsp_i2c1, blsp_spi0, blsp_spi1, blsp_uart0,
+-blsp_uart1, chip_rst, gpio, i2s_rx, i2s_spdif_in, i2s_spdif_out, i2s_td, i2s_tx,
+-jtag, led0, led1, led2, led3, led4, led5, led6, led7, led8, led9, led10, led11,
+-mdc, mdio, pcie, pmu, prng_rosc, qpic, rgmii, rmii, sdio, smart0, smart1,
+-smart2, smart3, tm, wifi0, wifi1
 -
 -Example:
 -
--	pinmux: pinctrl@800000 {
--		compatible = "qcom,ipq8064-pinctrl";
--		reg = <0x800000 0x4000>;
+-	tlmm: pinctrl@1000000 {
+-		compatible = "qcom,ipq4019-pinctrl";
+-		reg = <0x1000000 0x300000>;
 -
 -		gpio-controller;
 -		#gpio-cells = <2>;
--		gpio-ranges = <&pinmux 0 0 69>;
+-		gpio-ranges = <&tlmm 0 0 100>;
 -		interrupt-controller;
 -		#interrupt-cells = <2>;
--		interrupts = <0 32 0x4>;
+-		interrupts = <0 208 0>;
 -
--		pinctrl-names = "default";
--		pinctrl-0 = <&gsbi5_uart_default>;
--
--		gsbi5_uart_default: gsbi5_uart_default {
+-		serial_pins: serial_pinmux {
 -			mux {
--				pins = "gpio18", "gpio19";
--				function = "gsbi5";
--			};
--
--			tx {
--				pins = "gpio18";
--				drive-strength = <4>;
+-				pins = "gpio60", "gpio61";
+-				function = "blsp_uart0";
 -				bias-disable;
--			};
--
--			rx {
--				pins = "gpio19";
--				drive-strength = <2>;
--				bias-pull-up;
 -			};
 -		};
 -	};
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.yaml
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.yaml
 new file mode 100644
-index 000000000000..58f11e1bdd4f
+index 000000000000..ebf74e48ec5b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.yaml
-@@ -0,0 +1,108 @@
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.yaml
+@@ -0,0 +1,102 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pinctrl/qcom,ipq8064-pinctrl.yaml#
++$id: http://devicetree.org/schemas/pinctrl/qcom,ipq4019-pinctrl.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Qualcomm Technologies, Inc. IPQ8064 TLMM block
++title: Qualcomm Technologies, Inc. IPQ4019 TLMM block
 +
 +maintainers:
 +  - Bjorn Andersson <bjorn.andersson@linaro.org>
 +
 +description: |
-+  Top Level Mode Multiplexer pin controller in Qualcomm IPQ8064 SoC.
++  Top Level Mode Multiplexer pin controller in Qualcomm IPQ4019 SoC.
 +
 +allOf:
 +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
 +
 +properties:
 +  compatible:
-+    const: qcom,ipq8064-pinctrl
++    const: qcom,ipq4019-pinctrl
 +
 +  reg:
 +    maxItems: 1
@@ -248,14 +232,18 @@ index 000000000000..58f11e1bdd4f
 +patternProperties:
 +  "-state$":
 +    oneOf:
-+      - $ref: "#/$defs/qcom-ipq8064-tlmm-state"
++      - $ref: "#/$defs/qcom-ipq4019-tlmm-state"
 +      - patternProperties:
 +          "-pins$":
-+            $ref: "#/$defs/qcom-ipq8064-tlmm-state"
++            $ref: "#/$defs/qcom-ipq4019-tlmm-state"
 +        additionalProperties: false
 +
++  "-hog(-[0-9]+)?$":
++    required:
++      - gpio-hog
++
 +$defs:
-+  qcom-ipq8064-tlmm-state:
++  qcom-ipq4019-tlmm-state:
 +    type: object
 +    description:
 +      Pinctrl node's client devices use subnodes for desired pin configuration.
@@ -269,9 +257,7 @@ index 000000000000..58f11e1bdd4f
 +          List of gpio pins affected by the properties specified in this
 +          subnode.
 +        items:
-+          oneOf:
-+            - pattern: "^gpio([0-9]|[1-5][0-9]|6[0-8])$"
-+            - enum: [ sdc3_clk, sdc3_cmd, sdc3_data ]
++          pattern: "^gpio([0-9]|[1-9][0-9])$"
 +        minItems: 1
 +        maxItems: 36
 +
@@ -279,13 +265,13 @@ index 000000000000..58f11e1bdd4f
 +        description:
 +          Specify the alternative function to be configured for the specified
 +          pins.
-+        enum: [ mdio, mi2s, pdm, ssbi, spmi, audio_pcm, gpio, gsbi1, gsbi2, gsbi4, gsbi5,
-+                gsbi5_spi_cs1, gsbi5_spi_cs2, gsbi5_spi_cs3, gsbi6, gsbi7, nss_spi, sdc1,
-+                spdif, nand, tsif1, tsif2, usb_fs_n, usb_fs, usb2_hsic, rgmii2, sata,
-+                pcie1_rst, pcie1_prsnt, pcie1_pwren_n, pcie1_pwren, pcie1_pwrflt,
-+                pcie1_clk_req, pcie2_rst, pcie2_prsnt, pcie2_pwren_n, pcie2_pwren,
-+                pcie2_pwrflt, pcie2_clk_req, pcie3_rst, pcie3_prsnt, pcie3_pwren_n,
-+                pcie3_pwren, pcie3_pwrflt, pcie3_clk_req, ps_hold ]
++        enum: [ aud_pin, audio_pwm, blsp_i2c0, blsp_i2c1, blsp_spi0,
++                blsp_spi1, blsp_uart0, blsp_uart1, chip_rst, gpio,
++                i2s_rx, i2s_spdif_in, i2s_spdif_out, i2s_td, i2s_tx,
++                jtag, led0, led1, led2, led3, led4, led5, led6, led7,
++                led8, led9, led10, led11, mdc, mdio, pcie, pmu,
++                prng_rosc, qpic, rgmii, rmii, sdio, smart0, smart1,
++                smart2, smart3, tm, wifi0, wifi1 ]
 +
 +    required:
 +      - pins
@@ -299,29 +285,21 @@ index 000000000000..58f11e1bdd4f
 +examples:
 +  - |
 +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    tlmm: pinctrl@800000 {
-+        compatible = "qcom,ipq8064-pinctrl";
-+        reg = <0x00800000 0x4000>;
++    tlmm: pinctrl@1000000 {
++        compatible = "qcom,ipq4019-pinctrl";
++        reg = <0x01000000 0x300000>;
 +
 +        gpio-controller;
 +        #gpio-cells = <2>;
-+        gpio-ranges = <&tlmm 0 0 69>;
++        gpio-ranges = <&tlmm 0 0 100>;
 +        interrupt-controller;
 +        #interrupt-cells = <2>;
-+        interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
 +
 +        uart-state {
-+            rx-pins {
-+                pins = "gpio19";
-+                function = "gsbi5";
-+                bias-pull-up;
-+            };
-+
-+            tx-pins {
-+                pins = "gpio18";
-+                function = "gsbi5";
-+                bias-disable;
-+            };
++            pins = "gpio16", "gpio17";
++            function = "blsp_uart0";
++            bias-disable;
 +        };
 +    };
 -- 
