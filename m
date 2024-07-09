@@ -1,113 +1,95 @@
-Return-Path: <linux-gpio+bounces-8147-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8150-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7981C92C37D
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 20:47:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C35B92C4B9
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 22:40:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 31B4D2835B6
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 18:47:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70C521C20E63
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 20:40:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CC28180036;
-	Tue,  9 Jul 2024 18:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC74A1527B6;
+	Tue,  9 Jul 2024 20:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKxaEiiZ"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="MjQhK/BS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (msa-211.smtpout.orange.fr [193.252.23.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AC51B86C0;
-	Tue,  9 Jul 2024 18:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F50144313
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jul 2024 20:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720550853; cv=none; b=NtCFklFE9t4mzL5EX0/MQrAF5BrGCwk1+ZQTZaG8DmlafjAu2BFxxqB40T3JxMEbRKEtYYnOCxWXph1WVnCMuDzxb4YIPrm/Bno+7n2YbKAN7UksAY6k2ODJSxHGwe7SF97yUdeMlRFhYw/xXN7oyD9GhTALS1oo4JBaR1vtKF4=
+	t=1720557542; cv=none; b=Zc7YYdFi1ClJ+ffZ6ZNevyLiqnLKTKwCdC19Pz0fUqkAiVHx0lsV4qZ9jbZWOz+9LY9vxOQg/Fw+8gqcROfHvZCO+HNXSPuWZoK2qxKAL8C1ugy9b0Hfbr4vt46UUk27Q1wQWUbsPH15aWTCdshUIFiMSrN/TJmoNaN5T1du3GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720550853; c=relaxed/simple;
-	bh=7ye7ltyXbYOYYi8uAxpAmR2GIyPSMjM7g8VmAI3m74Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yn3TwIHbyKUWQ+9zxGtLGCXYYlvp2dgEER0t3RSFuuJpDqjnkjFJi8eJkpstRvQ/juckxTKgGJz9Q2kQkk2iAAYYFp+UAQFyU0vzduy2MXREND/jgSA4dodyp7FGEr0uDqN6GCWbae8PT2StyX6JHqw8BNhnD4e5eTW+ly8/ZRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKxaEiiZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59F36C3277B;
-	Tue,  9 Jul 2024 18:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720550850;
-	bh=7ye7ltyXbYOYYi8uAxpAmR2GIyPSMjM7g8VmAI3m74Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AKxaEiiZdtZv72eh/8HcEMtgL6askaomDjzh73Zmd585jJ9eTgjA8y605uew+GyXq
-	 BjVzXnTa25OtDMbvRzghMEoaZSm1+ncjkNet75r5zoxZdl3TOyqPMDXXFj0NIZcmzC
-	 C4TEBMPOgR9YjvEpUd1osYwGFrbsBKmsco8O8DLXeeGY//0GxFhujmJCxeaPez7SW3
-	 WY4tI7PURsponiYKUn94muFFNDz0CzfCfgnXc5TRN8r9d6r6uwy6hsgp8bN34Pg5IP
-	 8AfY1UR94wrAFkDc1hKCm/h/s4EFN8h2XUmt2OBSc8FAslyq0lyh2M84LHzJmnqQaF
-	 Wkys6UfkIASfA==
-Date: Tue, 9 Jul 2024 13:47:14 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Rayyan Ansari <rayyan.ansari@linaro.org>
-Cc: devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 0/4] dt-bindings: pinctrl: convert remaining qcom
- bindings to yaml
-Message-ID: <yyxc3ldrgphgp65fydziyswbvrhdkcacsnpw5mfqddglxecpun@rjrxj3ffpxnw>
-References: <20240709162009.5166-1-rayyan.ansari@linaro.org>
+	s=arc-20240116; t=1720557542; c=relaxed/simple;
+	bh=ZVITLZw3RZWYg9D/gUYsaAPt39mhDi81cXcYf0kiYo8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q9LadWV0DiRMFbSjJtWeDrSSob8hxf0+mEmNv5/gX/LAXU+F/oYc3XDZ1btMCph0yayViIiQabAb6g74pf+lNAy1+g8rariPnWNbEArn7DEL1lTq00SLW/YD55ZvkV8W4RxnoM62Ag4PWXLhZCouFsrlksBDwo56etJ/GM9sHPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=MjQhK/BS; arc=none smtp.client-ip=193.252.23.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from fedora.. ([77.130.249.53])
+	by smtp.orange.fr with ESMTPA
+	id RHavsh9C6phyvRHavsZbUA; Tue, 09 Jul 2024 22:37:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1720557471;
+	bh=Pf/cwNIvre1Xs+7SJVXgRoolLcWJeJYfmUMXMPn3ODo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=MjQhK/BSIx30xmH7mN5f+J/v7FA+3Dx9jApKTwGVicxPrsrXS3NthcOcSEw/Q7e34
+	 UhBeZtkGxt1lx+17JV17sGoWpFV04V7G3f1YaIYuYlzbzX6fsA6GqWJ6vp2kPusDD9
+	 M6RHtkjKyjxxlu+UGIv+zYXJEJcbcGFfJonKdX+3QKgh6MH5Mta83sHtc5SeNx07EV
+	 h7/BXjL/PaMMeMlhNj5jJpfQPf2mlc/Ix8UjY331Q4JclOtp9XucOnp0Yh/eSCFBOF
+	 gUUY5vg0hRfvY9dmLx6VWStNeiDWFUaScgHon5jG4ElIPz/xOmX0ppe33XEMClIFZH
+	 Bfb5AUaV9LzUA==
+X-ME-Helo: fedora..
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 09 Jul 2024 22:37:51 +0200
+X-ME-IP: 77.130.249.53
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: linus.walleij@linaro.org,
+	lokeshvutla@ti.com,
+	nm@ti.com,
+	robh@kernel.org,
+	tony@atomide.com
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 0/3] pinctrl: ti: ti-iodelay: Fix some error handling paths + 2 unrelated clean-ups
+Date: Tue,  9 Jul 2024 22:37:42 +0200
+Message-ID: <cover.1720556038.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240709162009.5166-1-rayyan.ansari@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 09, 2024 at 05:17:52PM GMT, Rayyan Ansari wrote:
-> Hi,
-> The following patches convert all remaining old text bindings for
-> Qualcomm pinctrl to yaml, so device trees can be validated against the
-> schema.
-> 
+The first patch is completly speculative. It is based on static analysis
+when a function is called in the remove() function, but not in the
+error handling path of the probe.
+When looking deeper at it, it seems that part of
+ti_iodelay_pinconf_init_dev() also needed to be fixed.
 
-Thanks for fixing these up!
+/!\ This is completly speculative. So review with care /!\
 
-I think it would have been good to use andersson@kernel.org as the
-maintainer address, but I see the other bindings have the broken address
-as well, so I can follow up with a patch to change them all.
 
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+Patch 2 and 3 are just constification patches spoted while looking at
+the code.
 
-Regards,
-Bjorn
+Christophe JAILLET (3):
+  pinctrl: ti: ti-iodelay: Fix some error handling paths
+  pinctrl: ti: ti-iodelay: Constify struct ti_iodelay_reg_data
+  pinctrl: ti: ti-iodelay: Constify struct regmap_config
 
-> Thanks,
-> Rayyan
-> 
-> Rayyan Ansari (4):
->   dt-bindings: pinctrl: qcom,apq8064-pinctrl: convert to dtschema
->   dt-bindings: pinctrl: qcom,ipq8064-pinctrl: convert to dtschema
->   dt-bindings: pinctrl: qcom,ipq4019-pinctrl: convert to dtschema
->   dt-bindings: pinctrl: qcom,apq8084-pinctrl: convert to dtschema
-> 
->  .../bindings/pinctrl/qcom,apq8064-pinctrl.txt |  95 ---------
->  .../pinctrl/qcom,apq8064-pinctrl.yaml         | 110 ++++++++++
->  .../bindings/pinctrl/qcom,apq8084-pinctrl.txt | 188 ------------------
->  .../pinctrl/qcom,apq8084-pinctrl.yaml         | 129 ++++++++++++
->  .../bindings/pinctrl/qcom,ipq4019-pinctrl.txt |  85 --------
->  .../pinctrl/qcom,ipq4019-pinctrl.yaml         | 102 ++++++++++
->  .../bindings/pinctrl/qcom,ipq8064-pinctrl.txt | 101 ----------
->  .../pinctrl/qcom,ipq8064-pinctrl.yaml         | 108 ++++++++++
->  8 files changed, 449 insertions(+), 469 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8064-pinctrl.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.yaml
-> 
-> -- 
-> 2.45.2
-> 
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 58 ++++++++++---------------
+ 1 file changed, 24 insertions(+), 34 deletions(-)
+
+-- 
+2.45.2
+
 
