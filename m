@@ -1,121 +1,114 @@
-Return-Path: <linux-gpio+bounces-8145-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8146-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FC5D92C178
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 18:59:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CBF992C35E
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 20:39:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2F686B21ABF
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 16:59:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6D9B1F2325F
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 18:39:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB2271B79D8;
-	Tue,  9 Jul 2024 16:27:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C6C180046;
+	Tue,  9 Jul 2024 18:39:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6lzpP1R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQbqTxig"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D05F1B79CD;
-	Tue,  9 Jul 2024 16:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229A21B86D8;
+	Tue,  9 Jul 2024 18:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720542457; cv=none; b=cQIa2HUVfA2Fnv3uPdXGh7mZ0oxcXRy8NQ25fnOhyBkYOLihwx2ucE1yjUVve6vynvEcuiuo1BsjNH/p4wThZvR1zy7GlVLl+BbJq8XtL+YadVfyxBj1+5gnG+OANHo49dPqsYWivZv/KUKdw969kymP2WcL1IbDYaYCJfIhLts=
+	t=1720550368; cv=none; b=VicHInCUEfOXkFfmPY4fn2fbuuO0Ju1VJ8+t0AuuPIPsMyk9FCTwHV4QdiUNBWKAkL0DFY3FHF2D32y1C8jfw2IqE47ec5C+kffOcSR4GjtfQGmp22byeJ8emBGGclB6DGsqiNke+DhVttENDta+QvoBEqScMDRWmZwVRGzq37c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720542457; c=relaxed/simple;
-	bh=4G8wuWb4Y8pS+ys/8Jvbl1C8xCNnuhIdKwc9u4vNSqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WSk/4BdluC0YmGSegLZgzGzRp+GpwE3XN6+xvhvhCOaK8aLacl1nEwvl/dALnzXspu9ZvVq/yHCbd9ZTKy/30wTgIXQCHVfGn02MVLmD5ke5QMTzFgAIciqpE8qdz9rb1ZwtIa3+QUXFacrwsjRh+PCt0NFW8suKrQ2nsdq4Ztc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6lzpP1R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F948C3277B;
-	Tue,  9 Jul 2024 16:27:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720542457;
-	bh=4G8wuWb4Y8pS+ys/8Jvbl1C8xCNnuhIdKwc9u4vNSqg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W6lzpP1RV/eb7eaHm0BJQaoVtCHy1XLcD/giqeBFwJCIN8iYLy6zhpVjEiMx9B2eC
-	 vX+TKF0MV8//5lE0zr/tpnWrx6yYaclYIclgegBFKnbqhtKiHwBwVragbFm1043qPQ
-	 aZPyDcRikypoLuaAy8/oIS0cltx3sGtQxfov8TnhNL1m0hPf0LWmZMX/O5pJfFQhzy
-	 cmx2oBHuGzPbK5CoJwrCSXsHmJrHUozIjiZv8zL1CF/O6tF715eGm3NaeCGfp3r51C
-	 H5jwAF/T8FdyPT9GS+h9ZewBNwmP5a7n7+Xsio45fB956QnJ777X6LdWYd4iD29RKO
-	 c59fz/y4orBfg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ian Ray <ian.ray@gehealthcare.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 4/7] gpio: pca953x: fix pca953x_irq_bus_sync_unlock race
-Date: Tue,  9 Jul 2024 12:27:15 -0400
-Message-ID: <20240709162726.33610-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240709162726.33610-1-sashal@kernel.org>
-References: <20240709162726.33610-1-sashal@kernel.org>
+	s=arc-20240116; t=1720550368; c=relaxed/simple;
+	bh=GuVzNLsoQwJbKQVwyFFDE4OTya1MyIR+LWxxvZmGsxA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PZNP379GMfBvvR8vhapnP6Ba2vexW1h/Z7vUyVNDpDoNOg+MvJ7aS1wJoxyxBjNOrg2CWacXUecY8Cv/AjbgOnYn45ycfk1oi+7tpenmngv1Ym2+E7Xh7/0ATxXCsepZ7NpO3HiA91azt1ha732O3pR22k0r+50dEg+RNBQpBMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQbqTxig; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-36799fb93baso3714459f8f.0;
+        Tue, 09 Jul 2024 11:39:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720550365; x=1721155165; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qnXLCo5LjE1ZlgJSfy+TjflOFTnxFUmr8lQoh5O2fgs=;
+        b=RQbqTxigpDah2lmQ7GIkq2mNrol5WXoT7Ao/AxmlsBn6Qmp+KLNQjRcT2oSA6ZWOEe
+         Ra9+zBOXU0VuTbBJ7fr0ylrepE35D5XTnivZWz8HOPlFFIiLphOxUrggrD66pl/PJhmT
+         h8gSQnrknc24xJOSK2CosMTdD0B6n9eHWx0mGRozJwfJShvbbCDfet6D4t2RNm+WgJlq
+         DlXZz3OXFrqdtN5EhAQru9UAY0T/lZuW4+wbG44QbAVOUzkPTR31jzErhYx62LpFUTvt
+         D6E8eapHpFVkJgi2DsKZGruKRQaHu8Zxa3QiSAJgTX25tmJAXYkjz99TGEhJP3qj1Cg7
+         90Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720550365; x=1721155165;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qnXLCo5LjE1ZlgJSfy+TjflOFTnxFUmr8lQoh5O2fgs=;
+        b=Ba0P8XoLnjMw/oWFPS0XRsQxJvpfSEDxZZAjf5rz9SmWIR/rFw5cNoGilEWmTkeJZF
+         neqrLEiTY+qJLuuaqbD6bDFFIM1az99wzIP1SbNXhz5+xWqMifUDWfo8f43csulL3Esj
+         w4kO6/kp0Jwvc+FXtUb2zgIrmEDjqkhKlP2u3oysrcJU+Y4RDG8NjhS9jpnz8LzqYxWU
+         hX6CaJ7Rhfj7mil4HVn0777GHefzUbhD+ZjxZV1uppxDa98taMXg/ccdvBjWa0M1f4ST
+         PHHGm9V7v70XkZiuano7HMCFl2wBhLjHTjAt0NMCQg5KCzBnCQCIay7ZlwpOK9tfJQ9X
+         BzyA==
+X-Forwarded-Encrypted: i=1; AJvYcCWSg3VcprNAyC0+cVb2RpvRSAp+AaKJ4TKVQOlHO4bCtn2irGzQE2ySzhyviCG0j81TJ53tPFC++XWmft4rbskb1DZfegSJ4FvY8QXf127iooqNLwasAfsV1a4kQetwJpcSpQ+TJ/Oqw2gjQS/pfX7wxHNcmhCeg7C66/drtPD8ZRlDLA==
+X-Gm-Message-State: AOJu0YxD5j03/UbMEGRONFKwyQagvPe7SkqWpEu0usmrpi4bfmt8kDXb
+	4KMNPg1zN25nrMSd+F1fZH9HjGdI5V0FWSQsgBq3pkZfm3IdV2Qu
+X-Google-Smtp-Source: AGHT+IFd7bwx5sb5axX5KrYBbNNdY99ASqrFU3SwYaujqk+tOLXKqRPB78vy/SeE2h37i8kPZdFH2w==
+X-Received: by 2002:a5d:62cb:0:b0:362:8201:fa3 with SMTP id ffacd0b85a97d-367cea963e0mr2147186f8f.34.1720550365011;
+        Tue, 09 Jul 2024 11:39:25 -0700 (PDT)
+Received: from mfe-desktop.Sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-367cde7deeasm3325993f8f.8.2024.07.09.11.39.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jul 2024 11:39:24 -0700 (PDT)
+From: marc.ferland@gmail.com
+X-Google-Original-From: marc.ferland@sonatest.com
+To: linus.walleij@linaro.org
+Cc: corbet@lwn.net,
+	linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marc Ferland <marc.ferland@sonatest.com>
+Subject: [PATCH] docs/pinctrl: fix typo in mapping example
+Date: Tue,  9 Jul 2024 14:39:19 -0400
+Message-Id: <20240709183919.3337131-1-marc.ferland@sonatest.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.317
 Content-Transfer-Encoding: 8bit
 
-From: Ian Ray <ian.ray@gehealthcare.com>
+From: Marc Ferland <marc.ferland@sonatest.com>
 
-[ Upstream commit bfc6444b57dc7186b6acc964705d7516cbaf3904 ]
+Small typo. The device name in the example should be "foo-i2c.0" and
+not "foo-i2c.o".
 
-Ensure that `i2c_lock' is held when setting interrupt latch and mask in
-pca953x_irq_bus_sync_unlock() in order to avoid races.
-
-The other (non-probe) call site pca953x_gpio_set_multiple() ensures the
-lock is held before calling pca953x_write_regs().
-
-The problem occurred when a request raced against irq_bus_sync_unlock()
-approximately once per thousand reboots on an i.MX8MP based system.
-
- * Normal case
-
-   0-0022: write register AI|3a {03,02,00,00,01} Input latch P0
-   0-0022: write register AI|49 {fc,fd,ff,ff,fe} Interrupt mask P0
-   0-0022: write register AI|08 {ff,00,00,00,00} Output P3
-   0-0022: write register AI|12 {fc,00,00,00,00} Config P3
-
- * Race case
-
-   0-0022: write register AI|08 {ff,00,00,00,00} Output P3
-   0-0022: write register AI|08 {03,02,00,00,01} *** Wrong register ***
-   0-0022: write register AI|12 {fc,00,00,00,00} Config P3
-   0-0022: write register AI|49 {fc,fd,ff,ff,fe} Interrupt mask P0
-
-Signed-off-by: Ian Ray <ian.ray@gehealthcare.com>
-Link: https://lore.kernel.org/r/20240620042915.2173-1-ian.ray@gehealthcare.com
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Marc Ferland <marc.ferland@sonatest.com>
 ---
- drivers/gpio/gpio-pca953x.c | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/driver-api/pin-control.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index dc4088a47ab2d..5dcc31e5fb3eb 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -489,6 +489,8 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 	u8 invert_irq_mask[MAX_BANK];
+diff --git a/Documentation/driver-api/pin-control.rst b/Documentation/driver-api/pin-control.rst
+index 4639912dc9cc..27ea1236307e 100644
+--- a/Documentation/driver-api/pin-control.rst
++++ b/Documentation/driver-api/pin-control.rst
+@@ -1002,7 +1002,7 @@ it even more compact which assumes you want to use pinctrl-foo and position
+ .. code-block:: c
  
- 	if (chip->driver_data & PCA_PCAL) {
-+		guard(mutex)(&chip->i2c_lock);
-+
- 		/* Enable latch on interrupt-enabled inputs */
- 		pca953x_write_regs(chip, PCAL953X_IN_LATCH, chip->irq_mask);
+ 	static struct pinctrl_map mapping[] __initdata = {
+-		PIN_MAP_MUX_GROUP("foo-i2c.o", PINCTRL_STATE_DEFAULT,
++		PIN_MAP_MUX_GROUP("foo-i2c.0", PINCTRL_STATE_DEFAULT,
+ 				  "pinctrl-foo", NULL, "i2c0"),
+ 	};
  
 -- 
-2.43.0
+2.34.1
 
 
