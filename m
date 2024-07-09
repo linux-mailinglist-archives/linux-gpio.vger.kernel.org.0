@@ -1,122 +1,124 @@
-Return-Path: <linux-gpio+bounces-8128-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8129-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43DC492BDEE
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 17:12:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8496592BDEF
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 17:13:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F20E32833B9
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 15:12:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A5E41F22D02
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jul 2024 15:13:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CA9C19CD10;
-	Tue,  9 Jul 2024 15:12:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3007F19CCED;
+	Tue,  9 Jul 2024 15:13:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OIhhdM2+"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WlozGYd4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10A6364AB
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Jul 2024 15:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624FB364AB
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jul 2024 15:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720537967; cv=none; b=DxW+/8xbgIqVCZK4HDER8OEkbPAdxNskZmse8YMyapOcZXGJxpAvOe6jzlTgx6VDeFRFQtH/gtH0i/CHqZCrBexn5bRq3Bpnbc0+6KXTcAEhCHVfDd+08fl7tYWVIaYVqwlP0zYU626TTHbX6hp0YHMtixZWYySvN8LLc6yystg=
+	t=1720538012; cv=none; b=X08hVRGQf73q7RIkQArfAGU29ln1gPckrMHsF1aXW337A7CUx13Pml6X2p2Vhan7v+1Xui8CzBGciRveKi5k0R9Maa6Ch/4GLVKoIZNkZFtExUja6DdosQj1gAQxJ/UdH0h4vX5I1Ebf09KlXzt5JBdqjiHyARkB0D750FoNg64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720537967; c=relaxed/simple;
-	bh=+9r+4NMvYbHvxkPuiPKkiOMBg8fjgOr0VIMCHhJ6zWQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oQ5cunMoZ4Pci4XEtkTj0Qw6gw5k2sSD4aaA2rUrOOxWcHyLAlqQiX33AkAiuzgvgov0rq87baCr9rrP7Vdr0L24ZQKcNXDkyj26FlfsFLISYatmIlJiw9p6/QMcUvSttyaPv/QZ8S5sf0H185LYZ4EDhJMONKjH+sSZnx0FmQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OIhhdM2+; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1720538012; c=relaxed/simple;
+	bh=Bv4GniJA/sj8UsDp9l+RW+trQ+0mazivTmVqArHdQLk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gND9tamJKmulbV3QWfztPb1OzZDVekSKhvbRfXHy3p8KSoGMReDRwqtMltBujbmytMv/eer3AtKO5tpudrfXwRGsG3oeCYR7k97fiwbaGB5Dj+m9bAY/coqqnrLXipn4xYdrUl4doEV3xmhtwjAVyy+ePI1Y/sZ/BOTWVavpFpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WlozGYd4; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3678f36f154so2788281f8f.2
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2024 08:12:43 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ee90dc1dc1so51419191fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jul 2024 08:13:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720537962; x=1721142762; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YDxRC/NgipoJ22mOoJFiie6SEQwWic07ikd+EFmNG4Y=;
-        b=OIhhdM2+b50/LDdpIGQC3oklLT1aIcDYXOaMUAAhWVeNcjSuzLhszWXbqzz5Hy5MnM
-         S/SbmbPav6khqsLn/AvHMXMJfLqHvNrrYrL86Nzi+o7+YdtOXbbNj9Ep9A78JdHFFGxX
-         EnAHOUYstvt7t2hZeVx8FayxP37G8zijgzJa1/RyMm2lLq+cazIEJTxcPGvhb/QUXPuX
-         g1iC+TsM+BrO5ff/IjQZU4SNsDkRJIOI9TDTZvcQHsVb1rSeZp5ZsjGAlwbTwmPXs4AI
-         aDguWYaZZ1tLx8ygOKM2rMmuQrMzxXtsC5lgFS2Kr270/528DicCC1RivpLm75KIO8lW
-         1O5Q==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720538008; x=1721142808; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r0+8oXKbZHWt9fS8V1upPHfv28NABY6xBNNKsQNZ9WA=;
+        b=WlozGYd4bHWJPGVVn/MFphbEVMT/xerTaUhyBda2E2vVZH7N3/dW9jl4q9QSGnlKkh
+         clLYe4ZzctX1tKxiO1WKbX3vVb64T8p75gvumokoqWiHQpNOWCDUDu3NtNouESQRGH0D
+         mUvg6orWwUISJzS268cggUI7rhJFLfkmB5bhY+9pyfGGq4USEMXndGZUa6yY5r8fOpIE
+         Y4TkKONn0Vui1xnuZkV4tgaIlVP+E32yl1/es11hfFOKn1ky+B2rnZiKMqQ6BlIfo7VS
+         ziq1UVH4HqlQst4UA7p35ToGXrI4fbSMpHYI43yiTpMOZ40Wue4BPXwTwwWYKEe/QiiG
+         K/lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720537962; x=1721142762;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YDxRC/NgipoJ22mOoJFiie6SEQwWic07ikd+EFmNG4Y=;
-        b=nrGhgzC+OTYA+ukdoKmehq+Q2azdOvCPqMm1CfVSWQ+eFKrX+F+kdoZM7JoH+WiGCZ
-         WZHXOIOVJlDEJMxPD/YHU7F1355W68q7YWs+zhBdo5cGNdfCnqIl22QZBicfTdIaAMHH
-         UCGMih1Y/Si2VTRJjLVWq3WuHW+py37Y/nhkg+SzgXK2iHbm2qu/P/M4cDjSXKL2U6Mc
-         BnPC96sfia4jEWcaytV6nRIhkJZBWxCFeeydJlvzLVHsDb83kwhl1G44s78UmWI3Q3PU
-         aZ63H+wRgXicKUGEnLDbO4xGXu7XUS21oHD6lP0T/qkB8T9lhxoXhF/ArY1nD8cRLzpP
-         Hqkw==
-X-Gm-Message-State: AOJu0YyQmCickxdTMjhYW6hQZtDqUGorIfayIXzOdu1RtBqy4aKW/Mhg
-	ImUkXYnMDcwo3cr5RiH2seh2QQpxIPUEbr4Ymobgh+Dtvrl681h6Ft+fBh1lJzo=
-X-Google-Smtp-Source: AGHT+IG0fX1i0Gqc64WSSgiaRye97wbl7EYey46tsHfUZVzHn7ae1jFaj4u5ZcE1YZBHbQ+Ah4o5mA==
-X-Received: by 2002:a5d:6da9:0:b0:367:9224:9620 with SMTP id ffacd0b85a97d-367cea46892mr2490327f8f.3.1720537962092;
-        Tue, 09 Jul 2024 08:12:42 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:c270:70c:8581:7be])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfab11csm2796456f8f.102.2024.07.09.08.12.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 08:12:41 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] gpio: virtuser: actually use the "trimmed" local variable
-Date: Tue,  9 Jul 2024 17:12:34 +0200
-Message-ID: <20240709151235.90523-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1720538008; x=1721142808;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r0+8oXKbZHWt9fS8V1upPHfv28NABY6xBNNKsQNZ9WA=;
+        b=ZGI+Moe4doHpfClLch3LFubT56hkWbnH28I+DI9s6pbD8hH/eV/jzWt8Wzy4AUot0x
+         VCZWnk0LnAAp4ugmIDjRpcpIRglCU81DGoQk93ShFKjoCCNtFcC+18Wft2MUhtf1kE+B
+         hdx7wg4lIPYlZXqkXOj1KNQKsvV/q07jRVlHATdMEtiCYbrmA9rrIFYq91wXEJCPC1w2
+         KjRnLKs9kbGRpQnEy8PrXsrjxX8T7vLFmnlCPikBt9pMaj3P5LqL4Z58CaON4xsdfIV1
+         N+/9fHlueVtMksg2s1fpQxDb0Hokwfu/hZ+dV/Q3+icZrOUakK6p8hD6me0Nct0+hiSX
+         dkFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUh1B0exrsrAIq3LZ1KnLXT9biODRSmbmUvdHZbUjR3bkiEreJwg8SM8e3o9A1KPy92s5aDhpi7BjxhIDx0q8kzle/Yqz1QMyVp5w==
+X-Gm-Message-State: AOJu0Yz7lzaGF3xoa5wBoPTka0mJjlk30g9AuC4amrpu/H8+dwwpXmB4
+	8Z72+PizVaTGt/oaEgiSbHLza9VlY1N1LTxV5roD/NVerOpeU4tLTjvR+pMJVbAZaEDdShbsWpe
+	mQa35Qv5ciPS+agdV2W/MkCmKD3ulxZW8TuTCMQ==
+X-Google-Smtp-Source: AGHT+IHgYMXg/ILH+Z1RFkRd83+nynSuzeIb7DgXToJ/UUOD4UjAR2FZCHBNgvwgAGTUIzwaSBYjtVIo+NzISepySXU=
+X-Received: by 2002:a2e:9dd3:0:b0:2ec:51b5:27c8 with SMTP id
+ 38308e7fff4ca-2eeb3171537mr19395601fa.32.1720538008481; Tue, 09 Jul 2024
+ 08:13:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <202407092245.BPnW2mr6-lkp@intel.com>
+In-Reply-To: <202407092245.BPnW2mr6-lkp@intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 9 Jul 2024 17:13:17 +0200
+Message-ID: <CAMRc=Mf_j0qTk8_q37uvbRyWHK_5M2D-dF_6hiELSBRGcy5KKg@mail.gmail.com>
+Subject: Re: [brgl:gpio/for-next 38/38] drivers/gpio/gpio-virtuser.c:400:24:
+ warning: variable 'trimmed' set but not used
+To: kernel test robot <lkp@intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, oe-kbuild-all@lists.linux.dev, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Jul 9, 2024 at 4:22=E2=80=AFPM kernel test robot <lkp@intel.com> wr=
+ote:
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gp=
+io/for-next
+> head:   337049890b8cbbb4fb527c58976ea19f4dc747a0
+> commit: 91581c4b3f29e2e22aeb1a62e842d529ca638b2d [38/38] gpio: virtuser: =
+new virtual testing driver for the GPIO API
+> config: microblaze-allmodconfig (https://download.01.org/0day-ci/archive/=
+20240709/202407092245.BPnW2mr6-lkp@intel.com/config)
+> compiler: microblaze-linux-gcc (GCC) 13.2.0
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20240709/202407092245.BPnW2mr6-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202407092245.BPnW2mr6-lkp=
+@intel.com/
+>
+> All warnings (new ones prefixed by >>):
+>
+>    drivers/gpio/gpio-virtuser.c: In function 'gpio_virtuser_direction_do_=
+write':
+> >> drivers/gpio/gpio-virtuser.c:400:24: warning: variable 'trimmed' set b=
+ut not used [-Wunused-but-set-variable]
+>      400 |         char buf[32], *trimmed;
+>          |                        ^~~~~~~
+>
+>
+> vim +/trimmed +400 drivers/gpio/gpio-virtuser.c
+>
 
-This variable is set with the intention of being passed to the
-subsequent strcmp() but something went wrong and it was left unused. Use
-it now.
+Fix sent out.
 
-Fixes: 91581c4b3f29 ("gpio: virtuser: new virtual testing driver for the GPIO API")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202407092245.BPnW2mr6-lkp@intel.com/
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-virtuser.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpio-virtuser.c b/drivers/gpio/gpio-virtuser.c
-index 2ac09c6a3763..0e0d55da4f01 100644
---- a/drivers/gpio/gpio-virtuser.c
-+++ b/drivers/gpio/gpio-virtuser.c
-@@ -406,12 +406,12 @@ static ssize_t gpio_virtuser_direction_do_write(struct file *file,
- 
- 	trimmed = strim(buf);
- 
--	if (strcmp(buf, "input") == 0) {
-+	if (strcmp(trimmed, "input") == 0) {
- 		dir = 1;
--	} else if (strcmp(buf, "output-high") == 0) {
-+	} else if (strcmp(trimmed, "output-high") == 0) {
- 		dir = 0;
- 		val = 1;
--	} else if (strcmp(buf, "output-low") == 0) {
-+	} else if (strcmp(trimmed, "output-low") == 0) {
- 		dir = val = 0;
- 	} else {
- 		return -EINVAL;
--- 
-2.43.0
-
+Bart
 
