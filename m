@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-8158-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8159-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5742192CCB7
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 10:18:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81E2F92CCD5
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 10:23:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8663F1C21529
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 08:18:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 36FA51F21D09
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 08:23:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50BB585283;
-	Wed, 10 Jul 2024 08:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A855186AE9;
+	Wed, 10 Jul 2024 08:23:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y11KsFd2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Scni5Cp4"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014C284D3E;
-	Wed, 10 Jul 2024 08:18:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEF5D535;
+	Wed, 10 Jul 2024 08:23:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720599488; cv=none; b=ESrO1XyBQXDjoeVL7+PQlxFVrVs7saTB+g9bJmO3AwZ+1MNsw20cngqJDzvrHugHoOyjTMlS8V51Am3xMl6G3drsyQOQW9NL6hjdl2YLTY+mHsfGmyFDwVejuVHJc2oLhTajSMbCesXv2EAST6S/Bea2QHat2cckW/MLY4J2tZA=
+	t=1720599795; cv=none; b=OSTnJ3TjQO69s4/FeSYF2lv4leLvswY3K4grm2i+2E7WTsV9qlKmOTK1JajBixtrnTEYgJu4H5ouG0nOxC0bp2SKZu31K2Zbg6sjutK6AdUYzAM+rUu8qXUpLD8rDbdLaRSwWde9E0i77gT+Q/z5bvfJJrNN5XOuYW7myQJFchw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720599488; c=relaxed/simple;
-	bh=jcdvUaJCjBFkcslD2R2EAmSimrylBNyq+N42vT+xBWE=;
+	s=arc-20240116; t=1720599795; c=relaxed/simple;
+	bh=zio6/BcIJLmE4NqTo2KSfFFhS58Lfdl4y9lA06n0zDE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rCMCj1+sgZHiJwN75zBgB6amn1ryPh1aSre81t/CIhlB0zMvm1ZqN1LwXOV1pavbdj9uWpyxS7h9Pp1oofG74CQdlwZdOQ0wCQSHpRRgSqEiLVPbsKU2IsjNaJ3FnegqPpiUU4BDhjqRLC1jugyR1TavVSHQ5F/pK9X3MiRUJ5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y11KsFd2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72317C32781;
-	Wed, 10 Jul 2024 08:18:04 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Ythc21qZBWsIGo8YgU5EhjCrrz6vWjCm9Mxaf8e10bJjf8KWwNIqFhuOvoYsZM2U3J+CgFZqF5OunM324AVAXxB4TPJe4sSeZZJN0tsxGF3qFrW7J07K7+kkrR2N5VIC1zAQ+cd0acZ5zOyapOC3OLgk3ajVzvQDbExcRvo0RkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Scni5Cp4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF46DC32781;
+	Wed, 10 Jul 2024 08:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720599487;
-	bh=jcdvUaJCjBFkcslD2R2EAmSimrylBNyq+N42vT+xBWE=;
+	s=k20201202; t=1720599795;
+	bh=zio6/BcIJLmE4NqTo2KSfFFhS58Lfdl4y9lA06n0zDE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y11KsFd2alzVH0ZA400ZChXBJQ6tOKFZ+j0eGXVZrKt9sNE1VNtCfEvpzPmZ3CPX3
-	 82ENdJ3Al5LvqTUHhdmWfEJUKf9VI1XX9bnJKF0fIu7p/jrC0HThKcfLtS/2J0Nq4F
-	 PYjsv+PDlVoxw2A7zXZTDrSPONMjXHa4+8dAgiHPHPW+fn5Dqd48g4cNppifFiq7f3
-	 YnRVPGiDGtn8/Ty5DWSifyv0wos4a+1W648PgUfFpetcTa6yTJjsTMWWSGymuPlluj
-	 bfLo/evKwyq2pFKfJszm4yIfxY5yvbd8Zt8wvNWpq+ccBIVGxTPpChgv1pIVNzvyDE
-	 YUJ0dgg5zjl2A==
-Message-ID: <7de5717e-c233-4657-b7b8-6459c0e58681@kernel.org>
-Date: Wed, 10 Jul 2024 10:18:01 +0200
+	b=Scni5Cp4siDTH/HN8bnZE6I5EM2i1M7dszHq806STu7ls+f6eJKKUSXPnSyyosIws
+	 nFJE6w2f83mCi5Ngcrs4DWciGIrpHy66JTSNghV60APqamtQyzCoQpC0qm61SWsSZg
+	 KP3JxN2f/v0Ur/YI/ZTq/jgaAlVq3pgEioph2Yt9qNLhXEVVztR5Dvgs0e2wTuj/hK
+	 Wg6iHoE59+GEOWWN3+xlQu6BNkX6oh250W9JfHX966PKy8SdtLneHptAcn319r8Nzb
+	 lFOL8smEuIBtjwjhKPDmsjS936ooF0tDQv4IKWWO8XDVh9B59Ai8Q2uB/47AzkhTvH
+	 8R9OcICuGaUzw==
+Message-ID: <5f372da5-9904-402b-ae1e-9ceee5cf0bd7@kernel.org>
+Date: Wed, 10 Jul 2024 10:23:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: qcom,ipq8064-pinctrl: convert
+Subject: Re: [PATCH 3/4] dt-bindings: pinctrl: qcom,ipq4019-pinctrl: convert
  to dtschema
 To: Rayyan Ansari <rayyan.ansari@linaro.org>, devicetree@vger.kernel.org
 Cc: Bjorn Andersson <andersson@kernel.org>, Conor Dooley
@@ -59,7 +59,7 @@ Cc: Bjorn Andersson <andersson@kernel.org>, Conor Dooley
  linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  Rob Herring <robh@kernel.org>
 References: <20240709162009.5166-1-rayyan.ansari@linaro.org>
- <20240709162009.5166-3-rayyan.ansari@linaro.org>
+ <20240709162009.5166-4-rayyan.ansari@linaro.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -105,16 +105,15 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240709162009.5166-3-rayyan.ansari@linaro.org>
+In-Reply-To: <20240709162009.5166-4-rayyan.ansari@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 09/07/2024 18:17, Rayyan Ansari wrote:
-> Convert the Qualcomm IPQ8064 TLMM block bindings from text to yaml dt
+> Convert the Qualcomm IPQ4019 TLMM block bindings from text to yaml dt
 > schema format.
 > 
 > Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
-> ---
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
