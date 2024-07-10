@@ -1,82 +1,79 @@
-Return-Path: <linux-gpio+bounces-8170-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8171-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D03E92D214
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 14:57:37 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D37892D2EE
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 15:35:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CB05F1F25029
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 12:57:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1890B28168C
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 13:35:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A727192465;
-	Wed, 10 Jul 2024 12:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0985A1922F2;
+	Wed, 10 Jul 2024 13:35:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="f2/43aAW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dN3d6/oK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8561922F8
-	for <linux-gpio@vger.kernel.org>; Wed, 10 Jul 2024 12:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A233190472
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Jul 2024 13:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720616250; cv=none; b=i8vforhkNrJaU0KUUW9KcuhhcbvoDgTCILa7Zy1o57SoWF3QLNnabjMtB4F3b76bOatCOXUCmq53IUghmrGKuZwjQ/1+rYKoUopAld9o+hNFkDRr9Ve+EgcXyH1lCt21TtZaev2jBJBiUuox8f1UrXgrIVMD580mXBxUTc1M6sI=
+	t=1720618499; cv=none; b=QcI5nRIsIW9E2W0w3fNjrkmVqkZ6wqFYMXAGJiwRnk9RGXDsuvPxAgrCwtGeZhvB1WDXF/VBh9Eljli4zpAp+gxN92hQ/zH2kGfwiZTz9ICA/1OjEWCR5RaoscfpR80QjbxeEAiateUyJ6OJ7RNqdCZzI8TSlq03//IWUcwbjBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720616250; c=relaxed/simple;
-	bh=mXATVwPEk7UYK5T45yRSX/AmjGb7sfW+E8DIBjs8f74=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sUuXmOuptQpbHkZvcaCjLk7v6cdOxwKl0yKbbp7OdXxT4rUylDUsLE7anonlEyP2fsCQX8ju+JZqLEN4/+mKIODVLop/j47t/kWbHcng7sdwf9S0QxQ/SJvKp2K7EIcvjC3utjfDzvjzJNpCAYgc5N6O1+w11SFKZyLWoGXch80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=f2/43aAW; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52ea2f58448so8088213e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jul 2024 05:57:28 -0700 (PDT)
+	s=arc-20240116; t=1720618499; c=relaxed/simple;
+	bh=rRvfOqJ0Oqeygqvq/p+FtwRLEdmb3GsY3/cayeVkIkc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bLVj95wCK50Rjfabi0NVCe6YTMmje1QI/Od8+6F2RvbRfVj0UBjNSA8I9KehoRBQeC3lUJT0ERp5p7AyysS5HQjDi3JHvaMu2dmO9ifbk4fjSlAbKrhzTO/lP3rUUPbxkTtcwa1sQJdYb1KNr/gVmVLAC3tPZqHlNiy/WygMqDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dN3d6/oK; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fb3cf78fcaso39915585ad.1
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Jul 2024 06:34:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720616247; x=1721221047; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RNXqWR3SzVEiokTh+pyWprWaaZ+CshWIgCgK6X8PJMY=;
-        b=f2/43aAWje9zIGksX4M/20lyy5lFoppKGd7bmLyfO9GE2YfM7MexMFI3EbRCtrUc4K
-         GqAmW9QaMZL7/qaHfg/KvSU2sl6XpIZhib/dLNhnxg/37G8+fVWACD/f+eK3H85Be2Yh
-         qxu2HC5pV6DF7aH8CqRuBg6gXIHRl52TZ98vBRoQqjr2CIn1d5ug9Y0gNMebppwBygpT
-         5oGJO4C0stiADIhC3PrpcOv2nzdDv2syQU3DCK7NmBiYDoQik3+yM/TcNEkA+YbW4Op/
-         erkKd46MKPGCQPO9C5KQ/tTuPTrv2HHwAHS/mQfR9q4ZY+uf2GI+6N9VAJ0iQvtAube8
-         8yDA==
+        d=gmail.com; s=20230601; t=1720618498; x=1721223298; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WQC+beY8HZi6OE9e7SHHtr/di1UIBTjaYEtizPO/YBk=;
+        b=dN3d6/oKbxPFTR9KpOs6oJN1Iowo9/FxnHPppT/j1fNdNf4Ign71G6tvStacQ7j6x+
+         YoABbj5FQ5wLtWc7yK4c6d941BqP06zgxIHSzmDlf2nQt8vjLJk+87o+3wgmCGMbIPbe
+         Ft8k42fi4MB8xFPSNFjLlF6hNAz+KmFaDLMF671Z9Fxu5i/y+5hQhAaZ8DYkaWDXorSB
+         nRDCpEkQx8fWHBp8odCG1gXhJQkg59+fcoBrwC24g9dznt4AjGa/KfgOKKv1POcgBFvW
+         brN0Hf0HiA2F+OuV/+jWnkYB3CXKB/DliAXCIGM/xP2k7C/V+kZv6LGJvIRq8Lde8od7
+         wsLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720616247; x=1721221047;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RNXqWR3SzVEiokTh+pyWprWaaZ+CshWIgCgK6X8PJMY=;
-        b=kQOmRjIodvsP0Jm1t/EO7XuGBrYb0GOl0PFhvOLJsQWypFA7Z6pwAIfBwvXYdn3ll9
-         wtUE1k9kT85d7nCXUqHNAwvg0vcKh4r71AECBzMnTQregkozQxdCQW4k1i1NWQ1hXvWw
-         t9cMdXa1ZRqI4igZdYD6xAWrJVOshV0nu2jxE6i08B2AyLPdkI9zUXNcy3iJZTbRrl0O
-         hgjJJENhg/89K2UCDBUiroBmNwDbwf9XjlB7XpvJ062EFaZp1xvt5U5VXk9c8GfvIvKj
-         YE6sTyx2mva1LUwmQgdPHgl8I+8wMCcBcx+e7mWGYxonIiO6YoMBZTlJkZV9fNC+GEbI
-         Nk4Q==
-X-Gm-Message-State: AOJu0YyUxqmkZM4feky3KrGB+4RkL1WhKR5BY064HUjCGOty/G1ZpcgU
-	vJfSa5q75EO5YHOwUW9f7qcodwZ0bHI9XUuTOPrAME/n6iRFwPB5+utcwbqGD0E=
-X-Google-Smtp-Source: AGHT+IHmbAW4e/O7btALU4TCz/KFup8xzPkJkZsCN8uz1p9FcSTTqDmbeJS+tdNIXtp8xJT5qM0vrw==
-X-Received: by 2002:a05:6512:31d0:b0:52c:e11e:d493 with SMTP id 2adb3069b0e04-52eb9991646mr3641095e87.26.1720616247344;
-        Wed, 10 Jul 2024 05:57:27 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:5d33:75a6:b07c:5579])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f7416bcsm81426675e9.43.2024.07.10.05.57.26
+        d=1e100.net; s=20230601; t=1720618498; x=1721223298;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WQC+beY8HZi6OE9e7SHHtr/di1UIBTjaYEtizPO/YBk=;
+        b=RMbr/Tp2XTWgK9IploWieLKjjxZFE21gvIfzy2zC/vNyCArE4dCvD4wSJYDLvbL6bT
+         8SmYTSG5BDqtg+rxH9zdVZj+cYWWzb9XdxVT8a/z8p8341WuO9abT042uMUOIMVJISRM
+         SrBEaspJalfTcG1CR4qeIcYJW1hUhpt6HLns/bO6cy8CPUfxxlCdDhIgM9QD9D4mqMR2
+         NGoDnRiq5+FNAghaLmbBRM1wOCYMqMxV/iSx3XcvQsqmMMzKLVQvpuPVKJZWvPfPCjji
+         FrV2dGiiApdpVrqNvhYdfsskq+aBFZEN6CzsQkU6m4lI6h5jL6V2OAM22Xr2mUQIsVJr
+         Icug==
+X-Forwarded-Encrypted: i=1; AJvYcCUnoDOrNeQv6JeJEGxNPbAbkUAP1C1Ex7OrKiPbDmp3WSsu7zarefTIhnQBlNXQ5ikMZWGPNwpaTeJo0V3x2vLwhyTWBQHdBSjQmA==
+X-Gm-Message-State: AOJu0YzwkGJ5BaqP76gwmZdTv0/XImaZ6Hw1NZSiES2+At9CUWv35NoK
+	QW0thT1FQix4lJnyTYKPTtBl9HPCfUdOHIA7xpJdtWhxjGNqYEc8
+X-Google-Smtp-Source: AGHT+IF23j44X9tj8sOfRXN8dpWx5uwb0KF9lONuxNsu09IGqcyUdbeqxORSsWMTcgPDhPtLqRGYnA==
+X-Received: by 2002:a17:902:e5d2:b0:1f9:fb48:7cf9 with SMTP id d9443c01a7336-1fbb6efaad1mr48815115ad.63.1720618497745;
+        Wed, 10 Jul 2024 06:34:57 -0700 (PDT)
+Received: from rigel ([118.209.204.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab75besm33477265ad.148.2024.07.10.06.34.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jul 2024 05:57:26 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	Chuang Zhu <git@chuang.cz>,
+        Wed, 10 Jul 2024 06:34:57 -0700 (PDT)
+Date: Wed, 10 Jul 2024 21:34:53 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH v3 2/2] bindings: python: tests: add a new test case
-Date: Wed, 10 Jul 2024 14:57:19 +0200
-Message-ID: <20240710125719.33655-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240710125719.33655-1-brgl@bgdev.pl>
+Subject: Re: [libgpiod][PATCH v3 0/2] bindings: python: fix line request by
+ name with multiple entries
+Message-ID: <20240710133453.GA108376@rigel>
 References: <20240710125719.33655-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -84,69 +81,31 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240710125719.33655-1-brgl@bgdev.pl>
 
-From: Chuang Zhu <git@chuang.cz>
+On Wed, Jul 10, 2024 at 02:57:17PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> We haven't heard from Chuang in two weeks but I want to finalize this
+> series so I applied the hints from Kent.
+>
+> Changes in v3:
+> - tweak the commit messages
+> - change the test class name
+> - improve the test case by testing one more line name
+>
+> Chuang Zhu (2):
+>   bindings: python: fix line request by name with multiple entries
+>   bindings: python: tests: add a new test case
+>
 
-Add a test-case for line request by name with multiple entries.
+I prefer adding the test case first, to demonstrate the problem before
+fixing it, but it isn't a deal breaker.
+Other than that, looks good to me.
 
-Signed-off-by: Chuang Zhu <git@chuang.cz>
-Co-developed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-[Bartosz:
-  - tweak the commit message
-  - improve the test class name
-  - extend the test assertion to test the 'baz' line too]
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- bindings/python/tests/tests_line_request.py | 34 +++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+Reviewed-by: Kent Gibson <warthog618@gmail.com>
 
-diff --git a/bindings/python/tests/tests_line_request.py b/bindings/python/tests/tests_line_request.py
-index 79167f1..c79a324 100644
---- a/bindings/python/tests/tests_line_request.py
-+++ b/bindings/python/tests/tests_line_request.py
-@@ -310,6 +310,40 @@ class LineRequestComplexConfig(TestCase):
-                 self.assertEqual(chip.get_line_info(3).edge_detection, Edge.BOTH)
- 
- 
-+class LineRequestMixedConfigByName(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(
-+            num_lines=4, line_names={2: "foo", 3: "bar", 1: "baz", 0: "xyz"}
-+        )
-+        self.req = gpiod.request_lines(
-+            self.sim.dev_path,
-+            {
-+                ("baz", "bar"): gpiod.LineSettings(direction=Direction.OUTPUT),
-+                ("foo", "xyz"): gpiod.LineSettings(direction=Direction.INPUT),
-+            },
-+        )
-+
-+    def tearDown(self):
-+        self.req.release()
-+        del self.req
-+        del self.sim
-+
-+    def test_set_values_by_name(self):
-+        self.req.set_values({"bar": Value.ACTIVE, "baz": Value.INACTIVE})
-+
-+        self.assertEqual(self.sim.get_value(1), SimVal.INACTIVE)
-+        self.assertEqual(self.sim.get_value(3), SimVal.ACTIVE)
-+
-+    def test_get_values_by_name(self):
-+        self.sim.set_pull(0, Pull.UP)
-+        self.sim.set_pull(2, Pull.DOWN)
-+
-+        self.assertEqual(
-+            self.req.get_values(["foo", "xyz", "baz"]),
-+            [Value.INACTIVE, Value.ACTIVE, Value.INACTIVE],
-+        )
-+
-+
- class RepeatingLinesInRequestConfig(TestCase):
-     def setUp(self):
-         self.sim = gpiosim.Chip(num_lines=4, line_names={0: "foo", 2: "bar"})
--- 
-2.43.0
-
+for the series.
 
