@@ -1,220 +1,123 @@
-Return-Path: <linux-gpio+bounces-8156-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8157-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2917D92CC52
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 09:55:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 477FC92CC93
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 10:12:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3C08281178
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 07:55:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E50761F22C62
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jul 2024 08:12:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 262F884A27;
-	Wed, 10 Jul 2024 07:55:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8400484D0F;
+	Wed, 10 Jul 2024 08:12:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hJYFl7ig"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kep5ygiU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078C084A21
-	for <linux-gpio@vger.kernel.org>; Wed, 10 Jul 2024 07:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3299182C60;
+	Wed, 10 Jul 2024 08:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720598136; cv=none; b=FyVYDgY2gaklYbMOGZL6kWeAZtKGMzskMHXQBPnlMHT1gPAT3ZN6G0Uyb0UrlU5v8wSDkm2xGRPUM/slmj8+/VgcABe3Y3sVhUHiPXLU0GfwKmdENCZyXzoi/5rfeO+scDrz3Y3Zvsl9q45D5tMidF2XcBZG2st5wF2RnS0qv40=
+	t=1720599139; cv=none; b=aaJViAGSc0Zws/u4QOdp9HgQpDytXXWp+7U3eHv3/PpzkwX8N/zQZf/pUrBZ5T9q7Gba7DX+jLP87kLe9iKT2l4rPpso8DtgUds9wjeds45wamunxGskvo8xs+lOxUZ37CSGs0aIS3trdpn/qdXHJymLcES8kz93dtluArlJfVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720598136; c=relaxed/simple;
-	bh=RVoGJoINLU+GiuJMZRpkUimi0FRfEaZ2M7RxkYQ1UBQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gtGvZI9HSv+Gz/vT9gV22CCF68kyYJRAbQyHyUvF8haD6wnuHKpVrUC8QQV+4XLdlX3cjeae9a5hGmtnnXNrjlfoxFhvBiZTKtoRhruQgpl1nTXy0q59ohkT5lCKTYY5aunywFAspnp1vHcEgzTscfrf+YbDhzqnMwEVBscUi4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hJYFl7ig; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52e9c55febcso7800589e87.2
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jul 2024 00:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1720598133; x=1721202933; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=evdfOW98pc+k5FTDMt+2znHs4NSJYxPCOtMVA/GQYyc=;
-        b=hJYFl7igPs7J1Ob6wMl3zuazp6VniJ2wzh/d83izaItZhSHtVxkNbh1khHmF3Ak7W7
-         7i6rbx948gSP4s8xk0UEZnztsl2Ti3drXnVrAOPyJmdAyNscur26T7W7Fjk9dVwUtv1V
-         BsnSMt3+MNZnBB0EASkNxYl3NfDPkjOUYMV7s8CG+L3ivu88Ix7cJiXwqoIeuWA0vPGG
-         au3kr5XQ5j2bKkS6xBELWb2oGB+LvnB3Fvfjc/JmlTzRpGyFtpcl47fO3VIcT8CqvFJV
-         kOmCX68SZhj52Akb4g7vJoVmyo5Y0GpxGmWQPaXnwqOp3w335zkQbkNBbFax3IIsmZqa
-         pMTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720598133; x=1721202933;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=evdfOW98pc+k5FTDMt+2znHs4NSJYxPCOtMVA/GQYyc=;
-        b=hEpIULn2b7BEvLXctU2oTWPvrwfrpxUevF5bTyC5TubS2cdlzn2iFcsIpl6eQTAXf8
-         B147ese89q6z0d3VyrcufMT6L68B4PQPXcY3V+d6h70zYKmWqnB082uB5yreV4QzRViG
-         wA2B7g6B/K7Ndpg0AvIJ4vgxS6AnUZFODEjf6TgRu3WkT7s7OURluHd8FUnW7q0ElaVt
-         NgGQZolIY4wR9fuaVT+RPyrMoDUq2dp6+kUShxWJYp+w7qQqOLPGosjKv47ORUSzz1DA
-         ACyZ9ifkLXhBV2A5a//SmbbGv9c9aQHDczeCY1w07HhHJCGZwCifv1SAUGKC43DoGZrM
-         kyIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwMct91vkvZm7OiNsON1kVI74PrYj9nTciNdFgVCm+HPUHHKQOkOyMkREkGDivit7l6XwgHTfwbHQOrX3oWqo9yTyLEDMSJMapaw==
-X-Gm-Message-State: AOJu0Yy0Q5QcSNJDuKRmxA6Z/QHUV26m4Ppp6gl6pfK1iT2U4NLXDvF8
-	tU2mIwpWVninN7H+6ebbYBfhLuMq/N5qKnqkeb5PWNA/P41JxXGNyOR0FE32j2KTSSeXagR9jK9
-	waTTOyLrg3GxGltzlvB7NLtZazMcS5Iv7i586+g==
-X-Google-Smtp-Source: AGHT+IGUAl3RsR/cRA7xV1Pw+0HC4vCxXn1mxec8ZOgFra0SjxMZEl1WTHKryN96PpRebpdOKB08O+e/y8lxE7K6Ewc=
-X-Received: by 2002:a2e:b04a:0:b0:2ec:4df7:8cef with SMTP id
- 38308e7fff4ca-2eeb30de2b2mr28945971fa.15.1720598133039; Wed, 10 Jul 2024
- 00:55:33 -0700 (PDT)
+	s=arc-20240116; t=1720599139; c=relaxed/simple;
+	bh=X2ZYnrR74fzhAKIBrsNGTaVQu9HZa0yNJflphJndmrI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nXpg9lshKAodwMc7Aa3fLu/J9sPJe47KxF7WJ4bfK/6x56Wfj/yOogos07sFTH+rmVnhEB7UAHR6o5QoyZZMkI65Y7tvI+coKveAXaEXS1ClHOR/qv3WoDV3btGXmy6KhImALARWXOwwWL2u/LXEhR98KxxdTzeu8fMSL2Hp6J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kep5ygiU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F7B3C32781;
+	Wed, 10 Jul 2024 08:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720599138;
+	bh=X2ZYnrR74fzhAKIBrsNGTaVQu9HZa0yNJflphJndmrI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kep5ygiUMRc5PpqqtR83bVSfda72KErlxT7Oeuee3TluemxsVBwAdFgRrU4IU4n4c
+	 TOuQZsb4jQ2qxWtr3d+VGt22DGHME11K1JsNwyXTL0xVS9hLXxCUBoVXN1zrA9o/oN
+	 lrmm+ycAiX+IUZ5ikLpCX0KZ6rutpDRy3reUvLVuiuv9Q75P6JQIdoVQlZwDrxHPG2
+	 a0kpr5TLR7/DazuBmtZbBBamOZJy/M0YlSQA7OaTXnUGmag8YTzETdvR/DwKwwCEXl
+	 6gyCMYkd74WzwkLlRhT8J8jrRtsdRXmV8QRwKw2MmgEfkUBeC02/YTQGgcYuglQJk2
+	 Hli6Ltm1W7SUg==
+Message-ID: <51c19f82-9a4c-498b-b292-7aa147e64b96@kernel.org>
+Date: Wed, 10 Jul 2024 10:12:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <172016528819.6599.11422057058966562764.b4-ty@linaro.org>
- <20240706025456.GA13007@rigel> <CAMRc=MeUmk5Q_9whx-fHFqRL3Z_wp0L66_kErnq1J6CGotsYJw@mail.gmail.com>
- <20240708124331.GA255037@rigel> <CAMRc=Me-43__rZEFSafdq+YVjgB-mJxsuMMXgZvgKDmyi0n8qg@mail.gmail.com>
- <20240708151517.GA355364@rigel> <CAMRc=MdGbOf7f6W6811gbqCFYjZFHZa0LmXVnNHvBC6uz1mgzw@mail.gmail.com>
- <20240708152946.GA363324@rigel> <20240709093425.GA153473@rigel>
- <CAMRc=MdvPUS2eDQ1u4=hK=GhKmeLQsQjaXE2M5xgpeCSH2MEUg@mail.gmail.com> <20240710014811.GA3616@rigel>
-In-Reply-To: <20240710014811.GA3616@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 10 Jul 2024 09:55:21 +0200
-Message-ID: <CAMRc=Mfaq9sN74DWZB2Lb56v8UXRPGtpLf10cYye97_YLWcvrg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] doc: fix sphinx config for rtd
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, 
-	linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: pinctrl: qcom,apq8064-pinctrl: convert
+ to dtschema
+To: Rayyan Ansari <rayyan.ansari@linaro.org>, devicetree@vger.kernel.org
+Cc: Bjorn Andersson <andersson@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Rob Herring <robh@kernel.org>
+References: <20240709162009.5166-1-rayyan.ansari@linaro.org>
+ <20240709162009.5166-2-rayyan.ansari@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240709162009.5166-2-rayyan.ansari@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 10, 2024 at 3:48=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Tue, Jul 09, 2024 at 05:48:33PM +0200, Bartosz Golaszewski wrote:
-> > On Tue, Jul 9, 2024 at 11:34=E2=80=AFAM Kent Gibson <warthog618@gmail.c=
-om> wrote:
-> > >
-> > > On Mon, Jul 08, 2024 at 11:29:46PM +0800, Kent Gibson wrote:
-> > > > On Mon, Jul 08, 2024 at 05:19:41PM +0200, Bartosz Golaszewski wrote=
-:
-> > > > > On Mon, Jul 8, 2024 at 5:15=E2=80=AFPM Kent Gibson <warthog618@gm=
-ail.com> wrote:
-> > > > > >
-> > > > > > >
-> > > > > > > Would we be able to then have a proper RTD website with a ver=
-sion
-> > > > > > > selector etc? That would be awesome and it's one of the last =
-big
-> > > > > > > missing bits for libgpiod to be more available to beginners.
-> > > > > > >
-> > > > > >
-> > > > > > Going forwards for sure.
-> > > > > >
-> > > > > > Going backwards is more problematic, particularly if changes to=
- the code
-> > > > > > docs are required to get them to render properly.  I've got a f=
-ew of
-> > > > > > those lined up already.  Should be able to work out something t=
-o patch
-> > > > > > older versions, but haven't put much thought into it at this po=
-int.
-> > > > > >
-> > >
-> > > And the python build has changed too.
-> > >
-> > > > > > Cheers,
-> > > > > > Kent.
-> > > > >
-> > > > > I guess going forward is enough.
-> > > > >
-> > > >
-> > > > I'm not ruling out supporting older revisions - but it will require
-> > > > additional work.  Longer term I would like to see all 2.x and even =
-1.6.
-> > > > But the immediate goal is 2.1 and/or 2.2, depending when it lands.
-> > > >
-> > >
-> > > But of course I have to look into this now anyway, as it impacts how =
-the
-> > > build is structured...
-> > >
-> > > I was thinking the maintenance branches could have the sphinx doc
-> > > generation backported, and the versions exposed on RTD would correspo=
-nd
-> > > to the maintenance branches. Those could be updated and rolled out
-> > > piecemeal. So I'm thinking that is quite doable.
-> > >
-> > > Then I recall that the bindings each have their own version, e.g. pyt=
-hon
-> > > is now at 2.2.0, and rust is 0.2.2, while core is at 2.1.2.
-> > > And I'm not even sure what version C++ is at (does that track core??)=
-.
-> > > How do you want to handle that?  The simplest would be for the RTD ve=
-rsion
-> > > to correspond to the core/maintenance branch, as I had intended.
-> > > The corresponding binding version could be displayed on the page for =
-the
-> > > binding.
-> > >
-> > > Would that work for you?
-> >
-> > What level of versioning clusterf*ck are we on anyway?
-> >
->
-> It looks to be versions all the way down ;-).
->
-> > C++ bindings track the C API version. Rust and Python are entirely sepa=
-rate now.
-> >
-> > For docs: Ideally we should have separate pages for each part of the
-> > project: core C library, C++ and Python (there are no Doxygen comments
-> > here, only pydoc) with their own version selectors. C and C++ could
-> > potentially live together though. Python bindings should probably get
-> > their own stable branches at some point but there was no need so far.
-> >
->
-> I agree - if C and C++ are tied then it is simpler to can keep them
-> as one. We can always split them later if the need arises.
->
-> Ok then, what you are describing is what RTD refers to as subprojects.
-> The sticking point being RTD expects tags or branches to key off.
-> To date you've only been tagging and branching core.
-> Given the need to backport doc patches, branches would be more
-> appropriate than tags.
->
+On 09/07/2024 18:17, Rayyan Ansari wrote:
+> Convert the Qualcomm APQ8064 TLMM block bindings from text to yaml dt
+> schema format.
+> 
+> Signed-off-by: Rayyan Ansari <rayyan.ansari@linaro.org>
 
-Neither is a problem really. I can tag older commits alright.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> Python can be a subproject, so maintenance branches for any revisions
-> you want to expose would be useful.
->
+Best regards,
+Krzysztof
 
-I'll create one for the current python release.
-
-Bart
-
-> > For rust: I think the docs belong on Rust.rs. Viresh, Erik: Is this
-> > something you plan to do eventually?
-> >
->
-> I think you mean docs.rs? crates.io is the home of rust crates, and
-> the libgpiod crates are published there ok.  But the docs are built
-> separately on docs.rs, and that is where the build is failing - as it
-> can't find a libgpiod library for libgpiod-sys to link to.
-> So that will need to be built first.
->
-> Back to RTD; the RTD Rust page can link to docs.rs - I anticipate that
-> fixing the docs.rs build would be easier to sort out than working out
-> how to get Rust doc through Sphinx, and docs.rs needs to be sorted
-> anyway.
->
-> As such, RTD won't need branches for the Rust bindings.
->
-> Hopefully that all makes sense.
->
-> Cheers,
-> Kent.
->
 
