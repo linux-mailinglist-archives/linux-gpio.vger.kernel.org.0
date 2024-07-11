@@ -1,61 +1,61 @@
-Return-Path: <linux-gpio+bounces-8179-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8180-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF90C92E4D7
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2024 12:34:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C90792E4DE
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2024 12:34:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C72D284C3D
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2024 10:33:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1C061F22704
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2024 10:34:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A56F915920B;
-	Thu, 11 Jul 2024 10:33:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC10415ADB1;
+	Thu, 11 Jul 2024 10:33:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qSauhvhC"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eqsqXWsU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2053.outbound.protection.outlook.com [40.107.237.53])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2080.outbound.protection.outlook.com [40.107.223.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55DD158DDD;
-	Thu, 11 Jul 2024 10:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5E715958E;
+	Thu, 11 Jul 2024 10:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.80
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720694022; cv=fail; b=CVAEIUD1FuKbRIVmwL4V0kciureOVUQoZ95axZZj5TkHgaN+ASDUz/nLyuTdxVpsphdLEv3xlcrqpgo2HmzO/3M7sfDn+RAgMU6GZYMG2Jkq9iRkgoaGsiWUlhaLpmbxqMnKS03mooepIpARj3/ydGhPSYuXzEsEEZanEE8k4d0=
+	t=1720694024; cv=fail; b=Z2B+jAl9HXy8W07X60dtqde6Vvdank1W4BqgT9FirIkVpS3XIRJYSTVumKtvjTtRshCGc+5mfJXC8cHb294u+TObJz5GnEIhT0Vp8G/7j9TVsNvvUqanbgieLAKm7NHu+eK47d9uN6AEk83nd8cFANTyJ/5r3FG2U9HXLv688PA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720694022; c=relaxed/simple;
-	bh=W7ci1t89oBAVvGl4Yvmy4ZhLj1U+yDUB2HpoMC+NX6Q=;
+	s=arc-20240116; t=1720694024; c=relaxed/simple;
+	bh=aEP9//HJhri6/luYGIN3gPQz8tAOFxNPNqiJvuDfi6k=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E41VdMRxf7kDAN96+KdvJQGjd6Tx/THnou2Aa2KHTy1lc4AJhZpNc2Fm3ka6DIHnY6XU785HmC2bTVnTdKP7LPFKPxVQZs5+Ehno6ZvNoNoTBRonDh/6X/mmEe67xqNEjGsUoJ6keV5c5nz6E7H9YA7lP4KvRc9uGVEWUBEkb78=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qSauhvhC; arc=fail smtp.client-ip=40.107.237.53
+	 MIME-Version:Content-Type; b=gmFwrqPcdkUqtu39Gra8UAkpZv6t0OIsSCHRWVAKOwa/NG6Y7P7YhVHPCRs+Ra7HxNP/lUhfVAc2M2+pbIxovbctBA1VMOGcasD9e6jAHTVTJrSUKHaWcP1GqfHjyokq+1nZC79ZaCB1hJdS617xOqFG6c7STvRy5u8g/rINrEQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eqsqXWsU; arc=fail smtp.client-ip=40.107.223.80
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=S/bBiv35xElOCQ+E3qsbPwYgnm5u0Fv7n8SirMo5Rp/tbymVd2BU4aMTwxfbaGUimhTsXHvzvDBAVfucf9ZUln38+sJ/1/uFHVkc1cqJ6WZxqoOWSvIrWU8acPMqCdJV9kn8+6QNftpEyM034tF5YW8n8e51eNxpySl89H6vvgEKZbFz5/xGbJyMqlXdwy3hXZfsTEneH9/gq88LgWD+CwTdvYrxGEydFwz4MO7HGOnBZ8vvw0SPn/+bKE2Gex0OvwBxvoOKq7hmWiVtTV1TX4hVVV3pbzYo8mrbD8eYSNTiPMrkdDcFWyxWHYV4dO9ptHqccfZ5hBxhTy4mK3Lxkg==
+ b=JHwqY6rVGcOBzD2NraRA0OOBUYEQvqrCJkEDtJhCNIWyrsbqmfEhoirmZnmJFSvf2r7Uxz4rz9A/4D3PQbtrY5yC0rHyhAHmr4iA5RHRdSzeXhiVwcff4UpzEweLKY459GlA5SsMYLxdYAXgGLEi2iFjruLfgnaAAJ55Aeyhmp071hZBAmD1CmqWfmPpALk0CSQ2Qo6Rsnwba4wqJmlUYHXXQN9/BQWgAyThUqr02kLis2nWSaGK1aja2JUvRhOpPfejlBYLVvwDCE8lle51ZVFvSRKuCnlVuenYDTqhltRDAxbSofUwccZyD9XrH45NFvw+twWcM6OIVLWP2GPn0w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1KcGTbDUi0ccrrJBN196pNbz0bDkn2Q0RXz8zqzARdk=;
- b=SGJxcyLceFujTfXZLR0231WfmlG4upAt1EG+79R63r99GuIzKz2gxgeviz3NZZLgxhRgRQuayvidvMYdB4WtL6qnwA7qrdt0YDUEBsL4Z57JWG5jN9D5qLeTjPk8DUl7xvWGyGLRWwu1GtQeKFk905tlM2c7NDsPoedwhUdR9Nbz/U0LsfoZlsttRO9jlCg6lWnhZq5vZ3bZZoH2k7bsVOlPNFVge5SDbOWkVzwuk/aiux3ALU3dNWrKkh0J1gMfwKNtdTwe4qEH/aQLzNh2mXFCQpRf9vjJIuTubc2BoYMdkMV3CGmbrZf/2vz4Jd1AH7Pngysxc1FcKDMySoBBmQ==
+ bh=18X7AL+gySGaAU6T4kRJemHzBS231JLwQEuirixxrqM=;
+ b=yAP9JYLqMeustLgHE8yCVdvyOcILVJyGrSp4xWtzcxvORCctQWqfONrezlHMzaLYYlZRNGw6eq/tm8TbVjQzuJDqBYYCyw02iYrshOiIuTL1aBoY2EHg8xDSOCi3UKg1EfC++Bqg+noOO5+1ge4PD+Ghj6nrhu4oBYtcuDazQ+wBzOGV0rwU1xtfyJebBBSI17faecogCQMzwESW27GEqHpzu9U3Vlr3dPSgDNeQiVQ0qOK55IzRJEZpRVeOUOIXU1V5P9HxZU7YCbcET+zhDdBWttx99qjKdSltRLStD4wil3fOF7ER66QY3KAC0ZAaxYX6Y/8Og6vb2QmvhrUcLA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1KcGTbDUi0ccrrJBN196pNbz0bDkn2Q0RXz8zqzARdk=;
- b=qSauhvhC4bskG24A/50S3gB55ZcxwcuIJqLFPKyxIOH5LIfFmZ/sFb9rk6B8EOgZv0M7y0VihVB6a205PjS8F8M1IOdKm3xsQiiY97tPdf3i8ZmV9C4KrLX1LC8vMmWcYs5pV1xmgoKhpTr9gu3QHTUhsSRR2IQfMSbLb+xMui0=
-Received: from MW4P222CA0006.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::11)
- by PH0PR12MB8098.namprd12.prod.outlook.com (2603:10b6:510:29a::17) with
+ bh=18X7AL+gySGaAU6T4kRJemHzBS231JLwQEuirixxrqM=;
+ b=eqsqXWsU+QqriSS3x31VZJ/sRsLltHrmlfPMVu1043oMzyZ0vA+3v8FxEhiKn75HiL5WXXeDZwvOc6+tdVozQLXvZ20SMRfZw/6inoukLs7gneiU3GilY3HYQgM+U3SGi7aa4Cdvib7P0Yt3wyRStZ0SGAbvobRFQ0Un9Z5m6D8=
+Received: from SJ0PR05CA0065.namprd05.prod.outlook.com (2603:10b6:a03:332::10)
+ by CH3PR12MB7617.namprd12.prod.outlook.com (2603:10b6:610:140::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Thu, 11 Jul
- 2024 10:33:36 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.20; Thu, 11 Jul
+ 2024 10:33:39 +0000
 Received: from CO1PEPF000044F1.namprd05.prod.outlook.com
- (2603:10b6:303:114:cafe::ab) by MW4P222CA0006.outlook.office365.com
- (2603:10b6:303:114::11) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:a03:332:cafe::bf) by SJ0PR05CA0065.outlook.office365.com
+ (2603:10b6:a03:332::10) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.22 via Frontend
- Transport; Thu, 11 Jul 2024 10:33:34 +0000
+ Transport; Thu, 11 Jul 2024 10:33:38 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -65,14 +65,14 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB03.amd.com (165.204.84.17) by
  CO1PEPF000044F1.mail.protection.outlook.com (10.167.241.71) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7762.17 via Frontend Transport; Thu, 11 Jul 2024 10:33:33 +0000
+ 15.20.7762.17 via Frontend Transport; Thu, 11 Jul 2024 10:33:38 +0000
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 11 Jul
- 2024 05:33:31 -0500
+ 2024 05:33:36 -0500
 Received: from xhdlakshmis40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Thu, 11 Jul 2024 05:33:27 -0500
+ Transport; Thu, 11 Jul 2024 05:33:32 -0500
 From: Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Michal Simek
 	<michal.simek@amd.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
@@ -85,9 +85,9 @@ CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<saikrishna12468@gmail.com>, <git@amd.com>, Sai Krishna Potthuri
 	<sai.krishna.potthuri@amd.com>
-Subject: [PATCH 2/3] firmware: xilinx: Add Pinctrl Get Attribute ID
-Date: Thu, 11 Jul 2024 16:03:16 +0530
-Message-ID: <20240711103317.891813-3-sai.krishna.potthuri@amd.com>
+Subject: [PATCH 3/3] pinctrl: pinctrl-zynqmp: Add support for Versal platform
+Date: Thu, 11 Jul 2024 16:03:17 +0530
+Message-ID: <20240711103317.891813-4-sai.krishna.potthuri@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240711103317.891813-1-sai.krishna.potthuri@amd.com>
 References: <20240711103317.891813-1-sai.krishna.potthuri@amd.com>
@@ -103,71 +103,200 @@ Received-SPF: None (SATLEXMB03.amd.com: sai.krishna.potthuri@amd.com does not
  designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F1:EE_|PH0PR12MB8098:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2e818b66-dbff-443e-bd68-08dca194ea71
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F1:EE_|CH3PR12MB7617:EE_
+X-MS-Office365-Filtering-Correlation-Id: 06c9a0f9-0cb7-4287-9e6b-08dca194ed3a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024;
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|7416014|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AnDv/HCmh///AApagxVugPi3cWAhYaTWwzamWFf0AB9pJ4aB57jHMgI0A67H?=
- =?us-ascii?Q?+CeCS1zmCtNzn+/pWxyrEiMUHSRlj1SP2KeAeue8PVGMX2hHE2FVW7UOkCl+?=
- =?us-ascii?Q?8J+uElXm2CsV357XDRb2WrRBHShg5A904pTP0p+qz5AvmcMg2UN6BToWS7VH?=
- =?us-ascii?Q?tLox56vhad0El5W37RAiqaL6ZUausssBffVk9AEfhmTxIgclZ1z3m7n/aD4P?=
- =?us-ascii?Q?3uTzXdOCRIOLRZFc+rhqmy8gN/K4A717sfLqRbeJG4uD8+nUzGuZJ90o+18n?=
- =?us-ascii?Q?d6ki96Tq0d7ZYUhhZ8eU9karxsnkPXQbdBKtMaX2OfRoZhwKFZZH+v6DjH9g?=
- =?us-ascii?Q?wIG8aJhZQYtN8xwNKoHWP6y6+LIZG96dl22JmhCC1QCPgyw0/IFYTO3FjXvd?=
- =?us-ascii?Q?7rQYUjeg1SK+yjIAnAgwqjlvgCRwwGZPNfYWQ+0Gb1RXvw95ve0YRVgOl76X?=
- =?us-ascii?Q?M7zeUF7PqQ9lea9EjSivRk1ELZffe2ObwzB1l4DLVIsyhvGCeKhi/BhIimKO?=
- =?us-ascii?Q?VdBJzyQtkzaLAkYeIA1N12SWSSYhysuJrf173qy2PG+bPQY9+jI/KJV/fmTq?=
- =?us-ascii?Q?L7kMTtGYv3I1wNkbFxKK0EnLkA5kbBz1kAwnzhCreDhbWOsuu1i6KrkGcZci?=
- =?us-ascii?Q?E6v90eKWbje34UV7APe1LfRz+w5ojdeF5oINAJGWi5mQp8hqnoFGCu0DZIts?=
- =?us-ascii?Q?wtUXQiPJ8rdRGWS1HjWiioa/U1yAq2q4x/x9SIz4tqc0Zr8fg+X6BBvg9Dlt?=
- =?us-ascii?Q?jiKm99Bc+ZgsfLjppxPcvU0RcDwI1emyHrPVcENT3EeM+LY25tcTZ1hnxE4Y?=
- =?us-ascii?Q?TiqBWqhB9DFOAkzNXBgdvZzzXB8OgRDRroOvK/z5yvFQy0Mfd6Y3lmZywfx6?=
- =?us-ascii?Q?xJ5vxA0gAAdBk8f0AnYFtBwbJjc9lMla78fd8mJew0LmOu8CxURqb2GQNuqz?=
- =?us-ascii?Q?q+pXkhtWxKM1LRtDavS1M2bEk/bRJChYkHwGx/Fs2aCRZvUQ1ce1qFow9+1E?=
- =?us-ascii?Q?Q8T7X2VuOkCPTP9HniojiJIrj6qvpItaear6B1hNRiCwanEZCKd8A9BbAxVd?=
- =?us-ascii?Q?eTiwTQ6IAaV/HpAP7AVVb4GCD60HaVF0oDWgnzzwExPxoIl6ixks1gachpjf?=
- =?us-ascii?Q?MD9LM1eYAkLwu/CY7TNhBugYi8sDjeNJZbUUmB5Z0h2atLHxB03SgBod/JMl?=
- =?us-ascii?Q?5CEXpKjkwkxWTn9RSm9pg3UVDz7cWAfyVV8NYym4CSlTq9soOkZh9EC75bH6?=
- =?us-ascii?Q?psUdue709UqLg2xTckDh6kUHP2EZ41AmGN3ZDO0QGFpz9ualCCMreEswqtc7?=
- =?us-ascii?Q?R/Cxk2noP/ZJ+krKY34byedQPOfHAOx7+M1JTW05WyrvgtkASyj2yucyL6qi?=
- =?us-ascii?Q?a2biLY++jvB8fEj3sV0UGP6qz0kVX57sM/+WuOfhUAvtx40B2eoztHH50KlX?=
- =?us-ascii?Q?6vpddLaJyqRy6PLg2ij8NHVqkEgRBYYg?=
+	=?us-ascii?Q?D6Vyr14wr8nUSSwfrRa/4VTeZjiN9SL5WoxlTWhVUpDRWlk+5jakSHozdEnM?=
+ =?us-ascii?Q?hAOr0YTGRLk2838Tgw4DfrlPrzqiA4EpPvv6X3AUI4FIsaqjzbeAjdsnMg8C?=
+ =?us-ascii?Q?YLNxKGX5X4ehjVl7d8NPeJm4RPiiklE1xswK0t9TSFB7xglMbxZlrlJ5s6pk?=
+ =?us-ascii?Q?TNiu1P8vdlTv9eH2Fjm5LTIUrMAsWCmuKfdNXE5WL3hYSWaJhHdxzyJr6gdP?=
+ =?us-ascii?Q?NXKD+Gz7wi5QRvG2sjRwtQcey7Pt8QVj63zEHN6LChyomy6Q7poWQLbIO+aW?=
+ =?us-ascii?Q?7wiozMx6C8T870xshJZUuCX+7T3wyEsOwHdV2RZWdjlgIE5O7Hbp9jv/aZlC?=
+ =?us-ascii?Q?G61/CDXEbKiQkr/XuU8H65T2WwXpNym7jZ9oktGKMDJfuPp5rN0aZinqxAa+?=
+ =?us-ascii?Q?oKMs/83DbGTRQPjfUsa3hzOD1GafHXpRUB3B3tf6ycFuCANuCjSMF1Fj6v3R?=
+ =?us-ascii?Q?ugAVqI3s5yURSzMbF4BDK/TCcD32LsyP265WY+8d4/zOt+R2M/gjhZbx4qeR?=
+ =?us-ascii?Q?nEHj1/Ahsd5pzb0bQegMs6I0U2vXHxq38CfZA2rlLPp9K3Sok+vHYtnSd4t4?=
+ =?us-ascii?Q?afetyl08lppJ2fxK7gTaTO22V/Mm6lqjfN376Up81WOyrOaQg/0052h03yjm?=
+ =?us-ascii?Q?ZfwVadYV19FgrF6eVnE8vSS+lD3Ou8IhvXiYtsosA4YvaLpKYXNuw9MzbBhX?=
+ =?us-ascii?Q?kl/tvBTHeQse53LVQjB/taDZ+OUPPwWBSEHncYP2a91J9/NqGqKuQtXNI43G?=
+ =?us-ascii?Q?GrQisLurE37w6W8mYHWWCZCjIwDg5HukNXuKMpLHphyMkifWAtm5UXKBE6xs?=
+ =?us-ascii?Q?9LTmc9/RAqa8PceFpg4WPb1O7ELZalYcuGY+L7G48Dka3Z1GAK1BYJzpFv+B?=
+ =?us-ascii?Q?ZArXV8mrgrh35GQ13mwSAoext7HrVaX/sKscXEsEDKFuIBwn8Hu+Jb4Ih7+y?=
+ =?us-ascii?Q?6GRpNITlLwTDjdZGzKSpBg0/E/LCOApyBUP62nqW5Cj20Mp8DeU/nUo3JD4B?=
+ =?us-ascii?Q?d8Yc31Q0u+ezZUPYXWa37FVhr7sQx+aASChqSVscX8+g1jnxDhJi6lf/9509?=
+ =?us-ascii?Q?1JOdpsOOML3299pEzAVm9fbH+pzoRf9RKsf8Vfy18bxpE2o+borCxOZxzbfc?=
+ =?us-ascii?Q?AvBAIci4Wa89xIKZA+VGQ7iG7NGylOpjM+HubD6ed4p5z34r8K5Czgx2524R?=
+ =?us-ascii?Q?utgyw1yv6Pc+L6bScYm98nlMEYI4E9t3AI932JMOa5SveGBE+Yeb+vSCxg1l?=
+ =?us-ascii?Q?7qSwASVugBgFjs0pjdxdbCIiMLU+GpkjQXaAfrBs+k9TiQhfLnMeQTuh6XL4?=
+ =?us-ascii?Q?3qE+IoN6XdR38faABq4fsqqkD1IwDlEAYckwCQ3FYxiIudp+gDuzQMsThYfm?=
+ =?us-ascii?Q?qXeDoRdM7Nf3JazLZFKo081hS7ELPoEoaWheEyt5VOVRrAT7MifYwh8yT/tm?=
+ =?us-ascii?Q?z98hBTlF4VWi5TdfSKCWfollNp5+wyIO?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(7416014)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 10:33:33.6884
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 10:33:38.3447
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e818b66-dbff-443e-bd68-08dca194ea71
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06c9a0f9-0cb7-4287-9e6b-08dca194ed3a
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CO1PEPF000044F1.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8098
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7617
 
-Add Pinctrl Get Attribute ID to the query ids list.
+Add Pinctrl support for Xilinx Versal platform.
+Driver checks for firmware support to retrieve the Pin information, if it
+is supported then proceed further otherwise it returns error saying
+operation not supported. Latest Xilinx Platform Management Firmware must
+be used to make use of the Pinctrl driver for Versal platform.
 
 Signed-off-by: Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
 ---
- include/linux/firmware/xlnx-zynqmp.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/pinctrl-zynqmp.c | 91 ++++++++++++++++++++++++++++++--
+ 1 file changed, 86 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 1a069a56c961..9b8735548aec 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -235,6 +235,7 @@ enum pm_query_id {
- 	PM_QID_PINCTRL_GET_PIN_GROUPS = 11,
- 	PM_QID_CLOCK_GET_NUM_CLOCKS = 12,
- 	PM_QID_CLOCK_GET_MAX_DIVISOR = 13,
-+	PM_QID_PINCTRL_GET_ATTRIBUTES = 15,
- };
+diff --git a/drivers/pinctrl/pinctrl-zynqmp.c b/drivers/pinctrl/pinctrl-zynqmp.c
+index 3c6d56fdb8c9..e2cfd3d512e8 100644
+--- a/drivers/pinctrl/pinctrl-zynqmp.c
++++ b/drivers/pinctrl/pinctrl-zynqmp.c
+@@ -10,6 +10,7 @@
  
- enum rpu_oper_mode {
+ #include <dt-bindings/pinctrl/pinctrl-zynqmp.h>
+ 
++#include <linux/bitfield.h>
+ #include <linux/bitmap.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+@@ -44,6 +45,12 @@
+ #define DRIVE_STRENGTH_8MA	8
+ #define DRIVE_STRENGTH_12MA	12
+ 
++#define VERSAL_LPD_PIN_PREFIX		"LPD_MIO"
++#define VERSAL_PMC_PIN_PREFIX		"PMC_MIO"
++
++#define VERSAL_PINCTRL_ATTR_NODETYPE_MASK	GENMASK(19, 14)
++#define VERSAL_PINCTRL_NODETYPE_LPD_MIO		BIT(0)
++
+ /**
+  * struct zynqmp_pmux_function - a pinmux function
+  * @name:	Name of the pin mux function
+@@ -596,8 +603,12 @@ static int zynqmp_pinctrl_prepare_func_groups(struct device *dev, u32 fid,
+ 			if (!groups[resp[i]].name)
+ 				return -ENOMEM;
+ 
+-			for (pin = 0; pin < groups[resp[i]].npins; pin++)
+-				__set_bit(groups[resp[i]].pins[pin], used_pins);
++			for (pin = 0; pin < groups[resp[i]].npins; pin++) {
++				if (of_device_is_compatible(dev->of_node, "xlnx,zynqmp-pinctrl"))
++					__set_bit(groups[resp[i]].pins[pin], used_pins);
++				else
++					__set_bit((u8)groups[resp[i]].pins[pin] - 1, used_pins);
++			}
+ 		}
+ 	}
+ done:
+@@ -873,6 +884,70 @@ static int zynqmp_pinctrl_prepare_pin_desc(struct device *dev,
+ 	return 0;
+ }
+ 
++static int versal_pinctrl_get_attributes(u32 pin_idx, u32 *response)
++{
++	struct zynqmp_pm_query_data qdata = {0};
++	u32 payload[PAYLOAD_ARG_CNT];
++	int ret;
++
++	qdata.qid = PM_QID_PINCTRL_GET_ATTRIBUTES;
++	qdata.arg1 = pin_idx;
++
++	ret = zynqmp_pm_query_data(qdata, payload);
++	if (ret)
++		return ret;
++
++	memcpy(response, &payload[1], sizeof(*response));
++
++	return 0;
++}
++
++static int versal_pinctrl_prepare_pin_desc(struct device *dev,
++					   const struct pinctrl_pin_desc **zynqmp_pins,
++					   unsigned int *npins)
++{
++	u32 lpd_mio_pins = 0, attr, nodetype;
++	struct pinctrl_pin_desc *pins, *pin;
++	int ret, i;
++
++	ret = zynqmp_pm_is_function_supported(PM_QUERY_DATA, PM_QID_PINCTRL_GET_ATTRIBUTES);
++	if (ret)
++		return ret;
++
++	ret = zynqmp_pinctrl_get_num_pins(npins);
++	if (ret)
++		return ret;
++
++	pins = devm_kzalloc(dev, sizeof(*pins) * *npins, GFP_KERNEL);
++	if (!pins)
++		return -ENOMEM;
++
++	for (i = 0; i < *npins; i++) {
++		ret = versal_pinctrl_get_attributes(i, &attr);
++		if (ret)
++			return ret;
++
++		pin = &pins[i];
++		pin->number = attr;
++		nodetype = FIELD_GET(VERSAL_PINCTRL_ATTR_NODETYPE_MASK, attr);
++		if (nodetype == VERSAL_PINCTRL_NODETYPE_LPD_MIO) {
++			pin->name = devm_kasprintf(dev, GFP_KERNEL, "%s%d",
++						   VERSAL_LPD_PIN_PREFIX, i);
++			lpd_mio_pins++;
++		} else {
++			pin->name = devm_kasprintf(dev, GFP_KERNEL, "%s%d",
++						   VERSAL_PMC_PIN_PREFIX, i - lpd_mio_pins);
++		}
++
++		if (!pin->name)
++			return -ENOMEM;
++	}
++
++	*zynqmp_pins = pins;
++
++	return 0;
++}
++
+ static int zynqmp_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	struct zynqmp_pinctrl *pctrl;
+@@ -882,9 +957,14 @@ static int zynqmp_pinctrl_probe(struct platform_device *pdev)
+ 	if (!pctrl)
+ 		return -ENOMEM;
+ 
+-	ret = zynqmp_pinctrl_prepare_pin_desc(&pdev->dev,
+-					      &zynqmp_desc.pins,
+-					      &zynqmp_desc.npins);
++	if (of_device_is_compatible(pdev->dev.of_node, "xlnx,versal-pinctrl")) {
++		ret = versal_pinctrl_prepare_pin_desc(&pdev->dev, &zynqmp_desc.pins,
++						      &zynqmp_desc.npins);
++	} else {
++		ret = zynqmp_pinctrl_prepare_pin_desc(&pdev->dev, &zynqmp_desc.pins,
++						      &zynqmp_desc.npins);
++	}
++
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "pin desc prepare fail with %d\n", ret);
+ 		return ret;
+@@ -907,6 +987,7 @@ static int zynqmp_pinctrl_probe(struct platform_device *pdev)
+ 
+ static const struct of_device_id zynqmp_pinctrl_of_match[] = {
+ 	{ .compatible = "xlnx,zynqmp-pinctrl" },
++	{ .compatible = "xlnx,versal-pinctrl" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, zynqmp_pinctrl_of_match);
 -- 
 2.25.1
 
