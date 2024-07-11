@@ -1,168 +1,173 @@
-Return-Path: <linux-gpio+bounces-8185-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8186-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A88C92E868
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2024 14:42:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0A8392EFC7
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2024 21:38:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 882431C221C0
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2024 12:42:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D06C1F222B6
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2024 19:38:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7465015B97A;
-	Thu, 11 Jul 2024 12:42:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83331187358;
+	Thu, 11 Jul 2024 19:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OjJZj3V1"
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="eO5uAoSQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from HK2PR02CU002.outbound.protection.outlook.com (mail-eastasiaazrln10220001.outbound.protection.outlook.com [52.103.192.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C9C14F9DA;
-	Thu, 11 Jul 2024 12:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720701733; cv=none; b=mFlgL94Tl2+DlKcG0B8j14TT8SprP5f2jBc15W6I1dOxG4lnGVS8T5JyUURmXk5CHW+q5z9L1hS2/428rq6N2JknOyc0QhjSYXqT/v3fNiFSvI8yq+ljKq9atJkzbMuN1kgeINoz7DXcuO4bH7KLPc7QeZnXLuWjRfHsChqqlqI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720701733; c=relaxed/simple;
-	bh=dlfUGwii84jF8p5SUDRDlg9myqYP7D84ssMbUkuUDv4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ln6AX5DsqpN529+2Za5u3wu0b7oTU22Y4/9J4aCikXvBM+Yto6kDp7XKsf2mJfD3pDzMK95mF/0raQngTdpyloNUvK9IOboP7goSAq9+Y8KMgsdzvA3gQAxDYb8SypIj2lvkzUdOtx4HH6x33ak3zlV9t8FFHHxYIKAliYYYxCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OjJZj3V1; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46B4nNZ0026088;
-	Thu, 11 Jul 2024 12:42:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	H6kH1jLfoAopLbY3Q15BGpbUKRq51XC1uiFM3+Cl79Y=; b=OjJZj3V1VCoSHuTw
-	dhY8yTdCbvwMJpORIDR5yxb4+ULGATNbBokQcMh2qxBrNxusLFw5CInkuCw/XJ6B
-	pqJ23MUx7nVVVjr8246kYTEameP4gAJlWe7H9DpHJaiRBOB0SlWSsUOXRHsPJdg+
-	zENoq88GZbsX7RU1WNzfy6Jjkn6DOFmHcVRgr43NAwkZwI0PuFvgHqI2riU0bETI
-	dlBcPjo3PYzk02eFhE3PbDMhMyHDww6978I8rhGQZuqBZucV9pR/7yPfZmdcjYw/
-	q7lKOb7B2Zc0AGReaX2CeNiKr4D+otHGZhurUTDW8WazFNFb6HopFBWj/vk/IfzK
-	ibjepg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 406xpdv3pp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 12:42:04 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46BCg2aH026618
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jul 2024 12:42:02 GMT
-Received: from [10.50.14.217] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Jul
- 2024 05:41:59 -0700
-Message-ID: <b7ae3284-a89c-4128-8927-584aab136458@quicinc.com>
-Date: Thu, 11 Jul 2024 18:11:43 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D4217CA01;
+	Thu, 11 Jul 2024 19:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.192.1
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720726686; cv=fail; b=YuDsU24xHhgIsBtDeSow8o1xKvmx2l+BpJe4IiCujQ1djstA+3rwdRFxMuvKj6moWqS/Y1hby6cshHIDx4jN+Uyu3DrDFUGHKnlkH/dWLAMRO5sCVG7jRiYHH8Yh25kLNFSywASDy7t/Z1C5A4IRhmguhzkiyOa7wBwnoUFYlzI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720726686; c=relaxed/simple;
+	bh=wLERqOg3IOA61rAbdWc1O9aLEzCAR7mPxT2aY7IyCEM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UX2OVBlJ1JL7ySI0z2Y3InuMFk1BnxIpD+1nDaM+Em6xw15TgAOeRmY3jMgYusJtmgtH5bIxfGlr7R7iV4AtvS6AnMkmUC0teEy8EgbidLm/4ru1bLtaeqidZSS2gVJc06/5qQ3l+lgNHk13zkm/G8MQZ64ZtyqiPe78SxNb+aI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=eO5uAoSQ; arc=fail smtp.client-ip=52.103.192.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Grk58fqRcEiBEL3tZHBnej/saJpWB2O66NgVh02PcUUvKhvzcASEvcM3L0SPquHMi+hWLiKq/Rtzg1lnhvf2YZeFFdIfS5yIdrbMi9a8rllaMm/nH+wgljXn5NWothbG+lJE2zC32NlKQm0jjvAN2pJGSPDKjLuavv619QjHUzXQtbzcohoxptbZQIvqwaO4tmg44OilDlDaH3ClGHcOwnGdmUPyzmEc32KNuaCwjPlX94j/wiEOrS6R07dG3CmUKXV5g8X1tz8RwYvaph+3R8l6ykiA0gbSIZWTaWiYpATnmXlJDnjwYHdExk+zP/YjKOEjJEPdxt3XtcNlS5R45Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+4gAGeUdTH8paOcwbB8b86f47vaYh01/EbkRdcsypis=;
+ b=BRnkfNFzzFPQ08r8oAKIVA3pgR/sVFEf7+AHHg0Fvuo8m+xYmQcH3Q7Ep/Ef1kejDNYga39uzkQxMcEU/HbfFMi1t/vYjRJzFC30Z0WFpOyXlJ7WXUQcUnCd3yI5/33VutDj2yzUbl12DgadSYzgB+s4MjYaApVm+KRRPEroKaP7qoZjQT6PiGc6px5ILFem3q43Xcplxuj0z7pBInMRlKU2tKrP0rjFSuf01l75GdO055mIicQVD9/8aQ4fArZ2dabAjtF7valOmzy49d2kSZlJ4mUFKcn/x2ZKEFZYrOCpWojU0HkdMWOE0SHT9p472AIW/ltX0PEuEtPRpdRWRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 211.75.126.7) smtp.rcpttodomain=gmail.com smtp.mailfrom=taln60.nuvoton.co.il;
+ dmarc=fail (p=none sp=quarantine pct=100) action=none header.from=gmail.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+4gAGeUdTH8paOcwbB8b86f47vaYh01/EbkRdcsypis=;
+ b=eO5uAoSQk0/6QJT0MznrxYS4YOSOwSQ8kKc/BmLNaRLo3VECfill+pQCiF2uXKU9z4xwM5vbuwlO2V7pBNGSVpXnfM4en7WA7+CWMPaPdDXtIgfgglRmsah3gSHWskFNTIK+BX/YMXHq/FlbIWGEnxH4Gq3zm5vKNwM6ylEM93U=
+Received: from SI2PR01CA0009.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::18) by SEYPR03MB7815.apcprd03.prod.outlook.com
+ (2603:1096:101:171::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Thu, 11 Jul
+ 2024 19:37:58 +0000
+Received: from HK3PEPF0000021E.apcprd03.prod.outlook.com
+ (2603:1096:4:191:cafe::4c) by SI2PR01CA0009.outlook.office365.com
+ (2603:1096:4:191::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23 via Frontend
+ Transport; Thu, 11 Jul 2024 19:37:58 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 211.75.126.7)
+ smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
+ designate permitted sender hosts)
+Received: from NTHCCAS01.nuvoton.com (211.75.126.7) by
+ HK3PEPF0000021E.mail.protection.outlook.com (10.167.8.40) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7762.17 via Frontend Transport; Thu, 11 Jul 2024 19:37:56 +0000
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 12 Jul
+ 2024 03:37:56 +0800
+Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Fri, 12 Jul 2024 03:37:55 +0800
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+	by taln58.nuvoton.co.il (Postfix) with ESMTP id D45FE5F671;
+	Thu, 11 Jul 2024 22:37:54 +0300 (IDT)
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+	id D42CDDC0F7F; Thu, 11 Jul 2024 22:37:54 +0300 (IDT)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: <linus.walleij@linaro.org>, <avifishman70@gmail.com>,
+	<tali.perry1@gmail.com>, <joel@jms.id.au>, <venture@google.com>,
+	<yuenn@google.com>, <benjaminfair@google.com>
+CC: <openbmc@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 1/7] pinctrl: nuvoton: npcm8xx: clear polarity before set both edge
+Date: Thu, 11 Jul 2024 22:37:43 +0300
+Message-ID: <20240711193749.2397471-2-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240711193749.2397471-1-tmaimon77@gmail.com>
+References: <20240711193749.2397471-1-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: qcom: x1e80100: Update PDC hwirq map
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Abel Vesa
-	<abel.vesa@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Sibi Sankar <quic_sibis@quicinc.com>
-CC: Marijn Suijten <marijn.suijten@somainline.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240711-topic-x1e_pdc_tlmm-v1-1-e278b249d793@linaro.org>
-Content-Language: en-US
-From: Rajendra Nayak <quic_rjendra@quicinc.com>
-In-Reply-To: <20240711-topic-x1e_pdc_tlmm-v1-1-e278b249d793@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: yeg_xDs3gu9qIi_C_HrXMsVX-_i4Uiha
-X-Proofpoint-ORIG-GUID: yeg_xDs3gu9qIi_C_HrXMsVX-_i4Uiha
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-11_08,2024-07-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
- clxscore=1011 lowpriorityscore=0 priorityscore=1501 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407110090
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK3PEPF0000021E:EE_|SEYPR03MB7815:EE_
+X-MS-Office365-Filtering-Correlation-Id: a70cb453-7af2-4594-4ce1-08dca1e0f6ff
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|7093399012|61400799027|48200799018|82310400026|35950700016|376014|35450700002;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?clCf4KcYN0hcydLAriXHHt9XJfU/XS9xr79gNt1WFlbn7x9VOz880w+uBenT?=
+ =?us-ascii?Q?T9lrlXAebCJ1+i+pRq8H88SbG3XWmORHPxZbG87ZJTUILr+V7/NRo8X/540I?=
+ =?us-ascii?Q?ozF1dZQ2KH24svj/bD9a+RYeDiEInl0wBR/twUh+qvGHmP5X+/f6TeTxDYj7?=
+ =?us-ascii?Q?kqsSmQ7m0h6gof+EJAuqAe7iUWTzjRZZOi6a96PGZNplYApncKcva1uY+smC?=
+ =?us-ascii?Q?dfk7XH++oIVBJdNBoG7443/KXnnLynBTMYQ8fCnaMlUhdmWipaxI9RTgpUFZ?=
+ =?us-ascii?Q?9D5cMXVfnls2JFnqWWsXvjwvuckyXEsbEsdT5IaFFTFiCqdZUROHF9HtmpM7?=
+ =?us-ascii?Q?FndHrL6F/F2AN7EsLmEnvxyHCB7dkmRLp7DSovkfX21XHAEV2ECun3iyqBKY?=
+ =?us-ascii?Q?FWvQ6LQsIr09HqjgCVpTaxgQjdJR9Ti46GS38JF9SAUc3MHm8FMTnIKVcTIi?=
+ =?us-ascii?Q?2mPxjRVM1tKm5rl1A0YV7GrwrlsRY1Bj9u5ZtTr96BJP9ymNSzriDeIKa0EE?=
+ =?us-ascii?Q?p3zB4hy/Kj6xNRgTwXo/qhbru26j3u9SWYSyEboHl7gk1L2jj0t1Hm47S4l1?=
+ =?us-ascii?Q?qijFbAEOB4qsnT/ThHnPzM5CE2MQWUJkrE8qSt3OsLPnWWJd6QrTDi4BpWIX?=
+ =?us-ascii?Q?5Wj0fBIAEY4eRlkKqqeZZ7BZLldk/RfVYIwRTnzKGGCBuxa5a3H6HGWNS+ds?=
+ =?us-ascii?Q?pC+0l6J0uhD78LXAWcCbyNurnZMmAlrQ46Zrwga1blVsnAFuF+ULxZTZhtnx?=
+ =?us-ascii?Q?i0lIDfXgm4sWf+jGoD4JxHxhp5zncs4dLaKdV29i/BHN6sBZ9SAyv5ebIshc?=
+ =?us-ascii?Q?cWnCv7+XAQwX8RXKg2+rg5EMTBg1fi7260ASxK8Mw35hDLXBJkGCbTHhz1tb?=
+ =?us-ascii?Q?O0jVXTKfNZM9w7T8I62Mz3Q+/6WnQotLo7Mxrdvnl9lTeHpZgp3R6tbCVyNp?=
+ =?us-ascii?Q?SqLRjMN0t+/PVo+l/wM2XO/yHMtVWyyXbKWAGbxGD9KAlzvlCjxibI1DZkTs?=
+ =?us-ascii?Q?j17bYam8dRksT+UiAukU8yzPz/d4FGJxOqRMi45Qi4JtDcHcLNX3L/LSrOjl?=
+ =?us-ascii?Q?o1UT2rBQURNBJDoJhqA/jD6gE6bPk1C/adZQjMVVIsx1Q/o11vn6TRhnFYXw?=
+ =?us-ascii?Q?xLwcBieyDpFXYuFJxhmE45Wholv86Ogdd6W+5yJCyNTyFwxQ8wpDmuwNL1M/?=
+ =?us-ascii?Q?nkrq1oRFy6OHb5Wqr/SZjWwU5JuYwSda07HJQJdpG2Olfqvumo/CUJ1bKkvL?=
+ =?us-ascii?Q?I+mjUiv+634EZmimcwDLJW1D0g4g6UiB9AMe1cRx7IkgC9q4TQNMWuRSn6o1?=
+ =?us-ascii?Q?qinOS/UcO0F7KWGJtrTxa0+MT6yknIXHUtKkXo+mGawpiowZMaaQX8V0j0zn?=
+ =?us-ascii?Q?bflwYYHb1ua3JzaqR9ZyCxCDUskY2NgUEhvGHkmlhLvG4kqUga0RZ4rjwLmA?=
+ =?us-ascii?Q?sAnDutcF10x2lVHuoEG6GFyg9dy7R+csrxqeHakwh97tFDkvVOWnCg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:211.75.126.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS01.nuvoton.com;PTR:211-75-126-7.hinet-ip.hinet.net;CAT:NONE;SFS:(13230040)(7416014)(7093399012)(61400799027)(48200799018)(82310400026)(35950700016)(376014)(35450700002);DIR:OUT;SFP:1022;
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2024 19:37:56.8128
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a70cb453-7af2-4594-4ce1-08dca1e0f6ff
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[211.75.126.7];Helo=[NTHCCAS01.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	HK3PEPF0000021E.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB7815
 
+Clear polarity before setting both edges to ensure that the polarity is
+in the same state before configuring events for both edges
 
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 7/11/2024 3:07 PM, Konrad Dybcio wrote:
-> The current map seems to be out of sync (and includes a duplicate entry
-> for GPIO193..).
-> 
-> Replace it with the map present in shipping devices' ACPI tables.
-> 
-> This new one seems more complete, as it e.g. contains GPIO145 (PCIE6a
-> WAKE#)
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+index a377d36b0eb0..0cd8a5e00cde 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+@@ -241,6 +241,7 @@ static int npcmgpio_set_irq_type(struct irq_data *d, unsigned int type)
+ 		npcm_gpio_set(&bank->gc, bank->base + NPCM8XX_GP_N_POL, gpio);
+ 		break;
+ 	case IRQ_TYPE_EDGE_BOTH:
++		npcm_gpio_clr(&bank->gc, bank->base + NPCM8XX_GP_N_POL, gpio);
+ 		npcm_gpio_set(&bank->gc, bank->base + NPCM8XX_GP_N_EVBE, gpio);
+ 		break;
+ 	case IRQ_TYPE_LEVEL_LOW:
+-- 
+2.34.1
 
-Thanks for fixing this, cross-checked with generating the data from the
-latest hardware documentation and this is indeed accurate.
-
-Reviewed-by: Rajendra Nayak <quic_rjendra@quicinc.com>
-
-> 
-> Fixes: 05e4941d97ef ("pinctrl: qcom: Add X1E80100 pinctrl driver")
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
->   drivers/pinctrl/qcom/pinctrl-x1e80100.c | 27 +++++++++++++++------------
->   1 file changed, 15 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-x1e80100.c b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-> index e30e93840357..6cd4d10e6fd6 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-> @@ -1813,18 +1813,21 @@ static const struct msm_pingroup x1e80100_groups[] = {
->   
->   static const struct msm_gpio_wakeirq_map x1e80100_pdc_map[] = {
->   	{ 0, 72 }, { 2, 70 }, { 3, 71 }, { 6, 123 }, { 7, 67 }, { 11, 85 },
-> -	{ 15, 68 }, { 18, 122 }, { 19, 69 }, { 21, 158 }, { 23, 143 }, { 26, 129 },
-> -	{ 27, 144 }, { 28, 77 }, { 29, 78 }, { 30, 92 }, { 32, 145 }, { 33, 115 },
-> -	{ 34, 130 }, { 35, 146 }, { 36, 147 }, { 39, 80 }, { 43, 148 }, { 47, 149 },
-> -	{ 51, 79 }, { 53, 89 }, { 59, 87 }, { 64, 90 }, { 65, 106 }, { 66, 142 },
-> -	{ 67, 88 }, { 71, 91 }, { 75, 152 }, { 79, 153 }, { 80, 125 }, { 81, 128 },
-> -	{ 84, 137 }, { 85, 155 }, { 87, 156 }, { 91, 157 }, { 92, 138 }, { 94, 140 },
-> -	{ 95, 141 }, { 113, 84 }, { 121, 73 }, { 123, 74 }, { 129, 76 }, { 131, 82 },
-> -	{ 134, 83 }, { 141, 93 }, { 144, 94 }, { 147, 96 }, { 148, 97 }, { 150, 102 },
-> -	{ 151, 103 }, { 153, 104 }, { 156, 105 }, { 157, 107 }, { 163, 98 }, { 166, 112 },
-> -	{ 172, 99 }, { 181, 101 }, { 184, 116 }, { 193, 40 }, { 193, 117 }, { 196, 108 },
-> -	{ 203, 133 }, { 212, 120 }, { 213, 150 }, { 214, 121 }, { 215, 118 }, { 217, 109 },
-> -	{ 220, 110 }, { 221, 111 }, { 222, 124 }, { 224, 131 }, { 225, 132 },
-> +	{ 13, 86 }, { 15, 68 }, { 18, 122 }, { 19, 69 }, { 21, 158 }, { 23, 143 },
-> +	{ 24, 126 }, { 26, 129 }, { 27, 144 }, { 28, 77 }, { 29, 78 }, { 30, 92 },
-> +	{ 31, 159 }, { 32, 145 }, { 33, 115 }, { 34, 130 }, { 35, 146 }, { 36, 147 },
-> +	{ 38, 113 }, { 39, 80 }, { 43, 148 }, { 47, 149 }, { 51, 79 }, { 53, 89 },
-> +	{ 55, 81 }, { 59, 87 }, { 64, 90 }, { 65, 106 }, { 66, 142 }, { 67, 88 },
-> +	{ 68, 151 }, { 71, 91 }, { 75, 152 }, { 79, 153 }, { 80, 125 }, { 81, 128 },
-> +	{ 83, 154 }, { 84, 137 }, { 85, 155 }, { 87, 156 }, { 91, 157 }, { 92, 138 },
-> +	{ 93, 139 }, { 94, 140 }, { 95, 141 }, { 113, 84 }, { 121, 73 }, { 123, 74 },
-> +	{ 125, 75 }, { 129, 76 }, { 131, 82 }, { 134, 83 }, { 141, 93 }, { 144, 94 },
-> +	{ 145, 95 }, { 147, 96 }, { 148, 97 }, { 150, 102 }, { 151, 103 }, { 153, 104 },
-> +	{ 154, 100 }, { 156, 105 }, { 157, 107 }, { 163, 98 }, { 166, 112 }, { 172, 99 },
-> +	{ 175, 114 }, { 181, 101 }, { 184, 116 }, { 193, 117 }, { 196, 108 }, { 203, 133 },
-> +	{ 208, 134 }, { 212, 120 }, { 213, 150 }, { 214, 121 }, { 215, 118 }, { 217, 109 },
-> +	{ 219, 119 }, { 220, 110 }, { 221, 111 }, { 222, 124 }, { 224, 131 }, { 225, 132 },
-> +	{ 228, 135 }, { 230, 136 }, { 232, 162 },
->   };
->   
->   static const struct msm_pinctrl_soc_data x1e80100_pinctrl = {
-> 
-> ---
-> base-commit: 0b58e108042b0ed28a71cd7edf5175999955b233
-> change-id: 20240711-topic-x1e_pdc_tlmm-a6cd7a0f6cbd
-> 
-> Best regards,
 
