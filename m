@@ -1,125 +1,112 @@
-Return-Path: <linux-gpio+bounces-8190-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8191-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F18392F214
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jul 2024 00:36:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11D3092F287
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jul 2024 01:20:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 01F5EB22C38
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2024 22:36:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A74791F2307B
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jul 2024 23:20:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F18C81A01B3;
-	Thu, 11 Jul 2024 22:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ks8ELnCm"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CA471A00E7;
+	Thu, 11 Jul 2024 23:20:20 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 20.mo561.mail-out.ovh.net (20.mo561.mail-out.ovh.net [178.33.47.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33AD15531B;
-	Thu, 11 Jul 2024 22:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83CE14D432
+	for <linux-gpio@vger.kernel.org>; Thu, 11 Jul 2024 23:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.47.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720737379; cv=none; b=W4cgAYu4DikQyXLpCSN7iU8RZLjpd9UP9wHtmgdMZp84w/2um9Qunc4NACokUYxylgxizLwZ3j8Cy3YPR4IID7UylV30afDND68IdxHaUGTtkHuqLtD1kHB7iWUptsH/SAJ6/vpirZCF/WEX6+Nf46uCRPq8dSQWjEut8f5F+xI=
+	t=1720740020; cv=none; b=hEgzzuhcWKK7nwfoPw49oB2ZPzPX+unYULeaFfErS7CjCU2/2f7pfM8F2oCLZC5WnbJiCbg9D7mmohoW53M9RYDN7LU5IfxwFxfz1GRyx1cvzmCEs/zDvDIhGqgfRHPrrT1Z18tvo6xNmFZ5PyvsAZW2W5gNWJ165HI6M7+gAI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720737379; c=relaxed/simple;
-	bh=pirreVvy4JZn8lrnWfmD1cwECwdJ1hvtT3Z1k6qiOwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NnhZTnCig2g4Cq4v/dhrr8UN9q9j2REX7/kRmmCWpifZWtjDn328hN6MJqB/HSbQS2Zq8akYoS2p/IgtLua8XWnYDiXVi3w6wKbOwqksqHTfBSCxVvQfYB0UKHlY56oZyc/s/W/+6irT8iwdUnZ5YVeodyakl5M+9lBkFo0iHxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ks8ELnCm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B487C32782;
-	Thu, 11 Jul 2024 22:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720737379;
-	bh=pirreVvy4JZn8lrnWfmD1cwECwdJ1hvtT3Z1k6qiOwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ks8ELnCmsBZ4ZxMYxC8SuWAARCYiWRJZth0Zyt2UkPp/K/lMnmocSf81YBl6SiiNT
-	 9EmZM/rP13whx+pEGYHjq33WVwsaXcFI04u4h0Xdp3CHgQbxHRS5T/cwQSPlutGUPQ
-	 w/XSc9Y3yIO6s3CTlWHuiUuS72Xs1FDIT1kTTUyj+ex6Je0OVJTO3FRoYn2+haZdle
-	 H4A1enmwEcV7wAyyeTpVcElD1vWsHCgmL4cP6H8t/BSFhWxXaUhMPRbtpMFaPLNtZO
-	 sMs6hSmwYtuq5Fah4gfxcu5YiQFlKM6XDscniSMdF/dEBhjbQIOdx09ch5PTd3NBs/
-	 /A5ym9rdYGSIA==
-Date: Thu, 11 Jul 2024 16:36:18 -0600
-From: Rob Herring <robh@kernel.org>
-To: Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Michal Simek <michal.simek@amd.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jay Buddhabhatti <jay.buddhabhatti@amd.com>,
-	Dhaval Shah <dhaval.r.shah@amd.com>,
-	Praveen Teja Kundanala <praveen.teja.kundanala@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	saikrishna12468@gmail.com, git@amd.com
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add support for Xilinx Versal
- platform
-Message-ID: <20240711223618.GA3237343-robh@kernel.org>
-References: <20240711103317.891813-1-sai.krishna.potthuri@amd.com>
- <20240711103317.891813-2-sai.krishna.potthuri@amd.com>
+	s=arc-20240116; t=1720740020; c=relaxed/simple;
+	bh=NZ8T7Ds3iZep5vO1ifYcykqOpLll7nDm1BsynJvV7Oo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dIlcudswxNiUtw4yLNzD1qrHDaT9e2u2Z/tR/X0zjgnDWhdJe4wNQF0/Wb3JYxi4wWUuDkH4a9qf2UPV4zR5zpRwUK4e8bvss/4apk780g/ugmoJE5zwianGnzYA0MHRtz1SugE0gLOgCVWb67PgSEr1T6ukee+4jXvsIuZzb+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=178.33.47.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director10.ghost.mail-out.ovh.net (unknown [10.109.148.87])
+	by mo561.mail-out.ovh.net (Postfix) with ESMTP id 4WKrL24JS3z1Q54
+	for <linux-gpio@vger.kernel.org>; Thu, 11 Jul 2024 23:20:10 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-8rwxz (unknown [10.108.42.201])
+	by director10.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 50E101FDFC;
+	Thu, 11 Jul 2024 23:20:07 +0000 (UTC)
+Received: from etezian.org ([37.59.142.96])
+	by ghost-submission-6684bf9d7b-8rwxz with ESMTPSA
+	id PzeKC6dokGZO4gsAyuFlTg
+	(envelope-from <andi@etezian.org>); Thu, 11 Jul 2024 23:20:07 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-96R001e9cb5549-685d-425f-a6a9-8576c3d7597e,
+                    47FBFB77BDCA57EA66E7955FCDEBFA84A3B4AB1A) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:194.230.248.195
+From: Andi Shyti <andi.shyti@kernel.org>
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: Andi Shyti <andi.shyti@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	virtualization@lists.linux.dev
+Subject: [PATCH 0/2] Cleanup the MAINTAINER's file
+Date: Fri, 12 Jul 2024 01:19:24 +0200
+Message-ID: <20240711231927.3103820-1-andi.shyti@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240711103317.891813-2-sai.krishna.potthuri@amd.com>
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 7541840528265644655
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeftddrfeehgddvudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpedtveeuieehfeetudejhfehleeijedvveetleefhfehuedtleektdevjedujefgvdenucfkphepuddvjedrtddrtddruddpudelgedrvdeftddrvdegkedrudelhedpfeejrdehledrudegvddrleeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheeiuddpmhhouggvpehsmhhtphhouhht
 
-On Thu, Jul 11, 2024 at 04:03:15PM +0530, Sai Krishna Potthuri wrote:
-> Add Xilinx Versal compatible string and corresponding groups, function and
-> pins properties to support pin controller features on Versal platform.
-> 
-> Signed-off-by: Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
-> ---
->  .../bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml | 509 +++++++++++-------
->  1 file changed, 329 insertions(+), 180 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-> index ce66fd15ff9c..68c378b17f49 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-> @@ -28,7 +28,9 @@ description: |
->  
->  properties:
->    compatible:
-> -    const: xlnx,zynqmp-pinctrl
-> +    enum:
-> +      - xlnx,zynqmp-pinctrl
-> +      - xlnx,versal-pinctrl
->  
->  patternProperties:
->    '^(.*-)?(default|gpio-grp)$':
-> @@ -46,196 +48,334 @@ patternProperties:
->              description:
->                List of pins to select (either this or "groups" must be specified)
->              items:
-> -              pattern: '^MIO([0-9]|[1-6][0-9]|7[0-7])$'
-> +              allOf:
-> +                - if:
-> +                    properties:
-> +                      compatible:
-> +                        contains:
-> +                          const: xlnx,zynqmp-pinctrl
-> +                  then:
-> +                    pattern: '^MIO([0-9]|[1-6][0-9]|7[0-7])$'
-> +                  else:
-> +                    pattern: '^((LPD|PMC)_)?MIO([0-9]|[1-6][0-9]|7[0-7])$'
+Hi,
 
-Did you test whether this works? It doesn't because the schema is 
-nonsense. The schema applies to a property's value, but the "if" schema 
-applies to a node. And it's not even the node you are at, but the parent 
-node. IOW, there is no "compatible" in this node.
+while reviewing Wolfram's series, I received some delivery
+failure notifications for e-mails that don't exist anymore.
 
-The 'else' schema covers both cases, so I'd just change the pattern and 
-be done with it.
+With this series I'm removing:
 
-However, based on the rest of the patch, you should just do a new schema 
-doc. There's little overlap of the values.
+ - Conghui Chen <conghui.chen@intel.com>
+ - Thor Thayer <thor.thayer@linux.intel.com>
 
-Rob
+unfortunately both from Intel :-(
+
+In the case of Altera's subsystems (except for the i2c), I didn't
+really know what to do with them, so that I marked them as
+Orphan.
+
+Andi
+
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Lee Jones <lee@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org
+Cc: virtualization@lists.linux.dev
+
+Andi Shyti (2):
+  MAINTAINERS: i2c-virtio: Drop Conghui Chen from Maintainers
+  MAINTAINERS: Drop Thor Thayer from maintainers
+
+ MAINTAINERS | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
+
+-- 
+2.45.2
+
 
