@@ -1,121 +1,86 @@
-Return-Path: <linux-gpio+bounces-8198-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8199-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41C2292F59C
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jul 2024 08:34:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55F0292F8C1
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jul 2024 12:15:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D2371B21D33
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jul 2024 06:34:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 10CBF1F2363D
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jul 2024 10:15:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1922313D538;
-	Fri, 12 Jul 2024 06:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3250D14D70B;
+	Fri, 12 Jul 2024 10:15:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ItZhMV1s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJsLT8bE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663C5567D
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Jul 2024 06:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA281179AA;
+	Fri, 12 Jul 2024 10:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720766057; cv=none; b=hRUMsu4H9eEhqPtkagKr1yaye8/YAodQ482FtEHMPx4xlJ26s6AiWP+8QOz2KSwRBA/nMplmS6pLuuHsdz7rKKE6zr4xbYYSNxxxHW6Tka1XM9In1kxdbG3D7LWhCIl2yHDTZJuknzcollUsJgMn8CRgRx/UgP/o92jW0GxiYlU=
+	t=1720779328; cv=none; b=VFxxtnNiDCwKelxQw0/OVouhI1VtmIf8TCbzyj0Vp8PMju/5r2MSzTxgB8Zn/rZ+OELrJ9K9T3tIa8vu88tMP8qGLuvHyUq6hdPvmnhZgaF10LragyfP7RuM87YHyO1UpbhbqB9wTuV6K82f6IR1VPs+J9RXbYF6amOoeEn7ZAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720766057; c=relaxed/simple;
-	bh=qE5WNhqkcyor/YY7ME6FLDIzgVykP89zYw6hRQEWuw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HjM7XKEA3AluFbHOaMRdJ1juZdao5Q6CiJEIPGAurFFwcC8xfdCy07hp8Qb0wmWInWbTo9xob2UWfkwvZROogwdoWYUAx0rupYfo0a8goJbSsdAkM6wNS9T62z/AM7wx+u+h/8x4cPPH4D0nxsMBZr7DiC5iSqU5KdIMec/4mW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ItZhMV1s; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=qMwy
-	j100TZiXpEG1RkEKy9X56Sq1twYVjHIju4RLaFo=; b=ItZhMV1szYGS1WAmXbFR
-	3D3U0ITPsuZvoYTG+kgCBPNlT3NKNBEQ6I4k80QfCn8ZHMWwVU45AdI3YzHY4O77
-	Wng30gi0zKJnKAnJRTrnGkj9yoNCj6pCezQ0KoBgKPN7npgl2d+lCBbwD5JNYQoq
-	/og/oef8+jyAm3N8sEDt/R0fboin03ekCop7YCPyjlZvsTuDH5H+uBMGmbAZrXXI
-	NLR+evTRZSXR9CqCZYkv1z/kxkC+bPWNJfxARtl911eeA/CNMkiCZOUsLhDnwW3i
-	PO9A34o0qQL7Fcgky41OKFZqddNtJIzCVfKXodcyJT6TYCnSSSGPJKS7cErp1kBQ
-	oQ==
-Received: (qmail 1055845 invoked from network); 12 Jul 2024 08:34:11 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 Jul 2024 08:34:11 +0200
-X-UD-Smtp-Session: l3s3148p1@b6c7EQcdgIQgAwDPXwmZAIsFIv4n+Dpm
-Date: Fri, 12 Jul 2024 08:34:11 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Viresh Kumar <viresh.kumar@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, virtualization@lists.linux.dev
+	s=arc-20240116; t=1720779328; c=relaxed/simple;
+	bh=AGn3G50o8OB3jWdzmtWhuLVvRg27O3BbS0LxxOGFq+Y=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WaGQskmpNRp2ThGeVhbe/xxMeBsfLw/uuZ9+XksH9Cf2f3cJR7/B6F7tikJPW2h/IGq4WcBA+mNJtULwyYsoGLpUGIyJv921hXllTS2x9KfqfOpx1QKsUihlmbPV6b71ONVjn2hv6EaZQA9zoftzVPT5OHym2oDMWpAfg7WGlVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJsLT8bE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB57BC32782;
+	Fri, 12 Jul 2024 10:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720779327;
+	bh=AGn3G50o8OB3jWdzmtWhuLVvRg27O3BbS0LxxOGFq+Y=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=tJsLT8bEHV+dXhgp7ER0pEtG1a6L9jW1vISOGbmwOdzpuunMQSf4ny35qkyUAC878
+	 FtVPJfgyFX3NrDAicb9Y4p9TsDRI8HA8B/FggigPCYP12GhlOGZMtcWJE8aC/C2nJz
+	 NmgW5lhfrPV31YA7Ynsmo4h430Ya+EDRlCOkpuAApYOK0NwHwkjKJ4RE4+2OouGh1A
+	 s/dhWrH0Wl4rsufI/xG3WRqRNPPnc8EpLvNKf2ATH/tMo8xikJlbPpnGyd+jzXAmDg
+	 eKEoOwFTZKWL9a4YuKk8Yl2+DqRi3+I5r3RyAZ+16MRyIllky3UsuVHZh2WVv3bVy7
+	 YDFnhEzb9cmXQ==
+Date: Fri, 12 Jul 2024 12:15:23 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	lkml <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	virtualization@lists.linux.dev
 Subject: Re: [PATCH 0/2] Cleanup the MAINTAINER's file
-Message-ID: <ZpDOY5KKee93lToM@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Viresh Kumar <viresh.kumar@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, virtualization@lists.linux.dev
+Message-ID: <f2ur5lj5fkliwoab6rcpnxraqcueyh46j4p7ckgn3ced4mgajt@lj53dwinzpgu>
 References: <20240711231927.3103820-1-andi.shyti@kernel.org>
+ <ZpDOY5KKee93lToM@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Z5uXCEPNnIb2FR7S"
-Content-Disposition: inline
-In-Reply-To: <20240711231927.3103820-1-andi.shyti@kernel.org>
-
-
---Z5uXCEPNnIb2FR7S
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZpDOY5KKee93lToM@shikoro>
 
-On Fri, Jul 12, 2024 at 01:19:24AM +0200, Andi Shyti wrote:
-> Hi,
->=20
-> while reviewing Wolfram's series, I received some delivery
-> failure notifications for e-mails that don't exist anymore.
->=20
-> With this series I'm removing:
->=20
->  - Conghui Chen <conghui.chen@intel.com>
->  - Thor Thayer <thor.thayer@linux.intel.com>
+Hi Wolfram,
 
-Fixes for these two are already in my for-current branch. (And the
-patches were on the i2c list, Andi ;))
+On Fri, Jul 12, 2024 at 08:34:11AM GMT, Wolfram Sang wrote:
+> On Fri, Jul 12, 2024 at 01:19:24AM +0200, Andi Shyti wrote:
+> > Hi,
+> > 
+> > while reviewing Wolfram's series, I received some delivery
+> > failure notifications for e-mails that don't exist anymore.
+> > 
+> > With this series I'm removing:
+> > 
+> >  - Conghui Chen <conghui.chen@intel.com>
+> >  - Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> Fixes for these two are already in my for-current branch. (And the
+> patches were on the i2c list, Andi ;))
 
+oh yes... sorry, completely forgot. Please, ignore, then :-)
 
---Z5uXCEPNnIb2FR7S
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmaQzl8ACgkQFA3kzBSg
-KbZC2w/+LZgnWmlJBwxQh5TSmeMsk2dilwE2eiHsoXwVM6TaE9idkTF8nwm3wGOZ
-0gk3iJD5XHOwHkPuUK0S9qnnDnRWsf2lR9sg9MGLnXc5i8PTvO7HHEGRxBrApi61
-FTLg1OQCZUDBaRT7Pf6Yqb99dXMvlVRkdoojYsCTbqY49YDPdBhS1989f4hfXeuw
-FQLAH5oJ9DrpfylZOMRiCXhsGmXCb+zpcaeJo3rR2jaJNyfKdBKBEx4CiYP4Bcrk
-DBO3Bxt9xQqjLyUVQXvwWntrnSXpyadUYEVvAF8fB2v1x0FYeKLc9DPEIZuX+XAw
-aKpjTMOmHwjWkXoTdT/0HphfE5MRJsqfNnpOJXyyM+Z833ty5JTT/+BkybDVaE9q
-330Dolj9RFVE//+/Y34bbmb6wfSmbX8L4R7NSSC22qsCD1VHqcMnFsaacE3/CrpH
-pJyAvmZ79NhPoPsj6OHkP/4xYw8thbwXzk9kv9k8EQpr1JgI9BL+EKp/DVHB6SYJ
-7nHDtGM2MLEkjzhgYRbEFQPZKfRf8OZzjUT7HRwhDk1DhqDjItjbnJ0js0lGtAR7
-IWbdYpdxBvLx9xVhfrpxFc+TJLT90i3qz2dSIWm655HpsBTV/I9FW3pb+Qb7Q52Y
-0luzSdaNkNUrokqW8biZflYENJ4Hadacfl4ZTc+wx1f45QZesqA=
-=1rBW
------END PGP SIGNATURE-----
-
---Z5uXCEPNnIb2FR7S--
+Andi
 
