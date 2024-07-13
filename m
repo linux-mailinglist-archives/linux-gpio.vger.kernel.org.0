@@ -1,110 +1,136 @@
-Return-Path: <linux-gpio+bounces-8201-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8202-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E36FB930595
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jul 2024 14:35:57 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47AF99305D9
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jul 2024 16:15:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 87C22B21948
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jul 2024 12:35:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AA727B219C3
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jul 2024 14:15:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17F0F12E1D2;
-	Sat, 13 Jul 2024 12:35:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C7FD13A24A;
+	Sat, 13 Jul 2024 14:15:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2yhnPsV"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="qcI3imhd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807C54C8E;
-	Sat, 13 Jul 2024 12:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588DB130486;
+	Sat, 13 Jul 2024 14:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720874150; cv=none; b=LYojpqSOWq/KFRYvZOo/8jh5J/mOKo/0L6/5/qfNjJoguwrBtK0y4xWv0K/0YpalvtOs8uwjhkqtXyiZnsG6ByeilU/yydD2kZ5erKlZSNgoh0k9fAtDwrd1apwuTv3caBunyInj2wtW9KaWopUqYkcKXXohgudnILdu6xUL5W4=
+	t=1720880135; cv=none; b=W8aT56wHHVonujWXQtED1iMQV4aAFbkkfw4a3f7llBlCJGiCyZGxaWBo+C5WWmkN+e62BUwios9RA7ppeUPzHV+/OTAvtrTtNbhbQpozmdOnZ04e/3xVXoA60qUcOSvsjhML4ZUv0VZ2YvTw7hEx8i7cN5b3i1pdUqvN9N9suSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720874150; c=relaxed/simple;
-	bh=NpVjYkog+25E4rQygl9YoxSBv9zb0zrBY5hRbqlgJA4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PAWfAH1pmgPGmxo1N7q4P/2j9tOlCkHUc7bbDm7kV9rQD7Z7PTEBTuCOWiJQNBez8qp2THUNM7kOrfE4HcnAXuBK5CfHkfv0Czkz1nIfRIKiayRdQ6xI/nYQKRus3nNSXqyvYI1KER1vFWC/8WaZ38ygulzHHXf0pcDhpMsfwrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W2yhnPsV; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-64b417e1511so27767787b3.3;
-        Sat, 13 Jul 2024 05:35:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720874148; x=1721478948; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=owkShcGocUOtbv22a0hw2ZQ7UgHf40jkC06XKxO56x8=;
-        b=W2yhnPsV3XdcZ1TdLL4sXt7QLBKsWeEGOG/fEspezFHeuRtK2hAHXbAkBoANTCT7Ay
-         uxfedI8B0qPmjDZdtpTwL3m3Bw6cpimfJWN23sn6vbv3rmmfNwt4RS+nX96LHxV+npBD
-         L654xsFmd5ZkH4hxbRqx7qvHLiuBrgXo0wiN/T1q0SCq2KEBV0NSIzUQTOL2iYkSkh57
-         xFwOUSXuZaE7J7zaUbzwj4Q1UFbmS7zJUqWPbA9X5FWoO1lkM2jRfRG/GSshV9r7amkT
-         HrFeZlWmTSYvY/OA0+HX0Lccg+geJBBh3fk/U8P/ksaOGhyDXP2eZQ2uQRpdlToOUzY8
-         Dzaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720874148; x=1721478948;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=owkShcGocUOtbv22a0hw2ZQ7UgHf40jkC06XKxO56x8=;
-        b=r3pZQ8XnvWQE30DUkvUJrlZ7Pn0M2pQvgPS5DW+Bq0foFXCmmGw0+yEpU3GDmdstxd
-         XWoK+iHbNp5E9J0i3+s2aZ/LKKgeEpYLpHVPGGK8CVUn8jRUZGq3DRVJKkx4F5KW5SJW
-         lgHJUcPsShA+Gm4SxxLBfwZ6zcRJusEqN4ZN5mir3Ozr1boJ0qVSUuoZSPbwDRLrYPAq
-         R86Vt2vwsbx+DnVbZ5I98Di8lieGaigSlssV57Yb4VEPAnZHz9Sv00eY8hnfaP7cHayr
-         zqZn0Z/XsNsjGnMj5WnNHXGwiMbiaVMfTcCtG3PwcNlOECYX3i+cKNMwTUbp+tB0VaNl
-         +31Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVcYrryUipABBbvNEqQl/lwZSmCmTECX1ixJDLq6dHP7X9OwkhzaVElMlNCm4FfR+0HmbKdXlu7ujrkgtLC0XhtB2gSbFL885FrF4rVh2Ax4tPYxMZkIhJIUIHdpN2prB5gC4jNso1m+A==
-X-Gm-Message-State: AOJu0YwJzOYiRCdo0g/OFNpDKGnPkJZ/7qRlPqQk/WiUN8K3p1Hf87u1
-	bXCqBDLTrG1tya2+5i7ERM3rV4AjfRdIfENRNYVoRDViaNz/b0YR+87k2AmsHwqGWPdYu7Ue20s
-	3BH8xOdlhV+TbCbuoPe5+ZZL3y74=
-X-Google-Smtp-Source: AGHT+IFxVjFQgnzk7U8EbynbAHgLidXGTg+dCuDEWyhjzb0s5oKcsQWA8qjq4FBXiKSC/kd0jB508Atnx1GMKhgcc2I=
-X-Received: by 2002:a81:8d4b:0:b0:63b:d711:e722 with SMTP id
- 00721157ae682-658ee7905a8mr168875407b3.1.1720874148479; Sat, 13 Jul 2024
- 05:35:48 -0700 (PDT)
+	s=arc-20240116; t=1720880135; c=relaxed/simple;
+	bh=0sImha/N/FjIHW7HwE6mq+4I+YE1wV6jEPOuW++u+5c=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=t5t3Q+c7bed5yOtgG3rE9/rZRoqPuOof4Nwsby3PARCqStI0SuOBeclWKG6V+flyGU7wIOKJCwL3aMcNp3bKctNiCmk90gzBzsSsBqEpqaC/pbtN1JplobBM456UQ+RGs78esxsaGXeVL0ZvO/ODUE33KDFVyObyRws/kErh+wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=qcI3imhd; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1720880129; x=1721484929; i=markus.elfring@web.de;
+	bh=i29h15iOs2DJLJvtpOSvAjE7y04Zre3BMYJI6oJamFY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=qcI3imhdJykTIHiWZu0ssEfdZ1/mw/PUoaBJ9elI6Be6kx0s8LCLQ5IAlGLvy7lX
+	 9QDJjBnziEVDo84m73oCNE0gXfiRUal/1M3fBBIZDrjwku5GAgDb/rKTMxfZtuqCh
+	 ANi75Pp9gsGXOby65rqzju9vSvaq9MGnOrWmINnu8BGRn72lITgNwDYAiKZweXb9L
+	 oddnoFzVjqas2DuOIEiY/r8etWyMMOfNmiBFKBX8atxC3pKiCj1hE4X2YT6BBKC/h
+	 4qxds/pBJFlfSPdHPISotjJoyAdeDSghhSV622WatWma3h/2zFBDOr6hzTmpMSGSB
+	 P6Hz02zo4kBEAwzwaw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MtPrY-1sDi1934ik-00zRPT; Sat, 13
+ Jul 2024 16:15:29 +0200
+Message-ID: <3a52f0c5-85c5-4077-b6cd-504cc5383817@web.de>
+Date: Sat, 13 Jul 2024 16:15:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240711193749.2397471-1-tmaimon77@gmail.com>
-In-Reply-To: <20240711193749.2397471-1-tmaimon77@gmail.com>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Sat, 13 Jul 2024 14:35:37 +0200
-Message-ID: <CAOiHx=kr=_-ra392XH-vR2fG-E5ZVXAutU9OP6xQRrzXSu9ZWg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/7] pinctrl: npcm8xx: pin configuration changes
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: linus.walleij@linaro.org, avifishman70@gmail.com, tali.perry1@gmail.com, 
-	joel@jms.id.au, venture@google.com, yuenn@google.com, benjaminfair@google.com, 
-	openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Linus Walleij <linus.walleij@linaro.org>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] pinctrl: core: Use seq_putc() in three functions
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:FHsifFfV8fdhGzisDa9WcUVEOifIRIqKuxaDTVIeakwyofgPKn5
+ weSW3384DZSLadx7B9H3CyTkodrPOW6s0T+/DF9PzZryG0kxw5Zyl+B3bYBuwDbcjxdib8+
+ 3JwLgL5SCowBv+q/boaj5o0FdG5rP78d4byfgzo2Rkx5hVo3yTn57v7tA2ulBoLpNhsyosk
+ EwUHi1mR/ZCEfJvJzUhpw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:mtI6PBGZhgY=;ZqXwS5/Omeym0uvpspkbO2My4rp
+ HPCwn4GBg95rleyvoxsRRDUU7jhs/+39Vp00AR1qUmbPUVkfi2yzEeNqshm2K6QeUJxwiL207
+ q3VdtNPvuvrmWv3WIz68WvPF8z5j1C8gxOeQn0p70xYNOzHyJyv/g5f+SjU71Uqglpy5OCDZ2
+ 739SRs3Ncg0SXTP9perMF86zwXHKvNdLPmhJIRG5lwZuex2k9zJumXdJaR3enuOMJ1MV1LFMF
+ PCSzize4EUYBpGXodoTsQvwSWWkJX6aNJTevDMgsOVK0e+fPLZ0DnC8B10VlsF/lqhHc8mPf+
+ ggeupk3x+ivRAy3xOtH66t6PYJzuz2HSO7VaW7DOPJSw09OhOq2AlpimG3pI4W8jR6FDTXJhZ
+ msu76hT/KDs2oNHPtmxu5PMeW9RvJuZSKuqdDayEheqINvbsa/VYjEcEH3jBq7VH5529JSU60
+ 6KcS40B3Yfd9+hT2qaJ3tifnSzW6bxAIFOu9rPUcRVmg60hg//WQdsFX5lkdyikVT9A4Kcx4o
+ PV78ZAVJeDWv21ioHrx39XvZle5Ypvtwe1K2g2OEI5PtmPjJ7V+Gdhb4vYbG5H4dC+utRBGwI
+ mAQ5uSU9oHvybizyI8E1tkBWyEae/oJN76irwP7wBUU41FYslx5lu1ErxeExnwqK05k/nJ3WP
+ ZpHIqvE1gE1yWjA+z1LeT4nlFH3ht6AIXyg25ER6agT7B7AUKq4SloeKkRmt+qhAhHjVIeS4Z
+ GSEkur24MD6vzG69A+GiOssh04DaOGjN+d9FK0NiPCN+N75nBYxb0YnPGzXfIPiDXSeEJxhhx
+ dB7kba3klrpmTl2joIuHKsqw==
 
-Hi,
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sat, 13 Jul 2024 16:10:31 +0200
 
-On Fri, 12 Jul 2024 at 02:48, Tomer Maimon <tmaimon77@gmail.com> wrote:
->
-> This patch set addresses various pin configuration changes for the
-> Nuvoton NPCM8XX BMC SoC. The patches aim to enhance functionality,
-> remove unused pins, and improve overall pin management.
->
-> Tomer Maimon (7):
->   pinctrl: nuvoton: npcm8xx: clear polarity before set both edge
->   pinctrl: nuvoton: npcm8xx: add gpi35 and gpi36
->   pinctrl: nuvoton: npcm8xx: add pin 250 to DDR pins group
->   pinctrl: nuvoton: npcm8xx: remove unused smb4den pin, group, function
->   pinctrl: nuvoton: npcm8xx: remove unused lpcclk pin, group, function
->   pinctrl: nuvoton: npcm8xx: modify clkrun and serirq pin configuration
->   pinctrl: nuvoton: npcm8xx: modify pins flags
+Single characters (line breaks) should be put into a sequence.
+Thus use the corresponding function =E2=80=9Cseq_putc=E2=80=9D.
 
-You also need to update
-Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
-for any changes that affect the device tree bindings (e.g.
-adding/removing functions/groups).
+This issue was transformed by using the Coccinelle software.
 
-Best Regards,
-Jonas
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/pinctrl/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 314ab93d7691..6d61101f488a 100644
+=2D-- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -1707,7 +1707,7 @@ static int pinctrl_pins_show(struct seq_file *s, voi=
+d *what)
+ 		if (ops->pin_dbg_show)
+ 			ops->pin_dbg_show(pctldev, s, pin);
+
+-		seq_puts(s, "\n");
++		seq_putc(s, '\n');
+ 	}
+
+ 	mutex_unlock(&pctldev->mutex);
+@@ -1751,7 +1751,7 @@ static int pinctrl_groups_show(struct seq_file *s, v=
+oid *what)
+ 				}
+ 				seq_printf(s, "pin %d (%s)\n", pins[i], pname);
+ 			}
+-			seq_puts(s, "\n");
++			seq_putc(s, '\n');
+ 		}
+ 		selector++;
+ 	}
+@@ -1814,7 +1814,7 @@ static int pinctrl_devices_show(struct seq_file *s, =
+void *what)
+ 			seq_puts(s, "yes");
+ 		else
+ 			seq_puts(s, "no");
+-		seq_puts(s, "\n");
++		seq_putc(s, '\n');
+ 	}
+
+ 	mutex_unlock(&pinctrldev_list_mutex);
+=2D-
+2.45.2
+
 
