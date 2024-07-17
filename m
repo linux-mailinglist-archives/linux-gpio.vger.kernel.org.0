@@ -1,136 +1,107 @@
-Return-Path: <linux-gpio+bounces-8248-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8249-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3326933F50
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2024 17:11:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F2FE933FC7
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2024 17:35:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 42F9AB209F4
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2024 15:11:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD58D285382
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2024 15:35:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E78A9181330;
-	Wed, 17 Jul 2024 15:11:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E06A181BB5;
+	Wed, 17 Jul 2024 15:35:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXGq+mwI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+BIZjQS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D26C20B0F
-	for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2024 15:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939F6181310;
+	Wed, 17 Jul 2024 15:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721229101; cv=none; b=ZhFeK2Yml3/MQCiRLfBM/uVxEYhmi3IhfunH4pFyFXjHp0cPGxoFwC7KCWJVYPf9euzL+V3+7C1NeJ03CoYU6M7aJ4tXRK1azcQrtiDl0RxLFXN7rhOSeexRPx5/IKIumQeEcRA6UzGgJn7GLO2Z6cOZpwvJiAXD71fz6x8KXtI=
+	t=1721230544; cv=none; b=X9Il2vEO/oEPUrpfpTG3TjWlytL6dVVXh2ux6bUTEuzLKKfDz5J2EjsKV8p/pMeep/kVdgCpADUM9NW0Ellr7H0p7eNG6VKVTwWFQnHgo6Kb57ewYJOIpfcL1jEem/EglZbVMoVnFggx8o8mtyyt7LDG5MP3kOIFooemcTgU1qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721229101; c=relaxed/simple;
-	bh=lz0Y1xQm1lt1JjyvTfjAvj43GiTkTjMIkSXUbq1eBDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J7R9d8xwBQopDXL0rcp9PU9Mh/w5Aw3JAXd5jLcqjsQmTn7cESIwOVweuzt8pi/r7PGzkEEi2HcytGgf28N30LsM/62pIR1lYVIe4qVjltDeMqay83WQcfPSo7HV8pTL74i/7FoUwITYmxquAR5bfIFU8n7Tkv9edKrgDSK3/+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXGq+mwI; arc=none smtp.client-ip=209.85.216.47
+	s=arc-20240116; t=1721230544; c=relaxed/simple;
+	bh=igKSkhh6A1mnqf1e706OFohGjxcTqllM85CooIxAVwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i1WLpqNRtFvVWYUtcGHjtffrSv7Bj7kF1WE9RDU7I+7a5T284c6oSBOnSHyRztswPMFbKlFvyxdBW/iHRRvztnwWfYmw8wDSsJbi+Immy+jI5Tv0rUMgw6eMm3j/3Zu8Ve6OxwrNf09SFUXlBJyXsD0raDBkr38TP8/3bfU0yos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R+BIZjQS; arc=none smtp.client-ip=209.85.219.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2cb585375f6so352777a91.3
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2024 08:11:40 -0700 (PDT)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e01a6e5da1fso833208276.0;
+        Wed, 17 Jul 2024 08:35:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721229099; x=1721833899; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cqN60Jf1ycfDdus/f0Obg9odZC9LZV3OF47IofiTOv0=;
-        b=EXGq+mwIvAXf5pW63/plkmi5jH8fwQYsWlwmeEYuj3peJ06VI76I5ZgvqKv9CW6nJF
-         nVFe/Lzv/0x+TZzcI+3/i47StxG9qQX0dMyJm9K8nbS1EMWxQ3ICwX7PBKcsniIrhrTS
-         cJSVnsimE651G//gH7PR2pGqL/xcI9QurOCg3O6W5l2YBV+gSJ+mNTCos4yTIxqA6KyZ
-         DVOMJ09y2ALbQiAYyBLPz/eP3bhkPd92I11mJpO1xV3dUCyhgekxPVlPvb2wOHNSR4Is
-         YzSp1j25nuQsoEOErI4/RogewGOTSGmTuJu9RG+798VZ0a+xldPESvaAcrn778LSJrC2
-         nWAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721229099; x=1721833899;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1721230542; x=1721835342; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cqN60Jf1ycfDdus/f0Obg9odZC9LZV3OF47IofiTOv0=;
-        b=TtBKz9HEns4PYy+G6WQ6Y2p4OeKizAU5Ev1kUS8CB1xhaesiYQKAax61CqC6oEGdl4
-         AOpIJ68SvhQDCBMHUVkUtOdCKsYglIHmjylYa0yLrR5aFIsesy9qGM3IqmV1n3shaenr
-         UC1lOzvi2auuimB9YgZMCjTdkTZyR4aMBVNp/mzBS5UEViP/admMFNGWLlTCenBJ8ujZ
-         LfGqNXGejaCQ6E5w7w0WX6VCzc+DxVFkB+uCQKZtIHXjenjaQThtOdd0LZL0hSX6c7h/
-         47E+kVdRZGdcXkODSjZ7ytFyXd2v5+xKLfzcYgKbjmWcRhrieLg695GR0USkBHFCP1SX
-         Gmfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYzPKYSolgfuSgMybIgvvM6eQAOTM/r+uxnIFYHWCuFcMMmHNJ4UgOwpBFQ3Lo6iUnyuVrFv/ulYJv3fSyItIK6t2C4rOn0GByzg==
-X-Gm-Message-State: AOJu0YxrF4YlCQO5sFZEImfxmAl7V49lzHqALkb7aoqey5d9M0lajLoR
-	LVuqaKJAyqnTMvA3fUHi3ecRF2VxPTzKEyY6Ab8haYFi3mqYoBk/
-X-Google-Smtp-Source: AGHT+IHqRLoLouWBhVkKdxOB56nNQ8s0Ry9trNYZ8pkTA9hAq0wUdD9aZrJkmeydk2bDekhUbUIDRw==
-X-Received: by 2002:a17:90a:7c07:b0:2c9:6ccc:2fbb with SMTP id 98e67ed59e1d1-2cb527a5d5bmr1577629a91.24.1721229099466;
-        Wed, 17 Jul 2024 08:11:39 -0700 (PDT)
-Received: from rigel ([118.209.204.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cb60117e47sm47237a91.23.2024.07.17.08.11.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 08:11:39 -0700 (PDT)
-Date: Wed, 17 Jul 2024 23:11:33 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Iker Pedrosa <ikerpedrosam@gmail.com>
-Cc: brgl@bgdev.pl, ipedrosa@redhat.com, javierm@redhat.com,
-	perobins@redhat.com, linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod][PATCH 2/4] lib: line-info strings termination
-Message-ID: <20240717151133.GA119430@rigel>
-References: <cover.1721039339.git.ikerpedrosam@gmail.com>
- <d86be0c6c536429f515be080ea43cc7180396476.1721039339.git.ikerpedrosam@gmail.com>
+        bh=igKSkhh6A1mnqf1e706OFohGjxcTqllM85CooIxAVwE=;
+        b=R+BIZjQSFW4EfFtrZdLzkvkJXLRERx9q1YTHmg4OJGcGmlB61G0s8aSyuBCOJhW26i
+         4K4VwHikf7KUVxXqN6niF/o+PiOcYtqX1Ra4hwN8hJsbW1Lc+Mb5pe9nylmRoJlLmlbD
+         EFHGMSiMGKilCiYWwlh+mrT8uF6yq09YOdlE8JeyBtcKXpRku9JbolSKKJky5ThmKcin
+         WBOmxriEN/nJkF96Vqq6dEQgrsF8JzwYZIQNkhYH7KQi4np7fi8TM2DJWwzDIDPAFYT4
+         i9yptDtegAKTeRQthCt+JhLFyZMyHEvKY/wUdIwZyg3ExXLRlYNJ6oeX3e87ytCa2QRo
+         lJ6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721230542; x=1721835342;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=igKSkhh6A1mnqf1e706OFohGjxcTqllM85CooIxAVwE=;
+        b=OdhzzT0AaCpWXqzzuAoFMieGwSpQy47vkVXjKE5Dgfn0AnU60TLK/aSUUoWV6prjEZ
+         dW9OIV17euBrUjFXEGlsyMi4+/5hunQNT/JLi2VCZgkRkCCndUJ6MzLXex0ieAZNr2FL
+         Zs6uyJ9iE0MMBKF6wsZsdplHjlqgvcm54/1dB6ERO2J7wH/ii9DTAW15tusmHwmzJ5Se
+         V6AJK2tzR836EPTec9tsTTWuSQ/BDnjTkN3z3izzStLV3JoaGWrAm9xue0reP03nxf3r
+         lcI2LSkBVN/U/rYvObyDnFt3d2S/O+vvxJ8RgCnvsVuk4t8DGA+zIYqUPTr/nj7YOlxr
+         2O7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUIhSK4wIYbvfA0L5iQvBkEKIXKZSWpEPXTbn06YjGotpFhaaZ/7kTwJcgpsUQ+9HkfzM7szqcoHmBP@vger.kernel.org, AJvYcCUhYc+9cZzNfxKSadd5z9jjKCDPfBYHy4vUnKcJt4MdpWpQJyuptVEbdlBFZRcYz39qqXeGphJgCVUL0A==@vger.kernel.org, AJvYcCVamoGR2gsgfrZfm8XEz8LMVyjKLvwzu29Od2+/SqqhndNP8ZhP4gSrhTJglV2JAAMJpiot1QY0iJ4j@vger.kernel.org, AJvYcCWfVew/XBxCwr/EKJhX9aFjpcVeh+cLRutcZHkAqhmHOjgFHGYt53YnHkmSHuFLDdqrRnXpoA86B2fezgOg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHZRPHzz3VtKrNmpvpXBCDTJ3KWkco7IY/p3p3RoYcf3xVvWCa
+	0QlXbPHO4KO/owJ4gpj7ta2Fny7HtTlJwY908v5t5xZuANCw8H7S2xbrHIz3kuKEq8/RvQbXjny
+	T3gQ8+Q/rA6TNK5l1OFMix/wfIAQ=
+X-Google-Smtp-Source: AGHT+IHe8OrFLg3ciltrH9UGah27A80WUE2vi6fq7nZNul7uqH2m67h9SsuJFdyNWxvxpLOezUdSHmc4pDBlQVlAl3w=
+X-Received: by 2002:a25:d34b:0:b0:e05:e16f:e8a5 with SMTP id
+ 3f1490d57ef6-e05ed7a649dmr1163650276.7.1721230542549; Wed, 17 Jul 2024
+ 08:35:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d86be0c6c536429f515be080ea43cc7180396476.1721039339.git.ikerpedrosam@gmail.com>
+References: <20240716-adi-v1-0-79c0122986e7@nxp.com> <20240716-adi-v1-4-79c0122986e7@nxp.com>
+ <u7xii4lfvjk6gbpmq7qtqckoznddiyno7xsaa74ufuxwdob532@wxuawwiwjpgm> <ZpfVNHQQaJvdnB+B@lizhi-Precision-Tower-5810>
+In-Reply-To: <ZpfVNHQQaJvdnB+B@lizhi-Precision-Tower-5810>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Wed, 17 Jul 2024 12:35:29 -0300
+Message-ID: <CAOMZO5CGqMXmcUg=J0OOtsq4ZpnVD7GnpxzEQQQ1Cq_dR45Hwg@mail.gmail.com>
+Subject: Re: [PATCH 4/6] pwm: adp5585: add adp5585 PWM support
+To: Frank Li <Frank.li@nxp.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, Clark Wang <xiaoning.wang@nxp.com>, 
+	Haibo Chen <haibo.chen@nxp.com>, Jindong Yue <jindong.yue@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 17, 2024 at 01:36:42PM +0200, Iker Pedrosa wrote:
-> strncpy() truncates the destination buffer if it isn't large enough to
-> hold the copy. Thus, let's terminate the strings with a NULL character
-> at the end.
+On Wed, Jul 17, 2024 at 11:29=E2=80=AFAM Frank Li <Frank.li@nxp.com> wrote:
+
+> Thank you for you review. I just found someone already submit similar pat=
+ch
 >
-> Signed-off-by: Iker Pedrosa <ikerpedrosam@gmail.com>
-> ---
->  lib/line-info.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> https://lore.kernel.org/linux-gpio/20240608141633.2562-5-laurent.pinchart=
+@ideasonboard.com/
 >
-> diff --git a/lib/line-info.c b/lib/line-info.c
-> index 9f53b04..2ded9ea 100644
-> --- a/lib/line-info.c
-> +++ b/lib/line-info.c
-> @@ -148,10 +148,12 @@ gpiod_line_info_from_uapi(struct gpio_v2_line_info *uapi_info)
->  	memset(info, 0, sizeof(*info));
->
->  	info->offset = uapi_info->offset;
-> -	strncpy(info->name, uapi_info->name, GPIO_MAX_NAME_SIZE);
-> +	strncpy(info->name, uapi_info->name, GPIO_MAX_NAME_SIZE - 1);
-> +	info->name[GPIO_MAX_NAME_SIZE - 1] = '\0';
->
+> Let's wait for laurent. If he is busy, I can rework base on the above one=
+.
 
-Given that uapi_info->name is not NULL terminated, this change can
-incorrectly discard one character.  The correct solution is to increase
-the size of info->name to allow for the NULL terminator, which would
-automatically be initialised by the memset.
-
->  	info->used = !!(uapi_info->flags & GPIO_V2_LINE_FLAG_USED);
-> -	strncpy(info->consumer, uapi_info->consumer, GPIO_MAX_NAME_SIZE);
-> +	strncpy(info->consumer, uapi_info->consumer, GPIO_MAX_NAME_SIZE - 1);
-> +	info->consumer[GPIO_MAX_NAME_SIZE - 1] = '\0';
->
-
-Same here.
-
-And same in patch 3.
-
-Patches 1 and 4 look ok to me.
-
-Cheers,
-Kent.
-
->  	if (uapi_info->flags & GPIO_V2_LINE_FLAG_OUTPUT)
->  		info->direction = GPIOD_LINE_DIRECTION_OUTPUT;
-> --
-> 2.45.2
->
+Adding Laurent.
 
