@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-8244-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8245-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 754AC933C6B
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2024 13:38:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28914933C6C
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2024 13:38:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A0BB1F2120E
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2024 11:38:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D435E282E3C
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2024 11:38:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADC7917F4F3;
-	Wed, 17 Jul 2024 11:38:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E42D817F4FD;
+	Wed, 17 Jul 2024 11:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRrPZK6c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYmlONO0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E717B17F399
-	for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2024 11:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2963BBF1
+	for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2024 11:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721216282; cv=none; b=egY/EU7sM3fcUj0khoJJIgcqTWPcRGQScQk5DtmGTFicAoFzZiEhDTcvdIqyZpmEuotXGMBfIZitkJ5FLDq2xjzaoGx/FBH0xrLbPw16szzZ20LVRxlO8iJLLLUNh87UopiG1VoUitxkk4einlk/U9H4DjER+pMRRQd3KpbGTZg=
+	t=1721216283; cv=none; b=Ftn5ooH2vA08VzhOCQOSQg6tkRalqeoaH6lEgqjyGUcyh74y7IKAGWGjUyt0cR3BnWXNBzn0OavVd2V38pwH8i3BdlHxBt9OKRvSOF1TrAFvqmZc65FUh+LqwL6htW+/Hykf1FMyPjj2SEE+6d6WXfwebxd9b4HdRyAA873BpTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721216282; c=relaxed/simple;
-	bh=enwmZmuv0L96caezA0J96IDUGnYyrKmPtVfarbKLP1o=;
+	s=arc-20240116; t=1721216283; c=relaxed/simple;
+	bh=ILKUmaQG9KQlC6WL68YOR6O9XEyIOCMsN3lUg8ieuo4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ya1/U1UhC7Obll24xNh/KL7YAWWMwSorgRAQr6WH6pj5QSNMhlM1Q+Pm4SeZpYbhRLhlvhacEG96Nl+fz0zYAilcuXmeIPde53PPWGLbsbEq/Z5irD7TgI4WS17rFp1kvPhuqElR2kERb6XLvK5SXzIoxdbL1dSz8HnwgI/TUyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cRrPZK6c; arc=none smtp.client-ip=209.85.128.46
+	 MIME-Version; b=D0ePJQY4/BPOtQtXh1j+0um1z7JsdwSk+zt0xTzT5B/R6NPHpOMzHoYXTXiXYSbLctckT3IpjHfQNW8k65/c2ZXQN50lX9YuhdhX/XB8VlcH7DeVagO8hYhtKEniP93LOc7C7VU1d+RkBjkLS4pqx0JWGAfSmj4+Us18+GAh06I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iYmlONO0; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4267345e746so46895705e9.0
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2024 04:38:00 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2eeb1ba0481so94049431fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2024 04:38:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721216279; x=1721821079; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1721216280; x=1721821080; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=la8KaLTUQo/ZMk9KONJFFAg0PJ07uCvXL6Kih2dokyU=;
-        b=cRrPZK6c/RS+Joh+8OnaCxnBsMNV8rmaIAeZ3j6xDtqvDVmY11rC2grqbm4YzD4qxE
-         qbkmZHmAMFmQrYCgqQbbnZ349yhWlBvIyI8a1tpLIZ/X+XT2ESV09BBiAZujwLQA3nOz
-         tEbUzA20wzwutETDjIY0NohhlFI68fcvgcU7jdymXyTiPbjlUCWTS9Pyoo7GRgyJlaBp
-         R8Gt7vgFi298dX8EJI0hN3M94B5ZLoU7ZU5q0qM1Kd1QAk2zS4lAzfgAP1gbn1Mt+7yo
-         ew9GFlap6S0mil4xC9KYu2zXO9WP7b6f/4OlXmValRm0uv20Sf6sbuSQT6O2wrX2yD38
-         0f2w==
+        bh=UQZT6M6FcqQ2Li/Ber5DmgcsjI/eghY/46+HVQwLP8k=;
+        b=iYmlONO0yyvMkKqlZe51LiEggM7PR0BZfuK+4AN09z2SM/8+zQxhSRjr8nVVpMGPpG
+         TAASG8P5Gp8u0IL88WOFiArL4MitaygVg+CU34rAMhe28ikWD6IH2NYkhGVcw7W1B7gY
+         WLA3QVFAIvEqX3Z7joW3Qj35EMwHPyo4ESl7nO8FNtexPZp80JTj0A5TZgOkQPd95luo
+         vmJm2fUpbHaGDuHcnv+IhC3lZpG5Ql5IrXgaUBgR9B8/UXAKZRtkyUkl50IU/XUgfIuw
+         x3vxNY9nT+dyZ/1ZbBf2QTh1eqlYGpXQ01xciuerkGmWYidRY2ZsLA9rELDk5iwSgOuo
+         7yjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721216279; x=1721821079;
+        d=1e100.net; s=20230601; t=1721216280; x=1721821080;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=la8KaLTUQo/ZMk9KONJFFAg0PJ07uCvXL6Kih2dokyU=;
-        b=DWDf+btgkLjIfSSQZuzvPwR6B6RhLvFAMvDUFmd9iOs9kcf+655yH/bXUQ2Qf5hDFa
-         1/nrBJex4MGZ+T711NRc+QPhixITWFiVpf4E+GeQnaqWToNgHZfoDn6MortDeTVvEM06
-         F2gpGOrKCvmzs9i6TKGLuLmqfjTVne+A9qNIaOYI66mtMFvMvtKL4FtSq1oxyLAzWw1S
-         LXiDMCc/+uVqPv9BtGcvGriHKNe7AnIeL48p7l2OTFSReIuq99UMyk58kO1VqtfBJSmb
-         KfGTcklemjqlIAhfSdvT4dGMbX2L2X/watjrFxSTnWCIj3HpkeYV/SR0q8rDRIPv3DdO
-         z14Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWMLQJ7aKzQ9g/FWMnXt08Spz5J4xHILn3aLqSVZW/mIzXHXAJ9I31H2m9iygm21x0oKNu0g1B/89lN1Eme50gXwWW5rXot2KGf/g==
-X-Gm-Message-State: AOJu0YzKY0RxtzDUladp3Qada3fa6oF//Wbk6gKte9oSbmv5VeoE1kzi
-	dwAcw+ABhFZbORBSBk6dVsL4V5yf/f4OrGHb3fOl3bIWVCZ8qjhx
-X-Google-Smtp-Source: AGHT+IGk1j41e/17L4+jt8Koxf+RogPXySfxsiLPrLDRjfdxx8p3RLqxIV4IcL2R4z5xZxSPWQqpYA==
-X-Received: by 2002:a05:600c:c08:b0:426:6f15:2e4d with SMTP id 5b1f17b1804b1-427c2cc27f0mr9100335e9.9.1721216278954;
-        Wed, 17 Jul 2024 04:37:58 -0700 (PDT)
+        bh=UQZT6M6FcqQ2Li/Ber5DmgcsjI/eghY/46+HVQwLP8k=;
+        b=Xv4kjXDd3jm8KVlOr7KfdjALJ4JdbWd9V9TZCMUX8FPbbaC0BFJvmm9PhWN0/RNJe+
+         Uq+8Wfd6X/jGEEZJu4IgVGycz821Y35zuEIRu7FFC5YL+Sh5nMvTHZLCD35Ih6V8L09J
+         Kvb9X7r25Pw2MzKQkBfEKkXkVMvezFlPJXXwxiFikWkN8WvJhB0Jab82LmRM0Fgzx/9U
+         RBkEl/Ow6FnKjGs8fXkE+2y89F/maSmrxOY3ghS8p99l+dDqNnortT1qg8VKTs4a7XOJ
+         /K+Gw5E9LeuWN1RwIDspKIrOJVV8M3+nqZuA8Zlai/7l2K8VfYaW45A2N+HLK0StelXB
+         5CnA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0JxOykAuQzOUeJPS1oxL6PXtted7Roqi6WnfKzhOVXosFAz4WxmiwhHrhoPDH0GBvPtv05Wu8KXau1jvn6Gs60XNXO9d+QNyhNQ==
+X-Gm-Message-State: AOJu0YyllxIIdAv5omgNjLFgjuXjmNvwyeiOucQfsHo1d0aHG6SG/Cpp
+	Ek6WK61A0+Gx3/NvYyWZS9Yn2pCOPqMQ63wDFbcJG2FABQdnOJS+
+X-Google-Smtp-Source: AGHT+IE77woKCSfCHYxjYQQPz+Af69ZcmfSIxgOA2mc3sq8zSlDCwKc72Zwgc6ffE7yGdl+sQXWOJw==
+X-Received: by 2002:a05:651c:3c7:b0:2ee:7255:5048 with SMTP id 38308e7fff4ca-2eefd158035mr9395511fa.48.1721216280027;
+        Wed, 17 Jul 2024 04:38:00 -0700 (PDT)
 Received: from localhost.localdomain ([67.218.244.73])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5ef4617sm165705635e9.41.2024.07.17.04.37.57
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5ef4617sm165705635e9.41.2024.07.17.04.37.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 04:37:58 -0700 (PDT)
+        Wed, 17 Jul 2024 04:37:59 -0700 (PDT)
 From: Iker Pedrosa <ikerpedrosam@gmail.com>
 To: brgl@bgdev.pl
 Cc: Iker Pedrosa <ikerpedrosam@gmail.com>,
@@ -74,9 +74,9 @@ Cc: Iker Pedrosa <ikerpedrosam@gmail.com>,
 	javierm@redhat.com,
 	perobins@redhat.com,
 	linux-gpio@vger.kernel.org
-Subject: [libgpiod][PATCH 2/4] lib: line-info strings termination
-Date: Wed, 17 Jul 2024 13:36:42 +0200
-Message-ID: <d86be0c6c536429f515be080ea43cc7180396476.1721039339.git.ikerpedrosam@gmail.com>
+Subject: [libgpiod][PATCH 3/4] lib: chip-info strings termination
+Date: Wed, 17 Jul 2024 13:36:43 +0200
+Message-ID: <275f51e932498959d57ebc5bf16adc90bb7b5967.1721039339.git.ikerpedrosam@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1721039339.git.ikerpedrosam@gmail.com>
 References: <cover.1721039339.git.ikerpedrosam@gmail.com>
@@ -94,28 +94,36 @@ at the end.
 
 Signed-off-by: Iker Pedrosa <ikerpedrosam@gmail.com>
 ---
- lib/line-info.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ lib/chip-info.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/lib/line-info.c b/lib/line-info.c
-index 9f53b04..2ded9ea 100644
---- a/lib/line-info.c
-+++ b/lib/line-info.c
-@@ -148,10 +148,12 @@ gpiod_line_info_from_uapi(struct gpio_v2_line_info *uapi_info)
- 	memset(info, 0, sizeof(*info));
+diff --git a/lib/chip-info.c b/lib/chip-info.c
+index 87fd9e7..2f2523e 100644
+--- a/lib/chip-info.c
++++ b/lib/chip-info.c
+@@ -57,7 +57,8 @@ gpiod_chip_info_from_uapi(struct gpiochip_info *uapi_info)
+ 	 * GPIO device must have a name - don't bother checking this field. In
+ 	 * the worst case (would have to be a weird kernel bug) it'll be empty.
+ 	 */
+-	strncpy(info->name, uapi_info->name, sizeof(info->name));
++	strncpy(info->name, uapi_info->name, sizeof(info->name) - 1);
++	info->name[sizeof(info->name) - 1] = '\0';
  
- 	info->offset = uapi_info->offset;
--	strncpy(info->name, uapi_info->name, GPIO_MAX_NAME_SIZE);
-+	strncpy(info->name, uapi_info->name, GPIO_MAX_NAME_SIZE - 1);
-+	info->name[GPIO_MAX_NAME_SIZE - 1] = '\0';
+ 	/*
+ 	 * The kernel sets the label of a GPIO device to "unknown" if it
+@@ -66,8 +67,10 @@ gpiod_chip_info_from_uapi(struct gpiochip_info *uapi_info)
+ 	 */
+ 	if (uapi_info->label[0] == '\0')
+ 		strncpy(info->label, "unknown", sizeof(info->label));
+-	else
+-		strncpy(info->label, uapi_info->label, sizeof(info->label));
++	else {
++		strncpy(info->label, uapi_info->label, sizeof(info->label) - 1);
++		info->label[sizeof(info->label) - 1] = '\0';
++	}
  
- 	info->used = !!(uapi_info->flags & GPIO_V2_LINE_FLAG_USED);
--	strncpy(info->consumer, uapi_info->consumer, GPIO_MAX_NAME_SIZE);
-+	strncpy(info->consumer, uapi_info->consumer, GPIO_MAX_NAME_SIZE - 1);
-+	info->consumer[GPIO_MAX_NAME_SIZE - 1] = '\0';
- 
- 	if (uapi_info->flags & GPIO_V2_LINE_FLAG_OUTPUT)
- 		info->direction = GPIOD_LINE_DIRECTION_OUTPUT;
+ 	return info;
+ }
 -- 
 2.45.2
 
