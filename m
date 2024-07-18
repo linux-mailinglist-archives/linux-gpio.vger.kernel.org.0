@@ -1,75 +1,74 @@
-Return-Path: <linux-gpio+bounces-8265-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8264-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CB22934AE4
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 11:28:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7C2C934AE5
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 11:28:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D712281E62
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4A997B222CE
 	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 09:28:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB2E4823DD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92318823CE;
 	Thu, 18 Jul 2024 09:28:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="iRO3pYVX"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xaYshmCD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C0681205
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Jul 2024 09:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166B681AC7
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Jul 2024 09:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721294922; cv=none; b=PltHsWzBYuYehKiMxrjoE/jx03V2GkJx+6AGHv6LrhY1oxQigy16eHXcG3uVexhisunraIXJM4ZFHRCLeCx8UersLKxW+HAQ0gOSR1D3GvfFC+wktjkKdJRaCxtecvQnDYXxrTeOkY/wFoH3bhtGS31G1mz5hP5OWIvsRwqixh0=
+	t=1721294922; cv=none; b=qZm242nRl63FTh3DIpVWeO/SrGvuOpsSsYbUD2YilZqIrZsawJWY0qc0onuw4Nv4nV5zQkBAeRZ5oJHnO05Yt56rFZlm1gU+al+gV9RM/GFQYMwBG/8leumv89GiUbW5eBqNl3aUCOathMIMxLJdiqX+NKeKHDER/sXKrwYfVrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1721294922; c=relaxed/simple;
-	bh=nuYuXPICAiX5DjdCrsPuHLtvJWGJy9lcKRFlneaaScc=;
+	bh=9IJF7u3k9VjBMNdJxw6+myAapa94V8je+wHgs1LGYw4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Zk9pSBEKUWLUWufqKU0+eajaBeOUQSz4CNpnvTGAT9rW4SaLafJCqtiHbmOnhqtbNiEGlF8P4o87OlkvPGxj8CXpuPbsdbCBRH37+b+Fn6f8vhm1Qzo2sO6NIW6j3PVherfKQZCNzuMhy++VZLMKN+VHGor0eCVf0aXZt3EAv74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=iRO3pYVX; arc=none smtp.client-ip=209.85.128.52
+	 In-Reply-To:To:Cc; b=YJONZO13hs5F/iGEph3TVvuywO2L8jp4cOB+T1WOwH2ErwEtZexlKMRvrkfWjdX+00NRbpp6gNPOkc7yVeObwx0ZW3pkwH5+DQTBe1CktEy6JLYS2WkrpXKOK4dOab5IWoP1dzUrVDpBp1G2bYXQuFHWJUredXfjBn93yUmOGrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xaYshmCD; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42797bcfc77so804705e9.2
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Jul 2024 02:28:38 -0700 (PDT)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4257d5fc9b7so842335e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Jul 2024 02:28:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721294917; x=1721899717; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721294918; x=1721899718; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ck4vtCeoXKfTeXkBP6cL+9zhWfqNxXZ5wT4S1VHaruU=;
-        b=iRO3pYVXhlRc/hX8/bgL1QF8L6HIEqdBVm53KM/1C8/JP7rUEoumNjOl9TES3KhWfl
-         sce+qRaSW+c89ZD75Xt4bEWtSbcZlsYhPGnL/mOcNAahi3s8QdvNUUAuVosj59HWbuGK
-         1EqAdKFG77kWCC1rnioBkMTNtHaH38KWwRYwm7CXaqLrvtxydDKa3zqspa8VvV8zrov/
-         xnHZ0g2EEgcT//JWmbOZ6CVFEs8RibsyRbumHHMS8hCyBg4i/hxDUCHg0TA7fksKPv+I
-         utMou5zqpqltO/mMvpc2Lca8lAwhw1RD0alSHc8h8tSbW8ggvfD1Lo42kvANeHwrdNXx
-         yh5g==
+        bh=vhd6l0SPbiOnmh49slS/vdQ0qXadf5oHmz0JSOPf4Lg=;
+        b=xaYshmCDPC1vg5fiu0vCzfCdYoREc7slu5G+AxhFCndaNIxq/A98UA8UkR5xrAFPOT
+         D1+/70s+A2NHjA8uwp4qkbkHQKKK4VPyueiTSLtLCysWSf9/+ZKzMadySptFInSooVet
+         gSbxQlZUq+HVVWiiHnazHerKmetNuH6TOHAGoZuarYsQBTIeoebEbvRxAIupkACAXXar
+         rsLcjCfryicYREPpcpF9XW/oFY3ACNzEVXGc8rW/Wj3kine+wbqltbwkOhZCL8cUJwvm
+         rHJpRKaOjDCQHaVwalLmzy5ZgnrKTVd18VhbRNYUAjS6ZUO5DEt3VtJsf3IBmqEiur1R
+         MGcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721294917; x=1721899717;
+        d=1e100.net; s=20230601; t=1721294918; x=1721899718;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ck4vtCeoXKfTeXkBP6cL+9zhWfqNxXZ5wT4S1VHaruU=;
-        b=tBnjKLd+L/A66dUf/LG2K+Xo+haIt5uSSDCu4AYq9NkpZI8bMcXljqXtUvL+N2sv0t
-         e7xDr+hLxHg0/yArlq/38CO09jDlmmeOlxnQx3g8YARdaOppc7cSQUj0cwbvaekbP3ZC
-         XEsLSEjDWSCIzczsOVCECooOW7Uer1ZKrnbRmBShoANhZPZH8MFfH+IybTaW+QCYn1WB
-         +4mR0UMoBnw1ahiBN4y1R4kc6VfboDrVQHsHZnosMhOYHrAQFbl+5r1d6/Vmj18BL6uk
-         qu/w9xzgQgYQZFudskqoAwWcI2AMQDmV4qsFY4eoLCBCt6X0LVuqZiAT/ErsRiGlM1kg
-         hR6Q==
-X-Gm-Message-State: AOJu0Yx16Xc0MZNZ9+Nx9OGMEEv1yf2A2qhTQnPiOwqfWORiJgpJl8bX
-	AsoCt84pkOH3Dqz8UEbPKsIvtZgZaKMZ9jlRsLkct0fpFw7izVWwjFxdha34J5o=
-X-Google-Smtp-Source: AGHT+IH0rd28z/YPKqb1VwiXRGZsK8x6D9+MOiaZP5oya3Tc9Yy+fFUMjaTMeaLzWUJST7MWWx9mSw==
-X-Received: by 2002:a05:600c:1da0:b0:426:6000:565a with SMTP id 5b1f17b1804b1-427c6c1837bmr20430315e9.16.1721294917278;
-        Thu, 18 Jul 2024 02:28:37 -0700 (PDT)
+        bh=vhd6l0SPbiOnmh49slS/vdQ0qXadf5oHmz0JSOPf4Lg=;
+        b=WWWzyrt54J5GxcmJ4Rkl1MxZ2AMzPAQ3fW3eXd2fFKwU+1TK8vEjg9XZIMJU0P92JA
+         XOyQxlBIyoogy+NtcTjUx8ESX9PTUVm1C3hTxT8/jMNuQO/syK2mszT7F3k9j6RpTJ8x
+         LyYcRyw03DhO6UUf9ZmBSG0inkDAlZUL/Ftr+IUPsnkvJe7IFKbp0TTFyY1phoI3I5ty
+         n8Z/mlvyrtqs74jhjJ1q6o/2i9nr+KzNHvNWRzSkDmTaUp/t52iZva9kGcetip6XTRZA
+         xFKxXGtmOWEGr7llH77DmDPXd0v9zx/ycDhzW8TwcDL2T1mD7ThQjqJU+K8XYZyDI1py
+         9b0w==
+X-Gm-Message-State: AOJu0YyAhL4i+GIOKC298bRk7aqxbTwTQpJomC4QiZZrTea3m/E5+VF1
+	cvEGjjQNEjQYJUd8BDFq7+Nn9VoGTOPgpjyTaCvl3YsN0E8rogtHG7v7c50yLnk=
+X-Google-Smtp-Source: AGHT+IGinjGytdI+FEpwi2qSf74wR+zZyapUGR1+9jJ1i4B9ErL0EV4nx2pGVEDYojhEC6Zj0e9vKw==
+X-Received: by 2002:a05:600c:4455:b0:426:5d4d:d759 with SMTP id 5b1f17b1804b1-427c2d01fa0mr36874195e9.24.1721294918193;
+        Thu, 18 Jul 2024 02:28:38 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:58d4:2f84:5fcd:8259])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680db0489csm13792849f8f.104.2024.07.18.02.28.36
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3680db0489csm13792849f8f.104.2024.07.18.02.28.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 02:28:36 -0700 (PDT)
+        Thu, 18 Jul 2024 02:28:37 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 18 Jul 2024 11:27:56 +0200
-Subject: [PATCH libgpiod v3 02/18] tests: split out the common test code
- for bash scripts
+Date: Thu, 18 Jul 2024 11:27:57 +0200
+Subject: [PATCH libgpiod v3 03/18] bindings: glib: add build files
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,7 +77,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240718-dbus-v3-2-c9ea2604f082@linaro.org>
+Message-Id: <20240718-dbus-v3-3-c9ea2604f082@linaro.org>
 References: <20240718-dbus-v3-0-c9ea2604f082@linaro.org>
 In-Reply-To: <20240718-dbus-v3-0-c9ea2604f082@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -93,1751 +92,410 @@ Cc: linux-gpio@vger.kernel.org, dbus@lists.freedesktop.org,
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
  Alexander Sverdlin <alexander.sverdlin@siemens.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=49483;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=12214;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=bCQc+qxQiVzA3UYaXHuonfN4zQifl9K9zF9gmCmVPb0=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmmOA+xXiyC1HhGhlhLB//GZHfg6XX1sdWhBTQe
- BSvTYajKWaJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZpjgPgAKCRARpy6gFHHX
- cgiYD/4wzpzXqObVUh84tVX+TJ6kzNTOFrZaa2o1lkcqwuerVOaKPneVUkZ97iR1eoE7tBjvfp4
- jNe5uXLBHIudXAXq5fXQQMRfPvgONJpY1LT2rkzYxRo+/NW+gvFOP7BTDKLwjQIJRTrPsAxd4fX
- 5LbTug6Vt9AkheK8795oF2UO5X+zV5pszWAqzl/z3RqcRfeTBZX3usHFGO6cis2nNnM93AMwsxY
- UibCDpIdWq0G/6+MNguv3/Rbi1g2+jDViel8+HaPI66mtCDA4Rf2Md3ICAuZgTzItqEdzXm/nqg
- r3xkaQ4U2EMVFzh9ILTyc9VAzzWXLw5PIMTPDCHk2JmxsaHYEwcpulVS7MLgMsYFjuy1ou03WtT
- oVmyQf1T0vCx7ncr6JCvXHQIC+vLn4uQgvZXfQWppQUqCgUiGkdsXjyCrl3i+ISIwNzAXjvj1kF
- cWZozQfE0HrSAE4luomZJH53lIH4WIz4sdA5NqirBvSMkDBw3fDQ5IovJWyRb0zqVhw3OxJTrYY
- RY3gjwrZX30QLtHkRBOnXHbdIyfzA3s9QvXPkXjGcSse3NXZEypEw/uwLuMGm1F1mB/+mTx/oAO
- kDfwocQeF47eDa5XbqJor3b9Q7KAGBPCNEKk53JwVNLDrvfzFPsLR8i3a+/gSZZy/bv0neIzyo8
- 0qmgqpG8KKVStwQ==
+ bh=zATcDbJoxluULhCGOEgspkEZFBkz6WCs6uEOVR463Gc=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmmOA+HkUA0Zs88R+H4YE4v/9puobYEIAsAc5sQ
+ O6+0ynjTjiJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZpjgPgAKCRARpy6gFHHX
+ cmfKD/9WWKTUyy0g7QRb6Ohic779SmR0oFnpbq2wTOmFZNpKvDWZ9D48wwMuOEWTJGq3cb2Yyu+
+ 70SqYqmwKvsP4PJT4EWcW/dPzptUB7xstLGbxnXgMoCnOnWOw9H21BYQybwOehuILKmxeacl6fa
+ er6naor+KZvd1HZ/It14lCoYPwYhpk2Yh0xomRifWh/tvFZpHM6y1ch2kdbMJFfVkiwbZqpAa+o
+ 71NReXP1pFEyh8K5f1QWmXZBs5FXGP2PYAjnZKyognKiPx8H833d8Oca6RAHv8PSlSVnH9wRhiX
+ YioCZ/6WHdEOWrQdWHq6fmV6HYDqdkerQfEZnkrlw7XH8BJBPCTAQRTh/ETRMj0bg4nwQXUFng9
+ mcXEEe6BTVCzYst0VZPZKoHvWySbvqsJCcqH5XUaY4Rxeyrqfcz+I4e78CpuXWdAabD9AM4fIor
+ dNPCyVCBLKtp3q3fFqI6MyXRdE699WEbsow91QWF8gEfrsaDv8ZxkcS8WimXYUfiSiW4MXlc7LZ
+ /T/s5Mtry1knx8RXqk4qWao3aJjjzsjai3+X/9sysdEDkn+7zu3JuesrzhN56z2oznn7NCG0Rj4
+ 4Pv6G2RlT3khvZpAtdAU2SbpaKtwYxSvW97cVjV/cSI6XYn080JJbo/3oge4MI+fl8DF3fkAY5g
+ z8ebeVp6H3ZQHIA==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-In order to allow the upcoming DBus command-line client tests to reuse the
-existing bash test harness, let's put the common code into an importable
-file and rename run_tool to run_prog to reflect that it now can run any
-program.
+Add the directory structure and build files as well as changes to
+.gitignore and Doxygen.in for GLib bindings.
 
 Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- configure.ac                             |   1 +
- tests/Makefile.am                        |   2 +-
- tests/scripts/Makefile.am                |   4 +
- tests/scripts/gpiod-bash-test-helper.inc | 330 ++++++++++++++++++
- tools/gpio-tools-test.bash               | 566 +++++++------------------------
- 5 files changed, 458 insertions(+), 445 deletions(-)
+ .gitignore                           |   2 +
+ Doxyfile.in                          |   4 +-
+ bindings/Makefile.am                 |   7 +++
+ bindings/glib/.gitignore             |   5 ++
+ bindings/glib/Makefile.am            | 105 +++++++++++++++++++++++++++++++++++
+ bindings/glib/examples/.gitignore    |  14 +++++
+ bindings/glib/examples/Makefile.am   |  22 ++++++++
+ bindings/glib/gpiod-glib.pc.in       |  15 +++++
+ bindings/glib/gpiod-glib/Makefile.am |  18 ++++++
+ bindings/glib/tests/.gitignore       |   4 ++
+ bindings/glib/tests/Makefile.am      |  29 ++++++++++
+ configure.ac                         |  30 ++++++++++
+ 12 files changed, 254 insertions(+), 1 deletion(-)
 
+diff --git a/.gitignore b/.gitignore
+index cf66e97..c3a29d8 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -4,6 +4,8 @@
+ *.o
+ *.lo
+ *.la
++generated-*.c
++generated-*.h
+ doc
+ *.pc
+ *.tar.gz
+diff --git a/Doxyfile.in b/Doxyfile.in
+index 9c85e21..548a0da 100644
+--- a/Doxyfile.in
++++ b/Doxyfile.in
+@@ -46,7 +46,9 @@ WARN_FORMAT            =
+ WARN_LOGFILE           =
+ INPUT                  = @top_srcdir@/include/gpiod.h \
+                          @top_srcdir@/bindings/cxx/gpiod.hpp \
+-                         @top_srcdir@/bindings/cxx/gpiodcxx/
++                         @top_srcdir@/bindings/cxx/gpiodcxx/ \
++                         @top_srcdir@/bindings/glib/gpiod-glib.h \
++                         @top_srcdir@/bindings/glib/gpiod-glib/
+ SOURCE_BROWSER         = YES
+ INLINE_SOURCES         = NO
+ REFERENCED_BY_RELATION = YES
+diff --git a/bindings/Makefile.am b/bindings/Makefile.am
+index 004ae23..a177187 100644
+--- a/bindings/Makefile.am
++++ b/bindings/Makefile.am
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
+ SUBDIRS = .
+ 
+@@ -20,3 +21,9 @@ if WITH_BINDINGS_RUST
+ SUBDIRS += rust
+ 
+ endif
++
++if WITH_BINDINGS_GLIB
++
++SUBDIRS += glib
++
++endif
+diff --git a/bindings/glib/.gitignore b/bindings/glib/.gitignore
+new file mode 100644
+index 0000000..9a7d424
+--- /dev/null
++++ b/bindings/glib/.gitignore
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: CC0-1.0
++# SPDX-FileCopyrightText: 2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++*.gir
++*.typelib
+diff --git a/bindings/glib/Makefile.am b/bindings/glib/Makefile.am
+new file mode 100644
+index 0000000..0f571c1
+--- /dev/null
++++ b/bindings/glib/Makefile.am
+@@ -0,0 +1,105 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++SUBDIRS = . gpiod-glib
++
++if WITH_TESTS
++
++SUBDIRS += tests
++
++endif
++
++if WITH_EXAMPLES
++
++SUBDIRS += examples
++
++endif
++
++lib_LTLIBRARIES = libgpiod-glib.la
++
++libgpiod_glib_la_SOURCES = \
++	chip.c \
++	chip-info.c \
++	edge-event.c \
++	error.c \
++	info-event.c \
++	internal.c \
++	internal.h \
++	line-config.c \
++	line-info.c \
++	line-request.c \
++	line-settings.c \
++	misc.c \
++	request-config.c
++
++EXTRA_DIST = \
++	generated-enums.c.template \
++	generated-enums.h.template
++
++project_headers = \
++	$(srcdir)/gpiod-glib/line.h \
++	$(srcdir)/gpiod-glib/edge-event.h \
++	$(srcdir)/gpiod-glib/info-event.h
++
++generated-enums.c: $(project_headers) generated-enums.c.template
++	$(AM_V_GEN)$(GLIB_MKENUMS) \
++		--template=$(srcdir)/generated-enums.c.template \
++		--output=$(builddir)/$@ \
++		$(project_headers)
++
++gpiod-glib/generated-enums.h: $(project_headers) generated-enums.h.template
++	$(AM_V_GEN)$(GLIB_MKENUMS) \
++		--template=$(srcdir)/generated-enums.h.template \
++		--output=$(srcdir)/$@ \
++		$(project_headers)
++
++nodist_libgpiod_glib_la_SOURCES = \
++	generated-enums.c \
++	gpiod-glib/generated-enums.h
++
++BUILT_SOURCES = $(nodist_libgpiod_glib_la_SOURCES)
++CLEANFILES = $(nodist_libgpiod_glib_la_SOURCES)
++
++libgpiod_glib_la_CFLAGS = -Wall -Wextra -g
++libgpiod_glib_la_CFLAGS += -I$(top_srcdir)/include/ -include $(top_builddir)/config.h
++libgpiod_glib_la_CFLAGS += $(GLIB_CFLAGS) $(GIO_CFLAGS) $(GIO_UNIX_CFLAGS)
++libgpiod_glib_la_CFLAGS += -DG_LOG_DOMAIN=\"gpiod-glib\"
++libgpiod_glib_la_CFLAGS += $(PROFILING_CFLAGS)
++libgpiod_glib_la_LDFLAGS = -version-info $(subst .,:,$(ABI_GLIB_VERSION))
++libgpiod_glib_la_LDFLAGS += -lgpiod -L$(top_builddir)/lib
++libgpiod_glib_la_LDFLAGS += $(GLIB_LIBS) $(GIO_LIBS) $(GIO_UNIX_LIBS)
++libgpiod_glib_la_LDFLAGS += $(PROFILING_LDFLAGS)
++
++include_HEADERS = gpiod-glib.h
++
++pkgconfigdir = $(libdir)/pkgconfig
++pkgconfig_DATA = gpiod-glib.pc
++
++if HAVE_INTROSPECTION
++
++INTROSPECTION_GIRS = gpiod-glib.gir
++
++girdir = $(INTROSPECTION_GIRDIR)
++gir_DATA = gpiod-glib.gir
++
++typelibsdir = $(INTROSPECTION_TYPELIBDIR)
++typelibs_DATA = gpiod-glib.typelib
++
++gpiod_gir_SCANNERFLAGS = \
++	--c-include="gpiod-glib.h" \
++	--warn-all \
++	--namespace Gpiodglib \
++	--identifier-prefix Gpiodglib \
++	--symbol-prefix gpiod
++
++gpiod_glib_gir_CFLAGS = $(libgpiod_glib_la_CFLAGS)
++
++gpiod-glib.gir: libgpiod-glib.la
++gpiod_glib_gir_INCLUDES = Gio-2.0
++gpiod_glib_gir_LIBS = libgpiod-glib.la
++gpiod_glib_gir_FILES = $(libgpiod_glib_la_SOURCES)
++gpiod_glib_gir_EXPORT_PACKAGES = gpiod-glib
++
++include $(INTROSPECTION_MAKEFILE)
++
++endif
+diff --git a/bindings/glib/examples/.gitignore b/bindings/glib/examples/.gitignore
+new file mode 100644
+index 0000000..c2415ae
+--- /dev/null
++++ b/bindings/glib/examples/.gitignore
+@@ -0,0 +1,14 @@
++# SPDX-License-Identifier: CC0-1.0
++# SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++find_line_by_name_glib
++get_chip_info_glib
++get_line_info_glib
++get_line_value_glib
++get_multiple_line_values_glib
++reconfigure_input_to_output_glib
++toggle_line_value_glib
++toggle_multiple_line_values_glib
++watch_line_info_glib
++watch_line_value_glib
++watch_multiple_edge_rising_glib
+diff --git a/bindings/glib/examples/Makefile.am b/bindings/glib/examples/Makefile.am
+new file mode 100644
+index 0000000..fb4e5b1
+--- /dev/null
++++ b/bindings/glib/examples/Makefile.am
+@@ -0,0 +1,22 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++bin_PROGRAMS = \
++	find_line_by_name_glib \
++	get_chip_info_glib \
++	get_line_info_glib \
++	get_line_value_glib \
++	get_multiple_line_values_glib \
++	reconfigure_input_to_output_glib \
++	toggle_line_value_glib \
++	toggle_multiple_line_values_glib \
++	watch_line_info_glib \
++	watch_line_value_glib \
++	watch_multiple_edge_rising_glib
++
++AM_CFLAGS = -I$(top_srcdir)/bindings/glib/
++AM_CFLAGS += -include $(top_builddir)/config.h
++AM_CFLAGS += -Wall -Wextra -g -std=gnu89 $(GLIB_CFLAGS) $(GOBJECT_CFLAGS)
++AM_CFLAGS += -DG_LOG_DOMAIN=\"gpiotools-glib\"
++LDADD = $(top_builddir)/bindings/glib/libgpiod-glib.la
++LDADD += $(GLIB_LIBS) $(GOBJECT_LIBS)
+diff --git a/bindings/glib/gpiod-glib.pc.in b/bindings/glib/gpiod-glib.pc.in
+new file mode 100644
+index 0000000..15d2b3f
+--- /dev/null
++++ b/bindings/glib/gpiod-glib.pc.in
+@@ -0,0 +1,15 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: gpiod-glib
++Description: GObject bindings for libgpiod
++URL: @PACKAGE_URL@
++Version: @PACKAGE_VERSION@
++Requires.private: libgpiod >= 2.1
++Libs: -L${libdir} -lgpiod-glib
++Cflags: -I${includedir}
+diff --git a/bindings/glib/gpiod-glib/Makefile.am b/bindings/glib/gpiod-glib/Makefile.am
+new file mode 100644
+index 0000000..3d47772
+--- /dev/null
++++ b/bindings/glib/gpiod-glib/Makefile.am
+@@ -0,0 +1,18 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++otherincludedir = $(includedir)/gpiod-glib
++otherinclude_HEADERS = \
++	chip.h \
++	chip-info.h \
++	edge-event.h \
++	error.h \
++	generated-enums.h \
++	info-event.h \
++	line.h \
++	line-config.h \
++	line-info.h \
++	line-request.h \
++	line-settings.h \
++	misc.h \
++	request-config.h
+diff --git a/bindings/glib/tests/.gitignore b/bindings/glib/tests/.gitignore
+new file mode 100644
+index 0000000..8eb499f
+--- /dev/null
++++ b/bindings/glib/tests/.gitignore
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: CC0-1.0
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++gpiod-glib-test
+diff --git a/bindings/glib/tests/Makefile.am b/bindings/glib/tests/Makefile.am
+new file mode 100644
+index 0000000..a90587a
+--- /dev/null
++++ b/bindings/glib/tests/Makefile.am
+@@ -0,0 +1,29 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++noinst_PROGRAMS = gpiod-glib-test
++gpiod_glib_test_SOURCES = \
++	helpers.c \
++	helpers.h \
++	tests-chip.c \
++	tests-chip-info.c \
++	tests-edge-event.c \
++	tests-info-event.c \
++	tests-line-config.c \
++	tests-line-info.c \
++	tests-line-request.c \
++	tests-line-settings.c \
++	tests-misc.c \
++	tests-request-config.c
++
++AM_CFLAGS = -I$(top_srcdir)/bindings/glib/
++AM_CFLAGS += -I$(top_srcdir)/tests/gpiosim-glib/
++AM_CFLAGS += -I$(top_srcdir)/tests/harness/
++AM_CFLAGS += -include $(top_builddir)/config.h
++AM_CFLAGS += -Wall -Wextra -g -std=gnu89 $(GLIB_CFLAGS) $(GIO_CFLAGS)
++AM_CFLAGS += -DG_LOG_DOMAIN=\"gpiod-glib-test\"
++LDADD = $(top_builddir)/bindings/glib/libgpiod-glib.la
++LDADD += $(top_builddir)/tests/gpiosim/libgpiosim.la
++LDADD += $(top_builddir)/tests/gpiosim-glib/libgpiosim-glib.la
++LDADD += $(top_builddir)/tests/harness/libgpiod-test-harness.la
++LDADD += $(GLIB_LIBS) $(GIO_LIBS)
 diff --git a/configure.ac b/configure.ac
-index d1f49ac..93d9d75 100644
+index 93d9d75..85d6984 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -277,6 +277,7 @@ AC_CONFIG_FILES([Makefile
- 		 tests/gpiosim/Makefile
- 		 tests/gpiosim-glib/Makefile
- 		 tests/harness/Makefile
-+		 tests/scripts/Makefile
- 		 bindings/cxx/libgpiodcxx.pc
- 		 bindings/Makefile
- 		 bindings/cxx/Makefile
-diff --git a/tests/Makefile.am b/tests/Makefile.am
-index c89fd8d..7049d21 100644
---- a/tests/Makefile.am
-+++ b/tests/Makefile.am
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2017-2022 Bartosz Golaszewski <brgl@bgdev.pl>
+@@ -31,6 +31,8 @@ AC_SUBST(ABI_CXX_VERSION, [3.0.1])
+ # ABI version for libgpiosim (we need this since it can be installed if we
+ # enable tests).
+ AC_SUBST(ABI_GPIOSIM_VERSION, [1.1.0])
++# ... and another one for GLib bindings:
++AC_SUBST(ABI_GLIB_VERSION, [1.0.0])
  
--SUBDIRS = gpiosim gpiosim-glib harness
-+SUBDIRS = gpiosim gpiosim-glib harness scripts
+ AC_CONFIG_AUX_DIR([autostuff])
+ AC_CONFIG_MACRO_DIRS([m4])
+@@ -248,6 +250,29 @@ then
+ 	fi
+ fi
  
- AM_CFLAGS = -I$(top_srcdir)/include/ -I$(top_srcdir)/tests/gpiosim-glib/
- AM_CFLAGS += -I$(top_srcdir)/tests/harness/
-diff --git a/tests/scripts/Makefile.am b/tests/scripts/Makefile.am
-new file mode 100644
-index 0000000..5766593
---- /dev/null
-+++ b/tests/scripts/Makefile.am
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++AC_ARG_ENABLE([bindings-glib],
++	[AS_HELP_STRING([--enable-bindings-glib],[enable GLib 2.0 bindings [default=no]])],
++	[if test "x$enableval" = xyes; then with_bindings_glib=true; fi],
++	[with_bindings_glib=false])
++AM_CONDITIONAL([WITH_BINDINGS_GLIB], [test "x$with_bindings_glib" = xtrue])
 +
-+EXTRA_DIST = gpiod-bash-test-helper.inc
-diff --git a/tests/scripts/gpiod-bash-test-helper.inc b/tests/scripts/gpiod-bash-test-helper.inc
-new file mode 100644
-index 0000000..d0f8a6d
---- /dev/null
-+++ b/tests/scripts/gpiod-bash-test-helper.inc
-@@ -0,0 +1,330 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
-+# SPDX-FileCopyrightText: 2022 Kent Gibson <warthog618@gmail.com>
-+# SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++if test "x$with_bindings_glib" = xtrue
++then
++	PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.54])
++	PKG_CHECK_MODULES([GOBJECT], [gobject-2.0 >= 2.54])
++	PKG_CHECK_MODULES([GIO], [gio-2.0 >= 2.54])
++	PKG_CHECK_MODULES([GIO_UNIX], [gio-unix-2.0 >= 2.54])
++	PKG_PROG_PKG_CONFIG([0.28])
++	PKG_CHECK_VAR([GLIB_MKENUMS], [glib-2.0], [glib_mkenums], [],
++		AC_MSG_ERROR([glib-mkenums not found - needed to build GLib bindings]))
++fi
 +
-+# Simple test harness for the gpio-tools.
++# GObject-introspection
++found_introspection=no
++m4_ifdef([GOBJECT_INTROSPECTION_CHECK],
++	[GOBJECT_INTROSPECTION_CHECK([0.6.2])],
++	[AM_CONDITIONAL(HAVE_INTROSPECTION, test "x$found_introspection" = "xyes")])
 +
-+# Where output from the dut is stored (must be used together
-+# with SHUNIT_TMPDIR).
-+DUT_OUTPUT=gpio-tools-test-output
-+
-+# Save the PID of coprocess - otherwise we won't be able to wait for it
-+# once it exits as the COPROC_PID will be cleared.
-+DUT_PID=""
-+
-+# mappings from local name to system chip name, path, dev name
-+declare -A GPIOSIM_CHIP_NAME
-+declare -A GPIOSIM_CHIP_PATH
-+declare -A GPIOSIM_DEV_NAME
-+GPIOSIM_CONFIGFS="/sys/kernel/config/gpio-sim"
-+GPIOSIM_SYSFS="/sys/devices/platform/"
-+GPIOSIM_APP_NAME="gpio-tools-test"
-+
-+MIN_KERNEL_VERSION="5.17.4"
-+MIN_SHUNIT_VERSION="2.1.8"
-+
-+# Run the command in $@ and fail the test if the command succeeds.
-+assert_fail() {
-+	"$@" || return 0
-+	fail " '$*': command did not fail as expected"
-+}
-+
-+# Check if the string in $2 matches against the pattern in $1.
-+regex_matches() {
-+	[[ $2 =~ $1 ]]
-+	assertEquals " '$2' did not match '$1':" "0" "$?"
-+}
-+
-+output_contains_line() {
-+	assertContains "$1" "$output"
-+}
-+
-+output_is() {
-+	assertEquals " output:" "$1" "$output"
-+}
-+
-+num_lines_is() {
-+	[ "$1" -eq "0" ] || [ -z "$output" ] && return 0
-+	local NUM_LINES
-+	NUM_LINES=$(echo "$output" | wc -l)
-+	assertEquals " number of lines:" "$1" "$NUM_LINES"
-+}
-+
-+status_is() {
-+	assertEquals " status:" "$1" "$status"
-+}
-+
-+# Same as above but match against the regex pattern in $1.
-+output_regex_match() {
-+	[[ "$output" =~ $1 ]]
-+	assertEquals " '$output' did not match '$1'" "0" "$?"
-+}
-+
-+gpiosim_chip() {
-+	local VAR=$1
-+	local NAME=${GPIOSIM_APP_NAME}-$$-${VAR}
-+	local DEVPATH=$GPIOSIM_CONFIGFS/$NAME
-+	local BANKPATH=$DEVPATH/bank0
-+
-+	mkdir -p "$BANKPATH"
-+
-+	for ARG in "$@"
-+	do
-+		local KEY VAL
-+		KEY=$(echo "$ARG" | cut -d"=" -f1)
-+		VAL=$(echo "$ARG" | cut -d"=" -f2)
-+
-+		if [ "$KEY" = "num_lines" ]
-+		then
-+			echo "$VAL" > "$BANKPATH/num_lines"
-+		elif [ "$KEY" = "line_name" ]
-+		then
-+			local OFFSET LINENAME
-+			OFFSET=$(echo "$VAL" | cut -d":" -f1)
-+			LINENAME=$(echo "$VAL" | cut -d":" -f2)
-+			local LINEPATH=$BANKPATH/line$OFFSET
-+
-+			mkdir -p "$LINEPATH"
-+			echo "$LINENAME" > "$LINEPATH/name"
-+		fi
-+	done
-+
-+	echo 1 > "$DEVPATH/live"
-+
-+	local CHIP_NAME
-+	CHIP_NAME=$(<"$BANKPATH/chip_name")
-+	GPIOSIM_CHIP_NAME[$1]=$CHIP_NAME
-+	GPIOSIM_CHIP_PATH[$1]="/dev/$CHIP_NAME"
-+	GPIOSIM_DEV_NAME[$1]=$(<"$DEVPATH/dev_name")
-+}
-+
-+gpiosim_chip_number() {
-+	local NAME=${GPIOSIM_CHIP_NAME[$1]}
-+	echo "${NAME#gpiochip}"
-+}
-+
-+gpiosim_chip_symlink() {
-+	GPIOSIM_CHIP_LINK="$2/${GPIOSIM_APP_NAME}-$$-lnk"
-+	ln -s "${GPIOSIM_CHIP_PATH[$1]}" "$GPIOSIM_CHIP_LINK"
-+}
-+
-+gpiosim_chip_symlink_cleanup() {
-+	if [ -n "$GPIOSIM_CHIP_LINK" ]
-+	then
-+		rm "$GPIOSIM_CHIP_LINK"
-+	fi
-+	unset GPIOSIM_CHIP_LINK
-+}
-+
-+gpiosim_set_pull() {
-+	local OFFSET=$2
-+	local PULL=$3
-+	local DEVNAME=${GPIOSIM_DEV_NAME[$1]}
-+	local CHIPNAME=${GPIOSIM_CHIP_NAME[$1]}
-+
-+	echo "$PULL" > "$GPIOSIM_SYSFS/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/pull"
-+}
-+
-+gpiosim_check_value() {
-+	local OFFSET=$2
-+	local EXPECTED=$3
-+	local DEVNAME=${GPIOSIM_DEV_NAME[$1]}
-+	local CHIPNAME=${GPIOSIM_CHIP_NAME[$1]}
-+
-+	VAL=$(<"$GPIOSIM_SYSFS/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/value")
-+	[ "$VAL" = "$EXPECTED" ]
-+}
-+
-+gpiosim_wait_value() {
-+	local OFFSET=$2
-+	local EXPECTED=$3
-+	local DEVNAME=${GPIOSIM_DEV_NAME[$1]}
-+	local CHIPNAME=${GPIOSIM_CHIP_NAME[$1]}
-+	local PORT=$GPIOSIM_SYSFS/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/value
-+
-+	for _i in {1..30}; do
-+		[ "$(<"$PORT")" = "$EXPECTED" ] && return
-+		sleep 0.01
-+	done
-+	return 1
-+}
-+
-+gpiosim_cleanup() {
-+	for CHIP in "${!GPIOSIM_CHIP_NAME[@]}"
-+	do
-+		local NAME=${GPIOSIM_APP_NAME}-$$-$CHIP
-+
-+		local DEVPATH=$GPIOSIM_CONFIGFS/$NAME
-+
-+		echo 0 > "$DEVPATH/live"
-+		find "$DEVPATH" -type d -name hog -exec rmdir '{}' '+'
-+		find "$DEVPATH" -type d -name "line*" -exec rmdir '{}' '+'
-+		find "$DEVPATH" -type d -name "bank*" -exec rmdir '{}' '+'
-+		rmdir "$DEVPATH"
-+	done
-+
-+	gpiosim_chip_symlink_cleanup
-+
-+	GPIOSIM_CHIP_NAME=()
-+	GPIOSIM_CHIP_PATH=()
-+	GPIOSIM_DEV_NAME=()
-+}
-+
-+run_prog() {
-+	# Executables to test are expected to be in the same directory as the
-+	# testing script.
-+	cmd=$1
-+	shift
-+	output=$(timeout 10s "$SOURCE_DIR/$cmd" "$@" 2>&1)
-+	status=$?
-+}
-+
-+dut_run() {
-+	cmd=$1
-+	shift
-+	coproc timeout 10s "$SOURCE_DIR/$cmd" "$@" 2>&1
-+	DUT_PID=$COPROC_PID
-+	read -r -t1 -n1 -u "${COPROC[0]}" DUT_FIRST_CHAR
-+}
-+
-+dut_run_redirect() {
-+	cmd=$1
-+	shift
-+	coproc timeout 10s "$SOURCE_DIR/$cmd" "$@" > "$SHUNIT_TMPDIR/$DUT_OUTPUT" 2>&1
-+	DUT_PID=$COPROC_PID
-+	# give the process time to spin up
-+	# FIXME - find a better solution
-+	sleep 0.2
-+}
-+
-+dut_read_redirect() {
-+	output=$(<"$SHUNIT_TMPDIR/$DUT_OUTPUT")
-+	local ORIG_IFS="$IFS"
-+	IFS=$'\n' mapfile -t lines <<< "$output"
-+	IFS="$ORIG_IFS"
-+}
-+
-+dut_read() {
-+	local LINE
-+	lines=()
-+	while read -r -t 0.2 -u "${COPROC[0]}" LINE
-+	do
-+		if [ -n "$DUT_FIRST_CHAR" ]
-+		then
-+			LINE=${DUT_FIRST_CHAR}${LINE}
-+			unset DUT_FIRST_CHAR
-+		fi
-+		lines+=("$LINE")
-+	done
-+	output="${lines[*]}"
-+}
-+
-+dut_readable() {
-+	read -t 0 -u "${COPROC[0]}" LINE
-+}
-+
-+dut_flush() {
-+	local _JUNK
-+	lines=()
-+	output=
-+	unset DUT_FIRST_CHAR
-+	while read -t 0 -u "${COPROC[0]}" _JUNK
-+	do
-+		read -r -t 0.1 -u "${COPROC[0]}" _JUNK || true
-+	done
-+}
-+
-+# check the next line of output matches the regex
-+dut_regex_match() {
-+	PATTERN=$1
-+
-+	read -r -t 0.2 -u "${COPROC[0]}" LINE || (echo Timeout && false)
-+	if [ -n "$DUT_FIRST_CHAR" ]
-+	then
-+		LINE=${DUT_FIRST_CHAR}${LINE}
-+		unset DUT_FIRST_CHAR
-+	fi
-+	[[ $LINE =~ $PATTERN ]]
-+	assertEquals "'$LINE' did not match '$PATTERN'" "0" "$?"
-+}
-+
-+dut_write() {
-+	echo "$@" >&"${COPROC[1]}"
-+}
-+
-+dut_kill() {
-+	kill "$@" "$DUT_PID"
-+}
-+
-+dut_wait() {
-+	wait "$DUT_PID"
-+	export status=$?
-+	unset DUT_PID
-+}
-+
-+dut_cleanup() {
-+	if [ -n "$DUT_PID" ]
-+	then
-+		kill -SIGTERM "$DUT_PID" 2> /dev/null
-+		wait "$DUT_PID" || false
-+	fi
-+	rm -f "$SHUNIT_TMPDIR/$DUT_OUTPUT"
-+}
-+
-+tearDown() {
-+	dut_cleanup
-+	gpiosim_cleanup
-+}
-+
-+request_release_line() {
-+	"$SOURCE_DIR/gpioget" -c "$@" >/dev/null
-+}
-+
-+die() {
-+	echo "$@" 1>&2
-+	exit 1
-+}
-+
-+# Must be done after we sources shunit2 as we need SHUNIT_VERSION to be set.
-+oneTimeSetUp() {
-+	test "$SHUNIT_VERSION" = "$MIN_SHUNIT_VERSION" && return 0
-+	local FIRST
-+	FIRST=$(printf "%s\n%s\n" "$SHUNIT_VERSION" "$MIN_SHUNIT_VERSION" | sort -Vr | head -1)
-+	test "$FIRST" = "$MIN_SHUNIT_VERSION" && \
-+		die "minimum shunit version required is $MIN_SHUNIT_VERSION (current version is $SHUNIT_VERSION"
-+}
-+
-+check_kernel() {
-+	local REQUIRED=$1
-+	local CURRENT
-+	CURRENT=$(uname -r)
-+
-+	SORTED=$(printf "%s\n%s" "$REQUIRED" "$CURRENT" | sort -V | head -n 1)
-+
-+	if [ "$SORTED" != "$REQUIRED" ]
-+	then
-+		die "linux kernel version must be at least: v$REQUIRED - got: v$CURRENT"
-+	fi
-+}
-+
-+check_prog() {
-+	local PROG=$1
-+
-+	if ! which "$PROG" > /dev/null
-+	then
-+		die "$PROG not found - needed to run the tests"
-+	fi
-+}
-+
-+# Check all required non-coreutils tools
-+check_prog shunit2
-+check_prog modprobe
-+check_prog timeout
-+
-+# Check if we're running a kernel at the required version or later
-+check_kernel $MIN_KERNEL_VERSION
-+
-+modprobe gpio-sim || die "unable to load the gpio-sim module"
-+mountpoint /sys/kernel/config/ > /dev/null 2> /dev/null || \
-+	die "configfs not mounted at /sys/kernel/config/"
-diff --git a/tools/gpio-tools-test.bash b/tools/gpio-tools-test.bash
-index 3b93388..359960a 100755
---- a/tools/gpio-tools-test.bash
-+++ b/tools/gpio-tools-test.bash
-@@ -4,285 +4,8 @@
- # SPDX-FileCopyrightText: 2022 Kent Gibson <warthog618@gmail.com>
- # SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
- 
--# Simple test harness for the gpio-tools.
--
--# Where output from the dut is stored (must be used together
--# with SHUNIT_TMPDIR).
--DUT_OUTPUT=gpio-tools-test-output
--
--# Save the PID of coprocess - otherwise we won't be able to wait for it
--# once it exits as the COPROC_PID will be cleared.
--DUT_PID=""
--
--SOURCE_DIR=$(dirname "${BASH_SOURCE[0]}")
--
--# mappings from local name to system chip name, path, dev name
--declare -A GPIOSIM_CHIP_NAME
--declare -A GPIOSIM_CHIP_PATH
--declare -A GPIOSIM_DEV_NAME
--GPIOSIM_CONFIGFS="/sys/kernel/config/gpio-sim"
--GPIOSIM_SYSFS="/sys/devices/platform/"
--GPIOSIM_APP_NAME="gpio-tools-test"
--
--MIN_KERNEL_VERSION="5.17.4"
--MIN_SHUNIT_VERSION="2.1.8"
--
--# Run the command in $@ and fail the test if the command succeeds.
--assert_fail() {
--	"$@" || return 0
--	fail " '$*': command did not fail as expected"
--}
--
--# Check if the string in $2 matches against the pattern in $1.
--regex_matches() {
--	[[ $2 =~ $1 ]]
--	assertEquals " '$2' did not match '$1':" "0" "$?"
--}
--
--output_contains_line() {
--	assertContains "$1" "$output"
--}
--
--output_is() {
--	assertEquals " output:" "$1" "$output"
--}
--
--num_lines_is() {
--	[ "$1" -eq "0" ] || [ -z "$output" ] && return 0
--	local NUM_LINES
--	NUM_LINES=$(echo "$output" | wc -l)
--	assertEquals " number of lines:" "$1" "$NUM_LINES"
--}
--
--status_is() {
--	assertEquals " status:" "$1" "$status"
--}
--
--# Same as above but match against the regex pattern in $1.
--output_regex_match() {
--	[[ "$output" =~ $1 ]]
--	assertEquals " '$output' did not match '$1'" "0" "$?"
--}
--
--gpiosim_chip() {
--	local VAR=$1
--	local NAME=${GPIOSIM_APP_NAME}-$$-${VAR}
--	local DEVPATH=$GPIOSIM_CONFIGFS/$NAME
--	local BANKPATH=$DEVPATH/bank0
--
--	mkdir -p "$BANKPATH"
--
--	for ARG in "$@"
--	do
--		local KEY VAL
--		KEY=$(echo "$ARG" | cut -d"=" -f1)
--		VAL=$(echo "$ARG" | cut -d"=" -f2)
--
--		if [ "$KEY" = "num_lines" ]
--		then
--			echo "$VAL" > "$BANKPATH/num_lines"
--		elif [ "$KEY" = "line_name" ]
--		then
--			local OFFSET LINENAME
--			OFFSET=$(echo "$VAL" | cut -d":" -f1)
--			LINENAME=$(echo "$VAL" | cut -d":" -f2)
--			local LINEPATH=$BANKPATH/line$OFFSET
--
--			mkdir -p "$LINEPATH"
--			echo "$LINENAME" > "$LINEPATH/name"
--		fi
--	done
--
--	echo 1 > "$DEVPATH/live"
--
--	local CHIP_NAME
--	CHIP_NAME=$(<"$BANKPATH/chip_name")
--	GPIOSIM_CHIP_NAME[$1]=$CHIP_NAME
--	GPIOSIM_CHIP_PATH[$1]="/dev/$CHIP_NAME"
--	GPIOSIM_DEV_NAME[$1]=$(<"$DEVPATH/dev_name")
--}
--
--gpiosim_chip_number() {
--	local NAME=${GPIOSIM_CHIP_NAME[$1]}
--	echo "${NAME#gpiochip}"
--}
--
--gpiosim_chip_symlink() {
--	GPIOSIM_CHIP_LINK="$2/${GPIOSIM_APP_NAME}-$$-lnk"
--	ln -s "${GPIOSIM_CHIP_PATH[$1]}" "$GPIOSIM_CHIP_LINK"
--}
--
--gpiosim_chip_symlink_cleanup() {
--	if [ -n "$GPIOSIM_CHIP_LINK" ]
--	then
--		rm "$GPIOSIM_CHIP_LINK"
--	fi
--	unset GPIOSIM_CHIP_LINK
--}
--
--gpiosim_set_pull() {
--	local OFFSET=$2
--	local PULL=$3
--	local DEVNAME=${GPIOSIM_DEV_NAME[$1]}
--	local CHIPNAME=${GPIOSIM_CHIP_NAME[$1]}
--
--	echo "$PULL" > "$GPIOSIM_SYSFS/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/pull"
--}
--
--gpiosim_check_value() {
--	local OFFSET=$2
--	local EXPECTED=$3
--	local DEVNAME=${GPIOSIM_DEV_NAME[$1]}
--	local CHIPNAME=${GPIOSIM_CHIP_NAME[$1]}
--
--	VAL=$(<"$GPIOSIM_SYSFS/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/value")
--	[ "$VAL" = "$EXPECTED" ]
--}
--
--gpiosim_wait_value() {
--	local OFFSET=$2
--	local EXPECTED=$3
--	local DEVNAME=${GPIOSIM_DEV_NAME[$1]}
--	local CHIPNAME=${GPIOSIM_CHIP_NAME[$1]}
--	local PORT=$GPIOSIM_SYSFS/$DEVNAME/$CHIPNAME/sim_gpio$OFFSET/value
--
--	for _i in {1..30}; do
--		[ "$(<"$PORT")" = "$EXPECTED" ] && return
--		sleep 0.01
--	done
--	return 1
--}
--
--gpiosim_cleanup() {
--	for CHIP in "${!GPIOSIM_CHIP_NAME[@]}"
--	do
--		local NAME=${GPIOSIM_APP_NAME}-$$-$CHIP
--
--		local DEVPATH=$GPIOSIM_CONFIGFS/$NAME
--
--		echo 0 > "$DEVPATH/live"
--		find "$DEVPATH" -type d -name hog -exec rmdir '{}' '+'
--		find "$DEVPATH" -type d -name "line*" -exec rmdir '{}' '+'
--		find "$DEVPATH" -type d -name "bank*" -exec rmdir '{}' '+'
--		rmdir "$DEVPATH"
--	done
--
--	gpiosim_chip_symlink_cleanup
--
--	GPIOSIM_CHIP_NAME=()
--	GPIOSIM_CHIP_PATH=()
--	GPIOSIM_DEV_NAME=()
--}
--
--run_tool() {
--	# Executables to test are expected to be in the same directory as the
--	# testing script.
--	cmd=$1
--	shift
--	output=$(timeout 10s "$SOURCE_DIR/$cmd" "$@" 2>&1)
--	status=$?
--}
--
--dut_run() {
--	cmd=$1
--	shift
--	coproc timeout 10s "$SOURCE_DIR/$cmd" "$@" 2>&1
--	DUT_PID=$COPROC_PID
--	read -r -t1 -n1 -u "${COPROC[0]}" DUT_FIRST_CHAR
--}
--
--dut_run_redirect() {
--	cmd=$1
--	shift
--	coproc timeout 10s "$SOURCE_DIR/$cmd" "$@" > "$SHUNIT_TMPDIR/$DUT_OUTPUT" 2>&1
--	DUT_PID=$COPROC_PID
--	# give the process time to spin up
--	# FIXME - find a better solution
--	sleep 0.2
--}
--
--dut_read_redirect() {
--	output=$(<"$SHUNIT_TMPDIR/$DUT_OUTPUT")
--	local ORIG_IFS="$IFS"
--	IFS=$'\n' mapfile -t lines <<< "$output"
--	IFS="$ORIG_IFS"
--}
--
--dut_read() {
--	local LINE
--	lines=()
--	while read -r -t 0.2 -u "${COPROC[0]}" LINE
--	do
--		if [ -n "$DUT_FIRST_CHAR" ]
--		then
--			LINE=${DUT_FIRST_CHAR}${LINE}
--			unset DUT_FIRST_CHAR
--		fi
--		lines+=("$LINE")
--	done
--	output="${lines[*]}"
--}
--
--dut_readable() {
--	read -t 0 -u "${COPROC[0]}" LINE
--}
--
--dut_flush() {
--	local _JUNK
--	lines=()
--	output=
--	unset DUT_FIRST_CHAR
--	while read -t 0 -u "${COPROC[0]}" _JUNK
--	do
--		read -r -t 0.1 -u "${COPROC[0]}" _JUNK || true
--	done
--}
--
--# check the next line of output matches the regex
--dut_regex_match() {
--	PATTERN=$1
--
--	read -r -t 0.2 -u "${COPROC[0]}" LINE || (echo Timeout && false)
--	if [ -n "$DUT_FIRST_CHAR" ]
--	then
--		LINE=${DUT_FIRST_CHAR}${LINE}
--		unset DUT_FIRST_CHAR
--	fi
--	[[ $LINE =~ $PATTERN ]]
--	assertEquals "'$LINE' did not match '$PATTERN'" "0" "$?"
--}
--
--dut_write() {
--	echo "$@" >&"${COPROC[1]}"
--}
--
--dut_kill() {
--	kill "$@" "$DUT_PID"
--}
--
--dut_wait() {
--	wait "$DUT_PID"
--	export status=$?
--	unset DUT_PID
--}
--
--dut_cleanup() {
--	if [ -n "$DUT_PID" ]
--	then
--		kill -SIGTERM "$DUT_PID" 2> /dev/null
--		wait "$DUT_PID" || false
--	fi
--	rm -f "$SHUNIT_TMPDIR/$DUT_OUTPUT"
--}
--
--tearDown() {
--	dut_cleanup
--	gpiosim_cleanup
--}
--
--request_release_line() {
--	"$SOURCE_DIR/gpioget" -c "$@" >/dev/null
--}
-+export SOURCE_DIR
-+SOURCE_DIR="$(dirname "${BASH_SOURCE[0]}")"
- 
- #
- # gpiodetect test cases
-@@ -300,7 +23,7 @@ test_gpiodetect_all_chips() {
- 	local sim1dev=${GPIOSIM_DEV_NAME[sim1]}
- 	local sim2dev=${GPIOSIM_DEV_NAME[sim2]}
- 
--	run_tool gpiodetect
-+	run_prog gpiodetect
- 
- 	output_regex_match "$sim0 \[${sim0dev}[-:]node0\] \(4 lines\)"
- 	output_regex_match "$sim1 \[${sim1dev}[-:]node0\] \(8 lines\)"
-@@ -311,7 +34,7 @@ test_gpiodetect_all_chips() {
- 	local initial_output=$output
- 	gpiosim_chip_symlink sim1 /dev
- 
--	run_tool gpiodetect
-+	run_prog gpiodetect
- 
- 	output_is "$initial_output"
- 	status_is 0
-@@ -330,21 +53,21 @@ test_gpiodetect_a_chip() {
- 	local sim2dev=${GPIOSIM_DEV_NAME[sim2]}
- 
- 	# by name
--	run_tool gpiodetect "$sim0"
-+	run_prog gpiodetect "$sim0"
- 
- 	output_regex_match "$sim0 \[${sim0dev}[-:]node0\] \(4 lines\)"
- 	num_lines_is 1
- 	status_is 0
- 
- 	# by path
--	run_tool gpiodetect "${GPIOSIM_CHIP_PATH[sim1]}"
-+	run_prog gpiodetect "${GPIOSIM_CHIP_PATH[sim1]}"
- 
- 	output_regex_match "$sim1 \[${sim1dev}[-:]node0\] \(8 lines\)"
- 	num_lines_is 1
- 	status_is 0
- 
- 	# by number
--	run_tool gpiodetect "$(gpiosim_chip_number sim2)"
-+	run_prog gpiodetect "$(gpiosim_chip_number sim2)"
- 
- 	output_regex_match "$sim2 \[${sim2dev}[-:]node0\] \(16 lines\)"
- 	num_lines_is 1
-@@ -352,7 +75,7 @@ test_gpiodetect_a_chip() {
- 
- 	# by symlink
- 	gpiosim_chip_symlink sim2 .
--	run_tool gpiodetect "$GPIOSIM_CHIP_LINK"
-+	run_prog gpiodetect "$GPIOSIM_CHIP_LINK"
- 
- 	output_regex_match "$sim2 \[${sim2dev}[-:]node0\] \(16 lines\)"
- 	num_lines_is 1
-@@ -371,7 +94,7 @@ test_gpiodetect_multiple_chips() {
- 	local sim1dev=${GPIOSIM_DEV_NAME[sim1]}
- 	local sim2dev=${GPIOSIM_DEV_NAME[sim2]}
- 
--	run_tool gpiodetect "$sim0" "$sim1" "$sim2"
-+	run_prog gpiodetect "$sim0" "$sim1" "$sim2"
- 
- 	output_regex_match "$sim0 \[${sim0dev}[-:]node0\] \(4 lines\)"
- 	output_regex_match "$sim1 \[${sim1dev}[-:]node0\] \(8 lines\)"
-@@ -381,7 +104,7 @@ test_gpiodetect_multiple_chips() {
- }
- 
- test_gpiodetect_with_nonexistent_chip() {
--	run_tool gpiodetect nonexistent-chip
-+	run_prog gpiodetect nonexistent-chip
- 
- 	status_is 1
- 	output_regex_match \
-@@ -396,7 +119,7 @@ test_gpioinfo_all_chips() {
- 	gpiosim_chip sim0 num_lines=4
- 	gpiosim_chip sim1 num_lines=8
- 
--	run_tool gpioinfo
-+	run_prog gpioinfo
- 
- 	output_contains_line "${GPIOSIM_CHIP_NAME[sim0]} - 4 lines:"
- 	output_contains_line "${GPIOSIM_CHIP_NAME[sim1]} - 8 lines:"
-@@ -408,7 +131,7 @@ test_gpioinfo_all_chips() {
- 	local initial_output=$output
- 	gpiosim_chip_symlink sim1 /dev
- 
--	run_tool gpioinfo
-+	run_prog gpioinfo
- 
- 	output_is "$initial_output"
- 	status_is 0
-@@ -420,7 +143,7 @@ test_gpioinfo_all_chips_with_some_used_lines() {
- 
- 	dut_run gpioset --banner --active-low foo=1 baz=0
- 
--	run_tool gpioinfo
-+	run_prog gpioinfo
- 
- 	output_contains_line "${GPIOSIM_CHIP_NAME[sim0]} - 4 lines:"
- 	output_contains_line "${GPIOSIM_CHIP_NAME[sim1]} - 8 lines:"
-@@ -439,7 +162,7 @@ test_gpioinfo_a_chip() {
- 	local sim1=${GPIOSIM_CHIP_NAME[sim1]}
- 
- 	# by name
--	run_tool gpioinfo --chip "$sim1"
-+	run_prog gpioinfo --chip "$sim1"
- 
- 	output_contains_line "$sim1 - 4 lines:"
- 	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+input"
-@@ -450,7 +173,7 @@ test_gpioinfo_a_chip() {
- 	status_is 0
- 
- 	# by path
--	run_tool gpioinfo --chip "$sim1"
-+	run_prog gpioinfo --chip "$sim1"
- 
- 	output_contains_line "$sim1 - 4 lines:"
- 	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+input"
-@@ -461,7 +184,7 @@ test_gpioinfo_a_chip() {
- 	status_is 0
- 
- 	# by number
--	run_tool gpioinfo --chip "$sim1"
-+	run_prog gpioinfo --chip "$sim1"
- 
- 	output_contains_line "$sim1 - 4 lines:"
- 	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+input"
-@@ -473,7 +196,7 @@ test_gpioinfo_a_chip() {
- 
- 	# by symlink
- 	gpiosim_chip_symlink sim1 .
--	run_tool gpioinfo --chip "$GPIOSIM_CHIP_LINK"
-+	run_prog gpioinfo --chip "$GPIOSIM_CHIP_LINK"
- 
- 	output_contains_line "$sim1 - 4 lines:"
- 	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+input"
-@@ -492,28 +215,28 @@ test_gpioinfo_a_line() {
- 	local sim1=${GPIOSIM_CHIP_NAME[sim1]}
- 
- 	# by offset
--	run_tool gpioinfo --chip "$sim1" 2
-+	run_prog gpioinfo --chip "$sim1" 2
- 
- 	output_regex_match "$sim1 2\\s+\"bar\"\\s+input"
- 	num_lines_is 1
- 	status_is 0
- 
- 	# by name
--	run_tool gpioinfo bar
-+	run_prog gpioinfo bar
- 
- 	output_regex_match "$sim0 5\\s+\"bar\"\\s+input"
- 	num_lines_is 1
- 	status_is 0
- 
- 	# by chip and name
--	run_tool gpioinfo --chip "$sim1" 2
-+	run_prog gpioinfo --chip "$sim1" 2
- 
- 	output_regex_match "$sim1 2\\s+\"bar\"\\s+input"
- 	num_lines_is 1
- 	status_is 0
- 
- 	# unquoted
--	run_tool gpioinfo --unquoted --chip "$sim1" 2
-+	run_prog gpioinfo --unquoted --chip "$sim1" 2
- 
- 	output_regex_match "$sim1 2\\s+bar\\s+input"
- 	num_lines_is 1
-@@ -530,7 +253,7 @@ test_gpioinfo_first_matching_named_line() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpioinfo foobar
-+	run_prog gpioinfo foobar
- 
- 	output_regex_match "$sim0 3\\s+\"foobar\"\\s+input"
- 	num_lines_is 1
-@@ -545,7 +268,7 @@ test_gpioinfo_multiple_lines() {
- 	local sim1=${GPIOSIM_CHIP_NAME[sim1]}
- 
- 	# by offset
--	run_tool gpioinfo --chip "$sim1" 1 2
-+	run_prog gpioinfo --chip "$sim1" 1 2
- 
- 	output_regex_match "$sim1 1\\s+unnamed\\s+input"
- 	output_regex_match "$sim1 2\\s+\"baz\"\\s+input"
-@@ -553,7 +276,7 @@ test_gpioinfo_multiple_lines() {
- 	status_is 0
- 
- 	# by name
--	run_tool gpioinfo bar baz
-+	run_prog gpioinfo bar baz
- 
- 	output_regex_match "$sim0 5\\s+\"bar\"\\s+input"
- 	output_regex_match "$sim1 2\\s+\"baz\"\\s+input"
-@@ -561,7 +284,7 @@ test_gpioinfo_multiple_lines() {
- 	status_is 0
- 
- 	# by name and offset
--	run_tool gpioinfo --chip "$sim0" bar 3
-+	run_prog gpioinfo --chip "$sim0" bar 3
- 
- 	output_regex_match "$sim0 5\\s+\"bar\"\\s+input"
- 	output_regex_match "$sim0 3\\s+unnamed\\s+input"
-@@ -578,7 +301,7 @@ test_gpioinfo_line_attribute_menagerie() {
- 
- 	dut_run gpioset --banner --active-low --bias=pull-up --drive=open-source foo=1 baz=0
- 
--	run_tool gpioinfo foo baz
-+	run_prog gpioinfo foo baz
- 
- 	output_regex_match \
- "$sim0 1\\s+\"foo\"\\s+output active-low drive=open-source bias=pull-up consumer=\"gpioset\""
-@@ -592,7 +315,7 @@ test_gpioinfo_line_attribute_menagerie() {
- 
- 	dut_run gpioset --banner --bias=pull-down --drive=open-drain foo=1 baz=0
- 
--	run_tool gpioinfo foo baz
-+	run_prog gpioinfo foo baz
- 
- 	output_regex_match \
- "$sim0 1\\s+\"foo\"\\s+output drive=open-drain bias=pull-down consumer=\"gpioset\""
-@@ -606,7 +329,7 @@ test_gpioinfo_line_attribute_menagerie() {
- 
- 	dut_run gpiomon --banner --bias=disabled --utc -p 10ms foo baz
- 
--	run_tool gpioinfo foo baz
-+	run_prog gpioinfo foo baz
- 
- 	output_regex_match \
- "$sim0 1\\s+\"foo\"\\s+input bias=disabled edges=both event-clock=realtime debounce-period=10ms consumer=\"gpiomon\""
-@@ -620,7 +343,7 @@ test_gpioinfo_line_attribute_menagerie() {
- 
- 	dut_run gpiomon --banner --edges=rising --localtime foo baz
- 
--	run_tool gpioinfo foo baz
-+	run_prog gpioinfo foo baz
- 
- 	output_regex_match \
- "$sim0 1\\s+\"foo\"\\s+input edges=rising event-clock=realtime consumer=\"gpiomon\""
-@@ -634,7 +357,7 @@ test_gpioinfo_line_attribute_menagerie() {
- 
- 	dut_run gpiomon --banner --edges=falling foo baz
- 
--	run_tool gpioinfo foo baz
-+	run_prog gpioinfo foo baz
- 
- 	output_regex_match \
- "$sim0 1\\s+\"foo\"\\s+input edges=falling consumer=\"gpiomon\""
-@@ -650,7 +373,7 @@ test_gpioinfo_with_same_line_twice() {
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
- 	# by offset
--	run_tool gpioinfo --chip "$sim0" 1 1
-+	run_prog gpioinfo --chip "$sim0" 1 1
- 
- 	output_regex_match "$sim0 1\\s+\"foo\"\\s+input"
- 	output_regex_match ".*lines '1' and '1' are the same line"
-@@ -658,7 +381,7 @@ test_gpioinfo_with_same_line_twice() {
- 	status_is 1
- 
- 	# by name
--	run_tool gpioinfo foo foo
-+	run_prog gpioinfo foo foo
- 
- 	output_regex_match "$sim0 1\\s+\"foo\"\\s+input"
- 	output_regex_match ".*lines 'foo' and 'foo' are the same line"
-@@ -666,7 +389,7 @@ test_gpioinfo_with_same_line_twice() {
- 	status_is 1
- 
- 	# by name and offset
--	run_tool gpioinfo --chip "$sim0" foo 1
-+	run_prog gpioinfo --chip "$sim0" foo 1
- 
- 	output_regex_match "$sim0 1\\s+\"foo\"\\s+input"
- 	output_regex_match ".*lines 'foo' and '1' are the same line"
-@@ -684,7 +407,7 @@ test_gpioinfo_all_lines_matching_name() {
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 	local sim1=${GPIOSIM_CHIP_NAME[sim1]}
- 
--	run_tool gpioinfo --strict foobar
-+	run_prog gpioinfo --strict foobar
- 
- 	output_regex_match "$sim0 3\\s+\"foobar\"\\s+input"
- 	output_regex_match "$sim1 2\\s+\"foobar\"\\s+input"
-@@ -701,7 +424,7 @@ test_gpioinfo_with_lines_strictly_by_name() {
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
- 	# first by offset (to show offsets match first)
--	run_tool gpioinfo --chip "$sim0" 1 6
-+	run_prog gpioinfo --chip "$sim0" 1 6
- 
- 	output_regex_match "$sim0 1\\s+\"6\"\\s+input"
- 	output_regex_match "$sim0 6\\s+\"1\"\\s+input"
-@@ -709,7 +432,7 @@ test_gpioinfo_with_lines_strictly_by_name() {
- 	status_is 0
- 
- 	# then strictly by name
--	run_tool gpioinfo --by-name --chip "$sim0" 1
-+	run_prog gpioinfo --by-name --chip "$sim0" 1
- 
- 	output_regex_match "$sim0 6\\s+\"1\"\\s+input"
- 	num_lines_is 1
-@@ -717,7 +440,7 @@ test_gpioinfo_with_lines_strictly_by_name() {
- }
- 
- test_gpioinfo_with_nonexistent_chip() {
--	run_tool gpioinfo --chip nonexistent-chip
-+	run_prog gpioinfo --chip nonexistent-chip
- 
- 	output_regex_match \
- ".*cannot find GPIO chip character device 'nonexistent-chip'"
-@@ -727,12 +450,12 @@ test_gpioinfo_with_nonexistent_chip() {
- test_gpioinfo_with_nonexistent_line() {
- 	gpiosim_chip sim0 num_lines=8
- 
--	run_tool gpioinfo nonexistent-line
-+	run_prog gpioinfo nonexistent-line
- 
- 	output_regex_match ".*cannot find line 'nonexistent-line'"
- 	status_is 1
- 
--	run_tool gpioinfo --chip "${GPIOSIM_CHIP_NAME[sim0]}" nonexistent-line
-+	run_prog gpioinfo --chip "${GPIOSIM_CHIP_NAME[sim0]}" nonexistent-line
- 
- 	output_regex_match ".*cannot find line 'nonexistent-line'"
- 	status_is 1
-@@ -743,7 +466,7 @@ test_gpioinfo_with_offset_out_of_range() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpioinfo --chip "$sim0" 0 1 2 3 4 5
-+	run_prog gpioinfo --chip "$sim0" 0 1 2 3 4 5
- 
- 	output_regex_match "$sim0 0\\s+unnamed\\s+input"
- 	output_regex_match "$sim0 1\\s+unnamed\\s+input"
-@@ -764,12 +487,12 @@ test_gpioget_by_name() {
- 
- 	gpiosim_set_pull sim0 1 pull-up
- 
--	run_tool gpioget foo
-+	run_prog gpioget foo
- 
- 	output_is "\"foo\"=active"
- 	status_is 0
- 
--	run_tool gpioget --unquoted foo
-+	run_prog gpioget --unquoted foo
- 
- 	output_is "foo=active"
- 	status_is 0
-@@ -780,12 +503,12 @@ test_gpioget_by_offset() {
- 
- 	gpiosim_set_pull sim0 1 pull-up
- 
--	run_tool gpioget --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1
-+	run_prog gpioget --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1
- 
- 	output_is "\"1\"=active"
- 	status_is 0
- 
--	run_tool gpioget --unquoted --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1
-+	run_prog gpioget --unquoted --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1
- 
- 	output_is "1=active"
- 	status_is 0
-@@ -797,7 +520,7 @@ test_gpioget_by_symlink() {
- 
- 	gpiosim_set_pull sim0 1 pull-up
- 
--	run_tool gpioget --chip "$GPIOSIM_CHIP_LINK" 1
-+	run_prog gpioget --chip "$GPIOSIM_CHIP_LINK" 1
- 
- 	output_is "\"1\"=active"
- 	status_is 0
-@@ -809,12 +532,12 @@ test_gpioget_by_chip_and_name() {
- 
- 	gpiosim_set_pull sim1 3 pull-up
- 
--	run_tool gpioget --chip "${GPIOSIM_CHIP_NAME[sim1]}" foo
-+	run_prog gpioget --chip "${GPIOSIM_CHIP_NAME[sim1]}" foo
- 
- 	output_is "\"foo\"=active"
- 	status_is 0
- 
--	run_tool gpioget --unquoted --chip "${GPIOSIM_CHIP_NAME[sim1]}" foo
-+	run_prog gpioget --unquoted --chip "${GPIOSIM_CHIP_NAME[sim1]}" foo
- 
- 	output_is "foo=active"
- 	status_is 0
-@@ -829,7 +552,7 @@ test_gpioget_first_matching_named_line() {
- 
- 	gpiosim_set_pull sim0 3 pull-up
- 
--	run_tool gpioget foobar
-+	run_prog gpioget foobar
- 
- 	output_is "\"foobar\"=active"
- 	status_is 0
-@@ -843,7 +566,7 @@ test_gpioget_multiple_lines() {
- 	gpiosim_set_pull sim0 5 pull-up
- 	gpiosim_set_pull sim0 7 pull-up
- 
--	run_tool gpioget --unquoted --chip "${GPIOSIM_CHIP_NAME[sim0]}" 0 1 2 3 4 5 6 7
-+	run_prog gpioget --unquoted --chip "${GPIOSIM_CHIP_NAME[sim0]}" 0 1 2 3 4 5 6 7
- 
- 	output_is \
- "0=inactive 1=inactive 2=active 3=active 4=inactive 5=active 6=inactive 7=active"
-@@ -859,7 +582,7 @@ test_gpioget_multiple_lines_by_name_and_offset() {
- 	gpiosim_set_pull sim0 4 pull-up
- 	gpiosim_set_pull sim0 6 pull-up
- 
--	run_tool gpioget --chip "$sim0" 0 foo 4 bar
-+	run_prog gpioget --chip "$sim0" 0 foo 4 bar
- 
- 	output_is "\"0\"=inactive \"foo\"=active \"4\"=active \"bar\"=active"
- 	status_is 0
-@@ -872,7 +595,7 @@ test_gpioget_multiple_lines_across_multiple_chips() {
- 	gpiosim_set_pull sim0 1 pull-up
- 	gpiosim_set_pull sim1 4 pull-up
- 
--	run_tool gpioget baz bar foo xyz
-+	run_prog gpioget baz bar foo xyz
- 
- 	output_is "\"baz\"=inactive \"bar\"=inactive \"foo\"=active \"xyz\"=active"
- 	status_is 0
-@@ -888,7 +611,7 @@ test_gpioget_with_numeric_values() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpioget --numeric --chip "$sim0" 0 1 2 3 4 5 6 7
-+	run_prog gpioget --numeric --chip "$sim0" 0 1 2 3 4 5 6 7
- 
- 	output_is "0 0 1 1 0 1 0 1"
- 	status_is 0
-@@ -904,7 +627,7 @@ test_gpioget_with_active_low() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpioget --active-low --unquoted --chip "$sim0" 0 1 2 3 4 5 6 7
-+	run_prog gpioget --active-low --unquoted --chip "$sim0" 0 1 2 3 4 5 6 7
- 
- 	output_is \
- "0=active 1=active 2=inactive 3=inactive 4=active 5=inactive 6=active 7=inactive"
-@@ -917,7 +640,7 @@ test_gpioget_with_consumer() {
- 
- 	dut_run gpionotify --banner -F "%l %E %C" foo baz
- 
--	run_tool gpioget --consumer gpio-tools-tests foo baz
-+	run_prog gpioget --consumer gpio-tools-tests foo baz
- 	status_is 0
- 
- 	dut_read
-@@ -935,7 +658,7 @@ test_gpioget_with_pull_up() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpioget --bias=pull-up --unquoted --chip "$sim0" 0 1 2 3 4 5 6 7
-+	run_prog gpioget --bias=pull-up --unquoted --chip "$sim0" 0 1 2 3 4 5 6 7
- 
- 	output_is \
- "0=active 1=active 2=active 3=active 4=active 5=active 6=active 7=active"
-@@ -952,7 +675,7 @@ test_gpioget_with_pull_down() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpioget --bias=pull-down --unquoted --chip "$sim0" 0 1 2 3 4 5 6 7
-+	run_prog gpioget --bias=pull-down --unquoted --chip "$sim0" 0 1 2 3 4 5 6 7
- 
- 	output_is \
- "0=inactive 1=inactive 2=inactive 3=inactive 4=inactive 5=inactive 6=inactive 7=inactive"
-@@ -965,31 +688,31 @@ test_gpioget_with_direction_as_is() {
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
- 	# flip to output
--	run_tool gpioset -t0 foo=1
-+	run_prog gpioset -t0 foo=1
- 
- 	status_is 0
- 
--	run_tool gpioinfo foo
-+	run_prog gpioinfo foo
- 	output_regex_match "$sim0 1\\s+\"foo\"\\s+output"
- 	status_is 0
- 
--	run_tool gpioget --as-is foo
-+	run_prog gpioget --as-is foo
- 	# note gpio-sim reverts line to its pull when released
- 	output_is "\"foo\"=inactive"
- 	status_is 0
- 
--	run_tool gpioinfo foo
-+	run_prog gpioinfo foo
- 	output_regex_match "$sim0 1\\s+\"foo\"\\s+output"
- 	status_is 0
- 
- 	# whereas the default behaviour forces to input
--	run_tool gpioget foo
-+	run_prog gpioget foo
- 	# note gpio-sim reverts line to its pull when released
- 	# (defaults to pull-down)
- 	output_is "\"foo\"=inactive"
- 	status_is 0
- 
--	run_tool gpioinfo foo
-+	run_prog gpioinfo foo
- 	output_regex_match "$sim0 1\\s+\"foo\"\\s+input"
- 	status_is 0
- }
-@@ -998,7 +721,7 @@ test_gpioget_with_hold_period() {
- 	gpiosim_chip sim0 num_lines=8 line_name=1:foo
- 
- 	# only test parsing - testing the hold-period itself is tricky
--	run_tool gpioget --hold-period=100ms foo
-+	run_prog gpioget --hold-period=100ms foo
- 	output_is "\"foo\"=inactive"
- 	status_is 0
- }
-@@ -1010,7 +733,7 @@ test_gpioget_with_strict_named_line_check() {
- 				      line_name=4:xyz line_name=7:foobar
- 	gpiosim_chip sim2 num_lines=16
- 
--	run_tool gpioget --strict foobar
-+	run_prog gpioget --strict foobar
- 
- 	output_regex_match ".*line 'foobar' is not unique"
- 	status_is 1
-@@ -1024,12 +747,12 @@ test_gpioget_with_lines_by_offset() {
- 	gpiosim_set_pull sim0 1 pull-up
- 	gpiosim_set_pull sim0 6 pull-down
- 
--	run_tool gpioget --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1 6
-+	run_prog gpioget --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1 6
- 
- 	output_is "\"1\"=active \"6\"=inactive"
- 	status_is 0
- 
--	run_tool gpioget --unquoted --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1 6
-+	run_prog gpioget --unquoted --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1 6
- 
- 	output_is "1=active 6=inactive"
- 	status_is 0
-@@ -1043,19 +766,19 @@ test_gpioget_with_lines_strictly_by_name() {
- 	gpiosim_set_pull sim0 1 pull-up
- 	gpiosim_set_pull sim0 6 pull-down
- 
--	run_tool gpioget --by-name --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1 6
-+	run_prog gpioget --by-name --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1 6
- 
- 	output_is "\"1\"=inactive \"6\"=active"
- 	status_is 0
- 
--	run_tool gpioget --by-name --unquoted --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1 6
-+	run_prog gpioget --by-name --unquoted --chip "${GPIOSIM_CHIP_NAME[sim0]}" 1 6
- 
- 	output_is "1=inactive 6=active"
- 	status_is 0
- }
- 
- test_gpioget_with_no_arguments() {
--	run_tool gpioget
-+	run_prog gpioget
- 
- 	output_regex_match ".*at least one GPIO line must be specified"
- 	status_is 1
-@@ -1064,7 +787,7 @@ test_gpioget_with_no_arguments() {
- test_gpioget_with_chip_but_no_line_specified() {
- 	gpiosim_chip sim0 num_lines=8
- 
--	run_tool gpioget --chip "${GPIOSIM_CHIP_NAME[sim0]}"
-+	run_prog gpioget --chip "${GPIOSIM_CHIP_NAME[sim0]}"
- 
- 	output_regex_match ".*at least one GPIO line must be specified"
- 	status_is 1
-@@ -1074,7 +797,7 @@ test_gpioget_with_offset_out_of_range() {
- 	gpiosim_chip sim0 num_lines=4
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpioget --chip "$sim0" 0 1 2 3 4 5
-+	run_prog gpioget --chip "$sim0" 0 1 2 3 4 5
- 
- 	output_regex_match ".*offset 4 is out of range on chip '$sim0'"
- 	output_regex_match ".*offset 5 is out of range on chip '$sim0'"
-@@ -1082,7 +805,7 @@ test_gpioget_with_offset_out_of_range() {
- }
- 
- test_gpioget_with_nonexistent_line() {
--	run_tool gpioget nonexistent-line
-+	run_prog gpioget nonexistent-line
- 
- 	output_regex_match ".*cannot find line 'nonexistent-line'"
- 	status_is 1
-@@ -1093,31 +816,31 @@ test_gpioget_with_same_line_twice() {
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
- 	# by offset
--	run_tool gpioget --chip "$sim0" 0 0
-+	run_prog gpioget --chip "$sim0" 0 0
- 
- 	output_regex_match ".*lines '0' and '0' are the same line"
- 	status_is 1
- 
- 	# by name
--	run_tool gpioget foo foo
-+	run_prog gpioget foo foo
- 
- 	output_regex_match ".*lines 'foo' and 'foo' are the same line"
- 	status_is 1
- 
- 	# by chip and name
--	run_tool gpioget --chip "$sim0" foo foo
-+	run_prog gpioget --chip "$sim0" foo foo
- 
- 	output_regex_match ".*lines 'foo' and 'foo' are the same line"
- 	status_is 1
- 
- 	# by name and offset
--	run_tool gpioget --chip "$sim0" foo 1
-+	run_prog gpioget --chip "$sim0" foo 1
- 
- 	output_regex_match ".*lines 'foo' and '1' are the same line"
- 	status_is 1
- 
- 	# by offset and name
--	run_tool gpioget --chip "$sim0" 1 foo
-+	run_prog gpioget --chip "$sim0" 1 foo
- 
- 	output_regex_match ".*lines '1' and 'foo' are the same line"
- 	status_is 1
-@@ -1126,7 +849,7 @@ test_gpioget_with_same_line_twice() {
- test_gpioget_with_invalid_bias() {
- 	gpiosim_chip sim0 num_lines=8
- 
--	run_tool gpioget --bias=bad --chip "${GPIOSIM_CHIP_NAME[sim0]}" 0 1
-+	run_prog gpioget --bias=bad --chip "${GPIOSIM_CHIP_NAME[sim0]}" 0 1
- 
- 	output_regex_match ".*invalid bias.*"
- 	status_is 1
-@@ -1135,7 +858,7 @@ test_gpioget_with_invalid_bias() {
- test_gpioget_with_invalid_hold_period() {
- 	gpiosim_chip sim0 num_lines=8
- 
--	run_tool gpioget --hold-period=bad --chip "${GPIOSIM_CHIP_NAME[sim0]}" 0
-+	run_prog gpioget --hold-period=bad --chip "${GPIOSIM_CHIP_NAME[sim0]}" 0
- 
- 	output_regex_match ".*invalid period.*"
- 	status_is 1
-@@ -1255,7 +978,7 @@ test_gpioset_with_consumer() {
- 
- 	dut_run gpioset --banner --consumer gpio-tools-tests foo=1 baz=0
- 
--	run_tool gpioinfo
-+	run_prog gpioinfo
- 
- 	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+input"
- 	output_regex_match \
-@@ -1627,7 +1350,7 @@ test_gpioset_with_invalid_toggle_period() {
- 	gpiosim_chip sim0 num_lines=8 line_name=1:foo line_name=4:bar \
- 				      line_name=7:baz
- 
--	run_tool gpioset --toggle 1ns foo=1 bar=0 baz=0
-+	run_prog gpioset --toggle 1ns foo=1 bar=0 baz=0
- 
- 	output_regex_match ".*invalid period.*"
- 	status_is 1
-@@ -1640,7 +1363,7 @@ test_gpioset_with_strict_named_line_check() {
- 				      line_name=4:xyz line_name=7:foobar
- 	gpiosim_chip sim2 num_lines=16
- 
--	run_tool gpioset --strict foobar=active
-+	run_prog gpioset --strict foobar=active
- 
- 	output_regex_match ".*line 'foobar' is not unique"
- 	status_is 1
-@@ -1697,7 +1420,7 @@ test_gpioset_interactive_after_SIGTERM() {
- }
- 
- test_gpioset_with_no_arguments() {
--	run_tool gpioset
-+	run_prog gpioset
- 
- 	status_is 1
- 	output_regex_match ".*at least one GPIO line value must be specified"
-@@ -1706,7 +1429,7 @@ test_gpioset_with_no_arguments() {
- test_gpioset_with_chip_but_no_line_specified() {
- 	gpiosim_chip sim0 num_lines=8
- 
--	run_tool gpioset --chip "${GPIOSIM_CHIP_NAME[sim0]}"
-+	run_prog gpioset --chip "${GPIOSIM_CHIP_NAME[sim0]}"
- 
- 	output_regex_match ".*at least one GPIO line value must be specified"
- 	status_is 1
-@@ -1717,7 +1440,7 @@ test_gpioset_with_offset_out_of_range() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpioset --chip "$sim0" 0=1 1=1 2=1 3=1 4=1 5=1
-+	run_prog gpioset --chip "$sim0" 0=1 1=1 2=1 3=1 4=1 5=1
- 
- 	output_regex_match ".*offset 4 is out of range on chip '$sim0'"
- 	output_regex_match ".*offset 5 is out of range on chip '$sim0'"
-@@ -1729,7 +1452,7 @@ test_gpioset_with_invalid_hold_period() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpioset --hold-period=bad --chip "$sim0" 0=1
-+	run_prog gpioset --hold-period=bad --chip "$sim0" 0=1
- 
- 	output_regex_match ".*invalid period.*"
- 	status_is 1
-@@ -1741,13 +1464,13 @@ test_gpioset_with_invalid_value() {
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
- 	# by name
--	run_tool gpioset --chip "$sim0" 0=c
-+	run_prog gpioset --chip "$sim0" 0=c
- 
- 	output_regex_match ".*invalid line value.*"
- 	status_is 1
- 
- 	# by value
--	run_tool gpioset --chip "$sim0" 0=3
-+	run_prog gpioset --chip "$sim0" 0=3
- 
- 	output_regex_match ".*invalid line value.*"
- 	status_is 1
-@@ -1756,7 +1479,7 @@ test_gpioset_with_invalid_value() {
- test_gpioset_with_invalid_offset() {
- 	gpiosim_chip sim0 num_lines=8
- 
--	run_tool gpioset --chip "${GPIOSIM_CHIP_NAME[sim0]}" 4000000000=0
-+	run_prog gpioset --chip "${GPIOSIM_CHIP_NAME[sim0]}" 4000000000=0
- 
- 	output_regex_match ".*cannot find line '4000000000'"
- 	status_is 1
-@@ -1765,7 +1488,7 @@ test_gpioset_with_invalid_offset() {
- test_gpioset_with_invalid_bias() {
- 	gpiosim_chip sim0 num_lines=8
- 
--	run_tool gpioset --bias=bad --chip "${GPIOSIM_CHIP_NAME[sim0]}" 0=1 1=1
-+	run_prog gpioset --bias=bad --chip "${GPIOSIM_CHIP_NAME[sim0]}" 0=1 1=1
- 
- 	output_regex_match ".*invalid bias.*"
- 	status_is 1
-@@ -1774,7 +1497,7 @@ test_gpioset_with_invalid_bias() {
- test_gpioset_with_invalid_drive() {
- 	gpiosim_chip sim0 num_lines=8
- 
--	run_tool gpioset --drive=bad --chip "${GPIOSIM_CHIP_NAME[sim0]}" 0=1 1=1
-+	run_prog gpioset --drive=bad --chip "${GPIOSIM_CHIP_NAME[sim0]}" 0=1 1=1
- 
- 	output_regex_match ".*invalid drive.*"
- 	status_is 1
-@@ -1785,14 +1508,14 @@ test_gpioset_with_interactive_and_toggle() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpioset --interactive --toggle 1s --chip "$sim0" 0=1
-+	run_prog gpioset --interactive --toggle 1s --chip "$sim0" 0=1
- 
- 	output_regex_match ".*can't combine interactive with toggle"
- 	status_is 1
- }
- 
- test_gpioset_with_nonexistent_line() {
--	run_tool gpioset nonexistent-line=0
-+	run_prog gpioset nonexistent-line=0
- 
- 	output_regex_match ".*cannot find line 'nonexistent-line'"
- 	status_is 1
-@@ -1804,25 +1527,25 @@ test_gpioset_with_same_line_twice() {
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
- 	# by offset
--	run_tool gpioset --chip "$sim0" 0=1 0=1
-+	run_prog gpioset --chip "$sim0" 0=1 0=1
- 
- 	output_regex_match ".*lines '0' and '0' are the same line"
- 	status_is 1
- 
- 	# by name
--	run_tool gpioset --chip "$sim0" foo=1 foo=1
-+	run_prog gpioset --chip "$sim0" foo=1 foo=1
- 
- 	output_regex_match ".*lines 'foo' and 'foo' are the same line"
- 	status_is 1
- 
- 	# by name and offset
--	run_tool gpioset --chip "$sim0" foo=1 1=1
-+	run_prog gpioset --chip "$sim0" foo=1 1=1
- 
- 	output_regex_match ".*lines 'foo' and '1' are the same line"
- 	status_is 1
- 
- 	# by offset and name
--	run_tool gpioset --chip "$sim0" 1=1 foo=1
-+	run_prog gpioset --chip "$sim0" 1=1 foo=1
- 
- 	output_regex_match ".*lines '1' and 'foo' are the same line"
- 	status_is 1
-@@ -2018,7 +1741,7 @@ test_gpiomon_with_consumer() {
- 
- 	dut_run gpiomon --banner --consumer gpio-tools-tests foo baz
- 
--	run_tool gpioinfo
-+	run_prog gpioinfo
- 
- 	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+input"
- 	output_regex_match \
-@@ -2089,7 +1812,7 @@ test_gpiomon_with_debounce_period() {
- 
- 	dut_run gpiomon --banner --debounce-period 123us foo baz
- 
--	run_tool gpioinfo
-+	run_prog gpioinfo
- 
- 	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+input"
- 	output_regex_match \
-@@ -2195,7 +1918,7 @@ test_gpiomon_exit_after_SIGTERM() {
- }
- 
- test_gpiomon_with_nonexistent_line() {
--	run_tool gpiomon nonexistent-line
-+	run_prog gpiomon nonexistent-line
- 
- 	status_is 1
- 	output_regex_match ".*cannot find line 'nonexistent-line'"
-@@ -2207,19 +1930,19 @@ test_gpiomon_with_same_line_twice() {
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
- 	# by offset
--	run_tool gpiomon --chip "$sim0" 0 0
-+	run_prog gpiomon --chip "$sim0" 0 0
- 
- 	output_regex_match ".*lines '0' and '0' are the same line"
- 	status_is 1
- 
- 	# by name
--	run_tool gpiomon foo foo
-+	run_prog gpiomon foo foo
- 
- 	output_regex_match ".*lines 'foo' and 'foo' are the same line"
- 	status_is 1
- 
- 	# by name and offset
--	run_tool gpiomon --chip "$sim0" 1 foo
-+	run_prog gpiomon --chip "$sim0" 1 foo
- 
- 	output_regex_match ".*lines '1' and 'foo' are the same line"
- 	status_is 1
-@@ -2232,7 +1955,7 @@ test_gpiomon_with_strict_named_line_check() {
- 				      line_name=4:xyz line_name=7:foobar
- 	gpiosim_chip sim2 num_lines=16
- 
--	run_tool gpiomon --strict foobar
-+	run_prog gpiomon --strict foobar
- 
- 	output_regex_match ".*line 'foobar' is not unique"
- 	status_is 1
-@@ -2292,7 +2015,7 @@ test_gpiomon_with_lines_strictly_by_name() {
- }
- 
- test_gpiomon_with_no_arguments() {
--	run_tool gpiomon
-+	run_prog gpiomon
- 
- 	output_regex_match ".*at least one GPIO line must be specified"
- 	status_is 1
-@@ -2301,7 +2024,7 @@ test_gpiomon_with_no_arguments() {
- test_gpiomon_with_no_line_specified() {
- 	gpiosim_chip sim0 num_lines=8
- 
--	run_tool gpiomon --chip "${GPIOSIM_CHIP_NAME[sim0]}"
-+	run_prog gpiomon --chip "${GPIOSIM_CHIP_NAME[sim0]}"
- 
- 	output_regex_match ".*at least one GPIO line must be specified"
- 	status_is 1
-@@ -2312,7 +2035,7 @@ test_gpiomon_with_offset_out_of_range() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpiomon --chip "$sim0" 5
-+	run_prog gpiomon --chip "$sim0" 5
- 
- 	output_regex_match ".*offset 5 is out of range on chip '$sim0'"
- 	status_is 1
-@@ -2323,7 +2046,7 @@ test_gpiomon_with_invalid_bias() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpiomon --bias=bad -c "$sim0" 0 1
-+	run_prog gpiomon --bias=bad -c "$sim0" 0 1
- 
- 	output_regex_match ".*invalid bias.*"
- 	status_is 1
-@@ -2334,7 +2057,7 @@ test_gpiomon_with_invalid_debounce_period() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpiomon --debounce-period bad -c "$sim0" 0 1
-+	run_prog gpiomon --debounce-period bad -c "$sim0" 0 1
- 
- 	output_regex_match ".*invalid period: bad"
- 	status_is 1
-@@ -2345,7 +2068,7 @@ test_gpiomon_with_invalid_idle_timeout() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpiomon --idle-timeout bad -c "$sim0" 0 1
-+	run_prog gpiomon --idle-timeout bad -c "$sim0" 0 1
- 
- 	output_regex_match ".*invalid period: bad"
- 	status_is 1
-@@ -2770,7 +2493,7 @@ test_gpionotify_exit_after_SIGTERM() {
- }
- 
- test_gpionotify_with_nonexistent_line() {
--	run_tool gpionotify nonexistent-line
-+	run_prog gpionotify nonexistent-line
- 
- 	status_is 1
- 	output_regex_match ".*cannot find line 'nonexistent-line'"
-@@ -2782,21 +2505,21 @@ test_gpionotify_with_same_line_twice() {
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
- 	# by offset
--	run_tool gpionotify --chip "$sim0" 0 0
-+	run_prog gpionotify --chip "$sim0" 0 0
- 
- 	output_regex_match ".*lines '0' and '0' are the same line"
- 	num_lines_is 1
- 	status_is 1
- 
- 	# by name
--	run_tool gpionotify foo foo
-+	run_prog gpionotify foo foo
- 
- 	output_regex_match ".*lines 'foo' and 'foo' are the same line"
- 	num_lines_is 1
- 	status_is 1
- 
- 	# by name and offset
--	run_tool gpionotify --chip "$sim0" 1 foo
-+	run_prog gpionotify --chip "$sim0" 1 foo
- 
- 	output_regex_match ".*lines '1' and 'foo' are the same line"
- 	num_lines_is 1
-@@ -2810,7 +2533,7 @@ test_gpionotify_with_strict_named_line_check() {
- 				      line_name=4:xyz line_name=7:foobar
- 	gpiosim_chip sim2 num_lines=16
- 
--	run_tool gpionotify --strict foobar
-+	run_prog gpionotify --strict foobar
- 
- 	output_regex_match ".*line 'foobar' is not unique"
- 	status_is 1
-@@ -2854,7 +2577,7 @@ test_gpionotify_with_lines_strictly_by_name() {
- }
- 
- test_gpionotify_with_no_arguments() {
--	run_tool gpionotify
-+	run_prog gpionotify
- 
- 	output_regex_match ".*at least one GPIO line must be specified"
- 	status_is 1
-@@ -2863,7 +2586,7 @@ test_gpionotify_with_no_arguments() {
- test_gpionotify_with_no_line_specified() {
- 	gpiosim_chip sim0 num_lines=8
- 
--	run_tool gpionotify --chip "${GPIOSIM_CHIP_NAME[sim0]}"
-+	run_prog gpionotify --chip "${GPIOSIM_CHIP_NAME[sim0]}"
- 
- 	output_regex_match ".*at least one GPIO line must be specified"
- 	status_is 1
-@@ -2874,7 +2597,7 @@ test_gpionotify_with_offset_out_of_range() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpionotify --chip "$sim0" 5
-+	run_prog gpionotify --chip "$sim0" 5
- 
- 	output_regex_match ".*offset 5 is out of range on chip '$sim0'"
- 	status_is 1
-@@ -2885,7 +2608,7 @@ test_gpionotify_with_invalid_idle_timeout() {
- 
- 	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
- 
--	run_tool gpionotify --idle-timeout bad -c "$sim0" 0 1
-+	run_prog gpionotify --idle-timeout bad -c "$sim0" 0 1
- 
- 	output_regex_match ".*invalid period: bad"
- 	status_is 1
-@@ -3037,53 +2760,8 @@ test_gpionotify_with_custom_format_unknown_specifier() {
- 	output_is "%x"
- }
- 
--die() {
--	echo "$@" 1>&2
--	exit 1
--}
--
--# Must be done after we sources shunit2 as we need SHUNIT_VERSION to be set.
--oneTimeSetUp() {
--	test "$SHUNIT_VERSION" = "$MIN_SHUNIT_VERSION" && return 0
--	local FIRST
--	FIRST=$(printf "%s\n%s\n" "$SHUNIT_VERSION" "$MIN_SHUNIT_VERSION" | sort -Vr | head -1)
--	test "$FIRST" = "$MIN_SHUNIT_VERSION" && \
--		die "minimum shunit version required is $MIN_SHUNIT_VERSION (current version is $SHUNIT_VERSION"
--}
--
--check_kernel() {
--	local REQUIRED=$1
--	local CURRENT
--	CURRENT=$(uname -r)
--
--	SORTED=$(printf "%s\n%s" "$REQUIRED" "$CURRENT" | sort -V | head -n 1)
--
--	if [ "$SORTED" != "$REQUIRED" ]
--	then
--		die "linux kernel version must be at least: v$REQUIRED - got: v$CURRENT"
--	fi
--}
--
--check_prog() {
--	local PROG=$1
--
--	if ! which "$PROG" > /dev/null
--	then
--		die "$PROG not found - needed to run the tests"
--	fi
--}
--
--# Check all required non-coreutils tools
--check_prog shunit2
--check_prog modprobe
--check_prog timeout
--
--# Check if we're running a kernel at the required version or later
--check_kernel $MIN_KERNEL_VERSION
--
--modprobe gpio-sim || die "unable to load the gpio-sim module"
--mountpoint /sys/kernel/config/ > /dev/null 2> /dev/null || \
--	die "configfs not mounted at /sys/kernel/config/"
-+# shellcheck source=tests/scripts/gpiod-bash-test-helper.inc
-+source gpiod-bash-test-helper.inc
- 
- # shellcheck source=/dev/null
--. shunit2
-+source shunit2
+ AC_CHECK_PROG([has_doxygen], [doxygen], [true], [false])
+ AM_CONDITIONAL([HAS_DOXYGEN], [test "x$has_doxygen" = xtrue])
+ if test "x$has_doxygen" = xfalse
+@@ -284,6 +309,11 @@ AC_CONFIG_FILES([Makefile
+ 		 bindings/cxx/gpiodcxx/Makefile
+ 		 bindings/cxx/examples/Makefile
+ 		 bindings/cxx/tests/Makefile
++		 bindings/glib/gpiod-glib.pc
++		 bindings/glib/Makefile
++		 bindings/glib/examples/Makefile
++		 bindings/glib/gpiod-glib/Makefile
++		 bindings/glib/tests/Makefile
+ 		 bindings/python/Makefile
+ 		 bindings/python/gpiod/Makefile
+ 		 bindings/python/gpiod/ext/Makefile
 
 -- 
 2.43.0
