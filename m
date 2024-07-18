@@ -1,171 +1,153 @@
-Return-Path: <linux-gpio+bounces-8254-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8255-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C559893454D
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 02:09:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00D86934653
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 04:23:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 70CEE1F2252D
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 00:09:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F6901C219BD
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 02:23:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE521365;
-	Thu, 18 Jul 2024 00:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3787628DB3;
+	Thu, 18 Jul 2024 02:23:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="r5Ks8ntI"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="NOXy9+0c"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02olkn2042.outbound.protection.outlook.com [40.92.44.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7711620
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Jul 2024 00:09:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721261382; cv=none; b=P0FCzGxBSkfVKAhzgmtpVnHSoAIPPskWK5a2hj2w7wdBWx6zdSjdlz+oEafO6Mj7MjP3QB5IPphl/oXbn7e7+YaSNe1tOexnf76/whHaOh2EQ2JPdh2a9cwiKWUINKiWvufgQpQ8mGCf4lzqPfxtM8+0KvI38eht3iV3fJrLkhU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721261382; c=relaxed/simple;
-	bh=wt/qzQuv1Oj3EPYIiGGE45EkZB5VMCHunctx/kbTHDs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jmkCyb0/IlyOgjJ0RqTGb0NP+K9MT6XHmxvOancKoY4nlWwqP4+ER8W7wX4VUTSk1H8c3NovJMYrT6Z5n8yeCPhJgqJYrSqrzTWpPzzJM+iBkD1HcQkf8S5KCjPVrIFEApQjOFU9kyhIC2LeM7v5HhcvhLCnKSfduipuoURmOok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=r5Ks8ntI; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70b0e9ee7bcso150271b3a.1
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2024 17:09:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1721261379; x=1721866179; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8rJ5m7Fl3sMwVskBOOBufRviDL1o9bXQXCNdGsyOVPo=;
-        b=r5Ks8ntIv/VsZHEkEN0l/9vtX0gCAjTa+VtRHWuFEvzkeFPb2HMyUAzcXe9z2D1bEy
-         HMxMghkII2CUHvreh+BdYYv2SOg7Ig/Fx/2tD0D3WKpKwpSlcAyFq6sCnO+flrxen3cV
-         CqSr48F2tkKPgvykR222j+UXOcXDLS2fBtZpA2MPf9kTZimlzYYL+fp8arvUlcN1Wr0m
-         rnZjcGT/x8ZnenMgyXsJgA7LfEuQOOqFuH+Kc3190TiD+im+FkjvBtwRGBYYUOhvCogL
-         figybXj/8qOORMQmBne8JsN9x0ZJWcmcn0P/TAfYxSUHMDULw3lcwxTA3QHmUNv3gkmG
-         GKDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721261379; x=1721866179;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8rJ5m7Fl3sMwVskBOOBufRviDL1o9bXQXCNdGsyOVPo=;
-        b=WDy8b3AggQHOt/BihVFJX7zDRVuHagmplGs06OVPr16i7EJZwfYX8Niz9gQMoXos3a
-         D5sc6IKKYpZIKeZ+CVlsxs9OaaGvfTJ7jNu9F2vg6RW5Z7H8IPSLO2ql8rYJJ4IoXQAt
-         djbiGK3gNgkAH5k/akQ0xlg3PmDjgeIk0X4/WtJqTXUpRhBGPD6/ihRePk3SBVbXtH0T
-         7v9ErtdsCYDqDM2l9qIOQPy/oRkSBdoqFSEDWkm5ocF+LqWvJvIksPmulNoIRcpUfePj
-         bhdskLfAEcOzcP4jQA2UXx5nNhXz+Gngvb+8hJGg/1MJFqZ7wHuJPyhmeAlPoQk0XDO1
-         NnBg==
-X-Gm-Message-State: AOJu0Yxio4kQWWYrZuO5UkigoNYDrNXSFa3+mok/8c0wWi8rtjATNFoo
-	KZ55hnwcV+ttWwbj5Gb1OxnPoJ+C5k6CUyrLCK6OZww0eOvLQC3Rmg1BMCRWYSirD01oJwKBPBu
-	r
-X-Google-Smtp-Source: AGHT+IF04MR7Smx6T0rGv8pS1Tq8lRD17LTiRDEIUaK4JAMINqysx/UaUEPbq8Zrh0qjpFKGvNNFwQ==
-X-Received: by 2002:a05:6a20:4325:b0:1bd:2710:de5c with SMTP id adf61e73a8af0-1c3fdd00c67mr4884982637.22.1721261379404;
-        Wed, 17 Jul 2024 17:09:39 -0700 (PDT)
-Received: from localhost (75-172-111-187.tukw.qwest.net. [75.172.111.187])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fc0bbc73a2sm80870995ad.109.2024.07.17.17.09.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jul 2024 17:09:38 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-To: linux-gpio@vger.kernel.org
-Cc: Keerthy <j-keerthy@ti.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] gpio: davinci: handle wakeup-source property, detect wake IRQs
-Date: Wed, 17 Jul 2024 17:09:33 -0700
-Message-ID: <20240718000935.2573288-3-khilman@baylibre.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAF415C9;
+	Thu, 18 Jul 2024 02:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.44.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721269402; cv=fail; b=mtn/dQA50C2hOkbgNOEZe2fckY5SB9eOvgAoT1ue4/A/GO+99NRg6SFfzLzsH0ioqVkv7B7VOHDHKVuGkBbdVNTz9zLy06+yW/0HF/hPlZUyBvTZB4ZPyINF/wKjwVj90qzjcUxfMIsMd2G+YLhQpn++iWVrBDK4st/+O6aKfts=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721269402; c=relaxed/simple;
+	bh=7rnVXK4z19a+cDaN0mdo4GpEpuRI85nl+B5rp7sdam4=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ZBW9sukA3ma+0BjFoocneNmzuseDHt0BK354xTt1rwRC8p2gCqB+SbpQb1yuNM0dLshX3usrMiuUiTamvL+qS2BQUaC6ohLAeK1BWGyp0qoTV75F6uGCyjFGmWuiIrODcFoAAGDdDhiWpsQAfmRrddVLs4IkAWnclOUPPrrjmnQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=NOXy9+0c; arc=fail smtp.client-ip=40.92.44.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lwWBeznRYcRus0KFSlAjdAp37ge91IT0iWxf2a8YgHlwYX9S/N6823E8OmM3pisX2cv5BA0TWdvXWYwHgMTHi/H0+VDsFcCcRWJD/T2nUDJ/7MnSb8bfuaPvuRrNri8zk/IR7wLcrBNfIMhGGQrx3+w5Ep1xeAr5nVzs//Z81AN/dSWidQLMxudfygLo3FobOgpczZhsGodtunBHbLr4RMclcJ7OFxpuKjPY1cQ+fxNDEDVt2vaF0I0ToDTw5hsqbH//tZxxf8BwS8NMPVYHeQVSO1WsFMef+EcOC9UUzCZCqYXOhaANNp6fej2urHSuj3a8DEDaHUeqU+JriOeGFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jPdysIrVOsaI+6LTp27cQdQRmhxoQNr/FKsE1NR25Eg=;
+ b=bn5lDEeTHgUY0fryhq3ndZCraClMoEJ2b0ymUyO7ZMqpRv3YKAWXsF1zj+QgtpfTnSPPqbj45tDhXZuBRfd7FKeakA22Gsj+ap6zq7UQBu11tf0s3f0/okEixnUK1u+Y0OSWhaRxuZo7wIo9Trz8qvXQKzJP4Y+uH0opVtoAUfgASn2815fvfct+EMmyX8mpE9toHHgT1NCwkzpDLEd7MePJR9i6zOzY0Z52DynVD7lx9ikrGI97J/jd+Bq2uIssy0QPYat9r0uWwhp7awqXk992x/TJrnRSIgqEPjHMrmOhE6RkmDgPGsnOKt5FSB7gxqus+XPfWsHiD643jIjhbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jPdysIrVOsaI+6LTp27cQdQRmhxoQNr/FKsE1NR25Eg=;
+ b=NOXy9+0c19Enbk+rQcqE1w6LsiGDqpuIU2S4DnHWttoZ0hQeychVwqakosYgC4ldehi6InS06nu/bhcHuUukcf1d0VkIL243iKu6AFsk4Px6g5DXeSBCobCpcbrK1aB52iI+0vFvkOr7aP4i4RINorSGP564rxbBsKCgOmEjFK7OcS8SphN/10ZG92tk1ACMD2xDAobN0ArDhwlkqoUrbGolH068fWNDwwT5rBqqe/UO/WrdvPXN0fEOWl8HP6ncW7UzE1KvZCvqygf03tCZs+KILBQBl6JuRqoQhZt1OwWI4f8fckj8mtF5HnlQi17lRUHs4Pe8sSgY6jLfhiyFBA==
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
+ by DS7PR20MB6786.namprd20.prod.outlook.com (2603:10b6:8:e8::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.28; Thu, 18 Jul
+ 2024 02:23:18 +0000
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::ab0b:c0d3:1f91:d149]) by IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::ab0b:c0d3:1f91:d149%5]) with mapi id 15.20.7784.016; Thu, 18 Jul 2024
+ 02:23:16 +0000
+From: Inochi Amaoto <inochiama@outlook.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Inochi Amaoto <inochiama@outlook.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] pinctrl: pinconf-generic: Add "input-schmitt-microvolt" property
+Date: Thu, 18 Jul 2024 10:23:02 +0800
+Message-ID:
+ <IA1PR20MB495346246245074234D337A6BBAC2@IA1PR20MB4953.namprd20.prod.outlook.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240718000935.2573288-1-khilman@baylibre.com>
-References: <20240718000935.2573288-1-khilman@baylibre.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [3NKzQMBWD6Dtk7VJ5oxsr49PQc+ifFfkFfIGTq07nMs=]
+X-ClientProxiedBy: SI2PR01CA0009.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::18) To IA1PR20MB4953.namprd20.prod.outlook.com
+ (2603:10b6:208:3af::19)
+X-Microsoft-Original-Message-ID:
+ <20240718022302.738346-1-inochiama@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|DS7PR20MB6786:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3fa23369-8fa4-4dcd-adfa-08dca6d09522
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|19110799003|8060799006|461199028|4302099013|1602099012|440099028|3412199025|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	7UPM+yLhewoBXIv9lOSC3VYbk+D/51h8a+sr/yezmVIssOjqsFIHvFDIMznVa+SHco3D41QT4vcmVQNb9+/JgDQkvLbOmgS7/zowkh+y2vXQbdEhd+JXfThRE3VummPLaF+OZE77mO2nb32uD2DaEbbh3TWLV4f+Ev7SDPLVAzaAcd9l5Z0gOSW8Dl5bMh0pJkTYzN/O1iNXt0L0Qe7Thk33NQZfw+jhOb0rLC4AorPybGXqcQQjxFo4n4JXp0LsvfMvAp7/xkOvmkOxaTRAvPekSHSXt9osBbpIlDfPPxkpWSfU8mwQQ3H3pbeBOtLun+qPAgQDmrUg+/Coe1qXOEV5KR8qMw04X4ftLtk6YP61gKAxXhqpkC9tPKZSCr1i2QIxy3tZaiapLLqS/JrbfldJ47HllNotNtLEAYhe8oOJpTsNMBsc71OorIh0X+bcPTwC4/hprFyKs5iE9xUvw0vmEk8JOUUJcTDbHd5qEE1ozwe2Oy4QmpnwTo6mU2Lw16Sn3k2m85rfrsrTaUK4Eq20LvPTivTUbhYGYzTBig7+MHcEGF4BTNH734RUme3stNaMTCLO7CTj/mTY7P+Yg/XrgrWZV1VFZIXN+Yb+AExpsV318SXYDlwS2YXJZcQfSFFEs/SNoKCShFzMA4zQlZwgnXlaoqX1cpzQ84AujDcifRgaNPm6s3NMd6Lel9aqCOhsryDfa7Qof5jw0XmvqTJmUQJOiRXeTVI6itohy/oje5jigaXEzQjK2NTnqfoyvefnuCUHIhKVMfp7bEmyFhdhV958uDBGIiBfsARVTMU=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8cuZruQtvGyb6dGU9tiWcbzpeg3YRBFSXwnUjdVPm3QZG0tFaF5K8WCqJ83E?=
+ =?us-ascii?Q?EvmWTajFNK5JWL9sgjQ0vU+X8lEVnrI1khbmb3GsPm2zXR6pasgdsmJWEixI?=
+ =?us-ascii?Q?5575UANICO6BXU+udRXRolzep4Uff56t/P2Kyp0RIB2Q4S7/dO0giH9yh75K?=
+ =?us-ascii?Q?69SPROIRFguxkA+FjbGxSiRWiSGM6d0+c3QLFlZ+Y7SZGb8QmSGlAf9nuUNr?=
+ =?us-ascii?Q?+eHJ2uHHxzn4s/tUxWTygssjV6H/ayUFzVcMzZQY3rnphYza1d+dZ71Vry5i?=
+ =?us-ascii?Q?pbM7lEvNLZKkCqVbJyUbNV5xSnllTAyUivlomjHJzRePxrJfeNgIlrugeN0Z?=
+ =?us-ascii?Q?TEylP+9to2ng5iJhom4+xe7Fc/GV9VPEUCkFTznM3ifiyVeIHmPjtKqV8B1Q?=
+ =?us-ascii?Q?swYLG7VZVU3XnGJV1DZfr1zhJ5gBj6iOy/9gu5gyF7qnerMUwoMyzKdVor4o?=
+ =?us-ascii?Q?CuXUQrm0X/OwCFXeEct5BNsHVPmSAJRV+RED6oDafAh5K9VljhiIgoEe4nqC?=
+ =?us-ascii?Q?japTBOlqJUvpwT/Fx5KCnD7xGz02NzNCtEIRaiq0NS7mIKVCOjEqOVbQodfM?=
+ =?us-ascii?Q?m/gc9RRBXx9iq7e0+sAGixGgXgZTaovUO3rc14lsJQO0t0i8MP5RtH3uMG/x?=
+ =?us-ascii?Q?SKKxCNenC7/kR9CSQVuOL+HEMxsZ4SIqicKtTVA8SQ3sIApVXtJmyTVOCBvt?=
+ =?us-ascii?Q?rkx9E6LYY0Dm07/rg3/VtXZccdZ4NxypGDg+UI0UYXtsHc22PDmsvOaI/D9f?=
+ =?us-ascii?Q?iiy6e+Da6+1/k3oh5rOfQW85WOsY29Qnzk2OA2+XvZOCnUN8GWrr5cec/07N?=
+ =?us-ascii?Q?22EKlvEuKYEorSSooae9qmUtVNOgt8OVAo8KQVhiwvwXfXZlnesevJplyWUI?=
+ =?us-ascii?Q?/MFsovZdKrwS0+qOG0rd5RVhEHuR2NhAz+HKlIOQ8J/tARupagZXm3x2gtGw?=
+ =?us-ascii?Q?Y0lHRz/GxYxg4ivIyJJ+v3Y6w6DGQvd4g63/aiIio9ulY1xmnKlICUx20P41?=
+ =?us-ascii?Q?HfVZZqFMWqOwNGs4ufrV/bYDFBfOfRQ2idbPOMuKnqYr28ydIdIwUY7kClLG?=
+ =?us-ascii?Q?3wPIQHviEgAkhUkK6s+EIb9zR4h3GBpsdEfcORQ0nPw65V8VAljypFuSJsHR?=
+ =?us-ascii?Q?drSyggUHdZQDOQBQCRrQ1k2SnLaFkktAYJ3UyGtJvIW5Ccbe8yJxUbPcFa7s?=
+ =?us-ascii?Q?TMH1DcVGwd4hWFRnBHpUc/iAy7ZJ4VCMV8a1CInfTBdifDYLczuV2lEnibQG?=
+ =?us-ascii?Q?TjG31xd7vkQHHk97bjZg?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3fa23369-8fa4-4dcd-adfa-08dca6d09522
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2024 02:23:16.7833
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR20MB6786
 
-If the wakeup-source property is used for the GPIO controller, then
-mark the controller as wakeup capable.
+On Sophgo CV18XX platform, threshold strength of schmitt trigger can
+be configured. As this standard property is already supported by the
+common pinconf code. Add "input-schmitt-microvolt" property in
+pincfg-node.yaml so that other platforms requiring such feature can
+make use of this property.
 
-Further, if there are any GPIO IRQs that are marked as wakeup-enabled,
-then mark the GPIO controller as wakeup enabled also.  Since the GPIO
-IRQs that are wake-enabled are dynamic, this is (re)calculated during
-each suspend (and cleared on resume.)
+See the previous patch discussion about why add "microvolt" suffix:
+https://lore.kernel.org/all/IA1PR20MB4953BB6E71CA3216E652E8B8BBA02@IA1PR20MB4953.namprd20.prod.outlook.com/
 
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
----
- drivers/gpio/gpio-davinci.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Changed for the original patch series:
+1. add "microvolt" suffix
 
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 1d0175d6350b..031aa7c30855 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/gpio/driver.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/errno.h>
- #include <linux/kernel.h>
- #include <linux/clk.h>
-@@ -195,6 +196,7 @@ static int davinci_gpio_probe(struct platform_device *pdev)
- 	struct davinci_gpio_controller *chips;
- 	struct davinci_gpio_platform_data *pdata;
- 	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 
- 	pdata = davinci_gpio_get_pdata(pdev);
- 	if (!pdata) {
-@@ -274,6 +276,9 @@ static int davinci_gpio_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	if (of_property_read_bool(np, "wakeup-source"))
-+		device_set_wakeup_capable(dev, true);
-+
- 	return 0;
- }
- 
-@@ -677,7 +682,24 @@ static int davinci_gpio_suspend(struct device *dev)
- 	struct davinci_gpio_controller *chips = dev_get_drvdata(dev);
- 	struct davinci_gpio_platform_data *pdata = dev_get_platdata(dev);
- 	u32 nbank = DIV_ROUND_UP(pdata->ngpio, 32);
-+	struct gpio_chip *chip = &chips->chip;
-+	struct gpio_desc *desc;
-+	bool wkup_set;
-+	int irq;
- 
-+	/*
-+	 * Check if any GPIO IRQs are wakeup enabled.  If so,
-+	 * set the GPIO controller as wakeup enabled also.
-+	 */
-+	for_each_gpio_desc(chip, desc) {
-+		irq = gpiod_to_irq(desc);
-+		wkup_set = irqd_is_wakeup_set(irq_get_irq_data(irq));
-+		if (wkup_set) {
-+			dev_dbg(dev, "%s: IRQ %d wakeup enabled.", __func__, irq);
-+			device_wakeup_enable(dev);
-+			break;
-+		}
-+	}
- 	davinci_gpio_save_context(chips, nbank);
- 
- 	return 0;
-@@ -691,6 +713,9 @@ static int davinci_gpio_resume(struct device *dev)
- 
- 	davinci_gpio_restore_context(chips, nbank);
- 
-+	if (device_may_wakeup(dev))
-+		device_wakeup_disable(dev);
-+
- 	return 0;
- }
- 
--- 
+Inochi Amaoto (2):
+  dt-bindings: pincfg-node: Add "input-schmitt-microvolt" property
+  pinctrl: pinconf-generic: Add support for "input-schmitt-microvolt"
+    property
+
+ Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml | 3 +++
+ drivers/pinctrl/pinconf-generic.c                          | 2 ++
+ include/linux/pinctrl/pinconf-generic.h                    | 3 +++
+ 3 files changed, 8 insertions(+)
+
+--
 2.45.2
 
 
