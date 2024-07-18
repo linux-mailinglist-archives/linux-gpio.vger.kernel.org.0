@@ -1,136 +1,99 @@
-Return-Path: <linux-gpio+bounces-8285-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8286-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 777A9934FF3
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 17:34:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A076B935113
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 19:08:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F3E001F2294C
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 15:33:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E30D0B214C2
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 17:08:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E21EA143C6D;
-	Thu, 18 Jul 2024 15:33:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DE75144D3E;
+	Thu, 18 Jul 2024 17:08:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wMGXMuvm"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="D1rpZxd2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A745A4D8B7
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Jul 2024 15:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28EB47A73;
+	Thu, 18 Jul 2024 17:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721316834; cv=none; b=fsawHV8c8PIiXj4+/1Adc1eMgtJR8ijBNS9CUdIke4IGBlEfXhPDt9b65oxVDOzhlNN19tgpXgoX2I+rrWPY2ttvz628DnZLCDQNcusdMyZwFc0Nc8PkK55QuPZvx4y2WnaEXDHsuoaSVNQ1pBgF/XiE3cc5sLy9zrQ9JuQi4ww=
+	t=1721322527; cv=none; b=n9adUzEjUCTTI82bVsVfmE4rCtHuU094arj0Nn/jvPoEQpKo/7TACJWlMlYMGjNUfj7s3XfSxAV0GneZn7apYpln5pOLjKI6Sx/SXzvbtGZjSWcFmKDWBHqrUAY4QUMxvHIGhHQdWR8uTTymkETeRTC6/XUK8QHGu1v7m/xwsyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721316834; c=relaxed/simple;
-	bh=GCR0CFRobQRw7xW5igxBYBkUPbLVql4oW/fQXJpkOuk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JfdMjn3r0OUYEu4rx7yt0lTSyoJG9GnkdU+li3+u1kavuscGK4ceeLcqEbtQRhmnt4587Wxyo7YIOsItUVMEG9JbnnEvItWpb9KOCP7zK7Mb4RWcOu3PucNTj9T1DFMYsbVHu12Dsq2CI0vvOcYKlO1qgl1NLoZB+0pU/7oL03o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wMGXMuvm; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ee9b1b422fso9297301fa.0
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Jul 2024 08:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721316831; x=1721921631; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kQmzV+03IahZ2nZfnvKXf7qXYLOLcvtEICvS0CRZ9tQ=;
-        b=wMGXMuvmFt82A8lVlKjat54jdm6ueifEUVUZjMfM4oglIDLEE0RBg1zKhZTj87/PZm
-         k/YOIjqYWFTPMDcqJOZgaaWnurlQ33b6L7wgX08GYyGYXkWS/cR+0uM+fEqAH4XTag+J
-         lXYAf13Jh9FFMvESspYUJI4iuV387NhGlVOVWV39pZc+GIFDhVZpeJMpjSBzrB95K3QX
-         0QhI7yyGESMHhq6MLEv6jcR3N7bnT3E4I/bIgJ4dWF/wRhTVv8andyuS4s5ZqIWb+qMh
-         XPma6AROdrSuNmy2N0u5+lQoWqh+LcmrefGWKICPNyA+sbZWoJy0I3BD7hLkKP0YqmLH
-         tDXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721316831; x=1721921631;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kQmzV+03IahZ2nZfnvKXf7qXYLOLcvtEICvS0CRZ9tQ=;
-        b=ZZn/7duevJ1NJvHUD3qnnY4WxRuU7Boo3V5s9tvQYl0CQpfvP23C8LgHoZiimtfN3o
-         wKNO1a+BOhNsbo8lOoGZMzZrjsZC6h4nUR8Qh40nsnPWrldSP28dzTNGYDX5PVWopTvS
-         80dQgoBayGtoJFQmp/AUphuE7rMtWbf84zC/uOipJgJsGsRW5gbcYLvnEwcrv0EstoPG
-         UcG/O7wLy6OQQlKoNuwQuWiv0lnDO3bCIB2SCzmuydv1mRUNF14WYzEvSEg9/GGdOzp3
-         7rEpVzihqLUL7jSMb834X/V4N07bGLnQHR6xeQ14DWdrOAhCgBdZ+ea2XG82NcpniCQB
-         McCg==
-X-Gm-Message-State: AOJu0YwQb8urboF9Pdzt6I0/5BYMEA8SYaWB/l/7ECg58tgF9BXRNM4M
-	t3mzfYcz3UpfP3YS0Gv0wKxTWf5L6zyRu+JiIwQOCwEyo0wzhHBq1LeIpMwDjncuTMnB7JWDj98
-	HZIq0ug4vu54RzwRb3N2SJqFX+W4sQDUSBgOjuA==
-X-Google-Smtp-Source: AGHT+IE6TGRDmdl3CtWniJLe17DpqfH8aK0Z3g+DTrfjXa+idRNXZGoqmlVsDZsSp7njbnqtLlmFbyGig48BtQr0Qag=
-X-Received: by 2002:a2e:8ecb:0:b0:2ec:32dc:60ba with SMTP id
- 38308e7fff4ca-2ef0657e165mr8574531fa.7.1721316830801; Thu, 18 Jul 2024
- 08:33:50 -0700 (PDT)
+	s=arc-20240116; t=1721322527; c=relaxed/simple;
+	bh=HB8dfb3UJPZxA//Ds4TzHgj9flc2H8ljylk/vKM5fsk=;
+	h=Message-ID:Date:MIME-Version:In-Reply-To:To:Cc:From:Subject:
+	 Content-Type; b=goC0nAsvyEYM+BD8nkBflSKILfKzTLBYLxogV2irLN8+XBnS3UdSEdhJ3Fsk6jXAwJ134Bb5wlJ8Uw8l+uydeqsjmEjNiaWBWszh0PtTZ7vgSw+Wt5NuQ9qmTWUYNZU3HOMCMBTkRawswRGR2phOAQJ/sJDHGJpptV0VRMzlxxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=D1rpZxd2; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1721322521; x=1721927321; i=wahrenst@gmx.net;
+	bh=HB8dfb3UJPZxA//Ds4TzHgj9flc2H8ljylk/vKM5fsk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:In-Reply-To:To:Cc:
+	 From:Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=D1rpZxd2lj1IhXA5nv2Y8qRkcvfGW+c/Ctpyu1DSVPTFVxzajjwGVwLiThOSgbnE
+	 eT5eeS1V3u5xGYdPDblSPi3fa3MvV5LNApht3L6VGtOl7aS+sgJa4iCA3eOp6r41n
+	 2LIu0lxWY8/+O2FsjDGRMTqva594RIUnKrhhwBjLeD2xhGwkCgmjF583kbr10KlFD
+	 kPqh07aQPTcQE6Qb/cn0Oj2bM6yNOU8UMgWHb752+W+x2RP3iU9r7on7jqT36U9gd
+	 0kCavSksPideJSGCSZRCAWtYwonhnLe75QMUwmwFOqGLbZQPp+wUfJO1Y8Mow+pIB
+	 qAS2df+yzSwbCEnkpg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.127] ([37.4.248.43]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MAfYm-1sb7Oj170K-003CUA; Thu, 18
+ Jul 2024 19:08:41 +0200
+Message-ID: <09eb7049-269e-4616-a33d-5b304c7aabf0@gmx.net>
+Date: Thu, 18 Jul 2024 19:08:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240718-dbus-v3-0-c9ea2604f082@linaro.org> <20240718-dbus-v3-3-c9ea2604f082@linaro.org>
-In-Reply-To: <20240718-dbus-v3-3-c9ea2604f082@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 18 Jul 2024 17:33:39 +0200
-Message-ID: <CAMRc=MfJTJH=UngJB2q8anrfcwQQDhSUj1q7o8FQ4Spv16h-uQ@mail.gmail.com>
-Subject: Re: [PATCH libgpiod v3 03/18] bindings: glib: add build files
-To: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	Erik Schilling <erik.schilling@linaro.org>, Phil Howard <phil@gadgetoid.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Philip Withnall <philip@tecnocode.co.uk>
-Cc: linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Alexander Sverdlin <alexander.sverdlin@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+In-Reply-To: <CACRpkdaRxoEZT1_KyJ3QMDgBcciw1XUXKr=cEiPxbcwSnpmyiA@mail.gmail.com>
+To: haibo.chen@nxp.com
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+From: Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH] gpio: vf610: always set GPIO to input mode when used as
+ interrupt source
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Prz1EgVU96L/IE7BzQCBQAF+oWvB8fuBCdgc10l3MUMI6+ioS5P
+ tAGEpLadmcNT9SLrZcvUConwpJZkRdOKZh6uNZkaciYiaJb9dHPiaVw/yucEB/DeqVoziFl
+ U6NrWSaaalFOhoNkNq4PlzVOFGBMHTRAX1l6o+VjJViC1LPHibrFPuFkTnv5FvP86gaCU6p
+ Gp07dBNxWyLABs3btk8Lg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8n6Yt+MBNW0=;4dBoCuPdnkYnY0CjmEgeFg5zmIi
+ 4OKZxyE235YGutky2N6L0fyFrysH2e9ExzwmCDEwfDcSquQ9M+upxV32Wg8U1vYF+8z8Id2fL
+ Dfjq20JIFW6OXRYZJlcoXdHoEfnH4oyAV4DbVQof/Ts3lVqL7zsUSFQlrjh+1NSjWg4eTxD9/
+ u+BxEx8MvAJdveBteTHjSFdH31gQd5/cxApY2LQ5OxOdSrgiJfXGUm2oJx+GtDcpi3c6jN6/R
+ 4y6QdC02BrcHOoDdwhsCvMoE/34gsUIq3+IIucLlQQ1etkkwy6DkcA0BLJz5ABJzE/0/NOPMR
+ ElX6VBfcDQHrZrr7llnp7BZvsIj5M8YJZwqCLXSy4iRIlpmGUNHAeP+F4MWUTM+3tPecw4e8m
+ VtD86UWAnoyf8WMdpobFj3Wneo5K5B5APC9iP7bPc7BZNJA68V/gga/hobqchtTQ2fGAKVE34
+ pIbWTKiG379jG5N/pwWWH4w9fTNVXVX6SIHpxgt+IJkwMyXWcqFTPbD+0a3ugXBgrz1G6lGyQ
+ ORUfZeEZLATnLqq9Au/cUpQ67se8XPPWOxag95ydtSz5sdbxGxNftOZPyY0+F1xX6t6kgOxeM
+ DY0uYZq434b3EZyhHxNCVXAW0RNHG4FFmpv6lF8l8n2uum6cyuOy1lbDjkZY94ZgxeNUuK3tu
+ 69QYJVF6XSkOQ/aSyQ1nrsTTcvpziPgWxQSmm+yQ8UFgN+9EQAYA05B1SfFNyCkZ4eE76tcrf
+ GDKVndklJEQ8A0LQazbuBQXd91/qfVEVBjzs/L321hMpSS4cQ/OidQ+p0fUMouFX82tHX5F0W
+ lvTrYVMr3UpD+WEuJ2yxj84w==
 
-On Thu, Jul 18, 2024 at 11:28=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Add the directory structure and build files as well as changes to
-> .gitignore and Doxygen.in for GLib bindings.
->
-> Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+Hi,
 
-[snip]
+I found this thread about the vf610 driver, because I noticed today that
+the i.MX93 is missing the GPIO get_direction callback.
 
-> +
-> +if HAVE_INTROSPECTION
-> +
-> +INTROSPECTION_GIRS =3D gpiod-glib.gir
-> +
-> +girdir =3D $(INTROSPECTION_GIRDIR)
-> +gir_DATA =3D gpiod-glib.gir
-> +
-> +typelibsdir =3D $(INTROSPECTION_TYPELIBDIR)
-> +typelibs_DATA =3D gpiod-glib.typelib
-> +
-> +gpiod_gir_SCANNERFLAGS =3D \
-> +       --c-include=3D"gpiod-glib.h" \
-> +       --warn-all \
-> +       --namespace Gpiodglib \
-> +       --identifier-prefix Gpiodglib \
-> +       --symbol-prefix gpiod
-> +
-> +gpiod_glib_gir_CFLAGS =3D $(libgpiod_glib_la_CFLAGS)
-> +
-> +gpiod-glib.gir: libgpiod-glib.la
-> +gpiod_glib_gir_INCLUDES =3D Gio-2.0
-> +gpiod_glib_gir_LIBS =3D libgpiod-glib.la
-> +gpiod_glib_gir_FILES =3D $(libgpiod_glib_la_SOURCES)
-> +gpiod_glib_gir_EXPORT_PACKAGES =3D gpiod-glib
-> +
-> +include $(INTROSPECTION_MAKEFILE)
+Are there any plans to implement this?
 
-Ah, I realized I added the introspection bits but they just silently
-fail to generate anything useful. I probably still need to change the
-file names to fit the convention.
-
-Bart
+Best regards
 
