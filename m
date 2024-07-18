@@ -1,147 +1,99 @@
-Return-Path: <linux-gpio+bounces-8251-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8252-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0D2E93450D
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 01:33:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97FCE93454B
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 02:09:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 745B41F22205
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jul 2024 23:33:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9B4F1C21742
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 00:09:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E85936BB4B;
-	Wed, 17 Jul 2024 23:33:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2406639;
+	Thu, 18 Jul 2024 00:09:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/tYahsI"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="FTnrECSn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6320018EBF;
-	Wed, 17 Jul 2024 23:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37548365
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Jul 2024 00:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721259217; cv=none; b=fRfYZUcdXXi0t3lLUdiTUHeWEDlggNi7Hj14pp00RH70U4Cd13AvA3dHS3EZVN4HvEPG9U0KvVKkYAPfw7nABuESTbU1pu60TjkhvnStESUqh3bRwvuIFRBCbIXJ61Hcu+uHQbConDKW4gS4qdMrhNxpp19mbIWwBlUJOvptN/k=
+	t=1721261380; cv=none; b=FEtE1Fc/6ThJo7Y9y++XfkAmuW7BxEieK7gceco33yzzkpKFiXup3omEtv7IaCnAm5RivgD/5/jgJeyyEolP3P0KXIXBHSSs/cfhXoC2ApifALoZEhX2YBEbHEQcNjb08TbxQ7232+DYdtxZhWnGlwslFgNxhigHn869Dvhmu64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721259217; c=relaxed/simple;
-	bh=/vntp9yziGCzvLchAgMHXkRgHgytqWIKu6wEIUPrxlQ=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=I50lv1Kqj5NSMeWUI/RxfLgvaOT/bjzYxs5YFYqh5viv3r2OTB0xp2uxNR1QGTFPnQh/1nkp4ZMZ274iyQ2DzsJFbhzO+AKWXPUp2/irJIIEtZEbnImKhbuiObOlztCb55V1E6FhPbXGWxuJpcQJwRpVpaKf+l0ldX9EKoG8K/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/tYahsI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A59E2C2BD10;
-	Wed, 17 Jul 2024 23:33:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721259216;
-	bh=/vntp9yziGCzvLchAgMHXkRgHgytqWIKu6wEIUPrxlQ=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=m/tYahsI7GcAsn0eTT4WF3W3BC90QDmQbipyzN62A8EQrxsGjJuDHvLvxJTe9ClPb
-	 SxfN7qFIZCngz7gztSRBpz2eEzrUCy4jUV1ydb6l65kKp+wAq1QWNBsZy5KABTYVQR
-	 tq+sCrNewY9i6SpEr8eZIOLHRCKt7Ey7NF7M1f0KLVQ+ZcrJeHrDZjeNPd1EsmFr+5
-	 4zTlnoxdZoC9fCxuCKnodh5r8fGggVstFE9nygPb3O0rvXh68bBkRq/sZ9W1kFT6Vp
-	 PNOejeGFpQtHdc4Q11bbXLpU6fBG4A6iIgpFlB92tbnMPPxy5xVe6T52lr0cg39ZBV
-	 sbhS/c+mN45rg==
-Message-ID: <1e36b1ba8af3584128550822a70cb072.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1721261380; c=relaxed/simple;
+	bh=uWED7BeiDTld7/fsLTKx/wTQtSU7SKZDeqo41IE1AiA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UB04HNN6/bGvTwRSwp3FMb7EIiTI7BOf5huHTIE5K+gzGNg/R9qHfOXptgqNnZgJ01z82zJA9fM/iG9DE1zuRqk2mIVrFWlvEW9uEu/qXiZzQ9Au0NB11rCUp9Ohrqxx7q2sbbgMI0sv0n+c6EASZ1TfdM9Q2lgfXosDwrC+LBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=FTnrECSn; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-70afe18837cso155859b3a.3
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Jul 2024 17:09:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1721261376; x=1721866176; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FwcOODaiNIPjABUgqnjMrLiYcWKkDs3876nm2eBWCtM=;
+        b=FTnrECSnuklHPxxgIpnP+3hDfYodcMgRoIhEWRzi6/apx081gON8Ftb4OVX6SlKKMZ
+         c88S2eEWiX0zAnbD7HZrL5r/Y9NOVB/KpNFS6tv8vK2xPGAYDZXp1JzA9ebQmlLcg2Jp
+         HmNmrsdYMe7ma97XVcwf14iMT7/yu31WJPLmPBhgMvcqF+svjxlBHgkIwEsrj+xg/ZSy
+         CHPKXh77MRsSH86TJ8qvg5KVDyFnQSIbV3VtWO7rwAnlM76EEZYaRgvOdaCfx7V+4NjH
+         Hy+k2cpv3JPCCb75lAqOklv1Gap2vrvgD3+D5kXMZcIjSlHndfS+qBf7RlNwKHaJiVS2
+         u3hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721261376; x=1721866176;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FwcOODaiNIPjABUgqnjMrLiYcWKkDs3876nm2eBWCtM=;
+        b=nsF2aQHOReyCUeFOB7SLa9D9uWgGImb2vWS01cj8R8k4ei8p00lR/NPwNBt89jTpat
+         Nr7HxdnZK3u1ImnBGXtwKjmmx7NIHRMhkbFY8OpWjdQJHPIDvKJUHavPGgqitV4nNmiu
+         c8yDhTexQzGrI1xeX9VDcbjLibD4NC8qlWhTPO7ZjBqLROXJinTIViLbYX2I5cy99lj9
+         39zRW2KIhdw688uR8F/+XjGX+tmDryyXZbdWRj0KrrkOyfxupXXUldxudv1fnKzvHOg+
+         K3glQVAyUuMzSl+LSyBnPQ85/D0i3uAqSVXqHH4rZBQ/EH5t5lDlGgsNZ1X6ZOCDWQEi
+         SSog==
+X-Gm-Message-State: AOJu0YyiEbAIfRh8ZoaT6V4UVq69CaB0dsa0Hig/84J1b8c4YonrM+1q
+	cw0ggkweKQrM9zH/rkr2KQW8EWvSzCgdlwLOWgTAoe8+l9K0BELcdN+nG1INdV00eEDfO5SmvwU
+	+
+X-Google-Smtp-Source: AGHT+IHpAh4WmnI72A/J/NGgvzUVLyzzYouBd6LJJfDkIdYvi8ppmd2MWpLj53aHutllJTGVi4PFQA==
+X-Received: by 2002:a05:6a00:1743:b0:70b:53b4:a805 with SMTP id d2e1a72fcca58-70ce4ff9136mr4221056b3a.16.1721261375983;
+        Wed, 17 Jul 2024 17:09:35 -0700 (PDT)
+Received: from localhost (75-172-111-187.tukw.qwest.net. [75.172.111.187])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b7eca7941sm8733279b3a.157.2024.07.17.17.09.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jul 2024 17:09:35 -0700 (PDT)
+From: Kevin Hilman <khilman@baylibre.com>
+To: linux-gpio@vger.kernel.org
+Cc: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 0/2] gpio: davinci: improve wakeup capabilities
+Date: Wed, 17 Jul 2024 17:09:31 -0700
+Message-ID: <20240718000935.2573288-1-khilman@baylibre.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240717-of_property_for_each_u32-v2-1-4060990f49c9@bootlin.com>
-References: <20240717-of_property_for_each_u32-v2-1-4060990f49c9@bootlin.com>
-Subject: Re: [PATCH v2] of: remove internal arguments from of_property_for_each_u32()
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Peng Fan (OSS) <peng.fan@oss.nxp.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, patches@opensource.cirrus.com, linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, Luca Ceresoli <luca.ceresoli@bootlin.com>, Andre Przywara <andre.przywara@arm.com>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, Richard Fitzgerald <rf@opensource.cirrus.com>
-To: Aaro Koskinen <aaro.koskinen@iki.fi>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Alim Akhtar <alim.akhtar@samsung.com>, Andreas Kemnade <andreas@kemnade.info>, Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Andersson <andersson@kernel.org>, Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Chen-Yu Tsai <wens@csie.org>, Chester Lin <chester62515@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, Damien Le Moal <dlemoal@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>, Doug Berger <opendmb@gmail.com>, Emilio =?utf-8?q?L=C3=B3pez?= <emilio@elopez.com.ar>, Fabio Estevam <festevam@gmail.com>, Florian Fainelli <florian.fainelli@broadcom.com>, Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jacky Bai <ping.bai@nxp.com>, Jaroslav Kysela <perex@perex.cz>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jiri Slaby
-  <jirislaby@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Mark Brown <broonie@kernel.org>, Matthias Brugger <mbrugger@suse.com>, Michael Ellerman <mpe@ellerman.id.au>, Michael Turquette <mturquette@baylibre.com>, Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Naveen N. Rao <naveen.n.rao@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Richard Leitner <richard.leitner@linux.dev>, Rob Herring <robh@kernel.org>, Roger Quadros <rogerq@kernel.org>, Samuel Holland <samuel@sholland.org>, Saravana Kannan <saravanak@google.com>, Shawn Guo <shawnguo@kernel.org>, Takashi Iwai <tiwai@suse.com>, Thomas Gleixner 
- <tglx@linutronix.de>, Tony Lindgren <tony@atomide.com>, Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Date: Wed, 17 Jul 2024 16:33:34 -0700
-User-Agent: alot/0.10
+Content-Transfer-Encoding: 8bit
 
-Quoting Luca Ceresoli (2024-07-17 09:16:32)
-> diff --git a/drivers/clk/clk-si5351.c b/drivers/clk/clk-si5351.c
-> index 4ce83c5265b8..d4904f59f83f 100644
-> --- a/drivers/clk/clk-si5351.c
-> +++ b/drivers/clk/clk-si5351.c
-> @@ -1175,8 +1175,8 @@ static int si5351_dt_parse(struct i2c_client *clien=
-t,
->  {
->         struct device_node *child, *np =3D client->dev.of_node;
->         struct si5351_platform_data *pdata;
-> -       struct property *prop;
-> -       const __be32 *p;
-> +       u32 array[4];
-> +       int sz, i;
->         int num =3D 0;
->         u32 val;
-> =20
-> @@ -1191,20 +1191,24 @@ static int si5351_dt_parse(struct i2c_client *cli=
-ent,
->          * property silabs,pll-source : <num src>, [<..>]
->          * allow to selectively set pll source
->          */
-> -       of_property_for_each_u32(np, "silabs,pll-source", prop, p, num) {
-> +       sz =3D of_property_read_variable_u32_array(np, "silabs,pll-source=
-", array, 2, 4);
-> +       sz =3D (sz =3D=3D -EINVAL) ? 0 : sz; /* Missing property is OK */
-> +       if (sz < 0)
-> +               return dev_err_probe(&client->dev, sz, "invalid pll-sourc=
-e");
+Improve wakeup capabilities in the gpio-davinci driver by properly
+handling the "wakeup-source" property from DT, but also by keeping
+track of any wake-enabled IRQs.
 
-Needs a newline on the printk message.
+Kevin Hilman (2):
+  gpiolib: expose for_each_gpio_desc() to drivers
+  gpio: davinci: handle wakeup-source property, detect wake IRQs
 
-> +       if (sz % 2)
-> +               return dev_err_probe(&client->dev, -EINVAL,
-> +                                    "missing pll-source for pll %d\n", a=
-rray[sz - 1]);
-> +
-> +       for (i =3D 0; i < sz; i +=3D 2) {
-> +               num =3D array[i];
-> +               val =3D array[i + 1];
-> +
->                 if (num >=3D 2) {
->                         dev_err(&client->dev,
->                                 "invalid pll %d on pll-source prop\n", nu=
-m);
->                         return -EINVAL;
->                 }
-> =20
-> -               p =3D of_prop_next_u32(prop, p, &val);
-> -               if (!p) {
-> -                       dev_err(&client->dev,
-> -                               "missing pll-source for pll %d\n", num);
-> -                       return -EINVAL;
-> -               }
-> -
->                 switch (val) {
->                 case 0:
->                         pdata->pll_src[num] =3D SI5351_PLL_SRC_XTAL;
-> @@ -1232,19 +1236,24 @@ static int si5351_dt_parse(struct i2c_client *cli=
-ent,
->         pdata->pll_reset[0] =3D true;
->         pdata->pll_reset[1] =3D true;
-> =20
-> -       of_property_for_each_u32(np, "silabs,pll-reset-mode", prop, p, nu=
-m) {
-> +       sz =3D of_property_read_variable_u32_array(np, "silabs,pll-reset-=
-mode", array, 2, 4);
-> +       sz =3D (sz =3D=3D -EINVAL) ? 0 : sz; /* Missing property is OK */
-> +       if (sz < 0)
-> +               return dev_err_probe(&client->dev, sz, "invalid pll-reset=
--mode");
+ drivers/gpio/gpio-davinci.c | 25 +++++++++++++++++++++++++
+ drivers/gpio/gpiolib.h      |  5 -----
+ include/linux/gpio/driver.h |  5 +++++
+ 3 files changed, 30 insertions(+), 5 deletions(-)
 
-Needs a newline on the printk message.
+-- 
+2.45.2
 
-> +       if (sz % 2)
-> +               return dev_err_probe(&client->dev, -EINVAL,
-> +                                    "missing pll-reset-mode for pll %d\n=
-", array[sz - 1]);
-> +
-
-With those fixed
-
-Acked-by: Stephen Boyd <sboyd@kernel.org> # clk
 
