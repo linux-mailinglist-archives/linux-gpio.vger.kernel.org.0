@@ -1,118 +1,140 @@
-Return-Path: <linux-gpio+bounces-8260-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8261-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0DB59347A5
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 07:35:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 658B193486E
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 08:57:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4BF68B210E7
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 05:35:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C9371F21D5C
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jul 2024 06:57:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC25244C7C;
-	Thu, 18 Jul 2024 05:35:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35D2274418;
+	Thu, 18 Jul 2024 06:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uFMS5Auj"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OlB6nsD5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D99638DE5;
-	Thu, 18 Jul 2024 05:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A009F2CCA3;
+	Thu, 18 Jul 2024 06:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721280916; cv=none; b=uZcC/Ou1DMOelNExL33lOndNo+fC/elQPPNjRgVjnrPaQT1PqD5H62ZBhpkX5qWTSoUQ9x9DoryfF2jfbXtM8MnThcaq2gk+xfBxWRACrfMRRk5x2i6bg9C2EV8XYE6MDu/lI8Qxa9oDp5Ix+FEcH/uI+KHEU7671U8w9Nkhwcs=
+	t=1721285833; cv=none; b=fNmUaH5/hDAeWsLLvkppIIirgmi1HtbJnuKnYqml9XcyWghm6dQ0du5cbbl9lGMp/uVT21LNCzIcGIFrEPxbQY+muuwMfwitKnnkwLQvTCyb6xuhA0REMgSsgoInLb+0Mq0qvqXOq9oC95A5W0TTZAbZj/VzxzslgLsYebixoxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721280916; c=relaxed/simple;
-	bh=554arJlAyY+yMIrtdQmrj1Ybfg3uQbn9nKNnJDo95vI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AEajM6Jqdd/dXSSPISn8p133tsZqP/Jo0DhowlTOyScRqT8ZurYNS9lL+yZZgorErMjt2MylwowZoGT+AiJthO4id1vHzcApOkKtWxJTwHi1Hs7AcYNh36RUZHnjMOAcLo2kN4Pkpr/Atmji/DJFq3tHbufgei7rjrl9pHvcook=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uFMS5Auj; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 46I5ZB9t107915;
-	Thu, 18 Jul 2024 00:35:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1721280911;
-	bh=fMUuTgKi6BATBFx4lgMh4QmXOqcHrSmeENQuJ8BZjws=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=uFMS5AujdFaRjkktNid3HCjhGCNiW69UGQL5Ivx3ODDB18XQfuDyjBLBxg4oqw0t5
-	 i8Al/hucrpoal09dBvZ+NAu33+hpRizdx3tTCaYMN0fVzNYLbUu/Ogf86ZTEVDXp2E
-	 5YFeb/K6rVKTsRVCirpDDNtNYBeAUv2PHFaZ7THg=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 46I5ZB7Y001025
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 18 Jul 2024 00:35:11 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 18
- Jul 2024 00:35:11 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 18 Jul 2024 00:35:11 -0500
-Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 46I5ZA24006332;
-	Thu, 18 Jul 2024 00:35:11 -0500
-Date: Thu, 18 Jul 2024 11:05:10 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: Kevin Hilman <khilman@baylibre.com>
-CC: <linux-gpio@vger.kernel.org>, Keerthy <j-keerthy@ti.com>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        open list
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] gpio: davinci: handle wakeup-source property, detect
- wake IRQs
-Message-ID: <20240718053510.ywdv5c7fk3natknl@dhruva>
-References: <20240718000935.2573288-1-khilman@baylibre.com>
- <20240718000935.2573288-3-khilman@baylibre.com>
+	s=arc-20240116; t=1721285833; c=relaxed/simple;
+	bh=z+aCMhKYfdvSH3LqcS7QRiHX5Ygt46joT7nhNjNOLXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R6V6ocq6oikBjxhzj8+vNfcMiWTu45ZEzHbhFgRHS4+nC6GeFhk81jBnyENm1YSo++iXzaZ1tfBJdxX+Dx2IpYBffxq1vvSDPIikQ1n9+bjxTEe0xWaT6Q7Ooc3L/Myt/6rFktvb5dlU/5RMviYmnc0bsfk8t91KKzRBpzY/tRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OlB6nsD5; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 66B00C0011;
+	Thu, 18 Jul 2024 06:56:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1721285821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TgZHkXL2FGs1/bjZPDSboGR72yBe//NfgloPvNTjUQ0=;
+	b=OlB6nsD5RtGZmYjd7bhjEoZx7QMkbbOT8V45YhxxCFz4y2iiCJe+cf2PVPl+VsXD6UUMqk
+	Yc28bGhZQ13OubzP5CW/pjPqqFo91MRM0eVoREVGLvn0MLgNZy6pPxquFKWhNBkv4SbFT2
+	sax9ioW5vC5M5bokQz4XncM9ZdU0GCDemzBwA+l1XJdTnXTEUKHI48dxPqMAjv00+G3aQG
+	rBXI5/ojqb79XSjovNP74Rn6wSf1My85vfzfK9OmlUEoc3d8vGPg+knHhqSD5yHTRQLUcZ
+	BDxiKiWHxBRawYhcLiwX+N2Krj0xmgk4IRTokaqbJaztXMntEG+p6mo1v3ON7A==
+Date: Thu, 18 Jul 2024 08:56:51 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Andreas Kemnade <andreas@kemnade.info>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Bjorn Andersson <andersson@kernel.org>, Broadcom internal
+ kernel review list <bcm-kernel-feedback-list@broadcom.com>, Chen-Yu Tsai
+ <wens@csie.org>, Chester Lin <chester62515@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Damien Le Moal <dlemoal@kernel.org>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>, Dong Aisheng <aisheng.dong@nxp.com>, Doug
+ Berger <opendmb@gmail.com>, Emilio =?UTF-8?Q?L=C3=B3pez?=
+ <emilio@elopez.com.ar>, Fabio Estevam <festevam@gmail.com>, Florian
+ Fainelli <florian.fainelli@broadcom.com>, Ghennadi Procopciuc
+ <ghennadi.procopciuc@oss.nxp.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Jacky Bai <ping.bai@nxp.com>, Jaroslav Kysela
+ <perex@perex.cz>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jiri Slaby 
+ <jirislaby@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Kevin Hilman
+ <khilman@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Lars-Peter
+ Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown
+ <broonie@kernel.org>, Matthias Brugger <mbrugger@suse.com>, Michael
+ Ellerman <mpe@ellerman.id.au>, Michael Turquette <mturquette@baylibre.com>,
+ Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Nicholas Piggin
+ <npiggin@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, Richard Leitner
+ <richard.leitner@linux.dev>, Rob Herring <robh@kernel.org>, Roger Quadros
+ <rogerq@kernel.org>, Samuel Holland <samuel@sholland.org>, Saravana Kannan
+ <saravanak@google.com>, Shawn Guo <shawnguo@kernel.org>, Takashi Iwai
+ <tiwai@suse.com>, Thomas Gleixner  <tglx@linutronix.de>, Tony Lindgren
+ <tony@atomide.com>, Uwe =?UTF-8?Q?Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, llvm@lists.linux.dev,
+ linux-clk@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-samsung-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-usb@vger.kernel.org, patches@opensource.cirrus.com,
+ linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, Andre Przywara <andre.przywara@arm.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Uwe =?UTF-8?Q?Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@baylibre.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>
+Subject: Re: [PATCH v2] of: remove internal arguments from
+ of_property_for_each_u32()
+Message-ID: <20240718085651.63ddfb20@booty>
+In-Reply-To: <1e36b1ba8af3584128550822a70cb072.sboyd@kernel.org>
+References: <20240717-of_property_for_each_u32-v2-1-4060990f49c9@bootlin.com>
+	<1e36b1ba8af3584128550822a70cb072.sboyd@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240718000935.2573288-3-khilman@baylibre.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Jul 17, 2024 at 17:09:33 -0700, Kevin Hilman wrote:
-> If the wakeup-source property is used for the GPIO controller, then
-> mark the controller as wakeup capable.
+Hello Stephen,
+
+On Wed, 17 Jul 2024 16:33:34 -0700
+Stephen Boyd <sboyd@kernel.org> wrote:
+
+> > @@ -1191,20 +1191,24 @@ static int si5351_dt_parse(struct i2c_client *client,
+> >          * property silabs,pll-source : <num src>, [<..>]
+> >          * allow to selectively set pll source
+> >          */
+> > -       of_property_for_each_u32(np, "silabs,pll-source", prop, p, num) {
+> > +       sz = of_property_read_variable_u32_array(np, "silabs,pll-source", array, 2, 4);
+> > +       sz = (sz == -EINVAL) ? 0 : sz; /* Missing property is OK */
+> > +       if (sz < 0)
+> > +               return dev_err_probe(&client->dev, sz, "invalid pll-source");  
 > 
-> Further, if there are any GPIO IRQs that are marked as wakeup-enabled,
-> then mark the GPIO controller as wakeup enabled also.  Since the GPIO
-> IRQs that are wake-enabled are dynamic, this is (re)calculated during
-> each suspend (and cleared on resume.)
-> 
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-> ---
->  drivers/gpio/gpio-davinci.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-> index 1d0175d6350b..031aa7c30855 100644
-> --- a/drivers/gpio/gpio-davinci.c
-> +++ b/drivers/gpio/gpio-davinci.c
-> @@ -7,6 +7,7 @@
->   */
->  
->  #include <linux/gpio/driver.h>
-> +#include <linux/gpio/consumer.h>
+> Needs a newline on the printk message.
 
-Please sort this...
+Ouch! Fix queued for v3.
 
-[...]
-
-With that taken care,
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Thanks,
+Luca
 
 -- 
-Best regards,
-Dhruva
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
