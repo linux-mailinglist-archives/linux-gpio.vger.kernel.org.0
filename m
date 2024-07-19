@@ -1,153 +1,113 @@
-Return-Path: <linux-gpio+bounces-8294-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8295-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23BC393746F
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jul 2024 09:36:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8861E9375B9
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jul 2024 11:33:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CDAA2281C92
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jul 2024 07:36:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA0131C21220
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jul 2024 09:33:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 235DD54BD8;
-	Fri, 19 Jul 2024 07:36:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B8C578291;
+	Fri, 19 Jul 2024 09:33:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iSOPtPQn"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zWvYkptf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70B52CA6;
-	Fri, 19 Jul 2024 07:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87845F876
+	for <linux-gpio@vger.kernel.org>; Fri, 19 Jul 2024 09:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721374604; cv=none; b=NLJmnUmKG+QbFDUS6PQF5LlrwtyLqaemTGQYbeMxqCrCTW8gRAotkLRUOuEbZPSejuPam59lEIWEvfVa4gYXFJUdVi3aWRw/HGT55dTFJHW5bx9E1s39/Z8bi9LgApuJGuIPTGdKQz3Q4PZT/1AcB/WEZFHhAaJ8rUz8KJ/QOh0=
+	t=1721381618; cv=none; b=G8K+l8IQj/zVDDtT8jNgk4bkJnh2vjctnrIvFRJIE8zS62x5v+dml1gi1cPl6QBg06KrPIwPRhZOPMe9aynWrbQjVtNOc2mI/mMePINvdvFao5qBDSLwaSVg0Mfx4JFEPbYCLgNZyKYke0Xjjov6Thap2E+5YocgpUYkLPqXmAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721374604; c=relaxed/simple;
-	bh=aC9MkwUDJk7T/TtXgzd8e6HDNqDjDkQL+GKqceDP1Ho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r1o/Wz5rPH5CijvWJqPSs8RKapv7Xd1IksU/9IPV/CkFcSpVPxz48Kk0zEJlhASGsHn3zwOclfmZFZ96nJDpfwSaCfTmZeVe4ebYMdChPYDzjms15jWqb78j3t6NxLJHJsCGVMMtU+JVGrUgHQ2RDt0x4S2RodqS9UFuZtgrZjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=iSOPtPQn; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3CF85471;
-	Fri, 19 Jul 2024 09:36:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1721374561;
-	bh=aC9MkwUDJk7T/TtXgzd8e6HDNqDjDkQL+GKqceDP1Ho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iSOPtPQnAN2dN+dPrtvML40dvEnFrkSH/9buEzj8weB6O99NTguiVaDRAWzJKgbkl
-	 /6qAPZZwbTGIeh8HhLQAcZbm47LQcoPXdY80ICPwbzH1whRI2dWu/PbvGXoyJUzpuG
-	 3Ol5HkEZnWBSQ1bhVwVYc+2l1CIK2rbIWGbs1nSQ=
-Date: Fri, 19 Jul 2024 10:36:25 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH v4 2/4] mfd: adp5585: Add Analog Devices ADP5585 core
- support
-Message-ID: <20240719073625.GA12656@pendragon.ideasonboard.com>
-References: <20240608141633.2562-1-laurent.pinchart@ideasonboard.com>
- <20240608141633.2562-3-laurent.pinchart@ideasonboard.com>
- <Zpcu3+6Ar/zR78Ma@lizhi-Precision-Tower-5810>
+	s=arc-20240116; t=1721381618; c=relaxed/simple;
+	bh=fmBwmdEFK/ZhjCn7imf45PjN0JhL1Geo2gKFf8SgFaU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KUXImVEs3Qs4YLEZh7XN5f8RrIB7yha5grK0117VlSj+sGVSz8uDdolwE3EW26w6IERY2OfKYF38pVNmnzVGOlXnm+HY0ch1fl6qzVVyuouCaWxISKXj5cnQG35otTOOjlpS0FGI86v2vBm9YYoE7euYtDJOxpnC56QGy5VzwuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zWvYkptf; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2eeec60a324so25807161fa.2
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Jul 2024 02:33:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1721381614; x=1721986414; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sjGBbCTIc2tjcoLSaEMzrNmaKQ11GjIwF71M6gs1Kkc=;
+        b=zWvYkptfPC9D1E0IGn0iYbSF7aQph58fg0PK92bUr6b2CliaNYvx2mlF1eVnEzBXhQ
+         uD0G/KMMm8ntO+cmXJX7tF+WMEORYYwYQZCSPRKZz5rFtAYPpwMMutPj2Henobf83I47
+         zyL0JNRuRrrZ/vIbhB0ZifrWG9NU5T/vKxwJ2s86GwfsKjhTP/MuN3UPvamBUZfvr+NY
+         RwyFizeq/8iqzTZ69mBlJEw+gS66BA0hrvj63dfIzLRiW9UtBIi4FpjoaQFPAWtzJC1g
+         uazIQlG8whE3GGHkMnJuQWopBwtQlFWT2GHfuyRQCivwTejrdHT+O6V8jnYKf4YmkSCC
+         gn+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721381614; x=1721986414;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sjGBbCTIc2tjcoLSaEMzrNmaKQ11GjIwF71M6gs1Kkc=;
+        b=LL3gxls5Exj5OmNOvH8PHB8rZBDN6PH0c71ikRu4IoecB1JMs5XtGazJ/QGeOQuoie
+         3F9U7maErESgBp5YEKY0BJNrhH8OJMliZu4R4IS2ZunhIfi11LHy472unQBNdS7SbFjm
+         PT5R3IwigitpLarW7ShEbf/I5+fwgMS0hVdgmninIHiv56Tl7ClZ+BDZLBdIW9foxJyF
+         xvtoDWQdYp6IcMpLggpe2URP5WIlzN3zY0U5XbmVBjokvmJS2Ssbc2wBcDiiXqorNPj6
+         ScnD6JjiDLafZNxlA6CEU5Wy6f/RWa7rMpNin5RWe6FFEKrppUbNFBTV0YduXmwq17u7
+         l8UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5P9di44iPGayNW0mREnuELYkiXhy6g3XwjVcFMxu/eyw2cevigTCU3djH+7b0CZVmnFCBQx19ZA886njdru2niXY1XwQOVyIZFw==
+X-Gm-Message-State: AOJu0YzAa9w8GhRz1GOKpr6GhBrkV1LfQJvSjTZ+WdrsjoLOPpJOV5bb
+	y48yzlkZbi3AvV76rk8lkE6GVMQ23v07RwbdAZqa4tLk8AnEfDx8Dh5i6Sr8z9DfuN1LPSJ8Km4
+	GAAEwXRSgy56mOU3MGC05H768NaCdwlQQN8CkBg==
+X-Google-Smtp-Source: AGHT+IEVJlksg3wxbTsGoI1DEwpomAjFcyzj462fFT2RJg9MIxvSaxY9hX7/i8qMDvjBvwETZQNwsh8eVTRY9nGAypM=
+X-Received: by 2002:a2e:9a87:0:b0:2ee:8566:32cb with SMTP id
+ 38308e7fff4ca-2ef05c73758mr37015821fa.16.1721381613741; Fri, 19 Jul 2024
+ 02:33:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Zpcu3+6Ar/zR78Ma@lizhi-Precision-Tower-5810>
+References: <cover.1721039339.git.ikerpedrosam@gmail.com>
+In-Reply-To: <cover.1721039339.git.ikerpedrosam@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 19 Jul 2024 11:33:22 +0200
+Message-ID: <CAMRc=Mca9hkN4pNRRJwvM2iYjyevSoq6nvt1TTmzbBF4qCiA5w@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 0/4] Fix issues detected by static analyzer
+To: Iker Pedrosa <ikerpedrosam@gmail.com>
+Cc: ipedrosa@redhat.com, javierm@redhat.com, perobins@redhat.com, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Frank,
+On Wed, Jul 17, 2024 at 1:37=E2=80=AFPM Iker Pedrosa <ikerpedrosam@gmail.co=
+m> wrote:
+>
+> This patch series contain a set of fixes for several issues detected by a
+> static analyzer tool. They are related to wrong pointers management and
+> string termination.
+>
 
-On Tue, Jul 16, 2024 at 10:39:27PM -0400, Frank Li wrote:
-> On Sat, Jun 08, 2024 at 05:16:31PM +0300, Laurent Pinchart wrote:
-> > From: Haibo Chen <haibo.chen@nxp.com>
-> > 
-> > The ADP5585 is a 10/11 input/output port expander with a built in keypad
-> > matrix decoder, programmable logic, reset generator, and PWM generator.
-> > This driver supports the chip by modelling it as an MFD device, with two
-> > child devices for the GPIO and PWM functions.
-> > 
-> > The driver is derived from an initial implementation from NXP, available
-> > in commit 8059835bee19 ("MLK-25917-1 mfd: adp5585: add ADI adp5585 core
-> > support") in their BSP kernel tree. It has been extensively rewritten.
-> > 
-> > Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> Laurent:
-> 	Just saw you already sent out adp5585 patches. Do you plan to
-> continue work on this? If you are busy, I can help follow up this.
+What is the static analyzer you used for this?
 
-I just came back from vacation and have a large backlog. Please feel
-free to take my v4, rebase it, address any review comments, and send a
-v5 if you would like to help merging the driver faster. Please CC me on
-the patch submission.
+Bart
 
-> > ---
-> > Changes since v2:
-> > 
-> > - Add missing and remove extraneous headers
-> > - Use i2c_get_match_data()
-> > - Drop unneeded parentheses
-> > - Use GENMASK()
-> > - Drop of_match_ptr()
-> > - Allow compilation on !OF with COMPILE_TEST
-> > - Replace ADP5585_MAN_ID() macro with ADP5585_MAN_ID_MASK
-> > - Drop unneeded macro
-> > 
-> > Changes since v1:
-> > 
-> > - Add comment to explain BANK and BIT macros
-> > - Drop compatible strings from cells
-> > - White space fixes
-> > - Fix comparison to NULL
-> > 
-> > Changes compared to the NXP original version:
-> > 
-> > - Add MAINTAINERS entry
-> > - Fix compatible strings for child devices
-> > - Fix header guards
-> > - Use lowercase hex constants
-> > - White space fixes
-> > - Use module_i2c_driver()
-> > - Switch to regmap
-> > - Drop I2C device ID table
-> > - Drop ADP5585_REG_MASK
-> > - Support R5 GPIO pin
-> > - Drop dev field from adp5585_dev structure
-> > - Check device ID at probe time
-> > - Fix register field names
-> > - Update copyright
-> > - Update license to GPL-2.0-only
-> > - Implement suspend/resume
-> > ---
-> >  MAINTAINERS                 |   2 +
-> >  drivers/mfd/Kconfig         |  12 +++
-> >  drivers/mfd/Makefile        |   1 +
-> >  drivers/mfd/adp5585.c       | 199 ++++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/adp5585.h | 126 +++++++++++++++++++++++
-> >  5 files changed, 340 insertions(+)
-> >  create mode 100644 drivers/mfd/adp5585.c
-> >  create mode 100644 include/linux/mfd/adp5585.h
-
-[snip]
-
--- 
-Regards,
-
-Laurent Pinchart
+> Iker Pedrosa (4):
+>   bindings: python: gpiod: avoid use after free
+>   lib: line-info strings termination
+>   lib: chip-info strings termination
+>   tools: free to avoid leak
+>
+>  bindings/python/gpiod/ext/chip.c | 6 ++++--
+>  lib/chip-info.c                  | 9 ++++++---
+>  lib/line-info.c                  | 6 ++++--
+>  tools/gpioinfo.c                 | 4 +++-
+>  4 files changed, 17 insertions(+), 8 deletions(-)
+>
+> --
+> 2.45.2
+>
 
