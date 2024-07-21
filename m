@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-8320-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8321-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1C01938441
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jul 2024 11:58:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F4B19384D0
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jul 2024 15:39:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28380B20D9F
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jul 2024 09:58:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B29791C20BDF
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jul 2024 13:39:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DAE1DDC1;
-	Sun, 21 Jul 2024 09:58:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20102166312;
+	Sun, 21 Jul 2024 13:37:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAtUt366"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kqCwryRv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCABD512;
-	Sun, 21 Jul 2024 09:58:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82391662EA;
+	Sun, 21 Jul 2024 13:37:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721555892; cv=none; b=nrIbO1F/q8Ue0jduunOtFk6NJblunrv/0ceC6jUVhdj18G1k0AghJPE1bXQRdonBYjswqSlWnvmYI8t4V1jrqnpvfC8xNJuoBzBrsjtMUE20VbJLVLyiSpHMKXKTr66BZNQ+1+Cwcdm1oblUSmarD6ZaCF8ZZh8WATsrhviK6EM=
+	t=1721569062; cv=none; b=TbUZlkjmPPVnZYum6mc8+eEgOyVc9ju3OHHbweXrLne2CNNjO9Pgm5k4JZYEGJ+fcYv4RP/nCEZt4hDUcxf+zHyxbJxSEmMMiuavvcxmtsiwX4npJe7DuoTCj2A+A/9URa+kXgS8ZxfiQmPXjBtajuaOq82R3P9C8q3VExmx9sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721555892; c=relaxed/simple;
-	bh=g10bqf5W4a2qVhz2e4z2Qko1iUpMJXrxY40AjrRiXpE=;
+	s=arc-20240116; t=1721569062; c=relaxed/simple;
+	bh=K/xym0/KBdypnuSiPIParBqdNB0Gawr610OSpcLoQgk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gWOEYSepHk+nc+u9QFA+VlLLUsyNlMILAgLtaKckYFtmT27Z+EDV+7ldlX4Lct9wV/6TbGMUFzTFiIflPvThrSY+6AgefoHF94hDxeKqhoE7/bfENCh3sPD8u6kpeGzXRzqi9dzD77y45mpsm/IFi/WNMipAWvl2Irk6b4CDOg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CAtUt366; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D32F5C116B1;
-	Sun, 21 Jul 2024 09:58:07 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=MmJiHDZ6XsfduTCldocGkkFRsq8asO5fz2lMaiiwfoAtCgbkLzzVlSrx6uVZqFvDHU+droyVDskcR+OWz2S1ZXk9LiaI3PJbws0FlYI259tB7vEz9zw+/tWek5SRVvjpynscGSKIUvVcAZHZnDxv0h+Fm3RPAcwBy8KDtlmgHBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kqCwryRv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4F26C116B1;
+	Sun, 21 Jul 2024 13:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721555891;
-	bh=g10bqf5W4a2qVhz2e4z2Qko1iUpMJXrxY40AjrRiXpE=;
+	s=k20201202; t=1721569062;
+	bh=K/xym0/KBdypnuSiPIParBqdNB0Gawr610OSpcLoQgk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CAtUt3668Bdq0IzVcbhCDJf5uVO4MKEgTIhsTCwTsOK3Tag9ltNOSjH6foiiFKUwm
-	 zGK0+9U+I9Qq6irD1+F+7AwmrMtx9eV4bofH0r3d4vigv4diKNnNqW7h8pGE0rzqgJ
-	 wuKVhijZqMTt7zNcCqYdct4kYLlLjo7MCd3N4KmhJ0Z7x6UrcXEsVV8jkBD6tqOMXM
-	 jSFdQkgJLDh//My0e9xpTnICrB7Moo0cdbOM7fB+qYmamfDXPyqRf6fmoZG/jvXiib
-	 x2T2RE/B7vlrgV+C42H0HdaKxyoQBd4mKKkDqitIVyvYeJ/tzjKHtAw5StxUaeKbWB
-	 bjrNWvdMSBepg==
-Message-ID: <4f87f1f7-b7e9-4836-bcc0-7b564765abb0@kernel.org>
-Date: Sun, 21 Jul 2024 11:58:05 +0200
+	b=kqCwryRvK2Um3OqBIGRfTA8kSaCnQAbG4Th3g5gnpNwBZRT6VVg/cW/b4iH+qmP5D
+	 38L7w520zx3E/RFk/gTscRhSLO1musy/ObG5T7fqYCyJxVI0vaNuvFEq0aQj6Te6lV
+	 FISv16X03y9ywQwM9+v7Z9IhoE37XfN1ruRMUNjCLJG+UafiN697sEdX4hRTOTquKn
+	 dnkjgp0NnUdyYiBOpQAJu4EUNSHByLeVjLQP0XYoYzq1pV5DqNOcByJFJEOVII56bB
+	 zP6TLp+vz7jY6KVrQ0gNphxvGRkUuevMA1XRMKyvxjcZMNUNciPp7oAxaZHpm/0QOX
+	 ljar5SQBNNyHQ==
+Message-ID: <fab9dfe8-5e5e-48cf-a08d-6625e5e1cc07@kernel.org>
+Date: Sun, 21 Jul 2024 15:37:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,20 +50,15 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/4] dt-bindings: mfd: Add Analog Devices ADP5585
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
- Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+Subject: Re: [PATCH 1/2] dt-bindings: pincfg-node: Add
+ "input-schmitt-microvolt" property
+To: Inochi Amaoto <inochiama@outlook.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Haibo Chen <haibo.chen@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
- Frank Li <Frank.li@nxp.com>
-References: <20240719203946.22909-1-laurent.pinchart@ideasonboard.com>
- <20240719203946.22909-2-laurent.pinchart@ideasonboard.com>
- <f962a71c-6be7-4ad2-9753-e1f9ab7a38a0@kernel.org>
- <20240721094520.GA5732@pendragon.ideasonboard.com>
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <IA1PR20MB495346246245074234D337A6BBAC2@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB4953C71C87FD150D2E64FF41BBAC2@IA1PR20MB4953.namprd20.prod.outlook.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,67 +104,21 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240721094520.GA5732@pendragon.ideasonboard.com>
+In-Reply-To: <IA1PR20MB4953C71C87FD150D2E64FF41BBAC2@IA1PR20MB4953.namprd20.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 21/07/2024 11:45, Laurent Pinchart wrote:
-> Hi Krzysztof,
+On 18/07/2024 04:23, Inochi Amaoto wrote:
+> On Sophgo CV18XX platform, threshold strength of schmitt trigger can
+> be configured. As this standard property is already supported by the
+> common pinconf code. Add "input-schmitt-microvolt" property in
+> pincfg-node.yaml so that other platforms requiring such feature can
+> make use of this property.
 > 
-> On Sun, Jul 21, 2024 at 11:23:12AM +0200, Krzysztof Kozlowski wrote:
->> On 19/07/2024 22:39, Laurent Pinchart wrote:
->>> +    maxItems: 1
->>> +
->>> +  interrupts:
->>> +    maxItems: 1
->>> +
->>> +  vdd-supply: true
->>> +
->>> +  gpio-controller: true
->>> +
->>> +  '#gpio-cells':
->>> +    const: 2
->>> +
->>> +  gpio-reserved-ranges: true
->>> +
->>> +  "#pwm-cells":
->>> +    const: 3
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - gpio-controller
->>> +  - "#gpio-cells"
->>> +  - "#pwm-cells"
->>> +
->>> +allOf:
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            const: adi,adp5585-01
->>> +    then:
->>> +      properties:
->>> +        gpio-reserved-ranges: false
->>> +    else:
->>> +      properties:
->>> +        gpio-reserved-ranges:
->>> +          items:
->>> +            - const: 5
->>> +            - const: 1
->>
->> Why reserved ranges are fixed? If they pins are *always* not accessible,
->> then these are not GPIOs. This really looks incorrect.
-> 
-> It's model-dependent. The ADP5585 has 11 pins that can be used as GPIOs.
-> They are named GPIO 1 to GPIO 11 in the datasheet. The -01 variant uses
-> the pin associated with GPIO 6 for a different purpose, so GPIO 6 is not
-> usable. That maps to index 5 as GPIO numbers in DT bindings are 0-based.
-> I've decided to handle that as a reserved GPIO range to keep the GPIO 7
-> to GPIO 11 indices the same across all ADP5585 variants.
+> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
 
-Ah, I missed the fact that gpio-reserved-ranges are not required, so
-some of variants can just skip it. It's fine.
+
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 Best regards,
 Krzysztof
