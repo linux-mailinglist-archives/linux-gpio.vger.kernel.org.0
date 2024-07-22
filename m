@@ -1,151 +1,132 @@
-Return-Path: <linux-gpio+bounces-8343-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8344-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FBB6938D8A
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2024 12:32:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1BCC938EE2
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2024 14:11:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7EDF01C20F46
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2024 10:32:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3B468B2121B
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jul 2024 12:11:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70F7316A94F;
-	Mon, 22 Jul 2024 10:32:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6000616D4D2;
+	Mon, 22 Jul 2024 12:11:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="l3ue96/2"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Rni74CVy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF683234;
-	Mon, 22 Jul 2024 10:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8F116CD3B;
+	Mon, 22 Jul 2024 12:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721644342; cv=none; b=Li8AR3JU3TBFv3OrdiZooutUUCpZR/zHQhc4/os1KwGFhYi/CeTyHwcFKUQqUPEvj8eALvXxZH0X+9yL245PE/gyf5b0bLXpTmurbUgm3Gbw2r3G7mN/6O6Z6MGrWByeh7+vUj6SkNevEnJH4pvM3n8lo8ACayxdDbwBL49mLVc=
+	t=1721650282; cv=none; b=sRM3FtgGFItRJcrz2xcYGouVW1dwnxALE9k0AHuqsZWh2rqEYrsJqpXSsc8O1rZoQo+GYkOLLqKffYdUWKVRYJP7XS3ug1r/9NWbSEfslsNrxFADIksA8ZigNI3nQlh2lVSdLA4A3glpfqS4OB1q94BbLY/wJWhfFx+GNAEYCJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721644342; c=relaxed/simple;
-	bh=btFUX4plcXuFTLmwR5l/4caueJXQ4idgFbnHF3IAqAU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fca11wsFrjY2VQwH9wJKb9Z2UqCPCXdGQAlnmPqBQwqnmrQo/vMEmPZcksz/B9wCudr0VBdZEWj4oaFm9I3PIZMheaAVVIuGbGSX841gqUVGyHt6Wty1NE/PvGJLMRxKyCKZJggaRqwMPzvxQ6a+TRrm0u94gZasXdvpcnsgcUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=l3ue96/2; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1721644336; x=1722249136; i=wahrenst@gmx.net;
-	bh=wgF/b0K1qBqS0k3TASviN5h+UV78eV+HuEXOqpcazLo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=l3ue96/2JAnvnFzdVd2wzlu7kJK+/uVnwuvekEcTyKTE7oVMy85z5lD9aBDFxPY0
-	 KSVasMpO1l7ddoFA8Hv23PpXss6CdipFRVSDk80kyV4Vqb2nion4ed0qZQLGnQH3f
-	 ejd8UUYYoAC7rH/gOZrqjWHIDtm4V41jjf09x93GTaUhU8wF1pAYACpjBAQV7xhLp
-	 GTHIsBmQ6paj7VrMikxI+3Jwr4jIracOu4qkelAu0ziwqTJz/9iUYrIeSO84vThxL
-	 6pDyovEhr4Xu4LtfdhJKXN6qwIw+C58y1+ytYRhMMZOXm9i/xenaCd+2pHQYbJJzo
-	 dwI9Ly2UA5fHxlaB7A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.127] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MvbBu-1sCncH42K6-015Ch0; Mon, 22
- Jul 2024 12:32:16 +0200
-Message-ID: <8ebb5430-93fa-4239-b09a-59f35b0dd94d@gmx.net>
-Date: Mon, 22 Jul 2024 12:32:15 +0200
+	s=arc-20240116; t=1721650282; c=relaxed/simple;
+	bh=6JjbiKt2EElXXn2fNVQlEfWX5/tSPM44Ms3XEhpuj8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XcvmADDXXwXfgT9wSZDfaeiD1vW3BC/41UxoIylcLNc1zCWtGq4p43D+fopi7UzuB19mHLDG+bOr7GaPCwu8rM9Rv317YWgTnArjJxUdiP1g9Xj2YDRo8s+VSm5HZkx6Gy7ySxpQMkdbRi06FlDGm6KAYIX5TV95OQZNjNWfmLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Rni74CVy; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 96F6045B;
+	Mon, 22 Jul 2024 14:10:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1721650236;
+	bh=6JjbiKt2EElXXn2fNVQlEfWX5/tSPM44Ms3XEhpuj8M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Rni74CVyXlkmVgMETNF+exKeTdfWksbyXBjEdToaRRX1iU0r58+V5tA/r8gu66Nuj
+	 eOXN/tTxs6bR9cGYs/ETyxpVzyr9lhgdr+y/WQqcAIuarpnB93VSAsZzc2GTWI3JKu
+	 s8IQRhZeaiXsQC3LcZUApFtKCZBqIR/mtUM1lo2k=
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	Frank Li <Frank.li@nxp.com>
+Subject: [PATCH v7 0/4] ADP5585 GPIO expander, PWM and keypad controller support
+Date: Mon, 22 Jul 2024 15:10:56 +0300
+Message-ID: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: vf610: add get_direction() support
-To: haibo.chen@nxp.com, linus.walleij@linaro.org, brgl@bgdev.pl
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev
-References: <20240722062809.915867-1-haibo.chen@nxp.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <20240722062809.915867-1-haibo.chen@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JtKrb3M07OxzgwfbJ0dLeGwVBAt5FEYl9+paBMqGKsp3C6tXL6P
- iZtk9lYVDXX7MOVEvb94vP7kApQkMDwjtHABvgmkUiJ2wvD4HBe3z5pLPIQNDuYE58kcII2
- mEbeRJ/66ARSHYesgSNaEWjWu0nyCSC8DXhFnDEGhDy8YVNG+NyyaoyRTtjCg6iyjNIJ541
- AMm36Kdnyb/BYgMvmYZ4A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QcmG+gQZ774=;FE8LxkvOE5lBLJMGeiyevjh2oLT
- t73tvdvw7RCjeldFRlTsWVS5E1UuZhmWvfBVmUdnaSZ2nmdZ4A/lzipKtVRE3NkKZDWhJVf+3
- VY3M4tgDK7o72mVf8gvtxHG8QX/PqQpvK2DEutFYk5jO+ArLO0a6I0AZMpuUIQjWlqGSQzLkq
- 4pvbeFPhObyjXPX3sJQ9PG/k71kqf/Tv52I018RBz2DnogcVBI0KRc/jy6cOK2QeiPqVvwMIy
- rFOlFc8B/M2ILAS4U1DgIHzaC+XF/nfHKJrjg9ARCUmRkprhZWWIiaK4DwBQPGjvH0ujpzUNv
- pq/EqSEXqD5qqby4TCBOu5HlqMU8rnm/NPMtPD6/TEWhzytMV6uRv6Vx86HB62M4ofkmJ6qYq
- Fjpc94z27Oqjl1p1T/8Oh8/niGuonjgCerx+keCXkX7VAhDtegKLc6+667jkHEZXpM05hm4Bh
- kyBXuMqvprzM1a6VkUIbRTDa0TdcE6jlo59bOWg+hYxPvOQgXaxXvCEi7kU0VPEwYw8xQef3a
- LwB28zKm9HZdIdS+vZ0Cazu9bGgALQsoB1AvnULIy6jExHM6Yv+OfK4Urgn4PH7L3GK/lyz39
- Q1GmyGhae+WMpOMhIGn48x7nwjZ+cYrL2TZalhBW3EXpk/AY4NrcLQU3zyq+rIg9KOFJe2VEB
- eCyMtJsnG1scisyvEwGQMI0PpLmuJ8axk/tcTkRBu1+aVZ6QH+0Jt90UoxJ/IuqLiz/MqiDee
- 0XmlUf4uVuOTho+vNu57BkKOPxp+6ceeacn9Dp+Yo9m9nMhPfjZWTCfw8mCSfpUrLacjR+2l6
- wvf+w9d6fDE9dke2ewqdfgtA==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Haibo,
+Hello,
 
-Am 22.07.24 um 08:28 schrieb haibo.chen@nxp.com:
-> From: Haibo Chen <haibo.chen@nxp.com>
->
-> For IP which do not contain PDDR, currently use the pinmux API
-> pinctrl_gpio_direction_input() to config the output/input, pinmux
-> currently do not support get_direction(). So here add the GPIO
-> get_direction() support only for the IP which has Port Data
-> Direction Register (PDDR).
->
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> ---
->   drivers/gpio/gpio-vf610.c | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
->
-> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-> index 07e5e6323e86..08ca8377b19c 100644
-> --- a/drivers/gpio/gpio-vf610.c
-> +++ b/drivers/gpio/gpio-vf610.c
-> @@ -151,6 +151,19 @@ static int vf610_gpio_direction_output(struct gpio_=
-chip *chip, unsigned gpio,
->   	return pinctrl_gpio_direction_output(chip, gpio);
->   }
->
-> +static int vf610_gpio_get_direction(struct gpio_chip *gc, unsigned int =
-gpio)
-> +{
-> +	struct vf610_gpio_port *port =3D gpiochip_get_data(gc);
-> +	unsigned long mask =3D BIT(gpio);
-thanks for sending this patch. I'm fine with this patch, but could we
-use u32 to make it clear about the range of the mask?
+This patch series introduces support for the Analog Devices ADP5585, a
+GPIO expander, PWM and keyboard controller. It models the chip as an MFD
+device, and includes DT bindings (1/4), an MFD driver (2/4) and drivers
+for the GPIO (3/4) and PWM (4/4) functions.
 
-Regards
-> +
-> +	mask &=3D vf610_gpio_readl(port->gpio_base + GPIO_PDDR);
-> +
-> +	if (mask)
-> +		return GPIO_LINE_DIRECTION_OUT;
-> +
-> +	return GPIO_LINE_DIRECTION_IN;
-> +}
-> +
->   static void vf610_gpio_irq_handler(struct irq_desc *desc)
->   {
->   	struct vf610_gpio_port *port =3D
-> @@ -362,6 +375,12 @@ static int vf610_gpio_probe(struct platform_device =
-*pdev)
->   	gc->get =3D vf610_gpio_get;
->   	gc->direction_output =3D vf610_gpio_direction_output;
->   	gc->set =3D vf610_gpio_set;
-> +	/*
-> +	 * only IP has Port Data Direction Register(PDDR) can
-> +	 * support get direction
-> +	 */
-> +	if (port->sdata->have_paddr)
-> +		gc->get_direction =3D vf610_gpio_get_direction;
->
->   	/* Mask all GPIO interrupts */
->   	for (i =3D 0; i < gc->ngpio; i++)
+Support for the keypad controller is left out, as I have no means to
+test it at the moment. The chip also includes a tiny reset controller,
+as well as a 3-bit input programmable logic block, which I haven't tried
+to support (and also have no means to test).
+
+The driver is based on an initial version from the NXP BSP kernel, then
+extensively and nearly completely rewritten, with added DT bindings. I
+have nonetheless retained original authorship. Clark, Haibo, if you
+would prefer not being credited and/or listed as authors, please let me
+know.
+
+Compared to v6, this version addresses small review comments. I believe
+it is ready to go, as the PWM and GPIO drivers have been acked by the
+respective subsystem maintainers, and I have addressed Lee's comments on
+the MFD side. Lee, if there's no more issue, could you apply this to
+your tree for v6.12 ?
+
+Clark Wang (1):
+  pwm: adp5585: Add Analog Devices ADP5585 support
+
+Haibo Chen (2):
+  mfd: adp5585: Add Analog Devices ADP5585 core support
+  gpio: adp5585: Add Analog Devices ADP5585 support
+
+Laurent Pinchart (1):
+  dt-bindings: mfd: Add Analog Devices ADP5585
+
+ .../devicetree/bindings/mfd/adi,adp5585.yaml  |  92 +++++++
+ .../devicetree/bindings/trivial-devices.yaml  |   4 -
+ MAINTAINERS                                   |  11 +
+ drivers/gpio/Kconfig                          |   7 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-adp5585.c                   | 229 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |  12 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/adp5585.c                         | 205 ++++++++++++++++
+ drivers/pwm/Kconfig                           |   7 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-adp5585.c                     | 184 ++++++++++++++
+ include/linux/mfd/adp5585.h                   | 126 ++++++++++
+ 13 files changed, 876 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+ create mode 100644 drivers/gpio/gpio-adp5585.c
+ create mode 100644 drivers/mfd/adp5585.c
+ create mode 100644 drivers/pwm/pwm-adp5585.c
+ create mode 100644 include/linux/mfd/adp5585.h
+
+
+base-commit: 0c3836482481200ead7b416ca80c68a29cfdaabd
+-- 
+Regards,
+
+Laurent Pinchart
 
 
