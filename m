@@ -1,140 +1,245 @@
-Return-Path: <linux-gpio+bounces-8366-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8367-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEC6393A48F
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2024 18:50:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B30A193A7B6
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2024 21:32:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2C3111C227BD
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2024 16:50:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4578A284003
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2024 19:32:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAFD1157A7C;
-	Tue, 23 Jul 2024 16:50:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD7DC1422C2;
+	Tue, 23 Jul 2024 19:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJg+wZi2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AYoOLh+7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1585413B287;
-	Tue, 23 Jul 2024 16:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BA813D628;
+	Tue, 23 Jul 2024 19:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721753402; cv=none; b=aLYprKwK5tmgbmn0thGIjyIAg9qoXShEV/cKfOMpCvlfDyXUGohKgEwzUmGG2PbhyotG7FmE/46TE4MjjwgLy8N+yGsNfwSLk39C4R5jjhsv74IQJQa9lGDL5+2POttbBmGdultaNQzXHa4waUZBTWdp8O5SULgVPT7e99fvLSM=
+	t=1721763115; cv=none; b=G6wZh64VqsUDB2cHE6I28DqGfqYIbX0Gu82W2bxBfongM/IH9aexAk6TO1joL7dnDGvoGBxhcuUkAJTSLPRuYsilOrr1JiKWypC0dxyxn4bu8Be/ndgEKc4cqRVDDh94G3aFnmbI1w6g8cZl2b9IAh8d2mjMSoQaNWQVH5UL9N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721753402; c=relaxed/simple;
-	bh=bgRzib7ffK4t/fOJONVPwKLTPYzLnXKhHikn+D5UNbk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C2H5Bfy6UYfGTreqkVz217jOmuO/RzuuZ3Qa1/0juJHYdReC1S9CjI33F/HBGrBDauaJ7fBwOeCiu0P0fw/OWOdr69cNNPQ37tZDnx3p4Bn+5aDKSYNObrZ+ywH2G3yKaCqy0AQQJqDKuCnq4WuJR3QXdA4MRnp5YO5lCua0ulk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GJg+wZi2; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4266edee10cso38498705e9.2;
-        Tue, 23 Jul 2024 09:50:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721753399; x=1722358199; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CIXjbVlMzQ/E74zkKkld+Uu+AAnVMwiLGvKXFp+BrOw=;
-        b=GJg+wZi2ZpT/hjngbuqMks6r2lUX5Jj3u1qpUe/tDNbczrjnsn1Dy5JLsFgFHqnBZR
-         ajI2Qu1dZ4AsJOXcqakWe9QoB7FAbD4WHMjkxrPLoUCv8i6tU9YZZF2CwXkL8zxr4DoD
-         2SGREfZCaIfrbsVAOLqs7JItEvcJRYyygmnZ/gg/1HDFxzSvVbyYwCtZqphhhhFCfrTE
-         QPnl+nLjhrw8SNX3/qs8uzuXBGtohKCt2JGk3lxlDcb8TYg9ezv8XEh/9hbskpBXjCN0
-         9M3xDhrYXQdDINo3ZUfjEclF1zrWK+y7NZV+tKD40kpiHYtVpJEgq1I3IPetMvl9el9o
-         7VqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721753399; x=1722358199;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CIXjbVlMzQ/E74zkKkld+Uu+AAnVMwiLGvKXFp+BrOw=;
-        b=fpLNKf4NrNwxVLELkAu+WM//M1l6t7Ket1AHyxDkIVgPcVfIjwXnyT+TJamYHDTiDm
-         Yl8HXVXU6kA5blYMMY98xOnbdQLq7WFaAz/0c84C/rw4HCBCNSdIGJl0IlfRgxO8SLFe
-         6qNqSanvmbaqo1SU8+8UoNfMEwCPPSNE/n3Mg34iQlJBfTyhU1yeM211RVPF6yLFbKoQ
-         EJkufPZJDvj5SyGdHJ28icChUg7OKrJlFXEhgNNwuyWAUt6AyNaUQCGgvurp72scWYAi
-         5fuIPOmMhQts5gGM1IHuLary6XDo7MgINO59TkZSt4zFdDwMhChIWIr072CqXc0y26JH
-         YAYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWeBfvvTlJNuhRLx7nCSV/1ip4NOUScb1vp+VIG4H8IiNG9Ufw4g5Wx7aoqKk25qxfxjCKMYHXb03amhSFjKEykeEXZQS05lRwI9dfCZyaXQRKIlTRTOStiPo3xywZ8XE3ERRdrxkPAig==
-X-Gm-Message-State: AOJu0YyKs1ANO6bq4Q6GV+/HfyEY5l6fk+dVaDA0xavkzjz+h7Wp886R
-	36tyXQJsf/U/de0ac2RabjAZFYmMxbGan4Jl5OtZhaK2Y10fQXBN
-X-Google-Smtp-Source: AGHT+IF5fAiKkcWS/KCYN1ZlTrAf5xl/dy8U8HtPAw0W8wO8y4qK0TOw3HRz/WQ1BqGJGDbRpL7KuA==
-X-Received: by 2002:a05:600c:5103:b0:426:6b47:290b with SMTP id 5b1f17b1804b1-427daa61cb4mr71062635e9.28.1721753399207;
-        Tue, 23 Jul 2024 09:49:59 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d2a8e42bsm210617315e9.30.2024.07.23.09.49.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jul 2024 09:49:58 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] pinctrl: renesas: rzg2l: Return -EINVAL if the pin doesn't support PIN_CFG_OEN
-Date: Tue, 23 Jul 2024 17:47:44 +0100
-Message-Id: <20240723164744.505233-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1721763115; c=relaxed/simple;
+	bh=o1cb58zWoAaLX2YYfI9NTmLR6gYzz9BPPWEXcPeG9/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qje9mqI/eNGlUzeaHNHGZ+6mlT9JZ2Nw6zb03KY5FxeuDSm7nNdf98+8Lb45UcMnfGS3PDKxdqL9rynBFrSxgq/zb2yA/kgusoTcb5UjFWNLZY7pAXOiczfrK3vgED+d3l+6zblUgB5C7aLWCSuTkbm4YQGdNtE4L5BIhXU9kGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AYoOLh+7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9935AC4AF09;
+	Tue, 23 Jul 2024 19:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721763114;
+	bh=o1cb58zWoAaLX2YYfI9NTmLR6gYzz9BPPWEXcPeG9/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AYoOLh+7TYQJc8U8Br1/u5SBbyXf2UbMOJ6oyP++MfP7T4QNuGQs/LPyiFH23jOdz
+	 rEIPdBPysN2nPhc3C8xtXsomq2tATsVnS7YBUGfqRpbAB5OTqOPOv95pbBonuFkhse
+	 9P49cIoajoXlfCKajyjLr2+zOiZx8F9VOtupCYCZT3s1/V4Fv/ZAIt6qz/tIUvSIOi
+	 H+gkxmYrS3irUhFv0UTSKuw6QJ8ZB/h/h7ESMfWyNYuGOQMTukEmisRQVcKiPfK8rG
+	 X5JiIm+VpXoSMUVgGsvsfFYXP/vhvuzKA9Rdob71yF3AcoBf4sDtlNPjNxChqcmmN5
+	 KbQuX9UgC/3vg==
+Date: Tue, 23 Jul 2024 13:31:53 -0600
+From: Rob Herring <robh@kernel.org>
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Haylen Chu <heylenay@outlook.com>,
+	Drew Fustini <dfustini@baylibre.com>, Yixun Lan <dlan@gentoo.org>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 1/7] dt-bindings: pinctrl: Add pinctrl for Sophgo
+ CV1800 series SoC.
+Message-ID: <20240723193153.GA992922-robh@kernel.org>
+References: <IA1PR20MB49535F9918829FA524BDB02ABBA82@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB4953E686117C52C2B4EF35C3BBA82@IA1PR20MB4953.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <IA1PR20MB4953E686117C52C2B4EF35C3BBA82@IA1PR20MB4953.namprd20.prod.outlook.com>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, Jul 22, 2024 at 09:39:20AM +0800, Inochi Amaoto wrote:
+> Add pinctrl support for Sophgo CV1800 series SoC.
+> 
+> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+> ---
+>  .../pinctrl/sophgo,cv1800-pinctrl.yaml        | 129 ++++++++++++++++++
+>  include/dt-bindings/pinctrl/pinctrl-cv1800b.h |  63 +++++++++
+>  include/dt-bindings/pinctrl/pinctrl-cv1812h.h | 127 +++++++++++++++++
+>  include/dt-bindings/pinctrl/pinctrl-cv18xx.h  |  19 +++
+>  include/dt-bindings/pinctrl/pinctrl-sg2000.h  | 127 +++++++++++++++++
+>  include/dt-bindings/pinctrl/pinctrl-sg2002.h  |  79 +++++++++++
+>  6 files changed, 544 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-cv1800b.h
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-cv1812h.h
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-cv18xx.h
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-sg2000.h
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-sg2002.h
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..e6bd271ad22d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/sophgo,cv1800-pinctrl.yaml
+> @@ -0,0 +1,129 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/sophgo,cv1800-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sophgo CV1800 Pin Controller
+> +
+> +maintainers:
+> +  - Inochi Amaoto <inochiama@outlook.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - sophgo,cv1800b-pinctrl
+> +      - sophgo,cv1812h-pinctrl
+> +      - sophgo,sg2000-pinctrl
+> +      - sophgo,sg2002-pinctrl
+> +
+> +  reg:
+> +    items:
+> +      - description: pinctrl for system domain
+> +      - description: pinctrl for rtc domain
+> +
+> +  reg-names:
+> +    items:
+> +      - const: sys
+> +      - const: rtc
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  '-cfg$':
+> +    type: object
+> +    description: |
 
-Update the rzg2l_pinctrl_pinconf_get() function to return -EINVAL for
-PIN_CONFIG_OUTPUT_ENABLE config if the pin doesn't support the PIN_CFG_OEN
-configuration.
+Don't need '|' if no formatting.
 
--EINVAL is a valid error when dumping the pin configurations. Returning
--EOPNOTSUPP for a pin that does not support PIN_CFG_OEN resulted in the
-message 'ERROR READING CONFIG SETTING 16' being printed during dumping
-pinconf-pins.
+> +      A pinctrl node should contain at least one subnode representing the
+> +      pinctrl groups available on the machine.
+> +
+> +    additionalProperties: false
+> +
+> +    patternProperties:
+> +      '-pins$':
+> +        type: object
+> +        description: |
+> +          Each subnode will list the pins it needs, and how they should
+> +          be configured, with regard to muxer configuration, bias, input
+> +          enable/disable, input schmitt trigger, slew-rate, drive strength
+> +          and bus hold state. In addition, all pins in the same subnode
+> +          should have the same power domain. For configuration detail,
+> +          refer to https://github.com/sophgo/sophgo-doc/.
+> +        $ref: /schemas/pinctrl/pincfg-node.yaml
+> +
+> +        properties:
+> +          pinmux:
+> +            description: |
+> +              The list of GPIOs and their mux settings that properties in the
+> +              node apply to. This should be set using the GPIOMUX or GPIOMUX2
+> +              macro.
+> +            $ref: /schemas/pinctrl/pinmux-node.yaml#/properties/pinmux
 
-For consistency do similar change in rzg2l_pinctrl_pinconf_set() for
-PIN_CONFIG_OUTPUT_ENABLE config.
+You already referenced this above which is the right way. Drop this 
+$ref.
 
-Fixes: a9024a323af2 ("pinctrl: renesas: rzg2l: Clean up and refactor OEN read/write functions")
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+> +
+> +          bias-pull-up:
+> +            type: boolean
+> +
+> +          bias-pull-down:
+> +            type: boolean
+> +
+> +          drive-strength:
+> +            description: typical current when output high level, but in mA.
+> +            $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +          drive-strength-microamp:
+> +            description: typical current when output high level.
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 632180570b70..3ef20f2fa88e 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -1261,7 +1261,9 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
- 		break;
- 
- 	case PIN_CONFIG_OUTPUT_ENABLE:
--		if (!pctrl->data->oen_read || !(cfg & PIN_CFG_OEN))
-+		if (!(cfg & PIN_CFG_OEN))
-+			return -EINVAL;
-+		if (!pctrl->data->oen_read)
- 			return -EOPNOTSUPP;
- 		arg = pctrl->data->oen_read(pctrl, _pin);
- 		if (!arg)
-@@ -1402,7 +1404,9 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
- 
- 		case PIN_CONFIG_OUTPUT_ENABLE:
- 			arg = pinconf_to_config_argument(_configs[i]);
--			if (!pctrl->data->oen_write || !(cfg & PIN_CFG_OEN))
-+			if (!(cfg & PIN_CFG_OEN))
-+				return -EINVAL;
-+			if (!pctrl->data->oen_write)
- 				return -EOPNOTSUPP;
- 			ret = pctrl->data->oen_write(pctrl, _pin, !!arg);
- 			if (ret)
--- 
-2.34.1
+New binding, why do you need both of these properties? Use the latter.
 
+> +
+> +          input-schmitt-microvolt:
+> +            description: typical threshold for schmitt trigger.
+
+No constraints?
+
+> +
+> +          power-source:
+> +            description: power supplies at X mV.
+> +            enum: [ 1800, 3300 ]
+> +
+> +          slew-rate:
+> +            description: slew rate for output buffer (0 is fast, 1 is slow)
+> +            enum: [ 0, 1 ]
+> +
+> +          bias-bus-hold:
+> +            type: boolean
+> +
+> +        required:
+> +          - pinmux
+> +          - power-source
+> +
+> +        additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/pinctrl/pinctrl-cv1800b.h>
+> +
+> +    soc {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+
+You can remove 'soc' node from the example. 1 cell is the default for 
+examples.
+
+> +
+> +        pinctrl@3001000 {
+> +            compatible = "sophgo,cv1800b-pinctrl";
+> +            reg = <0x03001000 0x1000>,
+> +                  <0x05027000 0x1000>;
+> +            reg-names = "sys", "rtc";
+> +
+> +            uart0_cfg: uart0-cfg {
+> +                uart0-pins {
+> +                    pinmux = <PINMUX(PIN_UART0_TX, 0)>,
+> +                             <PINMUX(PIN_UART0_RX, 0)>;
+> +                    bias-pull-up;
+> +                    drive-strength = <2>;
+> +                    power-source = <3300>;
+> +                    slew-rate = <0>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
 
