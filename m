@@ -1,39 +1,39 @@
-Return-Path: <linux-gpio+bounces-8353-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8354-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DC3E939ED8
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2024 12:37:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D8CF939F71
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2024 13:08:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16D192835C0
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2024 10:37:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2304C1F230C7
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jul 2024 11:08:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25CF114EC42;
-	Tue, 23 Jul 2024 10:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F8B214F9DC;
+	Tue, 23 Jul 2024 11:08:22 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C41213B2B6;
-	Tue, 23 Jul 2024 10:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 156BD14D29C;
+	Tue, 23 Jul 2024 11:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721731058; cv=none; b=emEdbqvfv0OsK/xibtjRq79RnCxbfzRzl5yk1VDvtc8lNBx4/awxOFa6LCSn9mxon70tJaGVaUJK8fxI+8Bs7hXwWBzNu2mlGiTowumtWg+TD+3deE/XdYzQuUUtax+FFX/yBu5VuSCYEst8V88ODLWkhh4tR3JBhJqqwopm4lk=
+	t=1721732902; cv=none; b=prh/Vg8x2osLlJ91N9e0CRN8SDynQC0Rc10wbHAnxekIsoST6+qRwSPoLR6JTepcbFBcX0cQVrHUcjSj07bZtd7rslZsrmNx2190Dr1Fa0+R8RUA1o/QqcEtYiJUSnndwqFJFvlCfCZPu7HyMZbZVDVCX4rAwvYSEk0w8aQ/OYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721731058; c=relaxed/simple;
-	bh=pYAQgXHqfGoNecgufy6PEoqACfymqP7TbUgEagpXDSs=;
+	s=arc-20240116; t=1721732902; c=relaxed/simple;
+	bh=UD+CUiNDbBhUvznD+O3qLj2i1Dk0CGEq12ZzBvceWvY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BC+XMy18eFMFHnUYcOiVIv8mGVVQ3sXOtwIOiLCQ7TBCbgib33BdQdaR/ll5HcYPwVEIXSa+6Qjkn+xi81Yvfyu87lP04cqyqcCdODwU7MDDgdq3NqTjVRevW9gWV+JCoIN6oPVSBzkk5lFXGv7z2ah7OTZDKak4IFRPMy37OV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+	 MIME-Version; b=jAJOOGei1auejxYacmArz9AzdBsBKLcW2fjR1EFUuwteLkuC7J6gvzj/UgdP7PzzmybUfMRoI/sdPNluQ/M1cQr01m9BG3Ya2Fnwo3Ummp0j3t6JDyk8iCeUOBL852Z7pyitrPUhnK7qwnnbTJF0ZCYsocmyzqDS3ash6YgIlps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 X-IronPort-AV: E=Sophos;i="6.09,230,1716217200"; 
-   d="scan'208";a="212369766"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 23 Jul 2024 19:37:34 +0900
+   d="scan'208";a="216331991"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 23 Jul 2024 20:08:19 +0900
 Received: from localhost.localdomain (unknown [10.226.93.79])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id A498840065AD;
-	Tue, 23 Jul 2024 19:37:31 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 6592342F3F16;
+	Tue, 23 Jul 2024 20:08:14 +0900 (JST)
 From: Oliver Rhodes <oliver.rhodes.aj@renesas.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
@@ -45,12 +45,12 @@ Cc: Oliver Rhodes <oliver.rhodes.aj@renesas.com>,
 	linux-renesas-soc@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: [PATCH 6/6] dt-bindings: pinctrl: renesas: Document RZ/G2M v3.0 (r8a774a3) PFC support
-Date: Tue, 23 Jul 2024 11:37:05 +0100
-Message-Id: <20240723103705.9774-7-oliver.rhodes.aj@renesas.com>
+Subject: [PATCH V1 resend 6/6] dt-bindings: pinctrl: renesas: Document RZ/G2M v3.0 (r8a774a3) PFC support
+Date: Tue, 23 Jul 2024 12:07:33 +0100
+Message-Id: <20240723110733.10988-7-oliver.rhodes.aj@renesas.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240723103705.9774-1-oliver.rhodes.aj@renesas.com>
-References: <20240723103705.9774-1-oliver.rhodes.aj@renesas.com>
+In-Reply-To: <20240723110733.10988-1-oliver.rhodes.aj@renesas.com>
+References: <20240723110733.10988-1-oliver.rhodes.aj@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,6 +62,9 @@ Content-Transfer-Encoding: 8bit
 Document PFC support for Renesas RZ/G2M v3.0 (a.k.a r8a774a3) SoC.
 
 Signed-off-by: Oliver Rhodes <oliver.rhodes.aj@renesas.com>
+---
+v1->v1 resend:
+* No change.
 ---
  Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml | 1 +
  1 file changed, 1 insertion(+)
