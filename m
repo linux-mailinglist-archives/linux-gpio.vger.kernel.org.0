@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-8370-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8371-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB44C93B194
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jul 2024 15:25:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64CD693B19A
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jul 2024 15:27:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 54C791F22EED
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jul 2024 13:25:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC09D1F22EA9
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jul 2024 13:27:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AAC3158D84;
-	Wed, 24 Jul 2024 13:25:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 298E5158D8C;
+	Wed, 24 Jul 2024 13:27:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KRKLiFYa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oemAObco"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F6814B97E;
-	Wed, 24 Jul 2024 13:25:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D686679F0;
+	Wed, 24 Jul 2024 13:27:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721827546; cv=none; b=ouiBqmf8gqiGKH3fSGHSgyazc5PHW0GFSRFrEyvVlY7yHQcOrmhqkva9CTVC0K5JxNodT0PdnXbgnAzlnhZcXxHtKUBPoqDDpaMUnrvyiOKnjO6gxcQlZ2GhjMk4hdi2vFf4HF2XL5EBNnQuNIwan1DhifzaSikd/3r1mGgY1ow=
+	t=1721827649; cv=none; b=QohNyoBZHZCTgEJja/Lw9UHP2jSExr+yrff0oXN+vzr9q89Q+px1jn4Kpf7p5tu6gVmYObsLyDki2diX3O06rEqGL8ltf04uT/5esyWwtr8nz1C3WM996Kp5mwXVLgGpM7DZvGgCLulqD1/5iDQa6iN41aBhFydLkI4Gk5pyZrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721827546; c=relaxed/simple;
-	bh=0WjHVOTLyfStdSH++DF841dbRL/ehxt6n906AZ7/X/I=;
+	s=arc-20240116; t=1721827649; c=relaxed/simple;
+	bh=y9X5n3qdmPwr11Deal1sb3U21Htt0vla5lQICF8SJQc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KErHtI+H6y3atOMeqk9ljeML71vi3ZWRyo3oPYsWSLIdiXvcaff0HGMDxFb/+aJLI6oDX9ApnIW6e44jeaBpGE0UCl20kldvwdDcWzcUJbv672N3Dpm+K0zB7V1eCmg+azJ+XW27hn2TmceoVsMcMgQxSV2MEFfXek0M7CFdNXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KRKLiFYa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67350C4AF0C;
-	Wed, 24 Jul 2024 13:25:41 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=IhtoR10k9WEqN2ZyjLeilyq8bPnbj8uWFHljinGI5jhe+s6IYUgLYGWD8HuX9zze4Ckd1ECT0la+llQren3Zd3f8HfByuJEuvwLJu5Z/AunG1mani5pudB0S6hH6hlbcr6t98zDdryCqrtHw4JOiLII+qpJrnQzUb3CX5OG07QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oemAObco; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C187AC32782;
+	Wed, 24 Jul 2024 13:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721827545;
-	bh=0WjHVOTLyfStdSH++DF841dbRL/ehxt6n906AZ7/X/I=;
+	s=k20201202; t=1721827649;
+	bh=y9X5n3qdmPwr11Deal1sb3U21Htt0vla5lQICF8SJQc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KRKLiFYa76q9rXmPJFJHBwYUEBkeq7iT1FIfwuXv0BFDZ0jHFSmInB1rwugEH3lcQ
-	 elMxknO1HciRVL3dZQDq4rWceLfDSL7FAn97cQ8sOlQLvH4LGqBcfngPflDFykEFDd
-	 93gIYnJ2/dV21ZxSiZ9EL92DsVxzsteue8rJxdW9hJOWVs+tsDD38bfni32X2KgARD
-	 bXdmSlkcA7uwjWujs4117cvYw++Int5NMN65qtfkRjpOC09qtu7sFLZ2yTNtppdVSY
-	 VuSSCEdsSOihxm6O61qwPPwvaFAPyaZutLkYUE+bH6pGy3PErfFSusUtlTsagbuygx
-	 ivQDtYFX9MyzQ==
-Message-ID: <b07538f3-44e4-4d98-b64d-0d15428e720f@kernel.org>
-Date: Wed, 24 Jul 2024 15:25:38 +0200
+	b=oemAObcoT4hSjBpdmS2nuYWe1sCGqIKOAvYgetQaCbiBlV7odg7/2sJJUm2GjEbYY
+	 qWM3d4kmekQFJGxJNNuIh4trnbFD+EQ+3QlIS64L0nvkBiv7fNYMX/mUUPjHmC3Xas
+	 SPaltVVLI4lux/NG0MR2eFmH5Kz4T7D+xluyLbHzttaDZeloj+CkPaXh2XrvQcbVPD
+	 IoVimXL09wkvHJiwwv9k8+haESsWII28xQdvVu7KocgjDx4exWIGnPbdieIUtlF6A5
+	 5EgYPnykMuCcnOvgyR7XaDFlD7tdZyGd5KfH3L5d8dywFuP8GVF6xdax857kE4h3Cn
+	 YAmE8I1sdbhbg==
+Message-ID: <3f732acc-6ed0-45f0-a2d6-ed8506b0fd6f@kernel.org>
+Date: Wed, 24 Jul 2024 15:27:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v7 1/6] dt-bindings: gpio: fix microchip,mpfs-gpio interrupt
- descriptions
+Subject: Re: [RFC v7 2/6] dt-bindings: interrupt-controller: document
+ PolarFire SoC's gpio interrupt mux
 To: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org
 Cc: conor@kernel.org, Marc Zyngier <maz@kernel.org>,
  Daire McNamara <daire.mcnamara@microchip.com>,
@@ -63,7 +63,7 @@ Cc: conor@kernel.org, Marc Zyngier <maz@kernel.org>,
  <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
  linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 References: <20240723-supervise-drown-d5d3b303e7fd@wendy>
- <20240723-trash-issuing-e2bdd55b764e@wendy>
+ <20240723-uncouple-enforcer-7c48e4a4fefe@wendy>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,39 +109,106 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240723-trash-issuing-e2bdd55b764e@wendy>
+In-Reply-To: <20240723-uncouple-enforcer-7c48e4a4fefe@wendy>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 23/07/2024 13:27, Conor Dooley wrote:
-> The microchip,mpfs-gpio binding suffered greatly due to being written
-> with a narrow minded view of the controller, and the interrupt bits
-> ended up incorrect. It was mistakenly assumed that the interrupt
-> configuration was set by platform firmware, based on the FPGA
-> configuration, and that the GPIO DT nodes were the only way to really
-> communicate interrupt configuration to software.
+> On PolarFire SoC there are more GPIO interrupts than there are interrupt
+> lines available on the PLIC, and a runtime configurable mux is used to
+> decide which interrupts are assigned direct connections to the PLIC &
+> which are relegated to sharing a line.
+> This mux is, in our reference configuration, written by platform
+> firmware during boot based on the FPGA's configuration.
 > 
-> Instead, the mux should be a device in its own right, and the GPIO
-> controllers should be connected to it, rather than to the PLIC.
-> Now that a binding exists for that mux, try to fix the misconceptions
-> in the GPIO controller binding.
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  .../microchip,mpfs-gpio-irq-mux.yaml          | 79 +++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,mpfs-gpio-irq-mux.yaml
 > 
-> Firstly, it's not possible for this controller to have fewer than 14
-> GPIOs, and thus 14 interrupts also. There are three controllers, with
-> 14, 24 & 32 GPIOs each.
-> 
-> The example is wacky too - it follows from the incorrect understanding
-> that the GPIO controllers are connected to the PLIC directly. They are
-> not however, with a mux sitting in between. Update the example to use
-> the mux as a parent, and the interrupt numbers at the mux for GPIO2 as
-> the example - rather than the strange looking, repeated <53>.
-> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/microchip,mpfs-gpio-irq-mux.yaml b/Documentation/devicetree/bindings/interrupt-controller/microchip,mpfs-gpio-irq-mux.yaml
+> new file mode 100644
+> index 0000000000000..89ed3a630eef3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/microchip,mpfs-gpio-irq-mux.yaml
+> @@ -0,0 +1,79 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/microchip,mpfs-gpio-irq-mux.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip Polarfire SoC GPIO Interrupt Mux
+> +
+> +maintainers:
+> +  - Conor Dooley <conor.dooley@microchip.com>
+> +
+> +description: |
+> +  There are 3 GPIO controllers on this SoC, of which:
+> +  - GPIO controller 0 has 14 GPIOs
+> +  - GPIO controller 1 has 24 GPIOs
+> +  - GPIO controller 2 has 32 GPIOs
+> +
+> +  All GPIOs are capable of generating interrupts, for a total of 70.
+> +  There are only 41 IRQs available however, so a configurable mux is used to
+> +  ensure all GPIOs can be used for interrupt generation.
+> +  38 of the 41 interrupts are in what the documentation calls "direct mode",
+> +  as they provide an exclusive connection from a GPIO to the PLIC.
+> +  The 3 remaining interrupts are used to mux the interrupts which do not have
+> +  a exclusive connection, one for each GPIO controller.
+> +
+> +properties:
+> +  compatible:
+> +    const: microchip,mpfs-gpio-irq-mux
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  interrupts:
+> +    description:
+> +      The first 38 entries must be the "direct" interrupts, for exclusive
+> +      connections to the PLIC. The final 3 entries must be the
+> +      "non-direct"/muxed connections for each of GPIO controller 0, 1 & 2
+> +      respectively.
+> +    maxItems: 41
+> +
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller.yaml#
 
-You make ngpios required, which could be an ABI break except that there
-is no Linux user for this, so there is no ABI break, right? If so, would
-be nice to mention it. Rest looks good:
+Please put allOf: after required:.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - "#interrupt-cells"
+> +  - interrupt-controller
+
+and here keep the same order as in properties, so
+controller+cells+interrupts.
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    irqmux: interrupt-controller@20002054 {
+> +        compatible = "microchip,mpfs-gpio-irq-mux";
+> +        reg = <0x20002054 0x4>;
+> +        interrupt-parent = <&plic>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <1>;
+> +        status = "okay";
+
+Drop status
+
 
 Best regards,
 Krzysztof
