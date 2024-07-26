@@ -1,109 +1,144 @@
-Return-Path: <linux-gpio+bounces-8394-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8395-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9F6793D656
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jul 2024 17:41:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E507A93D98E
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jul 2024 22:08:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 44356B23935
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jul 2024 15:41:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 166C5B2232B
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jul 2024 20:08:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DEE017A5AD;
-	Fri, 26 Jul 2024 15:41:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E6385FEE6;
+	Fri, 26 Jul 2024 20:07:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s4raXWw/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EFE6AAD;
-	Fri, 26 Jul 2024 15:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EF2502B1
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Jul 2024 20:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722008464; cv=none; b=mLBJdQwnssYuFjmmyu4GrL3AgBI3kSsLiwTu3TbW21MYWI0Af3tufy4z1N7Y2Adzxb86lr/N7zk4W0NPxSJuKmd02HRZCpc97XrX9Q3lvY2IkrVWDa5bLkGdrDQRVbFzxWjkpiPyvAcFdYX7+LrzEOIXjYPdi5UmIBtN7rzBFM0=
+	t=1722024478; cv=none; b=MmTqD87AEEk+9C5ISDWX7Ft5JqQM3KUZRTDhnzmuHaLIBDG+0uo45IiwVhuSeHMVu91vPzoOR/mNYFoUZU4iREkEWfLPbWTTQfI5/egs+6yAP3d2s0KO5w/0b145867pFZrkKv39n228oq0z4f/SZB0LyHKfwZOm0CnVkKUyhVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722008464; c=relaxed/simple;
-	bh=v0j9NG6AoqcGhZw/p7MGY2KYfvE1N3N8QFxouN0lG/o=;
+	s=arc-20240116; t=1722024478; c=relaxed/simple;
+	bh=cN+bhlGhXvdQOy/q2phk9f7fwDhkHhzSgfNRQFqKX5o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N0HnALhSwsdFypEMcb76SUD0rYjIzkqWJIZYx6OuSVlx73fJMPLlZ6NLPGR/JT6SdcodKplIEpGvGua69ARe+sXXmgOgUu0RFLRP6cf+owbGWscmWsQ4z9lJujkB1ni5zYuZG99MZU9BffAiekX6qTOWS1ar1QAfA+gznrKeKXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-66a048806e6so24074127b3.3;
-        Fri, 26 Jul 2024 08:41:02 -0700 (PDT)
+	 To:Cc:Content-Type; b=jvQUeHj2RwzmiUfyyOz9PC9789cbkZhUq91R6nhMqMeCYBvw2CzSwfWnaeW0C57GEXY/70ClD3D37pX+XwsnYMTaKugppQrw+ix/BsCYob67u/Pc3xaws9kCZ8/QMOFV6D99kYAf1zwzGh5w0FQqjYcEvPPBofNA0zkkPGpkPTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s4raXWw/; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52ef95ec938so2141086e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Jul 2024 13:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1722024474; x=1722629274; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L6vPQqxnaA8iRKELxBTOBnuLq648rZn3hSbphLM/0KA=;
+        b=s4raXWw/ciF7cbAfo2mI1C5VFeHoTtQ7U5tkGVfzTzVyfSdSK7+zQdbb6KlA7OsDz6
+         tZuie2ajJxUgFh6oQbSE4N8PJBrcxE1kQNhEk6xTlpuDBm9bI/RIILS1nf4I3jVZjvdx
+         smcjK0XFZFwLgUxGa8C9rgHI0U29xdUCmsLaer79OXY4j2be5yMYSEFvOxLdITH8eh5s
+         8Xze1rlMEFQkIGPBnlBYVGox04BXQXQK2xIu3XubqfNspPUUcOcGE9UXQU99kS5umaU1
+         8OCNDTvYLPXi482zTJK7ED527voeMYORPR/HQs5VT/GipXFuaosl1Da3kWB5E3it4Gki
+         2sAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722008460; x=1722613260;
+        d=1e100.net; s=20230601; t=1722024474; x=1722629274;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=35cgOpDj92wSxdN1zlNGXxGzMZAequWmR/LBSQe0uS8=;
-        b=dw5anqvn8B2pl2SlfTvmaV7LkUEtaSVhlD65Y9bAMTKrOmeas92DNdT7pUoCjpJ/Uk
-         AhZw4V7rUmr8xihHjtC6TEB6UtizN5BMpmuYpTKzKvbQ/L6wZhvxrm2yFC+WwiPKOdFX
-         zD1zUo3MsQ9RwaNWwoQjF5OVskXKsDIraKcHzacwBWzts4Z3isnOSliSDW+9NZljR9WO
-         H8G3sGyu5R92UPcvcfTnKD032ZBpxNP/Z1l7rLgFeDEpjfyHT8e3N64diQeEQQwnxuhf
-         prb6GU/JScvBdd8vJ2Ma1tZyLMxUa5fSm90VyX83wkRT+m+NebN0f9AB0kffvRjAvTEF
-         /byw==
-X-Forwarded-Encrypted: i=1; AJvYcCX03byNZvVrV7hKGPV4S7hsKJx4rWyJuYzQD3hOrWM5wjH2xSW4vvEMW8wlLu+Cn0Z0rfyNNCZ5XtSGlTT6eaXjqeLPeTzo4NWqnWBzm11ATllzS0iEHMafqH0tY/dwhlnwHkUIQHUuOPxj7n0EdCz0wCaFUgvCtZD8gLlEDuOcwV6DMsrVn3GzPA==
-X-Gm-Message-State: AOJu0YzvriDapJm0fwBpZmJeLmVQI35L+nRTXLehMgUnwHI4jfsIWXD/
-	PTavqS6klDsrTMyY6xN3deXPp9qJHheJEnSB13+P51XD9qQ0mse4/yxSbxijr+A=
-X-Google-Smtp-Source: AGHT+IECd3Z+5mFU70JvAAy9WuXWEWjkHfEJDVgx5SYSpnUiK48KhVXUcD+AC7uRbfjkERHjMoaSsA==
-X-Received: by 2002:a0d:ee42:0:b0:643:aef1:fb9d with SMTP id 00721157ae682-67a053e118cmr2242467b3.4.1722008460461;
-        Fri, 26 Jul 2024 08:41:00 -0700 (PDT)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6756c44ceb7sm9151347b3.140.2024.07.26.08.40.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jul 2024 08:41:00 -0700 (PDT)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-664ccd158b0so19350077b3.1;
-        Fri, 26 Jul 2024 08:40:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVxzONEL+dkRvuQEOmPmbfThrSSp4DerWSaoLHHhxJALtqEmOwFjbYG6fwcoHBGazvTY2zzwccoAZYbuBmIrqFu+zuQYbjFnXntpF8E7hcnXAToqPxe9nwpfzcuoQdCurgfZERyKj6FSB16weonpH5r2oal/3chKbtqMRehNsvSD81vHdy5Tf8Stg==
-X-Received: by 2002:a05:690c:6d8a:b0:64a:489c:4fbc with SMTP id
- 00721157ae682-67a0a8f4c59mr1846047b3.46.1722008459577; Fri, 26 Jul 2024
- 08:40:59 -0700 (PDT)
+        bh=L6vPQqxnaA8iRKELxBTOBnuLq648rZn3hSbphLM/0KA=;
+        b=Soy7YChZwdFK1lXbkiGKMvGj5i++c6YAapudvegZVDq72WkujmdVLjNPDfHLBjMKU6
+         cXe6fANiBQCeEturm5eUW2CcY7lNw7FD96rGzc1N1gFHOCWznuZbjlRAIj/EAerCjFwP
+         TyL1Ou5d+B5wHJTWTTTY6ZW/1wKRRRAd4b112bCb5zBHG3bSAHSnxla8dydYs+fSIJdt
+         rGJC1+jqs6YAopL48yInjedum+T5h00I5pnreHcFEpqrCcVS72tMB27Zm7+syWrfECm9
+         VSyvbIt3CodWbnJv4ea6rzasP35fjw84ddwFH1Hi4ALqlNAZTEjUKphpZNv149gAmNOI
+         THIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDhIWBypdUay41BMdIrJfwV5w8PFdCRzxyUtb204QDi0XWn6TL8k8V1laaqc7+58kr2aaWFXwRGdfXmxFs/qdF3OZOtKQQmSs9ng==
+X-Gm-Message-State: AOJu0YyoIqEpTZr6OsMaX6XbL/TW2QSEFUYMpx7ZHZu7P8SwuFdSCaLN
+	iHfK77apYgeukPtUXD2fbejLsxrooYhNFTgisCd4QXT40Nimz1TjYfxRTpQfkh5Yk4KlFzStzPj
+	c7RymEpd+nt6RqMCg39BF4+ESq3IzUv8BN33f6A==
+X-Google-Smtp-Source: AGHT+IEwJZ6dF/yGVYmOpFKpqcphcFS2ZB8YkzGVJkaRqeOwmM/ZJdVJevz+++6YMY8Cqm3K5Zdr9yx2KkbFU9KgNvs=
+X-Received: by 2002:a05:6512:324e:b0:52c:7fc3:601 with SMTP id
+ 2adb3069b0e04-5309b2cea1fmr427084e87.61.1722024474236; Fri, 26 Jul 2024
+ 13:07:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240725100534.5374-1-oliver.rhodes.aj@renesas.com> <20240725100534.5374-7-oliver.rhodes.aj@renesas.com>
-In-Reply-To: <20240725100534.5374-7-oliver.rhodes.aj@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 26 Jul 2024 17:40:48 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUPDc06JDG9469d6w=CWYLyEP0sKg4si7kwirKBpNWpDw@mail.gmail.com>
-Message-ID: <CAMuHMdUPDc06JDG9469d6w=CWYLyEP0sKg4si7kwirKBpNWpDw@mail.gmail.com>
-Subject: Re: [PATCH V2 6/6] dt-bindings: pinctrl: renesas: Document RZ/G2M
- v3.0 (r8a774a3) PFC support
-To: Oliver Rhodes <oliver.rhodes.aj@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+References: <CAPbMC77iDKaJvc_8Qq2SqQ-mnkAJyeeADGhWx-jgUV7KsCi28Q@mail.gmail.com>
+In-Reply-To: <CAPbMC77iDKaJvc_8Qq2SqQ-mnkAJyeeADGhWx-jgUV7KsCi28Q@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 26 Jul 2024 22:07:42 +0200
+Message-ID: <CACRpkdbaRNigfU_mLqcJJckwFz0+14NqWP_TpYqbONCa6wAH6g@mail.gmail.com>
+Subject: Re: [drivers/gpio] Question about `ljca_gpio_config`: misuse of __counted_by
+To: Haoyu Li <lihaoyu499@gmail.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 25, 2024 at 12:06=E2=80=AFPM Oliver Rhodes
-<oliver.rhodes.aj@renesas.com> wrote:
-> Document PFC support for Renesas RZ/G2M v3.0 (a.k.a r8a774a3) SoC.
+Hi Haoyu,
+
+On Wed, Jul 24, 2024 at 11:12=E2=80=AFAM Haoyu Li <lihaoyu499@gmail.com> wr=
+ote:
+
+> Dear Linux Developers for GPIO SUBSYSTEM,
 >
-> Signed-off-by: Oliver Rhodes <oliver.rhodes.aj@renesas.com>
-> ---
-> v2->v2 resend:
-> * No change.
+> We are curious about the use of `struct ljca_gpio_packet *packet` in the =
+function `ljca_gpio_config` (https://elixir.bootlin.com/linux/v6.10/source/=
+drivers/gpio/gpio-ljca.c#L80).
+> ```
+> static int ljca_gpio_config(struct ljca_gpio_dev *ljca_gpio, u8 gpio_id,
+>    u8 config)
+> {
+> struct ljca_gpio_packet *packet =3D
+> (struct ljca_gpio_packet *)ljca_gpio->obuf;
+> int ret;
+>
+> mutex_lock(&ljca_gpio->trans_lock);
+> packet->item[0].index =3D gpio_id;
+> packet->item[0].value =3D config | ljca_gpio->connect_mode[gpio_id];
+> packet->num =3D 1;
+>
+> ret =3D ljca_transfer(ljca_gpio->ljca, LJCA_GPIO_CONFIG, (u8 *)packet,
+>    struct_size(packet, item, packet->num), NULL, 0);
+> mutex_unlock(&ljca_gpio->trans_lock);
+>
+> return ret < 0 ? ret : 0;
+> }
+> ```
+> The definition of `struct ljca_gpio_packet` is at https://elixir.bootlin.=
+com/linux/v6.10/source/drivers/gpio/gpio-ljca.c#L53.
+> ```
+> struct ljca_gpio_packet {
+> u8 num;
+> struct ljca_gpio_op item[] __counted_by(num);
+> } __packed;
+> ```
+>
+> Our question is: The `item` member of `struct ljca_gpio_packet` is annota=
+ted with "__counted_by". Only if we set `packet->num =3D 1` before accessin=
+g `packet->item[0]`, the flexible member `item` can be properly bounds-chec=
+ked at run-time when enabling CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE=
+. Or there will be a warning from each access prior to the initialization b=
+ecause the number of elements is zero.
+> So we think relocating `packet->num =3D 1` before accessing `packet->item=
+[0]` is needed.
+>
+> Here is a fix example of a similar situation : https://lore.kernel.org/st=
+able/20240613113225.898955993@linuxfoundation.org/.
+>
+> Please kindly correct us if we missed any key information. Looking forwar=
+d to your response!
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.12.
+This is a Gustavo AR Silvia question, so let's loop him in.
+(I think you're right, and we should make a patch.)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
 
