@@ -1,144 +1,221 @@
-Return-Path: <linux-gpio+bounces-8395-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8396-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E507A93D98E
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jul 2024 22:08:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 947CD93DF78
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jul 2024 15:00:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 166C5B2232B
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jul 2024 20:08:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8C831F218E1
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jul 2024 13:00:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E6385FEE6;
-	Fri, 26 Jul 2024 20:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C85313AA51;
+	Sat, 27 Jul 2024 13:00:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s4raXWw/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPkBEqTL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EF2502B1
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Jul 2024 20:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FF46F303;
+	Sat, 27 Jul 2024 13:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722024478; cv=none; b=MmTqD87AEEk+9C5ISDWX7Ft5JqQM3KUZRTDhnzmuHaLIBDG+0uo45IiwVhuSeHMVu91vPzoOR/mNYFoUZU4iREkEWfLPbWTTQfI5/egs+6yAP3d2s0KO5w/0b145867pFZrkKv39n228oq0z4f/SZB0LyHKfwZOm0CnVkKUyhVY=
+	t=1722085227; cv=none; b=EyCGuebSOEy6tYjQuGp46wHF3JdC70tTPsfjK6lphcopvSw2iGQT33fuLv8bBhGimCajL2rdhElOTEKBYPlvvyeK0nnvP83sd+pnNpPQBtRwt3dEibU0MsxKf9RFxsxflZx3LFSRtVq1eO/FPlQDAYrlZhf8a5nu9CNog9JOHmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722024478; c=relaxed/simple;
-	bh=cN+bhlGhXvdQOy/q2phk9f7fwDhkHhzSgfNRQFqKX5o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jvQUeHj2RwzmiUfyyOz9PC9789cbkZhUq91R6nhMqMeCYBvw2CzSwfWnaeW0C57GEXY/70ClD3D37pX+XwsnYMTaKugppQrw+ix/BsCYob67u/Pc3xaws9kCZ8/QMOFV6D99kYAf1zwzGh5w0FQqjYcEvPPBofNA0zkkPGpkPTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s4raXWw/; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52ef95ec938so2141086e87.3
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Jul 2024 13:07:55 -0700 (PDT)
+	s=arc-20240116; t=1722085227; c=relaxed/simple;
+	bh=5thcGpGJ69XFlGA1JcPrbpuQqRrzWcuyzT0COcmxWqY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FcY45OdE03SkKsLwarKQB5Iyf4cPAJmNDlFZQNfPmCz6ZsMJlj743Mm4PD1PxYYh/wZafpPli4PDmpI2D3KBCwhgfZwW3Kmautu82/4lR5FAVsUVzeY7HyhKylNSRp9vMlIMbvrTyUdex0apQSt3IKdKpoIJEdlnV/DKLMjCm/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TPkBEqTL; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3db18102406so1285835b6e.1;
+        Sat, 27 Jul 2024 06:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722024474; x=1722629274; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L6vPQqxnaA8iRKELxBTOBnuLq648rZn3hSbphLM/0KA=;
-        b=s4raXWw/ciF7cbAfo2mI1C5VFeHoTtQ7U5tkGVfzTzVyfSdSK7+zQdbb6KlA7OsDz6
-         tZuie2ajJxUgFh6oQbSE4N8PJBrcxE1kQNhEk6xTlpuDBm9bI/RIILS1nf4I3jVZjvdx
-         smcjK0XFZFwLgUxGa8C9rgHI0U29xdUCmsLaer79OXY4j2be5yMYSEFvOxLdITH8eh5s
-         8Xze1rlMEFQkIGPBnlBYVGox04BXQXQK2xIu3XubqfNspPUUcOcGE9UXQU99kS5umaU1
-         8OCNDTvYLPXi482zTJK7ED527voeMYORPR/HQs5VT/GipXFuaosl1Da3kWB5E3it4Gki
-         2sAQ==
+        d=gmail.com; s=20230601; t=1722085224; x=1722690024; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ke2b2wOLe+75TWmUjgmqpavix1co7pFeONNfWYeaTVs=;
+        b=TPkBEqTLMW6PzqSjCP5ushcYf6ZVdSakzLCdI9gMVpmN/AVyuewBKbRuw3a8er4kLm
+         rxKL9xv1O7h0VMa9fvZHmEiVW0fCFWCgQH33Bu+N2kZWtUNGAgB/5Zu7HjNbs3gc9axb
+         XS0FDrUNSs+oGYBlXKXo2oV2Tmw5arBnIoTwkfwHa17nhgfZGY+xC8uCfl9I/JdREVcj
+         WB2PNMFLwpZVmfEpxj+p/we2xghZeAHp4FGnMvXfZQBP2OxuzzOCQGhECy/yqtETbSSS
+         aMnipYFHR7/b9AWSB6R5jmnnFigTsy3Vv0bkqSV8NUl8And/GNUaLyU8HDQT3LA88dMD
+         WCrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722024474; x=1722629274;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L6vPQqxnaA8iRKELxBTOBnuLq648rZn3hSbphLM/0KA=;
-        b=Soy7YChZwdFK1lXbkiGKMvGj5i++c6YAapudvegZVDq72WkujmdVLjNPDfHLBjMKU6
-         cXe6fANiBQCeEturm5eUW2CcY7lNw7FD96rGzc1N1gFHOCWznuZbjlRAIj/EAerCjFwP
-         TyL1Ou5d+B5wHJTWTTTY6ZW/1wKRRRAd4b112bCb5zBHG3bSAHSnxla8dydYs+fSIJdt
-         rGJC1+jqs6YAopL48yInjedum+T5h00I5pnreHcFEpqrCcVS72tMB27Zm7+syWrfECm9
-         VSyvbIt3CodWbnJv4ea6rzasP35fjw84ddwFH1Hi4ALqlNAZTEjUKphpZNv149gAmNOI
-         THIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDhIWBypdUay41BMdIrJfwV5w8PFdCRzxyUtb204QDi0XWn6TL8k8V1laaqc7+58kr2aaWFXwRGdfXmxFs/qdF3OZOtKQQmSs9ng==
-X-Gm-Message-State: AOJu0YyoIqEpTZr6OsMaX6XbL/TW2QSEFUYMpx7ZHZu7P8SwuFdSCaLN
-	iHfK77apYgeukPtUXD2fbejLsxrooYhNFTgisCd4QXT40Nimz1TjYfxRTpQfkh5Yk4KlFzStzPj
-	c7RymEpd+nt6RqMCg39BF4+ESq3IzUv8BN33f6A==
-X-Google-Smtp-Source: AGHT+IEwJZ6dF/yGVYmOpFKpqcphcFS2ZB8YkzGVJkaRqeOwmM/ZJdVJevz+++6YMY8Cqm3K5Zdr9yx2KkbFU9KgNvs=
-X-Received: by 2002:a05:6512:324e:b0:52c:7fc3:601 with SMTP id
- 2adb3069b0e04-5309b2cea1fmr427084e87.61.1722024474236; Fri, 26 Jul 2024
- 13:07:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1722085224; x=1722690024;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ke2b2wOLe+75TWmUjgmqpavix1co7pFeONNfWYeaTVs=;
+        b=hT9UefIvC/kBRtHcUNN58c1FEpSKJwskteONFuBLP/p9Z25Wh2YHIn+7G+z2mQ2TVj
+         UG8zv0tunvQ5FhhhSnjNl2h0k0JWuATaToODjDNc7gceKRuY3YPCpLGgIYK5bXErNGxY
+         ZopDUxNtEEG9D3V7tqdb0kFuhCew8WiCgOoQMFRkXJmX9frg/dnrTeqA/hFUVHu7T8KV
+         4jLcNXxoZO1/zN5/DNAFTzRfgC3XCGvTqGBSaaNHboXs8XA1hZ3XmUmkwrNTYbmt0G/g
+         EPCsQ2Db5dyLOFhZmp32RBQIV3178wp3E+hpskdYDeoT2NyUpAEYTqsxMUlgCrndQ7bB
+         5JcA==
+X-Forwarded-Encrypted: i=1; AJvYcCXHehAtDCE+j41a/I+qUGjg+jfrj5+79Czwa+Reb9jq42K/2Jl1QmQ9ZKV2WBQKB/hbqeWdq4aK708Ytip0F6TQRQr866BR1rbxyr/GsQGvgX/oQOrj9f7a4sQwACKDc8ls33CNNW8HztbZHm9yE523Sg63UkkiVB7Sj8vvla6hL4au7t8=
+X-Gm-Message-State: AOJu0YyriLW8AJZd2GNhQLXuTtUw3LdSQQN7MFASMTDD99BTfd3Qyns5
+	eJIf1jy29Z6ocIOoFn40zyZjSXyWK0rqgOGcpmAYtvnwMtJyrDNo
+X-Google-Smtp-Source: AGHT+IFugrwths5qXmiGrpyWRGPLjxYN9ABKLPzyxBbke/9wB2mDHVVUMREeBtaM84xUj8get90c5A==
+X-Received: by 2002:a05:6830:3c05:b0:703:6a3e:d3ca with SMTP id 46e09a7af769-70940c61394mr3405364a34.26.1722085224394;
+        Sat, 27 Jul 2024 06:00:24 -0700 (PDT)
+Received: from localhost.localdomain ([115.240.194.54])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cdb73b9b7dsm7231551a91.21.2024.07.27.06.00.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jul 2024 06:00:24 -0700 (PDT)
+From: Animesh Agarwal <animeshagarwal28@gmail.com>
+To: 
+Cc: Animesh Agarwal <animeshagarwal28@gmail.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: gpio: nxp,lpc3220-gpio: Convert to dtschema
+Date: Sat, 27 Jul 2024 18:30:03 +0530
+Message-ID: <20240727130008.408772-1-animeshagarwal28@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPbMC77iDKaJvc_8Qq2SqQ-mnkAJyeeADGhWx-jgUV7KsCi28Q@mail.gmail.com>
-In-Reply-To: <CAPbMC77iDKaJvc_8Qq2SqQ-mnkAJyeeADGhWx-jgUV7KsCi28Q@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 26 Jul 2024 22:07:42 +0200
-Message-ID: <CACRpkdbaRNigfU_mLqcJJckwFz0+14NqWP_TpYqbONCa6wAH6g@mail.gmail.com>
-Subject: Re: [drivers/gpio] Question about `ljca_gpio_config`: misuse of __counted_by
-To: Haoyu Li <lihaoyu499@gmail.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Haoyu,
+Convert the NXP LPC3220 SoC GPIO controller bindings to DT schema format.
 
-On Wed, Jul 24, 2024 at 11:12=E2=80=AFAM Haoyu Li <lihaoyu499@gmail.com> wr=
-ote:
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
 
-> Dear Linux Developers for GPIO SUBSYSTEM,
->
-> We are curious about the use of `struct ljca_gpio_packet *packet` in the =
-function `ljca_gpio_config` (https://elixir.bootlin.com/linux/v6.10/source/=
-drivers/gpio/gpio-ljca.c#L80).
-> ```
-> static int ljca_gpio_config(struct ljca_gpio_dev *ljca_gpio, u8 gpio_id,
->    u8 config)
-> {
-> struct ljca_gpio_packet *packet =3D
-> (struct ljca_gpio_packet *)ljca_gpio->obuf;
-> int ret;
->
-> mutex_lock(&ljca_gpio->trans_lock);
-> packet->item[0].index =3D gpio_id;
-> packet->item[0].value =3D config | ljca_gpio->connect_mode[gpio_id];
-> packet->num =3D 1;
->
-> ret =3D ljca_transfer(ljca_gpio->ljca, LJCA_GPIO_CONFIG, (u8 *)packet,
->    struct_size(packet, item, packet->num), NULL, 0);
-> mutex_unlock(&ljca_gpio->trans_lock);
->
-> return ret < 0 ? ret : 0;
-> }
-> ```
-> The definition of `struct ljca_gpio_packet` is at https://elixir.bootlin.=
-com/linux/v6.10/source/drivers/gpio/gpio-ljca.c#L53.
-> ```
-> struct ljca_gpio_packet {
-> u8 num;
-> struct ljca_gpio_op item[] __counted_by(num);
-> } __packed;
-> ```
->
-> Our question is: The `item` member of `struct ljca_gpio_packet` is annota=
-ted with "__counted_by". Only if we set `packet->num =3D 1` before accessin=
-g `packet->item[0]`, the flexible member `item` can be properly bounds-chec=
-ked at run-time when enabling CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE=
-. Or there will be a warning from each access prior to the initialization b=
-ecause the number of elements is zero.
-> So we think relocating `packet->num =3D 1` before accessing `packet->item=
-[0]` is needed.
->
-> Here is a fix example of a similar situation : https://lore.kernel.org/st=
-able/20240613113225.898955993@linuxfoundation.org/.
->
-> Please kindly correct us if we missed any key information. Looking forwar=
-d to your response!
+--
+Changes in v2:
+  - Changed the file name to match the compatible string.
+  - Removed optional from the description of '#gpio-cells' as it was wrongly
+    present.
+---
+ .../devicetree/bindings/gpio/gpio_lpc32xx.txt | 43 ---------------
+ .../bindings/gpio/nxp,lpc3220-gpio.yaml       | 52 +++++++++++++++++++
+ 2 files changed, 52 insertions(+), 43 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/nxp,lpc3220-gpio.yaml
 
-This is a Gustavo AR Silvia question, so let's loop him in.
-(I think you're right, and we should make a patch.)
+diff --git a/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt b/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
+deleted file mode 100644
+index 49819367a011..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio_lpc32xx.txt
++++ /dev/null
+@@ -1,43 +0,0 @@
+-NXP LPC32xx SoC GPIO controller
+-
+-Required properties:
+-- compatible: must be "nxp,lpc3220-gpio"
+-- reg: Physical base address and length of the controller's registers.
+-- gpio-controller: Marks the device node as a GPIO controller.
+-- #gpio-cells: Should be 3:
+-   1) bank:
+-      0: GPIO P0
+-      1: GPIO P1
+-      2: GPIO P2
+-      3: GPIO P3
+-      4: GPI P3
+-      5: GPO P3
+-   2) pin number
+-   3) optional parameters:
+-      - bit 0 specifies polarity (0 for normal, 1 for inverted)
+-- reg: Index of the GPIO group
+-
+-Example:
+-
+-	gpio: gpio@40028000 {
+-		compatible = "nxp,lpc3220-gpio";
+-		reg = <0x40028000 0x1000>;
+-		gpio-controller;
+-		#gpio-cells = <3>; /* bank, pin, flags */
+-	};
+-
+-	leds {
+-		compatible = "gpio-leds";
+-
+-		led0 {
+-			gpios = <&gpio 5 1 1>; /* GPO_P3 1, active low */
+-			linux,default-trigger = "heartbeat";
+-			default-state = "off";
+-		};
+-
+-		led1 {
+-			gpios = <&gpio 5 14 1>; /* GPO_P3 14, active low */
+-			linux,default-trigger = "timer";
+-			default-state = "off";
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/nxp,lpc3220-gpio.yaml b/Documentation/devicetree/bindings/gpio/nxp,lpc3220-gpio.yaml
+new file mode 100644
+index 000000000000..cea2f2bb2393
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/nxp,lpc3220-gpio.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/nxp,lpc3220-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP LPC3220 SoC GPIO controller
++
++maintainers:
++  - Animesh Agarwal <animeshagarwal28@gmail.com>
++
++properties:
++  compatible:
++    const: nxp,lpc3220-gpio
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 3
++    description: |
++      1) bank:
++        0: GPIO P0
++        1: GPIO P1
++        2: GPIO P2
++        3: GPIO P3
++        4: GPI P3
++        5: GPO P3
++      2) pin number
++      3) flags:
++        - bit 0 specifies polarity (0 for normal, 1 for inverted)
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - '#gpio-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    gpio@40028000 {
++        compatible = "nxp,lpc3220-gpio";
++        reg = <0x40028000 0x1000>;
++        gpio-controller;
++        #gpio-cells = <3>; /* bank, pin, flags */
++    };
+-- 
+2.45.2
 
-Yours,
-Linus Walleij
 
