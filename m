@@ -1,79 +1,119 @@
-Return-Path: <linux-gpio+bounces-8399-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8400-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E70F593E0D4
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jul 2024 22:08:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D47C93E1A3
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jul 2024 02:48:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2D8F1C20C65
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jul 2024 20:08:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF8131F217B9
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jul 2024 00:48:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB353188CC3;
-	Sat, 27 Jul 2024 20:07:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05B8BA947;
+	Sun, 28 Jul 2024 00:47:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pRPPdmLA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IHthgf2u"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F89188CA3;
-	Sat, 27 Jul 2024 20:07:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B307F8C1E;
+	Sun, 28 Jul 2024 00:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722110844; cv=none; b=cSZR+Mz0VXnpkVGwHnWg2VBd5ejr1qFJpIZEzLDbN1ZseIzkZ3D55SBRWMx93d+zsbQbnMXhrsiNOl6pEVGjDpQQt15Pu7JDwnXmyQtFJfWAm4c9DPydwPLTE3EqHVVIglV6iguEugJ5gtYvPGVEkuIouivRZ2hN2GCXbzDaKYU=
+	t=1722127665; cv=none; b=W8ny64XU1ATKiRoygBpPrjlbohMxBOLRiFbQv0UysOMM7ziWjvU6QbK2jExXbYFZrXS3fWP1VW/Y3mAYP2/FvxwUQq9h7oYGMmA8k9PIsoeGwUrrD0ZoPzTY9GdyluyPXIpLy9f5Tp+sezjKyfSMDHvBLJcvW0b2Di5Z16LaW1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722110844; c=relaxed/simple;
-	bh=yv59965U3F7geS0uB793wjJn2ulss9sGLyAjZTJ+e+A=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=m/TqOJVBrA6MWNgnmaYZqs+QQjC07gG1FvlRQrXJY9rPbnP7tv0qYgZhtZR0ORJcFrzQ/VEDaEn/22ca/3W1UQ3zoHEQ71RakVXsHSCs5AraAPTzo8ed4GB17og/Ai53gJA/9r99delaiYfdeR63zjbCzxbZkccYSLAfUVKrvhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pRPPdmLA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 76499C4AF11;
-	Sat, 27 Jul 2024 20:07:24 +0000 (UTC)
+	s=arc-20240116; t=1722127665; c=relaxed/simple;
+	bh=/T9kGZYYGRgCXgH2L71BmXyr5L6wYgN/ahRYRI/439I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MEFNmgiL25KN5W7YoR4U4+Qli1HPVJ+1uRQHwp5MgpLKvrAYXndM3xMfo1HLPNj19ZawUWxcP13nEJ2uZ4XLwgte0cSTA5gpWxZP2R2oyUqdDJ5DR6+eIqLdzRnOBErh0Ji0Yfpx4EcqcT+bTNqo5Eqj8OtDLY9kNfIPXu8fI78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IHthgf2u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9301CC4AF07;
+	Sun, 28 Jul 2024 00:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722110844;
-	bh=yv59965U3F7geS0uB793wjJn2ulss9sGLyAjZTJ+e+A=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=pRPPdmLAN+V1SZWHywBQ29g/KK9oEbfDLiAUFockGtgxj4wYfak87U9gcxZchi8qo
-	 28NpHW8VeolYlXsol3AvP8YRB2sZufgc94Y8b9VmSwIgE7XeG3un9ioPKHYymcvBCY
-	 cMRWXbeNfjqIr4bKWYyBPvnZbsNV+CdhErFmeb5NOaiIUIbgq2EJ9w+HpgpeALihVC
-	 JnrXPgOLCyjoyndSwZ+lf6SQpK9Z7mqg7dwBTUWbVvDra7AedCBqQYkHXxt+YQ49Qn
-	 E/ORduEOtFr0eQICQvNwUoCMyNDWYkqxo0RR49lxd8r40AfPIILD3jcMEWJqWqKNTo
-	 JCQcRhnFQtAjg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6C8DEC4333D;
-	Sat, 27 Jul 2024 20:07:24 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio fixes for v6.11-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240727194510.5454-1-brgl@bgdev.pl>
-References: <20240727194510.5454-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240727194510.5454-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v6.11-rc1
-X-PR-Tracked-Commit-Id: 3ae08e47742eeebf2190900d31ddac53fdd13a5b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8e333791d4605dbce611c22f71a86721c9afc336
-Message-Id: <172211084444.16614.16675167853790736830.pr-tracker-bot@kernel.org>
-Date: Sat, 27 Jul 2024 20:07:24 +0000
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+	s=k20201202; t=1722127665;
+	bh=/T9kGZYYGRgCXgH2L71BmXyr5L6wYgN/ahRYRI/439I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IHthgf2u58wSYWsD8u0IwCyNVMepJAMFDjiWBH2GnM/PSAAAyMQtZEsRoUAWp7KL6
+	 XuE2Oe6Ycen0Hgeo63qwFvFFFiMydaDhHzihWDCT9MZKiw74Oip3UnonfIp+2vt8MS
+	 VQSS1F1pSMLJet/i48jo7NeLcdMQzhByNUtEcWaV/+h01QZU6gaI0j4Hadn9Tz6RYK
+	 yMbyuIpKIxYH6a4dEz4hK5Ef4QFaNbKEvRrZH+Fl9MlE7aDIVr/8pKoRxgHXSxWjXI
+	 xDLIG3yCGUTmzIh0zMSCjbb9GloLsUbcIn+EYwp7mpscNfX/2mJ4lq7wJWAECr/rXa
+	 JHWaOdt/PfjuA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Hagar Hemdan <hagarhem@amazon.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.10 03/16] gpio: prevent potential speculation leaks in gpio_device_get_desc()
+Date: Sat, 27 Jul 2024 20:47:20 -0400
+Message-ID: <20240728004739.1698541-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240728004739.1698541-1-sashal@kernel.org>
+References: <20240728004739.1698541-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.10.2
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Sat, 27 Jul 2024 21:45:10 +0200:
+From: Hagar Hemdan <hagarhem@amazon.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v6.11-rc1
+[ Upstream commit d795848ecce24a75dfd46481aee066ae6fe39775 ]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8e333791d4605dbce611c22f71a86721c9afc336
+Userspace may trigger a speculative read of an address outside the gpio
+descriptor array.
+Users can do that by calling gpio_ioctl() with an offset out of range.
+Offset is copied from user and then used as an array index to get
+the gpio descriptor without sanitization in gpio_device_get_desc().
 
-Thank you!
+This change ensures that the offset is sanitized by using
+array_index_nospec() to mitigate any possibility of speculative
+information leaks.
 
+This bug was discovered and resolved using Coverity Static Analysis
+Security Testing (SAST) by Synopsys, Inc.
+
+Signed-off-by: Hagar Hemdan <hagarhem@amazon.com>
+Link: https://lore.kernel.org/r/20240523085332.1801-1-hagarhem@amazon.com
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpio/gpiolib.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index fa62367ee9290..1a9aadd4c803c 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -17,6 +17,7 @@
+ #include <linux/list.h>
+ #include <linux/lockdep.h>
+ #include <linux/module.h>
++#include <linux/nospec.h>
+ #include <linux/of.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/seq_file.h>
+@@ -198,7 +199,7 @@ gpio_device_get_desc(struct gpio_device *gdev, unsigned int hwnum)
+ 	if (hwnum >= gdev->ngpio)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	return &gdev->descs[hwnum];
++	return &gdev->descs[array_index_nospec(hwnum, gdev->ngpio)];
+ }
+ EXPORT_SYMBOL_GPL(gpio_device_get_desc);
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.43.0
+
 
