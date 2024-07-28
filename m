@@ -1,118 +1,134 @@
-Return-Path: <linux-gpio+bounces-8401-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8402-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 183F093E1D0
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jul 2024 02:52:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC24793E43C
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jul 2024 11:09:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C83E628143B
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jul 2024 00:51:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D36631C20E68
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jul 2024 09:09:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93EC76056;
-	Sun, 28 Jul 2024 00:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zig39kj0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F326182D2;
+	Sun, 28 Jul 2024 09:09:38 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A129C75817;
-	Sun, 28 Jul 2024 00:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5614F8F62;
+	Sun, 28 Jul 2024 09:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722127697; cv=none; b=bj6wFDrTtlKYRqG0l/T0Pn7FOsd0E/plzllrqeD44TJXadbCs2Pyfq47EOK4hIVK37e6ZsxIOt/1+zBwxPNrCld+UIy3ZOC7c60lAsiagfglb/QvCjlOCHO+VfAFm/ec30ebkcg1m0QYr6UmYQ+babReQUIthZQVVjQDOY8gblg=
+	t=1722157778; cv=none; b=XOou5kar8N+Dcbekku0Ix7ZKPbro5EZua8LPakkdp0zlOHxVxHLugkXhd9h5d/bGR2bIm94y54aPDtTItG2AdiUhv/YIBX8RVJL9Wwxwapjb+FrszykPILdhiv2oE9w6Oz5qSjjF+Sge+uzxBbHCTa4GPC7A+TZy9wnc1KCqh90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722127697; c=relaxed/simple;
-	bh=06EgB3bJk6nmJAH/dgXehgiFdXfXMAAzetLqDY+TjrQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BkhOLHiIo7pwbHA9WyYD3hWvbWN2OD14vew/LBpkfj58+uy09cgqkCWrVmaWuGP+lCA1Zch37Xu0JF1X2291w9zkp7WBu5jhyho7R3+HQ1HozJbi0F5eZzhbC1Mrg3vdmN9+PY71Y+LhaVyJkCMKiABAnaRyp1adS/FXZHhDOzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zig39kj0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37017C4AF09;
-	Sun, 28 Jul 2024 00:48:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722127697;
-	bh=06EgB3bJk6nmJAH/dgXehgiFdXfXMAAzetLqDY+TjrQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zig39kj0/OCqqNFnA8wOgcksNNZmMj48Flu9cbj0mmMRNvlNgmzgwQkC24w8bmJix
-	 LsAQ/5BFwlGEJMmiSy7tWlJpBDie87+/3YFWWbOHddkZCi1Gh4sYjqg2OLhnarm5fN
-	 Hig4hjP5tlRfFfEIqa8BDVPGIO4VUoB0CfwVkcWtj6ZW2TMA4Dxw9Z5DOP4BQ6cyId
-	 YM0ddpDJpTGOAWkub1qpN9w5vs4UT5Z1+4eN0+/rUf1uKFu3+KBJF6Tm2eCTBCRxke
-	 9vGnNptzGziBVdBSeSk5qWa9QjfFHXggPeOnLahqZs1PqRw0WzA6Tx4I8wZSKCCh9E
-	 JaUe3kTZ0WNZQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Hagar Hemdan <hagarhem@amazon.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 2/9] gpio: prevent potential speculation leaks in gpio_device_get_desc()
-Date: Sat, 27 Jul 2024 20:48:03 -0400
-Message-ID: <20240728004812.1701139-2-sashal@kernel.org>
+	s=arc-20240116; t=1722157778; c=relaxed/simple;
+	bh=7/7FMScEAXCexBgKIe8WnYVYP8/6bsuZT+pxnkLEit0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=swj1MS6oLO5Mvg8K7gZZiKclHr3uESzbFqBfvpKNFbbU/0uzw79IxHdTf0laKyLB4ut7CjgR6LaPhMDKXlQyIRVy++rUrS05q8EXj3lIqy9TR5sg6A9/YSS2sdh1Bo930UDiVghVU4tvxzYiBGjG3CVho6o/2OvoeCXc9rG+zr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.09,243,1716217200"; 
+   d="scan'208";a="217379659"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 28 Jul 2024 18:04:26 +0900
+Received: from localhost.localdomain (unknown [10.226.92.33])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 566494001B7C;
+	Sun, 28 Jul 2024 18:04:24 +0900 (JST)
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Biju Das <biju.das.au@gmail.com>
+Subject: [PATCH] pinctrl: renesas: rzg2l: Use dev_err_probe()
+Date: Sun, 28 Jul 2024 10:04:16 +0100
+Message-ID: <20240728090421.7136-1-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240728004812.1701139-1-sashal@kernel.org>
-References: <20240728004812.1701139-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.43
 Content-Transfer-Encoding: 8bit
 
-From: Hagar Hemdan <hagarhem@amazon.com>
+Replace dev_err()->dev_err_probe() to simpilfy probe
+helper functions.
 
-[ Upstream commit d795848ecce24a75dfd46481aee066ae6fe39775 ]
-
-Userspace may trigger a speculative read of an address outside the gpio
-descriptor array.
-Users can do that by calling gpio_ioctl() with an offset out of range.
-Offset is copied from user and then used as an array index to get
-the gpio descriptor without sanitization in gpio_device_get_desc().
-
-This change ensures that the offset is sanitized by using
-array_index_nospec() to mitigate any possibility of speculative
-information leaks.
-
-This bug was discovered and resolved using Coverity Static Analysis
-Security Testing (SAST) by Synopsys, Inc.
-
-Signed-off-by: Hagar Hemdan <hagarhem@amazon.com>
-Link: https://lore.kernel.org/r/20240523085332.1801-1-hagarhem@amazon.com
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- drivers/gpio/gpiolib.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 37 +++++++++----------------
+ 1 file changed, 13 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 1c512ed3fa6d9..5c0016c77d2ab 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -15,6 +15,7 @@
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/nospec.h>
- #include <linux/of.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/seq_file.h>
-@@ -164,7 +165,7 @@ struct gpio_desc *gpiochip_get_desc(struct gpio_chip *gc,
- 	if (hwnum >= gdev->ngpio)
- 		return ERR_PTR(-EINVAL);
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index 632180570b70..4de86388276d 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -2596,16 +2596,13 @@ static int rzg2l_gpio_register(struct rzg2l_pinctrl *pctrl)
+ 		return -EPROBE_DEFER;
  
--	return &gdev->descs[hwnum];
-+	return &gdev->descs[array_index_nospec(hwnum, gdev->ngpio)];
+ 	ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &of_args);
+-	if (ret) {
+-		dev_err(pctrl->dev, "Unable to parse gpio-ranges\n");
+-		return ret;
+-	}
++	if (ret)
++		return dev_err_probe(pctrl->dev, ret, "Unable to parse gpio-ranges\n");
+ 
+ 	if (of_args.args[0] != 0 || of_args.args[1] != 0 ||
+-	    of_args.args[2] != pctrl->data->n_port_pins) {
+-		dev_err(pctrl->dev, "gpio-ranges does not match selected SOC\n");
+-		return -EINVAL;
+-	}
++	    of_args.args[2] != pctrl->data->n_port_pins)
++		return dev_err_probe(pctrl->dev, -EINVAL,
++				     "gpio-ranges does not match selected SOC\n");
+ 
+ 	chip->names = pctrl->data->port_pins;
+ 	chip->request = rzg2l_gpio_request;
+@@ -2637,10 +2634,8 @@ static int rzg2l_gpio_register(struct rzg2l_pinctrl *pctrl)
+ 	pctrl->gpio_range.name = chip->label;
+ 	pctrl->gpio_range.gc = chip;
+ 	ret = devm_gpiochip_add_data(pctrl->dev, chip, pctrl);
+-	if (ret) {
+-		dev_err(pctrl->dev, "failed to add GPIO controller\n");
+-		return ret;
+-	}
++	if (ret)
++		return dev_err_probe(pctrl->dev, ret, "failed to add GPIO controller\n");
+ 
+ 	dev_dbg(pctrl->dev, "Registered gpio controller\n");
+ 
+@@ -2726,22 +2721,16 @@ static int rzg2l_pinctrl_register(struct rzg2l_pinctrl *pctrl)
+ 
+ 	ret = devm_pinctrl_register_and_init(pctrl->dev, &pctrl->desc, pctrl,
+ 					     &pctrl->pctl);
+-	if (ret) {
+-		dev_err(pctrl->dev, "pinctrl registration failed\n");
+-		return ret;
+-	}
++	if (ret)
++		return dev_err_probe(pctrl->dev, ret, "pinctrl registration failed\n");
+ 
+ 	ret = pinctrl_enable(pctrl->pctl);
+-	if (ret) {
+-		dev_err(pctrl->dev, "pinctrl enable failed\n");
+-		return ret;
+-	}
++	if (ret)
++		dev_err_probe(pctrl->dev, ret, "pinctrl enable failed\n");
+ 
+ 	ret = rzg2l_gpio_register(pctrl);
+-	if (ret) {
+-		dev_err(pctrl->dev, "failed to add GPIO chip: %i\n", ret);
+-		return ret;
+-	}
++	if (ret)
++		return dev_err_probe(pctrl->dev, ret, "failed to add GPIO chip\n");
+ 
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(gpiochip_get_desc);
- 
 -- 
 2.43.0
 
