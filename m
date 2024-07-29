@@ -1,146 +1,135 @@
-Return-Path: <linux-gpio+bounces-8428-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8429-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6248393F256
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 12:13:41 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65FF693F2FC
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 12:41:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1EE8B282ED1
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 10:13:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB412B2274D
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 10:41:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77F3B1422D9;
-	Mon, 29 Jul 2024 10:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1DD1442E8;
+	Mon, 29 Jul 2024 10:41:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hJ7ZvKE0"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AaVgNFMk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yoU0dLV8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE90F1420D8;
-	Mon, 29 Jul 2024 10:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8578F28399;
+	Mon, 29 Jul 2024 10:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722248017; cv=none; b=eCzOAop3wv/VJWOCtg2EaA6jS4X1m9MhCfoRE4XtiONRUF2wNEGS5X8iRuPn/LXwjp1gdB4roJvn/fnFKpOP/qPRSM20x+S5nCadSmPdnOfpXnPQmvZrx7l4EEXNJbvr+RKONzggzLQKrtCQrMZyoXOhX0FVjKoLQsq+2ObKUIE=
+	t=1722249688; cv=none; b=AkGOby9pH4FaRKyjbSdf8obmoqBPU2Cgfgc9f8EobhHdR0v8kPpqYHgR0WxdcQXIvIVXZzk3wjP8jeM2ftlZrw+UNBdt99FQjpzGdU68xwXX12rFqam5G9jTsomzbMqfN7yBAnAMEZdOOnrfDwNBMMwZ/w+osc06hrBpjUNHAGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722248017; c=relaxed/simple;
-	bh=uu4Ndu+dSnO0AKF4DXyDHytZPKsKTnjtBm1O4LGlIZs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qoCpiOtL00dI/nURXU1Kim3NwV1pwP0IpsxDCw/UGnfaW8jTawTSyFa651nwmpWo0sqYUNIcaD0whStuqk5i5YvkRcT3IEe4ImZWOtMEwO/39vos2QA6h4R8BCe89GdQTkKmVpuyga3WSTCqYqGAJelNYiqiAZTtDPFlJhH2kaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hJ7ZvKE0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46SNrqHx031449;
-	Mon, 29 Jul 2024 10:13:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	eFZszWFP/3fZ3P8WTHLQnK8a/nQ31EXl9Fet3fpHMrQ=; b=hJ7ZvKE0FO22mRMv
-	Gz5OWuknk43xkTBbf3RQozGM66WpSlsM++UUAaI5umpCnS9XtM61EpDQxSJsomb0
-	5MStc8gBgUPWMXwqSXFYu3v7kMohIPGGN/1v//GkKIio+8QytHgqMjPRgyJPvVdN
-	hUu018RAvXbUghuEA5DB0XBRWn6V6HpYpv6Z3jmXudzlfWTwh/Uyd5uy9+gCoWFo
-	wceq5bh61U3quXPAYXr+KoVsqKy0kZCBQn7TNky0qYwxeOeYBFlw0OUSzpRBbohX
-	WvOvIgO7dZo+haOJhttDujKGwYZCMHkEhTXLq9i3huPwVMFlmSxLmPqPhohOd4qK
-	GOMMEQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 40mt2kkpcu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jul 2024 10:13:32 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 46TADV6K022909
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jul 2024 10:13:31 GMT
-Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 29 Jul
- 2024 03:13:26 -0700
-Message-ID: <c19dc3c8-8d29-46fc-9386-37e83b9217b5@quicinc.com>
-Date: Mon, 29 Jul 2024 18:13:24 +0800
+	s=arc-20240116; t=1722249688; c=relaxed/simple;
+	bh=klov7AXJrBxt4kaO1ORqh6ORD4spqavsP0E/bA24oao=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BuOrno1vTCcqyq46C3xKNkDO/vZN2SD6srhxEO8idXoKe6JLtDiK0KfwCcTX1VHx/YJNLk6/GC4vqblymmBFPeL1EsrO8Iy4pgj+2Y03nF5M6wTrWNjJ9ah5TiIGHDFMGCCV8B2lXryFSgNJXV8lK4azqaUcFRIyApug+c7DsY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AaVgNFMk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yoU0dLV8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1722249686;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mUtMMscAr42lfvfhAq0RSAVA54FsqUgqvVfRKCjfdf4=;
+	b=AaVgNFMkjq2oSMoVgoXhHi8LyJtviLBVSbxF2c2Onnr0cVbEL2dWnEIR8wazERXBh78577
+	nlD5mJOiO1x63PUXZM29zP3SGWCXwRDmxql5v1QZ1eYu0PdiqE0jfP0SChD/DZJ6Q43mFz
+	QP0/bQd97GSh9cM+Kln5SUjeBogFdcefq6cF/IfVsQbiAeHa8KHfONlqRrLrhwocxmxwdc
+	Uc+v8LqB3ykRTd/5XPcIyhX88IBXcNtLHyxSO7gVC4YiIkD2lNw8cA3fbR7ohCt5csbYyQ
+	5Ou4xHjkm38M8rBleSg8FasjB6rff/3oqorf4V2Httv+6BKZxQE6RfoD/iNrnA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1722249686;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mUtMMscAr42lfvfhAq0RSAVA54FsqUgqvVfRKCjfdf4=;
+	b=yoU0dLV8/0NscyaF1HrCpNKZHshPsYNYXrjGhuYCXTBhgY+EB4PNTIsqh8CYm5h5eH1ckX
+	5msg3Z8GpP54PyBQ==
+To: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org
+Cc: conor@kernel.org, conor.dooley@microchip.com, Marc Zyngier
+ <maz@kernel.org>, Daire McNamara <daire.mcnamara@microchip.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC v7 3/6] irqchip: add mpfs gpio interrupt mux
+In-Reply-To: <20240723-flatworm-cornflake-8023212f6584@wendy>
+References: <20240723-supervise-drown-d5d3b303e7fd@wendy>
+ <20240723-flatworm-cornflake-8023212f6584@wendy>
+Date: Mon, 29 Jul 2024 12:41:25 +0200
+Message-ID: <87le1k8oq2.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] pinctrl: qcom: add the tlmm driver support for
- qcs9100 platform
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <kernel@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240709-add_qcs9100_tlmm_compatible-v2-0-d025b58ea196@quicinc.com>
- <20240709-add_qcs9100_tlmm_compatible-v2-2-d025b58ea196@quicinc.com>
- <CACMJSevpinkT+jFTK6ijpRF2ULEeAFiWLkWEmQ6bJfJdofyO8g@mail.gmail.com>
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <CACMJSevpinkT+jFTK6ijpRF2ULEeAFiWLkWEmQ6bJfJdofyO8g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: -bT-emD6QiEu28QK6kmCmQf3EKDjtktw
-X-Proofpoint-GUID: -bT-emD6QiEu28QK6kmCmQf3EKDjtktw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-29_08,2024-07-26_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- malwarescore=0 spamscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
- suspectscore=0 priorityscore=1501 impostorscore=0 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407290069
+Content-Type: text/plain
 
+On Tue, Jul 23 2024 at 12:27, Conor Dooley wrote:
+> +
+> +struct mpfs_irq_mux_bank_config {
+> +	u32 mask;
+> +	u8 shift;
+> +};
 
+Please see:
 
-On 7/9/2024 11:39 PM, Bartosz Golaszewski wrote:
-> On Tue, 9 Jul 2024 at 15:05, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
->>
->> Add the tlmm driver support for QCS9100 platform.
->> QCS9100 is drived from SA8775p. Currently, both the QCS9100 and SA8775p
->> platform use non-SCMI resource. In the future, the SA8775p platform will
->> move to use SCMI resources and it will have new sa8775p-related device
->> tree. Consequently, introduce "qcom,qcs9100-tlmm" to the pinctrl device
->> match table.
->>
->> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->> ---
->>   drivers/pinctrl/qcom/pinctrl-sa8775p.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
->> index 5459c0c681a2..4687e11dfe75 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
->> @@ -1519,6 +1519,7 @@ static int sa8775p_pinctrl_probe(struct platform_device *pdev)
->>   }
->>
->>   static const struct of_device_id sa8775p_pinctrl_of_match[] = {
->> +       { .compatible = "qcom,qcs9100-tlmm", },
->>          { .compatible = "qcom,sa8775p-tlmm", },
->>          { },
->>   };
->>
->> --
->> 2.25.1
->>
-> 
-> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+  https://www.kernel.org/doc/html/latest/process/maintainer-tip.html
 
-After considering the feedback provided on the subject, We have decided
-to keep current SA8775p compatible and ABI compatibility in drivers.
-Let's close this session and ignore the current patche here.
-Thank you for your input.
+vs. coding style.
 
--- 
-Thx and BRs,
-Tengfei Fan
+> +/*
+> + * Returns an unsigned long, where a set bit indicates the corresponding
+> + * interrupt is in non-direct/muxed mode for that bank/GPIO controller.
+> + */
+> +static inline unsigned long mpfs_irq_mux_get_muxed_irqs(struct mpfs_irq_mux *priv,
+> +							unsigned int bank)
+> +{
+> +	unsigned long mux_config = priv->mux_config, muxed_irqs = -1;
+> +	struct mpfs_irq_mux_bank_config bank_config = mpfs_irq_mux_bank_configs[bank];
+> +
+> +	/*
+> +	 * If a bit is set in the mux, GPIO the corresponding interrupt from
+> +	 * controller 2 is direct and that controllers 0 or 1 is muxed.
+
+This is not a coherent sentence.
+
+> +	 * Invert the bits in the configuration register, so that set bits
+> +	 * equate to non-direct mode, for GPIO controller 2.
+> +	 */
+> +	if (bank == 2u)
+> +		mux_config = ~mux_config;
+> +
+
+> +static int mpfs_irq_mux_nondirect_alloc(struct irq_domain *d, unsigned int virq,
+> +					struct irq_fwspec *fwspec, struct mpfs_irq_mux *priv)
+> +{
+> +	unsigned int bank = fwspec->param[0] / MPFS_MAX_IRQS_PER_GPIO;
+> +
+> +	if (bank > 2)
+> +		return -EINVAL;
+> +
+> +	priv->nondirect_irqchips[bank].domain = d;
+> +
+> +	irq_domain_set_hwirq_and_chip(d, virq, fwspec->param[0],
+> +				      &mpfs_irq_mux_nondirect_irq_chip, priv);
+> +	irq_set_chained_handler_and_data(virq, handle_untracked_irq,
+
+Why does this use handle_untracked_irq()? This sets up a chained handler
+but handle_untracked_irq() is a regular interrupt handler.
+
+> +					 &priv->nondirect_irqchips[bank]);
+
+Thanks,
+
+        tglx
 
