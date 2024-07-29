@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-8415-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8416-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAB5593EE95
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 09:37:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEB8693EEA0
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 09:39:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FD021F22555
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 07:37:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A9D31F21DEB
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 07:39:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2033912F581;
-	Mon, 29 Jul 2024 07:36:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB10E12BF23;
+	Mon, 29 Jul 2024 07:39:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j6enCwsV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0erdnr6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C751F2F46;
-	Mon, 29 Jul 2024 07:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6CD2F46;
+	Mon, 29 Jul 2024 07:39:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722238592; cv=none; b=n5cVYtZgMjUtGUQtM4eXal5GWJ2v3JAjKEBa3cAqVvkrdOuX1zPzktiPGCWk+gEAJjhYftyyaBBVA4OMNosMcoGknSlDQVtNfk3pmWZVsV9aVQVEx1+vT/B/dc1WCTXHJ0UAlbrUZmYD1Qnaw8lsauY1ALsIt3IGGJiExkKOs3c=
+	t=1722238780; cv=none; b=RdtSlQPjAxy912ATu8iXivt/rz6AF+gnaPN+Q0R6SkxZLhsGOCXGv/vLfJrPUScXN21Pn+ZHunduyXXOroFCP3WoWgpGFHufNe4VoQaCDmZpbuhk7G4GfP2ldiCevCOfaYEhCSzVY/f5eN2Smm/0eKyhOvvWvYm/9KZBUpNXtsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722238592; c=relaxed/simple;
-	bh=XosIECa9dwDc/SeeYGOHoU+Fn74A7HJoCXZZbfGRZFg=;
+	s=arc-20240116; t=1722238780; c=relaxed/simple;
+	bh=YMxHYOp8Oh4zMPFyBezHpfDaJlVyE6c1x7geeCh2YQ4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KIoqouOiqYqPH4Halb9AdlfIHt2YpmdSXBE6zJI3Lk04ca/BCJGawh25i9qFMdxv4HnAGFiIUi/njJANZTgYGyU8d0Hvy11T506t010+n3Z98oIvvq2zPF50NH7vvwuNXB472N1y5nVHdMZdg3AlGwa+9kAidPorTeQxVQuBSUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j6enCwsV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43FBC4AF60;
-	Mon, 29 Jul 2024 07:36:26 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=qvky4Kf3aJNd3Z/lgYUFC2mggJx39dgOHzrKZ7quhjxTQA8PGs4xJEb6g5Dnw/kbQql46+i7pVsSpOJ3GVuG6dbgk8Vie2df53ttXFjs7HAV5WnhHczX1gb6RbDpKBEFWoQ+zYLnoJKv/Tlt4gYFXSiItsq1M6IYb8KjL1OIoSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0erdnr6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 149FFC4AF0B;
+	Mon, 29 Jul 2024 07:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722238592;
-	bh=XosIECa9dwDc/SeeYGOHoU+Fn74A7HJoCXZZbfGRZFg=;
+	s=k20201202; t=1722238779;
+	bh=YMxHYOp8Oh4zMPFyBezHpfDaJlVyE6c1x7geeCh2YQ4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j6enCwsVQxxlnY1e9z84CpSYf/8pmAqCtE1N5yic67wkXsxY9dX7qPCdwZvnjYFAb
-	 MXBUvjaGIoOYHt0TW4ro1e4bKK6vaHEgIxOCIaz/p1O+/vUaQ7n7y06gaAoPAJHC9O
-	 dLATESsLY8XJyzlZFDgE3vlrw5i7tTEbBwsec2CaUQXdptO5MfhYjFaDPM2fty5YZb
-	 E4tOKUBlCjj33W7tMGOXzSQHCLO/yzo5yK9uoLeCqJAM1TY12L+mUUoUcr8MXkKSny
-	 +TR6yUSL3HUPhUI8XokUTFgdHb9Xp1LAHp9TnnOzcctPnwg5tVPAdz8FdOEEcsUiRm
-	 ZSYNq2jYSVyoQ==
-Message-ID: <dceb85da-0518-4215-9963-2d577b183021@kernel.org>
-Date: Mon, 29 Jul 2024 09:36:24 +0200
+	b=Y0erdnr6/J7yFWlDV9Qr4eEgsIf5QNE1tppk4zBiSqGhjksfqaWEUmUBkfwcnDRcB
+	 jFmIcuk/fUDlVN0NuX4EtVBXjU2bS+MViD7jbFWt8ZxEEbpJe7VXDQp4UDkX00Pgjw
+	 bqvwRoOjIDly92g0fbqS8Kfst/ErHAqvrlmrpO5wDOIewcqaslKHBkM4ypsJnnVG92
+	 s9LKd5NqrwWGvsy08PUHLN+8mNZHExL5CZkLq2OPXPcbGPImD9juh6+aUJaw4CeJtz
+	 2Td52W9zmGTh/SP6hlVGoLaGEn7xE0x0dvD60Bi9KKJfLmB/e2va2KrKFbBCA7c9Zg
+	 gA87r0WJXVgSQ==
+Message-ID: <aada1945-6351-4f5e-9f98-0d6640ba3b6b@kernel.org>
+Date: Mon, 29 Jul 2024 09:39:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: clock: mt6765: Add missing PMIC clock
+Subject: Re: [PATCH 4/5] dt-bindings: pinctrl: mediatek: Add bindings for
+ MT6765 pin controller
 To: Arseniy Velikanov <me@adomerle.xyz>, mturquette@baylibre.com,
  sboyd@kernel.org, matthias.bgg@gmail.com,
  angelogioacchino.delregno@collabora.com, sean.wang@kernel.org,
@@ -62,7 +63,7 @@ Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
  linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 References: <20240729073428.28983-1-me@adomerle.xyz>
- <20240729073428.28983-2-me@adomerle.xyz>
+ <20240729073428.28983-5-me@adomerle.xyz>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -108,34 +109,21 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240729073428.28983-2-me@adomerle.xyz>
+In-Reply-To: <20240729073428.28983-5-me@adomerle.xyz>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 29/07/2024 09:34, Arseniy Velikanov wrote:
-> Add PWRAP clock binding and shift the following ones
-> 
-> Fixes: eb7beb65ac30 ("clk: mediatek: add mt6765 clock IDs")
+> Add DT bindings for the MT6765 pin controller, which consist of macros
 
-Please describe the bug and its observable impact.
+By bindings we usually understand something else, which is clearly
+missing here: the documentation or bindings expressed as DT schema.
 
-> Signed-off-by: Arseniy Velikanov <me@adomerle.xyz>
-> ---
->  include/dt-bindings/clock/mt6765-clk.h | 131 +++++++++++++------------
->  1 file changed, 66 insertions(+), 65 deletions(-)
-> 
-> diff --git a/include/dt-bindings/clock/mt6765-clk.h b/include/dt-bindings/clock/mt6765-clk.h
-> index eb97e568518e..5d3a603a0d36 100644
-> --- a/include/dt-bindings/clock/mt6765-clk.h
-> +++ b/include/dt-bindings/clock/mt6765-clk.h
-> @@ -161,71 +161,72 @@
->  #define CLK_TOP_NR_CLK			126
->  
->  /* INFRACFG */
-> -#define CLK_IFR_ICUSB			0
+So where are the bindings, except header constants?
 
-NAK, you cannot change the bindings. Especially without bigger
-description where the bug is.
+Also, why are these exactly bindings? I do not see them being used in
+the driver, so probably you placed them in wrong directory - you wanted
+DTS header constants?
 
 Best regards,
 Krzysztof
