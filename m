@@ -1,135 +1,137 @@
-Return-Path: <linux-gpio+bounces-8429-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8430-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65FF693F2FC
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 12:41:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 511A793F354
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 12:57:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB412B2274D
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 10:41:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D0091C21EE7
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 10:57:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1DD1442E8;
-	Mon, 29 Jul 2024 10:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 216BA145356;
+	Mon, 29 Jul 2024 10:57:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AaVgNFMk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yoU0dLV8"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jUnCZID0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8578F28399;
-	Mon, 29 Jul 2024 10:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784FC145336;
+	Mon, 29 Jul 2024 10:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722249688; cv=none; b=AkGOby9pH4FaRKyjbSdf8obmoqBPU2Cgfgc9f8EobhHdR0v8kPpqYHgR0WxdcQXIvIVXZzk3wjP8jeM2ftlZrw+UNBdt99FQjpzGdU68xwXX12rFqam5G9jTsomzbMqfN7yBAnAMEZdOOnrfDwNBMMwZ/w+osc06hrBpjUNHAGw=
+	t=1722250621; cv=none; b=XtXrO7MpmZDhcwJB51+D+e11fNiN3eteMM62Em/kYDLFxrtpZlefbWY4BciAH/AE8m1j7i3d651b7Ox9nzzCvLdlRjebLvn6SfEDziWXRWk5sBDITFEmhzXBI/yKFXT9nVthgTF/6Z+PPLqHmOGsIbqVYFAQdZKcSLRySxEC/q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722249688; c=relaxed/simple;
-	bh=klov7AXJrBxt4kaO1ORqh6ORD4spqavsP0E/bA24oao=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BuOrno1vTCcqyq46C3xKNkDO/vZN2SD6srhxEO8idXoKe6JLtDiK0KfwCcTX1VHx/YJNLk6/GC4vqblymmBFPeL1EsrO8Iy4pgj+2Y03nF5M6wTrWNjJ9ah5TiIGHDFMGCCV8B2lXryFSgNJXV8lK4azqaUcFRIyApug+c7DsY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AaVgNFMk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yoU0dLV8; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1722249686;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mUtMMscAr42lfvfhAq0RSAVA54FsqUgqvVfRKCjfdf4=;
-	b=AaVgNFMkjq2oSMoVgoXhHi8LyJtviLBVSbxF2c2Onnr0cVbEL2dWnEIR8wazERXBh78577
-	nlD5mJOiO1x63PUXZM29zP3SGWCXwRDmxql5v1QZ1eYu0PdiqE0jfP0SChD/DZJ6Q43mFz
-	QP0/bQd97GSh9cM+Kln5SUjeBogFdcefq6cF/IfVsQbiAeHa8KHfONlqRrLrhwocxmxwdc
-	Uc+v8LqB3ykRTd/5XPcIyhX88IBXcNtLHyxSO7gVC4YiIkD2lNw8cA3fbR7ohCt5csbYyQ
-	5Ou4xHjkm38M8rBleSg8FasjB6rff/3oqorf4V2Httv+6BKZxQE6RfoD/iNrnA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1722249686;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mUtMMscAr42lfvfhAq0RSAVA54FsqUgqvVfRKCjfdf4=;
-	b=yoU0dLV8/0NscyaF1HrCpNKZHshPsYNYXrjGhuYCXTBhgY+EB4PNTIsqh8CYm5h5eH1ckX
-	5msg3Z8GpP54PyBQ==
-To: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org
-Cc: conor@kernel.org, conor.dooley@microchip.com, Marc Zyngier
- <maz@kernel.org>, Daire McNamara <daire.mcnamara@microchip.com>, Linus
- Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RFC v7 3/6] irqchip: add mpfs gpio interrupt mux
-In-Reply-To: <20240723-flatworm-cornflake-8023212f6584@wendy>
-References: <20240723-supervise-drown-d5d3b303e7fd@wendy>
- <20240723-flatworm-cornflake-8023212f6584@wendy>
-Date: Mon, 29 Jul 2024 12:41:25 +0200
-Message-ID: <87le1k8oq2.ffs@tglx>
+	s=arc-20240116; t=1722250621; c=relaxed/simple;
+	bh=lhVH4+aoI0xTEIrQarhaSOUs8dYRYg751A0Xq0lAqN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D/2VwmpBGR1s20lJndUc3TyNlrvYjW/eBrx+Q5ZUeVzokYPRVSChl6iSJpLtUlp0ClqN5F2K8Gab4v7V4mYwyoK+W7nefohBibwXq/4oFfBWWKW1b/CYkrMrYqXHD1CokSc48OOA93ZTb3rNYfhy4MCH2Qr2cHm6fqWL97UQC+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=jUnCZID0; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id AAD8345A;
+	Mon, 29 Jul 2024 12:56:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1722250572;
+	bh=lhVH4+aoI0xTEIrQarhaSOUs8dYRYg751A0Xq0lAqN0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jUnCZID0H/M4IU8LXXfQcl8baksFh4hFEBeHo38cKxwLM8oY5fIXVpXZWdo7HteeG
+	 kzlN1aSVl0CEJ30rz+xtSFE77BI+tIhR7xfhxRH506jyfhh8gRa71E4bi+K3Co83BH
+	 A4d6wknr4TxyijV338GJXG7LX1KXsijrCqzMym2U=
+Date: Mon, 29 Jul 2024 13:56:38 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Lee Jones <lee@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Haibo Chen <haibo.chen@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	Frank Li <Frank.li@nxp.com>
+Subject: Re: [PATCH v7 0/4] ADP5585 GPIO expander, PWM and keypad controller
+ support
+Message-ID: <20240729105638.GF2320@pendragon.ideasonboard.com>
+References: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
+ <20240725161616.GJ501857@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240725161616.GJ501857@google.com>
 
-On Tue, Jul 23 2024 at 12:27, Conor Dooley wrote:
-> +
-> +struct mpfs_irq_mux_bank_config {
-> +	u32 mask;
-> +	u8 shift;
-> +};
+On Thu, Jul 25, 2024 at 05:16:16PM +0100, Lee Jones wrote:
+> On Mon, 22 Jul 2024, Laurent Pinchart wrote:
+> 
+> > Hello,
+> > 
+> > This patch series introduces support for the Analog Devices ADP5585, a
+> > GPIO expander, PWM and keyboard controller. It models the chip as an MFD
+> > device, and includes DT bindings (1/4), an MFD driver (2/4) and drivers
+> > for the GPIO (3/4) and PWM (4/4) functions.
+> > 
+> > Support for the keypad controller is left out, as I have no means to
+> > test it at the moment. The chip also includes a tiny reset controller,
+> > as well as a 3-bit input programmable logic block, which I haven't tried
+> > to support (and also have no means to test).
+> > 
+> > The driver is based on an initial version from the NXP BSP kernel, then
+> > extensively and nearly completely rewritten, with added DT bindings. I
+> > have nonetheless retained original authorship. Clark, Haibo, if you
+> > would prefer not being credited and/or listed as authors, please let me
+> > know.
+> > 
+> > Compared to v6, this version addresses small review comments. I believe
+> > it is ready to go, as the PWM and GPIO drivers have been acked by the
+> > respective subsystem maintainers, and I have addressed Lee's comments on
+> > the MFD side. Lee, if there's no more issue, could you apply this to
+> > your tree for v6.12 ?
+> > 
+> > Clark Wang (1):
+> >   pwm: adp5585: Add Analog Devices ADP5585 support
+> > 
+> > Haibo Chen (2):
+> >   mfd: adp5585: Add Analog Devices ADP5585 core support
+> >   gpio: adp5585: Add Analog Devices ADP5585 support
+> > 
+> > Laurent Pinchart (1):
+> >   dt-bindings: mfd: Add Analog Devices ADP5585
+> > 
+> >  .../devicetree/bindings/mfd/adi,adp5585.yaml  |  92 +++++++
+> >  .../devicetree/bindings/trivial-devices.yaml  |   4 -
+> >  MAINTAINERS                                   |  11 +
+> >  drivers/gpio/Kconfig                          |   7 +
+> >  drivers/gpio/Makefile                         |   1 +
+> >  drivers/gpio/gpio-adp5585.c                   | 229 ++++++++++++++++++
+> >  drivers/mfd/Kconfig                           |  12 +
+> >  drivers/mfd/Makefile                          |   1 +
+> >  drivers/mfd/adp5585.c                         | 205 ++++++++++++++++
+> >  drivers/pwm/Kconfig                           |   7 +
+> >  drivers/pwm/Makefile                          |   1 +
+> >  drivers/pwm/pwm-adp5585.c                     | 184 ++++++++++++++
+> >  include/linux/mfd/adp5585.h                   | 126 ++++++++++
+> >  13 files changed, 876 insertions(+), 4 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+> >  create mode 100644 drivers/gpio/gpio-adp5585.c
+> >  create mode 100644 drivers/mfd/adp5585.c
+> >  create mode 100644 drivers/pwm/pwm-adp5585.c
+> >  create mode 100644 include/linux/mfd/adp5585.h
+> 
+> Note to self: This looks good to go.  Merge after -rc1 is released.
 
-Please see:
+\o/ Looking forward to that, now that -rc1 is out :-)
 
-  https://www.kernel.org/doc/html/latest/process/maintainer-tip.html
+-- 
+Regards,
 
-vs. coding style.
-
-> +/*
-> + * Returns an unsigned long, where a set bit indicates the corresponding
-> + * interrupt is in non-direct/muxed mode for that bank/GPIO controller.
-> + */
-> +static inline unsigned long mpfs_irq_mux_get_muxed_irqs(struct mpfs_irq_mux *priv,
-> +							unsigned int bank)
-> +{
-> +	unsigned long mux_config = priv->mux_config, muxed_irqs = -1;
-> +	struct mpfs_irq_mux_bank_config bank_config = mpfs_irq_mux_bank_configs[bank];
-> +
-> +	/*
-> +	 * If a bit is set in the mux, GPIO the corresponding interrupt from
-> +	 * controller 2 is direct and that controllers 0 or 1 is muxed.
-
-This is not a coherent sentence.
-
-> +	 * Invert the bits in the configuration register, so that set bits
-> +	 * equate to non-direct mode, for GPIO controller 2.
-> +	 */
-> +	if (bank == 2u)
-> +		mux_config = ~mux_config;
-> +
-
-> +static int mpfs_irq_mux_nondirect_alloc(struct irq_domain *d, unsigned int virq,
-> +					struct irq_fwspec *fwspec, struct mpfs_irq_mux *priv)
-> +{
-> +	unsigned int bank = fwspec->param[0] / MPFS_MAX_IRQS_PER_GPIO;
-> +
-> +	if (bank > 2)
-> +		return -EINVAL;
-> +
-> +	priv->nondirect_irqchips[bank].domain = d;
-> +
-> +	irq_domain_set_hwirq_and_chip(d, virq, fwspec->param[0],
-> +				      &mpfs_irq_mux_nondirect_irq_chip, priv);
-> +	irq_set_chained_handler_and_data(virq, handle_untracked_irq,
-
-Why does this use handle_untracked_irq()? This sets up a chained handler
-but handle_untracked_irq() is a regular interrupt handler.
-
-> +					 &priv->nondirect_irqchips[bank]);
-
-Thanks,
-
-        tglx
+Laurent Pinchart
 
