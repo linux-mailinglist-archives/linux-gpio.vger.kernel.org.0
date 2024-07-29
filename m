@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-8432-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8433-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A7C893F364
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 12:58:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4565E93F365
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 12:58:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E3451F223E0
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF92E1F21FAE
 	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jul 2024 10:58:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4EF6145334;
-	Mon, 29 Jul 2024 10:58:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A546814533F;
+	Mon, 29 Jul 2024 10:58:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAuRh2to"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dK8uyuwf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283921428F2
-	for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2024 10:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96841459F8
+	for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2024 10:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722250684; cv=none; b=DsWStpItJnA8Hq3XrvejEGSQkFj8S6/JBICFAX+8+44hye8r5jCkXJqs/pmOOI5mkEcC02VZsi26hlO4lBB9iVweB33U7JdG1/zCqQSz9yV4F+GiT+V7VCQaYy1BMF6tAIbggTs9n+CLppy2hjq14MAn3FwasTE2Cy2lYa0OSAA=
+	t=1722250685; cv=none; b=GzJIhhqrsHSphKuYmKhjbUqZYcKCgQ9SmjX/q/OiQG/ReecS4xzxcxrXMGP5bQfzsI4d6FaJvGqPONaJgGv8hkcwfFRUyxyKAu3BQeWTaRNr+Ka8GuV6G4vqjHo2P/rYAf/lKrTsm3A2HZb+YCzouN1StuFv+y0Q81HgHrTCptU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722250684; c=relaxed/simple;
-	bh=s7cZZRmxsDwzRd7DEaAWeVvYCa/invyf1ZkL3j18qD8=;
+	s=arc-20240116; t=1722250685; c=relaxed/simple;
+	bh=CjcglEjj5maZHTGMPRYlVfVRYbNXXqvyJvzKiP4ymPo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K6Z9Kw8Uf/EtiQasI3fYFcjIAugph1xJ8IsMAIuL6W+Cte8eXuKZYobyBmE9qL/vPDG27KYVbIuvSU4Sf/DP2QkzGQfKZP27r8DXSNifoM+/gEJ78Cu9J69qhiPKzqDSC0UgFJaFfTapthZOxGEgGJLeWudAqd1p4V77L7iHuIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SAuRh2to; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version; b=ETz7FA1qans0avuP2hb0qIa8yJCi8kvDRj4AEqNi8/ewFRQivhSoKZ5fsYPHfrDn/pVR1yID3EwpMBYhtk0tzPHbEQidPVp14Shrs2uYp+M8/XtUALwYtQPpd73Z1A/Z/Hjz+AoOPy+8qRT6LIyjClfqeSCH6TiTtBEWolH+M7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dK8uyuwf; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4281faefea9so3033895e9.2
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2024 03:58:02 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4281abc65daso8627275e9.2
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jul 2024 03:58:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722250681; x=1722855481; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1722250682; x=1722855482; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qYhIC7h0t54lRSrKMID9eYSGpD9atbKVN0wYx/7oAOM=;
-        b=SAuRh2toMrzCglKheE4p7zWT70+BUOjuT120qAuNoyzakirWRNX5QER4E0H6PB1Inu
-         xjPtmNR/FLpFVVBT3847p8mX0a6Y/zRdsL27yq1b54zHiDskTC7pwGI12b9o1innw0IZ
-         VRgGZrqIj4nomE6wJKWXFlPKldgouzv/hItTIn7Mb7oFPoH8N69H+LFvUzN5GIflG8bU
-         /BpXS46vyhVFYv79FF/Lrzd44JvGFwUmFEFnNsXnUgYWymLajMplkBPe5xyz59+3HN49
-         QNSyLJGPPLLrVVbirDHQcQKZ7anGHhwy2XgEJjvboND0RF/gU/LIeHuKXXC+yrqgseSs
-         OLew==
+        bh=CwZGphjLSMzYA/JQp2KpfNJjuPVCH40cB4KhBRZbxPc=;
+        b=dK8uyuwff090ms51dW0fo7GjarKHAyyA5lnFUnbA/oUG82T2zAGM4d4pernmgMbJ/+
+         r6Buoq1p96mtErhjnrG8WwAGgH0a/qdkmSgl5VH6PR/hEsrO1/2KO0s6QPJ6IxqNRME2
+         iR73Ve9tkoWONjKZ5J0MziOgFAojJc8zQRnh4IHYtqsg0AhFKro1NqohwYDmOUU6dVsv
+         Hp+jLb+UEVCiFLU4LAlf5tupDJu3G4z2ViFmFbZl26mMmc88PannitvBSJq9mAMg1kZq
+         WX+15bIG3X0REWRSwMF+OCD92X1bo+5OuFYgtgONf7WnOXd0qZqFWdZdUt+5p43pgabH
+         bnwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722250681; x=1722855481;
+        d=1e100.net; s=20230601; t=1722250682; x=1722855482;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qYhIC7h0t54lRSrKMID9eYSGpD9atbKVN0wYx/7oAOM=;
-        b=mbZyE+Bu1nwwCoONu4i4kyLROxZq/Od+7kVUGn8i673buhg4Z28Bw0oE+P176oU0ih
-         ++IcxHgewkTotWubX1cHtkdwVhcr5QPxf3sE5iPkOZHR1mOc1wjFMKCqH9mR7XT7cRWx
-         YTEh6/rkvDLwGMGhKY2UqfpF54UsWRyVCQO9SFXzLAl3sWLs5Xp7Oid+AMUK1aK7zhdV
-         grtv9jogUf1buIxQ8Fn+1me2umNTowuByNE0T7RDhWWBYPUZdRdIS80bYZ53k/+5O7pA
-         UxP2x7d2IoTB3BhMHP8lau0SAT5FLhoWxDF8z4ueDANbTMOO6w0bcp+oIsgo2hEnlUpZ
-         wojA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRQpZvwr4vrW824fsPdhvAQgk9i/BA7BdcjUJxBbXXnvdX4u50uXMaNLCfBL1qt2OinOLkfTA1nQg+PlIas0NF+6/UsQIL1I9X/A==
-X-Gm-Message-State: AOJu0YyGpwWdjqWl3Q8TW2XUgyUNwTmQuYjBLXdyzgBk3q6EsMdYBu5l
-	JUg9T7NIzVFOgJtny8mjkQgO8bYZG/nnoKWPzRa+vH6Yyr77c5Nz
-X-Google-Smtp-Source: AGHT+IH+TjAXXUq7uQOJP5RbhAp0jgZiUnsHhIatqHciwABgZo65ZGSw6ClcImNxRKdJk2EwfRGXIg==
-X-Received: by 2002:a5d:6b85:0:b0:369:b7e3:4983 with SMTP id ffacd0b85a97d-36b5cee9e5bmr4390940f8f.1.1722250681097;
+        bh=CwZGphjLSMzYA/JQp2KpfNJjuPVCH40cB4KhBRZbxPc=;
+        b=OQ06lBCJYq8QmdIBA9diytr+ct3pwd5voyua2Z6zrFFIgV8B1Jhgt+S04FuMMYWcgv
+         CT/8ee2ve0JKWeIDpq8aMDyzqhE2ZQ4NH7YpwUXLnzqEg5oFnf8WOiWiFJDtf+sXSoMD
+         4TJXrL/gQg4mc0l9VSXNLthj+Vq1TSt2T/treKgMp63ubVMMdpXUqufRs4g1/YGP4UbS
+         seFoz2cWE29um35+Kidk/N0+UJSQ6YIMENDZe8TgjRBljDTY3DEx/ObQ5t97mkyyaZ+1
+         ZggrkZr5cYhUe4EIrdjHA+I2hE+4KNxDQTViMbLPiYCt9uPYQwhCL0GEqh6RH42MCgco
+         FEzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNTOZMH2LB+Q77jpUmog0TrToP1ROtLTCcVVSyM5923uhZPcyNIFl3jTfzaCfUXjPq+juKDE025UbJUOno9JvzEcgMVwVkNvoqTA==
+X-Gm-Message-State: AOJu0YwvSxA1XApjtX0phB+dz71TAkBNCp01/u8Q6IclPTF6fD8HIZ7d
+	8noqjpicxmZ5NbqAbPPbGofu22o0Y0IRrDyIAiNT5xZJOS/4UNrlERm14S1x
+X-Google-Smtp-Source: AGHT+IFhO8XbluIeaB/uyD1tLl7H4Uyd1V0DOHMLHH8TVwYFcnibo2ettezgb36xK/1PmhW/3Twuhw==
+X-Received: by 2002:a05:6000:1043:b0:367:9988:7300 with SMTP id ffacd0b85a97d-36b5d08eb12mr4352019f8f.45.1722250681944;
         Mon, 29 Jul 2024 03:58:01 -0700 (PDT)
 Received: from fedora.redhat.com ([67.218.243.111])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36b367fc8a7sm11858068f8f.59.2024.07.29.03.58.00
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36b367fc8a7sm11858068f8f.59.2024.07.29.03.58.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jul 2024 03:58:00 -0700 (PDT)
+        Mon, 29 Jul 2024 03:58:01 -0700 (PDT)
 From: Iker Pedrosa <ikerpedrosam@gmail.com>
 To: brgl@bgdev.pl
 Cc: Iker Pedrosa <ikerpedrosam@gmail.com>,
@@ -75,9 +75,9 @@ Cc: Iker Pedrosa <ikerpedrosam@gmail.com>,
 	perobins@redhat.com,
 	linux-gpio@vger.kernel.org,
 	warthog618@gmail.com
-Subject: [PATCH libgpiod v2 1/4] bindings: python: gpiod: avoid use after free
-Date: Mon, 29 Jul 2024 12:57:16 +0200
-Message-ID: <3d8b12dd60eec59d4184c0bcc7d575b4eccbc22c.1722250385.git.ikerpedrosam@gmail.com>
+Subject: [PATCH libgpiod v2 2/4] lib: line-info strings termination
+Date: Mon, 29 Jul 2024 12:57:17 +0200
+Message-ID: <84db7bbe2c84b2d880052a05f8b1cc123d60c2dc.1722250385.git.ikerpedrosam@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1722250385.git.ikerpedrosam@gmail.com>
 References: <cover.1722250385.git.ikerpedrosam@gmail.com>
@@ -89,39 +89,31 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-`req_cfg` variable is freed and then used, which would generate an
-error. Avoid this problem by freeing when the variable will no longer be
-used.
+strncpy() truncates the destination buffer if it isn't large enough to
+hold the copy. Thus, let's increase the size of the destination strings
+to add the NULL character at the end.
 
 Signed-off-by: Iker Pedrosa <ikerpedrosam@gmail.com>
-Reviewed-by: Kent Gibson <warthog618@gmail.com>
 ---
- bindings/python/gpiod/ext/chip.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ lib/line-info.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bindings/python/gpiod/ext/chip.c b/bindings/python/gpiod/ext/chip.c
-index 28cf504..e8eaad8 100644
---- a/bindings/python/gpiod/ext/chip.c
-+++ b/bindings/python/gpiod/ext/chip.c
-@@ -274,14 +274,16 @@ static PyObject *chip_request_lines(chip_object *self, PyObject *args)
- 	Py_BEGIN_ALLOW_THREADS;
- 	request = gpiod_chip_request_lines(self->chip, req_cfg, line_cfg);
- 	Py_END_ALLOW_THREADS;
--	gpiod_request_config_free(req_cfg);
--	if (!request)
-+	if (!request) {
-+		gpiod_request_config_free(req_cfg);
- 		return Py_gpiod_SetErrFromErrno();
-+	}
+diff --git a/lib/line-info.c b/lib/line-info.c
+index 9f53b04..a7c6241 100644
+--- a/lib/line-info.c
++++ b/lib/line-info.c
+@@ -10,9 +10,9 @@
  
- 	req_obj = Py_gpiod_MakeRequestObject(request,
- 			gpiod_request_config_get_event_buffer_size(req_cfg));
- 	if (!req_obj)
- 		gpiod_line_request_release(request);
-+	gpiod_request_config_free(req_cfg);
- 
- 	return req_obj;
- }
+ struct gpiod_line_info {
+ 	unsigned int offset;
+-	char name[GPIO_MAX_NAME_SIZE];
++	char name[GPIO_MAX_NAME_SIZE+1];
+ 	bool used;
+-	char consumer[GPIO_MAX_NAME_SIZE];
++	char consumer[GPIO_MAX_NAME_SIZE+1];
+ 	enum gpiod_line_direction direction;
+ 	bool active_low;
+ 	enum gpiod_line_bias bias;
 -- 
 2.45.2
 
