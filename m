@@ -1,53 +1,52 @@
-Return-Path: <linux-gpio+bounces-8449-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8452-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76616940F18
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 12:26:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CCE7940F22
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 12:26:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E1C5283BD6
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 10:26:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F52D1C20CEF
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 10:26:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B52A519DF7C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F054B19E7E5;
 	Tue, 30 Jul 2024 10:26:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hmXjW1fp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emQbiUxZ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5867119B3F4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD1019D89E;
 	Tue, 30 Jul 2024 10:26:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722335171; cv=none; b=mtxw2+ofLu71+P2jzi1LKO2bc2cQyN/KENrQobfb+2txRYiSYfDNIKgkUT3nkGfHj71WKgi0oERVBEofG6Uk+MfvqVvaro1CqoWeKk1T9cVeSVZYHEWM9I7CRnS1YsMK0MuqkCxhQakeb/vFXL40KvsHEKQCji35t+n0oIRTRZs=
+	t=1722335171; cv=none; b=q33nfW2nxFIz/OwjpWNmEFaF478e68iRkpIKOLfOIdDXrESS2jsbv10xMxXxdvZcnOlt1RJelaLtcYP72JqpVFSXVD/lI3+lo0mRBG5+sWvHqUXeKLZ4KqSRVxl2WkxdOPQusPQYtq6J3WiZMHWWsUWBaXsFFnlymdLnLS5PhRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1722335171; c=relaxed/simple;
-	bh=HTq8KxdlBff6aHVfaDL9tdZs8oniKPuVqDJdX3FXXA0=;
+	bh=AEWNeN+JICR4EcZxZthCK+HHrZK9kPhdty3g+UJ4U+I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=C/C6dsjdHzVlbhelWrYmEN8NWp5DH1GJZgcJPSJgvll7JRnNMt7Lv0wLVn3pMi59Z1JOlQBr8D8aP1EVJ1q5lHYl3RY7ssPnkygFt1+WlU54OspT+OxkKmhdNP+8gV0w/RKJNdZh3SjqwPLfWiLGNxpk+5FCcaAdITnu7GFsMKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hmXjW1fp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 12ED0C4AF52;
+	 In-Reply-To:To:Cc; b=fyCuocwWmVLRoK5OVS7UhnTnqGbS4qWefiLneqExr6sBrM1rdJUz3BSUHl9Z8iQazMc+PwaQBG6HQev3YaQl/9HJE0zpAO94pJbGHmfWY/fCCK1dohd+GPTkDNfVtCwr6Sw/7W0Vr7CvlHO6WJJbiZGuvHTWBs5GJPdKT2nU2i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emQbiUxZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2372AC4AF53;
 	Tue, 30 Jul 2024 10:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1722335171;
-	bh=HTq8KxdlBff6aHVfaDL9tdZs8oniKPuVqDJdX3FXXA0=;
+	bh=AEWNeN+JICR4EcZxZthCK+HHrZK9kPhdty3g+UJ4U+I=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=hmXjW1fpsVHmTfgmyeFyogd6JxcedGzI2LkuLqbPM0AXFk85YvL0EgzPtb9Gduke/
-	 l4TithREs+VE2u/kRG2kzavTOrnGyWMuSPCI3tam73vyrFN7tPZEthudAwr0S7Qn0G
-	 FqmCVSe+U8NBB5dPY0dVBR1Qb/R/+rtSziw498v+IAAuvjizD/xiGDjV2/mEabL0pm
-	 PzbouARYdADjHHTKVHKzp5XGCbFHSKnwUWD7cDuFzBn81F6c3gzjXuF/EVjxjz9rxB
-	 nQpL9CkV4aSsS38AD5GHoxCAuexfGMceo9HslfSGaZB0Wbynidt1t5n1BATnI26ddu
-	 GHbnDo8Zfrm/w==
+	b=emQbiUxZTwsra0sh7zDncdSBAaFnEaJJePqmr7WivbMxZ/Mbip3n9G8WuZUvRaz7j
+	 iANeNn/g+sg+5DUNlvJZAQL/AcXHnVuOs3t7w5SbFz/UScezgX8GE291rKQUY1fJm+
+	 h6uQbH4fNx/Z2q/cwahLASLzbT9wyLoCJclKHRPeYYTdaqd/IKYBh8+d4uEncGn3iw
+	 7sKOQZjpzLvFvdiUlBunkQe4fcVnQsPkQGXgK7u2IXt7N5idRCEQe/fCbJlwUszHHL
+	 SPiueQVsQKGR3/J38JzKpV7ch52nwREyjY07uM3bQ7Qcb1v6mG5bvPVnCpoSWFeTHz
+	 EPvsUKC6Dw9CQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08114C3DA49;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17960C3DA7F;
 	Tue, 30 Jul 2024 10:26:11 +0000 (UTC)
 From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
-Date: Tue, 30 Jul 2024 12:25:12 +0200
-Subject: [PATCH v11 04/12] dt-bindings: clock: Add Marvell PXA1908 clock
- bindings
+Date: Tue, 30 Jul 2024 12:25:13 +0200
+Subject: [PATCH v11 05/12] clk: mmp: Add Marvell PXA1908 APBC driver
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240730-pxa1908-lkml-v11-4-21dbb3e28793@skole.hr>
+Message-Id: <20240730-pxa1908-lkml-v11-5-21dbb3e28793@skole.hr>
 References: <20240730-pxa1908-lkml-v11-0-21dbb3e28793@skole.hr>
 In-Reply-To: <20240730-pxa1908-lkml-v11-0-21dbb3e28793@skole.hr>
 To: Michael Turquette <mturquette@baylibre.com>, 
@@ -72,16 +71,15 @@ Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
  Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
  linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Conor Dooley <conor.dooley@microchip.com>
+ linux-arm-kernel@lists.infradead.org
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4973;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6279;
  i=duje.mihanovic@skole.hr; s=20240706; h=from:subject:message-id;
- bh=KMQL466nychebb4YZnaiI07BFVr6kSgzNovpEb0k4I8=;
- b=owGbwMvMwCW21nBykGv/WmbG02pJDGkr9m9Zvdp+opL46fb1FrdEz5rtEU878zU1kCszpUa1N
- Ui7kOdMRykLgxgXg6yYIkvuf8drvJ9Ftm7PXmYAM4eVCWQIAxenAEzkbRDDf9fdcUcrJ7yesKbn
- fIXCioT/t5VWPfvXMl+/mZl55T2b1kRGhkcs8ae+VMY48d1zznRz6Vepf2FSwBP9KPBNyrc9d28
- +5AMA
+ bh=LjTRA+snmoaVUrrzBhCFmFBGgt+UrcvoIXtSXsRi8aE=;
+ b=owGbwMvMwCW21nBykGv/WmbG02pJDGkr9m9R6bj6ePqfi68S5HfsWd6oeDrsRuiNLfyea/zeL
+ ph5b/mFNR2lLAxiXAyyYoosuf8dr/F+Ftm6PXuZAcwcViaQIQxcnAIwkeuPGRkeHuVrKcw9cVr8
+ +DdxDX++e8ZXdooKaW2afK1V+ved7pTNDH/4Kovu3rBR/+RbP8PkaM3as8UnduR1Mz29Ub/N+MT
+ FNac5AA==
 X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
  fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
 X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/20240706 with
@@ -91,165 +89,161 @@ Reply-To: duje.mihanovic@skole.hr
 
 From: Duje Mihanović <duje.mihanovic@skole.hr>
 
-Add dt bindings and documentation for the Marvell PXA1908 clock
-controller.
+Add driver for the APBC controller block found on Marvell's PXA1908 SoC.
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
- .../devicetree/bindings/clock/marvell,pxa1908.yaml | 48 ++++++++++++
- include/dt-bindings/clock/marvell,pxa1908.h        | 88 ++++++++++++++++++++++
- 2 files changed, 136 insertions(+)
+ drivers/clk/mmp/Makefile           |   2 +-
+ drivers/clk/mmp/clk-pxa1908-apbc.c | 131 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 132 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
+diff --git a/drivers/clk/mmp/Makefile b/drivers/clk/mmp/Makefile
+index 441bf83080a1..685bb80f8ae1 100644
+--- a/drivers/clk/mmp/Makefile
++++ b/drivers/clk/mmp/Makefile
+@@ -11,4 +11,4 @@ obj-$(CONFIG_MACH_MMP_DT) += clk-of-pxa168.o clk-of-pxa910.o
+ obj-$(CONFIG_COMMON_CLK_MMP2) += clk-of-mmp2.o clk-pll.o pwr-island.o
+ obj-$(CONFIG_COMMON_CLK_MMP2_AUDIO) += clk-audio.o
+ 
+-obj-y += clk-of-pxa1928.o
++obj-$(CONFIG_ARCH_MMP) += clk-of-pxa1928.o clk-pxa1908-apbc.o
+diff --git a/drivers/clk/mmp/clk-pxa1908-apbc.c b/drivers/clk/mmp/clk-pxa1908-apbc.c
 new file mode 100644
-index 000000000000..4e78933232b6
+index 000000000000..a418b9f895c1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/marvell,pxa1908.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/clk/mmp/clk-pxa1908-apbc.c
+@@ -0,0 +1,131 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <linux/clk-provider.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/spinlock.h>
 +
-+title: Marvell PXA1908 Clock Controllers
++#include <dt-bindings/clock/marvell,pxa1908.h>
 +
-+maintainers:
-+  - Duje Mihanović <duje.mihanovic@skole.hr>
++#include "clk.h"
 +
-+description: |
-+  The PXA1908 clock subsystem generates and supplies clock to various
-+  controllers within the PXA1908 SoC. The PXA1908 contains numerous clock
-+  controller blocks, with the ones currently supported being APBC, APBCP, MPMU
-+  and APMU roughly corresponding to internal buses.
++#define APBC_UART0		0x0
++#define APBC_UART1		0x4
++#define APBC_GPIO		0x8
++#define APBC_PWM0		0xc
++#define APBC_PWM1		0x10
++#define APBC_PWM2		0x14
++#define APBC_PWM3		0x18
++#define APBC_SSP0		0x1c
++#define APBC_SSP1		0x20
++#define APBC_IPC_RST		0x24
++#define APBC_RTC		0x28
++#define APBC_TWSI0		0x2c
++#define APBC_KPC		0x30
++#define APBC_SWJTAG		0x40
++#define APBC_SSP2		0x4c
++#define APBC_TWSI1		0x60
++#define APBC_THERMAL		0x6c
++#define APBC_TWSI3		0x70
 +
-+  All these clock identifiers could be found in <include/dt-bindings/marvell,pxa1908.h>.
++#define APBC_NR_CLKS		19
 +
-+properties:
-+  compatible:
-+    enum:
-+      - marvell,pxa1908-apbc
-+      - marvell,pxa1908-apbcp
-+      - marvell,pxa1908-mpmu
-+      - marvell,pxa1908-apmu
++struct pxa1908_clk_unit {
++	struct mmp_clk_unit unit;
++	void __iomem *base;
++};
 +
-+  reg:
-+    maxItems: 1
++static DEFINE_SPINLOCK(pwm0_lock);
++static DEFINE_SPINLOCK(pwm2_lock);
 +
-+  '#clock-cells':
-+    const: 1
++static DEFINE_SPINLOCK(uart0_lock);
++static DEFINE_SPINLOCK(uart1_lock);
 +
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
++static const char * const uart_parent_names[] = {"pll1_117", "uart_pll"};
++static const char * const ssp_parent_names[] = {"pll1_d16", "pll1_d48", "pll1_d24", "pll1_d12"};
 +
-+additionalProperties: false
++static struct mmp_param_gate_clk apbc_gate_clks[] = {
++	{PXA1908_CLK_TWSI0, "twsi0_clk", "pll1_32", CLK_SET_RATE_PARENT, APBC_TWSI0, 0x7, 3, 0, 0, NULL},
++	{PXA1908_CLK_TWSI1, "twsi1_clk", "pll1_32", CLK_SET_RATE_PARENT, APBC_TWSI1, 0x7, 3, 0, 0, NULL},
++	{PXA1908_CLK_TWSI3, "twsi3_clk", "pll1_32", CLK_SET_RATE_PARENT, APBC_TWSI3, 0x7, 3, 0, 0, NULL},
++	{PXA1908_CLK_GPIO, "gpio_clk", "vctcxo", CLK_SET_RATE_PARENT, APBC_GPIO, 0x7, 3, 0, 0, NULL},
++	{PXA1908_CLK_KPC, "kpc_clk", "clk32", CLK_SET_RATE_PARENT, APBC_KPC, 0x7, 3, 0, MMP_CLK_GATE_NEED_DELAY, NULL},
++	{PXA1908_CLK_RTC, "rtc_clk", "clk32", CLK_SET_RATE_PARENT, APBC_RTC, 0x87, 0x83, 0, MMP_CLK_GATE_NEED_DELAY, NULL},
++	{PXA1908_CLK_PWM0, "pwm0_clk", "pwm01_apb_share", CLK_SET_RATE_PARENT, APBC_PWM0, 0x2, 2, 0, 0, &pwm0_lock},
++	{PXA1908_CLK_PWM1, "pwm1_clk", "pwm01_apb_share", CLK_SET_RATE_PARENT, APBC_PWM1, 0x6, 2, 0, 0, NULL},
++	{PXA1908_CLK_PWM2, "pwm2_clk", "pwm23_apb_share", CLK_SET_RATE_PARENT, APBC_PWM2, 0x2, 2, 0, 0, NULL},
++	{PXA1908_CLK_PWM3, "pwm3_clk", "pwm23_apb_share", CLK_SET_RATE_PARENT, APBC_PWM3, 0x6, 2, 0, 0, NULL},
++	{PXA1908_CLK_UART0, "uart0_clk", "uart0_mux", CLK_SET_RATE_PARENT, APBC_UART0, 0x7, 3, 0, 0, &uart0_lock},
++	{PXA1908_CLK_UART1, "uart1_clk", "uart1_mux", CLK_SET_RATE_PARENT, APBC_UART1, 0x7, 3, 0, 0, &uart1_lock},
++	{PXA1908_CLK_THERMAL, "thermal_clk", NULL, 0, APBC_THERMAL, 0x7, 3, 0, 0, NULL},
++	{PXA1908_CLK_IPC_RST, "ipc_clk", NULL, 0, APBC_IPC_RST, 0x7, 3, 0, 0, NULL},
++	{PXA1908_CLK_SSP0, "ssp0_clk", "ssp0_mux", 0, APBC_SSP0, 0x7, 3, 0, 0, NULL},
++	{PXA1908_CLK_SSP2, "ssp2_clk", "ssp2_mux", 0, APBC_SSP2, 0x7, 3, 0, 0, NULL},
++};
 +
-+examples:
-+  # APMU block:
-+  - |
-+    clock-controller@d4282800 {
-+      compatible = "marvell,pxa1908-apmu";
-+      reg = <0xd4282800 0x400>;
-+      #clock-cells = <1>;
-+    };
-diff --git a/include/dt-bindings/clock/marvell,pxa1908.h b/include/dt-bindings/clock/marvell,pxa1908.h
-new file mode 100644
-index 000000000000..fb15b0d0cd4c
---- /dev/null
-+++ b/include/dt-bindings/clock/marvell,pxa1908.h
-@@ -0,0 +1,88 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-+#ifndef __DTS_MARVELL_PXA1908_CLOCK_H
-+#define __DTS_MARVELL_PXA1908_CLOCK_H
++static struct mmp_param_mux_clk apbc_mux_clks[] = {
++	{0, "uart0_mux", uart_parent_names, ARRAY_SIZE(uart_parent_names), CLK_SET_RATE_PARENT, APBC_UART0, 4, 3, 0, &uart0_lock},
++	{0, "uart1_mux", uart_parent_names, ARRAY_SIZE(uart_parent_names), CLK_SET_RATE_PARENT, APBC_UART1, 4, 3, 0, &uart1_lock},
++	{0, "ssp0_mux", ssp_parent_names, ARRAY_SIZE(ssp_parent_names), 0, APBC_SSP0, 4, 3, 0, NULL},
++	{0, "ssp2_mux", ssp_parent_names, ARRAY_SIZE(ssp_parent_names), 0, APBC_SSP2, 4, 3, 0, NULL},
++};
 +
-+/* plls */
-+#define PXA1908_CLK_CLK32		1
-+#define PXA1908_CLK_VCTCXO		2
-+#define PXA1908_CLK_PLL1_624		3
-+#define PXA1908_CLK_PLL1_416		4
-+#define PXA1908_CLK_PLL1_499		5
-+#define PXA1908_CLK_PLL1_832		6
-+#define PXA1908_CLK_PLL1_1248		7
-+#define PXA1908_CLK_PLL1_D2		8
-+#define PXA1908_CLK_PLL1_D4		9
-+#define PXA1908_CLK_PLL1_D8		10
-+#define PXA1908_CLK_PLL1_D16		11
-+#define PXA1908_CLK_PLL1_D6		12
-+#define PXA1908_CLK_PLL1_D12		13
-+#define PXA1908_CLK_PLL1_D24		14
-+#define PXA1908_CLK_PLL1_D48		15
-+#define PXA1908_CLK_PLL1_D96		16
-+#define PXA1908_CLK_PLL1_D13		17
-+#define PXA1908_CLK_PLL1_32		18
-+#define PXA1908_CLK_PLL1_208		19
-+#define PXA1908_CLK_PLL1_117		20
-+#define PXA1908_CLK_PLL1_416_GATE	21
-+#define PXA1908_CLK_PLL1_624_GATE	22
-+#define PXA1908_CLK_PLL1_832_GATE	23
-+#define PXA1908_CLK_PLL1_1248_GATE	24
-+#define PXA1908_CLK_PLL1_D2_GATE	25
-+#define PXA1908_CLK_PLL1_499_EN		26
-+#define PXA1908_CLK_PLL2VCO		27
-+#define PXA1908_CLK_PLL2		28
-+#define PXA1908_CLK_PLL2P		29
-+#define PXA1908_CLK_PLL2VCODIV3		30
-+#define PXA1908_CLK_PLL3VCO		31
-+#define PXA1908_CLK_PLL3		32
-+#define PXA1908_CLK_PLL3P		33
-+#define PXA1908_CLK_PLL3VCODIV3		34
-+#define PXA1908_CLK_PLL4VCO		35
-+#define PXA1908_CLK_PLL4		36
-+#define PXA1908_CLK_PLL4P		37
-+#define PXA1908_CLK_PLL4VCODIV3		38
++static void pxa1908_apb_periph_clk_init(struct pxa1908_clk_unit *pxa_unit)
++{
++	struct mmp_clk_unit *unit = &pxa_unit->unit;
++	struct clk *clk;
 +
-+/* apb (apbc) peripherals */
-+#define PXA1908_CLK_UART0		1
-+#define PXA1908_CLK_UART1		2
-+#define PXA1908_CLK_GPIO		3
-+#define PXA1908_CLK_PWM0		4
-+#define PXA1908_CLK_PWM1		5
-+#define PXA1908_CLK_PWM2		6
-+#define PXA1908_CLK_PWM3		7
-+#define PXA1908_CLK_SSP0		8
-+#define PXA1908_CLK_SSP1		9
-+#define PXA1908_CLK_IPC_RST		10
-+#define PXA1908_CLK_RTC			11
-+#define PXA1908_CLK_TWSI0		12
-+#define PXA1908_CLK_KPC			13
-+#define PXA1908_CLK_SWJTAG		14
-+#define PXA1908_CLK_SSP2		15
-+#define PXA1908_CLK_TWSI1		16
-+#define PXA1908_CLK_THERMAL		17
-+#define PXA1908_CLK_TWSI3		18
++	mmp_clk_register_gate(NULL, "pwm01_apb_share", "pll1_d48",
++			CLK_SET_RATE_PARENT,
++			pxa_unit->base + APBC_PWM0,
++			0x5, 1, 0, 0, &pwm0_lock);
++	mmp_clk_register_gate(NULL, "pwm23_apb_share", "pll1_d48",
++			CLK_SET_RATE_PARENT,
++			pxa_unit->base + APBC_PWM2,
++			0x5, 1, 0, 0, &pwm2_lock);
++	clk = mmp_clk_register_apbc("swjtag", NULL,
++			pxa_unit->base + APBC_SWJTAG, 10, 0, NULL);
++	mmp_clk_add(unit, PXA1908_CLK_SWJTAG, clk);
++	mmp_register_mux_clks(unit, apbc_mux_clks, pxa_unit->base,
++			ARRAY_SIZE(apbc_mux_clks));
++	mmp_register_gate_clks(unit, apbc_gate_clks, pxa_unit->base,
++			ARRAY_SIZE(apbc_gate_clks));
++}
 +
-+/* apb (apbcp) peripherals */
-+#define PXA1908_CLK_UART2		1
-+#define PXA1908_CLK_TWSI2		2
-+#define PXA1908_CLK_AICER		3
++static int pxa1908_apbc_probe(struct platform_device *pdev)
++{
++	struct pxa1908_clk_unit *pxa_unit;
 +
-+/* axi (apmu) peripherals */
-+#define PXA1908_CLK_CCIC1		1
-+#define PXA1908_CLK_ISP			2
-+#define PXA1908_CLK_DSI1		3
-+#define PXA1908_CLK_DISP1		4
-+#define PXA1908_CLK_CCIC0		5
-+#define PXA1908_CLK_SDH0		6
-+#define PXA1908_CLK_SDH1		7
-+#define PXA1908_CLK_USB			8
-+#define PXA1908_CLK_NF			9
-+#define PXA1908_CLK_CORE_DEBUG		10
-+#define PXA1908_CLK_VPU			11
-+#define PXA1908_CLK_GC			12
-+#define PXA1908_CLK_SDH2		13
-+#define PXA1908_CLK_GC2D		14
-+#define PXA1908_CLK_TRACE		15
-+#define PXA1908_CLK_DVC_DFC_DEBUG	16
++	pxa_unit = devm_kzalloc(&pdev->dev, sizeof(*pxa_unit), GFP_KERNEL);
++	if (IS_ERR(pxa_unit))
++		return PTR_ERR(pxa_unit);
 +
-+#endif
++	pxa_unit->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(pxa_unit->base))
++		return PTR_ERR(pxa_unit->base);
++
++	mmp_clk_init(pdev->dev.of_node, &pxa_unit->unit, APBC_NR_CLKS);
++
++	pxa1908_apb_periph_clk_init(pxa_unit);
++
++	return 0;
++}
++
++static const struct of_device_id pxa1908_apbc_match_table[] = {
++	{ .compatible = "marvell,pxa1908-apbc" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pxa1908_apbc_match_table);
++
++static struct platform_driver pxa1908_apbc_driver = {
++	.probe = pxa1908_apbc_probe,
++	.driver = {
++		.name = "pxa1908-apbc",
++		.of_match_table = pxa1908_apbc_match_table
++	}
++};
++module_platform_driver(pxa1908_apbc_driver);
++
++MODULE_AUTHOR("Duje Mihanović <duje.mihanovic@skole.hr>");
++MODULE_DESCRIPTION("Marvell PXA1908 APBC Clock Driver");
++MODULE_LICENSE("GPL");
 
 -- 
 2.45.2
