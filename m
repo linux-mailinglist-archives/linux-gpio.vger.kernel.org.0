@@ -1,306 +1,124 @@
-Return-Path: <linux-gpio+bounces-8468-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8469-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F39D94213C
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 22:02:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E8B4942378
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2024 01:38:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 63075B2437A
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 20:02:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7793E1C23088
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 23:38:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F6FF18CC0D;
-	Tue, 30 Jul 2024 20:02:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5B5A194123;
+	Tue, 30 Jul 2024 23:38:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TvvsLtAh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ek-dev.de header.i=@ek-dev.de header.b="gsmNAw5y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from server.cpprotect6.de (server.cpprotect6.de [185.225.135.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C3118C909;
-	Tue, 30 Jul 2024 20:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C72E18CC03;
+	Tue, 30 Jul 2024 23:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.225.135.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722369750; cv=none; b=MPp29m2wQt/F1Zi2y8F4Za6VmadU8tIgR0eDlEoO8Oyv8wnolDwYcMn/rLTD+khs+wt4nRyAsdpoxCo19AztetNzqbiPNZjWTJIfNpFsYTnWA0J+j4v5LI0rDePD5dqV/0BD0gR8A2qY6iE1cHb+29Sl8wPgTxppzxHsoL+LgGk=
+	t=1722382706; cv=none; b=F6AjBF1hGSilsFEhnojG6eHS7QBBVJ0XCoaVNXxWngr2bzFO23+e5wDWyiKPDf2qWU/P7RcwtONcfpIh2qpHbaW96eekRurBIGI+O/k5/ClQYIfHV4YGcZ5oqMGN2Gxi+erDuWHfmXCXiuzrWReDTzuZS0oSCdu/TLmvboljn/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722369750; c=relaxed/simple;
-	bh=fDsXKXOpP+9QFzGC+05tcUZioFkiWOvG5upo1inW/xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LrcNBv8AMk+09YVL30dT2nJMPKXr3WblRdw9xXR2ofuC0A1azJC/1VCeFJkX+s5S8kvov3RCSsDi+WitB7+9sCoW4l2P4HFDAAnLTL3dPYIPOCvRJODKhkunubMrtgpI02SuJ4+vWtekqrTsZXA7FiosFn+dwLScp/X3OeAqM08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TvvsLtAh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F1AEC32782;
-	Tue, 30 Jul 2024 20:02:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722369749;
-	bh=fDsXKXOpP+9QFzGC+05tcUZioFkiWOvG5upo1inW/xw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TvvsLtAhznDiSDL/Rb8TfVsxlMzeaaOvOVQ9iqhd8u/HciuCBXL/kzpSJnDiew7RJ
-	 xkBT1sRQSIpkH3vr2Sap/vL7Q/duGtT5Dn7s3zJgNwn/3czUCrUjVNXSQATgUBnt35
-	 iU3NsbuAYf1lpAPRuI7oRDVAR0kgpLBNaIL4g4SLDNFJi3IkjaGeZQD+yAXWmHU44O
-	 /8ob0YvgKOLGfqeEi4AotAv7Ve4twldMaELd8bnUtM1dsQUNcZbJY9gZayEh3S6Aif
-	 J67rvO/RaS4fle8pDJU+2D4IGnZ6QYA5jpLrEljxwENGtUVlbMIn5T6CtRTtOST21S
-	 91PWKdVjbX/gQ==
-Date: Tue, 30 Jul 2024 14:02:27 -0600
-From: Rob Herring <robh@kernel.org>
-To: Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Michal Simek <michal.simek@amd.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jay Buddhabhatti <jay.buddhabhatti@amd.com>,
-	Praveen Teja Kundanala <praveen.teja.kundanala@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	saikrishna12468@gmail.com, git@amd.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Add support for Xilinx
- Versal platform
-Message-ID: <20240730200227.GA2043536-robh@kernel.org>
-References: <20240730065548.1371518-1-sai.krishna.potthuri@amd.com>
- <20240730065548.1371518-2-sai.krishna.potthuri@amd.com>
+	s=arc-20240116; t=1722382706; c=relaxed/simple;
+	bh=3X/NlXDhom883Ym0Q2HQWNCIX5xq5rdeIKix2YEq0eo=;
+	h=To:Cc:From:Subject:Message-ID:Date:MIME-Version:Content-Type; b=bbTkmg4KyZzNi196e7FJzzfvlH1KNU2ABjDVMj2Ync+AYdygBuin+np1mSlD5aP2fRbOT6ha12YBmgHzTJTMiGK3DdztJw+wXLsgsB3Nh5q0/V6ljnPJZTj1KbGeGtPsRTjN4yUrA8qZYtIhBJHPSTQtRBiodNnQaC5nCytIkx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ek-dev.de; spf=pass smtp.mailfrom=ek-dev.de; dkim=pass (2048-bit key) header.d=ek-dev.de header.i=@ek-dev.de header.b=gsmNAw5y; arc=none smtp.client-ip=185.225.135.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ek-dev.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ek-dev.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ek-dev.de;
+	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+	Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ub6bitsfL2bAe5/YRicKaZIw/i3hZpWx6GHxBHvGEyA=; b=gsmNAw5yg7n9mouaiGJabU+beo
+	KuVmXd10GVhqGE8H2aww3DrUPCBP4cPEc8EOiIdYzRpXKkl2m4sKHiwyuSZ+Lj+YZlym2wwefsca6
+	NgN/1nRO4tu4Dx9fHpo/vnyqyGvtcrVpt5f85W5sfMjyoT3zKBZk26RrIU6ZC95e5ADbj95ARxLrq
+	LcuTpGx3ClSiCZcFIly7kX/kMySjXZTZG01U2Hw0BJ3oaodFNcrz7Um2OyGRi4D2RQrv3o+cIFVQE
+	j24o5w1Ii7aVSmnh6Hpbk5R9OKeesUutOrAYrHv3C5AomTk1WzUhkA4XkptFwFO6TTz/Qd+CagPu+
+	2TdEqTnA==;
+Received: from p508fb154.dip0.t-ipconnect.de ([80.143.177.84]:50278 helo=[192.168.178.50])
+	by server.cpprotect6.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.97.1)
+	(envelope-from <thomas.blocher@ek-dev.de>)
+	id 1sYw53-00000002x2n-49ST;
+	Wed, 31 Jul 2024 01:16:36 +0200
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+From: Thomas Blocher <thomas.blocher@ek-dev.de>
+Subject: [PATCH] pinctrl: at91: make it work with current gpiolib
+Message-ID: <5b992862-355d-f0de-cd3d-ff99e67a4ff1@ek-dev.de>
+Date: Wed, 31 Jul 2024 01:16:26 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240730065548.1371518-2-sai.krishna.potthuri@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.cpprotect6.de
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - ek-dev.de
+X-Get-Message-Sender-Via: server.cpprotect6.de: authenticated_id: thomas.blocher@ek-dev.de
+X-Authenticated-Sender: server.cpprotect6.de: thomas.blocher@ek-dev.de
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Tue, Jul 30, 2024 at 12:25:46PM +0530, Sai Krishna Potthuri wrote:
-> Add Xilinx Versal compatible string and corresponding groups, function and
-> pins properties to support pin controller features on Versal platform.
-> 
-> Signed-off-by: Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
-> ---
->  .../bindings/pinctrl/xlnx,versal-pinctrl.yaml | 289 ++++++++++++++++++
->  1 file changed, 289 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,versal-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/xlnx,versal-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/xlnx,versal-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..ff456a0c0a37
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/xlnx,versal-pinctrl.yaml
-> @@ -0,0 +1,289 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/xlnx,versal-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Xilinx Versal Pinctrl
-> +
-> +maintainers:
-> +  - Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
-> +
-> +description: |
-> +  Please refer to pinctrl-bindings.txt in this directory for details of the
-> +  common pinctrl bindings used by client devices, including the meaning of the
-> +  phrase "pin configuration node".
-> +
-> +  Versal's pin configuration nodes act as a container for an arbitrary number of
-> +  subnodes. Each of these subnodes represents some desired configuration for a
-> +  pin, a group, or a list of pins or groups. This configuration can include the
-> +  mux function to select on those pin(s)/group(s), and various pin configuration
-> +  parameters, such as pull-up, slew rate, etc.
-> +
-> +  Each configuration node can consist of multiple nodes describing the pinmux and
-> +  pinconf options. Those nodes can be pinmux nodes or pinconf nodes.
-> +
-> +  The name of each subnode is not important; all subnodes should be enumerated
-> +  and processed purely based on their content.
-> +
-> +properties:
-> +  compatible:
-> +    const: xlnx,versal-pinctrl
-> +
-> +patternProperties:
-> +  '^(.*-)?(default|gpio-grp)$':
-> +    type: object
-> +    patternProperties:
-> +      '^mux':
-> +        type: object
-> +        description:
-> +          Pinctrl node's client devices use subnodes for pin muxes,
-> +          which in turn use below standard properties.
-> +        $ref: pinmux-node.yaml#
-> +
-> +        properties:
-> +          pins:
-> +            description:
-> +              List of pins to select (either this or "groups" must be specified)
-> +            items:
-> +              pattern: '^((LPD|PMC)_)MIO([0-9]|[1-6][0-9]|7[0-7])$'
-> +
-> +          groups:
-> +            description:
-> +              List of groups to select (either this or "pins" must be
-> +              specified), available groups for this subnode.
-> +            items:
-> +              anyOf:
-> +                - pattern: '^((LPD|PMC)_)MIO([0-9]|[1-6][0-9]|7[0-7])$'
-> +                - enum: [spi0_0_grp, spi0_1_grp, spi0_2_grp, spi0_3_grp, spi0_4_grp, spi0_5_grp,
-> +                         spi0_ss_0_grp, spi0_ss_1_grp, spi0_ss_2_grp, spi0_ss_3_grp, spi0_ss_4_grp,
-> +                         spi0_ss_5_grp, spi0_ss_6_grp, spi0_ss_7_grp, spi0_ss_8_grp, spi0_ss_9_grp,
-> +                         spi0_ss_10_grp, spi0_ss_11_grp, spi0_ss_12_grp, spi0_ss_13_grp, spi0_ss_14_grp,
-> +                         spi0_ss_15_grp, spi0_ss_16_grp, spi0_ss_17_grp, spi1_0_grp, spi1_1_grp,
-> +                         spi1_2_grp, spi1_3_grp, spi1_4_grp, spi1_5_grp, spi1_ss_0_grp, spi1_ss_1_grp,
-> +                         spi1_ss_2_grp, spi1_ss_3_grp, spi1_ss_4_grp, spi1_ss_5_grp, spi1_ss_6_grp,
-> +                         spi1_ss_7_grp, spi1_ss_8_grp, spi1_ss_9_grp, spi1_ss_10_grp, spi1_ss_11_grp,
-> +                         spi1_ss_12_grp, spi1_ss_13_grp, spi1_ss_14_grp, spi1_ss_15_grp, spi1_ss_16_grp
-> +                         spi1_ss_17_grp, can0_0_grp, can0_1_grp, can0_2_grp, can0_3_grp, can0_4_grp,
-> +                         can0_5_grp, can0_6_grp, can0_7_grp, can0_8_grp, can0_9_grp, can0_10_grp,
-> +                         can0_11_grp, can0_12_grp, can0_13_grp, can0_14_grp, can0_15_grp, can0_16_grp,
-> +                         can0_17_grp, can1_0_grp, can1_1_grp, can1_2_grp, can1_3_grp, can1_4_grp,
-> +                         can1_5_grp, can1_6_grp, can1_7_grp, can1_8_grp, can1_9_grp, can1_10_grp,
-> +                         can1_11_grp, can1_12_grp, can1_13_grp, can1_14_grp, can1_15_grp, can1_16_grp,
-> +                         can1_17_grp, can1_18_grp, i2c0_0_grp, i2c0_1_grp, i2c0_2_grp, i2c0_3_grp,
-> +                         i2c0_4_grp, i2c0_5_grp, i2c0_6_grp, i2c0_7_grp, i2c0_8_grp, i2c0_9_grp,
-> +                         i2c0_10_grp, i2c0_11_grp, i2c0_12_grp, i2c0_13_grp, i2c0_14_grp, i2c0_15_grp,
-> +                         i2c0_16_grp, i2c0_17_grp, i2c1_0_grp, i2c1_1_grp, i2c1_2_grp, i2c1_3_grp,
-> +                         i2c1_4_grp, i2c1_5_grp, i2c1_6_grp, i2c1_7_grp, i2c1_8_grp, i2c1_9_grp,
-> +                         i2c1_10_grp, i2c1_11_grp, i2c1_12_grp, i2c1_13_grp, i2c1_14_grp, i2c1_15_grp,
-> +                         i2c1_16_grp, i2c1_17_grp, i2c1_18_grp, i2c_pmc_0_grp, i2c_pmc_1_grp,
-> +                         i2c_pmc_2_grp, i2c_pmc_3_grp, i2c_pmc_4_grp, i2c_pmc_5_grp, i2c_pmc_6_grp,
-> +                         i2c_pmc_7_grp, i2c_pmc_8_grp, i2c_pmc_9_grp, i2c_pmc_10_grp, i2c_pmc_11_grp,
-> +                         i2c_pmc_12_grp, ttc0_clk_0_grp, ttc0_clk_1_grp, ttc0_clk_2_grp, ttc0_clk_3_grp,
-> +                         ttc0_clk_4_grp, ttc0_clk_5_grp, ttc0_clk_6_grp, ttc0_clk_7_grp, ttc0_clk_8_grp,
-> +                         ttc0_wav_0_grp, ttc0_wav_1_grp, ttc0_wav_2_grp, ttc0_wav_3_grp, ttc0_wav_4_grp,
-> +                         ttc0_wav_5_grp, ttc0_wav_6_grp, ttc0_wav_7_grp, ttc0_wav_8_grp, ttc1_clk_0_grp,
-> +                         ttc1_clk_1_grp, ttc1_clk_2_grp, ttc1_clk_3_grp, ttc1_clk_4_grp, ttc1_clk_5_grp,
-> +                         ttc1_clk_6_grp, ttc1_clk_7_grp, ttc1_clk_8_grp, ttc1_wav_0_grp, ttc1_wav_1_grp,
-> +                         ttc1_wav_2_grp, ttc1_wav_3_grp, ttc1_wav_4_grp, ttc1_wav_5_grp, ttc1_wav_6_grp,
-> +                         ttc1_wav_7_grp, ttc1_wav_8_grp, ttc2_clk_0_grp, ttc2_clk_1_grp, ttc2_clk_2_grp,
-> +                         ttc2_clk_3_grp, ttc2_clk_4_grp, ttc2_clk_5_grp, ttc2_clk_6_grp, ttc2_clk_7_grp,
-> +                         ttc2_clk_8_grp, ttc2_wav_0_grp, ttc2_wav_1_grp, ttc2_wav_2_grp, ttc2_wav_3_grp,
-> +                         ttc2_wav_4_grp, ttc2_wav_5_grp, ttc2_wav_6_grp, ttc2_wav_7_grp, ttc2_wav_8_grp,
-> +                         ttc3_clk_0_grp, ttc3_clk_1_grp, ttc3_clk_2_grp, ttc3_clk_3_grp, ttc3_clk_4_grp,
-> +                         ttc3_clk_5_grp, ttc3_clk_6_grp, ttc3_clk_7_grp, ttc3_clk_8_grp, ttc3_wav_0_grp,
-> +                         ttc3_wav_1_grp, ttc3_wav_2_grp, ttc3_wav_3_grp, ttc3_wav_4_grp, ttc3_wav_5_grp,
-> +                         ttc3_wav_6_grp, ttc3_wav_7_grp, ttc3_wav_8_grp, wwdt0_0_grp, wwdt0_1_grp,
-> +                         wwdt0_2_grp, wwdt0_3_grp, wwdt0_4_grp, wwdt0_5_grp, wwdt1_0_grp, wwdt1_1_grp,
-> +                         wwdt1_2_grp, wwdt1_3_grp, wwdt1_4_grp, wwdt1_5_grp, sysmon_i2c0_0_grp,
-> +                         sysmon_i2c0_1_grp, sysmon_i2c0_2_grp, sysmon_i2c0_3_grp, sysmon_i2c0_4_grp,
-> +                         sysmon_i2c0_5_grp, sysmon_i2c0_6_grp, sysmon_i2c0_7_grp, sysmon_i2c0_8_grp,
-> +                         sysmon_i2c0_9_grp, sysmon_i2c0_10_grp, sysmon_i2c0_11_grp, sysmon_i2c0_12_grp,
-> +                         sysmon_i2c0_13_grp, sysmon_i2c0_14_grp, sysmon_i2c0_15_grp,
-> +                         sysmon_i2c0_16_grp, sysmon_i2c0_17_grp, sysmon_i2c0_alrt_0_grp,
-> +                         sysmon_i2c0_alrt_1_grp, sysmon_i2c0_alrt_2_grp, sysmon_i2c0_alrt_3_grp,
-> +                         sysmon_i2c0_alrt_4_grp, sysmon_i2c0_alrt_5_grp, sysmon_i2c0_alrt_6_grp,
-> +                         sysmon_i2c0_alrt_7_grp, sysmon_i2c0_alrt_8_grp, sysmon_i2c0_alrt_9_grp,
-> +                         sysmon_i2c0_alrt_10_grp, sysmon_i2c0_alrt_11_grp, sysmon_i2c0_alrt_12_grp,
-> +                         sysmon_i2c0_alrt_13_grp, sysmon_i2c0_alrt_14_grp, sysmon_i2c0_alrt_15_grp,
-> +                         sysmon_i2c0_alrt_16_grp, sysmon_i2c0_alrt_17_grp, uart0_0_grp, uart0_1_grp,
-> +                         uart0_2_grp, uart0_3_grp, uart0_4_grp, uart0_5_grp, uart0_6_grp, uart0_7_grp,
-> +                         uart0_8_grp, uart0_ctrl_0_grp, uart0_ctrl_1_grp, uart0_ctrl_2_grp,
-> +                         uart0_ctrl_3_grp, uart0_ctrl_4_grp, uart0_ctrl_5_grp, uart0_ctrl_6_grp,
-> +                         uart0_ctrl_7_grp, uart0_ctrl_8_grp, uart1_0_grp, uart1_1_grp, uart1_2_grp,
-> +                         uart1_3_grp, uart1_4_grp, uart1_5_grp, uart1_6_grp, uart1_7_grp, uart1_8_grp,
-> +                         uart1_ctrl_0_grp, uart1_ctrl_1_grp, uart1_ctrl_2_grp, uart1_ctrl_3_grp,
-> +                         uart1_ctrl_4_grp, uart1_ctrl_5_grp, uart1_ctrl_6_grp, uart1_ctrl_7_grp,
-> +                         uart1_ctrl_8_grp, gpio0_0_grp, gpio0_1_grp, gpio0_2_grp, gpio0_3_grp,
-> +                         gpio0_4_grp, gpio0_5_grp, gpio0_6_grp, gpio0_7_grp, gpio0_8_grp, gpio0_9_grp,
-> +                         gpio0_10_grp, gpio0_11_grp, gpio0_12_grp, gpio0_13_grp, gpio0_14_grp,
-> +                         gpio0_15_grp, gpio0_16_grp, gpio0_17_grp, gpio0_18_grp, gpio0_19_grp,
-> +                         gpio0_20_grp, gpio0_21_grp, gpio0_22_grp, gpio0_23_grp, gpio0_24_grp,
-> +                         gpio0_25_grp, gpio1_0_grp, gpio1_1_grp, gpio1_2_grp, gpio1_3_grp, gpio1_4_grp,
-> +                         gpio1_5_grp, gpio1_6_grp, gpio1_7_grp, gpio1_8_grp, gpio1_9_grp,
-> +                         gpio1_10_grp, gpio1_11_grp, gpio1_12_grp, gpio1_13_grp, gpio1_14_grp,
-> +                         gpio1_15_grp, gpio1_16_grp, gpio1_17_grp, gpio1_18_grp, gpio1_19_grp,
-> +                         gpio1_20_grp, gpio1_21_grp, gpio1_22_grp, gpio1_23_grp, gpio1_24_grp,
-> +                         gpio1_25_grp, gpio2_0_grp, gpio2_1_grp, gpio2_2_grp, gpio2_3_grp, gpio2_4_grp,
-> +                         gpio2_5_grp, gpio2_6_grp, gpio2_7_grp, gpio2_8_grp, gpio2_9_grp, gpio2_10_grp,
-> +                         gpio2_11_grp, gpio2_12_grp, gpio2_13_grp, gpio2_14_grp, gpio2_15_grp,
-> +                         gpio2_16_grp, gpio2_17_grp, gpio2_18_grp, gpio2_19_grp, gpio2_20_grp,
-> +                         gpio2_21_grp, gpio2_22_grp, gpio2_23_grp, gpio2_24_grp, gpio2_25_grp,
-> +                         emio0_0_grp, emio0_1_grp, emio0_2_grp, emio0_3_grp, emio0_4_grp, emio0_5_grp,
-> +                         emio0_6_grp, emio0_7_grp, emio0_8_grp, emio0_9_grp, emio0_10_grp,
-> +                         emio0_11_grp, emio0_12_grp, emio0_13_grp, emio0_14_grp, emio0_15_grp,
-> +                         emio0_16_grp, emio0_17_grp, emio0_18_grp, emio0_19_grp, emio0_20_grp,
-> +                         emio0_21_grp, emio0_22_grp, emio0_23_grp, emio0_24_grp, emio0_25_grp,
-> +                         emio0_26_grp, emio0_27_grp, emio0_28_grp, emio0_29_grp, emio0_30_grp,
-> +                         emio0_31_grp, emio0_32_grp, emio0_33_grp, emio0_34_grp, emio0_35_grp,
-> +                         emio0_36_grp, emio0_37_grp, emio0_38_grp, emio0_39_grp, emio0_40_grp,
-> +                         emio0_41_grp, emio0_42_grp, emio0_43_grp, emio0_44_grp, emio0_45_grp,
-> +                         emio0_46_grp, emio0_47_grp, emio0_48_grp, emio0_49_grp, emio0_50_grp,
-> +                         emio0_51_grp, emio0_52_grp, emio0_53_grp, emio0_54_grp, emio0_55_grp,
-> +                         emio0_56_grp, emio0_57_grp, emio0_58_grp, emio0_59_grp, emio0_60_grp,
-> +                         emio0_61_grp, emio0_62_grp, emio0_63_grp, emio0_64_grp, emio0_65_grp,
-> +                         emio0_66_grp, emio0_67_grp, emio0_68_grp, emio0_69_grp, emio0_70_grp,
-> +                         emio0_71_grp, emio0_72_grp, emio0_73_grp, emio0_74_grp, emio0_75_grp,
-> +                         emio0_76_grp, emio0_77_grp, gem0_0_grp, gem0_1_grp, gem1_0_grp, gem1_1_grp,
-> +                         trace0_0_grp, trace0_1_grp, trace0_2_grp, trace0_clk_0_grp, trace0_clk_1_grp,
-> +                         trace0_clk_2_grp, mdio0_0_grp, mdio0_1_grp, mdio1_0_grp, mdio1_1_grp,
-> +                         gem_tsu0_0_grp, gem_tsu0_1_grp, gem_tsu0_2_grp, gem_tsu0_3_grp, pcie0_0_grp,
-> +                         pcie0_1_grp, pcie0_2_grp, smap0_0_grp, usb0_0_grp, sd0_0_grp, sd0_1_grp,
-> +                         sd0_2_grp, sd0_3_grp, sd0_4_grp, sd0_5_grp, sd0_6_grp, sd0_7_grp, sd0_8_grp,
-> +                         sd0_9_grp, sd0_10_grp, sd0_11_grp, sd0_12_grp, sd0_13_grp, sd0_14_grp,
-> +                         sd0_15_grp, sd0_16_grp, sd0_17_grp, sd0_18_grp, sd0_19_grp, sd0_20_grp,
-> +                         sd0_21_grp, sd0_pc_0_grp, sd0_pc_1_grp, sd0_cd_0_grp, sd0_cd_1_grp,
-> +                         sd0_wp_0_grp, sd0_wp_1_grp, sd1_0_grp, sd1_1_grp, sd1_2_grp, sd1_3_grp,
-> +                         sd1_4_grp, sd1_5_grp, sd1_6_grp, sd1_7_grp, sd1_8_grp, sd1_9_grp, sd1_10_grp,
-> +                         sd1_11_grp, sd1_12_grp, sd1_13_grp, sd1_14_grp, sd1_15_grp, sd1_16_grp,
-> +                         sd1_17_grp, sd1_18_grp, sd1_19_grp, sd1_20_grp, sd1_21_grp, sd1_pc_0_grp,
-> +                         sd1_pc_1_grp, sd1_cd_0_grp, sd1_cd_1_grp, sd1_wp_0_grp, sd1_wp_1_grp,
-> +                         ospi0_0_grp, ospi0_ss_0_grp, qspi0_0_grp, qspi0_fbclk_0_grp, qspi0_ss_0_grp,
-> +                         test_clk_0_grp, test_scan_0_grp, tamper_trigger_0_grp]
-> +            maxItems: 78
-> +
-> +          function:
-> +            description:
-> +              Specify the alternative function to be configured for the
-> +              given pin groups.
-> +            enum: [spi0, spi0_ss, spi1, spi1_ss, can0, can1, i2c0, i2c1, i2c_pmc, ttc0_clk,
-> +                   ttc0_wav, ttc1_clk, ttc1_wav, ttc2_clk, ttc2_wav, ttc3_clk, ttc3_wav, wwdt0,
-> +                   wwdt1, sysmon_i2c0, sysmon_i2c0_alrt, uart0, uart0_ctrl, uart1, uart1_ctrl,
-> +                   gpio0, gpio1, gpio2, emio0, gem0, gem1, trace0, trace0_clk, mdio0, mdio1, gem_tsu0,
-> +                   pcie0, smap0, usb0, sd0, sd0_pc, sd0_cd, sd0_wp, sd1, sd1_pc, sd1_wp, sd1_cd,
-> +                   ospi0, ospi0_ss, qspi0, qspi0_fbclk, qspi0_ss, test_clk, test_scan, tamper_trigger]
-> +
-> +        required:
-> +          - function
-> +
-> +        oneOf:
-> +          - required: [ groups ]
-> +          - required: [ pins ]
-> +
-> +        additionalProperties: false
-> +
-> +      '^conf':
-> +        type: object
-> +        description:
-> +          Pinctrl node's client devices use subnodes for pin configurations,
-> +          which in turn use the standard properties below.
-> +        $ref: pincfg-node.yaml#
-> +
-> +        properties:
-> +          groups:
-> +            description:
-> +              List of pin groups as mentioned above.
+pinctrl-at91 currently does not support the gpio-groups devicetree
+property and has no pin-range.
+Because of this at91 gpios stopped working since patch
+commit 2ab73c6d8323fa1e ("gpio: Support GPIO controllers without pin-ranges")
+This was discussed in the patches
+commit fc328a7d1fcce263 ("gpio: Revert regression in sysfs-gpio (gpiolib.c)")
+commit 56e337f2cf132632 ("Revert "gpio: Revert regression in sysfs-gpio (gpiolib.c)"")
 
-That doesn't validate anything. I'd do something like this:
+As a workaround manually set pin-range via gpiochip_add_pin_range() until
+a) pinctrl-at91 is reworked to support devicetree gpio-groups
+b) another solution as mentioned in
+commit 56e337f2cf132632 ("Revert "gpio: Revert regression in sysfs-gpio (gpiolib.c)"")
+is found
 
-$defs:
-  pins:
-    additionalProperties: true
-    properties:
-      groups:
-        schema from above with all the names...
-      pins:
-        description:
-          List of pin names to select in this subnode.
-        items:
-          pattern: '^((LPD|PMC)_)MIO([0-9]|[1-6][0-9]|7[0-7])$'
-        maxItems: 78
+Signed-off-by: Thomas Blocher <thomas.blocher@ek-dev.de>
+---
+ drivers/pinctrl/pinctrl-at91.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-And then:
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index b3c3f5fb2e2e..93ab277d9943 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -1403,8 +1403,11 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	/* We will handle a range of GPIO pins */
+ 	for (i = 0; i < gpio_banks; i++)
+-		if (gpio_chips[i])
++		if (gpio_chips[i]) {
+ 			pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
++			gpiochip_add_pin_range(&gpio_chips[i]->chip, dev_name(info->pctl->dev), 0,
++				gpio_chips[i]->range.pin_base, gpio_chips[i]->range.npins);
++		}
+ 
+ 	dev_info(dev, "initialized AT91 pinctrl driver\n");
+ 
 
-allOf:
-  - $ref: pincfg-node.yaml#
-  - '#/$defs/pins'
+base-commit: c91a7dee0555f6f9d3702d86312382e4c4729d0a
+-- 
+2.30.2
 
-Rob
 
