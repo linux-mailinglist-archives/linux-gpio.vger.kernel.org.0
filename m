@@ -1,52 +1,54 @@
-Return-Path: <linux-gpio+bounces-8463-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8464-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4001194175C
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 18:10:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 00BDA94175D
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 18:10:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71D9B1C23682
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 16:10:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E5F61C23730
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 16:10:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EA7D18C929;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AF7218C92E;
 	Tue, 30 Jul 2024 16:08:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HvpkmqcG"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="a5GXmCKU"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD60F189918;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F0518C921;
 	Tue, 30 Jul 2024 16:08:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722355706; cv=none; b=gDXq0VM6UAvN6LSewQcA/7h4qwjSrdlNRSG9RrTMx+0EB9m/ZIiNrcjboMtKvYVL6o3xzZAOX0JM1QfuWcv+hNOx/4HYvvRxjcnQffPJApzpfJRIYdhLA2D11/eEw5mdOHFlQd82nUVWEmexqejB2qPtbodurgm5Wrn34dyeK0E=
+	t=1722355706; cv=none; b=Czi26D+2xijX1bLJi3BSgMmuDCSGk24kEyxCBGpkAK/x2m5pCo+1HBFevilLlrUsaAmB+a7i7Qk3XmUfuBPiLHFLy08s+Fewy8GI/vC9iqkdXNSEpvc48Jl2l+BQOsMmgtsnjFxF5WYnt05ncEWZ69+jAe6L/Ux58a/FRGWqRfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1722355706; c=relaxed/simple;
-	bh=nu1tNQkTVLU7Ya4bLMrb5FRJPuYZJI5uK4FTnTbBLpo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=onWRv6YuX3WgmnstrRfZdRNCpmQz2qYgg0D9zlz8hD6FQOWkJp6VkqVgW76Ntlh1tDz5VQmkRBvazBQREWL2zZ0FCb87DapqA/N7REW+2apLPtSkD323DzVPAZdHaPRvywbrraxIKwRqQcJS+2znJViS15BVOFY8sjfN+bn262w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HvpkmqcG; arc=none smtp.client-ip=217.70.183.201
+	bh=R+chOmv8FkPYy3shRU6omdcCqkvl4xYk7/bp9zGrGnw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LI3xk4QDlKoukebzfUSV1JMGiYxnAkk6wDaHbOqVCwogOVDTxLROFCFvSpReGV5ZzmVYVZR9hZr6TZatxvZS8tSP4geKeY7bH+V+/xxhogGwiezdIvFrsWqO6C5DPufstW2B5E54NMQKU3l61KaRbwqFXNs8DSRwQHGvsC5Us4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=a5GXmCKU; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8F0611BF207;
-	Tue, 30 Jul 2024 16:08:21 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 173571BF203;
+	Tue, 30 Jul 2024 16:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
 	t=1722355702;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ztq3xYiUAHRYqYmVghJuHU6InRmUrnOPuEKwBJVsIWU=;
-	b=HvpkmqcG0YS24q+WxzBOZ7umJCdkCtzREPINZDVSMERfKqniaF3m1PCR7FuZkfhhvjC2QG
-	a5fYAfpH+24f0IaRkj4yxRRDltlKYk4tevfSptiRannNRIQ/UMVXABK0pX1Jcpqcrj2vNL
-	1mbaZ/ZuuCVpA7W4ltspkqTtr/6sYqSSKPY1oxKy967EFG+FaNEEOyn4uu7+BQGlhh1K5z
-	ihVWmCmRtABtEmqTKxuAsFFkISJvhffibaNcikZrwv8XPEnGAiAg+Lbo3WAKetDx84KQgT
-	eQ4pmfFEYIk5p7nkdNUUjETUASmOP80HgPm3es5b2GnQus/SqLcbrscIDN0QrQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tlid2uc8/4wJ6Oij4D/kQLYpDdhcGo3VI/JMqY1sFgc=;
+	b=a5GXmCKUyMfqe63KwqzsbnrAl3ExXm46795WDtF08bhlhNx0qdhfMGtVLAPeXTM2ftvRBr
+	t11jfD8BR5HNTCV2p5iN1OZzntq1Qp2RiM6MEVcjuAJWQ373HoLhdg2SN/x+sSlEGVXSjt
+	igPj/2MU31K9Dwp0jwkqej3CUcGoEJg5ti45ceevkG1jmyC0nsxhAtJQExJLMsX4STed+y
+	eFhldpRogwYctttDkyV4vjxzUK0vHm0N9pk8EWTZw4LRQyfSS7zbnI4/IWK7t3SbIvQSW7
+	yburdi5l2QSpAOlEZXJ+ZTCEXaUJOENrZ9N4DRz7oZGlo+QxkZ4L9h/t9qvaXA==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: [PATCH RESEND v2 0/2] Add Mobileye EyeQ5 pinctrl support
-Date: Tue, 30 Jul 2024 18:08:17 +0200
-Message-Id: <20240730-mbly-pinctrl-v2-0-d470f64e0395@bootlin.com>
+Date: Tue, 30 Jul 2024 18:08:18 +0200
+Subject: [PATCH RESEND v2 1/2] Revert "dt-bindings: pinctrl:
+ mobileye,eyeq5-pinctrl: add bindings"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,6 +57,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20240730-mbly-pinctrl-v2-1-d470f64e0395@bootlin.com>
+References: <20240730-mbly-pinctrl-v2-0-d470f64e0395@bootlin.com>
+In-Reply-To: <20240730-mbly-pinctrl-v2-0-d470f64e0395@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>
@@ -68,65 +73,272 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
 X-Mailer: b4 0.14.1
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-This is a new iteration on the Mobileye system-controller series. It
-used to be sent as a single series [0], but has been split in the
-previous revision (see [1], [2], [3], [4]) to faciliate merging.
+Switch from one sub-node per functionality in the system-controller to a
+single node representing the entire OLB instance. This is the
+recommended approach for controllers handling many different
+functionalities; it is a single controller and should be represented by
+a single devicetree node.
 
-This series adds a driver handling EyeQ5 (and only EyeQ5, not EyeQ6L nor
-EyeQ6H) SoC pin config and muxing. It is an auxiliary driver being
-instantiated by the platform clk driver.
+The pinctrl bindings is removed and all properties will be described by:
+soc/mobileye/mobileye,eyeq5-olb.yaml
 
-Related series are targeted at clk [5], reset [6] and MIPS [4]. The
-first two are receiving a second version. The last one has no change
-and stays at its V1.
-
-Have a nice day,
-Théo
-
-[0]: https://lore.kernel.org/lkml/20240620-mbly-olb-v3-0-5f29f8ca289c@bootlin.com/
-
-[1]: https://lore.kernel.org/lkml/20240628-mbly-clk-v1-0-edb1e29ea4c1@bootlin.com/
-[2]: https://lore.kernel.org/lkml/20240628-mbly-reset-v1-0-2a8294fd4392@bootlin.com/
-[3]: https://lore.kernel.org/lkml/20240628-mbly-pinctrl-v1-0-c878192d6b0a@bootlin.com/
-[4]: https://lore.kernel.org/lkml/20240628-mbly-mips-v1-0-f53f5e4c422b@bootlin.com/
-
-[5]: https://lore.kernel.org/lkml/20240703-mbly-clk-v2-0-fe8c6199a579@bootlin.com/
-[6]: https://lore.kernel.org/lkml/20240703-mbly-reset-v2-0-3fe853d78139@bootlin.com/
-
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
-Changes in v2:
-- Kconfig: replace "depends on AUXILIARY_BUS" by "select AUXILIARY_BUS".
-- Kconfig: add "depends on OF" for pinconf_generic_dt_node_to_map_pin().
-- driver: cast dev_get_platdata()'s return value to (void __iomem *).
-- Link to v1: see [3]
+ .../bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml   | 242 ---------------------
+ 1 file changed, 242 deletions(-)
 
-Changes since OLB v3 [0]:
- - MAINTAINERS: Move changes into a separate commit to avoid merge
-   conflicts. This commit is in the MIPS series [3].
- - dt-bindings: Take Reviewed-by: Rob Herring and Linus Walleij.
- - Kconfig: do not depend on COMMON_CLK_EYEQ. This symbol is not defined
-   in this series, it is defined in the clk series [1].
- - Kconfig: do depend on AUXILIARY_BUS.
- - Kconfig: remove outdated "select MFD_SYSCON".
- - driver: remove "#include <linux/platform_device.h>".
+diff --git a/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
+deleted file mode 100644
+index 5f00604bf48c..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
++++ /dev/null
+@@ -1,242 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/pinctrl/mobileye,eyeq5-pinctrl.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Mobileye EyeQ5 pin controller
+-
+-description: >
+-  The EyeQ5 pin controller handles the two pin banks of the system. It belongs
+-  to a system-controller block called OLB.
+-
+-  Pin control is about bias (pull-down, pull-up), drive strength and muxing. Pin
+-  muxing supports two functions for each pin: first is GPIO, second is
+-  pin-dependent.
+-
+-  Pins and groups are bijective.
+-
+-maintainers:
+-  - Grégory Clement <gregory.clement@bootlin.com>
+-  - Théo Lebrun <theo.lebrun@bootlin.com>
+-  - Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+-
+-$ref: pinctrl.yaml#
+-
+-properties:
+-  compatible:
+-    enum:
+-      - mobileye,eyeq5-pinctrl
+-
+-  reg:
+-    maxItems: 1
+-
+-patternProperties:
+-  "-pins?$":
+-    type: object
+-    description: Pin muxing configuration.
+-    $ref: pinmux-node.yaml#
+-    additionalProperties: false
+-    properties:
+-      pins: true
+-      function:
+-        enum: [gpio,
+-               # Bank A
+-               timer0, timer1, timer2, timer5, uart0, uart1, can0, can1, spi0,
+-               spi1, refclk0,
+-               # Bank B
+-               timer3, timer4, timer6, uart2, can2, spi2, spi3, mclk0]
+-      bias-disable: true
+-      bias-pull-down: true
+-      bias-pull-up: true
+-      drive-strength: true
+-    required:
+-      - pins
+-      - function
+-    allOf:
+-      - if:
+-          properties:
+-            function:
+-              const: gpio
+-        then:
+-          properties:
+-            pins:
+-              items: # PA0 - PA28, PB0 - PB22
+-                pattern: '^(P(A|B)1?[0-9]|PA2[0-8]|PB2[0-2])$'
+-      - if:
+-          properties:
+-            function:
+-              const: timer0
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PA0, PA1]
+-      - if:
+-          properties:
+-            function:
+-              const: timer1
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PA2, PA3]
+-      - if:
+-          properties:
+-            function:
+-              const: timer2
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PA4, PA5]
+-      - if:
+-          properties:
+-            function:
+-              const: timer5
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PA6, PA7, PA8, PA9]
+-      - if:
+-          properties:
+-            function:
+-              const: uart0
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PA10, PA11]
+-      - if:
+-          properties:
+-            function:
+-              const: uart1
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PA12, PA13]
+-      - if:
+-          properties:
+-            function:
+-              const: can0
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PA14, PA15]
+-      - if:
+-          properties:
+-            function:
+-              const: can1
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PA16, PA17]
+-      - if:
+-          properties:
+-            function:
+-              const: spi0
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PA18, PA19, PA20, PA21, PA22]
+-      - if:
+-          properties:
+-            function:
+-              const: spi1
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PA23, PA24, PA25, PA26, PA27]
+-      - if:
+-          properties:
+-            function:
+-              const: refclk0
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PA28]
+-      - if:
+-          properties:
+-            function:
+-              const: timer3
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PB0, PB1]
+-      - if:
+-          properties:
+-            function:
+-              const: timer4
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PB2, PB3]
+-      - if:
+-          properties:
+-            function:
+-              const: timer6
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PB4, PB5, PB6, PB7]
+-      - if:
+-          properties:
+-            function:
+-              const: uart2
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PB8, PB9]
+-      - if:
+-          properties:
+-            function:
+-              const: can2
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PB10, PB11]
+-      - if:
+-          properties:
+-            function:
+-              const: spi2
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PB12, PB13, PB14, PB15, PB16]
+-      - if:
+-          properties:
+-            function:
+-              const: spi3
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PB17, PB18, PB19, PB20, PB21]
+-      - if:
+-          properties:
+-            function:
+-              const: mclk0
+-        then:
+-          properties:
+-            pins:
+-              items:
+-                enum: [PB22]
+-
+-required:
+-  - compatible
+-  - reg
+-
+-additionalProperties: false
 
----
-Théo Lebrun (2):
-      Revert "dt-bindings: pinctrl: mobileye,eyeq5-pinctrl: add bindings"
-      pinctrl: eyeq5: add platform driver
-
- .../bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml   | 242 ---------
- drivers/pinctrl/Kconfig                            |  15 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/pinctrl-eyeq5.c                    | 575 +++++++++++++++++++++
- 4 files changed, 591 insertions(+), 242 deletions(-)
----
-base-commit: f2661062f16b2de5d7b6a5c42a9a5c96326b8454
-change-id: 20240628-mbly-pinctrl-bf76bf390a7c
-
-Best regards,
 -- 
-Théo Lebrun <theo.lebrun@bootlin.com>
+2.45.2
 
 
