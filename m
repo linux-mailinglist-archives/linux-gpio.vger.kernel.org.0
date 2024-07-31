@@ -1,124 +1,130 @@
-Return-Path: <linux-gpio+bounces-8469-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8470-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E8B4942378
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2024 01:38:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A531D942518
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2024 05:35:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7793E1C23088
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jul 2024 23:38:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B46D1F23791
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jul 2024 03:35:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5B5A194123;
-	Tue, 30 Jul 2024 23:38:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 781D6182D8;
+	Wed, 31 Jul 2024 03:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ek-dev.de header.i=@ek-dev.de header.b="gsmNAw5y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YwKQr8tB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from server.cpprotect6.de (server.cpprotect6.de [185.225.135.100])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C72E18CC03;
-	Tue, 30 Jul 2024 23:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.225.135.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C413125D6;
+	Wed, 31 Jul 2024 03:35:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722382706; cv=none; b=F6AjBF1hGSilsFEhnojG6eHS7QBBVJ0XCoaVNXxWngr2bzFO23+e5wDWyiKPDf2qWU/P7RcwtONcfpIh2qpHbaW96eekRurBIGI+O/k5/ClQYIfHV4YGcZ5oqMGN2Gxi+erDuWHfmXCXiuzrWReDTzuZS0oSCdu/TLmvboljn/M=
+	t=1722396920; cv=none; b=lyWo+BPne/nWbSgEguQXxRXFoGQedZd5SiTmmTuwglevnL0/2aBmWDUgviw9LhqBZBGQ7iXlIvyvpzqmswcuk11yQC+JQWfSQ7sb4a/ivW2p9siyib1W+HBhorm63oD4fRez0Oo8uGSTeZgNAovGuGqPi3KfhGmz8dDDpY9tfRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722382706; c=relaxed/simple;
-	bh=3X/NlXDhom883Ym0Q2HQWNCIX5xq5rdeIKix2YEq0eo=;
-	h=To:Cc:From:Subject:Message-ID:Date:MIME-Version:Content-Type; b=bbTkmg4KyZzNi196e7FJzzfvlH1KNU2ABjDVMj2Ync+AYdygBuin+np1mSlD5aP2fRbOT6ha12YBmgHzTJTMiGK3DdztJw+wXLsgsB3Nh5q0/V6ljnPJZTj1KbGeGtPsRTjN4yUrA8qZYtIhBJHPSTQtRBiodNnQaC5nCytIkx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ek-dev.de; spf=pass smtp.mailfrom=ek-dev.de; dkim=pass (2048-bit key) header.d=ek-dev.de header.i=@ek-dev.de header.b=gsmNAw5y; arc=none smtp.client-ip=185.225.135.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ek-dev.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ek-dev.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ek-dev.de;
-	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-	Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=ub6bitsfL2bAe5/YRicKaZIw/i3hZpWx6GHxBHvGEyA=; b=gsmNAw5yg7n9mouaiGJabU+beo
-	KuVmXd10GVhqGE8H2aww3DrUPCBP4cPEc8EOiIdYzRpXKkl2m4sKHiwyuSZ+Lj+YZlym2wwefsca6
-	NgN/1nRO4tu4Dx9fHpo/vnyqyGvtcrVpt5f85W5sfMjyoT3zKBZk26RrIU6ZC95e5ADbj95ARxLrq
-	LcuTpGx3ClSiCZcFIly7kX/kMySjXZTZG01U2Hw0BJ3oaodFNcrz7Um2OyGRi4D2RQrv3o+cIFVQE
-	j24o5w1Ii7aVSmnh6Hpbk5R9OKeesUutOrAYrHv3C5AomTk1WzUhkA4XkptFwFO6TTz/Qd+CagPu+
-	2TdEqTnA==;
-Received: from p508fb154.dip0.t-ipconnect.de ([80.143.177.84]:50278 helo=[192.168.178.50])
-	by server.cpprotect6.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.97.1)
-	(envelope-from <thomas.blocher@ek-dev.de>)
-	id 1sYw53-00000002x2n-49ST;
-	Wed, 31 Jul 2024 01:16:36 +0200
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-From: Thomas Blocher <thomas.blocher@ek-dev.de>
-Subject: [PATCH] pinctrl: at91: make it work with current gpiolib
-Message-ID: <5b992862-355d-f0de-cd3d-ff99e67a4ff1@ek-dev.de>
-Date: Wed, 31 Jul 2024 01:16:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1722396920; c=relaxed/simple;
+	bh=AryltjAf6AGkg7qjk0xdwvpOG3hQp506KMvJGysEHmg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kcq9CJ4rzCqVTNCxq0wta0lfCrkyJOnDQKm/92J0AO3wYYvpOM1JXqiFToGL1gDOfAFVwVQ4VOJQYUj7MkbVfKQeElu39kPR8gpHSFLAOK+9hQattEJhIL/QerjqgAw6hP6ikURDWk1y/R9Mv/RG3dQt3AdhQIpv8UTf0t8QnDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YwKQr8tB; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722396918; x=1753932918;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AryltjAf6AGkg7qjk0xdwvpOG3hQp506KMvJGysEHmg=;
+  b=YwKQr8tBXBtseikbzjx/S+otCMsiMP3oriukruMdZSCeUkBSCc3q/Yrj
+   3Ccbrmba+Wz/HwiBrFjTeWK2jeTjaJNazZ6qzhFrbF1RqN16RBrjFyOgV
+   tN14zVjVk6vs67HNIabUWqKpJc7NWoDcZ2IAuZMZPFkqC3Wne+/Uco/e4
+   /WvXm3HpoVXpt4aFkmm2aGgkiKu3NVbOrNBGauMvgPd1cmLDy6I5LJTPl
+   L4Lk3rpK3Y2TC30/6MllQ+aQ51AmV6izKDLrctJaRiEgg3nE93DqaA3pU
+   JxO4i8Rp19OOqOdWpSr/m6y1MQLsFk39JMzdNMvLwBHxwecaUKKgLNMPp
+   w==;
+X-CSE-ConnectionGUID: aispFCZaTqOovRDsQSTi/Q==
+X-CSE-MsgGUID: yV1zb7o8RCOU03UgBUJUeQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11149"; a="24119544"
+X-IronPort-AV: E=Sophos;i="6.09,250,1716274800"; 
+   d="scan'208";a="24119544"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2024 20:35:17 -0700
+X-CSE-ConnectionGUID: TYyhdOYMRgyXjyH984EsNQ==
+X-CSE-MsgGUID: xnU9NzGRQ1+M9L8pQNfsBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,250,1716274800"; 
+   d="scan'208";a="54588641"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 30 Jul 2024 20:35:13 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sZ07K-000thk-04;
+	Wed, 31 Jul 2024 03:35:10 +0000
+Date: Wed, 31 Jul 2024 11:34:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Duje =?utf-8?Q?Mihanovi=C4=87?= via B4 Relay <devnull+duje.mihanovic.skole.hr@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+	Lubomir Rintel <lkundrak@v3.sk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, phone-devel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v11 10/12] arm64: Kconfig.platforms: Add config for
+ Marvell PXA1908 platform
+Message-ID: <202407311123.I2HGcXOK-lkp@intel.com>
+References: <20240730-pxa1908-lkml-v11-10-21dbb3e28793@skole.hr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.cpprotect6.de
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - ek-dev.de
-X-Get-Message-Sender-Via: server.cpprotect6.de: authenticated_id: thomas.blocher@ek-dev.de
-X-Authenticated-Sender: server.cpprotect6.de: thomas.blocher@ek-dev.de
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240730-pxa1908-lkml-v11-10-21dbb3e28793@skole.hr>
 
-pinctrl-at91 currently does not support the gpio-groups devicetree
-property and has no pin-range.
-Because of this at91 gpios stopped working since patch
-commit 2ab73c6d8323fa1e ("gpio: Support GPIO controllers without pin-ranges")
-This was discussed in the patches
-commit fc328a7d1fcce263 ("gpio: Revert regression in sysfs-gpio (gpiolib.c)")
-commit 56e337f2cf132632 ("Revert "gpio: Revert regression in sysfs-gpio (gpiolib.c)"")
+Hi Duje,
 
-As a workaround manually set pin-range via gpiochip_add_pin_range() until
-a) pinctrl-at91 is reworked to support devicetree gpio-groups
-b) another solution as mentioned in
-commit 56e337f2cf132632 ("Revert "gpio: Revert regression in sysfs-gpio (gpiolib.c)"")
-is found
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Thomas Blocher <thomas.blocher@ek-dev.de>
----
- drivers/pinctrl/pinctrl-at91.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+[auto build test WARNING on 8400291e289ee6b2bf9779ff1c83a291501f017b]
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index b3c3f5fb2e2e..93ab277d9943 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1403,8 +1403,11 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 
- 	/* We will handle a range of GPIO pins */
- 	for (i = 0; i < gpio_banks; i++)
--		if (gpio_chips[i])
-+		if (gpio_chips[i]) {
- 			pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
-+			gpiochip_add_pin_range(&gpio_chips[i]->chip, dev_name(info->pctl->dev), 0,
-+				gpio_chips[i]->range.pin_base, gpio_chips[i]->range.npins);
-+		}
- 
- 	dev_info(dev, "initialized AT91 pinctrl driver\n");
- 
+url:    https://github.com/intel-lab-lkp/linux/commits/Duje-Mihanovi-via-B4-Relay/clk-mmp-Switch-to-use-struct-u32_fract-instead-of-custom-one/20240730-204129
+base:   8400291e289ee6b2bf9779ff1c83a291501f017b
+patch link:    https://lore.kernel.org/r/20240730-pxa1908-lkml-v11-10-21dbb3e28793%40skole.hr
+patch subject: [PATCH v11 10/12] arm64: Kconfig.platforms: Add config for Marvell PXA1908 platform
+config: arm64-kismet-CONFIG_I2C_GPIO-CONFIG_VIDEO_MMP_CAMERA-0-0 (https://download.01.org/0day-ci/archive/20240731/202407311123.I2HGcXOK-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20240731/202407311123.I2HGcXOK-lkp@intel.com/reproduce)
 
-base-commit: c91a7dee0555f6f9d3702d86312382e4c4729d0a
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407311123.I2HGcXOK-lkp@intel.com/
+
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for I2C_GPIO when selected by VIDEO_MMP_CAMERA
+   WARNING: unmet direct dependencies detected for I2C_GPIO
+     Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && (GPIOLIB [=n] || COMPILE_TEST [=n])
+     Selected by [y]:
+     - VIDEO_MMP_CAMERA [=y] && MEDIA_SUPPORT [=y] && MEDIA_PLATFORM_SUPPORT [=y] && MEDIA_PLATFORM_DRIVERS [=y] && V4L_PLATFORM_DRIVERS [=y] && I2C [=y] && VIDEO_DEV [=y] && (ARCH_MMP [=y] || COMPILE_TEST [=n]) && COMMON_CLK [=y]
+
 -- 
-2.30.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
