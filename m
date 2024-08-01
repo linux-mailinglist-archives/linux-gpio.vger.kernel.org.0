@@ -1,123 +1,143 @@
-Return-Path: <linux-gpio+bounces-8526-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8527-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2648B9452FC
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2024 20:49:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5BAC9454D7
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Aug 2024 01:15:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5C8F288B01
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2024 18:49:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 61807B22E09
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2024 23:15:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6203C146D7D;
-	Thu,  1 Aug 2024 18:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 905E214BF8F;
+	Thu,  1 Aug 2024 23:15:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V/R18hQL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TB16bH+7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a6i2B2Uj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DEC14373A;
-	Thu,  1 Aug 2024 18:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA24A25757;
+	Thu,  1 Aug 2024 23:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722538154; cv=none; b=q+gOq2YN9i+Q/QYjCP7h8QiWdASI1LOAM4TgrGY5vEip5xnI+REifeg6spthJ+K843Edqp6v3qtK4qItXXWaoCREGc4KX1+OozveeWeTC6Xz+QxBK1aQWVwkSXKfER7ksAZ2hv1PJCgM+MeJUr+uBPvTbO9VbAl9qPOuG51XUVA=
+	t=1722554148; cv=none; b=Xfy+w/D04s+RuNMfoL4AP77kErZN9k8DLhfCNuFlIkh9cKryUjJ2YUSrVTXIT/qCVfsVg/3fSoeruwBOlPXKqvOYPRZqJXE5CuvaxiBPw+uzvkrKuaMOpmbMN3aDAw0LDfOpu4gBnAPtp1QgqKmwVZLdIwIojP/uQFgwwnZzksI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722538154; c=relaxed/simple;
-	bh=Mqvq6a7v7faU/RsAxiBN033U6iPOpo33gjvwTQwwEBE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UyZ6I9a1kTlzXcC6eWpF0Dmw21m1BjpvV5Gq4AiMetoQn9WtrF3WoBnayKd7soof5o5ycTRhXeMDDFZ1Ddmke/bbn6dNXTea4XaPpcVSZIjozHeDEmwvDWe+CmNnoc9XIjq0cdXN5/C1RbvsZk93P/jCvQ8DKc4YGNLOH28BuzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V/R18hQL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TB16bH+7; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1722538149;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zy4QAbBchws8wpEd632QvvKsWpoM4onCh56dsKjIHlQ=;
-	b=V/R18hQLq+jyQoLBzyEA/jn4Fzajd35TRSiGYLRaN/IJiictIcX6L3AmjSn/d3co88iSHu
-	bubzfHPnaZfsdZV+n9L6x0BH+0IDUzw4uWIiBLHtgmyyZRkKUc3z2lbAE7MFUFieOJQtr6
-	/K2h2pJ1GL5UKwSIn6qNY7EqGmRnc7NfuLvUYsEbgz315JLujAFOuyuCsxlfhcCkjCj1rw
-	9DAtO6VQGNm9NaCdKm+7p8mHC22oedrL3kc89L3/FE/HF+TkVc/1a8BEn4v4VvUc8p9cZd
-	F33M1ajTN9rT2zJyvvJgW1OyXO6NdrO66oFuFxLBUtr01FKDFp6spDwVwNwiBA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1722538149;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zy4QAbBchws8wpEd632QvvKsWpoM4onCh56dsKjIHlQ=;
-	b=TB16bH+7FY9c5h6o6aIywattKgBHBOAnvaRdWLpcsYODy3h8ds9MT5TvjCSdJWS3Y5wMeK
-	KUR0S+I/dHQsuzAw==
-To: Conor Dooley <conor@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
- Marc Zyngier <maz@kernel.org>, Daire McNamara
- <daire.mcnamara@microchip.com>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org
-Subject: Re: [RFC v7 3/6] irqchip: add mpfs gpio interrupt mux
-In-Reply-To: <20240801-palpitate-swinger-7bc8ae8deaaf@spud>
-References: <20240723-supervise-drown-d5d3b303e7fd@wendy>
- <20240723-flatworm-cornflake-8023212f6584@wendy> <87le1k8oq2.ffs@tglx>
- <20240801-palpitate-swinger-7bc8ae8deaaf@spud>
-Date: Thu, 01 Aug 2024 20:49:08 +0200
-Message-ID: <87r0b82i57.ffs@tglx>
+	s=arc-20240116; t=1722554148; c=relaxed/simple;
+	bh=xIEY5rR27yn9RRp2zVKcZiobCp0yYZORKifs1EvpsbE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nsc3BoJgr2KrJCbOOLKy0INcUrgP95AEordeU55d6NSDI5yZnLM0I94R4BvZ4r8gg/2Pcexqh0V/dTmmi29lQhR1J5wb+tibZIbd3C38nNqZovKlNrOR7fdxj6lu6h1cLq6lTYyT1ncJK9DdViFWIMySOh7dNS1wKl/X+9rDX2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a6i2B2Uj; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5a15692b6f6so11250630a12.0;
+        Thu, 01 Aug 2024 16:15:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722554145; x=1723158945; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eLRwfCdQETkjG/YfGs/h8tG3G0CkshB0kpr2NbWcQ+o=;
+        b=a6i2B2Uj3BSFP9MiyrTJGX12jCwKwQomiV4eRW6hJA2ZDy/prUuBkKhnkvS/JSFbRH
+         972ythlDuFQ3M1OVw02Z9BUR+kVeSS1YGPMTgSGUJLSPKpHPbhp7PAgH78DvG1JjIt6R
+         4lY+VL4ca1r8pza60IapnqErqqkYf/hmmFKPSxrTDMv3i1oU/jmBJqs0T7A2eNkNAWTa
+         fOWqzRN2TFcBC0XioCqfWcOJ7aLpWh4gma8ZknSKlmYxFiQsqMP1qsjoi2GG/JD1yV+l
+         7Y+mzqtK5iXu9I1A9r3DjtW2fNlm46VqNXLLf7JvWMye3RQpXl4GqimNj0EuJ1aCkJAn
+         5bJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722554145; x=1723158945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eLRwfCdQETkjG/YfGs/h8tG3G0CkshB0kpr2NbWcQ+o=;
+        b=wEQXOakNHWP6bG6HGdGWirBuVrSCCLgWlkUBf7vntVCNa3y8XSImTR1gpU6Dxzjdtj
+         NeuKT6bC4sPMKbhn7/XfsVZUdP57rYNLrY9RzFQt1lS8nhH6Yc74p3dSiqx77n439ULM
+         J8vqaGkN8bfPSQCiuQz3Jlt3Vza5oLhHjA7CJoLDSju54td2gNRsXwAi2G6w8w5S5l/Z
+         8AsfV0hxhlxBq+ZMUVZCW7xVv3UnsKinq1B/7vaBBxgsfEiLq2kaOyvXC38fzbg0CTK9
+         T6q/ubIq/5+czYZoW0Y7VWy1sj/Qm7m9nNQxJpQ/ou0Xqr50oQhFjKDH92/VzVNVTsER
+         xEwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMGk7Ez16DKhUVJeTEaMcs78YcXhH6+0pDvTPP566LzmCbI0PTF92zFhAIiCAI/eRkvbPgnGgS3W0LGzgktLJxXoBr+4TVq1IuunnF/NCcGAu+pm84KYdQw0UG9VOtcCsiGJ4LlveMXN+30C+au+FJ7pibNpRirgKjbDzUHor/OU4=
+X-Gm-Message-State: AOJu0YyfiWHQu1xc3MZJtpMR4y0tGkI0hpOzMF8iK1bDzdhqmxfvnFbt
+	AETiC8Mvaj0fZHeL/cn4NSeV6WRYrHEhpgouSJ39jkkDtWt9vlKFHXWQPqf7upuYDEq8XJSijrA
+	I5uQBmuEpn7+hSF00FJ+50vWn2nc=
+X-Google-Smtp-Source: AGHT+IF/hswnChnebe6R0QxeY5fSBqmjf0O5AvkNodYLB4It+AENYyQZH6xf825LuQTBN2qV8LOyreT8EtTt1azveJw=
+X-Received: by 2002:a17:907:3f13:b0:a77:cc6f:e791 with SMTP id
+ a640c23a62f3a-a7dc4ff1addmr151484266b.38.1722554144535; Thu, 01 Aug 2024
+ 16:15:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240608141633.2562-1-laurent.pinchart@ideasonboard.com>
+ <20240608141633.2562-4-laurent.pinchart@ideasonboard.com> <ZmcYnDf0YIWA9A85@surfacebook.localdomain>
+ <20240610152555.GV18479@pendragon.ideasonboard.com> <CAHp75Vd-TZYsm+fe+o1XvDYGHO6sDqZhMFqojowRx2scwxEhLw@mail.gmail.com>
+ <20240719135515.GB637@pendragon.ideasonboard.com>
+In-Reply-To: <20240719135515.GB637@pendragon.ideasonboard.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 2 Aug 2024 01:15:08 +0200
+Message-ID: <CAHp75VdztEuQbvEbirrzqYOdYjNrJADgwC5O40fU_BzsxEmWXg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Haibo Chen <haibo.chen@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 01 2024 at 16:09, Conor Dooley wrote:
-> On Mon, Jul 29, 2024 at 12:41:25PM +0200, Thomas Gleixner wrote:
->> > +	/*
->> > +	 * If a bit is set in the mux, GPIO the corresponding interrupt from
->> > +	 * controller 2 is direct and that controllers 0 or 1 is muxed.
->> 
->> This is not a coherent sentence.
+On Fri, Jul 19, 2024 at 3:55=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Mon, Jun 10, 2024 at 07:29:09PM +0300, Andy Shevchenko wrote:
+> > On Mon, Jun 10, 2024 at 6:26=E2=80=AFPM Laurent Pinchart wrote:
+> > > On Mon, Jun 10, 2024 at 06:15:40PM +0300, Andy Shevchenko wrote:
+> > > > Sat, Jun 08, 2024 at 05:16:32PM +0300, Laurent Pinchart kirjoitti:
+
+...
+
+> > > > > +static const struct platform_device_id adp5585_gpio_id_table[] =
+=3D {
+> > > > > +   { "adp5585-gpio" },
+> > > >
+> > > > > +   { /* Sentinel */ },
+> > > >
+> > > > Drop the comma.
+> > >
+> > > I prefer keeping it.
+> >
+> > For what reason?
+> > The sentinel should be runtime and compile time one. Why should we
+> > make our lives worse by neglecting help from a compiler?
 >
-> It should read "controller 0 or 1;s interrupt is muxed". Does that make
-> more sense to you?
+> Do you really think there's a risk here and that this will make a
+> difference ?
 
-No: If a bit is set in the mux, GPIO the corresponding...
+There are two aspects (or more?):
+1) potential mis-rebase or other thing that makes possible to have an
+entry _after_ the terminator and having it being compiled
+successfully, while we may prevent this from happening on the
+compilation phase (as you noticed this is quite unlikely to happen
+IRL);
+2) educational part, as somebody may use your code as a good standard.
 
-I'm already failing at 'GPIO'. My parser expects a verb there :)
+> I do appreciate most of your review comments, even
+> pendantic ones, as they can help making the code better, but we also all
+> need a little bit of space to breathe when it comes to coding style.
 
->> > +	irq_set_chained_handler_and_data(virq, handle_untracked_irq,
->> 
->> Why does this use handle_untracked_irq()?
->
-> I'll have to go and dig back in my notes as to why it is untracked. It
-> was probably something like irqd_set() in handle_irq_event() blowing up
-> on the irq_data being invalid (which I figure could relate back to my
-> questions in the cover letter about issues with irqd_to_hwirq()) - but
-> I'll double check what exactly prompted it when I get back from my
-> holidays, but...
->
->> This sets up a chained handler
->> but handle_untracked_irq() is a regular interrupt handler.
->
-> ...what I was likely using before was handle_simple_irq() which isn't
-> chained either. You're expecting to see mpfs_irq_mux_nondirect_handler()
-> here I suppose?
+Some of the coding style decisions can be considered slightly better
+than others. I have a rationale for this case. But of course, it's up
+to you and the subsystem maintainer on how to proceed with this. I
+wouldn't take your breath away.
 
-Yes or some other proper chained handler.
+> > > > > +};
 
-> Given you've only commented on one significant issue and two minor items,
-> is it safe to conclude that the overall approach doesn't have you
-> screaming and running for the hills?
 
-I don't love it, but I don't have a better approach to deal with this.
-
-Thanks,
-
-        tglx
+--=20
+With Best Regards,
+Andy Shevchenko
 
