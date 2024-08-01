@@ -1,123 +1,125 @@
-Return-Path: <linux-gpio+bounces-8497-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8495-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9688E943BC9
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2024 02:30:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A8C3943A26
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2024 02:10:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2018DB2404C
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2024 00:30:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFDA5281240
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2024 00:10:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3D80149C5E;
-	Thu,  1 Aug 2024 00:15:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B019A13BAE5;
+	Thu,  1 Aug 2024 00:08:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="osMXYE+x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k3PO4Op2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76802196DA1;
-	Thu,  1 Aug 2024 00:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F015347C7
+	for <linux-gpio@vger.kernel.org>; Thu,  1 Aug 2024 00:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722471314; cv=none; b=QjPMZ+Z5xUsTnTCl+P4ug2IcmrKEn3SN/iEvQec1TBe6p5rBcL9M/qGFsyieTeZ+P04Z8yJms0PaFdCgMmdDj3zbfAhvrbL6PVQzrU6pT2hEWhGYEBGGOtqxQuSd7FEHwXWo0Zp95X3gXLKWWhQ76HaYJsi4G99dYvIVqfaO7Bo=
+	t=1722470881; cv=none; b=oPJN7BTi4K+HtrkDHbliUKlbiR7reMFfdFfjxKhTMMMpE8vsjeuonu3GcgNSEcFW5Ln5hy7ck67hOxjlLoXYgbSJVvctIoizhewSgWnbrzHysHl+DSrtjX3Fj2B1RlW4LGOrBwfAQeDIXMJhQpIJozH4d/1aXMGgXTGBosVb9nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722471314; c=relaxed/simple;
-	bh=rEuIUDOjXhBJuZZxIIV4Z4DS1dJ190OWw+jL9ZhwwS4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E9W5K7K30BDzYCqPDrN2HCv+7HoK6mAHLwfmJ8kKp6rTTHe4b/nxZfOWontPw7hE2nzSE3rDe9VDoGwGQ7WCQQnnZgU1cbxtzdByLzaWMc/S5zuTYynS8BXSi4WhMhEdxEv/f9KeXuY2sAGrPQljazgEszZOgjRQuOPgKis4LAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=osMXYE+x; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3DD8C32786;
-	Thu,  1 Aug 2024 00:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722471314;
-	bh=rEuIUDOjXhBJuZZxIIV4Z4DS1dJ190OWw+jL9ZhwwS4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=osMXYE+xk22A5wk8q/86PV6PnvBWhnrXB7uVlUY3pLwWAjMEwS7+9v/JONC8Bt9tu
-	 SpB+wSRC7neFxBDwIGx+/jw2BIvbdxadydMDn6kr6bTcPY3Wsxqq5rAOZMlIpvGrxy
-	 7tp5BQKOeUfWj0hx+Dch1NewSoe3qbcaj/c/GFZlmaNJZHbYACq8Y7voHNkrIhxqXQ
-	 wIIZ9enw+RSw8dYGXEAlIm8SdAl4mWo6ci1WINPpQdrh3fdB74JT6KVeC0eblj5ff+
-	 gvoqogoaA+faPVVd/cXCBfQ8/7+dalATowMx1cXyNo/XSmPC6NiChnLXIk/TBT1Pb6
-	 TOPFhPwK1heEg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Sasha Levin <sashal@kernel.org>,
-	linus.walleij@linaro.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.10 068/121] pinctrl: renesas: rzg2l: Validate power registers for SD and ETH
-Date: Wed, 31 Jul 2024 20:00:06 -0400
-Message-ID: <20240801000834.3930818-68-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240801000834.3930818-1-sashal@kernel.org>
-References: <20240801000834.3930818-1-sashal@kernel.org>
+	s=arc-20240116; t=1722470881; c=relaxed/simple;
+	bh=C8pSPMgcwLZA1fhD9Jw0QW5UTev+XIASI8pbDcknumg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=igyndVU24yptMACq8I2UlD5lxYvz71FGFjQzCL2UqZMlJhW6peE8Xrrhu/ablCaawM1al49Vufda0nF0scncWvOxzHOqTxlz/oRRJSMoh7tJftUV6C84NIkJlSXcXZ/zHxye2xchsnoBH6ff7zsB/l7J1K97lLdM6rz6en0wkrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k3PO4Op2; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1fc60c3ead4so45440375ad.0
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Jul 2024 17:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722470879; x=1723075679; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6tNQViHfq90v00oR1PSw+aQThZ11z/b4vYTQLjKd+hk=;
+        b=k3PO4Op2oftr/sgrkuIDJ4FA5qPKwJTzLO9bOqvylWV3IlSY2o1DzBLYOMb8ZP5AUZ
+         S82Kvpl8JVZlkbntUMcx2UucslkVWVGU614juAJl3ipXPAuECN++uSSZ8LsQoCFYFrmH
+         /PvLPx1gakGPqMV4/74hnRLNrXRrGFRjyvyypn3zoktWKAoupaDg7uMjAZMgs/hMgkrH
+         gFnAB8K8b+vxnPftn2/d+m7f4T0A/x9aWIfEyTtV4tVrUd2KRV9E2gIJuIRILwHTpAL4
+         MKSO5yohTFzQ2c7QT9+ikQpUY7SzT0D6OkSEVSvQf6McEZH//KoNsJeWCTbVugJFnt+S
+         ONyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722470879; x=1723075679;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6tNQViHfq90v00oR1PSw+aQThZ11z/b4vYTQLjKd+hk=;
+        b=DXH/Q1FXKYQRU0vpqbV/M0zvuZWxIOXFPF9zF4hWRBhWXviPLX4BGHKoVrddt4B1n+
+         1dFNIbAcz05SG4F0nsPb6zixp5uSf8lmhxGRShJKF2POczKSsdD8zuXcTiRUG0DYaO/A
+         YU6XmJbnMhhRJGtbS98qbmAB9yx9qzITySGHxdSsrksspxtzYG1apgX5ks5UZqsr0v4l
+         sRt6f/ehjHwXHKSqy1MSz0jKKBn2kWa95qtb5TIfM9VexaG9Go5Ibg6cZBI2FnxduZsm
+         6HHSZ9xeleOcuaXDRUiid8T4P4/RyY4I/0UOaAf2hJPPDw5JqYG0fINAgU9sF/OObv+a
+         JQ/w==
+X-Forwarded-Encrypted: i=1; AJvYcCW+UhXIdqMWLzFkW22YMKM/hBWFMTgTyLoQr20AlOEw+ld1FMV62Z+6hPIO930xPL854uG2L5RhwSqxPiRBVTZvIz/5PnLtaMMHFA==
+X-Gm-Message-State: AOJu0Yw7cY/GPWMdvEKDldN0PANCw+lwoSHiY+PqJRxZN1pUa32KroaT
+	+3owJ+HX/WnxszdwbLVPVBTF/VLhxjZkyjJw/S4ooPAvOvLSFQb7lZ1QRQ==
+X-Google-Smtp-Source: AGHT+IEISS0hfleps6LHzbgnOrmU/5BVgUDCuWgzFfFjqBA/8nTtvxfdnRcPnMm9M0S+rVh9lktW2Q==
+X-Received: by 2002:a17:902:da92:b0:1fb:35c7:8ea4 with SMTP id d9443c01a7336-1ff4ce85797mr11069495ad.2.1722470879169;
+        Wed, 31 Jul 2024 17:07:59 -0700 (PDT)
+Received: from rigel ([118.209.204.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7d37b9asm126248315ad.114.2024.07.31.17.07.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jul 2024 17:07:58 -0700 (PDT)
+Date: Thu, 1 Aug 2024 08:07:53 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Benjamin =?iso-8859-1?Q?Cab=E9?= <kartben@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH libgpiod 1/2] bindings: python: properly pass event clock
+ settings
+Message-ID: <20240801000753.GA10337@rigel>
+References: <20240731104658.93117-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.10.2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240731104658.93117-1-brgl@bgdev.pl>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Wed, Jul 31, 2024 at 12:46:57PM +0200, Bartosz Golaszewski wrote:
+> From: Benjamin Cabé <kartben@gmail.com>
+>
+> Python binding was ignoring event_clock line setting.
+>
+> Signed-off-by: Benjamin Cabé <kartben@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  bindings/python/gpiod/ext/line-settings.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/bindings/python/gpiod/ext/line-settings.c b/bindings/python/gpiod/ext/line-settings.c
+> index 2cacbef..650235e 100644
+> --- a/bindings/python/gpiod/ext/line-settings.c
+> +++ b/bindings/python/gpiod/ext/line-settings.c
+> @@ -79,6 +79,10 @@ line_settings_init(line_settings_object *self, PyObject *args, PyObject *kwargs)
+>  	if (ret)
+>  		return set_error();
+>
+> +	ret = gpiod_line_settings_set_event_clock(self->settings, event_clock);
+> +	if (ret)
+> +		return set_error();
+> +
+>  	return 0;
+>  }
+>
 
-[ Upstream commit a3a632ed87f0913779092c30bd0ea7dfd81601f3 ]
+I'm ok with this series, but the gap this identifies in test coverage
+bothers me - are there any other attributes that are not round-trip tested?
+Debounce immediately springs to mind.  Bias?  Drive?  Even active_low?
+Maybe add or extend a test case to excerise those in a separate patch?
 
-On RZ/V2H(P) SoC, the power registers for SD and ETH do not exist,
-resulting in invalid register offsets.  Ensure that the register offsets
-are valid before any read/write operations are performed.  If the power
-registers are not available, both SD and ETH will be set to '0'.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com> # on RZ/G3S
-Link: https://lore.kernel.org/r/20240530173857.164073-7-prabhakar.mahadev-lad.rj@bp.renesas.com
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 60be78da9f529..389602e4d7ab3 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -2583,8 +2583,10 @@ static int rzg2l_pinctrl_suspend_noirq(struct device *dev)
- 	rzg2l_pinctrl_pm_setup_dedicated_regs(pctrl, true);
- 
- 	for (u8 i = 0; i < 2; i++) {
--		cache->sd_ch[i] = readb(pctrl->base + SD_CH(regs->sd_ch, i));
--		cache->eth_poc[i] = readb(pctrl->base + ETH_POC(regs->eth_poc, i));
-+		if (regs->sd_ch)
-+			cache->sd_ch[i] = readb(pctrl->base + SD_CH(regs->sd_ch, i));
-+		if (regs->eth_poc)
-+			cache->eth_poc[i] = readb(pctrl->base + ETH_POC(regs->eth_poc, i));
- 	}
- 
- 	cache->qspi = readb(pctrl->base + QSPI);
-@@ -2615,8 +2617,10 @@ static int rzg2l_pinctrl_resume_noirq(struct device *dev)
- 	writeb(cache->qspi, pctrl->base + QSPI);
- 	writeb(cache->eth_mode, pctrl->base + ETH_MODE);
- 	for (u8 i = 0; i < 2; i++) {
--		writeb(cache->sd_ch[i], pctrl->base + SD_CH(regs->sd_ch, i));
--		writeb(cache->eth_poc[i], pctrl->base + ETH_POC(regs->eth_poc, i));
-+		if (regs->sd_ch)
-+			writeb(cache->sd_ch[i], pctrl->base + SD_CH(regs->sd_ch, i));
-+		if (regs->eth_poc)
-+			writeb(cache->eth_poc[i], pctrl->base + ETH_POC(regs->eth_poc, i));
- 	}
- 
- 	rzg2l_pinctrl_pm_setup_pfc(pctrl);
--- 
-2.43.0
-
+Reviewed-by: Kent Gibson <warthog618@gmail.com>
 
