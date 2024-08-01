@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-8498-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8499-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 128FB943D4B
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2024 02:55:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50B35943ED8
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2024 03:27:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3295287B26
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2024 00:55:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 59D30B2B31A
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Aug 2024 01:13:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 203781C461F;
-	Thu,  1 Aug 2024 00:24:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7134C1D1724;
+	Thu,  1 Aug 2024 00:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6AMTSxd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j3XPw3lr"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87161C4613;
-	Thu,  1 Aug 2024 00:24:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D791D1727;
+	Thu,  1 Aug 2024 00:30:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722471861; cv=none; b=ml6Ak2j7iTQ3Sx6wZTRNpQX0vxG3iZcvwB6Y5gh1KbogLfVyFaaRBFQgKSGXmtQfTDou0RJ/GfBWFYc0uAwIRyewX8LPL/a4mUs+ZPm01Lv1WyYBoZZ9j7Gi1100bP8uvveXY3T0ls2vnMeM1cxTY+RwsHs0IhZCFG/+NuBCQis=
+	t=1722472219; cv=none; b=JtkLX5U30knz742lV2jRws3wEDSyyyKNp0RQZC4GovZpCmpIixZoL71Cb0GeoCI+z0vqqFjC4kgXH/NDtOfmOnBKbEWZywHPLkoHfza5rH05FLsMkpy55GxTdkNY+7MwXnOeeC4v8aDHcnS35SaBlWxalo6BranJm4l0/vSF84k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722471861; c=relaxed/simple;
-	bh=7ya/jMk4w9FtisSvlpnfylu0JSBrBUBhQgTzbZ2uyFo=;
+	s=arc-20240116; t=1722472219; c=relaxed/simple;
+	bh=cT734ZYDA0Jz+rKWc+j6YT2431NQG6GWzEm+gZfSA84=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OC4zLf8C0SXBS0XObZ/R3CO5meF+KlWKWRiSIStQvu4UAf/H2scv4FjgB5C+KmY0A9JR7TmjV7qJJ+hIagLSPeP1UreXZ/bVwdNcFQQOVbVzc/Wf5DA7tjy/S2ag34+ox+UABGTuLUi/1b1sSFGXgB9U7Y1gTF2uUj4DQDlvbvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6AMTSxd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2838C116B1;
-	Thu,  1 Aug 2024 00:24:20 +0000 (UTC)
+	 MIME-Version; b=lOHuIBckC2GmZLSLQHd+YI4+qXVHjR8kUkLggyrsLCEq5ZH+Jn0Skm/SlBaISZdEDQL5JOWQ+JafuQP4bbozsV6rcTeM6DPWwBsSdWrLITRUmrYK9qkOIeZUfGNcuy0d/96dnQQjXBSAhaVckqJQhXiF91PELGRHB4XXszIwDMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j3XPw3lr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E471C116B1;
+	Thu,  1 Aug 2024 00:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722471861;
-	bh=7ya/jMk4w9FtisSvlpnfylu0JSBrBUBhQgTzbZ2uyFo=;
+	s=k20201202; t=1722472218;
+	bh=cT734ZYDA0Jz+rKWc+j6YT2431NQG6GWzEm+gZfSA84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e6AMTSxdpg60BsFylspzTNXmVwATKNVNgaNFIKI5fPno0TrMmiQ7btKNDyTyxq6UB
-	 p0xiCqTMtb+AFefBJLHiUH+Kfk3ycOC69K+6IkosjA95B9Wie6VTDWNuhfmPR/ZDla
-	 4PEBa5aSS7Bi/YWPKEwFijZqqSUjJAQi3wdI1m3tn3DQF2MAs7WRQ7BeDOEk6trijH
-	 KGlNMWU6gbBXQQfdzv6dX4/C62rlFtGuBzO+zVrrSPibEfUgL8CJm5O8ihZKr6X47l
-	 sPaQJ5fPFQmMcUpmPE89dLCn5A7lu2GOcQchuN+qdJkwJCbjt+ft/QFohGuvkiKdB+
-	 79+folYwmhoRg==
+	b=j3XPw3lrR/N5QNxKekfpN/vL7ENZkh/mcJGxarDXtzLUlZyNwzPQRrSuL25hWzxae
+	 dKPx9MaOeMD9j4bgegyaYGxFrfBrIzP+BoWrzHNPAzkGFkX3EnNWtujMXSJoAAYcbS
+	 ymAbg/75PHNGCMuVDF4R8neawToLWs3uL4IH+JQwK2f+h5fxBe4KCJKN+3fA6WU0VC
+	 /KIPLa/q6jvOi+oMbmTiD0Q3D1NKk2R45dfNq2b+ouI7EJvHXKt4p5CCewFqwl3Eir
+	 iA2VJnClKJg36pt3ViD6dmeFFnTGE1oHseR3ZfoaOOQiku9bkhYAKlWpfpeIL/9qRQ
+	 m5d6jEi/dEwbA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -50,12 +50,12 @@ Cc: Kent Gibson <warthog618@gmail.com>,
 	brgl@bgdev.pl,
 	linus.walleij@linaro.org,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 42/83] gpiolib: cdev: Add INIT_KFIFO() for linereq events
-Date: Wed, 31 Jul 2024 20:17:57 -0400
-Message-ID: <20240801002107.3934037-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 32/61] gpiolib: cdev: Add INIT_KFIFO() for linereq events
+Date: Wed, 31 Jul 2024 20:25:50 -0400
+Message-ID: <20240801002803.3935985-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240801002107.3934037-1-sashal@kernel.org>
-References: <20240801002107.3934037-1-sashal@kernel.org>
+In-Reply-To: <20240801002803.3935985-1-sashal@kernel.org>
+References: <20240801002803.3935985-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.43
+X-stable-base: Linux 6.1.102
 Content-Transfer-Encoding: 8bit
 
 From: Kent Gibson <warthog618@gmail.com>
@@ -93,10 +93,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index d526a4c91e82e..0b1531557f04f 100644
+index be51bd00d2fd2..d50b910080654 100644
 --- a/drivers/gpio/gpiolib-cdev.c
 +++ b/drivers/gpio/gpiolib-cdev.c
-@@ -1855,6 +1855,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+@@ -1812,6 +1812,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
  
  	mutex_init(&lr->config_mutex);
  	init_waitqueue_head(&lr->wait);
