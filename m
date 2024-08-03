@@ -1,168 +1,109 @@
-Return-Path: <linux-gpio+bounces-8552-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8553-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69A139463A2
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Aug 2024 21:16:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1A6F946B61
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2024 00:52:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17AD21F227AB
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Aug 2024 19:16:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7AAE21F21DC5
+	for <lists+linux-gpio@lfdr.de>; Sat,  3 Aug 2024 22:52:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 167A8376F1;
-	Fri,  2 Aug 2024 19:16:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FB7658ABF;
+	Sat,  3 Aug 2024 22:52:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="RwUhhNcV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aG/gNvhn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC50B1ABEA9;
-	Fri,  2 Aug 2024 19:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E53EEC3
+	for <linux-gpio@vger.kernel.org>; Sat,  3 Aug 2024 22:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722626183; cv=none; b=iMDZsOaCaoPonsZsgu4m5KZzgLjSmWCDXjaDh4FJpmy5453SSOgt/4anwQ/30R6Z2MUstiiSmP6pD84LmT42v9b8s6GqSn7qFGsHJTaud2MKT93FkBRNjnA0k+Su3WUWi6VjFQnM49YTEwCmd/omOC6by5CAjipwuRV5JSVQLjk=
+	t=1722725537; cv=none; b=XRIyyIzzbMeSUl8qIntCQcUHkQh9zm8GriAEbFBLvv5YmqjGpMA41LcKc8TbitTVE8tN2ZjKMwNUahn7XqewtFoDAQNjW0pPoIvs4a/oObJo63W9oJwy7HDuJpZvqtpJm3AK0nY6qVi4tVMH9txyXBzrLt61YX1E14+r9JfMhOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722626183; c=relaxed/simple;
-	bh=MF60YOxBxzn6ztCkADvA2rd/tH1ZtSd9teZXV7gUl8Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cTHXE742/nVp/VvpoXIJ75d9hKYyLF9jH3wBIbdmbvxOMwEgRxDcTzUSt8Wq1ckU9FliTmfTcN7PMHxjmtPC0ul0juWGBL4txlDqf7pmpkgQjnm193FugiCiCiepFKlGjvvT7Cd/cknFf845FChm/Rby2yf4PZkjLmvkkaFa77M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=RwUhhNcV; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1722626170; x=1723230970; i=wahrenst@gmx.net;
-	bh=nuMZQLG+k7tqWNRdKUj/uVwRkDzgvYcOELnZoHgbJTo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=RwUhhNcVlU69Mo+z5cNCqQ7dfYj2IrWTc/zKM3ganhV0WoqM1vxaz1nPwG6g+qRb
-	 gkBFvDTTqUhtb0gw3tQDiu+XqCCGlj/A5St9BgMNPvDoaDNkKY2ZEk3NgvxH6f2JC
-	 ZJgyTlniF/bfRhtnLXc5RttDM28Ypxls7keBYjnl/MsvTW/3JsNqVG7wQ/gPL478X
-	 USqWUexa04XOiILQFoPsjf1DOsaV/PuMMTxmH62XG/ISx7a4ZgZbSfURvLRaimMBA
-	 qY7DpK3FJmZgG6eoTCw1pZo7hxhbDsq/vS0EQPM52Am8vDzl8RObMxCJm9fJeAs+s
-	 +iDx2Zt/koWd12ty6A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.127] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MYNJq-1snjND3re6-00JLEE; Fri, 02
- Aug 2024 21:16:10 +0200
-Message-ID: <7e4031c8-5192-40c1-bd11-9101e98a8612@gmx.net>
-Date: Fri, 2 Aug 2024 21:16:08 +0200
+	s=arc-20240116; t=1722725537; c=relaxed/simple;
+	bh=VS/k5v1QNh+3vyYqhg9LJgwdVa5PJldl/+U1/qKG/94=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cqy/fC4vQEVdLr7BFfBeRHCrfoXr15ATMuu36wpssmcCktFUTpKTDcU4PIb6Uob63YRhhEuR1Z6PfiAFGUDyw7ThOkgWoWAy2gHFX+B1+lM5Z5oW+s4dTMXhi/HxO+gkafiVnLrh5lELUkq7AqLEr2T9M5IQXF7z3ZlKcXJJpqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aG/gNvhn; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2f15790b472so41416761fa.0
+        for <linux-gpio@vger.kernel.org>; Sat, 03 Aug 2024 15:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1722725533; x=1723330333; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VS/k5v1QNh+3vyYqhg9LJgwdVa5PJldl/+U1/qKG/94=;
+        b=aG/gNvhnhPVXdVIbUpb5vM+gjqnnDkbGjdaSXiGEZ9IdwxFb1JMgeOscKyKswlhYI8
+         ZH/zbOjetAcvnzyYbIXEcXyT9xmdcqD29i50eUciHnqsD4J68vzY29Th4REvH1GHvRp+
+         OMdg6Bwvqy7jwNyt38JgGBFKBEuu/rbTDQP3nnjq2YdIX8C4sr0Wo/5eNBSkiwLSyilL
+         yPce+2Nl9CBwf0LvS4HOLH+59ABHICHZsj7fZ4EUMVo3HNsq/3K2EpttMRgeCCrhIsRS
+         r9/ccDCRJLwEid+zyXOqIIFh5LkPkwsWLJ1Kiv8fabuVVIqul+gnzyvRZVlIn5iTp1Wi
+         YdGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722725533; x=1723330333;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VS/k5v1QNh+3vyYqhg9LJgwdVa5PJldl/+U1/qKG/94=;
+        b=XHlCZcA+t72OwpGmq3zbuOPCvXLzZ27ChQv4Kh1IXbCSXCEDInJSqyonx1K5K1oHhn
+         JRd9Xk5FLHwV6CI+WSvLrnHtzcJlnuDgUiOwlKmHtaonDgDVyyhhe6U9VaE6B3QCaK4n
+         LqMm++84GMiIXJtkkqKG8AwvejB9ObHAke+xc1HDOSoaLCoG6HpHRVxbXo253SJLRoRx
+         PiXRsvMnVlcsYA1k7vJSv2u/6nHyqspKgYfaVf53eoLURvD/8aWn73DTHBlhxYoO2Uon
+         tZqGWODJxPWwXT/ojcDibq6hJJQmEAUFceQtzShfNeVO0wvRnzbFB//kI4uNeOBeUmjE
+         Zs9w==
+X-Forwarded-Encrypted: i=1; AJvYcCW2zZXZDRY8PtkfwjgDXeW0vKFWHmBQL8EcOtthadAKeMsfEgOQgLrGQ2q/itldURUkLd9LlUImLrnig4Ohws3VlBj9q/4j5aVOOg==
+X-Gm-Message-State: AOJu0YxYZwMJEigqrtno20IOhKCL+9hH18mWuAw91DGBtoLIm58dWUNT
+	f8n99QAvfus7rMYvZxjyh12OoJYcQmV5tzIagmfUoiKHonCrOwvEgNozy+gKrGvO7uhuQenoCL1
+	rW3w5ec1WR8XwWYsfGn+jzR1suwq4lQpTwAVCnQ==
+X-Google-Smtp-Source: AGHT+IGtKbqnwPRPd/X8SX60v5j4Xq35XV3AX5MwZR7GvVw8lAT724joPpRICFpM2WIHSkOHDQu2mGHM8Arm0D/qCKY=
+X-Received: by 2002:a2e:2416:0:b0:2f1:59ed:87b8 with SMTP id
+ 38308e7fff4ca-2f15aa84f4dmr51196711fa.3.1722725533354; Sat, 03 Aug 2024
+ 15:52:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/7] arm64: dts: broadcom: bcm2712: Add pin controller
- nodes
-To: "Ivan T. Ivanov" <iivanov@suse.de>, linus.walleij@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org
-Cc: conor+dt@kernel.org, florian.fainelli@broadcom.com,
- andrea.porta@suse.com, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240731062814.215833-1-iivanov@suse.de>
- <20240731062814.215833-5-iivanov@suse.de>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <20240731062814.215833-5-iivanov@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20240730-mbly-pinctrl-v2-0-d470f64e0395@bootlin.com>
+In-Reply-To: <20240730-mbly-pinctrl-v2-0-d470f64e0395@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 4 Aug 2024 00:52:02 +0200
+Message-ID: <CACRpkdbM2CQdgCq916kdObXUH3_73Yd897QxmY13mPWAzvHbHg@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 0/2] Add Mobileye EyeQ5 pinctrl support
+To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	=?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ywLruciPJhyfNk/9frrJo/ZeOMJR5Zip1gagCKq4GvAt2Yf1Rjh
- KXVT9evHNSRXYqPbam9IrPPzoaSbIiqVa5UQvF3gNkpHTV6noZRi13OtywGdJcOcOgH7vCq
- 5GEDgChdXstDP4EJjzlj9c80E2WvHDDVLx5fWtaj3HOlwAU70KBwtajOz3qtcU0IruxksqV
- lDeYFK7XAdWTnL+padUWQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MqI8FP61bAM=;Kg/kzJ92XgR+hYD7I6YUVv9Fm85
- pRTJ3vqoqYV+Cijys9YmsqniaWxJ3Z0zhil6PSQmbk8vMjsQ1aWuI7PPbdgJLjkNVfpXTQ1+I
- LfK6WPNhq7G2NXWm38Qrd5Eyg55nhN0VbqyGIvlG2KAgFluHL8Qt1VkNci8VKBHT7lrugN0Ny
- jg2GLi5P+K8KjkF3gNmkbaB9ZQNH2CbJb9zO7gwQsIl+ZkepQqLweOslgsUyp8ygAZwix5P73
- WGkJK9ry2FBEXshsAflAmBwLMZT5xm8qfWArY6pB7NjvUGgp3IA0A4tslymM+lpVjkLmTUk6V
- XJnkLJJ45kbsdSCDyVmZlmhBlTgtButIgJG7m0NzxsLA5MjUbdESnUfb8PafSPRQYhUiJ6ExB
- HQ6LKX4LskIdHHAAcaGM6oDNE0vocHPl8uTHDqbFGIH5TDd9Ywp/wXtHgfhzwSSWhOX6TvQnc
- e9MCHq16X4fmnJPSJgs2xGl58SzyQxBQUZ9Me75kKJhOSfCGmGv8NGg+UK+CrllCzA100fXau
- vlQztVXRtPJq+ku8DzG7F5R8GMOp+Fo4yPt7L0v+7ky1ETLbShSZRffQ9453hQNSaz+Obx+UA
- kJZvYM+MTcL1Ouioxdgyje5871Ur5LHHMdUTjQDVrA9gy0rO8u5zSwc41TRO+bA3J0DqHzUwT
- E2NAVVjPF67lhkyngszCeAGRSwWx4xRCW/CGo11Jst2RgZuwqbYxMBXCltwo298KoNnOVquVv
- mb8VQp+bNeWLUmYblpjGa8JMYHFOGAO8MJ+JW2xW6P+BW+JkAOCjVrALTAeJnxmlRrkYLUoVc
- kmFzaNxoulVWFWvYlnalwJBg==
 
-Am 31.07.24 um 08:28 schrieb Ivan T. Ivanov:
-> Add pin-control devicetree nodes and used them to
-> explicitly define uSD card interface pin configuration.
->
-> Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
-> ---
->   .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     | 20 +++++++++++++++++++
->   arch/arm64/boot/dts/broadcom/bcm2712.dtsi     | 10 ++++++++++
->   2 files changed, 30 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm=
-64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> index b5921437e09f..8a0d20afebfe 100644
-> --- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> @@ -53,10 +53,30 @@ &uart0 {
->
->   /* SDIO1 is used to drive the SD card */
->   &sdio1 {
-> +	pinctrl-0 =3D <&emmc_sd_pulls>, <&emmc_aon_cd_pins>;
-> +	pinctrl-names =3D "default";
->   	vqmmc-supply =3D <&sd_io_1v8_reg>;
->   	vmmc-supply =3D <&sd_vcc_reg>;
->   	bus-width =3D <4>;
->   	sd-uhs-sdr50;
->   	sd-uhs-ddr50;
->   	sd-uhs-sdr104;
-> +	cd-gpios =3D <&gio_aon 5 GPIO_ACTIVE_LOW>;
-> +};
-> +
-> +&pinctrl_aon {
-> +	emmc_aon_cd_pins: emmc-aon-cd-pins {
-> +		function =3D "sd_card_g";
-> +		pins =3D "aon_gpio5";
-> +		bias-pull-up;
-> +	};
-> +};
-> +
-> +&pinctrl {
-> +
-> +	emmc_sd_pulls: emmc-sd-pulls {
-> +		pins =3D "emmc_cmd", "emmc_dat0", "emmc_dat1", "emmc_dat2", "emmc_dat=
-3";
-> +		bias-pull-up;
-> +	};
-> +
->   };
-Please keep the references in alphabetical order (pinctrl comes before
-sdio). Except of this:
+On Tue, Jul 30, 2024 at 6:08=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
+in.com> wrote:
 
-Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
-> diff --git a/arch/arm64/boot/dts/broadcom/bcm2712.dtsi b/arch/arm64/boot=
-/dts/broadcom/bcm2712.dtsi
-> index 398df13148bd..1099171cd435 100644
-> --- a/arch/arm64/boot/dts/broadcom/bcm2712.dtsi
-> +++ b/arch/arm64/boot/dts/broadcom/bcm2712.dtsi
-> @@ -266,6 +266,16 @@ uart0: serial@7d001000 {
->   			status =3D "disabled";
->   		};
+> This is a new iteration on the Mobileye system-controller series. It
+> used to be sent as a single series [0], but has been split in the
+> previous revision (see [1], [2], [3], [4]) to faciliate merging.
 >
-> +		pinctrl: pinctrl@7d504100 {
-> +			compatible =3D "brcm,bcm2712-pinctrl";
-> +			reg =3D <0x7d504100 0x30>;
-> +		};
-> +
-> +		pinctrl_aon: pinctrl@7d510700 {
-> +			compatible =3D "brcm,bcm2712-aon-pinctrl";
-> +			reg =3D <0x7d510700 0x20>;
-> +		};
-> +
->   		interrupt-controller@7d517000 {
->   			compatible =3D "brcm,bcm7271-l2-intc";
->   			reg =3D <0x7d517000 0x10>;
+> This series adds a driver handling EyeQ5 (and only EyeQ5, not EyeQ6L nor
+> EyeQ6H) SoC pin config and muxing. It is an auxiliary driver being
+> instantiated by the platform clk driver.
+>
+> Related series are targeted at clk [5], reset [6] and MIPS [4]. The
+> first two are receiving a second version. The last one has no change
+> and stays at its V1.
 
+Patches applied!
+
+Yours,
+Linus Walleij
 
