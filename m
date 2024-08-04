@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-8560-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8561-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2175946E32
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2024 11:58:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 333AD946E34
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2024 11:58:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 37321B20F64
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2024 09:58:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DDA412818FE
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2024 09:58:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04F8424B26;
-	Sun,  4 Aug 2024 09:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AEC224B29;
+	Sun,  4 Aug 2024 09:58:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uekmcjx3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qni/DZOe"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B170F2374C;
-	Sun,  4 Aug 2024 09:58:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C502E416;
+	Sun,  4 Aug 2024 09:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722765492; cv=none; b=TJe8G2S2FSK/5rCdg+Xf2iGOQGRC3kK5ZC7fCdr9liBKlr+RYSZOCAvr4el/3Mz8eIkjR4gZxOXwBS8uK3mPIBBhasMU2R9nRkTZduocYnW00Wev7TTfkoBVFHDLk+jKKx+BBeqfEBIwcaUNt2fNZ65A4ORT0LeGcsPYyZkPjxI=
+	t=1722765505; cv=none; b=bDEmF0uma+rEVuUj9Pyb875+b9LYxjIUkyr1YPa5Qmn62rPNRH9YEcnFNe57wrhoCbsSz8ee8LmYgZhAdF9K6hWlkJwP37bskMT1Iw0cyHUZ4o/297MJwMo0WP3kpSq8ZE1lEce1JW5bhwjEvbLo3RYWQIG1XgEKQWJOAui9lbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722765492; c=relaxed/simple;
-	bh=EOUjBy9rrG/GDZG9Kp9n9d33+UGi1uo5OiMu+Sxji10=;
+	s=arc-20240116; t=1722765505; c=relaxed/simple;
+	bh=ZHEgrCibrJb5OWWJP5vV2NJK42XUHDHM2h8UGzr1RZM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nOTIgXD7jTfvong960eb1Iq/hzwRzp9CJQNFi9Yt8CXbEIhinTfno2yDvMH6TyTsehL/gG+h0DK/aZWbnYxUeS5no5limadM3RRshRcKKy6i646U6i0cKbfAyvZeUsC63bn+nAWx0Wm7Xu25A8LQAeMXT1o1uRz4ONxSQ8j0w6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uekmcjx3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCB3AC32786;
-	Sun,  4 Aug 2024 09:58:08 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=r+7xK3MT9O6NvKBlfaxCZb2hrub7hx3ccsqHuVw4jF7BeuyHPS3wOhC1BgkAnMi4GAyCigLB2i+37DTO8BdCGGxCXtFYxK19g64L/qxZdQ2o/tbxBwyoJ5rX9jinTq5pjRqczNm88FJgaN1zQ5EWy/ReQBYDW8dX7ohIu5Vrmlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qni/DZOe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CB3FC32786;
+	Sun,  4 Aug 2024 09:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722765492;
-	bh=EOUjBy9rrG/GDZG9Kp9n9d33+UGi1uo5OiMu+Sxji10=;
+	s=k20201202; t=1722765505;
+	bh=ZHEgrCibrJb5OWWJP5vV2NJK42XUHDHM2h8UGzr1RZM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Uekmcjx3hNmjOJqHap13oSx1QdS7AjJ0Bx5PPo/T7PbmwOG7GTPaygKEz23rU2458
-	 O5bUnYozDtkA+k3yOI1uE52/k3chxAAxv84XncaICsMBirN9G9Odozfc9W0Cm1xKLH
-	 /Dw+b2VTbCdIIT3vr94+UgYiisIMrOXwVR2TQp4NdYLP+G4Fb8C4vF8CIFEdyeBDlg
-	 4ksvo18itiFbOIdq4r1jjOCX43mJ2rPyIqL3YG9sc98kgWksLdPNwa3SNZ1BhVxRMC
-	 M0zIwYKJwZ2sf9tE0nF0yYtDU++nNjHa3EIB2RYmsrql5N92tbIGI2FA4yPYA8qjY9
-	 0Pl2RVEX4Pd/g==
-Message-ID: <0a4c8b5c-a394-4e16-a5a6-c8c4f588fd1e@kernel.org>
-Date: Sun, 4 Aug 2024 11:58:05 +0200
+	b=qni/DZOeBe4bW7wbetJPp8Sq7IfLBO8KX+AEmrkOsJL62/in5TafL5r7GWT5ASsyo
+	 e9vncTnIQRkXt3Rx0dxcNQ9PqHWTqLr0xnIAQegaoAdwh1ok7Nf47F4KXUw+SAt+JK
+	 9HS1p/SK71dldAfoo8F7s/T62rbPRTvn9R9ajztYre8h4TOxUmBhVYkMLpNXu2T+DR
+	 45XSBbzpS/umtQYaPhkrQHaLsavY9zwz6/diH8BgBz9xsPXGw1ABM6HhwH3i4HsGRn
+	 jL/gZR4CdZ9gzN9oUWoeEXy/DmI/Bu5oi/+ypm60rAJLZeDj/PHyru1rrnAwr7fej8
+	 EG2UX6F9SNV+A==
+Message-ID: <e65160a7-53c6-48d2-bfb2-50c807e56299@kernel.org>
+Date: Sun, 4 Aug 2024 11:58:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,16 +50,17 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: Add rk3576 pinctrl bindings
+Subject: Re: [PATCH 1/2] pinctrl: rockchip: Add rk3576 pinctrl support
 To: Detlev Casanova <detlev.casanova@collabora.com>,
  linux-kernel@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
  linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ Steven Liu <steven.liu@rock-chips.com>
 References: <20240802145458.291890-1-detlev.casanova@collabora.com>
- <20240802145458.291890-3-detlev.casanova@collabora.com>
+ <20240802145458.291890-2-detlev.casanova@collabora.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -105,49 +106,39 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240802145458.291890-3-detlev.casanova@collabora.com>
+In-Reply-To: <20240802145458.291890-2-detlev.casanova@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 02/08/2024 16:52, Detlev Casanova wrote:
-> This adds the compatible string as well as the optional rockchip,sys-grf field.
-
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-
-Please wrap commit message according to Linux coding style / submission
-process (neither too early nor over the limit):
-https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
-
+> From: Steven Liu <steven.liu@rock-chips.com>
 > 
-> Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
-> ---
->  .../devicetree/bindings/pinctrl/rockchip,pinctrl.yaml       | 6 ++++++
->  1 file changed, 6 insertions(+)
+> Add support for the 5 rk3576 GPIO banks.
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> index 20e806dce1ecb..a202b6681624c 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> @@ -45,6 +45,7 @@ properties:
->        - rockchip,rk3368-pinctrl
->        - rockchip,rk3399-pinctrl
->        - rockchip,rk3568-pinctrl
-> +      - rockchip,rk3576-pinctrl
->        - rockchip,rk3588-pinctrl
->        - rockchip,rv1108-pinctrl
->        - rockchip,rv1126-pinctrl
-> @@ -54,6 +55,11 @@ properties:
->      description:
->        The phandle of the syscon node for the GRF registers.
->  
-> +  rockchip,sys-grf:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      The phandle of the syscon node for the SYS GRF registers.
 
-Describe what for.
+
+> +static struct rockchip_pin_ctrl rk3576_pin_ctrl __maybe_unused = {
+> +	.pin_banks		= rk3576_pin_banks,
+> +	.nr_banks		= ARRAY_SIZE(rk3576_pin_banks),
+> +	.label			= "RK3576-GPIO",
+> +	.type			= RK3576,
+> +	.pull_calc_reg		= rk3576_calc_pull_reg_and_bit,
+> +	.drv_calc_reg		= rk3576_calc_drv_reg_and_bit,
+> +	.schmitt_calc_reg	= rk3576_calc_schmitt_reg_and_bit,
+> +};
+> +
+>  static struct rockchip_pin_bank rk3588_pin_banks[] = {
+>  	RK3588_PIN_BANK_FLAGS(0, 32, "gpio0",
+>  			      IOMUX_WIDTH_4BIT, PULL_TYPE_IO_1V8_ONLY),
+> @@ -4005,6 +4231,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
+>  		.data = &rk3399_pin_ctrl },
+>  	{ .compatible = "rockchip,rk3568-pinctrl",
+>  		.data = &rk3568_pin_ctrl },
+> +	{ .compatible = "rockchip,rk3576-pinctrl",
+> +		.data = &rk3576_pin_ctrl },
+
+Undocumented compatible. Bindings come before users.
+
 
 Best regards,
 Krzysztof
