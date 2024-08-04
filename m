@@ -1,147 +1,114 @@
-Return-Path: <linux-gpio+bounces-8558-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8559-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C1D7946B7C
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2024 01:38:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78180946DD2
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2024 11:09:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFA851F21EC0
-	for <lists+linux-gpio@lfdr.de>; Sat,  3 Aug 2024 23:38:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A91231C2093A
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Aug 2024 09:09:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F22D227446;
-	Sat,  3 Aug 2024 23:38:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7C4A1F94A;
+	Sun,  4 Aug 2024 09:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qtC3LEO7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533D51755C;
-	Sat,  3 Aug 2024 23:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F5A23774
+	for <linux-gpio@vger.kernel.org>; Sun,  4 Aug 2024 09:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722728317; cv=none; b=aDFEyByJG8aNw5sTZpkpdhGQanxfAH4qQO0XzUusp3seVxkTExAt2XQE/qFRqGibTk4DsddRgSfFOxYl67N1/iCU00HHz8jYdT+0bvKnVD5W0r1qF0lYroQknIBh6TrGw1FqytuZ3y96IYQrxm8ZOEVNsMazzwTyfzWfAupM18E=
+	t=1722762589; cv=none; b=k1jTrjcNaU7odOs17AcyDWIzn77X1oXvNV4LAucVLu62fEzJVIfGo006V99Gk7M1061tb7pmxtJwh9RhaYqWQHJedkO84pHZJOAWU1yqlZj6/v9CgoaHZEYiJKg2mAR9xXCmc9gMwxO8hvZctigqbaiDZKQ7L0mqRuPJuh+v8m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722728317; c=relaxed/simple;
-	bh=DKdJ8ZmPQiV1AKw6W1zusg/7WPyZQpoiTNot2qWt4ik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dPY2+gafvFGFBol5ygpnYdKOxClXpjVB+XsbBobKOpmvk7WYkBxUKPI4x69mZUgYSHvu9wqekI+99+ps2wfExmbgc+XZlKlA8U/afmxTYFIeX5tiJOYgnHp459XXvq3miQGM6a9KE17apY5z9WmnDnYxsZoPbipGz9ykNys8sZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1saOKJ-0000000082J-1Qgu;
-	Sat, 03 Aug 2024 23:38:19 +0000
-Date: Sun, 4 Aug 2024 00:38:11 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Huang-Huang Bao <i@eh5.me>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Richard Kojedzinszky <richard@kojedz.in>,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: rockchip: correct RK3328 iomux width flag for
- GPIO2-B pins
-Message-ID: <Zq6_Y_0wdAIibfIU@makrotopia.org>
-References: <20240709105428.1176375-1-i@eh5.me>
+	s=arc-20240116; t=1722762589; c=relaxed/simple;
+	bh=msD+Pu+Q6D1xBrZhQ7xYLQP5vBlKSa93nvdA9bCO7Jg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=l6USHjd4bS0IbA2SOUrKztob5FhWvy/hS8PUfZXaSalnwhGTOsx+2fKcalQTKn+coizA0A8wEKojB9MRLFIS8n2/fdMxWSgzf0jjyMrh6hrmRZpESNTUaDFUrZs+sDDGAgL+b1j0L7eerwPzgmrzpBRKLLR4qpd5vRM1JJ8lwBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qtC3LEO7; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-368380828d6so6458693f8f.1
+        for <linux-gpio@vger.kernel.org>; Sun, 04 Aug 2024 02:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1722762586; x=1723367386; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DHLoWshexZhuP2J8+WGpm+0qtk9I2Aug6souXmLzt8E=;
+        b=qtC3LEO7hADTBlKAjiicGaI85SYvsNPdTej84ruDwA0XRK/iZMDaJqLqDVa56mOWmw
+         WjDxlx+LIZOgeS9WhopbUiBOgPApnoYkzXC2fMNAGmo5n+HvkFcYv4+IzzrV6ePaXSGl
+         ED71YXCaVfL70QQ+nJDNqAcj+qPmzciGIG3JnfFbehOGaerUC8fxgaa8QUU5juHa6KHk
+         1MBYpU6aA08ENWN/p7qlp2kkxWgERxSKVuAF9IF0Odxjk7ddZcHIlOj9HjBrbNMGqPjX
+         3jvKgAO3RXOPZPVj6MVLtfaHG0yG6PHKU3P+IugiWjwh88FBZQiyMYJRL95bIu59GPAE
+         nT/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722762586; x=1723367386;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DHLoWshexZhuP2J8+WGpm+0qtk9I2Aug6souXmLzt8E=;
+        b=Za4nj+xg1FugUkWocGDubu//vz5Qaw9DTYb3N4sBMm552EtVOQCuOyUyO+7RWcoHv3
+         F/QxVwn08PpzqzCivpKyFOaIf2/3B8frn5X3/c2gbQ1XvQVLWJd3beTB6GFUbFcmhLGF
+         4VyZBV+z6MxKqf1ZJJy+RPaPLCxUUN4t9V48+eiu5wCr89Cjnq/+/KoYAtHU89ev/BQy
+         xnUcbeFFyfzSAKNiI/DjHyMXxoZ9T1KnCmumflVo0T2ga5v/NDMK2CoUNdHen4lP9WIM
+         0YnXrOEEhoWIdygyoC+ArGACFMxvFfibWaD251h0S4Sw8ObPhNUPJeOoLtPz6+QNL5Uz
+         5LWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWF9yFvHAWxIgukHnia9b3OTW9KaI6FsP3ceeB0sHd5jHl8QDB3td0Cm1hV4MTfKzIYpjgdBRKcjrzX8CSuCVDcDsKUFLxz7aNoXA==
+X-Gm-Message-State: AOJu0YyZt6+RHf9oHiZj98GUAAjYYdA8P9n1j3I6zhkvfxqNGEYt7Ro1
+	JNtQqLeoSOqBapUKGajJ9jlHWnKGKNTruif2Slmo6uYwaoPg17QMraC8lVM6iGGykp0ailkMhMV
+	p
+X-Google-Smtp-Source: AGHT+IHCO1fd/5h1ijS72pP957S/1fryoMWPBggf8fwYHEKJsA9djK2DDYTC7fOb8ySFt7DWWO/kBQ==
+X-Received: by 2002:a5d:5c87:0:b0:36b:bd75:ed73 with SMTP id ffacd0b85a97d-36bbd75ef23mr5985987f8f.23.1722762585867;
+        Sun, 04 Aug 2024 02:09:45 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36bbd075100sm6244814f8f.105.2024.08.04.02.09.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Aug 2024 02:09:45 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240731191312.1710417-16-robh@kernel.org>
+References: <20240731191312.1710417-16-robh@kernel.org>
+Subject: Re: [PATCH] pinctrl: samsung: Use of_property_present()
+Message-Id: <172276258438.8347.5786673357734721862.b4-ty@linaro.org>
+Date: Sun, 04 Aug 2024 11:09:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240709105428.1176375-1-i@eh5.me>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.1
 
-On Tue, Jul 09, 2024 at 06:54:28PM +0800, Huang-Huang Bao wrote:
-> The base iomux offsets for each GPIO pin line are accumulatively
-> calculated based off iomux width flag in rockchip_pinctrl_get_soc_data.
-> If the iomux width flag is one of IOMUX_WIDTH_4BIT, IOMUX_WIDTH_3BIT or
-> IOMUX_WIDTH_2BIT, the base offset for next pin line would increase by 8
-> bytes, otherwise it would increase by 4 bytes.
-> 
-> Despite most of GPIO2-B iomux have 2-bit data width, which can be fit
-> into 4 bytes space with write mask, it actually take 8 bytes width for
-> whole GPIO2-B line.
-> 
-> Commit e8448a6c817c ("pinctrl: rockchip: fix pinmux bits for RK3328
-> GPIO2-B pins") wrongly set iomux width flag to 0, causing all base
-> iomux offset for line after GPIO2-B to be calculated wrong. Fix the
-> iomux width flag to IOMUX_WIDTH_2BIT so the offset after GPIO2-B is
-> correctly increased by 8, matching the actual width of GPIO2-B iomux.
-> 
-> Fixes: e8448a6c817c ("pinctrl: rockchip: fix pinmux bits for RK3328 GPIO2-B pins")
-> Cc: stable@vger.kernel.org
-> Reported-by: Richard Kojedzinszky <richard@kojedz.in>
-> Closes: https://lore.kernel.org/linux-rockchip/4f29b743202397d60edfb3c725537415@kojedz.in/
-> Tested-by: Richard Kojedzinszky <richard@kojedz.in>
-> Signed-off-by: Huang-Huang Bao <i@eh5.me>
 
-Indeed fixes issues on RK3328 which appeared with the backport of
-commit in Fixes:-tag to linux-stable. Thank you for taking care of that.
+On Wed, 31 Jul 2024 13:12:54 -0600, Rob Herring (Arm) wrote:
+> Use of_property_present() to test for property presence rather than
+> of_find_property(). This is part of a larger effort to remove callers
+> of of_find_property() and similar functions. of_find_property() leaks
+> the DT struct property and data pointers which is a problem for
+> dynamically allocated nodes which may be freed.
+> 
+> 
+> [...]
 
-Tested-by: Daniel Golle <daniel@makrotopia.org>
+Applied, thanks!
 
-> ---
-> 
-> I have double checked the iomux offsets in debug message match iomux
-> register definitions in "GRF Register Description" section in RK3328
-> TRM[1].
-> 
-> [1]: https://opensource.rock-chips.com/images/9/97/Rockchip_RK3328TRM_V1.1-Part1-20170321.pdf
-> 
-> Kernel pinctrl debug message with dyndbg="file pinctrl-rockchip.c +p":
->   rockchip-pinctrl pinctrl: bank 0, iomux 0 has iom_offset 0x0 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 0, iomux 1 has iom_offset 0x4 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 0, iomux 2 has iom_offset 0x8 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 0, iomux 3 has iom_offset 0xc drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 1, iomux 0 has iom_offset 0x10 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 1, iomux 1 has iom_offset 0x14 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 1, iomux 2 has iom_offset 0x18 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 1, iomux 3 has iom_offset 0x1c drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 2, iomux 0 has iom_offset 0x20 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 2, iomux 1 has iom_offset 0x24 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 2, iomux 2 has iom_offset 0x2c drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 2, iomux 3 has iom_offset 0x34 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 3, iomux 0 has iom_offset 0x38 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 3, iomux 1 has iom_offset 0x40 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 3, iomux 2 has iom_offset 0x48 drv_offset 0x0
->   rockchip-pinctrl pinctrl: bank 3, iomux 3 has iom_offset 0x4c drv_offset 0x0
-> 
-> The "Closes" links to test report from original reporter with original
-> issue contained, which was not delivered to any mailing list thus not
-> available on the web.
-> 
-> Added CC stable as the problematic e8448a6c817c fixed by this patch was
-> recently merged to stable kernels.
-> 
-> Sorry for the inconvenience caused,
-> Huang-Huang
-> 
->  drivers/pinctrl/pinctrl-rockchip.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> 
-> base-commit: 4376e966ecb78c520b0faf239d118ecfab42a119
-> --
-> 2.45.2
-> 
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index 3f56991f5b89..f6da91941fbd 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -3813,7 +3813,7 @@ static struct rockchip_pin_bank rk3328_pin_banks[] = {
->  	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
->  	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
->  	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", 0,
-> -			     0,
-> +			     IOMUX_WIDTH_2BIT,
->  			     IOMUX_WIDTH_3BIT,
->  			     0),
->  	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3",
+[1/1] pinctrl: samsung: Use of_property_present()
+      https://git.kernel.org/pinctrl/samsung/c/aa85d45338692e8b29b0c023826c404c3e7113a6
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 
