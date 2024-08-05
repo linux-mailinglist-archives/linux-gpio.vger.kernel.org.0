@@ -1,101 +1,116 @@
-Return-Path: <linux-gpio+bounces-8573-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8574-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10034947619
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2024 09:34:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58BAF947650
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2024 09:49:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90066280FED
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2024 07:34:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 197EC280E6F
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2024 07:49:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 462CB149C69;
-	Mon,  5 Aug 2024 07:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8E48149C7D;
+	Mon,  5 Aug 2024 07:48:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KNj5FXnp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mLieDjX+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF4314373B
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Aug 2024 07:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB931487CD
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Aug 2024 07:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722843242; cv=none; b=jM0s2M43GSXsjNHyCUwfIG+7GvUvga3DtF1dHoiwyQ7t5obOD2pBbs+Nuv4kWk7kpDZY7LxTdjgenrlAc+fyxZfB5uSx48U1flvEC2KfaEnKSGAoBZwhIbe5HinlEmhSXeggYSmifKAA2oUtq2l/ZGy4wadQoxUwi3WnwgEw5wM=
+	t=1722844138; cv=none; b=ELuI5nEAxb+n1emNOw/zb2QL9Oqjn4CB+8QsT4ebfssdQBf8JsqGvN12Qroy6QN/WIPk0cGsFUJA7kJVq+rRvum1Mv8KB93il4hdX5ij+gL95AwpWxF9SBi8VBwSFmTf4qTi7TfRXAlpwbdhFG8m9aYLLytA1OhryFbveLG5bMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722843242; c=relaxed/simple;
-	bh=MWXSGtBUuIsu9gfT7t1iecOSYsEkGOOPqiqXne1odrw=;
+	s=arc-20240116; t=1722844138; c=relaxed/simple;
+	bh=m9jMRwN7D/g9ylb+qVmMEn3jD7LEDE289u1oCoCvFi8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cE7FXcjEqZ9dYjL+Shxdm955w3em2d5675ZDKForb1aN2JY/sPEd77kcvOguJYlFszWxNxQmTdvwLLwWw5Fpo9IOXHbu8NJwripIVICjg9St+t3HFEgH7/hIw7peGfcJE0hXBpXYBGMGIPFtKFdDB/kRVZdGzBoqoF4E6kUUj/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KNj5FXnp; arc=none smtp.client-ip=209.85.167.47
+	 To:Cc:Content-Type; b=a2Ti5x6ywu5lNmTiNh8VHeypRF5kEQIWnWWIrC4uquj/vO5YCpCadlBwX/QNGKdbMx9nKQk491QbOzvte7MaPQD4kfQsCAPLE0Pvjy9AeGMd4m17v4E0sRALfb99kWsDoTYDDGplsbkNLALrtVuqShG/pwtAaDXIMX8/SgylbJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mLieDjX+; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52fcc56c882so3028698e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2024 00:33:59 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52f025ab3a7so14060540e87.2
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2024 00:48:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722843238; x=1723448038; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1722844135; x=1723448935; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MWXSGtBUuIsu9gfT7t1iecOSYsEkGOOPqiqXne1odrw=;
-        b=KNj5FXnp0lxLbOy75LqM9XGxexoqH3Wvk9PLMIR5mB1SRzhNEP7UqPUZyq9rWpItyY
-         7FWWicJDBAmSiVd3SGbxeKPKiYyJqC7Rb5M35Yu4eJK/Ol//uxjDW9B0UMHhtyP11Rm+
-         sukNKPQaaBrAuTjqBrsKtQLs4BoNqkrbV+kLjG4gVwXa/IgKDnTgn5/y+hA3JSMSLsGR
-         zzrfqIeTqfW1/wWtun1dyD5kg40bptYZN5ddILo2ioxuT28PYzaJ7xbi00RSyurnltNM
-         JJ1+eIBf2G/sYu98lM5ul8U4hJd6pGuR8kFkSGFXT57/Y/o1wgelmeNarPCPQnNdlTfl
-         whWw==
+        bh=kKGwudayEl/s2GCBYHOT4CD2FeDk2bfVh99IyAaA7Kk=;
+        b=mLieDjX+ybcjyqDxAWUTrN6CMPi7egpoKP/n21k6SkBYqNWrg4A96qqqqkmYTwERQ7
+         tiaLtnNR/b67ulxpzEP6gWwfFhmge91vc9BQY2iC7nqIaL+ZpkGsX29k6PC13XHlpqIF
+         jnlU04P3zw2aUYgyCfPzrn1OoTk+xdj1AxzL0doToiuJR174MbB4EBH2UI4YMH99M2Is
+         TCjoPMk7h0TR3MNj0qyqAL4MjFcG33mQe5AAgKRw0hf4RCOyJjX99Qi6HfucJANzQCrJ
+         2MENfNueYAKUE0JH4Mn0Ann/P/ntgJ67I/hJV9vCM2uVxVTv3pd6I/NczL3Si9PF7oN1
+         94Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722843238; x=1723448038;
+        d=1e100.net; s=20230601; t=1722844135; x=1723448935;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MWXSGtBUuIsu9gfT7t1iecOSYsEkGOOPqiqXne1odrw=;
-        b=rfhvyjd0bMXufXBZvHdZAx+HPQawhyGEZAQ5nn2NKJLJxcakz5PZMK2vKPf3c1QYHt
-         eWpOpxKMu7BKxNJiaDT+wvZGsnl/V6tcXgYpNFTH8ocluHDj1mQPNc5X3HnxaBvGSZLy
-         J8sW2kr4cW+VSSgcyd8lixw+tguOE2v10hJMLAlldUZEp/LVyvujKl1HHrYs1x6M4MUI
-         QHdSCySO7vbWtQYHDFPqFQVOIOOZ9IJFvCPNJlM1EXJXEsN5djfWW8mGTVQ45YuH33WC
-         3NA6c1XFWJDsWh+hgIuLwsYnIOEeXUciVYtSMuBvFVy/qkHbhcMK3jVEAgvTSp7Q5wfm
-         03BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWuQ5l5WyhR+OCINa1OHGU7KaNhhWWvgwjnBHOhoO7nScfWJwhQN8/+1n89FRFtuxgh3NuZA4heF624q0yezp8DBZAgHctRWppC7A==
-X-Gm-Message-State: AOJu0YxyNjBeR/Vi2CX2URFPfPTPAEqtuaDsDoObrTWWuBcap2LTtXtI
-	2JIP82O7GVvbsFI0Z+LS9RCHEmRN2Hpn7Fy8DRcVxTy9TgogaeyX8B8QMaETft8doTCxpxscU82
-	yCjPjzJ946ILvvAEhYKuJei4zdFqgpCX1o+s8tg==
-X-Google-Smtp-Source: AGHT+IEdbpiAw4D3jz5wmtP8HUpVreiNVjQLGM1ndm3P5ErzjoCL6e/1KFGffHd3JxxaAbWeOXHrUGQNbY5Y3T1OgE0=
-X-Received: by 2002:a05:6512:3502:b0:52f:c281:72de with SMTP id
- 2adb3069b0e04-530bb2bcec4mr3199166e87.15.1722843237853; Mon, 05 Aug 2024
- 00:33:57 -0700 (PDT)
+        bh=kKGwudayEl/s2GCBYHOT4CD2FeDk2bfVh99IyAaA7Kk=;
+        b=WrMciH2tzgJ4vqRVGlnxRrVXSOco93trjbCJQF9jz/iBvLZWPxyID2tyKBKseRHYOY
+         8hP4fRoP4vskZmCqb1py7A6ouiAWuwRlzzlrAUOtkw72LUWJZfzTW7tBq9lSqaQ7u5NC
+         swZFZ1R/Ty3IqXj43DqYJW0jSQwkyc6F3p/DgkigD3IUxuX956QFHrAsxJ0p4wJF//In
+         wUMzEBkLjYpwmR0QplWKPMREK8kKQtfS/k2fK3ZQJX7gU3DG6b0QKlDvfCX5jeRFyTg/
+         qLGUUWWbRTN8j89b/ptJr/H6ZDo961DD/fFyyQR8G8K70dj6BR48WCZ2zetN4KFNxGlR
+         9ffQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYZV9r2B/nva8l0pM5xdiRTsJHXl/XSUgjPpTS0UurZQYF8WY9EnFCnJhJIX5R/Jut36kOVSPN55tE+OAK1TCgL8V59FuSuqvVqg==
+X-Gm-Message-State: AOJu0YyZSqlwjcUlHI5H4R+JOrY1OtBUQGYv08a5wul1SsP/pXNt+4C5
+	HcdAVRHDZIKFU9h5hxc0E3Y/e+Ha18SAzzN6gfLClQY+xYlAeiEJWtRAUqigEHuG1VHQuoeNacp
+	Dk1gXOOorcgAs8hkoMOc3PrQ4qv4jUt9C2apeSg==
+X-Google-Smtp-Source: AGHT+IEXIMB9nJG0TyIkPR9yKzdJtpYi5iceZ1E2YZ4ASFuMPTP6yq98iQjwWp8kP8YFpv+0ZSWlHsT8AQDqV2sKD8k=
+X-Received: by 2002:a05:6512:2804:b0:52e:fc01:ddfa with SMTP id
+ 2adb3069b0e04-530bb387c7cmr7077635e87.7.1722844135078; Mon, 05 Aug 2024
+ 00:48:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240716194008.3502068-1-tmaimon77@gmail.com> <20240716194008.3502068-2-tmaimon77@gmail.com>
-In-Reply-To: <20240716194008.3502068-2-tmaimon77@gmail.com>
+References: <20240716-adi-v1-0-79c0122986e7@nxp.com> <20240716-adi-v1-2-79c0122986e7@nxp.com>
+In-Reply-To: <20240716-adi-v1-2-79c0122986e7@nxp.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 5 Aug 2024 09:33:46 +0200
-Message-ID: <CACRpkdYKjbMNE_SUh+0rRY+m8XfYLN+VseixuspUgD+YMaNMCQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] dt-bindings: pinctrl: npcm8xx: remove non-existent
- groups and functions
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	avifishman70@gmail.com, tali.perry1@gmail.com, joel@jms.id.au, 
-	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
-	openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Date: Mon, 5 Aug 2024 09:48:44 +0200
+Message-ID: <CACRpkdaiG+Gr+asDHsztR3A=iNNCUsCFXfrW2ZUidWYLn9RcVA@mail.gmail.com>
+Subject: Re: [PATCH 2/6] mfd: adp5585: add ADI adp5585 core support
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, Haibo Chen <haibo.chen@nxp.com>, 
+	Jun Li <jun.li@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 16, 2024 at 9:40=E2=80=AFPM Tomer Maimon <tmaimon77@gmail.com> =
-wrote:
+Hi Frank,
 
-> Remove non-existent smb4den and lpcclk groups and functions from Nuvoton
-> NPCM8XX Pin controller binding documentation.
->
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+thanks for your patch!
 
-All 7 patches applied.
+On Tue, Jul 16, 2024 at 9:29=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
+
+> +struct adp5585_dev {
+> +       struct device *dev;
+> +       struct i2c_client *i2c_client;
+> +
+> +       int (*read_reg)(struct adp5585_dev *adp5585, u8 reg, u8 *val);
+> +       int (*write_reg)(struct adp5585_dev *adp5585, u8 reg, u8 val);
+> +};
+
+The read_reg() and write_reg() accessors looks like a reimplementation
+of regmap.
+
+Can you check if you can just let the subdrivers access a regmap
+for the parent MFD device and use that to read/write registers?
+
+There are many examples of this in recent MFD drivers.
 
 Yours,
 Linus Walleij
