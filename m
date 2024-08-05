@@ -1,96 +1,114 @@
-Return-Path: <linux-gpio+bounces-8566-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8567-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0CA59475BF
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2024 09:08:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 102AF9475CB
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2024 09:12:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8392B208C7
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2024 07:08:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF5812810F8
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Aug 2024 07:12:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FCF4146A67;
-	Mon,  5 Aug 2024 07:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDFCB1494D6;
+	Mon,  5 Aug 2024 07:12:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xndt+Mo2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F6PAh0qL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C99143C6C
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Aug 2024 07:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55A71487CD
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Aug 2024 07:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722841700; cv=none; b=fx8W02GKYG3BSXmAbF5AUTaJxvMqX/Ebnkn+H2m7dX8hCLQNXni0Nfj7bHEMstQR7oiCis7VuBBe1a1x3VrLLhR9mHAWufglKpxuqHCP6LiXjKcEZOqYhset2vN+scItnRwLZIpMZviDYTdVt2DA15qkcpAdx0y3LNrKxQWMFiY=
+	t=1722841940; cv=none; b=GG1+WNVw2JjpiR7Ip1SqYnG5HZEUP1BLAyGn0YzXdoprFjd2Cy044sFqMCEluDDJ9FESqO3097RVoOmPOsWJNW6/e/plFOfbzfeDcyyngAi3DFSMe86Yqrgv5ZuvQKS7yAJEgl0W8zrY7F6f8Zw57WVTL47qR7UclUm0VhoRkuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722841700; c=relaxed/simple;
-	bh=JigMBQHuoeximj8/IC6wBuOolRs3qpg2BF5ooo+VtA8=;
+	s=arc-20240116; t=1722841940; c=relaxed/simple;
+	bh=4ZP053oMmz+/X84NfsxYYXiElV8riFQvfYC2XCVBtq8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SokS/zs9yfJ+IQV2nlQ4fVFMay/9WgywQCnuSQT7FGCC/0GiSQo2U0jNx7r5PpEmyM0FiWB3kWxruRgvwKI6aYdpkY1DoNoYCSdNFd8QfFJr0SRLrP823rW+9FwqdpoJH7UQK7/VNpTiF1BgKthSDeuGVFXf39791pwp7GR1Ve0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xndt+Mo2; arc=none smtp.client-ip=209.85.167.49
+	 To:Cc:Content-Type; b=lEOHIw0HSbvQmsIPiw0RlAbs3CciOq+GkB39v0DyAyzNAs9Rogv0tc+f6Pu1TtymnQm0uu0UUh1sDlteUusbzBrwak1mpnqSDSqr6VJ5lQ3WY3H/cSRwyPcgtehtO2FZysqL2RR5tB/9rZzEmyArykVGaVydzT8hUzn2bj4Jwqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F6PAh0qL; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52fc4388a64so16068150e87.1
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2024 00:08:18 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2f025b94e07so127804601fa.0
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Aug 2024 00:12:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722841697; x=1723446497; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1722841936; x=1723446736; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JigMBQHuoeximj8/IC6wBuOolRs3qpg2BF5ooo+VtA8=;
-        b=Xndt+Mo2IO3wLXqu4b0H+srkNDToP1MnC91oVb3owQBehT+A7EVFzd0raqnrVsCXdS
-         NSkXlQmiuAUjnnC9vbDWsqoOPBajLIB+xSRVkMIP+C1QWpIpRhTRQ5DE28eSwt0uYGLN
-         WzTGqlAsxQikyptqBe1XW/szG7VZVPCPOE6V3s9b1m5NwHrl2We9MmDRpi41/JpnQ2wB
-         EBSrVZ+m6hhIzqPVcBWZMbGBieVjjeGz6y2IsJCc2uC9WdFnyNcu2cp/ReythONsVbfJ
-         mJ/KdtCj9Kmu2uTit9lx4rZ2IF0W3a0i+zD5FfSYJHuuWrnqWQZpQYSaeoxgAdZhDwmS
-         TwjQ==
+        bh=4ZP053oMmz+/X84NfsxYYXiElV8riFQvfYC2XCVBtq8=;
+        b=F6PAh0qLfKee+Y3rTW845I1uCLHQ8Rat440mQtdrBlKbu1YgPXbeks7bBSIDeDewf3
+         L5DTcEC8LVH3UI50m4+VgtxaVOm4ZwBWw2L0Dxy3nrc8yfypPVPXLMlCPOKQavBkFQ8F
+         lditnSaREqLIOnKCTUdqc4YnptJaxCObsRyLX5pxr3BVJGrJvdQQ2KphuO7/O2RFPgl0
+         FGtMUwWdJfw5cDcFLrMs7TXHs6P8844Logeo/VYGtJJsnIB8Ck7x7Nv7Gm0QV8W9+OTK
+         WCtmYh5LPu77CoRPDoNnN+v5mij3ZVBFtZrx0e1VVhGbe7kogpEp90R4uYyWiPRs19lr
+         W78w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722841697; x=1723446497;
+        d=1e100.net; s=20230601; t=1722841936; x=1723446736;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JigMBQHuoeximj8/IC6wBuOolRs3qpg2BF5ooo+VtA8=;
-        b=PgGP3bnxoj4VMdD+gHXZSFLecYNseEHpCqcGGEaipgHX7HtyPADXcR6Vfd4Cdw7T7I
-         JSBKQ2a34Fh+yThXK0Rl/6+j8CcTjEMOLKKSYc8tjIrMmnEVV6g/sX6+J8BsL5S+jhBP
-         PCRq28+7s72Q/38Bp5D6oEtuhqjlSaEMDOK2b4hyt2Xe9TDH2ltNpuE96FmaquAI5pDd
-         wWHcCyeugSqn6PT92voIz99qENGVBx+569zEv6bDpdXyGBVjh9hjVE0BTiQ91VXQqFsV
-         oEEErHbxpN7/8naQ2Ggg851DuIJ7wK1akWN2tQfZJkkRM6MYtV//RTnTd0X1uk9WK94x
-         fTew==
-X-Gm-Message-State: AOJu0Yw1gAiLS/jl2ARi9AJAxHOb2FVhzOBUvVTF/Vf9aShCACuyI99J
-	Mlzk16Bmgt7GAembXpKCNzc+WVRToTOWWpiMb6AU/8uYVzYZtUynRk8AugdD7i8tij6ypdvFu5/
-	+l9DJwUvdamE1wKAguaZ+26meVQ9xptdqbzuYNw==
-X-Google-Smtp-Source: AGHT+IGUNyfaJFjWk8BA92L0/xnKRR9vaRbFLTfDsoMxhm3Cd+zd19C1NT5F6HTMpjAQeVAaHckjwkijte4PFsXLu2k=
-X-Received: by 2002:a05:6512:a93:b0:52e:9cb1:d254 with SMTP id
- 2adb3069b0e04-530bb39dc80mr6822512e87.46.1722841696980; Mon, 05 Aug 2024
- 00:08:16 -0700 (PDT)
+        bh=4ZP053oMmz+/X84NfsxYYXiElV8riFQvfYC2XCVBtq8=;
+        b=PctqlQikqgoAAr+ugMCI81FkxxKRuCNvaWrTeLK4p3OJTIweXVCsni/ZBoLqsc2txF
+         rLTpnpng4c0quuzDWF10l/VIkpX7NBffbc4FfzzQmok66rXDOrYrGN7zT11IdDeOZhyp
+         6srVGOmcttlB4x+zxeSVf/wdXIqJprjDoZvivzy+xygsiW+7Sns/E34nsl+3aqLlOYCs
+         q7R5985z+NA/03vyeCX2g6nChc+a3NiFVDU02962Oi5hQsSM0ewuSSBowFkZgFdBhgPL
+         FvUdNw18MmKgEyV/8XRNmwIsFag6t4zFbTuoSyKRPAfn4bcUkv4WtD5aWwIjvBCv4jw+
+         MkNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcKfFwlaXjO/dBj4p7OIZeJdMqt9mw7Lh+ypkwi9xXF80dm1V5g9NWuhtVjvkX0dh+ogv5PCHlpV3/J6jkI1JUHfAW9mG4vMG9RA==
+X-Gm-Message-State: AOJu0YzBr2FhwREs8V21oUKw5op5qw495VD0a6olCGlwYlGmsiBwP8z5
+	gKuJP07L6Xt3f1tZht86zy8uJn/WyL24Nf/gvddm4cZr0yEkO1sY/pcp2VRoXSNp6sckGtMTDBl
+	7GT4E+iCyvEUuHNIz/alEQ61VPZxVCl8buqQtmg==
+X-Google-Smtp-Source: AGHT+IElD4u06pL2HqZSnzigcAhhzYjCaxNweUiYxJJqrtc3uoIYmMUVpFh1OipooKZyULCeycnfHLDZuNlVtaX4yQI=
+X-Received: by 2002:a2e:9b88:0:b0:2ef:2c2e:598a with SMTP id
+ 38308e7fff4ca-2f15aa96971mr72869621fa.11.1722841935651; Mon, 05 Aug 2024
+ 00:12:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240704-pinctrl-const-regmap_config-v1-0-9d5570f0b9f3@gmail.com>
-In-Reply-To: <20240704-pinctrl-const-regmap_config-v1-0-9d5570f0b9f3@gmail.com>
+References: <20240708102520.26473-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240708102520.26473-1-krzysztof.kozlowski@linaro.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 5 Aug 2024 09:08:06 +0200
-Message-ID: <CACRpkdZjTDzpXhe5v65yLiP3WwcOdP3uBwpm9C1SZ8BWUDhubA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pinctrl: Constify read-only struct regmap_config
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 5 Aug 2024 09:12:04 +0200
+Message-ID: <CACRpkdbaGtZgKFFjxGcerRi=sC_WU=-fnGt0D5u9pFTh85+kRQ@mail.gmail.com>
+Subject: Re: [PATCH PULL] pinctrl: samsung: Use scope based of_node_put() cleanups
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Peng Fan <peng.fan@nxp.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 4, 2024 at 8:36=E2=80=AFPM Javier Carrasco
-<javier.carrasco.cruz@gmail.com> wrote:
+On Mon, Jul 8, 2024 at 12:25=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-> This series adds the const modifier to the remaining regmap_config
-> structs in the pinctrl subsystem that are effectively used as const
-> (i.e., only read after their declaration), but kept ad writtable data.
+> From: Peng Fan <peng.fan@nxp.com>
 >
-> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+> Use scope based of_node_put() cleanup to simplify code.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Link: https://lore.kernel.org/r/20240504-pinctrl-cleanup-v2-20-26c5f2dc11=
+81@nxp.com
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>
+> Hi Linus,
+>
+> I got only this one in the queue, so sending directly.
+>
+> Best regards,
+> Krzysztof
 
-Patches applied.
+I missed this last merge window :(
+
+Can you queue it for the next v6.12 cycle, or do you want me
+to apply it still? Was thinking if there is more Exynos stuff coming
+for v6.12 it's good to have it in your tree.
 
 Yours,
 Linus Walleij
