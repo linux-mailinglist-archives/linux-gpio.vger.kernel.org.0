@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-8591-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8592-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01F49948745
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2024 04:07:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E081B948759
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2024 04:09:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24DB91C21E5C
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2024 02:07:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A9DE1C21F94
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Aug 2024 02:09:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CD81184D;
-	Tue,  6 Aug 2024 02:07:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6E4CAD5B;
+	Tue,  6 Aug 2024 02:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KX1YrVIh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lN7C8uGR"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C680CB647
-	for <linux-gpio@vger.kernel.org>; Tue,  6 Aug 2024 02:07:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49EC482E2
+	for <linux-gpio@vger.kernel.org>; Tue,  6 Aug 2024 02:08:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722910046; cv=none; b=mMYhg89Zui+8QdVR8lo20QkrngFB6K8xxrhVbQcOUZ8f5y4Qkf3ew0n7KhH6bP+wMEWvBJYY+YMTb1chemSttThW2N95geQoKxYhU9nMW3Xmdxy0s/epe2WtgsN6nEqm0AwGVhiYyupCoEcEbipQbGcvlIYTkuIBIk5Ipljo7w4=
+	t=1722910111; cv=none; b=DVPvIuOKQp1DwgyhX+IpNLP7sSBgijdQuT4znQQL6VT/JRpzVd3UrSsopFC4Arvlnf8w5GBkw8IvIq5EjMyMposEfKP0q4RvjCHYcJgX+8oFzjMxPc7/CwsAJIFM7CD3wLfgYrWVpEMFm6pg4oKlw+UTUH//ABoKQhxBwyDwpdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722910046; c=relaxed/simple;
-	bh=lHwgVsuv5IbO/kYzZicPFy88wVlltR9C5bHbCZACPnk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=deKp2hhlpfALEjPXyOh5CJHeEwL+fu6dLTDt1+dk3vd6slfbUlQzAzWnCp3C3qEqCZ1b2784E351HG1QjdFWov6fYUWEe+pNmEyEVcQj9ZL1Rkr8nDGkd9vKmaAXOt+s7QfxO03vAmhRLElWq8vErvJGXT6mXIO0o/RG6AHJmOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KX1YrVIh; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1722910111; c=relaxed/simple;
+	bh=OC7oKeAJqfQ2HASl1COoJ5Qr6Sy3vQFwfhVUEm3/jog=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=krxspjzEZ3MlA1gbVTz8z10ZWs22oGAe7BQUgYAYZ51glUPh0159+/tFLxQAF+IM3LpqviXxn0GOZKMAY2OndzSqW3hDa8tYUiHEFx0r5s7pKJU1frK+Bv5dLNEB7NuIf2IZ0q/tTJkhY/VvQsvBhMSapwJvwDi5C1y9fkes3zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lN7C8uGR; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722910045; x=1754446045;
+  t=1722910110; x=1754446110;
   h=date:from:to:cc:subject:message-id;
-  bh=lHwgVsuv5IbO/kYzZicPFy88wVlltR9C5bHbCZACPnk=;
-  b=KX1YrVIhEquJ1EYt0ETSLdRNoHOxFx1fOAhWZKDtiM//9r49GZsLZEbK
-   2MZxXiEBymkihS7yQZjOuO9mCWjfqprIaZ+PB3fXQviJJj/Y7oIl4B4kE
-   opi0lMEg09vIi4W9RYQBlaGDesTFaMk6krP5PAOstJqWC6ZDST9iSjoWO
-   njXsyFhfVPBNdWRtxX9JYcBMhGlc93cXitGQ3jd1MUr7CB2Lvixi3DzYX
-   dapxY391PYl0n2+c42LNsjtI3fzzFdVSN/rT43y/CyPAs16cejLa3+70k
-   Tmw/4vY4WLmpFtPhVngMoZE73dSvaksjIubQAGtmxkWrRk1J8kcGgYGYY
-   Q==;
-X-CSE-ConnectionGUID: GL5/hL9DTla6LZ6ZfCfznw==
-X-CSE-MsgGUID: LFxDGA6wQmy+0GdozIsyrw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="12878550"
+  bh=OC7oKeAJqfQ2HASl1COoJ5Qr6Sy3vQFwfhVUEm3/jog=;
+  b=lN7C8uGRoqQODy2j1X1EUUHQrQV7la6+3/mkrmFnNJ9nGHV6/zD2+vLp
+   lqIet/T+DTVkIFVSYwa6s5dsU168y5Ki4yHAyC4NMKBOtZRE2+N3Kj+TF
+   X63DxUGnl9oT3r0p6omFZjFE8v21XCJqb64aRG2lh98uInTbHs4wFp9CC
+   nC7xBHnpKYZDuoohs9kNCG+KiUcK+/BuQrGT82i5+k+RmAMIA4UMqp5uN
+   ypvyHt1/zmf6GBh30F9c1tqPqdg2BncHjmHmEbvvsVxAInrQUrh5nSwgI
+   ESlQAbOAnNfKk2ctbwdZY05bUaDLLaSskdr+XZe5Xu4stariIyLRG35e2
+   w==;
+X-CSE-ConnectionGUID: FipuD2NXRNe4rFpaflBF8A==
+X-CSE-MsgGUID: dbN7Z7a2QiO59ohXEnP3/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="12878571"
 X-IronPort-AV: E=Sophos;i="6.09,266,1716274800"; 
-   d="scan'208";a="12878550"
+   d="scan'208";a="12878571"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 19:07:24 -0700
-X-CSE-ConnectionGUID: QiQvxjJ6R8C4QkVQe08Jyw==
-X-CSE-MsgGUID: cDpNAcM6ROi9F3UpGxZR0Q==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2024 19:08:29 -0700
+X-CSE-ConnectionGUID: 4qR4Fi+lT3udB9PSrVIqTg==
+X-CSE-MsgGUID: PEvWM7UhToaAT/m7WWua5Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,266,1716274800"; 
-   d="scan'208";a="56563332"
+   d="scan'208";a="56563595"
 Received: from unknown (HELO b6bf6c95bbab) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 05 Aug 2024 19:07:22 -0700
+  by orviesa006.jf.intel.com with ESMTP; 05 Aug 2024 19:08:27 -0700
 Received: from kbuild by b6bf6c95bbab with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1sb9bc-00043g-09;
-	Tue, 06 Aug 2024 02:07:20 +0000
-Date: Tue, 06 Aug 2024 10:06:44 +0800
+	id 1sb9cf-00043o-2Q;
+	Tue, 06 Aug 2024 02:08:25 +0000
+Date: Tue, 06 Aug 2024 10:07:22 +0800
 From: kernel test robot <lkp@intel.com>
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 6fb214cdf7df78eb1be1e85d4b40b60307903ef3
-Message-ID: <202408061041.cRqBDvuU-lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 0274d8098291d87f61f1f8e5b22214abb5324669
+Message-ID: <202408061020.jnhIsu88-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -74,13 +74,13 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 6fb214cdf7df78eb1be1e85d4b40b60307903ef3  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 0274d8098291d87f61f1f8e5b22214abb5324669  pinctrl: s32cc: add update and overwrite options when setting pinconf
 
-elapsed time: 1025m
+elapsed time: 1027m
 
-configs tested: 248
-configs skipped: 6
+configs tested: 246
+configs skipped: 5
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -266,10 +266,8 @@ sparc64                             defconfig   gcc-14.1.0
 sparc64               randconfig-001-20240805   gcc-13.2.0
 sparc64               randconfig-002-20240805   gcc-13.2.0
 um                               alldefconfig   gcc-13.2.0
-um                               allmodconfig   clang-20
 um                               allmodconfig   gcc-13.3.0
 um                                allnoconfig   gcc-14.1.0
-um                               allyesconfig   gcc-12
 um                               allyesconfig   gcc-13.3.0
 um                                  defconfig   gcc-14.1.0
 um                             i386_defconfig   gcc-14.1.0
