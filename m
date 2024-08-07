@@ -1,74 +1,74 @@
-Return-Path: <linux-gpio+bounces-8642-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8640-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B861294A3DB
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 11:13:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF38C94A3E2
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 11:14:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6664F284873
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 09:13:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4995BB28B5B
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 09:13:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D92531D1757;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88B1C1D1753;
 	Wed,  7 Aug 2024 09:11:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="z9bx9979"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Qk9zqQ7s"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2754B1D174E
-	for <linux-gpio@vger.kernel.org>; Wed,  7 Aug 2024 09:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248B51CB316
+	for <linux-gpio@vger.kernel.org>; Wed,  7 Aug 2024 09:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723021894; cv=none; b=oN2BpQGr6U8vYQXXX1NoV83J88jeyjED4FWPaqAxcHWbvQU7oSzfIYDeW3j12mLnclLXReeiVQhZiNaujXjRthknAYUdz36ZObVkTES/j6J9wVViRRdgY+XvG+FAdnRVEX7VkOv4QlzEjw6fiLOTUuF0WL9kr4qHRm/IP28KG4I=
+	t=1723021894; cv=none; b=OFYrv+MQ3RzEZddD+RpV7W2RU93/PnOtFSI1d8NtVwaCju0a4cYW4CcfXZiXRvANfif1ppggfCNYmd2qErAkSFKY2K02ddbsGX00wbiRFJ38epo+y6nICr90BTevQCTOyedU3MxQjde1NV7AEa90RrY2FILgtDysaoI5rI9Dhe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1723021894; c=relaxed/simple;
-	bh=crhTucHEcX3UAcx4tJoyf6jwbSTmnXqUGD1VW2jGEIc=;
+	bh=GtTDSXWrWOOijGghZNVpnF2RXnMMWQ4y2G/2+IAlOso=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dYsLNoth3ZNSC5zu+sRzqk1UWXSLjCkiPF15yGn/XQBRbVzPW8GnfRygHTXNiox1xhBvCPwiAwIO2ZXqmeMf85QGhYgpvVUBw6sYL2aqzB/zh9GLivuGpIWOnvS37eQsrq1iU0bXGg7FgSOJww6fQlwkAu9+b8xdwX6s4MUmbzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=z9bx9979; arc=none smtp.client-ip=209.85.208.171
+	 In-Reply-To:To:Cc; b=P5sFAyY96EvniTwMcV4P3eHYdYWSr/NVxbyS7fGViYKJS33j9qKBlgCU+9Fx3w2wQzYdiIglUhydrm1bl8jAVOOHIOMNUPyFqQ48eXgWRigJ1JvajRtlPqtq+v7MqDXTDwkmnYOLG0vOaLJVajownW2rNA3iH9yLMNcdXaCUyMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Qk9zqQ7s; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ef2cce8be8so16468991fa.1
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Aug 2024 02:11:29 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2eeb1ba0481so21489601fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Aug 2024 02:11:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1723021888; x=1723626688; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1723021889; x=1723626689; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=wsc8TI9WHkCfdLfmy3xgn5VW6t8W+L1gvDWNX8MvR20=;
-        b=z9bx9979fuqktA79pgQ/pjycx+OIyJQAXehynl3RqjLOYv0FfCYFllEoFk/OaeNvGh
-         0XL/diHi2aGeAQqSRBdPIOzJOxHkoQ6NU9MKP+wke8OxAx8/JiNm5/1Vmbnr6mzqCjPo
-         fdo9ScvrpKiN7YI4kHVRS5r/N2VKPl9wuKAfEjTKLEcPrDznur9CHh6qg8FAYAdqWXwh
-         c6cq7rzLU0X3bDQFA4oCfkhpxBiSl176rVg3E1EkD/qc6FmQdJlerIXex/kypMz9IVi9
-         EFbA003U65wAFXhbVluqOA/NxVLxtRosmL48x9z4UuF3Y5dMTOXNQMmeKAw5hicdbg0D
-         TfuA==
+        bh=vTkWYM8BAxC3/3iN2d2WfV/QYJF/QHmNKLbAtCuuuGo=;
+        b=Qk9zqQ7s3fu6LXv98GKxTBQkQarbRiXW+8WUFGc/M9EXLnloy21vyR5EE4IbXHV2l5
+         UGRk4ALj6/QkO/B3bd4gyK/M5ewJ+XoFZ+1J3e9yXqZIVmI7kL97+k2lVM8upU1Ij4mz
+         Lb0yj85RTfqbcvVVxLUDaho3qV8XqKCQQBGyAkSgvCQMV512304p6uFooQBOp4gYjCR6
+         vePf5GtongGsgod5uehLCKRhnmU7UgBoWiLqTevZvPAtQLsQYXyNHPN7gY8g7H/l+KOS
+         H+cs7i2MxOuN1VThzGoaxHnaG0Gww+FL8LTf9ESDvT2qF0A0kyg6DkNeiWLmbAz+TSVd
+         4byw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723021888; x=1723626688;
+        d=1e100.net; s=20230601; t=1723021889; x=1723626689;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wsc8TI9WHkCfdLfmy3xgn5VW6t8W+L1gvDWNX8MvR20=;
-        b=U7PL5J6cGLudPWWcfnE1aaSK8E9JfCIZG2FVbbbg+mq5w7P1WZ4gOULQDojzVabubZ
-         PesbkIgPjz4LzPsZKBRjXtiqwts20LddXTLQoCDaTNEAjZZf1BZF6qQplVQmQ1EjzLMF
-         +yMfPbrWgRkXNYaxg+NGntB0HR772A4MrOowchjrBfMflbmymdl8NXh1TK0LyqfQagAj
-         XS3H1iAwhEpaHZG+XYX8IhSsmrf4sx1FgkrQfsJIYDmdFA1JSvTqOhQ06mDZDdUGIQj+
-         TfIGae+qgqvrDe4G6kHAuiRV7ofkRv3H00q2qdVEhU8IdbIDkdBOvRZ/PXe3o3GUw8p+
-         zWIw==
-X-Gm-Message-State: AOJu0YztlM5mLpU6X2nGSBI9nq9YCgl56IaMBZgl+14NZm2wM40DAD/E
-	afedB21FKhtKcIu58tUXEWMP2fcaJwUYq1vsEIm0pT9ZarQRCVaIX4fXN9DMaMo=
-X-Google-Smtp-Source: AGHT+IG6hP8mMszIn1QrSHBYAJzYCXBOXjeab/HX57TowffG7I9OveFOWJOc2zK1DTfrnWjpAvRzAQ==
-X-Received: by 2002:a2e:3815:0:b0:2f0:1b87:9090 with SMTP id 38308e7fff4ca-2f15aac1b77mr130118021fa.29.1723021887787;
-        Wed, 07 Aug 2024 02:11:27 -0700 (PDT)
+        bh=vTkWYM8BAxC3/3iN2d2WfV/QYJF/QHmNKLbAtCuuuGo=;
+        b=h8A3KMxwB4/ITBfsQs+lS1Gf6spBhAwfK5c3eEdmkqnnOrWJtfgniIL1K66NurkinA
+         6EkTHeRwXkSDFl3k8NC9mvTAXKHaL7y7RtOabZCFt9j0Z7LkdCJxRX07YEmTW+YzqJb1
+         NycOiHitCIGsyjaJOg5Khr2vs8hElhjoOa8vlOZ1b2flbLzElx8yaI/Z7/bIHrvyvM2f
+         CIrhYgqqPuGIlnYc9Az7NXSqewaMBJoS+GsqSLu4lE+p5My4kl6dfp2bGNUe5Ykrev9v
+         DeVhMUf5Yk+vKZmdEApJ2OsiBXcp5abBPLGlGVFAcPV5OMXOGjBsnypg5Z7iXu7APBOk
+         yHeg==
+X-Gm-Message-State: AOJu0Yy6wp/BI44UcmQNSEGYd3fzOW9XKO3JP566BnMvBmYXdra7Jjg9
+	+RRbEZNG4z5z5qYq4nXdTa+dlAwRsoQ5bzfcl3VeiUmVb3g4A/IztN3/rzxFMBo=
+X-Google-Smtp-Source: AGHT+IE61uc+JKF9xE/V41XfHW520FS16MqajzkVzGYrenQb8df6ShUQx1Xv8BtbKsDlurpUcRILgA==
+X-Received: by 2002:a2e:97ca:0:b0:2ef:2f17:9edd with SMTP id 38308e7fff4ca-2f15ab38098mr108561721fa.44.1723021888810;
+        Wed, 07 Aug 2024 02:11:28 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:a3e7:be71:fe4f:c360])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429059cd2b3sm18936355e9.44.2024.08.07.02.11.25
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429059cd2b3sm18936355e9.44.2024.08.07.02.11.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Aug 2024 02:11:26 -0700 (PDT)
+        Wed, 07 Aug 2024 02:11:28 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 07 Aug 2024 11:10:46 +0200
-Subject: [PATCH libgpiod v4 15/18] dbus: add a command-line client
+Date: Wed, 07 Aug 2024 11:10:47 +0200
+Subject: [PATCH libgpiod v4 16/18] dbus: client: add tests
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240807-dbus-v4-15-64ea80169e51@linaro.org>
+Message-Id: <20240807-dbus-v4-16-64ea80169e51@linaro.org>
 References: <20240807-dbus-v4-0-64ea80169e51@linaro.org>
 In-Reply-To: <20240807-dbus-v4-0-64ea80169e51@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -92,2985 +92,1483 @@ Cc: linux-gpio@vger.kernel.org,
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
  Alexander Sverdlin <alexander.sverdlin@siemens.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=86139;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=42100;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=I8z1qTxYPUPI2SChx/rUsN9Cpz9rR9vvTOPamkTIAZk=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmszoTiynN7Lf5GeD8MtVv2B/tk+Bx++5L2lesO
- Anmp1C1nmqJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZrM6EwAKCRARpy6gFHHX
- cgrVD/9DqTedq+QVEbrlL3ZsCXsDFkc+bBF1MsGs0uhpltNmO94rtLplNLtE3pCfp37GCzNK8MP
- VQiqWmd/liOFe6kzy2KkQrIeZYaIRMhP7Gn1e4GhfHf6ic24NgHropv8b/VGK+vfK5VOVs4a/U5
- E1/G5IA4/SY9M5NDQiSw/vq3w5DJzDwPDZdknLO/lHCHGAYg8faWg387fVbn+sNqEHA2IbBO2bd
- VpwasvXneR8Ox2qTOBV33SiFybSogGs4ccvHJXu21RKcsEBbehwoDBkF7OWexjxpwfPCr+q9eDI
- u4hZUsudG7BiBlJWUXrjnAbRuVKdS94O0ig/4WZ9hvobqt6w2huqxeSocefopKj30KEcvgDyjBO
- ASHaW1xmXkInSV0ZHeBXrrBE1Uy6g0MHTaUsRqumUG+6ZaJMEz57ujk16MdzhmnIOiSWaUnFe4p
- J0UNA9DrhN1qSk9ZeTE0PqhZuMSvkBgvK8yOIuFEScX1d+azJlLpDqmrGnvcHdw+xRklcrzP2dy
- 6x1P6QQZNRwJM2DAzfXSiBKDx1LDR2qXMcv4pnOa9wzgOzkRvjX7x5Mz5Wtu/lwahoFuOu3kpLG
- 75LTP5QkdZRClBc2H1Fii+YNGVi40LL6xRxbqpZcx5BYZbTkW8tcl7APe2pDpbQx25NaT/8ihOG
- uNaY9xYwgtEn+Gw==
+ bh=U7ehCGXgDpjdC50RULsscGBEvOAcJ+f+3c6UuBpGlmk=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmszoTuQl7uw1NWy5B0QjvjPUGVBPdcgo8O8I+V
+ Fqdc14/ZJ2JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZrM6EwAKCRARpy6gFHHX
+ cr4HEACrFryjF/PtPKPEsp6dgVUmlKgxiASQ3SZUdZSSIO+Z0vk/DfTwp0uYRj6OEZpspmZTZ5M
+ IldRiDbeNhjaiBd6Wm0g7H3cDbwhox17WaF8Ipvp0MdOQBhZ1YJ0RmhD+JGpCFeQ+cK4lTMU6c3
+ 6+rLuQpVwUSxRvzruw+hFPV6VkSkU1+6gFBZXiP2PDT7dQuLx9VOlDL+wFdKdwwUp8hB1dtSwP2
+ LpFPwaaQqSfpAPYPl/JaIo7miKM/tYgIwgjSPTj5kI2q0jDWo677VUXzgVtg+bG9flT1Lbj7bt4
+ Ck13KADeqcrKZhtj47MqEkeVbdFHdnH7nrk8rjSRqE0+CJ/BL+L1NI3mzckJJ5da2EtyPI/A/gG
+ pZbk9HJrRJZoJBsRLly6YKW/BQqe6oFhE9vETtZawzx0RjI9mHQIBAucT+fsCBSh1AJnB9Uomnt
+ 9bYIOMuU0O1eDF0v8FZbnV3oQmpAJIZqGYDASanq152yz7KKoHee6zTbzCeklczieucwTFHC29Z
+ 67pekErkv07WmMdG5HUA9ZQXo80Ewb9oAhaS3pOVPgjumtNLEJkNoHgkKb78ymbntNRscklkwca
+ uocmgglqhwJrlmP+U9wvxgQ5GUCVjae0mIYX7QH+FZBk3MrxDcnJT5NUD0TSSNE1TBYWB67wDcl
+ quMVh1Vvu212V6g==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add code for gpiocli - the command-line client for controlling GPIOs
-using the gpio-manager daemon.
+Add a set of bash tests of the command-line DBus client.
 
 Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- dbus/client/common.c      | 646 ++++++++++++++++++++++++++++++++++++++++++++++
- dbus/client/common.h      | 203 +++++++++++++++
- dbus/client/detect.c      |  53 ++++
- dbus/client/find.c        |  66 +++++
- dbus/client/get.c         | 212 +++++++++++++++
- dbus/client/gpiocli.c     | 174 +++++++++++++
- dbus/client/info.c        | 184 +++++++++++++
- dbus/client/monitor.c     | 191 ++++++++++++++
- dbus/client/notify.c      | 295 +++++++++++++++++++++
- dbus/client/reconfigure.c |  76 ++++++
- dbus/client/release.c     |  64 +++++
- dbus/client/request.c     | 250 ++++++++++++++++++
- dbus/client/requests.c    |  71 +++++
- dbus/client/set.c         | 173 +++++++++++++
- dbus/client/wait.c        | 188 ++++++++++++++
- 15 files changed, 2846 insertions(+)
+ dbus/client/gpiocli-test.bash | 1443 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 1443 insertions(+)
 
-diff --git a/dbus/client/common.c b/dbus/client/common.c
-new file mode 100644
-index 0000000..912c1ad
+diff --git a/dbus/client/gpiocli-test.bash b/dbus/client/gpiocli-test.bash
+new file mode 100755
+index 0000000..f210183
 --- /dev/null
-+++ b/dbus/client/common.c
-@@ -0,0 +1,646 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <glib/gprintf.h>
-+#include <stdarg.h>
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <string.h>
-+
-+#include "common.h"
-+
-+static void print_err_msg(GError *err, const gchar *fmt, va_list va)
-+{
-+	g_printerr("%s: ", g_get_prgname());
-+	g_vfprintf(stderr, fmt, va);
-+	if (err)
-+		g_printerr(": %s", err->message);
-+	g_printerr("\n");
++++ b/dbus/client/gpiocli-test.bash
+@@ -0,0 +1,1443 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# SPDX-FileCopyrightText: 2023-2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
++
++#
++# Test cases for gpiocli utility. This test-suite assumes that gpio-manager
++# is already running.
++#
++
++SOURCE_DIR="$(dirname "${BASH_SOURCE[0]}")"
++
++wait_for_sim() {
++	COUNTER=100
++
++	while true
++	do
++		gdbus call --system --dest io.gpiod1 \
++			--object-path /io/gpiod1/chips/"$1" \
++			--method org.freedesktop.DBus.Peer.Ping > /dev/null 2>&1 && break
++		sleep 0.01
++		COUNTER=$($COUNTER - 1)
++		if [ "$COUNTER" -eq 0 ]
++		then
++			fail "error waiting for the GPIO sim chip to be exported on the bus"
++			return 1
++		fi
++	done
++}
++
++# Create a simulated GPIO chip and wait until it's exported by the gpio-manager.
++gpiosim_chip_dbus() {
++	gpiosim_chip "$@"
++	wait_for_sim "${GPIOSIM_CHIP_NAME[$1]}"
++}
++
++gpiodbus_release_request() {
++	run_prog gpiocli release "$1"
++	status_is 0
++}
++
++gpiodbus_check_request() {
++	run_prog gpiocli requests
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$1"
++}
++
++#
++# gpiocli wait test cases
++#
++
++test_wait_for_manager() {
++	run_prog gpiocli wait
++	status_is 0
++	num_lines_is 0
++}
++
++test_wait_for_chip() {
++	dut_run gpiocli wait --chip=foobar
++	sleep 0.01
++
++	gpiosim_chip_dbus sim0 label=foobar
++	dut_flush
++	dut_read
++
++	status_is 0
++	num_lines_is 0
++}
++
++test_wait_timeout() {
++	run_prog gpiocli wait --chip=foobar --timeout=100ms
++	status_is 1
++	num_lines_is 1
++	output_regex_match ".*: wait timed out!"
++}
++
++#
++# gpiocli detect test cases
++#
++
++test_detect_all_chips() {
++	gpiosim_chip_dbus sim0 num_lines=4
++	gpiosim_chip_dbus sim1 num_lines=8
++	gpiosim_chip_dbus sim2 num_lines=16
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++	local sim1=${GPIOSIM_CHIP_NAME[sim1]}
++	local sim2=${GPIOSIM_CHIP_NAME[sim2]}
++	local sim0dev=${GPIOSIM_DEV_NAME[sim0]}
++	local sim1dev=${GPIOSIM_DEV_NAME[sim1]}
++	local sim2dev=${GPIOSIM_DEV_NAME[sim2]}
++
++	run_prog gpiocli detect
++
++	status_is 0
++	output_regex_match "$sim0 \[${sim0dev}[-:]node0\] \(4 lines\)"
++	output_regex_match "$sim1 \[${sim1dev}[-:]node0\] \(8 lines\)"
++	output_regex_match "$sim2 \[${sim2dev}[-:]node0\] \(16 lines\)"
++
++	# ignoring symlinks
++	local initial_output=$output
++	gpiosim_chip_symlink sim1 /dev
++
++	run_prog gpiocli detect
++
++	status_is 0
++	output_is "$initial_output"
++}
++
++test_detect_one_chip() {
++	gpiosim_chip_dbus sim0 num_lines=4
++	gpiosim_chip_dbus sim1 num_lines=8
++	gpiosim_chip_dbus sim2 num_lines=16
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++	local sim2=${GPIOSIM_CHIP_NAME[sim2]}
++	local sim0dev=${GPIOSIM_DEV_NAME[sim0]}
++	local sim2dev=${GPIOSIM_DEV_NAME[sim2]}
++
++	# by name
++	run_prog gpiocli detect "$sim0"
++
++	status_is 0
++	output_regex_match "$sim0 \[${sim0dev}[-:]node0\] \(4 lines\)"
++	num_lines_is 1
++
++	# by number
++	run_prog gpiocli detect "$(gpiosim_chip_number sim2)"
++
++	status_is 0
++	output_regex_match "$sim2 \[${sim2dev}[-:]node0\] \(16 lines\)"
++	num_lines_is 1
++}
++
++test_detect_multiple_chips() {
++	gpiosim_chip_dbus sim0 num_lines=4
++	gpiosim_chip_dbus sim1 num_lines=8
++	gpiosim_chip_dbus sim2 num_lines=16
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++	local sim1=${GPIOSIM_CHIP_NAME[sim1]}
++	local sim2=${GPIOSIM_CHIP_NAME[sim2]}
++	local sim0dev=${GPIOSIM_DEV_NAME[sim0]}
++	local sim1dev=${GPIOSIM_DEV_NAME[sim1]}
++	local sim2dev=${GPIOSIM_DEV_NAME[sim2]}
++
++	run_prog gpiocli detect "$sim0" "$sim1" "$sim2"
++
++	status_is 0
++	output_regex_match "$sim0 \[${sim0dev}[-:]node0\] \(4 lines\)"
++	output_regex_match "$sim1 \[${sim1dev}[-:]node0\] \(8 lines\)"
++	output_regex_match "$sim2 \[${sim2dev}[-:]node0\] \(16 lines\)"
++	num_lines_is 3
++}
++
++test_detect_with_nonexistent_chip() {
++	run_prog gpiocli detect nonexistent_chip
++
++	status_is 1
++	output_regex_match ".*: No such chip: 'nonexistent_chip'"
++}
++
++#
++# gpiocli info test cases
++#
++
++test_info_all_chips() {
++	gpiosim_chip_dbus sim0 num_lines=4
++	gpiosim_chip_dbus sim1 num_lines=8
++
++	run_prog gpiocli info
++
++	status_is 0
++	output_contains_line "${GPIOSIM_CHIP_NAME[sim0]} - 4 lines:"
++	output_contains_line "${GPIOSIM_CHIP_NAME[sim1]} - 8 lines:"
++	output_regex_match "\\s+line\\s+0:\\s+unnamed\\s+\[input\]"
++	output_regex_match "\\s+line\\s+7:\\s+unnamed\\s+\[input\]"
++}
++
++test_info_one_chip() {
++	gpiosim_chip_dbus sim0 num_lines=4
++	gpiosim_chip_dbus sim1 num_lines=8
++	gpiosim_chip_dbus sim2 num_lines=12
++
++	local sim1=${GPIOSIM_CHIP_NAME[sim1]}
++
++	# by name
++	run_prog gpiocli info -c "$sim1"
++
++	status_is 0
++	output_contains_line "$sim1 - 8 lines:"
++	output_regex_match "\\s+line\\s+2:\\s+unnamed\\s+\[input\]"
++	num_lines_is 9
++
++	# by number
++	run_prog gpiocli info -c "$(gpiosim_chip_number sim1)"
++
++	status_is 0
++	output_contains_line "$sim1 - 8 lines:"
++	output_regex_match "\\s+line\\s+2:\\s+unnamed\\s+\[input\]"
++	num_lines_is 9
++}
++
++test_info_one_line_by_name() {
++	gpiosim_chip_dbus sim0 num_lines=8 line_name=3:foo line_name=5:bar
++	gpiosim_chip_dbus sim1 num_lines=8 line_name=2:baz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli info bar
++
++	status_is 0
++	output_regex_match "$sim0\\s+5:\\s+\"bar\"\\s+\[input\]"
++	num_lines_is 1
++}
++
++test_info_one_line_by_chip_and_offset() {
++	gpiosim_chip_dbus sim0 num_lines=8
++	gpiosim_chip_dbus sim1 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli info -c "$sim0" 3
++
++	status_is 0
++	output_regex_match "$sim0\\s+3:\\s+unnamed\\s+\[input\]"
++	num_lines_is 1
++}
++
++test_info_two_lines_by_chip_offset_and_name() {
++	gpiosim_chip_dbus sim0 num_lines=8 line_name=3:foo line_name=5:bar
++	gpiosim_chip_dbus sim1 num_lines=8 line_name=2:baz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli info -c "$sim0" 3 bar
++
++	status_is 0
++	output_regex_match "$sim0\\s+3:\\s+\"foo\"\\s+\[input\]"
++	output_regex_match "$sim0\\s+5:\\s+\"bar\"\\s+\[input\]"
++	num_lines_is 2
++}
++
++test_info_two_lines() {
++	gpiosim_chip_dbus sim0 num_lines=8 line_name=3:foo line_name=5:bar
++	gpiosim_chip_dbus sim1 num_lines=8 line_name=2:baz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++	local sim1=${GPIOSIM_CHIP_NAME[sim1]}
++
++	run_prog gpiocli info bar baz
++
++	status_is 0
++	output_regex_match "$sim0\\s+5:\\s+\"bar\"\\s+\[input\]"
++	output_regex_match "$sim1\\s+2:\\s+\"baz\"\\s+\[input\]"
++	num_lines_is 2
++}
++
++test_info_repeating_lines() {
++	gpiosim_chip_dbus sim0 num_lines=8 line_name=3:foo line_name=5:bar
++	gpiosim_chip_dbus sim1 num_lines=8 line_name=2:baz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++	local sim1=${GPIOSIM_CHIP_NAME[sim1]}
++
++	run_prog gpiocli info baz bar baz
++
++	status_is 0
++	output_regex_match "$sim1\\s+2:\\s+\"baz\"\\s+\[input\]"
++	output_regex_match "$sim0\\s+5:\\s+\"bar\"\\s+\[input\]"
++	output_regex_match "$sim1\\s+2:\\s+\"baz\"\\s+\[input\]"
++	num_lines_is 3
++}
++
++#
++# gpiocli find test cases
++#
++
++test_map_existing_line() {
++	gpiosim_chip_dbus sim0 num_lines=4 line_name=3:baz
++	gpiosim_chip_dbus sim1 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli find bar
++
++	status_is 0
++	num_lines_is 1
++	output_is "${GPIOSIM_CHIP_NAME[sim1]} 5"
++}
++
++test_map_nonexistent_line() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli find foobar
++
++	status_is 1
++	num_lines_is 1
++	output_regex_match ".*: line 'foobar' not found"
++}
++
++#
++# gpiocli request test cases
++#
++
++test_request_invalid_arguments() {
++	gpiosim_chip_dbus sim0 num_lines=8 line_name=3:foo
++
++	run_prog gpiocli request --input --output foo
++	status_is 1
++	output_regex_match ".*: --input and --output are mutually exclusive"
++
++	run_prog gpiocli request --output --both-edges foo
++	status_is 1
++	output_regex_match ".*: monitoring edges is only possible in input mode"
++
++	run_prog gpiocli request --output --open-source --open-drain foo
++	status_is 1
++	output_regex_match ".*: --push-pull, --open-drain and --open-source are mutually exclusive"
++
++	run_prog gpiocli request --input --open-source foo
++	status_is 1
++	output_regex_match ".*: --push-pull, --open-drain and --open-source are only available in output mode"
++
++	run_prog gpiocli request --input --bias-disabled --pull-down foo
++	status_is 1
++	output_regex_match ".*: --pull-up, --pull-down and --bias-disabled are mutually exclusive"
++
++	run_prog gpiocli request --input --debounce-period=3000 foo
++	status_is 1
++	output_regex_match ".*: --debounce-period can only be used with edge-detection enabled"
++
++	run_prog gpiocli request --input --clock-monotonic foo
++	status_is 1
++	output_regex_match ".*: --clock-monotonic, --clock-realtime and --clock-hte can only be used with edge detection enabled"
++
++	run_prog gpiocli request --input --clock-monotonic --clock-realtime foo
++	status_is 1
++	output_regex_match ".*: --clock-monotonic, --clock-realtime and --clock-hte are mutually exclusive"
++}
++
++test_request_one_line_by_name() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli request --input bar
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	gpiodbus_check_request "$request\\s+\(${GPIOSIM_CHIP_NAME[sim0]}\)\\s+Offsets:\\s+\[5\]"
++	gpiodbus_release_request "$request"
++}
++
++test_request_one_line_by_chip_and_offset() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --chip="$sim0" 4
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	gpiodbus_check_request "$request\\s+\(${GPIOSIM_CHIP_NAME[sim0]}\)\\s+Offsets:\\s+\[4\]"
++	gpiodbus_release_request "$request"
++}
++
++test_request_from_different_chips() {
++	gpiosim_chip_dbus sim0 num_lines=8 line_name=1:foo line_name=5:bar
++	gpiosim_chip_dbus sim1 num_lines=4 line_name=1:xyz
++
++	run_prog gpiocli request --input foo xyz
++	status_is 1
++	output_regex_match ".*: all requested lines must belong to the same chip"
++}
++
++test_multiple_requests() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --chip="$sim0" 0
++	status_is 0
++	num_lines_is 1
++	local request0=$output
++
++	run_prog gpiocli request --output --chip="$sim0" 1 2
++	status_is 0
++	num_lines_is 1
++	local request1=$output
++
++	run_prog gpiocli request --chip="$sim0" 5
++	status_is 0
++	num_lines_is 1
++	local request2=$output
++
++	run_prog gpiocli requests
++	status_is 0
++	num_lines_is 3
++	output_contains_line "$request0 ($sim0) Offsets: [0]"
++	output_contains_line "$request1 ($sim0) Offsets: [1, 2]"
++	output_contains_line "$request2 ($sim0) Offsets: [5]"
++
++	gpiodbus_release_request "$request"0
++	gpiodbus_release_request "$request"1
++	gpiodbus_release_request "$request"2
++}
++
++test_request_multiple_lines_by_names() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli request --input foo xyz bar
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	gpiodbus_check_request "$request\\s+\(${GPIOSIM_CHIP_NAME[sim0]}\)\\s+Offsets:\\s+\[1, 11, 5\]"
++	gpiodbus_release_request "$request"
++}
++
++test_request_multiple_lines_by_chip_number_by_name_and_offset() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input -c "$(gpiosim_chip_number sim0)" xyz 0 foo 15
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	gpiodbus_check_request "$request\\s+\(${GPIOSIM_CHIP_NAME[sim0]}\)\\s+Offsets:\\s+\[11, 0, 1, 15\]"
++	gpiodbus_release_request "$request"
++}
++
++test_request_with_consumer_name() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --consumer='foobar' foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"foobar\",managed=\"request0\",input\]"
++
++	gpiodbus_release_request "$request"
++}
++
++test_request_with_consumer_name_with_whitespaces() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --consumer='foo bar' foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"foo bar\",managed=\"request0\",input\]"
++
++	gpiodbus_release_request "$request"
++}
++
++test_request_active_low() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --active-low foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",active-low,input\]"
++
++	run_prog gpiocli get foo
++	status_is 0
++	num_lines_is 1
++	output_is "\"foo\"=active"
++
++	gpiodbus_release_request "$request"
++}
++
++test_request_pull_up() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --pull-up foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",bias=pull-up,input\]"
++
++	run_prog gpiocli get foo
++	status_is 0
++	num_lines_is 1
++	output_is "\"foo\"=active"
++
++	gpiodbus_release_request "$request"
++}
++
++test_request_pull_down() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --pull-down foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",bias=pull-down,input\]"
++
++	run_prog gpiocli get foo
++	status_is 0
++	num_lines_is 1
++	output_is "\"foo\"=inactive"
++
++	gpiodbus_release_request "$request"
++}
++
++test_request_pull_bias_disabled() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --bias-disabled foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",bias=disabled,input\]"
++
++	run_prog gpiocli get foo
++	status_is 0
++	num_lines_is 1
++	output_is "\"foo\"=inactive"
++
++	gpiodbus_release_request "$request"
++}
++
++test_request_drive_push_pull() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --output --push-pull foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",output,push-pull\]"
++
++	gpiodbus_release_request "$request"
++}
++
++test_request_drive_open_drain() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --output --open-drain foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",output,open-drain\]"
++
++	gpiodbus_release_request "$request"
++}
++
++test_request_drive_open_source() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --output --open-source foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",output,open-source\]"
++
++	gpiodbus_release_request "$request"
++}
++
++test_request_edge_falling() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --falling-edge foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",edges=falling,event-clock=monotonic,input\]"
++
++	gpiodbus_release_request "$request"
 +}
-+
-+void die(const gchar *fmt, ...)
-+{
-+	va_list va;
++
++test_request_edge_rising() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --rising-edge foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",edges=rising,event-clock=monotonic,input\]"
++
++	gpiodbus_release_request "$request"
++}
++
++test_request_edge_both() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --both-edges foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	va_start(va, fmt);
-+	print_err_msg(NULL, fmt, va);
-+	va_end(va);
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",edges=both,event-clock=monotonic,input\]"
 +
-+	exit(EXIT_FAILURE);
++	gpiodbus_release_request "$request"
 +}
 +
-+void die_gerror(GError *err, const gchar *fmt, ...)
-+{
-+	va_list va;
++test_request_edge_falling_and_rising() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	va_start(va, fmt);
-+	print_err_msg(err, fmt, va);
-+	va_end(va);
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	exit(EXIT_FAILURE);
++	run_prog gpiocli request --input --falling-edge --rising-edge foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",edges=both,event-clock=monotonic,input\]"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_request_edge_with_debounce_period() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+void die_parsing_opts(const char *fmt, ...)
-+{
-+	va_list va;
++	run_prog gpiocli request --input --falling-edge --rising-edge --debounce-period=4000 foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	va_start(va, fmt);
-+	print_err_msg(NULL, fmt, va);
-+	va_end(va);
-+	g_printerr("\nSee %s --help\n", g_get_prgname());
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",edges=both,event-clock=monotonic,debounce-period=4000,input\]"
 +
-+	exit(EXIT_FAILURE);
++	gpiodbus_release_request "$request"
 +}
 +
-+void parse_options(const GOptionEntry *opts, const gchar *summary,
-+		   const gchar *description, int *argc, char ***argv)
-+{
-+	g_autoptr(GOptionContext) ctx = NULL;
-+	g_autoptr(GError) err = NULL;
-+	gboolean ret;
++test_request_edge_with_realtime_clock() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	ctx = g_option_context_new(NULL);
-+	g_option_context_set_summary(ctx, summary);
-+	g_option_context_set_description(ctx, description);
-+	g_option_context_add_main_entries(ctx, opts, NULL);
-+	g_option_context_set_strict_posix(ctx, TRUE);
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	ret = g_option_context_parse(ctx, argc, argv, &err);
-+	if (!ret) {
-+		g_printerr("%s: Option parsing failed: %s\nSee %s --help\n",
-+			   g_get_prgname(), err->message, g_get_prgname());
-+		exit(EXIT_FAILURE);
-+	}
++	run_prog gpiocli request --input --falling-edge --rising-edge --clock-realtime foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",edges=both,event-clock=realtime,input\]"
++
++	gpiodbus_release_request "$request"
 +}
 +
-+void check_manager(void)
-+{
-+	g_autoptr(GDBusProxy) proxy = NULL;
-+	g_autoptr(GVariant) result = NULL;
-+	g_autoptr(GError) err = NULL;
++test_request_with_output_values() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz line_name=9:abc
 +
-+	proxy = g_dbus_proxy_new_for_bus_sync(
-+			G_BUS_TYPE_SYSTEM, G_DBUS_PROXY_FLAGS_NONE, NULL,
-+			"io.gpiod1", "/io/gpiod1", "org.freedesktop.DBus.Peer",
-+			NULL, &err);
-+	if (!proxy)
-+		die_gerror(err, "Unable to create a proxy to '/io/gpiod1'");
++	run_prog gpiocli request --output foo=active bar=inactive xyz=1
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	result = g_dbus_proxy_call_sync(proxy, "Ping", NULL,
-+					G_DBUS_CALL_FLAGS_NONE, -1, NULL,
-+					&err);
-+	if (!result) {
-+		if (err->domain == G_DBUS_ERROR) {
-+			switch (err->code) {
-+			case G_DBUS_ERROR_ACCESS_DENIED:
-+				die("Access to gpio-manager denied, check your permissions");
-+			case G_DBUS_ERROR_SERVICE_UNKNOWN:
-+				die("gpio-manager not running");
-+			}
-+		}
++	run_prog gpiocli get -r "$request"
++	status_is 0
++	num_lines_is 1
++	output_regex_match "\"1\"=active \"5\"=inactive \"11\"=active"
 +
-+		die_gerror(err, "Failed trying to contect the gpio manager");
-+	}
++	gpiodbus_release_request "$request"
 +}
 +
-+gboolean quit_main_loop_on_signal(gpointer user_data)
-+{
-+	GMainLoop *loop = user_data;
++test_request_output_values_input_mode() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	g_main_loop_quit(loop);
++	run_prog gpiocli request --input foo=active bar=inactive xyz=1
++	status_is 1
++	num_lines_is 3
++	output_regex_match ".*: Output values can only be set in output mode"
++}
 +
-+	return G_SOURCE_REMOVE;
++test_request_output_values_invalid_format() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli request --output foo=active bar=foobar xyz=1
++	status_is 1
++	num_lines_is 3
++	output_regex_match ".*: invalid output value: 'foobar'"
 +}
++
++#
++# gpiocli reconfigure test cases
++#
 +
-+void die_on_name_vanished(GDBusConnection *con G_GNUC_UNUSED,
-+			  const gchar *name G_GNUC_UNUSED,
-+			  gpointer user_data G_GNUC_UNUSED)
-+{
-+	die("gpio-manager exited unexpectedly");
++test_reconfigure_from_output_to_input() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli request --output foo=active bar=inactive xyz=1
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",output,push-pull\]"
++
++	run_prog gpiocli reconfigure --input "$request"
++	status_is 0
++	num_lines_is 1
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",input\]"
++
++	gpiodbus_release_request "$request"
 +}
 +
-+GList *strv_to_gstring_list(GStrv lines)
-+{
-+	gsize llen = g_strv_length(lines);
-+	GList *list = NULL;
-+	guint i;
++test_reconfigure_from_input_to_output_with_values() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	for (i = 0; i < llen; i++)
-+		list = g_list_append(list, g_string_new(lines[i]));
++	run_prog gpiocli request --input foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	return list;
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",input\]"
++
++	run_prog gpiocli reconfigure --output "$request" 1 0 active
++	status_is 0
++	num_lines_is 1
++
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",output,push-pull\]"
++
++	run_prog gpiocli get foo bar xyz
++	status_is 0
++	num_lines_is 1
++	output_is "\"foo\"=active \"bar\"=inactive \"xyz\"=active"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_reconfigure_fails_with_wrong_number_of_output_values() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+gint output_value_from_str(const gchar *value_str)
-+{
-+	if ((g_strcmp0(value_str, "active") == 0) ||
-+	    (g_strcmp0(value_str, "1") == 0))
-+		return 1;
-+	else if ((g_strcmp0(value_str, "inactive") == 0) ||
-+		 (g_strcmp0(value_str, "0") == 0))
-+		return 0;
++	run_prog gpiocli request --input foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	die_parsing_opts("invalid output value: '%s'", value_str);
++	run_prog gpiocli info foo
++	status_is 0
++	num_lines_is 1
++	output_regex_match "$sim0\\s+1:\\s+\"foo\"\\s+\[used,consumer=\"gpio-manager\",managed=\"$request\",input\]"
++
++	run_prog gpiocli reconfigure --output "$request" 1 0
++	status_is 1
++	num_lines_is 3
++	output_regex_match ".*: The number of output values must correspond to the number of lines in the request"
++
++	run_prog gpiocli reconfigure --output "$request" 1 0 1 0
++	status_is 1
++	num_lines_is 3
++
++	gpiodbus_release_request "$request"
 +}
 +
-+static gboolean str_is_all_digits(const gchar *str)
-+{
-+	for (; *str; str++) {
-+		if (!g_ascii_isdigit(*str))
-+			return FALSE;
-+	}
++#
++# gpiocli release test cases
++#
 +
-+	return TRUE;
++test_release_nonexistent_request() {
++	run_prog gpiocli release request0
++	status_is 1
++	output_regex_match ".*: No such request: 'request0'"
 +}
++
++#
++# gpiocli get test cases
++#
 +
-+static gint compare_objs_by_path(GDBusObject *a, GDBusObject *b)
-+{
-+	return strverscmp(g_dbus_object_get_object_path(a),
-+			  g_dbus_object_get_object_path(b));
++test_get_value_for_unmanaged_line() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli get foo
++	status_is 1
++	num_lines_is 1
++	output_regex_match ".*: Line 'foo' not managed by gpio-manager, must be requested first"
 +}
++
++test_get_one_value_by_name() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+GDBusObjectManager *get_object_manager_client(const gchar *obj_path)
-+{
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	g_autoptr(GError) err = NULL;
++	run_prog gpiocli request --input foo bar
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	manager = gpiodbus_object_manager_client_new_for_bus_sync(
-+				G_BUS_TYPE_SYSTEM,
-+				G_DBUS_OBJECT_MANAGER_CLIENT_FLAGS_NONE,
-+				"io.gpiod1", obj_path, NULL, &err);
-+	if (!manager)
-+		die_gerror(err,
-+			   "failed to create the object manager client for %s",
-+			   obj_path);
++	gpiosim_set_pull sim0 1 pull-up
 +
-+	return g_object_ref(manager);
++	run_prog gpiocli get foo
++	status_is 0
++	num_lines_is 1
++	output_is "\"foo\"=active"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_get_multiple_values_by_names() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli request --input foo xyz bar
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+static gchar *make_chip_obj_path(const gchar *chip)
-+{
-+	return g_strdup_printf(
-+		str_is_all_digits(chip) ?
-+			"/io/gpiod1/chips/gpiochip%s" :
-+			"/io/gpiod1/chips/%s",
-+		chip);
++	gpiosim_set_pull sim0 1 pull-up
++	gpiosim_set_pull sim0 5 pull-up
++	gpiosim_set_pull sim0 11 pull-down
++
++	run_prog gpiocli get xyz bar foo
++	status_is 0
++	num_lines_is 1
++	output_is "\"xyz\"=inactive \"bar\"=active \"foo\"=active"
++
++	gpiodbus_release_request "$request"
 +}
 +
-+GpiodbusObject *get_chip_obj_by_path(const gchar *obj_path)
-+{
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	g_autoptr(GpiodbusObject) chip_obj = NULL;
++test_get_one_value_by_request_and_offset() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	manager = get_object_manager_client("/io/gpiod1/chips");
++	run_prog gpiocli request --input xyz foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	chip_obj = GPIODBUS_OBJECT(g_dbus_object_manager_get_object(manager,
-+								    obj_path));
-+	if (!chip_obj)
-+		die("No such chip object: '%s'", obj_path);
++	gpiosim_set_pull sim0 1 pull-up
 +
-+	return g_object_ref(chip_obj);
++	run_prog gpiocli get --request="$request" 1
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=active"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_get_multiple_values_by_request_and_offsets() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+GpiodbusObject *get_chip_obj(const gchar *chip_name)
-+{
-+	g_autofree gchar *chip_path = make_chip_obj_path(chip_name);
++	run_prog gpiocli request --input foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	return get_chip_obj_by_path(chip_path);
++	gpiosim_set_pull sim0 1 pull-up
++	gpiosim_set_pull sim0 5 pull-down
++	gpiosim_set_pull sim0 11 pull-up
++
++	run_prog gpiocli get --request="$request" 11 1 5
++	status_is 0
++	num_lines_is 1
++	output_is "\"11\"=active \"1\"=active \"5\"=inactive"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_get_multiple_values_by_request_names_and_offsets() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli request --input foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	gpiosim_set_pull sim0 1 pull-up
++	gpiosim_set_pull sim0 5 pull-down
++	gpiosim_set_pull sim0 11 pull-up
 +
-+GList *get_chip_objs(GStrv chip_names)
-+{
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	GList *objs = NULL;
-+	gint i;
++	run_prog gpiocli get --request="$request" xyz 1 5
++	status_is 0
++	num_lines_is 1
++	output_is "\"xyz\"=active \"1\"=active \"5\"=inactive"
 +
-+	manager = get_object_manager_client("/io/gpiod1/chips");
++	gpiodbus_release_request "$request"
++}
 +
-+	if (!chip_names)
-+		return g_list_sort(g_dbus_object_manager_get_objects(manager),
-+				   (GCompareFunc)compare_objs_by_path);
++test_get_all_values_for_request() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	for (i = 0; chip_names[i]; i++) {
-+		g_autofree gchar *obj_path = make_chip_obj_path(chip_names[i]);
-+		g_autoptr(GpiodbusObject) obj = NULL;
++	run_prog gpiocli request --input foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+		obj = GPIODBUS_OBJECT(
-+			g_dbus_object_manager_get_object(manager, obj_path));
-+		if (!obj)
-+			die("No such chip: '%s'", chip_names[i]);
++	gpiosim_set_pull sim0 1 pull-up
++	gpiosim_set_pull sim0 5 pull-down
++	gpiosim_set_pull sim0 11 pull-up
 +
-+		objs = g_list_insert_sorted(objs, g_object_ref(obj),
-+					    (GCompareFunc)compare_objs_by_path);
-+	}
++	run_prog gpiocli get --request="$request"
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=active \"5\"=inactive \"11\"=active"
 +
-+	return objs;
++	gpiodbus_release_request "$request"
 +}
++
++test_get_unquoted_output() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli request --input foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	gpiosim_set_pull sim0 1 pull-up
++	gpiosim_set_pull sim0 5 pull-down
++	gpiosim_set_pull sim0 11 pull-up
 +
-+gchar *make_request_obj_path(const gchar *request)
-+{
-+	return g_strdup_printf(
-+		str_is_all_digits(request) ?
-+			"/io/gpiod1/requests/request%s" :
-+			"/io/gpiod1/requests/%s",
-+		request);
++	run_prog gpiocli get --unquoted --request="$request" xyz 1 5
++	status_is 0
++	num_lines_is 1
++	output_is "xyz=active 1=active 5=inactive"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_get_numeric_output() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+GpiodbusObject *get_request_obj(const gchar *request_name)
-+{
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	g_autoptr(GpiodbusObject) req_obj = NULL;
-+	g_autofree gchar *obj_path = NULL;
++	run_prog gpiocli request --input foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	manager = get_object_manager_client("/io/gpiod1/requests");
-+	obj_path = make_request_obj_path(request_name);
++	gpiosim_set_pull sim0 1 pull-up
++	gpiosim_set_pull sim0 5 pull-down
++	gpiosim_set_pull sim0 11 pull-up
 +
-+	req_obj = GPIODBUS_OBJECT(g_dbus_object_manager_get_object(manager,
-+								   obj_path));
-+	if (!req_obj)
-+		die("No such request: '%s'", request_name);
++	run_prog gpiocli get --numeric --request="$request" xyz 1 5
++	status_is 0
++	num_lines_is 1
++	output_is "\"xyz\"=1 \"1\"=1 \"5\"=0"
 +
-+	return g_object_ref(req_obj);
++	gpiodbus_release_request "$request"
 +}
 +
-+GList *get_request_objs(void)
-+{
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	GList *objs = NULL;
++#
++# gpiocli set test cases
++#
 +
-+	manager = get_object_manager_client("/io/gpiod1/requests");
-+	objs = g_dbus_object_manager_get_objects(manager);
++test_set_value_for_unmanaged_line() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	return g_list_sort(objs, (GCompareFunc)compare_objs_by_path);
++	run_prog gpiocli set foo=active
++	status_is 1
++	num_lines_is 1
++	output_regex_match ".*: Line 'foo' not managed by gpio-manager, must be requested first"
 +}
 +
-+GArray *get_request_offsets(GpiodbusRequest *request)
-+{
-+	const gchar *chip_path, *line_path, *const *line_paths;
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	g_autoptr(GArray) offsets = NULL;
-+	GpiodbusLine *line;
-+	guint i, offset;
++test_set_one_value_with_invalid_arguments() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	chip_path = gpiodbus_request_get_chip_path(request);
-+	line_paths = gpiodbus_request_get_line_paths(request);
-+	offsets = g_array_new(FALSE, TRUE, sizeof(guint));
-+	manager = get_object_manager_client(chip_path);
++	run_prog gpiocli request --output foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	for (i = 0, line_path = line_paths[i];
-+	     line_path;
-+	     line_path = line_paths[++i]) {
-+		g_autoptr(GDBusObject) line_obj = NULL;
++	run_prog gpiocli set bar=wrong
++	status_is 1
++	num_lines_is 3
++	output_regex_match ".*: invalid output value: 'wrong'"
 +
-+		line_obj = g_dbus_object_manager_get_object(manager, line_path);
-+		line = gpiodbus_object_peek_line(GPIODBUS_OBJECT(line_obj));
-+		offset = gpiodbus_line_get_offset(line);
-+		g_array_append_val(offsets, offset);
-+	}
++	run_prog gpiocli set bar=
++	status_is 1
++	num_lines_is 3
++	output_regex_match ".*: invalid output value: ''"
 +
-+	return g_array_ref(offsets);
++	run_prog gpiocli set bar
++	status_is 1
++	num_lines_is 3
++	output_regex_match ".*: line must have a single value assigned"
++
++	gpiodbus_release_request "$request"
 +}
 +
-+gboolean get_line_obj_by_name(const gchar *name, GpiodbusObject **line_obj,
-+			      GpiodbusObject **chip_obj)
-+{
-+	g_autolist(GpiodbusObject) chip_objs = NULL;
-+	GList *pos;
++test_set_one_value_by_name() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	if (str_is_all_digits(name))
-+		die("Refusing to use line offsets if chip is not specified");
++	run_prog gpiocli request --output foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	chip_objs = get_chip_objs(NULL);
++	run_prog gpiocli get --request="$request"
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=inactive \"5\"=inactive \"11\"=inactive"
 +
-+	for (pos = g_list_first(chip_objs); pos; pos = g_list_next(pos)) {
-+		*line_obj = get_line_obj_by_name_for_chip(pos->data, name);
-+		if (*line_obj) {
-+			if (chip_obj)
-+				*chip_obj = g_object_ref(pos->data);
-+			return TRUE;
-+		}
-+	}
++	run_prog gpiocli set bar=active
++	status_is 0
 +
-+	return FALSE;
++	run_prog gpiocli get --request="$request"
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=inactive \"5\"=active \"11\"=inactive"
++
++	gpiodbus_release_request "$request"
 +}
 +
-+GpiodbusObject *
-+get_line_obj_by_name_for_chip(GpiodbusObject *chip_obj, const gchar *line_name)
-+{
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	g_autolist(GpiodbusObject) line_objs = NULL;
-+	const gchar *chip_path;
-+	GpiodbusLine *line;
-+	guint64 offset;
-+	GList *pos;
++test_set_multiple_values_by_names() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	chip_path = g_dbus_object_get_object_path(G_DBUS_OBJECT(chip_obj));
-+	manager = get_object_manager_client(chip_path);
-+	line_objs = g_dbus_object_manager_get_objects(manager);
++	run_prog gpiocli request --output foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	for (pos = g_list_first(line_objs); pos; pos = g_list_next(pos)) {
-+		line = gpiodbus_object_peek_line(pos->data);
++	run_prog gpiocli get --request="$request"
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=inactive \"5\"=inactive \"11\"=inactive"
 +
-+		if (g_strcmp0(gpiodbus_line_get_name(line), line_name) == 0)
-+			return g_object_ref(pos->data);
++	run_prog gpiocli set bar=active foo=active xyz=0
++	status_is 0
 +
-+		if (str_is_all_digits(line_name)) {
-+			offset = g_ascii_strtoull(line_name, NULL, 10);
-+			if (offset == gpiodbus_line_get_offset(line))
-+				return g_object_ref(pos->data);
-+		}
-+	}
++	run_prog gpiocli get --request="$request"
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=active \"5\"=active \"11\"=inactive"
 +
-+	return NULL;
++	gpiodbus_release_request "$request"
 +}
++
++test_set_one_value_by_request_and_offset() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+GList *get_all_line_objs_for_chip(GpiodbusObject *chip_obj)
-+{
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	const gchar *chip_path;
++	run_prog gpiocli request --output foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	chip_path = g_dbus_object_get_object_path(G_DBUS_OBJECT(chip_obj));
-+	manager = get_object_manager_client(chip_path);
++	run_prog gpiocli get --request="$request"
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=inactive \"5\"=inactive \"11\"=inactive"
 +
-+	return g_list_sort(g_dbus_object_manager_get_objects(manager),
-+			   (GCompareFunc)compare_objs_by_path);
++	run_prog gpiocli set -r "$request" 5=1
++	status_is 0
++
++	run_prog gpiocli get --request="$request"
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=inactive \"5\"=active \"11\"=inactive"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_set_multiple_values_by_request_and_offsets() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli request --output foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli get --request="$request"
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=inactive \"5\"=inactive \"11\"=inactive"
 +
-+static gchar *sanitize_str(const gchar *str)
-+{
-+	if (!strlen(str))
-+		return NULL;
++	run_prog gpiocli set --request="$request" 11=active 5=1 1=0
++	status_is 0
 +
-+	return g_strdup(str);
++	run_prog gpiocli get --request="$request"
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=inactive \"5\"=active \"11\"=active"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_set_multiple_values_by_request_names_and_offsets() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	run_prog gpiocli request --output foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	run_prog gpiocli get --request="$request"
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=inactive \"5\"=inactive \"11\"=inactive"
++
++	run_prog gpiocli set --request="$request" xyz=active 5=1 foo=0
++	status_is 0
 +
-+static const gchar *sanitize_direction(const gchar *direction)
-+{
-+	if ((g_strcmp0(direction, "input") == 0) ||
-+	    (g_strcmp0(direction, "output") == 0))
-+		return direction;
++	run_prog gpiocli get --request="$request"
++	status_is 0
++	num_lines_is 1
++	output_is "\"1\"=inactive \"5\"=active \"11\"=active"
 +
-+	die("invalid direction value received from manager: '%s'", direction);
++	gpiodbus_release_request "$request"
 +}
 +
-+static const gchar *sanitize_drive(const gchar *drive)
-+{
-+	if ((g_strcmp0(drive, "push-pull") == 0) ||
-+	    (g_strcmp0(drive, "open-source") == 0) ||
-+	    (g_strcmp0(drive, "open-drain") == 0))
-+		return drive;
++#
++# gpiocli notify test cases
++#
 +
-+	die("invalid drive value received from manager: '%s'", drive);
++test_notify_print_initial_info_by_name() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli request --input --both-edges --clock-realtime --debounce-period=5000 foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	dut_run gpiocli notify foo
++	dut_read
++
++	output_is "$sim0 - 1 (\"foo\"): [input,used,consumer=\"gpio-manager\",both-edges,realtime-clockdebounced,debounce-period=5000,managed,request=\"request0\"]"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_notify_print_initial_info_by_chip_and_offset() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+static const gchar *sanitize_bias(const gchar *bias)
-+{
-+	if ((g_strcmp0(bias, "pull-up") == 0) ||
-+	    (g_strcmp0(bias, "pull-down") == 0) ||
-+	    (g_strcmp0(bias, "disabled") == 0))
-+		return bias;
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	if (g_strcmp0(bias, "unknown") == 0)
-+		return NULL;
++	run_prog gpiocli request --output --open-drain --active-low foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	die("invalid bias value received from manager: '%s'", bias);
++	dut_run gpiocli notify --chip="$sim0" 5
++	dut_read
++
++	output_is "$sim0 - 5 (\"bar\"): [output,used,consumer=\"gpio-manager\",open-drain,active-low,managed,request=\"request0\"]"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_notify_print_initial_info_by_chip_name_and_offset_for_multiple_lines() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+static const gchar *sanitize_edge(const gchar *edge)
-+{
-+	if ((g_strcmp0(edge, "rising") == 0) ||
-+	    (g_strcmp0(edge, "falling") == 0) ||
-+	    (g_strcmp0(edge, "both") == 0))
-+		return edge;
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	if (g_strcmp0(edge, "none") == 0)
-+		return NULL;
++	run_prog gpiocli request --output --open-drain --active-low foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	die("invalid edge value received from manager: '%s'", edge);
++	dut_run gpiocli notify --chip="$sim0" 5 foo 11
++
++	dut_read
++	output_regex_match ".*$sim0 - 5 \(\"bar\"\): \[output,used,consumer=\"gpio-manager\",open-drain,active-low,managed,request=\"request0\"\].*"
++	output_regex_match ".*$sim0 - 1 \(\"foo\"\): \[output,used,consumer=\"gpio-manager\",open-drain,active-low,managed,request=\"request0\"\].*"
++	output_regex_match ".*$sim0 - 11 \(\"xyz\"\): \[output,used,consumer=\"gpio-manager\",open-drain,active-low,managed,request=\"request0\"\].*"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_notify_request_event() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+static const gchar *sanitize_clock(const gchar *event_clock)
-+{
-+	if ((g_strcmp0(event_clock, "monotonic") == 0) ||
-+	    (g_strcmp0(event_clock, "realtime") == 0) ||
-+	    (g_strcmp0(event_clock, "hte") == 0))
-+		return event_clock;
++	dut_run gpiocli notify foo bar
++	dut_flush
 +
-+	die("invalid clock value received from manager: '%s'", event_clock);
++	run_prog gpiocli request --output --open-drain --active-low foo bar
++	status_is 0
++	num_lines_is 1
++	local request=$output
++
++	dut_read
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[active-low=>True\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[drive=>open-drain\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[direction=>output\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[consumer=>\"gpio-manager\"\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[used=>True\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[request=>request0\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[managed=>True\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[request=>request0\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[managed=>True\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[active-low=>True\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[drive=>open-drain\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[direction=>output\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[consumer=>\"gpio-manager\"\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[used=>True\]"
++
++	gpiodbus_release_request "$request"
 +}
++
++test_notify_release_event() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpiocli notify foo bar
 +
-+gchar *sanitize_object_path(const gchar *path)
-+{
-+	if (g_strcmp0(path, "/") == 0)
-+		return g_strdup("N/A");
++	run_prog gpiocli request --output --open-drain --active-low foo bar
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	return g_path_get_basename(path);
++	dut_flush
++
++	gpiodbus_release_request "$request"
++
++	dut_read
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[active-low=>False\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[drive=>push-pull\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[consumer=>\"unused\"\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[used=>False\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[request=>N/A\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[managed=>False\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[request=>N/A\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[managed=>False\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[active-low=>False\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[drive=>push-pull\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[consumer=>\"unused\"\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[used=>False\]"
 +}
++
++test_notify_reconfigure_event() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+LineProperties *get_line_properties(GpiodbusLine *line)
-+{
-+	LineProperties *props;
++	dut_run gpiocli notify foo bar
 +
-+	props = g_malloc0(sizeof(*props));
-+	props->name = sanitize_str(gpiodbus_line_get_name(line));
-+	props->offset = gpiodbus_line_get_offset(line);
-+	props->used = gpiodbus_line_get_used(line);
-+	props->consumer = sanitize_str(gpiodbus_line_get_consumer(line));
-+	props->direction = sanitize_direction(
-+				gpiodbus_line_get_direction(line));
-+	props->drive = sanitize_drive(gpiodbus_line_get_drive(line));
-+	props->bias = sanitize_bias(gpiodbus_line_get_bias(line));
-+	props->active_low = gpiodbus_line_get_active_low(line);
-+	props->edge = sanitize_edge(gpiodbus_line_get_edge_detection(line));
-+	props->debounced = gpiodbus_line_get_debounced(line);
-+	props->debounce_period = gpiodbus_line_get_debounce_period_us(line);
-+	props->event_clock = sanitize_clock(
-+				gpiodbus_line_get_event_clock(line));
-+	props->managed = gpiodbus_line_get_managed(line);
-+	props->request_name = sanitize_object_path(
-+			gpiodbus_line_get_request_path(line));
++	run_prog gpiocli request --output --open-drain --active-low foo bar
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	return props;
++	dut_flush
++
++	run_prog gpiocli reconfigure --input --pull-up --rising-edge "$request"
++	status_is 0
++
++	dut_read
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[active-low=>False\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[drive=>push-pull\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[bias=>pull-up\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[edge=>rising\]"
++	output_regex_match "$sim0 - 1 \(\"foo\"\): \[direction=>input\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[active-low=>False\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[drive=>push-pull\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[bias=>pull-up\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[edge=>rising\]"
++	output_regex_match "$sim0 - 5 \(\"bar\"\): \[direction=>input\]"
++
++	gpiodbus_release_request "$request"
 +}
++
++#
++# gpiocli monitor test cases
++#
++
++test_monitor_unmanaged_line() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+void free_line_properties(LineProperties *props)
-+{
-+	g_free(props->name);
-+	g_free(props->consumer);
-+	g_free(props->request_name);
-+	g_free(props);
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_prog gpiocli monitor foo
++
++	output_regex_match ".*: Line must be managed by gpio-manager in order to be monitored"
 +}
 +
-+void validate_line_config_opts(LineConfigOpts *opts)
-+{
-+	gint counter;
++test_monitor_one_line_by_name() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	if (opts->input && opts->output)
-+		die_parsing_opts("--input and --output are mutually exclusive");
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	if (opts->both_edges)
-+		opts->rising_edge = opts->falling_edge = TRUE;
++	run_prog gpiocli request --input --both-edges foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	if (!opts->input && (opts->rising_edge || opts->falling_edge))
-+		die_parsing_opts("monitoring edges is only possible in input mode");
++	dut_run gpiocli monitor foo
 +
-+	counter = 0;
-+	if (opts->push_pull)
-+		counter++;
-+	if (opts->open_drain)
-+		counter++;
-+	if (opts->open_source)
-+		counter++;
++	gpiosim_set_pull sim0 1 pull-up
 +
-+	if (counter > 1)
-+		die_parsing_opts("--push-pull, --open-drain and --open-source are mutually exclusive");
++	dut_read
++	output_regex_match "[0-9]+ rising\\s+\"foo\""
 +
-+	if (!opts->output && (counter > 0))
-+		die_parsing_opts("--push-pull, --open-drain and --open-source are only available in output mode");
++	gpiodbus_release_request "$request"
++}
 +
-+	counter = 0;
-+	if (opts->pull_up)
-+		counter++;
-+	if (opts->pull_down)
-+		counter++;
-+	if (opts->bias_disabled)
-+		counter++;
++test_monitor_multiple_lines_by_name() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	if (counter > 1)
-+		die_parsing_opts("--pull-up, --pull-down and --bias-disabled are mutually exclusive");
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	counter = 0;
-+	if (opts->clock_monotonic)
-+		counter++;
-+	if (opts->clock_realtime)
-+		counter++;
-+	if (opts->clock_hte)
-+		counter++;
++	run_prog gpiocli request --input --both-edges foo bar xyz
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	if (counter > 1)
-+		die_parsing_opts("--clock-monotonic, --clock-realtime and --clock-hte are mutually exclusive");
++	dut_run gpiocli monitor foo xyz
 +
-+	if (counter > 0 && (!opts->rising_edge && !opts->falling_edge))
-+		die_parsing_opts("--clock-monotonic, --clock-realtime and --clock-hte can only be used with edge detection enabled");
++	gpiosim_set_pull sim0 1 pull-up
++	gpiosim_set_pull sim0 5 pull-up # This should be ignored
++	gpiosim_set_pull sim0 11 pull-up
++	gpiosim_set_pull sim0 1 pull-down
 +
-+	if (opts->debounce_period && (!opts->rising_edge && !opts->falling_edge))
-+		die_parsing_opts("--debounce-period can only be used with edge-detection enabled");
++	dut_read
++	output_regex_match "[0-9]+ rising\\s+\"foo\""
++	output_regex_match "[0-9]+ rising\\s+\"xyz\""
++	output_regex_match "[0-9]+ falling\\s+\"foo\""
++
++	gpiodbus_release_request "$request"
 +}
++
++test_monitor_one_line_by_request_and_offset() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+GVariant *make_line_config(GArray *offsets, LineConfigOpts *opts)
-+{
-+	const char *direction, *edge = NULL, *bias = NULL, *drive = NULL,
-+		   *clock = NULL;
-+	g_autoptr(GVariant) output_values = NULL;
-+	g_autoptr(GVariant) line_settings = NULL;
-+	g_autoptr(GVariant) line_offsets = NULL;
-+	g_autoptr(GVariant) line_configs = NULL;
-+	g_autoptr(GVariant) line_config = NULL;
-+	GVariantBuilder builder;
-+	guint i;
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
-+	for (i = 0; i < offsets->len; i++)
-+		g_variant_builder_add_value(&builder,
-+			g_variant_new_uint32(g_array_index(offsets, guint, i)));
-+	line_offsets = g_variant_builder_end(&builder);
++	run_prog gpiocli request --input --both-edges foo
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
++	dut_run gpiocli monitor --request="$request" 1
 +
-+	if (opts->input)
-+		direction = "input";
-+	else if (opts->output)
-+		direction = "output";
-+	else
-+		direction = "as-is";
++	gpiosim_set_pull sim0 1 pull-up
 +
-+	if (direction)
-+		g_variant_builder_add_value(&builder,
-+			g_variant_new("{sv}", "direction",
-+				      g_variant_new_string(direction)));
++	dut_read
++	output_regex_match "[0-9]+ rising\\s+\"foo\""
 +
-+	if (opts->rising_edge && opts->falling_edge)
-+		edge = "both";
-+	else if (opts->falling_edge)
-+		edge = "falling";
-+	else if (opts->rising_edge)
-+		edge = "rising";
++	gpiodbus_release_request "$request"
++}
++
++test_monitor_all_lines_on_request() {
++	gpiosim_chip_dbus sim0 num_lines=16 line_name=1:foo line_name=5:bar line_name=11:xyz
 +
-+	if (edge)
-+		g_variant_builder_add_value(&builder,
-+			g_variant_new("{sv}", "edge",
-+				      g_variant_new_string(edge)));
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	if (opts->pull_up)
-+		bias = "pull-up";
-+	else if (opts->pull_down)
-+		bias = "pull-down";
-+	else if (opts->bias_disabled)
-+		bias = "disabled";
++	run_prog gpiocli request --input --both-edges --chip="$sim0" foo bar xyz 4
++	status_is 0
++	num_lines_is 1
++	local request=$output
 +
-+	if (bias)
-+		g_variant_builder_add_value(&builder,
-+			g_variant_new("{sv}", "bias",
-+				      g_variant_new_string(bias)));
++	dut_run gpiocli monitor -r "$request"
 +
-+	if (opts->push_pull)
-+		drive = "push-pull";
-+	else if (opts->open_drain)
-+		drive = "open-drain";
-+	else if (opts->open_source)
-+		drive = "open-source";
++	gpiosim_set_pull sim0 1 pull-up
++	gpiosim_set_pull sim0 4 pull-up
++	gpiosim_set_pull sim0 1 pull-down
 +
-+	if (drive)
-+		g_variant_builder_add_value(&builder,
-+			g_variant_new("{sv}", "drive",
-+				      g_variant_new_string(drive)));
++	dut_read
++	output_regex_match "[0-9]+ rising\\s+\"foo\""
++	output_regex_match "[0-9]+ rising\\s+4"
++	output_regex_match "[0-9]+ falling\\s+\"foo\""
 +
-+	if (opts->active_low)
-+		g_variant_builder_add_value(&builder,
-+			g_variant_new("{sv}", "active-low",
-+				      g_variant_new_boolean(TRUE)));
-+
-+	if (opts->debounce_period)
-+		g_variant_builder_add_value(&builder,
-+			g_variant_new("{sv}", "debounce-period",
-+				g_variant_new_int64(opts->debounce_period)));
-+
-+	if (opts->clock_monotonic)
-+		clock = "monotonic";
-+	else if (opts->clock_realtime)
-+		clock = "realtime";
-+	else if (opts->clock_hte)
-+		clock = "hte";
-+
-+	if (clock)
-+		g_variant_builder_add_value(&builder,
-+			g_variant_new("{sv}", "event-clock",
-+				      g_variant_new_string(clock)));
-+
-+	line_settings = g_variant_builder_end(&builder);
-+
-+	g_variant_builder_init(&builder, G_VARIANT_TYPE_TUPLE);
-+	g_variant_builder_add_value(&builder, g_variant_ref(line_offsets));
-+	g_variant_builder_add_value(&builder, g_variant_ref(line_settings));
-+	line_config = g_variant_builder_end(&builder);
-+
-+	g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
-+	g_variant_builder_add_value(&builder, g_variant_ref(line_config));
-+	line_configs = g_variant_builder_end(&builder);
-+
-+	if (opts->output_values) {
-+		g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
-+		for (i = 0; i < opts->output_values->len; i++) {
-+			g_variant_builder_add(&builder, "i",
-+					g_array_index(opts->output_values,
-+						      gint, i));
-+		}
-+		output_values = g_variant_builder_end(&builder);
-+	} else {
-+		output_values = g_variant_new("ai", opts->output_values);
-+	}
-+
-+	g_variant_builder_init(&builder, G_VARIANT_TYPE_TUPLE);
-+	g_variant_builder_add_value(&builder, g_variant_ref(line_configs));
-+	g_variant_builder_add_value(&builder, g_variant_ref(output_values));
-+
-+	return g_variant_ref_sink(g_variant_builder_end(&builder));
-+}
-diff --git a/dbus/client/common.h b/dbus/client/common.h
-new file mode 100644
-index 0000000..772e94a
---- /dev/null
-+++ b/dbus/client/common.h
-@@ -0,0 +1,203 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/* SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org> */
-+
-+#ifndef __GPIOCLI_COMMON_H__
-+#define __GPIOCLI_COMMON_H__
-+
-+#include <gio/gio.h>
-+#include <glib.h>
-+#include <gpiodbus.h>
-+
-+void die(const gchar *fmt, ...) G_NORETURN G_GNUC_PRINTF(1, 2);
-+void
-+die_gerror(GError *err, const gchar *fmt, ...) G_NORETURN G_GNUC_PRINTF(2, 3);
-+void die_parsing_opts(const char *fmt, ...) G_NORETURN G_GNUC_PRINTF(1, 2);
-+
-+void parse_options(const GOptionEntry *opts, const gchar *summary,
-+		   const gchar *description, int *argc, char ***argv);
-+void check_manager(void);
-+
-+gboolean quit_main_loop_on_signal(gpointer user_data);
-+void die_on_name_vanished(GDBusConnection *con, const gchar *name,
-+			  gpointer user_data);
-+
-+GList *strv_to_gstring_list(GStrv lines);
-+gint output_value_from_str(const gchar *value_str);
-+
-+GDBusObjectManager *get_object_manager_client(const gchar *obj_path);
-+GpiodbusObject *get_chip_obj_by_path(const gchar *obj_path);
-+GpiodbusObject *get_chip_obj(const gchar *chip_name);
-+GList *get_chip_objs(GStrv chip_names);
-+gchar *make_request_obj_path(const gchar *request);
-+GpiodbusObject *get_request_obj(const gchar *request_name);
-+GList *get_request_objs(void);
-+GArray *get_request_offsets(GpiodbusRequest *request);
-+gboolean get_line_obj_by_name(const gchar *name, GpiodbusObject **line_obj,
-+			      GpiodbusObject **chip_obj);
-+GpiodbusObject *
-+get_line_obj_by_name_for_chip(GpiodbusObject *chip_obj, const gchar *name_line);
-+GList *get_all_line_objs_for_chip(GpiodbusObject *chip_obj);
-+
-+gchar *sanitize_object_path(const gchar *path);
-+
-+typedef struct {
-+	gchar *name;
-+	guint offset;
-+	gboolean used;
-+	gchar *consumer;
-+	const gchar *direction;
-+	const gchar *drive;
-+	const gchar *bias;
-+	gboolean active_low;
-+	const gchar *edge;
-+	gboolean debounced;
-+	guint64 debounce_period;
-+	const gchar *event_clock;
-+	gboolean managed;
-+	gchar *request_name;
-+} LineProperties;
-+
-+LineProperties *get_line_properties(GpiodbusLine *line);
-+void free_line_properties(LineProperties *props);
-+
-+G_DEFINE_AUTOPTR_CLEANUP_FUNC(LineProperties, free_line_properties);
-+
-+typedef struct {
-+	gboolean input;
-+	gboolean output;
-+	gboolean active_low;
-+	gboolean rising_edge;
-+	gboolean falling_edge;
-+	gboolean both_edges;
-+	gboolean push_pull;
-+	gboolean open_source;
-+	gboolean open_drain;
-+	gboolean pull_up;
-+	gboolean pull_down;
-+	gboolean bias_disabled;
-+	gboolean clock_monotonic;
-+	gboolean clock_realtime;
-+	gboolean clock_hte;
-+	GTimeSpan debounce_period;
-+	GArray *output_values;
-+} LineConfigOpts;
-+
-+#define LINE_CONFIG_OPTIONS(opts) \
-+		{ \
-+			.long_name		= "input", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->input, \
-+			.description		= "Set direction to input.", \
-+		}, \
-+		{ \
-+			.long_name		= "output", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->output, \
-+			.description		= "Set direction to output.", \
-+		}, \
-+		{ \
-+			.long_name		= "rising-edge", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->rising_edge, \
-+			.description		= "Monitor rising edges." \
-+		}, \
-+		{ \
-+			.long_name		= "falling-edge", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->falling_edge, \
-+			.description		= "Monitor falling edges." \
-+		}, \
-+		{ \
-+			.long_name		= "both-edges", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->both_edges, \
-+			.description		= "Monitor rising and falling edges." \
-+		}, \
-+		{ \
-+			.long_name		= "push-pull", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->push_pull, \
-+			.description		= "Drive the line in push-pull mode.", \
-+		}, \
-+		{ \
-+			.long_name		= "open-drain", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->open_drain, \
-+			.description		= "Drive the line in open-drain mode.", \
-+		}, \
-+		{ \
-+			.long_name		= "open-source", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->open_source, \
-+			.description		= "Drive the line in open-source mode.", \
-+		}, \
-+		{ \
-+			.long_name		= "pull-up", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->pull_up, \
-+			.description		= "Enable internal pull-up bias.", \
-+		}, \
-+		{ \
-+			.long_name		= "pull-down", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->pull_down, \
-+			.description		= "Enable internal pull-down bias.", \
-+		}, \
-+		{ \
-+			.long_name		= "bias-disabled", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->bias_disabled, \
-+			.description		= "Disable internal pull-up/down bias.", \
-+		}, \
-+		{ \
-+			.long_name		= "active-low", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->active_low, \
-+			.description		= "Treat the lines as active low.", \
-+		}, \
-+		{ \
-+			.long_name		= "debounce-period", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_INT64, \
-+			.arg_data		= &(opts)->debounce_period, \
-+			.arg_description	= "<period in miliseconds>", \
-+			.description		= "Enable debouncing and set the period", \
-+		}, \
-+		{ \
-+			.long_name		= "clock-monotonic", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->clock_monotonic, \
-+			.description		= "Use monotonic clock for edge event timestamps", \
-+		}, \
-+		{ \
-+			.long_name		= "clock-realtime", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->clock_realtime, \
-+			.description		= "Use realtime clock for edge event timestamps", \
-+		}, \
-+		{ \
-+			.long_name		= "clock-hte", \
-+			.flags			= G_OPTION_FLAG_NONE, \
-+			.arg			= G_OPTION_ARG_NONE, \
-+			.arg_data		= &(opts)->clock_hte, \
-+			.description		= "Use HTE clock (if available) for edge event timestamps", \
-+		}
-+
-+void validate_line_config_opts(LineConfigOpts *opts);
-+GVariant *make_line_config(GArray *offsets, LineConfigOpts *cfg_opts);
-+
-+#endif /* __GPIOCLI_COMMON_H__ */
-diff --git a/dbus/client/detect.c b/dbus/client/detect.c
-new file mode 100644
-index 0000000..a98c3d3
---- /dev/null
-+++ b/dbus/client/detect.c
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <stdlib.h>
-+
-+#include "common.h"
-+
-+static void show_chip(gpointer elem, gpointer user_data G_GNUC_UNUSED)
-+{
-+	GpiodbusObject *chip_obj = elem;
-+	GpiodbusChip *chip;
-+
-+	chip = gpiodbus_object_peek_chip(chip_obj);
-+
-+	g_print("%s [%s] (%u lines)\n",
-+		gpiodbus_chip_get_name(chip),
-+		gpiodbus_chip_get_label(chip),
-+		gpiodbus_chip_get_num_lines(chip));
-+}
-+
-+int gpiocli_detect_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"List GPIO chips, print their labels and number of GPIO lines.";
-+
-+	static const gchar *const description =
-+"Chips may be identified by name or number. e.g. '0' and 'gpiochip0' refer to\n"
-+"the same chip.\n"
-+"\n"
-+"If no chips are specified - display information for all chips in the system.";
-+
-+	g_autolist(GpiodbusObject) chip_objs = NULL;
-+	g_auto(GStrv) chip_names = NULL;
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &chip_names,
-+			.arg_description	= "[chip]...",
-+		},
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, description, &argc, &argv);
-+	check_manager();
-+
-+	chip_objs = get_chip_objs(chip_names);
-+	g_list_foreach(chip_objs, show_chip, NULL);
-+
-+	return EXIT_SUCCESS;
-+}
-diff --git a/dbus/client/find.c b/dbus/client/find.c
-new file mode 100644
-index 0000000..9fe4c1a
---- /dev/null
-+++ b/dbus/client/find.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <stdlib.h>
-+
-+#include "common.h"
-+
-+static void find_line_in_chip(gpointer elem, gpointer user_data)
-+{
-+	g_autoptr(GpiodbusObject) line_obj = NULL;
-+	GpiodbusObject *chip_obj = elem;
-+	const gchar *name = user_data;
-+	GpiodbusChip *chip;
-+	GpiodbusLine *line;
-+
-+	line_obj = get_line_obj_by_name_for_chip(chip_obj, name);
-+	if (!line_obj)
-+		return;
-+
-+	chip = gpiodbus_object_peek_chip(chip_obj);
-+	line = gpiodbus_object_peek_line(line_obj);
-+
-+	g_print("%s %u\n",
-+		gpiodbus_chip_get_name(chip),
-+		gpiodbus_line_get_offset(line));
-+
-+	exit(EXIT_SUCCESS);
-+}
-+
-+int gpiocli_find_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"Gicen a line name, find the name of the parent chip and offset of the line within that chip.";
-+
-+	static const gchar *const description =
-+"As line names are not guaranteed to be unique, this command finds the first line with given name.";
-+
-+	g_autolist(GpiodbusObject) objs = NULL;
-+	g_auto(GStrv) line_name = NULL;
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &line_name,
-+			.arg_description	= "<line name>",
-+		},
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, description, &argc, &argv);
-+	check_manager();
-+
-+	if (!line_name)
-+		die_parsing_opts("line name must be specified");
-+	if (g_strv_length(line_name) != 1)
-+		die_parsing_opts("only one line can be mapped");
-+
-+	objs = get_chip_objs(NULL);
-+	g_list_foreach(objs, find_line_in_chip, line_name[0]);
-+
-+	/* If we got here, the line was not found. */
-+	die("line '%s' not found", line_name[0]);
-+	return EXIT_FAILURE;
-+}
-diff --git a/dbus/client/get.c b/dbus/client/get.c
-new file mode 100644
-index 0000000..4ca6f3c
---- /dev/null
-+++ b/dbus/client/get.c
-@@ -0,0 +1,212 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2022-2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <stdlib.h>
-+
-+#include "common.h"
-+
-+int gpiocli_get_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"Get values of one or more GPIO lines.";
-+
-+	static const gchar *const description =
-+"If -r/--request is specified then all the lines must belong to the same\n"
-+"request (and - by extension - the same chip).\n"
-+"\n"
-+"If no lines are specified but -r/--request was passed then all lines within\n"
-+"the request will be used.";
-+
-+	const gchar *request_name = NULL, *chip_path, *req_path;
-+	gboolean ret, unquoted = FALSE, numeric = FALSE;
-+	g_autoptr(GpiodbusObject) chip_obj = NULL;
-+	g_autoptr(GpiodbusObject) req_obj = NULL;
-+	g_autoptr(GArray) offsets = NULL;
-+	g_autoptr(GArray) values = NULL;
-+	g_autoptr(GError) err = NULL;
-+	g_auto(GStrv) lines = NULL;
-+	GpiodbusRequest *request;
-+	GVariantBuilder builder;
-+	GpiodbusLine *line;
-+	gsize num_lines, i;
-+	GVariantIter iter;
-+	guint offset;
-+	gint value;
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= "request",
-+			.short_name		= 'r',
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING,
-+			.arg_data		= &request_name,
-+			.description		= "restrict scope to a particular request",
-+			.arg_description	= "<request>",
-+		},
-+		{
-+			.long_name		= "unquoted",
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_NONE,
-+			.arg_data		= &unquoted,
-+			.description		= "don't quote line names",
-+		},
-+		{
-+			.long_name		= "numeric",
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_NONE,
-+			.arg_data		= &numeric,
-+			.description		= "display line values as '0' (inactive) or '1' (active)",
-+		},
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &lines,
-+			.arg_description	= "[line0] [line1]...",
-+		},
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, description, &argc, &argv);
-+	check_manager();
-+
-+	if (!lines && !request_name)
-+		die_parsing_opts("either at least one line or the request must be specified");
-+
-+	offsets = g_array_new(FALSE, TRUE, sizeof(guint));
-+	num_lines = lines ? g_strv_length(lines) : 0;
-+
-+	if (!request_name) {
-+		/*
-+		 * TODO Limit the number of D-Bus calls by gathering the requests
-+		 * and their relevant lines into a container of some kind first.
-+		 */
-+
-+		values = g_array_sized_new(FALSE, TRUE, sizeof(gint),
-+					   num_lines);
-+
-+		for (i = 0; i < num_lines; i++) {
-+			g_autoptr(GpiodbusRequest) req_proxy = NULL;
-+			g_autoptr(GpiodbusObject) line_obj = NULL;
-+			g_autoptr(GVariant) arg_offsets = NULL;
-+			g_autoptr(GVariant) arg_values = NULL;
-+
-+			ret = get_line_obj_by_name(lines[i], &line_obj, NULL);
-+			if (!ret)
-+				die("Line not found: %s\n", lines[i]);
-+
-+			line = gpiodbus_object_peek_line(line_obj);
-+			req_path = gpiodbus_line_get_request_path(line);
-+
-+			if (!gpiodbus_line_get_managed(line))
-+				die("Line '%s' not managed by gpio-manager, must be requested first",
-+				    lines[i]);
-+
-+			req_proxy = gpiodbus_request_proxy_new_for_bus_sync(
-+							G_BUS_TYPE_SYSTEM,
-+							G_DBUS_PROXY_FLAGS_NONE,
-+							"io.gpiod1", req_path,
-+							NULL, &err);
-+			if (err)
-+				die_gerror(err,
-+					   "Failed to get D-Bus proxy for '%s'",
-+					   req_path);
-+
-+			offset = gpiodbus_line_get_offset(line);
-+			g_array_append_val(offsets, offset);
-+
-+			g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
-+			g_variant_builder_add(&builder, "u", offset);
-+			arg_offsets = g_variant_ref_sink(
-+					g_variant_builder_end(&builder));
-+
-+			ret = gpiodbus_request_call_get_values_sync(
-+							req_proxy, arg_offsets,
-+							G_DBUS_CALL_FLAGS_NONE,
-+							-1, &arg_values, NULL,
-+							&err);
-+			if (!ret)
-+				die_gerror(err, "Failed to get line values");
-+
-+			g_variant_iter_init(&iter, arg_values);
-+			while (g_variant_iter_next(&iter, "i", &value))
-+				g_array_append_val(values, value);
-+		}
-+	} else {
-+		g_autoptr(GVariant) arg_offsets = NULL;
-+		g_autoptr(GVariant) arg_values = NULL;
-+
-+		req_obj = get_request_obj(request_name);
-+		request = gpiodbus_object_peek_request(req_obj);
-+		chip_path = gpiodbus_request_get_chip_path(request);
-+		chip_obj = get_chip_obj_by_path(chip_path);
-+
-+		if (lines) {
-+			for (i = 0; i < num_lines; i++) {
-+				g_autoptr(GpiodbusObject) line_obj = NULL;
-+
-+				line_obj = get_line_obj_by_name_for_chip(
-+							chip_obj, lines[i]);
-+				if (!line_obj)
-+					die("Line not found: %s\n", lines[i]);
-+
-+				line = gpiodbus_object_peek_line(line_obj);
-+
-+				if (!gpiodbus_line_get_managed(line))
-+					die("Line '%s' not managed by gpio-manager, must be requested first",
-+					    lines[i]);
-+
-+				offset = gpiodbus_line_get_offset(line);
-+				g_array_append_val(offsets, offset);
-+			}
-+		} else {
-+			offsets = get_request_offsets(request);
-+			num_lines = offsets->len;
-+		}
-+
-+		g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
-+		for (i = 0; i < offsets->len; i++)
-+			g_variant_builder_add(&builder, "u",
-+					      g_array_index(offsets, guint, i));
-+		arg_offsets = g_variant_ref_sink(
-+					g_variant_builder_end(&builder));
-+
-+		ret = gpiodbus_request_call_get_values_sync(
-+							request, arg_offsets,
-+							G_DBUS_CALL_FLAGS_NONE,
-+							-1, &arg_values, NULL,
-+							&err);
-+		if (!ret)
-+			die_gerror(err, "Failed to get line values");
-+
-+		values = g_array_sized_new(FALSE, TRUE, sizeof(gint),
-+					   g_variant_n_children(arg_values));
-+
-+		g_variant_iter_init(&iter, arg_values);
-+		while (g_variant_iter_next(&iter, "i", &value))
-+			g_array_append_val(values, value);
-+	}
-+
-+	for (i = 0; i < num_lines; i++) {
-+		if (!unquoted)
-+			g_print("\"");
-+
-+		if (lines)
-+			g_print("%s", lines[i]);
-+		else
-+			g_print("%u", g_array_index(offsets, guint, i));
-+
-+		if (!unquoted)
-+			g_print("\"");
-+
-+		g_print("=%s", g_array_index(values, guint, i) ?
-+					numeric ? "1" : "active" :
-+					numeric ? "0" : "inactive");
-+
-+		if (i != (num_lines - 1))
-+			g_print(" ");
-+	}
-+	g_print("\n");
-+
-+	return EXIT_SUCCESS;
-+}
-diff --git a/dbus/client/gpiocli.c b/dbus/client/gpiocli.c
-new file mode 100644
-index 0000000..fbd1bbe
---- /dev/null
-+++ b/dbus/client/gpiocli.c
-@@ -0,0 +1,174 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2022-2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <glib/gstdio.h>
-+
-+#include "common.h"
-+
-+typedef struct {
-+	gchar *name;
-+	int (*main_func)(int argc, char **argv);
-+	gchar *descr;
-+} GPIOCliCmd;
-+
-+int gpiocli_detect_main(int argc, char **argv);
-+int gpiocli_find_main(int argc, char **argv);
-+int gpiocli_info_main(int argc, char **argv);
-+int gpiocli_get_main(int argc, char **argv);
-+int gpiocli_monitor_main(int argc, char **argv);
-+int gpiocli_notify_main(int argc, char **argv);
-+int gpiocli_reconfigure_main(int argc, char **argv);
-+int gpiocli_release_main(int argc, char **argv);
-+int gpiocli_request_main(int argc, char **argv);
-+int gpiocli_requests_main(int argc, char **argv);
-+int gpiocli_set_main(int argc, char **argv);
-+int gpiocli_wait_main(int argc, char **argv);
-+
-+static const GPIOCliCmd cli_cmds[] = {
-+	{
-+		.name = "detect",
-+		.main_func = gpiocli_detect_main,
-+		.descr = "list GPIO chips and print their properties",
-+	},
-+	{
-+		.name = "find",
-+		.main_func = gpiocli_find_main,
-+		.descr = "take a line name and find its parent chip's name and offset within it",
-+	},
-+	{
-+		.name = "info",
-+		.main_func = gpiocli_info_main,
-+		.descr = "print information about GPIO lines",
-+	},
-+	{
-+		.name = "get",
-+		.main_func = gpiocli_get_main,
-+		.descr = "get values of GPIO lines",
-+	},
-+	{
-+		.name = "monitor",
-+		.main_func = gpiocli_monitor_main,
-+		.descr = "notify the user about edge events",
-+	},
-+	{
-+		.name = "notify",
-+		.main_func = gpiocli_notify_main,
-+		.descr = "notify the user about line property changes",
-+	},
-+	{
-+		.name = "reconfigure",
-+		.main_func = gpiocli_reconfigure_main,
-+		.descr = "change the line configuration for an existing request",
-+	},
-+	{
-+		.name = "release",
-+		.main_func = gpiocli_release_main,
-+		.descr = "release one of the line requests controlled by the manager",
-+	},
-+	{
-+		.name = "request",
-+		.main_func = gpiocli_request_main,
-+		.descr = "request a set of GPIO lines for exclusive usage by the manager",
-+	},
-+	{
-+		.name = "requests",
-+		.main_func = gpiocli_requests_main,
-+		.descr = "list all line requests controlled by the manager",
-+	},
-+	{
-+		.name = "set",
-+		.main_func = gpiocli_set_main,
-+		.descr = "set values of GPIO lines",
-+	},
-+	{
-+		.name = "wait",
-+		.main_func = gpiocli_wait_main,
-+		.descr = "wait for the gpio-manager interface to appear",
-+	},
-+	{ }
-+};
-+
-+static GHashTable *make_cmd_table(void)
-+{
-+	GHashTable *cmd_table = g_hash_table_new_full(g_str_hash, g_str_equal,
-+						      NULL, NULL);
-+	const GPIOCliCmd *cmd;
-+
-+	for (cmd = &cli_cmds[0]; cmd->name; cmd++)
-+		g_hash_table_insert(cmd_table, cmd->name, cmd->main_func);
-+
-+	return cmd_table;
-+}
-+
-+static gchar *make_description(void)
-+{
-+	g_autoptr(GString) descr = g_string_new("Available commands:\n");
-+	const GPIOCliCmd *cmd;
-+
-+	for (cmd = &cli_cmds[0]; cmd->name; cmd++)
-+		g_string_append_printf(descr, "  %s - %s\n",
-+				       cmd->name, cmd->descr);
-+
-+	g_string_truncate(descr, descr->len - 1);
-+	return g_strdup(descr->str);
-+}
-+
-+static void show_version_and_exit(void)
-+{
-+	g_print("gpiocli v%s\n", GPIOD_VERSION_STR);
-+
-+	exit(EXIT_SUCCESS);
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"Simple command-line client for controlling gpio-manager.";
-+
-+	g_autoptr(GHashTable) cmd_table = make_cmd_table();
-+	g_autofree gchar *description = make_description();
-+	g_autofree gchar *basename = NULL;
-+	g_autofree gchar *cmd_name = NULL;
-+	gint (*cmd_func)(gint, gchar **);
-+	g_auto(GStrv) cmd_args = NULL;
-+	gboolean show_version = FALSE;
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= "version",
-+			.short_name		= 'v',
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_NONE,
-+			.arg_data		= &show_version,
-+			.description		= "Show version and exit.",
-+		},
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &cmd_args,
-+			.arg_description	= "CMD [ARGS?] ...",
-+		},
-+		{ }
-+	};
-+
-+	basename = g_path_get_basename(argv[0]);
-+	g_set_prgname(basename);
-+
-+	parse_options(opts, summary, description, &argc, &argv);
-+
-+	if (show_version)
-+		show_version_and_exit();
-+
-+	if (!cmd_args)
-+		die_parsing_opts("Command must be specified.");
-+
-+	cmd_func = g_hash_table_lookup(cmd_table, cmd_args[0]);
-+	if (!cmd_func)
-+		die_parsing_opts("Unknown command: %s.", cmd_args[0]);
-+
-+	cmd_name = g_strdup_printf("%s %s", basename, cmd_args[0]);
-+	g_set_prgname(cmd_name);
-+
-+	return cmd_func(g_strv_length(cmd_args), cmd_args);
-+}
-diff --git a/dbus/client/info.c b/dbus/client/info.c
-new file mode 100644
-index 0000000..fa08a3f
---- /dev/null
-+++ b/dbus/client/info.c
-@@ -0,0 +1,184 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <stdlib.h>
-+#include <string.h>
-+
-+#include "common.h"
-+
-+static gchar *make_line_name(const gchar *name)
-+{
-+	if (!name)
-+		return g_strdup("unnamed");
-+
-+	return g_strdup_printf("\"%s\"", name);
-+}
-+
-+static void do_print_line_info(GpiodbusObject *line_obj,
-+			       GpiodbusObject *chip_obj)
-+{
-+	g_autoptr(LineProperties) props = NULL;
-+	g_autoptr(GString) attributes = NULL;
-+	g_autofree gchar *line_name = NULL;
-+	GpiodbusChip *chip;
-+
-+	props = get_line_properties(gpiodbus_object_peek_line(line_obj));
-+	line_name = make_line_name(props->name);
-+
-+	attributes = g_string_new("[");
-+
-+	if (props->used)
-+		g_string_append_printf(attributes, "used,consumer=\"%s\",",
-+				       props->consumer);
-+
-+	if (props->managed)
-+		g_string_append_printf(attributes, "managed=\"%s\",",
-+				       props->request_name);
-+
-+	if (props->edge) {
-+		g_string_append_printf(attributes, "edges=%s,event-clock=%s,",
-+				       props->edge, props->event_clock);
-+		if (props->debounced)
-+			g_string_append_printf(attributes,
-+					       "debounce-period=%lu,",
-+					       props->debounce_period);
-+	}
-+
-+	if (props->bias)
-+		g_string_append_printf(attributes, "bias=%s,", props->bias);
-+
-+	if (props->active_low)
-+		attributes = g_string_append(attributes, "active-low,");
-+
-+	g_string_append_printf(attributes, "%s", props->direction);
-+
-+	if (g_strcmp0(props->direction, "output") == 0)
-+		g_string_append_printf(attributes, ",%s", props->drive);
-+
-+	attributes = g_string_append(attributes, "]");
-+
-+	if (chip_obj) {
-+		chip = gpiodbus_object_peek_chip(chip_obj);
-+		g_print("%s ", gpiodbus_chip_get_name(chip));
-+	} else {
-+		g_print("\tline ");
-+	}
-+
-+	g_print("%3u:\t%s\t\t%s\n", props->offset, line_name, attributes->str);
-+}
-+
-+static void print_line_info(gpointer elem, gpointer user_data G_GNUC_UNUSED)
-+{
-+	GpiodbusObject *line_obj = elem;
-+
-+	do_print_line_info(line_obj, NULL);
-+}
-+
-+static void do_show_chip(GpiodbusObject *chip_obj)
-+{
-+	GpiodbusChip *chip = gpiodbus_object_peek_chip(chip_obj);
-+	g_autolist(GpiodbusObject) line_objs = NULL;
-+
-+	g_print("%s - %u lines:\n",
-+		gpiodbus_chip_get_name(chip),
-+		gpiodbus_chip_get_num_lines(chip));
-+
-+	line_objs = get_all_line_objs_for_chip(chip_obj);
-+	g_list_foreach(line_objs, print_line_info, NULL);
-+}
-+
-+static void show_chip(gpointer elem, gpointer user_data G_GNUC_UNUSED)
-+{
-+	GpiodbusObject *chip_obj = elem;
-+
-+	do_show_chip(chip_obj);
-+}
-+
-+static void show_line_with_chip(gpointer elem, gpointer user_data)
-+{
-+	g_autoptr(GpiodbusObject) line_obj = NULL;
-+	GpiodbusObject *chip_obj = user_data;
-+	g_autofree gchar *chip_name = NULL;
-+	GString *line_name = elem;
-+
-+	line_obj = get_line_obj_by_name_for_chip(chip_obj, line_name->str);
-+	if (!line_obj) {
-+		chip_name = g_path_get_basename(
-+			g_dbus_object_get_object_path(G_DBUS_OBJECT(chip_obj)));
-+		die("no line '%s' on chip '%s'", line_name->str, chip_name);
-+	}
-+
-+	do_print_line_info(line_obj, chip_obj);
-+}
-+
-+static void show_line(gpointer elem, gpointer user_data G_GNUC_UNUSED)
-+{
-+	g_autoptr(GpiodbusObject) line_obj = NULL;
-+	g_autoptr(GpiodbusObject) chip_obj = NULL;
-+	GString *line_name = elem;
-+	gboolean ret;
-+
-+	ret = get_line_obj_by_name(line_name->str, &line_obj, &chip_obj);
-+	if (!ret)
-+		die("line '%s' not found", line_name->str);
-+
-+	do_print_line_info(line_obj, chip_obj);
-+}
-+
-+int gpiocli_info_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"Print information about GPIO lines.";
-+
-+	static const gchar *const description =
-+"Lines are specified by name, or optionally by offset if the chip option\n"
-+"is provided.\n";
-+
-+	g_autolist(GpiodbusObject) chip_objs = NULL;
-+	g_autolist(GString) line_name_list = NULL;
-+	g_autoptr(GpiodbusObject) chip_obj = NULL;
-+	g_auto(GStrv) line_names = NULL;
-+	const gchar *chip_name = NULL;
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= "chip",
-+			.short_name		= 'c',
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING,
-+			.arg_data		= &chip_name,
-+			.description		= "restrict scope to a particular chip",
-+			.arg_description	= "<chip>",
-+		},
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &line_names,
-+			.arg_description	= "[line1] [line2] ...",
-+		},
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, description, &argc, &argv);
-+	check_manager();
-+
-+	if (chip_name)
-+		chip_obj = get_chip_obj(chip_name);
-+
-+	if (line_names) {
-+		line_name_list = strv_to_gstring_list(line_names);
-+		if (chip_obj)
-+			g_list_foreach(line_name_list, show_line_with_chip,
-+				       chip_obj);
-+		else
-+			g_list_foreach(line_name_list, show_line, NULL);
-+	} else if (chip_obj) {
-+		do_show_chip(chip_obj);
-+	} else {
-+		chip_objs = get_chip_objs(NULL);
-+		g_list_foreach(chip_objs, show_chip, NULL);
-+	}
-+
-+	return EXIT_SUCCESS;
-+}
-diff --git a/dbus/client/monitor.c b/dbus/client/monitor.c
-new file mode 100644
-index 0000000..292b2bf
---- /dev/null
-+++ b/dbus/client/monitor.c
-@@ -0,0 +1,191 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <gio/gio.h>
-+#include <glib-unix.h>
-+#include <stdlib.h>
-+#include <string.h>
-+
-+#include "common.h"
-+
-+typedef struct {
-+	GList *lines;
-+} MonitorData;
-+
-+static void on_edge_event(GpiodbusLine *line, GVariant *args,
-+			  gpointer user_data G_GNUC_UNUSED)
-+{
-+	const char *name = gpiodbus_line_get_name(line);
-+	gulong global_seqno, line_seqno;
-+	guint64 timestamp;
-+	gint edge;
-+
-+	g_variant_get(args, "(ittt)", &edge, &timestamp,
-+		      &global_seqno, &line_seqno);
-+
-+	g_print("%lu %s ", timestamp, edge ? "rising " : "falling");
-+	if (strlen(name))
-+		g_print("\"%s\"\n", name);
-+	else
-+		g_print("%u\n", gpiodbus_line_get_offset(line));
-+}
-+
-+static void connect_edge_event(gpointer elem, gpointer user_data)
-+{
-+	GpiodbusObject *line_obj = elem;
-+	MonitorData *data = user_data;
-+	g_autoptr(GError) err = NULL;
-+	const gchar *line_obj_path;
-+	GpiodbusLine *line;
-+
-+	line_obj_path = g_dbus_object_get_object_path(G_DBUS_OBJECT(line_obj));
-+
-+	line = gpiodbus_line_proxy_new_for_bus_sync(G_BUS_TYPE_SYSTEM,
-+						    G_DBUS_PROXY_FLAGS_NONE,
-+						    "io.gpiod1", line_obj_path,
-+						    NULL, &err);
-+	if (err)
-+		die_gerror(err, "Failed to get D-Bus proxy for '%s'",
-+			   line_obj_path);
-+
-+	if (!gpiodbus_line_get_managed(line))
-+		die("Line must be managed by gpio-manager in order to be monitored");
-+
-+	if (g_strcmp0(gpiodbus_line_get_edge_detection(line), "none") == 0)
-+		die("Edge detection must be enabled for monitored lines");
-+
-+	data->lines = g_list_append(data->lines, line);
-+
-+	g_signal_connect(line, "edge-event", G_CALLBACK(on_edge_event), NULL);
-+}
-+
-+int gpiocli_monitor_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"Get values of one or more GPIO lines.";
-+
-+	static const gchar *const description =
-+"If -r/--request is specified then all the lines must belong to the same\n"
-+"request (and - by extension - the same chip).\n"
-+"\n"
-+"If no lines are specified but -r/--request was passed then all lines within\n"
-+"the request will be used.";
-+
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	const gchar *request_name = NULL, *chip_path;
-+	g_autolist(GpiodbusObject) line_objs = NULL;
-+	g_autoptr(GpiodbusObject) chip_obj = NULL;
-+	g_autoptr(GpiodbusObject) req_obj = NULL;
-+	g_autoptr(GArray) offsets = NULL;
-+	g_autoptr(GMainLoop) loop = NULL;
-+	g_auto(GStrv) lines = NULL;
-+	GpiodbusRequest *request;
-+	MonitorData data = { };
-+	gsize num_lines, i;
-+	guint watch_id;
-+	gboolean ret;
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= "request",
-+			.short_name		= 'r',
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING,
-+			.arg_data		= &request_name,
-+			.description		= "restrict scope to a particular request",
-+			.arg_description	= "<request>",
-+		},
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &lines,
-+			.arg_description	= "[line0] [line1]...",
-+		},
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, description, &argc, &argv);
-+
-+	watch_id = g_bus_watch_name(G_BUS_TYPE_SYSTEM, "io.gpiod1",
-+				    G_BUS_NAME_WATCHER_FLAGS_NONE,
-+				    NULL, die_on_name_vanished, NULL, NULL);
-+	check_manager();
-+
-+	if (!lines && !request_name)
-+		die_parsing_opts("either at least one line or the request must be specified");
-+
-+	if (request_name) {
-+		req_obj = get_request_obj(request_name);
-+		request = gpiodbus_object_peek_request(req_obj);
-+		chip_path = gpiodbus_request_get_chip_path(request);
-+		chip_obj = get_chip_obj_by_path(chip_path);
-+		offsets = g_array_new(FALSE, TRUE, sizeof(guint));
-+
-+		if (lines) {
-+			num_lines = g_strv_length(lines);
-+
-+			for (i = 0; i < num_lines; i++) {
-+				g_autoptr(GpiodbusObject) line_obj = NULL;
-+
-+				line_obj = get_line_obj_by_name_for_chip(
-+							chip_obj, lines[i]);
-+				if (!line_obj)
-+					die("Line not found: %s\n", lines[i]);
-+
-+				line_objs = g_list_append(line_objs,
-+							g_object_ref(line_obj));
-+			}
-+		} else {
-+			offsets = get_request_offsets(request);
-+			manager = get_object_manager_client(chip_path);
-+
-+			for (i = 0; i < offsets->len; i++) {
-+				g_autoptr(GpiodbusObject) line_obj = NULL;
-+				g_autofree char *obj_path = NULL;
-+
-+				obj_path = g_strdup_printf("%s/line%u",
-+							   chip_path,
-+							   g_array_index(
-+								offsets,
-+								guint, i));
-+
-+				line_obj = GPIODBUS_OBJECT(
-+					g_dbus_object_manager_get_object(
-+								manager,
-+								obj_path));
-+				if (!line_obj)
-+					die("Line not found: %u\n",
-+					    g_array_index(offsets, guint, i));
-+
-+				line_objs = g_list_append(line_objs,
-+							g_object_ref(line_obj));
-+			}
-+		}
-+	} else {
-+		num_lines = g_strv_length(lines);
-+
-+		for (i = 0; i < num_lines; i++) {
-+			g_autoptr(GpiodbusObject) line_obj = NULL;
-+
-+			ret = get_line_obj_by_name(lines[i], &line_obj, NULL);
-+			if (!ret)
-+				die("Line not found: %s\n", lines[i]);
-+
-+			line_objs = g_list_append(line_objs,
-+						  g_object_ref(line_obj));
-+		}
-+	}
-+
-+	g_list_foreach(line_objs, connect_edge_event, &data);
-+
-+	loop = g_main_loop_new(NULL, FALSE);
-+	g_unix_signal_add(SIGTERM, quit_main_loop_on_signal, loop);
-+	g_unix_signal_add(SIGINT, quit_main_loop_on_signal, loop);
-+
-+	g_main_loop_run(loop);
-+
-+	g_bus_unwatch_name(watch_id);
-+
-+	return EXIT_SUCCESS;
-+}
-diff --git a/dbus/client/notify.c b/dbus/client/notify.c
-new file mode 100644
-index 0000000..f5a8e5d
---- /dev/null
-+++ b/dbus/client/notify.c
-@@ -0,0 +1,295 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <gio/gio.h>
-+#include <glib-unix.h>
-+#include <stdlib.h>
-+
-+#include "common.h"
-+
-+/*
-+ * Used to keep line proxies and chip interfaces alive for the duration of the
-+ * program, which is required for signals to work.
-+ */
-+typedef struct {
-+	GList *lines;
-+	GList *chips;
-+	GpiodbusObject *scoped_chip;
-+} NotifyData;
-+
-+static void clear_notify_data(NotifyData *data)
-+{
-+	g_list_free_full(data->lines, g_object_unref);
-+	g_list_free_full(data->chips, g_object_unref);
-+
-+	if (data->scoped_chip)
-+		g_clear_object(&data->scoped_chip);
-+}
-+
-+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC(NotifyData, clear_notify_data);
-+
-+static const gchar *bool_to_str(gboolean val)
-+{
-+	return val ? "True" : "False";
-+}
-+
-+static const gchar *bool_variant_to_str(GVariant *val)
-+{
-+	return bool_to_str(g_variant_get_boolean(val));
-+}
-+
-+static void
-+on_properties_changed(GpiodbusLine *line, GVariant *changed_properties,
-+		      GStrv invalidated_properties G_GNUC_UNUSED,
-+		      gpointer user_data)
-+{
-+	GpiodbusChip *chip = user_data;
-+	g_autofree gchar *name = NULL;
-+	const gchar *consumer, *tmp;
-+	GVariantIter iter;
-+	GVariant *v;
-+	gsize len;
-+	gchar *k;
-+
-+	if (g_variant_n_children(changed_properties) == 0)
-+		return;
-+
-+	tmp = gpiodbus_line_get_name(line);
-+	name = tmp ? g_strdup_printf("\"%s\"", tmp) : g_strdup("unnamed");
-+
-+	g_variant_iter_init(&iter, changed_properties);
-+	while (g_variant_iter_next(&iter, "{sv}", &k, &v)) {
-+		g_autoptr(GString) change = g_string_new(NULL);
-+		g_autofree gchar *req_name = NULL;
-+		g_autoptr(GVariant) val = v;
-+		g_autofree gchar *key = k;
-+
-+		if (g_strcmp0(key, "Consumer") == 0) {
-+			consumer = g_variant_get_string(val, &len);
-+			g_string_printf(change, "consumer=>\"%s\"",
-+					len ? consumer : "unused");
-+		} else if (g_strcmp0(key, "Used") == 0) {
-+			g_string_printf(change, "used=>%s",
-+					       bool_variant_to_str(val));
-+		} else if (g_strcmp0(key, "Debounced") == 0) {
-+			g_string_printf(change, "debounced=>%s",
-+					       bool_variant_to_str(val));
-+		} else if (g_strcmp0(key, "ActiveLow") == 0) {
-+			g_string_printf(change, "active-low=>%s",
-+					       bool_variant_to_str(val));
-+		} else if (g_strcmp0(key, "Direction") == 0) {
-+			g_string_printf(change, "direction=>%s",
-+					       g_variant_get_string(val, NULL));
-+		} else if (g_strcmp0(key, "Drive") == 0) {
-+			g_string_printf(change, "drive=>%s",
-+					       g_variant_get_string(val, NULL));
-+		} else if (g_strcmp0(key, "Bias") == 0) {
-+			g_string_printf(change, "bias=>%s",
-+					       g_variant_get_string(val, NULL));
-+		} else if (g_strcmp0(key, "EdgeDetection") == 0) {
-+			g_string_printf(change, "edge=>%s",
-+					       g_variant_get_string(val, NULL));
-+		} else if (g_strcmp0(key, "EventClock") == 0) {
-+			g_string_printf(change, "event-clock=>%s",
-+					       g_variant_get_string(val, NULL));
-+		} else if (g_strcmp0(key, "DebouncePeriodUs") == 0) {
-+			g_string_printf(change, "debounce-period=>%ld",
-+					       g_variant_get_uint64(val));
-+		} else if (g_strcmp0(key, "Managed") == 0) {
-+			g_string_printf(change, "managed=>%s",
-+					       bool_variant_to_str(val));
-+		} else if (g_strcmp0(key, "RequestPath") == 0) {
-+			req_name = sanitize_object_path(
-+					g_variant_get_string(val, NULL));
-+			g_string_printf(change, "request=>%s",
-+					       req_name);
-+		} else {
-+			die("unexpected property update received from manager: '%s'",
-+			    key);
-+		}
-+
-+		g_print("%s - %u (%s): [%s]\n", gpiodbus_chip_get_name(chip),
-+			gpiodbus_line_get_offset(line), name ?: "unnamed",
-+			change->str);
-+	}
-+}
-+
-+static void print_line_info(GpiodbusLine *line, GpiodbusChip *chip)
-+{
-+	g_autoptr(LineProperties) props = get_line_properties(line);
-+	g_autoptr(GString) attrs = g_string_new(props->direction);
-+	g_autofree gchar *name = NULL;
-+
-+	if (props->used)
-+		g_string_append(attrs, ",used");
-+
-+	if (props->consumer)
-+		g_string_append_printf(attrs, ",consumer=\"%s\"",
-+				       props->consumer);
-+
-+	if (props->drive && g_strcmp0(props->direction, "output") == 0)
-+		g_string_append_printf(attrs, ",%s", props->drive);
-+
-+	if (props->bias) {
-+		if (g_strcmp0(props->bias, "disabled") == 0)
-+			g_string_append(attrs, ",bias-disabled");
-+		else
-+			g_string_append_printf(attrs, ",%s", props->bias);
-+	}
-+
-+	if (props->active_low)
-+		g_string_append(attrs, ",active-low");
-+
-+	if (props->edge) {
-+		if (g_strcmp0(props->edge, "both") == 0)
-+			g_string_append(attrs, ",both-edges");
-+		else
-+			g_string_append_printf(attrs, ",%s-edge", props->edge);
-+
-+		g_string_append_printf(attrs, ",%s-clock", props->event_clock);
-+
-+		if (props->debounced)
-+			g_string_append_printf(attrs,
-+					       "debounced,debounce-period=%lu",
-+					       props->debounce_period);
-+	}
-+
-+	if (props->managed)
-+		g_string_append_printf(attrs, ",managed,request=\"%s\"",
-+				       props->request_name);
-+
-+	name = props->name ? g_strdup_printf("\"%s\"", props->name) :
-+			     g_strdup("unnamed");
-+
-+	g_print("%s - %u (%s): [%s]\n", gpiodbus_chip_get_name(chip),
-+		props->offset, name ?: "unnamed", attrs->str);
-+}
-+
-+static void connect_line(gpointer elem, gpointer user_data)
-+{
-+	g_autoptr(GpiodbusObject) line_obj = NULL;
-+	g_autoptr(GpiodbusObject) chip_obj = NULL;
-+	g_autoptr(GpiodbusLine) line = NULL;
-+	g_autoptr(GpiodbusChip) chip = NULL;
-+	g_autofree gchar *chip_name = NULL;
-+	g_autoptr(GError) err = NULL;
-+	NotifyData *data = user_data;
-+	const gchar *line_obj_path;
-+	GString *line_name = elem;
-+	gboolean ret;
-+
-+	if (data->scoped_chip) {
-+		chip_obj = g_object_ref(data->scoped_chip);
-+		line_obj = get_line_obj_by_name_for_chip(chip_obj,
-+							 line_name->str);
-+		if (!line_obj) {
-+			chip_name = g_path_get_basename(
-+				g_dbus_object_get_object_path(
-+					G_DBUS_OBJECT(chip_obj)));
-+			die("no line '%s' on chip '%s'",
-+			    line_name->str, chip_name);
-+		}
-+	} else {
-+		ret = get_line_obj_by_name(line_name->str,
-+					   &line_obj, &chip_obj);
-+		if (!ret)
-+			die("line '%s' not found", line_name->str);
-+	}
-+
-+	line_obj_path = g_dbus_object_get_object_path(G_DBUS_OBJECT(line_obj));
-+
-+	line = gpiodbus_line_proxy_new_for_bus_sync(G_BUS_TYPE_SYSTEM,
-+						    G_DBUS_PROXY_FLAGS_NONE,
-+						    "io.gpiod1", line_obj_path,
-+						    NULL, &err);
-+	if (err)
-+		die_gerror(err, "Failed to get D-Bus proxy for '%s'",
-+			   line_obj_path);
-+
-+	data->lines = g_list_append(data->lines, g_object_ref(line));
-+
-+	if (data->scoped_chip) {
-+		if (g_list_length(data->chips) == 0) {
-+			chip = gpiodbus_object_get_chip(chip_obj);
-+			data->chips = g_list_append(data->chips,
-+						    g_object_ref(chip));
-+		} else {
-+			chip = g_list_first(data->chips)->data;
-+		}
-+	} else {
-+		chip = gpiodbus_object_get_chip(chip_obj);
-+		data->chips = g_list_append(data->chips, g_object_ref(chip));
-+	}
-+
-+	print_line_info(line, chip);
-+
-+	g_signal_connect(line, "g-properties-changed",
-+			 G_CALLBACK(on_properties_changed), chip);
-+}
-+
-+int gpiocli_notify_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"Monitor a set of lines for property changes.";
-+
-+	static const gchar *const description =
-+"Lines are specified by name, or optionally by offset if the chip option\n"
-+"is provided.\n";
-+
-+	g_autolist(GString) line_name_list = NULL;
-+	g_autoptr(GMainLoop) loop = NULL;
-+	g_auto(GStrv) line_names = NULL;
-+	const gchar *chip_name = NULL;
-+	/*
-+	 * FIXME: data internals must be freed but there's some issue with
-+	 * unrefing the GpiodbusObject here. For now it's leaking memory.
-+	 */
-+	NotifyData data = { };
-+	guint watch_id;
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= "chip",
-+			.short_name		= 'c',
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING,
-+			.arg_data		= &chip_name,
-+			.description		= "restrict scope to a particular chip",
-+			.arg_description	= "<chip>",
-+		},
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &line_names,
-+			.arg_description	= "<line1> [line2] ...",
-+		},
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, description, &argc, &argv);
-+
-+	watch_id = g_bus_watch_name(G_BUS_TYPE_SYSTEM, "io.gpiod1",
-+				    G_BUS_NAME_WATCHER_FLAGS_NONE,
-+				    NULL, die_on_name_vanished, NULL, NULL);
-+	check_manager();
-+
-+	if (!line_names)
-+		die_parsing_opts("at least one line must be specified");
-+
-+	if (chip_name)
-+		data.scoped_chip = get_chip_obj(chip_name);
-+
-+	line_name_list = strv_to_gstring_list(line_names);
-+	g_list_foreach(line_name_list, connect_line, &data);
-+
-+	loop = g_main_loop_new(NULL, FALSE);
-+	g_unix_signal_add(SIGTERM, quit_main_loop_on_signal, loop);
-+	g_unix_signal_add(SIGINT, quit_main_loop_on_signal, loop);
-+
-+	g_main_loop_run(loop);
-+
-+	g_bus_unwatch_name(watch_id);
-+
-+	return EXIT_SUCCESS;
-+}
-diff --git a/dbus/client/reconfigure.c b/dbus/client/reconfigure.c
-new file mode 100644
-index 0000000..cb22f58
---- /dev/null
-+++ b/dbus/client/reconfigure.c
-@@ -0,0 +1,76 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <stdlib.h>
-+
-+#include "common.h"
-+
-+int gpiocli_reconfigure_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"Change the line configuration for an existing request.";
-+
-+	g_autoptr(GpiodbusObject) req_obj = NULL;
-+	g_autoptr(GVariant) line_config = NULL;
-+	g_autoptr(GArray) output_values = NULL;
-+	LineConfigOpts line_cfg_opts = { };
-+	g_autoptr(GArray) offsets = NULL;
-+	g_auto(GStrv) remaining = NULL;
-+	g_autoptr(GError) err = NULL;
-+	GpiodbusRequest *request;
-+	gsize num_values;
-+	gboolean ret;
-+	gint val;
-+	guint i;
-+
-+	const GOptionEntry opts[] = {
-+		LINE_CONFIG_OPTIONS(&line_cfg_opts),
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &remaining,
-+			.arg_description	= "<request> [value1] [value2]...",
-+		},
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, NULL, &argc, &argv);
-+	validate_line_config_opts(&line_cfg_opts);
-+
-+	if (!remaining || g_strv_length(remaining) == 0)
-+		die_parsing_opts("Exactly one request to reconfigure must be specified.");
-+
-+	num_values = g_strv_length(remaining) - 1;
-+
-+	check_manager();
-+
-+	req_obj = get_request_obj(remaining[0]);
-+	request = gpiodbus_object_peek_request(req_obj);
-+	offsets = get_request_offsets(request);
-+
-+	if (num_values) {
-+		if (num_values != offsets->len)
-+			die_parsing_opts("The number of output values must correspond to the number of lines in the request");
-+
-+		output_values = g_array_sized_new(FALSE, TRUE, sizeof(gint),
-+						  num_values);
-+
-+		for (i = 0; i < num_values; i++) {
-+			val = output_value_from_str(remaining[i + 1]);
-+			g_array_append_val(output_values, val);
-+		}
-+	}
-+
-+	line_cfg_opts.output_values = output_values;
-+	line_config = make_line_config(offsets, &line_cfg_opts);
-+
-+	ret = gpiodbus_request_call_reconfigure_lines_sync(
-+						request, line_config,
-+						G_DBUS_CALL_FLAGS_NONE,
-+						-1, NULL, &err);
-+	if (!ret)
-+		die_gerror(err, "Failed to reconfigure lines");
-+
-+	return EXIT_SUCCESS;
-+}
-diff --git a/dbus/client/release.c b/dbus/client/release.c
-new file mode 100644
-index 0000000..84e364f
---- /dev/null
-+++ b/dbus/client/release.c
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <stdlib.h>
-+
-+#include "common.h"
-+
-+int gpiocli_release_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"Release one of the line requests controlled by the manager.";
-+
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	g_autoptr(GpiodbusObject) obj = NULL;
-+	g_autofree gchar *obj_path = NULL;
-+	g_auto(GStrv) remaining = NULL;
-+	g_autoptr(GError) err = NULL;
-+	const gchar *request_name;
-+	GpiodbusRequest *request;
-+	gboolean ret;
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &remaining,
-+			.arg_description	= "<request>",
-+		},
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, NULL, &argc, &argv);
-+
-+	if (!remaining || g_strv_length(remaining) != 1)
-+		die_parsing_opts("Exactly one request to release must be specified.");
-+
-+	check_manager();
-+
-+	request_name = remaining[0];
-+
-+	obj_path = make_request_obj_path(request_name);
-+	manager = get_object_manager_client("/io/gpiod1/requests");
-+	obj = GPIODBUS_OBJECT(g_dbus_object_manager_get_object(manager,
-+							       obj_path));
-+	if (!obj)
-+		goto no_request;
-+
-+	request = gpiodbus_object_peek_request(obj);
-+	if (!request)
-+		goto no_request;
-+
-+	ret = gpiodbus_request_call_release_sync(request,
-+						 G_DBUS_CALL_FLAGS_NONE,
-+						 -1, NULL, &err);
-+	if (!ret)
-+		die_gerror(err, "Failed to release request '%s': %s",
-+			   request_name, err->message);
-+
-+	return EXIT_SUCCESS;
-+
-+no_request:
-+	die("No such request: '%s'", request_name);
-+}
-diff --git a/dbus/client/request.c b/dbus/client/request.c
-new file mode 100644
-index 0000000..f12d903
---- /dev/null
-+++ b/dbus/client/request.c
-@@ -0,0 +1,250 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2023-2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <stdlib.h>
-+
-+#include "common.h"
-+
-+typedef struct {
-+	LineConfigOpts line_cfg_opts;
-+	const gchar *consumer;
-+} RequestOpts;
-+
-+typedef struct {
-+	const gchar *request_path;
-+	gboolean done;
-+} RequestWaitData;
-+
-+static GVariant *make_request_config(RequestOpts *opts)
-+{
-+	GVariantBuilder builder;
-+
-+	g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
-+	g_variant_builder_add_value(&builder,
-+			g_variant_new("{sv}", "consumer",
-+				      g_variant_new_string(opts->consumer)));
-+
-+	return g_variant_ref_sink(g_variant_builder_end(&builder));
-+}
-+
-+static gboolean on_timeout(gpointer user_data G_GNUC_UNUSED)
-+{
-+	die("wait for request to appear timed out!");
-+}
-+
-+static void obj_match_request_path(GpiodbusObject *obj, RequestWaitData *data)
-+{
-+	if (g_strcmp0(g_dbus_object_get_object_path(G_DBUS_OBJECT(obj)),
-+		      data->request_path) == 0)
-+		data->done = TRUE;
-+}
-+
-+static void match_request_path(gpointer elem, gpointer user_data)
-+{
-+	RequestWaitData *data = user_data;
-+	GpiodbusObject *obj = elem;
-+
-+	obj_match_request_path(obj, data);
-+}
-+
-+static void on_object_added(GDBusObjectManager *manager G_GNUC_UNUSED,
-+			    GpiodbusObject *obj, gpointer user_data)
-+{
-+	RequestWaitData *data = user_data;
-+
-+	obj_match_request_path(GPIODBUS_OBJECT(obj), data);
-+}
-+
-+static void wait_for_request(const gchar *request_path)
-+{
-+	RequestWaitData data = { .request_path = request_path };
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	g_autolist(GpiodbusObject) objs = NULL;
-+
-+	manager = get_object_manager_client("/io/gpiod1/requests");
-+
-+	g_signal_connect(manager, "object-added",
-+			 G_CALLBACK(on_object_added), &data);
-+
-+	objs = g_dbus_object_manager_get_objects(manager);
-+	g_list_foreach(objs, match_request_path, &data);
-+
-+	g_timeout_add(5000, on_timeout, NULL);
-+
-+	while (!data.done)
-+		g_main_context_iteration(NULL, TRUE);
-+}
-+
-+static int
-+request_lines(GList *line_names, const gchar *chip_name, RequestOpts *req_opts)
-+{
-+	g_autoptr(GpiodbusObject) chip_obj = NULL;
-+	g_autoptr(GVariant) request_config = NULL;
-+	g_autoptr(GVariant) line_config = NULL;
-+	g_autofree gchar *request_path = NULL;
-+	g_autofree gchar *request_name = NULL;
-+	g_autofree gchar *dyn_name = NULL;
-+	g_autoptr(GArray) offsets = NULL;
-+	g_autoptr(GError) err = NULL;
-+	GpiodbusLine *line;
-+	GpiodbusChip *chip;
-+	GString *line_name;
-+	guint i, *offset;
-+	gboolean ret;
-+	GList *pos;
-+	gsize llen;
-+
-+	llen = g_list_length(line_names);
-+	offsets = g_array_sized_new(FALSE, TRUE, sizeof(guint), llen);
-+	g_array_set_size(offsets, llen);
-+
-+	if (chip_name)
-+		chip_obj = get_chip_obj(chip_name);
-+
-+	for (i = 0, pos = g_list_first(line_names);
-+	     i < llen;
-+	     i++, pos = g_list_next(pos)) {
-+		g_autoptr(GpiodbusObject) line_obj = NULL;
-+
-+		line_name = pos->data;
-+
-+		if (chip_obj) {
-+			line_obj = get_line_obj_by_name_for_chip(chip_obj,
-+								line_name->str);
-+			if (!line_obj) {
-+				if (dyn_name) {
-+					ret = get_line_obj_by_name(
-+							line_name->str,
-+							&line_obj, NULL);
-+					if (ret)
-+						/*
-+						 * This means the line exists
-+						 * but on a different chip.
-+						 */
-+						die("all requested lines must belong to the same chip");
-+				}
-+
-+				die("no line '%s' on chip '%s'",
-+				    line_name->str, chip_name);
-+			}
-+		} else {
-+			ret = get_line_obj_by_name(line_name->str, &line_obj,
-+						   &chip_obj);
-+			if (!ret)
-+				die("line '%s' not found", line_name->str);
-+
-+			dyn_name = g_path_get_basename(
-+					g_dbus_object_get_object_path(
-+						G_DBUS_OBJECT(chip_obj)));
-+			chip_name = dyn_name;
-+		}
-+
-+		line = gpiodbus_object_peek_line(line_obj);
-+		offset = &g_array_index(offsets, guint, i);
-+		*offset = gpiodbus_line_get_offset(line);
-+	}
-+
-+	chip = gpiodbus_object_peek_chip(chip_obj);
-+	line_config = make_line_config(offsets, &req_opts->line_cfg_opts);
-+	request_config = make_request_config(req_opts);
-+
-+	ret = gpiodbus_chip_call_request_lines_sync(chip, line_config,
-+						    request_config,
-+						    G_DBUS_CALL_FLAGS_NONE, -1,
-+						    &request_path, NULL, &err);
-+	if (err)
-+		die_gerror(err, "failed to request lines from chip '%s'",
-+			   chip_name);
-+
-+	wait_for_request(request_path);
-+
-+	request_name = g_path_get_basename(request_path);
-+	g_print("%s\n", request_name);
-+
-+	return EXIT_SUCCESS;
-+}
-+
-+int gpiocli_request_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"Request a set of GPIO lines for exclusive usage by the gpio-manager.";
-+
-+	g_autoptr(GArray) output_values = NULL;
-+	g_autolist(GString) line_names = NULL;
-+	const gchar *chip_name = NULL;
-+	g_auto(GStrv) lines = NULL;
-+	RequestOpts req_opts = {};
-+	gsize llen;
-+	gint val;
-+	guint i;
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= "chip",
-+			.short_name		= 'c',
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING,
-+			.arg_data		= &chip_name,
-+			.description		=
-+"Explicitly specify the chip_name on which to resolve the lines which allows to use raw offsets instead of line names.",
-+			.arg_description	= "<chip name>",
-+		},
-+		{
-+			.long_name		= "consumer",
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING,
-+			.arg_data		= &req_opts.consumer,
-+			.description		= "Consumer string (defaults to program name)",
-+			.arg_description	= "<consumer name>",
-+		},
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &lines,
-+			.arg_description	= "<line1>[=value1] [line2[=value2]] ...",
-+		},
-+		LINE_CONFIG_OPTIONS(&req_opts.line_cfg_opts),
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, NULL, &argc, &argv);
-+	validate_line_config_opts(&req_opts.line_cfg_opts);
-+
-+	if (!lines)
-+		die_parsing_opts("At least one line must be specified");
-+
-+	if (!req_opts.consumer)
-+		req_opts.consumer = "gpio-manager";
-+
-+	for (i = 0, llen = g_strv_length(lines); i < llen; i++) {
-+		g_auto(GStrv) tokens = NULL;
-+
-+		tokens = g_strsplit(lines[i], "=", 2);
-+		line_names = g_list_append(line_names, g_string_new(tokens[0]));
-+		if (g_strv_length(tokens) == 2) {
-+			if (!req_opts.line_cfg_opts.output)
-+				die_parsing_opts("Output values can only be set in output mode");
-+
-+			if (!output_values)
-+				output_values = g_array_sized_new(FALSE, TRUE,
-+								  sizeof(gint),
-+								  llen);
-+			val = output_value_from_str(tokens[1]);
-+			g_array_append_val(output_values, val);
-+		}
-+	}
-+
-+	if (output_values && req_opts.line_cfg_opts.input)
-+		die_parsing_opts("cannot set output values in input mode");
-+
-+	if (output_values &&
-+	    (g_list_length(line_names) != output_values->len))
-+		die_parsing_opts("if values are set, they must be set for all lines");
-+
-+	req_opts.line_cfg_opts.output_values = output_values;
-+
-+	check_manager();
-+
-+	return request_lines(line_names, chip_name, &req_opts);
-+}
-diff --git a/dbus/client/requests.c b/dbus/client/requests.c
-new file mode 100644
-index 0000000..be25823
---- /dev/null
-+++ b/dbus/client/requests.c
-@@ -0,0 +1,71 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <stdlib.h>
-+
-+#include "common.h"
-+
-+static void show_request(gpointer elem, gpointer user_data G_GNUC_UNUSED)
-+{
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	g_autofree gchar *request_name = NULL;
-+	g_autofree gchar *offsets_str = NULL;
-+	g_autoptr(GVariant) voffsets = NULL;
-+	g_autofree gchar *chip_name = NULL;
-+	g_autoptr(GArray) offsets = NULL;
-+	GpiodbusObject *obj = elem;
-+	GpiodbusRequest *request;
-+	GVariantBuilder builder;
-+	const gchar *chip_path;
-+	gsize i;
-+
-+	request_name = g_path_get_basename(
-+			g_dbus_object_get_object_path(G_DBUS_OBJECT(obj)));
-+	request = gpiodbus_object_peek_request(obj);
-+	chip_path = gpiodbus_request_get_chip_path(request);
-+	manager = get_object_manager_client(chip_path);
-+	/* FIXME: Use chip proxy? */
-+	chip_name = g_path_get_basename(chip_path);
-+
-+	offsets = get_request_offsets(request);
-+	g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
-+	for (i = 0; i < offsets->len; i++)
-+		g_variant_builder_add(&builder, "u",
-+				      g_array_index(offsets, guint, i));
-+	voffsets = g_variant_ref_sink(g_variant_builder_end(&builder));
-+	offsets_str = g_variant_print(voffsets, FALSE);
-+
-+	g_print("%s (%s) Offsets: %s\n",
-+		request_name, chip_name, offsets_str);
-+}
-+
-+int gpiocli_requests_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"List all line requests controlled by the manager.";
-+
-+	g_autolist(GpiodbusObject) request_objs = NULL;
-+	g_auto(GStrv) remaining = NULL;
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &remaining,
-+			.arg_description	= NULL,
-+		},
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, NULL, &argc, &argv);
-+	check_manager();
-+
-+	if (remaining)
-+		die_parsing_opts("command doesn't take additional arguments");
-+
-+	request_objs = get_request_objs();
-+	g_list_foreach(request_objs, show_request, NULL);
-+
-+	return EXIT_SUCCESS;
-+}
-diff --git a/dbus/client/set.c b/dbus/client/set.c
-new file mode 100644
-index 0000000..6460dd5
---- /dev/null
-+++ b/dbus/client/set.c
-@@ -0,0 +1,173 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2024 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <stdlib.h>
-+
-+#include "common.h"
-+
-+static void free_str(gpointer data)
-+{
-+	GString *str = data;
-+
-+	g_string_free(str, TRUE);
-+}
-+
-+int gpiocli_set_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"Set values of one or more GPIO lines.";
-+
-+	static const gchar *const description =
-+"If -r/--request is specified then all the lines must belong to the same\n"
-+"request (and - by extension - the same chip).";
-+
-+	const gchar *request_name = NULL, *chip_path, *req_path;
-+	g_autoptr(GpiodbusObject) chip_obj = NULL;
-+	g_autoptr(GpiodbusObject) req_obj = NULL;
-+	g_autoptr(GPtrArray) line_names = NULL;
-+	g_autoptr(GArray) values = NULL;
-+	g_autoptr(GError) err = NULL;
-+	g_auto(GStrv) lines = NULL;
-+	GpiodbusRequest *request;
-+	GVariantBuilder builder;
-+	GpiodbusLine *line;
-+	gsize num_lines, i;
-+	GString *line_name;
-+	gboolean ret;
-+	guint offset;
-+	gint val;
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= "request",
-+			.short_name		= 'r',
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING,
-+			.arg_data		= &request_name,
-+			.description		= "restrict scope to a particular request",
-+			.arg_description	= "<request>",
-+		},
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &lines,
-+			.arg_description	= "<line1=value1> [line2=value2] ...",
-+		},
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, description, &argc, &argv);
-+
-+	if (!lines)
-+		die_parsing_opts("at least one line value must be specified");
-+
-+	num_lines = g_strv_length(lines);
-+	line_names = g_ptr_array_new_full(num_lines, free_str);
-+	values = g_array_sized_new(FALSE, TRUE, sizeof(gint), num_lines);
-+
-+	for (i = 0; i < num_lines; i++) {
-+		g_auto(GStrv) tokens = NULL;
-+
-+		tokens = g_strsplit(lines[i], "=", 2);
-+		if (g_strv_length(tokens) != 2)
-+			die_parsing_opts("line must have a single value assigned");
-+
-+		g_ptr_array_add(line_names, g_string_new(tokens[0]));
-+		val = output_value_from_str(tokens[1]);
-+		g_array_append_val(values, val);
-+	}
-+
-+	check_manager();
-+
-+	if (request_name) {
-+		g_autoptr(GVariant) arg_values = NULL;
-+		g_autoptr(GArray) offsets = NULL;
-+
-+		req_obj = get_request_obj(request_name);
-+		request = gpiodbus_object_peek_request(req_obj);
-+		chip_path = gpiodbus_request_get_chip_path(request);
-+		chip_obj = get_chip_obj_by_path(chip_path);
-+		offsets = g_array_sized_new(FALSE, TRUE, sizeof(guint),
-+					    num_lines);
-+
-+		for (i = 0; i < num_lines; i++) {
-+			g_autoptr(GpiodbusObject) line_obj = NULL;
-+
-+			line_name = g_ptr_array_index(line_names, i);
-+
-+			line_obj = get_line_obj_by_name_for_chip(chip_obj,
-+								line_name->str);
-+			if (!line_obj)
-+				die("Line not found: %s\n", line_name->str);
-+
-+			line = gpiodbus_object_peek_line(line_obj);
-+			offset = gpiodbus_line_get_offset(line);
-+			g_array_append_val(offsets, offset);
-+		}
-+
-+		g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
-+		for (i = 0; i < num_lines; i++) {
-+			g_variant_builder_add(&builder, "{ui}",
-+					      g_array_index(offsets, guint, i),
-+					      g_array_index(values, gint, i));
-+		}
-+
-+		arg_values = g_variant_ref_sink(
-+				g_variant_builder_end(&builder));
-+
-+		ret = gpiodbus_request_call_set_values_sync(
-+							request, arg_values,
-+							G_DBUS_CALL_FLAGS_NONE,
-+							-1, NULL, &err);
-+		if (!ret)
-+			die_gerror(err, "Failed to set line values");
-+
-+		return EXIT_SUCCESS;
-+	}
-+
-+	for (i = 0; i < num_lines; i++) {
-+		g_autoptr(GpiodbusRequest) req_proxy = NULL;
-+		g_autoptr(GpiodbusObject) line_obj = NULL;
-+		g_autoptr(GVariant) arg_values = NULL;
-+
-+		line_name = g_ptr_array_index(line_names, i);
-+
-+		ret = get_line_obj_by_name(line_name->str, &line_obj, NULL);
-+		if (!ret)
-+			die("Line not found: %s\n", line_name->str);
-+
-+		line = gpiodbus_object_peek_line(line_obj);
-+		req_path = gpiodbus_line_get_request_path(line);
-+
-+		if (!gpiodbus_line_get_managed(line))
-+			die("Line '%s' not managed by gpio-manager, must be requested first",
-+			    line_name->str);
-+
-+		req_proxy = gpiodbus_request_proxy_new_for_bus_sync(
-+						G_BUS_TYPE_SYSTEM,
-+						G_DBUS_PROXY_FLAGS_NONE,
-+						"io.gpiod1", req_path,
-+						NULL, &err);
-+		if (err)
-+			die_gerror(err, "Failed to get D-Bus proxy for '%s'",
-+				   req_path);
-+
-+		offset = gpiodbus_line_get_offset(line);
-+
-+		g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
-+		g_variant_builder_add(&builder, "{ui}", offset,
-+				      g_array_index(values, gint, i));
-+		arg_values = g_variant_ref_sink(
-+				g_variant_builder_end(&builder));
-+
-+		ret = gpiodbus_request_call_set_values_sync(
-+						req_proxy, arg_values,
-+						G_DBUS_CALL_FLAGS_NONE, -1,
-+						NULL, &err);
-+		if (!ret)
-+			die_gerror(err, "Failed to set line values");
-+	}
-+
-+	return EXIT_SUCCESS;
-+}
-diff --git a/dbus/client/wait.c b/dbus/client/wait.c
-new file mode 100644
-index 0000000..d65c4e7
---- /dev/null
-+++ b/dbus/client/wait.c
-@@ -0,0 +1,188 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+
-+#include <stdlib.h>
-+
-+#include "common.h"
-+
-+typedef struct {
-+	gboolean name_done;
-+	gboolean chip_done;
-+	const gchar *label;
-+} WaitData;
-+
-+static void obj_match_label(GpiodbusObject *chip_obj, WaitData *data)
-+{
-+	GpiodbusChip *chip = gpiodbus_object_peek_chip(chip_obj);
-+
-+	if (g_strcmp0(gpiodbus_chip_get_label(chip), data->label) == 0)
-+		data->chip_done = TRUE;
-+}
-+
-+static void check_label(gpointer elem, gpointer user_data)
-+{
-+	WaitData *data = user_data;
-+	GpiodbusObject *obj = elem;
-+
-+	obj_match_label(obj, data);
-+}
-+
-+static void on_object_added(GDBusObjectManager *manager G_GNUC_UNUSED,
-+			    GpiodbusObject *obj, gpointer user_data)
-+{
-+	WaitData *data = user_data;
-+
-+	obj_match_label(GPIODBUS_OBJECT(obj), data);
-+}
-+
-+static void wait_for_chip(WaitData *data)
-+{
-+	g_autoptr(GDBusObjectManager) manager = NULL;
-+	g_autolist(GpiodbusObject) objs = NULL;
-+
-+	manager = get_object_manager_client("/io/gpiod1/chips");
-+
-+	g_signal_connect(manager, "object-added",
-+			 G_CALLBACK(on_object_added), data);
-+
-+	objs = g_dbus_object_manager_get_objects(manager);
-+	g_list_foreach(objs, check_label, data);
-+
-+	while (!data->chip_done)
-+		g_main_context_iteration(NULL, TRUE);
-+}
-+
-+static void on_name_appeared(GDBusConnection *con G_GNUC_UNUSED,
-+			     const gchar *name G_GNUC_UNUSED,
-+			     const gchar *name_owner G_GNUC_UNUSED,
-+			     gpointer user_data)
-+{
-+	WaitData *data = user_data;
-+
-+	data->name_done = TRUE;
-+}
-+
-+static void on_name_vanished(GDBusConnection *con G_GNUC_UNUSED,
-+			     const gchar *name G_GNUC_UNUSED,
-+			     gpointer user_data)
-+{
-+	WaitData *data = user_data;
-+
-+	if (data->label && data->chip_done)
-+		die("gpio-manager vanished while waiting for chip");
-+}
-+
-+static gboolean on_timeout(gpointer user_data G_GNUC_UNUSED)
-+{
-+	die("wait timed out!");
-+}
-+
-+static guint schedule_timeout(const gchar *timeout)
-+{
-+	gint64 period, multiplier = 0;
-+	gchar *end;
-+
-+	period = g_ascii_strtoll(timeout, &end, 10);
-+
-+	switch (*end) {
-+	case 'm':
-+		multiplier = 1;
-+		end++;
-+		break;
-+	case 's':
-+		multiplier = 1000;
-+		break;
-+	case '\0':
-+		break;
-+	default:
-+		goto invalid_timeout;
-+	}
-+
-+	if (multiplier) {
-+		if (*end != 's')
-+			goto invalid_timeout;
-+
-+		end++;
-+	} else {
-+		/* Default to miliseconds. */
-+		multiplier = 1;
-+	}
-+
-+	period *= multiplier;
-+	if (period > G_MAXUINT)
-+		die("timeout must not exceed %u miliseconds\n", G_MAXUINT);
-+
-+	return g_timeout_add(period, on_timeout, NULL);
-+			
-+invalid_timeout:
-+	die("invalid timeout value: %s", timeout);
-+}
-+
-+int gpiocli_wait_main(int argc, char **argv)
-+{
-+	static const gchar *const summary =
-+"Wait for the gpio-manager interface to appear.";
-+
-+	static const gchar *const description =
-+"Timeout period defaults to miliseconds but can be given in seconds or miliseconds\n"
-+"explicitly .e.g: --timeout=1000, --timeout=1000ms and --timeout=1s all specify\n"
-+"the same period.";
-+
-+	const gchar *timeout_str = NULL;
-+	guint watch_id, timeout_id = 0;
-+	g_auto(GStrv) remaining = NULL;
-+	WaitData data = {};
-+
-+	const GOptionEntry opts[] = {
-+		{
-+			.long_name		= "chip",
-+			.short_name		= 'c',
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING,
-+			.arg_data		= &data.label,
-+			.description		= "Wait for a specific chip to appear.",
-+			.arg_description	= "<label>",
-+		},
-+		{
-+			.long_name		= "timeout",
-+			.short_name		= 't',
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING,
-+			.arg_data		= &timeout_str,
-+			.description		= "Bail-out if timeout expires.",
-+			.arg_description	= "<timeout_str>",
-+		},
-+		{
-+			.long_name		= G_OPTION_REMAINING,
-+			.flags			= G_OPTION_FLAG_NONE,
-+			.arg			= G_OPTION_ARG_STRING_ARRAY,
-+			.arg_data		= &remaining,
-+		},
-+		{ }
-+	};
-+
-+	parse_options(opts, summary, description, &argc, &argv);
-+
-+	if (remaining)
-+		die_parsing_opts("command doesn't take additional arguments");
-+
-+	watch_id = g_bus_watch_name(G_BUS_TYPE_SYSTEM, "io.gpiod1",
-+				    G_BUS_NAME_WATCHER_FLAGS_NONE,
-+				    on_name_appeared, on_name_vanished,
-+				    &data, NULL);
-+
-+	if (timeout_str)
-+		timeout_id = schedule_timeout(timeout_str);
-+
-+	while (!data.name_done)
-+		g_main_context_iteration(NULL, TRUE);
-+
-+	if (data.label)
-+		wait_for_chip(&data);
-+
-+	g_bus_unwatch_name(watch_id);
-+	if (timeout_str)
-+		g_source_remove(timeout_id);
-+
-+	return EXIT_SUCCESS;
++	gpiodbus_release_request "$request"
 +}
++
++# shellcheck source=tests/scripts/gpiod-bash-test-helper.inc
++source gpiod-bash-test-helper.inc
++
++check_prog gdbus
++
++# shellcheck source=/dev/null
++source shunit2
 
 -- 
 2.43.0
