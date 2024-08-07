@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-8646-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8647-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D950894A3FD
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 11:16:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA0EE94A42E
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 11:21:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E25D1C20B69
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 09:16:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8EA6B2812EF
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 09:21:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D927D1CCB26;
-	Wed,  7 Aug 2024 09:16:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E73691CCB4A;
+	Wed,  7 Aug 2024 09:20:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btd4UKdK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BrU+LAnu"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882E71A288;
-	Wed,  7 Aug 2024 09:16:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C6B811E2;
+	Wed,  7 Aug 2024 09:20:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723022190; cv=none; b=WTOh7X1BWVMaUhXXBlK3BT9qZhmA23Ln1NIwC/n0ccSgry9aUPd8CFumlnZqTo62YwHaOP9wn9ekmn2tmOSc0oDv7i7yQMMIOX2MGJO1j1OEp27UAw+cfOmQH9AokjYVcmtSK5DThQTzMIQOguQrSwMGPI13uqnJplcyELFmZWw=
+	t=1723022424; cv=none; b=h2m0IF8PY83x7GXETpRHOQD+bMBM7RiCzg/W9aeznMyH4QD56FZO4G44IY/SD78cZU7gNCPn2e0wiqmldFa5Ryk2kAT2CInsoiKtlE2tyRzrdfsYBQJVFT9G/PFqS3ZI2WW2S2NxdAPhEjQhoM25DI50GCh5RcIHWtG2cLlGhC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723022190; c=relaxed/simple;
-	bh=0yvqkTkckfXGJzI06r2/bDEpYBQxkbfPS1kPylwFSbA=;
+	s=arc-20240116; t=1723022424; c=relaxed/simple;
+	bh=gD+BO8KCPo5FlDSkmYt3b0GRFkK77JUKqOMdtZw1Tmo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z/sBdRr9wZu/I5neyLoGW15lk1YGAYmgEl+a0dfLYV8dRoEOjxHfmHQcHX5Tov2eeW0ysQYX9R+1ye9BO3q6cZGB5bbUOAuZu8EcdL2ofuf2GP0dAee1QyoosmFzzsbMdMDa0tzZs0IrW0n+eP4XY18PwQwzG0issvW914kqPnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btd4UKdK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65DB2C4AF09;
-	Wed,  7 Aug 2024 09:16:26 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=azmCgVh6iEj2ba4YYCt6w71TfwJkv4JUpXqTZB4jE/FbtzTGB2HukHAh8hL8siPMvnneZ4U4yG+flwkEPKaSynnvL+sr/NtLeSm0F4AqH4+VFlBxLgRIZqshewuGHOygOQDqLd8hvwxvK522PI2PWlienZGmVvQ5+/TCyl8TSfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BrU+LAnu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3462AC4AF0B;
+	Wed,  7 Aug 2024 09:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723022190;
-	bh=0yvqkTkckfXGJzI06r2/bDEpYBQxkbfPS1kPylwFSbA=;
+	s=k20201202; t=1723022424;
+	bh=gD+BO8KCPo5FlDSkmYt3b0GRFkK77JUKqOMdtZw1Tmo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=btd4UKdKlQK9miAs3ngZDGXCvg1a7tBANR7z7uT9F0xfznX9gMSx/UK0Vl+Ifxxx4
-	 cHtsrmc01CcDNHnjW3PYwBB+Ueoj15fPj84HAiksC5f9+NYKOYMNKhum9/7BOO3wFj
-	 HxmZHwB2pXrNRGIHQkAF32uM506rt0miuNB451+t1WUdgbPMxMXNwUQDQVCUs/hfp7
-	 T9QJIiAg5whMdAWkd8J3dzNphddGwCl2VMcq8onfHsnG6MvnbLVLJl4vXo6VTC5gEK
-	 qQfIcf4arDtz0khUr41Wx3m59uKCn2Lu4ZrKsoYcDrtCcb6KAEi2k0dsgX46OFVK1k
-	 6LMy3an0PxZYw==
-Message-ID: <f07c2c51-5f28-45ed-9321-33934895f9b3@kernel.org>
-Date: Wed, 7 Aug 2024 11:16:24 +0200
+	b=BrU+LAnuq3IOtevecR/MWHV/YXBKF6+8tqfmtn/ieL+jdVvmEihaxzgYX4JB4E8Cp
+	 LbFJfk2KVuDPAWChibfQpVZJdJWt2qYFq8TG7ntJEZB36aVvWeyKgTptciNwCvvHE+
+	 90L3kqpbXsxWvLAtDKgRAXPJc6yCwwtexcZZYKIxdy/n9Y+5tCt0MwiCN3RDYsc1Ye
+	 TQ3tnldpv5iYrhuoH4kTJF8fMA/Z/86ds64qLrfFbrIhlkWRZtrBim+qgrPD3XTNhj
+	 oObNScA0mciiDFnF2toL4tmFJHU+8bOPjTQRAcMtsLlxP1kLAE8KhTIh1PvUYnZix8
+	 3963bZDt2gkjg==
+Message-ID: <e6b4e0d8-7183-4ff4-a373-cb1c0c98d993@kernel.org>
+Date: Wed, 7 Aug 2024 11:20:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 07/10] dt-bindings: soc: samsung: exynos-pmu: Add
- exynos8895 compatible
+Subject: Re: [PATCH v1 08/10] arm64: dts: exynos: Add initial support for
+ exynos8895 SoC
 To: ivo.ivanov.ivanov1@gmail.com, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
  Sylwester Nawrocki <s.nawrocki@samsung.com>,
@@ -60,7 +60,7 @@ Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20240807082843.352937-1-ivo.ivanov.ivanov1@gmail.com>
- <20240807082843.352937-8-ivo.ivanov.ivanov1@gmail.com>
+ <20240807082843.352937-9-ivo.ivanov.ivanov1@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -106,37 +106,281 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240807082843.352937-8-ivo.ivanov.ivanov1@gmail.com>
+In-Reply-To: <20240807082843.352937-9-ivo.ivanov.ivanov1@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 07/08/2024 10:28, ivo.ivanov.ivanov1@gmail.com wrote:
 > From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 > 
-> Add exynos8895-pmu compatible to the bindings documentation.
-
-All your commit msg could say more, e.g. why it is or it is not
-compatible with existing devices.
-
+> Exynos 8895 SoC is an ARMv8 mobile SoC found in the Samsung Galaxy
+> S8 (dreamlte), S8 Plus (dream2lte), Note 8 (greatlte) and the Meizu
+> 15 Plus (m1891). Add minimal support for that SoC, including:
+> 
+> - All 8 cores via PSCI
+> - ChipID
+> - Generic ARMV8 Timer
+> - Enumarate all pinctrl nodes
+> 
+> Further platform support will be added over time.
 > 
 > Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 > ---
->  Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../boot/dts/exynos/exynos8895-pinctrl.dtsi   | 1378 +++++++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos8895.dtsi    |  253 +++
+>  2 files changed, 1631 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos8895-pinctrl.dtsi
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos8895.dtsi
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml b/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml
-> index 15fcd8f1d..5c4ba6c65 100644
-> --- a/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml
-> +++ b/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml
-> @@ -53,6 +53,7 @@ properties:
->        - items:
->            - enum:
->                - samsung,exynos7885-pmu
-> +              - samsung,exynos8895-pmu
->                - samsung,exynosautov9-pmu
->                - samsung,exynosautov920-pmu
+> diff --git a/arch/arm64/boot/dts/exynos/exynos8895-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos8895-pinctrl.dtsi
+> new file mode 100644
+> index 000000000..1dcb61e2e
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos8895-pinctrl.dtsi
+> @@ -0,0 +1,1378 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Samsung's Exynos 8895 SoC pin-mux and pin-config device tree source
+> + *
+> + * Copyright (c) 2024, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include "exynos-pinctrl.h"
+> +
+> +&pinctrl_alive {
+> +	gpa0: gpa0 {
 
-No update to select? Does that mean we don't need it anymore?
+I do not believe this was tested. See maintainer SoC profile for Samsung
+Exynos.
+
+Limited review follows due to lack of testing.
+
+
+> +};
+> diff --git a/arch/arm64/boot/dts/exynos/exynos8895.dtsi b/arch/arm64/boot/dts/exynos/exynos8895.dtsi
+> new file mode 100644
+> index 000000000..3ed381ee5
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos8895.dtsi
+> @@ -0,0 +1,253 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Samsung's Exynos 8895 SoC device tree source
+> + *
+> + * Copyright (c) 2024, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	compatible = "samsung,exynos8895";
+> +	#address-cells = <2>;
+> +	#size-cells = <1>;
+> +
+> +	interrupt-parent = <&gic>;
+> +
+> +	aliases {
+> +		pinctrl0 = &pinctrl_alive;
+> +		pinctrl1 = &pinctrl_abox;
+> +		pinctrl2 = &pinctrl_vts;
+> +		pinctrl3 = &pinctrl_fsys0;
+> +		pinctrl4 = &pinctrl_fsys1;
+> +		pinctrl5 = &pinctrl_busc;
+> +		pinctrl6 = &pinctrl_peric0;
+> +		pinctrl7 = &pinctrl_peric1;
+> +	};
+> +
+> +	arm-a53-pmu {
+
+Are there two pmus?
+
+> +		compatible = "arm,cortex-a53-pmu";
+> +		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-affinity = <&cpu0>,
+> +				     <&cpu1>,
+> +				     <&cpu2>,
+> +				     <&cpu3>,
+> +				     <&cpu4>,
+> +				     <&cpu5>,
+> +				     <&cpu6>,
+> +				     <&cpu7>;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&cpu0>;
+> +				};
+> +				core1 {
+> +					cpu = <&cpu1>;
+> +				};
+> +				core2 {
+> +					cpu = <&cpu2>;
+> +				};
+> +				core3 {
+> +					cpu = <&cpu3>;
+> +				};
+> +			};
+> +
+> +			cluster1 {
+> +				core0 {
+> +					cpu = <&cpu4>;
+> +				};
+> +				core1 {
+> +					cpu = <&cpu5>;
+> +				};
+> +				core2 {
+> +					cpu = <&cpu6>;
+> +				};
+> +				core3 {
+> +					cpu = <&cpu7>;
+> +				};
+> +			};
+> +		};
+> +
+> +		cpu0: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x100>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu1: cpu@101 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x101>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu2: cpu@102 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x102>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu3: cpu@103 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x103>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu4: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "samsung,mongoose-m2";
+> +			reg = <0x0>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu5: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "samsung,mongoose-m2";
+> +			reg = <0x1>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu6: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "samsung,mongoose-m2";
+> +			reg = <0x2>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu7: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "samsung,mongoose-m2";
+> +			reg = <0x3>;
+> +			enable-method = "psci";
+> +		};
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci";
+> +		method = "smc";
+> +		cpu_suspend = <0xc4000001>;
+> +		cpu_off = <0x84000002>;
+> +		cpu_on = <0xc4000003>;
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		/* Hypervisor Virtual Timer interrupt is not wired to GIC */
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+> +		clock-frequency = <26000000>;
+
+Hm? I think this was explicitly disallowed.
+
+> +	};
+> +
+> +	fixed-rate-clocks {
+
+Keep order of properties, just like DTS coding style asks.
+
+Anyway, fixed-rate-clocks wrapper is not needed, drop.
+
+> +		oscclk: osc-clock {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-output-names = "oscclk";
+> +		};
+> +	};
+> +
+> +	soc: soc@0 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x0 0x0 0x20000000>;
+> +
+> +		chipid@10000000 {
+> +			compatible = "samsung,exynos8895-chipid",
+> +				     "samsung,exynos850-chipid";
+> +			reg = <0x10000000 0x24>;
+> +		};
+> +
+> +		gic: interrupt-controller@10200000 {
+> +			compatible = "arm,gic-400";
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <0>;
+> +			interrupt-controller;
+> +			reg = <0x10201000 0x1000>,
+> +			      <0x10202000 0x1000>,
+> +			      <0x10204000 0x2000>,
+> +			      <0x10206000 0x2000>;
+> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) |
+> +						 IRQ_TYPE_LEVEL_HIGH)>;
+> +		};
+> +
+> +		pinctrl_alive: pinctrl@164b0000 {
+> +			compatible = "samsung,exynos8895-pinctrl";
+> +			reg = <0x164b0000 0x1000>;
+> +
+> +			wakeup-interrupt-controller {
+> +				compatible = "samsung,exynos8895-wakeup-eint",
+> +					     "samsung,exynos7-wakeup-eint";
+> +				interrupt-parent = <&gic>;
+> +				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +		};
+> +
+> +		pinctrl_abox: pinctrl@13e60000 {
+
+This does not look ordered. See DTS coding style.
 
 Best regards,
 Krzysztof
