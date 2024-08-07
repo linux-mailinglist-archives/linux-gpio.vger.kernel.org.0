@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-8630-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8644-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B448294A3CF
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 11:12:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EF7594A3E9
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 11:15:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5F7D1C216B9
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 09:12:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED5341F213A0
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 09:15:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30B6D1D0DC8;
-	Wed,  7 Aug 2024 09:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02AC71CB318;
+	Wed,  7 Aug 2024 09:14:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAHdZ77f"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8/iNg59"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49DA1CB30B;
-	Wed,  7 Aug 2024 09:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64E823CE;
+	Wed,  7 Aug 2024 09:14:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723021857; cv=none; b=EWGAI9QrNE7WFFvTcbPCQmVZJWMeKgpRtD0vE/uw3qtE2Gcf0O+FNzvdjpGmTXFDALIHDgFKLgZufOoyEL7RBDdgPT0CAVK9iSpHmW0vffCn2CArLimp8t8ZCnF2tYHmkf2UTyXtqnRI8mZ640mM/hP6I29VaTz7ERkV7fx4MYQ=
+	t=1723022094; cv=none; b=LfMKmY1wBqNRaF+diCORxVvhK05ffKA3B+wpEj8NEeO5xLputxME/iawT+2Iy0YqIdGlCd0nu0j+V5IbuVIv7F+9J7Whcej9CDAGPS8stULcM2KoUDrcI9u24JycIA/0+7cn074Di28JR3oBfRGZVPsEOmIiNJUFrQJtSDNMrpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723021857; c=relaxed/simple;
-	bh=VU++CE5msKYoAqUyR3mGZ/8V4ywx58Hkn97zVCsqh+E=;
+	s=arc-20240116; t=1723022094; c=relaxed/simple;
+	bh=Uo7yhLkhgqXuRdlC4MddA0Hoob8dmu8H/BarcPLbec0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lETelTPAQUjwPc4mhgy/UtJguHAZ0AWKadw1sEGiEl0wHWGEM96oO9HBbQybKbWzlzRtdEX3sBSUgVbW7QOBBKrnhBW7a2RFJ3ZLbStgiE4fv8IMZ9vwp1i0l8f9EbljwZaJuaW95+7ZIzaaJYtJaBTP72VSqLi6lceTM3BYCHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAHdZ77f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40C50C4AF09;
-	Wed,  7 Aug 2024 09:10:52 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=nePbsPlMsuve1mVyB3CbI6566SgtcMs6/diRTcIPuaomOaWcGYGN4zlm+9O2PgYwkOcjrfpZJRFxATpaobhJc2NaJ7tES61U6Z30OgBoSU1ql24BL/JUIuTFZlAIfEkpeHzocV7h5SNSeOWEifadkg2451bKvsyF2iqOI9STmy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8/iNg59; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AEC1C4AF0B;
+	Wed,  7 Aug 2024 09:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723021856;
-	bh=VU++CE5msKYoAqUyR3mGZ/8V4ywx58Hkn97zVCsqh+E=;
+	s=k20201202; t=1723022094;
+	bh=Uo7yhLkhgqXuRdlC4MddA0Hoob8dmu8H/BarcPLbec0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rAHdZ77fP00qPBigA4sQAZpVQgG/LeWNTttDFl47C6RDRqVfpxPZ7jRMaPhuJSGyr
-	 rg9gnqLb0QprF5jUZvKkc4p82/zFqF6OIKJPufbCxPA8C4DNHWlqGH+CE7Gnaa/Uz5
-	 P7DQY6+5VhsOi/mCcsf+ZzqkCvEd+CIYEXnyFaDTJrepxuRuuwkf14QUj31W7qVpZU
-	 DRQbywdiDSlyTWY2YiqhjtuA7h+SfORI7CMrnJRpq5Xpr8SNWQq3lzPsFJ0YWadNEq
-	 AXerh2dbs22lFBsE9cnin0tEniaBQP817CtSWAJLRYtSb8zqQJejCYlkvLtR0boqKo
-	 24vWR3J+//aGA==
-Message-ID: <e6f26cca-0266-492a-9e80-0894952b94b9@kernel.org>
-Date: Wed, 7 Aug 2024 11:10:50 +0200
+	b=j8/iNg59XGPavOojHtlj+DWQCdwJAHzwhUThhEmIJJgh4zl6gIlYk3iQOgzfK90gN
+	 yoD9b0PfMXCZnby8HrkQFEu3LD2FXxJEicUz2wyT+B1m98Fu1Ug873ILhoFYSFqwgJ
+	 GN31LX+8zKWWv6kvsE0pDv+ttcZjST4uaRddAC5crpVSD7AojASDb+Y3LFpmiW7t2p
+	 j3zxDJAYkRbNEEuyBeXGuzPf4DqE6U8XjK/QEHA0bHCCsI+bY1OdE9dEqKiX07mQAj
+	 XdHDrLQEtt87nxuCfMilsoldIFwnNa9xcbWPalUFJS8wjfPcNn5VtYiCKvzaje5Lqs
+	 L9x3aGTGdxVPg==
+Message-ID: <b1bc51c4-48a4-4640-8acd-b56a0788f247@kernel.org>
+Date: Wed, 7 Aug 2024 11:14:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 01/10] dt-bindings: arm: cpus: Add Samsung Mongoose M2
+Subject: Re: [PATCH v1 03/10] soc: samsung: exynos-chipid: add exynos8895 SoC
+ support
 To: ivo.ivanov.ivanov1@gmail.com, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
  Sylwester Nawrocki <s.nawrocki@samsung.com>,
@@ -59,7 +60,7 @@ Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20240807082843.352937-1-ivo.ivanov.ivanov1@gmail.com>
- <20240807082843.352937-2-ivo.ivanov.ivanov1@gmail.com>
+ <20240807082843.352937-4-ivo.ivanov.ivanov1@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -105,32 +106,34 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240807082843.352937-2-ivo.ivanov.ivanov1@gmail.com>
+In-Reply-To: <20240807082843.352937-4-ivo.ivanov.ivanov1@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 07/08/2024 10:28, ivo.ivanov.ivanov1@gmail.com wrote:
 > From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 > 
-> Add a compatible for the Samsung Mongoose M2, found in exynos8895.
+> Add EXYNOS8895 information to soc_ids tables. This SoC product id
+> is "0xE8895000".
 > 
 > Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
+>  drivers/soc/samsung/exynos-chipid.c | 1 +
 >  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-> index f308ff6c3..76df786ae 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> @@ -188,6 +188,7 @@ properties:
->        - nvidia,tegra132-denver
->        - nvidia,tegra186-denver
->        - nvidia,tegra194-carmel
-> +      - samsung,mongoose-m2
->        - qcom,krait
+> diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
+> index b1118d377..2f794cee8 100644
+> --- a/drivers/soc/samsung/exynos-chipid.c
+> +++ b/drivers/soc/samsung/exynos-chipid.c
+> @@ -57,6 +57,7 @@ static const struct exynos_soc_id {
+>  	{ "EXYNOS7420", 0xE7420000 },
+>  	/* Compatible with: samsung,exynos850-chipid */
+>  	{ "EXYNOS7885", 0xE7885000 },
+> +	{ "EXYNOS8895", 0xE8895000 },
+>  	{ "EXYNOS850", 0xE3830000 },
 
-Please keep the list ordered, so s goes after q.
+Order of the list is mentioned in the code, so keep it please. 88 is
+after 85.
 
 Best regards,
 Krzysztof
