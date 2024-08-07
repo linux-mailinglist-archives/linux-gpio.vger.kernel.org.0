@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-8648-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8649-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7CB494A448
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 11:29:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6014A94A43C
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 11:23:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1EBA1B2B41D
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 09:22:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09D341F279C2
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 09:23:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 543171D0DE3;
-	Wed,  7 Aug 2024 09:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D872B1CCB57;
+	Wed,  7 Aug 2024 09:22:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZwLcwoDt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2Gw/vFI"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0484A1D0DC6;
-	Wed,  7 Aug 2024 09:22:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8872F1CCB2B;
+	Wed,  7 Aug 2024 09:22:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723022532; cv=none; b=m0OfPrlleie2Fk/Tp3CxN1lJULxz8I8VP5q7QaEcQUHk0AZLgn+JKEBYAhwm6P6tiMKKM/bSh+iTd0qNFHOxengXjyIRKK04lGVfQFWOFCq+xV7ao3NEPssgGLGABeRU7aMYE3KjdVvNc1yzroQteN2wS8Inm3RYGc9L8zitMyA=
+	t=1723022577; cv=none; b=A+kJbrGKtuqHabXZdtIM8USKlDepE751o2TJjaJ6V5JNPhOTZoeQD+sgZlx0Y2A+XQK08BLMFhPZV3yHLvUWdfL22uWaA7ze8Wv3IAGRJkzlx5FpFeRptIYP8/NHvTzg7GUxyn70fZ5Z25jjFx74Qsf+wKn0rleSzxomzp9icaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723022532; c=relaxed/simple;
-	bh=bNN/+Wa5dpTIeQWMlsY+iSX7qUchaJdnQ6/ELRuwrYM=;
+	s=arc-20240116; t=1723022577; c=relaxed/simple;
+	bh=MEpgyBqa/MtgNTX9ShLP9jGGGWgu9mr/N/3Yti8fh08=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R/QwpzycP55sNLSqTKmyQiTdZdyURCRlZPqGfpMT4e6hQzNfwRBLr5wK4VIavkEwjBXRHoMxq81I9iGm5/R2XI9JfCeBWh4jiNCnW4a2LsHxE9jipzYtsNt+kdKaE/USSGwqkLh7IK+ZTUorMWZattvfqpj09OQbRQbYssgUy9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZwLcwoDt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8086DC4AF09;
-	Wed,  7 Aug 2024 09:22:07 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=WPki9r8UocDwwrBjkpVISAXxloF9KEgDoTduOsYP8NRVDeEc45o95wPyvcRc8bryVtgbOwdfoniwBiyIS0Yx/yYRVcKCuv9g8QJNmllXFUHcRvG0Y26kbSI5QGYjv7kf3LADqNBNX5tp3VRBgqPWAPaHoj2iaurI+z4Z3B7vOrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2Gw/vFI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 174CDC32782;
+	Wed,  7 Aug 2024 09:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723022531;
-	bh=bNN/+Wa5dpTIeQWMlsY+iSX7qUchaJdnQ6/ELRuwrYM=;
+	s=k20201202; t=1723022577;
+	bh=MEpgyBqa/MtgNTX9ShLP9jGGGWgu9mr/N/3Yti8fh08=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZwLcwoDt1o6T5ieacPvJ8zadfQAqfw0I1qz9U/+QQ6mEEZrKBTJLLpUPlvRGrW39i
-	 jr8uvliLMCqhJ8THd7rkcD5pcS5F9HaAK/d2m6LQ1ApKad4SSrESLFnhQyQcRxsfEP
-	 emWjR8qJjrcjH341qhSVYWGVlvh9xNJjbWGv5hJgAOmKqiYkAlukR2ihlEIxftwn6R
-	 KPPJQTbwpV10eKsWDSBjrIl6SnpQXcH7iQH3t8wTyM0zjk5LAvY0gZvijmc7nhAG8F
-	 MAncdk79UuH2UpIHqUoKvOtyjtPv6HM/Pcp8MZQQ6rQdbatH7+o2C0MRwH8PC0VAgF
-	 26JnYjTHyOWiw==
-Message-ID: <250fc005-3a76-4168-b7d7-b450c5b47e9e@kernel.org>
-Date: Wed, 7 Aug 2024 11:22:05 +0200
+	b=O2Gw/vFIijALA40hfRKDrBgTnq/ZDrjV4p/At88kDYZ4G45SBskTerSRKyjCsR3UF
+	 xTZmhGq8mfrn2yywEVUceofm1VudXnjvPAZj2Uv35FUYtX3bnC/xXIQueURIBidDsP
+	 LPSr3+6J0ssD+i7l+n+Q2q2Ji80eN0Zb4T7kaB/gFmJ2M1BisWxL5pQYAgnwMpQ6gJ
+	 2jTWlO/4RUxVM9IeOxyjt3yMi7SSghdwPkdzWSGaGMub3LiFKd6Pps5bdhzpFyWt5P
+	 Y2BfNi2267t7SX69eYCYibKNi388zxZcQm8IxFO3B+tcRtoBwVarC+hPqB5fqvXzhx
+	 pR7x+gM24gwQQ==
+Message-ID: <811ac81c-9220-4918-a3f8-d52519a367b0@kernel.org>
+Date: Wed, 7 Aug 2024 11:22:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,17 +50,16 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 10/10] arm64: dts: exynos: Add initial support for
- Samsung Galaxy S8
-To: ivo.ivanov.ivanov1@gmail.com, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+Subject: Re: [PATCH v2 00/10] Add minimal Exynos8895 SoC and SM-G950F support
+To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
  Sylwester Nawrocki <s.nawrocki@samsung.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
 Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20240807082843.352937-1-ivo.ivanov.ivanov1@gmail.com>
- <20240807082843.352937-11-ivo.ivanov.ivanov1@gmail.com>
+References: <20240807090858.356366-1-ivo.ivanov.ivanov1@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -106,73 +105,31 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240807082843.352937-11-ivo.ivanov.ivanov1@gmail.com>
+In-Reply-To: <20240807090858.356366-1-ivo.ivanov.ivanov1@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 07/08/2024 10:28, ivo.ivanov.ivanov1@gmail.com wrote:
-> From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+On 07/08/2024 11:08, Ivaylo Ivanov wrote:
+> Hi folks,
 > 
-> Samsung Galaxy S8 (SM-G950F), codenamed dreamlte, is a mobile phone
-> from 2017. It features 4GB RAM, 64GB UFS 2.1, Exynos 8895 SoC and a
-> 1440x2960 Super AMOLED display.
+> This series adds initial SoC support for the Exynos 8895 SoC and also
+> initial board support for Samsung Galaxy S8 phone (SM-G950F), codenamed
+> dreamlte.
 > 
-> This initial device tree enables SimpleFB, PSTORE and GPIO keys.
+> When sending out the V1 series it turned out that I had sendemail.from
+> enabled for some reason. I'm really sorry for the inconvenience caused by
+> that.
 > 
-> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-> ---
->  arch/arm64/boot/dts/exynos/Makefile           |   1 +
->  .../boot/dts/exynos/exynos8895-dreamlte.dts   | 126 ++++++++++++++++++
->  2 files changed, 127 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts
+> The Exynos 8895 SoC is also used in S8 Plus (dream2lte), Note 8 (greatlte)
+> and Meizu 15 Plus (m1891). Currently DT is added for the Exynos 8895 SoC
+> and dreamlte, but it should be really easy to adapt for the other devices
+> with the same SoC.
 > 
-> diff --git a/arch/arm64/boot/dts/exynos/Makefile b/arch/arm64/boot/dts/exynos/Makefile
-> index d7f2191c2..18f5a3eed 100644
-> --- a/arch/arm64/boot/dts/exynos/Makefile
-> +++ b/arch/arm64/boot/dts/exynos/Makefile
-> @@ -7,5 +7,6 @@ dtb-$(CONFIG_ARCH_EXYNOS) += \
->  	exynos7-espresso.dtb		\
->  	exynos7885-jackpotlte.dtb	\
->  	exynos850-e850-96.dtb		\
-> +	exynos8895-dreamlte.dtb		\
->  	exynosautov9-sadk.dtb		\
->  	exynosautov920-sadk.dtb
-> diff --git a/arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts b/arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts
-> new file mode 100644
-> index 000000000..5c8351b99
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts
-> @@ -0,0 +1,126 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Samsung Galaxy S8 (dreamlte/SM-G950F) device tree source
-> + *
-> + * Copyright (c) 2024, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-> + */
-> +
-> +/dts-v1/;
-> +#include "exynos8895.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +	model = "Samsung Galaxy S8 (SM-G950F)";
-> +	compatible = "samsung,dreamlte", "samsung,exynos8895";
-> +	chassis-type = "handset";
-> +
-> +	chosen {
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		framebuffer0: framebuffer@cc000000 {
-> +			status= "okay";
 
-Drop, it was not disabled. Also, please follow DTS coding style
-regarding order of properties.
+No, no no. One big patchset per 24h. You got fast feedback not to send v2.
 
-> +			compatible = "simple-framebuffer";
+Implement all comments you already received.
+
 Best regards,
 Krzysztof
 
