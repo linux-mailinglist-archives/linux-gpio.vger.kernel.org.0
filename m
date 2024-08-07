@@ -1,122 +1,144 @@
-Return-Path: <linux-gpio+bounces-8645-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8646-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 523DC94A3F0
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 11:15:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D950894A3FD
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 11:16:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 077CD1F21F1D
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 09:15:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E25D1C20B69
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 09:16:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F26A11CCB33;
-	Wed,  7 Aug 2024 09:15:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D927D1CCB26;
+	Wed,  7 Aug 2024 09:16:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QsP4a6VV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btd4UKdK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A22F1CB32D;
-	Wed,  7 Aug 2024 09:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882E71A288;
+	Wed,  7 Aug 2024 09:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723022119; cv=none; b=gv5DaPV23sW/Rt9XQh6ycvAbRdZsmQLZrP0miXCuYMgMO+ki6aCNB2yq5LhcGMjlAWaNXsQpOiMciq1dMqpBQ0onSHTM+7MZrkNrmZGrhzf12u8yNNbKe9asBTrmqMS4TdWPx6W1BNjRsDQYaHDm2F7/OhLQd+s0iwX2cWJsd8g=
+	t=1723022190; cv=none; b=WTOh7X1BWVMaUhXXBlK3BT9qZhmA23Ln1NIwC/n0ccSgry9aUPd8CFumlnZqTo62YwHaOP9wn9ekmn2tmOSc0oDv7i7yQMMIOX2MGJO1j1OEp27UAw+cfOmQH9AokjYVcmtSK5DThQTzMIQOguQrSwMGPI13uqnJplcyELFmZWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723022119; c=relaxed/simple;
-	bh=WAW4WAbZjj7ozQQ//z99AVwDz5MUPaFuGqSugyGLIHE=;
+	s=arc-20240116; t=1723022190; c=relaxed/simple;
+	bh=0yvqkTkckfXGJzI06r2/bDEpYBQxkbfPS1kPylwFSbA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hBsKXxP6UK3O9mLzsj7ZW8p+l7P7O9Vyld52h0twsTm7H0y8+E6LxhcWPiTYOLMialHYkbQlRW5HIAH2OiOv4f3TD556aFInEIOflN7EB4d3fJoKa9P1jI0W0ojlMECFe/nU7hgoxZfCvUlsfjcWGNu2KW0QyubFjcvGu01OFz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QsP4a6VV; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4266f3e0df8so10405665e9.2;
-        Wed, 07 Aug 2024 02:15:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723022116; x=1723626916; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WAW4WAbZjj7ozQQ//z99AVwDz5MUPaFuGqSugyGLIHE=;
-        b=QsP4a6VVHVuZJQenqtlZbhVbSmsGh6nI2Broa2X7i0Zldr4fySMmkqqrJcxFAfxKKe
-         xla9gioj9GKNinrk9SBt3dzEwnIrzXL2c7USwJzlAESHNRQSJ2Cl9dkUA+i29Xe3UUCU
-         Eo/mjeM7g7nZNPbkCraPDu3wkKqlC4l/0jkJNg4LlrbEvlYBloE7wE/E7pWxUmD5ucmr
-         VvytPqTaxi7zDfitG3CgfydIZJjv7TIgv0MwxlQjdAZLzqQGFVJaYPuhXS2wve3TApfv
-         2uy+Tx4vu6pk8mXroiOe2I8OorLmPCPfP/nU2D4tX4wsevt9Goa0YWJsJxMrOk/ra5y4
-         umqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723022116; x=1723626916;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WAW4WAbZjj7ozQQ//z99AVwDz5MUPaFuGqSugyGLIHE=;
-        b=n9Y2+YQmdbkZDeFKMo6VruDQz2/OgaJ4t9JJNMpL/567vRye9UHAJuxrG6cpCV98X/
-         nlRGf6lS4QunWPp4Akf7FjQde/lTb4qnXA+X3v9UItIIYCmX7MmqHAWguiOQX1WtxVRw
-         jy3CEeZBd8upL4WtmntwPwlQbtTz2nc6p5k9z4PPHB+UvXwvCG4CNjQ2AI9TgvCA9Uma
-         zalWht+SU4Ya++wcO6AMUqIKOpNYREulV9d9jYzggLWh3niFD4qnYqhZPIhVBgXvC7MV
-         5K2NaCc+RJGqYLmbQnGhYexrJLmtcXSEhBJ969GDYXiOTp45ZZ9XDxRp9Oh6ZJ8rkJns
-         C1zA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIrSU51XFXkgY3BsVnANw/UqQmC6fpOxHH9VMrSK7VzEzieukSDHwu2mzHZLAfL8KCRzLPzndZNy7CkptqIZHIc+dDEQO/ifP+cB2zHNc/F9969OxQBQnqwTEcW5lOkLMQw5TxNgRxtQE05wIKnY438mUilk9pgPhEFV08LWzea/Bf2Ks=
-X-Gm-Message-State: AOJu0YxypeYeolRH5pHTIkxFE7QDGc7tzGwbYgcYDGvjLKO57PD7dzYo
-	uQKtQr+6gTxmvvgklv4rE+NDbIANka23OqIToHJFE8cojcZOGHiOTsZ+lAff
-X-Google-Smtp-Source: AGHT+IEctfEJTlJWJclkwAwP1qPj01sRRAwqzgxnUWqm8NUgw9LRmDGW/K/imyM4MujFwSU32871aA==
-X-Received: by 2002:a05:600c:1987:b0:426:641f:25e2 with SMTP id 5b1f17b1804b1-428e6b7e80bmr110889905e9.25.1723022116273;
-        Wed, 07 Aug 2024 02:15:16 -0700 (PDT)
-Received: from [192.168.1.106] (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4290580cb80sm20162845e9.45.2024.08.07.02.15.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Aug 2024 02:15:15 -0700 (PDT)
-Message-ID: <a1086e31-4738-76b4-38e9-b494aa39f1a3@gmail.com>
-Date: Wed, 7 Aug 2024 12:15:14 +0300
+	 In-Reply-To:Content-Type; b=Z/sBdRr9wZu/I5neyLoGW15lk1YGAYmgEl+a0dfLYV8dRoEOjxHfmHQcHX5Tov2eeW0ysQYX9R+1ye9BO3q6cZGB5bbUOAuZu8EcdL2ofuf2GP0dAee1QyoosmFzzsbMdMDa0tzZs0IrW0n+eP4XY18PwQwzG0issvW914kqPnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btd4UKdK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65DB2C4AF09;
+	Wed,  7 Aug 2024 09:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723022190;
+	bh=0yvqkTkckfXGJzI06r2/bDEpYBQxkbfPS1kPylwFSbA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=btd4UKdKlQK9miAs3ngZDGXCvg1a7tBANR7z7uT9F0xfznX9gMSx/UK0Vl+Ifxxx4
+	 cHtsrmc01CcDNHnjW3PYwBB+Ueoj15fPj84HAiksC5f9+NYKOYMNKhum9/7BOO3wFj
+	 HxmZHwB2pXrNRGIHQkAF32uM506rt0miuNB451+t1WUdgbPMxMXNwUQDQVCUs/hfp7
+	 T9QJIiAg5whMdAWkd8J3dzNphddGwCl2VMcq8onfHsnG6MvnbLVLJl4vXo6VTC5gEK
+	 qQfIcf4arDtz0khUr41Wx3m59uKCn2Lu4ZrKsoYcDrtCcb6KAEi2k0dsgX46OFVK1k
+	 6LMy3an0PxZYw==
+Message-ID: <f07c2c51-5f28-45ed-9321-33934895f9b3@kernel.org>
+Date: Wed, 7 Aug 2024 11:16:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v1 00/10] Add minimal Exynos8895 SoC and SM-G950F support
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 07/10] dt-bindings: soc: samsung: exynos-pmu: Add
+ exynos8895 compatible
+To: ivo.ivanov.ivanov1@gmail.com, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
  Sylwester Nawrocki <s.nawrocki@samsung.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
 Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20240807082843.352937-1-ivo.ivanov.ivanov1@gmail.com>
- <f217cd23-88a3-e8d5-641b-482734c8f2e0@gmail.com>
- <84283d1a-fe69-4adf-a93f-8d31a7a18c63@kernel.org>
-From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-In-Reply-To: <84283d1a-fe69-4adf-a93f-8d31a7a18c63@kernel.org>
+ <20240807082843.352937-8-ivo.ivanov.ivanov1@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240807082843.352937-8-ivo.ivanov.ivanov1@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Well, thanks, I meant the "From" header. Although right as
+On 07/08/2024 10:28, ivo.ivanov.ivanov1@gmail.com wrote:
+> From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> 
+> Add exynos8895-pmu compatible to the bindings documentation.
 
-you replied, I sent the v2 :P. I'll just wait out for the review
+All your commit msg could say more, e.g. why it is or it is not
+compatible with existing devices.
 
-notes and send a following v3. My bad.
+> 
+> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml b/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml
+> index 15fcd8f1d..5c4ba6c65 100644
+> --- a/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml
+> +++ b/Documentation/devicetree/bindings/soc/samsung/exynos-pmu.yaml
+> @@ -53,6 +53,7 @@ properties:
+>        - items:
+>            - enum:
+>                - samsung,exynos7885-pmu
+> +              - samsung,exynos8895-pmu
+>                - samsung,exynosautov9-pmu
+>                - samsung,exynosautov920-pmu
 
+No update to select? Does that mean we don't need it anymore?
 
-Best regards, and thanks again,
+Best regards,
+Krzysztof
 
-Ivaylo
-
-On 8/7/24 12:09, Krzysztof Kozlowski wrote:
-> On 07/08/2024 11:06, Ivaylo Ivanov wrote:
->> Unfortunately, it turned out that I have an issue with my git
->>
->> configuration. I'm sorry for the inconvenience, I'll resend a V2
->>
->> without the sendemail.from.
->>
-> "From" header is not a problem. It's ok. Did you mean something else?
->
-> Best regards,
-> Krzysztof
->
 
