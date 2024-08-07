@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-8608-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8610-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A0B194A2E7
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 10:31:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABF5394A2EE
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 10:31:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2DD71F22F05
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 08:31:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E9531F21ADF
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Aug 2024 08:31:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FC1B1CCB51;
-	Wed,  7 Aug 2024 08:29:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBFC81D2F69;
+	Wed,  7 Aug 2024 08:29:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEAO1XQV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Du33Ytt6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8905A1D1F6A;
-	Wed,  7 Aug 2024 08:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3591C8FD1;
+	Wed,  7 Aug 2024 08:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723019345; cv=none; b=EFSkMU4gYuMpcpcREA7zZ8wHl2wn3SxldnM2Ohp5MYhaG+fKyHJewrLcRy42995hnnuTrhshFNbNTvT/+E7e8U6OJXVH/6dF3oRS1ycdjAgS61rk4aAKgdnFRrbNbYpv0196MM81njf9FpYRwCFo1yW4fQ55gNans+2j/CYUJPs=
+	t=1723019346; cv=none; b=pKuHZtZPj4o1OMFF6F57Enqni+S5g8fr4e1pdJEOWreB4TFiTrbv6jU9EURxn7a94xagV0718LGAV4hh7s162lmLzq15im/Yazfsm3y+6yajUwr85SemNKbL40fKBmdK3eGOYlsjTDO4p++e0DGeoR8/UTACMr75tQSs27A6UzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723019345; c=relaxed/simple;
-	bh=rRm5tdD/7RT5Aiy99bKbEcWXy4NPUIfqvbAKjZeBkMA=;
+	s=arc-20240116; t=1723019346; c=relaxed/simple;
+	bh=rKJFvh55vvP6U2xisWMgb3ilhUo/eg0syYnKT3T4tiU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jFWh+vSBKiHFTYp65O5EPV68maQVrIox3QJZf4HlGgL2xSTtOjwg37V6XiWzsgITu0vIlqVLLp1FWb3tLvyxjvjWSb6Z1Hc7x2baGuzUcNqiByxwIq5DPcP6PAqgXPhUjNABwmSjVSv7bzxDHTc6hxcSoTZNSEJPxbyzR5CUmpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QEAO1XQV; arc=none smtp.client-ip=209.85.128.44
+	 MIME-Version; b=eIT3RYqeVxWPAQPWMzs3QhkynLFn9h7Z3GZYip5vq00qzfrNDvZvLpMWF/NHWnzptUCit3Yv4QQydCtpJbX4xRnO2kC7PxcW5mO9Xrc5F0Dtnv2zL5tEroIgBEatWPr3449T6LJKmj/1gcwnsv5odk2ofNABIUWzcJleALmCkIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Du33Ytt6; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4266f3e0df8so10097015e9.2;
-        Wed, 07 Aug 2024 01:29:03 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42816ca782dso11179025e9.2;
+        Wed, 07 Aug 2024 01:29:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723019342; x=1723624142; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723019343; x=1723624143; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UvGIqP8seAMojHvOZHf0JtzhDewCaVgns8fBpUAVnsM=;
-        b=QEAO1XQVIF3x3/u0bSr6giOjyPzgx/8W6bCmeLrEUlbtVAwlvf5IZ3dgHh3dqLF8Wo
-         rUWmghhG/xQAkSAcGtygqEGmvW096HStT+mCDMC5RigMEIvycMdRynttBHM6k6rjJylm
-         lZAmrO/tK/W+l1DH0xTZdhntsUgzspmC8Lai+t1+QDm0IINFG2eCVYdhboK7j0GkjdoX
-         rYe3DmKFqqi+PmTZUEwgU2r4O2DkdKrjWP5SW51J5Msc3Fsoa8aAy5dTLurCCcMNeLLx
-         crHbjHKLwi81QWVOJtyGXRWNJCmBhbkgA7jK6LDyRtex0H8ccdq9UycAPfn/wvZ/GuDF
-         rSHA==
+        bh=MITnFzAhcXSHu7cXDX+waEWOqwPn85hNlSBixdf9qIs=;
+        b=Du33Ytt6nbKNKj0O+5Uqj9QM8zjS8xs9p5Zag65luVnxNVXxTekH6oLcIA76/yI7Bc
+         GU2pIFn01hU+am50QIIIjd5a4PcLaP1OYw7uiZxSb7eD63XBhN3oAk0Isv1Yop5VyAS2
+         vZCwEqlS0MhPsh0K1cPBUaOWXJ87KUHJXkmweVFxzXUZTkIoDebTSsrCh3LmITVvMwsG
+         tTsEYTILFpIGbsUlsM6TRtyx/7peT+7sPgifAy7r8JtzF4v23jG1Cz/mdQ4U1FA+Bgq+
+         eQj5OoHnOx/Hs3FVHA4pCKD0A+Eq0Bnh2smrBUx8fDh1Nl3dK/yJy9al5pUr+R71iFBr
+         n0Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723019342; x=1723624142;
+        d=1e100.net; s=20230601; t=1723019343; x=1723624143;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UvGIqP8seAMojHvOZHf0JtzhDewCaVgns8fBpUAVnsM=;
-        b=dFtB6n83HHurzq1MtC+eS05Q0w0FAfnwYlF5Z2wOoragGIDiMYYWwL4APW4MuqOL9U
-         G7jiIYlcBLFU0QkUeE1tNTl9VP6ZOgBukRU1knY7bpn/8uYXwrvhBBup21KbQQhZuT8G
-         cGHMBG9dENqxLhj7Ha6fK/WL50xJ2OYRlzPLRrVOrncZTOa5bkMmnuMhAC9BM6N6pdYi
-         f9nfqUciM0qUwxzPdJ7tfAR0mOaP3v69qfMsusmuYUbkx6bfkISZrr4+1J42zwt7Sfsn
-         vpwIVJwO0jAIFGCYDGzcTvRDGmia5AmWfuuWuX9RXU7ytpKK9JW75Cl3w6zSxSwPdIz1
-         CKFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdlDXurqZ+nBIZI0jQHgwbcmATVCIDt+Nxub81b+bofUZtS9V+FurusFIf2cq3ZifV2tFc/3awZpQJB+MF2WW5lXO/uCJdsQ9cL8SG3dgg9H9JFpMWrCABPc2tTyrDkrDPzlzBO20Krlc3nYZvAfAr3gHhstaKWbMDnF+bFAUmKDPnw54=
-X-Gm-Message-State: AOJu0YyqMqnVJC2OQf40VAd6k8YgzNGLh/DfUEuz2DZnAksAYTmmAvhO
-	KXT7Fk85BRolKp4YWQW+xu6D0h6lM2uSajhdmKDrwOINm/nnKXAt
-X-Google-Smtp-Source: AGHT+IEnDzQoIVtbORBW3Y1jm1auLocus13gR+zOJooA2n0Mcq1ysKgvVmn/qqhkMgLLESGW0n8HwQ==
-X-Received: by 2002:a05:600c:3547:b0:426:63b8:2cce with SMTP id 5b1f17b1804b1-428e6af2fadmr126574605e9.7.1723019341673;
-        Wed, 07 Aug 2024 01:29:01 -0700 (PDT)
+        bh=MITnFzAhcXSHu7cXDX+waEWOqwPn85hNlSBixdf9qIs=;
+        b=FE1HEZ1zqq86/TFSinCuDNOyWti4ZAn2rOORiOGEgd9EncWPJoi0RnSGwMVMEMQfOJ
+         3DFA3bgTLjLuCXsaSPJXkWvaDCuQYO46Kz4TpXuKcXc3h5I+IQzp7fof+ZiNCuUk8zVc
+         JHGHkI4xn5F5b3LXyNy/jDX0zfSrPT2nW46ISsYWkka9el0z4oJgDM8Z/lvxR9pVDOyd
+         2PavQy1DrqETK6R3Z24t0UgKd1W/sVHYvJEOt8NzaBNEnRjYgzAjsSWwvvicXfcgCs9M
+         xsM53XxZNlTu2fY1QHZMYFtFB5xLgJJOy++OQ788BDApcLw2vhz2Dh7JOJd37/xFxuC9
+         IzEw==
+X-Forwarded-Encrypted: i=1; AJvYcCURHGcwjEt/KWIWy1KGAgbFZg7WZwsgZFPzVY78+iTVvkHcunhdb0QhPBb8Fl15OyVzbtX07GEgZi/I2yGk/wv7UZK/+0yt1oKbARivsgJInN+U0wa4nKFRsnNiYYlPneHn5ixoVYZwnYCuMdKr+SsS3KBT4Ts7TcGpy1EaQdh5SqAxj4U=
+X-Gm-Message-State: AOJu0YxC1b2cV6lSCZBD071TJG0UpMHGfHU9gyBfJSds8PNQUJMabaGL
+	S60a95TukAH7cHoGaYAr3+g/pIWteBdA7zwhtjTmgriaWLObpKGw
+X-Google-Smtp-Source: AGHT+IEE+AqajD4fsqmHhGVEWaIEADU+aw3UXfH4k/RPjxH5Oqg4xDvGtVVk1LZLBX/ZNZG9OCKC/Q==
+X-Received: by 2002:a05:600c:a0b:b0:426:549b:dd7a with SMTP id 5b1f17b1804b1-428e6b93992mr107039125e9.36.1723019342877;
+        Wed, 07 Aug 2024 01:29:02 -0700 (PDT)
 Received: from ivaylo-desktop.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4290579fb34sm18168505e9.14.2024.08.07.01.29.00
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4290579fb34sm18168505e9.14.2024.08.07.01.29.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Aug 2024 01:29:00 -0700 (PDT)
+        Wed, 07 Aug 2024 01:29:02 -0700 (PDT)
 From: ivo.ivanov.ivanov1@gmail.com
 To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
@@ -79,9 +79,9 @@ Cc: linux-samsung-soc@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 09/10] dt-bindings: arm: samsung: Document dreamlte board binding
-Date: Wed,  7 Aug 2024 11:28:41 +0300
-Message-Id: <20240807082843.352937-10-ivo.ivanov.ivanov1@gmail.com>
+Subject: [PATCH v1 10/10] arm64: dts: exynos: Add initial support for Samsung Galaxy S8
+Date: Wed,  7 Aug 2024 11:28:42 +0300
+Message-Id: <20240807082843.352937-11-ivo.ivanov.ivanov1@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240807082843.352937-1-ivo.ivanov.ivanov1@gmail.com>
 References: <20240807082843.352937-1-ivo.ivanov.ivanov1@gmail.com>
@@ -95,31 +95,162 @@ Content-Transfer-Encoding: 8bit
 
 From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 
-Add binding for the Samsung Galaxy S8 (SM-G950F) board, which is
-based on the Samsung Exynos8895 SoC.
+Samsung Galaxy S8 (SM-G950F), codenamed dreamlte, is a mobile phone
+from 2017. It features 4GB RAM, 64GB UFS 2.1, Exynos 8895 SoC and a
+1440x2960 Super AMOLED display.
+
+This initial device tree enables SimpleFB, PSTORE and GPIO keys.
 
 Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 ---
- .../devicetree/bindings/arm/samsung/samsung-boards.yaml     | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/exynos/Makefile           |   1 +
+ .../boot/dts/exynos/exynos8895-dreamlte.dts   | 126 ++++++++++++++++++
+ 2 files changed, 127 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-index 01dcbd8aa..49884a7ab 100644
---- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-+++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-@@ -224,6 +224,12 @@ properties:
-               - winlink,e850-96                 # WinLink E850-96
-           - const: samsung,exynos850
- 
-+      - description: Exynos8895 based boards
-+        items:
-+          - enum:
-+              - samsung,dreamlte                # Samsung Galaxy S8 (SM-G950F)
-+          - const: samsung,exynos8895
+diff --git a/arch/arm64/boot/dts/exynos/Makefile b/arch/arm64/boot/dts/exynos/Makefile
+index d7f2191c2..18f5a3eed 100644
+--- a/arch/arm64/boot/dts/exynos/Makefile
++++ b/arch/arm64/boot/dts/exynos/Makefile
+@@ -7,5 +7,6 @@ dtb-$(CONFIG_ARCH_EXYNOS) += \
+ 	exynos7-espresso.dtb		\
+ 	exynos7885-jackpotlte.dtb	\
+ 	exynos850-e850-96.dtb		\
++	exynos8895-dreamlte.dtb		\
+ 	exynosautov9-sadk.dtb		\
+ 	exynosautov920-sadk.dtb
+diff --git a/arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts b/arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts
+new file mode 100644
+index 000000000..5c8351b99
+--- /dev/null
++++ b/arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts
+@@ -0,0 +1,126 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Samsung Galaxy S8 (dreamlte/SM-G950F) device tree source
++ *
++ * Copyright (c) 2024, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
++ */
 +
-       - description: Exynos Auto v9 based boards
-         items:
-           - enum:
++/dts-v1/;
++#include "exynos8895.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++
++/ {
++	model = "Samsung Galaxy S8 (SM-G950F)";
++	compatible = "samsung,dreamlte", "samsung,exynos8895";
++	chassis-type = "handset";
++
++	chosen {
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges;
++
++		framebuffer0: framebuffer@cc000000 {
++			status= "okay";
++			compatible = "simple-framebuffer";
++			reg = <0x0 0xcc000000 (1440 * 2960 * 4)>;
++			width = <1440>;
++			height = <2960>;
++			stride = <(1440 * 4)>;
++			format = "a8r8g8b8";
++		};
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x0 0x80000000 0x3c800000>,
++		      <0x0 0xc0000000 0x40000000>,
++		      <0x8 0x80000000 0x80000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges;
++
++		ramoops@92000000 {
++			compatible = "ramoops";
++			reg = <0 0x92000000 0x8000>;
++			record-size = <0x4000>;
++			console-size = <0x4000>;
++		};
++
++		continuous_splash: framebuffer@cc000000 {
++			reg = <0x0 0xcc000000 (1440 * 2960 * 4)>;
++			no-map;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&key_volup &key_voldown &key_power &key_wink>;
++
++		volup-key {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			gpios = <&gpa0 3 GPIO_ACTIVE_LOW>;
++		};
++
++		voldown-key {
++			label = "Volume Down";
++			linux,code = <KEY_VOLUMEDOWN>;
++			gpios = <&gpa0 4 GPIO_ACTIVE_LOW>;
++		};
++
++		power-key {
++			label = "Power";
++			linux,code = <KEY_POWER>;
++			gpios = <&gpa2 4 GPIO_ACTIVE_LOW>;
++			wakeup-source;
++		};
++
++		/* Typically used for Bixby. Map it as a camera button for now */
++		wink-key {
++			label = "Camera";
++			linux,code = <KEY_CAMERA>;
++			gpios = <&gpa0 6 GPIO_ACTIVE_LOW>;
++			wakeup-source;
++		};
++	};
++};
++
++&oscclk {
++	clock-frequency = <26000000>;
++};
++
++&pinctrl_alive {
++	key_volup: key-volup {
++		samsung,pins = "gpa0-3";
++		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS7_PIN_DRV_LV1>;
++	};
++
++	key_voldown: key-voldown {
++		samsung,pins = "gpa0-4";
++		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS7_PIN_DRV_LV1>;
++	};
++
++	key_power: key-power {
++		samsung,pins = "gpa2-4";
++		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS7_PIN_DRV_LV1>;
++	};
++
++	key_wink: key-wink {
++		samsung,pins = "gpa0-6";
++		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS7_PIN_DRV_LV1>;
++	};
++};
 -- 
 2.34.1
 
