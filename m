@@ -1,113 +1,156 @@
-Return-Path: <linux-gpio+bounces-8671-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8672-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5328694C113
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2024 17:26:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8456494C2BF
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2024 18:28:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1999D286D99
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2024 15:26:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1F770B265E5
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2024 16:28:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F2A6190070;
-	Thu,  8 Aug 2024 15:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0CCC18F2C5;
+	Thu,  8 Aug 2024 16:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="inrIY4UI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWnQY1M8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C0E190063
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Aug 2024 15:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6991F18B47A
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Aug 2024 16:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723130689; cv=none; b=BFrwysOM+ahMNmxy7jetDuJ+ulxH21SgQvjxSfzHC/atqeLHIKVzZpQEJsTDbZNMDcqb2UypdqZOURQcOoV9EUP2Rfq1Xt/yXpNeSFdQNBwMjSSAy0cUerYEExQy7vCSRcTEVwVjSZvuEDA0fVrQwxsJ9Owcif9Ovg85tZIVlq0=
+	t=1723134486; cv=none; b=NG0TFoIFn+iyQSaQ8U49P6+APGuJauahsxXi3kV7urW/5/VgG5fNoFkwmS0zbFlc0yx/mKBSd63i7kozDHeB3czU26/P0CPYe3APThQSZ+Pn9U2VZlVd8eGkGkERKPjHozlgyUBpjXX6qyiNXatlROo5eCTSr61u6rtdFR3ilR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723130689; c=relaxed/simple;
-	bh=aad38w9Iu56pb97dPIj1WoScz5gfWcOaLe//8FVdD38=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=J8l++WsTL8I8idBz3DhuYWT4e8F8KoZocGGVFveWyb2B5ygjN02UJ2zQu5WKPAF413HF1o7mEgyalayoIYwb7+ySO31dGyyyAOve3KXKZWgm0ecSWcbcZ+cMP2hcFv2YTeWjdHE/p59pQ4mSMF/dmGzW0aCRHzBpbSJk/PN2p5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=inrIY4UI; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-428e3129851so7984575e9.3
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Aug 2024 08:24:47 -0700 (PDT)
+	s=arc-20240116; t=1723134486; c=relaxed/simple;
+	bh=UK/cETamLxpyFIOG9UuHmjCuwYs5yCzAVU3e8VKJjaU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X7mynLmp0uvbkQ4KYJ88tT8cAt2DhLxQ3aEbeF+0mV+wx83Ju7Jh2TeGcIR3qcW9F+S6OVnU96cvuh6AQIr7hyh6MugdC0OtJplIGK54mKmXQDvaah0/KyjLw3JmOTeoGiT9nXP2QzEXbnN5QHXhTzS21GAj2/8fycbWG++Rmfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWnQY1M8; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2cb5a947b7dso219587a91.3
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Aug 2024 09:28:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723130686; x=1723735486; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZyqdbFiadiU8CwcQUl3AMf5EkBUw48qbdDcF4qR+yxY=;
-        b=inrIY4UIhUAJIaZiaiMRyk1Q7y0sqbxjx4L9IgWvnS2vYyjMTIl4Fr3z/PybadczbD
-         sPKEBaxBXUahLbx2tsDbkBpQ4tH2I78DDKoMUFnBE995kJFm6x/gpiY15PyO2yB+6224
-         +XDZd1TxB1IJE1m7VJzgNkGkpxUYO8/g0ZN2DpOSDQd6pmsghMzOG8og/0cbTolgnGv3
-         dEtbFjlK659Ij/3O2i9C1wCyTjhXkjWUGkqTvnX4CDP4jbfBhMrHThCMk50t0oU/B1SN
-         h2VWS5boAr2/YbA8+ZhcdjJdrouiZDYPynlQF70/aEHbfKaLvOE0TGScAeqpu8p0limA
-         BAXw==
+        d=gmail.com; s=20230601; t=1723134485; x=1723739285; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h55Ss4x4ropCBofo0X6KlfEBUKmmcmXJv6SUvAqr8VE=;
+        b=OWnQY1M8d9inTprhqOfcIjTUqepYfI8c7xRCepQyku1eT6xoNlcjZLip/G3yGaZYwA
+         xiM6iMtJn15/6aRLCxtz8gYG7ThxNBcgGNgks8ljxtNzJKrUO/RLguW3Atrbvy3SMAeS
+         ty4nMseflATJrdiEMcyHvqRF02fTEa2ZxNsMEPjScY1ZKGyPvU4c67HG1vU70oLMOtGt
+         MLZ2qf9L//9e/WrEUp6iGqdP51Zkb30DTM0sl9BVUUbfSkCjjXCcIlezSuOmIGEVtjd9
+         TJSLwMCOw89k03nc8ykV+eP2nYjPk5SjxVG5QieB+DhtVO5NGrAl5e+mzDKK+XIWFvwq
+         Z4Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723130686; x=1723735486;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZyqdbFiadiU8CwcQUl3AMf5EkBUw48qbdDcF4qR+yxY=;
-        b=kum3pnPYEDeeWRE50160FCP6ygF/KVqMTiKbWgB6qZvYgkmejE50BI/XQ61zN5PPJ5
-         Ijr7jARpNO9eBo5zBMrTlfutShczp3RnhZpBlVbB4kM6ET6y+PPBB1pV7IlJ1+dAvcq5
-         Ag/lHhtZpEMXbcVcv9U/Q8+yRTRKlDtTLLl2vBlaorMAnJD3JUDzBKZFE+lLjvGksdGS
-         Eo2Q0iMR7lBQWN99zmoS2wTrbnYDm0FsonJTt/wW2k86BSVBkhHmf7yvznUnHtrpWA8A
-         1wPW5s3Qp0rlT+RYN8hzRW00VfvR3JqetwT0uYRUqKOMS/a6LNjg5Hdzk3hjLApGmobP
-         H7Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvmuSXtZPXb1e0MbUXyQc/kW9vEkX07zf7bAX7gnvYPu6P9IzUi31eSfh7A1GZMHGbz23qEBxE2t1KAkNeGieUqHGNFzU+gElOvg==
-X-Gm-Message-State: AOJu0YzIdKZMqXCxoohyvhDgWSIXGAREWfVpQZsXA+QU7gCb55CHRgYJ
-	df+jGFfpKem9M8b/eDn50mPSrvi7EWU9tHmQk1X7DHTNQLPxgrUVPI8UFwEI5xA=
-X-Google-Smtp-Source: AGHT+IHQJx0c53pQAgMhwNBTq83Gpjecl7qyGcjwnz+MeFwZUlqabeZsX5w1jGdplOCgk5tp25lSbg==
-X-Received: by 2002:a05:600c:3c91:b0:426:62c5:473e with SMTP id 5b1f17b1804b1-4290af19256mr18982765e9.26.1723130685797;
-        Thu, 08 Aug 2024 08:24:45 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36d2716caf1sm2227775f8f.34.2024.08.08.08.24.44
+        d=1e100.net; s=20230601; t=1723134485; x=1723739285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h55Ss4x4ropCBofo0X6KlfEBUKmmcmXJv6SUvAqr8VE=;
+        b=Hp6OL/VmT3TfvTBfyHLub29EEnkyt5PZ9KeeiobqGhCFYbQiukYDwwucy8GytEmMEz
+         Tx42+Ej0liYXf6Zac06k9KcMnkgpl5vqU3WQUYAt91xuIFo6XpaGGZXzXHnnTzrDyTrv
+         ErF7DpNb4P1zSx+kX7ATpBLTDn1lY8yIXMIiIteC/261NjjolidV6rEc+Gy3z7cCMhd5
+         Z3e97r9l6KBRjp35/3I+7HnprVqGATolwe7wVGRJr75WYX0uHz+y5EbVgMVpMUTiVZwH
+         ZFYS8bT3mCmrkGarDTQrAU14Pzr4lA/7lbnTNkBctI+952tvnSu6iWRoA3CU16H6ELdu
+         9m7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUnV2VwJuq5q0gqkmV5ZN9rJV+UPipfzPGlyoO7UEs6BNdVhk9UngbfCWJz7VmgWWybs7xQvgqFQyBfT2u56+b93YOcyK4TyYzqcQ==
+X-Gm-Message-State: AOJu0YxxX6DOGk+3HXPMOmmTig7VS9r/dLLx9cx/VFXOWLd7RosqUl1s
+	U0yXgUmdXabofDVSe2zGdo2Miax6JnJBLdb2lD8/qIkjYMZTm5Iqli62eA==
+X-Google-Smtp-Source: AGHT+IGRTgtmm4ljHUK/mCPuCaC5RCAN35nHV+wyRTJR8W+TGHEqgLOwkGi16J1pvUjgVOVGJ/6qLg==
+X-Received: by 2002:a17:90b:3cc8:b0:2ca:63a7:6b9d with SMTP id 98e67ed59e1d1-2d1c3465e32mr1669631a91.3.1723134484560;
+        Thu, 08 Aug 2024 09:28:04 -0700 (PDT)
+Received: from fabio-Precision-3551.. ([2804:14c:485:4b61:d689:1e02:dd79:b72c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d1c9dce50asm1327934a91.54.2024.08.08.09.28.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 08:24:45 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: s.nawrocki@samsung.com, alim.akhtar@samsung.com, 
- linus.walleij@linaro.org, Vishnu Reddy <vishnu.reddy@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
-In-Reply-To: <20240729153631.24536-1-vishnu.reddy@samsung.com>
-References: <CGME20240729154736epcas5p111a53e297c7f8c3122bf491cabaf74b8@epcas5p1.samsung.com>
- <20240729153631.24536-1-vishnu.reddy@samsung.com>
-Subject: Re: [PATCH v4] pinctrl: samsung: Add support for pull-up and
- pull-down
-Message-Id: <172313068449.39928.8459952266160240525.b4-ty@linaro.org>
-Date: Thu, 08 Aug 2024 17:24:44 +0200
+        Thu, 08 Aug 2024 09:28:04 -0700 (PDT)
+From: Fabio Estevam <festevam@gmail.com>
+To: linus.walleij@linaro.org
+Cc: aisheng.dong@nxp.com,
+	ping.bai@nxp.com,
+	linux-gpio@vger.kernel.org,
+	peng.fan@nxp.com,
+	imx@lists.linux.dev,
+	Fabio Estevam <festevam@denx.de>
+Subject: [PATCH v3] pinctrl: imx: Switch to LATE_SYSTEM_SLEEP_PM_OPS()
+Date: Thu,  8 Aug 2024 13:27:50 -0300
+Message-Id: <20240808162750.244092-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.1
+Content-Transfer-Encoding: 8bit
 
+From: Fabio Estevam <festevam@denx.de>
 
-On Mon, 29 Jul 2024 21:06:31 +0530, Vishnu Reddy wrote:
-> Gpiolib framework has the implementation of setting up the
-> PUD configuration for GPIO pins but there is no driver support.
-> 
-> Add support to handle the PUD configuration request from the
-> userspace in samsung pinctrl driver.
-> 
-> 
-> [...]
+Replace SET_LATE_SYSTEM_SLEEP_PM_OPS() with its modern
+LATE_SYSTEM_SLEEP_PM_OPS() alternative.
 
-Applied, thanks!
+The combined usage of pm_sleep_ptr() and LATE_SYSTEM_SLEEP_PM_OPS() allows
+the compiler to evaluate if the runtime suspend/resume() functions
+are used at build time or are simply dead code.
 
-[1/1] pinctrl: samsung: Add support for pull-up and pull-down
-      https://git.kernel.org/pinctrl/samsung/c/e61f1a729da850cca2c2d7e045b27c3fd4830d7c
+This allows removing the __maybe_unused notation from the runtime
+suspend/resume() functions.
 
-Best regards,
+Signed-off-by: Fabio Estevam <festevam@denx.de>
+---
+Changes since v2:
+- Use pm_sleep_ptr() (Peng).
+
+ drivers/pinctrl/freescale/pinctrl-imx.c    | 7 +++----
+ drivers/pinctrl/freescale/pinctrl-imx8mq.c | 2 +-
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index 9c2680df082c..d05c2c478e79 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -804,14 +804,14 @@ int imx_pinctrl_probe(struct platform_device *pdev,
+ }
+ EXPORT_SYMBOL_GPL(imx_pinctrl_probe);
+ 
+-static int __maybe_unused imx_pinctrl_suspend(struct device *dev)
++static int imx_pinctrl_suspend(struct device *dev)
+ {
+ 	struct imx_pinctrl *ipctl = dev_get_drvdata(dev);
+ 
+ 	return pinctrl_force_sleep(ipctl->pctl);
+ }
+ 
+-static int __maybe_unused imx_pinctrl_resume(struct device *dev)
++static int imx_pinctrl_resume(struct device *dev)
+ {
+ 	struct imx_pinctrl *ipctl = dev_get_drvdata(dev);
+ 
+@@ -819,8 +819,7 @@ static int __maybe_unused imx_pinctrl_resume(struct device *dev)
+ }
+ 
+ const struct dev_pm_ops imx_pinctrl_pm_ops = {
+-	SET_LATE_SYSTEM_SLEEP_PM_OPS(imx_pinctrl_suspend,
+-					imx_pinctrl_resume)
++	LATE_SYSTEM_SLEEP_PM_OPS(imx_pinctrl_suspend, imx_pinctrl_resume)
+ };
+ EXPORT_SYMBOL_GPL(imx_pinctrl_pm_ops);
+ 
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8mq.c b/drivers/pinctrl/freescale/pinctrl-imx8mq.c
+index 529eebe46298..e59e4fc80193 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx8mq.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx8mq.c
+@@ -341,7 +341,7 @@ static struct platform_driver imx8mq_pinctrl_driver = {
+ 	.driver = {
+ 		.name = "imx8mq-pinctrl",
+ 		.of_match_table = imx8mq_pinctrl_of_match,
+-		.pm = &imx_pinctrl_pm_ops,
++		.pm = pm_sleep_ptr(&imx_pinctrl_pm_ops),
+ 		.suppress_bind_attrs = true,
+ 	},
+ 	.probe = imx8mq_pinctrl_probe,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.34.1
 
 
