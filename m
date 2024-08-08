@@ -1,108 +1,113 @@
-Return-Path: <linux-gpio+bounces-8670-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8671-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08F6C94BA7C
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2024 12:06:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5328694C113
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2024 17:26:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86BB4B210B1
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2024 10:06:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1999D286D99
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Aug 2024 15:26:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E06F5189F33;
-	Thu,  8 Aug 2024 10:06:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F2A6190070;
+	Thu,  8 Aug 2024 15:24:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="n4HxHa5y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="inrIY4UI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3CE1482E9
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Aug 2024 10:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C0E190063
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Aug 2024 15:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723111562; cv=none; b=N5qKlA355T4ydFsMhGcg8Y0++hzaqz2M5NIgO8bnekDA7hVKdSxz6EY/Py7j/qF4lIRiFm2VZBCg93+VguR3BIYFHYs35teCkSiGncb6WQFE99mQSZ+1mscREhdwIR3pyAF0LkakQAa9SYMh7SKrKFSZqTxUKaI768Ns+o1IK38=
+	t=1723130689; cv=none; b=BFrwysOM+ahMNmxy7jetDuJ+ulxH21SgQvjxSfzHC/atqeLHIKVzZpQEJsTDbZNMDcqb2UypdqZOURQcOoV9EUP2Rfq1Xt/yXpNeSFdQNBwMjSSAy0cUerYEExQy7vCSRcTEVwVjSZvuEDA0fVrQwxsJ9Owcif9Ovg85tZIVlq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723111562; c=relaxed/simple;
-	bh=6hv5xKMBa4EVOIETsZgjUJj1tDj/hE5EZ3N7WS+BMmU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=giAAnYHc9VDobKWwDQjuiVtSWoNl0NnPYokx8ZAZBEY9ASajKTAT0fi4kU2ZaZopnP0BJmFjSyTVcdaK+l/tKIV122Vo6Xp5hTIZMbr0H4jth+hnZY7dVigAAnSTnG99fV7qgexItw95m2O4ys1ks/N4XA9Bn3YXH6Wckcn/Yl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=n4HxHa5y; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3687fd09251so400799f8f.0
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Aug 2024 03:05:59 -0700 (PDT)
+	s=arc-20240116; t=1723130689; c=relaxed/simple;
+	bh=aad38w9Iu56pb97dPIj1WoScz5gfWcOaLe//8FVdD38=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=J8l++WsTL8I8idBz3DhuYWT4e8F8KoZocGGVFveWyb2B5ygjN02UJ2zQu5WKPAF413HF1o7mEgyalayoIYwb7+ySO31dGyyyAOve3KXKZWgm0ecSWcbcZ+cMP2hcFv2YTeWjdHE/p59pQ4mSMF/dmGzW0aCRHzBpbSJk/PN2p5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=inrIY4UI; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-428e3129851so7984575e9.3
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Aug 2024 08:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1723111558; x=1723716358; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/qPsQ8QVE2zEks663h1JC5K+bSl/B5g3BfpyLqR4k0g=;
-        b=n4HxHa5yTpH9UzfsbLnDthna3m6hI9+Ph9C11hPNDhuFyxyvZWvcquKzyHlfgW+zCm
-         rAM1IqSmCWhEpo7d4miB0Lz/P14bOUBykfZCtviX7G5WOp91C5cliuxD/vE2H8lWEYqa
-         ELWGQlXHECzDSmzBsGXOlJa6L/5p0Umh7ilLKhbk5+D6OmyieophBIespy/24cRMawGR
-         E5V8KopGRrH4aAinUudbK5pTvfi1XKH72VPkGSLvQjzk9mg1qeij79k5Tl2zf7DIXezD
-         23IFklpluLBYy9ZVbPNK5Qqz3W8POP2kQ657Vb+WrHiageXZYF0OjeMa32u47Kf2eUWh
-         3CpQ==
+        d=linaro.org; s=google; t=1723130686; x=1723735486; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZyqdbFiadiU8CwcQUl3AMf5EkBUw48qbdDcF4qR+yxY=;
+        b=inrIY4UIhUAJIaZiaiMRyk1Q7y0sqbxjx4L9IgWvnS2vYyjMTIl4Fr3z/PybadczbD
+         sPKEBaxBXUahLbx2tsDbkBpQ4tH2I78DDKoMUFnBE995kJFm6x/gpiY15PyO2yB+6224
+         +XDZd1TxB1IJE1m7VJzgNkGkpxUYO8/g0ZN2DpOSDQd6pmsghMzOG8og/0cbTolgnGv3
+         dEtbFjlK659Ij/3O2i9C1wCyTjhXkjWUGkqTvnX4CDP4jbfBhMrHThCMk50t0oU/B1SN
+         h2VWS5boAr2/YbA8+ZhcdjJdrouiZDYPynlQF70/aEHbfKaLvOE0TGScAeqpu8p0limA
+         BAXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723111558; x=1723716358;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/qPsQ8QVE2zEks663h1JC5K+bSl/B5g3BfpyLqR4k0g=;
-        b=ihMz2Z7E0xVMLHPPbe/O0dSCnw3kG9wXloVvD47BdyzhhK1lWKkv0rgmd423B+inSR
-         KDRCH36odYN8wuX/kz4c/BulgVTbhLDHj8PPOeVcHPNggZyUFUG0lmUim05eeMPFhEpX
-         AQgf/jBSNIiDe3aSlHFXmXbd9T+64BEm5mve1TxRCxrQuJGFhZzEmRGGvf0mGECQsVdY
-         QIsGOl6Btq0siJU/rbDzJFqC+VWvzGn0CI/UHVauKlNIN7u6u5kVLsYD7HWgFmCaNKU8
-         HnAaxo4OyaDEydxrcVaRSGbmNSAxhdqba6JMHeWWrWsrkhrprfbZQlX1vRMu2aiaHrbB
-         P2ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXZQEC7ZkB6D2/VuoZuMbhvej0y8lIxbP13uqYPJHcwPFqhY8t38KLzE4SN+DeisLgMjijEcoSqZ5aA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2tNQNdqTtn0hyeaawN2VM9Jbxmbh0zj5gSfp56I6MXj9ocCe9
-	0+2BIwRqHragh79k5NMXY6One3RCBc0wID4VtvNQLxjpZ0tUUuoVsNzyoScNt3c=
-X-Google-Smtp-Source: AGHT+IHuYbrCTlKt5TCgiFSu5JCjZWHBFhE44QTQFbwLXgNURs2glTBXxCRbpAs970Ya85dt2iUAZw==
-X-Received: by 2002:a05:6000:259:b0:368:4e98:6e9e with SMTP id ffacd0b85a97d-36d275900a9mr806392f8f.63.1723111558368;
-        Thu, 08 Aug 2024 03:05:58 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:ae7:4e79:8821:15db])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36d27209a5esm1390336f8f.80.2024.08.08.03.05.57
+        d=1e100.net; s=20230601; t=1723130686; x=1723735486;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZyqdbFiadiU8CwcQUl3AMf5EkBUw48qbdDcF4qR+yxY=;
+        b=kum3pnPYEDeeWRE50160FCP6ygF/KVqMTiKbWgB6qZvYgkmejE50BI/XQ61zN5PPJ5
+         Ijr7jARpNO9eBo5zBMrTlfutShczp3RnhZpBlVbB4kM6ET6y+PPBB1pV7IlJ1+dAvcq5
+         Ag/lHhtZpEMXbcVcv9U/Q8+yRTRKlDtTLLl2vBlaorMAnJD3JUDzBKZFE+lLjvGksdGS
+         Eo2Q0iMR7lBQWN99zmoS2wTrbnYDm0FsonJTt/wW2k86BSVBkhHmf7yvznUnHtrpWA8A
+         1wPW5s3Qp0rlT+RYN8hzRW00VfvR3JqetwT0uYRUqKOMS/a6LNjg5Hdzk3hjLApGmobP
+         H7Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCXvmuSXtZPXb1e0MbUXyQc/kW9vEkX07zf7bAX7gnvYPu6P9IzUi31eSfh7A1GZMHGbz23qEBxE2t1KAkNeGieUqHGNFzU+gElOvg==
+X-Gm-Message-State: AOJu0YzIdKZMqXCxoohyvhDgWSIXGAREWfVpQZsXA+QU7gCb55CHRgYJ
+	df+jGFfpKem9M8b/eDn50mPSrvi7EWU9tHmQk1X7DHTNQLPxgrUVPI8UFwEI5xA=
+X-Google-Smtp-Source: AGHT+IHQJx0c53pQAgMhwNBTq83Gpjecl7qyGcjwnz+MeFwZUlqabeZsX5w1jGdplOCgk5tp25lSbg==
+X-Received: by 2002:a05:600c:3c91:b0:426:62c5:473e with SMTP id 5b1f17b1804b1-4290af19256mr18982765e9.26.1723130685797;
+        Thu, 08 Aug 2024 08:24:45 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36d2716caf1sm2227775f8f.34.2024.08.08.08.24.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 03:05:57 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Linus Walleij <linus.walleij@linaro.org>,  Neil Armstrong
- <neil.armstrong@linaro.org>,  Kevin Hilman <khilman@baylibre.com>,  Martin
- Blumenstingl <martin.blumenstingl@googlemail.com>,
-  linux-kernel@vger.kernel.org,  kernel-janitors@vger.kernel.org,
-  linux-gpio@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
-  linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH v2] pinctrl: meson: Constify some structures
-In-Reply-To: <f74e326bd7d48003c06219545bad7c2ef1a84bf8.1723053850.git.christophe.jaillet@wanadoo.fr>
-	(Christophe JAILLET's message of "Wed, 7 Aug 2024 20:05:36 +0200")
-References: <f74e326bd7d48003c06219545bad7c2ef1a84bf8.1723053850.git.christophe.jaillet@wanadoo.fr>
-Date: Thu, 08 Aug 2024 12:05:57 +0200
-Message-ID: <1jplqjxray.fsf@starbuckisacylon.baylibre.com>
+        Thu, 08 Aug 2024 08:24:45 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: s.nawrocki@samsung.com, alim.akhtar@samsung.com, 
+ linus.walleij@linaro.org, Vishnu Reddy <vishnu.reddy@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
+In-Reply-To: <20240729153631.24536-1-vishnu.reddy@samsung.com>
+References: <CGME20240729154736epcas5p111a53e297c7f8c3122bf491cabaf74b8@epcas5p1.samsung.com>
+ <20240729153631.24536-1-vishnu.reddy@samsung.com>
+Subject: Re: [PATCH v4] pinctrl: samsung: Add support for pull-up and
+ pull-down
+Message-Id: <172313068449.39928.8459952266160240525.b4-ty@linaro.org>
+Date: Thu, 08 Aug 2024 17:24:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.1
 
-On Wed 07 Aug 2024 at 20:05, Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
 
-> The following structures are not modified in these drivers.
->   - struct meson_bank
->   - struct meson_pmx_bank
->   - struct meson_pmx_func
->   - struct meson_pmx_group
->   - struct meson_pinctrl_data
->   - struct meson_axg_pmx_data
->
-> Constifying these structures moves some data to a read-only section, so
-> increase overall security.
->
+On Mon, 29 Jul 2024 21:06:31 +0530, Vishnu Reddy wrote:
+> Gpiolib framework has the implementation of setting up the
+> PUD configuration for GPIO pins but there is no driver support.
+> 
+> Add support to handle the PUD configuration request from the
+> userspace in samsung pinctrl driver.
+> 
+> 
+> [...]
 
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+Applied, thanks!
 
-On the vim3l:
-Tested-by: Jerome Brunet <jbrunet@baylibre.com>
+[1/1] pinctrl: samsung: Add support for pull-up and pull-down
+      https://git.kernel.org/pinctrl/samsung/c/e61f1a729da850cca2c2d7e045b27c3fd4830d7c
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 
