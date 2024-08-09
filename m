@@ -1,110 +1,138 @@
-Return-Path: <linux-gpio+bounces-8683-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8684-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 464F994D038
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2024 14:30:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7970494D294
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2024 16:52:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA66B1F2238D
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2024 12:30:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC4BD1C20777
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2024 14:52:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E94A1946C4;
-	Fri,  9 Aug 2024 12:29:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F54197A92;
+	Fri,  9 Aug 2024 14:52:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XVNHMXOX"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FpTXDA+a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D58719308F;
-	Fri,  9 Aug 2024 12:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D8F195F0D;
+	Fri,  9 Aug 2024 14:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723206595; cv=none; b=M+0Q3GXi3gPoneu5cbkHO06W/0p5PnCkd9xHOX4FowPLFvcYSd0IGZ6nsI0SK43+rKR0w6EOlpnL0X1BFpPwibaY4+2Vb6j688kKaOoENB3aiCjJsFy3OmkmqUsnYnSl8M91BxEL/aRH4WSnG1XK3C5pdnteanM/pIbbcRmy4QU=
+	t=1723215165; cv=none; b=a6khOiHUtdfBP5ba/FgVa0fdlMfjNGfWdWUmF8YXc7frdZCXF1EPuPWK+d5/Qox5oav2r4osG7IbmiOBWyzhdYHZg9kkkAowRIxJ+H0rfyaIuwO38y7KdxUEr8P+WSus2hoog/dTtOqbUe9KjhTnQiSWsiQm52O070xCIK0HVYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723206595; c=relaxed/simple;
-	bh=/0i68SHChLXtas/gs2mFUTJN5ts/W+f0GMQgafSgfMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lF/QjFQPF28ahsdfPEw/ZCbVq89At0SZHIrMi35ISSHQN330Yb0lJ4fDXwe325KdyIP2yozQjUP5CmXiAiwI+hbHXYXgI2eISiCg+cF47+k8xFBjLQTVBXXfahWfpm5kDZQGREi+T8PQGFhPfoVfJ3pyry+QjoUfjGM8Gby5NJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XVNHMXOX; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723206594; x=1754742594;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/0i68SHChLXtas/gs2mFUTJN5ts/W+f0GMQgafSgfMc=;
-  b=XVNHMXOX34crXtrjAmAl52Y4vBPfkJNpU35fwMwrHjp3gegSoQzI7gQ9
-   CG2kOehZd0jOd0iw8YPn5TYkHmawH7gD350oTQaHZeDJsT/HufFqOVFRH
-   yHLq+4xogUACfzEryacfNlIW/NVX33ARU0rAGGgXmSt4gQW9fvhLwQ/Cm
-   fVTI69yRH99kcHlB3TAABJpwGcgC7+nykN6SUY1Hw9jJ61otjyNaD+B09
-   PhHfa+O6cSH+1HbqPfJ5p/UZQN++vV+CXzcen9OXO8AyBFMVL80evehTN
-   387UrmKBJgJ76wtWZBpVCb0kWiae//+m5BHtzZZAUe2EFItz6XdzrcDVg
-   A==;
-X-CSE-ConnectionGUID: 6B9q49g2QbyrxGboHnxEcA==
-X-CSE-MsgGUID: 08/k9baLQcu2bRO9ec9cTg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11158"; a="25247535"
-X-IronPort-AV: E=Sophos;i="6.09,276,1716274800"; 
-   d="scan'208";a="25247535"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 05:29:53 -0700
-X-CSE-ConnectionGUID: hx0i8vIpS2WlDPjJkdNDgQ==
-X-CSE-MsgGUID: YQBySL1QQeyMO87drTRkDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,276,1716274800"; 
-   d="scan'208";a="58119753"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 05:29:51 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1scOke-0000000DPme-3I03;
-	Fri, 09 Aug 2024 15:29:48 +0300
-Date: Fri, 9 Aug 2024 15:29:48 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: put gpio_suffixes in a single compilation unit
-Message-ID: <ZrYLvCHcoNaZwPyj@smile.fi.intel.com>
-References: <20240612184821.58053-1-brgl@bgdev.pl>
- <171834931757.6326.8605051498855992570.b4-ty@linaro.org>
+	s=arc-20240116; t=1723215165; c=relaxed/simple;
+	bh=54QXor35iu4GsDL+IbSaowExg2cqF8oAk40RdmrZ9ro=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JOn11VSl3kwap1Xe3LrVXaNKVQT3bseoDAIo1iU1jcmD+yv03N+kq6asXyhG8+RfZtVUQjZVU4wmj2bmzB93ssfCkTpJomeeCMvJ8JjSz27E6yDQLA6MJG9tlETa8ZsNp6PSiaxPqAzyMnULNYkBozqh4Q5EGeooBP1/a+TygEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FpTXDA+a; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7293C40013;
+	Fri,  9 Aug 2024 14:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1723215153;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=x24MAzrCMKYNTrujF82LTVJxRbe78cQL5WaUMWGVif8=;
+	b=FpTXDA+aYU8FKWd1QYS9VxCeWO2yEnunehP7kSifsV/Ur9D23MIJEa7bXaSQPH32xkoU6j
+	n4FYUBJSolK4W3XCqBCpFrJic6Z+yQpR2W9P631VHLTVcjuZnYJOp19Gm+hZDj7DOFzY6a
+	+k3jJv/7bQ7IrApY0PP77BMJnqyQUG91aGW9lsLOmGpk67Y86H8F4O33Ub6fFDYTqFVfzc
+	3u3NZFbNjgAs075Rq7F8Bs0MZ+DspNxqR+s7t9OpXce+QlTRc/+rGLBWwfjha2iEXVaFkP
+	fzot6SZwwPDm6EHdarYxF+dZ95GpOiDeqNLnLMbPKIEdFDzRyWWIEVIq3KD4sw==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH 0/5] Congatec Board Controller drivers
+Date: Fri, 09 Aug 2024 16:52:04 +0200
+Message-Id: <20240503-congatec-board-controller-v1-0-fec5236270e7@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171834931757.6326.8605051498855992570.b4-ty@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABQttmYC/x3NwQrCMBAE0F8pezYQYyrFXxEPm822DdREdkMRS
+ v/dxONjmJkDlCWxwmM4QHhPmkpuuF4GoBXzwibFZnDWeTvam6GSF6xMJhSU2FmlbBuLmRzdw+Q
+ pekZo/YDKJghmWvvCG7Wy9OAjPKfv//T5Os8fdA2OHYQAAAA=
+To: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, blake.vermeer@keysight.com, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Fri, Jun 14, 2024 at 09:15:31AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> 
-> On Wed, 12 Jun 2024 20:48:21 +0200, Bartosz Golaszewski wrote:
-> > The gpio_suffixes array is defined in the gpiolib.h header. This means
-> > the array is stored in .rodata of every compilation unit that includes
-> > it. Put the definition for the array in gpiolib.c and export just the
-> > symbol in the header. We need the size of the array so expose it too.
-> 
-> Applied, thanks!
-> 
-> [1/1] gpiolib: put gpio_suffixes in a single compilation unit
->       commit: 7e92061f1e9d1f6d3bfa6113719534f2c773b041
+The Congatec Board Controller is a microcontroller embedded on the x86 SoM
+of Congatec. It's able to manage lots of features, such as a watchdog, some
+GPIOs, I2C busses ...
 
-Urgh... :-(
+There is no datasheet or specific documentation for this Board Controller.
+The only sources of information are the driver, library and tools provided
+by Congatec in their yocto metalayer [1].
 
+The Congatec implementation (available in [1]) doesn't follow the good
+practice (a unique driver, and all accesses are done using custom ioctls).
+
+This series implements an mfd driver, a gpio driver, a watchdog driver and
+an I2C bus driver, to use the standard API from userspace.
+
+For now, only the conga-SA7 module [2] is supported. For this board, the
+Board Controller has:
+- Two I2C busses
+- 14 GPIOs
+- A wathdog (with pretimeout support)
+
+It also has temperature, voltage and fan sensors. They will be supported
+later.
+
+For the development, the conga-SEVAL board [3] was used.
+With this board you have access to the 14 GPIOs, and the two I2C busses.
+On each I2C bus, a 24c16 EEPROM is present by default.
+
+To be able to drive GPIO 4, 5 and 6, a specific BIOS configuration is
+needed: HD audio shall be disabled, and they shall be set in GPIO mode.
+
+[1] https://git.congatec.com/x86/meta-congatec-x86/
+[2] https://www.congatec.com/fileadmin/user_upload/Documents/Manual/SA70.pdf
+[3] https://www.congatec.com/fileadmin/user_upload/Documents/Manual/SEVAL.pdf
+
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Thomas Richard (5):
+      mfd: add Congatec Board Controller mfd driver
+      gpio: Congatec Board Controller gpio driver
+      i2c: Congatec Board Controller i2c bus driver
+      watchdog: Congatec Board Controller watchdog timer driver
+      MAINTAINERS: Add entry for Congatec Board Controller
+
+ MAINTAINERS                   |   9 +
+ drivers/gpio/Kconfig          |  10 +
+ drivers/gpio/Makefile         |   1 +
+ drivers/gpio/gpio-cgbc.c      | 203 +++++++++++++++++++
+ drivers/i2c/busses/Kconfig    |  10 +
+ drivers/i2c/busses/Makefile   |   1 +
+ drivers/i2c/busses/i2c-cgbc.c | 407 +++++++++++++++++++++++++++++++++++++
+ drivers/mfd/Kconfig           |  12 ++
+ drivers/mfd/Makefile          |   1 +
+ drivers/mfd/cgbc-core.c       | 453 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/watchdog/Kconfig      |  10 +
+ drivers/watchdog/Makefile     |   1 +
+ drivers/watchdog/cgbc_wdt.c   | 217 ++++++++++++++++++++
+ include/linux/mfd/cgbc.h      |  44 ++++
+ 14 files changed, 1379 insertions(+)
+---
+base-commit: d31d4ea2a5e337e60f6da9a90e41d4061bdcec91
+change-id: 20240503-congatec-board-controller-82c6b84cd4ea
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Thomas Richard <thomas.richard@bootlin.com>
 
 
