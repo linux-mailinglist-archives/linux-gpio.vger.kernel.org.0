@@ -1,177 +1,139 @@
-Return-Path: <linux-gpio+bounces-8679-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8680-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4185894C9DB
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2024 07:49:34 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB01F94CCC9
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2024 10:59:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E8C762815E0
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2024 05:49:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 218FCB20F66
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Aug 2024 08:59:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5F8116C846;
-	Fri,  9 Aug 2024 05:49:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0B7818FC85;
+	Fri,  9 Aug 2024 08:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EEHpStzt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h9MN/UHR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8734934CDD;
-	Fri,  9 Aug 2024 05:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A43318F2E1
+	for <linux-gpio@vger.kernel.org>; Fri,  9 Aug 2024 08:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723182566; cv=none; b=kKw3uZbAo+pTM9jz3cwREOV0yLrro5lK8EBxTUwU8hTreuDm8g1b/kP5Q/VCITatv1pY8HCnzMf+m+SRx9MvioHnqDY9bonxJWQJrS7rsSmK5yyQFf2avErrrM3S+2Uqzg0eKf6Bz0J+OJpYzkkPLoJbyXAakzYDiov6OECKnbU=
+	t=1723193945; cv=none; b=sSqTYdADzwN25p0vZ1HxA4Tz7b/42PNf2g/eTABpX7x5OtOqd4qdtYz68WWOZiY0k59pAQ2/pdYL6+guF9M3mqDy59aODofoEjuidjExR5Z4p4UVlTY9CfPnmwE5CiELAEcjCbCJb9UYpl+hTPDqPCycSFGLARxPBElBIcA+mwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723182566; c=relaxed/simple;
-	bh=12XbqWay4D68Qp40QHYpSukXZCMh8XhXyK8jkIHuWzA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QZiyueiRZHjEgbV0YS7k+z+UybHNlftftQyxyffOiJBaX5bzqk5Zs0XnruAXWmcpjWtm5mC0g97Xe04xwFIIj03Fgn5J/l0w67PMCJtB4YaD4pHvQrf9lKh+U4pvExMN8sfx4lhoL4kYRfbh61e7TAD9fpBPkZ/9pyl39pYzhhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EEHpStzt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7857AC32782;
-	Fri,  9 Aug 2024 05:49:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723182566;
-	bh=12XbqWay4D68Qp40QHYpSukXZCMh8XhXyK8jkIHuWzA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EEHpStztJHMpUTADsJGXfHr7x9SGMACJQ7l6nIy6P6tjKLzrWEvBr3HwdXyrDSpLG
-	 b96p3F7rJbFpuRFCU6n20oO4c33OEUIXiYhSwYSz3Tf+BPjEOOZcxIO6Ra+5xBWRv9
-	 MXFc2+Gmo6LdSFbiyTjdX6QjuyEYiNit0qb+xMK/H7ADhpLVBbmXTZ44pZzFdhVzyw
-	 CNfSk0c6ul1ADKfMUhxLTpEwL9s//Xzd81ssImJMRH6D+6ynrekaNLkbYclyx/VheZ
-	 kCIqI+JoTd//YLADS4+iJCDCFJR4sWlNatranNA51M6ve/3njfHCEZYNek59xyHeZw
-	 o5RTNtLHZPhMQ==
-Message-ID: <a29c1c92-0f22-4fe3-a965-8561f6dba059@kernel.org>
-Date: Fri, 9 Aug 2024 07:49:19 +0200
+	s=arc-20240116; t=1723193945; c=relaxed/simple;
+	bh=lK2xl6KyTi2s5yaupefvwXgJ9xcHGS6tWSN3gQuPuBc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PA3VSEc1m/UC1o6rZPE3b3wpvzSKVr3dHtEx37Ma1c7OrMDY027kdhnF8W1Jp1lM/qFLlPSF1VxfEXNtXT0uqRIZ7nVYR+2n/aqBHlXJf6W4aQOibc0R6L2YO9g3cZcYpmZB/yNJ8AaYgFAw7gT9rQuBjpI2NNNrwKa04oPWm4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h9MN/UHR; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5bb85e90ad5so1660855a12.3
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Aug 2024 01:59:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1723193942; x=1723798742; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=y29XsGoEBrWtW+8pv1a0Cy2W/65r6eteamsegCWD7+8=;
+        b=h9MN/UHRrl/jVLDrkOl+ITEZxg/jmx54qCMb75o0gC24FGpFJdapuOp2q7RbIpT1Wg
+         ZsjjJZ8Eo8dJM/3ggaFhYN9VDXNI1WP4bSQqH3PZHpb5UxOZMgZmkfwjR7Ba7/RbLWuz
+         b1GuSiksgZo/zYjuVc0HiCoJC1L+7G/PG4uiXxwiFnRjhopWji7HzxdAh+aGtar4CCnk
+         asnReYrMvU0XJC/6idTwJVFjrei1QCDLvo1oZy1/rUNvXmyrB2utkS3FI1y0AzLti0he
+         s9kvxkjUsn33KkRB39V231/hw7fdaiR+2kzhYNcTt+h3Otvfk2dfdmaUfmKf2GWXUQzu
+         qU+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723193942; x=1723798742;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y29XsGoEBrWtW+8pv1a0Cy2W/65r6eteamsegCWD7+8=;
+        b=JUhku7bJSJlcNCITXA0LVHnSMSInoF1a/uiuqeOkusM8xscPf3K4Qe0ixvFHaviR5w
+         FsxpuakwfykP0vmZSZ97rokDFq70T4pXhD3BdZcIVn/9bPPaMlfiWsR4oNVB8mb1hbz2
+         6fkADX3Gr4oIghradoQkjmyS3MI4aLjcOX/RbiqL6upfH3JYUjxiIitWiJKF9vPI4xG7
+         rgajU8QZ0bcqZkp4RDcNuxurDuT77/KDqnR3BgBGGFA0EqOEidgBcufKSksVZFh10q2o
+         nG1wLmg67xRKyEsgnJWEXB28yxxfuidITft6A5A5X4nZrVV7LEsymN0F5AY3aVrf+ZZw
+         rtXA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIzBGdmid0ZBmamyw914WMT+XlUREDsK2cXzgpKZqGFhGB0cLMJ7TuQRvEwScDppONqb1cBfWfvQgB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9XB2ZE15atvBDoO9SQTyF0YTk61F/yoi0VbMh76PfuUpno9Ew
+	snE0IiNw0WZDedhRPUkWdiRFNoIZsmuPZZuRNEOPbAbtf/pVWXXMEbXH4/LaZaarVPuZ9AdbW/N
+	u6Ck=
+X-Google-Smtp-Source: AGHT+IEm4B7KEbbYZpTWE+SXfvbTwUGi0cG0j9nLMDU4o5bCAdcyXvGo+95gVFv7Ki5MvLUURp67Fg==
+X-Received: by 2002:a05:6402:4408:b0:5b8:34a9:7fd8 with SMTP id 4fb4d7f45d1cf-5bd0a643fe9mr674923a12.29.1723193942195;
+        Fri, 09 Aug 2024 01:59:02 -0700 (PDT)
+Received: from linaro.org ([82.79.186.176])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bbb2bf85fbsm1341522a12.16.2024.08.09.01.59.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Aug 2024 01:59:01 -0700 (PDT)
+Date: Fri, 9 Aug 2024 11:59:00 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Konrad Dybcio <quic_kdybcio@quicinc.com>
+Subject: Re: [PATCH] pinctrl: qcom: x1e80100: Fix special pin offsets
+Message-ID: <ZrXaVLyorJEM60ID@linaro.org>
+References: <20240809-topic-h_sdc-v1-1-bb421532c531@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 08/10] arm64: dts: exynos: Add initial support for
- exynos8895 SoC
-To: David Virag <virag.david003@gmail.com>,
- Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240807082843.352937-1-ivo.ivanov.ivanov1@gmail.com>
- <20240807082843.352937-9-ivo.ivanov.ivanov1@gmail.com>
- <e6b4e0d8-7183-4ff4-a373-cb1c0c98d993@kernel.org>
- <5274b8a1-b81c-3979-ed6c-3572f6a6cfc2@gmail.com>
- <225a94c3d0e8f70238aa9a486e7752ad6cb20283.camel@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <225a94c3d0e8f70238aa9a486e7752ad6cb20283.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240809-topic-h_sdc-v1-1-bb421532c531@quicinc.com>
 
-On 07/08/2024 19:29, David Virag wrote:
-> On Wed, 2024-08-07 at 14:20 +0300, Ivaylo Ivanov wrote:
->>
->> On 8/7/24 12:20, Krzysztof Kozlowski wrote:
->>> On 07/08/2024 10:28, ivo.ivanov.ivanov1@gmail.com wrote:
->>>> From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-> [snip]
->>>>
->>>> +
->>>> +	timer {
->>>> +		compatible = "arm,armv8-timer";
->>>> +		/* Hypervisor Virtual Timer interrupt is not
->>>> wired to GIC */
->>>> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8)
->>>> | IRQ_TYPE_LEVEL_LOW)>,
->>>> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8)
->>>> | IRQ_TYPE_LEVEL_LOW)>,
->>>> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8)
->>>> | IRQ_TYPE_LEVEL_LOW)>,
->>>> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8)
->>>> | IRQ_TYPE_LEVEL_LOW)>;
->>>> +		clock-frequency = <26000000>;
->>> Hm? I think this was explicitly disallowed.
->>
->> It's weird. Without the clock-frequency property it fails early
->> during the
->>
->> boot process and I can't get any logs from pstore or simple-
->> framebuffer.
->>
->> Yet it's not set on similar platforms (exynos7885, autov9). Perhaps I
->>
->> could alias the node and set it in the board device tree..? That
->> doesn't
->>
->> sound right.
+On 24-08-09 02:22:04, Konrad Dybcio wrote:
+> From: Konrad Dybcio <quic_kdybcio@quicinc.com>
 > 
-> This sounds like CNTFRQ_EL0 is not set properly by the firmware.
-> Now, if I read the documentation properly, this can be only set from
-> EL3, which in your case is... not easy.
+> Remove the erroneus 0x100000 offset to prevent the boards from crashing
+> on pin state setting, as well as for the intended state changes to take
+> effect.
 > 
-> On my Galaxy A8 2018 (Exynos7885) I remember the old Android 8
-> bootloader not being able to boot mainline, but Android 9 bootloaders
-> did. I did not take the time to check if it was related to this, but it
-> is my guess.
+> Fixes: 05e4941d97ef ("pinctrl: qcom: Add X1E80100 pinctrl driver")
+> Signed-off-by: Konrad Dybcio <quic_kdybcio@quicinc.com>
+
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+
+> ---
+>  drivers/pinctrl/qcom/pinctrl-x1e80100.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> Your best bet is that maybe Samsung decided to fix this on the latest
-> bootloader, and upgrading will fix it. (Though if it's already on an
-> Android 9 based bootloader and it's still broken, my guess is a newer
-> version won't fix it, but who knows)
-
-If you can update your device to newer Android and it fixes the issue,
-then please drop the property. If this does not work, then please add a
-comment like: /* Non-updatable, broken stock Samsung bootloader does not
-configure CNTFRQ_EL0 */
-
-Best regards,
-Krzysztof
-
+> diff --git a/drivers/pinctrl/qcom/pinctrl-x1e80100.c b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
+> index 6cd4d10e6fd6..65ed933f05ce 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-x1e80100.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
+> @@ -1805,10 +1805,10 @@ static const struct msm_pingroup x1e80100_groups[] = {
+>  	[235] = PINGROUP(235, aon_cci, qdss_gpio, _, _, _, _, _, _, _),
+>  	[236] = PINGROUP(236, aon_cci, qdss_gpio, _, _, _, _, _, _, _),
+>  	[237] = PINGROUP(237, _, _, _, _, _, _, _, _, _),
+> -	[238] = UFS_RESET(ufs_reset, 0x1f9000),
+> -	[239] = SDC_QDSD_PINGROUP(sdc2_clk, 0x1f2000, 14, 6),
+> -	[240] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x1f2000, 11, 3),
+> -	[241] = SDC_QDSD_PINGROUP(sdc2_data, 0x1f2000, 9, 0),
+> +	[238] = UFS_RESET(ufs_reset, 0xf9000),
+> +	[239] = SDC_QDSD_PINGROUP(sdc2_clk, 0xf2000, 14, 6),
+> +	[240] = SDC_QDSD_PINGROUP(sdc2_cmd, 0xf2000, 11, 3),
+> +	[241] = SDC_QDSD_PINGROUP(sdc2_data, 0xf2000, 9, 0),
+>  };
+>  
+>  static const struct msm_gpio_wakeirq_map x1e80100_pdc_map[] = {
+> 
+> ---
+> base-commit: 1e391b34f6aa043c7afa40a2103163a0ef06d179
+> change-id: 20240809-topic-h_sdc-eb6edad718cd
+> 
+> Best regards,
+> -- 
+> Konrad Dybcio <quic_kdybcio@quicinc.com>
+> 
 
