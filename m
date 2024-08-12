@@ -1,179 +1,170 @@
-Return-Path: <linux-gpio+bounces-8718-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8720-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5E7994E8C3
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 10:41:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C53294EE7A
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 15:38:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81F37280C9E
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 08:41:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 70179B21BB5
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 13:38:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 701BA16B750;
-	Mon, 12 Aug 2024 08:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="UXBpfi+7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8E9A17C200;
+	Mon, 12 Aug 2024 13:38:29 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11011034.outbound.protection.outlook.com [52.101.65.34])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2125.outbound.protection.partner.outlook.cn [139.219.146.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FE216B38E
-	for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2024 08:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE628176FBD;
+	Mon, 12 Aug 2024 13:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.125
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723452078; cv=fail; b=MCl8kWMoqOt1QVISJw2JNz2szwNqKWcnlMKr0XwApNvaHyZvxH0WpNa1ZnC1OI5EgScirvtbf7r1WjBpdyjo7rm55M3v898b40T86U2iHXyRg4BgYNMmJWp2T2HNLut8tJKHwH4ZIyrxD7VLOw4AX/F9elYKFS0ZRQOiJc6cNnY=
+	t=1723469909; cv=fail; b=DD+HdRW7fofUANXa3zWJU2ZaksxI3qzPRNS5MPskc4ctdUmAYCmtA6PpkY7afYU1VsRT4YTOR6KHPJIG8luorQxFHyF8w2/ate1xGQUAMrgzGuMUHCCDYPCbJV8GLEtojBr/pdlYYB69oQu1CjCd9MnK2XxIKA4mra4JwKmptu0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723452078; c=relaxed/simple;
-	bh=eOy1yPpfenAEyVGZBTX2pubSSl78gCZ+By605ASrtVE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XXSHiL21C53NrC/rV5yVYmgEvD229Y812fl7jS+gNr/AOV+Wf0E/7Vglgdpp75glOxekdQWsGdQ2YZBM2iF2c5f8fLNJGZOhsp3nw9z377iEIQau9ZvPT+Fn5hso56mPdkc00nQsQkjWanphU0NAk2KdP0qBU5FLNKTzNaJSqiQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=UXBpfi+7; arc=fail smtp.client-ip=52.101.65.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WJyNNUT32uEEzlU2ICYmm/2DOlK6b59/Q9reZ3TvWcu0NHK8MdYKkaRJvL+XozJifoN/WGa+4QP98+x1EecKWLvEuEbz0er/XPoS+vUJZnMN7gxxGjBKLHDkEVFhPl4dqSAf4gztPlGCJilwtbjjHUcC387NNhfec94yRN7K21Ooy7HXtFLaUqapD43LnUQXoZYvlyRQAr2vJ6DSMVRAb/gye9JemMAvNutjXfo8NMVFI4kR6m2Yki84eouoEoQHWGIVlIVpBgFeFLgHDaPoIgsAOQf4leo4KUFkfOv0xuxSl8cO6xucySyfj3A3p1wkQuDjt6CulZjkVTuLFY79YA==
+	s=arc-20240116; t=1723469909; c=relaxed/simple;
+	bh=+iFBzz2G0Syy8uQjZfVwHKKi5kmxZS9YRTdJhsqnADU=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=C1MMItIVLAHRec3Rnb/3hdGlnm+WVGHcKqSmd69Zcmfk5sg1RA+Oxq/LleaKyiSPfj7UbcROqeraL2bxWdaFJpg5N1k8iXncEcQAKTLPK2IXrhLhupN0nMGzeAcgyZgFwZcK1o3izIUkuMMKzFu2mM2NhhNCLfZRZ7Wj7ftU0Tc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i+mSAANc5UV0PuQuplwgfUqhj7wZKIEPsNaOtzeZpnAAkOMnF79zlEFaCrusSn8FhAuipxNzob+f39yyAXvu9wLa0acG/i1qSXH8K5TkT6QJ5py6+3TEn+Yp0YMkyLCaX7g2eZA0ytU6SH4atuwsjavrDek3ivB89EkrFNcv8F2qXaqd4RCrA/oMRGOLKU6qJpMhwCBtt9TAD2TZWGIA7BqVmOQM+zZknVrSgtnbIpMem7NdGU3pD1/VHwj68CBn3EMdHlmlrICwNSFInZPbAuW6aLm42k6F2rRiBKU77XxkQdaqR3tIjiZ/lz/7RW7XEgTEhX/zRRHK1BfYG9fckg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
+ s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eOy1yPpfenAEyVGZBTX2pubSSl78gCZ+By605ASrtVE=;
- b=KzoFyr9uY30wnnSM28DHQc02xx1UTUgrHQaWGDd9wqcnXwCmmAHUKqhT5UmMTKwGGa2bm6YkRUVFMSAHPU5+69iFOtlLfcky2Su5cqg7yPDHcfvLBdSD6Bh08z2zVVkwSN/j51SVmRXECB/7tFSGwXLIrrIHo41bDdrACctq9ZGwKrF2QgYhLBHFTuqej5pjhzNGtUMzPr6pM0U/yR63TyRtlkmmEFTLUJLRQucRHKvnSZXqjVn/s+0j3jLxqftFy64V3OOG+i9XJrY6UZ5E8tB9FYvAIj9U2tp8lAIBiZBL0fL0zfTKcg5n9U7ZpYj7naMMDqomJ7gT3XO4xPvz6A==
+ bh=dtTX+siQG+eMTSarMDHELnA25W+WyNzHpnayrRNzufo=;
+ b=ZufD12j+BoEW+meD1nbBQ78xhV7yV4BCjzVdCN+UdLftk2kWcJ9CxzEWpetedyYXhbsjtuQvn499oK5lWkufAsvWYmhIMqWloty/mek3TfFpT5A0M0GjNZBCPmOLkfpomEs/KcYoI18ZldkXZhdfvAI8Hjnhx32mUTNjKnXhEt2yfw2jEFgkGJDfnJXRke/hTjz1V5uKLxVDMiOIwC6ypfyN3tfjfeSDAA3Cd03M9cyK5b4BA7/3LKfoSJk+ACT98dScMP6Vj7rYRM738VzkT/NMYuA2dFrsPrmCbLLsIbVOr7WSjgHLqQIbxJKmAqY9LvC57JC12W7hiOB6H4fNTA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eOy1yPpfenAEyVGZBTX2pubSSl78gCZ+By605ASrtVE=;
- b=UXBpfi+7nZ3UqeziENVec2/UkLUv0H7UNqtcnXRNu54gzzQRG20SSB4mfVe+fC98zAdcRByqcWhtxfwOaMCiZdHzNY1zKvdFJV9Z5L/xp3CX6Mpe6/2A6xFfddI3Lrxe0+D3hyuxqijjWf8LY5HCBbSy/lOSA4dwZnQIjeUWb4dvP4UXJkcHfk0cY/rd07/74nDpyhvSgCN/hHOAXbdUUmkaW94O06SPnoL5+l+wb5TUGNRLGHLU8Jnjzs5GZs3fVdFMArcWfTu5ZzSN06sVkTgX2PpI5ZYmTNXNIPRYmzeq7bxI7fFq4Woj37wB1oLXnkbotkwpZ7EzCy2ZUMFkgg==
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by AS4PR04MB9433.eurprd04.prod.outlook.com (2603:10a6:20b:4e9::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.20; Mon, 12 Aug
- 2024 08:41:12 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%6]) with mapi id 15.20.7849.019; Mon, 12 Aug 2024
- 08:41:12 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Fabio Estevam <festevam@gmail.com>, "linus.walleij@linaro.org"
-	<linus.walleij@linaro.org>
-CC: Aisheng Dong <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>, Fabio Estevam <festevam@denx.de>
-Subject: RE: [PATCH v3] pinctrl: imx: Switch to LATE_SYSTEM_SLEEP_PM_OPS()
-Thread-Topic: [PATCH v3] pinctrl: imx: Switch to LATE_SYSTEM_SLEEP_PM_OPS()
-Thread-Index: AQHa6a/zmJW1SWCotEGNFItbYHycSbIjU0gA
-Date: Mon, 12 Aug 2024 08:41:12 +0000
-Message-ID:
- <PAXPR04MB8459E65998D6AE46B083315E88852@PAXPR04MB8459.eurprd04.prod.outlook.com>
-References: <20240808162750.244092-1-festevam@gmail.com>
-In-Reply-To: <20240808162750.244092-1-festevam@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|AS4PR04MB9433:EE_
-x-ms-office365-filtering-correlation-id: 2907bb10-7ea5-4b70-037a-08dcbaaa8585
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?s7069P690+etpE0B3LEKx1wMQmz0srXuO6WUDbk7WevY5Jp/Yu5+9gDAA3It?=
- =?us-ascii?Q?preNSt9iDH1DROa9TOKCK+9y8Q9yL/zFmwE8y0YrklCKmHAYC3GK/qBoVgAp?=
- =?us-ascii?Q?NlaTJmT5NYsFFGaWb2mVYHIyW+bXyA7MEdxE9CErHxKhOzbAvtNi/ckMW6gz?=
- =?us-ascii?Q?NW+tYnuh+UxmI8/CmLEM0aIzsnZH8LpA7VSZHrNyiXEkBS1Nm5L62Vr24ZYD?=
- =?us-ascii?Q?U8WBE3aP69xdISQhVnT7+k9sU23m/rr8lP2KFXpLhWNrCL3hvW+jV9XMj2lI?=
- =?us-ascii?Q?KkwWU7fT3bATe0PsfGpV1WVpZ/AKIgA2pJ/dehrgADqLB2L28DgIJ1IwL3V0?=
- =?us-ascii?Q?hCk+MTEOZ5ZbW3S6mx6OE/JgnNDOUi3SbUYtG4SLI1LSlvqLVGAbe/HVN1AJ?=
- =?us-ascii?Q?r3yL5O7KKEv0ZLltbdiaFDi3DSdLzRU+svYKUcx3MMTA2SHSI7PXW8dHQka5?=
- =?us-ascii?Q?DAKoAZ6Jfnu8jZ/v5dmS0tPa9bhferyAogJ2CVXKem/LtrinxfZG4X3+aL1S?=
- =?us-ascii?Q?dE6kq2OaZV5BpyZzyBTQXkpy1FPfdkvFGI+DSFbeqFxmd1pw+cHj3zvvXRKn?=
- =?us-ascii?Q?pnTzTU6zR2AnZk2uiEWo4hHcJcrdJkR5dL6bv0/S4JFcB67Jwv8QXdtqMCp2?=
- =?us-ascii?Q?kmXenWCbc57N9kJBRx2kkMBs7o0Jxv7AKJ5bnfKm0Ngi76xJ4p77lxqOkya3?=
- =?us-ascii?Q?nq/YBIFgyCMhNDIXlDDxR7ZJxzB4ywj81gCfhVrXnIKDp3gK6C5f5BfV5Uta?=
- =?us-ascii?Q?vPHZriesB2SDqjQaaE5afV6K/DdZsH2E5xVHGQ8YjY9hmU30pLjY5iuQDKl4?=
- =?us-ascii?Q?iaauSCCoQFuK4pPCx2Z4CVQqYYrfjE3ncJtHQd+t0nm+y6PXXRLFXuF/3cAk?=
- =?us-ascii?Q?wYNQpU/MOoJsJ05TLp+Gu/LVm/evqCzbuN59bZDXYQsIlhp3oePwC/ag2049?=
- =?us-ascii?Q?xgCtSdIpae5Gaynp2pDQoFywA+z6XlZ7V9ppJHHzAFufUEXv+7qKYZkDd/5A?=
- =?us-ascii?Q?OGFUpTBaAaVLkaeIxKhWOASE/koYy/2PZRApQ3aN/SRV9qQ3VDQgkyVj4dfn?=
- =?us-ascii?Q?6b2DWgnVFC0O+PbX4bAbPWnk0RhWDiEzIIxSLZ29bwr4xapk7hX+BsyN7Y8P?=
- =?us-ascii?Q?e1NNJCTyICblq3LKtpJ6Nv2E/HYrGEVzvaT2khrQchtDgRccUkHx0aCwfUzu?=
- =?us-ascii?Q?DMQkS5sX78C2xm9Hzr7e1SomsN0C/dzvo0iDXf5RoJJ0kOzcTnfQNbr2sHkn?=
- =?us-ascii?Q?2JUy1aH0e3v/ZJox+Hv3IpUsmGnV29nytqjwkaVy9OmacLuFOvEsjbUH1b2Q?=
- =?us-ascii?Q?zQYQVBA8v5TsxYcNT+bibKZxxtk0XhflD0dfc3M8BPcoj/hRYHTwZ+LsHplE?=
- =?us-ascii?Q?yaLimf6YNnDZhdbfmKrFtPtnUyc/zTqf240P6gZIklTO57BVBw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Ujngw97KHPU6Bh/+kSuY2XaZ7n2iNWemdLGgdAZkE3iDZpHZx9fpVCjUE22p?=
- =?us-ascii?Q?KHj2WuxUk1yBkgTy62yF8NpDt0mUYoEU2i5BnIwJ/RC+e4O2PtZjseZhI/1Q?=
- =?us-ascii?Q?+FzThJUWrvTlZ1lxv9rzdtY0Ri/IxVcKEUyO4XTCl/uwg4reFnlKNIz3YdE4?=
- =?us-ascii?Q?shD1sal3doWVykp+CnS3GAII2XR/IAjGIu17Cm7dPFQ+0y1C9HMKa2lOI+7p?=
- =?us-ascii?Q?QQ50y6QOpJBE/wbqDZ63KXJQ5wDqXbzPq2YnE5WVpi54JYfbGR0ftwV0zRN7?=
- =?us-ascii?Q?zkQHhA/QedQjVbIb7pFq2qGeLv9puDaYZBSgmJNV9q3Y/v2v5wk2EIvZgNno?=
- =?us-ascii?Q?DZCCKVJmnwGvfXIwrlLgrNR85MbguPlc9PQki0CuO+2cpMbOJ/WWpYzpGVA8?=
- =?us-ascii?Q?iy51ZL+Qu7bSwE4oSMsL9hZ7McLDzbMfUEEV1r5mRyH3RCJ9x8H0L5RcrcSI?=
- =?us-ascii?Q?MhGgg6AJpIY8UsGRX9K1cpaIpR0Bjv+25qvVRpv/EwYN894za0Ij7NntkUdi?=
- =?us-ascii?Q?YfvionbKMjwYASIZBhLvSXafxwAKcNR7LjXXN5bhLRbBASG/I1SEdZb09ozq?=
- =?us-ascii?Q?MOHN9OnnbsAbxaDFh6aPAFUrDXtlgjdL11ToK6GoNwHB1WGa/RRykNnchc1j?=
- =?us-ascii?Q?a9ggCNu0JSQEy3UXV8GkZwr2qkjFP9raoIutYdBX6k+soUg4U0vmffFUo5qf?=
- =?us-ascii?Q?yZ3A0KoNX9gC0ZumkMKhCkNTwk1H4UAp30RTVFd6WfpC7oNXbXvzzeAFIlYc?=
- =?us-ascii?Q?q89VcqCXNhFra0reXpcO321ym4/lY0UMVQWLqASTgxoUNXsx+rF53pOeXb6p?=
- =?us-ascii?Q?CzNaHZZL02OVwIsJKFiZi5Ods2aN5LNg9aPSbQBSKG6+P1GVHZ9HOHjtpND/?=
- =?us-ascii?Q?Rurt0OjDPA+q5hfFb6YNkK1YDNa5DWoAgzQHAW1MdxXh3IIucuHtMkNvf7EC?=
- =?us-ascii?Q?/S8cqUmIcTyW9p20QabI8U3CAj/c0j8m5ngh2PK6OEC2ax3hiaRbEBPolbcr?=
- =?us-ascii?Q?kPiz1IN9BXTiqbVclmaiUVqOhPAPPZb2NoxeoVQ6iibGYkkyUk2JFdPIp/7g?=
- =?us-ascii?Q?Dl2DjEOJNmuqPxBgqyHECmusZz8U9w8SCKSZcO6+FxbDaUPI7IePI5ZaWOwi?=
- =?us-ascii?Q?90lCHlp2avniz0n9zhzwnBTsYowH6kfVNcd/FhldCNw+EeIeR2R00PJRqivE?=
- =?us-ascii?Q?34Y0UnIjGjOuaOPRzm2QSSo9uWspATLlJNJhD2sBexRUOOYzuP7biHcwOibv?=
- =?us-ascii?Q?ZyzYFQ6l+QU2PjDDkdFWUfdJtuLSZuTsETjoCSGdJQGbTRCRMStbtyc3cjVj?=
- =?us-ascii?Q?03KpEiiBw+Klsb6MZMfCDZRGCsv+y4Hq5RNsOgFHuR/xxSNLkmUkGObWkF8U?=
- =?us-ascii?Q?84fdhw3JsEptVF7tOeosKNbmEL4Wt7b6dUimvAx7Qh1BqvxUH2Npd03BF+bS?=
- =?us-ascii?Q?Gc+z7RB/UiVlAapkK0sBGry+N9jLx4T04y4PxT6/Jmp9rI61hZwL425Oq/Ej?=
- =?us-ascii?Q?asjOc1xaY2Q8kAxgQdiFJaGM5ql4k2MQu3z3iW2YKwMWuPE0lmTtzsGOV2+j?=
- =?us-ascii?Q?npSjAhNRwr/OAjYJa2U=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::14) by ZQ2PR01MB1323.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.33; Mon, 12 Aug
+ 2024 07:02:31 +0000
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ ([fe80::5a83:8682:b030:e46b]) by
+ ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn ([fe80::5a83:8682:b030:e46b%3])
+ with mapi id 15.20.7784.035; Mon, 12 Aug 2024 07:02:31 +0000
+From: Hal Feng <hal.feng@starfivetech.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Conor Dooley <conor@kernel.org>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	Hal Feng <hal.feng@starfivetech.com>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] pinctrl: starfive: jh7110: Correct the level trigger configuration of iev register
+Date: Mon, 12 Aug 2024 15:01:08 +0800
+Message-ID: <20240812070108.100923-1-hal.feng@starfivetech.com>
+X-Mailer: git-send-email 2.43.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0015.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510::9) To ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::14)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1323:EE_
+X-MS-Office365-Filtering-Correlation-Id: 17d43eae-d7e7-4e39-54f0-08dcba9cbbe2
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|41320700013|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	N5dz4bRrH7QMjmQAJAXPKNxCa0x0qsk141m+zitGDtWGKWENEghpsxO+w2ZodsqgKbvSvdpUIXeBtkhPoa2xO1ENApJL66R+UU3+mTs5tKmqLddv5on8imPQfKFXhNVwi3O+lwUNtCCgQvB0hP8QNX6Xb55hU2qetS3b3xCrz4KaJ+QEWaI6WrnlgqFDhvS1ZnrJHYGsJCPN1dxqLMAXkfabHv3Ici4CS0dpcsZ3uc/JLnD6gqQ+LYDB/4U/7SP7o0kxluJ9JUIxgzCl3D55BnOv2+vNC2M5u4D6xXt5uMKIxyBydEEXMw1LhK1qFN2mTuwo2Ddr4k9717uwpV7nqNIdfNUMTcl54l8N2RJjvnwoeuTcTh0bebiy2YCkcKotFFiK+r80ICUgJDE3c+peenKJc6oXRpx5b46iaj42EuZRRuNeFRQbZXOHwkTdjFeELorJ2Z/7YtCUbN660xCiXccytztIVfi2iyRRJPaFPUeO9yYXJ6fOEM+KTBVwqCBVrKcNZ3Ds1vXl0hGNcitbifRDO99Cv01cRXpJq4D+seIagxVOO9VfGbdUDQvI6uG3XkicjWWhh/PjE6ASp8q0jS235bc7MMgI1lC2EH3TiRdW+L9lHz9M6WhOD6tGQl+2
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(41320700013)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?H0n8zKCtNT/2UUFHYePJWpG/F8awqMPkBwjgBpRSBiL6FD+bDhbOHDlVXxCI?=
+ =?us-ascii?Q?TMNz0fxL2t4pltnCZrOVwUH/LM8NDZZ1jTf/vTh4ttBUQYAYqscQxnsQEb9V?=
+ =?us-ascii?Q?hceIxLcKrqjmKXxuk+Y2QxhpNyRQnlMwcQLg23fJ3MWaKhxQyqE5GVZNdA6M?=
+ =?us-ascii?Q?bcF4sc9t94XEGZuYK9/AchnjZwIYEWfYTXmmEsDwY59Co1E4D31cBHtxt1Nk?=
+ =?us-ascii?Q?7fY8a6zp1/aOuDlbAKvMOgmoemwH5j5EgCwEqAe9VxGT50jFyldy+eIxfb9H?=
+ =?us-ascii?Q?F9PsnSylxa3Qa6eUZjEgqkAmicDW+Kbo54EXK5EeW7BPk388xYtNa8uuxvNs?=
+ =?us-ascii?Q?0oEDlOln/YTuQsOKnFKB6TqmaYhBV7FdjoNNBgnQUTuaQVr0ZFqHTiFN7dnT?=
+ =?us-ascii?Q?pTRUdlKwiLt7bUEe6+y6sjlCRk8IeNoz6NCGydmEP5nsO6z4zs+xaCVup721?=
+ =?us-ascii?Q?uDxMRsZD8E4rMEbRl+TKnloq6oRe97utfjRJUOltG0rBFf/kFGdlfhZrLCmb?=
+ =?us-ascii?Q?laaf01I7JdfM1uY8SkE6Ai9oJHXroTCWAGJVmwuxlwwGwz8pXp3TVhaeWjUG?=
+ =?us-ascii?Q?df0Y7wtmKtJZQFy/3QJcS09IKp4W/OTLroNhbAOFg48r99wR0YM0yiR3PIrd?=
+ =?us-ascii?Q?a/NSHeTekpsjmYTvaqqfUZB6d908XZ7lY/sulT9llbnuzPbCuGq0ZuCkR9Vl?=
+ =?us-ascii?Q?Xd7dAfw+nMa3TnvLRHqltXjPJLNSt+RmM8W71LfCD2lvO3JJK5ueZN1m+ooY?=
+ =?us-ascii?Q?4x8/F1wBpokjMPNwTJzZlmgbbNrsaE7B6kilHzV5nfQKMbM9M2yIrT4p+UCY?=
+ =?us-ascii?Q?WuWWuE0aNw24rqO52+qLJZhLtIUVPWYxa3gv2too2EVgD7K08F3fxSJrTWNF?=
+ =?us-ascii?Q?RogHY4V2uT4zEFwVlctkA1VaJQLUyiWbcbzRbVPKNXEIqkP+C6hD2euvC2No?=
+ =?us-ascii?Q?Xzhs603jopBWdnay+/nsZS9xUDW8PiLyKmqUF6X7m11kv0VtYKfQRUpVsHTf?=
+ =?us-ascii?Q?CvspyaX3xhXcLOu/TNQOw5w15fgIPCm2LOvQc6K37RV7VG7AfU+3mOEXwV32?=
+ =?us-ascii?Q?lipxCJokkxcuCPJxf1tiV8C4nxJm2/S/ZojZ6b+jrTvSt1Cm4ZUh/XWk97EG?=
+ =?us-ascii?Q?d201of5hPDeIOX0m6Fz1Ttm3dUe1bgnev46G0N14aE9ftAjmm1F0csU1uzX7?=
+ =?us-ascii?Q?0rxh6zSqW1sEY+1ZCdyePKO+/fENl+JvvxqFSuNfNMY+L5PsJrj44g5ktNIZ?=
+ =?us-ascii?Q?IisWgnDNZbNUHvHXLoG2lpolqR+8uO4VfkQvpZJ0cZXpo2PQaFDAONb+ypSr?=
+ =?us-ascii?Q?Mh4ciPHC6mMECdF7U1TNmJ0QvU2lRnz57+BDtYCQd75rqwsH7OaE20UBm62t?=
+ =?us-ascii?Q?uD07/6+7HeRKqvnyUXyhxUqQCB7DlM8IR4y41vSQwtpOZETkNo4sc9JMJXXv?=
+ =?us-ascii?Q?o9nkmdM6Akb7TihsydFwtbJsJ7chL0Dpv6ZUTW0fpmXIOfvbkpLnzdWae2oI?=
+ =?us-ascii?Q?9QMjVqYazhPz30EWF2zKC91+iq+Ay+3a+rEs96Hssav8xoiXK47DOE7fR+nY?=
+ =?us-ascii?Q?MXfetS8eDJew00POufSvTgmPZOP+NgwGoHvzYA/fQmtqVywOuJckbQh/Indy?=
+ =?us-ascii?Q?bA=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17d43eae-d7e7-4e39-54f0-08dcba9cbbe2
+X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2907bb10-7ea5-4b70-037a-08dcbaaa8585
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2024 08:41:12.6853
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2024 07:02:31.0822
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Rw7nW/UVS+Izn3CRKC5yUVLgmbdUA+iDXphU5vT7fmuhgwNMYQpKvLo3g5DnHZslAxdZxciBFPPdLEC3EaaERQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9433
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3Cp35fVcGtJW7pePR6ssLIndHhZ2YOxttgFaaZDMUNY+ixMGUAmHeOKmjZD2mPYYSOqJf+M7N1j70ZgQiIEJDk18++zQseBx+xmru092mX4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1323
 
-> Subject: [PATCH v3] pinctrl: imx: Switch to
-> LATE_SYSTEM_SLEEP_PM_OPS()
->=20
-> From: Fabio Estevam <festevam@denx.de>
->=20
-> Replace SET_LATE_SYSTEM_SLEEP_PM_OPS() with its modern
-> LATE_SYSTEM_SLEEP_PM_OPS() alternative.
->=20
-> The combined usage of pm_sleep_ptr() and
-> LATE_SYSTEM_SLEEP_PM_OPS() allows the compiler to evaluate if the
-> runtime suspend/resume() functions are used at build time or are
-> simply dead code.
->=20
-> This allows removing the __maybe_unused notation from the runtime
-> suspend/resume() functions.
->=20
-> Signed-off-by: Fabio Estevam <festevam@denx.de>
-> ---
+A mistake was made in level trigger register configuration. Correct it.
 
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
+Fixes: 447976ab62c5 ("pinctrl: starfive: Add StarFive JH7110 sys controller driver")
+Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+---
+
+Hi,
+
+When we tested some modules that use gpio level trigger, we found
+the current level trigger register configuration was set wrong.
+Submit this patch to correct.
+
+Best regards,
+Hal
+
+---
+ drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+index 4ce080caa233..1d0d6c224c10 100644
+--- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
++++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+@@ -793,12 +793,12 @@ static int jh7110_irq_set_type(struct irq_data *d, unsigned int trigger)
+ 	case IRQ_TYPE_LEVEL_HIGH:
+ 		irq_type  = 0;    /* 0: level triggered */
+ 		edge_both = 0;    /* 0: ignored */
+-		polarity  = mask; /* 1: high level */
++		polarity  = 0;    /* 0: high level */
+ 		break;
+ 	case IRQ_TYPE_LEVEL_LOW:
+ 		irq_type  = 0;    /* 0: level triggered */
+ 		edge_both = 0;    /* 0: ignored */
+-		polarity  = 0;    /* 0: low level */
++		polarity  = mask; /* 1: low level */
+ 		break;
+ 	default:
+ 		return -EINVAL;
+
+base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
+-- 
+2.43.2
+
 
