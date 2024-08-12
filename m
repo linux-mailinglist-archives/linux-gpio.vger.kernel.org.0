@@ -1,151 +1,198 @@
-Return-Path: <linux-gpio+bounces-8721-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8722-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F383F94F317
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 18:13:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EB5994F458
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 18:29:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3212D1C21267
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 16:13:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8F64EB248B0
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 16:29:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2B89187335;
-	Mon, 12 Aug 2024 16:13:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1161186E38;
+	Mon, 12 Aug 2024 16:29:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhSrpplF"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="kauK30pm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB26130E27;
-	Mon, 12 Aug 2024 16:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0407183CD4
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2024 16:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723479213; cv=none; b=O8iQRZC2thsGC/clm9k0BABxKb0ER1oETHh4snH1Z3WkAI9quDMqGpr6nAuRFgdv+n7puKIj3M6QqnytzsLvkDvcarWm/RMBBw4yZcoHoYm1uy7G1+Hil9iHOPk3Tdc73XR49/PdW7sBA0FQT8ah1t3fq1Cb4VAgsjT/RlcJt/E=
+	t=1723480147; cv=none; b=m+6uqAAuS/p6rajgvZWE6c+589kggYxGvWJa4T2x+K/auEktZAKxRa3mDiXZh4pzUE0yzZxrQ4lZUP/RnqUo4AtZZ+rOrsQoLdJNiqZbK01ZOomzLtow0A0WMcQeGXz0UFFXH4hGERHPLPPXsu6fss9clJMSNNPxAem7jIv9uqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723479213; c=relaxed/simple;
-	bh=0YjTgfH3hHB0i3WXLphUYB3PzSTXzdLghJd8Rv3Ffaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OMdp9GmrvobJj9OXWIs4xdpxYSIas0bwfT2E9r344ilXJUIIIgPJqNmktS6EYCfsi9AOxDn9BbjBIsIi8odGqzh2rpW6tuHKJlj1nT8rv0bKyUxvhZuZycoVMHuWaLco4MfMRF9U6YmMFvcDwBVhzRXrANUc/jSmx7TGcN7dxB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhSrpplF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F4BC32782;
-	Mon, 12 Aug 2024 16:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723479213;
-	bh=0YjTgfH3hHB0i3WXLphUYB3PzSTXzdLghJd8Rv3Ffaw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MhSrpplFKEYwtlVk144Qnb8h6EgRQApUaHgFeIzJ5rs43Qfcz8fhW/dkaEb+7Nt8z
-	 rqh4DVYf4igXuO0rM8BQTq2xhjR3SOa2cYOUkeUtF2rBPoTBHyFBoeF4SasAAPZWJ3
-	 /uY8fnW4neVjRNvNGUbf45h+AMGfj68syPoslq2NUjo/K9fJduRzrKTY3UJ8Mocwxk
-	 t+W+iR5bLko/qUffP5PTtVImPXvg3hE2ADeLvg72O0hMh8T6gf3M2g+WKruUvxIKlG
-	 8tyFukIH8gXw3pQOCx2KtB3MCJUX0P8ZRPodoDudjTgEvsTw1uEO327Z5BM7qiiwSD
-	 x9NcN6ClbhvUQ==
-Date: Mon, 12 Aug 2024 17:13:28 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Detlev Casanova <detlev.casanova@collabora.com>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: Add rk3576 pinctrl bindings
-Message-ID: <20240812-decibel-abdomen-90354e0ad4e6@spud>
-References: <20240808164132.81306-1-detlev.casanova@collabora.com>
- <20240808164132.81306-2-detlev.casanova@collabora.com>
- <20240809-dexterity-attention-8376b3b16d59@spud>
- <22382840.EfDdHjke4D@trenzalore>
+	s=arc-20240116; t=1723480147; c=relaxed/simple;
+	bh=zrNP2KYv0WqF3LdXLEDH1XuuWMpQN51bXPN7l9Gc3XM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fLYjH3Yz7pDrqLU/U6pe5HH0+6guVCco6mYR2u6IhaVRjTDAJnrKGx9pqpNkJ+K6vcUx4cIrhMXlvYvryY2E91bR2rwZExIg2tqBkM8WxaaSLPt9aLO5z+8ez+Fr/UFj4sqrYoKOCe/yRmUxL6snAvzbMjNUuUUXrgXV8G4Se3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=kauK30pm; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e0e7b421c88so4561465276.2
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2024 09:29:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1723480144; x=1724084944; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uMV3FW63GcPYNvV09/bzRTM0A7rqdaktyTCGiSEZP+g=;
+        b=kauK30pmBisWFXt2irM/T1Y4Om50XazFQO0qcG5ToSO0rDBoakMpatP/Fl6+2xMFjg
+         Eo/eKjzyLtep35cOTNZi0i0w0yYQs9KRuC4EsYMMZyWGzSMC5lxHbZ0H1kn/FkJEZo/i
+         3EH7rXyXw0hLU7Ag4gJnIzENVPpvCdTWH9YqwvMhCxKkokoxpzdcaQ7VbV3VQkacahsc
+         DhZ756ExUNps6a9Hasg8/aqQNuaoJYzQx3nDiaOQXR8aR7EWey+UzUnx8FZSUsKInJjL
+         m8DedwSDlY1DdIOrnfajMWjAzfS6Osv9zNHORrF5UT901gH3VHCO0B6erGWl4D5BDfnv
+         wf0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723480144; x=1724084944;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uMV3FW63GcPYNvV09/bzRTM0A7rqdaktyTCGiSEZP+g=;
+        b=cOuovAlvvUm0vESfwNuYkFW6BVRJIanavwebXfEq2OQE+8i4Ej9SYNMawWn1i+ztX8
+         T9zBvFPay4fV935V0Pstr9L93m5QggJknLdPjaWwiY0GOah15age6O3hZ5Vg+vobYw8J
+         kNyNLWtKC3aR/izC3VYsSyv5AiAwOpzRluMd7F8+rAVWtytqpFAixbut6wfn7/a/1Xqd
+         +eLU9AZcKuuWCLbNLvn/c7t1d4hW9VCs/AFoJLTuf0pzqJe0Zg9wwmd3GgDxHhbMf+Qq
+         T0Rcz43+PC1aSg9EJD4SVTy8vzwVsBtADdI3xqda1Q7BNGIia1Hl0FVZ14d2I2gPDQNt
+         DgPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQna6pk6ZI6SjGpyqHkkUdU4CfeRICB5uwd4vUnETmYE9aEj/5pdLBJVFfAHzcDBuF3WDlCyDaE9/THJh3WjuLP8bLQwRDZjWAuQ==
+X-Gm-Message-State: AOJu0YxTor45fSbEDtBveMZfGH9hBC/LAs3hvqjJA1cZHfeYPP7DscnR
+	cURqkE+DSbYG9V6A52KD8n9QoGzcX0DDWXrd5R6PbrBR/EaoRQ1tDlyV/CjkNO4aNOdDnkGRtsy
+	HCOazkZHW5fg0ed92VgypMe1VQ7y/edR3/vJgmQ==
+X-Google-Smtp-Source: AGHT+IGj7d7yd0eiw2JYaUqx2Ht7IqYG3B/CS0se5ZXlqWOTSnVZOd4JD9GKabzcEs76SbyuZwRil8Cin7Nw6RtBZtQ=
+X-Received: by 2002:a05:6902:c02:b0:e0b:2fcc:9891 with SMTP id
+ 3f1490d57ef6-e113d2902b2mr918707276.44.1723480143787; Mon, 12 Aug 2024
+ 09:29:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="puv11dB6IoxYMEpS"
-Content-Disposition: inline
-In-Reply-To: <22382840.EfDdHjke4D@trenzalore>
+References: <20240731062814.215833-1-iivanov@suse.de> <20240731062814.215833-2-iivanov@suse.de>
+ <200d54a3-bedf-4bd3-bb7f-0d834c43ea78@gmx.net>
+In-Reply-To: <200d54a3-bedf-4bd3-bb7f-0d834c43ea78@gmx.net>
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Mon, 12 Aug 2024 17:28:47 +0100
+Message-ID: <CAPY8ntB9Zf3sJejXuzrw6tUipfv71w4sDc26fg8cbMtRjrcPHg@mail.gmail.com>
+Subject: Re: [PATCH 1/7] dt-bindings: pinctrl: Add support for Broadcom STB
+ pin controller
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: "Ivan T. Ivanov" <iivanov@suse.de>, kernel-list@raspberrypi.com, 
+	florian.fainelli@broadcom.com, andrea.porta@suse.com, conor+dt@kernel.org, 
+	krzk+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, robh@kernel.org, 
+	linus.walleij@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Stefan
 
---puv11dB6IoxYMEpS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry for the delay in responding - I was on holiday last week.
 
-On Fri, Aug 09, 2024 at 01:53:16PM -0400, Detlev Casanova wrote:
-> On Friday, 9 August 2024 10:58:38 EDT Conor Dooley wrote:
-> > On Thu, Aug 08, 2024 at 12:39:55PM -0400, Detlev Casanova wrote:
-> > > Add the compatible string as well as the optional rockchip,sys-grf fi=
-eld.
-> >=20
-> > Optional for all rockchip devices supported by this binding, or just the
-> > one you're adding?
->=20
-> It is only optionally used by rk3576. I can add it in an 'if:', or update=
- the=20
-> description with somthing like "It is used on rk3576 for i3c software=20
-> controlled weak pull-up"
+On Fri, 2 Aug 2024 at 19:10, Stefan Wahren <wahrenst@gmx.net> wrote:
+>
+> Hi,
+>
+> [add official Raspberry Pi kernel developer list]
+>
+> Am 31.07.24 um 08:28 schrieb Ivan T. Ivanov:
+> > It looks like they are few revisions of this chip which varies
+> > by number of pins. Perhaps not all of them are available on the
+> > market. Perhaps some of them where early engineering samples,
+> > I don't know. I decided to keep all of them just in case.
+> The BCM2711 had also some revisions and we avoided successfully multiple
+> versions of the RPi 4B DTS. So it would be nice if someone can explain
+> if C0 & D0 are available in the market? Otherwise we may end up with
+> multiple versions of the RPi 5 DTS.
 
-And if/else that restricts it to where it is available please.
+AFAIK A0 and B0 silicon were never commercialised.
+C0 is the current revision in use with Pi5.
+D0 will be in devices imminently. CM5 will use it from launch, but
+subsequently standard Pi5s will do as well.
 
->=20
-> > > Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
-> > > ---
-> > >=20
-> > >  .../devicetree/bindings/pinctrl/rockchip,pinctrl.yaml      | 7 +++++=
-++
-> > >  1 file changed, 7 insertions(+)
-> > >=20
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> > > b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml ind=
-ex
-> > > 20e806dce1ecb..cd527ccc9e6bf 100644
-> > > --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> > >=20
-> > > @@ -45,6 +45,7 @@ properties:
-> > >        - rockchip,rk3368-pinctrl
-> > >        - rockchip,rk3399-pinctrl
-> > >        - rockchip,rk3568-pinctrl
-> > >=20
-> > > +      - rockchip,rk3576-pinctrl
-> > >=20
-> > >        - rockchip,rk3588-pinctrl
-> > >        - rockchip,rv1108-pinctrl
-> > >        - rockchip,rv1126-pinctrl
-> > >=20
-> > > @@ -54,6 +55,12 @@ properties:
-> > >      description:
-> > >        The phandle of the syscon node for the GRF registers.
-> > >=20
-> > > +  rockchip,sys-grf:
-> > > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > > +    description:
-> > > +      The phandle of the syscon node for the SYS GRF registers.
-> > > +      It is used for i3c software controlled weak pull-up.
-> > > +
-> > >=20
-> > >    rockchip,pmu:
-> > >      $ref: /schemas/types.yaml#/definitions/phandle
-> > >      description:
->=20
->=20
->=20
->=20
+In addition to putting in the few fixes that were desired, some
+registers and DMA dreqs got shuffled around, hence some drivers will
+need additional compatible strings (vc4 certainly does) and other
+minor DT tweaks.
 
---puv11dB6IoxYMEpS
-Content-Type: application/pgp-signature; name="signature.asc"
+Checking our downstream dt files, we have bcm2712d0-rpi-5-b.dts[1]
+that includes and patches the original (C0) bcm2712-rpi-5-b.dts[2].
+The cleaner option would be to have a common bcm2712-rpi-5-b.dts(i)
+and separate bcm2712c0-rpi-5-b.dts bcm2712d0-rpi-5-b.dts which include
+the base and add the relevant customisations. Later a
+bcm2712d0-rpi-cm5.dts DT should be able to include that same base file
+as well.
 
------BEGIN PGP SIGNATURE-----
+I'm not quite sure why the GPIO names are redefined in our d0 file -
+other than the unused ones using "-" instead of "", they appear
+identical.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZro0qAAKCRB4tDGHoIJi
-0kTXAQDyKDk5IqP6NphVJj1ZkDK5QCADbb+uzV5TA37RTt+HHgEAvaubL5mfaR+X
-heIH+qlN/7beb49IzJi3Kvx5wCZqXgE=
-=c1VS
------END PGP SIGNATURE-----
+> I'm missing an explanation in the commit message, what's the difference
+> between brcm,bcm2712-pinctrl and brcm,bcm2712-aon-pinctrl?
 
---puv11dB6IoxYMEpS--
+Two separate instantiations of the same IP block, but they differ in
+the number of pins that are associated and the pinmux functions for
+each of those pins. AFAIK there is no way from DT to specify those
+pinmux function names, so otherwise
+/sys/kernel/debug/pinctrl/<node>/pins will give the wrong function
+mappings.
+
+> According to the driver brcm,bcm2712-pinctrl is the same as
+> brcm,bcm2712c0-pinctrl. So the former is more a fallback?
+
+I'd need to check with Phil (who's on holiday this week) or Dom, but I
+believe you are correct that "brcm,bcm2712-pinctrl" is a fallback.
+Most likely due to our early DT files not having the c0 designation.
+Obviously for mainline that is irrelevant, so dropping the
+non-specific compatibles is fine.
+
+I hope that makes some more sense.
+
+  Dave
+
+[1] https://github.com/raspberrypi/linux/blob/rpi-6.6.y/arch/arm64/boot/dts/broadcom/bcm2712d0-rpi-5-b.dts
+[2] https://github.com/raspberrypi/linux/blob/rpi-6.6.y/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+
+> Thanks
+> >
+> > Cc: Andrea della Porta <andrea.porta@suse.com>
+> > Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
+> > ---
+> >   .../pinctrl/brcm,brcmstb-pinctrl.yaml         | 73 +++++++++++++++++++
+> >   1 file changed, 73 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,brcmstb-pinctrl.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,brcmstb-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,brcmstb-pinctrl.yaml
+> > new file mode 100644
+> > index 000000000000..c5afdb49d784
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/brcm,brcmstb-pinctrl.yaml
+> > @@ -0,0 +1,73 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/brcm,brcmstb-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Broadcom STB family pin controller
+> > +
+> > +maintainers:
+> > +  - Ivan T. Ivanov <iivanov@suse.de>
+> > +
+> > +description:
+> > +  Broadcom's STB family memory-mapped pin controller.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - brcm,bcm2712-pinctrl
+> > +      - brcm,bcm2712-aon-pinctrl
+> > +      - brcm,bcm2712c0-pinctrl
+> > +      - brcm,bcm2712c0-aon-pinctrl
+> > +      - brcm,bcm2712d0-pinctrl
+> > +      - brcm,bcm2712d0-aon-pinctrl
+> > +
+> >
+>
 
