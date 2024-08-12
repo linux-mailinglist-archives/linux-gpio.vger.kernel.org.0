@@ -1,342 +1,349 @@
-Return-Path: <linux-gpio+bounces-8712-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8713-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C53294E840
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 10:08:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D8CA94E866
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 10:22:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1D401F248F4
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 08:08:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7283A1C21256
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 08:22:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11943165EFF;
-	Mon, 12 Aug 2024 08:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20EB8165F03;
+	Mon, 12 Aug 2024 08:22:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aPO2FcOU"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TPwIB1L7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ED74D8D1
-	for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2024 08:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EFB1876
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2024 08:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723450077; cv=none; b=rsVdg+negW/0GQzwaQafcv0u4hg1VcXVsTuiG0bXkZzlhFU1e/3xVUk1LVsMGLkSvGTwamLicNeJNK8gIrQJShB0rLyycwIPworI1tmmTuRwmR/BK7yYjJAnW/RFseqYHs9+A45HzFQfUJVl3L7sSMDS3v6SP4Z2p4pRZ3o5Ebw=
+	t=1723450959; cv=none; b=Ko1ZyOBWlnU8FqpiBDJOco/ktgmh48ItbqppVdm3X45f+RTx9c5hEfnpSCxzX9r3A2r43mT8iujyEGi4ArvQs2B00TNvY73bYIyqtMmIuZDeFfd6B1nfHN85XMdCMTHUVRrQRDzxIMW6iaEz9GTLRx7v2HXQ8kDNad2njiScB7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723450077; c=relaxed/simple;
-	bh=4eJ4p2FzMvDXGxt8fXu/sTQ1XH/edjLeV96KaunxMFY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=fe0fqH8sGwpLtRo9EaMO9hAC4PtJxWeXqBWvQTbWCRCW0TGZU0EdUiKEan8X/FXxkGuYgYWauVqYj5HOAxAdfVNqqwLXgbeSfKBRY1g00SC1A2DJzHcSIXRGwZ/Khtu05KO+vxzjxc281mN13uiq+akZobBnaPM+/LDPXtBQT5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aPO2FcOU; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723450075; x=1754986075;
-  h=date:from:to:cc:subject:message-id;
-  bh=4eJ4p2FzMvDXGxt8fXu/sTQ1XH/edjLeV96KaunxMFY=;
-  b=aPO2FcOUd0TCsDiZWlJLaAMkHmDnjzTX6BD/Ky4iHPj5fpD0XzCubexs
-   Ad2j5BJ+PjhDWMxioAKmID56yGYPnvTBHo/yN5nUwJ/r7wpPxsOifekqo
-   y8lJva2NhffBvh6z/AaLzRKHyUU2wGY8Juc81xf5tQnw7bBG9/3n/FR1G
-   Xl4ZIYzl9RAA1+qOD290qBsm+g3xV8RvvIEoQZNK1IXBUpr07owZfdQPf
-   luVJkUV2UONPxw/xsyAocBBgYIcAXYbFroYmPGHK7TkoyNPIxcsE29zPt
-   Tnk7sJ0MUlEhwN6c+CVRFQWkfbUufM4vWJnwKwX5PmsXS+PLctcArU2x2
-   g==;
-X-CSE-ConnectionGUID: 6Qv7+25RSPKRfJUcS7vh6A==
-X-CSE-MsgGUID: woPaIm+vQ1CN/gqOPBYuGQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11161"; a="24450209"
-X-IronPort-AV: E=Sophos;i="6.09,282,1716274800"; 
-   d="scan'208";a="24450209"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 01:07:54 -0700
-X-CSE-ConnectionGUID: ODNXJiinRW69co4S10a3lg==
-X-CSE-MsgGUID: zO4LC0ZhSqqC9sChbRfBKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,282,1716274800"; 
-   d="scan'208";a="58257979"
-Received: from unknown (HELO b6bf6c95bbab) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 12 Aug 2024 01:07:53 -0700
-Received: from kbuild by b6bf6c95bbab with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sdQ5n-000BWR-1X;
-	Mon, 12 Aug 2024 08:07:51 +0000
-Date: Mon, 12 Aug 2024 16:07:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:at24/for-next] BUILD SUCCESS
- 36e071d2a1522eeb3d38fb9c257cac8e5907979f
-Message-ID: <202408121637.KVghc6Re-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1723450959; c=relaxed/simple;
+	bh=iI0aH/+bwbzpcW4GsuLbDXT1X+VRur4nYbOocTkdlek=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oMJuysx+bs8t+PyMxSTVg/r4zcvmrWbAe+8qGSgdOhk9Mu1wWE26FWEXbSjpUXAW6UoGu3CJw3Zhka4v/0XEoIBYzxFncNXS8AMMmy5xkhZoBo64MN4MEFAy1E2lV5mGTxCnvQkstC9xAsogAgGglWhellcH1c+F55iBR7lKQQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=TPwIB1L7; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42819654737so30221105e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2024 01:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1723450955; x=1724055755; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/uOpj01USNbyC3XO830k3Zf+wFNnRn0UYHMo8VnXkGA=;
+        b=TPwIB1L765xrSuQbEtzDIfGeiZL0gTNZqQkgkG9QyMVZmfzSXbfrKVoO/km+LSVRu9
+         502aAA5cPuEjcBXFHlTh3gtGJVkzlYBVJJJLCDoQGwIx8RZ/ynexCYfp50gfHsxCMire
+         nyRuYoBChKnxRAzsNLfjsXrmjyevU12xELB54tnTVojV8Y67b4Y74nFhDQqLKM7OfQa/
+         BnQ9a3pAHbGeEl0GbJjKglHTm/OxrJ+ZavarG4o/OcY1eYvVQKgtI6eB0abBXtk8Uk8f
+         IxLYz5YCM04o3EziFQ0CFeGj0OPqRFc6pHZp04PRD5Qr26vh50VuuJkFCZqP0WuFRR5O
+         Uduw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723450955; x=1724055755;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/uOpj01USNbyC3XO830k3Zf+wFNnRn0UYHMo8VnXkGA=;
+        b=RuNxiDBQZ/4h1FyUxwT5ctcdx17bvFo+Ky9akYk0uhGK3Vu7/L2tphcTpr1PBzasL7
+         sd6KdgE1bUAjyL0GCvDAKBg2uzLzcRINKNoFY+TKDtaKP7FY1+A4vUWGEAWukhy52L8u
+         GFieu/GAq7kq9GxgR4xphNyLqPyxZlKrb5r2PidedrwuK9QTJRrE9Rk+zBbCABOlGuJo
+         qDkolno+yT4rlGG0z0X000W2AfMpgZWEWXZJS4uKBGpb4saVpIPyGHkbJYHtiom70adO
+         pXcQcWe0Tcqtxr+9i9fh690XIjngkE+MdSxIVyx9vqak/DFnvdQdICYFzl/7IXzSL6SQ
+         DzJw==
+X-Gm-Message-State: AOJu0Yz5sReaoD6ewK4bljDgEr1GAV5um1mXYiU68HSJJr4FugZSWRYO
+	Nq7fNmjvga/yUEDsXkQHEUwgCJ7uKOzdzpD7r9c/HhVO1p96jWbyR/XtVRB+BiM=
+X-Google-Smtp-Source: AGHT+IGT9/8OZ0bmLgy5J+Q3rjshIb7Xz1kYeT7GhrPDYo88T17uGJ4jMr45DAk4A8qMLfOmntI5tw==
+X-Received: by 2002:a05:600c:1c15:b0:426:6f27:379a with SMTP id 5b1f17b1804b1-429c3a23d99mr58447855e9.13.1723450954431;
+        Mon, 12 Aug 2024 01:22:34 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:d7d3:597b:b219:7ba5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4290c74ff9fsm179059555e9.28.2024.08.12.01.22.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Aug 2024 01:22:34 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH libgpiod v5 0/4] dbus: add GLib-based D-Bus daemon and
+ command-line client
+Date: Mon, 12 Aug 2024 10:22:21 +0200
+Message-Id: <20240812-dbus-v5-0-ead288509217@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD3GuWYC/22PQWrDMBBFrxK0rsJoJMtyV71HyEK2xs5AsILUi
+ oTgu1d2U9LSLof/3/vMXWRKTFm87u4iUeHMca5H87ITw8nPE0kO9RYIaKDBVob+I0uHQN3YGqs
+ DiFq9JBr5umkO4sz9dOEYxLEmJ87vMd02f8Et31QW3ZeqoARJBrW2NBIG/Xbm2ae4j2la1f+0B
+ 6W18oNqh979bK97RT83WvVN6ZXqyKMFM4LDP5R5Ug4eTxZTKWvIO1C2o0b9opZl+QQZu11ZPQE
+ AAA==
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Kent Gibson <warthog618@gmail.com>, 
+ Erik Schilling <erik.schilling@linaro.org>, 
+ Phil Howard <phil@gadgetoid.com>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Dan Carpenter <dan.carpenter@linaro.org>, 
+ Philip Withnall <philip@tecnocode.co.uk>
+Cc: linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Alexander Sverdlin <alexander.sverdlin@siemens.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=13290;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=iI0aH/+bwbzpcW4GsuLbDXT1X+VRur4nYbOocTkdlek=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBmucZE+tzy3dVpCL+v+xNohDU/ghia8CSCbYhxt
+ jUOpiVmQrWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZrnGRAAKCRARpy6gFHHX
+ cvOAEACylvm1T/mBfgDgB4+vwFbr3wGVyk0Jp901q1+2WSU88ZLFNqCfiZcX/wqzVkZWCF9xq0P
+ 3QQyXEofEVCDFFxAE/UTLUaoSQ503aqBC5K+UTko1vs85NkWe6oDYEI8TOgyaBbgg0j1a1xvcTz
+ 96s0vxpwZgIWWgrNfp04g9zwduhTyWqTLwe9AnQ5sjer17CZMtaCd4zJ+pfbS9xPDzd1jygl2NA
+ 9Pz2yo60tgFsDk93dd3Tz6oRmTM9x+CuWxRNh5E3mISTQR32e1/qnjJH1H4ZqAE/4jLGIVf1FnM
+ 4bizBimqqg0Jh5LCq4gRBv5Xlw+c1/ZKebiQGzTX7VESsjfQR+noh0Ah3efZ0tGTSDZ7RpTgJSZ
+ hf4aR3s8T65CgknIDQCgOXkSao//riI8cWxNDubbGtZaoN37tEWGLx92LMjtx3vg+/Q6mxx/cYo
+ t9xahSjgB4oYknUnZlcNWxpMpol3EfN8jfvNRe7HH4nxKcW6GIVwQfACYeSALv/0U583irZR374
+ Cuz8Yh7uWh/QucjdeNNwY2c/OL6CEhod8exxeeouhKyPRPXJ5FTS886Ty/R8YLUdENYn8Pf4ulv
+ 5tp3JiyX1HY/I23gCNMjjWEdU4uaDmlwECN/CCh2DBy98irAdjRFtH/FpdhrO7Z+aVLw6ZGOqOB
+ jcyCXacSTEWBPAA==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git at24/for-next
-branch HEAD: 36e071d2a1522eeb3d38fb9c257cac8e5907979f  dt-bindings: eeprom: at24: Add compatible for Giantec GT24C04A
+I'm resending it once more but with commits squashed into how they'll appear
+in git once applied upstream. I think the code is in good enough shape that
+it can now go into the master branch and any further development can happen
+from there.
 
-elapsed time: 721m
+Big thanks to Philip Withnall <philip@tecnocode.co.uk> for his thorough review
+of this series. I think I addressed most of the issues pointed out.
 
-configs tested: 249
-configs skipped: 5
+This series introduces the D-Bus API definition and its implementation in the
+form of a GPIO manager daemon and a companion command-line client as well as
+GLib bindings to libgpiod which form the base on which the former are built.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+While I split the GLib and D-Bus code into several commits for easier review,
+I intend to apply all changes to bindings/glib/ and dbus/ as two big commits
+in the end as otherwise the split commits are not buildable until all of them
+are applied.
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                             allnoconfig   gcc-13.3.0
-alpha                            allyesconfig   gcc-13.3.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                   randconfig-001-20240812   gcc-13.2.0
-arc                   randconfig-002-20240812   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-14.1.0
-arm                               allnoconfig   clang-20
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-14.1.0
-arm                     am200epdkit_defconfig   gcc-14.1.0
-arm                                 defconfig   gcc-13.2.0
-arm                        keystone_defconfig   gcc-14.1.0
-arm                        multi_v5_defconfig   gcc-14.1.0
-arm                   randconfig-001-20240812   clang-15
-arm                   randconfig-001-20240812   gcc-13.2.0
-arm                   randconfig-002-20240812   clang-20
-arm                   randconfig-002-20240812   gcc-13.2.0
-arm                   randconfig-003-20240812   clang-20
-arm                   randconfig-003-20240812   gcc-13.2.0
-arm                   randconfig-004-20240812   clang-20
-arm                   randconfig-004-20240812   gcc-13.2.0
-arm64                            allmodconfig   clang-20
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-14.1.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240812   gcc-13.2.0
-arm64                 randconfig-001-20240812   gcc-14.1.0
-arm64                 randconfig-002-20240812   clang-20
-arm64                 randconfig-002-20240812   gcc-13.2.0
-arm64                 randconfig-003-20240812   gcc-13.2.0
-arm64                 randconfig-003-20240812   gcc-14.1.0
-arm64                 randconfig-004-20240812   clang-20
-arm64                 randconfig-004-20240812   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                              allnoconfig   gcc-14.1.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240812   gcc-13.2.0
-csky                  randconfig-001-20240812   gcc-14.1.0
-csky                  randconfig-002-20240812   gcc-13.2.0
-csky                  randconfig-002-20240812   gcc-14.1.0
-hexagon                          allmodconfig   clang-20
-hexagon                           allnoconfig   clang-20
-hexagon                          allyesconfig   clang-20
-hexagon               randconfig-001-20240812   clang-20
-hexagon               randconfig-002-20240812   clang-20
-i386                             alldefconfig   gcc-14.1.0
-i386                             allmodconfig   clang-18
-i386                             allmodconfig   gcc-12
-i386                              allnoconfig   clang-18
-i386                              allnoconfig   gcc-12
-i386                             allyesconfig   clang-18
-i386                             allyesconfig   gcc-12
-i386         buildonly-randconfig-001-20240812   clang-18
-i386         buildonly-randconfig-002-20240812   clang-18
-i386         buildonly-randconfig-003-20240812   clang-18
-i386         buildonly-randconfig-004-20240812   clang-18
-i386         buildonly-randconfig-005-20240812   clang-18
-i386         buildonly-randconfig-005-20240812   gcc-12
-i386         buildonly-randconfig-006-20240812   clang-18
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240812   clang-18
-i386                  randconfig-001-20240812   gcc-12
-i386                  randconfig-002-20240812   clang-18
-i386                  randconfig-002-20240812   gcc-12
-i386                  randconfig-003-20240812   clang-18
-i386                  randconfig-003-20240812   gcc-12
-i386                  randconfig-004-20240812   clang-18
-i386                  randconfig-005-20240812   clang-18
-i386                  randconfig-006-20240812   clang-18
-i386                  randconfig-006-20240812   gcc-12
-i386                  randconfig-011-20240812   clang-18
-i386                  randconfig-011-20240812   gcc-12
-i386                  randconfig-012-20240812   clang-18
-i386                  randconfig-013-20240812   clang-18
-i386                  randconfig-014-20240812   clang-18
-i386                  randconfig-015-20240812   clang-18
-i386                  randconfig-016-20240812   clang-18
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240812   gcc-13.2.0
-loongarch             randconfig-001-20240812   gcc-14.1.0
-loongarch             randconfig-002-20240812   gcc-13.2.0
-loongarch             randconfig-002-20240812   gcc-14.1.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                                defconfig   gcc-13.2.0
-m68k                       m5208evb_defconfig   gcc-14.1.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-14.1.0
-mips                         cobalt_defconfig   gcc-14.1.0
-mips                           jazz_defconfig   gcc-14.1.0
-mips                        omega2p_defconfig   gcc-14.1.0
-mips                        vocore2_defconfig   gcc-14.1.0
-nios2                             allnoconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc-14.1.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240812   gcc-13.2.0
-nios2                 randconfig-001-20240812   gcc-14.1.0
-nios2                 randconfig-002-20240812   gcc-13.2.0
-nios2                 randconfig-002-20240812   gcc-14.1.0
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc                randconfig-001-20240812   gcc-13.2.0
-parisc                randconfig-001-20240812   gcc-14.1.0
-parisc                randconfig-002-20240812   gcc-13.2.0
-parisc                randconfig-002-20240812   gcc-14.1.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-14.1.0
-powerpc                          allyesconfig   clang-20
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                    mvme5100_defconfig   gcc-14.1.0
-powerpc                      pcm030_defconfig   gcc-14.1.0
-powerpc               randconfig-001-20240812   gcc-13.2.0
-powerpc               randconfig-001-20240812   gcc-14.1.0
-powerpc               randconfig-002-20240812   gcc-13.2.0
-powerpc               randconfig-002-20240812   gcc-14.1.0
-powerpc               randconfig-003-20240812   gcc-13.2.0
-powerpc               randconfig-003-20240812   gcc-14.1.0
-powerpc                  storcenter_defconfig   gcc-14.1.0
-powerpc                         wii_defconfig   gcc-14.1.0
-powerpc64             randconfig-001-20240812   clang-20
-powerpc64             randconfig-001-20240812   gcc-13.2.0
-powerpc64             randconfig-002-20240812   clang-15
-powerpc64             randconfig-002-20240812   gcc-13.2.0
-powerpc64             randconfig-003-20240812   clang-20
-powerpc64             randconfig-003-20240812   gcc-13.2.0
-riscv                            allmodconfig   clang-20
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   gcc-14.1.0
-riscv                            allyesconfig   clang-20
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   clang-20
-riscv                               defconfig   gcc-14.1.0
-riscv                 randconfig-001-20240812   gcc-13.2.0
-riscv                 randconfig-001-20240812   gcc-14.1.0
-riscv                 randconfig-002-20240812   clang-20
-riscv                 randconfig-002-20240812   gcc-13.2.0
-s390                             allmodconfig   clang-20
-s390                              allnoconfig   clang-20
-s390                             allyesconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   clang-20
-s390                                defconfig   gcc-14.1.0
-s390                  randconfig-001-20240812   gcc-13.2.0
-s390                  randconfig-001-20240812   gcc-14.1.0
-s390                  randconfig-002-20240812   gcc-13.2.0
-s390                  randconfig-002-20240812   gcc-14.1.0
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-13.2.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-14.1.0
-sh                        edosk7705_defconfig   gcc-14.1.0
-sh                    randconfig-001-20240812   gcc-13.2.0
-sh                    randconfig-001-20240812   gcc-14.1.0
-sh                    randconfig-002-20240812   gcc-13.2.0
-sh                    randconfig-002-20240812   gcc-14.1.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-14.1.0
-sparc64               randconfig-001-20240812   gcc-13.2.0
-sparc64               randconfig-001-20240812   gcc-14.1.0
-sparc64               randconfig-002-20240812   gcc-13.2.0
-sparc64               randconfig-002-20240812   gcc-14.1.0
-um                               allmodconfig   clang-20
-um                               allmodconfig   gcc-13.3.0
-um                                allnoconfig   clang-17
-um                               allyesconfig   gcc-12
-um                               allyesconfig   gcc-13.3.0
-um                                  defconfig   clang-20
-um                                  defconfig   gcc-14.1.0
-um                             i386_defconfig   gcc-12
-um                             i386_defconfig   gcc-14.1.0
-um                    randconfig-001-20240812   clang-20
-um                    randconfig-001-20240812   gcc-13.2.0
-um                    randconfig-002-20240812   gcc-12
-um                    randconfig-002-20240812   gcc-13.2.0
-um                           x86_64_defconfig   clang-15
-um                           x86_64_defconfig   gcc-14.1.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240812   clang-18
-x86_64       buildonly-randconfig-002-20240812   clang-18
-x86_64       buildonly-randconfig-003-20240812   clang-18
-x86_64       buildonly-randconfig-003-20240812   gcc-12
-x86_64       buildonly-randconfig-004-20240812   clang-18
-x86_64       buildonly-randconfig-005-20240812   clang-18
-x86_64       buildonly-randconfig-006-20240812   clang-18
-x86_64                              defconfig   clang-18
-x86_64                              defconfig   gcc-11
-x86_64                randconfig-001-20240812   clang-18
-x86_64                randconfig-002-20240812   clang-18
-x86_64                randconfig-003-20240812   clang-18
-x86_64                randconfig-003-20240812   gcc-12
-x86_64                randconfig-004-20240812   clang-18
-x86_64                randconfig-004-20240812   gcc-12
-x86_64                randconfig-005-20240812   clang-18
-x86_64                randconfig-005-20240812   gcc-11
-x86_64                randconfig-006-20240812   clang-18
-x86_64                randconfig-011-20240812   clang-18
-x86_64                randconfig-012-20240812   clang-18
-x86_64                randconfig-012-20240812   gcc-12
-x86_64                randconfig-013-20240812   clang-18
-x86_64                randconfig-014-20240812   clang-18
-x86_64                randconfig-015-20240812   clang-18
-x86_64                randconfig-015-20240812   gcc-12
-x86_64                randconfig-016-20240812   clang-18
-x86_64                randconfig-016-20240812   gcc-12
-x86_64                randconfig-071-20240812   clang-18
-x86_64                randconfig-071-20240812   gcc-12
-x86_64                randconfig-072-20240812   clang-18
-x86_64                randconfig-072-20240812   gcc-12
-x86_64                randconfig-073-20240812   clang-18
-x86_64                randconfig-073-20240812   gcc-12
-x86_64                randconfig-074-20240812   clang-18
-x86_64                randconfig-075-20240812   clang-18
-x86_64                randconfig-075-20240812   gcc-12
-x86_64                randconfig-076-20240812   clang-18
-x86_64                randconfig-076-20240812   gcc-12
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                            allnoconfig   gcc-14.1.0
-xtensa                generic_kc705_defconfig   gcc-14.1.0
-xtensa                randconfig-001-20240812   gcc-13.2.0
-xtensa                randconfig-001-20240812   gcc-14.1.0
-xtensa                randconfig-002-20240812   gcc-13.2.0
-xtensa                randconfig-002-20240812   gcc-14.1.0
+The main point of interest is the D-Bus interface definition XML at
+dbus/lib/io.gpiod1.xml as it is what defines the actual D-Bus API. Everything
+else can be considered as implementation details as it's easier to change
+later than the API that's supposed to be stable once released.
 
+The first two patches expose the test infrastructure we use for the core
+library and tools to the GLib bindings and dbus code. Next we add the GLib
+bindings themselves. Not much to discuss here, they cover the entire libgpiod
+API but wrap it in GObject abstractions and plug into the GLib event loop.
+
+Finally we add the D-Bus code that's split into the daemon and command-line
+client. I added some examples to the README and documented the behavior in
+the help text of the programs as well as documented the interface file with
+XML comments that gdbus-codegen can parse and use to generate docbook output.
+
+For D-Bus, most of the testing happens in the command-line client bash tests.
+It has a very good coverage of the daemon's code and also allows to run the
+daemon through valgrind and verify there are no memory leaks and invalid
+accesses.
+
+Changes in v5:
+- squash GLib bindings and D-Bus commits into two big commits
+- Link to v4: https://lore.kernel.org/r/20240807-dbus-v4-0-64ea80169e51@linaro.org
+
+Changes in v4:
+- fix generating GObject introspection data
+- use GLib doc blocks with introspection annotations suitable for generating
+  docs with gi-docgen
+- various comment and doc tweaks
+- Link to v3: https://lore.kernel.org/r/20240718-dbus-v3-0-c9ea2604f082@linaro.org
+
+Changes in v3:
+- make gpio-manager run as its own user in the systemd service file and add
+  udev rules that automate the group assignment for gpiochips
+- add sandboxing options to the service file for an overall exposure score
+  from systemd-analyze of 2.3
+- enable introspection for GLib bindings
+- set the minimum required GLib version for gdbus-codegen
+- fix time units in dbus docs
+- change the D-Bus type for Chip's path to byte-array
+- change the naming convention in strings: s/DBus/D-Bus/g
+- add the "unknown" value to the EventClock property and document how to
+  interpret other unrecognized values
+- various doc updates
+- don't set environment variables from the daemon code, use the provided
+  g_log_writer_default_set_debug_domains() helper
+- use g_build_filename() where appropriate
+- use g_steal_pointer() to improve error propagation
+- use G_PARAM_STATIC_STRINGS across all properties
+- use G_GNUC_PRINTF() in g_gpiod_set_error_from_errno()
+- change the library's namespace to Gpiodglib/GPIODGLIB/gpiodglib_
+- remove the "handle" properties in favor of passing the core libgpiod pointers
+  to GObjects directly after they're constructed
+- add typedefs to property enums for better build-time safety
+- don't use g_value_set_static_string() for strings that are not really static
+  across the entire lifetime of the program
+- rework the code for internal property setting and getting
+- add Requires.private: libgpiod to gpiod-glib pkgconfig file
+- Link to v2: https://lore.kernel.org/r/20240628-dbus-v2-0-c1331ac17cb8@linaro.org
+
+Changes in v2:
+- fixed most segfaults I noticed (or was made aware of by others) in RFC
+- improve the code in GLib examples
+- make command-line tests pass shellckeck
+- fix build issue resulting in implicit pointer-to-int casting on some
+  platforms
+- many small tweaks, fixes and improvements all over the place but without
+  changing the API
+- fix a bunch of memory leaks reported by valgrind
+- Link to v1: https://lore.kernel.org/linux-gpio/20240412122804.109323-1-brgl@bgdev.pl/
+
+---
+Bartosz Golaszewski (4):
+      tests: split out reusable test code into a local static library
+      tests: split out the common test code for bash scripts
+      bindings: add GLib bindings
+      dbus: add the D-Bus daemon, command-line client and tests
+
+ .gitignore                                         |    2 +
+ Makefile.am                                        |    7 +
+ README                                             |   73 +-
+ TODO                                               |   17 -
+ bindings/Makefile.am                               |    7 +
+ bindings/glib/.gitignore                           |    6 +
+ bindings/glib/Makefile.am                          |  131 ++
+ bindings/glib/chip-info.c                          |  129 ++
+ bindings/glib/chip.c                               |  397 ++++++
+ bindings/glib/edge-event.c                         |  186 +++
+ bindings/glib/error.c                              |   67 +
+ bindings/glib/examples/.gitignore                  |   14 +
+ bindings/glib/examples/Makefile.am                 |   22 +
+ bindings/glib/examples/find_line_by_name_glib.c    |   71 +
+ bindings/glib/examples/get_chip_info_glib.c        |   42 +
+ bindings/glib/examples/get_line_info_glib.c        |   80 ++
+ bindings/glib/examples/get_line_value_glib.c       |   68 +
+ .../glib/examples/get_multiple_line_values_glib.c  |   73 +
+ .../examples/reconfigure_input_to_output_glib.c    |  104 ++
+ bindings/glib/examples/toggle_line_value_glib.c    |   99 ++
+ .../examples/toggle_multiple_line_values_glib.c    |  132 ++
+ bindings/glib/examples/watch_line_info_glib.c      |   63 +
+ bindings/glib/examples/watch_line_value_glib.c     |   91 ++
+ .../examples/watch_multiple_edge_rising_glib.c     |   95 ++
+ bindings/glib/generated-enums.c.template           |   43 +
+ bindings/glib/generated-enums.h.template           |   30 +
+ bindings/glib/gpiod-glib.h                         |   22 +
+ bindings/glib/gpiod-glib.pc.in                     |   15 +
+ bindings/glib/gpiod-glib/chip-info.h               |   62 +
+ bindings/glib/gpiod-glib/chip.h                    |  157 +++
+ bindings/glib/gpiod-glib/edge-event.h              |   97 ++
+ bindings/glib/gpiod-glib/error.h                   |   45 +
+ bindings/glib/gpiod-glib/info-event.h              |   76 ++
+ bindings/glib/gpiod-glib/line-config.h             |  101 ++
+ bindings/glib/gpiod-glib/line-info.h               |  171 +++
+ bindings/glib/gpiod-glib/line-request.h            |  186 +++
+ bindings/glib/gpiod-glib/line-settings.h           |  220 +++
+ bindings/glib/gpiod-glib/line.h                    |  113 ++
+ bindings/glib/gpiod-glib/misc.h                    |   39 +
+ bindings/glib/gpiod-glib/request-config.h          |   93 ++
+ bindings/glib/info-event.c                         |  163 +++
+ bindings/glib/internal.c                           |  327 +++++
+ bindings/glib/internal.h                           |   79 ++
+ bindings/glib/line-config.c                        |  193 +++
+ bindings/glib/line-info.c                          |  342 +++++
+ bindings/glib/line-request.c                       |  452 ++++++
+ bindings/glib/line-settings.c                      |  408 ++++++
+ bindings/glib/misc.c                               |   17 +
+ bindings/glib/request-config.c                     |  170 +++
+ bindings/glib/tests/.gitignore                     |    4 +
+ bindings/glib/tests/Makefile.am                    |   29 +
+ bindings/glib/tests/helpers.c                      |   12 +
+ bindings/glib/tests/helpers.h                      |  140 ++
+ bindings/glib/tests/tests-chip-info.c              |   58 +
+ bindings/glib/tests/tests-chip.c                   |  187 +++
+ bindings/glib/tests/tests-edge-event.c             |  225 +++
+ bindings/glib/tests/tests-info-event.c             |  322 +++++
+ bindings/glib/tests/tests-line-config.c            |  187 +++
+ bindings/glib/tests/tests-line-info.c              |  102 ++
+ bindings/glib/tests/tests-line-request.c           |  710 ++++++++++
+ bindings/glib/tests/tests-line-settings.c          |  256 ++++
+ bindings/glib/tests/tests-misc.c                   |   88 ++
+ bindings/glib/tests/tests-request-config.c         |   64 +
+ configure.ac                                       |   84 ++
+ dbus/Makefile.am                                   |   10 +
+ dbus/client/.gitignore                             |    4 +
+ dbus/client/Makefile.am                            |   31 +
+ dbus/client/common.c                               |  646 +++++++++
+ dbus/client/common.h                               |  203 +++
+ dbus/client/detect.c                               |   53 +
+ dbus/client/find.c                                 |   66 +
+ dbus/client/get.c                                  |  212 +++
+ dbus/client/gpiocli-test.bash                      | 1443 ++++++++++++++++++++
+ dbus/client/gpiocli.c                              |  174 +++
+ dbus/client/info.c                                 |  184 +++
+ dbus/client/monitor.c                              |  191 +++
+ dbus/client/notify.c                               |  295 ++++
+ dbus/client/reconfigure.c                          |   76 ++
+ dbus/client/release.c                              |   64 +
+ dbus/client/request.c                              |  250 ++++
+ dbus/client/requests.c                             |   71 +
+ dbus/client/set.c                                  |  173 +++
+ dbus/client/wait.c                                 |  188 +++
+ dbus/data/90-gpio.rules                            |    4 +
+ dbus/data/Makefile.am                              |   16 +
+ dbus/data/gpio-manager.service                     |   50 +
+ dbus/data/io.gpiod1.conf                           |   41 +
+ dbus/lib/Makefile.am                               |   29 +
+ dbus/lib/gpiodbus.h                                |    9 +
+ dbus/lib/io.gpiod1.xml                             |  324 +++++
+ dbus/manager/.gitignore                            |    4 +
+ dbus/manager/Makefile.am                           |   21 +
+ dbus/manager/daemon.c                              |  821 +++++++++++
+ dbus/manager/daemon.h                              |   22 +
+ dbus/manager/gpio-manager.c                        |  173 +++
+ dbus/manager/helpers.c                             |  431 ++++++
+ dbus/manager/helpers.h                             |   26 +
+ dbus/tests/.gitignore                              |    4 +
+ dbus/tests/Makefile.am                             |   25 +
+ dbus/tests/daemon-process.c                        |  129 ++
+ dbus/tests/daemon-process.h                        |   20 +
+ dbus/tests/helpers.c                               |  107 ++
+ dbus/tests/helpers.h                               |  114 ++
+ dbus/tests/tests-chip.c                            |  133 ++
+ dbus/tests/tests-line.c                            |  231 ++++
+ dbus/tests/tests-request.c                         |  116 ++
+ tests/Makefile.am                                  |   14 +-
+ tests/gpiod-test-helpers.c                         |   41 -
+ tests/gpiosim-glib/Makefile.am                     |   13 +
+ .../gpiosim-glib.c}                                |   30 +-
+ .../gpiosim-glib.h}                                |   14 +
+ tests/harness/Makefile.am                          |   12 +
+ tests/harness/gpiod-test-common.h                  |   23 +
+ tests/{ => harness}/gpiod-test.c                   |    0
+ tests/{ => harness}/gpiod-test.h                   |    0
+ tests/{gpiod-test-helpers.h => helpers.h}          |   36 +-
+ tests/scripts/Makefile.am                          |    4 +
+ tests/scripts/gpiod-bash-test-helper.inc           |  330 +++++
+ tests/tests-chip-info.c                            |    7 +-
+ tests/tests-chip.c                                 |   15 +-
+ tests/tests-edge-event.c                           |    7 +-
+ tests/tests-info-event.c                           |    7 +-
+ tests/tests-kernel-uapi.c                          |    7 +-
+ tests/tests-line-config.c                          |    7 +-
+ tests/tests-line-info.c                            |   11 +-
+ tests/tests-line-request.c                         |    7 +-
+ tests/tests-line-settings.c                        |    5 +-
+ tests/tests-misc.c                                 |    7 +-
+ tests/tests-request-config.c                       |    5 +-
+ tools/gpio-tools-test.bash                         |  566 ++------
+ 130 files changed, 15833 insertions(+), 584 deletions(-)
+---
+base-commit: 9fdd6e23faa5e0011d6ee047b25928e8ad4c3320
+change-id: 20240527-dbus-820e9f7463d0
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
 
