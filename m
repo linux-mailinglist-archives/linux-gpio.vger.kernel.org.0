@@ -1,198 +1,135 @@
-Return-Path: <linux-gpio+bounces-8722-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8723-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EB5994F458
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 18:29:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00C2E94F5BF
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 19:23:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8F64EB248B0
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 16:29:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24DEE1C211C9
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 17:23:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1161186E38;
-	Mon, 12 Aug 2024 16:29:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D501D187FEE;
+	Mon, 12 Aug 2024 17:23:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="kauK30pm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TaIwcCVX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0407183CD4
-	for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2024 16:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204901804F
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2024 17:23:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723480147; cv=none; b=m+6uqAAuS/p6rajgvZWE6c+589kggYxGvWJa4T2x+K/auEktZAKxRa3mDiXZh4pzUE0yzZxrQ4lZUP/RnqUo4AtZZ+rOrsQoLdJNiqZbK01ZOomzLtow0A0WMcQeGXz0UFFXH4hGERHPLPPXsu6fss9clJMSNNPxAem7jIv9uqs=
+	t=1723483383; cv=none; b=BFIvzYh7/RSm8N3k4EDzf+Z/RF4mr6+XdeZ5cZGhOgC3bAw+AC6R210huqvPebtEqghyW1m/EIA+BCN/0VuX59WVWMYaIwWFxvgiYEJJx7rhW1D6Pkz3jMK1f+gt09RTGlcAunmBiYS7iYXiVtRcjgfNbz1R4T+ttfObQtYFtjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723480147; c=relaxed/simple;
-	bh=zrNP2KYv0WqF3LdXLEDH1XuuWMpQN51bXPN7l9Gc3XM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fLYjH3Yz7pDrqLU/U6pe5HH0+6guVCco6mYR2u6IhaVRjTDAJnrKGx9pqpNkJ+K6vcUx4cIrhMXlvYvryY2E91bR2rwZExIg2tqBkM8WxaaSLPt9aLO5z+8ez+Fr/UFj4sqrYoKOCe/yRmUxL6snAvzbMjNUuUUXrgXV8G4Se3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=kauK30pm; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e0e7b421c88so4561465276.2
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2024 09:29:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1723480144; x=1724084944; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uMV3FW63GcPYNvV09/bzRTM0A7rqdaktyTCGiSEZP+g=;
-        b=kauK30pmBisWFXt2irM/T1Y4Om50XazFQO0qcG5ToSO0rDBoakMpatP/Fl6+2xMFjg
-         Eo/eKjzyLtep35cOTNZi0i0w0yYQs9KRuC4EsYMMZyWGzSMC5lxHbZ0H1kn/FkJEZo/i
-         3EH7rXyXw0hLU7Ag4gJnIzENVPpvCdTWH9YqwvMhCxKkokoxpzdcaQ7VbV3VQkacahsc
-         DhZ756ExUNps6a9Hasg8/aqQNuaoJYzQx3nDiaOQXR8aR7EWey+UzUnx8FZSUsKInJjL
-         m8DedwSDlY1DdIOrnfajMWjAzfS6Osv9zNHORrF5UT901gH3VHCO0B6erGWl4D5BDfnv
-         wf0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723480144; x=1724084944;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uMV3FW63GcPYNvV09/bzRTM0A7rqdaktyTCGiSEZP+g=;
-        b=cOuovAlvvUm0vESfwNuYkFW6BVRJIanavwebXfEq2OQE+8i4Ej9SYNMawWn1i+ztX8
-         T9zBvFPay4fV935V0Pstr9L93m5QggJknLdPjaWwiY0GOah15age6O3hZ5Vg+vobYw8J
-         kNyNLWtKC3aR/izC3VYsSyv5AiAwOpzRluMd7F8+rAVWtytqpFAixbut6wfn7/a/1Xqd
-         +eLU9AZcKuuWCLbNLvn/c7t1d4hW9VCs/AFoJLTuf0pzqJe0Zg9wwmd3GgDxHhbMf+Qq
-         T0Rcz43+PC1aSg9EJD4SVTy8vzwVsBtADdI3xqda1Q7BNGIia1Hl0FVZ14d2I2gPDQNt
-         DgPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQna6pk6ZI6SjGpyqHkkUdU4CfeRICB5uwd4vUnETmYE9aEj/5pdLBJVFfAHzcDBuF3WDlCyDaE9/THJh3WjuLP8bLQwRDZjWAuQ==
-X-Gm-Message-State: AOJu0YxTor45fSbEDtBveMZfGH9hBC/LAs3hvqjJA1cZHfeYPP7DscnR
-	cURqkE+DSbYG9V6A52KD8n9QoGzcX0DDWXrd5R6PbrBR/EaoRQ1tDlyV/CjkNO4aNOdDnkGRtsy
-	HCOazkZHW5fg0ed92VgypMe1VQ7y/edR3/vJgmQ==
-X-Google-Smtp-Source: AGHT+IGj7d7yd0eiw2JYaUqx2Ht7IqYG3B/CS0se5ZXlqWOTSnVZOd4JD9GKabzcEs76SbyuZwRil8Cin7Nw6RtBZtQ=
-X-Received: by 2002:a05:6902:c02:b0:e0b:2fcc:9891 with SMTP id
- 3f1490d57ef6-e113d2902b2mr918707276.44.1723480143787; Mon, 12 Aug 2024
- 09:29:03 -0700 (PDT)
+	s=arc-20240116; t=1723483383; c=relaxed/simple;
+	bh=eogV72n4YOMoZ8E/3unaFDzqLtZo7Sct/jk6BuP4Hus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V2EFr0FWfyDRxJpx8CXrgMb0+nbX4KFA7YyUi/6iTEmE3RCGHit4Nb/5wOuLkUzjBH98ltFX8M7WNyiB73rH4ZQJrUYQPLLGMECKKseoYWyJE/J5TMa1XOBOsZiQSPSH4kD22TObHugzUUJkTWPFJaTTsrgJTy40UDpDyOw3KiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TaIwcCVX; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723483383; x=1755019383;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eogV72n4YOMoZ8E/3unaFDzqLtZo7Sct/jk6BuP4Hus=;
+  b=TaIwcCVXqsaLfObrW6SNwiJ0RIQBG/J41BXuiPN69kGDPZE5karos+QS
+   Ypfu/StX0q9fOzKaIQ5eLNB+eRldFf4jBumBZc3HxS1AekhF7FGTPZlBQ
+   g6tfmJJDWkmMDzZU4B/zAt2f3BJUo8bDBhlrCAu8+a0+eis7tHsUSfr0P
+   GkmsrbGm48o1oq29cKiPV4bBSg9RMY3Tvdlyn6eDGOML70HNUugSAG1p5
+   SP3UjqEiqqLa7oi9nVCgj8Qmd3r6TytVYY+4H26loONNT1AstaEGBXXuo
+   XPW9MEvZPKj5nY90cs2loB6f1cbxMsj800W8fYE96odA3orYXXZsuAw0H
+   A==;
+X-CSE-ConnectionGUID: yyyvyz6xQeqEIRxYg8r55w==
+X-CSE-MsgGUID: TMfNZqgSTOOR3tQr8gUWFg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="44128693"
+X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
+   d="scan'208";a="44128693"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 10:23:02 -0700
+X-CSE-ConnectionGUID: CT5pwZrgRCy4FeogCAwo9g==
+X-CSE-MsgGUID: v3NKnE3PQP6sO6IwxKSYyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
+   d="scan'208";a="63264566"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 10:23:00 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1sdYkz-0000000EQXW-22iw;
+	Mon, 12 Aug 2024 20:22:57 +0300
+Date: Mon, 12 Aug 2024 20:22:57 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sai Kumar Cholleti <skmr537@gmail.com>
+Cc: bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+	mmcclain@noprivs.com
+Subject: Re: [PATCH] gpio: exar set value handling for hw with gpio pull-up
+ or pull-down
+Message-ID: <ZrpE8RYLG0141_EB@smile.fi.intel.com>
+References: <20240730134610.80986-1-skmr537@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240731062814.215833-1-iivanov@suse.de> <20240731062814.215833-2-iivanov@suse.de>
- <200d54a3-bedf-4bd3-bb7f-0d834c43ea78@gmx.net>
-In-Reply-To: <200d54a3-bedf-4bd3-bb7f-0d834c43ea78@gmx.net>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Mon, 12 Aug 2024 17:28:47 +0100
-Message-ID: <CAPY8ntB9Zf3sJejXuzrw6tUipfv71w4sDc26fg8cbMtRjrcPHg@mail.gmail.com>
-Subject: Re: [PATCH 1/7] dt-bindings: pinctrl: Add support for Broadcom STB
- pin controller
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: "Ivan T. Ivanov" <iivanov@suse.de>, kernel-list@raspberrypi.com, 
-	florian.fainelli@broadcom.com, andrea.porta@suse.com, conor+dt@kernel.org, 
-	krzk+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, robh@kernel.org, 
-	linus.walleij@linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240730134610.80986-1-skmr537@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Stefan
+On Tue, Jul 30, 2024 at 07:16:10PM +0530, Sai Kumar Cholleti wrote:
 
-Sorry for the delay in responding - I was on holiday last week.
+Please, refer to the functions in the text as func(), e.g. exar_set_value().
+Use proper acronym, i.e. GPIO (capitalised).
 
-On Fri, 2 Aug 2024 at 19:10, Stefan Wahren <wahrenst@gmx.net> wrote:
->
-> Hi,
->
-> [add official Raspberry Pi kernel developer list]
->
-> Am 31.07.24 um 08:28 schrieb Ivan T. Ivanov:
-> > It looks like they are few revisions of this chip which varies
-> > by number of pins. Perhaps not all of them are available on the
-> > market. Perhaps some of them where early engineering samples,
-> > I don't know. I decided to keep all of them just in case.
-> The BCM2711 had also some revisions and we avoided successfully multiple
-> versions of the RPi 4B DTS. So it would be nice if someone can explain
-> if C0 & D0 are available in the market? Otherwise we may end up with
-> multiple versions of the RPi 5 DTS.
+> Setting gpio direction = high, sometimes results in gpio value = 0.
+> 
+> If a gpio is pulled high, the following construction results in the
+> value being 0 when the desired value is 1:
+> 
+> $ echo "high" > /sys/class/gpio/gpio336/direction
+> $ cat /sys/class/gpio/gpio336/value
+> 0
+> 
+> Before the gpio direction is changed from input to output,
+> exar_set_value is set to 1, but since direction is input when
+> exar_set_value is called, _regmap_update_bits reads a 1 due to an
+> external pull-up.  When force_write is not set (regmap_set_bits has
+> force_write = false), the value is not written.  When the direction is
+> then changed, the gpio becomes an output with the value of 0 (the
+> hardware default).
+> 
+> regmap_write_bits sets force_write = true, so the value is always
+> written by exar_set_value and an external pull-up doesn't affect the
+> outcome of setting direction = high.
+> 
+> 
+> The same can happen when a gpio is pulled low, but the scenario is a
+> little more complicated.
+> 
+> $ echo high > /sys/class/gpio/gpio351/direction
+> $ cat /sys/class/gpio/gpio351/value
+> 1
+> 
+> $ echo in > /sys/class/gpio/gpio351/direction
+> $ cat /sys/class/gpio/gpio351/value
+> 0
+> 
+> $ echo low > /sys/class/gpio/gpio351/direction
+> $ cat /sys/class/gpio/gpio351/value
+> 1
 
-AFAIK A0 and B0 silicon were never commercialised.
-C0 is the current revision in use with Pi5.
-D0 will be in devices imminently. CM5 will use it from launch, but
-subsequently standard Pi5s will do as well.
+Okay, shouldn't you instead mark the respective registers as volatile or so?
+I believe regmap has some settings for this case. But I haven't checked myself.
 
-In addition to putting in the few fixes that were desired, some
-registers and DMA dreqs got shuffled around, hence some drivers will
-need additional compatible strings (vc4 certainly does) and other
-minor DT tweaks.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Checking our downstream dt files, we have bcm2712d0-rpi-5-b.dts[1]
-that includes and patches the original (C0) bcm2712-rpi-5-b.dts[2].
-The cleaner option would be to have a common bcm2712-rpi-5-b.dts(i)
-and separate bcm2712c0-rpi-5-b.dts bcm2712d0-rpi-5-b.dts which include
-the base and add the relevant customisations. Later a
-bcm2712d0-rpi-cm5.dts DT should be able to include that same base file
-as well.
 
-I'm not quite sure why the GPIO names are redefined in our d0 file -
-other than the unused ones using "-" instead of "", they appear
-identical.
-
-> I'm missing an explanation in the commit message, what's the difference
-> between brcm,bcm2712-pinctrl and brcm,bcm2712-aon-pinctrl?
-
-Two separate instantiations of the same IP block, but they differ in
-the number of pins that are associated and the pinmux functions for
-each of those pins. AFAIK there is no way from DT to specify those
-pinmux function names, so otherwise
-/sys/kernel/debug/pinctrl/<node>/pins will give the wrong function
-mappings.
-
-> According to the driver brcm,bcm2712-pinctrl is the same as
-> brcm,bcm2712c0-pinctrl. So the former is more a fallback?
-
-I'd need to check with Phil (who's on holiday this week) or Dom, but I
-believe you are correct that "brcm,bcm2712-pinctrl" is a fallback.
-Most likely due to our early DT files not having the c0 designation.
-Obviously for mainline that is irrelevant, so dropping the
-non-specific compatibles is fine.
-
-I hope that makes some more sense.
-
-  Dave
-
-[1] https://github.com/raspberrypi/linux/blob/rpi-6.6.y/arch/arm64/boot/dts/broadcom/bcm2712d0-rpi-5-b.dts
-[2] https://github.com/raspberrypi/linux/blob/rpi-6.6.y/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-
-> Thanks
-> >
-> > Cc: Andrea della Porta <andrea.porta@suse.com>
-> > Signed-off-by: Ivan T. Ivanov <iivanov@suse.de>
-> > ---
-> >   .../pinctrl/brcm,brcmstb-pinctrl.yaml         | 73 +++++++++++++++++++
-> >   1 file changed, 73 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,brcmstb-pinctrl.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,brcmstb-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,brcmstb-pinctrl.yaml
-> > new file mode 100644
-> > index 000000000000..c5afdb49d784
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/brcm,brcmstb-pinctrl.yaml
-> > @@ -0,0 +1,73 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pinctrl/brcm,brcmstb-pinctrl.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Broadcom STB family pin controller
-> > +
-> > +maintainers:
-> > +  - Ivan T. Ivanov <iivanov@suse.de>
-> > +
-> > +description:
-> > +  Broadcom's STB family memory-mapped pin controller.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - brcm,bcm2712-pinctrl
-> > +      - brcm,bcm2712-aon-pinctrl
-> > +      - brcm,bcm2712c0-pinctrl
-> > +      - brcm,bcm2712c0-aon-pinctrl
-> > +      - brcm,bcm2712d0-pinctrl
-> > +      - brcm,bcm2712d0-aon-pinctrl
-> > +
-> >
->
 
