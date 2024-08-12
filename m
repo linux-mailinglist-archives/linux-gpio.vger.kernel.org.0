@@ -1,623 +1,342 @@
-Return-Path: <linux-gpio+bounces-8711-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8712-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1250294E721
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 08:49:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C53294E840
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 10:08:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE5E82830C7
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 06:49:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1D401F248F4
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Aug 2024 08:08:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE4BE152E1C;
-	Mon, 12 Aug 2024 06:49:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11943165EFF;
+	Mon, 12 Aug 2024 08:07:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wj9KDBdN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aPO2FcOU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68E614EC64;
-	Mon, 12 Aug 2024 06:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ED74D8D1
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Aug 2024 08:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723445340; cv=none; b=j7SnTBmICCXbVPocG257OpPPFjtEe/rEFVCTS2I95POSQbbP/3xQFqukVcE1KXNBh2btgpMh2iJLdnpwYfZJVbIViAs1RXn+dg68T5Pu24Opt1/UHCak5klELO7Z2ygwOnHYy7z8zHzORZIR7B1ON75grfZr9gbJaphpc9M1iW4=
+	t=1723450077; cv=none; b=rsVdg+negW/0GQzwaQafcv0u4hg1VcXVsTuiG0bXkZzlhFU1e/3xVUk1LVsMGLkSvGTwamLicNeJNK8gIrQJShB0rLyycwIPworI1tmmTuRwmR/BK7yYjJAnW/RFseqYHs9+A45HzFQfUJVl3L7sSMDS3v6SP4Z2p4pRZ3o5Ebw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723445340; c=relaxed/simple;
-	bh=hcxPgTeXWCzFQ7gTfSAbUs13+eSsAvdLE+Y/kSNsHOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rZGgbxkug4hPyvwI8oPNpMGsUAdlF4Nsf4mMTH7hCsK/d/XfA/IJuHei8l6vA9PzkY8zsjqYsL4PFx1RNqXrFJYlWgPZhjED9wYVnV6xjHbgXEsN+90qkIynd4Sbsivhddp5ZRBpEfQhuxdfRL1fQ1XX8aWE+eVtqYDdnhVQn00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wj9KDBdN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7F48C32782;
-	Mon, 12 Aug 2024 06:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723445340;
-	bh=hcxPgTeXWCzFQ7gTfSAbUs13+eSsAvdLE+Y/kSNsHOk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Wj9KDBdNRvKZULq0O17sXomGxH3pQ+ibxA2cK6zQizZv+OwPDYssi9RgGEW0h1FWz
-	 q1Fwc3o9J7hLB9Irhm9w0nm1vyQTApGf2V9hkT0h+lWHvr0BN4niaLk1SY8Zoe5wUH
-	 WuPFwfpz673z0vXAs2ztes7ro5mRNSymw1Yuhc0Ual4PKvKeN9vmKRV4otPJgRY2+Z
-	 AihR8RfdWPOPOJVqe+rzxC4blT9iMZcFj1gV7Wf1m7GImeCz3ZR6/Z0UuEgSZIxNMe
-	 J5IvVrMIrW5uzTqEJFm0SJJchC+T6sgv7AfI0by7OaEUTpGrMYCnZQokS/wDf4CoBP
-	 IZbeo50Xh8QEQ==
-Message-ID: <22144671-fc7c-4cb2-8bb6-ee7d3fbfcb0e@kernel.org>
-Date: Mon, 12 Aug 2024 08:48:52 +0200
+	s=arc-20240116; t=1723450077; c=relaxed/simple;
+	bh=4eJ4p2FzMvDXGxt8fXu/sTQ1XH/edjLeV96KaunxMFY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=fe0fqH8sGwpLtRo9EaMO9hAC4PtJxWeXqBWvQTbWCRCW0TGZU0EdUiKEan8X/FXxkGuYgYWauVqYj5HOAxAdfVNqqwLXgbeSfKBRY1g00SC1A2DJzHcSIXRGwZ/Khtu05KO+vxzjxc281mN13uiq+akZobBnaPM+/LDPXtBQT5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aPO2FcOU; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723450075; x=1754986075;
+  h=date:from:to:cc:subject:message-id;
+  bh=4eJ4p2FzMvDXGxt8fXu/sTQ1XH/edjLeV96KaunxMFY=;
+  b=aPO2FcOUd0TCsDiZWlJLaAMkHmDnjzTX6BD/Ky4iHPj5fpD0XzCubexs
+   Ad2j5BJ+PjhDWMxioAKmID56yGYPnvTBHo/yN5nUwJ/r7wpPxsOifekqo
+   y8lJva2NhffBvh6z/AaLzRKHyUU2wGY8Juc81xf5tQnw7bBG9/3n/FR1G
+   Xl4ZIYzl9RAA1+qOD290qBsm+g3xV8RvvIEoQZNK1IXBUpr07owZfdQPf
+   luVJkUV2UONPxw/xsyAocBBgYIcAXYbFroYmPGHK7TkoyNPIxcsE29zPt
+   Tnk7sJ0MUlEhwN6c+CVRFQWkfbUufM4vWJnwKwX5PmsXS+PLctcArU2x2
+   g==;
+X-CSE-ConnectionGUID: 6Qv7+25RSPKRfJUcS7vh6A==
+X-CSE-MsgGUID: woPaIm+vQ1CN/gqOPBYuGQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11161"; a="24450209"
+X-IronPort-AV: E=Sophos;i="6.09,282,1716274800"; 
+   d="scan'208";a="24450209"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 01:07:54 -0700
+X-CSE-ConnectionGUID: ODNXJiinRW69co4S10a3lg==
+X-CSE-MsgGUID: zO4LC0ZhSqqC9sChbRfBKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,282,1716274800"; 
+   d="scan'208";a="58257979"
+Received: from unknown (HELO b6bf6c95bbab) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 12 Aug 2024 01:07:53 -0700
+Received: from kbuild by b6bf6c95bbab with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sdQ5n-000BWR-1X;
+	Mon, 12 Aug 2024 08:07:51 +0000
+Date: Mon, 12 Aug 2024 16:07:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:at24/for-next] BUILD SUCCESS
+ 36e071d2a1522eeb3d38fb9c257cac8e5907979f
+Message-ID: <202408121637.KVghc6Re-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
- controller
-To: Lorenzo Bianconi <lorenzo@kernel.org>, linux-gpio@vger.kernel.org
-Cc: linus.walleij@linaro.org, sean.wang@kernel.org,
- linux-mediatek@lists.infradead.org, lorenzo.bianconi83@gmail.com,
- krzk+dt@kernel.org, robh@kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, upstream@airoha.com,
- angelogioacchino.delregno@collabora.com, benjamin.larsson@genexis.eu,
- conor+dt@kernel.org, ansuelsmth@gmail.com
-References: <cover.1723392444.git.lorenzo@kernel.org>
- <0d537e88b64847bc4e49756b249b2efdcf489b92.1723392444.git.lorenzo@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <0d537e88b64847bc4e49756b249b2efdcf489b92.1723392444.git.lorenzo@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 11/08/2024 18:12, Lorenzo Bianconi wrote:
-> Introduce device-tree binding documentation for Airoha EN7581 pinctrl
-> controller.
-> 
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
->  .../pinctrl/airoha,en7581-pinctrl.yaml        | 467 ++++++++++++++++++
->  1 file changed, 467 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/airoha,en7581-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/airoha,en7581-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/airoha,en7581-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..b1f980613864
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/airoha,en7581-pinctrl.yaml
-> @@ -0,0 +1,467 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/airoha,en7581-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Airoha EN7581 Pin Controller
-> +
-> +maintainers:
-> +  - Lorenzo Bianconi <lorenzo@kernel.org>
-> +
-> +description:
-> +  The Airoha's EN7581 Pin controller is used to control SoC pins.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - airoha,en7581-pinctrl
-> +
-> +  reg:
-> +    items:
-> +      - description: IOMUX base address
-> +      - description: LED IOMUX base address
-> +      - description: GPIO flash mode base address
-> +      - description: GPIO flash mode extended base address
-> +      - description: IO pin configuration base address
-> +      - description: PCIE reset open-drain base address
-> +      - description: GPIO bank0 data register base address
-> +      - description: GPIO bank1 data register base address
-> +      - description: GPIO bank0 first control register base address
-> +      - description: GPIO bank0 second control register base address
-> +      - description: GPIO bank1 first control register base address
-> +      - description: GPIO bank1 second control register base address
-> +      - description: GPIO bank0 output enable register base address
-> +      - description: GPIO bank1 output enable register base address
-> +      - description: GPIO bank0 irq status register base address
-> +      - description: GPIO bank1 irq status register base address
-> +      - description: GPIO bank0 irq level first control register base address
-> +      - description: GPIO bank0 irq level second control register base address
-> +      - description: GPIO bank1 irq level first control register base address
-> +      - description: GPIO bank1 irq level second control register base address
-> +      - description: GPIO bank0 irq edge first control register base address
-> +      - description: GPIO bank0 irq edge second control register base address
-> +      - description: GPIO bank1 irq edge first control register base address
-> +      - description: GPIO bank1 irq edge second control register base address
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +    description:
-> +      Number of cells in GPIO specifier. Since the generic GPIO binding is
-> +      used, the amount of cells must be specified as 2. See the below mentioned
-> +      gpio binding representation for description of particular cells.
-> +
-> +  gpio-ranges:
-> +    maxItems: 1
-> +    description:
-> +      GPIO valid number range.
-> +
-> +  interrupt-controller: true
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +
-> +patternProperties:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git at24/for-next
+branch HEAD: 36e071d2a1522eeb3d38fb9c257cac8e5907979f  dt-bindings: eeprom: at24: Add compatible for Giantec GT24C04A
 
-Keep it after properties: block.
+elapsed time: 721m
 
-> +  '-pins$':
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '^.*mux.*$':
-> +        type: object
-> +        additionalProperties: false
-> +        description: |
+configs tested: 249
+configs skipped: 5
 
-Do not need '|' unless you need to preserve formatting.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> +          pinmux configuration nodes.
-> +
-> +        $ref: /schemas/pinctrl/pinmux-node.yaml
-> +        properties:
-> +          function:
-> +            description:
-> +              A string containing the name of the function to mux to the group.
-> +            enum: [pon, tod_1pps, sipo, mdio, uart, i2c, jtag, pcm, spi,
-> +                   pcm_spi, i2s, emmc, pnand, pcie_reset, pwm, phy1_led0,
-> +                   phy2_led0, phy3_led0, phy4_led0, phy1_led1, phy2_led1,
-> +                   phy3_led1, phy4_led1]
-> +          groups:
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                             allnoconfig   gcc-13.3.0
+alpha                            allyesconfig   gcc-13.3.0
+alpha                               defconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                   randconfig-001-20240812   gcc-13.2.0
+arc                   randconfig-002-20240812   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                              allmodconfig   gcc-14.1.0
+arm                               allnoconfig   clang-20
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-14.1.0
+arm                     am200epdkit_defconfig   gcc-14.1.0
+arm                                 defconfig   gcc-13.2.0
+arm                        keystone_defconfig   gcc-14.1.0
+arm                        multi_v5_defconfig   gcc-14.1.0
+arm                   randconfig-001-20240812   clang-15
+arm                   randconfig-001-20240812   gcc-13.2.0
+arm                   randconfig-002-20240812   clang-20
+arm                   randconfig-002-20240812   gcc-13.2.0
+arm                   randconfig-003-20240812   clang-20
+arm                   randconfig-003-20240812   gcc-13.2.0
+arm                   randconfig-004-20240812   clang-20
+arm                   randconfig-004-20240812   gcc-13.2.0
+arm64                            allmodconfig   clang-20
+arm64                            allmodconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-14.1.0
+arm64                               defconfig   gcc-13.2.0
+arm64                 randconfig-001-20240812   gcc-13.2.0
+arm64                 randconfig-001-20240812   gcc-14.1.0
+arm64                 randconfig-002-20240812   clang-20
+arm64                 randconfig-002-20240812   gcc-13.2.0
+arm64                 randconfig-003-20240812   gcc-13.2.0
+arm64                 randconfig-003-20240812   gcc-14.1.0
+arm64                 randconfig-004-20240812   clang-20
+arm64                 randconfig-004-20240812   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                              allnoconfig   gcc-14.1.0
+csky                                defconfig   gcc-13.2.0
+csky                  randconfig-001-20240812   gcc-13.2.0
+csky                  randconfig-001-20240812   gcc-14.1.0
+csky                  randconfig-002-20240812   gcc-13.2.0
+csky                  randconfig-002-20240812   gcc-14.1.0
+hexagon                          allmodconfig   clang-20
+hexagon                           allnoconfig   clang-20
+hexagon                          allyesconfig   clang-20
+hexagon               randconfig-001-20240812   clang-20
+hexagon               randconfig-002-20240812   clang-20
+i386                             alldefconfig   gcc-14.1.0
+i386                             allmodconfig   clang-18
+i386                             allmodconfig   gcc-12
+i386                              allnoconfig   clang-18
+i386                              allnoconfig   gcc-12
+i386                             allyesconfig   clang-18
+i386                             allyesconfig   gcc-12
+i386         buildonly-randconfig-001-20240812   clang-18
+i386         buildonly-randconfig-002-20240812   clang-18
+i386         buildonly-randconfig-003-20240812   clang-18
+i386         buildonly-randconfig-004-20240812   clang-18
+i386         buildonly-randconfig-005-20240812   clang-18
+i386         buildonly-randconfig-005-20240812   gcc-12
+i386         buildonly-randconfig-006-20240812   clang-18
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240812   clang-18
+i386                  randconfig-001-20240812   gcc-12
+i386                  randconfig-002-20240812   clang-18
+i386                  randconfig-002-20240812   gcc-12
+i386                  randconfig-003-20240812   clang-18
+i386                  randconfig-003-20240812   gcc-12
+i386                  randconfig-004-20240812   clang-18
+i386                  randconfig-005-20240812   clang-18
+i386                  randconfig-006-20240812   clang-18
+i386                  randconfig-006-20240812   gcc-12
+i386                  randconfig-011-20240812   clang-18
+i386                  randconfig-011-20240812   gcc-12
+i386                  randconfig-012-20240812   clang-18
+i386                  randconfig-013-20240812   clang-18
+i386                  randconfig-014-20240812   clang-18
+i386                  randconfig-015-20240812   clang-18
+i386                  randconfig-016-20240812   clang-18
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                         allnoconfig   gcc-14.1.0
+loongarch                           defconfig   gcc-13.2.0
+loongarch             randconfig-001-20240812   gcc-13.2.0
+loongarch             randconfig-001-20240812   gcc-14.1.0
+loongarch             randconfig-002-20240812   gcc-13.2.0
+loongarch             randconfig-002-20240812   gcc-14.1.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                              allnoconfig   gcc-14.1.0
+m68k                             allyesconfig   gcc-14.1.0
+m68k                                defconfig   gcc-13.2.0
+m68k                       m5208evb_defconfig   gcc-14.1.0
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-14.1.0
+microblaze                       allyesconfig   gcc-14.1.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-14.1.0
+mips                         cobalt_defconfig   gcc-14.1.0
+mips                           jazz_defconfig   gcc-14.1.0
+mips                        omega2p_defconfig   gcc-14.1.0
+mips                        vocore2_defconfig   gcc-14.1.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-14.1.0
+nios2                               defconfig   gcc-13.2.0
+nios2                 randconfig-001-20240812   gcc-13.2.0
+nios2                 randconfig-001-20240812   gcc-14.1.0
+nios2                 randconfig-002-20240812   gcc-13.2.0
+nios2                 randconfig-002-20240812   gcc-14.1.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                           allyesconfig   gcc-14.1.0
+parisc                              defconfig   gcc-14.1.0
+parisc                randconfig-001-20240812   gcc-13.2.0
+parisc                randconfig-001-20240812   gcc-14.1.0
+parisc                randconfig-002-20240812   gcc-13.2.0
+parisc                randconfig-002-20240812   gcc-14.1.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc                          allyesconfig   clang-20
+powerpc                          allyesconfig   gcc-14.1.0
+powerpc                    mvme5100_defconfig   gcc-14.1.0
+powerpc                      pcm030_defconfig   gcc-14.1.0
+powerpc               randconfig-001-20240812   gcc-13.2.0
+powerpc               randconfig-001-20240812   gcc-14.1.0
+powerpc               randconfig-002-20240812   gcc-13.2.0
+powerpc               randconfig-002-20240812   gcc-14.1.0
+powerpc               randconfig-003-20240812   gcc-13.2.0
+powerpc               randconfig-003-20240812   gcc-14.1.0
+powerpc                  storcenter_defconfig   gcc-14.1.0
+powerpc                         wii_defconfig   gcc-14.1.0
+powerpc64             randconfig-001-20240812   clang-20
+powerpc64             randconfig-001-20240812   gcc-13.2.0
+powerpc64             randconfig-002-20240812   clang-15
+powerpc64             randconfig-002-20240812   gcc-13.2.0
+powerpc64             randconfig-003-20240812   clang-20
+powerpc64             randconfig-003-20240812   gcc-13.2.0
+riscv                            allmodconfig   clang-20
+riscv                            allmodconfig   gcc-14.1.0
+riscv                             allnoconfig   gcc-14.1.0
+riscv                            allyesconfig   clang-20
+riscv                            allyesconfig   gcc-14.1.0
+riscv                               defconfig   clang-20
+riscv                               defconfig   gcc-14.1.0
+riscv                 randconfig-001-20240812   gcc-13.2.0
+riscv                 randconfig-001-20240812   gcc-14.1.0
+riscv                 randconfig-002-20240812   clang-20
+riscv                 randconfig-002-20240812   gcc-13.2.0
+s390                             allmodconfig   clang-20
+s390                              allnoconfig   clang-20
+s390                             allyesconfig   clang-20
+s390                             allyesconfig   gcc-14.1.0
+s390                                defconfig   clang-20
+s390                                defconfig   gcc-14.1.0
+s390                  randconfig-001-20240812   gcc-13.2.0
+s390                  randconfig-001-20240812   gcc-14.1.0
+s390                  randconfig-002-20240812   gcc-13.2.0
+s390                  randconfig-002-20240812   gcc-14.1.0
+sh                               allmodconfig   gcc-14.1.0
+sh                                allnoconfig   gcc-13.2.0
+sh                                allnoconfig   gcc-14.1.0
+sh                               allyesconfig   gcc-14.1.0
+sh                                  defconfig   gcc-14.1.0
+sh                        edosk7705_defconfig   gcc-14.1.0
+sh                    randconfig-001-20240812   gcc-13.2.0
+sh                    randconfig-001-20240812   gcc-14.1.0
+sh                    randconfig-002-20240812   gcc-13.2.0
+sh                    randconfig-002-20240812   gcc-14.1.0
+sparc                            allmodconfig   gcc-14.1.0
+sparc64                             defconfig   gcc-14.1.0
+sparc64               randconfig-001-20240812   gcc-13.2.0
+sparc64               randconfig-001-20240812   gcc-14.1.0
+sparc64               randconfig-002-20240812   gcc-13.2.0
+sparc64               randconfig-002-20240812   gcc-14.1.0
+um                               allmodconfig   clang-20
+um                               allmodconfig   gcc-13.3.0
+um                                allnoconfig   clang-17
+um                               allyesconfig   gcc-12
+um                               allyesconfig   gcc-13.3.0
+um                                  defconfig   clang-20
+um                                  defconfig   gcc-14.1.0
+um                             i386_defconfig   gcc-12
+um                             i386_defconfig   gcc-14.1.0
+um                    randconfig-001-20240812   clang-20
+um                    randconfig-001-20240812   gcc-13.2.0
+um                    randconfig-002-20240812   gcc-12
+um                    randconfig-002-20240812   gcc-13.2.0
+um                           x86_64_defconfig   clang-15
+um                           x86_64_defconfig   gcc-14.1.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240812   clang-18
+x86_64       buildonly-randconfig-002-20240812   clang-18
+x86_64       buildonly-randconfig-003-20240812   clang-18
+x86_64       buildonly-randconfig-003-20240812   gcc-12
+x86_64       buildonly-randconfig-004-20240812   clang-18
+x86_64       buildonly-randconfig-005-20240812   clang-18
+x86_64       buildonly-randconfig-006-20240812   clang-18
+x86_64                              defconfig   clang-18
+x86_64                              defconfig   gcc-11
+x86_64                randconfig-001-20240812   clang-18
+x86_64                randconfig-002-20240812   clang-18
+x86_64                randconfig-003-20240812   clang-18
+x86_64                randconfig-003-20240812   gcc-12
+x86_64                randconfig-004-20240812   clang-18
+x86_64                randconfig-004-20240812   gcc-12
+x86_64                randconfig-005-20240812   clang-18
+x86_64                randconfig-005-20240812   gcc-11
+x86_64                randconfig-006-20240812   clang-18
+x86_64                randconfig-011-20240812   clang-18
+x86_64                randconfig-012-20240812   clang-18
+x86_64                randconfig-012-20240812   gcc-12
+x86_64                randconfig-013-20240812   clang-18
+x86_64                randconfig-014-20240812   clang-18
+x86_64                randconfig-015-20240812   clang-18
+x86_64                randconfig-015-20240812   gcc-12
+x86_64                randconfig-016-20240812   clang-18
+x86_64                randconfig-016-20240812   gcc-12
+x86_64                randconfig-071-20240812   clang-18
+x86_64                randconfig-071-20240812   gcc-12
+x86_64                randconfig-072-20240812   clang-18
+x86_64                randconfig-072-20240812   gcc-12
+x86_64                randconfig-073-20240812   clang-18
+x86_64                randconfig-073-20240812   gcc-12
+x86_64                randconfig-074-20240812   clang-18
+x86_64                randconfig-075-20240812   clang-18
+x86_64                randconfig-075-20240812   gcc-12
+x86_64                randconfig-076-20240812   clang-18
+x86_64                randconfig-076-20240812   gcc-12
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                            allnoconfig   gcc-14.1.0
+xtensa                generic_kc705_defconfig   gcc-14.1.0
+xtensa                randconfig-001-20240812   gcc-13.2.0
+xtensa                randconfig-001-20240812   gcc-14.1.0
+xtensa                randconfig-002-20240812   gcc-13.2.0
+xtensa                randconfig-002-20240812   gcc-14.1.0
 
-minItems: 1
-maxItems: 32 (or whatever is sensible)
-
-> +            description:
-> +              An array of strings. Each string contains the name of a group.
-> +        required:
-> +          - function
-> +          - groups
-> +
-> +        allOf:
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: pon
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [pon]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: tod_1pps
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [pon_tod_1pps, gsw_tod_1pps]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: sipo
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [sipo, sipo_rclk]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: mdio
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [mdio]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: uart
-> +            then:
-> +              properties:
-> +                groups:
-> +                  items:
-> +                    enum: [uart2, uart2_cts_rts, hsuart, hsuart_cts_rts, uart4,
-> +                           uart5]
-> +                  maxItems: 2
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: i2c
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [i2c1]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: jtag
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [jtag_udi, jtag_dfd]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: pcm
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [pcm1, pcm2]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: spi
-> +            then:
-> +              properties:
-> +                groups:
-> +                  items:
-> +                    enum: [spi_quad, spi_cs1]
-> +                  maxItems: 2
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: pcm_spi
-> +            then:
-> +              properties:
-> +                groups:
-> +                  items:
-> +                    enum: [pcm_spi, pcm_spi_int, pcm_spi_rst, pcm_spi_cs1,
-> +                           pcm_spi_cs2_p156, pcm_spi_cs2_p128, pcm_spi_cs3,
-> +                           pcm_spi_cs4]
-> +                  maxItems: 7
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: i2c
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [i2s]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: emmc
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [emmc]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: pnand
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [pnand]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: pcie_reset
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [pcie_reset0, pcie_reset1, pcie_reset2]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: pwm
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6,
-> +                         gpio7, gpio8, gpio9, gpio10, gpio11, gpio12, gpio13,
-> +                         gpio14, gpio15, gpio16, gpio17, gpio18, gpio19,
-> +                         gpio20, gpio21, gpio22, gpio23, gpio24, gpio25,
-> +                         gpio26, gpio27, gpio28, gpio29, gpio30, gpio31,
-> +                         gpio36, gpio37, gpio38, gpio39, gpio40, gpio41,
-> +                         gpio42, gpio43, gpio44, gpio45, gpio46, gpio47]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: phy1_led0
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [gpio33, gpio34, gpio35, gpio42]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: phy2_led0
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [gpio33, gpio34, gpio35, gpio42]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: phy3_led0
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [gpio33, gpio34, gpio35, gpio42]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: phy4_led0
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [gpio33, gpio34, gpio35, gpio42]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: phy1_led1
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [gpio43, gpio44, gpio45, gpio46]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: phy2_led1
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [gpio43, gpio44, gpio45, gpio46]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: phy3_led1
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [gpio43, gpio44, gpio45, gpio46]
-> +          - if:
-> +              properties:
-> +                function:
-> +                  const: phy4_led1
-> +            then:
-> +              properties:
-> +                groups:
-> +                  enum: [gpio43, gpio44, gpio45, gpio46]
-> +
-> +      '^.*conf.*$':
-> +        type: object
-> +        additionalProperties: false
-> +        description:
-> +          pinconf configuration nodes.
-> +        $ref: /schemas/pinctrl/pincfg-node.yaml
-> +
-> +        properties:
-> +          pins:
-> +            description:
-> +              An array of strings. Each string contains the name of a pin.
-> +            items:
-> +              enum: [uart1_txd, uart1_rxd, i2c_scl, i2c_sda, spi_cs0, spi_clk,
-> +                     spi_mosi, spi_miso, gpio0, gpio1, gpio2, gpio3, gpio4,
-> +                     gpio5, gpio6, gpio7, gpio8, gpio9, gpio10, gpio11, gpio12,
-> +                     gpio13, gpio14, gpio15, gpio16, gpio17, gpio18, gpio19,
-> +                     gpio20, gpio21, gpio22, gpio23, gpio24, gpio25, gpio26,
-> +                     gpio27, gpio28, gpio29, gpio30, gpio31, gpio32, gpio33,
-> +                     gpio34, gpio35, gpio36, gpio37, gpio38, gpio39, gpio40,
-> +                     gpio41, gpio42, gpio43, gpio44, gpio45, gpio46,
-> +                     pcie_reset0, pcie_reset1, pcie_reset2]
-
-minItems
-
-> +            maxItems: 58
-> +
-> +          bias-disable: true
-> +
-> +          bias-pull-up: true
-> +
-> +          bias-pull-down: true
-> +
-> +          input-enable: true
-> +
-> +          output-enable: true
-> +
-> +          output-low: true
-> +
-> +          output-high: true
-> +
-> +          drive-open-drain: true
-
-Drop blank lines between these.
-> +
-> +          drive-strength:
-
-What are the units? Shouldn't this be drive-strength-microamp?
-
-> +            enum: [2, 4, 6, 8]
-> +
-> +        required:
-> +          - pins
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    soc {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      pio: pinctrl@1fa20214 {
-> +        compatible = "airoha,en7581-pinctrl";
-> +        reg = <0x0 0x1fa20214 0x0 0x30>,
-> +              <0x0 0x1fa2027c 0x0 0x8>,
-> +              <0x0 0x1fbf0234 0x0 0x4>,
-> +              <0x0 0x1fbf0268 0x0 0x4>,
-> +              <0x0 0x1fa2001c 0x0 0x50>,
-> +              <0x0 0x1fa2018c 0x0 0x4>,
-> +              <0x0 0x1fbf0204 0x0 0x4>,
-> +              <0x0 0x1fbf0270 0x0 0x4>,
-> +              <0x0 0x1fbf0200 0x0 0x4>,
-> +              <0x0 0x1fbf0220 0x0 0x4>,
-> +              <0x0 0x1fbf0260 0x0 0x4>,
-> +              <0x0 0x1fbf0264 0x0 0x4>,
-> +              <0x0 0x1fbf0214 0x0 0x4>,
-> +              <0x0 0x1fbf0278 0x0 0x4>,
-> +              <0x0 0x1fbf0208 0x0 0x4>,
-> +              <0x0 0x1fbf027c 0x0 0x4>,
-> +              <0x0 0x1fbf0210 0x0 0x4>,
-> +              <0x0 0x1fbf028c 0x0 0x4>,
-> +              <0x0 0x1fbf0290 0x0 0x4>,
-> +              <0x0 0x1fbf0294 0x0 0x4>,
-> +              <0x0 0x1fbf020c 0x0 0x4>,
-> +              <0x0 0x1fbf0280 0x0 0x4>,
-> +              <0x0 0x1fbf0284 0x0 0x4>,
-> +              <0x0 0x1fbf0288 0x0 0x4>;
-
-Why are you mapping individual registers? At least half of these are
-continuous.
-
-> +
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        gpio-ranges = <&pio 0 13 47>;
-> +
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        interrupt-parent = <&gic>;
-> +        interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +        pcie1-rst-pins {
-> +          conf {
-> +            pins = "pcie_reset1";
-> +            drive-open-drain = <1>;
-> +          };
-> +        };
-> +
-> +        pwm-pins {
-> +          mux {
-> +            function = "pwm";
-> +            groups = "gpio18";
-> +          };
-> +        };
-> +
-> +        spi-pins {
-> +          mux {
-> +            function = "spi";
-> +            groups = "spi_quad", "spi_cs1";
-> +          };
-> +        };
-> +
-> +        uuart2-pins {
-> +          mux {
-> +            function = "uart";
-> +            groups = "uart2", "uart2_cts_rts";
-> +          };
-> +        };
-> +
-> +        uar5-pins {
-> +          mux {
-> +            function = "uart";
-> +            groups = "uart5";
-> +          };
-> +        };
-> +
-> +        mmc-pins {
-> +          mux {
-> +            function = "emmc";
-> +            groups = "emmc";
-> +          };
-> +        };
-> +
-> +        mdio-pins {
-> +          mux {
-> +            function = "mdio";
-> +            groups = "mdio";
-> +          };
-> +
-> +          conf {
-> +            pins = "gpio2";
-
-What is the point of having both groups and pins?
-
-> +            output-enable;
-> +          };
-> +        };
-> +
-> +        gswp1-led0-pins {
-> +          mux {
-> +            function = "phy1_led0";
-> +            groups = "gpio33";
-> +          };
-> +        };
-> +
-> +        gswp2-led1-pins {
-> +          mux {
-> +            function = "phy2_led1";
-> +            groups = "gpio44";
-
-That's not a group but pin name.
-
-Best regards,
-Krzysztof
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
