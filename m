@@ -1,140 +1,166 @@
-Return-Path: <linux-gpio+bounces-8738-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8739-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACE6D950DA7
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 22:09:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBAD4951091
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2024 01:26:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DDBCB1C21E12
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 20:09:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6645B1F25D41
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 23:26:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 982E41A7052;
-	Tue, 13 Aug 2024 20:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9508D1ABECF;
+	Tue, 13 Aug 2024 23:24:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dn5GejX7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8ELICU7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178D31A4F3B
-	for <linux-gpio@vger.kernel.org>; Tue, 13 Aug 2024 20:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D481ABEA4;
+	Tue, 13 Aug 2024 23:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723579782; cv=none; b=LUv1j+e2Z7W8Vrszrp9IM0kSbR8b28lofvYUUmNkuru1QMIpiRuHMAZeK1lUHl0/bi2OKhJSskzQMb20vulaYlTum+eEQ4v70qHM1OZRv/3VERRz/XHcm0I12rCaHEfPdZoLX7KRyzUhsvwGG92sL31icV89ypH7GmZeBTGTrHM=
+	t=1723591471; cv=none; b=WS7Pqfyr2PEnqSgAPezLLcdMuX7pGVD5hOEmMx+LVz5aPBiA7VLxiSjjcXR+ayZL8V+VPtLkBG4REOfYNtWVbFzsW7zYDjme45kNNthBFLU+9sAMtc0E/5QFP7udOKdfAb666m2+8bFQ2cg7ixy8Zsa7M57wyzZ1uWjCHH8EvbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723579782; c=relaxed/simple;
-	bh=82upTc6GZWpOToOFPBaHe7WgGinNrBj3P4zWDwZGgsE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=RHt3ZS/vO1//xFB5UKRqLfHpRr0djfTYRgnl/vu22FmnkhGd/0v59wOjCBwDixvQKJAyRhkvQk8PHKpo4hXNPHhHEQiSIDicK/M3T9vyRntiJHKrADrUGABvi5V1S+KpbmMj2oM3kvBI2YpmbUrQdsuBohBhU2USPYQKhiy5K0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dn5GejX7; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723579781; x=1755115781;
-  h=date:from:to:cc:subject:message-id;
-  bh=82upTc6GZWpOToOFPBaHe7WgGinNrBj3P4zWDwZGgsE=;
-  b=dn5GejX771wGQB6v4AxR1twuLCeg8xABV/srR3UPDWlXMMdWM/UkntuA
-   0pK/afqDUDogfCBDDzQd/WraetKuLd4g3lCm8DeoSkFqUq4OgL90yS5Xa
-   Tz3Zmw/FN2Ppj+mgtFiOBeuUQDhXGu6FzDMMc1jgfeEmYqbdRhY9Dt3OB
-   BXNcFYStqD5CclqvlBb6vSb6Txks0sYLHM/Agajy1MDZauqY/0jFnHflO
-   1yOLiogvmBHEwwaNSSvNuoZUOZH/8rrKXvX5WAeYM8BWfNTItQpb5sWpC
-   h1h8NtA+D2xvRmtBjbwzj3D3R+YkrDs0bki2qI+9WgqFq+VPOqJKjdjjP
-   A==;
-X-CSE-ConnectionGUID: xILoTHFgSuCD7ABcLu2CBQ==
-X-CSE-MsgGUID: 89JLlN4/Q0ioNSxgmUWTaw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21582632"
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="21582632"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 13:09:39 -0700
-X-CSE-ConnectionGUID: msfE1Bc3TKOfA/qWu7+/Mw==
-X-CSE-MsgGUID: myZqVW4gTPaFBa+zX8r8WA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="58776971"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 13 Aug 2024 13:09:37 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sdxpn-0000hW-2l;
-	Tue, 13 Aug 2024 20:09:35 +0000
-Date: Wed, 14 Aug 2024 04:09:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:davinci/for-next] BUILD SUCCESS
- 8205d5c7463d50dc32ebcf3417a9926ca2b25826
-Message-ID: <202408140400.wDc2t80c-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1723591471; c=relaxed/simple;
+	bh=GO2++5vBD4Pi/QwB+hArlHHUYaYdMOfzb4pkmpEqjjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N92Pl8XtR4WfRaDb0YGB1pUqe0GNDdCBRlehJa137hRQFnYhEVrDLktu6BPXzjqIzQYvoiAQyqvR1a2yAB0sZ7NlFMLJ0LtooGUsu2SUjDBYnL663K9oXcSYoqUnfXmxlA9u+OGOuiIMzXR0jdlu9/juiCMpZ7oA9elaQd3jpqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8ELICU7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A81C32782;
+	Tue, 13 Aug 2024 23:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723591471;
+	bh=GO2++5vBD4Pi/QwB+hArlHHUYaYdMOfzb4pkmpEqjjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r8ELICU7uuTX8vaKprCLN8fiAB/dIkP7aA0p9z8k1mwybrN48URZ6fGjBUa1mp4xe
+	 3pIgulmGTb60R6XV+giGrCXKTZWARy8XK4BvKl0q6XrXI5mPwtwzLAUqR8ry8v+hVW
+	 8c1QoKIPqMQsQg44LWWNf3p8ajDyxdwIOssBcYtFt3pB/yJB5mDnrxVleDmWiyT9cL
+	 WhypUr0MOVGUBPR95ybMoPeIDdj1PSn7H8xbE+8xrXE4MeDi6BWtcLwDI6oBDCCZvH
+	 FrGSSxFiOrOVXHgYTjCv1eruweJlp1uiLUbHdEfO9W2bV+UDscLM8z/v2khUW+xHYE
+	 NUhTifixawKQw==
+Date: Wed, 14 Aug 2024 00:24:28 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-watchdog@vger.kernel.org, thomas.petazzoni@bootlin.com, 
+	blake.vermeer@keysight.com
+Subject: Re: [PATCH 3/5] i2c: Congatec Board Controller i2c bus driver
+Message-ID: <tv6v7g3nkoedbu4olu2xi76qtfueebnfz7c2zx7t2wmpthqdt6@wmbo2lwv5qnf>
+References: <20240503-congatec-board-controller-v1-0-fec5236270e7@bootlin.com>
+ <20240503-congatec-board-controller-v1-3-fec5236270e7@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240503-congatec-board-controller-v1-3-fec5236270e7@bootlin.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git davinci/for-next
-branch HEAD: 8205d5c7463d50dc32ebcf3417a9926ca2b25826  ARM: davinci: remove unused davinci_init_ide() declaration
+Hi Thomas,
 
-elapsed time: 721m
+On Fri, Aug 09, 2024 at 04:52:07PM GMT, Thomas Richard wrote:
+> Add i2c support for the Congatec Board Controller.
 
-configs tested: 47
-configs skipped: 140
+do you mind adding some more description?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-tested configs:
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                              allmodconfig   gcc-14.1.0
-arm                               allnoconfig   clang-20
-arm                              allyesconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-14.1.0
-arm                                 defconfig   gcc-13.2.0
-arm                   randconfig-001-20240813   gcc-14.1.0
-arm                   randconfig-002-20240813   gcc-14.1.0
-arm                   randconfig-003-20240813   gcc-14.1.0
-arm                   randconfig-004-20240813   gcc-14.1.0
-arm64                            allmodconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-i386                             allmodconfig   clang-18
-i386                              allnoconfig   clang-18
-i386                             allyesconfig   clang-18
-i386                                defconfig   clang-18
-loongarch                           defconfig   gcc-13.2.0
-m68k                                defconfig   gcc-13.2.0
-microblaze                          defconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                           allnoconfig   gcc-14.1.0
-riscv                             allnoconfig   gcc-14.1.0
-riscv                               defconfig   gcc-14.1.0
-s390                             allmodconfig   clang-20
-s390                              allnoconfig   gcc-14.1.0
-s390                             allyesconfig   clang-20
-s390                                defconfig   gcc-14.1.0
-sh                                  defconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-14.1.0
-um                                allnoconfig   gcc-14.1.0
-um                                  defconfig   gcc-14.1.0
-um                             i386_defconfig   gcc-14.1.0
-um                           x86_64_defconfig   gcc-14.1.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64                              defconfig   clang-18
-x86_64                          rhel-8.3-rust   clang-18
+...
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +config I2C_CGBC
+> +	tristate "Congatec I2C Controller"
+> +	depends on MFD_CGBC
+> +	help
+> +	  This enables the I2C bus interfaces for the Congatec Board
+
+This what? :-)
+
+> +	  Controller.
+> +
+> +	  This driver can also be built as a module. If so, the module will
+> +	  be called i2c-cgbc.ko.
+> +
+
+...
+
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/i2c.h>
+> +#include <linux/iopoll.h>
+
+please sort includes in alphabetical order?
+
+> +#include <linux/mfd/cgbc.h>
+
+...
+
+> +enum i2c_state {
+> +	STATE_DONE = 0,
+> +	STATE_INIT,
+> +	STATE_START,
+> +	STATE_READ,
+> +	STATE_WRITE,
+> +	STATE_ERROR,
+> +};
+
+can you please use the cgbc prefix for this enum and all the
+members?
+
+...
+
+> +	if (bus_frequency > CGBC_I2C_FREQ_MAX_HZ ||
+> +	    bus_frequency < CGBC_I2C_FREQ_MIN_HZ) {
+> +		dev_warn(i2c->dev, "invalid frequency %u, using default\n", bus_frequency);
+
+should this rather be a dev_info()? (supernit: please start with
+capital leter).
+
+> +		bus_frequency = I2C_MAX_STANDARD_MODE_FREQ;
+> +	}
+> +
+> +	cmd[0] = CGBC_I2C_CMD_SPEED | algo_data->bus_id;
+> +	cmd[1] = cgbc_i2c_freq_to_reg(bus_frequency);
+> +
+> +	ret = cgbc_command(cgbc, &cmd, sizeof(cmd), &data, 1, NULL);
+> +	if (ret)
+> +		return dev_err_probe(i2c->dev, ret,
+> +				     "Failed to initialize I2C bus %s",
+> +				     adap->name);
+> +
+> +	cmd[1] = 0x00;
+> +
+> +	ret = cgbc_command(cgbc, &cmd, sizeof(cmd), &data, 1, NULL);
+> +	if (ret)
+> +		return dev_err_probe(i2c->dev, ret,
+> +				     "Failed to get I2C bus frequency");
+> +
+> +	bus_frequency = cgbc_i2c_reg_to_freq(data);
+> +
+> +	dev_dbg(i2c->dev, "%s is running at %d Hz\n", adap->name, bus_frequency);
+> +
+> +	/*
+> +	 * The read_maxtime_us is the maximum time to wait during a read to get
+> +	 * data. At maximum CGBC_I2C_READ_MAX_LEN can be read by command.
+> +	 * So calculate the max time to size correctly the timeout.
+> +	 */
+
+this comment is a bit wild, can we rephrase to something like:
+
+/*
+ * The read_maxtime_us variable represents the maximum time to wait
+ * for data during a read operation. The maximum amount of data that
+ * can be read by a command is CGBC_I2C_READ_MAX_LEN.
+ * Therefore, calculate the max time to properly size the timeout.
+ */
+
+(it's a suggestion, please choose the words you prefer).
+
+Andi
 
