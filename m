@@ -1,75 +1,57 @@
-Return-Path: <linux-gpio+bounces-8728-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8729-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A52B950234
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 12:14:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDD9F9508A5
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 17:12:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12378289F7D
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 10:14:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 743C41F21EFC
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 15:12:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00CAE1898FF;
-	Tue, 13 Aug 2024 10:14:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD65D19EEA7;
+	Tue, 13 Aug 2024 15:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o+oBGW0g"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=noprivs.com header.i=@noprivs.com header.b="XKM3/98k"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-108-mta12.mxroute.com (mail-108-mta12.mxroute.com [136.175.108.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3951E185606
-	for <linux-gpio@vger.kernel.org>; Tue, 13 Aug 2024 10:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25487198A05
+	for <linux-gpio@vger.kernel.org>; Tue, 13 Aug 2024 15:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723544085; cv=none; b=MM/nMW8Ujtp/iMm33Ntzi8GJ3IzqTTqcnKGZIjLcf1khdPjF8wi5avFrAR4xtB0KYT3u5ZbuUZvwxWCaCcrt9fQSqyIvcHfD1rk/PNkTCXJ9nDczvKHHAXCBMY9tJeY8fqZLcUSqj7uzfJ8EJ+gt/luQbaRYmvcv5rGAguLkKtA=
+	t=1723561973; cv=none; b=iwZV8IwFsgxOGV/qgPUKSCIvjKjlCNzI/gUI5V5uxjPPkmct3oQZvkED5IdEhpYAZzJVobKZ3OV3Ft2zeMWAg5N1KzDH48UgF5A4YHYoCDoTi75cWsAw/h8BdGjpMCChXwX5ERcQHXyoDbGUY6C8BMbh/3W0iInk6/7YEGu6Bn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723544085; c=relaxed/simple;
-	bh=wREu/D36uLjySPM4un3nginac5EwGOWHtqt0/8k99ek=;
+	s=arc-20240116; t=1723561973; c=relaxed/simple;
+	bh=bf5v2dK2KexWtU7plmEYXqNCrq2veDOvRWJtAqy2azc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m3lt15TUu+VFP4fYxYR+yUam2pnbKoQclg+WdB5/nIuGlj7aUO7Q7RPEhC0c2+VV4JUBhlGPF0IpFl86pSCLbMkCyRANK5BCoX+eKAk75I5U2Q9oPbPC125xbUEABJVbkJXB9C/cLB87q7tBlStLOttBqbP0rK4xI4zLIfqgmIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o+oBGW0g; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52f024f468bso6194691e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Aug 2024 03:14:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723544082; x=1724148882; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=YIi2kTAkl5KHYMgtv3D2yljZbS3C9SwJHPYHBgYsUzg=;
-        b=o+oBGW0gK/zxH3HsdRjM5wxG1hidAEGTDRXi6kYZ6txDHqk68dzh9OgP5REbXOrKIm
-         YfhI+29Smh8CwK/dTlDAiWy3KfiuCCa8sh45GK3fY/0iZHbp+Ut+YZJC/qV/FulyLFcf
-         NxBkL0cFjaTXa5XrHR5vRuknlE9pQN0PlT2yGMVu2iKnUPmRdT0Whu87W8rF4JyLqg9r
-         7N6d6Ok1rkHhORg5IfcumOkCoeLP1tWFuLt+7Jtk+L1W1EPjtw/sFhN0sAZWZl01FbP4
-         7BR3ILnb1TEy5dFErDLA0rV1H6KEHW0o0yJ+PW+ZYwFdkKEkeBOhq+hgOQxOp3Ummiki
-         MB9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723544082; x=1724148882;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YIi2kTAkl5KHYMgtv3D2yljZbS3C9SwJHPYHBgYsUzg=;
-        b=la1743CWC6f3HjrBAKIoVnOCNZJuTNQ3zXwJHyaZBdf8TIJhQyQrrkaPIooiNs9T/p
-         Zs1qXfs/zVlfqosa76wbdX4chT10R1cNPr9/+C7wG08E+3euD3k8bt24ZvSnFv2Kdd9j
-         h3wO488YNnB3kNX4tTvE0g+pexWsxOtlNJjN0MRpJJFyCBlaEhWoIXI5GoAHaw0v91TR
-         p0rDrcRINHnwiSUbeKDDIlGDZwt+5si+W4jATvZt36WmQV9cDGHQV6s8MO+4bTnQ1HXX
-         l3wPgukYL+oY4s/xSn9d+8Tt2RuGm2C+s0Edo5Ey0Blw9Cww3K241dGHzQPVBczzppjt
-         9XQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWm4lEXqc3tX6FC3x+73c3NGt5xTxTnYu5bYdkGx905pUWurelMKR+HrYBqexeBp9s5OahRRy7wjQ7MGGvsSLBUEixZC5SUHqOWaA==
-X-Gm-Message-State: AOJu0YxxbXujBEj463gBPHK1+dC8pIQqOhe8arS2WK2Qv7Q3LJrzvv0K
-	8AAigO27OVQ2qYasNAvLOsznrkLl2RcK+nHrnFsqpjsPJF7txMfWa9M4u9B3RdQ=
-X-Google-Smtp-Source: AGHT+IG9hPIybOJGXD89f4JWm29+GhMD/0H+GQVsuiviN+NPV7jroNI/1UztFFEm0Y1nJSs9TaJPEQ==
-X-Received: by 2002:a05:6512:1293:b0:52e:f9f1:c13a with SMTP id 2adb3069b0e04-5321364a388mr2345928e87.12.1723544082162;
-        Tue, 13 Aug 2024 03:14:42 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.215.209])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36e4c36be8csm9821144f8f.4.2024.08.13.03.14.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Aug 2024 03:14:41 -0700 (PDT)
-Message-ID: <a93b8d25-1bec-4a6f-9cb2-e8c59b923180@linaro.org>
-Date: Tue, 13 Aug 2024 12:14:39 +0200
+	 In-Reply-To:Content-Type; b=L3pHhtwAg1GE5eRB0A225NWJj80X3Wdom5zv1sCmvPXhtFW4aqaJ5OLAlBNxAyFRL/N3nlWkiSDi5aNQA5Ke3ixsPm7ByA5E+Ilze/98aRLJGcD+k6bXzb9UtcBy3zPCqLSRzwZrr/6e3jMIbtGuFjNTK8CS/+NbK+uHIa4X8Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=noprivs.com; spf=pass smtp.mailfrom=noprivs.com; dkim=pass (2048-bit key) header.d=noprivs.com header.i=@noprivs.com header.b=XKM3/98k; arc=none smtp.client-ip=136.175.108.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=noprivs.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=noprivs.com
+Received: from filter006.mxroute.com ([136.175.111.3] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta12.mxroute.com (ZoneMTA) with ESMTPSA id 1914c47cdc40000a78.004
+ for <linux-gpio@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Tue, 13 Aug 2024 15:07:39 +0000
+X-Zone-Loop: a43d25287bb68bcb2c0808d9202a9e26aee9edc1e8a5
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=noprivs.com
+	; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:
+	Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=Zq8BEQkvnMJy8TYT7dlaJEScwZy3VhWSdR3+M71ATgs=; b=XKM3/98k1qfGgfLmlfgNejHSTY
+	llGeVh71hK3tlYVg+L198lxYe9pYndhCEZvda8z3lHkuu6oqM+khA97SzfGQnWXex5Sc+OPrxEo6p
+	6yG+94T/KnxWAcMhQXrjX6bvwBldYYqa5ydB0QHd8eQwWHEn5xeJRnZjStz0LjCfUViv+vkmu6afR
+	C6kyiWir4zb3mhckQDPTgXwDTGC2uWgO2i3EEX0a6fslR7rcXGfbs5F15U74U1Ns7AVOMvM3cOQQj
+	7xbQHNYzwGQ1uwB3XXOyjHaZllFVzDHUPvprvUZxWe8iEH/ZdHBPku4QY1gUDDjeXARFCopQGjlGC
+	Cp2UHoaQ==;
+Message-ID: <00bc04c5-a424-4d68-b7cd-7ad9e586409a@noprivs.com>
+Date: Tue, 13 Aug 2024 10:07:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,109 +59,73 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: Add support for Xilinx
- Versal platform
-To: "Potthuri, Sai Krishna" <sai.krishna.potthuri@amd.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- "Simek, Michal" <michal.simek@amd.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "Buddhabhatti, Jay" <jay.buddhabhatti@amd.com>,
- "Kundanala, Praveen Teja" <praveen.teja.kundanala@amd.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "saikrishna12468@gmail.com" <saikrishna12468@gmail.com>,
- "git (AMD-Xilinx)" <git@amd.com>
-References: <20240801120029.1807180-1-sai.krishna.potthuri@amd.com>
- <20240801120029.1807180-2-sai.krishna.potthuri@amd.com>
- <27da3261-8c1e-4c4d-a548-acdfee1909f2@linaro.org>
- <BY5PR12MB42586B02EB54BA76704F1062DBB92@BY5PR12MB4258.namprd12.prod.outlook.com>
- <0bded05c-0fe6-4f35-b527-662b3356fb56@linaro.org>
- <BY5PR12MB4258AE889108439ECAA4B1C2DB862@BY5PR12MB4258.namprd12.prod.outlook.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] gpio: exar set value handling for hw with gpio pull-up or
+ pull-down
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Sai Kumar Cholleti <skmr537@gmail.com>
+Cc: bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org
+References: <20240730134610.80986-1-skmr537@gmail.com>
+ <ZrpE8RYLG0141_EB@smile.fi.intel.com>
 Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <BY5PR12MB4258AE889108439ECAA4B1C2DB862@BY5PR12MB4258.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Matthew McClain <mmcclain@noprivs.com>
+In-Reply-To: <ZrpE8RYLG0141_EB@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: catch@noprivs.com
 
-On 13/08/2024 07:40, Potthuri, Sai Krishna wrote:
->> sd1_wp_0_grp, sd1_wp_1_grp,
->>> +                         ospi0_0_grp, ospi0_ss_0_grp, qspi0_0_grp,
->> qspi0_fbclk_0_grp, qspi0_ss_0_grp,
->>> +                         test_clk_0_grp, test_scan_0_grp, tamper_trigger_0_grp]
->>> +            maxItems: 78
->>
->> You miss minItems... I have doubts this was really tested.
-> groups/pins are mentioned as required property.
-> Do we still need to define minItems?
+On 8/12/24 12:22, Andy Shevchenko wrote:
+ > On Tue, Jul 30, 2024 at 07:16:10PM +0530, Sai Kumar Cholleti wrote:
+ >
+ > Please, refer to the functions in the text as func(), e.g. 
+exar_set_value().
+ > Use proper acronym, i.e. GPIO (capitalised).
 
-These are two unrelated concepts. How many items can be listed at once
-in each property?
+We will update the patch and send a new version out if the current
+approach is acceptable.
 
-> 
-> ....
-> 
->>> +
->>> +      drive-strength:
->>
->> drive-strength-microamp
-> In this case, values are in mA.
+ >> Before the gpio direction is changed from input to output,
+ >> exar_set_value is set to 1, but since direction is input when
+ >> exar_set_value is called, _regmap_update_bits reads a 1 due to an
+ >> external pull-up.  When force_write is not set (regmap_set_bits has
+ >> force_write = false), the value is not written.  When the direction is
+ >> then changed, the gpio becomes an output with the value of 0 (the
+ >> hardware default).
+ >>
+ >> regmap_write_bits sets force_write = true, so the value is always
+ >> written by exar_set_value and an external pull-up doesn't affect the
+ >> outcome of setting direction = high.
 
-Ah, no, if it is mA, then existing property is correct.
+ > Okay, shouldn't you instead mark the respective registers as volatile 
+or so?
+ > I believe regmap has some settings for this case. But I haven't 
+checked myself.
 
-> Do we still need to use drive-strength-microamp?
+Unfortunately, in addition to marking the regmap volatile, we'd need to
+define reg_update_bits which means we'd be partially undoing the work
+from 36fb7218e87833b17e3042e77f3b102c75129e8f to reuse regmap locking
+and update functions.
 
+Below is the relevant section of _regmap_update_bits().
 
+static int _regmap_update_bits(struct regmap *map, unsigned int reg,
+                                unsigned int mask, unsigned int val,
+                                bool *change, bool force_write)
+...
+         if (regmap_volatile(map, reg) && map->reg_update_bits) {
+...
+         } else {
+...
+                 if (force_write || (tmp != orig) || 
+map->force_write_field) {
+                         ret = _regmap_write(map, reg, tmp);
+                         if (ret == 0 && change)
+                                 *change = true;
+...
 
-Best regards,
-Krzysztof
+I suspect this might be a common problem with other GPIO drivers as
+well.
+
+Thank you,
+Matthew
 
 
