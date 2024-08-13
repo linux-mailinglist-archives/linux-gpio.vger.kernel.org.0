@@ -1,126 +1,153 @@
-Return-Path: <linux-gpio+bounces-8726-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8727-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2364A950048
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 10:49:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2095E95013F
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 11:30:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE77F1F21F67
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 08:49:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D20DF28109C
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 09:30:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C743E74063;
-	Tue, 13 Aug 2024 08:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 401C9170A0C;
+	Tue, 13 Aug 2024 09:30:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ujs9I9e+"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KvuCNP3l"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94E0249F5
-	for <linux-gpio@vger.kernel.org>; Tue, 13 Aug 2024 08:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8F98BF3
+	for <linux-gpio@vger.kernel.org>; Tue, 13 Aug 2024 09:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723538963; cv=none; b=XacY5IykSnnfSWOTSwwU499fjXcTuG1ooePlNcQqXtdBy0nCB6VGoxgnz3PjjJpkaviFIY7vl0+PKulNJ6JZRlHzRTphRXztxoRDfx2UDr1artEqGcW3RCSZX/S1HTqCXv3ZORj2RzbYQDJVdrSadNl4JB5q080MCnYh++fEzXU=
+	t=1723541433; cv=none; b=XHh2Ge+Sk8jI3iHqrXAiip246sGXqxOiPsnhTMmq8SXhFpBW37LQJMA9xyvn0p0WCxtJzEjqO5sqszvdQ6mwacjmh53ImFEIU9pjqRsbvzc7XVDAMGg6csJECYltFDY2kT/VpYXd0lkJubQUcR0X/CTsH+1KyOnIEAnTrOTpwJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723538963; c=relaxed/simple;
-	bh=CvhaJ0ImRmB0ZXFZK3VZjf8m+6sdEv+vznmzQKJ7OgA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CZcSprZUFliN/dM01bbxUSaVOsTA/VfEAgZksx7Lx1vDljr+EG28/jQxYBfdyRiO+hZrjEtyczMKM+gS5fxwXGxm9q1/Dbkd9x/DDsi6HnKfB55ZuRFTRAPH1Cxyo3kflrpXWW1M6DUpQ2D35t8ZlHrQouiW1uZJ++Eq5oVPp6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ujs9I9e+; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1723541433; c=relaxed/simple;
+	bh=80FZz/hS5yVjf6Ez49T7vv4o9Yn+9ptPalWyH4EwjQw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ST6FBj7Qyv7gsN9IvxHTzTi/46cwWvh8bZTP7b7oKI+hAZhqcUFW4BnWy52XaRKgJfQQP92kvRZ1cSX4/zVwAfTKQ2daP7apUy0CEP+8gT5KCMRRApfbTcFf2PD7LaO2IFS9io6dlDVNsoTsSyhqhyNVN0J5K7ExXXGV7VrHC3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KvuCNP3l; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-428101fa30aso39554715e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Aug 2024 01:49:21 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-429d2d7be1eso8742665e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Aug 2024 02:30:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1723538960; x=1724143760; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NjTqNqxIyhpJRbUq7+lFXFq+Pzc7eQwT5dYLHqlco2c=;
-        b=Ujs9I9e+6RWfDkR/lXhOFIP0kP8xZnsnHUMsHu26d4Ap3d6JVlABwNNd36rWNk7XHO
-         lVa3RN3cjZVySXrFiQMizHoqqq+loLGey6WLvM9wzmnxCvWM8TG2nGA1gCS5XPJvD4FE
-         9jjx6NFmEbKw9Je+pbMkyXQVmcsQXD+E3zlkxVG/tmzetEg1kX3En5BIiNloRVsm/o+Q
-         GbQ4IDX7UllKqDNYXt99/iYzUuM+PETFifZxGmjrK0xi3RuhDXN8HV/glJx8xPkg+Otg
-         XaGAWvKFZLkfxrtAHvCEBMPPzAOyMRNZ89aT00jpaedIeEfpxbHd3YnIJB6N/mKsNsvP
-         I/Iw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1723541429; x=1724146229; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6nHkbAix24aIbU1Db3KFLjAn+eHa7Mmg6IhQWu9uG68=;
+        b=KvuCNP3lWatKn11DC4C7K3GW1qElmv7vgrcI9fZevBUPc9fEj+bRc61UxltPOTKgMd
+         CQJxBMxDQa8YyjVUWRm/wh4Me1X9DNMLKdlk2YBYffFji5O/6FUYANLlhINcaXlfb4Ut
+         MYX6aKjAuNQULjz6fZoHrqTEsdOTBpHDHITmWvTFE3Us77avuG26QfYVamelzG4AmkK5
+         RhZClPYCql8prVslovW77I/6DE7NfS+YlN634B93CHKhb+g3HrvevC4LddZuGoZxHd5r
+         ilU62GBqhFiDP8NyxEifIQOxwDt93HZKBJepOrnBdY4xM+sqHEnVNVVM6LlBQxV45Hq7
+         TaBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723538960; x=1724143760;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NjTqNqxIyhpJRbUq7+lFXFq+Pzc7eQwT5dYLHqlco2c=;
-        b=JOf+/leTD/HQog0T1oAyi7RpaGdyVkf+kDllHdHteonkz51v5egAZWr/lvSwDoZqiw
-         4Ksr3BR36MoXqV4iq+HofD2km3ubDP2wMQQ1ICeFJMxuhukaikHk81XP/CgMNRq2ut1T
-         hZHtzY+BAoF4WXWSboL6sqzpXRk2Zfom1vnh+tLErnZD1PXBzeqj0fQGRJluqwurs7eF
-         /mUpp8yySI21G6jYz3hMHoroEhioQ9LXTLPiCs9ZG+gCwjcvhkA+Od7BddvkwmyibUfK
-         /cOR0w/ylMGosYaMr8hF1BMwXQMwiaLanO54LPrEjOX8zGC+zAwszg1VXvO9rr749Brj
-         OZYw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsHtBtGPtscy/Aiwg8mGAadWW3YjuwGeniIoIheNql3keWwwHrh0C7Ey7M9bylA2JmPEPTKy/J+1om23/Dk/TVFDJ5pHKj1NyUjw==
-X-Gm-Message-State: AOJu0Yyf9oSdVS5qLQ8WVXhO3lUH1JzMtmS0v3/0QrPrR74cbvo11gIB
-	J9ZVgjVLNuUZfntX7DjKEYxakXIqViAlPXgHEr2J2KoSunXIE36bnUw5rGOmQTI=
-X-Google-Smtp-Source: AGHT+IGjOfKQAXg55ea8E0LCrcMR84v6Ojblt2IrDaBNoGcJ2dLWvrHx130HpueWBASExMAXKu8oTw==
-X-Received: by 2002:a05:600c:450e:b0:425:7796:8e2c with SMTP id 5b1f17b1804b1-429d4805ac3mr18701295e9.12.1723538959591;
-        Tue, 13 Aug 2024 01:49:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723541429; x=1724146229;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6nHkbAix24aIbU1Db3KFLjAn+eHa7Mmg6IhQWu9uG68=;
+        b=BbKLj5hJoNl5AFVh3rP/LJiKSU3V2xw1cnGL3nbvZFbVDVnpy4pUux/cWF2W8OV/Hz
+         G+nIbPf0+YaJ3IUHh14mWMLQbgiXqEg37y/Rz/SE3dHnagJ+bTZWZzAdlEVfZueYFTPO
+         7lY5J/+8KViH5ftsBiVc3eMe0u0zhEnfLBb/eUvGoYSliqlzvPNFkmOiSZqYfOX2LVeR
+         2ZMOgU/s6n6/2s1MeIDxmIXR1+hmivg/qLdJpYPczJP/Te3/NX61vzwlvI5GjgWON/jm
+         +tAjH+H2hUEyOw+FPmrz1c44HN053mp/62ed8RlZFxrCgxUG+Od9xBqY9dNvPlKASTKj
+         fxyQ==
+X-Gm-Message-State: AOJu0Yy3CvpeXci7Zl33bRYG3FzahfmEl6O5sUQZ9U4tlsrIdQn1e+9D
+	IoCE372DwLjMz4LYq3LQUHWquZpUZFw0ZwIjS4A6FniXwZnUPivpCvX6SO0hSfQ=
+X-Google-Smtp-Source: AGHT+IHzrYN75+EtskRjTMkf9miM+ByYfisiGMniYX0E7ChIiFxBqdysy/mavMhRiAmNieaBpJLfLQ==
+X-Received: by 2002:a05:600c:19c9:b0:424:a7f1:ba2 with SMTP id 5b1f17b1804b1-429d62fe113mr18102425e9.17.1723541429037;
+        Tue, 13 Aug 2024 02:30:29 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3979:ff54:1b42:968a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36e4f0a7111sm9588091f8f.117.2024.08.13.01.49.18
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36e4e51ec39sm9609442f8f.80.2024.08.13.02.30.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2024 01:49:19 -0700 (PDT)
+        Tue, 13 Aug 2024 02:30:28 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	Phil Howard <phil@gadgetoid.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Philip Withnall <philip@tecnocode.co.uk>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	Alexander Sverdlin <alexander.sverdlin@siemens.com>
-Subject: Re: [PATCH libgpiod v5 0/4] dbus: add GLib-based D-Bus daemon and command-line client
-Date: Tue, 13 Aug 2024 10:49:17 +0200
-Message-ID: <172353894852.54186.8243553925278671329.b4-ty@linaro.org>
+To: Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Philip Withnall <philip@tecnocode.co.uk>
+Subject: [libgpiod][PATCH] tests: don't use g_value_set_static_string() for non-static strings
+Date: Tue, 13 Aug 2024 11:30:25 +0200
+Message-ID: <20240813093025.94980-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240812-dbus-v5-0-ead288509217@linaro.org>
-References: <20240812-dbus-v5-0-ead288509217@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+As pointed out by Philip Withnall, g_value_set_static_string() must only
+be used with actual static strings and not with ones whose life-time is
+tied to that of their owner. Use g_value_set_string() to get the gpiosim
+properties and rework the existing getter functions returning const
+gchar * to return the address provided by libgpiosim directly instead of
+passing through the GObject property path.
 
-On Mon, 12 Aug 2024 10:22:21 +0200, Bartosz Golaszewski wrote:
-> I'm resending it once more but with commits squashed into how they'll appear
-> in git once applied upstream. I think the code is in good enough shape that
-> it can now go into the master branch and any further development can happen
-> from there.
-> 
-> Big thanks to Philip Withnall <philip@tecnocode.co.uk> for his thorough review
-> of this series. I think I addressed most of the issues pointed out.
-> 
-> [...]
+Suggested-by: Philip Withnall <philip@tecnocode.co.uk>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ tests/gpiosim-glib/gpiosim-glib.c | 24 +++++-------------------
+ 1 file changed, 5 insertions(+), 19 deletions(-)
 
-Applied, thanks!
-
-[1/4] tests: split out reusable test code into a local static library
-      commit: e60e38375c7a5b9a0bae99b27e9c5b4d9fe21f27
-[2/4] tests: split out the common test code for bash scripts
-      commit: ad325c0b650b2ff543ec1edb8f802cfb54a0d6e3
-[3/4] bindings: add GLib bindings
-      commit: e090088c21b7e52f2f407dddd8d6f113182660d0
-[4/4] dbus: add the D-Bus daemon, command-line client and tests
-      commit: a5ab76da1e0a7475c42336829c611f438bffd584
-
-Best regards,
+diff --git a/tests/gpiosim-glib/gpiosim-glib.c b/tests/gpiosim-glib/gpiosim-glib.c
+index 4eaeace..27ce019 100644
+--- a/tests/gpiosim-glib/gpiosim-glib.c
++++ b/tests/gpiosim-glib/gpiosim-glib.c
+@@ -245,12 +245,11 @@ static void g_gpiosim_chip_get_property(GObject *obj, guint prop_id,
+ 
+ 	switch (prop_id) {
+ 	case G_GPIOSIM_CHIP_PROP_DEV_PATH:
+-		g_value_set_static_string(val,
+-				gpiosim_bank_get_dev_path(self->bank));
++		g_value_set_string(val, gpiosim_bank_get_dev_path(self->bank));
+ 		break;
+ 	case G_GPIOSIM_CHIP_PROP_NAME:
+-		g_value_set_static_string(val,
+-				gpiosim_bank_get_chip_name(self->bank));
++		g_value_set_string(val,
++				   gpiosim_bank_get_chip_name(self->bank));
+ 		break;
+ 	default:
+ 		G_OBJECT_WARN_INVALID_PROPERTY_ID(obj, prop_id, pspec);
+@@ -396,27 +395,14 @@ static void g_gpiosim_chip_init(GPIOSimChip *self)
+ 	self->hogs = NULL;
+ }
+ 
+-static const gchar *
+-g_gpiosim_chip_get_string_prop(GPIOSimChip *self, const gchar *prop)
+-{
+-	GValue val = G_VALUE_INIT;
+-	const gchar *str;
+-
+-	g_object_get_property(G_OBJECT(self), prop, &val);
+-	str = g_value_get_string(&val);
+-	g_value_unset(&val);
+-
+-	return str;
+-}
+-
+ const gchar *g_gpiosim_chip_get_dev_path(GPIOSimChip *self)
+ {
+-	return g_gpiosim_chip_get_string_prop(self, "dev-path");
++	return gpiosim_bank_get_dev_path(self->bank);
+ }
+ 
+ const gchar *g_gpiosim_chip_get_name(GPIOSimChip *self)
+ {
+-	return g_gpiosim_chip_get_string_prop(self, "name");
++	return gpiosim_bank_get_chip_name(self->bank);
+ }
+ 
+ GPIOSimValue
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.43.0
+
 
