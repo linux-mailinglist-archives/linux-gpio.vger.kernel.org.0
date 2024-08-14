@@ -1,78 +1,83 @@
-Return-Path: <linux-gpio+bounces-8740-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8741-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFD3A951095
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2024 01:26:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4C109512EB
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2024 05:10:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1AF0A1C20BBF
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Aug 2024 23:26:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AB871F25A30
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Aug 2024 03:10:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AEA01AC456;
-	Tue, 13 Aug 2024 23:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPZQwFpQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9129C3987B;
+	Wed, 14 Aug 2024 03:09:49 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22201AC44A;
-	Tue, 13 Aug 2024 23:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EA639879;
+	Wed, 14 Aug 2024 03:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723591576; cv=none; b=a9yekCqABZDO6oe6svEtKJZsKbQAIF8fH3uuEnMZLgY1dOFtouATiKpSh00jLsrfjdXZirqt7dcgo+hip9YQ/LRgm+02vyne6GqA9VdlgPLGRmyQtTXPyfX5tL7jR+mI7rsdYUo8k9gNcLxYZS/q1yRGCRYxgSN4If1FhUPqlIQ=
+	t=1723604989; cv=none; b=YGy2oMGjMezlIqd9mPX8FXrolgoARIBeA4TdRSVOkKAw0VaMY4vKV3oOVqWYXvbfm/BRvoFgwyuubEa6LhBhL9rpnrNKQCtD9yBM6VNLH04JYsi37KvF3BfnVPpP1OBLVS5to4McaWK77x1edtEMmtW43XahDrzmnKrlveDDQfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723591576; c=relaxed/simple;
-	bh=Pj/vEH4rXCY0exxF5jQLlKMEj2jb+mpQ3RAwRKHYaJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Br59gfssqi05Ib0NjZRG9ZSW/l9iYwwF4O4XNTCN8rmH9hrNyBxuxAox1tXJvpx8pYlyvAgAtgei5MeX40nZs3WnRROFJsWxisdVxs/FGay4D8Dca/TLTSRY5yf32iZv7FZIDLEoutw0EMOauqKoLsX6qFSbGHwPpCK1cRZl+XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPZQwFpQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCC15C4AF13;
-	Tue, 13 Aug 2024 23:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723591576;
-	bh=Pj/vEH4rXCY0exxF5jQLlKMEj2jb+mpQ3RAwRKHYaJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RPZQwFpQsmm0C8BxkOv/mGzOUzbXEm0+YY9j7gT8wHO9Q07ls7BxX2vDilkUuArTp
-	 KCm51TCN+CquHi3OcKLMK1F2TyDJ9Bs80JmbmD91Okh7kexq5IoGglWlsoEQNzZ70i
-	 OP/e+55OUenMzNOjGBurncfJ/YT816DHwVAaNb+gMg89bCeAnz/y1WQbvUBl6ZZC19
-	 /GDD9DbJLWKsMSe0AjWYK1fHngXjKsLmoOwyiJArMEqT5hfonhspA9djKkyV+zildu
-	 K2rXWNhir8JN+z260LMd3CiaBuMMWOtnTIlPP/cbOZ9qd6xu8ij5IPR+CaHSo320y8
-	 wKvCXeRFmJDMA==
-Date: Wed, 14 Aug 2024 00:26:12 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-watchdog@vger.kernel.org, thomas.petazzoni@bootlin.com, 
-	blake.vermeer@keysight.com
-Subject: Re: [PATCH 5/5] MAINTAINERS: Add entry for Congatec Board Controller
-Message-ID: <6ooikjhonxxvey36b3wvtl6klppw6g3nqrdfzl6u6ey7ipptel@r5k6ywecthaw>
-References: <20240503-congatec-board-controller-v1-0-fec5236270e7@bootlin.com>
- <20240503-congatec-board-controller-v1-5-fec5236270e7@bootlin.com>
+	s=arc-20240116; t=1723604989; c=relaxed/simple;
+	bh=HSxV9DCwxnKbAClnBF2Sl7FFbF6SYtxpSn25/kSssvY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WKicVPxKBTRT+M2MW8dq5KL48PlpGNUdhO1nfPayQgRCXYbpxm8tyR3LuDqTW/eowvxRK41Lbp4YSVSBUIukR2Cqm+hW/E9Ch2zZtFOSxFCScOq1PhArNOWrqkd4uBYBqcg7bYJfl1tigkltCT9guv4B7K36/G1BOcn10wJmdFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WkCr82457zndv7;
+	Wed, 14 Aug 2024 11:08:24 +0800 (CST)
+Received: from dggpemm500020.china.huawei.com (unknown [7.185.36.49])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8DB4B1400FD;
+	Wed, 14 Aug 2024 11:09:44 +0800 (CST)
+Received: from huawei.com (10.67.174.77) by dggpemm500020.china.huawei.com
+ (7.185.36.49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 14 Aug
+ 2024 11:09:44 +0800
+From: Liao Chen <liaochen4@huawei.com>
+To: <linux-arm-kernel@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linus.walleij@linaro.org>,
+	<michal.simek@amd.com>
+Subject: [PATCH -next] pinctrl: pinctrl-zynq: fix module autoloading
+Date: Wed, 14 Aug 2024 03:01:55 +0000
+Message-ID: <20240814030155.3876069-1-liaochen4@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503-congatec-board-controller-v1-5-fec5236270e7@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500020.china.huawei.com (7.185.36.49)
 
-Hi Thomas,
+Add MODULE_DEVICE_TABLE(), so modules could be properly autoloaded
+based on the alias from of_device_id table.
 
-On Fri, Aug 09, 2024 at 04:52:09PM GMT, Thomas Richard wrote:
-> Add the Congatec Board Controller drivers and header as Maintained by
-> myself.
-> 
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+Signed-off-by: Liao Chen <liaochen4@huawei.com>
+---
+ drivers/pinctrl/pinctrl-zynq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Acked-by: Andi Shyti <andi.shyti@kernel.org>
+diff --git a/drivers/pinctrl/pinctrl-zynq.c b/drivers/pinctrl/pinctrl-zynq.c
+index 0e8de27d0de8..caa8a2ca3e68 100644
+--- a/drivers/pinctrl/pinctrl-zynq.c
++++ b/drivers/pinctrl/pinctrl-zynq.c
+@@ -1202,6 +1202,7 @@ static const struct of_device_id zynq_pinctrl_of_match[] = {
+ 	{ .compatible = "xlnx,pinctrl-zynq" },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, zynq_pinctrl_of_match);
+ 
+ static struct platform_driver zynq_pinctrl_driver = {
+ 	.driver = {
+-- 
+2.34.1
 
-Thanks,
-Andi
 
