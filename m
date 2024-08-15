@@ -1,51 +1,59 @@
-Return-Path: <linux-gpio+bounces-8752-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8755-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51E749527C4
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2024 04:00:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 328D6952A09
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2024 09:42:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E73B285E86
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2024 02:00:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD9021F22CFF
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Aug 2024 07:42:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2441E63B9;
-	Thu, 15 Aug 2024 02:00:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9661C17B514;
+	Thu, 15 Aug 2024 07:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="kDMz1WBB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-m1011.netease.com (mail-m1011.netease.com [154.81.10.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEFF8F6D;
-	Thu, 15 Aug 2024 02:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED69C13A26F;
+	Thu, 15 Aug 2024 07:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.81.10.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723687233; cv=none; b=cyeJDs6ROPlEPb0WFaXbQlSM0slmgVVtedCtcp2Zagd+y/h9738oCdPAdRSVi5E1luNqPE+N1EyUZKe8IoSS87sy2vVYzA4JhYtzzj/M5kKzeQYMKQ9D9Efwkrgv0RgQINzjYvnE5qQQ0wEIsvXUYZD/zCL1QdyZwqbTQrkHqKA=
+	t=1723707743; cv=none; b=nCOvJsiLkAcKhz3UZkChIg3t3ezVa3LqDZNgc9y+4drCiMUqq8PdrHnGcCfZR1UsMC/a7++S8TpA1RxACuLwG8vK+g8217md4E+CbNGyAs1OD1ZrsP78iA2Q5IkONfugWY11KCOSgmB1h1mNFt5p104woaYkkCSI7jCXgexA2X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723687233; c=relaxed/simple;
-	bh=glhbN7dVT4zQpN3na6hmnR2DxrICAvbg2AdlboJlrmM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qrdmUl/MJ+lP+FA0SkZKRvhz35s2/LAgldivdqljowXuKGMJt0r08hwOZ0PEIjNYDmMBwiR47BpHv3NoKxtSOzOPsT3sevSeiNcIEH9+HXjbZPCbAicDLtFNSoy9u6XYw7fTF0C/uzAXCNhwkHcu/uLU5svuIlJuzE1jPwvTf1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-03 (Coremail) with SMTP id rQCowAAHDvovYb1mXpiIBg--.8052S2;
-	Thu, 15 Aug 2024 10:00:22 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: tony@atomide.com,
-	haojian.zhuang@linaro.org,
-	linus.walleij@linaro.org,
-	akpm@linux-foundation.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-omap@vger.kernel.org,
+	s=arc-20240116; t=1723707743; c=relaxed/simple;
+	bh=KJ8q/jikV/cKfiJf5tY+6LEtasPaMvlhZ3R2hwDIU5E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nUxt2MtyV0mYJvDeV/NRYmcUIfPH+/z8r5Yip2f0GkLBxEmyLbmkFe1QuUbR94duVxNdR+VOmltmgxhRUkCblp6MtkKQo+f0wTMMzLPKanHiyUBSxpz6JQzJHY+NwZfeWQ328K7BC9Abotbd2Y2G+xFJLKfIXjC6gu3TRNN64lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=kDMz1WBB; arc=none smtp.client-ip=154.81.10.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+DKIM-Signature: a=rsa-sha256;
+	b=kDMz1WBBsBfHQZV2b5BpKoJVgnMAPlDDoxOl9sEKiv2VY0x4ceyMeQc1A9V/UlbzV8GAR3R7ONPbfsL14bK6tDS1UeMzGaAaPsRyGAvzOHI9n2yd4g03yLnPbOFJyawP3CWSvYatoQCjkycm672VBrfcb0waRX3bzDJyEhNJsOo=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=nRi56lvQd1lb/9/v3V4eyAuo18seJA3Hj2x5njyEgPU=;
+	h=date:mime-version:subject:message-id:from;
+Received: from rockchip.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 157447E0193;
+	Thu, 15 Aug 2024 15:17:18 +0800 (CST)
+From: Ye Zhang <ye.zhang@rock-chips.com>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	heiko@sntech.de,
 	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Ma Ke <make24@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH RESEND] pinctrl: single: fix potential NULL dereference in pcs_get_function()
-Date: Thu, 15 Aug 2024 10:00:14 +0800
-Message-Id: <20240815020014.149431-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	tao.huang@rock-chips.com,
+	finley.xiao@rock-chips.com,
+	tim.chen@rock-chips.com,
+	elaine.zhang@rock-chips.com,
+	Ye Zhang <ye.zhang@rock-chips.com>
+Subject: [PATCH v1 0/5] gpio: rockchip: Update the GPIO driver
+Date: Thu, 15 Aug 2024 15:16:46 +0800
+Message-Id: <20240815071651.3645949-1-ye.zhang@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,52 +61,30 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAHDvovYb1mXpiIBg--.8052S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrury8WFW5Xr4DZF4fCFW8tFb_yoWDZFg_CF
-	WxXryxJryUGF4DXw17K3yrZFy0ka1UZFW0vr4vg34akryUAw4q93ykG390kwn7Gr4fGrZa
-	yFy5Zr93J347AjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbh8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	4UJVWxJr1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
-	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r
-	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAq
-	YI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82
-	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
-	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
-	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
-	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
-	Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUF0eHDUUUU
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRhJH1YdHk8YTxkaHUlIT0tWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCSE
+	NVSktLVUpCS0tZBg++
+X-HM-Tid: 0a9154e5e70909cfkunm157447e0193
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NlE6FCo5CzI4NUM*QyoeKEkD
+	PkIKCTZVSlVKTElITEtNSUhCSE1CVTMWGhIXVQIeVQETGhUcOwkUGBBWGBMSCwhVGBQWRVlXWRIL
+	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBSkxLQzcG
 
-pinmux_generic_get_function() can return NULL and the pointer 'function'
-was dereferenced without checking against NULL. Add checking of pointer
-'function' in pcs_get_function().
+GPIO driver support acpi and new version, set input direction in
+irq_request_resources, fix division error and debounce config error.
 
-Found by code review.
+Ye Zhang (5):
+  gpio: rockchip: support acpi
+  gpio: rockchip: support GPIO_TYPE_V2_2
+  gpio: rockchip: Set input direction in irq_request_resources
+  gpio: rockchip: avoid division by zero
+  rockchip: gpio: fix debounce config error
 
-Cc: stable@vger.kernel.org
-Fixes: 571aec4df5b7 ("pinctrl: single: Use generic pinmux helpers for managing functions")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
----
- drivers/pinctrl/pinctrl-single.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpio/gpio-rockchip.c | 286 ++++++++++++++++++++++-------------
+ 1 file changed, 180 insertions(+), 106 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index 4c6bfabb6bd7..4da3c3f422b6 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -345,6 +345,8 @@ static int pcs_get_function(struct pinctrl_dev *pctldev, unsigned pin,
- 		return -ENOTSUPP;
- 	fselector = setting->func;
- 	function = pinmux_generic_get_function(pctldev, fselector);
-+	if (!function)
-+		return -EINVAL;
- 	*func = function->data;
- 	if (!(*func)) {
- 		dev_err(pcs->dev, "%s could not find function%i\n",
 -- 
-2.25.1
+2.34.1
 
 
