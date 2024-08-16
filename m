@@ -1,106 +1,84 @@
-Return-Path: <linux-gpio+bounces-8770-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8771-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1FB995468A
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 12:11:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85B879548AB
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 14:23:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5579F1F22C43
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 10:11:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42F25284E81
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 12:23:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E74C4172BCC;
-	Fri, 16 Aug 2024 10:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HfmrIPJU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C89711A01CF;
+	Fri, 16 Aug 2024 12:23:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from greygoose-centos7.csh.rit.edu (greygoose-centos7.csh.rit.edu [129.21.49.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21E5172760
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Aug 2024 10:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA74612AAC6;
+	Fri, 16 Aug 2024 12:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.21.49.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723803085; cv=none; b=ezc/hg41tgWM7jq+YrhB4D4B+9+v9cbrSi/fFMzVbQFv4XkXoIAUEvZpMHq+onJmC7u3A9IvY2YyMwY8sTFi753O4cA43S6A/4rJKs7MbITWPJHVLoeNtKaFkTVZbpDW/kIyHeDA//QYYo/hJS4c5tY8nHGxAlyuBdOyB+lzxZ4=
+	t=1723811007; cv=none; b=bZ5Bx78rqZoRGtJ0i8cW2grRMGafCtP1zQSHCdPOVazOonNaxsOEKWkGx5Hmr6taiWqNCkdxi8u+LNDy4LNzgEskAzO8/v/I2Gv+M1PFEPZNaHQX23/OcXxdqaKmBm+LAovQjQKgJGm5jpe+x7gpwWvQq6DBQwpl3xx99MUUad8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723803085; c=relaxed/simple;
-	bh=jgW8qR9dd1GpYhXPsruabtVGV0P70quPl95KW8r73/M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KsS9boKd4oLrG1+kUL42ANPO3oyyx6x25WDwtShIRUMqKBEhwleZE80DMnOUCKHzswBTIjhOMgeV8olI/5ibs1HpWZG3xtToSUuhWVYlWPxyRQamWGQMohwWBE3fyXv1Q8ZwxMAMlMHNJEHhy0nH0LCVhjuPYF/Ih8/V7Vp67Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HfmrIPJU; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-53301d46c54so2521626e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Aug 2024 03:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1723803081; x=1724407881; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jgW8qR9dd1GpYhXPsruabtVGV0P70quPl95KW8r73/M=;
-        b=HfmrIPJUeFGdQACbuIm/vJgTJiMS6/uGIQl6yQY1SXYphCBrI0kg1z8Y4BgK0oRX1E
-         X7qPmwzkEQ+GfZAAbnoJtBBoSap7wmU27zbiCjUtSITmuqypFjoTgnF5caRid8JglvNJ
-         AhqM2wLZFzp1TMk5pTRtyTjIjrlGrSJ55rSkv46zcK///r+3PBSLhH2lal6Cza4D42tB
-         YkJJLAzZCuWTcO7ZFUSonE0koWnF2MzkvnKTftcNVuWSEVwqAbGAXBnCwvexwHKhLDOi
-         kmh7Y5vaZmD8IG3nXMkczFHX466Pag7H+5/xSgZaPUhh4R0YisyE0f3PK1FvyVAZKx3H
-         aaNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723803081; x=1724407881;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jgW8qR9dd1GpYhXPsruabtVGV0P70quPl95KW8r73/M=;
-        b=checc/GZmWVLxOoKsxDHYUjtvoh2Bj0DpAcq4Am1oDC2gmgB8Biq3uznNa5ufIY493
-         yShtl2Xgwk65Z1R80f0GaMCpRtNguWvKSOmPquYW/ebb5c9bheehcOo65yaTRSB7kaQC
-         qAuWMeBe+IpPoxagAit9+dddx7UqgYcNG3tFxocz5V+ZywWxk6nd4l21/nNBF+JqzRel
-         UImlYa4CLvsK0Vd/CbWCxh5osGVYyI7ZWyxFRWfbvZqtibLDwLg2LE5mxD2rx3Q+sooI
-         XvBW9AqAidWe9cxXXCvbOWnLtmgOFaJRS+KVECsSiGUdfqfWUB0N1SHoDV4w+JU1Im0B
-         KL8w==
-X-Forwarded-Encrypted: i=1; AJvYcCX3BiPWkmLq7Li2ddD5EnOrryQdGU1Sa6X67UrH0wESG8EsrywYcgYrgGh3gs/jsibbmY+kRCl46h2LcGKiFBmUiIe+xSBxk3+2mA==
-X-Gm-Message-State: AOJu0Yzd9N9bvciRoR/6i3zdQkhgDARPN8NJLkeoTdAxXrJLU3G613oO
-	RQe87Wde2sCG3rA+a41D7HjcNyzi8NHGCrlBjNpLggsKwXfHyU+tn2AQewpv2lji24Nn+POIxGV
-	lBmEHz1Uxbg4tzaqtn6eMlmdhc4kttXyhPuPhiA==
-X-Google-Smtp-Source: AGHT+IFcVVXjGoc/qGWPxsaC0pBLaWdPcEgyZ2BKX13uQ6PcUDXE3ldI/yAxzls/u7L0bahDE7nlrnrf5QbmU71tWFQ=
-X-Received: by 2002:a05:6512:2356:b0:52e:767a:ada3 with SMTP id
- 2adb3069b0e04-5331c6e38afmr1553665e87.47.1723803080819; Fri, 16 Aug 2024
- 03:11:20 -0700 (PDT)
+	s=arc-20240116; t=1723811007; c=relaxed/simple;
+	bh=UfPDRFd0sZcw8VTEACv6koAZLJVRdOyVFvePyMLlt3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oB66i0NtlEo4q3yebJSDpSKhzMBQwZKDkHm1zD1/vwJCwcM5Ov7ZN5q9v/o67X7K2zSZhRIxBHbS/qKMRBH67Uc+Kk+qvhclSMx23EWjaS4j5xKiXeNVmMQcjxb65oBxOlipwO56TFB4UHKYdD1z18DGf2h72ACv2aZOK8Dq21Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=freedom.csh.rit.edu; spf=none smtp.mailfrom=freedom.csh.rit.edu; arc=none smtp.client-ip=129.21.49.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=freedom.csh.rit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=freedom.csh.rit.edu
+Received: from localhost (localhost [127.0.0.1])
+	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 16585414DD61;
+	Fri, 16 Aug 2024 08:23:18 -0400 (EDT)
+X-Virus-Scanned: amavisd-new at csh.rit.edu
+Received: from greygoose-centos7.csh.rit.edu ([127.0.0.1])
+ by localhost (mail.csh.rit.edu [127.0.0.1]) (amavisd-new, port 10026)
+ with ESMTP id Q4MOhtoyrouT; Fri, 16 Aug 2024 08:23:17 -0400 (EDT)
+Received: from freedom.csh.rit.edu (freedom.csh.rit.edu [129.21.49.182])
+	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTPS id 34DF745735E9;
+	Fri, 16 Aug 2024 08:23:17 -0400 (EDT)
+Date: Fri, 16 Aug 2024 08:23:16 -0400
+From: Mary Strodl <mstrodl@freedom.csh.rit.edu>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mary Strodl <mstrodl@csh.rit.edu>, linux-kernel@vger.kernel.org,
+	linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpio: add support for FTDI's MPSSE as GPIO
+Message-ID: <Zr9EtK6qnj5apiie@freedom.csh.rit.edu>
+References: <20240814191509.1577661-1-mstrodl@csh.rit.edu>
+ <5d26a74d-af5c-490a-8a00-ca0791bb23f6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240815071651.3645949-1-ye.zhang@rock-chips.com> <20240815071651.3645949-6-ye.zhang@rock-chips.com>
-In-Reply-To: <20240815071651.3645949-6-ye.zhang@rock-chips.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 16 Aug 2024 12:11:09 +0200
-Message-ID: <CAMRc=Mfok1T4xGvdKa54Hy9BocuFx5g4zrK8eSC3Qivhhmz9xg@mail.gmail.com>
-Subject: Re: [PATCH v1 5/5] rockchip: gpio: fix debounce config error
-To: Ye Zhang <ye.zhang@rock-chips.com>
-Cc: linus.walleij@linaro.org, heiko@sntech.de, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, tao.huang@rock-chips.com, 
-	finley.xiao@rock-chips.com, tim.chen@rock-chips.com, 
-	elaine.zhang@rock-chips.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d26a74d-af5c-490a-8a00-ca0791bb23f6@kernel.org>
 
-On Thu, Aug 15, 2024 at 9:17=E2=80=AFAM Ye Zhang <ye.zhang@rock-chips.com> =
-wrote:
->
-> 1. Prevent data from crossing boundaries
+Hello!
 
-I don't understand.
+On Fri, Aug 16, 2024 at 07:52:43AM +0200, Krzysztof Kozlowski wrote:
+> You should not need MODULE_ALIAS() in normal cases. If you need it,
+> usually it means your device ID table is wrong (e.g. misses either
+> entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
+> for incomplete ID table.
 
-> 2. Support GPIO_TYPE_V2_2 debounce config
+Gotcha. I will remove that next time this gets sent out. I'll probably
+give it a few days so other folks can chime in, unless you'd like to
+see this changed before reviewing in more depth?
 
-Should this be a separate patch?
+I assumed it was there to make `gpio-mpsse` work in addition to
+`gpio_mpsse`.
 
-> 3. fix rockchip_gpio_set_config
->
+> The module with autoload based on USB ids, right?
+Yep.
 
-Same? And a fix?
+> Best regards,
+> Krzysztof
 
-Bart
+Thanks for taking the time to review my patch!
+Mary
 
