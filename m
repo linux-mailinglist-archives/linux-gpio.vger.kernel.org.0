@@ -1,82 +1,82 @@
-Return-Path: <linux-gpio+bounces-8767-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8768-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A96A6954623
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 11:50:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7AFB95462A
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 11:50:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E7641F2327C
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 09:50:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97D48284C85
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 09:50:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A328516F26F;
-	Fri, 16 Aug 2024 09:49:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25BD616FF27;
+	Fri, 16 Aug 2024 09:50:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OQgKgx1T"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="H1yE1vXE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA873171E74
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Aug 2024 09:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702BF16F27C
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Aug 2024 09:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723801776; cv=none; b=b/j/1TrblodfLQzuNAnhTBGryzQ1t3OACg0TKlB+RuoULs7DE0T7Fj8vjZfWep7PPHrgc3JwDWFWTUVkP6psGxWaRgMQYYpKFvOH4ViEHoGEEvWmaVy0IUam7aQ+P0rJ9i+jPFZH0aRSv2Y/OKkbAQPvPcj0uQDvO0UpDhr1a/0=
+	t=1723801811; cv=none; b=FSS4YFf5600Rk8aczS37MXBPlH7jEovE/c3RyCtjPMp9Qj4hQEA1RtOptGpXsBW1U3RhC7pj6EPHKiF0QoUq85KTEYTvel2mvyfVuXuRlZSoQ+QD/oUn4BlRmoevpJposfMGCBwHo5/0ltFVR65j1IIrMvydxjBZhtmsvKDdUlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723801776; c=relaxed/simple;
-	bh=3E06hR/kE/+jOyW51rmSiRalV0WxldTLJOqbtbpW77o=;
+	s=arc-20240116; t=1723801811; c=relaxed/simple;
+	bh=CHQ+NPmQVZFS37omHyDmVEDa/txR3YEvhn3ONo2BXDc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YAqbUCLUOeMRD1kS5iqQOlifJBnHhP5FDip9sdNbrYue1QV+ju07EY+jBa85B6YwhdDNaId8lP+1O83KMoRYVpIdqx6VzPz0QVUsMGdJnMQaxtYT5ECFBqUG5UqNZTHOtckSUfQc52w2jVnmJNBQ/aILpWqCDOyeX+j8QYAxtUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OQgKgx1T; arc=none smtp.client-ip=209.85.167.52
+	 To:Cc:Content-Type; b=inOt1ixrB0KDvaimjZf/V1NGnrt3DoQ5ZmXPqRRDthgGWyuLEL5c97+nAKIZE/E8hV8+PLd5NXnc4iZCd/HhKlRuj6hn/ILt38ywUKgUA0Ol+eBgNwl9TdzFlu/JKS+CyCli9rONke+/bUrLvf9QIwL3ElDcqRnoCXmQ7jguF6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=H1yE1vXE; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-53310adb4c3so1691113e87.3
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Aug 2024 02:49:34 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-530e062217eso2367513e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Aug 2024 02:50:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1723801773; x=1724406573; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1723801808; x=1724406608; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rDRicemMaQ9tmYiX6MN/UubXh4KqHsRzOY0h3TLIrbw=;
-        b=OQgKgx1TG6sEeKv5p+J8mgGcQqwgWMvlCgpM+rFA4/11dYiqRhsrhFACSYYvApmxir
-         XOyb2dcAGBCzlG1IhhmbnSzH4VYOzW8O4hw6YR1uC5geX6fDeZyICNgEEfYG2ARLDOaZ
-         QrCqKMBt93mou6sRFGvKlwiqZaVjT6lBJNn5fyCgxwb2Go/BOyoP40IPL9sr93jrfqWS
-         SixGeCQmBcgkPehi5H32z7zbQJHtKjqFzwFixdD2EC/C4mNSp6h3YSu8WTQpOc51oos/
-         qIorXZCfBCv1QTitI3Ckf1YnHG+DOoAzCmR59MOG67N2dqjazhBDFeNrfdFRCFXswI2v
-         YaHw==
+        bh=CHQ+NPmQVZFS37omHyDmVEDa/txR3YEvhn3ONo2BXDc=;
+        b=H1yE1vXEE/mpxgeq2WIZdtPfiv0PvfNyc5hB1d8he2C4te0OOkgRcd+hCgj31HfWSz
+         oYg5fPaT+h/tL33eteuOTQz+QTos9/NaQPVI2rCaAjYks+9U597boWTwWvRkz3/3xwz6
+         a+efmoPUPF5yAXf/6nNOft8dVQ0eXXuee8h2/uH7Vh10WKSpnfACCKOnxZ6uXddlkTwJ
+         Bf4VlBdoh6uRQ+ceqcEclNbGTxqXWgLzJ5YFBYZAHSVftOkj6EHJMWP1XkF/2OJKsP5N
+         2hexUeNr1UXvA80ZJGAhw4j5BokJDKLFhMk+aY0CyzooJzZt7dIRXF5s78xMeQKvK9E9
+         bKDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723801773; x=1724406573;
+        d=1e100.net; s=20230601; t=1723801808; x=1724406608;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rDRicemMaQ9tmYiX6MN/UubXh4KqHsRzOY0h3TLIrbw=;
-        b=PIjJ6f+8r5CH83+MGBecqzVHWbU0rTCG6zi6cjtiNfYr4DSc05LIVIO7kiSdzJZnu5
-         Olxl7x9uaw4LrIEjXPlMT45dJBrPNVG+UEBbt/+eNjWAd63WpxRPls+4ErRS2ZfyiCfK
-         X5jqiIorKrHHv3LozI0dZ9SUc7pR2Zd4Yd+4xlymnQnVrQMul//X+5Jb5oj1rmK10U2b
-         Tnj/u7ZGiPJew5VswaRX8iUiQvf9VSACHMzoSFd7a/rIfZSwsNcXNdddwWvpe6Ygy09S
-         3KMKGQNVefargIFcbUGOOSmwYRUiXDYm1BhnuKIhdqVIodqIyB8DRVP2Jd2Elo/AJk8k
-         +MgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTTOGbhywp6ky4l8vpNu9e12zs8mo2wq0dKkzgRx9w/Ie1klqHcm133F7xDmuzJbxyReigxqubeh7UvPy9sPrtNUfVq2NZqLZTtg==
-X-Gm-Message-State: AOJu0YzQMSLCTkGyD+w9+PjzyX7PmWshHYc/C+vGntFfptuvtyV3DxzH
-	QLWapwm+6+vq6w67jYNvEG5tQjvzKJPPOxMd++Ly3+qVPiKFK7QJxMl6p8YOKC3ZLJJ10Dts9Xy
-	tArhwMStfU1h2IYMCPZrsWX3FuAdWivtVwTwNFA==
-X-Google-Smtp-Source: AGHT+IHmg3osOqkxcBCw6cd7nvM2A++r8/levkFNphPgMqmwsQ1uao1fGoTVrUEpZE7F0Rv9IbVTyfY3p5N41sjhPZo=
-X-Received: by 2002:a05:6512:3044:b0:530:ae22:a6f0 with SMTP id
- 2adb3069b0e04-5331c6927bemr1824198e87.5.1723801772449; Fri, 16 Aug 2024
- 02:49:32 -0700 (PDT)
+        bh=CHQ+NPmQVZFS37omHyDmVEDa/txR3YEvhn3ONo2BXDc=;
+        b=h3TIQPmwKGLf4dWgsm+Vo0p1zGkmAmuaHAzS2a9QFZDilznPu2/Kz75NLRbprMj9XZ
+         C3XCTgIQ1dXzbA32/POtTWm85TVznqoppWy6Wq4DopVK5SGJj5My2bOOnQBtNImKmr4b
+         8GhMsNsGSrUoEJ2w7k9Plcx8gSusr+/EJWV9i0497xf7No8weAUxkH+/p/c5sUgIASJ8
+         m9ngvnb3Edz/Y3EPkS0uDqH3fGEft7QjOFCnlvMb7wfOSBdk2qfRhhjkQJc3Tj1h23cu
+         RV0Rwq0G52n6nXZyf6t30UzA8sm5zItNrR4JId6Pooqo8v6dCCVvpdG106cFn1T67Ph7
+         ZRoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgMDqvrfzmzG3hdQYYUGgyhr/rNj8maQ6U5Xw87FP9dAyB+YeXtJfbCQsJy4f0XdorHnsa2+et2VNwTodcS7BWaJdaDwTOrPwxSg==
+X-Gm-Message-State: AOJu0YywYguna6DpGwY/tqVfTjVbCCpMu7ze9rITOJhTA+NfwyGl+i52
+	zbhElasad7Xu9M9k+DCQ9dZ5WX54KdbOaFKqteGv94YQ21CVyaW6zNbQsPo4zMSOtnyZOmFEPTO
+	zvrCACzJk3j0fEWSTGECQFJqh6gBRTeVcF/73XQ==
+X-Google-Smtp-Source: AGHT+IFNH5mDJnOyEqPzpQTAY1AoSCSs72K9GQZ9BwCbH2cPCtVdHDWdIpfPEJBIGm2rXuUmgdKzj52MPIsWb6Io7f8=
+X-Received: by 2002:a05:6512:1150:b0:52f:cd03:a850 with SMTP id
+ 2adb3069b0e04-5331c6b0a4dmr1426019e87.32.1723801807810; Fri, 16 Aug 2024
+ 02:50:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240815071651.3645949-1-ye.zhang@rock-chips.com> <20240815071651.3645949-4-ye.zhang@rock-chips.com>
-In-Reply-To: <20240815071651.3645949-4-ye.zhang@rock-chips.com>
+References: <20240815071651.3645949-1-ye.zhang@rock-chips.com> <20240815071651.3645949-3-ye.zhang@rock-chips.com>
+In-Reply-To: <20240815071651.3645949-3-ye.zhang@rock-chips.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 16 Aug 2024 11:49:21 +0200
-Message-ID: <CAMRc=Me6XHGsmoRLBK3rb90=v7j9ChABMZjkVn4j5WQdzVv96A@mail.gmail.com>
-Subject: Re: [PATCH v1 3/5] gpio: rockchip: Set input direction in irq_request_resources
+Date: Fri, 16 Aug 2024 11:49:57 +0200
+Message-ID: <CAMRc=Me8OB6auZa0xrs3gBmGQb=UAeCDgczz_t2GLECW7xGQAQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/5] gpio: rockchip: support GPIO_TYPE_V2_2
 To: Ye Zhang <ye.zhang@rock-chips.com>
 Cc: linus.walleij@linaro.org, heiko@sntech.de, linux-gpio@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
@@ -89,33 +89,11 @@ Content-Transfer-Encoding: quoted-printable
 On Thu, Aug 15, 2024 at 9:17=E2=80=AFAM Ye Zhang <ye.zhang@rock-chips.com> =
 wrote:
 >
-> Set input direction to avoid FLAG_IS_OUT in gpiochip_lock_as_irq
+> Support GPIO_TYPE_V2_2
 >
 
-That I can tell from the code. The commit message should say *why*
-you're doing something.
+I don't know what GPIO_TYPE_V2_2 is. Please explain in detail what
+you're doing here.
 
 Bart
-
-> Signed-off-by: Ye Zhang <ye.zhang@rock-chips.com>
-> ---
->  drivers/gpio/gpio-rockchip.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> index b2f26a16b1f6..8949324ed816 100644
-> --- a/drivers/gpio/gpio-rockchip.c
-> +++ b/drivers/gpio/gpio-rockchip.c
-> @@ -475,6 +475,8 @@ static int rockchip_irq_reqres(struct irq_data *d)
->         struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(d);
->         struct rockchip_pin_bank *bank =3D gc->private;
->
-> +       rockchip_gpio_direction_input(&bank->gpio_chip, d->hwirq);
-> +
->         return gpiochip_reqres_irq(&bank->gpio_chip, d->hwirq);
->  }
->
-> --
-> 2.34.1
->
 
