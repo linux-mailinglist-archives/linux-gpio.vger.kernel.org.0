@@ -1,122 +1,79 @@
-Return-Path: <linux-gpio+bounces-8774-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8775-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68B0E954DA0
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 17:27:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFDA8954EE0
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 18:32:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AEDE1C2123F
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 15:27:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D64BB23167
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 16:32:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A14601BD51E;
-	Fri, 16 Aug 2024 15:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88D851BF320;
+	Fri, 16 Aug 2024 16:32:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X5GbSN+q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRlrx3d9"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5163A127E3A;
-	Fri, 16 Aug 2024 15:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463181B3F0F;
+	Fri, 16 Aug 2024 16:32:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723822064; cv=none; b=VOPRPJx4lCxLYBUlZ6xe94/VB6R9oQMe4orNg0GSOAEhXCWX01UhyKemWi6+JNO6iNmYSCDg0fPg8jIXwovMtctxBGdpQlq9Xgs2yrCbhwO7Y541kOPWrONHK9QXueXsluqUalAm2grgk79lzAyAItR+E2oUKVhTFxSPLVy3MYU=
+	t=1723825952; cv=none; b=gHnS0JDIRS8MRIAUvbqVqYT4UbgsH1cn5rFHMMIkNBbRxpM5fIJ1URdL7bDvderq074Xzo3Nkwa24egPbsjeufvCAu4yJxcLHTpsyw0ZlDbPcDjYUj/Lx7RrVGkSlmxIvcXR8NAn7bmBGvZN80A0NPPTR9QkqgUFdUq0J2ic4VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723822064; c=relaxed/simple;
-	bh=bHbg28x9ZF+oj+ApGQowOZXBQpdCPk7yj6dFt1qAqA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AskTsQA5Ws+PzYwjOohofllFdcGGNt8877rN5O5yfNW9EraMj+ZTEFXO8Noq8kQIXix/hHJMR0vZJIJKZnADqt2aSMqYYHeySZ9//ja7bEIYzLUiLAraXDpC4hqF+AwRLNbTJKO1ErU4kbzVKwF4InHo/bvwXPi3hKcmJf0FZDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X5GbSN+q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D31E5C32782;
-	Fri, 16 Aug 2024 15:27:40 +0000 (UTC)
+	s=arc-20240116; t=1723825952; c=relaxed/simple;
+	bh=/0oLy9WTpKH0+iIQX95+M0FoMi4VDRPWvWRwb2K2u/U=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=dB4QmalUbTe1xg4SC7uhGQTthgqp+XsxNUBO6xGY3VgnUbGoXOuRKv5rXJpUsf8z3FY4Hgg6hrWWNn4zO/wcO/ZchOE7Duw0u9ww/oBwT6bQCp4S1HIcvsWz17GApPNAhKZa5cVJdo2MH+0zDESg+vkC2GqN9Eqt1Yo1CgpRHoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRlrx3d9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D69C4AF0B;
+	Fri, 16 Aug 2024 16:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723822063;
-	bh=bHbg28x9ZF+oj+ApGQowOZXBQpdCPk7yj6dFt1qAqA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X5GbSN+qy510lSQK1FxZQnUty4+MnPqHsbFFaZT7+swchpDR+oOVEIvxsi28VMKuk
-	 Yotd23wKg3KdLPxx8eo92jtDLS8asHG4JTNeFZ7dPtDDvuTGZHUVkKpYu6aqMu38zd
-	 iOwmMBR+H0gLWJq2/IBP/lnjid8+tAIrCeKwgyxZA6bvPFYneut7+jj0YPt4xXRvO+
-	 fcMhx0gIL5ah8TmS71IcLCxgbwedSNMnCybrc2gRqLUcO7KNOKi8GPSrAAA1SXdKTI
-	 7Tw+58+jTwUsqxj/3Jwlruuh1lRc//GcO5Q3uq7Lr1Z3C05CFO9C+CC9xAzxo0M0Ty
-	 5+mSo4kXQni1Q==
-Date: Fri, 16 Aug 2024 16:27:38 +0100
-From: Lee Jones <lee@kernel.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Haibo Chen <haibo.chen@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
-	Frank Li <Frank.li@nxp.com>
-Subject: Immutable branch between MFD, GPIO and PWM due for the v6.12 merge
- window
-Message-ID: <20240816152738.GB5853@google.com>
-References: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
+	s=k20201202; t=1723825952;
+	bh=/0oLy9WTpKH0+iIQX95+M0FoMi4VDRPWvWRwb2K2u/U=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=oRlrx3d9do1mj29brlpZ42Kw5C/oP6qVwAvnLI+YgqXItrYyM441VxcSfZDgZ10wV
+	 DnXLjSRlrx8d62ZtxkW8AXqhfYm/tVHxxlkBPPKbFTp9ajTfb5ofTMbcgOp0kNiq1k
+	 uW4c8b77d+vYRI1o6YspnkcKchFgXDzU27h7CZDxN0dgB1iLd9X3e5cP2MFMgG1m/b
+	 XQ30dWS4+5ut9bz/YbhYQ5Ul0L6EnVkekVU6YcGvhTiMHL597BwNEPP56/AcciRsEu
+	 2oydxqYcKVxZtUSejWAdF1209pxVmNqtBndo6wK6mcIrKCVgWSF6T2SMEmzO2U1Rew
+	 Etu7E8blviBLw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE0FC38231F8;
+	Fri, 16 Aug 2024 16:32:32 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio fixes for v6.11-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240816093423.12622-1-brgl@bgdev.pl>
+References: <20240816093423.12622-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240816093423.12622-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.11-rc4
+X-PR-Tracked-Commit-Id: aad41832326723627ad8ac9ee8a543b6dca4454d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9bd40f824a7fed9ffdd1660ea7567f4133f8b672
+Message-Id: <172382595115.3569819.11391310376347718895.pr-tracker-bot@kernel.org>
+Date: Fri, 16 Aug 2024 16:32:31 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
 
-Sorry for the tardy PR - enjoy!
+The pull request you sent on Fri, 16 Aug 2024 11:34:23 +0200:
 
-The following changes since commit 8400291e289ee6b2bf9779ff1c83a291501f017b:
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.11-rc4
 
-  Linux 6.11-rc1 (2024-07-28 14:19:55 -0700)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9bd40f824a7fed9ffdd1660ea7567f4133f8b672
 
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-gpio-pwm-v6.12
-
-for you to fetch changes up to e9b503879fd2b6332eaf8b719d1e07199fc70c6b:
-
-  pwm: adp5585: Add Analog Devices ADP5585 support (2024-08-01 14:09:28 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD, GPIO and PWM due for the v6.12 merge window
-
-----------------------------------------------------------------
-Clark Wang (1):
-      pwm: adp5585: Add Analog Devices ADP5585 support
-
-Haibo Chen (2):
-      mfd: adp5585: Add Analog Devices ADP5585 core support
-      gpio: adp5585: Add Analog Devices ADP5585 support
-
-Laurent Pinchart (1):
-      dt-bindings: mfd: Add Analog Devices ADP5585
-
- .../devicetree/bindings/mfd/adi,adp5585.yaml       |  92 +++++++++
- .../devicetree/bindings/trivial-devices.yaml       |   4 -
- MAINTAINERS                                        |  11 +
- drivers/gpio/Kconfig                               |   7 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-adp5585.c                        | 229 +++++++++++++++++++++
- drivers/mfd/Kconfig                                |  12 ++
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/adp5585.c                              | 205 ++++++++++++++++++
- drivers/pwm/Kconfig                                |   7 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-adp5585.c                          | 184 +++++++++++++++++
- include/linux/mfd/adp5585.h                        | 126 ++++++++++++
- 13 files changed, 876 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
- create mode 100644 drivers/gpio/gpio-adp5585.c
- create mode 100644 drivers/mfd/adp5585.c
- create mode 100644 drivers/pwm/pwm-adp5585.c
- create mode 100644 include/linux/mfd/adp5585.h
+Thank you!
 
 -- 
-Lee Jones [李琼斯]
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
