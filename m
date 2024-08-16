@@ -1,84 +1,152 @@
-Return-Path: <linux-gpio+bounces-8771-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8772-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85B879548AB
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 14:23:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C45DD954D3F
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 16:57:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42F25284E81
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 12:23:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8019F2827BF
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Aug 2024 14:57:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C89711A01CF;
-	Fri, 16 Aug 2024 12:23:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82DB81BE85F;
+	Fri, 16 Aug 2024 14:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oklD/Sg+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from greygoose-centos7.csh.rit.edu (greygoose-centos7.csh.rit.edu [129.21.49.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA74612AAC6;
-	Fri, 16 Aug 2024 12:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.21.49.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B9F1BD01F;
+	Fri, 16 Aug 2024 14:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723811007; cv=none; b=bZ5Bx78rqZoRGtJ0i8cW2grRMGafCtP1zQSHCdPOVazOonNaxsOEKWkGx5Hmr6taiWqNCkdxi8u+LNDy4LNzgEskAzO8/v/I2Gv+M1PFEPZNaHQX23/OcXxdqaKmBm+LAovQjQKgJGm5jpe+x7gpwWvQq6DBQwpl3xx99MUUad8=
+	t=1723820061; cv=none; b=W3uYabY0VaMFlOEPml+l+mxyomTWcTNDqVLVdTgn2rJZxgmFN+vTE88SoHqB6GqY1wrRoFrnC8OIVUnlyihSjHoodE7Ai95IFkgAhEMrCIZbdTXkMrDPdCkfwF+AHZipAVaxOUvqOLpVTB9IkHGUoLM3nI2h+4GLuuLfh9hIncQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723811007; c=relaxed/simple;
-	bh=UfPDRFd0sZcw8VTEACv6koAZLJVRdOyVFvePyMLlt3I=;
+	s=arc-20240116; t=1723820061; c=relaxed/simple;
+	bh=78otssZMSXfx1mx9AaYXC8oqCx4zvXSJqowAtShFVRw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oB66i0NtlEo4q3yebJSDpSKhzMBQwZKDkHm1zD1/vwJCwcM5Ov7ZN5q9v/o67X7K2zSZhRIxBHbS/qKMRBH67Uc+Kk+qvhclSMx23EWjaS4j5xKiXeNVmMQcjxb65oBxOlipwO56TFB4UHKYdD1z18DGf2h72ACv2aZOK8Dq21Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=freedom.csh.rit.edu; spf=none smtp.mailfrom=freedom.csh.rit.edu; arc=none smtp.client-ip=129.21.49.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=freedom.csh.rit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=freedom.csh.rit.edu
-Received: from localhost (localhost [127.0.0.1])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 16585414DD61;
-	Fri, 16 Aug 2024 08:23:18 -0400 (EDT)
-X-Virus-Scanned: amavisd-new at csh.rit.edu
-Received: from greygoose-centos7.csh.rit.edu ([127.0.0.1])
- by localhost (mail.csh.rit.edu [127.0.0.1]) (amavisd-new, port 10026)
- with ESMTP id Q4MOhtoyrouT; Fri, 16 Aug 2024 08:23:17 -0400 (EDT)
-Received: from freedom.csh.rit.edu (freedom.csh.rit.edu [129.21.49.182])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTPS id 34DF745735E9;
-	Fri, 16 Aug 2024 08:23:17 -0400 (EDT)
-Date: Fri, 16 Aug 2024 08:23:16 -0400
-From: Mary Strodl <mstrodl@freedom.csh.rit.edu>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mary Strodl <mstrodl@csh.rit.edu>, linux-kernel@vger.kernel.org,
-	linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpio: add support for FTDI's MPSSE as GPIO
-Message-ID: <Zr9EtK6qnj5apiie@freedom.csh.rit.edu>
-References: <20240814191509.1577661-1-mstrodl@csh.rit.edu>
- <5d26a74d-af5c-490a-8a00-ca0791bb23f6@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pdE5mygnhmOmtzf95b5ADItaeYREy5wn15lWZ9vHxvfGZFD8vpSq2WTpVMTpp2AmBh+DtWUmoPoLmPDgkG9BhhZhRaxCCsAp3we6vUm0ITZS38lrqHEc6qXBXwLR0DUT29rwqnqjKmus0zPRe0zBY/wCcBA9PbBeUGQEgXMjgtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oklD/Sg+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B18F9C32782;
+	Fri, 16 Aug 2024 14:54:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723820060;
+	bh=78otssZMSXfx1mx9AaYXC8oqCx4zvXSJqowAtShFVRw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oklD/Sg+QQth2aZWuDJhvPlnx9zq+cenScXXGlKdQe25lUnoPUp9xpTQnkcf9LTOG
+	 hrojpvRi5rhro7xjvXb4TXfPF68qBJoJwOSFMZ4LPNhqf/i47B/jfa2CY2O814syVm
+	 tVa7BdBW86tsnbriMcDmMNWVR36bTan9GbOgQfbSw8rvpioT2pZTU7qh9eEnQ7mSAp
+	 x2TtstSgqw7O7obKtigVMS2IRrec5gHUgs8F1ct93D3KmfHyj/q67xxq8HN3PtTO/R
+	 U/ReIucT4pBfiyTkQkmbvXeh4PQ11mC6PHY2od5eij7uXq6b4VwQTCjN3cwGSTBBYT
+	 s+vhCyK7tf1Uw==
+Date: Fri, 16 Aug 2024 15:54:05 +0100
+From: Lee Jones <lee@kernel.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Haibo Chen <haibo.chen@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	Frank Li <Frank.li@nxp.com>
+Subject: Re: [PATCH v7 0/4] ADP5585 GPIO expander, PWM and keypad controller
+ support
+Message-ID: <20240816145405.GA5853@google.com>
+References: <20240722121100.2855-1-laurent.pinchart@ideasonboard.com>
+ <20240725161616.GJ501857@google.com>
+ <20240801131044.GF6756@google.com>
+ <20240807105418.GA8562@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5d26a74d-af5c-490a-8a00-ca0791bb23f6@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240807105418.GA8562@pendragon.ideasonboard.com>
 
-Hello!
+On Wed, 07 Aug 2024, Laurent Pinchart wrote:
 
-On Fri, Aug 16, 2024 at 07:52:43AM +0200, Krzysztof Kozlowski wrote:
-> You should not need MODULE_ALIAS() in normal cases. If you need it,
-> usually it means your device ID table is wrong (e.g. misses either
-> entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
-> for incomplete ID table.
+> Hi Lee,
+> 
+> On Thu, Aug 01, 2024 at 02:10:44PM +0100, Lee Jones wrote:
+> > On Thu, 25 Jul 2024, Lee Jones wrote:
+> > > On Mon, 22 Jul 2024, Laurent Pinchart wrote:
+> > > 
+> > > > Hello,
+> > > > 
+> > > > This patch series introduces support for the Analog Devices ADP5585, a
+> > > > GPIO expander, PWM and keyboard controller. It models the chip as an MFD
+> > > > device, and includes DT bindings (1/4), an MFD driver (2/4) and drivers
+> > > > for the GPIO (3/4) and PWM (4/4) functions.
+> > > > 
+> > > > Support for the keypad controller is left out, as I have no means to
+> > > > test it at the moment. The chip also includes a tiny reset controller,
+> > > > as well as a 3-bit input programmable logic block, which I haven't tried
+> > > > to support (and also have no means to test).
+> > > > 
+> > > > The driver is based on an initial version from the NXP BSP kernel, then
+> > > > extensively and nearly completely rewritten, with added DT bindings. I
+> > > > have nonetheless retained original authorship. Clark, Haibo, if you
+> > > > would prefer not being credited and/or listed as authors, please let me
+> > > > know.
+> > > > 
+> > > > Compared to v6, this version addresses small review comments. I believe
+> > > > it is ready to go, as the PWM and GPIO drivers have been acked by the
+> > > > respective subsystem maintainers, and I have addressed Lee's comments on
+> > > > the MFD side. Lee, if there's no more issue, could you apply this to
+> > > > your tree for v6.12 ?
+> > > > 
+> > > > Clark Wang (1):
+> > > >   pwm: adp5585: Add Analog Devices ADP5585 support
+> > > > 
+> > > > Haibo Chen (2):
+> > > >   mfd: adp5585: Add Analog Devices ADP5585 core support
+> > > >   gpio: adp5585: Add Analog Devices ADP5585 support
+> > > > 
+> > > > Laurent Pinchart (1):
+> > > >   dt-bindings: mfd: Add Analog Devices ADP5585
+> > > > 
+> > > >  .../devicetree/bindings/mfd/adi,adp5585.yaml  |  92 +++++++
+> > > >  .../devicetree/bindings/trivial-devices.yaml  |   4 -
+> > > >  MAINTAINERS                                   |  11 +
+> > > >  drivers/gpio/Kconfig                          |   7 +
+> > > >  drivers/gpio/Makefile                         |   1 +
+> > > >  drivers/gpio/gpio-adp5585.c                   | 229 ++++++++++++++++++
+> > > >  drivers/mfd/Kconfig                           |  12 +
+> > > >  drivers/mfd/Makefile                          |   1 +
+> > > >  drivers/mfd/adp5585.c                         | 205 ++++++++++++++++
+> > > >  drivers/pwm/Kconfig                           |   7 +
+> > > >  drivers/pwm/Makefile                          |   1 +
+> > > >  drivers/pwm/pwm-adp5585.c                     | 184 ++++++++++++++
+> > > >  include/linux/mfd/adp5585.h                   | 126 ++++++++++
+> > > >  13 files changed, 876 insertions(+), 4 deletions(-)
+> > > >  create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+> > > >  create mode 100644 drivers/gpio/gpio-adp5585.c
+> > > >  create mode 100644 drivers/mfd/adp5585.c
+> > > >  create mode 100644 drivers/pwm/pwm-adp5585.c
+> > > >  create mode 100644 include/linux/mfd/adp5585.h
+> > > 
+> > > Note to self: This looks good to go.  Merge after -rc1 is released.
+> > 
+> > Submitted for build testing.
+> 
+> Are those tests public ? Will the series eventually be merged in
+> https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/ ?
 
-Gotcha. I will remove that next time this gets sent out. I'll probably
-give it a few days so other folks can chime in, unless you'd like to
-see this changed before reviewing in more depth?
+Sorry for the delay - vacation.
 
-I assumed it was there to make `gpio-mpsse` work in addition to
-`gpio_mpsse`.
+No, the tests/branches are not public.
 
-> The module with autoload based on USB ids, right?
-Yep.
+> > Note to self: ib-mfd-gpio-pwm-6.12
 
-> Best regards,
-> Krzysztof
-
-Thanks for taking the time to review my patch!
-Mary
+-- 
+Lee Jones [李琼斯]
 
