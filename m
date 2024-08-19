@@ -1,53 +1,70 @@
-Return-Path: <linux-gpio+bounces-8788-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8789-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E65CE95615F
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2024 05:09:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBCF49563F5
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2024 08:50:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7C9EFB21779
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2024 03:09:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 581C0B217E2
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2024 06:50:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B619813B592;
-	Mon, 19 Aug 2024 03:09:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E619D155C98;
+	Mon, 19 Aug 2024 06:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VdPERHyX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F73634
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Aug 2024 03:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A3917C77;
+	Mon, 19 Aug 2024 06:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724036987; cv=none; b=CIGfm6Ru4/P0xdjcfE+QwLsZWDv/F5Ah4VUbuSYycFKsGQcqjjPeu+WDV6XGdVXKuY24a3wBm0ZRglxPHcQZJXT4Eyv+RgSxi5g2mNvB7JmuXpGAgT8p48SXPwBJTqWPz6vreqsOVXJYQEvK8eqFxZNQd/BkiuIc7vJLZz+3N60=
+	t=1724050228; cv=none; b=nucsdRjgSm9ydKloD4qpEJ4nCsdpvBy2tXsYybnQEUD85fLNxZLNhb96yRfLAQ2Icv9/Ao821+b5GzUipY1nu0pd280IN+aJExM+DheEWNvsThGGeO8NCfjimGs00gTLAqaJzdCPaQuq1bDa7T7TbI8jz/s54s37saxMCiNuCDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724036987; c=relaxed/simple;
-	bh=CmsQPEpoeXB/ChZeq1efgsVDXesSsP8qS/CkLt11opM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tX9RNwM7YjyvvOFF9Mn79WhEbvD71DyzxA0cj5PRPupLjefTI5Lp6GqSgodkpak4acvyzae16g8qtTQVTWwIac5b8ZNTrCowhXI+1AIcpMtwVUyYd91g/kJzH7Rrgli2GahCGaU5M6K7Et2DRA2VI7+p9TAj/Izog7HvpqrFlpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WnHD91QnHz4f3jHk
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Aug 2024 10:51:21 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2C3D91A07B6
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Aug 2024 10:51:36 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.103.91])
-	by APP4 (Coremail) with SMTP id gCh0CgAXPoQys8JmCk1eCA--.51495S4;
-	Mon, 19 Aug 2024 10:51:36 +0800 (CST)
-From: Yang Yingliang <yangyingliang@huaweicloud.com>
-To: linux-gpio@vger.kernel.org
-Cc: linus.walleij@linaro.org,
-	dan.carpenter@linaro.org,
-	tony@atomide.com,
-	haojian.zhuang@linaro.org,
-	liwei391@huawei.com,
-	yangyingliang@huawei.com
-Subject: [PATCH] pinctrl: single: fix missing error code in pcs_probe()
-Date: Mon, 19 Aug 2024 10:46:25 +0800
-Message-Id: <20240819024625.154441-1-yangyingliang@huaweicloud.com>
+	s=arc-20240116; t=1724050228; c=relaxed/simple;
+	bh=vB6iA25ZkUrZfSpLhyAAcSbfWJ0e8+V/hzCHlgVzVrA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jlZvtAVMCdM2+b7sBOnwG0tKS/EYydMSqnptbAwVUIk79cqh6GF+/IZoTyrM7xVgZ3GbvTrJ5XpUh36u2hm8Fan4rfrGIkgUueWDb9FOTwMGWHjO+S0zqnRqdQJ5Wqm5YoMBq3j9ReHWmhwhfcG21bdLSjTxKwUSL6N9dgwaEmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VdPERHyX; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47J0Oa61002183;
+	Mon, 19 Aug 2024 06:50:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=foAA78XAhbb5WvEu158KFx
+	xJEnkhvquU0iRRmNiChJA=; b=VdPERHyXTN+wvv8AK3nMk32Dxf/sNLIMobXUTQ
+	nozE4yfHzbg08GvMbJKMHLb/W6g+WMI3vtpZGIGopJgCfj/vOD6xLtFT4bpe55sO
+	/RFB/vK6Q9SJBRj3bLUM/Fm8cnm8BPlUJ3edSsy2jXV5IatfQs2CKRHZ21D9/Lp4
+	M3Y2eyjDES22JjNYsFEsSopDOOzwWu2+ojUyrdfpjjXNxSuTkp5u3WyZk+Kxzg7W
+	PCrshKelLeU1ZNaLw8VsZEZCIz6MWwenT+WTTGGnWl/uXakii/HObuDyc+H/mRud
+	dyHa1U2F1oB3krDmlM5i597xAxouM+MO0GYig9MTNVQ+JAiQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 412key38x3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Aug 2024 06:50:20 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 47J6oJjU007131
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Aug 2024 06:50:19 GMT
+Received: from jingyw-gv.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Sun, 18 Aug 2024 23:50:15 -0700
+From: Jingyi Wang <quic_jingyw@quicinc.com>
+To: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <andersson@kernel.org>, <robh@kernel.org>, <konradybcio@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linus.walleij@linaro.org>, <quic_tingweiz@quicinc.com>,
+        <quic_aiquny@quicinc.com>, <quic_tengfan@quicinc.com>
+CC: <quic_jingyw@quicinc.com>
+Subject: [PATCH 0/2] pinctrl: qcom: Introduce Pinctrl for QCS8300
+Date: Mon, 19 Aug 2024 14:49:31 +0800
+Message-ID: <20240819064933.1778204-1-quic_jingyw@quicinc.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -56,49 +73,41 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXPoQys8JmCk1eCA--.51495S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7GF15GFy3tw17WF43Cr1UAwb_yoWfWrXEka
-	y8WrW7XrWjgFs2g34jy345ZFy0kF4UXr4vyFnava4a9Fy7Zw1UJrWv9rnxC34fGr4Ygr97
-	tr4kZw4SyF17AjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbzkYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
-	7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UZSdgUUUUU=
-X-CM-SenderInfo: 51dqw5xlqjzxhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: JbZhcyNank-Go8mNqbGbCmbWuvu1yBdI
+X-Proofpoint-GUID: JbZhcyNank-Go8mNqbGbCmbWuvu1yBdI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-19_04,2024-08-19_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 mlxscore=0 adultscore=0 clxscore=1011 impostorscore=0
+ suspectscore=0 malwarescore=0 priorityscore=1501 spamscore=0
+ mlxlogscore=665 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2408190049
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+Introduce Top Level Mode Multiplexer dt-binding and driver for Qualcomm
+QCS8300 SoC.
 
-If pinctrl_enable() fails in pcs_probe(), it should return the error code.
-
-Fixes: 8f773bfbdd42 ("pinctrl: single: fix possible memory leak when pinctrl_enable() fails")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Jingyi Wang <quic_jingyw@quicinc.com>
 ---
- drivers/pinctrl/pinctrl-single.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Jingyi Wang (2):
+  dt-bindings: pinctrl: describe qcs8300-tlmm
+  pinctrl: qcom: add the tlmm driver for QCS8300 platforms
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index 4c6bfabb6bd7..fcac0c03905c 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -1911,7 +1911,8 @@ static int pcs_probe(struct platform_device *pdev)
- 
- 	dev_info(pcs->dev, "%i pins, size %u\n", pcs->desc.npins, pcs->size);
- 
--	if (pinctrl_enable(pcs->pctl))
-+	ret = pinctrl_enable(pcs->pctl);
-+	if (ret)
- 		goto free;
- 
- 	return 0;
+ .../bindings/pinctrl/qcom,qcs8300-tlmm.yaml   |  118 ++
+ drivers/pinctrl/qcom/Kconfig.msm              |    7 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-qcs8300.c        | 1226 +++++++++++++++++
+ 4 files changed, 1352 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qcs8300-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-qcs8300.c
+
 -- 
+base-commit: 469f1bad3c1c6e268059f78c0eec7e9552b3894c
 2.25.1
 
 
