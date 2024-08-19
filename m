@@ -1,89 +1,105 @@
-Return-Path: <linux-gpio+bounces-8794-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8797-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2090956AA7
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2024 14:22:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 239EF956C02
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2024 15:30:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FA72282CFA
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2024 12:22:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD0C71F23294
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Aug 2024 13:30:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDC4616A949;
-	Mon, 19 Aug 2024 12:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D47BE1741E7;
+	Mon, 19 Aug 2024 13:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EqHTC0gI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A95916A940;
-	Mon, 19 Aug 2024 12:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1638216CD13;
+	Mon, 19 Aug 2024 13:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724070135; cv=none; b=gbcnhLLquRfaTZn8cGDL8xC8nesIqnR+QzXtauIZcYQt40vdWnKU1nyfrH8Kayb6Drm9bYuglobXu/XSh0QCOQB1Y62CfWQ8c/OERFBnisHdE82hCk/SH+VhRwjiZFisvL1ZFvvpICcxx8b7zj9log49ZrgYDSM1Pk+2VPiTCmE=
+	t=1724073926; cv=none; b=ciyZAN2pJ/9gDk/LYJZhGoC7kdBl65WqK1Wqw6TK9XoLGKVD5JvACf4/viPG1WVshlp7Cml0i4PU+4Rj9YmgtWfo+v1mi12ZsVoytRgXlROwSqKgJP3TS5LJGQErw2W0MirV8mRe7JPYNVz1XHss0ba41pz/byTKeppbw3ncKCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724070135; c=relaxed/simple;
-	bh=VnW/V/OWDr1zAW3V3CmmoDVOIxg6G1ZmT3OYyJCke5E=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=uwd8x2wF9dIAuLwGJSwVWUXyMCvtuPEp2ibpG4xYuosv2uIvCCAdMcvH7iBYairjCXPI0YZ1IoAU2SntNR310Cak52J3M709wfTSYuOn9EOxqDV4sMdHvm74GLF0irzGie3hu83rakaCXnakIpinFfHit2kNuY1uvgdE5cTKkGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WnWn31CJyz1j6gn;
-	Mon, 19 Aug 2024 20:17:11 +0800 (CST)
-Received: from dggpemm500020.china.huawei.com (unknown [7.185.36.49])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7FF7614022E;
-	Mon, 19 Aug 2024 20:22:09 +0800 (CST)
-Received: from [10.67.108.52] (10.67.108.52) by dggpemm500020.china.huawei.com
- (7.185.36.49) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 19 Aug
- 2024 20:22:09 +0800
-Message-ID: <4ffc2b2c-7d68-4a53-945f-e77c207445c9@huawei.com>
-Date: Mon, 19 Aug 2024 20:22:09 +0800
+	s=arc-20240116; t=1724073926; c=relaxed/simple;
+	bh=Opo/TKxoGD6nvQw3E8EezstpfD5n92ncSnypBJ/zreE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WWRup4LgCKRNsJt3D2xySo6CpaFyVq8cVSSdiq3hfXWAHd5fQm4KjWl/2WjOfFBkvzKgg1r6ku66EZBZrNRbEO6ofvJcBusdu9USmvaf3OfUz55+hMvdNDXksmcxvArfFFN9SdHWQLTDsFHlqCivezD5IdYATXiEEnh7cYQd7Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EqHTC0gI; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724073925; x=1755609925;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Opo/TKxoGD6nvQw3E8EezstpfD5n92ncSnypBJ/zreE=;
+  b=EqHTC0gIUm3pukU4W7Jnsds3lVQqK9V0BPCgyEs4IU5JyfMdHWbkUrLV
+   TOmODLvQgAD7e6osepYRomx79Z2MeIIUk4+JLzuTOnZnkcS0N+U/McUq/
+   E88URUiqkuJckW4bwYm2qIXSjSscJ9mUOWRC2rv1Ug0f5/rdzZ58fueEU
+   yWWUtUq7wt6r1l/STtf+AqwA/hdItw4Vgm9vYiuPbgIs/2CNbfDIzbDUL
+   pFaIOCpTdODJevRxZcp51cagpA/S6qdtkcebuNUsZIlRo1Kl0vN6hbqiE
+   p1zhNp6LSlMh6Hqy799pRFkAEVu4v49pb8ycmdFK8HiDiyerJbqIQ2o1C
+   A==;
+X-CSE-ConnectionGUID: pOFPAnAjRUKEKuHUNI2mGQ==
+X-CSE-MsgGUID: Ne8shGjXQMyHmU64SC238A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11169"; a="22462697"
+X-IronPort-AV: E=Sophos;i="6.10,159,1719903600"; 
+   d="scan'208";a="22462697"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2024 06:25:05 -0700
+X-CSE-ConnectionGUID: XPRKBWGURIO6Tny1a7IiIA==
+X-CSE-MsgGUID: dwpzRfANRAaUyU9qsVTwQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,159,1719903600"; 
+   d="scan'208";a="64531824"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP; 19 Aug 2024 06:25:02 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id C01132D8; Mon, 19 Aug 2024 16:25:01 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 0/5] gpiolib: Add and utilise for_each_gpio_property_name()
+Date: Mon, 19 Aug 2024 16:22:42 +0300
+Message-ID: <20240819132458.208677-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next] pinctrl: pinctrl-zynq: fix module autoloading
-Content-Language: en-US
-From: "liaochen (A)" <liaochen4@huawei.com>
-To: <linux-arm-kernel@lists.infradead.org>, <linux-gpio@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linus.walleij@linaro.org>,
-	<michal.simek@amd.com>
-References: <20240814030155.3876069-1-liaochen4@huawei.com>
-In-Reply-To: <20240814030155.3876069-1-liaochen4@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500020.china.huawei.com (7.185.36.49)
+Content-Transfer-Encoding: 8bit
 
-On 2024/8/14 11:01, Liao Chen wrote:
-> Add MODULE_DEVICE_TABLE(), so modules could be properly autoloaded
-> based on the alias from of_device_id table.
-> 
-> Signed-off-by: Liao Chen <liaochen4@huawei.com>
-> ---
->   drivers/pinctrl/pinctrl-zynq.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-zynq.c b/drivers/pinctrl/pinctrl-zynq.c
-> index 0e8de27d0de8..caa8a2ca3e68 100644
-> --- a/drivers/pinctrl/pinctrl-zynq.c
-> +++ b/drivers/pinctrl/pinctrl-zynq.c
-> @@ -1202,6 +1202,7 @@ static const struct of_device_id zynq_pinctrl_of_match[] = {
->   	{ .compatible = "xlnx,pinctrl-zynq" },
->   	{ }
->   };
-> +MODULE_DEVICE_TABLE(of, zynq_pinctrl_of_match);
->   
->   static struct platform_driver zynq_pinctrl_driver = {
->   	.driver = {
-Gentle ping
+There are a few of duplication of the same for-loop against GPIO
+suffixes. This series addresses that along with proposal to eliminate
+the exported gpio_suffix_count by converting the array to be
+NULL-terminated.
 
-Thanks,
-Chen
+Andy Shevchenko (5):
+  gpiolib: Introduce for_each_gpio_property_name() helper
+  gpiolib: swnode: Unify return code variable name
+  gpiolib: swnode: Introduce swnode_gpio_get_reference() helper
+  gpiolib: swnode: Make use of for_each_gpio_property_name()
+  gpiolib: Replace gpio_suffix_count with NULL-terminated array
+
+ drivers/gpio/gpiolib-acpi.c   | 21 ++----------
+ drivers/gpio/gpiolib-of.c     | 25 +++------------
+ drivers/gpio/gpiolib-swnode.c | 60 ++++++++++++++++-------------------
+ drivers/gpio/gpiolib.c        |  3 +-
+ drivers/gpio/gpiolib.h        | 16 ++++++++--
+ 5 files changed, 49 insertions(+), 76 deletions(-)
+
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
+
 
