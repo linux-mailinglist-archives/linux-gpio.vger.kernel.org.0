@@ -1,144 +1,297 @@
-Return-Path: <linux-gpio+bounces-8846-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8847-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 667B39580FF
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 10:30:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E121495810F
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 10:33:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 981C11C24468
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 08:30:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95CB8281B88
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 08:33:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C046D18A6D3;
-	Tue, 20 Aug 2024 08:30:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6E5118A6CA;
+	Tue, 20 Aug 2024 08:33:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="NNje7Jmi"
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="igo8G/7k"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2056.outbound.protection.outlook.com [40.107.255.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26292D627
-	for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2024 08:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724142618; cv=none; b=PguP0se/HFyzT83q8Sii1gtvZ6+JqwSv/5+Tg/T8ZsdHv/Mueb1lKvog3CPRDRGcfq7PvA/9XofjdxKJWEP1jjyttNJHM5PMPqWsFaEsyD+jHN1whawELZMvxg8JaxbtPTRSGsYUxbQIJQErMT/jn3Aj0tpDc+0z3wTbbuSbfKE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724142618; c=relaxed/simple;
-	bh=TRU83+gdLy9W4YUZl8iWPzvI2LOP1Kh2BEShyjf0IqY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H0NI5aeiqf4nV02Wta4HeRggHeeYP/We4sAX8093PElXThJbImvjuyxri9pF3supgY2deNuziYdRDmnKz1cQt1TxTbynNHx5LTUXnXw/NDwkCfem+/fPsSLJHZrEkCpAwKr2+NLfhVtJmAz2O4AtFeEzvceqKlC+YyPWrJbxnRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=NNje7Jmi; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e13d5cbc067so2789993276.2
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2024 01:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1724142616; x=1724747416; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AZqeWsMIa4G+/Jffk4q0DpUs0TIfN5gPXqtsEPQIEU4=;
-        b=NNje7JmioAy08T7lf7tHdSLPMj0Pr3Hamzj2j7aQ4dezc4+MmxFKuUvhqrc3imEhpt
-         VzNhPkrTMqWrYWfS4/lf9CJwvQamwhFYel9pBcGsmxvmN4JgP7iQUA4fNKw3+u5HFkHV
-         72DzSd/KJn4nCw4hmT4siwUHsYUS2G/sbPAPDhrqoOlRfLtt35DyZLyhTQtSc3TRitUJ
-         cc68cYkV3ylzda87ECfsX3FubqYCj3UPOSHy3Sw9ExpIS15mXKdForlGkpN+UFHrzY/j
-         J2U10opIApOfrS1oKVxAvYhyEt44+U9E2oWiA/EsxL2QW25H6h1s5F+0Tv3CE+J2+amf
-         t0Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724142616; x=1724747416;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AZqeWsMIa4G+/Jffk4q0DpUs0TIfN5gPXqtsEPQIEU4=;
-        b=lmdyWlyBn/6yWAhCmDKe5y0mp+zy4fN8DpzsR/Yl+LkTZ0NiT+ibS6/EsHD4DU9DVq
-         vtis71m4I1t/WEwZkQhhKm8Z4sgFKz5nQKuPMEbHAcavQ6woUuEvCe5RzVbAwkK1Jfd4
-         Q+pyzOnuimHcHzPk241wgOtPn8wU1TZsSs5Pn6uaaTSBG+yxH7AT8kYYSlwJguPxwwXZ
-         vdiRinu5XhtzPT+1sRm82zWC1Bfpc7fyMGsAHZpQBV8bXAGT3Lza+Bb7OxX+FgGPR57I
-         m4jpFCoznSeB7OVkdD74VPZy8S2PnnLiV62f8PsfAsKXQIJzVmjOj8wUZ9NqPew64YY3
-         bSGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWlsbI8tecJAofgwVVkGQar8PD7F+D0PjzEJVlxuwfi5GF+8jc6QWDPL6V3xg+Nr0gBNCXIQzMa/oJH@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFqvBsocjI0TC3ZaPz7pL+Nl8IesXMgOyDp0Wu3hMnNrvo1OIM
-	AoxjbEgM0u/hytExRE1RDxafv1UaBe+VJH+xKDi+6sRwII7wWm1t75g5gRH7O+WrOONRqydr3GZ
-	oGlrAg5W/smJqnRh2twlVPdOhzj7A2l/thPwQhQ==
-X-Google-Smtp-Source: AGHT+IG57A46tSVSlUwBGa65sWLT3dWQaLzZIDDHTtIjcr1bc6ll69vw3ONJvZa7AKDIafyzi3kD1Osy0aRv1CnPdGc=
-X-Received: by 2002:a05:6902:988:b0:e16:3d01:3fc6 with SMTP id
- 3f1490d57ef6-e163d0148b9mr5405653276.21.1724142615533; Tue, 20 Aug 2024
- 01:30:15 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EC318E34B;
+	Tue, 20 Aug 2024 08:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724142820; cv=fail; b=HNXKuXzpv0oaq/f1vAFfSugcRS6AzZBlOwxYNsUjVMB6ZsjUCOFpFjtrXyhWeJV6nFa/bJqrrcDLrD3eGJhGMYUli7/nfUZ3JSU+VZevSsS6p9UTZh6tbP+nntaD4e6C2qNDctJhAvpr/qDpW3XBLa5obM3yLNJwMSxKVmoPB10=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724142820; c=relaxed/simple;
+	bh=hgxdO9bQWs8wdjSsrOwNOgxQPKX6k/AAkkZdngQbmj8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=gjTVlTj9F/msxKrg3PEdlF8m9DlPna7RcnLss9iO5PzWIymPnnHRIdQnTLHGqfuJG2V+S4Z8/7gPVQaEXU1P/X9KbGPFb7qNnda6IhkkBruJ/eWIgzwswuqsZmbe4mL3M1+7FIwXzjXEUCqOfPqJ8XA4bGP7vRzX1KWr3TCL6aM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=igo8G/7k; arc=fail smtp.client-ip=40.107.255.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Bhe0UTWkFwaRRemnkcFPCo1HGO6DRTHa2r8hI2bDRF6Fa/nRh+oAr5yuLPIQu4YZkj5uyqqFOxnOasKAfFW5ONSrbVR9jZcfefja3phhIvN6qrkALH/vyriyID61+FZYnaNl81AwPc93sR41A1qvayJfu6DkP4nhkKuQ/fwFUqYpjrXDqjzUIU1PmHS8Q3j8qqk3FpBI6qMzlK078izV1SiDSRton4Ov3uYZOyCiEdv23uDmB4eatdpyj2B6WD5glg3yNbiL/UbKLZ0J90EdCh3VkF8HWfPA0gFvR3YLUm9uvnvVQ5BLr59UBJa43/7ubiBkArDIrncAo1agokYxeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bJPBsIq7YAA3ML9oLOc5aRgZBJ40VC9m1eTjT84QemY=;
+ b=fn/h61S38zMkVIUN8JvNw3uKymEKjScvOPvMDcGklG8boKZfpWRqX05MHgKJQuO88MNbeyuDXJpo6d3E9Oj9PM15xFN2koIG/7wE5RyIyZkqjlagWayITNybIBKUWSI3n6JiInSdroW7/Il3jkWs0oSymOh9QZhd7lbB4eYTjHJikLORmkrkWwtQiZ3mJY7OEhaqfV47PmkOWighNRHbr++1FCWjYJQqxLOFsN5PIc1rDIrcgYv2u4GnOVku+FbdxT+Gr94uMLRDS02hdWzvBDzccgthQ1P7tbNB1AImO0DTE4bxMbNcVzh8whVPTDZMdNnZcXrlOcPzmnzCNs2NIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bJPBsIq7YAA3ML9oLOc5aRgZBJ40VC9m1eTjT84QemY=;
+ b=igo8G/7kPGPKaU+OmM9qUJuEHxFCZ50friiD1xgx0/mSR3OYAN+uwH0kvHPBv+oy4tMMcgABzWCq7nDOBGt5N4PZPOrPV22OEYc+NwY61vZR3qWujtCYCwy8DuvX12wiDHpDUpm3FP0hn6sDD20/7Qkn8quIzanOjD5qxNP3rLCFTtkZKqusXkp0fPjJD/qIG/dnnKwvTHnd+dgVt/JOiKhtGIYU5kLWoeONh4Dt2R+QPYZe03z4/A4NY+Y3VLxJAeg+9I5RIqWHfHsqw9+/5VxbOQ8qD+gKl0KwXdw1dc/eApCRDBwQVj+OUxA0EQF26k51N9zHYs/hxn0xrhqNBA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SI2PR06MB5140.apcprd06.prod.outlook.com (2603:1096:4:1af::9) by
+ TYZPR06MB6467.apcprd06.prod.outlook.com (2603:1096:400:464::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7875.21; Tue, 20 Aug 2024 08:33:33 +0000
+Received: from SI2PR06MB5140.apcprd06.prod.outlook.com
+ ([fe80::468a:88be:bec:666]) by SI2PR06MB5140.apcprd06.prod.outlook.com
+ ([fe80::468a:88be:bec:666%6]) with mapi id 15.20.7875.019; Tue, 20 Aug 2024
+ 08:33:33 +0000
+From: Rong Qianfeng <rongqianfeng@vivo.com>
+To: Keerthy <j-keerthy@ti.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+	Srinivas Neeli <srinivas.neeli@amd.com>,
+	Michal Simek <michal.simek@amd.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: opensource.kernel@vivo.com,
+	Rong Qianfeng <rongqianfeng@vivo.com>
+Subject: [PATCH] gpio: Simplify using devm_clk_get_enabled()
+Date: Tue, 20 Aug 2024 16:33:22 +0800
+Message-Id: <20240820083323.62485-1-rongqianfeng@vivo.com>
+X-Mailer: git-send-email 2.39.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0036.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:190::11) To SI2PR06MB5140.apcprd06.prod.outlook.com
+ (2603:1096:4:1af::9)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240521152602.1097764-1-patrick.rudolph@9elements.com>
- <20240521152602.1097764-2-patrick.rudolph@9elements.com> <ZrYH8QlXH5Gfvnz_@black.fi.intel.com>
-In-Reply-To: <ZrYH8QlXH5Gfvnz_@black.fi.intel.com>
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
-Date: Tue, 20 Aug 2024 10:30:04 +0200
-Message-ID: <CALNFmy38aq915Oj7x4q27OWbiympDU=Vjo=7anTYx7w3E=F2UA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] pinctrl: cy8c95x0: Use regmap ranges
-To: Andy Shevchenko <andy@black.fi.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, naresh.solanki@9elements.com, 
-	andy.shevchenko@gmail.com, broonie@kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SI2PR06MB5140:EE_|TYZPR06MB6467:EE_
+X-MS-Office365-Filtering-Correlation-Id: da99ac3f-8e4d-4b06-e365-08dcc0f2c6db
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?5j6cncrKBZiVseEUjeHI6iBLIGV35KAgkTDMOEg9glg5RMhu0pDiJPgfRph4?=
+ =?us-ascii?Q?hYqGPf6aoxIgkGJK7MKbmgBG7616vafSig7R8eLeHAFeoJwo6rwfnuTu8iPE?=
+ =?us-ascii?Q?TqbYIN5gJDv7RvbLBTZtoFZIvc+7vdinZoYbpT2hYtIlU/7tU/viAp/0Cunl?=
+ =?us-ascii?Q?BuZY1BV8gDP5AXwudUHHAc8XNBk8i5UsgDpxKl91xsMwixjDHgxb8yqiOpqZ?=
+ =?us-ascii?Q?qqWx8VWtOSEjGDG7hHwXlrAGOC3wMfp8XC0ZTI+eZr3/nsdq5xY+4ljNveWw?=
+ =?us-ascii?Q?TiSQP9UJvBJGSC6tIGpM48YUJ+Albjmn3BdE8W23vo7p6tpGX7tkycX10lK5?=
+ =?us-ascii?Q?bMRsS1yyfJ0pvF+qnWhnNAFbB0MLMezFXsaY89wjqyZVzLhGI30sX386KY2q?=
+ =?us-ascii?Q?FAf7KaD49K0BT+iZFVx2lkzSyTzWtfKYtWUR9INlysdtebopgaNltK4sTxH9?=
+ =?us-ascii?Q?fobJQPflGbdom4jUfVxW+6qpVZiHtigZ7P2G7P1LcYTgW3/aQ9SDovUemM2t?=
+ =?us-ascii?Q?9TVHCzLr5m6j5WMx4vQtAWOgYDOzxZQQrsZB+8wviTUVdy3oN601LxYaQrAT?=
+ =?us-ascii?Q?yN49g6kTxtfuf6nrhpw08+oB05o8DGL/MQ0l/ODqa6ZZiMhBuuQowRVy27Hi?=
+ =?us-ascii?Q?qdRiMEurxkkcHBrwWccUrJNGFr12dlIyGu+eLWHb+2DsTttJ7IBv/O5LYoh9?=
+ =?us-ascii?Q?SJQkrwNslAbIo02QKrE6vEhYzPFc0obEPELON5jJGfgc+OYP374tKRHgjTNK?=
+ =?us-ascii?Q?Kpx9AmpFR6K66egvuZsN1bMOrY2RAwMx+r0tX+9FuCO9cy9UeTAajEkk02Gz?=
+ =?us-ascii?Q?ngB1rTPr14FBCSKg4kOHpPp3avbIPZU9XyqkXiX2UvYHERt6SO72HnVzOeZh?=
+ =?us-ascii?Q?TgJ6ccpoABbTu2oaO3K6i09nmPVVwjmsqQpFdv8qUSDoD/U4zDYRC8v+mS4U?=
+ =?us-ascii?Q?jOAucQOS0cgDhLH/bENetC1MVSgltWEB3GOyk/CvSRt2gNbhUeS+B8Y9mZib?=
+ =?us-ascii?Q?r2p63cFa2no8y86oLA8+cq/GW90D8nKxsuhZ4uoJns6Uu1QCfRZxl1lwn+x2?=
+ =?us-ascii?Q?ucoMc/aqA9vLhTanyY4AJppLR3R8SxD1SUqJ8zTWQduK9KQ6lDOq3dsslPWR?=
+ =?us-ascii?Q?WCz6SuKL2mGM7rTi3EpFtTMw94e3s8gW2iH4/223POYitiwAzXjanp/f9fpQ?=
+ =?us-ascii?Q?7qzOFcMxVRsIICYOuTXtoy6P3XsuYObxkzXnMolSdfhbODEgZSIQkQd0DhzQ?=
+ =?us-ascii?Q?anwuLpUA8OP7+mMv7qJxdETeqkSYeafoHjAYQdv48ENnHyeY6GCbSoeIi2p0?=
+ =?us-ascii?Q?gw76TM16LcIbmCJlLjkA+RYEry/68uqK2GelH33coAejsOjpoLxHgaa0u0uC?=
+ =?us-ascii?Q?QrDvoC+8ojkEPSyra03U8wZhNyPUpHbRLhqB/rxdPCxRDZe1Uw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2PR06MB5140.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?JFpjUzonyBDxaaWDAYhFlPYCKC5AZT+UoHx9tDbqXmHfkjPhBih+S662fZ9d?=
+ =?us-ascii?Q?EXpRR9UnC0/W6Ol0c+kwEZRu/7g22yZacjzZPwG8ClMr3PadFQXvBb0iEG01?=
+ =?us-ascii?Q?ggyMKBKi9wQkTjhkV50oIylBixN37ulVup8QFrGUrv3abecsDTsfHpRm7g/f?=
+ =?us-ascii?Q?8Ar89DWVPnDZGHtDSprnbfETwJdtrX1xmL/Nq95FP6tuoY+ewGYhh2+fFKhk?=
+ =?us-ascii?Q?QdAKpbdccRjLYVLmWQw3Ephbc28mDxKP/HwzTuqVyxhfmYhtf2pSeVwE3kM5?=
+ =?us-ascii?Q?oB65gAuM69hAAUpW9iu9mChkheIyQaX3ORqAPCcrCLkLpuh2LXosnRcgWxpg?=
+ =?us-ascii?Q?CLzi5HIDBUpZr1VqbDg1jG6REiEg/9pHFGFey0X7eaL/fUcSrSuTLZ4ZWe9P?=
+ =?us-ascii?Q?Tndak/fqva+yUKovG8J2kUbSpqZJB565us5gzYokJr5v5foCb5ajLn9zfExT?=
+ =?us-ascii?Q?yIj5rzqId5VoQ70yjG7rkiDouIhvVhuXDmbIZtgTRDm5yZXfT334lrHUlQ6n?=
+ =?us-ascii?Q?bl1oiV1V/TyhsddU9xUCCBgJSGCaRo0LKSZBrafAhetPw1Vu2JUSkiIRYJHQ?=
+ =?us-ascii?Q?OOO58v4qww2J1DeYKsvcW/QV51Q1muXw1ay0JDPM1AOkRdKmbqy5Q93ReRAp?=
+ =?us-ascii?Q?HN0g+EtVMH7ABwSVYNzLjzmYGp9rPVOBDKxK7W2ntfYGrSun7f2kdxx1hTQF?=
+ =?us-ascii?Q?XF6et+LZLlXwy+RtUpa0gG1SuTG+2Kw4IkuAYDF0Y66Hf3NzBNojFy5aWqGL?=
+ =?us-ascii?Q?Yktv0vN/bJXRUX+k3wLKvYajGzUQj2jsYNderTKa0JZ8HEGp6T7uNH7oP6gZ?=
+ =?us-ascii?Q?nsK4K5l18sxZ57zCvLPOKS2WcMEmg1a4rxzOwhWKUVvQoweo+leLWrbwliH/?=
+ =?us-ascii?Q?Ds+1s2zWSZeJ00sLPSP79DVArQnCIVlviduOBvPzvKCiQudIdcMXsJPlVYrG?=
+ =?us-ascii?Q?uzrwOb6hJ1ZboHPYyOlfdS07CuqMCOrmR+cndjMWrwkDoNrW0lnIXLQlOlGn?=
+ =?us-ascii?Q?XtcESHGRfeuBnOVleVOgDCXMOhA9KQ79+1n16/j7e+cJzAOv4FRaz/v6NKQN?=
+ =?us-ascii?Q?AMixul653p6O13BF3kxYoI9PgIU+AhZeqlB+0UWAM9GZJNOxUEbqQwOM+8PV?=
+ =?us-ascii?Q?1LbI094G2pywukXu1YYeDzd+8t5vSb2NbQ40GRnDXAkLirDPCZwJ9UeJsmjp?=
+ =?us-ascii?Q?bzKbTqHpsoIq/5/50jKEhzBuCyOCkZtJffXznRAOj5mXNUxRCpeHLmN2+DHV?=
+ =?us-ascii?Q?j6V7yjVN1gJixfLdFbDgdP7mqrd8k2RR9unVL8OtV8KhKcBqVT+pYhDIfRAS?=
+ =?us-ascii?Q?XiAj6H1w9AV9E5eoE2W40rUIfHmoDmMgjH4fFI0kzWl0jYVH9mQDRrLumC+5?=
+ =?us-ascii?Q?TMQ2M1KMAdI+RHIMWwwFewR7Yy4ODSXpcwj/dglUb4vISfqEi0laKIe7HCZM?=
+ =?us-ascii?Q?DhRKhksrZuua0cqybPbnMc+rXzpb4iRhcZLBGlx4XegwnZCzJniYbGOJWcFi?=
+ =?us-ascii?Q?A4Ax8mVAD2N7EnyQnegMxpOCrhg6RH/SkuzX8ym42YQ9CFjDgrUYZa6cyBTe?=
+ =?us-ascii?Q?cty+ZuEybuVYm0xyIxxE4SxPih2y+4bghugNmEvI?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: da99ac3f-8e4d-4b06-e365-08dcc0f2c6db
+X-MS-Exchange-CrossTenant-AuthSource: SI2PR06MB5140.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2024 08:33:33.2908
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DFrxIv1HSjM1/+whGW1fOuJHr5Q8juRoYT07mPifHmV7XHeLWzIwoQYwRMHIooPOpZWJnK2fKeTP8msVLFbFUA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB6467
 
-On Fri, Aug 9, 2024 at 2:13=E2=80=AFPM Andy Shevchenko <andy@black.fi.intel=
-.com> wrote:
->
-> On Tue, May 21, 2024 at 05:25:58PM +0200, Patrick Rudolph wrote:
-> > Instead of implementing a custom register paging mechanism in
-> > the driver use the existing regmap ranges feature.
->
-> ...
->
-> > +#define MUXED_STRIDE         (CY8C95X0_DRV_HIZ - CY8C95X0_INTMASK)
->
-> > +#define CY8C95X0_MUX_REGMAP_TO_OFFSET(x, p) \
-> > +     (CY8C95X0_VIRTUAL + (x) - CY8C95X0_INTMASK + (p) * MUXED_STRIDE)
->
-> > +static const struct regmap_range_cfg cy8c95x0_ranges[] =3D {
-> > +     {
-> > +             .range_min =3D CY8C95X0_VIRTUAL,
-> > +             .range_max =3D 0,         /* Updated at runtime */
-> > +             .selector_reg =3D CY8C95X0_PORTSEL,
-> > +             .selector_mask =3D 0x07,
-> > +             .selector_shift =3D 0x0,
-> > +             .window_start =3D CY8C95X0_INTMASK,
-> > +             .window_len =3D MUXED_STRIDE,
->
-> Looking at this again, are you sure you have no off-by-one error in
-> MUXED_STRIDE value?
-You are right. I tried to save some memory here. Will send out a fix.
+devm_clk_get_enabled() will call devm_clk_get() + clk_prepare_enable()
+and the clock will automatically be disabled, unprepared and freed when
+the device is unbound from the bus. So simplify .probe() and .remove()
+accordingly.
 
->
-> Also a comment in the regmap core suggests that we may include selector
-> in each of the window.
->
-> With this, we probably should simply use PORTSEL as window start with a
-> fixed window len of 16, having a few more (reserved) registers in the
-> dump seems not a big deal to me, but it will be much easier to decipher
-> a port number based on (virtual) offset.
->
-That's true.
+Signed-off-by: Rong Qianfeng <rongqianfeng@vivo.com>
+---
+ drivers/gpio/gpio-davinci.c  | 13 ++-----------
+ drivers/gpio/gpio-stp-xway.c | 10 ++--------
+ drivers/gpio/gpio-zynq.c     | 10 +---------
+ 3 files changed, 5 insertions(+), 28 deletions(-)
 
-> Besides above, why virtual start is not well aligned? I would expect not
-> 0x31, but 0x40 or alike. It might explain some bugs with cache you have
-> seen.
->
-I didn't find any rules on this, so I used the next free index.
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index 1d0175d6350b..945832d54ac3
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -482,7 +482,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ {
+ 	unsigned	gpio, bank;
+ 	int		irq;
+-	int		ret;
+ 	struct clk	*clk;
+ 	u32		binten = 0;
+ 	unsigned	ngpio;
+@@ -504,21 +503,16 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 
+ 	ngpio = pdata->ngpio;
+ 
+-	clk = devm_clk_get(dev, "gpio");
++	clk = devm_clk_get_enabled(dev, "gpio");
+ 	if (IS_ERR(clk)) {
+ 		dev_err(dev, "Error %ld getting gpio clock\n", PTR_ERR(clk));
+ 		return PTR_ERR(clk);
+ 	}
+ 
+-	ret = clk_prepare_enable(clk);
+-	if (ret)
+-		return ret;
+-
+ 	if (!pdata->gpio_unbanked) {
+ 		irq = devm_irq_alloc_descs(dev, -1, 0, ngpio, 0);
+ 		if (irq < 0) {
+ 			dev_err(dev, "Couldn't allocate IRQ numbers\n");
+-			clk_disable_unprepare(clk);
+ 			return irq;
+ 		}
+ 
+@@ -527,7 +521,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 							chips);
+ 		if (!irq_domain) {
+ 			dev_err(dev, "Couldn't register an IRQ domain\n");
+-			clk_disable_unprepare(clk);
+ 			return -ENODEV;
+ 		}
+ 	}
+@@ -596,10 +589,8 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 				       sizeof(struct
+ 					      davinci_gpio_irq_data),
+ 					      GFP_KERNEL);
+-		if (!irqdata) {
+-			clk_disable_unprepare(clk);
++		if (!irqdata)
+ 			return -ENOMEM;
+-		}
+ 
+ 		irqdata->regs = g;
+ 		irqdata->bank_num = bank;
+diff --git a/drivers/gpio/gpio-stp-xway.c b/drivers/gpio/gpio-stp-xway.c
+index 053d616f2e02..5a6406d1f03a
+--- a/drivers/gpio/gpio-stp-xway.c
++++ b/drivers/gpio/gpio-stp-xway.c
+@@ -296,23 +296,17 @@ static int xway_stp_probe(struct platform_device *pdev)
+ 	if (!of_property_read_bool(pdev->dev.of_node, "lantiq,rising"))
+ 		chip->edge = XWAY_STP_FALLING;
+ 
+-	clk = devm_clk_get(&pdev->dev, NULL);
++	clk = devm_clk_get_enabled(&pdev->dev, NULL);
+ 	if (IS_ERR(clk)) {
+ 		dev_err(&pdev->dev, "Failed to get clock\n");
+ 		return PTR_ERR(clk);
+ 	}
+ 
+-	ret = clk_prepare_enable(clk);
+-	if (ret)
+-		return ret;
+-
+ 	xway_stp_hw_init(chip);
+ 
+ 	ret = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
+-	if (ret) {
+-		clk_disable_unprepare(clk);
++	if (ret)
+ 		return ret;
+-	}
+ 
+ 	dev_info(&pdev->dev, "Init done\n");
+ 
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+index 466e23031afc..1a42336dfc1d
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -940,16 +940,10 @@ static int zynq_gpio_probe(struct platform_device *pdev)
+ 	chip->ngpio = gpio->p_data->ngpio;
+ 
+ 	/* Retrieve GPIO clock */
+-	gpio->clk = devm_clk_get(&pdev->dev, NULL);
++	gpio->clk = devm_clk_get_enabled(&pdev->dev, NULL);
+ 	if (IS_ERR(gpio->clk))
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(gpio->clk), "input clock not found.\n");
+ 
+-	ret = clk_prepare_enable(gpio->clk);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Unable to enable clock.\n");
+-		return ret;
+-	}
+-
+ 	spin_lock_init(&gpio->dirlock);
+ 
+ 	pm_runtime_set_active(&pdev->dev);
+@@ -999,7 +993,6 @@ static int zynq_gpio_probe(struct platform_device *pdev)
+ 	pm_runtime_put(&pdev->dev);
+ err_pm_dis:
+ 	pm_runtime_disable(&pdev->dev);
+-	clk_disable_unprepare(gpio->clk);
+ 
+ 	return ret;
+ }
+@@ -1019,7 +1012,6 @@ static void zynq_gpio_remove(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		dev_warn(&pdev->dev, "pm_runtime_get_sync() Failed\n");
+ 	gpiochip_remove(&gpio->chip);
+-	clk_disable_unprepare(gpio->clk);
+ 	device_set_wakeup_capable(&pdev->dev, 0);
+ 	pm_runtime_disable(&pdev->dev);
+ }
+-- 
+2.39.0
 
-> P.S. It might still be bugs in regmap core, if it is the case, they
-> need to be addressed.
->
-> > +     }
-> >  };
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
 
