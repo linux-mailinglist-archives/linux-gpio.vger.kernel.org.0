@@ -1,233 +1,168 @@
-Return-Path: <linux-gpio+bounces-8880-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8881-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54328958E14
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 20:32:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C9B77958EDA
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 21:53:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BA15EB2296F
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 18:32:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 358D0B21EC8
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 19:53:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E079614F119;
-	Tue, 20 Aug 2024 18:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 795CD15C13E;
+	Tue, 20 Aug 2024 19:53:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XG/5LE3T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="pYSmpacu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C6514B09F
-	for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2024 18:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE1B1547D1;
+	Tue, 20 Aug 2024 19:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724178698; cv=none; b=fGnAfx2V+WsywCbwSlf7IO29yv7gQ1gEOmVp0b5HHwIUrewI2YRAa3ElF1w8DyyD5CMwfgwKpieOciSwl5T47b/qJx8P5wtaDYy5VBK6JOoz9hypKtecOVqKa2zh+VTmoZdvJmKzzviFNrZG8qFjK+W6gUkJrmwXnWJysDVZAi4=
+	t=1724183630; cv=none; b=CI5IDId+t2uPQGROv13zozOY4npYij9MxRAHLHsFiclSCplpV0ZV4jKvOd1WFz7r4AXUgTVNSyPgLK2r7i1BjexTjJrSbqhH8x+MCsMKkGuSiMOcPVSI1UVH7N1DAR+iYHFQMUqczkluHQel1je+QGUZ5Tywnrv7kr50/0b46mI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724178698; c=relaxed/simple;
-	bh=XSYdjKiKvyThLATmIh9N2JQAPLRS7wiEijXbWwiDs/M=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jWe7xMByqjF4y8WLSA1Zp3tIqmkJmWju5fh7KCa/1ZXP4WtBQ/0G1yBK0DDteA5oRRssOJXurCzrQO15vuvHFNX93CQiWiKNaqmxRrO1UWVn1LNI+qKBsXwy+AHCIg/tMSocsILnnGpy31ngojR33XiHcrhK4BwsZE7GOZAb3eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XG/5LE3T; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a7a94478a4eso1183910566b.1
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2024 11:31:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1724178693; x=1724783493; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C07kwkQPZHrXmRCk/7LVIjuwNmyBogh+obKLGkkmYFE=;
-        b=XG/5LE3T3o+gzqyCCzm34nba+qmCfXalrQDA360AoPJk3mlkvXoCh6/QfeZvip7m88
-         mjk3ucHDwb1pAgb+EPb5v+NwSsgFfp+LTToHWPRvGmwFGhvSKgH6uKsBqTSHIcq7ayfe
-         igGCVo7l+Anll1eM0oRtiUphZEDoR+Sfvkjr7iCAN4UCUx7MlAUSS1Ogur2VJ3W9YkXg
-         rtoaO1gBhVsVxBa3dMTKrMgQ7EwAJDPFJPhjFa5I97vK/G9xcmb35+CrJ9aJ/gqkTBWF
-         O6g9ox9cp3GKkztqS2IAN3YAPU5DLU1qODsl1PoGrL1fZ+bCdUMj0TPUOTv3TRdDIgx9
-         CLKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724178693; x=1724783493;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C07kwkQPZHrXmRCk/7LVIjuwNmyBogh+obKLGkkmYFE=;
-        b=EG6E0+LgMaI5cPcotjJb70yyKHF7OVHhAXF5Sk6FZOyJptAPQdL7L50skL/0rLvC2i
-         jbVvTz58ceOlLtsV7XEhWzS5g1OGQ+qfsypjPdHojETGeO9Wtuqx6URQiP4c375MpEIF
-         ZEAlmuObzAct3MZHf5LgkWMEqHbpqv8kcaafDcan1VzaigMgYUGv8iXCca9fVZwJI/4n
-         mgkMbVp2jOk3p63ZUyikJlva6Uf0RRNI3CSGG5MbQLkxgri9clshse5GY61l7T0PVcm9
-         w4xWBJCmgKnhTXPNSe4Py/svvKmVazx4Ca5boEDaEyC4KFTkRSZVSm/kwAxxclda9EQi
-         DDCA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxqn1SvShRjKEEHJg4GPDoicWjm19/CE20sWHc917Hu5xpTYR5DvMQtSWo/fgw9lP5GzNYzSWGtCfM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHYfwsL9VnPnoJxzngcCSA8tmyEOUXvURwunA+e5cRR/YvRyLf
-	hxi7HFrYtJTeY8MGK4LMRoiXCYZ6xSjdaJU14SrCmO2X39giUfswCrYUk0SQdww=
-X-Google-Smtp-Source: AGHT+IGOs6VYvfV4LBlh3n6XPG9LIKhdxKViotPxcCB+fUrUkrU6+w914efXSB1ZJv8NT+vGMTojLg==
-X-Received: by 2002:a17:907:1b13:b0:a86:6a9a:d719 with SMTP id a640c23a62f3a-a866a9adcddmr29207866b.29.1724178693023;
-        Tue, 20 Aug 2024 11:31:33 -0700 (PDT)
-Received: from localhost ([87.13.33.30])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a838396940fsm796113566b.189.2024.08.20.11.31.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2024 11:31:32 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 20 Aug 2024 20:31:38 +0200
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 10/11] net: macb: Add support for RP1's MACB variant
-Message-ID: <ZsThCh45-WX_TDmP@apocalypse>
-Mail-Followup-To: Andrew Lunn <andrew@lunn.ch>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <775000dfb3a35bc691010072942253cb022750e1.1724159867.git.andrea.porta@suse.com>
- <c33fe03d-2097-4d26-b3db-8a3d6c793cd1@lunn.ch>
+	s=arc-20240116; t=1724183630; c=relaxed/simple;
+	bh=DR2GJN7s3OoXebWgjtePJ6xiOH9yRIZ/F7+6AiRug2w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QKlIaYhFyg2dPnbHYmt55ddsyPKILF5eYkTe59Is4MJqFMI6cig5Syh2c8J8TaHk7TKxpqZBUvcraB9v5NwLNvT8wg5EBSw5wBlV6sq6ExyNAg/uVedyZf9a5FLh4e+Owl37VEz5xoJCfqyhbtYazoTQxycyAjXy14GTjvnGrIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=pYSmpacu; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=BVZoZvXjYkyYcVetsS+NsA6dchCrMli+gEckw36uz5k=; b=pYSmpacuNcBLDgxvE9kbjJw6H9
+	Hmn/kWIdsbrtWZRMyyM1EaKN+ITOzjK6AzYD96mTuohFp1pDdoxeSYAWezaDn9aiXjAJezehsVXWe
+	Drr99YgqxHRhe2WyWUGlH4LNoiWJlm07xXeP2xfEczb3u2mUsCoK8559IZkHRe0R6EulOT0RgWleA
+	loPsRGG59j/JcHbHus8QNA+AHrnjDpkhyhdYVCZoLxzabWwYmA9YPcjh005YG0ry6+bJoBfvvqkKA
+	imHBdkhLsh/+5tVfFBGHIW7Um5y6bxcLuIUO5SkIkDMU6hoVv4aMLBTcM2eQMVsMYo1gaLpNodGXi
+	jaPu8FHg==;
+Received: from i53875aca.versanet.de ([83.135.90.202] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1sgUvD-0001So-3G; Tue, 20 Aug 2024 21:53:39 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Linus Walleij <linus.walleij@linaro.org>, Huang-Huang Bao <i@eh5.me>
+Cc: Richard Kojedzinszky <richard@kojedz.in>, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Huang-Huang Bao <i@eh5.me>,
+ stable@vger.kernel.org
+Subject:
+ Re: [PATCH] pinctrl: rockchip: correct RK3328 iomux width flag for GPIO2-B
+ pins
+Date: Tue, 20 Aug 2024 21:54:05 +0200
+Message-ID: <2241778.ZfL8zNpBrT@diego>
+In-Reply-To: <20240709105428.1176375-1-i@eh5.me>
+References: <20240709105428.1176375-1-i@eh5.me>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c33fe03d-2097-4d26-b3db-8a3d6c793cd1@lunn.ch>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Andrew,
+Hi Linus,
 
-On 17:13 Tue 20 Aug     , Andrew Lunn wrote:
-> > +static unsigned int txdelay = 35;
-> > +module_param(txdelay, uint, 0644);
-> 
-> Networking does not like module parameters.
-> 
-> This is also unused in this patch! So i suggest you just delete it.
-> 
-> > +
-> >  /* This structure is only used for MACB on SiFive FU540 devices */
-> >  struct sifive_fu540_macb_mgmt {
-> >  	void __iomem *reg;
-> > @@ -334,7 +337,7 @@ static int macb_mdio_wait_for_idle(struct macb *bp)
-> >  	u32 val;
-> >  
-> >  	return readx_poll_timeout(MACB_READ_NSR, bp, val, val & MACB_BIT(IDLE),
-> > -				  1, MACB_MDIO_TIMEOUT);
-> > +				  100, MACB_MDIO_TIMEOUT);
-> >  }
->   
-> Please take this patch out of the series, and break it up. This is one
-> patch, with a good explanation why you need 1->100.
-> 
-> >  static int macb_mdio_read_c22(struct mii_bus *bus, int mii_id, int regnum)
-> > @@ -493,6 +496,19 @@ static int macb_mdio_write_c45(struct mii_bus *bus, int mii_id,
-> >  	return status;
-> >  }
-> >  
-> > +static int macb_mdio_reset(struct mii_bus *bus)
-> > +{
-> > +	struct macb *bp = bus->priv;
-> > +
-> > +	if (bp->phy_reset_gpio) {
-> > +		gpiod_set_value_cansleep(bp->phy_reset_gpio, 1);
-> > +		msleep(bp->phy_reset_ms);
-> > +		gpiod_set_value_cansleep(bp->phy_reset_gpio, 0);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static void macb_init_buffers(struct macb *bp)
-> >  {
-> >  	struct macb_queue *queue;
-> > @@ -969,6 +985,7 @@ static int macb_mii_init(struct macb *bp)
-> >  	bp->mii_bus->write = &macb_mdio_write_c22;
-> >  	bp->mii_bus->read_c45 = &macb_mdio_read_c45;
-> >  	bp->mii_bus->write_c45 = &macb_mdio_write_c45;
-> > +	bp->mii_bus->reset = &macb_mdio_reset;
-> 
-> This is one patch.
-> 
-> >  	snprintf(bp->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
-> >  		 bp->pdev->name, bp->pdev->id);
-> >  	bp->mii_bus->priv = bp;
-> > @@ -1640,6 +1657,11 @@ static int macb_rx(struct macb_queue *queue, struct napi_struct *napi,
-> >  
-> >  		macb_init_rx_ring(queue);
-> >  		queue_writel(queue, RBQP, queue->rx_ring_dma);
-> > +#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
-> > +		if (bp->hw_dma_cap & HW_DMA_CAP_64B)
-> > +			macb_writel(bp, RBQPH,
-> > +				    upper_32_bits(queue->rx_ring_dma));
-> > +#endif
-> 
-> How does this affect a disto kernel? Do you actually need the #ifdef?
-> What does bp->hw_dma_cap contain when CONFIG_ARCH_DMA_ADDR_T_64BIT is
-> not defined?
-> 
-> Again, this should be a patch of its own, with a good commit message.
-> 
-> Interrupt coalescing should be a patch of its own, etc.
-> 
->     Andrew
->
+Am Dienstag, 9. Juli 2024, 12:54:28 CEST schrieb Huang-Huang Bao:
+> The base iomux offsets for each GPIO pin line are accumulatively
+> calculated based off iomux width flag in rockchip_pinctrl_get_soc_data.
+> If the iomux width flag is one of IOMUX_WIDTH_4BIT, IOMUX_WIDTH_3BIT or
+> IOMUX_WIDTH_2BIT, the base offset for next pin line would increase by 8
+> bytes, otherwise it would increase by 4 bytes.
 
-Thanks for the feedback, I agree on all the observations. Please do note
-however that, as mentioned in the cover letter, this patch is not intended
-to be included upstream and is provided just as a quick way for anyone
-interested in testing the RP1 functionality using the Ethernet MAC. 
-As such, this patch has not been polished nor splitted into manageable bits.
-Ii'm taknge note of your comments however and will come back to them in a
-future patch that deals specifically with macb.
+could you pick this patch that fixes a pinctrl problem on rk3328?
 
-Many thanks,
-Andrea
- 
+The change is good and I added my reviewed-by on july 29th.
+
+
+Thanks a lot
+Heiko
+
+
+> Despite most of GPIO2-B iomux have 2-bit data width, which can be fit
+> into 4 bytes space with write mask, it actually take 8 bytes width for
+> whole GPIO2-B line.
+> 
+> Commit e8448a6c817c ("pinctrl: rockchip: fix pinmux bits for RK3328
+> GPIO2-B pins") wrongly set iomux width flag to 0, causing all base
+> iomux offset for line after GPIO2-B to be calculated wrong. Fix the
+> iomux width flag to IOMUX_WIDTH_2BIT so the offset after GPIO2-B is
+> correctly increased by 8, matching the actual width of GPIO2-B iomux.
+> 
+> Fixes: e8448a6c817c ("pinctrl: rockchip: fix pinmux bits for RK3328 GPIO2-B pins")
+> Cc: stable@vger.kernel.org
+> Reported-by: Richard Kojedzinszky <richard@kojedz.in>
+> Closes: https://lore.kernel.org/linux-rockchip/4f29b743202397d60edfb3c725537415@kojedz.in/
+> Tested-by: Richard Kojedzinszky <richard@kojedz.in>
+> Signed-off-by: Huang-Huang Bao <i@eh5.me>
 > ---
-> pw-bot: cr
+> 
+> I have double checked the iomux offsets in debug message match iomux
+> register definitions in "GRF Register Description" section in RK3328
+> TRM[1].
+> 
+> [1]: https://opensource.rock-chips.com/images/9/97/Rockchip_RK3328TRM_V1.1-Part1-20170321.pdf
+> 
+> Kernel pinctrl debug message with dyndbg="file pinctrl-rockchip.c +p":
+>   rockchip-pinctrl pinctrl: bank 0, iomux 0 has iom_offset 0x0 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 0, iomux 1 has iom_offset 0x4 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 0, iomux 2 has iom_offset 0x8 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 0, iomux 3 has iom_offset 0xc drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 1, iomux 0 has iom_offset 0x10 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 1, iomux 1 has iom_offset 0x14 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 1, iomux 2 has iom_offset 0x18 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 1, iomux 3 has iom_offset 0x1c drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 2, iomux 0 has iom_offset 0x20 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 2, iomux 1 has iom_offset 0x24 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 2, iomux 2 has iom_offset 0x2c drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 2, iomux 3 has iom_offset 0x34 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 3, iomux 0 has iom_offset 0x38 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 3, iomux 1 has iom_offset 0x40 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 3, iomux 2 has iom_offset 0x48 drv_offset 0x0
+>   rockchip-pinctrl pinctrl: bank 3, iomux 3 has iom_offset 0x4c drv_offset 0x0
+> 
+> The "Closes" links to test report from original reporter with original
+> issue contained, which was not delivered to any mailing list thus not
+> available on the web.
+> 
+> Added CC stable as the problematic e8448a6c817c fixed by this patch was
+> recently merged to stable kernels.
+> 
+> Sorry for the inconvenience caused,
+> Huang-Huang
+> 
+>  drivers/pinctrl/pinctrl-rockchip.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+> index 3f56991f5b89..f6da91941fbd 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.c
+> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+> @@ -3813,7 +3813,7 @@ static struct rockchip_pin_bank rk3328_pin_banks[] = {
+>  	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", 0, 0, 0, 0),
+>  	PIN_BANK_IOMUX_FLAGS(1, 32, "gpio1", 0, 0, 0, 0),
+>  	PIN_BANK_IOMUX_FLAGS(2, 32, "gpio2", 0,
+> -			     0,
+> +			     IOMUX_WIDTH_2BIT,
+>  			     IOMUX_WIDTH_3BIT,
+>  			     0),
+>  	PIN_BANK_IOMUX_FLAGS(3, 32, "gpio3",
+> 
+> base-commit: 4376e966ecb78c520b0faf239d118ecfab42a119
+> --
+> 2.45.2
+> 
+
+
+
+
 
