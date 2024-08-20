@@ -1,106 +1,107 @@
-Return-Path: <linux-gpio+bounces-8844-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8845-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED063958092
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 10:09:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 388C39580A3
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 10:14:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A36022830F2
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 08:09:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E1A19284449
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 08:14:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FD9218A6AD;
-	Tue, 20 Aug 2024 08:09:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 557C018A6CC;
+	Tue, 20 Aug 2024 08:13:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2rU0y1S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V+ZmSPrW"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADC6189F47
-	for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2024 08:09:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5142189F3F
+	for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2024 08:13:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724141387; cv=none; b=lzWHPdeudwT2PeWm/EfUsx3HdNnAFqz2mTWsPguKRraftn4RPasux2hV9dJjUU7UhB7euwjZf97feVX9YsQxVhXsFr1W5bJIqkzj25YJY9m180JnLGOX5JeIayKEH+kcozh/aI7MQpQiy2pj2dO0oPl+EyfEJjpl63hB7wCf4mM=
+	t=1724141629; cv=none; b=HX8O3sx231W33LxGAX4m3YoW9jwAV7JNJ6pUvSfX5kbactDimMEFJz05etRP7C86NKLWDcs/bx4ToBZvHs0GSFrB6w+GhugoQYxWI98qBEYsex06ICU1uhY/9CoBpZ7dY6fshB3LGM+ZXVu6dhV60048Em1Eq9v/YiYcjngmE54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724141387; c=relaxed/simple;
-	bh=DLZKg/oGENcvx3g7vLmJ6PWU9gpxjKwySy5I9EoT3Ow=;
+	s=arc-20240116; t=1724141629; c=relaxed/simple;
+	bh=5x2Zwvil69v7j2QTmo/ru3l3YhUvaf/XafPWpjOjfD8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fYX8UlxdWLZUyCadVm4jsC5rH0QiMy+bakKiLpzkiN0YN9L0BbSQAHvHgSyLa3AAOdBH7VjEL5CxbaZqiAmD4DHKLusEs1MmbrCiztAFVY1uF/BZmwn1X9s7qlDexbehPJFC1qpaybN/tHjDELo6+sNiA1YQkmtknuopYFk72bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A2rU0y1S; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:MIME-Version; b=l2eAgR5SxLD33q7F7pfbEgbK9I0tvzM0NkYmprQuvyJ9za9B09PNlkOsgwcGogEnKkQeeqwR2KNe6dOX6G4+scvg1NFgaryWJcHufY4q9w1iXKtsiiqhIIgEbJcwiQ4nZVa/hpo9cfe/V2BhIGF2/WKvUaCMVQ8+k5LcOWOUfb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V+ZmSPrW; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724141384;
+	s=mimecast20190719; t=1724141626;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pczNxSocdM26pcn5q5hEVOERw14zQBRp0K6rH/Gt/U8=;
-	b=A2rU0y1SdX1bWxMLlcdgZNnTzjNeH+7VRstlEdQWvwqfafZEFaUm6UxEK5O39EPKN8UKR2
-	Ds63jEXgQLcmMtH5UdDytYOjQf9Kq5No7MQky9R8GCdWaj5Iwp8F1c717wJHo1rC4sumdF
-	SYhw1ELSzHQu/2rhu32+xEqJ6v4+FdE=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=5x2Zwvil69v7j2QTmo/ru3l3YhUvaf/XafPWpjOjfD8=;
+	b=V+ZmSPrWuPW6iLzzX/1uzcNwn98hDSrf6VhFntnNxB76lX0aWT4ijx7J/jymC2ubpNZoSc
+	S+b3c5MZ348SKGP2k32ka4MpVzVZtZng0TyzFIh+Ta/wL9DolYpmYLiPrNL/2iNRMVE0dJ
+	RpN3S3RxZZugSzgnHCeCxk/5URbfDM4=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-AjgnliYlOuWi-tDPseLQ7Q-1; Tue, 20 Aug 2024 04:09:42 -0400
-X-MC-Unique: AjgnliYlOuWi-tDPseLQ7Q-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2f01b609ac9so4215961fa.1
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2024 01:09:42 -0700 (PDT)
+ us-mta-414-XXHtgDDROoSk5IANfA0UbA-1; Tue, 20 Aug 2024 04:13:44 -0400
+X-MC-Unique: XXHtgDDROoSk5IANfA0UbA-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-532fba083deso652765e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2024 01:13:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724141381; x=1724746181;
+        d=1e100.net; s=20230601; t=1724141623; x=1724746423;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pczNxSocdM26pcn5q5hEVOERw14zQBRp0K6rH/Gt/U8=;
-        b=gV5Q6goHnj+F7KOTtKlV2WX7+Z2rmmqnNERvfQXkdlILynG55F7rFVGJ8rSLEMz3PF
-         LAbMYRCG19i+d0VoRd2DFAnatkaheWTJv9vp9oe3uqfcu8irtHcYcmdawkbXyHO/uZwm
-         zojpZXGYp7D6JCk8mct8VZQgDOYaxiz3X67ZZ8B7PAzvxu8Vc4lBZZLPA7WJEJVkLt+T
-         d7FgEG0WGmVoYe+9hMXBK/ZwjZVg+6Kiq2qvrX0R4t89pzAGVEedkGjgqnWj+oJrzCOO
-         HYoHYq/OPTHojPESPLqp+xI2rxMDqVriifqyCkpepwVSvAXm0dNlLGcmtrk/+Us7y7W+
-         lYRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVBqSAlxzsNrQ5TwZnncD4vvDUoYgfTBNaY+F8pO7QQSPSoN2sV0KkHhyNpPikP0lhG7DVhdx9hoNf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlTf5eJgRXbRW8/9cbOq00CPsxJLHmnSnhGDd7/w2cjq84fv9I
-	dUxh7b1au7qHTQT7ADKBn9eghqIjseuyLQBq+V2E2aeLJ2GBw7pXQ+3PZdDKCi/bmUD93rezZCX
-	OJeF3xVwxGEDOVvJ5t08heS95+JkFPgqQp0ZBy3QMD+8OOvzEpAcZulsIZxc=
-X-Received: by 2002:a05:651c:2211:b0:2ef:24a9:6aa8 with SMTP id 38308e7fff4ca-2f3be3e14b8mr44110041fa.0.1724141380702;
-        Tue, 20 Aug 2024 01:09:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFUKjHSOAziZ7PYgWrAVl4EdFwjiCRVXWWzixF1wxqW29HSPOlA0o0CuaPTeGWaikDKakA/tA==
-X-Received: by 2002:a05:651c:2211:b0:2ef:24a9:6aa8 with SMTP id 38308e7fff4ca-2f3be3e14b8mr44109861fa.0.1724141380001;
-        Tue, 20 Aug 2024 01:09:40 -0700 (PDT)
+        bh=5x2Zwvil69v7j2QTmo/ru3l3YhUvaf/XafPWpjOjfD8=;
+        b=dG6svrB1TY3E+IC5sFQeSafo0FPoKscv55ipNjhKR0rKp9MlPsMZ3WzZmKpZJXgMtn
+         TSm/JQXZ0PKbARsamV6Ui59IzEV6ntfWXhyhWkZ+voMpq7T4pNEYXJ9wIzCd46IeuYEn
+         7dkQbPvFwwaLvwuGgGCuMYCPU2d9xibhXyejFTcTn9KxJOUZCm39E7A5AixAWJokVRL6
+         GXpAkv53P9aGQVUPiW7ax+u9XcqRI0UMo0BQsvB19kwlohsIp7we/GjW3iDiP87iX1uH
+         EnSah8slavHLx4/voxZsVcz7fIz01lbWW8YCm2P5upgb9VOLHdFesq/KXHf1rJhcx8JH
+         Eynw==
+X-Forwarded-Encrypted: i=1; AJvYcCXvMBG6hoG8GXmT/5c1ZLibdHkseTKqExSGm30alKTQXmCaJzr7i+YZaVwvMEeZxByULW+k1UIp80GY@vger.kernel.org
+X-Gm-Message-State: AOJu0YwS4jHT/tH+EoqPaHtJOgecKmbHmNJO+ycmbRzzS/pY1FQcJPHo
+	T/AdmK3YbpcESWJost3rMTFBQ1NWUKGjyg+CX+PeAlIg27+ZDEu2G23nI2kzT1813nAsoGXI6co
+	f+0L4BZzdBvC9/xYPeQ4jYGzxBIJQSfE+ieCyh2nBl1GdxvsrEBCSUcTI3Ig=
+X-Received: by 2002:a05:6512:10c1:b0:530:e0fd:4a85 with SMTP id 2adb3069b0e04-5331c6d4a61mr5183723e87.4.1724141623050;
+        Tue, 20 Aug 2024 01:13:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZQZIXMi/Gkd3uNyVjKj7Xpsxjs4S0/m1lMVeXOF/ppQ1u+jlQhYOCzCKjOM9+Rw34AQB54A==
+X-Received: by 2002:a05:6512:10c1:b0:530:e0fd:4a85 with SMTP id 2adb3069b0e04-5331c6d4a61mr5183700e87.4.1724141622413;
+        Tue, 20 Aug 2024 01:13:42 -0700 (PDT)
 Received: from eisenberg.fritz.box ([2001:16b8:3dcc:1f00:bec1:681e:45eb:77e2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8383935909sm728451466b.112.2024.08.20.01.09.38
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8383935616sm724162966b.123.2024.08.20.01.13.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2024 01:09:39 -0700 (PDT)
-Message-ID: <3e4288bb7300f3fd0883ff07b75ae69d0532019b.camel@redhat.com>
+        Tue, 20 Aug 2024 01:13:42 -0700 (PDT)
+Message-ID: <419e91cb2b698a450497dfc1fb86f2c46eb7d8fb.camel@redhat.com>
 Subject: Re: [PATCH 8/9] vdap: solidrun: Replace deprecated PCI functions
 From: Philipp Stanner <pstanner@redhat.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, onathan Corbet
- <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>, Wu Hao <hao.wu@intel.com>,
- Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, Xu Yilun
- <yilun.xu@intel.com>,  Andy Shevchenko <andy@kernel.org>, Linus Walleij
+To: Andy Shevchenko <andy@kernel.org>, Christophe JAILLET
+	 <christophe.jaillet@wanadoo.fr>
+Cc: onathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>, Wu Hao
+ <hao.wu@intel.com>, Tom Rix <trix@redhat.com>, Moritz Fischer
+ <mdf@kernel.org>,  Xu Yilun <yilun.xu@intel.com>, Linus Walleij
  <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,  Jakub
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
  Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alexandre
  Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>,
  Maxime Coquelin <mcoquelin.stm32@gmail.com>, Bjorn Helgaas
  <bhelgaas@google.com>, Alvaro Karsz <alvaro.karsz@solid-run.com>, "Michael
  S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Eugenio =?ISO-8859-1?Q?P=E9rez?=
+ <xuanzhuo@linux.alibaba.com>,  Eugenio =?ISO-8859-1?Q?P=E9rez?=
  <eperezma@redhat.com>, Richard Cochran <richardcochran@gmail.com>, Mark
- Brown <broonie@kernel.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-block@vger.kernel.org, linux-fpga@vger.kernel.org, 
- linux-gpio@vger.kernel.org, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com,
+ Brown <broonie@kernel.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-block@vger.kernel.org,
+ linux-fpga@vger.kernel.org,  linux-gpio@vger.kernel.org,
+ netdev@vger.kernel.org,  linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
  virtualization@lists.linux.dev
-Date: Tue, 20 Aug 2024 10:09:37 +0200
-In-Reply-To: <74e9109a-ac59-49e2-9b1d-d825c9c9f891@wanadoo.fr>
+Date: Tue, 20 Aug 2024 10:13:40 +0200
+In-Reply-To: <ZsOQPbVGQFtUYSww@smile.fi.intel.com>
 References: <20240819165148.58201-2-pstanner@redhat.com>
 	 <20240819165148.58201-10-pstanner@redhat.com>
 	 <74e9109a-ac59-49e2-9b1d-d825c9c9f891@wanadoo.fr>
+	 <ZsOQPbVGQFtUYSww@smile.fi.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
@@ -111,208 +112,54 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-08-19 at 20:19 +0200, Christophe JAILLET wrote:
-> Le 19/08/2024 =C3=A0 18:51, Philipp Stanner a =C3=A9crit=C2=A0:
-> > solidrun utilizes pcim_iomap_regions(), which has been deprecated
-> > by the
-> > PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
-> > pcim_iomap_table(), pcim_iomap_regions_request_all()"), among other
-> > things because it forces usage of quite a complicated bitmask
-> > mechanism.
-> > The bitmask handling code can entirely be removed by replacing
-> > pcim_iomap_regions() and pcim_iomap_table().
+On Mon, 2024-08-19 at 21:34 +0300, Andy Shevchenko wrote:
+> On Mon, Aug 19, 2024 at 08:19:28PM +0200, Christophe JAILLET wrote:
+> > Le 19/08/2024 =C3=A0 18:51, Philipp Stanner a =C3=A9crit=C2=A0:
+>=20
+>=20
+> ...
+>=20
+> > Unrelated to the patch, but is is safe to have 'name' be on the
+> > stack?
 > >=20
-> > Replace pcim_iomap_regions() and pcim_iomap_table() with
-> > pci_iomap_region().
+> > pcim_iomap_region()
+> > --> __pcim_request_region()
+> > --> __pcim_request_region_range()
+> > --> request_region() or __request_mem_region()
+> > --> __request_region()
+> > --> __request_region_locked()
+> > --> res->name =3D name;
 > >=20
-> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > ---
-> > =C2=A0 drivers/vdpa/solidrun/snet_main.c | 47 +++++++++++--------------=
--
-> > -----
-> > =C2=A0 1 file changed, 16 insertions(+), 31 deletions(-)
+> > So an address on the stack ends in the 'name' field of a "struct
+> > resource".
 > >=20
-> > diff --git a/drivers/vdpa/solidrun/snet_main.c
-> > b/drivers/vdpa/solidrun/snet_main.c
-> > index 99428a04068d..abf027ca35e1 100644
-> > --- a/drivers/vdpa/solidrun/snet_main.c
-> > +++ b/drivers/vdpa/solidrun/snet_main.c
-> > @@ -556,33 +556,24 @@ static const struct vdpa_config_ops
-> > snet_config_ops =3D {
-> > =C2=A0 static int psnet_open_pf_bar(struct pci_dev *pdev, struct psnet
-> > *psnet)
-> > =C2=A0 {
-> > =C2=A0=C2=A0	char name[50];
-> > -	int ret, i, mask =3D 0;
-> > +	int i;
-> > +
-> > +	snprintf(name, sizeof(name), "psnet[%s]-bars",
-> > pci_name(pdev));
-> > +
-> > =C2=A0=C2=A0	/* We don't know which BAR will be used to communicate..
-> > =C2=A0=C2=A0	 * We will map every bar with len > 0.
-> > =C2=A0=C2=A0	 *
-> > =C2=A0=C2=A0	 * Later, we will discover the BAR and unmap all other
-> > BARs.
-> > =C2=A0=C2=A0	 */
-> > =C2=A0=C2=A0	for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
-> > -		if (pci_resource_len(pdev, i))
-> > -			mask |=3D (1 << i);
-> > -	}
-> > -
-> > -	/* No BAR can be used.. */
-> > -	if (!mask) {
-> > -		SNET_ERR(pdev, "Failed to find a PCI BAR\n");
-> > -		return -ENODEV;
-> > -	}
-> > -
-> > -	snprintf(name, sizeof(name), "psnet[%s]-bars",
-> > pci_name(pdev));
-> > -	ret =3D pcim_iomap_regions(pdev, mask, name);
-> > -	if (ret) {
-> > -		SNET_ERR(pdev, "Failed to request and map PCI
-> > BARs\n");
-> > -		return ret;
-> > -	}
-> > +		if (pci_resource_len(pdev, i)) {
-> > +			psnet->bars[i] =3D pcim_iomap_region(pdev,
-> > i, name);
+> > According to a few grep, it looks really unusual.
+> >=20
+> > I don't know if it is used, but it looks strange to me.
 >=20
-> Hi,
+> It might be used when printing /proc/iomem, but I don't remember by
+> heart.
 >=20
-> Unrelated to the patch, but is is safe to have 'name' be on the
-> stack?
+> > If it is an issue, it was apparently already there before this
+> > patch.
 >=20
-> pcim_iomap_region()
-> --> __pcim_request_region()
-> --> __pcim_request_region_range()
-> --> request_region() or __request_mem_region()
-> --> __request_region()
-> --> __request_region_locked()
-> --> res->name =3D name;
->=20
-> So an address on the stack ends in the 'name' field of a "struct
-> resource".
+> This series seems to reveal a lot of issues with the probe/remove in
+> many
+> drivers. I think it's better to make fixes of them before this series
+> for
+> the sake of easier backporting.
 
-Oh oh...
+Just so we're in sync:
+I think the only real bug here so far is the one found by Christophe.
 
->=20
-> According to a few grep, it looks really unusual.
->=20
-> I don't know if it is used, but it looks strange to me.
-
-
-I have seen it used in the kernel ringbuffer log when you try to
-request something that's already owned. I think it's here, right in
-__request_region_locked():
-
-/*
- * mm/hmm.c reserves physical addresses which then
- * become unavailable to other users.  Conflicts are
- * not expected.  Warn to aid debugging if encountered.
- */
-if (conflict->desc =3D=3D IORES_DESC_DEVICE_PRIVATE_MEMORY) {
-	pr_warn("Unaddressable device %s %pR conflicts with %pR",
-		conflict->name, conflict, res);
-}
-
-
-Assuming I interpret the code correctly:
-The conflicting resource is found when a new caller (e.g. another
-driver) tries to get the same region. So conflict->name on the original
-requester's stack is by now gone and you do get UB.
-
-Very unlikely UB, since only rarely drivers race for the same resource,
-but still UB.
-
-But there's also a few other places. Grep for "conflict->name".
-
->=20
->=20
-> If it is an issue, it was apparently already there before this patch.
-
-I think this has to be fixed.
-
-Question would just be whether one wants to fix it locally in this
-driver, or prevent it from happening globally by making the common
-infrastructure copy the string.
-
+The usages of pci_disable_device(), pcim_iounmap_regions() and the like
+in remove() and error unwind paths are not elegant and make devres kind
+of useless =E2=80=93 but they are not bugs. So I wouldn't backport them.
 
 P.
 
-
 >=20
-> > +			if (IS_ERR(psnet->bars[i])) {
-> > +				SNET_ERR(pdev, "Failed to request
-> > and map PCI BARs\n");
-> > +				return PTR_ERR(psnet->bars[i]);
-> > +			}
-> > +		}
-> > =C2=A0=20
-> > -	for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
-> > -		if (mask & (1 << i))
-> > -			psnet->bars[i] =3D
-> > pcim_iomap_table(pdev)[i];
-> > =C2=A0=C2=A0	}
-> > =C2=A0=20
-> > =C2=A0=C2=A0	return 0;
-> > @@ -591,18 +582,15 @@ static int psnet_open_pf_bar(struct pci_dev
-> > *pdev, struct psnet *psnet)
-> > =C2=A0 static int snet_open_vf_bar(struct pci_dev *pdev, struct snet
-> > *snet)
-> > =C2=A0 {
-> > =C2=A0=C2=A0	char name[50];
-> > -	int ret;
-> > =C2=A0=20
-> > =C2=A0=C2=A0	snprintf(name, sizeof(name), "snet[%s]-bar",
-> > pci_name(pdev));
-> > =C2=A0=C2=A0	/* Request and map BAR */
-> > -	ret =3D pcim_iomap_regions(pdev, BIT(snet->psnet-
-> > >cfg.vf_bar), name);
-> > -	if (ret) {
-> > +	snet->bar =3D pcim_iomap_region(pdev, snet->psnet-
-> > >cfg.vf_bar, name);
->=20
-> Same
->=20
-> Just my 2c.
->=20
-> CJ
->=20
-> > +	if (IS_ERR(snet->bar)) {
-> > =C2=A0=C2=A0		SNET_ERR(pdev, "Failed to request and map PCI BAR
-> > for a VF\n");
-> > -		return ret;
-> > +		return PTR_ERR(snet->bar);
-> > =C2=A0=C2=A0	}
-> > =C2=A0=20
-> > -	snet->bar =3D pcim_iomap_table(pdev)[snet->psnet-
-> > >cfg.vf_bar];
-> > -
-> > =C2=A0=C2=A0	return 0;
-> > =C2=A0 }
-> > =C2=A0=20
-> > @@ -650,15 +638,12 @@ static int psnet_detect_bar(struct psnet
-> > *psnet, u32 off)
-> > =C2=A0=20
-> > =C2=A0 static void psnet_unmap_unused_bars(struct pci_dev *pdev, struct
-> > psnet *psnet)
-> > =C2=A0 {
-> > -	int i, mask =3D 0;
-> > +	int i;
-> > =C2=A0=20
-> > =C2=A0=C2=A0	for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
-> > =C2=A0=C2=A0		if (psnet->bars[i] && i !=3D psnet->barno)
-> > -			mask |=3D (1 << i);
-> > +			pcim_iounmap_region(pdev, i);
-> > =C2=A0=C2=A0	}
-> > -
-> > -	if (mask)
-> > -		pcim_iounmap_regions(pdev, mask);
-> > =C2=A0 }
-> > =C2=A0=20
-> > =C2=A0 /* Read SNET config from PCI BAR */
->=20
+> If here is a problem, the devm_kasprintf() should be used.
 >=20
 
 
