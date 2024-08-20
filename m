@@ -1,67 +1,109 @@
-Return-Path: <linux-gpio+bounces-8863-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8864-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E7EA958967
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 16:34:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78A1A95897F
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 16:36:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BF99D2838D2
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 14:34:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AD361C2156F
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 14:36:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C2B21917C7;
-	Tue, 20 Aug 2024 14:34:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB207191F81;
+	Tue, 20 Aug 2024 14:36:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=martyn.welch@collabora.com header.b="dDi3Y0r7"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KKXDE6+V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E9618E756;
-	Tue, 20 Aug 2024 14:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724164455; cv=pass; b=mfUCUE7ewQmtBBbsF52FSv0HHNxYBwQTxXmd/+LU3NKheCo+9A0HCimeoqM0VLxwvLcFZdxuvxCNeda7I/noJ382EcWN4zfSDJJwAGrgH5eKMLQFtFE+i29sm/sx+rCSFs8qfbRAOejcjfxe45lTd8Wuk6opwIS1ybWPiKlMDAk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724164455; c=relaxed/simple;
-	bh=tlVZiJq+FXMzsigETTBROYaKMXD3oFR183eogggWQkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P1ezI7IGv81hkXKfGiqMQVr3ZPv/wJd9dQlV2GLPJXOG1yhHPqiSF5fG6JUyQN7wG2J53eJk73vP6/DjDLT0ZEiboKkIfxyqN93AvKwgXi+Qy3bYqfhlK+L248e8SWgrKHz0fIpse7uAceTXW9g0mH6v+RPsMpcubByvOjTStAA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=martyn.welch@collabora.com header.b=dDi3Y0r7; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Delivered-To: kernel@collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1724164445; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=hzuFoSwF9CrtHZ4j5hZKfAaBi7lXcBK8fiJx2qw7fNE5GJovhGvVSWd1PeMwMOCDO1YxZxRBZlHRkUPBs64j1u4RvYtfdydDsBOp+zA1TggqwEEkubKafS84swUiai1JgopjIkxR2r+fAm25ev1jHmdEr+Fs6sdTzNrBniyJaTo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1724164445; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=vplBHQruDMbj68SuzMwoca2dFOJUKVYY913/jF0sAAM=; 
-	b=jBNs6tfxECeO/iytGtapAGEJqAHgfXxvzIXHVWt+n5WyV+KUcGxFPm1+46TzNJ/s0DbW4eyli5j4ntSXFldeXrMfXkHKz2IFovaMyn92u9MKjsqdpc6fn1qUeJjYNsqvYnAFI5ISazPnYDiFHmr3RFgcyojw+0kzL2q28zrguwk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=martyn.welch@collabora.com;
-	dmarc=pass header.from=<martyn.welch@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724164445;
-	s=zohomail; d=collabora.com; i=martyn.welch@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=vplBHQruDMbj68SuzMwoca2dFOJUKVYY913/jF0sAAM=;
-	b=dDi3Y0r7HjoIXx8ebhDf10o/8EttkkYWJ3kH06Xw/ze8gsP6LEzxdi4/5fahH2nO
-	GcYkcorVks17YCBZZo3iOQNS+IbEF5VHf/GRkaoEu9i09CWHT6OYkYSm17AureXqXjU
-	8ErIP9360PNUReYgWTlI4EtqcTIpayBlhABpXKH4=
-Received: by mx.zohomail.com with SMTPS id 1724164442979644.9362485336538;
-	Tue, 20 Aug 2024 07:34:02 -0700 (PDT)
-From: Martyn Welch <martyn.welch@collabora.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: kernel@collabora.com,
-	Martyn Welch <martyn.welch@collabora.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF5818E756
+	for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2024 14:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.67
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724164576; cv=none; b=Q8khbPBehzRHVqMWQExOoNusl+RDdYVXA7w52RmmqoJAIXTiDVPjezNJu7RbVhBhmaTi/95GKKcXsZFFxi9UfdFqlgLvJ9fr8qg4A+dzQSxA5G4J0y+5hJApZWfhbzGwl+BtukjXOQ7fz437WH0EcX3gAgs+QrJJ09mKz20cMk4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724164576; c=relaxed/simple;
+	bh=nbes6SGqdEbR+eyIYqDvar9JyRtfpfTelp/Kn/mm0qE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=E1XTuqBr2p3MwxE7GZBa/z+3y1wW2UolhD0/uU6NxYhMSIylE0C138F9fcCFnaPnoHZPzIeZId9da/9y/oN7/l0KJR/qwbgZQrV5cETdNSUjSwLGqb8M4Bosupy+hwEzDNu79IKSzvjhToNN72D5ZL0hxg3lKQ+eVc4lBhlWbNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KKXDE6+V; arc=none smtp.client-ip=209.85.167.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-5332f488c6eso5109145e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Aug 2024 07:36:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1724164572; x=1724769372; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OfyTQeSSkPZ+QzWWZU+FNyyT4+itZMzr8DmOygd/33U=;
+        b=KKXDE6+VlWxMwU68/tuVqlu9RQlRNHMaF6Z34J4PJ43FtC60HeUzBrXTUP7Q4DIfeS
+         PWxXfLORCxZm0LrljfFDH5dyMGxyQTOL/SVSxyfYROYqimYM7f4F1eWtgXa3Fbiaxelw
+         8Y40wOmM+3QUMM5gVacy+l5unwQ5urO4uvVAniDP81If5tIfVU00Fw+X6GDF2nxALs4O
+         9c15gcz4VvGTG+a8mv3n2xTM73n9H0v73rwnNhKVZB+gE1snnUKU6iEtX3A8y5Ujenxj
+         zgdWfDihJHN8JpMj/C3S8WhSZ99tTeJcP/ry6D4+0WIb4YdiGbG1JdCnDK6TWgtahFyz
+         ecAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724164572; x=1724769372;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OfyTQeSSkPZ+QzWWZU+FNyyT4+itZMzr8DmOygd/33U=;
+        b=JLeQGnwQa0tK2ManjlmPgb/7OuWHDaTbBp5qDzxfUojwSoWil81EwSYnF364N5CC1m
+         46oUusdTVSHyLEGXfhMKawQIzY4YKJeVu3KxBRJEZkYbXh2RgjTU/iVtaErOlcko3RG+
+         aN5jxoGfpOsAyh0jyCzF2Ux9KScOpiNLibZhT+nk3ML+frsbUMKKF5fIESV2UxBkNUPF
+         74wl8GWcDcfTlorFy6Cy+3gV12uk1+oV4aNoX+0JhZxFI0jtyawFKSji5deL7r7GjGrQ
+         GEpjMbedUZNp4xsUEadIOk+X2ta9i9sNNLEMkD7xJXa43Fp357oWHC1OLz4aDnC4/PMD
+         jgUw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9YX8hHi6tbWXbgzXm9PUykEoVwEQp+eUVgki/S+eEyaG3OTXuMkgBTVorp6CATK1okscr9Y4B0T9NnZx6D3C4uMqE8iz/Z0toFQ==
+X-Gm-Message-State: AOJu0YxFeBLqVax6dHIS3jsXu5/l+VaNmA+OI4hk1OBl/UimP47pDhxn
+	7idu82fGC1BCbKaMfFHBqjYJMpFrn0r81ESFyzs7MHHg47jA5LWYnw1FteL54Ao=
+X-Google-Smtp-Source: AGHT+IFLUQVFBJiZPnU1UIStc9VMSRLEpQuaGd1PxEKJ/fpKdzW6906wlGxbUZmW87C0ek7drDgHNg==
+X-Received: by 2002:a05:6512:3b8b:b0:52e:fa5f:b6a7 with SMTP id 2adb3069b0e04-5331c6a0569mr10710062e87.13.1724164571458;
+        Tue, 20 Aug 2024 07:36:11 -0700 (PDT)
+Received: from localhost ([87.13.33.30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a838396940fsm772692466b.189.2024.08.20.07.36.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2024 07:36:11 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: mpc8xxx: Add wake on GPIO support
-Date: Tue, 20 Aug 2024 15:33:27 +0100
-Message-ID: <20240820143328.1987442-1-martyn.welch@collabora.com>
-X-Mailer: git-send-email 2.43.0
+	netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH 00/11] Add support for RaspberryPi RP1 PCI device using a DT overlay
+Date: Tue, 20 Aug 2024 16:36:02 +0200
+Message-ID: <cover.1724159867.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -69,77 +111,124 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-The mpc8xxx GPIO can generate an interrupt on state change. This
-interrupt can be used to wake up the device from its sleep state if
-enabled to do so. Add required support to the driver so that the GPIO
-can be used in this way.
+RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
+a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM, 
+etc.) whose registers are all reachable starting from an offset from the
+BAR address.  The main point here is that while the RP1 as an endpoint
+itself is discoverable via usual PCI enumeraiton, the devices it contains
+are not discoverable and must be declared e.g. via the devicetree.
 
-In order for the GPIO to actually function in this way, it is necessary
-to also set the GPIO bit in the RCPM. This can be done via the device
-tree fsl,rcpm-wakeup property.
+This patchset is an attempt to provide a minimum infrastructure to allow
+the RP1 chipset to be discovered and perpherals it contains to be added
+from a devictree overlay loaded during RP1 PCI endpoint enumeration.
+Followup patches should add support for the several peripherals contained
+in RP1.
 
-Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
----
- drivers/gpio/gpio-mpc8xxx.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+This work is based upon dowstream drivers code and the proposal from RH
+et al. (see [1] and [2]). A similar approach is also pursued in [3].
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index c0125ac73906..ab30c911c9d5 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -413,6 +413,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
-+	device_init_wakeup(&pdev->dev, true);
-+
- 	return 0;
- err:
- 	irq_domain_remove(mpc8xxx_gc->irq);
-@@ -429,6 +431,31 @@ static void mpc8xxx_remove(struct platform_device *pdev)
- 	}
- }
- 
-+#ifdef CONFIG_PM
-+static int mpc8xxx_suspend(struct platform_device *pdev, pm_message_t state)
-+{
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
-+
-+	if (mpc8xxx_gc->irqn && device_may_wakeup(&pdev->dev))
-+		enable_irq_wake(mpc8xxx_gc->irqn);
-+
-+	return 0;
-+}
-+
-+static int mpc8xxx_resume(struct platform_device *pdev)
-+{
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
-+
-+	if (mpc8xxx_gc->irqn && device_may_wakeup(&pdev->dev))
-+		disable_irq_wake(mpc8xxx_gc->irqn);
-+
-+	return 0;
-+}
-+#else
-+#define mpc8xxx_suspend NULL
-+#define mpc8xxx_resume NULL
-+#endif
-+
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id gpio_acpi_ids[] = {
- 	{"NXP0031",},
-@@ -440,6 +467,8 @@ MODULE_DEVICE_TABLE(acpi, gpio_acpi_ids);
- static struct platform_driver mpc8xxx_plat_driver = {
- 	.probe		= mpc8xxx_probe,
- 	.remove_new	= mpc8xxx_remove,
-+	.suspend	= mpc8xxx_suspend,
-+	.resume		= mpc8xxx_resume,
- 	.driver		= {
- 		.name = "gpio-mpc8xxx",
- 		.of_match_table	= mpc8xxx_gpio_ids,
+The patches are ordered as follows:
+
+-PATCHES 1 and 2: add binding schemas for clock and gpio peripherals 
+ found in RP1. They are needed to support the other peripherals, e.g.
+ the ethernet mac depends on a clock generated by RP1 and the phy is
+ reset though the on-board gpio controller.
+
+-PATCHES 3, 4 and 5: preparatory patches that fix the address mapping
+ translation (especially wrt dma-ranges) and permit to place the dtbo
+ binary blob to be put in non transient section.
+
+-PATCH 6 and 7: add clock and gpio device drivers.
+
+-PATCH 8: this is the main patch to support RP1 chipset and peripherals
+ enabling through dtb overlay. It contains the dtso since its intimately
+ coupled with the driver and will be linked in as binary blob in the driver
+ obj, but of course it can be easily split in a separate patch if the
+ maintainer feels it so. The real dtso is in devicetree folder while
+ the dtso in driver folder is just a placeholder to include the real dtso.
+ In this way it is possible to check the dtso against dt-bindings.
+
+-PATCH 9: add the relevant kernel CONFIG_ options to defconfig.
+
+-PATCHES 10 and 11: these (still unpolished) patches are not intended to
+ be upstreamed (yet), they serve just as a test reference to be able to
+ use the ethernet MAC contained in RP1.
+
+This patchset is also a first attempt to be more agnostic wrt hardware
+description standards such as OF devicetree and ACPI, where 'agnostic'
+means "using DT in coexistence with ACPI", as been alredy promoted
+by e.g. AL (see [4]). Although there's currently no evidence it will also
+run out of the box on purely ACPI system, it is a first step towards
+that direction.
+
+Please note that albeit this patchset has no prerequisites in order to
+be applied cleanly, it still depends on Stanimir's WIP patchset for BCM2712
+PCIe controller (see [5]) in order to work at runtime.
+
+Many thanks,
+Andrea della Porta
+
+Link:
+- [1]: https://lpc.events/event/17/contributions/1421/attachments/1337/2680/LPC2023%20Non-discoverable%20devices%20in%20PCI.pdf
+- [2]: https://lore.kernel.org/lkml/20230419231155.GA899497-robh@kernel.org/t/
+- [3]: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/#t
+- [4]: https://lore.kernel.org/all/73e05c77-6d53-4aae-95ac-415456ff0ae4@lunn.ch/
+- [5]: https://lore.kernel.org/all/20240626104544.14233-1-svarbanov@suse.de/
+
+Andrea della Porta (11):
+  dt-bindings: clock: Add RaspberryPi RP1 clock bindings
+  dt-bindings: pinctrl: Add RaspberryPi RP1 gpio/pinctrl/pinmux bindings
+  PCI: of_property: Sanitize 32 bit PCI address parsed from DT
+  of: address: Preserve the flags portion on 1:1 dma-ranges mapping
+  vmlinux.lds.h: Preserve DTB sections from being discarded after init
+  clk: rp1: Add support for clocks provided by RP1
+  pinctrl: rp1: Implement RaspberryPi RP1 gpio support
+  misc: rp1: RaspberryPi RP1 misc driver
+  arm64: defconfig: Enable RP1 misc/clock/gpio drivers as built-in
+  net: macb: Add support for RP1's MACB variant
+  arm64: dts: rp1: Add support for MACB contained in RP1
+
+ .../clock/raspberrypi,rp1-clocks.yaml         |   87 +
+ .../pinctrl/raspberrypi,rp1-gpio.yaml         |  177 ++
+ MAINTAINERS                                   |   12 +
+ arch/arm64/boot/dts/broadcom/rp1.dtso         |  175 ++
+ arch/arm64/configs/defconfig                  |    3 +
+ drivers/clk/Kconfig                           |    9 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-rp1.c                         | 1655 +++++++++++++++++
+ drivers/misc/Kconfig                          |    1 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/rp1/Kconfig                      |   20 +
+ drivers/misc/rp1/Makefile                     |    3 +
+ drivers/misc/rp1/rp1-pci.c                    |  333 ++++
+ drivers/misc/rp1/rp1-pci.dtso                 |    8 +
+ drivers/net/ethernet/cadence/macb.h           |   25 +
+ drivers/net/ethernet/cadence/macb_main.c      |  152 +-
+ drivers/of/address.c                          |    3 +-
+ drivers/pci/of_property.c                     |    5 +-
+ drivers/pci/quirks.c                          |    1 +
+ drivers/pinctrl/Kconfig                       |   10 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-rp1.c                 |  719 +++++++
+ include/asm-generic/vmlinux.lds.h             |    2 +-
+ include/dt-bindings/clock/rp1.h               |   56 +
+ include/dt-bindings/misc/rp1.h                |  235 +++
+ include/linux/pci_ids.h                       |    3 +
+ 26 files changed, 3692 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+ create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+ create mode 100644 drivers/clk/clk-rp1.c
+ create mode 100644 drivers/misc/rp1/Kconfig
+ create mode 100644 drivers/misc/rp1/Makefile
+ create mode 100644 drivers/misc/rp1/rp1-pci.c
+ create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+ create mode 100644 drivers/pinctrl/pinctrl-rp1.c
+ create mode 100644 include/dt-bindings/clock/rp1.h
+ create mode 100644 include/dt-bindings/misc/rp1.h
+
 -- 
-2.43.0
+2.35.3
 
 
