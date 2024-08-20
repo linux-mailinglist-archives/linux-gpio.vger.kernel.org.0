@@ -1,163 +1,115 @@
-Return-Path: <linux-gpio+bounces-8876-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8877-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEAE7958AE2
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 17:14:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A174E958C11
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 18:18:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C7E0283FF0
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 15:14:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 14BF3B21717
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 16:18:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6892B1922EF;
-	Tue, 20 Aug 2024 15:14:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D80E4194145;
+	Tue, 20 Aug 2024 16:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hs3bidrT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSmUHbZl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9D318EFC9;
-	Tue, 20 Aug 2024 15:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1EF3F9CC;
+	Tue, 20 Aug 2024 16:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724166861; cv=none; b=Q76dH/mz/52KHB2icfxxVP0lapQjT97WH5x07363QZrt6tbwUFV0SBS5fdP1xJJUtxqP40AcA3K7jTc8LxraA+hTrtQ2bOyhQ7Yj6j2ERwh2yTBy969cdR0E5I2+CfbE/OKr3zB67sBK3JfrV6s2l6yaxJyNgb/xVN2SkhJhTVc=
+	t=1724170723; cv=none; b=GPywtRBE500RLdFKQA0I9ou3Q6KxMqkO5t5FbLZYtHvXetwHiwOZTcM4KCJCHJr3AtY9Vz1TnhjXaEOgKWYdMwnP61BlVhpvSY7eMJUYZXAqecLWgCFo2Qwi2xY5iVZdJuhbtKXkAVMrNf2CuucxB2OJhNUOsq0dfNX1A5A1jJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724166861; c=relaxed/simple;
-	bh=HEp2O9Yg+xFVobpRrcPzfJ17tFgUBl3wrHGCOvMurYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q9Cia/EwPmrCFVj+7/pqRPoP5eFSjUmhLO+agMKXLAcCVzbnBpsZFSPSSqDpDWFtHeFnB25CyyI7dRXv0YDWoPjnAzZxRa++4DIiyCK9whqhyzMqtvNuxTyDxFn1wNqyMVaeMmk45hfqoEkYGUIBGnF/VTX+7AVIn2udtjXcWzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=hs3bidrT; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Mj0xb+mKKtlxydaY/lPIxOqJwc7T/yLIdICGlctTCsA=; b=hs3bidrTIdT3d9wsjsAk5IF+tP
-	EhBSP23m2Zp5+ctd2b+yclSD9n2h/JqDGHeXAjvdLUnhRbi15qMm5yNb7m8b6ZCEdDQQpZD1TnIm0
-	3KVPjhWYJFxfsO+eljPP2JOZVPYWTGDDYrMFFJRrPcq24qC9f4TtL8K0Ypiqj9MRIjBg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sgQYY-005Ew0-6K; Tue, 20 Aug 2024 17:13:58 +0200
-Date: Tue, 20 Aug 2024 17:13:58 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 10/11] net: macb: Add support for RP1's MACB variant
-Message-ID: <c33fe03d-2097-4d26-b3db-8a3d6c793cd1@lunn.ch>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <775000dfb3a35bc691010072942253cb022750e1.1724159867.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1724170723; c=relaxed/simple;
+	bh=GwHcNLghiWzz7Zhh/ycQpyABHYaHtBC7z8dJ0fYp28k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WkCDzQyeNuy5Zn3sXonTtfcO20ldOZ2jUYmfPh+B5HxCuvkwRfbcHzyPkI7rLT1oOblMXZVVMfdQ0pCoOGdOHPz1YU10m6xLqamhZUSgHf/8g+8UOrzM1nio8B1O4DgKxBsnlKOcW2URH7w+YFafpe61fQ8S3WabV7nsLDxcK30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PSmUHbZl; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52f0277daa5so7283491e87.0;
+        Tue, 20 Aug 2024 09:18:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724170720; x=1724775520; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GwHcNLghiWzz7Zhh/ycQpyABHYaHtBC7z8dJ0fYp28k=;
+        b=PSmUHbZl2zNZOv+0+6i7nDhN6lPgPzTgUoNC7YoCHZUlrBfD5NlN4QsV2ZGVpmX5B1
+         gtBWi59uWbuyyUod2ZtIJ9tFiZRI9WACpgFeBijOv2JxfXHIF0mZiSYGpa3PjKsBmzWw
+         msyqklvI842H1pmPydGPsFHuwdS4zwy0QBcuNCSGZxy9Oq2kIUF3tY84mgl+Yw9GYj1Y
+         2IEalSnr2nakzTTPynAK1tBjQrRHaUok5ZLrqHXyCuXlxheRki462hv7d2swy1kf7X2v
+         Onxj7/zoi+0nJi2ODW6SFKsCU7dqIms7cpu+WFZwTGR3tR1o/evc+YOr0h11HiwnvwGL
+         mxQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724170720; x=1724775520;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GwHcNLghiWzz7Zhh/ycQpyABHYaHtBC7z8dJ0fYp28k=;
+        b=Zty89iepT4ma+vTbghTbt9pmx5vfRCDn89taio1LuxqoAwWW+mKrHr32Y6TW/Mi+oy
+         biQaVKlmyYyCZYYr3fgS1qZCfZmT24xUz0ymEl3gsNALhvxlOAUgbyx2Fr+BbamXd4O7
+         jeeEPGTe492S0sIId0KhAZrdshAX4ttOdr3lkF9qJKGhdOvmxRnMcA9Q1HqlKzDdR1FR
+         YbkPHViLtSe3IVVWC3qCVhEAF9eKdhHnNCvzLWSEfxIZlR/MI+pw8NUs4pbKx254ae4h
+         tH6Y+Xyq3CVKlsetUAzY3/jzR8T7Ln0004yZhj3pglsjOxUF3nARKs7sItlPTjEV4+zs
+         BkOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMu9hAKmic8IW9bfTGJ/TNeuWApOv3LZsixZsKaWE2pFfwcqz1bwh9oytuzEbawjHgIcbsZU6hRx5T0Jp14rRrrAAZDTZoxhSrCaIvz85i1fjcEZGg55gCIW6NJTA5J1zI7nk98G8Qfw==
+X-Gm-Message-State: AOJu0YwluJqjpPiXK+QCp0ArHUvZ0fOSo/n1yf74CGkN3VEYZc0gys2Y
+	DdexDgnL4WnA3oq2MiqPYWbfonXYrPXMcv+iNvCUuvyMtT/MgMyNnWEzHC3iXMi15yvx1Qv7psJ
+	zk6bv/ciRTifNbEGi+FteiUDRXdE=
+X-Google-Smtp-Source: AGHT+IF+6LtMSMWEY/Ao8mJroKKMrDoN7E0WZ1Mj++6KXYuF7ZJYgX5umtjKZYajSeJthmvQrhBhSTsl/XYG8AJ5XL8=
+X-Received: by 2002:a05:6512:2386:b0:533:97b:e272 with SMTP id
+ 2adb3069b0e04-5331c6dc80bmr11274705e87.41.1724170719833; Tue, 20 Aug 2024
+ 09:18:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <775000dfb3a35bc691010072942253cb022750e1.1724159867.git.andrea.porta@suse.com>
+References: <20240521152602.1097764-1-patrick.rudolph@9elements.com>
+ <20240521152602.1097764-2-patrick.rudolph@9elements.com> <ZrYH8QlXH5Gfvnz_@black.fi.intel.com>
+ <CALNFmy38aq915Oj7x4q27OWbiympDU=Vjo=7anTYx7w3E=F2UA@mail.gmail.com>
+In-Reply-To: <CALNFmy38aq915Oj7x4q27OWbiympDU=Vjo=7anTYx7w3E=F2UA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 20 Aug 2024 19:18:03 +0300
+Message-ID: <CAHp75VeHO-=fs232ZRyTsnmTyZsigwmTihKRUGLtX4mdBxPgaQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] pinctrl: cy8c95x0: Use regmap ranges
+To: Patrick Rudolph <patrick.rudolph@9elements.com>, Andy Shevchenko <andy@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, naresh.solanki@9elements.com, 
+	broonie@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> +static unsigned int txdelay = 35;
-> +module_param(txdelay, uint, 0644);
+On Tue, Aug 20, 2024 at 11:30=E2=80=AFAM Patrick Rudolph
+<patrick.rudolph@9elements.com> wrote:
+> On Fri, Aug 9, 2024 at 2:13=E2=80=AFPM Andy Shevchenko <andy@black.fi.int=
+el.com> wrote:
+> > On Tue, May 21, 2024 at 05:25:58PM +0200, Patrick Rudolph wrote:
 
-Networking does not like module parameters.
+...
 
-This is also unused in this patch! So i suggest you just delete it.
+> > Besides above, why virtual start is not well aligned? I would expect no=
+t
+> > 0x31, but 0x40 or alike. It might explain some bugs with cache you have
+> > seen.
+> >
+> I didn't find any rules on this, so I used the next free index.
 
-> +
->  /* This structure is only used for MACB on SiFive FU540 devices */
->  struct sifive_fu540_macb_mgmt {
->  	void __iomem *reg;
-> @@ -334,7 +337,7 @@ static int macb_mdio_wait_for_idle(struct macb *bp)
->  	u32 val;
->  
->  	return readx_poll_timeout(MACB_READ_NSR, bp, val, val & MACB_BIT(IDLE),
-> -				  1, MACB_MDIO_TIMEOUT);
-> +				  100, MACB_MDIO_TIMEOUT);
->  }
-  
-Please take this patch out of the series, and break it up. This is one
-patch, with a good explanation why you need 1->100.
+I don't know either if any exists, but here is just my common sense.
+When we have the offsets being aligned it's much easier to decypher and,
+depending on implementation, may be more robust (in case there is some
+bit arithmetics is being used, I hope not though). That's why the 0x40
+or any aligned offset seems natural choice to me.
 
->  static int macb_mdio_read_c22(struct mii_bus *bus, int mii_id, int regnum)
-> @@ -493,6 +496,19 @@ static int macb_mdio_write_c45(struct mii_bus *bus, int mii_id,
->  	return status;
->  }
->  
-> +static int macb_mdio_reset(struct mii_bus *bus)
-> +{
-> +	struct macb *bp = bus->priv;
-> +
-> +	if (bp->phy_reset_gpio) {
-> +		gpiod_set_value_cansleep(bp->phy_reset_gpio, 1);
-> +		msleep(bp->phy_reset_ms);
-> +		gpiod_set_value_cansleep(bp->phy_reset_gpio, 0);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void macb_init_buffers(struct macb *bp)
->  {
->  	struct macb_queue *queue;
-> @@ -969,6 +985,7 @@ static int macb_mii_init(struct macb *bp)
->  	bp->mii_bus->write = &macb_mdio_write_c22;
->  	bp->mii_bus->read_c45 = &macb_mdio_read_c45;
->  	bp->mii_bus->write_c45 = &macb_mdio_write_c45;
-> +	bp->mii_bus->reset = &macb_mdio_reset;
+> > P.S. It might still be bugs in regmap core, if it is the case, they
+> > need to be addressed.
 
-This is one patch.
-
->  	snprintf(bp->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
->  		 bp->pdev->name, bp->pdev->id);
->  	bp->mii_bus->priv = bp;
-> @@ -1640,6 +1657,11 @@ static int macb_rx(struct macb_queue *queue, struct napi_struct *napi,
->  
->  		macb_init_rx_ring(queue);
->  		queue_writel(queue, RBQP, queue->rx_ring_dma);
-> +#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
-> +		if (bp->hw_dma_cap & HW_DMA_CAP_64B)
-> +			macb_writel(bp, RBQPH,
-> +				    upper_32_bits(queue->rx_ring_dma));
-> +#endif
-
-How does this affect a disto kernel? Do you actually need the #ifdef?
-What does bp->hw_dma_cap contain when CONFIG_ARCH_DMA_ADDR_T_64BIT is
-not defined?
-
-Again, this should be a patch of its own, with a good commit message.
-
-Interrupt coalescing should be a patch of its own, etc.
-
-    Andrew
-
----
-pw-bot: cr
+--=20
+With Best Regards,
+Andy Shevchenko
 
