@@ -1,174 +1,165 @@
-Return-Path: <linux-gpio+bounces-8951-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8952-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F10E959EF5
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 15:43:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E779959F0C
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 15:49:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA6DD28460F
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 13:43:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A33A11F22BD2
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 13:49:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408BB1AD5E4;
-	Wed, 21 Aug 2024 13:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 782B61AF4E6;
+	Wed, 21 Aug 2024 13:49:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdWjgVWs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NK9LP76a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B971A4ADA;
-	Wed, 21 Aug 2024 13:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8297B1AD5CE;
+	Wed, 21 Aug 2024 13:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724247778; cv=none; b=lhy3vidZWX6XEEHHhVZ1aJXYNwMeHsiB8YSf49LAAgAfkt7BS2oE0fo7H78IYKR8HPjDSH025qwasDj4dBmYCVHAO+v9Vf8Gi9dSoUHceCbHMecxNJA64K77buYl6rOiFWn1P4a4MVBKNmUE8We4tXOrIfm3kmmTzEZd2r1HIFI=
+	t=1724248195; cv=none; b=ptPWooHwhAi2cx20NCrk3C2KNKkLX6lcMNSffN4T76RqyEmqWdbAMwqMVM5GuIckzfp9+UdF/s0r3SPgxPRk2Yzks//QODp/5btoI0fLr1Ol+SAGKqILRYMhQxX9qTAnTCHMVh4jbTG8EvGCi0eBWWyyEBdYnPFaA8EayTmXVvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724247778; c=relaxed/simple;
-	bh=THhE5eMnjlNKxQ/R+oGQK3EpvB9KEoAA4Y/el7UyCgc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=qHZbKCM+iW36IWepI1qV4IK3O7qU8eVZ3fNiMC1Z8/DiV4epcNPfn0HkHZZVBU3rgYZoQjmEv6fUd/2Zl3X0iLY1oqyhaBIv30HOslxTN8wsJNvDl9JZ/uTimXRZDeP1LlRFwWfpDKWygoBC8x0tHB9Kziv23BkHsJYKrJuyz8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdWjgVWs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C26C32782;
-	Wed, 21 Aug 2024 13:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724247777;
-	bh=THhE5eMnjlNKxQ/R+oGQK3EpvB9KEoAA4Y/el7UyCgc=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=gdWjgVWsHis3krlbmQZ3X58rj8MsjRM1ldVftrS82nR67XO9gkDMSWmV4mjNersqt
-	 Cm/vJl3tAEb+1jV3iL7kICq6Vd30uPtwc/LgrqOvo/0p39YdXB+JY4//E1Uxqu9dFH
-	 GaF06vqkKCkP7I15FnBE/WwLLlgtUeqjdL+pxtJ8Rrc98zmECQrrcWugU98PlHr0xv
-	 EEmpRrbkzfvpLlS6WH0ojzR5c/B71UbhFdHQYz0kXhwT0LyQgbAxNfWd2FsMyVCzPi
-	 HC1vpoU5nDkNpbkqF8T8cISPeCyIlcevgZ3C3Et+mpWH0JJElDQB8funuTwZaBnVWJ
-	 ki8IS+/1FqBuA==
-Message-ID: <14990d25-40a2-46c0-bf94-25800f379a30@kernel.org>
-Date: Wed, 21 Aug 2024 15:42:45 +0200
+	s=arc-20240116; t=1724248195; c=relaxed/simple;
+	bh=u4kuJipWD1vmaiNeXqgsS1lktVrwGmZ+cANuZ0l5L24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YmPoaYPucd7PiU5uLgqtcIq2/arY78corhgXwfDhE9P+4rk/rdDfGb4X8K940Gl8VqVx1t2SuiScmlGJd70vVFy0n9mbJc1My7aBF4Bopv74aG27vdrnjXCFRLxTWy8cVDqjJETOF4TwSF3Axm9VvDnZKmoSeMQnGJPphcBj5RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NK9LP76a; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724248194; x=1755784194;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=u4kuJipWD1vmaiNeXqgsS1lktVrwGmZ+cANuZ0l5L24=;
+  b=NK9LP76aoJeILk1Wsr88t/UBlph4vk8/SCNNFLzrjQuI/r3VUFZxeIXb
+   lvCe3XIe+iX6l3LWP4cb53tjDTNkV37qubJYKO+iEqcVk/ZZBIbsqrydl
+   1MbWPZSe9A9wOfuEg6nEbu+8fhm8u+0Pl5PnUHSeC10MwWTds49bNq3X0
+   HVwuLeR8/0uKFqgFtHrVZwQ9DzA3kNSbeZQGk+sPc3F3YUjE1rLuuNqlw
+   n/nS9/4hwlZNYc3fS6CKKnct81B1IXiqJmrjl30VzTytMFfDtsj4ow2BK
+   m1TeZD9R1n5xM9oo7QOIeNUBivuAXIbhMXtj7EnBhNzAxmf9AHmJY1nvv
+   Q==;
+X-CSE-ConnectionGUID: ehxEVG83SJSQk3SstFdWrA==
+X-CSE-MsgGUID: yBeT5vwARhy33QL9ZPIIeQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="26476090"
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="26476090"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 06:49:41 -0700
+X-CSE-ConnectionGUID: ElUHF5rxQaav52IEjQTp0Q==
+X-CSE-MsgGUID: 4rqoe0VZTu+IxQcD9Bzf8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="61406714"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 21 Aug 2024 06:49:34 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sgliN-000BQI-1L;
+	Wed, 21 Aug 2024 13:49:31 +0000
+Date: Wed, 21 Aug 2024 21:49:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <202408212114.i6MFeKR1-lkp@intel.com>
+References: <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/11] Add support for RaspberryPi RP1 PCI device using a
- DT overlay
-To: Andrea della Porta <andrea.porta@suse.com>
-References: <cover.1724159867.git.andrea.porta@suse.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, Lee Jones <lee@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>, Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <cover.1724159867.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
 
-On 20/08/2024 16:36, Andrea della Porta wrote:
-> RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
-> a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM, 
-> etc.) whose registers are all reachable starting from an offset from the
-> BAR address.  The main point here is that while the RP1 as an endpoint
-> itself is discoverable via usual PCI enumeraiton, the devices it contains
-> are not discoverable and must be declared e.g. via the devicetree.
-> 
-> This patchset is an attempt to provide a minimum infrastructure to allow
-> the RP1 chipset to be discovered and perpherals it contains to be added
-> from a devictree overlay loaded during RP1 PCI endpoint enumeration.
-> Followup patches should add support for the several peripherals contained
-> in RP1.
-> 
-> This work is based upon dowstream drivers code and the proposal from RH
-> et al. (see [1] and [2]). A similar approach is also pursued in [3].
+Hi Andrea,
 
-Looking briefly at findings it seems this was not really tested by
-automation and you expect reviewers to find issues which are pointed out
-by tools. That's not nice approach. Reviewer's time is limited, while
-tools do it for free. And the tools are free - you can use them without
-any effort.
+kernel test robot noticed the following build errors:
 
-It does not look like you tested the DTS against bindings. Please run
-`make dtbs_check W=1` (see
-Documentation/devicetree/bindings/writing-schema.rst or
-https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-for instructions).
+[auto build test ERROR on clk/clk-next]
+[also build test ERROR on robh/for-next char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus linus/master v6.11-rc4 next-20240821]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Please run standard kernel tools for static analysis, like coccinelle,
-smatch and sparse, and fix reported warnings. Also please check for
-warnings when building with W=1. Most of these commands (checks or W=1
-build) can build specific targets, like some directory, to narrow the
-scope to only your code. The code here looks like it needs a fix. Feel
-free to get in touch if the warning is not clear.
+url:    https://github.com/intel-lab-lkp/linux/commits/Andrea-della-Porta/dt-bindings-clock-Add-RaspberryPi-RP1-clock-bindings/20240821-023901
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+patch link:    https://lore.kernel.org/r/5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta%40suse.com
+patch subject: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+config: x86_64-randconfig-r133-20240821 (https://download.01.org/0day-ci/archive/20240821/202408212114.i6MFeKR1-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240821/202408212114.i6MFeKR1-lkp@intel.com/reproduce)
 
-Please run scripts/checkpatch.pl and fix reported warnings. Then please
-run `scripts/checkpatch.pl --strict` and (probably) fix more warnings.
-Some warnings can be ignored, especially from --strict run, but the code
-here looks like it needs a fix. Feel free to get in touch if the warning
-is not clear.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408212114.i6MFeKR1-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/misc/rp1/rp1-pci.c: In function 'rp1_mask_irq':
+>> drivers/misc/rp1/rp1-pci.c:98:9: error: implicit declaration of function 'pci_msi_mask_irq'; did you mean 'pci_msix_free_irq'? [-Werror=implicit-function-declaration]
+      98 |         pci_msi_mask_irq(pcie_irqd);
+         |         ^~~~~~~~~~~~~~~~
+         |         pci_msix_free_irq
+   drivers/misc/rp1/rp1-pci.c: In function 'rp1_unmask_irq':
+>> drivers/misc/rp1/rp1-pci.c:106:9: error: implicit declaration of function 'pci_msi_unmask_irq' [-Werror=implicit-function-declaration]
+     106 |         pci_msi_unmask_irq(pcie_irqd);
+         |         ^~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
 
-Best regards,
-Krzysztof
+vim +98 drivers/misc/rp1/rp1-pci.c
 
+    92	
+    93	static void rp1_mask_irq(struct irq_data *irqd)
+    94	{
+    95		struct rp1_dev *rp1 = irqd->domain->host_data;
+    96		struct irq_data *pcie_irqd = rp1->pcie_irqds[irqd->hwirq];
+    97	
+  > 98		pci_msi_mask_irq(pcie_irqd);
+    99	}
+   100	
+   101	static void rp1_unmask_irq(struct irq_data *irqd)
+   102	{
+   103		struct rp1_dev *rp1 = irqd->domain->host_data;
+   104		struct irq_data *pcie_irqd = rp1->pcie_irqds[irqd->hwirq];
+   105	
+ > 106		pci_msi_unmask_irq(pcie_irqd);
+   107	}
+   108	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
