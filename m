@@ -1,133 +1,140 @@
-Return-Path: <linux-gpio+bounces-8896-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8897-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB1899591B2
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 02:16:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AF269591F2
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 02:50:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DEBEF1C210AA
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 00:16:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 485BF2852D5
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 00:50:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E458AD58;
-	Wed, 21 Aug 2024 00:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CF1C18E10;
+	Wed, 21 Aug 2024 00:50:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8KQlM1S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0k+LUt/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011DC17F7;
-	Wed, 21 Aug 2024 00:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8315227;
+	Wed, 21 Aug 2024 00:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724199381; cv=none; b=f2xfdj4Bg7SM9tPnbp37vApn7FkNxEr2DNQUPDmPNwBO7cqzkqEtTwf+nUdzrLvVtKAl8McdDe4rWsleqZPB7NOr6/moH5addWJ0HAvOm18KNwIEuks3gsTS4Dqbul19WEHtNCFxiwkRpaC6Mr1gg1SAnJbpg4gyfQ8LRMelhR0=
+	t=1724201419; cv=none; b=h0K+RhgrswHCyhtZcpbyzuvVPM5XxA8SZ+m0hsVwP5A5WTsSPO1KImbT5P039XiIBGeVjmJBWGYLEzvO8+3sw0e0XzD/8oxZpA3CIiWB39GMiF/YhMoHJgbdHlEXEwJnbHyvq/Q9pf/YoLng8g7QZq1SpG30i1j9UjAdXVuFx9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724199381; c=relaxed/simple;
-	bh=//umJAjmzAHbb4srtnO6p7v3lXCw1BpKooPGruKj3YA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YyIRIbwqzI/yXN6NhJxL5k/K0yWWKNNfl1WFH7tuNBaLaa5t3q9z4tuz9hoI6sVKnWQvR6Tgd/Q0rl/R8a7p6FZZFv9uHstPLh/I1eSevg2BdtJkRSMqjklvPdsd0Rb9O0/Kv0Ve5VERxMA4QemL+ZCUtjok2ztOdQ3fWjuMPC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8KQlM1S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D40DC4AF0B;
-	Wed, 21 Aug 2024 00:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724199380;
-	bh=//umJAjmzAHbb4srtnO6p7v3lXCw1BpKooPGruKj3YA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X8KQlM1SytAKYaLYGKjUz1REIaj2OSxhUitYLdZDhbSPUm+zX/n9d16vFT2QAuH+t
-	 gRVIKK+04YVkR6EPmSuh0C6nOhanaGhRH0wIWK4naUn2w1uZl8uwHWI3y2mssctyjl
-	 0frL43b32OAch2HL/8vT8AD+BpumetAHSJPiJ/WMT4RR9Qc2idkWKBT82xQcfgaPIm
-	 q/VC4vMsptGQhU0h7I2LgO61rK80P5F0B0tguEZC8SIfByjBsVZmPGPfkG3ZAn+S0S
-	 Y9hgUuLVMsBU/bK7a4OHKAWCAgtfwoB+yNoxm4PHjV43MFU/C3auVSDpM4VgrsFPnR
-	 su1kG3ad1mLCw==
-Date: Tue, 20 Aug 2024 19:16:18 -0500
-From: Rob Herring <robh@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 04/11] of: address: Preserve the flags portion on 1:1
- dma-ranges mapping
-Message-ID: <20240821001618.GA2309328-robh@kernel.org>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1724201419; c=relaxed/simple;
+	bh=msnacrG5UMQf3gDfya9KnhEJ/6a9EztOkkXB5ytvD6I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T26zRyjsE2kR9ZsOZnNA6SQMpak5cxiKYV5qAlEgzojIE4MMm9CShmqbXUgGjl8t9GR7V28Qbm1eOFdwBH+NuCwKdihEQdnbl5ovNi1Ty+JTUKX41wefgIzaEQ5V8Y+EigZzgLFouc3q0g0+wYCEOY6yEzrSIsq1NpeHi3fOsig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K0k+LUt/; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52efe4c7c16so7924019e87.0;
+        Tue, 20 Aug 2024 17:50:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724201416; x=1724806216; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GoSSvwv5odqYZjwPeP5RG58rSx4Vvocb8gC0RlFGkyY=;
+        b=K0k+LUt/0K/zErXYerNVG/CVVMY6jjZAV9zWYKPKfy5vh3XiRaUvymNEZA/01dGEMr
+         oUGaBhO63Jbyj2+Ln+nSSB2DYnq1xlvtzoRQlUBhnt/DuwfpY3c7Rmwl7unOsCCnUx0T
+         e4ON5O/88JFN7uwi4JTBVFKm9qYcUjbKTQQpGkyxEbnuM00nCngwrd8TCMmaeXQ8fPlq
+         ZQwYzp71WF1UuKoe5HkujLFnI6Qv3iLmlUPjsZ/xN+cRc5nNKzlWB8o/DRK6M+hu7JPf
+         s/xMAucMSv8JALXppsvJHjU3ZHM6FPZlZa+pdose2ETujW6ceBJgpQ3pEPiww6kMAu1u
+         LH3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724201416; x=1724806216;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GoSSvwv5odqYZjwPeP5RG58rSx4Vvocb8gC0RlFGkyY=;
+        b=hxj0Y0xssInNOl5FvZhD2AyQVj8AVf3gcmGD0dEAOX/Xqbvxdx8Oz0sdY2Xde6kA+W
+         uKuCKTe3Lbdzmd0t5MKQq7Vp/TtXkJT7XSdnZyuTCEY+sHiNsk8BrOY7OkZKc88uRIFb
+         9lekC6GoS2cgTDFkur3AzAHNBO4uxLDjWQXBvsWxY1ARJlBCg1e46b6M/UNcRov/qSpY
+         ZCKMfamjWWiOS2md7aMxjSrCBsypIJDTQCEuHgUnn6tEG8LFU+GS7R+ktULuOiM0YtlZ
+         JCYRs1GMuxNoC+vYs1+EX16sLp1cWIjFDmiEudIz99I6hFBbQiq57dDmkW6YB0qAMdyk
+         HXoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBPRIwzSBqKqsTHpmydPJbwL2DyS9c2Xthso/2yjhP+xrv1zUhPIxhzRSJtC5oIWbf0Ck8MaWIGUo7@vger.kernel.org, AJvYcCURpkGlTiphm+K5sR/RYHErRBey59zF38A57SkcypVvF1uKwEAsNW4L66ysJTd3K0tdIkiljAn3zYHi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzcxw9RQGHnY9SMNwgFs44IPLQbV47jgIsuFYUVPE6u2tszp3aC
+	jbhB2lRJbbu8RXbM1tTX4F6R/ObgIHrHf940VXLt+GSkiaR/lyFU+xLCFTNGcHryLD8JKhRSP4S
+	YLPYse5l2D+FrNYFXcjg1DaNvkZJgjstv
+X-Google-Smtp-Source: AGHT+IGL5tlotafgQN+H2oUJsy7bZc97bFjxi9+qWaGa49KFqvRVw45iOBGC5pZO03tsbf3cUpFaLShwN4gYw0QAdfs=
+X-Received: by 2002:ac2:4e09:0:b0:530:e1f1:8dc9 with SMTP id
+ 2adb3069b0e04-53348590f43mr242435e87.46.1724201416012; Tue, 20 Aug 2024
+ 17:50:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
+References: <CAOMZO5DvGF5OW6fGQocZcFf+6103OhOyUCRdWGLBKbewWOOLHw@mail.gmail.com>
+ <CAOMZO5DiSvAG225poAoj9hHKioq9XSg_Y7kJ8PG66HEVo-SjMA@mail.gmail.com>
+ <d3c5d73f-a756-4f35-97f1-9301529cce34@lunn.ch> <ZsUXEkc5A5IBLpJv@shell.armlinux.org.uk>
+ <CAOMZO5CymmmUUhBrYwyCJ54sj=55wAVMqWpuYRbJOhoaroCUXA@mail.gmail.com>
+In-Reply-To: <CAOMZO5CymmmUUhBrYwyCJ54sj=55wAVMqWpuYRbJOhoaroCUXA@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Tue, 20 Aug 2024 21:50:04 -0300
+Message-ID: <CAOMZO5DUmw=PZ_v32Y_xkbOTkQiR-9BPmNH7992YSV0m3Yhbfw@mail.gmail.com>
+Subject: Re: pca953x: Probing too early
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, Oleksij Rempel <o.rempel@pengutronix.de>, andi.shyti@kernel.org, 
+	linux-i2c <linux-i2c@vger.kernel.org>, 
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 20, 2024 at 04:36:06PM +0200, Andrea della Porta wrote:
-> A missing or empty dma-ranges in a DT node implies a 1:1 mapping for dma
-> translations. In this specific case, rhe current behaviour is to zero out
+On Tue, Aug 20, 2024 at 8:18=E2=80=AFPM Fabio Estevam <festevam@gmail.com> =
+wrote:
 
-typo
+> The pca953x driver tries to write to the i2c-2 bus before i2c-2 is regist=
+ered.
+>
+> This is the point I don't understand: how can the pca953x driver get
+> probed before its I2C bus parent?
 
-> the entire specifier so that the translation could be carried on as an
-> offset from zero.  This includes address specifier that has flags (e.g.
-> PCI ranges).
-> Once the flags portion has been zeroed, the translation chain is broken
-> since the mapping functions will check the upcoming address specifier
+Disconsider what I wrote above.
 
-What does "upcoming address" mean?
+I'm trying to recover from the arbitration lost like this:
 
-> against mismatching flags, always failing the 1:1 mapping and its entire
-> purpose of always succeeding.
-> Set to zero only the address portion while passing the flags through.
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -491,6 +491,8 @@ static int i2c_imx_bus_busy(struct imx_i2c_struct
+*i2c_imx, int for_busy, bool a
+                /* check for arbitration lost */
+                if (temp & I2SR_IAL) {
+                        i2c_imx_clear_irq(i2c_imx, I2SR_IAL);
++                       pr_err("******* Arbitration lost\n");
++                       i2c_recover_bus(&i2c_imx->adapter);
+                        return -EAGAIN;
+                }
 
-Can you point me to what the failing DT looks like. I'm puzzled how 
-things would have worked for anyone.
+@@ -1487,6 +1489,7 @@ static int i2c_imx_probe(struct platform_device *pdev=
+)
+        i2c_imx->adapter.nr             =3D pdev->id;
+        i2c_imx->adapter.dev.of_node    =3D pdev->dev.of_node;
+        i2c_imx->base                   =3D base;
++       i2c_imx->adapter.retries        =3D 5;
+        ACPI_COMPANION_SET(&i2c_imx->adapter.dev, ACPI_COMPANION(&pdev->dev=
+));
 
+but still get pca953x probe failure:
 
-> 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
->  drivers/of/address.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index d669ce25b5f9..5a6d55a67aa8 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -443,7 +443,8 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
->  	}
->  	if (ranges == NULL || rlen == 0) {
->  		offset = of_read_number(addr, na);
-> -		memset(addr, 0, pna * 4);
-> +		/* copy the address while preserving the flags */
-> +		memset(addr + pbus->flag_cells, 0, (pna - pbus->flag_cells) * 4);
->  		pr_debug("empty ranges; 1:1 translation\n");
->  		goto finish;
->  	}
-> -- 
-> 2.35.3
-> 
+[    1.756761] pca953x 2-0020: supply vcc not found, using dummy regulator
+[    1.766564] pca953x 2-0020: using no AI
+[    1.775333] ******* Arbitration lost
+[    1.783811] ******* Arbitration lost
+[    1.793701] ******* Arbitration lost
+[    1.797455] ******* Arbitration lost
+[    1.801209] ******* Arbitration lost
+[    1.804964] ******* Arbitration lost
+[    1.808562] pca953x 2-0020: failed writing register
+[    1.813602] pca953x: probe of 2-0020 failed with error -11
+[    1.819222] i2c i2c-2: IMX I2C adapter registered
 
