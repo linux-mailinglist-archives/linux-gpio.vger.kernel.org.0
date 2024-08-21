@@ -1,162 +1,140 @@
-Return-Path: <linux-gpio+bounces-8927-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8928-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB1A495980F
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 12:45:02 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E26D9598A9
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 12:57:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 640E31F2358E
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 10:45:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B5B51B232A2
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 10:57:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F0B316B391;
-	Wed, 21 Aug 2024 08:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A8E91E792A;
+	Wed, 21 Aug 2024 09:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FIq/czgs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7AE6165EE8;
-	Wed, 21 Aug 2024 08:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF11F1CBEAD;
+	Wed, 21 Aug 2024 09:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724230285; cv=none; b=mEqHf6oZr3E34kSxAduHB4TA9QjLd+jwvxvYpegVWFr0Ri8dJdvKXf9SA0fnwtzx/Rq/Plf8QHWDVfARE8UWRCrPFHSvE0ufdB2+cmnjvb+Pb01Yu5iSsNzQnOt4YqD6cD38jJGp2298LRM3aLNxJm+lDWMUN9h4uxbU4Plc7kc=
+	t=1724232214; cv=none; b=dWpgxjWZindRdIhOPcFq8CVnKbxAee62j6qRWUQ2PkMYRQ9u1EwmavQMBs0SC2HnTB/1oKT/N5PIYxd7NJkjvDlOMDrf8CLoJAgYZJ4liq5nu8NZ0Mmy/0HuhcxHs6hyhWQUoKX+ub2cTy3LsEczwdQpTRK9ihlEDtnCDm1zMgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724230285; c=relaxed/simple;
-	bh=bGA/b8UDri/Zj5EdsIsP8nNFv4JTmBmBHcQu+n4ERJM=;
+	s=arc-20240116; t=1724232214; c=relaxed/simple;
+	bh=t/CSQvrauuMm+CtOl+ntlCgIHDDtGtHS2ZDMZbNdyCw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=biioP0EbONXsXQp3cwVvq3XDQBpFp4r5NeMdjKKCwf2SHUELwyoYkcAgpS4eB/EwbcagonptZLt+pk4kOuOQW1dCYsvqPLTLWGCbjxQ5l6DClVtrLqLlOyH53e+iKFOeq6WcrfCJnkBJs6ENgD8zHbdD9Z6hZW5CuaaYqxYn6cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-428243f928fso70277835e9.0;
-        Wed, 21 Aug 2024 01:51:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724230282; x=1724835082;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1grTtpsOD7QxOvlav66VEj13IRTNdzSA+6cdUBz9z7c=;
-        b=n2WlvywSkXTVQugA2L2gT17h2rgLR/OxR/roqmAyGfU86wUITQtASpsN7fpscL/ejY
-         B4a7vM/SnjKPXUreuBEBijKONv2zSfbZZcMJciOgO7GiVHvmPrJ0jlK2Jph+ICMikScn
-         44GNBv2EtGEr+hQEB/Eyn2I3JR41S35Kfj13kAVW4eYAv0VJwFcR/h2zrWhGH473Jjhp
-         FdJnLqjc57m/dDrJmIOl50NBdYo+sHsuzv3CgfGBH9uo3zwZMwwMaAe2i5Nz4APEwdfg
-         0P8Slpm7pP993FRuxzKO5yHyzgoeGp5qj/fdyDvg65eijs2S9bsLauYpyw3uGOrwON/a
-         EFYg==
-X-Forwarded-Encrypted: i=1; AJvYcCVysfEXwrcxNFd5JVwiRZiIDta/ScsyzoeeSS+7+5doBgCtJXD6wiGLgW8dIu/GoxgtEwOeRs/JP82C@vger.kernel.org, AJvYcCXB0Me2Py68JarqC6CWiCWt/9aRm/U53tAawDs0Fy61pP3TFVE0iOsbW3zvdLYNzq/Z1TXrDMD7r1KW1PBx@vger.kernel.org, AJvYcCXwQ3XpygJZpuS5A2JQMJLnVv95TnZ0XY3LbES/H6f8DJzZF55WUX35HBM4EPOl4KDfkXLxWRTXOKwATA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpEa3J3XzCWvL/VrElIT5Mdn9MH3I2zLbCBijYDx6lezW7ahor
-	2103/qttBuM8QwH9SsOJ5UAa/trX9/9iZWMAO2NhvSCGHFWVXMBx
-X-Google-Smtp-Source: AGHT+IFSv9dRDxRxssoEwFJ9zMxpMyAVM3DX9QE+lXjk5ISrbFMnahGU4oGJcJr3eIQD0eScUDcIrQ==
-X-Received: by 2002:a05:600c:a01:b0:426:5b44:2be7 with SMTP id 5b1f17b1804b1-42abd2149d0mr17554295e9.10.1724230281780;
-        Wed, 21 Aug 2024 01:51:21 -0700 (PDT)
-Received: from krzk-bin ([178.197.215.209])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3718984980dsm15121871f8f.40.2024.08.21.01.51.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2024 01:51:21 -0700 (PDT)
-Date: Wed, 21 Aug 2024 10:51:18 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Billy Tsai <billy_tsai@aspeedtech.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com
-Subject: Re: [PATCH v1 1/2] dt-bindings: gpio: aspeed,ast2400-gpio: Support
- ast2700
-Message-ID: <rdbnhk6hsgusamxn3c6vol47xoliad57gwy4i7tbitb6n2dkhe@hnd7vgbstpvw>
-References: <20240821070740.2378602-1-billy_tsai@aspeedtech.com>
- <20240821070740.2378602-2-billy_tsai@aspeedtech.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ml92B5lK6gDLOXFl2bzoipYEmJtB8STHLWk6l/vlBMpgO/MOFCrSvysmOI6RADnZdVkz2ybM3dRKJ8LHeWgmNo14q7J8j7cHkx6yEVLAnHArLX0Qc1hR1ZWjSLZWZ1xZBETjd4UisrqperLy+2hek6a22Z/kzDnA4K+IsAeMrHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FIq/czgs; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724232212; x=1755768212;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=t/CSQvrauuMm+CtOl+ntlCgIHDDtGtHS2ZDMZbNdyCw=;
+  b=FIq/czgsZW0BAKYkCNwGas3HzgNxtkBD26c/TXqAp2CBvTf9lhrkHfeT
+   uBfigJjOMgLjoCriCoUxac3smtjLnT3FYN4oK4Jt/HhEg6U4D+zfQK32T
+   Ekxj+51f9YJL9OIsuzQ98ReQOEksgwfaLbcanrUqK8idfOnpYNGKBa3nS
+   R1t8L9dzY8FyDOXzeUmBHNclllwBJlIB+gHe5xnrhOHboeamJe+rTGUCa
+   Oq4O1Ja2QlBj9lRwaR/WRs6vDW0O+XNWIklbZOmQtdnHndRDcKy8CDwM6
+   zs/NLnL1F/ki5vguA43HbXdixFiaAD+8NvK4q0yHWP+MeFldDNc70iA3U
+   g==;
+X-CSE-ConnectionGUID: Ex2hzCZ5QYG8zzERjAjZeQ==
+X-CSE-MsgGUID: U7AWMTtUSCKngkaRPvSGpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11170"; a="40037663"
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="40037663"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 02:23:31 -0700
+X-CSE-ConnectionGUID: siL8DPxaQxKhLChs3QZt+g==
+X-CSE-MsgGUID: RbN4J6lASDiEeCMso/RH+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="61570021"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 21 Aug 2024 02:23:25 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sghYm-000B9u-35;
+	Wed, 21 Aug 2024 09:23:20 +0000
+Date: Wed, 21 Aug 2024 17:22:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org
+Subject: Re: [PATCH 07/11] pinctrl: rp1: Implement RaspberryPi RP1 gpio
+ support
+Message-ID: <202408211702.1WVqlgTb-lkp@intel.com>
+References: <eb39a5f3cefff2a1240a18a255dac090af16f223.1724159867.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240821070740.2378602-2-billy_tsai@aspeedtech.com>
+In-Reply-To: <eb39a5f3cefff2a1240a18a255dac090af16f223.1724159867.git.andrea.porta@suse.com>
 
-On Wed, Aug 21, 2024 at 03:07:39PM +0800, Billy Tsai wrote:
-> The AST2700 is the 7th generation SoC from Aspeed, featuring two GPIO
-> controllers: one with 12 GPIO pins and another with 216 GPIO pins.
-> 
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> ---
->  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 46 ++++++++++++++++++-
->  1 file changed, 45 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-> index cf11aa7ec8c7..4d439972c14b 100644
-> --- a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-> @@ -15,6 +15,7 @@ properties:
->        - aspeed,ast2400-gpio
->        - aspeed,ast2500-gpio
->        - aspeed,ast2600-gpio
-> +      - aspeed,ast2700-gpio
->  
->    reg:
->      maxItems: 1
-> @@ -42,7 +43,7 @@ properties:
->      const: 2
->  
->    ngpios:
-> -    minimum: 36
-> +    minimum: 12
->      maximum: 232
->  
->  required:
-> @@ -93,6 +94,20 @@ allOf:
->            enum: [ 36, 208 ]
->        required:
->          - ngpios
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: aspeed,ast2700-gpio
-> +    then:
-> +      properties:
-> +        gpio-line-names:
-> +          minItems: 12
-> +          maxItems: 216
-> +        ngpios:
-> +          enum: [ 12, 216 ]
-> +      required:
-> +        - ngpios
->  
->  additionalProperties: false
->  
-> @@ -146,3 +161,32 @@ examples:
->          gpio-ranges = <&pinctrl 0 208 36>;
->          ngpios = <36>;
->      };
-> +  - |
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +        gpio2: gpio@14c0b000 {
-> +            compatible = "aspeed,ast2700-gpio";
+Hi Andrea,
 
-No need for new example, no relavant/important differences here.
+kernel test robot noticed the following build warnings:
 
+[auto build test WARNING on clk/clk-next]
+[also build test WARNING on robh/for-next char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus linus/master v6.11-rc4 next-20240821]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> +            reg = <0x0 0x14c0b000 0x0 0x1000>;
-> +            interrupts-extended = <&soc1_intc2 18>;
-> +            interrupt-controller;
-> +            #interrupt-cells = <2>;
-> +            #gpio-cells = <2>;
-> +            gpio-controller;
-> +            gpio-ranges = <&pinctrl1 0 0 216>;
-> +            ngpios = <216>;
-> +        };
-> +
-> +        gpio3: gpio@12c11000 {
-> +            compatible = "aspeed,ast2700-gpio";
+url:    https://github.com/intel-lab-lkp/linux/commits/Andrea-della-Porta/dt-bindings-clock-Add-RaspberryPi-RP1-clock-bindings/20240821-023901
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+patch link:    https://lore.kernel.org/r/eb39a5f3cefff2a1240a18a255dac090af16f223.1724159867.git.andrea.porta%40suse.com
+patch subject: [PATCH 07/11] pinctrl: rp1: Implement RaspberryPi RP1 gpio support
+config: nios2-kismet-CONFIG_GPIOLIB_IRQCHIP-CONFIG_PINCTRL_RP1-0-0 (https://download.01.org/0day-ci/archive/20240821/202408211702.1WVqlgTb-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20240821/202408211702.1WVqlgTb-lkp@intel.com/reproduce)
 
-Especially for two the same examples...
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408211702.1WVqlgTb-lkp@intel.com/
 
-Best regards,
-Krzysztof
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for GPIOLIB_IRQCHIP when selected by PINCTRL_RP1
+   WARNING: unmet direct dependencies detected for GPIOLIB_IRQCHIP
+     Depends on [n]: GPIOLIB [=n]
+     Selected by [y]:
+     - PINCTRL_RP1 [=y] && PINCTRL [=y]
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
