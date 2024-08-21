@@ -1,184 +1,101 @@
-Return-Path: <linux-gpio+bounces-8960-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8962-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A40195A621
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 22:52:11 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA0FE95A7A8
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 00:16:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72EA62866C7
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 20:52:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D8E61C211BE
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 22:16:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE34F170A2C;
-	Wed, 21 Aug 2024 20:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 948D817BB05;
+	Wed, 21 Aug 2024 22:16:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="co84FhOn"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MTklpD/j"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781D31531C2;
-	Wed, 21 Aug 2024 20:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279E413B297;
+	Wed, 21 Aug 2024 22:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724273524; cv=none; b=kVgjtKDwCJ2kIFNzXqV71DCa5wDpXuFxbVYSAauI0MrBueihR1DK2LD1hXUaq6Kq7GKHAhTdwc8tVlRi0hp6ET+asCGtA9xMtT1n/0bh2BIRH2XKYniACTt5opY+MPv+OI3S/aBHoCZ1UHjK64wImLpaYgPM5PPzpqfmihzEj24=
+	t=1724278566; cv=none; b=b+pauNW+vMK1A38w92eUbUSZQTaqu47xIA/YblbWWc6Dm39Xj6LZErI3eAfzidvzmMWP8Kc/uqGhFxRUi7Cxd6AETFNzvNnNc/6YwxwuejYfkt4XqNnT0WILMV49SICAkttGbsi3DRQvZMC5W5Npun4VrxlICqhlLaY1D/89knE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724273524; c=relaxed/simple;
-	bh=L92fXwzpvfy6V5aVSsrMQYQc8poFWLPSnWtKPdphpC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z5JWPhL6wXQ2RL0tuYH63Sot8rMx/a+z2vT8sNZKFv04VwAUpgzmFKLa+aL+gazxmmWjMv8s02uEyIgaA0F2lSzHFiB49yJQTst9so2RvQhbYMmJ+BqXpslLeRdaeuMhrOfhA7RiaXTj0KMVX1nLRfJYK0PpAZexfQQfIIbTRKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=co84FhOn; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724273523; x=1755809523;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=L92fXwzpvfy6V5aVSsrMQYQc8poFWLPSnWtKPdphpC4=;
-  b=co84FhOnZUZpMuNdeKixnwT9hl0AmVxpkHMWZcPp6lvYNwqp2zBrcBZ0
-   ao8G27TKZYk95yzd0J1fFdrHjrgtre9zfVtQwtdN1Cj5IeroeINoxlsMn
-   fcMcx9/+3spUYxjemiaHWPEspZfnD9F2wUfImZ32PWVYbKX50mLaoxUtn
-   o4Kwm8LzKzxFmEKyKX5AlXl/kKbxwr+bb03w+x2q2+2o26pvi+lDh2Sw+
-   mh0uxEcnhhz9wpe7WpKvuUFgiTw3qYhyvHELbtkIPHOcrSfTW2U2WUKJN
-   upW92sff8AIqCwJdOZhPwKd0FDExXCGlDr3zecU0xt7M8LhHwPOqVRctQ
-   g==;
-X-CSE-ConnectionGUID: ILtEsulAQ6+SjW3B+6PFTQ==
-X-CSE-MsgGUID: v+FvMQS+SEa1e6Hn2cSLGA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="26410888"
-X-IronPort-AV: E=Sophos;i="6.10,165,1719903600"; 
-   d="scan'208";a="26410888"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 13:52:02 -0700
-X-CSE-ConnectionGUID: U4dPVaJbT0qrJgLGR4NhPQ==
-X-CSE-MsgGUID: APZvwVe7QRWjfRcB7XVWVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,165,1719903600"; 
-   d="scan'208";a="61209335"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 21 Aug 2024 13:51:59 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sgsJA-000Bwo-1b;
-	Wed, 21 Aug 2024 20:51:56 +0000
-Date: Thu, 22 Aug 2024 04:51:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Billy Tsai <billy_tsai@aspeedtech.com>, linus.walleij@linaro.org,
-	brgl@bgdev.pl, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v1 2/2] gpio: Add G7 Aspeed gpio controller driver
-Message-ID: <202408220439.BUcaNSTv-lkp@intel.com>
-References: <20240821070740.2378602-3-billy_tsai@aspeedtech.com>
+	s=arc-20240116; t=1724278566; c=relaxed/simple;
+	bh=wTXjUI+iyePnK5zTtz2JfrslMN0r7IoujZ3NVj0xpi0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=qq53DjtW4M/uD411R9dM686S8ywvDzqmZEUYUzFW7uZxF2sukcrsB/mhOco9450VPOrf2GU6tYXHJ0y4XuyyinPwgPfEq4tGS1WmmsbRuqX9U3lG1ZApyBYrWyFGVDRC40xiLriJwgQVpASMMSiPLBcvWmzpJjWVfOsXnUGQ4A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MTklpD/j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13CCCC32781;
+	Wed, 21 Aug 2024 22:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1724278565;
+	bh=wTXjUI+iyePnK5zTtz2JfrslMN0r7IoujZ3NVj0xpi0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MTklpD/jbTK2RUbXeeiNsGd/xmxANxyt8Q/JFcQBFjX3YpfJ76JRFZr8XYxz0Co5F
+	 X7ATJcQmyoMavPA14NVjM5jBmLLU+MHufHMhHQ/b+suBmW6Zq7KhuZ7eZBZtIXJ6CT
+	 JxlUylADRhlXguYsHFS1dd1XK84lgoJxY6ElYx30=
+Date: Wed, 21 Aug 2024 15:16:04 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Ma Ke <make24@iscas.ac.cn>
+Cc: tony@atomide.com, haojian.zhuang@linaro.org, linus.walleij@linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH RESEND] pinctrl: single: fix potential NULL dereference
+ in pcs_get_function()
+Message-Id: <20240821151604.7fbb834fa1503d11b373212b@linux-foundation.org>
+In-Reply-To: <20240821062132.1407444-1-make24@iscas.ac.cn>
+References: <20240821062132.1407444-1-make24@iscas.ac.cn>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240821070740.2378602-3-billy_tsai@aspeedtech.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Billy,
+On Wed, 21 Aug 2024 14:21:32 +0800 Ma Ke <make24@iscas.ac.cn> wrote:
 
-kernel test robot noticed the following build warnings:
+> pinmux_generic_get_function() can return NULL and the pointer 'function'
+> was dereferenced without checking against NULL. Add checking of pointer
+> 'function' in pcs_get_function().
+> 
+> Found by code review.
+> 
+> ...
+>
+> --- a/drivers/pinctrl/pinctrl-single.c
+> +++ b/drivers/pinctrl/pinctrl-single.c
+> @@ -345,6 +345,8 @@ static int pcs_get_function(struct pinctrl_dev *pctldev, unsigned pin,
+>  		return -ENOTSUPP;
+>  	fselector = setting->func;
+>  	function = pinmux_generic_get_function(pctldev, fselector);
+> +	if (!function)
+> +		return -EINVAL;
+>  	*func = function->data;
+>  	if (!(*func)) {
+>  		dev_err(pcs->dev, "%s could not find function%i\n",
 
-[auto build test WARNING on brgl/gpio/for-next]
-[also build test WARNING on linus/master v6.11-rc4 next-20240821]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Maybe.  Or maybe pinmux_generic_get_function() must always return a
+valid pointer, in which case
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Billy-Tsai/dt-bindings-gpio-aspeed-ast2400-gpio-Support-ast2700/20240821-150951
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20240821070740.2378602-3-billy_tsai%40aspeedtech.com
-patch subject: [PATCH v1 2/2] gpio: Add G7 Aspeed gpio controller driver
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20240822/202408220439.BUcaNSTv-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240822/202408220439.BUcaNSTv-lkp@intel.com/reproduce)
+	BUG_ON(!function);
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202408220439.BUcaNSTv-lkp@intel.com/
+is an appropriate thing.  But a null-pointer deref gives us the same
+info, so no change is needed.
 
-All warnings (new ones prefixed by >>):
+btw, pinmux_generic_get_function() is funny:
 
-   drivers/gpio/gpio-aspeed-g7.c: In function 'aspeed_gpio_g7_request':
->> drivers/gpio/gpio-aspeed-g7.c:474:48: warning: passing argument 1 of 'pinctrl_gpio_request' makes pointer from integer without a cast [-Wint-conversion]
-     474 |         return pinctrl_gpio_request(chip->base + offset);
-         |                                     ~~~~~~~~~~~^~~~~~~~
-         |                                                |
-         |                                                unsigned int
-   In file included from drivers/gpio/gpio-aspeed-g7.c:16:
-   include/linux/pinctrl/consumer.h:30:44: note: expected 'struct gpio_chip *' but argument is of type 'unsigned int'
-      30 | int pinctrl_gpio_request(struct gpio_chip *gc, unsigned int offset);
-         |                          ~~~~~~~~~~~~~~~~~~^~
-   drivers/gpio/gpio-aspeed-g7.c:474:16: error: too few arguments to function 'pinctrl_gpio_request'
-     474 |         return pinctrl_gpio_request(chip->base + offset);
-         |                ^~~~~~~~~~~~~~~~~~~~
-   include/linux/pinctrl/consumer.h:30:5: note: declared here
-      30 | int pinctrl_gpio_request(struct gpio_chip *gc, unsigned int offset);
-         |     ^~~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-aspeed-g7.c: In function 'aspeed_gpio_g7_free':
->> drivers/gpio/gpio-aspeed-g7.c:479:38: warning: passing argument 1 of 'pinctrl_gpio_free' makes pointer from integer without a cast [-Wint-conversion]
-     479 |         pinctrl_gpio_free(chip->base + offset);
-         |                           ~~~~~~~~~~~^~~~~~~~
-         |                                      |
-         |                                      unsigned int
-   include/linux/pinctrl/consumer.h:31:42: note: expected 'struct gpio_chip *' but argument is of type 'unsigned int'
-      31 | void pinctrl_gpio_free(struct gpio_chip *gc, unsigned int offset);
-         |                        ~~~~~~~~~~~~~~~~~~^~
-   drivers/gpio/gpio-aspeed-g7.c:479:9: error: too few arguments to function 'pinctrl_gpio_free'
-     479 |         pinctrl_gpio_free(chip->base + offset);
-         |         ^~~~~~~~~~~~~~~~~
-   include/linux/pinctrl/consumer.h:31:6: note: declared here
-      31 | void pinctrl_gpio_free(struct gpio_chip *gc, unsigned int offset);
-         |      ^~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-aspeed-g7.c: In function 'aspeed_gpio_g7_set_config':
->> drivers/gpio/gpio-aspeed-g7.c:676:48: warning: passing argument 1 of 'pinctrl_gpio_set_config' makes pointer from integer without a cast [-Wint-conversion]
-     676 |                 return pinctrl_gpio_set_config(offset, config);
-         |                                                ^~~~~~
-         |                                                |
-         |                                                unsigned int
-   include/linux/pinctrl/consumer.h:36:47: note: expected 'struct gpio_chip *' but argument is of type 'unsigned int'
-      36 | int pinctrl_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-         |                             ~~~~~~~~~~~~~~~~~~^~
-   drivers/gpio/gpio-aspeed-g7.c:676:24: error: too few arguments to function 'pinctrl_gpio_set_config'
-     676 |                 return pinctrl_gpio_set_config(offset, config);
-         |                        ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/pinctrl/consumer.h:36:5: note: declared here
-      36 | int pinctrl_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-         |     ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-aspeed-g7.c: In function 'aspeed_gpio_g7_request':
-   drivers/gpio/gpio-aspeed-g7.c:475:1: warning: control reaches end of non-void function [-Wreturn-type]
-     475 | }
-         | ^
+	if (!function)
+		return NULL;
+
+	return function;
 
 
-vim +/pinctrl_gpio_request +474 drivers/gpio/gpio-aspeed-g7.c
-
-   468	
-   469	static int aspeed_gpio_g7_request(struct gpio_chip *chip, unsigned int offset)
-   470	{
-   471		if (!have_gpio(gpiochip_get_data(chip), offset))
-   472			return -ENODEV;
-   473	
- > 474		return pinctrl_gpio_request(chip->base + offset);
-   475	}
-   476	
-   477	static void aspeed_gpio_g7_free(struct gpio_chip *chip, unsigned int offset)
-   478	{
- > 479		pinctrl_gpio_free(chip->base + offset);
-   480	}
-   481	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
