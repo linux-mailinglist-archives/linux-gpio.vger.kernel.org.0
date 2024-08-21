@@ -1,122 +1,387 @@
-Return-Path: <linux-gpio+bounces-8933-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8934-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03013959AE6
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 13:57:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90DC9959AEF
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 13:57:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB78228346D
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 11:57:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B5D3A1C226EF
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 11:57:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0853B1B78EB;
-	Wed, 21 Aug 2024 11:42:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 677AE1A4B8D;
+	Wed, 21 Aug 2024 11:46:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f02x8oyr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2G/y1bM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D491B5EB4
-	for <linux-gpio@vger.kernel.org>; Wed, 21 Aug 2024 11:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034E9188A3C;
+	Wed, 21 Aug 2024 11:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724240544; cv=none; b=Ob1TUF5MWHlBE0PP/kAn08v33S1TvotZrukoxos12K2OkSxde5nIYepx56siNoEf7pFggcescR6ezocnosIBnFYT6xRw6nNNR/mIRXhUw267bFvY3D/53JA1qUbDmoOBmMNbI+9mQLW2WPQOE/zsvi1YBkpota95qfmrJJI8Kwc=
+	t=1724240788; cv=none; b=islA0Q9oKOsE6H1129XSpOIRAdJpjLYxxcbHxZ6TaA7pDop9HNISQOtMRH6QnTre3kEGyULWP4XTq22e/8yvOFNjGTzmNm+XTfVS9Se5yp6Hxotnr0kSNfA/6EgqKsDaetgtvNbg0DEyoCCYeP0agYXdG/ar/rupkukQj3mPiMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724240544; c=relaxed/simple;
-	bh=gqFeZhLDZa8/V36NMsHuuGtqH0kl483lV0GD5epFpNE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u4yuyK5vHGmnYrPYzEQhMGuUM2zReOcrAVcyGo4s87nUe1vQgtxLi7KM73eh3FLx3MCRez8rmlrNtc4RSCq9GLtEx0y0PrixwybHjbtEA5D9JgBhIeSZmg8Vwhc7HsXbne9xFYZExuODFvfjzLRNfqJ89MK2FfZ/yImZ+B/fcNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f02x8oyr; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-20230059241so28119505ad.3
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Aug 2024 04:42:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724240542; x=1724845342; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=G22Fd+92Gxxc0ViKFeJcBhlfve/Sxtk78g15n/KrJwA=;
-        b=f02x8oyryThW2nY6CeXyBqPiXcz3Y5vK31PoG3+Py18ZdpBNyiUTccT7AZpcNKYoSx
-         apjicCOAw6x6oMDFBZZ0PYQWxdwa/8mUgGOtV3QNSeVaymZAg4GenmX5CrfkmCe6D2iC
-         I8dYFqQgDvjWn9Y4saP0SsljGheRVzDeQdD/ykhVLqMeZzSTbJmcIbEnJp2eS7VW1rmO
-         kEbGZf+F31c7ARbKXOK55QYSxh/dF62R/J4UMzBMRugoOT4R2WocrNXZVcrliPhY+7GO
-         ryprdC84KD9mV+2M6MEPpbstYm7liReW9hig+QbzaKW8OIWB1Xwu9EQNaOEvmdwyMxPd
-         UuMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724240542; x=1724845342;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G22Fd+92Gxxc0ViKFeJcBhlfve/Sxtk78g15n/KrJwA=;
-        b=w1E2VjCRYc2WgjVSsR+attnCFgIVS47zFDSM6cXK9cMCr3UMaytFVqFvOebm+QnraL
-         n/oVsdHosw2jIBgty3DcxH7SJW+wAt7tx2qiaUKw4r/Pb4/ysdoh1iYqL6FXVnTmt3F8
-         RHIU0ARxSdVIqsCFNWIuaGMl9qonBeFHIZF/ECJIHMqPESkdoaq4xrYYzH7/occLzU3X
-         VDhTQ9yV40Ltt139OAZ8VH/xRHJngIBF20o/ORhHfq4vf//Yoq6AwiWy9GnYgDhEioPN
-         KvMawpzNwfYnfEVmAdM0Jrkk7k+z5GkBjM+UWKVr20C7Iyw3GiAD0ucQhaRVTAYdq3Tu
-         pyQA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0OmSs6kWI4c29BgL78FzyJEczP49UcIQscQpYfQ79NTwH2qtnXHwP4F86RvVen9lXiBwR+qRvkgS6@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU55KwWwPBBwbajKU2PPMcNtUG1WEGb+bwZOdRa5PHn+MhrZGJ
-	0d5uml5H4NQqcMumnTBorKGxiBgVOyGH//IvayIqqYzPYFVdDcED
-X-Google-Smtp-Source: AGHT+IFnZAX+GQZkv8n5Y7ATr2vG0bA+1YBgP82ISc5ZgS9+4RF3vRrhfQEvBgVqT3dALxJCzJPAqg==
-X-Received: by 2002:a17:902:e746:b0:202:4317:79c1 with SMTP id d9443c01a7336-20367d57521mr24596885ad.37.1724240542523;
-        Wed, 21 Aug 2024 04:42:22 -0700 (PDT)
-Received: from fabio-Precision-3551.. ([2804:14c:485:4b61:2803:be04:d9cf:894f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201f031edbesm91754095ad.110.2024.08.21.04.42.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2024 04:42:22 -0700 (PDT)
-From: Fabio Estevam <festevam@gmail.com>
-To: brgl@bgdev.pl
-Cc: linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux@armlinux.org.uk,
-	Fabio Estevam <festevam@denx.de>
-Subject: [PATCH] gpio: pca953x: Print the error code on read/write failures
-Date: Wed, 21 Aug 2024 08:42:02 -0300
-Message-Id: <20240821114202.2072220-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1724240788; c=relaxed/simple;
+	bh=WMV4dGFtHRsMdGbR2t0cIKkZrN1IsuFG4Za9AEuHTRw=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mi8ZrWtkbxyQmyokHMhJksVvq82bXYlkO/NVrmA3+E0//6SOkGmQMJ5aZh8Q9FmKIh+Y3XRFW7MoXYxYmSuBBgBr9Xb1xSAw1HODi+MP35O2vgkfRtg7DnxfL6xaXZwlTvJAAYfezphFnNpVC0+v2lV9p31PgziL3wdyLHS6YfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2G/y1bM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 184C6C32782;
+	Wed, 21 Aug 2024 11:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724240787;
+	bh=WMV4dGFtHRsMdGbR2t0cIKkZrN1IsuFG4Za9AEuHTRw=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=r2G/y1bMyDsrn/29xVktY1F46ZX1ZKor91MvYUGiPhlQ/pwuxV/1c0wTvT/ylUDSl
+	 9BBy09XZgbyDNor2+WyK9oOQnPkY1FnNhRDAC6ClFaSePQbYyB0hR1qhuKTYz8qBnq
+	 qHmWeJA15MJL4rrye2JVqnFiqwSxoOARKEJguvzTt/4DcztdtbMDtH0iw+64DttJhM
+	 foLuSUPDleQWrjJJ2RCjOthIiqGyvwQKmJ9ZIgzJbnyZgyoAIVa0ULthwUi5P1G0Zm
+	 9degnT1bf3Ag7E4hmIx8Xod4j73NrXI0hOWM/pG2Rp5IAWDefxO+mmif2NIN0txw7t
+	 gRzupXR5uo6LA==
+Date: Wed, 21 Aug 2024 12:46:18 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 01/11] dt-bindings: clock: Add RaspberryPi RP1 clock
+ bindings
+Message-ID: <20240821-exception-nearby-5adeaaf0178b@spud>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <8d7dd7ca5da41f2a96e3ef4e2e3f29fd0d71906a.1724159867.git.andrea.porta@suse.com>
+ <20240820-baritone-delegate-5711f7a0bc76@spud>
+ <ZsTfoC3aKLdmFPCL@apocalypse>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="eD3kkNo53rLLXBRC"
+Content-Disposition: inline
+In-Reply-To: <ZsTfoC3aKLdmFPCL@apocalypse>
 
-From: Fabio Estevam <festevam@denx.de>
 
-Print the error code in the pca953x_write_regs() and pca953x_read_regs()
-functions to help debugging.
+--eD3kkNo53rLLXBRC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
-Signed-off-by: Fabio Estevam <festevam@denx.de>
----
- drivers/gpio/gpio-pca953x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, Aug 20, 2024 at 08:25:36PM +0200, Andrea della Porta wrote:
+> Hi Conor,
+>=20
+> On 17:19 Tue 20 Aug     , Conor Dooley wrote:
+> > On Tue, Aug 20, 2024 at 04:36:03PM +0200, Andrea della Porta wrote:
+> > > Add device tree bindings for the clock generator found in RP1 multi
+> > > function device, and relative entries in MAINTAINERS file.
+> > >=20
+> > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > > ---
+> > >  .../clock/raspberrypi,rp1-clocks.yaml         | 87 +++++++++++++++++=
+++
+> > >  MAINTAINERS                                   |  6 ++
+> > >  include/dt-bindings/clock/rp1.h               | 56 ++++++++++++
+> > >  3 files changed, 149 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/clock/raspberry=
+pi,rp1-clocks.yaml
+> > >  create mode 100644 include/dt-bindings/clock/rp1.h
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/clock/raspberrypi,rp1-=
+clocks.yaml b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clock=
+s.yaml
+> > > new file mode 100644
+> > > index 000000000000..b27db86d0572
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.=
+yaml
+> > > @@ -0,0 +1,87 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/clock/raspberrypi,rp1-clocks.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: RaspberryPi RP1 clock generator
+> > > +
+> > > +maintainers:
+> > > +  - Andrea della Porta <andrea.porta@suse.com>
+> > > +
+> > > +description: |
+> > > +  The RP1 contains a clock generator designed as three PLLs (CORE, A=
+UDIO,
+> > > +  VIDEO), and each PLL output can be programmed though dividers to g=
+enerate
+> > > +  the clocks to drive the sub-peripherals embedded inside the chipse=
+t.
+> > > +
+> > > +  Link to datasheet:
+> > > +  https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: raspberrypi,rp1-clocks
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  '#clock-cells':
+> > > +    description:
+> > > +      The index in the assigned-clocks is mapped to the output clock=
+ as per
+> > > +      definitions in dt-bindings/clock/rp1.h.
+> > > +    const: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - '#clock-cells'
+> > > +  - clocks
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/clock/rp1.h>
+> > > +
+> > > +    rp1 {
+> > > +        #address-cells =3D <2>;
+> > > +        #size-cells =3D <2>;
+> > > +
+> > > +        rp1_clocks: clocks@18000 {
+> >=20
+> > The unit address does not match the reg property. I'm surprised that
+> > dtc doesn't complain about that.
+>=20
+> Agreed. I'll update the address with the reg value in the next release
+>=20
+> >=20
+> > > +            compatible =3D "raspberrypi,rp1-clocks";
+> > > +            reg =3D <0xc0 0x40018000 0x0 0x10038>;
+> >=20
+> > This is a rather oddly specific size. It leads me to wonder if this
+> > region is inside some sort of syscon area?
+>=20
+> >From downstream source code and RP1 datasheet it seems that the last add=
+ressable
+> register is at 0xc040028014 while the range exposed through teh devicetre=
+e ends
+> up at 0xc040028038, so it seems more of a little safe margin. I wouldn't =
+say it
+> is a syscon area since those register are quite specific for video clock
+> generation and not to be intended to be shared among different peripheral=
+s.
+> Anyway, the next register aperture is at 0xc040030000 so I would say we c=
+an=20
+> extend the clock mapped register like the following:
+>=20
+> reg =3D <0xc0 0x40018000 0x0 0x18000>;
+>=20
+> if you think it is more readable.
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 8baf3edd5274..3f2d33ee20cc 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -498,7 +498,7 @@ static int pca953x_write_regs(struct pca953x_chip *chip, int reg, unsigned long
- 
- 	ret = regmap_bulk_write(chip->regmap, regaddr, value, NBANK(chip));
- 	if (ret < 0) {
--		dev_err(&chip->client->dev, "failed writing register\n");
-+		dev_err(&chip->client->dev, "failed writing register: %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -513,7 +513,7 @@ static int pca953x_read_regs(struct pca953x_chip *chip, int reg, unsigned long *
- 
- 	ret = regmap_bulk_read(chip->regmap, regaddr, value, NBANK(chip));
- 	if (ret < 0) {
--		dev_err(&chip->client->dev, "failed reading register\n");
-+		dev_err(&chip->client->dev, "failed reading register: %d\n", ret);
- 		return ret;
- 	}
- 
--- 
-2.34.1
+I don't care=20
+> > > +            #clock-cells =3D <1>;
+> > > +            clocks =3D <&clk_xosc>;
+> > > +
+> > > +            assigned-clocks =3D <&rp1_clocks RP1_PLL_SYS_CORE>,
+>=20
+> > FWIW, I don't think any of these assigned clocks are helpful for the
+> > example. That said, why do you need to configure all of these assigned
+> > clocks via devicetree when this node is the provider of them?
+>=20
+> Not sure to understand what you mean here, the example is there just to
+> show how to compile the dt node, maybe you're referring to the fact that
+> the consumer should setup the clock freq?
 
+I suppose, yeah. I don't think a particular configuration is relevant
+for the example binding, but simultaneously don't get why you are
+assigning the rate for clocks used by audio devices or ethernet in the
+clock provider node.
+
+> Consider that the rp1-clocks
+> is coupled to the peripherals contained in the same RP1 chip so there is
+> not much point in letting the peripherals set the clock to their leisure.
+
+How is that any different to the many other SoCs in the kernel?
+
+> > > +                              <&rp1_clocks RP1_PLL_AUDIO_CORE>,
+> > > +                              /* RP1_PLL_VIDEO_CORE and dividers are=
+ now managed by VEC,DPI drivers */
+> >=20
+> > Comments like this also do not seem relevant to the binding.
+>=20
+> Agreed, will drop in the next release.
+>=20
+> >=20
+> >=20
+> > Cheers,
+> > Conor.
+> >
+>=20
+> Many thanks,
+> Andrea
+> =20
+> >=20
+> > > +                              <&rp1_clocks RP1_PLL_SYS>,
+> > > +                              <&rp1_clocks RP1_PLL_SYS_SEC>,
+> > > +                              <&rp1_clocks RP1_PLL_AUDIO>,
+> > > +                              <&rp1_clocks RP1_PLL_AUDIO_SEC>,
+> > > +                              <&rp1_clocks RP1_CLK_SYS>,
+> > > +                              <&rp1_clocks RP1_PLL_SYS_PRI_PH>,
+> > > +                              /* RP1_CLK_SLOW_SYS is used for the fr=
+equency counter (FC0) */
+> > > +                              <&rp1_clocks RP1_CLK_SLOW_SYS>,
+> > > +                              <&rp1_clocks RP1_CLK_SDIO_TIMER>,
+> > > +                              <&rp1_clocks RP1_CLK_SDIO_ALT_SRC>,
+> > > +                              <&rp1_clocks RP1_CLK_ETH_TSU>;
+> > > +
+> > > +            assigned-clock-rates =3D <1000000000>, // RP1_PLL_SYS_CO=
+RE
+> > > +                                   <1536000000>, // RP1_PLL_AUDIO_CO=
+RE
+> > > +                                   <200000000>,  // RP1_PLL_SYS
+> > > +                                   <125000000>,  // RP1_PLL_SYS_SEC
+> > > +                                   <61440000>,   // RP1_PLL_AUDIO
+> > > +                                   <192000000>,  // RP1_PLL_AUDIO_SEC
+> > > +                                   <200000000>,  // RP1_CLK_SYS
+> > > +                                   <100000000>,  // RP1_PLL_SYS_PRI_=
+PH
+> > > +                                   /* Must match the XOSC frequency =
+*/
+> > > +                                   <50000000>, // RP1_CLK_SLOW_SYS
+> > > +                                   <1000000>, // RP1_CLK_SDIO_TIMER
+> > > +                                   <200000000>, // RP1_CLK_SDIO_ALT_=
+SRC
+> > > +                                   <50000000>; // RP1_CLK_ETH_TSU
+> > > +        };
+> > > +    };
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 42decde38320..6e7db9bce278 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -19116,6 +19116,12 @@ F:	Documentation/devicetree/bindings/media/r=
+aspberrypi,pispbe.yaml
+> > >  F:	drivers/media/platform/raspberrypi/pisp_be/
+> > >  F:	include/uapi/linux/media/raspberrypi/
+> > > =20
+> > > +RASPBERRY PI RP1 PCI DRIVER
+> > > +M:	Andrea della Porta <andrea.porta@suse.com>
+> > > +S:	Maintained
+> > > +F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.ya=
+ml
+> > > +F:	include/dt-bindings/clock/rp1.h
+> > > +
+> > >  RC-CORE / LIRC FRAMEWORK
+> > >  M:	Sean Young <sean@mess.org>
+> > >  L:	linux-media@vger.kernel.org
+> > > diff --git a/include/dt-bindings/clock/rp1.h b/include/dt-bindings/cl=
+ock/rp1.h
+> > > new file mode 100644
+> > > index 000000000000..1ed67b8a5229
+> > > --- /dev/null
+> > > +++ b/include/dt-bindings/clock/rp1.h
+> > > @@ -0,0 +1,56 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 OR MIT */
+> > > +/*
+> > > + * Copyright (C) 2021 Raspberry Pi Ltd.
+> > > + */
+> > > +
+> > > +#define RP1_PLL_SYS_CORE		0
+> > > +#define RP1_PLL_AUDIO_CORE		1
+> > > +#define RP1_PLL_VIDEO_CORE		2
+> > > +
+> > > +#define RP1_PLL_SYS			3
+> > > +#define RP1_PLL_AUDIO			4
+> > > +#define RP1_PLL_VIDEO			5
+> > > +
+> > > +#define RP1_PLL_SYS_PRI_PH		6
+> > > +#define RP1_PLL_SYS_SEC_PH		7
+> > > +#define RP1_PLL_AUDIO_PRI_PH		8
+> > > +
+> > > +#define RP1_PLL_SYS_SEC			9
+> > > +#define RP1_PLL_AUDIO_SEC		10
+> > > +#define RP1_PLL_VIDEO_SEC		11
+> > > +
+> > > +#define RP1_CLK_SYS			12
+> > > +#define RP1_CLK_SLOW_SYS		13
+> > > +#define RP1_CLK_DMA			14
+> > > +#define RP1_CLK_UART			15
+> > > +#define RP1_CLK_ETH			16
+> > > +#define RP1_CLK_PWM0			17
+> > > +#define RP1_CLK_PWM1			18
+> > > +#define RP1_CLK_AUDIO_IN		19
+> > > +#define RP1_CLK_AUDIO_OUT		20
+> > > +#define RP1_CLK_I2S			21
+> > > +#define RP1_CLK_MIPI0_CFG		22
+> > > +#define RP1_CLK_MIPI1_CFG		23
+> > > +#define RP1_CLK_PCIE_AUX		24
+> > > +#define RP1_CLK_USBH0_MICROFRAME	25
+> > > +#define RP1_CLK_USBH1_MICROFRAME	26
+> > > +#define RP1_CLK_USBH0_SUSPEND		27
+> > > +#define RP1_CLK_USBH1_SUSPEND		28
+> > > +#define RP1_CLK_ETH_TSU			29
+> > > +#define RP1_CLK_ADC			30
+> > > +#define RP1_CLK_SDIO_TIMER		31
+> > > +#define RP1_CLK_SDIO_ALT_SRC		32
+> > > +#define RP1_CLK_GP0			33
+> > > +#define RP1_CLK_GP1			34
+> > > +#define RP1_CLK_GP2			35
+> > > +#define RP1_CLK_GP3			36
+> > > +#define RP1_CLK_GP4			37
+> > > +#define RP1_CLK_GP5			38
+> > > +#define RP1_CLK_VEC			39
+> > > +#define RP1_CLK_DPI			40
+> > > +#define RP1_CLK_MIPI0_DPI		41
+> > > +#define RP1_CLK_MIPI1_DPI		42
+> > > +
+> > > +/* Extra PLL output channels - RP1B0 only */
+> > > +#define RP1_PLL_VIDEO_PRI_PH		43
+> > > +#define RP1_PLL_AUDIO_TERN		44
+> > > --=20
+> > > 2.35.3
+> > >=20
+>=20
+>=20
+
+--eD3kkNo53rLLXBRC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZsXTdgAKCRB4tDGHoIJi
+0kLKAQC535sjoiTm1nVjrfWgTOd6n9yLyJcuMXMSBYYjbBLvdAD+PDOHUfTtzjNr
+QMANmxNh/c4BZ8btKjAD28A7nvtqGAU=
+=945/
+-----END PGP SIGNATURE-----
+
+--eD3kkNo53rLLXBRC--
 
