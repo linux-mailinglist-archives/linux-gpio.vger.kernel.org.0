@@ -1,139 +1,109 @@
-Return-Path: <linux-gpio+bounces-8930-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8931-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4C24959980
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 13:20:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 100C79599C6
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 13:28:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 244151C216BA
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 11:20:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 435981C21643
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 11:28:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0649C2049EE;
-	Wed, 21 Aug 2024 10:00:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CDD2213497;
+	Wed, 21 Aug 2024 10:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="QxT2yLCS"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0TpbejM6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8EF20ABE8;
-	Wed, 21 Aug 2024 10:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D15D21347B
+	for <linux-gpio@vger.kernel.org>; Wed, 21 Aug 2024 10:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724234445; cv=none; b=YFt/3rzVUbaNSK8CMsbKfuPHLzl9jlVA4IHgcn/d5jF9E3GAXgYVkVko7TH2TIj3HvSI3TCIvUJaxw0kPnuPnr/N4r2khvcgR7SKPP/7mUT/md013qljIoAZYXkdVblch21ao0B+fVTUrHgSTctIF3uOsb8tImpFa8H5dyWReiM=
+	t=1724235528; cv=none; b=uRy8Fv4qRWkl9t6oH8oeUQECAUega56KdcOQD7ZfbjfovjOgsGVKgF6NPwHyCLRjAMxzN8UQ1Rh3+qonhiT4RZ42jVn1ZbIkMFcih1cvw2nCktCAxFmKc6xmJV/LKPB02AbWw0ABE+CIIf1oRPbMrRGu/quxoBHDcVhL1Pjh85k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724234445; c=relaxed/simple;
-	bh=xNUZvZ/XGFquQ7bcR8kjzWBjJpgTgvtWAUsduWt4sgQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QQA9wCScfYLOzSa/CG+l1UPWMWKn+ebNR9/yC4cR/iQSkfV2VYqSGjCM7y4XHnQXhlE7pZ3jGqx+5SGCSy+22XLxQWwj9QWLJwnbgOIIJ4UibqU3JXf3v8M5J5WWNHvga5mDoV2AHRTAohAULoX12lhdIaII/tMauafuO9Im760=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=QxT2yLCS; arc=none smtp.client-ip=80.12.242.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id gi8bsVe5vQYYugi8bs0j4Z; Wed, 21 Aug 2024 12:00:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1724234435;
-	bh=w6AIYrBySrGuhkddExNCWqzXmH7gBMeTgtXfKwkDmGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=QxT2yLCSf3emNohfH/QMtChqPSQqqWCz+jg4/sJ1vsmTOCfCHpgaAvyqx/WbsPUgZ
-	 j0w3Ifi/pO/A9j3NexJSl4xUQGdgAwPSojkhWMogfJYjmNkm75D5FBLvWvzBfsoLnx
-	 RtgE/n5BJ2UFiEIPD8sFOVl2YVWvD1WoFHghd/fnChM3vrdlWGJ60YZx+cSO1POKe/
-	 UrZjsxDAjN7K04ZUGLvQezWqRv7RkY5CN3xSXxVmxM1ACtkvF+GMWCeH8yp3vLp82I
-	 DfoFXgyExAGvtjtoSmSR/NevfVwszwgh3H/mUaKphifhnf+W+FZJJpCz9TpFGY61l8
-	 ZEZ3P0e9kIg0Q==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Wed, 21 Aug 2024 12:00:35 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <40db668d-8e8b-4782-8a0b-4a0e9965f086@wanadoo.fr>
-Date: Wed, 21 Aug 2024 12:00:20 +0200
+	s=arc-20240116; t=1724235528; c=relaxed/simple;
+	bh=IrCwK7+BhTrW4s8TxW9PL2T+V+PgKFD8aTUduaq5fpc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tEBwHMkQolLTVrkHZBD/iGebzjORssiXWL4hGFa1OclxoVRrH9n9W7qpC9BXrzV326LKipLzTYmxWLcQcQmT3W9gNhY5SlkPNXi2iFtlIHIEHnerF0aqaByZ1hLTKsjziW/SXza1rT6MiMCMzz7RajPIzjh/TuyNHM+54ftz++A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0TpbejM6; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-371a6fcd863so2728594f8f.1
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Aug 2024 03:18:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1724235525; x=1724840325; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IOpfe84wOW93OeXxz7jrTStdA5m5aEo9lGe57jDguWs=;
+        b=0TpbejM6ZZ/FmttNzdkwo5KUEzGKjcy0giVzgu4KMbcsreNjNsN+nP4zFDWA/wNQI0
+         0068/Dtb8FpneEW11L0Lsp3iqvANB4mBnBCLW2A/RmdUXQLYqXXFFDw5vC9F2qmbKzNP
+         1fsTmZdCI4Of7kqqbOxhA5UohRIYWec7XmBDF5McIVXFWBX3y8Rttwjg6t1sztfMHrO4
+         9EeOZwL6L9XdSc+8Xbic/mTsaipS/9r19MgTbrwK7V/kas2Tr10sHsORlBGHLJ4iEHvn
+         WeJH2TQRAl13py8quhZvImTL8m+RX39snyN+PJ/RzhCqeWIsPUSFgmGYyI8A4OU0kjuD
+         fqDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724235525; x=1724840325;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IOpfe84wOW93OeXxz7jrTStdA5m5aEo9lGe57jDguWs=;
+        b=DBMjplwSaHdILeD6mcYxLewCQNj5InV77pPgvKGc9bWqb+H/+wRiM4EXVUgA5JXI9z
+         tz+6qLAZLMfRaLhx4R72a8kxTt/I7dqWhP1GaW0vghRkXqD/0lO5FiaIv95JWx7JgADs
+         CRCVRCh5zqBvzoArs8B/khZcx3gsIEyh3wgcebOl6eNPZ2SRjopvrfSawMX6xoKpZ93g
+         3gO8FKy+qm1XLss/bwh/28hxwPJbhBS4R8fzLmpYqnYMK8VbQCb2wWQ4nCoAaE5UcpeT
+         Xmdb7ofbQ3ApEZgRVmJIWcpQuIyFn441W5D2GFOoIRIuCRqTRUj2nTwUt4M4y/VGOvay
+         U65g==
+X-Gm-Message-State: AOJu0YwwOQ5/i7kfpimDPcF8DizaNjhiJY0sGQ02UQyZqw6SMlhJU/Vk
+	utQ1VY6ypPLCAIslkyu05RJRjI1gMDCUiqcWwXZEtv0yqrGiesp4/tarRFVanC9NWNGy5+MkKR4
+	SmLE=
+X-Google-Smtp-Source: AGHT+IG0k1QWH7EKXa9xLkDmmWS8z6ihVQWOwECJ2n33gs1mT2RgoNUQldG6ksqRS6M1D2rj0dMnUA==
+X-Received: by 2002:a5d:43c7:0:b0:368:4c38:a669 with SMTP id ffacd0b85a97d-372fd5a85d2mr938977f8f.10.1724235524723;
+        Wed, 21 Aug 2024 03:18:44 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:42a6:b34f:6c18:3851])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-371898aa8casm15437433f8f.93.2024.08.21.03.18.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2024 03:18:44 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 1/1] gpio: virtuser: Use GPIO_LOOKUP_IDX() macro
+Date: Wed, 21 Aug 2024 12:18:43 +0200
+Message-ID: <172423551979.14185.1510477772723968102.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240820200858.3659995-1-andriy.shevchenko@linux.intel.com>
+References: <20240820200858.3659995-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/9] vdpa: solidrun: Fix potential UB bug with devres
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: alexandre.torgue@foss.st.com, alvaro.karsz@solid-run.com,
- andy@kernel.org, axboe@kernel.dk, bhelgaas@google.com, brgl@bgdev.pl,
- broonie@kernel.org, christophe.jaillet@wanadoo.fr, corbet@lwn.net,
- davem@davemloft.net, dlechner@baylibre.com, dlemoal@kernel.org,
- edumazet@google.com, eperezma@redhat.com, hao.wu@intel.com, hare@suse.de,
- jasowang@redhat.com, joabreu@synopsys.com, kbusch@kernel.org,
- kuba@kernel.org, linus.walleij@linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-fpga@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- mcoquelin.stm32@gmail.com, mdf@kernel.org, mst@redhat.com,
- netdev@vger.kernel.org, pabeni@redhat.com, richardcochran@gmail.com,
- stable@vger.kernel.org, trix@redhat.com, u.kleine-koenig@pengutronix.de,
- virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com,
- yilun.xu@intel.com
-References: <20240821071842.8591-2-pstanner@redhat.com>
- <20240821071842.8591-9-pstanner@redhat.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240821071842.8591-9-pstanner@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Le 21/08/2024 à 09:18, Philipp Stanner a écrit :
-> In psnet_open_pf_bar() a string later passed to pcim_iomap_regions() is
-> placed on the stack. Neither pcim_iomap_regions() nor the functions it
-> calls copy that string.
-> 
-> Should the string later ever be used, this, consequently, causes
-> undefined behavior since the stack frame will by then have disappeared.
-> 
-> Fix the bug by allocating the string on the heap through
-> devm_kasprintf().
-> 
-> Cc: stable@vger.kernel.org	# v6.3
-> Fixes: 51a8f9d7f587 ("virtio: vdpa: new SolidNET DPU driver.")
-> Reported-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Closes: https://lore.kernel.org/all/74e9109a-ac59-49e2-9b1d-d825c9c9f891@wanadoo.fr/
-> Suggested-by: Andy Shevchenko <andy@kernel.org>
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> ---
->   drivers/vdpa/solidrun/snet_main.c | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/vdpa/solidrun/snet_main.c b/drivers/vdpa/solidrun/snet_main.c
-> index 99428a04068d..4d42a05d70fc 100644
-> --- a/drivers/vdpa/solidrun/snet_main.c
-> +++ b/drivers/vdpa/solidrun/snet_main.c
-> @@ -555,7 +555,7 @@ static const struct vdpa_config_ops snet_config_ops = {
->   
->   static int psnet_open_pf_bar(struct pci_dev *pdev, struct psnet *psnet)
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-snet_open_vf_bar() also needs the same modification (see Andy's comment 
-on patch 8/9)
 
-CJ
+On Tue, 20 Aug 2024 23:08:58 +0300, Andy Shevchenko wrote:
+> Use GPIO_LOOKUP_IDX() macro which provides a compound literal
+> and can be used with dynamic data.
+> 
+> 
 
->   {
-> -	char name[50];
-> +	char *name;
->   	int ret, i, mask = 0;
->   	/* We don't know which BAR will be used to communicate..
->   	 * We will map every bar with len > 0.
-> @@ -573,7 +573,10 @@ static int psnet_open_pf_bar(struct pci_dev *pdev, struct psnet *psnet)
->   		return -ENODEV;
->   	}
->   
-> -	snprintf(name, sizeof(name), "psnet[%s]-bars", pci_name(pdev));
-> +	name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "psnet[%s]-bars", pci_name(pdev));
-> +	if (!name)
-> +		return -ENOMEM;
-> +
->   	ret = pcim_iomap_regions(pdev, mask, name);
->   	if (ret) {
->   		SNET_ERR(pdev, "Failed to request and map PCI BARs\n");
+Applied, thanks!
 
+[1/1] gpio: virtuser: Use GPIO_LOOKUP_IDX() macro
+      commit: 2a4727e6a8bd1d2b8ae7abf95061eda0457c4d79
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
