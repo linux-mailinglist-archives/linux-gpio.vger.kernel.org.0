@@ -1,81 +1,70 @@
-Return-Path: <linux-gpio+bounces-8926-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8927-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C739959804
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 12:44:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB1A495980F
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 12:45:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2831C2842FE
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 10:44:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 640E31F2358E
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 10:45:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3C05178395;
-	Wed, 21 Aug 2024 08:49:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F0B316B391;
+	Wed, 21 Aug 2024 08:51:25 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F7F1A2873;
-	Wed, 21 Aug 2024 08:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7AE6165EE8;
+	Wed, 21 Aug 2024 08:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724230164; cv=none; b=keCMcmw2LyPzVp/7DncRP4/u3Xe8pqT4uq8J+kMg5ruSYsTejp4gUnf56YQ1BwCmjz87iiVpuFnEzAx6O7gwANAFeGybBnsT+Nxnnstrodt2OpQg185/5/oCyL/mI6kpkuJmZy24xiivwyrfuo1eDx111eFxl+IWmdPpgkkfvAo=
+	t=1724230285; cv=none; b=mEqHf6oZr3E34kSxAduHB4TA9QjLd+jwvxvYpegVWFr0Ri8dJdvKXf9SA0fnwtzx/Rq/Plf8QHWDVfARE8UWRCrPFHSvE0ufdB2+cmnjvb+Pb01Yu5iSsNzQnOt4YqD6cD38jJGp2298LRM3aLNxJm+lDWMUN9h4uxbU4Plc7kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724230164; c=relaxed/simple;
-	bh=LKr4rdH+xZbTu2yhcIA2OdvnxhvnxFtzzUi6nJEJfbI=;
+	s=arc-20240116; t=1724230285; c=relaxed/simple;
+	bh=bGA/b8UDri/Zj5EdsIsP8nNFv4JTmBmBHcQu+n4ERJM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=giy0f+OPjoarakTyzL+zV7UhQE89TCFi5li25Pnah+fdgvLuaOF/MaAOzyPVFOK5VAWkEhvCFspCOFOe7N8o+inDK5j8Adad+X+s1yePUYsAZJfohzkKGuOEOgNoFM5cPGYvogIOaH8ALthBxmAs6z/TjJs42vcHPSizL+XmUUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=biioP0EbONXsXQp3cwVvq3XDQBpFp4r5NeMdjKKCwf2SHUELwyoYkcAgpS4eB/EwbcagonptZLt+pk4kOuOQW1dCYsvqPLTLWGCbjxQ5l6DClVtrLqLlOyH53e+iKFOeq6WcrfCJnkBJs6ENgD8zHbdD9Z6hZW5CuaaYqxYn6cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-371a13c7c80so293893f8f.0;
-        Wed, 21 Aug 2024 01:49:22 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-428243f928fso70277835e9.0;
+        Wed, 21 Aug 2024 01:51:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724230161; x=1724834961;
+        d=1e100.net; s=20230601; t=1724230282; x=1724835082;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ukrxdYKGocvbe6s+bvnlsPSVVnh0A9nJ4+Mt3mqrxjs=;
-        b=ar36/ReeTmZV99doht/ytOHnjdGT3R83BUsbReYcun0zI55XBVZdLA8LkyUXgDo1wx
-         kka6gEbbhegNhymlN1HDe/+ZYKwA6WfPoXinO3zbgKsjCujmifOg6Ww84N8AYMIl6dQF
-         IX1rS+p6S82jV+DOWz9DUuzX/pJLw0hvyE6r0PJ9lMxO84xj08e3NC28iUSZAOqJywiX
-         ONC1Ew+JArDMYrKTYZRhIV5orZh7DVQR6ZLzKPnToQwwIcyHfai4LyykKbkfPgxeEct1
-         hM0EiJFalXzIdKBlYufqrT7aKO6njcQtF2q1MvKNemKFeHvvkeBLAKFE0OJMwjaEBL4c
-         z8gw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/+Sy1swCAOEUOmAum9ZNq6MhXQu/MfSObqSDLfZhg0kAI2Vu5gQtefbKpRhJMtBTWKOAnthmLLBom4Q==@vger.kernel.org, AJvYcCUVmLV5rEwjHUcEiBtfECM2uNsWjTHZgNeHpRvytqkxk6QQyag56nmLVNTcqWP4kG+rOvKdk5pDrX8+8Q==@vger.kernel.org, AJvYcCVYWcpmZ0PEvf0gLk5mh8we2/Q+j9j7H/34VsZIlRde4qudW5pwjnCrs6FJraNzRG3yAgRt87keACPqq8Nl@vger.kernel.org, AJvYcCW+wQ+3YcNtVI5geyoxHCe1f/HFwRIKzekZ3juO2irUI269KJ6ZHNEWBSL0TQudgj+B8Xpk/3FtM/zN@vger.kernel.org, AJvYcCX+TwTS+6tg4CxyJc7M0pXE+jQtzAuYpdHJJIU1F4S3XY6djRp/Ay1/q8xsKi2Dkegn6AousA4EeiNV@vger.kernel.org, AJvYcCX+WZ7YWCexmhtFS7K8FQk/dHJqcOFuobdMqD4bQwz+nSZgSENRzKT1Nl2Wb46t2Ujk/E4sU3tm@vger.kernel.org, AJvYcCXwDZc4l+Rbq57ZxO9Qp6e9y7iJNzJb9egLkorLJOj8JLr/soGnJw3RUqgTamxEJN++nT0wm0LYRLdz@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXae/TVXmKlhyFTO338UR7SNWdfMIEZcFRup9q3xoRAQZNyHln
-	kD0zhJqlx5BX1XQugWvPXESL0wkoVWqIz0f4v3Vf4gZkDpu11Y8Z
-X-Google-Smtp-Source: AGHT+IEzY+cggmVnYXPr8wlDLGWO82CX9mX5uhMUzAWJkxF4X7S6w6FHg8Ktq2bdplOPGiLT2xi4Qw==
-X-Received: by 2002:adf:f70a:0:b0:36b:ea3c:5c00 with SMTP id ffacd0b85a97d-372fdd9a510mr842526f8f.9.1724230161018;
-        Wed, 21 Aug 2024 01:49:21 -0700 (PDT)
+        bh=1grTtpsOD7QxOvlav66VEj13IRTNdzSA+6cdUBz9z7c=;
+        b=n2WlvywSkXTVQugA2L2gT17h2rgLR/OxR/roqmAyGfU86wUITQtASpsN7fpscL/ejY
+         B4a7vM/SnjKPXUreuBEBijKONv2zSfbZZcMJciOgO7GiVHvmPrJ0jlK2Jph+ICMikScn
+         44GNBv2EtGEr+hQEB/Eyn2I3JR41S35Kfj13kAVW4eYAv0VJwFcR/h2zrWhGH473Jjhp
+         FdJnLqjc57m/dDrJmIOl50NBdYo+sHsuzv3CgfGBH9uo3zwZMwwMaAe2i5Nz4APEwdfg
+         0P8Slpm7pP993FRuxzKO5yHyzgoeGp5qj/fdyDvg65eijs2S9bsLauYpyw3uGOrwON/a
+         EFYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVysfEXwrcxNFd5JVwiRZiIDta/ScsyzoeeSS+7+5doBgCtJXD6wiGLgW8dIu/GoxgtEwOeRs/JP82C@vger.kernel.org, AJvYcCXB0Me2Py68JarqC6CWiCWt/9aRm/U53tAawDs0Fy61pP3TFVE0iOsbW3zvdLYNzq/Z1TXrDMD7r1KW1PBx@vger.kernel.org, AJvYcCXwQ3XpygJZpuS5A2JQMJLnVv95TnZ0XY3LbES/H6f8DJzZF55WUX35HBM4EPOl4KDfkXLxWRTXOKwATA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpEa3J3XzCWvL/VrElIT5Mdn9MH3I2zLbCBijYDx6lezW7ahor
+	2103/qttBuM8QwH9SsOJ5UAa/trX9/9iZWMAO2NhvSCGHFWVXMBx
+X-Google-Smtp-Source: AGHT+IFSv9dRDxRxssoEwFJ9zMxpMyAVM3DX9QE+lXjk5ISrbFMnahGU4oGJcJr3eIQD0eScUDcIrQ==
+X-Received: by 2002:a05:600c:a01:b0:426:5b44:2be7 with SMTP id 5b1f17b1804b1-42abd2149d0mr17554295e9.10.1724230281780;
+        Wed, 21 Aug 2024 01:51:21 -0700 (PDT)
 Received: from krzk-bin ([178.197.215.209])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-42abef81a5esm17549115e9.28.2024.08.21.01.49.18
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3718984980dsm15121871f8f.40.2024.08.21.01.51.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2024 01:49:20 -0700 (PDT)
-Date: Wed, 21 Aug 2024 10:49:17 +0200
+        Wed, 21 Aug 2024 01:51:21 -0700 (PDT)
+Date: Wed, 21 Aug 2024 10:51:18 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, 
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 10/11] net: macb: Add support for RP1's MACB variant
-Message-ID: <cfysm2r6sswmvrch34pk5dx4wum3rohcxdla7i5qoh6vizgklb@pk5i7nzlnp67>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <775000dfb3a35bc691010072942253cb022750e1.1724159867.git.andrea.porta@suse.com>
+To: Billy Tsai <billy_tsai@aspeedtech.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com
+Subject: Re: [PATCH v1 1/2] dt-bindings: gpio: aspeed,ast2400-gpio: Support
+ ast2700
+Message-ID: <rdbnhk6hsgusamxn3c6vol47xoliad57gwy4i7tbitb6n2dkhe@hnd7vgbstpvw>
+References: <20240821070740.2378602-1-billy_tsai@aspeedtech.com>
+ <20240821070740.2378602-2-billy_tsai@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,57 +73,88 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <775000dfb3a35bc691010072942253cb022750e1.1724159867.git.andrea.porta@suse.com>
+In-Reply-To: <20240821070740.2378602-2-billy_tsai@aspeedtech.com>
 
-On Tue, Aug 20, 2024 at 04:36:12PM +0200, Andrea della Porta wrote:
-> RaspberryPi RP1 contains Cadence's MACB core. Implement the
-> changes to be able to operate the customization in the RP1.
+On Wed, Aug 21, 2024 at 03:07:39PM +0800, Billy Tsai wrote:
+> The AST2700 is the 7th generation SoC from Aspeed, featuring two GPIO
+> controllers: one with 12 GPIO pins and another with 216 GPIO pins.
 > 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-
-
-> @@ -5100,6 +5214,11 @@ static int macb_probe(struct platform_device *pdev)
->  			}
->  		}
->  	}
-> +
-> +	device_property_read_u8(&pdev->dev, "cdns,aw2w-max-pipe", &bp->aw2w_max_pipe);
-> +	device_property_read_u8(&pdev->dev, "cdns,ar2r-max-pipe", &bp->ar2r_max_pipe);
-
-Where are the bindings?
-
-> +	bp->use_aw2b_fill = device_property_read_bool(&pdev->dev, "cdns,use-aw2b-fill");
-> +
->  	spin_lock_init(&bp->lock);
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 46 ++++++++++++++++++-
+>  1 file changed, 45 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+> index cf11aa7ec8c7..4d439972c14b 100644
+> --- a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+> @@ -15,6 +15,7 @@ properties:
+>        - aspeed,ast2400-gpio
+>        - aspeed,ast2500-gpio
+>        - aspeed,ast2600-gpio
+> +      - aspeed,ast2700-gpio
 >  
->  	/* setup capabilities */
-> @@ -5155,6 +5274,21 @@ static int macb_probe(struct platform_device *pdev)
->  	else
->  		bp->phy_interface = interface;
+>    reg:
+>      maxItems: 1
+> @@ -42,7 +43,7 @@ properties:
+>      const: 2
 >  
-> +	/* optional PHY reset-related properties */
-> +	bp->phy_reset_gpio = devm_gpiod_get_optional(&pdev->dev, "phy-reset",
+>    ngpios:
+> -    minimum: 36
+> +    minimum: 12
+>      maximum: 232
+>  
+>  required:
+> @@ -93,6 +94,20 @@ allOf:
+>            enum: [ 36, 208 ]
+>        required:
+>          - ngpios
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: aspeed,ast2700-gpio
+> +    then:
+> +      properties:
+> +        gpio-line-names:
+> +          minItems: 12
+> +          maxItems: 216
+> +        ngpios:
+> +          enum: [ 12, 216 ]
+> +      required:
+> +        - ngpios
+>  
+>  additionalProperties: false
+>  
+> @@ -146,3 +161,32 @@ examples:
+>          gpio-ranges = <&pinctrl 0 208 36>;
+>          ngpios = <36>;
+>      };
+> +  - |
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        gpio2: gpio@14c0b000 {
+> +            compatible = "aspeed,ast2700-gpio";
 
-Where is the binding?
+No need for new example, no relavant/important differences here.
 
-> +						     GPIOD_OUT_LOW);
-> +	if (IS_ERR(bp->phy_reset_gpio)) {
-> +		dev_err(&pdev->dev, "Failed to obtain phy-reset gpio\n");
-> +		err = PTR_ERR(bp->phy_reset_gpio);
-> +		goto err_out_free_netdev;
-> +	}
+
+> +            reg = <0x0 0x14c0b000 0x0 0x1000>;
+> +            interrupts-extended = <&soc1_intc2 18>;
+> +            interrupt-controller;
+> +            #interrupt-cells = <2>;
+> +            #gpio-cells = <2>;
+> +            gpio-controller;
+> +            gpio-ranges = <&pinctrl1 0 0 216>;
+> +            ngpios = <216>;
+> +        };
 > +
-> +	bp->phy_reset_ms = 10;
-> +	of_property_read_u32(np, "phy-reset-duration", &bp->phy_reset_ms);
+> +        gpio3: gpio@12c11000 {
+> +            compatible = "aspeed,ast2700-gpio";
 
-Where is the binding?
-
-> +	/* A sane reset duration should not be longer than 1s */
-> +	if (bp->phy_reset_ms > 1000)
-> +		bp->phy_reset_ms = 1000;
-> +
->  	/* IP specific init */
->  	err = init(pdev);
+Especially for two the same examples...
 
 Best regards,
 Krzysztof
