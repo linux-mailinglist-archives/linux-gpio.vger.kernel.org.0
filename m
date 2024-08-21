@@ -1,111 +1,133 @@
-Return-Path: <linux-gpio+bounces-8895-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8896-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D301A959168
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 01:56:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB1899591B2
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 02:16:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D8921F253E2
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Aug 2024 23:56:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DEBEF1C210AA
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 00:16:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD2CE1C8FD5;
-	Tue, 20 Aug 2024 23:56:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E458AD58;
+	Wed, 21 Aug 2024 00:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvAh0iNd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8KQlM1S"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91441C8FBE;
-	Tue, 20 Aug 2024 23:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011DC17F7;
+	Wed, 21 Aug 2024 00:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724198208; cv=none; b=kFeVdF90L1y66rOHS7ncVOjHVDgooi8CAEwOi2Mu5OJn+WMu75eo77VBf+dXJs2Bygw1CatvGi0Hz9Cs2I2OFcSsN7IVdwlsW8vCUeTLvcuuMZbou8BtI9RV3y3j52+R0DdpsvaSnHTStbO2HOAGWbc7mNerj0qnk1qTFo2R+jk=
+	t=1724199381; cv=none; b=f2xfdj4Bg7SM9tPnbp37vApn7FkNxEr2DNQUPDmPNwBO7cqzkqEtTwf+nUdzrLvVtKAl8McdDe4rWsleqZPB7NOr6/moH5addWJ0HAvOm18KNwIEuks3gsTS4Dqbul19WEHtNCFxiwkRpaC6Mr1gg1SAnJbpg4gyfQ8LRMelhR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724198208; c=relaxed/simple;
-	bh=xz4OC+9BQHEFLvYvlpWiMwlUUwfX25q4QeHkD63nSQ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rv8xATSRVEgdsEbdvl6OgXNxBpICheOj2ULao/nUHiop2PmwTpQTprcKy6t2dJmowpgNo0rJTlCARxPunhOyj8kXZ42OyxyPMqXXzLg1b0pFwMsG0zFFkzes6ZDoA+zaJQk46CWjUeixPc/25WxwSOg7YzhsaedWKUjcpso/C6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mvAh0iNd; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2f3e2f07f41so25782411fa.3;
-        Tue, 20 Aug 2024 16:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724198205; x=1724803005; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xz4OC+9BQHEFLvYvlpWiMwlUUwfX25q4QeHkD63nSQ0=;
-        b=mvAh0iNdX+d5R8jUZ3XyJzMA/EApM5Jcf6Y6AqOQ8nm3AD6u3gXDUktoT7Xiss3CgH
-         QdYW9++1RSdswdbvoMf3ZC4mgKJNfSXzTbifhDsTSxsoEAkwOn81SBeGkdUelAplLrBv
-         vvZz5dq/3OSkojASOk67lakn5pxgs3QapY23PA0VDAiKeURfHShxXXz0UP0pZX7bM/Kj
-         t/F6l9HZi39trK0IAxh54Q11wd56j8amoLXaZVJh01Pluw2sRcvA65GmPrHvfwfGjnAM
-         Y3xtBPrGoJ2tVIVFTjP5rXCM7YL7UksLWP1rYrsxZSr//yIqVtMbB4LSei+tU/b7XI8a
-         0C0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724198205; x=1724803005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xz4OC+9BQHEFLvYvlpWiMwlUUwfX25q4QeHkD63nSQ0=;
-        b=h/josJniU7AE9Tst76ZDlpKx+lzB6BZPqNJ6X2M65DtDw2+ZDYlBhOHsgT3hRCxQ1p
-         vJz7k0JhDTTMh5ork9gtbWoANuHVwzhYXXZtGbtOb+SCkfMbpX2Gp5SyER2XH/n17E3+
-         1/YECsvsWsjNnuhbt5gj50oYTa3QJIsHr+c0fRj0RhWnXQckzU41B1n9HqVlemH0864q
-         frztBXVNtHwMorhctX1oS95ZCLbyvv8gXUfSqcsBvVsHVkr/PgTk+KSG5DOKPjIKCzeu
-         rzNB0rcsst3W0MA4XS+mPALg3n1kPmDTvKugio4We1F/RAgGWGD15GR6HgNBTaq4L4TM
-         +dLg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9XkhWcmiYjd+8Z+0NANm2Ax8NCImMCOGhsYpyl+lYqDLWvtBciDJyHbhbC+JhAn0G6h89frzLLKwm@vger.kernel.org, AJvYcCX4Nnl/GT8aC9jS09ZlSnvt5FPtloMrlac1CA0+N+TiR45WVrD8nfvzvM8FucTeGJ0vbhJjBRTc9vWT@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmyiKBDLOrg5kyUfsQ5E4/t6FewCg+dFpITwsNJmjz/DCgKXHZ
-	YRbIa9WqvtBvl9qlpOGK68gTJsFK+gb5SejLWTQ2Gy4wAdKjQ2/HyjrnJwmb9cNcSWJTMkU5+Zt
-	tKHh628e3syvkArVxDbN0LV2tnSvQyg==
-X-Google-Smtp-Source: AGHT+IG0TkElo7se4gr+uSbTT3YfP5VNfjT6kygZN6wVGQaSiqMPf8kKqtvmXN/0qZMCQJUHf8oKkk8LFRt/ZIu+Ha0=
-X-Received: by 2002:a2e:9515:0:b0:2f1:929b:aef6 with SMTP id
- 38308e7fff4ca-2f3f8b3ccddmr2899941fa.36.1724198204654; Tue, 20 Aug 2024
- 16:56:44 -0700 (PDT)
+	s=arc-20240116; t=1724199381; c=relaxed/simple;
+	bh=//umJAjmzAHbb4srtnO6p7v3lXCw1BpKooPGruKj3YA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YyIRIbwqzI/yXN6NhJxL5k/K0yWWKNNfl1WFH7tuNBaLaa5t3q9z4tuz9hoI6sVKnWQvR6Tgd/Q0rl/R8a7p6FZZFv9uHstPLh/I1eSevg2BdtJkRSMqjklvPdsd0Rb9O0/Kv0Ve5VERxMA4QemL+ZCUtjok2ztOdQ3fWjuMPC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8KQlM1S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D40DC4AF0B;
+	Wed, 21 Aug 2024 00:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724199380;
+	bh=//umJAjmzAHbb4srtnO6p7v3lXCw1BpKooPGruKj3YA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X8KQlM1SytAKYaLYGKjUz1REIaj2OSxhUitYLdZDhbSPUm+zX/n9d16vFT2QAuH+t
+	 gRVIKK+04YVkR6EPmSuh0C6nOhanaGhRH0wIWK4naUn2w1uZl8uwHWI3y2mssctyjl
+	 0frL43b32OAch2HL/8vT8AD+BpumetAHSJPiJ/WMT4RR9Qc2idkWKBT82xQcfgaPIm
+	 q/VC4vMsptGQhU0h7I2LgO61rK80P5F0B0tguEZC8SIfByjBsVZmPGPfkG3ZAn+S0S
+	 Y9hgUuLVMsBU/bK7a4OHKAWCAgtfwoB+yNoxm4PHjV43MFU/C3auVSDpM4VgrsFPnR
+	 su1kG3ad1mLCw==
+Date: Tue, 20 Aug 2024 19:16:18 -0500
+From: Rob Herring <robh@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 04/11] of: address: Preserve the flags portion on 1:1
+ dma-ranges mapping
+Message-ID: <20240821001618.GA2309328-robh@kernel.org>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAOMZO5DvGF5OW6fGQocZcFf+6103OhOyUCRdWGLBKbewWOOLHw@mail.gmail.com>
- <CAOMZO5DiSvAG225poAoj9hHKioq9XSg_Y7kJ8PG66HEVo-SjMA@mail.gmail.com>
- <d3c5d73f-a756-4f35-97f1-9301529cce34@lunn.ch> <CAHp75Vd3uUge7QFb4eOZb_nGNDu-GFDTZMyS9aZSm-D4LkT97A@mail.gmail.com>
-In-Reply-To: <CAHp75Vd3uUge7QFb4eOZb_nGNDu-GFDTZMyS9aZSm-D4LkT97A@mail.gmail.com>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Tue, 20 Aug 2024 20:56:33 -0300
-Message-ID: <CAOMZO5B2p8JCGON7C5CzyFzsed0Es0wFrq9XKY8mvSeHiVV7Gg@mail.gmail.com>
-Subject: Re: pca953x: Probing too early
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, Oleksij Rempel <o.rempel@pengutronix.de>, andi.shyti@kernel.org, 
-	linux-i2c <linux-i2c@vger.kernel.org>, 
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
 
-Hi Andy,
+On Tue, Aug 20, 2024 at 04:36:06PM +0200, Andrea della Porta wrote:
+> A missing or empty dma-ranges in a DT node implies a 1:1 mapping for dma
+> translations. In this specific case, rhe current behaviour is to zero out
 
-On Tue, Aug 20, 2024 at 7:07=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+typo
 
-> I bet on __i2c_smbus_xfer(). Which comes from
-> https://elixir.bootlin.com/linux/v6.11-rc4/source/drivers/i2c/busses/i2c-=
-imx.c#L549.
+> the entire specifier so that the translation could be carried on as an
+> offset from zero.  This includes address specifier that has flags (e.g.
+> PCI ranges).
+> Once the flags portion has been zeroed, the translation chain is broken
+> since the mapping functions will check the upcoming address specifier
 
-Yes, this is correct.
+What does "upcoming address" mean?
 
-> Very easy to check is to add at the top of i2c-imx.c the following
->
-> #undef EAGAIN
-> #define EAGAIN __LINE__
->
-> and search for the respective line in suspicious files.
+> against mismatching flags, always failing the 1:1 mapping and its entire
+> purpose of always succeeding.
+> Set to zero only the address portion while passing the flags through.
 
-That's an useful hint, thanks.
+Can you point me to what the failing DT looks like. I'm puzzled how 
+things would have worked for anyone.
+
+
+> 
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> ---
+>  drivers/of/address.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index d669ce25b5f9..5a6d55a67aa8 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -443,7 +443,8 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+>  	}
+>  	if (ranges == NULL || rlen == 0) {
+>  		offset = of_read_number(addr, na);
+> -		memset(addr, 0, pna * 4);
+> +		/* copy the address while preserving the flags */
+> +		memset(addr + pbus->flag_cells, 0, (pna - pbus->flag_cells) * 4);
+>  		pr_debug("empty ranges; 1:1 translation\n");
+>  		goto finish;
+>  	}
+> -- 
+> 2.35.3
+> 
 
