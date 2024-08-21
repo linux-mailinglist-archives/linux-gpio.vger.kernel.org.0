@@ -1,143 +1,104 @@
-Return-Path: <linux-gpio+bounces-8900-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8901-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9848A95945C
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 08:05:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49BB6959479
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 08:21:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0682C283D18
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 06:05:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75B541C214F1
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Aug 2024 06:21:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1821816C87E;
-	Wed, 21 Aug 2024 06:05:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77D3A16D9AE;
+	Wed, 21 Aug 2024 06:21:51 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5D4168487
-	for <linux-gpio@vger.kernel.org>; Wed, 21 Aug 2024 06:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B781A1C6B5;
+	Wed, 21 Aug 2024 06:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724220320; cv=none; b=Zp3Wc4tgBRcv7MgrxIFHC4bfQbFDFkJELbj7gAmFCa8e/5tMK9eRLGVHPJjtgOSdzX/cEbLOEEYhVF9tXPuY4QDg0OTowd1r1N5tWgBsgCf2iqofV3jipRUXv/+NARdE7f/qmiDmYXDqjX22+cx5sjmdUYdqSzt5FGXSFruiOX4=
+	t=1724221311; cv=none; b=iKWCJbMitBiyjnTSlRzrvcBweSkeLZPU5oku1PbUduYhseZx5inla6QOKZMiW/7R7hvQjPHn3so1yHj++BxrnrTPJXRKTMkvMoVOiBK3AlAKBCLOeEBxaz+atTAKmx57cETBFu1MiLXFQLGYsQqkVOldRB2gda16idXQNXTb1cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724220320; c=relaxed/simple;
-	bh=Lmr1ZW511aiy6LUvUqcwSnykjVwhBOGbFCjnf6g4mxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iWcdFkx2IK28ERXjnMKUSz8jGP/Dz5KCYxOo6YjSyUbK1tziWwXka1+TVB++qViO8wKJAY6dHezaVHlodxQrm3ZdiaBV9vsqLZ4LzQwQWHijDKfNRRWpl5Xg36t2d4icCqhGByG1MUf9eOfZemMDzY3PdI/ND54rAFP4s795M1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sgeSp-00030i-Ri; Wed, 21 Aug 2024 08:04:59 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sgeSo-001wYp-1J; Wed, 21 Aug 2024 08:04:58 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sgeSn-00FOha-30;
-	Wed, 21 Aug 2024 08:04:57 +0200
-Date: Wed, 21 Aug 2024 08:04:57 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
-	andi.shyti@kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: pca953x: Probing too early
-Message-ID: <ZsWDicqAjmkHgaPD@pengutronix.de>
-References: <CAOMZO5DvGF5OW6fGQocZcFf+6103OhOyUCRdWGLBKbewWOOLHw@mail.gmail.com>
- <CAOMZO5DiSvAG225poAoj9hHKioq9XSg_Y7kJ8PG66HEVo-SjMA@mail.gmail.com>
- <d3c5d73f-a756-4f35-97f1-9301529cce34@lunn.ch>
- <ZsUXEkc5A5IBLpJv@shell.armlinux.org.uk>
- <CAOMZO5CymmmUUhBrYwyCJ54sj=55wAVMqWpuYRbJOhoaroCUXA@mail.gmail.com>
- <CAOMZO5DUmw=PZ_v32Y_xkbOTkQiR-9BPmNH7992YSV0m3Yhbfw@mail.gmail.com>
+	s=arc-20240116; t=1724221311; c=relaxed/simple;
+	bh=glhbN7dVT4zQpN3na6hmnR2DxrICAvbg2AdlboJlrmM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n21qeUXYPVa4LnCb6xpbrcXctsXN97v1MV61JGXFhQFN4nrISdesALP4V8DPzaC66jz6jmHZGoSF3JNmNhsdAvJjx2AyictOFloMW9w1xIEuNaZohjQ6ka+5HiDhOgamPU8gY8O9ETrzx27+BvCUdRr4R8gMjEDTNvB30u8Sabo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowAB3XThth8VmV6WgCA--.27029S2;
+	Wed, 21 Aug 2024 14:21:41 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: tony@atomide.com,
+	haojian.zhuang@linaro.org,
+	linus.walleij@linaro.org,
+	akpm@linux-foundation.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-omap@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] pinctrl: single: fix potential NULL dereference in pcs_get_function()
+Date: Wed, 21 Aug 2024 14:21:32 +0800
+Message-Id: <20240821062132.1407444-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOMZO5DUmw=PZ_v32Y_xkbOTkQiR-9BPmNH7992YSV0m3Yhbfw@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-CM-TRANSID:zQCowAB3XThth8VmV6WgCA--.27029S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrury8WFW5Xr4DZF4fCFW8tFb_yoWDZFg_CF
+	WxXryxJryUGF4DXw17K3yrZFy0ka1UZFW0vr4vg34akryUAw4q93ykG390kwn7Gr4fGrZa
+	yFy5Zr93J347AjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbSxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWlnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUosqXDUUUU
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-Hi Fabio,
+pinmux_generic_get_function() can return NULL and the pointer 'function'
+was dereferenced without checking against NULL. Add checking of pointer
+'function' in pcs_get_function().
 
-On Tue, Aug 20, 2024 at 09:50:04PM -0300, Fabio Estevam wrote:
-> On Tue, Aug 20, 2024 at 8:18 PM Fabio Estevam <festevam@gmail.com> wrote:
-> 
-> > The pca953x driver tries to write to the i2c-2 bus before i2c-2 is registered.
-> >
-> > This is the point I don't understand: how can the pca953x driver get
-> > probed before its I2C bus parent?
-> 
-> Disconsider what I wrote above.
-> 
-> I'm trying to recover from the arbitration lost like this:
-> 
-> --- a/drivers/i2c/busses/i2c-imx.c
-> +++ b/drivers/i2c/busses/i2c-imx.c
-> @@ -491,6 +491,8 @@ static int i2c_imx_bus_busy(struct imx_i2c_struct
-> *i2c_imx, int for_busy, bool a
->                 /* check for arbitration lost */
->                 if (temp & I2SR_IAL) {
->                         i2c_imx_clear_irq(i2c_imx, I2SR_IAL);
-> +                       pr_err("******* Arbitration lost\n");
-> +                       i2c_recover_bus(&i2c_imx->adapter);
->                         return -EAGAIN;
->                 }
-> 
-> @@ -1487,6 +1489,7 @@ static int i2c_imx_probe(struct platform_device *pdev)
->         i2c_imx->adapter.nr             = pdev->id;
->         i2c_imx->adapter.dev.of_node    = pdev->dev.of_node;
->         i2c_imx->base                   = base;
-> +       i2c_imx->adapter.retries        = 5;
->         ACPI_COMPANION_SET(&i2c_imx->adapter.dev, ACPI_COMPANION(&pdev->dev));
-> 
-> but still get pca953x probe failure:
-> 
-> [    1.756761] pca953x 2-0020: supply vcc not found, using dummy regulator
-> [    1.766564] pca953x 2-0020: using no AI
-> [    1.775333] ******* Arbitration lost
-> [    1.783811] ******* Arbitration lost
-> [    1.793701] ******* Arbitration lost
-> [    1.797455] ******* Arbitration lost
-> [    1.801209] ******* Arbitration lost
-> [    1.804964] ******* Arbitration lost
-> [    1.808562] pca953x 2-0020: failed writing register
-> [    1.813602] pca953x: probe of 2-0020 failed with error -11
-> [    1.819222] i2c i2c-2: IMX I2C adapter registered
+Found by code review.
 
-Do you have a multi master i2c bus? If not, can you please test
-following patch:
-https://lore.kernel.org/all/20240715151824.90033-2-eichest@gmail.com/
+Cc: stable@vger.kernel.org
+Fixes: 571aec4df5b7 ("pinctrl: single: Use generic pinmux helpers for managing functions")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+ drivers/pinctrl/pinctrl-single.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Regards,
-Oleksij
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 4c6bfabb6bd7..4da3c3f422b6 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -345,6 +345,8 @@ static int pcs_get_function(struct pinctrl_dev *pctldev, unsigned pin,
+ 		return -ENOTSUPP;
+ 	fselector = setting->func;
+ 	function = pinmux_generic_get_function(pctldev, fselector);
++	if (!function)
++		return -EINVAL;
+ 	*func = function->data;
+ 	if (!(*func)) {
+ 		dev_err(pcs->dev, "%s could not find function%i\n",
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.25.1
+
 
