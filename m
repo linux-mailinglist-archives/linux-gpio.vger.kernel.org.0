@@ -1,56 +1,57 @@
-Return-Path: <linux-gpio+bounces-9002-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9003-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4786395BF33
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 21:57:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5C9395BF37
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 21:57:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1AC11F261D3
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 19:57:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A85F1F262FB
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 19:57:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D3921D0DDF;
-	Thu, 22 Aug 2024 19:57:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A13C1D0DF0;
+	Thu, 22 Aug 2024 19:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="X7rNhmUo"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="Wl/kZB/Q"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DC617588;
-	Thu, 22 Aug 2024 19:57:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2251D0499;
+	Thu, 22 Aug 2024 19:57:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724356657; cv=pass; b=KBtq92S59YoGKptC8DBf9yOkTQjvzoUvxVmqtOxk/8R0J9ETrAQEoM+7W3Zh9cO33XKcNv0BDwl2SPDjNE8Gpv3nQQkLNWngks+QSvrr30/03p+6iXpKCAUDYy/YcEEapVNahSa9/3ZwG/KYK7S0VS5RS78sobxHKgBP1TXC+7k=
+	t=1724356658; cv=pass; b=H8IRuMzSH9fJxHut+oKINrKFLyfKd2d4/nh10Bq84alKQd/0BQ1xJ2iOw3IWBnmg9MQxsiXA7LpH1SezyT594NzzUbQg0UJEhPyhqJ58ODnIJd5TAJ/gKWkVeVkZmMEoo3afdaqkI+rP3so8kd+qqkakrUKRAwP2H7JbMlcg6iU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724356657; c=relaxed/simple;
-	bh=OYGMQeMIzR2Qkqh0UCbymOIGCTmmBed4yr0mWDQHmqU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FCKRzJAg3YVi92yYUVFYY/jOX+Nc0QeQuBp+lFdNfCMMPBYA0qwhnO6kO90NFbPCSIsAamLkOJboijyPwFIDjDJCUP3jAg8O1XKbBrSkLsxMq7uUyGpF90g9eDhbG7THQ6MqTL9J1Z7+PnIKYdf690kHzQIkBvCTJpLkcVT4Pug=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=X7rNhmUo; arc=pass smtp.client-ip=136.143.188.112
+	s=arc-20240116; t=1724356658; c=relaxed/simple;
+	bh=FYXvWzRTZWgnW9i9bBFw2x7MrD6acq5Gg1I3Om+YqBM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uwACypp6biJzQGYtxb2sACTpCUwH6G7tLLhgtCBmr5JqxIApHeNsn+pEa2wulKXTEhAAZJ4Kyis1UtMsA+kqjUTTXpGilwckl+ikbCsUp+xQACcVpG+sAmQS9sJt+kBjTF5DykdRKVDuIZbgJPYYzBFDhyn2F+XQIpreTzRKwYU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=Wl/kZB/Q; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Delivered-To: sebastian.reichel@collabora.com
 ARC-Seal: i=1; a=rsa-sha256; t=1724356642; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=mrMMoVI/vPpUTcwUWmVqAzUZqnK9BHKMfsEHlELNfsdLquU+g2sbqSC/T2dNXX6XiwOG9CgvkVNj9ObKBW2es24/xJ6P3VBbcGyDznFlso+BJtBIh9V02p4Cg1eAjsJHrJHJ0/hWSscDbd5C0JETX7oVfbb65oOwHRxsW5cEMcU=
+	b=dOQG379/jVTi2dNGxoDkn6HXO80ZsClGEZ1qe+xZMwWVCXsZm3/2LfeT+eU6EvsRRNsPsIW4BhuPHz52lqXKM0Yz6CloIMTkIqdaHQlyiwdU9I7wZmDR4oJnu+B51ZTfipjv0bpiNqaU8/p6GJsdZBB7tPccDT/HfsoTIBN3nGM=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1724356642; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=cDAWEJoEuz/zAjQB2GDr5o/+uMhJXPXP0OhvbyTM3eQ=; 
-	b=elg7zCTgG0JGoPym0Bt7GGwWg8QG1KDkl5/q4E4r6K7z7x3QCJK++XxwPqS/UlB0XmhbPk/dWM9S+k2rYS+FFZUX9MIKddGQkLjRTia8w3y5SMST03nVMpDIKM3mv2H1p0uTM6ZxaDAB842087kJ4C6aZI/yX1ioc4+QloOKHl8=
+	t=1724356642; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=5H+Ta+1pr9NtfEOdpaRVmvlyf6UnmYB8Nq+4H/8l53I=; 
+	b=V3Ki9/quUhejKnYlOBkk6BR0wsopNQ1UKNMZEoi+I0ICQBT+o5jK6jNWXaHqCv9NrLARQAHXkgJFSfZHS3L/2EM7dYLtuNAvm/20e6SJSubAG9ttzE9an2EeqLEKOl8cSPHoVFNRK0LF8Nt8ae76BbsWaCK6aNgxBFJxfFvTbaQ=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
 	dmarc=pass header.from=<detlev.casanova@collabora.com>
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724356642;
 	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=cDAWEJoEuz/zAjQB2GDr5o/+uMhJXPXP0OhvbyTM3eQ=;
-	b=X7rNhmUo1ZZg/4il+v8om2GyJcVoSSVDqoPCpnzG28LruVhDc4F7fyqg6EUYsgZt
-	dseyrUIyFkYTnyMpsPvphi40gcPB1xt+buHfOSG85hV1DfBsUPpBoNlEW2/d8VXP4Rv
-	NC0RBqZb5TRpCGeyyzbbBxlctlEjcRjUzTDonVxY=
-Received: by mx.zohomail.com with SMTPS id 1724356639631760.212187062417;
-	Thu, 22 Aug 2024 12:57:19 -0700 (PDT)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=5H+Ta+1pr9NtfEOdpaRVmvlyf6UnmYB8Nq+4H/8l53I=;
+	b=Wl/kZB/QHE8bn0PCi5umpsJgLeznE4AhghH43l+gOBmpjTXtmL4LVWhqLfjJCbAS
+	RLD1/+/7HupiljawaJplmoIupHiW6FwYpPvf3ZgxUXyi6uPsiUGaz0DjA6NvS8Bikom
+	nM2SEAgudi21Uc++kXbGVXuOwIVnLhvxXkX6+nh8=
+Received: by mx.zohomail.com with SMTPS id 1724356641568368.2845162991723;
+	Thu, 22 Aug 2024 12:57:21 -0700 (PDT)
 From: Detlev Casanova <detlev.casanova@collabora.com>
 To: linux-kernel@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>,
@@ -68,10 +69,12 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
 	kernel@collabora.com
-Subject: [PATCH v4 0/4] Add pinctrl support for rk3576
-Date: Thu, 22 Aug 2024 15:53:35 -0400
-Message-ID: <20240822195706.920567-1-detlev.casanova@collabora.com>
+Subject: [PATCH v4 1/4] dt-bindings: soc: rockchip: Add rk3576 syscon compatibles
+Date: Thu, 22 Aug 2024 15:53:36 -0400
+Message-ID: <20240822195706.920567-2-detlev.casanova@collabora.com>
 X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20240822195706.920567-1-detlev.casanova@collabora.com>
+References: <20240822195706.920567-1-detlev.casanova@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -81,42 +84,47 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Add support for the pinctrl core on the rk3576 SoC.
-The patch from downstream has been rebased.
+Add all syscon compatibles for RK3576.
 
-The grf driver is added support for the rk3576 default values:
-- enable i3c weakpull SW control
-- disable jtag on sdmmc IO lines
+Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+---
+ .../devicetree/bindings/soc/rockchip/grf.yaml    | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Changes since v3:
-- Set GRF bits through the GRF driver
-- Drop the rockchip,sys-grf phandle
-
-Changes since v2:
-- Document rockchip,sys-grf field as only needed for rk3576
-
-Changes since v1:
-- Reorder commits
-- Describe sys-grf use
-- Update imperative commit message
-
-Detlev.
-
-Detlev Casanova (3):
-  dt-bindings: soc: rockchip: Add rk3576 syscon compatibles
-  grf: rk3576: Add default GRF values
-  dt-bindings: pinctrl: Add rk3576 pinctrl support
-
-Steven Liu (1):
-  pinctrl: rockchip: Add rk3576 pinctrl support
-
- .../bindings/pinctrl/rockchip,pinctrl.yaml    |   1 +
- .../devicetree/bindings/soc/rockchip/grf.yaml |  16 ++
- drivers/pinctrl/pinctrl-rockchip.c            | 207 ++++++++++++++++++
- drivers/pinctrl/pinctrl-rockchip.h            |   1 +
- drivers/soc/rockchip/grf.c                    |  30 ++-
- 5 files changed, 254 insertions(+), 1 deletion(-)
-
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+index 78c6d5b64138..9735063e6aa5 100644
+--- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
++++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+@@ -20,6 +20,20 @@ properties:
+               - rockchip,rk3568-pipe-grf
+               - rockchip,rk3568-pipe-phy-grf
+               - rockchip,rk3568-usb2phy-grf
++              - rockchip,rk3576-bigcore-grf
++              - rockchip,rk3576-cci-grf
++              - rockchip,rk3576-gpu-grf
++              - rockchip,rk3576-litcore-grf
++              - rockchip,rk3576-npu-grf
++              - rockchip,rk3576-php-grf
++              - rockchip,rk3576-pipe-phy-grf
++              - rockchip,rk3576-pmu1-grf
++              - rockchip,rk3576-sdgmac-grf
++              - rockchip,rk3576-sys-grf
++              - rockchip,rk3576-usb-grf
++              - rockchip,rk3576-usbdpphy-grf
++              - rockchip,rk3576-vo0-grf
++              - rockchip,rk3576-vop-grf
+               - rockchip,rk3588-bigcore0-grf
+               - rockchip,rk3588-bigcore1-grf
+               - rockchip,rk3588-hdptxphy-grf
+@@ -58,6 +72,8 @@ properties:
+               - rockchip,rk3399-pmugrf
+               - rockchip,rk3568-grf
+               - rockchip,rk3568-pmugrf
++              - rockchip,rk3576-ioc-grf
++              - rockchip,rk3576-pmu0-grf
+               - rockchip,rk3588-usb2phy-grf
+               - rockchip,rv1108-grf
+               - rockchip,rv1108-pmugrf
 -- 
 2.46.0
 
