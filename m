@@ -1,395 +1,202 @@
-Return-Path: <linux-gpio+bounces-9006-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9007-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AE2E95BF40
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 21:58:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63E1595BFF1
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 22:51:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFE87281F74
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 19:58:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E567A1F248AB
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 20:51:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D0271D0DED;
-	Thu, 22 Aug 2024 19:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFD8517965E;
+	Thu, 22 Aug 2024 20:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="kYyRCuzP"
+	dkim=pass (1024-bit key) header.d=genexis.eu header.i=@genexis.eu header.b="b/6WWldQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2131.outbound.protection.outlook.com [40.107.22.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414CB1D0DD4;
-	Thu, 22 Aug 2024 19:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E413313AA2E;
+	Thu, 22 Aug 2024 20:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.131
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724356670; cv=pass; b=FLAAlxsPFtN1rUqGSsNDNdn/RDWee05+KX0v+tdy30ltByBZBFc4/eF0UIDEGVAQ18JIGlhIdll2mwrB4yQbM3mlqAfmm21UvgX1La+vP98lhoWzw3LIHXY6zWUNoilFTxstkOnx48fcVVR2THRih19Rzw/GB+h+wvZpzA3dLbQ=
+	t=1724359863; cv=fail; b=EmQ1DbA5sf236lV/QAk+9nUyTa+yPl3eTA9TQwn75VBOLYZ1nXXvEfTaoEYaIbUULJYjE73ehVUElhjjvcRoABaDqfxyDDR4qrwWRmdEYIxSm5wnJQ034ZFTSe7ijU840VkZC6PJgsgyPK+xcsO1cnBhmIdjb9pmbXs6K2HBDYA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724356670; c=relaxed/simple;
-	bh=6wbINRFfJ8KEBYLiNj1sXj//kIp5IMy3cY6yFY1J8Gc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D4CvI/ZIo9pS1m9l3+6bpia3q1NyRveVFf1GMv/VgvxNGphgCR1ewBPOAnXNdJ1c+ZjGVJ9aTC5Avd991RMDoSvtDd5RFCRGfAVAGG8ujL9B5nKgZDtUaFolZdocyHfgeTLXQSa+rc/k6Z4cm/WVLqqpF4XdEAB0x6OV0gfVp3Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=kYyRCuzP; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Delivered-To: sebastian.reichel@collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1724356648; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=d8vVOmD6ZaM86Ycas0w0pewSCPBOCrqXJ5ZQV01el2CvMJbafxP732pzVBtpGRTfdTa4KS2Yreex/H2HO7Ee3ODKj6vk8BfPbDxqS2ATHtzDp/QszMVkO1xFl3YhRHolSRaUQbSNt1BgVDB8Hab3yagk7BcpDpshDK7+D78lCjg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1724356648; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=rA0n8ctmZw8+6tnYG8ZA868nqC3mPN3m1J5XHjs9lP4=; 
-	b=dJ7uymxB/vOh2i8aUfER864DECnrxrZ/Rq0bNyFLOOnDQ64BlhLOUfdHg6z4+YVXtRDSDHwNUTla7Fb//o5QZu6kBVRRf6ERRxT+pPsNHhOQHY5jaKdwv8S4BvwjI2ej04EYt0kQUkB3sghEO6rt1XVX33HWZelQGCK/nXC/bG4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
-	dmarc=pass header.from=<detlev.casanova@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724356648;
-	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=rA0n8ctmZw8+6tnYG8ZA868nqC3mPN3m1J5XHjs9lP4=;
-	b=kYyRCuzP77hPlz1x9xGNMtiS83CnMZsfljbRBa7ukhftodXoks+B3wO75D1KmMi1
-	xMlXc9soKT6JN9FGV08GkdO5Qw/SnA4g5OP8uwOxiEI9n/nLIBn7laS96hJq7vyk+1U
-	xpnPU5EFj3YD5cArgtTXrSGSqV0eBaBgHi52yPcI=
-Received: by mx.zohomail.com with SMTPS id 1724356646585207.36059246604952;
-	Thu, 22 Aug 2024 12:57:26 -0700 (PDT)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	kernel@collabora.com,
-	Steven Liu <steven.liu@rock-chips.com>
-Subject: [PATCH v4 4/4] pinctrl: rockchip: Add rk3576 pinctrl support
-Date: Thu, 22 Aug 2024 15:53:39 -0400
-Message-ID: <20240822195706.920567-5-detlev.casanova@collabora.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240822195706.920567-1-detlev.casanova@collabora.com>
-References: <20240822195706.920567-1-detlev.casanova@collabora.com>
+	s=arc-20240116; t=1724359863; c=relaxed/simple;
+	bh=UetVMItMPXu+G/RB30NmyOad/KKXY9Dl92BpoZmZSRc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=s2W0W36VPVoNZ5KaQh8cbBXkFYSPIoblWAWnsOdMCW+XR0pbPyVJz1Ka/ZapmtICQBXBXYp9GINj7UMFLWhH99KlkNHNftPT87tID6nc9mLqwOMJyqK1eAc9xfj7bXiKenuo3U0NNkxJ0IlOQ//JcFCcJBZ+a+yfcURsaCX+abY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=genexis.eu; spf=pass smtp.mailfrom=genexis.eu; dkim=pass (1024-bit key) header.d=genexis.eu header.i=@genexis.eu header.b=b/6WWldQ; arc=fail smtp.client-ip=40.107.22.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=genexis.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=genexis.eu
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bSN4xGqDEi6YrATydorlM1W2z3XUYTvsD1UWOseEIsbfzGSveZwhVRBYQS3Y9P9f5vK3dIn5EI24FaH61mrD3c32C5kzuT6j2r2yAm+sFbP37T6xCatlFXwetiK1eeNV4bEtBCtx5K+pDz1dSbo1k8WTrghE+N9LMQzpan4f05Mp6KJE2GSnhD3Aurk/stkK7G89JgDO+U8bJWMsLi5gCACUasXSzG0cJetuuIKaqBvk9AIOqjkhpHc/VeRNXRlBYXn4erak5hq8hvAUT9zeNobu71XtRhbVuQhWNhPTRpCTRcSlr63/QDsEJYuOMIMVQcfdqInVrVsFq5Jy4QBe9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gnimm2Orc5XqI8G0JhmSVw8O8mx1XbIDYsg7nPt6/44=;
+ b=ZkS2H23wx/+3AmyJmTnyXmMbTXcfy6SgdGSyJJY0X9o6lzEXqSs+OjDBWZZkwrf1f2jnOWbMSJ0qvpzIs69tOW16++yvOoYWgiFyr2q0PPnSHAyvj7kgVLdV2IpcLryWCx2WHfhuDVbZD1knW+U/ba+T8YEjMtRNkDDKyw4xg56WVAMy66NnqLzlL9COWfFqHLbJBOC+EhZBynZZTfHE+Ibqgm6W0cBdgKzxO8yJ9KBVMhSc6sxCvBgnfDFbUj1pqHOXnbGaLJbZmL0XZQtyqbGxUD5w4xCa4hWoSyT8SljXZEo/WxAJqT84U6c4001bMFUVVh6rEc1xxO8qrx7ABA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=genexis.eu; dmarc=pass action=none header.from=genexis.eu;
+ dkim=pass header.d=genexis.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=genexis.eu;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gnimm2Orc5XqI8G0JhmSVw8O8mx1XbIDYsg7nPt6/44=;
+ b=b/6WWldQ3sG0UBOltLcqx41bihCVcL6A6KHPBIHHXW1FcMYTh/sf/ZABAqmMBtSBqNahc3B3gMN6VAxN0czZmfkpRdhPNRejtCoid/oX5eZ03m3SBEhpwcr5Zjerac0D4CWD/jKLnh96E/zt4nhFqsrqnMpgftaINJdl5oDwyP4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=genexis.eu;
+Received: from AM9PR08MB6034.eurprd08.prod.outlook.com (2603:10a6:20b:2db::18)
+ by AS1PR08MB7610.eurprd08.prod.outlook.com (2603:10a6:20b:475::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.16; Thu, 22 Aug
+ 2024 20:50:55 +0000
+Received: from AM9PR08MB6034.eurprd08.prod.outlook.com
+ ([fe80::9ead:b6bc:10eb:ef35]) by AM9PR08MB6034.eurprd08.prod.outlook.com
+ ([fe80::9ead:b6bc:10eb:ef35%4]) with mapi id 15.20.7897.014; Thu, 22 Aug 2024
+ 20:50:55 +0000
+Message-ID: <aef3188d-5aaf-4f6d-addf-60066065ef9b@genexis.eu>
+Date: Thu, 22 Aug 2024 22:50:52 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
+ controller
+To: Conor Dooley <conor@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ upstream@airoha.com, ansuelsmth@gmail.com
+References: <20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org>
+ <20240822-en7581-pinctrl-v2-1-ba1559173a7f@kernel.org>
+ <20240822-taste-deceptive-03d0ad56ae2e@spud>
+Content-Language: en-US
+From: Benjamin Larsson <benjamin.larsson@genexis.eu>
+In-Reply-To: <20240822-taste-deceptive-03d0ad56ae2e@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: GVX0EPF00014AFD.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:158:401::312) To AM9PR08MB6034.eurprd08.prod.outlook.com
+ (2603:10a6:20b:2db::18)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR08MB6034:EE_|AS1PR08MB7610:EE_
+X-MS-Office365-Filtering-Correlation-Id: c91f7fb2-01b9-41a6-0ee0-08dcc2ec1ddc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cjB5dmh0Z2psRUo2d0xuaHN6MnF3K3lEdmtLYy9KK200RkZYNE9oclNGK0lK?=
+ =?utf-8?B?a2pYRnVxdjlMdnJRamRBWklybVRzcUJNaG05SmJzU3k3VTlnbjhzbkQ0MkZv?=
+ =?utf-8?B?K3BIWllTaFFaVU04djdOTzl6UC83bHNwVjAwOVBib0hxUlhQVDZhSEUyQjM0?=
+ =?utf-8?B?aUZadXpCWjVjY2dHVEpSeStEYjlVTXp3TTVXTXNEZXQ5aXB6R2VKVkY3Mmkr?=
+ =?utf-8?B?cUM2NzVXUTV1dThpY0N2aS9HTFZPMEJzNmticzd3aWZyNkgvbDNSRFZid25F?=
+ =?utf-8?B?ZTk0RFJON2V3VkM4Q0Q0QlVRa0RDVmx4bE9QbWJjNUlHb2xkWEtyVHNRY092?=
+ =?utf-8?B?NzZhYWRPOWJtT2N1dDZYeXFpMXJWRkJpQzlRMWJoc2E3RmxMSGZ4UTVkckVj?=
+ =?utf-8?B?Sit4ck5NNVZIM0dzU0tmUnVkck1BY3J1V24zS2dtK3l5SW5NRlVYWE96Z0hw?=
+ =?utf-8?B?QjVtV3FGZjJDZFRJK3ZoWmw5bnJBRzFvVC9sWHdZUTBLbWwvYlA0MDBVVXQ0?=
+ =?utf-8?B?L0VpbGRYdGJoakRWajlUemw3RjlCeXRldmNBK2VCV3VWWXNLcThIVFc4cDBw?=
+ =?utf-8?B?VjgzenRMaUR5cHNBamMwcUo2WGZ0djFZL0dtajhkby80Q2cwd0h4Y0dweGtJ?=
+ =?utf-8?B?TFIwY3ZmdGx2SHBNamg5ckFkYnBpeUhFdVZKWDNDWWZvYW5EWWN6TktmeEt0?=
+ =?utf-8?B?N1BzeUxaUFlCLzQ1UTJJQ0JOcXlTWTB5N2pEZTJIRm4raGNrQUE3TzJQWnR5?=
+ =?utf-8?B?a3lXT05COGVBYkZMV2g1YjVyaTFJMGlvbkNMMmZFeXR1TWtQK1BMWnVYVUE1?=
+ =?utf-8?B?TVRrWDlCcC9qUElVcG4zM1E1ZFBYSXRYNHB6cHJUdlRibTEvbDV1a3QzMHB5?=
+ =?utf-8?B?VDVmY0xMSVovMS9PR1QxTFRpRSszL0ZTS1VsOUhoQ2FSMVczTDFFcTZRSWQ2?=
+ =?utf-8?B?UUFhOGRzMTVwY1hxbjV6MklHU2ZENURPWXFWbHlEb09oRGJLMCtDYWtpUitK?=
+ =?utf-8?B?RFEwb1lUSzVIRVp4QkhOVTdWUjFJS1VmOXI0THNNTnVDREc3N212TU44QnF5?=
+ =?utf-8?B?M01ndkZZdTQ2TTBUMlFzcnhYU2V3dkVNODI3a0JiUjkraXlKNFRnY1FpekNP?=
+ =?utf-8?B?Ylp3MnJ1Wk5nRWdPeXcrd0hXeHcyZWhpSlI3ZFd6MWlzZkpGS0N1RDZ5TUJx?=
+ =?utf-8?B?MEU3WVJkaGZXNGFRWXd5eGVSTVlEVzgyVTBuQjlrdmMvVmFEejZaVS9tQjJL?=
+ =?utf-8?B?MXdqaUo1V1pTTy9LOWZsZDdFSFF1MHBaYU1oQk05OGdDMFc4NFM0SitLN05z?=
+ =?utf-8?B?VGdXdnVBMzZhamxsRStidTZTQ09pMGMva2gxRHEwaEUwd2lCYitqN1pkZzVC?=
+ =?utf-8?B?UXpBOHVhZWtzWFFoOE9Jd05aOU41VEtrN1RqSW1lUlFEa3FRTEpsWTVQM3hF?=
+ =?utf-8?B?anVVL1djQjVkejZSU1FRS3FRM1kzM0tIcmtkVU4yOEtvc25nWWZiWWhTNEZ4?=
+ =?utf-8?B?aEkxL21aMldraGlheFZicmd1QUwvdWRKVW1WVElXb0pwMlRWVnFsMFhxenN2?=
+ =?utf-8?B?Z0VSWjRpWUhMVHJTd0dFVTNZL0ZhVHJyL2tGc2gxNGhQOVRUelduTW4wSVZI?=
+ =?utf-8?B?MzdONXh5eWJNc2dCSjNENTJqUzhLYlhsU3ViMXVSLzU1YjlUL3ZkZWFnYnpQ?=
+ =?utf-8?B?ZkpNbzl6OWcvTHY0Ny9iUUQwcjhVWkhzMEhiZDY2ZUJyWGJjUkNkTUVQWkl0?=
+ =?utf-8?B?UDRRVDl5VmpKcEZQUnhWbER0bFlORHk5TnFpczBwZVpOb1dFNTFDN1VvYzhK?=
+ =?utf-8?B?aDJBdnpxZXB5YlltK2V5QT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB6034.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MmhZMndCRCsyeENFZCs1bEJSdnF5dENEeGEydjA1WnZwbVNyT1FKbXJwU3lG?=
+ =?utf-8?B?YmY5UUlhZmU4L21GdUt4NStSYTlkQTdxZlRSQXY4ajBwYStsR2VXTWo5MnN0?=
+ =?utf-8?B?NStlVU9GVm5FTzBtWUgvbHZYWEt6T1QvdUxpRHR6cStsUW0vb2VtakFxdENS?=
+ =?utf-8?B?bHVJZE5RN1ZYMTA2SDhFUVpNSEZWekVRem1IWTJCYXNKOEV2aFIyaWZ0WDFk?=
+ =?utf-8?B?dEZmUWdqMDY5T0RKSnVaN3IzVXFwaXFWdDdyZEtyOEJmQ051U2dYWGI4UTJC?=
+ =?utf-8?B?Z3JyOW10MENZTG04Z0FKZDlhRHZaekdORGhPQ1pJeDQ1RE42QzNSTnkyVHFz?=
+ =?utf-8?B?cHRTbXBxRFl6Nm05U2tta0VXdUpYZ1F1RjhhRURaVURuMExuKzloc0tHZ3Ns?=
+ =?utf-8?B?cUROVk1ZZ2owTUU5RGV5QzdJUk5LV0JtY1ZwYTJCTEFlZGFVZUlTZXFyQjZ5?=
+ =?utf-8?B?TW5ZNXg2cUpwNnY5Y0RYZlRGanFEZTlKd2x6dmNYNkxJNXphbGl3Q0Z2K2NV?=
+ =?utf-8?B?bHBaaUpSbnJYRUt4Y1ZFMXBiZFlUY0x2SHR2ZnJNUjZwWG9sSnpIY29vOHVs?=
+ =?utf-8?B?MjdnZ2FrWTFVcWs4SklSTmRHLy9OZTMzN3NTZDBVMXJNb3JKdHJtSXhrOWM5?=
+ =?utf-8?B?TE9yRVZUbEhJVHlzZm9nWlZnY2FiMGtsOEtNMzI2QmY2cmhDYzZDQXh5RVdi?=
+ =?utf-8?B?V1RyR0t2Z0VDcjBELzhNZ1h3RVdTWHlkY0tHZldsNUdHbDZBaEpKZ25DN2hN?=
+ =?utf-8?B?cHVINkZGdmFyZFUrVnF6UXViYTNQd3QvRXFBbktXcHo4Qm4xS1Vwd3VESG84?=
+ =?utf-8?B?UHZMSlYxamdtZUpzRHRGQXM4UGFydS9YdlRuSzY2QmV2YkdOakQ2ZlF1K2JI?=
+ =?utf-8?B?L2lkalNqYVZmeG05dzY1THl4cXdBbmkwYTdsakliZVE0eFVsUnd2M2hWK1FE?=
+ =?utf-8?B?cDJYc3p1RUU0R21xa0wwL25uRVBoN3VVZzV6YWErVUtIQW84RnFUc1dPcmxS?=
+ =?utf-8?B?eGdKZkY0UGpaWDI3aXFkRC82UGpwT2NwOUZYK3A4ZkhLNVQ5Z3NrYXJqWkRn?=
+ =?utf-8?B?Q1JTelF6b3NlTmhvSndtTisvcS81YnEwMlpSaGNZdXU0cm1uT2JrWGtCNE1C?=
+ =?utf-8?B?a2pGb1NMdkRDWFNpY2ZRYTk1VndIeHptTkt2cFFmVk81U0FjUjFmYlRWYjd5?=
+ =?utf-8?B?WW5vcVNhUEZBNUg2LzFxMUpWaHgyeU1LRHpjR0kvK2RQOVJHQVo4N3B0dkZl?=
+ =?utf-8?B?aC9FM0RzRkJDZ1B0Njh5VWVuQVkyVTdpZU05WnZkdk1kZnRQYUJ0MWVWRVlu?=
+ =?utf-8?B?L2gycGRuZUo0UG50c3hTNy9kU2Y0cDNLOGdRc0NmRzVlZlQ3UFZIWkdoQnky?=
+ =?utf-8?B?cmVVNlVEQ0FwRlJ3TTl3cDBTcUlMQWlqSDB4N2xDV2tYaFN2OUMrZ2NKZk1N?=
+ =?utf-8?B?dnROR0U1bEtrd0ZqUkZaVjJDTHp5dUo4MjE3OU1EWkg0TEdYVEVCQWRsTFUy?=
+ =?utf-8?B?S0F1cFVQVit5RXRJK0dvMy9JN0VQUndwWkowbmgyUWJaQ0FjUzRCNnB5ck1k?=
+ =?utf-8?B?Q1U0OFNoeEVvcGhlcW5zayt0Z05jUHh2T1Y4ZFBMSXlraFBPMEM1QktnMG5k?=
+ =?utf-8?B?NVIrTGROZ1dXTHJNU0xNbFIwaU82bndDY3BjZDlwSHNyUy9OaFFVeC9kSHU2?=
+ =?utf-8?B?VDZvNzZzd1dlZ2cvcGJmc2RkcFlTdG03VFlSTmxZUERMK2Via25ab05JS0tk?=
+ =?utf-8?B?Y2IyeTgybHoweW91dmpZRjI4dUEvQUM0cVA4MTFpTWZ3bFhMWlFjQ0s5T0Zy?=
+ =?utf-8?B?SXRFWWF2L0cxS3J4UTh6VkF3ZzFHc3lldmRPZ1NGKzFUdmhER3M0WHdML1VT?=
+ =?utf-8?B?T0hxSXFLL2JRZUFiQkNITC9KN2NSWElTZHdRNHBGZStlT05PNkVKdWhJKzFO?=
+ =?utf-8?B?WUJydlUrdGYveUdKZnNVWFpHaXplTm9NNDROYkMvOWp6WGp4ZnF1Z0U1bnlX?=
+ =?utf-8?B?aGtydTV3NVljWGx0Vlp6MWtlaWZ3OUxBWlZzOEVTTTBmcGpaUkJEc1FqUzZF?=
+ =?utf-8?B?MzlDRVpZMVJLVGJZbWEvOFZSQUFmcll5TlR0L0EyZm5VdHJOemJ6emxyV2pp?=
+ =?utf-8?B?dG0rOG9pQ2J2SjA1cE1ORW04V1p3elhYajZPVlpETHNjUFhGOStFbkQ4UC9t?=
+ =?utf-8?B?RVE9PQ==?=
+X-OriginatorOrg: genexis.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: c91f7fb2-01b9-41a6-0ee0-08dcc2ec1ddc
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR08MB6034.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2024 20:50:55.0530
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8d891be1-7bce-4216-9a99-bee9de02ba58
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jrQk4+0XewCch1HKxaZOFxRupL5kEsvPP+QVohsfCjsq+1Qfitt4EffOzJ6FF6pdZ1jzpUmvyvlA7iiciISa2eKJ62gBPiZO0Ks4fsJLtqg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR08MB7610
 
-From: Steven Liu <steven.liu@rock-chips.com>
+On 22/08/2024 18:06, Conor Dooley wrote:
 
-Add support for the 5 rk3576 GPIO banks.
 
-Signed-off-by: Steven Liu <steven.liu@rock-chips.com>
-Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
----
- drivers/pinctrl/pinctrl-rockchip.c | 207 +++++++++++++++++++++++++++++
- drivers/pinctrl/pinctrl-rockchip.h |   1 +
- 2 files changed, 208 insertions(+)
+Hi.
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 0eacaf10c640..914b27b5838d 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -84,6 +84,27 @@
- 		},							\
- 	}
- 
-+#define PIN_BANK_IOMUX_FLAGS_OFFSET_PULL_FLAGS(id, pins, label, iom0,	\
-+					       iom1, iom2, iom3,	\
-+					       offset0, offset1,	\
-+					       offset2, offset3, pull0,	\
-+					       pull1, pull2, pull3)	\
-+	{								\
-+		.bank_num	= id,					\
-+		.nr_pins	= pins,					\
-+		.name		= label,				\
-+		.iomux		= {					\
-+			{ .type = iom0, .offset = offset0 },		\
-+			{ .type = iom1, .offset = offset1 },		\
-+			{ .type = iom2, .offset = offset2 },		\
-+			{ .type = iom3, .offset = offset3 },		\
-+		},							\
-+		.pull_type[0] = pull0,					\
-+		.pull_type[1] = pull1,					\
-+		.pull_type[2] = pull2,					\
-+		.pull_type[3] = pull3,					\
-+	}
-+
- #define PIN_BANK_DRV_FLAGS(id, pins, label, type0, type1, type2, type3) \
- 	{								\
- 		.bank_num	= id,					\
-@@ -1120,6 +1141,11 @@ static int rockchip_get_mux(struct rockchip_pin_bank *bank, int pin)
- 	if (bank->recalced_mask & BIT(pin))
- 		rockchip_get_recalced_mux(bank, pin, &reg, &bit, &mask);
- 
-+	if (ctrl->type == RK3576) {
-+		if ((bank->bank_num == 0) && (pin >= RK_PB4) && (pin <= RK_PB7))
-+			reg += 0x1ff4; /* GPIO0_IOC_GPIO0B_IOMUX_SEL_H */
-+	}
-+
- 	if (ctrl->type == RK3588) {
- 		if (bank->bank_num == 0) {
- 			if ((pin >= RK_PB4) && (pin <= RK_PD7)) {
-@@ -1234,6 +1260,11 @@ static int rockchip_set_mux(struct rockchip_pin_bank *bank, int pin, int mux)
- 	if (bank->recalced_mask & BIT(pin))
- 		rockchip_get_recalced_mux(bank, pin, &reg, &bit, &mask);
- 
-+	if (ctrl->type == RK3576) {
-+		if ((bank->bank_num == 0) && (pin >= RK_PB4) && (pin <= RK_PB7))
-+			reg += 0x1ff4; /* GPIO0_IOC_GPIO0B_IOMUX_SEL_H */
-+	}
-+
- 	if (ctrl->type == RK3588) {
- 		if (bank->bank_num == 0) {
- 			if ((pin >= RK_PB4) && (pin <= RK_PD7)) {
-@@ -2038,6 +2069,142 @@ static int rk3568_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
- 	return 0;
- }
- 
-+#define RK3576_DRV_BITS_PER_PIN		4
-+#define RK3576_DRV_PINS_PER_REG		4
-+#define RK3576_DRV_GPIO0_AL_OFFSET	0x10
-+#define RK3576_DRV_GPIO0_BH_OFFSET	0x2014
-+#define RK3576_DRV_GPIO1_OFFSET		0x6020
-+#define RK3576_DRV_GPIO2_OFFSET		0x6040
-+#define RK3576_DRV_GPIO3_OFFSET		0x6060
-+#define RK3576_DRV_GPIO4_AL_OFFSET	0x6080
-+#define RK3576_DRV_GPIO4_CL_OFFSET	0xA090
-+#define RK3576_DRV_GPIO4_DL_OFFSET	0xB098
-+
-+static int rk3576_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
-+					int pin_num, struct regmap **regmap,
-+					int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+
-+	if (bank->bank_num == 0 && pin_num < 12)
-+		*reg = RK3576_DRV_GPIO0_AL_OFFSET;
-+	else if (bank->bank_num == 0)
-+		*reg = RK3576_DRV_GPIO0_BH_OFFSET - 0xc;
-+	else if (bank->bank_num == 1)
-+		*reg = RK3576_DRV_GPIO1_OFFSET;
-+	else if (bank->bank_num == 2)
-+		*reg = RK3576_DRV_GPIO2_OFFSET;
-+	else if (bank->bank_num == 3)
-+		*reg = RK3576_DRV_GPIO3_OFFSET;
-+	else if (bank->bank_num == 4 && pin_num < 16)
-+		*reg = RK3576_DRV_GPIO4_AL_OFFSET;
-+	else if (bank->bank_num == 4 && pin_num < 24)
-+		*reg = RK3576_DRV_GPIO4_CL_OFFSET - 0x10;
-+	else if (bank->bank_num == 4)
-+		*reg = RK3576_DRV_GPIO4_DL_OFFSET - 0x18;
-+	else
-+		dev_err(info->dev, "unsupported bank_num %d\n", bank->bank_num);
-+
-+	*reg += ((pin_num / RK3576_DRV_PINS_PER_REG) * 4);
-+	*bit = pin_num % RK3576_DRV_PINS_PER_REG;
-+	*bit *= RK3576_DRV_BITS_PER_PIN;
-+
-+	return 0;
-+}
-+
-+#define RK3576_PULL_BITS_PER_PIN	2
-+#define RK3576_PULL_PINS_PER_REG	8
-+#define RK3576_PULL_GPIO0_AL_OFFSET	0x20
-+#define RK3576_PULL_GPIO0_BH_OFFSET	0x2028
-+#define RK3576_PULL_GPIO1_OFFSET	0x6110
-+#define RK3576_PULL_GPIO2_OFFSET	0x6120
-+#define RK3576_PULL_GPIO3_OFFSET	0x6130
-+#define RK3576_PULL_GPIO4_AL_OFFSET	0x6140
-+#define RK3576_PULL_GPIO4_CL_OFFSET	0xA148
-+#define RK3576_PULL_GPIO4_DL_OFFSET	0xB14C
-+
-+static int rk3576_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
-+					 int pin_num, struct regmap **regmap,
-+					 int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+
-+	if (bank->bank_num == 0 && pin_num < 12)
-+		*reg = RK3576_PULL_GPIO0_AL_OFFSET;
-+	else if (bank->bank_num == 0)
-+		*reg = RK3576_PULL_GPIO0_BH_OFFSET - 0x4;
-+	else if (bank->bank_num == 1)
-+		*reg = RK3576_PULL_GPIO1_OFFSET;
-+	else if (bank->bank_num == 2)
-+		*reg = RK3576_PULL_GPIO2_OFFSET;
-+	else if (bank->bank_num == 3)
-+		*reg = RK3576_PULL_GPIO3_OFFSET;
-+	else if (bank->bank_num == 4 && pin_num < 16)
-+		*reg = RK3576_PULL_GPIO4_AL_OFFSET;
-+	else if (bank->bank_num == 4 && pin_num < 24)
-+		*reg = RK3576_PULL_GPIO4_CL_OFFSET - 0x8;
-+	else if (bank->bank_num == 4)
-+		*reg = RK3576_PULL_GPIO4_DL_OFFSET - 0xc;
-+	else
-+		dev_err(info->dev, "unsupported bank_num %d\n", bank->bank_num);
-+
-+	*reg += ((pin_num / RK3576_PULL_PINS_PER_REG) * 4);
-+	*bit = pin_num % RK3576_PULL_PINS_PER_REG;
-+	*bit *= RK3576_PULL_BITS_PER_PIN;
-+
-+	return 0;
-+}
-+
-+#define RK3576_SMT_BITS_PER_PIN		1
-+#define RK3576_SMT_PINS_PER_REG		8
-+#define RK3576_SMT_GPIO0_AL_OFFSET	0x30
-+#define RK3576_SMT_GPIO0_BH_OFFSET	0x2040
-+#define RK3576_SMT_GPIO1_OFFSET		0x6210
-+#define RK3576_SMT_GPIO2_OFFSET		0x6220
-+#define RK3576_SMT_GPIO3_OFFSET		0x6230
-+#define RK3576_SMT_GPIO4_AL_OFFSET	0x6240
-+#define RK3576_SMT_GPIO4_CL_OFFSET	0xA248
-+#define RK3576_SMT_GPIO4_DL_OFFSET	0xB24C
-+
-+static int rk3576_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
-+					   int pin_num,
-+					   struct regmap **regmap,
-+					   int *reg, u8 *bit)
-+{
-+	struct rockchip_pinctrl *info = bank->drvdata;
-+
-+	*regmap = info->regmap_base;
-+
-+	if (bank->bank_num == 0 && pin_num < 12)
-+		*reg = RK3576_SMT_GPIO0_AL_OFFSET;
-+	else if (bank->bank_num == 0)
-+		*reg = RK3576_SMT_GPIO0_BH_OFFSET - 0x4;
-+	else if (bank->bank_num == 1)
-+		*reg = RK3576_SMT_GPIO1_OFFSET;
-+	else if (bank->bank_num == 2)
-+		*reg = RK3576_SMT_GPIO2_OFFSET;
-+	else if (bank->bank_num == 3)
-+		*reg = RK3576_SMT_GPIO3_OFFSET;
-+	else if (bank->bank_num == 4 && pin_num < 16)
-+		*reg = RK3576_SMT_GPIO4_AL_OFFSET;
-+	else if (bank->bank_num == 4 && pin_num < 24)
-+		*reg = RK3576_SMT_GPIO4_CL_OFFSET - 0x8;
-+	else if (bank->bank_num == 4)
-+		*reg = RK3576_SMT_GPIO4_DL_OFFSET - 0xc;
-+	else
-+		dev_err(info->dev, "unsupported bank_num %d\n", bank->bank_num);
-+
-+	*reg += ((pin_num / RK3576_SMT_PINS_PER_REG) * 4);
-+	*bit = pin_num % RK3576_SMT_PINS_PER_REG;
-+	*bit *= RK3576_SMT_BITS_PER_PIN;
-+
-+	return 0;
-+}
-+
- #define RK3588_PMU1_IOC_REG		(0x0000)
- #define RK3588_PMU2_IOC_REG		(0x4000)
- #define RK3588_BUS_IOC_REG		(0x8000)
-@@ -2332,6 +2499,10 @@ static int rockchip_set_drive_perpin(struct rockchip_pin_bank *bank,
- 		rmask_bits = RK3568_DRV_BITS_PER_PIN;
- 		ret = (1 << (strength + 1)) - 1;
- 		goto config;
-+	} else if (ctrl->type == RK3576) {
-+		rmask_bits = RK3576_DRV_BITS_PER_PIN;
-+		ret = ((strength & BIT(2)) >> 2) | ((strength & BIT(0)) << 2) | (strength & BIT(1));
-+		goto config;
- 	}
- 
- 	if (ctrl->type == RV1126) {
-@@ -2469,6 +2640,7 @@ static int rockchip_get_pull(struct rockchip_pin_bank *bank, int pin_num)
- 	case RK3368:
- 	case RK3399:
- 	case RK3568:
-+	case RK3576:
- 	case RK3588:
- 		pull_type = bank->pull_type[pin_num / 8];
- 		data >>= bit;
-@@ -2528,6 +2700,7 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
- 	case RK3368:
- 	case RK3399:
- 	case RK3568:
-+	case RK3576:
- 	case RK3588:
- 		pull_type = bank->pull_type[pin_num / 8];
- 		ret = -EINVAL;
-@@ -2793,6 +2966,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
- 	case RK3368:
- 	case RK3399:
- 	case RK3568:
-+	case RK3576:
- 	case RK3588:
- 		return (pull != PIN_CONFIG_BIAS_PULL_PIN_DEFAULT);
- 	}
-@@ -3949,6 +4123,37 @@ static struct rockchip_pin_ctrl rk3568_pin_ctrl = {
- 	.schmitt_calc_reg	= rk3568_calc_schmitt_reg_and_bit,
- };
- 
-+#define RK3576_PIN_BANK(ID, LABEL, OFFSET0, OFFSET1, OFFSET2, OFFSET3)	\
-+	PIN_BANK_IOMUX_FLAGS_OFFSET_PULL_FLAGS(ID, 32, LABEL,		\
-+					       IOMUX_WIDTH_4BIT,	\
-+					       IOMUX_WIDTH_4BIT,	\
-+					       IOMUX_WIDTH_4BIT,	\
-+					       IOMUX_WIDTH_4BIT,	\
-+					       OFFSET0, OFFSET1,	\
-+					       OFFSET2, OFFSET3,	\
-+					       PULL_TYPE_IO_1V8_ONLY,	\
-+					       PULL_TYPE_IO_1V8_ONLY,	\
-+					       PULL_TYPE_IO_1V8_ONLY,	\
-+					       PULL_TYPE_IO_1V8_ONLY)
-+
-+static struct rockchip_pin_bank rk3576_pin_banks[] = {
-+	RK3576_PIN_BANK(0, "gpio0", 0, 0x8, 0x2004, 0x200C),
-+	RK3576_PIN_BANK(1, "gpio1", 0x4020, 0x4028, 0x4030, 0x4038),
-+	RK3576_PIN_BANK(2, "gpio2", 0x4040, 0x4048, 0x4050, 0x4058),
-+	RK3576_PIN_BANK(3, "gpio3", 0x4060, 0x4068, 0x4070, 0x4078),
-+	RK3576_PIN_BANK(4, "gpio4", 0x4080, 0x4088, 0xA390, 0xB398),
-+};
-+
-+static struct rockchip_pin_ctrl rk3576_pin_ctrl __maybe_unused = {
-+	.pin_banks		= rk3576_pin_banks,
-+	.nr_banks		= ARRAY_SIZE(rk3576_pin_banks),
-+	.label			= "RK3576-GPIO",
-+	.type			= RK3576,
-+	.pull_calc_reg		= rk3576_calc_pull_reg_and_bit,
-+	.drv_calc_reg		= rk3576_calc_drv_reg_and_bit,
-+	.schmitt_calc_reg	= rk3576_calc_schmitt_reg_and_bit,
-+};
-+
- static struct rockchip_pin_bank rk3588_pin_banks[] = {
- 	RK3588_PIN_BANK_FLAGS(0, 32, "gpio0",
- 			      IOMUX_WIDTH_4BIT, PULL_TYPE_IO_1V8_ONLY),
-@@ -4005,6 +4210,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
- 		.data = &rk3399_pin_ctrl },
- 	{ .compatible = "rockchip,rk3568-pinctrl",
- 		.data = &rk3568_pin_ctrl },
-+	{ .compatible = "rockchip,rk3576-pinctrl",
-+		.data = &rk3576_pin_ctrl },
- 	{ .compatible = "rockchip,rk3588-pinctrl",
- 		.data = &rk3588_pin_ctrl },
- 	{},
-diff --git a/drivers/pinctrl/pinctrl-rockchip.h b/drivers/pinctrl/pinctrl-rockchip.h
-index 849266f8b191..6ebbb0a88ce7 100644
---- a/drivers/pinctrl/pinctrl-rockchip.h
-+++ b/drivers/pinctrl/pinctrl-rockchip.h
-@@ -197,6 +197,7 @@ enum rockchip_pinctrl_type {
- 	RK3368,
- 	RK3399,
- 	RK3568,
-+	RK3576,
- 	RK3588,
- };
- 
--- 
-2.46.0
+> before looking at v1:
+> I would really like to see an explanation for why this is a correct
+> model of the hardware as part of the commit message. To me this screams
+> syscon/MFD and instead of describing this as a child of a syscon and
+> using regmap to access it you're doing whatever this is...
+
+Can you post a link to a good example dts that uses syscon/MFD ?
+
+It is not only pinctrl, pwm and gpio that are entangled in each other. A 
+good example would help with developing a proper implementation.
+
+MvH
+
+Benjamin Larsson
 
 
