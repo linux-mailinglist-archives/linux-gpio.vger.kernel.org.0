@@ -1,112 +1,142 @@
-Return-Path: <linux-gpio+bounces-8998-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8999-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F339295B90A
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 16:50:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BB0CE95BB58
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 18:06:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E8B01C23056
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 14:50:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E12FC1C229A4
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 16:06:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 686411CC178;
-	Thu, 22 Aug 2024 14:50:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCED11CCB35;
+	Thu, 22 Aug 2024 16:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YCLoBA6w"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90B81C8FC9;
-	Thu, 22 Aug 2024 14:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA0D28389;
+	Thu, 22 Aug 2024 16:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724338241; cv=none; b=j/CAOQi2nAFoZ6jSy57iIPu4gBQu7Z8Fk3C+52NfwJp3eoXnS2M9k2d/QsqxCs6ZOjBVzQZVWmdODqNZbY/VMO5lit8pn/ngKMC7fAVxcI+BRDLs+evbuwZCQQ8xNmBl2ydhSbKO/DLm54/eaf+yzi4ioZ09hGd9DOtyZuaXFug=
+	t=1724342809; cv=none; b=LNujKUyVVmIIawDmUSQv5XWCbHYyZX2kPuO+Fa7fcC33Hd7pqHNYe0eYMQyjoNa7DMV581OBF6XOO/2PxW3Vgfz3Uo7qF4nTr+y1GwaI9BnWqQ8gRVyso7uU0PBX3pvnlSI42rk71hVF1L9qdwve775I0u2pMF61aaq3cR82+BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724338241; c=relaxed/simple;
-	bh=dl3kb68HcduOqK5lkZHdmPl+lK4j2kU52a/fqW62vRU=;
+	s=arc-20240116; t=1724342809; c=relaxed/simple;
+	bh=JKSc2pCJPHiBPYG6O9itMsD/N2edGQ/08PARRYFbmoI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QFly1iJbSofTFnBEggT1ZSM4sEjuGikXQrklYbVU3hA1wjlgelZA8SnjOY5hjEkfvKQzGDDKFF/OG2LmjfPPjrlb/ohIrBHg96EppNgSUU1F8QnTJoPLpzePRptB+YK7daqvhQKAf0pdBdEzNrdMZhhXzgwrkKphL5YAiOND0g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: 2WjSmbAMTE2WMIvFHMedDg==
-X-CSE-MsgGUID: lYjJJJqkT5mRy1ndIfkf6w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="22886625"
-X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
-   d="scan'208";a="22886625"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 07:50:36 -0700
-X-CSE-ConnectionGUID: gRGZt8Q+TzmbySdyJ/62Vw==
-X-CSE-MsgGUID: R5o12bjCSma3zXw3NSRBWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
-   d="scan'208";a="92270919"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 07:50:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy@kernel.org>)
-	id 1sh98X-00000000U9R-0pzE;
-	Thu, 22 Aug 2024 17:50:05 +0300
-Date: Thu, 22 Aug 2024 17:50:04 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-	Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
-	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Alvaro Karsz <alvaro.karsz@solid-run.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>,
-	Chaitanya Kulkarni <kch@nvidia.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	virtualization@lists.linux.dev
-Subject: Re: [PATCH v3 0/9] PCI: Remove pcim_iounmap_regions()
-Message-ID: <ZsdQHMXRJOQkEN4-@smile.fi.intel.com>
-References: <20240822134744.44919-1-pstanner@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=OgFfjVVp3Jwnv95d+mmT8ZfdDuUruq9Rw9gzg8boYyLj0aRK4u6WHPhv0ZbipVwWlj6BtUGh/Hp1GSFC0Yrm/kPVsP5hpUzIsvBaCE09vs9uiA2FeFDb+lwLewVCvHTE8dehOwDfd0g9rY74CsQYYlcKXsaz6zz5kD2DbOr/3cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YCLoBA6w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27058C4AF0B;
+	Thu, 22 Aug 2024 16:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724342809;
+	bh=JKSc2pCJPHiBPYG6O9itMsD/N2edGQ/08PARRYFbmoI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YCLoBA6wK8HES0FLgfc3r7p3Ru9S+uWShWHV6U2bduADrNBxYRHYMnkOnIHGsttl9
+	 sjbtOtDejqqhu0hiMg+FQSmBCotX5JNMyTPMxXIBixGBQAMwV93LEwSHP1HRNeKjzi
+	 BvkKOjlYiKSlqujAelZfBsUYKMtsHrhj6NeeRo6TIZet+iOdvxVbh+twWZ0I109THi
+	 CtOfdiu6gWyo4mqB0C8iTN/fj88Il4RTdbsNVZxoLgJ9/qB8ShBoJAhpLkXaxjrtJ1
+	 rFtIroybZd3RB/4hjrnHEdpt3MxtHWV4LytV1fNDJE1MjjjpqG9og5qGovqU2ghEqp
+	 PoGwLrdks5XAw==
+Date: Thu, 22 Aug 2024 17:06:44 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	ansuelsmth@gmail.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
+ controller
+Message-ID: <20240822-taste-deceptive-03d0ad56ae2e@spud>
+References: <20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org>
+ <20240822-en7581-pinctrl-v2-1-ba1559173a7f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Keq2bc7KVkSdMDBF"
+Content-Disposition: inline
+In-Reply-To: <20240822-en7581-pinctrl-v2-1-ba1559173a7f@kernel.org>
+
+
+--Keq2bc7KVkSdMDBF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240822134744.44919-1-pstanner@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 22, 2024 at 03:47:32PM +0200, Philipp Stanner wrote:
+On Thu, Aug 22, 2024 at 11:40:52AM +0200, Lorenzo Bianconi wrote:
+> Introduce device-tree binding documentation for Airoha EN7581 pinctrl
+> controller.
+>=20
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> +  reg:
+> +    items:
+> +      - description: IOMUX base address
+> +      - description: LED IOMUX base address
+> +      - description: GPIO flash mode base address
+> +      - description: GPIO flash mode extended base address
+> +      - description: IO pin configuration base address
+> +      - description: PCIE reset open-drain base address
+> +      - description: GPIO bank0 register base address
+> +      - description: GPIO bank0 second control register base address
+> +      - description: GPIO bank1 second control register base address
+> +      - description: GPIO bank1 register base address
 
-> Important things first:
-> This series is based on [1] and [2] which Bjorn Helgaas has currently
-> queued for v6.12 in the PCI tree.
-> 
-> This series shall remove pcim_iounmap_regions() in order to make way to
-> remove its brother, pcim_iomap_regions().
+> +      pinctrl@1fa20214 {
+> +        compatible =3D "airoha,en7581-pinctrl";
+> +        reg =3D <0x0 0x1fa20214 0x0 0x30>,
+> +              <0x0 0x1fa2027c 0x0 0x8>,
+> +              <0x0 0x1fbf0234 0x0 0x4>,
+> +              <0x0 0x1fbf0268 0x0 0x4>,
+> +              <0x0 0x1fa2001c 0x0 0x50>,
+> +              <0x0 0x1fa2018c 0x0 0x4>,
+> +              <0x0 0x1fbf0200 0x0 0x18>,
+> +              <0x0 0x1fbf0220 0x0 0x4>,
+> +              <0x0 0x1fbf0260 0x0 0x8>,
+> +              <0x0 0x1fbf0270 0x0 0x28>;
+> +        reg-names =3D "iomux", "led-iomux",
+> +                    "gpio-flash-mode", "gpio-flash-mode-ext",
+> +                    "ioconf", "pcie-rst-od",
+> +                    "gpio-bank0", "gpio-ctrl1",
+> +                    "gpio-ctrl2", "gpio-bank1";
 
-For the non-commented ones (by me or by others)
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+before looking at v1:
+I would really like to see an explanation for why this is a correct
+model of the hardware as part of the commit message. To me this screams
+syscon/MFD and instead of describing this as a child of a syscon and
+using regmap to access it you're doing whatever this is...
 
--- 
-With Best Regards,
-Andy Shevchenko
+after looking at v1:
+AFAICT the PWM driver does not currently exist in mainline, so I am now
+doubly of the opinion that this needs to be an MFD and a wee bit annoyed
+that you didn't include any rationale in your cover letter or w/e for
+not going with an MFD given there was discussion on the topic in v1.
 
+Thanks,
+Conor.
 
+--Keq2bc7KVkSdMDBF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZsdiEwAKCRB4tDGHoIJi
+0uKZAQDj5+09ic83KcLDIq5zWWJ09DULVEuilCvZB8SXAroqgAD+Jui9Hf6JNAuM
+9ieVzZOf+irfrtrGnPCFLrkKqBC7hAQ=
+=dqn2
+-----END PGP SIGNATURE-----
+
+--Keq2bc7KVkSdMDBF--
 
