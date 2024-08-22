@@ -1,196 +1,123 @@
-Return-Path: <linux-gpio+bounces-9001-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9002-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8C3795BEA0
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 21:02:58 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4786395BF33
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 21:57:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 08169B214D1
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 19:02:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1AC11F261D3
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 19:57:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D32C31D0DC2;
-	Thu, 22 Aug 2024 19:02:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D3921D0DDF;
+	Thu, 22 Aug 2024 19:57:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9bADXjh"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="X7rNhmUo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F763EC5;
-	Thu, 22 Aug 2024 19:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724353363; cv=none; b=RyT0Lp07TeR88ShRkVxWSt0WbPoi/TJVro0nldKmXxFBHC5QwQLieLkYbPsounm6xPt2cftBv+h3+8Fmuot+UMXTQ50Vhd6Jd/Ghs0Q/8gxc95UBdVSxlczt56RFr+pSxRoU1VlutaBb9Ue7aDRSjfLcaPsZWXAjN8iXAu5NxSA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724353363; c=relaxed/simple;
-	bh=xkJxuhgb78n4FuOPdIwcmBi1eA/Yu0psL+bwoB8zMA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=chmTomIwjaAeurm66TWqzAEXInvk6b60AiZCsMnvKgD5PJq+8keu1SrucU1sNBj1b3HAOfN4AE2Tr1oDZZtYePjLT99b8cNzsQvvlVutA+YBDdn+ldCocIh1i2i87aRmp7kOt9YOCGtF9ieljBVskMKLykbY+xSsqHS1j3Q34hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9bADXjh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD4C2C32782;
-	Thu, 22 Aug 2024 19:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724353363;
-	bh=xkJxuhgb78n4FuOPdIwcmBi1eA/Yu0psL+bwoB8zMA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t9bADXjhnhFV9D6FC7d7Oi2kbTHMS/q2RGBnT9miyH5POy5PnigNWky8RoFcgQAYl
-	 K5IZ0zonP123H8Qt0k08l5k71aPOfRWXbAV6z0zqGi5wwmSlxq8lU5r8G7VrDgxodr
-	 h9nsHwJWs1S74Z94y27or9ExB0VM5JYK8GbdacOQpPRM1gB3Pl1Q1KjzKHMCeYGI99
-	 eWFleMcUDJS4IFArGb3Sn+jwUKkw/fZeL50V0mbGloBi5E/2wd9FOKOFqwFQJ0tMVu
-	 09iYREQP2HP9yK/Ia34b/rdngLyAS3rVAS0r3yqYskdSHDQJEVS7bKXr/QygBECsGM
-	 ciB6LN4o7mF6Q==
-Date: Thu, 22 Aug 2024 21:02:39 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DC617588;
+	Thu, 22 Aug 2024 19:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724356657; cv=pass; b=KBtq92S59YoGKptC8DBf9yOkTQjvzoUvxVmqtOxk/8R0J9ETrAQEoM+7W3Zh9cO33XKcNv0BDwl2SPDjNE8Gpv3nQQkLNWngks+QSvrr30/03p+6iXpKCAUDYy/YcEEapVNahSa9/3ZwG/KYK7S0VS5RS78sobxHKgBP1TXC+7k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724356657; c=relaxed/simple;
+	bh=OYGMQeMIzR2Qkqh0UCbymOIGCTmmBed4yr0mWDQHmqU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FCKRzJAg3YVi92yYUVFYY/jOX+Nc0QeQuBp+lFdNfCMMPBYA0qwhnO6kO90NFbPCSIsAamLkOJboijyPwFIDjDJCUP3jAg8O1XKbBrSkLsxMq7uUyGpF90g9eDhbG7THQ6MqTL9J1Z7+PnIKYdf690kHzQIkBvCTJpLkcVT4Pug=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=X7rNhmUo; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Delivered-To: sebastian.reichel@collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1724356642; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=mrMMoVI/vPpUTcwUWmVqAzUZqnK9BHKMfsEHlELNfsdLquU+g2sbqSC/T2dNXX6XiwOG9CgvkVNj9ObKBW2es24/xJ6P3VBbcGyDznFlso+BJtBIh9V02p4Cg1eAjsJHrJHJ0/hWSscDbd5C0JETX7oVfbb65oOwHRxsW5cEMcU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1724356642; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=cDAWEJoEuz/zAjQB2GDr5o/+uMhJXPXP0OhvbyTM3eQ=; 
+	b=elg7zCTgG0JGoPym0Bt7GGwWg8QG1KDkl5/q4E4r6K7z7x3QCJK++XxwPqS/UlB0XmhbPk/dWM9S+k2rYS+FFZUX9MIKddGQkLjRTia8w3y5SMST03nVMpDIKM3mv2H1p0uTM6ZxaDAB842087kJ4C6aZI/yX1ioc4+QloOKHl8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
+	dmarc=pass header.from=<detlev.casanova@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724356642;
+	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=cDAWEJoEuz/zAjQB2GDr5o/+uMhJXPXP0OhvbyTM3eQ=;
+	b=X7rNhmUo1ZZg/4il+v8om2GyJcVoSSVDqoPCpnzG28LruVhDc4F7fyqg6EUYsgZt
+	dseyrUIyFkYTnyMpsPvphi40gcPB1xt+buHfOSG85hV1DfBsUPpBoNlEW2/d8VXP4Rv
+	NC0RBqZb5TRpCGeyyzbbBxlctlEjcRjUzTDonVxY=
+Received: by mx.zohomail.com with SMTPS id 1724356639631760.212187062417;
+	Thu, 22 Aug 2024 12:57:19 -0700 (PDT)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	ansuelsmth@gmail.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
- controller
-Message-ID: <ZseLT2roso_L7UG4@lore-desk>
-References: <20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org>
- <20240822-en7581-pinctrl-v2-1-ba1559173a7f@kernel.org>
- <20240822-taste-deceptive-03d0ad56ae2e@spud>
+	Heiko Stuebner <heiko@sntech.de>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Shresth Prasad <shresthprasad7@gmail.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	kernel@collabora.com
+Subject: [PATCH v4 0/4] Add pinctrl support for rk3576
+Date: Thu, 22 Aug 2024 15:53:35 -0400
+Message-ID: <20240822195706.920567-1-detlev.casanova@collabora.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="diazt744lIJbkc3n"
-Content-Disposition: inline
-In-Reply-To: <20240822-taste-deceptive-03d0ad56ae2e@spud>
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
+Add support for the pinctrl core on the rk3576 SoC.
+The patch from downstream has been rebased.
 
---diazt744lIJbkc3n
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The grf driver is added support for the rk3576 default values:
+- enable i3c weakpull SW control
+- disable jtag on sdmmc IO lines
 
-On Aug 22, Conor Dooley wrote:
-> On Thu, Aug 22, 2024 at 11:40:52AM +0200, Lorenzo Bianconi wrote:
-> > Introduce device-tree binding documentation for Airoha EN7581 pinctrl
-> > controller.
-> >=20
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > +  reg:
-> > +    items:
-> > +      - description: IOMUX base address
-> > +      - description: LED IOMUX base address
-> > +      - description: GPIO flash mode base address
-> > +      - description: GPIO flash mode extended base address
-> > +      - description: IO pin configuration base address
-> > +      - description: PCIE reset open-drain base address
-> > +      - description: GPIO bank0 register base address
-> > +      - description: GPIO bank0 second control register base address
-> > +      - description: GPIO bank1 second control register base address
-> > +      - description: GPIO bank1 register base address
->=20
-> > +      pinctrl@1fa20214 {
-> > +        compatible =3D "airoha,en7581-pinctrl";
-> > +        reg =3D <0x0 0x1fa20214 0x0 0x30>,
-> > +              <0x0 0x1fa2027c 0x0 0x8>,
-> > +              <0x0 0x1fbf0234 0x0 0x4>,
-> > +              <0x0 0x1fbf0268 0x0 0x4>,
-> > +              <0x0 0x1fa2001c 0x0 0x50>,
-> > +              <0x0 0x1fa2018c 0x0 0x4>,
-> > +              <0x0 0x1fbf0200 0x0 0x18>,
-> > +              <0x0 0x1fbf0220 0x0 0x4>,
-> > +              <0x0 0x1fbf0260 0x0 0x8>,
-> > +              <0x0 0x1fbf0270 0x0 0x28>;
-> > +        reg-names =3D "iomux", "led-iomux",
-> > +                    "gpio-flash-mode", "gpio-flash-mode-ext",
-> > +                    "ioconf", "pcie-rst-od",
-> > +                    "gpio-bank0", "gpio-ctrl1",
-> > +                    "gpio-ctrl2", "gpio-bank1";
->=20
-> before looking at v1:
-> I would really like to see an explanation for why this is a correct
-> model of the hardware as part of the commit message. To me this screams
-> syscon/MFD and instead of describing this as a child of a syscon and
-> using regmap to access it you're doing whatever this is...
->=20
-> after looking at v1:
-> AFAICT the PWM driver does not currently exist in mainline, so I am now
-> doubly of the opinion that this needs to be an MFD and a wee bit annoyed
-> that you didn't include any rationale in your cover letter or w/e for
-> not going with an MFD given there was discussion on the topic in v1.
+Changes since v3:
+- Set GRF bits through the GRF driver
+- Drop the rockchip,sys-grf phandle
 
-based on the reply from Rob I was thinking it is fine to just reduce the nu=
-mber
-of IO mappings, sorry for that.
+Changes since v2:
+- Document rockchip,sys-grf field as only needed for rk3576
 
->=20
-> Thanks,
-> Conor.
+Changes since v1:
+- Reorder commits
+- Describe sys-grf use
+- Update imperative commit message
 
-clock, pinctrl and pwm controllers need to map 3 main memory areas:
-- chip-scu: <0x0 0x1fa20000 0x0 0x384>
-  it is used by the clock driver for fixed freq clock configuration,
-  by the pinctrl driver for io-muxing (and by the future pon drivers)
-- scu: <0x1fb00020 0x0 0x94c>
-  it is used by the clock/rst driver
-- gpio: <0x1fbf0200 0x0 0xbc>
-  it is used by the pinctrl driver to implement gpio/irq controller and
-  by the pwm driver.
+Detlev.
 
-I guess we can model chip_scu as single syscon node used by clock and pinct=
-rl
-while pwm can be a child of the pinctrl node. Something like:
+Detlev Casanova (3):
+  dt-bindings: soc: rockchip: Add rk3576 syscon compatibles
+  grf: rk3576: Add default GRF values
+  dt-bindings: pinctrl: Add rk3576 pinctrl support
 
-=2E..
+Steven Liu (1):
+  pinctrl: rockchip: Add rk3576 pinctrl support
 
-chip_scu: chip-scu@1fa20000 {
-	compatible =3D "airoha,en7581-chip-scu", "syscon";
-	reg =3D <0x0 0x1fa20000 0x0 0x384>;
-};
+ .../bindings/pinctrl/rockchip,pinctrl.yaml    |   1 +
+ .../devicetree/bindings/soc/rockchip/grf.yaml |  16 ++
+ drivers/pinctrl/pinctrl-rockchip.c            | 207 ++++++++++++++++++
+ drivers/pinctrl/pinctrl-rockchip.h            |   1 +
+ drivers/soc/rockchip/grf.c                    |  30 ++-
+ 5 files changed, 254 insertions(+), 1 deletion(-)
 
-scuclk: clock-controller@1fb00020 {
-	compatible =3D "airoha,en7581-scu";
-	reg =3D <0x1fb00020 0x0 0x94c>;
-	airoha,chip-scu =3D <&chip_scu>;
-	...
-};
+-- 
+2.46.0
 
-pio: pinctrl@1fbf0200 {
-	compatible =3D "airoha,en7581-pinctrl", "simple-mfd", "syscon";
-	reg =3D <0x1fbf0200 0x0 0xbc>;
-	airoha,chip-scu =3D <&chip_scu>;
-	....
-
-	pwm {
-		compatible =3D "airoha,en7581-pwm";
-		...
-	};
-};
-
-=2E..
-
-Does it work for you?
-
-Regards,
-Lorenzo
-
---diazt744lIJbkc3n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZseLTwAKCRA6cBh0uS2t
-rGKnAQCZ+o4MIMWsRuzvGOZSrG1NdV6hktrlDyjEJQ5C2jFzYAEAu4nxBgW+EpZW
-RRqyuyYxUDBvOoQ4vFB7hMODbQlKmQo=
-=1h0o
------END PGP SIGNATURE-----
-
---diazt744lIJbkc3n--
 
