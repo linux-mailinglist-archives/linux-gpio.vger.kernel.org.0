@@ -1,79 +1,139 @@
-Return-Path: <linux-gpio+bounces-8969-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8970-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 748F095B148
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 11:17:13 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAF8895B1C5
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 11:36:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 993D81C21E01
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 09:17:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EA7C8B23D18
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 09:35:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D940139D1A;
-	Thu, 22 Aug 2024 09:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AE2B17C20E;
+	Thu, 22 Aug 2024 09:35:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZRQOSWwA"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DW+82SUT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193671BF2A;
-	Thu, 22 Aug 2024 09:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99BD175D39
+	for <linux-gpio@vger.kernel.org>; Thu, 22 Aug 2024 09:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724318226; cv=none; b=qkPJdQ8+BaPR9Tb0Ap+5gMKY21cH8Xx43vR8ex0V7bYQ4FIVw2+bxriYCFlSNgjZf6ZjUsg853OD3gB1Axzd6Rk5+EYkScU4BN9SzI6GPdia968Rp6ITbAp2Wb0H6d44EeUZ+j1GqsbThoLaulrD69npwKAvNx/TZVT5UsNNs+8=
+	t=1724319350; cv=none; b=uOltgHsGihuISzPmzAVslOWN96kEIbv9MazWrlSqCjlvdNZJIpqBSx9PYwOQzlIiQHTcQKRavMsevSjz0AZK+En8BjUGw23io3mHGlnOih2NaWy640vKtzKOPzXcUDfkHh5lcEYferjiZpwEPn7QFTJxAgNy7NuKu+xa2MfLpqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724318226; c=relaxed/simple;
-	bh=a5PNgAbycCCuxa0C4C7BKpl2tPEQguQMGeFz4yS4IDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GlCuktJ39+TUWn81LwxDu5W/OsgaUYSwtw2C6tABb7CU2L1kitMmvw6CkArVh/pwsi1FrK6cM5AVAkOQdUypStcqiiJheadqFyiJt2jdE4ajM0ULrC0O56gnVMl7vuSrKdfLB47Vso3sPGzY9XGhxQlsMGEUnFnM5w7olOmkJOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZRQOSWwA; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724318224; x=1755854224;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=a5PNgAbycCCuxa0C4C7BKpl2tPEQguQMGeFz4yS4IDY=;
-  b=ZRQOSWwAP70nOk1RlD53e4s2ZE5nyxXgB+2ePOgdMlGnEt3Mh2OYXA4E
-   tR+nb+xyXIJA9Ix8QCxCFkaN5pQhE2+NFYIJolsM3xLcArrf0EmTvCYHR
-   bovgo+wZPgN1atR0IsLnGFCvieF/dgThk43IV0fGlwo+XWCgsRJLoGNKP
-   KkXxVUkeKd/lys5IodEkiEA2HEEtV+JwC5IFvO5wp464pz6KAd2HhWI/w
-   TXacwd1IH/PIkoZXHZYhTlDHRefu2CfsYVSGBIbTD4YAWfzIx+ISoW+oA
-   84lzGOhtnb7mFn4yzttvQt1AZRfnHepbL6iTbNIYg3dw+bg0ArEp3jGVN
-   g==;
-X-CSE-ConnectionGUID: WdY/AILkQKWXg0lmc/FzrA==
-X-CSE-MsgGUID: N/DotHE7Q9STouhZJ81VJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="33873634"
-X-IronPort-AV: E=Sophos;i="6.10,166,1719903600"; 
-   d="scan'208";a="33873634"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 02:17:03 -0700
-X-CSE-ConnectionGUID: eN96XfaFTkanRcr91cANTg==
-X-CSE-MsgGUID: RfBXsT0JSoaL6GquC24RHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,166,1719903600"; 
-   d="scan'208";a="61702781"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 22 Aug 2024 02:16:59 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sh3w9-000Ccy-1e;
-	Thu, 22 Aug 2024 09:16:57 +0000
-Date: Thu, 22 Aug 2024 17:16:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Billy Tsai <billy_tsai@aspeedtech.com>, linus.walleij@linaro.org,
-	brgl@bgdev.pl, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v1 2/2] gpio: Add G7 Aspeed gpio controller driver
-Message-ID: <202408221624.UtsHD8HQ-lkp@intel.com>
-References: <20240821070740.2378602-3-billy_tsai@aspeedtech.com>
+	s=arc-20240116; t=1724319350; c=relaxed/simple;
+	bh=Yt0SGBdvkoQALbkyTLGjUsIfe+e/jGTFEfTctg8D1mQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NOnZiYmbV7LoLNiXgyj1vWB9RBn4/8UmCdqXVbNSyQLB07y/lfhI60/Xt5kUj++mtMiecedtCmsZWupUxdlRYrkv554yJi5K2UHoy3innzjXVvbCwCgJf/x+G8MuGitdm2c4xQ26GcJIYPUx3QOWuYNJfuZnAt1ETxyz5qMGcPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DW+82SUT; arc=none smtp.client-ip=209.85.218.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-a7aa086b077so70920066b.0
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Aug 2024 02:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1724319346; x=1724924146; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5as64V3nQXJvuAvKv0T+XO2CQeSqsYWKkMYHqmyR0EU=;
+        b=DW+82SUTh0cCpgBUqBkw1ax3sFYCut/Pfm/3UCEO675HxYn022XQSMC88UhZ9UTbYN
+         WP2SfYdp0ayLVFIR85I6U5KIK0rKf6SpyyOoAgPtlIE/ylWaO8akVD/3yk3M321Wj3TH
+         Ydkz0qohGwVkEu5tGevvxSko4ABoZ0tVdbSGxvD15bCzsPU4yauHf7xvNOxwXprS782c
+         zGkaAERzJIF/pTNQzAIRTEQWMU+CsfxXGwe4lye2nLPzwjKUKUmRcNUh9UExSC/uswQ6
+         arRg82mbrhTsAWK9MShnd9zCQE/G5iXBIhkd39/eCytrjbqapDA8h1rqZ8GihVnW8eft
+         l8tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724319346; x=1724924146;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5as64V3nQXJvuAvKv0T+XO2CQeSqsYWKkMYHqmyR0EU=;
+        b=PRCF5m7tFngH4rBGZvdG/CXMrvXCaJ6AgeabAp4D0vXRh7NkwnUY6aG40sYbByal/c
+         APbsHQhkHFlygLs2i2El7VImQOBVEVwZXPALVpF1XZ3S8qMgsrY91o5YxENCiitzGRjt
+         G9tJcS8c52cZF3gEFvEqwBIDvKrMI/hzq9YG0yJ23ntC65maxmhVeHHkp9q2SjKgc4k4
+         tLjUSGr0TQQQJ/l/AmAHp6QV7WSgCDOf3phVMl1akSucwdT6Q2KCj9KPI4ZwqIz9ZcJp
+         9T3kDP2PwWGtn/dGp+rd2buMSNd8QvK71oB+ry5dWaIlLu786qrPZvxB0SrvvJt+cOuf
+         WtlA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0Rb4zK1U2KzVRwxIcqE966hLsKcTP7fzHClBx6Vs//UiXF2fvbOSJTiVKHHaoj3tdPqq2Xzb6/+Ed@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM+oPqNSwG0t8rY/LMhhIja68XOGSCeoW3wLoSyVziDsbG+Gpx
+	1B9s9nHk2KlWJVicnTkh+OKnpNJdbQgFjpry2Vu2wyTK4MMvUHrbjERPd9uPJcQ=
+X-Google-Smtp-Source: AGHT+IFOY/EtR8WQw5iC60MgtfJT6RPxhSE4K08Yn6ESgwiAUbm+IoOrlNo+vVu7HeKvVsEjzl1GNA==
+X-Received: by 2002:a17:906:d26a:b0:a77:e48d:bae with SMTP id a640c23a62f3a-a866f3615cbmr397450866b.28.1724319345495;
+        Thu, 22 Aug 2024 02:35:45 -0700 (PDT)
+Received: from localhost ([87.13.33.30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f2a5903sm91837266b.78.2024.08.22.02.35.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2024 02:35:45 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 22 Aug 2024 11:35:51 +0200
+To: Conor Dooley <conor@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 01/11] dt-bindings: clock: Add RaspberryPi RP1 clock
+ bindings
+Message-ID: <ZscGdxgoNJrifSgk@apocalypse>
+Mail-Followup-To: Conor Dooley <conor@kernel.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <8d7dd7ca5da41f2a96e3ef4e2e3f29fd0d71906a.1724159867.git.andrea.porta@suse.com>
+ <20240820-baritone-delegate-5711f7a0bc76@spud>
+ <ZsTfoC3aKLdmFPCL@apocalypse>
+ <20240821-exception-nearby-5adeaaf0178b@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -82,169 +142,294 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240821070740.2378602-3-billy_tsai@aspeedtech.com>
+In-Reply-To: <20240821-exception-nearby-5adeaaf0178b@spud>
 
-Hi Billy,
+Hi Conor,
 
-kernel test robot noticed the following build errors:
+On 12:46 Wed 21 Aug     , Conor Dooley wrote:
+> On Tue, Aug 20, 2024 at 08:25:36PM +0200, Andrea della Porta wrote:
+> > Hi Conor,
+> > 
+> > On 17:19 Tue 20 Aug     , Conor Dooley wrote:
+> > > On Tue, Aug 20, 2024 at 04:36:03PM +0200, Andrea della Porta wrote:
+> > > > Add device tree bindings for the clock generator found in RP1 multi
+> > > > function device, and relative entries in MAINTAINERS file.
+> > > > 
+> > > > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > > > ---
+> > > >  .../clock/raspberrypi,rp1-clocks.yaml         | 87 +++++++++++++++++++
+> > > >  MAINTAINERS                                   |  6 ++
+> > > >  include/dt-bindings/clock/rp1.h               | 56 ++++++++++++
+> > > >  3 files changed, 149 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> > > >  create mode 100644 include/dt-bindings/clock/rp1.h
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..b27db86d0572
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> > > > @@ -0,0 +1,87 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/clock/raspberrypi,rp1-clocks.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: RaspberryPi RP1 clock generator
+> > > > +
+> > > > +maintainers:
+> > > > +  - Andrea della Porta <andrea.porta@suse.com>
+> > > > +
+> > > > +description: |
+> > > > +  The RP1 contains a clock generator designed as three PLLs (CORE, AUDIO,
+> > > > +  VIDEO), and each PLL output can be programmed though dividers to generate
+> > > > +  the clocks to drive the sub-peripherals embedded inside the chipset.
+> > > > +
+> > > > +  Link to datasheet:
+> > > > +  https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: raspberrypi,rp1-clocks
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  '#clock-cells':
+> > > > +    description:
+> > > > +      The index in the assigned-clocks is mapped to the output clock as per
+> > > > +      definitions in dt-bindings/clock/rp1.h.
+> > > > +    const: 1
+> > > > +
+> > > > +  clocks:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +  - '#clock-cells'
+> > > > +  - clocks
+> > > > +
+> > > > +additionalProperties: false
+> > > > +
+> > > > +examples:
+> > > > +  - |
+> > > > +    #include <dt-bindings/clock/rp1.h>
+> > > > +
+> > > > +    rp1 {
+> > > > +        #address-cells = <2>;
+> > > > +        #size-cells = <2>;
+> > > > +
+> > > > +        rp1_clocks: clocks@18000 {
+> > > 
+> > > The unit address does not match the reg property. I'm surprised that
+> > > dtc doesn't complain about that.
+> > 
+> > Agreed. I'll update the address with the reg value in the next release
+> > 
+> > > 
+> > > > +            compatible = "raspberrypi,rp1-clocks";
+> > > > +            reg = <0xc0 0x40018000 0x0 0x10038>;
+> > > 
+> > > This is a rather oddly specific size. It leads me to wonder if this
+> > > region is inside some sort of syscon area?
+> > 
+> > >From downstream source code and RP1 datasheet it seems that the last addressable
+> > register is at 0xc040028014 while the range exposed through teh devicetree ends
+> > up at 0xc040028038, so it seems more of a little safe margin. I wouldn't say it
+> > is a syscon area since those register are quite specific for video clock
+> > generation and not to be intended to be shared among different peripherals.
+> > Anyway, the next register aperture is at 0xc040030000 so I would say we can 
+> > extend the clock mapped register like the following:
+> > 
+> > reg = <0xc0 0x40018000 0x0 0x18000>;
+> > 
+> > if you think it is more readable.
+> 
+> I don't care
 
-[auto build test ERROR on brgl/gpio/for-next]
-[also build test ERROR on linus/master v6.11-rc4 next-20240821]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Ack.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Billy-Tsai/dt-bindings-gpio-aspeed-ast2400-gpio-Support-ast2700/20240821-150951
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20240821070740.2378602-3-billy_tsai%40aspeedtech.com
-patch subject: [PATCH v1 2/2] gpio: Add G7 Aspeed gpio controller driver
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20240822/202408221624.UtsHD8HQ-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 26670e7fa4f032a019d23d56c6a02926e854e8af)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240822/202408221624.UtsHD8HQ-lkp@intel.com/reproduce)
+> > > > +            #clock-cells = <1>;
+> > > > +            clocks = <&clk_xosc>;
+> > > > +
+> > > > +            assigned-clocks = <&rp1_clocks RP1_PLL_SYS_CORE>,
+> > 
+> > > FWIW, I don't think any of these assigned clocks are helpful for the
+> > > example. That said, why do you need to configure all of these assigned
+> > > clocks via devicetree when this node is the provider of them?
+> > 
+> > Not sure to understand what you mean here, the example is there just to
+> > show how to compile the dt node, maybe you're referring to the fact that
+> > the consumer should setup the clock freq?
+> 
+> I suppose, yeah. I don't think a particular configuration is relevant
+> for the example binding, but simultaneously don't get why you are
+> assigning the rate for clocks used by audio devices or ethernet in the
+> clock provider node.
+>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202408221624.UtsHD8HQ-lkp@intel.com/
+Honestly I don't have a strong preference here, I can manage to do some tests
+moving the clock rate settings inside the consumer nodes but I kinda like
+the curernt idea of a centralized node where clocks are setup beforehand.
+In RP1 the clock generator and peripherals such as ethernet are all on-board
+and cannot be rewired in any other way so the devices are not standalone
+consumer in their own right (such it would be an ethernet chip wired to an
+external CPU). But of course this is debatable, on the other hand the current
+approach of provider/consumer is of course very clean. I'm just wondering
+wthether you think I should take action on this or we can leave it as it is.
+Please see also below.
 
-All errors (new ones prefixed by >>):
+> > Consider that the rp1-clocks
+> > is coupled to the peripherals contained in the same RP1 chip so there is
+> > not much point in letting the peripherals set the clock to their leisure.
+> 
+> How is that any different to the many other SoCs in the kernel?
 
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
-     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-         |                                                      ^
-   In file included from drivers/gpio/gpio-aspeed-g7.c:10:
-   In file included from include/linux/gpio/driver.h:8:
-   In file included from include/linux/irqchip/chained_irq.h:10:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
-     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-         |                                                      ^
-   In file included from drivers/gpio/gpio-aspeed-g7.c:10:
-   In file included from include/linux/gpio/driver.h:8:
-   In file included from include/linux/irqchip/chained_irq.h:10:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/s390/include/asm/io.h:93:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     693 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     701 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     709 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     718 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     727 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     736 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   In file included from drivers/gpio/gpio-aspeed-g7.c:10:
-   In file included from include/linux/gpio/driver.h:8:
-   In file included from include/linux/irqchip/chained_irq.h:10:
-   In file included from include/linux/irq.h:591:
-   In file included from arch/s390/include/asm/hw_irq.h:6:
-   In file included from include/linux/pci.h:37:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:181:
-   In file included from arch/s390/include/asm/mmu_context.h:11:
-   In file included from arch/s390/include/asm/pgalloc.h:18:
-   In file included from include/linux/mm.h:2228:
-   include/linux/vmstat.h:500:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     500 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     501 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:507:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     507 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     508 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:519:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     519 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     520 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:528:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     528 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     529 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> drivers/gpio/gpio-aspeed-g7.c:474:49: error: too few arguments to function call, expected 2, have 1
-     474 |         return pinctrl_gpio_request(chip->base + offset);
-         |                ~~~~~~~~~~~~~~~~~~~~                    ^
-   include/linux/pinctrl/consumer.h:30:5: note: 'pinctrl_gpio_request' declared here
-      30 | int pinctrl_gpio_request(struct gpio_chip *gc, unsigned int offset);
-         |     ^                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-aspeed-g7.c:479:39: error: too few arguments to function call, expected 2, have 1
-     479 |         pinctrl_gpio_free(chip->base + offset);
-         |         ~~~~~~~~~~~~~~~~~                    ^
-   include/linux/pinctrl/consumer.h:31:6: note: 'pinctrl_gpio_free' declared here
-      31 | void pinctrl_gpio_free(struct gpio_chip *gc, unsigned int offset);
-         |      ^                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-aspeed-g7.c:676:48: error: too few arguments to function call, expected 3, have 2
-     676 |                 return pinctrl_gpio_set_config(offset, config);
-         |                        ~~~~~~~~~~~~~~~~~~~~~~~               ^
-   include/linux/pinctrl/consumer.h:36:5: note: 'pinctrl_gpio_set_config' declared here
-      36 | int pinctrl_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-         |     ^                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      37 |                                 unsigned long config);
-         |                                 ~~~~~~~~~~~~~~~~~~~~
-   17 warnings and 3 errors generated.
+In fact, it isn't. Please take a look at:
+ 
+arch/arm/boot/dts/st/stm32mp15xx-dhcom-som.dtsi
+arch/arm/boot/dts/ti/omap/omap44xx-clocks.dtsi
+arch/arm/boot/dts/ti/omap/dra7xx-clocks.dtsi
+arch/arm/boot/dts/nxp/imx/imx7d-zii-rpu2.dts
+
+and probably many others... they use the same approach, so I assumed it is at
+least reasonable to assign the clock rate this way.
 
 
-vim +474 drivers/gpio/gpio-aspeed-g7.c
+Many thanks,
+Andrea
 
-   468	
-   469	static int aspeed_gpio_g7_request(struct gpio_chip *chip, unsigned int offset)
-   470	{
-   471		if (!have_gpio(gpiochip_get_data(chip), offset))
-   472			return -ENODEV;
-   473	
- > 474		return pinctrl_gpio_request(chip->base + offset);
-   475	}
-   476	
+> 
+> > > > +                              <&rp1_clocks RP1_PLL_AUDIO_CORE>,
+> > > > +                              /* RP1_PLL_VIDEO_CORE and dividers are now managed by VEC,DPI drivers */
+> > > 
+> > > Comments like this also do not seem relevant to the binding.
+> > 
+> > Agreed, will drop in the next release.
+> > 
+> > > 
+> > > 
+> > > Cheers,
+> > > Conor.
+> > >
+> > 
+> > Many thanks,
+> > Andrea
+> >  
+> > > 
+> > > > +                              <&rp1_clocks RP1_PLL_SYS>,
+> > > > +                              <&rp1_clocks RP1_PLL_SYS_SEC>,
+> > > > +                              <&rp1_clocks RP1_PLL_AUDIO>,
+> > > > +                              <&rp1_clocks RP1_PLL_AUDIO_SEC>,
+> > > > +                              <&rp1_clocks RP1_CLK_SYS>,
+> > > > +                              <&rp1_clocks RP1_PLL_SYS_PRI_PH>,
+> > > > +                              /* RP1_CLK_SLOW_SYS is used for the frequency counter (FC0) */
+> > > > +                              <&rp1_clocks RP1_CLK_SLOW_SYS>,
+> > > > +                              <&rp1_clocks RP1_CLK_SDIO_TIMER>,
+> > > > +                              <&rp1_clocks RP1_CLK_SDIO_ALT_SRC>,
+> > > > +                              <&rp1_clocks RP1_CLK_ETH_TSU>;
+> > > > +
+> > > > +            assigned-clock-rates = <1000000000>, // RP1_PLL_SYS_CORE
+> > > > +                                   <1536000000>, // RP1_PLL_AUDIO_CORE
+> > > > +                                   <200000000>,  // RP1_PLL_SYS
+> > > > +                                   <125000000>,  // RP1_PLL_SYS_SEC
+> > > > +                                   <61440000>,   // RP1_PLL_AUDIO
+> > > > +                                   <192000000>,  // RP1_PLL_AUDIO_SEC
+> > > > +                                   <200000000>,  // RP1_CLK_SYS
+> > > > +                                   <100000000>,  // RP1_PLL_SYS_PRI_PH
+> > > > +                                   /* Must match the XOSC frequency */
+> > > > +                                   <50000000>, // RP1_CLK_SLOW_SYS
+> > > > +                                   <1000000>, // RP1_CLK_SDIO_TIMER
+> > > > +                                   <200000000>, // RP1_CLK_SDIO_ALT_SRC
+> > > > +                                   <50000000>; // RP1_CLK_ETH_TSU
+> > > > +        };
+> > > > +    };
+> > > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > > index 42decde38320..6e7db9bce278 100644
+> > > > --- a/MAINTAINERS
+> > > > +++ b/MAINTAINERS
+> > > > @@ -19116,6 +19116,12 @@ F:	Documentation/devicetree/bindings/media/raspberrypi,pispbe.yaml
+> > > >  F:	drivers/media/platform/raspberrypi/pisp_be/
+> > > >  F:	include/uapi/linux/media/raspberrypi/
+> > > >  
+> > > > +RASPBERRY PI RP1 PCI DRIVER
+> > > > +M:	Andrea della Porta <andrea.porta@suse.com>
+> > > > +S:	Maintained
+> > > > +F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> > > > +F:	include/dt-bindings/clock/rp1.h
+> > > > +
+> > > >  RC-CORE / LIRC FRAMEWORK
+> > > >  M:	Sean Young <sean@mess.org>
+> > > >  L:	linux-media@vger.kernel.org
+> > > > diff --git a/include/dt-bindings/clock/rp1.h b/include/dt-bindings/clock/rp1.h
+> > > > new file mode 100644
+> > > > index 000000000000..1ed67b8a5229
+> > > > --- /dev/null
+> > > > +++ b/include/dt-bindings/clock/rp1.h
+> > > > @@ -0,0 +1,56 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 OR MIT */
+> > > > +/*
+> > > > + * Copyright (C) 2021 Raspberry Pi Ltd.
+> > > > + */
+> > > > +
+> > > > +#define RP1_PLL_SYS_CORE		0
+> > > > +#define RP1_PLL_AUDIO_CORE		1
+> > > > +#define RP1_PLL_VIDEO_CORE		2
+> > > > +
+> > > > +#define RP1_PLL_SYS			3
+> > > > +#define RP1_PLL_AUDIO			4
+> > > > +#define RP1_PLL_VIDEO			5
+> > > > +
+> > > > +#define RP1_PLL_SYS_PRI_PH		6
+> > > > +#define RP1_PLL_SYS_SEC_PH		7
+> > > > +#define RP1_PLL_AUDIO_PRI_PH		8
+> > > > +
+> > > > +#define RP1_PLL_SYS_SEC			9
+> > > > +#define RP1_PLL_AUDIO_SEC		10
+> > > > +#define RP1_PLL_VIDEO_SEC		11
+> > > > +
+> > > > +#define RP1_CLK_SYS			12
+> > > > +#define RP1_CLK_SLOW_SYS		13
+> > > > +#define RP1_CLK_DMA			14
+> > > > +#define RP1_CLK_UART			15
+> > > > +#define RP1_CLK_ETH			16
+> > > > +#define RP1_CLK_PWM0			17
+> > > > +#define RP1_CLK_PWM1			18
+> > > > +#define RP1_CLK_AUDIO_IN		19
+> > > > +#define RP1_CLK_AUDIO_OUT		20
+> > > > +#define RP1_CLK_I2S			21
+> > > > +#define RP1_CLK_MIPI0_CFG		22
+> > > > +#define RP1_CLK_MIPI1_CFG		23
+> > > > +#define RP1_CLK_PCIE_AUX		24
+> > > > +#define RP1_CLK_USBH0_MICROFRAME	25
+> > > > +#define RP1_CLK_USBH1_MICROFRAME	26
+> > > > +#define RP1_CLK_USBH0_SUSPEND		27
+> > > > +#define RP1_CLK_USBH1_SUSPEND		28
+> > > > +#define RP1_CLK_ETH_TSU			29
+> > > > +#define RP1_CLK_ADC			30
+> > > > +#define RP1_CLK_SDIO_TIMER		31
+> > > > +#define RP1_CLK_SDIO_ALT_SRC		32
+> > > > +#define RP1_CLK_GP0			33
+> > > > +#define RP1_CLK_GP1			34
+> > > > +#define RP1_CLK_GP2			35
+> > > > +#define RP1_CLK_GP3			36
+> > > > +#define RP1_CLK_GP4			37
+> > > > +#define RP1_CLK_GP5			38
+> > > > +#define RP1_CLK_VEC			39
+> > > > +#define RP1_CLK_DPI			40
+> > > > +#define RP1_CLK_MIPI0_DPI		41
+> > > > +#define RP1_CLK_MIPI1_DPI		42
+> > > > +
+> > > > +/* Extra PLL output channels - RP1B0 only */
+> > > > +#define RP1_PLL_VIDEO_PRI_PH		43
+> > > > +#define RP1_PLL_AUDIO_TERN		44
+> > > > -- 
+> > > > 2.35.3
+> > > > 
+> > 
+> > 
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
 
