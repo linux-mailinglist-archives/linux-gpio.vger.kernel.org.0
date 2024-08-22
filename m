@@ -1,64 +1,86 @@
-Return-Path: <linux-gpio+bounces-8999-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9000-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB0CE95BB58
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 18:06:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 050F895BBC3
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 18:23:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E12FC1C229A4
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 16:06:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4282281FA5
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 16:23:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCED11CCB35;
-	Thu, 22 Aug 2024 16:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C4611CCECF;
+	Thu, 22 Aug 2024 16:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YCLoBA6w"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHkvnzvX"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA0D28389;
-	Thu, 22 Aug 2024 16:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05348282FC;
+	Thu, 22 Aug 2024 16:23:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724342809; cv=none; b=LNujKUyVVmIIawDmUSQv5XWCbHYyZX2kPuO+Fa7fcC33Hd7pqHNYe0eYMQyjoNa7DMV581OBF6XOO/2PxW3Vgfz3Uo7qF4nTr+y1GwaI9BnWqQ8gRVyso7uU0PBX3pvnlSI42rk71hVF1L9qdwve775I0u2pMF61aaq3cR82+BM=
+	t=1724343792; cv=none; b=UMdsxxKIgfEwAR/rY3tTUIAKp6F8WtN5BfkRJJrWx6yxf1XWAHyimQKrCRWAJh0P2cxU7lbzcrPHaqk47NG3RO3WBstDrwJNBVBOyvPS8+pry9ICzTXu4QlzgZ/8dgPoH14S+p1e9b2xVf3TuInoaLcjk1Iw8TOgpao87O0mJQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724342809; c=relaxed/simple;
-	bh=JKSc2pCJPHiBPYG6O9itMsD/N2edGQ/08PARRYFbmoI=;
+	s=arc-20240116; t=1724343792; c=relaxed/simple;
+	bh=43L7DnNwf5PKhCn45ifgPN7YWE34/X02RDZibv66tIU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OgFfjVVp3Jwnv95d+mmT8ZfdDuUruq9Rw9gzg8boYyLj0aRK4u6WHPhv0ZbipVwWlj6BtUGh/Hp1GSFC0Yrm/kPVsP5hpUzIsvBaCE09vs9uiA2FeFDb+lwLewVCvHTE8dehOwDfd0g9rY74CsQYYlcKXsaz6zz5kD2DbOr/3cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YCLoBA6w; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27058C4AF0B;
-	Thu, 22 Aug 2024 16:06:45 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=q5rR223E0ZvdW1Fyvhr18jhEa66QZF/Tpdhl52ga2GaCM96In6gN2J29Q3mG3i0tB/yfklXoIMbdvH2fECyf10jvUHONL6mNhP+YdcNFsoVmZmpZ4PStgKA1kYmHMO/TPi67xEcj4Z6KA0Mk7TC692WE1VjimwGG6jqOII9CtEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHkvnzvX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26FF9C4AF16;
+	Thu, 22 Aug 2024 16:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724342809;
-	bh=JKSc2pCJPHiBPYG6O9itMsD/N2edGQ/08PARRYFbmoI=;
+	s=k20201202; t=1724343791;
+	bh=43L7DnNwf5PKhCn45ifgPN7YWE34/X02RDZibv66tIU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YCLoBA6wK8HES0FLgfc3r7p3Ru9S+uWShWHV6U2bduADrNBxYRHYMnkOnIHGsttl9
-	 sjbtOtDejqqhu0hiMg+FQSmBCotX5JNMyTPMxXIBixGBQAMwV93LEwSHP1HRNeKjzi
-	 BvkKOjlYiKSlqujAelZfBsUYKMtsHrhj6NeeRo6TIZet+iOdvxVbh+twWZ0I109THi
-	 CtOfdiu6gWyo4mqB0C8iTN/fj88Il4RTdbsNVZxoLgJ9/qB8ShBoJAhpLkXaxjrtJ1
-	 rFtIroybZd3RB/4hjrnHEdpt3MxtHWV4LytV1fNDJE1MjjjpqG9og5qGovqU2ghEqp
-	 PoGwLrdks5XAw==
-Date: Thu, 22 Aug 2024 17:06:44 +0100
+	b=NHkvnzvXwnE6uzWrZj3r8QS7huQYHl6lQUYwWj4Ch6u/DQaoBdkprt3nE9whm0XSC
+	 JWfdoCkn9uQ738thQ7Mf/GZEsOdygoyA+HjgYQ0h26/08YxBQuRIt1bED2mvFsLWA2
+	 scH8G+pyi8FaQ7GdKEkbagnrT6FWj73l8KtMriASbVskJTkAYw1F6FsW/RWTbIHvPe
+	 SXq1hj00pqD/luPofnGZmKPkEliydpp3cN1c6VdnGZcx0rKHA4Ur2p/H7lvE0EHVrR
+	 fqKFZmx0krWiok3jMAx+j3eBlhzlsKJY8zkTwnfAH5mKumXoQXrX/8svvLsQtysEbO
+	 Qckd+tLlb+xUw==
+Date: Thu, 22 Aug 2024 17:23:02 +0100
 From: Conor Dooley <conor@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	ansuelsmth@gmail.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
- controller
-Message-ID: <20240822-taste-deceptive-03d0ad56ae2e@spud>
-References: <20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org>
- <20240822-en7581-pinctrl-v2-1-ba1559173a7f@kernel.org>
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 01/11] dt-bindings: clock: Add RaspberryPi RP1 clock
+ bindings
+Message-ID: <20240822-refutable-railroad-a3f111ab1e3f@spud>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <8d7dd7ca5da41f2a96e3ef4e2e3f29fd0d71906a.1724159867.git.andrea.porta@suse.com>
+ <20240820-baritone-delegate-5711f7a0bc76@spud>
+ <ZsTfoC3aKLdmFPCL@apocalypse>
+ <20240821-exception-nearby-5adeaaf0178b@spud>
+ <ZscGdxgoNJrifSgk@apocalypse>
+ <399ff156-ffc9-4d50-8e5f-a86dc82da2fa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -66,77 +88,145 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Keq2bc7KVkSdMDBF"
+	protocol="application/pgp-signature"; boundary="MUECiN+fSdL5Fn4Y"
 Content-Disposition: inline
-In-Reply-To: <20240822-en7581-pinctrl-v2-1-ba1559173a7f@kernel.org>
+In-Reply-To: <399ff156-ffc9-4d50-8e5f-a86dc82da2fa@kernel.org>
 
 
---Keq2bc7KVkSdMDBF
+--MUECiN+fSdL5Fn4Y
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 22, 2024 at 11:40:52AM +0200, Lorenzo Bianconi wrote:
-> Introduce device-tree binding documentation for Airoha EN7581 pinctrl
-> controller.
+On Thu, Aug 22, 2024 at 11:52:27AM +0200, Krzysztof Kozlowski wrote:
+
+> >>>>> +examples:
+> >>>>> +  - |
+> >>>>> +    #include <dt-bindings/clock/rp1.h>
+> >>>>> +
+> >>>>> +    rp1 {
+> >>>>> +        #address-cells =3D <2>;
+> >>>>> +        #size-cells =3D <2>;
+> >>>>> +
+> >>>>> +        rp1_clocks: clocks@18000 {
+> >>>>
+> >>>> The unit address does not match the reg property. I'm surprised that
+> >>>> dtc doesn't complain about that.
+> >>>
+> >>> Agreed. I'll update the address with the reg value in the next release
+> >>>
+> >>>>
+> >>>>> +            compatible =3D "raspberrypi,rp1-clocks";
+> >>>>> +            reg =3D <0xc0 0x40018000 0x0 0x10038>;
+> >>>>
+> >>>> This is a rather oddly specific size. It leads me to wonder if this
+> >>>> region is inside some sort of syscon area?
+> >>>
+> >>> >From downstream source code and RP1 datasheet it seems that the last=
+ addressable
+> >>> register is at 0xc040028014 while the range exposed through teh devic=
+etree ends
+> >>> up at 0xc040028038, so it seems more of a little safe margin. I would=
+n't say it
+> >>> is a syscon area since those register are quite specific for video cl=
+ock
+> >>> generation and not to be intended to be shared among different periph=
+erals.
+> >>> Anyway, the next register aperture is at 0xc040030000 so I would say =
+we can=20
+> >>> extend the clock mapped register like the following:
+> >>>
+> >>> reg =3D <0xc0 0x40018000 0x0 0x18000>;
+> >>>
+> >>> if you think it is more readable.
+> >>
+> >> I don't care
+> >=20
+> > Ack.
+> >=20
+> >>>>> +            #clock-cells =3D <1>;
+> >>>>> +            clocks =3D <&clk_xosc>;
+> >>>>> +
+> >>>>> +            assigned-clocks =3D <&rp1_clocks RP1_PLL_SYS_CORE>,
+> >>>
+> >>>> FWIW, I don't think any of these assigned clocks are helpful for the
+> >>>> example. That said, why do you need to configure all of these assign=
+ed
+> >>>> clocks via devicetree when this node is the provider of them?
+> >>>
+> >>> Not sure to understand what you mean here, the example is there just =
+to
+> >>> show how to compile the dt node, maybe you're referring to the fact t=
+hat
+> >>> the consumer should setup the clock freq?
+> >>
+> >> I suppose, yeah. I don't think a particular configuration is relevant
+> >> for the example binding, but simultaneously don't get why you are
+> >> assigning the rate for clocks used by audio devices or ethernet in the
+> >> clock provider node.
+> >>
+> >=20
+> > Honestly I don't have a strong preference here, I can manage to do some=
+ tests
+> > moving the clock rate settings inside the consumer nodes but I kinda li=
+ke
+> > the curernt idea of a centralized node where clocks are setup beforehan=
+d.
+> > In RP1 the clock generator and peripherals such as ethernet are all on-=
+board
+> > and cannot be rewired in any other way so the devices are not standalone
+> > consumer in their own right (such it would be an ethernet chip wired to=
+ an
+> > external CPU). But of course this is debatable, on the other hand the c=
+urrent
+> > approach of provider/consumer is of course very clean. I'm just wonderi=
+ng
+> > wthether you think I should take action on this or we can leave it as i=
+t is.
+> > Please see also below.
+> >=20
+> >>> Consider that the rp1-clocks
+> >>> is coupled to the peripherals contained in the same RP1 chip so there=
+ is
+> >>> not much point in letting the peripherals set the clock to their leis=
+ure.
+> >>
+> >> How is that any different to the many other SoCs in the kernel?
+> >=20
+> > In fact, it isn't. Please take a look at:
+> > =20
+> > arch/arm/boot/dts/st/stm32mp15xx-dhcom-som.dtsi
+> > arch/arm/boot/dts/ti/omap/omap44xx-clocks.dtsi
+> > arch/arm/boot/dts/ti/omap/dra7xx-clocks.dtsi
+> > arch/arm/boot/dts/nxp/imx/imx7d-zii-rpu2.dts
+> >=20
+> > and probably many others... they use the same approach, so I assumed it=
+ is at
+> > least reasonable to assign the clock rate this way.
 >=20
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> +  reg:
-> +    items:
-> +      - description: IOMUX base address
-> +      - description: LED IOMUX base address
-> +      - description: GPIO flash mode base address
-> +      - description: GPIO flash mode extended base address
-> +      - description: IO pin configuration base address
-> +      - description: PCIE reset open-drain base address
-> +      - description: GPIO bank0 register base address
-> +      - description: GPIO bank0 second control register base address
-> +      - description: GPIO bank1 second control register base address
-> +      - description: GPIO bank1 register base address
+> Please do not bring some ancient DTS, not really worked on, as example.
+> stm32 could is moderately recent but dra and omap are not.
 
-> +      pinctrl@1fa20214 {
-> +        compatible =3D "airoha,en7581-pinctrl";
-> +        reg =3D <0x0 0x1fa20214 0x0 0x30>,
-> +              <0x0 0x1fa2027c 0x0 0x8>,
-> +              <0x0 0x1fbf0234 0x0 0x4>,
-> +              <0x0 0x1fbf0268 0x0 0x4>,
-> +              <0x0 0x1fa2001c 0x0 0x50>,
-> +              <0x0 0x1fa2018c 0x0 0x4>,
-> +              <0x0 0x1fbf0200 0x0 0x18>,
-> +              <0x0 0x1fbf0220 0x0 0x4>,
-> +              <0x0 0x1fbf0260 0x0 0x8>,
-> +              <0x0 0x1fbf0270 0x0 0x28>;
-> +        reg-names =3D "iomux", "led-iomux",
-> +                    "gpio-flash-mode", "gpio-flash-mode-ext",
-> +                    "ioconf", "pcie-rst-od",
-> +                    "gpio-bank0", "gpio-ctrl1",
-> +                    "gpio-ctrl2", "gpio-bank1";
+Right, there may be some examples like this, but there are many many
+other SoCs where clocks are also not re-wireable, that do not. To me
+this line of argument is akin to the clock driver calling enable on all
+of the clocks because "all of the peripherals are always on the SoC".
+The peripheral is the actual consumer of the clock that quote-unquote
+wants the particular rate, not the clock provider, so having the rate
+assignments in the consumers is the only thing that makes sense to me.
 
-before looking at v1:
-I would really like to see an explanation for why this is a correct
-model of the hardware as part of the commit message. To me this screams
-syscon/MFD and instead of describing this as a child of a syscon and
-using regmap to access it you're doing whatever this is...
 
-after looking at v1:
-AFAICT the PWM driver does not currently exist in mainline, so I am now
-doubly of the opinion that this needs to be an MFD and a wee bit annoyed
-that you didn't include any rationale in your cover letter or w/e for
-not going with an MFD given there was discussion on the topic in v1.
 
-Thanks,
-Conor.
-
---Keq2bc7KVkSdMDBF
+--MUECiN+fSdL5Fn4Y
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZsdiEwAKCRB4tDGHoIJi
-0uKZAQDj5+09ic83KcLDIq5zWWJ09DULVEuilCvZB8SXAroqgAD+Jui9Hf6JNAuM
-9ieVzZOf+irfrtrGnPCFLrkKqBC7hAQ=
-=dqn2
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZsdl5gAKCRB4tDGHoIJi
+0qOXAQD5rgYw5/X4Ja91lG6uIEE1SemLGNR402ItvyyoKoxd1wEAwHPc8uJHiM0U
+N6HspNFbOaRmU2j/vypiAMrlT9GH6A0=
+=ar8E
 -----END PGP SIGNATURE-----
 
---Keq2bc7KVkSdMDBF--
+--MUECiN+fSdL5Fn4Y--
 
