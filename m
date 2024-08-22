@@ -1,135 +1,113 @@
-Return-Path: <linux-gpio+bounces-8979-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-8980-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C3D095B342
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 12:54:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36D0495B5E1
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 15:05:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E1691C22DFA
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 10:54:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D3FBA1F23B63
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Aug 2024 13:04:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 471D4183CA5;
-	Thu, 22 Aug 2024 10:54:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12DDC1C9DF5;
+	Thu, 22 Aug 2024 13:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="JIaK67v+"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NtUxmpci"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CD4183CA0;
-	Thu, 22 Aug 2024 10:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED05181310;
+	Thu, 22 Aug 2024 13:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724324076; cv=none; b=kFKcjD4/xFkhAs8agCp9d3ImXm/FBrZp+PiGuYhPLrAcxpvtTO0CU/+tJPZCzm0JgGG95FJnlaEh2vIASvqTsYBSjnaiLCQHmpA9o+p23vmKVXHAR0uONj7ZbEsNpdFd3mqze6D/HLOisPZ+f2P0wZUXQp01qCLM0GCm4+s/1Y4=
+	t=1724331891; cv=none; b=L/lBdHaDBewFvw8xCh6F7pnDNYn83FZmYC4dwiFnUTtJ56zhiv/UsWgelsunPqxUJ4ZBM5RzKkVtOpoqAsw3gKoKbpoJ2tlItdLtcpgzgifERdqMQxynJpb8nvElTduXjL2QM6y0mpFssrNx7+9XaafQuEK0Uq/UQIUlRQocB4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724324076; c=relaxed/simple;
-	bh=HiFsjXGDeGkHbNvJdIEgF9kVJxOiIPq/dIz6D60/P1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QyeuN71174Yd7BgZKsYMlpLCTMakcceySEUUg0A91ZSzwwlOgPeyyUxdhH9rgNsnYNOg9QhwmL3CFYvuMZDGapKq/e4cNqQB3MpXHPLGUhTEBPHW5sAqh9muxtzWx+J3yBrevqROW1mHHyvjNSojs52bQ1ZPKFB/9HQi0LGkoCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=JIaK67v+; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1724324058; x=1724928858; i=wahrenst@gmx.net;
-	bh=zOFP5BWBuetc2TrQOrHHuI03YWZfStPHpDr8stAP600=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=JIaK67v+tbnyBGa0KffZ+TqajLehpZeO8GEE4+ktUNFnqzAVqA9qUNHiXf2wAER0
-	 30QyJXsSEyjOfmrj54j7UCaP6qWAROcAx1auj6vn0NdOqfi4FRNEUE++/lO2lMArU
-	 l0CWeLQK+s4KLphi3FdnTJrVh6dKPiArA1LwsnGYL08YpN3jFLV9uaGJkTq+JmczF
-	 ut98nrN3GiBkHuYuOj516Mh1mK+D49vapsHYOWiX6BWVS+KGxVWJrQ0HCzmqbqqty
-	 FwqTXCbSIjKmtGgtXemnc585bFU6haG05+K+M7tNYqEEod6lbGJ3w6Qa7HKL2K5Cz
-	 ocqpB5HSkUjCNnIe4Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.127] ([37.4.248.43]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MxlzI-1rvQTk2joU-00yTu6; Thu, 22
- Aug 2024 12:54:18 +0200
-Message-ID: <3d29c7be-b1a8-46db-a6c9-d53ecaeda02d@gmx.net>
-Date: Thu, 22 Aug 2024 12:54:17 +0200
+	s=arc-20240116; t=1724331891; c=relaxed/simple;
+	bh=+VGKhjgsEZE4sCJ69JLJrAJccMxpl+39tmJWKUMFlWc=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KYZxAEvO1xMpdw/loyDqBGSX8PRTZ/J17/Z1q4UdEIFOOPcZk638VYySZz2OleyypRgVIQIOyXE6wGmTRAVx6Mx246iOOlTpAFC3Bonz/LrZdQ7vz7RQkBUHkK1m3FRuRSPTxNUurc6wOQ182PbUe/Z/7607A2yOLKvfRGho8T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NtUxmpci; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:To:From:Date:From:Sender:Reply-To:Subject:Date:
+	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=7KkZEy7FtBrCs9x5HPBYk6bPtUT9ztwHglddJCkvJ2Y=; b=NtUxmpcity96kEKIhSEKwWz6Gr
+	HoPF8rO/tmSoTMeNNUitgojvekZYepkU2iq9M86hkk141y7ViQU7JTFpjYBWUeSnyOXKh8Ps1p1n/
+	KIzg7COmE2G/lBb1WIg45MsIa2bpDlrhGC9MUoE099qHtFebFOLsUxJRT+/m1Lhsyh1c=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sh7U9-005QKl-Ah; Thu, 22 Aug 2024 15:04:17 +0200
+Date: Thu, 22 Aug 2024 15:04:17 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 00/11] Add support for RaspberryPi RP1 PCI device using a
+ DT overlay
+Message-ID: <45a41ed9-2e42-4fd5-a1d5-35de93ce0512@lunn.ch>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <14990d25-40a2-46c0-bf94-25800f379a30@kernel.org>
+ <Zsb_ZeczWd-gQ5po@apocalypse>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] dt-bindings: pinctrl: Add support for Broadcom STB
- pin controller
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc: "Ivan T. Ivanov" <iivanov@suse.de>, kernel-list@raspberrypi.com,
- florian.fainelli@broadcom.com, andrea.porta@suse.com, conor+dt@kernel.org,
- krzk+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, robh@kernel.org,
- linus.walleij@linaro.org
-References: <20240731062814.215833-1-iivanov@suse.de>
- <20240731062814.215833-2-iivanov@suse.de>
- <200d54a3-bedf-4bd3-bb7f-0d834c43ea78@gmx.net>
- <CAPY8ntB9Zf3sJejXuzrw6tUipfv71w4sDc26fg8cbMtRjrcPHg@mail.gmail.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <CAPY8ntB9Zf3sJejXuzrw6tUipfv71w4sDc26fg8cbMtRjrcPHg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:e6jzzM9cG8z7Se31hDznIvK6iI3JkgLsX6AzocJxQjOLoIB1EZh
- oGqHrL+bF4AvLnEb73lPCU32kiK0JAK5jJS87KvX53XUEDcyctoxkhHG9P+eianBYv4oLlx
- ETju6YYOyOR9yQxptgT4PnMK7J1Fvfp+Q24QLQEBC4ZXNdHhWe8jNAvM7s+mcT7//HsN4GF
- Fu/3xQTdRg+1YrKojFMaw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:eI6EEVLqXOc=;woPS/4z2P8/ZPhzgvEsz6ILpy7Z
- 4Xm7jGF5RVZPQyaTmonACqwqYQXNvamaiUO+tlpsb8Mv3XkOPRs3sITSGRvg3gbkF7ygjl0BE
- A69HXIGnCPxiOcqqH67IFufNRPpSi7gEkGYSiRfahtSVEmSi/uoR5b4us2MfX6xSwIAzCTT9v
- zzKD2dzaLJ6v/I7j5WhZl87Kit8OqNpQKuOwGexizcDXqEgQK6f9oA3rB+zH71rkfY5+waDKr
- 7URAupUSkBNTg0W80rmDahc7c/jH4eiUCduVpTpDfQZnfC3Lyzus1fwSAlZnm670maHsRH+sj
- KYHfNAFWuqYQP787rnmHHgLeoj/WdcAd6n9KfY3SZbBNNKOjlVTMhQiN69kP5KtJlGufXq5Xu
- tFZeNkRlGK9AQEMrs592f/jQEGeFhDEsUTOIcWPcprSrHaelxUaxeGp+aTD44R4MFvICubBRp
- Sw4xvho/E1Fu2hl3pENqGWa7vc8C/HzyRPVhsNSEq+zB9u1W+jKf4RJincRXyqbhHJOL80qHC
- ssBi26PUz8e5OM8afBL7ZD2SbdNbQa3HrnCoPJt4buJrPz1Qg11mVyMwxJKjUnYe84wlMdkfb
- mDQVYD6hXWZ4sRFoNtRxhQqYkmG0v0WlNs8HqWRSAyGN0S9tLPVMlECJMzwfRXAhApnG/AQ9O
- 5E0BCG/fjEcJTXQ4igiIn1E9zkg0xm6Z/YRfelUHZfwW6J+eU4Wetan54n/FpXCXF2H0OytNH
- Su/Q+JHydkLYSE763j1nvIpxIDMHwzj21IVYWKi+lfNkkz0NTi/UBTi0fIxp6zQX6Tn/JunMf
- ow1U7bjbp3rKupv8+sqfax2tSYJIuIFe2f6TE9RepmN/I=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zsb_ZeczWd-gQ5po@apocalypse>
 
-Hi Dave,
+> WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
+> #673: FILE: drivers/pinctrl/pinctrl-rp1.c:600:
+> +                               return -ENOTSUPP;
+> 
+> This I must investigate: I've already tried to fix it before sending the patchset
+> but for some reason it wouldn't work, so I planned to fix it in the upcoming 
+> releases.
 
-Am 12.08.24 um 18:28 schrieb Dave Stevenson:
-> Hi Stefan
->
-> Sorry for the delay in responding - I was on holiday last week.
->
-no problem and thanks for the explanations.
->> I'm missing an explanation in the commit message, what's the difference
->> between brcm,bcm2712-pinctrl and brcm,bcm2712-aon-pinctrl?
-> Two separate instantiations of the same IP block, but they differ in
-> the number of pins that are associated and the pinmux functions for
-> each of those pins. AFAIK there is no way from DT to specify those
-> pinmux function names, so otherwise
-> /sys/kernel/debug/pinctrl/<node>/pins will give the wrong function
-> mappings.
-Yes, my request is that this or a similar explanation should go to the
-commit message, because not all reviewers know the IP block. It would be
-great to explain the aon part. Always on?
->> According to the driver brcm,bcm2712-pinctrl is the same as
->> brcm,bcm2712c0-pinctrl. So the former is more a fallback?
-> I'd need to check with Phil (who's on holiday this week) or Dom, but I
-> believe you are correct that "brcm,bcm2712-pinctrl" is a fallback.
-> Most likely due to our early DT files not having the c0 designation.
-> Obviously for mainline that is irrelevant, so dropping the
-> non-specific compatibles is fine.
-I agree.
+ENOTSUPP is an NFS error. It should not be used outside for NFS. You
+want EOPNOTSUPP.
 
-Regards
->
-> I hope that makes some more sense.
->
->    Dave
->
-> [1] https://github.com/raspberrypi/linux/blob/rpi-6.6.y/arch/arm64/boot/=
-dts/broadcom/bcm2712d0-rpi-5-b.dts
-> [2] https://github.com/raspberrypi/linux/blob/rpi-6.6.y/arch/arm64/boot/=
-dts/broadcom/bcm2712-rpi-5-b.dts
+ 
+> WARNING: externs should be avoided in .c files
+> #331: FILE: drivers/misc/rp1/rp1-pci.c:58:
+> +extern char __dtbo_rp1_pci_begin[];
+> 
+> True, but in this case we don't have a symbol that should be exported to other
+> translation units, it just needs to be referenced inside the driver and
+> consumed locally. Hence it would be better to place the extern in .c file.
+ 
+Did you try making it static.
+
+	Andrew
 
