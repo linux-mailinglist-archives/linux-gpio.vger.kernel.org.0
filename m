@@ -1,159 +1,105 @@
-Return-Path: <linux-gpio+bounces-9089-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9081-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7548E95D433
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 19:21:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 69FE495D264
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 18:05:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C33C1F2343E
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 17:21:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FD3F1F229BB
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 16:05:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71AFA18E043;
-	Fri, 23 Aug 2024 17:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1811F189BB2;
+	Fri, 23 Aug 2024 16:05:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TnJ/IDvs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TiZeWRtt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6A641C69;
-	Fri, 23 Aug 2024 17:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289C7184550
+	for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2024 16:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724433683; cv=none; b=d9AxIIvOevO938aq51rzguryhT2yOicZBWKs2DrmnItHTbDFfL8xXCJDb02Yy4AmrRRbE9JlQEamfDRmfxBIkhk6SzP1D6IqzRZVac/coUC3N6S2zJKk8yXHzxvQ6iZUVc84iHKSOkJoq4XkHAdlPdHA70JycWZDxLeN0nLyX9E=
+	t=1724429146; cv=none; b=HeLrsHrFj98+XoZU1HAIRWJUvr+X5/PP28NgX90r9sU/boqS2TgzlXUUCGKcIY5rBkaBG52bur3qJn2o7rqceyt/b/JIizpeDbUSN8aMN4ZvVjNy5+lib9GjT0KX6sVdyVzwvu6r7IEdvq1LtlJ0O1NRQj4zifDciSU9a/Nb1II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724433683; c=relaxed/simple;
-	bh=CkO9IvqsG0iFWnRGdPmM5Qwes7ubF2O3wr/bx0vRq20=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pv9GyHJBjq63reUXQET4/50R/CXwCzqx6M+VkPpWWiHA0NrQiQajdv6v1+3gEHEv75fAcFqSyCeFZpTEmX7iUNkL9Blve5mhAl7K8IROVXdD1ZqGKUacVk7xjdRuRcZki+VmBfAq+U/Mq1/vuLTNreTsWmSdTpdl9P87sRM1FhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TnJ/IDvs; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-428243f928cso17941695e9.3;
-        Fri, 23 Aug 2024 10:21:21 -0700 (PDT)
+	s=arc-20240116; t=1724429146; c=relaxed/simple;
+	bh=CtH44QKwujAGQE8ahoA+3jbLv2Uur7pXg2mjO4prtB0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hx2/deM55Hn/9NGx0f5uRPS295vljfoZMusCMStBOxWVycz9rlCOqOYm1j9npLyDToCNzeaCn4RNcLDxXgRXbxp+l5bK18cuD9JLQjdqBMwJD/LCgp0YUF/mIOH5gsXs4bGkr7GgA2t4rCDZnlSP45/QXBOtF1bmw2aWDQUU8g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TiZeWRtt; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-53349d3071eso2664052e87.2
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2024 09:05:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724433680; x=1725038480; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=93UYZNtsycP6f+B131FhdRCqvOk5pQ/dX6SuPovTZMM=;
-        b=TnJ/IDvsye+76dyOH5dqUvRYztYBnBLWDo34RwvirXZXn4+SvloP/AhNPR14jx6qsG
-         mVYj4b96JKmSVPjQCNOF0nUutdvDV2HTxLJKryz1fcdLgBbhbt4xFoSOR74wZI/a/Cfp
-         MsjJ1MhsVu9lTNNoSyj55Lb18Jv0bojZ5LNP08FZ7F70nBHhJ1IxW4fjJCa6gxKNut67
-         cIiFTxqgNnUq39SpTucwMRfhNC2aTLhDFERHqydWClhEyz57m8XadlcDeaAJYzx3mJzB
-         4EX2tl3LIxTPEeY11EzibjvwtTxc1sGmIfG4s7Zn0WLM4eMw0JRG2CoI2Q9tR4+4v6iQ
-         KrYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724433680; x=1725038480;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1724429142; x=1725033942; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=93UYZNtsycP6f+B131FhdRCqvOk5pQ/dX6SuPovTZMM=;
-        b=cGwCEogjgxe8rWl8bNQyXqNSbNcOIzr81E8Wf/6tfK9N6hryTR/RKkQz6exFZSF2v/
-         iHMmorUqskAbKqw4fTxrmhIvc71RTBP4+0dBMcGwxE2NIFUOEWsKUWvaqOWxflZv6RiF
-         tu2YBdrHPpE5//OtF+c2lNUSMR6eBUwKrpa1znwwfP2PPy5OvnMjhx6V00/7akl7FcHQ
-         zY6hOC093mcOpkmbpL7ZBnOec9RBpeVonxkJoJq2rlNjx+XP6oVnveUNkrFgas2hpeVK
-         UDPXQ3/kCHJUR2ZqDkrQk4YzfkX9ifWjks4jPpeQggXqyvpSJ9PfwUm9TZJ97wjL69TQ
-         KOqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWY2bhgNXB19KSlEkCKefgPY8Rp4CJVuRvVA2CqGXDpw/x+i/Sis3XPIpzVGxJ4M/TwdcKvou8Mgx9WiA==@vger.kernel.org, AJvYcCX5vTpLYgNSKyo+cAdO+HEOgMROucVyMjO9jJbZS5Mrfr3h/5CQd0/REXINlHphaerGFI5zD1weCCnR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmLlFRc12dlZDJerEP4pAMeM+csGZtBmGtgQB3u7kdWMgXx68o
-	rP+8MSpJwq6B94785Y1XPY/W8Oa6dWcEJNveKAlVFg/RXBsr0kiU
-X-Google-Smtp-Source: AGHT+IGref40zkb0IUvtDNwA0TYFbk5k0+fa5r9I46BPr609ayqKWhEfTU0CKdcojT+tg6DFwoXrFg==
-X-Received: by 2002:a05:600c:1f87:b0:421:7bed:5274 with SMTP id 5b1f17b1804b1-42acc8ddcdcmr25250625e9.10.1724433679578;
-        Fri, 23 Aug 2024 10:21:19 -0700 (PDT)
-Received: from Ansuel-XPS. (host-87-1-209-141.retail.telecomitalia.it. [87.1.209.141])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42abee8d1d9sm104140345e9.22.2024.08.23.10.21.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2024 10:21:19 -0700 (PDT)
-Message-ID: <66c8c50f.050a0220.d7871.f209@mx.google.com>
-X-Google-Original-Message-ID: <ZsimBSqlc_NeRhZB@Ansuel-XPS.>
-Date: Fri, 23 Aug 2024 17:08:53 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
- controller
-References: <20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org>
- <20240822-en7581-pinctrl-v2-1-ba1559173a7f@kernel.org>
- <20240822-taste-deceptive-03d0ad56ae2e@spud>
- <aef3188d-5aaf-4f6d-addf-60066065ef9b@genexis.eu>
- <20240823-darkened-cartload-d2621f33eab8@spud>
+        bh=CtH44QKwujAGQE8ahoA+3jbLv2Uur7pXg2mjO4prtB0=;
+        b=TiZeWRttdJs0LL3h0MSJkCb6YQD9HzH7SHkVQRl1QsvOiNF9O2Tu+nZwVMpj/C1X6U
+         1xr2caF0o3oOFH5+CRuG3k6j+b7Rv6c0Zqhpy6/6PiVLZATmx/OhlBt17bw1tcZ0QbHQ
+         PWzvZOceArjHXnAnh8HmYBpmloExeU/sSw14/Z8bLuZHJh40nhEjDhT42zJcljjTLXu6
+         RFM9fe83MM7W5GfiyN8X+AIZXFVgEv7YCu4zKKVC+hVlO5TqxJ/hK1EXArDiQgwChsts
+         kE/i6O8oXjyiKGYJX06E7rv8fAMlymS1CpuMMEqu/PBHAlIbMJ3m0UabivmrPSXXJs3I
+         M9Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724429142; x=1725033942;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CtH44QKwujAGQE8ahoA+3jbLv2Uur7pXg2mjO4prtB0=;
+        b=iQc8NqusQiR16XTm6Z8KYIvhPEd0yUYhS5BQR8kqvYYx5txEYy7tbHwiN4nRDe2Yqs
+         QbztUgXpQVqDf4yvT00w2tcRTd3AWSTHTTV6xSo9Pz2aphmUMRxBgdu6/uJbi+bhax/S
+         GdnW3IHdxkAW4sb6ZdscJwjoxYMXT0rcKpLhCUbk/YY+zjB0utax8295AsXmrUm5GZX7
+         jcm4NaFcNC8wSNBO6UlmFmCeFuSo8PdGEHmmGTJ1sBUImdKHnbAZzsTCQ2dt+5Fuq5Mk
+         hP2vrzN+8dnhrYLakuX/KamtORCfuukHO0BhzhdtwL1n3wWRtGnD0jhtS0WJ36Y86LmY
+         hvIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDaJd55CKhokVcAuUb1eUdqFwNUdbDgApAen6wgNyX/wtkGtpu96V3E//biPt0wL8KX6onm8gC7sZ7@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxmFMS2tb3tpZYtmLQRysf86+8KbrQAnr5Ej5GGL9n5M2mBe0Z
+	WTQQcHWD4smZN4uS22qOotMV9qm2CLyj3oAcDTVG0a7+qJulFHw5qXIeynGM55G2AzP6duLpRvV
+	ZS1fhXhG+SbBJQC4e4X1K0SkKxfi/f2Ik4dpGOA==
+X-Google-Smtp-Source: AGHT+IFup5zNjSHwkI2S/YAnufS8QBOQVFCx3HRsnuBi4f//6Xe94XR5Vv9t6+VRO3kcnKL+sE8ePevaR0twifCKGDc=
+X-Received: by 2002:a05:6512:3c9a:b0:52e:999b:7c01 with SMTP id
+ 2adb3069b0e04-534387bbf66mr2083635e87.48.1724429141735; Fri, 23 Aug 2024
+ 09:05:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240823-darkened-cartload-d2621f33eab8@spud>
+References: <20240808041355.2766009-1-make24@iscas.ac.cn>
+In-Reply-To: <20240808041355.2766009-1-make24@iscas.ac.cn>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 23 Aug 2024 18:05:30 +0200
+Message-ID: <CACRpkdavngGcP43APeXuJzn75nt=_0rzj1E3+nk0E1Qr6BVKJA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: single: fix potential NULL dereference in pcs_get_function()
+To: Ma Ke <make24@iscas.ac.cn>
+Cc: tony@atomide.com, haojian.zhuang@linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 23, 2024 at 05:14:30PM +0100, Conor Dooley wrote:
-> On Thu, Aug 22, 2024 at 10:50:52PM +0200, Benjamin Larsson wrote:
-> > On 22/08/2024 18:06, Conor Dooley wrote:
-> > 
-> > 
-> > Hi.
-> > 
-> > > before looking at v1:
-> > > I would really like to see an explanation for why this is a correct
-> > > model of the hardware as part of the commit message. To me this screams
-> > > syscon/MFD and instead of describing this as a child of a syscon and
-> > > using regmap to access it you're doing whatever this is...
-> > 
-> > Can you post a link to a good example dts that uses syscon/MFD ?
-> > 
-> > It is not only pinctrl, pwm and gpio that are entangled in each other. A
-> > good example would help with developing a proper implementation.
-> 
-> Off the top of my head, no unfortunately. Maybe Rob or Krzk have a good
-> example. I would suggest to start by looking at drivers within gpio or
-> pinctrl that use syscon_to_regmap() where the argument is sourced from
-> either of_node->parent or dev.parent->of_node (which you use depends on
-> whether or not you have a child node or not).
-> 
-> I recently had some questions myself for Rob about child nodes for mfd
-> devices and when they were suitable to use:
-> https://lore.kernel.org/all/20240815200003.GA2956351-robh@kernel.org/
-> 
-> Following Rob's line of thought, I'd kinda expect an mfd driver to create
-> the devices for gpio and pwm using devm_mfd_add_devices() and the
-> pinctrl to have a child node.
+On Thu, Aug 8, 2024 at 6:14=E2=80=AFAM Ma Ke <make24@iscas.ac.cn> wrote:
 
-Just to not get confused and staring to focus on the wrong kind of
-API/too complex solution, I would suggest to check the example from
-Lorenzo.
+> pinmux_generic_get_function() can return NULL and the pointer 'function'
+> was dereferenced without checking against NULL. Add checking of pointer
+> 'function' in pcs_get_function().
+>
+> Found by code review.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 571aec4df5b7 ("pinctrl: single: Use generic pinmux helpers for man=
+aging functions")
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 
-The pinctrl/gpio is an entire separate block and is mapped separately.
-What is problematic is that chip SCU is a mix and address are not in
-order and is required by many devices. (clock, pinctrl, gpio...)
+Patch applied.
 
-IMHO a mfd is overkill and wouldn't suite the task. MDF still support a
-single big region and in our case we need to map 2 different one (gpio
-AND chip SCU) (or for clock SCU and chip SCU)
-
-Similar problem is present in many other place and syscon is just for
-the task.
-
-Simple proposed solution is:
-- chip SCU entirely mapped and we use syscon
-- pinctrl mapped and reference chip SCU by phandle
-- pwm a child of pinctrl as it's scrambled in the pinctrl mapped regs
-
-Hope this can clear any confusion.
-
--- 
-	Ansuel
+Yours,
+Linus Walleij
 
