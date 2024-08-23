@@ -1,105 +1,137 @@
-Return-Path: <linux-gpio+bounces-9081-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9082-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69FE495D264
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 18:05:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 385BD95D272
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 18:07:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FD3F1F229BB
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 16:05:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E89E1285512
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 16:07:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1811F189BB2;
-	Fri, 23 Aug 2024 16:05:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 534D3189539;
+	Fri, 23 Aug 2024 16:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TiZeWRtt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aN/8Iiao"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289C7184550
-	for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2024 16:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1A818593A
+	for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2024 16:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724429146; cv=none; b=HeLrsHrFj98+XoZU1HAIRWJUvr+X5/PP28NgX90r9sU/boqS2TgzlXUUCGKcIY5rBkaBG52bur3qJn2o7rqceyt/b/JIizpeDbUSN8aMN4ZvVjNy5+lib9GjT0KX6sVdyVzwvu6r7IEdvq1LtlJ0O1NRQj4zifDciSU9a/Nb1II=
+	t=1724429274; cv=none; b=MU5gY1dPWz5rcd+vEi1vzbNZRauZtVPmLKpdjU1JloRBQEkwFWpZc13gVUvCB4poUYfdwQ532QSdJq+unsWyOaJ3J0zce8VkYXZ0/k89yyZNjsfUORjOqh53i1QTXUHaLKb0IURoaUPYoL4uKfNU5inbLp9hOqRvHylj+ycgQhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724429146; c=relaxed/simple;
-	bh=CtH44QKwujAGQE8ahoA+3jbLv2Uur7pXg2mjO4prtB0=;
+	s=arc-20240116; t=1724429274; c=relaxed/simple;
+	bh=TeVMpeQdg2wG0XosoMdsTgxo9Xce9on002pqxPK6pjw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hx2/deM55Hn/9NGx0f5uRPS295vljfoZMusCMStBOxWVycz9rlCOqOYm1j9npLyDToCNzeaCn4RNcLDxXgRXbxp+l5bK18cuD9JLQjdqBMwJD/LCgp0YUF/mIOH5gsXs4bGkr7GgA2t4rCDZnlSP45/QXBOtF1bmw2aWDQUU8g4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TiZeWRtt; arc=none smtp.client-ip=209.85.167.41
+	 To:Cc:Content-Type; b=B9LX8c/2Owrxg8gl6eokwvNYDFVYHmHvtGxqmng+HQed0LEGWyEtDq9PcF2J7eVD2phz4+4a6EFQAhg2dR1YaBdp6Eti+6akKh4iBjhaHg62v/mWWOaQGsUj+qWN49LcngF7DO3KzkM/fXzu2Mgthmck5IDE8iC8joABKdFKT9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aN/8Iiao; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-53349d3071eso2664052e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2024 09:05:43 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5334879ba28so2622658e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2024 09:07:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724429142; x=1725033942; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1724429271; x=1725034071; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CtH44QKwujAGQE8ahoA+3jbLv2Uur7pXg2mjO4prtB0=;
-        b=TiZeWRttdJs0LL3h0MSJkCb6YQD9HzH7SHkVQRl1QsvOiNF9O2Tu+nZwVMpj/C1X6U
-         1xr2caF0o3oOFH5+CRuG3k6j+b7Rv6c0Zqhpy6/6PiVLZATmx/OhlBt17bw1tcZ0QbHQ
-         PWzvZOceArjHXnAnh8HmYBpmloExeU/sSw14/Z8bLuZHJh40nhEjDhT42zJcljjTLXu6
-         RFM9fe83MM7W5GfiyN8X+AIZXFVgEv7YCu4zKKVC+hVlO5TqxJ/hK1EXArDiQgwChsts
-         kE/i6O8oXjyiKGYJX06E7rv8fAMlymS1CpuMMEqu/PBHAlIbMJ3m0UabivmrPSXXJs3I
-         M9Mw==
+        bh=9OCNvj/wx5yxOsb2/+mcktbpA3DNvcmR3VULCO7umQ0=;
+        b=aN/8IiaoxsYMBfIxY5DMV9NyoGdUpCAeWs8GA0TvLvmbp8qV5CjYTQpR0HPS1mgxh/
+         oYZzfiWFjbgt9T/DWGgp2iZ1HFj+qTS3UUVSZOcSbaOq7Ar39UtvGdzrnLf/3J37iP7z
+         8BVawduf1kac336bq7ntSt56Gt3EILfWxygocK+7ZDzyRcFM7WDnyPnGwjEDzQ2i3/p+
+         0jyAFvpEX/wdL+YUR7QsmoRWqbFgGOo64av2YGdQTNOSx/m3VZgS5F0KpnO+bXv6Rtmc
+         MRRNouHh6/NKaseRECZSL9oEYT6tXw5cn/MsQDIN+9EYgx/NR/r3EjvyWSeJwZpzzwqh
+         lWVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724429142; x=1725033942;
+        d=1e100.net; s=20230601; t=1724429271; x=1725034071;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CtH44QKwujAGQE8ahoA+3jbLv2Uur7pXg2mjO4prtB0=;
-        b=iQc8NqusQiR16XTm6Z8KYIvhPEd0yUYhS5BQR8kqvYYx5txEYy7tbHwiN4nRDe2Yqs
-         QbztUgXpQVqDf4yvT00w2tcRTd3AWSTHTTV6xSo9Pz2aphmUMRxBgdu6/uJbi+bhax/S
-         GdnW3IHdxkAW4sb6ZdscJwjoxYMXT0rcKpLhCUbk/YY+zjB0utax8295AsXmrUm5GZX7
-         jcm4NaFcNC8wSNBO6UlmFmCeFuSo8PdGEHmmGTJ1sBUImdKHnbAZzsTCQ2dt+5Fuq5Mk
-         hP2vrzN+8dnhrYLakuX/KamtORCfuukHO0BhzhdtwL1n3wWRtGnD0jhtS0WJ36Y86LmY
-         hvIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDaJd55CKhokVcAuUb1eUdqFwNUdbDgApAen6wgNyX/wtkGtpu96V3E//biPt0wL8KX6onm8gC7sZ7@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxmFMS2tb3tpZYtmLQRysf86+8KbrQAnr5Ej5GGL9n5M2mBe0Z
-	WTQQcHWD4smZN4uS22qOotMV9qm2CLyj3oAcDTVG0a7+qJulFHw5qXIeynGM55G2AzP6duLpRvV
-	ZS1fhXhG+SbBJQC4e4X1K0SkKxfi/f2Ik4dpGOA==
-X-Google-Smtp-Source: AGHT+IFup5zNjSHwkI2S/YAnufS8QBOQVFCx3HRsnuBi4f//6Xe94XR5Vv9t6+VRO3kcnKL+sE8ePevaR0twifCKGDc=
+        bh=9OCNvj/wx5yxOsb2/+mcktbpA3DNvcmR3VULCO7umQ0=;
+        b=CGuFq3CEeRWBBCjggva/INes6SLFku3xURKARPYF9UYQzw/1Oktg1yikeEe91mkkRk
+         zzCd8K4k6cBBfS/CNrA+EkbFmiRl6dzq2P/gHz4g19ubBKm4i+5NjLzGBM9HBZXf0GAe
+         w+b9ijV1v/CwJA/BxfVIx818SN2Ew8tHwaUB8rMHWf7yL20bshSpdXOMjBC+T6tArhLE
+         OdbIq9KuBFlDP+VLlX+gj4FhS1QnuSflNOY3OJqFVZiVgfobOgHQTxi5nM1YpUbFpnuR
+         8feysL/zotbks/1tD1/1a5uSYzf0eh8cOJjP7TnnxcypS+KtS6VbYbEDXM4jrk5ty603
+         GhzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwpRAYCDrE7yyDWT3b1uQDOjL+JFoTiquslIHKzaOvUeaRgf75uxOwObu8OiV9sdx1WYWapaRPbk1I@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrbD2BN/Xpu9tJFvQs2jf4zqCuoOoIlw5XBYtfmnt8dCSUUGE2
+	17hLMlDTMFI6p5R5lmY2yljt87XfZ8e+sfPL47EDTKU14AD3o29a6Vu3SnrqrPbTeY+IalnchUn
+	ifbzCAEryY/lnVyH+DrfdzONIenp4XS0T4GtcJQ==
+X-Google-Smtp-Source: AGHT+IGUI0PY8Ux0OZKUd+jbtCpSnv5I/wL6SIyMbObq48C6tOrwmIkWL6by381sXMMlDTaIRU35sAsSSqAQhXmpqJI=
 X-Received: by 2002:a05:6512:3c9a:b0:52e:999b:7c01 with SMTP id
- 2adb3069b0e04-534387bbf66mr2083635e87.48.1724429141735; Fri, 23 Aug 2024
- 09:05:41 -0700 (PDT)
+ 2adb3069b0e04-534387bbf66mr2088604e87.48.1724429270252; Fri, 23 Aug 2024
+ 09:07:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240808041355.2766009-1-make24@iscas.ac.cn>
-In-Reply-To: <20240808041355.2766009-1-make24@iscas.ac.cn>
+References: <20240808-mtk-rsel-bias-disable-fix-v1-1-1b4e85bf596c@collabora.com>
+In-Reply-To: <20240808-mtk-rsel-bias-disable-fix-v1-1-1b4e85bf596c@collabora.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 23 Aug 2024 18:05:30 +0200
-Message-ID: <CACRpkdavngGcP43APeXuJzn75nt=_0rzj1E3+nk0E1Qr6BVKJA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: single: fix potential NULL dereference in pcs_get_function()
-To: Ma Ke <make24@iscas.ac.cn>
-Cc: tony@atomide.com, haojian.zhuang@linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
+Date: Fri, 23 Aug 2024 18:07:39 +0200
+Message-ID: <CACRpkdZy9F-oh0sT+YhvgzoSrKQL78gK46wRbQ6d6jHYS5nzfA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mediatek: common-v2: Fix broken bias-disable for PULL_PU_PD_RSEL_TYPE
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>
+Cc: Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, kernel@collabora.com, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 8, 2024 at 6:14=E2=80=AFAM Ma Ke <make24@iscas.ac.cn> wrote:
+On Fri, Aug 9, 2024 at 1:27=E2=80=AFAM N=C3=ADcolas F. R. A. Prado
+<nfraprado@collabora.com> wrote:
 
-> pinmux_generic_get_function() can return NULL and the pointer 'function'
-> was dereferenced without checking against NULL. Add checking of pointer
-> 'function' in pcs_get_function().
+> Despite its name, commit fed74d75277d ("pinctrl: mediatek: common-v2:
+> Fix bias-disable for PULL_PU_PD_RSEL_TYPE") actually broke bias-disable
+> for PULL_PU_PD_RSEL_TYPE.
 >
-> Found by code review.
+> mtk_pinconf_bias_set_combo() tries every bias method supported by the
+> pin until one succeeds. For PULL_PU_PD_RSEL_TYPE pins, before the
+> breaking commit, mtk_pinconf_bias_set_rsel() would be called first to
+> try and set the RSEL value (as well as PU and PD), and if that failed,
+> the only other valid option was that bias-disable was specified, which
+> would then be handled by calling mtk_pinconf_bias_set_pu_pd() and
+> disabling both PU and PD.
 >
-> Cc: stable@vger.kernel.org
-> Fixes: 571aec4df5b7 ("pinctrl: single: Use generic pinmux helpers for man=
-aging functions")
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+> The breaking commit misunderstood this logic and added an early "return
+> 0" in mtk_pinconf_bias_set_rsel(). The result was that in the
+> bias-disable case, the bias was left unchanged, since by returning
+> success, mtk_pinconf_bias_set_combo() no longer tried calling
+> mtk_pinconf_bias_set_pu_pd() to disable the bias.
+>
+> Since the logic for configuring bias-disable on PULL_PU_PD_RSEL_TYPE
+> pins required mtk_pinconf_bias_set_rsel() to fail first, in that case,
+> an error was printed to the log, eg:
+>
+>   mt8195-pinctrl 10005000.pinctrl: Not support rsel value 0 Ohm for pin =
+=3D 29 (GPIO29)
+>
+> This is what the breaking commit actually got rid of, and likely part of
+> the reason why that commit was thought to be fixing functionality, while
+> in reality it was breaking it.
+>
+> Instead of simply reverting that commit, restore the functionality but
+> in a way that avoids the error from being printed and makes the code
+> less confusing:
+> * Return 0 explicitly if a bias method was successful
+> * Introduce an extra function mtk_pinconf_bias_set_pu_pd_rsel() that
+>   calls both mtk_pinconf_bias_set_rsel() (only if needed) and
+>   mtk_pinconf_bias_set_pu_pd()
+>   * And analogously for the corresponding getters
+>
+> Fixes: fed74d75277d ("pinctrl: mediatek: common-v2: Fix bias-disable for =
+PULL_PU_PD_RSEL_TYPE")
+> Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
 
-Patch applied.
+Patch applied for fixes.
 
-Yours,
+Thanks!
 Linus Walleij
 
