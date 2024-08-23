@@ -1,107 +1,117 @@
-Return-Path: <linux-gpio+bounces-9062-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9063-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42B6395D05F
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 16:49:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AA8995D065
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 16:51:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C86BA281F61
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 14:49:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D9EF1F23252
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 14:51:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AAAB188585;
-	Fri, 23 Aug 2024 14:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11FDD1885AB;
+	Fri, 23 Aug 2024 14:51:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YKcLg4V4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d4wZ3Uay"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914A5186E3B;
-	Fri, 23 Aug 2024 14:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C69E1DA5E;
+	Fri, 23 Aug 2024 14:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724424560; cv=none; b=VXeUgHqYG6iWKxW9GzDNO1AE7NdQGeOTUNHULFv/sAo9DsXRC9vHCh+ZhUBBFoCdZAJ7UZKMTCgkvEkTdGD6ILCZooXSZY9crLVz2deUnIg0GBjdS5/4Y4F5H58lTqvA78DjPv563SN6BAISMO1TARt36elNXBK2J28rJ3ictKY=
+	t=1724424672; cv=none; b=oPaaEQlgq9FVIkKZZ55nEWlXg0mPqAcGMtEIRnJAfr3CEXFrsuUDISa+aO8zDW0ninyQrtk039Ro9st+odWpZYFbcxJD20V9sekxtaV7wksn+rPR569oiD22jH1t8mPZz4KeySeW9DxpXFPBQQtOIP9HgV55VFQa+M2c/PXoL3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724424560; c=relaxed/simple;
-	bh=F1xamHkmCiWIgbmGDKsQayOzdfeCChJxTzpDnXIDvGc=;
+	s=arc-20240116; t=1724424672; c=relaxed/simple;
+	bh=2XbOOhKkWPqZCcSXIvvSuHpiha9ebAQ8MRQe2Eu+/jA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PG0fnJXUGRx31UiEaQrlPPdcQ0I/EDA0WIR5sJT27d829n7EJMwljpVFqXs98IhDDgqpkDLIrXQGmd+ntphfaI1iZo18JdXqkUf/vJrqivSbfaaXHYVTY8c3yzMqpOesSDJQNyvxHyLfas1a++21fvgnIk8Fiu2Jy+pNpKanw3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YKcLg4V4; arc=none smtp.client-ip=198.175.65.21
+	 Content-Type:Content-Disposition:In-Reply-To; b=NVCMV7Tsd/TgXc0fde85lteiXw8TkwFFtlG96AcgFq3VxAwZPeXi13NVxoBUh/WwxkLMFM4gbhZcQ/Irqe85XGGaGF9OHCAevf7FXzFClmgMTzFGKpe1zOf/9N8GsGnooLAQxUm2r3XHG6Oi33rh5/8AiBpIL0FpsJgnkXTMg8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d4wZ3Uay; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724424560; x=1755960560;
+  t=1724424672; x=1755960672;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=F1xamHkmCiWIgbmGDKsQayOzdfeCChJxTzpDnXIDvGc=;
-  b=YKcLg4V4c9ODGwRoGOUhbwZBFyXMJ1bdIaDsZ1RcCPEYx3JRFphZF6Oe
-   9U+Go8yuLpynjUuFesM29PT2BDQwt9Gn4EJgvzMw3I7M/abRDl3mNhnmn
-   d2wncx6ui1MJpxRDmDbFfC4bDpus4cJJ8BG6AKlauW379qCJU0IALgSCH
-   YKRgzRwhjin03NOn8uddI0cjxwKYbpCa0eHk0ucdQeoZ5SWAx0udVCmUF
-   EITDm1oCicl1bcg71nnMRcQjDXBtdujJ/QiRbtKzx/H3ZvuRRkkAhQTyo
-   /qL63W6fNeM+7/+cOlTPq+ExHuMx270hheyT1mVTvqSkixUYZL7RjLP5q
-   A==;
-X-CSE-ConnectionGUID: zeiUCTvwTtSrb3W5pekfmQ==
-X-CSE-MsgGUID: RRX3DDf0TeezA6agdOBX1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="22861432"
+   mime-version:in-reply-to;
+  bh=2XbOOhKkWPqZCcSXIvvSuHpiha9ebAQ8MRQe2Eu+/jA=;
+  b=d4wZ3Uayh9h0yMM2Mxyh/x7fxCNQAUUnQKpvkLN0qPv2Z3yo0UQf+cd1
+   iCZCG/tM3NsI27hMymAfW3BIXbHg/DyzIVztnMANNUADx7FEVmvBBHeae
+   y3QIsfDw0Z8d2gX4OfAV/G9415GnOWyvqlj876m3Pq/yYMjbvQNT+UE6C
+   gMob2Cum4sw/ejqwQVmUNUkUtgD7d5jTrkj5coqOfuD+LXlpaLbbPW81j
+   DQrpUmEXPAEtwzbBMR3K2oTWA1UlEcnLDrineNxF/Bojb45NMIVtdb3Ii
+   BsCqIAF5m8tXogj9kB7pJlqUrc5Yx1V4cLi+N9u4he9LH7pUMovc/3LpB
+   g==;
+X-CSE-ConnectionGUID: x3Wef78tRnGpc+eE5t8ZxQ==
+X-CSE-MsgGUID: KJV7moIbRsac5uQza1N7Fw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="23021622"
 X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
-   d="scan'208";a="22861432"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 07:49:19 -0700
-X-CSE-ConnectionGUID: NnZPkaVTTAa4ZTeJQ8odGw==
-X-CSE-MsgGUID: RN6n3lZNRiCpKSvSSGi7Cw==
+   d="scan'208";a="23021622"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 07:51:11 -0700
+X-CSE-ConnectionGUID: NIMEP4FaT4ikO66N0Qq0Cg==
+X-CSE-MsgGUID: /5WbCK3IRxKW1rnmuNnjLQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
-   d="scan'208";a="92611103"
+   d="scan'208";a="66634754"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 07:49:15 -0700
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 07:51:08 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1shVbF-00000000pFB-1A2I;
-	Fri, 23 Aug 2024 17:49:13 +0300
-Date: Fri, 23 Aug 2024 17:49:13 +0300
+	id 1shVd3-00000000pH1-0nRR;
+	Fri, 23 Aug 2024 17:51:05 +0300
+Date: Fri, 23 Aug 2024 17:51:04 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Ye Zhang <ye.zhang@rock-chips.com>, linus.walleij@linaro.org,
-	brgl@bgdev.pl, heiko@sntech.de, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+To: Ye Zhang <ye.zhang@rock-chips.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, heiko@sntech.de,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
 	mika.westerberg@linux.intel.com, tao.huang@rock-chips.com,
 	finley.xiao@rock-chips.com, tim.chen@rock-chips.com,
 	elaine.zhang@rock-chips.com
-Subject: Re: [PATCH v2] gpio: rockchip: resolve overflow issues
-Message-ID: <ZsihaV40J6RjJRvl@smile.fi.intel.com>
+Subject: Re: [PATCH v2] gpio: rockchip: resolve underflow issue
+Message-ID: <Zsih2NggJXRF6YhI@smile.fi.intel.com>
 References: <20240823034314.62305-1-ye.zhang@rock-chips.com>
- <20240823034314.62305-4-ye.zhang@rock-chips.com>
- <f2194489-c637-4034-9077-951f74d621a5@rock-chips.com>
+ <20240823034314.62305-5-ye.zhang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f2194489-c637-4034-9077-951f74d621a5@rock-chips.com>
+In-Reply-To: <20240823034314.62305-5-ye.zhang@rock-chips.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Aug 23, 2024 at 06:59:40PM +0800, Shawn Lin wrote:
-> 在 2024/8/23 11:43, Ye Zhang 写道:
+On Fri, Aug 23, 2024 at 11:43:07AM +0800, Ye Zhang wrote:
+> div_reg may be < 0 if debounce is zero, causing the unsigned int to
+> overflow.
 
 ...
 
-> > -		max_debounce = (GENMASK(23, 0) + 1) * 2 * 1000000 / freq;
-> > +		div = (u64)(GENMASK(23, 0) + 1) * 2 * 1000000;
-> > +		max_debounce = DIV_ROUND_CLOSEST_ULL(div, freq);
-> 
-> can't max_debounce = DIV_ROUND_CLOSEST_ULL((GENMASK(23, 0) + 1) * 2 *
-> 1000000, freq) work?
+> -	if (bank->gpio_type == GPIO_TYPE_V2 && !IS_ERR(bank->db_clk)) {
+> -		div_debounce_support = true;
 
-Wouldn't be too long line in this case?
+Wouldn't be cleaner (from the patch perspective) to simply move else branch here?
+
+	else
+		div_debounce_support = false;
+
+> +	div_debounce_support = (bank->gpio_type == GPIO_TYPE_V2) && !IS_ERR(bank->db_clk);
+> +	if (debounce && div_debounce_support) {
+>  		freq = clk_get_rate(bank->db_clk);
+>  		if (!freq)
+>  			return -EINVAL;
+> @@ -216,8 +216,6 @@ static int rockchip_gpio_set_debounce(struct gpio_chip *gc,
+>  
+>  		div = (u64)debounce * freq;
+>  		div_reg = DIV_ROUND_CLOSEST_ULL(div, 2 * USEC_PER_SEC) - 1;
+> -	} else {
+> -		div_debounce_support = false;
+>  	}
 
 -- 
 With Best Regards,
