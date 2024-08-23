@@ -1,127 +1,171 @@
-Return-Path: <linux-gpio+bounces-9054-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9055-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9110995CD98
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 15:18:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C1B2A95CDF5
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 15:32:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 475351F23C69
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 13:18:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78DE01F251D7
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 13:32:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B3B5186616;
-	Fri, 23 Aug 2024 13:18:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F369C18755C;
+	Fri, 23 Aug 2024 13:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcJjW2kQ"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="brZY86nX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497CC18660D;
-	Fri, 23 Aug 2024 13:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724419080; cv=none; b=XWVOqWY9cjLGMHkQo4U/QZxtwglapmIZfJWk9IH/MFXNzebatyDqYpjh4IkCYUfXKv1Yp0ZmlWiGnD0oV333SHSdl+sUSt6xd1E8f4dtv7JcrFmQNKLtV98Pm7brNikG3eArQHJqoIdIdh7rHjgj1frid9o5NaCViuDPvxEyDe0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724419080; c=relaxed/simple;
-	bh=pfyQOkmQAU8XkzyXRFVQA9QDvSE5Ui00cEDJmg8NJ6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LEVgYLThgexDl9Damh9XFEcEi4tJ3K69c9wQA3MDU+Fjd7FAxg2WjpjPWk7EmxbW0DatyN/HdGjlYP9D7ABeIIFJrIrLfTpR9F4A4K8lmSu38YMrb18jodGQ0VfCwePdDHpo8MQV+glG0HRr8b51qmkMjedWAwKn+5n409Wm4hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mcJjW2kQ; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a8679f534c3so239090766b.0;
-        Fri, 23 Aug 2024 06:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724419076; x=1725023876; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GYZqtNKbUf46Y9j/NKPxky9EWjGfSIe8fIFl5OJVMWI=;
-        b=mcJjW2kQ8KXfNQQeYsqUczsn082zwZRaNkrq1r9EyThz8fVghZ2McJrmfbdQjzcG13
-         OPOa0yyIN1uHKYmqaoPg2l8KBkZhBSgw0R3xpBxEy3JyD1yDZTIS+oMAJ0fozXcFvBbS
-         61xbQEjpjXrE+Gl7Eb6FlSu1KmLsuooIAgvefU1Ff8ZYNeV++mK0sD3ufObwCxJOX+ZB
-         4OW6P+3knxgq/5YkfxJ2DleioRnIoGRrF0pto0BDRoWk9MyLZo/7fShOQB6AwOrHB9K0
-         maF3JNMXTxOfL202Gh0v2sJgSqiRJOm39m/30Nk9LHcjP4CvmV0ykFlSgKaZxJuztPb9
-         /Scg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724419076; x=1725023876;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GYZqtNKbUf46Y9j/NKPxky9EWjGfSIe8fIFl5OJVMWI=;
-        b=tBf4W3gGicQf9f4i0OZD9E8ibcDtxTYuf9WfoVw6H1J9Q14LDVoj2F7mhQja8ymmDv
-         Txlf71Nu2MS03Y6UBHHzSM6CoNGmy0MnWDnVTt3VAwpyLR+vPWMyc+j647xTiy1FxiGg
-         yW4MoTWg/c531nrgw6/hNRl19VINWXcSoUv0PDTNgw/6KjNn12tqMBU8TnfUlbyhvTiP
-         MIBgval8D/fABGK/pMRfgQbId6eNnfpYRVAgESTZ02QU3dvLqSe/k011m/vTw5MyajWd
-         Jt9vmsx1NCI6LELloUgVvu9EZyry8orhty6eE/dl0jUHMiiZ6n+UgtrPg281TEduIYuR
-         4+9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWAtFbbUW9aGj3igokC1fvqwkFWFvezufiIuOnzByQ1k+DEcfrQfHetXyf2EdTPFG16OTTw9NJiyW2p@vger.kernel.org, AJvYcCXSr1Tx3bHFe3/SN3BIS5tql5pbNRyx11HESafMHL+LeiDBX0tz9VuwbxaMau3VvsUr3Su97vbHCBA01KrO@vger.kernel.org
-X-Gm-Message-State: AOJu0YydJpxR4C1y2gGQ/mQ3v2ijoPWSs6JAPFovRnV2bDczcjBBeDGu
-	kBwZnep3SPXfQHO1lTTrNqjCW/Z9x11icVOJVnmXdBbnoAmGoGwGEQ3Ax7dmhveSKsm8EMeoKSk
-	vJsmpg48rTZtuwoKaZueukH5WFaY=
-X-Google-Smtp-Source: AGHT+IFb9dM2hTGAgF+mE+zRRyN4RLOmdCTv+xltJOXiNxFfV14R5W5jlIb2uXglMgqXP+bnxHgjptGQ9l74MQxF7/Y=
-X-Received: by 2002:a17:907:6088:b0:a86:7a84:abb7 with SMTP id
- a640c23a62f3a-a86a51b4cc7mr182232366b.20.1724419076196; Fri, 23 Aug 2024
- 06:17:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC6814387B;
+	Fri, 23 Aug 2024 13:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724419944; cv=pass; b=ABG2nhIV/6ttA/qAskDUlTNE/5rJkBt1halMMtTHjQp5wmM3NqnZXEQuElTgnbEgjJglRvW6673xbSJwIzQxs+Yyy7pN8JPB4Ot/1FppHjM3kCK5LrlIm4afLJXCcHQ1l05SftFrUQY6ho+nnGqR7fhzeiO0spteO8kXKuv7Hzo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724419944; c=relaxed/simple;
+	bh=4GVfqZ9yOekn4tnZ0CwmT/G8IupJRVl+CvpU1zQpgwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PJ9J1wfLcV3B0pGj6b56PaNQo9TtPZQyuWgInFXWrpwKCCASAYZuesOMUGMOk+wgzp+ZK51wxMwGmelZLXEvJESuQWFC7ZWj2QrNyONdRwz8ZVKithHSlBDURlkvQH8ZDlXemaQTGlwuYJwMFLo3t0VZ4YnXYei6qwnj6TsuHW8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=brZY86nX; arc=pass smtp.client-ip=136.143.188.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Delivered-To: detlev.casanova@collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1724419928; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=KPAyQPg5eTVOLlCTUyJVq1JaBUlGmOOewxA+F0jfoYKiejNzjEzAFuw3xEOHTrrVA0mNYOCiBoDwxDfC9GYqyOnUE9nu2PSYg10NvmWorAAoZIl8ZeiKnSJf+JpQn7aVn9MwO8WmB7vJU+rPoy0Do2TDUA7HEIYUQ6Sznyzp/70=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1724419928; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=36+a1glbwxcI0a2i+ISO16XDr0TPQCW8/sEg2TiO13k=; 
+	b=TXxIwHfmoj2KuqJfrKd99zhFQ2LWlnQxKppEhaU4UJqckb1e+uYa/fQW600Vt2+Z8VdrWvXLfo5q3jXzVwhtbsbxxnqx3UPK/OyCdFp+Be3EbaeuQZJgzd0mE1NpmILrWLAJPRzbJJzJxcBTFEKozgNUYP2YzCdzs7LSGy+Deu0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724419928;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=36+a1glbwxcI0a2i+ISO16XDr0TPQCW8/sEg2TiO13k=;
+	b=brZY86nXo+B9PwbZJ+W2OizsPGsYK2O/CIryusHuS/EvssKKSXAkAzfGLqiQCQRU
+	NXWK6RpGiVr2agI2aie/kPcL5t6QGlOLLt5QdthlvXmAWJCG33IyRFM2uyjX5dnXkr/
+	uQAqjPazjh7QKY6XcL9r6eU8979HuuDTUAs92QhU=
+Received: by mx.zohomail.com with SMTPS id 1724419926661174.78715179759513;
+	Fri, 23 Aug 2024 06:32:06 -0700 (PDT)
+Received: by mercury (Postfix, from userid 1000)
+	id 3A8581060533; Fri, 23 Aug 2024 15:32:01 +0200 (CEST)
+Date: Fri, 23 Aug 2024 15:32:01 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Ye Zhang <ye.zhang@rock-chips.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, heiko@sntech.de, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com, 
+	andriy.shevchenko@linux.intel.com, tao.huang@rock-chips.com, finley.xiao@rock-chips.com, 
+	tim.chen@rock-chips.com, elaine.zhang@rock-chips.com, detlev.casanova@collabora.com
+Subject: Re: [PATCH v2] gpio: rockchip: support new version gpio
+Message-ID: <c6mvxcgono3s2jtotks6sfqojenj2nmvf4b5fau5uc6gmlmerb@oi34wxnqna4n>
+References: <20240823034314.62305-1-ye.zhang@rock-chips.com>
+ <20240823034314.62305-9-ye.zhang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240822230104.707812-1-andy.shevchenko@gmail.com> <CAMuHMdW2W+RsnBWdvxJJ7wOKCyM_162Hb1Xkd6id4h_74fzQrw@mail.gmail.com>
-In-Reply-To: <CAMuHMdW2W+RsnBWdvxJJ7wOKCyM_162Hb1Xkd6id4h_74fzQrw@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 23 Aug 2024 16:17:19 +0300
-Message-ID: <CAHp75VfyPQGXT9ypp+SducvHwOgMpCm-rCXSrQ=9-MCH8b+ZLw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: renesas: rzg2l: Replace
- of_node_to_fwnode() with more suitable API
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	"Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kvez7yto2c3wu2kd"
+Content-Disposition: inline
+In-Reply-To: <20240823034314.62305-9-ye.zhang@rock-chips.com>
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.3.1/224.322.35
+X-ZohoMailClient: External
+
+
+--kvez7yto2c3wu2kd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 23, 2024 at 10:23=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Fri, Aug 23, 2024 at 1:01=E2=80=AFAM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > of_node_to_fwnode() is a IRQ domain specific implementation of
-> > of_fwnode_handle(). Replace the former with more suitable API.
+Hi,
 
-...
+On Fri, Aug 23, 2024 at 11:43:11AM GMT, Ye Zhang wrote:
+> The next version gpio controller on SoCs like rk3576 which support four
+> OS operation and four interrupts
+>=20
+> Signed-off-by: Ye Zhang <ye.zhang@rock-chips.com>
+> ---
+>  drivers/gpio/gpio-rockchip.c | 40 ++++++++++++++++++++++++------------
+>  1 file changed, 27 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
+> index 25ddf6a82c09..5289c94d5c60 100644
+> --- a/drivers/gpio/gpio-rockchip.c
+> +++ b/drivers/gpio/gpio-rockchip.c
+> @@ -29,6 +29,7 @@
+>  #define GPIO_TYPE_V1		(0)           /* GPIO Version ID reserved */
+>  #define GPIO_TYPE_V2		(0x01000C2B)  /* GPIO Version ID 0x01000C2B */
+>  #define GPIO_TYPE_V2_1		(0x0101157C)  /* GPIO Version ID 0x0101157C */
+> +#define GPIO_TYPE_V2_2		(0x010219C8)  /* GPIO Version ID 0x010219C8 */
 
-> > -       girq->fwnode =3D of_node_to_fwnode(np);
-> > +       girq->fwnode =3D dev_fwnode(pctrl->dev);
->
-> While this looks correct, the new call goes through many more hoops, and
-> is not a simple inline function.
+The comments for anything but the V1 define are redundant.
 
-Maybe, but it's not a hot path anyway.
+[...]
 
-> Perhaps just &np->fwnode? ;-)
+> @@ -648,13 +655,20 @@ static int rockchip_get_bank_data(struct rockchip_p=
+in_bank *bank)
+> =20
+>  	id =3D readl(bank->reg_base + gpio_regs_v2.version_id);
+> =20
+> -	/* If not gpio v2, that is default to v1. */
+> -	if (id =3D=3D GPIO_TYPE_V2 || id =3D=3D GPIO_TYPE_V2_1) {
+> +	switch (id) {
+> +	case GPIO_TYPE_V2:
+> +	case GPIO_TYPE_V2_1:
+>  		bank->gpio_regs =3D &gpio_regs_v2;
+>  		bank->gpio_type =3D GPIO_TYPE_V2;
+> -	} else {
+> +		break;
+> +	case GPIO_TYPE_V2_2:
+> +		bank->gpio_regs =3D &gpio_regs_v2;
+> +		bank->gpio_type =3D GPIO_TYPE_V2_2;
+> +		break;
 
-Definitely not for a couple of reasons:
-- the explicit dereferencing may prevent from easier cleaning up and
-moving the fwnode members around in the driver core
-- the GPIO library internally doesn't use OF node directly, so the
-code that call GPIO library would be better to follow that
+Can't this just be handled like GPIO_TYPE_V2_1 (i.e. reusing the V2
+case)? Also it looks risky to use >=3D on gpio_type. GPIO_TYPE_V2_2
+looks like a simple enum, but it contains the ID. Is it guranteed to
+be increasing? In that case any ID > GPIO_TYPE_V2_2 should not
+default to GPIO_TYPE_V1?
 
-Additionally one can call of_fwnode_handle(), but going here and there
-with it makes no sense as it much cleaner to see that this fwnode
-comes directly from the device. This is not obvious from the original
-or any code that uses np.
+> +	default:
+>  		bank->gpio_regs =3D &gpio_regs_v1;
+>  		bank->gpio_type =3D GPIO_TYPE_V1;
+> +		pr_info("Note: Use default GPIO_TYPE_V1!\n");
 
-After all the idea at minimum to isolate of_node_to_fwnode() from all,
-but native IRQ chips (basically there are two big users: native IRQ
-chips and PCI MSI).
+Can we have a list of valid V1 IDs and default to -ENODEV?
 
-P.S. Also note, it's _the only_ pin control driver that uses that API.
+Greetings,
 
---=20
-With Best Regards,
-Andy Shevchenko
+-- Sebastian
+
+--kvez7yto2c3wu2kd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmbIj0YACgkQ2O7X88g7
++po2CRAAqG5J+F5LRYbd+YUt4EK3DRMoN2w4n0P/DMq1lXgeH555/OJOW4pncyrR
+6/wkI8KYwKLLEZSbRbgo3PCOiobC6GlEtyX9p0h9ZDl8ioLAymUIbHT0EOkVtj7N
+PlgLcAu/bZRH1IucSOP7ks474ePpdePiCLw6101pqWpjLpVrQZryq6iEA5YJU60f
+VpaSLcNp3HF5nAyo5tlfyUexgEJEDMhMDpzf/Rrm4Z6o5yJxbGjn+tSkGJm64atu
+EkGmFX96ACW+9HtGrX6Oc7FModh1mPwDJBc9VIvxTCbhvvrZ4BTUcPbdRxHUdKNs
+kfSYmZ6t2HMEVG+madk+4IJgFHRdd8IeD9i1XDfpSni9lv/qQNgBQibYd6CVGvc2
+bMk6h/WmLv/Mc1mSQ/CLPahSjoYRjKzbWrvg96aZkLejBOU6UcY4fO3/CpSTXGp/
+HNWe/TSfY1B2ErSdKp4Izw5SbXC93SrZZvPf45FGX/iUUkw9RdhvirVRaTbV/jmI
+J3Ih00t+XHPsIuwRnuRglAlloHPPkJp2TUMv9WkpI5dTuAzh3TO5JABsxNx0WwF0
+UtJBEEuYtV9bDwVDWsvG+aI4cf5zmxAriWbAZljpu5hbruVjmX00YZXWxyj3FxjU
+5EnhBWyiLQHGHakN5okQj7BC2Z0pDc6UXVcZPvrGNGMa8nySYN4=
+=xJ6l
+-----END PGP SIGNATURE-----
+
+--kvez7yto2c3wu2kd--
 
