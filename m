@@ -1,136 +1,103 @@
-Return-Path: <linux-gpio+bounces-9017-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9018-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D15095C354
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 04:37:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2546195C3D2
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 05:45:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C31A5B2394C
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 02:37:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 44D091C2284B
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 03:45:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F060D20B33;
-	Fri, 23 Aug 2024 02:37:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CBCD224E8;
+	Fri, 23 Aug 2024 03:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="gPm/GQSH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-m3290.qiye.163.com (mail-m3290.qiye.163.com [220.197.32.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6691D364AB;
-	Fri, 23 Aug 2024 02:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6132D33080;
+	Fri, 23 Aug 2024 03:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724380627; cv=none; b=hH3IkQWM8d+eIwjpT0mACXwZK8MtaXdSs878+1Z5OebMgOCbksoXQB8OJXLColQd0vH6VP+jNjNqWyqtrzfdXif6fbpOH1iyctmqyYAzCTNkdVxm+xYdQozrl+cvaYM/ShCBfdYFhvkNfG5nCfhPO6eu7j6faw8TypLWx5EUq2Y=
+	t=1724384738; cv=none; b=C6RsHWmsWQ1Hjk2kcFeCibRC2aU35nl4jggQPEZHryhXGCYLE5tJgAaFxCJmS2Bk/dn3ndJk5JR+B1CBt46nZbm7DUWI0UFl/mT3GvqnlH6esdCFxzT3uxf3jtqQmlCg7Ae7pVrHJghWgNvYmQ9c37fTXxwNVchlnvTUWra8EHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724380627; c=relaxed/simple;
-	bh=9KBRN+uaalolKKdODoaz7qP+X19sfZ0ncDoTDYrTJ5w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JWXJu4CtGhU5j1Q9FWMiu9/kIo0gQe9xlE0nNcF3Lw7kEPFGddII6tJqHwiE7/TnCP+GgQw9dICF4HI6dH+70ooG4FNoNhym/5ouHcC0hiRWDBBAQbM2sgh2xkUpRHKI0gL6ICpYM9qkFAoM1ghZ0KZDx76z7x2ZW79LkLyJ5pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-01 (Coremail) with SMTP id qwCowAC3vUm89cdmPBV6CQ--.44906S2;
-	Fri, 23 Aug 2024 10:36:55 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: akpm@linux-foundation.org
-Cc: haojian.zhuang@linaro.org,
-	linus.walleij@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1724384738; c=relaxed/simple;
+	bh=619Ptvk3s5x+Kwt1YH71GP4DjnupKHf7sfmg6K79Ddo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XqDimwpHZDa0vCU2SUuvNdMH6L3pQ8xWT9HUPPsZRyC5oUK0f/IbG/+ItsN55YZygc0kouWeAZ+woKCIBJJyhPq4tgsEE4G1YgQlUIhhuCGehIhuqO/6p4JNZ1LLGpcwXKLqK/HJty3UHrb+sdP+wAVepN9s2wd5TvYg36JUvbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=gPm/GQSH; arc=none smtp.client-ip=220.197.32.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+DKIM-Signature: a=rsa-sha256;
+	b=gPm/GQSHAAxzH797ORe9emB7dVOvZbhlLMwglem7R6bcBK2S+qBaOzh7tPZWMkeHdJJ90mqvPtZzprKB0z/o3Espjj9N40MF6qssd2h5rZoA/N2iKQuSKR9oNNAhJq9oGrx9Ib5OMUlWFVVD0Ngn6XZ/2ASgJC0wA7gqcoI0lN0=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=F5H5rNwV6aJTfLYYBUUqm2z4cRjXCUxTyxJDgnGMbc4=;
+	h=date:mime-version:subject:message-id:from;
+Received: from rockchip.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 22DE17E02A0;
+	Fri, 23 Aug 2024 11:44:57 +0800 (CST)
+From: Ye Zhang <ye.zhang@rock-chips.com>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	heiko@sntech.de,
 	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	make24@iscas.ac.cn,
-	stable@vger.kernel.org,
-	tony@atomide.com
-Subject: Re: [PATCH RESEND] pinctrl: single: fix potential NULL dereference in pcs_get_function()
-Date: Fri, 23 Aug 2024 10:36:44 +0800
-Message-Id: <20240823023644.1778013-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240821151604.7fbb834fa1503d11b373212b@linux-foundation.org>
-References: <20240821151604.7fbb834fa1503d11b373212b@linux-foundation.org>
+	mika.westerberg@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	tao.huang@rock-chips.com,
+	finley.xiao@rock-chips.com,
+	tim.chen@rock-chips.com,
+	elaine.zhang@rock-chips.com,
+	Ye Zhang <ye.zhang@rock-chips.com>
+Subject: [PATCH v2] gpio: rockchip: Update the GPIO driver
+Date: Fri, 23 Aug 2024 11:43:03 +0800
+Message-Id: <20240823034314.62305-1-ye.zhang@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:qwCowAC3vUm89cdmPBV6CQ--.44906S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw1xWr47Zry3KF4fuw4rXwb_yoW8AF1fpa
-	yfAry5CrW5tF48JryUJw4rCFy7Ww4xJFyfGa4kKryqva15WF1DtFWDKr1q9a1vkrW8CrW0
-	v3W3XF909ryDAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
-	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
-	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8v
-	x2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20x
-	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
-	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIx
-	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAI
-	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
-	IEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbQVy7UUUUU==
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQhgYGVZNSUJDSBlMQkIaQh1WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCSE
+	NVSktLVUpCS0tZBg++
+X-HM-Tid: 0a917d565e0109cfkunm22de17e02a0
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ORQ6FDo*PDIwEiwwGTZPTggt
+	GEwaChpVSlVKTElPSENPTUJDSExPVTMWGhIXVQIeVQETGhUcOwkUGBBWGBMSCwhVGBQWRVlXWRIL
+	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBSUlCSTcG
 
-Andrew Morton<akpm@linux-foundation.org> wrote:=0D
-> On Wed, 21 Aug 2024 14:21:32 +0800 Ma Ke <make24@iscas.ac.cn> wrote:=0D
-> =0D
-> > pinmux_generic_get_function() can return NULL and the pointer 'function=
-'=0D
-> > was dereferenced without checking against NULL. Add checking of pointer=
-=0D
-> > 'function' in pcs_get_function().=0D
-> > =0D
-> > Found by code review.=0D
-> > =0D
-> > ...=0D
-> >=0D
-> > --- a/drivers/pinctrl/pinctrl-single.c=0D
-> > +++ b/drivers/pinctrl/pinctrl-single.c=0D
-> > @@ -345,6 +345,8 @@ static int pcs_get_function(struct pinctrl_dev *pct=
-ldev, unsigned pin,=0D
-> >  		return -ENOTSUPP;=0D
-> >  	fselector =3D setting->func;=0D
-> >  	function =3D pinmux_generic_get_function(pctldev, fselector);=0D
-> > +	if (!function)=0D
-> > +		return -EINVAL;=0D
-> >  	*func =3D function->data;=0D
-> >  	if (!(*func)) {=0D
-> >  		dev_err(pcs->dev, "%s could not find function%i\n",=0D
-> =0D
-> Maybe.  Or maybe pinmux_generic_get_function() must always return a=0D
-> valid pointer, in which case=0D
-> =0D
-> 	BUG_ON(!function);=0D
-> =0D
-> is an appropriate thing.  But a null-pointer deref gives us the same=0D
-> info, so no change is needed.=0D
-> =0D
-> btw, pinmux_generic_get_function() is funny:=0D
-> =0D
-> 	if (!function)=0D
-> 		return NULL;=0D
-> =0D
-> 	return function;=0D
-Thank you for your response to the vulnerability I submitted. Yes, we =0D
-believe there is a similar issue. As described in [1], =0D
-pinmux_generic_get_function() could return as NULL and lead to a d=0D
-ereferencing problem, and a similar issue exists in this code. It is better=
-=0D
-to add checking of pointer 'function' in pcs_get_function(). The discovery =
-=0D
-of this problem was confirmed through manual review of the code and =0D
-compilation testing.=0D
-=0D
-[1] https://lore.kernel.org/linux-arm-kernel/CACRpkdYwBNjGzODYqvz+oScsO3u=
-=3DR0dXMkP4UfqmosDugPFWRA@mail.gmail.com/T/=0D
-=0D
---=0D
-Regards,=0D
-=0D
-Ma Ke=
+GPIO driver support acpi and new version, set input direction in
+irq_request_resources, fix division error and debounce config error.
+
+Changes since v1:
+- Split commits with multiple changes into separate commits.
+- Adjust backportable fix to the forefront.
+- Modify messages of some commits. 
+
+Ye Zhang (11):
+  gpio: rockchip: avoid division by zero
+  gpio: rockchip: release reference to device node
+  gpio: rockchip: resolve overflow issues
+  gpio: rockchip: resolve underflow issue
+  gpio: rockchip: fix debounce calculate
+  gpio: rockchip: Update debounce config function
+  gpio: rockchip: support 'clock-names' from dt nodes
+  gpio: rockchip: support new version gpio
+  gpio: rockchip: Set input direction when request irq
+  gpio: rockchip: support ACPI
+  gpio: rockchip: driver works without pinctrl device
+
+ drivers/gpio/gpio-rockchip.c | 297 +++++++++++++++++++++--------------
+ 1 file changed, 181 insertions(+), 116 deletions(-)
+
+-- 
+2.34.1
 
 
