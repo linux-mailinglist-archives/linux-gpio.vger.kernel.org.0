@@ -1,52 +1,53 @@
-Return-Path: <linux-gpio+bounces-9099-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9101-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2CD095D82B
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 22:56:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AF1395D834
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 22:56:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8FFDC283E8A
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 20:56:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B90F8B21376
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 20:56:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BC271C8FA4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73C2C1C8FB7;
 	Fri, 23 Aug 2024 20:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixgJ1ZZB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GgB/T8qh"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30911C8225;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185381C86E1;
 	Fri, 23 Aug 2024 20:55:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724446540; cv=none; b=ss+IHrHjicM0DsS/IcnZc0PC34JA1UV4+QIijYojY9fjl04ke/BIh1+kha18dwQSASW2rE4QQTBcpIZzB/5NRd4kXYddlNqb+PjxBIrYv5hjO7C6wJPDz3Z8KGudMPY44LIQUYT5GwmlAE/57ffxX+aOeVHuAujDNp4XILKGnyg=
+	t=1724446540; cv=none; b=kkpRsrOVEsJ4O/GxaqXj722HzcItc8YqqtvoZqjxLEzE5jE6iWh8ax9ubh9OKWHfGhWsXxsMcm2+FWDqEKzlEN2tbNm5T2fsDv36ngNCbS47kQRglUvpBj+Yh+Rw3tIJF4gXqUgngF8Lx9+OX1ymEAB1su1L8fjsJoUi7+I4AvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1724446540; c=relaxed/simple;
-	bh=dKnC46XozTJpypvkpaetASRFK//qRCP4l+nrbuy+mis=;
+	bh=Bc7Y8RE10TBtcIo2KWuTduWgRhhYWwzVGcu0VEozjwA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I1kGhbFGsrcUUeKyCwPrr2fi+zlkfjI9W6OpD6YToREui4g2J2ZO/RuqDuKGnJtMYkpLkY1+hnK1iJVVp/aNwB5GngeVI5kLs1KD0eo13IdGIW1yR32EItOSS3mI96EAQi8kQWVSoFlZSC8DbhdXmxsQOKDD7Pl6Fdrld48oTTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixgJ1ZZB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A62C8C4DDF4;
+	 In-Reply-To:To:Cc; b=t022ZKoxZ7mg1Z3OvrIuoxtt8y421+ip43uQ6hhHP6H42JCInrT2HzayXIaWxx3vQfBhagRGah8TX7E8TGv2SQo8AbqyRbVuDiR6sN2CzUIUKYDJL/PkGTbAIDqucEfPcUDCrBEmQdLQTW9qrhLyVc9pyS3dGVhihz9vxZmmUvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GgB/T8qh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BCABFC4AF12;
 	Fri, 23 Aug 2024 20:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1724446539;
-	bh=dKnC46XozTJpypvkpaetASRFK//qRCP4l+nrbuy+mis=;
+	bh=Bc7Y8RE10TBtcIo2KWuTduWgRhhYWwzVGcu0VEozjwA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ixgJ1ZZB3ej/732cXAAuG8ccGemWCiQ2c0nUeqgrefgU9i9z7KBcfXt8xPwh6Kke2
-	 a7TTyVGiRBpQ6ztrSAGPfko7EEGQj3/ISQuTcbZp1u2erYNOtT0aSqgjwrVuXyF+Nz
-	 DSjVYCCNnNvbjp2p/t08zj222mWJ9dDJ5kpoFZbsSL+34youmwBD7yCUBdFFZ27lOl
-	 iGeH5556KCS9QIjEOZLh9g/k83NZVLtJJLx1t89eYinoqbjdjSuRJro3s/Jr8Nk8Le
-	 vy7k3rUtkDvh+GV9RIFQmKzBvGQhklWcyRkfhgNnBXYrSoMMxjdhIbl7qC2/WzHMFb
-	 bi4KGJoDt2XKg==
+	b=GgB/T8qhdT40vsE9ridoym05oCkIvVRjIDPKHchEBLHFKf2jzsWtQo2/ldKeInYMv
+	 8WF1c8XQru2VE1U5+mOaYrGq62qlJysdhIoC18kJhNVT7hFhT/h1VBbGbrWhgtn5r0
+	 43zpjFDFVPUhYrCa38nNigvPb7JzccfGyaEvPxxulv1YtZUGcgke7teeg2aF1Lnjcb
+	 Jdguj8QoPRpNRBAI7zsNmEU7N4DH8HZHbfgXWSj05oc/3HYCC4orLjU7i3vnkCXDGZ
+	 ROV8/zolz+GmGHdhUnDqoXwmJPGGHg7f26SBr0wNnOBaO2RubQKJPZ54uyZMJNE6lx
+	 AClmQPeXVK0Sg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB35C5321E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B37C5472C;
 	Fri, 23 Aug 2024 20:55:39 +0000 (UTC)
 From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
-Date: Fri, 23 Aug 2024 22:54:44 +0200
-Subject: [PATCH v12 09/12] dt-bindings: marvell: Document PXA1908 SoC
+Date: Fri, 23 Aug 2024 22:54:45 +0200
+Subject: [PATCH v12 10/12] arm64: Kconfig.platforms: Add config for Marvell
+ PXA1908 platform
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240823-pxa1908-lkml-v12-9-cc3ada51beb0@skole.hr>
+Message-Id: <20240823-pxa1908-lkml-v12-10-cc3ada51beb0@skole.hr>
 References: <20240823-pxa1908-lkml-v12-0-cc3ada51beb0@skole.hr>
 In-Reply-To: <20240823-pxa1908-lkml-v12-0-cc3ada51beb0@skole.hr>
 To: Michael Turquette <mturquette@baylibre.com>, 
@@ -71,16 +72,15 @@ Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
  Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
  linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ linux-arm-kernel@lists.infradead.org
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=890;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=855;
  i=duje.mihanovic@skole.hr; s=20240706; h=from:subject:message-id;
- bh=QrqVNghZjJ0danHmekNgPNEViycSfbtrsGgmjE2XERU=;
- b=owGbwMvMwCW21nBykGv/WmbG02pJDGknvmvufKZe53Y0IyqncPrBaK2Mbo3w5QvSNx0z/jK1p
- Xj7ojNJHaUsDGJcDLJiiiy5/x2v8X4W2bo9e5kBzBxWJpAhDFycAjCRXScY/pm6Gx22LY3rKjr4
- pyXcZ2aWwOUCBYm5yn3ZL4XZVgQ6FTD89/663PTP4oCXsqdcZ+88VubQJhW39JLdJPdX7ocj10y
- yZwYA
+ bh=fzvCh/aSlHCzaUUGJBsiKYdBDNmXMSZTFM1QYbrcN24=;
+ b=owGbwMvMwCW21nBykGv/WmbG02pJDGknvmsu4b62bR1X/f+Kxze27H2f81j0asEhvaigqRkbd
+ /yoS3qs2FHKwiDGxSArpsiS+9/xGu9nka3bs5cZwMxhZQIZwsDFKQATufCEkaF76bfuHJ4dIY+2
+ 79YKO/D3OYf6fTahtOez3RgapZb0ugNVnPyxku3x1Ed8rz6f/Xmu8PrX+XP8SspEtfYoZjQKHu+
+ W5gEA
 X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
  fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
 X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/20240706 with
@@ -90,30 +90,32 @@ Reply-To: duje.mihanovic@skole.hr
 
 From: Duje Mihanović <duje.mihanovic@skole.hr>
 
-Add dt binding for the Marvell PXA1908 SoC.
+Add ARCH_MMP configuration option for Marvell PXA1908 SoC.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
- Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/Kconfig.platforms | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
-index 4c43eaf3632e..f73bb8ec3a1a 100644
---- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
-+++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
-@@ -35,6 +35,11 @@ properties:
-           - enum:
-               - dell,wyse-ariel
-           - const: marvell,mmp3
-+      - description: PXA1908 based boards
-+        items:
-+          - enum:
-+              - samsung,coreprimevelte
-+          - const: marvell,pxa1908
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 6c6d11536b42..6cb21a278447 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -175,6 +175,14 @@ config ARCH_MESON
+ 	  This enables support for the arm64 based Amlogic SoCs
+ 	  such as the s905, S905X/D, S912, A113X/D or S905X/D2
  
- additionalProperties: true
- 
++config ARCH_MMP
++	bool "Marvell MMP SoC Family"
++	select PINCTRL
++	select PINCTRL_SINGLE
++	help
++	  This enables support for Marvell MMP SoC family, currently
++	  supporting PXA1908 aka IAP140.
++
+ config ARCH_MVEBU
+ 	bool "Marvell EBU SoC Family"
+ 	select ARMADA_AP806_SYSCON
 
 -- 
 2.46.0
