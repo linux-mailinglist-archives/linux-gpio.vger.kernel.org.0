@@ -1,116 +1,282 @@
-Return-Path: <linux-gpio+bounces-9091-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9092-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7130E95D5BA
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 21:02:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A92A195D817
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 22:55:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D9EF283583
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 19:02:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF4FD1C22933
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 20:55:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48027192B8D;
-	Fri, 23 Aug 2024 19:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE9B81C8234;
+	Fri, 23 Aug 2024 20:55:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OKAIug6A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="umc6B4rS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4629D192B86
-	for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2024 19:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911041922E4;
+	Fri, 23 Aug 2024 20:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724439737; cv=none; b=Ogz7xBki8OpdXauoSWy4hKG40njED+grsRW7Nfe4KPNfczFl1Cy+pX4ncatjHFSi3QAgAmQ0fpXmvQfMA1QIaf2/+FYKS+tuj+lURiqqoVksnnQoAfQ/dde3C9kkf7p7b9SYhZkxf4rSp3JJD4VxM88GX2L9OGpt0VAJYGFmkhw=
+	t=1724446539; cv=none; b=GS9mLP4seGTgeGHFRUSA2ZsYyZ+krVyQDdRipM6hFlLSry3OChwsM8OuHkU1X5ABIv6ETGXI7JXFwEJNb+s/5anlxZycZZUSNaj0IBgjwVhGdKCFOwzWvO6dc1b8aGvwpdzrB6C70jhi1J2seWvEcGbTEdUtP9uRUnQ1Q3CxNNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724439737; c=relaxed/simple;
-	bh=j4zCDtKYby5NAJbcfNgbzO3yEpthFCNJDa/eQ0M3KCc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HY43YAgnUoLYQ+L7nLGTqbX2bkpMQJSxs+GP+ElhVHNR5TX+Ktaf7TBjEO2GdUYgCJV+N1pDvxhbxT4jgEhlEu4G3uFe+ByNBHd/BI3PqxXT3NbwWAICCQEdfZsakr2neqcTX/KQJ3XMRUcsrNEJjb2NFwJx5nfUxSDGS/BDatQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OKAIug6A; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724439735; x=1755975735;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=j4zCDtKYby5NAJbcfNgbzO3yEpthFCNJDa/eQ0M3KCc=;
-  b=OKAIug6ABdWo2xeMC75T+uOgcPtoTrST82Cs/a6aIHwhxysBU0aHFoSN
-   iEmYRWpmIi/6BaHKqxn0UDMH6fZ7/YYuM9kFI+JimEr3E3pQE3gNh2eJu
-   /lTGH5X4Dyw/T+JWxIFWfXiWNYHvxvW7RpXXLaJ2K/cRmEn52AJ6XNA6d
-   y8euw3dxOT8LpsvPwMjTj3KD+aNZWl+UmB+9Z7O02YSfiZYkDf6Nvuy1O
-   c0TXCKlaMS6BFVGoI2VZozOgsEc4btwoqh6bKRFjVnxtvAdOucv5hDiOl
-   ofzbrPiVMmiDt10AWYG0lz9y8t2g9szA8v9Z7AZA+d4dgt4MsDpSr3yrY
-   Q==;
-X-CSE-ConnectionGUID: WuXD1PQcQwOvofjTH6WGvQ==
-X-CSE-MsgGUID: bAoEzcTMSWKN+UNCzMieKA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="40441415"
-X-IronPort-AV: E=Sophos;i="6.10,171,1719903600"; 
-   d="scan'208";a="40441415"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 12:02:15 -0700
-X-CSE-ConnectionGUID: gCubvebRS1u/V2B/X1gWxw==
-X-CSE-MsgGUID: T9G8co4HSR2vF216h5lvpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,171,1719903600"; 
-   d="scan'208";a="62047980"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 23 Aug 2024 12:02:12 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 0F505209; Fri, 23 Aug 2024 22:02:11 +0300 (EEST)
-Date: Fri, 23 Aug 2024 22:02:10 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linus.walleij@linaro.org, aisheng.dong@nxp.com, ping.bai@nxp.com,
-	linux-gpio@vger.kernel.org, peng.fan@nxp.com, imx@lists.linux.dev,
-	Fabio Estevam <festevam@denx.de>
-Subject: Re: [PATCH v3] pinctrl: imx: Switch to LATE_SYSTEM_SLEEP_PM_OPS()
-Message-ID: <ZsjcshzPkRXv5mBR@black.fi.intel.com>
-References: <20240808162750.244092-1-festevam@gmail.com>
+	s=arc-20240116; t=1724446539; c=relaxed/simple;
+	bh=n/WFQJS232AmDiJpqwhj2qPyACgFlnwvyXnFmTR1dnE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IOz4NWZ6lnhSowQzcmPEwzzbnGBXYSqr77IQpTCG+ic384Y/LZAa23C320fUfl1BDfR/meTGkPaVdGKxceqHRmoSuovid1Q2UBywHWRF0pHO7WvlgXXpqOZ5yMmDju6zGxt5pzi6MUBzYPBnEhRkWD3g0b+zsQsetcfRvRj8D/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=umc6B4rS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 15526C32786;
+	Fri, 23 Aug 2024 20:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724446539;
+	bh=n/WFQJS232AmDiJpqwhj2qPyACgFlnwvyXnFmTR1dnE=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=umc6B4rSKx5dD0fx6EOjETtHn8+R5S5eVp9HsEi4JnxYvagJ69h1ZZtdoeEXWqnFe
+	 FJSHOn5OSnOqqz/zfZ2vx1X7zVEHWt0zF3lDdyxsGun2dzCzbqkf1dpHJSTGH6XdXJ
+	 TWOjkvnSEuwVEN8CReWtXuw4RJxrxfim1dLyf2U+ogdQ/Xt9uZFt4muomeaUL1Kk5u
+	 0tahp6afj1JQ9ze6FkDeAioQsVkUQcM7RRvJRdMeAY6UJwQl+SMMfQJp+asruQxVvU
+	 JDOOkTmt5kL7JNMs84QuwVb/yiNK9QjcCJR26yop8llwBV4AjEH1W5I4SSpGxdhnu3
+	 qZQcaXJKY0erg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3686C531DC;
+	Fri, 23 Aug 2024 20:55:38 +0000 (UTC)
+From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
+Subject: [PATCH v12 00/12] Initial Marvell PXA1908 support
+Date: Fri, 23 Aug 2024 22:54:35 +0200
+Message-Id: <20240823-pxa1908-lkml-v12-0-cc3ada51beb0@skole.hr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240808162750.244092-1-festevam@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAv3yGYC/4XRy07DMBAF0F+pssbRPPzsiv9ALBzHpqaPVAlER
+ VX/HbdSaTALlh7p3LnynJspjjlOzXp1bsY45ykPh/JAelo1YeMPb1HkvgwaAmKwwOJ48ujAit1
+ 2vxPaMkTbe6mCaQo5jjHl0y3v5bW8N3n6GMavW/zM1+k9SP4OmlmAsFHaFDwbcO552g672G7G5
+ poz08MaMqjJgWs1MAoU/ed7bPe5tB3mHCqIS4iEAJJaQsXqPymXdU1VV5a6oWNresOdVFRZtbB
+ IlVXFetUrdGxiZFlZ/WMRECqri+0oRXAkISRbWXu3EvCPtcWm6I22Xjlp6r3uYSXUnV2xpDwAR
+ 8tBp/qXYYGpvm1pAoJ16FOnrMRUHxfxoQ3XtRGvu7HvOo5kjeOFvlwu32aJrV/DAgAA
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Tony Lindgren <tony@atomide.com>, 
+ Haojian Zhuang <haojian.zhuang@linaro.org>, 
+ =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
+ Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8095;
+ i=duje.mihanovic@skole.hr; s=20240706; h=from:subject:message-id;
+ bh=n/WFQJS232AmDiJpqwhj2qPyACgFlnwvyXnFmTR1dnE=;
+ b=owGbwMvMwCW21nBykGv/WmbG02pJDGknvmtsmzFBImxv3cmjTysmzVpp903CNv/xCZ8YVenfO
+ 55bLbmf11HKwiDGxSArpsiS+9/xGu9nka3bs5cZwMxhZQIZwsDFKQAT+drN8ItpZcK9eRp99Ucu
+ TN9RJyQ3u+dL6o3tjzjlBF9WrP85e74lw1/Jfn/h/zvEKjWyTnisKGz60v2n1dL+Ik/6MZktk90
+ CZzMDAA==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
+X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/20240706 with
+ auth_id=191
+X-Original-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Reply-To: duje.mihanovic@skole.hr
 
-On Thu, Aug 08, 2024 at 01:27:50PM -0300, Fabio Estevam wrote:
-> From: Fabio Estevam <festevam@denx.de>
-> 
-> Replace SET_LATE_SYSTEM_SLEEP_PM_OPS() with its modern
-> LATE_SYSTEM_SLEEP_PM_OPS() alternative.
-> 
-> The combined usage of pm_sleep_ptr() and LATE_SYSTEM_SLEEP_PM_OPS() allows
-> the compiler to evaluate if the runtime suspend/resume() functions
-> are used at build time or are simply dead code.
-> 
-> This allows removing the __maybe_unused notation from the runtime
-> suspend/resume() functions.
+Hello,
 
-...
+This series adds initial support for the Marvell PXA1908 SoC and
+"samsung,coreprimevelte", a smartphone using the SoC.
 
->  const struct dev_pm_ops imx_pinctrl_pm_ops = {
-> -	SET_LATE_SYSTEM_SLEEP_PM_OPS(imx_pinctrl_suspend,
-> -					imx_pinctrl_resume)
-> +	LATE_SYSTEM_SLEEP_PM_OPS(imx_pinctrl_suspend, imx_pinctrl_resume)
->  };
->  EXPORT_SYMBOL_GPL(imx_pinctrl_pm_ops);
+USB works and the phone can boot a rootfs from an SD card, but there are
+some warnings in the dmesg:
 
-Can go even further
+During SMP initialization:
+[    0.006519] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU1: 0x00000000000000
+[    0.006542] CPU features: Unsupported CPU feature variation detected.
+[    0.006589] CPU1: Booted secondary processor 0x0000000001 [0x410fd032]
+[    0.010710] Detected VIPT I-cache on CPU2
+[    0.010716] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU2: 0x00000000000000
+[    0.010758] CPU2: Booted secondary processor 0x0000000002 [0x410fd032]
+[    0.014849] Detected VIPT I-cache on CPU3
+[    0.014855] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU3: 0x00000000000000
+[    0.014895] CPU3: Booted secondary processor 0x0000000003 [0x410fd032]
 
-	EXPORT_GPL_DEV_PM_OPS(...) = {
-		LATE_SYSTEM_SLEEP_PM_OPS(...)
-	};
+SMMU probing fails:
+[    0.101798] arm-smmu c0010000.iommu: probing hardware configuration...
+[    0.101809] arm-smmu c0010000.iommu: SMMUv1 with:
+[    0.101816] arm-smmu c0010000.iommu:         no translation support!
 
+A 3.14 based Marvell tree is available on GitHub
+acorn-marvell/brillo_pxa_kernel, and a Samsung one on GitHub
+CoderCharmander/g361f-kernel.
+
+Andreas Färber attempted to upstream support for this SoC in 2017:
+https://lore.kernel.org/lkml/20170222022929.10540-1-afaerber@suse.de/
+
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+
+Changes in v12:
+- Rebase on v6.11-rc4
+- Fix schmitt properties in accordance with 78d8815031fb ("dt-bindings: pinctrl: pinctrl-single: fix schmitt related properties")
+- Drop a few redundant includes in clock drivers
+- Link to v11: https://lore.kernel.org/r/20240730-pxa1908-lkml-v11-0-21dbb3e28793@skole.hr
+
+Changes in v11:
+- Rebase on v6.11-rc1 (conflict with DTS Makefile), no changes
+- Link to v10: https://lore.kernel.org/r/20240424-pxa1908-lkml-v10-0-36cdfb5841f9@skole.hr
+
+Changes in v10:
+- Update trailers
+- Rebase on v6.9-rc5
+- Clock driver changes:
+  - Add a couple of forgotten clocks in APBC
+    - The clocks are thermal_clk, ipc_clk, ssp0_clk, ssp2_clk and swjtag
+    - The IDs and register offsets were already present, but I forgot to
+      actually register them
+  - Split each controller block into own file
+  - Drop unneeded -of in clock driver filenames
+  - Simplify struct pxa1908_clk_unit
+  - Convert to platform driver
+  - Add module metadata
+- DTS changes:
+  - Properly name pinctrl nodes
+  - Drop pinctrl #size-cells, #address-cells, ranges and #gpio-size-cells
+  - Fix pinctrl input-schmitt configuration
+- Link to v9: https://lore.kernel.org/20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr
+
+Changes in v9:
+- Update trailers and rebase on v6.9-rc2, no changes
+- Link to v8: https://lore.kernel.org/20240110-pxa1908-lkml-v8-0-fea768a59474@skole.hr
+
+Changes in v8:
+- Drop SSPA patch
+- Drop broken-cd from eMMC node
+- Specify S-Boot hardcoded initramfs location in device tree
+- Add ARM PMU node
+- Correct inverted modem memory base and size
+- Update trailers
+- Rebase on next-20240110
+- Link to v7: https://lore.kernel.org/20231102-pxa1908-lkml-v7-0-cabb1a0cb52b@skole.hr
+  and https://lore.kernel.org/20231102152033.5511-1-duje.mihanovic@skole.hr
+
+Changes in v7:
+- Suppress SND_MMP_SOC_SSPA on ARM64
+- Update trailers
+- Rebase on v6.6-rc7
+- Link to v6: https://lore.kernel.org/r/20231010-pxa1908-lkml-v6-0-b2fe09240cf8@skole.hr
+
+Changes in v6:
+- Address maintainer comments:
+  - Add "marvell,pxa1908-padconf" binding to pinctrl-single driver
+- Drop GPIO patch as it's been pulled
+- Update trailers
+- Rebase on v6.6-rc5
+- Link to v5: https://lore.kernel.org/r/20230812-pxa1908-lkml-v5-0-a5d51937ee34@skole.hr
+
+Changes in v5:
+- Address maintainer comments:
+  - Move *_NR_CLKS to clock driver from dt binding file
+- Allocate correct number of clocks for each block instead of blindly
+  allocating 50 for each
+- Link to v4: https://lore.kernel.org/r/20230807-pxa1908-lkml-v4-0-cb387d73b452@skole.hr
+
+Changes in v4:
+- Address maintainer comments:
+  - Relicense clock binding file to BSD-2
+- Add pinctrl-names to SD card node
+- Add vgic registers to GIC node
+- Rebase on v6.5-rc5
+- Link to v3: https://lore.kernel.org/r/20230804-pxa1908-lkml-v3-0-8e48fca37099@skole.hr
+
+Changes in v3:
+- Address maintainer comments:
+  - Drop GPIO dynamic allocation patch
+  - Move clock register offsets into driver (instead of bindings file)
+  - Add missing Tested-by trailer to u32_fract patch
+  - Move SoC binding to arm/mrvl/mrvl.yaml
+- Add serial0 alias and stdout-path to board dts to enable UART
+  debugging
+- Rebase on v6.5-rc4
+- Link to v2: https://lore.kernel.org/r/20230727162909.6031-1-duje.mihanovic@skole.hr
+
+Changes in v2:
+- Remove earlycon patch as it's been merged into tty-next
+- Address maintainer comments:
+  - Clarify GPIO regressions on older PXA platforms
+  - Add Fixes tag to commit disabling GPIO pinctrl calls for this SoC
+  - Add missing includes to clock driver
+  - Clock driver uses HZ_PER_MHZ, u32_fract and GENMASK
+  - Dual license clock bindings
+  - Change clock IDs to decimal
+  - Fix underscores in dt node names
+  - Move chosen node to top of board dts
+  - Clean up documentation
+  - Reorder commits
+  - Drop pxa,rev-id
+- Rename muic-i2c to i2c-muic
+- Reword some commits
+- Move framebuffer node to chosen
+- Add aliases for mmc nodes
+- Rebase on v6.5-rc3
+- Link to v1: https://lore.kernel.org/r/20230721210042.21535-1-duje.mihanovic@skole.hr
+
+---
+Andy Shevchenko (1):
+      clk: mmp: Switch to use struct u32_fract instead of custom one
+
+Duje Mihanović (11):
+      dt-bindings: pinctrl: pinctrl-single: add marvell,pxa1908-padconf compatible
+      pinctrl: single: add marvell,pxa1908-padconf compatible
+      dt-bindings: clock: Add Marvell PXA1908 clock bindings
+      clk: mmp: Add Marvell PXA1908 APBC driver
+      clk: mmp: Add Marvell PXA1908 APBCP driver
+      clk: mmp: Add Marvell PXA1908 APMU driver
+      clk: mmp: Add Marvell PXA1908 MPMU driver
+      dt-bindings: marvell: Document PXA1908 SoC
+      arm64: Kconfig.platforms: Add config for Marvell PXA1908 platform
+      arm64: dts: Add DTS for Marvell PXA1908 and samsung,coreprimevelte
+      MAINTAINERS: add myself as Marvell PXA1908 maintainer
+
+ .../devicetree/bindings/arm/mrvl/mrvl.yaml         |   5 +
+ .../devicetree/bindings/clock/marvell,pxa1908.yaml |  48 +++
+ .../bindings/pinctrl/pinctrl-single.yaml           |   4 +
+ MAINTAINERS                                        |   9 +
+ arch/arm64/Kconfig.platforms                       |   8 +
+ arch/arm64/boot/dts/marvell/Makefile               |   3 +
+ .../dts/marvell/pxa1908-samsung-coreprimevelte.dts | 336 +++++++++++++++++++++
+ arch/arm64/boot/dts/marvell/pxa1908.dtsi           | 300 ++++++++++++++++++
+ drivers/clk/mmp/Makefile                           |   2 +-
+ drivers/clk/mmp/clk-frac.c                         |  57 ++--
+ drivers/clk/mmp/clk-of-mmp2.c                      |  26 +-
+ drivers/clk/mmp/clk-of-pxa168.c                    |   4 +-
+ drivers/clk/mmp/clk-of-pxa1928.c                   |   6 +-
+ drivers/clk/mmp/clk-of-pxa910.c                    |   4 +-
+ drivers/clk/mmp/clk-pxa1908-apbc.c                 | 130 ++++++++
+ drivers/clk/mmp/clk-pxa1908-apbcp.c                |  82 +++++
+ drivers/clk/mmp/clk-pxa1908-apmu.c                 | 121 ++++++++
+ drivers/clk/mmp/clk-pxa1908-mpmu.c                 | 112 +++++++
+ drivers/clk/mmp/clk.h                              |  10 +-
+ drivers/pinctrl/pinctrl-single.c                   |   1 +
+ include/dt-bindings/clock/marvell,pxa1908.h        |  88 ++++++
+ 21 files changed, 1299 insertions(+), 57 deletions(-)
+---
+base-commit: 47ac09b91befbb6a235ab620c32af719f8208399
+change-id: 20230803-pxa1908-lkml-6830e8da45c7
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
+Duje Mihanović <duje.mihanovic@skole.hr>
 
 
 
