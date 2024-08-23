@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-9096-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9095-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 645FD95D821
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 22:56:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C4D395D81F
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 22:56:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 213932840EC
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 20:56:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29117283D89
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 20:55:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FFE91C86F5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2907F1C86F2;
 	Fri, 23 Aug 2024 20:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vw5WoJFm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8FEfGQc"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8F11C7B79;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8A41C6F7D;
 	Fri, 23 Aug 2024 20:55:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724446539; cv=none; b=B/b9fsMecd17UxF3i7eMDoz+/jX57e0IwIAuem8rJxpOiFAaCtp5agNkYnRIAalsVssofGOIeTo8P0sZapa1NFOGOC6K6i0u+DE8+FcVhz7rzjdnWlCJM3HkbqOaCYsmYnykVXl7jw2vvepQ4GgW2MKM3k7IuA/JxLT5aaWPg8w=
+	t=1724446539; cv=none; b=t2FzzLMnYI/Ekr2Zg/VHSJa14P0nF3vj0pymVq/VAReQ7ebeMDUR4qFaiG1L8wQSxZKOfIkyAvfRRRPv7Z74kq4Wzxw0WSsI8AI0DWKQj7SOuVmA04q5/K/8u2SxqdyqpkVwn039hcjN2iJ79nFszdXS6PK/rIkhF3AHuSTu/8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1724446539; c=relaxed/simple;
-	bh=x+d9e00yawhbZ8h7g7xlFZ3Pv+uhRtESlIjauEB2srI=;
+	bh=fsHk61niTVsPeKsjrtYOwSxoRUIRFtSXZ+Tv2NMS4/I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mTaFOe1mtmTUkfhWA+7/9eLf4FVsU+o6k4/TtBB3mOE4eWO1QyjDownEe2E6rRAjuwOCMqQZ9XC7VOlqQfaoGYbCD2HmZgbGKfTgKJybg9x6hHeHMhI7qnd1LupRrKNaQQPZDO09PFL4cnbfJl6b6DyZ6c7GWEicZshOX7qCqIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vw5WoJFm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3B5DFC4AF0F;
+	 In-Reply-To:To:Cc; b=I+VDMAbfpKQ/rShwlYXvCCRuCYM/DkjUSaDsN3b7Zp5RNOOHYzvPh3PmvEqkrMdNID0WEuavoG5UikNTPI9LbNwP/eFBJm0RQPXyEUVSfop7/ZhQF4wIp4ZviEtfCbupZwdCC4/73CDjN9SCrCsMOu3JbjVVNqOvivBWKwPwwDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8FEfGQc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 45C1FC4AF13;
 	Fri, 23 Aug 2024 20:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1724446539;
-	bh=x+d9e00yawhbZ8h7g7xlFZ3Pv+uhRtESlIjauEB2srI=;
+	bh=fsHk61niTVsPeKsjrtYOwSxoRUIRFtSXZ+Tv2NMS4/I=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Vw5WoJFmUS9i4RR26m5CzzlREH7ZB4GEzXAN9jagszx3EPXvoR15tymDWX03lCNIm
-	 4Kx/OTQRwBvPqr2XJsRZ8eU6V/34u7Tdt7RiaSEekZ7RHmmgHly4ZjFUjj34gO7Kzx
-	 kUWynawVIk6TIm/jGVsVzWtvgvuLR2icuCJKpDFFVryAtWZNk6QdzL8GB+nCSbpNwD
-	 XZL2MbVDI9PZyE1z36Yl3J+4z98bDcmaPWHkVzvEgr/AaUNtU60KhNjBVgcMLhiwwE
-	 q30SM8YfHJ9HuADcAYo61XF8z6wyit8tKeu9x2FdOEoTRfz00U1xDnGKiats1h7LDt
-	 DqVOA0IKUCnPQ==
+	b=B8FEfGQcSvixtBfTxAaJ30AX+0kAEgL7YrDFSndIa9Kt60LRK2xmiQhW6iDhWHCgz
+	 q/6MsnZ0IRne5LHXSFGq9XbX3PXJVjwmrhI4wKc+BDTZv/xGwuXKed3K/ZVal+OMO4
+	 UkZGOVf9RmPAzNZUFp/9e9eo3JGZ37uGuyzXz4dD+ZoCrEWEF3YoABvNDUpotgun6R
+	 /BxwSswDU2fe6Fyup4c6mp5w84hEgeNU/rnyxRskiZHMZYmPZo8py4OuuBO4Sm/8wH
+	 /aXWRJFIIHuM4D6o/8mq6lSyxD71BTpE4bICM7ennmvP92RdMD9qjvuIx5/ewaaUSi
+	 1ZxUoyvVSqjDQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299BEC5321E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC6BC5472F;
 	Fri, 23 Aug 2024 20:55:39 +0000 (UTC)
 From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
-Date: Fri, 23 Aug 2024 22:54:37 +0200
-Subject: [PATCH v12 02/12] dt-bindings: pinctrl: pinctrl-single: add
- marvell,pxa1908-padconf compatible
+Date: Fri, 23 Aug 2024 22:54:38 +0200
+Subject: [PATCH v12 03/12] pinctrl: single: add marvell,pxa1908-padconf
+ compatible
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240823-pxa1908-lkml-v12-2-cc3ada51beb0@skole.hr>
+Message-Id: <20240823-pxa1908-lkml-v12-3-cc3ada51beb0@skole.hr>
 References: <20240823-pxa1908-lkml-v12-0-cc3ada51beb0@skole.hr>
 In-Reply-To: <20240823-pxa1908-lkml-v12-0-cc3ada51beb0@skole.hr>
 To: Michael Turquette <mturquette@baylibre.com>, 
@@ -74,13 +74,13 @@ Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
  linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=989;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=938;
  i=duje.mihanovic@skole.hr; s=20240706; h=from:subject:message-id;
- bh=jSu/auev6NXw8rqoRVgMNJdUTPhlK55ZwDiRgbxNxJE=;
- b=owGbwMvMwCW21nBykGv/WmbG02pJDGknvmtETLGoaaip5PW9o/+ncSHTSucDN1qt7GSk7q/YX
- LBTJdymo5SFQYyLQVZMkSX3v+M13s8iW7dnLzOAmcPKBDKEgYtTACZSt5WR4fd2lh/ieY/bUpep
- dJS2SaVtU7ykbMuhUWH46anb0k2N2xn+ynZNWKn/T6dC8Yzj5YCJEa6ysdGq2gpyIkwKAeVz9i1
- nAgA=
+ bh=SqzyQbKfxnpwnFXP3f6fJKwa7753b4kTK6T5hNwwn5c=;
+ b=owGbwMvMwCW21nBykGv/WmbG02pJDGknvms08D6oXB4avHei9erJxl0MdVNP+n/dJlv3+eCVG
+ 2H7MsybO0pZGMS4GGTFFFly/zte4/0ssnV79jIDmDmsTCBDGLg4BWAi7eKMDEdmdLDLmeW8/SSt
+ Y7enyKuf+5ThsdKVy2ckOS56+X/n3G5Ghi0/444fOz2d7VdreQHX87BzpW+cb2yaxDk/QH3ezot
+ xp9gB
 X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
  fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
 X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/20240706 with
@@ -93,28 +93,24 @@ From: Duje Mihanović <duje.mihanovic@skole.hr>
 Add the "marvell,pxa1908-padconf" compatible to allow migrating to a
 separate pinctrl driver later.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
- Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/pinctrl-single.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-index e02595316c9f..f83dbf32ad18 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-@@ -33,6 +33,10 @@ properties:
-               - ti,omap5-padconf
-               - ti,j7200-padconf
-           - const: pinctrl-single
-+      - items:
-+          - enum:
-+              - marvell,pxa1908-padconf
-+          - const: pinconf-single
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 4c6bfabb6bd7..45166d479c70 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -1963,6 +1963,7 @@ static const struct pcs_soc_data pinconf_single = {
+ };
  
-   reg:
-     maxItems: 1
+ static const struct of_device_id pcs_of_match[] = {
++	{ .compatible = "marvell,pxa1908-padconf", .data = &pinconf_single },
+ 	{ .compatible = "ti,am437-padconf", .data = &pinctrl_single_am437x },
+ 	{ .compatible = "ti,am654-padconf", .data = &pinctrl_single_am654 },
+ 	{ .compatible = "ti,dra7-padconf", .data = &pinctrl_single_dra7 },
 
 -- 
 2.46.0
