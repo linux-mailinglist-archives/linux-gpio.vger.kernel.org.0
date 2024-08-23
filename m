@@ -1,125 +1,182 @@
-Return-Path: <linux-gpio+bounces-9103-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9105-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E694295D832
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 22:56:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FEF495D863
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 23:17:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C5281F23C19
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 20:56:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED435285A89
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 21:17:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C8BF1C8FBE;
-	Fri, 23 Aug 2024 20:55:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16D7C194C84;
+	Fri, 23 Aug 2024 21:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvBQSMqU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LixhdjOa"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114A61C8255;
-	Fri, 23 Aug 2024 20:55:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54D980C02;
+	Fri, 23 Aug 2024 21:17:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724446540; cv=none; b=f7v3U+RgozUIKiSJvbkAB5Wo8ZVyJCS5wk6FL8LMHFQnrNO1eHY8q8DyZjDNHI61Oz9dI0bcz0vEqfOUCiX8Q0UpanyZlje0WyxpnO3e2qVL5/PRllRLgvOnWObpyeJ9b0OHotvaSMV22IiwbP6U28S+N1LrNB3fiAEo1/6Bv/w=
+	t=1724447858; cv=none; b=UpkLCrFnLHdPiR2xExvpUTQ9P7Y4YHl/JEZjbkRGnS9dfoXtvZgW+/hKFYC9rVtt82GG4aCPlule/NYmY/5CDC6zXMKWhoON9RjOwv/Mjn676YtIUDyGJYqFD7hiAyxnJpHYbE1UGy/0ZJjZmPVGrSR3Et3PLUlhNr24ajATkBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724446540; c=relaxed/simple;
-	bh=Q3+HmYt/G3Au0niSNa/DgxrSc5e1rXQMjT5sZsxkC6k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qi72sruBA1ryWecxbaRyRiqXHar54Vah0OJIomGCFGh7N+SQ6WKRQ5SP3Rj1vg/R5V0ME5OCivOnEpExzeN1o49WTAgMgIPTuZJuXt0K9a+NRXAkew7IzOogaS3KSj3vV+kz1uMYxK6nzytLjeo4zltPuO+N+xFYFemxuxTb+NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvBQSMqU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DC580C4DE06;
-	Fri, 23 Aug 2024 20:55:39 +0000 (UTC)
+	s=arc-20240116; t=1724447858; c=relaxed/simple;
+	bh=5vp3IopamqzyJfcMcKJMpVOvlvO8s/jVJqB3/inrE14=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pRYFay8/YZbCimztO+coVf4nbCcWXm76CeRowLhYmOV/hdahtTjeYcO9sdNYYDmct+Z+KxtW1fE0DQIlU3t3mh2jwCDmE1mXfHDLlPFSnR2lCWA4KHXXLwTQ8GExeN+rT00O+wfnoKNaRNcJNS5hIDsm+3tLfwCgym7GOcrSeV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LixhdjOa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA0DC32786;
+	Fri, 23 Aug 2024 21:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724446539;
-	bh=Q3+HmYt/G3Au0niSNa/DgxrSc5e1rXQMjT5sZsxkC6k=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=XvBQSMqU1e7ef3C8uU+tS2nJk/ECWMx5tGp040hyDzvCwQBoLunK+w9N39JZNswI8
-	 SSdDf0595/SF0it02f1TuVrXivw9KePWXfpt0WQjJugHLCIz2tf2ccKwLULN3soyMA
-	 IonTfGVxUSvmqr1bEwnxC2k9gYYeUJHJsVbOeVXw8S+u0MfZcW/axJa9MRi2YfWc4Q
-	 gGjZGB+y2/FhD9kkFSUpCl3AHEMTkCuCvaDsemjKLuSN2Yvn4YiWqFoJiRTSOoNSAf
-	 KpwH7WuMA5g43VfJTyz1S637B6iQEE7WacemNb6MbtmS4ZQlwP+XwkYoP+cCUOSd6v
-	 p6P4pS5bkLi7g==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4818C5472F;
-	Fri, 23 Aug 2024 20:55:39 +0000 (UTC)
-From: =?utf-8?q?Duje_Mihanovi=C4=87_via_B4_Relay?= <devnull+duje.mihanovic.skole.hr@kernel.org>
-Date: Fri, 23 Aug 2024 22:54:47 +0200
-Subject: [PATCH v12 12/12] MAINTAINERS: add myself as Marvell PXA1908
- maintainer
+	s=k20201202; t=1724447858;
+	bh=5vp3IopamqzyJfcMcKJMpVOvlvO8s/jVJqB3/inrE14=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LixhdjOa+jatyNAkpqH2J44yHTLFT4cJcS86pPKY79wsQCnWjhNB8elz/Is1MFfrW
+	 s0jAn6GXEMppILVvT4Fy/0J8bHr0jH0aeQzVi9u3yZYX9VdDA1F+aK0jFsR/o9ApIM
+	 nwApemyIe+gVoG6obgLB/VoFyzRICBmyFT6a3d68nHXjG3JXcqg0VMDqt4w0fkox2P
+	 UJKxhHMD/jcWIovJKht+UiyjZzhuJrc+3vWiaGXW7BBOIbkwS43n1VzsOlZltoDrjN
+	 0cx4POjuqoe7c0Y1Ex9Bo5f6ezopTiyj6WZKFC9/JDwd1btGcHrhpIbphxoCso0WVV
+	 sUPBV49rjFAPw==
+Date: Fri, 23 Aug 2024 23:17:34 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Conor Dooley <conor@kernel.org>,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
+ controller
+Message-ID: <Zsj8bmBJhfUdH6qT@lore-desk>
+References: <20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org>
+ <20240822-en7581-pinctrl-v2-1-ba1559173a7f@kernel.org>
+ <20240822-taste-deceptive-03d0ad56ae2e@spud>
+ <aef3188d-5aaf-4f6d-addf-60066065ef9b@genexis.eu>
+ <20240823-darkened-cartload-d2621f33eab8@spud>
+ <66c8c50f.050a0220.d7871.f209@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240823-pxa1908-lkml-v12-12-cc3ada51beb0@skole.hr>
-References: <20240823-pxa1908-lkml-v12-0-cc3ada51beb0@skole.hr>
-In-Reply-To: <20240823-pxa1908-lkml-v12-0-cc3ada51beb0@skole.hr>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
- Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=906;
- i=duje.mihanovic@skole.hr; s=20240706; h=from:subject:message-id;
- bh=GovpMCIQGsNWiqbFciJR2Sc0Ur3raxOrVfpbnASZsI0=;
- b=owGbwMvMwCW21nBykGv/WmbG02pJDGknvmtOrQsqVdn/eNOL6UtM38WnnF06LSylxs74TY+Zk
- /MLo0UVHaUsDGJcDLJiiiy5/x2v8X4W2bo9e5kBzBxWJpAhDFycAjAR5VWMDF+Fr/W0cn4+lPPI
- Uab+fHTsIt2zZgz9t86z6nFxOK0uusvwizlo+fYjB/3Zpdj5D8SaqDX/blqV+7tOwe4d256288v
- OswIA
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=6DFF41D60DF314B5B76BA630AD319352458FAD03
-X-Endpoint-Received: by B4 Relay for duje.mihanovic@skole.hr/20240706 with
- auth_id=191
-X-Original-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Reply-To: duje.mihanovic@skole.hr
-
-From: Duje Mihanović <duje.mihanovic@skole.hr>
-
-Add myself as the maintainer for Marvell PXA1908 SoC support.
-
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f328373463b0..33752c63bd5a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2481,6 +2481,15 @@ F:	drivers/irqchip/irq-mvebu-*
- F:	drivers/pinctrl/mvebu/
- F:	drivers/rtc/rtc-armada38x.c
- 
-+ARM/Marvell PXA1908 SOC support
-+M:	Duje Mihanović <duje.mihanovic@skole.hr>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+T:	git https://gitlab.com/LegoLivesMatter/linux
-+F:	arch/arm64/boot/dts/marvell/pxa1908*
-+F:	drivers/clk/mmp/clk-pxa1908*.c
-+F:	include/dt-bindings/clock/marvell,pxa1908.h
-+
- ARM/Mediatek RTC DRIVER
- M:	Eddie Huang <eddie.huang@mediatek.com>
- M:	Sean Wang <sean.wang@mediatek.com>
-
--- 
-2.46.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="FjTXgr77T+PgRI1H"
+Content-Disposition: inline
+In-Reply-To: <66c8c50f.050a0220.d7871.f209@mx.google.com>
 
 
+--FjTXgr77T+PgRI1H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+> On Fri, Aug 23, 2024 at 05:14:30PM +0100, Conor Dooley wrote:
+> > On Thu, Aug 22, 2024 at 10:50:52PM +0200, Benjamin Larsson wrote:
+> > > On 22/08/2024 18:06, Conor Dooley wrote:
+> > >=20
+> > >=20
+> > > Hi.
+> > >=20
+> > > > before looking at v1:
+> > > > I would really like to see an explanation for why this is a correct
+> > > > model of the hardware as part of the commit message. To me this scr=
+eams
+> > > > syscon/MFD and instead of describing this as a child of a syscon and
+> > > > using regmap to access it you're doing whatever this is...
+> > >=20
+> > > Can you post a link to a good example dts that uses syscon/MFD ?
+> > >=20
+> > > It is not only pinctrl, pwm and gpio that are entangled in each other=
+=2E A
+> > > good example would help with developing a proper implementation.
+> >=20
+> > Off the top of my head, no unfortunately. Maybe Rob or Krzk have a good
+> > example. I would suggest to start by looking at drivers within gpio or
+> > pinctrl that use syscon_to_regmap() where the argument is sourced from
+> > either of_node->parent or dev.parent->of_node (which you use depends on
+> > whether or not you have a child node or not).
+> >=20
+> > I recently had some questions myself for Rob about child nodes for mfd
+> > devices and when they were suitable to use:
+> > https://lore.kernel.org/all/20240815200003.GA2956351-robh@kernel.org/
+> >=20
+> > Following Rob's line of thought, I'd kinda expect an mfd driver to crea=
+te
+> > the devices for gpio and pwm using devm_mfd_add_devices() and the
+> > pinctrl to have a child node.
+>=20
+> Just to not get confused and staring to focus on the wrong kind of
+> API/too complex solution, I would suggest to check the example from
+> Lorenzo.
+>=20
+> The pinctrl/gpio is an entire separate block and is mapped separately.
+> What is problematic is that chip SCU is a mix and address are not in
+> order and is required by many devices. (clock, pinctrl, gpio...)
+>=20
+> IMHO a mfd is overkill and wouldn't suite the task. MDF still support a
+> single big region and in our case we need to map 2 different one (gpio
+> AND chip SCU) (or for clock SCU and chip SCU)
+>=20
+> Similar problem is present in many other place and syscon is just for
+> the task.
+>=20
+> Simple proposed solution is:
+> - chip SCU entirely mapped and we use syscon
+> - pinctrl mapped and reference chip SCU by phandle
+> - pwm a child of pinctrl as it's scrambled in the pinctrl mapped regs
+>=20
+> Hope this can clear any confusion.
+>=20
+> --=20
+> 	Ansuel
+
+To clarify the hw architecture we are discussing about 3 memory regions:
+- chip_scu: <0x1fa20000 0x384>
+- scu: <0x1fb00020 0x94c>
+- gpio: <0x1fbf0200 0xbc>
+
+The memory regions above are used by the following IC blocks:
+- clock: chip_scu and scu
+- pinctrl (io-muxing/gpio_chip/irq_chip): chip_scu and gpio
+- pwm: gpio
+
+clock and pinctrl devices share the chip_scu memory region but they need to
+access even other separated memory areas (scu and gpio respectively).
+pwm needs to just read/write few gpio registers.
+As pointed out in my previous email, we can define the chip_scu block as
+syscon node that can be accessed via phandle by clock and pinctrl drivers.
+clock driver will map scu area while pinctrl one will map gpio memory block.
+pwm can be just a child of pinctrl node.
+What do you think about this approach? Can we address the requirements above
+via classic mfd driver?
+
+Regards,
+Lorenzo
+
+
+
+--FjTXgr77T+PgRI1H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZsj8bgAKCRA6cBh0uS2t
+rBjaAP4/vfGhFiS/vj9sssUIoNRlFJhijxXzvU5sMMqyl/kc1gEA62j6BqYh+DWk
+hSTa7/6R9VZ5ok2v7Tl/oNzGhIOadQM=
+=C0OQ
+-----END PGP SIGNATURE-----
+
+--FjTXgr77T+PgRI1H--
 
