@@ -1,171 +1,112 @@
-Return-Path: <linux-gpio+bounces-9055-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9056-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1B2A95CDF5
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 15:32:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66ECD95CE29
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 15:41:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78DE01F251D7
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 13:32:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 254F4282810
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Aug 2024 13:41:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F369C18755C;
-	Fri, 23 Aug 2024 13:32:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C66B2187571;
+	Fri, 23 Aug 2024 13:41:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="brZY86nX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vx6NtFDd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC6814387B;
-	Fri, 23 Aug 2024 13:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724419944; cv=pass; b=ABG2nhIV/6ttA/qAskDUlTNE/5rJkBt1halMMtTHjQp5wmM3NqnZXEQuElTgnbEgjJglRvW6673xbSJwIzQxs+Yyy7pN8JPB4Ot/1FppHjM3kCK5LrlIm4afLJXCcHQ1l05SftFrUQY6ho+nnGqR7fhzeiO0spteO8kXKuv7Hzo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724419944; c=relaxed/simple;
-	bh=4GVfqZ9yOekn4tnZ0CwmT/G8IupJRVl+CvpU1zQpgwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJ9J1wfLcV3B0pGj6b56PaNQo9TtPZQyuWgInFXWrpwKCCASAYZuesOMUGMOk+wgzp+ZK51wxMwGmelZLXEvJESuQWFC7ZWj2QrNyONdRwz8ZVKithHSlBDURlkvQH8ZDlXemaQTGlwuYJwMFLo3t0VZ4YnXYei6qwnj6TsuHW8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=brZY86nX; arc=pass smtp.client-ip=136.143.188.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Delivered-To: detlev.casanova@collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1724419928; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=KPAyQPg5eTVOLlCTUyJVq1JaBUlGmOOewxA+F0jfoYKiejNzjEzAFuw3xEOHTrrVA0mNYOCiBoDwxDfC9GYqyOnUE9nu2PSYg10NvmWorAAoZIl8ZeiKnSJf+JpQn7aVn9MwO8WmB7vJU+rPoy0Do2TDUA7HEIYUQ6Sznyzp/70=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1724419928; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=36+a1glbwxcI0a2i+ISO16XDr0TPQCW8/sEg2TiO13k=; 
-	b=TXxIwHfmoj2KuqJfrKd99zhFQ2LWlnQxKppEhaU4UJqckb1e+uYa/fQW600Vt2+Z8VdrWvXLfo5q3jXzVwhtbsbxxnqx3UPK/OyCdFp+Be3EbaeuQZJgzd0mE1NpmILrWLAJPRzbJJzJxcBTFEKozgNUYP2YzCdzs7LSGy+Deu0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1724419928;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=36+a1glbwxcI0a2i+ISO16XDr0TPQCW8/sEg2TiO13k=;
-	b=brZY86nXo+B9PwbZJ+W2OizsPGsYK2O/CIryusHuS/EvssKKSXAkAzfGLqiQCQRU
-	NXWK6RpGiVr2agI2aie/kPcL5t6QGlOLLt5QdthlvXmAWJCG33IyRFM2uyjX5dnXkr/
-	uQAqjPazjh7QKY6XcL9r6eU8979HuuDTUAs92QhU=
-Received: by mx.zohomail.com with SMTPS id 1724419926661174.78715179759513;
-	Fri, 23 Aug 2024 06:32:06 -0700 (PDT)
-Received: by mercury (Postfix, from userid 1000)
-	id 3A8581060533; Fri, 23 Aug 2024 15:32:01 +0200 (CEST)
-Date: Fri, 23 Aug 2024 15:32:01 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Ye Zhang <ye.zhang@rock-chips.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, heiko@sntech.de, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com, 
-	andriy.shevchenko@linux.intel.com, tao.huang@rock-chips.com, finley.xiao@rock-chips.com, 
-	tim.chen@rock-chips.com, elaine.zhang@rock-chips.com, detlev.casanova@collabora.com
-Subject: Re: [PATCH v2] gpio: rockchip: support new version gpio
-Message-ID: <c6mvxcgono3s2jtotks6sfqojenj2nmvf4b5fau5uc6gmlmerb@oi34wxnqna4n>
-References: <20240823034314.62305-1-ye.zhang@rock-chips.com>
- <20240823034314.62305-9-ye.zhang@rock-chips.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04279185B5C
+	for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2024 13:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724420496; cv=none; b=c0xG0x35EMoD8mfk5O4q+OE8DwrKry5FycwFq/Y2p/SmaVsJ2d3B4NtpXJ6j1y6wgyl/I5Atw6NgJbmxHtqOczoQaDj5BK6s7AMmafeRec2GaQiE1urGvEdbUwiqc/HDsDcLOvjue4XDxl+ZojjPzjq5rCIvwIgAqVt0QaXiNbg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724420496; c=relaxed/simple;
+	bh=PJaIxgOdV8WYNarq4L6gg4MyoJXnyxUqZQl5qVXDwb8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=i/IwC1QrO0k05+qrl7dVY9q6zCAJceC+LGs6MK/o0KgsBsFLkoEldwhJtpT8/vlT+Vv1qu8ffsyEBLcjZOMY7Kvt3hk/YKEong5TxWyJOmXBhp+fcbqe4zVd14AViTXFXi/WE2DL3K4r4JNvdD9/ZuvoI5bdQKPwEPQ4mZQ3dGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vx6NtFDd; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-368633ca4ffso317899f8f.0
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Aug 2024 06:41:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1724420493; x=1725025293; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zLXphlx4Jr/wlEp6hPPEJ9LkWbBrVmLQW+HX4IXSgtQ=;
+        b=vx6NtFDdT7J6aB0reF6ZnPCxLExWkot4DYQHlXnzCfDs3MjUSfX1Wi8s+4A0uovFkm
+         DRZRa3b+OLOAvuqucqPWYJyc1jvis7+IC3QMyCEMELBYi9uQ8zz2guVGbmt8VMmL+7+v
+         RyauLWsmFBAxs4X1LMZexMQSVyFrb5ARTOwJoArDUYn4iqChKg/FAIQDDZnpKvj+RRLl
+         xh8vJwlKZjOCZZ5oJAvP8bmhma1ZrfG65ITUJd9Hap1S1H6G2gc/64J38pHqBAmYQre0
+         QDUYNHfv4ypsvRHpZg3NAOCwLf3TAdgu318nKgcGVA9AhbtgzJMfROJVdoS373AE7dos
+         C78Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724420493; x=1725025293;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zLXphlx4Jr/wlEp6hPPEJ9LkWbBrVmLQW+HX4IXSgtQ=;
+        b=KZ04GWjPWF4Toavy6dOgAictroQrJwYTJnqDsNoMN2UGZFqGsNrTlNI7bmOhPH9LKb
+         sqmu1SznjFv6ktZo8kXLjSAt8O+9dZM03pHUV6VZPfkOrFGkg1jErh40sNc3/hJNDC67
+         ZWP1/qkTjR+bXngZjO5xU3U65RuZHWaOtN1BbhglFKjsPu1V6j8b4hTrZPz2CmEfV+7I
+         MFyX4PH6r35eJHdMo55pu27tOkUfuwJ4gnsgRle4f1sYngCWBoTagk7x+0OHPb2J8Vcp
+         iA24p8XgH2dAZs0cOKqrtfrnDn5sS1kXr0i+3ov/RPsdV2xf28ev1r0GD3rCs+uD/HZK
+         ZNIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAjlFT6CQdhpGFsd/c4k1Ur8/eK4s6XFPKrnEE4YDh6L6A2G71jQxldulxQsyhrQkZyGHDn2QLydPb@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqkRnWwqfWCT1RlbqQijnCVBm0KnjoYXmwTUvn82bLuUPB0Fpc
+	u30Mw+J/icjo71SYs9N3RRgSwlqH1h88dHGV8/e2vKWhiWnROvjoblT7tziv6U8=
+X-Google-Smtp-Source: AGHT+IFAy5TWXluGypKumB4L46fCMYjfuXS/7gcYMZMUIjnPaNZc5SXlvykLSSlmd7HczFCeAQnMLg==
+X-Received: by 2002:a5d:6c6f:0:b0:368:4e31:7735 with SMTP id ffacd0b85a97d-3731191ea94mr885503f8f.9.1724420493063;
+        Fri, 23 Aug 2024 06:41:33 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.222.82])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42abef81777sm95905955e9.27.2024.08.23.06.41.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2024 06:41:32 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: krzk@kernel.org, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
+ Shen Lichuan <shenlichuan@vivo.com>
+Cc: alim.akhtar@samsung.com, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
+In-Reply-To: <20240823114441.50648-1-shenlichuan@vivo.com>
+References: <20240823114441.50648-1-shenlichuan@vivo.com>
+Subject: Re: [PATCH v2] drivers: pinctrl: samsung: Use kmemdup_array
+ instead of kmemdup for multiple allocation
+Message-Id: <172442049174.83535.13112470931201037762.b4-ty@linaro.org>
+Date: Fri, 23 Aug 2024 15:41:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kvez7yto2c3wu2kd"
-Content-Disposition: inline
-In-Reply-To: <20240823034314.62305-9-ye.zhang@rock-chips.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.3.1/224.322.35
-X-ZohoMailClient: External
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.1
 
 
---kvez7yto2c3wu2kd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 23 Aug 2024 19:44:41 +0800, Shen Lichuan wrote:
+> Let the kmemdup_array() take care about multiplication
+> and possible overflows.
+> 
+> Using kmemdup_array() is more appropriate and makes the code
+> easier to audit.
+> 
+> 
+> [...]
 
-Hi,
+Applied, thanks!
 
-On Fri, Aug 23, 2024 at 11:43:11AM GMT, Ye Zhang wrote:
-> The next version gpio controller on SoCs like rk3576 which support four
-> OS operation and four interrupts
->=20
-> Signed-off-by: Ye Zhang <ye.zhang@rock-chips.com>
-> ---
->  drivers/gpio/gpio-rockchip.c | 40 ++++++++++++++++++++++++------------
->  1 file changed, 27 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> index 25ddf6a82c09..5289c94d5c60 100644
-> --- a/drivers/gpio/gpio-rockchip.c
-> +++ b/drivers/gpio/gpio-rockchip.c
-> @@ -29,6 +29,7 @@
->  #define GPIO_TYPE_V1		(0)           /* GPIO Version ID reserved */
->  #define GPIO_TYPE_V2		(0x01000C2B)  /* GPIO Version ID 0x01000C2B */
->  #define GPIO_TYPE_V2_1		(0x0101157C)  /* GPIO Version ID 0x0101157C */
-> +#define GPIO_TYPE_V2_2		(0x010219C8)  /* GPIO Version ID 0x010219C8 */
+[1/1] drivers: pinctrl: samsung: Use kmemdup_array instead of kmemdup for multiple allocation
+      https://git.kernel.org/pinctrl/samsung/c/39dbbd4e6778ac5580313ba34409855250633c61
 
-The comments for anything but the V1 define are redundant.
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-[...]
-
-> @@ -648,13 +655,20 @@ static int rockchip_get_bank_data(struct rockchip_p=
-in_bank *bank)
-> =20
->  	id =3D readl(bank->reg_base + gpio_regs_v2.version_id);
-> =20
-> -	/* If not gpio v2, that is default to v1. */
-> -	if (id =3D=3D GPIO_TYPE_V2 || id =3D=3D GPIO_TYPE_V2_1) {
-> +	switch (id) {
-> +	case GPIO_TYPE_V2:
-> +	case GPIO_TYPE_V2_1:
->  		bank->gpio_regs =3D &gpio_regs_v2;
->  		bank->gpio_type =3D GPIO_TYPE_V2;
-> -	} else {
-> +		break;
-> +	case GPIO_TYPE_V2_2:
-> +		bank->gpio_regs =3D &gpio_regs_v2;
-> +		bank->gpio_type =3D GPIO_TYPE_V2_2;
-> +		break;
-
-Can't this just be handled like GPIO_TYPE_V2_1 (i.e. reusing the V2
-case)? Also it looks risky to use >=3D on gpio_type. GPIO_TYPE_V2_2
-looks like a simple enum, but it contains the ID. Is it guranteed to
-be increasing? In that case any ID > GPIO_TYPE_V2_2 should not
-default to GPIO_TYPE_V1?
-
-> +	default:
->  		bank->gpio_regs =3D &gpio_regs_v1;
->  		bank->gpio_type =3D GPIO_TYPE_V1;
-> +		pr_info("Note: Use default GPIO_TYPE_V1!\n");
-
-Can we have a list of valid V1 IDs and default to -ENODEV?
-
-Greetings,
-
--- Sebastian
-
---kvez7yto2c3wu2kd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmbIj0YACgkQ2O7X88g7
-+po2CRAAqG5J+F5LRYbd+YUt4EK3DRMoN2w4n0P/DMq1lXgeH555/OJOW4pncyrR
-6/wkI8KYwKLLEZSbRbgo3PCOiobC6GlEtyX9p0h9ZDl8ioLAymUIbHT0EOkVtj7N
-PlgLcAu/bZRH1IucSOP7ks474ePpdePiCLw6101pqWpjLpVrQZryq6iEA5YJU60f
-VpaSLcNp3HF5nAyo5tlfyUexgEJEDMhMDpzf/Rrm4Z6o5yJxbGjn+tSkGJm64atu
-EkGmFX96ACW+9HtGrX6Oc7FModh1mPwDJBc9VIvxTCbhvvrZ4BTUcPbdRxHUdKNs
-kfSYmZ6t2HMEVG+madk+4IJgFHRdd8IeD9i1XDfpSni9lv/qQNgBQibYd6CVGvc2
-bMk6h/WmLv/Mc1mSQ/CLPahSjoYRjKzbWrvg96aZkLejBOU6UcY4fO3/CpSTXGp/
-HNWe/TSfY1B2ErSdKp4Izw5SbXC93SrZZvPf45FGX/iUUkw9RdhvirVRaTbV/jmI
-J3Ih00t+XHPsIuwRnuRglAlloHPPkJp2TUMv9WkpI5dTuAzh3TO5JABsxNx0WwF0
-UtJBEEuYtV9bDwVDWsvG+aI4cf5zmxAriWbAZljpu5hbruVjmX00YZXWxyj3FxjU
-5EnhBWyiLQHGHakN5okQj7BC2Z0pDc6UXVcZPvrGNGMa8nySYN4=
-=xJ6l
------END PGP SIGNATURE-----
-
---kvez7yto2c3wu2kd--
 
