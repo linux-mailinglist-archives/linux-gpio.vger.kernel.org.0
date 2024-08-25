@@ -1,341 +1,141 @@
-Return-Path: <linux-gpio+bounces-9124-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9125-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0149095E26D
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Aug 2024 09:28:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1639995E37B
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Aug 2024 15:10:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 814A81F21966
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Aug 2024 07:28:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 78FF6B210A7
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Aug 2024 13:10:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2180757CAC;
-	Sun, 25 Aug 2024 07:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DIPSI0fm"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD7E3154456;
+	Sun, 25 Aug 2024 13:10:44 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6163252F62
-	for <linux-gpio@vger.kernel.org>; Sun, 25 Aug 2024 07:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353D129CEF;
+	Sun, 25 Aug 2024 13:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724570910; cv=none; b=ij9qDuEHjtplIOspeR1OqhFQz8eoGA+Tvh4sFFz8ZAncGjXs1OUMgtZyWOFPsjIS9y3sAJUifaj2fjQzKJsbtl6ciRrbON/MyWa2wxqaKQLl6VsdysDYdfNC0LMbhTRrc5Y72fdk9gI06DzxFIl67+3rdaSzsQGW1GHIfbAedx0=
+	t=1724591444; cv=none; b=Vx3YCY0G7A9RSS6jwmEzHC1TDm/gTxXI0JpevdqEbgzd1DcCxFQ/TrgEgnvztCcLBgxIERpHEPMP5QRHESKHm99cFSiUV3Q+4goLxNT+FJEYxsh0LPkuKzt5fOmj6GKni9p1dDu/u7Jv2GRwD0wCKjoovpULN0kbuC17s8Nr8ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724570910; c=relaxed/simple;
-	bh=xwzlgqXHxjQhbdZeaFSGWOIvzJm41vFagLs916+O/po=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=kbXE9lLRJZiOa5D2ajAHTVWfq1BdiYZu/QSywHefQu/iFzwSgwkLi4dvXxQ5R3Do9XCZLg5EUrE7ujIipWE/iDgWmgHWrWuWUrlaA6Vm3VjRq3nZj76NaUgaeQaL/4nmrwB8K6uqqZbN1/rqSHB2UbcItnht8q2reVH8lFlHkHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DIPSI0fm; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724570907; x=1756106907;
-  h=date:from:to:cc:subject:message-id;
-  bh=xwzlgqXHxjQhbdZeaFSGWOIvzJm41vFagLs916+O/po=;
-  b=DIPSI0fm1RVp0dh34wlX1RPhilhOFyZ5v6ULuP9h4ghQ2lLQJNaGNwUF
-   tEYDpGhheq8hKDC6WMdtvDckfAxiMjjUUj1r6Qf4lYz9UTfa1XwlFmUUA
-   YKDO1JlDL60hw3/eEIBE97JPHvKFIJ4YKExYBaDT/FIVs6lS5IVnXiAJQ
-   bcvGAYFHbkKIZqXjEs8zTCF2+90EJw7obBZMQQX/BaGEsXNjs4s6V2tXG
-   kzDNR+9ep5wispg/77mwZqNdN3ZHkkEDsfblv+RlkXGyNc33VLmh4n58P
-   n5JUhCJeLoUKuh7sbdlHh+KC0Cu3Mvd2yPhvMQEfeptBD8ycpeAieCktg
-   w==;
-X-CSE-ConnectionGUID: 19s8HurfRWKHZ1AVnd+AtA==
-X-CSE-MsgGUID: LdCQIbyZRLaxsN9QSiu8uw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11173"; a="34165139"
-X-IronPort-AV: E=Sophos;i="6.10,175,1719903600"; 
-   d="scan'208";a="34165139"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2024 00:28:27 -0700
-X-CSE-ConnectionGUID: J1jt3dvFQz6REe1kSnko5A==
-X-CSE-MsgGUID: 4/D9NENxT6ONy6t8XLr74w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,175,1719903600"; 
-   d="scan'208";a="93008025"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 25 Aug 2024 00:28:26 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1si7fj-000F1H-2E;
-	Sun, 25 Aug 2024 07:28:23 +0000
-Date: Sun, 25 Aug 2024 15:27:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:pwrseq/for-current] BUILD SUCCESS
- 06802616488c980a63084e53f401cfc8a65672a7
-Message-ID: <202408251535.AvlPxcYr-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1724591444; c=relaxed/simple;
+	bh=Mb2l/czd6BaayP/ofbPCL9dm1Wu0Kio9yNMkYFZ5ohQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=naoEjH+eONr5cjB7zERtV/ld9ir8/EAmn2bcOipCRARVNYgmps06D4QiOLKdwR3QOp6uool0zGOAHpIdvfsdBwZRyZGRYRhaTnx/kBBrrgO/tfRX+OXXPoVkKqF2vN4Bj7X1LMhpePPIXH6qy5psUPgT/59tVgwv3VHJuYFDI/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+From: Yixun Lan <dlan@gentoo.org>
+Subject: [PATCH v2 0/4] riscv: spacemit: add pinctrl support to K1 SoC
+Date: Sun, 25 Aug 2024 13:10:01 +0000
+Message-Id: <20240825-02-k1-pinctrl-v2-0-ddd38a345d12@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACkty2YC/12Py26EMAxFfwVlXVdxAgmw6n9Us8jDMFE7ZCZJU
+ asR/94Ai0pdXls+PvfJMqVAmY3NkyVaQw5xqUG8NMxdzTITBF8zE1y0XPMeuIAPhHtYXEmfII2
+ wnBxK5MjqzT3RFL4P3vvlzIkeXxVbzuEftT7ZmUqoHcgRrMnBgS+AxkgkIuu8GNdu59YdgYu3W
+ yhj01lScnI4TM6Y1gmprOS6FbztZad706mhV0ZqthtcQy4x/RwFVzwUzi44/OuyVgsQcjCus1p
+ 7r95mWkqMrzHN7LJt2y8RxdaHLQEAAA==
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Conor Dooley <conor@kernel.org>
+Cc: Yangyu Chen <cyy@cyyself.name>, Jesse Taube <jesse@rivosinc.com>, 
+ Jisheng Zhang <jszhang@kernel.org>, Inochi Amaoto <inochiama@outlook.com>, 
+ Icenowy Zheng <uwu@icenowy.me>, Meng Zhang <zhangmeng.kevin@spacemit.com>, 
+ Meng Zhang <kevin.z.m@hotmail.com>, devicetree@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3078; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=Mb2l/czd6BaayP/ofbPCL9dm1Wu0Kio9yNMkYFZ5ohQ=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBmyy0+A+C8AVtH97JWOv0N6fm/REYW1Z+2mlBhv
+ tWuSBXXD1iJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZsstPl8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277dyKD/4yb+nUy1tuI3F2DJ
+ YEP5LSyuSHjmb6XKB4Nnr9UO6LAjJ6JVq3w3Q69k6CoaGFFzQZ3myWOU2BsfXHP3usJK740EPMc
+ JIoPYAihX47pwlTcDgwOAWef8K2HQl8gFYH9oSyj80369W5cxAbCwBO3BWGhEaQhmU5eLBx3Rnh
+ nLDAYnn9DvYCRhVDwNNYQAL4tWsd/CcZNsCR2d/ThwEcKHZkQ9YRcsIMbU0GhJFpGOQxAsvLaEj
+ 2tu9xOhYy6nMNwuT3+f4+4tk4LejJ9EEcxND5O85aTFH+CoseKyfHqRYx7yhZZ58K5Vl41cSAfE
+ NNp8JfxJ0v9wmzISAX1XZgFzG8iBBLNdUXl8Rxoxer3pKqNRO6LXeMlXohJlWNIerzj2JiHqmlP
+ FWOVJun3tP7xVolgzD7186CJluZLmo35nWXxmuG3nxTr/0vOT/Mc+Vh5Hi6xzfaJGn0B9Et/r6y
+ Lx7k4CGSmRyDU06to6if2ptONOsyI2wmU7L0WKeQTEjuQ+s8GyTmncnGf3E1ftYUNinbAYtGRFE
+ nNzM5RMH1bw+8tKCVf0MD68g/r9uN/+K5eP/DRJzHgeEOuSB+VMvvulj6fVqmQNXeq0wvlkgyqS
+ S0VgblZdwa3MFtGANm57A6ruwAY8B8dl+Eef48OyJrT3GFdd0jnNDMU0+wF36HZsYZ1Q==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git pwrseq/for-current
-branch HEAD: 06802616488c980a63084e53f401cfc8a65672a7  power: sequencing: qcom-wcn: set the wlan-enable GPIO to output
+This series adds pinctrl support to SpacemiT's K1 SoC, the controller
+uses a single register to describe all pin functions, including
+bias pull up/down, drive strength, schmitter trigger, slew rate,
+strong pull-up, mux mode. Later, we complete the pinctrl property of
+uart device for the Bananapi-F3 board.
 
-elapsed time: 1443m
+The pinctrl docs of K1 can be found here[1], and dts data of this series
+are largely converted from vendor's code[2].
 
-configs tested: 248
-configs skipped: 8
+Note, we rewrite this series as an independent pinctrl driver for K1 SoC,
+which mean it does not use pinctrl-single driver as the model anymore,
+see the suggestion from Krzysztof at [3].
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Link: https://developer.spacemit.com/documentation?token=An1vwTwKaigaXRkYfwmcznTXned [1]
+Link: https://gitee.com/bianbu-linux/linux-6.1/blob/bl-v1.0.y/arch/riscv/boot/dts/spacemit/k1-x_pinctrl.dtsi [2]
+Link: https://lore.kernel.org/all/b7a01cba-9f68-4a6f-9795-b9103ee81d8b@kernel.org/ [3]
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+Changes in v2:
+- drop using pinctrl-single driver for K1
+- rewite as independent pinctrl driver
+- rebase to v6.11-rc5
+- Link to v1: https://lore.kernel.org/r/20240719-02-k1-pinctrl-v1-0-239ac5b77dd6@gentoo.org
 
-tested configs:
-alpha                             allnoconfig   gcc-13.2.0
-alpha                            allyesconfig   gcc-13.3.0
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc-13.2.0
-arc                              allyesconfig   gcc-13.2.0
-arc                                 defconfig   gcc-13.2.0
-arc                   randconfig-001-20240824   gcc-13.2.0
-arc                   randconfig-001-20240825   gcc-13.2.0
-arc                   randconfig-002-20240824   gcc-13.2.0
-arc                   randconfig-002-20240825   gcc-13.2.0
-arm                              allmodconfig   gcc-13.2.0
-arm                               allnoconfig   gcc-13.2.0
-arm                              allyesconfig   gcc-13.2.0
-arm                       aspeed_g4_defconfig   clang-20
-arm                         at91_dt_defconfig   clang-20
-arm                                 defconfig   gcc-13.2.0
-arm                          ep93xx_defconfig   clang-14
-arm                          gemini_defconfig   clang-20
-arm                         mv78xx0_defconfig   clang-20
-arm                             mxs_defconfig   clang-14
-arm                         nhk8815_defconfig   clang-20
-arm                   randconfig-001-20240824   gcc-13.2.0
-arm                   randconfig-001-20240825   gcc-13.2.0
-arm                   randconfig-002-20240824   gcc-13.2.0
-arm                   randconfig-002-20240825   gcc-13.2.0
-arm                   randconfig-003-20240824   gcc-13.2.0
-arm                   randconfig-003-20240825   gcc-13.2.0
-arm                   randconfig-004-20240824   gcc-13.2.0
-arm                   randconfig-004-20240825   gcc-13.2.0
-arm                             rpc_defconfig   clang-20
-arm                         socfpga_defconfig   clang-14
-arm                           sunxi_defconfig   clang-20
-arm64                            allmodconfig   gcc-13.2.0
-arm64                             allnoconfig   gcc-13.2.0
-arm64                               defconfig   gcc-13.2.0
-arm64                 randconfig-001-20240824   gcc-13.2.0
-arm64                 randconfig-001-20240825   gcc-13.2.0
-arm64                 randconfig-002-20240824   gcc-13.2.0
-arm64                 randconfig-002-20240825   gcc-13.2.0
-arm64                 randconfig-003-20240824   gcc-13.2.0
-arm64                 randconfig-003-20240825   gcc-13.2.0
-arm64                 randconfig-004-20240824   gcc-13.2.0
-arm64                 randconfig-004-20240825   gcc-13.2.0
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc-13.2.0
-csky                  randconfig-001-20240824   gcc-13.2.0
-csky                  randconfig-001-20240825   gcc-13.2.0
-csky                  randconfig-002-20240824   gcc-13.2.0
-csky                  randconfig-002-20240825   gcc-13.2.0
-i386                             allmodconfig   clang-18
-i386                              allnoconfig   clang-18
-i386                             allyesconfig   clang-18
-i386         buildonly-randconfig-001-20240824   clang-18
-i386         buildonly-randconfig-001-20240825   clang-18
-i386         buildonly-randconfig-002-20240824   clang-18
-i386         buildonly-randconfig-002-20240825   clang-18
-i386         buildonly-randconfig-003-20240824   clang-18
-i386         buildonly-randconfig-003-20240825   clang-18
-i386         buildonly-randconfig-004-20240824   clang-18
-i386         buildonly-randconfig-004-20240825   clang-18
-i386         buildonly-randconfig-005-20240824   clang-18
-i386         buildonly-randconfig-005-20240825   clang-18
-i386         buildonly-randconfig-006-20240824   clang-18
-i386         buildonly-randconfig-006-20240825   clang-18
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240824   clang-18
-i386                  randconfig-001-20240825   clang-18
-i386                  randconfig-002-20240824   clang-18
-i386                  randconfig-002-20240825   clang-18
-i386                  randconfig-003-20240824   clang-18
-i386                  randconfig-003-20240825   clang-18
-i386                  randconfig-004-20240824   clang-18
-i386                  randconfig-004-20240825   clang-18
-i386                  randconfig-005-20240824   clang-18
-i386                  randconfig-005-20240825   clang-18
-i386                  randconfig-006-20240824   clang-18
-i386                  randconfig-006-20240825   clang-18
-i386                  randconfig-011-20240824   clang-18
-i386                  randconfig-011-20240825   clang-18
-i386                  randconfig-012-20240824   clang-18
-i386                  randconfig-012-20240825   clang-18
-i386                  randconfig-013-20240824   clang-18
-i386                  randconfig-013-20240825   clang-18
-i386                  randconfig-014-20240824   clang-18
-i386                  randconfig-014-20240825   clang-18
-i386                  randconfig-015-20240824   clang-18
-i386                  randconfig-015-20240825   clang-18
-i386                  randconfig-016-20240824   clang-18
-i386                  randconfig-016-20240825   clang-18
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc-13.2.0
-loongarch             randconfig-001-20240824   gcc-13.2.0
-loongarch             randconfig-001-20240825   gcc-13.2.0
-loongarch             randconfig-002-20240824   gcc-13.2.0
-loongarch             randconfig-002-20240825   gcc-13.2.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                                defconfig   gcc-13.2.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-13.2.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-13.2.0
-mips                              allnoconfig   gcc-13.2.0
-mips                          rb532_defconfig   clang-14
-mips                          rb532_defconfig   clang-20
-nios2                             allnoconfig   gcc-13.2.0
-nios2                               defconfig   gcc-13.2.0
-nios2                 randconfig-001-20240824   gcc-13.2.0
-nios2                 randconfig-001-20240825   gcc-13.2.0
-nios2                 randconfig-002-20240824   gcc-13.2.0
-nios2                 randconfig-002-20240825   gcc-13.2.0
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc                randconfig-001-20240824   gcc-13.2.0
-parisc                randconfig-001-20240825   gcc-13.2.0
-parisc                randconfig-002-20240824   gcc-13.2.0
-parisc                randconfig-002-20240825   gcc-13.2.0
-parisc64                            defconfig   gcc-13.2.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-14.1.0
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                     mpc512x_defconfig   clang-14
-powerpc                 mpc8313_rdb_defconfig   clang-14
-powerpc                      pasemi_defconfig   clang-20
-powerpc                     powernv_defconfig   clang-20
-powerpc                      ppc44x_defconfig   clang-20
-powerpc                      ppc64e_defconfig   clang-20
-powerpc               randconfig-001-20240824   gcc-13.2.0
-powerpc               randconfig-001-20240825   gcc-13.2.0
-powerpc               randconfig-002-20240825   gcc-13.2.0
-powerpc                     tqm8548_defconfig   clang-20
-powerpc                        warp_defconfig   clang-14
-powerpc64             randconfig-001-20240824   gcc-13.2.0
-powerpc64             randconfig-001-20240825   gcc-13.2.0
-powerpc64             randconfig-002-20240824   gcc-13.2.0
-powerpc64             randconfig-003-20240824   gcc-13.2.0
-powerpc64             randconfig-003-20240825   gcc-13.2.0
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   gcc-14.1.0
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   gcc-14.1.0
-riscv                    nommu_k210_defconfig   clang-20
-riscv                 randconfig-001-20240824   gcc-13.2.0
-riscv                 randconfig-001-20240825   gcc-13.2.0
-riscv                 randconfig-002-20240824   gcc-13.2.0
-riscv                 randconfig-002-20240825   gcc-13.2.0
-s390                             allmodconfig   clang-20
-s390                              allnoconfig   clang-20
-s390                              allnoconfig   gcc-14.1.0
-s390                             allyesconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                          debug_defconfig   clang-20
-s390                                defconfig   clang-14
-s390                                defconfig   gcc-14.1.0
-s390                  randconfig-001-20240824   gcc-13.2.0
-s390                  randconfig-001-20240825   gcc-13.2.0
-s390                  randconfig-002-20240824   gcc-13.2.0
-s390                  randconfig-002-20240825   gcc-13.2.0
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-13.2.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-14.1.0
-sh                    randconfig-001-20240824   gcc-13.2.0
-sh                    randconfig-001-20240825   gcc-13.2.0
-sh                    randconfig-002-20240824   gcc-13.2.0
-sh                    randconfig-002-20240825   gcc-13.2.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-14.1.0
-sparc64               randconfig-001-20240824   gcc-13.2.0
-sparc64               randconfig-001-20240825   gcc-13.2.0
-sparc64               randconfig-002-20240824   gcc-13.2.0
-sparc64               randconfig-002-20240825   gcc-13.2.0
-um                               allmodconfig   gcc-13.3.0
-um                                allnoconfig   clang-17
-um                                allnoconfig   gcc-14.1.0
-um                               allyesconfig   gcc-13.3.0
-um                                  defconfig   gcc-14.1.0
-um                             i386_defconfig   gcc-14.1.0
-um                    randconfig-001-20240824   gcc-13.2.0
-um                    randconfig-001-20240825   gcc-13.2.0
-um                    randconfig-002-20240824   gcc-13.2.0
-um                    randconfig-002-20240825   gcc-13.2.0
-um                           x86_64_defconfig   gcc-14.1.0
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240824   clang-18
-x86_64       buildonly-randconfig-001-20240825   gcc-12
-x86_64       buildonly-randconfig-002-20240824   clang-18
-x86_64       buildonly-randconfig-002-20240825   gcc-12
-x86_64       buildonly-randconfig-003-20240824   clang-18
-x86_64       buildonly-randconfig-003-20240825   gcc-12
-x86_64       buildonly-randconfig-004-20240824   clang-18
-x86_64       buildonly-randconfig-004-20240825   gcc-12
-x86_64       buildonly-randconfig-005-20240824   clang-18
-x86_64       buildonly-randconfig-005-20240825   gcc-12
-x86_64       buildonly-randconfig-006-20240824   clang-18
-x86_64       buildonly-randconfig-006-20240825   gcc-12
-x86_64                              defconfig   clang-18
-x86_64                randconfig-001-20240824   clang-18
-x86_64                randconfig-001-20240825   gcc-12
-x86_64                randconfig-002-20240824   clang-18
-x86_64                randconfig-002-20240825   gcc-12
-x86_64                randconfig-003-20240824   clang-18
-x86_64                randconfig-003-20240825   gcc-12
-x86_64                randconfig-004-20240824   clang-18
-x86_64                randconfig-004-20240825   gcc-12
-x86_64                randconfig-005-20240824   clang-18
-x86_64                randconfig-005-20240825   gcc-12
-x86_64                randconfig-006-20240824   clang-18
-x86_64                randconfig-006-20240825   gcc-12
-x86_64                randconfig-011-20240824   clang-18
-x86_64                randconfig-011-20240825   gcc-12
-x86_64                randconfig-012-20240824   clang-18
-x86_64                randconfig-012-20240825   gcc-12
-x86_64                randconfig-013-20240824   clang-18
-x86_64                randconfig-013-20240825   gcc-12
-x86_64                randconfig-014-20240824   clang-18
-x86_64                randconfig-014-20240825   gcc-12
-x86_64                randconfig-015-20240824   clang-18
-x86_64                randconfig-015-20240825   gcc-12
-x86_64                randconfig-016-20240824   clang-18
-x86_64                randconfig-016-20240825   gcc-12
-x86_64                randconfig-071-20240824   clang-18
-x86_64                randconfig-071-20240825   gcc-12
-x86_64                randconfig-072-20240824   clang-18
-x86_64                randconfig-072-20240825   gcc-12
-x86_64                randconfig-073-20240824   clang-18
-x86_64                randconfig-073-20240825   gcc-12
-x86_64                randconfig-074-20240824   clang-18
-x86_64                randconfig-074-20240825   gcc-12
-x86_64                randconfig-075-20240824   clang-18
-x86_64                randconfig-075-20240825   gcc-12
-x86_64                randconfig-076-20240824   clang-18
-x86_64                randconfig-076-20240825   gcc-12
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-13.2.0
-xtensa                randconfig-001-20240824   gcc-13.2.0
-xtensa                randconfig-001-20240825   gcc-13.2.0
-xtensa                randconfig-002-20240824   gcc-13.2.0
-xtensa                randconfig-002-20240825   gcc-13.2.0
+---
+Yixun Lan (4):
+      dt-binding: pinctrl: spacemit: add documents for K1 SoC
+      pinctrl: spacemit: add support for SpacemiT K1 SoC
+      riscv: dts: spacemit: add pinctrl support for K1 SoC
+      riscv: dts: spacemit: add pinctrl property to uart0 in BPI-F3
 
+ .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      |  134 +++
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts    |    3 +
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi       |   19 +
+ arch/riscv/boot/dts/spacemit/k1.dtsi               |    5 +
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/spacemit/Kconfig                   |   17 +
+ drivers/pinctrl/spacemit/Makefile                  |    3 +
+ drivers/pinctrl/spacemit/pinctrl-k1.c              | 1012 ++++++++++++++++++++
+ drivers/pinctrl/spacemit/pinctrl-k1.h              |   36 +
+ include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h  |  161 ++++
+ 11 files changed, 1392 insertions(+)
+---
+base-commit: 5be63fc19fcaa4c236b307420483578a56986a37
+change-id: 20240708-02-k1-pinctrl-3a2b0ec13101
+prerequisite-change-id: 20240626-k1-01-basic-dt-1aa31eeebcd2:v5
+prerequisite-patch-id: 47dcf6861f7d434d25855b379e6d7ef4ce369c9c
+prerequisite-patch-id: 77787fe82911923aff15ccf565e8fa451538c3a6
+prerequisite-patch-id: b0bdb1742d96c5738f05262c3b0059102761390b
+prerequisite-patch-id: 3927d39d8d77e35d5bfe53d9950da574ff8f2054
+prerequisite-patch-id: a98039136a4796252a6029e474f03906f2541643
+prerequisite-patch-id: c95f6dc0547a2a63a76e3cba0cf5c623b212b4e6
+prerequisite-patch-id: 66e750e438ee959ddc2a6f0650814a2d8c989139
+prerequisite-patch-id: 29a0fd8c36c1a4340f0d0b68a4c34d2b8abfb1ab
+prerequisite-patch-id: 0bdfff661c33c380d1cf00a6c68688e05f88c0b3
+prerequisite-patch-id: 99f15718e0bfbb7ed1a96dfa19f35841b004dae9
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yixun Lan <dlan@gentoo.org>
+
 
