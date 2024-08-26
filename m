@@ -1,358 +1,258 @@
-Return-Path: <linux-gpio+bounces-9137-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9138-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7378095E7F5
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 07:37:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4E0C95E86D
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 08:21:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 987681C20F46
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 05:37:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 341031F214D7
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 06:21:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D33247407A;
-	Mon, 26 Aug 2024 05:37:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FE9D823DE;
+	Mon, 26 Aug 2024 06:21:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFywewTX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iagqMa6v"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EDE8C11;
-	Mon, 26 Aug 2024 05:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6F078C89
+	for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 06:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724650664; cv=none; b=GCqwyjvliPiJ2OX1Q1luGvkKR0X7pzt6PtLEC8TRT7DXBwaFxxXuZ7Y1Y8M9JZ/HPMGUt04MyV5C/o6s95dS8FmyTl1O3r7CPot+QPtMmO+KGdwSRSoZs1MuHwVBh5K8XNdrF5I4qU4nIrPENtHhPjKcuq5KtlxXu266+WRji1E=
+	t=1724653281; cv=none; b=KejUtBLjVy0LZcIl6RFE7Mxn+WyikhUsML7dJlKXCATo/BgUyU0DLp7WxLhsLpzbI+E0AGydJWmJlsquk/b1w8AL+X6Bm7K4juOA5+IIXRCcCacPRZwtC79rYVdyDD9BE+peS3st2muaQTEPagiIqz8QddUtNatfEwIUA87NrEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724650664; c=relaxed/simple;
-	bh=7o6ye5i/SsfL/3HvmhtG2xS2Nj6hXCUaPE+Z28dhZWk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uNlUzxJQBAxUj3U/2l6cmt1tq2XJJGkrAhHAAYs0afDNLGUY3ehMXny2nZzcBSOojnlyu7uTQfYGmEVohN8CckN0uHZwt8eHQORoUqCwH/0E4jL0YRswQJxs1guYxRGbyyEU7u/eMyhrJHCFWjPM8TFK1N9y0pX8aDvfcHbb9hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFywewTX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B0D0C32786;
-	Mon, 26 Aug 2024 05:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724650664;
-	bh=7o6ye5i/SsfL/3HvmhtG2xS2Nj6hXCUaPE+Z28dhZWk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YFywewTXBuuiUfvFC+83I8C44uItl64c5ij70WWXTdYN1zHlBIPkRuapBsMhRpV7C
-	 hOYHxmxsQ5iysqsZxHeIxBjGKuduyGZobi30Up/2x90MK7768bkwLayCoc+ru14Fde
-	 hRNC31+0d9FPTxaRCzbmZhpB5oSk2tzZazevRz8c8KRpKF6IpgE6677zei37IPeuJ9
-	 5+WgnNfZKWqnvmtaw59LzpbdZdDs8jSA9d27cJbIWk4lOD8GzQn+A3n5i5y/gApmvi
-	 KsQrW5ff+1e2EYYaEF7lIQ1qhAJsK9DXVKxpgRJKicXT5ZTCvF29I5BpY9+QyEa4cx
-	 q75u3GlNsGxNg==
-Message-ID: <34a73de2-85b3-4a20-b2b4-6a72622d5abc@kernel.org>
-Date: Mon, 26 Aug 2024 07:37:34 +0200
+	s=arc-20240116; t=1724653281; c=relaxed/simple;
+	bh=Zt0viKBYBy3gsNexchxhAjrEq07N727RspPAJu7OtsY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=M/QUsUZb/J7UUerFo7G4JQhrkhmNV9zz2oDdErMQ07FrD8B2mWAgAWtsK0sTbnF0PZ/LeZntHW2T89lasJsc6bcKOvdU2glBtSEDZr8xwHSr4ZauJsxZLvrUzanGOT18QZchSWRagA0zfGlaGgdNPksT5ZchljgE9DI3FkzWBrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iagqMa6v; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5becc379f3fso4246007a12.3
+        for <linux-gpio@vger.kernel.org>; Sun, 25 Aug 2024 23:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1724653278; x=1725258078; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fB2CwcuX6Z1CCaY5iMgx/R66TH1mMnIMHICV7TYykXE=;
+        b=iagqMa6v4CE2AYT217cvxxqHsipaqMT8h8omP4T9IA/AZ/InVdazeOtUs0lCB9jUWT
+         1Vdtzc8GcqRVYw2OLqFfeQntKEJbkFj7J7loJOCTvfOJGsl1ot1zq1ysaUuILJo7TxjC
+         WfRqSflwUDp2VoCXortLPJtzj0JZkXxNdt3Pxi60eHvEoy54fBO1tO1h3+1/gywFOSUS
+         0ZSjV4D98ZpTfl+/SdupBGu+Fov+WZpUyVy5YuJQN0nIYJqwB/CQ3zDzEjHp2a31YdNg
+         FJuI9IM2aRcr8Z/tS4X5bvBfOvMvv1wIh+/EZNAPjK0OdKtIdZr8+Rqr9QSHaP1jzSe3
+         iMEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724653278; x=1725258078;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fB2CwcuX6Z1CCaY5iMgx/R66TH1mMnIMHICV7TYykXE=;
+        b=FRP+qKPIlJI8T7Jgat6LvhS5HoRn17po4XIDonj4CSTENA0aIDvzMj/0JkUqdkbrB2
+         CODDyMEKCExpkt+TzNUIRN29SvX7o8dTVu32N6R/VeZ74aKNV+kcNl5kG7ifWFU8/YlO
+         8ockwG72PUrU0aw2O5Lktvb2PhC+Ggdu9kOqAZ3l84/QIB22oJGkASiZQKitP/ZZMrdU
+         k0KAoEVmEFM3Q9pYyJEN0UrPgdLoKM9H3MY15odHV2c1ItskUahrYGtoD+oK7nhnlqIR
+         jdeh3lnmmmcRZN30Ap4RFrIS7hpwYs3IlhfqcOhEOm9PmIGoppeE07N+ZuiP22lklrd0
+         2r1g==
+X-Forwarded-Encrypted: i=1; AJvYcCU7peGLcBROmAE3dXFf8GpmDgzCq+8D2QPy7N++4zhDaMvbdjnvMmbbwqcJw53hhGIUX1ViXMJisOuV@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYmscIS+K4/xJ/kC07nkx6FVRBIaagguKSVswVa47Ugfw5mSNK
+	DQV5GHIrZZH8rWZwRHLRenw0ERtrgP648gj/TE90ZpNVyaP4RvdLmqi1eEJT7x8=
+X-Google-Smtp-Source: AGHT+IFq/GdaLk62XwsiYr5/C05c0Lw6voqcTxYoq9s6d6E99IxrIwLr9lp5cQHlRsgyGExSiVIxYQ==
+X-Received: by 2002:a05:6402:2549:b0:5a1:83c4:c5a8 with SMTP id 4fb4d7f45d1cf-5c08916a807mr4618588a12.14.1724653277766;
+        Sun, 25 Aug 2024 23:21:17 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c04a4c9322sm5147752a12.60.2024.08.25.23.21.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Aug 2024 23:21:17 -0700 (PDT)
+Date: Mon, 26 Aug 2024 09:21:11 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Ye Zhang <ye.zhang@rock-chips.com>,
+	linus.walleij@linaro.org, brgl@bgdev.pl, heiko@sntech.de,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	tao.huang@rock-chips.com, finley.xiao@rock-chips.com,
+	tim.chen@rock-chips.com, elaine.zhang@rock-chips.com,
+	Ye Zhang <ye.zhang@rock-chips.com>
+Subject: Re: [PATCH v1 1/5] gpio: rockchip: support acpi
+Message-ID: <1cbf0ddf-d438-41e0-8344-9e63d4cd1a60@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] dt-binding: pinctrl: spacemit: add documents for
- K1 SoC
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Conor Dooley <conor@kernel.org>, Yangyu Chen <cyy@cyyself.name>,
- Jesse Taube <jesse@rivosinc.com>, Jisheng Zhang <jszhang@kernel.org>,
- Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>,
- Meng Zhang <zhangmeng.kevin@spacemit.com>, Meng Zhang
- <kevin.z.m@hotmail.com>, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <20240825-02-k1-pinctrl-v2-0-ddd38a345d12@gentoo.org>
- <20240825-02-k1-pinctrl-v2-1-ddd38a345d12@gentoo.org>
- <d9a925da-2381-4203-a3b6-4cb892039d23@kernel.org>
- <66cbdc2a.050a0220.2d7994.f671SMTPIN_ADDED_BROKEN@mx.google.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <66cbdc2a.050a0220.2d7994.f671SMTPIN_ADDED_BROKEN@mx.google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240815071651.3645949-2-ye.zhang@rock-chips.com>
 
-On 26/08/2024 03:36, Yixun Lan wrote:
-> Hi Krzysztof: 
-> 
-> On 15:48 Sun 25 Aug     , Krzysztof Kozlowski wrote:
->> On 25/08/2024 15:10, Yixun Lan wrote:
->>> Add dt-binding for the pinctrl driver of SpacemiT's K1 SoC.
->>
->>
->> Please use subject prefixes matching the subsystem. You can get them for
->> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
->> your patch is touching. For bindings, the preferred subjects are
->> explained here:
->> https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
->>
->> It's "dt-bindings:"
-> Ok, will fix in next version
-> 
->>
->>>
->>> Two vendor specific properties are introduced here, As the pinctrl
->>> has dedicated slew rate enable control - bit[7], so we have
->>> spacemit,slew-rate-{enable,disable} for this. For the same reason,
->>> creating spacemit,strong-pull-up for the strong pull up control.
->>
->> Huh, no, use generic properties. More on that below
->>
-> see my reply below
-> 
->>
->>
->>>
->>> Signed-off-by: Yixun Lan <dlan@gentoo.org>
->>> ---
->>>  .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      | 134 +++++++++++++++++
->>>  include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h  | 161 +++++++++++++++++++++
->>>  2 files changed, 295 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
->>> new file mode 100644
->>> index 0000000000000..8adfc5ebbce37
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
->>> @@ -0,0 +1,134 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/pinctrl/spacemit,k1-pinctrl.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: SpacemiT K1 SoC Pin Controller
->>> +
->>> +maintainers:
->>> +  - Yixun Lan <dlan@gentoo.org>
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: spacemit,k1-pinctrl
->>> +
->>> +  reg:
->>> +    items:
->>> +      - description: pinctrl io memory base
->>> +
->>> +patternProperties:
->>> +  '-cfg$':
->>> +    type: object
->>> +    description: |
->>
->> Do not need '|' unless you need to preserve formatting.
->>
-> Ok
->>> +      A pinctrl node should contain at least one subnode representing the
->>> +      pinctrl groups available on the machine.
->>> +
->>> +    additionalProperties: false
->>
->> Keep it before description.
-> Ok
->>
->>> +
->>> +    patternProperties:
->>> +      '-pins$':
->>> +        type: object
->>> +        description: |
->>> +          Each subnode will list the pins it needs, and how they should
->>> +          be configured, with regard to muxer configuration, bias, input
->>> +          enable/disable, input schmitt trigger, slew-rate enable/disable,
->>> +          slew-rate, drive strength, power source.
->>> +        $ref: /schemas/pinctrl/pincfg-node.yaml
->>> +
->>> +        allOf:
->>> +          - $ref: pincfg-node.yaml#
->>> +          - $ref: pinmux-node.yaml#
->>
->> You are duplicating refs.
-> ok, will fix it
->>
->>> +
->>> +        properties:
->>> +          pinmux:
->>> +            description: |
->>> +              The list of GPIOs and their mux settings that properties in the
->>> +              node apply to. This should be set using the K1_PADCONF macro to
->>> +              construct the value.
->>> +            $ref: /schemas/pinctrl/pinmux-node.yaml#/properties/pinmux
->>
->> Hm why you need the ref?
->>
-> will drop it
->>> +
->>> +          bias-disable: true
->>> +
->>> +          bias-pull-up: true
->>> +
->>> +          bias-pull-down: true
->>> +
->>> +          drive-strength-microamp:
->>> +            description: |
->>> +              typical current when output high level, but in mA.
->>> +              1.8V output: 11, 21, 32, 42 (mA)
->>> +              3.3V output: 7, 10, 13, 16, 19, 23, 26, 29 (mA)
->>> +            $ref: /schemas/types.yaml#/definitions/uint32
->>> +
->>> +          input-schmitt:
->>> +            description: |
->>> +              typical threshold for schmitt trigger.
->>> +              0: buffer mode
->>> +              1: trigger mode
->>> +              2, 3: trigger mode
->>> +            $ref: /schemas/types.yaml#/definitions/uint32
->>> +            enum: [0, 1, 2, 3]
->>> +
->>> +          power-source:
->>> +            description: external power supplies at 1.8v or 3.3v.
->>> +            enum: [ 1800, 3300 ]
->>> +
->>> +          slew-rate:
->>> +            description: |
->>> +              slew rate for output buffer
->>> +              0, 1: Slow speed
->>
->> Hm? Surprising, 0 is slow speed?
->>
-> from docs, section 3.3.2.2 MFPR Register Description
-> 0, 1 are same, both for slow speed
-> https://developer.spacemit.com/documentation?token=An1vwTwKaigaXRkYfwmcznTXned
+Hi Ye,
 
-Don't store here register value.
+kernel test robot noticed the following build warnings:
 
-> 
->>> +              2: Medium speed
->>> +              3: Fast speed
->>> +            $ref: /schemas/types.yaml#/definitions/uint32
->>> +            enum: [0, 1, 2, 3]
->>> +
->>> +          spacemit,slew-rate-enable:
->>> +            description: enable slew rate.
->>
->> The presence of slew-rate enables it, doesn't it?
->>
-> yes, this should work, I will take this approach, thanks
-> 
->>> +            type: boolean
->>> +
->>> +          spacemit,slew-rate-disable:
->>> +            description: disable slew rate.
->>> +            type: boolean
->>
->> Just use slew-rate, 0 disable, some value to match real slew-rate.
->>
-> sounds good to me, since 0, 1 indicate same meaning, can re-use 0 for
-> disabling slew rate.
-> 
->>> +
->>> +          spacemit,strong-pull-up:
->>> +            description: enable strong pull up.
->>
->> Do not duplicate the property name in description. You did not say
->> anything useful here. What is "strong"? bias-pull-up takes also an argument.
->>
-> there is a dedicated strong pull bit[3] for I2C, SD card kinds of pad
-> I don't know how 'strong' it is if in ohms, will see if can get
-> more info on this (may expand the description)
-> 
-> I think using 'bias-pull-up' property with argument should also work,
-> but it occur to me it's more intuitive to introduce a property here, which
-> reflect the underlying hardware functionality. this is similar to starfive's jh7100
-> bindings/pinctrl/starfive,jh7100-pinctrl.yaml:154
-> (refer to exist code doesn't mean always correct, so I need advice here)
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-No, avoid introducing properties which duplicate existing generic ones.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ye-Zhang/gpio-rockchip-support-acpi/20240815-154340
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
+patch link:    https://lore.kernel.org/r/20240815071651.3645949-2-ye.zhang%40rock-chips.com
+patch subject: [PATCH v1 1/5] gpio: rockchip: support acpi
+config: arc-randconfig-r073-20240824 (https://download.01.org/0day-ci/archive/20240824/202408241538.j3g0NqRa-lkp@intel.com/config)
+compiler: arc-elf-gcc (GCC) 13.2.0
 
-Same story was with qualcomm and it was possible to use specific value.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202408241538.j3g0NqRa-lkp@intel.com/
 
-> 
-> I will keep this property unless there is objection, please let me know
-> 
->>> +            type: boolean
->>> +
->>> +        required:
->>> +          - pinmux
->>> +
->>> +        additionalProperties: false
->>
->> This goes up, before description.
->>
-> Ok
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/pinctrl/spacemit,k1-pinctrl.h>
->>> +
->>> +    soc {
->>> +        #address-cells = <2>;
->>> +        #size-cells = <2>;
->>> +
->>> +        pinctrl@d401e000 {
->>> +            compatible = "spacemit,k1-pinctrl";
->>> +            reg = <0x0 0xd401e000 0x0 0x400>;
->>> +            #pinctrl-cells = <2>;
->>> +            #gpio-range-cells = <3>;
->>
->> This wasn't ever tested... :(
->> ...
-> will drop it
+smatch warnings:
+drivers/gpio/gpio-rockchip.c:797 rockchip_gpio_probe() warn: can 'cfg' even be NULL?
 
-Test your patches instead.
+vim +/cfg +797 drivers/gpio/gpio-rockchip.c
 
+936ee2675eee1f Jianqun Xu     2021-08-16  699  static int rockchip_gpio_probe(struct platform_device *pdev)
+936ee2675eee1f Jianqun Xu     2021-08-16  700  {
+936ee2675eee1f Jianqun Xu     2021-08-16  701  	struct device *dev = &pdev->dev;
+936ee2675eee1f Jianqun Xu     2021-08-16  702  	struct pinctrl_dev *pctldev = NULL;
+936ee2675eee1f Jianqun Xu     2021-08-16  703  	struct rockchip_pin_bank *bank = NULL;
+371a1b26dd7c7c Ye Zhang       2024-08-15  704  	int bank_id = 0;
+371a1b26dd7c7c Ye Zhang       2024-08-15  705  	int ret;
+936ee2675eee1f Jianqun Xu     2021-08-16  706  
+371a1b26dd7c7c Ye Zhang       2024-08-15  707  	bank_id = rockchip_gpio_acpi_get_bank_id(dev);
+371a1b26dd7c7c Ye Zhang       2024-08-15  708  	if (bank_id < 0) {
+371a1b26dd7c7c Ye Zhang       2024-08-15  709  		bank_id = rockchip_gpio_of_get_bank_id(dev);
+371a1b26dd7c7c Ye Zhang       2024-08-15  710  		if (bank_id < 0)
+371a1b26dd7c7c Ye Zhang       2024-08-15  711  			return bank_id;
+371a1b26dd7c7c Ye Zhang       2024-08-15  712  	}
+371a1b26dd7c7c Ye Zhang       2024-08-15  713  
+371a1b26dd7c7c Ye Zhang       2024-08-15  714  	if (!ACPI_COMPANION(dev)) {
+371a1b26dd7c7c Ye Zhang       2024-08-15  715  		struct device_node *pctlnp = of_get_parent(dev->of_node);
+936ee2675eee1f Jianqun Xu     2021-08-16  716  
+936ee2675eee1f Jianqun Xu     2021-08-16  717  		pctldev = of_pinctrl_get(pctlnp);
+371a1b26dd7c7c Ye Zhang       2024-08-15  718  		of_node_put(pctlnp);
+936ee2675eee1f Jianqun Xu     2021-08-16  719  		if (!pctldev)
+936ee2675eee1f Jianqun Xu     2021-08-16  720  			return -EPROBE_DEFER;
+936ee2675eee1f Jianqun Xu     2021-08-16  721  
+371a1b26dd7c7c Ye Zhang       2024-08-15  722  		bank = rockchip_gpio_find_bank(pctldev, bank_id);
+371a1b26dd7c7c Ye Zhang       2024-08-15  723  		if (!bank)
+371a1b26dd7c7c Ye Zhang       2024-08-15  724  			return -ENODEV;
+371a1b26dd7c7c Ye Zhang       2024-08-15  725  	}
+936ee2675eee1f Jianqun Xu     2021-08-16  726  
+371a1b26dd7c7c Ye Zhang       2024-08-15  727  	if (!bank) {
+371a1b26dd7c7c Ye Zhang       2024-08-15  728  		bank = devm_kzalloc(dev, sizeof(*bank), GFP_KERNEL);
+936ee2675eee1f Jianqun Xu     2021-08-16  729  		if (!bank)
+371a1b26dd7c7c Ye Zhang       2024-08-15  730  			return -ENOMEM;
+371a1b26dd7c7c Ye Zhang       2024-08-15  731  	}
+936ee2675eee1f Jianqun Xu     2021-08-16  732  
+371a1b26dd7c7c Ye Zhang       2024-08-15  733  	bank->bank_num = bank_id;
+936ee2675eee1f Jianqun Xu     2021-08-16  734  	bank->dev = dev;
+371a1b26dd7c7c Ye Zhang       2024-08-15  735  
+371a1b26dd7c7c Ye Zhang       2024-08-15  736  	bank->reg_base = devm_platform_ioremap_resource(pdev, 0);
+371a1b26dd7c7c Ye Zhang       2024-08-15  737  	if (IS_ERR(bank->reg_base))
+371a1b26dd7c7c Ye Zhang       2024-08-15  738  		return PTR_ERR(bank->reg_base);
+371a1b26dd7c7c Ye Zhang       2024-08-15  739  
+371a1b26dd7c7c Ye Zhang       2024-08-15  740  	bank->irq = platform_get_irq(pdev, 0);
+371a1b26dd7c7c Ye Zhang       2024-08-15  741  	if (bank->irq < 0)
+371a1b26dd7c7c Ye Zhang       2024-08-15  742  		return bank->irq;
+936ee2675eee1f Jianqun Xu     2021-08-16  743  
+936ee2675eee1f Jianqun Xu     2021-08-16  744  	raw_spin_lock_init(&bank->slock);
+936ee2675eee1f Jianqun Xu     2021-08-16  745  
+371a1b26dd7c7c Ye Zhang       2024-08-15  746  	if (!ACPI_COMPANION(dev)) {
+371a1b26dd7c7c Ye Zhang       2024-08-15  747  		bank->clk = devm_clk_get(dev, "bus");
+371a1b26dd7c7c Ye Zhang       2024-08-15  748  		if (IS_ERR(bank->clk)) {
+371a1b26dd7c7c Ye Zhang       2024-08-15  749  			bank->clk = of_clk_get(dev->of_node, 0);
+371a1b26dd7c7c Ye Zhang       2024-08-15  750  			if (IS_ERR(bank->clk)) {
+371a1b26dd7c7c Ye Zhang       2024-08-15  751  				dev_err(dev, "fail to get apb clock\n");
+371a1b26dd7c7c Ye Zhang       2024-08-15  752  				return PTR_ERR(bank->clk);
+371a1b26dd7c7c Ye Zhang       2024-08-15  753  			}
+371a1b26dd7c7c Ye Zhang       2024-08-15  754  		}
+371a1b26dd7c7c Ye Zhang       2024-08-15  755  
+371a1b26dd7c7c Ye Zhang       2024-08-15  756  		bank->db_clk = devm_clk_get(dev, "db");
+371a1b26dd7c7c Ye Zhang       2024-08-15  757  		if (IS_ERR(bank->db_clk)) {
+371a1b26dd7c7c Ye Zhang       2024-08-15  758  			bank->db_clk = of_clk_get(dev->of_node, 1);
+371a1b26dd7c7c Ye Zhang       2024-08-15  759  			if (IS_ERR(bank->db_clk))
+371a1b26dd7c7c Ye Zhang       2024-08-15  760  				bank->db_clk = NULL;
+371a1b26dd7c7c Ye Zhang       2024-08-15  761  		}
+371a1b26dd7c7c Ye Zhang       2024-08-15  762  	}
+371a1b26dd7c7c Ye Zhang       2024-08-15  763  
+371a1b26dd7c7c Ye Zhang       2024-08-15  764  	clk_prepare_enable(bank->clk);
+371a1b26dd7c7c Ye Zhang       2024-08-15  765  	clk_prepare_enable(bank->db_clk);
+371a1b26dd7c7c Ye Zhang       2024-08-15  766  
+371a1b26dd7c7c Ye Zhang       2024-08-15  767  	rockchip_gpio_get_ver(bank);
+936ee2675eee1f Jianqun Xu     2021-08-16  768  
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  769  	/*
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  770  	 * Prevent clashes with a deferred output setting
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  771  	 * being added right at this moment.
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  772  	 */
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  773  	mutex_lock(&bank->deferred_lock);
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  774  
+936ee2675eee1f Jianqun Xu     2021-08-16  775  	ret = rockchip_gpiolib_register(bank);
+936ee2675eee1f Jianqun Xu     2021-08-16  776  	if (ret) {
+371a1b26dd7c7c Ye Zhang       2024-08-15  777  		dev_err(bank->dev, "Failed to register gpio %d\n", ret);
+371a1b26dd7c7c Ye Zhang       2024-08-15  778  		goto err_unlock;
+371a1b26dd7c7c Ye Zhang       2024-08-15  779  	}
+371a1b26dd7c7c Ye Zhang       2024-08-15  780  
+371a1b26dd7c7c Ye Zhang       2024-08-15  781  	if (!device_property_read_bool(bank->dev, "gpio-ranges") && pctldev) {
+371a1b26dd7c7c Ye Zhang       2024-08-15  782  		struct gpio_chip *gc = &bank->gpio_chip;
+371a1b26dd7c7c Ye Zhang       2024-08-15  783  
+371a1b26dd7c7c Ye Zhang       2024-08-15  784  		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0,
+371a1b26dd7c7c Ye Zhang       2024-08-15  785  					     gc->base, gc->ngpio);
+371a1b26dd7c7c Ye Zhang       2024-08-15  786  		if (ret) {
+371a1b26dd7c7c Ye Zhang       2024-08-15  787  			dev_err(bank->dev, "Failed to add pin range\n");
+371a1b26dd7c7c Ye Zhang       2024-08-15  788  			goto err_unlock;
+371a1b26dd7c7c Ye Zhang       2024-08-15  789  		}
+936ee2675eee1f Jianqun Xu     2021-08-16  790  	}
+936ee2675eee1f Jianqun Xu     2021-08-16  791  
+8ce5ef64546850 Caleb Connolly 2022-03-28  792  	while (!list_empty(&bank->deferred_pins)) {
+371a1b26dd7c7c Ye Zhang       2024-08-15  793  		struct rockchip_pin_deferred *cfg;
+371a1b26dd7c7c Ye Zhang       2024-08-15  794  
+8ce5ef64546850 Caleb Connolly 2022-03-28  795  		cfg = list_first_entry(&bank->deferred_pins,
+8ce5ef64546850 Caleb Connolly 2022-03-28  796  				       struct rockchip_pin_deferred, head);
+371a1b26dd7c7c Ye Zhang       2024-08-15 @797  		if (!cfg)
+371a1b26dd7c7c Ye Zhang       2024-08-15  798  			break;
 
+The patch adds a NULL check here, but list_first_entry() can never return NULL.
 
-Best regards,
-Krzysztof
+371a1b26dd7c7c Ye Zhang       2024-08-15  799  
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  800  		list_del(&cfg->head);
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  801  
+8ce5ef64546850 Caleb Connolly 2022-03-28  802  		switch (cfg->param) {
+8ce5ef64546850 Caleb Connolly 2022-03-28  803  		case PIN_CONFIG_OUTPUT:
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  804  			ret = rockchip_gpio_direction_output(&bank->gpio_chip, cfg->pin, cfg->arg);
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  805  			if (ret)
+8ce5ef64546850 Caleb Connolly 2022-03-28  806  				dev_warn(dev, "setting output pin %u to %u failed\n", cfg->pin,
+8ce5ef64546850 Caleb Connolly 2022-03-28  807  					 cfg->arg);
+8ce5ef64546850 Caleb Connolly 2022-03-28  808  			break;
+7ff11357810fd1 Caleb Connolly 2022-03-28  809  		case PIN_CONFIG_INPUT_ENABLE:
+7ff11357810fd1 Caleb Connolly 2022-03-28  810  			ret = rockchip_gpio_direction_input(&bank->gpio_chip, cfg->pin);
+7ff11357810fd1 Caleb Connolly 2022-03-28  811  			if (ret)
+7ff11357810fd1 Caleb Connolly 2022-03-28  812  				dev_warn(dev, "setting input pin %u failed\n", cfg->pin);
+7ff11357810fd1 Caleb Connolly 2022-03-28  813  			break;
+8ce5ef64546850 Caleb Connolly 2022-03-28  814  		default:
+8ce5ef64546850 Caleb Connolly 2022-03-28  815  			dev_warn(dev, "unknown deferred config param %d\n", cfg->param);
+8ce5ef64546850 Caleb Connolly 2022-03-28  816  			break;
+8ce5ef64546850 Caleb Connolly 2022-03-28  817  		}
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  818  		kfree(cfg);
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  819  	}
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  820  
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  821  	mutex_unlock(&bank->deferred_lock);
+59dd178e1d7cb6 Heiko Stuebner 2021-09-14  822  
+936ee2675eee1f Jianqun Xu     2021-08-16  823  	platform_set_drvdata(pdev, bank);
+371a1b26dd7c7c Ye Zhang       2024-08-15  824  	dev_info(dev, "probed %pfw\n", dev_fwnode(dev));
+936ee2675eee1f Jianqun Xu     2021-08-16  825  
+936ee2675eee1f Jianqun Xu     2021-08-16  826  	return 0;
+371a1b26dd7c7c Ye Zhang       2024-08-15  827  err_unlock:
+371a1b26dd7c7c Ye Zhang       2024-08-15  828  	mutex_unlock(&bank->deferred_lock);
+371a1b26dd7c7c Ye Zhang       2024-08-15  829  	clk_disable_unprepare(bank->clk);
+371a1b26dd7c7c Ye Zhang       2024-08-15  830  	clk_disable_unprepare(bank->db_clk);
+371a1b26dd7c7c Ye Zhang       2024-08-15  831  
+371a1b26dd7c7c Ye Zhang       2024-08-15  832  	return ret;
+936ee2675eee1f Jianqun Xu     2021-08-16  833  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 
