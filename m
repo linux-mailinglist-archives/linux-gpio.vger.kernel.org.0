@@ -1,258 +1,310 @@
-Return-Path: <linux-gpio+bounces-9138-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9139-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4E0C95E86D
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 08:21:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A267895E8F6
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 08:34:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 341031F214D7
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 06:21:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 292C61F22B01
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 06:34:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FE9D823DE;
-	Mon, 26 Aug 2024 06:21:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86E2C13D29A;
+	Mon, 26 Aug 2024 06:30:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iagqMa6v"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h6nEhi2V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6F078C89
-	for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 06:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C28126F0A
+	for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 06:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724653281; cv=none; b=KejUtBLjVy0LZcIl6RFE7Mxn+WyikhUsML7dJlKXCATo/BgUyU0DLp7WxLhsLpzbI+E0AGydJWmJlsquk/b1w8AL+X6Bm7K4juOA5+IIXRCcCacPRZwtC79rYVdyDD9BE+peS3st2muaQTEPagiIqz8QddUtNatfEwIUA87NrEw=
+	t=1724653856; cv=none; b=B4et5v+yJnVwhS8ejok6oI/WIwjl6JgwkS1Pz0A1pvks8OU7e+WGY/KTkLgQRl7nZxnFUQC5IpRcd4e7jM18f2yVJntvsIgTdTyLJPrfsL4pPmDCuJy/BUg3LFT3Oi6JV1PPlFHSl5QIWrwms8bbkMH0Uq6C/K4Xn5qrI8jzIWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724653281; c=relaxed/simple;
-	bh=Zt0viKBYBy3gsNexchxhAjrEq07N727RspPAJu7OtsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=M/QUsUZb/J7UUerFo7G4JQhrkhmNV9zz2oDdErMQ07FrD8B2mWAgAWtsK0sTbnF0PZ/LeZntHW2T89lasJsc6bcKOvdU2glBtSEDZr8xwHSr4ZauJsxZLvrUzanGOT18QZchSWRagA0zfGlaGgdNPksT5ZchljgE9DI3FkzWBrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iagqMa6v; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5becc379f3fso4246007a12.3
-        for <linux-gpio@vger.kernel.org>; Sun, 25 Aug 2024 23:21:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724653278; x=1725258078; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fB2CwcuX6Z1CCaY5iMgx/R66TH1mMnIMHICV7TYykXE=;
-        b=iagqMa6v4CE2AYT217cvxxqHsipaqMT8h8omP4T9IA/AZ/InVdazeOtUs0lCB9jUWT
-         1Vdtzc8GcqRVYw2OLqFfeQntKEJbkFj7J7loJOCTvfOJGsl1ot1zq1ysaUuILJo7TxjC
-         WfRqSflwUDp2VoCXortLPJtzj0JZkXxNdt3Pxi60eHvEoy54fBO1tO1h3+1/gywFOSUS
-         0ZSjV4D98ZpTfl+/SdupBGu+Fov+WZpUyVy5YuJQN0nIYJqwB/CQ3zDzEjHp2a31YdNg
-         FJuI9IM2aRcr8Z/tS4X5bvBfOvMvv1wIh+/EZNAPjK0OdKtIdZr8+Rqr9QSHaP1jzSe3
-         iMEw==
+	s=arc-20240116; t=1724653856; c=relaxed/simple;
+	bh=h5ZFt0JePyZg+K4l+Qy3R/qbSbgG77yDQBvoSy7r1Rk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FKR6eVqkUMjpMjrlboUbC/D671HR0bx9EPszZXCgsCgDAsFX2Hy8VxM8CQQ9croRb/okOe+Q5iieYsz/iq8hDBuTjIqP8nEjzFiByPIpF6r7h2tcDHImZlUdCBqy9wSgbCcTHZrrFWQrCasr6j0W13KOoj2G0G1/vTs9eQqGXCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h6nEhi2V; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724653853;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jJFTNQ6Wct6NFpa/rz2wXYP7UMNXrnzBHL4pGlquRbc=;
+	b=h6nEhi2V8XtR3k301i9W9zhaYCClTSA+B+i1idXbwAm7CZ2bn+uF0zdHV/BSGMtewN+4XQ
+	+bQa+ia9phd9EJZH5kkESO7hlSeHE569U+3aR0aLx6iGDYhUziXAZ+4EUxRzDagWMfQRNP
+	BZWOVZkBNmjrBd5wwvKutV5ZAeZkksw=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-331-Aw7PsO19NQGBPuCW7wWaxQ-1; Mon, 26 Aug 2024 02:30:31 -0400
+X-MC-Unique: Aw7PsO19NQGBPuCW7wWaxQ-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6bf7bb58632so49211196d6.2
+        for <linux-gpio@vger.kernel.org>; Sun, 25 Aug 2024 23:30:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724653278; x=1725258078;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fB2CwcuX6Z1CCaY5iMgx/R66TH1mMnIMHICV7TYykXE=;
-        b=FRP+qKPIlJI8T7Jgat6LvhS5HoRn17po4XIDonj4CSTENA0aIDvzMj/0JkUqdkbrB2
-         CODDyMEKCExpkt+TzNUIRN29SvX7o8dTVu32N6R/VeZ74aKNV+kcNl5kG7ifWFU8/YlO
-         8ockwG72PUrU0aw2O5Lktvb2PhC+Ggdu9kOqAZ3l84/QIB22oJGkASiZQKitP/ZZMrdU
-         k0KAoEVmEFM3Q9pYyJEN0UrPgdLoKM9H3MY15odHV2c1ItskUahrYGtoD+oK7nhnlqIR
-         jdeh3lnmmmcRZN30Ap4RFrIS7hpwYs3IlhfqcOhEOm9PmIGoppeE07N+ZuiP22lklrd0
-         2r1g==
-X-Forwarded-Encrypted: i=1; AJvYcCU7peGLcBROmAE3dXFf8GpmDgzCq+8D2QPy7N++4zhDaMvbdjnvMmbbwqcJw53hhGIUX1ViXMJisOuV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYmscIS+K4/xJ/kC07nkx6FVRBIaagguKSVswVa47Ugfw5mSNK
-	DQV5GHIrZZH8rWZwRHLRenw0ERtrgP648gj/TE90ZpNVyaP4RvdLmqi1eEJT7x8=
-X-Google-Smtp-Source: AGHT+IFq/GdaLk62XwsiYr5/C05c0Lw6voqcTxYoq9s6d6E99IxrIwLr9lp5cQHlRsgyGExSiVIxYQ==
-X-Received: by 2002:a05:6402:2549:b0:5a1:83c4:c5a8 with SMTP id 4fb4d7f45d1cf-5c08916a807mr4618588a12.14.1724653277766;
-        Sun, 25 Aug 2024 23:21:17 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c04a4c9322sm5147752a12.60.2024.08.25.23.21.16
+        d=1e100.net; s=20230601; t=1724653831; x=1725258631;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jJFTNQ6Wct6NFpa/rz2wXYP7UMNXrnzBHL4pGlquRbc=;
+        b=vJhKyBj9nKBX8S4gVr+x2s/K8GhQO8cN9ZhXZXYmMYgx25GGzfIjz2fwSdEtThZvk7
+         kxhQxmHyEM0AqVpNQzZ/DokMVVrrSKQI4aOpGdcjaPsbyMOmLOUZZCR1+SUt1JhDMEYo
+         zW/sBtRbuWiqOSn5gUhX9aX0qwJISKG5tgZWC7TPYUUV3PT+ucHKkitbTaLImnYEdGuV
+         iQ8PqmfKQrtE9GPMx1T/HgOaYf59nU7JtLjp7Y7r3BSouVgnwNZXEU6R+ue0u0qw8Fzh
+         m8+WWnQZXjtFaNrj+hRJn7k+mcHvPk4jJorDEF6gPxXhGcJEYn+OTIrbAdLf9ySPbnhK
+         K7Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCVr1PXumaIVPN6K7T/5flCo8qCz0TyeKnXbT1pjgSyLeZ2YX6iL8MyKkYQSj2CQN3QCsxjJAaYrTm3E@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJnjACzUHgqqTPpU9jxZ3wpQ9M6M0FDGg26OkN6sPnksLlQ+tU
+	e0t/HsXKJ9oOi3OknEYPumJUAJjL/K1+i0WQEqaIQEYXsAL3R+Ilyz0OXLFwa/zb/BdRa+HHyyl
+	iDdIhynwE3l54bGyQ5RWfZ3y9tTp8lXfGmhVhecaLCh1lQXfi/wDndWIwYU0=
+X-Received: by 2002:a05:6214:3a87:b0:6c1:6b38:2fa4 with SMTP id 6a1803df08f44-6c16dc7ae95mr108606196d6.24.1724653831051;
+        Sun, 25 Aug 2024 23:30:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHjcrM+de6Fn6cHOIaSi480as1GF3hlSLum1vFYi4hcws7Awk5SxCY7Nx45ugpgCSJ72TftWg==
+X-Received: by 2002:a05:6214:3a87:b0:6c1:6b38:2fa4 with SMTP id 6a1803df08f44-6c16dc7ae95mr108605926d6.24.1724653830595;
+        Sun, 25 Aug 2024 23:30:30 -0700 (PDT)
+Received: from dhcp-64-164.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c162db0685sm43302446d6.101.2024.08.25.23.30.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Aug 2024 23:21:17 -0700 (PDT)
-Date: Mon, 26 Aug 2024 09:21:11 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Ye Zhang <ye.zhang@rock-chips.com>,
-	linus.walleij@linaro.org, brgl@bgdev.pl, heiko@sntech.de,
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	tao.huang@rock-chips.com, finley.xiao@rock-chips.com,
-	tim.chen@rock-chips.com, elaine.zhang@rock-chips.com,
-	Ye Zhang <ye.zhang@rock-chips.com>
-Subject: Re: [PATCH v1 1/5] gpio: rockchip: support acpi
-Message-ID: <1cbf0ddf-d438-41e0-8344-9e63d4cd1a60@stanley.mountain>
+        Sun, 25 Aug 2024 23:30:30 -0700 (PDT)
+Message-ID: <6e93c43e6e513559f0306085211245578c2c9d3f.camel@redhat.com>
+Subject: Re: [PATCH v3 6/9] ethernet: stmicro: Simplify PCI devres usage
+From: Philipp Stanner <pstanner@redhat.com>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>, Wu Hao
+ <hao.wu@intel.com>, Tom Rix <trix@redhat.com>, Moritz Fischer
+ <mdf@kernel.org>,  Xu Yilun <yilun.xu@intel.com>, Andy Shevchenko
+ <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,  Paolo
+ Abeni <pabeni@redhat.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Alvaro
+ Karsz <alvaro.karsz@solid-run.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ Eugenio =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>, Richard Cochran
+ <richardcochran@gmail.com>, Mark Brown <broonie@kernel.org>, David Lechner
+ <dlechner@baylibre.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
+ <u.kleine-koenig@pengutronix.de>, Damien Le Moal <dlemoal@kernel.org>, 
+ Hannes Reinecke <hare@suse.de>, Chaitanya Kulkarni <kch@nvidia.com>,
+ linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org,  linux-fpga@vger.kernel.org,
+ linux-gpio@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
+ virtualization@lists.linux.dev
+Date: Mon, 26 Aug 2024 08:30:23 +0200
+In-Reply-To: <6q4pcpyqqt6mhj422pfkgggvwu7jhweu5446y6prcjgjql6xeq@jztt7z4fr6rg>
+References: <20240822134744.44919-1-pstanner@redhat.com>
+	 <20240822134744.44919-7-pstanner@redhat.com>
+	 <6q4pcpyqqt6mhj422pfkgggvwu7jhweu5446y6prcjgjql6xeq@jztt7z4fr6rg>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240815071651.3645949-2-ye.zhang@rock-chips.com>
 
-Hi Ye,
+On Fri, 2024-08-23 at 12:29 +0300, Serge Semin wrote:
+> Hi Philipp
+>=20
+> On Thu, Aug 22, 2024 at 03:47:38PM +0200, Philipp Stanner wrote:
+> > stmicro uses PCI devres in the wrong way. Resources requested
+> > through pcim_* functions don't need to be cleaned up manually in
+> > the
+> > remove() callback or in the error unwind path of a probe()
+> > function.
+> >=20
+> > Moreover, there is an unnecessary loop which only requests and
+> > ioremaps
+> > BAR 0, but iterates over all BARs nevertheless.
+> >=20
+> > Furthermore, pcim_iomap_regions() and pcim_iomap_table() have been
+> > deprecated by the PCI subsystem in commit e354bb84a4c1 ("PCI:
+> > Deprecate
+> > pcim_iomap_table(), pcim_iomap_regions_request_all()").
+> >=20
+> > Replace these functions with pcim_iomap_region().
+> >=20
+> > Remove the unnecessary manual pcim_* cleanup calls.
+> >=20
+> > Remove the unnecessary loop over all BARs.
+> >=20
+> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+>=20
+> Thanks for the series. But please note the network subsystem
+> dev-process requires to submit the cleanup/feature changes on top of
+> the net-next tree:
+> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/
 
-kernel test robot noticed the following build warnings:
+That seems a policy I haven't seen so far; usually the assumption is
+that you branch out from Linus's master.
 
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Anyways, I of course am going to help with setting up something
+mergeable
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ye-Zhang/gpio-rockchip-support-acpi/20240815-154340
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
-patch link:    https://lore.kernel.org/r/20240815071651.3645949-2-ye.zhang%40rock-chips.com
-patch subject: [PATCH v1 1/5] gpio: rockchip: support acpi
-config: arc-randconfig-r073-20240824 (https://download.01.org/0day-ci/archive/20240824/202408241538.j3g0NqRa-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
+>=20
+> Just recently a Yanteng' (+cc) series
+> https://lore.kernel.org/netdev/cover.1723014611.git.siyanteng@loongson.cn=
+/
+> was merged in which significantly refactored the Loongson MAC driver.
+> Seeing your patch isn't based on these changes, there is a high
+> probability that the patch won't get cleanly applied onto the
+> net-next tree. So please either rebase your patch onto the net-next
+> tree, or at least merge in the Yanteng' series in your tree and
+> rebase the patch onto it and let's hope there have been no other
+> conflicting patches merged in into the net-next tree.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202408241538.j3g0NqRa-lkp@intel.com/
+I'll take a look into that, thx
 
-smatch warnings:
-drivers/gpio/gpio-rockchip.c:797 rockchip_gpio_probe() warn: can 'cfg' even be NULL?
 
-vim +/cfg +797 drivers/gpio/gpio-rockchip.c
+P.
 
-936ee2675eee1f Jianqun Xu     2021-08-16  699  static int rockchip_gpio_probe(struct platform_device *pdev)
-936ee2675eee1f Jianqun Xu     2021-08-16  700  {
-936ee2675eee1f Jianqun Xu     2021-08-16  701  	struct device *dev = &pdev->dev;
-936ee2675eee1f Jianqun Xu     2021-08-16  702  	struct pinctrl_dev *pctldev = NULL;
-936ee2675eee1f Jianqun Xu     2021-08-16  703  	struct rockchip_pin_bank *bank = NULL;
-371a1b26dd7c7c Ye Zhang       2024-08-15  704  	int bank_id = 0;
-371a1b26dd7c7c Ye Zhang       2024-08-15  705  	int ret;
-936ee2675eee1f Jianqun Xu     2021-08-16  706  
-371a1b26dd7c7c Ye Zhang       2024-08-15  707  	bank_id = rockchip_gpio_acpi_get_bank_id(dev);
-371a1b26dd7c7c Ye Zhang       2024-08-15  708  	if (bank_id < 0) {
-371a1b26dd7c7c Ye Zhang       2024-08-15  709  		bank_id = rockchip_gpio_of_get_bank_id(dev);
-371a1b26dd7c7c Ye Zhang       2024-08-15  710  		if (bank_id < 0)
-371a1b26dd7c7c Ye Zhang       2024-08-15  711  			return bank_id;
-371a1b26dd7c7c Ye Zhang       2024-08-15  712  	}
-371a1b26dd7c7c Ye Zhang       2024-08-15  713  
-371a1b26dd7c7c Ye Zhang       2024-08-15  714  	if (!ACPI_COMPANION(dev)) {
-371a1b26dd7c7c Ye Zhang       2024-08-15  715  		struct device_node *pctlnp = of_get_parent(dev->of_node);
-936ee2675eee1f Jianqun Xu     2021-08-16  716  
-936ee2675eee1f Jianqun Xu     2021-08-16  717  		pctldev = of_pinctrl_get(pctlnp);
-371a1b26dd7c7c Ye Zhang       2024-08-15  718  		of_node_put(pctlnp);
-936ee2675eee1f Jianqun Xu     2021-08-16  719  		if (!pctldev)
-936ee2675eee1f Jianqun Xu     2021-08-16  720  			return -EPROBE_DEFER;
-936ee2675eee1f Jianqun Xu     2021-08-16  721  
-371a1b26dd7c7c Ye Zhang       2024-08-15  722  		bank = rockchip_gpio_find_bank(pctldev, bank_id);
-371a1b26dd7c7c Ye Zhang       2024-08-15  723  		if (!bank)
-371a1b26dd7c7c Ye Zhang       2024-08-15  724  			return -ENODEV;
-371a1b26dd7c7c Ye Zhang       2024-08-15  725  	}
-936ee2675eee1f Jianqun Xu     2021-08-16  726  
-371a1b26dd7c7c Ye Zhang       2024-08-15  727  	if (!bank) {
-371a1b26dd7c7c Ye Zhang       2024-08-15  728  		bank = devm_kzalloc(dev, sizeof(*bank), GFP_KERNEL);
-936ee2675eee1f Jianqun Xu     2021-08-16  729  		if (!bank)
-371a1b26dd7c7c Ye Zhang       2024-08-15  730  			return -ENOMEM;
-371a1b26dd7c7c Ye Zhang       2024-08-15  731  	}
-936ee2675eee1f Jianqun Xu     2021-08-16  732  
-371a1b26dd7c7c Ye Zhang       2024-08-15  733  	bank->bank_num = bank_id;
-936ee2675eee1f Jianqun Xu     2021-08-16  734  	bank->dev = dev;
-371a1b26dd7c7c Ye Zhang       2024-08-15  735  
-371a1b26dd7c7c Ye Zhang       2024-08-15  736  	bank->reg_base = devm_platform_ioremap_resource(pdev, 0);
-371a1b26dd7c7c Ye Zhang       2024-08-15  737  	if (IS_ERR(bank->reg_base))
-371a1b26dd7c7c Ye Zhang       2024-08-15  738  		return PTR_ERR(bank->reg_base);
-371a1b26dd7c7c Ye Zhang       2024-08-15  739  
-371a1b26dd7c7c Ye Zhang       2024-08-15  740  	bank->irq = platform_get_irq(pdev, 0);
-371a1b26dd7c7c Ye Zhang       2024-08-15  741  	if (bank->irq < 0)
-371a1b26dd7c7c Ye Zhang       2024-08-15  742  		return bank->irq;
-936ee2675eee1f Jianqun Xu     2021-08-16  743  
-936ee2675eee1f Jianqun Xu     2021-08-16  744  	raw_spin_lock_init(&bank->slock);
-936ee2675eee1f Jianqun Xu     2021-08-16  745  
-371a1b26dd7c7c Ye Zhang       2024-08-15  746  	if (!ACPI_COMPANION(dev)) {
-371a1b26dd7c7c Ye Zhang       2024-08-15  747  		bank->clk = devm_clk_get(dev, "bus");
-371a1b26dd7c7c Ye Zhang       2024-08-15  748  		if (IS_ERR(bank->clk)) {
-371a1b26dd7c7c Ye Zhang       2024-08-15  749  			bank->clk = of_clk_get(dev->of_node, 0);
-371a1b26dd7c7c Ye Zhang       2024-08-15  750  			if (IS_ERR(bank->clk)) {
-371a1b26dd7c7c Ye Zhang       2024-08-15  751  				dev_err(dev, "fail to get apb clock\n");
-371a1b26dd7c7c Ye Zhang       2024-08-15  752  				return PTR_ERR(bank->clk);
-371a1b26dd7c7c Ye Zhang       2024-08-15  753  			}
-371a1b26dd7c7c Ye Zhang       2024-08-15  754  		}
-371a1b26dd7c7c Ye Zhang       2024-08-15  755  
-371a1b26dd7c7c Ye Zhang       2024-08-15  756  		bank->db_clk = devm_clk_get(dev, "db");
-371a1b26dd7c7c Ye Zhang       2024-08-15  757  		if (IS_ERR(bank->db_clk)) {
-371a1b26dd7c7c Ye Zhang       2024-08-15  758  			bank->db_clk = of_clk_get(dev->of_node, 1);
-371a1b26dd7c7c Ye Zhang       2024-08-15  759  			if (IS_ERR(bank->db_clk))
-371a1b26dd7c7c Ye Zhang       2024-08-15  760  				bank->db_clk = NULL;
-371a1b26dd7c7c Ye Zhang       2024-08-15  761  		}
-371a1b26dd7c7c Ye Zhang       2024-08-15  762  	}
-371a1b26dd7c7c Ye Zhang       2024-08-15  763  
-371a1b26dd7c7c Ye Zhang       2024-08-15  764  	clk_prepare_enable(bank->clk);
-371a1b26dd7c7c Ye Zhang       2024-08-15  765  	clk_prepare_enable(bank->db_clk);
-371a1b26dd7c7c Ye Zhang       2024-08-15  766  
-371a1b26dd7c7c Ye Zhang       2024-08-15  767  	rockchip_gpio_get_ver(bank);
-936ee2675eee1f Jianqun Xu     2021-08-16  768  
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  769  	/*
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  770  	 * Prevent clashes with a deferred output setting
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  771  	 * being added right at this moment.
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  772  	 */
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  773  	mutex_lock(&bank->deferred_lock);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  774  
-936ee2675eee1f Jianqun Xu     2021-08-16  775  	ret = rockchip_gpiolib_register(bank);
-936ee2675eee1f Jianqun Xu     2021-08-16  776  	if (ret) {
-371a1b26dd7c7c Ye Zhang       2024-08-15  777  		dev_err(bank->dev, "Failed to register gpio %d\n", ret);
-371a1b26dd7c7c Ye Zhang       2024-08-15  778  		goto err_unlock;
-371a1b26dd7c7c Ye Zhang       2024-08-15  779  	}
-371a1b26dd7c7c Ye Zhang       2024-08-15  780  
-371a1b26dd7c7c Ye Zhang       2024-08-15  781  	if (!device_property_read_bool(bank->dev, "gpio-ranges") && pctldev) {
-371a1b26dd7c7c Ye Zhang       2024-08-15  782  		struct gpio_chip *gc = &bank->gpio_chip;
-371a1b26dd7c7c Ye Zhang       2024-08-15  783  
-371a1b26dd7c7c Ye Zhang       2024-08-15  784  		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0,
-371a1b26dd7c7c Ye Zhang       2024-08-15  785  					     gc->base, gc->ngpio);
-371a1b26dd7c7c Ye Zhang       2024-08-15  786  		if (ret) {
-371a1b26dd7c7c Ye Zhang       2024-08-15  787  			dev_err(bank->dev, "Failed to add pin range\n");
-371a1b26dd7c7c Ye Zhang       2024-08-15  788  			goto err_unlock;
-371a1b26dd7c7c Ye Zhang       2024-08-15  789  		}
-936ee2675eee1f Jianqun Xu     2021-08-16  790  	}
-936ee2675eee1f Jianqun Xu     2021-08-16  791  
-8ce5ef64546850 Caleb Connolly 2022-03-28  792  	while (!list_empty(&bank->deferred_pins)) {
-371a1b26dd7c7c Ye Zhang       2024-08-15  793  		struct rockchip_pin_deferred *cfg;
-371a1b26dd7c7c Ye Zhang       2024-08-15  794  
-8ce5ef64546850 Caleb Connolly 2022-03-28  795  		cfg = list_first_entry(&bank->deferred_pins,
-8ce5ef64546850 Caleb Connolly 2022-03-28  796  				       struct rockchip_pin_deferred, head);
-371a1b26dd7c7c Ye Zhang       2024-08-15 @797  		if (!cfg)
-371a1b26dd7c7c Ye Zhang       2024-08-15  798  			break;
-
-The patch adds a NULL check here, but list_first_entry() can never return NULL.
-
-371a1b26dd7c7c Ye Zhang       2024-08-15  799  
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  800  		list_del(&cfg->head);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  801  
-8ce5ef64546850 Caleb Connolly 2022-03-28  802  		switch (cfg->param) {
-8ce5ef64546850 Caleb Connolly 2022-03-28  803  		case PIN_CONFIG_OUTPUT:
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  804  			ret = rockchip_gpio_direction_output(&bank->gpio_chip, cfg->pin, cfg->arg);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  805  			if (ret)
-8ce5ef64546850 Caleb Connolly 2022-03-28  806  				dev_warn(dev, "setting output pin %u to %u failed\n", cfg->pin,
-8ce5ef64546850 Caleb Connolly 2022-03-28  807  					 cfg->arg);
-8ce5ef64546850 Caleb Connolly 2022-03-28  808  			break;
-7ff11357810fd1 Caleb Connolly 2022-03-28  809  		case PIN_CONFIG_INPUT_ENABLE:
-7ff11357810fd1 Caleb Connolly 2022-03-28  810  			ret = rockchip_gpio_direction_input(&bank->gpio_chip, cfg->pin);
-7ff11357810fd1 Caleb Connolly 2022-03-28  811  			if (ret)
-7ff11357810fd1 Caleb Connolly 2022-03-28  812  				dev_warn(dev, "setting input pin %u failed\n", cfg->pin);
-7ff11357810fd1 Caleb Connolly 2022-03-28  813  			break;
-8ce5ef64546850 Caleb Connolly 2022-03-28  814  		default:
-8ce5ef64546850 Caleb Connolly 2022-03-28  815  			dev_warn(dev, "unknown deferred config param %d\n", cfg->param);
-8ce5ef64546850 Caleb Connolly 2022-03-28  816  			break;
-8ce5ef64546850 Caleb Connolly 2022-03-28  817  		}
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  818  		kfree(cfg);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  819  	}
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  820  
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  821  	mutex_unlock(&bank->deferred_lock);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  822  
-936ee2675eee1f Jianqun Xu     2021-08-16  823  	platform_set_drvdata(pdev, bank);
-371a1b26dd7c7c Ye Zhang       2024-08-15  824  	dev_info(dev, "probed %pfw\n", dev_fwnode(dev));
-936ee2675eee1f Jianqun Xu     2021-08-16  825  
-936ee2675eee1f Jianqun Xu     2021-08-16  826  	return 0;
-371a1b26dd7c7c Ye Zhang       2024-08-15  827  err_unlock:
-371a1b26dd7c7c Ye Zhang       2024-08-15  828  	mutex_unlock(&bank->deferred_lock);
-371a1b26dd7c7c Ye Zhang       2024-08-15  829  	clk_disable_unprepare(bank->clk);
-371a1b26dd7c7c Ye Zhang       2024-08-15  830  	clk_disable_unprepare(bank->db_clk);
-371a1b26dd7c7c Ye Zhang       2024-08-15  831  
-371a1b26dd7c7c Ye Zhang       2024-08-15  832  	return ret;
-936ee2675eee1f Jianqun Xu     2021-08-16  833  }
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>=20
+> -Serge(y)
+>=20
+>=20
+> > ---
+> > =C2=A0.../ethernet/stmicro/stmmac/dwmac-loongson.c=C2=A0 | 25 +++++----=
+------
+> > ----
+> > =C2=A0.../net/ethernet/stmicro/stmmac/stmmac_pci.c=C2=A0 | 18 +++++----=
+----
+> > =C2=A02 files changed, 12 insertions(+), 31 deletions(-)
+> >=20
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> > b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> > index 9e40c28d453a..5d42a9fad672 100644
+> > --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> > @@ -50,7 +50,7 @@ static int loongson_dwmac_probe(struct pci_dev
+> > *pdev, const struct pci_device_id
+> > =C2=A0	struct plat_stmmacenet_data *plat;
+> > =C2=A0	struct stmmac_resources res;
+> > =C2=A0	struct device_node *np;
+> > -	int ret, i, phy_mode;
+> > +	int ret, phy_mode;
+> > =C2=A0
+> > =C2=A0	np =3D dev_of_node(&pdev->dev);
+> > =C2=A0
+> > @@ -88,14 +88,11 @@ static int loongson_dwmac_probe(struct pci_dev
+> > *pdev, const struct pci_device_id
+> > =C2=A0		goto err_put_node;
+> > =C2=A0	}
+> > =C2=A0
+> > -	/* Get the base address of device */
+> > -	for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
+> > -		if (pci_resource_len(pdev, i) =3D=3D 0)
+> > -			continue;
+> > -		ret =3D pcim_iomap_regions(pdev, BIT(0),
+> > pci_name(pdev));
+> > -		if (ret)
+> > -			goto err_disable_device;
+> > -		break;
+> > +	memset(&res, 0, sizeof(res));
+> > +	res.addr =3D pcim_iomap_region(pdev, 0, pci_name(pdev));
+> > +	if (IS_ERR(res.addr)) {
+> > +		ret =3D PTR_ERR(res.addr);
+> > +		goto err_disable_device;
+> > =C2=A0	}
+> > =C2=A0
+> > =C2=A0	plat->bus_id =3D of_alias_get_id(np, "ethernet");
+> > @@ -116,8 +113,6 @@ static int loongson_dwmac_probe(struct pci_dev
+> > *pdev, const struct pci_device_id
+> > =C2=A0
+> > =C2=A0	loongson_default_data(plat);
+> > =C2=A0	pci_enable_msi(pdev);
+> > -	memset(&res, 0, sizeof(res));
+> > -	res.addr =3D pcim_iomap_table(pdev)[0];
+> > =C2=A0
+> > =C2=A0	res.irq =3D of_irq_get_byname(np, "macirq");
+> > =C2=A0	if (res.irq < 0) {
+> > @@ -158,18 +153,10 @@ static void loongson_dwmac_remove(struct
+> > pci_dev *pdev)
+> > =C2=A0{
+> > =C2=A0	struct net_device *ndev =3D dev_get_drvdata(&pdev->dev);
+> > =C2=A0	struct stmmac_priv *priv =3D netdev_priv(ndev);
+> > -	int i;
+> > =C2=A0
+> > =C2=A0	of_node_put(priv->plat->mdio_node);
+> > =C2=A0	stmmac_dvr_remove(&pdev->dev);
+> > =C2=A0
+> > -	for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
+> > -		if (pci_resource_len(pdev, i) =3D=3D 0)
+> > -			continue;
+> > -		pcim_iounmap_regions(pdev, BIT(i));
+> > -		break;
+> > -	}
+> > -
+> > =C2=A0	pci_disable_msi(pdev);
+> > =C2=A0	pci_disable_device(pdev);
+> > =C2=A0}
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> > b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> > index 352b01678c22..f89a8a54c4e8 100644
+> > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+> > @@ -188,11 +188,11 @@ static int stmmac_pci_probe(struct pci_dev
+> > *pdev,
+> > =C2=A0		return ret;
+> > =C2=A0	}
+> > =C2=A0
+> > -	/* Get the base address of device */
+> > +	/* Request the base address BAR of device */
+> > =C2=A0	for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
+> > =C2=A0		if (pci_resource_len(pdev, i) =3D=3D 0)
+> > =C2=A0			continue;
+> > -		ret =3D pcim_iomap_regions(pdev, BIT(i),
+> > pci_name(pdev));
+> > +		ret =3D pcim_request_region(pdev, i,
+> > pci_name(pdev));
+> > =C2=A0		if (ret)
+> > =C2=A0			return ret;
+> > =C2=A0		break;
+> > @@ -205,7 +205,10 @@ static int stmmac_pci_probe(struct pci_dev
+> > *pdev,
+> > =C2=A0		return ret;
+> > =C2=A0
+> > =C2=A0	memset(&res, 0, sizeof(res));
+> > -	res.addr =3D pcim_iomap_table(pdev)[i];
+> > +	/* Get the base address of device */
+> > +	res.addr =3D pcim_iomap(pdev, i, 0);
+> > +	if (!res.addr)
+> > +		return -ENOMEM;
+> > =C2=A0	res.wol_irq =3D pdev->irq;
+> > =C2=A0	res.irq =3D pdev->irq;
+> > =C2=A0
+> > @@ -231,16 +234,7 @@ static int stmmac_pci_probe(struct pci_dev
+> > *pdev,
+> > =C2=A0 */
+> > =C2=A0static void stmmac_pci_remove(struct pci_dev *pdev)
+> > =C2=A0{
+> > -	int i;
+> > -
+> > =C2=A0	stmmac_dvr_remove(&pdev->dev);
+> > -
+> > -	for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
+> > -		if (pci_resource_len(pdev, i) =3D=3D 0)
+> > -			continue;
+> > -		pcim_iounmap_regions(pdev, BIT(i));
+> > -		break;
+> > -	}
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static int __maybe_unused stmmac_pci_suspend(struct device *dev)
+> > --=20
+> > 2.46.0
+> >=20
+> >=20
+>=20
 
 
