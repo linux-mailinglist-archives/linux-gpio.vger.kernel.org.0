@@ -1,126 +1,147 @@
-Return-Path: <linux-gpio+bounces-9179-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9180-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F26E095F64B
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 18:19:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3267695F65C
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 18:22:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9CA01F22BAE
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 16:19:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C7951C21937
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 16:22:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A160A194AE6;
-	Mon, 26 Aug 2024 16:18:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD04219539F;
+	Mon, 26 Aug 2024 16:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fpGKZ71G"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LyvyOAvD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA20194ACD
-	for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 16:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84545194C9E;
+	Mon, 26 Aug 2024 16:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724689137; cv=none; b=SxWcYRjaMZQMq27W2GThAtt55javTzfpTG6eaSQYudC4G0JorDTGSZM8+OgfTEIJP2pNYXc0qwAJot0MRryAW1kl+BISHnj3foVYujgfIiUThDmGlFzpKY6tcqVHgs1iW064Z8ecrFwRWxhNXqZqZL5dc8MsuCTZqhFsp/0Aerc=
+	t=1724689336; cv=none; b=AhVb/zTy7VL8sdauID0HnuL8qD4b5dTjOvTX3FEPoiSxBmBTLwLbGGKHnw8BtkfODZkXb44jGU/rkgbTAmuI/4QXyUGXDn/Ppl5cja2VdMGrXnyIDrNbTEd9WFITLbx9UIarVidH39BjgmM2oBqWidmPIEhdDYQRbVnNR8/90U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724689137; c=relaxed/simple;
-	bh=qDC390bCNSJIhRfsWLE0LOccZRGOiv+AJDEaZGB6mzM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PAg2NtnwNNsdE3e6MG8xMJsxFKPJgjPGyBNqqhhgSnETitvUdlYQq8D3zgTN/32xouCK6isd3vzNXrxH1stZjHz/TYYL1pLuy69HJKevZxlhaqEgTSJ/8LFxf9nT1oFSoLCeTTD2n2vOVS45XzVhU1X30Wi2VHZXmsQjaWcaFh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fpGKZ71G; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-368633ca4ffso591265f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 09:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724689134; x=1725293934; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=thAMzPWe3GOIIK6BaNzqQ9nzGU0UzdwEDyQShp+gYiA=;
-        b=fpGKZ71GJBwEyWF8DD4QKnvoMmKa3LaXAaNBVQlRl3HrinfVByFDhADOTMr+Eg2Oik
-         uY5G2Q1gv6KU/qJFMUxb5AW97HT1z47HS1aY8ty4rm2qLcHeSaOaiYa81cw+sv90u2Jd
-         EdLqSo1N8Tu1l79GMgI1KuEwgNaWdrGu4BKWYFP/X5btjqfVzGb7Br7PqRQM+WO8BMi8
-         zrCBoBLiPEcjCFLY2Q8NmoMpEwoFDTZ3M/1XaM9pWv1Nsb83g5XdOFD2g92cjBqALB1E
-         lXfPbQstkSPi7udpWieRb6teNpC3oOVDXdrV5Acwo/v5FqyK8JnabDn9Sq8jvQkna+Bp
-         0DZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724689134; x=1725293934;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=thAMzPWe3GOIIK6BaNzqQ9nzGU0UzdwEDyQShp+gYiA=;
-        b=XW2rspYD3trIScdTuD4yjtt3V8c34WoAqLobm5qAkyxFCzfFNJpdTh796D57gwoOow
-         rA2LkcnDpZMPPqOgFUAXB82F1hbGgx2qSPffooMJ4lGL9AaxWDNG7AU2fbBSLUaXZEZj
-         ZUbSHdCnoVkFG74VxNL6+q84SQerf2mr6Xg8PxrE3wOUAWr7Hfq8qOi/bkhc2roQUNrH
-         vpWX4ritxqv4oEbEM8gjXIi7T3t6FteIjzxrE7JUkgnWBAVyCq9EMEmxDzLHVbpS5We0
-         vGbkhrJpRqaUvbsmBtgXPWye2NVps8yWWECgzpMAfGsNh2deZb7fCChqeXMxAZfPCCUc
-         bqVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKc20D6fhsnBJcR4SYXTo07ZQIObHsxt7p0sTLZxGGeGBSf7YdkI1kxb2NA6VnIK6+3v0sddupZ/B2@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqyBbV/1COHuko8Lpn2VN3XUEupmu5dSbHeefCvdIUiNJeE1B2
-	JWZWhxe1vPjS36/Lu4/HgM1fdQofUOFvDJd0i8FfE8g5dP/Nzrb33K+h4l6zkTQ=
-X-Google-Smtp-Source: AGHT+IG6yyYlNT9PwtS/u4zRyTAnpTgCPff3pX7qqpX1bUBS/93bzpOzeXEaMUmjlbTHHDazjgdbDg==
-X-Received: by 2002:a05:6000:154f:b0:368:4c5:12ec with SMTP id ffacd0b85a97d-3731191d5c5mr4107077f8f.8.1724689133822;
-        Mon, 26 Aug 2024 09:18:53 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.222.82])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3730813c459sm10983794f8f.27.2024.08.26.09.18.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2024 09:18:53 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] gpio: kerneldoc fixes for excess members
-Date: Mon, 26 Aug 2024 18:18:50 +0200
-Message-ID: <20240826161850.74447-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1724689336; c=relaxed/simple;
+	bh=+RTZMx1fzQdb+R5GnKXIaBS0hVNREfRA+TCS9zcwgbk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ie0bLcHmdqa0EL7IHJtZUzEwIpWrSHIzgxlcETXVl6ES5cQugKKC3stpoHplTe5NWX7N+uo+SMIQkNPYIwb4K30JTWoHIOXr332ZdC9YFfBjO2gmM5zA8lWL9xOyZAyDVmv3cG/g2jDC8JZxeVoBDf6zYMZgO7mVVwDds5FD6Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LyvyOAvD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D4C2C52FC0;
+	Mon, 26 Aug 2024 16:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724689336;
+	bh=+RTZMx1fzQdb+R5GnKXIaBS0hVNREfRA+TCS9zcwgbk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LyvyOAvDft8diKLOLUx20hHBgtJRj7WlrqbidunMWHGD5BOLkxHTL5o6fY7yT8Gs3
+	 DcJbKbnMLgpQyKVvdKGc+flE6lxPFbG4P0K0SNVPn0k/RvbWGO7OgbK/ZEUEIXPd07
+	 3E8i+1Nn+9ESLgGww9YjjHr/qrJNLORNHmJQnc5Q5i/Pu3vwPCVJj8Wi3ZYrjR13xc
+	 JXCO18OxLNbPaGkIjKdBoOi2U+nPIHr5ipkRWEOmayOa6pyxygSEF9rKm3KsFZG+zZ
+	 MjC99H2cFwabwar8EGqf8u7eQG4DStn4QbAn20rnKOmdIwhuoC2NLavgyHVMV4AkM+
+	 5264DWAfuAyZQ==
+Date: Mon, 26 Aug 2024 17:22:10 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Yangyu Chen <cyy@cyyself.name>,
+	Jesse Taube <jesse@rivosinc.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@spacemit.com>,
+	Meng Zhang <kevin.z.m@hotmail.com>, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-binding: pinctrl: spacemit: add documents for
+ K1 SoC
+Message-ID: <20240826-turbofan-unwound-280af18d60cc@spud>
+References: <20240825-02-k1-pinctrl-v2-0-ddd38a345d12@gentoo.org>
+ <20240825-02-k1-pinctrl-v2-1-ddd38a345d12@gentoo.org>
+ <66cbf3bb.050a0220.2632ed.b191SMTPIN_ADDED_BROKEN@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vv0iS6OPh2q+34gu"
+Content-Disposition: inline
+In-Reply-To: <66cbf3bb.050a0220.2632ed.b191SMTPIN_ADDED_BROKEN@mx.google.com>
 
-Drop kerneldoc descriptions of struct members which do not exist to fix
-W=1 warnings:
 
-  drivers/gpio/gpio-pch.c:101: warning: Excess struct member 'lock' description in 'pch_gpio'
-  drivers/gpio/gpio-syscon.c:46: warning: Excess struct member 'compatible' description in 'syscon_gpio_data'
+--vv0iS6OPh2q+34gu
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/gpio/gpio-pch.c    | 1 -
- drivers/gpio/gpio-syscon.c | 1 -
- 2 files changed, 2 deletions(-)
+On Mon, Aug 26, 2024 at 03:09:39AM +0000, Yixun Lan wrote:
+>=20
+> On 13:10 Sun 25 Aug     , Yixun Lan wrote:
+> > Add dt-binding for the pinctrl driver of SpacemiT's K1 SoC.
+> >=20
+> > Two vendor specific properties are introduced here, As the pinctrl
+> > has dedicated slew rate enable control - bit[7], so we have
+> > spacemit,slew-rate-{enable,disable} for this. For the same reason,
+> > creating spacemit,strong-pull-up for the strong pull up control.
+> >=20
+> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
 
-diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
-index ee37ecb615cb..63f25c72eac2 100644
---- a/drivers/gpio/gpio-pch.c
-+++ b/drivers/gpio/gpio-pch.c
-@@ -84,7 +84,6 @@ struct pch_gpio_reg_data {
-  * @gpio:			Data for GPIO infrastructure.
-  * @pch_gpio_reg:		Memory mapped Register data is saved here
-  *				when suspend.
-- * @lock:			Used for register access protection
-  * @irq_base:		Save base of IRQ number for interrupt
-  * @ioh:		IOH ID
-  * @spinlock:		Used for register access protection
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 3a90a3a1caea..5ab394ec81e6 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -23,7 +23,6 @@
- 
- /**
-  * struct syscon_gpio_data - Configuration for the device.
-- * @compatible:		SYSCON driver compatible string.
-  * @flags:		Set of GPIO_SYSCON_FEAT_ flags:
-  *			GPIO_SYSCON_FEAT_IN:	GPIOs supports input,
-  *			GPIO_SYSCON_FEAT_OUT:	GPIOs supports output,
--- 
-2.43.0
+I got this mail, and one of your other ones, 5 times. What's going wrong
+with your mail setup?=20
 
+| 250   T Aug 25 Yixun Lan       (6.0K) =E2=94=8C=E2=94=80>[PATCH v2 4/4] r=
+iscv: dts: spacemit: add pinctrl property to uart0 in BPI-F3
+| 251 N T Aug 26 Inochi Amaoto   ( 12K) =E2=94=82 =E2=94=8C=E2=94=80>
+| 252   T Aug 25 Yixun Lan       (6.8K) =E2=94=9C=E2=94=80>[PATCH v2 3/4] r=
+iscv: dts: spacemit: add pinctrl support for K1 SoC
+| 253 N T Aug 26 Inochi Amaoto   ( 46K) =E2=94=82 =E2=94=8C=E2=94=80>
+| 254   T Aug 25 Yixun Lan       ( 38K) =E2=94=9C=E2=94=80>[PATCH v2 2/4] p=
+inctrl: spacemit: add support for SpacemiT K1 SoC
+| 255 N T Aug 26 Inochi Amaoto   ( 22K) =E2=94=82 =E2=94=8C=E2=94=80>
+| 256   T Aug 26 Yixun Lan       ( 333) =E2=94=82 =E2=94=9C=E2=94=80>
+| 257   T Aug 26 Yixun Lan       ( 338) =E2=94=82 =E2=94=9C=E2=94=80>
+| 258   T Aug 26 Yixun Lan       ( 334) =E2=94=82 =E2=94=9C=E2=94=80>
+| 259   T Aug 26 Yixun Lan       ( 334) =E2=94=82 =E2=94=9C=E2=94=80>
+| 260   T Aug 26 Yixun Lan       ( 333) =E2=94=82 =E2=94=9C=E2=94=80>
+| 261   C Aug 25 Rob Herring (Ar (9.0K) =E2=94=82 =E2=94=9C=E2=94=80>
+| 262 N C Aug 26 Krzysztof Kozlo ( 14K) =E2=94=82 =E2=94=82 =E2=94=8C=E2=94=
+=80>
+| 263 N C Aug 26 Inochi Amaoto   ( 19K) =E2=94=82 =E2=94=82 =E2=94=9C=E2=94=
+=80>
+| 264   C Aug 26 Yixun Lan       ( 285) =E2=94=82 =E2=94=82 =E2=94=9C=E2=94=
+=80>
+| 265   C Aug 26 Yixun Lan       ( 281) =E2=94=82 =E2=94=82 =E2=94=9C=E2=94=
+=80>
+| 266 N C Aug 26 Yixun Lan       ( 14K) =E2=94=82 =E2=94=82 =E2=94=9C=E2=94=
+=80>
+| 267 N C Aug 26 Yixun Lan       ( 12K) =E2=94=82 =E2=94=82 =E2=94=9C=E2=94=
+=80>
+| 268 N C Aug 26 Yixun Lan       ( 12K) =E2=94=82 =E2=94=82 =E2=94=9C=E2=94=
+=80>
+| 269   T Aug 25 Krzysztof Kozlo ( 13K) =E2=94=82 =E2=94=9C=E2=94=80>
+| 270   T Aug 25 Yixun Lan       ( 14K) =E2=94=9C=E2=94=80>[PATCH v2 1/4] d=
+t-binding: pinctrl: spacemit: add documents for K1 SoC
+| 271   T Aug 25 Yixun Lan       (8.5K) [PATCH v2 0/4] riscv: spacemit: add=
+ pinctrl support to K1 SoC
+
+
+--vv0iS6OPh2q+34gu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZsyrsgAKCRB4tDGHoIJi
+0q6hAQDeH2i2SNS/Z13kPou1aa7nn27FSu6SRvKx9lRsDN+A0wD/eqwn/JkSg0bn
+sCsM9hBmsqrjbzQW/WiTVKFJWO1kZAk=
+=th+c
+-----END PGP SIGNATURE-----
+
+--vv0iS6OPh2q+34gu--
 
