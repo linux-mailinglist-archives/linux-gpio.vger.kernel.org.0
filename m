@@ -1,168 +1,124 @@
-Return-Path: <linux-gpio+bounces-9166-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9167-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67CB995ED8D
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 11:42:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C286795EDBB
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 11:53:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 99D951C2194B
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 09:42:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 023271C211B7
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 09:53:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE15129A2;
-	Mon, 26 Aug 2024 09:42:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77C31145FE8;
+	Mon, 26 Aug 2024 09:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EZK1ziPF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SHd81OGW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB13B143C70
-	for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 09:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C1B27701;
+	Mon, 26 Aug 2024 09:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724665361; cv=none; b=nqRZahIz811265sMC3ZNk0aIw8UMaVoYKA2CTUjpFjOgpJtxFODr17VjwgNlUmH3HF3He1NvSmTaFSdEFGqYxUbUDa6iYrlmIEoKKPTYuOrPUhaMg1/oiBkZYqaYJIwCv3xdnsGk5WrTRIWcz+7Zk30jrAcV3czLlFJNeaFxkjE=
+	t=1724665993; cv=none; b=JKGUjb86o53KfS7gERHRxkieWwXFRr/etQBOcFfbQRBGfHMI0anuHNpNy1bgkuwklBaGwdbgs0oPUaiKpirEakgfUp2pRAlgVxGHPbcrXfsFrtBO+6nBH82OcJYiXkYmUDNMTV6kFKMjjRVrCRqF91ULD77KaiMfO6/P64UKTQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724665361; c=relaxed/simple;
-	bh=UEc80ObWhu2axDgM7w2gCK2Z7ddiegXdkbdTjfVTIJw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CRg0Va1wQ6c5T3lyjtrTbdp56oNJkTuihldiwP9akPoJikUrRIoSiLXjGUxJDI6aoTwPwEOay2YCn4KLpVZFTaUmYR7YEkk4c9EU5kwUx2AEemPoRFiu+T639wPCRxZJpw7OWRQoDPn1OjHtgdFgF/vaQ0YCc0gYKv9nVFQpqZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EZK1ziPF; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-533de5a88f8so3501397e87.3
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 02:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724665358; x=1725270158; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AVYhHA3HG2UY8+Vcymfdj0fB1iRyPGdD56Dm85jLt/c=;
-        b=EZK1ziPFRtaGDsaPyvjgK41PZ3bBKNE4iz6OAzD4zKEHX0N+iFZNElBcL0QM/S4ah0
-         9VhXQVbo6iUmAyGwd1uCUdYuCsptQCARD7em26gxqJlBdwnlMsMMgvzrAMbC8cdFL4W5
-         w+4ijj37AmdGsQu2+wNjwDAIvcJ+odTmQAZEwSRAaeqO/FndceivjWYahNa4BGqMK5yj
-         j1CjZLhHLdKwgjMUv6HiOwbjpfdHv0yfe1bmf2bGwwiQuA43YJJxmxtEc/4UGHlCtsOp
-         p2U2/DlTxCtUU4qPPrn8n2xef+NDIjQZCIGeyIERW8//sUCXwhehRZoRQd+oOqt0ZUAI
-         6Kkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724665358; x=1725270158;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AVYhHA3HG2UY8+Vcymfdj0fB1iRyPGdD56Dm85jLt/c=;
-        b=FRhfFL5mRyZ2M2uMt3gkT7B6smzvNQLmJPbLLV+7i1X+yk+VKwojaR0yVvXsrM1dRw
-         7qiKRfXdUc3bYh7rRUqW9g007WfxU4cEla3QUPGlzKQ0VFGfTPx9OGHukpvJwoD81ed6
-         WPlp5VtqWD0RRisYNwcRYnlszTndTe8GDyn7fdbvSFAFPxP87jpJA03LxlmhgOWdGCZh
-         wm1YI0RjQc1ZHQPGzmW/HhvmwrjTIQ4BYNmd/ZO2QjP3ZaLr3w+7UqWxC2XSofzMWVG1
-         HAuCyfL9PFhTtGoWiHMZ6vZHEDtZ1rLxJYH3BCNQIBvT8ItCu8KxVyRCd68IS2iBl6Sc
-         daZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEqaM6K0MrDzjdBrua7+fMY9nlNGgCRb3tNvuszA5zwpuoejnZK5Lycr5bDaZ9SdR5VFg0oHN1OKIj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg+MyxwUeMsa/jWGVsHzmjDjbH8VgkfDtOs837n71MAGFw3/T0
-	Mou2KM7E2rVf8JwtHo9daBVcOXz1gRd7dZZtkMnpN3npBi3ZuC0j07enAwGyHjF49bJX06aa/Ok
-	PRQ2EKGVJE0CT9sKUOSjQy4y7tS1YSTO39UI08g==
-X-Google-Smtp-Source: AGHT+IESo1EpDdRnIB/kucNnisTBAnG+tBvFztK55h8yZxs6sHljZkuSVUDgsUgWnaQt2tk4uTQijGTGLbkHtHh8j5w=
-X-Received: by 2002:a05:6512:159e:b0:52f:d128:bd13 with SMTP id
- 2adb3069b0e04-534387bcf46mr5643646e87.39.1724665357384; Mon, 26 Aug 2024
- 02:42:37 -0700 (PDT)
+	s=arc-20240116; t=1724665993; c=relaxed/simple;
+	bh=FM0aUTLDtyB6gqzlabbXPTBd7yBelmI/W35+tx3U+aE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NHid7bxgzTCPWvwOyvO/Pg1uPGdOoTOPcfSNtVfiCiafrZ8wyBsApvLkRO8Xm4z7y/kOltjI5kizrJqcl354ClEBZEcSyH82qAVq8Ca5wZgN3HlMLA3kOxliJXrluLXfEGKMG0RJxkzVrn+e3BAic8bUZldFtxcIINKIasfu6JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SHd81OGW; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724665991; x=1756201991;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FM0aUTLDtyB6gqzlabbXPTBd7yBelmI/W35+tx3U+aE=;
+  b=SHd81OGWmbMululN22jhZ7HCJSjRHDT8Ifk0mZE8NZkShmg13O6Lzsie
+   lax+yBltFMD2hHpNObC9qE500+JsWTl2NWt+awY1dxckBNEQeBMJE52pC
+   EwO3AYic5uidpORUUZjQT4uY/FaqiE9mwVXgkA5YOH12W3SIKDJdIOzzY
+   XrO3RclWpgmmqMxb296IlF3gc8VNcdcuKJqtP2bMlbWTrCkbwydrleNje
+   HW9kNa+c6srkkcraqmVHsvGjnOC42mslwRZYobcUOXyOBMy3uN+2zP4XJ
+   wf+FtCn8XnrAt+abTpKKwcEf2LrcgBzw0z1W1QLsMMFBpJWuvROHBSvaK
+   A==;
+X-CSE-ConnectionGUID: xkjXdhrMRV6bVfPLn/gsfQ==
+X-CSE-MsgGUID: ZfGcdRxEQ7WYu8LzEoklYA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11175"; a="40548498"
+X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
+   d="scan'208";a="40548498"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 02:53:11 -0700
+X-CSE-ConnectionGUID: rUaLih7UTVWeA32VhCL20Q==
+X-CSE-MsgGUID: U5e3Kgi+S5SFPDGvTftcMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
+   d="scan'208";a="62295820"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP; 26 Aug 2024 02:53:09 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 7715A502; Mon, 26 Aug 2024 12:53:07 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-gpio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pinctrl: stmfx: Use string_choices API instead of ternary operator
+Date: Mon, 26 Aug 2024 12:53:06 +0300
+Message-ID: <20240826095306.1420628-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240826084214.2368673-1-andrei.stefanescu@oss.nxp.com> <20240826084214.2368673-3-andrei.stefanescu@oss.nxp.com>
-In-Reply-To: <20240826084214.2368673-3-andrei.stefanescu@oss.nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 26 Aug 2024 11:42:26 +0200
-Message-ID: <CACRpkdaZbHsi1zeHr+HyUgfdCDHm1DaA1=peH8BjVSirga_sVg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] drivers: gpio: siul2-s32g2: add NXP S32G2/S32G3 SoCs support
-To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>, 
-	Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>, Larisa Grigore <larisa.grigore@nxp.com>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	NXP S32 Linux Team <s32@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Andrei,
+Use modern string_choices API instead of manually determining the
+output using ternary operator.
 
-thanks for your patch!
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/pinctrl-stmfx.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-On Mon, Aug 26, 2024 at 10:43=E2=80=AFAM Andrei Stefanescu
-<andrei.stefanescu@oss.nxp.com> wrote:
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index 6313be370eb7..d2c5321dd025 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -11,6 +11,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/seq_file.h>
++#include <linux/string_choices.h>
+ 
+ #include <linux/pinctrl/pinconf.h>
+ #include <linux/pinctrl/pinmux.h>
+@@ -369,14 +370,14 @@ static void stmfx_pinconf_dbg_show(struct pinctrl_dev *pctldev,
+ 		return;
+ 
+ 	if (dir == GPIO_LINE_DIRECTION_OUT) {
+-		seq_printf(s, "output %s ", val ? "high" : "low");
++		seq_printf(s, "output %s ", str_high_low(val));
+ 		if (type)
+ 			seq_printf(s, "open drain %s internal pull-up ",
+ 				   pupd ? "with" : "without");
+ 		else
+ 			seq_puts(s, "push pull no pull ");
+ 	} else {
+-		seq_printf(s, "input %s ", val ? "high" : "low");
++		seq_printf(s, "input %s ", str_high_low(val));
+ 		if (type)
+ 			seq_printf(s, "with internal pull-%s ",
+ 				   pupd ? "up" : "down");
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-> Add the GPIO driver for S32G2/S32G3 SoCs. This driver uses the SIUL2
-> (System Integration Unit Lite2) hardware module. There are two
-> SIUL2 hardware modules present, SIUL2_0(controlling GPIOs 0-101) and
-> SIUL2_1 for the rest.
->
-> The GPIOs are not fully contiguous, there are some gaps:
-> - GPIO102 up to GPIO111(inclusive) are invalid
-> - GPIO123 up to GPIO143(inclusive) are invalid
->
-> Some GPIOs are input only(i.e. GPI182) though this restriction
-> is not yet enforced in code.
->
-> This patch adds basic GPIO functionality(no interrupts, no
-> suspend/resume functions).
->
-> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-
-As Krzysztof points out: the driver is based on something really old and
-needs an overhaul. Luckily GPIO drivers are not that big so it should be
-pretty straight-forward.
-
-> +config GPIO_SIUL2_S32G2
-> +        tristate "GPIO driver for S32G2/S32G3"
-> +        depends on OF_GPIO
-
-select REGMAP?
-
-You are using it.
-
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/gpio.h>
-
-Drop this include.
-
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/pinctrl/consumer.h>
-> +#include <linux/bitmap.h>
-
-Really?
-
-> +       raw_spin_lock_irqsave(&dev->lock, flags);
-> +
-> +       if (dir =3D=3D GPIO_LINE_DIRECTION_IN)
-> +               bitmap_clear(dev->pin_dir_bitmap, gpio, 1);
-> +       else
-> +               bitmap_set(dev->pin_dir_bitmap, gpio, 1);
-
-This is just an unsigned long, just use the nonatomic
-__clear_bit() and __set_bit()
-from <linux/bitops.h>.
-
-> +       gc->set =3D siul2_gpio_set;
-> +       gc->get =3D siul2_gpio_get;
-> +       gc->set_config =3D siul2_set_config;
-> +       gc->request =3D siul2_gpio_request;
-> +       gc->free =3D siul2_gpio_free;
-> +       gc->direction_output =3D siul2_gpio_dir_out;
-> +       gc->direction_input =3D siul2_gpio_dir_in;
-> +       gc->get_direction =3D siul2_gpio_get_dir;
-
-Since it is backed by proper pin control I would expect
-a generic .set_config() implementation, but no hurry with that
-I suppose.
-
-Yours,
-Linus Walleij
 
