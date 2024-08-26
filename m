@@ -1,396 +1,216 @@
-Return-Path: <linux-gpio+bounces-9133-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9134-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0706795E731
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 05:09:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAA9395E73E
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 05:16:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 253391C21040
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 03:09:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F30D81C210C3
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 03:16:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A6F329408;
-	Mon, 26 Aug 2024 03:09:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38C9926AFF;
+	Mon, 26 Aug 2024 03:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="avLumW78"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2054.outbound.protection.outlook.com [40.107.117.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9CC1373;
-	Mon, 26 Aug 2024 03:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724641785; cv=none; b=XLS329Jdx73gGd2gcXWmxN4B8aoPCfjIH9gAY5F4xz6LCddxzSoWqmRe5lVzhhUXomQa/Qi1Yc4ZKYne2AT4FPxOUnOMfoWCvwQfvyL5pT26q1wZgtrxciBk8ci4gyndz/ACjjb5OKh2phWjI5XGDo8G8hVphgsa74B2nyYUXA0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724641785; c=relaxed/simple;
-	bh=F6/ZTly055eWO2i/XHPxfw4Grpop7nRNFNqh5dBx06w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxUawnuJNfICSJZ0JEtpL+XIW8wavzT6Rh0qp1C9pJGYXAJ56vSCceQ/ZOAMUjMs+6UCGn2+JCDw1XghMzB3FDYmpGXWptSmPG9yXrmMh4bw2JWpeTHZaF4U7YqLr+DYCXlIn0AFB1rrxtjSbdzCDXq2K92VZz7U4eh/ocMLfBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Date: Mon, 26 Aug 2024 03:09:39 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>
-Cc: Yangyu Chen <cyy@cyyself.name>, Jesse Taube <jesse@rivosinc.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Meng Zhang <zhangmeng.kevin@spacemit.com>,
-	Meng Zhang <kevin.z.m@hotmail.com>, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-binding: pinctrl: spacemit: add documents for
- K1 SoC
-Message-ID: <20240826030939.GYB22924.dlan.gentoo>
-References: <20240825-02-k1-pinctrl-v2-0-ddd38a345d12@gentoo.org>
- <20240825-02-k1-pinctrl-v2-1-ddd38a345d12@gentoo.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD031DFCF;
+	Mon, 26 Aug 2024 03:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724642194; cv=fail; b=scLtqOmllUFeee+Bxx/hLnwQlxjBRMXc+XNQ88H9Jv71mXIgsWZyjYnwbGjCnJuPFdU7C0HFGRbgJCZ4NY1vFxfnjCtHlpec9Nm/2EOcMDXgTkl41r66oSJaoMLfyPbddZ+/PrW83MEbk5asbz9Y9KIzW5hLhc9vX/JBd076c/I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724642194; c=relaxed/simple;
+	bh=vbU6mMSo69weIG84pjocJ7IeTCl/cfPZo5fdV5T9pGg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=gRdXfZiXdw8qtu2JgSp1CYcC2sk302g+YMOuHABQT7b+zTM16jQj7Fgtty3XtBXCmFf0QqLhzWjXXC3z00Q2wajV+O0FIHJtMQukhNzDptNpJJbXNN67bvoYzPMi24PFIbmrDJ4v//3GDRy/EcSgbnuvxHrApFnEdX604hFZ6W8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=avLumW78; arc=fail smtp.client-ip=40.107.117.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Hhr/rYH5pWYrXSRyfXZXOl76Vku2XixmMCYaX6cvseIYJYNE/UYWr7xnH48FmnzokXpY1+b6pXxGEc3+g6A4Qv5acUxOD9SAyFswtiYJMLVZdkcx4A9MFVa0o0/rrg/gLdwaNy5z6IQ3QlEC9deixzSGGEkUVpss/c0Ym3zLwGXvQ45f3To6lbKmobPeOv032AAGU5804q5+cA+GW6IhjrXgtnStNppbIurj+iF8VLoyqUyKSU6V33skQ1G4zA1xfv8tBeSHQtFEoidL3zW09IJ2hGBAuGqUn9PsdL88DwqbSwVjKjHTu+E+Uhm4CYH4tp+SXfZJmT3tlNHtmkjV7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EgR/LwofiB/Izm6fIUykAIXCPGT9F2TdrjB6uZFyVBE=;
+ b=N7MA1MutmsR+iQIIqIvwgS5aYbVeVKhWda9SXk7AyUX0a3iwZOIceuWOWgjMQi/2xYZr8WVQDD/tiw0Hp3gS44YQqhpowzYb8bvb5OViJcoyhmWoY2b6PRVx9lgqWu6dO7eZiC638sdelQ7LuDl5OwkXV1lx2J68aJI3eEOw2NiIosrBawihpYdQyEfBfCRySKWx2woq+lzM4SV3rA9TqEJM95qFePMmDhiXfYHpixqh3ZhRLErAq/sEGlLRtClPQeLlozof937n3HXPjKAkPYUaB/BpcDaAAKIHC9GoWQX1q2e5cMIk8Y4u8XxvCb7lxchx8G50fJBb9CQW0qS1mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EgR/LwofiB/Izm6fIUykAIXCPGT9F2TdrjB6uZFyVBE=;
+ b=avLumW783vekMpnRt+MxxwbcM87vvXtu8n99OqJQo6FwfIwGT9a9d9bfcjJabKCh926PtBBI6Yi7eQIFKsTR6eNGKwin2sENYFEbywyboH0UZh/hH3zwhyGGzdB9n0R6vxM3Qmo/9flMPE88O0ahWKucSZ9R7rgKc50LpTVAQcHhwfsX3KYU0uKhFiPa/fuWyUvaxANCmlTzPH2y8ktzMJ5gkH3cFkwFyMDmIy8sB3GjFHqRkcW/aMbf5FA7qV/81qd3AimzpBJXZee/9eb8efkpKb48e+CA5uurdNw7r4bW/lINdP5ezRGt09gT/yODmo1+OJuW4MfOBcsQszkvsg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5899.apcprd06.prod.outlook.com (2603:1096:101:e3::16)
+ by OSQPR06MB7279.apcprd06.prod.outlook.com (2603:1096:604:294::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.20; Mon, 26 Aug
+ 2024 03:16:26 +0000
+Received: from SEZPR06MB5899.apcprd06.prod.outlook.com
+ ([fe80::8bfc:f1ee:8923:77ce]) by SEZPR06MB5899.apcprd06.prod.outlook.com
+ ([fe80::8bfc:f1ee:8923:77ce%3]) with mapi id 15.20.7897.021; Mon, 26 Aug 2024
+ 03:16:26 +0000
+From: Shen Lichuan <shenlichuan@vivo.com>
+To: geert+renesas@glider.be,
+	linus.walleij@linaro.org
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	opensource.kernel@vivo.com,
+	Shen Lichuan <shenlichuan@vivo.com>
+Subject: [PATCH v2] pinctrl: renesas: Switch to use kmemdup_array()
+Date: Mon, 26 Aug 2024 11:15:50 +0800
+Message-Id: <20240826031550.2393-1-shenlichuan@vivo.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0003.apcprd02.prod.outlook.com
+ (2603:1096:3:17::15) To SEZPR06MB5899.apcprd06.prod.outlook.com
+ (2603:1096:101:e3::16)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240825-02-k1-pinctrl-v2-1-ddd38a345d12@gentoo.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5899:EE_|OSQPR06MB7279:EE_
+X-MS-Office365-Filtering-Correlation-Id: c7ece58b-c513-4e87-4ccf-08dcc57d7838
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?GKiuR9BOzFdKHIRwr4lzKVbrcB202MJPTYInn8hpNHfKtinUlZQneK8Vkxfh?=
+ =?us-ascii?Q?fM8ycGrb4CWGI7SDsmD0juu4lVt/9Ymw3RdSHK+Ag8BhJWa3Cxxs4V2eWq4+?=
+ =?us-ascii?Q?4VCDoF+yoUxOZwgs1+AyQxIDl4/ZAW6qKidwSaxcoi2ITxtNgDqd9VnyI7dp?=
+ =?us-ascii?Q?QPkRTSzxj0lRL8d+MApIy0+/CtLnPEs6Rk7kY+sTbEj3+DgVAJ+yzHE/IZSx?=
+ =?us-ascii?Q?qOHWW2VuC0a4afNNxM/1AHnI0HrchHjUWPSBV/m5Pz9ynEJpI+R2A8aUO0q9?=
+ =?us-ascii?Q?lmI9hQ0N+Ei4XEld78lovrJ+yJqdvM7oIn8tGPCUcx7NgbUV1MTwzX/8ojW/?=
+ =?us-ascii?Q?I6OIIksa5BWzvzeeWekht3WO8gJHdv5R/5Kr/g0FHeHxtmh3ZDDxiCK7bp8Q?=
+ =?us-ascii?Q?NHK3tnxXQhmCdf9RT/WxoL3xb/0rkDPCbEBemnuLwrq/di6BtZ8j++j4gNtt?=
+ =?us-ascii?Q?5Kab8+4mkLJNBjU956aowsoZGiA0kZBhVR8yY/VQZKSdtIS9KsQLosq0XJeu?=
+ =?us-ascii?Q?V/Nu2mEpF9OD6gK4Vj6mGtqbZ8BRJBQiqYEifu2kI8tmA0CRucPcRECxjk47?=
+ =?us-ascii?Q?bSDj0SsTAxPWgGj3c84lB0sunZ913OrO2pY7jDjoKbSmNJ/qN4j6oOK/wxJ4?=
+ =?us-ascii?Q?byR5hhhgBhUuK5VeSnpcOAv2PrchUd1nfdf3dBMmO/wnz9dydNvuvxpCML5p?=
+ =?us-ascii?Q?30OBhCGCcetKYqocyCOr632Eueu7NjzFqsfyNQ0oog1k8dc19P2PcbTvrOpK?=
+ =?us-ascii?Q?QKkfl2iuikW/TVWwxsj4p7zFPi1eShsYv4mYCrArb0/YEIvBgVSh2UnQxphX?=
+ =?us-ascii?Q?fYI51NsZEuNaYTcsk8Sag/5Ke/him9xbLPYPaS7Edu1J19GJXvinj7himyC7?=
+ =?us-ascii?Q?tyLDX8Ij/Jjs4FAYU9efDl2a7gnR0CrID7f4MkNuDU9LCZ4uoo/AJ3uWNZRr?=
+ =?us-ascii?Q?Kpdu02+iKRClfMU5GCKX2ywNceXI8TQFV3nLNn2e3scyKnwkr9bKep0zKm5+?=
+ =?us-ascii?Q?GiZjR6Z9EbXYO00yfYAPTz5xv03rGV12Lsj2lvBJokAzKzJyQ63OCEHnImTt?=
+ =?us-ascii?Q?QkhjWwwL/lCEUuJTmISQLSwmDMQgPFDxH/5bygTtottXznSO97G6ZS0Utbm2?=
+ =?us-ascii?Q?5bDBQ/qPAu8sR9YLIcj7U0x2xhK5Ksqk3t5BoKGT3EYr7P/7I/dqX/Wyff1l?=
+ =?us-ascii?Q?yJl4cqWYaATBQcJjCniAJFlfZGEbFZk3cwlA/Hldubsb/ZP6ZxK1LNQQQ44b?=
+ =?us-ascii?Q?1Ozm/wyU6qnw1jFy8PEQKyVX7ISWISmLumntpdD+W9p04ePOGYPT8bosQ7hk?=
+ =?us-ascii?Q?T2grhYcYfWvC24AQlwuH80zmrIKsT17Sbtytb9OBq2f2G4XCNXFO5EanVO2H?=
+ =?us-ascii?Q?4oX+GaM3wniIR/jKK9NyNkJa78+HRDcFh2/nqsifsdwp9KGMpA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5899.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?FyMHHetjQIoGlhIurrlH4Jz2Di4pKieFUqW3SugSP9vI3FN3ZfZZER2/Y0uQ?=
+ =?us-ascii?Q?NIODFbeU9q01LsaqC0GoE6K0Q6UEgGHYSnLflTqj0VEMBFsF9ko3pE/bcLSb?=
+ =?us-ascii?Q?BpxvmQD2oGD0UlJf7PqS+Ib0/VVOUdHIPqe4C1Elr5bfoTAyqgMo7DFbsXzg?=
+ =?us-ascii?Q?pGbuFPH92X5TA90WFBXO0eYEnb0gw+JxU3IfN5AbixJljqLBP6QSX3frSvj7?=
+ =?us-ascii?Q?U121usFpUMFB7vaVvShexTMbI3kQ7qJROg4Y8twJ02f90MTfn7gaFynQloY0?=
+ =?us-ascii?Q?Y9Q4oO5z+/8HiJXhG8TsGYWLUJQ3Q+M4JDAmw5bV0LP6tjrA+s1jrgtSf7Lb?=
+ =?us-ascii?Q?qkGhXE1GKn+/zxw8Gqf7VVln0vm09PU0noF+Ht2WP2UyChu1CrlrIeHiOON4?=
+ =?us-ascii?Q?Vk5609PSWsrh+x3ZAd/jwSUyBW8oACoPm5yUdTJD0nt9JQKGBhxWzz13CRih?=
+ =?us-ascii?Q?BOk79rFQjS8EjIQhzLetK43W9OBPtj7sYeyIhtrnMNJy+foDoRQ4UB6qX6nj?=
+ =?us-ascii?Q?p4/rY89itDX+5rHxUb74y4ZlYBk27hGLZzQezXYesOt8W3TMi2EA5qC+s3kj?=
+ =?us-ascii?Q?3fsFr5ODPDu23wCyz9uPgH1UdeGd7qRb9s0zPfS078z8WwRLw4OAB/aLGHQX?=
+ =?us-ascii?Q?EAYCtpcuPBuQSJOXbSzDxeZOCVIVJ2+WJxaDB+cKhk447TdN9qAhQv15EqT4?=
+ =?us-ascii?Q?uxDdF8hrz+lLrU8F1wW6CQFvZAR3h49KADZkgj6FyMGAo1oZpxmRvHAtdi0e?=
+ =?us-ascii?Q?yOF/vgLsXaXGCwEv4l3B8DQfmp2nlBNBixDOQdI2Lpkene/g28XfXmmv557+?=
+ =?us-ascii?Q?BqOPqYAfHKjkp+6V7aHQh2Byp+7/189eBrmixC9jNdCdArZY3OR70IYSBwQV?=
+ =?us-ascii?Q?1SDvtDmtzRpjZnEkjqKHcxE/Ct50rH6hHUZ8GEXb/BtZJUEuSNegXSes7hD7?=
+ =?us-ascii?Q?FKFzkxK7GgIUiLr4jLJmEo9tK8mPWutSzo7/gX8bgDQbZzLDmAJQXXmxlAs1?=
+ =?us-ascii?Q?6WUyUqwavrw5PwLWW+EZehZ1pQarHrvc0IHFmqyB4ah3QQT2TJ06GEpN0M+B?=
+ =?us-ascii?Q?U2IIF5bRHRY+dvr7Hnbb6q7wT6ixhirE53A/bCajzyzO8gUpSW3NnoCh9VVW?=
+ =?us-ascii?Q?tkLNGaqV5Qs+rPRPptI5qIkD5AuCR5F+ra177b9yj2gibpLqAMUcLYNoD4fi?=
+ =?us-ascii?Q?ap0v9uUxJaU616WY/DRocJ1nwYfof07qmoD2zI5bWBehn0FGg4xskzzp1xJv?=
+ =?us-ascii?Q?yYeFneI/j+cmTXOQnSWFAvdTgRImeE3RIf9uCTUANz0us/7gB5+XWYJU7FJB?=
+ =?us-ascii?Q?cgdWBqgBZTmDLAzu+cEy5cevo7rmHwxrLmISjqowzrU1pUkEkQXwLwG5Nj7r?=
+ =?us-ascii?Q?Q9nCvumGwqxusCq4T2ElurZeeinPUrM/7hA/tFnO5jiCrX47KLFijGVrcCyp?=
+ =?us-ascii?Q?g+vPW3UWoMmy1omgqc9jXOJG8+JZLE0RsiXeUKP9LDbEaVQL8/gjK8wYEfM8?=
+ =?us-ascii?Q?ueh0e4mAcoaa1hvNYTlAN0Se5BByLZpq2R9I7wci1/qFCZlsIOzQ3XXIOpN4?=
+ =?us-ascii?Q?DpkinXKkMWe+bFm+XxzYZRL4+2/hu7zZ7bP6s86b?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7ece58b-c513-4e87-4ccf-08dcc57d7838
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5899.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2024 03:16:25.9937
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Et/TVCg9kJMVLAHXShkM052qR/MrdC0NDR0KS7Isphjj5UI6WHuaKxfHyVlvxcVE+s5btUq4aqIzZp8LyaNAFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSQPR06MB7279
 
+Let the kmemdup_array() take care about multiplication
+and possible overflows.
 
-On 13:10 Sun 25 Aug     , Yixun Lan wrote:
-> Add dt-binding for the pinctrl driver of SpacemiT's K1 SoC.
-> 
-> Two vendor specific properties are introduced here, As the pinctrl
-> has dedicated slew rate enable control - bit[7], so we have
-> spacemit,slew-rate-{enable,disable} for this. For the same reason,
-> creating spacemit,strong-pull-up for the strong pull up control.
-> 
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
->  .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      | 134 +++++++++++++++++
->  include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h  | 161 +++++++++++++++++++++
->  2 files changed, 295 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-> new file mode 100644
-> index 0000000000000..8adfc5ebbce37
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-> @@ -0,0 +1,134 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/spacemit,k1-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SpacemiT K1 SoC Pin Controller
-> +
-> +maintainers:
-> +  - Yixun Lan <dlan@gentoo.org>
-> +
-> +properties:
-> +  compatible:
-> +    const: spacemit,k1-pinctrl
-> +
-> +  reg:
-> +    items:
-> +      - description: pinctrl io memory base
-> +
-> +patternProperties:
-> +  '-cfg$':
-> +    type: object
-> +    description: |
-> +      A pinctrl node should contain at least one subnode representing the
-> +      pinctrl groups available on the machine.
-> +
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '-pins$':
-> +        type: object
-> +        description: |
-> +          Each subnode will list the pins it needs, and how they should
-> +          be configured, with regard to muxer configuration, bias, input
-> +          enable/disable, input schmitt trigger, slew-rate enable/disable,
-> +          slew-rate, drive strength, power source.
-> +        $ref: /schemas/pinctrl/pincfg-node.yaml
-> +
-> +        allOf:
-> +          - $ref: pincfg-node.yaml#
-> +          - $ref: pinmux-node.yaml#
-> +
-> +        properties:
-> +          pinmux:
-> +            description: |
-> +              The list of GPIOs and their mux settings that properties in the
-> +              node apply to. This should be set using the K1_PADCONF macro to
-> +              construct the value.
-> +            $ref: /schemas/pinctrl/pinmux-node.yaml#/properties/pinmux
-> +
-> +          bias-disable: true
-> +
-> +          bias-pull-up: true
-> +
-> +          bias-pull-down: true
-> +
-> +          drive-strength-microamp:
-just realise here should use 'drive-strength' which will comply to hw
-will fix in next version
+Signed-off-by: Shen Lichuan <shenlichuan@vivo.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v1 -> v2: 
+* Changed subject prefix to "pinctrl: renesas: "
+* Fixed spelling mistakes
+* Adapted code formatting to linux coding style
 
-> +            description: |
-> +              typical current when output high level, but in mA.
-> +              1.8V output: 11, 21, 32, 42 (mA)
-> +              3.3V output: 7, 10, 13, 16, 19, 23, 26, 29 (mA)
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +          input-schmitt:
-> +            description: |
-> +              typical threshold for schmitt trigger.
-> +              0: buffer mode
-> +              1: trigger mode
-> +              2, 3: trigger mode
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            enum: [0, 1, 2, 3]
-> +
-> +          power-source:
-> +            description: external power supplies at 1.8v or 3.3v.
-> +            enum: [ 1800, 3300 ]
-> +
-> +          slew-rate:
-> +            description: |
-> +              slew rate for output buffer
-> +              0, 1: Slow speed
-> +              2: Medium speed
-> +              3: Fast speed
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            enum: [0, 1, 2, 3]
-> +
-> +          spacemit,slew-rate-enable:
-> +            description: enable slew rate.
-> +            type: boolean
-> +
-> +          spacemit,slew-rate-disable:
-> +            description: disable slew rate.
-> +            type: boolean
-> +
-> +          spacemit,strong-pull-up:
-> +            description: enable strong pull up.
-> +            type: boolean
-> +
-> +        required:
-> +          - pinmux
-> +
-> +        additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/pinctrl/spacemit,k1-pinctrl.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pinctrl@d401e000 {
-> +            compatible = "spacemit,k1-pinctrl";
-> +            reg = <0x0 0xd401e000 0x0 0x400>;
-> +            #pinctrl-cells = <2>;
-> +            #gpio-range-cells = <3>;
-> +
-> +            uart0_2_cfg: uart0-2-cfg {
-> +                uart0-2-pins {
-> +                    pinmux = <K1_PADCONF(GPIO_68, 2)>,
-> +                             <K1_PADCONF(GPIO_69, 2)>;
-> +                    bias-pull-up;
-> +                    drive-strength-microamp = <32>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h b/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h
-> new file mode 100644
-> index 0000000000000..13ef4aa6c53a3
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h
-> @@ -0,0 +1,161 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> +/*
-> + * Copyright (c) 2022-2024 SpacemiT (Hangzhou) Technology Co. Ltd
-> + * Copyright (c) 2024 Yixun Lan <dlan@gentoo.org>
-> + *
-> + */
-> +
-> +#ifndef _DT_BINDINGS_PINCTRL_K1_H
-> +#define _DT_BINDINGS_PINCTRL_K1_H
-> +
-> +#define PINMUX(pin, mux) \
-> +	(((pin) & 0xffff) | (((mux) & 0xff) << 16))
-> +
-> +/* pin offset */
-> +#define PINID(x)	((x) + 1)
-> +
-> +#define GPIO_INVAL  0
-> +#define GPIO_00     PINID(0)
-> +#define GPIO_01     PINID(1)
-> +#define GPIO_02     PINID(2)
-> +#define GPIO_03     PINID(3)
-> +#define GPIO_04     PINID(4)
-> +#define GPIO_05     PINID(5)
-> +#define GPIO_06     PINID(6)
-> +#define GPIO_07     PINID(7)
-> +#define GPIO_08     PINID(8)
-> +#define GPIO_09     PINID(9)
-> +#define GPIO_10     PINID(10)
-> +#define GPIO_11     PINID(11)
-> +#define GPIO_12     PINID(12)
-> +#define GPIO_13     PINID(13)
-> +#define GPIO_14     PINID(14)
-> +#define GPIO_15     PINID(15)
-> +#define GPIO_16     PINID(16)
-> +#define GPIO_17     PINID(17)
-> +#define GPIO_18     PINID(18)
-> +#define GPIO_19     PINID(19)
-> +#define GPIO_20     PINID(20)
-> +#define GPIO_21     PINID(21)
-> +#define GPIO_22     PINID(22)
-> +#define GPIO_23     PINID(23)
-> +#define GPIO_24     PINID(24)
-> +#define GPIO_25     PINID(25)
-> +#define GPIO_26     PINID(26)
-> +#define GPIO_27     PINID(27)
-> +#define GPIO_28     PINID(28)
-> +#define GPIO_29     PINID(29)
-> +#define GPIO_30     PINID(30)
-> +#define GPIO_31     PINID(31)
-> +
-> +#define GPIO_32     PINID(32)
-> +#define GPIO_33     PINID(33)
-> +#define GPIO_34     PINID(34)
-> +#define GPIO_35     PINID(35)
-> +#define GPIO_36     PINID(36)
-> +#define GPIO_37     PINID(37)
-> +#define GPIO_38     PINID(38)
-> +#define GPIO_39     PINID(39)
-> +#define GPIO_40     PINID(40)
-> +#define GPIO_41     PINID(41)
-> +#define GPIO_42     PINID(42)
-> +#define GPIO_43     PINID(43)
-> +#define GPIO_44     PINID(44)
-> +#define GPIO_45     PINID(45)
-> +#define GPIO_46     PINID(46)
-> +#define GPIO_47     PINID(47)
-> +#define GPIO_48     PINID(48)
-> +#define GPIO_49     PINID(49)
-> +#define GPIO_50     PINID(50)
-> +#define GPIO_51     PINID(51)
-> +#define GPIO_52     PINID(52)
-> +#define GPIO_53     PINID(53)
-> +#define GPIO_54     PINID(54)
-> +#define GPIO_55     PINID(55)
-> +#define GPIO_56     PINID(56)
-> +#define GPIO_57     PINID(57)
-> +#define GPIO_58     PINID(58)
-> +#define GPIO_59     PINID(59)
-> +#define GPIO_60     PINID(60)
-> +#define GPIO_61     PINID(61)
-> +#define GPIO_62     PINID(62)
-> +#define GPIO_63     PINID(63)
-> +
-> +#define GPIO_64     PINID(64)
-> +#define GPIO_65     PINID(65)
-> +#define GPIO_66     PINID(66)
-> +#define GPIO_67     PINID(67)
-> +#define GPIO_68     PINID(68)
-> +#define GPIO_69     PINID(69)
-> +#define GPIO_70     PINID(70)
-> +#define GPIO_71     PINID(71)
-> +#define GPIO_72     PINID(72)
-> +#define GPIO_73     PINID(73)
-> +#define GPIO_74     PINID(74)
-> +#define GPIO_75     PINID(75)
-> +#define GPIO_76     PINID(76)
-> +#define GPIO_77     PINID(77)
-> +#define GPIO_78     PINID(78)
-> +#define GPIO_79     PINID(79)
-> +#define GPIO_80     PINID(80)
-> +#define GPIO_81     PINID(81)
-> +#define GPIO_82     PINID(82)
-> +#define GPIO_83     PINID(83)
-> +#define GPIO_84     PINID(84)
-> +#define GPIO_85     PINID(85)
-> +
-> +#define GPIO_101    PINID(89)
-> +#define GPIO_100    PINID(90)
-> +#define GPIO_99     PINID(91)
-> +#define GPIO_98     PINID(92)
-> +#define GPIO_103    PINID(93)
-> +#define GPIO_102    PINID(94)
-> +
-> +#define GPIO_104    PINID(109)
-> +#define GPIO_105    PINID(110)
-> +#define GPIO_106    PINID(111)
-> +#define GPIO_107    PINID(112)
-> +#define GPIO_108    PINID(113)
-> +#define GPIO_109    PINID(114)
-> +#define GPIO_110    PINID(115)
-> +
-> +#define GPIO_93     PINID(116)
-> +#define GPIO_94     PINID(117)
-> +#define GPIO_95     PINID(118)
-> +#define GPIO_96     PINID(119)
-> +#define GPIO_97     PINID(120)
-> +
-> +#define GPIO_86     PINID(122)
-> +#define GPIO_87     PINID(123)
-> +#define GPIO_88     PINID(124)
-> +#define GPIO_89     PINID(125)
-> +#define GPIO_90     PINID(126)
-> +#define GPIO_91     PINID(127)
-> +#define GPIO_92     PINID(128)
-> +
-> +#define GPIO_111    PINID(130)
-> +#define GPIO_112    PINID(131)
-> +#define GPIO_113    PINID(132)
-> +#define GPIO_114    PINID(133)
-> +#define GPIO_115    PINID(134)
-> +#define GPIO_116    PINID(135)
-> +#define GPIO_117    PINID(136)
-> +#define GPIO_118    PINID(137)
-> +#define GPIO_119    PINID(138)
-> +#define GPIO_120    PINID(139)
-> +#define GPIO_121    PINID(140)
-> +#define GPIO_122    PINID(141)
-> +#define GPIO_123    PINID(142)
-> +#define GPIO_124    PINID(143)
-> +#define GPIO_125    PINID(144)
-> +#define GPIO_126    PINID(145)
-> +#define GPIO_127    PINID(146)
-> +
-> +#define SLEW_RATE_SLOW0		0
-> +#define SLEW_RATE_SLOW1		1
-> +#define SLEW_RATE_MEDIUM	2
-> +#define SLEW_RATE_FAST		3
-> +
-> +#define K1_PADCONF(pin, func) (((pin) << 16) | (func))
-> +
-> +#endif /* _DT_BINDINGS_PINCTRL_K1_H */
-> 
-> -- 
-> 2.45.2
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 3 +--
+ drivers/pinctrl/renesas/pinctrl-rzv2m.c | 3 +--
+ drivers/pinctrl/renesas/pinctrl.c       | 3 +--
+ 3 files changed, 3 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index 5e3d735a8570..2a73a8c374b3 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -528,8 +528,7 @@ static int rzg2l_map_add_config(struct pinctrl_map *map,
+ {
+ 	unsigned long *cfgs;
+ 
+-	cfgs = kmemdup(configs, num_configs * sizeof(*cfgs),
+-		       GFP_KERNEL);
++	cfgs = kmemdup_array(configs, num_configs, sizeof(*cfgs), GFP_KERNEL);
+ 	if (!cfgs)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzv2m.c b/drivers/pinctrl/renesas/pinctrl-rzv2m.c
+index 0cae5472ac67..4062c56619f5 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzv2m.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzv2m.c
+@@ -196,8 +196,7 @@ static int rzv2m_map_add_config(struct pinctrl_map *map,
+ {
+ 	unsigned long *cfgs;
+ 
+-	cfgs = kmemdup(configs, num_configs * sizeof(*cfgs),
+-		       GFP_KERNEL);
++	cfgs = kmemdup_array(configs, num_configs, sizeof(*cfgs), GFP_KERNEL);
+ 	if (!cfgs)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/pinctrl/renesas/pinctrl.c b/drivers/pinctrl/renesas/pinctrl.c
+index 03e9bdbc82b9..29d16c9c1bd1 100644
+--- a/drivers/pinctrl/renesas/pinctrl.c
++++ b/drivers/pinctrl/renesas/pinctrl.c
+@@ -83,8 +83,7 @@ static int sh_pfc_map_add_config(struct pinctrl_map *map,
+ {
+ 	unsigned long *cfgs;
+ 
+-	cfgs = kmemdup(configs, num_configs * sizeof(*cfgs),
+-		       GFP_KERNEL);
++	cfgs = kmemdup_array(configs, num_configs, sizeof(*cfgs), GFP_KERNEL);
+ 	if (cfgs == NULL)
+ 		return -ENOMEM;
+ 
 -- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+2.17.1
+
 
