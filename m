@@ -1,44 +1,43 @@
-Return-Path: <linux-gpio+bounces-9132-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9133-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1EC695E657
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 03:36:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0706795E731
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 05:09:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 57841B2085D
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 01:36:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 253391C21040
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 03:09:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA8BE4A33;
-	Mon, 26 Aug 2024 01:36:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A6F329408;
+	Mon, 26 Aug 2024 03:09:45 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F82443D;
-	Mon, 26 Aug 2024 01:36:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9CC1373;
+	Mon, 26 Aug 2024 03:09:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724636201; cv=none; b=ZHtyBeMULuNdzZ7cwvQ1jTA+HNInhluoeAGtsOF6Jn24b4PF3hr3rTtMHYxjgM/b6LwXSxKVdN/R1CYi3ErMmnlDom8lmVDPq5pJ53XNOIgXpT6/ZKNwVLQsoax2doXtMUsqzSvyuJS/YSf2+eVVZD9lshgKxkqTjUeAJv+78Ag=
+	t=1724641785; cv=none; b=XLS329Jdx73gGd2gcXWmxN4B8aoPCfjIH9gAY5F4xz6LCddxzSoWqmRe5lVzhhUXomQa/Qi1Yc4ZKYne2AT4FPxOUnOMfoWCvwQfvyL5pT26q1wZgtrxciBk8ci4gyndz/ACjjb5OKh2phWjI5XGDo8G8hVphgsa74B2nyYUXA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724636201; c=relaxed/simple;
-	bh=wd6zZUEd613VvgbUTb6iIUfcvaLsT1imtH42TS06iMo=;
+	s=arc-20240116; t=1724641785; c=relaxed/simple;
+	bh=F6/ZTly055eWO2i/XHPxfw4Grpop7nRNFNqh5dBx06w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=budZQ7rP62XLqL+6ED5wvwoB80hwCs5SlZKmSrUfloqZreIaTMpfMVj4JBVd94sOo19OcuSYPnJrDJNopoIOzSIXnzSAYQPrP9pZ97rv420ldQeDvc5ZZtXPJ8nLl5f7qlbMLMzd59D2XsK0MeirKa71g+FbOXuyp4wRTy3PV38=
+	 Content-Type:Content-Disposition:In-Reply-To; b=jxUawnuJNfICSJZ0JEtpL+XIW8wavzT6Rh0qp1C9pJGYXAJ56vSCceQ/ZOAMUjMs+6UCGn2+JCDw1XghMzB3FDYmpGXWptSmPG9yXrmMh4bw2JWpeTHZaF4U7YqLr+DYCXlIn0AFB1rrxtjSbdzCDXq2K92VZz7U4eh/ocMLfBQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Date: Mon, 26 Aug 2024 01:36:35 +0000
+Date: Mon, 26 Aug 2024 03:09:39 +0000
 From: Yixun Lan <dlan@gentoo.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Yangyu Chen <cyy@cyyself.name>, Jesse Taube <jesse@rivosinc.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>
+Cc: Yangyu Chen <cyy@cyyself.name>, Jesse Taube <jesse@rivosinc.com>,
 	Jisheng Zhang <jszhang@kernel.org>,
 	Inochi Amaoto <inochiama@outlook.com>,
 	Icenowy Zheng <uwu@icenowy.me>,
@@ -48,10 +47,9 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
 	linux-gpio@vger.kernel.org
 Subject: Re: [PATCH v2 1/4] dt-binding: pinctrl: spacemit: add documents for
  K1 SoC
-Message-ID: <20240826013230.GYA22924.dlan.gentoo>
+Message-ID: <20240826030939.GYB22924.dlan.gentoo>
 References: <20240825-02-k1-pinctrl-v2-0-ddd38a345d12@gentoo.org>
  <20240825-02-k1-pinctrl-v2-1-ddd38a345d12@gentoo.org>
- <d9a925da-2381-4203-a3b6-4cb892039d23@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -60,283 +58,336 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d9a925da-2381-4203-a3b6-4cb892039d23@kernel.org>
+In-Reply-To: <20240825-02-k1-pinctrl-v2-1-ddd38a345d12@gentoo.org>
 
-Hi Krzysztof: 
 
-On 15:48 Sun 25 Aug     , Krzysztof Kozlowski wrote:
-> On 25/08/2024 15:10, Yixun Lan wrote:
-> > Add dt-binding for the pinctrl driver of SpacemiT's K1 SoC.
+On 13:10 Sun 25 Aug     , Yixun Lan wrote:
+> Add dt-binding for the pinctrl driver of SpacemiT's K1 SoC.
 > 
+> Two vendor specific properties are introduced here, As the pinctrl
+> has dedicated slew rate enable control - bit[7], so we have
+> spacemit,slew-rate-{enable,disable} for this. For the same reason,
+> creating spacemit,strong-pull-up for the strong pull up control.
 > 
-> Please use subject prefixes matching the subsystem. You can get them for
-> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-> your patch is touching. For bindings, the preferred subjects are
-> explained here:
-> https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
+>  .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      | 134 +++++++++++++++++
+>  include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h  | 161 +++++++++++++++++++++
+>  2 files changed, 295 insertions(+)
 > 
-> It's "dt-bindings:"
-Ok, will fix in next version
+> diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> new file mode 100644
+> index 0000000000000..8adfc5ebbce37
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> @@ -0,0 +1,134 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/spacemit,k1-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SpacemiT K1 SoC Pin Controller
+> +
+> +maintainers:
+> +  - Yixun Lan <dlan@gentoo.org>
+> +
+> +properties:
+> +  compatible:
+> +    const: spacemit,k1-pinctrl
+> +
+> +  reg:
+> +    items:
+> +      - description: pinctrl io memory base
+> +
+> +patternProperties:
+> +  '-cfg$':
+> +    type: object
+> +    description: |
+> +      A pinctrl node should contain at least one subnode representing the
+> +      pinctrl groups available on the machine.
+> +
+> +    additionalProperties: false
+> +
+> +    patternProperties:
+> +      '-pins$':
+> +        type: object
+> +        description: |
+> +          Each subnode will list the pins it needs, and how they should
+> +          be configured, with regard to muxer configuration, bias, input
+> +          enable/disable, input schmitt trigger, slew-rate enable/disable,
+> +          slew-rate, drive strength, power source.
+> +        $ref: /schemas/pinctrl/pincfg-node.yaml
+> +
+> +        allOf:
+> +          - $ref: pincfg-node.yaml#
+> +          - $ref: pinmux-node.yaml#
+> +
+> +        properties:
+> +          pinmux:
+> +            description: |
+> +              The list of GPIOs and their mux settings that properties in the
+> +              node apply to. This should be set using the K1_PADCONF macro to
+> +              construct the value.
+> +            $ref: /schemas/pinctrl/pinmux-node.yaml#/properties/pinmux
+> +
+> +          bias-disable: true
+> +
+> +          bias-pull-up: true
+> +
+> +          bias-pull-down: true
+> +
+> +          drive-strength-microamp:
+just realise here should use 'drive-strength' which will comply to hw
+will fix in next version
 
+> +            description: |
+> +              typical current when output high level, but in mA.
+> +              1.8V output: 11, 21, 32, 42 (mA)
+> +              3.3V output: 7, 10, 13, 16, 19, 23, 26, 29 (mA)
+> +            $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +          input-schmitt:
+> +            description: |
+> +              typical threshold for schmitt trigger.
+> +              0: buffer mode
+> +              1: trigger mode
+> +              2, 3: trigger mode
+> +            $ref: /schemas/types.yaml#/definitions/uint32
+> +            enum: [0, 1, 2, 3]
+> +
+> +          power-source:
+> +            description: external power supplies at 1.8v or 3.3v.
+> +            enum: [ 1800, 3300 ]
+> +
+> +          slew-rate:
+> +            description: |
+> +              slew rate for output buffer
+> +              0, 1: Slow speed
+> +              2: Medium speed
+> +              3: Fast speed
+> +            $ref: /schemas/types.yaml#/definitions/uint32
+> +            enum: [0, 1, 2, 3]
+> +
+> +          spacemit,slew-rate-enable:
+> +            description: enable slew rate.
+> +            type: boolean
+> +
+> +          spacemit,slew-rate-disable:
+> +            description: disable slew rate.
+> +            type: boolean
+> +
+> +          spacemit,strong-pull-up:
+> +            description: enable strong pull up.
+> +            type: boolean
+> +
+> +        required:
+> +          - pinmux
+> +
+> +        additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/pinctrl/spacemit,k1-pinctrl.h>
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        pinctrl@d401e000 {
+> +            compatible = "spacemit,k1-pinctrl";
+> +            reg = <0x0 0xd401e000 0x0 0x400>;
+> +            #pinctrl-cells = <2>;
+> +            #gpio-range-cells = <3>;
+> +
+> +            uart0_2_cfg: uart0-2-cfg {
+> +                uart0-2-pins {
+> +                    pinmux = <K1_PADCONF(GPIO_68, 2)>,
+> +                             <K1_PADCONF(GPIO_69, 2)>;
+> +                    bias-pull-up;
+> +                    drive-strength-microamp = <32>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h b/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h
+> new file mode 100644
+> index 0000000000000..13ef4aa6c53a3
+> --- /dev/null
+> +++ b/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h
+> @@ -0,0 +1,161 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> +/*
+> + * Copyright (c) 2022-2024 SpacemiT (Hangzhou) Technology Co. Ltd
+> + * Copyright (c) 2024 Yixun Lan <dlan@gentoo.org>
+> + *
+> + */
+> +
+> +#ifndef _DT_BINDINGS_PINCTRL_K1_H
+> +#define _DT_BINDINGS_PINCTRL_K1_H
+> +
+> +#define PINMUX(pin, mux) \
+> +	(((pin) & 0xffff) | (((mux) & 0xff) << 16))
+> +
+> +/* pin offset */
+> +#define PINID(x)	((x) + 1)
+> +
+> +#define GPIO_INVAL  0
+> +#define GPIO_00     PINID(0)
+> +#define GPIO_01     PINID(1)
+> +#define GPIO_02     PINID(2)
+> +#define GPIO_03     PINID(3)
+> +#define GPIO_04     PINID(4)
+> +#define GPIO_05     PINID(5)
+> +#define GPIO_06     PINID(6)
+> +#define GPIO_07     PINID(7)
+> +#define GPIO_08     PINID(8)
+> +#define GPIO_09     PINID(9)
+> +#define GPIO_10     PINID(10)
+> +#define GPIO_11     PINID(11)
+> +#define GPIO_12     PINID(12)
+> +#define GPIO_13     PINID(13)
+> +#define GPIO_14     PINID(14)
+> +#define GPIO_15     PINID(15)
+> +#define GPIO_16     PINID(16)
+> +#define GPIO_17     PINID(17)
+> +#define GPIO_18     PINID(18)
+> +#define GPIO_19     PINID(19)
+> +#define GPIO_20     PINID(20)
+> +#define GPIO_21     PINID(21)
+> +#define GPIO_22     PINID(22)
+> +#define GPIO_23     PINID(23)
+> +#define GPIO_24     PINID(24)
+> +#define GPIO_25     PINID(25)
+> +#define GPIO_26     PINID(26)
+> +#define GPIO_27     PINID(27)
+> +#define GPIO_28     PINID(28)
+> +#define GPIO_29     PINID(29)
+> +#define GPIO_30     PINID(30)
+> +#define GPIO_31     PINID(31)
+> +
+> +#define GPIO_32     PINID(32)
+> +#define GPIO_33     PINID(33)
+> +#define GPIO_34     PINID(34)
+> +#define GPIO_35     PINID(35)
+> +#define GPIO_36     PINID(36)
+> +#define GPIO_37     PINID(37)
+> +#define GPIO_38     PINID(38)
+> +#define GPIO_39     PINID(39)
+> +#define GPIO_40     PINID(40)
+> +#define GPIO_41     PINID(41)
+> +#define GPIO_42     PINID(42)
+> +#define GPIO_43     PINID(43)
+> +#define GPIO_44     PINID(44)
+> +#define GPIO_45     PINID(45)
+> +#define GPIO_46     PINID(46)
+> +#define GPIO_47     PINID(47)
+> +#define GPIO_48     PINID(48)
+> +#define GPIO_49     PINID(49)
+> +#define GPIO_50     PINID(50)
+> +#define GPIO_51     PINID(51)
+> +#define GPIO_52     PINID(52)
+> +#define GPIO_53     PINID(53)
+> +#define GPIO_54     PINID(54)
+> +#define GPIO_55     PINID(55)
+> +#define GPIO_56     PINID(56)
+> +#define GPIO_57     PINID(57)
+> +#define GPIO_58     PINID(58)
+> +#define GPIO_59     PINID(59)
+> +#define GPIO_60     PINID(60)
+> +#define GPIO_61     PINID(61)
+> +#define GPIO_62     PINID(62)
+> +#define GPIO_63     PINID(63)
+> +
+> +#define GPIO_64     PINID(64)
+> +#define GPIO_65     PINID(65)
+> +#define GPIO_66     PINID(66)
+> +#define GPIO_67     PINID(67)
+> +#define GPIO_68     PINID(68)
+> +#define GPIO_69     PINID(69)
+> +#define GPIO_70     PINID(70)
+> +#define GPIO_71     PINID(71)
+> +#define GPIO_72     PINID(72)
+> +#define GPIO_73     PINID(73)
+> +#define GPIO_74     PINID(74)
+> +#define GPIO_75     PINID(75)
+> +#define GPIO_76     PINID(76)
+> +#define GPIO_77     PINID(77)
+> +#define GPIO_78     PINID(78)
+> +#define GPIO_79     PINID(79)
+> +#define GPIO_80     PINID(80)
+> +#define GPIO_81     PINID(81)
+> +#define GPIO_82     PINID(82)
+> +#define GPIO_83     PINID(83)
+> +#define GPIO_84     PINID(84)
+> +#define GPIO_85     PINID(85)
+> +
+> +#define GPIO_101    PINID(89)
+> +#define GPIO_100    PINID(90)
+> +#define GPIO_99     PINID(91)
+> +#define GPIO_98     PINID(92)
+> +#define GPIO_103    PINID(93)
+> +#define GPIO_102    PINID(94)
+> +
+> +#define GPIO_104    PINID(109)
+> +#define GPIO_105    PINID(110)
+> +#define GPIO_106    PINID(111)
+> +#define GPIO_107    PINID(112)
+> +#define GPIO_108    PINID(113)
+> +#define GPIO_109    PINID(114)
+> +#define GPIO_110    PINID(115)
+> +
+> +#define GPIO_93     PINID(116)
+> +#define GPIO_94     PINID(117)
+> +#define GPIO_95     PINID(118)
+> +#define GPIO_96     PINID(119)
+> +#define GPIO_97     PINID(120)
+> +
+> +#define GPIO_86     PINID(122)
+> +#define GPIO_87     PINID(123)
+> +#define GPIO_88     PINID(124)
+> +#define GPIO_89     PINID(125)
+> +#define GPIO_90     PINID(126)
+> +#define GPIO_91     PINID(127)
+> +#define GPIO_92     PINID(128)
+> +
+> +#define GPIO_111    PINID(130)
+> +#define GPIO_112    PINID(131)
+> +#define GPIO_113    PINID(132)
+> +#define GPIO_114    PINID(133)
+> +#define GPIO_115    PINID(134)
+> +#define GPIO_116    PINID(135)
+> +#define GPIO_117    PINID(136)
+> +#define GPIO_118    PINID(137)
+> +#define GPIO_119    PINID(138)
+> +#define GPIO_120    PINID(139)
+> +#define GPIO_121    PINID(140)
+> +#define GPIO_122    PINID(141)
+> +#define GPIO_123    PINID(142)
+> +#define GPIO_124    PINID(143)
+> +#define GPIO_125    PINID(144)
+> +#define GPIO_126    PINID(145)
+> +#define GPIO_127    PINID(146)
+> +
+> +#define SLEW_RATE_SLOW0		0
+> +#define SLEW_RATE_SLOW1		1
+> +#define SLEW_RATE_MEDIUM	2
+> +#define SLEW_RATE_FAST		3
+> +
+> +#define K1_PADCONF(pin, func) (((pin) << 16) | (func))
+> +
+> +#endif /* _DT_BINDINGS_PINCTRL_K1_H */
 > 
-> > 
-> > Two vendor specific properties are introduced here, As the pinctrl
-> > has dedicated slew rate enable control - bit[7], so we have
-> > spacemit,slew-rate-{enable,disable} for this. For the same reason,
-> > creating spacemit,strong-pull-up for the strong pull up control.
-> 
-> Huh, no, use generic properties. More on that below
-> 
-see my reply below
-
-> 
-> 
-> > 
-> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > ---
-> >  .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      | 134 +++++++++++++++++
-> >  include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h  | 161 +++++++++++++++++++++
-> >  2 files changed, 295 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-> > new file mode 100644
-> > index 0000000000000..8adfc5ebbce37
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-> > @@ -0,0 +1,134 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pinctrl/spacemit,k1-pinctrl.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: SpacemiT K1 SoC Pin Controller
-> > +
-> > +maintainers:
-> > +  - Yixun Lan <dlan@gentoo.org>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: spacemit,k1-pinctrl
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: pinctrl io memory base
-> > +
-> > +patternProperties:
-> > +  '-cfg$':
-> > +    type: object
-> > +    description: |
-> 
-> Do not need '|' unless you need to preserve formatting.
-> 
-Ok
-> > +      A pinctrl node should contain at least one subnode representing the
-> > +      pinctrl groups available on the machine.
-> > +
-> > +    additionalProperties: false
-> 
-> Keep it before description.
-Ok
-> 
-> > +
-> > +    patternProperties:
-> > +      '-pins$':
-> > +        type: object
-> > +        description: |
-> > +          Each subnode will list the pins it needs, and how they should
-> > +          be configured, with regard to muxer configuration, bias, input
-> > +          enable/disable, input schmitt trigger, slew-rate enable/disable,
-> > +          slew-rate, drive strength, power source.
-> > +        $ref: /schemas/pinctrl/pincfg-node.yaml
-> > +
-> > +        allOf:
-> > +          - $ref: pincfg-node.yaml#
-> > +          - $ref: pinmux-node.yaml#
-> 
-> You are duplicating refs.
-ok, will fix it
-> 
-> > +
-> > +        properties:
-> > +          pinmux:
-> > +            description: |
-> > +              The list of GPIOs and their mux settings that properties in the
-> > +              node apply to. This should be set using the K1_PADCONF macro to
-> > +              construct the value.
-> > +            $ref: /schemas/pinctrl/pinmux-node.yaml#/properties/pinmux
-> 
-> Hm why you need the ref?
-> 
-will drop it
-> > +
-> > +          bias-disable: true
-> > +
-> > +          bias-pull-up: true
-> > +
-> > +          bias-pull-down: true
-> > +
-> > +          drive-strength-microamp:
-> > +            description: |
-> > +              typical current when output high level, but in mA.
-> > +              1.8V output: 11, 21, 32, 42 (mA)
-> > +              3.3V output: 7, 10, 13, 16, 19, 23, 26, 29 (mA)
-> > +            $ref: /schemas/types.yaml#/definitions/uint32
-> > +
-> > +          input-schmitt:
-> > +            description: |
-> > +              typical threshold for schmitt trigger.
-> > +              0: buffer mode
-> > +              1: trigger mode
-> > +              2, 3: trigger mode
-> > +            $ref: /schemas/types.yaml#/definitions/uint32
-> > +            enum: [0, 1, 2, 3]
-> > +
-> > +          power-source:
-> > +            description: external power supplies at 1.8v or 3.3v.
-> > +            enum: [ 1800, 3300 ]
-> > +
-> > +          slew-rate:
-> > +            description: |
-> > +              slew rate for output buffer
-> > +              0, 1: Slow speed
-> 
-> Hm? Surprising, 0 is slow speed?
-> 
-from docs, section 3.3.2.2 MFPR Register Description
-0, 1 are same, both for slow speed
-https://developer.spacemit.com/documentation?token=An1vwTwKaigaXRkYfwmcznTXned
-
-> > +              2: Medium speed
-> > +              3: Fast speed
-> > +            $ref: /schemas/types.yaml#/definitions/uint32
-> > +            enum: [0, 1, 2, 3]
-> > +
-> > +          spacemit,slew-rate-enable:
-> > +            description: enable slew rate.
-> 
-> The presence of slew-rate enables it, doesn't it?
-> 
-yes, this should work, I will take this approach, thanks
-
-> > +            type: boolean
-> > +
-> > +          spacemit,slew-rate-disable:
-> > +            description: disable slew rate.
-> > +            type: boolean
-> 
-> Just use slew-rate, 0 disable, some value to match real slew-rate.
-> 
-sounds good to me, since 0, 1 indicate same meaning, can re-use 0 for
-disabling slew rate.
-
-> > +
-> > +          spacemit,strong-pull-up:
-> > +            description: enable strong pull up.
-> 
-> Do not duplicate the property name in description. You did not say
-> anything useful here. What is "strong"? bias-pull-up takes also an argument.
-> 
-there is a dedicated strong pull bit[3] for I2C, SD card kinds of pad
-I don't know how 'strong' it is if in ohms, will see if can get
-more info on this (may expand the description)
-
-I think using 'bias-pull-up' property with argument should also work,
-but it occur to me it's more intuitive to introduce a property here, which
-reflect the underlying hardware functionality. this is similar to starfive's jh7100
-bindings/pinctrl/starfive,jh7100-pinctrl.yaml:154
-(refer to exist code doesn't mean always correct, so I need advice here)
-
-I will keep this property unless there is objection, please let me know
-
-> > +            type: boolean
-> > +
-> > +        required:
-> > +          - pinmux
-> > +
-> > +        additionalProperties: false
-> 
-> This goes up, before description.
-> 
-Ok
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/pinctrl/spacemit,k1-pinctrl.h>
-> > +
-> > +    soc {
-> > +        #address-cells = <2>;
-> > +        #size-cells = <2>;
-> > +
-> > +        pinctrl@d401e000 {
-> > +            compatible = "spacemit,k1-pinctrl";
-> > +            reg = <0x0 0xd401e000 0x0 0x400>;
-> > +            #pinctrl-cells = <2>;
-> > +            #gpio-range-cells = <3>;
-> 
-> This wasn't ever tested... :(
-> ...
-will drop it
-> 
-> > diff --git a/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h b/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h
-> > new file mode 100644
-> > index 0000000000000..13ef4aa6c53a3
-> > --- /dev/null
-> > +++ b/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h
-> > @@ -0,0 +1,161 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> > +/*
-> > + * Copyright (c) 2022-2024 SpacemiT (Hangzhou) Technology Co. Ltd
-> > + * Copyright (c) 2024 Yixun Lan <dlan@gentoo.org>
-> > + *
-> > + */
-> > +
-> > +#ifndef _DT_BINDINGS_PINCTRL_K1_H
-> > +#define _DT_BINDINGS_PINCTRL_K1_H
-> > +
-> > +#define PINMUX(pin, mux) \
-> > +	(((pin) & 0xffff) | (((mux) & 0xff) << 16))
-> > +
-> > +/* pin offset */
-> > +#define PINID(x)	((x) + 1)
-> > +
-> > +#define GPIO_INVAL  0
-> > +#define GPIO_00     PINID(0)
-> 
-> Not really, pin numbers are not bindings. Drop entire header.
-> 
-Ok, I will move them to dts folder, which should be file
-arch/riscv/boot/dts/spacemit/k1-pinctrl.h
-
-> ...
-> 
-> > +
-> > +#define SLEW_RATE_SLOW0		0
-> > +#define SLEW_RATE_SLOW1		1
-> > +#define SLEW_RATE_MEDIUM	2
-> > +#define SLEW_RATE_FAST		3
-> 
-> Not a binding, either. No usage in the driver.
-Ok, will drop it
-
-> 
-> > +
-> > +#define K1_PADCONF(pin, func) (((pin) << 16) | (func))
-> 
-> Not a binding.
-> 
-same, move to dts
-
-> 
-> 
-> Best regards,
-> Krzysztof
+> -- 
+> 2.45.2
 
 -- 
 Yixun Lan (dlan)
