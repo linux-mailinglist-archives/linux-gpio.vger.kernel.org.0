@@ -1,76 +1,136 @@
-Return-Path: <linux-gpio+bounces-9184-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9185-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6536395F8C5
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 20:10:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB78395F9FC
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 21:51:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 834821C2189A
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 18:10:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 75C061F232A0
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 19:51:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87A04198E7F;
-	Mon, 26 Aug 2024 18:10:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 567E7199940;
+	Mon, 26 Aug 2024 19:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sg5fD8vH"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AHghUoTk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4315018FC83
-	for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 18:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49DF78C93
+	for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 19:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724695827; cv=none; b=OWDIyrWNTpLCGEc0vVQWSDUyU4YWUsxQL1rXh7iQNyXyo7whY8YOhCboEPZcXE/EsPahXipuWdyRcUF+OQkbAl79cpXJA2dcjkQHMr8Y24Gi8UcfYhpaJ5AC30Ymim4AXUjgtpf2Olyuz3FKSN16PvMHhah53F0UrClfhmjftSE=
+	t=1724701863; cv=none; b=Y1xaGy8PgdtMgAcAAFBptQk0R2BTrIUtwi5DUfT1R9Z9JrkP02iTgISpM2Ogc0jJRHFSuU6yifHNmtPyhYh68azBP0qk7fpXcVSWu0m0XARMmDr+2S7yCB4GdKr4GB6KFKtwivuQBStYNpw8mweOfwN222Y338D9L1XwaP/wt9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724695827; c=relaxed/simple;
-	bh=1HY95TgskjQw3DicPs8nXeZ75xLkAousJ1JOgMZJBIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Cb7B9TyznBb14ezgS5WahuM569rSwFXFiPecn7dFeFP3UvEYnNzyDzdMQ1QOXxLW0OcWZF2yMirH8MKo8f5PpJiuqF3Ye7eP5A6o3q4dYOAVTyY5VHMkFB4QEb/SIG4/++B2Yw9aWIFek4iVmxcNhG5hJwTkNZ6wrYixBfmKL5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sg5fD8vH; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724695825; x=1756231825;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=1HY95TgskjQw3DicPs8nXeZ75xLkAousJ1JOgMZJBIE=;
-  b=Sg5fD8vHlNfGH7pb3t5giegT10qsmC+MWYD8hoUJ/8x52D3LTHOHPlda
-   29a2nj6Fn3VbamrpKLlA6IGFuF7YAWGCwUaBnv0rHqyMaCaEE1/NEHFuo
-   m3zdpSVvkbiJTf1JlRkWHfcGzhf+THEQWzZuUsYI4nq9e0bld5ADcAbyO
-   PxmaeqQemYfDMMKW6qVwsM7vLR2crhPd357J4l3KIzBB4T/RFjOii2Vpn
-   Vp0wGw1ZXQzEBWEi/ES+bpVEcbnlKJkJuvOPGwXN2MNxRFrduxC50foCa
-   plRFNUNGYeQPiQWJunxBsm4Qid6SRqlsv0H2fYvPpn4S6MhVMeVjpAeWe
-   Q==;
-X-CSE-ConnectionGUID: kEvhU4VQQEiVUrSobvhWIA==
-X-CSE-MsgGUID: jH+gyI+3RzizdoDd8kM13A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="23316670"
-X-IronPort-AV: E=Sophos;i="6.10,178,1719903600"; 
-   d="scan'208";a="23316670"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 11:10:24 -0700
-X-CSE-ConnectionGUID: N8hUpObdSlmiI5xQWlTqdw==
-X-CSE-MsgGUID: afF4w9ALQOuZv9ccMjJf4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,178,1719903600"; 
-   d="scan'208";a="62908029"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 26 Aug 2024 11:10:22 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sieAW-000HSs-1G;
-	Mon, 26 Aug 2024 18:10:20 +0000
-Date: Tue, 27 Aug 2024 02:09:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Inochi Amaoto <inochiama@outlook.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: [linusw-pinctrl:ib-sophgo-pintrl 2/5]
- drivers/pinctrl/sophgo/pinctrl-cv18xx.c:544:14: error:
- 'PIN_CONFIG_INPUT_SCHMITT_UV' undeclared; did you mean
- 'PIN_CONFIG_INPUT_SCHMITT'?
-Message-ID: <202408270140.L6Hm1sNo-lkp@intel.com>
+	s=arc-20240116; t=1724701863; c=relaxed/simple;
+	bh=MMfRm30DKmAgIRDJDysPRmHSCruCns16kqlRyLPykmk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hg1E038d2I2GxrhH+7XizXgZ23AxJ382JdQGgIPIZkA2DPKvmcB79THxy89tijDa0bbIDTDHy0kZuyGntRCd0zm542cYnBqddyHOBUsmo+cmTv/MJ4UmGyjxbcesuJcxbD/WZw27D9QgiRO/6B4m35rJp95DqObcQ5NcGVHiRtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AHghUoTk; arc=none smtp.client-ip=209.85.128.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wm1-f68.google.com with SMTP id 5b1f17b1804b1-428ec6c190eso41229885e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 12:50:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1724701858; x=1725306658; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nm1b7fe+EM2KbxsMouqWXhXxk0JeYyRkXhbMRY2MV68=;
+        b=AHghUoTkE4yOiAJy4LNPy1fRpzci6tNt0XLPUUrS/9LFDz+62u0CiSkq11a5sqrZB1
+         ejDhhkmaBRMWLSLdpjLiKiNkLPySpx6kRxpBkhtLof7zvZTuA4noA2uMK2Om6wpUe4Ot
+         KHfz+HmnN7t/yIN3LGi52LusAA83E3EwB1vXT1NoF2sgA3f+PnSFzJ0marK48bmP2pk/
+         C1fSCgiOzw8SGKRL7I4PJidY0bUbroj2SuGSeZ4np+7v+pNBaNFIz5M0SfOw+AFvdeln
+         2KeAMh00RnCFuoEpTsBJV3v4pYRgRyTpCi42EhyMndSWuyR/AnalfKoRfeL/yQTJDjpc
+         hTRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724701858; x=1725306658;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nm1b7fe+EM2KbxsMouqWXhXxk0JeYyRkXhbMRY2MV68=;
+        b=rabQU2Jb8gjpEwul3Bqix2tehpeAAQKCpwcKKErcXc2mMbHNsiI/LLbaeFVh+AKHYR
+         laojtLSrZDw757zYoLZQdO7Nmja4Kx59KrYZalsT3Vq2sMT3M10DpHgZpjk6FyViXjoJ
+         L4nPkWxbC42g0URDX75hehk+bgTJgPQH+Iu++LZRkm4zU8yQVG00F7T9ZKaNFTGDQMPF
+         9as14HPMSMVwORVKiMCdKXmSoaeTOQKMGhavSbwTyg8cvmbwQocnpbFc3lcbt7n5eQoG
+         wicToKaIeO6L7CHD7Z5gVN/WO16IKHo+oYmhL5BYmgS6OxeCU66wt6TFeeI2xlDIZ1Jb
+         W4rA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7mto+rlj5k7Ec+sQ8WDnY57HA3eXWA+KS3mNAMTFpzK5znl4ReQJfbA/LvAYtEQKCmL/maHbr7jpn@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlFO2UA5TOJiZx4QoT4wFvqTCngcEpDc1G48kddCZmgQRrh+rp
+	kNje9vpVLYROlo+jSBz/Jdu8CHG6Nsazw9juPX2B4WwgL5ZEN3Giy5tsX9sFAQc=
+X-Google-Smtp-Source: AGHT+IF2zQ2HTqZgToRotlgcOcl2W6GGPXIdSXXSe9YgqKKpwd3OPRH5/4dJ7SYP5S2nDsD/4FzRPA==
+X-Received: by 2002:a5d:4cc2:0:b0:371:72a8:15e with SMTP id ffacd0b85a97d-37311855fecmr7064417f8f.16.1724701857803;
+        Mon, 26 Aug 2024 12:50:57 -0700 (PDT)
+Received: from localhost ([87.13.33.30])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a67f41f249sm488655485a.126.2024.08.26.12.50.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2024 12:50:57 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Mon, 26 Aug 2024 21:51:02 +0200
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
+ parsed from DT
+Message-ID: <Zszcps6bnCcdFa54@apocalypse>
+Mail-Followup-To: Bjorn Helgaas <helgaas@kernel.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+References: <8b4fa91380fc4754ea80f47330c613e4f6b6592c.1724159867.git.andrea.porta@suse.com>
+ <20240821152441.GA222583@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,106 +139,150 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240821152441.GA222583@bhelgaas>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-sophgo-pintrl
-head:   e7a4141f4420879720f9d2c99974e269044c7597
-commit: a29d8e93e710e97863d5bb4e4b6079d6c7daab81 [2/5] pinctrl: sophgo: add support for CV1800B SoC
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20240827/202408270140.L6Hm1sNo-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240827/202408270140.L6Hm1sNo-lkp@intel.com/reproduce)
+Hi Bjorn,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202408270140.L6Hm1sNo-lkp@intel.com/
+On 10:24 Wed 21 Aug     , Bjorn Helgaas wrote:
+> On Tue, Aug 20, 2024 at 04:36:05PM +0200, Andrea della Porta wrote:
+> > The of_pci_set_address() function parse devicetree PCI range specifier
+> 
+> s/parse/parses/ ? 
 
-All errors (new ones prefixed by >>):
+Ack.
 
-   drivers/pinctrl/sophgo/pinctrl-cv18xx.c: In function 'cv1800_pconf_get':
->> drivers/pinctrl/sophgo/pinctrl-cv18xx.c:544:14: error: 'PIN_CONFIG_INPUT_SCHMITT_UV' undeclared (first use in this function); did you mean 'PIN_CONFIG_INPUT_SCHMITT'?
-     544 |         case PIN_CONFIG_INPUT_SCHMITT_UV:
-         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |              PIN_CONFIG_INPUT_SCHMITT
-   drivers/pinctrl/sophgo/pinctrl-cv18xx.c:544:14: note: each undeclared identifier is reported only once for each function it appears in
-   drivers/pinctrl/sophgo/pinctrl-cv18xx.c: In function 'cv1800_pinconf_compute_config':
-   drivers/pinctrl/sophgo/pinctrl-cv18xx.c:611:22: error: 'PIN_CONFIG_INPUT_SCHMITT_UV' undeclared (first use in this function); did you mean 'PIN_CONFIG_INPUT_SCHMITT'?
-     611 |                 case PIN_CONFIG_INPUT_SCHMITT_UV:
-         |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                      PIN_CONFIG_INPUT_SCHMITT
+> 
+> > assuming the address is 'sanitized' at the origin, i.e. without checking
+> > whether the incoming address is 32 or 64 bit has specified in the flags.
+> > In this way an address with no OF_PCI_ADDR_SPACE_MEM64 set in the flagss
+> 
+> s/flagss/flags/
 
+Ack.
 
-vim +544 drivers/pinctrl/sophgo/pinctrl-cv18xx.c
+> 
+> > could leak through and the upper 32 bits of the address will be set too,
+> > and this violates the PCI specs stating that ion 32 bit address the upper
+> 
+> s/ion/in/
 
-   505	
-   506	static int cv1800_pconf_get(struct pinctrl_dev *pctldev,
-   507				    unsigned int pin_id, unsigned long *config)
-   508	{
-   509		struct cv1800_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-   510		int param = pinconf_to_config_param(*config);
-   511		struct cv1800_pin *pin = cv1800_get_pin(pctrl, pin_id);
-   512		enum cv1800_pin_io_type type;
-   513		u32 value;
-   514		u32 arg;
-   515		bool enabled;
-   516		int ret;
-   517	
-   518		if (!pin)
-   519			return -EINVAL;
-   520	
-   521		type = cv1800_pin_io_type(pin);
-   522		if (type == IO_TYPE_ETH || type == IO_TYPE_AUDIO)
-   523			return -ENOTSUPP;
-   524	
-   525		value = readl(cv1800_pinctrl_get_component_addr(pctrl, &pin->conf));
-   526	
-   527		switch (param) {
-   528		case PIN_CONFIG_BIAS_PULL_DOWN:
-   529			enabled = FIELD_GET(PIN_IO_PULLDOWN, value);
-   530			arg = cv1800_pull_down_typical_resistor(pctrl, pin);
-   531			break;
-   532		case PIN_CONFIG_BIAS_PULL_UP:
-   533			enabled = FIELD_GET(PIN_IO_PULLUP, value);
-   534			arg = cv1800_pull_up_typical_resistor(pctrl, pin);
-   535			break;
-   536		case PIN_CONFIG_DRIVE_STRENGTH_UA:
-   537			enabled = true;
-   538			arg = FIELD_GET(PIN_IO_DRIVE, value);
-   539			ret = cv1800_pinctrl_reg2oc(pctrl, pin, arg);
-   540			if (ret < 0)
-   541				return ret;
-   542			arg = ret;
-   543			break;
- > 544		case PIN_CONFIG_INPUT_SCHMITT_UV:
-   545			arg = FIELD_GET(PIN_IO_SCHMITT, value);
-   546			ret = cv1800_pinctrl_reg2schmitt(pctrl, pin, arg);
-   547			if (ret < 0)
-   548				return ret;
-   549			arg = ret;
-   550			enabled = arg != 0;
-   551			break;
-   552		case PIN_CONFIG_POWER_SOURCE:
-   553			enabled = true;
-   554			arg = cv1800_get_power_cfg(pctrl, pin->power_domain);
-   555			break;
-   556		case PIN_CONFIG_SLEW_RATE:
-   557			enabled = true;
-   558			arg = FIELD_GET(PIN_IO_OUT_FAST_SLEW, value);
-   559			break;
-   560		case PIN_CONFIG_BIAS_BUS_HOLD:
-   561			arg = FIELD_GET(PIN_IO_BUS_HOLD, value);
-   562			enabled = arg != 0;
-   563			break;
-   564		default:
-   565			return -ENOTSUPP;
-   566		}
-   567	
-   568		*config = pinconf_to_config_packed(param, arg);
-   569	
-   570		return enabled ? 0 : -EINVAL;
-   571	}
-   572	
+Ack.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> > bit should be zero.
+> 
+> I don't understand this code, so I'm probably missing something.  It
+> looks like the interesting path here is:
+> 
+>   of_pci_prop_ranges
+>     res = &pdev->resource[...];
+>     for (j = 0; j < num; j++) {
+>       val64 = res[j].start;
+>       of_pci_set_address(..., val64, 0, flags, false);
+>  +      if (OF_PCI_ADDR_SPACE_MEM64)
+>  +        prop[1] = upper_32_bits(val64);
+>  +      else
+>  +        prop[1] = 0;
+> 
+> OF_PCI_ADDR_SPACE_MEM64 tells us about the size of the PCI bus
+> address, but the address (val64) is a CPU physical address, not a PCI
+> bus address, so I don't understand why of_pci_set_address() should use
+> OF_PCI_ADDR_SPACE_MEM64 to clear part of the CPU address.
+>
+
+It all starts from of_pci_prop_ranges(), that is the caller of of_pci_set_address().
+val64 (i.e. res[j].start) is the address part of a struct resource that has
+its own flags.  Those flags are directly translated to of_pci_range flags by
+of_pci_get_addr_flags(), so any IORESOURCE_MEM_64 / IORESOURCE_MEM in the
+resource flag will respectively become OF_PCI_ADDR_SPACE_MEM64 / OF_PCI_ADDR_SPACE_MEM32
+in pci range.
+What is advertised as 32 bit at the origin (val64) should not become a 64
+bit PCI address at the output of of_pci_set_address(), so the upper 32 bit
+portion should be dropped. 
+This is explicitly stated in [1] (see page 5), where a space code of 0b10
+implies that the upper 32 bit of the address must be zeroed out.
+Please note that of_pci_prop_ranges() will be called only in case 
+CONFIG_PCI_DYNAMIC_OF_NODES is enabled to populate ranges for pci bridges and
+pci endpoint for which a quirk is declared, so I would say not a very
+often recurring use case.
+ 
+[1] - https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+
+> Add blank lines between paragraphs.
+
+Ack.
+
+> 
+> > This could cause mapping translation mismatch on PCI devices (e.g. RP1)
+> > that are expected to be addressed with a 64 bit address while advertising
+> > a 32 bit address in the PCI config region.
+> > Add a check in of_pci_set_address() to set upper 32 bits to zero in case
+> > the address has no 64 bit flag set.
+> 
+> Is this an indication of a DT error?  Have you seen this cause a
+> problem?  If so, what does it look like to a user?  I.e., how could a
+> user find this patch if they saw a problem?
+
+Not neccessarily a DT error, but an inconsistent representation of addresses
+wrt the specs. I incidentally encountered this on RaspberryPi 5, where
+the PCI config space for the RP1 endpoint shows 32 bit BARs (basically an
+offset from zero) but the effective address to which the CPU can access the
+device is 64 bit nonetheless (0x1f_00000000).  I believe this is backed by
+some non standard hw wiring.
+
+Without this patch the range translation chain is broken, like this:
+
+pcie@120000: <0x2000000 0x00 0x00    0x1f 0x00                0x00 0xfffffffc>;
+~~~ chain breaks here ~~~
+pci@0      : <0x82000000 0x1f 0x00   0x82000000 0x1f 0x00     0x00 0x600000>;
+dev@0,0    : <0x01 0x00 0x00         0x82010000 0x1f 0x00     0x00 0x400000>;
+rp1@0      : <0xc0 0x40000000        0x01 0x00 0x00           0x00 0x400000>;
+
+while with the patch applied the chain correctly become:
+
+pcie@120000: <0x2000000 0x00 0x00    0x1f 0x00                0x00 0xfffffffc>;
+pci@0      : <0x82000000 0x00 0x00   0x82000000 0x00 0x00     0x00 0x600000>;
+dev@0,0    : <0x01 0x00 0x00         0x82010000 0x00 0x00     0x00 0x400000>;
+rp1@0      : <0xc0 0x40000000        0x01 0x00 0x00           0x00 0x400000>;
+
+I'm not advocating here that this patch is fixing the behaviour on Rpi5, this
+is just a nice side effect of the correct address representation. I think we can
+also probably fix it by patching the pcie node in the devicetree like this:
+
+pcie@120000: <0x2000000 0xi1f 0x00    0x1f 0x00                0x00 0xfffffffc>;
+
+but this is of course just a 1:1 mapping, while the address will still be at
+least 'virtually' unconsistent, showing 64 bit address wihile the 32 bit flag is
+set.
+The net symptoms to the user would be, in the case of the RP1, a platform driver
+of one of its sub-peripheral that fails to be probed.
+
+Many thanks,
+Andrea
+
+> 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> >  drivers/pci/of_property.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
+> > index 5a0b98e69795..77865facdb4a 100644
+> > --- a/drivers/pci/of_property.c
+> > +++ b/drivers/pci/of_property.c
+> > @@ -60,7 +60,10 @@ static void of_pci_set_address(struct pci_dev *pdev, u32 *prop, u64 addr,
+> >  	prop[0] |= flags | reg_num;
+> >  	if (!reloc) {
+> >  		prop[0] |= OF_PCI_ADDR_FIELD_NONRELOC;
+> > -		prop[1] = upper_32_bits(addr);
+> > +		if (FIELD_GET(OF_PCI_ADDR_FIELD_SS, flags) == OF_PCI_ADDR_SPACE_MEM64)
+> > +			prop[1] = upper_32_bits(addr);
+> > +		else
+> > +			prop[1] = 0;
+> >  		prop[2] = lower_32_bits(addr);
+> >  	}
+> >  }
+> > -- 
+> > 2.35.3
+> > 
 
