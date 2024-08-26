@@ -1,138 +1,345 @@
-Return-Path: <linux-gpio+bounces-9131-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9132-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D334695E3DC
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Aug 2024 16:23:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1EC695E657
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 03:36:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D90A1F21415
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Aug 2024 14:23:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 57841B2085D
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 01:36:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD8C6154BFF;
-	Sun, 25 Aug 2024 14:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xz0fqWmP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA8BE4A33;
+	Mon, 26 Aug 2024 01:36:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C3713E04B;
-	Sun, 25 Aug 2024 14:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F82443D;
+	Mon, 26 Aug 2024 01:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724595776; cv=none; b=jt9CjnW1gMJdzvXy4pKdydYSBwr3d2TTHFoW5SvMxwdz0YlQL9HERIj4WKk0EG8wrGB0M/LW4nW0EL1Y6mOz7gGK2HmXt5Ji06h37Kn2C252gr29GzKQoDVbVd/FDA2lDLo5VAbeUvsmJZpMrgzHJsUnVKySd6BOpptX1flOcWw=
+	t=1724636201; cv=none; b=ZHtyBeMULuNdzZ7cwvQ1jTA+HNInhluoeAGtsOF6Jn24b4PF3hr3rTtMHYxjgM/b6LwXSxKVdN/R1CYi3ErMmnlDom8lmVDPq5pJ53XNOIgXpT6/ZKNwVLQsoax2doXtMUsqzSvyuJS/YSf2+eVVZD9lshgKxkqTjUeAJv+78Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724595776; c=relaxed/simple;
-	bh=rkM9g5ut8ywJerR7d/mwyAA5vHOU2dkdY0f6Jmpzmac=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=MpIjwC8MjKSqZCYbVUVXTSvEuSEKJYhNuE0flh0AwuiggMCQjIkxEEZ5rvI640r6KprT3ZyYjwLyH8HRlBCc8hvQp8DVPPTE1V0AcxwDq5ToTA3zBN94vcfwkkfx3tTh/D9gvm2Linnt9H95G/LzoBihUzKrHHo0KOI5Wz6tQ2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xz0fqWmP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834ABC32782;
-	Sun, 25 Aug 2024 14:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724595776;
-	bh=rkM9g5ut8ywJerR7d/mwyAA5vHOU2dkdY0f6Jmpzmac=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Xz0fqWmPZPSg4jiwhxs39YBOFbQPsN0KG1K/Qa/qt7Gk/UEh1FeMBEMoIBVZwDuDK
-	 tN/qOtV7RWXaLVlOFjQAdC33a90uackR9kNV4W5RRUoIO9Vg2Yau4wffY2l0cjxqgF
-	 EQos4hGwcSZtmWjXLgB2VKLU1Yv1qbfy6BMGEuCrtdliMULQqTW5qHCv26nP9bUP/m
-	 5Nj+o4BuTmjtaSK9rpcDUmSdoSMl+/rfjaJ+vRy/IdKPdc6bpjK4V7TXHCywedgfjp
-	 YDf2YIX7NU6BEyK8PnVMlnzJVeuk8MYwjglmDo4rHlNPRQxsLzSi5NY9LwNeCM6IIi
-	 IrL1+i4yKHn8Q==
-Date: Sun, 25 Aug 2024 09:22:53 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1724636201; c=relaxed/simple;
+	bh=wd6zZUEd613VvgbUTb6iIUfcvaLsT1imtH42TS06iMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=budZQ7rP62XLqL+6ED5wvwoB80hwCs5SlZKmSrUfloqZreIaTMpfMVj4JBVd94sOo19OcuSYPnJrDJNopoIOzSIXnzSAYQPrP9pZ97rv420ldQeDvc5ZZtXPJ8nLl5f7qlbMLMzd59D2XsK0MeirKa71g+FbOXuyp4wRTy3PV38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Date: Mon, 26 Aug 2024 01:36:35 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Yangyu Chen <cyy@cyyself.name>, Jesse Taube <jesse@rivosinc.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@spacemit.com>,
+	Meng Zhang <kevin.z.m@hotmail.com>, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-binding: pinctrl: spacemit: add documents for
+ K1 SoC
+Message-ID: <20240826013230.GYA22924.dlan.gentoo>
+References: <20240825-02-k1-pinctrl-v2-0-ddd38a345d12@gentoo.org>
+ <20240825-02-k1-pinctrl-v2-1-ddd38a345d12@gentoo.org>
+ <d9a925da-2381-4203-a3b6-4cb892039d23@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
- Meng Zhang <zhangmeng.kevin@spacemit.com>, 
- Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org, 
- Yangyu Chen <cyy@cyyself.name>, Paul Walmsley <paul.walmsley@sifive.com>, 
- Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org, 
- Linus Walleij <linus.walleij@linaro.org>, Jesse Taube <jesse@rivosinc.com>, 
- Conor Dooley <conor+dt@kernel.org>, Meng Zhang <kevin.z.m@hotmail.com>, 
- linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- linux-gpio@vger.kernel.org
-In-Reply-To: <20240825-02-k1-pinctrl-v2-1-ddd38a345d12@gentoo.org>
-References: <20240825-02-k1-pinctrl-v2-0-ddd38a345d12@gentoo.org>
- <20240825-02-k1-pinctrl-v2-1-ddd38a345d12@gentoo.org>
-Message-Id: <172459577302.1848940.15978105845752882956.robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-binding: pinctrl: spacemit: add documents
- for K1 SoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d9a925da-2381-4203-a3b6-4cb892039d23@kernel.org>
 
+Hi Krzysztof: 
 
-On Sun, 25 Aug 2024 13:10:02 +0000, Yixun Lan wrote:
-> Add dt-binding for the pinctrl driver of SpacemiT's K1 SoC.
+On 15:48 Sun 25 Aug     , Krzysztof Kozlowski wrote:
+> On 25/08/2024 15:10, Yixun Lan wrote:
+> > Add dt-binding for the pinctrl driver of SpacemiT's K1 SoC.
 > 
-> Two vendor specific properties are introduced here, As the pinctrl
-> has dedicated slew rate enable control - bit[7], so we have
-> spacemit,slew-rate-{enable,disable} for this. For the same reason,
-> creating spacemit,strong-pull-up for the strong pull up control.
 > 
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
->  .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      | 134 +++++++++++++++++
->  include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h  | 161 +++++++++++++++++++++
->  2 files changed, 295 insertions(+)
+> Please use subject prefixes matching the subsystem. You can get them for
+> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+> your patch is touching. For bindings, the preferred subjects are
+> explained here:
+> https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 > 
+> It's "dt-bindings:"
+Ok, will fix in next version
 
-My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> > 
+> > Two vendor specific properties are introduced here, As the pinctrl
+> > has dedicated slew rate enable control - bit[7], so we have
+> > spacemit,slew-rate-{enable,disable} for this. For the same reason,
+> > creating spacemit,strong-pull-up for the strong pull up control.
+> 
+> Huh, no, use generic properties. More on that below
+> 
+see my reply below
 
-yamllint warnings/errors:
+> 
+> 
+> > 
+> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > ---
+> >  .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      | 134 +++++++++++++++++
+> >  include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h  | 161 +++++++++++++++++++++
+> >  2 files changed, 295 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> > new file mode 100644
+> > index 0000000000000..8adfc5ebbce37
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> > @@ -0,0 +1,134 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/spacemit,k1-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: SpacemiT K1 SoC Pin Controller
+> > +
+> > +maintainers:
+> > +  - Yixun Lan <dlan@gentoo.org>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: spacemit,k1-pinctrl
+> > +
+> > +  reg:
+> > +    items:
+> > +      - description: pinctrl io memory base
+> > +
+> > +patternProperties:
+> > +  '-cfg$':
+> > +    type: object
+> > +    description: |
+> 
+> Do not need '|' unless you need to preserve formatting.
+> 
+Ok
+> > +      A pinctrl node should contain at least one subnode representing the
+> > +      pinctrl groups available on the machine.
+> > +
+> > +    additionalProperties: false
+> 
+> Keep it before description.
+Ok
+> 
+> > +
+> > +    patternProperties:
+> > +      '-pins$':
+> > +        type: object
+> > +        description: |
+> > +          Each subnode will list the pins it needs, and how they should
+> > +          be configured, with regard to muxer configuration, bias, input
+> > +          enable/disable, input schmitt trigger, slew-rate enable/disable,
+> > +          slew-rate, drive strength, power source.
+> > +        $ref: /schemas/pinctrl/pincfg-node.yaml
+> > +
+> > +        allOf:
+> > +          - $ref: pincfg-node.yaml#
+> > +          - $ref: pinmux-node.yaml#
+> 
+> You are duplicating refs.
+ok, will fix it
+> 
+> > +
+> > +        properties:
+> > +          pinmux:
+> > +            description: |
+> > +              The list of GPIOs and their mux settings that properties in the
+> > +              node apply to. This should be set using the K1_PADCONF macro to
+> > +              construct the value.
+> > +            $ref: /schemas/pinctrl/pinmux-node.yaml#/properties/pinmux
+> 
+> Hm why you need the ref?
+> 
+will drop it
+> > +
+> > +          bias-disable: true
+> > +
+> > +          bias-pull-up: true
+> > +
+> > +          bias-pull-down: true
+> > +
+> > +          drive-strength-microamp:
+> > +            description: |
+> > +              typical current when output high level, but in mA.
+> > +              1.8V output: 11, 21, 32, 42 (mA)
+> > +              3.3V output: 7, 10, 13, 16, 19, 23, 26, 29 (mA)
+> > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +          input-schmitt:
+> > +            description: |
+> > +              typical threshold for schmitt trigger.
+> > +              0: buffer mode
+> > +              1: trigger mode
+> > +              2, 3: trigger mode
+> > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > +            enum: [0, 1, 2, 3]
+> > +
+> > +          power-source:
+> > +            description: external power supplies at 1.8v or 3.3v.
+> > +            enum: [ 1800, 3300 ]
+> > +
+> > +          slew-rate:
+> > +            description: |
+> > +              slew rate for output buffer
+> > +              0, 1: Slow speed
+> 
+> Hm? Surprising, 0 is slow speed?
+> 
+from docs, section 3.3.2.2 MFPR Register Description
+0, 1 are same, both for slow speed
+https://developer.spacemit.com/documentation?token=An1vwTwKaigaXRkYfwmcznTXned
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml: patternProperties:-cfg$:patternProperties:-pins$:properties:drive-strength-microamp: '$ref' should not be valid under {'const': '$ref'}
-	hint: Standard unit suffix properties don't need a type $ref
-	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.example.dtb: dsi-phy@10215000: drive-strength-microamp: 4000 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/phy/mediatek,dsi-phy.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.example.dtb: dsi-phy@10215000: drive-strength-microamp: 4000 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/property-units.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.example.dtb: pinctrl@10005000: i2c0-pins:pins1:drive-strength-microamp: 1000 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/pinctrl/mediatek,mt8183-pinctrl.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,mt8183-pinctrl.example.dtb: pins1: drive-strength-microamp: 1000 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/property-units.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,mt8186-pinctrl.example.dtb: pinctrl@10005000: i2c0-pins:pins:drive-strength-microamp: 1000 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/pinctrl/mediatek,mt8186-pinctrl.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,mt8186-pinctrl.example.dtb: pins: drive-strength-microamp: 1000 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/property-units.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,mt8195-pinctrl.example.dtb: pinctrl@10005000: i2c0-pins:pins:drive-strength-microamp: 1000 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/pinctrl/mediatek,mt8195-pinctrl.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,mt8195-pinctrl.example.dtb: pins: drive-strength-microamp: 1000 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/property-units.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,mt8188-pinctrl.example.dtb: pinctrl@10005000: i2c0-pins:pins:drive-strength-microamp: 1000 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/pinctrl/mediatek,mt8188-pinctrl.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,mt8188-pinctrl.example.dtb: pins: drive-strength-microamp: 1000 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/property-units.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.example.dtb: pinctrl@d401e000: '#gpio-range-cells', '#pinctrl-cells' do not match any of the regexes: '-cfg$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/pinctrl/spacemit,k1-pinctrl.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.example.dtb: uart0-2-pins: drive-strength-microamp: 32 is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/property-units.yaml#
+> > +              2: Medium speed
+> > +              3: Fast speed
+> > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > +            enum: [0, 1, 2, 3]
+> > +
+> > +          spacemit,slew-rate-enable:
+> > +            description: enable slew rate.
+> 
+> The presence of slew-rate enables it, doesn't it?
+> 
+yes, this should work, I will take this approach, thanks
 
-doc reference errors (make refcheckdocs):
+> > +            type: boolean
+> > +
+> > +          spacemit,slew-rate-disable:
+> > +            description: disable slew rate.
+> > +            type: boolean
+> 
+> Just use slew-rate, 0 disable, some value to match real slew-rate.
+> 
+sounds good to me, since 0, 1 indicate same meaning, can re-use 0 for
+disabling slew rate.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240825-02-k1-pinctrl-v2-1-ddd38a345d12@gentoo.org
+> > +
+> > +          spacemit,strong-pull-up:
+> > +            description: enable strong pull up.
+> 
+> Do not duplicate the property name in description. You did not say
+> anything useful here. What is "strong"? bias-pull-up takes also an argument.
+> 
+there is a dedicated strong pull bit[3] for I2C, SD card kinds of pad
+I don't know how 'strong' it is if in ohms, will see if can get
+more info on this (may expand the description)
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+I think using 'bias-pull-up' property with argument should also work,
+but it occur to me it's more intuitive to introduce a property here, which
+reflect the underlying hardware functionality. this is similar to starfive's jh7100
+bindings/pinctrl/starfive,jh7100-pinctrl.yaml:154
+(refer to exist code doesn't mean always correct, so I need advice here)
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+I will keep this property unless there is objection, please let me know
 
-pip3 install dtschema --upgrade
+> > +            type: boolean
+> > +
+> > +        required:
+> > +          - pinmux
+> > +
+> > +        additionalProperties: false
+> 
+> This goes up, before description.
+> 
+Ok
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/pinctrl/spacemit,k1-pinctrl.h>
+> > +
+> > +    soc {
+> > +        #address-cells = <2>;
+> > +        #size-cells = <2>;
+> > +
+> > +        pinctrl@d401e000 {
+> > +            compatible = "spacemit,k1-pinctrl";
+> > +            reg = <0x0 0xd401e000 0x0 0x400>;
+> > +            #pinctrl-cells = <2>;
+> > +            #gpio-range-cells = <3>;
+> 
+> This wasn't ever tested... :(
+> ...
+will drop it
+> 
+> > diff --git a/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h b/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h
+> > new file mode 100644
+> > index 0000000000000..13ef4aa6c53a3
+> > --- /dev/null
+> > +++ b/include/dt-bindings/pinctrl/spacemit,k1-pinctrl.h
+> > @@ -0,0 +1,161 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> > +/*
+> > + * Copyright (c) 2022-2024 SpacemiT (Hangzhou) Technology Co. Ltd
+> > + * Copyright (c) 2024 Yixun Lan <dlan@gentoo.org>
+> > + *
+> > + */
+> > +
+> > +#ifndef _DT_BINDINGS_PINCTRL_K1_H
+> > +#define _DT_BINDINGS_PINCTRL_K1_H
+> > +
+> > +#define PINMUX(pin, mux) \
+> > +	(((pin) & 0xffff) | (((mux) & 0xff) << 16))
+> > +
+> > +/* pin offset */
+> > +#define PINID(x)	((x) + 1)
+> > +
+> > +#define GPIO_INVAL  0
+> > +#define GPIO_00     PINID(0)
+> 
+> Not really, pin numbers are not bindings. Drop entire header.
+> 
+Ok, I will move them to dts folder, which should be file
+arch/riscv/boot/dts/spacemit/k1-pinctrl.h
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+> ...
+> 
+> > +
+> > +#define SLEW_RATE_SLOW0		0
+> > +#define SLEW_RATE_SLOW1		1
+> > +#define SLEW_RATE_MEDIUM	2
+> > +#define SLEW_RATE_FAST		3
+> 
+> Not a binding, either. No usage in the driver.
+Ok, will drop it
 
+> 
+> > +
+> > +#define K1_PADCONF(pin, func) (((pin) << 16) | (func))
+> 
+> Not a binding.
+> 
+same, move to dts
+
+> 
+> 
+> Best regards,
+> Krzysztof
+
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
 
