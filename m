@@ -1,115 +1,147 @@
-Return-Path: <linux-gpio+bounces-9176-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9177-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 223DD95F49A
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 17:08:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81E8B95F563
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 17:42:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C02CD1F21995
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 15:08:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 397EA28290E
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Aug 2024 15:42:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1718C18C910;
-	Mon, 26 Aug 2024 15:08:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 542DB194138;
+	Mon, 26 Aug 2024 15:42:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UV6W6Cs3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdjS9CZa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218AB13BACC
-	for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 15:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A94D19306C;
+	Mon, 26 Aug 2024 15:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724684918; cv=none; b=CpIw34yU9dqW0Zi4DR/LYi5qIPntSAmZPlndHlqBpcZRcs9Y405zd/92++Miris7rBbjHOGsMwCRUkZdkLy+uDIniIsKY7HcPDkimeQKMxQu5O2ALY5qSfLTMMj43hFVpWC3IGS0l3kOTRNblXRj7aOY71tIu2Ay1lzKKnRTmuE=
+	t=1724686937; cv=none; b=PqiENNsrCI/Iquu4kbfC43dz8sSqIa9utJmK+lagtaYx1aitKLsL5MoXRufpJfn+XAFn3a+8wNLSnCmV9qBYl3WPHufgCS6oW5o42ElV/wReHo92t+3lDNfkRACc+xrRi1HhvU7LVfTDEzmbptAH7XXq23plaJLBZpHuqerFXqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724684918; c=relaxed/simple;
-	bh=QRRzk6+mhsJ4JwH3MhC2Atvzvd4zaOnggwRIlTPhMWA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dMaPfeMRTplRP191hFJ6lQe8hXD0dHPhp4Y5+dfZHIWRPUT8ad1mt5QkvRrJ8yC3SGTOERQi25T1UYJtO7FaN/QtH10a1cf87D0MM8WJHlfsUjgJb0DKAXurfb+Qb/LoRccRIfWm5X37esdiCnnFul6uvXNpva8AYrGP7R3X+z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UV6W6Cs3; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-37196229356so99526f8f.3
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Aug 2024 08:08:36 -0700 (PDT)
+	s=arc-20240116; t=1724686937; c=relaxed/simple;
+	bh=xM8pXW+HgjT0erxnOsIGtoopuFkOjZ2IcKxNFrbxs24=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WCZrOFK+2hXKBDQAUS40EMbewcaWyu1MUrgWV9+P2/V97lwdYGNOXpxnHNiz3bBBVCgwueURk6fFsIesudDF8A4Dnm4eXzr4rbv9SSHowIobN34NKL8NziYwtDqQV/DZtB1olu5D6kaLZvX0L2MfePcVoYtM/oBMJHNy8l0ajI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EdjS9CZa; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5343eeb4973so3703342e87.2;
+        Mon, 26 Aug 2024 08:42:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724684915; x=1725289715; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qq3MT2U3Bii1oMqcjLAXejFqk1AKEOqI5iAx/L7MuJo=;
-        b=UV6W6Cs3RTnBWGfs0kfkqz5A3QTfC7xybWJbKYydkO3OS++3S09oqnFNK9VvySg/KI
-         1XCeJdscNvULKmy9ABot1yxSTS6dGERzfel97NLs1lRnChjd/Hs+if6dfza1OiymeBxK
-         UcgeTHyxYTXp3BpGtJvumTgEoIVrlCFKVeKS/cNutHRVuQNPxrsMNlLjQTrO8aQlVUBZ
-         R3jBxvCcMAoSVhzkent3ZUw6YoVjtf4X6RzMMg5AA8KG7g5DwRRflb3boNvIjRoG7M+V
-         z+xDJwvL8+dKG+gkdvsTLEGB7xYrtSi1pXd5BJrZHCtuEMuK8WLp1iN6HTuxu9x+VsX/
-         On0w==
+        d=gmail.com; s=20230601; t=1724686933; x=1725291733; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FH/rM9r8vy15gTO0SvqG09ShUwI8MYLfcApXi3x19VU=;
+        b=EdjS9CZavbm/qHjdqAVWAMe51uCR7TIdmv8bxidfh6CYSFEDINpoD9bnNZw/44NEd2
+         bwBi7FKlKtyMt0aRH9pV5PVxbBLin9ef5NWVI29BzbN/ecmH7ybQvBjssgCuZxe2N6ZU
+         7ix90zpw2jETILZoFi3jgRNr5r8Uc+0KPKg8uDr8uTXolk0iCXovdJcMfQ0COUo0Fagf
+         aIVHXK2pNYoUTKjnCizNHQ2GnNb3Ssg1jeZQVF2hHit1AtRoMmTpfyj80pjyAYaVa3SL
+         190xbe2zVRO5EoXJuoymLYZLXgIt0VN5KzhSc99Ki7QVuE4o/Lg4evW1RfKxHAV1p1jZ
+         VsIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724684915; x=1725289715;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Qq3MT2U3Bii1oMqcjLAXejFqk1AKEOqI5iAx/L7MuJo=;
-        b=BdIkP85BBBfcQc/dAIYHYotq7/LwDbogoIs5GIRz+H5a2CmQUAdsVws4FKp7I9nbi1
-         ZtPr0ufOOLp798OXl1VEYs2QSQvJo6ucoXmWfTBtQPGBUqAahpzcrsq+CQwjRH6kKIxx
-         mRSbJRRTe/z8RCHHj1Vc0prDaIHG06SK30TT1qyQ01jVHMse89lpGKpXj3xXc5aR5JCM
-         U5g0v+TDmdRQ5pV2z8t5pPSfnBvi17qxZPa7lN9wcLKfV4lkgsrCEHNDBuV0f1ghjC+1
-         LRSwk7M980ZyBOsfo1qQojnlSyQ9vzNADRrVI0dx5Z8fxbWQTXP49FHh3yFeUaIiGhuV
-         MzGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDh7ocwLWJEQzUh5hsJMgoiSdham3dWry5znQqSWj0E4l9B0L2ToXphTGHW1fLYtTMeq5itweF4IAQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1lUELmwHfw6rrBD36XGyc4zqFkb7fdP4qpX1CBxsRb0+0tkLe
-	kl146ts4HGhZI5e1zQ/oE1ifhfCzHV3eIwF9jmH3fc4ybPIF5zaWE4KOYk3PmomrU9EfvIuYQT7
-	w
-X-Google-Smtp-Source: AGHT+IGp1HEFpKBlPzvGLdHjlSkL9VLALIn2mdOC9GkDps/j6o00dYXrlTi5d5CGoc1xVMCg+wJO1A==
-X-Received: by 2002:a5d:5889:0:b0:35f:1edb:4695 with SMTP id ffacd0b85a97d-373118b65acmr3696789f8f.6.1724684915215;
-        Mon, 26 Aug 2024 08:08:35 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.222.82])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42ac5162322sm155040825e9.24.2024.08.26.08.08.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2024 08:08:34 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Jianqun Xu <jay.xu@rock-chips.com>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] gpio: rockchip: fix OF node leak in probe()
-Date: Mon, 26 Aug 2024 17:08:32 +0200
-Message-ID: <20240826150832.65657-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1724686933; x=1725291733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FH/rM9r8vy15gTO0SvqG09ShUwI8MYLfcApXi3x19VU=;
+        b=OfchqeexupTnQ70b/gPvTSp4ysO6+DSuBIzlVLqODF84aw3sTALHkfvT3hvcmmbuya
+         4jdOLh7DNXR6+k7hm2oNSxBm3H2CQfRZWZE7bWobKs/vPIxCsAiGqTpka2JtNw8h2h0M
+         tLhJHtB0tHKzsPT7/FU1qvbvg98315bSVMfOzetEC15qRrr+WnJnPLR0X0Qx86CwU+1a
+         W1BdoruNDwHJ5zgXUzCjAEG24whjNZKyBfHfG2yX5yi9AmR1n50/Kk21b1qiiqUgkNGh
+         ezOuRQyCdPURdLohfIk8677CHVQAbELVp3rFyzRr92YeTlx2ZbCKOX1+2Zknuk9VpwNe
+         Nbgw==
+X-Forwarded-Encrypted: i=1; AJvYcCV82Yc0GfBiVscdpNiH8Cn1HQ0lYpvuSjt7qaJLOwA7h3aPdyAHtosYXKiZvRpibbuebyhAPTvn4CLKbA==@vger.kernel.org, AJvYcCVI/piB7xYhp2AHSPIQF5Hk0tDk577LglGcyylXlTgtoaXrXEq5Or9FY6RXK39IQ1kDpOadZyZA@vger.kernel.org, AJvYcCVl833agkMpi5UadWwaCyPL5YHvENsRbuJ13BnzKYdY2hoDUHJWqcFtyzBCVD09LtQY5JO3vrYhJ4kWxoLx@vger.kernel.org, AJvYcCWGRmTCqwn/PSfdfXgT1AAVmlZnnskaFi6uXQdehnW9n2MQpRoJ309ZJ8OyGu9Xxrunu3Q4JthwcARz@vger.kernel.org, AJvYcCWKN89Y418s69KCCpnQbddorcfo/8aSC5MMwvtKd6cH2ZMrUFAzAQZLEcFa+Vyj8fI0w/GCaDawDRsC@vger.kernel.org, AJvYcCWWlpsZ8jctj9IxWb8rtQvxQs1vqqrexaHjZ7YNhuNAIvLxnZVw1sDiWp0IDgkBYvY5QtQkIyzyf/6dsQ==@vger.kernel.org, AJvYcCXuzaFrSIuR/W/rSaj86l3u9rw6GOtN9wKq/KJS32EAWj8zas0gTCJXrxwiKUVmX53q8dLcX/97D4pXXg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkmXMIVUA9sKDzyL8jEy9n3kr4Qxovw8z1bM2cGDcWxbyAG//6
+	AFqhaHBjbrFkL/rqOTtRTb203J3BDnzRje5y1MGPsPxrMEN9PSxU7766//v/ZH7mr11JzDSMnh3
+	AME9aKOsRvcxxnkE4TnqlG5qJnig=
+X-Google-Smtp-Source: AGHT+IEO+gUPPoFWhnVIZyFPIRMKkPjZZ1g7sFSpxYSDeKMazFoujBp34K9I3yoSDp0PEZ365NhxrirOyyk84oqJOVc=
+X-Received: by 2002:ac2:4e06:0:b0:52e:936e:a237 with SMTP id
+ 2adb3069b0e04-53438846debmr7930724e87.16.1724686932982; Mon, 26 Aug 2024
+ 08:42:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240822134744.44919-1-pstanner@redhat.com> <20240822134744.44919-6-pstanner@redhat.com>
+ <ZsdO2q8uD829hP-X@smile.fi.intel.com> <ad6af1c4194873e803df65dc4d595f8e4b26cb33.camel@redhat.com>
+In-Reply-To: <ad6af1c4194873e803df65dc4d595f8e4b26cb33.camel@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 26 Aug 2024 18:41:36 +0300
+Message-ID: <CAHp75VfKS_PWer2hEH8x0qgBUEPx05p8BA=c0UirAWjg0SaLeA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/9] ethernet: cavium: Replace deprecated PCI functions
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>, 
+	Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, 
+	Xu Yilun <yilun.xu@intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Alvaro Karsz <alvaro.karsz@solid-run.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Richard Cochran <richardcochran@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>, Chaitanya Kulkarni <kch@nvidia.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-fpga@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	virtualization@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Driver code is leaking OF node reference from of_get_parent() in
-probe().
+On Mon, Aug 26, 2024 at 5:51=E2=80=AFPM Philipp Stanner <pstanner@redhat.co=
+m> wrote:
+> On Thu, 2024-08-22 at 17:44 +0300, Andy Shevchenko wrote:
+> > On Thu, Aug 22, 2024 at 03:47:37PM +0200, Philipp Stanner wrote:
 
-Fixes: 936ee2675eee ("gpio/rockchip: add driver for rockchip gpio")
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/gpio/gpio-rockchip.c | 1 +
- 1 file changed, 1 insertion(+)
+...
 
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index 0bd339813110..365ab947983c 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -713,6 +713,7 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 
- 	pctldev = of_pinctrl_get(pctlnp);
-+	of_node_put(pctlnp);
- 	if (!pctldev)
- 		return -EPROBE_DEFER;
- 
--- 
-2.43.0
+> > > -   err =3D pcim_iomap_regions(pdev, 1 << PCI_PTP_BAR_NO,
+> > > pci_name(pdev));
+> > > -   if (err)
+> > > +   clock->reg_base =3D pcim_iomap_region(pdev, PCI_PTP_BAR_NO,
+> > > pci_name(pdev));
+> > > +   if (IS_ERR(clock->reg_base)) {
+> > > +           err =3D PTR_ERR(clock->reg_base);
+> > >             goto error_free;
+> > > -
+> > > -   clock->reg_base =3D pcim_iomap_table(pdev)[PCI_PTP_BAR_NO];
+> > > +   }
+> >
+> > Perhaps
+> >
+> >       clock->reg_base =3D pcim_iomap_region(pdev, PCI_PTP_BAR_NO,
+> > pci_name(pdev));
+> >       err =3D PTR_ERR_OR_ZERO(clock->reg_base);
+> >       if (err)
+> >               goto error_free;
+> >
+> > This will make your patch smaller and neater.
+> >
+> > P.S. Do you use --histogram diff algo when preparing patches?
+>
+> So far not.
+> Should one do that?
 
+Id doesn't alter your code, it's in addition to what I suggested, but
+as Linus shared that there is no reason to avoid using --histogram not
+only in Linux kernel, but in general as it produces more
+human-readable diff:s.
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
