@@ -1,306 +1,351 @@
-Return-Path: <linux-gpio+bounces-9208-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9209-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CC629604D0
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 10:48:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 792BA960731
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 12:18:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7CF928197C
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 08:48:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0913A1F27067
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 10:18:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342D019D06C;
-	Tue, 27 Aug 2024 08:47:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BB7E1A0704;
+	Tue, 27 Aug 2024 10:13:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAeqqbCA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hqrGDAb2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C76A19ADAC;
-	Tue, 27 Aug 2024 08:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A7D1A00D0
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Aug 2024 10:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724748434; cv=none; b=ZjlBwkBctfLIzEB6SDWHgp7j6y1Te3OMSSuzgPRJvF7mMqNIWA0E2LvwwzVdGnAEyhCFq69J1XFZzuejEFcSm7E0kVtbkGcNHw65XdpKFs3Fv6nyMGgwbZ6dzXeUy4PMWtC7kt2IPa3qq5/WXyU1aLLhLUp0AZM8IItea57vZzs=
+	t=1724753599; cv=none; b=BGccNZbquz7wOyr1TiUxuqJ+4zqQAXW4kLg+xGAw03skJIynDQZJ6wcndQNTITLaHIOGx1vWh+THvb7taMQsAeVc1q9DdC5oJhI7UUZwZF5B9XtzRkKoVMWmX2vbya/59cQxrL7iooHJCpiIopyScTuYyBOWmgnJTGim5/WvEgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724748434; c=relaxed/simple;
-	bh=/bKdA/fUgS6txw3PjDZjMyTtbG9DKmlJaGp1eA8pz6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qgDcyM6q5wI8Ed0elDsZuu1BsoeOVHmB6V0YjFgoyXIeACojash7VeZRari/sf/UbZq984BTU9mJiqAro7HIG5z2A25g0PAVCcH3lwM6BM21xiSpgJC9L94jts2EICyhg61kMrgU1M/o4HWwCdXHkM8SGCotsaS3eba+H2+fzjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DAeqqbCA; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2f3f0a31ab2so57811561fa.0;
-        Tue, 27 Aug 2024 01:47:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724748430; x=1725353230; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fGVlo+O+ebU/GFxqfUFQ4h31mc1K7cAiW2G4oCByTC0=;
-        b=DAeqqbCAmXmcSkfizYqs8LDYY/z1bCA+7UKwHQsvfz9byFPdaIYJzeotNKd5pzL7Sj
-         RsCsYfzHoq9PUXmueOyEkGyrnOoi1bi8toa8bCOkKeyddVHvbZ8UyG4e8jSHyL+A3keO
-         5VbRMpI+/AUcq95Px5Yl1ky2U37jQxUdo12XdjdmqeCyulRUdP/G0VsruAbs7v8zfAFY
-         qyp3w+lGtkUgDUvr4vKUnMdbirshI7Bo4b84k5z695ErvbomKRcFC0x/vxZDyaWyFBsD
-         9gpCKhZiINMQHaYCDw0VWkUyl38AJktRk1nqGjE9vL1TLuuVJCyJJGorh/Uq0AW3q1u1
-         z72w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724748430; x=1725353230;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fGVlo+O+ebU/GFxqfUFQ4h31mc1K7cAiW2G4oCByTC0=;
-        b=ETSgEYnE5S9VD/JiBJXUdUkl+2iziJ+AvIfWyU0EFvnm0DWLMHhgGEMeMBZ0ySM54r
-         R4DEj2dmMVOQP6enbs7pjm2hJvs7l6BLBhbATizwg9/bpkVSjPQtUgSatYelJYlGdN/u
-         oOBjSrEu5qRgvmNxz/HhJoebwHGMarX7grWm92dpVrd2CelhTs6tc6oO2WiyxexH96et
-         4xNcdVZp87Y1WHVHGW08CNcH0KgNGqysvYwiizfhqgbpqq0haI3xjLnwsAERZzRDYncS
-         pvs7vDyZNZVcAVT5XeFm77//JDxpymCQ0+yKKRnE7frO6+HO0ZP3Ye04sKRt6PmoGw8Q
-         QzNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFIIgW2i+1qL85a/B7e0z8S9vx/d1cG6I8zXaQiBRVqvE63ec6UtbB/SVTcJcIR20L2Mx9dhFbVurV@vger.kernel.org, AJvYcCWSi87zUPwGqS0QG2uqBkcRqISGrY7D24k9kBJC0Itge2N4r5nWyYPJzIUHrvC7DMKBPrXvGtFclF2rgg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+RYosaHksBv8Jo1nao1BMihycU3X6s99qM0Bt8CDZSFhEejKM
-	RojinD0FXIp07I5AVmL0SgUvVwHMjEJm+8uUHrxqEt6GUPUKfnV86qrq0Lnl/gkqO5+jXBux9Re
-	Il2InGhW8YfJakeYAoZh770/W+so=
-X-Google-Smtp-Source: AGHT+IF+7bMAIBWpPp9ZpYwoa+Iv2SEaNFgur+pE6KunkOxacIkCMQdQ0TOsiUNbIEVl+RbrIkKRo9Ai58gvP8G+H1Q=
-X-Received: by 2002:a2e:bc1f:0:b0:2f5:487:e87a with SMTP id
- 38308e7fff4ca-2f50487eaa3mr51459021fa.18.1724748429619; Tue, 27 Aug 2024
- 01:47:09 -0700 (PDT)
+	s=arc-20240116; t=1724753599; c=relaxed/simple;
+	bh=FdajFHUT76LYZBk99B5N5SPUL5DMyNsYd1XbqbAM2V8=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=rRLzlpkVbBrDiwHYFLMTW8tUZOfrM0HxMNbTPxW8Qgn3QiTSoMmkmc6kirf6fo5eI1VP5+QD6NwbvIJtzZMJ4oHIG+RGo3zTmcnHZrAdfVssm1EHG1ov3BSzfg3cYyWhmoDA/RgMky+AB12OCsOmR4Gin9Z93iDMW4KboJpTHyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hqrGDAb2; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724753596; x=1756289596;
+  h=date:from:to:cc:subject:message-id;
+  bh=FdajFHUT76LYZBk99B5N5SPUL5DMyNsYd1XbqbAM2V8=;
+  b=hqrGDAb24xvoOwEIDlJD8bRXQZ4s5qeTTVi4HMnkfAnDSreb7DYWE0xi
+   YnCxvF19Esc3weO5OWWkh6G3hVYFwTaP0Lri0obxcUPo358/6/6AsPniR
+   4Csg7vKf0zdlikhldCvgFlnb15ubEhb8jh2PRxK+0jiLJdytaXGyzPQU0
+   ulXwPZrjcaeWdRn/wDwmh6CQpxQAXatqUXuTFuBv7FXK74fXMN7ebzbhz
+   1p0i+GCtbt5/y/mX3Evv0yAUnCyJrYPi2+ZYL5bV2ykyAx2Dfrs/lMakH
+   Dn/p7SeKbECkWg1OxY8AeKzD+ymyCSrLQBK52Z5olehragzv22FA5h2/U
+   g==;
+X-CSE-ConnectionGUID: 8XeIjipsQa2qmwIVvNWzNg==
+X-CSE-MsgGUID: w90UCrAqRkGCMU2fyd2GqA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="27018248"
+X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
+   d="scan'208";a="27018248"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 03:13:16 -0700
+X-CSE-ConnectionGUID: wArjEvOBTDmhPK9dg5vNWQ==
+X-CSE-MsgGUID: rLhFjxVDSemOBg3y7jxpTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
+   d="scan'208";a="67644067"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 27 Aug 2024 03:13:15 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sitCK-000IV6-1i;
+	Tue, 27 Aug 2024 10:13:12 +0000
+Date: Tue, 27 Aug 2024 18:12:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:ib-sophgo-pintrl] BUILD REGRESSION
+ e7a4141f4420879720f9d2c99974e269044c7597
+Message-ID: <202408271814.hLhK0nJV-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org>
- <20240822-en7581-pinctrl-v2-1-ba1559173a7f@kernel.org> <20240822-taste-deceptive-03d0ad56ae2e@spud>
- <aef3188d-5aaf-4f6d-addf-60066065ef9b@genexis.eu> <20240823-darkened-cartload-d2621f33eab8@spud>
- <66c8c50f.050a0220.d7871.f209@mx.google.com> <Zsj8bmBJhfUdH6qT@lore-desk> <20240826-kinsman-crunching-e3b75297088c@spud>
-In-Reply-To: <20240826-kinsman-crunching-e3b75297088c@spud>
-From: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-Date: Tue, 27 Aug 2024 10:46:58 +0200
-Message-ID: <CAA2SeNJ2Gi+3Za+jvAVqqbx7xEGLqkDBkJ8vL=pA=ZbKWOfp=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl controller
-To: Conor Dooley <conor@kernel.org>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, Christian Marangi <ansuelsmth@gmail.com>, 
-	Benjamin Larsson <benjamin.larsson@genexis.eu>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	upstream@airoha.com
-Content-Type: text/plain; charset="UTF-8"
 
->
-> On Fri, Aug 23, 2024 at 11:17:34PM +0200, Lorenzo Bianconi wrote:
-> > > On Fri, Aug 23, 2024 at 05:14:30PM +0100, Conor Dooley wrote:
-> > > > On Thu, Aug 22, 2024 at 10:50:52PM +0200, Benjamin Larsson wrote:
-> > > > > On 22/08/2024 18:06, Conor Dooley wrote:
-> > > > >
-> > > > >
-> > > > > Hi.
-> > > > >
-> > > > > > before looking at v1:
-> > > > > > I would really like to see an explanation for why this is a correct
-> > > > > > model of the hardware as part of the commit message. To me this screams
-> > > > > > syscon/MFD and instead of describing this as a child of a syscon and
-> > > > > > using regmap to access it you're doing whatever this is...
-> > > > >
-> > > > > Can you post a link to a good example dts that uses syscon/MFD ?
-> > > > >
-> > > > > It is not only pinctrl, pwm and gpio that are entangled in each other. A
-> > > > > good example would help with developing a proper implementation.
-> > > >
-> > > > Off the top of my head, no unfortunately. Maybe Rob or Krzk have a good
-> > > > example. I would suggest to start by looking at drivers within gpio or
-> > > > pinctrl that use syscon_to_regmap() where the argument is sourced from
-> > > > either of_node->parent or dev.parent->of_node (which you use depends on
-> > > > whether or not you have a child node or not).
-> > > >
-> > > > I recently had some questions myself for Rob about child nodes for mfd
-> > > > devices and when they were suitable to use:
-> > > > https://lore.kernel.org/all/20240815200003.GA2956351-robh@kernel.org/
-> > > >
-> > > > Following Rob's line of thought, I'd kinda expect an mfd driver to create
-> > > > the devices for gpio and pwm using devm_mfd_add_devices() and the
-> > > > pinctrl to have a child node.
-> > >
-> > > Just to not get confused and staring to focus on the wrong kind of
-> > > API/too complex solution, I would suggest to check the example from
-> > > Lorenzo.
-> > >
-> > > The pinctrl/gpio is an entire separate block and is mapped separately.
-> > > What is problematic is that chip SCU is a mix and address are not in
-> > > order and is required by many devices. (clock, pinctrl, gpio...)
-> > >
-> > > IMHO a mfd is overkill and wouldn't suite the task. MDF still support a
-> > > single big region and in our case we need to map 2 different one (gpio
-> > > AND chip SCU) (or for clock SCU and chip SCU)
-> > >
-> > > Similar problem is present in many other place and syscon is just for
-> > > the task.
-> > >
-> > > Simple proposed solution is:
-> > > - chip SCU entirely mapped and we use syscon
->
-> That seems reasonable.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-sophgo-pintrl
+branch HEAD: e7a4141f4420879720f9d2c99974e269044c7597  pinctrl: sophgo: add support for SG2002 SoC
 
-ack
+Error/Warning reports:
 
->
-> > > - pinctrl mapped and reference chip SCU by phandle
->
-> ref by phandle shouldn't be needed here, looking up by compatible should
-> suffice, no?
+https://lore.kernel.org/oe-kbuild-all/202408270140.L6Hm1sNo-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202408270540.4jPYshgO-lkp@intel.com
 
-ack, I think it would be fine
+Error/Warning: (recently discovered and may have been fixed)
 
->
-> > > - pwm a child of pinctrl as it's scrambled in the pinctrl mapped regs
->
-> The pwm is not a child of the pinctrl though, they're both subfunctions of
-> the register region they happen to both be in. I don't agree with that
-> appraisal, sounds like an MFD to me.
+drivers/pinctrl/sophgo/pinctrl-cv18xx.c:544:14: error: 'PIN_CONFIG_INPUT_SCHMITT_UV' undeclared (first use in this function); did you mean 'PIN_CONFIG_INPUT_SCHMITT'?
+drivers/pinctrl/sophgo/pinctrl-cv18xx.c:544:7: error: use of undeclared identifier 'PIN_CONFIG_INPUT_SCHMITT_UV'; did you mean 'PIN_CONFIG_INPUT_SCHMITT'?
 
-ack
+Error/Warning ids grouped by kconfigs:
 
->
-> > > Hope this can clear any confusion.
-> >
-> > To clarify the hw architecture we are discussing about 3 memory regions:
-> > - chip_scu: <0x1fa20000 0x384>
-> > - scu: <0x1fb00020 0x94c>
->                   ^
-> I'm highly suspicious of a register region that begins at 0x20. What is
-> at 0x1fb00000?
+recent_errors
+|-- alpha-allyesconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- arc-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- arc-allyesconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- arm-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- arm-allyesconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- arm64-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:use-of-undeclared-identifier-PIN_CONFIG_INPUT_SCHMITT_UV
+|-- hexagon-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:use-of-undeclared-identifier-PIN_CONFIG_INPUT_SCHMITT_UV
+|-- hexagon-allyesconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:use-of-undeclared-identifier-PIN_CONFIG_INPUT_SCHMITT_UV
+|-- i386-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- i386-allyesconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- m68k-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- microblaze-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- microblaze-allyesconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- openrisc-allyesconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- parisc-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- parisc-allyesconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- powerpc-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- s390-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:use-of-undeclared-identifier-PIN_CONFIG_INPUT_SCHMITT_UV
+|-- sh-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- sparc-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+|-- um-allmodconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:use-of-undeclared-identifier-PIN_CONFIG_INPUT_SCHMITT_UV
+|-- um-allyesconfig
+|   `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
+`-- xtensa-allyesconfig
+    `-- drivers-pinctrl-sophgo-pinctrl-cv18xx.c:error:PIN_CONFIG_INPUT_SCHMITT_UV-undeclared-(first-use-in-this-function)
 
-sorry, my fault
+elapsed time: 1468m
 
->
-> > - gpio: <0x1fbf0200 0xbc>
->
-> Do you have a link to the register map documentation for this hardware?
->
-> > The memory regions above are used by the following IC blocks:
-> > - clock: chip_scu and scu
->
-> What is the differentiation between these two different regions? Do they
-> provide different clocks? Are registers from both of them required in
-> order to provide particular clocks?
+configs tested: 201
+configs skipped: 5
 
-In chip-scu and scu memory regions we have heterogeneous registers.
-Regarding clocks in chip-scu we have fixed clock registers (e.g. spi
-clock divider, switch clock source and divider, main bus clock source
-and divider, ...) while in scu (regarding clock configuration) we have
-pcie clock regs (e.g. reset and other registers). This is the reason
-why, in en7581-scu driver, we need both of them, but we can access
-chip-scu via the compatible string (please take a look at the dts
-below).
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                             allnoconfig   gcc-13.3.0
+alpha                            allyesconfig   gcc-13.3.0
+alpha                               defconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                   randconfig-001-20240827   gcc-13.2.0
+arc                   randconfig-002-20240827   gcc-13.2.0
+arm                              allmodconfig   gcc-14.1.0
+arm                               allnoconfig   clang-20
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-14.1.0
+arm                      footbridge_defconfig   clang-20
+arm                         nhk8815_defconfig   clang-20
+arm                           omap1_defconfig   clang-20
+arm                   randconfig-001-20240827   clang-20
+arm                   randconfig-001-20240827   gcc-13.2.0
+arm                   randconfig-002-20240827   gcc-13.2.0
+arm                   randconfig-002-20240827   gcc-14.1.0
+arm                   randconfig-003-20240827   clang-20
+arm                   randconfig-003-20240827   gcc-13.2.0
+arm                   randconfig-004-20240827   gcc-13.2.0
+arm                   randconfig-004-20240827   gcc-14.1.0
+arm                         s5pv210_defconfig   clang-20
+arm                          sp7021_defconfig   clang-20
+arm64                            allmodconfig   clang-20
+arm64                             allnoconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-14.1.0
+arm64                               defconfig   gcc-13.2.0
+arm64                 randconfig-001-20240827   gcc-13.2.0
+arm64                 randconfig-001-20240827   gcc-14.1.0
+arm64                 randconfig-002-20240827   clang-14
+arm64                 randconfig-002-20240827   gcc-13.2.0
+arm64                 randconfig-003-20240827   clang-14
+arm64                 randconfig-003-20240827   gcc-13.2.0
+arm64                 randconfig-004-20240827   clang-20
+arm64                 randconfig-004-20240827   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                              allnoconfig   gcc-14.1.0
+csky                                defconfig   gcc-13.2.0
+csky                  randconfig-001-20240827   gcc-13.2.0
+csky                  randconfig-001-20240827   gcc-14.1.0
+csky                  randconfig-002-20240827   gcc-13.2.0
+csky                  randconfig-002-20240827   gcc-14.1.0
+hexagon                          allmodconfig   clang-20
+hexagon                           allnoconfig   clang-20
+hexagon                          allyesconfig   clang-20
+hexagon               randconfig-002-20240827   clang-20
+i386                             allmodconfig   clang-18
+i386                             allmodconfig   gcc-12
+i386                              allnoconfig   clang-18
+i386                              allnoconfig   gcc-12
+i386                             allyesconfig   clang-18
+i386                             allyesconfig   gcc-12
+i386         buildonly-randconfig-001-20240827   gcc-12
+i386         buildonly-randconfig-002-20240827   clang-18
+i386         buildonly-randconfig-002-20240827   gcc-12
+i386         buildonly-randconfig-003-20240827   gcc-12
+i386         buildonly-randconfig-004-20240827   clang-18
+i386         buildonly-randconfig-004-20240827   gcc-12
+i386         buildonly-randconfig-005-20240827   clang-18
+i386         buildonly-randconfig-005-20240827   gcc-12
+i386         buildonly-randconfig-006-20240827   gcc-12
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240827   gcc-12
+i386                  randconfig-002-20240827   gcc-12
+i386                  randconfig-003-20240827   gcc-12
+i386                  randconfig-004-20240827   gcc-12
+i386                  randconfig-005-20240827   gcc-12
+i386                  randconfig-006-20240827   clang-18
+i386                  randconfig-006-20240827   gcc-12
+i386                  randconfig-011-20240827   clang-18
+i386                  randconfig-011-20240827   gcc-12
+i386                  randconfig-012-20240827   clang-18
+i386                  randconfig-012-20240827   gcc-12
+i386                  randconfig-013-20240827   clang-18
+i386                  randconfig-013-20240827   gcc-12
+i386                  randconfig-014-20240827   gcc-12
+i386                  randconfig-015-20240827   gcc-12
+i386                  randconfig-016-20240827   clang-18
+i386                  randconfig-016-20240827   gcc-12
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                         allnoconfig   gcc-14.1.0
+loongarch                           defconfig   gcc-13.2.0
+loongarch             randconfig-001-20240827   gcc-13.2.0
+loongarch             randconfig-001-20240827   gcc-14.1.0
+loongarch             randconfig-002-20240827   gcc-13.2.0
+loongarch             randconfig-002-20240827   gcc-14.1.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                              allnoconfig   gcc-14.1.0
+m68k                             allyesconfig   gcc-14.1.0
+m68k                                defconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-14.1.0
+microblaze                       allyesconfig   gcc-14.1.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-14.1.0
+mips                           ci20_defconfig   clang-20
+mips                  maltasmvp_eva_defconfig   clang-20
+nios2                             allnoconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-14.1.0
+nios2                               defconfig   gcc-13.2.0
+nios2                 randconfig-001-20240827   gcc-13.2.0
+nios2                 randconfig-001-20240827   gcc-14.1.0
+nios2                 randconfig-002-20240827   gcc-13.2.0
+nios2                 randconfig-002-20240827   gcc-14.1.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                           allyesconfig   gcc-14.1.0
+parisc                              defconfig   gcc-14.1.0
+parisc                randconfig-001-20240827   gcc-13.2.0
+parisc                randconfig-001-20240827   gcc-14.1.0
+parisc                randconfig-002-20240827   gcc-13.2.0
+parisc                randconfig-002-20240827   gcc-14.1.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc                        cell_defconfig   clang-20
+powerpc                        icon_defconfig   clang-20
+powerpc               randconfig-001-20240827   gcc-13.2.0
+powerpc               randconfig-002-20240827   gcc-13.2.0
+powerpc               randconfig-003-20240827   gcc-13.2.0
+powerpc                     sequoia_defconfig   clang-20
+powerpc64             randconfig-001-20240827   gcc-13.2.0
+powerpc64             randconfig-002-20240827   gcc-13.2.0
+powerpc64             randconfig-003-20240827   gcc-13.2.0
+riscv                             allnoconfig   gcc-14.1.0
+riscv                               defconfig   clang-20
+riscv                 randconfig-001-20240827   gcc-13.2.0
+riscv                 randconfig-002-20240827   gcc-13.2.0
+s390                             allmodconfig   clang-20
+s390                              allnoconfig   clang-20
+s390                              allnoconfig   gcc-14.1.0
+s390                             allyesconfig   gcc-14.1.0
+s390                                defconfig   clang-20
+s390                  randconfig-001-20240827   gcc-13.2.0
+s390                  randconfig-002-20240827   gcc-13.2.0
+sh                               allmodconfig   gcc-14.1.0
+sh                                allnoconfig   gcc-13.2.0
+sh                                allnoconfig   gcc-14.1.0
+sh                               allyesconfig   gcc-14.1.0
+sh                                  defconfig   gcc-14.1.0
+sh                    randconfig-001-20240827   gcc-13.2.0
+sh                    randconfig-002-20240827   gcc-13.2.0
+sparc                            allmodconfig   gcc-14.1.0
+sparc64                             defconfig   gcc-14.1.0
+sparc64               randconfig-001-20240827   gcc-13.2.0
+sparc64               randconfig-002-20240827   gcc-13.2.0
+um                               allmodconfig   clang-20
+um                               allmodconfig   gcc-13.3.0
+um                                allnoconfig   clang-17
+um                                allnoconfig   gcc-14.1.0
+um                               allyesconfig   gcc-12
+um                               allyesconfig   gcc-13.3.0
+um                                  defconfig   clang-20
+um                             i386_defconfig   gcc-12
+um                    randconfig-001-20240827   gcc-13.2.0
+um                    randconfig-002-20240827   gcc-13.2.0
+um                           x86_64_defconfig   clang-15
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240827   clang-18
+x86_64       buildonly-randconfig-002-20240827   clang-18
+x86_64       buildonly-randconfig-003-20240827   clang-18
+x86_64       buildonly-randconfig-004-20240827   clang-18
+x86_64       buildonly-randconfig-005-20240827   clang-18
+x86_64       buildonly-randconfig-006-20240827   clang-18
+x86_64                              defconfig   clang-18
+x86_64                              defconfig   gcc-11
+x86_64                randconfig-001-20240827   clang-18
+x86_64                randconfig-002-20240827   clang-18
+x86_64                randconfig-003-20240827   clang-18
+x86_64                randconfig-004-20240827   clang-18
+x86_64                randconfig-005-20240827   clang-18
+x86_64                randconfig-006-20240827   clang-18
+x86_64                randconfig-011-20240827   clang-18
+x86_64                randconfig-012-20240827   clang-18
+x86_64                randconfig-013-20240827   clang-18
+x86_64                randconfig-014-20240827   clang-18
+x86_64                randconfig-015-20240827   clang-18
+x86_64                randconfig-016-20240827   clang-18
+x86_64                randconfig-071-20240827   clang-18
+x86_64                randconfig-072-20240827   clang-18
+x86_64                randconfig-073-20240827   clang-18
+x86_64                randconfig-074-20240827   clang-18
+x86_64                randconfig-075-20240827   clang-18
+x86_64                randconfig-076-20240827   clang-18
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                            allnoconfig   gcc-14.1.0
+xtensa                randconfig-001-20240827   gcc-13.2.0
+xtensa                randconfig-002-20240827   gcc-13.2.0
 
->
-> > - pinctrl (io-muxing/gpio_chip/irq_chip): chip_scu and gpio
->
-> Ditto here. Are these actually two different sets of iomuxes, or are
-> registers from both required to mux a particular pin?
-
-Most of the io-muxes configuration registers are in chip-scu block,
-just pwm ones are in gpio memory block.
-Gpio block is mainly used for gpio_chip and irq_chip functionalities.
-
->
-> > - pwm: gpio
-> >
-> > clock and pinctrl devices share the chip_scu memory region but they need to
-> > access even other separated memory areas (scu and gpio respectively).
-> > pwm needs to just read/write few gpio registers.
-> > As pointed out in my previous email, we can define the chip_scu block as
-> > syscon node that can be accessed via phandle by clock and pinctrl drivers.
-> > clock driver will map scu area while pinctrl one will map gpio memory block.
-> > pwm can be just a child of pinctrl node.
->
-> As I mentioned above, the last statement here I disagree with. As
-> someone that's currently in the process of fixing making a mess of this
-> exact kind of thing, I'm going to strongly advocate not taking shortcuts
-> like this.
->
-> IMO, all three of these regions need to be described as syscons in some
-> form, how exactly it's hard to say without a better understanding of the
-> breakdown between regions.
->
-> If, for example, the chip_scu only provides a few "helper" bits, I'd
-> expect something like
->
-> syscon@1fa20000 {
->         compatible = "chip-scu", "syscon";
->         reg = <0x1fa2000 0x384>;
-> };
->
-> syscon@1fb00000 {
->         compatible = "scu", "syscon", "simple-mfd";
->         #clock-cells = 1;
-> };
->
-> syscon@1fbf0200 {
->         compatible = "gpio-scu", "syscon", "simple-mfd";
->         #pwm-cells = 1;
->
->         pinctrl@x {
->                 compatible = "pinctrl";
->                 reg = x;
->                 #pinctrl-cells = 1;
->                 #gpio-cells = 1;
->         };
-> };
->
-
-ack, so we could use the following dts nodes for the discussed memory
-regions (chip-scu, scu and gpio):
-
-syscon@1fa20000 {
-    compatible = "airoha,chip-scu", "syscon";
-    reg = <0x0 0x1fa2000 0x0 0x384>;
-};
-
-clock-controller@1fb00000 {
-    compatible = "airoha,en7581-scu", "syscon";
-    reg = <0x0 0x1fb00000 0x0 0x94c>;
-    #clock-cells = <1>;
-    #reset-cells = <1>;
-};
-
-mfd@1fbf0200 {
-    compatible = "airoha,en7581-gpio-mfd", "simple-mfd";
-    reg = <0x0 0x1fbf0200 0x0 0xc0>;
-
-    pio: pinctrl {
-        compatible = "airoha,en7581-pinctrl"
-        gpio-controller;
-        #gpio-cells = <2>;
-
-        interrupt-controller;
-        #interrupt-cells = <2>;
-        interrupt-parent = <&gic>;
-        interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-    }
-
-    pwm: pwm {
-        compatible = "airoha,en7581-pwm";
-        #pwm-cells = <3>;
-    }
-};
-
-What do you think?
-If we all agree on the approach above, we can proceed with the
-required changes in the clk/pinctrl and pwm drivers.
-
-Regards,
-Lorenzo
-
-> And you could look up the chip-scu by its compatible from the clock or
-> pinctrl drivers. Perhaps the "helper" bits assumption is incorrect
-> however, and both the scu and chip scu provide independent clocks?
->
-> > What do you think about this approach? Can we address the requirements above
-> > via classic mfd driver?
->
->
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
