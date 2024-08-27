@@ -1,609 +1,366 @@
-Return-Path: <linux-gpio+bounces-9227-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9228-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A4FB961690
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 20:15:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BB6E09616FE
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 20:29:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F71A285AAA
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 18:15:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B7E5283FDE
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 18:29:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F7381D2795;
-	Tue, 27 Aug 2024 18:15:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 331341D1F4C;
+	Tue, 27 Aug 2024 18:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Hf0TcZq6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jojjj+AU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010031.outbound.protection.outlook.com [52.101.69.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8581D279D;
-	Tue, 27 Aug 2024 18:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.31
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724782509; cv=fail; b=Gkxxb+WjQi8jsRB4oshbFd5nmYN9YRCCOI7oWMTIWF9HNayFLNjFcYAYBb6Wgw4vZ/h1XA5inR4JDJIhqrBeYzQKFGIqmHkQn4a+JhOoe83zAJSe7OXskLibz1mpzo19Lp5Z3iOG0H6fTR3bsTaPhi3zljlRMJpZDz+S/SNurvU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724782509; c=relaxed/simple;
-	bh=HW7nsYGqvaWcH0UojoGZfvkVdT4bAMbbn9ga3JveTT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EarGNKZ5OaEsV9+mjM8rx2+X4otUVwSS2fg/r3QtUK0mCFOIjoTJU6dwnAbQ50qLA9/OkaxAvp0qerpk6N+FrUUY/YcIH4OTtDschpL0i2rGlD7T1v8Y+1qptKBYZiCjg/akMOZsmbTLUxW9Qwe0VliLUeQWDwSV/RhjD4KgL2Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Hf0TcZq6; arc=fail smtp.client-ip=52.101.69.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bMgNOudFNCOPI/h89b6+YJ4M4hfd9X0JL8za8HUv5j9iIwcWcAeugpDLN4OsohO0ZBuBYvBUcNgRZfEjbXc/0Uuf0F5TOxjS5Zxdk1PZhSN1L5VAvzqCiuguuE3Z7CnKbeCeb5Wei72nm/UPgU1gdvMTqolW6E61W+V0Ze9b6sRzIRiyl8qRCsEQpACoqo9fYqZIEXknd6liZYnVgTDSJ9fwP+2TabXWtgDC7bLpEacf4oVrawstmAsSR4MowH4hIQ0488QhTjkQlMl8cXj3sHTfwz5G7Sv8Sw5j/PQaZ+M395kuOuoWwJzP38HxZGWbbeb5/kQIYFa6ovMaulfiYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hYci2bdFlRXuXOlj3V2jnS3UjDIcGu47AQUBOEUDtFw=;
- b=RP+3ZFyNABtuIDjc7zgMPYduErdUv+qlzVbFpWTqF+MFJnV8IBvpTYGvfmdC62x5BGj6Wz/kPNTvWaCsQeHBDXOZUw6zMyHoERy5RT5ecoVporhqQJ4vSIbEfxNXmX8h/WBxBRjEYU0vji4FiD7GpjifeHAxJEXSMwLNv3C1YkUURaWAAHkw4irdxdOScrmNyHvT6kf3t737DRUhzL3sGfvqmH4ATmgyVwCoSvxUwOJj0qQ5Ggu3jsGqFBXZxkq+f76ZXC64cXKeNxiIKYJ9JtfimIybQv+G4N0vJCEXXUBP8qpaNG1/fKY3knB71a4GResSvEZeJdx3uIiUflB+0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hYci2bdFlRXuXOlj3V2jnS3UjDIcGu47AQUBOEUDtFw=;
- b=Hf0TcZq6m13jxM2iahMteB6/GlzGrUB6rUq7uyROZqYHdsLk3RuqlpWEmfD8XQxdCtlGfmBBYJr6SEcp0m6NYjZLt7fohwyHPH/we4YRw0nLKwaOF9wfsu3/M2tRQ2c6B1NYXI7vZShTdHKGkzkyW8PtMOHjEr+87Xb15YTkuj1vMgksUCrppF09f1PwoIiZiAA1Eqg9RSOqVJ3ir8BGl+GDDtsT51IVcKVm+aJCLH9+r9eQyC3/oyh3n96+Ca6jDA0TmjlqtwxKYD2NkUK6o5KH2ZcLnP0r2wwzxV0QEMHULf+b0zqo3uKwwCAfKGGjLbtRcCNvMa+UBGLocbCaww==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DUZPR04MB9781.eurprd04.prod.outlook.com (2603:10a6:10:4e1::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.19; Tue, 27 Aug
- 2024 18:15:03 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%4]) with mapi id 15.20.7875.019; Tue, 27 Aug 2024
- 18:15:02 +0000
-Date: Tue, 27 Aug 2024 14:14:54 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: David Leonard <David.Leonard@digi.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAAD1C57A5;
+	Tue, 27 Aug 2024 18:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724783369; cv=none; b=rq2ypN55C/EP/4UORJEuVey9UzVY+GL0NBMnx5bpp8DKoF1A8lGo3HDCLxrb5MlZG+Bh8zoX1AWpBFoa/QMqKeFrE6VJgtUmUKi1fQvv5ettNq1Ow44cR6wBXADNRlOmew1FJUQARs5IWokxcPgzaa/Yr4cZx0Lo+o8iHf2FyD0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724783369; c=relaxed/simple;
+	bh=EnYjS++9YilliVGA8wfsFMGybcXA/J3pmRuAWqg/ZXM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CA0UMZFSphh2POm7ukAAj2+LnI6l6QoputgKdKBYZq3U2rE1SMGx3/19/h4/Gam0O+1+YDrYhCJJFUCat2DHphcHF3pR+1L8YflW0K08x5J9NluDahwbgpFK0/53R7GJYeFsXa7xS0ykKoQnjKtHkCko53lUu9mC3dR7dLHZkpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jojjj+AU; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-371b97cfd6fso3741565f8f.2;
+        Tue, 27 Aug 2024 11:29:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724783365; x=1725388165; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WI1N1DgwDsJPwlRve7vkKC6KRtuD+miK3xK7WkyW/yM=;
+        b=Jojjj+AUt19zb7B1JKRzzDcJNbDOyVc2kMkWblzijpXh+4tdIJQR7dOB5Ce12TkT7X
+         TjM+QB6fH3tzKsup7jncWOQ2abEuwdDwR958ycqUvJXLDFTFFnMcpg4rBwshq84MQ4aY
+         q336YEgXOa30CRY9rC09dsKWfvYUsX3QzT9iIkF7LXl9ogi0qFcxF5D9G2Gzv1SqIMh1
+         7Gn+yK1Ltkp8/XaxvGj2OJ00uuMUMm5/+c/HLG7PI6OnDs3pHHayAH5cYr/UI5/hBThS
+         3xDpt+ObUn57FXnmaz0jCZ6Xwgg3yrufe4EnsYSyD1oGlL3/83ix0tUsy2Y9CxjkwPKy
+         VSlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724783365; x=1725388165;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WI1N1DgwDsJPwlRve7vkKC6KRtuD+miK3xK7WkyW/yM=;
+        b=Nk0Ds4RFVSuIfD4gvTJG2vCdsW+dzT8ci1ve8xH3MsZ1jYxvd0df6b6ol0QFp0069b
+         6mpdurkuyQrqpyzUFbZPkd5YWH9sj1nfdbHPWxzDMtxs8QsI7vztZXdX57OV7h6e2oYt
+         sjkts76xHc5Oc2wk/zXQ7oc6pqx2+h2G4hE2PoipV2oSVwWj0toCPeRidnXvQIDKS8ae
+         ZsSF0owT2IaDem4ks7n6z6YrPJ7e/Luab2BRYhqH2AiDx/SjwUar4q9wApwb+cinY+xy
+         0FbFsi4n4aftmYqYrcQpPCU9itgYTB9vUAT8nmhEURxWS5euWwbHaclkJb+HQ6/kS5T3
+         rQ7g==
+X-Forwarded-Encrypted: i=1; AJvYcCW+t33L0B7Gd5PwBq5HcAOTnZQYvZ12xYe323bJS2yvbO/sSGJmALKaJDYlagHtLfmMqV3M3t5AfioA@vger.kernel.org, AJvYcCXpNsNLmh3goNuLuHDgQQWNxPJAP7H1zNTNUEf18uSgx6PwkWSs08gedKP1Tszg8svUcQq4dewuuLs7eg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl8pFl6G5315xorzFlg5W4LjtmTZM6fm8OiNggE06yMHafjo+D
+	jZm8rr1cFiF4mWdGLbKK3hQq6RNo3naOOzHDL+eRHKDNEEGnli0X
+X-Google-Smtp-Source: AGHT+IEh8e9df02+VsFiaG+m2FW0LXgC8j4lKzwsfi4bbOggJsY8PNcGwyF+AYmZjvqrw4VScPcODg==
+X-Received: by 2002:a5d:4903:0:b0:368:d0d:a5d6 with SMTP id ffacd0b85a97d-3748c81a27cmr1883813f8f.50.1724783364861;
+        Tue, 27 Aug 2024 11:29:24 -0700 (PDT)
+Received: from Ansuel-XPS. (host-87-1-209-141.retail.telecomitalia.it. [87.1.209.141])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3730817a2f4sm13703619f8f.61.2024.08.27.11.29.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2024 11:29:24 -0700 (PDT)
+Message-ID: <66ce1b04.df0a0220.a2131.6def@mx.google.com>
+X-Google-Original-Message-ID: <Zs4bADmXY6V4ukSg@Ansuel-XPS.>
+Date: Tue, 27 Aug 2024 20:29:20 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+	Conor Dooley <conor@kernel.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/6] pinctrl: ls1012a: Add pinctrl driver support
-Message-ID: <Zs4XngympYeWcwnY@lizhi-Precision-Tower-5810>
-References: <8cd0b743-4fff-e17f-9543-d2d4d7879758@digi.com>
- <Zs4W9EGSCFfxDgq9@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zs4W9EGSCFfxDgq9@lizhi-Precision-Tower-5810>
-X-ClientProxiedBy: SJ0PR13CA0124.namprd13.prod.outlook.com
- (2603:10b6:a03:2c6::9) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
+ controller
+References: <20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org>
+ <20240822-en7581-pinctrl-v2-1-ba1559173a7f@kernel.org>
+ <20240822-taste-deceptive-03d0ad56ae2e@spud>
+ <aef3188d-5aaf-4f6d-addf-60066065ef9b@genexis.eu>
+ <20240823-darkened-cartload-d2621f33eab8@spud>
+ <66c8c50f.050a0220.d7871.f209@mx.google.com>
+ <Zsj8bmBJhfUdH6qT@lore-desk>
+ <20240826-kinsman-crunching-e3b75297088c@spud>
+ <CAA2SeNJ2Gi+3Za+jvAVqqbx7xEGLqkDBkJ8vL=pA=ZbKWOfp=Q@mail.gmail.com>
+ <CAL_JsqLBGwgX=PeCqP8+iFj6uvAO4O_dTvz7x1c+T1Kz+-q-QA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DUZPR04MB9781:EE_
-X-MS-Office365-Filtering-Correlation-Id: f690c4b2-6d98-438b-04c3-08dcc6c42b4b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?e8RnGxT848ixcpf4cSuxOWWV9ypQJd8khYDi5ij9ACWcIQerkjCtxtByVIXc?=
- =?us-ascii?Q?tKnWfzS/jjtHAy4yTwoLArJMb5XxAxR2ZS+lCD4E3f49L3oGjflvJ6xaUcBL?=
- =?us-ascii?Q?rqAFYZg0Y87/JYKUQ3K0U+OtnQTY+ntqK/80X3EwbsI6hDnKnCRqM47SFmtN?=
- =?us-ascii?Q?5GKMALBWwL571QE+hCE6IXKwIC/ks/LYIv0P1eCnHBR44QOTE7MT+Dm9aQJW?=
- =?us-ascii?Q?ojoK2pcGCkL5G6bQYh1iK+cOzBgVDjSpfv9+/xs03KHclAqJn6U1L/2MFnVg?=
- =?us-ascii?Q?hadwhzKlsxkCXFD0PLBUd9zxBtx4pjrQCrSZEzaC3I1xVgn/UiE7Dw7or6oG?=
- =?us-ascii?Q?sLaVy2mpSyVYo2dkVq3qaXKtMiXp7gY5TnR2QApf9nsp0BiHsRnuJxRlKkUc?=
- =?us-ascii?Q?mMTsJ3Yg44IAsUgBDpbOyL6Hnqyaq7BPXZst19e/r1+2CBLOhurx/7P+nr/s?=
- =?us-ascii?Q?I2kpXeDh9eoP8yglg2jdO76/F0lJy8szlBxZ/XDdh7E5LKz2eStQBKral9K3?=
- =?us-ascii?Q?k+0O7g0z39EJVhyXzbdMlc2UCUpS6REOkOT5/MdbTVMNuJZYtEHCn17YhWC0?=
- =?us-ascii?Q?sxle0s0P7BdoOtculTEGNBpsXMM5UiSBFfxCBMg7NFnrcwMwcesGyhZiYbB0?=
- =?us-ascii?Q?+IdQZuPFjr/Bq1Wmh/3gz7425jrtnUdKAMhgaDxglxATmPg5U+PXClTWUx8F?=
- =?us-ascii?Q?i4jOB7MLflLlKwdx8wIpKlW2fbxrrFL0aAb6nixZovANLsy2SIMrId08yWt1?=
- =?us-ascii?Q?cRra2T09kxJGwI6H2mPvgWzBjcf8BzdiT7lWuUgQMMXhHKqqNiTKKEXK3qVv?=
- =?us-ascii?Q?Nm/cnCGTPSDapIgAAKsngMOZUwCLNsPWqVQgInkRZt7Y68+HLkM/NDpGXsot?=
- =?us-ascii?Q?YZwjBLRpxtEHc3qXrBa/dy4JpCLkBjdvV3XocSry0TQvpijGC+zfR0kkOfbt?=
- =?us-ascii?Q?FvYQoSVFQDeWHEnEdXCqFkoE1R79nVpfm1mw91zDD07ZgteEtXEsueZ7xeAX?=
- =?us-ascii?Q?PNo1sukfHwfCqspbnHYTzNtdbWmd6uuRhtVyMniHfGeUu8ahPURFSqkU8iif?=
- =?us-ascii?Q?OJvn3T/OLldLcKPDFPnm6frmNhcMtrTxabVIX54hciLd1CavIsK2RA9MUSvc?=
- =?us-ascii?Q?yuPzaxGAs7rMu8P/uOAyLkvZwuYS0DP+PEXD6qVrlptZ9slOlyfN+3e4sGLN?=
- =?us-ascii?Q?OGRt9SqFBeCynFoWXRreAna2DCKO11pcON8mAHom9XWbhTlp8F2kBYoEcivv?=
- =?us-ascii?Q?2/CteIc27v/NmJDGokjblvI9EluAozVuBe9WcXQcjlTJDelteVLYWNePtgR/?=
- =?us-ascii?Q?WxFSDDHJ5PB3K95jDsPHecYXX/TVf5+0a5g7kgy7sziBDTfaBcMbVGBLrD3W?=
- =?us-ascii?Q?tMeXaeunvElmJDHi5PStNKAjLlnkA0U+GGmJ4RKIqczjkSSljA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?EHBIpw2+YHdRsdQjDBATjlWl+Ydbs7KDitb1nxcM1HLz6nTavp6bQ3XCamMO?=
- =?us-ascii?Q?d5DYsYc8Biy+tOSW7dUd8aumAWRI838E7Y1GvchL3qDeSOIolF77+hka2vUg?=
- =?us-ascii?Q?z2YL2uery608iwHurbnmLlxu9m5B5yWDaaRUynAca5e3chcyCwpuXIqdKYnd?=
- =?us-ascii?Q?ckNODwTVaXmEfmOf5XSdQjiNolthW/C6Tv4VmmkYGYJb+cEsbzfo9QdlKr4l?=
- =?us-ascii?Q?3iysC4YBK2nNvH/NeSfP4+YX8fxrgWJwdAycjPaav5RzPDYSZYUi8KdBtgwr?=
- =?us-ascii?Q?qQNq2q222z38Nb2KMFPmBfWnrisu+TK8nzeQhv654adZYk9/tWrQMWWdFwDn?=
- =?us-ascii?Q?HkxDYl+hZ9rToSfHsA/07eNzpIggGKN070hBD+fw2YHelATYMmqF9rGwzUNA?=
- =?us-ascii?Q?1drl7l/qyKNGk/YJJdAD1IptS1yxp6FXhJKFsnJdMpnYdcOSe7suAx5UManf?=
- =?us-ascii?Q?zwtrV7BFijKULyzJl854al4FGf3Oe3frgzHkmmwtcuSe800yH4vswm1fG2k0?=
- =?us-ascii?Q?5OxvKFf6pdL9qB1DyZuI8R2goFBQJrxlykRVSaXTptgBiSNkP1r0TfdIfZWc?=
- =?us-ascii?Q?UmsWYlJ1mr0SRRYp/3yIIfda+Faj3FJnYrYg0YTnQHI+kFZ6x7+fi76/h5x8?=
- =?us-ascii?Q?43NlUkvweJY2B7GMMMB3XGss2SWfsiLc341kMQI5dngCPnxKJTvFTIXllGtq?=
- =?us-ascii?Q?0hxcDqdd21dw7iftuVYCtAOLIqEFuhHK+qAFvyfKXQETCeXglbM0qe4BgK4Y?=
- =?us-ascii?Q?gDK5XC7GTqKQNkzjrj9c+CaG+u9LFnxGjm4htSONNx05KYMaQNj5KKYxONJX?=
- =?us-ascii?Q?QS5LUyqxqDHOsHvv3dW6zGMJXV7gGCdrpV9Gnx0POgs5n5rpnTnhF9OjYzKV?=
- =?us-ascii?Q?TV5D4xTJad3zM865cIHHtG8Rzn2v0sIgPQ53j+coyk4CEK0xrw8AVs/EMAbI?=
- =?us-ascii?Q?rLx5YNo884TXRRenSaIMcjWCaXquvcES6biiaMhAHVdi3c5fD8X8UhMSxY6i?=
- =?us-ascii?Q?Z+boO27OUouMpj5y7m0B9Ve+eZ+jUMBhLJjss+ecKi8EL9SBubeDx1JkyNSn?=
- =?us-ascii?Q?xwsgawewLgPFNd0XE0oEGgJoIqoWKMmq/q0CNdRtS+ZWxzNVLMuCCFKZXxSr?=
- =?us-ascii?Q?jnRM0y8MJHS6SKufH//b/k2yDKcWUEM94cXj16dWAKk40b7N5j8rLoaa4pgn?=
- =?us-ascii?Q?9J0O5Wm9/6l9pNXC9haK+c+jRFVwtypmKusfD9mqslOCx947wAz/0zt3SLvm?=
- =?us-ascii?Q?3b2zUe/lO/7LA7igJmlaU3Um5OwYQceyD9//tJdqqZY+C/06eq5RlqEL4yB7?=
- =?us-ascii?Q?ozFN7ClO2i3oxcldge2cDyzC5oRFSS2L7+m8OyKnq/rS/Hck155H+ZlizIOc?=
- =?us-ascii?Q?VPzjR4/bwdLFZEKVSGmHFsS+LX1zNVVjjLeHlwf3GqmIxHFsIGSRhFUPioW2?=
- =?us-ascii?Q?4TQsk68H5YGZ3Wr5CESw6W6NIjW1ju+ytN3dVJnrZa8z6s6Z5HsOw6vfTL1O?=
- =?us-ascii?Q?TAGxSDgUeF0sCNLkGxQnDfEEVk0x+0zGtirLxkIo5vrpz1/bVqR0udZzeAXl?=
- =?us-ascii?Q?XJKfQ2gW5oY1YSsZahY=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f690c4b2-6d98-438b-04c3-08dcc6c42b4b
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2024 18:15:02.5321
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QVo8Xg48ogSQeuw48SjGSI2uuPiqjp0pdpukJHl5IaTlxTzl112izCkf5cVU+UN31wwKtoh+HZIcetTKjdIqvg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB9781
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqLBGwgX=PeCqP8+iFj6uvAO4O_dTvz7x1c+T1Kz+-q-QA@mail.gmail.com>
 
-On Tue, Aug 27, 2024 at 02:12:04PM -0400, Frank Li wrote:
-> On Tue, Aug 27, 2024 at 12:05:24PM +1000, David Leonard wrote:
+On Tue, Aug 27, 2024 at 09:35:07AM -0500, Rob Herring wrote:
+> On Tue, Aug 27, 2024 at 3:47 AM Lorenzo Bianconi
+> <lorenzo.bianconi83@gmail.com> wrote:
 > >
-> > Add QorIQ LS1012A pinctrl driver, allowing i2c-core to exert
-> > GPIO control over the second I2C bus.
+> > >
+> > > On Fri, Aug 23, 2024 at 11:17:34PM +0200, Lorenzo Bianconi wrote:
+> > > > > On Fri, Aug 23, 2024 at 05:14:30PM +0100, Conor Dooley wrote:
+> > > > > > On Thu, Aug 22, 2024 at 10:50:52PM +0200, Benjamin Larsson wrote:
+> > > > > > > On 22/08/2024 18:06, Conor Dooley wrote:
+> > > > > > >
+> > > > > > >
+> > > > > > > Hi.
+> > > > > > >
+> > > > > > > > before looking at v1:
+> > > > > > > > I would really like to see an explanation for why this is a correct
+> > > > > > > > model of the hardware as part of the commit message. To me this screams
+> > > > > > > > syscon/MFD and instead of describing this as a child of a syscon and
+> > > > > > > > using regmap to access it you're doing whatever this is...
+> > > > > > >
+> > > > > > > Can you post a link to a good example dts that uses syscon/MFD ?
+> > > > > > >
+> > > > > > > It is not only pinctrl, pwm and gpio that are entangled in each other. A
+> > > > > > > good example would help with developing a proper implementation.
+> > > > > >
+> > > > > > Off the top of my head, no unfortunately. Maybe Rob or Krzk have a good
+> > > > > > example. I would suggest to start by looking at drivers within gpio or
+> > > > > > pinctrl that use syscon_to_regmap() where the argument is sourced from
+> > > > > > either of_node->parent or dev.parent->of_node (which you use depends on
+> > > > > > whether or not you have a child node or not).
+> > > > > >
+> > > > > > I recently had some questions myself for Rob about child nodes for mfd
+> > > > > > devices and when they were suitable to use:
+> > > > > > https://lore.kernel.org/all/20240815200003.GA2956351-robh@kernel.org/
+> > > > > >
+> > > > > > Following Rob's line of thought, I'd kinda expect an mfd driver to create
+> > > > > > the devices for gpio and pwm using devm_mfd_add_devices() and the
+> > > > > > pinctrl to have a child node.
+> > > > >
+> > > > > Just to not get confused and staring to focus on the wrong kind of
+> > > > > API/too complex solution, I would suggest to check the example from
+> > > > > Lorenzo.
+> > > > >
+> > > > > The pinctrl/gpio is an entire separate block and is mapped separately.
+> > > > > What is problematic is that chip SCU is a mix and address are not in
+> > > > > order and is required by many devices. (clock, pinctrl, gpio...)
+> > > > >
+> > > > > IMHO a mfd is overkill and wouldn't suite the task. MDF still support a
+> > > > > single big region and in our case we need to map 2 different one (gpio
+> > > > > AND chip SCU) (or for clock SCU and chip SCU)
+> > > > >
+> > > > > Similar problem is present in many other place and syscon is just for
+> > > > > the task.
+> > > > >
+> > > > > Simple proposed solution is:
+> > > > > - chip SCU entirely mapped and we use syscon
+> > >
+> > > That seems reasonable.
 > >
-> > Signed-off-by: David Leonard <David.Leonard@digi.com>
-> > ---
+> > ack
+> >
+> > >
+> > > > > - pinctrl mapped and reference chip SCU by phandle
+> > >
+> > > ref by phandle shouldn't be needed here, looking up by compatible should
+> > > suffice, no?
+> >
+> > ack, I think it would be fine
+> >
+> > >
+> > > > > - pwm a child of pinctrl as it's scrambled in the pinctrl mapped regs
+> > >
+> > > The pwm is not a child of the pinctrl though, they're both subfunctions of
+> > > the register region they happen to both be in. I don't agree with that
+> > > appraisal, sounds like an MFD to me.
+> >
+> > ack
+> >
+> > >
+> > > > > Hope this can clear any confusion.
+> > > >
+> > > > To clarify the hw architecture we are discussing about 3 memory regions:
+> > > > - chip_scu: <0x1fa20000 0x384>
+> > > > - scu: <0x1fb00020 0x94c>
+> > >                   ^
+> > > I'm highly suspicious of a register region that begins at 0x20. What is
+> > > at 0x1fb00000?
+> >
+> > sorry, my fault
+> >
+> > >
+> > > > - gpio: <0x1fbf0200 0xbc>
+> > >
+> > > Do you have a link to the register map documentation for this hardware?
+> > >
+> > > > The memory regions above are used by the following IC blocks:
+> > > > - clock: chip_scu and scu
+> > >
+> > > What is the differentiation between these two different regions? Do they
+> > > provide different clocks? Are registers from both of them required in
+> > > order to provide particular clocks?
+> >
+> > In chip-scu and scu memory regions we have heterogeneous registers.
+> > Regarding clocks in chip-scu we have fixed clock registers (e.g. spi
+> > clock divider, switch clock source and divider, main bus clock source
+> > and divider, ...) while in scu (regarding clock configuration) we have
+> > pcie clock regs (e.g. reset and other registers). This is the reason
+> > why, in en7581-scu driver, we need both of them, but we can access
+> > chip-scu via the compatible string (please take a look at the dts
+> > below).
+> >
+> > >
+> > > > - pinctrl (io-muxing/gpio_chip/irq_chip): chip_scu and gpio
+> > >
+> > > Ditto here. Are these actually two different sets of iomuxes, or are
+> > > registers from both required to mux a particular pin?
+> >
+> > Most of the io-muxes configuration registers are in chip-scu block,
+> > just pwm ones are in gpio memory block.
+> > Gpio block is mainly used for gpio_chip and irq_chip functionalities.
+> >
+> > >
+> > > > - pwm: gpio
+> > > >
+> > > > clock and pinctrl devices share the chip_scu memory region but they need to
+> > > > access even other separated memory areas (scu and gpio respectively).
+> > > > pwm needs to just read/write few gpio registers.
+> > > > As pointed out in my previous email, we can define the chip_scu block as
+> > > > syscon node that can be accessed via phandle by clock and pinctrl drivers.
+> > > > clock driver will map scu area while pinctrl one will map gpio memory block.
+> > > > pwm can be just a child of pinctrl node.
+> > >
+> > > As I mentioned above, the last statement here I disagree with. As
+> > > someone that's currently in the process of fixing making a mess of this
+> > > exact kind of thing, I'm going to strongly advocate not taking shortcuts
+> > > like this.
+> > >
+> > > IMO, all three of these regions need to be described as syscons in some
+> > > form, how exactly it's hard to say without a better understanding of the
+> > > breakdown between regions.
+> > >
+> > > If, for example, the chip_scu only provides a few "helper" bits, I'd
+> > > expect something like
+> > >
+> > > syscon@1fa20000 {
+> > >         compatible = "chip-scu", "syscon";
+> > >         reg = <0x1fa2000 0x384>;
+> > > };
+> > >
+> > > syscon@1fb00000 {
+> > >         compatible = "scu", "syscon", "simple-mfd";
+> > >         #clock-cells = 1;
+> > > };
+> > >
+> > > syscon@1fbf0200 {
+> > >         compatible = "gpio-scu", "syscon", "simple-mfd";
+> > >         #pwm-cells = 1;
+> > >
+> > >         pinctrl@x {
+> > >                 compatible = "pinctrl";
+> > >                 reg = x;
+> > >                 #pinctrl-cells = 1;
+> > >                 #gpio-cells = 1;
+> > >         };
+> > > };
+> > >
+> >
+> > ack, so we could use the following dts nodes for the discussed memory
+> > regions (chip-scu, scu and gpio):
+> >
+> > syscon@1fa20000 {
+> >     compatible = "airoha,chip-scu", "syscon";
+> >     reg = <0x0 0x1fa2000 0x0 0x384>;
+> > };
+> >
+> > clock-controller@1fb00000 {
+> >     compatible = "airoha,en7581-scu", "syscon";
+> >     reg = <0x0 0x1fb00000 0x0 0x94c>;
+> >     #clock-cells = <1>;
+> >     #reset-cells = <1>;
+> > };
+> >
+> > mfd@1fbf0200 {
+> >     compatible = "airoha,en7581-gpio-mfd", "simple-mfd";
+> >     reg = <0x0 0x1fbf0200 0x0 0xc0>;
+> >
+> >     pio: pinctrl {
+> >         compatible = "airoha,en7581-pinctrl"
+> >         gpio-controller;
+> >         #gpio-cells = <2>;
+> >
+> >         interrupt-controller;
+> >         #interrupt-cells = <2>;
+> >         interrupt-parent = <&gic>;
+> >         interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> >     }
+> >
+> >     pwm: pwm {
+> >         compatible = "airoha,en7581-pwm";
+> >         #pwm-cells = <3>;
+> >     }
+> > };
+> 
+> I think this can be simplified down to this:
+> 
+> mfd@1fbf0200 {
+>     compatible = "airoha,en7581-gpio-mfd";  // MFD is a Linuxism. What
+> is this h/w block called?
+>     reg = <0x0 0x1fbf0200 0x0 0xc0>;
+>     gpio-controller;
+>     #gpio-cells = <2>;
+>     interrupt-controller;
+>     #interrupt-cells = <2>;
+>     interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> 
+>     #pwm-cells = <3>;
+> 
+>     pio: pinctrl {
+>         foo-pins {};
+>         bar-pins {};
+>     };
+> };
+> 
+> Maybe we keep the compatible in 'pinctrl'...
 >
-> Why not use pinctrl-single ?
->
-> You can ref arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
->
-> It did similar thing to use GPIO recover i2c bus.
->
-> Just need change dts file.
 
-Next time, please cc: imx@lists.linux.dev
+Hi Rob, thanks a lot for the hint, I hope we can finally find a solution
+on how to implement this.
 
-Frank
+In Documentation the block is called GPIO Controller. As explained it does
+expose pinctrl function AND pwm (with regs in the middle)
 
->
-> Frank
->
->
-> >  drivers/pinctrl/freescale/Kconfig           |   8 +
-> >  drivers/pinctrl/freescale/Makefile          |   1 +
-> >  drivers/pinctrl/freescale/pinctrl-ls1012a.c | 381 ++++++++++++++++++++
-> >  3 files changed, 390 insertions(+)
-> >  create mode 100644 drivers/pinctrl/freescale/pinctrl-ls1012a.c
-> >
-> > diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-> > index 3b59d7189004..a2038042eeae 100644
-> > --- a/drivers/pinctrl/freescale/Kconfig
-> > +++ b/drivers/pinctrl/freescale/Kconfig
-> > @@ -209,6 +209,14 @@ config PINCTRL_IMX93
-> >  	help
-> >  	  Say Y here to enable the imx93 pinctrl driver
-> >
-> > +config PINCTRL_LS1012A
-> > +	tristate "LS1012A pinctrl driver"
-> > +	depends on ARCH_LAYERSCAPE && OF || COMPILE_TEST
-> > +	select PINMUX
-> > +	select GENERIC_PINCONF
-> > +	help
-> > +	  Say Y here to enable the ls1012a pinctrl driver
-> > +
-> >  config PINCTRL_VF610
-> >  	bool "Freescale Vybrid VF610 pinctrl driver"
-> >  	depends on SOC_VF610
-> > diff --git a/drivers/pinctrl/freescale/Makefile b/drivers/pinctrl/freescale/Makefile
-> > index d27085c2b4c4..6926529d8635 100644
-> > --- a/drivers/pinctrl/freescale/Makefile
-> > +++ b/drivers/pinctrl/freescale/Makefile
-> > @@ -35,3 +35,4 @@ obj-$(CONFIG_PINCTRL_IMX25)	+= pinctrl-imx25.o
-> >  obj-$(CONFIG_PINCTRL_IMX28)	+= pinctrl-imx28.o
-> >  obj-$(CONFIG_PINCTRL_IMXRT1050)	+= pinctrl-imxrt1050.o
-> >  obj-$(CONFIG_PINCTRL_IMXRT1170)	+= pinctrl-imxrt1170.o
-> > +obj-$(CONFIG_PINCTRL_LS1012A)	+= pinctrl-ls1012a.o
-> > diff --git a/drivers/pinctrl/freescale/pinctrl-ls1012a.c b/drivers/pinctrl/freescale/pinctrl-ls1012a.c
-> > new file mode 100644
-> > index 000000000000..d4c535ed6c07
-> > --- /dev/null
-> > +++ b/drivers/pinctrl/freescale/pinctrl-ls1012a.c
-> > @@ -0,0 +1,381 @@
-> > +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
-> > +/*
-> > + * Pin controller for NXP QorIQ LS1012A.
-> > + *
-> > + * Copyright (c) 2024 Digi International, Inc.
-> > + * Author: David Leonard <David.Leonard@digi.com>
-> > + */
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/pinctrl/pinctrl.h>
-> > +#include <linux/pinctrl/pinmux.h>
-> > +#include <linux/pinctrl/pinconf-generic.h>
-> > +#include <linux/of.h>
-> > +#include <linux/io.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/sys_soc.h>
-> > +
-> > +struct ls1012a_pinctrl_pdata {
-> > +	struct pinctrl_dev *pctl_dev;
-> > +	void __iomem *cr0mem;
-> > +	bool big_endian;
-> > +	u32 ssc;
-> > +};
-> > +
-> > +/* Bitfield macros for masks and values that follow the datasheet's
-> > + * bit numbering schemes for registers of different bit-endianess. */
-> > +#define BITV_BE(hi, v)	((v) << (31 - (hi) % 32))
-> > +#define BITM_BE(hi, lo)	(((1 << ((hi) - (lo) + 1)) - 1) << (31 - (hi) % 32))
-> > +#define BITV_LE(lo, v)	((v) << ((lo) % 32))
-> > +#define BITM_LE(lo, hi)	(((1 << ((hi) - (lo) + 1)) - 1) << ((lo) % 32))
-> > +
-> > +/* SCFG PMUXCR0 pinmux control register */
-> > +#define SCFG_PMUXCR0			0x430
-> > +#define QSPI_MUX_OVRD_MASK		BITM_BE(0, 0)	/* [0] */
-> > +#define QSPI_MUX_DISABLE		BITV_BE(0, 0)	/*  use RCW */
-> > +#define QSPI_MUX_ENABLE			BITV_BE(0, 1)	/*  use PMUXCR0 */
-> > +#define QSPI_DATA0_GPIO_OVR_MASK	BITM_BE(1, 1)	/* [1] */
-> > +#define QSPI_DATA0_GPIO_SEL_SPI		BITV_BE(1, 0)	/*  DATA0,SCK,CS0 */
-> > +#define QSPI_DATA0_GPIO_SEL_GPIO	BITV_BE(1, 1)	/*  GPIO1[4,11,5] */
-> > +#define QSPI_DATA1_GPIO_OVR_MASK	BITM_BE(3, 2)	/* [3:2] */
-> > +#define QSPI_DATA1_GPIO_SEL_SPI		BITV_BE(3, 0)	/*  DATA1 */
-> > +#define QSPI_DATA1_GPIO_SEL_GPIO	BITV_BE(3, 1)	/*  GPIO1[12] */
-> > +#define QSPI_IIC2_OVR_MASK		BITM_BE(5, 4)	/* [5:4] */
-> > +#define QSPI_IIC2_SEL_GPIO		BITV_BE(5, 0)	/*  GPIO1[13,14] */
-> > +#define QSPI_IIC2_SEL_I2C		BITV_BE(5, 1)	/*  SCL,SDA (rev0) */
-> > +#define QSPI_IIC2_SEL_SPI		BITV_BE(5, 2)	/*  DATA2,DATA3 */
-> > +
-> > +/* RCW SoC-specific configuration (read-only) */
-> > +#define DCFG_RCWSR			0x100
-> > +#define SOC_SPEC_CONFIG			416		/* word 13 */
-> > +#define DCFG_SSC_REG			(DCFG_RCWSR + SOC_SPEC_CONFIG / 8)
-> > +#define SSC_DATA0_GPIO_MASK		BITM_LE(421, 421)
-> > +#define SSC_DATA0_GPIO_SEL_SPI		BITV_LE(421, 0)	/*  DATA0,SCK,CS0 */
-> > +#define SSC_DATA0_GPIO_SEL_GPIO		BITV_LE(421, 1)	/*  GPIO1[11,4,5] */
-> > +#define SSC_DATA1_GPIO_MASK		BITM_LE(422, 423)
-> > +#define SSC_DATA1_GPIO_SEL_SPI		BITV_LE(422, 0)	/*  DATA1 */
-> > +#define SSC_DATA1_GPIO_SEL_GPIO		BITV_LE(422, 2)	/*  GPIO1[12] */
-> > +#define SSC_IIC2_MASK			BITM_LE(424, 425)
-> > +#define SSC_IIC2_SEL_GPIO		BITV_LE(424, 0)	/*  GPIO1[13,14] */
-> > +#define SSC_IIC2_SEL_I2C		BITV_LE(424, 2)	/*  SCL,SDA */
-> > +#define SSC_IIC2_SEL_SPI		BITV_LE(424, 1)	/*  DATA2,DATA3 */
-> > +#define SSC_IIC2_SEL_GPIO_RESET		BITV_LE(424, 3)	/*  GPIO1[13],RESET_REQ_B*/
-> > +
-> > +const struct pinctrl_pin_desc ls1012a_pins[] = {
-> > +	PINCTRL_PIN(60, "QSPI_A_DATA3/GPIO1_14/IIC2_SDA/RESET_REQ_B"),
-> > +	PINCTRL_PIN(61, "QSPI_A_DATA1/GPIO1_12"),
-> > +	PINCTRL_PIN(62, "QSPI_A_SCK/GPIO1_04"),
-> > +	PINCTRL_PIN(122, "QSPI_A_DATA2/GPIO1_13/IIC2_SCL"),
-> > +	PINCTRL_PIN(123, "QSPI_A_DATA0/GPIO1_11"),
-> > +	PINCTRL_PIN(124, "QSPI_A_CS0/GPIO1_05"),
-> > +};
-> > +
-> > +static const unsigned int qspi_1_grp[] = { 62, 123, 124 };
-> > +static const unsigned int qspi_2_grp[] = { 61 };
-> > +static const unsigned int qspi_3_grp[] = { 122, 60 };
-> > +
-> > +#define GRP_qspi_1	0	/* SCK,CS0,DATA0 */
-> > +#define GRP_qspi_2	1	/* DATA1 */
-> > +#define GRP_qspi_3	2	/* DATA2,DATA3 */
-> > +#define _GRP_max	3
-> > +
-> > +#define _PINGROUP(name) \
-> > +	[GRP_##name] = PINCTRL_PINGROUP(#name "_grp", name##_grp, ARRAY_SIZE(name##_grp))
-> > +static const struct pingroup ls1012a_groups[] = {
-> > +	_PINGROUP(qspi_1),
-> > +	_PINGROUP(qspi_2),
-> > +	_PINGROUP(qspi_3),
-> > +};
-> > +
-> > +
-> > +static void ls1012a_write_cr0(struct ls1012a_pinctrl_pdata *pd, u32 val)
-> > +{
-> > +	if (pd->big_endian)
-> > +		iowrite32be(val, pd->cr0mem);
-> > +	else
-> > +		iowrite32(val, pd->cr0mem);
-> > +}
-> > +
-> > +static u32 ls1012a_read_cr0(struct ls1012a_pinctrl_pdata *pd)
-> > +{
-> > +	return pd->big_endian ? ioread32be(pd->cr0mem) : ioread32(pd->cr0mem);
-> > +}
-> > +
-> > +static int ls1012a_get_groups_count(struct pinctrl_dev *pcdev)
-> > +{
-> > +	return ARRAY_SIZE(ls1012a_groups);
-> > +}
-> > +
-> > +static const char *ls1012a_get_group_name(struct pinctrl_dev *pcdev,
-> > +	unsigned int selector)
-> > +{
-> > +	return ls1012a_groups[selector].name;
-> > +}
-> > +
-> > +static int ls1012a_get_group_pins(struct pinctrl_dev *pcdev,
-> > +	unsigned int selector, const unsigned int **pins, unsigned int *npins)
-> > +{
-> > +	*pins = ls1012a_groups[selector].pins;
-> > +	*npins = ls1012a_groups[selector].npins;
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct pinctrl_ops ls1012a_pinctrl_ops = {
-> > +	.get_groups_count = ls1012a_get_groups_count,
-> > +	.get_group_name = ls1012a_get_group_name,
-> > +	.get_group_pins = ls1012a_get_group_pins,
-> > +	.dt_node_to_map = pinconf_generic_dt_node_to_map_group,
-> > +	.dt_free_map = pinconf_generic_dt_free_map,
-> > +};
-> > +
-> > +static const char * const i2c_groups[] = { "qspi_3_grp" };
-> > +static const char * const spi_groups[] = { "qspi_1_grp", "qspi_2_grp", "qspi_3_grp" };
-> > +static const char * const gpio_groups[] = { "qspi_1_grp", "qspi_2_grp", "qspi_3_grp" };
-> > +static const char * const gpio_reset_groups[] = { "qspi_3_grp" };
-> > +
-> > +#define FUNC_i2c	0
-> > +#define FUNC_spi	1
-> > +#define FUNC_gpio	2
-> > +#define FUNC_gpio_reset 3
-> > +#define _FUNC_max	4
-> > +
-> > +#define _PINFUNC(name) \
-> > +	[FUNC_##name] = PINCTRL_PINFUNCTION(#name, name##_groups, ARRAY_SIZE(name##_groups))
-> > +static const struct pinfunction ls1012a_functions[] = {
-> > +	_PINFUNC(i2c),
-> > +	_PINFUNC(spi),
-> > +	_PINFUNC(gpio),
-> > +	_PINFUNC(gpio_reset),
-> > +};
-> > +
-> > +static int ls1012a_get_functions_count(struct pinctrl_dev *pctldev)
-> > +{
-> > +	return ARRAY_SIZE(ls1012a_functions);
-> > +}
-> > +
-> > +static const char *ls1012a_get_function_name(struct pinctrl_dev *pctldev, unsigned int func)
-> > +{
-> > +	return ls1012a_functions[func].name;
-> > +}
-> > +
-> > +static int ls1012a_get_function_groups(struct pinctrl_dev *pctldev, unsigned int func,
-> > +	const char * const **groups,
-> > +	unsigned int * const ngroups)
-> > +{
-> > +	*groups = ls1012a_functions[func].groups;
-> > +	*ngroups = ls1012a_functions[func].ngroups;
-> > +	return 0;
-> > +}
-> > +
-> > +/*
-> > + * LS1012A
-> > + *    Group: qspi_1             qspi_2      qspi_3
-> > + *           ================== =========== =============
-> > + *    Pin:   62    123    124   61          122    60
-> > + *           ----- ------ ----- ----------- ------ ------
-> > + * i2c                                      SCL    SDA    (RCW only)
-> > + * spi       SCK   DATA0
-> > + * spi       SCK   DATA0        DATA1
-> > + * spi       SCK   DATA0        DATA1       DATA2  DATA3
-> > + * gpio      GPIO4 GPIO11 GPIO5
-> > + * gpio                         GPIO12
-> > + * gpio                                     GPIO13 GPIO14
-> > + * gpio_reset                               GPIO13 REQ_B  (RCW only)
-> > + */
-> > +
-> > +static const struct ls1012a_func_mux {
-> > +	u32 cr0mask, cr0; /* mux control */
-> > +	u32 sscmask, ssc; /* equivalent in RCW */
-> > +} ls1012a_func_mux[_FUNC_max][_GRP_max] = {
-> > +	[FUNC_i2c] = {
-> > +		[GRP_qspi_3] = {
-> > +			.sscmask = SSC_IIC2_MASK,
-> > +			.ssc =     SSC_IIC2_SEL_I2C,
-> > +		},
-> > +	},
-> > +	[FUNC_spi] = {
-> > +		[GRP_qspi_1] = {
-> > +			.cr0mask = QSPI_DATA0_GPIO_OVR_MASK,
-> > +			.cr0 =     QSPI_DATA0_GPIO_SEL_SPI,
-> > +			.sscmask = SSC_DATA0_GPIO_MASK,
-> > +			.ssc =     SSC_DATA0_GPIO_SEL_SPI
-> > +		},
-> > +		[GRP_qspi_2] = {
-> > +			.cr0mask = QSPI_DATA1_GPIO_OVR_MASK,
-> > +			.cr0 =     QSPI_DATA1_GPIO_SEL_SPI,
-> > +			.sscmask = SSC_DATA1_GPIO_MASK,
-> > +			.ssc =     SSC_DATA1_GPIO_SEL_SPI,
-> > +		},
-> > +		[GRP_qspi_3] = {
-> > +			.cr0mask = QSPI_IIC2_OVR_MASK,
-> > +			.cr0 =     QSPI_IIC2_SEL_SPI,
-> > +			.sscmask = SSC_IIC2_MASK,
-> > +			.ssc =     SSC_IIC2_SEL_SPI,
-> > +		},
-> > +	},
-> > +	[FUNC_gpio] = {
-> > +		[GRP_qspi_1] = {
-> > +			.cr0mask = QSPI_DATA0_GPIO_OVR_MASK,
-> > +			.cr0 =     QSPI_DATA0_GPIO_SEL_GPIO,
-> > +			.sscmask = SSC_DATA0_GPIO_MASK,
-> > +			.ssc =     SSC_DATA0_GPIO_SEL_GPIO,
-> > +		},
-> > +		[GRP_qspi_2] = {
-> > +			.cr0mask = QSPI_DATA1_GPIO_OVR_MASK,
-> > +			.cr0 =     QSPI_DATA1_GPIO_SEL_GPIO,
-> > +			.sscmask = SSC_DATA1_GPIO_MASK,
-> > +			.ssc =     SSC_DATA1_GPIO_SEL_GPIO,
-> > +		},
-> > +		[GRP_qspi_3] = {
-> > +			.cr0mask = QSPI_IIC2_OVR_MASK,
-> > +			.cr0 =     QSPI_IIC2_SEL_GPIO,
-> > +			.sscmask = SSC_IIC2_MASK,
-> > +			.ssc =     SSC_IIC2_SEL_GPIO,
-> > +		},
-> > +	},
-> > +	[FUNC_gpio_reset] = {
-> > +		[GRP_qspi_3] = {
-> > +			.sscmask = SSC_IIC2_MASK,
-> > +			.ssc =     SSC_IIC2_SEL_GPIO_RESET,
-> > +		},
-> > +	},
-> > +};
-> > +
-> > +static int ls1012a_set_mux(struct pinctrl_dev *pcdev,
-> > +	unsigned int func, unsigned int group)
-> > +{
-> > +	struct ls1012a_pinctrl_pdata *pd = pinctrl_dev_get_drvdata(pcdev);
-> > +	const struct ls1012a_func_mux *fm = &ls1012a_func_mux[func][group];
-> > +	u32 cr0 = ls1012a_read_cr0(pd);
-> > +
-> > +	if (!fm->cr0mask) {
-> > +		if ((pd->ssc & fm->sscmask) != fm->ssc)
-> > +			return -EOPNOTSUPP;
-> > +		cr0 = (cr0 & ~QSPI_MUX_OVRD_MASK) | QSPI_MUX_DISABLE;
-> > +	} else {
-> > +		cr0 = (cr0 & ~fm->cr0mask) | fm->cr0;
-> > +		if ((pd->ssc & fm->sscmask) != fm->ssc)
-> > +			cr0 = (cr0 & ~QSPI_MUX_OVRD_MASK) | QSPI_MUX_ENABLE;
-> > +	}
-> > +	ls1012a_write_cr0(pd, cr0);
-> > +	return 0;
-> > +}
-> > +
-> > +static void ls1012a_init_mux(struct ls1012a_pinctrl_pdata *pd)
-> > +{
-> > +	unsigned int func, group;
-> > +	const struct ls1012a_func_mux *fm;
-> > +	u32 cr0;
-> > +
-> > +	cr0 = ls1012a_read_cr0(pd);
-> > +	if ((cr0 & QSPI_MUX_OVRD_MASK) == QSPI_MUX_DISABLE) {
-> > +		/*
-> > +		 * Prepare a disabled MUXCR0 to have a same/similar
-> > +		 * configuration as RCW SSC, and leave it disabled.
-> > +		 */
-> > +		for (func = 0; func < _FUNC_max; func++) {
-> > +			for (group = 0; group < _GRP_max; group++) {
-> > +				fm = &ls1012a_func_mux[func][group];
-> > +				if (fm->sscmask &&
-> > +				    fm->ssc == (pd->ssc & fm->sscmask)) {
-> > +					cr0 &= ~fm->cr0mask;
-> > +					cr0 |= fm->cr0;
-> > +				}
-> > +			}
-> > +		}
-> > +		ls1012a_write_cr0(pd, cr0);
-> > +	}
-> > +}
-> > +
-> > +static const struct pinmux_ops ls1012a_pinmux_ops = {
-> > +	.get_functions_count = ls1012a_get_functions_count,
-> > +	.get_function_name = ls1012a_get_function_name,
-> > +	.get_function_groups = ls1012a_get_function_groups,
-> > +	.set_mux = ls1012a_set_mux,
-> > +};
-> > +
-> > +static struct pinctrl_desc ls1012a_pinctrl_desc = {
-> > +	.name = "ls1012a",
-> > +	.pins = ls1012a_pins,
-> > +	.npins = ARRAY_SIZE(ls1012a_pins),
-> > +	.pctlops = &ls1012a_pinctrl_ops,
-> > +	.pmxops = &ls1012a_pinmux_ops,
-> > +	.owner = THIS_MODULE,
-> > +};
-> > +
-> > +static int ls1012a_pinctrl_probe(struct platform_device *pdev)
-> > +{
-> > +	struct ls1012a_pinctrl_pdata *pd;
-> > +	int ret;
-> > +	u32 dcfg_ssc;
-> > +	struct regmap *dcfg_regmap;
-> > +
-> > +	pd = devm_kzalloc(&pdev->dev, sizeof(*pd), GFP_KERNEL);
-> > +	if (!pd)
-> > +		return -ENOMEM;
-> > +	platform_set_drvdata(pdev, pd);
-> > +
-> > +	pd->big_endian = device_is_big_endian(&pdev->dev);
-> > +
-> > +	/* SCFG PMUX0 */
-> > +	pd->cr0mem = devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(pd->cr0mem))
-> > +		return PTR_ERR(pd->cr0mem);
-> > +	dev_dbg(&pdev->dev, "scfg pmuxcr0 at %px %s", pd->cr0mem,
-> > +		pd->big_endian ? "be" : "le");
-> > +
-> > +	/* DCFG RCW SSC */
-> > +	dcfg_regmap = syscon_regmap_lookup_by_phandle(
-> > +		dev_of_node(&pdev->dev), "dcfg-regmap");
-> > +	if (IS_ERR(dcfg_regmap)) {
-> > +		dev_err(&pdev->dev, "dcfg regmap: %pe\n", dcfg_regmap);
-> > +		return -EINVAL;
-> > +	}
-> > +	ret = regmap_read(dcfg_regmap, DCFG_SSC_REG, &dcfg_ssc);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "dcfg-regmap read: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +	pd->ssc = swab32(dcfg_ssc); /* untwist RCW fields */
-> > +
-> > +	dev_dbg(&pdev->dev, "dcfg ssc = %08x (grp1=%s grp2=%s grp3=%s)\n",
-> > +		pd->ssc,
-> > +		(pd->ssc & SSC_DATA0_GPIO_MASK) == SSC_DATA0_GPIO_SEL_SPI ? "spi" : "gpio",
-> > +		(pd->ssc & SSC_DATA1_GPIO_MASK) == SSC_DATA1_GPIO_SEL_SPI ? "spi"
-> > +		: (pd->ssc & SSC_DATA1_GPIO_MASK) == SSC_DATA1_GPIO_SEL_GPIO ? "gpio"
-> > +		: (pd->ssc & SSC_DATA1_GPIO_MASK) == 0x80 ? "10" : "11",
-> > +		(pd->ssc & SSC_IIC2_MASK) == SSC_IIC2_SEL_GPIO ? "gpio"
-> > +		: (pd->ssc & SSC_IIC2_MASK) == SSC_IIC2_SEL_I2C ? "i2c"
-> > +		: (pd->ssc & SSC_IIC2_MASK) == SSC_IIC2_SEL_SPI ? "spi"
-> > +		: "gpio+reset");
-> > +
-> > +	ls1012a_init_mux(pd);
-> > +
-> > +	ret = devm_pinctrl_register_and_init(&pdev->dev, &ls1012a_pinctrl_desc,
-> > +		pd, &pd->pctl_dev);
-> > +	if (ret)
-> > +		return dev_err_probe(&pdev->dev, ret, "Failed pinctrl init\n");
-> > +
-> > +	pinctrl_enable(pd->pctl_dev);
-> > +	return ret;
-> > +}
-> > +
-> > +static const struct of_device_id ls1012a_pinctrl_match_table[] = {
-> > +	{ .compatible = "fsl,ls1012a-pinctrl" },
-> > +	{ /* sentinel */ }
-> > +};
-> > +
-> > +static struct platform_driver ls1012a_pinctrl_driver = {
-> > +	.driver = {
-> > +		.name = "ls1012a_pinctrl",
-> > +		.of_match_table = ls1012a_pinctrl_match_table,
-> > +	},
-> > +	.probe = ls1012a_pinctrl_probe,
-> > +};
-> > +
-> > +builtin_platform_driver(ls1012a_pinctrl_driver)
-> > +
-> > +MODULE_DESCRIPTION("LS1012A pinctrl driver");
-> > +MODULE_LICENSE("GPL");
-> > --
-> > 2.43.0
-> >
+Is this semplification really needed? It does pose some problem driver
+wise (on where to put the driver, in what subsystem) and also on the
+yaml side with mixed property for pinctrl and pwm controller.
+
+I feel mixing the 2 thing might cause some confusion on the 2 block
+device that are well separated aside from the unlucky position of the
+regs.
+
+The suggested MFD implementation would consist of
+- main node with MFD (map the entire GPIO controller regs)
+-   2 child for PWM and pinctrl (no regs)
+
+- driver in mfd/
+- driver in pinctrl/
+- driver in pwm/
+
+An alternative is the previous solution with pinctrl mapping all the
+GPIO controller regs and PWM a child but Conor suggested that a MFD
+structure might be better suited for the task. We have both implemented
+and ready to be submitted. Hope we can find a common decision on how to
+implement this simple but annoying block of devices.
+
+-- 
+	Ansuel
 
