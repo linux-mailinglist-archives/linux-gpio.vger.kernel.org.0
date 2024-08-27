@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-9198-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9199-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4172E95FFB0
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 05:22:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAAD795FFB4
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 05:22:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E7B4628331E
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 03:22:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28FE41C21A9F
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Aug 2024 03:22:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7DB18030;
-	Tue, 27 Aug 2024 03:22:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C29A02556F;
+	Tue, 27 Aug 2024 03:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2Fm6A06"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2RLt6uN"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505BBBE5E;
-	Tue, 27 Aug 2024 03:22:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2E21BDDF;
+	Tue, 27 Aug 2024 03:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724728953; cv=none; b=Gn6m/xU1mOEYwwSBxIy+R3VgkQzA0pPjVwMn8R4tmSG2mi9ji+2uEUz6qW44XMEnGx9p/0z0sPw/Y69J4VoIqymIPQL8SUjuHBLMc2N09UAh5C30YeF0HH71XPU7dW462mLgvMZ5QWdZztK0NbyRaPRVyQJ3mwiYJPicn1GR8DQ=
+	t=1724728955; cv=none; b=iGAb4Wk2CEUQwMnAYsNbMFBtXPsd4vXdgQ8KGE/OfTUqdyv2UTfc8X59PhoijXk5dYS2E9qx2/kBYCFKpzLjGf4kuE8cea10sA91KJ/r0ZSUigkUunDz4pBpmHLyjYhCG3z/tu45k8rZkoDZ1JhQwUXB6KIgdJ3qPCSiY1WXY4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724728953; c=relaxed/simple;
-	bh=JA4Rrl0gSqFn2h51HnJ2rwMHcWPIgHb9IG2HsHXFITE=;
+	s=arc-20240116; t=1724728955; c=relaxed/simple;
+	bh=7Z9U0t0Y1rsapv+eorjIA6eyAZO0pGjgnJ4s7LP9ZQQ=;
 	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=umXEqMXZ25UGeE4xDAQgmbunAOhSRKusCp9Hwkkjb+Ia3Xi5oyEA1M/rBcMYXWsC9rAw8r3N4gUZCS+7I20AXLEVlu2H1guz+/xweXSstTysz26BRd/vDwg3a02GUf1+BioAX27TRFDvRXRcQakjewqYyaA//STGlH9eiAI2U3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2Fm6A06; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93CB6C8B7A5;
-	Tue, 27 Aug 2024 03:22:32 +0000 (UTC)
+	 Message-Id:Subject; b=kLKkCMjlAR/3MJa8FTVgEx296gKKKv1yIbW+cJ8lO6WyjJI+Wbv15RIR80YT2krcE5b+oiQ/AzJbikbx928HxEHhCAV1BjMDSfoEMNVr2oHJLuk10mZo7mYpwdgZgVjKnXWe3FE2a+X/uJ+Z4IUyba5yNci+UKYNkQqGu3KlTwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2RLt6uN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CECAFC8B7A5;
+	Tue, 27 Aug 2024 03:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724728952;
-	bh=JA4Rrl0gSqFn2h51HnJ2rwMHcWPIgHb9IG2HsHXFITE=;
+	s=k20201202; t=1724728955;
+	bh=7Z9U0t0Y1rsapv+eorjIA6eyAZO0pGjgnJ4s7LP9ZQQ=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=r2Fm6A06EIDJCVN7uy5A0M33DaPpTTg/oArTg63+j6kCNzDW01SsKXYbkTrg5tj5e
-	 QWtqJ8orlwnwcj7PW4k0HD68rkGj4fXl72S66I/SQ9rlB0dyulmxrzagSALnLdkig0
-	 K4fsHHJQrKnXC04vt3BFQLBChUagrO1n2+IfxrhS6fS9vXql3xY8qK1+UaI/oP4Nd1
-	 4GQnUdw1P3P9LXQErr7P3RFwF2nk4/4O4t6tBLXKWc+wGeezrEcEFj5Yhhb/aTbWtl
-	 N2Wl2ZIedsseOaXCMuab0DEPe5AN2UwRHju2ZqjHeYCXqjgYki0UBY9erIJjs0AVZw
-	 wNYMdazGOmfzQ==
-Date: Mon, 26 Aug 2024 22:22:30 -0500
+	b=u2RLt6uNzRUdVsXuT197qPrty/u1Ey8nRfNl5fAsKhnFE2KvQ7QGoAuVMXk6OMr2q
+	 R+4dJAfmUyuM+2+QMV3uZThzXeo6VGP27Bgm+X+rSjhd91JNSN1USp9yj1Z2JfxoqN
+	 OKKkgtOiGIyl9AvAlYLvpFntVB5ANhmDa1dbPWas235+EShcKkdTwwONiDyGEVGA9e
+	 V1dYbmkOnM6aUo54ORsAJaCTV7lskzyoUgU1M5DjMq36RozSsMCjHHxp+iTzxPxopL
+	 5+g5doDRKkKQoMNikFtjtkFGsppBtBS9BSi3DDdDLV942Pp/rRL1JMcQSQdZclepQ8
+	 svPpMNK7YqUfw==
+Date: Mon, 26 Aug 2024 22:22:33 -0500
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -52,30 +52,30 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: David Leonard <David.Leonard@digi.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, 
- devicetree@vger.kernel.org, Jacky Bai <ping.bai@nxp.com>, 
- linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Shawn Guo <shawnguo@kernel.org>, linux-gpio@vger.kernel.org, 
+Cc: Shawn Guo <shawnguo@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
  Dong Aisheng <aisheng.dong@nxp.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- linux-arm-kernel@lists.infradead.org, Fabio Estevam <festevam@gmail.com>
-In-Reply-To: <a5c1eef7-372d-082b-066e-ecd5e001d1cf@digi.com>
-References: <a5c1eef7-372d-082b-066e-ecd5e001d1cf@digi.com>
-Message-Id: <172472894855.2520648.730159395986149947.robh@kernel.org>
-Subject: Re: [PATCH 3/6] dt-bindings: pinctrl: Add fsl,ls1012a-pinctrl yaml
+ Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <b17a0414-8503-950e-a133-e5a1b1cab8c4@digi.com>
+References: <b17a0414-8503-950e-a133-e5a1b1cab8c4@digi.com>
+Message-Id: <172472895083.2520688.17158215509587084131.robh@kernel.org>
+Subject: Re: [PATCH 6/6] dt-bindings: pinctrl: Add fsl,ls1046a-pinctrl yaml
  file
 
 
-On Tue, 27 Aug 2024 12:10:44 +1000, David Leonard wrote:
+On Tue, 27 Aug 2024 12:15:08 +1000, David Leonard wrote:
 > 
-> Add a binding schema and examples for the LS1012A's pinctrl function.
+> Add a binding schema and examples for the LS1046A's pinctrl function.
 > 
 > Signed-off-by: David Leonard <David.Leonard@digi.com>
 > ---
->   .../bindings/pinctrl/fsl,ls1012a-pinctrl.yaml | 83 +++++++++++++++++++
->   1 file changed, 83 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,ls1012a-pinctrl.yaml
+>   .../bindings/pinctrl/fsl,ls1046a-pinctrl.yaml | 74 +++++++++++++++++++
+>   1 file changed, 74 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,ls1046a-pinctrl.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -83,22 +83,12 @@ My bot found errors running 'make dt_binding_check' on your patch:
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/fsl,ls1012a-pinctrl.example.dtb: quadspi@1550000: $nodename:0: 'quadspi@1550000' does not match '^spi(@.*|-([0-9]|[1-9][0-9]+))?$'
-	from schema $id: http://devicetree.org/schemas/spi/fsl,spi-fsl-qspi.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/fsl,ls1012a-pinctrl.example.dtb: quadspi@1550000: 'reg-names' is a required property
-	from schema $id: http://devicetree.org/schemas/spi/fsl,spi-fsl-qspi.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/fsl,ls1012a-pinctrl.example.dtb: quadspi@1550000: 'clocks' is a required property
-	from schema $id: http://devicetree.org/schemas/spi/fsl,spi-fsl-qspi.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/fsl,ls1012a-pinctrl.example.dtb: quadspi@1550000: 'clock-names' is a required property
-	from schema $id: http://devicetree.org/schemas/spi/fsl,spi-fsl-qspi.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/fsl,ls1012a-pinctrl.example.dtb: quadspi@1550000: 'oneOf' conditional failed, one must be fixed:
-	'interrupts' is a required property
-	'interrupts-extended' is a required property
-	from schema $id: http://devicetree.org/schemas/spi/fsl,spi-fsl-qspi.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/fsl,ls1046a-pinctrl.example.dtb: pinmux@157040c: pinctrl-i2c3-gpio: {'groups': ['M3', 'N3'], 'function': ['gpio']} is not of type 'array'
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-consumer.yaml#
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/a5c1eef7-372d-082b-066e-ecd5e001d1cf@digi.com
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/b17a0414-8503-950e-a133-e5a1b1cab8c4@digi.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
