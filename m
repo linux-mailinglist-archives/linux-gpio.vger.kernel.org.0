@@ -1,138 +1,144 @@
-Return-Path: <linux-gpio+bounces-9268-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9269-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 669FD962715
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2024 14:27:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17B599628B3
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2024 15:33:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 100F31F23EFD
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2024 12:27:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA506283F6A
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2024 13:33:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6907A175D4A;
-	Wed, 28 Aug 2024 12:27:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65252188CAD;
+	Wed, 28 Aug 2024 13:32:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="oG0xt3RO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fR57m6Jv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A7516C859;
-	Wed, 28 Aug 2024 12:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89164187FE5;
+	Wed, 28 Aug 2024 13:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724848047; cv=none; b=QHumBHRlFH7LuAWCr2QXF8eUqGiqnGVeoRqiPhSuDYj1uSVgLwIRNU7E83154qcE3oh6HEc11EwSmxhhmWF9aMhiIMVGph1Jtg5Cz01yPkpLAWmgOwfhIOqECyiPYVpzN8eBJYLN6po7Qfx4IxKPTtcYKvvNtGZlzTDKzLGQCIU=
+	t=1724851971; cv=none; b=f4RJ9n6DxH/UY3aljbvIMCaunM1RKKm1xFh+ifILiQDQeuL7VfP9L2FJcxrIgqKLA3JSLJjEmhPjOojKAwlQEF04trQ7IlfBMR5sWPJU14eghred2aPynbGJ8WZN47i8rRQ33cElVQzGJxn/i3GlkFbUynMJ0w5dDNmJYS9IoQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724848047; c=relaxed/simple;
-	bh=2ziwrwW4OywBLlfR192dIFSM2DT7pGe0Nj0XqoHXsSA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X051V2JumPb6LOYVaRszDcr2k8fxXPwKSIvlVWVl6fPhAS21LmuJnmNB8hNoQ+YQu5oQ7uz9X7MBG/kitDAp6JRMYrxkQwqL7X7w80v2Y331gfVipiiJbkGJqGznr3PVvHBgN3Zq/cBrxELTamMcJWpcyKWGy6fRqeqqc0a6smc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=oG0xt3RO; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47S81J3D020794;
-	Wed, 28 Aug 2024 07:27:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=PODMain02222019; bh=l9zlw/gyFu63tESz3Q
-	uaR6nrfY0/IeoZG2y0/T3PxDs=; b=oG0xt3ROPlUIIcm1dpRyIlnhfDsX6P2W/v
-	qfvx0TQH403HRJbC4sdkhCL3jRQaMZHv788zl4jmil2sToV/Poc/C50h8EEX5bsq
-	l5LhMBsEbHpT/fxafFrEZL8CATW9dN2lULsD9cqklXmx94pUfYhZX4FaHPTsmrCo
-	hg4gwB8HpqYS/5agee1dMe+FlcOqYC6U1+u09DDTViB13En8QkM/rzuCGYPaMNgG
-	4Wboc6km/2MEUM0LhQGB9eZS/DhaC1W2R9oI4RKqSht8/YWeK5vJQR0E6QbJ0YRS
-	Y9+/gYCRmrLxvWj4CQ9oDb60t5Eo5mK8aZokiAcmH8masiYexXqg==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 419puw0pgb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Aug 2024 07:27:06 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 28 Aug
- 2024 13:27:04 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Wed, 28 Aug 2024 13:27:04 +0100
-Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 75288820244;
-	Wed, 28 Aug 2024 12:27:04 +0000 (UTC)
-Date: Wed, 28 Aug 2024 13:27:03 +0100
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Yan Zhen <yanzhen@vivo.com>
-CC: <rf@opensource.cirrus.com>, <tglx@linutronix.de>,
-        <linus.walleij@linaro.org>, <linux-sound@vger.kernel.org>,
-        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <opensource.kernel@vivo.com>
-Subject: Re: [PATCH v1] cirrus: Simplify with dev_err_probe()
-Message-ID: <Zs8XlyXw421hHjM/@opensource.cirrus.com>
-References: <20240828120118.1284420-1-yanzhen@vivo.com>
+	s=arc-20240116; t=1724851971; c=relaxed/simple;
+	bh=2XSRcAhsIgxmGMC+Jhj0eYGlLwatsGrfTxmjiiVbw28=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K1gKKuAoN/dgj7NYWsDIyvQYXxilXRhaQbiaH9ssrXRiPNtPOefoOV0U8DmMN0m5KNCnFsjyH+7+391bMaul41TAJEdl05xqMc9BLUJOFqc1hsNs4/ZbOIdTJithKNujP7wHO5jTQVqEj1FPOzTaobI5172i9WRI1959Q/NmnYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fR57m6Jv; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42bac9469e8so2570995e9.3;
+        Wed, 28 Aug 2024 06:32:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724851968; x=1725456768; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vX5OXPOSkMPqbGMZAISswtCFwqTn+jp7AakChDRSONg=;
+        b=fR57m6JvT3D7cGOlaypD1/xhAV17/vVYhGVQHfpds3lEkFDlXZYsD6lQvCr4FokLtY
+         ZDrO3RACe6doDPkfJFnla2akv5iTA2GimLxgorfNeRA/vOihcYn/ljl73vkTnzBhTDSd
+         1FU8GE8Vb4AuGdsEaR5690+j6E3eRBlgouwR7fErEV1z8QCBRqHzPWJ37eCXG6Ut6w0Q
+         U6CkDG7ipmzHWKuo2PksJiBcm4+/4PELU+T+hOr6qVRFXpQGkEQFiwR8kQuRVBOJ7q7f
+         6nSQceXJfo6QQm4hWObfZJQQkeZvb06usgRyivgpwSk+Rqz+oYqZit3BTnkoSJmvWurd
+         6FbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724851968; x=1725456768;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vX5OXPOSkMPqbGMZAISswtCFwqTn+jp7AakChDRSONg=;
+        b=ICdmAqY6qy+cuHT/JkrTQUu/a3x2pEcMVSp28pPrvw3c4nDExxW3Zl07I5p4/EmFBy
+         ek3o9vFpkYYrRoZzLh2b8hUDd3vySfNjLw4MozOUfm/Y2TnE3eTfuczczxS8Ub8TkOh8
+         ZFEIaRTs77GO9NA2E7qyqt/RuHrjvzC3Ycagb3KgngvaZXQuTXnGF8TSC0YXAqu+BlhK
+         mFdQiRdbZdKyd4+zyHxl88HJ9XeHcydHHmHkAwTJCca1zoc17gC5HwTaRYWEx0t1dBWo
+         qK4X04Zq/M4cUOcfQr1rog9cB2/yu/D3yvtN3v5dl3VUI5RaRllRxHH7HfvRaYIt7Bjs
+         b3qg==
+X-Forwarded-Encrypted: i=1; AJvYcCViDAn7QtN1bMuUo08Zg4jauH79mykQ3frSGcRITdd7vliOyW3DcUXPik3bd9BDp9mkFZL6tXYQIEui@vger.kernel.org, AJvYcCVlA3259CWiojWgi/qqSiUQ/11LZZ8bBgohyk5WwYHS0Ofo8oCY3Z9N7VSD3L5sd4TI+TwIKGMK@vger.kernel.org, AJvYcCWObZguviD/n8Uo3dPonyTCdrXC1V/Cs59qb3gTaRh9EKUrywf5U3GEY/91qd/2FrQ4jezMwhWJplvws97t@vger.kernel.org
+X-Gm-Message-State: AOJu0YyejwKi15EZhngU2+2JKDpRE2IFP2AraA2l6/32FhuO9/5r13V9
+	zypDGXG+iIrKZFmvd3vdHgOdL5j1jWGxEQay4wnclg8h+NMJ0JbXbQRZvS6n
+X-Google-Smtp-Source: AGHT+IGFX29cXbltT3lcGmPWqanqujpX/4qjLupXabLKah0CJhhZP+MvW7aCG8Zkc714ofxFD8gg/Q==
+X-Received: by 2002:a05:600c:3ba9:b0:429:991:dd71 with SMTP id 5b1f17b1804b1-42acc8d4bd5mr107123905e9.11.1724851967480;
+        Wed, 28 Aug 2024 06:32:47 -0700 (PDT)
+Received: from partp-nb.corp.toradex.com (31-10-206-125.static.upc.ch. [31.10.206.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42ba6396662sm22136845e9.3.2024.08.28.06.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2024 06:32:46 -0700 (PDT)
+From: Parth Pancholi <parth105105@gmail.com>
+To: Keerthy <j-keerthy@ti.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Parth Pancholi <parth.pancholi@toradex.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] gpio: davinci: fix lazy disable
+Date: Wed, 28 Aug 2024 15:32:07 +0200
+Message-Id: <20240828133207.493961-1-parth105105@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240828120118.1284420-1-yanzhen@vivo.com>
-X-Proofpoint-GUID: Z59lWicZ8vZqdtlHwKdfeWRAlqaqk8BJ
-X-Proofpoint-ORIG-GUID: Z59lWicZ8vZqdtlHwKdfeWRAlqaqk8BJ
-X-Proofpoint-Spam-Reason: safe
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 28, 2024 at 08:01:18PM +0800, Yan Zhen wrote:
-> Switch to use dev_err_probe() to simplify the error path and
-> unify a message template.
-> 
-> Using this helper is totally fine even if err is known to never 
-> be -EPROBE_DEFER.
-> 
-> The benefit compared to a normal dev_err() is the standardized format
-> of the error code, it being emitted symbolically and the fact that
-> the error code is returned which allows more compact error paths.
-> 
-> Signed-off-by: Yan Zhen <yanzhen@vivo.com>
-> ---
->  drivers/irqchip/irq-madera.c                 | 5 ++---
->  drivers/pinctrl/cirrus/pinctrl-madera-core.c | 7 +++----
->  2 files changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-madera.c b/drivers/irqchip/irq-madera.c
-> index acceb6e7fa95..68ebe09baaf6 100644
-> --- a/drivers/irqchip/irq-madera.c
-> +++ b/drivers/irqchip/irq-madera.c
-> @@ -199,9 +199,8 @@ static int madera_irq_probe(struct platform_device *pdev)
->  		ret = regmap_update_bits(madera->regmap, MADERA_IRQ1_CTRL,
->  					 MADERA_IRQ_POL_MASK, 0);
->  		if (ret) {
-> -			dev_err(&pdev->dev,
-> -				"Failed to set IRQ polarity: %d\n", ret);
-> -			return ret;
-> +			return dev_err_probe(&pdev->dev, ret,
-> +						"Failed to set IRQ polarity: %d\n", ret);
->  		}
->  	}
->  
-> diff --git a/drivers/pinctrl/cirrus/pinctrl-madera-core.c b/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-> index 898b197c3738..532fa8ac9a94 100644
-> --- a/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-> +++ b/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-> @@ -1064,10 +1064,9 @@ static int madera_pin_probe(struct platform_device *pdev)
->  		ret = pinctrl_register_mappings(pdata->gpio_configs,
->  						pdata->n_gpio_configs);
->  		if (ret) {
-> -			dev_err(priv->dev,
-> -				"Failed to register pdata mappings (%d)\n",
-> -				ret);
-> -			return ret;
-> +			return dev_err_probe(priv->dev, ret,
-> +						"Failed to register pdata mappings (%d)\n",
-> +						ret);
->  		}
+From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
 
-Since we are doing a respin anyway also the brackets on the if
-should be dropped on both of these as well.
+On a few platforms such as TI's AM69 device, disable_irq()
+fails to keep track of the interrupts that happen between
+disable_irq() and enable_irq() and those interrupts are missed.
+Use the ->irq_unmask() and ->irq_mask() methods instead
+of ->irq_enable() and ->irq_disable() to correctly keep track of
+edges when disable_irq is called.
+This solves the issue of disable_irq() not working as expected
+on such platforms.
 
-Thanks,
-Charles
+Fixes: 23265442b02b ("ARM: davinci: irq_data conversion.")
+Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+Signed-off-by: Parth Pancholi <parth.pancholi@toradex.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/gpio/gpio-davinci.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index 1d0175d6350b..0ecfa7de5ce2 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -289,7 +289,7 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+  * serve as EDMA event triggers.
+  */
+ 
+-static void gpio_irq_disable(struct irq_data *d)
++static void gpio_irq_mask(struct irq_data *d)
+ {
+ 	struct davinci_gpio_regs __iomem *g = irq2regs(d);
+ 	uintptr_t mask = (uintptr_t)irq_data_get_irq_handler_data(d);
+@@ -298,7 +298,7 @@ static void gpio_irq_disable(struct irq_data *d)
+ 	writel_relaxed(mask, &g->clr_rising);
+ }
+ 
+-static void gpio_irq_enable(struct irq_data *d)
++static void gpio_irq_unmask(struct irq_data *d)
+ {
+ 	struct davinci_gpio_regs __iomem *g = irq2regs(d);
+ 	uintptr_t mask = (uintptr_t)irq_data_get_irq_handler_data(d);
+@@ -324,8 +324,8 @@ static int gpio_irq_type(struct irq_data *d, unsigned trigger)
+ 
+ static struct irq_chip gpio_irqchip = {
+ 	.name		= "GPIO",
+-	.irq_enable	= gpio_irq_enable,
+-	.irq_disable	= gpio_irq_disable,
++	.irq_unmask	= gpio_irq_unmask,
++	.irq_mask	= gpio_irq_mask,
+ 	.irq_set_type	= gpio_irq_type,
+ 	.flags		= IRQCHIP_SET_TYPE_MASKED | IRQCHIP_SKIP_SET_WAKE,
+ };
+-- 
+2.34.1
+
 
