@@ -1,150 +1,307 @@
-Return-Path: <linux-gpio+bounces-9275-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9276-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75EA2962ABB
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2024 16:50:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7053F962AF6
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2024 16:59:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 11888B246A1
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2024 14:50:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4655FB224D0
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2024 14:59:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E65FA19E83D;
-	Wed, 28 Aug 2024 14:50:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A771A0710;
+	Wed, 28 Aug 2024 14:59:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="TjpLr7zm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LbHyAEP7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F80118990D
-	for <linux-gpio@vger.kernel.org>; Wed, 28 Aug 2024 14:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D748F1A01CA;
+	Wed, 28 Aug 2024 14:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724856604; cv=none; b=eJ2rm05gA5/cARwvuSMw9UNH4onzx9s5Bp/HzPcfeN5L9cT6ZAygViM9094CZMrPczyau+dvndaP4MYBaDp1EBLFArxFzPVUa+gKGQMRVpRI17lewSpBVylJO3tiCq1xyhlPQasiS3HjTw11jgZk4wsEBpCUcKznTFCVER219xc=
+	t=1724857163; cv=none; b=FGH9EqhomwKtCZNX0EbJzIKBYNNLVc2NN0Dyv9edUEjcnm7EtKBhASJz+XGmvAmnBUwdrXNpyf4WnIExodnxTTGxFUIs+GQi9p8PO+FwqYMwgRBL90iCiAgJwPU7PSWSDrAHto8VwH+sU1LI0YQEcZXHV2/Wq08ElYE03mtO3sM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724856604; c=relaxed/simple;
-	bh=J/jwHT4zbJgGObXt+D2j/0zzLiAWfKkvbdM+Ta6bS7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H6kPxE6kTzEQOcGqqjqJc3Sb16YGT/Hia/GIuaBsm1mFO+C5BmGVy7gaO6OowetlIvb6SUxYKOaeLvTFUdSfPTpiKLI6nEbJ0FmDZXxR7ddKZlKcwZM9iCL7cExLoC4w6AoBdkYa+6Xu+ZEZ9MUVkjLYHXmZ9ElppvJ9rux2FmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=TjpLr7zm; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-39d21fdc11bso24032035ab.2
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Aug 2024 07:50:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1724856601; x=1725461401; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mkLMtpGIw3Y/dhXXuYhIUT4xTca0Ie89HWp40We3Xeg=;
-        b=TjpLr7zmxDKYik9nmetyJQTPQ9slqpYnCX+aBlaLqojZBLk7IRhTLRpbZEP3Q/pTZ1
-         ebGzhjX07IssLxwUhGJ8Kl13VjMprmSiPuZV+sf1UTpkn3Vn8BGewden42zQkJJFVLuk
-         0jOr4VgnEQnr2nLyhDhKB8DwLq53k9VxkNlo1mO4Sshpr9BRe7a1fFT9jOX17l4beRKV
-         g/Lwhcc+uCFPAXq5o/i+uK7tih8uZTtFTW1aMNZs6RXkC+5g40SBWlPr9PlBEAOGgV2n
-         M448MMMOd7lvgdpHrdNJv5UcLLZkiLEorqY/Jj349ybOM0uL8I/cQSmto3/GpoMdbfyS
-         qoXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724856601; x=1725461401;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mkLMtpGIw3Y/dhXXuYhIUT4xTca0Ie89HWp40We3Xeg=;
-        b=RTG5hb03eG0XhfJw0e9VCznB3WC1zWMlWrgwbAn0vCC3cJuMDuo8VhsDE5jv+/mykS
-         KjAAbw+UgG4nLTBaOgt1hasW5j8SQHncZJ79H0t/dfcsIX7MMBOep+hMbfge+hloloUw
-         XCvd+lqr4Re2W0WBdJ2b1Lsi6ueLyfojBCtxx/wTOEq+hRMPEYkBKGEz3QDlQAQ/q0k8
-         txtBig6OK6oiF/4lo/rvCVEY3lv4JZD3Vhi6ZGzN9lDOW6cYqrXLdiTYKSuQ7YUQpqCX
-         kJpOWJvn4QyQP09GWovBweg4zm0CUBJsiVCJA+h31WVX7kzy8wW2K9LA0pdjsHEzJbV1
-         EPGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTTLcjRnbXTbFxL6Vx4L7TfXRu2Jegnw/p6Qvnut+ePFNXSel5T+E14sb+Hov40vBfaxjxMiHeTJ8/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4s0VR8E1AYr6+5KbCpZTFGZhXwzGPm+fFiqd/nOMc4JT4jEnA
-	49BP5jR7s+BguHGNlphRDI2BMrsrjzniHUJ5aQinMylZrrFrMJUBlDkmKM5rEMY=
-X-Google-Smtp-Source: AGHT+IFBscc8IYAxjJLTBWjrXmkHgdjkc3wJmP/EHCRSuAoFvcdmRkkoVZFsL6zQmmMKLOgkxkhFgQ==
-X-Received: by 2002:a05:6e02:12cf:b0:39a:e9ec:9462 with SMTP id e9e14a558f8ab-39e3c976ba5mr195862795ab.5.1724856601103;
-        Wed, 28 Aug 2024 07:50:01 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-39f376ff875sm34085ab.42.2024.08.28.07.49.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Aug 2024 07:49:59 -0700 (PDT)
-Message-ID: <bc192dc5-5db3-4cbb-90a7-91b13ea7d0c7@kernel.dk>
-Date: Wed, 28 Aug 2024 08:49:54 -0600
+	s=arc-20240116; t=1724857163; c=relaxed/simple;
+	bh=2F6dPp+IAfqvH3BafvdZ7gW4KB0RHBvgAWJGeOf4fFg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EZ/Q9/LX0YXKXUqzpXdEsIZFzLZdqz3b9CusVnGp35UzKwoGL2N61NfGqOcbOlek3Q1X2NhCym1hIkBdFRuRaGIFHjDWNiAgiNRYqGXij93FupnJWqSHnB7o731e+c3mc3ubqRbm2V1nYQl0P8wZWbYziolNaLxma5wBozoF2ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LbHyAEP7; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724857162; x=1756393162;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2F6dPp+IAfqvH3BafvdZ7gW4KB0RHBvgAWJGeOf4fFg=;
+  b=LbHyAEP7dVWHoB0SxJS23zMiPaPhTtCkvWXkEDcDmayYKbpLL2Ifg8QA
+   PPGXWrLqvitqMh6qJ5MSnRb1GtgcAY9JhOoO27F+clSEQApclAKxgB8Bp
+   F1DDFiIBheYgUarpUWOsMMQ+x6ENF3l0sCHWpxzng/3CzvqX8LKtGrK3H
+   jG46eL80XEfkmym4G5Qgo6utjV/5nPf65uj/zXxK3qiYhTfDjqb9TiIG7
+   yfMzpkUEhZYIBeOdTgiug4cov3AvYvm4mfHzaqJ9rsLkKXpCkIlVpYtLg
+   7X/+g9ZUg59vKgJ7GQmWDYnH68UIDHHPUDxoaRlhwqYN4iBjAQfoBtk9G
+   w==;
+X-CSE-ConnectionGUID: iJUpPdp2RjqO9G5P3cHNzw==
+X-CSE-MsgGUID: QTfMqFjfQJiDW7u5H1XU+A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11178"; a="27159650"
+X-IronPort-AV: E=Sophos;i="6.10,183,1719903600"; 
+   d="scan'208";a="27159650"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 07:59:22 -0700
+X-CSE-ConnectionGUID: 3Q8VUhG/Qpq0DUyg8FVnRA==
+X-CSE-MsgGUID: nF8er1zDTVSy7nS9VhOB2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,183,1719903600"; 
+   d="scan'208";a="67611681"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 28 Aug 2024 07:59:20 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id EF623143; Wed, 28 Aug 2024 17:59:18 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 1/1] gpiolib: legacy: Consolidate devm_gpio_*() with other legacy APIs
+Date: Wed, 28 Aug 2024 17:59:14 +0300
+Message-ID: <20240828145914.2569187-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/7] block: mtip32xx: Replace deprecated PCI functions
-To: Philipp Stanner <pstanner@redhat.com>, Wu Hao <hao.wu@intel.com>,
- Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
- Xu Yilun <yilun.xu@intel.com>, Andy Shevchenko <andy@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Alvaro Karsz <alvaro.karsz@solid-run.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Richard Cochran <richardcochran@gmail.com>,
- Damien Le Moal <dlemoal@kernel.org>, Hannes Reinecke <hare@suse.de>,
- Keith Busch <kbusch@kernel.org>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- virtualization@lists.linux.dev
-References: <20240827185616.45094-1-pstanner@redhat.com>
- <20240827185616.45094-4-pstanner@redhat.com>
- <c7acca0d-586f-41c0-a542-6b698305f17a@kernel.dk>
- <189ab84e8af230092ff94cc3f3addb499b1a581d.camel@redhat.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <189ab84e8af230092ff94cc3f3addb499b1a581d.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 8/28/24 1:10 AM, Philipp Stanner wrote:
-> On Tue, 2024-08-27 at 13:05 -0600, Jens Axboe wrote:
->> On 8/27/24 12:56 PM, Philipp Stanner wrote:
->>> pcim_iomap_regions() and pcim_iomap_table() have been deprecated by
->>> the
->>> PCI subsystem in commit e354bb84a4c1 ("PCI: Deprecate
->>> pcim_iomap_table(), pcim_iomap_regions_request_all()").
->>>
->>> In mtip32xx, these functions can easily be replaced by their
->>> respective
->>> successors, pcim_request_region() and pcim_iomap(). Moreover, the
->>> driver's calls to pcim_iounmap_regions() in probe()'s error path
->>> and in
->>> remove() are not necessary. Cleanup can be performed by PCI devres
->>> automatically.
->>>
->>> Replace pcim_iomap_regions() and pcim_iomap_table().
->>>
->>> Remove the calls to pcim_iounmap_regions().
->>
->> Looks fine to me - since it depends on other trees, feel free to take
->> it
->> through those:
->>
->> Reviewed-by: Jens Axboe <axboe@kernel.dk>
-> 
-> Thank you for the review.
-> 
-> I have to provide a v5 because of an issue in another patch. While I'm
-> at it, I'd modify this patch here so that the comment above
-> pcim_request_region() is descriptive of the actual events:
-> 
-> -	/* Map BAR5 to memory. */
-> +	/* Request BAR5. */
-> 
-> 
-> I'd keep your Reviewed-by if that's OK. It's the only change I'd do.
+There is no reason to keep deprecated legacy API implementations
+in the gpiolib-devres.c. Consolidate devm_gpio_*() with other legacy
+APIs. While at it, clean up header inclusion block in gpiolib-devres.c.
 
-That's fine.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib-devres.c | 92 +++--------------------------------
+ drivers/gpio/gpiolib-legacy.c | 86 ++++++++++++++++++++++++++++++++
+ 2 files changed, 94 insertions(+), 84 deletions(-)
 
+diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+index 04c33fdd1163..53e0559cad63 100644
+--- a/drivers/gpio/gpiolib-devres.c
++++ b/drivers/gpio/gpiolib-devres.c
+@@ -6,15 +6,19 @@
+  * Copyright (c) 2011 John Crispin <john@phrozen.org>
+  */
+ 
+-#include <linux/module.h>
+-#include <linux/err.h>
+-#include <linux/gpio.h>
+-#include <linux/gpio/consumer.h>
+ #include <linux/device.h>
++#include <linux/err.h>
++#include <linux/export.h>
+ #include <linux/gfp.h>
++#include <linux/types.h>
++
++#include <linux/gpio/consumer.h>
+ 
+ #include "gpiolib.h"
+ 
++struct fwnode_handle;
++struct lock_class_key;
++
+ static void devm_gpiod_release(void *desc)
+ {
+ 	gpiod_put(desc);
+@@ -309,86 +313,6 @@ void devm_gpiod_put_array(struct device *dev, struct gpio_descs *descs)
+ }
+ EXPORT_SYMBOL_GPL(devm_gpiod_put_array);
+ 
+-static void devm_gpio_release(struct device *dev, void *res)
+-{
+-	unsigned *gpio = res;
+-
+-	gpio_free(*gpio);
+-}
+-
+-/**
+- * devm_gpio_request - request a GPIO for a managed device
+- * @dev: device to request the GPIO for
+- * @gpio: GPIO to allocate
+- * @label: the name of the requested GPIO
+- *
+- * Except for the extra @dev argument, this function takes the
+- * same arguments and performs the same function as gpio_request().
+- * GPIOs requested with this function will be automatically freed
+- * on driver detach.
+- *
+- * **DEPRECATED** This function is deprecated and must not be used in new code.
+- *
+- * Returns:
+- * 0 on success, or negative errno on failure.
+- */
+-int devm_gpio_request(struct device *dev, unsigned gpio, const char *label)
+-{
+-	unsigned *dr;
+-	int rc;
+-
+-	dr = devres_alloc(devm_gpio_release, sizeof(unsigned), GFP_KERNEL);
+-	if (!dr)
+-		return -ENOMEM;
+-
+-	rc = gpio_request(gpio, label);
+-	if (rc) {
+-		devres_free(dr);
+-		return rc;
+-	}
+-
+-	*dr = gpio;
+-	devres_add(dev, dr);
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(devm_gpio_request);
+-
+-/**
+- * devm_gpio_request_one - request a single GPIO with initial setup
+- * @dev: device to request for
+- * @gpio: the GPIO number
+- * @flags: GPIO configuration as specified by GPIOF_*
+- * @label: a literal description string of this GPIO
+- *
+- * **DEPRECATED** This function is deprecated and must not be used in new code.
+- *
+- * Returns:
+- * 0 on success, or negative errno on failure.
+- */
+-int devm_gpio_request_one(struct device *dev, unsigned gpio,
+-			  unsigned long flags, const char *label)
+-{
+-	unsigned *dr;
+-	int rc;
+-
+-	dr = devres_alloc(devm_gpio_release, sizeof(unsigned), GFP_KERNEL);
+-	if (!dr)
+-		return -ENOMEM;
+-
+-	rc = gpio_request_one(gpio, flags, label);
+-	if (rc) {
+-		devres_free(dr);
+-		return rc;
+-	}
+-
+-	*dr = gpio;
+-	devres_add(dev, dr);
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(devm_gpio_request_one);
+-
+ static void devm_gpio_chip_release(void *data)
+ {
+ 	struct gpio_chip *gc = data;
+diff --git a/drivers/gpio/gpiolib-legacy.c b/drivers/gpio/gpiolib-legacy.c
+index 087fe3227e35..28f1046fb670 100644
+--- a/drivers/gpio/gpiolib-legacy.c
++++ b/drivers/gpio/gpiolib-legacy.c
+@@ -1,4 +1,10 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <linux/bitops.h>
++#include <linux/device.h>
++#include <linux/errno.h>
++#include <linux/export.h>
++#include <linux/gfp.h>
++
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio/driver.h>
+ 
+@@ -74,3 +80,83 @@ int gpio_request(unsigned gpio, const char *label)
+ 	return gpiod_request(desc, label);
+ }
+ EXPORT_SYMBOL_GPL(gpio_request);
++
++static void devm_gpio_release(struct device *dev, void *res)
++{
++	unsigned *gpio = res;
++
++	gpio_free(*gpio);
++}
++
++/**
++ * devm_gpio_request - request a GPIO for a managed device
++ * @dev: device to request the GPIO for
++ * @gpio: GPIO to allocate
++ * @label: the name of the requested GPIO
++ *
++ * Except for the extra @dev argument, this function takes the
++ * same arguments and performs the same function as gpio_request().
++ * GPIOs requested with this function will be automatically freed
++ * on driver detach.
++ *
++ * **DEPRECATED** This function is deprecated and must not be used in new code.
++ *
++ * Returns:
++ * 0 on success, or negative errno on failure.
++ */
++int devm_gpio_request(struct device *dev, unsigned gpio, const char *label)
++{
++	unsigned *dr;
++	int rc;
++
++	dr = devres_alloc(devm_gpio_release, sizeof(unsigned), GFP_KERNEL);
++	if (!dr)
++		return -ENOMEM;
++
++	rc = gpio_request(gpio, label);
++	if (rc) {
++		devres_free(dr);
++		return rc;
++	}
++
++	*dr = gpio;
++	devres_add(dev, dr);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(devm_gpio_request);
++
++/**
++ * devm_gpio_request_one - request a single GPIO with initial setup
++ * @dev: device to request for
++ * @gpio: the GPIO number
++ * @flags: GPIO configuration as specified by GPIOF_*
++ * @label: a literal description string of this GPIO
++ *
++ * **DEPRECATED** This function is deprecated and must not be used in new code.
++ *
++ * Returns:
++ * 0 on success, or negative errno on failure.
++ */
++int devm_gpio_request_one(struct device *dev, unsigned gpio,
++			  unsigned long flags, const char *label)
++{
++	unsigned *dr;
++	int rc;
++
++	dr = devres_alloc(devm_gpio_release, sizeof(unsigned), GFP_KERNEL);
++	if (!dr)
++		return -ENOMEM;
++
++	rc = gpio_request_one(gpio, flags, label);
++	if (rc) {
++		devres_free(dr);
++		return rc;
++	}
++
++	*dr = gpio;
++	devres_add(dev, dr);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(devm_gpio_request_one);
 -- 
-Jens Axboe
+2.43.0.rc1.1336.g36b5255a03ac
 
 
