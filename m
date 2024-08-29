@@ -1,194 +1,349 @@
-Return-Path: <linux-gpio+bounces-9368-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9369-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C92129645E3
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 15:11:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09EC69645F0
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 15:11:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 498CF1F28220
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 13:11:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B480F28828E
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 13:11:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 759381A3BCF;
-	Thu, 29 Aug 2024 13:11:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52EFD1A706F;
+	Thu, 29 Aug 2024 13:11:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="dv/1c0y9"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="eiJDuvEY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2056.outbound.protection.outlook.com [40.107.117.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4261A01BF;
-	Thu, 29 Aug 2024 13:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724937071; cv=fail; b=YADtoCMbXZ2HXJi61NJbYGPOEn67kiRaoSUp42sFUQEyCD6QvS2YaTYu9maBghFGnCZ27d4csatMHREC7x2h0bJVPtoMObU8b39SoWZ6JkHPwBPxXpJtcHu41fXlgqEjUPvfST3pgTU/75D4zgybZekCOyzY9f3qapMQgoUMsEQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724937071; c=relaxed/simple;
-	bh=9Nt1AaUHnYgU16svE90YJ0xze/cL5v8wJQwocEIstRU=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=gyYm5sJxK0btGMxOdJhm4JzTCHp8Sk5LE2vadvHA87oy+KKB9ItgSarGtojsvDXfwxgldrgFYZl4nVA7iefTvB++obyAryX2lXwwFkhUwJ/hHaYXgihrUZHFs29PIvRQCrNFffdw0Dv7rqAgloOyVzi0qWRM/NARsDdFIFF7azo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=dv/1c0y9; arc=fail smtp.client-ip=40.107.117.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=L98h77Rg5NcStowMRN4oMJXawZIR0NYNzJvTJNAxr2gXM/VTnHINcq82fPVqsWURg6vE2DpvLzsIhw6rGNZ5YGn6XwKmqUL1JaYKCMFRUkhFKVjhY3QwsRIMPjzPLEZ7J37dkoMWrmnGb7IWLEPUTs6aXVfjkb7lSEPRSMCLzByfUKUQc0MFFsUhqUN9gcN1VNlDecD/aX8tDjhj0gSwpEymmM/R+z/WPEEmxvyZcM6w0ltR5JoSIEVcLfIFypq6RkkYnqji7YDnnhgR8KVn6Uh2wlwKJqCi9qf32XT6XGFjXxf3Eui2xYWo57XZy2Gvgqt7H2t60E8saFOrsioSOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aaVZEgOOEX767hG2OX04Pn8dTI+Lz+VJ7fTKUgU+FXA=;
- b=hqcHUjZGnVy48kZfUfOSKJTxjq1tWBFYei67vhJJr+sgkPfiFjNJaA2gZQjX0I6vxnHISianjugYsUckybIj8+2o2SDwRewU30alwMtkDZIGg5O1HaRqr/elx33deKy1RRCgkDHDtssDMtKDyCV5HbY3lUpPRsMYCtnUBVP07ewkU+UZ+P7xixpRVyzvVq5NNr7X/CizN2IrW43us8NFIDFoOHoWdsZvUSvlGsCpVYLxK5JKrTAyYnv3xglPzQrxjWmvXuC513O/1PWeVJErHYokSWG4BqBQpfmrjUQRoOxsWEhSbXi+jMPRc/5kjY2c+UeU8C/wjnQb8u49nQ3J/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aaVZEgOOEX767hG2OX04Pn8dTI+Lz+VJ7fTKUgU+FXA=;
- b=dv/1c0y9FQCo8i1HEZIL1zUWP5BBt01rA5bouH/nPBgbeU0hZVok7biQTdzhh9zbgXf+8FVC9n3SgJNi97c+0GuJMU44I+bg8d9xR0l/Ixvfm0UWE95Q/0SjJ30u+p8l0GoJKRaOVuh0lkQAHZUikUvBlWelHzzWR3uONFpKJF67gH/j613ybhEiCRSTN0T852Qjsm1GVXQLh6yAN6EJqGjrNjpkc0foi3YWYIjAAyeNd5ESy2sGGuryq82YhUi4SPIvcJJmcxVN9JazTMmyFdAPHw6kbiLVON6x5bLmRHbEOjL8Nrkr0ua5WvsM4CEryfqFNcCqhlj+cE89A33Edw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5899.apcprd06.prod.outlook.com (2603:1096:101:e3::16)
- by KL1PR06MB7317.apcprd06.prod.outlook.com (2603:1096:820:145::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.20; Thu, 29 Aug
- 2024 13:11:03 +0000
-Received: from SEZPR06MB5899.apcprd06.prod.outlook.com
- ([fe80::8bfc:f1ee:8923:77ce]) by SEZPR06MB5899.apcprd06.prod.outlook.com
- ([fe80::8bfc:f1ee:8923:77ce%3]) with mapi id 15.20.7897.027; Thu, 29 Aug 2024
- 13:11:02 +0000
-From: Shen Lichuan <shenlichuan@vivo.com>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com
-Cc: linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	opensource.kernel@vivo.com,
-	Shen Lichuan <shenlichuan@vivo.com>
-Subject: [PATCH v1] gpio: stmpe: Simplify with dev_err_probe()
-Date: Thu, 29 Aug 2024 21:10:51 +0800
-Message-Id: <20240829131051.43200-1-shenlichuan@vivo.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0080.apcprd02.prod.outlook.com
- (2603:1096:4:90::20) To SEZPR06MB5899.apcprd06.prod.outlook.com
- (2603:1096:101:e3::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF391A4ADE
+	for <linux-gpio@vger.kernel.org>; Thu, 29 Aug 2024 13:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.67
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724937097; cv=none; b=BwbniuYM6ocMmVss/lWISGL6WMGlYUl/3gui9PiW8NnPmt1iuXyGMxI2aXR3skLTNvp9TMx+LYLAjnH3iBCT1sHlB9sZgQrb2NfMMt6xcghB/vUA5t8LCejbO9Ul6dsehEf/UaBIjZX6YGRhM5oPO6Kd6Ord/1hTmylPgSCEg2g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724937097; c=relaxed/simple;
+	bh=fakhpIJR2ZfTamWLWAqABaX77u05L93KwsKGKWJugw4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NNSOEDjAmB6w1eXeGbozL36iMe7tqkLvSXecx2UPxuTYuuU5dWJF3GZLSOzXO+hE5s+vwR24LRnv51ljgkeLexoecvA2tI8I1qsvT6xNEupY6smDmUKW5/L5TERoBcENmPNyD8m7pODLAbV5AnTTN/2IrkChEsGQHm1hUVrp4ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=eiJDuvEY; arc=none smtp.client-ip=209.85.208.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f67.google.com with SMTP id 4fb4d7f45d1cf-5a10835487fso884434a12.1
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Aug 2024 06:11:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1724937093; x=1725541893; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6HSLQ8KvULAlJol+4PZpsMQiwSkPlENMupYF/HR2lik=;
+        b=eiJDuvEYAoOlohJFbU5fyl8pTquuP5f/Qvo0RcWNOl/z9fauJCIGdi3FMiVDfAPwel
+         /jd8Np0eLvOucrO53/kcTB6QUsb13fusFXlWKHCt4uWJnLTiZp3t653yuOFe/FHw64vs
+         X2gmkZ7DyV1JOzz4x6C3xvzrs8ey8gumRz4AOs0XF97hvfPKhJBwUMyeaLDbFfBrZ0Ho
+         o5wlDZfu3R8R/d+ogDTf6a+hEDDNf480T3U511yZiPF6ICgj0IWEMENfKoCmyNhrgX4e
+         9X+sJNWFtTvW5xeDqDoVTqUt+Ijvi/kmH3unEH7KCoFGfwACEH39o4u3TnB3wUjFvOyg
+         vRRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724937093; x=1725541893;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6HSLQ8KvULAlJol+4PZpsMQiwSkPlENMupYF/HR2lik=;
+        b=ZWSxFzp0ZiWfzhUvQSLoDo02wWt0TBH4dOaG6CIub8NiF5gU7aQdU86fQxT68dpP/5
+         ElZh3XZj8PRQMKSxpSvHXFkFaUnxyAF3DodG2sqo0rPwKxBEXBq3zO3BS/XEaW1b/BFR
+         qMyh6kyfEFS101SxegeS9fI1gpzpPwyoIklnTT7xzB6HrxPrvttbcv0ICkyjkwnipuZx
+         HC/L9enWTzD6jc4O3/JCWFYhNhnLERUmp4zUjI1nKeW/sGp7SqB7JYMmpjNY/OoFKRpV
+         NKpUZLYJoSMh4+G3aHSqIzJ3dXh5eONn6co4zbZISHtyMQLTcBdCEI8mBWZDvEOaOrmM
+         X98A==
+X-Forwarded-Encrypted: i=1; AJvYcCUndw2ch2EUvHv8v2C/7TNlLWuDs12nJ1caGAbWtdqRmrkgI8mPC89hoCv94mM8+RZi4CDeMHg9vwi1@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN/wSSt9urcl7I0W5W59QfyT9c6iJL8ymr+DmsSPC7c9kCuGNs
+	NHvcp68jWAAiBGbLZEbfpdeNvvYZqE4d+wt6omOU8KrQBS64QAmACkMoy6ZtGiM=
+X-Google-Smtp-Source: AGHT+IEH/zJZio4NTe6eEsV2DoExlez2oCgJWKVnp5yu1Qv76cYjCAYlwUS9Kb57z8iTsLMFbn1guw==
+X-Received: by 2002:a05:6402:268e:b0:5bf:dd0:93ad with SMTP id 4fb4d7f45d1cf-5c21ed8e66bmr2407157a12.27.1724937091825;
+        Thu, 29 Aug 2024 06:11:31 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8988fea68dsm77550266b.26.2024.08.29.06.11.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Aug 2024 06:11:31 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 29 Aug 2024 15:11:38 +0200
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 00/11] Add support for RaspberryPi RP1 PCI device using a
+ DT overlay
+Message-ID: <ZtBzis5CzQMm8loh@apocalypse>
+Mail-Followup-To: Krzysztof Kozlowski <krzk@kernel.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <14990d25-40a2-46c0-bf94-25800f379a30@kernel.org>
+ <Zsb_ZeczWd-gQ5po@apocalypse>
+ <d97dbb0b-2e9c-4a62-b6c2-c1ec3fa1225b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5899:EE_|KL1PR06MB7317:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29d61ec2-979e-427d-1db2-08dcc82c082e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CzIim0fxkHxVELeX4b8yv8AJ8SHWwCBwH3VkQ2Qm962bIXxRs4ZlEUrOWFjb?=
- =?us-ascii?Q?29yBv35W0jzxbv1KzlMMqwvqNEMdLCync1WdSEKj8sjk0VJQq4aCzG5sd9wd?=
- =?us-ascii?Q?qgs6PxL++Pi/Rnk7lmgLawpoqPPDV9cm2MST46N/W9Ejo4oPqjXj2nsaB7kF?=
- =?us-ascii?Q?ak3yffPP4NBFh+v1fa/cRkW368m83ih9QutQxJVSylniAZlnjgpfbLUWNjkN?=
- =?us-ascii?Q?u078nJc1CPh6QXLCX11s98wmHu9UvepsDrVl31C8di/aVFiimg7qzwoubC8i?=
- =?us-ascii?Q?hWLN2PRbJ/ytSo9F7y3grJQsnbE++JyMxAlB/DdHJBOmGPp/5b8ChzY4bEfa?=
- =?us-ascii?Q?7SwxB5IjYLHyUyptsykArGrTBDF3ZSwF/MFUBLeAkKhJPchFPGkRHmb86jGg?=
- =?us-ascii?Q?1BYdMOqEfoMyiRILL4aS5vqrw1EL+geOw89WDv7EIt+bKw67VThBv5QHFkMm?=
- =?us-ascii?Q?7qmafyjjRFb657obboz0Bg3vyB0z3OUFik8yS3/DT+5KWNrFM3gAVtXFP+Gi?=
- =?us-ascii?Q?qmngzruyEzoze0hZRD2lwre3zg5k9B5m3LqIbBqCbNEfDobNspsZQoFakWuP?=
- =?us-ascii?Q?jWcdn76hjrmefIMihUp/WHxwNuzyB09bGAwkLun7dheJ6xGZI5NiUc46i+IB?=
- =?us-ascii?Q?4kFTcNMk+YTy6/46JS1Abgo6TaA/mHA7GjKSPL9/bpEbycHKVacnHd9L6ujQ?=
- =?us-ascii?Q?dgiHKS8PT1FEYgo49AVhj2zOS8XxvhpGzx1wDlZfdXTEMLHuaAAjSGM1pUxG?=
- =?us-ascii?Q?ZD50NWSi+0ACCDcnCZiFQpbqm7+dJXLaOBKsWZcQG6vT0BM8axI6mye/Zvd1?=
- =?us-ascii?Q?HGVohjT6IPpsSpbTwK9PLuGpfaZp5RgB+6M49G0qjAyKxmQ5sNBDyH4gPxpA?=
- =?us-ascii?Q?iVg4ihJ9GGixCjuOnG48YsFi5huvXMudQb4NpmOzfTjrITnRQm4OjUPkJaNs?=
- =?us-ascii?Q?QiBE9kfE8qLv7nxUU7hv7ge6PzdRisIP1uJ1pOGQGsCXyadrr6NOskEXx2Yh?=
- =?us-ascii?Q?ZwSGJA1/IFd3SZ1QVlMf7H9FkdtuQ/v8kMVIqZWi9oM/YaR4b7iVBrW0cjt9?=
- =?us-ascii?Q?/w0JHddDV8gnJCIRF8L3pI98xhF98Dm8M6qVz4/NCofgEni1V/bxx7ZqUJdK?=
- =?us-ascii?Q?oVZx3Y6jExI8xjooqVuSQ3UeAtFc9M//8D1KdXhpHZlh4g2X3xsIYFKRgc0U?=
- =?us-ascii?Q?YL93R3/ty3hDbQBnrBP6PflRFnlMUMYQ50DwNHqfZwkhgQt5kFaYzzCJrmx7?=
- =?us-ascii?Q?3jXQRaHtrPJlU0Mab0Q2C0ptxq+YFGDx/M4bzWPs9/19KSG41QUyoOje/Ho7?=
- =?us-ascii?Q?RzJIoRzFiUKZxq2RVJT4o2PEpAMcgOnif/5dbgGmjRajYdF1zRA28h+54+Cx?=
- =?us-ascii?Q?qEQwOvYKuBFqn7nmtAktcswVqihAuRki2iVcQ9SQtQOmK3adug=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5899.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jbxUN+nLzYg8sclwNcwsxEghsbDo5H/NpBweTZ4zTYNwfvI034KarVFrZxp6?=
- =?us-ascii?Q?F8e1ZVPZ7zU+4WSJz7nEGmQ1qH+Y8rPbuY8pWJ3FqfV08V4wjwIz871Jx7o+?=
- =?us-ascii?Q?1uQcXzTEhACKCBI1ynGBhedvrjvPY9VFtw56Fl6XO9ANFljFdbrW9foQeuo+?=
- =?us-ascii?Q?+0xLmnc0vWx5q90regFeuSXnOgpOd3kEn42ahRpiJF1cdXFZhP29ig+OJdgK?=
- =?us-ascii?Q?fJeokoP1r7nZqDlK+yJWNF+3Ez4XlJciwZMcaSR3kYEwNxJ+cQ7rF+hL9PbN?=
- =?us-ascii?Q?KjUMeP0UatZS+Lavd5F1yvEfAmCYrGdWYa6I+UVvvPoPzZH8Gi9a5oHqCNF9?=
- =?us-ascii?Q?miBf4AS7eo8ED0Y8LbtDzRjPI6ahlK1deYmfws7dXEyN78CNQI7M1s02scdr?=
- =?us-ascii?Q?hLwqlohGn2zEAnEukjRXRaWoms56T7PCvGDQwKdFwNotJCWuHn+pv7tsRUm/?=
- =?us-ascii?Q?aX+S4+xIYLozguibIokna4ksgsctRIGBfmkmWcA9U42l4P3IpiwFDUPp+SzG?=
- =?us-ascii?Q?4FC5l0oHp+KQXjSdtsGyigOBjw5FS3FWqz4mheIs/ZLE66iaGgKBGE/hEKWL?=
- =?us-ascii?Q?atkjaI1v0DxBx7La4koE7pg7wnPi5aTwUMB30qggmyftBKkH2SE/ply48Hai?=
- =?us-ascii?Q?Q9hxlfMLH5gr5O9HxneVEOn5eI48xQ2m+Eok+fuDNmx5OExsx458/K/u46Y3?=
- =?us-ascii?Q?KVL4efmC2592Vkfjq+w5WAiz6osyP9Y/U660hlIWNRVAJIGQmodStB7tfHmB?=
- =?us-ascii?Q?OEiSi9n0FPwsa8YmbkyFMOI/bAhU5MNw15Ra1MLAej+g18i1FQ0NrP4UYuwY?=
- =?us-ascii?Q?9QPkmHZ1RsfrorLKU5ir1ErEMoDc8w5a+8AipiQFefdP4uSETZgw4hBlgq+a?=
- =?us-ascii?Q?7YOf/o6rjZQZ0ADg3XFoMueEmrgkpaJKkL31hwF52WVXTbFxfsPor9khgb9J?=
- =?us-ascii?Q?nnXJZB/8ugjcTAVj27KDqpvUwycJXSeETv95v3GZTcOk4FjGQ8yLeqf8IRZa?=
- =?us-ascii?Q?6N+FxRbqBYTVLhtvyQHQC6Q29+BSCw58bfx29RYNl06/GcCRME7LGzOtftmM?=
- =?us-ascii?Q?Sm4t3UAX2lolSVTJdPTuBc/k4oFRbI4mfl9GtsgvOnYtxJaicuTbAoNrQdXi?=
- =?us-ascii?Q?ju4Zf6WlOGO/tAn0nOsBa5wf4XlTk05KbuFqMGpz6D4hFMtkkoPFwBGYRqJa?=
- =?us-ascii?Q?y8QYBeFXSRFnIGeCCKFeSTx+3eYz3CFVfDOzLn8nsNbDKYVXT8KWwgwIzA5R?=
- =?us-ascii?Q?VVC8HVjRyRQhS4cUmonlmaXO1aYwuTjHvK9VzqkLn2DWuIq9s8+hPnSYZkEt?=
- =?us-ascii?Q?N2yqW/eTlVQTuQpqFxHpcqFsO0NNqvSk5vVRKDbLgWhUh/6J4qNV+3ioWuNP?=
- =?us-ascii?Q?Az4qQapfR8g/AeKpGqZ4oEg+jjVAALYxli82z5OzGxDeS8f2olWOS4uuEKcR?=
- =?us-ascii?Q?XBt5nq3fqTMd0pRwWkkaFX9uMchxUZ7dnMQaQhnXky4B9b5jy8mMEkO9Ij6x?=
- =?us-ascii?Q?+KSaerv/J5b4+doAGpeMV9aO4CwscJoIQEY4BR4Ix+4fvUa7S8UcLhrkUI6j?=
- =?us-ascii?Q?q/KzRh1IzHtrhAIRQMHa+wwchUTqkgzFvwJvSWT3?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29d61ec2-979e-427d-1db2-08dcc82c082e
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5899.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2024 13:11:02.3191
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eUwcKKo+yuFiQ9Pobq4llcXSePi8YzNGVIQuJLsrxAnh7IGD8QoocUUF+BP4qGuKiutZeLxzZU6Q0aXitlQHMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB7317
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d97dbb0b-2e9c-4a62-b6c2-c1ec3fa1225b@kernel.org>
 
-Use dev_err_probe() to simplify the error path and unify a message 
-template.
+Hi Krzysztof,
 
-Using this helper is totally fine even if err is known to never 
-be -EPROBE_DEFER.
+On 11:50 Thu 22 Aug     , Krzysztof Kozlowski wrote:
+> On 22/08/2024 11:05, Andrea della Porta wrote:
+> > Hi Krzysztof,
+> > 
+> > On 15:42 Wed 21 Aug     , Krzysztof Kozlowski wrote:
+> >> On 20/08/2024 16:36, Andrea della Porta wrote:
+> >>> RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
+> >>> a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM, 
+> >>> etc.) whose registers are all reachable starting from an offset from the
+> >>> BAR address.  The main point here is that while the RP1 as an endpoint
+> >>> itself is discoverable via usual PCI enumeraiton, the devices it contains
+> >>> are not discoverable and must be declared e.g. via the devicetree.
+> >>>
+> >>> This patchset is an attempt to provide a minimum infrastructure to allow
+> >>> the RP1 chipset to be discovered and perpherals it contains to be added
+> >>> from a devictree overlay loaded during RP1 PCI endpoint enumeration.
+> >>> Followup patches should add support for the several peripherals contained
+> >>> in RP1.
+> >>>
+> >>> This work is based upon dowstream drivers code and the proposal from RH
+> >>> et al. (see [1] and [2]). A similar approach is also pursued in [3].
+> >>
+> >> Looking briefly at findings it seems this was not really tested by
+> >> automation and you expect reviewers to find issues which are pointed out
+> >> by tools. That's not nice approach. Reviewer's time is limited, while
+> >> tools do it for free. And the tools are free - you can use them without
+> >> any effort.
+> > 
+> > Sorry if I gave you that impression, but this is not obviously the case.
+> 
+> Just look at number of reports... so many sparse reports that I wonder
+> how it is not the case.
+> 
+> And many kbuild reports.
 
-The benefit compared to a normal dev_err() is the standardized format
-of the error code, it being emitted symbolically and the fact that
-the error code is returned which allows more compact error paths.
+Ack.
 
-Signed-off-by: Shen Lichuan <shenlichuan@vivo.com>
----
- drivers/gpio/gpio-stmpe.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> > I've spent quite a bit of time in trying to deliver a patchset that ease
+> > your and others work, at least to the best I can. In fact, I've used many
+> > of the checking facilities you mentioned before sending it, solving all
+> > of the reported issues, except the ones for which there are strong reasons
+> > to leave untouched, as explained below.
+> > 
+> >>
+> >> It does not look like you tested the DTS against bindings. Please run
+> >> `make dtbs_check W=1` (see
+> >> Documentation/devicetree/bindings/writing-schema.rst or
+> >> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+> >> for instructions).
+> > 
+> > #> make W=1 dt_binding_check DT_SCHEMA_FILES=raspberrypi,rp1-gpio.yaml
+> >    CHKDT   Documentation/devicetree/bindings
+> >    LINT    Documentation/devicetree/bindings
+> >    DTEX    Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.example.dts
+> >    DTC_CHK Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.example.dtb
+> > 
+> > #> make W=1 dt_binding_check DT_SCHEMA_FILES=raspberrypi,rp1-clocks.yaml
+> >    CHKDT   Documentation/devicetree/bindings
+> >    LINT    Documentation/devicetree/bindings
+> >    DTEX    Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.example.dts
+> >    DTC_CHK Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.example.dtb
+> > 
+> > I see no issues here, in case you've found something different, I kindly ask you to post
+> > the results.
+> > 
+> > #> make W=1 CHECK_DTBS=y broadcom/rp1.dtbo
+> >    DTC     arch/arm64/boot/dts/broadcom/rp1.dtbo
+> >    arch/arm64/boot/dts/broadcom/rp1.dtso:37.24-42.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/clk_xosc: missing or empty reg/ranges property
+> >    arch/arm64/boot/dts/broadcom/rp1.dtso:44.26-49.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/macb_pclk: missing or empty reg/ranges property
+> >    arch/arm64/boot/dts/broadcom/rp1.dtso:51.26-56.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/macb_hclk: missing or empty reg/ranges property
+> >    arch/arm64/boot/dts/broadcom/rp1.dtso:14.15-173.5: Warning (avoid_unnecessary_addr_size): /fragment@0/__overlay__: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property 
+> > 
+> > I believe that These warnings are unavoidable, and stem from the fact that this
+> > is quite a peculiar setup (PCI endpoint which dynamically loads platform driver
+> > addressable via BAR).
+> > The missing reg/ranges in the threee clocks are due to the simple-bus of the
+> > containing node to which I believe they should belong: I did a test to place
+> 
+> This is not the place where they belong. non-MMIO nodes should not be
+> under simple-bus.
 
-diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
-index 6c5ee81d71b3..6cf545f5fc9d 100644
---- a/drivers/gpio/gpio-stmpe.c
-+++ b/drivers/gpio/gpio-stmpe.c
-@@ -513,10 +513,9 @@ static int stmpe_gpio_probe(struct platform_device *pdev)
- 		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
- 				stmpe_gpio_irq, IRQF_ONESHOT,
- 				"stmpe-gpio", stmpe_gpio);
--		if (ret) {
--			dev_err(&pdev->dev, "unable to get irq: %d\n", ret);
--			return ret;
--		}
-+		if (ret)
-+			return dev_err_probe(&pdev->dev, ret,
-+					     "unable to get irq");
+Ack.
+
+> 
+> > those clocks in the same dtso under root or /clocks node but AFAIK it doesn't
+> > seems to work. I could move them in a separate dtso to be loaded before the main
+> 
+> Well... who instantiates them? If they are in top-level, then
+> CLK_OF_DECLARE which is not called at your point?
+> 
+> You must instantiate clocks different way, since they are not part of
+> "rp1". That's another bogus DT description... external oscilator is not
+> part of RP1.
+>
+
+Ok, I'll dive into that and see what I can come up with. Many thanks for
+this feedback.
  
- 		girq = &stmpe_gpio->chip.irq;
- 		gpio_irq_chip_set_chip(girq, &stmpe_gpio_irq_chip);
--- 
-2.17.1
+> 
+> > one but this is IMHO even more cumbersome than having a couple of warnings in
+> > CHECK_DTBS.
+> > Of course, if you have any suggestion on how to improve it I would be glad to
+> > discuss.
+> > About the last warning about the address/size-cells, if I drop those two lines
+> > in the _overlay_ node it generates even more warning, so again it's a "don't fix"
+> > one.
+> > 
+> >>
+> >> Please run standard kernel tools for static analysis, like coccinelle,
+> >> smatch and sparse, and fix reported warnings. Also please check for
+> >> warnings when building with W=1. Most of these commands (checks or W=1
+> >> build) can build specific targets, like some directory, to narrow the
+> >> scope to only your code. The code here looks like it needs a fix. Feel
+> >> free to get in touch if the warning is not clear.
+> > 
+> > I didn't run those static analyzers since I've preferred a more "manual" aproach
+> > by carfeully checking the code, but I agree that something can escape even the
+> > more carefully executed code inspection so I will add them to my arsenal from
+> > now on. Thanks for the heads up.
+> 
+> I don't care if you do not run static analyzers if you produce good
+> code. But if you produce bugs which could have been easily spotted with
+> sparser, than it is different thing.
+> 
+> Start running static checkers instead of asking reviewers to do that.
 
+Ack.
+
+> 
+> > 
+> >>
+> >> Please run scripts/checkpatch.pl and fix reported warnings. Then please
+> >> run `scripts/checkpatch.pl --strict` and (probably) fix more warnings.
+> >> Some warnings can be ignored, especially from --strict run, but the code
+> >> here looks like it needs a fix. Feel free to get in touch if the warning
+> >> is not clear.
+> >>
+> > 
+> > Again, most of checkpatch's complaints have been addressed, the remaining
+> > ones I deemed as not worth fixing, for example:>
+> > #> scripts/checkpatch.pl --strict --codespell tmp/*.patch
+> > 
+> > WARNING: please write a help paragraph that fully describes the config symbol
+> > #42: FILE: drivers/clk/Kconfig:91:
+> > +config COMMON_CLK_RP1
+> > +       tristate "Raspberry Pi RP1-based clock support"
+> > +       depends on PCI || COMPILE_TEST
+> > +       depends on COMMON_CLK
+> > +       help
+> > +         Enable common clock framework support for Raspberry Pi RP1.
+> > +         This mutli-function device has 3 main PLLs and several clock
+> > +         generators to drive the internal sub-peripherals.
+> > +
+> > 
+> > I don't understand this warning, the paragraph is there and is more or less similar
+> > to many in the same file that are already upstream. Checkpatch bug?
+> > 
+> > 
+> > CHECK: Alignment should match open parenthesis
+> > #1541: FILE: drivers/clk/clk-rp1.c:1470:
+> > +       if (WARN_ON_ONCE(clock_data->num_std_parents > AUX_SEL &&
+> > +           strcmp("-", clock_data->parents[AUX_SEL])))
+> > 
+> > This would have worsen the code readability.
+> > 
+> > 
+> > WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
+> > #673: FILE: drivers/pinctrl/pinctrl-rp1.c:600:
+> > +                               return -ENOTSUPP;
+> > 
+> > This I must investigate: I've already tried to fix it before sending the patchset
+> > but for some reason it wouldn't work, so I planned to fix it in the upcoming 
+> > releases.
+> > 
+> > 
+> > WARNING: externs should be avoided in .c files
+> > #331: FILE: drivers/misc/rp1/rp1-pci.c:58:
+> > +extern char __dtbo_rp1_pci_begin[];
+> > 
+> > True, but in this case we don't have a symbol that should be exported to other
+> > translation units, it just needs to be referenced inside the driver and
+> > consumed locally. Hence it would be better to place the extern in .c file.
+> > 
+> > 
+> > Apologies for a couple of other warnings that I could have seen in the first
+> > place, but honestly they don't seems to be a big deal (one typo and on over
+> > 100 chars comment, that will be fixed in next patch version). 
+> 
+> Again, judging by number of reports from checkers that is a big deal,
+> because it is your task to run the tools.
+
+Ack.
+
+Many thanks,
+Andrea
+
+> 
+> Best regards,
+> Krzysztof
+> 
 
