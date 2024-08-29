@@ -1,170 +1,185 @@
-Return-Path: <linux-gpio+bounces-9325-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9326-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E529E9639BF
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 07:09:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9778B9639EA
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 07:34:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 181BA1C21062
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 05:09:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F339285CD0
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 05:34:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D6897581F;
-	Thu, 29 Aug 2024 05:09:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9C7A13C81B;
+	Thu, 29 Aug 2024 05:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Cbw+ing+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTQc4JN9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2084.outbound.protection.outlook.com [40.92.18.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A36B40870;
-	Thu, 29 Aug 2024 05:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724908185; cv=fail; b=LolwWRSlt5mlmZblquLHgJXDSMZXALBqZaMPNhvGgmEIXKnULeSI93rBbO0bI1eXust5tt5yJsRNTMzV/E8Uq0f4CvOcTjvvHbGeGejFBG80gGz+j3054rPSY8Qrj3Ua0oPe07ln68KetkVQYHD4Doj73pTim9pQM93h1Cis/fA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724908185; c=relaxed/simple;
-	bh=JshRJMw5RIfftLZj0Y+LRu1hfj9oxghD69Q5xHVXHwE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Rl4k+8snYkbAAt2JWwk475HYwxYw6KIhIaEBopaTOyxYmma2LIJIURkAbhectP2mGkqmXqePCcTlkbsKKrjKe0/Ux1AnHnRp7X77lDSvcg8TDbuHo3FSBMoSRBIDfY8lN5/omEkYXaiwJIoEdu3T6Qa2M77MOv+tlOj9JSZxovA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Cbw+ing+; arc=fail smtp.client-ip=40.92.18.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=R0LFTob9Tl/v216/zUEjxvPuO8OBUnWlahBO80gMQ3Rerh6Q4UPTEf6l9D+BCPlFvaVHqeePH8XrkaEQHsyxRZv3xB9Q3Eog/PjgzjbAdGRQngYsMaQLEuxgqwKOpary24TNY6r97IdYv8UpOQFH6WBW4wDAy/L99bT5XrnxMVCuALFTJTa6tLNOjZfqAppHGlKMuhWzocpD81WywfUivyIbAh8tH9W4iAQYl0+Myw2tNBEg4VuWPPmcAJ4TOPCcOZ28jc3m5YqAztEq4d0t+u7vaJ+tQmMR8gXcOSl8qM6FoSW9rQyNClcBqMKiZpSuJpDlswIsRNZqwUbuEBKkwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vVmT5CMMYq9LdP3EkPBBN2ZqNm+zKy81PF+L2axmtGw=;
- b=lwvCWqkSJj4GDjHrssS75c/XhA6AtDrQX3gOQb7s6E6Eo9hqZUAIekb8Xw8HQIH6N4EaJTF7dwJiQttNvpnBA7cHQxYIwzpLTfHXhPsIxVxbv893Hw4hAc4KO/yM22VRwlCvMB+IdsXegPPTvJPNStGrVYNBeYtepeOm77ZP3gipLUg+ZJs4Oo9zUwJYEq1k/nA++O8uHAvX57p5k9infIWjKScKuSTC/l7ixI9WpGNv3dVFYnSZtajuIKbbmxSROFPAW7qYzQGzreH1Uil5yRBwM3UnTaXFny31MwMJ+y7KSFxPKC9UJU/b2NpqAbN8TmRXHgAE2EF98XJDr6L2IA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vVmT5CMMYq9LdP3EkPBBN2ZqNm+zKy81PF+L2axmtGw=;
- b=Cbw+ing+IuEdyt0ri+vDKh9rejSsA/bPGCWvsQlcTrxHtZb9TfVVhAvVIsMpAPyciniB7vnooC9uqMAad5lOfj1D+tsRHB62B2a7iHUUugyT+8DrgezLY8qNORVhWc5SS83Km1hWaq9vncyh+yyHwZ7ZfaFIBAy+IhfiV62Blq+Yc9mfiqVjtx9Fn6BboYiiIeC32V8aEWY98AO2ojHigzTJVIaDxuc/j+sni3Rh/HMEUg/Mv6OyL+9GRMNUBO4v8WobCzaUgz+mHhxR4A2VlfUIsc/p0TkoU1fkyAlVi658qireroFqpuHk7YnKuaibOZ0RQa9taadK9lYzeWzZ4w==
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
- by MW4PR20MB5105.namprd20.prod.outlook.com (2603:10b6:303:20a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.27; Thu, 29 Aug
- 2024 05:09:41 +0000
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::ab0b:c0d3:1f91:d149]) by IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::ab0b:c0d3:1f91:d149%4]) with mapi id 15.20.7897.021; Thu, 29 Aug 2024
- 05:09:41 +0000
-From: Inochi Amaoto <inochiama@outlook.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Guo Ren <guoren@kernel.org>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Haylen Chu <heylenay@outlook.com>,
-	Inochi Amaoto <inochiama@outlook.com>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: (subset) [PATCH v4 0/7] riscv: sophgo: Add pinctrl support for CV1800 series SoC
-Date: Thu, 29 Aug 2024 13:08:41 +0800
-Message-ID:
- <IA1PR20MB4953281633974BE4AB4887F5BB962@IA1PR20MB4953.namprd20.prod.outlook.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <IA1PR20MB4953DC78BB0FE0C57EA94F91BBB32@IA1PR20MB4953.namprd20.prod.outlook.com>
-References: <IA1PR20MB4953DC78BB0FE0C57EA94F91BBB32@IA1PR20MB4953.namprd20.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-TMN: [IT9AbJ8TNaKIyzrpvWlfPsXJDZEWp/n29LcozQBzIgw=]
-X-ClientProxiedBy: TYCPR01CA0021.jpnprd01.prod.outlook.com (2603:1096:405::33)
- To IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
-X-Microsoft-Original-Message-ID:
- <172490809691.606212.17146855872593490329.b4-ty@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1686A92D;
+	Thu, 29 Aug 2024 05:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724909688; cv=none; b=VEX01bkuPInfkdbZb2s7TBFHJab1t5kfvdrwMa4xMa0PKIgwO2uDUhGxBbVBEcyizDSAih//vypVpl5vijpK/MrPZFATxLRWDJ9AGCbh73bXybngt+CDuCUyeDBUUnHRfMblLhX/4xo3f6Y2IC0/QTw0sTmFe04jla3v+eRlO6E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724909688; c=relaxed/simple;
+	bh=qOzLTC5TwIPs6fH5v8BJWFxwitFWVkLCRunEOqdsgiA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ro0jtzSaGwaYKbxu0zPD8uOuhnQgH2crM3rO3pdWHBwHJg9rf+8m8GqwdZKuLMEd9YMD1a4knePcwBWahG29o7u60LVOj48uxZbY5P9oNarKcsiOUI462sbigyPTq9r/uQNLvubVgXd6hPBU2j3d2PJPSF1TW/dPtTrD5K23Liw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GTQc4JN9; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2f3e071eb64so2709281fa.1;
+        Wed, 28 Aug 2024 22:34:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724909685; x=1725514485; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6duK+y0NIbCZnrZY/SKwmfpA9Y/EZSnO7EgAhUfZetE=;
+        b=GTQc4JN9v9AOwMi/eLCkvPoPG3k4ndAbZggJM6PEo1xR3TDtwp7o7vR7aZOm63i2jL
+         vlqjffxMldKf9jf9k8/uKIdp7QXmLqG1yVBKTGQ2nwXVP+zdybRZbAgiEVt+1sL+W46p
+         ZjUVMJExC4PsjBmOLuTSpXN3O0NpNXXquXu6rXPcNMmMdxntHeqVtiu2PbwCbCHBnty+
+         QHF0XjUPljhCU9pMWSO27YsYR75s3FZEX4q0ZID55Y6+7DLt+Bj4Ljbhl0rk9XTnTT/W
+         buNKd0+1Uiexen/9qhzIxMNJXHkicbCR3mNi9CFeWHMwVWgJ4r+rXyIkxrvA9MiZ6PGj
+         c90A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724909685; x=1725514485;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6duK+y0NIbCZnrZY/SKwmfpA9Y/EZSnO7EgAhUfZetE=;
+        b=uGnQQTmDNZcmry1AwWcc2NnMH08hIWeXwnf76ds38YX7sKkQwxh9HhJKCYsiAqRts+
+         eB8dDKxFS6gK2T0dMKgAfeNsg1JQAPacOfEjeFevh4FdJppqqe1TUVzWWUjl3stLz02H
+         MPjZVuMaShWIIbBnrw7bIcckeFT07lcd1DT5bDGvMkHqv/n/j7SELIDNX3nNJSxdr9pF
+         YFFvyoY5+rvQYHFF/JPX7QLIIjtX7OaplncFr+JwmC32KKYj0tGpE/gqXIhECTEi2GQn
+         kZO5i9iCI2wSxrRL7mveHmHDpzn1CAaPF2deB2EmuLf0KFmM/XmKvncEijs+JyJAsSoQ
+         lXkA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAfZ4nhJ8/3C0wvzI6byy4Gyv0HJeeKSniyAlBTmiEOqXuxFLgEWjB2TeNW5jMOu5m3kMuUIoW6oKi@vger.kernel.org, AJvYcCXXMgHXxsywKrxKGwgg7D774JR50Mo3B7H/7NmZOqGotGzHGWkyRaRWBjOXQUCiAkN9VB9NIIwN1coLlgQ6@vger.kernel.org
+X-Gm-Message-State: AOJu0YyemjFjgVrqA0jdzhJVSspNnjiQxO6ZCAwd8dFn/TMaWyK4HdDH
+	IiJ+8iTh+x/AjJBw7wn0F8oWQ9o/ha0tmiU6pmFYJ5NA0LVicVEkkjXq06Jtp1F6jW3715lpJA+
+	wfb8Ag/GSQlvQiMX3VGhFvAKptNDT075G
+X-Google-Smtp-Source: AGHT+IGf+cGnsxc6Gp6hnAijFaiDpUZ4HnMX13sJkmsDz2H4U99wyfT8oNOb7C15TJldrMxAMyWKHPV57Es9pFVsl0o=
+X-Received: by 2002:a05:6512:4003:b0:533:4620:ebec with SMTP id
+ 2adb3069b0e04-5353e543459mr1238678e87.3.1724909683984; Wed, 28 Aug 2024
+ 22:34:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|MW4PR20MB5105:EE_
-X-MS-Office365-Filtering-Correlation-Id: ee3bdf6a-d6b9-4e94-164a-08dcc7e8c968
-X-MS-Exchange-SLBlob-MailProps:
-	7J/vb0KDx3jIGjTVij+H+31XKAuPWx7Gsw+JgTmeTHrySBmQtvsGenU2hMnP0j1KyDw089V+UQ95JHqJtbDXcgEbhgYxVfTdXXecfr935JWbe9WcR+wsz/pt/8vpEmf6+JUc5irl+Ku/rnqPxkLo6by6F7rwxyQOu9LsPW/wafHE3hQ3rbfQ0laSyeSJoJhR7bmIRD05+b7uU9tD53Et8xtrLH1GKi/kNdginOZVKWeNK5YzEvvykiEixKEYfcUzV6EKu2xIuDZnQAqJKFch1g2LZDEa8kKXFgUIAZ8vGmPpTc9J3zdOCd+syQc7X6KRpro9FIvlkF2vx5q9Y2KkXnQpTUL7Zt91+v82x5AGuR/ZL4b+mcc3NRMdqzXookrIaTVkrKM4TdLF1TI04voS+aBlA7a77yUR0Pz8QAlyTBsRImxc+qky1sxqHJhNnLS8Qmr2QfNLXoRSTEzxexTQxJWBtPwphnMjcQRFn1U2/wFjfC5U49Gw7/8FgA2rb+5+M+J4MukFE+SCWYv/AeqZY+YkUbDUjCpPhfseALix/pRtf+rN+viDbXFZ+lhBhuehxhRuoOjVU44q3iQ2P/bk9pm1u1eojVDylkYqTKdJc6fGuhTm2XZbI7JaJTpGRC/Zn6xwDckoLc51jtcA2ufQI9wSzwdlBiO22VqcV/3ZgJ9vhh8rz6E2CnisssdPTH8JkOXLD70qh1BGRJM+roTs+osB0LEx+RQ/GlGinykmXnF5rZRHmFprSS1omZn4RrV2VgiMKNgsU8ShhHaVQjGYYenpbztmA8rEeDJUN4iNewQ=
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|15080799006|6090799003|5072599009|19110799003|8060799006|461199028|1602099012|3412199025|440099028|4302099013|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	nPV1MtS8RGncpZDzSkQ3C21Nfmd9zMedD/sxiEePt0NwjvH+JsVDIThC403e0a1BjVj0PXsVQ1eSG/9+fbKlvll6qIVuwtxsbDh5clETg/grz8zx2Znd0M+jRYjR7pRmRCHVxCmtaWUdSNXfL4T9eMuV8h35d9ZoGKWTrIEXC9sl5XMx8ZBq9IBw1gbfn+H0VxQ9SmTTmH0i6LY+qrFSZsqfWs5xX70KnkId/WZkdo+Uh2S9iOGq4epOos1Qd256cf6p3Wlb87fxqf+bkhK/OffYK4NHV5seAzllSacsxu1RibOaOLZHehig5HcrBobzzpifRat/94UCsvJF5JBxXNwYQ7n/aDq19iIH6/nbvKM2YEEbsrBk4fTbGlVeZKN7u+vTNDzWhgSWangbKdn4Bwg8SyTnDdc55H8ZyLEJeTDuBU53YCV4Tib9S6RVtIBEhu2bZRQI+pLO5aapopg9qYG977ubhEjpGmDSTDj4CXRwbherBalmlx4YQppwL//Xr3yw7ikYsPIbWuc3qNMtS8lTBnqIBPHex7IGKNtqKpY0cl4YXHuu46WnvxPe6M6aWEfzvPVkM9DeavuBV4ORrhlXzNCZ6uoCfzGX2iB4HNkYeGrJFLOn9xMpEIaz15OyjVy4g4LRtts4f/n+6NS/q9bglsPc2/zuw6Lt1j9+3ZoNpvPI2AYg0CJXdfWd159aKQwmV69mSiyHcEChZH+pajuUHlQahNcHAEJGzmJpCp4ODi7bEk3/yi2Pt3FYfzyVcaQl0Ak06RX9uLzW9ixPyU6eLqELvQKYCweXm0GYTNT0UzSGGR/I/3SafdiOJhhwlANdFuKR7g26z/hBn29YWKnFMeEKYpDEbjtIlogXgST0cBumPZRHRqikCaDnpbu0
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V1c3SkdLa2pVS2E5clczUC9HNzRmNzd0b0x2RkpLaGNWOWYvRmRJQVcyUllZ?=
- =?utf-8?B?RDJPN1F6aXM0YVgwVmlkczd2cUl3MjJrZ3hMS2l6ejQwY3pnVGM0dktxRkxH?=
- =?utf-8?B?N1hOdm1PS2thM0cxM3dOcFFvcmlHOW9hVzlJQ214VlRPTHgxTmt4QVlSaHpZ?=
- =?utf-8?B?WWthbVdHQ001VnM5ek4xOUlpejNSUCt2L2lzZjhLUzNYTXFHZENGY3J6TFZx?=
- =?utf-8?B?MmVSUHVwQnFDemVydEdVLzAwOXlISkxwRXdkcHlzc0dCM3A0Y1ZuNkpqdWlD?=
- =?utf-8?B?NlhsMktEWE03ejlLNlVZUW90aUFpWEVoRkoxckxYNEtna2pLWXlaV2NRMlVu?=
- =?utf-8?B?MDdNbFVDc0phSmtIZ2l3bWszYm4yZ2p0Z2Z1dGF4QTV0TjhkR0dRY3BNNktK?=
- =?utf-8?B?UUlCRVljNWtIU0s0eEVYRW1CaTlYWkVMbDBXQ01zdmJKemNueDJ1eWllSTJl?=
- =?utf-8?B?Z3BKcXZVK0ZuSUFMczBMbU0ya3JLR09keWdBT0VRZHB4cUJUZFl1L3NaZkRq?=
- =?utf-8?B?OUVlNUxTWnc0WHZ4TXNwcis2d1diRGJ6Q3FxeFYvY2c4Yk9TbEh3V3FJb0M0?=
- =?utf-8?B?STdmZnhsYVh0TUxrZEY0WDlwbldKVFRNdGRqMStYUkU4cWVSc2F6ZVhFaGdN?=
- =?utf-8?B?RUt4UFpSN09ma1NMSEtiak03U3ZzVTdrY29wRG5UdDJxa01VL0dWV09handW?=
- =?utf-8?B?UVpEREFTZ2lYaW9tcUoyeVdNYjBmbG1uWFNUZVc3akllRG9qWWoveXJNM3pX?=
- =?utf-8?B?dFlSZXcwM2xqVkREQ3RsS1BIcDlhTUpIN3h0dHJEczRhU0xwMEtvTXFFRTRW?=
- =?utf-8?B?YTF2b2h5SVNKYzd4VmpMK3o0eUxqZmRiOEpsTFZYRWlNVmdTTzFpWk55L2FD?=
- =?utf-8?B?TG9Icng3NGZ5MW1FcWtiQnF5OW5xMGF6QjB4UGl4bENYOG00TnJGNUtZWHFw?=
- =?utf-8?B?a3pGdWl2cG4rczRXVGt0TnhFUHUvNkdORHgyNklFSFJuSWRrVk5YUENYaTB1?=
- =?utf-8?B?MHJGS0dUNGZGVkIwS2ZobFltMEZ3RHVkT0pSZlhCUkZMN1YvZEZXRHlRMzBC?=
- =?utf-8?B?QVFaOEhscXphWVBtKzA5SWF3bXIxWGJPTEI3RmFrMGlPNDBITWplRDZudVVp?=
- =?utf-8?B?NU8rTGZuTEZzUnU5SlV5dm1XS2d6TlpUdDBvbWlFQjNUejNCQWFDWUU0cjdw?=
- =?utf-8?B?bTl6SGkwaC9NV0ZHRU84d1ZnMnRnbkMzMjJXcTRtQStqaFVRZEVLb0lpenRV?=
- =?utf-8?B?UU13UFp1TW95U2xaeVVqOVFYNEN1cnJ2S1BHYzhCVjBuN0pwT1VvZlJxVnBY?=
- =?utf-8?B?QnFreEpVOUhMVkZDblNjL0R4a3dqc2syODRVdHoyc01MbmNBSDlDSm16d09s?=
- =?utf-8?B?aWllN2ZwVE5jMWZaL3FLR2k2RVhkVXJidyt3eHkzMGc2VkZHcEJjWHRjMkI3?=
- =?utf-8?B?c0djN3EzUVBiUzVDR21rZFphb1RaZ1l4cWtnK1ltNTBhWitWb3NYWlBycUcr?=
- =?utf-8?B?dk1NTjRKK3piS2NnM3NSS2ROcUVLYnlqck1SVG1ISndnZEN3T0gvbnZrUTkv?=
- =?utf-8?B?dUR1QTIrbVVLU2FMb3VQNG1lWlY5U3dpOEVwUHhlc2NWS0duVUIxelVOUllJ?=
- =?utf-8?B?Z2YvSWg4ZE9VUVNCeXdsei9NalZqY1oxcXF5NzVoRFNoVERIekVCKzhvQVV3?=
- =?utf-8?Q?4YJYWoDXBk/gpt+wyoxW?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee3bdf6a-d6b9-4e94-164a-08dcc7e8c968
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2024 05:09:40.9604
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR20MB5105
+References: <20240828184018.3097386-1-andriy.shevchenko@linux.intel.com>
+ <20240828184018.3097386-6-andriy.shevchenko@linux.intel.com> <20240829045334.GT1532424@black.fi.intel.com>
+In-Reply-To: <20240829045334.GT1532424@black.fi.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 29 Aug 2024 08:34:07 +0300
+Message-ID: <CAHp75VfCpoTVxxNJewTDmYjFtX378QMoNuRv-KGiFSgop-_d-w@mail.gmail.com>
+Subject: Re: [PATCH v1 5/5] pinctrl: intel: Introduce for_each_intel_gpio_group()
+ helper
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2 Aug 2024 08:33:58 +0800, Inochi Amaoto wrote:
-> Add basic pinctrl driver for Sophgo CV1800 series SoCs.
-> This patch series aims to replace the previous patch from Jisheng [1].
-> Since the pinctrl of cv1800 has nested mux and its pin definination
-> is discrete, it is not suitable to use "pinctrl-single" to cover the
-> pinctrl device.
-> 
-> This patch require another patch [2] that provides standard attribute
-> "input-schmitt-microvolt"
-> 
-> [...]
+On Thu, Aug 29, 2024 at 7:53=E2=80=AFAM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Wed, Aug 28, 2024 at 09:38:38PM +0300, Andy Shevchenko wrote:
+> > Introduce a helper macro for_each_intel_gpio_group().
+> > With that in place, update users.
+> >
+> > It reduces the C code base as well as shrinks the binary:
+> >
+> >   add/remove: 0/0 grow/shrink: 1/8 up/down: 37/-106 (-69)
+> >   Total: Before=3D15611, After=3D15542, chg -0.44%
 
-Applied to for-next, thanks!
+...
 
-[6/7] riscv: dts: sophgo: cv1800b: add pinctrl support
-      https://github.com/sophgo/linux/commit/1728c7e408c6e5ef1c6f3a2c7f75bd20139c2e13
-[7/7] riscv: dts: sophgo: cv1812h: add pinctrl support
-      https://github.com/sophgo/linux/commit/2926c05f9cb7b5bb0374fb7a53bffd65937a454f
+> > +#define for_each_intel_gpio_group(pctrl, community, grp)              =
+               \
+> > +     for (unsigned int __i =3D 0;                                     =
+                 \
+> > +          __i < pctrl->ncommunities && (community =3D &pctrl->communit=
+ies[__i]);       \
+> > +          __i++)                                                      =
+               \
+> > +             for (unsigned int __j =3D 0;                             =
+                 \
+> > +                  __j < community->ngpps && (grp =3D &community->gpps[=
+__j]);           \
+> > +                  __j++)                                              =
+               \
+> > +                     if (grp->gpio_base =3D=3D INTEL_GPIO_BASE_NOMAP) =
+{} else
+> > +
+>
+> This looks absolutely grotesque. I hope that you can debug this still
+> after couple of months has passed because I cannot ;-)
 
-Thanks,
-Inochi
+Yes, I can.
 
+> I wonder if there is a way to make it more readable by adding some sort
+> of helpers? Or perhaps we don't need to make the whole thing as macro
+> and just provide helpers we can use in the otherwise open-coded callers.
+
+Yes, I can split it into two for-loops. But note, each of them a quite
+standard how we define for_each macro with and without conditional,
+see the jernel full of them (PCI, GPIOLIB, i915, ...).
+
+...
+
+> > -     for (i =3D 0; i < pctrl->ncommunities; i++) {
+> > -             const struct intel_community *comm =3D &pctrl->communitie=
+s[i];
+> > -             int j;
+> > +     for_each_intel_gpio_group(pctrl, c, gpp) {
+> > +             if (offset >=3D gpp->gpio_base && offset < gpp->gpio_base=
+ + gpp->size) {
+> > +                     if (community)
+> > +                             *community =3D c;
+> > +                     if (padgrp)
+> > +                             *padgrp =3D gpp;
+> >
+> > -             for (j =3D 0; j < comm->ngpps; j++) {
+> > -                     const struct intel_padgroup *pgrp =3D &comm->gpps=
+[j];
+> > -
+> > -                     if (pgrp->gpio_base =3D=3D INTEL_GPIO_BASE_NOMAP)
+> > -                             continue;
+> > -
+> > -                     if (offset >=3D pgrp->gpio_base &&
+> > -                         offset < pgrp->gpio_base + pgrp->size) {
+> > -                             int pin;
+> > -
+> > -                             pin =3D pgrp->base + offset - pgrp->gpio_=
+base;
+> > -                             if (community)
+> > -                                     *community =3D comm;
+> > -                             if (padgrp)
+> > -                                     *padgrp =3D pgrp;
+> > -
+> > -                             return pin;
+> > -                     }
+>
+> Because I think this open-coded one is still at least readable. Of
+> course if there is duplication we should try to get rid of it but not in
+> expense of readability IMHO.
+
+The result I think is more readable as it's pretty clear from the
+macro name what is iterating over. It also hides unneeded detail, i.e.
+iterator variable.
+
+>
+> > +                     return gpp->base + offset - gpp->gpio_base;
+> >               }
+> >       }
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
