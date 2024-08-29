@@ -1,69 +1,73 @@
-Return-Path: <linux-gpio+bounces-9402-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9403-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FDFD964DBC
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 20:36:18 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F26C7964E3C
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 20:52:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 08194B21863
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 18:36:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 31BE11C224FE
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 18:52:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CDC31B86E8;
-	Thu, 29 Aug 2024 18:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D37B51B81DF;
+	Thu, 29 Aug 2024 18:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITgXofYm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b3KbXqaC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98AF4D59F;
-	Thu, 29 Aug 2024 18:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58ABC1494B2;
+	Thu, 29 Aug 2024 18:52:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724956565; cv=none; b=BFSu5fr004fQ9YwRr9cq9Bck0rxod4bE3Yzn+k/rAQqGHXlEiltzmNEsEzeMhB9lvU0pIE24NgvnryMPP6f2F+DRYXrYv0f051EQ3x7Mr0BLuRL84wN7J/bvgJjwtEOdync+DGXKXPjTvYUSYruzaK/waeJGTAFRrKOhqByLG9A=
+	t=1724957562; cv=none; b=LZbe/Y7zrWHxddgquZIl8rZZPIqRSuMO392eH1F5SrCPTcemQLLOG9nFB7FVOYKcZ+67asMoUJodlgp8Lvmxw/n0A2XAAuowX6+Ijii2h0QK6QLoRFStoTeZEJl13CipZWbApXt9neQfaweasddOSAB0QHpBRtSkeToJRt02udU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724956565; c=relaxed/simple;
-	bh=Mxgf/84Y368eJ01uALZl6+hxWNZdpBDsZMUdIPn0f5o=;
+	s=arc-20240116; t=1724957562; c=relaxed/simple;
+	bh=sji9qUHLrqHNW9BPEl5XCsnv+ETqRB6bWthNHqjS8ks=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IspfnZAiYeTZe3h1KhWMjLEcDMYvrAb2X+ig8XvXrboHs1nCQGPILu1Tgg4ef6bZi6nwqPLeFmzECqWCAwQsIyOYDZl9wjQEkLOqWFaiwznlgvuaxDPdAg0CcxSm8yKG5FXfhAkrzZOHNge5y0Hdjs7hGdtLwCDb+8X7wVabCp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITgXofYm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6647BC4CEC2;
-	Thu, 29 Aug 2024 18:36:05 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=DFdCyrQ4Bf3euJjXvXuE/CyouwzgK3syY0widik7Q/ebjy3tUUUJ9nChWgA1+YJ/1m6igJVs7of7OuMFJ2XMcGqsCWt3AVitRR1050JmaUq+Wwb0ya+QfBcW3SgjIHBCs8JJ9tNr+jXDbil2jQdVcFP9v4HJEXeGKz8kIBZPJ7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b3KbXqaC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9460BC4CEC1;
+	Thu, 29 Aug 2024 18:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724956565;
-	bh=Mxgf/84Y368eJ01uALZl6+hxWNZdpBDsZMUdIPn0f5o=;
+	s=k20201202; t=1724957561;
+	bh=sji9qUHLrqHNW9BPEl5XCsnv+ETqRB6bWthNHqjS8ks=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ITgXofYmvTEoWUdQ+jq3yc3XOD7MH1h4mlishkA0S+AzZMScvyn11W1HoE4N/6do9
-	 nUxWggFoDfbougAQ+SMo7yYHF75VQ/2Zw2gMSTkw2+Tfs1RUeMPSfrziSSqTTx3YE7
-	 gI+nQc5qXP5SQ0bHWqyFiS6eX7Gu29w/GaGhBYmCEbClL8aG3KJ0AVeHZveus0SkrM
-	 iymZOgHeteGlri8HkJ4YhTmoeyH1c6SJZR5ZRLECuusoWFcDbEmbXnPYVWhdj7RwGf
-	 rD78oiKXQaLQkLvSaNzHhn4Z01TPuB+89QmRb6iUh1y6ff7cQQx0WXfvrUPMAZfbUz
-	 +drnU7Bobk2Ag==
-Date: Thu, 29 Aug 2024 13:36:03 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Albert Ou <aou@eecs.berkeley.edu>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Meng Zhang <zhangmeng.kevin@spacemit.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Meng Zhang <kevin.z.m@hotmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Icenowy Zheng <uwu@icenowy.me>, linux-kernel@vger.kernel.org,
-	Yangyu Chen <cyy@cyyself.name>, Conor Dooley <conor@kernel.org>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Jesse Taube <jesse@rivosinc.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jisheng Zhang <jszhang@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: pinctrl: spacemit: add support for
- K1 SoC
-Message-ID: <172495656327.898546.917420601420420121.robh@kernel.org>
-References: <20240828-02-k1-pinctrl-v3-0-1fed6a22be98@gentoo.org>
- <20240828-02-k1-pinctrl-v3-1-1fed6a22be98@gentoo.org>
+	b=b3KbXqaCwxgQIesaGWz0wsMeMBDUv0yytXgal8R6jeuHVlZqaBLT7/9XFox2ERjcO
+	 9NVN1CkLl68ZV88Z4sPzema+0lLKi1WA0TmWgzLPOTzGmjZUBvGNn/SWT4SddOhTM/
+	 M9sBWFbm8vqMVWXfc2IyB/nXdMXuukiAfzykL9RE+2IEQYu4Sl60FNcfnXl3jHkDw5
+	 Ocg2HPMWl1idVHFtmWIgFAmHBkn1nmp6dIMj3hy7bcQmvFQjkKk/DDY3fMlWOhTpma
+	 a7pVUtKxtUJPC5laEA4kBh0oL8DdIeF14K4KeeysXWVQTM83Rs8F9Nm1lC9kZ64g5Y
+	 ae33sp3w6Xy9g==
+Date: Thu, 29 Aug 2024 13:52:40 -0500
+From: Rob Herring <robh@kernel.org>
+To: Nikunj Kela <quic_nkela@quicinc.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, rafael@kernel.org, viresh.kumar@linaro.org,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	sudeep.holla@arm.com, andi.shyti@kernel.org, tglx@linutronix.de,
+	will@kernel.org, joro@8bytes.org, jassisinghbrar@gmail.com,
+	lee@kernel.org, linus.walleij@linaro.org, amitk@kernel.org,
+	thara.gopinath@gmail.com, broonie@kernel.org,
+	wim@linux-watchdog.org, linux@roeck-us.net, robin.murphy@arm.com,
+	cristian.marussi@arm.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+	vkoul@kernel.org, quic_gurus@quicinc.com, agross@kernel.org,
+	bartosz.golaszewski@linaro.org, quic_rjendra@quicinc.com,
+	robimarko@gmail.com, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	kernel@quicinc.com, quic_psodagud@quicinc.com,
+	quic_tsoni@quicinc.com, quic_shazhuss@quicinc.com
+Subject: Re: [PATCH 21/22] ARM: dt: GIC: add extended SPI specifier
+Message-ID: <20240829185240.GA914553-robh@kernel.org>
+References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
+ <20240828203721.2751904-22-quic_nkela@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -72,25 +76,34 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240828-02-k1-pinctrl-v3-1-1fed6a22be98@gentoo.org>
+In-Reply-To: <20240828203721.2751904-22-quic_nkela@quicinc.com>
 
+On Wed, Aug 28, 2024 at 01:37:20PM -0700, Nikunj Kela wrote:
+> Add interrupt specifier for extended SPI interrupts.
 
-On Wed, 28 Aug 2024 11:30:23 +0000, Yixun Lan wrote:
-> Add dt-bindings for the pinctrl driver of SpacemiT's K1 SoC.
+What's an "extended SPI"? Is this a GIC spec thing? If so, what version?
+
 > 
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
-> Changes in v3:
-> - drop spacemit,slew-rate-{enable,disable} property
-> - use drive-strength instead of drive-strength-microamp
-> - fold strong-pull-up into bias-pull-up
-> - format fixed
-> - title fixed
-> ---
->  .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      | 127 +++++++++++++++++++++
->  1 file changed, 127 insertions(+)
+> Qualcomm SA8255p platform uses extended SPI for SCMI 'a2p' doorbells.
 > 
-
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-
+> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
+> ---
+>  include/dt-bindings/interrupt-controller/arm-gic.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/dt-bindings/interrupt-controller/arm-gic.h b/include/dt-bindings/interrupt-controller/arm-gic.h
+> index 35b6f69b7db6..9c06248446b7 100644
+> --- a/include/dt-bindings/interrupt-controller/arm-gic.h
+> +++ b/include/dt-bindings/interrupt-controller/arm-gic.h
+> @@ -12,6 +12,7 @@
+>  
+>  #define GIC_SPI 0
+>  #define GIC_PPI 1
+> +#define GIC_ESPI 2
+>  
+>  /*
+>   * Interrupt specifier cell 2.
+> -- 
+> 2.34.1
+> 
 
