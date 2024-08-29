@@ -1,601 +1,157 @@
-Return-Path: <linux-gpio+bounces-9405-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9406-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 493A8964E82
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 21:13:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBE6B964E99
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 21:16:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9BE66B237B4
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 19:13:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CBBA1C22961
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 19:16:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63E251B9B2A;
-	Thu, 29 Aug 2024 19:12:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADB911B86C5;
+	Thu, 29 Aug 2024 19:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hfyPmOCI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TL6UCmDy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5B51B6540;
-	Thu, 29 Aug 2024 19:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D1D1465AB;
+	Thu, 29 Aug 2024 19:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724958752; cv=none; b=XwTaPVcqEy9skf7/rEw1CFNRtz7Nyyr+jDNXlRvJxS1gWVLrZ63gea0VEGcK/hhmm4YshllRW6myEEa2o9q7A+uZXwTJwpVNDyMxSQL9jPv45nZLbpZTM7oU99Gv7tOzyR6clVyS239dhpiA95YeEgTnCOSAh1K4GPZZacTIvgY=
+	t=1724958957; cv=none; b=X/yxTZ20f/oN1/nKES6nvDLbQhhPnpYtaqOtTNaQE3zeXT56lD2QrVorf4U/6eY2/kg1S1+pWMBwe6+c5S4CyeNdh14gTWLRoeqnzrigJYVS2y76lIzmuZP/x1BdYSQjq3LNUqSITAIOIySF1lsavam8ZzbA7LGbqcwqa06z7TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724958752; c=relaxed/simple;
-	bh=IccCRubsZkcY5u3qNEH7PHyogwGX+dXPNc8wVEM5Uj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IlLtOW19GE2cic94oRBopDM6Cj7jo0T6VlM/0aGOtZ7HZEO+COHxw13XZhAcSmZ57499h4CtzRdkyqYpPClolcDXbtvKnyTcCmTLbhmv0rNe1NGgUiFk7G137m/UMeh9fsM0VvDv0rCCzs3Cs7UZLwIZa7gY8DFbywsdd6UkYjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hfyPmOCI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47TGK93O024486;
-	Thu, 29 Aug 2024 19:06:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XDi8cWM8np1l+qyak2upQZYRIHORj4j79K4H6ISldk8=; b=hfyPmOCIbJzySDql
-	OmdQD12Zz2sJREaZberhLneflE/hOKYVZZofyBK6QxUqr+18/e7B2woskKUH04yX
-	P9M6Vu7XCzs0Sw1UkxkCGUDZsLS2J/ybso0t3LyLX392wvtW70b21D/3qIl5LXMA
-	moO9LAh5TzBMpGjBBvPoAERhy5GgXTVGwzuYgryZAtMF714InpSKXglhAg/IpGDL
-	onNsTohtbQclmqE+Ke7mTlocsMoR/YNkSWUnZwb0lG3imy41+HiXq8RBvXvyElo7
-	Sz/h8Nr/0cTtOzqvqIu0+E1ab50ffotira891aDv2XBw5h9QpcpLs73DzIoO7eBM
-	PC1l5w==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 419puvedfy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Aug 2024 19:06:52 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 47TJ6ppS019360
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Aug 2024 19:06:51 GMT
-Received: from [10.110.28.107] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 29 Aug
- 2024 12:06:47 -0700
-Message-ID: <57eee144-cdc4-48e7-838b-103cda6ec1dd@quicinc.com>
-Date: Thu, 29 Aug 2024 12:06:46 -0700
+	s=arc-20240116; t=1724958957; c=relaxed/simple;
+	bh=0jXi7+7QMhF/FyYgxjssnc7RbxbhImRq/78BKVAp2XA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iizfL0EP6SnoEl9R3m4SCvKuiKvUYbq8gJpATgQbIuv0T+xcJz6TSAg9nNDA9FCEJFqJZqxrpzzhqn/vWR+AvX1L0AyiOV16cURwjkYoStfS1J4JdfGC9VPLxQSANeE4YdoHPHZn2nJfIb2OluCJjZtDKpgPpUGYT0fma0W0Zk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TL6UCmDy; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4feb60e525bso587477e0c.0;
+        Thu, 29 Aug 2024 12:15:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724958955; x=1725563755; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nR0JuAwLuIKu+YZbSZKkpBbfbZUDSLztLsb5RIpWmB4=;
+        b=TL6UCmDylPiyrTNyc68n+ztq5Q5WISuBLZ3rVeXdtIG3NvsNWHfPbpznFDe2Qmb4fc
+         4PPuZogz3Es95t7FsJBZE4G1eCUPKEnLjmri7iT0BMTf9s6N8xCpisSNogzjvvDH4Rdv
+         InQpRbd3M+3CdL71h5ouKmQcQSg3imt6cs3wTZt0tKItQsHQpa6vHJE0e+gWduxVigEt
+         ukKT0iQ40uSMbOCi9VAlpE0QkDnYh7XV+EQ1WOJst49v3jqnFIaaKTCiWcfFWk81W6vZ
+         +mhwLC8Sr/pWQgR1RqESUVvXQqf03ASa/PUpLNlVjqeg5N/E0rSS7WMdNQH8CSq0BlKI
+         +LkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724958955; x=1725563755;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nR0JuAwLuIKu+YZbSZKkpBbfbZUDSLztLsb5RIpWmB4=;
+        b=mtLI3IAVQpRBwdBy+7b9ge/L/ylWm/4VdXYaRbebl4okJ6U6KQGclNUlXHZUU6GJXZ
+         3b+af683t+D/Bt6XVM+r/XmQHqNOmcajlOcow+Jd1Ydjo/aRdPm0u4XCQhYDlgad6dP5
+         clqO2NWkQ4A3mWxDibDCh2ZZ9m8VYPp/18zwQXO/05BCaYxpXl0jCx9st0jE8gkFDXcq
+         h6CuYQYyObrW6SZohkURiOq7Jh4g21MpIjtQrgaYFDF0GaMiZur34h00SAMEViOD+J9Y
+         pnGrXslUHHsnwZUkA2Fa1vdlE2ugQiUZoNW/ZjfoEUoXUSUppOjhip9XSq+05/vDEXYE
+         iedg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0PYGWBNOlgkucYkDoRXFVkVpraGKcOxinnPIEaaCdwplPamK2ZxL5nHtsSRA+lBLXPU2oTbarBKtyLwYyQYL7taA=@vger.kernel.org, AJvYcCX0Se00CoimizG5uycWsLJCaQoCp+hWmtxw494XqH6jCNbI9/7gqD4iBVlZud486VT1VJf1CkWbJQcF@vger.kernel.org, AJvYcCXVUfmj0ybzMslaeZMm7C6iASPc8ONspSE7CDlWy6Vy8AO/ZKYETvWYwg0B/f/fCOj6DOorjm4tMDR8mVj2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4G71YBs1l5FdmIM2YwUwR8cRlNmKYsfcQI72BlaTGPUv3fIEH
+	+qkAVMHGPERzHVOr4ZVFLS3EEmCjfl5UjSjpWevYc4OmkUK4sEjajQROj1fZf9CHs5kI/IjeyGV
+	uRg0fMJimEUSAIWqwL+hHFK+JjQE=
+X-Google-Smtp-Source: AGHT+IHgv7JcjoF2hykAtWUI6o2nnP5h2u8BmIiAGNCkjmIUGko5XrcSIvgWtonot4VZ8C5CT7i2yskb+aCm7ARQRYA=
+X-Received: by 2002:ac5:c4d2:0:b0:4f9:a30:d855 with SMTP id
+ 71dfb90a1353d-5003b09d2f7mr3094385e0c.3.1724958954636; Thu, 29 Aug 2024
+ 12:15:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 22/22] arm64: dts: qcom: Add reduced functional DT for
- SA8255p Ride platform
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <sudeep.holla@arm.com>, <andi.shyti@kernel.org>, <tglx@linutronix.de>,
-        <will@kernel.org>, <joro@8bytes.org>, <jassisinghbrar@gmail.com>,
-        <lee@kernel.org>, <linus.walleij@linaro.org>, <amitk@kernel.org>,
-        <thara.gopinath@gmail.com>, <broonie@kernel.org>,
-        <wim@linux-watchdog.org>, <linux@roeck-us.net>
-CC: <robin.murphy@arm.com>, <cristian.marussi@arm.com>, <rui.zhang@intel.com>,
-        <lukasz.luba@arm.com>, <vkoul@kernel.org>, <quic_gurus@quicinc.com>,
-        <agross@kernel.org>, <bartosz.golaszewski@linaro.org>,
-        <quic_rjendra@quicinc.com>, <robimarko@gmail.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <arm-scmi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <iommu@lists.linux.dev>, <linux-gpio@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <kernel@quicinc.com>,
-        <quic_psodagud@quicinc.com>, <quic_tsoni@quicinc.com>,
-        <quic_shazhuss@quicinc.com>
-References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
- <20240828203721.2751904-23-quic_nkela@quicinc.com>
- <746be896-8798-44b0-aa86-e77cf34655e1@kernel.org>
-From: Nikunj Kela <quic_nkela@quicinc.com>
-In-Reply-To: <746be896-8798-44b0-aa86-e77cf34655e1@kernel.org>
+References: <20240827131722.89359-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240827131722.89359-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdU739fyGhF4WGo-REEus82h0VVz+jQtgXk5qUaTqvu6hg@mail.gmail.com>
+In-Reply-To: <CAMuHMdU739fyGhF4WGo-REEus82h0VVz+jQtgXk5qUaTqvu6hg@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 29 Aug 2024 20:15:24 +0100
+Message-ID: <CA+V-a8uU2UfhB7JhSKOuOQrOxaGtyuKAMWW-ZC+xDrfYRpHekA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: renesas: rzg2l: Introduce single macro for
+ digital noise filter configuration
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 1DMGIf9YfzGAwuDSquaVObGA-TL4ZKmm
-X-Proofpoint-GUID: 1DMGIf9YfzGAwuDSquaVObGA-TL4ZKmm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-29_06,2024-08-29_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 impostorscore=0
- adultscore=0 malwarescore=0 phishscore=0 lowpriorityscore=0 mlxscore=0
- spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408290136
+Content-Transfer-Encoding: quoted-printable
 
+Hi Geert,
 
-On 8/29/2024 12:49 AM, Krzysztof Kozlowski wrote:
-> On 28/08/2024 22:37, Nikunj Kela wrote:
->> SA8255p Ride platform is an automotive virtual platform. This platform
->> abstracts resources such as clocks, regulators etc. in the firmware VM.
->> The device drivers request resources operations over SCMI using power,
->> performance, reset and sensor protocols.
->>
->> Multiple virtual SCMI instances are being employed for greater parallelism.
->> These instances are tied to devices such that devices can have dedicated
->> SCMI channel. Firmware VM (runs SCMI platform stack) is SMP enabled and
->> can process requests from agents in parallel. Qualcomm smc transport is
->> used for communication between SCMI agent and platform.
->>
->> Let's add the reduced functional support for SA8255p Ride board.
->> Subsequently, the support for PCIe, USB, UFS, Ethernet will be added.
->>
->> Co-developed-by: Shazad Hussain <quic_shazhuss@quicinc.com>
->> Signed-off-by: Shazad Hussain <quic_shazhuss@quicinc.com>
->> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
->> ---
->>  arch/arm64/boot/dts/qcom/Makefile           |    1 +
->>  arch/arm64/boot/dts/qcom/sa8255p-pmics.dtsi |   80 +
->>  arch/arm64/boot/dts/qcom/sa8255p-ride.dts   |  149 ++
->>  arch/arm64/boot/dts/qcom/sa8255p-scmi.dtsi  | 2312 ++++++++++++++++++
->>  arch/arm64/boot/dts/qcom/sa8255p.dtsi       | 2405 +++++++++++++++++++
->>  5 files changed, 4947 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/qcom/sa8255p-pmics.dtsi
->>  create mode 100644 arch/arm64/boot/dts/qcom/sa8255p-ride.dts
->>  create mode 100644 arch/arm64/boot/dts/qcom/sa8255p-scmi.dtsi
->>  create mode 100644 arch/arm64/boot/dts/qcom/sa8255p.dtsi
->>
-> ...
->
->> diff --git a/arch/arm64/boot/dts/qcom/sa8255p-ride.dts b/arch/arm64/boot/dts/qcom/sa8255p-ride.dts
->> new file mode 100644
->> index 000000000000..1dc03051ad92
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/sa8255p-ride.dts
->> @@ -0,0 +1,149 @@
->> +// SPDX-License-Identifier: BSD-3-Clause
->> +/*
->> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +
->> +#include "sa8255p.dtsi"
->> +#include "sa8255p-pmics.dtsi"
->> +#include "sa8255p-scmi.dtsi"
->> +
->> +/ {
->> +	model = "Qualcomm Technologies, Inc. SA8255P Ride";
->> +	compatible = "qcom,sa8255p-ride", "qcom,sa8255p";
->> +
->> +	aliases {
->> +		i2c11 = &i2c11;
->> +		i2c18 = &i2c18;
->> +		serial0 = &uart10;
->> +		serial1 = &uart4;
->> +		spi16 = &spi16;
->> +		scmichannels = &scmichannels;
-> Nothing parses this.
->
-We are using this alias in bootloader to speed up the parsing. Since we
-are using 64 SCMI instances and SCMI smc transport driver for
-Qualcomm(drivers/firmware/arm_scmi/transports/smc.c) expects
-cap-id(created by hypervisor at boot time), our bootloader gets those
-cap-id for each channel and populate them. This alias is an optimization
-to save boottime as in automotive, boot KPIs are critical.
+Thank you for the review.
 
+On Thu, Aug 29, 2024 at 2:09=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> Thanks for your patch!
+>
+> On Tue, Aug 27, 2024 at 3:17=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
+.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > When enabling the digital noise filter for the pins, it is necessary to
+> > configure both the noise filter stages (via the FILNUM register) and th=
+e
+> > sampling interval (via the FILCLKSEL register). To simplify this proces=
+s,
+> > we introduce a single macro for configuring the digital noise filter.
+>
+> Currently the pin control tables just declare which pins support
+> digital noise filter configuration, but the driver does not support
+> configuring the digital noise filters yet, right?
+>
+Yes that's right.
 
+> So I'd reword the paragraph above to something like:
 >
->> +
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +&firmware {
->> +	scmi0: scmi0 {
-> scmi-0
+>     Support for enabling the digital noise filter, and support for
+>     configuring the noise filter stages (via the FILNUM register) and the
+>     sampling interval (via the FILCLKSEL register) are related: a pin
+>     supports either all or none of them.  Hence simplify declaring digita=
+l
+>     noise filter support for a pin by using a single feature flag instead=
+ of
+>     three separate flags.
 >
-ACK!
->> +		compatible = "qcom,scmi-smc";
->> +		arm,smc-id = <0xc6008012>;
->> +		shmem = <&shmem0>;
->> +
->> +		interrupts = <GIC_SPI 963 IRQ_TYPE_EDGE_RISING>;
->> +		interrupt-names = "a2p";
->> +
->> +		max-rx-timeout-ms = <3000>;
->> +
->> +		status = "disabled";
-> status is the last property (from properties)
+Ok, I'll update the commit description as above.
+
+Cheers,
+Prabhakar
+
+> > This patch removes the PIN_CFG_FILNUM and PIN_CFG_FILCLKSEL configurati=
+on
+> > macros and renames PIN_CFG_FILONOFF to PIN_CFG_NF.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-ACK!
-> ...
+> For the actual patch contents:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >
->> +
->> +&soc {
->> +	scmichannels: sram@d0000000 {
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		compatible = "mmio-sram";
->> +		reg = <0x0 0xd0000000 0x0 0x40000>;
->> +		ranges = <0x0 0x0 0x0 0xffffffff>;
->> +
->> +		shmem0: scmi-sram@d0000000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0000000 0x1000>;
->> +		};
->> +
->> +		shmem1: scmi-sram@d0001000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0001000 0x1000>;
->> +		};
->> +
->> +		shmem2: scmi-sram@d0002000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0002000 0x1000>;
->> +		};
->> +
->> +		shmem3: scmi-sram@d0003000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0003000 0x1000>;
->> +		};
->> +
->> +		shmem4: scmi-sram@d0004000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0004000 0x1000>;
->> +		};
->> +
->> +		shmem5: scmi-sram@d0005000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0005000 0x1000>;
->> +		};
->> +
->> +		shmem6: scmi-sram@d0006000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0006000 0x1000>;
->> +		};
->> +
->> +		shmem7: scmi-sram@d0007000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0007000 0x1000>;
->> +		};
->> +
->> +		shmem8: scmi-sram@d0008000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0008000 0x1000>;
->> +		};
->> +
->> +		shmem9: scmi-sram@d0009000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0009000 0x1000>;
->> +		};
->> +
->> +		shmem10: scmi-sram@d000a000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd000a000 0x1000>;
->> +		};
->> +
->> +		shmem11: scmi-sram@d000b000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd000b000 0x1000>;
->> +		};
->> +
->> +		shmem12: scmi-sram@d000c000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd000c000 0x1000>;
->> +		};
->> +
->> +		shmem13: scmi-sram@d000d000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd000d000 0x1000>;
->> +		};
->> +
->> +		shmem14: scmi-sram@d000e000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd000e000 0x1000>;
->> +		};
->> +
->> +		shmem15: scmi-sram@d000f000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd000f000 0x1000>;
->> +		};
->> +
->> +		shmem16: scmi-sram@d0010000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0010000 0x1000>;
->> +		};
->> +
->> +		shmem17: scmi-sram@d0011000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0011000 0x1000>;
->> +		};
->> +
->> +		shmem18: scmi-sram@d0012000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0012000 0x1000>;
->> +		};
->> +
->> +		shmem19: scmi-sram@d0013000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0013000 0x1000>;
->> +		};
->> +
->> +		shmem20: scmi-sram@d0014000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0014000 0x1000>;
->> +		};
->> +
->> +		shmem21: scmi-sram@d0015000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0015000 0x1000>;
->> +		};
->> +
->> +		shmem22: scmi-sram@d0016000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0016000 0x1000>;
->> +		};
->> +
->> +		shmem23: scmi-sram@d0017000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0017000 0x1000>;
->> +		};
->> +
->> +		shmem24: scmi-sram@d0018000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0018000 0x1000>;
->> +		};
->> +
->> +		shmem25: scmi-sram@d0019000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0019000 0x1000>;
->> +		};
->> +
->> +		shmem26: scmi-sram@d001a000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd001a000 0x1000>;
->> +		};
->> +
->> +		shmem27: scmi-sram@d001b000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd001b000 0x1000>;
->> +		};
->> +
->> +		shmem28: scmi-sram@d001c000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd001c000 0x1000>;
->> +		};
->> +
->> +		shmem29: scmi-sram@d001d000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd001d000 0x1000>;
->> +		};
->> +
->> +		shmem30: scmi-sram@d001e000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd001e000 0x1000>;
->> +		};
->> +
->> +		shmem31: scmi-sram@d001f000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd001f000 0x1000>;
->> +		};
->> +
->> +		shmem32: scmi-sram@d0020000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0020000 0x1000>;
->> +		};
->> +
->> +		shmem33: scmi-sram@d0021000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0021000 0x1000>;
->> +		};
->> +
->> +		shmem34: scmi-sram@d0022000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0022000 0x1000>;
->> +		};
->> +
->> +		shmem35: scmi-sram@d0023000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0023000 0x1000>;
->> +		};
->> +
->> +		shmem36: scmi-sram@d0024000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0024000 0x1000>;
->> +		};
->> +
->> +		shmem37: scmi-sram@d0025000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0025000 0x1000>;
->> +		};
->> +
->> +		shmem38: scmi-sram@d0026000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0026000 0x1000>;
->> +		};
->> +
->> +		shmem39: scmi-sram@d0027000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0027000 0x1000>;
->> +		};
->> +
->> +		shmem40: scmi-sram@d0028000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0028000 0x1000>;
->> +		};
->> +
->> +		shmem41: scmi-sram@d0029000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0029000 0x1000>;
->> +		};
->> +
->> +		shmem42: scmi-sram@d002a000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd002a000 0x1000>;
->> +		};
->> +
->> +		shmem43: scmi-sram@d002b000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd002b000 0x1000>;
->> +		};
->> +
->> +		shmem44: scmi-sram@d002c000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd002c000 0x1000>;
->> +		};
->> +
->> +		shmem45: scmi-sram@d002d000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd002d000 0x1000>;
->> +		};
->> +
->> +		shmem46: scmi-sram@d002e000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd002e000 0x1000>;
->> +		};
->> +
->> +		shmem47: scmi-sram@d002f000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd002f000 0x1000>;
->> +		};
->> +
->> +		shmem48: scmi-sram@d0030000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0030000 0x1000>;
->> +		};
->> +
->> +		shmem49: scmi-sram@d0031000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0031000 0x1000>;
->> +		};
->> +
->> +		shmem50: scmi-sram@d0032000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0032000 0x1000>;
->> +		};
->> +
->> +		shmem51: scmi-sram@d0033000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0033000 0x1000>;
->> +		};
->> +
->> +		shmem52: scmi-sram@d0034000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0034000 0x1000>;
->> +		};
->> +
->> +		shmem53: scmi-sram@d0035000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0035000 0x1000>;
->> +		};
->> +
->> +		shmem54: scmi-sram@d0036000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0036000 0x1000>;
->> +		};
->> +
->> +		shmem55: scmi-sram@d0037000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0037000 0x1000>;
->> +		};
->> +
->> +		shmem56: scmi-sram@d0038000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0038000 0x1000>;
->> +		};
->> +
->> +		shmem57: scmi-sram@d0039000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd0039000 0x1000>;
->> +		};
->> +
->> +		shmem58: scmi-sram@d003a000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd003a000 0x1000>;
->> +		};
->> +
->> +		shmem59: scmi-sram@d003b000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd003b000 0x1000>;
->> +		};
->> +
->> +		shmem60: scmi-sram@d003c000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd003c000 0x1000>;
->> +		};
->> +
->> +		shmem61: scmi-sram@d003d000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd003d000 0x1000>;
->> +		};
->> +
->> +		shmem62: scmi-sram@d003e000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd003e000 0x1000>;
->> +		};
->> +
->> +		shmem63: scmi-sram@d003f000 {
->> +			compatible = "arm,scmi-shmem";
->> +			reg = <0xd003f000 0x1000>;
->> +		};
->> +	};
->> +};
->> diff --git a/arch/arm64/boot/dts/qcom/sa8255p.dtsi b/arch/arm64/boot/dts/qcom/sa8255p.dtsi
->> new file mode 100644
->> index 000000000000..c354f76ffa5e
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/sa8255p.dtsi
->> @@ -0,0 +1,2405 @@
->> +// SPDX-License-Identifier: BSD-3-Clause
->> +/*
->> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
->> + */
->> +
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/mailbox/qcom-ipcc.h>
->> +
->> +/ {
->> +	interrupt-parent = <&intc>;
->> +
->> +	#address-cells = <2>;
->> +	#size-cells = <2>;
->> +
->> +	clocks {
->> +		xo_board_clk: xo-board-clk {
->> +			compatible = "fixed-clock";
->> +			#clock-cells = <0>;
->> +		};
->> +
->> +		sleep_clk: sleep-clk {
->> +			compatible = "fixed-clock";
->> +			#clock-cells = <0>;
->> +		};
->> +
->> +		gpll0_board_clk: gpll0-board-clk {
->> +			compatible = "fixed-clock";
->> +			#clock-cells = <0>;
->> +		};
->> +
->> +		bi_tcxo_div2: bi-tcxo-div2-clk {
->> +			compatible = "fixed-factor-clock";
->> +			clocks = <&xo_board_clk>;
->> +			clock-mult = <1>;
->> +			clock-div = <2>;
->> +			#clock-cells = <0>;
->> +		};
->> +	};
->> +
->> +	cpus {
->> +		#address-cells = <2>;
->> +		#size-cells = <0>;
->> +
->> +		CPU0: cpu@0 {
-> Lowercase label.
-ACK!
+> Gr{oetje,eeting}s,
 >
-> ...
+>                         Geert
 >
-> Best regards,
-> Krzysztof
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
 >
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
 
