@@ -1,85 +1,85 @@
-Return-Path: <linux-gpio+bounces-9319-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9320-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BF3D963661
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 01:46:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8325696389A
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 05:06:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5FF1F1C2417D
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Aug 2024 23:46:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 368511F21365
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 03:06:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 410FB1AED5E;
-	Wed, 28 Aug 2024 23:45:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E6D5487B0;
+	Thu, 29 Aug 2024 03:06:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZCX/3jN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/Q1ulfC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BF01AED32;
-	Wed, 28 Aug 2024 23:45:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08F14A00;
+	Thu, 29 Aug 2024 03:06:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724888704; cv=none; b=RR1XjOcdNRH3MAyRhRBvln0HHyJWLyRLDB/4effVWAwdhATv5OifABDRWaiJsJm9Wv7Bnr4G01OqNUGsSjcOF57JuV1E0yKEOVX68PN32/kQjPy9XOZZttVtCOQqiX+LzZOqycQQ1Dt8QkbAm6TAmiLrnfzgoOzKlu6vSeDHgL4=
+	t=1724900798; cv=none; b=sf5/RbMbEAq4afphrje0DjV1xL6neJ/edCrtfUhHDumiXLmb2ubfNY0ugH9hGcDfwq22Ng/BJJCE56y8Zo03rKOpsG5/paCTe/09/dSgtTiJldJ1KW1o68gv4LEcYH4FkUrB7Voy+YmNJfDT52RWe4EAJc7AeZiASvUMnCQmS10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724888704; c=relaxed/simple;
-	bh=p+NVSC09VElp6IeeUTBDhei3VSVsi3AmSB9mTtYrU4g=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=ZHBGqrIkhCp5qEsWRsyMk0qFi1p3vHwD8/gUiE5P++lWf5kBePkHQwOqMw9h/K2tHHkZdUvK0Z5N3UInQAUW2fnDuxIqi7XG5uctlFfyCaRCR3eRjMA9KIu3XFIZLBIunxkZeNUHVNV1/2hyv7oCqYaTtUdvTiNlS4nt3P56+jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZCX/3jN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 134ECC4CEDD;
-	Wed, 28 Aug 2024 23:45:02 +0000 (UTC)
+	s=arc-20240116; t=1724900798; c=relaxed/simple;
+	bh=V51tZLE6chfQqVtSs/q+YZUu4GgCPe8BR7V7YnYADVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UfYoLo7M3EX4TCGG9zmwA5UqtlNBm7C1bzYsPls3yJbvha7nkzFkN87Zr0IhxK0slDpwGwpRnFblr523h1+ZLwjAlbMvm2OGR+05TRQ6DG6P9XGx5+WrSb+x+8I1mNpX4PxAn2qlOY1xA4h18ud1g6lym2AfIV6bs5Iv27B5DT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/Q1ulfC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D383FC4CEC0;
+	Thu, 29 Aug 2024 03:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724888702;
-	bh=p+NVSC09VElp6IeeUTBDhei3VSVsi3AmSB9mTtYrU4g=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=lZCX/3jNphfc+xRxC8wxOc/dFdbYIGXQo9D6nvd6RaoiqEPw89g8pPboK3s7OJlvy
-	 0JWsz/BlF3jt8da0L0KTWRXOd1EYDwVqtWwONxI4sMmZISoOatLxPIy9ueUoSu7Tq4
-	 KodvT5t9xXs7aBMtHksOEvZp9EwACYNHIRdQ+PNznFS/kJ65I6PH3zNukMBQO0ApWC
-	 gxWdWc4Mj3lqDAO/TUxLsMoQn8VeT0l1Bs5W7XEPWhiLv0xmzg/Juj/gOBf6jgWBSr
-	 Upu9bj4PQkjm0eJIdW6qXJ9T/S+zkiqsmqoLdK/b7c2cGKWGLbRHcU9oYCYe2XMlvc
-	 TITiwCyD6ujbA==
-Date: Wed, 28 Aug 2024 18:45:00 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1724900798;
+	bh=V51tZLE6chfQqVtSs/q+YZUu4GgCPe8BR7V7YnYADVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R/Q1ulfCYH77cN7NSaau2Bh8FRTX9GiM6zpuXJyHVhlz36ylE4JGkY1vvHM/M8doH
+	 2xhGyM+JrkWwJxIg0ESf8zBZ8zwjzU4JqYrqXaM89W4snq7vvI4FnX3sahVYUJ5X7D
+	 e3dPFTPrLl1twrv+GJFSOFvVZX3hoWeDapI6iVZloGDmiGI1oYynZ8QCy+CueTORbE
+	 LA0S0zMHBwft8ZBLUq+OvBceA+WUjL9a1f1W/K8yppefR78l44xrGk6oqxDPvixm9i
+	 hwf1iMIpc0sOOyxK5jGSGUOUsu59YAIs2oqIf1VCxVSnfazxZ6fO3/CZkgNt0Ywj+h
+	 ZmKW3k90V8dHQ==
+Date: Wed, 28 Aug 2024 22:06:36 -0500
+From: Rob Herring <robh@kernel.org>
+To: Nikunj Kela <quic_nkela@quicinc.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, rafael@kernel.org, viresh.kumar@linaro.org,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	sudeep.holla@arm.com, andi.shyti@kernel.org, tglx@linutronix.de,
+	will@kernel.org, joro@8bytes.org, jassisinghbrar@gmail.com,
+	lee@kernel.org, linus.walleij@linaro.org, amitk@kernel.org,
+	thara.gopinath@gmail.com, broonie@kernel.org,
+	wim@linux-watchdog.org, linux@roeck-us.net, robin.murphy@arm.com,
+	cristian.marussi@arm.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+	vkoul@kernel.org, quic_gurus@quicinc.com, agross@kernel.org,
+	bartosz.golaszewski@linaro.org, quic_rjendra@quicinc.com,
+	robimarko@gmail.com, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	kernel@quicinc.com, quic_psodagud@quicinc.com,
+	quic_tsoni@quicinc.com, quic_shazhuss@quicinc.com,
+	Praveen Talari <quic_ptalari@quicinc.com>
+Subject: Re: [PATCH 18/22] dt-bindings: spi: document support for SA8255p
+Message-ID: <20240829030636.GA2208587-robh@kernel.org>
+References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
+ <20240828203721.2751904-19-quic_nkela@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Nikunj Kela <quic_nkela@quicinc.com>
-Cc: herbert@gondor.apana.org.au, linux-arm-msm@vger.kernel.org, 
- linux-serial@vger.kernel.org, Praveen Talari <quic_ptalari@quicinc.com>, 
- iommu@lists.linux.dev, wim@linux-watchdog.org, 
- bartosz.golaszewski@linaro.org, konradybcio@kernel.org, 
- andi.shyti@kernel.org, joro@8bytes.org, vkoul@kernel.org, agross@kernel.org, 
- linus.walleij@linaro.org, thara.gopinath@gmail.com, 
- linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org, 
- conor+dt@kernel.org, quic_rjendra@quicinc.com, linux@roeck-us.net, 
- quic_gurus@quicinc.com, rafael@kernel.org, 
- linux-arm-kernel@lists.infradead.org, quic_psodagud@quicinc.com, 
- quic_tsoni@quicinc.com, quic_shazhuss@quicinc.com, lukasz.luba@arm.com, 
- viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, 
- linux-crypto@vger.kernel.org, cristian.marussi@arm.com, 
- sudeep.holla@arm.com, jassisinghbrar@gmail.com, will@kernel.org, 
- robimarko@gmail.com, kernel@quicinc.com, amitk@kernel.org, 
- broonie@kernel.org, rui.zhang@intel.com, linux-i2c@vger.kernel.org, 
- lee@kernel.org, krzk+dt@kernel.org, davem@davemloft.net, 
- robin.murphy@arm.com, andersson@kernel.org, arm-scmi@vger.kernel.org, 
- tglx@linutronix.de, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20240828203721.2751904-19-quic_nkela@quicinc.com>
-References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
- <20240828203721.2751904-19-quic_nkela@quicinc.com>
-Message-Id: <172488869914.1836625.1695909794254781782.robh@kernel.org>
-Subject: Re: [PATCH 18/22] dt-bindings: spi: document support for SA8255p
 
-
-On Wed, 28 Aug 2024 13:37:17 -0700, Nikunj Kela wrote:
+On Wed, Aug 28, 2024 at 01:37:17PM -0700, Nikunj Kela wrote:
 > Add compatible representing spi support on SA8255p.
 > 
 > Clocks and interconnects are being configured in firmware VM
@@ -91,29 +91,138 @@ On Wed, 28 Aug 2024 13:37:17 -0700, Nikunj Kela wrote:
 >  .../bindings/spi/qcom,spi-geni-qcom.yaml      | 64 +++++++++++++++----
 >  1 file changed, 53 insertions(+), 11 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.yaml b/Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.yaml
+> index 2e20ca313ec1..74ea7c4f2451 100644
+> --- a/Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.yaml
+> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.yaml
+> @@ -25,10 +25,41 @@ description:
+>  
+>  allOf:
+>    - $ref: /schemas/spi/spi-controller.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: qcom,sa8255p-geni-spi
+> +    then:
+> +      required:
+> +        - power-domains
+> +        - power-domain-names
 
-My bot found errors running 'make dt_binding_check' on your patch:
+blank line
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.yaml:90:11: [error] string value is redundantly quoted with any quotes (quoted-strings)
+> +      properties:
+> +        power-domains:
+> +          minItems: 2
+> +          maxItems: 2
 
-dtschema/dtc warnings/errors:
+Drop maxItems as 2 is already the max (with my change below).
 
-doc reference errors (make refcheckdocs):
+Add blank line here.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240828203721.2751904-19-quic_nkela@quicinc.com
+> +    else:
+> +      required:
+> +        - clocks
+> +        - clock-names
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+blank line
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+> +      properties:
+> +        power-domains:
+> +          maxItems: 1
 
-pip3 install dtschema --upgrade
+blank line
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+> +        interconnects:
+> +          minItems: 2
+> +          maxItems: 3
 
+blank line
+
+> +        interconnect-names:
+> +          minItems: 2
+> +          items:
+> +            - const: qup-core
+> +            - const: qup-config
+> +            - const: qup-memory
+>  
+>  properties:
+>    compatible:
+> -    const: qcom,geni-spi
+> +    enum:
+> +      - qcom,geni-spi
+> +      - qcom,sa8255p-geni-spi
+>  
+>    clocks:
+>      maxItems: 1
+> @@ -45,15 +76,10 @@ properties:
+>        - const: rx
+>  
+>    interconnects:
+> -    minItems: 2
+> -    maxItems: 3
+> +    description: phandles of interconnect bw provider
+>  
+>    interconnect-names:
+> -    minItems: 2
+> -    items:
+> -      - const: qup-core
+> -      - const: qup-config
+> -      - const: qup-memory
+> +    description: names of interconnects
+
+No, keep all properties defined at the top-level and then add 
+constraints in if/then schemas.
+
+>  
+>    interrupts:
+>      maxItems: 1
+> @@ -61,15 +87,18 @@ properties:
+>    operating-points-v2: true
+>  
+>    power-domains:
+> -    maxItems: 1
+> +    $ref: "/schemas/power/power-domain.yaml#/properties/power-domains"
+
+Do you see an example of this anywhere else? No. You need:
+
+minItems: 1
+maxItems: 2
+
+> +
+> +  power-domain-names:
+> +    items:
+> +      - const: power
+> +      - const: perf
+>  
+>    reg:
+>      maxItems: 1
+>  
+>  required:
+>    - compatible
+> -  - clocks
+> -  - clock-names
+>    - interrupts
+>    - reg
+>  
+> @@ -116,3 +145,16 @@ examples:
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+>      };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    spi@888000 {
+> +        compatible = "qcom,sa8255p-geni-spi";
+> +        reg = <0x888000 0x4000>;
+> +        interrupts = <GIC_SPI 584 IRQ_TYPE_LEVEL_HIGH>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        power-domains = <&scmi10_pd 16>, <&scmi10_dvfs 16>;
+> +        power-domain-names = "power", "perf";
+> +    };
+> -- 
+> 2.34.1
+> 
 
