@@ -1,126 +1,123 @@
-Return-Path: <linux-gpio+bounces-9364-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9365-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 151E7964585
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 14:56:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5EE796459D
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 14:58:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6A758B29254
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 12:55:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78536286644
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Aug 2024 12:58:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09C6D1B1518;
-	Thu, 29 Aug 2024 12:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1416119309C;
+	Thu, 29 Aug 2024 12:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zwADjAuP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429D41AE861;
-	Thu, 29 Aug 2024 12:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6676518C35B;
+	Thu, 29 Aug 2024 12:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724935878; cv=none; b=bstQtF7+vCPkZbqTtctxZViXe53c2ndgYExDRuhSylYeY2hvEe0Mwitm8ZO9/Kom+uLOSl+N7vnw4Z9J3oom2xjYBOOKDXPAQmaWus8gDCIuBj9vjpWhphSbyNW824FI5RBxxAN7vG38ANk4BGlb60Uq832kOb7pzditf6QesXE=
+	t=1724936307; cv=none; b=B96uwu/ASG20eBsL0qDM3pqtuIP3vvy1o8VUmEKxXrAMos/O3rHDMe7SyLeiS4CWd7gZkYTkIl0j9jYXpEv88QmP7vxa34uGtcWB0aIO1x8enrEu+5rW0Bb6u+G1+JD92bv8s++obRndEEw1yd8BdoerSfaH9DHnKwPqLs+dimU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724935878; c=relaxed/simple;
-	bh=TdlstDs9GF3GW1CQLJxbDiBEfsNrmEYh+0rBE8YH438=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oX0Ji+s7kfc8bcAGTHZmBV0mJDRCGmiPCTeW5ilnvjpCPhLIYO5Si8KFE5JeWVyQbppwuqy1a37/xSfVkeljyDXxIDv2LkzQwgKva9zZTQVifpSi+dtTps0qFzhgd7HSzguAWNFCir+AbS7DdSLsyIJtCyDT4OwHjqqf0VxoPB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e1161ee54f7so695624276.2;
-        Thu, 29 Aug 2024 05:51:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724935876; x=1725540676;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6RaapfIZqaKH/yUWHMOaNDMRq75shGd+WNNlMTOiDx8=;
-        b=WJsOfhH9irmM0WHdIPjzeCumywOW8UWV988Ix0WHsP+ACICGt/89QciFNVlwmXYUfp
-         9DUFcUJzNwxfa7g6Gff6XBtZYFjsrJWBPv2ziBge9KEIfonm9LbWuWgEjHEZ2eYMIAVM
-         /oTkLH3uwIh+LpACcPC2Z6zaCKOiV53xJYaWuBxuKSXwJQ8QI1Qph+l/dt0BYGuJAXrr
-         0bUITNBjlzFTLgZpUQBLoaGcUq+o9S5nI30WXgaadOoxhdp1AFP3l612C+ILRlgDGRhJ
-         5Hyxt/SPlsoCPNc9BTFrfLSJXuJ2iUa/dVVoyJHYbIXbrDDiLlWHSmlwdXs4WdyR9ZQN
-         ah7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWidbVc7yL2yWu7pJK0J/cqJWtxNABTHap3x9aJnGFViLAzNkuOFlhYAjyS2QsijyNHVYSMhiCSNHrYD+bk@vger.kernel.org, AJvYcCXeLryRaq5ytcp9trLdFHalIU4E+w9ZRT9fRRUTdIRVvfe7Yew0lyjFIHQn5F/Uewji0nYQzffmNTq0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzlql2F65WvSFS2+M5+JKyhXQE6pE1qL/2f8lj5dg7ARcST+Nbv
-	cZRluZlltEBKm7b059ygOuDhQxKQ6E0TuEhipJpDl+ZEjE8BFqtnnaAz+JXf
-X-Google-Smtp-Source: AGHT+IESphWkmRnT6/H9x41PpF8+hRufS//3uA9QTn+VPZY2/qMrt1QLU6hy1TXnqsIvD2rvBmFw0A==
-X-Received: by 2002:a05:6902:1791:b0:e13:eba5:406d with SMTP id 3f1490d57ef6-e1a5ab58505mr2573707276.9.1724935875659;
-        Thu, 29 Aug 2024 05:51:15 -0700 (PDT)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6d2d5daebd6sm2271907b3.105.2024.08.29.05.51.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Aug 2024 05:51:15 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e1161ee54f7so695584276.2;
-        Thu, 29 Aug 2024 05:51:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV9N8kt0Zs0rbLRYLuXK3SUJTY/GokEdLrqhGinlmq9aeAxg/G+wy+/fBoc4yk0meIgG3jlKQC8keH/@vger.kernel.org, AJvYcCViND1QZNtHzcdFvSCfvBDszy8C8eua8blmZtD0xezVx/6e1NnbymV3/VJFQbaa+7Dfu/XC7dQOyPqKp3LW@vger.kernel.org
-X-Received: by 2002:a25:ed08:0:b0:e1a:43fb:12e6 with SMTP id
- 3f1490d57ef6-e1a5ae020famr2604026276.35.1724935874608; Thu, 29 Aug 2024
- 05:51:14 -0700 (PDT)
+	s=arc-20240116; t=1724936307; c=relaxed/simple;
+	bh=+PkUDybrY7h/5JAutPmUn6loGA2FCGqTdsMcANWYMlY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ptU3RRj8L40dkSQyyngy59CHv8rl2ybBfxDyELmFh9P17KEuAxG9PcQEvwW5Ok9QF19AQlL9ejIEXDcQS1kQzwGUMejgeh27GdBuXnFffrNpbCKeecIqPnXIrCkyTpLMyX0CXvRz7MJ4C1lTOdyH1lYqMmLo5sD9Z/4M+HC52xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=zwADjAuP; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=2DMaGcBrCtwhweR0eYxljcor73ra0w4g90JZuCsAVrU=; b=zwADjAuPKsULeSQNlxljgFSZUn
+	ft8C0DIQHCrrdse/KJcTUbRLPe7qqo1muAzpgqjwJ0+LKIcmPyTfVnRLoSdj2LsDQpmEah/jrS7S6
+	9McE3p9dLIAsu/yIZWxqRZZ+IQKWrdbIcKlfqZOwWWQ/QK4DaoRfSZE240bSyLRAH0Sk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sjejG-0062HZ-GT; Thu, 29 Aug 2024 14:58:22 +0200
+Date: Thu, 29 Aug 2024 14:58:22 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Wang Jianzheng <wangjianzheng@vivo.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	"moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel@lists.infradead.org>,
+	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	opensource.kernel@vivo.com
+Subject: Re: [PATCH 3/5] pinctrl: mvebu: Use devm_clk_get_enabled() helpers
+Message-ID: <3c446336-c1f6-499c-8fcd-4c49f5be863e@lunn.ch>
+References: <20240829064900.19909-1-wangjianzheng@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240822230104.707812-1-andy.shevchenko@gmail.com>
- <CAMuHMdW2W+RsnBWdvxJJ7wOKCyM_162Hb1Xkd6id4h_74fzQrw@mail.gmail.com> <CAHp75VfyPQGXT9ypp+SducvHwOgMpCm-rCXSrQ=9-MCH8b+ZLw@mail.gmail.com>
-In-Reply-To: <CAHp75VfyPQGXT9ypp+SducvHwOgMpCm-rCXSrQ=9-MCH8b+ZLw@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 29 Aug 2024 14:51:02 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX38O+TOhaK4_C5kh+11VwQTdnnSU=nhkSzdeJT=aMnxg@mail.gmail.com>
-Message-ID: <CAMuHMdX38O+TOhaK4_C5kh+11VwQTdnnSU=nhkSzdeJT=aMnxg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: renesas: rzg2l: Replace
- of_node_to_fwnode() with more suitable API
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	"Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240829064900.19909-1-wangjianzheng@vivo.com>
 
-Hi Andy,
+On Thu, Aug 29, 2024 at 02:48:59PM +0800, Wang Jianzheng wrote:
+> The devm_clk_get_enabled() helpers:
+>     - call devm_clk_get()
+>     - call clk_prepare_enable() and register what is needed in order to
+>      call clk_disable_unprepare() when needed, as a managed resource.
+> 
+> This simplifies the code and avoids the calls to clk_disable_unprepare().
+> 
+> Signed-off-by: Wang Jianzheng <wangjianzheng@vivo.com>
+> ---
+>  drivers/pinctrl/mvebu/pinctrl-dove.c | 45 +++++++++-------------------
+>  1 file changed, 14 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/mvebu/pinctrl-dove.c b/drivers/pinctrl/mvebu/pinctrl-dove.c
+> index dce601d99372..1c2a292ebbd9 100644
+> --- a/drivers/pinctrl/mvebu/pinctrl-dove.c
+> +++ b/drivers/pinctrl/mvebu/pinctrl-dove.c
+> @@ -767,7 +767,7 @@ static int dove_pinctrl_probe(struct platform_device *pdev)
+>  	struct resource fb_res;
+>  	struct mvebu_mpp_ctrl_data *mpp_data;
+>  	void __iomem *base;
+> -	int i, ret;
+> +	int i;
+>  
+>  	pdev->dev.platform_data = (void *)device_get_match_data(&pdev->dev);
+>  
+> @@ -775,25 +775,20 @@ static int dove_pinctrl_probe(struct platform_device *pdev)
+>  	 * General MPP Configuration Register is part of pdma registers.
+>  	 * grab clk to make sure it is ticking.
+>  	 */
+> -	clk = devm_clk_get(&pdev->dev, NULL);
+> +	clk = devm_clk_get_enabled(&pdev->dev, NULL);
+>  	if (IS_ERR(clk)) {
+>  		dev_err(&pdev->dev, "Unable to get pdma clock");
+>  		return PTR_ERR(clk);
+>  	}
+> -	clk_prepare_enable(clk);
+>  
+>  	base = devm_platform_get_and_ioremap_resource(pdev, 0, &mpp_res);
+> -	if (IS_ERR(base)) {
+> -		ret = PTR_ERR(base);
+> -		goto err_probe;
+> -	}
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
 
-On Fri, Aug 23, 2024 at 3:17=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Aug 23, 2024 at 10:23=E2=80=AFAM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > On Fri, Aug 23, 2024 at 1:01=E2=80=AFAM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > of_node_to_fwnode() is a IRQ domain specific implementation of
-> > > of_fwnode_handle(). Replace the former with more suitable API.
->
-> ...
->
-> > > -       girq->fwnode =3D of_node_to_fwnode(np);
-> > > +       girq->fwnode =3D dev_fwnode(pctrl->dev);
-> >
-> > While this looks correct, the new call goes through many more hoops, an=
-d
-> > is not a simple inline function.
+It appears that in patch 3 you add all these goto err_probe, and now
+you delete them?
 
-[...]
+Please reverse the order of these two patches!
 
-> P.S. Also note, it's _the only_ pin control driver that uses that API.
+    Andrew
 
-Thanks for the explanation!
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.12.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+---
+pw-bot: cr
 
