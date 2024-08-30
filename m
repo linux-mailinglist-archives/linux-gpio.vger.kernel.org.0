@@ -1,148 +1,121 @@
-Return-Path: <linux-gpio+bounces-9437-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9438-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB089965C5D
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 11:10:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA2BD965C68
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 11:12:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 876C1281B8F
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 09:10:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09C6B1C229F1
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 09:12:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7C3E176FA7;
-	Fri, 30 Aug 2024 09:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AYkMPE5K"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3D2216F0E3;
+	Fri, 30 Aug 2024 09:12:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B6817332B
-	for <linux-gpio@vger.kernel.org>; Fri, 30 Aug 2024 09:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA90116F0EF;
+	Fri, 30 Aug 2024 09:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725008970; cv=none; b=XaOk7fL6qMhT6AuWmVyn7bQJHj1SHhV2pTo0L5Nw/tDjDgIccAoFit56weuEcjCOrPPO0jJWM+FkDIoRMbcGcOSsDr+aXtK3bKWc4Dl71plSwd+s2xpVhm4/LncBlw7CmM6y5sujOQIo/wkwmeap1zRn4krXjI34VPMfkQ1lXOM=
+	t=1725009127; cv=none; b=CWMxcTEWM9fS/Tp+xk5TEinCs3K2ozqlmCkvKSi4Lifk9vla+R2IklDBTzcOR5YnuI6pZuIxztX3niQ5RJ6C3FgtFVcJL5VmBSDZ0HOdpWpUNuTTd613pj/8ikyMxh9nS/uoSbPUxz5VhuhajE8mAGHbXjm20Rg9eHHtV1jGWF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725008970; c=relaxed/simple;
-	bh=fFcbqZ/vIeJ4VTNjMGaw5nvoy7YsGVIv1hnF2lSSras=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qDuHHzFR2oBnvzcaIC1SHKVFkdn26P4mKfaIsIYa58OqR3zPawQsYh2sJ3MIiAgrP6+i37LXLIQbwkfr5VajegwWIPDZDXBf1U+OU2CMCSx8KFdwfqdX413Vl04KPI3tPAmTra4kaxGoHTt0i6Kl0mXtIODnqvv0yXp6cPYDxBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AYkMPE5K; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a86910caf9cso469881366b.1
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Aug 2024 02:09:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725008966; x=1725613766; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/jtniPcEEBTRKcAWG7MfiUPW0tfxRZJxn6QjSld5MsQ=;
-        b=AYkMPE5KEaYvHGbHDi/8jLYKwyexfJvnA+FLmM32SNiu1p9SVTnxG8vHc8wbUiWXTQ
-         F6ZQi6idVn3kz7jWa4hYbUsfmJwet+saW2FegsQ7pjEuB0K+2aitgD22TyvudrzQ4rmd
-         ANU1qmd49vJ5CrVKJyqe2oOH3qaOq+O0+ueHptnMTeOL5iWCbWK7MhVo2E1Kf3a9giBE
-         25llPWYcp0gTIAcdFdkuiab9O1j1ZsU7ojEH+x6szNSJQFWCO+zySL5Msd0fsx7FFy/e
-         xvwUmk60gJDC1PeFkCz2yhh0mO9lVtvTb5dvK5g1pVOZni/APjxN8blTLeUvtC1sUwq4
-         1amQ==
+	s=arc-20240116; t=1725009127; c=relaxed/simple;
+	bh=SL1tJCOx4Kzg4rA4j3RzxOS2+Zr0y6BBy1QlMpvCz5c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GlIVPC246Xy1poRVEfQVMH6ur0FBYD+LjhzwT58HtJXHAOcpgsDf+kv9NaRXdq/cMikF0GCfiTdBSfJ24lv4ebcUgfXcc+AUVF2GF7UqOscEDV50rvsVX7v0BTgliuYo8KyGNl1Y7ts7OHRJTu4klf7AmLGvaAWV0RcLTPLi0K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e04196b7603so1603950276.0;
+        Fri, 30 Aug 2024 02:12:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725008966; x=1725613766;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/jtniPcEEBTRKcAWG7MfiUPW0tfxRZJxn6QjSld5MsQ=;
-        b=kZmA32cDJZ8yiKt/bStyevl3K9yUjaAy4NXPRK4AEzwrQV1yMhMgUUew6tuCZ/8SbF
-         MuyMXGlaFINTHyzHQhriM1tlJv5lslGTtRcN0s6txZxdRA4KdO0ba6r1g5tU7XtVJ/Ji
-         1FbUavI2n7UWfPlWUkLPis9fE9KVZL5ULEAv+6MdkqDly1QYP0sgNs5/4wnht23b/NNo
-         Oj8rKw/2VrcdeNiMpHdhUwVSNLJN+TSOEJDY/Srkgk9gZ15qmZd9fDNDexTxGCMgBiLo
-         +ga7VGm4uKKv35KFJv4AwmOn7HznMRiSphSU62qGRbzhRwe5nJgvkFvq1rcHopotrp39
-         YTWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxSxqeqZQNcAWpbIieIHq4xn87Hii+x+y6x3tH8w8hDKZeMlNLQc3SdPyjYgZso/zEOaE7yGcmCh2K@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfJFWnoTyy0VbnU+bEuBJWl0mlhYdJOKD231lbxnY/HLBauarD
-	O/MVcnRBrb9kttCeobVC5a0D0iFuhSuQ0Z+qCr6SjRR+WjwEuHlnhQHBrjM9k1I=
-X-Google-Smtp-Source: AGHT+IHHiJzGies10GeD/T522u3rTjWbrbBrndvVaP8DwgXwoy/eAbJ2HNCrySNv/05wNTqDo8+X5A==
-X-Received: by 2002:a17:907:2d21:b0:a72:7a71:7f4f with SMTP id a640c23a62f3a-a89a249ca36mr173053966b.7.1725008965594;
-        Fri, 30 Aug 2024 02:09:25 -0700 (PDT)
-Received: from [127.0.0.2] ([2a02:2454:ff1f:b240:c7ae:74d2:e4c4:8f14])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a89891d698bsm194860366b.145.2024.08.30.02.09.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 02:09:25 -0700 (PDT)
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-Date: Fri, 30 Aug 2024 11:09:07 +0200
-Subject: [PATCH] pinctrl: qcom: x1e80100: Bypass PDC wakeup parent for now
+        d=1e100.net; s=20230601; t=1725009123; x=1725613923;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eIOH3LpzIVdDeYI/iq40E50sWmAPCzD6l+fBwO+s++I=;
+        b=PTTV43HJ+SjcAwHT51fAVcLJE6BqRMdWeuvc7Ws7XhuHKUvbMnHMqQmHirRWqOaRmL
+         qQdiXk68JoI9G7KZXTei4j8ZRzOZy3niHjCMCU4nzacJeJahT7DjRjTUfn2q7vIl1t1K
+         4/Vr1Y9tuPiUOKQ7IakvA8TB/s3cva+2asWBBx6DqEKfV4P6O1NByAEfS83xb1Vcz5QV
+         r6XN5iURmw5xL0rm0vZWj1gO243vCJ7kElq/XinJwkhj3jbTeWxrwn90XKcFgQ6RjjN8
+         FxT9yVbeMp2H8ZfhvXxK7z+UVomebsSHe4y5BDPRJASyoS2sz9BUzN/9EFgR7BdUg+SB
+         MjeA==
+X-Forwarded-Encrypted: i=1; AJvYcCUc4ttesvSfxeTSqwN+qZRQwbZlegkjL/dg6zv92hyQaj3l+aUkqHcpPYe5xcbzg81UDkkVywFzwJi650PNx/k+128=@vger.kernel.org, AJvYcCWGLQ3qFGyL+UIA+kTgfgPaIab/h7GLF1EAR23vy1jXzw4wuapnB3vNSQ76wDkOJflSKz2xXo4PUfFsraJB@vger.kernel.org, AJvYcCXLCfF7Cl9B4GhqL32R5hKVTai8Dw67l4ollt9AOdda2mNniBOMNdW78L3mFDhMWUPvhj4iA90tc+0H@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4kNuvK0sv9u5FWQWOPho1UmUZmB2ybTLBPW3eoetVHT8G/Rum
+	lT8bW0yvvnq35P5pGOmAYzwhr53zVoJGfxVmoDOigFPaXMr5i0plKdy60aXA
+X-Google-Smtp-Source: AGHT+IFPsEO39TB9UjXvXE3upePIjXddIvdtD9rJj3JQIjXtMuXt8TPPN4kMXlCIlwgZVMRoBHaxiQ==
+X-Received: by 2002:a05:6902:1028:b0:e1a:40da:f47f with SMTP id 3f1490d57ef6-e1a7a1a33d6mr2026016276.38.1725009123553;
+        Fri, 30 Aug 2024 02:12:03 -0700 (PDT)
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e1a62682f6bsm542768276.35.2024.08.30.02.12.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Aug 2024 02:12:03 -0700 (PDT)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6d3c10af2efso7019357b3.0;
+        Fri, 30 Aug 2024 02:12:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUQ5YGpc9O+26ZuQMDRIJfbw22PK2ITRHlv/feUvG9rTNCt82J8qwKV4rf+96o9lYJvhBC1bO3lbJ9/@vger.kernel.org, AJvYcCVOv6RyWUeYfiqPgxNwQlkaEIRhSp+cQZKDx5hgLPCqaKUJn1QBjQDN/5EHUl3nTeEXINYKoRb4S6HKMc06@vger.kernel.org, AJvYcCVc0qO8rFb3zbOmLJXk++R7CB7mOZ2199xm1KOgaUYKN8wrMkyG1rzNw5IY3SwUiQWMdYqXyyt5B7koOmZzPlE3XfA=@vger.kernel.org
+X-Received: by 2002:a05:690c:4e87:b0:6b0:5b97:8d82 with SMTP id
+ 00721157ae682-6d40e08615bmr10477197b3.18.1725009122767; Fri, 30 Aug 2024
+ 02:12:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240830-x1e80100-bypass-pdc-v1-1-d4c00be0c3e3@linaro.org>
-X-B4-Tracking: v=1; b=H4sIADKM0WYC/x3MPQqAMAxA4atIZgOpP1C9ijjUNtUsWhoQRby7x
- fEb3ntAOQsrjNUDmU9ROfYCU1fgN7evjBKKoaGmI9sSXoYtGSJc7uRUMQWP7eCsN477oYtQypQ
- 5yvVfp/l9Pz6rARdlAAAA
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Rajendra Nayak <quic_rjendra@quicinc.com>, 
- Maulik Shah <quic_mkshah@quicinc.com>, Sibi Sankar <quic_sibis@quicinc.com>, 
- Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan@kernel.org>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-X-Mailer: b4 0.13.0
+References: <20240829194841.84398-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240829194841.84398-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240829194841.84398-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 Aug 2024 11:11:51 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW3+ZUhwbX29zE_18mLn6tudKQ74rfcrvcLXzX2aZTC5Q@mail.gmail.com>
+Message-ID: <CAMuHMdW3+ZUhwbX29zE_18mLn6tudKQ74rfcrvcLXzX2aZTC5Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: renesas: rzg2l: Introduce single macro
+ for digital noise filter configuration
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On X1E80100, GPIO interrupts for wakeup-capable pins have been broken since
-the introduction of the pinctrl driver. This prevents keyboard and touchpad
-from working on most of the X1E laptops. So far we have worked around this
-by manually building a kernel with the "wakeup-parent" removed from the
-pinctrl node in the device tree, but we cannot expect all users to do that.
+On Thu, Aug 29, 2024 at 9:49=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Support for enabling the digital noise filter, and support for
+> configuring the noise filter stages (via the FILNUM register) and the
+> sampling interval (via the FILCLKSEL register) are related: a pin
+> supports either all or none of them. Hence simplify declaring digital
+> noise filter support for a pin by using a single feature flag instead of
+> three separate flags.
+>
+> This patch removes the PIN_CFG_FILNUM and PIN_CFG_FILCLKSEL configuration
+> macros and renames PIN_CFG_FILONOFF to PIN_CFG_NF.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v1->v2
+> - Updated commit description
+> - Collated RB tag
 
-Implement a similar workaround in the driver by clearing the wakeirq_map
-for X1E80100. This avoids using the PDC wakeup parent for all GPIOs
-and handles the interrupts directly in the pinctrl driver instead.
+Thanks, will queue in renesas-pinctrl for v6.12.
 
-The PDC driver needs additional changes to support X1E80100 properly.
-Adding a workaround separately first allows to land the necessary PDC
-changes through the normal release cycle, while still solving the more
-critical problem with keyboard and touchpad on the current stable kernel
-versions. Bypassing the PDC is enough for now, because we have not yet
-enabled the deep idle states where using the PDC becomes necessary.
+Gr{oetje,eeting}s,
 
-Cc: stable@vger.kernel.org
-Fixes: 05e4941d97ef ("pinctrl: qcom: Add X1E80100 pinctrl driver")
-Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
----
-Commenting out .wakeirq_map as well would give an unused declaration
-warning for x1e80100_pdc_map. The map itself is correct, so I just "clear"
-it by setting .nwakeirq_map to 0 for now. It's just temporary - this patch
-will be reverted after we add X1E80100 support to the PDC driver.
----
- drivers/pinctrl/qcom/pinctrl-x1e80100.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+                        Geert
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-x1e80100.c b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-index 65ed933f05ce..abfcdd3da9e8 100644
---- a/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-+++ b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-@@ -1839,7 +1839,9 @@ static const struct msm_pinctrl_soc_data x1e80100_pinctrl = {
- 	.ngroups = ARRAY_SIZE(x1e80100_groups),
- 	.ngpios = 239,
- 	.wakeirq_map = x1e80100_pdc_map,
--	.nwakeirq_map = ARRAY_SIZE(x1e80100_pdc_map),
-+	/* TODO: Enabling PDC currently breaks GPIO interrupts */
-+	.nwakeirq_map = 0,
-+	/* .nwakeirq_map = ARRAY_SIZE(x1e80100_pdc_map), */
- 	.egpio_func = 9,
- };
- 
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
----
-base-commit: 128f71fe014fc91efa1407ce549f94a9a9f1072c
-change-id: 20240830-x1e80100-bypass-pdc-39a8c1ae594f
-
-Best regards,
--- 
-Stephan Gerhold <stephan.gerhold@linaro.org>
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
