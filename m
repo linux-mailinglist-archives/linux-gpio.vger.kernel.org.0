@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-9451-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9452-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A3C8965FF0
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 13:04:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8ADC9660F6
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 13:46:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9F4C01C21113
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 11:04:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 731F71F260BF
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 11:46:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B68D3190684;
-	Fri, 30 Aug 2024 11:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CF3519882E;
+	Fri, 30 Aug 2024 11:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h4Pelg4O"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d51iEnvv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737241531CD;
-	Fri, 30 Aug 2024 11:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FBF16EB42;
+	Fri, 30 Aug 2024 11:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725015834; cv=none; b=eR4Q422NF3IOHYiS60qPEGIESMscRZvtw/7AL5iIKEoePFq/EWdRVNe46CTClMZ6WP4+UUynYwwFoihf6fqylKvh3PggJXzNNuC3fqa8ud5YrGZCN4bIG+O6RnhycPTUpm84XKjVr6OD8imDr9l2Q4SioDpD3Hc2omYG7CSl6bQ=
+	t=1725018401; cv=none; b=SscwgBYsfj+Atl5SybNxq2YXoo66Dh7zh5sL/aF+iv0RQ/KV3d59YgntY0eSjQtVbQhZFB4AMFSnlINhYq/fTRLym28ap7NptlFJUf4XZhIB9cARD9CsJUkxNPVZLzo15RWEYHpPicKZgcRhSPuLGzJi8sv8gAMNP+TV1/g9GTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725015834; c=relaxed/simple;
-	bh=usFsqN8rw6jJgzE3LoXO1ibr/w7v/sbbk6GzQgZo84s=;
+	s=arc-20240116; t=1725018401; c=relaxed/simple;
+	bh=s/VkjtgxTFQbSHfauzE7Qxke78j8kqoSK12Sz7gMxIc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UCe89kGG0KqSQb+61UF0X87w9r/wgPFT7raB4JjCOgbWOV12bgQd5Mp+x6PSqn3iYBxPViQJLJXwJjs1tCwP/AL+llY2Rdr0RWa9lZJXljaWiL89oHTpLjM+YTlKeESmQW7e4Ijy/NZrXNbgIbHi3xBSKxoJMwdurjMhx/jUzhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h4Pelg4O; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 729DBC4CEC2;
-	Fri, 30 Aug 2024 11:03:48 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Ua2etqO4icLLBAyH7x89Owo66vv/bSFQh1qxD8epR8ZIcTz55WvqtfUAZ6Szf1ofEeTqocVSYH9cusSFFqBGjU8olRr/b999jhIiEBQ1N9dvpYmI4WrYTALpg8Nk4e2qg+XdW36/aW2H7+mLq8gkAD1YXl7YpI/kkKS0a3B/SoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d51iEnvv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D2EC4CEC2;
+	Fri, 30 Aug 2024 11:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725015834;
-	bh=usFsqN8rw6jJgzE3LoXO1ibr/w7v/sbbk6GzQgZo84s=;
+	s=k20201202; t=1725018400;
+	bh=s/VkjtgxTFQbSHfauzE7Qxke78j8kqoSK12Sz7gMxIc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=h4Pelg4OuZmSA+H86fQvajI5AX/6qqQwKsU/N0SkPzu8x7Qv6XnYd0tO0fKZM8dtG
-	 5OqqQ7YrT00eEyzkCd8+8kGcK07XgHLnFEQozGB+RS56vrwWjTDLLrX2jJ5wGHiG/T
-	 6ZURzv67kaNMHHQ7RnWe+qlXsD40z1eQrTfqa7EtstMZyYRXqbE/9U7d5XQ+XTEAm0
-	 2uJSYRnDIS6MyYsd9k4RYh6K3U5x6sfXbKUM8nwnVKjB6BNK3dH6XGCNo/13wuEVcu
-	 wvfpJvIrCs6oTlOosRd29bpl11gPAkhkxpzaatMlsKuKQ0OPnr4nPvLexVSlFWqVkP
-	 u4p9trkLVAJmw==
-Message-ID: <09aa43d6-9e8c-4f6e-ab49-dc4a9571e832@kernel.org>
-Date: Fri, 30 Aug 2024 13:03:46 +0200
+	b=d51iEnvvrGvL2l/XtbY10HLhDXxltAWvPJGI9/8zf+/dDWUl2gS8+drLEMkMxP6ir
+	 llVe4NrANBzust24JIUFuDbS8TN2uNwx6zPlXZTNex61M8WO5cvjhuWwGtP9uiueEJ
+	 z71sxA2k1tPk1eDBkOGLafUMCV2Sr2zvEl0ojJTtwci8ue13IsCidsBZ53+qHiQsv1
+	 sCiZTZb3PUwsYtQDtyNSz8u1g8wL12LZWbJZVQHptF8jzqFcHFLTrdTh1bNZeO6F25
+	 WAvzi00b7FPwjXlmMfQaYZU5K4dk1pYXB/QGegjl80iGHDXaLX0qEWVuBQNf3rgkY2
+	 5CzfmklABTxnQ==
+Message-ID: <e05705c1-95dc-4d77-8a0d-8c2a785b0b05@kernel.org>
+Date: Fri, 30 Aug 2024 13:46:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,31 +50,35 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
- controller
-To: Conor Dooley <conor.dooley@microchip.com>,
- Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Christian Marangi <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
- Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
- Conor Dooley <conor@kernel.org>,
- Benjamin Larsson <benjamin.larsson@genexis.eu>,
- Linus Walleij <linus.walleij@linaro.org>,
+Subject: Re: [PATCH 02/11] dt-bindings: pinctrl: Add RaspberryPi RP1
+ gpio/pinctrl/pinmux bindings
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- upstream@airoha.com
-References: <66c8c50f.050a0220.d7871.f209@mx.google.com>
- <Zsj8bmBJhfUdH6qT@lore-desk> <20240826-kinsman-crunching-e3b75297088c@spud>
- <CAA2SeNJ2Gi+3Za+jvAVqqbx7xEGLqkDBkJ8vL=pA=ZbKWOfp=Q@mail.gmail.com>
- <CAL_JsqLBGwgX=PeCqP8+iFj6uvAO4O_dTvz7x1c+T1Kz+-q-QA@mail.gmail.com>
- <66ce1b04.df0a0220.a2131.6def@mx.google.com>
- <qro6jbupm27vvulymb4ckn7wm6qbvrvnydzjyd42metarlh2t2@hxdzvff4jdus>
- <66d187f1.050a0220.3213d8.ad53@mx.google.com>
- <2c9aafdd-000b-4e8f-b599-4f57e7eb0ca7@kernel.org>
- <ZtGlJBORZaFm_77K@lore-desk> <20240830-payphone-unexposed-75eed532c14d@wendy>
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org, Lee Jones <lee@kernel.org>,
+ Andrew Lunn <andrew@lunn.ch>, Stefan Wahren <wahrenst@gmx.net>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <82d57814075ed1bc76bf17bde124c5c83925ac59.1724159867.git.andrea.porta@suse.com>
+ <5zlaxts46utk66k2n2uxeqr6umppfasnqoxhwdzah44hcmyfnp@euwjda6zk5rh>
+ <ZtGdTjZPYtm3EGM0@apocalypse>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -120,97 +124,50 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240830-payphone-unexposed-75eed532c14d@wendy>
+In-Reply-To: <ZtGdTjZPYtm3EGM0@apocalypse>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/08/2024 13:01, Conor Dooley wrote:
-> On Fri, Aug 30, 2024 at 12:55:32PM +0200, Lorenzo Bianconi wrote:
->> [...]
->>
->>>>>>
->>>>>> Hi Rob, thanks a lot for the hint, I hope we can finally find a solution
->>>>>> on how to implement this.
->>>>>>
->>>>>> In Documentation the block is called GPIO Controller. As explained it does
->>>>>> expose pinctrl function AND pwm (with regs in the middle)
->>>>>>
->>>>>> Is this semplification really needed? It does pose some problem driver
->>>>>> wise (on where to put the driver, in what subsystem) and also on the
->>>>>
->>>>> Sorry, but no, dt-bindings do not affect the driver at all in such way.
->>>>> Nothing changes in your driver in such aspect, no dilemma where to put
->>>>> it (the same place as before).
->>>>>
->>>>
->>>> Ok, from the proposed node structure, is it problematic to move the
->>>> gpio-controller and -cells in the pinctrl node? And also the pwm-cells
->>>> to the pwm node?
->>>
->>> The move is just unnecessary and not neat. You design DTS based on your
->>> drivers architecture and this is exactly what we want to avoid.
->>>
->>>> This is similar to how it's done by broadcom GPIO MFD [1] that also
->>>
->>> There are 'reg' fields, which is the main problem here. I don't like
->>> that arguments because it entirely misses the discussions - about that
->>> binding or other bindings - happening prior to merge.
->>>
->>>> expose pinctrl and other device in the same register block as MFD
->>>> childs.
->>>>
->>>> This would be the final node block.
->>>>
->>>>                 mfd@1fbf0200 {
->>>>                         compatible = "airoha,en7581-gpio-mfd";
->>>>                         reg = <0x0 0x1fbf0200 0x0 0xc0>;
->>>>
->>>>                         interrupt-parent = <&gic>;
->>>>                         interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
->>>>
->>>>                         pio: pinctrl {
->>>>                                 compatible = "airoha,en7581-pinctrl";
->>>>
->>>>                                 gpio-controller;
->>>>                                 #gpio-cells = <2>;
->>>>
->>>>                                 interrupt-controller;
->>>>                                 #interrupt-cells = <2>;
->>>
->>> No resources here...
->>
->> ack. iiuc, all the properties will be in the parent node (mfd) and we will
->> have just the compatible strings in the child ones, right? Something like:
->>
->> 		mfd@1fbf0200 {
->> 			compatible = "airoha,en7581-gpio-mfd";
->> 			reg = <0x0 0x1fbf0200 0x0 0xc0>;
->> 			gpio-controller;
->> 			#gpio-cells = <2>;
->>
->> 			...
->> 			#pwm-cells = <3>;
->>
->> 			pio: pinctrl {
->> 				compatible = "airoha,en7581-pinctrl";
->> 			};
->>
->> 			pwm: pwm {
->> 				compatible = "airoha,en7581-pwm";
->> 			};
->> 		};
+On 30/08/2024 12:22, Andrea della Porta wrote:
+> Hi Krzysztof,
 > 
+
+...
+
+>>> +#define RP1_USBHOST0_AXIS_BASE 0x200000
+>>> +#define RP1_USBHOST1_AXIS_BASE 0x300000
+>>> +#define RP1_EXAC_BASE 0x400000
+>>> +
+>>> +/* Interrupts */
+>>> +
+>>> +#define RP1_INT_IO_BANK0 0
+>>> +#define RP1_INT_IO_BANK1 1
+>>
+>> Also no, interrupt numbers are not considered bindings. That's too much
+>> churn. Otherwise, please point me to driver code using the define
+>> (directly! that's the requirement).
 > 
-> Didn't Rob basically tell you how to do it earlier in the thread?
-> What you've got now makes no sense, the compatibles only exist in that
-> to probe drivers, which you can do from the mfd driver with
-> mfd_add_devices() or w/e that function is called.
+> As mentioned above, RP1_INT_END is used in rp1-pci.c. To get rid of all those
 
-Yep, we are making circles.
+Number of interrupts is not a binding, either. Does not appear in the DTS.
 
-I will repeat:
-"The move is just unnecessary and not neat. You design DTS based on your
-drivers architecture and this is exactly what we want to avoid."
+> macroes from dt-binding would mean to hardcode the interrupt number in both
+> the binding example and in dtso, from this:
+> 
+> interrupts = <RP1_INT_IO_BANK0 IRQ_TYPE_LEVEL_HIGH>,
+>              <RP1_INT_IO_BANK1 IRQ_TYPE_LEVEL_HIGH>,
+>              <RP1_INT_IO_BANK2 IRQ_TYPE_LEVEL_HIGH>;
+> 
+> to this:
+> 
+> interrupts = <0 IRQ_TYPE_LEVEL_HIGH>,
+> 	     <1 IRQ_TYPE_LEVEL_HIGH>,
+>              <2 IRQ_TYPE_LEVEL_HIGH>;
+> 
+> is this what you are proposing?
+
+Yes, just like every DTS does. I think the hard-coding of numbers is not
+a problem.
 
 Best regards,
 Krzysztof
