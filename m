@@ -1,225 +1,211 @@
-Return-Path: <linux-gpio+bounces-9448-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9449-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF5BD965F66
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 12:39:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DAB2965FAF
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 12:55:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F634284FF0
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 10:39:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 18FDC1F21BC1
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 10:55:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521FD18E76B;
-	Fri, 30 Aug 2024 10:38:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80A6218FC9D;
+	Fri, 30 Aug 2024 10:55:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="K1iU6M/I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qi3JE0Is"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC88C18E35B
-	for <linux-gpio@vger.kernel.org>; Fri, 30 Aug 2024 10:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD6917DFF3;
+	Fri, 30 Aug 2024 10:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725014339; cv=none; b=E8GnTb+oha3iGUxtvArNQAbpnCZ515hQ3IRqvUpjcBaArTIhZIzSQqVrYgXF+oGPtNeoVuDUNs0u3fOxFN2yJi5xuUtHazHPaQB3hc7vb0Cu9e6nk8000fEH8Pn0uvVrdiJgw6/mxI/UhyKWNZWkpjb4U8FOu0czsDEMPs8lwBo=
+	t=1725015335; cv=none; b=VN7yI9nSdGiJAG2qK7gDYuy1NaHdpmfQn1xRBY6FpF9xcLu2U1mov8EjHE3kVQwGnzPvyiBpogQ34+7YUk9BL5jn6qzOfZSScrfKBi6+ylQNW2E0EmgH/2aF2rQgUeOYuYJJuKNF25yhIr9csrGT2HoQm+XCoN0CuY2kNPDEAIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725014339; c=relaxed/simple;
-	bh=4G2JQeTl20rKQb1UIC8sygdnIRevvH3GCEN6TIr/r3g=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FQQ1S5WFDkGMVHTrigp4IL7WQz9xEWQD46lFclLV9C6B7FP5MW5VTSC6WrFbji/lRfsDUNl5TjqaGbdAJBI0cByqd5Rdfbcwcg7r+/pQyPxQ3RjiPtxL2lFDuUkMy6DAfN1mpWV3roG6D5QpJ3FGN0URKbH4AYAkJlRI7JJjrrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=K1iU6M/I; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a86cc0d10aaso190438866b.2
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Aug 2024 03:38:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1725014335; x=1725619135; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h5Au08vB5OeNxHqyShPMASavhrXq4vVsx5hzYBAmcP4=;
-        b=K1iU6M/I9+FzAxbZpsKnXAIvO3tBvl1i9x2TDGmPqowTJ8Vb/VbOQmTZ69MErb8ehy
-         by0KMbos4bIwAWnk4Cip4VHhToTxegmbae3na3DiN2GSPxqWrGOOlvIPC13KS2eooJRo
-         UEDVBUDuxW1Vdfxpu+q4941qHndwQn9QrhJx/CCrEHfA31qTtrSrboCJHdy2dZJeqEDD
-         +o8k5FDm0+lq0JCY8mprZobZBvaJHYzAAZYyridv8O1KvF7XNl5a8PUjHXWSb1VV/Boi
-         YMJB55hIoLjbdSMxLgb6X+nls04GLhuJx0db/PsS1m10rQEAHsBOdCQurA9feM0VA07x
-         3Ntw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725014335; x=1725619135;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h5Au08vB5OeNxHqyShPMASavhrXq4vVsx5hzYBAmcP4=;
-        b=GchsDbNryPn40JNEXzwV4rKFk4peT9c/iPT32Z0Pc+A/TvbWHqSRt8iCswzXMKnz1L
-         oxa/1y2frHuWQO0GHii8EFi7uqkX7/4I0Zqfugz6UNKT0lYCGWJY+uhQyqjGqHnY9rqi
-         uhKdpT/EPZw+GAFcQdgVg3wfybR1wdaHTY7qkYKat+lSDr9pmYU7m6H/2KfD/xCcp+zC
-         7IzItLlPCIHsvQ2Ne3ikKGNtaX5KjaMUIgP9eM+LLxgsTPwCA1G2AIAlJID0h5amy/4C
-         g92FrmrzMUWpH/Gw58ydfHqxqJwIxstGaFJPwhMvZRV2v8+ma606eISDa4Tms1ap3syV
-         HNsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2A5pM0aHn2Rk4qqNA629TMtu+H5GneSxFj93aeFKfdbLb9K3GDDo23bE80xXFo/Sw1RmUsxILuwwJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YymspOSFKowDNC9X7ridQ10EVjwA7YAsU1h0gd6fi+PtgCqNftG
-	vYfsrpJbK54BlKGRiRFpVGeXQCwZ5bjD10wc2rDi/1gFSzv9GDsM3r3yr2HU5fk=
-X-Google-Smtp-Source: AGHT+IGFX+JpOuBNkuiqWpwqqojLsjyd0c1q3uUvAXvmTXay18Cll/dJEuA1ST8QE4ynzxsCiSRyHw==
-X-Received: by 2002:a17:907:e8d:b0:a86:6e5e:620d with SMTP id a640c23a62f3a-a897f84d602mr429881266b.27.1725014334494;
-        Fri, 30 Aug 2024 03:38:54 -0700 (PDT)
-Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a89892220e5sm197540666b.195.2024.08.30.03.38.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 03:38:54 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Fri, 30 Aug 2024 12:39:00 +0200
+	s=arc-20240116; t=1725015335; c=relaxed/simple;
+	bh=WiGHYqQ3xuBvbimQ4RqLRQywBEUVEijfKbSvmrPedj4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QaWZ+7YRV1SxUh64u5WuO5QtkJk60OSqcdoApQ5CMjjnlMv2+CsiUZIxpYdX2QXZvBeiQjv8WH7Pnc6d5hbYinsWi8kH6e1Mrjagrc7c2k9UkjsNpPlGU9xs/MAv5wGb3BXhUZsBqm2kL7CYYvMa0epOX8qyrWzccVdt8e7Jav8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qi3JE0Is; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94486C4CEC2;
+	Fri, 30 Aug 2024 10:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725015335;
+	bh=WiGHYqQ3xuBvbimQ4RqLRQywBEUVEijfKbSvmrPedj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qi3JE0Is0KSULRu+fHNrtUz2DyqQgaeXzDIGycaqMRW3M7Y/EmT74mQyMS1sU87ye
+	 KGHIO83AP2PCPYyko+OIe6/mL6Etc4gb50kgEXVnW44Jlgm4tbn1buj1W8bzD/KSLD
+	 6GewoEWUoTFR+KOqysHF5g6WwYgbUjR+EBsMOFlbl98oe6ypzCBfVVm1F54opEwSRV
+	 UKvGLSTh1yj5MB40y7PBMKurc1+3ciV1yhYI+krxr6XAwidltjcF481DWyTFhk4J37
+	 Z22rXE0rcEep5BGKVYla/u3JntoVAz2YK/uEvvumgssZleJ7IBxFKGjOHeNUWluFxn
+	 fkbiwEMm4C+rQ==
+Date: Fri, 30 Aug 2024 12:55:32 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+Cc: Christian Marangi <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
+	Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+	Conor Dooley <conor@kernel.org>,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 07/11] pinctrl: rp1: Implement RaspberryPi RP1 gpio
- support
-Message-ID: <ZtGhRAnd0a_TFPEj@apocalypse>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <eb39a5f3cefff2a1240a18a255dac090af16f223.1724159867.git.andrea.porta@suse.com>
- <l4xijmtxz5i5kkkd5tt25ls33drnnhxp26r42lab5ev343e4zh@ctknkjzbpwqz>
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
+ controller
+Message-ID: <ZtGlJBORZaFm_77K@lore-desk>
+References: <20240823-darkened-cartload-d2621f33eab8@spud>
+ <66c8c50f.050a0220.d7871.f209@mx.google.com>
+ <Zsj8bmBJhfUdH6qT@lore-desk>
+ <20240826-kinsman-crunching-e3b75297088c@spud>
+ <CAA2SeNJ2Gi+3Za+jvAVqqbx7xEGLqkDBkJ8vL=pA=ZbKWOfp=Q@mail.gmail.com>
+ <CAL_JsqLBGwgX=PeCqP8+iFj6uvAO4O_dTvz7x1c+T1Kz+-q-QA@mail.gmail.com>
+ <66ce1b04.df0a0220.a2131.6def@mx.google.com>
+ <qro6jbupm27vvulymb4ckn7wm6qbvrvnydzjyd42metarlh2t2@hxdzvff4jdus>
+ <66d187f1.050a0220.3213d8.ad53@mx.google.com>
+ <2c9aafdd-000b-4e8f-b599-4f57e7eb0ca7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="IYN2kXd47Q+edkfX"
+Content-Disposition: inline
+In-Reply-To: <2c9aafdd-000b-4e8f-b599-4f57e7eb0ca7@kernel.org>
+
+
+--IYN2kXd47Q+edkfX
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <l4xijmtxz5i5kkkd5tt25ls33drnnhxp26r42lab5ev343e4zh@ctknkjzbpwqz>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
+[...]
 
-On 10:45 Wed 21 Aug     , Krzysztof Kozlowski wrote:
-> On Tue, Aug 20, 2024 at 04:36:09PM +0200, Andrea della Porta wrote:
-> > The RP1 is an MFD supporting a gpio controller and /pinmux/pinctrl.
-> > Add minimum support for the gpio only portion. The driver is in
-> > pinctrl folder since upcoming patches will add the pinmux/pinctrl
-> > support where the gpio part can be seen as an addition.
-> > 
-> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > ---
-> >  MAINTAINERS                   |   1 +
-> >  drivers/pinctrl/Kconfig       |  10 +
-> >  drivers/pinctrl/Makefile      |   1 +
-> >  drivers/pinctrl/pinctrl-rp1.c | 719 ++++++++++++++++++++++++++++++++++
-> >  4 files changed, 731 insertions(+)
-> >  create mode 100644 drivers/pinctrl/pinctrl-rp1.c
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 4ce7b049d67e..67f460c36ea1 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -19122,6 +19122,7 @@ S:	Maintained
-> >  F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
-> >  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
-> >  F:	drivers/clk/clk-rp1.c
-> > +F:	drivers/pinctrl/pinctrl-rp1.c
-> >  F:	include/dt-bindings/clock/rp1.h
-> >  F:	include/dt-bindings/misc/rp1.h
-> >  
-> > diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> > index 7e4f93a3bc7a..18bb1a8bd102 100644
-> > --- a/drivers/pinctrl/Kconfig
-> > +++ b/drivers/pinctrl/Kconfig
-> > @@ -565,6 +565,16 @@ config PINCTRL_MLXBF3
-> >  	  each pin. This driver can also be built as a module called
-> >  	  pinctrl-mlxbf3.
-> >  
-> > +config PINCTRL_RP1
-> > +	bool "Pinctrl driver for RP1"
-> > +	select PINMUX
-> > +	select PINCONF
-> > +	select GENERIC_PINCONF
-> > +	select GPIOLIB_IRQCHIP
-> > +	help
-> > +	  Enable the gpio and pinctrl/mux  driver for RaspberryPi RP1
-> > +	  multi function device. 
-> > +
-> >  source "drivers/pinctrl/actions/Kconfig"
-> >  source "drivers/pinctrl/aspeed/Kconfig"
-> >  source "drivers/pinctrl/bcm/Kconfig"
-> > diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-> > index cc809669405a..f1ca23b563f6 100644
-> > --- a/drivers/pinctrl/Makefile
-> > +++ b/drivers/pinctrl/Makefile
-> > @@ -45,6 +45,7 @@ obj-$(CONFIG_PINCTRL_PIC32)	+= pinctrl-pic32.o
-> >  obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
-> >  obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
-> >  obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
-> > +obj-$(CONFIG_PINCTRL_RP1)       += pinctrl-rp1.o
-> >  obj-$(CONFIG_PINCTRL_SCMI)	+= pinctrl-scmi.o
-> >  obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o
-> >  obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
-> > diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
-> > new file mode 100644
-> > index 000000000000..c035d2014505
-> > --- /dev/null
-> > +++ b/drivers/pinctrl/pinctrl-rp1.c
-> > @@ -0,0 +1,719 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Driver for Raspberry Pi RP1 GPIO unit
-> > + *
-> > + * Copyright (C) 2023 Raspberry Pi Ltd.
-> > + *
-> > + * This driver is inspired by:
-> > + * pinctrl-bcm2835.c, please see original file for copyright information
-> > + */
-> > +
-> > +#include <linux/bitmap.h>
-> > +#include <linux/bitops.h>
-> > +#include <linux/bug.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/device.h>
-> > +#include <linux/err.h>
-> > +#include <linux/gpio/driver.h>
-> > +#include <linux/io.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/irqdesc.h>
-> > +#include <linux/init.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/seq_file.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/types.h>
-> 
-> Half of these headers are not used. Drop them.
+> >>>
+> >>> Hi Rob, thanks a lot for the hint, I hope we can finally find a solut=
+ion
+> >>> on how to implement this.
+> >>>
+> >>> In Documentation the block is called GPIO Controller. As explained it=
+ does
+> >>> expose pinctrl function AND pwm (with regs in the middle)
+> >>>
+> >>> Is this semplification really needed? It does pose some problem driver
+> >>> wise (on where to put the driver, in what subsystem) and also on the
+> >>
+> >> Sorry, but no, dt-bindings do not affect the driver at all in such way.
+> >> Nothing changes in your driver in such aspect, no dilemma where to put
+> >> it (the same place as before).
+> >>
+> >=20
+> > Ok, from the proposed node structure, is it problematic to move the
+> > gpio-controller and -cells in the pinctrl node? And also the pwm-cells
+> > to the pwm node?
+>=20
+> The move is just unnecessary and not neat. You design DTS based on your
+> drivers architecture and this is exactly what we want to avoid.
+>=20
+> > This is similar to how it's done by broadcom GPIO MFD [1] that also
+>=20
+> There are 'reg' fields, which is the main problem here. I don't like
+> that arguments because it entirely misses the discussions - about that
+> binding or other bindings - happening prior to merge.
+>=20
+> > expose pinctrl and other device in the same register block as MFD
+> > childs.
+> >=20
+> > This would be the final node block.
+> >=20
+> >                 mfd@1fbf0200 {
+> >                         compatible =3D "airoha,en7581-gpio-mfd";
+> >                         reg =3D <0x0 0x1fbf0200 0x0 0xc0>;
+> >=20
+> >                         interrupt-parent =3D <&gic>;
+> >                         interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> >=20
+> >                         pio: pinctrl {
+> >                                 compatible =3D "airoha,en7581-pinctrl";
+> >=20
+> >                                 gpio-controller;
+> >                                 #gpio-cells =3D <2>;
+> >=20
+> >                                 interrupt-controller;
+> >                                 #interrupt-cells =3D <2>;
+>=20
+> No resources here...
 
-Ack.
+ack. iiuc, all the properties will be in the parent node (mfd) and we will
+have just the compatible strings in the child ones, right? Something like:
 
-Many thanks,
-Andrea
+		mfd@1fbf0200 {
+			compatible =3D "airoha,en7581-gpio-mfd";
+			reg =3D <0x0 0x1fbf0200 0x0 0xc0>;
+			gpio-controller;
+			#gpio-cells =3D <2>;
 
-> 
+			...
+			#pwm-cells =3D <3>;
+
+			pio: pinctrl {
+				compatible =3D "airoha,en7581-pinctrl";
+			};
+
+			pwm: pwm {
+				compatible =3D "airoha,en7581-pwm";
+			};
+		};
+
+>=20
+> >                         };
+> >=20
+> >                         pwm: pwm {
+> >                                 compatible =3D "airoha,en7581-pwm";
+> >=20
+> >                                 #pwm-cells =3D <3>;
+> >                                 status =3D "disabled";
+>=20
+> And why is it disabled? No external resources. There is no benefit of
+> this node.
+
+This is just a copy-paster error.
+
+Regards,
+Lorenzo
+
+>=20
+> >                         };
+> >                 };
+> >=20
+> > I also link the implementation of the MFD driver [2]
+> >=20
+> > [1] https://elixir.bootlin.com/linux/v6.10.7/source/Documentation/devic=
+etree/bindings/mfd/brcm,bcm6318-gpio-sysctl.yaml
+> > [2] https://github.com/Ansuel/linux/blob/airoha-mfd/drivers/mfd/airoha-=
+en7581-gpio-mfd.c
+>=20
+>=20
 > Best regards,
 > Krzysztof
-> 
+>=20
+
+--IYN2kXd47Q+edkfX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZtGlJAAKCRA6cBh0uS2t
+rFzQAP4mYUCwg1JRcirltoinC6e9pS7gd5QYY6CO37on5nvrvQEAnfzJf6uwCbLw
+wY4Eg/KVWSaHIB8anfeZPF6f9L4DyAc=
+=nxyD
+-----END PGP SIGNATURE-----
+
+--IYN2kXd47Q+edkfX--
 
