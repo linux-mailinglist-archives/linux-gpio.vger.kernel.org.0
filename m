@@ -1,34 +1,34 @@
-Return-Path: <linux-gpio+bounces-9457-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9458-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1FFA9663AB
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 16:05:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A8DD9663D3
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 16:11:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A8391F23556
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 14:05:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB9A0B22AAF
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 14:10:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 586ED1B250A;
-	Fri, 30 Aug 2024 14:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42C301B1D75;
+	Fri, 30 Aug 2024 14:10:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OfmCU11d"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="haLZ8908"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F281B2502;
-	Fri, 30 Aug 2024 14:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B2D1AF4F8;
+	Fri, 30 Aug 2024 14:10:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725026685; cv=none; b=leB59qOsssTVgJHkzBdPIs9QV4JyTPPHVQZlfsXfFncthZIizbrp8gXwqAxFd6KCyRowDIWWG5LGwMgikti1W6KmSHUnf6lCaPfXEw4jhhQFlA2i9ViwU6VN66R/dsP6SKphh7DlmxRzQ6PgfhXblqAUf0ZyiLtJY8SDYZlLhHc=
+	t=1725027051; cv=none; b=WwcKJFIlFpbA0CkPdQJVT9b5txmR78mpiaPQKCLnts7yMKAdIkeTYn+yrVSO8YNpk14/4bXrQXLQCHco+oA1c1KNAE/Uyjj2c5SI3Ebl5/9eSQc0V+VoMxv/CZdCMseSwG2wgeAIq+8KR/PODS2M8FF0wCJWceoubcUBbVN136I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725026685; c=relaxed/simple;
-	bh=6ffwwo51+lVZaUwGer0tCRr+QGiyxA9GE/Yb5IgrIfc=;
+	s=arc-20240116; t=1725027051; c=relaxed/simple;
+	bh=s4ofsPLllTgoEZz5zcK/aCOTMmpqFnd/GqJpSB5kJaM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PXt1iUT1ODymrrafayqeNU52MRRdC5flyZU5fWiSXDORjkNmSjmY+8EzifxGd5VmbN6MTWgFR9MZ+n8FrPMh/5NE8Ym1kZ7mf2DtYK/UALCY/dmi+NCUH5Xk1WpzZn3+bAQ8/riXCC3JINqjrsi2fk0xl1tE+wC59lnzxFddOBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=OfmCU11d; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ha1U3BLkzqNOteFXI8o33OYn6b4g5JwQZegN0RSUnYlebdj3Qd0/B63ZsQeeW/ST9ZQKDheAdwApGsZB1IljjAai7Du/zaOH0SQvKtZOXB5fnKKjrvtoaM+89IT/9aTfkMOdgwvKcr4+BZdUmJK3fJYSqmPvwfcEP1RTtoU1+/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=haLZ8908; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
@@ -36,25 +36,51 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=YUJm+EFsgiY7ytfWC61RaH14IYQ0/ggW0KsSeTobyXw=; b=OfmCU11dWNUN8T7f6MMs6RsTcn
-	MLBFQi4y9EAC3RiSO/A9I1fe4pqcRW+R79rIteI/LiVte4Wk0EIMaAqo4LokFivx84uh0cAKCYVeh
-	houdLFvUj1f6/eVu+3IC47USge877i74ujIkOdW2+RYwUGDylbkqQjSiAecNxzJ5fod8=;
+	bh=uDcaebjvS3BGJm2mNwOKtW7qt1HOm0LrXI8UJBsCjr4=; b=haLZ8908g6RDC+VOGOw83NdP89
+	CeMPQLDvAK1hacZ5Q+EEj1yIsZ0PaIMoSfgNYOvLOOaN27XdqMy1bcvmuVBG9AD3sycn7kPSdsGk0
+	RpiOOZLgoac+3bM3ztwfjZr04JbHp+Wh6jTzzcYEBpmYIy8VRneE9X7tOYOkBojC8bBU=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1sk2Ex-0068GT-CI; Fri, 30 Aug 2024 16:04:39 +0200
-Date: Fri, 30 Aug 2024 16:04:39 +0200
+	id 1sk2KZ-0068J6-EH; Fri, 30 Aug 2024 16:10:27 +0200
+Date: Fri, 30 Aug 2024 16:10:27 +0200
 From: Andrew Lunn <andrew@lunn.ch>
-To: =?utf-8?B?546L5bu65pS/?= <wangjianzheng@vivo.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	"moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel@lists.infradead.org>,
-	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"opensource.kernel" <opensource.kernel@vivo.com>
-Subject: Re: [PATCH 3/5] pinctrl: mvebu: Use devm_clk_get_enabled() helpers
-Message-ID: <2ec65238-2c91-4c87-bf77-de2c6f5ac2c7@lunn.ch>
-References: <KL1PR0601MB4211C193CD204C565F834BB9DE972@KL1PR0601MB4211.apcprd06.prod.outlook.com>
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 00/11] Add support for RaspberryPi RP1 PCI device using a
+ DT overlay
+Message-ID: <334b382a-c9ab-47e4-b860-b8477f04c3fb@lunn.ch>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <14990d25-40a2-46c0-bf94-25800f379a30@kernel.org>
+ <Zsb_ZeczWd-gQ5po@apocalypse>
+ <45a41ed9-2e42-4fd5-a1d5-35de93ce0512@lunn.ch>
+ <ZtBjMpMGtA4WfDij@apocalypse>
+ <e6e6c230-370f-4b04-8cb7-4158dd51efdc@lunn.ch>
+ <ZtFWyAX_7OR5yYDS@apocalypse>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -63,17 +89,24 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <KL1PR0601MB4211C193CD204C565F834BB9DE972@KL1PR0601MB4211.apcprd06.prod.outlook.com>
+In-Reply-To: <ZtFWyAX_7OR5yYDS@apocalypse>
 
-> Actually, I add "goto err_probe" in patch2/5 for fix the clock disable error. Based on that,
-> I delete them in patch3/5. Because I want to use devm_clk_get_enabled() instead of original
->  devm_clk_get(), and need to remove the disable clock operation. 
-> 
-> It seems that it is unable to reverse the order of thes two patches. How about combining 
-> These two patches into one? 
+> On a second thought, are you really sure we want to proceed with the header file?
+> After all the only line in it would be the extern declaration and the only one to
+> include it would be rp1-dev.c. Moreover, an header file would convey the false
+> premise that you can include it and use that symbol while in fact it should be
+> only used inside the driver.
+> OTOH, not creating that header file will continue to trigger the warning...
 
-You should not add code and then delete it. How you achieve that is up
-to you.
+The header file does not need to be in global scope. It could be in
+the driver source directory. As such, nothing outside of the driver
+can use it.
+
+Headers like this have multiple proposes. One is they make a symbol
+visible to the linker. But having two different .c files include the
+header enables type checking, which for long term maintenance is just
+as important. So a one line header is fine.
 
 	Andrew
+
 
