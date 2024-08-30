@@ -1,104 +1,79 @@
-Return-Path: <linux-gpio+bounces-9430-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9431-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 276369659D7
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 10:15:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD611965A35
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 10:24:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A6A61C2212B
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 08:15:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9AFC428B8CE
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 08:24:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF5E216B38B;
-	Fri, 30 Aug 2024 08:14:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E10D16C685;
+	Fri, 30 Aug 2024 08:24:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="EjcW/iXx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjnDETLW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8700C14BFB4;
-	Fri, 30 Aug 2024 08:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5B114D294;
+	Fri, 30 Aug 2024 08:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725005695; cv=none; b=mu9i4X1Twi1L7U1IPBwO1hMcngie7e083ThuZqxroTgPICuIvLEpvqzhnvABIkXwpdC21eyRoo+d42cjiWr44CdyEpVmMgBUbiZgD+HUvEGOkaPhLocIf+HWl1gregreKk2iqsj2sAueR/fIKmCbZi77JR7Tc3EDAXmuMgVwkps=
+	t=1725006263; cv=none; b=nWd53U+60B7f7jWzJ/4klD/x0eMsyTIC9Gb4SaT1ytITKLtyY9mjRJrumXmglPrLBQACHYY7EIvO7wVHo9ue2ZVlj6NryMAJc2yk0KxKYYNeJCtSbfr/1uTnwL8RhmZWYewuTum8m/7q06OLs4sBCFwNX87WUNeoCyOmTd3q1G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725005695; c=relaxed/simple;
-	bh=u3vaPi4med1O6USTp2YrdKvfHtJkdmZmS0MxlUz8BQs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uorCqdyyYYIHndsMUPmMcPiSu3VRxsbKTCTHYoyMlGne3j+XqeCKPb8PY0VGBhJINssRYyGVBNSR0zyCjzplN8PGGc42S/3Y3zEbmbA/Dh8JL7K/CjMK1bseOctElxOGixnAo4smMfwsJerQXUoxHOry2+DCPDobqc5u9jm1JgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=EjcW/iXx; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47U4TA83006885;
-	Fri, 30 Aug 2024 03:14:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=PODMain02222019; bh=HE+ZHb5Werdu1CGONZ
-	mh99lXU9j25qKzD92evBFq5yY=; b=EjcW/iXxiuxK/taLJbTEnNk82KepZd/23m
-	CHzoWIoztwKqrllTW22ZjnTbn3y3b3Nnkp6aSIGrmhkmBpFFgHhwoha+qzclLF1d
-	Q+dskL0rK9aNZXvi27Dw+i3Nrw7p7h+Iq1tsgCCVfKteBSqw153rk41oysm8ULpg
-	8vp6SSY5JVO59S1gjcKSlcneO5KQBXgIPIaU9UKTX5JAbgEktQzj7lakd3us/oNY
-	osZ+5Llesfly6StiSWjO/fpxx0mVLcqOD+6PY+OyqXWRexBEd5mYtHvdvyQlVfRZ
-	9XMPKJXxd/ShoHtuZxO+hJoma8bqUraXtHATBMb8xa87lvQQoi9A==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 419puw3eta-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 Aug 2024 03:14:51 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 30 Aug
- 2024 09:14:49 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Fri, 30 Aug 2024 09:14:49 +0100
-Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 745D0820249;
-	Fri, 30 Aug 2024 08:14:49 +0000 (UTC)
-Date: Fri, 30 Aug 2024 09:14:48 +0100
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Yan Zhen <yanzhen@vivo.com>
-CC: <rf@opensource.cirrus.com>, <linus.walleij@linaro.org>,
-        <linux-sound@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <opensource.kernel@vivo.com>
-Subject: Re: [PATCH v2] pinctrl: Simplify with dev_err_probe()
-Message-ID: <ZtF/eGlQXPjaeBRa@opensource.cirrus.com>
-References: <20240829044835.2047794-1-yanzhen@vivo.com>
+	s=arc-20240116; t=1725006263; c=relaxed/simple;
+	bh=2tR2hRQ1rYChuVlupkc+56arNudu9Oi8Rf0EuNIq87E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Pwk1JvZEGnoPU28ZS5F+v5jTaADlrJXvbQtSc4Wm3KNVE+JZQeJFMLmbCPxM7nwq68n03zkuCyxawbdl0RXPIjyIEI0gCoMoF0IkGDQpTflTDpPE9I1sqEiYJJ9sxOLp41CyNNUtie+s76ZoC3nbycLobeztznIwMyl5TTg2zp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjnDETLW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9697EC4CEC2;
+	Fri, 30 Aug 2024 08:24:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725006262;
+	bh=2tR2hRQ1rYChuVlupkc+56arNudu9Oi8Rf0EuNIq87E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=QjnDETLWpLZXqCOaY0PTfKYzUTjf0S/WCjJ+24pvcV2pOXSaOMQqYXTjRiVpXRjUd
+	 dflF9AcXoJrXxBVRs2ojyVuvHr7efs27Hd2AGWkncR6zW8+GbjtK+mV1upJf6O0KEd
+	 IaDl4O32tmXGz5zMIdRI6dncE3w1N0l5aTbnrS1uM8OAXVx6VG3qT0G21fbW1ra1bw
+	 kSw5DCFqIC62VyG2QBxsCEaV0lXCxFpGht/bqSZtBBgoEaZ+HvkdUt3UrIKMDeHe+3
+	 lMDMLdAF8boF6t4F/daeaN0jJSckP72nzJbZjUCq1DkyWKxxZjUqD6ecKtS0evGstV
+	 DKFY50zVLaKhA==
+From: Lee Jones <lee@kernel.org>
+To: laurent.pinchart@ideasonboard.com, lee@kernel.org, robh@kernel.org, 
+ krzk+dt@kernel.org, conor+dt@kernel.org, haibo.chen@nxp.com
+Cc: linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev
+In-Reply-To: <20240828030405.2851611-1-haibo.chen@nxp.com>
+References: <20240828030405.2851611-1-haibo.chen@nxp.com>
+Subject: Re: (subset) [PATCH v2] dt-bindings: mfd: adp5585: Add parsing of
+ hogs
+Message-Id: <172500626034.92906.922008422255613833.b4-ty@kernel.org>
+Date: Fri, 30 Aug 2024 09:24:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240829044835.2047794-1-yanzhen@vivo.com>
-X-Proofpoint-GUID: _xd2txAgVOr1pnyGXCyo_Wd4DjzgxFyl
-X-Proofpoint-ORIG-GUID: _xd2txAgVOr1pnyGXCyo_Wd4DjzgxFyl
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-On Thu, Aug 29, 2024 at 12:48:35PM +0800, Yan Zhen wrote:
-> Switch to use dev_err_probe() to simplify the error path and
-> unify a message template.
-> 
-> Using this helper is totally fine even if err is known to never
-> be -EPROBE_DEFER.
-> 
-> The benefit compared to a normal dev_err() is the standardized format
-> of the error code, it being emitted symbolically and the fact that
-> the error code is returned which allows more compact error paths. 
+On Wed, 28 Aug 2024 11:04:05 +0800, haibo.chen@nxp.com wrote:
+> Allow parsing GPIO controller children nodes with GPIO hogs.
 > 
 > 
-> Signed-off-by: Yan Zhen <yanzhen@vivo.com>
-> ---
 
-Subject line really should be pinctrl: madera:, but otherwise:
+Applied, thanks!
 
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+[1/1] dt-bindings: mfd: adp5585: Add parsing of hogs
+      commit: c9530dd31470c071b364801c90466a5c15942c25
 
-Thanks,
-Charles
+--
+Lee Jones [李琼斯]
+
 
