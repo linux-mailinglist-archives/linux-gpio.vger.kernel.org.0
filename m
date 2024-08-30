@@ -1,163 +1,173 @@
-Return-Path: <linux-gpio+bounces-9422-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9423-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3835E9656D4
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 07:21:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 283BD965727
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 07:56:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8B1F1F24B5C
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 05:21:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56D331C22AB9
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 05:56:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74C2C14E2E9;
-	Fri, 30 Aug 2024 05:21:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B6E14B061;
+	Fri, 30 Aug 2024 05:56:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GsFkRnyD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTbGKm/h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46787374D1
-	for <linux-gpio@vger.kernel.org>; Fri, 30 Aug 2024 05:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA1422615;
+	Fri, 30 Aug 2024 05:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724995270; cv=none; b=W31Z5Y9zej2wHl5Ae53ehPMLdFjTzdxyBSCPaecPDv9dLzrHiAXX+4kqYcQ0g3Q5cDt56Wx5r6A4fZTy6quI7kvt6ELjyQfwXp79iiVDRY713W6Ud+RUSY7Km0wIQXngTmXBB43H4FWMYLy5d4AE2MstYB7hJPKeKJHb7tBB0SU=
+	t=1724997376; cv=none; b=kSfRoqJWgY3WY8/1HsDhl6umX8nbLPyIrj796YpWa3mQPRYUc1ymeHawJb4GKJraiONeAaug6TY+7hDwkzKSykIATmglbrzuFeb9uvMztAVFgYpEBak8XNWaNG+WYKz4qg4V+bvs8K2pQGhENqPKtvnAv60489SkFbVvkMG50dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724995270; c=relaxed/simple;
-	bh=jtf7PV5qM5aW2ZTufnYu/xPa7oOq40+0/uQGqTwb61k=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OFFhU0xJZRV4eCgHEThZyeENKue6fv+0Rre73WCSG/E78T5cdIoKQaqy+ucncfxmTo1Md798OZPbEBdZWfQzKWCvT/yG4uMh2L3jRCst21JoKKo7oiXHK0AGXrnUbRYhZ2mWNmDH3RrQFa23AEYS2MKV4fNwu46GDOvfUdHBR+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GsFkRnyD; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a86a37208b2so166997766b.0
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Aug 2024 22:21:08 -0700 (PDT)
+	s=arc-20240116; t=1724997376; c=relaxed/simple;
+	bh=cyUGBPH6jtevEUyJoznq85ftO2ISltRLuMtmf7myHkM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GUDcJqY+dx5uhExDTGx+2x27iEk+WtmlIEVeDGb91+96qJGfXSIP30CLP5G2PxK/Q3OdNf74Ab3jc0TtJZ2dV8f2ESXjN+B9e5+lsnUhXNw/sMEVFR+hliLZ15VehpMVG2/FFXzmKNBzL3/ks/jUuN0XIF0RRdJ3hBRVg0f6zco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YTbGKm/h; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a7a81bd549eso142767666b.3;
+        Thu, 29 Aug 2024 22:56:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1724995267; x=1725600067; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GExFSIDcR+m296qL0+T8lfbyMBHXGvoOKDeyXebihgs=;
-        b=GsFkRnyDx48N26VCklfdB2GSObBJ3t8yj/CrliklVlkfQn3wrBQGaceW/ki3DjbDcx
-         1A3SybfgZCfcPvhsmS37VUfaCM3IXhnu9xeLOSbPRek9Y3wiv1/Q7Zomq95opPya7Uzo
-         0Zh2qm1famEmU79YhHqopS24/5GvaxxjrTk3cNsN1S9ZLIJkdCKo5dMgfL1OgAbUNXnn
-         LqGDntT2J7eVsAiBd1mP6ZWrSKUdbakMlSganQZbjRZjS2M1+WXhEIAi3MZBhp5nl3vW
-         wO8JZ9JlJ38w1TEGMjk53Tjkiv31euGaL2Nuuzv9NjbTCzOsu/RMJOo/4/8fuq1B4rno
-         ouBQ==
+        d=gmail.com; s=20230601; t=1724997373; x=1725602173; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=dmaK9yXGDkfaaoKQC0QquO3O2dAxsqNTqltc0sGWtbA=;
+        b=YTbGKm/hbJN7qnekdmP4ty22iQjRJpRdrVGMD6c9enwlgzKIYREXqIgEB+0F3PEihM
+         q0tYrQAseZZRMfGJd2ysO8PpzAJFrFk/FYY/vtTcbn71f0nOjvoik8Y4TlSBxlDXWZha
+         oBbxhE/3h49H+S+WthBx0FRHM9UUK+M5WczH+ZBc41/Bls/GdQhXDLgDyiz2s+Jyl94Q
+         1CYAm91fzRfJaXCBj65OIMQ/68zBnEayUvzLWF48bNsbQT9byWzTAhwshg5iHO6EBIE2
+         rQjwN+wH0jz/ih2bnKjTTQWI98lkWdBc5JYBOwOOYrzoVJtx48ByeCwro1Tqsyv0bxwl
+         Nt8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724995267; x=1725600067;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1724997373; x=1725602173;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GExFSIDcR+m296qL0+T8lfbyMBHXGvoOKDeyXebihgs=;
-        b=H7m4sUCEHt55DCYSlr/BtLNI4GtyOM/w1xVf3ef8v9glE0E8hyrxmPGLXx5rVQRG5p
-         u3sKsieVTah++NKdQnBiaQOI1Ih+kxlD+k8jbsZwtp446gYLkxaOjDjQtWflVDYjaNMT
-         K/Je09hF7Q9btHJmCiU1eu057u5rZmCcuGSkDX3GXdKfdWVMbv5UlyxEBHD6LbPLWMEP
-         y7uJVPmGgz3Zt9RbkfyJDLpleEymIT7dRW9S++eUSBc/kkQ0KX/1lt2ML9bljEApTRWW
-         kSVU3BbA6Ft3whlZxjwfKcislRU7lOFcYMUNo7IjEbkP8roEbi3b5C7dPxrn9TP2R7uz
-         GKsg==
-X-Forwarded-Encrypted: i=1; AJvYcCXWoDMVcKHiAOp5QeJoItnI6gDG8m6coKp9E1rGZX3bjLquNzak++MPuCLdpTIwEkOJeLuHLkqvZQ0O@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfQuRo78AdR36ZSr7fyj2/7SiS/Llr2REibZWI4Ir9NiYEXFzC
-	vzDvpPp3Ij2tcvuGzyTSh2yTuRm2KXiX4Hhgiwe/Dw2M8v/Xtu69HeKs1YQfkXs=
-X-Google-Smtp-Source: AGHT+IF7+hVzizb5h2RAOKpmPeEAucZHJJ8SE3J6cbyAO0CAecmSuqQGdIsglF6MfVFAtKQonNztKg==
-X-Received: by 2002:a17:907:7da8:b0:a86:8b7b:7880 with SMTP id a640c23a62f3a-a897fad50fdmr358086866b.63.1724995265995;
-        Thu, 29 Aug 2024 22:21:05 -0700 (PDT)
-Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8988ff4233sm166746966b.25.2024.08.29.22.21.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 22:21:05 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Fri, 30 Aug 2024 07:21:12 +0200
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 00/11] Add support for RaspberryPi RP1 PCI device using a
- DT overlay
-Message-ID: <ZtFWyAX_7OR5yYDS@apocalypse>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <14990d25-40a2-46c0-bf94-25800f379a30@kernel.org>
- <Zsb_ZeczWd-gQ5po@apocalypse>
- <45a41ed9-2e42-4fd5-a1d5-35de93ce0512@lunn.ch>
- <ZtBjMpMGtA4WfDij@apocalypse>
- <e6e6c230-370f-4b04-8cb7-4158dd51efdc@lunn.ch>
+        bh=dmaK9yXGDkfaaoKQC0QquO3O2dAxsqNTqltc0sGWtbA=;
+        b=hp7AdJoCH9eQuB2F0uwGMAZsmaCNz3hE4C7o/+opiClm+ri5zthbHD+dlulPdSgPuU
+         ZYspHBDegugxuyEyLvVRexBn/kzsuxDYOcrYVN36SKDIEEoeS9g980YzfKnGMOu0BqCs
+         I5O0662bfSQb87udBNdU4nZZ6MWgS6yZsQbk/H9q5oaOX6GNtGTKa3u2D1+lTAH9h7+e
+         uaQrYeOH2SDg6mdZO3VvooC7Sb3do03byOlDDM2V55zLqEkuH3nTWTtXpFMqaDMhCcWh
+         DCA/QXdqL7OCsZhofFNIsgLKlqG8wyAtnelT4YOWtBeZY+AxfSFtzUA4LzqonBI670e5
+         1Myg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHbKh0N5vpP6WjtUy0+Zly/e8NVxkwKOI89/s0cZxt2/Af5Fpub+vYxZywXHW4DddpESjxOti1hVSaJDYY@vger.kernel.org, AJvYcCWRhvWloCPbgFhgsyeLRCC9gSodCSlLZB49ASvZzbg7ddSKjdSMdjPSFHdDqZviAOqPxH+vJYqBCqda@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbRRPQxJYmuyKafsyA6ygVLf4U7nd2wmDGS24Obd0ZAPwJBxJu
+	uoRz0MfsFt21ToWFYiztdxvQNbciW87S0uQVCYTUWHCZQwu4GFuT
+X-Google-Smtp-Source: AGHT+IHsULRYo9z1QH/4NddIBdvBMbhvn5uaP3O5ds2dgND2gDpY2sp9hvDc1u8QCplg2dXc3rihbA==
+X-Received: by 2002:a17:907:3fa7:b0:a86:b00a:7a27 with SMTP id a640c23a62f3a-a897fad07f9mr360474066b.60.1724997372587;
+        Thu, 29 Aug 2024 22:56:12 -0700 (PDT)
+Received: from ?IPV6:2a01:c23:c577:dc00:45fe:38ba:a095:abab? (dynamic-2a01-0c23-c577-dc00-45fe-38ba-a095-abab.c23.pool.telefonica.de. [2a01:c23:c577:dc00:45fe:38ba:a095:abab])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a8988ff0465sm170202766b.29.2024.08.29.22.56.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Aug 2024 22:56:12 -0700 (PDT)
+Message-ID: <974bbb25-3b27-4f53-be35-4bfda17b8c7e@gmail.com>
+Date: Fri, 30 Aug 2024 07:56:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6e6c230-370f-4b04-8cb7-4158dd51efdc@lunn.ch>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/5] pinctrl: intel: High impedance impl. and cleanups
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>
+References: <20240828184018.3097386-1-andriy.shevchenko@linux.intel.com>
+ <Zs-B9m4jO9x3wX4d@smile.fi.intel.com>
+Content-Language: en-US
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+In-Reply-To: <Zs-B9m4jO9x3wX4d@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Andrew,
+On 28.08.2024 22:00, Andy Shevchenko wrote:
+> +Cc: Heiner
+> 
+> On Wed, Aug 28, 2024 at 09:38:33PM +0300, Andy Shevchenko wrote:
+>> We would need a high impedance implementation for a quirk, so here it
+>> is. While doing this series I also noticed a couple of opportunities
+>> to clean up, hence two more patches (1st and 5th).
+> 
+> Sorry it took a while to actually start implementing the quirk for your case.
+> Here I'm asking for the following things:
+> 
+> 1) what is the marketing name of the device you have problems with?
+> (I believe it's available on the free market, correct?);
+> 
 
-On 15:04 Thu 29 Aug     , Andrew Lunn wrote:
-> > > > WARNING: externs should be avoided in .c files
-> > > > #331: FILE: drivers/misc/rp1/rp1-pci.c:58:
-> > > > +extern char __dtbo_rp1_pci_begin[];
-> > > > 
-> > > > True, but in this case we don't have a symbol that should be exported to other
-> > > > translation units, it just needs to be referenced inside the driver and
-> > > > consumed locally. Hence it would be better to place the extern in .c file.
-> > >  
-> > > Did you try making it static.
-> > 
-> > The dtso is compiled into an obj and linked with the driver which is in
-> > a different transaltion unit. I'm not aware on other ways to include that
-> > symbol without declaring it extern (the exception being some hackery 
-> > trick that compile the dtso into a .c file to be included into the driver
-> > main source file). 
-> > Or probably I'm not seeing what you are proposing, could you please elaborate
-> > on that?
-> 
-> Sorry, i jumped to the wrong conclusion. Often it is missing static
-> keyword which causes warnings. However, you say it needs to be global
-> scope.
-> 
-> Reading the warning again:
-> 
-> > > > WARNING: externs should be avoided in .c files
-> 
-> It is wanting you to put it in a .h file, which then gets
-> included by the two users.
+Device is a dirt-cheap mini pc, marketed as Chatreey T9. It's available
+on the free market, right. Dmesg says:
+DMI: Default string Default string/Default string, BIOS ADLN.M6.SODIMM.ZB.CY.015 08/08/2023
 
-On a second thought, are you really sure we want to proceed with the header file?
-After all the only line in it would be the extern declaration and the only one to
-include it would be rp1-dev.c. Moreover, an header file would convey the false
-premise that you can include it and use that symbol while in fact it should be
-only used inside the driver.
-OTOH, not creating that header file will continue to trigger the warning...
-
-Many thanks,
-Andrea
-
+> 2) does it have any BIOS updates and, if it has, does it fix the issue?
 > 
-> 	Andrew
+No BIOS updates.
+
+> 3) can you apply patches 2,3,4,5 from this series (the first one is buggy and
+> not needed for you) and replace the hack I mentioned earlier with
+> 
+> 	ret = intel_gpio_set_high_impedance(pctrl, 3);
+> 	if (ret)
+> 		return ret;
+> 
+> somewhere at the end of intel_pinctrl_probe()?
+> 
+> Does it still work as expected?
+> 
+> 
+I will check.
+
 
