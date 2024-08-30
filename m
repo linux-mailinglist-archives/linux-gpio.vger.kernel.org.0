@@ -1,202 +1,357 @@
-Return-Path: <linux-gpio+bounces-9428-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9429-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0770D96596D
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 10:06:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74F6C96598D
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 10:09:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B34B4281AD9
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 08:06:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2CE16281ACB
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 08:09:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25D0E166F0A;
-	Fri, 30 Aug 2024 08:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KXMurrdJ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B24916BE28;
+	Fri, 30 Aug 2024 08:09:37 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEC61662F8
-	for <linux-gpio@vger.kernel.org>; Fri, 30 Aug 2024 08:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9ED01662E9;
+	Fri, 30 Aug 2024 08:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725005191; cv=none; b=jVV9K6K/2PfRXDAUi14vLs0oy1s57gbv7VYIdBrevM+Ktz2e6P7ap+ECvHP2nOQfxzVmdX5JB/8MhuK2xJBuexYX2YVngVYJcIiHktBVWHjnjjaZeuvugfhsnFD2dgfyf/cLb/73bYxQne0stRp/nx/TK4JcnsDFi8nKfg1D5m4=
+	t=1725005377; cv=none; b=cJsjfCJUanUs+K0im/Bv89zYe2aWQfzSnDg1UsfTqyCgeU75WJExu7o6IJdkUXZySo7cVnfYBXSreJEfRbEBW1+e/RL0+T2UBG/0x89mqVKUdcDMYW6pb8qXepe9LmZVKyYymYGULVY9PiG2dREsiPwCxMlX4WyPSkwsgW+YRRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725005191; c=relaxed/simple;
-	bh=71gPXzApkUJkbbo3sc3sJH3nklCpJRWVUVpfiyyleDM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JEZ5fn0xoIdLNmO7F7z1ZWzojWRKuWbSXxKqoHKYMXJHKo7j0BQ7giNiJ+w1rXEAERh1ocfzkgXnvD0guwSk0qeYV6AqtyZabSFh35ScbIKQAIS0hh1uzuWuN/w+vgYyz4rS03e2s7N7sXes9WxHk3I2+H+/LZQFY20uu2juAmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KXMurrdJ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725005187;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=71gPXzApkUJkbbo3sc3sJH3nklCpJRWVUVpfiyyleDM=;
-	b=KXMurrdJSWi/NjM0k0S7xW0yLSH8wUpRXZDKD0zETzSpwA5Ze3rxY2Plp1CCtHqJD/IG6t
-	gSPai8A6cevo2/PivW2T0y43BmUo1g9To0FRX5lYJkyS5EUphW/ugf3c50ctDqCAgLWnO3
-	db0zIYPmxZKZEz7ebBFEArJsXD0gBfA=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-650-_gWcvs4iNs-9Xp6Wm5YCXg-1; Fri, 30 Aug 2024 04:05:17 -0400
-X-MC-Unique: _gWcvs4iNs-9Xp6Wm5YCXg-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42bb6d3cd05so14375565e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Aug 2024 01:05:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725005116; x=1725609916;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=71gPXzApkUJkbbo3sc3sJH3nklCpJRWVUVpfiyyleDM=;
-        b=dqQtPT+SVyUkZ6l/q+oMjF4gJN22oR/TwlAsCJUlgeXQV35iGL7QUoAbtb1XaWZHrw
-         xtzfkuFaQggsJA09aACqJqEWEMWQoIu+EqWnNATf0kHtLScXS80+hDtMpopc+Ah1c8Lv
-         H7fWnmKsEWyp6p9UkE/irkLQN//z1eOfxqtLZe4HyPRmApdkRzPuF+1jDcn8pF5KbO4R
-         6XL7ebOniJE3v6e3fhMuqHe1kgtvGYSxI8EitTaXKEXLVZ8E2EihYg6qmlGUBsWxbTwZ
-         4ju1EHHzhBEjdrObCOewllfcTmb7rdPOGNp7tlT6HHET81A3xGtztwUoRsZJFVdGSUoq
-         0Rqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQddb7LiCQRKuJqlyLOI+R3LqHoJ38vLiY533777CWmfJ1r6oStuRLVl4t69wrMC3oCgkJufnOnmPJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKMfSmJ9NjvIK6WW+PI3WL+nRWADYgggJMvdSfiym+Xc6TN2tx
-	x+vr5K6ZTy+56M60gLhfEcIdf0Gm6oVglTIFRt8ekBd0xjFtPn0NoOUkRae4pN1Rybhdh5K3fGs
-	SLh3UOZzctsjjUEFCtkE9BnZZyQO8HxLac8VkZYGl0MzBRE+/g3DcElyFSKI=
-X-Received: by 2002:a05:600c:1914:b0:42b:afbb:1704 with SMTP id 5b1f17b1804b1-42bb0281326mr42324635e9.6.1725005115856;
-        Fri, 30 Aug 2024 01:05:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IElMHHa1ss0AjuIdZRhm4Z2kioy67ZZmuCCx+UBXe8jQVj10UPNfr/s1tjKN2uvyTW+vaIl2g==
-X-Received: by 2002:a05:600c:1914:b0:42b:afbb:1704 with SMTP id 5b1f17b1804b1-42bb0281326mr42324235e9.6.1725005115323;
-        Fri, 30 Aug 2024 01:05:15 -0700 (PDT)
-Received: from eisenberg.fritz.box (200116b82d2f1b0080ee39dcd7d81ce9.dip.versatel-1u1.de. [2001:16b8:2d2f:1b00:80ee:39dc:d7d8:1ce9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3749ef7f329sm3287195f8f.70.2024.08.30.01.05.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 01:05:14 -0700 (PDT)
-Message-ID: <ff637570c16c6a15be414839ec4878e49ecd2350.camel@redhat.com>
-Subject: Re: [PATCH v5 6/7] vdpa: solidrun: Fix UB bug with devres
-From: Philipp Stanner <pstanner@redhat.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Jens Axboe
- <axboe@kernel.dk>,  Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
- Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Andy
- Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Alvaro Karsz <alvaro.karsz@solid-run.com>, Jason
- Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio
- =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>, Richard Cochran
- <richardcochran@gmail.com>, Damien Le Moal <dlemoal@kernel.org>, Hannes
- Reinecke <hare@suse.de>, John Garry <john.g.garry@oracle.com>,
- linux-block@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-fpga@vger.kernel.org,  linux-gpio@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
- virtualization@lists.linux.dev, stable@vger.kernel.org, Christophe JAILLET
- <christophe.jaillet@wanadoo.fr>
-Date: Fri, 30 Aug 2024 10:05:12 +0200
-In-Reply-To: <20240829110902-mutt-send-email-mst@kernel.org>
-References: <20240829141844.39064-1-pstanner@redhat.com>
-	 <20240829141844.39064-7-pstanner@redhat.com>
-	 <20240829102320-mutt-send-email-mst@kernel.org>
-	 <CAHp75Ve7O6eAiNx0+v_SNR2vuYgnkeWrPD1Umb1afS3pf7m8MQ@mail.gmail.com>
-	 <20240829104124-mutt-send-email-mst@kernel.org>
-	 <2cc5984b65beb6805f8d60ffd9627897b65b7700.camel@redhat.com>
-	 <20240829110902-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1725005377; c=relaxed/simple;
+	bh=HIK1H4Pb1Iui5jV64Tsn0cWMVj2Hh/pln1mhkk4Ddzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P35dNVGxG1URg1qLHyf2sZfItFZEwU/VaLBxBc5YwulBDkxG+StWrkuIxNHugNA3jItD5ayZU7J4lyTViB22e6PRAOKwJz5L0ESPNpEjgnzcT9TP0eRZ0/T1ui3pZ7tlDECFg2gB4EcdoV+oI7Jcd8d7smx2aElrZ5ruPYhmIyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Date: Fri, 30 Aug 2024 08:09:31 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Yangyu Chen <cyy@cyyself.name>, Jesse Taube <jesse@rivosinc.com>,
+	Jisheng Zhang <jszhang@kernel.org>, Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@spacemit.com>,
+	Meng Zhang <kevin.z.m@hotmail.com>, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] pinctrl: spacemit: add support for SpacemiT K1 SoC
+Message-ID: <20240830080931-GYB41291@gentoo>
+References: <20240828-02-k1-pinctrl-v3-0-1fed6a22be98@gentoo.org>
+ <20240828-02-k1-pinctrl-v3-2-1fed6a22be98@gentoo.org>
+ <IA1PR20MB495365FC785D7C0B205BD982BB972@IA1PR20MB4953.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <IA1PR20MB495365FC785D7C0B205BD982BB972@IA1PR20MB4953.namprd20.prod.outlook.com>
 
-On Thu, 2024-08-29 at 11:10 -0400, Michael S. Tsirkin wrote:
-> On Thu, Aug 29, 2024 at 04:49:50PM +0200, Philipp Stanner wrote:
-> > On Thu, 2024-08-29 at 10:41 -0400, Michael S. Tsirkin wrote:
-> > > On Thu, Aug 29, 2024 at 05:26:39PM +0300, Andy Shevchenko wrote:
-> > > > On Thu, Aug 29, 2024 at 5:23=E2=80=AFPM Michael S. Tsirkin
-> > > > <mst@redhat.com>
-> > > > wrote:
-> > > > >=20
-> > > > > On Thu, Aug 29, 2024 at 04:16:25PM +0200, Philipp Stanner
-> > > > > wrote:
-> > > > > > In psnet_open_pf_bar() and snet_open_vf_bar() a string
-> > > > > > later
-> > > > > > passed to
-> > > > > > pcim_iomap_regions() is placed on the stack. Neither
-> > > > > > pcim_iomap_regions() nor the functions it calls copy that
-> > > > > > string.
-> > > > > >=20
-> > > > > > Should the string later ever be used, this, consequently,
-> > > > > > causes
-> > > > > > undefined behavior since the stack frame will by then have
-> > > > > > disappeared.
-> > > > > >=20
-> > > > > > Fix the bug by allocating the strings on the heap through
-> > > > > > devm_kasprintf().
-> > > > > >=20
-> > > > > > Cc: stable@vger.kernel.org=C2=A0=C2=A0=C2=A0 # v6.3
-> > > > > > Fixes: 51a8f9d7f587 ("virtio: vdpa: new SolidNET DPU
-> > > > > > driver.")
-> > > > > > Reported-by: Christophe JAILLET
-> > > > > > <christophe.jaillet@wanadoo.fr>
-> > > > > > Closes:
-> > > > > > https://lore.kernel.org/all/74e9109a-ac59-49e2-9b1d-d825c9c9f89=
-1@wanadoo.fr/
-> > > > > > Suggested-by: Andy Shevchenko <andy@kernel.org>
-> > > > > > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> > > > >=20
-> > > > > Post this separately, so I can apply?
-> > > >=20
-> > > > Don't you use `b4`? With it it as simple as
-> > > >=20
-> > > > =C2=A0 b4 am -P 6 $MSG_ID_OF_THIS_SERIES
-> > > >=20
-> > > > --=20
-> > > > With Best Regards,
-> > > > Andy Shevchenko
-> > >=20
-> > > I can do all kind of things, but if it's posted as part of a
-> > > patchset,
-> > > it is not clear to me this has been tested outside of the
-> > > patchset.
-> > >=20
-> >=20
-> > Separating it from the series would lead to merge conflicts,
-> > because
-> > patch 7 depends on it.
-> >=20
-> > If you're responsible for vdpa in general I could send patches 6
-> > and 7
-> > separately to you.
-> >=20
-> > But number 7 depends on number 1, because pcim_iounmap_region()
-> > needs
-> > to be public. So if patches 1-5 enter through a different tree than
-> > yours, that could be a problem.
-> >=20
-> >=20
-> > P.
->=20
-> Defer 1/7 until after the merge window, this is what is normally
-> done.
+Hi Inochi:
 
-1 cannot be deferred. Take a look what 1 does.
+On 09:46 Fri 30 Aug     , Inochi Amaoto wrote:
+> On Wed, Aug 28, 2024 at 11:30:24AM GMT, Yixun Lan wrote:
+> > SpacemiT's K1 SoC has a pinctrl controller which use single register
+> > to describe all functions, which include bias pull up/down(strong pull),
+> > drive strength, schmitter trigger, slew rate, mux mode.
+> > 
+> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > ---
+> >  drivers/pinctrl/Kconfig               |   1 +
+> >  drivers/pinctrl/Makefile              |   1 +
+> >  drivers/pinctrl/spacemit/Kconfig      |  17 +
+> >  drivers/pinctrl/spacemit/Makefile     |   3 +
+> >  drivers/pinctrl/spacemit/pinctrl-k1.c | 978 ++++++++++++++++++++++++++++++++++
+> >  drivers/pinctrl/spacemit/pinctrl-k1.h | 180 +++++++
+> >  6 files changed, 1180 insertions(+)
+> > 
+.. snip
+> > +
+> > +obj-$(CONFIG_PINCTRL_SPACEMIT_K1)	+= pinctrl-k1.o
+> > diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
+> > new file mode 100644
+> > index 0000000000000..9faac5a629c38
+> > --- /dev/null
+> > +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
+> > @@ -0,0 +1,978 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright (c) 2024 Yixun Lan <dlan@gentoo.org> */
+> > +
+> > +
+.. snip
+> > +static int spacemit_request_gpio(struct pinctrl_dev *pctldev,
+> > +				 struct pinctrl_gpio_range *range,
+> > +				 unsigned int pin)
+> > +{
+> > +	struct spacemit_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+> > +	const struct spacemit_pin *spin = spacemit_get_pin(pctrl, pin);
+> > +	void __iomem *reg;
+> > +
+> > +	reg = spacemit_pin_to_reg(pctrl, pin);
+> > +	writel(spin->gpiofunc, reg);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct pinmux_ops spacemit_pmx_ops = {
+> > +	.get_functions_count	= pinmux_generic_get_function_count,
+> > +	.get_function_name	= pinmux_generic_get_function_name,
+> > +	.get_function_groups	= pinmux_generic_get_function_groups,
+> > +	.set_mux		= spacemit_pmx_set_mux,
+> > +	.gpio_request_enable	= spacemit_request_gpio,
+> > +	.strict			= true,
+> > +};
+> > +
+> 
+> > +static int spacemit_pinconf_get(struct pinctrl_dev *pctldev,
+> > +				unsigned int pin, unsigned long *config)
+> > +{
+> > +	struct spacemit_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+> > +	int param = pinconf_to_config_param(*config);
+> > +	u32 value, arg;
+> > +
+> > +	if (!pin)
+> > +		return -EINVAL;
+> > +
+> > +	value = readl(spacemit_pin_to_reg(pctrl, pin));
+> > +
+> > +	switch (param) {
+> > +	case PIN_CONFIG_BIAS_DISABLE:
+> > +		arg = !FIELD_GET(PAD_PULL_EN, value);
+> > +		break;
+> > +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> > +		arg = FIELD_GET(PAD_PULLDOWN, value);
+> > +		break;
+> > +	case PIN_CONFIG_BIAS_PULL_UP:
+> > +		arg = FIELD_GET(PAD_PULLUP, value);
+> > +		break;
+> > +	case PIN_CONFIG_DRIVE_STRENGTH:
+> > +		arg = FIELD_GET(PAD_DRIVE, value);
+> > +		break;
+> > +	case PIN_CONFIG_INPUT_SCHMITT:
+> > +		arg = FIELD_GET(PAD_SCHMITT, value);
+> > +		break;
+> > +	case PIN_CONFIG_SLEW_RATE:
+> > +		arg = FIELD_GET(PAD_SLEW_RATE, value);
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	*config = pinconf_to_config_packed(param, arg);
+> > +
+> > +	return 0;
+> > +}
+> 
+> return the value follows the config requirement, not the register value.
+> 
+ok, I rework this part
 
-Your message is not comprehensible. Be so kind and write some more
-sentences.
-*What* is normally done? Sending patches? It's up to subsystem
-maintainers to queue them for the right cycle.
+> > +
+> > +#define ENABLE_DRV_STRENGTH	BIT(1)
+> > +#define ENABLE_SLEW_RATE	BIT(2)
+> > +static int spacemit_pinconf_generate_config(const struct spacemit_pin *spin,
+> > +					    unsigned long *configs,
+> > +					    unsigned int num_configs,
+> > +					    u32 *value)
+> > +{
+> > +	enum spacemit_pin_io_type type;
+> > +	int i, param;
+> > +	u32 v = 0, voltage = 0, arg, val;
+> > +	u32 flag = 0, drv_strength, slew_rate;
+> > +
+> > +	if (!spin)
+> > +		return -EINVAL;
+> > +
+> > +	for (i = 0; i < num_configs; i++) {
+> > +		param = pinconf_to_config_param(configs[i]);
+> > +		arg = pinconf_to_config_argument(configs[i]);
+> > +
+> > +		switch (param) {
+> > +		case PIN_CONFIG_BIAS_DISABLE:
+> > +			v &= ~(PAD_PULL_EN | PAD_PULLDOWN | PAD_PULLUP);
+> > +			v &= ~PAD_STRONG_PULL;
+> > +			break;
+> > +		case PIN_CONFIG_BIAS_PULL_DOWN:
+> > +			v &= ~(PAD_PULLUP | PAD_STRONG_PULL);
+> > +			v |= (PAD_PULL_EN | PAD_PULLDOWN);
+> > +			break;
+> > +		case PIN_CONFIG_BIAS_PULL_UP:
+> > +			v &= ~PAD_PULLDOWN;
+> > +			v |= (PAD_PULL_EN | PAD_PULLUP);
+> > +
+> > +			if (arg == 1)
+> > +				v |= PAD_STRONG_PULL;
+> > +			break;
+> > +		case PIN_CONFIG_DRIVE_STRENGTH:
+> > +			flag |= ENABLE_DRV_STRENGTH;
+> > +			drv_strength = arg;
+> > +			break;
+> > +		case PIN_CONFIG_INPUT_SCHMITT:
+> > +			v &= ~PAD_SCHMITT;
+> > +			v |= FIELD_PREP(PAD_SCHMITT, arg);
+> > +			break;
+> > +		case PIN_CONFIG_POWER_SOURCE:
+> > +			voltage = arg;
+> > +			break;
+> > +		case PIN_CONFIG_SLEW_RATE:
+> > +			if (arg) {
+> > +				flag |= ENABLE_SLEW_RATE;
+> > +				v |= PAD_SLEW_RATE_EN;
+> > +				slew_rate = arg;
+> > +			} else {
+> > +				v &= ~PAD_SLEW_RATE_EN;
+> > +			}
+> > +			break;
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	if (flag & ENABLE_DRV_STRENGTH) {
+> > +		type = spacemit_to_pin_io_type(spin);
+> > +
+> > +		/* fix external io type */
+> > +		if (type == IO_TYPE_EXTERNAL) {
+> > +			switch (voltage) {
+> > +			case 1800:
+> > +				type = IO_TYPE_1V8;
+> > +				break;
+> > +			case 3300:
+> > +				type = IO_TYPE_3V3;
+> > +				break;
+> > +			default:
+> > +				return -EINVAL;
+> > +			}
+> > +		}
+> > +
+> > +		val = spacemit_get_driver_strength(type, drv_strength);
+> > +
+> > +		v &= ~PAD_DRIVE;
+> > +		v |= FIELD_PREP(PAD_DRIVE, val);
+> > +	}
+> > +
+> > +	if (flag & ENABLE_SLEW_RATE) {
+> > +		/* check, driver strength & slew rate */
+> > +		if (flag & ENABLE_DRV_STRENGTH) {
+> > +			val = FIELD_GET(PAD_SLEW_RATE, v) + 2;
+> > +			if (slew_rate > 1 && slew_rate != val) {
+> > +				pr_err("slew rate conflict with drive strength\n");
+> > +				return -EINVAL;
+> > +			}
+> > +		} else {
+> > +			v &= ~PAD_SLEW_RATE;
+> > +			slew_rate = slew_rate > 1 ? (slew_rate - 2) : 0;
+> > +			v |= FIELD_PREP(PAD_SLEW_RATE, slew_rate);
+> > +		}
+> > +	}
+> > +
+> > +	*value = v;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int spacemit_pin_set_config(struct spacemit_pinctrl *pctrl,
+> > +				 unsigned int pin,
+> > +				 u32 value)
+> > +{
+> > +	const struct spacemit_pin *spin = spacemit_get_pin(pctrl, pin);
+> > +	void __iomem *reg;
+> > +	unsigned long flags;
+> > +	unsigned int mux;
+> > +
+> > +	if (!pin)
+> > +		return -EINVAL;
+> > +
+> > +	reg = spacemit_pin_to_reg(pctrl, spin->pin);
+> > +
+> > +	raw_spin_lock_irqsave(&pctrl->lock, flags);
+> > +	mux = readl_relaxed(reg) & PAD_MUX;
+> > +	writel_relaxed(mux | value, reg);
+> > +	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int spacemit_pinconf_set(struct pinctrl_dev *pctldev,
+> > +				unsigned int pin, unsigned long *configs,
+> > +				unsigned int num_configs)
+> > +{
+> > +	struct spacemit_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+> > +	const struct spacemit_pin *spin = spacemit_get_pin(pctrl, pin);
+> > +	u32 value;
+> > +
+> > +	if (spacemit_pinconf_generate_config(spin, configs, num_configs, &value))
+> > +		return -EINVAL;
+> > +
+> > +	return spacemit_pin_set_config(pctrl, pin, value);
+> > +}
+> > +
+> > +static int spacemit_pinconf_group_set(struct pinctrl_dev *pctldev,
+> > +				      unsigned int gsel,
+> > +				      unsigned long *configs,
+> > +				      unsigned int num_configs)
+> > +{
+> > +	struct spacemit_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+> > +	const struct spacemit_pin *spin;
+> > +	const struct group_desc *group;
+> > +	u32 value;
+> > +	int i;
+> > +
+> > +	group = pinctrl_generic_get_group(pctldev, gsel);
+> > +	if (!group)
+> > +		return -EINVAL;
+> > +
+> > +	spin = spacemit_get_pin(pctrl, group->grp.pins[0]);
+> > +	if (spacemit_pinconf_generate_config(spin, configs, num_configs, &value))
+> > +		return -EINVAL;
+> > +
+> > +	for (i = 0; i < group->grp.npins; i++)
+> > +		spacemit_pin_set_config(pctrl, group->grp.pins[i], value);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> 
+> > +static void spacemit_pinconf_dbg_show(struct pinctrl_dev *pctldev,
+> > +				      struct seq_file *seq, unsigned int pin)
+> > +{
+> > +	struct spacemit_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+> > +	const struct spacemit_pin *spin = spacemit_get_pin(pctrl, pin);
+> > +	enum spacemit_pin_io_type type = spacemit_to_pin_io_type(spin);
+> > +	void __iomem *reg;
+> > +	u32 value;
+> > +
+> > +	reg = spacemit_pin_to_reg(pctrl, pin);
+> > +	value = readl(reg);
+> > +	seq_printf(seq, ", io type (%d)", type);
+> > +	seq_printf(seq, ", strong pull (%ld)", FIELD_GET(PAD_STRONG_PULL, value));
+> > +	seq_printf(seq, ", register (0x%04x)\n", value);
+> > +}
+> 
+> drop, move the "io type" to the spacemit_pctrl_dbg_show.
+Ok
 
-> Adding new warnings is not nice, anyway.
+> "strong pull" should be handled if you use real value in
+> spacemit_pinconf_get.
+> 
+for this reason, I will just drop it
 
-What?
 
-
-
->=20
-
+-- 
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
 
