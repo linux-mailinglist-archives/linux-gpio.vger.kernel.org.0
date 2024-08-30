@@ -1,256 +1,325 @@
-Return-Path: <linux-gpio+bounces-9418-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9419-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9A0D9655CE
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 05:41:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39D8396568E
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 06:50:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 805B728509A
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 03:41:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65FA31C22C72
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 04:50:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DC4614D6EF;
-	Fri, 30 Aug 2024 03:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3934D136327;
+	Fri, 30 Aug 2024 04:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="enQVekBa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC00713C672;
-	Fri, 30 Aug 2024 03:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE5F1D1308;
+	Fri, 30 Aug 2024 04:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724989276; cv=none; b=Yt/1KJ7GgrWW0AhToc+i3CKxdP9IhI6ED56hiqQuGem7w/yMN1E2BhhRpQbtYSZY4RNDQvZonsUISRr2zzib7ONW3AOxb+M73q7zbLdVksAkn5iLNbOsFjk8/oKI+gotKw78zf9BOis4VB64ZkVXxSYg9+aXxSBzqHAP2lqhNqE=
+	t=1724993445; cv=none; b=qKdJQ0IGok1+TpSuu1i238bnWPNk2gE+lV82Viyn17kzov0MMpfiYBNywQc4csdwnGvvAJswr5BkVFjZpOdppdeWXuYowJYFvfO9jWvOFyD+D2KLBcVP3pyzIacXID6YMrYcT6r5/6+rqoxkYqW1KXP/JjkeWHKD1Wa2mpx1iIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724989276; c=relaxed/simple;
-	bh=bbDUZJuxl6BhnSNZqhyx6zNmudvYRof97UdKWYiiPnE=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hu9X+WoGjww7991FZ8MF2UpAf2TXOXXgmmFucKGqKK7btVDkbJytBBwBqi/qVntRDQv51Gsb7j5RhOr42Z1mVYUlrg0nkn8xgB/44vMfYavPfHmEDd//fFGlk/pIpKsWhJiZmts5crIGyVFh0tcfkKMPkr/UVQCeU9TJIdt65mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Fri, 30 Aug
- 2024 11:40:48 +0800
-Received: from mail.aspeedtech.com (192.168.10.10) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Fri, 30 Aug 2024 11:40:48 +0800
-From: Billy Tsai <billy_tsai@aspeedtech.com>
-To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <joel@jms.id.au>,
-	<andrew@codeconstruct.com.au>, <linux-gpio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<BMC-SW@aspeedtech.com>
-Subject: [PATCH v2 4/4] gpio: aspeed: Support G7 Aspeed gpio controller
-Date: Fri, 30 Aug 2024 11:40:47 +0800
-Message-ID: <20240830034047.2251482-5-billy_tsai@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240830034047.2251482-1-billy_tsai@aspeedtech.com>
-References: <20240830034047.2251482-1-billy_tsai@aspeedtech.com>
+	s=arc-20240116; t=1724993445; c=relaxed/simple;
+	bh=Ihnlsw267bzJ+EP52khp0GkOm7bVOKPPqD11oLSh4DM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rNuR4XyvSXdC+AlbiJFuQkYujiPrh58Y0qQM3LCHM+A+C1j/6sLGHblAYTEbcIsvpU0ejFSpsnXUN1AQHbFgR8RjBkg2oRHf7uJnGn5yb1birkgVCRSX8k8dvS9dcZyWbvHrCbQ7XyI9/IYSmNgRBwHxmFcUvXylk5FOTObeVpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=enQVekBa; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724993443; x=1756529443;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ihnlsw267bzJ+EP52khp0GkOm7bVOKPPqD11oLSh4DM=;
+  b=enQVekBam4qCuhjzNSuEXwhOrueE/JwUAi8jzS0uDvaiLR/IGwa0s0AI
+   u7pYxggzy7FbTJtq2wBK+xMn4LEWLnK9TCInQROFfmL9QYE0IJiXOwhZG
+   CJj9dMFQyrxDOJ+NsYlKu6Q8ij1UnMs0jf5NayfCju6p6kSb+cN5SrzDU
+   nULHklJK3UiyX6r+cUpn+UPc+wLEHVi1ieR/wKReg8mk061z7ON5waq9E
+   mk8OKY9eqADBxOomup4SazURyeueb0987qAal699sHz0VpbV/6Tb82jWs
+   MsAaSP/DO1E9HywVwURLGy0psvfg7cvj6HZ6v+vEZvbYCO8QK1HrU7edG
+   g==;
+X-CSE-ConnectionGUID: VezJXZneSaiJeqT2OtRYIQ==
+X-CSE-MsgGUID: qFXNHdAXQbq9BGLdn50znw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="23808180"
+X-IronPort-AV: E=Sophos;i="6.10,187,1719903600"; 
+   d="scan'208";a="23808180"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 21:50:43 -0700
+X-CSE-ConnectionGUID: nWaU11vHRmi6iASXzgpMLQ==
+X-CSE-MsgGUID: 7RwYCFWiQ9ywVpQIlLZDDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,187,1719903600"; 
+   d="scan'208";a="94529492"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 29 Aug 2024 21:50:42 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 8FBB0142; Fri, 30 Aug 2024 07:50:39 +0300 (EEST)
+Date: Fri, 30 Aug 2024 07:50:39 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v2 6/6] pinctrl: intel: Introduce
+ for_each_intel_gpio_group() helper et al.
+Message-ID: <20240830045039.GU1532424@black.fi.intel.com>
+References: <20240829140406.357612-1-andriy.shevchenko@linux.intel.com>
+ <20240829140406.357612-7-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240829140406.357612-7-andriy.shevchenko@linux.intel.com>
 
-In the 7th generation of the SoC from Aspeed, the control logic of the
-GPIO controller has been updated to support per-pin control. Each pin now
-has its own 32-bit register, allowing for individual control of the pin’s
-value, direction, interrupt type, and other settings. The permission for
-coprocessor access is supported by the hardware but hasn’t been
-implemented in the current patch.
+On Thu, Aug 29, 2024 at 04:59:20PM +0300, Andy Shevchenko wrote:
+> Introduce a helper macro for_each_intel_gpio_group() et al.
+> With those in place, update the users.
+> 
+> It reduces the C code base as well as shrinks the binary:
+> 
+>   add/remove: 0/0 grow/shrink: 4/21 up/down: 39/-621 (-582)
+>   Total: Before=15942, After=15360, chg -3.65%
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/pinctrl/intel/pinctrl-intel.c | 125 ++++++++++----------------
+>  1 file changed, 46 insertions(+), 79 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> index e8dbaf3964dc..75201d5c52a1 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -114,13 +114,16 @@ struct intel_community_context {
+>  #define pin_to_padno(c, p)	((p) - (c)->pin_base)
+>  #define padgroup_offset(g, p)	((p) - (g)->base)
+>  
+> +#define for_each_intel_pin_community(pctrl, community)					\
+> +	for (unsigned int __ci = 0;							\
+> +	     __ci < pctrl->ncommunities && (community = &pctrl->communities[__ci]);	\
+> +	     __ci++)									\
+> +
 
-Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
----
- drivers/gpio/gpio-aspeed.c | 116 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
+These look more readable, thanks. Just one comment. Can you move all
+them here at the top of the file so all the variants are close to each
+other? You can do that while applying.
 
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index 74c4e80958bf..24f9c7312351 100644
---- a/drivers/gpio/gpio-aspeed.c
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -30,6 +30,23 @@
- #include <linux/gpio/consumer.h>
- #include "gpiolib.h"
- 
-+#define GPIO_G7_IRQ_STS_BASE 0x100
-+#define GPIO_G7_IRQ_STS_OFFSET(x) (GPIO_G7_IRQ_STS_BASE + (x) * 0x4)
-+#define GPIO_G7_CTRL_REG_BASE 0x180
-+#define GPIO_G7_CTRL_REG_OFFSET(x) (GPIO_G7_CTRL_REG_BASE + (x) * 0x4)
-+#define GPIO_G7_CTRL_OUT_DATA BIT(0)
-+#define GPIO_G7_CTRL_DIR BIT(1)
-+#define GPIO_G7_CTRL_IRQ_EN BIT(2)
-+#define GPIO_G7_CTRL_IRQ_TYPE0 BIT(3)
-+#define GPIO_G7_CTRL_IRQ_TYPE1 BIT(4)
-+#define GPIO_G7_CTRL_IRQ_TYPE2 BIT(5)
-+#define GPIO_G7_CTRL_RST_TOLERANCE BIT(6)
-+#define GPIO_G7_CTRL_DEBOUNCE_SEL2 BIT(7)
-+#define GPIO_G7_CTRL_DEBOUNCE_SEL1 BIT(8)
-+#define GPIO_G7_CTRL_INPUT_MASK BIT(9)
-+#define GPIO_G7_CTRL_IRQ_STS BIT(12)
-+#define GPIO_G7_CTRL_IN_DATA BIT(13)
-+
- struct aspeed_bank_props {
- 	unsigned int bank;
- 	u32 input;
-@@ -95,6 +112,7 @@ struct aspeed_gpio_bank {
-  */
- 
- static const int debounce_timers[4] = { 0x00, 0x50, 0x54, 0x58 };
-+static const int g7_debounce_timers[4] = { 0x00, 0x04, 0x00, 0x08 };
- 
- static const struct aspeed_gpio_copro_ops *copro_ops;
- static void *copro_data;
-@@ -246,6 +264,39 @@ static inline void __iomem *bank_reg(struct aspeed_gpio *gpio,
- 	BUG();
- }
- 
-+static inline u32 reg_mask(const enum aspeed_gpio_reg reg)
-+{
-+	switch (reg) {
-+	case reg_val:
-+		return GPIO_G7_CTRL_OUT_DATA;
-+	case reg_dir:
-+		return GPIO_G7_CTRL_DIR;
-+	case reg_irq_enable:
-+		return GPIO_G7_CTRL_IRQ_EN;
-+	case reg_irq_type0:
-+		return GPIO_G7_CTRL_IRQ_TYPE0;
-+	case reg_irq_type1:
-+		return GPIO_G7_CTRL_IRQ_TYPE1;
-+	case reg_irq_type2:
-+		return GPIO_G7_CTRL_IRQ_TYPE2;
-+	case reg_tolerance:
-+		return GPIO_G7_CTRL_RST_TOLERANCE;
-+	case reg_debounce_sel1:
-+		return GPIO_G7_CTRL_DEBOUNCE_SEL1;
-+	case reg_debounce_sel2:
-+		return GPIO_G7_CTRL_DEBOUNCE_SEL2;
-+	case reg_rdata:
-+		return GPIO_G7_CTRL_OUT_DATA;
-+	case reg_irq_status:
-+		return GPIO_G7_CTRL_IRQ_STS;
-+	case reg_cmdsrc0:
-+	case reg_cmdsrc1:
-+	default:
-+		WARN_ON_ONCE(1);
-+		return 0;
-+	}
-+}
-+
- #define GPIO_BANK(x)	((x) >> 5)
- #define GPIO_OFFSET(x)	((x) & 0x1f)
- #define GPIO_BIT(x)	BIT(GPIO_OFFSET(x))
-@@ -930,6 +981,9 @@ int aspeed_gpio_copro_grab_gpio(struct gpio_desc *desc,
- 	const struct aspeed_gpio_bank *bank = to_bank(offset);
- 	unsigned long flags;
- 
-+	if (gpio->config->version == 7)
-+		return -EOPNOTSUPP;
-+
- 	if (!gpio->cf_copro_bankmap)
- 		gpio->cf_copro_bankmap = kzalloc(gpio->chip.ngpio >> 3, GFP_KERNEL);
- 	if (!gpio->cf_copro_bankmap)
-@@ -975,6 +1029,9 @@ int aspeed_gpio_copro_release_gpio(struct gpio_desc *desc)
- 	int rc = 0, bindex, offset = gpio_chip_hwgpio(desc);
- 	unsigned long flags;
- 
-+	if (gpio->config->version == 7)
-+		return -EOPNOTSUPP;
-+
- 	if (!gpio->cf_copro_bankmap)
- 		return -ENXIO;
- 
-@@ -1069,10 +1126,27 @@ static const struct aspeed_gpio_config ast2600_config =
- 	 */
- 	{ .nr_gpios = 208, .props = ast2600_bank_props, .version = 4};
- 
-+static const struct aspeed_bank_props ast2700_bank_props[] = {
-+	/*     input	  output   */
-+	{ 1, 0x0fffffff, 0x0fffffff }, /* E/F/G/H, 4-GPIO hole */
-+	{ 6, 0x00ffffff, 0x00ffffff }, /* Y/Z/AA */
-+	{},
-+};
-+
-+static const struct aspeed_gpio_config ast2700_config =
-+	/*
-+	 * ast2700 has two controllers one with 212 GPIOs and one with 16 GPIOs.
-+	 * 216 for simplicity, actual number is 212 (4-GPIO hole in GPIOH)
-+	 * We expect ngpio being set in the device tree and this is a fallback
-+	 * option.
-+	 */
-+	{ .nr_gpios = 216, .props = ast2700_bank_props, .version = 7 };
-+
- static const struct of_device_id aspeed_gpio_of_table[] = {
- 	{ .compatible = "aspeed,ast2400-gpio", .data = &ast2400_config, },
- 	{ .compatible = "aspeed,ast2500-gpio", .data = &ast2500_config, },
- 	{ .compatible = "aspeed,ast2600-gpio", .data = &ast2600_config, },
-+	{ .compatible = "aspeed,ast2700-gpio", .data = &ast2700_config, },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, aspeed_gpio_of_table);
-@@ -1111,6 +1185,40 @@ struct aspeed_gpio_llops aspeed_g4_llops = {
- 	.reg_bits_read = aspeed_g4_reg_bits_read,
- };
- 
-+static void aspeed_g7_reg_bits_set(struct aspeed_gpio *gpio, unsigned int offset,
-+				   const enum aspeed_gpio_reg reg, u32 val)
-+{
-+	u32 mask = reg_mask(reg);
-+	void __iomem *addr = gpio->base + GPIO_G7_CTRL_REG_OFFSET(offset);
-+	u32 write_val = (ioread32(addr) & ~(mask)) | (((val) << (ffs(mask) - 1)) & (mask));
-+
-+	iowrite32(write_val, addr);
-+}
-+
-+static u32 aspeed_g7_reg_bits_read(struct aspeed_gpio *gpio, unsigned int offset,
-+				   const enum aspeed_gpio_reg reg)
-+{
-+	u32 mask = reg_mask(reg);
-+	void __iomem *addr;
-+
-+	if (reg == reg_irq_status) {
-+		addr = gpio->base + GPIO_G7_IRQ_STS_OFFSET(offset);
-+		return ioread32(addr);
-+	}
-+	addr = gpio->base + GPIO_G7_CTRL_REG_OFFSET(offset);
-+	if (reg == reg_val)
-+		mask = GPIO_G7_CTRL_IN_DATA;
-+
-+	return (((ioread32(addr)) & (mask)) >> (ffs(mask) - 1));
-+}
-+
-+struct aspeed_gpio_llops aspeed_g7_llops = {
-+	.copro_request = NULL,
-+	.copro_release = NULL,
-+	.reg_bits_set = aspeed_g7_reg_bits_set,
-+	.reg_bits_read = aspeed_g7_reg_bits_read,
-+};
-+
- static int __init aspeed_gpio_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *gpio_id;
-@@ -1152,6 +1260,14 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
- 			gpio->debounce_timers_array = debounce_timers;
- 			gpio->debounce_timers_num = ARRAY_SIZE(debounce_timers);
- 		}
-+	} else if (gpio->config->version == 7) {
-+		if (!gpio->llops)
-+			gpio->llops = &aspeed_g7_llops;
-+
-+		if (!gpio->debounce_timers_array) {
-+			gpio->debounce_timers_array = g7_debounce_timers;
-+			gpio->debounce_timers_num = ARRAY_SIZE(g7_debounce_timers);
-+		}
- 	} else {
- 		return -EOPNOTSUPP;
- 	}
--- 
-2.25.1
-
+>  const struct intel_community *intel_get_community(struct intel_pinctrl *pctrl, unsigned int pin)
+>  {
+>  	const struct intel_community *community;
+> -	int i;
+>  
+> -	for (i = 0; i < pctrl->ncommunities; i++) {
+> -		community = &pctrl->communities[i];
+> +	for_each_intel_pin_community(pctrl, community) {
+>  		if (pin >= community->pin_base &&
+>  		    pin < community->pin_base + community->npins)
+>  			return community;
+> @@ -131,15 +134,18 @@ const struct intel_community *intel_get_community(struct intel_pinctrl *pctrl, u
+>  }
+>  EXPORT_SYMBOL_NS_GPL(intel_get_community, PINCTRL_INTEL);
+>  
+> +#define for_each_intel_community_pad_group(community, grp)			\
+> +	for (unsigned int __gi = 0;						\
+> +	     __gi < community->ngpps && (grp = &community->gpps[__gi]);		\
+> +	     __gi++)								\
+> +
+>  static const struct intel_padgroup *
+>  intel_community_get_padgroup(const struct intel_community *community,
+>  			     unsigned int pin)
+>  {
+> -	int i;
+> -
+> -	for (i = 0; i < community->ngpps; i++) {
+> -		const struct intel_padgroup *padgrp = &community->gpps[i];
+> +	const struct intel_padgroup *padgrp;
+>  
+> +	for_each_intel_community_pad_group(community, padgrp) {
+>  		if (pin >= padgrp->base && pin < padgrp->base + padgrp->size)
+>  			return padgrp;
+>  	}
+> @@ -924,6 +930,14 @@ static const struct pinctrl_desc intel_pinctrl_desc = {
+>  	.owner = THIS_MODULE,
+>  };
+>  
+> +#define for_each_intel_pad_group(pctrl, community, grp)			\
+> +	for_each_intel_pin_community(pctrl, community)			\
+> +		for_each_intel_community_pad_group(community, grp)
+> +
+> +#define for_each_intel_gpio_group(pctrl, community, grp)		\
+> +	for_each_intel_pad_group(pctrl, community, grp)			\
+> +		if (grp->gpio_base == INTEL_GPIO_BASE_NOMAP) {} else
+> +
+>  /**
+>   * intel_gpio_to_pin() - Translate from GPIO offset to pin number
+>   * @pctrl: Pinctrl structure
+> @@ -942,30 +956,17 @@ static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
+>  			     const struct intel_community **community,
+>  			     const struct intel_padgroup **padgrp)
+>  {
+> -	int i;
+> +	const struct intel_community *comm;
+> +	const struct intel_padgroup *grp;
+>  
+> -	for (i = 0; i < pctrl->ncommunities; i++) {
+> -		const struct intel_community *comm = &pctrl->communities[i];
+> -		int j;
+> +	for_each_intel_gpio_group(pctrl, comm, grp) {
+> +		if (offset >= grp->gpio_base && offset < grp->gpio_base + grp->size) {
+> +			if (community)
+> +				*community = comm;
+> +			if (padgrp)
+> +				*padgrp = grp;
+>  
+> -		for (j = 0; j < comm->ngpps; j++) {
+> -			const struct intel_padgroup *pgrp = &comm->gpps[j];
+> -
+> -			if (pgrp->gpio_base == INTEL_GPIO_BASE_NOMAP)
+> -				continue;
+> -
+> -			if (offset >= pgrp->gpio_base &&
+> -			    offset < pgrp->gpio_base + pgrp->size) {
+> -				int pin;
+> -
+> -				pin = pgrp->base + offset - pgrp->gpio_base;
+> -				if (community)
+> -					*community = comm;
+> -				if (padgrp)
+> -					*padgrp = pgrp;
+> -
+> -				return pin;
+> -			}
+> +			return grp->base + offset - grp->gpio_base;
+>  		}
+>  	}
+>  
+> @@ -1258,12 +1259,11 @@ static const struct irq_chip intel_gpio_irq_chip = {
+>  static int intel_gpio_community_irq_handler(struct intel_pinctrl *pctrl,
+>  					    const struct intel_community *community)
+>  {
+> +	const struct intel_padgroup *padgrp;
+>  	struct gpio_chip *gc = &pctrl->chip;
+> -	unsigned int gpp;
+>  	int ret = 0;
+>  
+> -	for (gpp = 0; gpp < community->ngpps; gpp++) {
+> -		const struct intel_padgroup *padgrp = &community->gpps[gpp];
+> +	for_each_intel_community_pad_group(community, padgrp) {
+>  		unsigned long pending, enabled;
+>  		unsigned int gpp, gpp_offset;
+>  		void __iomem *reg, *is;
+> @@ -1294,29 +1294,23 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
+>  {
+>  	const struct intel_community *community;
+>  	struct intel_pinctrl *pctrl = data;
+> -	unsigned int i;
+>  	int ret = 0;
+>  
+>  	/* Need to check all communities for pending interrupts */
+> -	for (i = 0; i < pctrl->ncommunities; i++) {
+> -		community = &pctrl->communities[i];
+> +	for_each_intel_pin_community(pctrl, community)
+>  		ret += intel_gpio_community_irq_handler(pctrl, community);
+> -	}
+>  
+>  	return IRQ_RETVAL(ret);
+>  }
+>  
+>  static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
+>  {
+> -	int i;
+> +	const struct intel_community *community;
+>  
+> -	for (i = 0; i < pctrl->ncommunities; i++) {
+> -		const struct intel_community *community;
+> +	for_each_intel_pin_community(pctrl, community) {
+>  		void __iomem *reg, *is;
+>  		unsigned int gpp;
+>  
+> -		community = &pctrl->communities[i];
+> -
+>  		for (gpp = 0; gpp < community->ngpps; gpp++) {
+>  			reg = community->regs + community->ie_offset + gpp * 4;
+>  			is = community->regs + community->is_offset + gpp * 4;
+> @@ -1341,36 +1335,17 @@ static int intel_gpio_irq_init_hw(struct gpio_chip *gc)
+>  	return 0;
+>  }
+>  
+> -static int intel_gpio_add_community_ranges(struct intel_pinctrl *pctrl,
+> -				const struct intel_community *community)
+> -{
+> -	int ret = 0, i;
+> -
+> -	for (i = 0; i < community->ngpps; i++) {
+> -		const struct intel_padgroup *gpp = &community->gpps[i];
+> -
+> -		if (gpp->gpio_base == INTEL_GPIO_BASE_NOMAP)
+> -			continue;
+> -
+> -		ret = gpiochip_add_pin_range(&pctrl->chip, dev_name(pctrl->dev),
+> -					     gpp->gpio_base, gpp->base,
+> -					     gpp->size);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	return ret;
+> -}
+> -
+>  static int intel_gpio_add_pin_ranges(struct gpio_chip *gc)
+>  {
+>  	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
+> -	int ret, i;
+> +	const struct intel_community *community;
+> +	const struct intel_padgroup *grp;
+> +	int ret;
+>  
+> -	for (i = 0; i < pctrl->ncommunities; i++) {
+> -		const struct intel_community *community = &pctrl->communities[i];
+> -
+> -		ret = intel_gpio_add_community_ranges(pctrl, community);
+> +	for_each_intel_gpio_group(pctrl, community, grp) {
+> +		ret = gpiochip_add_pin_range(&pctrl->chip, dev_name(pctrl->dev),
+> +					     grp->gpio_base, grp->base,
+> +					     grp->size);
+>  		if (ret) {
+>  			dev_err(pctrl->dev, "failed to add GPIO pin range\n");
+>  			return ret;
+> @@ -1383,20 +1358,12 @@ static int intel_gpio_add_pin_ranges(struct gpio_chip *gc)
+>  static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
+>  {
+>  	const struct intel_community *community;
+> +	const struct intel_padgroup *grp;
+>  	unsigned int ngpio = 0;
+> -	int i, j;
+>  
+> -	for (i = 0; i < pctrl->ncommunities; i++) {
+> -		community = &pctrl->communities[i];
+> -		for (j = 0; j < community->ngpps; j++) {
+> -			const struct intel_padgroup *gpp = &community->gpps[j];
+> -
+> -			if (gpp->gpio_base == INTEL_GPIO_BASE_NOMAP)
+> -				continue;
+> -
+> -			if (gpp->gpio_base + gpp->size > ngpio)
+> -				ngpio = gpp->gpio_base + gpp->size;
+> -		}
+> +	for_each_intel_gpio_group(pctrl, community, grp) {
+> +		if (grp->gpio_base + grp->size > ngpio)
+> +			ngpio = grp->gpio_base + grp->size;
+>  	}
+>  
+>  	return ngpio;
+> -- 
+> 2.43.0.rc1.1336.g36b5255a03ac
 
