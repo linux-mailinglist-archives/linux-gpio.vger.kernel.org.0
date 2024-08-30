@@ -1,428 +1,225 @@
-Return-Path: <linux-gpio+bounces-9447-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9448-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63D24965F34
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 12:30:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF5BD965F66
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 12:39:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2FFF1F291FE
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 10:30:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F634284FF0
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 10:39:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EF7E192D83;
-	Fri, 30 Aug 2024 10:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521FD18E76B;
+	Fri, 30 Aug 2024 10:38:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9CEJVM2"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="K1iU6M/I"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B73A17C7B2;
-	Fri, 30 Aug 2024 10:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC88C18E35B
+	for <linux-gpio@vger.kernel.org>; Fri, 30 Aug 2024 10:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725013719; cv=none; b=ZGpBFhqAYDetcIJQkyA4TUP+gt/agP5FGuF1F3XoW78mBhIgTOeQ7N97Cka891qOX22lMLIwiUOSttWi/ULM9Jae+3uPUbJ8ikWZg5uRQMJzMjU+9S2hKX3jRixw41x0VXzXOrVwfJv2sLAvdf1UtKNDZKZOiJY04pZgakRDN1o=
+	t=1725014339; cv=none; b=E8GnTb+oha3iGUxtvArNQAbpnCZ515hQ3IRqvUpjcBaArTIhZIzSQqVrYgXF+oGPtNeoVuDUNs0u3fOxFN2yJi5xuUtHazHPaQB3hc7vb0Cu9e6nk8000fEH8Pn0uvVrdiJgw6/mxI/UhyKWNZWkpjb4U8FOu0czsDEMPs8lwBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725013719; c=relaxed/simple;
-	bh=dZ8CQV9ldkyefyzvTOcSfiZvMemx5KWDS9clqXl5m7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kLobUQcJ/QJyRVyDJEQb09e/OKSrwm1DTRJAP15eDd6r34pg8R/0DuknvySZ8JUWbORxWjgW8hVtfLQf+CJnVr9yhVXA9CGLXlQ44nTyDa8mg9IS9mLLvXVEX+DkQwoUcIYYfKeu1pCn5MBvGqdGfzwop5mshb5e1zavyI7bsyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j9CEJVM2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6628EC4CEE0;
-	Fri, 30 Aug 2024 10:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725013718;
-	bh=dZ8CQV9ldkyefyzvTOcSfiZvMemx5KWDS9clqXl5m7M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j9CEJVM2oMi9/FECOWP02t94vvItgPv0PO1i53qimpn8RlpBg9C0OkRWDvrgThr0b
-	 k/Xw+2nHMNPv9Qder2cCPxyyWXoTycOSJA7X2x1rm1v8PsAFeffDEZoCa8JkESs/XF
-	 1Ixm9wEy/rOC8Strrf0KvKDkcgfwp12obimc26wp83WeU22lmMF6juUKVQ3Zl3hJx+
-	 pszdFs/GgNMwI+oHI6W0eV5EBLCZLiJSfio+gKASZkNFZWNMhJiT0P0pV3Aa3vUQnu
-	 BDgqw7N+TyZdnJHNAAPoA4we4vrLEEOsqHMkC12yx2ON1mlwwjbXiQNITKovMMnARa
-	 jj30XET/pkj8A==
-Message-ID: <2c9aafdd-000b-4e8f-b599-4f57e7eb0ca7@kernel.org>
-Date: Fri, 30 Aug 2024 12:28:31 +0200
+	s=arc-20240116; t=1725014339; c=relaxed/simple;
+	bh=4G2JQeTl20rKQb1UIC8sygdnIRevvH3GCEN6TIr/r3g=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FQQ1S5WFDkGMVHTrigp4IL7WQz9xEWQD46lFclLV9C6B7FP5MW5VTSC6WrFbji/lRfsDUNl5TjqaGbdAJBI0cByqd5Rdfbcwcg7r+/pQyPxQ3RjiPtxL2lFDuUkMy6DAfN1mpWV3roG6D5QpJ3FGN0URKbH4AYAkJlRI7JJjrrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=K1iU6M/I; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a86cc0d10aaso190438866b.2
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Aug 2024 03:38:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1725014335; x=1725619135; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h5Au08vB5OeNxHqyShPMASavhrXq4vVsx5hzYBAmcP4=;
+        b=K1iU6M/I9+FzAxbZpsKnXAIvO3tBvl1i9x2TDGmPqowTJ8Vb/VbOQmTZ69MErb8ehy
+         by0KMbos4bIwAWnk4Cip4VHhToTxegmbae3na3DiN2GSPxqWrGOOlvIPC13KS2eooJRo
+         UEDVBUDuxW1Vdfxpu+q4941qHndwQn9QrhJx/CCrEHfA31qTtrSrboCJHdy2dZJeqEDD
+         +o8k5FDm0+lq0JCY8mprZobZBvaJHYzAAZYyridv8O1KvF7XNl5a8PUjHXWSb1VV/Boi
+         YMJB55hIoLjbdSMxLgb6X+nls04GLhuJx0db/PsS1m10rQEAHsBOdCQurA9feM0VA07x
+         3Ntw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725014335; x=1725619135;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h5Au08vB5OeNxHqyShPMASavhrXq4vVsx5hzYBAmcP4=;
+        b=GchsDbNryPn40JNEXzwV4rKFk4peT9c/iPT32Z0Pc+A/TvbWHqSRt8iCswzXMKnz1L
+         oxa/1y2frHuWQO0GHii8EFi7uqkX7/4I0Zqfugz6UNKT0lYCGWJY+uhQyqjGqHnY9rqi
+         uhKdpT/EPZw+GAFcQdgVg3wfybR1wdaHTY7qkYKat+lSDr9pmYU7m6H/2KfD/xCcp+zC
+         7IzItLlPCIHsvQ2Ne3ikKGNtaX5KjaMUIgP9eM+LLxgsTPwCA1G2AIAlJID0h5amy/4C
+         g92FrmrzMUWpH/Gw58ydfHqxqJwIxstGaFJPwhMvZRV2v8+ma606eISDa4Tms1ap3syV
+         HNsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2A5pM0aHn2Rk4qqNA629TMtu+H5GneSxFj93aeFKfdbLb9K3GDDo23bE80xXFo/Sw1RmUsxILuwwJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YymspOSFKowDNC9X7ridQ10EVjwA7YAsU1h0gd6fi+PtgCqNftG
+	vYfsrpJbK54BlKGRiRFpVGeXQCwZ5bjD10wc2rDi/1gFSzv9GDsM3r3yr2HU5fk=
+X-Google-Smtp-Source: AGHT+IGFX+JpOuBNkuiqWpwqqojLsjyd0c1q3uUvAXvmTXay18Cll/dJEuA1ST8QE4ynzxsCiSRyHw==
+X-Received: by 2002:a17:907:e8d:b0:a86:6e5e:620d with SMTP id a640c23a62f3a-a897f84d602mr429881266b.27.1725014334494;
+        Fri, 30 Aug 2024 03:38:54 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a89892220e5sm197540666b.195.2024.08.30.03.38.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Aug 2024 03:38:54 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Fri, 30 Aug 2024 12:39:00 +0200
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 07/11] pinctrl: rp1: Implement RaspberryPi RP1 gpio
+ support
+Message-ID: <ZtGhRAnd0a_TFPEj@apocalypse>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <eb39a5f3cefff2a1240a18a255dac090af16f223.1724159867.git.andrea.porta@suse.com>
+ <l4xijmtxz5i5kkkd5tt25ls33drnnhxp26r42lab5ev343e4zh@ctknkjzbpwqz>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: airoha: Add EN7581 pinctrl
- controller
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Rob Herring <robh@kernel.org>,
- Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
- Conor Dooley <conor@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Benjamin Larsson <benjamin.larsson@genexis.eu>,
- Linus Walleij <linus.walleij@linaro.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- upstream@airoha.com
-References: <20240822-taste-deceptive-03d0ad56ae2e@spud>
- <aef3188d-5aaf-4f6d-addf-60066065ef9b@genexis.eu>
- <20240823-darkened-cartload-d2621f33eab8@spud>
- <66c8c50f.050a0220.d7871.f209@mx.google.com> <Zsj8bmBJhfUdH6qT@lore-desk>
- <20240826-kinsman-crunching-e3b75297088c@spud>
- <CAA2SeNJ2Gi+3Za+jvAVqqbx7xEGLqkDBkJ8vL=pA=ZbKWOfp=Q@mail.gmail.com>
- <CAL_JsqLBGwgX=PeCqP8+iFj6uvAO4O_dTvz7x1c+T1Kz+-q-QA@mail.gmail.com>
- <66ce1b04.df0a0220.a2131.6def@mx.google.com>
- <qro6jbupm27vvulymb4ckn7wm6qbvrvnydzjyd42metarlh2t2@hxdzvff4jdus>
- <66d187f1.050a0220.3213d8.ad53@mx.google.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <66d187f1.050a0220.3213d8.ad53@mx.google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <l4xijmtxz5i5kkkd5tt25ls33drnnhxp26r42lab5ev343e4zh@ctknkjzbpwqz>
 
-On 30/08/2024 10:50, Christian Marangi wrote:
-> On Thu, Aug 29, 2024 at 08:20:10AM +0200, Krzysztof Kozlowski wrote:
->> On Tue, Aug 27, 2024 at 08:29:20PM +0200, Christian Marangi wrote:
->>> On Tue, Aug 27, 2024 at 09:35:07AM -0500, Rob Herring wrote:
->>>> On Tue, Aug 27, 2024 at 3:47 AM Lorenzo Bianconi
->>>> <lorenzo.bianconi83@gmail.com> wrote:
->>>>>
->>>>>>
->>>>>> On Fri, Aug 23, 2024 at 11:17:34PM +0200, Lorenzo Bianconi wrote:
->>>>>>>> On Fri, Aug 23, 2024 at 05:14:30PM +0100, Conor Dooley wrote:
->>>>>>>>> On Thu, Aug 22, 2024 at 10:50:52PM +0200, Benjamin Larsson wrote:
->>>>>>>>>> On 22/08/2024 18:06, Conor Dooley wrote:
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Hi.
->>>>>>>>>>
->>>>>>>>>>> before looking at v1:
->>>>>>>>>>> I would really like to see an explanation for why this is a correct
->>>>>>>>>>> model of the hardware as part of the commit message. To me this screams
->>>>>>>>>>> syscon/MFD and instead of describing this as a child of a syscon and
->>>>>>>>>>> using regmap to access it you're doing whatever this is...
->>>>>>>>>>
->>>>>>>>>> Can you post a link to a good example dts that uses syscon/MFD ?
->>>>>>>>>>
->>>>>>>>>> It is not only pinctrl, pwm and gpio that are entangled in each other. A
->>>>>>>>>> good example would help with developing a proper implementation.
->>>>>>>>>
->>>>>>>>> Off the top of my head, no unfortunately. Maybe Rob or Krzk have a good
->>>>>>>>> example. I would suggest to start by looking at drivers within gpio or
->>>>>>>>> pinctrl that use syscon_to_regmap() where the argument is sourced from
->>>>>>>>> either of_node->parent or dev.parent->of_node (which you use depends on
->>>>>>>>> whether or not you have a child node or not).
->>>>>>>>>
->>>>>>>>> I recently had some questions myself for Rob about child nodes for mfd
->>>>>>>>> devices and when they were suitable to use:
->>>>>>>>> https://lore.kernel.org/all/20240815200003.GA2956351-robh@kernel.org/
->>>>>>>>>
->>>>>>>>> Following Rob's line of thought, I'd kinda expect an mfd driver to create
->>>>>>>>> the devices for gpio and pwm using devm_mfd_add_devices() and the
->>>>>>>>> pinctrl to have a child node.
->>>>>>>>
->>>>>>>> Just to not get confused and staring to focus on the wrong kind of
->>>>>>>> API/too complex solution, I would suggest to check the example from
->>>>>>>> Lorenzo.
->>>>>>>>
->>>>>>>> The pinctrl/gpio is an entire separate block and is mapped separately.
->>>>>>>> What is problematic is that chip SCU is a mix and address are not in
->>>>>>>> order and is required by many devices. (clock, pinctrl, gpio...)
->>>>>>>>
->>>>>>>> IMHO a mfd is overkill and wouldn't suite the task. MDF still support a
->>>>>>>> single big region and in our case we need to map 2 different one (gpio
->>>>>>>> AND chip SCU) (or for clock SCU and chip SCU)
->>>>>>>>
->>>>>>>> Similar problem is present in many other place and syscon is just for
->>>>>>>> the task.
->>>>>>>>
->>>>>>>> Simple proposed solution is:
->>>>>>>> - chip SCU entirely mapped and we use syscon
->>>>>>
->>>>>> That seems reasonable.
->>>>>
->>>>> ack
->>>>>
->>>>>>
->>>>>>>> - pinctrl mapped and reference chip SCU by phandle
->>>>>>
->>>>>> ref by phandle shouldn't be needed here, looking up by compatible should
->>>>>> suffice, no?
->>>>>
->>>>> ack, I think it would be fine
->>>>>
->>>>>>
->>>>>>>> - pwm a child of pinctrl as it's scrambled in the pinctrl mapped regs
->>>>>>
->>>>>> The pwm is not a child of the pinctrl though, they're both subfunctions of
->>>>>> the register region they happen to both be in. I don't agree with that
->>>>>> appraisal, sounds like an MFD to me.
->>>>>
->>>>> ack
->>>>>
->>>>>>
->>>>>>>> Hope this can clear any confusion.
->>>>>>>
->>>>>>> To clarify the hw architecture we are discussing about 3 memory regions:
->>>>>>> - chip_scu: <0x1fa20000 0x384>
->>>>>>> - scu: <0x1fb00020 0x94c>
->>>>>>                   ^
->>>>>> I'm highly suspicious of a register region that begins at 0x20. What is
->>>>>> at 0x1fb00000?
->>>>>
->>>>> sorry, my fault
->>>>>
->>>>>>
->>>>>>> - gpio: <0x1fbf0200 0xbc>
->>>>>>
->>>>>> Do you have a link to the register map documentation for this hardware?
->>>>>>
->>>>>>> The memory regions above are used by the following IC blocks:
->>>>>>> - clock: chip_scu and scu
->>>>>>
->>>>>> What is the differentiation between these two different regions? Do they
->>>>>> provide different clocks? Are registers from both of them required in
->>>>>> order to provide particular clocks?
->>>>>
->>>>> In chip-scu and scu memory regions we have heterogeneous registers.
->>>>> Regarding clocks in chip-scu we have fixed clock registers (e.g. spi
->>>>> clock divider, switch clock source and divider, main bus clock source
->>>>> and divider, ...) while in scu (regarding clock configuration) we have
->>>>> pcie clock regs (e.g. reset and other registers). This is the reason
->>>>> why, in en7581-scu driver, we need both of them, but we can access
->>>>> chip-scu via the compatible string (please take a look at the dts
->>>>> below).
->>>>>
->>>>>>
->>>>>>> - pinctrl (io-muxing/gpio_chip/irq_chip): chip_scu and gpio
->>>>>>
->>>>>> Ditto here. Are these actually two different sets of iomuxes, or are
->>>>>> registers from both required to mux a particular pin?
->>>>>
->>>>> Most of the io-muxes configuration registers are in chip-scu block,
->>>>> just pwm ones are in gpio memory block.
->>>>> Gpio block is mainly used for gpio_chip and irq_chip functionalities.
->>>>>
->>>>>>
->>>>>>> - pwm: gpio
->>>>>>>
->>>>>>> clock and pinctrl devices share the chip_scu memory region but they need to
->>>>>>> access even other separated memory areas (scu and gpio respectively).
->>>>>>> pwm needs to just read/write few gpio registers.
->>>>>>> As pointed out in my previous email, we can define the chip_scu block as
->>>>>>> syscon node that can be accessed via phandle by clock and pinctrl drivers.
->>>>>>> clock driver will map scu area while pinctrl one will map gpio memory block.
->>>>>>> pwm can be just a child of pinctrl node.
->>>>>>
->>>>>> As I mentioned above, the last statement here I disagree with. As
->>>>>> someone that's currently in the process of fixing making a mess of this
->>>>>> exact kind of thing, I'm going to strongly advocate not taking shortcuts
->>>>>> like this.
->>>>>>
->>>>>> IMO, all three of these regions need to be described as syscons in some
->>>>>> form, how exactly it's hard to say without a better understanding of the
->>>>>> breakdown between regions.
->>>>>>
->>>>>> If, for example, the chip_scu only provides a few "helper" bits, I'd
->>>>>> expect something like
->>>>>>
->>>>>> syscon@1fa20000 {
->>>>>>         compatible = "chip-scu", "syscon";
->>>>>>         reg = <0x1fa2000 0x384>;
->>>>>> };
->>>>>>
->>>>>> syscon@1fb00000 {
->>>>>>         compatible = "scu", "syscon", "simple-mfd";
->>>>>>         #clock-cells = 1;
->>>>>> };
->>>>>>
->>>>>> syscon@1fbf0200 {
->>>>>>         compatible = "gpio-scu", "syscon", "simple-mfd";
->>>>>>         #pwm-cells = 1;
->>>>>>
->>>>>>         pinctrl@x {
->>>>>>                 compatible = "pinctrl";
->>>>>>                 reg = x;
->>>>>>                 #pinctrl-cells = 1;
->>>>>>                 #gpio-cells = 1;
->>>>>>         };
->>>>>> };
->>>>>>
->>>>>
->>>>> ack, so we could use the following dts nodes for the discussed memory
->>>>> regions (chip-scu, scu and gpio):
->>>>>
->>>>> syscon@1fa20000 {
->>>>>     compatible = "airoha,chip-scu", "syscon";
->>>>>     reg = <0x0 0x1fa2000 0x0 0x384>;
->>>>> };
->>>>>
->>>>> clock-controller@1fb00000 {
->>>>>     compatible = "airoha,en7581-scu", "syscon";
->>>>>     reg = <0x0 0x1fb00000 0x0 0x94c>;
->>>>>     #clock-cells = <1>;
->>>>>     #reset-cells = <1>;
->>>>> };
->>>>>
->>>>> mfd@1fbf0200 {
->>>>>     compatible = "airoha,en7581-gpio-mfd", "simple-mfd";
->>>>>     reg = <0x0 0x1fbf0200 0x0 0xc0>;
->>>>>
->>>>>     pio: pinctrl {
->>>>>         compatible = "airoha,en7581-pinctrl"
->>>>>         gpio-controller;
->>>>>         #gpio-cells = <2>;
->>>>>
->>>>>         interrupt-controller;
->>>>>         #interrupt-cells = <2>;
->>>>>         interrupt-parent = <&gic>;
->>>>>         interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
->>>>>     }
->>>>>
->>>>>     pwm: pwm {
->>>>>         compatible = "airoha,en7581-pwm";
->>>>>         #pwm-cells = <3>;
->>>>>     }
->>>>> };
->>>>
->>>> I think this can be simplified down to this:
->>>>
->>>> mfd@1fbf0200 {
->>>>     compatible = "airoha,en7581-gpio-mfd";  // MFD is a Linuxism. What
->>>> is this h/w block called?
->>>>     reg = <0x0 0x1fbf0200 0x0 0xc0>;
->>>>     gpio-controller;
->>>>     #gpio-cells = <2>;
->>>>     interrupt-controller;
->>>>     #interrupt-cells = <2>;
->>>>     interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
->>>>
->>>>     #pwm-cells = <3>;
->>>>
->>>>     pio: pinctrl {
->>>>         foo-pins {};
->>>>         bar-pins {};
->>>>     };
->>>> };
->>>>
->>>> Maybe we keep the compatible in 'pinctrl'...
->>>>
->>>
->>> Hi Rob, thanks a lot for the hint, I hope we can finally find a solution
->>> on how to implement this.
->>>
->>> In Documentation the block is called GPIO Controller. As explained it does
->>> expose pinctrl function AND pwm (with regs in the middle)
->>>
->>> Is this semplification really needed? It does pose some problem driver
->>> wise (on where to put the driver, in what subsystem) and also on the
->>
->> Sorry, but no, dt-bindings do not affect the driver at all in such way.
->> Nothing changes in your driver in such aspect, no dilemma where to put
->> it (the same place as before).
->>
+Hi Krzysztof,
+
+On 10:45 Wed 21 Aug     , Krzysztof Kozlowski wrote:
+> On Tue, Aug 20, 2024 at 04:36:09PM +0200, Andrea della Porta wrote:
+> > The RP1 is an MFD supporting a gpio controller and /pinmux/pinctrl.
+> > Add minimum support for the gpio only portion. The driver is in
+> > pinctrl folder since upcoming patches will add the pinmux/pinctrl
+> > support where the gpio part can be seen as an addition.
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> >  MAINTAINERS                   |   1 +
+> >  drivers/pinctrl/Kconfig       |  10 +
+> >  drivers/pinctrl/Makefile      |   1 +
+> >  drivers/pinctrl/pinctrl-rp1.c | 719 ++++++++++++++++++++++++++++++++++
+> >  4 files changed, 731 insertions(+)
+> >  create mode 100644 drivers/pinctrl/pinctrl-rp1.c
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 4ce7b049d67e..67f460c36ea1 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -19122,6 +19122,7 @@ S:	Maintained
+> >  F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> >  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+> >  F:	drivers/clk/clk-rp1.c
+> > +F:	drivers/pinctrl/pinctrl-rp1.c
+> >  F:	include/dt-bindings/clock/rp1.h
+> >  F:	include/dt-bindings/misc/rp1.h
+> >  
+> > diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> > index 7e4f93a3bc7a..18bb1a8bd102 100644
+> > --- a/drivers/pinctrl/Kconfig
+> > +++ b/drivers/pinctrl/Kconfig
+> > @@ -565,6 +565,16 @@ config PINCTRL_MLXBF3
+> >  	  each pin. This driver can also be built as a module called
+> >  	  pinctrl-mlxbf3.
+> >  
+> > +config PINCTRL_RP1
+> > +	bool "Pinctrl driver for RP1"
+> > +	select PINMUX
+> > +	select PINCONF
+> > +	select GENERIC_PINCONF
+> > +	select GPIOLIB_IRQCHIP
+> > +	help
+> > +	  Enable the gpio and pinctrl/mux  driver for RaspberryPi RP1
+> > +	  multi function device. 
+> > +
+> >  source "drivers/pinctrl/actions/Kconfig"
+> >  source "drivers/pinctrl/aspeed/Kconfig"
+> >  source "drivers/pinctrl/bcm/Kconfig"
+> > diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+> > index cc809669405a..f1ca23b563f6 100644
+> > --- a/drivers/pinctrl/Makefile
+> > +++ b/drivers/pinctrl/Makefile
+> > @@ -45,6 +45,7 @@ obj-$(CONFIG_PINCTRL_PIC32)	+= pinctrl-pic32.o
+> >  obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
+> >  obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
+> >  obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
+> > +obj-$(CONFIG_PINCTRL_RP1)       += pinctrl-rp1.o
+> >  obj-$(CONFIG_PINCTRL_SCMI)	+= pinctrl-scmi.o
+> >  obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o
+> >  obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
+> > diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
+> > new file mode 100644
+> > index 000000000000..c035d2014505
+> > --- /dev/null
+> > +++ b/drivers/pinctrl/pinctrl-rp1.c
+> > @@ -0,0 +1,719 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Driver for Raspberry Pi RP1 GPIO unit
+> > + *
+> > + * Copyright (C) 2023 Raspberry Pi Ltd.
+> > + *
+> > + * This driver is inspired by:
+> > + * pinctrl-bcm2835.c, please see original file for copyright information
+> > + */
+> > +
+> > +#include <linux/bitmap.h>
+> > +#include <linux/bitops.h>
+> > +#include <linux/bug.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/gpio/driver.h>
+> > +#include <linux/io.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/irqdesc.h>
+> > +#include <linux/init.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_irq.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/seq_file.h>
+> > +#include <linux/spinlock.h>
+> > +#include <linux/types.h>
 > 
-> Ok, from the proposed node structure, is it problematic to move the
-> gpio-controller and -cells in the pinctrl node? And also the pwm-cells
-> to the pwm node?
+> Half of these headers are not used. Drop them.
 
-The move is just unnecessary and not neat. You design DTS based on your
-drivers architecture and this is exactly what we want to avoid.
+Ack.
 
-> This is similar to how it's done by broadcom GPIO MFD [1] that also
+Many thanks,
+Andrea
 
-There are 'reg' fields, which is the main problem here. I don't like
-that arguments because it entirely misses the discussions - about that
-binding or other bindings - happening prior to merge.
-
-> expose pinctrl and other device in the same register block as MFD
-> childs.
 > 
-> This would be the final node block.
+> Best regards,
+> Krzysztof
 > 
->                 mfd@1fbf0200 {
->                         compatible = "airoha,en7581-gpio-mfd";
->                         reg = <0x0 0x1fbf0200 0x0 0xc0>;
-> 
->                         interrupt-parent = <&gic>;
->                         interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> 
->                         pio: pinctrl {
->                                 compatible = "airoha,en7581-pinctrl";
-> 
->                                 gpio-controller;
->                                 #gpio-cells = <2>;
-> 
->                                 interrupt-controller;
->                                 #interrupt-cells = <2>;
-
-No resources here...
-
->                         };
-> 
->                         pwm: pwm {
->                                 compatible = "airoha,en7581-pwm";
-> 
->                                 #pwm-cells = <3>;
->                                 status = "disabled";
-
-And why is it disabled? No external resources. There is no benefit of
-this node.
-
->                         };
->                 };
-> 
-> I also link the implementation of the MFD driver [2]
-> 
-> [1] https://elixir.bootlin.com/linux/v6.10.7/source/Documentation/devicetree/bindings/mfd/brcm,bcm6318-gpio-sysctl.yaml
-> [2] https://github.com/Ansuel/linux/blob/airoha-mfd/drivers/mfd/airoha-en7581-gpio-mfd.c
-
-
-Best regards,
-Krzysztof
-
 
