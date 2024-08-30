@@ -1,178 +1,133 @@
-Return-Path: <linux-gpio+bounces-9466-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9467-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E97E9668EA
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 20:28:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96514966927
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 20:52:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34748285732
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 18:28:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 247CAB23115
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Aug 2024 18:52:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C1D81BC9EC;
-	Fri, 30 Aug 2024 18:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F35831BBBE8;
+	Fri, 30 Aug 2024 18:52:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tZw9zYlB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yw7cWkYn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01E614C585;
-	Fri, 30 Aug 2024 18:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A121B9B29;
+	Fri, 30 Aug 2024 18:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725042482; cv=none; b=bifIiTyzvQ81x5HsL6Q0pp258ubAlscxi0CBLU1UNxkHSNpOmyB/mhJC3cJg0EGGCbZp+U0G4j99atk376PmqbGVDQUmwi4DQYjql8OYdODF/pryyYymz8NJ4y98MQXtVp+ju6OFqXI3aiT9b9HpRhHG8mqmVuqSljKj7IdYrWo=
+	t=1725043928; cv=none; b=Y7FRWrq7V7DTRbe25lrfGhN3rGCCsTjB83X3O12buBBtWDKAmK21s5kfyMgXAUWTg7QRFBOOYcWQE4HHqVw5MQ874L4jwAKJJccyQ6RiR2ElnzF1ISafiTubKxGJSBpk4BuWepay0XvtrSoqVvOB+QCjshDMiFSHMCTliFKQR4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725042482; c=relaxed/simple;
-	bh=f5Uc5k5MsEWXT0HDmaPjKPSyz/7E7DKh4+BY1PUsbVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BWBioSQNWb6FWj6Xv5X1sAdbTbyjMD/qHT9AjA+jXqVxf18G+YHvQp0k0Tsaz9Rm9IZi+R6OWw9UnmjlBlSOI+/8sXXGDBevXiUc8lkjK5X6jzWl7CIs/BgHYUnE0UehRJ7o/A2OAN6vkf2xrcih7Da1tPUMgzPQ1dWzEzX7Jh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tZw9zYlB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77642C4CEC4;
-	Fri, 30 Aug 2024 18:28:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725042481;
-	bh=f5Uc5k5MsEWXT0HDmaPjKPSyz/7E7DKh4+BY1PUsbVo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tZw9zYlBB3g5eplwmqwDuXZj66pLzG7m+54tkBkcDUj1oZ68+xI6EdlFYTOrcHQzc
-	 5X8AXWsHcPvAr2C5XAbm56EwdXy57n3WnPP5I3SFK4pPrFcY2GlBof6kBPHR19rK2t
-	 UHSGAPt1+B/ZYSUOnTnAlgjPWh+VHTVOjtGrZy1Mhpea1jqm+qnuNsb76/G4ACeBdt
-	 PDVROZTa5ctZ30DiryM3zkZeZG9FeGri895jfshIvfAEPtxkTCCKE2VcMabMeHKqpO
-	 NGMIwjO2SHaFrqc5pzuDyNaD/ORFAMGoBgCRaQaK0OteHQm+krqqpV1+3/ba+RXpc/
-	 nHg5W/6dMTgnA==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5334c4d6829so2855708e87.2;
-        Fri, 30 Aug 2024 11:28:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUKM00D8wAxF98/OLZM1pMgT3jUJbid4mC87dmL4ZMIW6TaO28FMV+LwYxvgDxJx6BmPnBQGtWPBdPL@vger.kernel.org, AJvYcCUbclfWQJ1jDVhtC+CtouBNY+rrdb5JCAeiv4t16ZUp5EBNCdqp+vLgKnMLIkmFTv8+eRduXDe7N6ha3d0D@vger.kernel.org, AJvYcCVTwhY5+WgmAbWOSRQdDYEgdChsnHh5vo59HAp9ZJdfV/it6GZpgZu8NzlRXMyevICVUv0M0OlurAUJ@vger.kernel.org, AJvYcCWQrdUp/m+ntbNJFxhXix0POwyFHF55fnYwNBFTFj/XRDEanUkObyshx0GOlt6gFSyUs7H5gZs6KnZL0Q==@vger.kernel.org, AJvYcCWUj3YOEqr+KLSGTm+J3iJG9l15c1hhW/nFj79lXSyzXZ6lp3M5ilktW01F0kiMmi/g90QmqZZcKxT+@vger.kernel.org, AJvYcCX0Wvh5bPaFkcMM3VCrT8LgzNm3Bd1JDau2ie2xDNW00osddV3Bi7a3Ar906ZsDSJlW8prr43ERbEYzSw==@vger.kernel.org, AJvYcCX9cvq+VctDLzp/0rILSKogQy7yqM61yyYEkriJBIjVfbVI7f4kx6Zs13Vq2GLchPtiLn25EQKj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5OVsLE+q1tQET83J3sx03PV/6dDvL27gOJDoCaplDyg1rPA4u
-	kcdJO5XLptJnO7hkCmpvSHhiltAw8U/dv2wRMJ+fUplddi5kqV6tFmDOPMHUDPOSMniKjGgR1Q9
-	pdQrE7/DQnB3+rT8wHzJ7pBssBw==
-X-Google-Smtp-Source: AGHT+IHkKGY89CPI6FFA16aU1d1oJTlBeNFiYnaYKv5/UM42MiQxOpY0Lv8jGLq5OjBzmO9YOzgtvsD8lUsQ5sxBIsk=
-X-Received: by 2002:a05:6512:2c92:b0:530:e323:b1cd with SMTP id
- 2adb3069b0e04-53546bab46bmr2046490e87.40.1725042479576; Fri, 30 Aug 2024
- 11:27:59 -0700 (PDT)
+	s=arc-20240116; t=1725043928; c=relaxed/simple;
+	bh=1g6UP0+INSxNv+dqvr+NMhr94C5/+d020dTzUB1qIEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JjZxtV121aTxwARez6O1ZvXrqI7eyhO5MZ8UT74VfDrwXSikuVsXmkG7FuGjqV+NE4q58acIBb19ZejTAO8UEuv2woAT1UsiaRTHSDfZeTVjI04UvTOavOJSqMWQS/W69G0ywE+8oQ0S0B7pzutZHxvTWDwLL+jR2aAtiqgFcXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yw7cWkYn; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725043927; x=1756579927;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1g6UP0+INSxNv+dqvr+NMhr94C5/+d020dTzUB1qIEo=;
+  b=Yw7cWkYn3AjMSCByO1To2Q36j3kIQcSGLS/f7A4CVEtlrFEPMkDVJ6O/
+   qcV+95O/0W0r88C5e5XQAdwa8WlB4Bmceb2ZnZPkjtb2Okv+6U6DZ7K5Q
+   wD333/P1vnj2dK1Z9vLdgqCkEvEEXyc1vYyIxNb1RJTIo2YE4TdI7kp4l
+   YUtvDptGSvYNz+1I4z8isgWJecIM8gOWOSyv3KMMAWCCURsyAANfwK+KW
+   9/xUET/sVOGtSzgSif1IHh9q5AOfxFZCjCSue3IsymGtGkh1xkkTssJ0Q
+   zTfqGUKRmM10sLFBJ+RRGlJnWSp8mkxJXEiHvmTaWQrbAZg/0y9FmuBoL
+   g==;
+X-CSE-ConnectionGUID: 7x9xX5xjRVut5bheWeW0mA==
+X-CSE-MsgGUID: 7pz1OywIQ56apQcwkQOGGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11180"; a="27575243"
+X-IronPort-AV: E=Sophos;i="6.10,189,1719903600"; 
+   d="scan'208";a="27575243"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 11:52:06 -0700
+X-CSE-ConnectionGUID: YhrcxMycTQy8jKRAvPG0BQ==
+X-CSE-MsgGUID: R5EoqoN3Sui9gIoRcQwxRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,189,1719903600"; 
+   d="scan'208";a="68375059"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 11:52:06 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1sk6io-00000003Ryp-13LU;
+	Fri, 30 Aug 2024 21:51:46 +0300
+Date: Fri, 30 Aug 2024 21:51:45 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 0/5] pinctrl: intel: High impedance impl. and cleanups
+Message-ID: <ZtIUwWavMQRXDOGN@smile.fi.intel.com>
+References: <20240828184018.3097386-1-andriy.shevchenko@linux.intel.com>
+ <Zs-B9m4jO9x3wX4d@smile.fi.intel.com>
+ <974bbb25-3b27-4f53-be35-4bfda17b8c7e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1724159867.git.andrea.porta@suse.com> <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
- <98c570cb-c2ca-4816-9ca4-94033f7fb3fb@gmx.net> <ZshZ6yAmyFoiF5qu@apocalypse>
- <015a0dd9-7a13-45b7-971a-19775a6bdd04@gmx.net> <Zsi5fNftL21vqJ3w@apocalypse>
-In-Reply-To: <Zsi5fNftL21vqJ3w@apocalypse>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 30 Aug 2024 13:27:46 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+XSWEfNF-Dn3paf1io0vxTmfFNbPf7AfRWFf4XiOYkaw@mail.gmail.com>
-Message-ID: <CAL_Jsq+XSWEfNF-Dn3paf1io0vxTmfFNbPf7AfRWFf4XiOYkaw@mail.gmail.com>
-Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
-To: Stefan Wahren <wahrenst@gmx.net>, Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arch@vger.kernel.org, Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <974bbb25-3b27-4f53-be35-4bfda17b8c7e@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Aug 23, 2024 at 11:31=E2=80=AFAM Andrea della Porta
-<andrea.porta@suse.com> wrote:
->
-> Hi Stefan,
->
-> On 12:23 Fri 23 Aug     , Stefan Wahren wrote:
-> > Hi Andrea,
-> >
-> > Am 23.08.24 um 11:44 schrieb Andrea della Porta:
-> > > Hi Stefan,
-> > >
-> > > On 18:20 Wed 21 Aug     , Stefan Wahren wrote:
-> > > > Hi Andrea,
-> > > >
-> > > > Am 20.08.24 um 16:36 schrieb Andrea della Porta:
-> > > > > The RaspberryPi RP1 is ia PCI multi function device containing
-> > > > > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > > > > and others.
-> > > > sorry, i cannot provide you a code review, but just some comments. =
-multi
-> > > > function device suggests "mfd" subsystem or at least "soc" . I won'=
-t
-> > > > recommend misc driver here.
-> > > It's true that RP1 can be called an MFD but the reason for not placin=
-g
-> > > it in mfd subsystem are twofold:
-> > >
-> > > - these discussions are quite clear about this matter: please see [1]
-> > >    and [2]
-> > > - the current driver use no mfd API at all
-> > >
-> > > This RP1 driver is not currently addressing any aspect of ARM core in=
- the
-> > > SoC so I would say it should not stay in drivers/soc / either, as als=
-o
-> > > condifirmed by [2] again and [3] (note that Microchip LAN966x is a ve=
-ry
-> > > close fit to what we have here on RP1).
-> > thanks i was aware of these discussions. A pointer to them or at least =
-a
-> > short statement in the cover letter would be great.
->
-> Sure, consider it done.
->
-> > >
-> > > > > Implement a bare minimum driver to operate the RP1, leveraging
-> > > > > actual OF based driver implementations for the on-borad periphera=
-ls
-> > > > > by loading a devicetree overlay during driver probe.
-> > > > Can you please explain why this should be a DT overlay? The RP1 is
-> > > > assembled on the Raspberry Pi 5 PCB. DT overlays are typically for =
-loose
-> > > > connections like displays or HATs. I think a DTSI just for the RP1 =
-would
-> > > > fit better and is easier to read.
-> > > The dtsi solution you proposed is the one adopted downstream. It has =
-its
-> > > benefits of course, but there's more.
-> > > With the overlay approach we can achieve more generic and agnostic ap=
-proach
-> > > to managing this chipset, being that it is a PCI endpoint and could b=
-e
-> > > possibly be reused in other hw implementations. I believe a similar
-> > > reasoning could be applied to Bootlin's Microchip LAN966x patchset as
-> > > well, and they also choose to approach the dtb overlay.
-> > Could please add this point in the commit message. Doesn't introduce
->
-> Ack.
->
-> > (maintainence) issues in case U-Boot needs a RP1 driver, too?
->
-> Good point. Right now u-boot does not support RP1 nor PCIe (which is a
-> prerequisite for RP1 to work) on Rpi5 and I'm quite sure that it will be
-> so in the near future. Of course I cannot guarantee this will be the case
-> far away in time.
->
-> Since u-boot is lacking support for RP1 we cannot really produce some tes=
-t
-> results to check the compatibility versus kernel dtb overlay but we can
-> speculate a little bit about it. AFAIK u-boot would probably place the rp=
-1
-> node directly under its pcie@12000 node in DT while the dtb overlay will =
-use
-> dynamically created PCI endpoint node (dev@0) as parent for rp1 node.
+On Fri, Aug 30, 2024 at 07:56:11AM +0200, Heiner Kallweit wrote:
+> On 28.08.2024 22:00, Andy Shevchenko wrote:
+> > On Wed, Aug 28, 2024 at 09:38:33PM +0300, Andy Shevchenko wrote:
+> >> We would need a high impedance implementation for a quirk, so here it
+> >> is. While doing this series I also noticed a couple of opportunities
+> >> to clean up, hence two more patches (1st and 5th).
+> > 
+> > Sorry it took a while to actually start implementing the quirk for your case.
+> > Here I'm asking for the following things:
+> > 
+> > 1) what is the marketing name of the device you have problems with?
+> > (I believe it's available on the free market, correct?);
+> 
+> Device is a dirt-cheap mini pc, marketed as Chatreey T9. It's available
+> on the free market, right. Dmesg says:
+> DMI: Default string Default string/Default string, BIOS ADLN.M6.SODIMM.ZB.CY.015 08/08/2023
+> 
+> > 2) does it have any BIOS updates and, if it has, does it fix the issue?
+> > 
+> No BIOS updates.
+> 
+> > 3) can you apply patches 2,3,4,5 from this series (the first one is buggy and
+> > not needed for you) and replace the hack I mentioned earlier with
+> > 
+> > 	ret = intel_gpio_set_high_impedance(pctrl, 3);
+> > 	if (ret)
+> > 		return ret;
+> > 
+> > somewhere at the end of intel_pinctrl_probe()?
+> > 
+> > Does it still work as expected?
+> > 
+> I will check.
 
-u-boot could do that and it would not be following the 25+ year old
-PCI bus bindings. Some things may be argued about as "Linux bindings",
-but that isn't one of them.
+There is a v2 to test, you can take entire series, or for-next branch of Intel
+pin control tree
 
-Rob
+https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git/log/?h=for-next
+
+Thanks!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
