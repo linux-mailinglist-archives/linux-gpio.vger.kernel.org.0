@@ -1,128 +1,139 @@
-Return-Path: <linux-gpio+bounces-9487-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9488-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4F1A966F20
-	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 05:40:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93E5B966F7E
+	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 07:50:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E68EB1C214D9
-	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 03:40:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B5CF284079
+	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 05:50:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24F4178289;
-	Sat, 31 Aug 2024 03:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E722314D28E;
+	Sat, 31 Aug 2024 05:49:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L9+cKLg0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mTbRkehX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78ED2F2E;
-	Sat, 31 Aug 2024 03:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B69C3C30;
+	Sat, 31 Aug 2024 05:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725075596; cv=none; b=ZbdXQgtCO6utmIcVaGnb8jjzLcLdPc1e70KEEYV/EXgwHpLylE81DrbtuzReeD3Hl55R6k7yXoErrRbWe8iFJpSTpcpr6vd7G7QmT3BYPdXXByJ7gGotEhSWh2yzMbUamx6rLYDiENAkYoh3hm6uDCMdsxXi2ViNFnB/0fsqNjE=
+	t=1725083394; cv=none; b=TCOySAd3gof/CuW8+Hn4owqkH+B4GGh5XsC6PpVSqnNoVBRDxY8VVd58o15tLtu9bC7ixruSkq9mympIAI7B9y3lmIvexAiszmy4bV/l9GRMR8VVpJdIRhI8+kS7rScrLlbgDeYCH/Mt0B7bQWHHfspzag23FZx4wEgLE+MeKrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725075596; c=relaxed/simple;
-	bh=E3vRu46hlWxy6N2bSPsweS01OPMGvsArMoRLzr9AZOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CFER2nUjy1Q41Wk6eN5L1+gcOJVPPhEG/g0nzAhRk4UvvIqKmCxqNjv4RA+2YZ0HJTmxHKRUBlGiUrkyiw2brvILg4gRYgIpm3h7TLF09MwzK05LQ2soHUqnmjZkMolmFKvvR1gZTgCGVlrY1UfOZO2fBng72Jxo8SrrnUfFHIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L9+cKLg0; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725075595; x=1756611595;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=E3vRu46hlWxy6N2bSPsweS01OPMGvsArMoRLzr9AZOA=;
-  b=L9+cKLg0WZ2Cr9JyIwKfGGX96jbr2yrtMT3BTULMudwPp3+aKNxjDySc
-   Ncba3EjidJI7weOZw6IGj2gjKZvb1DpQU5opc3HZ+n8WO8IblfAM99jlT
-   O03OFMZB2zdc145kWjAyOm+Dne+LRdm5V2tVhzUAYcsLJ6TABZmZgaQWj
-   NaoTAf1W0d9N1zKn4GsPWOBhG70JufkEXqCtQSJ8GJ7i72vvie61jrptV
-   gQwLANGfETJzVj6us4YZnZcRU8SN2J1kYCmP3qGxFNasExkG4+voHJM/l
-   GM4xUOJw3DLzS0VPAyGmwnGtPL1wxhdZHJzry+PMZmzr33D2QvEfHBDRC
-   w==;
-X-CSE-ConnectionGUID: /CjWC7IrSoqKniAQTwLhyw==
-X-CSE-MsgGUID: MOe9c4Y8Sp2bAsjnK47jFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11180"; a="23592806"
-X-IronPort-AV: E=Sophos;i="6.10,190,1719903600"; 
-   d="scan'208";a="23592806"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 20:39:54 -0700
-X-CSE-ConnectionGUID: e3zhyya4TkGgJU8661giWg==
-X-CSE-MsgGUID: FVPujpNEQdiXXGkrmCT8Gw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,190,1719903600"; 
-   d="scan'208";a="68740810"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 30 Aug 2024 20:39:45 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1skExj-0002KF-1g;
-	Sat, 31 Aug 2024 03:39:43 +0000
-Date: Sat, 31 Aug 2024 11:39:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Billy Tsai <billy_tsai@aspeedtech.com>, linus.walleij@linaro.org,
-	brgl@bgdev.pl, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v2 4/4] gpio: aspeed: Support G7 Aspeed gpio controller
-Message-ID: <202408311104.T3i0AxEf-lkp@intel.com>
-References: <20240830034047.2251482-5-billy_tsai@aspeedtech.com>
+	s=arc-20240116; t=1725083394; c=relaxed/simple;
+	bh=qxfIMSk+CG/XJddTHxQfdwpdqzdadrG6fYvmeJJ7Zg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=WnQZNVk2YOmg6GTq/Lc7UVE5Ea4y08UPTao9UjgDfn+O9tfTDC8wpgehtd4X729D0fiOo+J/h5up6tUZdxY3+SQZLaLwsel3ANAbSVhwxBVc724HB4ARBZu7qbMfV1L7CS4rTpwgfBBvbD0M0e0NkwR5TUwMGEj6+SzkVexJgag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mTbRkehX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C67E2C4CEC0;
+	Sat, 31 Aug 2024 05:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725083394;
+	bh=qxfIMSk+CG/XJddTHxQfdwpdqzdadrG6fYvmeJJ7Zg4=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=mTbRkehXGIhDRPsFEN1l3gabpMyIzPsEWFvhtst4Z/pxOw1QnjMr3wfeOdHruoS05
+	 qgMF7AIvt6VqZF9646MVVyUp4Sgi/e+06paEVnJp782fcgykj2toJ7ewNJZ/Kc/Hqk
+	 h6w8NmnLydeaAVC5mMfeEhHMuMnfN6jO6oWa76jqInnnRBwRFWD5/70iAhOCmeltHE
+	 DrCIk7yoO9qmZOaiLVhxayWJoDubJCDUnNkFJ3qYZCoS0iti/timnuqrgRLsNanVOh
+	 iZropZeUz35y8FrlVoYfjOuDuWClaYf+ObGu/IIeMTHosjiSuo2GVwPdiAgf+DeT3a
+	 +bgu7umBxtJkQ==
+Message-ID: <216a9d60-3485-444a-ab22-1b17882e873e@kernel.org>
+Date: Sat, 31 Aug 2024 07:49:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240830034047.2251482-5-billy_tsai@aspeedtech.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] dt-bindings: gpio: aspeed,ast2400-gpio: Support
+ ast2700
+To: Billy Tsai <billy_tsai@aspeedtech.com>, linus.walleij@linaro.org,
+ brgl@bgdev.pl, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ joel@jms.id.au, andrew@codeconstruct.com.au, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ BMC-SW@aspeedtech.com
+References: <20240830034047.2251482-1-billy_tsai@aspeedtech.com>
+ <20240830034047.2251482-2-billy_tsai@aspeedtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20240830034047.2251482-2-billy_tsai@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Billy,
+On 30/08/2024 05:40, Billy Tsai wrote:
+> The AST2700 is the 7th generation SoC from Aspeed, featuring two GPIO
+> controllers: one with 12 GPIO pins and another with 216 GPIO pins.
+> 
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 46 ++++++++++++++++++-
+>  1 file changed, 45 insertions(+), 1 deletion(-)
+> 
 
-kernel test robot noticed the following build warnings:
+One more Aspeed patch where you ignore review feedback. I think almost
+all (except one) Aspeed submissions were doing this: ignoring reviewers.
 
-[auto build test WARNING on brgl/gpio/for-next]
-[also build test WARNING on linus/master v6.11-rc5 next-20240830]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+<form letter>
+This is a friendly reminder during the review process.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Billy-Tsai/dt-bindings-gpio-aspeed-ast2400-gpio-Support-ast2700/20240830-114325
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20240830034047.2251482-5-billy_tsai%40aspeedtech.com
-patch subject: [PATCH v2 4/4] gpio: aspeed: Support G7 Aspeed gpio controller
-config: openrisc-randconfig-r131-20240830 (https://download.01.org/0day-ci/archive/20240831/202408311104.T3i0AxEf-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 14.1.0
-reproduce: (https://download.01.org/0day-ci/archive/20240831/202408311104.T3i0AxEf-lkp@intel.com/reproduce)
+It seems my or other reviewer's previous comments were not fully
+addressed. Maybe the feedback got lost between the quotes, maybe you
+just forgot to apply it. Please go back to the previous discussion and
+either implement all requested changes or keep discussing them.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202408311104.T3i0AxEf-lkp@intel.com/
+Thank you.
+</form letter>
 
-sparse warnings: (new ones prefixed by >>)
-   drivers/gpio/gpio-aspeed.c:1181:26: sparse: sparse: symbol 'aspeed_g4_llops' was not declared. Should it be static?
->> drivers/gpio/gpio-aspeed.c:1215:26: sparse: sparse: symbol 'aspeed_g7_llops' was not declared. Should it be static?
+Best regards,
+Krzysztof
 
-vim +/aspeed_g7_llops +1215 drivers/gpio/gpio-aspeed.c
-
-  1214	
-> 1215	struct aspeed_gpio_llops aspeed_g7_llops = {
-  1216		.copro_request = NULL,
-  1217		.copro_release = NULL,
-  1218		.reg_bits_set = aspeed_g7_reg_bits_set,
-  1219		.reg_bits_read = aspeed_g7_reg_bits_read,
-  1220	};
-  1221	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
