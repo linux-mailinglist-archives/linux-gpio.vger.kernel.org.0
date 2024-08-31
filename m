@@ -1,153 +1,139 @@
-Return-Path: <linux-gpio+bounces-9492-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9493-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A6919671FC
-	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 15:54:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BBAF96722C
+	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 16:28:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12E81282722
-	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 13:54:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 969F0B21A2D
+	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 14:28:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6A9B1B28A;
-	Sat, 31 Aug 2024 13:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A211BDDB;
+	Sat, 31 Aug 2024 14:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V1jjL5XG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YcItafka"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4121811711
-	for <linux-gpio@vger.kernel.org>; Sat, 31 Aug 2024 13:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8894117999;
+	Sat, 31 Aug 2024 14:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725112440; cv=none; b=L5qTzkzEQcShlTGjCdKXXIhSr8qm5Ynb3YzkgQ2+xy/IjKmbUGENUCRUhVeCznoSpHlUQ8wJwz90HVmgoEuEM1CZK7kI9oSPN7P7mWGWOU2t8bkHcJ6ZuZLYmVeWFVdWaOGI+69ySfoBaw9gLGk9pfUHOLFCQo3hNVM7/O/6Zak=
+	t=1725114515; cv=none; b=U0+kyjMNYxf4WVaeeuNal+9w+dnARR3qdrP6KJ2tLVGLFmuoG9UvNmuTfpwEWg33s6Xg0pwriqXTSaC1aQPSjACyV0j+aYIQD24q+V6HTbKT3+Jom9jlZ9Mv8k4AHEjajD/hyV8MxPr5pT3y7yqQHf/SRk7r4RR9cHIlBWTio8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725112440; c=relaxed/simple;
-	bh=wJ4QgFNuqwu/Leb/N4TW45209mZ5WZDv25eNPwvyxO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HASPJipLgAk6OGP1+nPzynPMJzvf1YV7q0Z/bwUKAvPw1FgTAq1LEWRMp+VouVHHp4MW3XbZF40BauY5xk957nveCL5E1fsOnCfGhMtB5hPE6TH/wNvVRZVSAgTUmUGr9Oj0L+TsIb+T/8fXde5vWS+7jw8MNHE2WPdCyHhUDTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V1jjL5XG; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42bbf138477so9208795e9.2
-        for <linux-gpio@vger.kernel.org>; Sat, 31 Aug 2024 06:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725112437; x=1725717237; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=36D9CATQ2pvh5CBMOXJIawRjTPDBw45elgFZcq41bNg=;
-        b=V1jjL5XGEq/3FxsxLbbIBYQP1A3m+CNzjc0UwmTIAf8wcRF9bLUw1UYeU5PPWw7Lsf
-         AyStAX/hfsp7xSYO9/1AjXv8qk6jZczpQjGfiuJ3+Ku7CKZfSmm0E404Ai6xqu26E+Mg
-         5VHoewo6DBbe1s4I+wZ6651TjANCPwP7iwRaRlPMyE5cJXc+EV7r+Lklcbi5HuSNBJex
-         jQzuu/AN23x7KaVxUF5Rcf/rHT4yB7biBUabHEGZxQ0B2aJOfEInlQmWEoEgs/QuqPx/
-         KTnOJRdUQUfWQPmI8oqdZuvC5tOpDFmvXZGiW3WkGSS7eKCHn0k/rMf3Hl9KFv3LFlEx
-         4qoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725112437; x=1725717237;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=36D9CATQ2pvh5CBMOXJIawRjTPDBw45elgFZcq41bNg=;
-        b=F0oA1GzAMudTsiiB6OmN6aQe5feggCnkrjNATEkETXBBE5t4pqZ1zlo4U7Sre9G+dY
-         /U4PErY/S0drcrq04jvWJqqPbXvvSqp7dz2uN3rSYDLsWyDIkspLz0FulKDGkN2OXrXN
-         ady5qCJ24gn8OzmliK3WcOlawYx3WrLkShmwiFFCgjYjaV5SiZH1O7UjBCplrhiyYkoE
-         1cCk/1yOyBRhQ1Vm3hEZHE23zc3u+cjUUOf+wD3e46n9xSph2He1p6A9xluyNsqYOpwS
-         JcIGMOOXAbRLIpH1KoF8GMMrUBzgiX90qEEOCN7g5fsXbrP6whkQYfvjxq2NCBSBJNCT
-         PTiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXP0oLenEGawg7EN9pJV4PHPS/Zs1iGzPzzz+w/9i+EoArBhY6dBhBdaLTCxK7wddPDSDUsej2a/oKl@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpmQKxkUwDRsre/Cu43KoKvPYhemLUoxY7M51qRDJWfDm4693S
-	cw94hP8QG2CfUGPyskkyVEeyHwxT70lvMeR6CAoYY/uw0rwpoihf0Ck8POoJQrs=
-X-Google-Smtp-Source: AGHT+IHX2XVIKii7FuT5487mVz6P9wGbmrCYDRQmGLpqd0rgF3FqG6sdOGhjn9n4TnD5FCIX0Rz0Cg==
-X-Received: by 2002:a05:600c:3b25:b0:428:d83:eb6b with SMTP id 5b1f17b1804b1-42bb0294357mr77516125e9.15.1725112436454;
-        Sat, 31 Aug 2024 06:53:56 -0700 (PDT)
-Received: from linaro.org ([82.79.186.176])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6deb2dcsm77602925e9.1.2024.08.31.06.53.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2024 06:53:55 -0700 (PDT)
-Date: Sat, 31 Aug 2024 16:53:54 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Maulik Shah <quic_mkshah@quicinc.com>,
-	Sibi Sankar <quic_sibis@quicinc.com>,
-	Johan Hovold <johan@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: qcom: x1e80100: Bypass PDC wakeup parent for now
-Message-ID: <ZtMgcsjpA6e5kSoc@linaro.org>
-References: <20240830-x1e80100-bypass-pdc-v1-1-d4c00be0c3e3@linaro.org>
+	s=arc-20240116; t=1725114515; c=relaxed/simple;
+	bh=NxucNnCnJizcmF2lSWVyU0LQyReQyHJFnoqf4gfasbo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IUbvP8vIlG2RpI7RrmMwKZljmvhJCqrGK7GVF979+aSPlelHJgg3gL6y6U3QCEb/+LbU3oH+yCUlOAOziMQ1A6Iq4eo/YZz3Gs8Mb1CjuzO1OTeuNWwIlf4/aIECGyu09UyfqoQ37MYR1ckp/irulKzQ12EBL/ouXechTc1u7Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YcItafka; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E2EC4CEC0;
+	Sat, 31 Aug 2024 14:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725114515;
+	bh=NxucNnCnJizcmF2lSWVyU0LQyReQyHJFnoqf4gfasbo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=YcItafkawK8PxwdOVLQMnIrzH1PflF1oCp9JdxpZDo2FfB3IRP49XUmtVnCEOlgb1
+	 AOarRiLWWihmj60eV5JywhMpA+i1cuoe9p82mFRLTSjo/cfDnDyDZdOAOlj3oPypb0
+	 BgT569s3ojB9+Min4cuIOUTFJHJOJhWaMk2IeZsTU/OjiYroHnh9rqDWzZz7hiaTBT
+	 KIkcnO7KZ8BJPg38xqrIFQfMpth/weBxKx66cDVURpV/sJZTI/rSpo7d/Zx9/S6YeJ
+	 n1gneOpwA/paBII0f6Vv0F2wAtHl5zaN3hOR+5A9et1hVKUTREH5vjvFcBBNGYkuJE
+	 zieyaQ+2pho7w==
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: [PATCH v3 0/5] Add mfd, pinctrl and pwm support to EN7581 SoC
+Date: Sat, 31 Aug 2024 16:27:45 +0200
+Message-Id: <20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240830-x1e80100-bypass-pdc-v1-1-d4c00be0c3e3@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGEo02YC/12Q3U6EMBSEX4X02kP6S1uufA+zFxROoRFbtiBRN
+ 7y7XdZE4+Wc5Mx8MzeyYg64kra6kYx7WEOKRYinivRTF0eEMBRNOOWSGmYAo1aGwRJiv+UZmPO
+ MU6akQ0rK05LRh4/T8OVStM/pDbYpY3fa0EEJjca4RhqpXS9RWq0ax6V1HP3Qe2mss7xmmgthu
+ ZSyHsNWzylj/ErPr5gjznXK409Yxut7gd4eib/MbXUSa6rApwwNMAZu8dAJadH31AzetDsnd8Y
+ prFvKn+cG5XT3edTl/H/dnQMF1zGlLNOi0/4v0eU4jm9bMUPhUQEAAA==
+To: Lorenzo Bianconi <lorenzo@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Lee Jones <lee@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
+ linux-pwm@vger.kernel.org
+X-Mailer: b4 0.14.1
 
-On 24-08-30 11:09:07, Stephan Gerhold wrote:
-> On X1E80100, GPIO interrupts for wakeup-capable pins have been broken since
-> the introduction of the pinctrl driver. This prevents keyboard and touchpad
-> from working on most of the X1E laptops. So far we have worked around this
-> by manually building a kernel with the "wakeup-parent" removed from the
-> pinctrl node in the device tree, but we cannot expect all users to do that.
-> 
-> Implement a similar workaround in the driver by clearing the wakeirq_map
-> for X1E80100. This avoids using the PDC wakeup parent for all GPIOs
-> and handles the interrupts directly in the pinctrl driver instead.
-> 
-> The PDC driver needs additional changes to support X1E80100 properly.
-> Adding a workaround separately first allows to land the necessary PDC
-> changes through the normal release cycle, while still solving the more
-> critical problem with keyboard and touchpad on the current stable kernel
-> versions. Bypassing the PDC is enough for now, because we have not yet
-> enabled the deep idle states where using the PDC becomes necessary.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 05e4941d97ef ("pinctrl: qcom: Add X1E80100 pinctrl driver")
-> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+Introduce airoha-mfd driver in order to load pinctrl and pwm drivers for
+EN7581 SoC. airoha-mfd is needed since both pinctrl and pwm drivers
+needs to access the same memory block (gpio memory region) to configure
+{gio,irq}_chip and pwm functionalities respectively, so model them as
+childs of a parent mfd driver.
+Current EN7581 pinctrl driver supports the following functionalities:
+- pin multiplexing via chip_scu syscon
+- pin pull-up, pull-down, open-drain, current strength,
+  {input,output}_enable, output_{low,high} via chip_scu syscon
+- gpio controller
+- irq controller
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+---
+Changes in v3:
+- introduce airoha-mfd driver
+- add pwm driver to the same series
+- model pinctrl and pwm drivers as childs of a parent mfd driver.
+- access chip-scu memory region in pinctrl driver via syscon
+- introduce a single airoha,en7581-gpio-sysctl.yaml binding and get rid
+  of dedicated bindings for pinctrl and pwm
+- add airoha,en7581-chip-scu.yaml binding do the series
+- Link to v2: https://lore.kernel.org/r/20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org
 
-> ---
-> Commenting out .wakeirq_map as well would give an unused declaration
-> warning for x1e80100_pdc_map. The map itself is correct, so I just "clear"
-> it by setting .nwakeirq_map to 0 for now. It's just temporary - this patch
-> will be reverted after we add X1E80100 support to the PDC driver.
-> ---
->  drivers/pinctrl/qcom/pinctrl-x1e80100.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-x1e80100.c b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-> index 65ed933f05ce..abfcdd3da9e8 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-> @@ -1839,7 +1839,9 @@ static const struct msm_pinctrl_soc_data x1e80100_pinctrl = {
->  	.ngroups = ARRAY_SIZE(x1e80100_groups),
->  	.ngpios = 239,
->  	.wakeirq_map = x1e80100_pdc_map,
-> -	.nwakeirq_map = ARRAY_SIZE(x1e80100_pdc_map),
-> +	/* TODO: Enabling PDC currently breaks GPIO interrupts */
-> +	.nwakeirq_map = 0,
-> +	/* .nwakeirq_map = ARRAY_SIZE(x1e80100_pdc_map), */
->  	.egpio_func = 9,
->  };
->  
-> 
-> ---
-> base-commit: 128f71fe014fc91efa1407ce549f94a9a9f1072c
-> change-id: 20240830-x1e80100-bypass-pdc-39a8c1ae594f
-> 
-> Best regards,
-> -- 
-> Stephan Gerhold <stephan.gerhold@linaro.org>
-> 
+Changes in v2:
+- Fix compilation errors
+- Collapse some register mappings for gpio and irq controllers
+- update dt-bindings according to new register mapping
+- fix some dt-bindings errors
+- Link to v1: https://lore.kernel.org/all/cover.1723392444.git.lorenzo@kernel.org/
+
+---
+Benjamin Larsson (1):
+      pwm: airoha: Add support for EN7581 SoC
+
+Christian Marangi (2):
+      dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
+      mfd: airoha: Add support for Airoha EN7581 MFD
+
+Lorenzo Bianconi (2):
+      dt-bindings: arm: airoha: Add the chip-scu node for EN7581 SoC
+      pinctrl: airoha: Add support for EN7581 SoC
+
+ .../bindings/arm/airoha,en7581-chip-scu.yaml       |   42 +
+ .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    |  433 +++
+ MAINTAINERS                                        |    7 +
+ drivers/mfd/Kconfig                                |    8 +
+ drivers/mfd/Makefile                               |    2 +
+ drivers/mfd/airoha-en7581-gpio-mfd.c               |   72 +
+ drivers/pinctrl/mediatek/Kconfig                   |   16 +-
+ drivers/pinctrl/mediatek/Makefile                  |    1 +
+ drivers/pinctrl/mediatek/pinctrl-airoha.c          | 2964 ++++++++++++++++++++
+ drivers/pwm/Kconfig                                |   10 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-airoha.c                           |  435 +++
+ include/linux/mfd/airoha-en7581-mfd.h              |    9 +
+ 13 files changed, 3999 insertions(+), 1 deletion(-)
+---
+base-commit: defaf1a2113a22b00dfa1abc0fd2014820eaf065
+change-id: 20240818-en7581-pinctrl-1bf120154be0
+prerequisite-change-id: 20240705-for-6-11-bpf-a349efc08df8:v2
+
+Best regards,
+-- 
+Lorenzo Bianconi <lorenzo@kernel.org>
+
 
