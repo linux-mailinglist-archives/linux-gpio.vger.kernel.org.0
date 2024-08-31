@@ -1,125 +1,153 @@
-Return-Path: <linux-gpio+bounces-9491-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9492-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FB23967036
-	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 09:52:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A6919671FC
+	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 15:54:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C35E91F2334D
-	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 07:52:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12E81282722
+	for <lists+linux-gpio@lfdr.de>; Sat, 31 Aug 2024 13:54:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94FE016EBE6;
-	Sat, 31 Aug 2024 07:52:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6A9B1B28A;
+	Sat, 31 Aug 2024 13:54:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1ND3IHN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V1jjL5XG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028C813A885
-	for <linux-gpio@vger.kernel.org>; Sat, 31 Aug 2024 07:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4121811711
+	for <linux-gpio@vger.kernel.org>; Sat, 31 Aug 2024 13:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725090751; cv=none; b=SrVD85+oE1cAVLt3Tq8g3c4C0cPqh+XMk56ghuADnIrGjBiSUVqpViCZiPisoZhAPJv8i04UFIZcF9Bu80p7DpizkqmZLMgmPp5pOh+q8UpNiGXVCecddulUK6mNNXEqko14OZAvcERPkFKLnx1eCvPWEuAawwvj9papbEul5TQ=
+	t=1725112440; cv=none; b=L5qTzkzEQcShlTGjCdKXXIhSr8qm5Ynb3YzkgQ2+xy/IjKmbUGENUCRUhVeCznoSpHlUQ8wJwz90HVmgoEuEM1CZK7kI9oSPN7P7mWGWOU2t8bkHcJ6ZuZLYmVeWFVdWaOGI+69ySfoBaw9gLGk9pfUHOLFCQo3hNVM7/O/6Zak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725090751; c=relaxed/simple;
-	bh=AVvt57Z0sxrj4s1bCCfPtoY7eOlx6IexIbRFZ7lRcYA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tBsBVx/1xCD7ORBWoOv6mfVMc48PjRgp9S89U1i7/XAgSNdkfklU/J5hYDZ4NrTVa7W5hskd7Isg1fzVHcPuLuGPFq6A5ahkaK75gsjNt46hXpjvz1Up/GMt2LjigvzGWalrzkh+RwBVZBAbwrwaBNTrlrYmrJ3FDa3jAFrS79k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H1ND3IHN; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-715c160e231so2222715b3a.0
-        for <linux-gpio@vger.kernel.org>; Sat, 31 Aug 2024 00:52:28 -0700 (PDT)
+	s=arc-20240116; t=1725112440; c=relaxed/simple;
+	bh=wJ4QgFNuqwu/Leb/N4TW45209mZ5WZDv25eNPwvyxO0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HASPJipLgAk6OGP1+nPzynPMJzvf1YV7q0Z/bwUKAvPw1FgTAq1LEWRMp+VouVHHp4MW3XbZF40BauY5xk957nveCL5E1fsOnCfGhMtB5hPE6TH/wNvVRZVSAgTUmUGr9Oj0L+TsIb+T/8fXde5vWS+7jw8MNHE2WPdCyHhUDTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V1jjL5XG; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42bbf138477so9208795e9.2
+        for <linux-gpio@vger.kernel.org>; Sat, 31 Aug 2024 06:53:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725090748; x=1725695548; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xtkkygVLjjrRxbM3vqt+WmM8hPWt/sjXJrM4oxyp8+s=;
-        b=H1ND3IHN4H2nCKoZBDc4PlaX4dw0fESMETAoq5w6wo3g45yQB1nY4uRChXO6I8jdFx
-         E9SSu3BQOSPpWur0RxAg9PyMtQEVShW+WQl4EeWBxgDnDhfptpH4fX1kSGCXl7TFPQGh
-         JrLskPG5mxwkWEmQsG4JVYXZ3uiAj2mq78lF00/VcfGhIsgiAja9QhYov1Q+kJxOqagp
-         q7Ef8JaB4bgHpnXW6LBfMtC02dZ5CokGr2zV9uccUmb13O8ZANkisbYrrVgrLL7vvsNd
-         9ePdCC9yOl206XlBlfWg2dA/v4BgdS69AFsPyE/1MOEWJCKtxh5VqFgK++pCfGlVenWU
-         o60Q==
+        d=linaro.org; s=google; t=1725112437; x=1725717237; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=36D9CATQ2pvh5CBMOXJIawRjTPDBw45elgFZcq41bNg=;
+        b=V1jjL5XGEq/3FxsxLbbIBYQP1A3m+CNzjc0UwmTIAf8wcRF9bLUw1UYeU5PPWw7Lsf
+         AyStAX/hfsp7xSYO9/1AjXv8qk6jZczpQjGfiuJ3+Ku7CKZfSmm0E404Ai6xqu26E+Mg
+         5VHoewo6DBbe1s4I+wZ6651TjANCPwP7iwRaRlPMyE5cJXc+EV7r+Lklcbi5HuSNBJex
+         jQzuu/AN23x7KaVxUF5Rcf/rHT4yB7biBUabHEGZxQ0B2aJOfEInlQmWEoEgs/QuqPx/
+         KTnOJRdUQUfWQPmI8oqdZuvC5tOpDFmvXZGiW3WkGSS7eKCHn0k/rMf3Hl9KFv3LFlEx
+         4qoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725090748; x=1725695548;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xtkkygVLjjrRxbM3vqt+WmM8hPWt/sjXJrM4oxyp8+s=;
-        b=q40ts7K7CEhr2+94t9TjugQHXvOh4rQw/nF1XgpYofu6Fk9HqaSEL9X5mGqRLbWo8G
-         /hpu7vp5rrTXwXpQehoC5HSGosGX/kyHltVkLOw8qtpCOQvzvRrUHCeNA6aYTr8oh54S
-         tDBhqDE4eNThTncbIfohfezRXbMuBYrcESIW78UIcD4JCLANYZUKEoW4pKgVuL+h06xp
-         JF3n7Cp3YMvyUqwmMwNTbHlnYAq0hYSRGvdHO85uZBBCPepSfK48FSTY4TdbIUBde9Sl
-         uilVMlT+ScGWpZ/kDb2DPW35VKtFlnyGlUorixFWHTU7wAuewpXp0YkNr/lf5XbREqPO
-         bHsg==
-X-Gm-Message-State: AOJu0YyiuDpvmPpOcHhh8WESJ+xj48ZDrdTurYJ61Vfjm17EJg9NQ7XH
-	1wtC9D831Wfyid7fL/bOBbvq+7yOFdP7nMxW6tkwkM48QvVnYcdMyfy1wQ==
-X-Google-Smtp-Source: AGHT+IHN0R1sQEy251SS7pBPOl5Nf4vVlMjCK03kIULfJZrtHOkDNpNUO2bhq/iq2d8WndAELt/KkQ==
-X-Received: by 2002:a05:6a00:3c86:b0:710:4d08:e094 with SMTP id d2e1a72fcca58-715dfba79c7mr10477130b3a.2.1725090747980;
-        Sat, 31 Aug 2024 00:52:27 -0700 (PDT)
-Received: from rigel.home.arpa ([203.63.211.120])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-715e56e5c14sm3983205b3a.151.2024.08.31.00.52.25
+        d=1e100.net; s=20230601; t=1725112437; x=1725717237;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=36D9CATQ2pvh5CBMOXJIawRjTPDBw45elgFZcq41bNg=;
+        b=F0oA1GzAMudTsiiB6OmN6aQe5feggCnkrjNATEkETXBBE5t4pqZ1zlo4U7Sre9G+dY
+         /U4PErY/S0drcrq04jvWJqqPbXvvSqp7dz2uN3rSYDLsWyDIkspLz0FulKDGkN2OXrXN
+         ady5qCJ24gn8OzmliK3WcOlawYx3WrLkShmwiFFCgjYjaV5SiZH1O7UjBCplrhiyYkoE
+         1cCk/1yOyBRhQ1Vm3hEZHE23zc3u+cjUUOf+wD3e46n9xSph2He1p6A9xluyNsqYOpwS
+         JcIGMOOXAbRLIpH1KoF8GMMrUBzgiX90qEEOCN7g5fsXbrP6whkQYfvjxq2NCBSBJNCT
+         PTiA==
+X-Forwarded-Encrypted: i=1; AJvYcCXP0oLenEGawg7EN9pJV4PHPS/Zs1iGzPzzz+w/9i+EoArBhY6dBhBdaLTCxK7wddPDSDUsej2a/oKl@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpmQKxkUwDRsre/Cu43KoKvPYhemLUoxY7M51qRDJWfDm4693S
+	cw94hP8QG2CfUGPyskkyVEeyHwxT70lvMeR6CAoYY/uw0rwpoihf0Ck8POoJQrs=
+X-Google-Smtp-Source: AGHT+IHX2XVIKii7FuT5487mVz6P9wGbmrCYDRQmGLpqd0rgF3FqG6sdOGhjn9n4TnD5FCIX0Rz0Cg==
+X-Received: by 2002:a05:600c:3b25:b0:428:d83:eb6b with SMTP id 5b1f17b1804b1-42bb0294357mr77516125e9.15.1725112436454;
+        Sat, 31 Aug 2024 06:53:56 -0700 (PDT)
+Received: from linaro.org ([82.79.186.176])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6deb2dcsm77602925e9.1.2024.08.31.06.53.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2024 00:52:27 -0700 (PDT)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH] build: fix HAS_GI_DOCGEN never defined error
-Date: Sat, 31 Aug 2024 15:52:12 +0800
-Message-Id: <20240831075212.147812-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        Sat, 31 Aug 2024 06:53:55 -0700 (PDT)
+Date: Sat, 31 Aug 2024 16:53:54 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Maulik Shah <quic_mkshah@quicinc.com>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Johan Hovold <johan@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: x1e80100: Bypass PDC wakeup parent for now
+Message-ID: <ZtMgcsjpA6e5kSoc@linaro.org>
+References: <20240830-x1e80100-bypass-pdc-v1-1-d4c00be0c3e3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240830-x1e80100-bypass-pdc-v1-1-d4c00be0c3e3@linaro.org>
 
-When building without --enable-bindings-glib configure reports this error:
+On 24-08-30 11:09:07, Stephan Gerhold wrote:
+> On X1E80100, GPIO interrupts for wakeup-capable pins have been broken since
+> the introduction of the pinctrl driver. This prevents keyboard and touchpad
+> from working on most of the X1E laptops. So far we have worked around this
+> by manually building a kernel with the "wakeup-parent" removed from the
+> pinctrl node in the device tree, but we cannot expect all users to do that.
+> 
+> Implement a similar workaround in the driver by clearing the wakeirq_map
+> for X1E80100. This avoids using the PDC wakeup parent for all GPIOs
+> and handles the interrupts directly in the pinctrl driver instead.
+> 
+> The PDC driver needs additional changes to support X1E80100 properly.
+> Adding a workaround separately first allows to land the necessary PDC
+> changes through the normal release cycle, while still solving the more
+> critical problem with keyboard and touchpad on the current stable kernel
+> versions. Bypassing the PDC is enough for now, because we have not yet
+> enabled the deep idle states where using the PDC becomes necessary.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 05e4941d97ef ("pinctrl: qcom: Add X1E80100 pinctrl driver")
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 
-  ...
-  checking for help2man... true
-  checking that generated files are newer than configure... done
-  configure: error: conditional "HAS_GI_DOCGEN" was never defined.
-  Usually this means the macro was only invoked conditionally.
-  make: *** [Makefile:440: config.status] Error 1
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
 
-Move the initialization of HAS_GI_DOCGEN outside the conditional
-with_bindings_glib section so it is always initialized.
-
-Fixes: e090088c21b7 ("bindings: add GLib bindings")
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
-
-Sorry about the resend - forgot the libgpiod prefix on the first try :(.
-
- configure.ac | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/configure.ac b/configure.ac
-index cbe9e13..1ac1002 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -267,12 +267,12 @@ then
- 		AC_MSG_ERROR([glib-mkenums not found - needed to build GLib bindings]))
- 
- 	AC_CHECK_PROG([has_gi_docgen], [gi-docgen], [true], [false])
--	AM_CONDITIONAL([HAS_GI_DOCGEN], [test "x$has_gi_docgen" = xtrue])
- 	if test "x$has_gi_docgen" = xfalse
- 	then
- 		AC_MSG_NOTICE([gi-docgen not found - GLib documentation cannot be generated])
- 	fi
- fi
-+AM_CONDITIONAL([HAS_GI_DOCGEN], [test "x$has_gi_docgen" = xtrue])
- 
- # GObject-introspection
- found_introspection=no
--- 
-2.39.2
-
+> ---
+> Commenting out .wakeirq_map as well would give an unused declaration
+> warning for x1e80100_pdc_map. The map itself is correct, so I just "clear"
+> it by setting .nwakeirq_map to 0 for now. It's just temporary - this patch
+> will be reverted after we add X1E80100 support to the PDC driver.
+> ---
+>  drivers/pinctrl/qcom/pinctrl-x1e80100.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-x1e80100.c b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
+> index 65ed933f05ce..abfcdd3da9e8 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-x1e80100.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
+> @@ -1839,7 +1839,9 @@ static const struct msm_pinctrl_soc_data x1e80100_pinctrl = {
+>  	.ngroups = ARRAY_SIZE(x1e80100_groups),
+>  	.ngpios = 239,
+>  	.wakeirq_map = x1e80100_pdc_map,
+> -	.nwakeirq_map = ARRAY_SIZE(x1e80100_pdc_map),
+> +	/* TODO: Enabling PDC currently breaks GPIO interrupts */
+> +	.nwakeirq_map = 0,
+> +	/* .nwakeirq_map = ARRAY_SIZE(x1e80100_pdc_map), */
+>  	.egpio_func = 9,
+>  };
+>  
+> 
+> ---
+> base-commit: 128f71fe014fc91efa1407ce549f94a9a9f1072c
+> change-id: 20240830-x1e80100-bypass-pdc-39a8c1ae594f
+> 
+> Best regards,
+> -- 
+> Stephan Gerhold <stephan.gerhold@linaro.org>
+> 
 
