@@ -1,65 +1,65 @@
-Return-Path: <linux-gpio+bounces-9587-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9586-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BAA09688E4
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 15:32:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 37A529688E3
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 15:32:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39681286207
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 13:32:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E7536286166
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 13:32:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BEFA2101AC;
-	Mon,  2 Sep 2024 13:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E204E21019E;
+	Mon,  2 Sep 2024 13:32:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hBkBq1Kr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A/H7/y/Q"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933BC20FABF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4173C10A0E;
 	Mon,  2 Sep 2024 13:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725283926; cv=none; b=sC9zDkFBbJRmffTxcCk2o8u0mQVq9PGixfFQqA5dXItn9bTdcIBILhhiJZ2k247YtYRIHfB410XSx1SLjQkMv0YI1i4sT9IBm4W0enxQcyE1dZ9Q59OMq5T/2NBa5w5u9uLN/taH8TD7WfMDNsq3gOLXAQ+1Df4N4xhcizk97o0=
+	t=1725283925; cv=none; b=FXY199DsjhaGhJpKvTBJCUxpqTIdkppjNCuR/+qc8WCjWZ2mFTQaC6du55l6QVKn5uZn4DP2S3TTNIAwICiXCvdmvSkF4LuQF6U6guU2eIcp/jBAKPT5InxsctqoYlssUrh5tMx1PGjQ/EB7qEt9c1ilBWe5emUzTqGVu9sbIPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725283926; c=relaxed/simple;
-	bh=TOdIiE5tZOppfGkiAtqdeQ7Xsi+hc/W2Ft00cv2eZik=;
+	s=arc-20240116; t=1725283925; c=relaxed/simple;
+	bh=7XH+G1Xb/vD8vf0GcakPf1WizXUz/rhT3tCc+q7JEcU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZA4fEynh4okpy1pFIlNY/TsqmGELQnwNE3Qt6okZxrly6h1/TZHPDen0gwxj3HD44KukPNPu3KmAAzQpgJOZJYgtpSOU+eFONVMgNPBH8GICglAotbfuh/L3UOjDKSO+PfUQybgxgSqGDiB1jDjQ0Rsl8/1+TYzoQc+xDGnEPkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hBkBq1Kr; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version; b=pm54PrQdhwQpqHmDHCpu9F9FUaSVevEZpjXzJcTWBLUEaSg0mQW6/0ck6TarYG+8ofpvF5oUtALb33lgrIy/P0P/AqbGpzNBMnx4SktP/ekR413tuY7Vo260qRvx6DsfjejS8Gs48r3u4gmqGJ7Dbwm4ofYRGD7LezgyHlNqK7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A/H7/y/Q; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725283925; x=1756819925;
+  t=1725283924; x=1756819924;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=TOdIiE5tZOppfGkiAtqdeQ7Xsi+hc/W2Ft00cv2eZik=;
-  b=hBkBq1Krkm6+6VRWl1cXu5kg9ziFu3NmUXaLAQ2nM8dVHQAjpGXBhtHi
-   +bb9kZwT/9ACLDs5q9CndTAFSAiEOgBG8H1ygnQgr534aeCBmadxZITuB
-   lfGLSpCljkrHavDVgnkdl+DuidZAJrS+TTbtqUKhlLiMU5huzAvWrpejx
-   IomAqkijdA38hOpBQZHkxOLf2lL67A2Bkw0L1CmCLM0rt3bbrgGl6gv8r
-   11fGPekP1b1/xkAHkdxo2VL8E4TOVNj2jjuHK2I2ojHxzbjE/uwFqs02T
-   hg+LLdPQ/8hvCynGL8tCB48aYWQ2Bjlw7hEAbj+udgZt5GuzSii9pWWdS
+  bh=7XH+G1Xb/vD8vf0GcakPf1WizXUz/rhT3tCc+q7JEcU=;
+  b=A/H7/y/QFKs1vsAregCl8043HcAKJl5kPmodn8rpgGayQAguZU8orS16
+   xtpMDGFM8ut9lYsx9bkx1kzwklQlwQ0VFe2oZ0kjhlkms1+YpPPGJ/6rs
+   0qOmsMlCUhuMZqdNs1TQbLb6w9XNWZOXGGXGCjx2kY0ReFeTsfL/oXSkt
+   h6MO7az8K7IfDqvN7Dk8XZ5jcLVGpseLLVAbAcPAiPsfLvDzV0lx068tm
+   F/Cs14PhAbOAHLQq1ArFOuAUHFm6dMBdtaMEQtQ0bPCI6yLdX4sa1UqCZ
+   rn5kC+vmO+peQYV36aZkyVGvVRIyPmksZ+1LvZbfaik+zRagwKXK+M8XT
    w==;
-X-CSE-ConnectionGUID: X1yRjw/QSpKQ8Boh8iyxZQ==
-X-CSE-MsgGUID: NnRiflPqTyyieNH/ZEWOsA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11183"; a="35022580"
+X-CSE-ConnectionGUID: Ex+AJo10RFmkBlaBmkX6Lg==
+X-CSE-MsgGUID: b+dDmg+7Sx65wwt+FeS02g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11183"; a="35022573"
 X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
-   d="scan'208";a="35022580"
+   d="scan'208";a="35022573"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
   by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 06:32:02 -0700
-X-CSE-ConnectionGUID: UdwefpfjQBKyswgyCVLfIA==
-X-CSE-MsgGUID: VvLoTozcSb+WvrB1eDpLyA==
+X-CSE-ConnectionGUID: M+jjVR5wQYCMPQ+GdDN7Yw==
+X-CSE-MsgGUID: fmyiHwNASM6OuAbg2JE87w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
-   d="scan'208";a="65114780"
+   d="scan'208";a="65114779"
 Received: from black.fi.intel.com ([10.237.72.28])
   by orviesa007.jf.intel.com with ESMTP; 02 Sep 2024 06:31:59 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 3FDD8233; Mon, 02 Sep 2024 16:31:58 +0300 (EEST)
+	id 48B883BA; Mon, 02 Sep 2024 16:31:58 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-gpio@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
 	Alexandre Torgue <alexandre.torgue@foss.st.com>
-Subject: [PATCH v1 1/5] gpio: stmpe: Fix IRQ related error messages
-Date: Mon,  2 Sep 2024 16:30:40 +0300
-Message-ID: <20240902133148.2569486-2-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/5] gpio: stmpe: Remove unused 'dev' member of struct stmpe_gpio
+Date: Mon,  2 Sep 2024 16:30:41 +0300
+Message-ID: <20240902133148.2569486-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20240902133148.2569486-1-andriy.shevchenko@linux.intel.com>
 References: <20240902133148.2569486-1-andriy.shevchenko@linux.intel.com>
@@ -84,66 +84,34 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-First of all, remove duplicate message that platform_get_irq()
-does already print. Second, correct the error message when unable
-to register a handler, which is broken in two ways:
-1) the misleading 'get' vs. 'register';
-2) missing '\n' at the end.
+There is no evidence that the 'dev' member of struct stmpe_gpio
+is used, drop it.
 
-(Yes, for the curious ones, the dev_*() cases do not require '\n'
-and issue it automatically, but it's better to have them explicit)
-
-Fix all this here.
-
-Fixes: 1882e769362b ("gpio: stmpe: Simplify with dev_err_probe()")
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpio-stmpe.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/gpio/gpio-stmpe.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
-index abd42a975b09..4e171f9075bf 100644
+index 4e171f9075bf..99f1482b2ab3 100644
 --- a/drivers/gpio/gpio-stmpe.c
 +++ b/drivers/gpio/gpio-stmpe.c
-@@ -464,6 +464,7 @@ static void stmpe_gpio_disable(void *stmpe)
+@@ -31,7 +31,6 @@ enum { LSB, CSB, MSB };
+ struct stmpe_gpio {
+ 	struct gpio_chip chip;
+ 	struct stmpe *stmpe;
+-	struct device *dev;
+ 	struct mutex irq_lock;
+ 	u32 norequest_mask;
+ 	/* Caches of interrupt control registers for bus_lock */
+@@ -481,7 +480,6 @@ static int stmpe_gpio_probe(struct platform_device *pdev)
  
- static int stmpe_gpio_probe(struct platform_device *pdev)
- {
-+	struct device *dev = &pdev->dev;
- 	struct stmpe *stmpe = dev_get_drvdata(pdev->dev.parent);
- 	struct device_node *np = pdev->dev.of_node;
- 	struct stmpe_gpio *stmpe_gpio;
-@@ -493,12 +494,6 @@ static int stmpe_gpio_probe(struct platform_device *pdev)
- 	of_property_read_u32(np, "st,norequest-mask",
- 			&stmpe_gpio->norequest_mask);
+ 	mutex_init(&stmpe_gpio->irq_lock);
  
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
--		dev_info(&pdev->dev,
--			"device configured in no-irq mode: "
--			"irqs are not available\n");
--
- 	ret = stmpe_enable(stmpe, STMPE_BLOCK_GPIO);
- 	if (ret)
- 		return ret;
-@@ -507,6 +502,7 @@ static int stmpe_gpio_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	irq = platform_get_irq(pdev, 0);
- 	if (irq > 0) {
- 		struct gpio_irq_chip *girq;
- 
-@@ -514,8 +510,7 @@ static int stmpe_gpio_probe(struct platform_device *pdev)
- 				stmpe_gpio_irq, IRQF_ONESHOT,
- 				"stmpe-gpio", stmpe_gpio);
- 		if (ret)
--			return dev_err_probe(&pdev->dev, ret,
--					     "unable to get irq");
-+			return dev_err_probe(dev, ret, "unable to register IRQ handler\n");
- 
- 		girq = &stmpe_gpio->chip.irq;
- 		gpio_irq_chip_set_chip(girq, &stmpe_gpio_irq_chip);
+-	stmpe_gpio->dev = &pdev->dev;
+ 	stmpe_gpio->stmpe = stmpe;
+ 	stmpe_gpio->chip = template_chip;
+ 	stmpe_gpio->chip.ngpio = stmpe->num_gpios;
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
