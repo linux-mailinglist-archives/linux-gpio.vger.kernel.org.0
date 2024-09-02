@@ -1,64 +1,64 @@
-Return-Path: <linux-gpio+bounces-9590-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9591-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B30E4968998
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 16:15:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F5BB9689A3
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 16:16:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E07AB1C21AAB
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 14:15:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92248B229DA
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 14:16:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F0CA19E977;
-	Mon,  2 Sep 2024 14:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EC2F19F12E;
+	Mon,  2 Sep 2024 14:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gpmy5LWL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HbuKjkmA"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D4F19F139;
-	Mon,  2 Sep 2024 14:15:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FDF1E49F;
+	Mon,  2 Sep 2024 14:16:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725286513; cv=none; b=nBXxGN7VEwUEzeV59CvqD0m7yTtbmxjjp6MZmT2EMOru9hj58maiSilOJ4TVBnHC8cdFe5yACsyv8NGdkIZD1QAwdc895k+dmjrTWT8lErAEQWQa/CPkSlK7MmfWCQ/mYo6cVsnoTAaOSNxOGb2IbjzQ6Q/3TkxbJ0wJflgGffs=
+	t=1725286574; cv=none; b=GaJQbZiw9TxRnCE6yqLvuZvF1nHMg913dkV2JYg/3nnyx3Tf4Oo9x6CgfrO06oDUxby48gGhoag3iDQ+xikQE46qdb0PX29Xhn3muhcqVtvid61wZyn+dYkAZn4gwTTsZfULYcq44mvMPCg+ecssy199rP+05dGZTSDfpo/O4Yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725286513; c=relaxed/simple;
-	bh=WcWeVPSp0tT51Ye5Obld4BMVGdh83tPeXUYqSFlZLLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W2EoHiSbPtJUxpsoQgxXQkkiXMHDanuH10w4JM41yl7SoHP3W2wln22pxDUgHbFrkPvvIum/OWmdtcsS14L9os/JSRxGdITp5qZmUWfCuGQFBbNDgJsPMFoITUhqECfP3da5e9yXGUjJQ3Ycebf2HVOp2bRTXooV0hpIS05SmpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gpmy5LWL; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1725286574; c=relaxed/simple;
+	bh=OQ9+0BsynHs3lhDXF9g42KhKU0JzeGzoLakIKq0NXjM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MQFF1ItFZYQ19esmsorDlkk8dHQl6RkOBBD90YLTGV2eZz8Z0RIvJjU7omaUvctB+vYPmW2SE5x4bLlktabww+5/vF9BIRB+NB4B5NAS4DbP20oiN5DK0sGTnmYz7jwd+Kx7aKgaI3IHszzMh2yrfKTdj3/IAOtUd8vhfRxLu4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HbuKjkmA; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725286511; x=1756822511;
+  t=1725286572; x=1756822572;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=WcWeVPSp0tT51Ye5Obld4BMVGdh83tPeXUYqSFlZLLM=;
-  b=gpmy5LWLxpPhjdRCxjDgdbcwZ7WblYpzizSjoCB1pKDtX1bONKbtzISc
-   jlwnOJVXYnfsZGbmQiiQRIXr+DuoW/WXXo5EwFf9qSWi1SMd1J/rMsVqE
-   31Q634EWd97p7NjRl3OZuFBMuT1Yj6A5ppQuJ6wnD4eVDxZFsAtnB8gm5
-   tGZQbCBo5i+8DrudopMPnvEW6G0aVKNysocImcFqIhFUQF5Kv6qZMhKk4
-   TqxJAh6KKaBFa/Dg3j3esMm4Xq0dXcNoPXJQ+Yca9WJh3NNErmvb0ERrW
-   VT0SzeepE3U5u/yDpEG2qq0H1vzyHz7uOzhhji7A5Tt+vBBsBNfgL1wGk
-   g==;
-X-CSE-ConnectionGUID: FYhs3uwrTlqtnytd2VAc3Q==
-X-CSE-MsgGUID: GhswVH7dRCaxfTiyGmt/KA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11183"; a="27661649"
+  bh=OQ9+0BsynHs3lhDXF9g42KhKU0JzeGzoLakIKq0NXjM=;
+  b=HbuKjkmAOaiFtsMDJMv2fyxuVWS73dR1feLst8H80s288ne9bYbXDCVy
+   sojHuIwcWdnk6XdB2A6vNOJ7glekrQQeTYlJwkih+EwHH1z42gyOrrLi0
+   uw31i0fBWyb7wLO4vli+TDwpQDTVou1TgJTY+kS0nulSOMeFfSbSv2r/u
+   u/yZqDGQouagivoPcyA1iTNDJugd4Xnk06naGu9gkfqgclLk8I5njfW76
+   xyShoWOJb5Hpfhid1RYb7NBL3JsE074J3PaKoMZcfr568lh6gilOm9tLc
+   8tHBSFJNdZlx3LYfYUrWYSE/+a0DlBVoGklEo7f0ivyscUsl2MMZ9ppKA
+   Q==;
+X-CSE-ConnectionGUID: YcOefIWoSwSXmIhgf0Zkkg==
+X-CSE-MsgGUID: FYr6ibn8QpOfkKgi9k8TCA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11183"; a="27662035"
 X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
-   d="scan'208";a="27661649"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 07:14:45 -0700
-X-CSE-ConnectionGUID: rdWh2PHiT0CwILtymYGAIw==
-X-CSE-MsgGUID: lw9omZDbTRiUYDjU8DVjkg==
+   d="scan'208";a="27662035"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 07:16:12 -0700
+X-CSE-ConnectionGUID: s+k7yPQsRZSeejwdixsXLw==
+X-CSE-MsgGUID: qFYkkhNTSNaSiNHH5ivhgA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
-   d="scan'208";a="69429059"
+   d="scan'208";a="64596270"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP; 02 Sep 2024 07:14:43 -0700
+  by orviesa009.jf.intel.com with ESMTP; 02 Sep 2024 07:16:11 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 7BEE8233; Mon, 02 Sep 2024 17:14:42 +0300 (EEST)
+	id ACE30233; Mon, 02 Sep 2024 17:16:09 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-gpio@vger.kernel.org,
@@ -66,9 +66,9 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 1/1] pinctrl: intel: Inline intel_gpio_community_irq_handler()
-Date: Mon,  2 Sep 2024 17:14:41 +0300
-Message-ID: <20240902141441.2683122-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pinctrl: intel: Constify struct intel_pinctrl parameter
+Date: Mon,  2 Sep 2024 17:15:11 +0300
+Message-ID: <20240902141607.2694988-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -78,60 +78,179 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since we have for_each_intel_pad_group() helper, there is
-no advantage of having intel_gpio_community_irq_handler().
-Inline it into intel_gpio_irq().
+There are a few functions that do not and should not change
+the state of the pin control object. Constify the respective
+parameter.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/intel/pinctrl-intel.c | 23 ++++++-----------------
- 1 file changed, 6 insertions(+), 17 deletions(-)
+
+There are more opportunities, but they will make the code inconsistent,
+for example, .get uses const, while .set may not due to locking.
+
+ drivers/pinctrl/intel/pinctrl-intel.c | 33 ++++++++++++++-------------
+ drivers/pinctrl/intel/pinctrl-intel.h |  3 ++-
+ 2 files changed, 19 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 02dd8107e250..a2194d2ab178 100644
+index a2194d2ab178..7a790c437f68 100644
 --- a/drivers/pinctrl/intel/pinctrl-intel.c
 +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1256,14 +1256,16 @@ static const struct irq_chip intel_gpio_irq_chip = {
- 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
+@@ -132,7 +132,8 @@ struct intel_community_context {
+ 	for_each_intel_pad_group(pctrl, community, grp)			\
+ 		if (grp->gpio_base == INTEL_GPIO_BASE_NOMAP) {} else
  
--static int intel_gpio_community_irq_handler(struct intel_pinctrl *pctrl,
--					    const struct intel_community *community)
-+static irqreturn_t intel_gpio_irq(int irq, void *data)
+-const struct intel_community *intel_get_community(struct intel_pinctrl *pctrl, unsigned int pin)
++const struct intel_community *intel_get_community(const struct intel_pinctrl *pctrl,
++						  unsigned int pin)
  {
-+	const struct intel_community *community;
- 	const struct intel_padgroup *padgrp;
--	struct gpio_chip *gc = &pctrl->chip;
-+	struct intel_pinctrl *pctrl = data;
- 	int ret = 0;
+ 	const struct intel_community *community;
  
--	for_each_intel_community_pad_group(community, padgrp) {
-+	/* Need to check all communities for pending interrupts */
-+	for_each_intel_pad_group(pctrl, community, padgrp) {
-+		struct gpio_chip *gc = &pctrl->chip;
- 		unsigned long pending, enabled;
- 		unsigned int gpp, gpp_offset;
- 		void __iomem *reg, *is;
-@@ -1287,19 +1289,6 @@ static int intel_gpio_community_irq_handler(struct intel_pinctrl *pctrl,
- 		ret += pending ? 1 : 0;
- 	}
- 
--	return ret;
--}
--
--static irqreturn_t intel_gpio_irq(int irq, void *data)
--{
--	const struct intel_community *community;
--	struct intel_pinctrl *pctrl = data;
--	int ret = 0;
--
--	/* Need to check all communities for pending interrupts */
--	for_each_intel_pin_community(pctrl, community)
--		ret += intel_gpio_community_irq_handler(pctrl, community);
--
- 	return IRQ_RETVAL(ret);
+@@ -161,7 +162,7 @@ intel_community_get_padgroup(const struct intel_community *community,
+ 	return NULL;
  }
  
+-static void __iomem *intel_get_padcfg(struct intel_pinctrl *pctrl,
++static void __iomem *intel_get_padcfg(const struct intel_pinctrl *pctrl,
+ 				      unsigned int pin, unsigned int reg)
+ {
+ 	const struct intel_community *community;
+@@ -181,7 +182,7 @@ static void __iomem *intel_get_padcfg(struct intel_pinctrl *pctrl,
+ 	return community->pad_regs + reg + padno * nregs * 4;
+ }
+ 
+-static bool intel_pad_owned_by_host(struct intel_pinctrl *pctrl, unsigned int pin)
++static bool intel_pad_owned_by_host(const struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	const struct intel_community *community;
+ 	const struct intel_padgroup *padgrp;
+@@ -206,7 +207,7 @@ static bool intel_pad_owned_by_host(struct intel_pinctrl *pctrl, unsigned int pi
+ 	return !(readl(padown) & PADOWN_MASK(gpp_offset));
+ }
+ 
+-static bool intel_pad_acpi_mode(struct intel_pinctrl *pctrl, unsigned int pin)
++static bool intel_pad_acpi_mode(const struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	const struct intel_community *community;
+ 	const struct intel_padgroup *padgrp;
+@@ -248,7 +249,7 @@ enum {
+ 	PAD_LOCKED_FULL	= PAD_LOCKED | PAD_LOCKED_TX,
+ };
+ 
+-static int intel_pad_locked(struct intel_pinctrl *pctrl, unsigned int pin)
++static int intel_pad_locked(const struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	const struct intel_community *community;
+ 	const struct intel_padgroup *padgrp;
+@@ -286,19 +287,19 @@ static int intel_pad_locked(struct intel_pinctrl *pctrl, unsigned int pin)
+ 	return ret;
+ }
+ 
+-static bool intel_pad_is_unlocked(struct intel_pinctrl *pctrl, unsigned int pin)
++static bool intel_pad_is_unlocked(const struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	return (intel_pad_locked(pctrl, pin) & PAD_LOCKED) == PAD_UNLOCKED;
+ }
+ 
+-static bool intel_pad_usable(struct intel_pinctrl *pctrl, unsigned int pin)
++static bool intel_pad_usable(const struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	return intel_pad_owned_by_host(pctrl, pin) && intel_pad_is_unlocked(pctrl, pin);
+ }
+ 
+ int intel_get_groups_count(struct pinctrl_dev *pctldev)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pctrl->soc->ngroups;
+ }
+@@ -306,7 +307,7 @@ EXPORT_SYMBOL_NS_GPL(intel_get_groups_count, PINCTRL_INTEL);
+ 
+ const char *intel_get_group_name(struct pinctrl_dev *pctldev, unsigned int group)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pctrl->soc->groups[group].grp.name;
+ }
+@@ -315,7 +316,7 @@ EXPORT_SYMBOL_NS_GPL(intel_get_group_name, PINCTRL_INTEL);
+ int intel_get_group_pins(struct pinctrl_dev *pctldev, unsigned int group,
+ 			 const unsigned int **pins, unsigned int *npins)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	*pins = pctrl->soc->groups[group].grp.pins;
+ 	*npins = pctrl->soc->groups[group].grp.npins;
+@@ -326,7 +327,7 @@ EXPORT_SYMBOL_NS_GPL(intel_get_group_pins, PINCTRL_INTEL);
+ static void intel_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
+ 			       unsigned int pin)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 	void __iomem *padcfg;
+ 	u32 cfg0, cfg1, mode;
+ 	int locked;
+@@ -383,7 +384,7 @@ static const struct pinctrl_ops intel_pinctrl_ops = {
+ 
+ int intel_get_functions_count(struct pinctrl_dev *pctldev)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pctrl->soc->nfunctions;
+ }
+@@ -391,7 +392,7 @@ EXPORT_SYMBOL_NS_GPL(intel_get_functions_count, PINCTRL_INTEL);
+ 
+ const char *intel_get_function_name(struct pinctrl_dev *pctldev, unsigned int function)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pctrl->soc->functions[function].func.name;
+ }
+@@ -400,7 +401,7 @@ EXPORT_SYMBOL_NS_GPL(intel_get_function_name, PINCTRL_INTEL);
+ int intel_get_function_groups(struct pinctrl_dev *pctldev, unsigned int function,
+ 			      const char * const **groups, unsigned int * const ngroups)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	*groups = pctrl->soc->functions[function].func.groups;
+ 	*ngroups = pctrl->soc->functions[function].func.ngroups;
+@@ -952,7 +953,7 @@ static const struct pinctrl_desc intel_pinctrl_desc = {
+  * Return: a pin number and pointers to the community and pad group, which
+  * the pin belongs to, or negative error code if translation can't be done.
+  */
+-static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
++static int intel_gpio_to_pin(const struct intel_pinctrl *pctrl, unsigned int offset,
+ 			     const struct intel_community **community,
+ 			     const struct intel_padgroup **padgrp)
+ {
+@@ -982,7 +983,7 @@ static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
+  *
+  * Return: a GPIO offset, or negative error code if translation can't be done.
+  */
+-static int intel_pin_to_gpio(struct intel_pinctrl *pctrl, int pin)
++static int intel_pin_to_gpio(const struct intel_pinctrl *pctrl, int pin)
+ {
+ 	const struct intel_community *community;
+ 	const struct intel_padgroup *padgrp;
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
+index c7b025ea989a..4d4e1257afdf 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.h
++++ b/drivers/pinctrl/intel/pinctrl-intel.h
+@@ -264,7 +264,8 @@ int intel_pinctrl_probe_by_uid(struct platform_device *pdev);
+ 
+ extern const struct dev_pm_ops intel_pinctrl_pm_ops;
+ 
+-const struct intel_community *intel_get_community(struct intel_pinctrl *pctrl, unsigned int pin);
++const struct intel_community *intel_get_community(const struct intel_pinctrl *pctrl,
++						  unsigned int pin);
+ 
+ int intel_get_groups_count(struct pinctrl_dev *pctldev);
+ const char *intel_get_group_name(struct pinctrl_dev *pctldev, unsigned int group);
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
