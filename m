@@ -1,154 +1,122 @@
-Return-Path: <linux-gpio+bounces-9529-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9530-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3BEA968308
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 11:21:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5A87968332
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 11:28:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90389283E6F
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 09:21:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01CCE1C2032B
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 09:28:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 718EF1C331B;
-	Mon,  2 Sep 2024 09:21:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 277841C32F1;
+	Mon,  2 Sep 2024 09:28:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UA7k4zL2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRaOIxj1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A86D1C330C
-	for <linux-gpio@vger.kernel.org>; Mon,  2 Sep 2024 09:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B4A187355;
+	Mon,  2 Sep 2024 09:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725268898; cv=none; b=MLHPv3kC0KefkN/KNoIuuOxADkbTELeXFgNJtAwrDVvqDNUTWgMeBD7KsyuIiculKbJ7DY+XcEoUNu9nnJBZHtrtQc+IEt6zrvlSHmMUSOSXQOz2NWPdRi+/xs86f5AHGT191UGp73ZpVpVzhgXboQCGmxmkkuNuqbfRFIvNBWE=
+	t=1725269307; cv=none; b=UXcfkAqCGFk5ZpIt8O0h+YdHNy8HHigqvGYR+piI7srNyKj4t9xsrGFBtOed57vJdPvgyCoPda6axMSRiac3PQZ/7hpMg/c7Pnv/dZF+KTH6kwMYn5EviHO99mQL9v6cFDZ7tf/vbWGChgmb8iRHN5RJNmP8veubGfNgBTqIn38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725268898; c=relaxed/simple;
-	bh=BSpqubEdJ/sRUU6vWaBwncVg7qOd28rdyPPZgAweRno=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oyyrPSz+kiigdl9pkqNXoKaK3AE9xjPC3kEMZPc5I6Jmm4pOFyTHSUwRM3L0VzWRi1/bThlimD9nq/hQHIamRp7MPMOYG2ETNToqoPNheHido+FqB3Q9GiGc5L+vbdjVjGmPUTCozHaNXFojFXLW+p9wXCfkc22xzExy+ZryMqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UA7k4zL2; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a86e5e9ff05so468761066b.1
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Sep 2024 02:21:35 -0700 (PDT)
+	s=arc-20240116; t=1725269307; c=relaxed/simple;
+	bh=wz0nbLzlS8nCRQNYzJhVNp33aZ9ev7UqcyhxjtZTSEs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CQSlrc5jpj7TprK0F1Nm5OuFW0tWQn4741L7hbAD8ljkKO08Bj2twfoNuchZ0eE9SFDgG8Lu61f22xiHSLTcqyx4DJPsQ9AgfFJUVm97q7fUjAnbpFZfOtYZfnYeWUq9C6pgF4i+vufvYn9IAxF0QA5558SrWP55zYQO65RLOI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LRaOIxj1; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2f3f68dd44bso41277491fa.3;
+        Mon, 02 Sep 2024 02:28:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1725268894; x=1725873694; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ZDs/9l3dOZ4/JRpcNDnT31Gwsua2/3rtLsltEu9Mww=;
-        b=UA7k4zL27EtQiyL1sHrgRCfTMPBXKeFmHxdZe3ebhOMpjrG/LvCIEKtNXE/wR+fdC0
-         nGc8eVPdONCBPfmOl9gVV5Fv0lB3hSjTq0u7jK/66YtY2pXMeS7fTFAN/VGpzWJRkzbn
-         XkzYzfEsazl03MK/eExlEnIgkIx/NmtK0yvuqYc+fGv4VEIvD6oZ63hEUR6e55d0Th+H
-         ragU4vi9H2cqQqxMviFP196JUbdigDpKSrLJLnTZGWB3zija/D7YC9Eh6CtjA96jSPtL
-         GZudEXjpOBEz/hjpIjWhdIeragV3oITHm659ApbXz3h2is871vprXeJBwVBuOXrAGPUJ
-         LX/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725268894; x=1725873694;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1725269304; x=1725874104; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1ZDs/9l3dOZ4/JRpcNDnT31Gwsua2/3rtLsltEu9Mww=;
-        b=ESgzmBgFQPiggLPKj0Dyeg6H3x/2ARATJYZ8DMS7Q3M3+Mp1J0pyhI2ToQq7YYHpSe
-         tLuq/DdNhVY2csvv+qKpXFqaVZSXKtApxXcNfuqt8ipStA3T7f6ZQvogSDluuhmkXxYf
-         U5wFMwIj4u1tPKALSxYAqO4RlIufRBnST96zNxtLxQq6CuMMl0/0F18iDGASk47WnZ8W
-         agaCxWzpaqwOZcqJ16dog5yBGwiFHnrgQ/cwzCfO3I6vp+g9k9xbR0v8HsIif2RD83S/
-         B48bbhZ6Y7+eTiOn/C34uVzwXbVfYnPL4iBYdRaLlU4eM/Ycn6hqcc7BBcLdndJSQASA
-         Ho8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXcCykTaRU/uachn/UhYGaRVgJPPBM/CLVp6aCI0Y8MVo0Ds+2nDJHs/rvJXCCJ8E5GLiheiA7Khyse@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTKyZjZYgQSDrDr3g6DiTrS0upzi3Nmo9QF+J4uk1CI5TpZ88/
-	Rb9BRVpwucRT3xV/2lGQPC9IDxoOAq+VhteTO/CUuMe0WjGzg/psYvkQ9hItRaI=
-X-Google-Smtp-Source: AGHT+IFiJyKI83M4pAEH+bJt4D+2x9ZKVCIWaumLPxOS3x0JckDJtyYxve6HAvVZNlN6e2kKZafDDw==
-X-Received: by 2002:a17:907:6094:b0:a7a:adac:57d5 with SMTP id a640c23a62f3a-a897f84d7efmr930072566b.18.1725268894023;
-        Mon, 02 Sep 2024 02:21:34 -0700 (PDT)
-Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a89891db42fsm527788266b.184.2024.09.02.02.21.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2024 02:21:33 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Mon, 2 Sep 2024 11:21:41 +0200
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 00/11] Add support for RaspberryPi RP1 PCI device using a
- DT overlay
-Message-ID: <ZtWDpaqUG9d9yPPf@apocalypse>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <14990d25-40a2-46c0-bf94-25800f379a30@kernel.org>
- <Zsb_ZeczWd-gQ5po@apocalypse>
- <45a41ed9-2e42-4fd5-a1d5-35de93ce0512@lunn.ch>
- <ZtBjMpMGtA4WfDij@apocalypse>
- <e6e6c230-370f-4b04-8cb7-4158dd51efdc@lunn.ch>
- <ZtFWyAX_7OR5yYDS@apocalypse>
- <334b382a-c9ab-47e4-b860-b8477f04c3fb@lunn.ch>
+        bh=e2I6KRglLDhMBBHQDhZYriJGFB36l6M5um5WgZKc0bU=;
+        b=LRaOIxj1l0Z8kERniynpTQN+3Xvc4U3Q4Ur6oDPZpVL8ZCERXrxHr/iQTeY0IQN9nA
+         P8QqDOJLuDM5wVVw3CdJc+oLtZhWTFK92gBOdlmWUlTubtQbcu34RYg2v5Fx8X9uBtMf
+         VSPHAQtew24L0n0rkGshrywErxvEtJr3Kg86jbJ9AhiLX9OYEww40kcfkch2n4TrHweh
+         Zo60lqgyE6Ptte5kRtlqsURHJhA5ySUfc8JBaqtaApMMksrtM3qMncEPgNhnRjN1n5UI
+         k7EiTUJkHSfKh5BVbkUpsP7/QE9DoIK9OnI+Ocf2aJIcZjDUGXxVQ2/AF0ODQfRU9Rwz
+         J6TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725269304; x=1725874104;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e2I6KRglLDhMBBHQDhZYriJGFB36l6M5um5WgZKc0bU=;
+        b=SbUTNacvCJBGZawnNl0AUWVkLEGR/tC7tNK7PoSOmb9c1IRq56EtafCgoBQuCbLd89
+         NFdS9IEOwfNQE8qFXm+/OUDRCcUAGG0VQ2mDllVxDr4+xIqGhl4GGLthbZJOHVWXq/bR
+         CQpipauiuUEp++Zk8P0/5Ez/s/Hyf8xDOKkC2tiR85jeyqSKDU0IcF219pRI2DYJrjdL
+         nYczjdGu2XqsOQ2hr1eTYRsny7h20CeDepxXngE7/bzm6IxgEmQVoxPu2CX1l1d5Z0fq
+         bcXZbtuSyiM2mmxoI93qRMmyD3njswWXjBYEfPQbX3lVZckRb0d6sYOEI2jSoaDkzHUp
+         m81g==
+X-Forwarded-Encrypted: i=1; AJvYcCU5g/E8Z7fYDn4q4ghojOsJuDpgqq8cppryWVrmmOuqByDJ0L1Y8HIXBF5zJVdtW60N2CwyszYqDEnB@vger.kernel.org, AJvYcCVE+8LUd5RTBcEgF28kNUQvRLBXdXJTAm2vjV7o6s7GVslBNGmkey3WbTBHZmRFTe+Mg69vl4m4TnW3vKb4@vger.kernel.org
+X-Gm-Message-State: AOJu0YwstlOCoDnzxBE5ldE/tcNmWDeezcuP2VVT9SGVmMjVJ9Y18Ajf
+	swkEZF7BxTFglvqsv2c+h1i7EECO3d4C8X4aJMLOnm9BV0Rjj/IFeB5Vi7ipPkw2kHQfWkLuBLq
+	Vl6W+jG9pMRXRxOCsE4xA5KMx35xG/uzN
+X-Google-Smtp-Source: AGHT+IFhk4AbmFcLW3KVfd8VGDWeIlXhyDUx0aCY8LXKoX8coHpxbkyA8VYLyCZ2du/pvNixMNJ51iy5dx7ZjRZxEN0=
+X-Received: by 2002:a05:6512:3984:b0:533:efaf:ab26 with SMTP id
+ 2adb3069b0e04-53546b44d77mr5542334e87.36.1725269303920; Mon, 02 Sep 2024
+ 02:28:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <334b382a-c9ab-47e4-b860-b8477f04c3fb@lunn.ch>
+References: <20240902072859.583490-1-patrick.rudolph@9elements.com>
+In-Reply-To: <20240902072859.583490-1-patrick.rudolph@9elements.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 2 Sep 2024 12:27:47 +0300
+Message-ID: <CAHp75VeHc23XXjSGkmgajmbJ4ZH1OrSL0FGRQNrDfvWdW6cRQQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinctrl-cy8c95x0: Fix regcache
+To: Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
+	naresh.solanki@9elements.com, broonie@kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+On Mon, Sep 2, 2024 at 10:30=E2=80=AFAM Patrick Rudolph
+<patrick.rudolph@9elements.com> wrote:
+>
+> The size of the mux stride was of by one, which could result in
 
-On 16:10 Fri 30 Aug     , Andrew Lunn wrote:
-> > On a second thought, are you really sure we want to proceed with the header file?
-> > After all the only line in it would be the extern declaration and the only one to
-> > include it would be rp1-dev.c. Moreover, an header file would convey the false
-> > premise that you can include it and use that symbol while in fact it should be
-> > only used inside the driver.
-> > OTOH, not creating that header file will continue to trigger the warning...
-> 
-> The header file does not need to be in global scope. It could be in
-> the driver source directory. As such, nothing outside of the driver
-> can use it.
+off
 
-Ack.
+> invalid pin configuration on the device side or invalid state
+> readings on the software side.
+>
+> While on it also update the code and:
+> - Increase the mux stride size to 16
+> - Align the virtual muxed regmap range to 16
+> - Start the regmap window at the selector
+> - Mark reserved registers as not-readable
 
-> 
-> Headers like this have multiple proposes. One is they make a symbol
-> visible to the linker. But having two different .c files include the
+Reported-by: Andy Shevchenko <andy@kernel.org>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-Hmm... not sure what second file is including it, since only rp1_pci.c needs it.
+...
 
-> header enables type checking, which for long term maintenance is just
-> as important. So a one line header is fine.
+> -       if (reg >=3D CY8C95X0_VIRTUAL)
+> +       if (reg >=3D CY8C95X0_VIRTUAL && (reg % MUXED_STRIDE) < 12)
 
-Done.
+Probably good to have 12 defined, but also a comment suffice, like:
 
-Cheers,
-Andrea
+/* Only 12 registers are present per port (see Table 6 in the datasheet). *=
+/
 
-> 
-> 	Andrew
-> 
+>                 return true;
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
