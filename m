@@ -1,104 +1,110 @@
-Return-Path: <linux-gpio+bounces-9555-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9556-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 152829684BB
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 12:33:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD5BA9684BF
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 12:34:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C720D286929
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 10:33:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE25D1C22B6F
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 10:34:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E528F1822F8;
-	Mon,  2 Sep 2024 10:33:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8662015FD13;
+	Mon,  2 Sep 2024 10:34:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CvIo47+G"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="iZ0ySCTP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5756617E008
-	for <linux-gpio@vger.kernel.org>; Mon,  2 Sep 2024 10:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E294E74063
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Sep 2024 10:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725273194; cv=none; b=AmEA66tr70u0ctyC6yVWW1++PMumClcIGnHwBlfDSndIiR6A5R7+mowz9CbtCJgd099RTvBECDGDA6FMiRNuTWufOoRUass+q2VPTa73x7x+befMjtaOVaqlWCyJoMsfso5IhTH/rg4P03pooNGYeHyakDGCtlFKf8TXl6ALLcs=
+	t=1725273249; cv=none; b=M7trAilvA/s77b9aJvqyp/yc7kydWj+bpGVr+tLVepN+Nw6J4isw5ZytacUS+0YVwYKrUR1wy3QIv8PTekOBHFU4GBoW4LgwZvhpfiGdCaZ52qIqSGqTU/fojilo+nW9KpdqP+FSgeRm1KhkSn0boA51WQiw+rslzWpnvZOUfFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725273194; c=relaxed/simple;
-	bh=ntBd206Yvf20SaH7Pj2eQRVkjOQdc0qX6sWfPk/fAfg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GP4RuVwafvMTD4a76/NoVUiSKbQfxeIgkNJ+U0umeWoiQPseq240Ha0rDbn0kSh6jFauXy4kReUcKkmJdpVWDpIfj5GwUaWSMoTaVOSRdDC9gF5+0aanD7zMerOsqaJEOmi5wLESLeLgfVnyp4ym1SBVvg/aLfnfhM040e54jEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CvIo47+G; arc=none smtp.client-ip=209.85.167.41
+	s=arc-20240116; t=1725273249; c=relaxed/simple;
+	bh=thNj+m9tysdWqjtQSV+YNo4/kN/AS2FzgErK1XihFw4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RZRwK2LVmqlNT1HHa4qMrWeCwVeDPcIe9QHaqYk3ebmcFneAgB8Se5Ino0GvwTJ4uJhAg6x95W7V1Ui+gLAySmFt6l37uqEIQz01t8SKwZHUdC6PE7w/VACIwL3LdMVSvZPGSMachM86vxJZLr/6XaXqGtv8FFl5bkt2goe3jrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=iZ0ySCTP; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5334b0e1a8eso5333216e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Sep 2024 03:33:12 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42bb4f8a4bfso21769655e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Sep 2024 03:34:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725273190; x=1725877990; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725273246; x=1725878046; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ntBd206Yvf20SaH7Pj2eQRVkjOQdc0qX6sWfPk/fAfg=;
-        b=CvIo47+GM4Rfp+YjhJEfpuUlwvCaGUB4rZwCPpP4fNRA0/E81UfebSweugmSHVhxbE
-         aRjq4zAMGlXEWesOt4jaU136k1b92Sbt3Zjadqzrikp6uTkxN3dmzagQwaPcT2ur01mc
-         YL+O/PR61AEbRE+t7LEFl/PnEixs4yTWuaBsF7HvHyMCm1XoTANrqllQL2PUe90aJOpe
-         rRb0+hd1ydF2ETuYth2KJ5Tk2dCFhUDjdfJI5/B8mYNSzAYGU1nXZrUXxEIKgCQXWiXh
-         hgrzZ0mIuB39Nu045dq/mDOc7bNsrV9aifXWitNyRogBvB16ugSStKzxZXcbuxQ7Zwob
-         pmyg==
+        bh=EfnknnSI88SMEAmIK9ZIqu4FUp3tloSoVvgrsROObkc=;
+        b=iZ0ySCTPKMVrA5sRakqEgSqSdfMzqrTKrVrKBgJCse14fx1PKv7RdonTwxIVlu2bCp
+         IjhFWvLC84U+0fFGIm9Rr5Nq9uem7ML6ujpc1IcptYnT5HNolruguDoBsDgnPgDaJXuw
+         aod518deaAioQfKAWt2gGUF1fsxbBBsojUNbnf8hCTmXxwcChLKWkPJx1ci0vY/KMQQV
+         RD/PWoaRHmO2XhK0kHBDBRpgohnCM/g7gaQ2s+nBnnVoJ0rH5p5X7nbkuONj2VtMyYfR
+         u9UCeDA9w6JB60wjWOuRVYnct6lldhk/ZLTAy1y3iqb95Wyqm0Z9evyZr3amLC5cWfBX
+         PAQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725273190; x=1725877990;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1725273246; x=1725878046;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ntBd206Yvf20SaH7Pj2eQRVkjOQdc0qX6sWfPk/fAfg=;
-        b=daTPKLiajY5F1aQsRh5u7q7gsU1CEmsqjuZHFqwN0C9kkC06qI6rCelZuRV/aztKTh
-         jLhG5AHZZTAceKP2Ni0ppHIFXbF1mPhuvy5ap3/GuE8xJc/ueY76EE6Tnf+iEwNjWnh2
-         dKGZ9ivlDl5SatY5A3nytn5skuGIfV14PsCubUhf1xhTKhADSzlssVEr14pmiFr6bBKS
-         6SJ0CGXXEsc/cJ1vZa1i4LZ3Y/mWeIfNM7bDIAD6Lueolq+gu6O9bDc0MJewhypIAJSL
-         lvKAODjRZ0+cJwsvGO5ChOYDnbEMaH9vwArIPtgByO1j23e8S8JUBwnUIXh0Z7CI4U2g
-         VOuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUm8MVr9GkKU6wgDT2Bod+P3XY8vtZYNY0XmvsMmiiQrM4kWkt1QHSdpGdb4z8tPKKVCyOfSAqBHGJP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4N7IaabO+HkotbniwjjJ5JNucmI4O0GBIBwAn/Bvl0aYUz/Lt
-	8wFqaWnxQnLl36ObYZAiCIaD5NT5ROLiJ5hmsmDB9KWpVT2eIWULPKmlMggo6uTrJvSzdkYBVzf
-	j1tLIOBG5rlmkCxaKu6nQIlORiQsR5hUIpSfksA==
-X-Google-Smtp-Source: AGHT+IHR0BjlaxvH5N4Xcsh9oU+BzC5/rnmjLf45rfI9sxOMbtwkRJLYZ/zoGaUuvSzjAzYpnLfsKrP5/6IvBrMJBJY=
-X-Received: by 2002:a05:6512:1055:b0:52e:f950:31f3 with SMTP id
- 2adb3069b0e04-53546b44404mr8330415e87.35.1725273189848; Mon, 02 Sep 2024
- 03:33:09 -0700 (PDT)
+        bh=EfnknnSI88SMEAmIK9ZIqu4FUp3tloSoVvgrsROObkc=;
+        b=ZkFhbozVChxsoQtLWiSIJV3HZKxAoUmKKWToLPg8PQa7W2AyjPMUoeX7wfBDVPtL9Q
+         8L23Ub1j/TbqG8XCeulA+j6abBIQzGvDjxMybQnP0rxl4qyCTLzE8NQ+cqKEJvXFBEXC
+         EZzrpY4vfljRslzCoS36+f3yxg4WFnen0DwtXczLufLM9UEE6HWbpb3UUhdM+LZxSwMD
+         kHDXork10GdK6Xdydxxct/9YSQgClk+Dtxxtol9VcUOWqmbb4rbzlKx7JqRmfxdzkK30
+         FpKq/D6DLIopRLI37uy8UlS8TT7MQvsaKrqWxLN/CDbJsJbYZ8LeqFxtbbe+QZz+RxaD
+         juPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVuqhGVjNQHfvRqrOjQTPOUswLT2+0yXdCASF1d9NfG99D5uhThd94h9Q7OGoE6HSXf3ynXoTEKe4vX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBRVzpDCKvH5QvtUKu+jOtFVy/a1Qfbgm5k7a5tPD4iL48Hdc7
+	Q+KzUK2Xp5D5sKyEZeV/udwd+solIAdh6kbfkajCSWV1CQnXEZ+UtiZEhLTKYqM=
+X-Google-Smtp-Source: AGHT+IFdFPgO+oZwmws/3Yz5eXsbV5a/tr2eiQTpD1UeVF7Ht5uaERbyauIo9GDIAHqXqR8KYzVoRQ==
+X-Received: by 2002:a05:600c:4584:b0:42a:b32b:cc65 with SMTP id 5b1f17b1804b1-42bb4c4058fmr83572515e9.2.1725273245644;
+        Mon, 02 Sep 2024 03:34:05 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b496:9e67:73c9:9f5a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-374c32793b4sm5085844f8f.7.2024.09.02.03.34.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2024 03:34:05 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dhruva Gole <d-gole@ti.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio-syscon: fix excess struct member build warning
+Date: Mon,  2 Sep 2024 12:34:03 +0200
+Message-ID: <172527323991.25859.15792653428426761773.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240902-b4-gpio-fix-v1-1-49a997994fa5@ti.com>
+References: <20240902-b4-gpio-fix-v1-1-49a997994fa5@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240820121651.29706-1-rongqianfeng@vivo.com> <20240820121651.29706-3-rongqianfeng@vivo.com>
-In-Reply-To: <20240820121651.29706-3-rongqianfeng@vivo.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 2 Sep 2024 12:32:59 +0200
-Message-ID: <CAMRc=Me0OBPTneoB5WGa72eL_Yu=1=X_yu3nFimsDKUv2X56Fw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] gpio: zynq: Simplify using devm_clk_get_enabled()
-To: Michal Simek <michal.simek@amd.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, opensource.kernel@vivo.com, 
-	Rong Qianfeng <rongqianfeng@vivo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 20, 2024 at 2:17=E2=80=AFPM Rong Qianfeng <rongqianfeng@vivo.co=
-m> wrote:
->
-> Use devm_clk_get_enabled() simplify zynq_gpio_probe() and zynq_gpio_remov=
-e().
->
-> Signed-off-by: Rong Qianfeng <rongqianfeng@vivo.com>
-> ---
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Michal,
 
-This changes the order of operations in remove(), could you test it or
-at least give your Ack here?
+On Mon, 02 Sep 2024 16:00:02 +0530, Dhruva Gole wrote:
+> Fix the build warning with W=1 flag,
+> "Excess struct member 'compatible' description in 'syscon_gpio_data' "
+> by removing the documentation for the non existent member.
+> 
+> 
 
-Bart
+Applied, thanks!
+
+[1/1] gpio-syscon: fix excess struct member build warning
+      commit: 3cbf09bfb6162a90bda5e1228d0c46ad3e4c0d6c
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
