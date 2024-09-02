@@ -1,122 +1,146 @@
-Return-Path: <linux-gpio+bounces-9530-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9531-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5A87968332
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 11:28:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EED0596835C
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 11:34:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01CCE1C2032B
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 09:28:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7D1E281D03
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 09:34:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 277841C32F1;
-	Mon,  2 Sep 2024 09:28:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B93DD1D3629;
+	Mon,  2 Sep 2024 09:33:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRaOIxj1"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XwhWPDX8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B4A187355;
-	Mon,  2 Sep 2024 09:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571FF1D2F6B
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Sep 2024 09:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725269307; cv=none; b=UXcfkAqCGFk5ZpIt8O0h+YdHNy8HHigqvGYR+piI7srNyKj4t9xsrGFBtOed57vJdPvgyCoPda6axMSRiac3PQZ/7hpMg/c7Pnv/dZF+KTH6kwMYn5EviHO99mQL9v6cFDZ7tf/vbWGChgmb8iRHN5RJNmP8veubGfNgBTqIn38=
+	t=1725269638; cv=none; b=tWqDtA/YSJAgEfT/PgFwwx9R3/11f7/V9dnZtGgrTTHD/PVDEK9G4cSBGDtTGSBNI+Ga/mHzo36eHbbxp3OvhSUDm1MeSLiKBS6ulcV9lWnlgD1ds8LLI/nA0wY9ESqqP81iV7gNdNZzU0U3nYxo5tJrB8y7KweRuOPwGBHurXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725269307; c=relaxed/simple;
-	bh=wz0nbLzlS8nCRQNYzJhVNp33aZ9ev7UqcyhxjtZTSEs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CQSlrc5jpj7TprK0F1Nm5OuFW0tWQn4741L7hbAD8ljkKO08Bj2twfoNuchZ0eE9SFDgG8Lu61f22xiHSLTcqyx4DJPsQ9AgfFJUVm97q7fUjAnbpFZfOtYZfnYeWUq9C6pgF4i+vufvYn9IAxF0QA5558SrWP55zYQO65RLOI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LRaOIxj1; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2f3f68dd44bso41277491fa.3;
-        Mon, 02 Sep 2024 02:28:26 -0700 (PDT)
+	s=arc-20240116; t=1725269638; c=relaxed/simple;
+	bh=bZT6HOFefTCtK8dJDH5XgBal9zoVpEOw5ZS27xXJrBw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cylz7cpabf+fwTVBzHkwg1mO1hNEvkP3/Z23Hz/ycAG2jV7b3SEVtuYWf3V2k63NB5X3s+IxMOFYKIuTWT663W1uyn2REhQQwr/JN/wTjtpI1vFwRWKMiCk6wwSerQyLa0gq5sWtS1RhwACt0nRD8jRzdQtmtjXBFXlILpPClWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XwhWPDX8; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a86abbd68ffso651574166b.0
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Sep 2024 02:33:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725269304; x=1725874104; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e2I6KRglLDhMBBHQDhZYriJGFB36l6M5um5WgZKc0bU=;
-        b=LRaOIxj1l0Z8kERniynpTQN+3Xvc4U3Q4Ur6oDPZpVL8ZCERXrxHr/iQTeY0IQN9nA
-         P8QqDOJLuDM5wVVw3CdJc+oLtZhWTFK92gBOdlmWUlTubtQbcu34RYg2v5Fx8X9uBtMf
-         VSPHAQtew24L0n0rkGshrywErxvEtJr3Kg86jbJ9AhiLX9OYEww40kcfkch2n4TrHweh
-         Zo60lqgyE6Ptte5kRtlqsURHJhA5ySUfc8JBaqtaApMMksrtM3qMncEPgNhnRjN1n5UI
-         k7EiTUJkHSfKh5BVbkUpsP7/QE9DoIK9OnI+Ocf2aJIcZjDUGXxVQ2/AF0ODQfRU9Rwz
-         J6TQ==
+        d=suse.com; s=google; t=1725269635; x=1725874435; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nkFfwghHSavbjYo+VJPUeYMN2TlcRh+j2R34rUyvbNY=;
+        b=XwhWPDX8jDvrKTPDva8jFo1mIstNKJ+KKz71PfS3MtcQeLxeml9Q+OajUJ+06327j/
+         jdVLQf2odYjxixUQf5X8EgRpw2usche70C4PtzsaYFk85k91ypUWcZ0x8zMNATRlBnnU
+         cmKnsRDcBX6l5w4pvahJdOc/TJ104e19SXvB8hC6QiKr/8Y96/ot2vgiEJBXPqN2UTlk
+         isRGM1OiJiS3Hweqp1yvUvXIugM57DoMB20gVoJEgu1nluhvF2zjVqVh8l/8Tskdanm8
+         UZ+wlOK1U0mgTBpRXZmslX0qiuXcft5gZGR7SvBRPrTN2Srnt9hD1eXk2wgzIk2fOty8
+         PRgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725269304; x=1725874104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e2I6KRglLDhMBBHQDhZYriJGFB36l6M5um5WgZKc0bU=;
-        b=SbUTNacvCJBGZawnNl0AUWVkLEGR/tC7tNK7PoSOmb9c1IRq56EtafCgoBQuCbLd89
-         NFdS9IEOwfNQE8qFXm+/OUDRCcUAGG0VQ2mDllVxDr4+xIqGhl4GGLthbZJOHVWXq/bR
-         CQpipauiuUEp++Zk8P0/5Ez/s/Hyf8xDOKkC2tiR85jeyqSKDU0IcF219pRI2DYJrjdL
-         nYczjdGu2XqsOQ2hr1eTYRsny7h20CeDepxXngE7/bzm6IxgEmQVoxPu2CX1l1d5Z0fq
-         bcXZbtuSyiM2mmxoI93qRMmyD3njswWXjBYEfPQbX3lVZckRb0d6sYOEI2jSoaDkzHUp
-         m81g==
-X-Forwarded-Encrypted: i=1; AJvYcCU5g/E8Z7fYDn4q4ghojOsJuDpgqq8cppryWVrmmOuqByDJ0L1Y8HIXBF5zJVdtW60N2CwyszYqDEnB@vger.kernel.org, AJvYcCVE+8LUd5RTBcEgF28kNUQvRLBXdXJTAm2vjV7o6s7GVslBNGmkey3WbTBHZmRFTe+Mg69vl4m4TnW3vKb4@vger.kernel.org
-X-Gm-Message-State: AOJu0YwstlOCoDnzxBE5ldE/tcNmWDeezcuP2VVT9SGVmMjVJ9Y18Ajf
-	swkEZF7BxTFglvqsv2c+h1i7EECO3d4C8X4aJMLOnm9BV0Rjj/IFeB5Vi7ipPkw2kHQfWkLuBLq
-	Vl6W+jG9pMRXRxOCsE4xA5KMx35xG/uzN
-X-Google-Smtp-Source: AGHT+IFhk4AbmFcLW3KVfd8VGDWeIlXhyDUx0aCY8LXKoX8coHpxbkyA8VYLyCZ2du/pvNixMNJ51iy5dx7ZjRZxEN0=
-X-Received: by 2002:a05:6512:3984:b0:533:efaf:ab26 with SMTP id
- 2adb3069b0e04-53546b44d77mr5542334e87.36.1725269303920; Mon, 02 Sep 2024
- 02:28:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725269635; x=1725874435;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nkFfwghHSavbjYo+VJPUeYMN2TlcRh+j2R34rUyvbNY=;
+        b=g+QuA/jJMLxkjHaawaVoaycdVV3mdtS7NhEN3qnxSQbSHbKxq5KIhUP5fG6VNSfiJV
+         4Yf1W1VxnJQ3EMUB5r/0yyLPoiU9K0Q6WWj/k7tv296KIt+WOY3eGzT6KgFa8LeQ6TSs
+         406BE+4P44OJq0THLJ0nhIQxhfAmQ/CHlIysAwBnuIrk4S9ryz9QSnoObTXF+RyauwPd
+         l1OPssoVbEe+PZRhFxlJqnzZ0U2e9R2qAUqmeHPQsoGYR2RLFVWYrKfRYwk6VXTRgLgJ
+         yK7FE4L2DOUD4KPWAlIwiIbFfSCQWwm/xVsn72ajEK/YKDpeUFRtrqnLE7emL2P1b/Mu
+         E1zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcc7DZX504DC2uzj50XqL+ZxzDhOmI1NPDofWlMJbZAvoFJiRqsADwPVMga00Nkv5IvYVF7y5dDE58@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPI0Gl0even4LMVwcqQMjZv9QFXXGOm63f829mdmCUerA/exjB
+	so8f/f+bhbKSIx0CLrSIfU1t2ElEzEVYHeSY4GZCBpmBt+EnvEysrYo/YWb4uPQ=
+X-Google-Smtp-Source: AGHT+IFzqMMMEekpBj1FaMcTXT8G69ZzPIWqB+7+/4FijlOwcga3oDJHGPe2vbWjoVRgbBwsvahR5w==
+X-Received: by 2002:a17:906:d7c8:b0:a86:9fac:6939 with SMTP id a640c23a62f3a-a89a29f3862mr1013061366b.30.1725269634232;
+        Mon, 02 Sep 2024 02:33:54 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a89892220e5sm527704366b.195.2024.09.02.02.33.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2024 02:33:53 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Mon, 2 Sep 2024 11:34:01 +0200
+To: Rob Herring <robh@kernel.org>
+Cc: Stefan Wahren <wahrenst@gmx.net>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <ZtWGiXUsWZOVAXRv@apocalypse>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <98c570cb-c2ca-4816-9ca4-94033f7fb3fb@gmx.net>
+ <ZshZ6yAmyFoiF5qu@apocalypse>
+ <015a0dd9-7a13-45b7-971a-19775a6bdd04@gmx.net>
+ <Zsi5fNftL21vqJ3w@apocalypse>
+ <CAL_Jsq+XSWEfNF-Dn3paf1io0vxTmfFNbPf7AfRWFf4XiOYkaw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240902072859.583490-1-patrick.rudolph@9elements.com>
-In-Reply-To: <20240902072859.583490-1-patrick.rudolph@9elements.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 2 Sep 2024 12:27:47 +0300
-Message-ID: <CAHp75VeHc23XXjSGkmgajmbJ4ZH1OrSL0FGRQNrDfvWdW6cRQQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: pinctrl-cy8c95x0: Fix regcache
-To: Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	naresh.solanki@9elements.com, broonie@kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_Jsq+XSWEfNF-Dn3paf1io0vxTmfFNbPf7AfRWFf4XiOYkaw@mail.gmail.com>
 
-On Mon, Sep 2, 2024 at 10:30=E2=80=AFAM Patrick Rudolph
-<patrick.rudolph@9elements.com> wrote:
->
-> The size of the mux stride was of by one, which could result in
+Hi Rob,
 
-off
-
-> invalid pin configuration on the device side or invalid state
-> readings on the software side.
->
-> While on it also update the code and:
-> - Increase the mux stride size to 16
-> - Align the virtual muxed regmap range to 16
-> - Start the regmap window at the selector
-> - Mark reserved registers as not-readable
-
-Reported-by: Andy Shevchenko <andy@kernel.org>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-
+On 13:27 Fri 30 Aug     , Rob Herring wrote:
+> On Fri, Aug 23, 2024 at 11:31 AM Andrea della Porta
+> <andrea.porta@suse.com> wrote:
+> >
 ...
+> >
+> > Since u-boot is lacking support for RP1 we cannot really produce some test
+> > results to check the compatibility versus kernel dtb overlay but we can
+> > speculate a little bit about it. AFAIK u-boot would probably place the rp1
+> > node directly under its pcie@12000 node in DT while the dtb overlay will use
+> > dynamically created PCI endpoint node (dev@0) as parent for rp1 node.
+> 
+> u-boot could do that and it would not be following the 25+ year old
+> PCI bus bindings. Some things may be argued about as "Linux bindings",
+> but that isn't one of them.
 
-> -       if (reg >=3D CY8C95X0_VIRTUAL)
-> +       if (reg >=3D CY8C95X0_VIRTUAL && (reg % MUXED_STRIDE) < 12)
+Indeed. It was just speculation, not something I would bet on.
 
-Probably good to have 12 defined, but also a comment suffice, like:
+Regards,
+Andrea
 
-/* Only 12 registers are present per port (see Table 6 in the datasheet). *=
-/
-
->                 return true;
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+> 
+> Rob
 
