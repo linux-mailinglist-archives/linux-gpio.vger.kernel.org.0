@@ -1,297 +1,138 @@
-Return-Path: <linux-gpio+bounces-9589-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9590-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5352968909
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 15:38:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B30E4968998
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 16:15:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 33AAD1F231E8
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 13:38:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E07AB1C21AAB
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 14:15:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A52C5205E16;
-	Mon,  2 Sep 2024 13:38:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F0CA19E977;
+	Mon,  2 Sep 2024 14:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="k0CCwUTb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gpmy5LWL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3DC184D;
-	Mon,  2 Sep 2024 13:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D4F19F139;
+	Mon,  2 Sep 2024 14:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725284317; cv=none; b=PCrMQ03kV1kGsSMqN8ZNmlWDQ5UYAmN5ojw0/dZE/adUe6jS2FaaBrn3CAz6rHKSm7OJm+bvyapFEBTicLq83U3iE7Q3CkPgyiD1kAWKPdQ49PV9SiPSnsCC4c9+eILEmQW48CZrmwMnRNRohj7tgLXU9dvMmFJ8TTjwodGtfII=
+	t=1725286513; cv=none; b=nBXxGN7VEwUEzeV59CvqD0m7yTtbmxjjp6MZmT2EMOru9hj58maiSilOJ4TVBnHC8cdFe5yACsyv8NGdkIZD1QAwdc895k+dmjrTWT8lErAEQWQa/CPkSlK7MmfWCQ/mYo6cVsnoTAaOSNxOGb2IbjzQ6Q/3TkxbJ0wJflgGffs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725284317; c=relaxed/simple;
-	bh=VmbSlwz30CrgBjxHN1m/rtFJOQFx3FRyCzp3Ry2x69s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=twk/6kxs0FTb+Dt10NLPnXHcDzuVNbLGb51TWPRBGD0mlsJSI5RhVe1vAXGzhxXPVdVtluTMQ0KvtGPSML5dUQtIeMzlZAwuQ/48HU5c2GeiKXVszN1j6KX8USS9Hd1kZ1CdIqHI4crTw5b/+3E1vnalQnKopblepXxyfDHA3ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=k0CCwUTb; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D7C8A40006;
-	Mon,  2 Sep 2024 13:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1725284305;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xQY4ArvB7ONJr6lW7dYcvuSILbt3nf3xqfBfKcm34kM=;
-	b=k0CCwUTbIe+E+p6iI7jRvjha8V3FntUrfWrWbfTojJwp6sv+/k6g2jXTYCsc5viQVGz2ik
-	/BNqnhbIGPuZGgmkfgiW6qNcLlgBYKe907EsCVFnYCyCa8uXELTBB6SGIkFaLRSQpOHkJv
-	BBG+W2oz9x2gIb1OS7tBgzMlpxwnQyP7P8ezng/AtibztVPy2T68tNo9SBTHMQQowBYrWg
-	Mmv8fX26CMPzknYLLm/QLpFT8YqrYKXukJob9pGBdqi8HtU2yuk8nzjiVzP4cBa1Iaa1gw
-	9I+En5JjFKpvi5a7rip8Ew9zP+8naSzdLbWb8iFgwjGGtBtWrShBoWXgTcyBkw==
-Message-ID: <13c328c9-eb44-4a40-9f0e-734a84594bef@bootlin.com>
-Date: Mon, 2 Sep 2024 15:38:23 +0200
+	s=arc-20240116; t=1725286513; c=relaxed/simple;
+	bh=WcWeVPSp0tT51Ye5Obld4BMVGdh83tPeXUYqSFlZLLM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W2EoHiSbPtJUxpsoQgxXQkkiXMHDanuH10w4JM41yl7SoHP3W2wln22pxDUgHbFrkPvvIum/OWmdtcsS14L9os/JSRxGdITp5qZmUWfCuGQFBbNDgJsPMFoITUhqECfP3da5e9yXGUjJQ3Ycebf2HVOp2bRTXooV0hpIS05SmpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gpmy5LWL; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725286511; x=1756822511;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WcWeVPSp0tT51Ye5Obld4BMVGdh83tPeXUYqSFlZLLM=;
+  b=gpmy5LWLxpPhjdRCxjDgdbcwZ7WblYpzizSjoCB1pKDtX1bONKbtzISc
+   jlwnOJVXYnfsZGbmQiiQRIXr+DuoW/WXXo5EwFf9qSWi1SMd1J/rMsVqE
+   31Q634EWd97p7NjRl3OZuFBMuT1Yj6A5ppQuJ6wnD4eVDxZFsAtnB8gm5
+   tGZQbCBo5i+8DrudopMPnvEW6G0aVKNysocImcFqIhFUQF5Kv6qZMhKk4
+   TqxJAh6KKaBFa/Dg3j3esMm4Xq0dXcNoPXJQ+Yca9WJh3NNErmvb0ERrW
+   VT0SzeepE3U5u/yDpEG2qq0H1vzyHz7uOzhhji7A5Tt+vBBsBNfgL1wGk
+   g==;
+X-CSE-ConnectionGUID: FYhs3uwrTlqtnytd2VAc3Q==
+X-CSE-MsgGUID: GhswVH7dRCaxfTiyGmt/KA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11183"; a="27661649"
+X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
+   d="scan'208";a="27661649"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 07:14:45 -0700
+X-CSE-ConnectionGUID: rdWh2PHiT0CwILtymYGAIw==
+X-CSE-MsgGUID: lw9omZDbTRiUYDjU8DVjkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
+   d="scan'208";a="69429059"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa005.jf.intel.com with ESMTP; 02 Sep 2024 07:14:43 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 7BEE8233; Mon, 02 Sep 2024 17:14:42 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/1] pinctrl: intel: Inline intel_gpio_community_irq_handler()
+Date: Mon,  2 Sep 2024 17:14:41 +0300
+Message-ID: <20240902141441.2683122-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] watchdog: Congatec Board Controller watchdog timer
- driver
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-watchdog@vger.kernel.org, thomas.petazzoni@bootlin.com,
- blake.vermeer@keysight.com
-References: <20240503-congatec-board-controller-v1-0-fec5236270e7@bootlin.com>
- <20240503-congatec-board-controller-v1-4-fec5236270e7@bootlin.com>
- <d37e3fea-d35e-4688-a845-02be6ea5eaa3@roeck-us.net>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <d37e3fea-d35e-4688-a845-02be6ea5eaa3@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hi Guenter,
+Since we have for_each_intel_pad_group() helper, there is
+no advantage of having intel_gpio_community_irq_handler().
+Inline it into intel_gpio_irq().
 
->> +
->> +struct cgbc_wdt_cmd_cfg {
->> +	u8 cmd;
->> +	u8 mode;
->> +	u8 action;
->> +	u8 timeout1[3];
->> +	u8 timeout2[3];
->> +	u8 reserved[3];
->> +	u8 delay[3];
->> +} __packed;
->> +
->> +static_assert(sizeof(struct cgbc_wdt_cmd_cfg) == 15);
-> 
-> static_assert() is declared in linux/build_bug.h. Please include all
-> necessary include files explicitly and do not depend on indirect includes.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 23 ++++++-----------------
+ 1 file changed, 6 insertions(+), 17 deletions(-)
 
-Fixed in next iteration.
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 02dd8107e250..a2194d2ab178 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1256,14 +1256,16 @@ static const struct irq_chip intel_gpio_irq_chip = {
+ 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+-static int intel_gpio_community_irq_handler(struct intel_pinctrl *pctrl,
+-					    const struct intel_community *community)
++static irqreturn_t intel_gpio_irq(int irq, void *data)
+ {
++	const struct intel_community *community;
+ 	const struct intel_padgroup *padgrp;
+-	struct gpio_chip *gc = &pctrl->chip;
++	struct intel_pinctrl *pctrl = data;
+ 	int ret = 0;
+ 
+-	for_each_intel_community_pad_group(community, padgrp) {
++	/* Need to check all communities for pending interrupts */
++	for_each_intel_pad_group(pctrl, community, padgrp) {
++		struct gpio_chip *gc = &pctrl->chip;
+ 		unsigned long pending, enabled;
+ 		unsigned int gpp, gpp_offset;
+ 		void __iomem *reg, *is;
+@@ -1287,19 +1289,6 @@ static int intel_gpio_community_irq_handler(struct intel_pinctrl *pctrl,
+ 		ret += pending ? 1 : 0;
+ 	}
+ 
+-	return ret;
+-}
+-
+-static irqreturn_t intel_gpio_irq(int irq, void *data)
+-{
+-	const struct intel_community *community;
+-	struct intel_pinctrl *pctrl = data;
+-	int ret = 0;
+-
+-	/* Need to check all communities for pending interrupts */
+-	for_each_intel_pin_community(pctrl, community)
+-		ret += intel_gpio_community_irq_handler(pctrl, community);
+-
+ 	return IRQ_RETVAL(ret);
+ }
+ 
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-> 
->> +
->> +static int cgbc_wdt_start(struct watchdog_device *wdd)
->> +{
->> +	struct cgbc_wdt_data *wdt_data = watchdog_get_drvdata(wdd);
-> 
-> Unusual way to get wdt_data instead of using container_of().
-> Any special reason ?
-
-No special reason, I saw that watchdog_get_drvdata() was often used in
-watchdog drivers (more than container_of()) to get wdt_data.
-But I can use container_of() if you think I should.
-
-> 
->> +	struct cgbc_device_data *cgbc = wdt_data->cgbc;
->> +	unsigned int timeout1 = (wdd->timeout - wdd->pretimeout) * 1000;
->> +	unsigned int timeout2 = wdd->pretimeout * 1000;
->> +	u8 action;
->> +
->> +	struct cgbc_wdt_cmd_cfg cmd_start = {
->> +		.cmd = CGBC_WDT_CMD_INIT,
->> +		.mode = CGBC_WDT_MODE_SINGLE_EVENT,
->> +		.timeout1[0] = (u8)timeout1,
->> +		.timeout1[1] = (u8)(timeout1 >> 8),
->> +		.timeout1[2] = (u8)(timeout1 >> 16),
->> +		.timeout2[0] = (u8)timeout2,
->> +		.timeout2[1] = (u8)(timeout2 >> 8),
->> +		.timeout2[2] = (u8)(timeout2 >> 16),
->> +	};
->> +
->> +	if (wdd->pretimeout) {
->> +		action = 2;
->> +		action |= wdt_data->pretimeout_action << 2;
->> +		action |= wdt_data->timeout_action << 4;
->> +	} else {
->> +		action = 1;
->> +		action |= wdt_data->timeout_action << 2;
->> +	}
->> +
->> +	cmd_start.action = action;
->> +
->> +	return cgbc_command(cgbc, &cmd_start, sizeof(cmd_start), NULL, 0, NULL);
->> +}
->> +
->> +static int cgbc_wdt_stop(struct watchdog_device *wdd)
->> +{
->> +	struct cgbc_wdt_data *wdt_data = watchdog_get_drvdata(wdd);
->> +	struct cgbc_device_data *cgbc = wdt_data->cgbc;
->> +	struct cgbc_wdt_cmd_cfg cmd_stop = {
->> +		.cmd = CGBC_WDT_CMD_INIT,
->> +		.mode = CGBC_WDT_DISABLE,
->> +	};
->> +
->> +	return cgbc_command(cgbc, &cmd_stop, sizeof(cmd_stop), NULL, 0, NULL);
->> +}
->> +
->> +static int cgbc_wdt_keepalive(struct watchdog_device *wdd)
->> +{
->> +	struct cgbc_wdt_data *wdt_data = watchdog_get_drvdata(wdd);
->> +	struct cgbc_device_data *cgbc = wdt_data->cgbc;
->> +	u8 cmd_ping = CGBC_WDT_CMD_TRIGGER;
->> +
->> +	return cgbc_command(cgbc, &cmd_ping, sizeof(cmd_ping), NULL, 0, NULL);
->> +}
->> +
->> +static int cgbc_wdt_set_pretimeout(struct watchdog_device *wdd,
->> +				   unsigned int pretimeout)
->> +{
->> +	struct cgbc_wdt_data *wdt_data = watchdog_get_drvdata(wdd);
->> +
->> +	wdd->pretimeout = pretimeout;
->> +	wdt_data->pretimeout_action = ACTION_SMI;
->> +
->> +	if (watchdog_active(wdd))
->> +		return cgbc_wdt_start(wdd);
->> +
->> +	return 0;
->> +}
->> +
->> +static int cgbc_wdt_set_timeout(struct watchdog_device *wdd,
->> +				unsigned int timeout)
->> +{
->> +	struct cgbc_wdt_data *wdt_data = watchdog_get_drvdata(wdd);
->> +
->> +	if (timeout < wdd->pretimeout) {
->> +		dev_warn(wdd->parent, "timeout <= pretimeout. Setting pretimeout to zero\n");
-> 
-> That is a normal condition which does not warrant a log message.
-> Also see drivers/watchdog/watchdog_dev.c around line 385.
-
-Fixed in next iteration.
-
-> 
->> +		wdd->pretimeout = 0;
->> +	}
->> +
->> +	wdd->timeout = timeout;
->> +	wdt_data->timeout_action = ACTION_RESET;
-> 
-> Both timeout_action and pretimeout_action are set statically.
-> What is the point of doing that instead of just using
-> ACTION_RESET and ACTION_SMI as needed irectly ?
-
-Yes indeed, using ACTION_RESET and ACTION_SMI directly in
-cgbc_wdt_start() makes the code smaller.
-
-> 
->> +
->> +	if (watchdog_active(wdd))
->> +		return cgbc_wdt_start(wdd);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct watchdog_info cgbc_wdt_info = {
->> +	.identity	= "CGBC Watchdog",
->> +	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
->> +		WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT
->> +};
->> +
->> +static const struct watchdog_ops cgbc_wdt_ops = {
->> +	.owner		= THIS_MODULE,
->> +	.start		= cgbc_wdt_start,
->> +	.stop		= cgbc_wdt_stop,
->> +	.ping		= cgbc_wdt_keepalive,
->> +	.set_timeout	= cgbc_wdt_set_timeout,
->> +	.set_pretimeout = cgbc_wdt_set_pretimeout,
->> +};
->> +
->> +static int cgbc_wdt_probe(struct platform_device *pdev)
->> +{
->> +	struct cgbc_device_data *cgbc = dev_get_drvdata(pdev->dev.parent);
->> +	struct device *dev = &pdev->dev;
->> +	struct cgbc_wdt_data *wdt_data;
->> +	struct watchdog_device *wdd;
->> +	int ret;
->> +
->> +	wdt_data = devm_kzalloc(dev, sizeof(*wdt_data), GFP_KERNEL);
-> 
-> devm_kzalloc() is declared in linux/device.h. Again, please include all
-> necessary include files explicitly.
-
-Fixed in next iteration.
-
-> 
->> +	if (!wdt_data)
->> +		return -ENOMEM;
->> +
->> +	wdt_data->cgbc = cgbc;
->> +	wdd = &wdt_data->wdd;
->> +	wdd->parent = dev;
->> +
-> 
-> No limits ? That is unusual. Are you sure the driver accepts all
-> timeouts from 0 to UINT_MAX ?
-
-Yes limits are needed.
-For next iteration I added 1s as min_timeout (which seems to be the
-usual value, and it is accepted by the hardware), and a max_timeout.
-
-> 
->> +	wdd->info = &cgbc_wdt_info;
->> +	wdd->ops = &cgbc_wdt_ops;
->> +
->> +	watchdog_set_drvdata(wdd, wdt_data);
->> +	watchdog_set_nowayout(wdd, nowayout);
->> +
->> +	cgbc_wdt_set_timeout(wdd, timeout);
->> +	cgbc_wdt_set_pretimeout(wdd, pretimeout);
-> 
-> The more common approach would be to set default limits in wdd->{timout,pretimeout}
-> and only override the values if needed, ie if provided using module parameters.
-> That implies initializing the module parameters with 0. YOur call, though.
-
-Ok.
-For next iteration I added limits (min_timeout, max_timeout), the
-timeout module parameter is set to 0 by default, and
-watchdog_init_timeout() is called in the probe.
-
-> 
->> +
->> +	platform_set_drvdata(pdev, wdt_data);
->> +	watchdog_stop_on_reboot(wdd);
->> +	watchdog_stop_on_unregister(wdd);
->> +
->> +	ret = devm_watchdog_register_device(dev, wdd);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return 0;
-> 
-> Why not just
-> 	return devm_watchdog_register_device(dev, wdd);
-> ?
-
-I don't know :)
-Fixed in the next iteration.
-
-Thanks for the review !!
-
-Thomas.
 
