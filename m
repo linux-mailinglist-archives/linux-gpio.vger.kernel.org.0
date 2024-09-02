@@ -1,83 +1,90 @@
-Return-Path: <linux-gpio+bounces-9532-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9533-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1E7E968379
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 11:41:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25169968384
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 11:46:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8EAA828198F
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 09:41:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 886F3281186
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Sep 2024 09:46:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D91301D1F79;
-	Mon,  2 Sep 2024 09:41:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BD5D185B4D;
+	Mon,  2 Sep 2024 09:46:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="a+/TR8fn"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OjOKgu2W"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AC215C15E
-	for <linux-gpio@vger.kernel.org>; Mon,  2 Sep 2024 09:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9836A44C76
+	for <linux-gpio@vger.kernel.org>; Mon,  2 Sep 2024 09:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725270094; cv=none; b=W7ZQBVFo0156Jqt2DezQvd9T6+d5jyjq0qCtdH/ST/edfSFeB2kwOqn03fQST/0JNsawke4ifmVvMOywBz2rp03LSo+A1+nHTOZxf2G1RGDGuGvBqnD41iWHLHF7+HPJRo/1j5e4z57qr1yeKEFcB/eyehZcO+Sksh737DpS3YU=
+	t=1725270400; cv=none; b=fX+72gTWdNl55uS1rCHAXQDTk2tLzXR4hTEM3XGovvZcLPBr8VbOB6fIisbrBeZrGfHDqk/IlMRmvv0G+NKwh8fV+V4WLURDO5lz5Iv4Uq22NvP0o374tAVq0qgyzWmbxAaBlbHJX87oIEiY3G2czecK0p/0rGvGZLniI5xiicE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725270094; c=relaxed/simple;
-	bh=7f9NohxoKYVV+JcYuwzUmeYnZ8BqcMgzeGi4H9xfJBs=;
+	s=arc-20240116; t=1725270400; c=relaxed/simple;
+	bh=mxXOMvXAWzIqlWZH+wOhuCEAYYQ2ycQl61aOIdkm/Q0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ToOye147Cgk8YbHIgdlS3qbdFP5zKaSuU4pOw5D6a7123hYySno7JAZCDlmjbq0YrwV/8GX0Eo+9AueB/Tb3B8YuzWGmVDuweBWct73SW0HguJU8x/C9CWKUVQUWTYO2W9wPkBr4bMxZmh7Jr2/f5w5kreTWj8z0D4gKlpGSbJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=a+/TR8fn; arc=none smtp.client-ip=209.85.128.51
+	 MIME-Version:Content-Type; b=S2JT51cocYXMVvSc8zGp/t7kOjjJM0akEqP7hoG4vkGL1uoxIXR011zqoRliHsRGb76m8i4Ru+zL6+HuQRRRwtdxGGueVtkSJilnyN3sFT+Cc0Cw0PSljFqvoyelOWVIYFwqVGXYdn9P6YIczPHEBBtxa7ySoimStRhoDBXeF7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OjOKgu2W; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42bb9d719d4so27982635e9.3
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Sep 2024 02:41:32 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5c2561e8041so1113673a12.2
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Sep 2024 02:46:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725270091; x=1725874891; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725270397; x=1725875197; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r7EhRLl1axrUIsWyWDb3JWNTr3sPA2EDqw2uAoCWZ4k=;
-        b=a+/TR8fnwp6KtWtkey4yhp+XFmyObDiDYFNxjs8fmuCo3SWZhbNGFfu1p+H2yaCLHU
-         oqUDl/sjSE4P9+dErTfqkCwkVKQBssNQ2SUdufKg8/J359STpZhvy3WA2r7QB6wslDe8
-         jN3rLr7qPs4K4s8CWf+NENJc4HGc76btae/PASxvtqpG/YZqc2Hpfk4KkzXvzkqJEhC7
-         Ly4gEpP7TmBVNdAH6Jxj4OMvf05OGcfGnWcyIjpe29Z31MmAxt7C5aZQs8RoI0W2EMFj
-         T/yYFhTTD6cJWNgG6fV2eiPPAJQvr+mXLofYipxANmLT/UfH7XO78MZ1JA5uvly4JEyv
-         TWQw==
+        bh=uvU0q4IqsZC3m7HbUXvgFdJn7OUlluR4GbPu5ha70so=;
+        b=OjOKgu2W/cu1/0U3nL/dxblFCa2ZIGQNVfmSRDlNFJJXhu2VHfOX+VA1pOHYwdo8T/
+         ARGPks+fwOtmacTbFAqWr2CLe0p/LE0pe8y+sObPjkMJBo0lFJFB8arwGNzf0e+33xUS
+         8Mv0eihhP9pxQLETQppdAv9ioDG4yRZzBleiz0MjtyC+YK8lSUWReqgBmay3ZfjsOym0
+         nAX6zryt2vNgnAzvmYgj+iRXoLHD+FHOx52IzyLEcbOzTizOjexIyrN8zfVgiJzv/Efd
+         m/RG+thlQfmRVqtHAf/Kl2SYSNVKDKZQnaIhLrNklkbZKhOeR9W9v0Fa8U6kE3i+B5Yp
+         lZLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725270091; x=1725874891;
+        d=1e100.net; s=20230601; t=1725270397; x=1725875197;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r7EhRLl1axrUIsWyWDb3JWNTr3sPA2EDqw2uAoCWZ4k=;
-        b=mpgNSKWb212kQEHNESf3tWt+yBHzji4wqBnQDDru+aWTQ51hcy4YoQe9tcV3xguwa2
-         kw31JFBXt2RGhm1vtAASJGBRojik2z/nSYA+7VVI/DsOFnuJPWsvCCL1+lom/ouSylRS
-         Wf7fiT9/iP8kjs8b19O1mQLd55+rmXSPkOEN18okW51ib9Spu8LwrexGIGalfqIZ7Es4
-         NXVYdpYHA8lbGpVoWq7qEc4jDSh6KDIDnqLo31xOkXc76d6OoLzwKlzPLeo2awz97SUq
-         36VCPbgvu6xF2plZ5Nt33I3/fPVJiENkk62EYVpYSeimwfYEJauYhp/mlf5E7lQyIEhy
-         3ayg==
-X-Gm-Message-State: AOJu0YzkRurVi/p8OqLimWDetnnrTUF5otECV4frqyL+XrTK1q6Px7z0
-	UJybYIJBogMql+OB6NnHkIb6BR8NfIQSF6pfUBitn7DIaOypZugw3Ao+sWQC1HqZpfasl4B3oUO
-	O
-X-Google-Smtp-Source: AGHT+IGd5U51EF8urg0wHHh7LUfrT/h2JyBqzsu0NjQ72lbwy2e8CjJkI7Gvlnl9UO/EqLYT/E77Lw==
-X-Received: by 2002:a5d:5e12:0:b0:374:b3a3:3f83 with SMTP id ffacd0b85a97d-374b3a34035mr4922669f8f.53.1725270090183;
-        Mon, 02 Sep 2024 02:41:30 -0700 (PDT)
+        bh=uvU0q4IqsZC3m7HbUXvgFdJn7OUlluR4GbPu5ha70so=;
+        b=WFRiOWBJLB10i4D+X5th4uGoBp6M94CP170uYyT4l+n4LsBmcbTeu6d1ZzNOWo+b1g
+         tJMwlALpTLr4jCwO5LMYrnweeaiOBI5LpWvWe255cUoyFqMahHYIDn9RVYvF52thQmWd
+         D5rXGJ3EouLSY7Ku2oDHJzi1OBdYFfGJvdZZwU4wKADkib9WpBA8gFRPqiuvaxVKP2gE
+         Zf9RD8dZZyDIug/VflR3YbpEkzZsRmgRSX1Tp4N6Td4d0KFUxdxy20WZmCtvfWRkYHzo
+         9V6u2eQ+mAbXe23qtfQGIPJd3pyvPPbGtQ4UVj/qHpKjLXeqnLrC83K0Eq+NX5z2XQFX
+         PsPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEqFoIf75hsInOTpqNnaCvCWWwfHbKa7gxzats6xMNzsiUHk/lM7s8MHLZNR3KVv9R8GdDzVt6bVbG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7UA9pyFM+bJyivPCRoyaxkn6KQyghFBGKdEuDy5Xmy11MygRH
+	IJWvgMDHi6thHVrUirppUjfzNqXQWgr28fKn+Hn+ChZ9sHCRUXnqdTUgV+tIY68=
+X-Google-Smtp-Source: AGHT+IH1zg1jlwXDCyd/ampfGvI2tFOVMbwlFkIFwwhxA5YtvJe4GT6oAvCh2TQyWSsKQ+egPE4Erg==
+X-Received: by 2002:a05:6402:3481:b0:5c2:112e:f106 with SMTP id 4fb4d7f45d1cf-5c21ed319c6mr9363383a12.3.1725270396001;
+        Mon, 02 Sep 2024 02:46:36 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b496:9e67:73c9:9f5a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-374c23d6a38sm5273938f8f.38.2024.09.02.02.41.22
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c226ccfeacsm5009357a12.78.2024.09.02.02.46.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2024 02:41:25 -0700 (PDT)
+        Mon, 02 Sep 2024 02:46:35 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
+To: linus.walleij@linaro.org,
 	brgl@bgdev.pl,
-	Kent Gibson <warthog618@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH] build: fix HAS_GI_DOCGEN never defined error
-Date: Mon,  2 Sep 2024 11:41:21 +0200
-Message-ID: <172527007905.20851.4063706700024610685.b4-ty@linaro.org>
+	mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com,
+	Shen Lichuan <shenlichuan@vivo.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	opensource.kernel@vivo.com
+Subject: Re: [PATCH v1] gpio: stmpe: Simplify with dev_err_probe()
+Date: Mon,  2 Sep 2024 11:46:34 +0200
+Message-ID: <172527039219.21144.385699965145763717.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240831075212.147812-1-warthog618@gmail.com>
-References: <20240831075212.147812-1-warthog618@gmail.com>
+In-Reply-To: <20240829131051.43200-1-shenlichuan@vivo.com>
+References: <20240829131051.43200-1-shenlichuan@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -90,22 +97,23 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Sat, 31 Aug 2024 15:52:12 +0800, Kent Gibson wrote:
-> When building without --enable-bindings-glib configure reports this error:
+On Thu, 29 Aug 2024 21:10:51 +0800, Shen Lichuan wrote:
+> Use dev_err_probe() to simplify the error path and unify a message
+> template.
 > 
->   ...
->   checking for help2man... true
->   checking that generated files are newer than configure... done
->   configure: error: conditional "HAS_GI_DOCGEN" was never defined.
->   Usually this means the macro was only invoked conditionally.
->   make: *** [Makefile:440: config.status] Error 1
+> Using this helper is totally fine even if err is known to never
+> be -EPROBE_DEFER.
+> 
+> The benefit compared to a normal dev_err() is the standardized format
+> of the error code, it being emitted symbolically and the fact that
+> the error code is returned which allows more compact error paths.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] build: fix HAS_GI_DOCGEN never defined error
-      commit: c701785717629ecb609764092414d1f164022d2a
+[1/1] gpio: stmpe: Simplify with dev_err_probe()
+      commit: 1882e769362b8e4ef68fd30a05295f5eedf5c54a
 
 Best regards,
 -- 
