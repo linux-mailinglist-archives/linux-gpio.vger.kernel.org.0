@@ -1,154 +1,546 @@
-Return-Path: <linux-gpio+bounces-9666-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9667-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A89296A2C1
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 17:33:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCC7C96A2D1
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 17:34:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14CAF1F294E9
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 15:33:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E19C11C23268
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 15:34:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1990F18B499;
-	Tue,  3 Sep 2024 15:30:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0DFF175D45;
+	Tue,  3 Sep 2024 15:34:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B8uH/Hu5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tRnJd7Zs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E94726AEC;
-	Tue,  3 Sep 2024 15:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A76412B94;
+	Tue,  3 Sep 2024 15:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725377424; cv=none; b=eTwGUZp8qOlDHRM3ZBjzZF8dXe0F5lipT/65uepxe4ragjVC8qwTYq6soL1Z7+gO/jqjXxg3walvD98EagpUhT8CpoYfAJsw+n/bYP0aMR+jeGWqwmK9QhTqaxYa520V2cQnA9rgMd4efp7kfYo+Iup6wGDICWni1YqbFNAeq60=
+	t=1725377640; cv=none; b=j3c//DyihdRRPrsb7WuOqRBKAfEIN/Ec3XHqFjmlTowS2kxCteoShl9rZjqcSZGpYUnPYVXjOpm0OJFfuxq/eSg156Nsd952mMlN3lnK02RD+LJqmJSAb0wKX2VDMxPodQdD/Em3bp2qliO2ThtoqZMcAhH8bSDAVV/oXa+DqiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725377424; c=relaxed/simple;
-	bh=6piqvsdwZK7m2rQI2xaAzlLX4itMjm+cIfYUK76i/9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TcWJVXoxeOjjqpTVESg1BRyom5rbUVkLgy9M6iNyT9bOSxqcZUqFFNuWEazihkt70MTf+OYb0rC8FGFEBB8yWIR/D5TZvpMItlO8Y4aVrTPsTGDE9l7MzRoK+KPYWhOCw+V9H/mcz1x5pvgB4zdqkyZl+DIiemXjE3myIwL1FZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B8uH/Hu5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 483C6D5a009100;
-	Tue, 3 Sep 2024 15:24:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6piqvsdwZK7m2rQI2xaAzlLX4itMjm+cIfYUK76i/9c=; b=B8uH/Hu5GO1wPnC+
-	V7P+1suidAjBz8algBBAEisJFWoejjT+7IiHvbN989/gYH6/qFw0rveL7SE5ZLZx
-	0IEQkeyq/8J3O2O6670dOXhxPPWRy3Ikvswir+YwzzYKWHxkKiexh8NZDaTYPUw4
-	VX+/duYB69K9KB6BApD64+Vtl0+m/xA5OkGzRJZvJbLpAYPusr1hq0LK4wvgCFQr
-	GNH9+/upDX42qqTPWBcKRcKwtxTpmmp04D19xSewG8ve1oTVl28ZMFOhizAI/e+S
-	c46/mv5mhsEUJ1NGAi7RHvauXR6a7SZaXAIFcNCCn7k3FKY+h4MmtxZUrltx4ymk
-	D8a3Dw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41btrxqt7a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Sep 2024 15:24:35 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 483FOXh5020808
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 3 Sep 2024 15:24:33 GMT
-Received: from [10.110.120.207] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 3 Sep 2024
- 08:24:29 -0700
-Message-ID: <b855f1a9-35c2-4c53-9485-0989b3eb5a6b@quicinc.com>
-Date: Tue, 3 Sep 2024 08:24:29 -0700
+	s=arc-20240116; t=1725377640; c=relaxed/simple;
+	bh=ACsj0l+2UVfRxDV7jR+nkjUSIPe5eAHlHqzxtK9MgxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bQ2XegHowzagBuB8tlzbVbLvFCk3ZGnckBCpJysh9xmssX2allRCyx5XZ/g0+HI6Mkl8xoSrNAL0TqNcK18+0A9TIzWm9xjRVWkUjdatf6P8KFdN/K5c565+y8V0OvxIwxRvxHemC0UJL6w693c6mkJCIWIBdp8pvBBGDEymRV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tRnJd7Zs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 911FDC4CEC4;
+	Tue,  3 Sep 2024 15:33:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725377639;
+	bh=ACsj0l+2UVfRxDV7jR+nkjUSIPe5eAHlHqzxtK9MgxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tRnJd7ZsCHhZ63y8ffut2gcmMjzeajaOqH/t/PDG6bPBtnvtSgg+rIt7UV07jcOhm
+	 SewvAgJ947ex5ehM9SbRMgWHUTCXTVF4kwkY0RUCGGpN4CV0NS2fhMYcKQn5aOcNgx
+	 h7SXR6COZ9zZWAwpTBKYumWci4Of+u0W+efk6YBuS3ldEVnCw5gxNN6yx3vq8nREN7
+	 JpUs1Xo4dMXQog8ZTUpI9v37gI4f6EnA+QIxrLeBEfcOuFrE5z1T6Kg6iUvxVPnk/Y
+	 U1FhdefJJO9qddqA9j7FXcHuNy2RGGMAeJddyw7UYNmVw8MKI+VOiwohtdaZWAoxS0
+	 jisQ/QS2r2VsQ==
+Date: Tue, 3 Sep 2024 16:33:53 +0100
+From: Lee Jones <lee@kernel.org>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Add support for Airoha EN7581
+ GPIO System Controller
+Message-ID: <20240903153353.GZ6858@google.com>
+References: <20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org>
+ <20240831-en7581-pinctrl-v3-2-98eebfb4da66@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/22] pinctrl: qcom: sa8775p: Add support for SA8255p SoC
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <rafael@kernel.org>,
-        <viresh.kumar@linaro.org>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <sudeep.holla@arm.com>, <andi.shyti@kernel.org>,
-        <tglx@linutronix.de>, <will@kernel.org>, <joro@8bytes.org>,
-        <jassisinghbrar@gmail.com>, <lee@kernel.org>,
-        <linus.walleij@linaro.org>, <amitk@kernel.org>,
-        <thara.gopinath@gmail.com>, <broonie@kernel.org>,
-        <wim@linux-watchdog.org>, <linux@roeck-us.net>, <robin.murphy@arm.com>,
-        <cristian.marussi@arm.com>, <rui.zhang@intel.com>,
-        <lukasz.luba@arm.com>, <vkoul@kernel.org>, <quic_gurus@quicinc.com>,
-        <agross@kernel.org>, <bartosz.golaszewski@linaro.org>,
-        <quic_rjendra@quicinc.com>, <robimarko@gmail.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <arm-scmi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <iommu@lists.linux.dev>, <linux-gpio@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <kernel@quicinc.com>,
-        <quic_psodagud@quicinc.com>, <quic_tsoni@quicinc.com>,
-        <quic_shazhuss@quicinc.com>
-References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
- <20240828203721.2751904-12-quic_nkela@quicinc.com>
- <erlzqkxrogk24ugfahfsxrramay6tfhljnxrcfcuhe24pla7k3@lytnz3kmszyj>
- <d15927f9-bd00-4e32-9c25-535c69fe56f6@quicinc.com>
- <f227c799-cf9a-481a-b359-21828d6e8bca@kernel.org>
-Content-Language: en-US
-From: Nikunj Kela <quic_nkela@quicinc.com>
-In-Reply-To: <f227c799-cf9a-481a-b359-21828d6e8bca@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bWyf1ZPtHhHPINAXIshQXWfk8GFZ_w_W
-X-Proofpoint-ORIG-GUID: bWyf1ZPtHhHPINAXIshQXWfk8GFZ_w_W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-03_03,2024-09-03_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- clxscore=1015 suspectscore=0 phishscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=999 spamscore=0
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2407110000 definitions=main-2409030125
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240831-en7581-pinctrl-v3-2-98eebfb4da66@kernel.org>
 
+On Sat, 31 Aug 2024, Lorenzo Bianconi wrote:
 
-On 8/30/2024 2:52 AM, Krzysztof Kozlowski wrote:
-> On 29/08/2024 16:17, Nikunj Kela wrote:
->> On 8/29/2024 12:29 AM, Krzysztof Kozlowski wrote:
->>> On Wed, Aug 28, 2024 at 01:37:10PM -0700, Nikunj Kela wrote:
->>>> SA8255p platform uses the same TLMM block as used in SA8775p,
->>>> though the pins are split between Firmware VM and Linux VM.
->>>> let's add SA8255p specific compatible.
->>> The change suggests devices are fully compatible, but above description
->>> does not.
->>>
->>> This looks conflicting.
->>>
->>> Best regards,
->>> Krzysztof
->> Hi Krzysztof,
->>
->> Thanks for reviewing patches. TLMM HW block is exactly same as used in
->> SA8775p however ownership of pins can be split between firmware VM and
->> Linux VM. It is upto devices to decide what pins they want to use in
->> what VM. I will extend the subject with same description as used in DT
->> binding.
-> So there is no difference? Then devices should be made compatible with
-> fallback.
->
-> Best regards,
-> Krzysztof
+> From: Christian Marangi <ansuelsmth@gmail.com>
+> 
+> Add support for Airoha EN7581 GPIO System Controller which provide a
+> register map for controlling the GPIO, pinctrl and PWM of the SoC.
+> 
+> Schema define cells for both gpio/interrupt controller and PWM.
+> Moreover it provides a dedicated pinctrl node for pins and config
+> definitions.
+> 
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> ---
+>  .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    | 433 +++++++++++++++++++++
+>  1 file changed, 433 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml b/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml
+> new file mode 100644
+> index 000000000000..a9080c7f50f9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml
+> @@ -0,0 +1,433 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/airoha,en7581-gpio-sysctl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Airoha EN7581 GPIO System Controller
+> +
+> +maintainers:
+> +  - Christian Marangi <ansuelsmth@gmail.com>
+> +  - Lorenzo Bianconi <lorenzo@kernel.org>
+> +
+> +description:
+> +  Airoha EN7581 SoC GPIO system controller which provided a register map
+> +  for controlling the GPIO, pins and PWM of the SoC.
 
-Yes, I get your point now. I will discuss internally. I am leaning
-towards using sa8775p-tlmm compatible in SA8255p TLMM node so there is
-no need for adding new compatible. Will drop the two pincontrol related
-patches from the series in next version if agreed internally.
+This whole thing is just about pins.
 
-Thanks,
+The MFD portion of this submission doesn't do anything.
 
--Nikunj
+Please rework this to omit the MFD driver.
 
+After just a glance, it looks like simple-mfd _might_ work.
+
+> +properties:
+> +  compatible:
+> +    const: airoha,en7581-gpio-sysctl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +  pinctrl:
+> +    type: object
+> +
+> +    $ref: /schemas/pinctrl/pinctrl.yaml
+> +
+> +    patternProperties:
+> +      '-pins$':
+> +        type: object
+> +
+> +        patternProperties:
+> +          '^.*mux.*$':
+> +            type: object
+> +
+> +            description:
+> +              pinmux configuration nodes.
+> +
+> +            $ref: /schemas/pinctrl/pinmux-node.yaml
+> +
+> +            properties:
+> +              function:
+> +                description:
+> +                  A string containing the name of the function to mux to the group.
+> +                enum: [pon, tod_1pps, sipo, mdio, uart, i2c, jtag, pcm, spi,
+> +                       pcm_spi, i2s, emmc, pnand, pcie_reset, pwm, phy1_led0,
+> +                       phy2_led0, phy3_led0, phy4_led0, phy1_led1, phy2_led1,
+> +                       phy3_led1, phy4_led1]
+> +
+> +              groups:
+> +                description:
+> +                  An array of strings. Each string contains the name of a group.
+> +
+> +            required:
+> +              - function
+> +              - groups
+> +
+> +            allOf:
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: pon
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [pon]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: tod_1pps
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [pon_tod_1pps, gsw_tod_1pps]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: sipo
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [sipo, sipo_rclk]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: mdio
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [mdio]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: uart
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      items:
+> +                        enum: [uart2, uart2_cts_rts, hsuart, hsuart_cts_rts, uart4,
+> +                               uart5]
+> +                      maxItems: 2
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: i2c
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [i2c1]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: jtag
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [jtag_udi, jtag_dfd]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: pcm
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [pcm1, pcm2]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: spi
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      items:
+> +                        enum: [spi_quad, spi_cs1]
+> +                      maxItems: 2
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: pcm_spi
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      items:
+> +                        enum: [pcm_spi, pcm_spi_int, pcm_spi_rst, pcm_spi_cs1,
+> +                               pcm_spi_cs2_p156, pcm_spi_cs2_p128, pcm_spi_cs3,
+> +                               pcm_spi_cs4]
+> +                      maxItems: 7
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: i2c
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [i2s]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: emmc
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [emmc]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: pnand
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [pnand]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: pcie_reset
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [pcie_reset0, pcie_reset1, pcie_reset2]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: pwm
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6,
+> +                             gpio7, gpio8, gpio9, gpio10, gpio11, gpio12, gpio13,
+> +                             gpio14, gpio15, gpio16, gpio17, gpio18, gpio19,
+> +                             gpio20, gpio21, gpio22, gpio23, gpio24, gpio25,
+> +                             gpio26, gpio27, gpio28, gpio29, gpio30, gpio31,
+> +                             gpio36, gpio37, gpio38, gpio39, gpio40, gpio41,
+> +                             gpio42, gpio43, gpio44, gpio45, gpio46, gpio47]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: phy1_led0
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [gpio33, gpio34, gpio35, gpio42]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: phy2_led0
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [gpio33, gpio34, gpio35, gpio42]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: phy3_led0
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [gpio33, gpio34, gpio35, gpio42]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: phy4_led0
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [gpio33, gpio34, gpio35, gpio42]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: phy1_led1
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [gpio43, gpio44, gpio45, gpio46]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: phy2_led1
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [gpio43, gpio44, gpio45, gpio46]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: phy3_led1
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [gpio43, gpio44, gpio45, gpio46]
+> +              - if:
+> +                  properties:
+> +                    function:
+> +                      const: phy4_led1
+> +                then:
+> +                  properties:
+> +                    groups:
+> +                      enum: [gpio43, gpio44, gpio45, gpio46]
+> +
+> +            additionalProperties: false
+> +
+> +          '^.*conf.*$':
+> +            type: object
+> +
+> +            description:
+> +              pinconf configuration nodes.
+> +
+> +            $ref: /schemas/pinctrl/pincfg-node.yaml
+> +
+> +            properties:
+> +              pins:
+> +                description:
+> +                  An array of strings. Each string contains the name of a pin.
+> +                items:
+> +                  enum: [uart1_txd, uart1_rxd, i2c_scl, i2c_sda, spi_cs0, spi_clk,
+> +                         spi_mosi, spi_miso, gpio0, gpio1, gpio2, gpio3, gpio4,
+> +                         gpio5, gpio6, gpio7, gpio8, gpio9, gpio10, gpio11, gpio12,
+> +                         gpio13, gpio14, gpio15, gpio16, gpio17, gpio18, gpio19,
+> +                         gpio20, gpio21, gpio22, gpio23, gpio24, gpio25, gpio26,
+> +                         gpio27, gpio28, gpio29, gpio30, gpio31, gpio32, gpio33,
+> +                         gpio34, gpio35, gpio36, gpio37, gpio38, gpio39, gpio40,
+> +                         gpio41, gpio42, gpio43, gpio44, gpio45, gpio46,
+> +                         pcie_reset0, pcie_reset1, pcie_reset2]
+> +                minItems: 1
+> +                maxItems: 58
+> +
+> +              bias-disable: true
+> +
+> +              bias-pull-up: true
+> +
+> +              bias-pull-down: true
+> +
+> +              input-enable: true
+> +
+> +              output-enable: true
+> +
+> +              output-low: true
+> +
+> +              output-high: true
+> +
+> +              drive-open-drain: true
+> +
+> +              drive-strength:
+> +                description:
+> +                  Selects the drive strength for MIO pins, in mA.
+> +                enum: [2, 4, 6, 8]
+> +
+> +            required:
+> +              - pins
+> +
+> +            additionalProperties: false
+> +
+> +        additionalProperties: false
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +  - "#pwm-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    mfd@1fbf0200 {
+> +        compatible = "airoha,en7581-gpio-sysctl";
+> +        reg = <0x1fbf0200 0xc0>;
+> +
+> +        interrupt-parent = <&gic>;
+> +        interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +
+> +        #pwm-cells = <3>;
+> +
+> +        pinctrl {
+> +            pcie1-rst-pins {
+> +                conf {
+> +                    pins = "pcie_reset1";
+> +                    drive-open-drain = <1>;
+> +                };
+> +            };
+> +
+> +            pwm-pins {
+> +                mux {
+> +                    function = "pwm";
+> +                    groups = "gpio18";
+> +                };
+> +            };
+> +
+> +            spi-pins {
+> +                mux {
+> +                    function = "spi";
+> +                    groups = "spi_quad", "spi_cs1";
+> +                };
+> +            };
+> +
+> +            uart2-pins {
+> +                mux {
+> +                    function = "uart";
+> +                    groups = "uart2", "uart2_cts_rts";
+> +                };
+> +            };
+> +
+> +            uar5-pins {
+> +                mux {
+> +                    function = "uart";
+> +                    groups = "uart5";
+> +                };
+> +            };
+> +
+> +            mmc-pins {
+> +                mux {
+> +                    function = "emmc";
+> +                    groups = "emmc";
+> +                };
+> +            };
+> +
+> +            mdio-pins {
+> +                mux {
+> +                    function = "mdio";
+> +                    groups = "mdio";
+> +                };
+> +
+> +                conf {
+> +                    pins = "gpio2";
+> +                    output-enable;
+> +                };
+> +            };
+> +
+> +            gswp1-led0-pins {
+> +                mux {
+> +                    function = "phy1_led0";
+> +                    groups = "gpio33";
+> +                };
+> +            };
+> +
+> +            gswp2-led1-pins {
+> +                mux {
+> +                    function = "phy2_led1";
+> +                    groups = "gpio44";
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> 
+> -- 
+> 2.46.0
+> 
+
+-- 
+Lee Jones [李琼斯]
 
