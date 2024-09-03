@@ -1,349 +1,271 @@
-Return-Path: <linux-gpio+bounces-9709-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9731-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFEB496A9F4
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 23:20:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5731D96ABD8
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 00:13:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FCD31C24763
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 21:20:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7BE461C23D28
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 22:12:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B27AE126BE4;
-	Tue,  3 Sep 2024 21:20:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89C6A1DA623;
+	Tue,  3 Sep 2024 22:08:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="npd9CLWx"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JcmyexsI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C8A1EC017
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Sep 2024 21:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D441DA30F;
+	Tue,  3 Sep 2024 22:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725398418; cv=none; b=HTCoEW5GytSjFLgZeJPt8BYJ+UVnPbRpnnTNRFXNWdhrzlSS2THiDQqy2Vg7Aa0/5tFJClbHZXrsO2Av/y38r/6meLmlA73TQtGP5V7wJvDMZl5YZPDyijVdqdCcrgLgdYOcX4u/IEFdi0k9YvKGQWTYCDSrrXXrfBOaij2YsfE=
+	t=1725401318; cv=none; b=ScMzUW803REi2y4bFL2Gyo3pXf5GMjhf/0EqiLyZeDhKXTplHu6COCAgfFOeqJI6kmATFQCdQ+UYO91RHrYM3HDMKHx64L9UZM4OP3D0KkU2HwW6Oyo3Kn6mYAd2rjKO4kl+W/o3hjxOZtSnNcjYfzH3P3kiwg4sfsyZMwDM6fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725398418; c=relaxed/simple;
-	bh=zGw+WJkdThsfd9X27i2yWNeI8B8dXTd1oEncs8KiCOY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KY6760FcDDcmQ6tBRoKVsuDdnXNuXaAb+HO7L2wt406gLHNj4HehCi0NDA/mt1ZxcSp3qzI3nOZ5tPdCL5yJcS+O4Ehxhot7UIAE7KlOhAYG+n7TrgkEiBnyjyBBqx1EHe5pvkUrmM5NdOCH8wkMgZytSDZkmwBIwUS9x62JzQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=npd9CLWx; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6da395fb97aso19625867b3.0
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2024 14:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725398415; x=1726003215; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OGgWpFqjKdXqQ+We9v9Bm3uUeVDDVvqu7jm5vMgKaSQ=;
-        b=npd9CLWxjh6/Zds/WsdLhLkdq1ALqbNjsL8PgiUsaKzE5p1YVphgzAZ4HQfLAIQeiu
-         kXaTFdudi8R0O9FI4kfKVIKKEYgWaParXf2p4PO0L4Dw8pRKQIRI/v2GDTMpsCJUAliy
-         AzR+7S70RUKc/W84dbZvMjemgPjo73hI8UDmHHlxrY+RXPrr75LfOYyTzo9QCPVMUHR1
-         US4HMtejUaTrMXdPbpaKE3XHN96F1jMD50+J8AxpeU4aLVyBlHYQcxh4fUee43DaTzos
-         M3vUTsnP9iXIs/fafdgqDsEStXutD4YUYaDG3R5u20IFOyEkmQW8phHtD5oq1sp4jeMA
-         yDUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725398415; x=1726003215;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OGgWpFqjKdXqQ+We9v9Bm3uUeVDDVvqu7jm5vMgKaSQ=;
-        b=cL7aUIfPZuPoaDX/WLeXMSMsvavHeDzYYaNMyi0FBMW2QsqOA6xdo3DDXFyABL83YS
-         Jzx51tY5eXUSsQdUGVtGKGuvNtuyAtLV1XEBIigAuZLG3cOp4ZH0ONgseygcedo5CzLQ
-         A6oJw0rd1Hk342fB9YOzTNVKWDl4R7Ftge/8dMP6QlZoMwIcBDBrFygKa68S6GRW501g
-         oyOUf9IjfIr4X2z01CzsEbOQKD9Vm2WL/02bnRvEJbrfV00hYwBk8JKAKjRrPvla/ux+
-         roY6W5acOCyUpxs5e+Bl+yiifJ91bZrNEQf05RPLhjolT1VQ1ffHd701p1WH5+9E63/L
-         Lh3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWxK1nC/YnxZsqjnC4EKpE3hFYGZW79PeY75ggY8FY1+202b7zViWcsO/aJ1ZR7V4NXBqsA3JSrEdSm@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVehc6xfK0mIDJY38bz66RDZ3YC/bGFGkDhCJ3hxk3+kSvpx/I
-	npvC1Y4MEn57sXyXoyhkR2qSP7y3pRj9s6l8kbAgLUNlySBV/iQhW8d38wknhsrzKvBnK1Ydshh
-	7bc0OePIjzh8GHDLIwTHLIs5WL6+xz6fQqtpbsQ==
-X-Google-Smtp-Source: AGHT+IFytbcUiayfRWAYEBNABArUGnVyJm0Qn9ouaRXgvkcvfg7aIGFmg+Fw0IPzhQndUnCFie5xZeU3v+x6yFT5W2Q=
-X-Received: by 2002:a05:690c:6703:b0:6d3:b708:7b19 with SMTP id
- 00721157ae682-6d40e782513mr147731587b3.27.1725398415487; Tue, 03 Sep 2024
- 14:20:15 -0700 (PDT)
+	s=arc-20240116; t=1725401318; c=relaxed/simple;
+	bh=vyrhUKou0XD4nZWQsn66DthQrAeicawTIpdpcWCMhr4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qtIBHug9YEg1FqDaiN4/L6HmlaTyY3JlGcXNr/puSc9M5gRPWc8MCO3RT0yRhTTKZhZBh5qBpxMTqbQwyq5uKFWl0L+sg0HjcYrU7m35LqQ4nC2xAcVOCnmNQjeMTN+7+K7thQV3x/jaIXzT0qdRo7smtbDg77HM/SKUGooVZU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JcmyexsI; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 483LhYK1004948;
+	Tue, 3 Sep 2024 22:03:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	VJ5ksTVw82HBrOjZW1RnoU3D+LfVJFMZlBTSgU8rxyA=; b=JcmyexsIdEgimOW+
+	ENNWT0ZlPkhARdzfxHLV9UWXNFbAcnunV3oR5pcI4mnE8Srq9PumvHAUNBjLIFbt
+	95ecofD5nXhPSgUeSB/2dupYz2RPhLChitp94y0FSv4OZOygdyb8JN9qMITXbVrp
+	BLORZp4Iqhm31g3zuPKvXGjBgqdG/Q/q73r/RHv3tq5ahOU2ihQ8BK2Y8REIFOv7
+	aBWNpXMOao1qzC4slqTVYAS5HRhKkOAJGwdeVH9bfr/y4A7oxNDWp1SuNBUK5sQ6
+	+NYtrs2D6NfjGeKYZBnT24L0OfBkWmyFkdS4Q3nB6hPePFJyYuZW/FKxn1STbPGZ
+	KYFm7Q==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41drqe3444-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Sep 2024 22:03:01 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 483M2x0u002338
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 3 Sep 2024 22:02:59 GMT
+Received: from hu-nkela-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 3 Sep 2024 15:02:55 -0700
+From: Nikunj Kela <quic_nkela@quicinc.com>
+To: <quic_nkela@quicinc.com>
+CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <rafael@kernel.org>,
+        <viresh.kumar@linaro.org>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <sudeep.holla@arm.com>, <andi.shyti@kernel.org>,
+        <tglx@linutronix.de>, <will@kernel.org>, <robin.murphy@arm.com>,
+        <joro@8bytes.org>, <jassisinghbrar@gmail.com>, <lee@kernel.org>,
+        <linus.walleij@linaro.org>, <amitk@kernel.org>,
+        <thara.gopinath@gmail.com>, <broonie@kernel.org>,
+        <cristian.marussi@arm.com>, <rui.zhang@intel.com>,
+        <lukasz.luba@arm.com>, <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, <arm-scmi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
+        <iommu@lists.linux.dev>, <linux-gpio@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>, <kernel@quicinc.com>,
+        <quic_psodagud@quicinc.com>
+Subject: [PATCH v2 00/21] arm64: qcom: Introduce SA8255p Ride platform
+Date: Tue, 3 Sep 2024 15:02:19 -0700
+Message-ID: <20240903220240.2594102-1-quic_nkela@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240828203721.2751904-1-quic_nkela@quicinc.com>
+References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240903124429.107076-1-ivo.ivanov.ivanov1@gmail.com> <20240903124429.107076-6-ivo.ivanov.ivanov1@gmail.com>
-In-Reply-To: <20240903124429.107076-6-ivo.ivanov.ivanov1@gmail.com>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Tue, 3 Sep 2024 16:20:04 -0500
-Message-ID: <CAPLW+4ns=6eO=S4Cz70aBSyVO8CJ5=ixmKL38dZDjD3UgO98ZA@mail.gmail.com>
-Subject: Re: [PATCH v3 05/10] pinctrl: samsung: Add exynos8895 SoC pinctrl configuration
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: rr1wmp4df3_Phh0IuAStRJcDv9BszwT_
+X-Proofpoint-ORIG-GUID: rr1wmp4df3_Phh0IuAStRJcDv9BszwT_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-03_10,2024-09-03_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501 clxscore=1015
+ impostorscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
+ definitions=main-2409030177
 
-On Tue, Sep 3, 2024 at 7:46=E2=80=AFAM Ivaylo Ivanov
-<ivo.ivanov.ivanov1@gmail.com> wrote:
->
-> Add support for the pin-controller found on the Exynos8895 SoC
-> used in Samsung Galaxy S8 and S8 Plus phones.
->
-> It has a newly applied pinctrl register layer for FSYS0 with a
-> different bank type offset that consists of the following bit
-> fields:
->
-> CON: 4, DAT: 1, PUD: 2, DRV: 3, CONPDN: 2, PUDPDN: 2
->
-> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-> ---
+This series enables the support for SA8255p Qualcomm SoC and Ride
+platform. This platform uses SCMI power, reset, performance, sensor
+protocols for resources(e.g. clocks, regulator, interconnect, phy etc.)
+management. SA8255p is a virtual platforms that uses Qualcomm smc/hvc
+transport driver.
 
-Other than minor comments below, LGTM:
+Multiple virtual SCMI instances are being used to achieve the parallelism.
+SCMI platform stack runs in SMP enabled VM hence allows platform to service
+multiple resource requests in parallel. Each device is assigned its own
+dedicated SCMI channel and Tx/Rx doorbells.
 
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+Resource operations are grouped together to achieve better abstraction
+and to reduce the number of requests being sent to SCMI platform(server)
+thus improving boot time KPIs. This design approach was presented during
+LinaroConnect 2024 conference[1].
 
->  .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 137 ++++++++++++++++++
->  drivers/pinctrl/samsung/pinctrl-exynos.h      |  10 ++
->  drivers/pinctrl/samsung/pinctrl-samsung.c     |   2 +
->  drivers/pinctrl/samsung/pinctrl-samsung.h     |   1 +
->  4 files changed, 150 insertions(+)
->
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pin=
-ctrl/samsung/pinctrl-exynos-arm64.c
-> index 5480e0884..0d5d14cf0 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> @@ -58,6 +58,15 @@ static const struct samsung_pin_bank_type exynos850_ba=
-nk_type_alive =3D {
->         .reg_offset =3D { 0x00, 0x04, 0x08, 0x0c, },
->  };
->
-> +/*
-> + * Bank type for non-alive type. Bit fields:
-> + * CON: 4, DAT: 1, PUD: 2, DRV: 3, CONPDN: 2, PUDPDN: 2
-> + */
-> +static const struct samsung_pin_bank_type exynos8895_bank_type_off  =3D =
-{
-> +       .fld_width =3D { 4, 1, 2, 3, 2, 2, },
-> +       .reg_offset =3D { 0x00, 0x04, 0x08, 0x0c, 0x10, 0x14, },
-> +};
-> +
->  /* Pad retention control code for accessing PMU regmap */
->  static atomic_t exynos_shared_retention_refcnt;
->
-> @@ -866,6 +875,134 @@ const struct samsung_pinctrl_of_match_data exynosau=
-tov920_of_data __initconst =3D
->         .num_ctrl       =3D ARRAY_SIZE(exynosautov920_pin_ctrl),
->  };
->
-> +/* pin banks of exynos8895 pin-controller 0 (ALIVE) */
-> +static const struct samsung_pin_bank_data exynos8895_pin_banks0[] __init=
-const =3D {
-> +       EXYNOS_PIN_BANK_EINTW(8, 0x020, "gpa0", 0x00),
-> +       EXYNOS_PIN_BANK_EINTW(8, 0x040, "gpa1", 0x04),
-> +       EXYNOS_PIN_BANK_EINTW(8, 0x060, "gpa2", 0x08),
-> +       EXYNOS_PIN_BANK_EINTW(8, 0x080, "gpa3", 0x0c),
-> +       EXYNOS_PIN_BANK_EINTW(7, 0x0A0, "gpa4", 0x24),
-> +};
-> +
-> +/* pin banks of exynos8895 pin-controller 1 (ABOX) */
-> +static const struct samsung_pin_bank_data exynos8895_pin_banks1[] __init=
-const =3D {
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x000, "gph0", 0x00),
-> +       EXYNOS_PIN_BANK_EINTG(7, 0x020, "gph1", 0x04),
-> +       EXYNOS_PIN_BANK_EINTG(4, 0x040, "gph3", 0x08),
-> +};
-> +
-> +/* pin banks of exynos8895 pin-controller 2 (VTS) */
-> +static const struct samsung_pin_bank_data exynos8895_pin_banks2[] __init=
-const =3D {
-> +       EXYNOS_PIN_BANK_EINTG(3, 0x000, "gph2", 0x00),
-> +};
-> +
-> +/* pin banks of exynos8895 pin-controller 3 (FSYS0) */
-> +static const struct samsung_pin_bank_data exynos8895_pin_banks3[] __init=
-const =3D {
-> +       EXYNOS8895_PIN_BANK_EINTG(3, 0x000, "gpi0", 0x00),
-> +       EXYNOS8895_PIN_BANK_EINTG(8, 0x020, "gpi1", 0x04),
-> +};
-> +
-> +/* pin banks of exynos8895 pin-controller 4 (FSYS1) */
-> +static const struct samsung_pin_bank_data exynos8895_pin_banks4[] __init=
-const =3D {
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x000, "gpj1", 0x00),
-> +       EXYNOS_PIN_BANK_EINTG(7, 0x020, "gpj0", 0x04),
-> +};
-> +
-> +/* pin banks of exynos8895 pin-controller 5 (BUSC) */
-> +static const struct samsung_pin_bank_data exynos8895_pin_banks5[] __init=
-const =3D {
-> +       EXYNOS_PIN_BANK_EINTG(2, 0x000, "gpb2", 0x00),
-> +};
-> +
-> +/* pin banks of exynos8895 pin-controller 6 (PERIC0) */
-> +static const struct samsung_pin_bank_data exynos8895_pin_banks6[] __init=
-const =3D {
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x000, "gpd0", 0x00),
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x020, "gpd1", 0x04),
-> +       EXYNOS_PIN_BANK_EINTG(4, 0x040, "gpd2", 0x08),
-> +       EXYNOS_PIN_BANK_EINTG(5, 0x060, "gpd3", 0x0C),
+Architecture:
+------------
+                                                          +--------------------+
+                                                          |   Shared Memory    |
+                                                          |                    |
+                                                          | +----------------+ |                +----------------------------------+
+     +----------------------------+                     +-+->  ufs-shmem     <-+---+            |            Linux VM              |
+     |        Firmware VM         |                     | | +----------------+ |   |            |   +----------+   +----------+    |
+     |                            |                     | |                    |   |            |   |   UFS    |   |   PCIe   |    |
+     | +---------+ f +----------+ |                     | |                    |   |            |   |  Driver  |   |  Driver  |    |
+     | |Drivers  <---+  SCMI    | |        e            | |         |          |   |            |   +--+----^--+   +----------+    |
+     | | (clks,  | g | Server   +-+---------------------+ |                    |   |            |      |    |                      |
+     | |  vreg,  +--->          | |        h              |         |          |  b|k           |     a|   l|                      |
+     | |  gpio,  |   +--^-----+-+ |                       |                    |   |            |      |    |                      |
+     | |  phy,   |      |     |   |                       |         |          |   |            |  +---v----+----+  +----------+   |
+     | |  etc.)  |      |     |   |                       |                    |   +------------+--+  UFS SCMI   |  | PCIe SCMI|   |
+     | +---------+      |     |   |                       |                    |                |  |  INSTANCE   |  | INSTANCE |   |
+     |                  |     |   |                       |  +---------------+ |                |  +-^-----+-----+  +----------+   |
+     |                  |     |   |                       |  |  pcie-shmem   | |                |    |     |                       |
+     +------------------+-----+---+                       |  +---------------+ |                +----+-----+-----------------------+
+                        |     |                           |                    |                     |     |
+                        |     |                           +--------------------+                     |     |
+                       d|IRQ i|HVC                                                                  j|IRQ c|HVC
+                        |     |                                                                      |     |
+                        |     |                                                                      |     |
++-----------------------+-----v----------------------------------------------------------------------+-----v------------------------------+
+|                                                                                                                                         |
+|                                                                                                                                         |
+|                                                                                                                                         |
+|                                                               HYPERVISOR                                                                |
+|                                                                                                                                         |
+|                                                                                                                                         |
++-----------------------------------------------------------------------------------------------------------------------------------------+
 
-Here and below: please use lower-case letters for hex values. So 0x0C
--> 0x0c, etc.
+        +--------+   +--------+                                                                         +----------+  +-----------+
+        | CLOCK  |   |  PHY   |                                                                         |   UFS    |  |   PCIe    |
+        +--------+   +--------+                                                                         +----------+  +-----------+
 
-> +       EXYNOS_PIN_BANK_EINTG(4, 0x080, "gpb1", 0x10),
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x0A0, "gpe7", 0x14),
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x0C0, "gpf1", 0x18),
-> +};
-> +
-> +/* pin banks of exynos8895 pin-controller 7 (PERIC1) */
-> +static const struct samsung_pin_bank_data exynos8895_pin_banks7[] __init=
-const =3D {
-> +       EXYNOS_PIN_BANK_EINTG(3, 0x000, "gpb0", 0x00),
-> +       EXYNOS_PIN_BANK_EINTG(5, 0x020, "gpc0", 0x04),
-> +       EXYNOS_PIN_BANK_EINTG(5, 0x040, "gpc1", 0x08),
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x060, "gpc2", 0x0C),
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x080, "gpc3", 0x10),
-> +       EXYNOS_PIN_BANK_EINTG(4, 0x0A0, "gpk0", 0x14),
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x0C0, "gpe5", 0x18),
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x0e0, "gpe6", 0x1C),
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x100, "gpe2", 0x20),
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x120, "gpe3", 0x24),
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x140, "gpe4", 0x28),
-> +       EXYNOS_PIN_BANK_EINTG(4, 0x160, "gpf0", 0x2C),
-> +       EXYNOS_PIN_BANK_EINTG(8, 0x180, "gpe1", 0x30),
-> +       EXYNOS_PIN_BANK_EINTG(2, 0x1A0, "gpg0", 0x34),
-> +};
-> +
-> +static const struct samsung_pin_ctrl exynos8895_pin_ctrl[] __initconst =
-=3D {
-> +       {
-> +               /* pin-controller instance 0 Alive data */
 
-Wouldn't it be better to capitalize it, i.e. Alive -> ALIVE?
+This series is based on next-20240903.
 
-> +               .pin_banks      =3D exynos8895_pin_banks0,
-> +               .nr_banks       =3D ARRAY_SIZE(exynos8895_pin_banks0),
-> +               .eint_gpio_init =3D exynos_eint_gpio_init,
-> +               .eint_wkup_init =3D exynos_eint_wkup_init,
-> +               .suspend        =3D exynos_pinctrl_suspend,
-> +               .resume         =3D exynos_pinctrl_resume,
-> +       }, {
-> +               /* pin-controller instance 1 ABOX data */
-> +               .pin_banks      =3D exynos8895_pin_banks1,
-> +               .nr_banks       =3D ARRAY_SIZE(exynos8895_pin_banks1),
-> +       }, {
-> +               /* pin-controller instance 2 VTS data */
-> +               .pin_banks      =3D exynos8895_pin_banks2,
-> +               .nr_banks       =3D ARRAY_SIZE(exynos8895_pin_banks2),
-> +               .eint_gpio_init =3D exynos_eint_gpio_init,
-> +       }, {
-> +               /* pin-controller instance 3 FSYS0 data */
-> +               .pin_banks      =3D exynos8895_pin_banks3,
-> +               .nr_banks       =3D ARRAY_SIZE(exynos8895_pin_banks3),
-> +               .eint_gpio_init =3D exynos_eint_gpio_init,
-> +               .suspend        =3D exynos_pinctrl_suspend,
-> +               .resume         =3D exynos_pinctrl_resume,
-> +       }, {
-> +               /* pin-controller instance 4 FSYS1 data */
-> +               .pin_banks      =3D exynos8895_pin_banks4,
-> +               .nr_banks       =3D ARRAY_SIZE(exynos8895_pin_banks4),
-> +               .eint_gpio_init =3D exynos_eint_gpio_init,
-> +               .suspend        =3D exynos_pinctrl_suspend,
-> +               .resume         =3D exynos_pinctrl_resume,
-> +       }, {
-> +               /* pin-controller instance 5 BUSC data */
-> +               .pin_banks      =3D exynos8895_pin_banks5,
-> +               .nr_banks       =3D ARRAY_SIZE(exynos8895_pin_banks5),
-> +               .eint_gpio_init =3D exynos_eint_gpio_init,
-> +               .suspend        =3D exynos_pinctrl_suspend,
-> +               .resume         =3D exynos_pinctrl_resume,
-> +       }, {
-> +               /* pin-controller instance 6 PERIC0 data */
-> +               .pin_banks      =3D exynos8895_pin_banks6,
-> +               .nr_banks       =3D ARRAY_SIZE(exynos8895_pin_banks6),
-> +               .eint_gpio_init =3D exynos_eint_gpio_init,
-> +               .suspend        =3D exynos_pinctrl_suspend,
-> +               .resume         =3D exynos_pinctrl_resume,
-> +       }, {
-> +               /* pin-controller instance 7 PERIC1 data */
-> +               .pin_banks      =3D exynos8895_pin_banks7,
-> +               .nr_banks       =3D ARRAY_SIZE(exynos8895_pin_banks7),
-> +               .eint_gpio_init =3D exynos_eint_gpio_init,
-> +               .suspend        =3D exynos_pinctrl_suspend,
-> +               .resume         =3D exynos_pinctrl_resume,
-> +       },
-> +};
-> +
-> +const struct samsung_pinctrl_of_match_data exynos8895_of_data __initcons=
-t =3D {
-> +       .ctrl           =3D exynos8895_pin_ctrl,
-> +       .num_ctrl       =3D ARRAY_SIZE(exynos8895_pin_ctrl),
-> +};
-> +
->  /*
->   * Pinctrl driver data for Tesla FSD SoC. FSD SoC includes three
->   * gpio/pin-mux/pinconfig controllers.
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl/s=
-amsung/pinctrl-exynos.h
-> index 305cb1d31..7b7ff7ffe 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos.h
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
-> @@ -141,6 +141,16 @@
->                 .name           =3D id                            \
->         }
->
-> +#define EXYNOS8895_PIN_BANK_EINTG(pins, reg, id, offs)         \
-> +       {                                                       \
-> +               .type           =3D &exynos8895_bank_type_off,    \
-> +               .pctl_offset    =3D reg,                          \
-> +               .nr_pins        =3D pins,                         \
-> +               .eint_type      =3D EINT_TYPE_GPIO,               \
-> +               .eint_offset    =3D offs,                         \
-> +               .name           =3D id                            \
-> +       }
-> +
->  #define EXYNOSV920_PIN_BANK_EINTG(pins, reg, id, con_offs, mask_offs, pe=
-nd_offs)       \
->         {                                                       \
->                 .type                   =3D &exynos850_bank_type_off,    =
- \
-> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/=
-samsung/pinctrl-samsung.c
-> index 623df65a5..ea3214897 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-> @@ -1409,6 +1409,8 @@ static const struct of_device_id samsung_pinctrl_dt=
-_match[] =3D {
->                 .data =3D &exynos7885_of_data },
->         { .compatible =3D "samsung,exynos850-pinctrl",
->                 .data =3D &exynos850_of_data },
-> +       { .compatible =3D "samsung,exynos8895-pinctrl",
-> +               .data =3D &exynos8895_of_data },
->         { .compatible =3D "samsung,exynosautov9-pinctrl",
->                 .data =3D &exynosautov9_of_data },
->         { .compatible =3D "samsung,exynosautov920-pinctrl",
-> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/=
-samsung/pinctrl-samsung.h
-> index d50ba6f07..f18877f2f 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-> @@ -363,6 +363,7 @@ extern const struct samsung_pinctrl_of_match_data exy=
-nos5433_of_data;
->  extern const struct samsung_pinctrl_of_match_data exynos7_of_data;
->  extern const struct samsung_pinctrl_of_match_data exynos7885_of_data;
->  extern const struct samsung_pinctrl_of_match_data exynos850_of_data;
-> +extern const struct samsung_pinctrl_of_match_data exynos8895_of_data;
->  extern const struct samsung_pinctrl_of_match_data exynosautov9_of_data;
->  extern const struct samsung_pinctrl_of_match_data exynosautov920_of_data=
-;
->  extern const struct samsung_pinctrl_of_match_data fsd_of_data;
-> --
-> 2.34.1
->
->
+[1]: https://resources.linaro.org/en/resource/wfnfEwBhRjLV1PEAJoDDte
+
+---
+Changes in v2:
+  - Patch 1/21 - 11/21
+    - Added Reviewed-by tag
+
+  - Patch 12/21
+    - Already applied in the maintainers tree
+
+  - Patch 13/21
+    - Modified subject line
+    - Fixed schema to include fallback
+
+  - Patch 14/21
+    - Added constraints
+
+  - Patch 15/21
+    - Modified schema to remove useless text
+   
+  - Patch 16/21
+    - Modified schema formatting
+    - Amended schema definition as advised
+
+  - Patch 17/21
+    - Moved allOf block after required
+    - Fixed formatting
+    - Modified schema to remove useless text
+
+  - Patch 18/21
+    - Fixed clock property changes
+
+  - Patch 19/21
+    - Fixed scmi nodename pattern
+
+  - Patch 20/21
+    - Modified subject line and description
+    - Added EPPI macro
+
+  - Patch 21/21
+    - Removed scmichannels label and alias
+    - Modified scmi node name to conform to schema
+    - Moved status property to be the last one in scmi instances
+    - Changed to lower case for cpu labels
+    - Added fallback compatible for tlmm node
+
+Nikunj Kela (21):
+  dt-bindings: arm: qcom: add the SoC ID for SA8255P
+  soc: qcom: socinfo: add support for SA8255P
+  dt-bindings: arm: qcom: add SA8255p Ride board
+  dt-bindings: firmware: qcom,scm: document support for SA8255p
+  dt-bindings: mailbox: qcom-ipcc: document the support for SA8255p
+  dt-bindings: watchdog: qcom-wdt: document support on SA8255p
+  dt-bindings: crypto: qcom,prng: document support for SA8255p
+  dt-bindings: interrupt-controller: qcom-pdc: document support for
+    SA8255p
+  dt-bindings: soc: qcom: aoss-qmp: document support for SA8255p
+  dt-bindings: arm-smmu: document the support on SA8255p
+  dt-bindings: mfd: qcom,tcsr: document support for SA8255p
+  dt-bindings: thermal: tsens: document support on SA8255p
+  dt-bindings: pinctrl: Add SA8255p TLMM
+  dt-bindings: cpufreq: qcom-hw: document support for SA8255p
+  dt-bindings: i2c: document support for SA8255p
+  dt-bindings: spi: document support for SA8255p
+  dt-bindings: serial: document support for SA8255p
+  dt-bindings: qcom: geni-se: document support for SA8255P
+  dt-bindings: firmware: arm,scmi: allow multiple virtual instances
+  dt-bindings: arm: GIC: add ESPI and EPPI specifiers
+  arm64: dts: qcom: Add reduced functional DT for SA8255p Ride platform
+
+ .../devicetree/bindings/arm/qcom.yaml         |    6 +
+ .../bindings/cpufreq/cpufreq-qcom-hw.yaml     |   16 +
+ .../devicetree/bindings/crypto/qcom,prng.yaml |    1 +
+ .../bindings/firmware/arm,scmi.yaml           |    2 +-
+ .../bindings/firmware/qcom,scm.yaml           |    2 +
+ .../bindings/i2c/qcom,i2c-geni-qcom.yaml      |   33 +-
+ .../interrupt-controller/qcom,pdc.yaml        |    1 +
+ .../devicetree/bindings/iommu/arm,smmu.yaml   |    3 +
+ .../bindings/mailbox/qcom-ipcc.yaml           |    1 +
+ .../devicetree/bindings/mfd/qcom,tcsr.yaml    |    1 +
+ .../bindings/pinctrl/qcom,sa8775p-tlmm.yaml   |    8 +-
+ .../serial/qcom,serial-geni-qcom.yaml         |   53 +-
+ .../bindings/soc/qcom/qcom,aoss-qmp.yaml      |    1 +
+ .../bindings/soc/qcom/qcom,geni-se.yaml       |   45 +-
+ .../bindings/spi/qcom,spi-geni-qcom.yaml      |   60 +-
+ .../bindings/thermal/qcom-tsens.yaml          |    1 +
+ .../bindings/watchdog/qcom-wdt.yaml           |    1 +
+ arch/arm64/boot/dts/qcom/Makefile             |    1 +
+ arch/arm64/boot/dts/qcom/sa8255p-pmics.dtsi   |   80 +
+ arch/arm64/boot/dts/qcom/sa8255p-ride.dts     |  148 +
+ arch/arm64/boot/dts/qcom/sa8255p-scmi.dtsi    | 2312 ++++++++++++++++
+ arch/arm64/boot/dts/qcom/sa8255p.dtsi         | 2405 +++++++++++++++++
+ drivers/soc/qcom/socinfo.c                    |    1 +
+ include/dt-bindings/arm/qcom,ids.h            |    1 +
+ .../interrupt-controller/arm-gic.h            |    2 +
+ 25 files changed, 5169 insertions(+), 16 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/sa8255p-pmics.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sa8255p-ride.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sa8255p-scmi.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sa8255p.dtsi
+
+
+base-commit: 6804f0edbe7747774e6ae60f20cec4ee3ad7c187
+-- 
+2.34.1
+
 
