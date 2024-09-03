@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-9703-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9704-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57E3796A8ED
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 22:49:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E3CE96A921
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 22:54:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0EF631F240D8
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 20:49:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC99F1F213B1
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 20:54:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B34D41E0B9C;
-	Tue,  3 Sep 2024 20:44:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2AA41E4116;
+	Tue,  3 Sep 2024 20:45:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ws1gx/jr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0aHLluh"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEA61E0B92;
-	Tue,  3 Sep 2024 20:44:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC341E410D;
+	Tue,  3 Sep 2024 20:45:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725396244; cv=none; b=El/gfVqACK5fgaez51tQLO1ydEFiRMIbYp21qaoVBcRJBhaqoMVFg09ydQXWgC9SvOdMSo2qoTuCb7QUCXxwJEGwYrWzzs3yoJQLlwweCKYSPkYHoexozl3098eWNCRTzLH3B/tCctzD5xkzzbK3N0JHf2cRrY4U8qBU3XNJPro=
+	t=1725396335; cv=none; b=CppQ9xGKKxXC0CwGRnQPE1KRdZku2aX5yx8neqaBGPfIec/k2aKnXAfevHqTPU0Su/C7ltVuhm3NW/1aOfOpcj23OqWd7TUe2NfOg7/XbwL3HBUMfmHN4ORapMAXkvK2uqBze9wXegF0cSzW98B5ZPZ7Bj1ZcED2I1xpqKq+pLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725396244; c=relaxed/simple;
-	bh=OjCBct6utP0eiJi0kbYF5FvJLWxEVq+ao5PMjpG0pW0=;
+	s=arc-20240116; t=1725396335; c=relaxed/simple;
+	bh=EXJ5tIqYx2d5HUlqX/rUKbbqFPLaR29YltOoP6OggNY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dTpUutLzFYBBBspG6xeAhN1e4cMeWWDWRMrMdscZITGiQC5uA2cjbcBtt3szbxdyUxWIkLwKovG2KzNtChX65pkg9BaJGq3AuZsk7PZ6zoT4K7QQ70KgWkxKWJv5/+L/+EyxHPWYvDs/Sd9YMvaV9Q2unXRHCqldXvpPSAajEig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ws1gx/jr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB8DEC4CEC8;
-	Tue,  3 Sep 2024 20:44:02 +0000 (UTC)
+	 MIME-Version; b=T5iMwe2iOC9ebwrlKKirNWKDWhmz2K+ewEo0bMEMXfapij5Q5sJUKx6UVyYxUBhx1zQ9z7dR+GqZwtHYNsa5AYzrmZyPMzjrCnZyMiFdw3aG04oOktXSoiE3F7Niv2FLK0+kLu+eszw4qcQVxXJkBTd3yBz69BPjWO13uNXUZyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0aHLluh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC841C4CEC9;
+	Tue,  3 Sep 2024 20:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725396244;
-	bh=OjCBct6utP0eiJi0kbYF5FvJLWxEVq+ao5PMjpG0pW0=;
+	s=k20201202; t=1725396335;
+	bh=EXJ5tIqYx2d5HUlqX/rUKbbqFPLaR29YltOoP6OggNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ws1gx/jrEyIqFxkAJt77I7V/3UZHw8+djXldpHhKzddx9o4QD7dF4ssvVKhlDIztW
-	 S9C3x7Y0ueDEzFWxfqUPOwJsTmVOhYw1JyqOU5NNfmrQDtIXUv5EVdjM9pIpM7QkzE
-	 e25pn2oJc4uvsvdVR0aJNoSC/yERzZcTB4cP4XkGoj3TPOEox+mdXzJzzymUUnjG2K
-	 Rx8B/20k1BmSEwvCxrw7nFTj2ErIFw5iPNocfFZ69Ki1yQAJXj5QzAx1ykrdxkX4SU
-	 OqjCyMXxHXrxxCkuLPHIQVPf58lO27uek2Kmzo2bWosVMDwxt8xxAh8zbYRbtlA/ta
-	 SAsHw0yYIehIw==
+	b=c0aHLluh7pOwOqc5PKtbpPnG00xeY07Eyuyo1kaX7lNGo/TmA/yym0SFfZQbvpRAQ
+	 E/wSqBuN6u13Sdq+E/fzNgfFKVq2XDCQURR2g4xu69gct8ggC+opnB/8fosGfdXpS3
+	 fN49ajpIIPzSNQvnIPXp2dFzHNvCf8KZbdafPXu1gaYQVUs6YMuw281SUVm3OO48Cv
+	 krU/5jy5FmPcvTnuMKLSeBAN2qg+q8PHl2/t9rL3eof9TOv0q/W7nBOKdsR5xmERgU
+	 gII07LIx657nzf9/xJ2KnEOVKmA6th2Aoy+nTudHHN2YwtKec3mR1gk8hlXr8+exlY
+	 LlEt+JSPtRgWA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -53,12 +53,12 @@ Cc: Thomas Blocher <thomas.blocher@ek-dev.de>,
 	claudiu.beznea@tuxon.dev,
 	linux-arm-kernel@lists.infradead.org,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 08/20] pinctrl: at91: make it work with current gpiolib
-Date: Tue,  3 Sep 2024 15:23:40 -0400
-Message-ID: <20240903192425.1107562-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 07/17] pinctrl: at91: make it work with current gpiolib
+Date: Tue,  3 Sep 2024 15:25:21 -0400
+Message-ID: <20240903192600.1108046-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240903192425.1107562-1-sashal@kernel.org>
-References: <20240903192425.1107562-1-sashal@kernel.org>
+In-Reply-To: <20240903192600.1108046-1-sashal@kernel.org>
+References: <20240903192600.1108046-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.48
+X-stable-base: Linux 6.1.107
 Content-Transfer-Encoding: 8bit
 
 From: Thomas Blocher <thomas.blocher@ek-dev.de>
@@ -97,10 +97,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 608f55c5ba5fe..ad30fd47a4bb0 100644
+index ff3b6a8a0b170..333f9d70c7f48 100644
 --- a/drivers/pinctrl/pinctrl-at91.c
 +++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1410,8 +1410,11 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
+@@ -1420,8 +1420,11 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
  
  	/* We will handle a range of GPIO pins */
  	for (i = 0; i < gpio_banks; i++)
@@ -111,7 +111,7 @@ index 608f55c5ba5fe..ad30fd47a4bb0 100644
 +				gpio_chips[i]->range.pin_base, gpio_chips[i]->range.npins);
 +		}
  
- 	dev_info(dev, "initialized AT91 pinctrl driver\n");
+ 	dev_info(&pdev->dev, "initialized AT91 pinctrl driver\n");
  
 -- 
 2.43.0
