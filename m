@@ -1,255 +1,271 @@
-Return-Path: <linux-gpio+bounces-9649-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9650-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1D16969E3A
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 14:47:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59FAA969EDD
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 15:17:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F360B23AB8
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 12:47:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B67A283B9A
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 13:17:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 766461D9337;
-	Tue,  3 Sep 2024 12:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C8781A7254;
+	Tue,  3 Sep 2024 13:17:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOBZl25C"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="H3Z9+jfG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2130.outbound.protection.outlook.com [40.107.20.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECED1C2433;
-	Tue,  3 Sep 2024 12:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725367491; cv=none; b=o+T1bdWSiiVj31Fi9qy7y/D99FJrrE9BOeCojbMyhhQXw8XTFJgfRUtG2YDAPT8WjjKbfIMmkXZG+/xDgecYV81QVGFowlj7ZvOMCzA0fHySeBKNGsAvXl9n0eJ67aWyC0n0wDm7N5pI1qe1ip5dYQfxC+Neyb54I477WwsTaA4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725367491; c=relaxed/simple;
-	bh=4JBoG/i1oIvG2n0LJb8y+ry6r3EO/H0sXEnIU+hKY2M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uFWZDbnB+cO4/wzljZdu5ulsugcUqVEhq7qX3IZ3EGJ+ECoALEB3R4Gauc7toRbF8GViIXt9cRBAhMF4Vp93mUXIARVERgBrAdhA/OMDdR+vy/L3FmqTKckEwSR2r3PTbwtiUpwS6ASAt+zKWD2SWtp1q9so699MCf6m775YmfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cOBZl25C; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a868b739cd9so620915266b.2;
-        Tue, 03 Sep 2024 05:44:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725367488; x=1725972288; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G/FjRZEf2VlqEHZp9Pt3WFUwWueUkmpeqTpDvDRxrBY=;
-        b=cOBZl25CvNu1unKxpLxovdJ/tNnnnUg5HArWsQN0YlcWqZt8dJvH5UZsbm2Sx8+7vf
-         5T9o9EajmO8mGR1GnEIZTf0lMVYmKhLZlSwVNu3u8pvowO7znmV1dsntKla/nxSghMl8
-         PuR1ktoPIPby5LCER0hCuILIfNjM3AjftWUqzikQ3pVQCLlBw0hU0Bdvuz8SAYpJx/XQ
-         NGsZBpVfV7KoSlCP6M0r2ob7b7Yc3G85x0QIoKCawMQkHdR1Y+N4+XrE4ZBBh2QOU6Wl
-         Iom6NtxrjEsnOvoGqy8jxmBmYA9hf33MNcecZwK0zmpjaV9BL/EXd4imKpauaANg1ZMc
-         IE5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725367488; x=1725972288;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G/FjRZEf2VlqEHZp9Pt3WFUwWueUkmpeqTpDvDRxrBY=;
-        b=S+2UP+FbuzTsW4AG7+lZAPK0kE9Acge5g7KGqIN5Mg+NiIdcdmoZ1/IK02SqtDmtW1
-         U3E3TmzjwCb+NKuVy9nmR1nG+BG1N6jXPoDxYwtJNANO031TKU35fR88qf76kMyJES9b
-         TMTQ08q6byQ2KHeUX/j3hppoXfoUCKTBG6x3YYdySYlX45OhQc51p10hyuker7SYPhk1
-         ooo1rYkTrebPzfHiPEX5QZV7L27s0O16CyANrzF0fOCbW6ZFmG10Yx+/xnXfnZ5ERLyt
-         AzaqEBpxFEwCTm4qUSpsvWzIevYdvVrZY6zTtyCUxi1J+5BI9hYsSgExhE+3SWdbXz4p
-         hLuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUiWQNXqDeryBwTRhzLtuBGtR2ZClI2IeXGxOKDil5yQlHPm9agCl+8IGEMdoFV62babv69dx0xwoz4ag==@vger.kernel.org, AJvYcCVoBjAnOiUxpWRv/lVhg74Istt93q+XxmSdqRoVk4smHMZI/5L6fL3S2hfQlD+bbyMITBUX9XaED406GBVt@vger.kernel.org, AJvYcCW7o8lO16QPPqtExEot1C34/aLCo3bbxGsDB24dKSDTjcZyeEeCZPFLHF3efKl8ak18l4DptDz9f/cj@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFgK1GPuBiXHBVRwRn/itCJsENDUdMThzxM2dZUXAyuFuxKTym
-	lgBGQGKfSUJwF34z4UEHZZg3P+tTRNKSh0XIJ63glunDNnA4IRYC
-X-Google-Smtp-Source: AGHT+IHOrQNoNTwqqmp+4lVnEeHdowsq4Cd98jmaSK0Cxumej5nFh4tllkwKK2LzQHTIH2QW6XFknA==
-X-Received: by 2002:a17:906:fe4c:b0:a80:d913:be07 with SMTP id a640c23a62f3a-a897f930bb1mr1474876766b.36.1725367487553;
-        Tue, 03 Sep 2024 05:44:47 -0700 (PDT)
-Received: from ivaylo-desktop.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8989223199sm678461566b.219.2024.09.03.05.44.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 05:44:46 -0700 (PDT)
-From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/10] arm64: dts: exynos: Add initial support for Samsung Galaxy S8
-Date: Tue,  3 Sep 2024 15:44:29 +0300
-Message-Id: <20240903124429.107076-11-ivo.ivanov.ivanov1@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240903124429.107076-1-ivo.ivanov.ivanov1@gmail.com>
-References: <20240903124429.107076-1-ivo.ivanov.ivanov1@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96BD1CA690;
+	Tue,  3 Sep 2024 13:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.130
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725369444; cv=fail; b=Mh0Eb1bb8fTgtnQc8p1Qx8YRcmJnvGySP0F6pU9f1HLnUSCrjm9o/jOkKLgi/SUuho+vkgmB2JsHx7dgvi2VEYxc5RkEACvVQ8kvu57eC65mCYdyG/IJDuBxTCqvdmjvoaAM0kjHghEo7EWTr481h1ozvPKWWJoOKRB53ThFMmg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725369444; c=relaxed/simple;
+	bh=AllYzC05Gk7l7dCwYhtde6yOP2JgMRAAur3J2XQZeGM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=bqsqWw4STu8wCbSTggANOp/vQhFD6UINfyLlQkGjnyPUC3CxxbN9pDLzAruNyyxb6fOywhBmh9Rtypg0Acmkx0PynFi8uTWfkjdKTS3JvnbnsXw3rNcsx0fsrRiUYNkBVx7eIwI3az1SgXxa70z2b1zcxz2x57y4/tUsSV/lSZs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axentia.se; spf=pass smtp.mailfrom=axentia.se; dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b=H3Z9+jfG; arc=fail smtp.client-ip=40.107.20.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axentia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axentia.se
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ta4v7ufEu2fkaCQ22htDwkNuwNxOzkmWEFlN99VIMrKQYfE90kHqOAZ24UNmdxawQFZcxOwhmGL5oTQDLHCZ61l70r5DRsYbghAPjO9TLUjsNLHN1rtGdjDxxULsbT/fh+Y7aADwnOHlBPK07Sxr3Brz9eSQrDmKTIGXEN30keWLA+jzrOa48A/ev/Dwp8QHJeG0crN28sXgeMRMNBlLdBcaQOdUt4IDLg0ojd43Fbxzw3yGZ+xFgx6raqSzNHhMMDdGuvdJvh/9SLDGS6qDI3JZLtdyDMKlcfK+jriQ/JHTRvmgq5I55wu97cIcO9I2MuesPvAsbC4RHzZA0Cmolw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SOYHb5A0PEYczo9ROVPr7TGa01qXcBqvQp6uoW/3Jz8=;
+ b=xUlBkpuYIwsz7iGh5M+IC43ip52U47PycpK04vVJexHZiiYkIvmtO6Tw7DJIQquL054meLuRU3tRJ0Twe03fBOxx18TeXI568K8USL7IMLUTaygOkdGMeUcmFOCtIhdgtQSBLh6vslEx6kPrBOuVB/uWCjSiO985L16lRBtRTlTIy2ZxsCqhY8wxuBaPYZAdjDXjWv70xm7I7Dqy/2TGeTwyi5a4RewR6JA+o5A6TZp2/ssLcFavYnY6n7JRTu0O5bvPDzFbK2l0pk48yD6PwFg+dz4X1HHBFp8WnIj06f9uF7Yi8VIhqdaz4pfVF4yZjTfRelWfPJxJ3MX9juS+EQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SOYHb5A0PEYczo9ROVPr7TGa01qXcBqvQp6uoW/3Jz8=;
+ b=H3Z9+jfGCd2e+8HofarozdwnBDU39NxVRFnHiskI7nh/fvtuxnJpYLT7zCeiMoPIAnHyiMdacS0SfAF3uVgxZtjzQDP5J+U0+uV1kJrpqXfLTTkEkjj4ajxduYuzJi6SzCso+aEDIyDTJcSXyP6Gnfn73NeJji6/67Tg93BkLx0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=axentia.se;
+Received: from DU0PR02MB8500.eurprd02.prod.outlook.com (2603:10a6:10:3e3::8)
+ by AS8PR02MB7046.eurprd02.prod.outlook.com (2603:10a6:20b:2ee::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.24; Tue, 3 Sep
+ 2024 13:17:17 +0000
+Received: from DU0PR02MB8500.eurprd02.prod.outlook.com
+ ([fe80::aff4:cbc7:ff18:b827]) by DU0PR02MB8500.eurprd02.prod.outlook.com
+ ([fe80::aff4:cbc7:ff18:b827%3]) with mapi id 15.20.7918.019; Tue, 3 Sep 2024
+ 13:17:17 +0000
+Message-ID: <dd42f526-6da7-87f8-ad4c-bf18af41c665@axentia.se>
+Date: Tue, 3 Sep 2024 15:17:14 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v4 04/18] mux: add mux_chip_resume() function
+Content-Language: sv-SE
+To: Thomas Richard <thomas.richard@bootlin.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Tony Lindgren <tony@atomide.com>, Haojian Zhuang
+ <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
+ <20240102-j7200-pcie-s2r-v4-4-6f1f53390c85@bootlin.com>
+From: Peter Rosin <peda@axentia.se>
+In-Reply-To: <20240102-j7200-pcie-s2r-v4-4-6f1f53390c85@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: GV2PEPF00004525.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:158:401::346) To DU0PR02MB8500.eurprd02.prod.outlook.com
+ (2603:10a6:10:3e3::8)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR02MB8500:EE_|AS8PR02MB7046:EE_
+X-MS-Office365-Filtering-Correlation-Id: a4f68b5c-9ef7-400f-15e4-08dccc1abbba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SHd5eHNqKzhnK3c0ODVKV3pnN0VGREZXSEZYMGNtN1hoNFdhS0hhRVFPYW1s?=
+ =?utf-8?B?bi9ZQkkvSlNHSkVTajFGdmZma3dXamRVYm5zMzBBU29GNHpySSs4RW5yWWhh?=
+ =?utf-8?B?R0tiSFBkUG5ydHphcGNiZzl5djNLb3BkeFYzOUFUTGtXZkR6NkU2bk5uaVFL?=
+ =?utf-8?B?eVhzdXAyaXR0Ujk2ak1OU3BYcU1sQmc1Zkc5QWg2SVJJS2lBQzc5SVpvSStp?=
+ =?utf-8?B?OVVoOVkxQjZvZkJ4MU5wN2k4QTYwYmFydXVVN293YmhOQ0dqVkYrbHJMcm9R?=
+ =?utf-8?B?NkR2MnRBeDFubE5lckhPRU5tM3QySkdFVGtsV000dGYxODZOck1WcDBJdEVE?=
+ =?utf-8?B?dkxLSlJMTHk4Z3BZWFVBZHhlQ0pmd0xjazZoeENsN0w0L0FldGxTSEFGc0NQ?=
+ =?utf-8?B?RTMzUDR3NWk1SGJQblI5YTRXZ3IybnhBUHcyYUJyZzZrN0NIUDc2aUVtVUt5?=
+ =?utf-8?B?WUlkUis0elF1WG1pVFFMME42RDZoRjRaUVJUNVlxVkVZdHp6Y1ZidWpXZWNu?=
+ =?utf-8?B?a05WMXJ4ODJQSGRWcnB1d291K2txWFAwTmowWWpIby90U1IySmtXYmhjeVk0?=
+ =?utf-8?B?Tllwc2ZpTDZvbm1td0dPUmVnMzIrTE5Hc0xMV1d6ZWtkQzZsdUNXTEpuZ04r?=
+ =?utf-8?B?SWxjUUM2RlRrWUhZVjNIWlZvUmpBY2ZETXpLN0J5NGJiY0xSVjljMnlBNWEw?=
+ =?utf-8?B?TXZIZVNuQmNrdG5tV0wyVGhPMUhhVkgvS0dPZnFkRXFGZURLWHN2dFdzSEZa?=
+ =?utf-8?B?WkdaN3V6c0pMbVJGM294Q0NaNDZxUm9nSnRxemFlQWhnSGhNdTRRVXE0V3Q2?=
+ =?utf-8?B?RmxwSFkyYzNqTVlJL1JwbXRmWkVuVzJML0s4MDcyOXE3LzFPdURldUxwQ25F?=
+ =?utf-8?B?K2JvZk9mVWpSTTM4cDBRNlJ0Wk1QMXoycEUwVmZISTFUL09mdERIbkNHYVhj?=
+ =?utf-8?B?aDViUURubHZpL3E3M2xPODN3cHZCVkdBOUZ0dXdXUGYxL3VaSkRwTVdtQWE0?=
+ =?utf-8?B?WjZadTJOYlNEY0RCSmxML2s3eUNPL0NqcUdHaUdmM3pkYUl6QTNEWlBiYkpw?=
+ =?utf-8?B?UlNtaXBoTE1lV0p0T3poRmdSUG9yend2VDRyWDFTOFoyTFJhUXhqV1NSazFB?=
+ =?utf-8?B?QUZTWVZIVCtJM1lxY2xDaGdQcFFLTGRuV1kyM25WSlhodHpabnYxTHhCYzQ1?=
+ =?utf-8?B?azllZ1B3T29TZU5VZDRJM3lLQnZSUmlLSGwvRDdBOXN2eEFnckNybzNzMkFE?=
+ =?utf-8?B?TUZMVEwwM2F2NVduSTdpUktjK3BDYkE2UCtlTmptSEFaQlBnR1FFbHB5V3Ju?=
+ =?utf-8?B?a0lXM3hoeWlEb2F5M2toNjV3UmlZeTVPRzVlN0pnMllJVS85TGhtRXdQN1M5?=
+ =?utf-8?B?TXR2TWtYS05LSEdUbUU3YjF2VlVqRUZVamtWQnZzYjkzdDF1U3kvM0Y0KzRP?=
+ =?utf-8?B?Z3YvL3VzamRQRDFrdXFxbFFXNDNQMHN3NE1STlJqQXQrU1lDakdhR2pLdnBL?=
+ =?utf-8?B?NHlVYkE2QWE2RlhrNWNWY3NZWXFoS3ExOGJYQk5rM2lzWEI1eFI1enZLZnAr?=
+ =?utf-8?B?aWlEZlNvZk5DQUR2OTJEcmNDaXIraUFsUDZpMU0yeUxWNEVndVBGSS9iSXk1?=
+ =?utf-8?B?cENYZkljSm1wRjdkZkUyZDJmUWIybjN3TUlHd2VwbHF1M2VwM3dVY3Jobm0x?=
+ =?utf-8?B?Nm50UU52alRydFB4QXhadlF4MWNkdkgvOE1mMUNlZ2FoVkQvRjZXRWdtaUZz?=
+ =?utf-8?B?TDdKQ3EyN0d2TG9mQUJWVVRZbURPSld2YW1VMTNIZ0g4RFJDQzVlOXJPYnFP?=
+ =?utf-8?B?TUYvbGkza3hRKzJ3WFNXd2oyL3RET2M4Sm8vc2djSWROaEY4MThsVk5ackNF?=
+ =?utf-8?Q?TEAOmPU+M62py?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR02MB8500.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?KzNuTG1qNkFrcmNaWkY4TkMxakJhc0VRZk41TFdyZDJnWEUyZ3lxZ0hTSUk3?=
+ =?utf-8?B?TmcySDl5Z0dYdEx1VzNrQitQRG9mRHhaQTd0MkNXNGlLWjFQdGNzLzZWWHpq?=
+ =?utf-8?B?Z1VUbjJkTjVXNmtTT1o0bG5UMUNwUEY4aWpFNUtVK1RCblY3Y2Z1TnI0SmVY?=
+ =?utf-8?B?NTFGakNPaWU4SHlGaDh3TURmWVZlZnhQRFNXS2xLOFp6UXdud3Myam9ocVJk?=
+ =?utf-8?B?aHhqTm1JMFBGSlFWWGtMTmdOb0FTbXd3S0NKUnlYR0l3V3hNaVB1aHpaWWZp?=
+ =?utf-8?B?ZlR6dWNuYWFVYnpBeXRna3N3VDYzVFFtclVLbGJYamVna015UmV1dEJ5QTE0?=
+ =?utf-8?B?ZjYwWjFoV0ExRVJRYXhGVHdGTmVyU3IrbnNCTVVRckFpajd6Tmt6dEV1ODYx?=
+ =?utf-8?B?RWY2Q1VzRk9ES1dhVVJ5bXJKTDk0ekoyRjJZWklRcDJyWTZGY3VOSzRwOGVQ?=
+ =?utf-8?B?Tm5VU3QvOHdNbExkL0R3dlVFMENGZjVSeTN2NFZzbDJ6ZklLYTAxMGtPL1k3?=
+ =?utf-8?B?NUlVRXFsVE9YL0tyY2h0ZytsZ01wck1GSC84b2l6RDFWM2k3dVM3NlR6NThG?=
+ =?utf-8?B?T2d0ZXJQS3FraTVTaHpETjBSVEx2WEtNcUFzVElXaWI5N2cxTkxnM3NnUjln?=
+ =?utf-8?B?SkZ2TSs3UXlmNkNDL0lMYmphRW5MdERwcXFGckVIYU80MENNbFlscDhqbXhn?=
+ =?utf-8?B?bDlTVlRUTGlzNGV6SzlBRk4rYXNSYm93MkZjTHE3MlRYRWpVZXozaFZLQWxN?=
+ =?utf-8?B?K2MrTG9yT1JGM2h2VFZMbncwOVhKWmVwVmgwdGp6bW5PU0pvdnd1RkZhQ1hn?=
+ =?utf-8?B?MW1kN29rM3dMakd1a0MrallJQnRteXo2VkZScUJoTWVodzZycTBPMEpVdVpR?=
+ =?utf-8?B?THRLaVBtbEkrQXArN1hxRkpOLzdhdWhuOXBNWTRoY0Q0VHhOdEpDNHBzQW1j?=
+ =?utf-8?B?RTlhdit4bU1paDM4ODhYQm4wNVIrTUFSVkZtWnpJWWtUV1ZtQmFqdlJYMDlF?=
+ =?utf-8?B?ck1wTlVuMUxiOENyVkdvdzdzNmdoMUZKVFJFYlBkRG5GSmx0L1FqVlpNaG1O?=
+ =?utf-8?B?R0xFa2lvTmZTeDRBYkR1R0tiQURWVVoweHE5cHBhZzFTbHdaSXd4OTZkd1dK?=
+ =?utf-8?B?YWpUdS9vWTVhdFpOaWZWWCtidVFLOHBMLzBjUnJmRVhLNDVVTEl3ZUFZU0c1?=
+ =?utf-8?B?YkUxK0dkMU5QZDlES3lwOFA4MGNtdXhodnBKdkYwK0JhcHZkeXVLbnV0VkV0?=
+ =?utf-8?B?bmQ4MFpWQ3ZlSVdHcU1TNWdXNjRWaDc1TTQ2YTBUbUxkWUx0eU1Xb0wvT3h0?=
+ =?utf-8?B?Kyt3SzBoWFJXWUsydENJT2l5QjdJWW5HYkhNc2xKaXN0cVhwVXROd29OQTV2?=
+ =?utf-8?B?VlhWaFdHR3ArTXNKdmhDMW9hTGF0dXNUbGtsb01lMEE2SEJwYnpUaURnYTFo?=
+ =?utf-8?B?Y0l4ZHFsamEvYStCNm9CWk1XdWZLWUZIbitqVDUvbWpVMmd3SklTMkFISndq?=
+ =?utf-8?B?Rkw3eWdPSWtWYjk0U2RRWXlEb0hFMTRobVJ3K0Uxa0luSGx6MzRoanBwWlBZ?=
+ =?utf-8?B?QWdIL0hFcmRNYlhPMTE1NnRQSzZhTzhhb1d6R1pYZHNZUkY4SGhNb1JCV2xz?=
+ =?utf-8?B?dkVIT3Q4OEJkWll3MnFpd293eXRodlp5bzRLL0o5VFV0MnlwYy9EWkhoYWpJ?=
+ =?utf-8?B?NDRhQ0VCZXJ2UllkZzFBVW1RMnpmREIyeVFFNzFLc292ekFTV0ErL3J3NTlM?=
+ =?utf-8?B?QS9ndkZtWGYrVnVETVNUVmRSREJTTGxyWll0OGYwSlJCc1NuN0VJQXdEUFRV?=
+ =?utf-8?B?dEVKQmRteG1aTGhlaEw2YmkvODA0c3VtYk81aHNiMkViQ2ViS2RidEZ6TUkr?=
+ =?utf-8?B?Z1JpajU1WHZsUWZSQjdsL0Z5dXozem1WblJYVkZJTlpYZkU3b2FQRHVFMDFT?=
+ =?utf-8?B?QndWbUN4b25sZzZ1TUtXNjdPYml2dHo1ODRaNFZiZTZLeTgva2s0UzZkWWh0?=
+ =?utf-8?B?cDFTQ3Ixa0FkTW81S3pMM0ZWWlR4SWVDQkVwdlp5eXR6cVhnaFdjQlY1TzFr?=
+ =?utf-8?B?UEJvNEFFb1U1TUhaUnRtZHhGSFlYUDNvSGFlU0I0YjJWbEIvYlpWUkRtcUhK?=
+ =?utf-8?Q?ymtZjpRUwfNpzbAwW303p/Vvu?=
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4f68b5c-9ef7-400f-15e4-08dccc1abbba
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR02MB8500.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2024 13:17:17.2390
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L0TAug1QlioQydTcRvUFkyD2ghftYAmwJDwHZql/9O86kIZs1OnXupovki6iwArg
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR02MB7046
 
-Samsung Galaxy S8 (SM-G950F), codenamed dreamlte, is a mobile phone
-from 2017. It features 4GB RAM, 64GB UFS 2.1, Exynos 8895 SoC and a
-1440x2960 Super AMOLED display.
+Hi!
 
-This initial device tree enables SimpleFB, PSTORE and GPIO keys.
+Sorry for being unresponsive.
 
-Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
----
- arch/arm64/boot/dts/exynos/Makefile           |   1 +
- .../boot/dts/exynos/exynos8895-dreamlte.dts   | 126 ++++++++++++++++++
- 2 files changed, 127 insertions(+)
- create mode 100644 arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts
+2024-03-04 at 16:35, Thomas Richard wrote:
+> The mux_chip_resume() function restores a mux_chip using the cached state
+> of each mux.
+> 
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> ---
+>  drivers/mux/core.c         | 29 +++++++++++++++++++++++++++++
+>  include/linux/mux/driver.h |  1 +
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/drivers/mux/core.c b/drivers/mux/core.c
+> index 775816112932..0742aa2a7c73 100644
+> --- a/drivers/mux/core.c
+> +++ b/drivers/mux/core.c
+> @@ -215,6 +215,35 @@ void mux_chip_free(struct mux_chip *mux_chip)
+>  }
+>  EXPORT_SYMBOL_GPL(mux_chip_free);
+>  
+> +/**
+> + * mux_chip_resume() - restores the mux-chip state
+> + * @mux_chip: The mux-chip to resume.
+> + *
+> + * Restores the mux-chip state.
+> + *
+> + * Return: Zero on success or a negative errno on error.
+> + */
+> +int mux_chip_resume(struct mux_chip *mux_chip)
+> +{
+> +	int ret, i;
+> +
+> +	for (i = 0; i < mux_chip->controllers; ++i) {
+> +		struct mux_control *mux = &mux_chip->mux[i];
+> +
+> +		if (mux->cached_state == MUX_CACHE_UNKNOWN)
+> +			continue;
+> +
+> +		ret = mux_control_set(mux, mux->cached_state);
 
-diff --git a/arch/arm64/boot/dts/exynos/Makefile b/arch/arm64/boot/dts/exynos/Makefile
-index d7f2191c2..18f5a3eed 100644
---- a/arch/arm64/boot/dts/exynos/Makefile
-+++ b/arch/arm64/boot/dts/exynos/Makefile
-@@ -7,5 +7,6 @@ dtb-$(CONFIG_ARCH_EXYNOS) += \
- 	exynos7-espresso.dtb		\
- 	exynos7885-jackpotlte.dtb	\
- 	exynos850-e850-96.dtb		\
-+	exynos8895-dreamlte.dtb		\
- 	exynosautov9-sadk.dtb		\
- 	exynosautov920-sadk.dtb
-diff --git a/arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts b/arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts
-new file mode 100644
-index 000000000..f123e26be
---- /dev/null
-+++ b/arch/arm64/boot/dts/exynos/exynos8895-dreamlte.dts
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-+/*
-+ * Samsung Galaxy S8 (dreamlte/SM-G950F) device tree source
-+ *
-+ * Copyright (c) 2024, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-+ */
-+
-+/dts-v1/;
-+#include "exynos8895.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	model = "Samsung Galaxy S8 (SM-G950F)";
-+	compatible = "samsung,dreamlte", "samsung,exynos8895";
-+	chassis-type = "handset";
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		framebuffer0: framebuffer@cc000000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0 0xcc000000 (1440 * 2960 * 4)>;
-+			width = <1440>;
-+			height = <2960>;
-+			stride = <(1440 * 4)>;
-+			format = "a8r8g8b8";
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x3c800000>,
-+		      <0x0 0xc0000000 0x40000000>,
-+		      <0x8 0x80000000 0x80000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		ramoops@92000000 {
-+			compatible = "ramoops";
-+			reg = <0 0x92000000 0x8000>;
-+			record-size = <0x4000>;
-+			console-size = <0x4000>;
-+		};
-+
-+		continuous_splash: framebuffer@cc000000 {
-+			reg = <0 0xcc000000 (1440 * 2960 * 4)>;
-+			no-map;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&key_volup &key_voldown &key_power &key_wink>;
-+		pinctrl-names = "default";
-+
-+		volup-key {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&gpa0 3 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		voldown-key {
-+			label = "Volume Down";
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			gpios = <&gpa0 4 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		power-key {
-+			label = "Power";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpa2 4 GPIO_ACTIVE_LOW>;
-+			wakeup-source;
-+		};
-+
-+		/* Typically used for Bixby. Map it as a camera button for now */
-+		wink-key {
-+			label = "Camera";
-+			linux,code = <KEY_CAMERA>;
-+			gpios = <&gpa0 6 GPIO_ACTIVE_LOW>;
-+			wakeup-source;
-+		};
-+	};
-+};
-+
-+&oscclk {
-+	clock-frequency = <26000000>;
-+};
-+
-+&pinctrl_alive {
-+	key_volup: key-volup {
-+		samsung,pins = "gpa0-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS7_PIN_DRV_LV1>;
-+	};
-+
-+	key_voldown: key-voldown {
-+		samsung,pins = "gpa0-4";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS7_PIN_DRV_LV1>;
-+	};
-+
-+	key_power: key-power {
-+		samsung,pins = "gpa2-4";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS7_PIN_DRV_LV1>;
-+	};
-+
-+	key_wink: key-wink {
-+		samsung,pins = "gpa0-6";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS7_PIN_DRV_LV1>;
-+	};
-+};
--- 
-2.34.1
+mux_control_set() is an internal helper. It is called from
+__mux_control_select() and mux_control_deselect() (and on init...)
 
+In all those cases, there is no race to reach the mux_control_set()
+function, by means of the mux->lock semaphore (or the mux not being
+"published" yet).
+
+I fail to see how resume is safe when mux->lock is ignored?
+
+Cheers,
+Peter
+
+> +		if (ret < 0) {
+> +			dev_err(&mux_chip->dev, "unable to restore state\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(mux_chip_resume);
+> +
+>  static void devm_mux_chip_release(struct device *dev, void *res)
+>  {
+>  	struct mux_chip *mux_chip = *(struct mux_chip **)res;
+> diff --git a/include/linux/mux/driver.h b/include/linux/mux/driver.h
+> index 18824064f8c0..2a7e5ec5d540 100644
+> --- a/include/linux/mux/driver.h
+> +++ b/include/linux/mux/driver.h
+> @@ -88,6 +88,7 @@ struct mux_chip *mux_chip_alloc(struct device *dev,
+>  int mux_chip_register(struct mux_chip *mux_chip);
+>  void mux_chip_unregister(struct mux_chip *mux_chip);
+>  void mux_chip_free(struct mux_chip *mux_chip);
+> +int mux_chip_resume(struct mux_chip *mux_chip);
+>  
+>  struct mux_chip *devm_mux_chip_alloc(struct device *dev,
+>  				     unsigned int controllers,
+> 
 
