@@ -1,121 +1,157 @@
-Return-Path: <linux-gpio+bounces-9688-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9689-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AC9696A438
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 18:25:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0526E96A4AC
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 18:42:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC160282439
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 16:25:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9DE562847AF
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 16:42:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D6C418BB8C;
-	Tue,  3 Sep 2024 16:25:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD2718BC08;
+	Tue,  3 Sep 2024 16:42:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gbKR3BRf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgCqPXZa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDB92868D;
-	Tue,  3 Sep 2024 16:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA701E492;
+	Tue,  3 Sep 2024 16:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725380741; cv=none; b=MqY25RmTipgWAKaLA56XqDVeHRXnLonLQih00vDsNhGUSM79UHjgYdXzrA9os5aMbxJxxILpVPLtzXE+4dx9yn/Nu4XfVXKoH0pXqcxK+S0BK8Yony/1k8p70mWCoKc7z0Lu72vCIukACilPZkuWgVSVeEpERhFTAleTLCjkbxk=
+	t=1725381745; cv=none; b=YSYHG854Xuq8998zug2+NNJBUvpsN6PKdKIJae6IgE64MbUs1M1HVU4skPS6PcGwG5II2Fe77oed41Iy/IjDjB45LNjFi9OfFtA9SMo/YfIYxWZ7lHnTTlYKEU7HkWVKkC1Wq8ZxuuXh5GSvO9pD2RzqOIox1ESVZ752jRlMUSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725380741; c=relaxed/simple;
-	bh=iwVYy+FZcEnwamNnd1vJnvqP66l4y5FfFkqW4IaQGp8=;
+	s=arc-20240116; t=1725381745; c=relaxed/simple;
+	bh=ysx2yq2EzG2SmeMo3CLySNMcvk3ddYkzx0Kw43XPAxo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ISPNVJ53sX+adW80j41Z3g3F+VaXGZsgG4uh8s5qBFVI4+W19wHVloIzmkjRgstd8OdWcM8meBCJA7eBFfQtL9m5s13q0uhxs9KCvIcAmsh0+S6anKNo6QnKrTT2aSJNJ1D3+SvJDzelE33uI9YB+0ngLPMNrkbLF8NsPp5rDkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gbKR3BRf; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725380740; x=1756916740;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=iwVYy+FZcEnwamNnd1vJnvqP66l4y5FfFkqW4IaQGp8=;
-  b=gbKR3BRf2Pv+VlboqWSmqQeWENJcRR1fkX0dsobZ5k/0Y9dLTpwdKgeT
-   c8MxuHBfgeDXwi8hqzJS+Ft/A7uJ7EY7kGSqe0Lo3EPjdCt98Jx/DisVa
-   sdJriDUsk9jxsC1tjf4dQky4jOjopPdd+8JcQERrzkT6eaS1QqDEW2S1g
-   esKl4X6krN4Yi6n4RvjAb6euxMNR32pI77RW9WJY6fQx69TbyGyUQZ1XC
-   kNY02qu8ivfu3Gcmi/5TVS6YPCOSGuV5XSm9tS3s4fKDWAJ1Txi0741X5
-   6mo5zrUDHRQx71Olm4/jOC22bCGeC/vSEblMAHOUt4QxUE/YEDjUABvI8
-   g==;
-X-CSE-ConnectionGUID: AVUG4qSGQou3NEpgPc+few==
-X-CSE-MsgGUID: Fke+bkRyRuiO0wf4puurhQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="23508962"
-X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
-   d="scan'208";a="23508962"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 09:25:39 -0700
-X-CSE-ConnectionGUID: kucaFSwRT82RxDPCY77u+w==
-X-CSE-MsgGUID: PtjElxBiQDa+4O7YZtcsoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
-   d="scan'208";a="69755552"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 09:25:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1slWLX-00000004liQ-1cpy;
-	Tue, 03 Sep 2024 19:25:35 +0300
-Date: Tue, 3 Sep 2024 19:25:35 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Martyn Welch <martyn.welch@collabora.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: mpc8xxx: switch to using
- DEFINE_RUNTIME_DEV_PM_OPS()
-Message-ID: <Ztc4f3AOpppiL4Dt@smile.fi.intel.com>
-References: <20240903154533.101258-1-brgl@bgdev.pl>
- <20240903154533.101258-2-brgl@bgdev.pl>
- <Ztc4A0rZE3G1oHo7@smile.fi.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CuvbiJqUwGe8I1RaEfq/DBlgANOv91ZwXsH4VE5c3xuzzKFbxV+5/eRvMYdA2LvqTAr9TYepvcvkHYAIcS2BZnhQPpojMcl3BnfGNyxgXt6AwmWesTZp3DXWmFa+7Ecf/8Ykuq1dxne8q52sJqiKPejwFCAsvYUfqiMXhHgnRAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgCqPXZa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A82BC4CEC4;
+	Tue,  3 Sep 2024 16:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725381744;
+	bh=ysx2yq2EzG2SmeMo3CLySNMcvk3ddYkzx0Kw43XPAxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XgCqPXZazwzGXgfGAhqlE+vpCryS6mxbB6qDi2nJMtReK0UuPyw1UIERUdA36XOgx
+	 WDxqlO5jl7O5CapgicZ8MVPOkcojtyHi3qvPdKgYDGAzo9OtCWfBzAZh7QqeQC3MrK
+	 1VrUL5vWukZR8FWRGHp14byhFqupVrqQpdh985FojvyqjwFs4XVGr5ZJAvd6PglQ4U
+	 XQk5k3/pmyZBDIQdpxVRXXGile+ffCXoRKvpg0sEZmBvfU5PVA9tametbMV8sM87Jn
+	 o84+B+tFOlo+AgtR5XGka5zi/SBUFzD/yIQOeONzQyeIzkRV4u7WAn1fGUSuI4RW7Z
+	 YQeezY7rQRlQA==
+Date: Tue, 3 Sep 2024 17:42:18 +0100
+From: Lee Jones <lee@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Add support for Airoha EN7581
+ GPIO System Controller
+Message-ID: <20240903164218.GC6858@google.com>
+References: <20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org>
+ <20240831-en7581-pinctrl-v3-2-98eebfb4da66@kernel.org>
+ <20240903153353.GZ6858@google.com>
+ <66d72ea9.df0a0220.21f5f.029f@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Ztc4A0rZE3G1oHo7@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <66d72ea9.df0a0220.21f5f.029f@mx.google.com>
 
-On Tue, Sep 03, 2024 at 07:23:31PM +0300, Andy Shevchenko wrote:
-> On Tue, Sep 03, 2024 at 05:45:33PM +0200, Bartosz Golaszewski wrote:
+On Tue, 03 Sep 2024, Christian Marangi wrote:
 
-...
-
-> >  #include <linux/mod_devicetable.h>
-> >  #include <linux/of.h>
-> >  #include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
+> On Tue, Sep 03, 2024 at 04:33:53PM +0100, Lee Jones wrote:
+> > On Sat, 31 Aug 2024, Lorenzo Bianconi wrote:
+> > 
+> > > From: Christian Marangi <ansuelsmth@gmail.com>
+> > > 
+> > > Add support for Airoha EN7581 GPIO System Controller which provide a
+> > > register map for controlling the GPIO, pinctrl and PWM of the SoC.
+> > > 
+> > > Schema define cells for both gpio/interrupt controller and PWM.
+> > > Moreover it provides a dedicated pinctrl node for pins and config
+> > > definitions.
+> > > 
+> > > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> > > Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > > ---
+> > >  .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    | 433 +++++++++++++++++++++
+> > >  1 file changed, 433 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml b/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml
+> > > new file mode 100644
+> > > index 000000000000..a9080c7f50f9
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml
+> > > @@ -0,0 +1,433 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mfd/airoha,en7581-gpio-sysctl.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Airoha EN7581 GPIO System Controller
+> > > +
+> > > +maintainers:
+> > > +  - Christian Marangi <ansuelsmth@gmail.com>
+> > > +  - Lorenzo Bianconi <lorenzo@kernel.org>
+> > > +
+> > > +description:
+> > > +  Airoha EN7581 SoC GPIO system controller which provided a register map
+> > > +  for controlling the GPIO, pins and PWM of the SoC.
+> > 
+> > This whole thing is just about pins.
+> > 
+> > The MFD portion of this submission doesn't do anything.
+> >
 > 
-> You need pm.h as macros defined there.
+> Hi Lee,
+> 
+> thanks for the review. I think you missed the other series as it was
+> requested to use MFD implementation due to shared register map.
+> 
+> > Please rework this to omit the MFD driver.
+> 
+> I'm a bit confused by this you mean in the schema? Putting PWM property
+> in a pinctrl schema looks wrong to me :(
+> 
+> > 
+> > After just a glance, it looks like simple-mfd _might_ work.
+> 
+> Simple-mfd works if register map are well defined and you can have
+> something like
+> - parent define the whole register
+> - child can user reg property to register offset and subsection of the
+>   parent register
+> 
+> Here it's all mixed and scrambled and also it was requested to have a
+> very simple node that include both pwm and pinctrl property (cause that
+> is how the HW register block is designed and schema must reflect HW)
+> 
+> Hope you can understand these reasons.
 
-...or both...
+Thinking very quickly before I have to rush off.
 
-> >  #include <linux/property.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/spinlock.h>
-
-...
-
-> > +static DEFINE_RUNTIME_DEV_PM_OPS(mpc8xx_pm_ops, mpc8xxx_suspend,
-> > +				 mpc8xxx_resume, NULL);
-
-This one comes from pm_runtime.h, but pm*_ptr() ones from pm.h.
-
-And it seems you wanted pm_ptr().
+Have you considered syscon?
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lee Jones [李琼斯]
 
