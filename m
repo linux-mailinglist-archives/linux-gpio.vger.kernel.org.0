@@ -1,156 +1,165 @@
-Return-Path: <linux-gpio+bounces-9637-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9638-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D3F9969D8B
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 14:28:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8A04969D93
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 14:29:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AD59EB23BF6
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 12:28:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 614CA281340
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 12:29:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16C6C1D86F2;
-	Tue,  3 Sep 2024 12:27:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E53EE1CF2A2;
+	Tue,  3 Sep 2024 12:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IbY6SCP4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98431D86E8;
-	Tue,  3 Sep 2024 12:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A79E1C987C
+	for <linux-gpio@vger.kernel.org>; Tue,  3 Sep 2024 12:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725366449; cv=none; b=r6sTXmkntpPTtstrCxj+uIQ8hnTq1zF+A714bHw5hpQEiddHT50CSmMDpaVs+zPm5qL//Xj3wB7NE6locMF2QJO02/e02rMJ1IuCGps6oN2OMgZxn8KZFLFlN2hR3dEbOW59r9E30nb3/Aia0GmnJRlmjJQ4IyET0ZHF0at/vuQ=
+	t=1725366555; cv=none; b=IrWB6AcO2fLfJoDmxUtzlgGI29L/RPfUy4ADK4HufImGqLtKJtYzKf8Rmb9Q60UBUBeZFkvf85p+oXYNtlaJGhFgZgwuHcNPuOjl0oL3egT151MS3ekkHAS5Jt90a8AophexG2LtRC9DGZJzJ8+Gd45eOg+B7Yx5pvzq7mfO7iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725366449; c=relaxed/simple;
-	bh=72OUePKJmY9EObBTz2p3oSPWaKFyOulBRCi5gSja9tI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pDRAx47XJLhFv7yU46+y5s0PKGJRVRMEvd9O04iNV0A7AExGZNcq9CEOWEWHQgKSkYsiyn9xhDQ4v4XKoNpd51NosSV6AB4aZwjPkI1CetTBnveVOI5YX9fZHiwQXs0noooJGBjT4rGVc/P8doT8GTbbUJm2rtyCsMJ+JZyWUIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-From: Yixun Lan <dlan@gentoo.org>
-Date: Tue, 03 Sep 2024 12:26:46 +0000
-Subject: [PATCH v4 3/3] riscv: dts: spacemit: add pinctrl property to uart0
- in BPI-F3
+	s=arc-20240116; t=1725366555; c=relaxed/simple;
+	bh=LYZ3g1BOQrAmEV2a5L00wMHSlNaPPgLH0lWGP87X9VE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvq3mmcm37MBbvmNl5FB4Y1hQ88/oKNrt/aBF5aUFMgtukR2HIC0wivIav/77iMh3/O7J7m6lR8GuLbYUTcfqLjvIt5frDs28hS3EmDVEdTNaHkAwoPL6oToqZgP+KxpyoKSwFNl42wFAYgkg/CtiHfQc3waqyHai021smJNrsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IbY6SCP4; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52f01b8738dso3779228e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2024 05:29:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1725366551; x=1725971351; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pQaEXKZRWyREIUo8wC8RcTnNWfD1rXPNnUAij9Sr27k=;
+        b=IbY6SCP4WWPPL2wU29cTSHcvBDgNnVeuU2grWCJXHhk+8cJGN+SSnRloO9PpTLhe4b
+         LfHYLzWEfoCva2m/GdE8rJ7f62g5YKa0X0eUeeJlCOfybn5LI79N6kFW66kvOiFeQsI4
+         nwhl2hdZbXWiAMrbE89ngBhyAfDA6Df5AKAs07lJUXb6dklEVIGdpN3/ZMrhQn61wc8k
+         NCfOuJ+8YGx7apRuj0krn9P0DlpMk0AeQ+/8hLUd/EjOSK4WIsr6Fz8kMpCSPR04ocF7
+         Ur+e4xK+Hlp8/W0ymMOcrQ9WaxoE++Mj9jQUuF92/3dQCfDuJ/lUIytA6SwFu0eK6Jvt
+         /r1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725366551; x=1725971351;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pQaEXKZRWyREIUo8wC8RcTnNWfD1rXPNnUAij9Sr27k=;
+        b=ZIHSv1xy5xbI64vFpw8GyJS2pxIwwq4prGsaM0GoW6bYFVVDEiIFO6DyZQhl1bs4a5
+         8jxvrOGDIDAtK0gZSTTwUm+5fOVAlVqbBlMhw4iiW9AL00cV/rhGcio0Sc1PjZWLAGlX
+         CQHKvtqiELlYI7VuGkfSfJMItOGMQfpp7W2OSTUPbtfJVv+rCulfhb8VQwJbG4uNCaBb
+         OZvSj02i1ZoCkz8fLTV+djd07Znp2k4uIT8apw3dmf7k9D3YQqhovzhylyiAvyvZ3OKZ
+         ERW1ey/WNHfVsQUxZyctuYMsPdZulgOZ5Fyx8YJYnxOpPGa3LHpNEQ3LcZ4hJvkDIrSc
+         ErOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXeJjcZW31LZnJdhwmyx0zU9GFsaBpngLzmF/Bm+hykMm/IAycBjxRsZir1/VHfCkeeAZtfMvF/2T7L@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwUJozeOTUY8ixef6cfDgKkJGW3Mw/BUWeBUyktags5JMkRp05
+	3B8DwHD75eAp4zzVMiNnaajzhstxxuQiImutn38ePcQHED/Q3nG2+FE5ueOfavE=
+X-Google-Smtp-Source: AGHT+IFq5h7rZ8oQIIXm6nz6CibNpWmLcPJNLG4TGtm/2ICu6a9ZqKTz9NHYYqSXDVwrc61upSj1pQ==
+X-Received: by 2002:a05:6512:2254:b0:530:ea60:7e07 with SMTP id 2adb3069b0e04-53546bb9455mr9237621e87.58.1725366550821;
+        Tue, 03 Sep 2024 05:29:10 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a89891d7834sm688285166b.177.2024.09.03.05.29.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2024 05:29:10 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 3 Sep 2024 14:29:18 +0200
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.org>,
+	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH 05/11] vmlinux.lds.h: Preserve DTB sections from being
+ discarded after init
+Message-ID: <ZtcBHvI9JxgH9iFT@apocalypse>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <12d0909b1612fb6d2caa42b4fda5e5ae63d623a3.1724159867.git.andrea.porta@suse.com>
+ <2113b8df52164733a0ee3860bb793d6e.sboyd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240903-02-k1-pinctrl-v4-3-d76c00a33b2b@gentoo.org>
-References: <20240903-02-k1-pinctrl-v4-0-d76c00a33b2b@gentoo.org>
-In-Reply-To: <20240903-02-k1-pinctrl-v4-0-d76c00a33b2b@gentoo.org>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Conor Dooley <conor@kernel.org>
-Cc: Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>, 
- Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
- Meng Zhang <zhangmeng.kevin@spacemit.com>, 
- Meng Zhang <kevin.z.m@hotmail.com>, devicetree@vger.kernel.org, 
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2235; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=72OUePKJmY9EObBTz2p3oSPWaKFyOulBRCi5gSja9tI=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBm1wCbeyJvCjfwfjk6CxerD0e3wqymKHbG2IGb5
- 8rM/z5ULKmJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZtcAm18UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277WrOD/9QFex+y4trbZ+gJC
- YHw1005oEpM6MRg7yEsgUPuISrnLXM4a8S8R+J0AQaP7OV0gIF51d7rxqabRAHk9pW+GyAISSS6
- 2YeBSA0Wd2luVEy4Ioc2qc0xkqYnuZR62kz/3QN4QG55JI6KRX9UQnSUwau4xNNa2ItFHGCb2cS
- qL8sVNPPdmBZe0TSUMByqV+ndT2SERktZtU0O5xkk1a3JHp6F+p5/99utf+QkkxnwkRxtVvZDtt
- B6lkhaGX5DVjygkugsuTr9Vj7C+Y8yb2w3xMdwOfc4xbMaAJ0IEhZ583peVog/STflOeJsi1nmu
- X44CAmGCODxpuMeTIW9AI5q+8Foc+sL0wt42IJB9rK58aYC+Dkq+e3IGumLNGdQmR1+xntXNxPk
- 4Nsy5eYKt0aUnOJFa8sXYAB5SS06M2RKbxe4fqUio1p94ucHLvzyw8V7cIpiy8wk1dhUZJdwnaY
- HFqkW3l8kftO0cuucRmSquFfJ07ByMBcX3q0xUaIloF6j8xzV6OQwCopJYPuzAcSa0UA1wNtCVW
- TJI1OypksHZPzs4+NsFg+DVSleu9QVfWDRwIUVhr/qCzIyBKWMdTGpCbv2FbvisyuADQEL/Jxhk
- s8YcsJ+m3LJWdOfk/xJe6D85+LvkTR7QFEOuviA06Fa0nAeNjnFshLS+TiIHuynhBeNw==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2113b8df52164733a0ee3860bb793d6e.sboyd@kernel.org>
 
-Before pinctrl driver implemented, the uart0 controller reply on
-bootloader for setting correct pin mux and configurations.
+Hi Stephen,
 
-Now, let's add pinctrl property to uart0 of Bananapi-F3 board.
+On 12:46 Fri 30 Aug     , Stephen Boyd wrote:
+> Quoting Andrea della Porta (2024-08-20 07:36:07)
+> > The special section .dtb.init.rodata contains dtb and dtbo compiled
+> > as objects inside the kernel and ends up in .init.data sectiion that
+> > will be discarded early after the init phase. This is a problem for
+> > builtin drivers that apply dtb overlay at runtime since this happens
+> > later (e.g. during bus enumeration) and also for modules that should
+> > be able to do it dynamically during runtime.
+> > Move the dtb section to .data.
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> >  include/asm-generic/vmlinux.lds.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> > index ad6afc5c4918..3ae9097774b0 100644
+> > --- a/include/asm-generic/vmlinux.lds.h
+> > +++ b/include/asm-generic/vmlinux.lds.h
+> > @@ -365,6 +365,7 @@
+> >         TRACE_PRINTKS()                                                 \
+> >         BPF_RAW_TP()                                                    \
+> >         TRACEPOINT_STR()                                                \
+> > +       KERNEL_DTB()                                                    \
+> 
+> The KERNEL_DTB() macro shows the section name is dtb.init.rodata. Can
+> you remove the ".init." part if this isn't initdata anymore? And
+> shouldn't it be in the RO_DATA() macro?
 
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
- arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts |  3 +++
- arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi    | 20 ++++++++++++++++++++
- arch/riscv/boot/dts/spacemit/k1.dtsi            |  5 +++++
- 3 files changed, 28 insertions(+)
+Ack.
 
-diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 023274189b492..bc88d4de25a62 100644
---- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-+++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-@@ -4,6 +4,7 @@
-  */
- 
- #include "k1.dtsi"
-+#include "k1-pinctrl.dtsi"
- 
- / {
- 	model = "Banana Pi BPI-F3";
-@@ -15,5 +16,7 @@ chosen {
- };
- 
- &uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_2_cfg>;
- 	status = "okay";
- };
-diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-new file mode 100644
-index 0000000000000..a8eac5517f857
---- /dev/null
-+++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-@@ -0,0 +1,20 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Copyright (c) 2024 Yixun Lan <dlan@gentoo.org>
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+#define K1_PADCONF(pin, func) (((pin) << 16) | (func))
-+
-+&pinctrl {
-+	uart0_2_cfg: uart0-2-cfg {
-+		uart0-2-pins {
-+			pinmux = <K1_PADCONF(68, 2)>,
-+				 <K1_PADCONF(69, 2)>;
-+
-+			bias-pull-up = <0>;
-+			drive-strength = <32>;
-+		};
-+	};
-+};
-diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 0777bf9e01183..a2d5f7d4a942a 100644
---- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-@@ -416,6 +416,11 @@ uart9: serial@d4017800 {
- 			status = "disabled";
- 		};
- 
-+		pinctrl: pinctrl@d401e000 {
-+			compatible = "spacemit,k1-pinctrl";
-+			reg = <0x0 0xd401e000 0x0 0x400>;
-+		};
-+
- 		plic: interrupt-controller@e0000000 {
- 			compatible = "spacemit,k1-plic", "sifive,plic-1.0.0";
- 			reg = <0x0 0xe0000000 0x0 0x4000000>;
+> 
+> It would be nice to keep the initdata properties when this isn't used
+> after init as well. Perhaps we need another macro and/or filename to
+> indicate that the DTB{O} can be thrown away after init/module init.
 
--- 
-2.45.2
+We can certainly add some more filename extension that would place the
+relevant data in a droppable section. 
+Throwing away the dtb/o after init is like the actual KERNEL_DTB macro that
+is adding teh data to section .init.data, but this would mean t would be
+useful only at very early init stage, just like for CONFIG_OF_UNITTEST.
+Throwing after module init could be more difficult though, I think,
+for example we're not sure when to discard the section in case of deferred
+modules probe.
 
+Many thanks,
+Andrea
 
