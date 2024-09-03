@@ -1,116 +1,202 @@
-Return-Path: <linux-gpio+bounces-9616-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9619-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 062EF9696E3
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 10:20:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E0A596985D
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 11:10:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 84683B23557
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 08:20:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A7E341F244A9
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 09:10:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABEC6205E07;
-	Tue,  3 Sep 2024 08:20:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEFBC1A2656;
+	Tue,  3 Sep 2024 09:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YLjxJgQe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAEA201248
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Sep 2024 08:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B901C7669;
+	Tue,  3 Sep 2024 09:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725351607; cv=none; b=iZ5u7Mc3elqf+6kGYmkOSr51q7kC882id0CHRK48pb2Bv4Gm8xBBtZoOVeRtbVOsIzCG7NKQTwV6wFXwvWuUi/fMdlNlRqCBlE5jZe0umBIyekBPgNYL+Q/wPPwkgfUSQa1KK5A5Pv2p4+Cc1Ot2zn7CmiX9b7fVIK/cT5wVRGo=
+	t=1725354602; cv=none; b=rgJMiBdxklZWQncA9XlKadGNfXzMHKYpMF1fZG4QPlDC36v3HxJ/osgkH2D8ElO03zMse9REjYFm3eWVCHBIUQjOcPvNBu84J5sNHwrQj306Z1gkfYQR/JYWpLF3NVq4YCdVbmsZPzldOJnewT2T5FuC9Dcg9RMSiluZY1cgAaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725351607; c=relaxed/simple;
-	bh=G8BfkIiGQV8P32DgaMEUvaXHgpxPG8R4uhjactVkhUI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sWl9U5rpP2zOiRbt3dC4QNddMFphO6ISuLharIpNMpatA6kYzYaq6x1Fnq6TOkH011KaWm4tcdujdoQNEpbRn5JvVpBajOiAwfStK5Zq9durywmfNw0uBg7Dnm/IiqbO5Yjj4Co3cvAgeNIUigu9yAeYVERiDmyZcs/MJXYkWkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WydkW27x4z1HJ80;
-	Tue,  3 Sep 2024 16:16:35 +0800 (CST)
-Received: from kwepemf500003.china.huawei.com (unknown [7.202.181.241])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8BD5B1A0188;
-	Tue,  3 Sep 2024 16:20:01 +0800 (CST)
-Received: from huawei.com (10.175.112.208) by kwepemf500003.china.huawei.com
- (7.202.181.241) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 3 Sep
- 2024 16:20:00 +0800
-From: Zhang Zekun <zhangzekun11@huawei.com>
-To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <vz@mleia.com>,
-	<linux-gpio@vger.kernel.org>
-CC: <zhangzekun11@huawei.com>
-Subject: [PATCH 4/4] gpio: xilinx: Use helper function devm_clk_get_enabled()
-Date: Tue, 3 Sep 2024 16:06:27 +0800
-Message-ID: <20240903080627.53652-5-zhangzekun11@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240903080627.53652-1-zhangzekun11@huawei.com>
-References: <20240903080627.53652-1-zhangzekun11@huawei.com>
+	s=arc-20240116; t=1725354602; c=relaxed/simple;
+	bh=/tKo89+mcPizvF1Zm1NC+9oGmbQZWFYGqvMBFGbBTr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IqZ+FedI0Gzha7IgierK3iz7wWs5n+d1wGtQ3PmnTvwF2vGna11SmxmOYKfG7O1m4k2tjCYjdfF11dE0nR4cs13frJl9DlBogO7Q6PMy1bMxYOma60+vyXaFSyDe10VPKhaYTBxEZQ6fX9Ob30oQgqaSuZv5TDdrVipXtWWrdds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YLjxJgQe; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C13424000B;
+	Tue,  3 Sep 2024 09:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1725354597;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7LttFW8rTrdCnShZkP1nFG0SbHb65v/96Px6RosbpqQ=;
+	b=YLjxJgQeUItsVJ9gFA+6szbHMMcy/jFztLjUTtOdnTE1kJJ1YNpr5SWSmSzrQ0Fcor3gGz
+	8UO1UWSm2NNGYm+PEtn65EfyIIl8iL8anFMsQ9vGc8MRsVuZ4Cyak/fSmlA/R2uLfCjrlM
+	XV9M2ZBOonlf+tO2sq2fJH7BtgFCKOgfePeGYqVoKJWChjb6MCbFLuJYCgbfq5/VL32JIG
+	9co31FIV9mpNOR7bRqHir+gL6DLowcQyXHkn1phPVoBTQVnidadKcHuyPSdJ4LM/gO013j
+	1E2uC57WvRuf0xJig2u1sfnT4uLMBRKvZZ9Ujr+I2eqYvrf50qlmXpWBKmodyw==
+Date: Tue, 3 Sep 2024 11:09:53 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Florian
+ Fainelli <florian.fainelli@broadcom.com>, Broadcom internal kernel review
+ list <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, Dragan
+ Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, Lee Jones
+ <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Stefan Wahren
+ <wahrenst@gmx.net>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 04/11] of: address: Preserve the flags portion on 1:1
+ dma-ranges mapping
+Message-ID: <20240903110953.2b1f55b6@bootlin.com>
+In-Reply-To: <CAL_JsqJNcZx-HH-TJhsNai2fqwPJ+dtcWTdPagRjgqM31wsJkA@mail.gmail.com>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+	<5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
+	<20240821001618.GA2309328-robh@kernel.org>
+	<ZsWi86I1KG91fteb@apocalypse>
+	<CAL_JsqKN0ZNMtq+_dhurwLR+FL2MBOmWujp7uy+5HzXxUb_qDQ@mail.gmail.com>
+	<ZtBJ0jIq-QrTVs1m@apocalypse>
+	<CAL_Jsq+_-m3cjTRsFZ0RwVpot3Pdcr1GWt-qiiFC8kQvsmV7VQ@mail.gmail.com>
+	<ZtChPt4cD8PzfEkF@apocalypse>
+	<CAL_JsqJNcZx-HH-TJhsNai2fqwPJ+dtcWTdPagRjgqM31wsJkA@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemf500003.china.huawei.com (7.202.181.241)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-devm_clk_get() and clk_prepare_enable() can be replaced by helper
-function devm_clk_get_enabled(). Let's use devm_clk_get_enabled() to
-simplify code and avoid calling clk_disable_unprepare().
+Hi,
 
-Signed-off-by: Zhang Zekun <zhangzekun11@huawei.com>
----
- drivers/gpio/gpio-xilinx.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+On Fri, 30 Aug 2024 14:37:54 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index 7348df385198..afcf432a1573 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -333,12 +333,9 @@ static int __maybe_unused xgpio_suspend(struct device *dev)
-  */
- static void xgpio_remove(struct platform_device *pdev)
- {
--	struct xgpio_instance *gpio = platform_get_drvdata(pdev);
--
- 	pm_runtime_get_sync(&pdev->dev);
- 	pm_runtime_put_noidle(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
--	clk_disable_unprepare(gpio->clk);
- }
- 
- /**
-@@ -644,15 +641,10 @@ static int xgpio_probe(struct platform_device *pdev)
- 		return PTR_ERR(chip->regs);
- 	}
- 
--	chip->clk = devm_clk_get_optional(&pdev->dev, NULL);
-+	chip->clk = devm_clk_get_optional_enabled(&pdev->dev, NULL);
- 	if (IS_ERR(chip->clk))
- 		return dev_err_probe(&pdev->dev, PTR_ERR(chip->clk), "input clock not found.\n");
- 
--	status = clk_prepare_enable(chip->clk);
--	if (status < 0) {
--		dev_err(&pdev->dev, "Failed to prepare clk\n");
--		return status;
--	}
- 	pm_runtime_get_noresume(&pdev->dev);
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
-@@ -699,7 +691,6 @@ static int xgpio_probe(struct platform_device *pdev)
- err_pm_put:
- 	pm_runtime_disable(&pdev->dev);
- 	pm_runtime_put_noidle(&pdev->dev);
--	clk_disable_unprepare(chip->clk);
- 	return status;
- }
- 
--- 
-2.17.1
+...
 
+> > this view is much like Bootlin's approach, also my pci-ep-bus node now would look
+> > like this:
+> >  ...
+> >  pci-ep-bus@0 {
+> >         ranges = <0xc0 0x40000000
+> >                   0x01 0x00 0x00000000
+> >                   0x00 0x00400000>;
+> >         ...
+> >  };
+> >
+> > and also the correct unit address here is 0 again, since the parent address in
+> > ranges is 0x01 0x00 0x00000000 (0x01 is the flags and in this case represent
+> > BAR1, I assume that for the unit address I should use only the address part that
+> > is 0, right?).  
+> 
+> No, it should be 1 for BAR1. It's 1 node per BAR.
+
+It should be 1 node per BAR but in some cases it is not.
+
+Indeed, in the LAN966x case, the pci-ep-bus need to have access to several
+BARs and we have:
+	...
+	pci-ep-bus@0 {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/*
+		 * map @0xe2000000 (32MB) to BAR0 (CPU)
+		 * map @0xe0000000 (16MB) to BAR1 (AMBA)
+		 */
+		ranges = <0xe2000000 0x00 0x00 0x00 0x2000000
+		          0xe0000000 0x01 0x00 0x00 0x1000000>;
+	...
+
+Some devices under this bus need to use both BARs and use two regs values
+in their reg properties to access BAR0 and BAR1.
+
+
+> > > > > The assumption so far with all of this is that you have some specific
+> > > > > PCI device (and therefore a driver). The simple-buses under it are
+> > > > > defined per BAR. Not really certain if that makes sense in all cases,
+> > > > > but since the address assignment is dynamic, it may have to. I'm also
+> > > > > not completely convinced we should reuse 'simple-bus' here or define
+> > > > > something specific like 'pci-bar-bus' or something.  
+> > > >
+> > > > Good point. Labeling a new bus for this kind of 'appliance' could be
+> > > > beneficial to unify the dt overlay approach, and I guess it could be
+> > > > adopted by the aforementioned Bootlin's Microchip patchset too.
+> > > > However, since the difference with simple-bus would be basically non
+> > > > existent, I believe that this could be done in a future patch due to
+> > > > the fact that the dtbo is contained into the driver itself, so we do
+> > > > not suffer from the proliferation that happens when dtb are managed
+> > > > outside.  
+> > >
+> > > It's an ABI, so we really need to decide first.  
+> >
+> > Okay. How should we proceed?  
+> 
+> I think simple-bus where you have it is fine. It is really 1 level up
+> that needs to be specified. Basically something that's referenced from
+> the specific PCI device's schema (e.g. the RP1 schema (which you are
+> missing)).
+> 
+> That schema needs to roughly look like this:
+> 
+> properties:
+>   "#address-cells":
+>     const: 3
+>   "#size-cells":
+>     const: 2
+>   ranges:
+>     minItems: 1
+>     maxItems: 6
+>     items:
+>       additionalItems: true
+>       items:
+>         - maximum: 5  # The BAR number
+>         - const: 0
+>         - const: 0
+>         - # TODO: valid PCI memory flags
+> 
+> patternProperties:
+>   "^bar-bus@[0-5]$":
+>     type: object
+>     additionalProperties: true
+>     properties:
+>       compatible:
+>         const: simple-bus
+>       ranges: true
+> 
+
+IMHO, the node should not have 'bar' in the name.
+In the LAN966x PCI use case, multiple BARs have to be accessed by devices
+under this simple-bus. That's why I choose pci-ep-bus for this node name.
+
+Best regards,
+Hervé
 
