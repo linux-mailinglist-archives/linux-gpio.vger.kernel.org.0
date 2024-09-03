@@ -1,37 +1,38 @@
-Return-Path: <linux-gpio+bounces-9634-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9635-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 052D1969D80
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 14:27:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA7B5969D83
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 14:27:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B0BA21F23D7B
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 12:27:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BCB01C20E90
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 12:27:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 460081C9877;
-	Tue,  3 Sep 2024 12:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B0B11D61B5;
+	Tue,  3 Sep 2024 12:27:21 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8411C7688;
-	Tue,  3 Sep 2024 12:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADF51B12DE;
+	Tue,  3 Sep 2024 12:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725366437; cv=none; b=n3pHzcE018FWKg/wYpyBxGmZYtYEyv93LZ17cIyTEbYlJLgKzHwswMxi3qZHLrZQ6yJNOQVHcqAJ3I2Q4YHwHFETuztCk7jnJvuHZb9lmkcBY13eWQHyjwOgtFr+9kNLvLlfCO1Pjj12AGBoaB1F9dFb2IPB8+dbKu38N5Gwb+4=
+	t=1725366441; cv=none; b=jDE2r3rZVybvM5lcQg0yvcI4rFj9KOOAucdiaNQYUazdxRNB2u3ALKcAJEYeafYQHChgzh7ghKfncx8Wzt7lzGWUq5nwbq0WiIs5ah2m8w1KLPPdVdg62x+aNcS/ANpS6WFvB/q/5ZmSgVvWQKonY3jmNAbyis9dtYkRax8Jj4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725366437; c=relaxed/simple;
-	bh=Pwn7mZql+l/6H4k0w9z5e/b4dnAhIH+ZWTPs4Uj3+QA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eKUoOKRyAMw+MhOZgxv8u+J7x9cmsmG413kVCKyXAWvC+ingbaxc/eu7+M3O0fZhvr0V7NYzPaCFXemvrqiCcXRuhofEraSK5q+K58WEzuBdQbHgm8mmsW6VLtzCpleL6/F7jr4MMssaUc2riLsXFkyYbc63iURtojE7BLn3c5U=
+	s=arc-20240116; t=1725366441; c=relaxed/simple;
+	bh=YBpT/3PqGgtZFSNBAnPeMlslzAclFshMpPrK579COGU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jji3gMEYSUXHW8bxsfItMrVtEi9uPZbMQc1GHMq9yL5FYMzrSqOUe7s0ky83neJM/wNmwWIwiTwypa7faUwcl/ikGlZ7ocAz5cBJVRyb/JXN3T2R0Q4iW51tmsJ2j3i7fO1qyYKyGbUNxcVHFyXDf5k8C1a+Pu8bnR558AB/zEM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
 From: Yixun Lan <dlan@gentoo.org>
-Subject: [PATCH v4 0/3] riscv: spacemit: add pinctrl support to K1 SoC
-Date: Tue, 03 Sep 2024 12:26:43 +0000
-Message-Id: <20240903-02-k1-pinctrl-v4-0-d76c00a33b2b@gentoo.org>
+Date: Tue, 03 Sep 2024 12:26:44 +0000
+Subject: [PATCH v4 1/3] dt-bindings: pinctrl: spacemit: add support for K1
+ SoC
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -40,12 +41,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIMA12YC/2WQy26DMBBFfwV5XVeesTGGVf+j6sKPIbHa4MRQ1
- Cri32tgkZYur61zdO/c2Ug50si66s4yzXGMaShBPVXMn+1wIh5DyQwFKtEIwwXyd+DXOPgpf3B
- p0QnyIEEAK8w1Ux+/Nt/r254z3T6LdtofH9au2pwa9SoUwJ0do+dh4mCtBCJyPmA316u3/BH36
- XKJUyknwYNWmqA32rWq7a3Upqbe18JpLUpSHp1ma4NzHKeUv7eBM2wV9i3QHrbMpQVH2Vpfu6Y
- JQb+caJhSek75tKlmfOAG6yOOBQ8hSGOlqgPgP1z+xo+XnGXBoaegLaKj1vzBl2X5AUf6Bp6rA
- QAA
+Message-Id: <20240903-02-k1-pinctrl-v4-1-d76c00a33b2b@gentoo.org>
+References: <20240903-02-k1-pinctrl-v4-0-d76c00a33b2b@gentoo.org>
+In-Reply-To: <20240903-02-k1-pinctrl-v4-0-d76c00a33b2b@gentoo.org>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -59,98 +57,174 @@ Cc: Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>,
  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
  linux-gpio@vger.kernel.org, Yixun Lan <dlan@gentoo.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3473; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=Pwn7mZql+l/6H4k0w9z5e/b4dnAhIH+ZWTPs4Uj3+QA=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBm1wCR/7ec9bZkLiJChSs3C4x3sOWCBlX9YlyEs
- qb4AQXB4W2JApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZtcAkV8UgAAAAAAuAChp
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4339; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=YBpT/3PqGgtZFSNBAnPeMlslzAclFshMpPrK579COGU=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBm1wCUEbvr8+/5FNss5zfyKq9w+eMy/Cy5pBUXG
+ k0glKkbII6JApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZtcAlF8UgAAAAAAuAChp
  c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277baEEACAMkwr8T+fb5zT2q
- 9/PaffoJvsSbmWyeZZyFewVkWBu976EVHwAm6thC2+/KfusEyEBQJg78VPk+ff90EQs4Iv76CUZ
- /ghU+6OLa+o6bOW1sgimJSmyUCTduCSdZHO//Zrtw0II2hSwZ1aBNyfYcmB8pdEgUXG8xdnOF+c
- SQHLwHHK5nZOpPz7sTtoUj7EgXZiGu7lGT8S4F0giOXYAHl+2Gtx/2LsNqR5y12EC7xNjZgHBte
- el1yHTSTx3k91ifjwpuwrvvDF5SVTHwjWsg7/TPf5r1b6ceNiJz4uWrYvSLgJZzjkS5XmQFj3SZ
- CVJkhMwAR9b2pN9aZifQBjIBcj6ZgzyasQVsKbk7bbdsvnFz+fV5TIOA922pB0TiRNDGBCkMA3e
- 8dzFuotCNqD9h34d6QOVbdxFq8jRyEbVcxLQfHRJPvfPso50uYauBVnOsjPQgQIGIssPRSs5agj
- dZ5XQbI4lR0MMg4BRvBZWwPVPKL203WxA3MtqQoLg58JymB7bkgHQaN0kxypq5trqXx60BZJ2xE
- /G2TQl/8Yv7IwxXuvmiuqcLZQ/CyDnrtcIDGCS0WOTU7KSEKIGp4bzU1NBUNUMsZT7NooeyQti4
- rywIXjY3kROtXx9AgC1zUXt/O7LoMfcfPugqEip/r1af+hduOrtUSW8+r0l8m8LLNgTw==
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277avMD/9kig+JxRIVo9rUKW
+ iusSVCLOzi4WUuog1YkjMPM9FbMVBNd5Yof3kbOYvbMM7GABrbQm28/4aZdnjvCQU6svRGIJ0YG
+ uiL1qa43A+/EYZOWB+97KBDHathok9w3RziCBJPYtnL8T/+5iJSf695Pq33zK4S6TJd9vvcZF8g
+ GfPwc052gF/FHUbG58SlzFr1FMzC9uzR2R841lV4ioEtRYHxSwEnpQSe3xchO6SoeAvbKazNpxS
+ Y11hG46e/iCq/n3/o2o91Bh/RiTAhufhcuJ1EMfJxmVcTeb0+D0GE9ss9HfjmmRZgwrZt9AT25u
+ cQZ7vcHdyTC6gkDnig10cMkH6Uk0ELe6LscuKxHtZlqkO6Xwx97oVGLzVv65XsFxKpXOaWFJqEj
+ v92mOfW9AHflAiux/+dTdRM9H2V8UlJb4dXGp9SUfPRObqBkJn8s22cUWOioWNTV3ZL/5WjuaSY
+ YzWtX9EvW4X4Z+kwhH4mBaR8PZUsOdbt2CYI4npL17bsv1CPeIMMaEXPDfskx1fTClWTWM2gctQ
+ XBlub0bNF0Edp7Np2q5KpjzE+CwXC08g+8QAKIol0Jj7aQQCHyQi9ktE1TSKNuYWu16K+/YpaFO
+ hYaXxWxezocWmnJdTHzXxxgLsm7ziXOiUrxlP/UZf1CSC0U2rruGV7pf0DSpaTJn78jg==
 X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
  fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-This series adds pinctrl support to SpacemiT's K1 SoC, the controller
-uses a single register to describe all pin functions, including
-bias pull up/down, drive strength, schmitter trigger, slew rate,
-strong pull-up, mux mode. In patch #3, we add the pinctrl property of
-uart device for the Bananapi-F3 board.
+Add dt-bindings for the pinctrl driver of SpacemiT's K1 SoC.
 
-You can find the pinctrl docs of K1 here[1], and the original vendor's 
-pinctrl dts data here[2].
-
-Note, we rewrite this series as an independent pinctrl driver for K1 SoC,
-which means it does not use pinctrl-single driver as the model anymore,
-see the suggestion from Krzysztof at [3].
-
-Link: https://developer.spacemit.com/documentation?token=An1vwTwKaigaXRkYfwmcznTXned [1]
-Link: https://gitee.com/bianbu-linux/linux-6.1/blob/bl-v1.0.y/arch/riscv/boot/dts/spacemit/k1-x_pinctrl.dtsi [2]
-Link: https://lore.kernel.org/all/b7a01cba-9f68-4a6f-9795-b9103ee81d8b@kernel.org/ [3]
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Yixun Lan <dlan@gentoo.org>
 ---
 Changes in v4:
-- squash dts patch (drop patch #3)
-- collect review tags
-- Patch #2
- - fix pin id mapping
- - improve pinconf debugfs
-- Link to v3: https://lore.kernel.org/r/20240828-02-k1-pinctrl-v3-0-1fed6a22be98@gentoo.org
+- collect tags
 
 Changes in v3:
-- dt-bindings: drop vendor specific properties, fix format
-- rework pinctrl's gpio request function
-- fix logic of slew rate & drive strength
-- add power-source check
-- improve debugfs info
-- Link to v2: https://lore.kernel.org/r/20240825-02-k1-pinctrl-v2-0-ddd38a345d12@gentoo.org
-
-Changes in v2:
-- drop using pinctrl-single driver for K1
-- rewite as independent pinctrl driver
-- rebase to v6.11-rc5
-- Link to v1: https://lore.kernel.org/r/20240719-02-k1-pinctrl-v1-0-239ac5b77dd6@gentoo.org
-
+- drop spacemit,slew-rate-{enable,disable} property
+- use drive-strength instead of drive-strength-microamp
+- fold strong-pull-up into bias-pull-up
+- format fixed
+- title fixed
 ---
-Yixun Lan (3):
-      dt-bindings: pinctrl: spacemit: add support for K1 SoC
-      pinctrl: spacemit: add support for SpacemiT K1 SoC
-      riscv: dts: spacemit: add pinctrl property to uart0 in BPI-F3
+ .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      | 124 +++++++++++++++++++++
+ 1 file changed, 124 insertions(+)
 
- .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      |  124 +++
- arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts    |    3 +
- arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi       |   20 +
- arch/riscv/boot/dts/spacemit/k1.dtsi               |    5 +
- drivers/pinctrl/Kconfig                            |    1 +
- drivers/pinctrl/Makefile                           |    1 +
- drivers/pinctrl/spacemit/Kconfig                   |   17 +
- drivers/pinctrl/spacemit/Makefile                  |    3 +
- drivers/pinctrl/spacemit/pinctrl-k1.c              | 1078 ++++++++++++++++++++
- drivers/pinctrl/spacemit/pinctrl-k1.h              |   40 +
- 10 files changed, 1292 insertions(+)
----
-base-commit: 431c1646e1f86b949fa3685efc50b660a364c2b6
-change-id: 20240708-02-k1-pinctrl-3a2b0ec13101
-prerequisite-change-id: 20240626-k1-01-basic-dt-1aa31eeebcd2:v5
-prerequisite-patch-id: 47dcf6861f7d434d25855b379e6d7ef4ce369c9c
-prerequisite-patch-id: 77787fe82911923aff15ccf565e8fa451538c3a6
-prerequisite-patch-id: b0bdb1742d96c5738f05262c3b0059102761390b
-prerequisite-patch-id: 3927d39d8d77e35d5bfe53d9950da574ff8f2054
-prerequisite-patch-id: a98039136a4796252a6029e474f03906f2541643
-prerequisite-patch-id: c95f6dc0547a2a63a76e3cba0cf5c623b212b4e6
-prerequisite-patch-id: 66e750e438ee959ddc2a6f0650814a2d8c989139
-prerequisite-patch-id: 29a0fd8c36c1a4340f0d0b68a4c34d2b8abfb1ab
-prerequisite-patch-id: 0bdfff661c33c380d1cf00a6c68688e05f88c0b3
-prerequisite-patch-id: 99f15718e0bfbb7ed1a96dfa19f35841b004dae9
+diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+new file mode 100644
+index 0000000000000..b01ecd83b71b5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+@@ -0,0 +1,124 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/spacemit,k1-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SpacemiT K1 SoC Pin Controller
++
++maintainers:
++  - Yixun Lan <dlan@gentoo.org>
++
++properties:
++  compatible:
++    const: spacemit,k1-pinctrl
++
++  reg:
++    items:
++      - description: pinctrl io memory base
++
++patternProperties:
++  '-cfg$':
++    type: object
++    additionalProperties: false
++
++    description:
++      A pinctrl node should contain at least one subnode representing the
++      pinctrl groups available on the machine.
++
++    patternProperties:
++      '-pins$':
++        type: object
++        additionalProperties: false
++
++        description:
++          Each subnode will list the pins it needs, and how they should
++          be configured, with regard to muxer configuration, bias pull,
++          drive strength, input schmitt trigger, slew rate, power source.
++
++        allOf:
++          - $ref: pincfg-node.yaml#
++          - $ref: pinmux-node.yaml#
++
++        properties:
++          pinmux:
++            description:
++              The list of GPIOs and their mux settings that properties in the
++              node apply to. This should be set using the K1_PADCONF macro to
++              construct the value.
++
++          bias-disable: true
++
++          bias-pull-down: true
++
++          bias-pull-up:
++            description: |
++              typical value for selecting bias pull up or strong pull up.
++              0: normal bias pull up
++              1: strong bias pull up
++            enum: [ 0, 1 ]
++
++          drive-strength:
++            description: |
++              typical current when output high level.
++              1.8V output: 11, 21, 32, 42 (mA)
++              3.3V output: 7, 10, 13, 16, 19, 23, 26, 29 (mA)
++
++          input-schmitt:
++            description: |
++              typical threshold for schmitt trigger.
++              0: buffer mode
++              1: trigger mode
++              2, 3: trigger mode
++            $ref: /schemas/types.yaml#/definitions/uint32
++            enum: [ 0, 1, 2, 3 ]
++
++          power-source:
++            description: external power supplies at 1.8v or 3.3v.
++            enum: [ 1800, 3300 ]
++
++          slew-rate:
++            description: |
++              slew rate for output buffer.
++              0: disable it
++              1: enable it (via bundled value from drive strength)
++              2: slow speed 0
++              3: slow speed 1
++              4: medium speed
++              5: fast speed
++            enum: [ 0, 1, 2, 3, 4, 5 ]
++
++        required:
++          - pinmux
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #define K1_PADCONF(pin, func) (((pin) << 16) | (func))
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pinctrl@d401e000 {
++            compatible = "spacemit,k1-pinctrl";
++            reg = <0x0 0xd401e000 0x0 0x400>;
++
++            uart0_2_cfg: uart0-2-cfg {
++                uart0-2-pins {
++                    pinmux = <K1_PADCONF(68, 2)>,
++                             <K1_PADCONF(69, 2)>;
++
++                    bias-pull-up = <0>;
++                    drive-strength = <32>;
++                };
++            };
++        };
++    };
++
++...
 
-Best regards,
 -- 
-Yixun Lan <dlan@gentoo.org>
+2.45.2
 
 
