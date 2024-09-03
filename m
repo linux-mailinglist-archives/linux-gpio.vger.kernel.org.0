@@ -1,66 +1,109 @@
-Return-Path: <linux-gpio+bounces-9662-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9663-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09FA396A1B9
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 17:10:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D81396A1E7
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 17:17:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C7E11F22EA2
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 15:10:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1E721C249FE
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 15:17:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B522A188916;
-	Tue,  3 Sep 2024 15:09:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E211188921;
+	Tue,  3 Sep 2024 15:15:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2G2SLdR"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CcXKMBh/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FA82A1DC;
-	Tue,  3 Sep 2024 15:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16ECD18BC14
+	for <linux-gpio@vger.kernel.org>; Tue,  3 Sep 2024 15:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725376195; cv=none; b=skuLYswgzt9UaZU0wPEmCFcBaBCs14w5HxtX3FV1RXvp7tnjfnR+MVpie5PDXp3Zh/UKQWzNmLjf8/uSJJA26NwCEHj8TPMm6UtmQhf/3glON4ginokmS6SaqlnyLfbBuh3kaCJLZLBtkZcA584XvxERYLww1+tVD4fiRvSX5n0=
+	t=1725376531; cv=none; b=Y1kwnAHa2b3ldXmmWyZ+d6cvoTv3SJPmJGRK/tq9Xz8tUWOWj83Nf0hHjA3xWc0jOkW3bqG9wW0+bcHk0DzwUO0OH8dbJrdoBRo0aS5HxezPAaYZoG0SmjzS9KrJ4B5EXZ0pd1q9whEkg7zHP1iXu7TBr/SLgAnCw4djXER3P8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725376195; c=relaxed/simple;
-	bh=jIW79MyAeLnLk8Tf9pgkACo++H/cWJ8aF/7auE5Di5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQJAq1mstTXqNI8rCRAYS/1NAF26xm7tHng1b+fbi6f4c/BbUB9Iw8n8+HxJW7wspvD54TqO/7RDumrZFBUFpg2x654HFD/Z+kmb5ceq6gWRXXrA43LVfJf9fwSKw2VQN+8wNZ9TB9XFiEXANEPNBk6e2qfo/vsSCXnrmJ4YkDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2G2SLdR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC08AC4CEC6;
-	Tue,  3 Sep 2024 15:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725376194;
-	bh=jIW79MyAeLnLk8Tf9pgkACo++H/cWJ8aF/7auE5Di5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z2G2SLdRclDbvhec0I/IM6qfdwMkFkKRdAwrbdb4LcwYBforMi081pghUbCiH+ikU
-	 pf8eOgNuu4GKjJndPsp0bUpLQsqyL/xQojXURGO6pRw16lavL3OXlcHMNtsnrSE7DA
-	 9Pk1ZYCw09IArWMq/tyHVR358Rb9nHAjMhyuNjyfiS4Pdl543MYWdZSZyXk98ErRsN
-	 RIrkdgdzsjK4rAJGFn8oo71d5M4VYVkGVVP9G2q91VhjomojxPxx8y+NyLbo5tNMHu
-	 kB/+4nYrU4F/yg8rQ/uVBGDrS4tBosF+4pMjH4Xs5uigffi/atniW5MuL6N7zdz5si
-	 lP9qrfXXFcrCA==
-Date: Tue, 3 Sep 2024 10:09:53 -0500
-From: Rob Herring <robh@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
+	s=arc-20240116; t=1725376531; c=relaxed/simple;
+	bh=U7DXv46kAArn9FLdjrGEE2AWjxJWOWdSgwiVv/J76LE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RBVb+aJJ25qGyzDFc6tY9SEmqETQdq+HX7KdMonSCuU//8y2gWgYxOjdmZfJnsXjnRJex15bk0szvj0koMCgyCY9iuMlxf0HWNeVBLdWCpkxOaADvgYqKomNgkji6Iqpmn3lNnCVGXhMhrj6iYqPkMlS+u+V2/0WawZeNdarXr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CcXKMBh/; arc=none smtp.client-ip=209.85.208.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-5c2561e8041so2735703a12.2
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2024 08:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1725376527; x=1725981327; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OTB7wsQhvCFsxyJgB8CQ5Pa/NBo7hDozebUo452UiWE=;
+        b=CcXKMBh/yTEpgJXgHzTwNQqtauDtBWEk0ZD+eMw20BnH2RdGrmSQKc6uUeCA5PrRse
+         P6A/sBteYAwsDeSQ8ayUU/rmvJyhnYJ5JAdb/HhpfPFs4LVw6w8qNkTDXTqHkjiMhue3
+         uBGYRxp6SmwsWEWs/5USx3A3vVF9GSPj3TxwgpJ+FwB9et1NP0yxpy2uIEwsvd06ddx5
+         mdGOASLxPJfA61KReguknBaa4zXQUDu/nNhF0AlAv7FPhPc7dNT47EVBMFLThvtAiLr6
+         j5doz5L7Q+DjJFFlN+8tpp2iBTEpx/cjJl/z0c7BoDGZxIWkpW79IEZYZ0/4gaGD/hR6
+         prVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725376527; x=1725981327;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OTB7wsQhvCFsxyJgB8CQ5Pa/NBo7hDozebUo452UiWE=;
+        b=IHTT6YAPkRaU7a7Jq8Ld0RQ/ObcLHmifxTQX4y2UuenexK2rMb1sJZURwP/aRx+KDU
+         12/1GUnEK4mv2sWP8OPYHtm6XM8SdznOkKO4OombMOql22bY+y+tzmTbZuFcqL5Eoia6
+         QntqAsvlM4yNaq9ORjCt+KbzWzH7S8x1C33TtBuYImQNOB6EmVcOy+STh61mVYc+4+iA
+         3NM5mtTKYoQmyCyiUzAJpNlBlIQ1Py6mC9HrAg9t5xOBIO7hXOFGNtMVKoaDHiCwlmvD
+         GnSr+BR7sNuBJfRzeab78/uepViGQSDDruFGUnI0n8GgFt+l+fcOpGTqlO0H3a2PqppG
+         40Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5dKse1zosRMkA355BQY+UxHDVUigUtkQF8jAgbn2gmj7rIUmDBLnJ/oW7ug4nge+lR98PnKkefx6Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWyYQgOeU0VHgIbRYPlCVew9hlzw60Le5vcZxpNLQ9lbIptOyf
+	LIJ+KvJw/6pd/pl7mnLftpyFMD4lr4FeY9U09wqre13IuXTU+cgDRumds7WhLOg=
+X-Google-Smtp-Source: AGHT+IFcTte6BIp8pPXY+ojLOKAWveu1EM1jhlSY6FJHdjViAJCeXH8Z3blw4a5BrzCnpyEjcGVtwQ==
+X-Received: by 2002:a05:6402:3506:b0:5c2:6e5f:3bf9 with SMTP id 4fb4d7f45d1cf-5c26e5f3d09mr1609966a12.28.1725376526784;
+        Tue, 03 Sep 2024 08:15:26 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c226c7bda6sm6607816a12.41.2024.09.03.08.15.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2024 08:15:26 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 3 Sep 2024 17:15:34 +0200
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lee Jones <lee@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Add support for Airoha EN7581
- GPIO System Controller
-Message-ID: <20240903150953.GA1018489-robh@kernel.org>
-References: <20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org>
- <20240831-en7581-pinctrl-v3-2-98eebfb4da66@kernel.org>
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <ZtcoFmK6NPLcIwVt@apocalypse>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
+ <ZtHN0B8VEGZFXs95@apocalypse>
+ <b74327b8-43f6-47cf-ba9d-cc9a4559767b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -69,317 +112,217 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240831-en7581-pinctrl-v3-2-98eebfb4da66@kernel.org>
+In-Reply-To: <b74327b8-43f6-47cf-ba9d-cc9a4559767b@kernel.org>
 
-On Sat, Aug 31, 2024 at 04:27:47PM +0200, Lorenzo Bianconi wrote:
-> From: Christian Marangi <ansuelsmth@gmail.com>
+Hi Krzysztof,
+
+On 18:52 Fri 30 Aug     , Krzysztof Kozlowski wrote:
+> On 30/08/2024 15:49, Andrea della Porta wrote:
+> > Hi Krzysztof,
+> > 
+> > On 10:38 Wed 21 Aug     , Krzysztof Kozlowski wrote:
+> >> On Tue, Aug 20, 2024 at 04:36:10PM +0200, Andrea della Porta wrote:
+> >>> The RaspberryPi RP1 is ia PCI multi function device containing
+> >>> peripherals ranging from Ethernet to USB controller, I2C, SPI
+> >>> and others.
+> >>> Implement a bare minimum driver to operate the RP1, leveraging
+> >>> actual OF based driver implementations for the on-borad peripherals
+> >>> by loading a devicetree overlay during driver probe.
+> >>> The peripherals are accessed by mapping MMIO registers starting
+> >>> from PCI BAR1 region.
+> >>> As a minimum driver, the peripherals will not be added to the
+> >>> dtbo here, but in following patches.
+> >>>
+> >>> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> >>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> >>> ---
+> >>>  MAINTAINERS                           |   2 +
+> >>>  arch/arm64/boot/dts/broadcom/rp1.dtso | 152 ++++++++++++
+> >>
+> >> Do not mix DTS with drivers.
+> >>
+> >> These MUST be separate.
+> > 
+> > Separating the dtso from the driver in two different patches would mean
+> > that the dtso patch would be ordered before the driver one. This is because
+> > the driver embeds the dtbo binary blob inside itself, at build time. So
+> > in order to build the driver, the dtso needs to be there also. This is not
 > 
-> Add support for Airoha EN7581 GPIO System Controller which provide a
-> register map for controlling the GPIO, pinctrl and PWM of the SoC.
+> Sure, in such case DTS will have to go through the same tree as driver
+> as an exception. Please document it in patch changelog (---).
+
+Ack.
+
 > 
-> Schema define cells for both gpio/interrupt controller and PWM.
-> Moreover it provides a dedicated pinctrl node for pins and config
-> definitions.
+> > the standard approach used with 'normal' dtb/dtbo, where the dtb patch is
+> > ordered last wrt the driver it refers to.
 > 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
->  .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    | 433 +++++++++++++++++++++
->  1 file changed, 433 insertions(+)
+> It's not exactly the "ordered last" that matters, but lack of dependency
+> and going through separate tree and branch - arm-soc/dts. Here there
+> will be an exception how we handle patch, but still DTS is hardware
+> description so should not be combined with driver code.
+
+Ack.
+
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml b/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml
-> new file mode 100644
-> index 000000000000..a9080c7f50f9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/airoha,en7581-gpio-sysctl.yaml
-> @@ -0,0 +1,433 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/airoha,en7581-gpio-sysctl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Airoha EN7581 GPIO System Controller
-> +
-> +maintainers:
-> +  - Christian Marangi <ansuelsmth@gmail.com>
-> +  - Lorenzo Bianconi <lorenzo@kernel.org>
-> +
-> +description:
-> +  Airoha EN7581 SoC GPIO system controller which provided a register map
-> +  for controlling the GPIO, pins and PWM of the SoC.
-> +
-> +properties:
-> +  compatible:
-> +    const: airoha,en7581-gpio-sysctl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  "#pwm-cells":
-> +    const: 3
-> +
-> +  pinctrl:
-> +    type: object
-> +
-> +    $ref: /schemas/pinctrl/pinctrl.yaml
-> +
-> +    patternProperties:
-> +      '-pins$':
-> +        type: object
-> +
-> +        patternProperties:
-> +          '^.*mux.*$':
+> > Are you sure you want to proceed in this way?
+> 
+> 
+> > 
+> >>
+> >>>  drivers/misc/Kconfig                  |   1 +
+> >>>  drivers/misc/Makefile                 |   1 +
+> >>>  drivers/misc/rp1/Kconfig              |  20 ++
+> >>>  drivers/misc/rp1/Makefile             |   3 +
+> >>>  drivers/misc/rp1/rp1-pci.c            | 333 ++++++++++++++++++++++++++
+> >>>  drivers/misc/rp1/rp1-pci.dtso         |   8 +
+> >>>  drivers/pci/quirks.c                  |   1 +
+> >>>  include/linux/pci_ids.h               |   3 +
+> >>>  10 files changed, 524 insertions(+)
+> >>>  create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+> >>>  create mode 100644 drivers/misc/rp1/Kconfig
+> >>>  create mode 100644 drivers/misc/rp1/Makefile
+> >>>  create mode 100644 drivers/misc/rp1/rp1-pci.c
+> >>>  create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+> >>>
+> >>> diff --git a/MAINTAINERS b/MAINTAINERS
+> >>> index 67f460c36ea1..1359538b76e8 100644
+> >>> --- a/MAINTAINERS
+> >>> +++ b/MAINTAINERS
+> >>> @@ -19119,9 +19119,11 @@ F:	include/uapi/linux/media/raspberrypi/
+> >>>  RASPBERRY PI RP1 PCI DRIVER
+> >>>  M:	Andrea della Porta <andrea.porta@suse.com>
+> >>>  S:	Maintained
+> >>> +F:	arch/arm64/boot/dts/broadcom/rp1.dtso
+> >>>  F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> >>>  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+> >>>  F:	drivers/clk/clk-rp1.c
+> >>> +F:	drivers/misc/rp1/
+> >>>  F:	drivers/pinctrl/pinctrl-rp1.c
+> >>>  F:	include/dt-bindings/clock/rp1.h
+> >>>  F:	include/dt-bindings/misc/rp1.h
+> >>> diff --git a/arch/arm64/boot/dts/broadcom/rp1.dtso b/arch/arm64/boot/dts/broadcom/rp1.dtso
+> >>> new file mode 100644
+> >>> index 000000000000..d80178a278ee
+> >>> --- /dev/null
+> >>> +++ b/arch/arm64/boot/dts/broadcom/rp1.dtso
+> >>> @@ -0,0 +1,152 @@
+> >>> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> >>> +
+> >>> +#include <dt-bindings/gpio/gpio.h>
+> >>> +#include <dt-bindings/interrupt-controller/irq.h>
+> >>> +#include <dt-bindings/clock/rp1.h>
+> >>> +#include <dt-bindings/misc/rp1.h>
+> >>> +
+> >>> +/dts-v1/;
+> >>> +/plugin/;
+> >>> +
+> >>> +/ {
+> >>> +	fragment@0 {
+> >>> +		target-path="";
+> >>> +		__overlay__ {
+> >>> +			#address-cells = <3>;
+> >>> +			#size-cells = <2>;
+> >>> +
+> >>> +			rp1: rp1@0 {
+> >>> +				compatible = "simple-bus";
+> >>> +				#address-cells = <2>;
+> >>> +				#size-cells = <2>;
+> >>> +				interrupt-controller;
+> >>> +				interrupt-parent = <&rp1>;
+> >>> +				#interrupt-cells = <2>;
+> >>> +
+> >>> +				// ranges and dma-ranges must be provided by the includer
+> >>> +				ranges = <0xc0 0x40000000
+> >>> +					  0x01/*0x02000000*/ 0x00 0x00000000
+> >>> +					  0x00 0x00400000>;
+> >>
+> >> Are you 100% sure you do not have here dtc W=1 warnings?
+> > 
+> > the W=1 warnings are:
+> > 
+> > arch/arm64/boot/dts/broadcom/rp1.dtso:37.24-42.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/clk_xosc: missing or empty reg/ranges property
+> > arch/arm64/boot/dts/broadcom/rp1.dtso:44.26-49.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/macb_pclk: missing or empty reg/ranges property
+> > arch/arm64/boot/dts/broadcom/rp1.dtso:51.26-56.7: Warning (simple_bus_reg): /fragment@0/__overlay__/rp1@0/macb_hclk: missing or empty reg/ranges property
+> > arch/arm64/boot/dts/broadcom/rp1.dtso:14.15-173.5: Warning (avoid_unnecessary_addr_size): /fragment@0/__overlay__: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
+> > 
+> > I don't see anything related to the ranges line you mentioned.
+> 
+> Hm, indeed, but I would expect warning about unit address not matching
+> ranges/reg.
+> 
+> > 
+> >>
+> >>> +
+> >>> +				dma-ranges =
+> >>> +				// inbound RP1 1x_xxxxxxxx -> PCIe 1x_xxxxxxxx
+> >>> +					     <0x10 0x00000000
+> >>> +					      0x43000000 0x10 0x00000000
+> >>> +					      0x10 0x00000000>;
+> >>> +
+> >>> +				clk_xosc: clk_xosc {
+> >>
+> >> Nope, switch to DTS coding style.
+> > 
+> > Ack.
+> > 
+> >>
+> >>> +					compatible = "fixed-clock";
+> >>> +					#clock-cells = <0>;
+> >>> +					clock-output-names = "xosc";
+> >>> +					clock-frequency = <50000000>;
+> >>> +				};
+> >>> +
+> >>> +				macb_pclk: macb_pclk {
+> >>> +					compatible = "fixed-clock";
+> >>> +					#clock-cells = <0>;
+> >>> +					clock-output-names = "pclk";
+> >>> +					clock-frequency = <200000000>;
+> >>> +				};
+> >>> +
+> >>> +				macb_hclk: macb_hclk {
+> >>> +					compatible = "fixed-clock";
+> >>> +					#clock-cells = <0>;
+> >>> +					clock-output-names = "hclk";
+> >>> +					clock-frequency = <200000000>;
+> >>> +				};
+> >>> +
+> >>> +				rp1_clocks: clocks@c040018000 {
+> >>
+> >> Why do you mix MMIO with non-MMIO nodes? This really does not look
+> >> correct.
+> >>
+> > 
+> > Right. This is already under discussion here:
+> > https://lore.kernel.org/all/ZtBzis5CzQMm8loh@apocalypse/
+> > 
+> > IIUC you proposed to instantiate the non-MMIO nodes (the three clocks) by
+> > using CLK_OF_DECLARE.
+> 
+> Depends. Where are these clocks? Naming suggests they might not be even
+> part of this device. But if these are part of the device, then why this
+> is not a clock controller (if they are controllable) or even removed
+> (because we do not represent internal clock tree in DTS).
 
-Do you really need 'mux' anywhere in the node names? Isn't either a 
-prefix or a suffix enough?
+xosc is a crystal connected to the oscillator input of the RP1, so I would
+consider it an external fixed-clock. If we were in the entire dts, I would have
+put it in root under /clocks node, but here we're in the dtbo so I'm not sure
+where else should I put it.
 
-> +            type: object
-> +
-> +            description:
-> +              pinmux configuration nodes.
-> +
-> +            $ref: /schemas/pinctrl/pinmux-node.yaml
-> +
-> +            properties:
-> +              function:
-> +                description:
-> +                  A string containing the name of the function to mux to the group.
-> +                enum: [pon, tod_1pps, sipo, mdio, uart, i2c, jtag, pcm, spi,
-> +                       pcm_spi, i2s, emmc, pnand, pcie_reset, pwm, phy1_led0,
-> +                       phy2_led0, phy3_led0, phy4_led0, phy1_led1, phy2_led1,
-> +                       phy3_led1, phy4_led1]
-> +
-> +              groups:
-> +                description:
-> +                  An array of strings. Each string contains the name of a group.
-> +
-> +            required:
-> +              - function
-> +              - groups
-> +
-> +            allOf:
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pon
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [pon]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: tod_1pps
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [pon_tod_1pps, gsw_tod_1pps]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: sipo
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [sipo, sipo_rclk]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: mdio
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [mdio]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: uart
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      items:
-> +                        enum: [uart2, uart2_cts_rts, hsuart, hsuart_cts_rts, uart4,
-> +                               uart5]
-> +                      maxItems: 2
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: i2c
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [i2c1]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: jtag
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [jtag_udi, jtag_dfd]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pcm
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [pcm1, pcm2]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: spi
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      items:
-> +                        enum: [spi_quad, spi_cs1]
-> +                      maxItems: 2
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pcm_spi
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      items:
-> +                        enum: [pcm_spi, pcm_spi_int, pcm_spi_rst, pcm_spi_cs1,
-> +                               pcm_spi_cs2_p156, pcm_spi_cs2_p128, pcm_spi_cs3,
-> +                               pcm_spi_cs4]
-> +                      maxItems: 7
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: i2c
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [i2s]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: emmc
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [emmc]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pnand
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [pnand]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pcie_reset
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [pcie_reset0, pcie_reset1, pcie_reset2]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: pwm
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6,
-> +                             gpio7, gpio8, gpio9, gpio10, gpio11, gpio12, gpio13,
-> +                             gpio14, gpio15, gpio16, gpio17, gpio18, gpio19,
-> +                             gpio20, gpio21, gpio22, gpio23, gpio24, gpio25,
-> +                             gpio26, gpio27, gpio28, gpio29, gpio30, gpio31,
-> +                             gpio36, gpio37, gpio38, gpio39, gpio40, gpio41,
-> +                             gpio42, gpio43, gpio44, gpio45, gpio46, gpio47]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy1_led0
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio33, gpio34, gpio35, gpio42]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy2_led0
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio33, gpio34, gpio35, gpio42]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy3_led0
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio33, gpio34, gpio35, gpio42]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy4_led0
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio33, gpio34, gpio35, gpio42]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy1_led1
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio43, gpio44, gpio45, gpio46]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy2_led1
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio43, gpio44, gpio45, gpio46]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy3_led1
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio43, gpio44, gpio45, gpio46]
-> +              - if:
-> +                  properties:
-> +                    function:
-> +                      const: phy4_led1
-> +                then:
-> +                  properties:
-> +                    groups:
-> +                      enum: [gpio43, gpio44, gpio45, gpio46]
-> +
-> +            additionalProperties: false
-> +
-> +          '^.*conf.*$':
+Regarding pclk and hclk, I'm still trying to understand where they come from.
+If they are external clocks (since they are fixed-clock too), they should be
+in the same node as xosc. CLK_OF_DECLARE does not seem to fit here because
+there's no special management of these clocks, so no new clock definition is
+needed.
+If they are internal tree, I cannot simply get rid of them because rp1_eth node
+references these two clocks (see clocks property), so they must be decalred 
+somewhere. Any hint about this?.
 
-Same here.
+Many thanks,
+Andrea
 
-Otherwise, LGTM.
-
-Rob
+> 
+> Best regards,
+> Krzysztof
+> 
 
