@@ -1,69 +1,71 @@
-Return-Path: <linux-gpio+bounces-9671-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9672-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90BB096A31F
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 17:45:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA0EF96A31D
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 17:45:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4806F1F21C5A
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 15:45:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18CE91C227A2
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 15:45:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34ACF18859E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3484E188598;
 	Tue,  3 Sep 2024 15:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ILa+gD0F"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bQsXSQxO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C216262A3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB48374FF
 	for <linux-gpio@vger.kernel.org>; Tue,  3 Sep 2024 15:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725378342; cv=none; b=ptn8sBM3H1JrwVQjY+ZCXBf11nKr37Vi2b0NQucVTNNrsqwhGhuChGu67zYj9AqWr3lEArSW5P89qu6/P1T6wEUOXgQCHtSQ9uN9YuSu0h4BpwoWhskjoHDwhQFFi5MTw0Wa2SKS+8F5nFnmu3aGZ8YlJUykd/xhfC1phecyZVM=
+	t=1725378342; cv=none; b=NWH/9JCD9yqhuykS7L2uidnk8csd5g2hrbGHZIY26u0EYBFOAIg8C7kFbvnegPGmrzGIBKsThHqp2BF6bD1iVyOdmivs+dMeSoRvER+7k6NqIdvHOYwx00F1AZb926R90/KfdqS7CewG4cH2IrTpnbpi2S3uz7F5S1repiXbPIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1725378342; c=relaxed/simple;
-	bh=7TGt3UVPR5EKU3qIHcGrhDfIOHmcB3omprSj/24NcHA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n1C1menq/Ttm8je0uJw6nigU9cHsFtLfFZOJSyFYPrnZ0r1T2YgehMTcjvLabogbF2UZGh/vstR/hSyY98Xw/jN1pv7HSGYZsMg1vnVL7qljJu81KvaN9ahhhp/tGTGQpRNvejMbykmrUPDqDUXf7kESjjQ4xbgMczMoEWbQoaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ILa+gD0F; arc=none smtp.client-ip=209.85.221.46
+	bh=744I/wZQKWyPOh5U3pqr85EuPnBBmQ6CMfkMIEazKng=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=P0pCHnfHXjDF8fnYNYMVhov/4hNZB/7444iGv1DY7UQOdaiE73mTEDm/rdFo4kWSXqm3w8nC0keyw8zBRRyY4ZMaxxFVOLJLmJ3jFYTEXtoDiIlmhvKOcNZQtWBoAsj9JB6+SnOiOzCyaByUlAdMBkUG55vjGz7v6saF7m4FEXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bQsXSQxO; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-374c5bab490so1618136f8f.1
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42c7b5b2d01so34873195e9.3
         for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2024 08:45:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725378338; x=1725983138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dYFzd5wGbdUTzxf7kedk64DnlzYKL/ERNfiEExLtyL4=;
-        b=ILa+gD0FcoLnXk7+D9bTvQHMH9oQ13Ekz3Zm8a6R4Zn+YzKoeJNx9kYNwKxwkhUAmT
-         t+PrFsxq0LNe3KW7a1zmH+rR7oAgZB0sAn7yWzvFljv1YGmLF9WRzC07Gp2ZpmRL51RJ
-         SjyLeL2fV1qreKbM8Fp/DTXYdgV1vInExkwXZaoWcr63rj8VOXAtCnlJrrD5KI/UMdVt
-         tpadBjUYCR9bcrtJHt0TuiJoYJOOyl9ZUXUKaKuQneg1vdUD4PdkKAcmGLLGjXGPmtmB
-         lSkEW+GKyrE/0B+/FTbpYtfSHPj12z2pEJzsvOKp7AeyyYiJoflOseYs+0jQFwXXe6oE
-         +uBw==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f1X1Xz/aK7oJBE8r6yGDDbc+O0HogrYYxQPJLz3AbE8=;
+        b=bQsXSQxOWlCkGFtyu4o566SjdiDDJO2hB+5hTlSrKcammFlreehKeELKgbYDzRYKsd
+         jekSM+ZTClZXENJvT/tb9mqg/bRLMVkwL6CShH19wDn8sZ9Etx+dfT5JEY2zBXUpCTbf
+         GygnYjOk/zbomjqU5i3dRcl89CZ0exSpInMj8Ta87TiMg6v6frm1qCs8MzCDxokjql9T
+         EOQXZYViBeTdbDwwUaBZW26vBtu6c2nIk3BwqA12LXUzIQF+bemYzHSpVHOL3emBtcKG
+         LXMd+ZRm8nmfuow/I8OPJsnuYcecqS2LvoRVedL+zFq8kBGHKL99Mpyec48a31RCQDvl
+         gZlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1725378338; x=1725983138;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dYFzd5wGbdUTzxf7kedk64DnlzYKL/ERNfiEExLtyL4=;
-        b=BTkk9A5+AOc5pX9dWwF9Fm/l01NKaEuxm67eHhCCnxKAi3sAvPKxTRZNN092AjtXFw
-         AwrScI1K3hKD7bUe9b5RcoOJnIXKv6RQ/6dUNvfFbDDTocj/I1taqRtOZvmN6iBp0IK4
-         7gxLTAYs+4dRXFH9Ko7dyNmkztg0pS79QHVGEz1KQIQZtkCrFImrctufTXt0DlFf5V8Q
-         lZtjsItiGoGkutGJ3ZIXhS9apvAsnjLbwNrNkNjZBDA1PjCc/vmFFO0KzVf5fS+usGNb
-         Ajg7hO9t9XKvwij9JL+cz8RUcVUsgEBPIjwzyJexvul8t4grwa5+6lBNHM9m9WUFZU1A
-         Zb1A==
-X-Gm-Message-State: AOJu0Yx7s9fYgZx/CVgXx3oV9HsHXQPjaTe6nTviGdOwMb1cCXOzpmBx
-	ZqGTDehwzeqbzy3j/WKxK0uafsv7ZXqMQbAGNKMELYB4dpLFqotRSyRLgb8I84Q=
-X-Google-Smtp-Source: AGHT+IEW0aC2qwad1ogmXE2GwNM6XKUxHfftr2VPi/LGhbsi0QB4I7TotNYbuNGJrqQfw3bYVMeTvw==
-X-Received: by 2002:a05:6000:2811:b0:374:cd3c:db6d with SMTP id ffacd0b85a97d-374cd3cdf08mr4333632f8f.6.1725378337099;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f1X1Xz/aK7oJBE8r6yGDDbc+O0HogrYYxQPJLz3AbE8=;
+        b=r/mM8LH7bpG85Ng6HbRgr4IbVVS2bMvT9/fDinPkGfvIWvJ1hAqg+85/ABmReBwMgx
+         DbjyV25O88KEnZsn+G6VDgTRi44cIhQgzq+FFpvgwWy7xaTLoQynn0y+1LCrXd7oWSeO
+         3MVVHObfm0NzGbf8KwMj1nIjmEpeLQUcnIyNX1n2gJnIxAdvg+UhPkgmy48QOq77n4gQ
+         /WHqkkpM7veXtPr474H4w5f3o9GPLH0Mx4y8Ju5O+Hk4kitWUz3N9fCYlu3SzM2y+R3a
+         CyC5ujwG7OemQ09Az/qFJq1lxksn4ph9NHF36i/o46UlQM/qr7O91jJTwly3DtElN4y3
+         vNIw==
+X-Gm-Message-State: AOJu0YwS0Goxbv+n5g3mbakdCq5hYJ6LRVPRN87wlf2hZSAc+3I/QXG1
+	RBdRD0kH6yNvNzrxrGKns6U/UB4QWFwREd5JxP/cvTJVvJPpylWEsXStbRdkle4=
+X-Google-Smtp-Source: AGHT+IEhqzjHoaNT2CAv83hbKqh3ToB731ohp4V6Jef3U2B0Y2zPUAXgLnFnUptFhMGoznfvj2kLyg==
+X-Received: by 2002:a05:600c:5102:b0:426:690d:d5b7 with SMTP id 5b1f17b1804b1-42bb01ee5b3mr159410145e9.25.1725378337695;
         Tue, 03 Sep 2024 08:45:37 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:6a50:a260:3846:9065])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6df0a42sm172256465e9.11.2024.09.03.08.45.36
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6df0a42sm172256465e9.11.2024.09.03.08.45.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 08:45:36 -0700 (PDT)
+        Tue, 03 Sep 2024 08:45:37 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@intel.com>,
@@ -71,10 +73,12 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 1/2] gpio: mpc8xxx: order headers alphabetically
-Date: Tue,  3 Sep 2024 17:45:32 +0200
-Message-ID: <20240903154533.101258-1-brgl@bgdev.pl>
+Subject: [PATCH 2/2] gpio: mpc8xxx: switch to using DEFINE_RUNTIME_DEV_PM_OPS()
+Date: Tue,  3 Sep 2024 17:45:33 +0200
+Message-ID: <20240903154533.101258-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240903154533.101258-1-brgl@bgdev.pl>
+References: <20240903154533.101258-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -85,47 +89,79 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Cleanup the includes by putting them in alphabetical order.
+Use the preferred API for assigning system sleep pm callbacks in drivers.
 
+Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpio-mpc8xxx.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/gpio/gpio-mpc8xxx.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index ab30c911c9d50..e084e08f54387 100644
+index e084e08f54387..edb228d9af277 100644
 --- a/drivers/gpio/gpio-mpc8xxx.c
 +++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -7,19 +7,19 @@
-  */
+@@ -17,6 +17,7 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
+ #include <linux/property.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+@@ -431,30 +432,28 @@ static void mpc8xxx_remove(struct platform_device *pdev)
+ 	}
+ }
  
- #include <linux/acpi.h>
--#include <linux/kernel.h>
--#include <linux/init.h>
--#include <linux/platform_device.h>
--#include <linux/spinlock.h>
--#include <linux/io.h>
--#include <linux/of.h>
--#include <linux/property.h>
--#include <linux/mod_devicetable.h>
--#include <linux/slab.h>
--#include <linux/irq.h>
--#include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/init.h>
- #include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
+-#ifdef CONFIG_PM
+-static int mpc8xxx_suspend(struct platform_device *pdev, pm_message_t state)
++static int mpc8xxx_suspend(struct device *dev)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = dev_get_drvdata(dev);
  
- #define MPC8XXX_GPIO_PINS	32
+-	if (mpc8xxx_gc->irqn && device_may_wakeup(&pdev->dev))
++	if (mpc8xxx_gc->irqn && device_may_wakeup(dev))
+ 		enable_irq_wake(mpc8xxx_gc->irqn);
+ 
+ 	return 0;
+ }
+ 
+-static int mpc8xxx_resume(struct platform_device *pdev)
++static int mpc8xxx_resume(struct device *dev)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = dev_get_drvdata(dev);
+ 
+-	if (mpc8xxx_gc->irqn && device_may_wakeup(&pdev->dev))
++	if (mpc8xxx_gc->irqn && device_may_wakeup(dev))
+ 		disable_irq_wake(mpc8xxx_gc->irqn);
+ 
+ 	return 0;
+ }
+-#else
+-#define mpc8xxx_suspend NULL
+-#define mpc8xxx_resume NULL
+-#endif
++
++static DEFINE_RUNTIME_DEV_PM_OPS(mpc8xx_pm_ops, mpc8xxx_suspend,
++				 mpc8xxx_resume, NULL);
+ 
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id gpio_acpi_ids[] = {
+@@ -467,12 +466,11 @@ MODULE_DEVICE_TABLE(acpi, gpio_acpi_ids);
+ static struct platform_driver mpc8xxx_plat_driver = {
+ 	.probe		= mpc8xxx_probe,
+ 	.remove_new	= mpc8xxx_remove,
+-	.suspend	= mpc8xxx_suspend,
+-	.resume		= mpc8xxx_resume,
+ 	.driver		= {
+ 		.name = "gpio-mpc8xxx",
+ 		.of_match_table	= mpc8xxx_gpio_ids,
+ 		.acpi_match_table = ACPI_PTR(gpio_acpi_ids),
++		.pm = pm_sleep_ptr(&mpc8xx_pm_ops),
+ 	},
+ };
  
 -- 
 2.43.0
