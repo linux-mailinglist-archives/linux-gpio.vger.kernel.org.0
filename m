@@ -1,122 +1,99 @@
-Return-Path: <linux-gpio+bounces-9690-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9692-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8612796A4E8
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 18:57:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E167096A504
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 19:08:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B83D61C23B36
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 16:57:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9947E2819F9
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 17:08:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52A5818BC13;
-	Tue,  3 Sep 2024 16:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F93318C902;
+	Tue,  3 Sep 2024 17:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nJ0edGhN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from ciao.gmane.io (ciao.gmane.io [116.202.254.214])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDE417A90F
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Sep 2024 16:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.254.214
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E050188912;
+	Tue,  3 Sep 2024 17:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725382656; cv=none; b=WBvTFhsUWC3jW1xL4jit3up1S4w5j+/gnywk+aFuBIKdk3tqgFQcXuM2ZdN4aluhT54yaRAhtC31l7YU+e2VpfkDO7ig2+mW4uJntyeTAAsWREAl5PdCVPTbJHgOFEst1TQ7UvieycvqClWBQNKKLoXZEJ3cZHO5evG1H4GHOyY=
+	t=1725383280; cv=none; b=SDl2KshUPeA0FwokLTJWW4fUjtReq59qakUGVbzJLkQKVEEvUTn4Od290UXbuXs/FldtIvgiyH+9LbWcUyeYdytdBn//ZuZNl56KMpNAR6qQ5iY22otK2k/Ezw7Ts1++SOL/O3shlo2jx5x9rr4hobt2oO6LahYqZRh+hxIdHT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725382656; c=relaxed/simple;
-	bh=CH7xX3WmupAgXf7ywAmQtoAEt/RMfdbpPzlnG5d6wWo=;
-	h=To:From:Subject:Date:Message-ID:References:Mime-Version:
-	 Content-Type:In-Reply-To:Cc; b=ijyKeMMqhYuKEGcWhXUxoIWba49FwoD6F1rzGbG2LbILigVqL57RaATTqHh9CT7/RBycZIrrPPTeMIXcrB2n3Ti73oeDQ6vCRm8ZTeiAPJh/bWudU5kMHZ9zV9KSKmGaKLL4jNDE+feU/GLjB5004+4e7Uz5faUpK/gi6s5YwU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=m.gmane-mx.org; arc=none smtp.client-ip=116.202.254.214
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.gmane-mx.org
-Received: from list by ciao.gmane.io with local (Exim 4.92)
-	(envelope-from <glg-linux-gpio@m.gmane-mx.org>)
-	id 1slWlS-000AIw-Bh
-	for linux-gpio@vger.kernel.org; Tue, 03 Sep 2024 18:52:22 +0200
-X-Injected-Via-Gmane: http://gmane.org/
-To: linux-gpio@vger.kernel.org
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v3 12/12] gpio: rockchip: replace mutex_lock() with
- guard()
-Date: Tue, 3 Sep 2024 18:52:16 +0200
-Message-ID: <6555c378-f230-480e-9dd4-625ea550074f@wanadoo.fr>
-References: <20240903073649.237362-1-ye.zhang@rock-chips.com>
- <20240903073649.237362-13-ye.zhang@rock-chips.com>
+	s=arc-20240116; t=1725383280; c=relaxed/simple;
+	bh=jn+ZGZj9OTTyN9aeM7XsY04s8XZr+/xkqeb5ywpI5oo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XaWZsDtmTavCQwxYVrFuNz1APq7T97THSSmigXjbF+jtF54S1SOQKt5cW8gmfWPRCuswOCIiKaXR+kBA54YtL2ZtOxdjscbnkpGuSOvDhV0JY5S9fmvWkDnJH5yuD00g8Kmyh4paB8taLep8cL/2YP8giuPNL1JpH0cymyz2qbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nJ0edGhN; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725383279; x=1756919279;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jn+ZGZj9OTTyN9aeM7XsY04s8XZr+/xkqeb5ywpI5oo=;
+  b=nJ0edGhNp6mt5zkhLFyE15PPvBV3AWuKsWEe3F4Jf+ckV9+6TkhIrN/o
+   rLaL/k1ZF3CkX9HP5FSVKJgJxT4vrtz1da62lJY1BVzdL9WQJ1MDk3/qU
+   WhGxW3tmilh5NPlEHg/MkhCw1WScPrpNoGIWttddxLrnzPCUxjCJWhYdM
+   plAU7M+90iwkAkE+YIaTZ0LifZTnhOgAW/xydftOSKiildsNKgcZ4Jg4n
+   7sJVmQ4KHRKxKkTxqsCNvwCyDyczb0SBO0pTmzuIcJGaNbuvQ3g/eSe7h
+   /ynVfNuWR+Ldwmd74F0bYwDS77AzsSpt417Sc0NKYpV1ulsQHraswp1yx
+   A==;
+X-CSE-ConnectionGUID: yCpFqHoOSfK1aT6jSuCHaA==
+X-CSE-MsgGUID: pi2eDj6pSWy85+NZl4J8fQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="34661655"
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="34661655"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 10:07:58 -0700
+X-CSE-ConnectionGUID: I8SWgXe/TwCDQhZl7rj6kQ==
+X-CSE-MsgGUID: ITAQYvMQSiKZ6j50aH0+UA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="69837932"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa004.jf.intel.com with ESMTP; 03 Sep 2024 10:07:57 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 752673C1; Tue, 03 Sep 2024 20:07:55 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 0/3] pinctrl: intel: Get rid of ifdeffery leftovers
+Date: Tue,  3 Sep 2024 20:04:48 +0300
+Message-ID: <20240903170752.3564538-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US, fr-FR
-In-Reply-To: <20240903073649.237362-13-ye.zhang@rock-chips.com>
-Cc: linux-arm-kernel@lists.infradead.org,linux-rockchip@lists.infradead.org,linux-kernel@vger.kernel.org
 
-Le 03/09/2024 à 09:36, Ye Zhang a écrit :
-> Replacing mutex_lock with guard() simplifies the code and helps avoid
-> deadlocks.
-> 
-> Signed-off-by: Ye Zhang <ye.zhang@rock-chips.com>
-> ---
->   drivers/gpio/gpio-rockchip.c | 14 +++++---------
->   1 file changed, 5 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> index 73e57efb46fc..d5c57617fc86 100644
-> --- a/drivers/gpio/gpio-rockchip.c
-> +++ b/drivers/gpio/gpio-rockchip.c
-> @@ -765,20 +765,19 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
->   		}
->   	}
->   
-> -	ret = rockchip_get_bank_data(bank);
-> -	if (ret)
-> -		goto err_disabled_clk;
-> -
->   	/*
->   	 * Prevent clashes with a deferred output setting
->   	 * being added right at this moment.
->   	 */
-> -	mutex_lock(&bank->deferred_lock);
-> +	guard(mutex)(&bank->deferred_lock);
-> +	ret = rockchip_get_bank_data(bank);
+There are two benefits of this series:
+1) no more ugly ifdeffery in the code;
+2) the PM callbacks are all being synchronised via using the same macro,
+i.e. pm_sleep_ptr() everywhere.
 
-rockchip_get_bank_data() was out of the lock before, now it is inside.
+Andy Shevchenko (3):
+  pinctrl: intel: Replace ifdeffery by pm_sleep_ptr() macro
+  pinctrl: baytrail: Replace ifdeffery by pm_sleep_ptr() macro
+  pinctrl: cherryview: Replace ifdeffery by pm_sleep_ptr() macro
 
-It looks ok, but is it on purpose? If so, maybe it could be mentioned or 
-explained why in the changelog ?
+ drivers/pinctrl/intel/pinctrl-baytrail.c   | 21 ++++++++++++++-------
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 20 +++++++++++++-------
+ drivers/pinctrl/intel/pinctrl-intel.c      |  5 +----
+ 3 files changed, 28 insertions(+), 18 deletions(-)
 
-CJ
-
-> +	if (ret)
-> +		goto err_disabled_clk;
->   
->   	ret = rockchip_gpiolib_register(bank);
->   	if (ret) {
->   		dev_err(bank->dev, "Failed to register gpio %d\n", ret);
-> -		goto err_unlock;
-> +		goto err_disabled_clk;
->   	}
->   
->   	while (!list_empty(&bank->deferred_pins)) {
-> @@ -805,14 +804,11 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
->   		kfree(cfg);
->   	}
->   
-> -	mutex_unlock(&bank->deferred_lock);
->   
->   	platform_set_drvdata(pdev, bank);
->   	dev_info(dev, "probed %pOF\n", np);
->   
->   	return 0;
-> -err_unlock:
-> -	mutex_unlock(&bank->deferred_lock);
->   err_disabled_clk:
->   	if (bank->manual_clk_release)
->   		clk_disable_unprepare(bank->clk);
-
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
 
