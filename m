@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-9706-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9707-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA1ED96A96A
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 23:01:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 04FD796A97F
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 23:04:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D5AB1F242B0
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 21:01:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A1F861F21E8C
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 21:04:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3E241D799A;
-	Tue,  3 Sep 2024 20:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3FF1DFE1F;
+	Tue,  3 Sep 2024 20:48:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqDQnUjR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DkqFQksU"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74171D7994;
-	Tue,  3 Sep 2024 20:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251B71DFE16;
+	Tue,  3 Sep 2024 20:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725396461; cv=none; b=rACSYGa0gwypVfceC7YwjJjdfjrqkZ1ezn34QdyMcx3HduTJH1sjyLkJTLo9tKsn3BwAYFwz8q9sjkIkWNpVnPB6wmUyT4Zla4xekA5pCqlmONDlI7MA3NuWsvrsfOuQBkKFaoga/55PWBP4PHRrmd9jhz1rUnOufeOzQBjMU7k=
+	t=1725396505; cv=none; b=VY7XsoMLv5CcdCmf6oMsolOx4dMorv3R2BLupQexjQgj++mavUj0A+XrMtlHjjz2LX3izR6rMMghB4gxdcGIinNA1Iw4ei36njrCed1ewz7ixvacnT/pGWOcoHdJNEGTp5+2SgNh3UZI2U/i6VRgMxzgWeImP1pdjKG3Ye9q5tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725396461; c=relaxed/simple;
-	bh=+f/j5Lq6rX6nBgJ1RviQB2pxhUSUgZ2OByCkFCXUfTE=;
+	s=arc-20240116; t=1725396505; c=relaxed/simple;
+	bh=91Y9pJpi9qRMRVV1eNq3XPfF+tpsc2w36dbLk1iPug8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TJGmgLODDEc7gq58sygbQc06FONgs829D4jxCj9spxKhMKf8WaLJ5ySPn9xdWj8mX2zND8LKp07LGupjuSGFcH3oOu3PM6iFElXPKsOy9feM3pPW1JoEoKE0A+RHybHVy3ShOQTARfrq5jP0IryjTyx354I5LDPMMVIHJxRtRYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqDQnUjR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E713EC4CEC4;
-	Tue,  3 Sep 2024 20:47:39 +0000 (UTC)
+	 MIME-Version; b=LunJGvXrRZDwMWrOeqvPGMpkcdyZ9s/XT1FP3BFo+oU2uRCnWZp8PHKnmtUGEP7I0fXt4IxM1kiGJB7H8gQr20LC8jPxYmb3ILihiWEHPaWO2Ji+xbw+ESuH7bIC0W386c138Ac0OS3aDpa+0q5DNmh4S4VgJGHduGAFYlNffuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DkqFQksU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F567C4CEC8;
+	Tue,  3 Sep 2024 20:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725396461;
-	bh=+f/j5Lq6rX6nBgJ1RviQB2pxhUSUgZ2OByCkFCXUfTE=;
+	s=k20201202; t=1725396504;
+	bh=91Y9pJpi9qRMRVV1eNq3XPfF+tpsc2w36dbLk1iPug8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MqDQnUjRHIfSySajmEz+9VY68oOqUX50XQtHQOLq2L2pVb33yefika0540M20Eurs
-	 C/ek4J/R9RDxTisMlSPhoKmoa+ehbx92nNueCfMnEJEX8fXdEqcXj2vF7K4VG1KKPO
-	 HOMpy9F+dPQEi2y7j6zprc3iSEQaC8Gyw0sWOqNltYWG7aSRukX97gRWxGTVJqqtpd
-	 GMm/7VirwR0qWj+6EbFpBB72meO8nYztgM80p1xiM6dcschksdQs24wNfsrs2Ai1bW
-	 OfmqJ4BET7yzte257OLKiaR+uuJOF/ydx/HQ0JPQOTysdkmSgi6sFuOEotaPNOPz6A
-	 LLQcnybnA9awA==
+	b=DkqFQksU607zQUMpWnlETtb/v8XfZkAfeS+EqjA4lYeUVkURTFwVjPy79X4bu24oW
+	 KVDswETyF14kLB2kzpHg7MoAOEsRNEGYATZaTWKzi1oBU0+tXgJyZe+Pgz4aZ/dVwT
+	 LA4VSYiOPzl9tdC2kjTlmYjwy2aPq1KyJHOfks2b08BHk78opBPxO+HVNzMlFOCjDn
+	 4VOFRxeZBSlZth5uZrcGu6O/JvfZJUYLol5pDtGEqxPTd3XmXTXE4wcyW0MACveQKK
+	 nWbhWNi2ahRSNzrKDMynFdcsyeozwsAJSlyXVxv2mWcG1JKUvSqPN6ce41u8Gz/+iX
+	 Vz/qEYRuDfgUA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -53,12 +53,12 @@ Cc: Thomas Blocher <thomas.blocher@ek-dev.de>,
 	claudiu.beznea@tuxon.dev,
 	linux-arm-kernel@lists.infradead.org,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 4/8] pinctrl: at91: make it work with current gpiolib
-Date: Tue,  3 Sep 2024 15:27:54 -0400
-Message-ID: <20240903192815.1108754-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 4/8] pinctrl: at91: make it work with current gpiolib
+Date: Tue,  3 Sep 2024 15:28:40 -0400
+Message-ID: <20240903192859.1108979-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240903192815.1108754-1-sashal@kernel.org>
-References: <20240903192815.1108754-1-sashal@kernel.org>
+In-Reply-To: <20240903192859.1108979-1-sashal@kernel.org>
+References: <20240903192859.1108979-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.224
+X-stable-base: Linux 5.4.282
 Content-Transfer-Encoding: 8bit
 
 From: Thomas Blocher <thomas.blocher@ek-dev.de>
@@ -97,10 +97,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 52ecd47c18e2d..bb9348f14b1ba 100644
+index 39a55fd85b192..4e6e151db11f2 100644
 --- a/drivers/pinctrl/pinctrl-at91.c
 +++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1401,8 +1401,11 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
+@@ -1398,8 +1398,11 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
  
  	/* We will handle a range of GPIO pins */
  	for (i = 0; i < gpio_banks; i++)
