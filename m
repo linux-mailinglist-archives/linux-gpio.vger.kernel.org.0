@@ -1,205 +1,139 @@
-Return-Path: <linux-gpio+bounces-9684-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9685-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B14896A3F9
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 18:15:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEC9696A41D
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 18:20:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8690C1C21BFF
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 16:15:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8DE58B24F3C
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 16:20:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3541518B46A;
-	Tue,  3 Sep 2024 16:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2254A18BC06;
+	Tue,  3 Sep 2024 16:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WmFFff2k"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2xDt6aZG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E737D47F6B
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Sep 2024 16:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3553618BB99
+	for <linux-gpio@vger.kernel.org>; Tue,  3 Sep 2024 16:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725380107; cv=none; b=ShzJaBtUOog6dJcWDSogA9Rxsl8m6kzle1hPJ4MH4v6TX0E0oOxG2MkakxiOKtWP0GQDC0wQqqovysy4pY6nCtLIVHbjR6Cld3rsywmZOH0TNt8fNxRHCqktetyBmdj1V52+NaQVApvgmW4HNu0pSFTJ7WuMRC2WeZwGNRZBtiA=
+	t=1725380415; cv=none; b=igefF+hF1xw9XGVlI4/aGEJj08RlP/PT7WVLbUazlNBQK7ZPeHITt/ZSaOTMw6+opzD4UbmHbJqx3sph5teyYZC1k92E9MVKGyFWB2gJMjl8JTpA3n04rNfRc7Y74vp/QTiPiCWdZstc/cM0WVEkIH3k55N42fGpfPAcgA0g86c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725380107; c=relaxed/simple;
-	bh=xpPrjjx3C5+Im8uDKPe6tjHcImbiqGdfdOEgJ6hTna4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7G7TOm46c6cZVsdJaWVUPE5yCzyUUWDm+xhvqe2OsWpi/tE2/jpzGdfs/vhKmoPCi7oC7jmhryoSSZMFGlsjk2CCNlPc6ugQXmMJTSFT2lk7jWypuZqV+m6+YWBJnbKzAeSMydzKKJTUQszF83QNXVKnJmzq0ISQsnvBAMbee4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WmFFff2k; arc=none smtp.client-ip=209.85.218.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-a7a9cf7d3f3so618104566b.1
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2024 09:15:04 -0700 (PDT)
+	s=arc-20240116; t=1725380415; c=relaxed/simple;
+	bh=H74pYIhXSdOFwMm2aJy9P2vz5eCGVW8B8NAt3TGxtpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PyHI3GY3q6tvoy6/ZvHwCnYeGvZnL7NxOaWd8GyZiOKvfbu6M54jsFm8aL2dAclGE6Y7S+idQImpEZWnJg/JIQ+1QsdfMggaUN7UvmiAEsZ5fUW3vtPNTEQO1/LdsF5tUbA7ZsuNhgc9eunwdF0K1JjzKJY4KPUZHuvJFF+wX8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2xDt6aZG; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a86910caf9cso1131268266b.1
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2024 09:20:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1725380103; x=1725984903; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ujcJQ5WbiK5TK1a1sgf7j5ujXkTQVZFXM9n+2iP5G8w=;
-        b=WmFFff2kFIq19MtQaDjm0FzF2D+n4UmBArivKNenpVoyPiaLTVuuoy/2JRdmVHz05u
-         Lqa4vliOXLpIra5yAWbRIRmH/gr73eNVqOuCZmERDdoW4IBJPAW0sYaVGWss4Y3rKkFr
-         4krm7cnvbgu1nkic+2VZPaHyF42IWfbWvSKSNHgM6O3W1GyyexRpDg7m2fL5vczsU6T9
-         rrPJgADQIB4TeWtAEmnA82LaI4PPec7TQ4J02+Yu8Ger2/dtigf3afQhVAjjOCTzdvv+
-         35EMIx1mozZG7cBMF6y4hcXC4tVN306+ThGE/zCgjgLD3OTRWnpd8TJymP+El+OaQLAH
-         PeVA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725380412; x=1725985212; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=H74pYIhXSdOFwMm2aJy9P2vz5eCGVW8B8NAt3TGxtpU=;
+        b=2xDt6aZG6POoEJim/Es6+VfEgvXYihL1Gq00yhUe5jbP9B2k9oKNcLx0fUvobXHXm0
+         qqivlVmZUO0ykDaxLGUHJ7ugtJYkBc4V9+HwXMA+8h2RP4/dm+Fq6eGk1fuKzWGxFlv7
+         PKdnE6B+gE1negs2ZpyQ02qrfMAnkTr64bWFcDPY96D4IMz9blXNmuSQEuIr2lAcf+qr
+         IQQGS2fpisIbonvLwlWZA5VQiPKSOuq731iAfxscJ6AaBuFAzLwIzn0ctNV9uNhqZ7uI
+         VFTTIMcMN/uEvuih0Zz5aMoLH64vyVgTS7LzR3YX+gIHlcpTZ81uuAKiWuVmZG3qACND
+         h7mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725380103; x=1725984903;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ujcJQ5WbiK5TK1a1sgf7j5ujXkTQVZFXM9n+2iP5G8w=;
-        b=PbGIrqreCELMuiAkPtX+qtgbW9PzxBbms5Ks+JClNgVftw76QQGZ1Aq7Oa2OVzjyMg
-         3PcR6GBEDHN9oGbdmyDZdw+015nj+bNVb+u87SbxO7sObF8HylBFDiem7UXRZXM/0PyI
-         W80G2rwo94ZOSDnNekUQUktK48p0E1RmcPFrf/ljapGctqdCon8r7dfipREmH3iGbyA+
-         KaT/K1BybvBIIvvNdDD5ymWxNAqagjC1n148tZLu7EHknYmO0yBMTOx8GBBEjtJtGH9V
-         7JWcFewMp9TJ87sKs/LyyyEJhQpYKRseUn590Zi/Gi4QWFuyhm9i3KMTRjr6uUc/lN9s
-         45GA==
-X-Forwarded-Encrypted: i=1; AJvYcCXuamSgO/ygGrTJN9z2eFXHSTt6yPMXqbgz6iz1S1Pk1IlO/4d99b7EUvKB3HQD50cJO+8ktxN2MctI@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywa94/FfaHdsr0eTyuI6w7cOO/WuPXhmHGtAXS8BJtWx8ATW0Qf
-	WA4P80u+i0v+39sAWZutsuhSKoPJz4XRsoJLavqduWHei+MM9MvjG3jhbxk49w0=
-X-Google-Smtp-Source: AGHT+IGOVI/KlbnVkPKcUFB/WP4ky/V34Mnqxzaki61Es6M5ZEdZH9hu90OMWXXvI1MZc9xKoKdrvw==
-X-Received: by 2002:a17:907:d08:b0:a86:6d39:cbfd with SMTP id a640c23a62f3a-a89fafad393mr618619866b.57.1725380102711;
-        Tue, 03 Sep 2024 09:15:02 -0700 (PDT)
-Received: from localhost (host-80-182-198-72.pool80182.interbusiness.it. [80.182.198.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a1dbfba91sm145366666b.225.2024.09.03.09.15.02
+        d=1e100.net; s=20230601; t=1725380412; x=1725985212;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H74pYIhXSdOFwMm2aJy9P2vz5eCGVW8B8NAt3TGxtpU=;
+        b=MIc+bDaK+L0fdekDT2OKnONZ07HfdPw4z4hRk1GLFbVXDnuF4UQ3bfViqUT9QQlo3P
+         xUxVu7Nsqj3el11K6Nex7gT34Sjl3OFgrjiM0/b9ZLXNOoMrFxG4CDwIXUNL2afHgExy
+         StgOJw5qfBZjwtPbPhuPXfRplklDh5r5ma/KLXmjAVocQmiS+NY/u6JQnE8aKWP04pR/
+         dsjurmkFKrWGPG5mZ+CX9eQexMZpTddiDvPlw1mqskGWzXPOm0+JKkuuAbpkwH3UH1jF
+         +3bgNruqnvdBRvsz8rI1CD9ew9A6PFEtpESFQ4SD4YFG4TZi5WvLUSngNFqC3wwpUtDk
+         mRpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWToijmy4wsuWSoja+VhbZWs20rs3mjYtnA1F8/UPgPH3Zko4pn7NXc1IvhV5gvV368MHFOhLWwF9Ox@vger.kernel.org
+X-Gm-Message-State: AOJu0YyffexTISnQWQFOtiaFFzaRuEKD+CrVCxUuTzF3anb4i16mIYg8
+	9LORPyL2mReHkEv1nEosiNTBebXMMziS+7NZfqxDVyDVQvdsZMo7mc4qk3jQM8M=
+X-Google-Smtp-Source: AGHT+IEr5QVGgWbiVYfCs11rGjeX6QjZhxJmrTzkAqzKLetbWL3snVsaK/w2xgyZunk5r3yWMEi8Iw==
+X-Received: by 2002:a17:907:7286:b0:a86:beb2:1d6d with SMTP id a640c23a62f3a-a89827a4283mr1958213666b.26.1725380412471;
+        Tue, 03 Sep 2024 09:20:12 -0700 (PDT)
+Received: from localhost (p5dc68f76.dip0.t-ipconnect.de. [93.198.143.118])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a898919670asm708945766b.140.2024.09.03.09.20.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 09:15:02 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 3 Sep 2024 18:15:09 +0200
-To: Rob Herring <robh@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 04/11] of: address: Preserve the flags portion on 1:1
- dma-ranges mapping
-Message-ID: <Ztc2DadAnxLIYFj-@apocalypse>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
- <20240821001618.GA2309328-robh@kernel.org>
- <ZsWi86I1KG91fteb@apocalypse>
- <CAL_JsqKN0ZNMtq+_dhurwLR+FL2MBOmWujp7uy+5HzXxUb_qDQ@mail.gmail.com>
- <ZtBJ0jIq-QrTVs1m@apocalypse>
- <CAL_Jsq+_-m3cjTRsFZ0RwVpot3Pdcr1GWt-qiiFC8kQvsmV7VQ@mail.gmail.com>
- <ZtChPt4cD8PzfEkF@apocalypse>
- <CAL_JsqJNcZx-HH-TJhsNai2fqwPJ+dtcWTdPagRjgqM31wsJkA@mail.gmail.com>
+        Tue, 03 Sep 2024 09:20:12 -0700 (PDT)
+Date: Tue, 3 Sep 2024 18:20:10 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Liu Ying <victor.liu@nxp.com>, linux-gpio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, xiaoning.wang@nxp.com, 
+	Frank.Li@nxp.com, lee@kernel.org
+Subject: Re: [PATCH] pwm: adp5585: Set OSC_EN bit to 1 when PWM state is
+ enabled
+Message-ID: <tpjuy3wiaxoowyry5r23ubm5veznenrvdzrqcpqp3rid5hjoxh@yiqctlab32le>
+References: <20240826083337.1835405-1-victor.liu@nxp.com>
+ <20240826085049.GA23129@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="orgfecggc6qxpui4"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqJNcZx-HH-TJhsNai2fqwPJ+dtcWTdPagRjgqM31wsJkA@mail.gmail.com>
+In-Reply-To: <20240826085049.GA23129@pendragon.ideasonboard.com>
 
-Hi Rob,
 
-On 14:37 Fri 30 Aug     , Rob Herring wrote:
-> On Thu, Aug 29, 2024 at 11:26 AM Andrea della Porta
-> <andrea.porta@suse.com> wrote:
-> >
-> > Hi Rob,
-> >
+--orgfecggc6qxpui4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-...
+Hello Laurent,
 
-> 
-> I think simple-bus where you have it is fine. It is really 1 level up
-> that needs to be specified. Basically something that's referenced from
-> the specific PCI device's schema (e.g. the RP1 schema (which you are
-> missing)).
-> 
-> That schema needs to roughly look like this:
-> 
-> properties:
->   "#address-cells":
->     const: 3
->   "#size-cells":
->     const: 2
->   ranges:
->     minItems: 1
->     maxItems: 6
->     items:
->       additionalItems: true
->       items:
->         - maximum: 5  # The BAR number
->         - const: 0
->         - const: 0
->         - # TODO: valid PCI memory flags
-> 
-> patternProperties:
->   "^bar-bus@[0-5]$":
->     type: object
->     additionalProperties: true
->     properties:
->       compatible:
->         const: simple-bus
->       ranges: true
->
+On Mon, Aug 26, 2024 at 11:50:49AM +0300, Laurent Pinchart wrote:
+> Thank you for the patch.
+>=20
+> On Mon, Aug 26, 2024 at 04:33:37PM +0800, Liu Ying wrote:
+> > It turns out that OSC_EN bit in GERNERAL_CFG register has to be set to 1
+> > when PWM state is enabled, otherwise PWM signal won't be generated.
+>=20
+> Indeed, this likely got lost during one of the reworks. The apply
+> function correctly clears the bit when disabling PWM, but doesn't set it
+> otherwise.
+>=20
+> > Fixes: e9b503879fd2 ("pwm: adp5585: Add Analog Devices ADP5585 support")
+> > Signed-off-by: Liu Ying <victor.liu@nxp.com>
+>=20
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>=20
+> Uwe, would you be able to queue this for v6.12 ?
 
-Hmmm.. not sure how this is going to work. The PCI device (RP1) will
-havei, at runtime, a compatible like this:
+Yes, I just merged Lee's immutable branch into my for-next branch to get
+e9b503879fd2 and applied this patch on top.
 
-compatible = "pci1de4,1\0pciclass,0200000\0pciclass,0200";
+Best regards
+Uwe
 
-that is basically generated automatically by the OF framework. So, in the
-schema you proposed above, I can put something like:
+--orgfecggc6qxpui4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-properties:
-  compatible:
-    contains:
-      pattern: '^pci1de4,1'
+-----BEGIN PGP SIGNATURE-----
 
-or maybe I could omit the compatible entirely, like in:
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbXNzQACgkQj4D7WH0S
+/k7d/wgAkOCSryP0aa2OHiPimr3aQ59Aq7DHTjNLIsOXmVjJwgRlwH1+QWVuAWpL
+1rGSNLnhgeaAARgbXAWnIwcklDUu8Q10slOXg9BSEoY0Ikrz8l0IMuB6TyXPxjEM
+6OcXyZz/kdWRQd4lDVKosPmyimSUjaRFHpCZ/kz5Ms8eWWgsvXEtgPDFKccy34KL
+mbDVVi+5QuZRraizVpUT6E0c17l/+21wnumsrFcl5HCy6bRFUkVqgOqPQoeR3445
+irfbJEmkyOG2dqYjdrJ+hMBbz6/TkKza3ImH1ClXe1q7PYCxOBBUk28D2CBNdJ3z
+AzhHsAzA9XMQvcOPjQSAqD7tG0On3A==
+=RtDb
+-----END PGP SIGNATURE-----
 
-https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-iommu.yaml
-
-that seems to refer to generic compatible values.
-In both cases though, I don't see how these binding could work with
-make dt_binding_check, since there's no compatible known at compile
-time (for the first approach), or no compatible at all (the second
-approach).
-Is it intended only as a loose documentation?
-Or are you proposing that for a future new bus (hence with a new, specific,
-compatible) that could be described by the schema above?
-
-Many thanks,
-Andrea
- 
-> There were some discussions around interrupt handling that might also
-> factor into this.
-> 
-> Rob
+--orgfecggc6qxpui4--
 
