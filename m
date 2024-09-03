@@ -1,250 +1,167 @@
-Return-Path: <linux-gpio+bounces-9621-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9622-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A60696992D
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 11:36:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0016596998B
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 11:54:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0D5BDB27FE5
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 09:35:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABC63288815
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 09:54:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88BC71D094E;
-	Tue,  3 Sep 2024 09:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDC0619F437;
+	Tue,  3 Sep 2024 09:54:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ID+2qPcP"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Udpvku3i"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324121A0BCB
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Sep 2024 09:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2963F1A0BC6
+	for <linux-gpio@vger.kernel.org>; Tue,  3 Sep 2024 09:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725355989; cv=none; b=G4KpBeczMQMbPIiwA3M5yzliQGBDWq0At0oXnc1/d/FFS2wwxnEoxojwAVR5jKBfhW/uADjxcwwcyie3qvIkKg8+DSyRjkeneu5zLnGuAB+SsXJCF2//AZQDLTRZ04a0BzdfTtflI583mlTM7DsQdyz+rTTOqGMFntN4knFJPpU=
+	t=1725357242; cv=none; b=Xy2r7BjJLpNjSY1yRyJycjGuBRtwhYCNtHdGt6qzRYz2WxLR0EjQI2+Y3G7y8P72FDwCLRGTyFAYJ3St8moclCOfLM5ZsenQeooYUMLIaJ3IV1OCqfc0XzWWobWpuTMhNQqMfqu9eD1OqV9UgiNTQU782elLKvLEvHpbLXy/8pQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725355989; c=relaxed/simple;
-	bh=9bwQymfzf4ndqd3FHXuhSQAaB8hV+38lgAKZNuAsONE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nB+5bGF4uMg5U2ichV4YjCcEz9n6efzNtDkBP+83RrnoqFZLHgdnQY+z/BTc4pAWSp4OGKgNL01eTYHqyB1nh+sZ7Ql49hXswg47eUFBIS+qCSjUrfZOO66Fmg/IDr++NZW7JlwDaioRLLnX7LfZQ23auj5Z1k4RDPkSRse+aC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ID+2qPcP; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a868b8bb0feso612140166b.0
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2024 02:33:06 -0700 (PDT)
+	s=arc-20240116; t=1725357242; c=relaxed/simple;
+	bh=IbpTT6S4V1luVgt1JS2fuCNjChVvH/86LlhmEnOvP5s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d7WITn0D9dxYqqyXJNJlVyjGCM+4Rhh1cn6eDmH/XbFgK7YuS5qXiCOnvKBRK1Xcf4ic2X/xwqdzB5oAwlnjGBpEKOCGf5g+Y2NZubEihI4CtSIw1i+xoX/CvCrkSZ4+AREJKb2EYyQPzlQRlsxCol/itly0/MjLQk3FDVXVB9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Udpvku3i; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42c7856ed66so24648745e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Sep 2024 02:54:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1725355985; x=1725960785; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wTnKFrfUmE/uIkrL7Z9DoBSa27AtxRfrH2Z2SWNCR6U=;
-        b=ID+2qPcPviliUAh87/JIQZz+GwIz0+ikXhuwcYGZa9KU6XMlIU8hFqVZRSbEdsPIqr
-         MZ78jllU9dwC2lQ7yQsdVW9FRGjchQFvttzbA8u9FExn48Ek0g8SwUcTUp6kABIsboFJ
-         p4N4aWiEW0akaDfCUe+a/XbTz0mC65VUvR6UxL93A7ImF5ivD7UTiuPVUm1cGNzWM514
-         xPQfTF0sp6IBRDO/nNmPZd3k8qjC1RGxuwvbITv5tPpgzgva7ucgxfmgn98mN7dhFPnC
-         AOkbFRyJv6vQJSMupMAO1d7rVN2dxZAPCccFCd6xrJi3fMINK4Xy6po0g50gS0w3rNZT
-         0yig==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725357239; x=1725962039; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8lfOdkF2ndBEmCHtZC6aXIJtpuydyKDMjkA3wwk6mS4=;
+        b=Udpvku3iH6PYSMS/fopa7zbI7SosA1WbfKygXy7fPtz0XkHpbsBKDJRZ6UZcaJ7pVJ
+         2CXOiCX6D5aUwlopn41g0b9pzqwhfROP9buu7bLjDp19kJAULiJQYzyWUnI3QFTyvM/5
+         0QZa3DS2HjEcavbM1nZC8A2qBfrSU9rQuyJEbbm1GZWb/tvznWsWG8geOUcmbhr9gZdh
+         ei7BOVOCJJI8Yfa+zbr2VmxPbJmGhZZjCeGCpovc5qStoy1bj46EDjE/35XBhKzTirq/
+         FxXt48pp1SVO9pD5gszIWtwFJQ6XFcroFZ6T8qn17fju1g4RZnfZTGknKFHYaHuEZl03
+         2YWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725355985; x=1725960785;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wTnKFrfUmE/uIkrL7Z9DoBSa27AtxRfrH2Z2SWNCR6U=;
-        b=rt0YEQzfx9SNltw0Fz2KREG7jtQcR/AgG8+hpHItRBEJLsAz5minVukPuqxTQjehbv
-         AX/TfpHiAqwbRE9aCvn2IlCl25EcHVGVICP8wr5FxlqcP7Tn391AdC0cg0yoXACCxqeL
-         8U3fawHue7roYvSu5xYASL+VvbMPIDp2Hjd7Ayww4ib8ZrcFRilfue0Fjac2AVnWOD6e
-         XYAKrXsEHIeylZ7BoYehpNyCkk0HaCJDxWGAluUjtd/3Y5onSRayQVnvSMLK2jH18uah
-         Py8Acgt2N69UopHSqMufqZpmtk1E8m6iThDBU7lSiBtLT+XNPeLEJh1YJtgAtJ/9Zyl0
-         50Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCXfQ8R0n5KHa9+pYfyj54KcCMg4jn6XZzTZpxtzmaOYOJucCKs4gZs5xMCxQZhsdVJGph7GISg/VojV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIR4OpaXRTgGcDNaaZ4LE1M12BB2sZwuTzPPzDHWW8UwRiOji+
-	qK/iBlols0cQSP39SLdv+sLmvdrnKBKCHKC+vqYwqIWeSyzTW4sHPgoeu7CJqr8=
-X-Google-Smtp-Source: AGHT+IF1reVINALdSgJc0RMsY6rt9TxEJ4rR+Xojf3y9r57wj6wnX0V9PBsi2NJ940berEZ0OfsA7Q==
-X-Received: by 2002:a17:907:72c7:b0:a86:a30f:4aef with SMTP id a640c23a62f3a-a89a35dee4cmr901597466b.22.1725355985011;
-        Tue, 03 Sep 2024 02:33:05 -0700 (PDT)
-Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8988bdcf57sm659603066b.0.2024.09.03.02.33.04
+        d=1e100.net; s=20230601; t=1725357239; x=1725962039;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8lfOdkF2ndBEmCHtZC6aXIJtpuydyKDMjkA3wwk6mS4=;
+        b=MMS4NWwRH9Ic2I3e9MY9Y815FoCUHUytFviHCCiPKhpT8cMb6pQI12zaeqdArEwdIQ
+         ot9Ty8NacvccKd/5mwgBC1ZLRNpYcvX6oMwejwe2GeRWVOxFA9MesDP2k6Mxe6BN2+kz
+         +OXQw75PlNRKLKMwCJVwK2PQ83odExcPC5YYBY9q+i+6NwFx+zz4U/mehTML7Ivoe+mB
+         TZ1b9SyTvYlX1esIBaAjCnO3E9aa+GD1qukbB4xXxxwTxcAhRAWr3Xlmyd+VGx7IqFLd
+         hK/CQ/qcSWSYX6w8Tjr8ht0sJSIcGGUg0wFpYd6KoV9c8vqecPBTWgUFjVJFjBjvKWFg
+         xAPQ==
+X-Gm-Message-State: AOJu0YzrkRrUfNhTYai5qMtTxACtY+N6zOXVYXHTTbPdA2Omhnbq7k0H
+	hvxWVwwUMxoxUoFaI7aALG6UripOsEdmwToS3ilp6qfc0m5ZDggwKFbBNXUL8ZE=
+X-Google-Smtp-Source: AGHT+IHun79FCVF6zZ4w4sEWdS71L/emDmC4pSV2DFN6cmYUeuVm+RsL0+x2gJwhv83rCm4+z4b/XQ==
+X-Received: by 2002:a05:600c:3c8e:b0:429:d0cb:950f with SMTP id 5b1f17b1804b1-42bb02c2031mr125153175e9.2.1725357239167;
+        Tue, 03 Sep 2024 02:53:59 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:e61d:37d0:a59f:d06f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6df9705sm164893505e9.27.2024.09.03.02.53.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 02:33:04 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 3 Sep 2024 11:33:12 +0200
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 04/11] of: address: Preserve the flags portion on 1:1
- dma-ranges mapping
-Message-ID: <ZtbX2NZ6A6ATqQLh@apocalypse>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
- <20240821001618.GA2309328-robh@kernel.org>
- <ZsWi86I1KG91fteb@apocalypse>
- <CAL_JsqKN0ZNMtq+_dhurwLR+FL2MBOmWujp7uy+5HzXxUb_qDQ@mail.gmail.com>
- <ZtBJ0jIq-QrTVs1m@apocalypse>
- <CAL_Jsq+_-m3cjTRsFZ0RwVpot3Pdcr1GWt-qiiFC8kQvsmV7VQ@mail.gmail.com>
- <ZtChPt4cD8PzfEkF@apocalypse>
- <CAL_JsqJNcZx-HH-TJhsNai2fqwPJ+dtcWTdPagRjgqM31wsJkA@mail.gmail.com>
- <20240903110953.2b1f55b6@bootlin.com>
+        Tue, 03 Sep 2024 02:53:58 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Douglas Silva <doug.hs@proton.me>
+Subject: [libgpiod][PATCH] build: imply --enable-bindings-glib for --enable-dbus
+Date: Tue,  3 Sep 2024 11:53:57 +0200
+Message-ID: <20240903095357.27998-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240903110953.2b1f55b6@bootlin.com>
 
-Hi Herve,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On 11:09 Tue 03 Sep     , Herve Codina wrote:
-> Hi,
-> 
-> On Fri, 30 Aug 2024 14:37:54 -0500
-> Rob Herring <robh@kernel.org> wrote:
-> 
-> ...
-> 
-> > > this view is much like Bootlin's approach, also my pci-ep-bus node now would look
-> > > like this:
-> > >  ...
-> > >  pci-ep-bus@0 {
-> > >         ranges = <0xc0 0x40000000
-> > >                   0x01 0x00 0x00000000
-> > >                   0x00 0x00400000>;
-> > >         ...
-> > >  };
-> > >
-> > > and also the correct unit address here is 0 again, since the parent address in
-> > > ranges is 0x01 0x00 0x00000000 (0x01 is the flags and in this case represent
-> > > BAR1, I assume that for the unit address I should use only the address part that
-> > > is 0, right?).  
-> > 
-> > No, it should be 1 for BAR1. It's 1 node per BAR.
-> 
-> It should be 1 node per BAR but in some cases it is not.
-> 
-> Indeed, in the LAN966x case, the pci-ep-bus need to have access to several
-> BARs and we have:
+GLib bindings are required to build the D-Bus daemon. Enable them
+automatically if --enable-dbus is passed to configure.
 
-I second this, on RP1 there are multiple BARs too, but for this minimal
-implementation we need only one. Splitting them in one bus per BAR or
-merging them with multiple ranges entries depend on whether the peripherals
-can access different BARs simultaneously. Besides this contraint, I would
-say both approach are viable.
+Fixes: a5ab76da1e0a ("dbus: add the D-Bus daemon, command-line client and tests")
+Reported-by: Douglas Silva <doug.hs@proton.me>
+Suggested-by: Kent Gibson <warthog618@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ configure.ac | 48 +++++++++++++++++++++---------------------------
+ 1 file changed, 21 insertions(+), 27 deletions(-)
 
-> 	...
-> 	pci-ep-bus@0 {
-> 		compatible = "simple-bus";
-> 		#address-cells = <1>;
-> 		#size-cells = <1>;
-> 
-> 		/*
-> 		 * map @0xe2000000 (32MB) to BAR0 (CPU)
-> 		 * map @0xe0000000 (16MB) to BAR1 (AMBA)
-> 		 */
-> 		ranges = <0xe2000000 0x00 0x00 0x00 0x2000000
-> 		          0xe0000000 0x01 0x00 0x00 0x1000000>;
-> 	...
-> 
-> Some devices under this bus need to use both BARs and use two regs values
-> in their reg properties to access BAR0 and BAR1.
-> 
-> 
-> > > > > > The assumption so far with all of this is that you have some specific
-> > > > > > PCI device (and therefore a driver). The simple-buses under it are
-> > > > > > defined per BAR. Not really certain if that makes sense in all cases,
-> > > > > > but since the address assignment is dynamic, it may have to. I'm also
-> > > > > > not completely convinced we should reuse 'simple-bus' here or define
-> > > > > > something specific like 'pci-bar-bus' or something.  
-> > > > >
-> > > > > Good point. Labeling a new bus for this kind of 'appliance' could be
-> > > > > beneficial to unify the dt overlay approach, and I guess it could be
-> > > > > adopted by the aforementioned Bootlin's Microchip patchset too.
-> > > > > However, since the difference with simple-bus would be basically non
-> > > > > existent, I believe that this could be done in a future patch due to
-> > > > > the fact that the dtbo is contained into the driver itself, so we do
-> > > > > not suffer from the proliferation that happens when dtb are managed
-> > > > > outside.  
-> > > >
-> > > > It's an ABI, so we really need to decide first.  
-> > >
-> > > Okay. How should we proceed?  
-> > 
-> > I think simple-bus where you have it is fine. It is really 1 level up
-> > that needs to be specified. Basically something that's referenced from
-> > the specific PCI device's schema (e.g. the RP1 schema (which you are
-> > missing)).
-> > 
-> > That schema needs to roughly look like this:
-> > 
-> > properties:
-> >   "#address-cells":
-> >     const: 3
-> >   "#size-cells":
-> >     const: 2
-> >   ranges:
-> >     minItems: 1
-> >     maxItems: 6
-> >     items:
-> >       additionalItems: true
-> >       items:
-> >         - maximum: 5  # The BAR number
-> >         - const: 0
-> >         - const: 0
-> >         - # TODO: valid PCI memory flags
-> > 
-> > patternProperties:
-> >   "^bar-bus@[0-5]$":
-> >     type: object
-> >     additionalProperties: true
-> >     properties:
-> >       compatible:
-> >         const: simple-bus
-> >       ranges: true
-> > 
-> 
-> IMHO, the node should not have 'bar' in the name.
-> In the LAN966x PCI use case, multiple BARs have to be accessed by devices
-> under this simple-bus. That's why I choose pci-ep-bus for this node name.
->
-
-Agreed for your scenario. Anyway, since the dtbo and driver are shipped together,
-we are free to change the name anytime without impacting anything.
-
-Many thanks,
-Andrea
+diff --git a/configure.ac b/configure.ac
+index 1ac1002..a4dd05f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -250,6 +250,27 @@ then
+ 	fi
+ fi
  
-> Best regards,
-> Hervé
++AC_ARG_ENABLE([dbus],
++	[AS_HELP_STRING([--enable-dbus], [build dbus daemon [default=no]])],
++	[if test "x$enableval" == xyes; then with_dbus=true; with_bindings_glib=true; fi],
++	[with_dbus=false])
++AM_CONDITIONAL([WITH_DBUS], [test "x$with_dbus" = xtrue])
++
++AC_DEFUN([FUNC_NOT_FOUND_DBUS],
++	[ERR_NOT_FOUND([$1()], [dbus daemon])])
++
++if test "x$with_dbus" = xtrue
++then
++	AC_CHECK_FUNC([daemon], [], [FUNC_NOT_FOUND_DBUS([daemon])])
++	AC_CHECK_FUNC([strverscmp], [], [FUNC_NOT_FOUND_DBUS([strverscmp])])
++	PKG_CHECK_MODULES([GUDEV], [gudev-1.0 >= 230])
++	AC_CHECK_PROG([has_gdbus_codegen], [gdbus-codegen], [true], [false])
++	if test "x$has_gdbus_codegen" = xfalse
++	then
++		AC_MSG_ERROR([gdbus-codegen not found - needed to build dbus daemon])
++	fi
++fi
++
+ AC_ARG_ENABLE([bindings-glib],
+ 	[AS_HELP_STRING([--enable-bindings-glib],[enable GLib 2.0 bindings [default=no]])],
+ 	[if test "x$enableval" = xyes; then with_bindings_glib=true; fi],
+@@ -280,33 +301,6 @@ m4_ifdef([GOBJECT_INTROSPECTION_CHECK],
+ 	[GOBJECT_INTROSPECTION_CHECK([0.6.2])],
+ 	[AM_CONDITIONAL(HAVE_INTROSPECTION, test "x$found_introspection" = "xyes")])
+ 
+-# Depends on GLib bindings so must come after
+-AC_ARG_ENABLE([dbus],
+-	[AS_HELP_STRING([--enable-dbus], [build dbus daemon [default=no]])],
+-	[if test "x$enableval" == xyes; then with_dbus=true; fi],
+-	[with_dbus=false])
+-AM_CONDITIONAL([WITH_DBUS], [test "x$with_dbus" = xtrue])
+-
+-AC_DEFUN([FUNC_NOT_FOUND_DBUS],
+-	[ERR_NOT_FOUND([$1()], [dbus daemon])])
+-
+-if test "x$with_dbus" = xtrue && test "x$with_bindings_glib" != xtrue
+-then
+-	AC_MSG_ERROR([GLib bindings are required to build the dbus daemon - use --enable-bindings-glib])
+-fi
+-
+-if test "x$with_dbus" = xtrue
+-then
+-	AC_CHECK_FUNC([daemon], [], [FUNC_NOT_FOUND_DBUS([daemon])])
+-	AC_CHECK_FUNC([strverscmp], [], [FUNC_NOT_FOUND_DBUS([strverscmp])])
+-	PKG_CHECK_MODULES([GUDEV], [gudev-1.0 >= 230])
+-	AC_CHECK_PROG([has_gdbus_codegen], [gdbus-codegen], [true], [false])
+-	if test "x$has_gdbus_codegen" = xfalse
+-	then
+-		AC_MSG_ERROR([gdbus-codegen not found - needed to build dbus daemon])
+-	fi
+-fi
+-
+ AC_ARG_ENABLE([systemd],
+ 	[AS_HELP_STRING([--enable-systemd], [enable systemd support [default=no]])],
+ 	[if test "x$enableval" == xyes; then with_systemd=true; fi],
+-- 
+2.43.0
+
 
