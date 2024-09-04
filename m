@@ -1,140 +1,170 @@
-Return-Path: <linux-gpio+bounces-9790-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9791-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A520E96BD78
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 15:00:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5147396BDE9
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 15:11:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60693284C34
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 13:00:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 079351F20D38
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 13:11:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC601DA0F7;
-	Wed,  4 Sep 2024 12:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BDBA1D9357;
+	Wed,  4 Sep 2024 13:06:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FnLGEm41"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lNqeqCYa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8173B1D9344;
-	Wed,  4 Sep 2024 12:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDD120334;
+	Wed,  4 Sep 2024 13:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725454748; cv=none; b=NKs0OJUF8m6Bq03/Gt1+Rx4bYxxjlvTlJLeTthvyHz3J9Ac6AsLxpq85vvFR9MX8A1WX+B5zg1qaa+ufEdUpQVuOHvIdj3ZxmACcvgd2/wL+1bx9NWBfSbFdOrewSPsGNKtBWvHDCGuEsvXXCYvPcY8NXsrchuUM2MSX5IJU8rU=
+	t=1725455173; cv=none; b=E1dKUQshN7WtQ6gn6CBxaBOdp6mB//NLH/R6eBNNHsqZEjs5Lt4Pwx5shu/pe1NnbOgPtRLjEdVBUFNTGpb52gd3wiMu8XHfi2KC/c+fE2RcZi0dsuJCfyjDlzDCWE0cDVWsyDlVh3nMUDg2jTl4ahTnNJTs7wv+TqT1+TeQVDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725454748; c=relaxed/simple;
-	bh=cufdcsefzRbjrRxrUtSpAMqU+L+OLWENmAOh0cCRkQ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=k1zbbYuznnQ9h8gkHRrDQFElQOQ0rFSf+4+7oL18hfnK3qVEhOWOXUy9WMg2a9/sEeSNfcq9ELsqH8KlfxSkf/P2RfSOIzXjSsH3rGsP6BYDUHzLzm7F+Z/LiAxUNrKZe8JbilZZx6jA5Pu6Mf5YinfZziHSYlZHo4QBOPyeJj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FnLGEm41; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 484AXGuD032277;
-	Wed, 4 Sep 2024 12:58:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	IF475OtMV49GuJTorggo0x/huhW9Mbg7NQzbxMUq98k=; b=FnLGEm41Xr6krBS7
-	3FCaGBLGutcwgWVfqR7i9BmLY5JzZMSKeucWO/1x2M5jfJ28bhKDfVj5onewo76W
-	Rpfyxm9ty/QGaTs4SmxSIkMRISVEB0EmP8TTMy4NEkY4T9Nvuu3WYzHF4VUhzCFZ
-	qybZv/ohAK0a2m00ytzdFNkP9jDTosiY4zpq3zAu1txTCQ/cXn8bjkq5eTkk1cs5
-	SFaW7gFRWfTHHoeKpFYfWAwp3L2sQcPbt5gwEAdLkcQlmCMB/ThYDtopzL+uJdyx
-	R8Z4LaVUX9MdINg44X01lGp6JBFEYwtIii6xTD5bXjQknvlleRlDc+WTYJPSlRXk
-	wpFlKg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41bvbkjmm0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Sep 2024 12:58:36 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 484CwZYo028022
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 4 Sep 2024 12:58:35 GMT
-Received: from [10.110.120.207] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 4 Sep 2024
- 05:58:32 -0700
-Message-ID: <9b9dfee5-5ce3-4140-9340-2001d6e0adf0@quicinc.com>
-Date: Wed, 4 Sep 2024 05:58:32 -0700
+	s=arc-20240116; t=1725455173; c=relaxed/simple;
+	bh=mM1Ro031A08ZpqxLqSTFKpkQoEe2UZuBQXmTL877tWo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TX6YAxE0TJIVHc+nTWPFECwk619k1mBKmZEdBkx27tby88KyLaJ35EDs/fplonRTdu8rRQUgDTsdpf6LE37wn24+Xz6w6Z67uGmAtnZE3uVmb8FnST1XZ0W2VH6+5vPnms0seYvcisbo8VKG9jdZGeDn3ZkJQfAEzeBFi7vmj2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lNqeqCYa; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725455172; x=1756991172;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mM1Ro031A08ZpqxLqSTFKpkQoEe2UZuBQXmTL877tWo=;
+  b=lNqeqCYaCAzpB9JmD2amk7JTTBzkzj5/YfbAXDvBghOIjyvUJdSGERdU
+   ntV7ragFU0q62JR4+8iz18z/fl+dWWceY006g2gbGxL0QT5ls/VCXMjdP
+   BasdX2KZ60MisYefv1ahSiFF6Cwrto5fQMEI98S3Ca8rlFtQeuxNqOWyR
+   zOFdFyrrqh+Ca0gX+DWdUpo4ANTGTI8yv0SU1fOmg1YWIped77RQN7cCb
+   DPsjSbNgSIyiBt7yDxYb9w5JEn/u3O3Vv69gYqfpNcsWzn5xecAD/Zvqv
+   DsZNXNyP7DOv3ze1iIJlLGLAZ8diUKbokuKunOf6tSyFVsPZBPi7NmYUM
+   Q==;
+X-CSE-ConnectionGUID: apJ8ch55SjiuYsnSkYB51w==
+X-CSE-MsgGUID: XGujfzHUR0OCXiqT32u3Dw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="41611954"
+X-IronPort-AV: E=Sophos;i="6.10,201,1719903600"; 
+   d="scan'208";a="41611954"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 06:05:18 -0700
+X-CSE-ConnectionGUID: O5NtZppmScGRPLixhjd7kg==
+X-CSE-MsgGUID: jEMrTlcBR4qBKW9Pj0Tg9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,201,1719903600"; 
+   d="scan'208";a="65308473"
+Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 04 Sep 2024 06:05:17 -0700
+Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1slphC-000863-2y;
+	Wed, 04 Sep 2024 13:05:14 +0000
+Date: Wed, 4 Sep 2024 21:04:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 2/3] pinctrl: baytrail: Replace ifdeffery by
+ pm_sleep_ptr() macro
+Message-ID: <202409042054.YDMtnXfx-lkp@intel.com>
+References: <20240903170752.3564538-3-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/21] arm64: qcom: Introduce SA8255p Ride platform
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <rafael@kernel.org>,
-        <viresh.kumar@linaro.org>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <sudeep.holla@arm.com>, <andi.shyti@kernel.org>,
-        <tglx@linutronix.de>, <will@kernel.org>, <robin.murphy@arm.com>,
-        <joro@8bytes.org>, <jassisinghbrar@gmail.com>, <lee@kernel.org>,
-        <linus.walleij@linaro.org>, <amitk@kernel.org>,
-        <thara.gopinath@gmail.com>, <broonie@kernel.org>,
-        <cristian.marussi@arm.com>, <rui.zhang@intel.com>,
-        <lukasz.luba@arm.com>, <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <arm-scmi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <iommu@lists.linux.dev>, <linux-gpio@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <kernel@quicinc.com>,
-        <quic_psodagud@quicinc.com>
-References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
- <20240903220240.2594102-1-quic_nkela@quicinc.com>
- <glo34r35r2jqypeureu5dzoe6udkniqbma627jnv55ihfoatfu@ujvsxcsrhhdc>
-From: Nikunj Kela <quic_nkela@quicinc.com>
-In-Reply-To: <glo34r35r2jqypeureu5dzoe6udkniqbma627jnv55ihfoatfu@ujvsxcsrhhdc>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: c8vZkm80WZTU8HCRdHZaM0UBp4pbnxWL
-X-Proofpoint-GUID: c8vZkm80WZTU8HCRdHZaM0UBp4pbnxWL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-04_10,2024-09-04_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0 mlxscore=0
- impostorscore=0 malwarescore=0 bulkscore=0 spamscore=0 clxscore=1015
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2409040098
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240903170752.3564538-3-andriy.shevchenko@linux.intel.com>
+
+Hi Andy,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on linusw-pinctrl/devel]
+[also build test WARNING on linusw-pinctrl/for-next linus/master v6.11-rc6 next-20240904]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-intel-Replace-ifdeffery-by-pm_sleep_ptr-macro/20240904-011041
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20240903170752.3564538-3-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v1 2/3] pinctrl: baytrail: Replace ifdeffery by pm_sleep_ptr() macro
+config: i386-buildonly-randconfig-002-20240904 (https://download.01.org/0day-ci/archive/20240904/202409042054.YDMtnXfx-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240904/202409042054.YDMtnXfx-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409042054.YDMtnXfx-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/pinctrl/intel/pinctrl-baytrail.c: In function 'byt_pinctrl_probe':
+>> drivers/pinctrl/intel/pinctrl-baytrail.c:1610:49: warning: the address of 'byt_pinctrl_pm_init' will always evaluate as 'true' [-Waddress]
+    1610 |         ret = pm_sleep_ptr(byt_pinctrl_pm_init) ? byt_pinctrl_pm_init(vg) : 0;
+         |                                                 ^
 
 
-On 9/3/2024 10:54 PM, Krzysztof Kozlowski wrote:
-> On Tue, Sep 03, 2024 at 03:02:19PM -0700, Nikunj Kela wrote:
->> This series enables the support for SA8255p Qualcomm SoC and Ride
->> platform. This platform uses SCMI power, reset, performance, sensor
->> protocols for resources(e.g. clocks, regulator, interconnect, phy etc.)
->> management. SA8255p is a virtual platforms that uses Qualcomm smc/hvc
->> transport driver.
->>
->> Multiple virtual SCMI instances are being used to achieve the parallelism.
->> SCMI platform stack runs in SMP enabled VM hence allows platform to service
->> multiple resource requests in parallel. Each device is assigned its own
->> dedicated SCMI channel and Tx/Rx doorbells.
->>
-> Do not attach (thread) your patchsets to some other threads (unrelated
-> or older versions). This buries them deep in the mailbox and might
-> interfere with applying entire sets.
->
-> It does not look like you tested the bindings, at least after quick
-> look. Please run  (see
-> Documentation/devicetree/bindings/writing-schema.rst for instructions).
-> Maybe you need to update your dtschema and yamllint.
->
-> Best regards,
-> Krzysztof
+vim +1610 drivers/pinctrl/intel/pinctrl-baytrail.c
 
-Will fix spaces and send v3 in separate thread. Thanks
+  1587	
+  1588	static int byt_pinctrl_probe(struct platform_device *pdev)
+  1589	{
+  1590		const struct intel_pinctrl_soc_data *soc_data;
+  1591		struct device *dev = &pdev->dev;
+  1592		struct intel_pinctrl *vg;
+  1593		int ret;
+  1594	
+  1595		soc_data = intel_pinctrl_get_soc_data(pdev);
+  1596		if (IS_ERR(soc_data))
+  1597			return PTR_ERR(soc_data);
+  1598	
+  1599		vg = devm_kzalloc(dev, sizeof(*vg), GFP_KERNEL);
+  1600		if (!vg)
+  1601			return -ENOMEM;
+  1602	
+  1603		vg->dev = dev;
+  1604		ret = byt_set_soc_data(vg, soc_data);
+  1605		if (ret) {
+  1606			dev_err(dev, "failed to set soc data\n");
+  1607			return ret;
+  1608		}
+  1609	
+> 1610		ret = pm_sleep_ptr(byt_pinctrl_pm_init) ? byt_pinctrl_pm_init(vg) : 0;
+  1611		if (ret)
+  1612			return ret;
+  1613	
+  1614		vg->pctldesc		= byt_pinctrl_desc;
+  1615		vg->pctldesc.name	= dev_name(dev);
+  1616		vg->pctldesc.pins	= vg->soc->pins;
+  1617		vg->pctldesc.npins	= vg->soc->npins;
+  1618	
+  1619		vg->pctldev = devm_pinctrl_register(dev, &vg->pctldesc, vg);
+  1620		if (IS_ERR(vg->pctldev)) {
+  1621			dev_err(dev, "failed to register pinctrl driver\n");
+  1622			return PTR_ERR(vg->pctldev);
+  1623		}
+  1624	
+  1625		ret = byt_gpio_probe(vg);
+  1626		if (ret)
+  1627			return ret;
+  1628	
+  1629		platform_set_drvdata(pdev, vg);
+  1630	
+  1631		return 0;
+  1632	}
+  1633	
 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
