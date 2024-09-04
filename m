@@ -1,116 +1,77 @@
-Return-Path: <linux-gpio+bounces-9767-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9773-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35DBD96B644
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 11:16:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CF3E96B6EC
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 11:37:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 67FA41C21EE1
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 09:16:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E7E081F25FB7
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 09:37:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCCCC1CC886;
-	Wed,  4 Sep 2024 09:16:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBA211CF7A1;
+	Wed,  4 Sep 2024 09:36:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E9A155C96
-	for <linux-gpio@vger.kernel.org>; Wed,  4 Sep 2024 09:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F8E1CF5EC
+	for <linux-gpio@vger.kernel.org>; Wed,  4 Sep 2024 09:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725441394; cv=none; b=sAqDUw519ZCjF7PezplwDvrYy2YW5hDqoZAsC3ApHOF+Q5vn7R3Hifkp4JOWkubbX/Fj6Z03TDmkNOp4Yv7D5pwRxORpkk5o1Lo+IMyQsq53nUaUxNpuOSqf4zBbQYoj06AOK2bVYIKS5xFr+rJRNBXWwg6H2keClY4OIPlj20c=
+	t=1725442615; cv=none; b=j7cgtKLEcRO2pZlleel49c9GJ+4uUwV0RrUZ56BRpA8EnNk6wG6eCPSehy7ak8uA9rgo9MfICbAAReuyahdSgnnW/L05/IRusyd8hRrRIlJjDlGXWWrOBaeNwAoaUoBXA/fInFZwGm4roQvcLM7h3HdgME62ShydS7BuQDoKNVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725441394; c=relaxed/simple;
-	bh=EtwVs8+yScxbL9IdzxYu1juaHCYRmOBjWIfoNYxCCO0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XgiImVZBv7CVpodH7pEn/Y5Xg5uhOLv1bIcGwLruN4YwrlNBtFhusP2m0QGB3qyWa/sr4eLWRyK//SSSLqt5+Cv5AIdJ7697P5lreZxunUZr0OvN+RsBo/UtcUJmUuRK5l/jtEJpdUL3bHJUkygBLw20KEPfp1SgAHA/Lg94+GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-	by gauss.telenet-ops.be (Postfix) with ESMTPS id 4WzGrb4XbCz50SBQ
-	for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2024 11:09:03 +0200 (CEST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:ef52:68c5:eac1:f6b5])
-	by albert.telenet-ops.be with cmsmtp
-	id 898v2D00T3m5in10698vWk; Wed, 04 Sep 2024 11:08:56 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1slm0S-0026XW-PT;
-	Wed, 04 Sep 2024 11:08:55 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1slm0V-0044NM-Fh;
-	Wed, 04 Sep 2024 11:08:55 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Damien Le Moal <dlemoal@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-riscv@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] pinctrl: k210: Make (p)clk local to k210_fpioa_probe()
-Date: Wed,  4 Sep 2024 11:08:53 +0200
-Message-Id: <77f543046d4d5c19206f829ddcf8e093d3e3f6da.1725440917.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1725442615; c=relaxed/simple;
+	bh=KEaGE7fBNTkTu/l0w+xxtf1EvfoDPekvQveJuxw+zY8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=csYC10C5UHaRXihq4Nr1wF32lkiSxzWAK4iH0QeWOIn8591guvNmJwwm0Ft8Dt8K+Mz1+XeqX6C4hm+B7rRj7k0mGXj/sHYtrIF0WEzZCONvq5BD8v6DfnEF4c0GmmzvmhBR5Z8T+lnvrYN3rr9ZKp2J6Vmeh4EOdjiwtZcNwXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4WzHS82rZKz1S9VS;
+	Wed,  4 Sep 2024 17:36:24 +0800 (CST)
+Received: from kwepemf500003.china.huawei.com (unknown [7.202.181.241])
+	by mail.maildlp.com (Postfix) with ESMTPS id 405BC1A016C;
+	Wed,  4 Sep 2024 17:36:45 +0800 (CST)
+Received: from huawei.com (10.175.112.208) by kwepemf500003.china.huawei.com
+ (7.202.181.241) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 4 Sep
+ 2024 17:36:44 +0800
+From: Zhang Zekun <zhangzekun11@huawei.com>
+To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <vz@mleia.com>,
+	<linux-gpio@vger.kernel.org>
+CC: <zhangzekun11@huawei.com>
+Subject: [PATCH v2 0/4] Simplify code with helper function devm_clk_get*()
+Date: Wed, 4 Sep 2024 17:23:07 +0800
+Message-ID: <20240904092311.9544-1-zhangzekun11@huawei.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemf500003.china.huawei.com (7.202.181.241)
 
-There were never any users of k210_fpioa_data.clk and
-k210_fpioa_data.pclk outside k210_fpioa_probe().
+Use helper function devm_clk_get_enabled() and
+devm_clk_get_optional_enabled() to simplify code.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/pinctrl/pinctrl-k210.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+Zhang Zekun (4):
+  gpio: cadence: Use helper function devm_clk_get_enabled()
+  gpio: lpc18xx: Use helper function devm_clk_get_enabled()
+  gpio: mb86s7x: Use helper function devm_clk_get_optional_enabled()
+  gpio: xilinx: Use helper function devm_clk_get_optional_enabled()
 
-diff --git a/drivers/pinctrl/pinctrl-k210.c b/drivers/pinctrl/pinctrl-k210.c
-index 0f6b55fec31de700..caf20215aaba5e9b 100644
---- a/drivers/pinctrl/pinctrl-k210.c
-+++ b/drivers/pinctrl/pinctrl-k210.c
-@@ -96,8 +96,6 @@ struct k210_fpioa_data {
- 	struct k210_fpioa __iomem *fpioa;
- 	struct regmap *sysctl_map;
- 	u32 power_offset;
--	struct clk *clk;
--	struct clk *pclk;
- };
- 
- #define K210_PIN_NAME(i)	("IO_" #i)
-@@ -925,6 +923,7 @@ static int k210_fpioa_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct k210_fpioa_data *pdata;
-+	struct clk *clk, *pclk;
- 
- 	dev_info(dev, "K210 FPIOA pin controller\n");
- 
-@@ -939,13 +938,13 @@ static int k210_fpioa_probe(struct platform_device *pdev)
- 	if (IS_ERR(pdata->fpioa))
- 		return PTR_ERR(pdata->fpioa);
- 
--	pdata->clk = devm_clk_get_enabled(dev, "ref");
--	if (IS_ERR(pdata->clk))
--		return PTR_ERR(pdata->clk);
-+	clk = devm_clk_get_enabled(dev, "ref");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
- 
--	pdata->pclk = devm_clk_get_optional_enabled(dev, "pclk");
--	if (IS_ERR(pdata->pclk))
--		return PTR_ERR(pdata->pclk);
-+	pclk = devm_clk_get_optional_enabled(dev, "pclk");
-+	if (IS_ERR(pclk))
-+		return PTR_ERR(pclk);
- 
- 	pdata->sysctl_map =
- 		syscon_regmap_lookup_by_phandle_args(np,
+ drivers/gpio/gpio-cadence.c | 23 ++++++-----------------
+ drivers/gpio/gpio-lpc18xx.c | 23 ++++++-----------------
+ drivers/gpio/gpio-mb86s7x.c | 21 +++++++--------------
+ drivers/gpio/gpio-xilinx.c  | 11 +----------
+ 4 files changed, 20 insertions(+), 58 deletions(-)
+
 -- 
-2.34.1
+2.17.1
 
 
