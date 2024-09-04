@@ -1,78 +1,79 @@
-Return-Path: <linux-gpio+bounces-9798-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9799-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C35B696BF79
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 16:02:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ADC696BFAB
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 16:07:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A95228A69C
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 14:02:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 287B8B21A31
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 14:07:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45CCA1CF292;
-	Wed,  4 Sep 2024 14:01:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 734CC1DA301;
+	Wed,  4 Sep 2024 14:07:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="UqMOWpSy"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bic19V4E"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77941CCEFC
-	for <linux-gpio@vger.kernel.org>; Wed,  4 Sep 2024 14:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3F51D9D6B
+	for <linux-gpio@vger.kernel.org>; Wed,  4 Sep 2024 14:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725458495; cv=none; b=EVQ56FCM4bMhzVjjw070AkyeT5fX35ZduRhvZ+nl9Nxs/jJQzdFnzvXMQC3LecYDqJBM6dAMAsTzIyqyPPwR5wLpW0u0VJXzzkQVpfo54iwJ5zdzp0xCbGJG256Oi1Nu7bTx6n2sirAsqeu49C8sByMfI6IKyxWEyMZ4uc18CIA=
+	t=1725458833; cv=none; b=h46DGZS+vMABVY6nj2dW09l/9CWnzSmkAdRf/92x01ciHpt0aZNtaQvkJ2wi3aL9IIh/1A0/1rFz7Q3i0OQUHrfxW5lPQnHixrmrmJKMXlWXHWr8dVvQDMmf+vEJL1ouvoXTCRm2cWjoM8Z6u/vZWwUqWdNJu0W7AncHjYP+WD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725458495; c=relaxed/simple;
-	bh=Yvc2QWKFGGW7ij5JMho+lUo4/QSIY+9po0k0Wlnc3Lo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rwWHmHRc1XsAv/F0/SGUnjOUMpmlr/hnrfLHQM8BKMTW+0fUD4ZtuWpimEqlBVgimItzYYoVm50E0sD1PRJqo7c50h3YBnaE3wa2ya0N/2iYrvJQWl1uKTdMxiGolA+m37WMW/a9qQaBoFngvEQhtTPYj/E5FnEh2LRQoYhn/eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=UqMOWpSy; arc=none smtp.client-ip=209.85.208.53
+	s=arc-20240116; t=1725458833; c=relaxed/simple;
+	bh=4xPxlwu1bhPSXn0lYvYoNGfGIo6tkfTqVZqIzPt0jh8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gSgn1APlduy0lNsqmCyQgQS37MiyV93JkRLK3VHsNFFPNPP+zTEGdT3jqKyMn6DfaFAw6f9wHw6wWTmAyXKVyffiAUCPAdzJnpf5BfG8p+68sdyKpFjowTrlBR9XVN2Kj2lK36uT0JzIoCte/e9ewvBDVL+Qbq+MCdFWNBSoVEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bic19V4E; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5becd359800so6844957a12.0
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2024 07:01:32 -0700 (PDT)
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-374bb1a3addso2853558f8f.1
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2024 07:07:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725458491; x=1726063291; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725458830; x=1726063630; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yI9uwp1PRvLZ9d6uG18DgVQb9z8/zN76rlGY3xm0zwI=;
-        b=UqMOWpSyBFirs8g4pXpQi1BcvAX1/S1KISRuWRbi5RSbDE7sDU8CBekinEWh5VwMZ7
-         U+TfVnGa4FdmOmXroNb+UZMALbSiDfHAI4kxvmbWeepwWboX1wx56qmtZ7d0HZlFLRXJ
-         4XZUhsCxiyjuDciqaSu8XhR7lWsYAjO5WzuKlCBepk+RVttXGrlWSCwZy6SNrTjqdOdf
-         PJMU5JgmuhwqkG+mFiFhiUbzr16pQLvod933RZhm6b9uB0eu7RtFHgmbyx8XiGh7VeNC
-         1mQDyjdTOb2nBl+dM4heAkUeFCQ96Ba0J83ArQ1BHOrEOwFsWf+x9IoowulBteb9nI7l
-         EYqg==
+        bh=6Nc9aX50i+dMN/1Cd07ZSHF0hwNUhEe8ygyGy7L3y3I=;
+        b=bic19V4Em7ozUZ/veVq0Ba5HbTif23raa1Ahx0Vn9Jb7fQL3t7pg3oLyoJz38IH/uv
+         mKKBpjkJyY9AJRN2ffftfE5XLN7BmdfhMdcGowRU3xlsToBmvCdxWg0c+ygK4qtkcqI7
+         4zJz80piCF4HNLPNlpaBd89kEbDUvkwPHxv3pdndU8jG11rjx79D0d0w8fgCfAb8db0f
+         SNjin8z8pSNogy2MjpoaxI35j+ykD3dWmVyIg6lwtC2oIe6JuNP232FPmKH7evx/kxFr
+         /FvLjBodoFa5IgD1fVB1XtSznFwMzA+QOvC8mRbafEhmFwL9SQ1uKXE9ixHqmtTIl7db
+         HrsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725458491; x=1726063291;
+        d=1e100.net; s=20230601; t=1725458830; x=1726063630;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yI9uwp1PRvLZ9d6uG18DgVQb9z8/zN76rlGY3xm0zwI=;
-        b=ivgA6TT4ICdQQGWEZtoALARvZfikFUD4duNJlHGMeSdd7Sg9KPf2Z/igmcRGYdUOP0
-         unmFkpZootJnv7qrgRB4Vy2ddC9VGBPYg7VS5Q8Hnd3qwW5rdj0t9mljru/wWp7a5BrY
-         ZtSYclYSLa/PixdJ8qHzHWzL/gciuFfLjzaelbu6D4YkbLuLQAR18jzX+boGCTeoveNg
-         QHlni8cO9FPokmT+CinWvMwBqJcsAEr+qsA/uJw1OWmEJhpZEDw6VMEpy4+fx/5zgKMD
-         mTyiTFJM3IDzRbJlgJBnlYwqOdfD8aupMfIQQ2E47IAVr9WpHyCA1/D1VzFUlmmxT/LH
-         VpYA==
-X-Gm-Message-State: AOJu0YwyGPbTnZ6USNPME6/m+Cq7rnAHqV3Wz6zRqgSXJ08rdsn1s3xB
-	+QSG6ajDxp0J+1JExWXSSX6LBbvXr7C9LsXT+VGWlZsqe1AkK6lBZF+lh5TO8KI=
-X-Google-Smtp-Source: AGHT+IGEc4KY/zTaEMzRDVWEdLLXECKftWjtf2ySCxhffz5ZPxNY/EPOSqOBO32wOIBOyV/LGwlzLw==
-X-Received: by 2002:a17:907:2d10:b0:a86:817e:d27a with SMTP id a640c23a62f3a-a89a38247demr1006842666b.61.1725458489760;
-        Wed, 04 Sep 2024 07:01:29 -0700 (PDT)
+        bh=6Nc9aX50i+dMN/1Cd07ZSHF0hwNUhEe8ygyGy7L3y3I=;
+        b=VJ2NKKw9VtiKnRtn8Xit5ltbDZ4BE1i2dR7oWzl+4dJ9P1Gys7KVhDMToY3Gn+6wOv
+         qtFoADSXKf92C6GIA2HRkEjIp24A+39fmpnruBLXFKEoWDQZbDp8Z1QpZAXfuX6HQeHg
+         nmg72T066X54LknFpOiuStN3K54gHjx3+0yJ5X74CAni6o5fiWV/kdKlYaCzFVGaKn5Q
+         vO6fx1G8MATNhgGlOmTBTXT0hKl4GEVwECOs4RBUUTbaseLZOcWIx1dYcaKSL1Ozha6p
+         5sRqSnDb5UwveU/VwNRyjwKcVCZhEA7j4oa5RVgpZaJ3vG67uyMV/TzsI8uUWoUjVQ4d
+         16Hg==
+X-Gm-Message-State: AOJu0YwpPpwfsvULgl2Hh6yaFzeQxV+aXHpV9Z+7c0YsySLjFWt2/tig
+	6FQJJMFsv3dFZRI34TBqZcj5OPvJkqcgcKQso0zzKidK25jqO8jL4LZZf/Zg00k=
+X-Google-Smtp-Source: AGHT+IERvN09HxpnR1/88V4krFNTYDQv3qQjgSZkek/YY4MS8sDjiitPdrGu1ZBD37ARHvs1yryObA==
+X-Received: by 2002:a05:6000:4029:b0:374:ce9a:ff11 with SMTP id ffacd0b85a97d-376dea47205mr4105172f8f.50.1725458829037;
+        Wed, 04 Sep 2024 07:07:09 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:66d0:70f:5bef:d67d])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a898900f221sm811514866b.61.2024.09.04.07.01.29
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3749ee4c83fsm17100901f8f.22.2024.09.04.07.07.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2024 07:01:29 -0700 (PDT)
+        Wed, 04 Sep 2024 07:07:08 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Martyn Welch <martyn.welch@collabora.com>
 Cc: linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Douglas Silva <doug.hs@proton.me>
-Subject: [libgpiod][PATCH v2] build: imply --enable-bindings-glib for --enable-dbus
-Date: Wed,  4 Sep 2024 16:01:27 +0200
-Message-ID: <20240904140127.58667-1-brgl@bgdev.pl>
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v2] gpio: mpc8xxx: switch to using DEFINE_RUNTIME_DEV_PM_OPS()
+Date: Wed,  4 Sep 2024 16:07:06 +0200
+Message-ID: <20240904140706.70359-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -84,94 +85,86 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-GLib bindings are required to build the D-Bus daemon. Enable them
-automatically if --enable-dbus is passed to configure.
+Use the preferred API for assigning system sleep pm callbacks in drivers.
 
-Fixes: a5ab76da1e0a ("dbus: add the D-Bus daemon, command-line client and tests")
-Reported-by: Douglas Silva <doug.hs@proton.me>
-Suggested-by: Kent Gibson <warthog618@gmail.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
 v1 -> v2:
-- make the changes actually work
+- include pm.h too (doesn't hurt)
+- use pm_ptr() instead of pm_sleep_ptr()
+- improve the line breaks
 
- configure.ac | 52 +++++++++++++++++++++++++---------------------------
- 1 file changed, 25 insertions(+), 27 deletions(-)
+ drivers/gpio/gpio-mpc8xxx.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index 1ac1002..92d3408 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -250,10 +250,35 @@ then
- 	fi
- fi
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index e084e08f54387..685ec31db409d 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -17,6 +17,8 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/pm.h>
++#include <linux/pm_runtime.h>
+ #include <linux/property.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+@@ -431,30 +433,28 @@ static void mpc8xxx_remove(struct platform_device *pdev)
+ 	}
+ }
  
-+AC_ARG_ENABLE([dbus],
-+	[AS_HELP_STRING([--enable-dbus], [build dbus daemon [default=no]])],
-+	[if test "x$enableval" == xyes; then with_dbus=true; fi],
-+	[with_dbus=false])
-+AM_CONDITIONAL([WITH_DBUS], [test "x$with_dbus" = xtrue])
-+
- AC_ARG_ENABLE([bindings-glib],
- 	[AS_HELP_STRING([--enable-bindings-glib],[enable GLib 2.0 bindings [default=no]])],
- 	[if test "x$enableval" = xyes; then with_bindings_glib=true; fi],
- 	[with_bindings_glib=false])
-+
-+AC_DEFUN([FUNC_NOT_FOUND_DBUS],
-+	[ERR_NOT_FOUND([$1()], [dbus daemon])])
-+
-+if test "x$with_dbus" = xtrue
-+then
-+	AC_CHECK_FUNC([daemon], [], [FUNC_NOT_FOUND_DBUS([daemon])])
-+	AC_CHECK_FUNC([strverscmp], [], [FUNC_NOT_FOUND_DBUS([strverscmp])])
-+	PKG_CHECK_MODULES([GUDEV], [gudev-1.0 >= 230])
-+	AC_CHECK_PROG([has_gdbus_codegen], [gdbus-codegen], [true], [false])
-+	if test "x$has_gdbus_codegen" = xfalse
-+	then
-+		AC_MSG_ERROR([gdbus-codegen not found - needed to build dbus daemon])
-+	fi
-+
-+	# Imply GLib bindings for D-Bus
-+	with_bindings_glib=true
-+fi
-+
- AM_CONDITIONAL([WITH_BINDINGS_GLIB], [test "x$with_bindings_glib" = xtrue])
+-#ifdef CONFIG_PM
+-static int mpc8xxx_suspend(struct platform_device *pdev, pm_message_t state)
++static int mpc8xxx_suspend(struct device *dev)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = dev_get_drvdata(dev);
  
- if test "x$with_bindings_glib" = xtrue
-@@ -280,33 +305,6 @@ m4_ifdef([GOBJECT_INTROSPECTION_CHECK],
- 	[GOBJECT_INTROSPECTION_CHECK([0.6.2])],
- 	[AM_CONDITIONAL(HAVE_INTROSPECTION, test "x$found_introspection" = "xyes")])
+-	if (mpc8xxx_gc->irqn && device_may_wakeup(&pdev->dev))
++	if (mpc8xxx_gc->irqn && device_may_wakeup(dev))
+ 		enable_irq_wake(mpc8xxx_gc->irqn);
  
--# Depends on GLib bindings so must come after
--AC_ARG_ENABLE([dbus],
--	[AS_HELP_STRING([--enable-dbus], [build dbus daemon [default=no]])],
--	[if test "x$enableval" == xyes; then with_dbus=true; fi],
--	[with_dbus=false])
--AM_CONDITIONAL([WITH_DBUS], [test "x$with_dbus" = xtrue])
--
--AC_DEFUN([FUNC_NOT_FOUND_DBUS],
--	[ERR_NOT_FOUND([$1()], [dbus daemon])])
--
--if test "x$with_dbus" = xtrue && test "x$with_bindings_glib" != xtrue
--then
--	AC_MSG_ERROR([GLib bindings are required to build the dbus daemon - use --enable-bindings-glib])
--fi
--
--if test "x$with_dbus" = xtrue
--then
--	AC_CHECK_FUNC([daemon], [], [FUNC_NOT_FOUND_DBUS([daemon])])
--	AC_CHECK_FUNC([strverscmp], [], [FUNC_NOT_FOUND_DBUS([strverscmp])])
--	PKG_CHECK_MODULES([GUDEV], [gudev-1.0 >= 230])
--	AC_CHECK_PROG([has_gdbus_codegen], [gdbus-codegen], [true], [false])
--	if test "x$has_gdbus_codegen" = xfalse
--	then
--		AC_MSG_ERROR([gdbus-codegen not found - needed to build dbus daemon])
--	fi
--fi
--
- AC_ARG_ENABLE([systemd],
- 	[AS_HELP_STRING([--enable-systemd], [enable systemd support [default=no]])],
- 	[if test "x$enableval" == xyes; then with_systemd=true; fi],
+ 	return 0;
+ }
+ 
+-static int mpc8xxx_resume(struct platform_device *pdev)
++static int mpc8xxx_resume(struct device *dev)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = dev_get_drvdata(dev);
+ 
+-	if (mpc8xxx_gc->irqn && device_may_wakeup(&pdev->dev))
++	if (mpc8xxx_gc->irqn && device_may_wakeup(dev))
+ 		disable_irq_wake(mpc8xxx_gc->irqn);
+ 
+ 	return 0;
+ }
+-#else
+-#define mpc8xxx_suspend NULL
+-#define mpc8xxx_resume NULL
+-#endif
++
++static DEFINE_RUNTIME_DEV_PM_OPS(mpc8xx_pm_ops,
++				 mpc8xxx_suspend, mpc8xxx_resume, NULL);
+ 
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id gpio_acpi_ids[] = {
+@@ -467,12 +467,11 @@ MODULE_DEVICE_TABLE(acpi, gpio_acpi_ids);
+ static struct platform_driver mpc8xxx_plat_driver = {
+ 	.probe		= mpc8xxx_probe,
+ 	.remove_new	= mpc8xxx_remove,
+-	.suspend	= mpc8xxx_suspend,
+-	.resume		= mpc8xxx_resume,
+ 	.driver		= {
+ 		.name = "gpio-mpc8xxx",
+ 		.of_match_table	= mpc8xxx_gpio_ids,
+ 		.acpi_match_table = ACPI_PTR(gpio_acpi_ids),
++		.pm = pm_ptr(&mpc8xx_pm_ops),
+ 	},
+ };
+ 
 -- 
 2.43.0
 
