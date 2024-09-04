@@ -1,113 +1,119 @@
-Return-Path: <linux-gpio+bounces-9736-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9737-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D6CB96AD4F
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 02:28:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8047F96AE19
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 03:50:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FDD01C23D9F
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 00:28:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 04435B22DEF
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 01:50:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D86262581;
-	Wed,  4 Sep 2024 00:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9B7F10A0D;
+	Wed,  4 Sep 2024 01:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jsadccl/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2F1B66C;
-	Wed,  4 Sep 2024 00:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D6A3211;
+	Wed,  4 Sep 2024 01:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725409686; cv=none; b=XP4XNsGnuIAtazMt1aTX2BvpYv5WAzIpLAA7trAAJzTWlgRG2KMtkyhOe8tgA4G2dGjXhlPe7yXiVpRRpKs+e7ljOO/9/ITesUBlVcF51Kpt6Ntr87u4pMqygXz6tIaRDkfw4gIMWDfe3MvvonOPeBGoVTZ2udcS3ldE0B6sYXY=
+	t=1725414608; cv=none; b=P/ngmW3zT49Xqd2PnAeBwkh+ve5BVICmDE1NTYJJdge74KefuwVaHAus5pnukVrZSS2SSLiCWPVFgajGbLhQmUgfgv7Maiu2IiHL7mIEzJCKeaKEm22D8AYgHVw20feYYaYE8TzUddHTEotVZfuAFLz1TJFNODzCZo2g5GsHyL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725409686; c=relaxed/simple;
-	bh=gy4hAKBYfvoYkNXZdcCiPvChAhmVEjnxfrdfroixmG0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=J2lZuJ/aTJesz2uqFxkZY8M5vgMBbbblDQEgzncZanMd9nEjM3U3fTy1raaLn6zTut+yB398N/UL0ux5fQKayS6/JqiZn25h0iD/KL8SLispGDIBuEzKGMx82bxTZOLskOFj/pVT6MhbylS2HlyRVyub6mOvXUscTucMOEI0Vy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-From: Yixun Lan <dlan@gentoo.org>
-Date: Wed, 04 Sep 2024 00:27:25 +0000
-Subject: [PATCH 3/3] riscv: dts: spacemit: add gpio support for K1 SoC
+	s=arc-20240116; t=1725414608; c=relaxed/simple;
+	bh=4AQxlfwksI8M0lXuPBfgDWfUUeO7Xwm6/Q69FGEDaqE=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=Bf07VAvSoWJ+nAeiW8MfCQS4ADKdpvknOTWLeIM8dFcLjGGXZAONCiXaRg7qZNZ2BiKBX2f3e3TFVIpfhMebThfTvG/O8+fTMhxTGCR3iI+i/Qg1FonPxKcOSLwCsAI0s53+Zpasrty0f5gmxRpP7ePt9KgKuoto+FQ0/NAIxqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jsadccl/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 853F8C4CEC4;
+	Wed,  4 Sep 2024 01:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725414607;
+	bh=4AQxlfwksI8M0lXuPBfgDWfUUeO7Xwm6/Q69FGEDaqE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=jsadccl/9E+PbXaq+qBmbPd7/PjPSWuCGCCzZgXrCdzxotTCt+t4Jh4/bmoJd9CVw
+	 H8TFVkWCnT6PO3N5msofWRplIEzvDa/Eg5k4rOBS65A+0zhdG8IyexgNbEl8PJPjw+
+	 IPqvsG8xcWU4KoDxTm0aKsnESTEtPBfW/2JJhC2yZ7oNtXlbcdYda/gKsGnl9kjiks
+	 zYIezEibBc9qTHTav6i6r2l9PCUv9D8lgvmxWdNEEHSR/qOB+sf1qlb4hUUhVYAkeY
+	 sRh9O478wwJmKVRY2p7fE4R/AvzwSGarhGRI5N4ZYyVZuwxFz3ZGhNiy/K7VPANfL9
+	 HopuyFoAQZ++g==
+Date: Tue, 03 Sep 2024 20:50:06 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240904-03-k1-gpio-v1-3-6072ebeecae0@gentoo.org>
-References: <20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org>
-In-Reply-To: <20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>, 
- Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
- Meng Zhang <zhangmeng.kevin@spacemit.com>, 
- Meng Zhang <kevin.z.m@hotmail.com>, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1037; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=gy4hAKBYfvoYkNXZdcCiPvChAhmVEjnxfrdfroixmG0=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBm16mAzKQqhIRAHRj8x0eR0whqAE38Cg8Ov60Dg
- DzdoEyXVd2JApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZtepgF8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277apQEACJgGBpAHyaenJ7eF
- T7/Q8syncOfzBxoTm7WYnlaM23Wup3C4/KD2+u0c7pRKkNgQp+K3OdqRUiO1C8pb72qQIEFHgv+
- zH2HKGcPstHabN3mw442MeRuuqla6vyX/GtS/UvBY/u4fErG7eCCbW7tWHcWgYXXCxWGHKqHbUK
- LSymTQg2IOLLIayOtuwwBqmHVk1yE12B9D91+Gn6sNZU+XCCrWX8tfsl5aS1xTSvvxENQoRO8fN
- WsUM7M/7aNXXrYMa3QASsQlgjY7ygyrjmBrtjlw2l5czaCtnQbp4ZJCpzM8bt8M+HnM3OVFr+yF
- A5c50uwUhCcy/y68IZJ9ttLVMrAEFEjLgOk0LbcP/PhMkLTg3+958cZSFIlkF/szBS7Cp95oCge
- Vr5cF6wHtezAte9s/h1BnfXj7AFpVc357t4c9OENS748G44D1U1fFuak6U0vuBVc+/2DFRlkF73
- Z0xfk+LFOkU8fzQo2yr/++kh/C8Azro0ztPI41XQHr2ebAET70n3jd0QbY5A1drZkjOFYqKj6RN
- lzOW//tphdlNAv+XNwZ4AnC/flVSb4EsR1wfUJDXfFLwsh/dddvwhGfCgnQjleX2ogYFIlhalu5
- UuaKZQ6Ly89+3cQ1nnan5hjkprBN7ONfRNp7ZpdAeVZ2WzE91p2j0EDHgeZWsg/2MjuA==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Nikunj Kela <quic_nkela@quicinc.com>
+Cc: devicetree@vger.kernel.org, cristian.marussi@arm.com, 
+ rui.zhang@intel.com, linux-spi@vger.kernel.org, lee@kernel.org, 
+ krzk+dt@kernel.org, will@kernel.org, linux-arm-msm@vger.kernel.org, 
+ linus.walleij@linaro.org, joro@8bytes.org, linux-kernel@vger.kernel.org, 
+ robin.murphy@arm.com, quic_psodagud@quicinc.com, conor+dt@kernel.org, 
+ kernel@quicinc.com, sudeep.holla@arm.com, linux-serial@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, herbert@gondor.apana.org.au, 
+ konradybcio@kernel.org, jassisinghbrar@gmail.com, 
+ linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, andersson@kernel.org, 
+ lukasz.luba@arm.com, iommu@lists.linux.dev, linux-watchdog@vger.kernel.org, 
+ broonie@kernel.org, rafael@kernel.org, davem@davemloft.net, 
+ arm-scmi@vger.kernel.org, thara.gopinath@gmail.com, viresh.kumar@linaro.org, 
+ linux@roeck-us.net, amitk@kernel.org, wim@linux-watchdog.org, 
+ andi.shyti@kernel.org, linux-arm-kernel@lists.infradead.org, 
+ tglx@linutronix.de, linux-crypto@vger.kernel.org
+In-Reply-To: <20240903220240.2594102-14-quic_nkela@quicinc.com>
+References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-14-quic_nkela@quicinc.com>
+Message-Id: <172541460656.3237041.12121704663662726692.robh@kernel.org>
+Subject: Re: [PATCH v2 13/21] dt-bindings: pinctrl: Add SA8255p TLMM
 
-Populate the GPIO node in the device tree for K1 SoC.
-Also, map all 128 pins as GPIO to the pinctrl controller.
 
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
- arch/riscv/boot/dts/spacemit/k1.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+On Tue, 03 Sep 2024 15:02:32 -0700, Nikunj Kela wrote:
+> Add compatible for TLMM block representing support on SA8255p.
+> 
+> SA8255p uses the same TLMM block as SA8775p however the ownership
+> of pins are split between Firmware VM and Linux VM on SA8255p. For
+> example, pins used by UART are owned and configured by Firmware VM
+> while pins used by ethernet are owned and configured by Linux VM.
+> Therefore, adding a sa8255p specific compatible to mark the difference.
+> 
+> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
+> ---
+>  .../devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml    | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
 
-diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index a2d5f7d4a942a..648b459597a4d 100644
---- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-@@ -416,6 +416,19 @@ uart9: serial@d4017800 {
- 			status = "disabled";
- 		};
- 
-+		gpio: gpio@d4019000 {
-+			compatible = "spacemit,k1-gpio";
-+			reg = <0x0 0xd4019000 0x0 0x800>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <58>;
-+			interrupt-names = "gpio_mux";
-+			interrupt-parent = <&plic>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 128>;
-+		};
-+
- 		pinctrl: pinctrl@d401e000 {
- 			compatible = "spacemit,k1-pinctrl";
- 			reg = <0x0 0xd401e000 0x0 0x400>;
+My bot found errors running 'make dt_binding_check' on your patch:
 
--- 
-2.45.2
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml:22:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml:23:11: [warning] wrong indentation: expected 12 but found 10 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml:26:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
+
+dtschema/dtc warnings/errors:
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240903220240.2594102-14-quic_nkela@quicinc.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
 
