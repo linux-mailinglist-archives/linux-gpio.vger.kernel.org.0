@@ -1,121 +1,257 @@
-Return-Path: <linux-gpio+bounces-9760-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9761-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DEAB96B3C8
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 10:02:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5F0F96B498
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 10:33:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D89B1C2164D
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 08:02:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66E6C1F2934D
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 08:33:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 122E617BECD;
-	Wed,  4 Sep 2024 08:01:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E9181CC14A;
+	Wed,  4 Sep 2024 08:32:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ih0zvCLU"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AEbkVfIg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3BF176FA2
-	for <linux-gpio@vger.kernel.org>; Wed,  4 Sep 2024 08:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2D31CB13F
+	for <linux-gpio@vger.kernel.org>; Wed,  4 Sep 2024 08:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725436915; cv=none; b=so5jAFZJMCV/0TxbCCHzT1Aj6gtGjFXMeiHDJ6k5lXxc8iQQ6mUgk8iNkroLVTvHlWITFbTcXztZu8Fw5pqwuGbJL8CezXGLkpJ8uArZYKZDB5MAxa7yAmKqS8lqrMyd25lNAea0aKaV6hGIyBFH6/7NQ8f/7SZt9KStG//A0ns=
+	t=1725438779; cv=none; b=Kmg9ZhPX4IhB8ozzaf/Cktbhk3jRPYGvtZGhfk/AdCx2fKdVMve1BXdnvT4/O1YU4OaZtizWa5XwmOk0Yg0lb8xOjmU56QaVmA1hkXMfg1i6IxrnDUWq0J9TOaSuSw6/v+tGsHApSDS4uqWwsp6uVrp6IPacgKCkZ3eq7k1FhLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725436915; c=relaxed/simple;
-	bh=NE0zVNdkSQggFLaj6w+8JQWDBinoLV3SdgXeouoLfXk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d2WAAyobd5QTfug5aXOTAgmRy1MFpgJqNJMCWDRT2GSa6zieSLDEig/UkPgnd9LBCYhFvvJ7m0kELs++BpuFHKdI6u1qPUFjPLbr15Stvd4zgdwkE/VZQhhiH0njil4zUMfj3GpiWUfqaOvx5XuE7AL1TV1SJ6mJku0zK0UWmqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Ih0zvCLU; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-374c3400367so2655786f8f.2
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2024 01:01:53 -0700 (PDT)
+	s=arc-20240116; t=1725438779; c=relaxed/simple;
+	bh=Xv0p+AJofBlCcpb3u4bgKBZYMhgzStHTHgFTPhmw1pE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lmYj1L5cSi3PjSGnMHbYZHCysZXM8BKtD42qDv2pErqv/tdQP1BPizJeqkdxi5ckHn+7WBx2b+8ajUWo+kAj3U+0SWUiLK7lljsbb4RLgDZ2zo8BZhlD4lIYi/vhmHb3joae1QQ21AdhuGC4iANAvop0wnkStu/fZDKBU4u6Si0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AEbkVfIg; arc=none smtp.client-ip=209.85.218.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-a8692bbec79so718952866b.3
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2024 01:32:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725436912; x=1726041712; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fgG2SWOBmEmcbYBqaioLCfXPV4aBp9tip53DbH+tfDE=;
-        b=Ih0zvCLU+EvmT7+Ey9oXzO20y8u7xcJYfW3sV/FzNQTpsLtzzdQqniYn2xkTRdLyJg
-         lJrtS2S32N33Eumj2+q0qJUL7bL2oVbpn4Noz8uMoGp6rh+3FupdRisrvkEfBNKkh5Gm
-         2afbosPMH3Q0fSxGXlfyn9w/5I7GaSKCTwXPPGA0NbC7PSfg9hmOf5j5ekT70OyGFeH9
-         zJEVXP41TaARf6hsZXu8FGmz3kX+ETSuVeomrus7ZE8IcnrkkL9WHIxPTiJ5l4zReXem
-         Z4dtk8271VuT7jyYY8njdPN/7aOhfFSrf7DVOM12C/IWSvC+uzRoJQqOybHb6eZlgwX6
-         bJRA==
+        d=suse.com; s=google; t=1725438775; x=1726043575; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=czuWwJfvtYwCI1yRbL1xXo5MWTUEx5+lgQqq8jdG4Bg=;
+        b=AEbkVfIgg41Etbmw1+4g5J0R5NmCwhfHwx23LU+LzIEk7m0E4mAqRG6jgZUsJFamgn
+         L+mOk9hNx0oQ8wypBYKuu6KvJCMQGWXUKkxULYzmg6o+0VJn5HTHqJRjekkFYxaLKCM1
+         hLG3RbpQ8/4y82I5tH9ONW8PpzQBn7JJW29XPtChfemnXe+ahNuXwfis2VOB7/rcd88v
+         gqNZXb93EJtHOyCG1yq4LzDFuRyfnmvZ86A9xDX+0TVqOXBU+g2NO5L6cpgwclT3eLmr
+         63KsmC6AVXKiuwwyi6gSHvZ7Rr9UV4fzYskeuZRaHhHpKlmeZ9yd2LgRDp1ZxKFCjV49
+         tt5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725436912; x=1726041712;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fgG2SWOBmEmcbYBqaioLCfXPV4aBp9tip53DbH+tfDE=;
-        b=VDsAjvlozAD/G9OSfW9jUrzaadGreXSNekia5fiRJm4CBAAs+uynekTZKkIDO/NFGZ
-         IrheXTTgaCJ2/L28Ba6hO2CeGQIzwg24xSQF5F7s7bjSjl4NNcaA6b8uPdqaL7rQl02k
-         sAuMhAM3gr7FxUtgEckOyTcj1bv63SJUaLf1FgWdQxkHQawW8I14E5/1+d0j17km5vJ1
-         NFauqKNAWnxKO1+gZq4ZZx0HC6aZkje2Kc6v8XD7/aaYT34ZnwYwVtnr2QLxYE5F828w
-         R3jW2WMeWhlXh1RZ2hzY0I+Ygav7WWfP2qgDmoCQGqVddqiwYavYIri2RUKsPgn10vfg
-         Lg8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVG1rx37R7BU1NHBZ3iLNU9bguHPPr8c2NRqWT5+01Wpm3g6hC78+mTwq1N5M2ywnrnIYcOtUk3U8C1@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgJo4aFMD4hj1a9mU1sX+g1zhmzNz5HXbkXbGk/Lbdr45f2wf3
-	3z6bWL7pyk8HlBuBAG2HmKw0Ep8PkyU5DDSGPZXU+o72+EwtI9bl86LAFLuC4qQ=
-X-Google-Smtp-Source: AGHT+IHboRICQb0C/vqtbSkCRNWf8WdQM43byGBZL7tHaz2fk+Up3D8SXZWo563oF18JtDaSd1g2/g==
-X-Received: by 2002:a05:6000:1f08:b0:368:7f53:6b57 with SMTP id ffacd0b85a97d-3749b544b2bmr15519213f8f.18.1725436912126;
-        Wed, 04 Sep 2024 01:01:52 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:66d0:70f:5bef:d67d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-374d00564b6sm6096319f8f.91.2024.09.04.01.01.51
+        d=1e100.net; s=20230601; t=1725438775; x=1726043575;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=czuWwJfvtYwCI1yRbL1xXo5MWTUEx5+lgQqq8jdG4Bg=;
+        b=YHtXXfUd+HGJOt/dLGxmD8YvCNM+k/cPZ2aJ93jE/2Gefz7o5hApg8eA3U/FFLFdy8
+         Qf6wd8mPZ+eGdb3Em5CBvUeShv2Ovi8BI713uj051GV1MCKjT2WuGc0KxzE3yVDDIJ5y
+         UMawr7jamkqZabNPgs8HdkHodwTPftpTiVp4iVOFTul2mU4EgFv1gTJGomQMuXVlN+VQ
+         snBSnFYS3FDSusxLpjPjKGVDx7R6M4EZLWnz2LWhFjTVtAEw893778ww8fkMk+g7DKlT
+         R28AMDS+GcTFIPHA5n4LB5whs3DwKI8CHpUTyNguwGa7X+ttJYm5wRBfxD7ikGLH1kHz
+         9B4g==
+X-Forwarded-Encrypted: i=1; AJvYcCXxOtU0O8knyJjjXR9IG6mZStzCVnFEuTkliDYH7cpbkO8+HKKfdxQanTX696mpr7zQm8BSRAcGB4YZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YznWYfLtNapWQ9IjuPGVfjFmiICNEXU4XtCR6Og2/8hFXKF9bbX
+	OybNEO08MBYUv7KJGp0WcUJearL2jJ0nghUNCYKUmtYl2Uel9tXcNzBCXnrDho0=
+X-Google-Smtp-Source: AGHT+IFsYrIc/8V6Dd0Wb4ac4K3yCfFqAZyqP0j4It4wu1Ti01Hf/Xj9KyshDVwvjUwn7G7BVIArrg==
+X-Received: by 2002:a17:907:1c94:b0:a7a:b643:654f with SMTP id a640c23a62f3a-a89a358274emr1229334866b.15.1725438774327;
+        Wed, 04 Sep 2024 01:32:54 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a3d3177basm69728966b.64.2024.09.04.01.32.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2024 01:01:51 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	vz@mleia.com,
-	linux-gpio@vger.kernel.org,
-	Zhang Zekun <zhangzekun11@huawei.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 0/4] Simplify code with helper function devm_clk_get*()
-Date: Wed,  4 Sep 2024 10:01:50 +0200
-Message-ID: <172543690825.12391.10926770607261853766.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240903080627.53652-1-zhangzekun11@huawei.com>
-References: <20240903080627.53652-1-zhangzekun11@huawei.com>
+        Wed, 04 Sep 2024 01:32:53 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Wed, 4 Sep 2024 10:33:02 +0200
+To: Rob Herring <robh@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 04/11] of: address: Preserve the flags portion on 1:1
+ dma-ranges mapping
+Message-ID: <ZtgbPtYXu0yOieou@apocalypse>
+References: <5ca13a5b01c6c737f07416be53eb05b32811da21.1724159867.git.andrea.porta@suse.com>
+ <20240821001618.GA2309328-robh@kernel.org>
+ <ZsWi86I1KG91fteb@apocalypse>
+ <CAL_JsqKN0ZNMtq+_dhurwLR+FL2MBOmWujp7uy+5HzXxUb_qDQ@mail.gmail.com>
+ <ZtBJ0jIq-QrTVs1m@apocalypse>
+ <CAL_Jsq+_-m3cjTRsFZ0RwVpot3Pdcr1GWt-qiiFC8kQvsmV7VQ@mail.gmail.com>
+ <ZtChPt4cD8PzfEkF@apocalypse>
+ <CAL_JsqJNcZx-HH-TJhsNai2fqwPJ+dtcWTdPagRjgqM31wsJkA@mail.gmail.com>
+ <Ztc2DadAnxLIYFj-@apocalypse>
+ <CAL_Jsq+mpVEDthuViQZ6T7tDQ_krgxYSQ0Qg1pBMNW8Kpr+Qcw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_Jsq+mpVEDthuViQZ6T7tDQ_krgxYSQ0Qg1pBMNW8Kpr+Qcw@mail.gmail.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Rob,
 
-
-On Tue, 03 Sep 2024 16:06:23 +0800, Zhang Zekun wrote:
-> Use helper function devm_clk_get_enabled() and
-> devm_clk_get_optional_enabled() to simplify code.
+On 13:46 Tue 03 Sep     , Rob Herring wrote:
+> On Tue, Sep 3, 2024 at 11:15 AM Andrea della Porta
+> <andrea.porta@suse.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > On 14:37 Fri 30 Aug     , Rob Herring wrote:
+> > > On Thu, Aug 29, 2024 at 11:26 AM Andrea della Porta
+> > > <andrea.porta@suse.com> wrote:
+> > > >
+> > > > Hi Rob,
+> > > >
+> >
+> > ...
+> >
+> > >
+> > > I think simple-bus where you have it is fine. It is really 1 level up
+> > > that needs to be specified. Basically something that's referenced from
+> > > the specific PCI device's schema (e.g. the RP1 schema (which you are
+> > > missing)).
+> > >
+> > > That schema needs to roughly look like this:
+> > >
+> > > properties:
+> > >   "#address-cells":
+> > >     const: 3
+> > >   "#size-cells":
+> > >     const: 2
+> > >   ranges:
+> > >     minItems: 1
+> > >     maxItems: 6
+> > >     items:
+> > >       additionalItems: true
+> > >       items:
+> > >         - maximum: 5  # The BAR number
+> > >         - const: 0
+> > >         - const: 0
+> > >         - # TODO: valid PCI memory flags
+> > >
+> > > patternProperties:
+> > >   "^bar-bus@[0-5]$":
+> > >     type: object
+> > >     additionalProperties: true
+> > >     properties:
+> > >       compatible:
+> > >         const: simple-bus
+> > >       ranges: true
+> > >
+> >
+> > Hmmm.. not sure how this is going to work. The PCI device (RP1) will
+> > havei, at runtime, a compatible like this:
+> >
+> > compatible = "pci1de4,1\0pciclass,0200000\0pciclass,0200";
+> >
+> > that is basically generated automatically by the OF framework. So, in the
+> > schema you proposed above, I can put something like:
+> >
+> > properties:
+> >   compatible:
+> >     contains:
+> >       pattern: '^pci1de4,1'
 > 
-> Zhang Zekun (4):
->   gpio: cadence: Use helper function devm_clk_get_enabled()
->   gpio: lpc18xx: Use helper function devm_clk_get_enabled()
->   gpio: mb86s7x: Use helper function devm_clk_get_enabled()
->   gpio: xilinx: Use helper function devm_clk_get_enabled()
+> No, it should be like this:
 > 
-> [...]
+> compatible:
+>   items:
+>     - const: pci1de4,1
+>     - const: pciclass,0200000
+>     - const: pciclass,0200
+> 
+> or
+> 
+> compatible:
+>   addtionalItems: true
+>   maxItems: 3
+>   items:
+>     - const: pci1de4,1
+>
 
-Applied, thanks!
+Ack.
+ 
+> 
+> Alternatively, we could instead only generate 'pciclass' compatibles
+> for bridge nodes. The reason being that being an ethernet controller
+> doesn't really tell us anything. There's no standard interface
+> associated with that class.
 
-[1/4] gpio: cadence: Use helper function devm_clk_get_enabled()
-      commit: 7cea93092a28d3338e242b08f8ee5099c82c1cb6
-[2/4] gpio: lpc18xx: Use helper function devm_clk_get_enabled()
-      commit: c9e5cb9916fcf73ac8d2e0a1e35a9327bf0e347e
-[3/4] gpio: mb86s7x: Use helper function devm_clk_get_enabled()
-      commit: 1c927fb131fffea28a7ebe00220071d400a11d53
-[4/4] gpio: xilinx: Use helper function devm_clk_get_enabled()
-      commit: f8d5200bd59b9688f5f59ec8b1e06e8200dc4fda
+I'd avoid this one, since the class is not representative in this case. RP1
+is an MFD and not an Ethernet controller. Also, it would prevent other similar
+PCI devices with differnt class from using this schema.
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> > or maybe I could omit the compatible entirely, like in:
+> 
+> No.
+> 
+> > https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-iommu.yaml
+> 
+> That's not a device node, but just part of pci-host-bridge.yaml.
+> 
+> > that seems to refer to generic compatible values.
+> > In both cases though, I don't see how these binding could work with
+> > make dt_binding_check, since there's no compatible known at compile
+> > time (for the first approach), or no compatible at all (the second
+> > approach).
+> > Is it intended only as a loose documentation?
+> 
+> No, schemas define exactly what a binding can and can't contain. But
+> they are divided into device schemas and common schemas. The latter
+> are incomplete and are included by the former. Generally, "compatible"
+> goes in device schemas.
+
+Ack.
+
+> 
+> > Or are you proposing that for a future new bus (hence with a new, specific,
+> > compatible) that could be described by the schema above?
+> 
+> The above schema would be the common schema included by a RP1 schema,
+> LAN966x schema, or any other device doing the same thing.
+
+Many thanks, I believe I've got it now :)
+
+Cheers,
+Andrea
+
+> Rob
 
