@@ -1,149 +1,141 @@
-Return-Path: <linux-gpio+bounces-9732-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9733-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 521B296AC32
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 00:26:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BC5A96AD45
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 02:28:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFF231F25931
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Sep 2024 22:26:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B72BE28611E
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 00:27:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16A271D589F;
-	Tue,  3 Sep 2024 22:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dZn4TZXV"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 145B0804;
+	Wed,  4 Sep 2024 00:27:54 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5E51EBFE4;
-	Tue,  3 Sep 2024 22:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534F7391;
+	Wed,  4 Sep 2024 00:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725402406; cv=none; b=nDLxfs5UW/Qeh6He6KB0MfPwPE/grdeGGxDR469836Ph5SgumU4hoAfGwWtwNIUiRVMsk5Pg8SiAL0SyAljToD++j8XLm1LHmMbnYmYjFIgsok8ddRUnkgKoZKji4ICjPc7+bspNSnIForNeZKgGyPakq/1B4+KI7VxE/InvPM8=
+	t=1725409673; cv=none; b=W3hN3d2+NMwWQiqE+VYSgsYpR5roNTwuL0UHYO3512B6mcfNlckAAVzwonXSEobwXu6b7JK0EPGH9hCtpq07kEBcHlWfOTjGmNGqW/KlF0yg7CPZfMWAhSXIOc6sZbnn5yaNnkW5LmWJWYnffrBnIk21SwQgutW8WRlTr9LmSMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725402406; c=relaxed/simple;
-	bh=YXQIagdDPc90ZbJET9jNpaM1MPJKmJ5Y5fngYc6zZ5E=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=VZMM6QfOdfOIsPgcFMIvR2Co69DR7Vwe9M2ZEKtZZ6911mC8xz9L4Hl6YD6H7dv+Je6L9OfqOa1ZE4MtzfXdRAzUeYBwUmlHv08Bru2sfpZq77UfYVbB/QVYjrrDWC9kFf02JsvFpcfQcj60PoXPtwU5KMExDBb2qHgOT07xXiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dZn4TZXV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE497C4CEC4;
-	Tue,  3 Sep 2024 22:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725402406;
-	bh=YXQIagdDPc90ZbJET9jNpaM1MPJKmJ5Y5fngYc6zZ5E=;
-	h=Date:From:To:Subject:In-Reply-To:From;
-	b=dZn4TZXVbXEzEwa3ibet6GkytN3NXh0+F+/hWh7n22CyMZmwuMO1drbR6aDqPSH/m
-	 1onS+XmaNIzxiX4h1AD6FfLhQyYnaF2/AgM8LQSsl2aVq3kh1VZZBtMEcyN3NWmoV7
-	 WlGawzRAr97kNfsueOFPzVcWLHcCL9fx1uyE4BVpWiZCD3Br+lCJ4EnLT86dFuTSFv
-	 RNtwJ1gX9LNZsCrEFoRM1ff4GhTGAT9H3wladciEnJy5WJx+dAMD0kSmMMoulZg4hk
-	 aulQSWoX0q7ifdHNpRfXx5NwOgTa64bW7nZm0ZcA6mpu5hGiXwivszhbdpATg3smEr
-	 PHbM0Q+6gtxrw==
-Date: Tue, 3 Sep 2024 17:26:44 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
- parsed from DT
-Message-ID: <20240903222644.GA126427@bhelgaas>
+	s=arc-20240116; t=1725409673; c=relaxed/simple;
+	bh=6onhXgV1s1mDjlTMHyC+Ggv07yKIGjKsJnRg82UX0m0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DhQLnLjE5Y5o+PxkF3SMyaLv7EghHUq9pWQG5dQpzqTyHzDNbGT71wnbH5h/CbhiGQhlQssG6XBgB4KsR3lNyznJJibxFPVSnfOtzi7fxU9ciWk3zcV6rRqxaMXPpqmgzeC+IrENX7ZO9qtU2g4IZE2hiUkteBMLm8C/Qx4BfRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+From: Yixun Lan <dlan@gentoo.org>
+Subject: [PATCH 0/3] riscv: spacemit: add gpio support for K1 SoC
+Date: Wed, 04 Sep 2024 00:27:22 +0000
+Message-Id: <20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zszcps6bnCcdFa54@apocalypse>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGup12YC/02OQWrDMBBFr2K0rmBmJE9tX6VkIY1HqWhjO7JrC
+ iF3r5wU2uX78B7/ZlYtWVczNDdTdM9rnqcK+NIYeQ/TWW0eKxsC8tBRZ8HZD7TnJc+WMaaeUg+
+ OxFRhKZry9yP2dnpy0etXbW7P8S85NI8gEx81QBvDmsWOm8UQHKpqlJGGvTX/j/xar1Bv0CEue
+ ZKtfFoXKIIKOgQcdn9INahW5sslb0PjHQqyZ8XUcex9n4LjrtUkLURmqOSFIpvT/f4DGisaJxM
+ BAAA=
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>, 
+ Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
+ Meng Zhang <zhangmeng.kevin@spacemit.com>, 
+ Meng Zhang <kevin.z.m@hotmail.com>, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3228; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=6onhXgV1s1mDjlTMHyC+Ggv07yKIGjKsJnRg82UX0m0=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBm16l2KunxRkOS7t5zOG8f0JH+VIHbba4RUAHEF
+ f7si38Obi+JApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZtepdl8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277ZL7EACG6R6SWRwmFXnCib
+ 1Xo0iAQSJZHYzudSqhQC3EXT1wuEThyod3yu+g+rzpSpX+tNpBOinudlJY0lYudYujiVxQI4jJr
+ 5hL5jiGZzbTUG2t6/XgYBaRd0JgZm0Cd0swGUghOH2Dp0blkHi9bHcQzmsPDplwi/HB+X5V4nJl
+ 2E9EaGZZySQ5RkK4mgY9cA+A7wt4WgGdFX6rmqwFuVZVeCQtmn9FyrfJrGtCqxApwe815anj3Fy
+ VeAwzFB8ZsgoaNheOubn5kwHnkK2nSEjFLabNPuYVJzdewmbRINOxWZcIWdHb2z6XF+JJQA8grR
+ PoZ0NbTHgahivcKYteEjZuAfvRPO/XnE6YsDPDPBEd763w0XvLpGBifa2J4k46WR54jYm49Y8ar
+ fyHbYZdnO6jzzVcI5dDAPqlH/bAKn9MnvWw9xxmqoSsUGOnvDfrB4hmq5QtaE+yyaVGOqPt1r4O
+ rLt5yoTfbNW+GSvBFPrvS6GYKd+L/msl4rmAisPsaC2TdnU6pTAsOoZJ6jnaUquRtbpqvVhI8/I
+ 086vjWh5yRFw7Afg+CnGgf5IlZOmjRENz+0LMfkDFQ3vHln5e9WI0XGHjXoRkhFQXolW/svfd2Y
+ JIkdTO2gTMDz/Cs+Y0A1DC6vyB2CZ4F6bVFdWHf4nRKAz2efDeKp2tpnS13hN0qJ53Fg==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-On Mon, Aug 26, 2024 at 09:51:02PM +0200, Andrea della Porta wrote:
-> On 10:24 Wed 21 Aug     , Bjorn Helgaas wrote:
-> > On Tue, Aug 20, 2024 at 04:36:05PM +0200, Andrea della Porta wrote:
-> > > The of_pci_set_address() function parses devicetree PCI range
-> > > specifier assuming the address is 'sanitized' at the origin,
-> > > i.e. without checking whether the incoming address is 32 or 64
-> > > bit has specified in the flags.  In this way an address with no
-> > > OF_PCI_ADDR_SPACE_MEM64 set in the flags could leak through and
-> > > the upper 32 bits of the address will be set too, and this
-> > > violates the PCI specs stating that in 32 bit address the upper
-> > > bit should be zero.
+The gpio controller of K1 support basic GPIO functions,
+which capable of enabling as input, output. It can also be used
+as GPIO interrupt which able to detect rising edge, failing edge,
+or both. There are four GPIO banks, each consisting of 32 pins.
 
-> > I don't understand this code, so I'm probably missing something.  It
-> > looks like the interesting path here is:
-> > 
-> >   of_pci_prop_ranges
-> >     res = &pdev->resource[...];
-> >     for (j = 0; j < num; j++) {
-> >       val64 = res[j].start;
-> >       of_pci_set_address(..., val64, 0, flags, false);
-> >  +      if (OF_PCI_ADDR_SPACE_MEM64)
-> >  +        prop[1] = upper_32_bits(val64);
-> >  +      else
-> >  +        prop[1] = 0;
-> > 
-> > OF_PCI_ADDR_SPACE_MEM64 tells us about the size of the PCI bus
-> > address, but the address (val64) is a CPU physical address, not a PCI
-> > bus address, so I don't understand why of_pci_set_address() should use
-> > OF_PCI_ADDR_SPACE_MEM64 to clear part of the CPU address.
-> 
-> It all starts from of_pci_prop_ranges(), that is the caller of
-> of_pci_set_address().
+The GPIO driver request one clock source from APBC block,
+In this series, I haven't added the clock support, instead plan
+to fix it after clock driver is implemented/merged.
 
-> val64 (i.e. res[j].start) is the address part of a struct resource
-> that has its own flags.  Those flags are directly translated to
-> of_pci_range flags by of_pci_get_addr_flags(), so any
-> IORESOURCE_MEM_64 / IORESOURCE_MEM in the resource flag will
-> respectively become OF_PCI_ADDR_SPACE_MEM64 /
-> OF_PCI_ADDR_SPACE_MEM32 in pci range.
+The GPIO docs of K1 SoC can be found here, chapter 16.4 GPIO [1]
 
-> What is advertised as 32 bit at the origin (val64) should not become
-> a 64 bit PCI address at the output of of_pci_set_address(), so the
-> upper 32 bit portion should be dropped. 
+Note, this patch need two prerequisite series, basic dt[2] and pinctrl[3]
 
-> This is explicitly stated in [1] (see page 5), where a space code of 0b10
-> implies that the upper 32 bit of the address must be zeroed out.
+Link: https://developer.spacemit.com/documentation?token=Rn9Kw3iFHirAMgkIpTAcV2Arnkf [1]
+Link: https://lore.kernel.org/all/20240730-k1-01-basic-dt-v5-0-98263aae83be@gentoo.org [2]
+Link: https://lore.kernel.org/all/20240903-02-k1-pinctrl-v4-0-d76c00a33b2b@gentoo.org [3]
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+Yixun Lan (3):
+      dt-bindings: gpio: spacemit: add support for K1 SoC
+      gpio: spacemit: add support for K1 SoC
+      riscv: dts: spacemit: add gpio support for K1 SoC
 
-OK, I was confused and thought IORESOURCE_MEM_64 was telling us
-something about the *CPU* address, but it's actually telling us
-something about what *PCI bus* addresses are possible, i.e., whether
-it's a 32-bit BAR or a 64-bit BAR.
+ .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml |  95 +++++
+ arch/riscv/boot/dts/spacemit/k1.dtsi               |  13 +
+ drivers/gpio/Kconfig                               |   7 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-spacemit-k1.c                    | 454 +++++++++++++++++++++
+ 5 files changed, 570 insertions(+)
+---
+base-commit: 431c1646e1f86b949fa3685efc50b660a364c2b6
+change-id: 20240828-03-k1-gpio-61bf92f9032c
+prerequisite-change-id: 20240626-k1-01-basic-dt-1aa31eeebcd2:v5
+prerequisite-patch-id: 47dcf6861f7d434d25855b379e6d7ef4ce369c9c
+prerequisite-patch-id: 77787fe82911923aff15ccf565e8fa451538c3a6
+prerequisite-patch-id: b0bdb1742d96c5738f05262c3b0059102761390b
+prerequisite-patch-id: 3927d39d8d77e35d5bfe53d9950da574ff8f2054
+prerequisite-patch-id: a98039136a4796252a6029e474f03906f2541643
+prerequisite-patch-id: c95f6dc0547a2a63a76e3cba0cf5c623b212b4e6
+prerequisite-patch-id: 66e750e438ee959ddc2a6f0650814a2d8c989139
+prerequisite-patch-id: 29a0fd8c36c1a4340f0d0b68a4c34d2b8abfb1ab
+prerequisite-patch-id: 0bdfff661c33c380d1cf00a6c68688e05f88c0b3
+prerequisite-patch-id: 99f15718e0bfbb7ed1a96dfa19f35841b004dae9
+prerequisite-change-id: 20240708-02-k1-pinctrl-3a2b0ec13101:v4
+prerequisite-patch-id: 47dcf6861f7d434d25855b379e6d7ef4ce369c9c
+prerequisite-patch-id: 77787fe82911923aff15ccf565e8fa451538c3a6
+prerequisite-patch-id: b0bdb1742d96c5738f05262c3b0059102761390b
+prerequisite-patch-id: 3927d39d8d77e35d5bfe53d9950da574ff8f2054
+prerequisite-patch-id: a98039136a4796252a6029e474f03906f2541643
+prerequisite-patch-id: c95f6dc0547a2a63a76e3cba0cf5c623b212b4e6
+prerequisite-patch-id: 66e750e438ee959ddc2a6f0650814a2d8c989139
+prerequisite-patch-id: 29a0fd8c36c1a4340f0d0b68a4c34d2b8abfb1ab
+prerequisite-patch-id: 0bdfff661c33c380d1cf00a6c68688e05f88c0b3
+prerequisite-patch-id: 99f15718e0bfbb7ed1a96dfa19f35841b004dae9
+prerequisite-patch-id: 238db182251f2f79a947d16f0112a958d0837878
+prerequisite-patch-id: 75272e3a60f76c6dc417ecb3f56626e663918668
+prerequisite-patch-id: b93bb35db82d199d4d30deefbc34b8413539cf32
 
-However, the CPU physical address space and the PCI bus address are
-not the same.  Generic code paths should account for that different by
-applying an offset (the offset will be zero on many platforms where
-CPU and PCI bus addresses *look* the same).
+Best regards,
+-- 
+Yixun Lan <dlan@gentoo.org>
 
-So a generic code path like of_pci_prop_ranges() that basically copies
-a CPU physical address to a PCI bus address looks broken to me.
-
-Maybe my expectation of this being described in DT is mistaken.
-
-Bjorn
 
