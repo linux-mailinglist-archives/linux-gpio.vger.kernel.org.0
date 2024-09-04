@@ -1,208 +1,112 @@
-Return-Path: <linux-gpio+bounces-9750-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9751-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C895696B253
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 09:05:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 503B896B297
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 09:15:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2B4C5B20DBB
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 07:05:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A9A20B2718F
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 07:15:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1DDA145B07;
-	Wed,  4 Sep 2024 07:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04BC61465A0;
+	Wed,  4 Sep 2024 07:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hq7tACsV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521E91EC01C;
-	Wed,  4 Sep 2024 07:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D61C6A8D2
+	for <linux-gpio@vger.kernel.org>; Wed,  4 Sep 2024 07:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725433526; cv=none; b=ihiG5W07Z52A5cfsDHFxLJg4RHEvHNRXfbEvuTp5cgEIfZub2L1n3UkDMXJ8QdbbVuxQTSDMDjYecvuUMAeAB7QhgDV1bz5hzK1f6lIroo9M40tjSmKcryFWgvxrFyYqGj/lgLPj3hoIxdiaNME7bLrYuJsU2x7J8+SL+DGFtes=
+	t=1725434043; cv=none; b=k90dmic5NvQX/5sh/WQAx/DoR6vtSzppy+SZ9K/qCNrhB6CRl6xyILKc07V8pph+/5yT+B+sYMTiIXs5oi4FbXpwimDz63F+HaEV7Bo5mKLmN5hvXyhysFdQPxAL5qAzavDMDrKmn9WgXXUU3zx7n0f0pI8dCTVcsCRXakfaK6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725433526; c=relaxed/simple;
-	bh=c7qUXUOvGX+WYqEK4G2pw0HsJjV4YrvOvUOiIHnfWT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mKmAqgKUOEQel5pgb1LVKX56FZW0UZs+ehOdy7yFFXLfIkN6wuIs7Wv+xOIQuCGv+jgAyEdv6PelHfoZY0guCW0gh6CPx2Zo3SYbAAmowxwd9SV+lmKMlVR5j6GNElqT6idPfvXZUEGXX+ZGgBmx7w+v2+Yqr8YUDJsZ1xmjdZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Date: Wed, 4 Sep 2024 07:05:20 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Yangyu Chen <cyy@cyyself.name>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Icenowy Zheng <uwu@icenowy.me>,
-	Meng Zhang <zhangmeng.kevin@spacemit.com>,
-	Meng Zhang <kevin.z.m@hotmail.com>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: spacemit: add support for K1 SoC
-Message-ID: <20240904070520-GYA107481@gentoo>
-References: <20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org>
- <20240904-03-k1-gpio-v1-1-6072ebeecae0@gentoo.org>
- <ttvqw3hncprtshhdgsnvlfopobqcxtsraxevgxqgnlt6orftkr@ktahud64cczd>
+	s=arc-20240116; t=1725434043; c=relaxed/simple;
+	bh=NJ9SB/aX3bvQztjlQcLr8iqQrO1jv19h+Xzs+NqiN6g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XqDcRT+NJu1YLQkIp4FSJtLzTFJhrWWoLdbDhLpbLRqBwfC2RSJktFYLvX7DBkcCxRwKTVvfbdfrs9Q++X0GBJ+0ER4sfOgMHuAw0StCRUwZQtWOSvyzjKCxPi1g1qvixcI90FZHL7nt4fz3LwcjkqewbkOmFO9ECHlJ24MOxtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hq7tACsV; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5c26a52cf82so1131943a12.2
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2024 00:14:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725434040; x=1726038840; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0HZtdoUXcKqwpohrchXt3yFUw2pAuJSelVNGLdO7S9M=;
+        b=hq7tACsVCeM4nqZYVXr7p8B6JtXp7ncwMYSRPjS53o/k/w7+kkMs9cwaIDGv0zyPdM
+         qhwE1GTnuwkGiD4MjYOK12c9nhZINwwQHksEF6zD9bI80BSQc9rZKmmRnKDmTWb+KDGp
+         HzmkViW4SlQzCcs2Iy9ItdxvcR/aQd874D9YWQXAUWPko8wBFE2TRE9i474X1aVutygh
+         TIKH7+RRdKJFLecPzYSJ4zIW0fl6cUaawt5of5Rs3SQP/Z5Ye9wGwyJtcxZCWVc2vaHD
+         D3UUmeD2o8s++ESR5johCzi1x6+B9N/zQhHIdBvqatxwhQ7IskHdjFCMy/vVVYPT/ZVf
+         RMPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725434040; x=1726038840;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0HZtdoUXcKqwpohrchXt3yFUw2pAuJSelVNGLdO7S9M=;
+        b=bPRSY6Si1jebHdRM2BQuJS0nYcVtDUq/x4bvX5WRjR+ZcULm61jTPS63j9aWnS9f1w
+         PImM0w/Ksnul+p1QUV0UV8nFTgV3+GqGoxdQF75zgRx1wJ/ydSsFxCgrloy8PTXsGm+x
+         TNrXSXh624bfR+UTUh/iTQZX0wd5b7wfi9YQ8W8hPJ5nGxXVMY7dpjaxvgYSK3/ZR9am
+         rgf65as3ppLffRJAsBGMJC8My+CvfO8r4ClUkMQlkR9UUlcpFVYowGSkhRk6EdYo8z6r
+         fDWD3YUtkBikz7mIYbjXpGnCb5GCMywkQj1a5l80BuwkBVXvYC9PkYnZT23FME0bw2R8
+         gtMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWBXf6lZVFQ1jzyXGCVkjj2f2Z2C2Bq0cRg5317AT5TVXQOyZHz1G5FqFbxBf887RgVCOza4pAE5ZZo@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzUnLoME1USfwUNGV3gVLS64iCrtXrK/T7vZJS+5i0PK20fDt/
+	RsgNtqzPDdAyE00SaPSfPeWQxK+ty7JvRfd5O+aQz5Yitp+etZtl0b1QAWsFH4k=
+X-Google-Smtp-Source: AGHT+IHulaUeFFtnEe6u+urEyuK65aq23Dpp2PX81PJyqmCErVFFNvx0CT7lhbt2SXESkKcTH0nYag==
+X-Received: by 2002:a05:6402:27c7:b0:5c2:5620:f72 with SMTP id 4fb4d7f45d1cf-5c2562011e0mr7748478a12.0.1725434040172;
+        Wed, 04 Sep 2024 00:14:00 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:66d0:70f:5bef:d67d])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c226c6a2a6sm7228799a12.7.2024.09.04.00.13.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2024 00:13:59 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Keerthy <j-keerthy@ti.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/2] gpio: davinci: drop platform data support
+Date: Wed,  4 Sep 2024 09:13:58 +0200
+Message-ID: <172543401622.8740.5904991065703116554.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240819151705.37258-1-brgl@bgdev.pl>
+References: <20240819151705.37258-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ttvqw3hncprtshhdgsnvlfopobqcxtsraxevgxqgnlt6orftkr@ktahud64cczd>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof 
-
-On 08:46 Wed 04 Sep     , Krzysztof Kozlowski wrote:
-> On Wed, Sep 04, 2024 at 12:27:23AM +0000, Yixun Lan wrote:
-> > The GPIO controller of K1 support basic functions as input/output,
-> > all pins can be used as interrupt which route to one IRQ line,
-> > trigger type can be select between rising edge, failing edge, or both.
-> > There are four GPIO banks, each consisting of 32 pins.
-> > 
-> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > ---
-> >  .../devicetree/bindings/gpio/spacemit,k1-gpio.yaml | 95 ++++++++++++++++++++++
-> >  1 file changed, 95 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
-> > new file mode 100644
-> > index 0000000000000..db2e62fb452fd
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
-> > @@ -0,0 +1,95 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/gpio/spacemit,k1-gpio.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: SpacemiT K1 GPIO controller
-> > +
-> > +description: >
-> 
-> Drop >
-> 
-> > +  The controller's registers are organized as sets of eight 32-bit
-> > +  registers with each set controlling a bank of up to 32 pins.  A single
-> > +  interrupt is shared for all of the banks handled by the controller.
-> > +
-> > +maintainers:
-> > +  - Yixun Lan <dlan@gentoo.org>
-> 
-> Maintainers go before description. Use example-schema as template.
-> 
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: '^gpio@[0-9a-f]+$'
-> 
-> 
-> No, why? Drop.
-> 
-> > +
-> > +  compatible:
-> > +    items:
-> 
-> and you can drop items as well.
-> 
-> > +      - const: spacemit,k1-gpio
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: >
-> 
-> Drop >. Everywhere.
-> 
-> > +      Define the base and range of the I/O address space containing
-> > +      the SpacemiT K1 GPIO controller registers
-> 
-> Redundant description, drop.
-> 
-> > +
-> > +  ranges: true
-> > +
-> > +  "#gpio-cells":
-> > +    const: 2
-> > +    description: >
-> > +      The first cell is the pin number (within the controller's
-> > +      pin space), and the second is used for the following:
-> > +      bit[0]: polarity (0 for active-high, 1 for active-low)
-> 
-> Rather refer to standard GPIO bindings header.
-> 
-> > +
-> > +  gpio-controller: true
-> > +
-> > +  gpio-ranges: true
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +    description:
-> > +      The interrupt shared by all GPIO lines for this controller.
-> > +
-> > +  interrupt-names:
-> > +    items:
-> > +      - const: gpio_mux
-> > +
-> > +  "#interrupt-cells":
-> > +    const: 2
-> > +    description: |
-> > +      The first cell is the GPIO number, the second should specify
-> > +      flags.  The following subset of flags is supported:
-> > +      - bits[3:0] trigger type flags (no level trigger type support)
-> > +        1 = low-to-high edge triggered
-> > +        2 = high-to-low edge triggered
-> > +      Valid combinations are 1, 2, 3
-> 
-> Hm? No, you must use standard interrupt flags, not custom ones.
-> 
-It should be same as standard flags, my intention here was try to say
-the controller support edge trigger only, but no level trigger flags (4, 8)
-should I just replace number to macro, and put it like this:
-
-The value is defined in <dt-bindings/interrupt-controller/irq.h>
-Only the following flags are supported:
-    IRQ_TYPE_EDGE_RISING
-    IRQ_TYPE_EDGE_FALLING
-    IRQ_TYPE_EDGE_BOTH
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-> > +
-> > +  interrupt-controller: true
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - gpio-controller
-> > +  - '#gpio-cells'
-> > +  - interrupts
-> > +  - interrupt-names
-> > +  - interrupt-controller
-> > +  - '#interrupt-cells'
+On Mon, 19 Aug 2024 17:17:04 +0200, Bartosz Golaszewski wrote:
+> There are no more any board files that use the platform data for
+> gpio-davinci. We can remove the header defining it and port the code to
+> no longer store any context in pdata.
 > 
-> Use consistent quotes. Either ' or ".
 > 
-> > +
-> > +additionalProperties: false
-> 
-> Best regards,
-> Krzysztof
 
-Ack for other comments, will address them in next version, thanks
+Oh well, if nobody's complaining then let's get it into next.
 
+[1/2] gpio: davinci: drop platform data support
+      commit: d29e741cad3f8f41df1834bf74df79380c1c6c6d
+[2/2] gpio: davinci: use devm_clk_get_enabled()
+      commit: d14f6f405fc7b66b0a18967378a4114054b2690c
+
+Best regards,
 -- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
