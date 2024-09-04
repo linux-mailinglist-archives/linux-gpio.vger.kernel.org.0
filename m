@@ -1,200 +1,178 @@
-Return-Path: <linux-gpio+bounces-9797-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9798-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3E4F96BE64
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 15:24:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C35B696BF79
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 16:02:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BD212810C9
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 13:24:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A95228A69C
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 14:02:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E6911DA2F7;
-	Wed,  4 Sep 2024 13:24:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45CCA1CF292;
+	Wed,  4 Sep 2024 14:01:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EaZA3Zoc"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="UqMOWpSy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4601441D;
-	Wed,  4 Sep 2024 13:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77941CCEFC
+	for <linux-gpio@vger.kernel.org>; Wed,  4 Sep 2024 14:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725456279; cv=none; b=TYiZEJgQbe8VKIBQ6JL3TyFvN7pWohxe3sDbUZEdgMLJC7MnLxdgWjp/W2qjacWtQDMVzFyNjLa408jwiknJZ+DDC7jEzpWtom6xsh8JemdYmxE5o/WNqQxvgDcNjbfRTkjwzyT5tV9Io5Xq0hZc8NrzCpAKh1NTtHy3yEvOCtc=
+	t=1725458495; cv=none; b=EVQ56FCM4bMhzVjjw070AkyeT5fX35ZduRhvZ+nl9Nxs/jJQzdFnzvXMQC3LecYDqJBM6dAMAsTzIyqyPPwR5wLpW0u0VJXzzkQVpfo54iwJ5zdzp0xCbGJG256Oi1Nu7bTx6n2sirAsqeu49C8sByMfI6IKyxWEyMZ4uc18CIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725456279; c=relaxed/simple;
-	bh=VD4Uy7oAc+nT7ov65tbrV4jCOunVuSnuaZX67sZ/AD8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m/k9WmPo6ukG+AyIYsZePL1fC2ZYXADdg9QaVGncD/XT68LmNvbF3TcOaVn1FjdMAujXRCXhL3gtPGnFbE1dE0q+5lGD3ADTX+/yCMhiSgeqLNDGh1evwEQoUIExOxkb7pWcY3XP5q47NirJvajzrD1SXvmhXzImeq+O3fekVxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EaZA3Zoc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF76C4CEC2;
-	Wed,  4 Sep 2024 13:24:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725456279;
-	bh=VD4Uy7oAc+nT7ov65tbrV4jCOunVuSnuaZX67sZ/AD8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EaZA3ZocO9yeFcLWnQAMtGEkip86DBt1O5MM3Zi+MIiWlMApYGZLT71+bvGX4QX0s
-	 GzBGd9kEpW3E4pKUA6YDOPUgHm3Z81C/b18Nzgg4oT+G1LWPjiAYum78+jItZd72EO
-	 gj5xBz5Fk2ts+TNEta4t0cTkDj1paLqxjCXH040xSXtye+xXtm3faE8B8mXAIXeP0A
-	 FyKLBPpFTpPW1iJ5Ugh9taN9x2d9+U+iJNEx7VD+99J7IOCNCQLjofSBU7olyHNeaH
-	 QP+Z1eaYSJlC4gLKcNSgQB4hLoiQBfsDEE/jS43+FQ46wAXjppCl3vz+VpvLPmM3um
-	 ClLE8oJQvyGDA==
-Message-ID: <e352a836-82ef-4031-ac46-3ac7e0cb77ec@kernel.org>
-Date: Wed, 4 Sep 2024 15:24:18 +0200
+	s=arc-20240116; t=1725458495; c=relaxed/simple;
+	bh=Yvc2QWKFGGW7ij5JMho+lUo4/QSIY+9po0k0Wlnc3Lo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rwWHmHRc1XsAv/F0/SGUnjOUMpmlr/hnrfLHQM8BKMTW+0fUD4ZtuWpimEqlBVgimItzYYoVm50E0sD1PRJqo7c50h3YBnaE3wa2ya0N/2iYrvJQWl1uKTdMxiGolA+m37WMW/a9qQaBoFngvEQhtTPYj/E5FnEh2LRQoYhn/eA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=UqMOWpSy; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5becd359800so6844957a12.0
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Sep 2024 07:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725458491; x=1726063291; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yI9uwp1PRvLZ9d6uG18DgVQb9z8/zN76rlGY3xm0zwI=;
+        b=UqMOWpSyBFirs8g4pXpQi1BcvAX1/S1KISRuWRbi5RSbDE7sDU8CBekinEWh5VwMZ7
+         U+TfVnGa4FdmOmXroNb+UZMALbSiDfHAI4kxvmbWeepwWboX1wx56qmtZ7d0HZlFLRXJ
+         4XZUhsCxiyjuDciqaSu8XhR7lWsYAjO5WzuKlCBepk+RVttXGrlWSCwZy6SNrTjqdOdf
+         PJMU5JgmuhwqkG+mFiFhiUbzr16pQLvod933RZhm6b9uB0eu7RtFHgmbyx8XiGh7VeNC
+         1mQDyjdTOb2nBl+dM4heAkUeFCQ96Ba0J83ArQ1BHOrEOwFsWf+x9IoowulBteb9nI7l
+         EYqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725458491; x=1726063291;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yI9uwp1PRvLZ9d6uG18DgVQb9z8/zN76rlGY3xm0zwI=;
+        b=ivgA6TT4ICdQQGWEZtoALARvZfikFUD4duNJlHGMeSdd7Sg9KPf2Z/igmcRGYdUOP0
+         unmFkpZootJnv7qrgRB4Vy2ddC9VGBPYg7VS5Q8Hnd3qwW5rdj0t9mljru/wWp7a5BrY
+         ZtSYclYSLa/PixdJ8qHzHWzL/gciuFfLjzaelbu6D4YkbLuLQAR18jzX+boGCTeoveNg
+         QHlni8cO9FPokmT+CinWvMwBqJcsAEr+qsA/uJw1OWmEJhpZEDw6VMEpy4+fx/5zgKMD
+         mTyiTFJM3IDzRbJlgJBnlYwqOdfD8aupMfIQQ2E47IAVr9WpHyCA1/D1VzFUlmmxT/LH
+         VpYA==
+X-Gm-Message-State: AOJu0YwyGPbTnZ6USNPME6/m+Cq7rnAHqV3Wz6zRqgSXJ08rdsn1s3xB
+	+QSG6ajDxp0J+1JExWXSSX6LBbvXr7C9LsXT+VGWlZsqe1AkK6lBZF+lh5TO8KI=
+X-Google-Smtp-Source: AGHT+IGEc4KY/zTaEMzRDVWEdLLXECKftWjtf2ySCxhffz5ZPxNY/EPOSqOBO32wOIBOyV/LGwlzLw==
+X-Received: by 2002:a17:907:2d10:b0:a86:817e:d27a with SMTP id a640c23a62f3a-a89a38247demr1006842666b.61.1725458489760;
+        Wed, 04 Sep 2024 07:01:29 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:66d0:70f:5bef:d67d])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a898900f221sm811514866b.61.2024.09.04.07.01.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2024 07:01:29 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Douglas Silva <doug.hs@proton.me>
+Subject: [libgpiod][PATCH v2] build: imply --enable-bindings-glib for --enable-dbus
+Date: Wed,  4 Sep 2024 16:01:27 +0200
+Message-ID: <20240904140127.58667-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 17/21] dt-bindings: serial: document support for
- SA8255p
-To: Nikunj Kela <quic_nkela@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, rafael@kernel.org,
- viresh.kumar@linaro.org, herbert@gondor.apana.org.au, davem@davemloft.net,
- sudeep.holla@arm.com, andi.shyti@kernel.org, tglx@linutronix.de,
- will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
- jassisinghbrar@gmail.com, lee@kernel.org, linus.walleij@linaro.org,
- amitk@kernel.org, thara.gopinath@gmail.com, broonie@kernel.org,
- cristian.marussi@arm.com, rui.zhang@intel.com, lukasz.luba@arm.com,
- wim@linux-watchdog.org, linux@roeck-us.net, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
- arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
- linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
- kernel@quicinc.com, quic_psodagud@quicinc.com,
- Praveen Talari <quic_ptalari@quicinc.com>
-References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
- <20240903220240.2594102-1-quic_nkela@quicinc.com>
- <20240903220240.2594102-18-quic_nkela@quicinc.com>
- <jzpx66l4tesnyszmpc3nt5h7mezbvdhtcbls5rbwlmpveb6d6y@i3jf7jsajjjd>
- <6fed4714-5239-473b-b4a0-886d83c459c3@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <6fed4714-5239-473b-b4a0-886d83c459c3@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 04/09/2024 14:54, Nikunj Kela wrote:
-> 
-> On 9/3/2024 11:36 PM, Krzysztof Kozlowski wrote:
->> On Tue, Sep 03, 2024 at 03:02:36PM -0700, Nikunj Kela wrote:
->>> Add compatibles representing UART support on SA8255p.
->>>
->>> Clocks and interconnects are being configured in the firmware VM
->>> on SA8255p platform, therefore making them optional.
->>>
->>> CC: Praveen Talari <quic_ptalari@quicinc.com>
->>> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
->>> ---
->>>  .../serial/qcom,serial-geni-qcom.yaml         | 53 ++++++++++++++++---
->>>  1 file changed, 47 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/serial/qcom,serial-geni-qcom.yaml b/Documentation/devicetree/bindings/serial/qcom,serial-geni-qcom.yaml
->>> index dd33794b3534..b63c984684f3 100644
->>> --- a/Documentation/devicetree/bindings/serial/qcom,serial-geni-qcom.yaml
->>> +++ b/Documentation/devicetree/bindings/serial/qcom,serial-geni-qcom.yaml
->>> @@ -10,14 +10,13 @@ maintainers:
->>>    - Andy Gross <agross@kernel.org>
->>>    - Bjorn Andersson <bjorn.andersson@linaro.org>
->>>  
->>> -allOf:
->>> -  - $ref: /schemas/serial/serial.yaml#
->>> -
->>>  properties:
->>>    compatible:
->>>      enum:
->>>        - qcom,geni-uart
->>>        - qcom,geni-debug-uart
->>> +      - qcom,sa8255p-geni-uart
->>> +      - qcom,sa8255p-geni-debug-uart
->> Why devices are not compatible? What changed in programming model?
-> 
-> The cover-letter explains what is changed for devices in this platform.
-> I will add the description in this patch too.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Many of us do not read cover letters. They don't really matter,
-especially that serial tree will not include it. Each commit must stand
-on its own.
+GLib bindings are required to build the D-Bus daemon. Enable them
+automatically if --enable-dbus is passed to configure.
 
-> 
-> 
->>
->>>  
->>>    clocks:
->>>      maxItems: 1
->>> @@ -51,18 +50,49 @@ properties:
->>>        - const: sleep
->>>  
->>>    power-domains:
->>> -    maxItems: 1
->>> +    minItems: 1
->>> +    maxItems: 2
->>> +
->>> +  power-domain-names:
->> This does not match power-domains anymore.
-> 
-> Single power domain doesn't need to use power-domain-names binding as it
-> is not needed however for multiple(in this case 2), you need to provide
-> names. I will add this property to if block and only keep maxItems here.
+Fixes: a5ab76da1e0a ("dbus: add the D-Bus daemon, command-line client and tests")
+Reported-by: Douglas Silva <doug.hs@proton.me>
+Suggested-by: Kent Gibson <warthog618@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+v1 -> v2:
+- make the changes actually work
 
-The xxx and xxx-names properties always go in sync. Otherwise we do not
-really know what is the power domain for other variants.
+ configure.ac | 52 +++++++++++++++++++++++++---------------------------
+ 1 file changed, 25 insertions(+), 27 deletions(-)
 
-You are allowed to be unspecific about power domain (so maxItems: 1) if
-it is obvious. You now made it non-obvious, so above flexibility does
-not apply anymore.
-
-Best regards,
-Krzysztof
+diff --git a/configure.ac b/configure.ac
+index 1ac1002..92d3408 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -250,10 +250,35 @@ then
+ 	fi
+ fi
+ 
++AC_ARG_ENABLE([dbus],
++	[AS_HELP_STRING([--enable-dbus], [build dbus daemon [default=no]])],
++	[if test "x$enableval" == xyes; then with_dbus=true; fi],
++	[with_dbus=false])
++AM_CONDITIONAL([WITH_DBUS], [test "x$with_dbus" = xtrue])
++
+ AC_ARG_ENABLE([bindings-glib],
+ 	[AS_HELP_STRING([--enable-bindings-glib],[enable GLib 2.0 bindings [default=no]])],
+ 	[if test "x$enableval" = xyes; then with_bindings_glib=true; fi],
+ 	[with_bindings_glib=false])
++
++AC_DEFUN([FUNC_NOT_FOUND_DBUS],
++	[ERR_NOT_FOUND([$1()], [dbus daemon])])
++
++if test "x$with_dbus" = xtrue
++then
++	AC_CHECK_FUNC([daemon], [], [FUNC_NOT_FOUND_DBUS([daemon])])
++	AC_CHECK_FUNC([strverscmp], [], [FUNC_NOT_FOUND_DBUS([strverscmp])])
++	PKG_CHECK_MODULES([GUDEV], [gudev-1.0 >= 230])
++	AC_CHECK_PROG([has_gdbus_codegen], [gdbus-codegen], [true], [false])
++	if test "x$has_gdbus_codegen" = xfalse
++	then
++		AC_MSG_ERROR([gdbus-codegen not found - needed to build dbus daemon])
++	fi
++
++	# Imply GLib bindings for D-Bus
++	with_bindings_glib=true
++fi
++
+ AM_CONDITIONAL([WITH_BINDINGS_GLIB], [test "x$with_bindings_glib" = xtrue])
+ 
+ if test "x$with_bindings_glib" = xtrue
+@@ -280,33 +305,6 @@ m4_ifdef([GOBJECT_INTROSPECTION_CHECK],
+ 	[GOBJECT_INTROSPECTION_CHECK([0.6.2])],
+ 	[AM_CONDITIONAL(HAVE_INTROSPECTION, test "x$found_introspection" = "xyes")])
+ 
+-# Depends on GLib bindings so must come after
+-AC_ARG_ENABLE([dbus],
+-	[AS_HELP_STRING([--enable-dbus], [build dbus daemon [default=no]])],
+-	[if test "x$enableval" == xyes; then with_dbus=true; fi],
+-	[with_dbus=false])
+-AM_CONDITIONAL([WITH_DBUS], [test "x$with_dbus" = xtrue])
+-
+-AC_DEFUN([FUNC_NOT_FOUND_DBUS],
+-	[ERR_NOT_FOUND([$1()], [dbus daemon])])
+-
+-if test "x$with_dbus" = xtrue && test "x$with_bindings_glib" != xtrue
+-then
+-	AC_MSG_ERROR([GLib bindings are required to build the dbus daemon - use --enable-bindings-glib])
+-fi
+-
+-if test "x$with_dbus" = xtrue
+-then
+-	AC_CHECK_FUNC([daemon], [], [FUNC_NOT_FOUND_DBUS([daemon])])
+-	AC_CHECK_FUNC([strverscmp], [], [FUNC_NOT_FOUND_DBUS([strverscmp])])
+-	PKG_CHECK_MODULES([GUDEV], [gudev-1.0 >= 230])
+-	AC_CHECK_PROG([has_gdbus_codegen], [gdbus-codegen], [true], [false])
+-	if test "x$has_gdbus_codegen" = xfalse
+-	then
+-		AC_MSG_ERROR([gdbus-codegen not found - needed to build dbus daemon])
+-	fi
+-fi
+-
+ AC_ARG_ENABLE([systemd],
+ 	[AS_HELP_STRING([--enable-systemd], [enable systemd support [default=no]])],
+ 	[if test "x$enableval" == xyes; then with_systemd=true; fi],
+-- 
+2.43.0
 
 
