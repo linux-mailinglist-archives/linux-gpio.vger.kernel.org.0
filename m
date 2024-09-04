@@ -1,164 +1,139 @@
-Return-Path: <linux-gpio+bounces-9757-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9756-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32EA196B359
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 09:49:47 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C919696B356
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 09:49:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65F591C21EA4
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 07:49:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2E31FB26741
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 07:49:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0D20155730;
-	Wed,  4 Sep 2024 07:49:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FB981547E0;
+	Wed,  4 Sep 2024 07:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjd7U+4L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQa9ogNU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B461482FE;
-	Wed,  4 Sep 2024 07:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D4E1487C0;
+	Wed,  4 Sep 2024 07:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725436162; cv=none; b=iNLW/CdTS14bve3gj1OoJKh6l2SBqeTlkL3+MfgXD3GU6Go8sTRgMPj+PgBT1fF/jBdjhj95/OjvuNQckXL8zxYlYLR1CEF5Pa1W3o9T7/NbERX0ELgNn5Kycg4Mb5CippvZM8ef5ccwJ2GWoUb/okojkXHW+AgPTMK6YmTv3k4=
+	t=1725436156; cv=none; b=YXzam/xSaNddbkB4obizcuaWVBk+EY5uJeN/C0LPsny20yI8rBn8i1/T/PADrVRoCaZrJgZjF+GHujw0XDH161mGQ5z0I1fjfelgXA0p//FGm6/KUIE8Em6dGbLYHYbB3qrPq+3yvTgCe3EWKAdyn5rGRDK371cO+U6ll/Lyxhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725436162; c=relaxed/simple;
-	bh=vBnrt7Qaa7n2L83QcaZK3itlXmi40WQOPLzdulhYC4I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FFvmUiorIryS9X/Hp0VFNa0sh6R4vBXG2WMoZGksTvzQiw2NcDkb4uKSir9b6dU7E1uOO7eVD8lSxv/HhWIpNHaFN0NgEEe3bGmz5IF8e3+4LRrTTVbzigAGl7H4BLR1swpwkByZuWeT2qWFEM5+xLtBdoDeG8T4oJGlNi58LrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mjd7U+4L; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a80eab3945eso598229266b.1;
-        Wed, 04 Sep 2024 00:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725436159; x=1726040959; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/39XL9l+mzdE16W2UogoekLmd6wixOzTkIcecD8Jjpg=;
-        b=mjd7U+4LM0pmbc3iiz5kIbnvRQv5jTTPBtU+LZuvQrl8LHmlk2fUINiVLUkgVpW+dT
-         OztlS16/TRgCARoIl6kdOXVXM3br3oFDlK5Mg7dq9bdvNqbxeOW1HPQffqKwZnviV3vU
-         fV8kiNSwwCnVCwmRI7imHgPexRJ7gHe6AWOE2wltB6qrFkYhtefaw13SIkMk7OzxL/if
-         hbRK2QAyfb2JtOgiMCiCpFJUI1+W1nw7LWI+0Rq1p6Ih7irkrH+cqt/GD/60sCUl7SLk
-         FEyb7kXbSdZ/XdmmdHj0tIEudPzaP0WvKRwdHH7g2DeVbJdFB9WX5K20kJFGdl4E1dUK
-         dm8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725436159; x=1726040959;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/39XL9l+mzdE16W2UogoekLmd6wixOzTkIcecD8Jjpg=;
-        b=uoAYiyJV58Zbv8embS4F55Tf2vmaLE5wE6/ZhD2odLP3ZifBxf+YqArU8K3ioyGbbL
-         UiZelNb3F6RagOMW8LeHeinXt0pJEontYc7c7Zsq4J4cMSqEi6xKDsGEbFHSFsWWCHw7
-         alm8Hi9eHiXAUHkrBtJ+jLI0ETc2Hy32BDnwuO+6cFHKKGFOvwXyaj3mN2NG9eGenCG3
-         1JpgcEvcjV+FBMzVV+TE32LlgdvmKR/1hxlXLWT3NEsIuHsjCuOjw5v/2n9hTgcbHNQj
-         hvaxbdqtl4Y7MwvRuk8bUNaoNEUQsLXnlXsQqJ2ec/qXUw06RUE5d09zu/GbJNkq7j8+
-         7BuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJR6M5RNow6Hu77cugx/D2TpLlorEouTySM+Eh3l8A4w99XX3qdgEOeMugFUnd7nYsp9j8SHybqt31@vger.kernel.org, AJvYcCV8T/2UtTENM24vCdyfRg/InIO+KjW/LyRREA0foGSsjY5EJU+M60p2uNMl9/qWCzoe4KlpVAAvNeQCBjN5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlXbgoJ4zSwCSVebhTjMI5xked24p1ZNcm+QFt+kzKSc0owzHI
-	JlZ+lwJ3R8bIXntEebJNKV/n3/Ciu1JvxWXtTJfD2Dm8dEyOHi5vzrSVwoPlClqwXSKFnBNNdLw
-	qNyOI1qBXDByHBQdInVrjjpNYBkY=
-X-Google-Smtp-Source: AGHT+IFv/bJ/DrOO368qxMXr2YQ8+NNdcbc+OkEXX/V50RBy8EqS15m/wPJ98ZlyZp5GsOK+7Ax/h64zAzh3kp1Uu3U=
-X-Received: by 2002:a17:907:7248:b0:a86:7c6f:7cfa with SMTP id
- a640c23a62f3a-a89a36a2db4mr1104045866b.37.1725436158881; Wed, 04 Sep 2024
- 00:49:18 -0700 (PDT)
+	s=arc-20240116; t=1725436156; c=relaxed/simple;
+	bh=6Bm7uTUvhVH7PpSFjOKDk4rW79vyeC/zdZLwv/1f/9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cLfKHrceJoiidWsZ70Cv2hFOXg7cXs315S6OIxwufhDUoilbTuKsicQce8s0AZvY7yebL6GK7oyVNUR3nHtu3gPM11q9n5SHQwFNieq/tfa4jUSIVhEO78dV5yqh8UNLJyCy9p0VG6dhjoUer4BCdfxKEgCZfDBoFjpz79KjDqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQa9ogNU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD5BC4CEC8;
+	Wed,  4 Sep 2024 07:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725436155;
+	bh=6Bm7uTUvhVH7PpSFjOKDk4rW79vyeC/zdZLwv/1f/9Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dQa9ogNUvAyh4PCCyFYNHZ2um6jHsvKf3404lBskn2/DWVZ6zGoB3aTqHGWGAZaXr
+	 S/p53Uwrb3JWOwhupo3BCZiSlHps76loZyjwjDwK+ku5uh+k5l8J6YuppHhzqK6L84
+	 RrZqBg6NbvMYR317Yp+zVK5L2ZBMrz4Wk5m3qC+7fs4k5q/YtCtDbCA/kDvmRr2TMY
+	 wUX0V4mu06kdE8B83IVYDRy4Co8Byz3hAomcK3BTM9jbP0NQMOvMmvnPdM6QKPNzwG
+	 BNWakxNjgork4SYa667vv6xCBxZuP/3NgUctUBt4jZqD7GPh9s8xEghHN9WDzbt7Re
+	 AC7NczY4uOLkQ==
+Message-ID: <66458a5c-5054-44ac-914f-e66281ee43a9@kernel.org>
+Date: Wed, 4 Sep 2024 09:48:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240903170752.3564538-1-andriy.shevchenko@linux.intel.com>
- <20240903170752.3564538-2-andriy.shevchenko@linux.intel.com>
- <20240904050551.GB1532424@black.fi.intel.com> <CAHp75Veb+ycdEVdSPVF7vOE3dcSNVUfPXdDcR35OCo3NPYJPCQ@mail.gmail.com>
-In-Reply-To: <CAHp75Veb+ycdEVdSPVF7vOE3dcSNVUfPXdDcR35OCo3NPYJPCQ@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 4 Sep 2024 10:48:42 +0300
-Message-ID: <CAHp75VdzNBct2N+DgEW9mDUytnoOronn4biDEifcpJvtq9Wzug@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] pinctrl: intel: Replace ifdeffery by
- pm_sleep_ptr() macro
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 16/21] dt-bindings: spi: document support for SA8255p
+To: Nikunj Kela <quic_nkela@quicinc.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, rafael@kernel.org,
+ viresh.kumar@linaro.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+ sudeep.holla@arm.com, andi.shyti@kernel.org, tglx@linutronix.de,
+ will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
+ jassisinghbrar@gmail.com, lee@kernel.org, linus.walleij@linaro.org,
+ amitk@kernel.org, thara.gopinath@gmail.com, broonie@kernel.org,
+ cristian.marussi@arm.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+ wim@linux-watchdog.org, linux@roeck-us.net, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
+ arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
+ linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ kernel@quicinc.com, quic_psodagud@quicinc.com,
+ Praveen Talari <quic_ptalari@quicinc.com>
+References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-17-quic_nkela@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240903220240.2594102-17-quic_nkela@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 4, 2024 at 10:47=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Sep 4, 2024 at 8:05=E2=80=AFAM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > On Tue, Sep 03, 2024 at 08:04:49PM +0300, Andy Shevchenko wrote:
-> > > Explicit ifdeffery is ugly and theoretically might be not synchronise=
-d
-> > > with the rest of functions that are assigned via pm_sleep_ptr() macro=
-.
-> > > Replace ifdeffery by pm_sleep_ptr() macro to improve this.
+On 04/09/2024 00:02, Nikunj Kela wrote:
+> Add compatible representing spi support on SA8255p.
+> 
+> Clocks and interconnects are being configured in firmware VM
+> on SA8255p platform, therefore making them optional.
+> 
+> CC: Praveen Talari <quic_ptalari@quicinc.com>
+> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
 
-...
+Also this is incomplete - adding compatible without driver change is not
+expected. It cannot even work.
 
-> > Can't we make this a stub when !PM_SLEEP?
-> >
-> > #ifdef CONFIG_PM_SLEEP
-> > static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
-> > {
-> > ...
-> > }
-> > #else
-> > static inline int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
-> > {
-> >         return 0;
-> > }
-> > #endif
->
-> There is no benefit. It's actually the opposite, i.e. it expands more ifd=
-effery.
->
-> ...
->
-> > > -     ret =3D intel_pinctrl_pm_init(pctrl);
-> > > +     ret =3D pm_sleep_ptr(intel_pinctrl_pm_init) ? intel_pinctrl_pm_=
-init(pctrl) : 0;
-> >
-> > Then this still looks like a function call and not like some weird
-> > conditional.
->
-> I understand that, but the point is to make all PM callbacks use the
-> same approach against kernel configuration. Current state of affairs
-> is simple inconsistency, but it might, however quite unlikely, lead to
-> desynchronization between two pm_sleep_ptr() and ifdeffery approaches.
->
-> Approach that I have before this one (and I kinda agree that ternary
-> here looks a bit weird) is to typedef the function and do something
-> like
->
-> pinctrl-intel.h:
+Best regards,
+Krzysztof
 
-> typedef alloc_fn;
-
-Actually typedef is not needed as it may be embedded in the below
-inline as it's used only once.
-
-> static inline int ctx_alloc(pctrl, alloc_fn)
-> {
->   if (alloc_fn)
->     return alloc_fn(pctrl);
->
->   return 0;
-> }
->
-> pinctrl-intel.c:
->
->   ret =3D ctx_alloc(pctrl, pm_sleep_ptr(_pm_init))
->   if (ret)
->     return ret;
->
-> Altogether it will be ~20+ LoCs in addition to the current codebase.
-
---=20
-With Best Regards,
-Andy Shevchenko
 
