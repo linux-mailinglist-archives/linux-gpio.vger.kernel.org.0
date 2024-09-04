@@ -1,145 +1,156 @@
-Return-Path: <linux-gpio+bounces-9753-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9754-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B23F96B314
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 09:42:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8DFF96B33C
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 09:47:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 461CC2824C6
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 07:42:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1ECB1B25717
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Sep 2024 07:47:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78A86147C96;
-	Wed,  4 Sep 2024 07:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C1E8148308;
+	Wed,  4 Sep 2024 07:47:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QzJfclFr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ie7egf12"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D32C1474B8;
-	Wed,  4 Sep 2024 07:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1D71482FE;
+	Wed,  4 Sep 2024 07:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725435738; cv=none; b=Gp/CJlTfx3skDipNX39pGnq0MxDuie+Oxh66GgigMpcHuKIRIqDdrFi9KqVVpM6bLlsfLWVQblk43TuZqM2HiSwYwM/+5HhX4aT4ieBwWBpQ15ZKOcrNytYujLwM233qyJE5sHfD46ApJ2+d/GlcYtQdeBhtWKYERVrJA7F9hhk=
+	t=1725436061; cv=none; b=D721Apj50W2gUe98qI3kLE/Wyqx+NDKZ+OEBq9NtppTBM4tWquorS++usx/a8fNHCqbifLWNmTu7jOK/mC9Z4CD6qtBWN0QwKduk8iQ2mhx0eyXZJgMBKTJK3EhPbrV9D+oYKHlHn+Jp9ZqiwDbJvJRj2uViZkp4EV1i5PYuGIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725435738; c=relaxed/simple;
-	bh=w/IC7wOtGINb3uFhfGVrdUEZ+tDXBUxvlITe0KVPQ58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pPU/nXGiF7iD2GHXZnuNtemTws+RiC5/TQkNXhxThLNzBj4o5B9Z15Ata+NqWyZqlZCmZ83co4Uw1B9IBQPwszfjCVlCQRcjmZ0DDtdOS7GpfzvrO1JOYGVz7TuOB+qUQSqnDBVIgD1Rlb+F7laZBZd7UWnwHaDzl0RAT60Txx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QzJfclFr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB31C4CEC2;
-	Wed,  4 Sep 2024 07:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725435737;
-	bh=w/IC7wOtGINb3uFhfGVrdUEZ+tDXBUxvlITe0KVPQ58=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QzJfclFrAaDKV06wz4uXz4TQh0OpudiX92SP6Aq5w8iLYPJO5RlS3SggIS+WexUXy
-	 zI0bofFE+8OHfzhc6qIwaWl5LQ5ior8BbIm9hWBz5fMlvDAPMoceJWOvjvUjJsn7mG
-	 mOstac1e8C7emkM05dTullvcsWIrjWLe+3vcj4ycFYSkkkbpMYVFhmqd+m7YnpN9rE
-	 ftu+Vn1ifJeVIcWcH5k8apFqJTNTEWymHURFm2CdqcNslEQuwI8XqqLchu146qQCWN
-	 j4+gXvwgAvyQ2MOZ1Va4DP8pxwXcMVBdZxJtc639VhkVN7na7DDZXCLtF2tNJeiIis
-	 4mYJLxOBn0wCw==
-Message-ID: <f27dc213-e5a0-41d7-9522-ed29567f0097@kernel.org>
-Date: Wed, 4 Sep 2024 09:42:10 +0200
+	s=arc-20240116; t=1725436061; c=relaxed/simple;
+	bh=5glsy4fj5oiFr495gRqtLldsStL5x4QDUV7Dr6TaYYw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MmeqtxrUoz+uWVNd/myKh9l2QBlkDfl9yQGrwT30WvV2XlT75rAa0rAIKU99gWx3Ssit7N0EEMICpWvoCT7Q0Wz82rRECTigB63Yu/EEKyVEiUAwD7TauZv/7KQEEldq52+LjdqKy6DEvCCSZT62gNnRTrq2JA+alQgR4YZEiN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ie7egf12; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5353d0b7463so10527699e87.3;
+        Wed, 04 Sep 2024 00:47:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725436058; x=1726040858; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DgqQ4ytDkeYT+let/Ki8TVy0ffHS875kR1D+tJTKOx0=;
+        b=Ie7egf1255jtwn50hGma7PCIRr+xyaz298qYilyUbM2Kf1tK9LrHC9tFP9IPcmIcxk
+         mYbQmfkG/97RVfkeHVw5hb0+3EKwmTEdrlL37a73z6Xr+d71fO5pNDJLnjt0WgLhW3gS
+         nzpt8abTYjJwDC5Ln6UL6ksMHBGADcddskdZ6FgF50zRPgUyGGb3qSuws69HNeP+W3q1
+         cAvX7qmAUYTbU0omEM+cgBuUpL8fmkFdSPi6io02+bpNs4+ta3YQclppyXLDWtdS609m
+         uEwXSXkKN748O/Us0fKEH4ZoGu4CcBLKLNZjwMSf79Z8zeCPiie0pIOyY1aeHymnH8Gs
+         eimw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725436058; x=1726040858;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DgqQ4ytDkeYT+let/Ki8TVy0ffHS875kR1D+tJTKOx0=;
+        b=Rd6VPWkX3psn96Il8fYJhjMN/3sSqQxh/2aOA1Q1l/7bz16EO1LygV1FVGaQ/uuDZS
+         Kuot8wPE+v+QZXAZNfzVsVSHoWiHuqio0u7N+bYzkaEibtdog7728nsGmZgYrBoJaK+/
+         Y+KgFahqWUIEraefRBNbj+ZNXrqrzu8D587ZA5h5immrjDXN0aE8DmLy5ADov7Xg6DGK
+         BxBwMdzNvCgke/IWxsFByVBG4XkwdQ1/bIOyXmQ9/Gp+ZswMNXK2NDnOSkxhdWIGnRKA
+         Y//H3vV8eUKCXeTSYUmPvPd07yz9Q6BUWoHui8rEekUUKR6qj2cnBPiaGjCzeYgjP01I
+         VPYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlRE/7IaLpsUPdlsqye979qQoxLFFJHzYO6Ej71EIubuj3KCBVG6Bg0d8U2tMKyWRRuLG5vYdkeeM5@vger.kernel.org, AJvYcCXeQJZwAdKzFMq9fNDgXtvo/SpTrFgrg+2cNdDtZReNIa1G8+UvUu0I1gyqb7nGgcROD7NrxHn9zEof4zAl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9i6c+sFMPRYGjyZgsurmWSbfz1P/ACS4X/VKNOvKCB3wIBUHS
+	zAKtZPg4g9vj+yLmoq5P0i9PyiFRHyDXTLdxRKpb7C8toIABcoK4X/8TntF8a33fOaFmE8QKR50
+	lHU5V9PpldRO/hhh7N3pygx/spMA/gZcua/0=
+X-Google-Smtp-Source: AGHT+IHu4NsSSxUEthVjsFF3xhq327k3pHTkvCDsGUcunnugfGusqVQ650t78YDsauYaqkDrSxOCEYm8fAfOhygxcz4=
+X-Received: by 2002:a05:6512:281b:b0:52c:ddef:4eb7 with SMTP id
+ 2adb3069b0e04-53546b38dabmr13156569e87.20.1725436057393; Wed, 04 Sep 2024
+ 00:47:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: spacemit: add support for K1 SoC
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>,
- Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>,
- Meng Zhang <zhangmeng.kevin@spacemit.com>, Meng Zhang
- <kevin.z.m@hotmail.com>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org>
- <20240904-03-k1-gpio-v1-1-6072ebeecae0@gentoo.org>
- <ttvqw3hncprtshhdgsnvlfopobqcxtsraxevgxqgnlt6orftkr@ktahud64cczd>
- <20240904070520-GYA107481@gentoo>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240904070520-GYA107481@gentoo>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240903170752.3564538-1-andriy.shevchenko@linux.intel.com>
+ <20240903170752.3564538-2-andriy.shevchenko@linux.intel.com> <20240904050551.GB1532424@black.fi.intel.com>
+In-Reply-To: <20240904050551.GB1532424@black.fi.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 4 Sep 2024 10:47:00 +0300
+Message-ID: <CAHp75Veb+ycdEVdSPVF7vOE3dcSNVUfPXdDcR35OCo3NPYJPCQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] pinctrl: intel: Replace ifdeffery by
+ pm_sleep_ptr() macro
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/09/2024 09:05, Yixun Lan wrote:
-> Hi Krzysztof 
+On Wed, Sep 4, 2024 at 8:05=E2=80=AFAM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Tue, Sep 03, 2024 at 08:04:49PM +0300, Andy Shevchenko wrote:
+> > Explicit ifdeffery is ugly and theoretically might be not synchronised
+> > with the rest of functions that are assigned via pm_sleep_ptr() macro.
+> > Replace ifdeffery by pm_sleep_ptr() macro to improve this.
 
->>> +  "#interrupt-cells":
->>> +    const: 2
->>> +    description: |
->>> +      The first cell is the GPIO number, the second should specify
->>> +      flags.  The following subset of flags is supported:
->>> +      - bits[3:0] trigger type flags (no level trigger type support)
->>> +        1 = low-to-high edge triggered
->>> +        2 = high-to-low edge triggered
->>> +      Valid combinations are 1, 2, 3
->>
->> Hm? No, you must use standard interrupt flags, not custom ones.
->>
-> It should be same as standard flags, my intention here was try to say
-> the controller support edge trigger only, but no level trigger flags (4, 8)
-> should I just replace number to macro, and put it like this:
+...
 
-Then just say that level interrupts are not supported. Do not refer to
-some bits (bits of what?).
+> Can't we make this a stub when !PM_SLEEP?
+>
+> #ifdef CONFIG_PM_SLEEP
+> static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
+> {
+> ...
+> }
+> #else
+> static inline int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
+> {
+>         return 0;
+> }
+> #endif
 
-Best regards,
-Krzysztof
+There is no benefit. It's actually the opposite, i.e. it expands more ifdef=
+fery.
 
+...
+
+> > -     ret =3D intel_pinctrl_pm_init(pctrl);
+> > +     ret =3D pm_sleep_ptr(intel_pinctrl_pm_init) ? intel_pinctrl_pm_in=
+it(pctrl) : 0;
+>
+> Then this still looks like a function call and not like some weird
+> conditional.
+
+I understand that, but the point is to make all PM callbacks use the
+same approach against kernel configuration. Current state of affairs
+is simple inconsistency, but it might, however quite unlikely, lead to
+desynchronization between two pm_sleep_ptr() and ifdeffery approaches.
+
+Approach that I have before this one (and I kinda agree that ternary
+here looks a bit weird) is to typedef the function and do something
+like
+
+pinctrl-intel.h:
+
+typedef alloc_fn;
+
+static inline int ctx_alloc(pctrl, alloc_fn)
+{
+  if (alloc_fn)
+    return alloc_fn(pctrl);
+
+  return 0;
+}
+
+pinctrl-intel.c:
+
+  ret =3D ctx_alloc(pctrl, pm_sleep_ptr(_pm_init))
+  if (ret)
+    return ret;
+
+Altogether it will be ~20+ LoCs in addition to the current codebase.
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
