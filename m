@@ -1,246 +1,276 @@
-Return-Path: <linux-gpio+bounces-9871-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9872-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B25296E484
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 22:56:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 813AE96E4F7
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 23:21:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D228B20CA9
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 20:56:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D6FA0B21796
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 21:21:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC9C11A724A;
-	Thu,  5 Sep 2024 20:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 241B31AD3E8;
+	Thu,  5 Sep 2024 21:21:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aepYPkNu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xonpj9Hz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7DF19FA81;
-	Thu,  5 Sep 2024 20:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BE31A4E6F;
+	Thu,  5 Sep 2024 21:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725569804; cv=none; b=goj1IE+8/43LWWn8J3PZNO3asX1CFH9q+KW2UIVVAOlGy1RKL6rD7l8/5DgqUaCQlMaDpNdU6upN4UOKSlG6mwotiy5s382y02fOajMAgHtmmtTvTwZuj72j0cs64NJ/M7xLYs7w4cGgh1ZuUWd48WFvYZre9c3yBwjlceDvToM=
+	t=1725571269; cv=none; b=avCcOIFybHUR6WDFLAcGxbjbi3AzreqUMckBGPHoka/GLH/N8zN/gxemTrWo0E3RyE4O2nWzZ9gmroI5n4b2GN2f4jyGKWHziHBYGWiL9eOfKy7t5wKtejLkMCQhOTQERbHL4t09ZXe/5Rnp4Np0xSqIqA8LySEcppo1auUEPaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725569804; c=relaxed/simple;
-	bh=taQ4WCsCZh+bR4MBj6fpYJh1fvc9s4vNiUTT49UaCe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cOfGSlMmJKmRux/90coPnx5caBjo/07j5y5ylbyHmsixZ+Wz7HXUHmRaceq8HiHRbWBT9RPU4ozO2lvhCFBzJwySCXLntXaImRoykUeZ7YQxBwcPsscDrCdOtuhsAunzTz/Gf107ao9Qoq0UKnC4/mX1R7ZSZ+xlgRBETZ8LnTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aepYPkNu; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725569803; x=1757105803;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=taQ4WCsCZh+bR4MBj6fpYJh1fvc9s4vNiUTT49UaCe8=;
-  b=aepYPkNui1no0Q/PZoHojoeIEOVi1XI7YcrhCr9puhxeyjmflJdOzmwK
-   K9tBBZs/eDn/v9FvwHDI6bZOqSQmzkiVRQGHa6XcqO+/Knwhez6nYyQo6
-   F3bN64gRiS3f5+sfaT51uRsf/WtaULKpkipHE4Rxbj+LiztlcIvkmHuh1
-   lNaw3q7VAXxigS8umNYlTjTmn/PfvT+6beQWCyVroDlmrAL0cahUfRuVl
-   dQQWrV/YvWLGEkcmsUUo4N4RCpBzD+ExFeYLVuYcj7TPdZu26/ljrsy90
-   LYhPdS+/s/hkP+sR1zpScVWZppnFdrF68XadSPDZUYnGxlEElNBc6Lf+W
-   g==;
-X-CSE-ConnectionGUID: jMo0lMJBRE+N2nsg1ZBhTg==
-X-CSE-MsgGUID: sJGdaoPfSHeEJBxASTxfQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="34914483"
-X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
-   d="scan'208";a="34914483"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 13:56:42 -0700
-X-CSE-ConnectionGUID: AJFwPS1jR1iy0Xuu5ZI6Hg==
-X-CSE-MsgGUID: ahRjGd+jRauQKKmxG1KOng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
-   d="scan'208";a="65749821"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 05 Sep 2024 13:56:38 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1smJWu-000AKD-0X;
-	Thu, 05 Sep 2024 20:56:36 +0000
-Date: Fri, 6 Sep 2024 04:53:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ma Ke <make24@iscas.ac.cn>, linus.walleij@linaro.org,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	bartosz.golaszewski@linaro.org, s.shtylyov@omp.ru,
-	patrice.chotard@foss.st.com, antonio.borneo@foss.st.com,
-	peng.fan@nxp.com, valentin.caron@foss.st.com,
-	akpm@linux-foundation.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: stm32: check devm_kasprintf() returned value
-Message-ID: <202409060455.cCSXg0Gt-lkp@intel.com>
-References: <20240905020244.355474-1-make24@iscas.ac.cn>
+	s=arc-20240116; t=1725571269; c=relaxed/simple;
+	bh=pu745UfD6nFeM4JKfJBuPPz6wiYc0c0r/+Z5uAO5/C4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eVuhV9E3MUZWmZlCZ8BvZ2k8Un401S7s/wfoQaCPmfLX74Y5Jey6N8wTR8lw1mgVNEfwJpzYGLZNgXCaWoqFF9vFsjZf5dEc57b5C8C3kcXQSC5ct8co4MYGogLHov11xko6ORUAti2ORdIGtauslX5O040TCa4khLxbAJjOvT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xonpj9Hz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09384C4CEC3;
+	Thu,  5 Sep 2024 21:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725571269;
+	bh=pu745UfD6nFeM4JKfJBuPPz6wiYc0c0r/+Z5uAO5/C4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Xonpj9Hz1TwRC0/VLPThd2398ncy6DzNG9LWiNdpJJVfcYZLj5M48GBD7vLE12gCI
+	 gEexAMyQm2sjRBxDETT83rcY+1iLGIakuC9pECOBsDw3OARuJSjnRUGjE46irwDvYn
+	 4jrWOjHPFCxqr3Xl1o3f+n2cPnntzKvIl23qXb/3xpRjcZmcHfYE5JzQnuIVtn9+1o
+	 Ei+SGQ6XItUEctLgbQKtcozAh5eSwRlItRWOdjWRF/S/VIze/hT6/VrjUdF95uw129
+	 bFiI9BxHu9rHTcfi5/9Uu7eiTupTHNiBi/kr6SAW85Z3xZqJis/OZMxD5spJJLX3zS
+	 F/wevBVGGCHUw==
+Message-ID: <50546635-1870-499d-8cdc-eb4e9fa1a510@kernel.org>
+Date: Thu, 5 Sep 2024 23:20:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240905020244.355474-1-make24@iscas.ac.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org, Lee Jones <lee@kernel.org>,
+ Andrew Lunn <andrew@lunn.ch>, Stefan Wahren <wahrenst@gmx.net>
+References: <cover.1724159867.git.andrea.porta@suse.com>
+ <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
+ <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
+ <ZtHN0B8VEGZFXs95@apocalypse>
+ <b74327b8-43f6-47cf-ba9d-cc9a4559767b@kernel.org>
+ <ZtcoFmK6NPLcIwVt@apocalypse>
+ <39735704-ae94-4ff8-bf4d-d2638b046c8e@kernel.org>
+ <ZtndaYh2Faf6t3fC@apocalypse>
+ <f39edf3d-aa9e-43a0-8997-762d76c9c248@kernel.org>
+ <Ztn-XOvtk_d3U6XJ@apocalypse>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Ztn-XOvtk_d3U6XJ@apocalypse>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Ma,
+On 05/09/2024 20:54, Andrea della Porta wrote:
+> Hi Krzysztof,
+> 
+> On 18:52 Thu 05 Sep     , Krzysztof Kozlowski wrote:
+>> On 05/09/2024 18:33, Andrea della Porta wrote:
+>>> Hi Krzysztof,
+>>>
+>>> On 20:27 Tue 03 Sep     , Krzysztof Kozlowski wrote:
+>>>> On 03/09/2024 17:15, Andrea della Porta wrote:
+>>>>>>>>> +
+>>>>>>>>> +				rp1_clocks: clocks@c040018000 {
+>>>>>>>>
+>>>>>>>> Why do you mix MMIO with non-MMIO nodes? This really does not look
+>>>>>>>> correct.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Right. This is already under discussion here:
+>>>>>>> https://lore.kernel.org/all/ZtBzis5CzQMm8loh@apocalypse/
+>>>>>>>
+>>>>>>> IIUC you proposed to instantiate the non-MMIO nodes (the three clocks) by
+>>>>>>> using CLK_OF_DECLARE.
+>>>>>>
+>>>>>> Depends. Where are these clocks? Naming suggests they might not be even
+>>>>>> part of this device. But if these are part of the device, then why this
+>>>>>> is not a clock controller (if they are controllable) or even removed
+>>>>>> (because we do not represent internal clock tree in DTS).
+>>>>>
+>>>>> xosc is a crystal connected to the oscillator input of the RP1, so I would
+>>>>> consider it an external fixed-clock. If we were in the entire dts, I would have
+>>>>> put it in root under /clocks node, but here we're in the dtbo so I'm not sure
+>>>>> where else should I put it.
+>>>>
+>>>> But physically, on which PCB, where is this clock located?
+>>>
+>>> xosc is a crystal, feeding the reference clock oscillator input pins of the RP1,
+>>> please see page 12 of the following document:
+>>> https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+>>
+>> That's not the answer. Where is it physically located?
+> 
+> Please see below.
+> 
+>>
+>>> On Rpi5, the PCB is the very same as the one on which the BCM2712 (SoC) and RP1
+>>> are soldered. Would you consider it external (since the crystal is outside the RP1)
+>>> or internal (since the oscillator feeded by the crystal is inside the RP1)?
+>>
+>> So it is on RPi 5 board? Just like every other SoC and every other
+>> vendor? Then just like every other SoC and every other vendor it is in
+>> board DTS file.
+> 
+> Yes it's on the Rpi5 board. These are two separate thing, though: one is where
 
-kernel test robot noticed the following build errors:
+Finally.
 
-[auto build test ERROR on atorgue-stm32/stm32-next]
-[also build test ERROR on linusw-pinctrl/devel linusw-pinctrl/for-next akpm-mm/mm-everything linus/master v6.11-rc6 next-20240905]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> to put it (DTS, DTSO) and another is in what target path relative to root. I
+> was trying to understand the latter.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ma-Ke/pinctrl-stm32-check-devm_kasprintf-returned-value/20240905-100531
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
-patch link:    https://lore.kernel.org/r/20240905020244.355474-1-make24%40iscas.ac.cn
-patch subject: [PATCH] pinctrl: stm32: check devm_kasprintf() returned value
-config: arc-randconfig-001-20240906 (https://download.01.org/0day-ci/archive/20240906/202409060455.cCSXg0Gt-lkp@intel.com/config)
-compiler: arceb-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240906/202409060455.cCSXg0Gt-lkp@intel.com/reproduce)
+It is already or should be part of DTS, not DTSO. You are duplicating
+device nodes.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409060455.cCSXg0Gt-lkp@intel.com/
+> The clock node should be put in the DTBO since we are loading this driver at
+> runtime and we probably don't want to depend on some specific node name to be
+> present in the DTS. This is also true because this driver should possibly work
+> also on ACPI system and on hypothetical PCI card on which the RP1 could be mounted
 
-All errors (new ones prefixed by >>):
+Not really. ACPI and thus DT in such case will take it as clock input.
+Basically what you need here is to provide clock inputs to this device.
+It's then firmware independent.
 
-   drivers/pinctrl/stm32/pinctrl-stm32.c: In function 'stm32_gpiolib_register_bank':
->> drivers/pinctrl/stm32/pinctrl-stm32.c:1379:30: error: 'name' undeclared (first use in this function); did you mean 'names'?
-    1379 |                         if (!name[i]) {
-         |                              ^~~~
-         |                              names
-   drivers/pinctrl/stm32/pinctrl-stm32.c:1379:30: note: each undeclared identifier is reported only once for each function it appears in
+> in the future, and in that case a DTS could be not even there. 
 
+No problem. Whatever firmware mechanism you have, it will provide you clock.
 
-vim +1379 drivers/pinctrl/stm32/pinctrl-stm32.c
+> After all, those clocks must be in the immediate proximity to the RP1, and on the
+> same board, which may or may not be the main board as the Rpi5 case.
+> I think that, since this application is a little bit peculiar, maybe some
+> compromises could be legit.
 
-  1287	
-  1288	static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode_handle *fwnode)
-  1289	{
-  1290		struct stm32_gpio_bank *bank = &pctl->banks[pctl->nbanks];
-  1291		int bank_ioport_nr;
-  1292		struct pinctrl_gpio_range *range = &bank->range;
-  1293		struct fwnode_reference_args args;
-  1294		struct device *dev = pctl->dev;
-  1295		struct resource res;
-  1296		int npins = STM32_GPIO_PINS_PER_BANK;
-  1297		int bank_nr, err, i = 0;
-  1298		struct stm32_desc_pin *stm32_pin;
-  1299		char **names;
-  1300	
-  1301		if (!IS_ERR(bank->rstc))
-  1302			reset_control_deassert(bank->rstc);
-  1303	
-  1304		if (of_address_to_resource(to_of_node(fwnode), 0, &res))
-  1305			return -ENODEV;
-  1306	
-  1307		bank->base = devm_ioremap_resource(dev, &res);
-  1308		if (IS_ERR(bank->base))
-  1309			return PTR_ERR(bank->base);
-  1310	
-  1311		err = clk_prepare_enable(bank->clk);
-  1312		if (err) {
-  1313			dev_err(dev, "failed to prepare_enable clk (%d)\n", err);
-  1314			return err;
-  1315		}
-  1316	
-  1317		bank->gpio_chip = stm32_gpio_template;
-  1318	
-  1319		fwnode_property_read_string(fwnode, "st,bank-name", &bank->gpio_chip.label);
-  1320	
-  1321		if (!fwnode_property_get_reference_args(fwnode, "gpio-ranges", NULL, 3, i, &args)) {
-  1322			bank_nr = args.args[1] / STM32_GPIO_PINS_PER_BANK;
-  1323			bank->gpio_chip.base = args.args[1];
-  1324	
-  1325			/* get the last defined gpio line (offset + nb of pins) */
-  1326			npins = args.args[0] + args.args[2];
-  1327			while (!fwnode_property_get_reference_args(fwnode, "gpio-ranges", NULL, 3, ++i, &args))
-  1328				npins = max(npins, (int)(args.args[0] + args.args[2]));
-  1329		} else {
-  1330			bank_nr = pctl->nbanks;
-  1331			bank->gpio_chip.base = bank_nr * STM32_GPIO_PINS_PER_BANK;
-  1332			range->name = bank->gpio_chip.label;
-  1333			range->id = bank_nr;
-  1334			range->pin_base = range->id * STM32_GPIO_PINS_PER_BANK;
-  1335			range->base = range->id * STM32_GPIO_PINS_PER_BANK;
-  1336			range->npins = npins;
-  1337			range->gc = &bank->gpio_chip;
-  1338			pinctrl_add_gpio_range(pctl->pctl_dev,
-  1339					       &pctl->banks[bank_nr].range);
-  1340		}
-  1341	
-  1342		if (fwnode_property_read_u32(fwnode, "st,bank-ioport", &bank_ioport_nr))
-  1343			bank_ioport_nr = bank_nr;
-  1344	
-  1345		bank->gpio_chip.base = -1;
-  1346	
-  1347		bank->gpio_chip.ngpio = npins;
-  1348		bank->gpio_chip.fwnode = fwnode;
-  1349		bank->gpio_chip.parent = dev;
-  1350		bank->bank_nr = bank_nr;
-  1351		bank->bank_ioport_nr = bank_ioport_nr;
-  1352		bank->secure_control = pctl->match_data->secure_control;
-  1353		spin_lock_init(&bank->lock);
-  1354	
-  1355		if (pctl->domain) {
-  1356			/* create irq hierarchical domain */
-  1357			bank->fwnode = fwnode;
-  1358	
-  1359			bank->domain = irq_domain_create_hierarchy(pctl->domain, 0, STM32_GPIO_IRQ_LINE,
-  1360								   bank->fwnode, &stm32_gpio_domain_ops,
-  1361								   bank);
-  1362	
-  1363			if (!bank->domain) {
-  1364				err = -ENODEV;
-  1365				goto err_clk;
-  1366			}
-  1367		}
-  1368	
-  1369		names = devm_kcalloc(dev, npins, sizeof(char *), GFP_KERNEL);
-  1370		if (!names) {
-  1371			err = -ENOMEM;
-  1372			goto err_clk;
-  1373		}
-  1374	
-  1375		for (i = 0; i < npins; i++) {
-  1376			stm32_pin = stm32_pctrl_get_desc_pin_from_gpio(pctl, bank, i);
-  1377			if (stm32_pin && stm32_pin->pin.name) {
-  1378				names[i] = devm_kasprintf(dev, GFP_KERNEL, "%s", stm32_pin->pin.name);
-> 1379				if (!name[i]) {
-  1380					err = -ENOMEM;
-  1381					goto err_clk;
-  1382				}
-  1383			}
-  1384			else
-  1385				names[i] = NULL;
-  1386		}
-  1387	
-  1388		bank->gpio_chip.names = (const char * const *)names;
-  1389	
-  1390		err = gpiochip_add_data(&bank->gpio_chip, bank);
-  1391		if (err) {
-  1392			dev_err(dev, "Failed to add gpiochip(%d)!\n", bank_nr);
-  1393			goto err_clk;
-  1394		}
-  1395	
-  1396		dev_info(dev, "%s bank added\n", bank->gpio_chip.label);
-  1397		return 0;
-  1398	
-  1399	err_clk:
-  1400		clk_disable_unprepare(bank->clk);
-  1401		return err;
-  1402	}
-  1403	
+Application is not peculiar but completely standard. You have standard
+PCI device which has some inputs. One of these inputs, maybe on some
+reserved M.2 pins or whatver connector you have there, is the clock.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+...
+
+>>>
+>>> If externals, I would place them in the same position as xosc, so root node
+>>> or some other node under root (eg.: /rp1-clocks)
+>>
+>> Just like /clocks, /rp1-clocks is not better. Neither /rp1-foo-clocks.
+> 
+> Right. So in this case, since xosc seems to be on the same level and on the same
+> board of the RP1 and the SoC, and it's also external to the RP1, can I assume that
+> placing xosc node in root is ok?
+
+root node of the DTS yes. Root node of DTSO of course not, because it is
+not part of DTSO and you are duplicating DTS. It would not even work.
+
+That's why you need to apply the overlay to proper target as I asked
+long time ago.
+
+> 
+>>
+>> I think there is some sort of big misunderstanding here. Is this RP1
+>> co-processor on the RP board, connected over PCI to Broadcom SoC?
+> 
+> Yes. 
+> 
+>  ---------------Rpi5 board---------------------
+>  |                                            |
+>  |    SoC ==pci bus==> RP1 <== xosc crystal   |
+>  |                                            |
+>  ----------------------------------------------
+> 
+>>
+>>>
+>>> If internals, I would leave them just where they are, i.e. inside the rp1 node
+>>>
+>>> Does it make sense?
+>>
+>> No, because you do not have xosc there, according to my knowledge.
+> 
+> Hmmm sorry, not sure what this negation was referring to... I was talking about
+> hclk and pclk, not xosc here. Could you please add some details?
+
+If considering hclk and pclk, then depends where are they. If they come
+as inputs, then same as xosc. If they are not, then it is also obvious -
+we do not represent internal device clocks as fixed clocks in DTS,
+because it makes absolutely no sense at all. No benefits, no help,
+nothing at all.
+
+It's just device's internal clock.
+
+This is again nothing peculiar. Many other devices have some internal
+stuff. Do we add fixed clocks for these? Fixed regulators? No, of course
+not.
+
+Best regards,
+Krzysztof
+
 
