@@ -1,141 +1,151 @@
-Return-Path: <linux-gpio+bounces-9840-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9841-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8795896DA0E
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 15:20:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B52F996DA1A
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 15:22:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44DCE2818E8
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 13:20:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E74421C23A62
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 13:22:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D442519D071;
-	Thu,  5 Sep 2024 13:19:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8823D19D880;
+	Thu,  5 Sep 2024 13:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T49DeywJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A3lPMym7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EED147796;
-	Thu,  5 Sep 2024 13:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040EA1991A9
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Sep 2024 13:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725542398; cv=none; b=s5RVLfSV1kMP7W0eLByELA4v+OAmdJ8b1dG4aewDu1giiIuEg+V5eNaIUal4dI8+43kLW2tZyOp3HwSYPdTDSHoy/52eiqtE80HczYAw5Oi+G+uZ4GRh/lvzyYFDWWHsrEpgMbkCcaGKXNJkUhfNvls/DlioKkikUE4ePfwKnLw=
+	t=1725542518; cv=none; b=o8nE28/qnV5KMTCR8Qb3ZyJhGXQGac4n2M4L4errRFxQ+iAqf0qcDB10lhk31RNbkGa9f/3W6USXrNKOPmGKY4PvEqNGpgZBK/aiIg/+4ChOnWOQe0PcWC9GymNCSbN2z7n8RikGD4frP4aGjoFKyHof42OV3h47XUdxqeZ3Bw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725542398; c=relaxed/simple;
-	bh=6V3euneuGtibcLKrF6WsUA6dayTGKVR1M0HT1vjiMIY=;
+	s=arc-20240116; t=1725542518; c=relaxed/simple;
+	bh=tvMGH6acHpq0mf3wOpKqkyCyArZRu2SdyTDclFxOFhE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f+MmX+7nlZ0hb7VNwVRbryOM2G1AaJlZDKSXjOCMjTRxzSFXQpFd8meRFma9aGUdWK+7AVw4TVqxB0txnUmqsi1is8qx6pumFj9Gi6J9zZWHIK/lEu14KaPH9FoLyl7eR0cTAk574H79oIVWfqaQXmAY8aog4tLu7fkZQ3+l7dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T49DeywJ; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-656d8b346d2so497535a12.2;
-        Thu, 05 Sep 2024 06:19:57 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=F9KDV4KN3am9v6WB9swsrAtAlvbTM2JwKPb0qJHwC2+2G1TLJyP1fGgnV74UpbZp4P5dZw6/WzXbdflnl0xGSxPQ4mAbnKnpcRxeOmyjq1wxqNPzM8AM4ejXHgiyNw+p0VcGp+QLFqnD+UOP3Avv1nEjfz2EtKigxFy0qttv2mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A3lPMym7; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5343617fdddso1196046e87.0
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Sep 2024 06:21:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725542397; x=1726147197; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6G+1H1L06ZYyzHJXqiHVCAxEIU4FmeJw2ZnDmlGGd18=;
-        b=T49DeywJ4S7ujU2CAY6BDXYo36r3nuGKnrU/dUy8ZLadTNH9ElIfzqfrU1aJpMygp6
-         WTsKF6aEyAhEk7UHxZQ0t61xuMq4rwtHp76Fj/l57s5/XHHcvGpunnWxCPq8H2j9hKEe
-         2KgjLHF4sYhXSlK0AhHyxTLuS6Wi2/tRyOHB//4jRZf/kIEECCjsa9e/5jea6n3KgC5t
-         WaXHAi5G62HdnK759bc8ypuwstWM3xMqTGRhG4/AcgVTPOzZwnZqbKtmzE4ksHaXTrwJ
-         wqpysOi7Mrv2DKLllJ+Fpl78395VaGs6Jc4PpncgicYzetkc7pSn5oRN19C6H1vjElXb
-         oTMg==
+        d=linaro.org; s=google; t=1725542514; x=1726147314; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lmlFpgXruyMe2tR2xQCFFCz5LQ41UoitHBNzmaLBXlg=;
+        b=A3lPMym75YWCZz8EinkWZYCKvPIPxjaPXnNG6yUBR0Tj2kdX+v6bjRIpUDbdq3GKUO
+         bCWePp3AwiAJjO0SsJHVsG5eHVVQnvHoTyKkT5KYofW48jtvsvrDV39wR19TDLWk1Sgm
+         djA9pjfOzF72oPZZwHjZz4B6wFja0eR3qYPxmoW9C3bYdpbWcpGcsFrXyGDpzf4pkGC/
+         onKuZi07fNWILlqsBuVCVu2dEyOfD17tvaho/FL6eZ6Tfhp5GR0rYhTyQLPNizFST4Lp
+         pxjsFq2MFe7cRwBjZHFje3n0xdDu+bYUuXSeli25yMQFdpRvK2caCEIdE83okvIxtuEo
+         MYAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725542397; x=1726147197;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6G+1H1L06ZYyzHJXqiHVCAxEIU4FmeJw2ZnDmlGGd18=;
-        b=JX2dIMH3ffkz11MpmXrH33wGvCutAq49os5pJvXtsbj+nEAhUoVyfmroLksnSsCFWV
-         z86LouxZq3wi3T+RIUYbtj3kUhld2YjmashMyX/QJn66Gl8edTOW77+63CMwIEsMwLDy
-         BHsCA8c3DfU0HBq64yQt/Q5OXy+XvK35RKZqsg2RkOhevpxS9YTFYxA0xK9jo9bVok9k
-         0CihUmbnVUJKEP1W0DXZ10rlI6guR2qyZVFu1+yPNlruvUUEmORxJN1G3cy0iZ/NQxL4
-         lkD8RnVKL5OSBUXZI1g9b4xQEtuSyqRUFhNhrklcEBPfHaW62fU7zP5dXEDEZkoW1iZP
-         wRiw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBbkmyVIuKxEx5Uuj0265zxIMdOYgn6bx2KNiZ0hn3j50X8/w/4dT20aqPva+KOulidghGxTndTziusrA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrALCNGTbt71EUwjliaHMlHJb+7g/UygnSFY4kYg8gPW2jDsKN
-	BUIuI96MjXje4Igh+5wuqmBqSPkFKSLeTHTlmsBG/15BEk3x8LiY
-X-Google-Smtp-Source: AGHT+IF4dbYu6+uDgLDiTIdVAA5fboZCE6L9E6fXLxkA21wUQYREfw5Enu9CqITADmiySOcl7wbRCg==
-X-Received: by 2002:a17:90b:19ca:b0:2c9:b72:7a1f with SMTP id 98e67ed59e1d1-2d8973a580emr15117769a91.28.1725542396544;
-        Thu, 05 Sep 2024 06:19:56 -0700 (PDT)
-Received: from rigel ([203.63.211.120])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d8ace66f14sm10373548a91.20.2024.09.05.06.19.53
+        d=1e100.net; s=20230601; t=1725542514; x=1726147314;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lmlFpgXruyMe2tR2xQCFFCz5LQ41UoitHBNzmaLBXlg=;
+        b=SSdigqPhj6bdGYE79mg2XZ5/hSURt3pwqbJm+97//dly9yxV2f3D1nTibTSKdoBZsI
+         UTpgxFiXgKhAcGF78lKF7RZZw8HHAET3pXbm49bLHCDWqvOTL2z9ezQ0ywgkLzynXLdE
+         7tSqsfxGkiB7Oxr140ZQcxLtgHmU+odNfsWPyALE7tDk4ryHoI6gDNq6mw/pm+EE31JG
+         kVC1ESfu0D49lVhoNibL6sC/Gsyhh5mvmy4gc04OEBatXc6QIDs+Ub4BLkUNyJUlSNpa
+         nkXPaLGE9KFN0AcTGSzZGZ2SIaJUddieX5ewLKpFroUi3Oacbqxvl6fTHXESIFNh+MIw
+         sazg==
+X-Forwarded-Encrypted: i=1; AJvYcCUL/kfaPDah786WuG6aMjrclzE7O92IE7AUQEMDpqcJnJvGfB0+Z7zR/0Xn69vsW5D3YjXoqKC8Klnm@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhVuUNl4I7jr2HXeI61WHK4kaQcMskOfsTlK+cnHAzc/BqYp2S
+	tcbXJ9LhYGOxj14jRE9zh8W4vZQiYkxIq3tk4UdfIZlvokZWW1wktFOfqU4rL0o=
+X-Google-Smtp-Source: AGHT+IGX+rtcdbYxBe2zl/yQqy3m4+s8S5Tpbx76wjpbCC2RqHyz/t9kDhohpfiwytRMDDou5RYhfA==
+X-Received: by 2002:a05:6512:a8b:b0:536:54ff:51c8 with SMTP id 2adb3069b0e04-53654ff53dbmr899587e87.17.1725542513261;
+        Thu, 05 Sep 2024 06:21:53 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53653a926besm140835e87.302.2024.09.05.06.21.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2024 06:19:55 -0700 (PDT)
-Date: Thu, 5 Sep 2024 21:19:50 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] gpiolib: cdev: use !mem_is_zero() instead of
- memchr_inv(s, 0, n)
-Message-ID: <20240905131950.GA191863@rigel>
-References: <20240904090743.1204593-1-andy.shevchenko@gmail.com>
- <172552177868.28435.4071190094207246356.b4-ty@linaro.org>
- <20240905130121.GA166185@rigel>
- <CAMRc=Mc=aK98ZYvz8AuwxYpqEPDAqG1kLcM+T24JipP6HW0L9A@mail.gmail.com>
+        Thu, 05 Sep 2024 06:21:52 -0700 (PDT)
+Date: Thu, 5 Sep 2024 16:21:50 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Nikunj Kela <quic_nkela@quicinc.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, andersson@kernel.org, 
+	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	rafael@kernel.org, viresh.kumar@linaro.org, herbert@gondor.apana.org.au, 
+	davem@davemloft.net, sudeep.holla@arm.com, andi.shyti@kernel.org, tglx@linutronix.de, 
+	will@kernel.org, robin.murphy@arm.com, joro@8bytes.org, jassisinghbrar@gmail.com, 
+	lee@kernel.org, linus.walleij@linaro.org, amitk@kernel.org, 
+	thara.gopinath@gmail.com, broonie@kernel.org, cristian.marussi@arm.com, 
+	rui.zhang@intel.com, lukasz.luba@arm.com, wim@linux-watchdog.org, linux@roeck-us.net, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org, arm-scmi@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, kernel@quicinc.com, quic_psodagud@quicinc.com, 
+	Praveen Talari <quic_ptalari@quicinc.com>
+Subject: Re: [PATCH v2 16/21] dt-bindings: spi: document support for SA8255p
+Message-ID: <kyy6wb46zt32e6mxcw66xrzlourhvwxnxhhq3pxioxkabs3ny2@hyhb5bjeuoka>
+References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-17-quic_nkela@quicinc.com>
+ <sdxhnqvdbcpmbp3l7hcnsrducpa5zrgbmkykwfluhrthqhznxi@6i4xiqrre3qg>
+ <b369bd73-ce2f-4373-8172-82c0cca53793@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mc=aK98ZYvz8AuwxYpqEPDAqG1kLcM+T24JipP6HW0L9A@mail.gmail.com>
+In-Reply-To: <b369bd73-ce2f-4373-8172-82c0cca53793@quicinc.com>
 
-On Thu, Sep 05, 2024 at 03:04:34PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Sep 5, 2024 at 3:01 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Thu, Sep 05, 2024 at 09:36:20AM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > >
-> > > On Wed, 04 Sep 2024 12:07:43 +0300, Andy Shevchenko wrote:
-> > > > Use the mem_is_zero() helper where possible.
-> > > >
-> > > >
-> > >
-> > > Applied, thanks!
-> > >
-> > > [1/1] gpiolib: cdev: use !mem_is_zero() instead of memchr_inv(s, 0, n)
-> > >       commit: b1da870ba36b3f525aee9be35b2f08a1feec61a7
-> > >
-> >
-> > As per my other mail, mem_is_zero() is not defined in gpio/for-next yet.
-> > So how does this work?
-> >
-> > If I build for-next I get:
-> >
-> > drivers/gpio/gpiolib-cdev.c: In function ‘gpio_v2_line_config_validate’:
-> > drivers/gpio/gpiolib-cdev.c:1334:14: error: implicit declaration of function ‘mem_is_zero’; did you mean ‘xa_is_zero’? [-Werror=implicit-function-declaration]
-> >  1334 |         if (!mem_is_zero(lc->padding, sizeof(lc->padding)))
-> >       |              ^~~~~~~~~~~
-> >       |              xa_is_zero
+On Wed, Sep 04, 2024 at 05:48:35AM GMT, Nikunj Kela wrote:
+> 
+> On 9/3/2024 11:34 PM, Krzysztof Kozlowski wrote:
+> > On Tue, Sep 03, 2024 at 03:02:35PM -0700, Nikunj Kela wrote:
+> >> Add compatible representing spi support on SA8255p.
+> >>
+> >> Clocks and interconnects are being configured in firmware VM
+> >> on SA8255p platform, therefore making them optional.
+> >>
+> > Please use standard email subjects, so with the PATCH keyword in the
+> > title.  helps here to create proper versioned patches.
+> Where did I miss PATCH keyword in the subject here? It says "[PATCH v2
+> 16/21] dt-bindings: spi: document support for SA8255p"
+> > Another useful tool is b4. Skipping the PATCH keyword makes filtering of
+> > emails more difficult thus making the review process less convenient.
 > >
 > >
-> > Cheers,
-> > Kent.
->
-> Ah, it'll have to wait until the next release cycle then. Sorry for
-> vacuuming patches too eagerly today. Dropping it.
->
+> >> CC: Praveen Talari <quic_ptalari@quicinc.com>
+> >> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
+> >> ---
+> >>  .../bindings/spi/qcom,spi-geni-qcom.yaml      | 60 +++++++++++++++++--
+> >>  1 file changed, 56 insertions(+), 4 deletions(-)
 
-My bad for not being clearer in my initial mail - that was why I acked
-rather than giving it a Rb - it still needs you to work out how to deal
-with the other patch that it requires.
+> >>  
+> >>  properties:
+> >>    compatible:
+> >> -    const: qcom,geni-spi
+> >> +    enum:
+> >> +      - qcom,geni-spi
+> >> +      - qcom,sa8255p-geni-spi
+> > You have entire commit msg to explain why this device's programming
+> > model is not compatible with existing generic compatible which must
+> > cover all variants (because it is crazy generic).
+> >
+> > Best regards,
+> > Krzysztof
+> 
+> I will put more details in the description of the patch, though, I had
+> put the description in the cover letter for this entire series.
 
-Well that and I would flip the sense of the function but, assuming that
-ship has sailed, that is just grumbling.
+Cover letters do not land in the git repo, so the next person coming to
+perform modifications can not understand what was so special about this
+platform. Please always provide all reasoning for a change in the commit
+message.
 
-Cheers,
-Kent.
+-- 
+With best wishes
+Dmitry
 
