@@ -1,185 +1,142 @@
-Return-Path: <linux-gpio+bounces-9849-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9850-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7E6296DC56
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 16:49:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B77896DC5D
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 16:50:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8059528A773
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 14:49:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE54028B85C
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 14:50:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 607CD76056;
-	Thu,  5 Sep 2024 14:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCgnBeg/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 568DE6E614;
+	Thu,  5 Sep 2024 14:50:45 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6C343169;
-	Thu,  5 Sep 2024 14:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82C874413;
+	Thu,  5 Sep 2024 14:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725547760; cv=none; b=q5U4jeY7p8tdYCLH5Jte20fC74SQZ4jitrqTqOv3qciVs2QqGD90k/w1mUqhE3TB3Z5dDCdKy1e7ofdTWyjPB2moq4NZxZVOFJ5aIYqCNLgyhY6FgieWe12Iloru/ORfQUfbMhE7a4LeokJMVoqlOMw/7cJAmnoUZFT0dcWmLQo=
+	t=1725547845; cv=none; b=RrNwwfJP3xk3s4CpenYybsNvYM6KzkDkFCWykCslW83hMIV3EzadCkpflWuxMAwnLXMjiW2CjJ37mnMhc8BUqb5/JF04jIkzYtlmOdSKAEIykANgYbb9EcL39gyZ+C5vzAspK+SMdGb7b3scdWfKxpU0SKmAI3kopq+RSSrK6Lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725547760; c=relaxed/simple;
-	bh=z9r0NxcFekK09jKFvUY4vj72duAS7qn2qglDPPI4PLU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=loZTUiNWXSw7+rjaAoMRXg/YB9bytGQaCKJJUACdDiy3Xskm5WTYaPGyRYXxlu0D15gTlLvRokaXMwBDX18r8dSOCZ94FMNXcPTikpKr+4BCz3qQJTBZZYSSBimCZP4e3ruBex/JE35ixLplKXylPhaTm8qntSbln7A1DdZ7SfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCgnBeg/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D68AC4CEC3;
-	Thu,  5 Sep 2024 14:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725547759;
-	bh=z9r0NxcFekK09jKFvUY4vj72duAS7qn2qglDPPI4PLU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rCgnBeg/2QCYhFtf0Uy4Rf0QMQd2VIyVYz3/sRkVSci1e96UTATiMm/ws9WoKeynB
-	 T49qs+s6WuUW2mszeaD3bazikT8Dl2FI1Ku1sQvnfHfgF74rZymjC34+lis8nyGX0P
-	 ItehwgG2Ue7MlNlmLSi3UrAUEw2Sek90HQHhX4LrLAiUo7fLSwgyIbuXfVp7PCjhRz
-	 8YBBd1Q1rUwp8f5T14sECowNTvz8to0Q2Och1rd67oMEL0OY7BiFbYaxoQSuSc0vjh
-	 m0cgsleMCKGC/q58QJ1h3aBM9yI22Y4DUGedudgZb7cxBmOtGfUUoP3AmpAImLvEuP
-	 5mP7hTkF/SbgA==
-Message-ID: <a2c2e365-7e47-4ad1-87dc-b5603a927cc6@kernel.org>
-Date: Thu, 5 Sep 2024 16:49:08 +0200
+	s=arc-20240116; t=1725547845; c=relaxed/simple;
+	bh=CK2E0vmywcwr2z4DMRWOl+JpYr3SUFEXFQJ+GlpelCs=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=fEEMhL0/3BgV3rV/rOz704TA/dTMBAYUMhxEaLtQPKT9rwLi/XSz0gTQOkO//N/kmW/0+QtCuGECyeD+6jKpfmtnmum0P8JvaPeQnx0XFj/a6X1o2Z8X7sUfKPe5RaJvMspRSkmZ+4tbZMpKU40eqQUkCYztYYd2GkooNMsEtIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [10.185.68.150] (90.154.15.122) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Thu, 5 Sep
+ 2024 17:50:28 +0300
+Subject: Re: [PATCH] pinctrl: stm32: check devm_kasprintf() returned value
+To: Ma Ke <make24@iscas.ac.cn>, <linus.walleij@linaro.org>,
+	<mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+	<bartosz.golaszewski@linaro.org>, <patrice.chotard@foss.st.com>,
+	<antonio.borneo@foss.st.com>, <peng.fan@nxp.com>,
+	<valentin.caron@foss.st.com>, <akpm@linux-foundation.org>
+CC: <linux-gpio@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<stable@vger.kernel.org>
+References: <20240905020244.355474-1-make24@iscas.ac.cn>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <03cf48b6-58b4-eeaa-41bf-5dda61ea37ac@omp.ru>
+Date: Thu, 5 Sep 2024 17:50:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 16/21] dt-bindings: spi: document support for SA8255p
-To: Nikunj Kela <quic_nkela@quicinc.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, rafael@kernel.org,
- viresh.kumar@linaro.org, herbert@gondor.apana.org.au, davem@davemloft.net,
- sudeep.holla@arm.com, andi.shyti@kernel.org, tglx@linutronix.de,
- will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
- jassisinghbrar@gmail.com, lee@kernel.org, linus.walleij@linaro.org,
- amitk@kernel.org, thara.gopinath@gmail.com, broonie@kernel.org,
- cristian.marussi@arm.com, rui.zhang@intel.com, lukasz.luba@arm.com,
- wim@linux-watchdog.org, linux@roeck-us.net, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
- arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
- linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
- kernel@quicinc.com, quic_psodagud@quicinc.com,
- Praveen Talari <quic_ptalari@quicinc.com>
-References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
- <20240903220240.2594102-1-quic_nkela@quicinc.com>
- <20240903220240.2594102-17-quic_nkela@quicinc.com>
- <sdxhnqvdbcpmbp3l7hcnsrducpa5zrgbmkykwfluhrthqhznxi@6i4xiqrre3qg>
- <b369bd73-ce2f-4373-8172-82c0cca53793@quicinc.com>
- <9a655c1c-97f6-4606-8400-b3ce1ed3c8bf@kernel.org>
- <516f17e6-b4b4-4f88-a39f-cc47a507716a@quicinc.com>
- <2f11f622-1a00-4558-bde9-4871cdc3d1a6@lunn.ch>
- <204f5cfe-d1ed-40dc-9175-d45f72395361@quicinc.com>
- <70c75241-b6f1-4e61-8451-26839ec71317@kernel.org>
- <75768451-4c85-41fa-82b0-8847a118ea0a@quicinc.com>
- <ce4d6ea9-0ba7-4587-b4a7-3dcb2d6bb1a6@kernel.org>
- <4896510e-6e97-44e0-b3d7-7a7230f935ec@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20240905020244.355474-1-make24@iscas.ac.cn>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <4896510e-6e97-44e0-b3d7-7a7230f935ec@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 09/05/2024 14:36:50
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 187573 [Sep 05 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.1.5
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 32 0.3.32
+ 766319f57b3d5e49f2c79a76e7d7087b621090df
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 90.154.15.122 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;90.154.15.122:7.1.2;omp.ru:7.1.1
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 90.154.15.122
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 09/05/2024 14:40:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 9/5/2024 12:11:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On 05/09/2024 16:15, Nikunj Kela wrote:
-> 
-> On 9/5/2024 7:09 AM, Krzysztof Kozlowski wrote:
->> On 05/09/2024 16:03, Nikunj Kela wrote:
->>> On 9/5/2024 1:04 AM, Krzysztof Kozlowski wrote:
->>>> On 04/09/2024 23:06, Nikunj Kela wrote:
->>>>> On 9/4/2024 9:58 AM, Andrew Lunn wrote:
->>>>>>> Sorry, didn't realize SPI uses different subject format than other
->>>>>>> subsystems. Will fix in v3. Thanks
->>>>>> Each subsystem is free to use its own form. e.g for netdev you will
->>>>>> want the prefix [PATCH net-next v42] net: stmmac: dwmac-qcom-ethqos:
->>>>> of course they are! No one is disputing that.
->>>>>> This is another reason why you should be splitting these patches per
->>>>>> subsystem, and submitting both the DT bindings and the code changes as
->>>>>> a two patch patchset. You can then learn how each subsystem names its
->>>>>> patches.
->>>>> Qualcomm QUPs chips have serial engines that can be configured as
->>>>> UART/I2C/SPI so QUPs changes require to be pushed in one series for all
->>>>> 3 subsystems as they all are dependent.
->>>> No, they are not dependent. They have never been. Look how all other
->>>> upstreaming process worked in the past.
->>> Top level QUP node(patch#18) includes i2c,spi,uart nodes.
->>> soc/qcom/qcom,geni-se.yaml validate those subnodes against respective
->>> yaml. The example that is added in YAML file for QUP node will not find
->>> sa8255p compatibles if all 4 yaml(qup, i2c, spi, serial nodes) are not
->>> included in the same series.
->>>
->> So where is the dependency? I don't see it. 
-> 
-> Ok, what is your suggestion on dt-schema check failure in that case as I
-> mentioned above? Shall we remove examples from yaml that we added?
-> 
-> 
->> Anyway, if you insist,
->> provide reasons why this should be the only one patchset - from all
->> SoCs, all companies, all developers - getting an exception from standard
->> merging practice and from explicit rule about driver change. See
->> submitting bindings.
->>
->> This was re-iterated over and over, but you keep claiming you need some
->> sort of special treatment. If so, please provide arguments WHY this
->> requires special treatment and *all* other contributions are fine with it.
+On 9/5/24 5:02 AM, Ma Ke wrote:
 
-You did not respond to above about explaining why this patchset needs
-special treatment, so I assume there is no exception here to be granted
-so any new version will follow standard process (see submitting bindings
-/ writing bindings).
+> devm_kasprintf() can return a NULL pointer on failure but this returned
+> value is not checked. Fix this lack and check the returned value.
+> 
+> Found by code review.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 32c170ff15b0 ("pinctrl: stm32: set default gpio line names using pin names")
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+> ---
+>  drivers/pinctrl/stm32/pinctrl-stm32.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> index a8673739871d..53306d939d14 100644
+> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
+> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> @@ -1374,8 +1374,13 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
+>  
+>  	for (i = 0; i < npins; i++) {
+>  		stm32_pin = stm32_pctrl_get_desc_pin_from_gpio(pctl, bank, i);
+> -		if (stm32_pin && stm32_pin->pin.name)
+> +		if (stm32_pin && stm32_pin->pin.name) {
+>  			names[i] = devm_kasprintf(dev, GFP_KERNEL, "%s", stm32_pin->pin.name);
+> +			if (!name[i]) {
+> +				err = -ENOMEM;
+> +				goto err_clk;
+> +			}
+> +		}
+>  		else
+>  			names[i] = NULL;
 
-Best regards,
-Krzysztof
+   That doesn't comply with the kernel coding style -- it now needs to be:
 
+ 		} else {
+ 			names[i] = NULL;
+		}
+[...]
+
+MBR, Sergey
 
