@@ -1,155 +1,194 @@
-Return-Path: <linux-gpio+bounces-9859-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9858-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2646A96E024
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 18:45:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3455B96E016
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 18:43:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58B201C22696
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 16:45:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6F2D9B2489E
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 16:43:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2273C1A071A;
-	Thu,  5 Sep 2024 16:45:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B5191A0707;
+	Thu,  5 Sep 2024 16:43:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nerlkPCY"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZMkxZhhD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4556D6F066;
-	Thu,  5 Sep 2024 16:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C8419C579
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Sep 2024 16:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725554744; cv=none; b=vC49n5m/ZQQ6sA/0xXtFWdBq6GuuFvxis53CwPXyU/BvLViJ5b97lZED1b0DAG5fpnXUncazQJHMxWiOfqPF7kE/16ohWMKgTkDQeaZqBhPcTaF1YwriWPZqnb5nsGPCqsIN24jzZCG2EXU1xESvRK9zZ/GdomS/DMM570xA9zc=
+	t=1725554612; cv=none; b=U6NcOmD6OrTE6pXK06W0nlRio4PHH2771T4dgEyM86hHr3C+UCix8agcYAJkWJOIagYlyaig2h9E47Wwn56EZN4BqReXvYNvvjp9Lvnauqzm3cH20qSBOaS08oJT0Log/IZ+yrJsNik3ld/PzfDg5TkxyTFT1F7oHNA93pUIgs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725554744; c=relaxed/simple;
-	bh=YWwbPzF+sNkt5ZpTARioh/0x0WR47L48CO6YcSiPyKw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SguRQPD3A9szuH/qs0sFX6lwU3hvb1uxR6Y6JBgQrX1aP1aMsrZRxw4ALTA0+KyLwY+f90vVEkgYL/Xp3fe3OVgHjwT0KCaAnYArILJRmtIAFeJmZXftLXLNIUJGdqi5U+bU67tgER0cH0FS83/+igSElYhn553tiLSDPTvdVgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nerlkPCY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 485974JZ016158;
-	Thu, 5 Sep 2024 16:40:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	gH2m8z07VyC9Rs4uG0Uvl0zZaPASslF/e9Q/tX9hoOk=; b=nerlkPCYZhbbBpBr
-	NSScHB2ruGVyMU95nTcKEy0ov3a15xf+EL/4EkQVy2x2jk6QiHENXdA3nRD8sM2g
-	t8LR2skwquCdUa8Wcmy6aApm20yGV0zO7V7NEUVKiyUKQjKjyqxNFfjNu6fdBXC4
-	yc+nNrkQN5ErZhn8q7JWuScM0KiAP2JM+SDJtkaiKrZYx6DkkeZ7HOYPxL8B5PCn
-	XTivXST2ASE0Eb4RfwykgJk6eTUEZolAQ5OHpi6dglMdc5u+2CUS8SnxoyMWc7xc
-	KxqLtZeX+V1pbKCEYC6iW/oKwWiM/fvwlMqeg3LLwpJkuMIKFDlp+h3U7KTb/N21
-	PVEkHw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41egmrn4rf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Sep 2024 16:39:59 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 485GdwfI007444
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 5 Sep 2024 16:39:58 GMT
-Received: from [10.110.102.234] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 5 Sep 2024
- 09:39:55 -0700
-Message-ID: <63f988eb-e638-48fa-b566-3df39588bf7c@quicinc.com>
-Date: Thu, 5 Sep 2024 09:39:54 -0700
+	s=arc-20240116; t=1725554612; c=relaxed/simple;
+	bh=c7m+RNyq7iAjsBTay5Gjc6yi5+rmYBoTjqtXT+27Ecs=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DasDwGkAQFOECTtv0OvHcWqTr/UcaKlNde7ML10ZP+2743T1JwTdy7DN0OT8yA4x5w488jLIzoKLkn88TckYVGiblvVIbja2pXbEIi/tsFkNIvWxZzk6wyCfIJWVvlEB9bv8YD3jNym3Q7qPFru0a7FZANc3n72FGagxhGO7blI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZMkxZhhD; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a86c476f679so140789766b.1
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Sep 2024 09:43:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1725554609; x=1726159409; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q9/Cl4pns2tvY2+ex2I7VzPKJmEi9tuK1Vum+Ld5DXw=;
+        b=ZMkxZhhD4w/zZ2AXhBwz/1oX+b1ZHWuah8EecaYnHz0NzBTITle5cMqQoc2l+dcbik
+         bEwVneBiZqibyV02dZhMp6n0a0K94xX+rYLiY79Ogn0jccRvdl4owVyNoHbmvqg1Bt9J
+         lgNLZbQ2tuR+bJsIrM2GK5mFuDUayBBaz+5KGMbU/Ufzvo4Zpb4qusn1K9qJUeL6OdFE
+         ShE4bgVsJ4h3P716ziZT17yTCpFs8yAx0JdMwsGaV8pccSHabMiz1rpghsiOGTsg9sv4
+         I01zQJgV+/yiqVPMCG9OZF4QazuF39dDTP+pyrfh19QdB9tIbK6G9cLm9F4p/LP3zi3w
+         sqKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725554609; x=1726159409;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q9/Cl4pns2tvY2+ex2I7VzPKJmEi9tuK1Vum+Ld5DXw=;
+        b=Q9/+qw93ty3glZ9Mb9NQABsJycv0cqvnoq7ScPhmraxmaUe4e1LSAAcg42ubjWwopP
+         +IcSCbeYItN7oTy4FvT7PrSwpZ26k08fTuib8powIpsmYF6DVxXn7ESon0zOrkAnQIJt
+         gS2wP7psOY76veaG7gb8gHMwGonJHrmcGYwcCu39srR1seOV61GHkIo/LS18QsCv19w2
+         7gYtiP0y+nzuWPaBE/sPpuEJswa+StYe3YpgE2ENK0eWAIJRGDwsnvhiUvBTX+I4O2R8
+         yNYmGspm2Ny4BILw2pMecs89FG1cdexOe6+gm50QLtJlYL9PlZrHHm8ALaIexGN9Eg/P
+         9J6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXfw0dtRG9imRfc5P4YRJnlbWeM2tLn9+5lQRoSNrbRHtorEn7qgMPnbYrQBeIyPERMQBJ1XzIB+skz@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnjZLKqJm7XOoJjOY7AZ08zc3kqSN4RtSfVzjK0wpM5sJGVL3k
+	EWJIXzcd6aYwbQXSmLaJSEkZnsKuZGzPc0bVR9fiKSDd/i2w2P9z0MWX/HRAvGg=
+X-Google-Smtp-Source: AGHT+IEz20rh2z3FuTn3FqdARHdBZA33h+CRI0+H4sggZcuGroEd9OHEiz6QTkjQzE4FTjN3pv3RUA==
+X-Received: by 2002:a17:907:dab:b0:a86:743a:a716 with SMTP id a640c23a62f3a-a89b96f8af8mr1230712666b.53.1725554607887;
+        Thu, 05 Sep 2024 09:43:27 -0700 (PDT)
+Received: from localhost (host-80-182-198-72.retail.telecomitalia.it. [80.182.198.72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a6236d0easm156239566b.102.2024.09.05.09.43.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2024 09:43:27 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 5 Sep 2024 18:43:35 +0200
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
+ parsed from DT
+Message-ID: <Ztnft3p3tb_kP1jc@apocalypse>
+References: <Zszcps6bnCcdFa54@apocalypse>
+ <20240903222644.GA126427@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 16/21] dt-bindings: spi: document support for SA8255p
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Krzysztof Kozlowski <krzk@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <sudeep.holla@arm.com>, <andi.shyti@kernel.org>, <tglx@linutronix.de>,
-        <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
-        <jassisinghbrar@gmail.com>, <lee@kernel.org>,
-        <linus.walleij@linaro.org>, <amitk@kernel.org>,
-        <thara.gopinath@gmail.com>, <broonie@kernel.org>,
-        <cristian.marussi@arm.com>, <rui.zhang@intel.com>,
-        <lukasz.luba@arm.com>, <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <arm-scmi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <iommu@lists.linux.dev>, <linux-gpio@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <kernel@quicinc.com>,
-        <quic_psodagud@quicinc.com>,
-        Praveen Talari
-	<quic_ptalari@quicinc.com>
-References: <9a655c1c-97f6-4606-8400-b3ce1ed3c8bf@kernel.org>
- <516f17e6-b4b4-4f88-a39f-cc47a507716a@quicinc.com>
- <2f11f622-1a00-4558-bde9-4871cdc3d1a6@lunn.ch>
- <204f5cfe-d1ed-40dc-9175-d45f72395361@quicinc.com>
- <70c75241-b6f1-4e61-8451-26839ec71317@kernel.org>
- <75768451-4c85-41fa-82b0-8847a118ea0a@quicinc.com>
- <ce4d6ea9-0ba7-4587-b4a7-3dcb2d6bb1a6@kernel.org>
- <4896510e-6e97-44e0-b3d7-7a7230f935ec@quicinc.com>
- <b1ad1c7a-0995-48e0-8ebc-46a39a5ef4b3@kernel.org>
- <515a2837-69c3-47b2-978b-68ad3f6ad0fc@quicinc.com>
- <0ba03b8e-4dd5-4234-823e-db4c457fa292@lunn.ch>
-Content-Language: en-US
-From: Nikunj Kela <quic_nkela@quicinc.com>
-In-Reply-To: <0ba03b8e-4dd5-4234-823e-db4c457fa292@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: l_oq1IAyrxiZBlBS8JOfAaNdh9tdibTi
-X-Proofpoint-ORIG-GUID: l_oq1IAyrxiZBlBS8JOfAaNdh9tdibTi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-05_12,2024-09-04_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- suspectscore=0 lowpriorityscore=0 mlxlogscore=999 priorityscore=1501
- spamscore=0 malwarescore=0 adultscore=0 bulkscore=0 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2409050124
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240903222644.GA126427@bhelgaas>
+
+Hi Bjorn,
+
+On 17:26 Tue 03 Sep     , Bjorn Helgaas wrote:
+> On Mon, Aug 26, 2024 at 09:51:02PM +0200, Andrea della Porta wrote:
+> > On 10:24 Wed 21 Aug     , Bjorn Helgaas wrote:
+> > > On Tue, Aug 20, 2024 at 04:36:05PM +0200, Andrea della Porta wrote:
+> > > > The of_pci_set_address() function parses devicetree PCI range
+> > > > specifier assuming the address is 'sanitized' at the origin,
+> > > > i.e. without checking whether the incoming address is 32 or 64
+> > > > bit has specified in the flags.  In this way an address with no
+> > > > OF_PCI_ADDR_SPACE_MEM64 set in the flags could leak through and
+> > > > the upper 32 bits of the address will be set too, and this
+> > > > violates the PCI specs stating that in 32 bit address the upper
+> > > > bit should be zero.
+> 
+> > > I don't understand this code, so I'm probably missing something.  It
+> > > looks like the interesting path here is:
+> > > 
+> > >   of_pci_prop_ranges
+> > >     res = &pdev->resource[...];
+> > >     for (j = 0; j < num; j++) {
+> > >       val64 = res[j].start;
+> > >       of_pci_set_address(..., val64, 0, flags, false);
+> > >  +      if (OF_PCI_ADDR_SPACE_MEM64)
+> > >  +        prop[1] = upper_32_bits(val64);
+> > >  +      else
+> > >  +        prop[1] = 0;
+> > > 
+> > > OF_PCI_ADDR_SPACE_MEM64 tells us about the size of the PCI bus
+> > > address, but the address (val64) is a CPU physical address, not a PCI
+> > > bus address, so I don't understand why of_pci_set_address() should use
+> > > OF_PCI_ADDR_SPACE_MEM64 to clear part of the CPU address.
+> > 
+> > It all starts from of_pci_prop_ranges(), that is the caller of
+> > of_pci_set_address().
+> 
+> > val64 (i.e. res[j].start) is the address part of a struct resource
+> > that has its own flags.  Those flags are directly translated to
+> > of_pci_range flags by of_pci_get_addr_flags(), so any
+> > IORESOURCE_MEM_64 / IORESOURCE_MEM in the resource flag will
+> > respectively become OF_PCI_ADDR_SPACE_MEM64 /
+> > OF_PCI_ADDR_SPACE_MEM32 in pci range.
+> 
+> > What is advertised as 32 bit at the origin (val64) should not become
+> > a 64 bit PCI address at the output of of_pci_set_address(), so the
+> > upper 32 bit portion should be dropped. 
+> 
+> > This is explicitly stated in [1] (see page 5), where a space code of 0b10
+> > implies that the upper 32 bit of the address must be zeroed out.
+> 
+> OK, I was confused and thought IORESOURCE_MEM_64 was telling us
+> something about the *CPU* address, but it's actually telling us
+> something about what *PCI bus* addresses are possible, i.e., whether
+> it's a 32-bit BAR or a 64-bit BAR.
+> 
+> However, the CPU physical address space and the PCI bus address are
+> not the same.  Generic code paths should account for that different by
+> applying an offset (the offset will be zero on many platforms where
+> CPU and PCI bus addresses *look* the same).
+> 
+> So a generic code path like of_pci_prop_ranges() that basically copies
+> a CPU physical address to a PCI bus address looks broken to me.
+
+Hmmm, I'd say that a translation from one bus type to the other is
+going on nonetheless, and this is done in the current upstream function
+as well. This patch of course does not add the translation (which is
+already in place), just to do it avoiding generating inconsistent address.
 
 
-On 9/5/2024 9:23 AM, Andrew Lunn wrote:
->> If the QUPs yaml changes are not included in the same series with
->> i2c,serial yaml changes, you see these errors:
->>
->> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.example.dtb: geniqup@9c0000: serial@990000:compatible:0: 'qcom,sa8255p-geni-uart' is not one of ['qcom,geni-uart', 'qcom,geni-debug-uart']
->> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.example.dtb: geniqup@9c0000: i2c@984000:compatible:0: 'qcom,sa8255p-geni-i2c' is not one of ['qcom,geni-i2c', 'qcom,geni-i2c-master-hub']
-> So you have a couple of options:
->
-> 1) It sounds like you should get the QUP changes merged first. Then
->    submit the i2c,serial changes. Is there a reason you cannot do
->    this? Is there a mutual dependency between these two series, or
->    just a one way dependency?
+> 
+> Maybe my expectation of this being described in DT is mistaken.
 
-The ask in this thread is to create new yaml files since existing one is
-using generic compatibles. With new yaml, we would need to provide
-example and can't avoid it. If we have to provide example of QUP node,
-IMO, we should provide a few subnodes as well since just QUP node
-without subnodes(i2c/serial/spi)  will not be very useful.
+Not sure what you mean here, the address being translated are coming from
+DT, in fact they are described by "ranges" properties.
 
-We can possibly skip all 3 subnode and only keep one subsystem(e.g.
-serial) so QUP and UART yaml can go together(still need two subsystems)
-while SPI and I2C can go independently after QUP series is accepted. Not
-sure if that is acceptable to maintainers though. QUP node in actual DT
-will have all 3 types of subnodes(i2c,spi, serial) so example in this
-case won't be complete.
+Many thanks,
+Andrea
 
->
-> 2) Explain in the commit message that following errors are expected
->    because ... And explain in detail why the dependency cannot be
->    broken to avoid the errors.
->
-> Andrew
+> Bjorn
 
