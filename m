@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-9860-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9861-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2879996E037
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 18:52:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6CA396E095
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 18:57:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B19D1C23C2C
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 16:52:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 428A61F26716
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 16:57:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530231A0709;
-	Thu,  5 Sep 2024 16:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B9C51A38F5;
+	Thu,  5 Sep 2024 16:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJiK/RmV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ssw/Bo3e"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED713C2FD;
-	Thu,  5 Sep 2024 16:52:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E021A0B1E;
+	Thu,  5 Sep 2024 16:57:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725555146; cv=none; b=Y/TXixOVQNMENEIN01qMUGpMIDy2BSvHnB8mEMTUGcyYHMk2+EXC5kjxTxf5VmnxlavMHiXbwBgSCwOsydT3+7uZlPSooclPE0yAPGJtPjs56jGnA0YkM+fvAE8bJM3CuY+H80kqrNUsVi9eiZcRDA5ZNHEOCn9fMeRTwTgqBps=
+	t=1725555421; cv=none; b=Lv/aUvvGqF1WwEJLOuNSCaFZcLIcLXk9Qc6gd5VZcDEDcz9Q7UvGBvusmiAaFTGLO8rs1Qj/xZAVOVWXHR7HhAsyeWEF97tQjGx8NSZK/1I0161k3hQNSnzUw3z0ZCFL/smsZ3I6s3qshTVlnSNadp49gP57qmz6DAZ+L2EM0gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725555146; c=relaxed/simple;
-	bh=LxreSBk46ePe4SK89Oq0or2qu57zLm/XmRM6LSpM+D4=;
+	s=arc-20240116; t=1725555421; c=relaxed/simple;
+	bh=REwzquBrwTrVU2SKXUDHLjtToZtZU/lyVbTT0o3bv1U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KBnAwZUyUt2uDOwBJHEjgXt8h509ES0hzYy0D8lPw0C17K2QptsSm7/0vNBzhHv/beTAjmoNPXcvmI5D96+a6GJxhahxgSFcBk7QTm24c1h9BjNGSQMQILl4ucgnQjgiW8Z9ovHUAxjD8YBc7xMoIt7L67LhmEisDRK9IdNbUsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJiK/RmV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB2FC4CEC3;
-	Thu,  5 Sep 2024 16:52:12 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Cv45RQDNI7JhYDB7DAxPJXyFlel6dfz9Cr7KLq9WWGOHN3bwFqZRG5CWeO2PdfB0EjlF0t00tOry7U2UUpBglqUYlxlp1ebwYWQe8Ft3GcYBTMOGnv7JXV9ZdDRnFOjRt17V9XF9TzaMM2/V2nAH+wlJ2O7q5of4Yja0zswzebM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ssw/Bo3e; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D435AC4CEC7;
+	Thu,  5 Sep 2024 16:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725555143;
-	bh=LxreSBk46ePe4SK89Oq0or2qu57zLm/XmRM6LSpM+D4=;
+	s=k20201202; t=1725555420;
+	bh=REwzquBrwTrVU2SKXUDHLjtToZtZU/lyVbTT0o3bv1U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aJiK/RmVZU+4QKnS20PevtZxI9Ao5l8kyPyrEFRfP5OJUiANjObzveTqFVMZvBfaq
-	 WvBZ+sESik2xeJo7HJwHV0YtQmU/k+E9sevdItiN3gY+oLQvNT6DIzErhTFmAtRfvW
-	 Z3Th9wsbWepCEbJIn8XbaTM2jgGsDsmD8igQpy4bYxlw1YLVMkgk1IHrAZ5ESpS4oO
-	 bGLgGWuO0oL57SU0Ub3Ntu7DwZK3eT0dYB3UuIjeRCvdcJ/zI6p6vNbBkpIANesZa+
-	 otXUzG3BSdj36YMneV4hn7uLwaEtsfN2PluWHfEebPoVRWvofMfzhvbjttQkItfin6
-	 Z02VSAPBtn/eA==
-Message-ID: <f39edf3d-aa9e-43a0-8997-762d76c9c248@kernel.org>
-Date: Thu, 5 Sep 2024 18:52:10 +0200
+	b=Ssw/Bo3eazEvp0aYQc2Ds+zgEuc/uYfNpbnYLSMwMnPN6t8iHXyQQfr/+BUz7YPWx
+	 vuErk3C56T6t/fILXOoRGIVvOr9sUC367XCSA4dugLSmvFdHmBLjaagqQUv+zbtfvM
+	 emsShXku5gskGoFAq7URQxGdXaCfnmlREgONL+UXBRs1UjzlbLWuBkSzqcjHlRhHXW
+	 KLVwuQVNz6JASMkyjx7PQI+Bx8nzaAwxIgvL9jyG+9XwdyZ9W36g6qgOSuUzTNCCd8
+	 wGlTndfuVwvFL8Zmidl7TdVVfIkKsQN7F/UlvMi2mn5hLxhTYaVzP9FrSBc7KL2d14
+	 +m6zj08k7Il2A==
+Message-ID: <f0cd5f5c-270f-4d9b-8169-be6180fc9925@kernel.org>
+Date: Thu, 5 Sep 2024 18:56:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,38 +50,40 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/11] misc: rp1: RaspberryPi RP1 misc driver
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- netdev@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, Lee Jones <lee@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>, Stefan Wahren <wahrenst@gmx.net>
-References: <cover.1724159867.git.andrea.porta@suse.com>
- <5954e4dccc0e158cf434d2c281ad57120538409b.1724159867.git.andrea.porta@suse.com>
- <lrv7cpbt2n7eidog5ydhrbyo5se5l2j23n7ljxvojclnhykqs2@nfeu4wpi2d76>
- <ZtHN0B8VEGZFXs95@apocalypse>
- <b74327b8-43f6-47cf-ba9d-cc9a4559767b@kernel.org>
- <ZtcoFmK6NPLcIwVt@apocalypse>
- <39735704-ae94-4ff8-bf4d-d2638b046c8e@kernel.org>
- <ZtndaYh2Faf6t3fC@apocalypse>
+Subject: Re: [PATCH v2 16/21] dt-bindings: spi: document support for SA8255p
+To: Nikunj Kela <quic_nkela@quicinc.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, rafael@kernel.org,
+ viresh.kumar@linaro.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+ sudeep.holla@arm.com, andi.shyti@kernel.org, tglx@linutronix.de,
+ will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
+ jassisinghbrar@gmail.com, lee@kernel.org, linus.walleij@linaro.org,
+ amitk@kernel.org, thara.gopinath@gmail.com, broonie@kernel.org,
+ cristian.marussi@arm.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+ wim@linux-watchdog.org, linux@roeck-us.net, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
+ arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
+ linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ kernel@quicinc.com, quic_psodagud@quicinc.com,
+ Praveen Talari <quic_ptalari@quicinc.com>
+References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-17-quic_nkela@quicinc.com>
+ <sdxhnqvdbcpmbp3l7hcnsrducpa5zrgbmkykwfluhrthqhznxi@6i4xiqrre3qg>
+ <b369bd73-ce2f-4373-8172-82c0cca53793@quicinc.com>
+ <9a655c1c-97f6-4606-8400-b3ce1ed3c8bf@kernel.org>
+ <516f17e6-b4b4-4f88-a39f-cc47a507716a@quicinc.com>
+ <2f11f622-1a00-4558-bde9-4871cdc3d1a6@lunn.ch>
+ <204f5cfe-d1ed-40dc-9175-d45f72395361@quicinc.com>
+ <70c75241-b6f1-4e61-8451-26839ec71317@kernel.org>
+ <75768451-4c85-41fa-82b0-8847a118ea0a@quicinc.com>
+ <ce4d6ea9-0ba7-4587-b4a7-3dcb2d6bb1a6@kernel.org>
+ <4896510e-6e97-44e0-b3d7-7a7230f935ec@quicinc.com>
+ <b1ad1c7a-0995-48e0-8ebc-46a39a5ef4b3@kernel.org>
+ <515a2837-69c3-47b2-978b-68ad3f6ad0fc@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -127,106 +129,62 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <ZtndaYh2Faf6t3fC@apocalypse>
+In-Reply-To: <515a2837-69c3-47b2-978b-68ad3f6ad0fc@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 05/09/2024 18:33, Andrea della Porta wrote:
-> Hi Krzysztof,
+On 05/09/2024 18:08, Nikunj Kela wrote:
 > 
-> On 20:27 Tue 03 Sep     , Krzysztof Kozlowski wrote:
->> On 03/09/2024 17:15, Andrea della Porta wrote:
->>>>>>> +
->>>>>>> +				rp1_clocks: clocks@c040018000 {
->>>>>>
->>>>>> Why do you mix MMIO with non-MMIO nodes? This really does not look
->>>>>> correct.
->>>>>>
+> On 9/5/2024 7:39 AM, Krzysztof Kozlowski wrote:
+>> On 05/09/2024 16:15, Nikunj Kela wrote:
+>>> On 9/5/2024 7:09 AM, Krzysztof Kozlowski wrote:
+>>>> On 05/09/2024 16:03, Nikunj Kela wrote:
+>>>>> On 9/5/2024 1:04 AM, Krzysztof Kozlowski wrote:
+>>>>>> On 04/09/2024 23:06, Nikunj Kela wrote:
+>>>>>>> On 9/4/2024 9:58 AM, Andrew Lunn wrote:
+>>>>>>>>> Sorry, didn't realize SPI uses different subject format than other
+>>>>>>>>> subsystems. Will fix in v3. Thanks
+>>>>>>>> Each subsystem is free to use its own form. e.g for netdev you will
+>>>>>>>> want the prefix [PATCH net-next v42] net: stmmac: dwmac-qcom-ethqos:
+>>>>>>> of course they are! No one is disputing that.
+>>>>>>>> This is another reason why you should be splitting these patches per
+>>>>>>>> subsystem, and submitting both the DT bindings and the code changes as
+>>>>>>>> a two patch patchset. You can then learn how each subsystem names its
+>>>>>>>> patches.
+>>>>>>> Qualcomm QUPs chips have serial engines that can be configured as
+>>>>>>> UART/I2C/SPI so QUPs changes require to be pushed in one series for all
+>>>>>>> 3 subsystems as they all are dependent.
+>>>>>> No, they are not dependent. They have never been. Look how all other
+>>>>>> upstreaming process worked in the past.
+>>>>> Top level QUP node(patch#18) includes i2c,spi,uart nodes.
+>>>>> soc/qcom/qcom,geni-se.yaml validate those subnodes against respective
+>>>>> yaml. The example that is added in YAML file for QUP node will not find
+>>>>> sa8255p compatibles if all 4 yaml(qup, i2c, spi, serial nodes) are not
+>>>>> included in the same series.
 >>>>>
->>>>> Right. This is already under discussion here:
->>>>> https://lore.kernel.org/all/ZtBzis5CzQMm8loh@apocalypse/
->>>>>
->>>>> IIUC you proposed to instantiate the non-MMIO nodes (the three clocks) by
->>>>> using CLK_OF_DECLARE.
->>>>
->>>> Depends. Where are these clocks? Naming suggests they might not be even
->>>> part of this device. But if these are part of the device, then why this
->>>> is not a clock controller (if they are controllable) or even removed
->>>> (because we do not represent internal clock tree in DTS).
->>>
->>> xosc is a crystal connected to the oscillator input of the RP1, so I would
->>> consider it an external fixed-clock. If we were in the entire dts, I would have
->>> put it in root under /clocks node, but here we're in the dtbo so I'm not sure
->>> where else should I put it.
->>
->> But physically, on which PCB, where is this clock located?
+>>>> So where is the dependency? I don't see it. 
+>>> Ok, what is your suggestion on dt-schema check failure in that case as I
+>>> mentioned above? Shall we remove examples from yaml that we added?
+>> I don't understand what sort of failure you want to fix and why examples
+>> have any problem here. 
 > 
-> xosc is a crystal, feeding the reference clock oscillator input pins of the RP1,
-> please see page 12 of the following document:
-> https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+> If the QUPs yaml changes are not included in the same series with
 
-That's not the answer. Where is it physically located?
+They cannot be included in the same series. You just think that
+including here solves the problem so go ahead, simulate the merging:
+1. Bjorn applies soc/qcom/qcom,geni-se.yaml patch and tests. His tree
+MUST build, so it also must pass dt_binding_check.
+Does it pass? No.
 
-> On Rpi5, the PCB is the very same as the one on which the BCM2712 (SoC) and RP1
-> are soldered. Would you consider it external (since the crystal is outside the RP1)
-> or internal (since the oscillator feeded by the crystal is inside the RP1)?
+2. SPI maintainer... ah, no point even going there.
 
-So it is on RPi 5 board? Just like every other SoC and every other
-vendor? Then just like every other SoC and every other vendor it is in
-board DTS file.
+> i2c,serial yaml changes, you see these errors:
+> 
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.example.dtb: geniqup@9c0000: serial@990000:compatible:0: 'qcom,sa8255p-geni-uart' is not one of ['qcom,geni-uart', 'qcom,geni-debug-uart']
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.example.dtb: geniqup@9c0000: i2c@984000:compatible:0: 'qcom,sa8255p-geni-i2c' is not one of ['qcom,geni-i2c', 'qcom,geni-i2c-master-hub']
 
-> 
->>
->>>
->>> Regarding pclk and hclk, I'm still trying to understand where they come from.
->>> If they are external clocks (since they are fixed-clock too), they should be
->>> in the same node as xosc. CLK_OF_DECLARE does not seem to fit here because
->>
->> There is no such node as "/clocks" so do not focus on that. That's just
->> placeholder but useless and it is inconsistent with other cases (e.g.
->> regulators).
-> 
-> Fine, I beleve that the root node would be okay then, or some other carefully named
-> node in root, if the clock is not internal to any chip.
-> 
->>
->> If this is external oscillator then it is not part of RP1 and you cannot
->> put it inside just to satisfy your drivers.
-> 
-> Ack.
-> 
->>
->>> there's no special management of these clocks, so no new clock definition is
->>> needed.
->>
->>> If they are internal tree, I cannot simply get rid of them because rp1_eth node
->>> references these two clocks (see clocks property), so they must be decalred 
->>> somewhere. Any hint about this?.
->>>
->>
->> Describe the hardware. Show the diagram or schematics where is which device.
-> 
-> Unfortunately I don't have the documentation (schematics or other info) about
-> how these two clocks (pclk and hclk) are arranged, but I'm trying to get
-> some insight about that from various sources. While we're waiting for some
-> (hopefully) more certain info, I'd like to speculate a bit. I would say that
-> they both probably be either external (just like xosc), or generated internally
-> to the RP1:
-> 
-> If externals, I would place them in the same position as xosc, so root node
-> or some other node under root (eg.: /rp1-clocks)
-
-Just like /clocks, /rp1-clocks is not better. Neither /rp1-foo-clocks.
-
-I think there is some sort of big misunderstanding here. Is this RP1
-co-processor on the RP board, connected over PCI to Broadcom SoC?
-
-> 
-> If internals, I would leave them just where they are, i.e. inside the rp1 node
-> 
-> Does it make sense?
-
-No, because you do not have xosc there, according to my knowledge.
+Don't grow examples if not needed. Or create dependencies and ask
+maintainers to cross-merge.
 
 Best regards,
 Krzysztof
