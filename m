@@ -1,138 +1,174 @@
-Return-Path: <linux-gpio+bounces-9869-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9870-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51D3496E3A2
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 22:02:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40C2796E3E4
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 22:19:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E45352872F8
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 20:02:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5DE931C231D3
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 20:19:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9894318FC92;
-	Thu,  5 Sep 2024 20:02:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEC771A4E93;
+	Thu,  5 Sep 2024 20:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nQ/hIZF5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FsjR3g/7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72F33D6D;
-	Thu,  5 Sep 2024 20:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507CC1946B5;
+	Thu,  5 Sep 2024 20:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725566559; cv=none; b=KNRibOdG6aWLVCfSZplSz7ZyMSl7571BBgrNXk0UoJV2EpxNZGhyd+byUJTDDqo7tg1Z3j0pfSFe6AIUHDaOrgSIy2lOL4hCg2lmA6c80rFwIJqsmuYLBbnBzac/2poTfBOrhLBm70BZT8jVPzgfpYo2OhE2Q9GjeUk6iv2bXJc=
+	t=1725567419; cv=none; b=HqFD3+8bWTTaEQKbeGopBuAqkr2GXHdsRfSCUNRAXT9CE8PeLKxB9DXjTNa4g+57LyWPKForQkbSSVbIP7P3wxqcK+gSA/yjbWJ/L0vOdLHtr3y50cCMR8M27jaRQLnFD97YDM6Dnp6CUk2OehTO3DgY6YxF2WE8G1mVbNHEEho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725566559; c=relaxed/simple;
-	bh=AyKX8+nt2yPLP/ENIDpA19SGhZiScbd4CUZUU3/QXes=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CxboaOP1zNRyRiMz4sq9IQJWR3hDUtUXJOdFId7sfASepSnopRn9/El5uSC/SDJMQFLr5g3Ugqyh1zDENVAmnDOzKT+CoXOg+anA0d1awfTxbzKZjA1EpBWvWtcWKUzXHM8L9NsbUsIYOWIHuj4VcAaolU+QoK2BrTc2vjmIMD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nQ/hIZF5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 485IQQXj027901;
-	Thu, 5 Sep 2024 20:02:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=Mn7XCQGjNFcU5zDL9Twrmr
-	AgmrHe+mhCNT0PPdaYjVs=; b=nQ/hIZF5B3X1/LWuh4PkukuEeQQTnO6aPz5P5L
-	jg02U2I16cnd+X2IFtbHg14Ld8kxYoSUKCJ/Nah6y4oVRviXF4vhSJecPvctBy5h
-	Qg+LDj4Z+Iqs2Ng2QZc3nOwaHFu0HGb4NU7UCWxDliO4HJFi1V3Q87+rXkUHe/Wb
-	DkCIf6NSsDz4IWenUSlHqslkocZ2yR5LvbXS0nKYrr6S5NprgRSfo8E6iDWNZLwz
-	E2Hn7LkABS8IslO8VyNnH5nInCWT9LLMjVIkOeNyq2gII/ZmlRQxCRzi04cIFv/K
-	nY7qJVSpgIe5HvRQQoF//ZBuiSVpx6OieErsX8i2XUFjyPTQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41fhx1r66y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Sep 2024 20:02:31 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 485K2UqS029120
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 5 Sep 2024 20:02:30 GMT
-Received: from hu-nkela-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 5 Sep 2024 13:02:27 -0700
-From: Nikunj Kela <quic_nkela@quicinc.com>
-To: <andersson@kernel.org>, <linus.walleij@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>, <quic_psodagud@quicinc.com>,
-        Nikunj Kela
-	<quic_nkela@quicinc.com>
-Subject: [PATCH v3] dt-bindings: pinctrl: Add SA8255p TLMM
-Date: Thu, 5 Sep 2024 13:02:18 -0700
-Message-ID: <20240905200218.3810712-1-quic_nkela@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1725567419; c=relaxed/simple;
+	bh=oOrc4XFmXO7UWLqnMJyq0ZtqgmmLYbyMcYG1L7W+7R8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Wwo9rK1G3NEb+bc918QKubKDeN93Nm5gutn05abBToNJwxGGGgXHD6B2bZncdWUKAvnVGJ5U7AFlBk4zaWkkazPnf7/OMhJZ2tvr3TCmmFfWvyFZDVZEWz/szb866EYeffACCVyimOHzyyKk/F/9RefKs2ObFaXNLSexvEd/JG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FsjR3g/7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F4C0C4CEC3;
+	Thu,  5 Sep 2024 20:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725567418;
+	bh=oOrc4XFmXO7UWLqnMJyq0ZtqgmmLYbyMcYG1L7W+7R8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FsjR3g/7qQB4gi6gQ9RJe09XF0lhU9RDIS65EF9eR8pufSZx3XUVXFcKuAsN5vCTg
+	 YbIXCDluUqqPGFG5RDUHS39Rc0LUd5lZ3O6jDmROgqjuueAKjiVHDxcRxRiQvtWj2h
+	 fqWmWUbDLI0jkK876ryQqsAtOf/5h/5j+X1+bsDS9LXLzGS1UbDVgsqJ9+P+PDtK6S
+	 LIzAK4mda7NISRizuFn0Pnr07uFs7DTNRHEN0rLNQXQVsP6nAWBEjpbGEjcWCNp8+V
+	 FDUcU22Dz/kT2d/cCZI5EsnUHqN5kodzOLqI0GZoscnBGoJNrcirN87tzj7Z4uc6f7
+	 8DJglFSaWIiYg==
+Date: Thu, 5 Sep 2024 15:16:56 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Lee Jones <lee@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Stefan Wahren <wahrenst@gmx.net>, Lizhi Hou <lizhi.hou@amd.com>
+Subject: Re: [PATCH 03/11] PCI: of_property: Sanitize 32 bit PCI address
+ parsed from DT
+Message-ID: <20240905201656.GA391855@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: FvK5MaHPvxGa8ai8NNLf8c2LINvqpRXr
-X-Proofpoint-GUID: FvK5MaHPvxGa8ai8NNLf8c2LINvqpRXr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-05_15,2024-09-05_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- clxscore=1015 impostorscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
- lowpriorityscore=0 spamscore=0 priorityscore=1501 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409050149
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Ztnft3p3tb_kP1jc@apocalypse>
 
-Add compatible for TLMM block representing support on SA8255p.
+[+cc Lizhi]
 
-SA8255p uses the same TLMM block as SA8775p however the ownership
-of pins are split between Firmware VM and Linux VM on SA8255p. For
-example, pins used by UART are owned and configured by Firmware VM
-while pins used by ethernet are owned and configured by Linux VM.
-Therefore, adding a sa8255p specific compatible to mark the difference.
+On Thu, Sep 05, 2024 at 06:43:35PM +0200, Andrea della Porta wrote:
+> On 17:26 Tue 03 Sep     , Bjorn Helgaas wrote:
+> > On Mon, Aug 26, 2024 at 09:51:02PM +0200, Andrea della Porta wrote:
+> > > On 10:24 Wed 21 Aug     , Bjorn Helgaas wrote:
+> > > > On Tue, Aug 20, 2024 at 04:36:05PM +0200, Andrea della Porta wrote:
+> > > > > The of_pci_set_address() function parses devicetree PCI range
+> > > > > specifier assuming the address is 'sanitized' at the origin,
+> > > > > i.e. without checking whether the incoming address is 32 or 64
+> > > > > bit has specified in the flags.  In this way an address with no
+> > > > > OF_PCI_ADDR_SPACE_MEM64 set in the flags could leak through and
+> > > > > the upper 32 bits of the address will be set too, and this
+> > > > > violates the PCI specs stating that in 32 bit address the upper
+> > > > > bit should be zero.
+> > 
+> > > > I don't understand this code, so I'm probably missing something.  It
+> > > > looks like the interesting path here is:
+> > > > 
+> > > >   of_pci_prop_ranges
+> > > >     res = &pdev->resource[...];
+> > > >     for (j = 0; j < num; j++) {
+> > > >       val64 = res[j].start;
+> > > >       of_pci_set_address(..., val64, 0, flags, false);
+> > > >  +      if (OF_PCI_ADDR_SPACE_MEM64)
+> > > >  +        prop[1] = upper_32_bits(val64);
+> > > >  +      else
+> > > >  +        prop[1] = 0;
+> ...
+> > However, the CPU physical address space and the PCI bus address are
+> > not the same.  Generic code paths should account for that different by
+> > applying an offset (the offset will be zero on many platforms where
+> > CPU and PCI bus addresses *look* the same).
+> > 
+> > So a generic code path like of_pci_prop_ranges() that basically copies
+> > a CPU physical address to a PCI bus address looks broken to me.
+> 
+> Hmmm, I'd say that a translation from one bus type to the other is
+> going on nonetheless, and this is done in the current upstream function
+> as well. This patch of course does not add the translation (which is
+> already in place), just to do it avoiding generating inconsistent address.
 
-Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
----
+I think I was looking at this backwards.  I assumed we were *parsing"
+a "ranges" property, but I think in fact we're *building* a "ranges"
+property to describe an existing PCI device (either a PCI-to-PCI
+bridge or an endpoint).  For such devices there is no address
+translation.
 
-Changes in v3:
-	- Removed the patch from original series[1]
-	- Fixed mising spaces schema errors
+Any address translation would only occur at a PCI host bridge that has
+CPU address space on the upstream side and PCI address space on the
+downstream side.
 
-Changes in v2:
-	- Modified subject line
-	- Fixed schema to include fallback
+Since (IIUC), we're building "ranges" for a device in the interior of
+a PCI hierarchy where address translation doesn't happen, I think both
+the parent and child addresses in "ranges" should be in the PCI
+address space.
 
-[1]: https://lore.kernel.org/all/20240903220240.2594102-1-quic_nkela@quicinc.com/
----
- .../devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml    | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+But right now, I think they're both in the CPU address space, and we
+basically do this:
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
-index e9abbf2c0689..749dbc563ac5 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
-@@ -17,7 +17,13 @@ allOf:
- 
- properties:
-   compatible:
--    const: qcom,sa8775p-tlmm
-+    oneOf:
-+      - items:
-+          - enum:
-+              - qcom,sa8255p-tlmm
-+          - const: qcom,sa8775p-tlmm
-+      - items:
-+          - const: qcom,sa8775p-tlmm
- 
-   reg:
-     maxItems: 1
--- 
-2.34.1
+  of_pci_prop_ranges(struct pci_dev *pdev, ...)
+    res = &pdev->resource[...];
+    for (j = 0; j < num; j++) {   # iterate through BARs or windows
+      val64 = res[j].start;       # CPU physical address
+      # <convert to PCI address space>
+      of_pci_set_address(..., rp[i].parent_addr, val64, ...)
+        rp[i].parent_addr = val64
+      if (pci_is_bridge(pdev))
+        memcpy(rp[i].child_addr, rp[i].parent_addr)
+      else
+        rp[i].child_addr[0] = j   # child addr unset/unused
 
+Here "res" is a PCI BAR or bridge window, and it contains CPU physical
+addresses, so "val64" is a CPU physical address.  It looks to me like
+we should convert to a PCI bus address at the point noted above, based
+on any translation described by the PCI host bridge.  That *should*
+naturally result in a 32-bit value if OF_PCI_ADDR_SPACE_MEM64 is not
+set.
+
+> > Maybe my expectation of this being described in DT is mistaken.
+> 
+> Not sure what you mean here, the address being translated are coming from
+> DT, in fact they are described by "ranges" properties.
+
+Right, for my own future reference since I couldn't find a generic
+description of "ranges" in Documentation/devicetree/:
+
+[1] https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#ranges
 
