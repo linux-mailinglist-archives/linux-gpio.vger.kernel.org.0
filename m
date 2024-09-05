@@ -1,122 +1,128 @@
-Return-Path: <linux-gpio+bounces-9835-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9836-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8914E96D99C
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 15:01:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A51F896D9BD
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 15:04:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 151251F22F78
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 13:01:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B1001F248CC
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 13:04:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B888119AD71;
-	Thu,  5 Sep 2024 13:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB56F19B5AA;
+	Thu,  5 Sep 2024 13:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+AoRmli"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sF0H9EPP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB97198E84;
-	Thu,  5 Sep 2024 13:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECA31993BB
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Sep 2024 13:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725541290; cv=none; b=o3UJloid6xVQeDmXza50HN3tx7jo8qecZ1URkC0oKCKgCB1O8Hiuo2FQmfMs4m+zmuQUoMqVE25/9FZ67u31wN5yUhBPtgnTWLBuKgn4Y22AyIKPh+R/XsqUDJH2P1xRFR94fbR7mXhQa/ppmhKVKTSvyDI8BpLA0+to82Sn2r8=
+	t=1725541488; cv=none; b=ABBQ+y/Wdw5BAIYw/N7qC/tl5SS0FY8SBh/cHRRbckHl/gCAK8BZ7q97OzIq5loGLKN0M97V1P7iKaMW7eJKF1le09WbCVVUR2PZT9aixQaVk9SZ1ADC3kMLmZGofVYVsQGWuvvCzVjpgUJQoNp8bBtMIz3mhGbY1hiN9x9xDhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725541290; c=relaxed/simple;
-	bh=tkxHU7hZVDfRA8rd2YekS1j0GoIwf/WYcslyJtMoVXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=THk8G/Ha76OWgcqNDn9UGZ2f4uY5S9DV2+SgyTpBLRHk4DQHlrJUwcEyNMM4dap3RcnxOnVIOFJSVsCg5iDMLmy6Dz9jQ72I69ibDxP+dpNBZghXmCBYWSDAi1uJe1zkBXAxOdIl3clsBrTPILMNqWaJOBoUQk7L+E+GFruuzE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U+AoRmli; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2021c08b95cso15402105ad.0;
-        Thu, 05 Sep 2024 06:01:29 -0700 (PDT)
+	s=arc-20240116; t=1725541488; c=relaxed/simple;
+	bh=N/VtCV6UKmGzISX9jSpbNqrj81M5RVqAaF4hKF/4BXc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MMmduEMg1WN/DaIfyu7MmMcgRdsY9ZitXJKuSF5J0qKuaCCjTgTjvECQWXIkIXAQFd6bygbR36uxiMqGxqSBThMkOEa/T2XvT6LEQRj9sUpBRSeGlQ1Wac7IfGlKOVJknHfQFEDbFifkZ0eJz4yhSxAcYPEBxcFnOnPevNqoHSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sF0H9EPP; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2f74e613a10so6111001fa.1
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Sep 2024 06:04:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725541288; x=1726146088; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=b9ROrOIM9enPhK0yrnMuxFWN8TPFgN2Dmn5612MJ8mg=;
-        b=U+AoRmlifAVQQYhYMstggA+CGCGeck7iFIeOiyDepImqD5bFv7amCoPRo9L9CyooUq
-         C4sIG3MQoqYtjjJHfn1xEHqXNftcVJK5nfl7FgAejGCwams7qkhYXqvC+djOsTNzCpkz
-         xovq0vs8cCbzd8K0CXDmTx08npBZvuGJA0VkIYE5DLEefgW+1bXYl22fCtr1s0XbXp05
-         P500RsfgJCGQVpzACR9PWkf1F0IotIcezrqxmnqGfK9RL7w6zjPyv0atLhrwJXlU7qi6
-         TZ0SuTXkkLRD0ntHM7LggSkvzKoeRQe59APa4U8mavBffJR1/+eLw2U+NN6a4ol/KL2G
-         mCCA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725541485; x=1726146285; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2sYI/kMEQjv4c5kmtLazolOaBbntnQqMArZgDWaqpro=;
+        b=sF0H9EPPe5pL9RZU2SwKeQHN43ohrgHdtE1tqJVUenwqMayN5KhGfodfNAwjITr/XJ
+         VAqRCMgfW5OzSpVkLkccsFAHZZS2/OhkXZ/pq64s4AukubOajq4eMHmypsjHxK1yPOZM
+         5wo91yOPesMKICLEYzjVbPbTGNZPS0lrby1QEcTfafgVdD46KnEYlEPttGSg2o1ms1Sx
+         YyFidA0cDMDET3Syjw2mMz80LdgfDJgWtDOHSktFfssdytGd5I6dU8I4it2JRBBiLtD0
+         9oFI0sppcfy+3iA45JfDqTTACGGtcHlgezyaO6YOkAgVyoujSgccYHj13Va32HqME43a
+         XCog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725541288; x=1726146088;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b9ROrOIM9enPhK0yrnMuxFWN8TPFgN2Dmn5612MJ8mg=;
-        b=UBeaxhPkkePUbFbhh8VYZty/x1SbUke2/CMViE5iSE+ljvAAtepTZIGgR62Jwrtr8n
-         GqbfajYnBRbFm/nhYhfW+6gsJfvZ3D1isORS4GyDxzf6wISTBauhgciuyByXIcB6PadW
-         TYtxETESyny2+m6AC4RcMJGYZiOXi35MRsj8LGhXkg0E/F4zUdjBkqSLAOoDVw6VgCLN
-         LEMd0zjw4WcBfvvEkoN20HQMuu6LsE6qjp7U+htxIzVlHXeiZbsrZnnm+cJinejUUDH+
-         hQkRgy04WavcEnGLGgM8KuZ/beM4I8qfbqjSFp6Pgs4Z/pq3y/toUyYKHb5ReCKmmpZE
-         5CpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbLls9PBvsmzaJKTqsFRAk1JYwBTi8rxCBy6V5vr1n7wVtqV6ME8q7c/d95x2h5Q/2D6cLVmWDdf3jrZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBLsugodvH7CAapsm03p561aRLoRqDR76c2CDcsNll3WP+l3Zm
-	0EUpSNKTkxdJ4IP/uHlCX4OcXWJ7nEQvBKZrqDBajty2wAXQEGDW
-X-Google-Smtp-Source: AGHT+IEmli1rNfjUdTgqJY6ZDnm2bVAcwPRt/sBwOd6M9bWhnrxa6kByqOINAVR9Dm3QLQlHDiQWmg==
-X-Received: by 2002:a17:902:da91:b0:205:7b03:ec3f with SMTP id d9443c01a7336-206b835fc61mr81218615ad.19.1725541288374;
-        Thu, 05 Sep 2024 06:01:28 -0700 (PDT)
-Received: from rigel ([203.63.211.120])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-206ae913df2sm28301605ad.41.2024.09.05.06.01.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2024 06:01:27 -0700 (PDT)
-Date: Thu, 5 Sep 2024 21:01:21 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] gpiolib: cdev: use !mem_is_zero() instead of
- memchr_inv(s, 0, n)
-Message-ID: <20240905130121.GA166185@rigel>
-References: <20240904090743.1204593-1-andy.shevchenko@gmail.com>
- <172552177868.28435.4071190094207246356.b4-ty@linaro.org>
+        d=1e100.net; s=20230601; t=1725541485; x=1726146285;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2sYI/kMEQjv4c5kmtLazolOaBbntnQqMArZgDWaqpro=;
+        b=NBEyRzy3Z+jXyykGFU7XfDBcthN21EJAHKiXI/6SHvYGf1+MmtAvAyPHef1A9tlBXY
+         0U/FNc0U/uGFNqI3yDb5bC1oW/9Wic9vkSKTnVGXnmdGhzRUp00ozkySwy9fuF5yMw6y
+         c7sgBK0vy+uVOpDM8PaRQTQmNFKQ3lCOj5dlVMDQASX796Lw94UXUqOjykhJjt4vAqpN
+         hXFK3JFu9Qd/KmhKedd8Dr7xM6XNqBsFOUXdFeEtt5yIrTAGbcBU4HgRc24rZzVpv1cb
+         56o1C7OApLo/6HJ+szKHHtYRbVMCEbUICsILAvRhYdNFA8FQ6/jLd7uYwWcOjQzGaogd
+         GdTQ==
+X-Gm-Message-State: AOJu0YyKV4r5ltCCAjO6SvENLL8cE8YR0V+UR/vhFowFqeX2uC6hJSaz
+	i5MejeXYGiYf1QGq5C5j1Aq7MPdryT3K/e3kr1HOlwKtkXIGSwx47NbXyzbjT9UmT2R5bTVtRov
+	dUPIEOnAQ/1cNoBtwY5UUk1ktSLVZR+YYSRhUsGllDD6DQQ4D
+X-Google-Smtp-Source: AGHT+IHOHIaz9dVBbolPHU7EfIO5jfwLbPNj5lBOgI9PHj1N4SUTyLwK/EoaFWFkJ6ATMaitWneLJtSroPos2uHgCNU=
+X-Received: by 2002:a05:651c:551:b0:2f0:27da:6864 with SMTP id
+ 38308e7fff4ca-2f6105d7954mr228845611fa.17.1725541484830; Thu, 05 Sep 2024
+ 06:04:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <172552177868.28435.4071190094207246356.b4-ty@linaro.org>
+References: <20240904090743.1204593-1-andy.shevchenko@gmail.com>
+ <172552177868.28435.4071190094207246356.b4-ty@linaro.org> <20240905130121.GA166185@rigel>
+In-Reply-To: <20240905130121.GA166185@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 5 Sep 2024 15:04:34 +0200
+Message-ID: <CAMRc=Mc=aK98ZYvz8AuwxYpqEPDAqG1kLcM+T24JipP6HW0L9A@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: cdev: use !mem_is_zero() instead of
+ memchr_inv(s, 0, n)
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 05, 2024 at 09:36:20AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Sep 5, 2024 at 3:01=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
+rote:
 >
->
-> On Wed, 04 Sep 2024 12:07:43 +0300, Andy Shevchenko wrote:
-> > Use the mem_is_zero() helper where possible.
+> On Thu, Sep 05, 2024 at 09:36:20AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
 > >
+> > On Wed, 04 Sep 2024 12:07:43 +0300, Andy Shevchenko wrote:
+> > > Use the mem_is_zero() helper where possible.
+> > >
+> > >
+> >
+> > Applied, thanks!
+> >
+> > [1/1] gpiolib: cdev: use !mem_is_zero() instead of memchr_inv(s, 0, n)
+> >       commit: b1da870ba36b3f525aee9be35b2f08a1feec61a7
+> >
 >
-> Applied, thanks!
+> As per my other mail, mem_is_zero() is not defined in gpio/for-next yet.
+> So how does this work?
 >
-> [1/1] gpiolib: cdev: use !mem_is_zero() instead of memchr_inv(s, 0, n)
->       commit: b1da870ba36b3f525aee9be35b2f08a1feec61a7
+> If I build for-next I get:
 >
+> drivers/gpio/gpiolib-cdev.c: In function =E2=80=98gpio_v2_line_config_val=
+idate=E2=80=99:
+> drivers/gpio/gpiolib-cdev.c:1334:14: error: implicit declaration of funct=
+ion =E2=80=98mem_is_zero=E2=80=99; did you mean =E2=80=98xa_is_zero=E2=80=
+=99? [-Werror=3Dimplicit-function-declaration]
+>  1334 |         if (!mem_is_zero(lc->padding, sizeof(lc->padding)))
+>       |              ^~~~~~~~~~~
+>       |              xa_is_zero
+>
+>
+> Cheers,
+> Kent.
 
-As per my other mail, mem_is_zero() is not defined in gpio/for-next yet.
-So how does this work?
+Ah, it'll have to wait until the next release cycle then. Sorry for
+vacuuming patches too eagerly today. Dropping it.
 
-If I build for-next I get:
-
-drivers/gpio/gpiolib-cdev.c: In function ‘gpio_v2_line_config_validate’:
-drivers/gpio/gpiolib-cdev.c:1334:14: error: implicit declaration of function ‘mem_is_zero’; did you mean ‘xa_is_zero’? [-Werror=implicit-function-declaration]
- 1334 |         if (!mem_is_zero(lc->padding, sizeof(lc->padding)))
-      |              ^~~~~~~~~~~
-      |              xa_is_zero
-
-
-Cheers,
-Kent.
+Bart
 
