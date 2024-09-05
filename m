@@ -1,231 +1,108 @@
-Return-Path: <linux-gpio+bounces-9825-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9826-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85CB596D356
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 11:33:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFF7E96D73D
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 13:34:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D8186B25334
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 09:33:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E2FFC1C250F9
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 11:34:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7081199FDC;
-	Thu,  5 Sep 2024 09:30:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D99C19995E;
+	Thu,  5 Sep 2024 11:34:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tptvwIFk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GKaf/VLm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD17198A37
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Sep 2024 09:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DFA19923D
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Sep 2024 11:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725528646; cv=none; b=jkMNKm5myrJ95FzT9jEHxARbwIO38CazxR3Rp6ez9NKJmkHgtK/GsYk+7polrmDZzkJiw/GLLrl6Ypg4OVZZicK9jjSCFy22+RPuu6kl9zaCILFN2iLw6Ru6a/GDJTR9HGuPzHX7F6rqg33Zra9nrc7IodDylgXdEu9ORxsfLPk=
+	t=1725536054; cv=none; b=aryknLO63y2GZM1QVbfn/fZftz4R6bzPuLPvR0Trbc6R7KJRRKw8oOrWnrwVOzlFfdllEOvpTxmyG2+DpT+ghzhdhhPd0eW8jKA0xKIDP4mxZ0ktbrmCfLqVGVl7GOP6tHlk6panmPzg6NEtd9rJ3tGD/Q9d/YCMiTAcT1cfGj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725528646; c=relaxed/simple;
-	bh=J0LZIWMwMt/MZZVW3nq6qgr2WJNe1KV87wCkyEmdGBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZvRzG+rd8btCp5vh1oyMTYwpVM8oKE6LADXsVKaBdZwhP+vP1pQ5XaHhJS+NJhctn06MLiLsebucLFaG/u0FN9XHT1OVrwAN9uqha2z1Fb3c/DlMTC+u1kp7tpXtTdrkUp7sB1hZIJZSpr4lzvqJIJhyZVm9LIJoIbtSoh4hyIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=tptvwIFk; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5334a8a1af7so514942e87.2
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Sep 2024 02:30:44 -0700 (PDT)
+	s=arc-20240116; t=1725536054; c=relaxed/simple;
+	bh=bLDmb4u45gfKegGAaWlNWOEqcWS6avYoGfdiMI2tkYc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ovryg92Fdy5Gvls0WnTjdtoTpuOAvL2W+JuX4vpwDzcYR7Za8o8jd1gP3xHw6KmVS5pwfDiRLohFzmHiGmoEKv1UeukDv+PuQZyrEJI8toQdT7J5agq/Tp76F1f2CKm4NtX5shFAs1nDaOrdXp2yK6zEcWCN6KmJn4Cyt2gRse8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GKaf/VLm; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5343617fdddso1031554e87.0
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Sep 2024 04:34:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725528642; x=1726133442; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OukU97CSMGxT3uwDMoEVzMhIgXm52avuG4qSgwd2MBc=;
-        b=tptvwIFkXUerYt3vwXSSq0bNEpX20nC2yoDmBjVOSq7tY0U2G0ppzidnf4MrcsPkCj
-         2dv+Bsfqa43hPSA7dMA6M5c0M2MQ8pnXHBPGtRhAZ8t+IIWdpqkxiyH8p+lbac639WRE
-         OKGaqKbxFBws4y+NmwbNd7rgt9U9c/MqqlX+PY3K1GF5Ppk4FZjVAlgJbveT1uUROi76
-         zQQ2Lh7/7BZqw4v+dq+ak/uCrBWQMaWSzyk5KBZeI6pq8NwIVJOg5qGjih0tBu7WSWV6
-         SBYFCqqo7N9Ae4ORQN2pefCuAeDfN0nBhUdhpMe4nvbnzOvAgek7NdW8QVro7gntI2q/
-         xI3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725528642; x=1726133442;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1725536050; x=1726140850; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OukU97CSMGxT3uwDMoEVzMhIgXm52avuG4qSgwd2MBc=;
-        b=dMwV5vYcSAHP6f8D2Wzo2o8o8zPPc7FOT4f1I9Mta4Pamd2BN59wrTf4FlzA5KTBb3
-         BmGSgL10stUaHj7O/1wWDI2vXKfnUvMDfXq7WiGWNGRAnCxTaHZYfyzcnSiYkS0Py0sL
-         U0tIoERHhHwv6Dc5lChBMVVLPiMXdQkPntklLCckM/a+8Jw0te/Bq3nE3c5UIeUwBY0e
-         fO7FTTriXV70/SH+Vly3VxWPiHlPPE60oWYYuwMSyf1V1uR1oxldDuFjtbcY4TlsCAGG
-         QwCKd53bfVHHNaMMz6guDy+B9EAdU5MGPzX3wWaE5tB0gobmSzlVOQZkUIMEzYqKUypi
-         /pvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgSqyhoymLfo2guhGtHQ7pLRDA0Xb47v5ogNApfhy2fU3N7IIaAt3U0XN/M9z5Q44rF/5hSSnCwl1L@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhKSB5cuZOR61I59aFrqMNhDYmpeG9jPnkLfF8jgWAaXuho+6p
-	UX8iujA2qwxMycRmVSDlrr0DicH4s0yGcWZ/f+1H7yCcwRne/qj+7UgH6jZddAk=
-X-Google-Smtp-Source: AGHT+IGl97KqbLMslldgmJDsArJp07y5GgcTUh6K+r7VA0eX5LCA05Il4GJUPsiAHiDhjNduobGdJg==
-X-Received: by 2002:a05:6512:2523:b0:536:548a:ff89 with SMTP id 2adb3069b0e04-536548b0048mr444189e87.39.1725528642343;
-        Thu, 05 Sep 2024 02:30:42 -0700 (PDT)
-Received: from localhost (p5dc68f76.dip0.t-ipconnect.de. [93.198.143.118])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a623a9234sm109248866b.156.2024.09.05.02.30.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2024 02:30:41 -0700 (PDT)
-Date: Thu, 5 Sep 2024 11:30:40 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Benjamin Larsson <benjamin.larsson@genexis.eu>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, linux-mediatek@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	upstream@airoha.com, ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <xmlta4za6malgthd6cmt5fcipxgyzwmqwxqdg5e4qahcuqzcrt@eidsf6mexrkz>
-References: <20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org>
- <20240831-en7581-pinctrl-v3-5-98eebfb4da66@kernel.org>
- <yfqmlca6cnhrghpo5s6tml36tngmekcfbyjakxs7or7wtap3ka@7qlrxjowo4ou>
- <d9298199-fe10-4b28-8e28-dc252bd6832c@genexis.eu>
- <t2f5kockuvfi66qqumda6jxf5a4c4zf35ld5ainsnksavkchyj@kdueaqlhjoar>
- <b7e44fb2-6cf6-4530-a271-9e1730d4f431@genexis.eu>
+        bh=bLDmb4u45gfKegGAaWlNWOEqcWS6avYoGfdiMI2tkYc=;
+        b=GKaf/VLmLR9R5KyABurbdCPYMqKDiN5vpWjZg8r6IH3JeunxtgaPTuYAMAyPDVa/KK
+         xYJOmLTyAajWX22STThoAV3fELT5CA3EttlgytVtIiM+9lqBEOAKn2hxS0M6cQIX8+Le
+         XkGGdrOJtulQ6ExcnsK0F10zWys8DnnNag/1qGezcWyXsLqmacuPwCk/Kud9brUUtl9M
+         MZX3y3qumVkphMx95cnrD94a9kspxFMlBrDuojZ9aQlk5pFkJBuvJvQVntqmbaVpsbY6
+         vMWHlOXqDRyMJiv1anKxvHKLTlVM2sXR6HpRtyd1u25o+PpHhaBv4m3XSUS+nTSdiza5
+         N4ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725536050; x=1726140850;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bLDmb4u45gfKegGAaWlNWOEqcWS6avYoGfdiMI2tkYc=;
+        b=vPURnBtb9A8ft4x3UMQRSZXBncLj4TVce3L5Yybocx0UoXy6jcOXIuOhjwRmO7kld/
+         38ZIliSTkc9iRkHPbMZkdNQ9vGsL9yCrB1chewMSJl+Jd1p6N/A8H4pSayYcmrkgN0Ey
+         wwjmW9/WzB5Ufn1qC/UsTZIJeRLPyr6vp0IeaNO9MheRdrfyXP87Li9QOrPOUC4poMyn
+         3MnK/8GJD1ZUEVtfZn+WkOi1xMmaRPJq2zAdnC1TAsumb/tB3g9SDkJsLEih/it26Rw+
+         OLsTIQNcskNpL59huJc1ODywcaAzQo8aVv0QHQhF1RR+01Ow9n3DUfvS4UJWNlQBTAlx
+         53eQ==
+X-Gm-Message-State: AOJu0YwvOG3P4aGf9PnLewb2LLmuQBUaCi1UoSnk7GhKMW8PwqmRRL5f
+	UwAf6KCJqAEHdqlv3K0t2p2K0kIDy/dQ8PIRcMiIBVz1OiR0q90N39JOdNtV154mvJNGeeu13gz
+	RryGDL1niTf4qghQftQmmoYAncL0V0pxwBtuqWS3xKpoYlcva
+X-Google-Smtp-Source: AGHT+IGzsgH7C+tzPtSN8VBNWiDdDaXjEPSwwJUrmvuJsG+F6lPhfUKhjc6NKXyqkx2vA55fxHGPX68sblNZHKLWO6o=
+X-Received: by 2002:a05:6512:3da4:b0:530:e0fd:4a97 with SMTP id
+ 2adb3069b0e04-53546a55137mr16340997e87.0.1725536049827; Thu, 05 Sep 2024
+ 04:34:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="43j4qp3ucvr7fjgi"
-Content-Disposition: inline
-In-Reply-To: <b7e44fb2-6cf6-4530-a271-9e1730d4f431@genexis.eu>
-
-
---43j4qp3ucvr7fjgi
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20240902133148.2569486-1-andriy.shevchenko@linux.intel.com> <20240902133148.2569486-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240902133148.2569486-2-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 5 Sep 2024 13:33:56 +0200
+Message-ID: <CACRpkdbskty+v0V90MrP5nm=S-mqHQq1B5C07QciaYJr09-88g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] gpio: stmpe: Fix IRQ related error messages
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Mon, Sep 2, 2024 at 3:32=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-On Thu, Sep 05, 2024 at 01:09:48AM +0200, Benjamin Larsson wrote:
-> On 03/09/2024 17:47, Uwe Kleine-K=F6nig wrote:
-> > Hello Benjamin,
-> >=20
-> > On Tue, Sep 03, 2024 at 01:58:30PM +0200, Benjamin Larsson wrote:
-> > > On 2024-09-03 12:46, Uwe Kleine-K=F6nig wrote:
-> > > > Would you please add a "Limitations" paragraph here covering the
-> > > > following questions:
-> > > >=20
-> > > >    - How does the hardware behave on changes of configuration (does=
- it
-> > > >      complete the currently running period? Are there any glitches?)
-> > > >    - How does the hardware behave on disabling?
-> > > >=20
-> > > > Please stick to the format used in several other drivers such that
-> > > >=20
-> > > > 	sed -rn '/Limitations:/,/\*\/?$/p' drivers/pwm/*.c
-> > > >=20
-> > > > emits the informations.
-> > > The answer to your questions are currently unknown. Is this informati=
-on
-> > > needed for a merge of the driver ?
-> > It would be very welcome and typically isn't that hard to work out if
-> > you have an LED connected to the output or a similar means to observe
-> > the output. An oscilloscope makes it still easier.
-> >=20
-> > For example to check if the current period is completed configure the
-> > PWM with period =3D 1s and duty_cycle =3D 0 disabling the LED. (I leave=
- it
-> > as an exercise for the reader what to do if duty_cycle =3D 0 enables the
-> > LED :-) Then do:
-> >=20
-> > 	pwm_apply_might_sleep(mypwm, &(struct pwm_state){
-> > 		.period =3D NSEC_PER_SEC,
-> > 		.duty_cycle =3D NSEC_PER_SEC,
-> > 		.enabled =3D true,
-> > 	});
-> > 	pwm_apply_might_sleep(mypwm, &(struct pwm_state){
-> > 		.period =3D NSEC_PER_SEC,
-> > 		.duty_cycle =3D 0,
-> > 		.enabled =3D true,
-> > 	});
-> >=20
-> > Iff that enables the LED for a second, the period is completed. The
-> > question about glitches is a bit harder to answer, but with a tool like
-> > memtool should be possible to answer. Alternatively add delays and
-> > printk output to .apply() in the critical places.
-> >=20
-> >=20
->=20
-> I connected a logic analyzer to a pin and configured the pwm for it.
->=20
-> I then configured the pwm with these parameters (setup for 2Hz).
->=20
-> echo 1000000000 > /sys/class/pwm/pwmchip0/pwm12/period
-> echo 0 > /sys/class/pwm/pwmchip0/pwm12/duty_cycle
->=20
-> If I then ran the following (in a script) no pulse was detected:
->=20
-> echo 500000000 > /sys/class/pwm/pwmchip0/pwm12/duty_cycle
-> echo 0 > /sys/class/pwm/pwmchip0/pwm12/duty_cycle
->=20
-> If I added a sleep 1 in between I always got 1 500ms pulse.
->=20
-> I then did the same but with direct register access with the same result.
-> Setting the duty cycle to 0 disables the pwm function on the pin, it seems
-> to take a while before it properly activates but before it disables it the
-> cycle completes.
->=20
->=20
-> I also tested with enabling the pwn signal and then setting a 0 duty cycl=
-e.
-> The last observed pulse was always 500ms long.
->=20
->=20
-> I am not sure what of your questions this answers and is there some other
-> tests I should perform ?
+> First of all, remove duplicate message that platform_get_irq()
+> does already print. Second, correct the error message when unable
+> to register a handler, which is broken in two ways:
+> 1) the misleading 'get' vs. 'register';
+> 2) missing '\n' at the end.
+>
+> (Yes, for the curious ones, the dev_*() cases do not require '\n'
+> and issue it automatically, but it's better to have them explicit)
+>
+> Fix all this here.
+>
+> Fixes: 1882e769362b ("gpio: stmpe: Simplify with dev_err_probe()")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-IIUC that means to add:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-	On configuration the currently running period is completed.
-
-to the Limitations paragraph.
-
-> For the record while toggling the registers I noticed that it was actually
-> possible to generate 1 second long pulses. The documentation is not clear=
- on
-> this part.
-
-1 second long pulses with a period size of 1 second, so a constant high
-signal?
-
-Another thing that would be interesting is, if it can happen that you
-get a mixed signal. That is, if you update from=20
-
-	.period =3D A
-	.duty_cycle =3D B
-
-to
-
-	.period =3D C
-	.duty_cycle =3D D
-
-that you get one period with length C and duty_cycle B when the period
-completes after configuring period but before duty_cycle.
-
-Best regards
-UWe
-
---43j4qp3ucvr7fjgi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbZej4ACgkQj4D7WH0S
-/k5xhAf9EPcXdp1Pl5jZjnIObpW0/xdCiScDgmou0lMZIm+blc6lkmB/qhCGIQ9k
-BKqpP3E9L9wtcT+9VOg6PRd8cvri2K5d0t70K79H4y9hYDqdsvkJWhS2bXuE0cQ3
-KmlqPMMRv89xQgBGJcZeDzVzrGZxNzBeuTpUoS3ij3+tfEcliluQKLWyn9kEfq1O
-RzSnevhSNZn76LIkK0jX6bzcwY1a3H9xySGnYf8xmKdFRBNPYZa/ToAfAJA0IdSG
-yGo7dr2tidwmdeKyz3c2ZuswaYKhGhgu7j3uukcq9unxhmkzyqiaK2zz0ktiyXa7
-huaBYupjFR6t/UhFEv6yRv8hjQwZ2A==
-=iEnI
------END PGP SIGNATURE-----
-
---43j4qp3ucvr7fjgi--
+Yours,
+Linus Walleij
 
