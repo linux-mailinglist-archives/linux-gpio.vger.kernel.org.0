@@ -1,165 +1,236 @@
-Return-Path: <linux-gpio+bounces-9845-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9846-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B68F96DBAC
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 16:21:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81A2196DBB0
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 16:23:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72AF9B25F8A
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 14:21:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 022EA1F221D3
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 14:23:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F89D2556F;
-	Thu,  5 Sep 2024 14:21:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DC1BDDBE;
+	Thu,  5 Sep 2024 14:23:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WlNkXtMW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YM+eRsFr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E75CA6B;
-	Thu,  5 Sep 2024 14:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654881CA84;
+	Thu,  5 Sep 2024 14:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725546095; cv=none; b=gSUvIJJD+EFhMqjIBtXmE6SJzv+eIqGiD/PMPMmwek+botF8ESlnK1yVuYy+VzA83FF5yvx3sA3Q3MVP76qC9ssxzIfDipkL4hlxw/kdWC3WyIOZ14HJvB5JeqqpFCADf6Cp3RGlKexDUbsYCM1VJq6TQsnGq2L8A3aWxG0JWnY=
+	t=1725546181; cv=none; b=NnorXjUIYzSkRIqSyWTynDTJFk/SLd1nPxF/YSovPln0SarWTtZK7A9kc6nGcrQLATEvWT3pFctK/poNkQIGnUjg8+CfnCNzSLRD6VQCHXyvLUGtRuztCmS3SYVO2lKrgKezaIdiZAArQhkq85XT03KY6jg9QdK2tV9P5lUzdiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725546095; c=relaxed/simple;
-	bh=DXyaYUEdp9Wc5HqoVQv8h4Xdqi2x4QC9WP7/RCMuanY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=oU2i2+feEojsZgVnLw3U4/bG3qAEC3Yg25sMudCwbOCYpYN9ys3E23N5QCLejBJgkaSXezpF56HxHqnCPynSpwhhSanIo0ppDovMEo+hyP3I8nPoRYfYE28Vqw27cOJUzTi1rWYJqDjex1m6cHbtwWlY+JdetJ6Xt9ba3Xn7auI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WlNkXtMW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48597n0o023730;
-	Thu, 5 Sep 2024 14:15:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PqmjsGtsdH0pPKX2Ec8nWXjou6CnajA32b/jszhvD/A=; b=WlNkXtMWL4A/p4gj
-	eimNBRrtTjZB9Z3WhjPtgq1cOmqEOBOy9PFERhTZm8vBWYo+/y1qbK/qlITSK7AP
-	1MbuDlf18GTjDMQCXuHnyhpELUbgX4LdZr7qIjTb/U2ztsyGxTLPdG+Pn4ldtncz
-	Kjw8NQwKzDlnrwdht/A+gvm85rLbq35s2CTkyrnMMpPB/9Gj8/+Nm3i9vBMLH3Dd
-	XKrZJ+X9mYfuO5svrt9X3UFhMqef5HPpXpOQ+FEUd1cQc3gagvjfUAqANWUPwNdN
-	xc5aJx0QKGkJJe1JmhdkYbgHyUH5sAT9KqFIm/iYS+hJk2KpBry/loFskPu/NKjW
-	h6/sAw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41f86ks3da-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Sep 2024 14:15:53 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 485EFq25019533
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 5 Sep 2024 14:15:52 GMT
-Received: from [10.110.102.234] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 5 Sep 2024
- 07:15:48 -0700
-Message-ID: <4896510e-6e97-44e0-b3d7-7a7230f935ec@quicinc.com>
-Date: Thu, 5 Sep 2024 07:15:48 -0700
+	s=arc-20240116; t=1725546181; c=relaxed/simple;
+	bh=rLNyEBQDkZqcHhPUa6TayxFxwoSgkdma4B13Esk2aCE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OkwoGxPBkb/wfO7RYGtw6d0SmP589gG9IEuJQmQvIu3vBnqejVjWaCCAAF9GCtX9Wuj8PfLsX+scHZEHEr9sq8W9mi2vUnGqpYdusIz+bBmCtJroWdKGlciKgL14fVlXN63b9yf5PNxrCGZjXI8oWBXcoyD+KGlPyTzOS46sZpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YM+eRsFr; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725546179; x=1757082179;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rLNyEBQDkZqcHhPUa6TayxFxwoSgkdma4B13Esk2aCE=;
+  b=YM+eRsFriidMt4AhSCx4dZz8DxPIl3hEDTeZwgZsRICIE9uTdLOU0drd
+   RCgyvZLCW7n2BOjSGigEYNzZnRu1TpJ+j8911tCwONNDoy0PqEA0FBGyb
+   ZssDY77a0/fxrPn7IpU5pb1+CUPj0F8pu8ZuxAvuEAVtFkttEjpheTUam
+   wT4URH77R+8/1Gct0SmIyQeR2RUqAKOCwzZrDBAYq0nHONr8yVozVTgxa
+   Sf+fWj6w44QYrZ5ejFYE34oozEYUw0ZHivCgPVyWfSDdOtdvmbnyqrpbH
+   jEBGKklcmVawuGVcZTO6Ooi0iKqkX1VKL96IaOYbc5V5zwejFIIFSEWpr
+   A==;
+X-CSE-ConnectionGUID: 6vmY9gUZSzGdbo/ZY2pY4Q==
+X-CSE-MsgGUID: WhqncnODQmGpuAn1rq2pOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="49675517"
+X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
+   d="scan'208";a="49675517"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 07:22:54 -0700
+X-CSE-ConnectionGUID: uZZZ8sT1RzuAWLdUbyBz7Q==
+X-CSE-MsgGUID: SOETt3ElSJGD0TSNfawUEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
+   d="scan'208";a="70226852"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa004.fm.intel.com with ESMTP; 05 Sep 2024 07:22:52 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 02118A1; Thu, 05 Sep 2024 17:22:50 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v2 1/1] pinctrl: intel: Constify struct intel_pinctrl parameter
+Date: Thu,  5 Sep 2024 17:21:38 +0300
+Message-ID: <20240905142249.707556-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 16/21] dt-bindings: spi: document support for SA8255p
-To: Krzysztof Kozlowski <krzk@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <rafael@kernel.org>,
-        <viresh.kumar@linaro.org>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <sudeep.holla@arm.com>, <andi.shyti@kernel.org>,
-        <tglx@linutronix.de>, <will@kernel.org>, <robin.murphy@arm.com>,
-        <joro@8bytes.org>, <jassisinghbrar@gmail.com>, <lee@kernel.org>,
-        <linus.walleij@linaro.org>, <amitk@kernel.org>,
-        <thara.gopinath@gmail.com>, <broonie@kernel.org>,
-        <cristian.marussi@arm.com>, <rui.zhang@intel.com>,
-        <lukasz.luba@arm.com>, <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>, <arm-scmi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <iommu@lists.linux.dev>, <linux-gpio@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>, <kernel@quicinc.com>,
-        <quic_psodagud@quicinc.com>, Praveen Talari <quic_ptalari@quicinc.com>
-References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
- <20240903220240.2594102-1-quic_nkela@quicinc.com>
- <20240903220240.2594102-17-quic_nkela@quicinc.com>
- <sdxhnqvdbcpmbp3l7hcnsrducpa5zrgbmkykwfluhrthqhznxi@6i4xiqrre3qg>
- <b369bd73-ce2f-4373-8172-82c0cca53793@quicinc.com>
- <9a655c1c-97f6-4606-8400-b3ce1ed3c8bf@kernel.org>
- <516f17e6-b4b4-4f88-a39f-cc47a507716a@quicinc.com>
- <2f11f622-1a00-4558-bde9-4871cdc3d1a6@lunn.ch>
- <204f5cfe-d1ed-40dc-9175-d45f72395361@quicinc.com>
- <70c75241-b6f1-4e61-8451-26839ec71317@kernel.org>
- <75768451-4c85-41fa-82b0-8847a118ea0a@quicinc.com>
- <ce4d6ea9-0ba7-4587-b4a7-3dcb2d6bb1a6@kernel.org>
-Content-Language: en-US
-From: Nikunj Kela <quic_nkela@quicinc.com>
-In-Reply-To: <ce4d6ea9-0ba7-4587-b4a7-3dcb2d6bb1a6@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: mwTkK25Wdk3u_xGDqOaQj7Oc4I2DLIkL
-X-Proofpoint-ORIG-GUID: mwTkK25Wdk3u_xGDqOaQj7Oc4I2DLIkL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-05_09,2024-09-04_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 impostorscore=0
- malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2409050106
+Content-Transfer-Encoding: 8bit
 
+There are a few functions that do not and should not change
+the state of the pin control object. Constify the respective
+parameter.
 
-On 9/5/2024 7:09 AM, Krzysztof Kozlowski wrote:
-> On 05/09/2024 16:03, Nikunj Kela wrote:
->> On 9/5/2024 1:04 AM, Krzysztof Kozlowski wrote:
->>> On 04/09/2024 23:06, Nikunj Kela wrote:
->>>> On 9/4/2024 9:58 AM, Andrew Lunn wrote:
->>>>>> Sorry, didn't realize SPI uses different subject format than other
->>>>>> subsystems. Will fix in v3. Thanks
->>>>> Each subsystem is free to use its own form. e.g for netdev you will
->>>>> want the prefix [PATCH net-next v42] net: stmmac: dwmac-qcom-ethqos:
->>>> of course they are! No one is disputing that.
->>>>> This is another reason why you should be splitting these patches per
->>>>> subsystem, and submitting both the DT bindings and the code changes as
->>>>> a two patch patchset. You can then learn how each subsystem names its
->>>>> patches.
->>>> Qualcomm QUPs chips have serial engines that can be configured as
->>>> UART/I2C/SPI so QUPs changes require to be pushed in one series for all
->>>> 3 subsystems as they all are dependent.
->>> No, they are not dependent. They have never been. Look how all other
->>> upstreaming process worked in the past.
->> Top level QUP node(patch#18) includes i2c,spi,uart nodes.
->> soc/qcom/qcom,geni-se.yaml validate those subnodes against respective
->> yaml. The example that is added in YAML file for QUP node will not find
->> sa8255p compatibles if all 4 yaml(qup, i2c, spi, serial nodes) are not
->> included in the same series.
->>
-> So where is the dependency? I don't see it. 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: dropped cases like <non-const TYPE>* foo(const *pctrl) (Mika)
+ drivers/pinctrl/intel/pinctrl-intel.c | 29 ++++++++++++++-------------
+ drivers/pinctrl/intel/pinctrl-intel.h |  3 ++-
+ 2 files changed, 17 insertions(+), 15 deletions(-)
 
-Ok, what is your suggestion on dt-schema check failure in that case as I
-mentioned above? Shall we remove examples from yaml that we added?
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index a2194d2ab178..f6f6d3970d5d 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -132,7 +132,8 @@ struct intel_community_context {
+ 	for_each_intel_pad_group(pctrl, community, grp)			\
+ 		if (grp->gpio_base == INTEL_GPIO_BASE_NOMAP) {} else
+ 
+-const struct intel_community *intel_get_community(struct intel_pinctrl *pctrl, unsigned int pin)
++const struct intel_community *intel_get_community(const struct intel_pinctrl *pctrl,
++						  unsigned int pin)
+ {
+ 	const struct intel_community *community;
+ 
+@@ -181,7 +182,7 @@ static void __iomem *intel_get_padcfg(struct intel_pinctrl *pctrl,
+ 	return community->pad_regs + reg + padno * nregs * 4;
+ }
+ 
+-static bool intel_pad_owned_by_host(struct intel_pinctrl *pctrl, unsigned int pin)
++static bool intel_pad_owned_by_host(const struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	const struct intel_community *community;
+ 	const struct intel_padgroup *padgrp;
+@@ -206,7 +207,7 @@ static bool intel_pad_owned_by_host(struct intel_pinctrl *pctrl, unsigned int pi
+ 	return !(readl(padown) & PADOWN_MASK(gpp_offset));
+ }
+ 
+-static bool intel_pad_acpi_mode(struct intel_pinctrl *pctrl, unsigned int pin)
++static bool intel_pad_acpi_mode(const struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	const struct intel_community *community;
+ 	const struct intel_padgroup *padgrp;
+@@ -248,7 +249,7 @@ enum {
+ 	PAD_LOCKED_FULL	= PAD_LOCKED | PAD_LOCKED_TX,
+ };
+ 
+-static int intel_pad_locked(struct intel_pinctrl *pctrl, unsigned int pin)
++static int intel_pad_locked(const struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	const struct intel_community *community;
+ 	const struct intel_padgroup *padgrp;
+@@ -286,19 +287,19 @@ static int intel_pad_locked(struct intel_pinctrl *pctrl, unsigned int pin)
+ 	return ret;
+ }
+ 
+-static bool intel_pad_is_unlocked(struct intel_pinctrl *pctrl, unsigned int pin)
++static bool intel_pad_is_unlocked(const struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	return (intel_pad_locked(pctrl, pin) & PAD_LOCKED) == PAD_UNLOCKED;
+ }
+ 
+-static bool intel_pad_usable(struct intel_pinctrl *pctrl, unsigned int pin)
++static bool intel_pad_usable(const struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	return intel_pad_owned_by_host(pctrl, pin) && intel_pad_is_unlocked(pctrl, pin);
+ }
+ 
+ int intel_get_groups_count(struct pinctrl_dev *pctldev)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pctrl->soc->ngroups;
+ }
+@@ -306,7 +307,7 @@ EXPORT_SYMBOL_NS_GPL(intel_get_groups_count, PINCTRL_INTEL);
+ 
+ const char *intel_get_group_name(struct pinctrl_dev *pctldev, unsigned int group)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pctrl->soc->groups[group].grp.name;
+ }
+@@ -315,7 +316,7 @@ EXPORT_SYMBOL_NS_GPL(intel_get_group_name, PINCTRL_INTEL);
+ int intel_get_group_pins(struct pinctrl_dev *pctldev, unsigned int group,
+ 			 const unsigned int **pins, unsigned int *npins)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	*pins = pctrl->soc->groups[group].grp.pins;
+ 	*npins = pctrl->soc->groups[group].grp.npins;
+@@ -383,7 +384,7 @@ static const struct pinctrl_ops intel_pinctrl_ops = {
+ 
+ int intel_get_functions_count(struct pinctrl_dev *pctldev)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pctrl->soc->nfunctions;
+ }
+@@ -391,7 +392,7 @@ EXPORT_SYMBOL_NS_GPL(intel_get_functions_count, PINCTRL_INTEL);
+ 
+ const char *intel_get_function_name(struct pinctrl_dev *pctldev, unsigned int function)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	return pctrl->soc->functions[function].func.name;
+ }
+@@ -400,7 +401,7 @@ EXPORT_SYMBOL_NS_GPL(intel_get_function_name, PINCTRL_INTEL);
+ int intel_get_function_groups(struct pinctrl_dev *pctldev, unsigned int function,
+ 			      const char * const **groups, unsigned int * const ngroups)
+ {
+-	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 
+ 	*groups = pctrl->soc->functions[function].func.groups;
+ 	*ngroups = pctrl->soc->functions[function].func.ngroups;
+@@ -952,7 +953,7 @@ static const struct pinctrl_desc intel_pinctrl_desc = {
+  * Return: a pin number and pointers to the community and pad group, which
+  * the pin belongs to, or negative error code if translation can't be done.
+  */
+-static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
++static int intel_gpio_to_pin(const struct intel_pinctrl *pctrl, unsigned int offset,
+ 			     const struct intel_community **community,
+ 			     const struct intel_padgroup **padgrp)
+ {
+@@ -982,7 +983,7 @@ static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
+  *
+  * Return: a GPIO offset, or negative error code if translation can't be done.
+  */
+-static int intel_pin_to_gpio(struct intel_pinctrl *pctrl, int pin)
++static int intel_pin_to_gpio(const struct intel_pinctrl *pctrl, int pin)
+ {
+ 	const struct intel_community *community;
+ 	const struct intel_padgroup *padgrp;
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
+index c7b025ea989a..4d4e1257afdf 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.h
++++ b/drivers/pinctrl/intel/pinctrl-intel.h
+@@ -264,7 +264,8 @@ int intel_pinctrl_probe_by_uid(struct platform_device *pdev);
+ 
+ extern const struct dev_pm_ops intel_pinctrl_pm_ops;
+ 
+-const struct intel_community *intel_get_community(struct intel_pinctrl *pctrl, unsigned int pin);
++const struct intel_community *intel_get_community(const struct intel_pinctrl *pctrl,
++						  unsigned int pin);
+ 
+ int intel_get_groups_count(struct pinctrl_dev *pctldev);
+ const char *intel_get_group_name(struct pinctrl_dev *pctldev, unsigned int group);
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-
-> Anyway, if you insist,
-> provide reasons why this should be the only one patchset - from all
-> SoCs, all companies, all developers - getting an exception from standard
-> merging practice and from explicit rule about driver change. See
-> submitting bindings.
->
-> This was re-iterated over and over, but you keep claiming you need some
-> sort of special treatment. If so, please provide arguments WHY this
-> requires special treatment and *all* other contributions are fine with it.
->
-> Best regards,
-> Krzysztof
->
 
