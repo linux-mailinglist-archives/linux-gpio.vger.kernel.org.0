@@ -1,124 +1,155 @@
-Return-Path: <linux-gpio+bounces-9822-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9823-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0DA496D0DF
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 09:54:07 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E598B96D13E
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 10:05:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0C7E1C2140A
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 07:54:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 58618B22FB8
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Sep 2024 08:05:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB7AA193432;
-	Thu,  5 Sep 2024 07:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85AEB194A53;
+	Thu,  5 Sep 2024 08:05:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZRcip2s/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NFmvtyFL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC095193428
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Sep 2024 07:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE322AE96;
+	Thu,  5 Sep 2024 08:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725522843; cv=none; b=ZGhcqzdPEmGcHLt1ag2DRZ5NYR28xitRJ6kE1bz0CZbgNhJZeskOHHmaJsdJ+6hYWrARRWEeWaw+m1p5DUesSnz34/e5CxLCCr0mdRIHF8y0tbOabZrUX+jpEglv6+0fSsUS8MWYneDf1xHgTOvm1ZQseDDwKbXblftnU8591OQ=
+	t=1725523509; cv=none; b=BQ+nv7LMN1ImfchpESptGRTx1dla6btGyp/Pj7kyNwLvmde7O9VW9xDwH1yYecFRIZCJBk6bW6/x4B4m/MG5fSG3BVAqiLmImvNoztflcPBc20IiLJRLQr/7da83HpXWdfHX5aK2z99Vzm0mLmiWXBm5IzyptdssORMIxcWs/Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725522843; c=relaxed/simple;
-	bh=VJBwJbD619cc1I8/YyBLZfHDGMwxWgg1L62yHdnPBkQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fzoA+1sn2kx+UQ9shFmfalPsdTbtxFvJYfees3bj3vhhjGdbmzkuxm/b4IVqveCddqc8wGZRcm5Agl0gXdUUr65sjNW76PIhpXXGDNIRM8ginTZyGcz2nspSJbkfoJeqOd75jy14qWQrQIrj18N/cTMrqSlp049EcqUyJn0WLJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZRcip2s/; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42bac9469e8so3063955e9.3
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Sep 2024 00:54:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725522840; x=1726127640; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F5apR4pmNO5sit+KqFjLSdR5QZK2p/duTgt9ROVCwQ4=;
-        b=ZRcip2s/U5uUPqn1QD1ulH1+XJ+cKmM8INevMjUyfPh3wawgoNJ4+fXPU40mRXRvyT
-         Kx09mgriICXPI2XXlNf3OhMPI5tpRidKNbHYbUQa+rjsiCl6fbguTzyI4pK9G7Y1dyqD
-         5aMyHKpVVRQm3Q/aK/JJLDjvxXTwb+nkuO3D0FR/t9Y0s6I2WMXEmBE5cUjnlxt+aces
-         ZKDGSSL1nI19BL1HFM6H3iJLfs57RZyF3vJ3VjgNrRb3nGFHWBHeg1Qqvbcn7MWx9EJ4
-         9w1GvimJPJvvn9rOL2WR6UryKcHHjw42EmUv9eFBjLsIITzFtEhCnXUjjp/XwWbOw/iK
-         7A1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725522840; x=1726127640;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F5apR4pmNO5sit+KqFjLSdR5QZK2p/duTgt9ROVCwQ4=;
-        b=ZHSY43TdgCwG9O8YipZeDTzXebFO3Jy2Ma6c/APx+Zr2mmCGQg+qoujwbLvqQEqkH7
-         ZNfM7W3UdFy3PJ6/k7srkbaseUUEQsTN67HCZ56qOZ+2sBj7DoqJ9/h9k79mTIgfGTZz
-         ptskYfl8XMpT44iYDza6MEibUDTlUPKr7qzXIM9UvUXXCaikuXRZTmtsTi76+q99mFPm
-         JRlEANDKeNkKzoOxunvlJcgYEtDDqNlww9+05fysLupXOh95ykSb/oplkMIN57xh8uqS
-         vmmRgACGCSbH9AD13n4SstN0RJNk1PHclLCpLXI6HX7kMqHV2NQjZVYGQ8Y0CeEgpVWo
-         6y/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWsGbmiHeDZBtXvp0aS37Y0uP24koMh45lE3enFMel1gWaik/LpEjty1enRcIakbsRhMitm6va4rzz8@vger.kernel.org
-X-Gm-Message-State: AOJu0YympAsjfc2ixrO0Dfic6byorVGuJceQ0ne8VxRP3104D5pe45QB
-	L+C+fIjs5sApb7FJNBr6hSPEDoi80Ko227v8Ih4MXIZEHWUXe0BZc916wMJv0ZU=
-X-Google-Smtp-Source: AGHT+IHTYTbdxPIFQ1Fm2yX4/APX3iBtIWWEQQ2xHNTIiMmLPmVaFmSgClpFPIjw07slUGTLd07Kng==
-X-Received: by 2002:a05:600c:1c0d:b0:426:62df:bdf0 with SMTP id 5b1f17b1804b1-42c9544efe0mr34698995e9.10.1725522839961;
-        Thu, 05 Sep 2024 00:53:59 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:cbe4:ce99:cb33:eb1c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6deb273sm226449915e9.8.2024.09.05.00.53.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2024 00:53:59 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	vz@mleia.com,
-	linux-gpio@vger.kernel.org,
-	Zhang Zekun <zhangzekun11@huawei.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 0/4] Simplify code with helper function devm_clk_get*()
-Date: Thu,  5 Sep 2024 09:53:58 +0200
-Message-ID: <172552281048.29255.13807889360517193444.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240904092311.9544-1-zhangzekun11@huawei.com>
-References: <20240904092311.9544-1-zhangzekun11@huawei.com>
+	s=arc-20240116; t=1725523509; c=relaxed/simple;
+	bh=SLJolgqxxpCuR5zbqIclh1OOtja/y7k9ppSY8hpWXVc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tf27qbpso+FfpJYShA4dkerrZf+/EgstWOFcGLj/daCTbfVD+bbZyGSWtE5Vk+ghLaVob11K+cX2uqCdk/f1u0PM7ORkUlal/igXsPYr9od0GQBhLQ+cSvgbxyDP7B6FZlcwi3qUOV5v+ZSNw0LxrRsA0L1QUI84zfA81bvNuPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NFmvtyFL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B0F4C4CEC3;
+	Thu,  5 Sep 2024 08:04:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725523508;
+	bh=SLJolgqxxpCuR5zbqIclh1OOtja/y7k9ppSY8hpWXVc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NFmvtyFL35bPrTmXqvsQH8UI6oTD7GEbaTrMQPLHuvCEPh8/1G68QZklDC6EDxDos
+	 tci5smfQ/EP2p/jjnT4/qS+chI+hg0AzYA/Ik346w809sHnZszg/DX4gUMO0anSdBg
+	 fPlE5QKrO1+O/iC4cHPAlDoLhKJjf1j61KuYxEiBTypI5n9ygD8MOZZEcHbXiDT4MV
+	 pe+/4jymtMLw5CKPLbAsJ2vkjACivy1y0js5uTdR+WZBXpXC5xkPN+lA/wHSSaj0t8
+	 BRhEwWxYCqUlrSrpwNkCX0YsQ4ZaHyVBOt0ihznESA3iDb7m+ErIf+MTFfKLT1UDav
+	 6vB84x7aB8MxA==
+Message-ID: <70c75241-b6f1-4e61-8451-26839ec71317@kernel.org>
+Date: Thu, 5 Sep 2024 10:04:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 16/21] dt-bindings: spi: document support for SA8255p
+To: Nikunj Kela <quic_nkela@quicinc.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, rafael@kernel.org,
+ viresh.kumar@linaro.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+ sudeep.holla@arm.com, andi.shyti@kernel.org, tglx@linutronix.de,
+ will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
+ jassisinghbrar@gmail.com, lee@kernel.org, linus.walleij@linaro.org,
+ amitk@kernel.org, thara.gopinath@gmail.com, broonie@kernel.org,
+ cristian.marussi@arm.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+ wim@linux-watchdog.org, linux@roeck-us.net, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
+ arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
+ linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ kernel@quicinc.com, quic_psodagud@quicinc.com,
+ Praveen Talari <quic_ptalari@quicinc.com>
+References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-17-quic_nkela@quicinc.com>
+ <sdxhnqvdbcpmbp3l7hcnsrducpa5zrgbmkykwfluhrthqhznxi@6i4xiqrre3qg>
+ <b369bd73-ce2f-4373-8172-82c0cca53793@quicinc.com>
+ <9a655c1c-97f6-4606-8400-b3ce1ed3c8bf@kernel.org>
+ <516f17e6-b4b4-4f88-a39f-cc47a507716a@quicinc.com>
+ <2f11f622-1a00-4558-bde9-4871cdc3d1a6@lunn.ch>
+ <204f5cfe-d1ed-40dc-9175-d45f72395361@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <204f5cfe-d1ed-40dc-9175-d45f72395361@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Wed, 04 Sep 2024 17:23:07 +0800, Zhang Zekun wrote:
-> Use helper function devm_clk_get_enabled() and
-> devm_clk_get_optional_enabled() to simplify code.
+On 04/09/2024 23:06, Nikunj Kela wrote:
 > 
-> Zhang Zekun (4):
->   gpio: cadence: Use helper function devm_clk_get_enabled()
->   gpio: lpc18xx: Use helper function devm_clk_get_enabled()
->   gpio: mb86s7x: Use helper function devm_clk_get_optional_enabled()
->   gpio: xilinx: Use helper function devm_clk_get_optional_enabled()
+> On 9/4/2024 9:58 AM, Andrew Lunn wrote:
+>>> Sorry, didn't realize SPI uses different subject format than other
+>>> subsystems. Will fix in v3. Thanks
+>> Each subsystem is free to use its own form. e.g for netdev you will
+>> want the prefix [PATCH net-next v42] net: stmmac: dwmac-qcom-ethqos:
+> of course they are! No one is disputing that.
+>>
+>> This is another reason why you should be splitting these patches per
+>> subsystem, and submitting both the DT bindings and the code changes as
+>> a two patch patchset. You can then learn how each subsystem names its
+>> patches.
 > 
-> [...]
+> Qualcomm QUPs chips have serial engines that can be configured as
+> UART/I2C/SPI so QUPs changes require to be pushed in one series for all
+> 3 subsystems as they all are dependent.
 
-Applied, thanks!
+No, they are not dependent. They have never been. Look how all other
+upstreaming process worked in the past.
 
-Please add the changelog between versions next time. I'll let it slide
-this time as I know what changed.
-
-[1/4] gpio: cadence: Use helper function devm_clk_get_enabled()
-      commit: d71794170e54a6fa49dbc8e8a1cf69a0b805ade7
-[2/4] gpio: lpc18xx: Use helper function devm_clk_get_enabled()
-      commit: fb8028a0f4705d75119d539bf9c9bcac28fa64f4
-[3/4] gpio: mb86s7x: Use helper function devm_clk_get_optional_enabled()
-      commit: e79fac4bc5cf4bda44b35aa5c6f31264c44c8781
-[4/4] gpio: xilinx: Use helper function devm_clk_get_optional_enabled()
-      commit: 835eb0c95064560b10c1de945fe6d8838cf71b1c
 
 Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Krzysztof
+
 
