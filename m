@@ -1,109 +1,124 @@
-Return-Path: <linux-gpio+bounces-9874-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9875-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1040F96EB08
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 08:53:47 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 384A596EC2C
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 09:39:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 83F28B218B8
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 06:53:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3B931F2415E
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 07:39:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0125413D8B5;
-	Fri,  6 Sep 2024 06:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC1CB15530C;
+	Fri,  6 Sep 2024 07:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="njYzfIHH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cB0wo8oG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3D913D243
-	for <linux-gpio@vger.kernel.org>; Fri,  6 Sep 2024 06:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC23514B96E
+	for <linux-gpio@vger.kernel.org>; Fri,  6 Sep 2024 07:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725605619; cv=none; b=q2NmlIR2vU//GvOhNM9eaHZ66sVD/Mw51j9hmnLwvZWEHMTM3v6YsGvWRfvILm9gcLQ2k00v6kAb+djHpAMMVCOOmlZJa7aNy8FxjQ8uppxY3hARQqRx5duSwVH5PLv/jmo3ZYLoyTjjBIFYsFJvD2ZDnsoNkaX+kV94weKYPd0=
+	t=1725608343; cv=none; b=Y27Lvfc4EdYZaqmWx2eiFUFHZqgEaWdpnMoOV6ccEuqQpdeWRvX4KmxjBWzOvK6CkgeMNfnqA3pyWr6oKA3VudrVPBfixJsCOc/eulbto9GOQf393ovRZar70i4X0UC27mpmzTXuLP9pLBX+cFBdg6/HSQjmCSTJDIUt7vHebmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725605619; c=relaxed/simple;
-	bh=tnNsEtGtWFMm/bfDuYOYLc3H1LpokXva1XZ98SjaLQ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hh9pH2wRH+57iTNiQffkkiV/KSkj+vH/xdeJcp+k8ZO8la0yYlXNzApVT6ieVt6Hl14+3eFL94Z4qkT9z9f/+YYJCqOJEvEDByml9zKFmRRDGiCr/45gCYKUNifOiQNitgIhSI9XxIMDLKe7WpKEHr8dzW8h9vjQmGBkN4S67fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=njYzfIHH; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42bbd16fca8so14135705e9.0
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Sep 2024 23:53:37 -0700 (PDT)
+	s=arc-20240116; t=1725608343; c=relaxed/simple;
+	bh=/VfN5TZBKFESX0ktdJnLpkP+3s1XJrbvW7+e2JjstSQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JMghxj7WmLQtA8pb2S+INt3F1Zm52tNx32j1kIropDG1Obe/y9f+CQ3alpnLBOlHtQXgd1ls9Bf0i0PxToiWvytTWY6vFngXyHg5U/WeIgpM1TuSqUmN2Yqqil8o2dsvuhKhaBbCL+/QvmWnYZ4TYtui9zImLt8jm9R+jos7Eio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cB0wo8oG; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-374b25263a3so785992f8f.0
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Sep 2024 00:39:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1725605616; x=1726210416; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+IYW21oi9yH7QqhGx5jI/FXCYiMC05lPbcPdKcwx56g=;
-        b=njYzfIHHAB2xpn10XVs2lqP1URgHpBnjCMw5mdJGzeEPp6nTr2eXS8/WTJdLaySurd
-         T3PihBdn54TD4tbs4UyJtHd7q+dEH1R+XknkxQr2QT6iiB1Jc9Rp/cGaHIOCInsy3jB2
-         FM5hGWBL6DUzfVMVZgWA4ZENaHIH+KAM5bgjxJ2MIQAcy+14ECWetPW8DcpYpeYfWCrd
-         674Kgk1NJ+YN6xfVJGc4s4gL0NYZ8coKS910GmqossF/hXIv3CdOs8+MwDurx9MpZsVF
-         tgp4dPW7BGo9eX8XXaxXeoov34XC2/DAUl38Cnj6vOQxlX/PWLeENWPdKA7CUHUWZ5No
-         LOHQ==
+        d=linaro.org; s=google; t=1725608339; x=1726213139; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xz9IdLmzy/T20GbDRPSYjXR1GKGx3xeoUvnivTDuQzM=;
+        b=cB0wo8oGQ4gkqzsJUvwKF2bKsP3JPyJcvK8bOlIjlrk+jEwF2DTaekiQ5x9nIxU/UZ
+         HaCsFa7RX/okxuGsDJAAUa9wIbIqORlQfJwHEEqjhATDZFBZXnh4K0gjB8TM9nBNytTH
+         Lpx4ZaujIBV1Y4PChxe/m+H3cnhkvFDulli0meNFfyNDTGKB6IYEnbfb+WZVDITwgwyf
+         Mtg9oW5A2dL3K3TxhVhVOTy8lY0hnWAOlVabsmGFF1FagxFC2iQ5AdRCVdjFdzQ4DQI1
+         aRafG/lG6ZWwZAaCW2b0/DfSRhZ0jDCKGlajtSZAp+/RjNDaPd4p0xjNgqps9c0zsTCp
+         8UzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725605616; x=1726210416;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+IYW21oi9yH7QqhGx5jI/FXCYiMC05lPbcPdKcwx56g=;
-        b=DQhmDaaYbCQOOQ4oM6eASoWrV+3lAazlx8xRLMrNSJdX01LrxTlD8a1mu9fq1sMLDf
-         8Wv2DRFjBxHzgN7EDLv7vfxIR1K6y7C9dk92lf7mJbfVaURS/GCZPLnqYmBt7CYMaLsl
-         FzLKBWjGBxXuIpQ29g0MpMFidROB5E+8Pdrp90QtTcV+jo+2ZCrUfGa65mloGNOFsZWl
-         nrTr8riH+A+qLHYgthdHWjIdKOg9MqSu7eO9P2BaVm1m6pKKR+9HGh5+u7P/HO076DFr
-         JYbi/JKRg9z+OdjzY+SlWNfMFtm45Z614XEL+17l2CEHvaaOWCk8xeqUm2D1Z6tUirwJ
-         bvfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/5GxebqBdkmznba03fSEGEEdUZPR+be0iNjiTr+dWwjZyXMnYSTi/SSHSDfC2AcCHjqVnZE5caxd+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4j2ucLGRDZmGh+mThRV7K6DVrvoC2/M7xmuFcOEnSlCe46zQi
-	ObsOg7vUaE/+yknWcYr8SYnmICCINYju13JdqW4aciBo8xVXfcA/7INXDAnDTnc=
-X-Google-Smtp-Source: AGHT+IHIug8Vy6nVa6CgM+WDS6SRKy6Pk2msF4EYJa32/Liac07D4IHnwN+x/z0KCsoTZpGMOkl6hQ==
-X-Received: by 2002:a05:600c:3588:b0:426:602d:a243 with SMTP id 5b1f17b1804b1-42c9f98a268mr11474335e9.16.1725605615504;
-        Thu, 05 Sep 2024 23:53:35 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b9fc:a1e7:588c:1e37])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42ca06003e8sm10136765e9.33.2024.09.05.23.53.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2024 23:53:35 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Martyn Welch <martyn.welch@collabora.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: mpc8xxx: switch to using DEFINE_RUNTIME_DEV_PM_OPS()
-Date: Fri,  6 Sep 2024 08:53:33 +0200
-Message-ID: <172560561169.6345.488968579750809640.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240904140706.70359-1-brgl@bgdev.pl>
-References: <20240904140706.70359-1-brgl@bgdev.pl>
+        d=1e100.net; s=20230601; t=1725608339; x=1726213139;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xz9IdLmzy/T20GbDRPSYjXR1GKGx3xeoUvnivTDuQzM=;
+        b=ncz933CJROFSlrEys3Y7+2/Iohg323qKMaUvzUkia/Pl2pGFJWugXPsj8My+NTeCw+
+         ViHwYwga5f93BA9+5BFnxhiI47bxi3giOm1D3aJ8f21qxRyefL1hLkmzKMp1IOJLiOhR
+         VbIk8FjwVfYm3ppp0B7WMAN8VbehLjvSh7zjfpM6xEd1z6+IS3Ez5BUN2HblBRVAIcfd
+         x0v8diSZ+ViBwYrLhGQzlG7oFXUvRktFiArFxY+qRzRfGmfZYC+bCODCVQftR1GIxGNj
+         Wi6cShJH8LLGXT3wRGW0pJiTCOx7W21HCxDVXUlkHYrMHrxyw1lReOeYbhZCe5S47cKP
+         fS8g==
+X-Forwarded-Encrypted: i=1; AJvYcCX+UT2cr4HpNHWsR29l1r590D2zE1ZB8ZlpqfB0bZvLyOSzSD6KWGTSSSNvho0MeyVb/+2d8gcPLG+q@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV/UWtdr7HDtJ5PtjGYiDCvTkiqdhTMJfSphrG84KOFL9NuXxa
+	bpbtBvAJjnQvRcbBDaZHSl6BTvoF0WwKz6mfLOMG27iiI3WzIs7xVnoVy0AxZCM=
+X-Google-Smtp-Source: AGHT+IGFHwFQ99mHOKHLLsrCtuLnOv+VrrxaTcWgKFCATGwuZhLv7Zk5Z474pGF9RhYDinH0QTPZug==
+X-Received: by 2002:a5d:5f4a:0:b0:374:c269:df79 with SMTP id ffacd0b85a97d-374c269e0d7mr16000044f8f.22.1725608338871;
+        Fri, 06 Sep 2024 00:38:58 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3749eea60e2sm21002351f8f.62.2024.09.06.00.38.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Sep 2024 00:38:58 -0700 (PDT)
+Message-ID: <64758ccf-7ad4-4490-b938-864ade9ae74c@linaro.org>
+Date: Fri, 6 Sep 2024 09:38:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 12/21] dt-bindings: thermal: tsens: document support on
+ SA8255p
+To: Nikunj Kela <quic_nkela@quicinc.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, rafael@kernel.org,
+ viresh.kumar@linaro.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+ sudeep.holla@arm.com, andi.shyti@kernel.org, tglx@linutronix.de,
+ will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
+ jassisinghbrar@gmail.com, lee@kernel.org, linus.walleij@linaro.org,
+ amitk@kernel.org, thara.gopinath@gmail.com, broonie@kernel.org,
+ cristian.marussi@arm.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+ wim@linux-watchdog.org, linux@roeck-us.net, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
+ arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-i2c@vger.kernel.org, iommu@lists.linux.dev,
+ linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ kernel@quicinc.com, quic_psodagud@quicinc.com,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20240828203721.2751904-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-1-quic_nkela@quicinc.com>
+ <20240903220240.2594102-13-quic_nkela@quicinc.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20240903220240.2594102-13-quic_nkela@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Wed, 04 Sep 2024 16:07:06 +0200, Bartosz Golaszewski wrote:
-> Use the preferred API for assigning system sleep pm callbacks in drivers.
+On 04/09/2024 00:02, Nikunj Kela wrote:
+> Add compatible for sensors representing support on SA8255p.
 > 
-> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
+> ---
 
-Applied, thanks!
+Applied, thanks
 
-[1/1] gpio: mpc8xxx: switch to using DEFINE_RUNTIME_DEV_PM_OPS()
-      commit: 6b5e97c020060c2b8ad286002415106ab7034435
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
