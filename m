@@ -1,65 +1,65 @@
-Return-Path: <linux-gpio+bounces-9888-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9891-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40A4696F32E
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 13:37:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3975496F361
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 13:44:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DECB71F249D3
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 11:37:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EAA3A286892
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 11:44:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39B7C1CB338;
-	Fri,  6 Sep 2024 11:37:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10BB51CBEA5;
+	Fri,  6 Sep 2024 11:43:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TjnAdVnk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GKDgJwLb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8961C9EC7;
-	Fri,  6 Sep 2024 11:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740F01CB154;
+	Fri,  6 Sep 2024 11:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725622640; cv=none; b=GahiPnYgLTGXIrBbdhyUVmkjiDwYweN/mlrahzhHwpcAwbyJ0EDNijWxDXr1W3to1BADNLb4z0zV23WafFKWw8OcpGDCZ1N6D8gf/a8b06zn7syW5NJENS3vfucaWskjE+u3teG9a/o8jxT0HXT42W2kxR3D9exLJ23gj2esTZs=
+	t=1725623036; cv=none; b=S0YBS9buDJ9Ci4LRkAt0puLo0GeA9ZMTGbcCcwdx3sljLoxgq6zR0so52nPweloqf5Z8n1Nmf+6ctRCZUBCZRQts/pRZTAcyHURmSuscTjs+Gex8SiTmdP8kILYf40k25VU7B7ZRX7AX7kOcK8TK2I9mVNhctgRq1nxkoIWkgMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725622640; c=relaxed/simple;
-	bh=uaDYEPRdS1ji4vdHJOFP5PfaRlGOOrp6sfKVd6dO4is=;
+	s=arc-20240116; t=1725623036; c=relaxed/simple;
+	bh=k2nGLLAeLRhr+YcEzVH1i4afIkU6w/zHEyW7VQqdBPI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yx/IYRo+phL/yv9Sg4m+/ng+G0rSY/DDf5pNXmkuci90dLc6fKfUZc3EamvL+1LAU4Q/q3olBD0VljDkn804vgXF30uab/wj6nc7HptF0uP0pFFlL3AmvVUFbu7ZAFVKOk6pqq59XAz7vLRftQcXHNAT0+I9aRnhPoyFdUpUFS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TjnAdVnk; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version; b=sKMNG90Pp6X9x2h8d0sNsPHhharhaG5XkoPc71iHDHZXRFe8cigknoV9i4sW8MPd1kXeS9MGYXQvoHqaSrPHNJ4/vSNShRgJLSagHfWuil4JQH6I38Z3iEW/PGxB7/nLvYrqdz8q10vvGrkY/4O5WIeVW3eoM7zvKelWiDlV9qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GKDgJwLb; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725622637; x=1757158637;
+  t=1725623036; x=1757159036;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=uaDYEPRdS1ji4vdHJOFP5PfaRlGOOrp6sfKVd6dO4is=;
-  b=TjnAdVnkisCNw4J63fFyQ0OomgSqWaq9/R7fRBACCAkVm3R+5HKvEcG6
-   YBqVXNPyJpTHDcvG0L8BWkSXJRyot2uygfMuROtg/j3OmeI/782l7nF9w
-   T/Lh1JjsWFQzX2lrr/SnyLsgFXpuQfLSlfipXbLW8Gl3CbqCzl+5DQFoP
-   zN3AHjVag+VLzYkQVo7I8UKGt5/9o9xmuschiuiDg43f+ovJhw4JISsp5
-   DgOm5/z6nlu6R0xDoHT8/5/DQGg+RjS1CjfKOg+3JjfVaiyH8ZBGHgP6d
-   bg3JgCQ3CHW1I/LAX0XjXvPcTyiuk+2p4QkTzdcxaooLW+Ex724PU6nTy
-   A==;
-X-CSE-ConnectionGUID: x50wic7mQw2ZHW0roj5nNQ==
-X-CSE-MsgGUID: jb3eKrCRSUSkFtmgj8ucMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11187"; a="34952537"
+  bh=k2nGLLAeLRhr+YcEzVH1i4afIkU6w/zHEyW7VQqdBPI=;
+  b=GKDgJwLbd13a8tw68awCVJuwYRckGncvyoKj9cSgUCO749yZcqns50SL
+   69JhlaZ2fmzb5kv2kFBEN34j0eq2I2ci4dB9iltrTt3M/5Xf+lkxu/9rl
+   SZdWVphkvfVhTNuQAa297/c5fZEqnVq0Cttsaxtsw8CquZrCpblkFz4h3
+   eQKFQeLKID5+SlmQWcEq3bhH3e+A0pl05SUW1TPx4WnSFUgR9veRbxNnc
+   V20O7vXwVhqnwcPlUkBH6ZeXXmEIZrmwSeoGqPNV8B4yhJLNCr7IuIcEb
+   5I2tdu+EwWXg+0ikJv95DAFumKo2j14Ya8WpqRenA30uQqpD2oKU9JI+F
+   w==;
+X-CSE-ConnectionGUID: pyepTlqeQdK0FlOJrdLIqA==
+X-CSE-MsgGUID: FRtYnJoMRO2v/yrXtWVOxw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11187"; a="24488701"
 X-IronPort-AV: E=Sophos;i="6.10,207,1719903600"; 
-   d="scan'208";a="34952537"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2024 04:37:17 -0700
-X-CSE-ConnectionGUID: 2KaGta+kR0GfiHaxN3uANg==
-X-CSE-MsgGUID: YSNQ1aoQQga+d9IbMnJsPA==
+   d="scan'208";a="24488701"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2024 04:43:55 -0700
+X-CSE-ConnectionGUID: AqcyRIx+Qq6fKaYYQJNfZQ==
+X-CSE-MsgGUID: a9wONoX+ShCVfnMUHsK6lA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,207,1719903600"; 
-   d="scan'208";a="70729675"
+   d="scan'208";a="66272496"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP; 06 Sep 2024 04:37:16 -0700
+  by orviesa006.jf.intel.com with ESMTP; 06 Sep 2024 04:43:54 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 500FF1BE; Fri, 06 Sep 2024 14:37:14 +0300 (EEST)
+	id 5C3131C4; Fri, 06 Sep 2024 14:37:14 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -67,9 +67,9 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andy@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v2 2/3] pinctrl: baytrail: Replace ifdeffery by pm_sleep_ptr() macro
-Date: Fri,  6 Sep 2024 14:36:07 +0300
-Message-ID: <20240906113710.467716-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 3/3] pinctrl: cherryview: Replace ifdeffery by pm_sleep_ptr() macro
+Date: Fri,  6 Sep 2024 14:36:08 +0300
+Message-ID: <20240906113710.467716-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20240906113710.467716-1-andriy.shevchenko@linux.intel.com>
 References: <20240906113710.467716-1-andriy.shevchenko@linux.intel.com>
@@ -87,55 +87,47 @@ Replace ifdeffery by pm_sleep_ptr() macro to improve this.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/intel/pinctrl-baytrail.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 4533c4d0a9e7..44a77ec1c8ed 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -1514,13 +1514,6 @@ static int byt_gpio_probe(struct intel_pinctrl *vg)
- 	gc->parent	= vg->dev;
- 	gc->ngpio	= vg->soc->npins;
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index 2f0e29c78dfb..5cf99caf511f 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -1608,6 +1608,16 @@ static acpi_status chv_pinctrl_mmio_access_handler(u32 function,
+ 	return AE_OK;
+ }
  
--#ifdef CONFIG_PM_SLEEP
--	vg->context.pads = devm_kcalloc(vg->dev, gc->ngpio, sizeof(*vg->context.pads),
--					GFP_KERNEL);
--	if (!vg->context.pads)
--		return -ENOMEM;
--#endif
--
- 	/* set up interrupts  */
- 	irq = platform_get_irq_optional(pdev, 0);
- 	if (irq > 0) {
-@@ -1581,6 +1574,16 @@ static const struct acpi_device_id byt_gpio_acpi_match[] = {
- 	{ }
- };
- 
-+static int byt_pinctrl_pm_init(struct intel_pinctrl *vg)
++static int chv_pinctrl_pm_init(struct intel_pinctrl *pctrl)
 +{
-+	vg->context.pads = devm_kcalloc(vg->dev, vg->soc->npins,
-+					sizeof(*vg->context.pads), GFP_KERNEL);
-+	if (!vg->context.pads)
++	pctrl->context.pads = devm_kcalloc(pctrl->dev, pctrl->soc->npins,
++					   sizeof(*pctrl->context.pads), GFP_KERNEL);
++	if (!pctrl->context.pads)
 +		return -ENOMEM;
 +
 +	return 0;
 +}
 +
- static int byt_pinctrl_probe(struct platform_device *pdev)
+ static int chv_pinctrl_probe(struct platform_device *pdev)
  {
  	const struct intel_pinctrl_soc_data *soc_data;
-@@ -1603,6 +1606,10 @@ static int byt_pinctrl_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+@@ -1648,13 +1658,9 @@ static int chv_pinctrl_probe(struct platform_device *pdev)
  
-+	ret = intel_pinctrl_context_alloc(vg, byt_pinctrl_pm_init);
+ 	community->pad_regs = community->regs + FAMILY_PAD_REGS_OFF;
+ 
+-#ifdef CONFIG_PM_SLEEP
+-	pctrl->context.pads = devm_kcalloc(dev, pctrl->soc->npins,
+-					   sizeof(*pctrl->context.pads),
+-					   GFP_KERNEL);
+-	if (!pctrl->context.pads)
+-		return -ENOMEM;
+-#endif
++	ret = intel_pinctrl_context_alloc(pctrl, chv_pinctrl_pm_init);
 +	if (ret)
 +		return ret;
-+
- 	vg->pctldesc		= byt_pinctrl_desc;
- 	vg->pctldesc.name	= dev_name(dev);
- 	vg->pctldesc.pins	= vg->soc->pins;
+ 
+ 	pctrl->context.communities = devm_kcalloc(dev, pctrl->soc->ncommunities,
+ 						  sizeof(*pctrl->context.communities),
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
