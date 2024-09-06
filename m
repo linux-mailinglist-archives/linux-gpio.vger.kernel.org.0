@@ -1,249 +1,157 @@
-Return-Path: <linux-gpio+bounces-9892-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9893-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7BBD96F39D
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 13:53:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E5E196F3E8
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 14:02:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 31E14B25111
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 11:53:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12E5F1F22EA8
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Sep 2024 12:02:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42EF81D0963;
-	Fri,  6 Sep 2024 11:50:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0FB51CBE89;
+	Fri,  6 Sep 2024 12:02:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Y2T9zalC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HVqBFTue"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011028.outbound.protection.outlook.com [52.101.70.28])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00521CC8BC;
-	Fri,  6 Sep 2024 11:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725623442; cv=fail; b=JdlBVGd70eiAtZhDfYN+aelLqgN4Q6k5GUgRhdyE4DldogPaLddvrtirT2CgfpQAzX+BVML6aAhIUgRq+M2rrS2iLPmS6D//ayk2K1o1EVfUZry+iy4AxysI6Wd0yfHPIgIOwkjvp7+9gT3iBjtx4oI2jgc7pRSf9LmkdaK3hqs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725623442; c=relaxed/simple;
-	bh=668vttL5tK83Io/zl339S4ODGy4KF/yum198y+j4myk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pv1BYHb68BzsGRD3rL2KTuyVr0LPyXlPr15KWceZ13ORxaH/jZJeP0GyQ6v6+cUxAcBH7Ae+gzUcXdHVQ5/11s4ca8pIZVmNhgxsAbNZrrfF8vEHVlA3E7VpmPmZJ4Ni3kd8b8/De5DBymnU3rKT7j7O6woBOrA4Yf5SXoxlZnw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=Y2T9zalC; arc=fail smtp.client-ip=52.101.70.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rEJ2zgeaQVdNq8zhl5wz9k2HKyyzoUOq2f0nXf2W6Y/R9ENIYRmOorhL2rckyR0rlaF6h+CWYfKijoqG/iEOuOe5q27GiHbTH1buPK0Bup7dHBVfqpEKHc08Dmuezvj4fsxvy12EgqYNkB0gVbxWnq6Zw013VjtHL3pi5j//ZZEc2xjlSVssH/+/2+Xa7ZMEw1s4VjDxSq7czTMUUwVyaHmG427kcDksbg/+vMZ3ifeGNz1yaLgaMSCRvSxt+2cLkGUibWqNNH2yYqk0adx/xDhky8QrHERYmU7mVqDY1CTC0A9uikb7WdEpBJm2leq1SWQ5m+C+MkpsHRt2wrPqHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JNw5y110xDjKtR5EOWT7AdUC6ma241A0+cOffn/Vk3A=;
- b=oLkTT8FvXfwXmOFkih7Vxpd8db+22O0jBdWDQnHgJeWQA7CS2V3YvxPPQwDhpLepTZ9syMgTx6AChVWrIKjghszSVhN1Wk8B25TowFe00C0ECU3AUzvE7+J+S849KUlpKOpeC/FaR8SyxTWvPXn8A5kd3wAknxjKrGpwnuNyhOYfiHHeNI4esz6Tes6H+M6wj+PL/aYFDRB62cg6+sifzxdKki8ASasD/rLDqKIZ8BeJXr9JAkvmdr15hMg46/4qZD5/Db2baiGJSvZEqiDWXWQSF6ChUmiIjBNFqWxkSrK57urmh32SYyVu+Hk2DmoX4VRpP/qlHXKyTTJ64x/8mw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JNw5y110xDjKtR5EOWT7AdUC6ma241A0+cOffn/Vk3A=;
- b=Y2T9zalCFgsykYNSQFOOM1/OxazxsYaG8Ww/S7n9j0S5EPuXF2Z17EMyMnmpdCURO2AONprfz07BHQP3T1mgasq5jfnMpcdpFL6Ki8mnua6QDtsdTtdlsWxdBqb/XwvNCBZtwuUrDQRP1jLcqEjPJ4ruoKKBZFoQb+JCAJuoy0gSBoUDgWQVBfM6yhy5+tZD+V64E8EqAT7W3NfQTN/Zvb8xzDcLwMUHmBGr4QWpRNlOLx69yLWg4QFdQH/+NlaeVpfk6t9k8KwoMJWN8+BoLUgXjZ8NSGpBWWroyCs6Eat7V2af+wu5zt3T8BqHypIvUmLEcdSqKqo9MUb4BCSryw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from AM9PR04MB8487.eurprd04.prod.outlook.com (2603:10a6:20b:41a::6)
- by AS1PR04MB9359.eurprd04.prod.outlook.com (2603:10a6:20b:4db::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.17; Fri, 6 Sep
- 2024 11:50:36 +0000
-Received: from AM9PR04MB8487.eurprd04.prod.outlook.com
- ([fe80::6d7a:8d2:f020:455]) by AM9PR04MB8487.eurprd04.prod.outlook.com
- ([fe80::6d7a:8d2:f020:455%4]) with mapi id 15.20.7918.024; Fri, 6 Sep 2024
- 11:50:36 +0000
-Message-ID: <d934d026-92dc-4832-bb0f-556fe12947a4@oss.nxp.com>
-Date: Fri, 6 Sep 2024 14:50:31 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] drivers: gpio: siul2-s32g2: add NXP S32G2/S32G3 SoCs
- support
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chester Lin <chester62515@gmail.com>,
- Matthias Brugger <mbrugger@suse.com>,
- Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
- Larisa Grigore <larisa.grigore@nxp.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- NXP S32 Linux Team <s32@nxp.com>
-References: <20240826084214.2368673-1-andrei.stefanescu@oss.nxp.com>
- <20240826084214.2368673-3-andrei.stefanescu@oss.nxp.com>
- <fd18295c-6544-4da6-aab0-6d6b9c12581a@kernel.org>
- <6a65f608-7ca4-44f1-865c-6a1b9891b275@oss.nxp.com>
- <3ab4c235-c513-4dce-8061-b8831ea548a3@kernel.org>
- <0ba90fcf-60b8-478c-bd9d-487acacdc988@oss.nxp.com>
- <d1f9d323-0f66-484b-a5dd-3ea1fc690c6d@kernel.org>
-Content-Language: en-US
-From: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-In-Reply-To: <d1f9d323-0f66-484b-a5dd-3ea1fc690c6d@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS4P195CA0020.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d6::7) To AM9PR04MB8487.eurprd04.prod.outlook.com
- (2603:10a6:20b:41a::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD32722315;
+	Fri,  6 Sep 2024 12:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725624130; cv=none; b=fHU6hcGIHOuQ0DrMUVzcub9fYnTJheyfqAgfU59kbn+8Q5TLoS38axBhhwoHBSYn+Fvp3irIdbYkl3MThL1SqnkhpdcW8xG95xjxkz/+LBVVLcOOU7wAvaG78FDQiAvIsI2W2xA0UJS2BHzg9JbTNj90fYqnUR7IcSaU6kc2+TY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725624130; c=relaxed/simple;
+	bh=vEE1MOLnoAFGtMmRyecmuLNulPXNIP+QTrINs35oqPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YpRiC7Xwrt/TkbeyOQ6ZOGk6jbeCHkj60urO+7LS2dkabS3HtAR+zwSYVDMDm4H0Lz5wjsfU/dKlrpcV50Pwov7mrrj3DAUcg6PkBKGTSBhyL0z0DxqYyaff0yQTYzeMiAvYlxSkqjIFone+LBPg/5tlBkPq38HXs65dY7x4Kaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HVqBFTue; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725624129; x=1757160129;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vEE1MOLnoAFGtMmRyecmuLNulPXNIP+QTrINs35oqPo=;
+  b=HVqBFTueJVzBgwmNPZXFKEwdcElrxSruTI59sSUDMA10eM2bZ+poh95t
+   HcnwLd1SQ1YRVdtrw1vv67bG/ESase+gWWCAv12wFvXXzdsXLWvihk111
+   itwA/0VCl1A+SsBbhbC+lC+Mfma/9DWxBkqa4MDVPyCeLlyP8J1SSxUfU
+   0gCKwkT9Vt6bcRMQGSjby4x1Yw6WQPdcYs+Q47bbt6/+Qsv4ShBMB/nRI
+   d9JlGRg9XZVbwPB5N8PD413qFWgYJ4G2JMwcMF0PmKEjMvBt6rmhAIrmH
+   HY/4GxdOTyhPg72vCkUmWPlB+1HfgtS/2v4dYdHqHReDJ8vYyDBhYl6al
+   w==;
+X-CSE-ConnectionGUID: cwRbXU8wRaS3N1JePNFdIw==
+X-CSE-MsgGUID: gpGC/HhqQiWRo5Uagsk9IQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11187"; a="41861688"
+X-IronPort-AV: E=Sophos;i="6.10,207,1719903600"; 
+   d="scan'208";a="41861688"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2024 05:02:08 -0700
+X-CSE-ConnectionGUID: s1KtiPQkREG9ECreWY/xxg==
+X-CSE-MsgGUID: YdkD4i+4Q8q9xxa/mKgkbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,207,1719903600"; 
+   d="scan'208";a="70727937"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 06 Sep 2024 05:02:07 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id C9D7C197; Fri, 06 Sep 2024 15:02:05 +0300 (EEST)
+Date: Fri, 6 Sep 2024 15:02:05 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/3] pinctrl: intel: Replace ifdeffery by
+ pm_sleep_ptr() macro
+Message-ID: <20240906120205.GF275077@black.fi.intel.com>
+References: <20240906113710.467716-1-andriy.shevchenko@linux.intel.com>
+ <20240906113710.467716-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM9PR04MB8487:EE_|AS1PR04MB9359:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2ee1f804-b732-491d-e3e7-08dcce6a1ebd
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TXVSWXhwR0lON2c0amhKV3p3R2NCTnZWY1pqR1NKUTI3bDgzTFdqS0pyNnpS?=
- =?utf-8?B?YU5kdXFqT2lBd3lHeWFaS3ZQY0tTY2pWRFA1Nzk3eXlJU0F6blZmQjV0OUNt?=
- =?utf-8?B?dFBHeVR5bjl1YkM1bHdMWThiZHl6aUgyaWFyejEva3Vxc0dZY29mcDhuUVhl?=
- =?utf-8?B?aW00bnFOT1lmbElIS3FlbEVITVRrcktQZ2tSQjRYT25IMHNjVnd2VktsMkdl?=
- =?utf-8?B?VTBsMWR5alRIcUoxRVBuTENZdXFQbUNUdWswZTRseHJpOVVFWjFIclhJYmFk?=
- =?utf-8?B?TGY4SU1NNDBEaGdMSFlhUWtwZ0F6VDlONVovTzgxK252ZkdlQnpBRHNLNmtW?=
- =?utf-8?B?Rko2aWNUeU42UWxKbWpwL2lxMEhYWUVZQUV2UEdhQldOQVUvWC9keFJoTkh6?=
- =?utf-8?B?Rk5Ed0lEU0RrdVEwZ01vWnBQR2F3MkVJaFpYeWtqU1B4T0FnNnBSalFpQjJl?=
- =?utf-8?B?TTU2bzZNam56TFFOd3F3WXVzVlhJWXpqYlRGYUxldGk2T1k2WXBKWldua2Y3?=
- =?utf-8?B?U3ZvcVdMaTZ6QWxIMk5uMkg3ajhkZjE0SlhOaFAybkZCY21FVktIcnlIcVZH?=
- =?utf-8?B?MTBCbXBCdHJsb2JEdDBtN3F6aUIwUytncmt6dzVDNjhpdkM4MFZJREJVRklk?=
- =?utf-8?B?SGhyQ0o3U0tjMys4MjJWRHpaQ1B5WXM3ZFN6NG1TenZXWGIrdDFQeVhIODV1?=
- =?utf-8?B?d3l6TlhvSUp4a2lYT2N1Tk1rTkFKNTBRN1I5V1kzYTNkSHFXZkh6ZFhJZzNR?=
- =?utf-8?B?STJZbTAyVFZ3bjFNblJkcDlUYUNWeXRMZ09QcnBTc2UwMEpmbTFPSVV4TGFv?=
- =?utf-8?B?QXVJYmF0VGduN25KMUR6b0oxTGY1a3FnSWVZaVBRTTZGMXUrYkdIZDJnV3M3?=
- =?utf-8?B?cnhhRE1kVzlhUGsxU3g4c2pzcWpOUVlrVmpHbHh0c3RIRm9zcy9mSjZyVG9h?=
- =?utf-8?B?ckI1OEFHYmsyUGFURjQvMGJMNy81Q0hrQTZveUVyS2s0a1BTMnNQd25SdjBx?=
- =?utf-8?B?cEtYU0RqZ2o2dk5FR1FKZUlMYVBSeTdhb3o5YVN1SFpqa21GdlJRQXJHQzdu?=
- =?utf-8?B?My9GTTEvRm5NTWNONm5iU1I2QXdEOVJTVWlNWmJoVm9CL2Rady9DeGdReFB2?=
- =?utf-8?B?UGpFWjFtbDdHZUJ3dGM0aUtJd3pOYW1hS1lwUHp3c25OSlM5bHNPM2ZLTm12?=
- =?utf-8?B?VjZmZkViSEJtN0ptNDQ5S1Q5MTM2TjQrYnNvRk4vWktQRlU1RHhiZmtGQnVw?=
- =?utf-8?B?ZGsyVkd4NkoxNzF0ekJoWWJRd0pOWWxKZlFrQnVYbE0yQUU3eUR3ZW91SDNX?=
- =?utf-8?B?UzY0aEMwV1ZrN1ZQQ0xZNkluZ0JZell2NWg5YXVmOXpJWnFrTUdJNXRoZ3lm?=
- =?utf-8?B?bSsxMDBMdVAxWU0vd1F0cDArcmU0NjFLTFlSTUV4Q3dqN3A1aEhhTDNLRGxo?=
- =?utf-8?B?R3VEQmRwaEtlRjF0aUNRSUF1UWxCNXlNT1EvZXo5b1FLUVo0UXhvbExpdTdz?=
- =?utf-8?B?SFZVN2J0RTQ3a0VBalNpSEpWSXZyaGVwS3JwT21QMlZieTBHLzJmNjBJZVRU?=
- =?utf-8?B?MWxWT2xlNnJjVE12N0ZrU0VHVVM2UnB0VHQyNlRZd3IvUFVEeGlVVFZaZm9R?=
- =?utf-8?B?eHUwRGM4V1pFSW9DQ25BY0I5V1hVdW52cHVlZWZzOE9KeXI2ZE5DTlZNT3Ro?=
- =?utf-8?B?S0FJRDA3MTBvdklacTNwOGN3NGN4MEY5Vk4ySnJwVmMrZVFYTzBHbTNzRTla?=
- =?utf-8?B?RkljMjhDa2FVcDRlT3JmQjhPemN6cUdvK3N2ekxYcTl5NDF6S2FFODhBUVBu?=
- =?utf-8?B?eGorcGl4SUt1cXVWOG5HZ3VMVXh0ZHhsV0QwNXhYZnpVbzZHYUZpeGpYZEUw?=
- =?utf-8?Q?KLHVccpuRM3O1?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8487.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bUNxcXdZRmFXYm5mQnBlY2ZIaWZxRlp4Q2ZrU215V0h2a0dJVFdpSG1qMkc5?=
- =?utf-8?B?ek1IVXBjNGxhK0FzQVlWV2p1WWFuL1paSlovclBRVS8xYkpDOEF2RGFRcVFa?=
- =?utf-8?B?TEpZVzV5UldET1pnZnpUZjBabGFJQ3NTRXRqSHFRVkFIZkVlTEFoeDV6dFlx?=
- =?utf-8?B?UVRkUTFReGx4bnJ4elMxRUxYRGEvNkt6dXdMZFlBVVE1SmRKTXBKN3o4R2Vy?=
- =?utf-8?B?c3RlSDI4c1NRL3BENnVqYWFzWE9IZUgzYVV4NUx0MVdMcGNiUmJpOHZvZ3Rl?=
- =?utf-8?B?b1FZMkI4R1F3cHRsWXZOVGFsc2NWQlFxSlFsZmlUUWFVNFMvcnpTZ2JFcm1J?=
- =?utf-8?B?Q1J3MmttWmQzRGQ1WC83MkRVeHU3SW50cDJONS9WV2RRbXJiNzRSRy9WUThJ?=
- =?utf-8?B?L3FvQ1g0TU82MWpBcGM0N2ZOVlZYOTljL1E4RjJubUVCUE9sOUZOU3VhRkpy?=
- =?utf-8?B?Y3E0a3prSXQ3WVdySk8vZlJjb2htaFVWTGY4eU1GL2NMTFVMTFJtYmlzc0Qy?=
- =?utf-8?B?K2J1UUt3TDZ5ZktIS0Uwc2dhbTNMdEZUbUYybWlEVHJiUFFFMTRpNjJ1elhl?=
- =?utf-8?B?WURITzJvWUpUUHR6T3d2YmsybEZFL1h0UkF4Nk1keGhvMDY2OFVtWkIreFl0?=
- =?utf-8?B?RGI5REFrbVVLNGdIVXB1c3R4RlZXM3dUMEsvaUIydmVWL1BCQkhielpOOUtx?=
- =?utf-8?B?ZXNHMFlVMFJoK2cycDNMTVp2SnJWVXFYK3FsS2ZXOE02SXhEVS9Ed2xXM1ov?=
- =?utf-8?B?VWVmNHZ4cG4xeCs2b3FTZzVRSTVUS1lkd3ZqOEIrZWgxRzZrQXZPS0dIa0o2?=
- =?utf-8?B?b2hSQTJta3JiWE50N1djR3FwQXp6ZFNKcWRjcnhPV1dzNnRvSUpzTDk2emVi?=
- =?utf-8?B?bXpUWVJZT1BXbXpkZnljRjU1VW15V1VaeHNBbWMvM2ZDM3M0ZGVaeDlMYTlT?=
- =?utf-8?B?VDA5QnJmcEV2WFpuNXR2dUxoczVORUlQL0h3K0JoYUVvbXBlNXFOQ0ZuUzZa?=
- =?utf-8?B?NGQ2VlI1Tko1RGpnWURGeFVvVFFNL25TY2tualFSYTNrTWg3UlA5bk9jbGsv?=
- =?utf-8?B?U2w1Zis2ZjNPR3VaYW1MSmlDQkdBa2o0d3RLdWJ2RzlOeXJsdTZUMkUzcVh6?=
- =?utf-8?B?V0pNR3ZobDhnSXFjVWVnbW1DcnhmMWloL3dRV1k1R2V5bE1XT1FlSWtPcURM?=
- =?utf-8?B?QzA2QnlsbzZpN08raExQNDNVQ3BNYU5QQm5CUldiQ3M0bTFKMy8xaUtHdkxk?=
- =?utf-8?B?ZkFUaTN4QTMxZ2JDbFFhbHdGdEdLblN3VGFzajRGanE4SEFYNVV4VitZQStY?=
- =?utf-8?B?TUFUUzhoOWgydkQ3bnoxWWVCL3VuSTlIUVJiek9uaEwzYTg4blBQOEhFQlAv?=
- =?utf-8?B?bk1QcHhISkl2bEFzRWhvVHhUaWpiSXNiZVpXRUFnei9veXZLaXE0c2lnSUFE?=
- =?utf-8?B?TWtJRG1ldm9DamR4d2pJbWc0aU9pOGVham41UGFNY2RUcU5vNmJlL2kvUGVy?=
- =?utf-8?B?TlRNRklVaVpOSmpScU9CTHRpbXRzZWRSMGZsRE1JVTVEZm96UmgrQTYrbER6?=
- =?utf-8?B?ZWdJb0pYL2Z5cnA5MFFheCtrdUs1WFlYdktKQTR5ZXVDUTVuYWNEVmtFQmxq?=
- =?utf-8?B?MEhSMDBOMllRUlVlWi9tUWVQVDdETTRNNURDMWxqYTA5bm83N1JpWVNPU1FI?=
- =?utf-8?B?Njh3WmJBY3RNRW8wZ3JxRXJROEZrd3I3MWRaMWY3eXM2UTFHS1JtK0Z3MllN?=
- =?utf-8?B?RXphTERtRGp2YU5IdXB3aTJya3VxNnZKUnRXRGpXcjlyVlFyczJTRkdJYTc5?=
- =?utf-8?B?dzA3VFdPV21rRFVNa3c1bTlWZFNvbzNjOXhGTE5yeXRWNW5WT1ZzT2NQZFRS?=
- =?utf-8?B?UHZlQW1QM3RQbWdTOFYxUFlrTUZXSUtYaGVqQWZJRVdDa1VTRWxManVJMnJH?=
- =?utf-8?B?eDVBV2hPL0ErN1M4TFBPLzl3WVNoWFN3Qm9PVEFJWk1TWkgwRERLT1VFYVJv?=
- =?utf-8?B?VTI1OGtlNk1zVHdScjRTNGdQSEEvdUhDczJYZ2h5Mkcyb0Ryb2U5R1dmbURR?=
- =?utf-8?B?TEdnOEROUXhlNzQydTNOMStBays2dU1ieTRySVRsV2U0WXZ2QkprbXE2WDZN?=
- =?utf-8?B?L3pKYnFkamdFVEZMWWtpN014Ry9VdmljcWZpRU4vUHpiSVUrWHpWc3VOeGQ0?=
- =?utf-8?B?MUE9PQ==?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ee1f804-b732-491d-e3e7-08dcce6a1ebd
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8487.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2024 11:50:36.0507
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fC4cb/ZD6x8Nd8G4pOWN8Q/ZhIH4Mr/pVVxC4anVBT1uEDp7v7fmAjEt6Dy6i/xO3V9+0OhEge6ujNkCZE2Q/ocgGuNGaZjItoHVmjuvjQ0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9359
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240906113710.467716-2-andriy.shevchenko@linux.intel.com>
 
-On 06/09/2024 12:53, Krzysztof Kozlowski wrote:
-> On 06/09/2024 11:45, Andrei Stefanescu wrote:
->> On 06/09/2024 12:39, Krzysztof Kozlowski wrote:
->>> On 06/09/2024 10:43, Andrei Stefanescu wrote:
->>>> Hi Krzysztof,
->>>>
->>>>
->>>>>> +static struct regmap *common_regmap_init(struct platform_device *pdev,
->>>>>> +					 struct regmap_config *conf,
->>>>>> +					 const char *name)
->>>>>> +{
->>>>>> +	struct device *dev = &pdev->dev;
->>>>>> +	struct resource *res;
->>>>>> +	resource_size_t size;
->>>>>> +	void __iomem *base;
->>>>>> +
->>>>>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
->>>>>> +	if (!res) {
->>>>>> +		dev_err(&pdev->dev, "Failed to get MEM resource: %s\n", name);
->>>>>> +		return ERR_PTR(-EINVAL);
->>>>>> +	}
->>>>>> +
->>>>>> +	base = devm_ioremap_resource(dev, res);
->>>>>
->>>>> There is a wrapper for both calls above, so use it.
->>>>
->>>> I am not sure I can change this because I also use the `resource_size`
->>>> call below in order to initialize the regmap_config. 
->>>> Unfortunately, `devm_platform_ioremap_resource_byname` doesn't also retrieve
->>>> the resource via a pointer.
->>>>
->>>> I saw the `devm_platform_get_and_ioremap_resource` function but that one
->>>> retrieves the resource based on the index. I would like to keep identifying
->>>> the resource by its name instead of its index.
->>>
->>> So add the wrapper. Or explain what's wrong with indices?
->>
->> There's nothing wrong but I prefer to not force an order. I will
->> add a wrapper then.
+On Fri, Sep 06, 2024 at 02:36:06PM +0300, Andy Shevchenko wrote:
+> Explicit ifdeffery is ugly and theoretically might be not synchronised
+> with the rest of functions that are assigned via pm_sleep_ptr() macro.
+> Replace ifdeffery by pm_sleep_ptr() macro to improve this.
 > 
-> Order is forced. You cannot change it. I don't understand your rationale.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/pinctrl/intel/pinctrl-intel.c |  5 +----
+>  drivers/pinctrl/intel/pinctrl-intel.h | 14 ++++++++++++++
+>  2 files changed, 15 insertions(+), 4 deletions(-)
 > 
-> Best regards,
-> Krzysztof
-> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> index f6f6d3970d5d..e3f9d4d9667c 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -1482,7 +1482,6 @@ static int intel_pinctrl_add_padgroups_by_size(struct intel_pinctrl *pctrl,
+>  
+>  static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
+>  {
+> -#ifdef CONFIG_PM_SLEEP
+>  	const struct intel_pinctrl_soc_data *soc = pctrl->soc;
+>  	struct intel_community_context *communities;
+>  	struct intel_pad_context *pads;
+> @@ -1497,7 +1496,6 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
+>  	if (!communities)
+>  		return -ENOMEM;
+>  
+> -
+>  	for (i = 0; i < pctrl->ncommunities; i++) {
+>  		struct intel_community *community = &pctrl->communities[i];
+>  		u32 *intmask, *hostown;
+> @@ -1519,7 +1517,6 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
+>  
+>  	pctrl->context.pads = pads;
+>  	pctrl->context.communities = communities;
+> -#endif
+>  
+>  	return 0;
+>  }
+> @@ -1649,7 +1646,7 @@ int intel_pinctrl_probe(struct platform_device *pdev,
+>  	if (irq < 0)
+>  		return irq;
+>  
+> -	ret = intel_pinctrl_pm_init(pctrl);
+> +	ret = intel_pinctrl_context_alloc(pctrl, intel_pinctrl_pm_init);
+>  	if (ret)
+>  		return ret;
+>  
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
+> index 4d4e1257afdf..7d8d1c5668d3 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.h
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.h
+> @@ -256,6 +256,20 @@ struct intel_pinctrl {
+>  	int irq;
+>  };
+>  
+> +typedef int (*intel_pinctrl_context_alloc_fn)(struct intel_pinctrl *pctrl);
+> +
+> +static inline int intel_pinctrl_context_alloc(struct intel_pinctrl *pctrl,
+> +					      intel_pinctrl_context_alloc_fn alloc_fn)
+> +{
+> +	intel_pinctrl_context_alloc_fn fn;
+> +
+> +	fn = pm_sleep_ptr(alloc_fn);
+> +	if (fn)
+> +		return fn(pctrl);
+> +
+> +	return 0;
+> +}
 
-By order I mean the order in which the memory region descriptions are laid out
-in the reg property. Currently, there is no issue if we, let's say, swap the order
-of opads0 and opads1(as long as we keep the same change for the reg-names).
+No way, this looks even worse :(
 
-Just to double check, this would imply adding a new wrapper named
-`devm_platform_get_and_ioremap_resource_byname` which would basically be
-very similar to `devm_platform_get_and_ioremap_resource`. Is that ok?
-
-Best regards,
-Andrei
-
+Let's not do this change please.
 
