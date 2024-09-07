@@ -1,227 +1,115 @@
-Return-Path: <linux-gpio+bounces-9899-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9900-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D0F096FEB1
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Sep 2024 02:21:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DECC970080
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Sep 2024 08:58:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DADA02849C4
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Sep 2024 00:21:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 90FE31C21425
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Sep 2024 06:58:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2823D2CAB;
-	Sat,  7 Sep 2024 00:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CE8814884C;
+	Sat,  7 Sep 2024 06:58:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YVikxlI9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nHWWcqsZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8672F1870
-	for <linux-gpio@vger.kernel.org>; Sat,  7 Sep 2024 00:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EB03EA71
+	for <linux-gpio@vger.kernel.org>; Sat,  7 Sep 2024 06:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725668486; cv=none; b=Te5EtKK1rmUwEyVMC5ON8YmwVhiIbJwlok4Jj9b44XB6rIu3S2gXHQKp9KAcN8dnQIdFZ7kCcbW8N3dN+EFJvJhVARlLgeWP1jsamxwkcgsfHGL29qLPTMYeo/6Pijz3HCIY1VgLcQFcaHrt+VTKCi3DuWv+H/XCbntEFHePS9E=
+	t=1725692332; cv=none; b=CZU0tJxIsGAXdSvinx/w1xkTXm/6Y/qm08fIriBllq/rHzvkEfHcEuRV3wgP15U/DQPh9w096pznHtmvlNuTbKjo/syfYQA2YnGSubYZHX+9No2PBfF0eV3XUzi3kZj3JW9HcctrichEXaHCq9JvhCcPebJOXVqnXQZmXkE+wwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725668486; c=relaxed/simple;
-	bh=IsJWwWIWKuvhCv/q4SySmhFZDQGUvg0ryVJcV3GmcEM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=tBI0mSc1pWtROYdDVWxC35+bN2lVL3sE9R0xvrB4gqGU4MT0BfsBV6nQNTjHBBVZrCOU4zhz+iJN7b+1VCRufrIXgLh2fLtFmsp9OGX3JtndNqcypZS/tM6swFzA9RuSpvBleETwX3vJ6/JQYpgvwiGjHTUS7b+ycMJbqjRLw0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YVikxlI9; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725668485; x=1757204485;
-  h=date:from:to:cc:subject:message-id;
-  bh=IsJWwWIWKuvhCv/q4SySmhFZDQGUvg0ryVJcV3GmcEM=;
-  b=YVikxlI9Bu00w91TyVaCtL3Y+eXSvY15tmY6eOTqYHXvA7h2XxaP0gsL
-   S5B6QIg57sQGz0kVjwy+HCE7gTa50SeG10nmQwxezQuGH0JWMR8qxpshq
-   Yu5NCiektb4bXzFqJ+vmfedpPBdPpRndA9hK9NxaZPbQXJvt11EeUwCDE
-   sxfrmnfyAfjFJhCZg8FR5BFMoQ2SCQO/k34RbwH7Ba4QhpMFBafDS/Z9E
-   V0aZcy7splugutt+lutEtsGW0dFGVclaC2qHaWbkfgtxhU63FEF3ZHC7G
-   KL943D6+0lJ65QvvxAUPpKTXEUMSliObVKE5gQA+vCmSUsTqC9w3b186j
-   g==;
-X-CSE-ConnectionGUID: yhqr4XoaTU+Jq4Nt+uAxWQ==
-X-CSE-MsgGUID: IqyK+q1rRBi8wWquexLqTw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11187"; a="35824609"
-X-IronPort-AV: E=Sophos;i="6.10,209,1719903600"; 
-   d="scan'208";a="35824609"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2024 17:21:23 -0700
-X-CSE-ConnectionGUID: UY51oLFERmSg9/OZT1TxDg==
-X-CSE-MsgGUID: gagfwyq8RZCSxk2jphZn6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,209,1719903600"; 
-   d="scan'208";a="66838925"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 06 Sep 2024 17:21:21 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1smjCY-000BtP-1q;
-	Sat, 07 Sep 2024 00:21:18 +0000
-Date: Sat, 07 Sep 2024 08:21:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 6b5e97c020060c2b8ad286002415106ab7034435
-Message-ID: <202409070809.8MdJ6tXk-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1725692332; c=relaxed/simple;
+	bh=rgaGjgEabV2AZI1mYeylbTN9fxh/1IY0+yKdiZ9hXl0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=roNJfGq7m+GWrChyMNmH/8o5sL3PT+Zs8TaVK15Q2Pt382JW1kMuPkRd8D1WJP0YXoXOhxd7b891irFWCQc3vzrqSFoUUgYJldx8KCLn0dI5b6nTrN/YXebvkmeffdvi4zIdU5ChNtPim/y5EB9W9NGz/FPIuLyQkW8Q+iCXkrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nHWWcqsZ; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2f75a81b6d5so4275461fa.1
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Sep 2024 23:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1725692329; x=1726297129; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PPG/uD8SZZ9HQeRTUezsbbELYqqE6wi9aZnU/g/IvvY=;
+        b=nHWWcqsZymLeX5Ll11Prcgms18hFO7Z8ON0f2fwdjFLRWuJckNr7UNIqGVkpN0oCsL
+         waJL7aLYTczvAvDMCNgKYvPdd6gEpwfh/ecQj7cAXaeVO5m1gxRePjnR3DhWZJkSJIkM
+         +KcwYs38Uod8jM4CC4QsbQ7SuRgDjEStY7tLdO6KpmbGBymGkXuPJ/LKY1mMjuGOHMst
+         UvV1H2ao+gWjakl0r4p79YW1M2z4rsR+q1jsabPiVmHb+FCr6dyauWEuVu+V2g2YHpY2
+         /5TPkXhvS4A3r0YcxGiLefQBK6rqZXXl5HwqNcHsU7irNviX3SzBNl2pnpoFFQ9m4OyI
+         bXrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725692329; x=1726297129;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PPG/uD8SZZ9HQeRTUezsbbELYqqE6wi9aZnU/g/IvvY=;
+        b=RVNN2EKR8YU3DW2rw0RbkEdkKG3qB23eClYpebanA/I9IPm5fORW4fppb1NB5Ax1pX
+         ZPho7bNk69zrU/wGqU7Nl6Zog1cWaPBxNLsmlTh1rV7YzmQPEwA62+X6UKV+MQUE6Eq+
+         3Fjy+XnlsnhlWwKdEqK2pFuMMUrhTLOZexCF+ZE4Exm1aph6ejRjDaaoizzIi5tb+kmq
+         a2GHwwAzctgs5CKG0yrnRVN5Clc0A+60ByYA92WCX7AESEm4B4UTJpZ6BecYG42S537s
+         IQ3fT9L91nIr0KOad54U8qxrbT4okCexQKvBVZXZzpnmo/JlCEHbNi179ic01PiduUib
+         qV5Q==
+X-Gm-Message-State: AOJu0Yw5bPrn2HXfr0ZEFur908PfXuZOlH8SGZoh7YF+CS1YjTkumb0e
+	5521O1mE/+vROavImT3yOc5iFb1OX1QUYtinNF1cnsusUBHc+IRKbuRXcJO3gLYqPgI2oVMxgGm
+	MLbWiac9VSiW6AA3tGXPCBMjUjetNrEHlityJ0tO5CboPdjYCpiM=
+X-Google-Smtp-Source: AGHT+IGv5vE7FDTgdRe1M+YXuq3EjLJ8f7JAA0CMbIA7imH5TdPdPm87UXNbt5jLrgHXzb+2dRUXPtMD1uL0F53zgSw=
+X-Received: by 2002:a05:651c:b20:b0:2f3:f39f:3719 with SMTP id
+ 38308e7fff4ca-2f751f5d783mr27611151fa.29.1725692327975; Fri, 06 Sep 2024
+ 23:58:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 7 Sep 2024 08:58:36 +0200
+Message-ID: <CACRpkdb130FuEhKC2M6Ge42-sMDnKE04LGFv6uyAAUEvKXWyUA@mail.gmail.com>
+Subject: [GIT PULL] pin control fix for v6.11
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 6b5e97c020060c2b8ad286002415106ab7034435  gpio: mpc8xxx: switch to using DEFINE_RUNTIME_DEV_PM_OPS()
+Hi Linus,
 
-elapsed time: 987m
+I have this critical Qualcomm fix pending so sending it to
+you.
 
-configs tested: 134
-configs skipped: 3
+Please pull it in, the signed tag and commit itself describes
+the issue.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Yours,
+Linus Walleij
 
-tested configs:
-alpha                             allnoconfig   gcc-14.1.0
-alpha                            allyesconfig   clang-20
-alpha                               defconfig   gcc-14.1.0
-arc                              allmodconfig   clang-20
-arc                               allnoconfig   gcc-14.1.0
-arc                              allyesconfig   clang-20
-arc                                 defconfig   gcc-14.1.0
-arm                              allmodconfig   clang-20
-arm                               allnoconfig   gcc-14.1.0
-arm                              allyesconfig   clang-20
-arm                                 defconfig   gcc-14.1.0
-arm                        neponset_defconfig   clang-15
-arm                          pxa168_defconfig   clang-15
-arm64                            allmodconfig   clang-20
-arm64                             allnoconfig   gcc-14.1.0
-arm64                               defconfig   gcc-14.1.0
-csky                              allnoconfig   gcc-14.1.0
-csky                                defconfig   gcc-14.1.0
-hexagon                          allmodconfig   clang-20
-hexagon                           allnoconfig   gcc-14.1.0
-hexagon                          allyesconfig   clang-20
-hexagon                             defconfig   gcc-14.1.0
-i386                             allmodconfig   clang-18
-i386                              allnoconfig   clang-18
-i386                             allyesconfig   clang-18
-i386         buildonly-randconfig-001-20240906   gcc-12
-i386         buildonly-randconfig-002-20240906   gcc-12
-i386         buildonly-randconfig-003-20240906   gcc-12
-i386         buildonly-randconfig-004-20240906   gcc-12
-i386         buildonly-randconfig-005-20240906   gcc-12
-i386         buildonly-randconfig-006-20240906   gcc-12
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240906   gcc-12
-i386                  randconfig-002-20240906   gcc-12
-i386                  randconfig-003-20240906   gcc-12
-i386                  randconfig-004-20240906   gcc-12
-i386                  randconfig-005-20240906   gcc-12
-i386                  randconfig-006-20240906   gcc-12
-i386                  randconfig-011-20240906   gcc-12
-i386                  randconfig-012-20240906   gcc-12
-i386                  randconfig-013-20240906   gcc-12
-i386                  randconfig-014-20240906   gcc-12
-i386                  randconfig-015-20240906   gcc-12
-i386                  randconfig-016-20240906   gcc-12
-loongarch                        alldefconfig   clang-15
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch                           defconfig   gcc-14.1.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                          atari_defconfig   clang-15
-m68k                                defconfig   gcc-14.1.0
-m68k                        m5407c3_defconfig   clang-15
-m68k                       m5475evb_defconfig   clang-15
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-14.1.0
-mips                              allnoconfig   gcc-14.1.0
-mips                        vocore2_defconfig   clang-15
-nios2                             allnoconfig   gcc-14.1.0
-nios2                               defconfig   gcc-14.1.0
-openrisc                          allnoconfig   clang-20
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-12
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   clang-20
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-12
-parisc64                            defconfig   gcc-14.1.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   clang-20
-powerpc                          allyesconfig   gcc-14.1.0
-powerpc                      cm5200_defconfig   clang-15
-powerpc                       eiger_defconfig   clang-15
-powerpc                  iss476-smp_defconfig   clang-15
-powerpc                         ps3_defconfig   clang-15
-powerpc                     tqm8555_defconfig   clang-15
-riscv                            allmodconfig   gcc-14.1.0
-riscv                             allnoconfig   clang-20
-riscv                            allyesconfig   gcc-14.1.0
-riscv                               defconfig   gcc-12
-riscv             nommu_k210_sdcard_defconfig   clang-15
-s390                             allmodconfig   gcc-14.1.0
-s390                              allnoconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   gcc-12
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-12
-sh                               j2_defconfig   clang-15
-sh                           se7750_defconfig   clang-15
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-12
-um                               allmodconfig   clang-20
-um                                allnoconfig   clang-20
-um                               allyesconfig   clang-20
-um                                  defconfig   gcc-12
-um                             i386_defconfig   clang-15
-um                             i386_defconfig   gcc-12
-um                           x86_64_defconfig   gcc-12
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240907   gcc-12
-x86_64       buildonly-randconfig-002-20240907   gcc-12
-x86_64       buildonly-randconfig-003-20240907   gcc-12
-x86_64       buildonly-randconfig-004-20240907   gcc-12
-x86_64       buildonly-randconfig-005-20240907   gcc-12
-x86_64       buildonly-randconfig-006-20240907   gcc-12
-x86_64                              defconfig   clang-18
-x86_64                                  kexec   gcc-12
-x86_64                randconfig-001-20240907   gcc-12
-x86_64                randconfig-002-20240907   gcc-12
-x86_64                randconfig-003-20240907   gcc-12
-x86_64                randconfig-004-20240907   gcc-12
-x86_64                randconfig-005-20240907   gcc-12
-x86_64                randconfig-006-20240907   gcc-12
-x86_64                randconfig-011-20240907   gcc-12
-x86_64                randconfig-012-20240907   gcc-12
-x86_64                randconfig-013-20240907   gcc-12
-x86_64                randconfig-014-20240907   gcc-12
-x86_64                randconfig-015-20240907   gcc-12
-x86_64                randconfig-016-20240907   gcc-12
-x86_64                randconfig-071-20240907   gcc-12
-x86_64                randconfig-072-20240907   gcc-12
-x86_64                randconfig-073-20240907   gcc-12
-x86_64                randconfig-074-20240907   gcc-12
-x86_64                randconfig-075-20240907   gcc-12
-x86_64                randconfig-076-20240907   gcc-12
-x86_64                          rhel-8.3-rust   clang-18
-x86_64                               rhel-8.3   gcc-12
-xtensa                            allnoconfig   gcc-14.1.0
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The following changes since commit 431c1646e1f86b949fa3685efc50b660a364c2b6:
+
+  Linux 6.11-rc6 (2024-09-01 19:46:02 +1200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.11-3
+
+for you to fetch changes up to 602cb14e310a7a32c4f27d1f16c4614c790c7f6f:
+
+  pinctrl: qcom: x1e80100: Bypass PDC wakeup parent for now
+(2024-09-02 11:07:48 +0200)
+
+----------------------------------------------------------------
+A single fix for Qualcomm laptops that are affected by
+missing wakeup IRQs.
+
+----------------------------------------------------------------
+Stephan Gerhold (1):
+      pinctrl: qcom: x1e80100: Bypass PDC wakeup parent for now
+
+ drivers/pinctrl/qcom/pinctrl-x1e80100.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
