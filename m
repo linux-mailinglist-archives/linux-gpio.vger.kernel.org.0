@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-9904-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9903-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B197797115F
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2024 10:12:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ECC44971154
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2024 10:12:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C999D1C2203B
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2024 08:12:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F47E1C20968
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Sep 2024 08:12:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1786C1B14F1;
-	Mon,  9 Sep 2024 08:12:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9CBF1B140D;
+	Mon,  9 Sep 2024 08:12:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijuYKGZ7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5xbItHi"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F27170A0A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FC51779AE;
 	Mon,  9 Sep 2024 08:12:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725869535; cv=none; b=sRHZCVr72RmrxpyMoPSm/KHSXqTpr2l80ww1mA+6Ki5sjOp2Bm9nUV7eSZOs7DVVPIWdYvkeS9qhlyBhQ2JQDTEJwVQ2uS1XfCvEMjHa4am0z6cXfAKCQhDsqZB+vVR2IwHGZs76bNGCnppHIzfYTC6W2jvCrUlxqzmYR4qGcV8=
+	t=1725869535; cv=none; b=q4X5MrtrKIWPOMoNWUi5sHuChi9u8DLRTZlJCmw5/hfTDU9lSTBJwZz2RyatLRVCItVPfBuIZLhBEhamH+7fKmR0FdXcuDE1W3LTT/FKbp9pxttNwId1hOLFf5lqe5XB2Tmx3B7equ2ZyQdP3fo9bmrfCCT7nMoLGvBKHBxdiSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1725869535; c=relaxed/simple;
-	bh=GgauQIv5w/In5M6/tPKjRwgslmi2Ks4ZxiyWgNfTpl8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LmQlUm7Yx4PEnUA5bGCnHblAGy2+RM5Xsv0uA/UILiTzKbsqiP2/88GZIjsEsUnfbKC01hVlgmKgcil408sMAGBwn3JnW/GQTih1b0zOCHT69zIMAn0zowSxaoDvp2BPYDa+7cYTSbefud3LrnXyzIBBw827FWvAV1QBIsE/KtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijuYKGZ7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4CAA1C4CEC8;
+	bh=L9snBqYT6zbxHHzo7JUD/U/ceuDfn72AE374Ib9P4ic=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=X3rL5/OH5TvyziPPUx6qEW+BpZZnl48Urn+KhYErmKZ7YsqHx71ClrajF8IREQ0XWKXKEDfkOBKA9Z2QGLImWMHKvDq99cpUAUOG3Sn9x+DU/hScxVR43evBI5pxSNU8BdwiHQR0O7OuEcZfRwMysYgafXz9MFaNSoIPjkUnwvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5xbItHi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 50981C4CECB;
 	Mon,  9 Sep 2024 08:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1725869535;
-	bh=GgauQIv5w/In5M6/tPKjRwgslmi2Ks4ZxiyWgNfTpl8=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=ijuYKGZ77GcjzifY12TrX1BCbEvum0VxcGgaoopv/3pQ2Sibg9bgUWeU5c6TAMXBX
-	 t5etn1byjkXroEPOOLDRRzSd1T6uA5lS54mGkN5FP0dmYM9kPYcP4G+FLqY+uUIcAb
-	 8cONzTJdjKJrJrcZY+I/5CiKUMC9JXQL5AxU8hBbFkTN1lQhk7ZirUc7BXGKNtLA43
-	 N+cIz31HxOiDWbBzRxZKxAXR8oXPMKy1o3Qp5zdZPGRfOtcxPOmFFMaOSH4cTe1EP7
-	 ANpmrXllbhhJkWAg+TkVI4N+Ui5+PJJ/5E40ZVvN5PtGjkyeUwVyPOYQxmBB/qCSBk
-	 tACvDj0BvLBtg==
+	bh=L9snBqYT6zbxHHzo7JUD/U/ceuDfn72AE374Ib9P4ic=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=K5xbItHiDdGu+JFjzPq7Cw1rp0/lPxzY5y4oXQkxZoosBD18ZHR/0T8R6XOwFfOQt
+	 GOqaCsSCMtXLUgHEuVf/ZLPo6qwuNJbD3kthTSPN/NCt2xut8vY77mKZ4RNwjYKxjp
+	 63n1SqXBKWsbUA2KuWwefI+DIxk6YJ7fIyYtHUAf7h3FwrEsfjGGz7wDGnvMrtaJjw
+	 9BtPHddJzfJlHLcFzs66h96B8OCX73TS6OuK7cRXVcizP/YfavzXMCKsNB/CX2ECOq
+	 zTw3/XZGK1YLm/fZ3C1w33viTopFith1Kx5+Rnzat5uBA6WiuBTrFP6CWPGReyRXH+
+	 Fx8o6Rak4pdHg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0A7CD4F4C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4F0E6FE49;
 	Mon,  9 Sep 2024 08:12:15 +0000 (UTC)
 From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Subject: [PATCH v12 00/38] ep93xx device tree conversion
-Date: Mon, 09 Sep 2024 11:10:25 +0300
-Message-Id: <20240909-ep93xx-v12-0-e86ab2423d4b@maquefel.me>
+Date: Mon, 09 Sep 2024 11:10:26 +0300
+Subject: [PATCH v12 01/38] gpio: ep93xx: split device in multiple
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,61 +55,23 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHGt3mYC/23T226jMBAG4FeJuF5HnrHxIapW+x6rFRrsoaAGk
- hrCpqr67mtSbWhELw3+Zsbm570YOXU8Fofde5F47sbuNOQF4I9dEVoanll0MT8oUKKSRpaCz15
- dr0JCsEaBZYxY5M01jSzqRENol+09jROn5cU5cdNdby1+/8nrJp16MbWJaa2rUQOqEnEPTkkUI
- IbupZtoP7aXuht+9fR64YaP+56Xkm03Tqf0dht6VkvhzXizElKoaBSVDYBU/FBjmWPWK/SwQp0
- hQbTWx8AB5BaWdwiAeIdlhrH0ZE0sY4N+C80KEVZoMgxK2tpR8ERuC+1/qCWAu0O7dPSlctoQW
- wtb6FaIaO7QLZcDysRAFpVrttCvUH2BPkMoDSNxPmP4ZlSQqzRg7xJkpsYgGy05OvhmWICV2i9
- fBCBTzR41N5GsLx/px2fIEr9ecnynz6QVPY8j3dJ72D3dSnqpReS5r8LxpWr/VomfuyWk1RLPW
- CWauDpT4mGqIk2U++Yc2gZ0NLXOZ35o+3PJ4baHQy/CqNGCeKP+uMQQRAMGdQguX7TZ1Lj9N+H
- U99102M1mnw+bgsmn+vgHIVWw0pwDAAA=
-To: Arnd Bergmann <arnd@arndb.de>, 
- Hartley Sweeten <hsweeten@visionengravers.com>, 
+Message-Id: <20240909-ep93xx-v12-1-e86ab2423d4b@maquefel.me>
+References: <20240909-ep93xx-v12-0-e86ab2423d4b@maquefel.me>
+In-Reply-To: <20240909-ep93xx-v12-0-e86ab2423d4b@maquefel.me>
+To: Hartley Sweeten <hsweeten@visionengravers.com>, 
  Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
  Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, 
  Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Nikita Shubin <nikita.shubin@maquefel.me>, Vinod Koul <vkoul@kernel.org>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
- Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>, 
- "Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
- Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>
+ Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
- dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, 
- linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, 
- netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-sound@vger.kernel.org, 
- 20240904-devm_clk_hw_register_fixed_rate_parent_data-v1-1-7f14d6b456e5@maquefel.me, 
- 20240829-cs4271-yaml-v3-1-f1624cc838f6@maquefel.me, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Andy Shevchenko <andy.shevchenko@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+ linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1725869532; l=20546;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1725869532; l=25436;
  i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=GgauQIv5w/In5M6/tPKjRwgslmi2Ks4ZxiyWgNfTpl8=;
- b=M0nJ3n9QXNBqTe3QrpPUbT4tN4KCZAINITzP7ivWcVsRP/x0rSmPOLrH+IELwoeyggQu2lU8JyMW
- lbF2FqsNBPY+cQhyRI5Be8i+WjgglITK9UjzOELwZmje00WAC0EW
+ bh=H0zNf/mQwjdqPSa7ui7thngDyHREjpx9pAAsGwiVLr4=;
+ b=o4GviC5MW5EFy8S0PcnZExAVWrgVIc7YV8eeGWAR0fMdo6JzL+XT2WSXg++n8UVb/4qxQFmHSndY
+ mK4tSf97BWd81DXR9zBujWrPmwsdJQcMWw16pZjR1D6oISSBPu9q
 X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
  pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
 X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
@@ -117,514 +79,744 @@ X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
 X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
 Reply-To: nikita.shubin@maquefel.me
 
-The goal is to recieve ACKs for all patches in series to merge it via Arnd branch.
+From: Nikita Shubin <nikita.shubin@maquefel.me>
 
-It was decided from the very beginning of these series, mostly because
-it's a full conversion of platform code to DT and it seemed not
-convenient to maintain compatibility with both platform and DT.
+Prepare ep93xx SOC gpio to convert into device tree driver:
+- dropped banks and legacy defines
+- split AB IRQ and make it shared
 
-Following patches require attention from Stephen Boyd or clk subsystem:
+We are relying on IRQ number information A, B ports have single shared
+IRQ, while F port have dedicated IRQ for each line.
 
-- clk: ep93xx: add DT support for Cirrus EP93xx:
-  - tristate
-  - drop MFD_SYSCON/REGMAP
-  - add AUXILIARY_BUS/REGMAP_MMIO
-  - prefixed all static with ep9xx_
-  - s/clk_hw_register_ddiv()/ep93xx_clk_register_ddiv()/
-  - s/clk_register_div()/ep93xx_clk_register_div()/
-  - dropped devm_ep93xx_clk_hw_register_fixed_rate_parent_data macro
-  - s/devm_ep93xx_clk_hw_register_fixed_rate_parent_data()/devm_clk_hw_register_fixed_rate_parent_data()/
+Also we had to split single ep93xx platform_device into multiple, one
+for each port, without this we can't do a full working transition from
+legacy platform code into device tree capable. All GPIO_LOOKUP were
+change to match new chip namings.
 
-Fixed dtschema compain for cs4270, see deps.
-
-Patches should be formated with '--histogram'
-
-This series depends on:
-- clk: fixed-rate: add devm_clk_hw_register_fixed_rate_parent_data()
-  (applied to clk-next)
-- ASoC: dt-bindings: cirrus,cs4271: Convert to dtschema (applied to
-  bronie/sound for-next)
-
-prerequisite-message-id: <20240904-devm_clk_hw_register_fixed_rate_parent_data-v1-1-7f14d6b456e5@maquefel.me>
-prerequisite-patch-id: 7da0b1e1bcc0a4927607f77ffec6ec3c7c60165b
-prerequisite-message-id: <20240829-cs4271-yaml-v3-1-f1624cc838f6@maquefel.me>
-prerequisite-patch-id: bdaad57fbb09ee5b8acc08d84bba3ed5345f6dec
-
+Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 ---
-Changes in v12:
-- ARM: dts: ep93xx: Add EDB9302 DT:
-  - s/reset-gpio/reset-gpios/
+ arch/arm/mach-ep93xx/core.c          | 121 ++++++++++++--
+ arch/arm/mach-ep93xx/edb93xx.c       |   2 +-
+ arch/arm/mach-ep93xx/ts72xx.c        |   4 +-
+ arch/arm/mach-ep93xx/vision_ep9307.c |  10 +-
+ drivers/gpio/gpio-ep93xx.c           | 311 +++++++++++++----------------------
+ 5 files changed, 228 insertions(+), 220 deletions(-)
+
+diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
+index 8b1ec60a9a46..03bce5e9d1f1 100644
+--- a/arch/arm/mach-ep93xx/core.c
++++ b/arch/arm/mach-ep93xx/core.c
+@@ -35,6 +35,7 @@
+ #include <linux/reboot.h>
+ #include <linux/usb/ohci_pdriver.h>
+ #include <linux/random.h>
++#include <linux/ioport.h>
+ 
+ #include "hardware.h"
+ #include <linux/platform_data/video-ep93xx.h>
+@@ -139,9 +140,80 @@ EXPORT_SYMBOL_GPL(ep93xx_chip_revision);
+ /*************************************************************************
+  * EP93xx GPIO
+  *************************************************************************/
+-static struct resource ep93xx_gpio_resource[] = {
+-	DEFINE_RES_MEM(EP93XX_GPIO_PHYS_BASE, 0xcc),
++/* port A */
++static struct resource ep93xx_a_gpio_resources[] = {
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE,        0x04, "data"),
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x10, 0x04, "dir"),
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x90, 0x1c, "intr"),
+ 	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO_AB),
++};
++
++static struct platform_device ep93xx_a_gpio = {
++	.name           = "gpio-ep93xx",
++	.id             = 0,
++	.num_resources = ARRAY_SIZE(ep93xx_a_gpio_resources),
++	.resource = ep93xx_a_gpio_resources,
++};
++
++/* port B */
++static struct resource ep93xx_b_gpio_resources[] = {
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x04, 0x04, "data"),
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x14, 0x04, "dir"),
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0xac, 0x1c, "intr"),
++	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO_AB),
++};
++
++static struct platform_device ep93xx_b_gpio = {
++	.name           = "gpio-ep93xx",
++	.id             = 1,
++	.num_resources = ARRAY_SIZE(ep93xx_b_gpio_resources),
++	.resource = ep93xx_b_gpio_resources,
++};
++
++/* port C */
++static struct resource ep93xx_c_gpio_resources[] = {
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x08, 0x04, "data"),
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x18, 0x04, "dir"),
++};
++
++static struct platform_device ep93xx_c_gpio = {
++	.name           = "gpio-ep93xx",
++	.id             = 2,
++	.num_resources = ARRAY_SIZE(ep93xx_c_gpio_resources),
++	.resource = ep93xx_c_gpio_resources,
++};
++
++/* port D */
++static struct resource ep93xx_d_gpio_resources[] = {
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x0c, 0x04, "data"),
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x1c, 0x04, "dir"),
++};
++
++static struct platform_device ep93xx_d_gpio = {
++	.name           = "gpio-ep93xx",
++	.id             = 3,
++	.num_resources = ARRAY_SIZE(ep93xx_d_gpio_resources),
++	.resource = ep93xx_d_gpio_resources,
++};
++
++/* port E */
++static struct resource ep93xx_e_gpio_resources[] = {
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x20, 0x04, "data"),
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x24, 0x04, "dir"),
++};
++
++static struct platform_device ep93xx_e_gpio = {
++	.name           = "gpio-ep93xx",
++	.id             = 4,
++	.num_resources = ARRAY_SIZE(ep93xx_e_gpio_resources),
++	.resource = ep93xx_e_gpio_resources,
++};
++
++/* port F */
++static struct resource ep93xx_f_gpio_resources[] = {
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x30, 0x04, "data"),
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x34, 0x04, "dir"),
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x4c, 0x1c, "intr"),
+ 	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO0MUX),
+ 	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO1MUX),
+ 	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO2MUX),
+@@ -152,11 +224,34 @@ static struct resource ep93xx_gpio_resource[] = {
+ 	DEFINE_RES_IRQ(IRQ_EP93XX_GPIO7MUX),
+ };
+ 
+-static struct platform_device ep93xx_gpio_device = {
+-	.name		= "gpio-ep93xx",
+-	.id		= -1,
+-	.num_resources	= ARRAY_SIZE(ep93xx_gpio_resource),
+-	.resource	= ep93xx_gpio_resource,
++static struct platform_device ep93xx_f_gpio = {
++	.name           = "gpio-ep93xx",
++	.id             = 5,
++	.num_resources = ARRAY_SIZE(ep93xx_f_gpio_resources),
++	.resource = ep93xx_f_gpio_resources,
++};
++
++/* port G */
++static struct resource ep93xx_g_gpio_resources[] = {
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x38, 0x04, "data"),
++	DEFINE_RES_MEM_NAMED(EP93XX_GPIO_PHYS_BASE + 0x3c, 0x04, "dir"),
++};
++
++static struct platform_device ep93xx_g_gpio = {
++	.name           = "gpio-ep93xx",
++	.id             = 6,
++	.num_resources = ARRAY_SIZE(ep93xx_g_gpio_resources),
++	.resource = ep93xx_g_gpio_resources,
++};
++
++static struct platform_device *ep93xx_gpio_device[] __initdata = {
++	&ep93xx_a_gpio,
++	&ep93xx_b_gpio,
++	&ep93xx_c_gpio,
++	&ep93xx_d_gpio,
++	&ep93xx_e_gpio,
++	&ep93xx_f_gpio,
++	&ep93xx_g_gpio,
+ };
+ 
+ /*************************************************************************
+@@ -335,9 +430,9 @@ static struct gpiod_lookup_table ep93xx_i2c_gpiod_table = {
+ 	.dev_id		= "i2c-gpio.0",
+ 	.table		= {
+ 		/* Use local offsets on gpiochip/port "G" */
+-		GPIO_LOOKUP_IDX("G", 1, NULL, 0,
++		GPIO_LOOKUP_IDX("gpio-ep93xx.6", 1, NULL, 0,
+ 				GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
+-		GPIO_LOOKUP_IDX("G", 0, NULL, 1,
++		GPIO_LOOKUP_IDX("gpio-ep93xx.6", 0, NULL, 1,
+ 				GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
+ 		{ }
+ 	},
+@@ -441,8 +536,8 @@ static struct gpiod_lookup_table ep93xx_leds_gpio_table = {
+ 	.dev_id = "leds-gpio",
+ 	.table = {
+ 		/* Use local offsets on gpiochip/port "E" */
+-		GPIO_LOOKUP_IDX("E", 0, NULL, 0, GPIO_ACTIVE_HIGH),
+-		GPIO_LOOKUP_IDX("E", 1,	NULL, 1, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX("gpio-ep93xx.4", 0, NULL, 0, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX("gpio-ep93xx.4", 1, NULL, 1, GPIO_ACTIVE_HIGH),
+ 		{ }
+ 	},
+ };
+@@ -975,6 +1070,7 @@ static struct device __init *ep93xx_init_soc(void)
+ struct device __init *ep93xx_init_devices(void)
+ {
+ 	struct device *parent;
++	unsigned int i;
+ 
+ 	/* Disallow access to MaverickCrunch initially */
+ 	ep93xx_devcfg_clear_bits(EP93XX_SYSCON_DEVCFG_CPENA);
+@@ -989,7 +1085,8 @@ struct device __init *ep93xx_init_devices(void)
+ 	parent = ep93xx_init_soc();
+ 
+ 	/* Get the GPIO working early, other devices need it */
+-	platform_device_register(&ep93xx_gpio_device);
++	for (i = 0; i < ARRAY_SIZE(ep93xx_gpio_device); i++)
++		platform_device_register(ep93xx_gpio_device[i]);
+ 
+ 	amba_device_register(&uart1_device, &iomem_resource);
+ 	amba_device_register(&uart2_device, &iomem_resource);
+diff --git a/arch/arm/mach-ep93xx/edb93xx.c b/arch/arm/mach-ep93xx/edb93xx.c
+index dbdb822a0100..356b0460c7ed 100644
+--- a/arch/arm/mach-ep93xx/edb93xx.c
++++ b/arch/arm/mach-ep93xx/edb93xx.c
+@@ -105,7 +105,7 @@ static struct spi_board_info edb93xx_spi_board_info[] __initdata = {
+ static struct gpiod_lookup_table edb93xx_spi_cs_gpio_table = {
+ 	.dev_id = "spi0",
+ 	.table = {
+-		GPIO_LOOKUP("A", 6, "cs", GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP("gpio-ep93xx.0", 6, "cs", GPIO_ACTIVE_LOW),
+ 		{ },
+ 	},
+ };
+diff --git a/arch/arm/mach-ep93xx/ts72xx.c b/arch/arm/mach-ep93xx/ts72xx.c
+index d3de7283ecb3..0bbdf587c685 100644
+--- a/arch/arm/mach-ep93xx/ts72xx.c
++++ b/arch/arm/mach-ep93xx/ts72xx.c
+@@ -268,7 +268,7 @@ static struct spi_board_info bk3_spi_board_info[] __initdata = {
+ static struct gpiod_lookup_table bk3_spi_cs_gpio_table = {
+ 	.dev_id = "spi0",
+ 	.table = {
+-		GPIO_LOOKUP("F", 3, "cs", GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP("gpio-ep93xx.5", 3, "cs", GPIO_ACTIVE_LOW),
+ 		{ },
+ 	},
+ };
+@@ -318,7 +318,7 @@ static struct gpiod_lookup_table ts72xx_spi_cs_gpio_table = {
+ 	.dev_id = "spi0",
+ 	.table = {
+ 		/* DIO_17 */
+-		GPIO_LOOKUP("F", 2, "cs", GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP("gpio-ep93xx.5", 2, "cs", GPIO_ACTIVE_LOW),
+ 		{ },
+ 	},
+ };
+diff --git a/arch/arm/mach-ep93xx/vision_ep9307.c b/arch/arm/mach-ep93xx/vision_ep9307.c
+index 9471938df64c..b3087b8eed3f 100644
+--- a/arch/arm/mach-ep93xx/vision_ep9307.c
++++ b/arch/arm/mach-ep93xx/vision_ep9307.c
+@@ -206,9 +206,9 @@ static struct gpiod_lookup_table vision_spi_mmc_gpio_table = {
+ 	.dev_id = "mmc_spi.2", /* "mmc_spi @ CS2 */
+ 	.table = {
+ 		/* Card detect */
+-		GPIO_LOOKUP_IDX("B", 7, NULL, 0, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("gpio-ep93xx.1", 7, NULL, 0, GPIO_ACTIVE_LOW),
+ 		/* Write protect */
+-		GPIO_LOOKUP_IDX("F", 0, NULL, 1, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX("gpio-ep93xx.5", 0, NULL, 1, GPIO_ACTIVE_HIGH),
+ 		{ },
+ 	},
+ };
+@@ -253,9 +253,9 @@ static struct gpiod_lookup_table vision_spi_cs4271_gpio_table = {
+ static struct gpiod_lookup_table vision_spi_cs_gpio_table = {
+ 	.dev_id = "spi0",
+ 	.table = {
+-		GPIO_LOOKUP_IDX("A", 6, "cs", 0, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("A", 7, "cs", 1, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("G", 2, "cs", 2, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("gpio-ep93xx.0", 6, "cs", 0, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("gpio-ep93xx.0", 7, "cs", 1, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("gpio-ep93xx.6", 2, "cs", 2, GPIO_ACTIVE_LOW),
+ 		{ },
+ 	},
+ };
+diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
+index 6cedf46efec6..a55f635585f4 100644
+--- a/drivers/gpio/gpio-ep93xx.c
++++ b/drivers/gpio/gpio-ep93xx.c
+@@ -18,30 +18,10 @@
+ #include <linux/gpio/driver.h>
+ #include <linux/bitops.h>
+ #include <linux/seq_file.h>
+-
+-#define EP93XX_GPIO_F_INT_STATUS 0x5c
+-#define EP93XX_GPIO_A_INT_STATUS 0xa0
+-#define EP93XX_GPIO_B_INT_STATUS 0xbc
+-
+-/* Maximum value for gpio line identifiers */
+-#define EP93XX_GPIO_LINE_MAX 63
+-
+-/* Number of GPIO chips in EP93XX */
+-#define EP93XX_GPIO_CHIP_NUM 8
+-
+-/* Maximum value for irq capable line identifiers */
+-#define EP93XX_GPIO_LINE_MAX_IRQ 23
+-
+-#define EP93XX_GPIO_A_IRQ_BASE 64
+-#define EP93XX_GPIO_B_IRQ_BASE 72
+-/*
+- * Static mapping of GPIO bank F IRQS:
+- * F0..F7 (16..24) to irq 80..87.
+- */
+-#define EP93XX_GPIO_F_IRQ_BASE 80
++#include <linux/interrupt.h>
+ 
+ struct ep93xx_gpio_irq_chip {
+-	u8 irq_offset;
++	void __iomem *base;
+ 	u8 int_unmasked;
+ 	u8 int_enabled;
+ 	u8 int_type1;
+@@ -50,15 +30,11 @@ struct ep93xx_gpio_irq_chip {
+ };
+ 
+ struct ep93xx_gpio_chip {
++	void __iomem			*base;
+ 	struct gpio_chip		gc;
+ 	struct ep93xx_gpio_irq_chip	*eic;
+ };
+ 
+-struct ep93xx_gpio {
+-	void __iomem		*base;
+-	struct ep93xx_gpio_chip	gc[EP93XX_GPIO_CHIP_NUM];
+-};
+-
+ #define to_ep93xx_gpio_chip(x) container_of(x, struct ep93xx_gpio_chip, gc)
+ 
+ static struct ep93xx_gpio_irq_chip *to_ep93xx_gpio_irq_chip(struct gpio_chip *gc)
+@@ -79,25 +55,23 @@ static struct ep93xx_gpio_irq_chip *to_ep93xx_gpio_irq_chip(struct gpio_chip *gc
+ #define EP93XX_INT_RAW_STATUS_OFFSET	0x14
+ #define EP93XX_INT_DEBOUNCE_OFFSET	0x18
+ 
+-static void ep93xx_gpio_update_int_params(struct ep93xx_gpio *epg,
+-					  struct ep93xx_gpio_irq_chip *eic)
++static void ep93xx_gpio_update_int_params(struct ep93xx_gpio_irq_chip *eic)
+ {
+-	writeb_relaxed(0, epg->base + eic->irq_offset + EP93XX_INT_EN_OFFSET);
++	writeb_relaxed(0, eic->base + EP93XX_INT_EN_OFFSET);
+ 
+ 	writeb_relaxed(eic->int_type2,
+-		       epg->base + eic->irq_offset + EP93XX_INT_TYPE2_OFFSET);
++		       eic->base + EP93XX_INT_TYPE2_OFFSET);
+ 
+ 	writeb_relaxed(eic->int_type1,
+-		       epg->base + eic->irq_offset + EP93XX_INT_TYPE1_OFFSET);
++		       eic->base + EP93XX_INT_TYPE1_OFFSET);
+ 
+ 	writeb_relaxed(eic->int_unmasked & eic->int_enabled,
+-		       epg->base + eic->irq_offset + EP93XX_INT_EN_OFFSET);
++		       eic->base + EP93XX_INT_EN_OFFSET);
+ }
+ 
+ static void ep93xx_gpio_int_debounce(struct gpio_chip *gc,
+ 				     unsigned int offset, bool enable)
+ {
+-	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
+ 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
+ 	int port_mask = BIT(offset);
+ 
+@@ -106,53 +80,43 @@ static void ep93xx_gpio_int_debounce(struct gpio_chip *gc,
+ 	else
+ 		eic->int_debounce &= ~port_mask;
+ 
+-	writeb(eic->int_debounce,
+-	       epg->base + eic->irq_offset + EP93XX_INT_DEBOUNCE_OFFSET);
++	writeb(eic->int_debounce, eic->base + EP93XX_INT_DEBOUNCE_OFFSET);
+ }
+ 
+-static void ep93xx_gpio_ab_irq_handler(struct irq_desc *desc)
++static u32 ep93xx_gpio_ab_irq_handler(struct gpio_chip *gc)
+ {
+-	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+-	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
+-	struct irq_chip *irqchip = irq_desc_get_chip(desc);
++	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
+ 	unsigned long stat;
+ 	int offset;
+ 
+-	chained_irq_enter(irqchip, desc);
+-
+-	/*
+-	 * Dispatch the IRQs to the irqdomain of each A and B
+-	 * gpiochip irqdomains depending on what has fired.
+-	 * The tricky part is that the IRQ line is shared
+-	 * between bank A and B and each has their own gpiochip.
+-	 */
+-	stat = readb(epg->base + EP93XX_GPIO_A_INT_STATUS);
++	stat = readb(eic->base + EP93XX_INT_STATUS_OFFSET);
+ 	for_each_set_bit(offset, &stat, 8)
+-		generic_handle_domain_irq(epg->gc[0].gc.irq.domain,
+-					  offset);
++		generic_handle_domain_irq(gc->irq.domain, offset);
+ 
+-	stat = readb(epg->base + EP93XX_GPIO_B_INT_STATUS);
+-	for_each_set_bit(offset, &stat, 8)
+-		generic_handle_domain_irq(epg->gc[1].gc.irq.domain,
+-					  offset);
++	return stat;
++}
+ 
+-	chained_irq_exit(irqchip, desc);
++static irqreturn_t ep93xx_ab_irq_handler(int irq, void *dev_id)
++{
++	return IRQ_RETVAL(ep93xx_gpio_ab_irq_handler(dev_id));
+ }
+ 
+ static void ep93xx_gpio_f_irq_handler(struct irq_desc *desc)
+ {
+-	/*
+-	 * map discontiguous hw irq range to continuous sw irq range:
+-	 *
+-	 *  IRQ_EP93XX_GPIO{0..7}MUX -> EP93XX_GPIO_LINE_F{0..7}
+-	 */
+ 	struct irq_chip *irqchip = irq_desc_get_chip(desc);
+-	unsigned int irq = irq_desc_get_irq(desc);
+-	int port_f_idx = (irq & 7) ^ 4; /* {20..23,48..51} -> {0..7} */
+-	int gpio_irq = EP93XX_GPIO_F_IRQ_BASE + port_f_idx;
++	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
++	struct gpio_irq_chip *gic = &gc->irq;
++	unsigned int parent = irq_desc_get_irq(desc);
++	unsigned int i;
+ 
+ 	chained_irq_enter(irqchip, desc);
+-	generic_handle_irq(gpio_irq);
++	for (i = 0; i < gic->num_parents; i++)
++		if (gic->parents[i] == parent)
++			break;
++
++	if (i < gic->num_parents)
++		generic_handle_domain_irq(gc->irq.domain, i);
++
+ 	chained_irq_exit(irqchip, desc);
+ }
+ 
+@@ -160,31 +124,29 @@ static void ep93xx_gpio_irq_ack(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
+-	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
+-	int port_mask = BIT(d->irq & 7);
++	int port_mask = BIT(irqd_to_hwirq(d));
+ 
+ 	if (irqd_get_trigger_type(d) == IRQ_TYPE_EDGE_BOTH) {
+ 		eic->int_type2 ^= port_mask; /* switch edge direction */
+-		ep93xx_gpio_update_int_params(epg, eic);
++		ep93xx_gpio_update_int_params(eic);
+ 	}
+ 
+-	writeb(port_mask, epg->base + eic->irq_offset + EP93XX_INT_EOI_OFFSET);
++	writeb(port_mask, eic->base + EP93XX_INT_EOI_OFFSET);
+ }
+ 
+ static void ep93xx_gpio_irq_mask_ack(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
+-	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
+-	int port_mask = BIT(d->irq & 7);
++	int port_mask = BIT(irqd_to_hwirq(d));
+ 
+ 	if (irqd_get_trigger_type(d) == IRQ_TYPE_EDGE_BOTH)
+ 		eic->int_type2 ^= port_mask; /* switch edge direction */
+ 
+ 	eic->int_unmasked &= ~port_mask;
+-	ep93xx_gpio_update_int_params(epg, eic);
++	ep93xx_gpio_update_int_params(eic);
+ 
+-	writeb(port_mask, epg->base + eic->irq_offset + EP93XX_INT_EOI_OFFSET);
++	writeb(port_mask, eic->base + EP93XX_INT_EOI_OFFSET);
+ 	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
+ }
+ 
+@@ -192,10 +154,9 @@ static void ep93xx_gpio_irq_mask(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
+-	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
+ 
+-	eic->int_unmasked &= ~BIT(d->irq & 7);
+-	ep93xx_gpio_update_int_params(epg, eic);
++	eic->int_unmasked &= ~BIT(irqd_to_hwirq(d));
++	ep93xx_gpio_update_int_params(eic);
+ 	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
+ }
+ 
+@@ -203,11 +164,10 @@ static void ep93xx_gpio_irq_unmask(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
+-	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
+ 
+ 	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
+-	eic->int_unmasked |= BIT(d->irq & 7);
+-	ep93xx_gpio_update_int_params(epg, eic);
++	eic->int_unmasked |= BIT(irqd_to_hwirq(d));
++	ep93xx_gpio_update_int_params(eic);
+ }
+ 
+ /*
+@@ -219,8 +179,7 @@ static int ep93xx_gpio_irq_type(struct irq_data *d, unsigned int type)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
+-	struct ep93xx_gpio *epg = gpiochip_get_data(gc);
+-	int offset = d->irq & 7;
++	irq_hw_number_t offset = irqd_to_hwirq(d);
+ 	int port_mask = BIT(offset);
+ 	irq_flow_handler_t handler;
+ 
+@@ -264,51 +223,11 @@ static int ep93xx_gpio_irq_type(struct irq_data *d, unsigned int type)
+ 
+ 	eic->int_enabled |= port_mask;
+ 
+-	ep93xx_gpio_update_int_params(epg, eic);
++	ep93xx_gpio_update_int_params(eic);
+ 
+ 	return 0;
+ }
+ 
+-/*************************************************************************
+- * gpiolib interface for EP93xx on-chip GPIOs
+- *************************************************************************/
+-struct ep93xx_gpio_bank {
+-	const char	*label;
+-	int		data;
+-	int		dir;
+-	int		irq;
+-	int		base;
+-	bool		has_irq;
+-	bool		has_hierarchical_irq;
+-	unsigned int	irq_base;
+-};
+-
+-#define EP93XX_GPIO_BANK(_label, _data, _dir, _irq, _base, _has_irq, _has_hier, _irq_base) \
+-	{							\
+-		.label		= _label,			\
+-		.data		= _data,			\
+-		.dir		= _dir,				\
+-		.irq		= _irq,				\
+-		.base		= _base,			\
+-		.has_irq	= _has_irq,			\
+-		.has_hierarchical_irq = _has_hier,		\
+-		.irq_base	= _irq_base,			\
+-	}
+-
+-static struct ep93xx_gpio_bank ep93xx_gpio_banks[] = {
+-	/* Bank A has 8 IRQs */
+-	EP93XX_GPIO_BANK("A", 0x00, 0x10, 0x90, 0, true, false, EP93XX_GPIO_A_IRQ_BASE),
+-	/* Bank B has 8 IRQs */
+-	EP93XX_GPIO_BANK("B", 0x04, 0x14, 0xac, 8, true, false, EP93XX_GPIO_B_IRQ_BASE),
+-	EP93XX_GPIO_BANK("C", 0x08, 0x18, 0x00, 40, false, false, 0),
+-	EP93XX_GPIO_BANK("D", 0x0c, 0x1c, 0x00, 24, false, false, 0),
+-	EP93XX_GPIO_BANK("E", 0x20, 0x24, 0x00, 32, false, false, 0),
+-	/* Bank F has 8 IRQs */
+-	EP93XX_GPIO_BANK("F", 0x30, 0x34, 0x4c, 16, false, true, EP93XX_GPIO_F_IRQ_BASE),
+-	EP93XX_GPIO_BANK("G", 0x38, 0x3c, 0x00, 48, false, false, 0),
+-	EP93XX_GPIO_BANK("H", 0x40, 0x44, 0x00, 56, false, false, 0),
+-};
+-
+ static int ep93xx_gpio_set_config(struct gpio_chip *gc, unsigned offset,
+ 				  unsigned long config)
+ {
+@@ -342,110 +261,102 @@ static const struct irq_chip gpio_eic_irq_chip = {
+ 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+-static int ep93xx_gpio_add_bank(struct ep93xx_gpio_chip *egc,
+-				struct platform_device *pdev,
+-				struct ep93xx_gpio *epg,
+-				struct ep93xx_gpio_bank *bank)
++static int ep93xx_setup_irqs(struct platform_device *pdev,
++			     struct ep93xx_gpio_chip *egc)
+ {
+-	void __iomem *data = epg->base + bank->data;
+-	void __iomem *dir = epg->base + bank->dir;
+ 	struct gpio_chip *gc = &egc->gc;
+ 	struct device *dev = &pdev->dev;
+-	struct gpio_irq_chip *girq;
+-	int err;
++	struct gpio_irq_chip *girq = &gc->irq;
++	int ret, irq, i;
++	void __iomem *intr;
+ 
+-	err = bgpio_init(gc, dev, 1, data, NULL, NULL, dir, NULL, 0);
+-	if (err)
+-		return err;
++	intr = devm_platform_ioremap_resource_byname(pdev, "intr");
++	if (IS_ERR(intr))
++		return PTR_ERR(intr);
+ 
+-	gc->label = bank->label;
+-	gc->base = bank->base;
++	gc->set_config = ep93xx_gpio_set_config;
++	egc->eic = devm_kzalloc(dev, sizeof(*egc->eic), GFP_KERNEL);
++	if (!egc->eic)
++		return -ENOMEM;
+ 
+-	girq = &gc->irq;
+-	if (bank->has_irq || bank->has_hierarchical_irq) {
+-		gc->set_config = ep93xx_gpio_set_config;
+-		egc->eic = devm_kcalloc(dev, 1,
+-					sizeof(*egc->eic),
+-					GFP_KERNEL);
+-		if (!egc->eic)
+-			return -ENOMEM;
+-		egc->eic->irq_offset = bank->irq;
+-		gpio_irq_chip_set_chip(girq, &gpio_eic_irq_chip);
+-	}
++	egc->eic->base = intr;
++	gpio_irq_chip_set_chip(girq, &gpio_eic_irq_chip);
++	girq->num_parents = platform_irq_count(pdev);
++	if (girq->num_parents == 0)
++		return -EINVAL;
+ 
+-	if (bank->has_irq) {
+-		int ab_parent_irq = platform_get_irq(pdev, 0);
++	girq->parents = devm_kcalloc(dev, girq->num_parents,
++				   sizeof(*girq->parents),
++				   GFP_KERNEL);
++	if (!girq->parents)
++		return -ENOMEM;
+ 
+-		girq->parent_handler = ep93xx_gpio_ab_irq_handler;
+-		girq->num_parents = 1;
+-		girq->parents = devm_kcalloc(dev, girq->num_parents,
+-					     sizeof(*girq->parents),
+-					     GFP_KERNEL);
+-		if (!girq->parents)
+-			return -ENOMEM;
+-		girq->default_type = IRQ_TYPE_NONE;
+-		girq->handler = handle_level_irq;
+-		girq->parents[0] = ab_parent_irq;
+-		girq->first = bank->irq_base;
+-	}
++	if (girq->num_parents == 1) { /* A/B irqchips */
++		irq = platform_get_irq(pdev, 0);
++		if (irq < 0)
++			return irq;
+ 
+-	/* Only bank F has especially funky IRQ handling */
+-	if (bank->has_hierarchical_irq) {
+-		int gpio_irq;
+-		int i;
++		ret = devm_request_irq(dev, irq, ep93xx_ab_irq_handler,
++				       IRQF_SHARED, gc->label, gc);
++		if (ret)
++			return dev_err_probe(dev, ret, "requesting IRQ: %d\n", irq);
+ 
+-		/*
+-		 * FIXME: convert this to use hierarchical IRQ support!
+-		 * this requires fixing the root irqchip to be hierarchical.
+-		 */
++		girq->parents[0] = irq;
++	} else { /* F irqchip */
+ 		girq->parent_handler = ep93xx_gpio_f_irq_handler;
+-		girq->num_parents = 8;
+-		girq->parents = devm_kcalloc(dev, girq->num_parents,
+-					     sizeof(*girq->parents),
+-					     GFP_KERNEL);
+-		if (!girq->parents)
+-			return -ENOMEM;
+-		/* Pick resources 1..8 for these IRQs */
++
+ 		for (i = 0; i < girq->num_parents; i++) {
+-			girq->parents[i] = platform_get_irq(pdev, i + 1);
+-			gpio_irq = bank->irq_base + i;
+-			irq_set_chip_data(gpio_irq, &epg->gc[5]);
+-			irq_set_chip_and_handler(gpio_irq,
+-						 girq->chip,
+-						 handle_level_irq);
+-			irq_clear_status_flags(gpio_irq, IRQ_NOREQUEST);
++			irq = platform_get_irq(pdev, i);
++			if (irq < 0)
++				continue;
++
++			girq->parents[i] = irq;
+ 		}
+-		girq->default_type = IRQ_TYPE_NONE;
+-		girq->handler = handle_level_irq;
+-		girq->first = bank->irq_base;
++
++		girq->map = girq->parents;
+ 	}
+ 
+-	return devm_gpiochip_add_data(dev, gc, epg);
++	girq->default_type = IRQ_TYPE_NONE;
++	/* TODO: replace with handle_bad_irq() once we are fully hierarchical */
++	girq->handler = handle_simple_irq;
++
++	return 0;
+ }
+ 
+ static int ep93xx_gpio_probe(struct platform_device *pdev)
+ {
+-	struct ep93xx_gpio *epg;
+-	int i;
++	struct ep93xx_gpio_chip *egc;
++	struct gpio_chip *gc;
++	void __iomem *data;
++	void __iomem *dir;
++	int ret;
+ 
+-	epg = devm_kzalloc(&pdev->dev, sizeof(*epg), GFP_KERNEL);
+-	if (!epg)
++	egc = devm_kzalloc(&pdev->dev, sizeof(*egc), GFP_KERNEL);
++	if (!egc)
+ 		return -ENOMEM;
+ 
+-	epg->base = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(epg->base))
+-		return PTR_ERR(epg->base);
++	data = devm_platform_ioremap_resource_byname(pdev, "data");
++	if (IS_ERR(data))
++		return PTR_ERR(data);
+ 
+-	for (i = 0; i < ARRAY_SIZE(ep93xx_gpio_banks); i++) {
+-		struct ep93xx_gpio_chip *gc = &epg->gc[i];
+-		struct ep93xx_gpio_bank *bank = &ep93xx_gpio_banks[i];
++	dir = devm_platform_ioremap_resource_byname(pdev, "dir");
++	if (IS_ERR(dir))
++		return PTR_ERR(dir);
+ 
+-		if (ep93xx_gpio_add_bank(gc, pdev, epg, bank))
+-			dev_warn(&pdev->dev, "Unable to add gpio bank %s\n",
+-				 bank->label);
++	gc = &egc->gc;
++	ret = bgpio_init(gc, &pdev->dev, 1, data, NULL, NULL, dir, NULL, 0);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "unable to init generic GPIO\n");
++
++	gc->label = dev_name(&pdev->dev);
++	if (platform_irq_count(pdev) > 0) {
++		dev_dbg(&pdev->dev, "setting up irqs for %s\n", dev_name(&pdev->dev));
++		ret = ep93xx_setup_irqs(pdev, egc);
++		if (ret)
++			dev_err_probe(&pdev->dev, ret, "setup irqs failed");
+ 	}
+ 
+-	return 0;
++	return devm_gpiochip_add_data(&pdev->dev, gc, egc);
+ }
+ 
+ static struct platform_driver ep93xx_gpio_driver = {
 
-- clk: ep93xx: add DT support for Cirrus EP93x:
-  - tristate
-  - drop MFD_SYSCON/REGMAP
-  - add AUXILIARY_BUS/REGMAP_MMIO
-  - prefixed all static with ep9xx_
-  - s/clk_hw_register_ddiv()/ep93xx_clk_register_ddiv()/
-  - s/clk_register_div()/ep93xx_clk_register_div()/
-  - dropped devm_ep93xx_clk_hw_register_fixed_rate_parent_data macro
-  - s/devm_ep93xx_clk_hw_register_fixed_rate_parent_data()/devm_clk_hw_register_fixed_rate_parent_data()/
-- Link to v11: https://lore.kernel.org/r/20240715-ep93xx-v11-0-4e924efda795@maquefel.me
-
-Changes in v11:
-- clk: ep93xx: add DT support for Cirrus EP93xx
-  - added devm_ep93xx_clk_hw_register_fixed_rate_parent_data() for
-    devm_ version of clk_hw_register_fixed_rate_parent_data()
-  - s/devm_clk_hw_register_fixed_rate()/devm_ep93xx_clk_hw_register_fixed_rate_parent_data()/
-  - replaced all devm_clk_hw_register_fixed_factor() to
-    devm_clk_hw_register_fixed_factor_parent_hw() or
-    devm_clk_hw_register_fixed_factor_index()
-  - s/devm_clk_hw_register_gate()/devm_clk_hw_register_gate_parent_data()
-
-- Link to v10: https://lore.kernel.org/r/20240617-ep93xx-v10-0-662e640ed811@maquefel.me
-
-Changes in v10:
-
-Reordered SoB tags to make sure they appear before Rb and Acked tags.
-
-dmaengine: cirrus: Convert to DT for Cirrus EP93xx
-    - s/dma/dmaengine/ title
-
-dmaengine: cirrus: remove platform code
-    - s/dma/dmaengine/ title
-
-soc: Add SoC driver for Cirrus ep93xx:
-    - added __init for ep93xx_adev_alloc(), ep93xx_controller_register()
-    - added static, __initconst for pinctrl_names[]
-    - clk revision for SPI is now resolved here through differently named
-      clk device
-    - more verbose Kconfig description
-
-clk: ep93xx: add DT support for Cirrus EP93xx:
-    - dropped includes
-    - dropped ep93xx_soc_table[]
-    - add different named clk and dropped involved includes
-    - moved pll's and fclk, hclk, pclk init to separate function
-    - fixed ep93xx_clk_ids[] explicit lines
-
-- Link to v9: https://lore.kernel.org/r/20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me
-- Link to v2 clk: https://lore.kernel.org/r/20240408-ep93xx-clk-v2-1-adcd68c13753@maquefel.me
-
-Changes in v9:
-
-ARM: dts: add Cirrus EP93XX SoC .dtsi
-    - added #interrupt-cells to gpio nodes with interrupts-controller
-    - fixed EOF
-
-ARM: dts: ep93xx: Add EDB9302 DT
-    - Alexander Sverdlin: fixed bug in Device Tree resulting in CS4271 not working
-
-input: keypad: ep93xx: add DT support for Cirrus EP93xx
-    - fixed identation and type
-
-- Link to v8: https://lore.kernel.org/r/20240226-ep93xx-v8-0-3136dca7238f@maquefel.me/
-
-Changes in v8:
-
-soc: Add SoC driver for Cirrus ep93xx
-    - fixed freeing adev instead of rdev
-    - use __free() and no_free_ptr() for rdev allocation
-    - s/of_device_get_match_data()/device_get_match_data()/
-
-ata: pata_ep93xx: add device tree support
-    - more appropriate usage of dev_err_probe()
-
-pinctrl: add a Cirrus ep93xx SoC pin controller
-    - 8 per row in ide_9312_pins
-
-mtd: rawnand: add support for ts72xx
-    - fwnode_handle_put() for fwnode in ts72xx_nand_remove()
-
-- Link to v7: https://lore.kernel.org/r/20240118-ep93xx-v7-0-d953846ae771@maquefel.me
-
-Changes in v7:
-
-mtd: rawnand: add support for ts72xx
-    - fixed KConfig description
-
-ARM: ep93xx: Add terminator to gpiod_lookup_table
-    - + Reported-by, Fixes
-
-ARM: ep93xx: add regmap aux_dev
-    - + trailing comma
-    - - #include <linux/spinlock.h>
-
-clk: ep93xx: add DT support for Cirrus EP93xx
-    - dropped unused defines
-    - return from default in ep93xx_mux_get_parent()
-    - use guard() in ep93xx_mux_set_parent_lock()
-    - <math.h> header for abs_diff()
-    - fixed comments
-
-pinctrl: add a Cirrus ep93xx SoC pin controller
-    - dropped comments for DEVCFG defines
-    - <linux/array_size.h> for ARRAY_SIZE()
-    - + default in ep93xx_get_group_name()
-    - correct cast for id->driver_data
-    - s/device_set_of_node_from_dev()/device_set_node()/
-
-power: reset: Add a driver for the ep93xx reset
-    - Add <linux/container_of.h>, <linux/errno.h>, <linux/slab.h>
-    - Add <linux/module.h>, <linux/mod_devicetable.h>
-    - Remove <platform_device.h>
-
-spi: ep93xx: add DT support for Cirrus EP93xx
-    - Replace with ret = dev_err_probe(...);
-
-ata: pata_ep93xx: add device tree support
-    - fixed wrong rebase with some partes leaked in "ata: pata_ep93xx: remove legacy pinctrl use"
-    - fix dma_request_chan() error processing
-
-dma: cirrus: Convert to DT for Cirrus EP93xx
-    - fixed commit message (dropped explicit "only")
-    - fixed clk_get() processing to defer probe and log spamming
-    - refactor ep93xx_m2p_dma_filter()
-    - dropped blank line in ep93xx_m2p_dma_of_xlate()
-    - refactor ep93xx_m2m_dma_of_xlate()
-
-dma: cirrus: remove platform code
-    - s/dma/DMA/ in commit message
-
-soc: Add SoC driver for Cirrus ep93xx
-    - add period
-    - use cleanup and guard() for spinlocking
-    - correct cast for device_get_match_data()
-    - dropped dev_info() with SoC revision - i can't find it anywhere since 2.6 :/,
-      don't know why i was so sured that ep93xx always printed that
-
-ata: pata_ep93xx: remove legacy pinctrl use
-    - made error handling in DMA as Uwe suggested
-
-- Link to v6: https://lore.kernel.org/r/20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me
-
-Changes in v6:
-
-- clk: ep93xx: add DT support for Cirrus EP93xx
-  - s/spin_lock_irqsave()/guard()/
-  - refactor index check in ep93xx_mux_set_parent_lock() to something more readable
-  - use in_range in ep93xx_mux_set_parent_lock()/ep93xx_ddiv_set_rate()
-  - use GENMASK() in ep93xx_ddiv_recalc_rate()
-  - comment reserved bit in ep93xx_ddiv_set_rate()
-  - move out from loop ClkDiv value assigment
-  - some style fixes
-
-Andy, i was i asked to set index of XTALI explicitly, i am not setting ddiv_pdata
-there becouse only XTALI is jnown in advance, and i think setting them in one place is more convenient.
-
-- pinctrl: add a Cirrus ep93xx SoC pin controller
-  - drop OF from Kconfig
-  - droped linux/of.h include
-  - add space to */ where it is applicable
-  - add coma in multiline assigment
-  - "return NULL" as default case in ep93xx_get_group_name()
-  - fixed casting id->driver_data
-  - use device_set_of_node_from_dev()
-  - use dev_err_probe()
-
-- power: reset: Add a driver for the ep93xx reset
-  - drop linux/of.h include
-
-- soc: Add SoC driver for Cirrus ep93xx
-  - s/GPL-2.0/GPL-2.0-only/
-  - drop linux/kernel.h include
-  - + blank line before linux/soc/cirrus/ep93xx.h
-  - + blank line after ep93xx_get_soc_rev()
-  - + coma for pinctrl_names
-  - valid casting to int for of_device_get_match_data() return value
-
-- mtd: rawnand: add support for ts72xx
-  - return as part of switch case
-  - s/iowrite8/iowrite8_rep/
-
-- net: cirrus: add DT support for Cirrus EP93xx
-  - fix header sorting
-
-- dma: cirrus: Convert to DT for Cirrus EP93xx
-  - use devm_clk_get
-  - use is_slave_direction
-
-Changes in v5:
-
-- gpio: ep93xx: split device in multiple
-  - ordered headers
-  - use irqd_to_hwirq()
-  - s/platform_get_irq()/platform_get_irq_optional()/
-
-- [PATCH v4 02/42] ARM: ep93xx: add swlocked prototypes
-  - replaced with ARM: ep93xx: add regmap aux_dev
-
-- [PATCH v4 03/42] dt-bindings: clock: Add Cirrus EP93xx
-  - fixed identation
-  - removed EP93XX_CLK_END
-  - and dropped it
-  - clock bindings moved to syscon with renaming to cirrus,ep9301-syscon.h
-
-- clk: ep93xx: add DT support for Cirrus EP93xx
-  - convert to auxiliary and use parent device tree node
-  - moved all clocks except XTALI here
-  - used devm version everywhere and *_parent_hw() instead of passing name where it's possible
-  - unfortunately devm_clk_hw_register_fixed_rate doesn't have a parent index version
-
-- [PATCH v4 05/42] dt-bindings: pinctrl: Add Cirrus EP93xx
-  - "unevaluatedProperties: false" for pins
-  - returned "additionalProperties: false" where it was
-  - and dropped it
-
-- pinctrl: add a Cirrus ep93xx SoC pin controller
-  - sorted includes
-  - convert to auxiliary and use parent device tree node
-
-- power: reset: Add a driver for the ep93xx reset
-  - convert to auxiliary device
-
-- dt-bindings: soc: Add Cirrus EP93xx
-  - dropped all ref to reboot, clk, pinctrl subnodes
-  - added pins, as it's now used for pinctrl
-  - added #clock-cells, as it's now used for clk
-
-- dt-bindings: pwm: Add Cirrus EP93xx
-  - $ref to pwm.yaml
-  - fixed 'pwm-cells'
-  - s/additionalProperties/unevaluatedProperties/
-
-- soc: Add SoC driver for Cirrus ep93xx
-  - removed clocks, they are moved to clk auxiliary driver, as we dropped the clk dt node
-  - removed all swlocked exported functions
-  - dropped static spinlock
-  - added instantiating auxiliary reboot, clk, pinctrl
-
-- dt-bindings: spi: Add Cirrus EP93xx
-  - Document DMA support
-
-- spi: ep93xx: add DT support for Cirrus EP93xx
-  - dropped CONFIG_OF and SPI/DMA platform data entirely
-  - s/master/host/
-  - reworked DMA setup so we can use probe defer
-
-- dt-bindings: dma: Add Cirrus EP93xx
-  - dropped bindings header (moved ports description to YAML)
-  - changed '#dma-cells' to 2, we use port, direction in cells so we can drop platform code completely
-
-- dma: cirrus: add DT support for Cirrus EP93xx
-  - dropped platform probing completely
-  - dropped struct ep93xx_dma_data replaced with internal struct ep93xx_dma_chan_cfg with port/direction
-  - added xlate functions for m2m/m2p
-  - we require filters to set dma_cfg before hw_setup
-
-- dt-bindings: ata: Add Cirrus EP93xx
-  - Document DMA support
-
-- ata: pata_ep93xx: add device tree support
-  - drop DMA platform header with data
-  - use DMA OF so we can defer probing until DMA is up
-
-- ARM: dts: add Cirrus EP93XX SoC .dtsi
-- ARM: dts: ep93xx: add ts7250 board
-- ARM: dts: ep93xx: Add EDB9302 DT
-  - replaced "eclk: clock-controller" to syscon reference
-  - replaced "pinctrl: pinctrl" to syscon reference
-  - gpios are now "enabled" by default
-  - reworked i2s node
-  - change all dma nodes and refs
-
-- new additions to I2S
-  - Document DMA
-  - Document Audio Port usage
-  - drop legacy DMA support
-
-- Link to v4: https://lore.kernel.org/r/20230915-ep93xx-v4-0-a1d779dcec10@maquefel.me
-
-Changes in v4:
-
-- gpio: ep93xx: split device in multiple
-  - s/generic_handle_irq/generic_handle_domain_irq/
-  - s/int offset/irq_hw_number_t offset/ though now it looks a bit odd to me
-  - drop i = 0
-  - drop 'error'
-  - use dev_err_probe withour printing devname once again
-
-dt-bindings: clock: Add Cirrus EP93xx
-  - renamed cirrus,ep93xx-clock.h -> cirrus,ep9301-clk.h
-
-clk: ep93xx: add DT support for Cirrus EP93xx
-  - drop unused includes
-  - use .name only for xtali, pll1, pll2 parents
-  - convert // to /*
-  - pass clk_parent_data instead of char* clock name
-
-dt-bindings: pinctrl: Add Cirrus EP93xx
-  - s/additionalProperties/unevaluatedProperties/
-
-dt-bindings: soc: Add Cirrus EP93xx
-  - move syscon to soc directory
-  - add vendor prefix
-  - make reboot same style as pinctrl, clk
-  - use absolute path for ref
-  - expand example
-
-soc: Add SoC driver for Cirrus ep93xx
-  - s/0xf0000000/GENMASK(31, 28)/
-  - s/ret/ep93xx_chip_revision(map)/
-  - drop symbol exports
-  - convert to platform driver
-
-dt-bindings: rtc: Add Cirrus EP93xx
-  - allOf: with $ref to rtc.yaml
-  - s/additionalProperties/unevaluatedProperties/
-
-dt-bindings: watchdog: Add Cirrus EP93x
-  - drop description
-  - reword
-
-power: reset: Add a driver for the ep93xx reset
-  - lets use 'GPL-2.0+' instead of '(GPL-2.0)'
-  - s/of_device/of/
-  - drop mdelay with warning
-  - return 0 at the end
-
-net: cirrus: add DT support for Cirrus EP93xx
-  - fix leaking np
-
-mtd: nand: add support for ts72xx
-  - +bits.h
-  - drop comment
-  - ok to fwnode_get_next_child_node
-  - use goto to put handle and nand and report error
-
-ARM: dts: add Cirrus EP93XX SoC .dtsi
-  - add simple-bus for ebi, as we don't require to setup anything
-  - add arm,pl011 compatible to uart nodes
-  - drop i2c-gpio, as it's isn't used anywhere
-
-ARM: dts: ep93xx: add ts7250 board
-  - generic node name for temperature-sensor
-  - drop i2c
-  - move nand, rtc, watchdog to ebi node
-
-- Link to v3: https://lore.kernel.org/r/20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me
-
----
-Alexander Sverdlin (3):
-      ASoC: ep93xx: Drop legacy DMA support
-      ARM: dts: ep93xx: Add EDB9302 DT
-      ASoC: cirrus: edb93xx: Delete driver
-
-Nikita Shubin (35):
-      gpio: ep93xx: split device in multiple
-      ARM: ep93xx: add regmap aux_dev
-      clk: ep93xx: add DT support for Cirrus EP93xx
-      pinctrl: add a Cirrus ep93xx SoC pin controller
-      power: reset: Add a driver for the ep93xx reset
-      dt-bindings: soc: Add Cirrus EP93xx
-      soc: Add SoC driver for Cirrus ep93xx
-      dt-bindings: dma: Add Cirrus EP93xx
-      dmaengine: cirrus: Convert to DT for Cirrus EP93xx
-      dt-bindings: watchdog: Add Cirrus EP93x
-      watchdog: ep93xx: add DT support for Cirrus EP93xx
-      dt-bindings: pwm: Add Cirrus EP93xx
-      pwm: ep93xx: add DT support for Cirrus EP93xx
-      dt-bindings: spi: Add Cirrus EP93xx
-      spi: ep93xx: add DT support for Cirrus EP93xx
-      dt-bindings: net: Add Cirrus EP93xx
-      net: cirrus: add DT support for Cirrus EP93xx
-      dt-bindings: mtd: Add ts7200 nand-controller
-      mtd: rawnand: add support for ts72xx
-      dt-bindings: ata: Add Cirrus EP93xx
-      ata: pata_ep93xx: add device tree support
-      dt-bindings: input: Add Cirrus EP93xx keypad
-      input: keypad: ep93xx: add DT support for Cirrus EP93xx
-      wdt: ts72xx: add DT support for ts72xx
-      gpio: ep93xx: add DT support for gpio-ep93xx
-      ASoC: dt-bindings: ep93xx: Document DMA support
-      ASoC: dt-bindings: ep93xx: Document Audio Port support
-      ARM: dts: add Cirrus EP93XX SoC .dtsi
-      ARM: dts: ep93xx: add ts7250 board
-      ARM: ep93xx: DT for the Cirrus ep93xx SoC platforms
-      pwm: ep93xx: drop legacy pinctrl
-      ata: pata_ep93xx: remove legacy pinctrl use
-      ARM: ep93xx: delete all boardfiles
-      ARM: ep93xx: soc: drop defines
-      dmaengine: cirrus: remove platform code
-
- .../bindings/arm/cirrus/cirrus,ep9301.yaml         |   38 +
- .../bindings/ata/cirrus,ep9312-pata.yaml           |   42 +
- .../bindings/dma/cirrus,ep9301-dma-m2m.yaml        |   84 ++
- .../bindings/dma/cirrus,ep9301-dma-m2p.yaml        |  144 ++
- .../bindings/input/cirrus,ep9307-keypad.yaml       |   87 ++
- .../devicetree/bindings/mtd/technologic,nand.yaml  |   45 +
- .../devicetree/bindings/net/cirrus,ep9301-eth.yaml |   59 +
- .../devicetree/bindings/pwm/cirrus,ep9301-pwm.yaml |   53 +
- .../bindings/soc/cirrus/cirrus,ep9301-syscon.yaml  |   94 ++
- .../bindings/sound/cirrus,ep9301-i2s.yaml          |   16 +
- .../devicetree/bindings/spi/cirrus,ep9301-spi.yaml |   70 +
- .../bindings/watchdog/cirrus,ep9301-wdt.yaml       |   42 +
- arch/arm/Makefile                                  |    1 -
- arch/arm/boot/dts/cirrus/Makefile                  |    4 +
- arch/arm/boot/dts/cirrus/ep93xx-bk3.dts            |  125 ++
- arch/arm/boot/dts/cirrus/ep93xx-edb9302.dts        |  181 +++
- arch/arm/boot/dts/cirrus/ep93xx-ts7250.dts         |  145 ++
- arch/arm/boot/dts/cirrus/ep93xx.dtsi               |  444 ++++++
- arch/arm/mach-ep93xx/Kconfig                       |   20 +-
- arch/arm/mach-ep93xx/Makefile                      |   11 -
- arch/arm/mach-ep93xx/clock.c                       |  733 ----------
- arch/arm/mach-ep93xx/core.c                        | 1018 --------------
- arch/arm/mach-ep93xx/dma.c                         |  114 --
- arch/arm/mach-ep93xx/edb93xx.c                     |  368 -----
- arch/arm/mach-ep93xx/ep93xx-regs.h                 |   38 -
- arch/arm/mach-ep93xx/gpio-ep93xx.h                 |  111 --
- arch/arm/mach-ep93xx/hardware.h                    |   25 -
- arch/arm/mach-ep93xx/irqs.h                        |   76 --
- arch/arm/mach-ep93xx/platform.h                    |   42 -
- arch/arm/mach-ep93xx/soc.h                         |  212 ---
- arch/arm/mach-ep93xx/timer-ep93xx.c                |  143 --
- arch/arm/mach-ep93xx/ts72xx.c                      |  422 ------
- arch/arm/mach-ep93xx/ts72xx.h                      |   94 --
- arch/arm/mach-ep93xx/vision_ep9307.c               |  321 -----
- drivers/ata/pata_ep93xx.c                          |  107 +-
- drivers/clk/Kconfig                                |    8 +
- drivers/clk/Makefile                               |    1 +
- drivers/clk/clk-ep93xx.c                           |  846 ++++++++++++
- drivers/dma/ep93xx_dma.c                           |  287 +++-
- drivers/gpio/gpio-ep93xx.c                         |  345 ++---
- drivers/input/keyboard/ep93xx_keypad.c             |   74 +-
- drivers/mtd/nand/raw/Kconfig                       |    6 +
- drivers/mtd/nand/raw/Makefile                      |    1 +
- drivers/mtd/nand/raw/technologic-nand-controller.c |  222 +++
- drivers/net/ethernet/cirrus/ep93xx_eth.c           |   63 +-
- drivers/pinctrl/Kconfig                            |    7 +
- drivers/pinctrl/Makefile                           |    1 +
- drivers/pinctrl/pinctrl-ep93xx.c                   | 1434 ++++++++++++++++++++
- drivers/power/reset/Kconfig                        |   10 +
- drivers/power/reset/Makefile                       |    1 +
- drivers/power/reset/ep93xx-restart.c               |   84 ++
- drivers/pwm/pwm-ep93xx.c                           |   26 +-
- drivers/soc/Kconfig                                |    1 +
- drivers/soc/Makefile                               |    1 +
- drivers/soc/cirrus/Kconfig                         |   17 +
- drivers/soc/cirrus/Makefile                        |    2 +
- drivers/soc/cirrus/soc-ep93xx.c                    |  252 ++++
- drivers/spi/spi-ep93xx.c                           |   66 +-
- drivers/watchdog/ep93xx_wdt.c                      |    8 +
- drivers/watchdog/ts72xx_wdt.c                      |    8 +
- include/dt-bindings/clock/cirrus,ep9301-syscon.h   |   46 +
- include/linux/platform_data/dma-ep93xx.h           |   94 --
- include/linux/platform_data/eth-ep93xx.h           |   10 -
- include/linux/platform_data/keypad-ep93xx.h        |   32 -
- include/linux/platform_data/spi-ep93xx.h           |   15 -
- include/linux/soc/cirrus/ep93xx.h                  |   47 +-
- sound/soc/cirrus/Kconfig                           |    9 -
- sound/soc/cirrus/Makefile                          |    4 -
- sound/soc/cirrus/edb93xx.c                         |  116 --
- sound/soc/cirrus/ep93xx-i2s.c                      |   19 -
- sound/soc/cirrus/ep93xx-pcm.c                      |   19 +-
- 71 files changed, 5161 insertions(+), 4550 deletions(-)
----
-base-commit: fa050d2415bbf9d483fc948ecf224cc2be4a173a
-change-id: 20230605-ep93xx-01c76317e2d2
-
-Best regards,
 -- 
-Nikita Shubin <nikita.shubin@maquefel.me>
+2.43.2
 
 
 
