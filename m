@@ -1,1264 +1,162 @@
-Return-Path: <linux-gpio+bounces-9934-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9935-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 596EB973356
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 12:31:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D23F9736E5
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 14:12:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FE641C20F12
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 10:31:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BC3D8B214F1
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 12:11:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE3CE19F47A;
-	Tue, 10 Sep 2024 10:26:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A357190492;
+	Tue, 10 Sep 2024 12:11:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KMBnNLkC"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="CgL/RK81"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04olkn2085.outbound.protection.outlook.com [40.92.46.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E278219EEAF;
-	Tue, 10 Sep 2024 10:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725964017; cv=none; b=fAvKx0qlSuUO48hFBM7QQU4HypIz7ly0Clwfbvfk8X2Rg0z+F6UIlhuBkzJl/7PunsoqrjIpAR0b8GQU3ZNdQOZsjhh43R4rMpEdNO5I7fAkWcyFg4P3muAqxV2Wda6zG0eL5jrFwIP3er+6P+hk1BdHtRTjmiOcBicoimLg7Lk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725964017; c=relaxed/simple;
-	bh=r0HXJqazCT5+QUMckfrKv/GvNMeEHinrwRlCK/N9XVA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=k6jNv6QFEn8WLykQEXB0xOjLRgPPWYtEgmiGb1Z6O6MQkjhgTPCfpesqqjKZxbLvv9aQtnXjTRmp1wcc/JRPOAkEpEpoNLKBJng4Ha6ORO0cScF4J6qrDjVER10kFhMihK4bgh5wCxFLB4NX08VOarZsC+OwRzdaxHtyxOIWWmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KMBnNLkC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48A94m8W031011;
-	Tue, 10 Sep 2024 10:26:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	g+P1PsBr2DK2rcBwsZQy8Stl7RytbDPCpwGWvHi0s9M=; b=KMBnNLkC3PXEUV7a
-	EZUqeWEhWiQgv6LzT06lhWNExFWw+N3S8yNe9BGD872yVQxv7W/g82/fyuORIaU6
-	dQOdNhFOJm82QSswnOT3DSICTexUimUo/C7aTT6Xsjz0Gm6/COayNvy+NQaa3XPv
-	DXlfBX42VLmQe99tXbxzghtrLiPW6ftK7irs9RxFiPBlVuwEh7ajX+rdDhKTLjwV
-	TMNWBER3Li6a8Ak0a8dE2q/lybcbydT05Hz76Tut8zphHk2ubIZsbpt7gPfEkDv8
-	N+r7miO67TmkqiPa42abQyUs1g+o8wcSFTIxFgk5j0eJ5nqhLTkMvxGkkfnG2vwQ
-	A78AEA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41j6gmstx0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Sep 2024 10:26:49 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48AAQnHb022499
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Sep 2024 10:26:49 GMT
-Received: from lijuang2-gv.ap.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 10 Sep 2024 03:26:43 -0700
-From: Lijuan Gao <quic_lijuang@quicinc.com>
-Date: Tue, 10 Sep 2024 18:26:15 +0800
-Subject: [PATCH 2/2] pinctrl: qcom: add the tlmm driver for QCS615 platform
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE5F18E77B;
+	Tue, 10 Sep 2024 12:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.46.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725970305; cv=fail; b=U1lDc7+USNNBoz3bchlWUYFrmvHSBssGcDe7WkPrJ28TrJmYZ27EYk7AESXQjKbbWRvgyprugreac/qbcLpfr9pgR3bNHG7F0InlLW/NNVEmDSpLGmKf1jdu/Zt5HBkvAVWgxQlz3m2r+j2we/bkGwsYOJmcYnRoVw9U19mE+yw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725970305; c=relaxed/simple;
+	bh=7cWVnz7RWB6+ZzU5CnLuLGvI8TwL1DBFmPRKev+9xL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bhaUosXVx5xp/2V7djbdI03jRrt4zbnGvSQu0jgIRurOb4yShY/RZQ8siT+uGfrCBbY2vnVeR3XrCfJONL+VN1oZETptjfSLfuYYP3/1xQ5rTl99I4+NTJPHEbqCQQg+RmP+eA90P5Wi/EVnWoGz9AhtNBzInLQQhAdhKNv98aA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=CgL/RK81; arc=fail smtp.client-ip=40.92.46.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=utEFZNwtlHcPTOc0Z+UWTWEysGhu/3R1o4ukKElHNm9+5MRAkSpXjGc0jO1GvnfrA4kgTXgY9mkI66lZ/u9OOqTzTkEeWeWlnKwu4hbkekTiANvo6l2YH4Om2ZGMIyQmxBWVG23NqBLkHNPME42pm/owqq5uOh0inSJ5HSwXm82xhGWeOYMctR2CouCojgMpi3KWsEPfUPe5PFPIqLlpTairgbcWF+eJBz95m7N1P4kC1Quukm5HuzPH4JsvVdh/7Cogf3un5HHt3PhHtq2MqaV7RvQ63VvnLSXOUV1//AlKhZWLmlxAnH3qmW+1TEAF+d73uO3EycPdZ0FoEU/Zuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5gub6+QpuKKCvDS56vpFaPILriiWGWd+1y5sDu+JkAI=;
+ b=XWD7LGoLRC5I9smMU63XZHMdFunkY0AcZuvKeGT1xSKWto7QCvRki6IVlRjLownOjoNJPNaqg7+OyxEumUZYetFDHyXAKTRmHsiioDtuZxJPCjkPhZnZK3ux2yI5cE+abnqlwk6UN/xAKmqve03CXzE9X0fYfkPWMwHZMLhYdTf/SVFGGAN62OqUEBc2ukL0jq2mRv2Z+ajjYBU5HFyxcaDlRV3UNB5x66ceq1PBc2dCz7AGbcrvXaYKdUA4pFgf44clJ3X6jdgcP4qlaiN2oN/IZLgd6gHUO6KHe+U0LNujiKPLmhqlqEmq+qHDfrQBKyTpZYxOcDNby1VT151/Zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5gub6+QpuKKCvDS56vpFaPILriiWGWd+1y5sDu+JkAI=;
+ b=CgL/RK81F2kR6QxiBx0D5SAy3XMb8qvJVOgAucKvALZnaslDlSYi8j3FCjVjF/qf6uGDkktxk66kk+FOJXgG4a4b4DAqQfMl65++708BHh8JP6hJG8Utez/aCufjOKckuHwScLh+QpIctbq6OHQfTe6Ra5VY5RBD09Uub3sEySLZn+t1YdLTuzkz3zpOmiAbO2wZi9n10Rj7jv48XIFTxPyMDOO5nDM6OlZHWiQRf9AQVzm07LKU+0vX2vyrIEHpc5CZIRfidH2Smk3OuSYlOWLmXBfOVhDhxC/qrz7cCFvU48PPIcCi0NchU/2Pz84JMGhmzhgh1cVhkQbZIuQkeQ==
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
+ by LV3PR20MB6956.namprd20.prod.outlook.com (2603:10b6:408:20f::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.24; Tue, 10 Sep
+ 2024 12:11:41 +0000
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::ab0b:c0d3:1f91:d149]) by IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::ab0b:c0d3:1f91:d149%5]) with mapi id 15.20.7939.017; Tue, 10 Sep 2024
+ 12:11:41 +0000
+Date: Tue, 10 Sep 2024 20:10:19 +0800
+From: Inochi Amaoto <inochiama@outlook.com>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, 
+	Drew Fustini <dfustini@baylibre.com>, Haylen Chu <heylenay@outlook.com>, 
+	Inochi Amaoto <inochiama@outlook.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: (subset) [PATCH v4 0/7] riscv: sophgo: Add pinctrl support for
+ CV1800 series SoC
+Message-ID:
+ <IA1PR20MB49539E3E2083EEB820B781BABB9A2@IA1PR20MB4953.namprd20.prod.outlook.com>
+References: <IA1PR20MB4953DC78BB0FE0C57EA94F91BBB32@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <IA1PR20MB4953281633974BE4AB4887F5BB962@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <IA1PR20MB4953281633974BE4AB4887F5BB962@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-TMN: [NOhOw1qPnFIy7tzsDIkZ3Mrrn3nbHne2eaX39u8flEk=]
+X-ClientProxiedBy: SI2P153CA0032.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:190::23) To IA1PR20MB4953.namprd20.prod.outlook.com
+ (2603:10b6:208:3af::19)
+X-Microsoft-Original-Message-ID:
+ <s5clhds37zyezagn6ibe5skp2mi6cfunzzl3bm7jnrshn4w5qa@35k7v6vzf4fe>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240910-add_qcs615_pinctrl_driver-v1-2-36f4c0d527d8@quicinc.com>
-References: <20240910-add_qcs615_pinctrl_driver-v1-0-36f4c0d527d8@quicinc.com>
-In-Reply-To: <20240910-add_qcs615_pinctrl_driver-v1-0-36f4c0d527d8@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Lijuan Gao
-	<quic_lijuang@quicinc.com>, <kernel@quicinc.com>
-X-Mailer: b4 0.15-dev-99b12
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1725963997; l=38573;
- i=quic_lijuang@quicinc.com; s=20240827; h=from:subject:message-id;
- bh=r0HXJqazCT5+QUMckfrKv/GvNMeEHinrwRlCK/N9XVA=;
- b=i+mFOP3Q9NPMLUZv5NDPd7X+Lcem93pZpzBs0erwwHcK4DaS41WDxyWRInr4m3jKwVTQW5UJd
- bIOtjvW2ggFBXEtnfUQgCGkDHwm9kbkZ9p9w/7ghTXLstkhmuecxnAY
-X-Developer-Key: i=quic_lijuang@quicinc.com; a=ed25519;
- pk=1zeM8FpQK/J1jSFHn8iXHeb3xt7F/3GvHv7ET2RNJxE=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Xqh-UMMWpBGh3x6EuSnXr3VrNsgTcMyG
-X-Proofpoint-GUID: Xqh-UMMWpBGh3x6EuSnXr3VrNsgTcMyG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- clxscore=1015 phishscore=0 mlxlogscore=999 lowpriorityscore=0
- suspectscore=0 mlxscore=0 priorityscore=1501 malwarescore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409100078
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|LV3PR20MB6956:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9a806736-f012-4b3f-6d07-08dcd191ba5e
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|15080799006|8060799006|19110799003|461199028|5072599009|6090799003|440099028|4302099013|3412199025|1602099012|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	ambYZWGO0HT5sNVpJba7znExMGUppJVXU8SltEFyTl9427ibh4jvJi1K8NlMe6OkYZ1F7Pn6qyMggEKhgUGibhZTMIxolJAIG2Jp5ASyxoDAcF5vdoa19xmJ2lDL4brl1NAuRYru14P94KafGs+xZy+qgUyA6X3Lcj2BpdQcYfzO+QyLGeqE80FT/sogloTH1Fg5Ckb2ZxB1Yd7MpC+Y7c2nsxJxO7Ew0AtyNfpMpA7EmJ0fwcMlAb/EcarwmGaQsLJ5DYYsVaNCKK+D7IF5l4kJoykKBwiDt0CPaqQo3Jy4pkwEW7f8Cx20CmeUjmF8tc99lpatgMKVYJuJRGQUDOOvfv59VStniSwLQEu4WldoiRGN7L4p85YdZF23i9Pr7q8fBSPmrfLuO8Yd37VKf6a/xb+qhi7tt/aTsHG9AJ2KguPdbZfgxMny9wGe8WJ2DTZF3nkLfHMouEbZUyHbJ1DqjYcv9Eat/w07esnh+u8P+0o5fowDboQdaZyp1jqxL/iwBp98xS0tLVxdNUOKIYOuzPITDUT1OviMgU+WHT/MVCa1pX7P8rNXE2hxGYg6R3LUfV7ldWDZsLRvmLCD0hEY+QY+Fb7tgC1VPgYHyHFbS07D/2lEs/W3Gef9U1IbwtFRQ3TMBacl+dSYX0tyu+BrB2S9EWueYq2dgocfkqPZN7Kaf1WuxiKgkzPkp7N6g6Y6QwXaFRCkTFNiKgWBeZ7OQfu32s5pZHu3cCrpqWSqA2V2b+a6clG7526TYBFWftLQt8juyOfiPe1D/rnXC5GHcUyHzuVdyivRGhgUVzo/+Xl8HJbkKQdYknlUUG4Z2hehjw6QwqANchl/gTPUq5TDiuV70FwrX4AC5C7w9ixkHCcvzfIR3NxAg1jtSUWd
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zRlQ857JG4rQ3h/m3DeEnKNTbi2YPseglPfzThrhf3Vh/PPLcvGGflVol2Qj?=
+ =?us-ascii?Q?Wp3af2UM5z44dHDRHI8uYpkJ6bf0g5uShLWEZwZQn9Tx6CRHZnZ5Z9piiWhF?=
+ =?us-ascii?Q?ILpqE4+jeJ5WZ8/YgQnKXHHo756dqQcrGYKZuhbeB4ypwvL7dp2QruRspExJ?=
+ =?us-ascii?Q?mSCJpG+gT6YVpbtiMreRT2wIQShgAyiSPuL0k4MgU7jBQGYefOnztC4VY5or?=
+ =?us-ascii?Q?R8HHTkEWyuJB1Rd/35DxlCF0rkKJwJMISnKte8iGD8dfEpwwR+Q1XxZxlZ79?=
+ =?us-ascii?Q?N4wQhMyOk1st7k7HRLis919ZYSDE/DvVpHeLYuQB0jCpMEF4czd4KMhi7FDi?=
+ =?us-ascii?Q?ymb8vKnQ/VqRsg9loR/5XRjPjwsty5HJ0X2LBCxiJVgHRtURBkVPJiVnPIZU?=
+ =?us-ascii?Q?HzzCg5hzuRHw/4o7rlF/Md54Xk1iaR8PWeJVdJUn5nirSVJem4tEHysxUdh8?=
+ =?us-ascii?Q?Y+OQPSZUjjGFg9sgjHPqcIndSjnkP5cwECvKmqCb2n99YL4fvVUJbg3v3NcM?=
+ =?us-ascii?Q?1n81TefjbLGrJbVLA62gJcq+QT6nAVwPW0WDwDlQTFK7S+lKnQD/aEMQ69jT?=
+ =?us-ascii?Q?HCfLzOXfALstbaIqZclMFycDDmd+s1hPG+Sf1mRFn1L1jRXlI6vYb+Y/rd8E?=
+ =?us-ascii?Q?y3c65gNitPs+eGNP4YuLPgVxKN0R/qa7AesQarO0NxrCuTupwGsa8BXJ07Sg?=
+ =?us-ascii?Q?b+GbTxKyIrZ8Rl9Zak9nwcEZPT2+iOQFOwrXXgqsx8UvoUoVgrgqMb/3bk0F?=
+ =?us-ascii?Q?jhmtSUuF9fQk3gxiT8fiwWYF1FOkYJOHr4nZu9XAX9SoFss5G3kT4BXZrrKr?=
+ =?us-ascii?Q?2fCUNTsdj5kiNNkISQo7OtFSdrd59AI0ALxrbEnH/cBpCcDchZ+xH6RfKYXq?=
+ =?us-ascii?Q?1Bk1zzrFa/a20N46wTTng3kNUJEkcz2NfhV43bqRDVL1OavdSrRFkJJwmtSW?=
+ =?us-ascii?Q?iQEI56/3xEPFmThvcH7KlzvfuJ7SCsbDPKMIuMBbhU1bACQSmUw6i3CWNDgD?=
+ =?us-ascii?Q?DHGFwDQbfm1GQbD9AJqK2kuNZ1wFtNnJ89Z0c9ZJJMd+XW2MBkskoi/nQGi9?=
+ =?us-ascii?Q?OQj37vx/UZTdbB2bSqlVDhkhE8m1LkVCjGem57EGcwWnzF3atjA8dzf+i0cy?=
+ =?us-ascii?Q?6I8/QKoI+8woXBmlscd+9FDts75H+GBsNTeK4NLTq2y+TBI1qk4pqQyKbUtW?=
+ =?us-ascii?Q?p3cNSTCgNRmdya1dnweRygqiaJWy+AStT4keuxkmo3GtuFqLwQgkxn7wsXM5?=
+ =?us-ascii?Q?HpByGvgu4t53H4Z4/X51?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a806736-f012-4b3f-6d07-08dcd191ba5e
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2024 12:11:40.8773
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR20MB6956
 
-Add support for QCS615 TLMM configuration and control via the
-pinctrl framework.
+On Thu, Aug 29, 2024 at 01:08:41PM GMT, Inochi Amaoto wrote:
+> On Fri, 2 Aug 2024 08:33:58 +0800, Inochi Amaoto wrote:
+> > Add basic pinctrl driver for Sophgo CV1800 series SoCs.
+> > This patch series aims to replace the previous patch from Jisheng [1].
+> > Since the pinctrl of cv1800 has nested mux and its pin definination
+> > is discrete, it is not suitable to use "pinctrl-single" to cover the
+> > pinctrl device.
+> > 
+> > This patch require another patch [2] that provides standard attribute
+> > "input-schmitt-microvolt"
+> > 
+> > [...]
+> 
+> Applied to for-next, thanks!
+> 
+> [6/7] riscv: dts: sophgo: cv1800b: add pinctrl support
+>       https://github.com/sophgo/linux/commit/1728c7e408c6e5ef1c6f3a2c7f75bd20139c2e13
+> [7/7] riscv: dts: sophgo: cv1812h: add pinctrl support
+>       https://github.com/sophgo/linux/commit/2926c05f9cb7b5bb0374fb7a53bffd65937a454f
+> 
+> Thanks,
+> Inochi
+> 
 
-Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
----
- drivers/pinctrl/qcom/Kconfig.msm      |    7 +
- drivers/pinctrl/qcom/Makefile         |    1 +
- drivers/pinctrl/qcom/pinctrl-qcs615.c | 1107 +++++++++++++++++++++++++++++++++
- 3 files changed, 1115 insertions(+)
+Drop the apply and favor the v6 version:
+https://lore.kernel.org/all/IA1PR20MB495301A1A08224486DD0239BBB9A2@IA1PR20MB4953.namprd20.prod.outlook.com/T/#m4acc4e2a9652cb3f5a3ce54deaff52a827b80649
 
-diff --git a/drivers/pinctrl/qcom/Kconfig.msm b/drivers/pinctrl/qcom/Kconfig.msm
-index 8fe459d082ed..ad05f93a77f9 100644
---- a/drivers/pinctrl/qcom/Kconfig.msm
-+++ b/drivers/pinctrl/qcom/Kconfig.msm
-@@ -182,6 +182,13 @@ config PINCTRL_QCS404
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  TLMM block found in the Qualcomm QCS404 platform.
- 
-+config PINCTRL_QCS615
-+	tristate "Qualcomm Technologies QCS615 pin controller driver"
-+	depends on ARM64 || COMPILE_TEST
-+	help
-+	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-+	  TLMM block found on the Qualcomm QCS615 platform.
-+
- config PINCTRL_QDF2XXX
- 	tristate "Qualcomm Technologies QDF2xxx pin controller driver"
- 	depends on ACPI
-diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
-index eb04297b6388..249f46f339ac 100644
---- a/drivers/pinctrl/qcom/Makefile
-+++ b/drivers/pinctrl/qcom/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_PINCTRL_MSM8996)   += pinctrl-msm8996.o
- obj-$(CONFIG_PINCTRL_MSM8998)   += pinctrl-msm8998.o
- obj-$(CONFIG_PINCTRL_QCM2290)	+= pinctrl-qcm2290.o
- obj-$(CONFIG_PINCTRL_QCS404)	+= pinctrl-qcs404.o
-+obj-$(CONFIG_PINCTRL_QCS615)    += pinctrl-qcs615.o
- obj-$(CONFIG_PINCTRL_QDF2XXX)	+= pinctrl-qdf2xxx.o
- obj-$(CONFIG_PINCTRL_MDM9607)	+= pinctrl-mdm9607.o
- obj-$(CONFIG_PINCTRL_MDM9615)	+= pinctrl-mdm9615.o
-diff --git a/drivers/pinctrl/qcom/pinctrl-qcs615.c b/drivers/pinctrl/qcom/pinctrl-qcs615.c
-new file mode 100644
-index 000000000000..8380e22b2faa
---- /dev/null
-+++ b/drivers/pinctrl/qcom/pinctrl-qcs615.c
-@@ -0,0 +1,1107 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#include "pinctrl-msm.h"
-+
-+enum {
-+	SOUTH,
-+	EAST,
-+	WEST
-+};
-+
-+static const char * const qcs615_tiles[] = {
-+	[SOUTH] = "south",
-+	[EAST] = "east",
-+	[WEST] = "west"
-+};
-+
-+#define PINGROUP(id, _tile, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
-+	{						\
-+		.grp = PINCTRL_PINGROUP("gpio" #id,	\
-+			gpio##id##_pins,		\
-+			ARRAY_SIZE(gpio##id##_pins)),	\
-+		.funcs = (int[]){			\
-+			msm_mux_gpio, /* gpio mode */	\
-+			msm_mux_##f1,			\
-+			msm_mux_##f2,			\
-+			msm_mux_##f3,			\
-+			msm_mux_##f4,			\
-+			msm_mux_##f5,			\
-+			msm_mux_##f6,			\
-+			msm_mux_##f7,			\
-+			msm_mux_##f8,			\
-+			msm_mux_##f9			\
-+		},					\
-+		.nfuncs = 10,				\
-+		.ctl_reg = 0x1000 * id,		\
-+		.io_reg = 0x1000 * id + 0x4,		\
-+		.intr_cfg_reg = 0x1000 * id + 0x8,	\
-+		.intr_status_reg = 0x1000 * id + 0xc,	\
-+		.intr_target_reg = 0x1000 * id + 0x8,	\
-+		.tile = _tile,			\
-+		.mux_bit = 2,			\
-+		.pull_bit = 0,			\
-+		.drv_bit = 6,			\
-+		.oe_bit = 9,			\
-+		.in_bit = 0,			\
-+		.out_bit = 1,			\
-+		.intr_enable_bit = 0,		\
-+		.intr_status_bit = 0,		\
-+		.intr_target_bit = 5,		\
-+		.intr_target_kpss_val = 3,	\
-+		.intr_raw_status_bit = 4,	\
-+		.intr_polarity_bit = 1,		\
-+		.intr_detection_bit = 2,	\
-+		.intr_detection_width = 2,	\
-+	}
-+
-+#define SDC_QDSD_PINGROUP(pg_name, _tile, ctl, pull, drv)	\
-+	{						\
-+		.grp = PINCTRL_PINGROUP(#pg_name,	\
-+			pg_name##_pins,			\
-+			ARRAY_SIZE(pg_name##_pins)),	\
-+		.ctl_reg = ctl,				\
-+		.io_reg = 0,				\
-+		.intr_cfg_reg = 0,			\
-+		.intr_status_reg = 0,			\
-+		.intr_target_reg = 0,			\
-+		.tile = _tile,				\
-+		.mux_bit = -1,				\
-+		.pull_bit = pull,			\
-+		.drv_bit = drv,				\
-+		.oe_bit = -1,				\
-+		.in_bit = -1,				\
-+		.out_bit = -1,				\
-+		.intr_enable_bit = -1,			\
-+		.intr_status_bit = -1,			\
-+		.intr_target_bit = -1,			\
-+		.intr_raw_status_bit = -1,		\
-+		.intr_polarity_bit = -1,		\
-+		.intr_detection_bit = -1,		\
-+		.intr_detection_width = -1,		\
-+	}
-+
-+#define UFS_RESET(pg_name, offset)			\
-+	{						\
-+		.grp = PINCTRL_PINGROUP(#pg_name,	\
-+			pg_name##_pins,			\
-+			ARRAY_SIZE(pg_name##_pins)),	\
-+		.ctl_reg = offset,			\
-+		.io_reg = offset + 0x4,			\
-+		.intr_cfg_reg = 0,			\
-+		.intr_status_reg = 0,			\
-+		.intr_target_reg = 0,			\
-+		.tile = WEST,				\
-+		.mux_bit = -1,				\
-+		.pull_bit = 3,				\
-+		.drv_bit = 0,				\
-+		.oe_bit = -1,				\
-+		.in_bit = -1,				\
-+		.out_bit = 0,				\
-+		.intr_enable_bit = -1,			\
-+		.intr_status_bit = -1,			\
-+		.intr_target_bit = -1,			\
-+		.intr_raw_status_bit = -1,		\
-+		.intr_polarity_bit = -1,		\
-+		.intr_detection_bit = -1,		\
-+		.intr_detection_width = -1,		\
-+	}
-+
-+static const struct pinctrl_pin_desc qcs615_pins[] = {
-+	PINCTRL_PIN(0, "GPIO_0"),
-+	PINCTRL_PIN(1, "GPIO_1"),
-+	PINCTRL_PIN(2, "GPIO_2"),
-+	PINCTRL_PIN(3, "GPIO_3"),
-+	PINCTRL_PIN(4, "GPIO_4"),
-+	PINCTRL_PIN(5, "GPIO_5"),
-+	PINCTRL_PIN(6, "GPIO_6"),
-+	PINCTRL_PIN(7, "GPIO_7"),
-+	PINCTRL_PIN(8, "GPIO_8"),
-+	PINCTRL_PIN(9, "GPIO_9"),
-+	PINCTRL_PIN(10, "GPIO_10"),
-+	PINCTRL_PIN(11, "GPIO_11"),
-+	PINCTRL_PIN(12, "GPIO_12"),
-+	PINCTRL_PIN(13, "GPIO_13"),
-+	PINCTRL_PIN(14, "GPIO_14"),
-+	PINCTRL_PIN(15, "GPIO_15"),
-+	PINCTRL_PIN(16, "GPIO_16"),
-+	PINCTRL_PIN(17, "GPIO_17"),
-+	PINCTRL_PIN(18, "GPIO_18"),
-+	PINCTRL_PIN(19, "GPIO_19"),
-+	PINCTRL_PIN(20, "GPIO_20"),
-+	PINCTRL_PIN(21, "GPIO_21"),
-+	PINCTRL_PIN(22, "GPIO_22"),
-+	PINCTRL_PIN(23, "GPIO_23"),
-+	PINCTRL_PIN(24, "GPIO_24"),
-+	PINCTRL_PIN(25, "GPIO_25"),
-+	PINCTRL_PIN(26, "GPIO_26"),
-+	PINCTRL_PIN(27, "GPIO_27"),
-+	PINCTRL_PIN(28, "GPIO_28"),
-+	PINCTRL_PIN(29, "GPIO_29"),
-+	PINCTRL_PIN(30, "GPIO_30"),
-+	PINCTRL_PIN(31, "GPIO_31"),
-+	PINCTRL_PIN(32, "GPIO_32"),
-+	PINCTRL_PIN(33, "GPIO_33"),
-+	PINCTRL_PIN(34, "GPIO_34"),
-+	PINCTRL_PIN(35, "GPIO_35"),
-+	PINCTRL_PIN(36, "GPIO_36"),
-+	PINCTRL_PIN(37, "GPIO_37"),
-+	PINCTRL_PIN(38, "GPIO_38"),
-+	PINCTRL_PIN(39, "GPIO_39"),
-+	PINCTRL_PIN(40, "GPIO_40"),
-+	PINCTRL_PIN(41, "GPIO_41"),
-+	PINCTRL_PIN(42, "GPIO_42"),
-+	PINCTRL_PIN(43, "GPIO_43"),
-+	PINCTRL_PIN(44, "GPIO_44"),
-+	PINCTRL_PIN(45, "GPIO_45"),
-+	PINCTRL_PIN(46, "GPIO_46"),
-+	PINCTRL_PIN(47, "GPIO_47"),
-+	PINCTRL_PIN(48, "GPIO_48"),
-+	PINCTRL_PIN(49, "GPIO_49"),
-+	PINCTRL_PIN(50, "GPIO_50"),
-+	PINCTRL_PIN(51, "GPIO_51"),
-+	PINCTRL_PIN(52, "GPIO_52"),
-+	PINCTRL_PIN(53, "GPIO_53"),
-+	PINCTRL_PIN(54, "GPIO_54"),
-+	PINCTRL_PIN(55, "GPIO_55"),
-+	PINCTRL_PIN(56, "GPIO_56"),
-+	PINCTRL_PIN(57, "GPIO_57"),
-+	PINCTRL_PIN(58, "GPIO_58"),
-+	PINCTRL_PIN(59, "GPIO_59"),
-+	PINCTRL_PIN(60, "GPIO_60"),
-+	PINCTRL_PIN(61, "GPIO_61"),
-+	PINCTRL_PIN(62, "GPIO_62"),
-+	PINCTRL_PIN(63, "GPIO_63"),
-+	PINCTRL_PIN(64, "GPIO_64"),
-+	PINCTRL_PIN(65, "GPIO_65"),
-+	PINCTRL_PIN(66, "GPIO_66"),
-+	PINCTRL_PIN(67, "GPIO_67"),
-+	PINCTRL_PIN(68, "GPIO_68"),
-+	PINCTRL_PIN(69, "GPIO_69"),
-+	PINCTRL_PIN(70, "GPIO_70"),
-+	PINCTRL_PIN(71, "GPIO_71"),
-+	PINCTRL_PIN(72, "GPIO_72"),
-+	PINCTRL_PIN(73, "GPIO_73"),
-+	PINCTRL_PIN(74, "GPIO_74"),
-+	PINCTRL_PIN(75, "GPIO_75"),
-+	PINCTRL_PIN(76, "GPIO_76"),
-+	PINCTRL_PIN(77, "GPIO_77"),
-+	PINCTRL_PIN(78, "GPIO_78"),
-+	PINCTRL_PIN(79, "GPIO_79"),
-+	PINCTRL_PIN(80, "GPIO_80"),
-+	PINCTRL_PIN(81, "GPIO_81"),
-+	PINCTRL_PIN(82, "GPIO_82"),
-+	PINCTRL_PIN(83, "GPIO_83"),
-+	PINCTRL_PIN(84, "GPIO_84"),
-+	PINCTRL_PIN(85, "GPIO_85"),
-+	PINCTRL_PIN(86, "GPIO_86"),
-+	PINCTRL_PIN(87, "GPIO_87"),
-+	PINCTRL_PIN(88, "GPIO_88"),
-+	PINCTRL_PIN(89, "GPIO_89"),
-+	PINCTRL_PIN(90, "GPIO_90"),
-+	PINCTRL_PIN(91, "GPIO_91"),
-+	PINCTRL_PIN(92, "GPIO_92"),
-+	PINCTRL_PIN(93, "GPIO_93"),
-+	PINCTRL_PIN(94, "GPIO_94"),
-+	PINCTRL_PIN(95, "GPIO_95"),
-+	PINCTRL_PIN(96, "GPIO_96"),
-+	PINCTRL_PIN(97, "GPIO_97"),
-+	PINCTRL_PIN(98, "GPIO_98"),
-+	PINCTRL_PIN(99, "GPIO_99"),
-+	PINCTRL_PIN(100, "GPIO_100"),
-+	PINCTRL_PIN(101, "GPIO_101"),
-+	PINCTRL_PIN(102, "GPIO_102"),
-+	PINCTRL_PIN(103, "GPIO_103"),
-+	PINCTRL_PIN(104, "GPIO_104"),
-+	PINCTRL_PIN(105, "GPIO_105"),
-+	PINCTRL_PIN(106, "GPIO_106"),
-+	PINCTRL_PIN(107, "GPIO_107"),
-+	PINCTRL_PIN(108, "GPIO_108"),
-+	PINCTRL_PIN(109, "GPIO_109"),
-+	PINCTRL_PIN(110, "GPIO_110"),
-+	PINCTRL_PIN(111, "GPIO_111"),
-+	PINCTRL_PIN(112, "GPIO_112"),
-+	PINCTRL_PIN(113, "GPIO_113"),
-+	PINCTRL_PIN(114, "GPIO_114"),
-+	PINCTRL_PIN(115, "GPIO_115"),
-+	PINCTRL_PIN(116, "GPIO_116"),
-+	PINCTRL_PIN(117, "GPIO_117"),
-+	PINCTRL_PIN(118, "GPIO_118"),
-+	PINCTRL_PIN(119, "GPIO_119"),
-+	PINCTRL_PIN(120, "GPIO_120"),
-+	PINCTRL_PIN(121, "GPIO_121"),
-+	PINCTRL_PIN(122, "GPIO_122"),
-+	PINCTRL_PIN(123, "UFS_RESET"),
-+	PINCTRL_PIN(124, "SDC1_RCLK"),
-+	PINCTRL_PIN(125, "SDC1_CLK"),
-+	PINCTRL_PIN(126, "SDC1_CMD"),
-+	PINCTRL_PIN(127, "SDC1_DATA"),
-+	PINCTRL_PIN(128, "SDC2_CLK"),
-+	PINCTRL_PIN(129, "SDC2_CMD"),
-+	PINCTRL_PIN(130, "SDC2_DATA"),
-+};
-+
-+#define DECLARE_MSM_GPIO_PINS(pin) \
-+	static const unsigned int gpio##pin##_pins[] = { pin }
-+DECLARE_MSM_GPIO_PINS(0);
-+DECLARE_MSM_GPIO_PINS(1);
-+DECLARE_MSM_GPIO_PINS(2);
-+DECLARE_MSM_GPIO_PINS(3);
-+DECLARE_MSM_GPIO_PINS(4);
-+DECLARE_MSM_GPIO_PINS(5);
-+DECLARE_MSM_GPIO_PINS(6);
-+DECLARE_MSM_GPIO_PINS(7);
-+DECLARE_MSM_GPIO_PINS(8);
-+DECLARE_MSM_GPIO_PINS(9);
-+DECLARE_MSM_GPIO_PINS(10);
-+DECLARE_MSM_GPIO_PINS(11);
-+DECLARE_MSM_GPIO_PINS(12);
-+DECLARE_MSM_GPIO_PINS(13);
-+DECLARE_MSM_GPIO_PINS(14);
-+DECLARE_MSM_GPIO_PINS(15);
-+DECLARE_MSM_GPIO_PINS(16);
-+DECLARE_MSM_GPIO_PINS(17);
-+DECLARE_MSM_GPIO_PINS(18);
-+DECLARE_MSM_GPIO_PINS(19);
-+DECLARE_MSM_GPIO_PINS(20);
-+DECLARE_MSM_GPIO_PINS(21);
-+DECLARE_MSM_GPIO_PINS(22);
-+DECLARE_MSM_GPIO_PINS(23);
-+DECLARE_MSM_GPIO_PINS(24);
-+DECLARE_MSM_GPIO_PINS(25);
-+DECLARE_MSM_GPIO_PINS(26);
-+DECLARE_MSM_GPIO_PINS(27);
-+DECLARE_MSM_GPIO_PINS(28);
-+DECLARE_MSM_GPIO_PINS(29);
-+DECLARE_MSM_GPIO_PINS(30);
-+DECLARE_MSM_GPIO_PINS(31);
-+DECLARE_MSM_GPIO_PINS(32);
-+DECLARE_MSM_GPIO_PINS(33);
-+DECLARE_MSM_GPIO_PINS(34);
-+DECLARE_MSM_GPIO_PINS(35);
-+DECLARE_MSM_GPIO_PINS(36);
-+DECLARE_MSM_GPIO_PINS(37);
-+DECLARE_MSM_GPIO_PINS(38);
-+DECLARE_MSM_GPIO_PINS(39);
-+DECLARE_MSM_GPIO_PINS(40);
-+DECLARE_MSM_GPIO_PINS(41);
-+DECLARE_MSM_GPIO_PINS(42);
-+DECLARE_MSM_GPIO_PINS(43);
-+DECLARE_MSM_GPIO_PINS(44);
-+DECLARE_MSM_GPIO_PINS(45);
-+DECLARE_MSM_GPIO_PINS(46);
-+DECLARE_MSM_GPIO_PINS(47);
-+DECLARE_MSM_GPIO_PINS(48);
-+DECLARE_MSM_GPIO_PINS(49);
-+DECLARE_MSM_GPIO_PINS(50);
-+DECLARE_MSM_GPIO_PINS(51);
-+DECLARE_MSM_GPIO_PINS(52);
-+DECLARE_MSM_GPIO_PINS(53);
-+DECLARE_MSM_GPIO_PINS(54);
-+DECLARE_MSM_GPIO_PINS(55);
-+DECLARE_MSM_GPIO_PINS(56);
-+DECLARE_MSM_GPIO_PINS(57);
-+DECLARE_MSM_GPIO_PINS(58);
-+DECLARE_MSM_GPIO_PINS(59);
-+DECLARE_MSM_GPIO_PINS(60);
-+DECLARE_MSM_GPIO_PINS(61);
-+DECLARE_MSM_GPIO_PINS(62);
-+DECLARE_MSM_GPIO_PINS(63);
-+DECLARE_MSM_GPIO_PINS(64);
-+DECLARE_MSM_GPIO_PINS(65);
-+DECLARE_MSM_GPIO_PINS(66);
-+DECLARE_MSM_GPIO_PINS(67);
-+DECLARE_MSM_GPIO_PINS(68);
-+DECLARE_MSM_GPIO_PINS(69);
-+DECLARE_MSM_GPIO_PINS(70);
-+DECLARE_MSM_GPIO_PINS(71);
-+DECLARE_MSM_GPIO_PINS(72);
-+DECLARE_MSM_GPIO_PINS(73);
-+DECLARE_MSM_GPIO_PINS(74);
-+DECLARE_MSM_GPIO_PINS(75);
-+DECLARE_MSM_GPIO_PINS(76);
-+DECLARE_MSM_GPIO_PINS(77);
-+DECLARE_MSM_GPIO_PINS(78);
-+DECLARE_MSM_GPIO_PINS(79);
-+DECLARE_MSM_GPIO_PINS(80);
-+DECLARE_MSM_GPIO_PINS(81);
-+DECLARE_MSM_GPIO_PINS(82);
-+DECLARE_MSM_GPIO_PINS(83);
-+DECLARE_MSM_GPIO_PINS(84);
-+DECLARE_MSM_GPIO_PINS(85);
-+DECLARE_MSM_GPIO_PINS(86);
-+DECLARE_MSM_GPIO_PINS(87);
-+DECLARE_MSM_GPIO_PINS(88);
-+DECLARE_MSM_GPIO_PINS(89);
-+DECLARE_MSM_GPIO_PINS(90);
-+DECLARE_MSM_GPIO_PINS(91);
-+DECLARE_MSM_GPIO_PINS(92);
-+DECLARE_MSM_GPIO_PINS(93);
-+DECLARE_MSM_GPIO_PINS(94);
-+DECLARE_MSM_GPIO_PINS(95);
-+DECLARE_MSM_GPIO_PINS(96);
-+DECLARE_MSM_GPIO_PINS(97);
-+DECLARE_MSM_GPIO_PINS(98);
-+DECLARE_MSM_GPIO_PINS(99);
-+DECLARE_MSM_GPIO_PINS(100);
-+DECLARE_MSM_GPIO_PINS(101);
-+DECLARE_MSM_GPIO_PINS(102);
-+DECLARE_MSM_GPIO_PINS(103);
-+DECLARE_MSM_GPIO_PINS(104);
-+DECLARE_MSM_GPIO_PINS(105);
-+DECLARE_MSM_GPIO_PINS(106);
-+DECLARE_MSM_GPIO_PINS(107);
-+DECLARE_MSM_GPIO_PINS(108);
-+DECLARE_MSM_GPIO_PINS(109);
-+DECLARE_MSM_GPIO_PINS(110);
-+DECLARE_MSM_GPIO_PINS(111);
-+DECLARE_MSM_GPIO_PINS(112);
-+DECLARE_MSM_GPIO_PINS(113);
-+DECLARE_MSM_GPIO_PINS(114);
-+DECLARE_MSM_GPIO_PINS(115);
-+DECLARE_MSM_GPIO_PINS(116);
-+DECLARE_MSM_GPIO_PINS(117);
-+DECLARE_MSM_GPIO_PINS(118);
-+DECLARE_MSM_GPIO_PINS(119);
-+DECLARE_MSM_GPIO_PINS(120);
-+DECLARE_MSM_GPIO_PINS(121);
-+DECLARE_MSM_GPIO_PINS(122);
-+
-+static const unsigned int ufs_reset_pins[] = { 123 };
-+static const unsigned int sdc1_rclk_pins[] = { 124 };
-+static const unsigned int sdc1_clk_pins[] = { 125 };
-+static const unsigned int sdc1_cmd_pins[] = { 126 };
-+static const unsigned int sdc1_data_pins[] = { 127 };
-+static const unsigned int sdc2_clk_pins[] = { 128 };
-+static const unsigned int sdc2_cmd_pins[] = { 129 };
-+static const unsigned int sdc2_data_pins[] = { 130 };
-+
-+enum qcs615_functions {
-+	msm_mux_gpio,
-+	msm_mux_adsp_ext,
-+	msm_mux_agera_pll,
-+	msm_mux_aoss_cti,
-+	msm_mux_atest_char,
-+	msm_mux_atest_tsens,
-+	msm_mux_atest_usb,
-+	msm_mux_cam_mclk,
-+	msm_mux_cci_async,
-+	msm_mux_cci_i2c,
-+	msm_mux_cci_timer,
-+	msm_mux_copy_gp,
-+	msm_mux_copy_phase,
-+	msm_mux_cri_trng,
-+	msm_mux_dbg_out_clk,
-+	msm_mux_ddr_bist,
-+	msm_mux_ddr_pxi,
-+	msm_mux_dp_hot,
-+	msm_mux_edp_hot,
-+	msm_mux_edp_lcd,
-+	msm_mux_emac_gcc,
-+	msm_mux_emac_phy_intr,
-+	msm_mux_forced_usb,
-+	msm_mux_gcc_gp,
-+	msm_mux_gp_pdm,
-+	msm_mux_gps_tx,
-+	msm_mux_hs0_mi2s,
-+	msm_mux_hs1_mi2s,
-+	msm_mux_jitter_bist,
-+	msm_mux_ldo_en,
-+	msm_mux_ldo_update,
-+	msm_mux_m_voc,
-+	msm_mux_mclk1,
-+	msm_mux_mclk2,
-+	msm_mux_mdp_vsync,
-+	msm_mux_mdp_vsync0_out,
-+	msm_mux_mdp_vsync1_out,
-+	msm_mux_mdp_vsync2_out,
-+	msm_mux_mdp_vsync3_out,
-+	msm_mux_mdp_vsync4_out,
-+	msm_mux_mdp_vsync5_out,
-+	msm_mux_mi2s_1,
-+	msm_mux_mss_lte,
-+	msm_mux_nav_pps_in,
-+	msm_mux_nav_pps_out,
-+	msm_mux_pa_indicator_or,
-+	msm_mux_pcie_clk_req,
-+	msm_mux_pcie_ep_rst,
-+	msm_mux_phase_flag,
-+	msm_mux_pll_bist,
-+	msm_mux_pll_bypassnl,
-+	msm_mux_pll_reset_n,
-+	msm_mux_prng_rosc,
-+	msm_mux_qdss_cti,
-+	msm_mux_qdss_gpio,
-+	msm_mux_qlink_enable,
-+	msm_mux_qlink_request,
-+	msm_mux_qspi,
-+	msm_mux_qup0,
-+	msm_mux_qup1,
-+	msm_mux_rgmii,
-+	msm_mux_sd_write_protect,
-+	msm_mux_sp_cmu,
-+	msm_mux_ter_mi2s,
-+	msm_mux_tgu_ch,
-+	msm_mux_uim1,
-+	msm_mux_uim2,
-+	msm_mux_usb0_hs,
-+	msm_mux_usb1_hs,
-+	msm_mux_usb_phy_ps,
-+	msm_mux_vfr_1,
-+	msm_mux_vsense_trigger_mirnat,
-+	msm_mux_wlan,
-+	msm_mux_wsa_clk,
-+	msm_mux_wsa_data,
-+	msm_mux__,
-+};
-+
-+static const char *const gpio_groups[] = {
-+	"gpio0",   "gpio1",   "gpio2",   "gpio3",   "gpio4",   "gpio5",
-+	"gpio6",   "gpio7",   "gpio8",   "gpio9",   "gpio10",  "gpio11",
-+	"gpio12",  "gpio13",  "gpio14",  "gpio15",  "gpio16",  "gpio17",
-+	"gpio18",  "gpio19",  "gpio20",  "gpio21",  "gpio22",  "gpio23",
-+	"gpio24",  "gpio25",  "gpio26",  "gpio27",  "gpio28",  "gpio29",
-+	"gpio30",  "gpio31",  "gpio32",  "gpio33",  "gpio34",  "gpio35",
-+	"gpio36",  "gpio37",  "gpio38",  "gpio39",  "gpio40",  "gpio41",
-+	"gpio42",  "gpio43",  "gpio44",  "gpio45",  "gpio46",  "gpio47",
-+	"gpio48",  "gpio49",  "gpio50",  "gpio51",  "gpio52",  "gpio53",
-+	"gpio54",  "gpio55",  "gpio56",  "gpio57",  "gpio58",  "gpio59",
-+	"gpio60",  "gpio61",  "gpio62",  "gpio63",  "gpio64",  "gpio65",
-+	"gpio66",  "gpio67",  "gpio68",  "gpio69",  "gpio70",  "gpio71",
-+	"gpio72",  "gpio73",  "gpio74",  "gpio75",  "gpio76",  "gpio77",
-+	"gpio78",  "gpio79",  "gpio80",  "gpio81",  "gpio82",  "gpio83",
-+	"gpio84",  "gpio85",  "gpio86",  "gpio87",  "gpio88",  "gpio89",
-+	"gpio90",  "gpio91",  "gpio92",  "gpio93",  "gpio94",  "gpio95",
-+	"gpio96",  "gpio97",  "gpio98",  "gpio99",  "gpio100", "gpio101",
-+	"gpio102", "gpio103", "gpio104", "gpio105", "gpio106", "gpio107",
-+	"gpio108", "gpio109", "gpio110", "gpio111", "gpio112", "gpio113",
-+	"gpio114", "gpio115", "gpio116", "gpio117", "gpio118", "gpio119",
-+	"gpio120", "gpio121", "gpio122",
-+};
-+
-+static const char *const adsp_ext_groups[] = {
-+	"gpio118",
-+};
-+
-+static const char *const agera_pll_groups[] = {
-+	"gpio28",
-+};
-+
-+static const char *const aoss_cti_groups[] = {
-+	"gpio76",
-+};
-+
-+static const char *const atest_char_groups[] = {
-+	"gpio84",  "gpio85",  "gpio86",  "gpio87",
-+	"gpio115", "gpio117", "gpio118", "gpio119",
-+	"gpio120", "gpio121",
-+};
-+
-+static const char *const atest_tsens_groups[] = {
-+	"gpio7", "gpio29",
-+};
-+
-+static const char *const atest_usb_groups[] = {
-+	"gpio7",  "gpio10", "gpio11", "gpio54",
-+	"gpio55", "gpio67", "gpio68", "gpio76",
-+	"gpio75", "gpio77",
-+};
-+
-+static const char *const cam_mclk_groups[] = {
-+	"gpio28", "gpio29", "gpio30", "gpio31",
-+};
-+
-+static const char *const cci_async_groups[] = {
-+	"gpio26", "gpio41", "gpio42",
-+};
-+
-+static const char *const cci_i2c_groups[] = {
-+	"gpio32", "gpio33", "gpio34", "gpio35",
-+};
-+
-+static const char *const cci_timer_groups[] = {
-+	"gpio37", "gpio38", "gpio39", "gpio41",
-+	"gpio42",
-+};
-+
-+static const char *const copy_gp_groups[] = {
-+	"gpio86",
-+};
-+
-+static const char *const copy_phase_groups[] = {
-+	"gpio103",
-+};
-+
-+static const char *const cri_trng_groups[] = {
-+	"gpio60", "gpio61", "gpio62",
-+};
-+
-+static const char *const dbg_out_clk_groups[] = {
-+	"gpio11",
-+};
-+
-+static const char *const ddr_bist_groups[] = {
-+	"gpio7", "gpio8", "gpio9", "gpio10",
-+};
-+
-+static const char *const ddr_pxi_groups[] = {
-+	"gpio6",  "gpio7",  "gpio10", "gpio11",
-+	"gpio12", "gpio13", "gpio54", "gpio55",
-+};
-+
-+static const char *const dp_hot_groups[] = {
-+	"gpio102", "gpio103", "gpio104",
-+};
-+
-+static const char *const edp_hot_groups[] = {
-+	"gpio113",
-+};
-+
-+static const char *const edp_lcd_groups[] = {
-+	"gpio119",
-+};
-+
-+static const char *const emac_gcc_groups[] = {
-+	"gpio101", "gpio102",
-+};
-+
-+static const char *const emac_phy_intr_groups[] = {
-+	"gpio89",
-+};
-+
-+static const char *const forced_usb_groups[] = {
-+	"gpio43",
-+};
-+
-+static const char *const gcc_gp_groups[] = {
-+	"gpio21", "gpio22", "gpio57", "gpio58",
-+	"gpio59", "gpio78",
-+};
-+
-+static const char *const gp_pdm_groups[] = {
-+	"gpio8", "gpio54", "gpio63", "gpio66",
-+	"gpio79", "gpio95",
-+};
-+
-+static const char *const gps_tx_groups[] = {
-+	"gpio53", "gpio54", "gpio56", "gpio57",
-+	"gpio59", "gpio60",
-+};
-+
-+static const char *const hs0_mi2s_groups[] = {
-+	"gpio36", "gpio37", "gpio38", "gpio39",
-+};
-+
-+static const char *const hs1_mi2s_groups[] = {
-+	"gpio24", "gpio25", "gpio26", "gpio27",
-+};
-+
-+static const char *const jitter_bist_groups[] = {
-+	"gpio12", "gpio26",
-+};
-+
-+static const char *const ldo_en_groups[] = {
-+	"gpio97",
-+};
-+
-+static const char *const ldo_update_groups[] = {
-+	"gpio98",
-+};
-+
-+static const char *const m_voc_groups[] = {
-+	"gpio120",
-+};
-+
-+static const char *const mclk1_groups[] = {
-+	"gpio121",
-+};
-+
-+static const char *const mclk2_groups[] = {
-+	"gpio122",
-+};
-+
-+static const char *const mdp_vsync_groups[] = {
-+	"gpio81", "gpio82", "gpio83", "gpio90",
-+	"gpio97", "gpio98",
-+};
-+
-+static const char *const mdp_vsync0_out_groups[] = {
-+	"gpio90",
-+};
-+
-+static const char *const mdp_vsync1_out_groups[] = {
-+	"gpio90",
-+};
-+
-+static const char *const mdp_vsync2_out_groups[] = {
-+	"gpio90",
-+};
-+
-+static const char *const mdp_vsync3_out_groups[] = {
-+	"gpio90",
-+};
-+
-+static const char *const mdp_vsync4_out_groups[] = {
-+	"gpio90",
-+};
-+
-+static const char *const mdp_vsync5_out_groups[] = {
-+	"gpio90",
-+};
-+
-+static const char *const mi2s_1_groups[] = {
-+	"gpio108", "gpio109", "gpio110", "gpio111",
-+};
-+
-+static const char *const mss_lte_groups[] = {
-+	"gpio106", "gpio107",
-+};
-+
-+static const char *const nav_pps_in_groups[] = {
-+	"gpio53", "gpio56", "gpio57", "gpio59",
-+	"gpio60",
-+};
-+
-+static const char *const nav_pps_out_groups[] = {
-+	"gpio53", "gpio56", "gpio57", "gpio59",
-+	"gpio60",
-+};
-+
-+static const char *const pa_indicator_or_groups[] = {
-+	"gpio53",
-+};
-+
-+static const char *const pcie_clk_req_groups[] = {
-+	"gpio90",
-+};
-+
-+static const char *const pcie_ep_rst_groups[] = {
-+	"gpio89",
-+};
-+
-+static const char *const phase_flag_groups[] = {
-+	"gpio10",  "gpio18",  "gpio19",  "gpio20",
-+	"gpio23",  "gpio24",  "gpio25",  "gpio38",
-+	"gpio40",  "gpio41",  "gpio42",  "gpio43",
-+	"gpio44",  "gpio45",  "gpio53",  "gpio54",
-+	"gpio55",  "gpio67",  "gpio68",  "gpio75",
-+	"gpio76",  "gpio77",  "gpio78",  "gpio79",
-+	"gpio80",  "gpio82",  "gpio84",  "gpio92",
-+	"gpio116", "gpio117", "gpio118", "gpio119",
-+};
-+
-+static const char *const pll_bist_groups[] = {
-+	"gpio27",
-+};
-+
-+static const char *const pll_bypassnl_groups[] = {
-+	"gpio13",
-+};
-+
-+static const char *const pll_reset_n_groups[] = {
-+	"gpio14",
-+};
-+
-+static const char *const prng_rosc_groups[] = {
-+	"gpio99", "gpio102",
-+};
-+
-+static const char *const qdss_cti_groups[] = {
-+	"gpio83",  "gpio96",  "gpio97",  "gpio98",
-+	"gpio103", "gpio104", "gpio112", "gpio113",
-+};
-+
-+static const char *const qdss_gpio_groups[] = {
-+	"gpio0",   "gpio1",   "gpio2",   "gpio3",
-+	"gpio6",   "gpio7",   "gpio8",   "gpio9",
-+	"gpio14",  "gpio15",  "gpio20",  "gpio21",
-+	"gpio28",  "gpio29",  "gpio30",  "gpio31",
-+	"gpio32",  "gpio33",  "gpio34",  "gpio35",
-+	"gpio44",  "gpio45",  "gpio46",  "gpio47",
-+	"gpio81",  "gpio82",  "gpio92",  "gpio93",
-+	"gpio94",  "gpio95",  "gpio108", "gpio109",
-+	"gpio117", "gpio118", "gpio119", "gpio120",
-+};
-+
-+static const char *const qlink_enable_groups[] = {
-+	"gpio52",
-+};
-+
-+static const char *const qlink_request_groups[] = {
-+	"gpio51",
-+};
-+
-+static const char *const qspi_groups[] = {
-+	"gpio44", "gpio45", "gpio46", "gpio47",
-+	"gpio48", "gpio49", "gpio50",
-+};
-+
-+static const char *const qup0_groups[] = {
-+	"gpio0",  "gpio1",  "gpio2",  "gpio3",
-+	"gpio4",  "gpio5",  "gpio16", "gpio17",
-+	"gpio18", "gpio19",
-+};
-+
-+static const char *const qup1_groups[] = {
-+	"gpio6",  "gpio7",  "gpio8",  "gpio9",
-+	"gpio10", "gpio11", "gpio12", "gpio13",
-+	"gpio14", "gpio15", "gpio20", "gpio21",
-+	"gpio22", "gpio23",
-+};
-+
-+static const char *const rgmii_groups[] = {
-+	"gpio81",  "gpio82",  "gpio83",  "gpio91",
-+	"gpio92",  "gpio93",  "gpio94",  "gpio95",
-+	"gpio96",  "gpio97",  "gpio102", "gpio103",
-+	"gpio112", "gpio113", "gpio114",
-+};
-+
-+static const char *const sd_write_protect_groups[] = {
-+	"gpio24",
-+};
-+
-+static const char *const sp_cmu_groups[] = {
-+	"gpio64",
-+};
-+
-+static const char *const ter_mi2s_groups[] = {
-+	"gpio115", "gpio116", "gpio117", "gpio118",
-+};
-+
-+static const char *const tgu_ch_groups[] = {
-+	"gpio89", "gpio90", "gpio91", "gpio92",
-+};
-+
-+static const char *const uim1_groups[] = {
-+	"gpio77", "gpio78", "gpio79", "gpio80",
-+};
-+
-+static const char *const uim2_groups[] = {
-+	"gpio73", "gpio74", "gpio75", "gpio76",
-+};
-+
-+static const char *const usb0_hs_groups[] = {
-+	"gpio88",
-+};
-+
-+static const char *const usb1_hs_groups[] = {
-+	"gpio89",
-+};
-+
-+static const char *const usb_phy_ps_groups[] = {
-+	"gpio104",
-+};
-+
-+static const char *const vfr_1_groups[] = {
-+	"gpio92",
-+};
-+
-+static const char *const vsense_trigger_mirnat_groups[] = {
-+	"gpio7",
-+};
-+
-+static const char *const wlan_groups[] = {
-+	"gpio16", "gpio17", "gpio47", "gpio48",
-+};
-+
-+static const char *const wsa_clk_groups[] = {
-+	"gpio111",
-+};
-+
-+static const char *const wsa_data_groups[] = {
-+	"gpio110",
-+};
-+
-+static const struct pinfunction qcs615_functions[] = {
-+	MSM_PIN_FUNCTION(gpio),
-+	MSM_PIN_FUNCTION(adsp_ext),
-+	MSM_PIN_FUNCTION(agera_pll),
-+	MSM_PIN_FUNCTION(aoss_cti),
-+	MSM_PIN_FUNCTION(atest_char),
-+	MSM_PIN_FUNCTION(atest_tsens),
-+	MSM_PIN_FUNCTION(atest_usb),
-+	MSM_PIN_FUNCTION(cam_mclk),
-+	MSM_PIN_FUNCTION(cci_async),
-+	MSM_PIN_FUNCTION(cci_i2c),
-+	MSM_PIN_FUNCTION(cci_timer),
-+	MSM_PIN_FUNCTION(copy_gp),
-+	MSM_PIN_FUNCTION(copy_phase),
-+	MSM_PIN_FUNCTION(cri_trng),
-+	MSM_PIN_FUNCTION(dbg_out_clk),
-+	MSM_PIN_FUNCTION(ddr_bist),
-+	MSM_PIN_FUNCTION(ddr_pxi),
-+	MSM_PIN_FUNCTION(dp_hot),
-+	MSM_PIN_FUNCTION(edp_hot),
-+	MSM_PIN_FUNCTION(edp_lcd),
-+	MSM_PIN_FUNCTION(emac_gcc),
-+	MSM_PIN_FUNCTION(emac_phy_intr),
-+	MSM_PIN_FUNCTION(forced_usb),
-+	MSM_PIN_FUNCTION(gcc_gp),
-+	MSM_PIN_FUNCTION(gp_pdm),
-+	MSM_PIN_FUNCTION(gps_tx),
-+	MSM_PIN_FUNCTION(hs0_mi2s),
-+	MSM_PIN_FUNCTION(hs1_mi2s),
-+	MSM_PIN_FUNCTION(jitter_bist),
-+	MSM_PIN_FUNCTION(ldo_en),
-+	MSM_PIN_FUNCTION(ldo_update),
-+	MSM_PIN_FUNCTION(m_voc),
-+	MSM_PIN_FUNCTION(mclk1),
-+	MSM_PIN_FUNCTION(mclk2),
-+	MSM_PIN_FUNCTION(mdp_vsync),
-+	MSM_PIN_FUNCTION(mdp_vsync0_out),
-+	MSM_PIN_FUNCTION(mdp_vsync1_out),
-+	MSM_PIN_FUNCTION(mdp_vsync2_out),
-+	MSM_PIN_FUNCTION(mdp_vsync3_out),
-+	MSM_PIN_FUNCTION(mdp_vsync4_out),
-+	MSM_PIN_FUNCTION(mdp_vsync5_out),
-+	MSM_PIN_FUNCTION(mi2s_1),
-+	MSM_PIN_FUNCTION(mss_lte),
-+	MSM_PIN_FUNCTION(nav_pps_in),
-+	MSM_PIN_FUNCTION(nav_pps_out),
-+	MSM_PIN_FUNCTION(pa_indicator_or),
-+	MSM_PIN_FUNCTION(pcie_clk_req),
-+	MSM_PIN_FUNCTION(pcie_ep_rst),
-+	MSM_PIN_FUNCTION(phase_flag),
-+	MSM_PIN_FUNCTION(pll_bist),
-+	MSM_PIN_FUNCTION(pll_bypassnl),
-+	MSM_PIN_FUNCTION(pll_reset_n),
-+	MSM_PIN_FUNCTION(prng_rosc),
-+	MSM_PIN_FUNCTION(qdss_cti),
-+	MSM_PIN_FUNCTION(qdss_gpio),
-+	MSM_PIN_FUNCTION(qlink_enable),
-+	MSM_PIN_FUNCTION(qlink_request),
-+	MSM_PIN_FUNCTION(qspi),
-+	MSM_PIN_FUNCTION(qup0),
-+	MSM_PIN_FUNCTION(qup1),
-+	MSM_PIN_FUNCTION(rgmii),
-+	MSM_PIN_FUNCTION(sd_write_protect),
-+	MSM_PIN_FUNCTION(sp_cmu),
-+	MSM_PIN_FUNCTION(ter_mi2s),
-+	MSM_PIN_FUNCTION(tgu_ch),
-+	MSM_PIN_FUNCTION(uim1),
-+	MSM_PIN_FUNCTION(uim2),
-+	MSM_PIN_FUNCTION(usb0_hs),
-+	MSM_PIN_FUNCTION(usb1_hs),
-+	MSM_PIN_FUNCTION(usb_phy_ps),
-+	MSM_PIN_FUNCTION(vfr_1),
-+	MSM_PIN_FUNCTION(vsense_trigger_mirnat),
-+	MSM_PIN_FUNCTION(wlan),
-+	MSM_PIN_FUNCTION(wsa_clk),
-+	MSM_PIN_FUNCTION(wsa_data),
-+};
-+
-+/* Every pin is maintained as a single group, and missing or non-existing pin
-+ * would be maintained as dummy group to synchronize pin group index with
-+ * pin descriptor registered with pinctrl core.
-+ * Clients would not be able to request these dummy pin groups.
-+ */
-+static const struct msm_pingroup qcs615_groups[] = {
-+	[0] = PINGROUP(0, WEST, qup0, _, qdss_gpio, _, _, _, _, _, _),
-+	[1] = PINGROUP(1, WEST, qup0, _, qdss_gpio, _, _, _, _, _, _),
-+	[2] = PINGROUP(2, WEST, qup0, _, qdss_gpio, _, _, _, _, _, _),
-+	[3] = PINGROUP(3, WEST, qup0, _, qdss_gpio, _, _, _, _, _, _),
-+	[4] = PINGROUP(4, WEST, qup0, _, _, _, _, _, _, _, _),
-+	[5] = PINGROUP(5, WEST, qup0, _, _, _, _, _, _, _, _),
-+	[6] = PINGROUP(6, EAST, qup1, qdss_gpio, ddr_pxi, _, _, _, _, _, _),
-+	[7] = PINGROUP(7, EAST, qup1, ddr_bist, qdss_gpio, atest_tsens,
-+			vsense_trigger_mirnat, atest_usb, ddr_pxi, _, _),
-+	[8] = PINGROUP(8, EAST, qup1, gp_pdm, ddr_bist, qdss_gpio, _, _, _, _, _),
-+	[9] = PINGROUP(9, EAST, qup1, ddr_bist, qdss_gpio, _, _, _, _, _, _),
-+	[10] = PINGROUP(10, EAST, qup1, ddr_bist, _, phase_flag, atest_usb, ddr_pxi, _, _, _),
-+	[11] = PINGROUP(11, EAST, qup1, dbg_out_clk, atest_usb, ddr_pxi, _, _, _, _, _),
-+	[12] = PINGROUP(12, EAST, qup1, jitter_bist, ddr_pxi, _, _, _, _, _, _),
-+	[13] = PINGROUP(13, EAST, qup1, pll_bypassnl, _, ddr_pxi, _, _, _, _, _),
-+	[14] = PINGROUP(14, EAST, qup1, pll_reset_n, _, qdss_gpio, _, _, _, _, _),
-+	[15] = PINGROUP(15, EAST, qup1, qdss_gpio, _, _, _, _, _, _, _),
-+	[16] = PINGROUP(16, WEST, qup0, _, wlan, _, _, _, _, _, _),
-+	[17] = PINGROUP(17, WEST, qup0, _, wlan, _, _, _, _, _, _),
-+	[18] = PINGROUP(18, WEST, qup0, _, phase_flag, _, _, _, _, _, _),
-+	[19] = PINGROUP(19, WEST, qup0, _, phase_flag, _, _, _, _, _, _),
-+	[20] = PINGROUP(20, SOUTH, qup1, _, phase_flag, qdss_gpio, _, _, _, _, _),
-+	[21] = PINGROUP(21, SOUTH, qup1, gcc_gp, _, qdss_gpio, _, _, _, _, _),
-+	[22] = PINGROUP(22, SOUTH, qup1, gcc_gp, _, _, _, _, _, _, _),
-+	[23] = PINGROUP(23, SOUTH, qup1, _, phase_flag, _, _, _, _, _, _),
-+	[24] = PINGROUP(24, EAST, hs1_mi2s, sd_write_protect, _, phase_flag, _, _, _, _, _),
-+	[25] = PINGROUP(25, EAST, hs1_mi2s, _, phase_flag, _, _, _, _, _, _),
-+	[26] = PINGROUP(26, EAST, cci_async, hs1_mi2s, jitter_bist, _, _, _, _, _, _),
-+	[27] = PINGROUP(27, EAST, hs1_mi2s, pll_bist, _, _, _, _, _, _, _),
-+	[28] = PINGROUP(28, EAST, cam_mclk, agera_pll, qdss_gpio, _, _, _, _, _, _),
-+	[29] = PINGROUP(29, EAST, cam_mclk, _, qdss_gpio, atest_tsens, _, _, _, _, _),
-+	[30] = PINGROUP(30, EAST, cam_mclk, qdss_gpio, _, _, _, _, _, _, _),
-+	[31] = PINGROUP(31, EAST, cam_mclk, _, qdss_gpio, _, _, _, _, _, _),
-+	[32] = PINGROUP(32, EAST, cci_i2c, _, qdss_gpio, _, _, _, _, _, _),
-+	[33] = PINGROUP(33, EAST, cci_i2c, _, qdss_gpio, _, _, _, _, _, _),
-+	[34] = PINGROUP(34, EAST, cci_i2c, _, qdss_gpio, _, _, _, _, _, _),
-+	[35] = PINGROUP(35, EAST, cci_i2c, _, qdss_gpio, _, _, _, _, _, _),
-+	[36] = PINGROUP(36, EAST, hs0_mi2s, _, _, _, _, _, _, _, _),
-+	[37] = PINGROUP(37, EAST, cci_timer, hs0_mi2s, _, _, _, _, _, _, _),
-+	[38] = PINGROUP(38, EAST, cci_timer, hs0_mi2s, _, phase_flag, _, _, _, _, _),
-+	[39] = PINGROUP(39, EAST, cci_timer, hs0_mi2s, _, _, _, _, _, _, _),
-+	[40] = PINGROUP(40, EAST, _, phase_flag, _, _, _, _, _, _, _),
-+	[41] = PINGROUP(41, EAST, cci_async, cci_timer, _, phase_flag, _, _, _, _, _),
-+	[42] = PINGROUP(42, EAST, cci_async, cci_timer, _, phase_flag, _, _, _, _, _),
-+	[43] = PINGROUP(43, SOUTH, _, phase_flag, forced_usb, _, _, _, _, _, _),
-+	[44] = PINGROUP(44, EAST, qspi, _, phase_flag, qdss_gpio, _, _, _, _, _),
-+	[45] = PINGROUP(45, EAST, qspi, _, phase_flag, qdss_gpio, _, _, _, _, _),
-+	[46] = PINGROUP(46, EAST, qspi, _, qdss_gpio, _, _, _, _, _, _),
-+	[47] = PINGROUP(47, EAST, qspi, _, qdss_gpio, wlan, _, _, _, _, _),
-+	[48] = PINGROUP(48, EAST, qspi, _, wlan, _, _, _, _, _, _),
-+	[49] = PINGROUP(49, EAST, qspi, _, _, _, _, _, _, _, _),
-+	[50] = PINGROUP(50, EAST, qspi, _, _, _, _, _, _, _, _),
-+	[51] = PINGROUP(51, SOUTH, qlink_request, _, _, _, _, _, _, _, _),
-+	[52] = PINGROUP(52, SOUTH, qlink_enable, _, _, _, _, _, _, _, _),
-+	[53] = PINGROUP(53, SOUTH, pa_indicator_or, nav_pps_in, nav_pps_out, gps_tx, _,
-+			phase_flag, _, _, _),
-+	[54] = PINGROUP(54, SOUTH, _, gps_tx, gp_pdm, _, phase_flag, atest_usb, ddr_pxi, _, _),
-+	[55] = PINGROUP(55, SOUTH, _, _, phase_flag, atest_usb, ddr_pxi, _, _, _, _),
-+	[56] = PINGROUP(56, SOUTH, _, nav_pps_in, nav_pps_out, gps_tx, _, _, _, _, _),
-+	[57] = PINGROUP(57, SOUTH, _, nav_pps_in, gps_tx, nav_pps_out, gcc_gp, _, _, _, _),
-+	[58] = PINGROUP(58, SOUTH, _, gcc_gp, _, _, _, _, _, _, _),
-+	[59] = PINGROUP(59, SOUTH, _, nav_pps_in, nav_pps_out, gps_tx, gcc_gp, _, _, _, _),
-+	[60] = PINGROUP(60, SOUTH, _, nav_pps_in, nav_pps_out, gps_tx, cri_trng, _, _, _, _),
-+	[61] = PINGROUP(61, SOUTH, _, cri_trng, _, _, _, _, _, _, _),
-+	[62] = PINGROUP(62, SOUTH, _, cri_trng, _, _, _, _, _, _, _),
-+	[63] = PINGROUP(63, SOUTH, _, _, gp_pdm, _, _, _, _, _, _),
-+	[64] = PINGROUP(64, SOUTH, _, sp_cmu, _, _, _, _, _, _, _),
-+	[65] = PINGROUP(65, SOUTH, _, _, _, _, _, _, _, _, _),
-+	[66] = PINGROUP(66, SOUTH, _, gp_pdm, _, _, _, _, _, _, _),
-+	[67] = PINGROUP(67, SOUTH, _, _, _, phase_flag, atest_usb, _, _, _, _),
-+	[68] = PINGROUP(68, SOUTH, _, _, _, phase_flag, atest_usb, _, _, _, _),
-+	[69] = PINGROUP(69, SOUTH, _, _, _, _, _, _, _, _, _),
-+	[70] = PINGROUP(70, SOUTH, _, _, _, _, _, _, _, _, _),
-+	[71] = PINGROUP(71, SOUTH, _, _, _, _, _, _, _, _, _),
-+	[72] = PINGROUP(72, SOUTH, _, _, _, _, _, _, _, _, _),
-+	[73] = PINGROUP(73, SOUTH, uim2, _, _, _, _, _, _, _, _),
-+	[74] = PINGROUP(74, SOUTH, uim2, _, _, _, _, _, _, _, _),
-+	[75] = PINGROUP(75, SOUTH, uim2, _, phase_flag, atest_usb, _, _, _, _, _),
-+	[76] = PINGROUP(76, SOUTH, uim2, _, phase_flag, atest_usb, aoss_cti, _, _, _, _),
-+	[77] = PINGROUP(77, SOUTH, uim1, _, phase_flag, atest_usb, _, _, _, _, _),
-+	[78] = PINGROUP(78, SOUTH, uim1, gcc_gp, _, phase_flag, _, _, _, _, _),
-+	[79] = PINGROUP(79, SOUTH, uim1, gp_pdm, _, phase_flag, _, _, _, _, _),
-+	[80] = PINGROUP(80, SOUTH, uim1, _, phase_flag, _, _, _, _, _, _),
-+	[81] = PINGROUP(81, WEST, rgmii, mdp_vsync, _, qdss_gpio, _, _, _, _, _),
-+	[82] = PINGROUP(82, WEST, rgmii, mdp_vsync, _, phase_flag, qdss_gpio, _, _, _, _),
-+	[83] = PINGROUP(83, WEST, rgmii, mdp_vsync, _, qdss_cti, _, _, _, _, _),
-+	[84] = PINGROUP(84, SOUTH, _, phase_flag, atest_char, _, _, _, _, _, _),
-+	[85] = PINGROUP(85, SOUTH, _, atest_char, _, _, _, _, _, _, _),
-+	[86] = PINGROUP(86, SOUTH, copy_gp, _, atest_char, _, _, _, _, _, _),
-+	[87] = PINGROUP(87, SOUTH, _, atest_char, _, _, _, _, _, _, _),
-+	[88] = PINGROUP(88, WEST, _, usb0_hs, _, _, _, _, _, _, _),
-+	[89] = PINGROUP(89, WEST, emac_phy_intr, pcie_ep_rst, tgu_ch, usb1_hs, _, _, _, _, _),
-+	[90] = PINGROUP(90, WEST, mdp_vsync, mdp_vsync0_out, mdp_vsync1_out,
-+			mdp_vsync2_out, mdp_vsync3_out, mdp_vsync4_out, mdp_vsync5_out,
-+			pcie_clk_req, tgu_ch),
-+	[91] = PINGROUP(91, WEST, rgmii, tgu_ch, _, _, _, _, _, _, _),
-+	[92] = PINGROUP(92, WEST, rgmii, vfr_1, tgu_ch, _, phase_flag, qdss_gpio, _, _, _),
-+	[93] = PINGROUP(93, WEST, rgmii, qdss_gpio, _, _, _, _, _, _, _),
-+	[94] = PINGROUP(94, WEST, rgmii, qdss_gpio, _, _, _, _, _, _, _),
-+	[95] = PINGROUP(95, WEST, rgmii, gp_pdm, qdss_gpio, _, _, _, _, _, _),
-+	[96] = PINGROUP(96, WEST, rgmii, qdss_cti, _, _, _, _, _, _, _),
-+	[97] = PINGROUP(97, WEST, rgmii, mdp_vsync, ldo_en, qdss_cti, _, _, _, _, _),
-+	[98] = PINGROUP(98, WEST, mdp_vsync, ldo_update, qdss_cti, _, _, _, _, _, _),
-+	[99] = PINGROUP(99, EAST, prng_rosc, _, _, _, _, _, _, _, _),
-+	[100] = PINGROUP(100, WEST, _, _, _, _, _, _, _, _, _),
-+	[101] = PINGROUP(101, WEST, emac_gcc, _, _, _, _, _, _, _, _),
-+	[102] = PINGROUP(102, WEST, rgmii, dp_hot, emac_gcc, prng_rosc, _, _, _, _, _),
-+	[103] = PINGROUP(103, WEST, rgmii, dp_hot, copy_phase, qdss_cti, _, _, _, _, _),
-+	[104] = PINGROUP(104, WEST, usb_phy_ps, _, qdss_cti, dp_hot, _, _, _, _, _),
-+	[105] = PINGROUP(105, SOUTH, _, _, _, _, _, _, _, _, _),
-+	[106] = PINGROUP(106, EAST, mss_lte, _, _, _, _, _, _, _, _),
-+	[107] = PINGROUP(107, EAST, mss_lte, _, _, _, _, _, _, _, _),
-+	[108] = PINGROUP(108, SOUTH, mi2s_1, _, qdss_gpio, _, _, _, _, _, _),
-+	[109] = PINGROUP(109, SOUTH, mi2s_1, _, qdss_gpio, _, _, _, _, _, _),
-+	[110] = PINGROUP(110, SOUTH, wsa_data, mi2s_1, _, _, _, _, _, _, _),
-+	[111] = PINGROUP(111, SOUTH, wsa_clk, mi2s_1, _, _, _, _, _, _, _),
-+	[112] = PINGROUP(112, WEST, rgmii, _, qdss_cti, _, _, _, _, _, _),
-+	[113] = PINGROUP(113, WEST, rgmii, edp_hot, _, qdss_cti, _, _, _, _, _),
-+	[114] = PINGROUP(114, WEST, rgmii, _, _, _, _, _, _, _, _),
-+	[115] = PINGROUP(115, SOUTH, ter_mi2s, atest_char, _, _, _, _, _, _, _),
-+	[116] = PINGROUP(116, SOUTH, ter_mi2s, _, phase_flag, _, _, _, _, _, _),
-+	[117] = PINGROUP(117, SOUTH, ter_mi2s, _, phase_flag, qdss_gpio, atest_char, _, _, _, _),
-+	[118] = PINGROUP(118, SOUTH, ter_mi2s, adsp_ext, _, phase_flag, qdss_gpio, atest_char,
-+			_, _, _),
-+	[119] = PINGROUP(119, SOUTH, edp_lcd, _, phase_flag, qdss_gpio, atest_char, _, _, _, _),
-+	[120] = PINGROUP(120, SOUTH, m_voc, qdss_gpio, atest_char, _, _, _, _, _, _),
-+	[121] = PINGROUP(121, SOUTH, mclk1, atest_char, _, _, _, _, _, _, _),
-+	[122] = PINGROUP(122, SOUTH, mclk2, _, _, _, _, _, _, _, _),
-+	[123] = UFS_RESET(ufs_reset, 0x9f000),
-+	[124] = SDC_QDSD_PINGROUP(sdc1_rclk, WEST, 0x9a000, 15, 0),
-+	[125] = SDC_QDSD_PINGROUP(sdc1_clk, WEST, 0x9a000, 13, 6),
-+	[126] = SDC_QDSD_PINGROUP(sdc1_cmd, WEST, 0x9a000, 11, 3),
-+	[127] = SDC_QDSD_PINGROUP(sdc1_data, WEST, 0x9a000, 9, 0),
-+	[128] = SDC_QDSD_PINGROUP(sdc2_clk, SOUTH, 0x98000, 14, 6),
-+	[129] = SDC_QDSD_PINGROUP(sdc2_cmd, SOUTH, 0x98000, 11, 3),
-+	[130] = SDC_QDSD_PINGROUP(sdc2_data, SOUTH, 0x98000, 9, 0),
-+};
-+
-+static const struct msm_gpio_wakeirq_map qcs615_pdc_map[] = {
-+	{ 1, 45 },    { 3, 31 },    { 7, 55 },    { 9, 110 },   { 11, 34 },
-+	{ 13, 33 },   { 14, 35 },   { 17, 46 },   { 19, 48 },   { 21, 83 },
-+	{ 22, 36 },   { 26, 38 },   { 35, 37 },   { 39, 125 },  { 41, 47 },
-+	{ 47, 49 },   { 48, 51 },   { 50, 52 },   { 51, 123 },  { 55, 56 },
-+	{ 56, 57 },   { 57, 58 },   { 60, 60 },   { 71, 54 },   { 80, 73 },
-+	{ 81, 64 },   { 82, 50 },   { 83, 65 },   { 84, 92 },   { 85, 99 },
-+	{ 86, 67 },   { 87, 84 },   { 88, 124 },  { 89, 122 },  { 90, 69 },
-+	{ 92, 88 },   { 93, 75 },   { 94, 91 },   { 95, 72 },   { 96, 82 },
-+	{ 97, 74 },   { 98, 95 },   { 99, 94 },   { 100, 100 }, { 101, 40 },
-+	{ 102, 93 },  { 103, 77 },  { 104, 78 },  { 105, 96 },  { 107, 97 },
-+	{ 108, 111 }, { 112, 112 }, { 113, 113 }, { 117, 85 },  { 118, 102 },
-+	{ 119, 87 },  { 120, 114 }, { 121, 89 },  { 122, 90 },
-+};
-+
-+static const struct msm_pinctrl_soc_data qcs615_tlmm = {
-+	.pins = qcs615_pins,
-+	.npins = ARRAY_SIZE(qcs615_pins),
-+	.functions = qcs615_functions,
-+	.nfunctions = ARRAY_SIZE(qcs615_functions),
-+	.groups = qcs615_groups,
-+	.ngroups = ARRAY_SIZE(qcs615_groups),
-+	.ngpios = 123,
-+	.tiles = qcs615_tiles,
-+	.ntiles = ARRAY_SIZE(qcs615_tiles),
-+	.wakeirq_map = qcs615_pdc_map,
-+	.nwakeirq_map = ARRAY_SIZE(qcs615_pdc_map),
-+};
-+
-+static const struct of_device_id qcs615_tlmm_of_match[] = {
-+	{
-+		.compatible = "qcom,qcs615-tlmm",
-+	},
-+	{},
-+};
-+
-+static int qcs615_tlmm_probe(struct platform_device *pdev)
-+{
-+	return  msm_pinctrl_probe(pdev, &qcs615_tlmm);
-+}
-+
-+static struct platform_driver qcs615_tlmm_driver = {
-+	.driver = {
-+		.name = "qcs615-tlmm",
-+		.of_match_table = qcs615_tlmm_of_match,
-+	},
-+	.probe = qcs615_tlmm_probe,
-+	.remove_new = msm_pinctrl_remove,
-+};
-+
-+static int __init qcs615_tlmm_init(void)
-+{
-+	return platform_driver_register(&qcs615_tlmm_driver);
-+}
-+arch_initcall(qcs615_tlmm_init);
-+
-+static void __exit qcs615_tlmm_exit(void)
-+{
-+	platform_driver_unregister(&qcs615_tlmm_driver);
-+}
-+module_exit(qcs615_tlmm_exit);
-+
-+MODULE_DESCRIPTION("QTI QCS615 TLMM driver");
-+MODULE_LICENSE("GPL");
-+MODULE_DEVICE_TABLE(of, qcs615_tlmm_of_match);
-
--- 
-2.46.0
-
+Regards,
+Inochi
 
