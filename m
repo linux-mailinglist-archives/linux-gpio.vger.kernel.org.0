@@ -1,107 +1,147 @@
-Return-Path: <linux-gpio+bounces-9930-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9931-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72083972AED
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 09:37:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45BD1972C1E
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 10:28:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1FD4628615C
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 07:37:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 784E21C23E90
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 08:28:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEA8917F397;
-	Tue, 10 Sep 2024 07:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A61517E004;
+	Tue, 10 Sep 2024 08:28:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BHtY7DKd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QbexHhyN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634DC17E010;
-	Tue, 10 Sep 2024 07:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342DF136344
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Sep 2024 08:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725953826; cv=none; b=MIY7wcb8vz17VVkcK6UdDbT+MTGEYpdQF3CKCsp7MzH2FtxBOpaKjMkHBTvOfXrbAlRTS3j+AG9LlrOb+qrOfsDWOMGTfO+4Pl+5ZwFy5h22TiE5hWk1HqFlDXJcZwJTb5gRjfYsY3JEAGEMreanVvuhOeAo1e+WfUSg8WUe1/w=
+	t=1725956898; cv=none; b=Q33HgaiYQT4cZVfMFVp/ymwrDHzpKYIG7K3B7PgFns1oIn+DsLRakeLgF/xrC/S4Fcn9QWhwNq2jYfH37q+zH/ciTqu4HVGIUNupov0+RKxS+tGrFNSrwuvNNDrFfOAX8ITQd8U3X30ud8DeGzGJVHEStbaKh20f79eTsElOfYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725953826; c=relaxed/simple;
-	bh=l23NYfXeykSrpfi1JGToBjVhZyQnctbe5iVzH/S067U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OIiqfClCnQQPkW5YUEC+95upaI4cguGtBZ4NCzdWwIbJeP7KkF/yaModfdgeU3x5rIpnUEQsnlG63lvyeVWIkvFpUnCTsWTmI67lCOiXT/VZm06hfFrYLxFhuQk+W+iOVi5eQWOD3qovfxmDqiY4P7j7BzzSgsOrkEwP3FmxO2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BHtY7DKd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2623FC4CEC8;
-	Tue, 10 Sep 2024 07:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725953826;
-	bh=l23NYfXeykSrpfi1JGToBjVhZyQnctbe5iVzH/S067U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BHtY7DKdzrRxb+w+efU8gdL1Ohwx3mHCczD9LdA3i75lpD6MctmpQq0QZfHQ4aIJq
-	 LP8s88YI0tLNbFT1/AUxiLz+TWhVHP7+ysui4PcD4B2SArEZiB0PQFM9UCrgBIis9s
-	 uuFU3Ipz5UI1j0oXmrBFg8xWOs3kUnnytyf7hLVlozStMLb4Quj+kUAD/b87JPUeRJ
-	 xPJhX+JmiKMWDz2Mml3HThBlG2JH3pqI9XVDo1JalOLXRAv8FzJMjYQOygwdTO+XAV
-	 QWy3nkUjhziK3kOzNl2ci/VTPEZ/WeYJTKzAb624zKHu4IZMZQ4Ybxukt4WQiDl259
-	 PfHkOnkrnapIw==
-Date: Tue, 10 Sep 2024 09:37:02 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, linux-samsung-soc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/10] Add minimal Exynos8895 SoC and SM-G950F support
-Message-ID: <4rtzyvspsrtqhxx6er3pr2tmidfhyvipckrxmszx5zltp3ahbk@q66bxawsmtqm>
-References: <20240909110017.419960-1-ivo.ivanov.ivanov1@gmail.com>
+	s=arc-20240116; t=1725956898; c=relaxed/simple;
+	bh=8imfunuhxTYfoLScmxU+j53/bK6zeCbrtX5PrD7EC8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Tivcs9eHXmI2qKS/XPfnYq4+A77ma+fepxGOqgoe1vqrYVPb6rAZA04jk9Fz2SjpDV+EM1YQA5LKYGqydiXcZme+CW/NZVpE1HcHlagE9zewOl594MUfE94kNwMJ3MIOLnIRSmbGuSXvLxfAwpRRvMOUCsMlgDP8bDxJmDoOeRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QbexHhyN; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725956896; x=1757492896;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=8imfunuhxTYfoLScmxU+j53/bK6zeCbrtX5PrD7EC8A=;
+  b=QbexHhyNJ1aeyi+uOMrQyVEOaHTt+9HvkCAAl6F53RFsLoV3oaAC1miy
+   QmfapZag7FoIYoS6gNIHRbqEoRRL7RwCqoV4iZoYfmz8xPINOkQMeZXfa
+   HeEWICvCQu8JlQSH/EBT25xUaeqd1j5uQZxDxaGB6TbjkZgFHXfcOi/oy
+   B2Yfd0PyoWeyrUfsIB6sUhS2otxPTbsRPX0tdXD3fLEZIpblik2ZSvAbv
+   PS61uv5ziz86AlBA0VHJ4H9xgNMUwMm8spFH2SorlAjbJJb+b0gJESUBi
+   cumWdLghjRDORNmLOPO0q7W2gRQ41PMIDPH+b280rt5CWNYR2mXTX+gKN
+   A==;
+X-CSE-ConnectionGUID: LoLrq1V1Rjy49lCxroxL7Q==
+X-CSE-MsgGUID: 1AwpmiRbTOaIbPdkFEi3eg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="24556363"
+X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
+   d="scan'208";a="24556363"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 01:28:15 -0700
+X-CSE-ConnectionGUID: djlQ/o9aTsqGXqUqd5CYvQ==
+X-CSE-MsgGUID: q/+TMKmuQcCe4Ooj8utAlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
+   d="scan'208";a="66747720"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP; 10 Sep 2024 01:28:14 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 65C8B20B; Tue, 10 Sep 2024 11:28:13 +0300 (EEST)
+Date: Tue, 10 Sep 2024 11:28:13 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linux pin control <linux-gpio@vger.kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-pinctrl for 6.12-1
+Message-ID: <ZuADHfjPOZCV_osO@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240909110017.419960-1-ivo.ivanov.ivanov1@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Sep 09, 2024 at 02:00:07PM +0300, Ivaylo Ivanov wrote:
-> Hi folks,
-> 
-> This series adds initial SoC support for the Exynos 8895 SoC and also
-> initial board support for Samsung Galaxy S8 phone (SM-G950F), codenamed
-> dreamlte.
-> 
-> The Exynos 8895 SoC is also used in S8 Plus (dream2lte), Note 8 (greatlte)
-> and Meizu 15 Plus (m1891). Currently DT is added for the Exynos 8895 SoC
-> and dreamlte, but it should be really easy to adapt for the other devices
-> with the same SoC. It has been tested with dtbs_check W=1 and results
-> in no warnings.
-> 
-> The support added in this series consists of:
-> * cpus
-> * pinctrl
-> * gpio
-> * simple-framebuffer
-> * pstore
-> 
-> This is enough to reach a minimal initramfs shell using an upstream kernel.
-> More platform support will be added in the future.
-> 
-> The preferred way to boot this device is by using a small shim bl called
-> uniLoader [1], which packages the mainline kernel and DT and jumps to
-> the kernel. This is done in order to work around some issues caused by
-> the stock, and non-replacable Samsung S-Boot bootloader. For example,
-> S-Boot leaves the decon trigger control unset, which causes the framebuffer
-> to not refresh. 
-> 
-> [1] https://github.com/ivoszbg/uniLoader
-> 
+Hi Linux pin control  maintainers,
 
-FYI,
-It is too late in the cycle for me to pick up any of these patches.
-Also due to some travel and events, I might be slower in review, but I
-will review them before next merge window opens.
+Not so big update to the Intel pin control drivers for the next cycle. No
+problems were reported for one or more weeks that patches reside in Linux Next.
+Please, pull for v6.12.
 
-Best regards,
-Krzysztof
+Thanks,
+
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit 8400291e289ee6b2bf9779ff1c83a291501f017b:
+
+  Linux 6.11-rc1 (2024-07-28 14:19:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v6.12-1
+
+for you to fetch changes up to 1652e95b17d5666375949524c708afef2574a01e:
+
+  pinctrl: intel: Constify struct intel_pinctrl parameter (2024-09-05 18:09:28 +0300)
+
+----------------------------------------------------------------
+intel-pinctrl for v6.12-1
+
+* Enable High Impedance pin configuration support for Intel pin control
+* Miscellaneous small improvements here and there
+
+The following is an automated git shortlog grouped by driver:
+
+baytrail:
+ -  Drop duplicate return statement
+
+intel:
+ -  Constify struct intel_pinctrl parameter
+ -  Inline intel_gpio_community_irq_handler()
+ -  Introduce for_each_intel_gpio_group() helper et al.
+ -  Constify intel_get_community() returned object
+ -  Implement high impedance support
+ -  Add __intel_gpio_get_direction() helper
+ -  Refactor __intel_gpio_set_direction() to be more useful
+ -  Move debounce validation out of the lock
+
+----------------------------------------------------------------
+Andy Shevchenko (9):
+      pinctrl: intel: Move debounce validation out of the lock
+      pinctrl: intel: Refactor __intel_gpio_set_direction() to be more useful
+      pinctrl: intel: Add __intel_gpio_get_direction() helper
+      pinctrl: intel: Implement high impedance support
+      pinctrl: intel: Constify intel_get_community() returned object
+      pinctrl: intel: Introduce for_each_intel_gpio_group() helper et al.
+      pinctrl: intel: Inline intel_gpio_community_irq_handler()
+      pinctrl: baytrail: Drop duplicate return statement
+      pinctrl: intel: Constify struct intel_pinctrl parameter
+
+ drivers/pinctrl/intel/pinctrl-baytrail.c  |   7 +-
+ drivers/pinctrl/intel/pinctrl-intel.c     | 326 +++++++++++++++++-------------
+ drivers/pinctrl/intel/pinctrl-intel.h     |   3 +-
+ drivers/pinctrl/intel/pinctrl-lynxpoint.c |   2 +-
+ 4 files changed, 190 insertions(+), 148 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
