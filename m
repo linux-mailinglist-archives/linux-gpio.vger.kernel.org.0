@@ -1,147 +1,138 @@
-Return-Path: <linux-gpio+bounces-9931-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9932-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45BD1972C1E
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 10:28:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D4C6973349
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 12:30:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 784E21C23E90
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 08:28:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 624CF1C24D9E
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Sep 2024 10:30:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A61517E004;
-	Tue, 10 Sep 2024 08:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18816199FC6;
+	Tue, 10 Sep 2024 10:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QbexHhyN"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GmnD8tzD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342DF136344
-	for <linux-gpio@vger.kernel.org>; Tue, 10 Sep 2024 08:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C87818E778;
+	Tue, 10 Sep 2024 10:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725956898; cv=none; b=Q33HgaiYQT4cZVfMFVp/ymwrDHzpKYIG7K3B7PgFns1oIn+DsLRakeLgF/xrC/S4Fcn9QWhwNq2jYfH37q+zH/ciTqu4HVGIUNupov0+RKxS+tGrFNSrwuvNNDrFfOAX8ITQd8U3X30ud8DeGzGJVHEStbaKh20f79eTsElOfYM=
+	t=1725964008; cv=none; b=E4GT6k8f/xdm1tWFRPuOHk+QAzr7HdRWdk82c99Mrvnu58eAKs5XOI5qgE8ivSDAgKgfRRKXfpWfDvscObDmF4KkJS2VwkWjyQMrwCYF3ds0ppz6uSxtB34/XLf06trW2hYFN+CcsQt2su2o9kFp+pnjSWzYdZ4KHFujDi3otcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725956898; c=relaxed/simple;
-	bh=8imfunuhxTYfoLScmxU+j53/bK6zeCbrtX5PrD7EC8A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Tivcs9eHXmI2qKS/XPfnYq4+A77ma+fepxGOqgoe1vqrYVPb6rAZA04jk9Fz2SjpDV+EM1YQA5LKYGqydiXcZme+CW/NZVpE1HcHlagE9zewOl594MUfE94kNwMJ3MIOLnIRSmbGuSXvLxfAwpRRvMOUCsMlgDP8bDxJmDoOeRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QbexHhyN; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725956896; x=1757492896;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=8imfunuhxTYfoLScmxU+j53/bK6zeCbrtX5PrD7EC8A=;
-  b=QbexHhyNJ1aeyi+uOMrQyVEOaHTt+9HvkCAAl6F53RFsLoV3oaAC1miy
-   QmfapZag7FoIYoS6gNIHRbqEoRRL7RwCqoV4iZoYfmz8xPINOkQMeZXfa
-   HeEWICvCQu8JlQSH/EBT25xUaeqd1j5uQZxDxaGB6TbjkZgFHXfcOi/oy
-   B2Yfd0PyoWeyrUfsIB6sUhS2otxPTbsRPX0tdXD3fLEZIpblik2ZSvAbv
-   PS61uv5ziz86AlBA0VHJ4H9xgNMUwMm8spFH2SorlAjbJJb+b0gJESUBi
-   cumWdLghjRDORNmLOPO0q7W2gRQ41PMIDPH+b280rt5CWNYR2mXTX+gKN
-   A==;
-X-CSE-ConnectionGUID: LoLrq1V1Rjy49lCxroxL7Q==
-X-CSE-MsgGUID: 1AwpmiRbTOaIbPdkFEi3eg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="24556363"
-X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
-   d="scan'208";a="24556363"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 01:28:15 -0700
-X-CSE-ConnectionGUID: djlQ/o9aTsqGXqUqd5CYvQ==
-X-CSE-MsgGUID: q/+TMKmuQcCe4Ooj8utAlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
-   d="scan'208";a="66747720"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 10 Sep 2024 01:28:14 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 65C8B20B; Tue, 10 Sep 2024 11:28:13 +0300 (EEST)
-Date: Tue, 10 Sep 2024 11:28:13 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linux pin control <linux-gpio@vger.kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-pinctrl for 6.12-1
-Message-ID: <ZuADHfjPOZCV_osO@black.fi.intel.com>
+	s=arc-20240116; t=1725964008; c=relaxed/simple;
+	bh=A+3OLdpimudkms3tByzvzHCppYe6z/Si3Ti0qCO/73Q=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=hUiyzU0+5ych8ZMAUQAkEL5ZdkV1W4ryxkwiL7/lcgpegeuuSiPmcNJKuDZxQj9qP9YfcL4NV/ve1OaBtVfyFvvkpH0B0C+EteCxX7YaOj6vm3/E1wEhEOBnZsT+d5pbpBj+S6LjTmuBR6YRejRZ34YszWKr8x7Fcq47HDirdKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GmnD8tzD; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48A3K2g1023785;
+	Tue, 10 Sep 2024 10:26:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=XMcNMOa7T3YiCgYS23Em1q
+	KtvEpsX9ZqsjtO4s457gk=; b=GmnD8tzDmbQFqyVTGp1BdQ1dSVJGX4glZ98cvX
+	PMvVbr8bYeAEDIUM/YDZk6/NmBTGhF9NBGYz5fMznN3AJDLuMkc9LPlasFPfCxLE
+	aw9nm120DRVDN+STePOGEECVXpM9vTdmaKuF4GJUXHRMKbnkDaeeCPKWjSPGE6GL
+	PWpFSTKiL2MU0PgI28fBs65AMDm7RCyB7f4RoSd0Of7uOIMQvCWfdT1Nm3OkufJj
+	rgKJPL02CWu4juDs7BqkiNUUxSP1RNBW5xPGwyhdygET8iR+3toGJVhdzxMh9Nbg
+	sHCIPRKMlIWum8Tu7ra974r4NnSgLnc6unQDjKEkh3JDbJ2A==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41gy6p5h5s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Sep 2024 10:26:44 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48AAQhG8005712
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Sep 2024 10:26:43 GMT
+Received: from lijuang2-gv.ap.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 10 Sep 2024 03:26:37 -0700
+From: Lijuan Gao <quic_lijuang@quicinc.com>
+Subject: [PATCH 0/2] dt-bindings: pinctrl: describe qcs615-tlmm
+Date: Tue, 10 Sep 2024 18:26:13 +0800
+Message-ID: <20240910-add_qcs615_pinctrl_driver-v1-0-36f4c0d527d8@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMUe4GYC/43OTW4CMQwF4KugrBtkJ5lp01XvUaFRfpxiqZ2Bh
+ EZUaO7eDKgLVAlYPsv+/E6iUGYq4nV1EpkqF57GFvBpJcLWjR8kObYsFCgDFnrpYhz2ofTYDTs
+ ewyF/DjFzpSzJW3TWeOV7FO1+lynx8Wy/b1recjlM+ef8quIy/VPtDbWiBGkiBkwvoSMd3vbfH
+ NrOOkxfy5uLgXDXgEA6JtdZMFfG0q2qh/uoZqHWmAzGSAj/Lf2wpZde1j07rz0k3V9b8zz/Arc
+ aFQqgAQAA
+To: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Lijuan Gao
+	<quic_lijuang@quicinc.com>, <kernel@quicinc.com>
+X-Mailer: b4 0.15-dev-99b12
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1725963997; l=1162;
+ i=quic_lijuang@quicinc.com; s=20240827; h=from:subject:message-id;
+ bh=A+3OLdpimudkms3tByzvzHCppYe6z/Si3Ti0qCO/73Q=;
+ b=EB13IPRKg0cFCajqfG4jwBGzDe6tRJRzQgUCQl+MmTQkcLx7PxfL2MmJbvHItDGW65DTdqe1U
+ NJCHkF5KxBRCbB/4a0BJaNN+a5MXSAYo2c+EzuwNoLmnQ30M0LHWcjL
+X-Developer-Key: i=quic_lijuang@quicinc.com; a=ed25519;
+ pk=1zeM8FpQK/J1jSFHn8iXHeb3xt7F/3GvHv7ET2RNJxE=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: eLD9BiGoqUZwwxNb7tEXkXQz5r890xwy
+X-Proofpoint-GUID: eLD9BiGoqUZwwxNb7tEXkXQz5r890xwy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
+ bulkscore=0 lowpriorityscore=0 mlxlogscore=895 spamscore=0 phishscore=0
+ impostorscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2409100078
 
-Hi Linux pin control  maintainers,
+Introduce Top Level Mode Multiplexer dt-binding and driver for Qualcomm
+QCS615 SoC.
 
-Not so big update to the Intel pin control drivers for the next cycle. No
-problems were reported for one or more weeks that patches reside in Linux Next.
-Please, pull for v6.12.
+Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
+---
+patch made the following modifications and verifications:
+ - Successfully ran dt_binding_check for the current binding file.
+ - Sorted enums, function names, and groups alphabetically.
+ - Specified each tile in DeviceTree referenced with pinctrl-sm8150.c.
+ - Consolidated duplicate functions.
+ - Verified functional with UART function on QCS615 ride board.
 
-Thanks,
+---
+Lijuan Gao (2):
+      dt-bindings: pinctrl: document the QCS615 Top Level Mode Multiplexer
+      pinctrl: qcom: add the tlmm driver for QCS615 platform
 
-With Best Regards,
-Andy Shevchenko
+ .../bindings/pinctrl/qcom,qcs615-tlmm.yaml         |  123 +++
+ drivers/pinctrl/qcom/Kconfig.msm                   |    7 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-qcs615.c              | 1107 ++++++++++++++++++++
+ 4 files changed, 1238 insertions(+)
+---
+base-commit: fdadd93817f124fd0ea6ef251d4a1068b7feceba
+change-id: 20240906-add_qcs615_pinctrl_driver-eb91a94b2b61
 
-The following changes since commit 8400291e289ee6b2bf9779ff1c83a291501f017b:
-
-  Linux 6.11-rc1 (2024-07-28 14:19:55 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v6.12-1
-
-for you to fetch changes up to 1652e95b17d5666375949524c708afef2574a01e:
-
-  pinctrl: intel: Constify struct intel_pinctrl parameter (2024-09-05 18:09:28 +0300)
-
-----------------------------------------------------------------
-intel-pinctrl for v6.12-1
-
-* Enable High Impedance pin configuration support for Intel pin control
-* Miscellaneous small improvements here and there
-
-The following is an automated git shortlog grouped by driver:
-
-baytrail:
- -  Drop duplicate return statement
-
-intel:
- -  Constify struct intel_pinctrl parameter
- -  Inline intel_gpio_community_irq_handler()
- -  Introduce for_each_intel_gpio_group() helper et al.
- -  Constify intel_get_community() returned object
- -  Implement high impedance support
- -  Add __intel_gpio_get_direction() helper
- -  Refactor __intel_gpio_set_direction() to be more useful
- -  Move debounce validation out of the lock
-
-----------------------------------------------------------------
-Andy Shevchenko (9):
-      pinctrl: intel: Move debounce validation out of the lock
-      pinctrl: intel: Refactor __intel_gpio_set_direction() to be more useful
-      pinctrl: intel: Add __intel_gpio_get_direction() helper
-      pinctrl: intel: Implement high impedance support
-      pinctrl: intel: Constify intel_get_community() returned object
-      pinctrl: intel: Introduce for_each_intel_gpio_group() helper et al.
-      pinctrl: intel: Inline intel_gpio_community_irq_handler()
-      pinctrl: baytrail: Drop duplicate return statement
-      pinctrl: intel: Constify struct intel_pinctrl parameter
-
- drivers/pinctrl/intel/pinctrl-baytrail.c  |   7 +-
- drivers/pinctrl/intel/pinctrl-intel.c     | 326 +++++++++++++++++-------------
- drivers/pinctrl/intel/pinctrl-intel.h     |   3 +-
- drivers/pinctrl/intel/pinctrl-lynxpoint.c |   2 +-
- 4 files changed, 190 insertions(+), 148 deletions(-)
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Lijuan Gao <quic_lijuang@quicinc.com>
 
 
