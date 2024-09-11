@@ -1,108 +1,186 @@
-Return-Path: <linux-gpio+bounces-9970-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9971-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6B7097552B
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 16:22:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6D7A975691
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 17:13:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D7481F254C6
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 14:22:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 72CB82812D6
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 15:13:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8A9A19E97C;
-	Wed, 11 Sep 2024 14:22:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 980E31ABEAA;
+	Wed, 11 Sep 2024 15:13:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iT/O2DJr"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="d1FqCsPh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WJHEzuoO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow8-smtp.messagingengine.com (flow8-smtp.messagingengine.com [103.168.172.143])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AE3199949;
-	Wed, 11 Sep 2024 14:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F351AB6D5;
+	Wed, 11 Sep 2024 15:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.143
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726064524; cv=none; b=FzPqjBPP7TOcBSgqyOF2mE1915bZlRdqh0BpKqLoso5yC0t6EQhL/4ZDe55qn3Gj3qzgEOTOUAA5DH8wCs6rEpvL/bas4F7tfgjBOHakVqJ/7j8BEJsk8P1zU89vzPtlosCUzDqbljkeGZoWFmlG22W5iLKqbwINjnB2FZadb2o=
+	t=1726067596; cv=none; b=WiSLKqojL9wkNR6+Fh6ppdoJGNGEylBK7vQ31a1wqQKS/Crop9GVDd5frNaccRuYUK6wj+yi9yvEhT2nFiIcDpareutSUqxz0tz682n0zKK8ypo6KtbiGX+3kiMoGk1/DrJm324uted11czFNaKIE/+Mu1I+0liKDXI1q6jn7xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726064524; c=relaxed/simple;
-	bh=o76AcHbXbRGzANSciTEuox4Bvd9TI1DHxqnZ0Ai44mQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X/jwImDS/67yCcjPrdlTrduBkRuudW6N+QIXaJqOULxWcE0WCdMsNQRlq9FX05/cmV1FpdYTwMat9UXU2joZhaSS8mjlnj9X30xnwmYS54ghX6NDyEeIP4tjWEdnpeCfaF3hq53SydW2Umjq4JHugYPhL73KvlVU404x61VkB6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iT/O2DJr; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-71781f42f75so5457809b3a.1;
-        Wed, 11 Sep 2024 07:22:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726064522; x=1726669322; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=o76AcHbXbRGzANSciTEuox4Bvd9TI1DHxqnZ0Ai44mQ=;
-        b=iT/O2DJroGGSiqGcijJmfe5FN9dD+RysqMd9BZUo4Y0kimWWmMud7rB64CT7QM7InM
-         zXX4T6PLNnUyfSur0ErpVUacRdESS1/9GdIjb3KUi4A273QH4M52+HfOs3pREhLonHA5
-         PxLpYbrBFp2S29pj/JgBipA3oOD118rzILQMfectXjRSYlGxnoYVLixYoabfozOb++E0
-         fmH7uwoIQz2z1uHqLomFVlcEZ10qEM4HCh5fszoDDpluV9ossULxtANLW1Iy2UP5JfVb
-         Qh0JHDJQCittbmtJyCFTvBacBp54IAFUG5Ti+4J8WvXKEG068AjJtEg0dv4+UmffV6Tk
-         lCeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726064522; x=1726669322;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o76AcHbXbRGzANSciTEuox4Bvd9TI1DHxqnZ0Ai44mQ=;
-        b=hASvZrOW95EQjazE2Il5dvpjzU/X3BOdb8yVj89SiTPfC0z8SnLbKCaFX4UAtJPlUD
-         LUnHrFje53qncOHZ3Z/n6Wqp+sWtaPwITS/BLnbtxZ0h47YaHJPpR/RG1HMDka+ysOsZ
-         82bBUMnWU78pk6zTWcDzTkZztzuOcCobwhC80ufWfSN5wfBnUpzXgN3uOH8gqsDemuRc
-         sT6uzyOeR0v4MoeokGsHLrX1jh3iX6WE/KsOxz0fM81/DKYCSDG+7gChDxmzZuB9ayaZ
-         65Dqvnqk6vbIotM4PPGxbnedzQfAj2CYWdC2s0/ZMmM5KmWPHtzKLPfIHCmipkI7E9f3
-         Zz2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUA8MOQbDqx7NFCVFG3iiFyavoCbg5Go2InNwqow/Qe5tFmyEWP9hpuu3roiUJOMbg3iZS5WRDriZdu65GA@vger.kernel.org, AJvYcCUTZLXi0ar9gKWKj54Oiqngu12Dus5vW1/G/GjDISD63chA52gDrmsbjKdPdaVMIweNIJXRpa7kBYaDETuQ76g=@vger.kernel.org, AJvYcCVQkKxc0WgcQOGJ01+eucPwp0FSAlNGTjpJja3zx/rpX5mbk2zJtUTTeLyv1qL33IvSb/NxQuz7uey6Xg==@vger.kernel.org, AJvYcCVVZMV5zqhe5HDQILZuF3en3MG8PeI3Xr0ut0yvhT7kQ8UktQdnoeHUlnK5t0l8yeiRfCmuRQj2Ddw=@vger.kernel.org, AJvYcCXvxMLW66CCi0L6SZcYg3Qfi6up3atMv5bG4sSAYc/pgGZEOgsy7XL6q0+deqzCS/4JaJxkVhd7uaMk@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiGDcPNRU/OpDR55oSEDmVWS8oISSHi+Pw4iQ/VlqeefBk5/aL
-	OvF4qN2m2yGIazX+CK997YIJkVMctOUHhbUR/hc2599vmzuapxKF
-X-Google-Smtp-Source: AGHT+IGHiWzhUZMlISG1wfusUmj12FDfLvKIhsEju2A7EBEjueSKjiPNUyeW6qF3DD+xQn/SjKUC0A==
-X-Received: by 2002:a05:6a00:94a7:b0:710:591e:b52f with SMTP id d2e1a72fcca58-718d5ded3a6mr21737936b3a.5.1726064522266;
-        Wed, 11 Sep 2024 07:22:02 -0700 (PDT)
-Received: from [192.168.0.122] ([59.188.211.160])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7db1fba40f2sm31734a12.7.2024.09.11.07.21.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Sep 2024 07:22:01 -0700 (PDT)
-Message-ID: <041215c1-ad90-4257-9852-57b1d7bd490c@gmail.com>
-Date: Wed, 11 Sep 2024 22:21:56 +0800
+	s=arc-20240116; t=1726067596; c=relaxed/simple;
+	bh=WYSo2PbdmOt952RgPLexG7kR5bugRClHNNEt8x7IqTE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=OtrXEEp+2Wgye82IQUxHrqg/SE6tQ/vU7SB3WvBPqTquPcV+VbfLiV82rOy5esuj5LEf1Po/OLsbSsZ08Mf2XT2W6qsT+pZA4dykrPKPiVK0x1STzKBG0WMx+pHxb+O7euRhUENBTyFDfSyxkEkrzLb/UxmufhA5WoNWO/pfqF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=d1FqCsPh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WJHEzuoO; arc=none smtp.client-ip=103.168.172.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailflow.phl.internal (Postfix) with ESMTP id 7C9EA2001A5;
+	Wed, 11 Sep 2024 11:13:13 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Wed, 11 Sep 2024 11:13:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1726067593;
+	 x=1726074793; bh=W3/bFLF5GPmG/oJuoeXrc+CcLB5pp1RgCukpWqx8NY4=; b=
+	d1FqCsPhahhr2Dwr0XhrBSK7PBKhdl7kI1nAgf00eCbyFC3vScqgPILeiWLRy9hy
+	a4lO0s3Scill0gwpM/UBvLTdJMscXqSM2VFAsYG1+NoCJKaY9wISL6D34pDBkkLQ
+	t9r/A/L85Q/EsPnej4osD2co4XsYgrUYP+Rkha0LGyvvRv5L5Siv/SzxkF0RGUjj
+	tTslxZAr3dO0T05TmrYsAxurjvThNSfHsg/5VlmWemjcFPSKn6rh32tR0LPcX1Ry
+	Jm215fJWfFOvjQbaXBM/rfNP0IqwTiS6iKK9glQn55ItjILGpjpr1d4+5JBu+8pr
+	Xbpo3pGRUXteq9y9osONcQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1726067593; x=
+	1726074793; bh=W3/bFLF5GPmG/oJuoeXrc+CcLB5pp1RgCukpWqx8NY4=; b=W
+	JHEzuoO4E7PRxiBieiNSNuPJb4Yr2Tuy4vWbEXgdu4gj5HKRFgXN6/EUdTycU5CF
+	LT5ga6nz4aVl6f8wSmNowcpZikl5UwHsKgnOITVHnEOZBo9Y1IJcp+dDVIniLPjz
+	e1viD/oIGj3nwee812PuibrlGfCu5DeEBTZOp3yo3NjJQeTQWKL2xkpyhsES0BjK
+	AEZtCZPryrR9qTzhFoRv14kxWofl0C/yr5K/RMRVg7kbZslIowPSShqlctUDzE+f
+	hH29FlukC/fnufte5CTQ+hrLebOEikXOBU95oyfXOnorHMQzy2Up3zSoVLXz2DBd
+	p9Bhz9jQqwRNibXrZlPKw==
+X-ME-Sender: <xms:hrPhZnfTX_VylO-PNCzmdjPTic9z8BGVcJxI88meJ27e9r2pOSFL5Q>
+    <xme:hrPhZtMPdP0AD192qTqmmh8z6yEcM-y6QqpnpZixQ5Mxf_3q1NXlYfZrhn8s3ywTt
+    jIcY4d7mCJjNb6xF9I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudejuddgkeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhepvdfhvdekueduveffffetgfdvveefvdelhedvvdeg
+    jedvfeehtdeggeevheefleejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohephedt
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrrghrohhnrdifuhesrghnrghloh
+    hgrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdp
+    rhgtphhtthhopehmthhurhhquhgvthhtvgessggrhihlihgsrhgvrdgtohhmpdhrtghpth
+    htohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehmihhquhgvlhdrrhgrhihn
+    rghlsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhloh
+    hfthdrnhgvthdprhgtphhtthhopehluhhkmhgrseguvghngidruggvpdhrtghpthhtohep
+    rghlvgigrghnuggvrhdrshhvvghrughlihhnsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
+    eprghnugihrdhshhgvvhgthhgvnhhkohesghhmrghilhdrtghomh
+X-ME-Proxy: <xmx:hrPhZginhrjXLqpwTCFTnXWpiAEfHo6FpQYq-qC18dJws16a01kLeg>
+    <xmx:hrPhZo-6qbuPN1Aw9mzuLb4wUz9doIfVj9TzCNgYoAyNBZYVif6F-Q>
+    <xmx:hrPhZjut-J77GVyanCLtqtITaVUJE3vOfi2whVrSShNt_nC9ni0KDA>
+    <xmx:hrPhZnFgz3iQgcxly9ZYIMYBR37m-rLjANIkLGUC3G67NEHKp35kDw>
+    <xmx:ibPhZu-Qtm3ps0O94A68wPefYRL6CBcJRGkpn-4RQLmjUBM57R5KGzrl>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C2F2D222006F; Wed, 11 Sep 2024 11:13:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/22] Initial device trees for A7-A11 based Apple devices
-To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
- <linux@roeck-us.net>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Mark Kettenis <kettenis@openbsd.org>, asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org
-Cc: Konrad Dybcio <konradybcio@kernel.org>,
- Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-References: <20240911084353.28888-2-towinchenmi@gmail.com>
-Content-Language: en-MW
-From: Nick Chan <towinchenmi@gmail.com>
-In-Reply-To: <20240911084353.28888-2-towinchenmi@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Wed, 11 Sep 2024 15:12:49 +0000
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Nikita Shubin" <nikita.shubin@maquefel.me>,
+ "Andy Shevchenko" <andy.shevchenko@gmail.com>
+Cc: "Hartley Sweeten" <hsweeten@visionengravers.com>,
+ "Alexander Sverdlin" <alexander.sverdlin@gmail.com>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Lukasz Majewski" <lukma@denx.de>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Andy Shevchenko" <andy@kernel.org>,
+ "Michael Turquette" <mturquette@baylibre.com>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Sebastian Reichel" <sre@kernel.org>,
+ "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Vinod Koul" <vkoul@kernel.org>,
+ "Wim Van Sebroeck" <wim@linux-watchdog.org>,
+ "Guenter Roeck" <linux@roeck-us.net>,
+ "Thierry Reding" <thierry.reding@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ "Mark Brown" <broonie@kernel.org>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ "Miquel Raynal" <miquel.raynal@bootlin.com>,
+ "Richard Weinberger" <richard@nod.at>,
+ "Vignesh Raghavendra" <vigneshr@ti.com>,
+ "Damien Le Moal" <dlemoal@kernel.org>,
+ "Sergey Shtylyov" <s.shtylyov@omp.ru>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Liam Girdwood" <lgirdwood@gmail.com>,
+ "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
+ "Ralf Baechle" <ralf@linux-mips.org>, "Aaron Wu" <Aaron.Wu@analog.com>,
+ "Lee Jones" <lee@kernel.org>, "Olof Johansson" <olof@lixom.net>,
+ "Niklas Cassel" <cassel@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-watchdog@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-spi@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+ linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-sound@vger.kernel.org,
+ "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ "Andrew Lunn" <andrew@lunn.ch>
+Message-Id: <cff6b9b6-6ede-435a-9271-829fde82550d@app.fastmail.com>
+In-Reply-To: <0e3902c9a42b05b0227e767b227624c6fe8fd2bb.camel@maquefel.me>
+References: <20240909-ep93xx-v12-0-e86ab2423d4b@maquefel.me>
+ <CAHp75Veusv=f6Xf9-gL3ctoO5Njn7wiWMw-aMN45KbZ=YB=mQw@mail.gmail.com>
+ <0e3902c9a42b05b0227e767b227624c6fe8fd2bb.camel@maquefel.me>
+Subject: Re: [PATCH v12 00/38] ep93xx device tree conversion
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-There is a recommended device tree node `chassis-type` to specify the
-type of the chassis. For iPhones, iPod touches and iPads it is pretty
-obvious that they are `handset` and `tablet`. However, nothing really
-fits for Apple TV so a new chassis-type value may need to be added.
+On Mon, Sep 9, 2024, at 09:02, Nikita Shubin wrote:
+> On Mon, 2024-09-09 at 11:49 +0300, Andy Shevchenko wrote:
+>> On Mon, Sep 9, 2024 at 11:12=E2=80=AFAM Nikita Shubin via B4 Relay
+>> <devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
+>> >=20
+>> > The goal is to recieve ACKs for all patches in series to merge it
+>> > via Arnd branch.
+>> >=20
+>> > It was decided from the very beginning of these series, mostly
+>> > because
+>> > it's a full conversion of platform code to DT and it seemed not
+>> > convenient to maintain compatibility with both platform and DT.
+>> >=20
+>> > Following patches require attention from Stephen Boyd or clk
+>> > subsystem:
+>>=20
+>> Does it mean you still have a few patches without tags?
+>> What are their respective numbers?
+>
+> The clk is the last one as i think, all others can be ACKed by
+> Alexander or by Arnd himself.
 
-Nick Chan
+I've merged the series into the for-next branch of the arm-soc
+tree now. The timing isn't great as I was still waiting for
+that final Ack, but it seem better to have it done than to keep
+respinning the series.
+
+I won't send it with the initial pull requests this week
+but hope to send this one once I get beck from LPC, provided
+there are no surprises that require a rebase.
+
+     Arnd
 
