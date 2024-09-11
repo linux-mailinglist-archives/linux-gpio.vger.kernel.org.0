@@ -1,136 +1,170 @@
-Return-Path: <linux-gpio+bounces-9963-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9964-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7921B974D79
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 10:53:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB99A974F64
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 12:10:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1B431F21B9B
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 08:53:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F06941C220E6
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 10:10:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A975719E995;
-	Wed, 11 Sep 2024 08:48:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 907761822F8;
+	Wed, 11 Sep 2024 10:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SELzJjzQ"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ThHWqJwG";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ArS1iDDN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from a7-43.smtp-out.eu-west-1.amazonses.com (a7-43.smtp-out.eu-west-1.amazonses.com [54.240.7.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218F519E996;
-	Wed, 11 Sep 2024 08:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5F27E0E8;
+	Wed, 11 Sep 2024 10:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.7.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726044518; cv=none; b=oClQ0scTJI8PtfMbPaoZacaxUw3Ia5iqmDZidFfIJ4deI57RAX8WfipK6B8gkMFggjRHUJCWVH2Gx/yu5O5qqxe4RP2c81jJsjw/LdvL7d6KT15izX6P/iFheJw/urD8grVkOVL6zxyjeSYBVK2/V+TrJpE1JuJtL9OR44M5LWM=
+	t=1726049430; cv=none; b=gCSmdHVqyh6M2mZuOQxQ2IEnih/1iUyKTxv2nDItN3Yn/dvzq92PHpoc2jwZFUBrLC6RkUyT0YPylnvWIbLGXufumEQjzX3z1MQRPyvkEoHCskp1NTfLkD57Z7xs34bQTurwYDzPyICUv7EXpwmQekF5ArwAIyEBH/X1Y3MgCSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726044518; c=relaxed/simple;
-	bh=IlwfpKeYG1A6lmRpl2J8Js+0dUrkM33rNMIVVPeLcso=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Iukc8IvS0Q/VEz+PMWfmY18yGk3wBhC92wlKjB3D7monpaqL1VK8Vh+/Hd8FmyB2IQ4epb4TAhMfsQJY2DCyDMiNBd3uFO0u4TKbY3TonOhMUJnr4E2fMzsaGWxCgcXEk3n/HK3Ua7GRRsZ0YzjUIguhX84nhpiGEbozt99i8Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SELzJjzQ; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-71781f42f75so5188059b3a.1;
-        Wed, 11 Sep 2024 01:48:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726044516; x=1726649316; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zy0C2tn+S+ad9UGMaUozuLH5nIPIOY9VH2lYfYG3DPM=;
-        b=SELzJjzQRJIJxRVXaRARykQkhwroJK283xwl4eIwbQUTffdcYb0/l0GAl4hnYzMjFt
-         y5KwXDeq7WnpnSHdSTGqqMkvFXMI5C/oWk/lcKwdX6hPf6XREZWRc8y9Abd4mU+7i71D
-         ild4sZbaikqvOKg4Kz+VN9+CTKZFyiDTAQYhbiyWtn0ANi5pjuHeR3sumcbg8AlyE22y
-         WeIX4STn3DYZ0QpGmxEFK7qa7RHhyJZljSVpfCd3h2S672IPxefpFWm/r7fKA+jc1Gz5
-         /xz/wBkr+6sBCIPbNByEoCM/hYb9Rlb/cSUpKiC6PS6x3IQ8tdI957odc36CBomlTnbT
-         HoYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726044516; x=1726649316;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zy0C2tn+S+ad9UGMaUozuLH5nIPIOY9VH2lYfYG3DPM=;
-        b=V3DyqsjOzUUCruUM0hgWKPp+tV0nIM+FnF0gbF3PdJcIUYacHg7zn4zL2+KW1W8pcg
-         4Nevid9rpqUITt47c2yu086KBGiNkf1n2NIi6SmSlpq37S3l/1KHZf/69/S8Zlt9BNzJ
-         1ZUdKmBrNIiTHVr0DmSTb401KFiZMLhHdBSiKeugKok/yFMJvePGHpkY1cPh/shqFlXP
-         2YdMFQOwEa8MpqJFCYyRxL+fFfe5/RYS50FRQF7dsrAJWVbXuVNh4x+OwwEEQPekBpyJ
-         awl+mInZ2q3MBqrABe/WNHqwLkV3aXKjeB3Gj6nLIFONhFZ60JqGD+fihqt2Fb+6SbGx
-         jl4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU49cM36hX0Bpg7SFnHlDCnTmSXbs0/vv/wYnvvm6YX1AuVWC7AO2QgcS++EPrp5n/AMud8cN/tuJtULOvvZiM=@vger.kernel.org, AJvYcCUSEmsgRY+hvnFoLQ08GdYTYTaYjXDF9y31lvaKb00cqgyqa++EbM9KRrBSGfaClSbcL87Sc9mBmRWL1A==@vger.kernel.org, AJvYcCUe5m4b3qmfzfxT/M/D9F9ei5nxzIOITtrw8L7dXSeX9Dzmd6724QAhwrWbUOX72FxiSxm17yYX3jE1EiK0@vger.kernel.org, AJvYcCWCYGZ6hzE2OMawugdksF1jG1od/1oZtHS4LNzqn+k4BW7XkTV95X/4p0O6UNV00mkz07KsdbxnkhY2@vger.kernel.org, AJvYcCWS1bkMbSPWEkcM0KVksC6Z0Fk1fcITs2LNNlsHVtLPzxF32zAJxi1neUV+7oMe9cXDuckL77QWbIw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrEnrUOHif1ImnThTjsX9BDYbdbO9DsGlhKxcCD/VR5+L6CKa2
-	sXLEgzVhEkSL9GasCL+Bef0DPx1fSRbLSgJ4rJCxPOWQUCMOXeAq
-X-Google-Smtp-Source: AGHT+IEIz5d//17WPnMDgMVDUYvH7+sxfpmlvAoBsrI8xaC6pMBmCRrAzLDUicf2j5d88qL+NqMcTg==
-X-Received: by 2002:a05:6a00:886:b0:70d:22b5:5420 with SMTP id d2e1a72fcca58-718d5e5476fmr26897235b3a.15.1726044516437;
-        Wed, 11 Sep 2024 01:48:36 -0700 (PDT)
-Received: from nick-mbp.ust.hk (wf121-022.ust.hk. [175.159.121.22])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-71909095177sm2530125b3a.112.2024.09.11.01.48.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2024 01:48:35 -0700 (PDT)
-From: Nick Chan <towinchenmi@gmail.com>
-To: Hector Martin <marcan@marcan.st>,
-	Sven Peter <sven@svenpeter.dev>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Kettenis <kettenis@openbsd.org>,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Cc: Konrad Dybcio <konradybcio@kernel.org>,
-	Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
-	Nick Chan <towinchenmi@gmail.com>
-Subject: [PATCH 22/22] arm64: Kconfig: Update help text for CONFIG_ARCH_APPLE
-Date: Wed, 11 Sep 2024 16:41:12 +0800
-Message-ID: <20240911084353.28888-24-towinchenmi@gmail.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240911084353.28888-2-towinchenmi@gmail.com>
-References: <20240911084353.28888-2-towinchenmi@gmail.com>
+	s=arc-20240116; t=1726049430; c=relaxed/simple;
+	bh=XXNXRYbmz3Zes9xyUsSvTiVqxoySTWzbF2/5l+DV+OQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AH7C0LZyepaH1cQ1ODlvfVmN0+8UcPKJ9PiFuhQ3X+dYw716/BGBFYHEqa4MjOltQK96PO3DfxhvFZSiWlU1GujcBXtc2mM6xn2GE8J4mUrgygc7FuQjNN5t3Z4jyUmIOOJm+BoBPkW9L8F9wIA+2hFjrASGEatz3JBeUQ++UH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=amazonses.collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ThHWqJwG; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=ArS1iDDN; arc=none smtp.client-ip=54.240.7.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=4232tfv5ebdrjdwkr5zzm7kytdkokgug; d=collabora.com; t=1726049426;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=XXNXRYbmz3Zes9xyUsSvTiVqxoySTWzbF2/5l+DV+OQ=;
+	b=ThHWqJwGW2d6SgyvZM1kISkV9MQ6nVMsxL2KWE26xxtlCQW80zdB8yiAjabscpRC
+	bOD5jsyr6s6bIs+TsbuckZZy9MCboXfkHh3+EfKMyqpFvexSvcX4tH9TmvyXZ4XgAY1
+	DCQvrz0JopgyhvSCWaxUZoQssBn6lRGB4pIYbUulCGEdYF4dOayl4E4yrZOy+n5xq9l
+	E8lJSWDxwOcxts64gHTg+u+M2OKdjZtODLeqriAgAca0QHngJXQ83ctzJ5wZuhJpjbh
+	iz9B3czYJqmuW3Bbcavw9lOClse881/vi7YSVtKwrYP8jXHPZWCSL84RTFcJEn89Z6i
+	/lVBbmpB0Q==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=uku4taia5b5tsbglxyj6zym32efj7xqv; d=amazonses.com; t=1726049426;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=XXNXRYbmz3Zes9xyUsSvTiVqxoySTWzbF2/5l+DV+OQ=;
+	b=ArS1iDDNHqlmkcm+u7EYSSuksf2KcUGgBpJVPaEqYStCHYkvoCscsGkyFNEnPMe6
+	FWFNuCqLUXDnoF+UcRe5Aet6oNeeq32j1AnnALjkKdEz18fFM8JLGeFieNcuqhGlp4A
+	cpM9tBN8dtWu0P/MpggzN6H1KH81iPpOisHflY/Y=
+Message-ID: <01020191e0901d10-d427a5dd-af4e-4ecf-99e1-4bb051ad1475-000000@eu-west-1.amazonses.com>
+Date: Wed, 11 Sep 2024 10:10:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 1/3] pinctrl: mediatek: paris: Expose more
+ configurations to GPIO set_config
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>, 
+	Sean Wang <sean.wang@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	Bamvor Jian Zhang <bamv2005@gmail.com>, 
+	Shuah Khan <shuah@kernel.org>
+Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	linux-kselftest@vger.kernel.org, kernelci@lists.linux.dev
+References: <20240909-kselftest-gpio-set-get-config-v1-0-16a065afc3c1@collabora.com>
+ <20240909-kselftest-gpio-set-get-config-v1-1-16a065afc3c1@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240909-kselftest-gpio-set-get-config-v1-1-16a065afc3c1@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Feedback-ID: ::1.eu-west-1.YpP9ZbxnARFfy3Cb5pfsLd/pdsXBCNK0KEM7HforL4k=:AmazonSES
+X-SES-Outgoing: 2024.09.11-54.240.7.43
 
-Apple's A7-A11 SoC is now supported, so the original help text is no longer
-accurate.
+Il 09/09/24 20:37, Nícolas F. R. A. Prado ha scritto:
+> Currently the set_config callback in the gpio_chip registered by the
+> pinctrl_paris driver only supports PIN_CONFIG_INPUT_DEBOUNCE, despite
 
-Signed-off-by: Nick Chan <towinchenmi@gmail.com>
----
- arch/arm64/Kconfig.platforms | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+[...] only supports operations configuring the input debounce parameter
+of the EINT controller and denies configuring params on the other AP GPIOs [...]
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 6c6d11536b42..370a9d2b6919 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -37,8 +37,8 @@ config ARCH_APPLE
- 	bool "Apple Silicon SoC family"
- 	select APPLE_AIC
- 	help
--	  This enables support for Apple's in-house ARM SoC family, starting
--	  with the Apple M1.
-+	  This enables support for Apple's in-house ARM SoC family, such
-+	  as the Apple M1.
- 
- menuconfig ARCH_BCM
- 	bool "Broadcom SoC Support"
--- 
-2.46.0
+(reword as needed)
+
+> many other configurations already being implemented and available
+> through the pinctrl API for configuration of pins by the Devicetree and
+> other drivers.
+> 
+> Expose all configurations currently implemented through the GPIO API so
+> they can also be set from userspace, which is particularly useful to
+> allow testing them from userspace.
+> 
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> ---
+>   drivers/pinctrl/mediatek/pinctrl-paris.c | 20 ++++++++++----------
+
+You can do the same for pinctrl-moore too, it's trivial.
+
+Other than that, I agree about performing this change, as this may be useful
+for more than just testing.
+
+Cheers,
+Angelo
+
+>   1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index e12316c42698..668f8055a544 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -255,10 +255,9 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
+>   	return err;
+>   }
+>   
+> -static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+> +static int mtk_pinconf_set(struct mtk_pinctrl *hw, unsigned int pin,
+>   			   enum pin_config_param param, u32 arg)
+>   {
+> -	struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
+>   	const struct mtk_pin_desc *desc;
+>   	int err = -ENOTSUPP;
+>   	u32 reg;
+> @@ -795,7 +794,7 @@ static int mtk_pconf_group_set(struct pinctrl_dev *pctldev, unsigned group,
+>   	int i, ret;
+>   
+>   	for (i = 0; i < num_configs; i++) {
+> -		ret = mtk_pinconf_set(pctldev, grp->pin,
+> +		ret = mtk_pinconf_set(hw, grp->pin,
+>   				      pinconf_to_config_param(configs[i]),
+>   				      pinconf_to_config_argument(configs[i]));
+>   		if (ret < 0)
+> @@ -937,18 +936,19 @@ static int mtk_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+>   {
+>   	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+>   	const struct mtk_pin_desc *desc;
+> -	u32 debounce;
+> +	enum pin_config_param param = pinconf_to_config_param(config);
+> +	u32 arg = pinconf_to_config_argument(config);
+>   
+>   	desc = (const struct mtk_pin_desc *)&hw->soc->pins[offset];
+>   
+> -	if (!hw->eint ||
+> -	    pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE ||
+> -	    desc->eint.eint_n == EINT_NA)
+> -		return -ENOTSUPP;
+> +	if (param == PIN_CONFIG_INPUT_DEBOUNCE) {
+> +		if (!hw->eint || desc->eint.eint_n == EINT_NA)
+> +			return -ENOTSUPP;
+>   
+> -	debounce = pinconf_to_config_argument(config);
+> +		return mtk_eint_set_debounce(hw->eint, desc->eint.eint_n, arg);
+> +	}
+>   
+> -	return mtk_eint_set_debounce(hw->eint, desc->eint.eint_n, debounce);
+> +	return mtk_pinconf_set(hw, offset, param, arg);
+>   }
+>   
+>   static int mtk_build_gpiochip(struct mtk_pinctrl *hw)
+> 
+
+
 
 
