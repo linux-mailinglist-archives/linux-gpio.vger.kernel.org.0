@@ -1,159 +1,271 @@
-Return-Path: <linux-gpio+bounces-9974-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9975-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82AE297581F
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 18:19:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77673975912
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 19:11:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45603288FEB
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 16:19:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CD291C218FF
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Sep 2024 17:10:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0871AE86C;
-	Wed, 11 Sep 2024 16:19:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF73B1B1D5F;
+	Wed, 11 Sep 2024 17:10:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iiSrTmDv"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FwThThCp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2057.outbound.protection.outlook.com [40.107.93.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975651AE038;
-	Wed, 11 Sep 2024 16:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726071577; cv=none; b=DwareqghLs8ZCLBL2HVXbZlsNyZFD9XcutXMn3RYCUMm8wYzPmqUIVf74btP1agTmlbpAMkiVTUsjjtPtiX9TTxjSIrOOFW1fDdKeRh83eFv/mwenPlXImlfe9aCHvGS0U8oTUK6bUdNpLvw61DgswGQ4eK6v4L6rN5cI1tmdN4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726071577; c=relaxed/simple;
-	bh=lwlZJUmP9LcD4uQACLs3u1hgzJYRAuuAtfArazJJYQ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UyerrgMSeXDAK+fCv4JTOcQ5E02VdQxUt8nHDJe9qEMLMguonm8uYfzOjsgRWAo2e4YWccMiTwF79Ukwl6kiQCII0qfq7FeYd0i2Czwr99ut+u+11CaKsYOhg+TPgKF1t6LJ6gp4qnif2OnYOAdWnQmOihIEowdre0Y/xMVCQJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iiSrTmDv; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-53661ac5ba1so2546354e87.2;
-        Wed, 11 Sep 2024 09:19:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726071573; x=1726676373; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lwlZJUmP9LcD4uQACLs3u1hgzJYRAuuAtfArazJJYQ8=;
-        b=iiSrTmDv8zWDM8Ce73mbj+NyaBn86kLAblS5UiNGEoVmNOhBIONY27IztzWeZMxbqr
-         Ithukyn0UJu4g/kuETqapeg5ZRLo5Ppc+m070OAqOwarsuvcjCMGgKtmFJgwE9B//Ky7
-         iDGp2vTSo+Lcv9NMcitPDyWaW/1vene1DIBSUKeC4srHZhJZHTk/Mebabxi1I75/1qkD
-         MhYJ/TufTFnHhHLC2jPseOj+jp0PtzEzp8RbTU82K/TJgSOWQLmyNwGvYMLsRJcHxtQL
-         HdJJvOMknQdRTKb4Gt/CBZID3YAPB3Ryv8hru0Y7EvfRgPhr89cmUSZZb0kAiA7HLWb8
-         Co+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726071573; x=1726676373;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lwlZJUmP9LcD4uQACLs3u1hgzJYRAuuAtfArazJJYQ8=;
-        b=MCAjyhocAiHCTRtMSPk6GQg+qBG5D83yp6QQesc1GY5F87KPhBlAe4mp+ybmBx5jgv
-         qRkIY7JExLPmwkoH1BGBfedL36Xbvs2NXOjGc2BDeZau+4GiscTn9UOOYaCS54ZWX2iL
-         mTeneXAII6p5TuB9wEfo+yVweQWZeK4Ur4XDmlvIq2F4HBw12T1vnnhwJv0Az02XY+xT
-         y02Bl3jBVLFooSyXGHL0HZxvAEu/zQu++/2i1QLp1TraF5i1TXlu+HolymNENaW18xd6
-         XPTR0F+xguSqjaJB4MxHmLWGCQI4tUtF8KQHzycy4h/1Sl9WfbeqjcSFh1sm9dkrqbHp
-         6LJA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8rkarfVLONkvil1WbvogxEGRPyeEywOdMoVFRF+riawz2LDh2KJX9hSc7OYpW+1EsF52uRGCtVrINRg==@vger.kernel.org, AJvYcCUxwGUFCLklMaxZreI47KDFTf2UTUA5uO4z16LCGlwZGmOydA9loUzwEn71JSUl4hdIzcrBy8I8mF5P53yl@vger.kernel.org, AJvYcCVKGify8M11hK1Ly6U6pnlAXzdx+6BY3W5qQnfRAzJbS911bvVF0YKknu+VJy1R3yU+zCj+ACRZhYDp@vger.kernel.org, AJvYcCVTq/+DINN7eoathAlwqUssl0RGIyHbCNoqTHkV649iCzq1DJq3hxezE1lsukSIflBXZHG2Xm+LxkwZ@vger.kernel.org, AJvYcCViGBGRIwRDtO53gtbBPLf9pnx4oMvOBMsyHSQP1lTLH9EDBlsmwwrDDgNCpbvvKRBEn821IkF/W7BL@vger.kernel.org, AJvYcCVoFGDFijezUCqEDKiYBOkzxr5LY8zg849EO3R1STLNb9WkcfcK23fJ8fm7UhRFvrImKdh0wG7iU44=@vger.kernel.org, AJvYcCW03NDG0TsX6ZLihBupK4TmIrIlPCufHgOxa8bFRTMSrdG1lvRZdSol991EPKDILAfcG1GBTcyqUBvvIsA=@vger.kernel.org, AJvYcCW8ZRFtXIp/aUawUB5qJL78+uCIL2rm742yO4lbso/GsgXS1vZ1bpKfTORD//EZR6hyBRu1SiNrFMC9@vger.kernel.org, AJvYcCWcVDfTCzZ3ELzePXhUVICP9RshYHigXXoICuWPV9Qgy1ghGEoo/1vefe32SVhpoIpTPO5kDkebXEDBbgjWEp8=@vger.kernel.org, AJvYcCX48OZS5U9iF9erUTOdWN2H/MeI
- YafbohTjAEdGwXQ7+2Esg5rjH+yqEy3rl2vVk6nge9IxMLtn@vger.kernel.org, AJvYcCXP551LEphZJwnn28J1Kvr3iaWsS45S9PifNrjd9mFrVBBUGqrHj28i8zXPFOJR6vHtdyEABRIsjHXW2Gs=@vger.kernel.org, AJvYcCXWCc9ImALnuuLTdRm0AxwBJu8S7DCnZJts2b+yLg/v7fD8AaACxAPelx1/skYadEcO93FIAK0dr7Dc@vger.kernel.org, AJvYcCXkrhJNRUyiNCOgpJ4m63v5C32O2ge3tlu76+dpHbI1R+7Ck1om8ODUzRunM9PJIhU+7Qs7zwfIhVs7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBbdQw4f1RmKmDCsAdAeymkqq568iWSS/3rmoQaTU7el3Eugw5
-	5teNXOJSy1rqkEoa7yjoI5zhbpyEM06h2y05z4rkWmjjC5yS5YNPibbxGH31IV0SNHiA/COi85u
-	bD+I9osT1UPW5wEdWtfNbdXePy4U=
-X-Google-Smtp-Source: AGHT+IEfiqu9Tkr72UxQfCKwEwXNERhL9+EEF5iQAUfNY4YtEQqPnVlXr1xTzedLm0smIgh8R+iSdzkbG8ZOJ96JeDI=
-X-Received: by 2002:a05:6512:10d6:b0:52b:bf8e:ffea with SMTP id
- 2adb3069b0e04-53673c96a84mr2008337e87.40.1726071572960; Wed, 11 Sep 2024
- 09:19:32 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAB4156993;
+	Wed, 11 Sep 2024 17:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726074652; cv=fail; b=Iay5STfZBMcVKsY/ztrg+85IIx9Kw6I2hBb5cL8NlPkVi57Rpun34/OlXTwr2l7IfVq3GPnOqC4nhL3jaP4o6scCWRJC1gwAE9+lgyDz6t4XxypCfuI9+mwUfSwPQVrmfqCzY68ZEdfjeIg47HQsaSQ1GxAapISj2F13kcu+n+Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726074652; c=relaxed/simple;
+	bh=YAvtGvK9VMyEAcY/40aVtu+JQe+2FCGRTbNFKkXbN7U=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=S82h3DQFSfoUTmEivnF8+fpHel8Q6HXK/dr+f3fDsSRR5RxawLRWx9V6kfxIVm4H/we2xuJgX86i3freavwNIcAKTeJH2gDFdFg89NMWZJOeysvZWjpCQvcQpMTwZtudxx9mNoBXIfTcDKXm7fNYtB4sz+z7tUzX7BYvQY+o29A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FwThThCp; arc=fail smtp.client-ip=40.107.93.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qoYbj1AJTNYm1bql5Vg/MbKKdp7Yil8kxK+OZr+16VIJYTatW0Ajw3ApnZ7vd5qQToxys4kQzvgg4rjiWceYAmzfFgEQ6fFsjHDjunOJgF2eWWjajKeZoqE6mLfuiE0z9berCYw/VvuiJh4Jma4eOhKiIDSzoOZzOSEzYSfG2D06kdaBqL0gWelJEfaWzFR7gaDgIqs8k8cNbml4Vst4tAGWa5EUG1MoZMXAWtA70unzSmXrmHSSOfEzFtBzdblqQJpT+dcYWD3UBIb6VivXqczBljlbQSWD8rbnURV/WeYFcNwrWi1pCTvFv4n33DQMv12VQruOwVwXlgFjrN9W3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XPWfj9NUwUTmKjLCZkQhyM3nTyJBDmfQMPPCqYfBP7g=;
+ b=kuvk+0A+PXRHfsRiGlfuVwhRBnROpnIESELawIV6GvlZZpGfqkK4gN0X00OBAE0aUTLq8Zwqxs9wncFkdNgKFDSUjI1F46N+nkZYeRWDzq1gEpPmx4XWczHkiz0TZLjKep0AkmPV69qCDfcAb9jjRqAnpOClBgQn61F7fa2TGN8SJD/B73VAYMyZ/rRcHDAfLxn1llXO+xP8DILWDXEjT3R504u0gNNjucuxEFf1uKcCtwl6ZHzbjInkCUaS0PY/xvOXw3g+/3ADDPr47zbdyxSFThBSk6LCfhhd4M9x6akRTfT9PeCKTeFmldl0dHZTp5oLfZ9yuiSwtB77SIvJuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XPWfj9NUwUTmKjLCZkQhyM3nTyJBDmfQMPPCqYfBP7g=;
+ b=FwThThCp0TtmgqEMhzCmOjUV4jruLcPKW14kLl1gpiIjZcf8NHmBJdb5sNGL6FJ2+OWIYBos51l8Y2+duMUfCpuLO8JvR+YuKyCK8G9Jwp8BrAPWViMidKLKTViGoZwb1Zj063CsBvLw/1qyUXqJ2vnK7pZkef29QnWX2MUjFmU=
+Received: from LV3PR12MB9260.namprd12.prod.outlook.com (2603:10b6:408:1b4::21)
+ by DS7PR12MB9043.namprd12.prod.outlook.com (2603:10b6:8:db::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7939.24; Wed, 11 Sep 2024 17:10:47 +0000
+Received: from LV3PR12MB9260.namprd12.prod.outlook.com
+ ([fe80::e5c3:25dc:f93:cb99]) by LV3PR12MB9260.namprd12.prod.outlook.com
+ ([fe80::e5c3:25dc:f93:cb99%4]) with mapi id 15.20.7939.022; Wed, 11 Sep 2024
+ 17:10:46 +0000
+From: "Thangaraj, Senthil Nathan" <SenthilNathan.Thangaraj@amd.com>
+To: "Potthuri, Sai Krishna" <sai.krishna.potthuri@amd.com>, Linus Walleij
+	<linus.walleij@linaro.org>, "Simek, Michal" <michal.simek@amd.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, "Buddhabhatti, Jay" <jay.buddhabhatti@amd.com>,
+	"Kundanala, Praveen Teja" <praveen.teja.kundanala@amd.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "saikrishna12468@gmail.com"
+	<saikrishna12468@gmail.com>, "git (AMD-Xilinx)" <git@amd.com>
+Subject: RE: [PATCH v5 2/3] firmware: xilinx: Add Pinctrl Get Attribute ID
+Thread-Topic: [PATCH v5 2/3] firmware: xilinx: Add Pinctrl Get Attribute ID
+Thread-Index: AQHbAEyJrT3v9unufkywBhnPEm58+rJPsvOwgADZUICAAk4MEA==
+Date: Wed, 11 Sep 2024 17:10:46 +0000
+Message-ID:
+ <LV3PR12MB9260FA686E776F856F4779C8E29B2@LV3PR12MB9260.namprd12.prod.outlook.com>
+References: <20240906110113.3154327-1-sai.krishna.potthuri@amd.com>
+ <20240906110113.3154327-3-sai.krishna.potthuri@amd.com>
+ <LV3PR12MB92605EC32BE4F5AFA2949359E2992@LV3PR12MB9260.namprd12.prod.outlook.com>
+ <BY5PR12MB42583098D3C9B0879596D571DB9A2@BY5PR12MB4258.namprd12.prod.outlook.com>
+In-Reply-To:
+ <BY5PR12MB42583098D3C9B0879596D571DB9A2@BY5PR12MB4258.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV3PR12MB9260:EE_|DS7PR12MB9043:EE_
+x-ms-office365-filtering-correlation-id: 57aa3d94-8102-49b7-aadc-08dcd284ad88
+x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?PgPKWYgjDrT7gnin2IyGCwageRb3VyH9wqwmnBBFRjkQeAStu1/YA6i5xFJc?=
+ =?us-ascii?Q?cScU6fkCDkkkJSOT5PhGcdFBb83utpCfeih97C7v7A7Goer8INFGO8PIW1xG?=
+ =?us-ascii?Q?0uvX5m9PQY/HVm5R1vwL0tf4v15LBSZaA0ly+ElDen6Gu2lkwKjDJ/sUDJlp?=
+ =?us-ascii?Q?AoCJZM8zb+UAjzAiB/aWF7pO0tUCCN934gXU36UxRdKtQ86cSVdyZoELfdEn?=
+ =?us-ascii?Q?cBPVyNBX9MB/il5zGMr/JJFb3o3hekaE1wg/2eSKKk6zmCtEe9qP3WH/yoRQ?=
+ =?us-ascii?Q?fRDugmSQD+Hb78yqGNNk7TCrJhDtRsh0I32dZLi3YARqvh+Caeopi4I3gHZH?=
+ =?us-ascii?Q?DYmPDAWokKLudvcBPhiKkYYM+1lasKKPkc2jg6LxnepZotsvoZSAlD9It2BX?=
+ =?us-ascii?Q?MYPHliuOn2Uy3aZBfrAO2N+WkJgc0RGutih3h4GmMV+6U57HJTxzA8dthMaw?=
+ =?us-ascii?Q?6vHj9hmdjUehkgTbwPrhFu3zvdFcvEmXzVmH1YDK1OM/KErAYPNmV7rPumdd?=
+ =?us-ascii?Q?HzYA7T8dgM+ai/ixQ7bhkpt4CYseF5dWC4kClp6w6ZhiREhhFUrOAdszypXQ?=
+ =?us-ascii?Q?wN91wgV58k0QXexND1EKhCEXqf4vdhW7fX8zGpISxY4zXz2OSP8uo3bELEQM?=
+ =?us-ascii?Q?gNmFGHFovpdYw1KnyCe4HeHw+ioTnXYkl5RGmqaUKL8aThbYhvteX5s2F8aG?=
+ =?us-ascii?Q?ZjKMVkW8D6uWi4oO49+lV2O3in++f7HQSlOgtVr9CVKv4fS0T35j/OQXMkl8?=
+ =?us-ascii?Q?uRMwCDeUSBc6/dnuw1tWBpxQM08MG/AIl6ipZzqENBEstqVw4joCbz0uS9IR?=
+ =?us-ascii?Q?QqPiLyZW0H+Y20XqpQ3l6gqjIseR1SBuY8/pLRwf3u/dWUIDIaXx4SiIHr/n?=
+ =?us-ascii?Q?+Vu2DBNd+AnxLkdOFWYMabn+diFxn/IEe0auUnoE8MOUVjbJm+pd/aWiM4S/?=
+ =?us-ascii?Q?bY5MhkFWzawfh7Gtjja2iJ9Os0Zqm8X8/lqBBxM7SScegdKxwEnhTOhm6BuS?=
+ =?us-ascii?Q?XPf1bARYSpT+RGgaa57L48xPBVYGX/ZKtyvf9/rt6DOEowE/6dbG8GR8rua/?=
+ =?us-ascii?Q?8ZdbTDj1utrBicaxHEdziqCuLjQkR4/rpaCxlxbaNZ4cntV/+9+opLXCUCSU?=
+ =?us-ascii?Q?L0lZQM7+g8IbpKhj8eNnJCaNSibe6lTXoNWCrMkUfHSIF21VH5/16p2UJLi8?=
+ =?us-ascii?Q?zvw9IKGPiiou+G9EU4RTnP1NZxqWwtKO51QbyzkG+F3MV5cc8WWImobvobak?=
+ =?us-ascii?Q?+HcX40SiAugwGBz3dy8H9U6yBy9EXuzjySVmltvofZuNU1bnewCyFaLJ4WPL?=
+ =?us-ascii?Q?zX/fJsMGeTtnSUVgIKPkJnChL3Ut2D05+cx49khr8VMBTSw3+IFwCdMO8rQH?=
+ =?us-ascii?Q?kidA0pNQR7eTXEO/+ROhY1XsPlYjUYVjfb23YlK9vKTvKsfExRf19vnj0wg8?=
+ =?us-ascii?Q?wUaBZH/Mirw=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9260.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?VKCI2Xog5GnFAcmsZfjECyWzHRnDBQo3IGJ9iqpaN9qi78Agp4adhW/MqGte?=
+ =?us-ascii?Q?m//4s+Nb/o8VLCjdqDtuHh8SZkRSwURVOmn30y0KL//7VA+7rm93TI6QLYHk?=
+ =?us-ascii?Q?R9nmd2BWX58zd05BbNCFZ31DfoXAnmgP3e1elF88lcucw6+rNLOvrgu5cjep?=
+ =?us-ascii?Q?pC89qHWMh4/oIfgeyHg1ObNVvY5a6xwS8CFIYjB+ml8ss6AxoHsKkdt9QOy0?=
+ =?us-ascii?Q?5XEPeVzOajvyX+RIF8IzTTBTizeA0NpCVE8wdBBAIMXoZY6K1+QNUVHv/KsS?=
+ =?us-ascii?Q?jgSjIVWdjQFKt9E7T/3UNLMHJbGI3NXOOelNGRIfe8L+MExYbCGDFQ84qYU6?=
+ =?us-ascii?Q?/NbWjAC4AHopCUrkYFmgkEp/KviFVrwJ1qV132OWxSuPahsELXDQmSFNjpa7?=
+ =?us-ascii?Q?brbAyzvHH1sylFoYo/BgYCGc61qMsvEmDN7u+vB2KUAKSYHpqqzGGfpR0124?=
+ =?us-ascii?Q?FOtVsNc3cDJjQDa66qJhiAv+O2xi0vqRFE442f5wLv8kKRP4r0vdjokBuzlc?=
+ =?us-ascii?Q?DxYea+3c1TIdfvqCswgq3FhYzJby55hKug/sgp1x2j7N7Fb4rE4oAtmuWJhp?=
+ =?us-ascii?Q?hwJxVQySf6YqGAcYkIW66DwnY0EQ4EWuoBy5wnh3NeftlelbKxkNuZVKq7UB?=
+ =?us-ascii?Q?PAlkueuSoKx1ITkKl+0Drm071RbAiUxsYx2ykCNF708vLTH4fcZW1FkXB2lv?=
+ =?us-ascii?Q?RK0DqbOY7+/JsGTVv9EZxqUoBQou1Mk1HnvlRWnvkS3dDgVkuoqw80n9LIKB?=
+ =?us-ascii?Q?vObO/uOHfYaehsjQcgBfCIUsC8p2SH9+P3/xjcnCeehIQL3xJBziZfA/9BJU?=
+ =?us-ascii?Q?+4bn3bySW/KdS8JTQODjqOafs70LaVi4V8LRiHrSooHKyYVUYO1Brmx6cqYL?=
+ =?us-ascii?Q?hwGAyEAOa+bzwnX3wmXfh/IUDSsZWZdMP4xsD2h5vTbMvWDWtOp0GEImHVln?=
+ =?us-ascii?Q?pcLLREHtqp9dKLzjeXV5Hsr5nMACSJxXlr3g/m1nAcXUR6RGSq9PfKNSgU9u?=
+ =?us-ascii?Q?KlBtyD4u8A/YRDC6vaAAKs5uUdUCm7877suE+1h7kwJjfDSUnVnXbnlKaCSl?=
+ =?us-ascii?Q?4ar9C2MQ7yCE4TwhzaYiUBU8pCWqZtvJ/ijDSpb9Z/BCP4EGGN7y0CMfY0vY?=
+ =?us-ascii?Q?UhFjTJ2X70PrgijcFz9FtKfz4WjtnB3kG9VZA2C94YlLegM8hDAlTnW4wA5c?=
+ =?us-ascii?Q?s52gNPCQ4Rf8fFWwcZu0O21veOrr4cRjQ5d74Jx+OSH+6bqrKOXnNywaHjHp?=
+ =?us-ascii?Q?MPSTZyqE+7lO2/1IMVENr78JZ4GIBXUqXKKyxxRN0MjNn4v2aeftZD3nwtub?=
+ =?us-ascii?Q?n2Wzt2sQaCYcNFDTUnhU9QGYTGN/QOYBSbjmQsCxIK1lls1d0SCCOW2jeO2h?=
+ =?us-ascii?Q?5oyau63II70UWxImgLNjuXd2pKP2w2Zi+IcKc20IuzhaAMtELX/L7IRfFbYp?=
+ =?us-ascii?Q?saDIFJ9nujDvXkcUlOI4cPKWoAcUiDNjK67K4WiZBR0fxr/kx1rEqCmRy7yE?=
+ =?us-ascii?Q?mEmTfM8KgM2vzqJSanuH/q9k1PnPfhMYBpWKl9xT1GbkHITCsPSiNtP0S9GD?=
+ =?us-ascii?Q?vbp34vPlCaUR3v0GvvU=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240909-ep93xx-v12-0-e86ab2423d4b@maquefel.me>
- <CAHp75Veusv=f6Xf9-gL3ctoO5Njn7wiWMw-aMN45KbZ=YB=mQw@mail.gmail.com>
- <0e3902c9a42b05b0227e767b227624c6fe8fd2bb.camel@maquefel.me> <cff6b9b6-6ede-435a-9271-829fde82550d@app.fastmail.com>
-In-Reply-To: <cff6b9b6-6ede-435a-9271-829fde82550d@app.fastmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 11 Sep 2024 19:18:56 +0300
-Message-ID: <CAHp75Vc2Dbj0GAua4b85L8jgcGzdBfMdRgnuTSWNiGj0zKHU7A@mail.gmail.com>
-Subject: Re: [PATCH v12 00/38] ep93xx device tree conversion
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Nikita Shubin <nikita.shubin@maquefel.me>, 
-	Hartley Sweeten <hsweeten@visionengravers.com>, 
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Mark Brown <broonie@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Sergey Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Ralf Baechle <ralf@linux-mips.org>, Aaron Wu <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
-	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-clk@vger.kernel.org, 
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	Netdev <netdev@vger.kernel.org>, linux-mtd@lists.infradead.org, 
-	linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-sound@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9260.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57aa3d94-8102-49b7-aadc-08dcd284ad88
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2024 17:10:46.8365
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JS8WG8eMYJWx6jQ6/IAEHfsBJJshQQXX59QpSp+An7rnSwqoZa/zui/TXmwm1J9XX1+QCn4xEoBnuvhWWMDHMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9043
 
-On Wed, Sep 11, 2024 at 6:13=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
-:
->
-> On Mon, Sep 9, 2024, at 09:02, Nikita Shubin wrote:
-> > On Mon, 2024-09-09 at 11:49 +0300, Andy Shevchenko wrote:
-> >> On Mon, Sep 9, 2024 at 11:12=E2=80=AFAM Nikita Shubin via B4 Relay
-> >> <devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
-> >> >
-> >> > The goal is to recieve ACKs for all patches in series to merge it
-> >> > via Arnd branch.
-> >> >
-> >> > It was decided from the very beginning of these series, mostly
-> >> > because
-> >> > it's a full conversion of platform code to DT and it seemed not
-> >> > convenient to maintain compatibility with both platform and DT.
-> >> >
-> >> > Following patches require attention from Stephen Boyd or clk
-> >> > subsystem:
-> >>
-> >> Does it mean you still have a few patches without tags?
-> >> What are their respective numbers?
+Got it, LGTM thanks.
+
+> -----Original Message-----
+> From: Potthuri, Sai Krishna <sai.krishna.potthuri@amd.com>
+> Sent: Monday, September 9, 2024 10:58 PM
+> To: Thangaraj, Senthil Nathan <SenthilNathan.Thangaraj@amd.com>; Linus
+> Walleij <linus.walleij@linaro.org>; Simek, Michal <michal.simek@amd.com>;
+> Rob Herring <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>;
+> Conor Dooley <conor+dt@kernel.org>; Buddhabhatti, Jay
+> <jay.buddhabhatti@amd.com>; Kundanala, Praveen Teja
+> <praveen.teja.kundanala@amd.com>; Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org>
+> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; l=
+inux-
+> gpio@vger.kernel.org; devicetree@vger.kernel.org;
+> saikrishna12468@gmail.com; git (AMD-Xilinx) <git@amd.com>
+> Subject: RE: [PATCH v5 2/3] firmware: xilinx: Add Pinctrl Get Attribute I=
+D
+>=20
+> Hi Senthil,
+>=20
+> > -----Original Message-----
+> > From: Thangaraj, Senthil Nathan <SenthilNathan.Thangaraj@amd.com>
+> > Sent: Monday, September 9, 2024 10:33 PM
+> > To: Potthuri, Sai Krishna <sai.krishna.potthuri@amd.com>; Linus
+> > Walleij <linus.walleij@linaro.org>; Simek, Michal
+> > <michal.simek@amd.com>; Rob Herring <robh@kernel.org>; Krzysztof
+> > Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>;
+> > Buddhabhatti, Jay <jay.buddhabhatti@amd.com>; Kundanala, Praveen Teja
+> > <praveen.teja.kundanala@amd.com>; Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org>
+> > Cc: linux-arm-kernel@lists.infradead.org;
+> > linux-kernel@vger.kernel.org; linux-gpio@vger.kernel.org;
+> > devicetree@vger.kernel.org; saikrishna12468@gmail.com; git
+> > (AMD-Xilinx) <git@amd.com>; Potthuri, Sai Krishna
+> > <sai.krishna.potthuri@amd.com>
+> > Subject: RE: [PATCH v5 2/3] firmware: xilinx: Add Pinctrl Get
+> > Attribute ID
 > >
-> > The clk is the last one as i think, all others can be ACKed by
-> > Alexander or by Arnd himself.
->
-> I've merged the series into the for-next branch of the arm-soc
-> tree now. The timing isn't great as I was still waiting for
-> that final Ack, but it seem better to have it done than to keep
-> respinning the series.
->
-> I won't send it with the initial pull requests this week
-> but hope to send this one once I get beck from LPC, provided
-> there are no surprises that require a rebase.
+> > Hi Sai Krishna,
+> >
+> > Please find my review below.
+> >
+> > Thanks,
+> > Senthil
+> >
+> > > -----Original Message-----
+> > > From: linux-arm-kernel
+> > > <linux-arm-kernel-bounces@lists.infradead.org>
+> > > On Behalf Of Sai Krishna Potthuri
+> > > Sent: Friday, September 6, 2024 4:01 AM
+> > > To: Linus Walleij <linus.walleij@linaro.org>; Simek, Michal
+> > > <michal.simek@amd.com>; Rob Herring <robh@kernel.org>; Krzysztof
+> > > Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>;
+> > > Buddhabhatti, Jay <jay.buddhabhatti@amd.com>; Kundanala, Praveen
+> > > Teja <praveen.teja.kundanala@amd.com>; Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org>
+> > > Cc: linux-arm-kernel@lists.infradead.org;
+> > > linux-kernel@vger.kernel.org; linux- gpio@vger.kernel.org;
+> > > devicetree@vger.kernel.org; saikrishna12468@gmail.com; git
+> > > (AMD-Xilinx) <git@amd.com>; Potthuri, Sai Krishna
+> > > <sai.krishna.potthuri@amd.com>
+> > > Subject: [PATCH v5 2/3] firmware: xilinx: Add Pinctrl Get Attribute
+> > > ID
+> > >
+> > > Caution: This message originated from an External Source. Use proper
+> > > caution when opening attachments, clicking links, or responding.
+> > >
+> > >
+> > > Add Pinctrl Get Attribute ID to the query ids list.
+> > >
+> > > Signed-off-by: Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
+> > > ---
+> > >  include/linux/firmware/xlnx-zynqmp.h | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/include/linux/firmware/xlnx-zynqmp.h
+> > > b/include/linux/firmware/xlnx-zynqmp.h
+> > > index d7d07afc0532..3b4ce4ec5d3f 100644
+> > > --- a/include/linux/firmware/xlnx-zynqmp.h
+> > > +++ b/include/linux/firmware/xlnx-zynqmp.h
+> > > @@ -238,6 +238,7 @@ enum pm_query_id {
+> > >         PM_QID_PINCTRL_GET_PIN_GROUPS =3D 11,
+> > >         PM_QID_CLOCK_GET_NUM_CLOCKS =3D 12,
+> > >         PM_QID_CLOCK_GET_MAX_DIVISOR =3D 13,
+> > > +       PM_QID_PINCTRL_GET_ATTRIBUTES =3D 15,
+> >
+> > Any reason why do you need to skip 14 and use 15 here ?
+> This is based on the ID defined in the Xilinx Platform Management Firmwar=
+e.
+> Whatever the ID defined by the Xilinx firmware to handle this functionali=
+ty, the
+> same ID is used here. ID 14 might be used for another query function but =
+Linux
+> use cases might not be using it.
+>=20
+> Regards
+> Sai Krishna
 
-Thank you!
-
-This, in particular, will move forward to the GPIO descriptor and
-getting rid of old legacy GPIO APIs.
-
---=20
-With Best Regards,
-Andy Shevchenko
 
