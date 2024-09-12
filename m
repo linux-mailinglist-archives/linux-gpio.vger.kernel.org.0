@@ -1,297 +1,848 @@
-Return-Path: <linux-gpio+bounces-9997-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-9998-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDA4B9763B4
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2024 09:58:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E802197643A
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2024 10:18:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1EAE1C23305
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2024 07:58:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB619284CA0
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Sep 2024 08:18:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F16818F2D1;
-	Thu, 12 Sep 2024 07:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 665A7190665;
+	Thu, 12 Sep 2024 08:18:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="rNhDxPmU"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="GwWiwLEu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2105.outbound.protection.outlook.com [40.107.255.105])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28DC11712;
-	Thu, 12 Sep 2024 07:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.105
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726127877; cv=fail; b=mCP1qZSaHwfmdJdJphEnMZNL9ZeOo8kQC7UTOc657N+8MD8QjjNIn382/G2K3kPnTczpLP9OobbvNqctpM9HL6xgtU3oVzF/lsGyE0XYbcdNwVdklNnwNiM76k3DFIZzAfr/bzdeXAI0SqMHc4zjTx04TC9LIcQw/Iw54ZR/NMA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726127877; c=relaxed/simple;
-	bh=eW2c72oYBSqtAI2t2YbxlejM+1oofciNRJrae/V+hk0=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=AQ2Ap/FCq3MShPOMdz3ET/6hJ+bAWi3LxAzFwttRIQNunft1uk+js4IT/HGN89m7Ig9Gl/CLhQ11ZlLL598/o6SuyR5lMfpn83wQXSKek+27eUbuiqWVX6pI7w2Orj6KWEft/giQc/t2+4AMrVx/u7i65aeUZJJwtrrSx/5VqVo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=rNhDxPmU; arc=fail smtp.client-ip=40.107.255.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yRIgsg215BZ2g6dyNSaLw1IzKN6Pz/V1Qd+HR4d44K2cJ/qr5YypaIta4rAhdab+ngCruCU1vfONB7CG3dWnN1Yd6HVOMF9PWngRwp3v4OkV+2E3l4sekXGPgOdoKem3wpam71yygNtu72HDe5L6X/GJLBMF58iHUumoRd5G/RUNlIvGIWOTUuFmoPReXrglmWh7R2AgBF2nCitlKpyB0OCzqzvqIYgt1xbl9XbC0lbFxgcykplMeHKrNleXO2BakhTHIfQGLwwx6WyQ6sWGdwF36SktEckJh9ibdrVlLBmqeYdmg1uKunmwX6PcGdE0NBln4gciTEbZUxGvFmzzqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1/LC5+xUr5tZWlHQTub9LH/z+/FF277zeHD+HwwPty4=;
- b=dTFEOhUcFp8bDobAQ7zZKEhUDDihKF26EZ5hWIS05ZtFpZ2uVmr0YbSrJLFDIIjuJ3gc5gSv5G5joNizj+O2vF4eYZvXClmu+fYHKkrXAF4E6QU/6YZ7g1WR/AUYT7FLZBkUH+bJO05mtZpF16Az2yjMadR7qglcjTL22TttAEMyNJ43r6DLu+PV33FPVm944jzdtt5/jRu/PQcnjANfAGw5kvUHsCXILE6YVP31ISZs46d4fiTKKJkghT+pG90BQvZ66seyentYh4qVbRYIbgu7c7tfgpizRSK6zGZ4hR1iWzv2ptlDPP5yVnQI33MsBwDNbQstm0CPJZYBqxMybA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1/LC5+xUr5tZWlHQTub9LH/z+/FF277zeHD+HwwPty4=;
- b=rNhDxPmU1fu/PL3NlYlxLR8iUxrfeWeYMgrQhSE/DhfsJdGEUDU5rAx+0eRFe7dI6QwPJP0a89hq+ydTBnncohcmeMZfdyw0x1TLMhDhXRrhJyeo8ZiyQfF7Es5xOip7+fBorGFuzfstazVdUvBzoOZDtHZMFKCbjDb0/uDZsqOvmsSPMJeFT7EfGHpZ/WxVvVNdZHoDEiryb22Kq+D8SMp744HFZsKaoe/SBPdbE/cBVwtPwzlXj3gv1DfcLb8c+1ZgmZskVhqRrSrbRLNmPOjR6NTUjxeS90Bhj8Qb2ergGpQZEXAFku613QeSOXB8ELdQv4YvI93C7vebzF+w4A==
-Received: from OSQPR06MB7252.apcprd06.prod.outlook.com (2603:1096:604:29c::6)
- by TYSPR06MB6574.apcprd06.prod.outlook.com (2603:1096:400:483::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.27; Thu, 12 Sep
- 2024 07:57:49 +0000
-Received: from OSQPR06MB7252.apcprd06.prod.outlook.com
- ([fe80::814e:819a:7d52:7448]) by OSQPR06MB7252.apcprd06.prod.outlook.com
- ([fe80::814e:819a:7d52:7448%6]) with mapi id 15.20.7939.022; Thu, 12 Sep 2024
- 07:57:48 +0000
-From: Billy Tsai <billy_tsai@aspeedtech.com>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>, "linus.walleij@linaro.org"
-	<linus.walleij@linaro.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
-	<linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: [PATCH v2 2/4] gpio: aspeed: Remove the name for bank array
-Thread-Topic: [PATCH v2 2/4] gpio: aspeed: Remove the name for bank array
-Thread-Index: AQHa+o5rAS0ABtM/z0+zkypfekkFAbJT3AeAgAABR5U=
-Date: Thu, 12 Sep 2024 07:57:48 +0000
-Message-ID:
- <OSQPR06MB7252F641E8A1C6C705A41EEE8B642@OSQPR06MB7252.apcprd06.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FFF18E764;
+	Thu, 12 Sep 2024 08:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726129133; cv=none; b=uu66N7reFTXNBZDCPuMQRmsMYcZmEeJcWKkYRWL/M8EWPJ70IWfhxQpdJUSSvEUQa64yChCP5ZQQmO0UP6kv6zihS1rV1qVVuSSj9tBL1xUPHfJIFb6rJtILZRNMQnQMuGKQzNrDmnanf2IYIL1U+7be4uNSeLJDT9po9FmXjBs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726129133; c=relaxed/simple;
+	bh=TwDlr7ZX0SvYWUgnMAX1Favuodch3oJnigvWnVMvJqw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IFq1nttOT2eha+7x/5WYDIqSnEr4Qgf8uKLFQCjFz5FR9XItPS4DFMios8AyGyZ6oH2oIrVeIuqDAT7F178VPnRAsM04MHmaOp9zxPJ2rw4dKQOPVLfMxcB+/SEtI9ND7fw1hr+ymkRIY64IXCGAPTyr14otCWwGlsRhEcviUQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=GwWiwLEu; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1726129128;
+	bh=OjizMSkYgaBs3rVCn9iy59tr1MRR62KTXhMBH9qio8o=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=GwWiwLEucON0CizXT4Y/Z7/WAa7lpzyJQ1PGm9rGUOf+y+FNoyj2nhr7QGDT47kxL
+	 wF3FhSfQg0nW3z2mA9bX4VFaXRFMlySfx9U+yur6LNGtCn0L1xLU1ukzPTGBnd/D5u
+	 I56BBOmUvb9orZ5CfPrN0nTd2Kr+KOmUel9zIvjzzdSJEuuw/gRjqf8SR+J/GyeBqe
+	 vvCOosWeJyEkuAlaq6S1xasYYGckTKeM7TTxlAY1lJHYPIahtdCIXLfsnRypgoT4i0
+	 Rslq0LjOTv3XGecwYv/a1sdUpsFwTNFXyWk8lpfPZUD6MsC0644Uz6vSEuM4e/XMiq
+	 aNCp3xgHlWTCg==
+Received: from [192.168.68.112] (ppp118-210-89-8.adl-adc-lon-bras32.tpg.internode.on.net [118.210.89.8])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 6016B659B3;
+	Thu, 12 Sep 2024 16:18:47 +0800 (AWST)
+Message-ID: <416e580aabf2827199ed430dc561f364a1c39678.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v2 3/4] gpio: aspeed: Create llops to handle hardware
+ access
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Billy Tsai <billy_tsai@aspeedtech.com>, linus.walleij@linaro.org, 
+	brgl@bgdev.pl, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	joel@jms.id.au, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com
+Date: Thu, 12 Sep 2024 17:48:46 +0930
+In-Reply-To: <20240830034047.2251482-4-billy_tsai@aspeedtech.com>
 References: <20240830034047.2251482-1-billy_tsai@aspeedtech.com>
-	 <20240830034047.2251482-3-billy_tsai@aspeedtech.com>
- <7e2643f7586a7ed5d3cc90630d78fb3abd813a54.camel@codeconstruct.com.au>
-In-Reply-To:
- <7e2643f7586a7ed5d3cc90630d78fb3abd813a54.camel@codeconstruct.com.au>
-Accept-Language: en-US, zh-TW
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OSQPR06MB7252:EE_|TYSPR06MB6574:EE_
-x-ms-office365-filtering-correlation-id: 38ebfcd2-1def-4ed7-650a-08dcd3009840
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|1800799024|7416014|366016|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?lsRiYr+7NNDHHRgGpu2kR2Qfaq684gLe8oSmxhwlOvo7P5f++Gy5u4SDXG?=
- =?iso-8859-1?Q?aluNQgd9hMQmXBCDBVE6nWpHJXvOuaUPrv2VoJcJWMezJ0mID8dUVV0t+l?=
- =?iso-8859-1?Q?7aBxTGKRk8NiJ6A2vlCf/cpxigmx1qhHbEts4P8r7osdCTWxvIxJwI4V0l?=
- =?iso-8859-1?Q?Z1U8E/z7GMMA+N3I3NJDz+u2xCV3nVO8Zc4jdIo5jsyQi5BchVygjkJKWz?=
- =?iso-8859-1?Q?Rny3KDCMJNCcXsU+3CbD4+Riawlye1Uq2ZOIOKOunXdGEa6UKBQam7U6Jz?=
- =?iso-8859-1?Q?i8cygbIfVazbuDgdEJRJ/NootTavpDyZn/+pEYG5XR7l/BBesHXdVVuCsH?=
- =?iso-8859-1?Q?816ZQ+bu493TESCGytIAyQ5k5dMI5zKp/hUTO90OlAbFg3SJKMiMF+2Fpw?=
- =?iso-8859-1?Q?hAUxH+ou9hXNW+SszpjtpYjyau9Hc/6rb/ZI6LLcSdafSGjkePNY0T0451?=
- =?iso-8859-1?Q?+jWjigUnjiAOL96UEFdGXvqZ4omlOHUWpZGyBfCKlnADhsZlowdib1T1MK?=
- =?iso-8859-1?Q?YI5ydESxSCEpmCmp7fS375uupgbtuAqRCFpQhOyMQzkEITF971rj3RFSDn?=
- =?iso-8859-1?Q?Lu1TjmUBwcATOeNb0Kg0pSF6UIr3rj3vyyDAgUAJY/fko7UjGH5Pxk79Ez?=
- =?iso-8859-1?Q?IWtEH8W4cF1yx7bm/jEO/6N0G3jPtSW98HpLe1NFQBBZsF9AghLwfpB2NU?=
- =?iso-8859-1?Q?//9aCVf/ymx/LADk9bhBsOIwH8PLZdJ4kw2zahtCSoCCpNts/0Hks1Uyi7?=
- =?iso-8859-1?Q?51upI4cf3/+HxdcAiNj6vombM4q5LkNh5OvxjhU7UOOcB9lWLsFTVo/Pjk?=
- =?iso-8859-1?Q?hoF/3aRekIhsMb28eV5XP/jhq/wyj4UOOFOC0G44SOC87kabToaHny99Bo?=
- =?iso-8859-1?Q?LrbUSkNIF4Yv/4O2LxRuRzXb4qh5XjUqYl1s4nCkcav8BxYJ2aDlIcb1Qf?=
- =?iso-8859-1?Q?hmoh7tJaZHPn/0QuhbZSj7GJjoOEjDRn4M5g87rBLbL6mKPf80NaY4Lm+z?=
- =?iso-8859-1?Q?jbmRFaJrk3fEctsWo64rrzKJISr8he/0MTtQ6G4KtMMxjbBU3P7pwzK2iw?=
- =?iso-8859-1?Q?6FVAsmNxJAvSiaV4Xe4FQOmvJpjQ8w+YTy0mbJ2ytstB+Zgb6ue1kR7D5/?=
- =?iso-8859-1?Q?ZwErzSs70uEMjgReyCrzhGTS3GwmxE3WOVKGhRFg3y2QVYQIpT2h3CDtT0?=
- =?iso-8859-1?Q?0LXIW9m9GYAej3FPGb0Z5mUvAPe7ypseSLfuGDEBJZrNUBXM9jrF/bggu2?=
- =?iso-8859-1?Q?50USgkb6RiZwrQKtyAaGDwq/B8TxPIkjpHlIxQ78/p3aEYuHb+RyniSu1i?=
- =?iso-8859-1?Q?lfAO5486p2MjhPz13gX3oy28aGap0DauRUWNJq+IJp0MlDCaegt3XQ3lmM?=
- =?iso-8859-1?Q?Tad8ID105Zlj84IYVuEuC4vrnrsaw4QONpMOj1pfmo6C0B4ftUi+26pw7e?=
- =?iso-8859-1?Q?7weoFMNEe3OrcagQORVRapfKUB0hsGkA2SZ7ylhz6AKmniQH1YU3vNUXwj?=
- =?iso-8859-1?Q?A=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSQPR06MB7252.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(38070700018)(921020);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?/Y+K3QafqIZBEQaPxjiQqbvEal+ISI2in63FhdR0HheOMgtiTTkWHegrk/?=
- =?iso-8859-1?Q?XMwLLSlxUrfn9jPwaj5Iw4dGYCDh5XBoPYSpKQ5Ux2zKBW7BcyZ8oB2KiJ?=
- =?iso-8859-1?Q?PY0ihSAya40qn/B2pt6mV415P77O3OylDsdWeYglhV/TeOWUItijYn445c?=
- =?iso-8859-1?Q?+uA3XDzEdaMsK5kyQMGkhvQma3UJKpdDEg3R0KqZ29nbM5ojpF2EpBMwal?=
- =?iso-8859-1?Q?Us35tBxxdW4ssVy80xhxvh4tOnYFio7GUKCB5ld0hxNFxX5IejwiEme6CR?=
- =?iso-8859-1?Q?7M0KYe68hx34jxIMO+0nwUpB6VIbYR3IrIQ5otCAYWkRhstZtyNwZpcC7V?=
- =?iso-8859-1?Q?bJv5An7OL50w7lVLxgnLwzcpkgqJaFGrMIe9fozD2F2P943TJ0FB7lEvkQ?=
- =?iso-8859-1?Q?kzgt63YXr4tRVI9JAqM1m3jeqXXN/eHNM0mqlvTQrYZ5z+Khh49vD0qkpb?=
- =?iso-8859-1?Q?QXWlgdU/RvgE84c12k9B1A7PkCujZSEAm7qaY5dYv/vt38xvgzypbD25cF?=
- =?iso-8859-1?Q?1WoxFkvwhokeoKCJNSnhsT+V8l/pNZJiznx1tLwGLFyKx19amPgSYY0aK0?=
- =?iso-8859-1?Q?Qk+zlcZPMHnqrdbIyZeOUiyjB4Ipy/RK+EsSeq7I9lSit0TXDn8ojfiKV+?=
- =?iso-8859-1?Q?imSKFbS2F7p+9nkCkR+JBxYn1za625H5mfVNvICdaoT3lqj3cTVhxDxenC?=
- =?iso-8859-1?Q?ABYsj1hV62AR+MeGXYxZlxwXLK689oOMyQYns0XwjqVaxC8f7Aq8rL+08r?=
- =?iso-8859-1?Q?z/Xhhc0kFdVo4Mw8zE1zSxMND2C6TsetFRpJX7dRVjTHP1oTXvKb770zZK?=
- =?iso-8859-1?Q?akv1vucF5ICg+AMXdG/7kb5+updwN1P8ruNB0OChh05bDGma/ewAK0CRQY?=
- =?iso-8859-1?Q?OmfX7WVpRVaWv48fWiks907pN3a1hlZAK4Xb0PseDe9aX1YDw0b9jXBuij?=
- =?iso-8859-1?Q?Og5bXbIjARJ3RLIn10qtOlb/FW+JcpIQaZwFr5ET7v+cF5QsUaBMQEb29/?=
- =?iso-8859-1?Q?Suk8MMciEvb00SH+mKTQiI9OZFOR3zSNMUHkhvsES7C5JKAse39zfpTq7B?=
- =?iso-8859-1?Q?L936VonEu1B6UIA9ZqHbNZt1s5lsXP/2xz7gNb4ao6PFnOpNax7zFQ8t2K?=
- =?iso-8859-1?Q?otH/KfWZ7NRz9mMFPoOWvuan7QMpYHX1E/2TeqK1I6YnloTZEnmMFW6nXJ?=
- =?iso-8859-1?Q?FCN5SEMHFLBYpT8NLJVs574ydEsZ4VKnmmCxeqOFJUDGBzMdt4e34XjUtz?=
- =?iso-8859-1?Q?L1RClpr40UFh9uc+6TZNXgbg4Gz159YwJvqiScDP3jNCrZSVy43/IXhArj?=
- =?iso-8859-1?Q?kCeaQ6uWwdCg6uwLTjjteAaOgICPW+30lIyZ3Uv0EYsX5xw2htGMf/8Cso?=
- =?iso-8859-1?Q?9DFwy2XAW5fLWlIbokISCTNS0l8Hsr0hp903PR/rFB7c0J/WX2HkW3HRJM?=
- =?iso-8859-1?Q?+DRN2eKsq3oEJN2tVAtMc8jtUbaobp9xdX80aY39X0t+ZlqSE2bNIrdULJ?=
- =?iso-8859-1?Q?MEN2/DKXBJqNXI7LzlLrmbIDh02ShHdCT4+IiJZK5BHrHLHlv4Z6OFJPv2?=
- =?iso-8859-1?Q?EpmKGomD9i0+vVOn9AFfPz7CF/CcWAdKNWfCWg1FD7cMhPGcygrLyIGre0?=
- =?iso-8859-1?Q?GYnGGJrbOk60brA6hu+Xt+d62snuvWDDRj?=
-Content-Type: text/plain; charset="iso-8859-1"
+	 <20240830034047.2251482-4-billy_tsai@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSQPR06MB7252.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38ebfcd2-1def-4ed7-650a-08dcd3009840
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2024 07:57:48.7453
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xgvI2MiqQT8VIVzLoyHZwYtYhHuvXFdRuh5v5wFvOvkOGBuZkdVQ7J0388oqSdCOriYwmbp9N2UNStCiy9SQRmD8wrDjDVbb5vA5kEqtWbw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB6574
 
-> > The bank array name is only used to determine if the GPIO offset is val=
-id,=0A=
-> > and this condition can be replaced by checking if the offset exceeds th=
-e=0A=
-> > ngpio property.=0A=
-> >=0A=
-> > Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>=0A=
-> > ---=0A=
-> >  drivers/gpio/gpio-aspeed.c | 17 ++++-------------=0A=
-> >  1 file changed, 4 insertions(+), 13 deletions(-)=0A=
-> >=0A=
-> > diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c=0A=
-> > index 04c03402db6d..24f50a0ea4ab 100644=0A=
-> > --- a/drivers/gpio/gpio-aspeed.c=0A=
-> > +++ b/drivers/gpio/gpio-aspeed.c=0A=
-> > @@ -77,7 +77,6 @@ struct aspeed_gpio_bank {=0A=
-> >       uint16_t        debounce_regs;=0A=
-> >       uint16_t        tolerance_regs;=0A=
-> >       uint16_t        cmdsrc_regs;=0A=
-> > -     const char      names[4][3];=0A=
-> >  };=0A=
-> >=0A=
-> >  /*=0A=
-> > @@ -104,7 +103,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_ba=
-nks[] =3D {=0A=
-> >               .debounce_regs =3D 0x0040,=0A=
-> >               .tolerance_regs =3D 0x001c,=0A=
-> >               .cmdsrc_regs =3D 0x0060,=0A=
-> > -             .names =3D { "A", "B", "C", "D" },=0A=
-> >       },=0A=
-> >       {=0A=
-> >               .val_regs =3D 0x0020,=0A=
-> > @@ -113,7 +111,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_ba=
-nks[] =3D {=0A=
-> >               .debounce_regs =3D 0x0048,=0A=
-> >               .tolerance_regs =3D 0x003c,=0A=
-> >               .cmdsrc_regs =3D 0x0068,=0A=
-> > -             .names =3D { "E", "F", "G", "H" },=0A=
-> >       },=0A=
-> >       {=0A=
-> >               .val_regs =3D 0x0070,=0A=
-> > @@ -122,7 +119,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_ba=
-nks[] =3D {=0A=
-> >               .debounce_regs =3D 0x00b0,=0A=
-> >               .tolerance_regs =3D 0x00ac,=0A=
-> >               .cmdsrc_regs =3D 0x0090,=0A=
-> > -             .names =3D { "I", "J", "K", "L" },=0A=
-> >       },=0A=
-> >       {=0A=
-> >               .val_regs =3D 0x0078,=0A=
-> > @@ -131,7 +127,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_ba=
-nks[] =3D {=0A=
-> >               .debounce_regs =3D 0x0100,=0A=
-> >               .tolerance_regs =3D 0x00fc,=0A=
-> >               .cmdsrc_regs =3D 0x00e0,=0A=
-> > -             .names =3D { "M", "N", "O", "P" },=0A=
-> >       },=0A=
-> >       {=0A=
-> >               .val_regs =3D 0x0080,=0A=
-> > @@ -140,7 +135,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_ba=
-nks[] =3D {=0A=
-> >               .debounce_regs =3D 0x0130,=0A=
-> >               .tolerance_regs =3D 0x012c,=0A=
-> >               .cmdsrc_regs =3D 0x0110,=0A=
-> > -             .names =3D { "Q", "R", "S", "T" },=0A=
-> >       },=0A=
-> >       {=0A=
-> >               .val_regs =3D 0x0088,=0A=
-> > @@ -149,7 +143,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_ba=
-nks[] =3D {=0A=
-> >               .debounce_regs =3D 0x0160,=0A=
-> >               .tolerance_regs =3D 0x015c,=0A=
-> >               .cmdsrc_regs =3D 0x0140,=0A=
-> > -             .names =3D { "U", "V", "W", "X" },=0A=
-> >       },=0A=
-> >       {=0A=
-> >               .val_regs =3D 0x01E0,=0A=
-> > @@ -158,7 +151,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_ba=
-nks[] =3D {=0A=
-> >               .debounce_regs =3D 0x0190,=0A=
-> >               .tolerance_regs =3D 0x018c,=0A=
-> >               .cmdsrc_regs =3D 0x0170,=0A=
-> > -             .names =3D { "Y", "Z", "AA", "AB" },=0A=
-> >       },=0A=
-> >       {=0A=
-> >               .val_regs =3D 0x01e8,=0A=
-> > @@ -167,7 +159,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_ba=
-nks[] =3D {=0A=
-> >               .debounce_regs =3D 0x01c0,=0A=
-> >               .tolerance_regs =3D 0x01bc,=0A=
-> >               .cmdsrc_regs =3D 0x01a0,=0A=
-> > -             .names =3D { "AC", "", "", "" },=0A=
-> >       },=0A=
-> >  };=0A=
-> >=0A=
-> > @@ -280,11 +271,11 @@ static inline const struct aspeed_bank_props *fin=
-d_bank_props(=0A=
-> >  static inline bool have_gpio(struct aspeed_gpio *gpio, unsigned int of=
-fset)=0A=
-> >  {=0A=
-> >       const struct aspeed_bank_props *props =3D find_bank_props(gpio, o=
-ffset);=0A=
-> > -     const struct aspeed_gpio_bank *bank =3D to_bank(offset);=0A=
-> > -     unsigned int group =3D GPIO_OFFSET(offset) / 8;=0A=
-> >=0A=
-> > -     return bank->names[group][0] !=3D '\0' &&=0A=
-> > -             (!props || ((props->input | props->output) & GPIO_BIT(off=
-set)));=0A=
-> > +     if (offset > gpio->chip.ngpio)=0A=
-=0A=
-> Should this be `>=3D`? ngpio is a count.=0A=
-=0A=
-Yes, it should be `>=3D`. I will fix it.=0A=
-=0A=
-Thanks=0A=
-=0A=
-> > +             return false;=0A=
-> > +=0A=
-> > +     return (!props || ((props->input | props->output) & GPIO_BIT(offs=
-et)));=0A=
-> >  }=0A=
-> >=0A=
-> >  static inline bool have_input(struct aspeed_gpio *gpio, unsigned int o=
-ffset)=
+On Fri, 2024-08-30 at 11:40 +0800, Billy Tsai wrote:
+> Add low-level operations (llops) to abstract the register access for GPIO
+> registers and the coprocessor request/release. With this abstraction
+> layer, the driver can separate the hardware and software logic, making it
+> easier to extend the driver to support different hardware register
+> layouts.
+>=20
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  drivers/gpio/gpio-aspeed.c | 309 +++++++++++++++++--------------------
+>  1 file changed, 138 insertions(+), 171 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+> index 24f50a0ea4ab..74c4e80958bf 100644
+> --- a/drivers/gpio/gpio-aspeed.c
+> +++ b/drivers/gpio/gpio-aspeed.c
+> @@ -39,6 +39,7 @@ struct aspeed_bank_props {
+>  struct aspeed_gpio_config {
+>  	unsigned int nr_gpios;
+>  	const struct aspeed_bank_props *props;
+> +	unsigned int version;
+
+I'm interested to see whether this is necessary in practice.
+
+>  };
+> =20
+>  /*
+> @@ -62,10 +63,13 @@ struct aspeed_gpio {
+> =20
+>  	u8 *offset_timer;
+>  	unsigned int timer_users[4];
+> +	const int *debounce_timers_array;
+> +	int debounce_timers_num;
+>  	struct clk *clk;
+> =20
+>  	u32 *dcache;
+>  	u8 *cf_copro_bankmap;
+> +	const struct aspeed_gpio_llops *llops;
+>  };
+> =20
+>  struct aspeed_gpio_bank {
+> @@ -178,6 +182,15 @@ enum aspeed_gpio_reg {
+>  	reg_cmdsrc1,
+>  };
+> =20
+> +struct aspeed_gpio_llops {
+> +	bool (*copro_request)(struct aspeed_gpio *gpio, unsigned int offset);
+> +	void (*copro_release)(struct aspeed_gpio *gpio, unsigned int offset);
+> +	void (*reg_bits_set)(struct aspeed_gpio *gpio, unsigned int offset,
+> +			     const enum aspeed_gpio_reg reg, u32 val);
+> +	u32 (*reg_bits_read)(struct aspeed_gpio *gpio, unsigned int offset,
+> +			     const enum aspeed_gpio_reg reg);
+> +};
+> +
+>  #define GPIO_VAL_VALUE	0x00
+>  #define GPIO_VAL_DIR	0x04
+> =20
+> @@ -237,10 +250,6 @@ static inline void __iomem *bank_reg(struct aspeed_g=
+pio *gpio,
+>  #define GPIO_OFFSET(x)	((x) & 0x1f)
+>  #define GPIO_BIT(x)	BIT(GPIO_OFFSET(x))
+> =20
+> -#define _GPIO_SET_DEBOUNCE(t, o, i) ((!!((t) & BIT(i))) << GPIO_OFFSET(o=
+))
+> -#define GPIO_SET_DEBOUNCE1(t, o) _GPIO_SET_DEBOUNCE(t, o, 1)
+> -#define GPIO_SET_DEBOUNCE2(t, o) _GPIO_SET_DEBOUNCE(t, o, 0)
+> -
+>  static const struct aspeed_gpio_bank *to_bank(unsigned int offset)
+>  {
+>  	unsigned int bank =3D GPIO_BANK(offset);
+> @@ -296,35 +305,17 @@ static inline bool have_output(struct aspeed_gpio *=
+gpio, unsigned int offset)
+>  }
+> =20
+>  static void aspeed_gpio_change_cmd_source(struct aspeed_gpio *gpio,
+> -					  const struct aspeed_gpio_bank *bank,
+> -					  int bindex, int cmdsrc)
+> +					  unsigned int offset,
+> +					  int cmdsrc)
+>  {
+> -	void __iomem *c0 =3D bank_reg(gpio, bank, reg_cmdsrc0);
+> -	void __iomem *c1 =3D bank_reg(gpio, bank, reg_cmdsrc1);
+> -	u32 bit, reg;
+> -
+>  	/*
+> -	 * Each register controls 4 banks, so take the bottom 2
+> -	 * bits of the bank index, and use them to select the
+> -	 * right control bit (0, 8, 16 or 24).
+> +	 * The command source register is only valid in bits 0, 8, 16, and 24, =
+so we use
+> +	 * (offset & ~(0x7)) to ensure that reg_bits_set always targets a valid=
+ bit.
+>  	 */
+> -	bit =3D BIT((bindex & 3) << 3);
+> -
+>  	/* Source 1 first to avoid illegal 11 combination */
+> -	reg =3D ioread32(c1);
+> -	if (cmdsrc & 2)
+> -		reg |=3D bit;
+> -	else
+> -		reg &=3D ~bit;
+> -	iowrite32(reg, c1);
+> -
+> +	gpio->llops->reg_bits_set(gpio, offset & ~(0x7), reg_cmdsrc1, !!(cmdsrc=
+ & BIT(1)));
+>  	/* Then Source 0 */
+> -	reg =3D ioread32(c0);
+> -	if (cmdsrc & 1)
+> -		reg |=3D bit;
+> -	else
+> -		reg &=3D ~bit;
+> -	iowrite32(reg, c0);
+> +	gpio->llops->reg_bits_set(gpio, offset & ~(0x7), reg_cmdsrc0, !!(cmdsrc=
+ & BIT(0)));
+>  }
+> =20
+>  static bool aspeed_gpio_copro_request(struct aspeed_gpio *gpio,
+> @@ -343,7 +334,7 @@ static bool aspeed_gpio_copro_request(struct aspeed_g=
+pio *gpio,
+>  	copro_ops->request_access(copro_data);
+> =20
+>  	/* Change command source back to ARM */
+> -	aspeed_gpio_change_cmd_source(gpio, bank, offset >> 3, GPIO_CMDSRC_ARM)=
+;
+> +	aspeed_gpio_change_cmd_source(gpio, offset, GPIO_CMDSRC_ARM);
+> =20
+>  	/* Update cache */
+>  	gpio->dcache[GPIO_BANK(offset)] =3D ioread32(bank_reg(gpio, bank, reg_r=
+data));
+> @@ -354,8 +345,6 @@ static bool aspeed_gpio_copro_request(struct aspeed_g=
+pio *gpio,
+>  static void aspeed_gpio_copro_release(struct aspeed_gpio *gpio,
+>  				      unsigned int offset)
+>  {
+> -	const struct aspeed_gpio_bank *bank =3D to_bank(offset);
+> -
+>  	if (!copro_ops || !gpio->cf_copro_bankmap)
+>  		return;
+>  	if (!gpio->cf_copro_bankmap[offset >> 3])
+> @@ -364,7 +353,7 @@ static void aspeed_gpio_copro_release(struct aspeed_g=
+pio *gpio,
+>  		return;
+> =20
+>  	/* Change command source back to ColdFire */
+> -	aspeed_gpio_change_cmd_source(gpio, bank, offset >> 3,
+> +	aspeed_gpio_change_cmd_source(gpio, offset,
+>  				      GPIO_CMDSRC_COLDFIRE);
+> =20
+>  	/* Restart the coprocessor */
+> @@ -374,29 +363,24 @@ static void aspeed_gpio_copro_release(struct aspeed=
+_gpio *gpio,
+>  static int aspeed_gpio_get(struct gpio_chip *gc, unsigned int offset)
+>  {
+>  	struct aspeed_gpio *gpio =3D gpiochip_get_data(gc);
+> -	const struct aspeed_gpio_bank *bank =3D to_bank(offset);
+> =20
+> -	return !!(ioread32(bank_reg(gpio, bank, reg_val)) & GPIO_BIT(offset));
+> +	return gpio->llops->reg_bits_read(gpio, offset, reg_val);
+>  }
+> =20
+>  static void __aspeed_gpio_set(struct gpio_chip *gc, unsigned int offset,
+>  			      int val)
+>  {
+>  	struct aspeed_gpio *gpio =3D gpiochip_get_data(gc);
+> -	const struct aspeed_gpio_bank *bank =3D to_bank(offset);
+> -	void __iomem *addr;
+>  	u32 reg;
+> =20
+> -	addr =3D bank_reg(gpio, bank, reg_val);
+>  	reg =3D gpio->dcache[GPIO_BANK(offset)];
+> -
+>  	if (val)
+>  		reg |=3D GPIO_BIT(offset);
+>  	else
+>  		reg &=3D ~GPIO_BIT(offset);
+>  	gpio->dcache[GPIO_BANK(offset)] =3D reg;
+> =20
+> -	iowrite32(reg, addr);
+> +	gpio->llops->reg_bits_set(gpio, offset, reg_val, val);
+>  }
+> =20
+>  static void aspeed_gpio_set(struct gpio_chip *gc, unsigned int offset,
+> @@ -407,36 +391,32 @@ static void aspeed_gpio_set(struct gpio_chip *gc, u=
+nsigned int offset,
+>  	bool copro;
+> =20
+>  	raw_spin_lock_irqsave(&gpio->lock, flags);
+> -	copro =3D aspeed_gpio_copro_request(gpio, offset);
+> +	if (gpio->llops->copro_request)
+> +		copro =3D gpio->llops->copro_request(gpio, offset);
+
+A bit minor perhaps, but I'd add a static function to do the test and
+call:
+
+static bool aspeed_gpio_copro_request(struct aspeed_gpio *gpio,
+unsigned int offset)
+{
+    if (gpio->llops->copro_request)
+        return gpio->llops->copro_request(gpio, offset);
+
+    return false;
+}
+
+static void aspeed_gpio_copro_release(struct aspeed_gpio *gpio,
+unsigned int offset)
+{
+    if (gpio->llops->copro_release)
+        gpio->llops->copro_release(gpio, offset);
+}
+
+A bit less noise at the call-sites that way.
+
+That's only a suggestion for the optional copro function pointers
+though. For the reg_bits_read and reg_bits_set callbacks we should
+ensure they're not NULL in the driver probe() implementation, or error
+out if they are.
+
+> =20
+>  	__aspeed_gpio_set(gc, offset, val);
+> =20
+> -	if (copro)
+> -		aspeed_gpio_copro_release(gpio, offset);
+> +	if (copro && gpio->llops->copro_release)
+> +		gpio->llops->copro_release(gpio, offset);
+>  	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+>  }
+> =20
+>  static int aspeed_gpio_dir_in(struct gpio_chip *gc, unsigned int offset)
+>  {
+>  	struct aspeed_gpio *gpio =3D gpiochip_get_data(gc);
+> -	const struct aspeed_gpio_bank *bank =3D to_bank(offset);
+> -	void __iomem *addr =3D bank_reg(gpio, bank, reg_dir);
+>  	unsigned long flags;
+>  	bool copro;
+> -	u32 reg;
+> =20
+>  	if (!have_input(gpio, offset))
+>  		return -ENOTSUPP;
+> =20
+>  	raw_spin_lock_irqsave(&gpio->lock, flags);
+> =20
+> -	reg =3D ioread32(addr);
+> -	reg &=3D ~GPIO_BIT(offset);
+> -
+> -	copro =3D aspeed_gpio_copro_request(gpio, offset);
+> -	iowrite32(reg, addr);
+> -	if (copro)
+> -		aspeed_gpio_copro_release(gpio, offset);
+> +	if (gpio->llops->copro_request)
+> +		copro =3D gpio->llops->copro_request(gpio, offset);
+> +	gpio->llops->reg_bits_set(gpio, offset, reg_dir, 0);
+> +	if (copro && gpio->llops->copro_release)
+> +		gpio->llops->copro_release(gpio, offset);
+> =20
+>  	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+> =20
+> @@ -447,26 +427,21 @@ static int aspeed_gpio_dir_out(struct gpio_chip *gc=
+,
+>  			       unsigned int offset, int val)
+>  {
+>  	struct aspeed_gpio *gpio =3D gpiochip_get_data(gc);
+> -	const struct aspeed_gpio_bank *bank =3D to_bank(offset);
+> -	void __iomem *addr =3D bank_reg(gpio, bank, reg_dir);
+>  	unsigned long flags;
+>  	bool copro;
+> -	u32 reg;
+> =20
+>  	if (!have_output(gpio, offset))
+>  		return -ENOTSUPP;
+> =20
+>  	raw_spin_lock_irqsave(&gpio->lock, flags);
+> =20
+> -	reg =3D ioread32(addr);
+> -	reg |=3D GPIO_BIT(offset);
+> -
+> -	copro =3D aspeed_gpio_copro_request(gpio, offset);
+> +	if (gpio->llops->copro_request)
+> +		copro =3D gpio->llops->copro_request(gpio, offset);
+>  	__aspeed_gpio_set(gc, offset, val);
+> -	iowrite32(reg, addr);
+> +	gpio->llops->reg_bits_set(gpio, offset, reg_dir, 1);
+> =20
+> -	if (copro)
+> -		aspeed_gpio_copro_release(gpio, offset);
+> +	if (copro && gpio->llops->copro_release)
+> +		gpio->llops->copro_release(gpio, offset);
+>  	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+> =20
+>  	return 0;
+> @@ -475,7 +450,6 @@ static int aspeed_gpio_dir_out(struct gpio_chip *gc,
+>  static int aspeed_gpio_get_direction(struct gpio_chip *gc, unsigned int =
+offset)
+>  {
+>  	struct aspeed_gpio *gpio =3D gpiochip_get_data(gc);
+> -	const struct aspeed_gpio_bank *bank =3D to_bank(offset);
+>  	unsigned long flags;
+>  	u32 val;
+> =20
+> @@ -487,7 +461,7 @@ static int aspeed_gpio_get_direction(struct gpio_chip=
+ *gc, unsigned int offset)
+> =20
+>  	raw_spin_lock_irqsave(&gpio->lock, flags);
+> =20
+> -	val =3D ioread32(bank_reg(gpio, bank, reg_dir)) & GPIO_BIT(offset);
+> +	val =3D gpio->llops->reg_bits_read(gpio, offset, reg_dir);
+> =20
+>  	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+> =20
+> @@ -496,8 +470,7 @@ static int aspeed_gpio_get_direction(struct gpio_chip=
+ *gc, unsigned int offset)
+> =20
+>  static inline int irqd_to_aspeed_gpio_data(struct irq_data *d,
+>  					   struct aspeed_gpio **gpio,
+> -					   const struct aspeed_gpio_bank **bank,
+> -					   u32 *bit, int *offset)
+> +					   int *offset)
+>  {
+>  	struct aspeed_gpio *internal;
+> =20
+> @@ -510,70 +483,55 @@ static inline int irqd_to_aspeed_gpio_data(struct i=
+rq_data *d,
+>  		return -ENOTSUPP;
+> =20
+>  	*gpio =3D internal;
+> -	*bank =3D to_bank(*offset);
+> -	*bit =3D GPIO_BIT(*offset);
+> =20
+>  	return 0;
+>  }
+> =20
+>  static void aspeed_gpio_irq_ack(struct irq_data *d)
+>  {
+> -	const struct aspeed_gpio_bank *bank;
+>  	struct aspeed_gpio *gpio;
+>  	unsigned long flags;
+> -	void __iomem *status_addr;
+>  	int rc, offset;
+>  	bool copro;
+> -	u32 bit;
+> =20
+> -	rc =3D irqd_to_aspeed_gpio_data(d, &gpio, &bank, &bit, &offset);
+> +	rc =3D irqd_to_aspeed_gpio_data(d, &gpio, &offset);
+>  	if (rc)
+>  		return;
+> =20
+> -	status_addr =3D bank_reg(gpio, bank, reg_irq_status);
+> -
+>  	raw_spin_lock_irqsave(&gpio->lock, flags);
+> -	copro =3D aspeed_gpio_copro_request(gpio, offset);
+> +	if (gpio->llops->copro_request)
+> +		copro =3D gpio->llops->copro_request(gpio, offset);
+> =20
+> -	iowrite32(bit, status_addr);
+> +	gpio->llops->reg_bits_set(gpio, offset, reg_irq_status, 1);
+> =20
+> -	if (copro)
+> -		aspeed_gpio_copro_release(gpio, offset);
+> +	if (copro && gpio->llops->copro_release)
+> +		gpio->llops->copro_release(gpio, offset);
+>  	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+>  }
+> =20
+>  static void aspeed_gpio_irq_set_mask(struct irq_data *d, bool set)
+>  {
+> -	const struct aspeed_gpio_bank *bank;
+>  	struct aspeed_gpio *gpio;
+>  	unsigned long flags;
+> -	u32 reg, bit;
+> -	void __iomem *addr;
+>  	int rc, offset;
+>  	bool copro;
+> =20
+> -	rc =3D irqd_to_aspeed_gpio_data(d, &gpio, &bank, &bit, &offset);
+> +	rc =3D irqd_to_aspeed_gpio_data(d, &gpio, &offset);
+>  	if (rc)
+>  		return;
+> =20
+> -	addr =3D bank_reg(gpio, bank, reg_irq_enable);
+> -
+>  	/* Unmasking the IRQ */
+>  	if (set)
+>  		gpiochip_enable_irq(&gpio->chip, irqd_to_hwirq(d));
+> =20
+>  	raw_spin_lock_irqsave(&gpio->lock, flags);
+> -	copro =3D aspeed_gpio_copro_request(gpio, offset);
+> +	if (gpio->llops->copro_request)
+> +		copro =3D gpio->llops->copro_request(gpio, offset);
+> =20
+> -	reg =3D ioread32(addr);
+> -	if (set)
+> -		reg |=3D bit;
+> -	else
+> -		reg &=3D ~bit;
+> -	iowrite32(reg, addr);
+> +	gpio->llops->reg_bits_set(gpio, offset, reg_irq_enable, set);
+> =20
+> -	if (copro)
+> -		aspeed_gpio_copro_release(gpio, offset);
+> +	if (copro && gpio->llops->copro_release)
+> +		gpio->llops->copro_release(gpio, offset);
+>  	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+> =20
+>  	/* Masking the IRQ */
+> @@ -596,34 +554,31 @@ static int aspeed_gpio_set_type(struct irq_data *d,=
+ unsigned int type)
+>  	u32 type0 =3D 0;
+>  	u32 type1 =3D 0;
+>  	u32 type2 =3D 0;
+> -	u32 bit, reg;
+> -	const struct aspeed_gpio_bank *bank;
+>  	irq_flow_handler_t handler;
+>  	struct aspeed_gpio *gpio;
+>  	unsigned long flags;
+> -	void __iomem *addr;
+>  	int rc, offset;
+>  	bool copro;
+> =20
+> -	rc =3D irqd_to_aspeed_gpio_data(d, &gpio, &bank, &bit, &offset);
+> +	rc =3D irqd_to_aspeed_gpio_data(d, &gpio, &offset);
+>  	if (rc)
+>  		return -EINVAL;
+> =20
+>  	switch (type & IRQ_TYPE_SENSE_MASK) {
+>  	case IRQ_TYPE_EDGE_BOTH:
+> -		type2 |=3D bit;
+> +		type2 =3D 1;
+>  		fallthrough;
+>  	case IRQ_TYPE_EDGE_RISING:
+> -		type0 |=3D bit;
+> +		type0 =3D 1;
+>  		fallthrough;
+>  	case IRQ_TYPE_EDGE_FALLING:
+>  		handler =3D handle_edge_irq;
+>  		break;
+>  	case IRQ_TYPE_LEVEL_HIGH:
+> -		type0 |=3D bit;
+> +		type0 =3D 1;
+>  		fallthrough;
+>  	case IRQ_TYPE_LEVEL_LOW:
+> -		type1 |=3D bit;
+> +		type1 =3D 1;
+>  		handler =3D handle_level_irq;
+>  		break;
+>  	default:
+> @@ -631,25 +586,15 @@ static int aspeed_gpio_set_type(struct irq_data *d,=
+ unsigned int type)
+>  	}
+> =20
+>  	raw_spin_lock_irqsave(&gpio->lock, flags);
+> -	copro =3D aspeed_gpio_copro_request(gpio, offset);
+> -
+> -	addr =3D bank_reg(gpio, bank, reg_irq_type0);
+> -	reg =3D ioread32(addr);
+> -	reg =3D (reg & ~bit) | type0;
+> -	iowrite32(reg, addr);
+> +	if (gpio->llops->copro_request)
+> +		copro =3D gpio->llops->copro_request(gpio, offset);
+> =20
+> -	addr =3D bank_reg(gpio, bank, reg_irq_type1);
+> -	reg =3D ioread32(addr);
+> -	reg =3D (reg & ~bit) | type1;
+> -	iowrite32(reg, addr);
+> +	gpio->llops->reg_bits_set(gpio, offset, reg_irq_type0, type0);
+> +	gpio->llops->reg_bits_set(gpio, offset, reg_irq_type1, type1);
+> +	gpio->llops->reg_bits_set(gpio, offset, reg_irq_type2, type2);
+> =20
+> -	addr =3D bank_reg(gpio, bank, reg_irq_type2);
+> -	reg =3D ioread32(addr);
+> -	reg =3D (reg & ~bit) | type2;
+> -	iowrite32(reg, addr);
+> -
+> -	if (copro)
+> -		aspeed_gpio_copro_release(gpio, offset);
+> +	if (copro && gpio->llops->copro_release)
+> +		gpio->llops->copro_release(gpio, offset);
+>  	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+> =20
+>  	irq_set_handler_locked(d, handler);
+> @@ -661,7 +606,6 @@ static void aspeed_gpio_irq_handler(struct irq_desc *=
+desc)
+>  {
+>  	struct gpio_chip *gc =3D irq_desc_get_handler_data(desc);
+>  	struct irq_chip *ic =3D irq_desc_get_chip(desc);
+> -	struct aspeed_gpio *data =3D gpiochip_get_data(gc);
+>  	unsigned int i, p, banks;
+>  	unsigned long reg;
+>  	struct aspeed_gpio *gpio =3D gpiochip_get_data(gc);
+> @@ -670,9 +614,7 @@ static void aspeed_gpio_irq_handler(struct irq_desc *=
+desc)
+> =20
+>  	banks =3D DIV_ROUND_UP(gpio->chip.ngpio, 32);
+>  	for (i =3D 0; i < banks; i++) {
+> -		const struct aspeed_gpio_bank *bank =3D &aspeed_gpio_banks[i];
+> -
+> -		reg =3D ioread32(bank_reg(data, bank, reg_irq_status));
+> +		reg =3D gpio->llops->reg_bits_read(gpio, i, reg_irq_status);
+> =20
+>  		for_each_set_bit(p, &reg, 32)
+>  			generic_handle_domain_irq(gc->irq.domain, i * 32 + p);
+> @@ -711,26 +653,16 @@ static int aspeed_gpio_reset_tolerance(struct gpio_=
+chip *chip,
+>  {
+>  	struct aspeed_gpio *gpio =3D gpiochip_get_data(chip);
+>  	unsigned long flags;
+> -	void __iomem *treg;
+>  	bool copro;
+> -	u32 val;
+> -
+> -	treg =3D bank_reg(gpio, to_bank(offset), reg_tolerance);
+> =20
+>  	raw_spin_lock_irqsave(&gpio->lock, flags);
+> -	copro =3D aspeed_gpio_copro_request(gpio, offset);
+> +	if (gpio->llops->copro_request)
+> +		copro =3D gpio->llops->copro_request(gpio, offset);
+> =20
+> -	val =3D readl(treg);
+> +	gpio->llops->reg_bits_set(gpio, offset, reg_tolerance, enable);
+> =20
+> -	if (enable)
+> -		val |=3D GPIO_BIT(offset);
+> -	else
+> -		val &=3D ~GPIO_BIT(offset);
+> -
+> -	writel(val, treg);
+> -
+> -	if (copro)
+> -		aspeed_gpio_copro_release(gpio, offset);
+> +	if (copro && gpio->llops->copro_release)
+> +		gpio->llops->copro_release(gpio, offset);
+>  	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+> =20
+>  	return 0;
+> @@ -821,21 +753,11 @@ static inline bool timer_allocation_registered(stru=
+ct aspeed_gpio *gpio,
+>  static void configure_timer(struct aspeed_gpio *gpio, unsigned int offse=
+t,
+>  		unsigned int timer)
+>  {
+> -	const struct aspeed_gpio_bank *bank =3D to_bank(offset);
+> -	const u32 mask =3D GPIO_BIT(offset);
+> -	void __iomem *addr;
+> -	u32 val;
+> -
+>  	/* Note: Debounce timer isn't under control of the command
+>  	 * source registers, so no need to sync with the coprocessor
+>  	 */
+> -	addr =3D bank_reg(gpio, bank, reg_debounce_sel1);
+> -	val =3D ioread32(addr);
+> -	iowrite32((val & ~mask) | GPIO_SET_DEBOUNCE1(timer, offset), addr);
+> -
+> -	addr =3D bank_reg(gpio, bank, reg_debounce_sel2);
+> -	val =3D ioread32(addr);
+> -	iowrite32((val & ~mask) | GPIO_SET_DEBOUNCE2(timer, offset), addr);
+> +	gpio->llops->reg_bits_set(gpio, offset, reg_debounce_sel1, !!(timer & B=
+IT(1)));
+> +	gpio->llops->reg_bits_set(gpio, offset, reg_debounce_sel2, !!(timer & B=
+IT(0)));
+>  }
+> =20
+>  static int enable_debounce(struct gpio_chip *chip, unsigned int offset,
+> @@ -866,15 +788,15 @@ static int enable_debounce(struct gpio_chip *chip, =
+unsigned int offset,
+>  	}
+> =20
+>  	/* Try to find a timer already configured for the debounce period */
+> -	for (i =3D 1; i < ARRAY_SIZE(debounce_timers); i++) {
+> +	for (i =3D 1; i < gpio->debounce_timers_num; i++) {
+>  		u32 cycles;
+> =20
+> -		cycles =3D ioread32(gpio->base + debounce_timers[i]);
+> +		cycles =3D ioread32(gpio->base + gpio->debounce_timers_array[i]);
+>  		if (requested_cycles =3D=3D cycles)
+>  			break;
+>  	}
+> =20
+> -	if (i =3D=3D ARRAY_SIZE(debounce_timers)) {
+> +	if (i =3D=3D gpio->debounce_timers_num) {
+>  		int j;
+> =20
+>  		/*
+> @@ -905,7 +827,7 @@ static int enable_debounce(struct gpio_chip *chip, un=
+signed int offset,
+> =20
+>  		i =3D j;
+> =20
+> -		iowrite32(requested_cycles, gpio->base + debounce_timers[i]);
+> +		iowrite32(requested_cycles, gpio->base + gpio->debounce_timers_array[i=
+]);
+>  	}
+> =20
+>  	if (WARN(i =3D=3D 0, "Cannot register index of disabled timer\n")) {
+> @@ -1027,7 +949,7 @@ int aspeed_gpio_copro_grab_gpio(struct gpio_desc *de=
+sc,
+> =20
+>  	/* Switch command source */
+>  	if (gpio->cf_copro_bankmap[bindex] =3D=3D 1)
+> -		aspeed_gpio_change_cmd_source(gpio, bank, bindex,
+> +		aspeed_gpio_change_cmd_source(gpio, offset,
+>  					      GPIO_CMDSRC_COLDFIRE);
+> =20
+>  	if (vreg_offset)
+> @@ -1051,7 +973,6 @@ int aspeed_gpio_copro_release_gpio(struct gpio_desc =
+*desc)
+>  	struct gpio_chip *chip =3D gpiod_to_chip(desc);
+>  	struct aspeed_gpio *gpio =3D gpiochip_get_data(chip);
+>  	int rc =3D 0, bindex, offset =3D gpio_chip_hwgpio(desc);
+> -	const struct aspeed_gpio_bank *bank =3D to_bank(offset);
+>  	unsigned long flags;
+> =20
+>  	if (!gpio->cf_copro_bankmap)
+> @@ -1072,7 +993,7 @@ int aspeed_gpio_copro_release_gpio(struct gpio_desc =
+*desc)
+> =20
+>  	/* Switch command source */
+>  	if (gpio->cf_copro_bankmap[bindex] =3D=3D 0)
+> -		aspeed_gpio_change_cmd_source(gpio, bank, bindex,
+> +		aspeed_gpio_change_cmd_source(gpio, offset,
+>  					      GPIO_CMDSRC_ARM);
+>   bail:
+>  	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+> @@ -1082,12 +1003,10 @@ EXPORT_SYMBOL_GPL(aspeed_gpio_copro_release_gpio)=
+;
+> =20
+>  static void aspeed_gpio_irq_print_chip(struct irq_data *d, struct seq_fi=
+le *p)
+>  {
+> -	const struct aspeed_gpio_bank *bank;
+>  	struct aspeed_gpio *gpio;
+> -	u32 bit;
+>  	int rc, offset;
+> =20
+> -	rc =3D irqd_to_aspeed_gpio_data(d, &gpio, &bank, &bit, &offset);
+> +	rc =3D irqd_to_aspeed_gpio_data(d, &gpio, &offset);
+>  	if (rc)
+>  		return;
+> =20
+> @@ -1120,7 +1039,7 @@ static const struct aspeed_bank_props ast2400_bank_=
+props[] =3D {
+> =20
+>  static const struct aspeed_gpio_config ast2400_config =3D
+>  	/* 220 for simplicity, really 216 with two 4-GPIO holes, four at end */
+> -	{ .nr_gpios =3D 220, .props =3D ast2400_bank_props, };
+> +	{ .nr_gpios =3D 220, .props =3D ast2400_bank_props, .version =3D 4};
+> =20
+>  static const struct aspeed_bank_props ast2500_bank_props[] =3D {
+>  	/*     input	  output   */
+> @@ -1132,7 +1051,7 @@ static const struct aspeed_bank_props ast2500_bank_=
+props[] =3D {
+> =20
+>  static const struct aspeed_gpio_config ast2500_config =3D
+>  	/* 232 for simplicity, actual number is 228 (4-GPIO hole in GPIOAB) */
+> -	{ .nr_gpios =3D 232, .props =3D ast2500_bank_props, };
+> +	{ .nr_gpios =3D 232, .props =3D ast2500_bank_props, .version =3D 4};
+> =20
+>  static const struct aspeed_bank_props ast2600_bank_props[] =3D {
+>  	/*     input	  output   */
+> @@ -1148,7 +1067,7 @@ static const struct aspeed_gpio_config ast2600_conf=
+ig =3D
+>  	 * We expect ngpio being set in the device tree and this is a fallback
+>  	 * option.
+>  	 */
+> -	{ .nr_gpios =3D 208, .props =3D ast2600_bank_props, };
+> +	{ .nr_gpios =3D 208, .props =3D ast2600_bank_props, .version =3D 4};
+> =20
+>  static const struct of_device_id aspeed_gpio_of_table[] =3D {
+>  	{ .compatible =3D "aspeed,ast2400-gpio", .data =3D &ast2400_config, },
+> @@ -1158,6 +1077,40 @@ static const struct of_device_id aspeed_gpio_of_ta=
+ble[] =3D {
+>  };
+>  MODULE_DEVICE_TABLE(of, aspeed_gpio_of_table);
+> =20
+> +static void aspeed_g4_reg_bits_set(struct aspeed_gpio *gpio, unsigned in=
+t offset,
+> +				   const enum aspeed_gpio_reg reg, u32 val)
+> +{
+> +	const struct aspeed_gpio_bank *bank =3D to_bank(offset);
+> +	void __iomem *addr =3D bank_reg(gpio, bank, reg);
+> +	u32 temp;
+> +
+> +	temp =3D ioread32(addr);
+> +	if (val)
+> +		temp |=3D GPIO_BIT(offset);
+> +	else
+> +		temp &=3D ~GPIO_BIT(offset);
+> +
+> +	iowrite32(temp, addr);
+> +}
+> +
+> +static u32 aspeed_g4_reg_bits_read(struct aspeed_gpio *gpio, unsigned in=
+t offset,
+> +				   const enum aspeed_gpio_reg reg)
+> +{
+> +	const struct aspeed_gpio_bank *bank =3D to_bank(offset);
+> +	void __iomem *addr =3D bank_reg(gpio, bank, reg);
+> +
+> +	if (reg =3D=3D reg_rdata)
+> +		return ioread32(addr);
+> +	return !!(ioread32(addr) & GPIO_BIT(offset));
+> +}
+> +
+> +struct aspeed_gpio_llops aspeed_g4_llops =3D {
+> +	.copro_request =3D aspeed_gpio_copro_request,
+> +	.copro_release =3D aspeed_gpio_copro_release,
+> +	.reg_bits_set =3D aspeed_g4_reg_bits_set,
+> +	.reg_bits_read =3D aspeed_g4_reg_bits_read,
+> +};
+> +
+>  static int __init aspeed_gpio_probe(struct platform_device *pdev)
+>  {
+>  	const struct of_device_id *gpio_id;
+> @@ -1191,6 +1144,18 @@ static int __init aspeed_gpio_probe(struct platfor=
+m_device *pdev)
+> =20
+>  	gpio->config =3D gpio_id->data;
+> =20
+> +	if (gpio->config->version =3D=3D 4) {
+> +		if (!gpio->llops)
+> +			gpio->llops =3D &aspeed_g4_llops;
+> +
+> +		if (!gpio->debounce_timers_array) {
+> +			gpio->debounce_timers_array =3D debounce_timers;
+> +			gpio->debounce_timers_num =3D ARRAY_SIZE(debounce_timers);
+> +		}
+
+Why not embed the llops and debounce array pointer/size straight into
+the config struct that we provide via  .data in the OF match table?
+
+I think that would just mean reordering some of the function and struct
+definitions in the source?
+
+That way we can get rid of the version member.
+
+Also, let's make sure here that the reg_bits_set and reg_bits_read
+callbacks are not NULL (and error out of aspeed_gpio_probe() if they
+are).
+
+On the whole though, I feel this change turns out to be a decent
+cleanup. It pushes the bank/offset bit-hackery down and away from the
+call-sites.
+
+Andrew
+
+> +	} else {
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+>  	gpio->chip.parent =3D &pdev->dev;
+>  	err =3D of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpio);
+>  	gpio->chip.ngpio =3D (u16) ngpio;
+> @@ -1218,15 +1183,17 @@ static int __init aspeed_gpio_probe(struct platfo=
+rm_device *pdev)
+>  	 * Populate it with initial values read from the HW and switch
+>  	 * all command sources to the ARM by default
+>  	 */
+> -	for (i =3D 0; i < banks; i++) {
+> -		const struct aspeed_gpio_bank *bank =3D &aspeed_gpio_banks[i];
+> -		void __iomem *addr =3D bank_reg(gpio, bank, reg_rdata);
+> -		gpio->dcache[i] =3D ioread32(addr);
+> -		aspeed_gpio_change_cmd_source(gpio, bank, 0, GPIO_CMDSRC_ARM);
+> -		aspeed_gpio_change_cmd_source(gpio, bank, 1, GPIO_CMDSRC_ARM);
+> -		aspeed_gpio_change_cmd_source(gpio, bank, 2, GPIO_CMDSRC_ARM);
+> -		aspeed_gpio_change_cmd_source(gpio, bank, 3, GPIO_CMDSRC_ARM);
+> -	}
+> +	if (gpio->config->version =3D=3D 4)
+> +		for (i =3D 0; i < banks; i++) {
+> +			const struct aspeed_gpio_bank *bank =3D &aspeed_gpio_banks[i];
+> +			void __iomem *addr =3D bank_reg(gpio, bank, reg_rdata);
+> +
+> +			gpio->dcache[i] =3D ioread32(addr);
+> +			aspeed_gpio_change_cmd_source(gpio, i * 8 + 0, GPIO_CMDSRC_ARM);
+> +			aspeed_gpio_change_cmd_source(gpio, i * 8 + 8, GPIO_CMDSRC_ARM);
+> +			aspeed_gpio_change_cmd_source(gpio, i * 8 + 16, GPIO_CMDSRC_ARM);
+> +			aspeed_gpio_change_cmd_source(gpio, i * 8 + 24, GPIO_CMDSRC_ARM);
+> +		}
+> =20
+>  	/* Set up an irqchip */
+>  	irq =3D platform_get_irq(pdev, 0);
+
 
