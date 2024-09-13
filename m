@@ -1,164 +1,110 @@
-Return-Path: <linux-gpio+bounces-10048-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10053-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B48C977AFD
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Sep 2024 10:30:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3618977C1B
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Sep 2024 11:22:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 44C441C24CC8
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Sep 2024 08:30:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 38E671C24728
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Sep 2024 09:22:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 562581D6C7F;
-	Fri, 13 Sep 2024 08:30:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 443061D6C75;
+	Fri, 13 Sep 2024 09:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PYCP+m8L"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z7YYRGYr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13E11BD4F2;
-	Fri, 13 Sep 2024 08:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8551D6C6E
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Sep 2024 09:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726216227; cv=none; b=RSNxHCblKlO25leLr9Dmi04kLHqzkzvUrQELhctMUDFZzYY0vD8X5BTFvT/6xFtYp8P9Ue5Sz/OJs/U6Eo0CnkWI//XY0LpYfqzFHi0OnnN63mn0VFAOe3keDwRPo3XboW4VzkThxcYqwnd38ct7lkNeZpHsaCv5bKNZsD4Nn+I=
+	t=1726219343; cv=none; b=QWtLZvXQCHVMKPULRplzTflc1KoFVnfA0NZqYu7RFTys4jx3BUQZmuwDUCPwcdV6rA8mLkmv+UxA0OmvXbcg5Yd2tFtQ1TsRWgLdVqCTwfcCLMYr+PsRZXQ6nTPP312nwdYkC+fsuGaie+xfX3SLrg7XCYbaa1Iv4BcYW67barU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726216227; c=relaxed/simple;
-	bh=bSJtLY6qDNiYOGQql0SJEcAGPb5hkAcpOnrtqwmpugU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t73h7qnlzP/YdVY7t3AYhzJqKFE8e/IflJGhv+EqagqtVVRPYBSDRTR5QF59UCLnXldORjmSVqlA32yzmoD0+wCJPVz+LOKvfpnpFgqMKx/4YZKiut82C/AgToLzNjiKRe6O3KA4vrSPhR8v9Pry+hm0BqKCeOmyf5cc5ZBDL4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PYCP+m8L; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2C42B2000D;
-	Fri, 13 Sep 2024 08:30:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1726216221;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KVpxpR6mVs91qCI2AvrKQB0F4heOO0qpmJA2cAGWXrA=;
-	b=PYCP+m8LjkPcCqNhgL4Om3LCQ1RnsUFHza5uEyvT2wHLoBs5p4a1a4meh5sC/7mSo6WQ+Z
-	Spd2g9qBpZtCPJXl8mueLXkwqbGXd5J23ZJF7CBj3XnfOvn4OOxyEIYwao68Kc9ot/DOnp
-	8mBJSnvm0aSG0eL7eFf3I3A6ar7vfbnrXukHAJaPHfj80N6G4S/zbQo7DAR8D2BKTG+o88
-	yreSHj2xpPOSRaY/PHOC/nNvb3Ax1jhaXrt48pUBvU7sgfPYHqwDwFowoGaWEf/7rYXk/r
-	GR1xNHHza1DzDjXIwQk+ARrzn/bm4qGFEGJxTyGE3QDtwrefAzQIPSJdz4pnhw==
-Message-ID: <618cb281-9fec-471f-9e3d-c7a471f75a7a@bootlin.com>
-Date: Fri, 13 Sep 2024 10:30:20 +0200
+	s=arc-20240116; t=1726219343; c=relaxed/simple;
+	bh=RBokndMAiIy5R51ivAWdmIfUS6Jn2VomHlXe8X2sFFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MoBFlCCaen4wrb2Qgb5v850uN2/m6NTlXFtAyGwNyIc/Vo8TuI4yfdRZfpbyZwLqyErpDAet1M61MjIbjiLyg24zUVKCensw6kZqSJW+QA/Pf33sPXfZnI00r2N3bp+/zXTW7QVERTJLhOLrMb+Ii3f9uQrqRvC9yQc9cRsd8Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z7YYRGYr; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726219342; x=1757755342;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=RBokndMAiIy5R51ivAWdmIfUS6Jn2VomHlXe8X2sFFc=;
+  b=Z7YYRGYrkoHtca9ERS1wd087nEDJy7fsWeFOjHf44ObSJel+uIsL+H/H
+   3peE51sKzb+TplmzxJJnu/5LPuQR+pvI5khZb0DFS9J9hYTAbPE6L/0bW
+   +IJGRscmYEz7ykCrkAbR4MKwV2O43omph2hRAd+/kbm0Qsi0JwPoncxZv
+   r3keuGF3uah/fEjalvx4ZN14svcdEeJItc1pQVTBtOMlmhCUN7zDqYK/z
+   d3lwXD3Yp6jRJIOmwYGhtIm8+q5N5Otg3BCJrYe5/Pg+2v+Bo8cQfqem6
+   zj+h2xZyA9Pr0eac2xRjGNcCmsfGKxtyYdsxPG48BEs5X8GcC2xUVIEyU
+   A==;
+X-CSE-ConnectionGUID: bEo1WL9gSHKjZ1tnyJFOdg==
+X-CSE-MsgGUID: PakIWmXESTKEHO2CUCvYZw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11193"; a="25238703"
+X-IronPort-AV: E=Sophos;i="6.10,225,1719903600"; 
+   d="scan'208";a="25238703"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 02:22:22 -0700
+X-CSE-ConnectionGUID: ZnZ5xxSQT/CaQsb367obbA==
+X-CSE-MsgGUID: cgBQTe6oRLyEw2ksrnU6yw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,225,1719903600"; 
+   d="scan'208";a="98683811"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa002.jf.intel.com with ESMTP; 13 Sep 2024 02:22:20 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id EBA26334; Fri, 13 Sep 2024 12:22:18 +0300 (EEST)
+Date: Fri, 13 Sep 2024 12:22:18 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linux pin control <linux-gpio@vger.kernel.org>
+Subject: Re: [GIT PULL] intel-pinctrl for v6.11-1
+Message-ID: <ZuQESkcu7UcV-Qj7@black.fi.intel.com>
+References: <20240806072032.GZ1532424@black.fi.intel.com>
+ <CACRpkdaRhAuqC90Lzj7jwjRF7P9i3J6=1zmqVofREESk54QKeQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] mfd: add Congatec Board Controller mfd driver
-To: Lee Jones <lee@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
- <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-watchdog@vger.kernel.org, thomas.petazzoni@bootlin.com,
- blake.vermeer@keysight.com
-References: <20240503-congatec-board-controller-v1-0-fec5236270e7@bootlin.com>
- <20240503-congatec-board-controller-v1-1-fec5236270e7@bootlin.com>
- <20240822103858.GH6858@google.com>
- <9f29d904-e7ba-40fb-b5d8-1efeddf6f148@bootlin.com>
- <20240912141309.GC24460@google.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <20240912141309.GC24460@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdaRhAuqC90Lzj7jwjRF7P9i3J6=1zmqVofREESk54QKeQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 9/12/24 16:13, Lee Jones wrote:
-> On Tue, 10 Sep 2024, Thomas Richard wrote:
+On Wed, Aug 07, 2024 at 07:57:10PM +0200, Linus Walleij wrote:
+> On Tue, Aug 6, 2024 at 9:20 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
 > 
->> On 8/22/24 12:38, Lee Jones wrote:
->>> On Fri, 09 Aug 2024, Thomas Richard wrote:
->>>
->>>> Add core MFD driver for the Board Controller found on some Congatec SMARC
->>>> module. This Board Controller provides functions like watchdog, GPIO, and
->>>> I2C busses.
->>>>
->>>> This commit add support only for the conga-SA7 module.
->>>>
->>>> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
->>>> ---
->>>>  drivers/mfd/Kconfig      |  12 ++
->>>>  drivers/mfd/Makefile     |   1 +
->>>>  drivers/mfd/cgbc-core.c  | 453 +++++++++++++++++++++++++++++++++++++++++++++++
->>>>  include/linux/mfd/cgbc.h |  44 +++++
->>>>  4 files changed, 510 insertions(+)
->>>>
->>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->>>> index bc8be2e593b6..3e0530f30267 100644
->>>> --- a/drivers/mfd/Kconfig
->>>> +++ b/drivers/mfd/Kconfig
->>>> @@ -224,6 +224,18 @@ config MFD_AXP20X_RSB
->>>>  	  components like regulators or the PEK (Power Enable Key) under the
->>>>  	  corresponding menus.
->>>>  
->>>> +config MFD_CGBC
->>>> +	tristate "Congatec Board Controller"
->>>> +	select MFD_CORE
->>>> +	depends on X86
->>>> +	help
->>>> +	  This is the core driver of the Board Controller found on some Congatec
->>>> +	  SMARC modules. The Board Controller provides functions like watchdog,
->>>> +	  I2C busses, and GPIO controller.
->>>> +
->>>> +	  To compile this driver as a module, choose M here: the module will be
->>>> +	  called cgbc-core.
->>>> +
->>>>  config MFD_CROS_EC_DEV
->>>>  	tristate "ChromeOS Embedded Controller multifunction device"
->>>>  	select MFD_CORE
->>>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->>>> index 02b651cd7535..d5da3fcd691c 100644
->>>> --- a/drivers/mfd/Makefile
->>>> +++ b/drivers/mfd/Makefile
->>>> @@ -13,6 +13,7 @@ obj-$(CONFIG_MFD_SM501)		+= sm501.o
->>>>  obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
->>>>  obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
->>>>  obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
->>>> +obj-$(CONFIG_MFD_CGBC)		+= cgbc-core.o
->>>>  obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
->>>>  obj-$(CONFIG_MFD_CS42L43)	+= cs42l43.o
->>>>  obj-$(CONFIG_MFD_CS42L43_I2C)	+= cs42l43-i2c.o
->>>> diff --git a/drivers/mfd/cgbc-core.c b/drivers/mfd/cgbc-core.c
->>>> new file mode 100644
->>>> index 000000000000..cca9b1170cc9
->>>> --- /dev/null
->>>> +++ b/drivers/mfd/cgbc-core.c
->>>> @@ -0,0 +1,453 @@
->>>> +// SPDX-License-Identifier: GPL-2.0-or-later
->>>> +/*
->>>> + * Congatec Board Controller MFD core driver.
->>>
->>> No such thing as an MFD.
->>
->> What should it be if it's not an MFD ?
+> > The following changes since commit 8400291e289ee6b2bf9779ff1c83a291501f017b:
+> >
+> >   Linux 6.11-rc1 (2024-07-28 14:19:55 -0700)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v6.11-1
+> >
+> > for you to fetch changes up to a366e46da10d7bfa1a52c3bd31f342a3d0e8e7fe:
+> >
+> >   pinctrl: meteorlake: Add Arrow Lake-H/U ACPI ID (2024-07-31 13:38:13 +0300)
 > 
-> You should be telling me this. :)
-> 
-> "Board Controller" according to the Kconfig entry.
-> 
+> Pulled in, thanks Mika!
 
-This Congatec Board Controller is an external micro-controller that is
-interfaced with the CPU through a eSPI bus.
-This Board Controller provides multiple functions: an I2C controller, a
-GPIO controller, a watchdog and other not yet implemented functions
-(temp/voltage sensors, backlight).
+To where?
+We can't find it in v6.11-rcX nor in your fixes branch...
 
-Therefore, the MFD subsystem is a very good fit, as it allows to have a
-core driver that implements the communication with the external
-micro-controller, and then individual drivers for each of the functions
-offered by this Board Controller.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thomas
+
 
