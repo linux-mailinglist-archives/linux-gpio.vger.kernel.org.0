@@ -1,31 +1,31 @@
-Return-Path: <linux-gpio+bounces-10036-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10037-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBC15977A28
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Sep 2024 09:46:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0435E977A2B
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Sep 2024 09:47:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0CB01F274DA
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Sep 2024 07:46:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEEEB1F279A4
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Sep 2024 07:47:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D11AC1D5CE7;
-	Fri, 13 Sep 2024 07:43:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B467D1D6189;
+	Fri, 13 Sep 2024 07:43:46 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B8E1D58BF;
-	Fri, 13 Sep 2024 07:43:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56B31D52B;
+	Fri, 13 Sep 2024 07:43:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726213424; cv=none; b=FMoc0brh+QafnKjVejzzLmXRZl3W5rmi7rqeGKwTiXBUjuchO5R7Cvdtzx9udWuvKKweGcIjZ/d9ucB6OqSvcbHWlTtZ47Mke/4R0wi60I9exvDaZHXuWHBigzClpH/U3BXddatRV0UexpIdlNuhbdnywN1tQ/hR5SY3J5WQD6s=
+	t=1726213426; cv=none; b=NAGdth3GwgSugk9sEXRHy3lnGZh5rypznRXRB8QIMKZKDHY8/3btlHULEe7hiSv7jH5mvNtRiPv8+khCF3ccaJgYTuIQ7Kcyrn1ctb+Sne9Wfr3db9b6j0XHXQymy+CrrfTE1uxXBY1bK192+gEFTBPvgzKGB/iBDtH0zskjSjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726213424; c=relaxed/simple;
-	bh=k5RrxAawkHfEBmfWauUZVYdSdK5ArkRT/07tNHU3cxI=;
+	s=arc-20240116; t=1726213426; c=relaxed/simple;
+	bh=NG3amR7iFrgKjnKHjfubaviUbChsnr0lmE4xe3X7HOI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QQr4+oIF/rCQ7TR7yYd94nFd6+5m1WVLChek2Dfq7gUnCB6EiqD9sIzD7pMwFUFpahdCqnTAH8xZLPn5DmsVELmS7DkpF8bcQcbxFsDZ/8Fpja21TB+BthkJINdVN0t7Cpggkbkb5VoN7V1G1VONkW6oYItH8N1i472TVEnbezA=
+	 MIME-Version:Content-Type; b=PXLJFajNX40uLQBVVYCJNcnzWmRWr5dQAUV8H3/UmtAipgz4c82HMAyjxnXNLlPOdZGEL5AQC3Vv+jtMfxAGnjrRb+u+f6ODP+nj26pxbw68dq++tV8GlBNt1EVcPm1e+LpfVn4aR1Uglt9HtNPaaBr9QJTaPxGwZNhZ4dw7ZdU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
@@ -43,9 +43,9 @@ To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
 	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
 	<BMC-SW@aspeedtech.com>, <Peter.Yin@quantatw.com>
-Subject: [PATCH v3 1/6] dt-bindings: gpio: aspeed,ast2400-gpio: Support ast2700
-Date: Fri, 13 Sep 2024 15:43:20 +0800
-Message-ID: <20240913074325.239390-2-billy_tsai@aspeedtech.com>
+Subject: [PATCH v3 2/6] gpio: aspeed: Remove the name for bank array
+Date: Fri, 13 Sep 2024 15:43:21 +0800
+Message-ID: <20240913074325.239390-3-billy_tsai@aspeedtech.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240913074325.239390-1-billy_tsai@aspeedtech.com>
 References: <20240913074325.239390-1-billy_tsai@aspeedtech.com>
@@ -58,65 +58,107 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-The AST2700 is the 7th generation SoC from Aspeed, featuring two GPIO
-controllers: one with 12 GPIO pins and another with 216 GPIO pins.
+The bank array name is only used to determine if the GPIO offset is valid,
+and this condition can be replaced by checking if the offset exceeds the
+ngpio property.
 
 Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 ---
- .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-aspeed.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-index cf11aa7ec8c7..b9afd07a9d24 100644
---- a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-@@ -15,6 +15,7 @@ properties:
-       - aspeed,ast2400-gpio
-       - aspeed,ast2500-gpio
-       - aspeed,ast2600-gpio
-+      - aspeed,ast2700-gpio
+diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+index 04c03402db6d..d20e15b2079d 100644
+--- a/drivers/gpio/gpio-aspeed.c
++++ b/drivers/gpio/gpio-aspeed.c
+@@ -77,7 +77,6 @@ struct aspeed_gpio_bank {
+ 	uint16_t	debounce_regs;
+ 	uint16_t	tolerance_regs;
+ 	uint16_t	cmdsrc_regs;
+-	const char	names[4][3];
+ };
  
-   reg:
-     maxItems: 1
-@@ -25,7 +26,7 @@ properties:
+ /*
+@@ -104,7 +103,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_banks[] = {
+ 		.debounce_regs = 0x0040,
+ 		.tolerance_regs = 0x001c,
+ 		.cmdsrc_regs = 0x0060,
+-		.names = { "A", "B", "C", "D" },
+ 	},
+ 	{
+ 		.val_regs = 0x0020,
+@@ -113,7 +111,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_banks[] = {
+ 		.debounce_regs = 0x0048,
+ 		.tolerance_regs = 0x003c,
+ 		.cmdsrc_regs = 0x0068,
+-		.names = { "E", "F", "G", "H" },
+ 	},
+ 	{
+ 		.val_regs = 0x0070,
+@@ -122,7 +119,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_banks[] = {
+ 		.debounce_regs = 0x00b0,
+ 		.tolerance_regs = 0x00ac,
+ 		.cmdsrc_regs = 0x0090,
+-		.names = { "I", "J", "K", "L" },
+ 	},
+ 	{
+ 		.val_regs = 0x0078,
+@@ -131,7 +127,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_banks[] = {
+ 		.debounce_regs = 0x0100,
+ 		.tolerance_regs = 0x00fc,
+ 		.cmdsrc_regs = 0x00e0,
+-		.names = { "M", "N", "O", "P" },
+ 	},
+ 	{
+ 		.val_regs = 0x0080,
+@@ -140,7 +135,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_banks[] = {
+ 		.debounce_regs = 0x0130,
+ 		.tolerance_regs = 0x012c,
+ 		.cmdsrc_regs = 0x0110,
+-		.names = { "Q", "R", "S", "T" },
+ 	},
+ 	{
+ 		.val_regs = 0x0088,
+@@ -149,7 +143,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_banks[] = {
+ 		.debounce_regs = 0x0160,
+ 		.tolerance_regs = 0x015c,
+ 		.cmdsrc_regs = 0x0140,
+-		.names = { "U", "V", "W", "X" },
+ 	},
+ 	{
+ 		.val_regs = 0x01E0,
+@@ -158,7 +151,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_banks[] = {
+ 		.debounce_regs = 0x0190,
+ 		.tolerance_regs = 0x018c,
+ 		.cmdsrc_regs = 0x0170,
+-		.names = { "Y", "Z", "AA", "AB" },
+ 	},
+ 	{
+ 		.val_regs = 0x01e8,
+@@ -167,7 +159,6 @@ static const struct aspeed_gpio_bank aspeed_gpio_banks[] = {
+ 		.debounce_regs = 0x01c0,
+ 		.tolerance_regs = 0x01bc,
+ 		.cmdsrc_regs = 0x01a0,
+-		.names = { "AC", "", "", "" },
+ 	},
+ };
  
-   gpio-controller: true
-   gpio-line-names:
--    minItems: 36
-+    minItems: 12
-     maxItems: 232
+@@ -280,11 +271,11 @@ static inline const struct aspeed_bank_props *find_bank_props(
+ static inline bool have_gpio(struct aspeed_gpio *gpio, unsigned int offset)
+ {
+ 	const struct aspeed_bank_props *props = find_bank_props(gpio, offset);
+-	const struct aspeed_gpio_bank *bank = to_bank(offset);
+-	unsigned int group = GPIO_OFFSET(offset) / 8;
  
-   gpio-ranges: true
-@@ -42,7 +43,7 @@ properties:
-     const: 2
+-	return bank->names[group][0] != '\0' &&
+-		(!props || ((props->input | props->output) & GPIO_BIT(offset)));
++	if (offset >= gpio->chip.ngpio)
++		return false;
++
++	return (!props || ((props->input | props->output) & GPIO_BIT(offset)));
+ }
  
-   ngpios:
--    minimum: 36
-+    minimum: 12
-     maximum: 232
- 
- required:
-@@ -93,6 +94,20 @@ allOf:
-           enum: [ 36, 208 ]
-       required:
-         - ngpios
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: aspeed,ast2700-gpio
-+    then:
-+      properties:
-+        gpio-line-names:
-+          minItems: 12
-+          maxItems: 216
-+        ngpios:
-+          enum: [ 12, 216 ]
-+      required:
-+        - ngpios
- 
- additionalProperties: false
- 
+ static inline bool have_input(struct aspeed_gpio *gpio, unsigned int offset)
 -- 
 2.25.1
 
