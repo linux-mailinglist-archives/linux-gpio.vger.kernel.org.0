@@ -1,124 +1,113 @@
-Return-Path: <linux-gpio+bounces-10116-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10117-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A33EA9792BE
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 19:56:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11B049792FB
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 20:33:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D64931C2143E
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 17:56:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF99D1F212F6
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 18:33:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D4111D1309;
-	Sat, 14 Sep 2024 17:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B10FB1D0DF5;
+	Sat, 14 Sep 2024 18:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BCKnMStk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZgV4YYj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAA6522F;
-	Sat, 14 Sep 2024 17:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185461CEEA4
+	for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2024 18:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726336574; cv=none; b=WtgyLB5XCKpA7ioEWVtxsCz3uPfxQKhRBY4JBVWudomC3ChKl9b5C35x0D/SGn1QdHl2r0pA+uwwnjfFewNuVUEe2X2mECOO2kDEtj85QLm73XDEpyclUvD5tlKnh2Gs3/Gh7DuMJrhu0wgjITNxticNFDn69mSItbtBFkMVsOk=
+	t=1726338826; cv=none; b=ZkqT2w5gqwfj88qPaDSjuVPwKZPWUDG5cX54L5nibSeCuPjvraeYG14nwYyeaYU6X+jhA3oucR8rtwn/SBFhh6P0NCdpXk2LvZcNApbfrdfa7aB7BmCNcmOggl3c9WOJgR4NQEtZ2ngGXXH/jjykjSnYP3TrABYHkj75IF0sdi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726336574; c=relaxed/simple;
-	bh=usg5zuvL6dMiMtReqxAmcXPlYBF1AWzxevclY567A/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eGPxkqOOeL2frg0ZxgqulD244E4Pn3cRqlgLHYfr5DlwhmK1eAXyi2ScBrvMhgaHNfN6+Bn8MX1c33+kQSZXNuGbynbL7n6v+bacrvua2YQSoIFMZLSfG8eiZxup+bUZq/kpSwzgEWD56dCsu32TGYxjlDro0ArzPuMq4QtE03c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BCKnMStk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78388C4CEC0;
-	Sat, 14 Sep 2024 17:56:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1726336573;
-	bh=usg5zuvL6dMiMtReqxAmcXPlYBF1AWzxevclY567A/4=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:From;
-	b=BCKnMStk0KD+KF5iLNc2XB3G3YDXTC7IF5zt1upbDpbkyTewGa+L+bN3T+QCIm+/Y
-	 dcUP4wpxJ5OVej1SrXlGVNH6rMQsZ8gFAsxwg3lKkaE7rzFkVGFbcQIkMnzvhVM6Kr
-	 M5RTY7BxqmGcL3I30T4qtMRxT9JvvK30B023vO8c=
-Date: Sat, 14 Sep 2024 19:56:09 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Arturs Artamonovs <Arturs.Artamonovs@analog.com>,
-	Greg Malysa <greg.malysa@timesys.com>,
-	Nathan Barrett-Morrison <nathan.morrison@timesys.com>,
-	Utsav Agarwal <Utsav.Agarwal@analog.com>,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-	soc@kernel.org, Andi Shyti <andi.shyti@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Olof Johansson <olof@lixom.net>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, adsp-linux@analog.com
-Subject: Re: [PATCH 01/21] arm64: Add ADI ADSP-SC598 SoC
-Message-ID: <2024091459-company-diabolic-a9ed@gregkh>
-References: <20240912-test-v1-1-458fa57c8ccf@analog.com>
- <b6af2603-7f72-47d7-98b9-6dc2761dfb74@web.de>
+	s=arc-20240116; t=1726338826; c=relaxed/simple;
+	bh=ns4ulHEZwFMoRHoqEe+J5CPRWCYI4yLNsLQIs4J3NFY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kMw3bu3ID0hvvOsQPLV5yRicSwqM+YPAA6gOMO0AooxCYJ1CfSR5+FpUVeRQbo//OQofhcSrf0tuAnnDMcY5LB0qL+98hVvKxu5K7Ogzkjttbbv6WkGqkOLsDXqA8bP2w3jljNBuAxIuBT+02WxHvVlT7dOs4RcYYUk0Woy9JpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZgV4YYj; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-45830ff5b70so27210251cf.1
+        for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2024 11:33:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726338823; x=1726943623; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DMtP4VKu/7cwu01a/fMcQ2j+ZvVKdiMfiho0j2DoiOU=;
+        b=VZgV4YYjeq1GPRNeVWy+gh+rgIuH6DOQel1UEuqzomrb1M4SAIrlw196HCeESMkIQR
+         KCSzGamn/1we6mrVwytSCbU5Y26MsitAVciaEDB2S54fojJBfFwtst0aufUYfSkWmmac
+         YPK/hIWzwDP5juQlHJg2qw+fCu8Qdi7nUCxulTFQLMt5mVZubT5VTXqx4xFfVxAJibBf
+         hOt2TjY0kb9nIEArh6xg6fvzHMPhbExvdbT0rdmIo3do/9N+eTqMqzoksjTygejriztU
+         0MgIP4NiSuoN8/7m1gfq5wfKBJa9syeI7QsSxuR6q4RgXs9MCaSvdbH0gSkFxiVZ5Sv/
+         4Azg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726338823; x=1726943623;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DMtP4VKu/7cwu01a/fMcQ2j+ZvVKdiMfiho0j2DoiOU=;
+        b=rNpeZCNnL2MmWgRBkBfpaX7TRNvgxacCHVlMIXd5iJLe6JumPZRcQfYUpe3ihH6rcA
+         wN250bICUKYvjlAiKIH3XQ7wwPmifRa9zSkoBbGTDUkxqpq9kAUlFJQggwptJHLGRL8C
+         4ya4fqgVuMLum5UuKtl7BLhmIYy0yqoegwfbs8kLDn3XavvE+53lzOWI/yLl9ramixQ5
+         YGXbSnOpFHU1IH6xVHuqpLfr4l12lbN+KsfF3InrVuqAFGuWcGrsrg61sjgmpwDFfeLK
+         +ZU9DLKSjDngUdgBvWt9Dh9jjpvJ/94DajBM1fO3NNLwi4DwnrOpimxcEdEf5fQRntGJ
+         8zJg==
+X-Gm-Message-State: AOJu0Yza9lSc1FqKGLEra5NsxEyKGpJb0yRXRrH2WcTXLVOfRMwl+aUD
+	UC1+PQUDOAiTs08/+/zUZpuoLN3u7uWro3DsPbz8h41oz6OcKa4TXdEytQ==
+X-Google-Smtp-Source: AGHT+IGiZTCakhG7IYq0nOq6/SwW1xKIJcij7dGzAL8y3TzypM4ihCe8Lqb0DdJyC0eUmwYXg1wEDA==
+X-Received: by 2002:a05:6214:2f02:b0:6c5:51ed:2dbc with SMTP id 6a1803df08f44-6c57358430amr150481026d6.45.1726338823058;
+        Sat, 14 Sep 2024 11:33:43 -0700 (PDT)
+Received: from localhost.localdomain (syn-131-093-209-211.res.spectrum.com. [131.93.209.211])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c58c6261e8sm9280216d6.27.2024.09.14.11.33.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Sep 2024 11:33:42 -0700 (PDT)
+From: Vincent Fazio <vfazio@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: Vincent Fazio <vfazio@gmail.com>
+Subject: [libgpiod][PATCH] bindings: python: add py.typed marker
+Date: Sat, 14 Sep 2024 13:33:02 -0500
+Message-Id: <20240914183302.15768-1-vfazio@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b6af2603-7f72-47d7-98b9-6dc2761dfb74@web.de>
 
-On Sat, Sep 14, 2024 at 07:15:08PM +0200, Markus Elfring wrote:
-> …
-> > +++ b/drivers/soc/adi/system.c
-> > @@ -0,0 +1,257 @@
-> …
-> > +static void adi_system_config_remove(struct platform_device *pdev)
-> +{
-> > +	struct adi_system_config *config = platform_get_drvdata(pdev);
-> > +	unsigned long flags;
-> > +
-> > +	spin_lock_irqsave(&adi_system_config_lock, flags);
-> > +	list_del(&config->list);
-> > +	spin_unlock_irqrestore(&adi_system_config_lock, flags);
-> > +}
-> …
-> 
-> Under which circumstances would you become interested to apply a statement
-> like “guard(spinlock_irqsave)(&adi_system_config_lock);”?
-> https://elixir.bootlin.com/linux/v6.11-rc7/source/include/linux/spinlock.h#L572
-> 
-> Regards,
-> Markus
-> 
+Per PEP 561 [0], the marker is used by type checkers like mypy
+to recognize that the library is typed.
 
+[0]: https://peps.python.org/pep-0561/#packaging-type-information
 
-Hi,
+Closes: https://github.com/brgl/libgpiod/issues/94
+Signed-off-by: Vincent Fazio <vfazio@gmail.com>
+---
+ bindings/python/gpiod/py.typed | 0
+ bindings/python/setup.py       | 1 +
+ 2 files changed, 1 insertion(+)
+ create mode 100644 bindings/python/gpiod/py.typed
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+diff --git a/bindings/python/gpiod/py.typed b/bindings/python/gpiod/py.typed
+new file mode 100644
+index 0000000..e69de29
+diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+index 9607a28..1f04b99 100644
+--- a/bindings/python/setup.py
++++ b/bindings/python/setup.py
+@@ -224,6 +224,7 @@ setup(
+     name="gpiod",
+     url="https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git",
+     packages=find_packages(exclude=["tests", "tests.*"]),
++    package_data={"gpiod": ["py.typed"]},
+     python_requires=">=3.9.0",
+     ext_modules=[gpiod_ext],
+     cmdclass={"build_ext": build_ext, "sdist": sdist},
+-- 
+2.34.1
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
-
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
-
-thanks,
-
-greg k-h's patch email bot
 
