@@ -1,127 +1,138 @@
-Return-Path: <linux-gpio+bounces-10108-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10109-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C5A89790C7
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 14:18:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B066979156
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 16:19:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2372C285EC4
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 12:18:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03B3F1F2284A
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 14:19:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8F8A1CF5E0;
-	Sat, 14 Sep 2024 12:18:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 076131CFEC7;
+	Sat, 14 Sep 2024 14:19:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R7zSDzxp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="USgBtCjV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B491CF29F
-	for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2024 12:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5A91CF2B0;
+	Sat, 14 Sep 2024 14:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726316316; cv=none; b=LgEAVQW6LQSgSiX0wWy3FN2DEwvsoKMxPXBr1hxUtCOF8W/eu3Px2aVnNjk14cmWJLba1/wOWPehmcb61pUGD3ZvFhkCiLSE/iirNADWc72O2eYfTswUl0Yr91gWZcepM3eZBnYTxVLtBrTQcTwtSnWwuGiIRI15OykEFz3d4CA=
+	t=1726323552; cv=none; b=mN1wUtf1MSNc3Jig69WGK9VMAw8OnNnVTK6rfxPUMTsR4546TCiUy6RWrR3WS6ZFqMCfbmBKYhXIHGI9FNZE63WacsV+F4ZrqhykN8OGQ4a/HL3HiygxYv4Z5rU2Vsn9lsig137c6M7GhcMMpLTITjPKN/i3q29wg1JthL5Dmcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726316316; c=relaxed/simple;
-	bh=6WgcFIuXhZambpMrMXuiFxzrEsSHTzWg7o+MZz7Kr8E=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=WCsbjl2Oad1VMDM8UAqMmU54BnkBF8xkmI3chDCw2dWqII7Wvj8UbL2LMLgiUWRLgUrKBMQZmMtobEe3KR5PwjH4wCDMnc4reVhOMJ7y7hZ+2YaCJ+i7J1NKiwz7RboxPC4ooQPx/MhlPUbafaKu8cL8MzAkpTgRSeruiCgYX+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R7zSDzxp; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53658f30749so3370144e87.3
-        for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2024 05:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1726316313; x=1726921113; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3QgMqp/8uVFm4jkeSLqln/P/h5yrBagw+LmErv3bnxg=;
-        b=R7zSDzxpZUXaLi1p7NoCM/zMvN2dfojwITWh9SUYEMxGXj+el1J8daJQBXEu8IcM4Q
-         hN+nBz7rFYUk1g+J66fy63HZYQWum67cjyeu+vcZq/3E6oSUoOXrh9XLOCoWs642sccc
-         bxxGtIFM9YCAAt999tFh7LtWZ2wM3HHmOmAcgE7YOULJaBFn+40rd4NMiKG0KrfJwIck
-         gn6OXhAVJ1qEkxjblBzCdGPVSTAlRd3dtqFBMbOUsrhQZUySWRxSp+e9J0M/cK+w98uu
-         DeDfHZJ4cM0hDRpYFHbeEGZd2dL8zrX3Efz0jDw9Z0B/6y4Fbp+3Bu2KOPhZ/fpi5iS1
-         Y1fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726316313; x=1726921113;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3QgMqp/8uVFm4jkeSLqln/P/h5yrBagw+LmErv3bnxg=;
-        b=LD2WONd4gOYZnt8o2dcAKi+lFEsupI1JupxI0Tt0X28TOD/0jO/X7D6Rokea77LlqU
-         YSzmX7wTL3JQhRwYrf2NUbLQ2KXT13hZ+CS+2tOexXpO/e+krOPy3CECOiOnQCXnNFjk
-         mc4+FiP7ciCPztyzgSPnXhbINq956nGVnjcLWGOh36PLvY1DrIRZyPUQZCsDCHGF/843
-         k4yRjOhDkGCoCXI1LRDAdJrU7244yBo+8xGehvvs+7sNP7v5Dktk19WPTjJtSAkpPb4f
-         wq2F0LyGdTlWWg77jwfyQ0kyND+VV7UWU976Y8KdyrHRvu8+yeX3wodZFXmt+2PSHKsu
-         N5og==
-X-Gm-Message-State: AOJu0YzkiP8XHXj+kwdapUrUXQiuvnm0rdCmGc786Rfz9wB44s2IqqNB
-	Kynlywa9Gvve7QzRkruI+aHMYeDVvr5iqR0OiD3yPUXRA2YoJfElUK0U5pVOddvToQdzBV1wIhh
-	ztJCoKnRPcxrFu6M/Nsta9je1VH24Y0XSEoXOBpi6PP2L0mSOEW8=
-X-Google-Smtp-Source: AGHT+IFgp1e101wkvrRYAAv5mSozVdMrz4VSYt8xJVi54eyR6cour/J8MzsnwHiGXG95yg0rv1yFO1vg4AyDVI8N5NY=
-X-Received: by 2002:a05:6512:4022:b0:533:4b07:a8dc with SMTP id
- 2adb3069b0e04-53678fc230amr5819668e87.35.1726316311881; Sat, 14 Sep 2024
- 05:18:31 -0700 (PDT)
+	s=arc-20240116; t=1726323552; c=relaxed/simple;
+	bh=N9wMgdRefGu42K7ypeuSJnPQEd7Ns/OJA/BRmLa/8qc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uJJp/zNV6wlh/bIXFG2F2Eswyc4T3XC0E8BnKqw93pziEiNWswDrzzsOfVFA9+5O+Z4HH+G3SJiBTci5KCjGqMe8qKfnzSWLXWWaEKDCXABVD4zN1hpQuMNata+f+2ZV9oPPTlgbUNJPsEapFQGTEmh6UMDKeO643hJMp2DtX78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=USgBtCjV; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726323552; x=1757859552;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=N9wMgdRefGu42K7ypeuSJnPQEd7Ns/OJA/BRmLa/8qc=;
+  b=USgBtCjVcxufnJh9KVshcT6/3aSddwTsIRIxa+Ulnels+esyy0gAXEV5
+   PNr3wAGmQi8cgru5XhKuinNueGZcFwEpm0rFBztt5uzCOm77k2vLGLJU8
+   2Z0nq27B7TjEI7DJoTe7/EdyIwRLmoUR1k52Aw1Pn1DFwN9oPTKN+mZ89
+   5/lXiJhlrhm+GJzMLX1Mhlf9P2/34yeY6EVYNhPS5vqmsBlvYHMF7bI2d
+   B5TUdbze0dKXJUHn/R8R474SKgwNYd1eqwdvgifl5IWm2sUDwklZOlq42
+   WYUJr/ZbWJm4IEPZKh9j9LYBAqTaXcSxhb7V6s8fKHnYXNlTpGjUTA82N
+   w==;
+X-CSE-ConnectionGUID: cQGj1BAaSe64yTfLvQ6EMQ==
+X-CSE-MsgGUID: AVh9oKYtQ3aaT2zxoofULA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11195"; a="25090381"
+X-IronPort-AV: E=Sophos;i="6.10,229,1719903600"; 
+   d="scan'208";a="25090381"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2024 07:19:11 -0700
+X-CSE-ConnectionGUID: bLVvHNP4RYS89Cob7sBRYA==
+X-CSE-MsgGUID: 1WBix8DISMO95aCgNnVb5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,229,1719903600"; 
+   d="scan'208";a="99080744"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 14 Sep 2024 07:19:03 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1spTc5-0007pg-0v;
+	Sat, 14 Sep 2024 14:19:01 +0000
+Date: Sat, 14 Sep 2024 22:18:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Arturs Artamonovs via B4 Relay <devnull+arturs.artamonovs.analog.com@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Greg Malysa <greg.malysa@timesys.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Utsav Agarwal <Utsav.Agarwal@analog.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Olof Johansson <olof@lixom.net>, soc@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org,
+	Arturs Artamonovs <arturs.artamonovs@analog.com>,
+	adsp-linux@analog.com,
+	Nathan Barrett-Morrison <nathan.morrison@timesys.com>
+Subject: Re: [PATCH 07/21] clock: Add driver for ADI ADSP-SC5xx clock
+Message-ID: <202409142102.LvuMEIro-lkp@intel.com>
+References: <20240912-test-v1-7-458fa57c8ccf@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 14 Sep 2024 14:18:20 +0200
-Message-ID: <CACRpkdZDSTDC8xThy5jRXtrYqaOTLPcc2fuoiGSMQaQ1B6FSaw@mail.gmail.com>
-Subject: [GIT PULL] late pin control fixes for v6.11
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Patrick Rudolph <patrick.rudolph@9elements.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240912-test-v1-7-458fa57c8ccf@analog.com>
 
-Hi Linus,
+Hi Arturs,
 
-here are some late fixes for two pin control drivers that should
-ideally go into v6.11.
+kernel test robot noticed the following build warnings:
 
-Please pull it in, details in the signed tag!
+[auto build test WARNING on da3ea35007d0af457a0afc87e84fddaebc4e0b63]
 
-Yours,
-Linus Walleij
+url:    https://github.com/intel-lab-lkp/linux/commits/Arturs-Artamonovs-via-B4-Relay/arm64-Add-ADI-ADSP-SC598-SoC/20240913-022308
+base:   da3ea35007d0af457a0afc87e84fddaebc4e0b63
+patch link:    https://lore.kernel.org/r/20240912-test-v1-7-458fa57c8ccf%40analog.com
+patch subject: [PATCH 07/21] clock: Add driver for ADI ADSP-SC5xx clock
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
 
-The following changes since commit da3ea35007d0af457a0afc87e84fddaebc4e0b63:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409142102.LvuMEIro-lkp@intel.com/
 
-  Linux 6.11-rc7 (2024-09-08 14:50:28 -0700)
+includecheck warnings: (new ones prefixed by >>)
+>> drivers/clk/adi/clk-adi-sc598.c: linux/clk.h is included more than once.
 
-are available in the Git repository at:
+vim +9 drivers/clk/adi/clk-adi-sc598.c
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.11-4
+   > 9	#include <linux/clk.h>
+    10	#include <linux/clk-provider.h>
+  > 11	#include <linux/clk.h>
+    12	#include <linux/err.h>
+    13	#include <linux/module.h>
+    14	#include <linux/of_address.h>
+    15	
 
-for you to fetch changes up to 71e4001a0455ec2b6218715c81f374f1ab8b1b12:
-
-  pinctrl: pinctrl-cy8c95x0: Fix regcache (2024-09-13 13:14:18 +0200)
-
-----------------------------------------------------------------
-Pin control fixes for the v6.11 series:
-
-- One Intel patch that I mistakedly merged into for-next
-  despite it belongs in fixes: add Arrow Lake-H/U ACPI
-  ID so this Arrow Lake chip probes.
-
-- One fix making the CY895x0 reg cache work, which is
-  good because it makes the device work too.
-
-----------------------------------------------------------------
-Linus Walleij (1):
-      Merge tag 'intel-pinctrl-v6.11-1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into fixes
-
-Mika Westerberg (1):
-      pinctrl: meteorlake: Add Arrow Lake-H/U ACPI ID
-
-Patrick Rudolph (1):
-      pinctrl: pinctrl-cy8c95x0: Fix regcache
-
- drivers/pinctrl/intel/pinctrl-meteorlake.c |  1 +
- drivers/pinctrl/pinctrl-cy8c95x0.c         | 14 +++++++++-----
- 2 files changed, 10 insertions(+), 5 deletions(-)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
