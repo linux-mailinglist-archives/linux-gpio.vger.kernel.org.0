@@ -1,136 +1,119 @@
-Return-Path: <linux-gpio+bounces-10106-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10107-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B402F978E06
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 07:32:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CAEC978F31
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 10:45:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DF0028D0B5
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 05:32:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DF391C22A46
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 08:45:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 803C5192B80;
-	Sat, 14 Sep 2024 05:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D522147C9B;
+	Sat, 14 Sep 2024 08:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqxSHtIM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ch3j6soz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0747192B63;
-	Sat, 14 Sep 2024 05:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D859712E5D;
+	Sat, 14 Sep 2024 08:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726291615; cv=none; b=OGHxk8unUQJsQmSTZfreskCCMAeqIz5pVPpoMOwITeu35QDdpDBceF1Z+D6vn9tToH/Q8CFOqFKk4860fMIxpvpfUt8uIRLpZKwcE5BWr8bCvdAkwe1foa9I6Obw5ERt420rmTrJ1OrtZ5HFx0zasfAGc2UI31k/TFEdY61Fkjw=
+	t=1726303496; cv=none; b=gHvCQ59aqVA14QF9aTtBn4AYeMPo9Xh0om7EReHAMbihShZwDxEqyjan14C9omRTtei+iJDCmB9eynFWE6Vnbc0Twr4BbbeEX5tF+sXMoyFO7V+hway8f2H7LWOjkqzRzmXfZ0bf0K3aoecS+LRPjnRIUdkjy4GkueavM1DcTgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726291615; c=relaxed/simple;
-	bh=IlwfpKeYG1A6lmRpl2J8Js+0dUrkM33rNMIVVPeLcso=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EBcUY/5w7sO44ZjcpBsHXI+Prl7lJGWLmTsOQBQ8qicKuZ5VlAmDSBB2BNo7kdZJDU2YfsIpE3pgy4E/BY1GRjfuHhn41OIHccHbO+pU7KFz/4AgEJl/AZnG0rj2tVtk/aYw/jKsw2uwXzxmkrVfKQfYwV5hoTYpJWxxgIdBE58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cqxSHtIM; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7163489149eso1246518a12.1;
-        Fri, 13 Sep 2024 22:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726291613; x=1726896413; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zy0C2tn+S+ad9UGMaUozuLH5nIPIOY9VH2lYfYG3DPM=;
-        b=cqxSHtIMhW3IZ0I25qq7R1PMrSYWmTnVo0QCXF8KJ5FKBLHoSReJQldWHt9OertdIE
-         D2IBeh/8ILTYMVbO8+GtaKrzbJhXn9xt3GJNjMziJNM8OIoHiHWwefxdFBV+ExXoUJNn
-         SFelCNyQERnotstjdU6pYA6bXHPno3qgwsrbEMWWNhJ5qG9YfqFdjNBw65JfMxNrGuJJ
-         UPnRWxBJJzTI7ZJbgsqteFyFwBtrR8R3bQqtGkCTk46xh9Tv/TqGxXkk7qUBwwdq3Bti
-         4S64DZ39NHlK3EXxHYa987H2n3oV69kyVil1u8DOrFxwaOrH7UjZJWoHhitAhGKwlkho
-         EgMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726291613; x=1726896413;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zy0C2tn+S+ad9UGMaUozuLH5nIPIOY9VH2lYfYG3DPM=;
-        b=kCBNFu/w/uEziYq4IknJwP62nbwAsWakN0aL+B9T1PWa1WXHoX0HInrQKj/fsL900e
-         RLHYXn5NueiS4sMVEiL0sknjzqkPyfcAOJmtwygXGalGGa7wJSpehcDpNO/U02PwUpud
-         kzOuCr/b0iPIRlW6yIg7VULV3Vie9OBwTjwq7C+sROSxdwA36Vr37YsjoK6sXkyeJAdR
-         dDVdt7V+x0brhhiSKSgWT1ucIK9IeDujjUFikdbxJ7enE9JwqjPusNvAgsNOKpOj6+D9
-         Ewiz2iS2GNy9FnfUDQ3m2/FlLgPpzxrCESVtzQbE1+kvkXd8M0lwBx8doqdhaT8B2Z7t
-         LbKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJafuLksu6Ctf6f9z724q+faK5PB1D8jiQ8XKA4ICp36wml5+I2VVdKvWY+vYyCjIwI+iYNyHKZwhMiw==@vger.kernel.org, AJvYcCVjGUcXhT2V3up8xfZWTNyy8EXwN50VcXc0cRxqXdNt7t8CGRQb2eY8rr1urr/RyxmCcWHFeRAfeesElzSVJXY=@vger.kernel.org, AJvYcCW5RmPd75dbWWqNq6bNRgWQ+KnJQIQvNlI1tRe+l6avrqGcA6h3Nn5jkUyx3/h8NOKBcoLfcj2E5/D/nBWJ@vger.kernel.org, AJvYcCWP2AC4HeaWvNY0S+jLy89QxVPIgp36gUVxex675safx3GdW8mM6I4ELfjZTLK7ekTfGzPsLA3HM5I=@vger.kernel.org, AJvYcCXcwNndotA88rzbmoBg+skaEz4I8FgAU0bPGY0ngp52eklShzbEUbInjLTPB8zwS/pbJ/jKp5ygYMqf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzESYxVdTK9kcgvpPKJNFxCbUlr5IvJW8NDjKf9e/VkiL1Txw2T
-	KI3B/KkOsLEuj2atX9ANoUiM05oKaWusIi7/klK62f4cUI9dEkye
-X-Google-Smtp-Source: AGHT+IFAx3i0hnBuicVE8YdLzp74NzUBOGZMK0WvmVsGZX4ALFKO/gW3JhnXQICFiSDi3OGKhSwvZQ==
-X-Received: by 2002:a05:6a20:7b26:b0:1d1:17c6:7a38 with SMTP id adf61e73a8af0-1d117c67a9emr4578281637.9.1726291613169;
-        Fri, 13 Sep 2024 22:26:53 -0700 (PDT)
-Received: from localhost.localdomain ([59.188.211.160])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-71944b7b749sm391223b3a.113.2024.09.13.22.26.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2024 22:26:52 -0700 (PDT)
-From: Nick Chan <towinchenmi@gmail.com>
-To: Hector Martin <marcan@marcan.st>,
-	Sven Peter <sven@svenpeter.dev>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Kettenis <kettenis@openbsd.org>,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Cc: Nick Chan <towinchenmi@gmail.com>,
-	Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Subject: [PATCH v2 22/22] arm64: Kconfig: Update help text for CONFIG_ARCH_APPLE
-Date: Sat, 14 Sep 2024 13:17:31 +0800
-Message-ID: <20240914052413.68177-26-towinchenmi@gmail.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240914052413.68177-1-towinchenmi@gmail.com>
-References: <20240914052413.68177-1-towinchenmi@gmail.com>
+	s=arc-20240116; t=1726303496; c=relaxed/simple;
+	bh=Yo2t08wq6mqrLt2v9Yb6EbR8Hv+2oN77BrDNhVFJZzk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gP7zr7lf8usWdS9sNn3+S4Ck3g5dBQC+YuW9mfU4wVkj7YaXe2Jk2j8anjJi/FjtlFazmPvlFuQfBR7Tm3iujIPwI6WtKwZSzf1hKLGolnhTx8rwC0c/SFIx1NmGpJybG1QPLRpaZGT6XLDo2dxhZPFUiyGDLmMi6qC1gyBaM9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ch3j6soz; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726303495; x=1757839495;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Yo2t08wq6mqrLt2v9Yb6EbR8Hv+2oN77BrDNhVFJZzk=;
+  b=ch3j6sozVqrlmOrZeHC1SgTh45J7+vh6Y9odXQevxrnJKT8Pvhd8tHOV
+   L6wFu3uu+jWPlly8yXW1FwkxbQA6RVG9/NYa2SX7u3rHH4BxfwiAVDA6k
+   mwA/dhYyUTuSXeuog/fKJ4TbtWMyGohhIRNQtPBLGnrYbo1acEXwDUYwt
+   B1jEs31nrAhTjw9PTclTAfhKctqo9fz7+AFnYPvL0z1JHUuy14E2BGDjQ
+   mVjfJlganeAkAIoNIDYvG7RyY4TTsKiP2CMlSEUdpbNcAFMczeeiA41de
+   h02i9xM7wqh6hhPYaxWyoSvG7e4V4QV81kL0+rkgLWl3cDffsgTDqAKpS
+   g==;
+X-CSE-ConnectionGUID: pFpam943RqCDmEwWobTedQ==
+X-CSE-MsgGUID: vxIaa1n/SqiZlRu72b9rmg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11194"; a="25092067"
+X-IronPort-AV: E=Sophos;i="6.10,228,1719903600"; 
+   d="scan'208";a="25092067"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2024 01:44:54 -0700
+X-CSE-ConnectionGUID: xmrBwu1NS0qQAciLVisk0w==
+X-CSE-MsgGUID: E9tgl2zaSju+Bp7vrddTKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,228,1719903600"; 
+   d="scan'208";a="105796452"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 14 Sep 2024 01:44:50 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1spOOe-0007Xw-0K;
+	Sat, 14 Sep 2024 08:44:48 +0000
+Date: Sat, 14 Sep 2024 16:44:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Billy Tsai <billy_tsai@aspeedtech.com>, linus.walleij@linaro.org,
+	brgl@bgdev.pl, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com,
+	Peter.Yin@quantatw.com
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v3 5/6] gpio: aspeed: Change the macro to support
+ deferred probe
+Message-ID: <202409141654.wHuMQLLU-lkp@intel.com>
+References: <20240913074325.239390-6-billy_tsai@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240913074325.239390-6-billy_tsai@aspeedtech.com>
 
-Apple's A7-A11 SoC is now supported, so the original help text is no longer
-accurate.
+Hi Billy,
 
-Signed-off-by: Nick Chan <towinchenmi@gmail.com>
----
- arch/arm64/Kconfig.platforms | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 6c6d11536b42..370a9d2b6919 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -37,8 +37,8 @@ config ARCH_APPLE
- 	bool "Apple Silicon SoC family"
- 	select APPLE_AIC
- 	help
--	  This enables support for Apple's in-house ARM SoC family, starting
--	  with the Apple M1.
-+	  This enables support for Apple's in-house ARM SoC family, such
-+	  as the Apple M1.
- 
- menuconfig ARCH_BCM
- 	bool "Broadcom SoC Support"
+[auto build test WARNING on brgl/gpio/for-next]
+[also build test WARNING on linus/master v6.11-rc7 next-20240913]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Billy-Tsai/dt-bindings-gpio-aspeed-ast2400-gpio-Support-ast2700/20240913-154911
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20240913074325.239390-6-billy_tsai%40aspeedtech.com
+patch subject: [PATCH v3 5/6] gpio: aspeed: Change the macro to support deferred probe
+config: arc-randconfig-001-20240914 (https://download.01.org/0day-ci/archive/20240914/202409141654.wHuMQLLU-lkp@intel.com/config)
+compiler: arc-elf-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240914/202409141654.wHuMQLLU-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409141654.wHuMQLLU-lkp@intel.com/
+
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
+
+>> WARNING: modpost: vmlinux: section mismatch in reference: aspeed_gpio_driver+0x0 (section: .data) -> aspeed_gpio_probe (section: .init.text)
+
 -- 
-2.46.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
