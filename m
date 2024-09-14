@@ -1,107 +1,111 @@
-Return-Path: <linux-gpio+bounces-10118-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10119-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 603409792FC
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 20:34:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 85179979326
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 21:10:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B96A1F2175E
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 18:34:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 307DC1F22200
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 19:10:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 488C21D12EB;
-	Sat, 14 Sep 2024 18:34:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 468C080C04;
+	Sat, 14 Sep 2024 19:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AcM+BI4d"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="VyABFD5/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1391522F
-	for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2024 18:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D275175BF;
+	Sat, 14 Sep 2024 19:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726338863; cv=none; b=u03u3h4A77NKAHzyuoiY41NIDynXG4WRWgLjXQTWFV4L2jH02HdGJRa0bnNwa9QykzhCsGUXEpLg6DPpMclA31G4QLieYty3UsSTrgu4xJN7eccihqY+CehGb/y/+0Qf3MVd+BWRW8GQk3xhACoTjB5g+HqC+lrkWKLPN3FahuA=
+	t=1726341039; cv=none; b=pNEcDMffx4llZuSWu88d3fxMuFC5J3AusJADMwDnjrBbIJaaIHkRGh8c2M3pKP+YoWwwKMdUItWUumoGV3JyiqvGa+PRGR3/oEFK8YrPg/T/cJHAebmQB9tyRYJZ+R2q7RzZhh03ilZ01KqqRE2vlJHEO5OkysJDVdpDQRY8V4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726338863; c=relaxed/simple;
-	bh=p4xM7k2OA0n2AS6Vc7Mvbnz8lauQFCvsjckzgDcJPyM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IKxA7tXDi5jP8TDBz4BSPb4DiMeIh07zJLqOe5bMyOPeTUgq27mDN4KHwLcA16zcK1MDz1dhlmwx0IdRyqVlPUIglxgBBf0vHqFkJ+nCx7Nw3zuP359LcyAwDmqSrxCbqPE8VDZR06XudcfLylinQF5lAZQ6PNLSz1z3RRxQrbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AcM+BI4d; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7a99fd0535bso161143785a.3
-        for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2024 11:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726338860; x=1726943660; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nDQ50AmFo/4zXhSuUnZwAo7mhwLIdlR+vRcBTDVMClk=;
-        b=AcM+BI4dFhkVDxbfuQq+W2w07IVmjL9WCUYef3Zsegsq6SbHaq1gH9EdCU/DPBjHds
-         SKYLqu6Zk7KfBLT/cyU6rOC/sVcPXwusPuiadfmsEFQEA5SN59JfZYFsNLG7nVc6ttKM
-         Yz/Y4Me5c/v6JH62wAgMF0W2hb6zIcvouOJnmtcnn8V007okyo1DcKyo41m2sKyF0ZdJ
-         TgKKbZ+axYyE++Y8nyQ2Pg+Widd8mXG1Mrvd2XW44pf72p75BXD2EnS9vwoM7HzXyIim
-         /n69AiFKWvExlX9W2eBvcLrVwST3M6/pagUaNbf0pMJN/wBF05g3VyUgmOOL24xNKL0M
-         qPKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726338860; x=1726943660;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nDQ50AmFo/4zXhSuUnZwAo7mhwLIdlR+vRcBTDVMClk=;
-        b=cAMX2yI2frCkVML4n3pHVDE+4HlIaHCmnfhaatz3sQPpL3ptF1FwfEI1rKOtXF8kJ6
-         QTMXOQxH600296jE4/eixRO82T1vwIns0tdiqdJ3UBxGnEqCw2nVxdKJEZ8KJvc/ybF3
-         1lpcHG6tl4fxLVotcbouZvrxSKIUBpvWKGJkGodSGDd2oRzGVo/SOIdlOCBXGb+VSrtq
-         j0rrIUWqYKufuHsJm6mdHcR15TZCqNRDGwnSfRYSBUedVrp8M3DcEUrG+RSSPxc3kcOu
-         k1VJza9w0CwgAFh2JEpdtLN5EO/NLzTW51qh1sM+RZzTxPbKB5gc/eV+m2Wf75XKvStn
-         RPnQ==
-X-Gm-Message-State: AOJu0YyKmqO1NpoX6V+TGVoJ16BSqk5V92a84hFs8amhvT6/GcY4JfES
-	OXV5mFQZkjGlAO7kC9SlVLfaVRsf1wFEQvRVv7+eDUsYv/khnCOjg/SyaA==
-X-Google-Smtp-Source: AGHT+IHfGkadkq0vmwQGcpId9KNUanQkkHnv73XTglRAiM+1SXYqZsgKQP+FGyrTqqlBy0SuEAtEsw==
-X-Received: by 2002:a05:620a:1710:b0:7a9:a7aa:4bb8 with SMTP id af79cd13be357-7ab30dce590mr1153699585a.55.1726338859647;
-        Sat, 14 Sep 2024 11:34:19 -0700 (PDT)
-Received: from localhost.localdomain (syn-131-093-209-211.res.spectrum.com. [131.93.209.211])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ab3e9b409csm92742085a.62.2024.09.14.11.34.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Sep 2024 11:34:19 -0700 (PDT)
-From: Vincent Fazio <vfazio@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: Vincent Fazio <vfazio@gmail.com>
-Subject: [libgpiod][PATCH] bindings: python: fix Chip.request_lines typing
-Date: Sat, 14 Sep 2024 13:33:52 -0500
-Message-Id: <20240914183352.16090-1-vfazio@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1726341039; c=relaxed/simple;
+	bh=fA1i+LFpTdmNvbAqJul+OWfUJe2k3jNyASYB+A1+Jfw=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=hEtow3nZNDUu+hY7UNpoTS4uBC0x867/Q9cMrL/rJ3S7vi1cFRl7dOGuFtNVNvFqlPRtsWm2Gz8qlMRx5f+r5/m1XMl+lv4LD/+QRHM+1H7QTzMb1sRNPIwhQFY+snoAY4wqHrEjVdTCAZtb+8D94If85wWn6waLfMSG1h06D0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=VyABFD5/; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1726341037; x=1757877037;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=fA1i+LFpTdmNvbAqJul+OWfUJe2k3jNyASYB+A1+Jfw=;
+  b=VyABFD5/xy9xzbKAX+PRis8v8RrlatxtGwfFLsRMwsHzj5tiuJvoCBRM
+   h7LrklL5N8Cs8CdIdF4PfsKq22D6cqkbTeGqxuze0BUSJkOPqHG1FdIvb
+   VEEv74+eIKCY8euk1vUdGe9QmCSw4U8Lpd7pcjyobTB7r2QR5Olciq+cw
+   +NoxmtDo2SAb+EAYi9QJq96lgEZrEVJoZ81NEILvv9I2rN5SYBLu0ZC0E
+   o+WIeeWIyI3PwQ7xjz0L//Fu2MsCg814fwC1H3fvCPMmIozCGUWsko1ao
+   6qTBirf4J3zJVClcocpWlTpqjEFr2Q9UAXTO4GEwwqKVCKV0yPy2Z6h+Y
+   A==;
+X-CSE-ConnectionGUID: aORpv4XtRiOtN55YVRgpfg==
+X-CSE-MsgGUID: Bdxol7M6R++9c8ZMkPuUPA==
+X-IronPort-AV: E=Sophos;i="6.10,229,1719903600"; 
+   d="scan'208";a="31675563"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Sep 2024 12:10:35 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sat, 14 Sep 2024 12:10:30 -0700
+Received: from DEN-DL-M70577.microchip.com (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Sat, 14 Sep 2024 12:10:28 -0700
+From: Daniel Machon <daniel.machon@microchip.com>
+Subject: [PATCH 0/2] pinctrl: ocelot: add support for lan969x SoC
+Date: Sat, 14 Sep 2024 21:10:07 +0200
+Message-ID: <20240914-lan969x-pinctrl-v1-0-1b3a4d454b0d@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAI/f5WYC/x3MTQqDQAxA4atI1g2Mgz9Mr1K6mIlpDUi0GRVBv
+ HunXX6L907IbMIZ7tUJxrtkmbWgvlVAY9Q3owzF4J1vXKg9TlFDFw5cRGm1CRsKbUuOU+86KNV
+ i/JLjf3w8i1PMjMmi0vj7DLzjZ+ON4bq+sBlaR30AAAA=
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Lars Povlsen
+	<lars.povlsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>
+CC: <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+X-Mailer: b4 0.14-dev
 
-The output_values argument was typed as a dict of tuples, however, the
-code expects a dict of int|str.
+This series adds support for lan969x SoC pinctrl by reusing the existing
+Ocelot pinctrl driver.
 
-Closes: https://github.com/brgl/libgpiod/issues/96
-Signed-off-by: Vincent Fazio <vfazio@gmail.com>
+There are 66 General Purpose I/O pins that are individually configurable
+to multiple interfaces. The matrix of available GPIO alternate functions
+is detailed in the pinmuxing table of patch #2.
+
+Patch #1 adds compatible strings for lan969x in the dt-bindings.
+Patch #2 adds support for lan969x SoC pinctrl.
+
+Signed-off-by: Daniel Machon <daniel.machon@microchip.com>
 ---
- bindings/python/gpiod/chip.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Daniel Machon (2):
+      dt-bindings: ocelot: document lan969x-pinctrl
+      pinctrl: ocelot: add support for lan969x SoC pinctrl
 
-diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
-index 7692ba4..0a5ac6d 100644
---- a/bindings/python/gpiod/chip.py
-+++ b/bindings/python/gpiod/chip.py
-@@ -226,7 +226,7 @@ class Chip:
-         config: dict[tuple[Union[int, str]], Optional[LineSettings]],
-         consumer: Optional[str] = None,
-         event_buffer_size: Optional[int] = None,
--        output_values: Optional[dict[tuple[Union[int, str]], Value]] = None,
-+        output_values: Optional[dict[Union[int, str], Value]] = None,
-     ) -> LineRequest:
-         """
-         Request a set of lines for exclusive usage.
+ .../bindings/pinctrl/mscc,ocelot-pinctrl.yaml      |  32 +++-
+ drivers/pinctrl/pinctrl-ocelot.c                   | 203 +++++++++++++++++++++
+ 2 files changed, 227 insertions(+), 8 deletions(-)
+---
+base-commit: 3cfb5aa10cb78571e214e48a3a6e42c11d5288a1
+change-id: 20240912-lan969x-pinctrl-4c955c0eb706
+
+Best regards,
 -- 
-2.34.1
+Daniel Machon <daniel.machon@microchip.com>
 
 
