@@ -1,119 +1,127 @@
-Return-Path: <linux-gpio+bounces-10107-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10108-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CAEC978F31
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 10:45:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C5A89790C7
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 14:18:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DF391C22A46
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 08:45:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2372C285EC4
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 12:18:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D522147C9B;
-	Sat, 14 Sep 2024 08:44:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8F8A1CF5E0;
+	Sat, 14 Sep 2024 12:18:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ch3j6soz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R7zSDzxp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D859712E5D;
-	Sat, 14 Sep 2024 08:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B491CF29F
+	for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2024 12:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726303496; cv=none; b=gHvCQ59aqVA14QF9aTtBn4AYeMPo9Xh0om7EReHAMbihShZwDxEqyjan14C9omRTtei+iJDCmB9eynFWE6Vnbc0Twr4BbbeEX5tF+sXMoyFO7V+hway8f2H7LWOjkqzRzmXfZ0bf0K3aoecS+LRPjnRIUdkjy4GkueavM1DcTgY=
+	t=1726316316; cv=none; b=LgEAVQW6LQSgSiX0wWy3FN2DEwvsoKMxPXBr1hxUtCOF8W/eu3Px2aVnNjk14cmWJLba1/wOWPehmcb61pUGD3ZvFhkCiLSE/iirNADWc72O2eYfTswUl0Yr91gWZcepM3eZBnYTxVLtBrTQcTwtSnWwuGiIRI15OykEFz3d4CA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726303496; c=relaxed/simple;
-	bh=Yo2t08wq6mqrLt2v9Yb6EbR8Hv+2oN77BrDNhVFJZzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gP7zr7lf8usWdS9sNn3+S4Ck3g5dBQC+YuW9mfU4wVkj7YaXe2Jk2j8anjJi/FjtlFazmPvlFuQfBR7Tm3iujIPwI6WtKwZSzf1hKLGolnhTx8rwC0c/SFIx1NmGpJybG1QPLRpaZGT6XLDo2dxhZPFUiyGDLmMi6qC1gyBaM9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ch3j6soz; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726303495; x=1757839495;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Yo2t08wq6mqrLt2v9Yb6EbR8Hv+2oN77BrDNhVFJZzk=;
-  b=ch3j6sozVqrlmOrZeHC1SgTh45J7+vh6Y9odXQevxrnJKT8Pvhd8tHOV
-   L6wFu3uu+jWPlly8yXW1FwkxbQA6RVG9/NYa2SX7u3rHH4BxfwiAVDA6k
-   mwA/dhYyUTuSXeuog/fKJ4TbtWMyGohhIRNQtPBLGnrYbo1acEXwDUYwt
-   B1jEs31nrAhTjw9PTclTAfhKctqo9fz7+AFnYPvL0z1JHUuy14E2BGDjQ
-   mVjfJlganeAkAIoNIDYvG7RyY4TTsKiP2CMlSEUdpbNcAFMczeeiA41de
-   h02i9xM7wqh6hhPYaxWyoSvG7e4V4QV81kL0+rkgLWl3cDffsgTDqAKpS
-   g==;
-X-CSE-ConnectionGUID: pFpam943RqCDmEwWobTedQ==
-X-CSE-MsgGUID: vxIaa1n/SqiZlRu72b9rmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11194"; a="25092067"
-X-IronPort-AV: E=Sophos;i="6.10,228,1719903600"; 
-   d="scan'208";a="25092067"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2024 01:44:54 -0700
-X-CSE-ConnectionGUID: xmrBwu1NS0qQAciLVisk0w==
-X-CSE-MsgGUID: E9tgl2zaSju+Bp7vrddTKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,228,1719903600"; 
-   d="scan'208";a="105796452"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 14 Sep 2024 01:44:50 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1spOOe-0007Xw-0K;
-	Sat, 14 Sep 2024 08:44:48 +0000
-Date: Sat, 14 Sep 2024 16:44:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Billy Tsai <billy_tsai@aspeedtech.com>, linus.walleij@linaro.org,
-	brgl@bgdev.pl, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com,
-	Peter.Yin@quantatw.com
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v3 5/6] gpio: aspeed: Change the macro to support
- deferred probe
-Message-ID: <202409141654.wHuMQLLU-lkp@intel.com>
-References: <20240913074325.239390-6-billy_tsai@aspeedtech.com>
+	s=arc-20240116; t=1726316316; c=relaxed/simple;
+	bh=6WgcFIuXhZambpMrMXuiFxzrEsSHTzWg7o+MZz7Kr8E=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=WCsbjl2Oad1VMDM8UAqMmU54BnkBF8xkmI3chDCw2dWqII7Wvj8UbL2LMLgiUWRLgUrKBMQZmMtobEe3KR5PwjH4wCDMnc4reVhOMJ7y7hZ+2YaCJ+i7J1NKiwz7RboxPC4ooQPx/MhlPUbafaKu8cL8MzAkpTgRSeruiCgYX+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R7zSDzxp; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53658f30749so3370144e87.3
+        for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2024 05:18:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1726316313; x=1726921113; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3QgMqp/8uVFm4jkeSLqln/P/h5yrBagw+LmErv3bnxg=;
+        b=R7zSDzxpZUXaLi1p7NoCM/zMvN2dfojwITWh9SUYEMxGXj+el1J8daJQBXEu8IcM4Q
+         hN+nBz7rFYUk1g+J66fy63HZYQWum67cjyeu+vcZq/3E6oSUoOXrh9XLOCoWs642sccc
+         bxxGtIFM9YCAAt999tFh7LtWZ2wM3HHmOmAcgE7YOULJaBFn+40rd4NMiKG0KrfJwIck
+         gn6OXhAVJ1qEkxjblBzCdGPVSTAlRd3dtqFBMbOUsrhQZUySWRxSp+e9J0M/cK+w98uu
+         DeDfHZJ4cM0hDRpYFHbeEGZd2dL8zrX3Efz0jDw9Z0B/6y4Fbp+3Bu2KOPhZ/fpi5iS1
+         Y1fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726316313; x=1726921113;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3QgMqp/8uVFm4jkeSLqln/P/h5yrBagw+LmErv3bnxg=;
+        b=LD2WONd4gOYZnt8o2dcAKi+lFEsupI1JupxI0Tt0X28TOD/0jO/X7D6Rokea77LlqU
+         YSzmX7wTL3JQhRwYrf2NUbLQ2KXT13hZ+CS+2tOexXpO/e+krOPy3CECOiOnQCXnNFjk
+         mc4+FiP7ciCPztyzgSPnXhbINq956nGVnjcLWGOh36PLvY1DrIRZyPUQZCsDCHGF/843
+         k4yRjOhDkGCoCXI1LRDAdJrU7244yBo+8xGehvvs+7sNP7v5Dktk19WPTjJtSAkpPb4f
+         wq2F0LyGdTlWWg77jwfyQ0kyND+VV7UWU976Y8KdyrHRvu8+yeX3wodZFXmt+2PSHKsu
+         N5og==
+X-Gm-Message-State: AOJu0YzkiP8XHXj+kwdapUrUXQiuvnm0rdCmGc786Rfz9wB44s2IqqNB
+	Kynlywa9Gvve7QzRkruI+aHMYeDVvr5iqR0OiD3yPUXRA2YoJfElUK0U5pVOddvToQdzBV1wIhh
+	ztJCoKnRPcxrFu6M/Nsta9je1VH24Y0XSEoXOBpi6PP2L0mSOEW8=
+X-Google-Smtp-Source: AGHT+IFgp1e101wkvrRYAAv5mSozVdMrz4VSYt8xJVi54eyR6cour/J8MzsnwHiGXG95yg0rv1yFO1vg4AyDVI8N5NY=
+X-Received: by 2002:a05:6512:4022:b0:533:4b07:a8dc with SMTP id
+ 2adb3069b0e04-53678fc230amr5819668e87.35.1726316311881; Sat, 14 Sep 2024
+ 05:18:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240913074325.239390-6-billy_tsai@aspeedtech.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 14 Sep 2024 14:18:20 +0200
+Message-ID: <CACRpkdZDSTDC8xThy5jRXtrYqaOTLPcc2fuoiGSMQaQ1B6FSaw@mail.gmail.com>
+Subject: [GIT PULL] late pin control fixes for v6.11
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Patrick Rudolph <patrick.rudolph@9elements.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Billy,
+Hi Linus,
 
-kernel test robot noticed the following build warnings:
+here are some late fixes for two pin control drivers that should
+ideally go into v6.11.
 
-[auto build test WARNING on brgl/gpio/for-next]
-[also build test WARNING on linus/master v6.11-rc7 next-20240913]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Please pull it in, details in the signed tag!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Billy-Tsai/dt-bindings-gpio-aspeed-ast2400-gpio-Support-ast2700/20240913-154911
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20240913074325.239390-6-billy_tsai%40aspeedtech.com
-patch subject: [PATCH v3 5/6] gpio: aspeed: Change the macro to support deferred probe
-config: arc-randconfig-001-20240914 (https://download.01.org/0day-ci/archive/20240914/202409141654.wHuMQLLU-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240914/202409141654.wHuMQLLU-lkp@intel.com/reproduce)
+Yours,
+Linus Walleij
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409141654.wHuMQLLU-lkp@intel.com/
+The following changes since commit da3ea35007d0af457a0afc87e84fddaebc4e0b63:
 
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
+  Linux 6.11-rc7 (2024-09-08 14:50:28 -0700)
 
->> WARNING: modpost: vmlinux: section mismatch in reference: aspeed_gpio_driver+0x0 (section: .data) -> aspeed_gpio_probe (section: .init.text)
+are available in the Git repository at:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.11-4
+
+for you to fetch changes up to 71e4001a0455ec2b6218715c81f374f1ab8b1b12:
+
+  pinctrl: pinctrl-cy8c95x0: Fix regcache (2024-09-13 13:14:18 +0200)
+
+----------------------------------------------------------------
+Pin control fixes for the v6.11 series:
+
+- One Intel patch that I mistakedly merged into for-next
+  despite it belongs in fixes: add Arrow Lake-H/U ACPI
+  ID so this Arrow Lake chip probes.
+
+- One fix making the CY895x0 reg cache work, which is
+  good because it makes the device work too.
+
+----------------------------------------------------------------
+Linus Walleij (1):
+      Merge tag 'intel-pinctrl-v6.11-1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into fixes
+
+Mika Westerberg (1):
+      pinctrl: meteorlake: Add Arrow Lake-H/U ACPI ID
+
+Patrick Rudolph (1):
+      pinctrl: pinctrl-cy8c95x0: Fix regcache
+
+ drivers/pinctrl/intel/pinctrl-meteorlake.c |  1 +
+ drivers/pinctrl/pinctrl-cy8c95x0.c         | 14 +++++++++-----
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
