@@ -1,126 +1,121 @@
-Return-Path: <linux-gpio+bounces-10112-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10113-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 102849791D2
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 17:34:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D66BD97921F
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 18:40:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E7571C213F4
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 15:34:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F37A2840AD
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Sep 2024 16:40:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8DB51D048D;
-	Sat, 14 Sep 2024 15:34:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6415A1D094F;
+	Sat, 14 Sep 2024 16:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bcOz2c9/"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="U7Phdwrv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3CB1CFEC1;
-	Sat, 14 Sep 2024 15:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7721CA84;
+	Sat, 14 Sep 2024 16:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726328061; cv=none; b=Rv29lxgBtQ0RBd3WV7QEMWZwLiPDsMyz8eYYQnLB56nzsBecOQDOzHmK5ChTorXxN0Cdwm0qaP4AENJl6UUcUcKAc83lHPhlXJNqQKQgOGG1HnY3RTDc/0o38lJxYGe5FFRDHzRtL5Vm5YcLXsRcuMvbYkkRnmrjdQilSt1aWso=
+	t=1726332054; cv=none; b=j3BPVoSTjOGtYMGHUHb1Q3lodIEHpyhggGywfvwNPVkSt50OUM1DMPwce6UYDVhjk6Oh6XBYp4MybI5TNRXzrSXG8o2jtlUvEQdVjaaOPb+dWZb6kh4pCLVYL64jrfau10Ieh+EXQTOJrqqoJ3YbVcR0/OXqjV4pth4/ZkW8qv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726328061; c=relaxed/simple;
-	bh=QBOVB0yM2vWg5VsUrg726BxZNDRJISV0VOA08vKcut4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BndMD6L0sabHDzR24B3aS0eZm6jVEK0AZj4Kqgjualx6k81xXT2W21xSk483UjXZfAvCxnXGwJUd+6bAIFboWrPmXvcfUqwSKg4q5HU7OQMRYFmgSLwJfjQNvJuGuKDBhzKK0eVLCcbG5fOvZ33m4iNq7guqst6kJjXBUTfNBTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bcOz2c9/; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726328060; x=1757864060;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QBOVB0yM2vWg5VsUrg726BxZNDRJISV0VOA08vKcut4=;
-  b=bcOz2c9/JxfV2MYZcKLRZDAhF0o2iZS29XCNQ+oQIMLKOzcIrvC50wm5
-   hqvqHFlGWJpVefPIk5QkpBrKiVjVocV1D5YLOuX/WRuSB6DFByUlURToZ
-   abmRy52jVpuxRxlx6gpyTOr5hgzSCOgxEQG64XeH4TkiUI3We0+2aG65H
-   dBNhKmJgdXfZzWm51UzO+pGE7/zgLWel8ydYLasNaZjf3PElVugEWvBkr
-   YK/IZ5rsz3zzryH3C8mM0bu2qCw13IlQB4u7+6jZC6rqO+vToQkhVHfFb
-   ZqAR6GaNVZdvQF3M7gHAxNxnp+k5m2wOKWLBAWduexyUS/fhEmjZl+oIF
-   w==;
-X-CSE-ConnectionGUID: fKtYEDC4TPKaUQVEnVM2GQ==
-X-CSE-MsgGUID: wbkB+K5+Qcy5tmReeT4FGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11195"; a="42695731"
-X-IronPort-AV: E=Sophos;i="6.10,229,1719903600"; 
-   d="scan'208";a="42695731"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2024 08:34:10 -0700
-X-CSE-ConnectionGUID: bxZoZih5SFOFijIVQ5phng==
-X-CSE-MsgGUID: txFGEYR2TWmI7oVjMJY0xA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,229,1719903600"; 
-   d="scan'208";a="72808096"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 14 Sep 2024 08:34:06 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1spUmh-0007ta-20;
-	Sat, 14 Sep 2024 15:34:03 +0000
-Date: Sat, 14 Sep 2024 23:33:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Billy Tsai <billy_tsai@aspeedtech.com>, linus.walleij@linaro.org,
-	brgl@bgdev.pl, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com,
-	Peter.Yin@quantatw.com
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v3 5/6] gpio: aspeed: Change the macro to support
- deferred probe
-Message-ID: <202409142334.UEVN1oRP-lkp@intel.com>
-References: <20240913074325.239390-6-billy_tsai@aspeedtech.com>
+	s=arc-20240116; t=1726332054; c=relaxed/simple;
+	bh=pUuqIKBYyesbYCq2BGQWblTqXw5i744U0pPDWcwLLPk=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=WJNCcu3pFMqdUt2Ijva+UNGSVr60jRG/a3V/HsX+vl0numWARFK9wHQvOfifI+02wYCYmXipbTAioSB8O7gF1PMSH0NwJg+v4p25VQoH6lVn9UjjLWxr6+qHww3SlWDnlfKCDGuA2NKMwWZW1BhwfgaGzRnBxu9kr+x4rw417vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=U7Phdwrv; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1726332018; x=1726936818; i=markus.elfring@web.de;
+	bh=I1iQlt7ptDaqF8JKc8fXCDkki8rhaNUhW/GfnGYP5MA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=U7PhdwrvkH4UgL8Wlqlcfn90WJ2w7FuqyfABEyOLP1u0x+1rB4WiqikSjjDVW89S
+	 oBR5fBLDae3RkgA6uodkPL4ljVHuGbuiuRC+MATWiqQBID0Ps6Nklv4T/0A58tHZK
+	 YUQeNoX2sup1/DPl5VuQy7V8Sy3eIEPmigiyjldURohqPCEDzeXqdb3S42ZzbuA/+
+	 Yc+A9EDkMlBhqw2M+lNY52Lr/bhs6BU7cPXZDt0JAwFsDr5E+VGSPG+f50qDapyJg
+	 cKoVvby2dz7vDZWdUhetOlKN5TcK3AXnJQMwvtBdmBxugHKqK5KyGyqxuYWj+F7Zz
+	 +f3PqH7V9U3vj5yo1w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MActo-1siryU1oIC-005HOz; Sat, 14
+ Sep 2024 18:40:18 +0200
+Message-ID: <65f9ea8f-dd4d-4b57-9c53-cf9a9b475b06@web.de>
+Date: Sat, 14 Sep 2024 18:40:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240913074325.239390-6-billy_tsai@aspeedtech.com>
+User-Agent: Mozilla Thunderbird
+To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>,
+ Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+ Larisa Grigore <larisa.grigore@nxp.com>, Phu Luu An <phu.luuan@nxp.com>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Chester Lin <chester62515@gmail.com>, Conor Dooley <conor+dt@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Matthias Brugger <mbrugger@suse.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, s32@nxp.com
+References: <20240913082937.444367-4-andrei.stefanescu@oss.nxp.com>
+Subject: Re: [PATCH v2 3/4] gpio: siul2-s32g2: add NXP S32G2/S32G3 SoCs
+ support
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240913082937.444367-4-andrei.stefanescu@oss.nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:lARcwLAS9l+5uUg/kMPNUy8VqiapmNJy1uLCKPH85pCZvVvUyAB
+ iY7WA+e+50fG+K0bjSs9+lYQ98j9yG/IBARvjOvO0yvQdiFteDeeDJOBOAD0HpnGWB0wBBi
+ 3COTIQzn5raKUdjUs1n7qdAqYbq8TPcPrxQ1A12nEQNk0FcEFuVntZxrBxzlZo6/Zy0jJbp
+ wml3j8sJW/41nJZnWUJrw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:NhmNzHkgpYw=;5uFG1Xk0bjlMECsLHtlX+DSvDGE
+ xz4C3HCKJzzpKaYx2dmvNsYaMpnop1fAIWbt7iTy48nJ3wLF0jc0pqsQebPiXyCHYIbiJzw7z
+ ZosnuV9bYoVHROa787t0DGUBRYtoS6fWfkXFXaIGva0u7BvY6qA/MBlofFpsjAb0Rdy01G7ZY
+ viezET4IsR9T0WJvSQPMNEuKaJOtUd5BzagsVDtBm0ZkI7K0lnO4dI8E63jCUzBJZobJmGH36
+ M4/FNPDvYDowCm10Z4krZxlSrHLOcO7Q/VpsSUlmcBjRUwM4e27L/mLUnw4Q5CH1Mx2z+LuCM
+ 97peSht2qjIDdTM5kTr2mbtTjVyDMPRRgYHAaKL7JiXmRRmMUojTyB/YjF7JFyPuKvrGJceSW
+ LgBNFNIe7e3BwoImzfJwNotPq0JsxSllUgkYWJWztnxv93QmVgRFB29t8rnOPa6LtDH9EmHyB
+ nggN2osEHJG9qlr7tkjm1Bg2EBH06eGE0iBLD8BZuGP+hGCEsoB9+9sH2zhj1WxycyZK9OgwU
+ XPp/Y3nAIxxnFfL1RTeB9Lkw0MBKL/Ngd8fSrIJVbF40nm35G2igSs9/kelConkZpWTSFhtMi
+ LOe63eHTVri7j94n1sfb2t+T+apVnA2FWq/UFqAaohOyu77lB+0wZEvhq+RTSoWX0mG25MIYc
+ z6vFwnsgxBjQhBqwOIpVq3sactJrtr4FNZtXriKnz87guIw2Jax+pKPPP4GPCbnwuTZR48T8d
+ ruZg8LpYMOf+jVLOPKEo+exPt5mcXtzdZJVnrhM2cZV3MOJl0pQj7cildTh68pfWe9AdGzqTd
+ 0d1Dmj5mMrL4x6OvARtPhUsA==
 
-Hi Billy,
+=E2=80=A6
+> +++ b/drivers/gpio/gpio-siul2-s32g2.c
+> @@ -0,0 +1,581 @@
+=E2=80=A6
+> +static void siul2_gpio_set_direction(struct siul2_gpio_dev *dev,
+> +				     unsigned int gpio, int dir)
+> +{
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&dev->lock, flags);
+=E2=80=A6
+> +	raw_spin_unlock_irqrestore(&dev->lock, flags);
+> +}
+=E2=80=A6
 
-kernel test robot noticed the following build warnings:
+Under which circumstances would you become interested to apply a statement
+like =E2=80=9Cguard(raw_spinlock_irqsave)(&dev->lock);=E2=80=9D?
+https://elixir.bootlin.com/linux/v6.11-rc7/source/include/linux/spinlock.h=
+#L551
 
-[auto build test WARNING on brgl/gpio/for-next]
-[also build test WARNING on linus/master v6.11-rc7 next-20240913]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Billy-Tsai/dt-bindings-gpio-aspeed-ast2400-gpio-Support-ast2700/20240913-154911
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20240913074325.239390-6-billy_tsai%40aspeedtech.com
-patch subject: [PATCH v3 5/6] gpio: aspeed: Change the macro to support deferred probe
-config: arm-randconfig-003-20240914 (https://download.01.org/0day-ci/archive/20240914/202409142334.UEVN1oRP-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 14.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240914/202409142334.UEVN1oRP-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409142334.UEVN1oRP-lkp@intel.com/
-
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
-
-WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/locking/test-ww_mutex.o
->> WARNING: modpost: drivers/gpio/gpio-aspeed: section mismatch in reference: aspeed_gpio_driver+0x0 (section: .data) -> aspeed_gpio_probe (section: .init.text)
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/qcaux.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/symbolserial.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-hub.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-aspeed.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-ast-cf.o
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+Markus
 
