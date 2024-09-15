@@ -1,193 +1,134 @@
-Return-Path: <linux-gpio+bounces-10133-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10134-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DEB1979480
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Sep 2024 04:44:25 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C25D97949D
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Sep 2024 06:25:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6CD13B22FBA
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Sep 2024 02:44:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E9F9282EE1
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Sep 2024 04:25:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78DA3D531;
-	Sun, 15 Sep 2024 02:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B6D5171AA;
+	Sun, 15 Sep 2024 04:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="RuuzTrnD"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="amkJhq5b"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CF91B85DF
-	for <linux-gpio@vger.kernel.org>; Sun, 15 Sep 2024 02:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F74F11CA0;
+	Sun, 15 Sep 2024 04:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726368259; cv=none; b=kZ/XiK2xN+YrDi86o6OJ3ceA5PJ1T1QGwak3Jv+rscEEYb+hlMLfaeXN0iTaJpRULRnrTOdbyxXLhs34rx6qvGGr7jAzMO7K0zRo5G9ikrXyq0wUPENWp9yYPRvtazE4Wvecto9jiB04LPR9Iu3cEpSD0d1ooERaXepHg2zQwZ0=
+	t=1726374314; cv=none; b=EiNQcQqZGpdTupblH69W00wjaRVVar8yhVJdr9tIsJVa0NaN3xxJfz24sdYkpwxR6UQ7NYFrquDwXtRpYzEFMR2txmZM+0TgVj2nYl1RjHhTj+/3lc5jb40MJHbv1teoWNlzcYJ/UF5HNJYCHBKj8KxNYTw2Y84V30dehj3R96E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726368259; c=relaxed/simple;
-	bh=RHt/CuEImmNnG/8VOU+K/H1jEiWMV+ZSHNrD1hvj2cM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UpqbdxmeD3ITGbd1lDrkknicKIwQst6FIqmXCpCs/CBql8abx2Zyty7zEXKVuMWQWJ3mdI6xtVWiLpMPRM2oVliWLd2T2Q9qKQogpXLG5HTvmeMQmudYHRO9mvNoQHr6XqXf9qRTmu/9a8TcZJOnzwzHNIztr6Yb1I2Bsm0nkjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=RuuzTrnD; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e1d0e74f484so2846765276.2
-        for <linux-gpio@vger.kernel.org>; Sat, 14 Sep 2024 19:44:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tenstorrent.com; s=google; t=1726368257; x=1726973057; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Nq2qwoQ8fGvyakSE32KyqUjWPDGD9IAug2eijzHwHho=;
-        b=RuuzTrnDv57rErXTLd25zDpe4fCV1bQMJiux+7rjrbeO9G8VOjOTGuoaDGEZ+x06ub
-         m3peAX7XBU84EKfBnJQ9A7cyQg59sZ6viy0ggrbVw8GCUTy/iDNb2/q1WZhAdTiBGTQ4
-         n8MMhtA/fy2zYQzRiRAZvtAfcV4LE7W+YM1w5NF7+KOHWzFZZ27RiLVi5erip3uoD0Ks
-         GAY33hhUcYPUqfWlV9YSGPvyn9i+uA3ljZVNuqOJx1M6PhNEFoVIbeMa8LSb1OwVdiTk
-         gNgU8bAxYzGEe0AHPz+cQ4Y16vgfXfp+sjZTGDd6++/Ys9WdKWxoj7GFlkqu0uWQRLj+
-         KCQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726368257; x=1726973057;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nq2qwoQ8fGvyakSE32KyqUjWPDGD9IAug2eijzHwHho=;
-        b=lha81toR548XbAjIlAz7nYWVLyPuosq3PYAyuEKD29UXoq8F4zzANnasxOammTDnVX
-         jwiuEJNu9vxHWlGT3lJJe39Y4UkOGZhiCZzC+bsarnJws8x8mWc9i/oW2GnBr0Tom4VP
-         Ky+aNuZiGod7LHOZHSa6xit70nrzo0nxMReKI3NsC9xfudTVoBGh2sJ/v2b3AtFyIu3l
-         hJmfbbAPdOoiS9mfhGDgc9tr1ssuUlD9DgtdJqmwJLSpJSyIdovdlmcFRIzqjXNzA4Yg
-         4/EeBRCxqsrsr4jnRsEO0oW2IboxutwoAgO1na2P985LJe35QS6nCHxaLZa+xFqd3Cst
-         d5wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUerGXvEUkyEKnPkt+xM0GclLZMP7486hTJnbZMvhwaVnwSiHP1zff0qwPOe4ODilA6lfnaS88sdrI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdtoatY7LXmx3ahVFgPsWCq3mhgkWVUAPvIcURuwe9NdtLN+pX
-	gNgJzh0Ublx4aaZbuc6c9OeDgzLPPRfXkvQTGjnNFJ0boQXaulqk3LJihpgOyBk=
-X-Google-Smtp-Source: AGHT+IEClZ21Xn2I0tdDO6eQz5l4CSj9mqsoGgEda3xSmNTjGf1KEuzvGBfrhopXDCp2Yb4bN/rIaQ==
-X-Received: by 2002:a05:6902:1881:b0:e0b:e47d:ccc9 with SMTP id 3f1490d57ef6-e1d9db98c66mr11206546276.8.1726368256818;
-        Sat, 14 Sep 2024 19:44:16 -0700 (PDT)
-Received: from [127.0.1.1] ([216.139.163.245])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6dbe2e0d924sm4129097b3.41.2024.09.14.19.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Sep 2024 19:44:16 -0700 (PDT)
-From: Drew Fustini <dfustini@tenstorrent.com>
-Date: Sat, 14 Sep 2024 19:40:56 -0700
-Subject: [PATCH v2 8/8] riscv: dtb: thead: Add BeagleV Ahead LEDs
+	s=arc-20240116; t=1726374314; c=relaxed/simple;
+	bh=Hs3A/0NgMdrdsVPIXyw3hBiawKKXZLwpEf6kATB+HVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OXiMROAxODCBvTlydI1IP+iqx+mYLyEDJWIEAvoJBtgc66w0zZC+r3TgOWulT7ro1Uen7O9/c1NPSbDYT+9zb8fQi9qfviYV1bFR5lynOx9mZk3HIVB8IpgO9wWR52vUGj65evExJZjePd/up7vWCa5fdFILIhA+jZhn/zEkbtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=amkJhq5b; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48F40F18024744;
+	Sun, 15 Sep 2024 04:24:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1Di0Oqdi4xGJgoL6vNrrVyWlC/CcTvosN/PQueUb9K8=; b=amkJhq5bbK41F5hj
+	wCdJVIXbdBku5mFAUvKq1ZvjUBux2X0pTe1pHfQJnXNcNPArMnK8wk96Outuq4Rm
+	9EahMgreag/zyAKNceMWspsWi+k5uI2QjLgChL2z4U/+NpIS1inwXvba67p3zBsh
+	b9JIto8jvu0xCgWqY40urgdD/zneQi9fm3Ost00g8gmTabDSyFnzaEkWgCEnJ0El
+	tWhXkrH0ZL0y9G39q5f++mD6dB5Zreq1fKN6ArzCUxJRv/b0zKb/pVYnsld/g5lK
+	xmXX47ZAsPJ/1jOgcdP6s1kR/Q0VOTyutV9z2gelfqHnNqdVRfVYeYiWbzK1tNAQ
+	Ir1OTw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41n4hf9dd4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 15 Sep 2024 04:24:40 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48F4OdNG016839
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 15 Sep 2024 04:24:39 GMT
+Received: from [10.50.62.96] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 14 Sep
+ 2024 21:24:28 -0700
+Message-ID: <306acd78-cb7d-4fd2-9bdd-540426bac50d@quicinc.com>
+Date: Sun, 15 Sep 2024 09:54:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/8] pinctrl: qcom: Introduce IPQ5424 TLMM driver
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <p.zabel@pengutronix.de>, <geert+renesas@glider.be>,
+        <neil.armstrong@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <quic_varada@quicinc.com>
+References: <20240913121250.2995351-1-quic_srichara@quicinc.com>
+ <20240913121250.2995351-5-quic_srichara@quicinc.com>
+ <rp6hhamsqwtneyfrf6lwrchd4p35blaqzgiq66wfkn66xofbar@7dgexti4qs4u>
+Content-Language: en-US
+From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <rp6hhamsqwtneyfrf6lwrchd4p35blaqzgiq66wfkn66xofbar@7dgexti4qs4u>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240914-th1520-pinctrl-v2-8-3ba67dde882c@tenstorrent.com>
-References: <20240914-th1520-pinctrl-v2-0-3ba67dde882c@tenstorrent.com>
-In-Reply-To: <20240914-th1520-pinctrl-v2-0-3ba67dde882c@tenstorrent.com>
-To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
- Fu Wei <wefu@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
- Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Drew Fustini <dfustini@tenstorrent.com>
-X-Mailer: b4 0.14.1
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vah4GJY3KHbLBr0dESlP-hYGzFbTr_1K
+X-Proofpoint-ORIG-GUID: vah4GJY3KHbLBr0dESlP-hYGzFbTr_1K
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 phishscore=0 malwarescore=0 mlxlogscore=777 mlxscore=0
+ impostorscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2409150030
 
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
-Add nodes for the 5 user controllable LEDs on the BeagleV Ahead board.
 
-Tested-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Signed-off-by: Drew Fustini <dfustini@tenstorrent.com>
----
- arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+On 9/13/2024 6:09 PM, Dmitry Baryshkov wrote:
+> On Fri, Sep 13, 2024 at 05:42:46PM GMT, Sricharan R wrote:
+>> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+>>
+>> The IPQ5424 SoC comes with a TLMM block, like all other Qualcomm
+>> platforms, so add a driver for it.
+>>
+>> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+>> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> 
+> The order of trailers is strange. It lists you as an author, but then
+> Varadarajan's SoB comes first and yours (authors) comes afterwards. If
+> it was a joing effort, please use Co-developed-by tag in addition to SoB.
+> 
+  ok, will add the co-developed.
 
-diff --git a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-index c5356f674f85..823aa5b44efb 100644
---- a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-+++ b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-@@ -7,6 +7,8 @@
- /dts-v1/;
- 
- #include "th1520.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
- 
- / {
- 	model = "BeagleV Ahead";
-@@ -34,7 +36,42 @@ chosen {
- 	memory@0 {
- 		device_type = "memory";
- 		reg = <0x0  0x00000000  0x1 0x00000000>;
-+	};
-+
-+	leds {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins>;
-+		compatible = "gpio-leds";
-+
-+		led-1 {
-+			gpios = <&gpio4 8 GPIO_ACTIVE_LOW>;
-+			color = <LED_COLOR_ID_BLUE>;
-+			label = "led1";
-+		};
-+
-+		led-2 {
-+			gpios = <&gpio4 9 GPIO_ACTIVE_LOW>;
-+			color = <LED_COLOR_ID_BLUE>;
-+			label = "led2";
-+		};
-+
-+		led-3 {
-+			gpios = <&gpio4 10 GPIO_ACTIVE_LOW>;
-+			color = <LED_COLOR_ID_BLUE>;
-+			label = "led3";
-+		};
-+
-+		led-4 {
-+			gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
-+			color = <LED_COLOR_ID_BLUE>;
-+			label = "led4";
-+		};
- 
-+		led-5 {
-+			gpios = <&gpio4 12 GPIO_ACTIVE_LOW>;
-+			color = <LED_COLOR_ID_BLUE>;
-+			label = "led5";
-+		};
- 	};
- };
- 
-@@ -82,6 +119,24 @@ &sdio0 {
- 	status = "okay";
- };
- 
-+&padctrl_aosys {
-+	led_pins: led-0 {
-+		led-pins {
-+			pins = "AUDIO_PA8",  /* GPIO4_8 */
-+			       "AUDIO_PA9",  /* GPIO4_9 */
-+			       "AUDIO_PA10", /* GPIO4_10 */
-+			       "AUDIO_PA11", /* GPIO4_11 */
-+			       "AUDIO_PA12"; /* GPIO4_12 */
-+			function = "gpio";
-+			bias-disable;
-+			drive-strength = <3>;
-+			input-disable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+};
-+
- &padctrl0_apsys {
- 	uart0_pins: uart0-0 {
- 		tx-pins {
+>> ---
+>>   drivers/pinctrl/qcom/Kconfig.msm       |   9 +
+>>   drivers/pinctrl/qcom/Makefile          |   1 +
+>>   drivers/pinctrl/qcom/pinctrl-ipq5424.c | 792 +++++++++++++++++++++++++
+>>   3 files changed, 802 insertions(+)
+>>   create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq5424.c
+> 
+> The rest LGTM
+> 
+Thanks
 
--- 
-2.34.1
-
+Regards,
+  Sricharan
 
