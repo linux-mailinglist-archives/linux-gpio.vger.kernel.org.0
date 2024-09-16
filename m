@@ -1,48 +1,63 @@
-Return-Path: <linux-gpio+bounces-10183-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10184-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7E96979BDE
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 09:13:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5127979C49
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 09:51:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD1E71C226C0
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 07:13:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 146E1B22715
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 07:51:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5A0913C90B;
-	Mon, 16 Sep 2024 07:13:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C21EC13C8F3;
+	Mon, 16 Sep 2024 07:51:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tIVXUipk"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LxF5/PLI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D03612BF02;
-	Mon, 16 Sep 2024 07:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C191339B1;
+	Mon, 16 Sep 2024 07:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726470808; cv=none; b=osJGnBVk7Gzm3OitlUKNy3vj+Hpr1MO8K6aprIV8e6/REwSgCYUVFh3bKGFDIXM1Pp6oxptfEwBz4BNnNOM66xt+G/F+xPOQwk2PyCgk8VT1OMPago2EhD8TcTiENBo5vhPakh6Gicy0R9aTMSaga24L3Dc34X0Nt7JTMlTNRC4=
+	t=1726473065; cv=none; b=XKrAP/GfDmc5S6mdVahGmMxTzrsO9i9wmSfo7feVBMxhjmEGodG+HApNNTahFsYgnGaCWQPasl8ljJlDxv9NIwJ8L0pZwPxC+XIFLaqLQXvPtUviLb3H3FCoi3vDWEFUMvWO9j0QeOf5M0NJJW5emx7aKEMjh46Rkfhdh4xPx7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726470808; c=relaxed/simple;
-	bh=2a0pJBR14LWlAhQYOY88JR1dcJJ7eFFl68zpz6H3ptM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YiOD4exV8c6OJ95sJ4cuILnVOawxWiLHYBiN7b/CFZG9wCb4BXoveCceTVlxgRGrOgn/O5H8aQRy4X6+WcDL9f8ipgk6nkguEQ/U6EnC2BjuVXQs7sT7FvWzM0UEDYOXHtAtCgH5o5rSdjIYCgeHzaoln+CX9Apo/87KPraKBEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tIVXUipk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD29FC4CEC4;
-	Mon, 16 Sep 2024 07:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726470807;
-	bh=2a0pJBR14LWlAhQYOY88JR1dcJJ7eFFl68zpz6H3ptM=;
-	h=Date:Subject:List-Id:To:Cc:References:From:In-Reply-To:From;
-	b=tIVXUipkjSS946n9IFKZDr7qxpXiEO8TmFKDEMFxxhox7mEIpqXQ94hkR8v+tse0C
-	 5mlk9MePKNgtSxsWdCkBYizq1ksD1Jpblu/QlYGzIpsPa5nVFcADXYVl9BJUKhzQ4w
-	 xo7GBem/3My7g0ooLu3514Xrpxe9JeqCCTeHrz9a4+93OsykOdNX0iQxMstY06+i0F
-	 Mrt9JlxP3WZXoPI+R0OTV0OwbSB4XsIU96T/8yj/0Ts0QKHfhpDx/MlbZ33RZqOUBS
-	 rtMAhB6XYuN/GIR5ZLr68/prT9uDMt7wJhSoKbnMd9Ed4+dkGWifVhxIs//IjiGk1j
-	 X8YVi7Ob3WT0Q==
-Message-ID: <ad7ac580-3593-4b44-b6c9-5c43b80b135e@kernel.org>
-Date: Mon, 16 Sep 2024 09:13:14 +0200
+	s=arc-20240116; t=1726473065; c=relaxed/simple;
+	bh=Z9uIWG2PKf2KyhsARs6C+a8hCyFUNF7z+oDNfDWyUlI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=X30wxTdhmpOySvugy7czh9QD45L9AVgwds0DhSqTZTBB2bwOVaVwgEITid+Lykq6nAzR/pQ+8apLiFyLVxheAVY/tFJ5EOGN9GRZcMKRP4UsKe9iAz+ZIHKY1gJBX3YjvlYfMXqHaiOg4gkLhaFD31OdU2/YY7faH0+bLwYzywA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LxF5/PLI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48FNmwBA024426;
+	Mon, 16 Sep 2024 07:50:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	gBgmFYIDtjCkjwPRAQZ3OnNLyodUiCbqaDvzxqA+Jog=; b=LxF5/PLIqnNscV1V
+	h5fsKk2lNKyAB+/1ODBuwJa29nB1U10CeqfixNcxascuUhmI7KAzaphLLU43jtBb
+	4MENoySc0b7apl5JuzSo5LADUyYXKsptKy64B/iMkCXPBDEK6yzUcjY5hb35QWip
+	4NcICcQYFSvDSWYREEpsvvlsb/sFdRV8OwZBTb7/D3f+zbwIgyoGWpKj7O7el10e
+	PFVF2OT7fhJrZakDFjJkkRTJCQ8IY22EX/rZ2ROVA1glSOAMfPF0h+i6qQiI16ww
+	vaDQpJJzet2nDxk94/4iu/Adr+uZA0LXvTkTSjmTTCMDY8nxVuu848nJiD2UnfNU
+	bSJ4Zg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41n4gcu60a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Sep 2024 07:50:34 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48G7oXGF012618
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Sep 2024 07:50:33 GMT
+Received: from [10.151.37.100] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Sep
+ 2024 00:50:27 -0700
+Message-ID: <f9126534-3a46-4d01-9026-58e0b65c08d2@quicinc.com>
+Date: Mon, 16 Sep 2024 13:20:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,334 +65,340 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 15/21] i2c: Add driver for ADI ADSP-SC5xx platforms
-To: arturs.artamonovs@analog.com, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Greg Malysa <greg.malysa@timesys.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Utsav Agarwal <Utsav.Agarwal@analog.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Thomas Gleixner <tglx@linutronix.de>,
- Andi Shyti <andi.shyti@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Olof Johansson <olof@lixom.net>, soc@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-serial@vger.kernel.org, adsp-linux@analog.com,
- Nathan Barrett-Morrison <nathan.morrison@timesys.com>
-References: <20240912-test-v1-0-458fa57c8ccf@analog.com>
- <20240912-test-v1-15-458fa57c8ccf@analog.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 5/8] clk: qcom: add Global Clock controller (GCC) driver
+ for IPQ5424 SoC
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <p.zabel@pengutronix.de>, <geert+renesas@glider.be>,
+        <neil.armstrong@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <quic_varada@quicinc.com>
+References: <20240913121250.2995351-1-quic_srichara@quicinc.com>
+ <20240913121250.2995351-6-quic_srichara@quicinc.com>
+ <glkvcne5eius5l7dro7gzd7hyztc6vc4eekcbbxz6c4wwolwqy@aoj66qbrxezg>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240912-test-v1-15-458fa57c8ccf@analog.com>
-Content-Type: text/plain; charset=UTF-8
+From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <glkvcne5eius5l7dro7gzd7hyztc6vc4eekcbbxz6c4wwolwqy@aoj66qbrxezg>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: lGQJOmdExYP4olx6XnTSFvayGnhWWGDd
+X-Proofpoint-GUID: lGQJOmdExYP4olx6XnTSFvayGnhWWGDd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ bulkscore=0 clxscore=1015 spamscore=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 impostorscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
+ definitions=main-2409160048
 
-On 12/09/2024 20:25, Arturs Artamonovs via B4 Relay wrote:
-> From: Arturs Artamonovs <arturs.artamonovs@analog.com>
+
+
+On 9/13/2024 6:16 PM, Dmitry Baryshkov wrote:
+> On Fri, Sep 13, 2024 at 05:42:47PM GMT, Sricharan R wrote:
+>> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+>>
+>> Add support for the global clock controller found on IPQ5424 SoC.
+>>
+>> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+>> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 > 
-> Add support for I2C on SC5xx
+> Same comment regarding tags.
 > 
-> Signed-off-by: Arturs Artamonovs <Arturs.Artamonovs@analog.com>
-> Co-developed-by: Nathan Barrett-Morrison <nathan.morrison@timesys.com>
-> Signed-off-by: Nathan Barrett-Morrison <nathan.morrison@timesys.com>
-> Co-developed-by: Greg Malysa <greg.malysa@timesys.com>
-> Signed-off-by: Greg Malysa <greg.malysa@timesys.com>
-
-As in all patches - chain looks wrong.
-
-> ---
->  drivers/i2c/busses/Kconfig       |  17 +
->  drivers/i2c/busses/Makefile      |   1 +
->  drivers/i2c/busses/i2c-adi-twi.c | 940 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 958 insertions(+)
-
-
-
-> +static SIMPLE_DEV_PM_OPS(i2c_adi_twi_pm,
-> +			 i2c_adi_twi_suspend, i2c_adi_twi_resume);
-> +#define I2C_ADI_TWI_PM_OPS	(&i2c_adi_twi_pm)
-> +#else
-> +#define I2C_ADI_TWI_PM_OPS	NULL
-> +#endif
-> +
-> +#ifdef CONFIG_OF
-
-Drop
-
-> +static const struct of_device_id adi_twi_of_match[] = {
-> +	{
-> +		.compatible = "adi,twi",
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, adi_twi_of_match);
-> +#endif
-> +
-> +static int i2c_adi_twi_probe(struct platform_device *pdev)
-> +{
-> +	struct adi_twi_iface *iface;
-> +	struct i2c_adapter *p_adap;
-> +	struct resource *res;
-> +	const struct of_device_id *match;
-> +	struct device_node *node = pdev->dev.of_node;
-> +	int rc;
-> +	unsigned int clkhilow;
-> +	u16 writeValue;
-> +
-> +	iface = devm_kzalloc(&pdev->dev, sizeof(*iface), GFP_KERNEL);
-> +	if (!iface)
-> +		return -ENOMEM;
-> +
-> +	spin_lock_init(&(iface->lock));
-> +
-> +	match = of_match_device(of_match_ptr(adi_twi_of_match), &pdev->dev);
-
-Drop of_mathc_ptr
-
-> +	if (match) {
-> +		if (of_property_read_u32(node, "clock-khz",
-
-Uh? I really do not get what is this.
-
-
-> +			&iface->twi_clk))
-
-Really odd alignment.
-
-> +			iface->twi_clk = 50;
-> +	} else
-> +		iface->twi_clk = CONFIG_I2C_ADI_TWI_CLK_KHZ;
-> +
-> +	iface->sclk = devm_clk_get(&pdev->dev, "sclk0");
-> +	if (IS_ERR(iface->sclk)) {
-> +		if (PTR_ERR(iface->sclk) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Missing i2c clock\n");
-
-Eh... there is nowhere such code. Please work with upstream code, not
-downstream. When writing drivers take UPSTREAM driver as template.
-Whatever you have in downstream is not a good to send to us.
-
-Syntax is return dev_err_probe.
-
-> +		return PTR_ERR(iface->sclk);
-> +	}
-> +
-> +	/* Find and map our resources */
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (res == NULL) {
-> +		dev_err(&pdev->dev, "Cannot get IORESOURCE_MEM\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	iface->regs_base = devm_ioremap_resource(&pdev->dev, res);
-
-Combine these two calls with proper helper.
-
-> +	if (IS_ERR(iface->regs_base)) {
-> +		dev_err(&pdev->dev, "Cannot map IO\n");
-> +		return PTR_ERR(iface->regs_base);
-> +	}
-> +
-> +	iface->irq = platform_get_irq(pdev, 0);
-> +	if (iface->irq < 0) {
-
-Here you have correct, other patch has a bug. That makes me wonder about
-consistency of this code. There are several other hints that people
-wrote it with quite different coding style.
-
-> +		dev_err(&pdev->dev, "No IRQ specified\n");
-> +		return -ENOENT;
-
-No. return the error. Anyway, that's never a correct errno. Read
-description of this errno: no such file. This is not a file you are
-getting here.
-
-This comment applies to all your code.
-
-> +	}
-> +
-> +	p_adap = &iface->adap;
-> +	p_adap->nr = pdev->id;
-> +	strscpy(p_adap->name, pdev->name, sizeof(p_adap->name));
-> +	p_adap->algo = &adi_twi_algorithm;
-> +	p_adap->algo_data = iface;
-> +	p_adap->class = I2C_CLASS_DEPRECATED;
-> +	p_adap->dev.parent = &pdev->dev;
-> +	p_adap->dev.of_node = node;
-> +	p_adap->timeout = 5 * HZ;
-> +	p_adap->retries = 3;
-> +
-> +	rc = devm_request_irq(&pdev->dev, iface->irq, adi_twi_interrupt_entry,
-> +		0, pdev->name, iface);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "Can't get IRQ %d !\n", iface->irq);
-> +		rc = -ENODEV;
-
-???
-
-Sorry, this driver is in really poor shape.
-
-> +		goto out_error;
-> +	}
-> +
-> +	/* Set TWI internal clock as 10MHz */
-> +	clk_prepare_enable(iface->sclk);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "Could not enable sclk\n");
-> +		goto out_error;
-
-return
-
-> +	}
-> +
-> +	writeValue = ((clk_get_rate(iface->sclk) / 1000 / 1000 + 5) / 10) & 0x7F;
-
-No camelCase. Please follow Linux coding style.
-
-> +	iowrite16(writeValue, &iface->regs_base->control);
-> +
-> +	/*
-> +	 * We will not end up with a CLKDIV=0 because no one will specify
-> +	 * 20kHz SCL or less in Kconfig now. (5 * 1000 / 20 = 250)
-> +	 */
-> +	clkhilow = ((10 * 1000 / iface->twi_clk) + 1) / 2;
-> +
-> +	/* Set Twi interface clock as specified */
-> +	writeValue = (clkhilow << 8) | clkhilow;
-> +	iowrite16(writeValue, &iface->regs_base->clkdiv);
-> +
-> +	/* Enable TWI */
-> +	writeValue = ioread16(&iface->regs_base->control) | TWI_ENA;
-> +	iowrite16(writeValue, &iface->regs_base->control);
-> +
-> +	rc = i2c_add_numbered_adapter(p_adap);
-> +	if (rc < 0)
-> +		goto disable_clk;
-> +
-> +	platform_set_drvdata(pdev, iface);
-> +
-> +	dev_info(&pdev->dev, "ADI on-chip I2C TWI Controller, regs_base@%p\n",
-> +		iface->regs_base);
-
-Drop. Driver should be silent on success.
-
-> +
-> +	return 0;
-> +
-> +disable_clk:
-> +	clk_disable_unprepare(iface->sclk);
-
-devm_clk_get_enabled
-
-> +
-> +out_error:
-
-Drop
-
-> +	return rc;
-> +}
-> +
-> +static void i2c_adi_twi_remove(struct platform_device *pdev)
-> +{
-> +	struct adi_twi_iface *iface = platform_get_drvdata(pdev);
-> +
-> +	clk_disable_unprepare(iface->sclk);
-> +	i2c_del_adapter(&(iface->adap));
-> +}
-> +
-> +static struct platform_driver i2c_adi_twi_driver = {
-> +	.probe		= i2c_adi_twi_probe,
-> +	.remove		= i2c_adi_twi_remove,
-> +	.driver		= {
-> +		.name	= "i2c-adi-twi",
-> +		.pm	= I2C_ADI_TWI_PM_OPS,
-> +		.of_match_table = of_match_ptr(adi_twi_of_match),
-
-Drop of_match_ptr. None of your other code has it, right? This should
-make you wonder.
-
-> +	},
-> +};
-> +
-> +static int __init i2c_adi_twi_init(void)
-> +{
-> +	return platform_driver_register(&i2c_adi_twi_driver);
-> +}
-> +
-> +static void __exit i2c_adi_twi_exit(void)
-> +{
-> +	platform_driver_unregister(&i2c_adi_twi_driver);
-> +}
-> +
-> +subsys_initcall(i2c_adi_twi_init);
-
-No, i2c driver can be just module platform driver.
-
-> +module_exit(i2c_adi_twi_exit);
-> +
-> +MODULE_AUTHOR("Bryan Wu, Sonic Zhang");
-> +MODULE_DESCRIPTION("ADI on-chip I2C TWI Controller Driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:i2c-adi-twi");
-
-You should not need MODULE_ALIAS() in normal cases. If you need it,
-usually it means your device ID table is wrong (e.g. misses either
-entries or MODULE_DEVICE_TABLE()). MODULE_ALIAS() is not a substitute
-for incomplete ID table.
-
-> \ No newline at end of file
-
-
+ok
+>> ---
+>>   drivers/clk/qcom/Kconfig       |    7 +
+>>   drivers/clk/qcom/Makefile      |    1 +
+>>   drivers/clk/qcom/gcc-ipq5424.c | 3333 ++++++++++++++++++++++++++++++++
+>>   3 files changed, 3341 insertions(+)
+>>   create mode 100644 drivers/clk/qcom/gcc-ipq5424.c
+>>
+>> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+>> index a3e2a09e2105..c41e3318c2a7 100644
+>> --- a/drivers/clk/qcom/Kconfig
+>> +++ b/drivers/clk/qcom/Kconfig
+>> @@ -213,6 +213,13 @@ config IPQ_GCC_5332
+>>   	  Say Y if you want to use peripheral devices such as UART, SPI,
+>>   	  i2c, USB, SD/eMMC, etc.
+>>   
+>> +config IPQ_GCC_5424
+>> +	tristate "IPQ5424 Global Clock Controller"
+>> +	help
+>> +	  Support for the global clock controller on ipq5424 devices.
+>> +	  Say Y if you want to use peripheral devices such as UART, SPI,
+>> +	  i2c, USB, SD/eMMC, etc.
+>> +
+>>   config IPQ_GCC_6018
+>>   	tristate "IPQ6018 Global Clock Controller"
+>>   	help
+>> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+>> index 2b378667a63f..d58ba0f9a482 100644
+>> --- a/drivers/clk/qcom/Makefile
+>> +++ b/drivers/clk/qcom/Makefile
+>> @@ -32,6 +32,7 @@ obj-$(CONFIG_IPQ_APSS_6018) += apss-ipq6018.o
+>>   obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
+>>   obj-$(CONFIG_IPQ_GCC_5018) += gcc-ipq5018.o
+>>   obj-$(CONFIG_IPQ_GCC_5332) += gcc-ipq5332.o
+>> +obj-$(CONFIG_IPQ_GCC_5424) += gcc-ipq5424.o
+>>   obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
+>>   obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
+>>   obj-$(CONFIG_IPQ_GCC_8074) += gcc-ipq8074.o
+>> diff --git a/drivers/clk/qcom/gcc-ipq5424.c b/drivers/clk/qcom/gcc-ipq5424.c
+>> new file mode 100644
+>> index 000000000000..72d2c9bfa986
+>> --- /dev/null
+>> +++ b/drivers/clk/qcom/gcc-ipq5424.c
+>> @@ -0,0 +1,3333 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2018,2020 The Linux Foundation. All rights reserved.
+>> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include <dt-bindings/clock/qcom,ipq5424-gcc.h>
+>> +#include <dt-bindings/reset/qcom,ipq5424-gcc.h>
+>> +
+>> +#include "clk-alpha-pll.h"
+>> +#include "clk-branch.h"
+>> +#include "clk-rcg.h"
+>> +#include "clk-regmap.h"
+>> +#include "clk-regmap-divider.h"
+>> +#include "clk-regmap-mux.h"
+>> +#include "clk-regmap-phy-mux.h"
+>> +#include "common.h"
+>> +#include "reset.h"
+>> +
+>> +enum {
+>> +	DT_XO,
+>> +	DT_SLEEP_CLK,
+>> +	DT_PCIE30_PHY0_PIPE_CLK,
+>> +	DT_PCIE30_PHY1_PIPE_CLK,
+>> +	DT_PCIE30_PHY2_PIPE_CLK,
+>> +	DT_PCIE30_PHY3_PIPE_CLK,
+>> +	DT_USB_PCIE_WRAPPER_PIPE_CLK,
 > 
+> This doesn't seem to match bindings.
+> 
+ok, will fix
+>> +};
+>> +
+>> +enum {
+>> +	P_GCC_GPLL0_OUT_MAIN_DIV_CLK_SRC,
+>> +	P_GPLL0_OUT_AUX,
+>> +	P_GPLL0_OUT_MAIN,
+>> +	P_GPLL2_OUT_AUX,
+>> +	P_GPLL2_OUT_MAIN,
+>> +	P_GPLL4_OUT_AUX,
+>> +	P_GPLL4_OUT_MAIN,
+>> +	P_SLEEP_CLK,
+>> +	P_XO,
+>> +	P_USB3PHY_0_PIPE,
+>> +};
+>> +
+>> +static const struct clk_parent_data gcc_parent_data_xo = { .index = DT_XO };
+>> +
+>> +static struct clk_alpha_pll gpll0 = {
+>> +	.offset = 0x20000,
+>> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT_EVO],
+>> +	.clkr = {
+>> +		.enable_reg = 0xb000,
+>> +		.enable_mask = BIT(0),
+>> +		.hw.init = &(const struct clk_init_data) {
+>> +			.name = "gpll0",
+>> +			.parent_data = &gcc_parent_data_xo,
+>> +			.num_parents = 1,
+>> +			.ops = &clk_alpha_pll_ops,
+>> +			.flags = CLK_IS_CRITICAL,
+> 
+> This deserves a comment
+> 
+ok will add
+>> +		},
+>> +	},
+>> +};
+>> +
+>> +static struct clk_fixed_factor gpll0_div2 = {
+>> +	.mult = 1,
+>> +	.div = 2,
+>> +	.hw.init = &(const struct clk_init_data) {
+>> +		.name = "gpll0_div2",
+>> +		.parent_hws = (const struct clk_hw *[]) {
+>> +			&gpll0.clkr.hw
+>> +		},
+>> +		.num_parents = 1,
+>> +		.ops = &clk_fixed_factor_ops,
+>> +	},
+>> +};
+>> +
+>> +static struct clk_alpha_pll gpll2 = {
+>> +	.offset = 0x21000,
+>> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_NSS_HUAYRA],
+>> +	.clkr = {
+>> +		.enable_reg = 0xb000,
+>> +		.enable_mask = BIT(1),
+>> +		.hw.init = &(const struct clk_init_data) {
+>> +			.name = "gpll2",
+>> +			.parent_data = &gcc_parent_data_xo,
+>> +			.num_parents = 1,
+>> +			.ops = &clk_alpha_pll_ops,
+>> +		},
+>> +	},
+>> +};
+>> +
+>> +static const struct clk_div_table post_div_table_gpll2_out_main[] = {
+>> +	{ 0x1, 2 },
+>> +	{ }
+>> +};
+>> +
+>> +static struct clk_alpha_pll_postdiv gpll2_out_main = {
+>> +	.offset = 0x21000,
+>> +	.post_div_table = post_div_table_gpll2_out_main,
+>> +	.num_post_div = ARRAY_SIZE(post_div_table_gpll2_out_main),
+>> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_NSS_HUAYRA],
+>> +	.clkr.hw.init = &(const struct clk_init_data) {
+>> +		.name = "gpll2_out_main",
+>> +		.parent_hws = (const struct clk_hw*[]) {
+>> +			&gpll2.clkr.hw,
+>> +		},
+>> +		.num_parents = 1,
+>> +		.ops = &clk_alpha_pll_postdiv_ro_ops,
+>> +	},
+>> +};
+>> +
+>> +static struct clk_alpha_pll gpll4 = {
+>> +	.offset = 0x22000,
+>> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT_EVO],
+>> +	.clkr = {
+>> +		.enable_reg = 0xb000,
+>> +		.enable_mask = BIT(2),
+>> +		.hw.init = &(const struct clk_init_data) {
+>> +			.name = "gpll4",
+>> +			.parent_data = &gcc_parent_data_xo,
+>> +			.num_parents = 1,
+>> +			.flags = CLK_IS_CRITICAL,
+> 
+> Comment, please.
+> 
+ok, will add
+>> +			.ops = &clk_alpha_pll_ops,
+>> +		},
+>> +	},
+>> +};
+>> +
+> 
+> [skipped]
+> 
+>> +
+>> +static struct clk_rcg2 gcc_pcnoc_bfdcd_clk_src = {
+>> +	.cmd_rcgr = 0x31004,
+>> +	.mnd_width = 0,
+>> +	.hid_width = 5,
+>> +	.parent_map = gcc_parent_map_0,
+>> +	.freq_tbl = ftbl_gcc_pcnoc_bfdcd_clk_src,
+>> +	.clkr.hw.init = &(const struct clk_init_data) {
+>> +		.name = "gcc_pcnoc_bfdcd_clk_src",
+>> +		.parent_data = gcc_parent_data_0,
+>> +		.num_parents = ARRAY_SIZE(gcc_parent_data_0),
+>> +		.flags = CLK_IS_CRITICAL,
+> 
+> Comment
+> 
+ok
+>> +		.ops = &clk_rcg2_ops,
+>> +	},
+>> +};
+>> +
+> 
+> [skipped]
+> 
+>> +
+>> +static struct clk_branch gcc_qdss_dap_clk = {
+>> +	.halt_reg = 0x2d058,
+>> +	.clkr = {
+>> +		.enable_reg = 0x2d058,
+>> +		.enable_mask = BIT(0),
+>> +		.hw.init = &(const struct clk_init_data) {
+>> +			.name = "gcc_qdss_dap_clk",
+>> +			.parent_hws = (const struct clk_hw *[]) {
+>> +				&gcc_qdss_dap_sync_clk_src.hw
+>> +			},
+>> +			.num_parents = 1,
+>> +			.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+> 
+> Comment
+> 
+ok
+>> +			.ops = &clk_branch2_ops,
+>> +		},
+>> +	},
+>> +};
+>> +
+>> +static struct clk_branch gcc_qdss_at_clk = {
+>> +	.halt_reg = 0x2d034,
+>> +	.clkr = {
+>> +		.enable_reg = 0x2d034,
+>> +		.enable_mask = BIT(0),
+>> +		.hw.init = &(const struct clk_init_data) {
+>> +			.name = "gcc_qdss_at_clk",
+>> +			.parent_hws = (const struct clk_hw *[]) {
+>> +				&gcc_qdss_at_clk_src.clkr.hw
+>> +			},
+>> +			.num_parents = 1,
+>> +			.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+> 
+> Comment
+> 
+ok
+>> +			.ops = &clk_branch2_ops,
+>> +		},
+>> +	},
+>> +};
+>> +
+> 
+> [skipped]
+> 
+>> +
+>> +static int gcc_ipq5424_probe(struct platform_device *pdev)
+>> +{
+>> +	struct regmap *regmap;
+>> +	struct qcom_cc_desc ipq5424_desc = gcc_ipq5424_desc;
+>> +	int ret;
+>> +
+>> +	regmap = qcom_cc_map(pdev, &ipq5424_desc);
+>> +	if (IS_ERR(regmap))
+>> +		return PTR_ERR(regmap);
+>> +
+>> +	ret = qcom_cc_really_probe(&pdev->dev, &ipq5424_desc, regmap);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "Failed to register GCC clocks ret=%d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	dev_info(&pdev->dev, "Registered GCC clocks\n");
+>> +
+>> +	return ret;
+> 
+> Drop all the cruft and use qcom_cc_probe() directly.
+> 
+ok
 
-Best regards,
-Krzysztof
+Regards,
+  Sricharan
 
 
