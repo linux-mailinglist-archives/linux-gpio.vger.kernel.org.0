@@ -1,106 +1,154 @@
-Return-Path: <linux-gpio+bounces-10174-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10176-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1651979B81
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 08:50:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 76634979B88
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 08:50:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 300E61C22BFF
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 06:50:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AB9D1C22D0A
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 06:50:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94CCE83CD9;
-	Mon, 16 Sep 2024 06:49:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B45BF132103;
+	Mon, 16 Sep 2024 06:50:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GEzAlc2X"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y9BU/6iE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D04A4DA00
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Sep 2024 06:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D80E4D8BF;
+	Mon, 16 Sep 2024 06:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726469389; cv=none; b=fqaBE5bDgVHZhhMNRXQOykQ/Onm57BemzQJpch0G+U5f0W5UQSH8VFrmF0xzGD6Jy6/rEQN6vBFj3RzmR/13gBsRhL8ongjJAgNT/q1W3fQdElH5l6a+kJK1I/HbxwBvrhs5xr/6av4DqjM3L2x2ouk2xr5maAuzlYZbX3/JFqY=
+	t=1726469440; cv=none; b=FHyvvuEUiAMeE1oCuB9DtgEsvL3Bd87DwvlLYXPMfY5ROzoaclPKTI2D6zpa9OAOVq0mEdnZC1Mo27Yl3xWitk1kWdw5fLl1c70pH/4/vlgnFrNPn+jPtaCA66T+FZujQ06BPVXab1rvCTdzJgE4RJnW6swEx/6q+JnwE23jEDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726469389; c=relaxed/simple;
-	bh=LqFyvfoxL4NyazPWc3Vs96IZF5AAGr+z/reSIEDUQT0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ISIiUWhpbyi9yOug2amMKo0Ly30Za2IKAXaCeKiaCYdpTX2zJbvo2x4QWG0lD6f+FaBZuSEpdwWHyhm8o+OeEwdxd4IVNtMlQYytSzTyu0keaDpuXoQwDKNV1wcin6I8FI7WKPoSZg2hoFO/FSiXPfF0QWrbkah4ejqugQ8Uc/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GEzAlc2X; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-374bd0da617so2725774f8f.3
-        for <linux-gpio@vger.kernel.org>; Sun, 15 Sep 2024 23:49:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1726469385; x=1727074185; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3tqPsDphV4Ii9IYx+QZiuCpX4/Z9d4JMpoo8jYcvIN4=;
-        b=GEzAlc2X6wsr4A0l0FbfnDxFkF/mMifF/Jq8y2pNmoSi8Utd5Kx1Q06k7XlmscaIbp
-         ViCPkJhQ7YLtO6e0k8TiXnM/uT2as4rY6TxdwgPJwIKMhBQKZNYiUBQmPCYt/BBuyYKO
-         pmb/ScoqcWIfmM14mQlpEEWLnJ333nw7ofOaawJQaa2ac4zovZ7jnPkrFI8eq2YbcUpC
-         rK3jJsW/EzwX0q1EVz65K1/cTKYtlNmBJ6/46mHMZLq8jGBYjm8yIdKytrxlU8PVYmhi
-         Mn5xCxMJ8yFE4FoVs81eF7sngmY2ZW/aBEuREAIb392zxuvxthZ/0Id1AdZpHoAtOoaS
-         AJqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726469385; x=1727074185;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3tqPsDphV4Ii9IYx+QZiuCpX4/Z9d4JMpoo8jYcvIN4=;
-        b=SUCHWWtDiffmBOF8nAHC7MIG7lt6Rngk+fhCYv081g8b6c3GYq3Ej6b6RKUYdX5SdB
-         WdsKWdfj4d1LJYhvjZKf+xHVzKswWDKb5OVujM5shiL+WZAhxWm5FAq3/xJBAMLOHnrz
-         7k+xtrM8CllFHY0Skx3p+mhmN8PVoX2/dSfqSzNAhaFxhc/qwxEbiMuVo3fXmj2zFZRr
-         gM2cUandgff/LAV26NfNA9XjzoKpL4ZHXmZ6P2M37Q8llvt9xQS5LAY806Ee0tWyqc0C
-         sAoaPvI/jfQhX+BP3qFJY8ETTFeGHYCIMPk8eike5/BQpsVSFXPSYbu8xw/+vzjQZKUe
-         dvQQ==
-X-Gm-Message-State: AOJu0YxE5Lz2fVlykmFLPc9PhBxxwLCWre+tZm6SWzCfOlRtgIAAgiQm
-	cJxJcho6Ey9sJZVZ5vkdfsP9oYQ1nSZswQW0fJdujBJ8/+9CyjqCrrU749alMVh1T3S+/d6OB53
-	b
-X-Google-Smtp-Source: AGHT+IElGoH5qhUyAoQwjWThwi/FYIp5NcA3JEitcRF9dWHqW8S8hRrugskfWGlrjZTJg8g7diZwpA==
-X-Received: by 2002:a5d:4303:0:b0:371:8a90:112f with SMTP id ffacd0b85a97d-378c2d4ceaemr6951192f8f.44.1726469385331;
-        Sun, 15 Sep 2024 23:49:45 -0700 (PDT)
-Received: from brgl-uxlite.nice.aeroport.fr ([193.57.185.11])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e7800243sm6255188f8f.86.2024.09.15.23.49.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2024 23:49:45 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
-	Vincent Fazio <vfazio@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH] bindings: python: fix Chip.request_lines typing
-Date: Mon, 16 Sep 2024 08:49:41 +0200
-Message-ID: <172646937036.185947.12601581979717995833.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240914183352.16090-1-vfazio@gmail.com>
-References: <20240914183352.16090-1-vfazio@gmail.com>
+	s=arc-20240116; t=1726469440; c=relaxed/simple;
+	bh=x4zKM6dHXR4Yem4FMLNEqU3wDBCmOyQz0b+ZFXsjo+k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gcZBFKaUk48acX5+3bCC7ESQbnSm3OmJTBkWLUfZ+oLai6txjVe0nO2BWLjqlrVtHymikoUbpO/iV1JmhtZQ3GifKNg288zZrmdspOKfzflzauhaiHBng2+QeRNTGV64DGRdRaOEYbmSM1GQNoaaWVtm0eKnkdTPS3ag0Br5JRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y9BU/6iE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FA69C4CEC4;
+	Mon, 16 Sep 2024 06:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726469439;
+	bh=x4zKM6dHXR4Yem4FMLNEqU3wDBCmOyQz0b+ZFXsjo+k=;
+	h=Date:Subject:List-Id:To:Cc:References:From:In-Reply-To:From;
+	b=Y9BU/6iEsuC3ZxlE3Z1jalrWB0NnAOsY7syK/TpdTw1Yqj/X1o+ZpyT5pGXykgMlv
+	 9xu2mfM8L9cVvgi9wAXp/Lr18n7pHaPKhP5IJqTX5MTAVA3f3KgoExLLoyD1Dg+b1B
+	 VkicFtyd1KNVM4XTf4bHBtulXXw75jyyAeaOZ0Vc6CGBksDyanFsiJqNfTQnW2HqW4
+	 0AyBNr2MlyC+fnew1zDIn0wU2Ci4/sP8vRAu9CVt8Ow1542DcuFIlahn/7677xe2ez
+	 nabclv+oSVqELZ5DH7+duWUrLhoSDOkf+YkDL2uooKxWDG017nVXz/Oq6FooV16OdS
+	 HzsuflNzuDfcw==
+Message-ID: <f2c6cc62-e063-4482-a516-c6aa78d205cc@kernel.org>
+Date: Mon, 16 Sep 2024 08:50:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 09/21] gpio: add driver for ADI ADSP-SC5xx platform
+To: arturs.artamonovs@analog.com, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Greg Malysa <greg.malysa@timesys.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Utsav Agarwal <Utsav.Agarwal@analog.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Thomas Gleixner <tglx@linutronix.de>,
+ Andi Shyti <andi.shyti@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Olof Johansson <olof@lixom.net>, soc@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-serial@vger.kernel.org, adsp-linux@analog.com,
+ Nathan Barrett-Morrison <nathan.morrison@timesys.com>
+References: <20240912-test-v1-0-458fa57c8ccf@analog.com>
+ <20240912-test-v1-9-458fa57c8ccf@analog.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240912-test-v1-9-458fa57c8ccf@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Sat, 14 Sep 2024 13:33:52 -0500, Vincent Fazio wrote:
-> The output_values argument was typed as a dict of tuples, however, the
-> code expects a dict of int|str.
+On 12/09/2024 20:24, Arturs Artamonovs via B4 Relay wrote:
+> From: Arturs Artamonovs <arturs.artamonovs@analog.com>
 > 
+> Add ADSP-SC5xx GPIO driver.
+> - Support all GPIO ports
+> - Each gpio support seperate PINT interrupt controller
 > 
+> Signed-off-by: Arturs Artamonovs <Arturs.Artamonovs@analog.com>
+> Co-developed-by: Nathan Barrett-Morrison <nathan.morrison@timesys.com>
+> Signed-off-by: Nathan Barrett-Morrison <nathan.morrison@timesys.com>
+> Co-developed-by: Greg Malysa <greg.malysa@timesys.com>
+> Signed-off-by: Greg Malysa <greg.malysa@timesys.com>
 
-Applied, thanks!
+Your SoB chain is odd. Author is Greg, but Greg is not the first person
+in the chain? And no final SoB? This is really odd and not correct. I am
+not sure what you even want to say here.
 
-[1/1] bindings: python: fix Chip.request_lines typing
-      commit: 7c815ae11f3cfc98216d60eb0dca2bad0df9721b
+...
+
+> +
+> +module_platform_driver(adsp_gpio_driver);
+> +
+> +MODULE_AUTHOR("Greg Malysa <greg.malysa@timesys.com>");
+> +MODULE_DESCRIPTION("Analog Devices GPIO driver");
+> +MODULE_LICENSE("GPL v2");
+> \ No newline at end of file
+
+Please review all your patches before sending for such stuff.
 
 Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Krzysztof
+
 
