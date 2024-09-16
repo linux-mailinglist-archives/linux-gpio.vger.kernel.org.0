@@ -1,404 +1,218 @@
-Return-Path: <linux-gpio+bounces-10184-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10185-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5127979C49
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 09:51:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCC32979C9A
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 10:15:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 146E1B22715
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 07:51:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41D351F23913
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Sep 2024 08:15:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C21EC13C8F3;
-	Mon, 16 Sep 2024 07:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40C7D13D52F;
+	Mon, 16 Sep 2024 08:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LxF5/PLI"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="CW+sF/6J"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013019.outbound.protection.outlook.com [52.101.67.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C191339B1;
-	Mon, 16 Sep 2024 07:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726473065; cv=none; b=XKrAP/GfDmc5S6mdVahGmMxTzrsO9i9wmSfo7feVBMxhjmEGodG+HApNNTahFsYgnGaCWQPasl8ljJlDxv9NIwJ8L0pZwPxC+XIFLaqLQXvPtUviLb3H3FCoi3vDWEFUMvWO9j0QeOf5M0NJJW5emx7aKEMjh46Rkfhdh4xPx7E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726473065; c=relaxed/simple;
-	bh=Z9uIWG2PKf2KyhsARs6C+a8hCyFUNF7z+oDNfDWyUlI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=X30wxTdhmpOySvugy7czh9QD45L9AVgwds0DhSqTZTBB2bwOVaVwgEITid+Lykq6nAzR/pQ+8apLiFyLVxheAVY/tFJ5EOGN9GRZcMKRP4UsKe9iAz+ZIHKY1gJBX3YjvlYfMXqHaiOg4gkLhaFD31OdU2/YY7faH0+bLwYzywA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LxF5/PLI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48FNmwBA024426;
-	Mon, 16 Sep 2024 07:50:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	gBgmFYIDtjCkjwPRAQZ3OnNLyodUiCbqaDvzxqA+Jog=; b=LxF5/PLIqnNscV1V
-	h5fsKk2lNKyAB+/1ODBuwJa29nB1U10CeqfixNcxascuUhmI7KAzaphLLU43jtBb
-	4MENoySc0b7apl5JuzSo5LADUyYXKsptKy64B/iMkCXPBDEK6yzUcjY5hb35QWip
-	4NcICcQYFSvDSWYREEpsvvlsb/sFdRV8OwZBTb7/D3f+zbwIgyoGWpKj7O7el10e
-	PFVF2OT7fhJrZakDFjJkkRTJCQ8IY22EX/rZ2ROVA1glSOAMfPF0h+i6qQiI16ww
-	vaDQpJJzet2nDxk94/4iu/Adr+uZA0LXvTkTSjmTTCMDY8nxVuu848nJiD2UnfNU
-	bSJ4Zg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41n4gcu60a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Sep 2024 07:50:34 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48G7oXGF012618
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Sep 2024 07:50:33 GMT
-Received: from [10.151.37.100] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 16 Sep
- 2024 00:50:27 -0700
-Message-ID: <f9126534-3a46-4d01-9026-58e0b65c08d2@quicinc.com>
-Date: Mon, 16 Sep 2024 13:20:24 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2341713B5B3;
+	Mon, 16 Sep 2024 08:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726474504; cv=fail; b=dPVg3E3NUgYCuj1qjpi4p72/F5A3xF5bgomhWj7RHkqvYuiLHgiueVuiy0jCLc1paP8cu30hSl1mqAeo8TGQoOEZCiMMyRQNxKlIKl1FNv8HMfYe94KjrXDaFx6d+WzC/Gj9kY24QcJSaJ8X9ib3iNJmBKu02bbQbYdyEy+num4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726474504; c=relaxed/simple;
+	bh=kXkEQ1d75pJGQ41qaMhmtGt6ydPxvQ3w6YDYA9LH3mg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hz9umfrWJGZflINMrhvuQKLSWZlD1BR3VGGCsXnkajhMAFFC1pSC8asdje/9698Mzmx2IBe5Nj0uDX73W/MIv3LsPvxiFPw+Avumokf+rUfKuULLSDIgqTQBUNF27gMT0QnNJh363+ZeInfJ6kP1nfH5/yqLAyrjtdEsBOeRE7s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=CW+sF/6J; arc=fail smtp.client-ip=52.101.67.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TYUFORXBxGYPt4M57YklytGTzW72c84NWAfhj/8xsidhhAAd/El9aoUdTxYtkEv5+iaw/VGmkLFUsLO+vul48L4Ujl0ZtqPFFo10aIjz4hfAQ+ICCj96FHBQWNpVDCTSlKr/MG5fToyVrkZ/7kS5Sbij2lrzzukwipD16uU843acXkKHkRemXBIEOYni15ErcSajpw2hpKGL73gxvjMq8AAuEXgupbw4CEnzt2qlUB+3mDHahF1RDxqRipAzsl0yR0QOTOZLmpavgFsYpqk6eNSx7Ez/BqMaaEPHiNdd9YNxThvfCgax9rb8Ctl/ufSMHHZq+qOiVy8yYtV0rjaFfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=huZC53wxif6EPy3+hd4kBy7kY7Q97h4EBM5U4Cv1q3Y=;
+ b=vtQFtLX649NYxEXtzyAbvfskE0z6UWg8lr66X/cOTeouAjw0yjPzUXVXtFA8zWgM5nfz7XdbzLZq9aGzlzlwbVo5yUzFAYIyx9FvhvCXY0ig1VS+Q3pFp3iiv+vrSVScrW5yZdKmUCroX1NWw+XwTj1qLHYmCTFQIYIpMowi6yxmza7/npMAS5SofWuEPKzQGfVKXLiXucg5MEO7eDz+pcr9Nd+DUKE/ZakKB6OKwu8TE+IbaCrNLdD0dkEVBOffdY8sqKztkvZV7ktOaK8+4dmNHZij0mQEUO1bm3aAxlSD+mHtGEca3jtSxPgrZCpXt1M5yhoFU9DsGVSKYvmgxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=huZC53wxif6EPy3+hd4kBy7kY7Q97h4EBM5U4Cv1q3Y=;
+ b=CW+sF/6JchTy+PeHWKBUXoCdVlCwmf28TfZNyMVRZ6+OqAumAaXHUD7EX4TYD8R4BvSWM1IThTcMAf0Yf38NukIHNMD8DQuSzfgiJ+Gku1V6zFWSkOLFiVwZopmgBQvf6MXIJCCl+69n1IDDNn9bK78bf4oiiISnC3iwUJoHPC9Y7mIE3V6GCmsZJnuryHYvHacktiKUc+kPWJiCEzIxPVf6bH9wj5fEW5ZWfX2sIa3KfHb43QiW/DCLSpy5fSo1nTUi0YtkFEP4If6lU0p+UHW5U7nCq10vN25qqYifSG9AyCe6zXC83Pc6AskQznpOiODuPSF929+o72bGUbkMOg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from AM9PR04MB8487.eurprd04.prod.outlook.com (2603:10a6:20b:41a::6)
+ by DU4PR04MB10597.eurprd04.prod.outlook.com (2603:10a6:10:581::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.23; Mon, 16 Sep
+ 2024 08:14:51 +0000
+Received: from AM9PR04MB8487.eurprd04.prod.outlook.com
+ ([fe80::6d7a:8d2:f020:455]) by AM9PR04MB8487.eurprd04.prod.outlook.com
+ ([fe80::6d7a:8d2:f020:455%5]) with mapi id 15.20.7962.022; Mon, 16 Sep 2024
+ 08:14:51 +0000
+Message-ID: <6be27228-a8ed-4346-a819-3a9d4b1441fa@oss.nxp.com>
+Date: Mon, 16 Sep 2024 11:14:47 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] gpio: siul2-s32g2: add NXP S32G2/S32G3 SoCs
+ support
+To: Markus Elfring <Markus.Elfring@web.de>,
+ Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+ Larisa Grigore <larisa.grigore@nxp.com>, Phu Luu An <phu.luuan@nxp.com>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Chester Lin <chester62515@gmail.com>, Conor Dooley <conor+dt@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Matthias Brugger <mbrugger@suse.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, s32@nxp.com
+References: <20240913082937.444367-4-andrei.stefanescu@oss.nxp.com>
+ <65f9ea8f-dd4d-4b57-9c53-cf9a9b475b06@web.de>
+Content-Language: en-US
+From: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+In-Reply-To: <65f9ea8f-dd4d-4b57-9c53-cf9a9b475b06@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM0PR02CA0106.eurprd02.prod.outlook.com
+ (2603:10a6:208:154::47) To AM9PR04MB8487.eurprd04.prod.outlook.com
+ (2603:10a6:20b:41a::6)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] clk: qcom: add Global Clock controller (GCC) driver
- for IPQ5424 SoC
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
-        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
-        <p.zabel@pengutronix.de>, <geert+renesas@glider.be>,
-        <neil.armstrong@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <quic_varada@quicinc.com>
-References: <20240913121250.2995351-1-quic_srichara@quicinc.com>
- <20240913121250.2995351-6-quic_srichara@quicinc.com>
- <glkvcne5eius5l7dro7gzd7hyztc6vc4eekcbbxz6c4wwolwqy@aoj66qbrxezg>
-Content-Language: en-US
-From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <glkvcne5eius5l7dro7gzd7hyztc6vc4eekcbbxz6c4wwolwqy@aoj66qbrxezg>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: lGQJOmdExYP4olx6XnTSFvayGnhWWGDd
-X-Proofpoint-GUID: lGQJOmdExYP4olx6XnTSFvayGnhWWGDd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- bulkscore=0 clxscore=1015 spamscore=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 mlxscore=0 priorityscore=1501 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
- definitions=main-2409160048
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB8487:EE_|DU4PR04MB10597:EE_
+X-MS-Office365-Filtering-Correlation-Id: b14a8a37-2628-4c81-69a4-08dcd627a33b
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UGl5TW5MNHdGMHZpUnpsUTUxaXJxVGVCc2ZCMnc5elI0NWtUZTA4MWp0QjhX?=
+ =?utf-8?B?R2xkY2wxZGc2NXNHRkplczJjdm9uVWt1WVZGeVdNR1FHcW5SWnNDekZEd2V1?=
+ =?utf-8?B?SlhHcGlIaVZxQm04dUVEL3hic2ZlWFZyZmVmRGcxdURZek52T3EwR21jbjA5?=
+ =?utf-8?B?MWZVYmltdTNiWnZaU3ZSL1d6QmhrTW81V1BnOEJxdjhJQjFLbVYwUG1DcE5m?=
+ =?utf-8?B?ai9UU2NwYy9kc2JXSDVHeVRETWp5NWlYZzhIc24wbENjRVlTcGZKZ1RkbW1l?=
+ =?utf-8?B?dmZCa0VCNEhRYW9GK1dGSjdFQzZZUlgrQUN4VnNaT1NqdWMxRzh6K2plN2xG?=
+ =?utf-8?B?OXNhdStpQ2JjRVduRTJwbFVNN3BvT0FXelRDWWx2S1FxK0lhNjdjVWsyK2xt?=
+ =?utf-8?B?R2VlQk9oZEh5Q0d3eTluYmI5L2ZLK1FDeXJKQjRRWkZDTmJBMndQdXI2SjNG?=
+ =?utf-8?B?OVZzQXY1SzJHMXB4WWg4OGNOSmtXQ0F2Z3JRN01XYlNXeTRRZkR4UVhSbG5J?=
+ =?utf-8?B?bFlJM3Z6RVBpNEd3RzdPWGZLSTFYamNEblo3YTMyYjh2ekx6WHYreXRlVjQ3?=
+ =?utf-8?B?OXo1Y1hKUndqKzRXNUZBMk9Sc3pwZjRMRmo3ZTl5ejhWamQzM1JrdWhJK0xm?=
+ =?utf-8?B?T0YvTytTRVB5SE53djhMREdkaWxWbi9oTUtxV1NMWjZ4VDNabUpvOW9tbkp0?=
+ =?utf-8?B?Q1pzSWNwRHJvMVZSZ0g3OFRRZDViQVNEY3FFVEdaalJkbXQ1Mm5RNTRGaEpy?=
+ =?utf-8?B?WVRqaXIvbzgrZjI0ZTliaDkzdUpYZ1VLeVZPa0RJM0x4L3pERDhCcUxBcWpa?=
+ =?utf-8?B?YzV2ektCeCtNT2NnN1JBM3VFRkVUQVpGZ3dBSXF4UTNHVlVIRDAzWHJSYUx4?=
+ =?utf-8?B?SFE1NTQ5U2NsaWtWRXVvajJLL2lqZzBaWTNKS0JjNERKTE40OE5Oc3VxYmlV?=
+ =?utf-8?B?bFIvQlpRSU50cTdMN1hXSHBxeXlJMHdlOFd6L2FLa1NROHk1UFVVZW5acFNO?=
+ =?utf-8?B?NHRQZ0hQTWZaMm01V2UyRThYMGtuYTgrbkVLMGE2dDg2OWlZTmhCVjRDUUpF?=
+ =?utf-8?B?Z3RtdVkzRXkzVTVudG5PVHUwTjBoTTdCeHlkL1h4U3ZwUFFCcWFhZ3hMRFVB?=
+ =?utf-8?B?ZEVOWTNhUnRrVXpKeDRBN0ZZM1FvTFJIa28vNU10c1pQWlBHYUZWQjBtN3hT?=
+ =?utf-8?B?YTZnaTY5WUMyM0Z2UTJiNkRrU2hHdVhmYVovU1NtUmg0VkV3YWRsSWpBYlJY?=
+ =?utf-8?B?UUtaei9UbmlnTWJJV1RkTHBxS0p2aTh2WGRUSW5WYklVZXdzMnRnM3lFYWtq?=
+ =?utf-8?B?alZFOHNxVTB2UjU5NGYrdFcrOHVBSXMycDNORmN3RFM2OWQyU0hQdGlSYnV0?=
+ =?utf-8?B?REM4NnRwN2U2dXFUNnNwMjVVY21lV29Ea2N2NG1TNFBQZm1pZWhwaUhtYXdH?=
+ =?utf-8?B?UFBiTGJCVjhtaHZURWlSdjlmOXVmZE9oZC9sU0s2WmNPY2FhOHpvTm54RkNX?=
+ =?utf-8?B?S1ZTR25pTm1ia1h0eTBGaFFEb2FGQXpzSkRWdC8yQ25KVHdtOEYwNyt1eEdP?=
+ =?utf-8?B?TkErNXRsQnJXU2tnc0g4Qk1yZWRYT1c3TTk1dFpmaG8va0Q0OGd3TzVVa0h6?=
+ =?utf-8?B?S2d1cUJ6QUhNZzY4QkQ2Q092NzRNT3RlZGFoNGtPSXhOa2pGbUw4Y3dNSUo0?=
+ =?utf-8?B?TFBGM2NjcTFUalNuL09UaGpOQWZsWnFKbXN1T0JqTmlub3VKbzc1c3ptL2Zx?=
+ =?utf-8?B?NGtJWktISVVJalR0V0JQbEZncFJpbW5QdXpIWUt3L0VYWEhsVGVGaHA2ZnZK?=
+ =?utf-8?B?SWJtTEgrY2ptdGdRMittQT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8487.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YUNXMGZXRlZkNmw5ck9IRFc4UW9jQnBNQ1IvdThDM3Z1bFZudHZJeDkzb0dE?=
+ =?utf-8?B?SVlaTG1HWEE1YkdsWVhEOEhCSGRNeXlFWjhmSzFERHBTanVTZzBRbmhHR2Jv?=
+ =?utf-8?B?S2RrUjNMczhEOFpIdmpMRUZUNFM4NEdpWDRRVmtYSTkyUW1RalB5bFlNdWZL?=
+ =?utf-8?B?S01NeHJPUUZCN21tcktIR3VsbGxkdU9yZTQyZkxwWE5oNFZRK2s5T1FITFdE?=
+ =?utf-8?B?NEhadW4wTll2YzFQc1ExMDNTQW9WTHppNHZkTWFaSHplNFZ5RDc1MTg5Y1oy?=
+ =?utf-8?B?c2JhcWxoVTYvY1ZmVlZEQ2R5UlJyS3hUOUw3RGd3OGxpK0VsZFdYSnpYSWVY?=
+ =?utf-8?B?WGx5eml0ZWxVLzJyV0V0NWtVVVVmVlJPNm1KQUo0a3lQVWlrWUxVcEEvTlcv?=
+ =?utf-8?B?S3loMjhYUjFIdFF2OFFDUXlNdHFTWVJMcHkwMmVtZkN5ekw2M3IrNGFvbG9o?=
+ =?utf-8?B?M0ZLQmJHM3p5Sk1iMHo5bWZBYWdoQ2JjMyt1MHZLMk9QSGZPT2RJU3NoY0Nw?=
+ =?utf-8?B?Y2ZjWjlSOUx2SEF0NDJ6L1Z3b21USzduZ0VXdVJxNlZuOEpkb1ZyMWRmMVlo?=
+ =?utf-8?B?MTZuNCswSVNDRFVzS1FENThIZ1B6dnhhQmtLVDVZTE9JVjlvY085Sm9CN2I5?=
+ =?utf-8?B?bE1La3l3QkVTby8xNDdSNG54K3pvdzV0K3REUEt6UFZJaDErK2hwNnBOdUt2?=
+ =?utf-8?B?SVJRazhFR0lya1YxUkU2OVJPRmtoMUdOemRWK1NoRk92bWs2eU1SUVBONTVH?=
+ =?utf-8?B?T3c3V1h0cGpJUUZSSHVmdmJZVjUxNjlUa3Qwc3R4ZUJJV1JVRXpYbjZVWml5?=
+ =?utf-8?B?QW14amhEbHZkS2FJUVYxQU41QlRjQUVyQnFoY2Y3NEY3UFI1TDJmUmZBT0U1?=
+ =?utf-8?B?WU1CTHhpcjdtekpNZ29XSFhXNzRKR2h1UFZkL2FDVEpiWnAzMThXdGl0VjlC?=
+ =?utf-8?B?TmVjd1ROV0JEaHI0WmlBaW1Gei9JTFpIejJpeWlBS2lHWEVZelFmeHR6M3JT?=
+ =?utf-8?B?NDg0MGc1SkhXcjZqbVEzeFZrL1ZKb1lkKzBMWmc1cWM4d2N0aW9CTjFockFo?=
+ =?utf-8?B?ZWZVNWJOSlY2ekowODlTbEplVlkrQ29xU3pVSHE1L3FuN3IwZDZUK210TGFu?=
+ =?utf-8?B?cCtYQjltR3ArRmY0Q2FIMlY4T293bG1iYnRTQXFFeFpmU1d2RDRpVzNlcHNJ?=
+ =?utf-8?B?Sk5hVHQ3dGMzOHhaNjZhRUZDOThrUTYzblZYVDFsaFBvaS9RNXJzZnU5TU9S?=
+ =?utf-8?B?Y3laK3g3bFNMVDYzTi9WTmNDSnpxSXAycUU0VkJYVXMzMDlPM1Jzb2M3cXlu?=
+ =?utf-8?B?aEtjSFNJUmdla2pMVnJYMG5CeHVHTDZMT1VpZURJV0t6OFpQV0FuWEt1eWhT?=
+ =?utf-8?B?K0x5b2s3Y1duZCtkM0Y4MGJRRVl3QnJTSDZlWkZPQ1lIMlhmSk1hQ2NwYnNO?=
+ =?utf-8?B?eTRoTG5FdVNybStUUTdLS0UyODBuRXoxT1pQd3dLYm9aSUk1RlBwbzRpbGkx?=
+ =?utf-8?B?LzBtMFRGdnRmekdBVlQ0Zm9qQUN1QlY5dzF6ZkpCVW9xUnptR2pUd0psU2x1?=
+ =?utf-8?B?V3ovWEowbUdweHh5UndYbGRJbEtySklHZkxIMHlzWEU5ZmJQQ3hPbXRsbXB1?=
+ =?utf-8?B?RWNteHh4RHBqWDV1RVhSYUM0SG5GTHF4bitxWUNXN2pSbVkvOWdqbmtkOVVI?=
+ =?utf-8?B?UG1KSHNFMWpteldnZXo3amg3SlV0Wm4xTDV0SE9kWnRjZFRwRExTdDU1eUlS?=
+ =?utf-8?B?Mm02dm9yemtWSU5qYWZGWkVuRzg0VmFta2pYbERSRVY1dFEwclM3RWxSTnNr?=
+ =?utf-8?B?SVphLzdaUWFxT3NHV0c1VHVCRE9sSzJvVlNnOUlFYnBVUnpncmhISDkrRDg3?=
+ =?utf-8?B?bDJTZTdDZXVWcmdLN2dENnV1eGtmaXBuckRnYitCZmhVYjJ6MTBhU0tQRzlK?=
+ =?utf-8?B?eWxrK0tMYWw2NXdDODQxZ1BsSnBZYmZoNUZDNzdwQmtkRm5CaWFWMWdKc25M?=
+ =?utf-8?B?TnpMVFloZGlmRnZ4M05Wa21tY2E0cEk1cEN4TkdEMkRZN3J6UjRnSDA2Q3F0?=
+ =?utf-8?B?YjR0OXlIc1Q0eWZzU1NNVnZVdHJXN1FkQkRXeFpVVnU2S1pHUHg0bmhsT0hB?=
+ =?utf-8?B?NmdiZm1CK0tIZmp0QS9LRDF1WnYwUkRGVDZtRmJkUnY2MElvTkxEeGJZZFRx?=
+ =?utf-8?B?VHc9PQ==?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b14a8a37-2628-4c81-69a4-08dcd627a33b
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8487.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2024 08:14:51.7381
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SRjuvov8H3JZ+ryhifbfb/wM2iO7XtKB7ur0K1aXmv/0n5adBZyni/p18KP8/hBUh7ySszAwZ0KcDlgayoZB2JTLJ5BigdI75UkkLMlG7Z8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10597
 
+Hi Markus,
 
-
-On 9/13/2024 6:16 PM, Dmitry Baryshkov wrote:
-> On Fri, Sep 13, 2024 at 05:42:47PM GMT, Sricharan R wrote:
->> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>
->> Add support for the global clock controller found on IPQ5424 SoC.
->>
->> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
->> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> 
-> Same comment regarding tags.
-> 
-ok
->> ---
->>   drivers/clk/qcom/Kconfig       |    7 +
->>   drivers/clk/qcom/Makefile      |    1 +
->>   drivers/clk/qcom/gcc-ipq5424.c | 3333 ++++++++++++++++++++++++++++++++
->>   3 files changed, 3341 insertions(+)
->>   create mode 100644 drivers/clk/qcom/gcc-ipq5424.c
->>
->> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->> index a3e2a09e2105..c41e3318c2a7 100644
->> --- a/drivers/clk/qcom/Kconfig
->> +++ b/drivers/clk/qcom/Kconfig
->> @@ -213,6 +213,13 @@ config IPQ_GCC_5332
->>   	  Say Y if you want to use peripheral devices such as UART, SPI,
->>   	  i2c, USB, SD/eMMC, etc.
->>   
->> +config IPQ_GCC_5424
->> +	tristate "IPQ5424 Global Clock Controller"
->> +	help
->> +	  Support for the global clock controller on ipq5424 devices.
->> +	  Say Y if you want to use peripheral devices such as UART, SPI,
->> +	  i2c, USB, SD/eMMC, etc.
->> +
->>   config IPQ_GCC_6018
->>   	tristate "IPQ6018 Global Clock Controller"
->>   	help
->> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
->> index 2b378667a63f..d58ba0f9a482 100644
->> --- a/drivers/clk/qcom/Makefile
->> +++ b/drivers/clk/qcom/Makefile
->> @@ -32,6 +32,7 @@ obj-$(CONFIG_IPQ_APSS_6018) += apss-ipq6018.o
->>   obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
->>   obj-$(CONFIG_IPQ_GCC_5018) += gcc-ipq5018.o
->>   obj-$(CONFIG_IPQ_GCC_5332) += gcc-ipq5332.o
->> +obj-$(CONFIG_IPQ_GCC_5424) += gcc-ipq5424.o
->>   obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
->>   obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
->>   obj-$(CONFIG_IPQ_GCC_8074) += gcc-ipq8074.o
->> diff --git a/drivers/clk/qcom/gcc-ipq5424.c b/drivers/clk/qcom/gcc-ipq5424.c
->> new file mode 100644
->> index 000000000000..72d2c9bfa986
->> --- /dev/null
->> +++ b/drivers/clk/qcom/gcc-ipq5424.c
->> @@ -0,0 +1,3333 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2018,2020 The Linux Foundation. All rights reserved.
->> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <dt-bindings/clock/qcom,ipq5424-gcc.h>
->> +#include <dt-bindings/reset/qcom,ipq5424-gcc.h>
->> +
->> +#include "clk-alpha-pll.h"
->> +#include "clk-branch.h"
->> +#include "clk-rcg.h"
->> +#include "clk-regmap.h"
->> +#include "clk-regmap-divider.h"
->> +#include "clk-regmap-mux.h"
->> +#include "clk-regmap-phy-mux.h"
->> +#include "common.h"
->> +#include "reset.h"
->> +
->> +enum {
->> +	DT_XO,
->> +	DT_SLEEP_CLK,
->> +	DT_PCIE30_PHY0_PIPE_CLK,
->> +	DT_PCIE30_PHY1_PIPE_CLK,
->> +	DT_PCIE30_PHY2_PIPE_CLK,
->> +	DT_PCIE30_PHY3_PIPE_CLK,
->> +	DT_USB_PCIE_WRAPPER_PIPE_CLK,
-> 
-> This doesn't seem to match bindings.
-> 
-ok, will fix
->> +};
->> +
->> +enum {
->> +	P_GCC_GPLL0_OUT_MAIN_DIV_CLK_SRC,
->> +	P_GPLL0_OUT_AUX,
->> +	P_GPLL0_OUT_MAIN,
->> +	P_GPLL2_OUT_AUX,
->> +	P_GPLL2_OUT_MAIN,
->> +	P_GPLL4_OUT_AUX,
->> +	P_GPLL4_OUT_MAIN,
->> +	P_SLEEP_CLK,
->> +	P_XO,
->> +	P_USB3PHY_0_PIPE,
->> +};
->> +
->> +static const struct clk_parent_data gcc_parent_data_xo = { .index = DT_XO };
->> +
->> +static struct clk_alpha_pll gpll0 = {
->> +	.offset = 0x20000,
->> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT_EVO],
->> +	.clkr = {
->> +		.enable_reg = 0xb000,
->> +		.enable_mask = BIT(0),
->> +		.hw.init = &(const struct clk_init_data) {
->> +			.name = "gpll0",
->> +			.parent_data = &gcc_parent_data_xo,
->> +			.num_parents = 1,
->> +			.ops = &clk_alpha_pll_ops,
->> +			.flags = CLK_IS_CRITICAL,
-> 
-> This deserves a comment
-> 
-ok will add
->> +		},
->> +	},
->> +};
->> +
->> +static struct clk_fixed_factor gpll0_div2 = {
->> +	.mult = 1,
->> +	.div = 2,
->> +	.hw.init = &(const struct clk_init_data) {
->> +		.name = "gpll0_div2",
->> +		.parent_hws = (const struct clk_hw *[]) {
->> +			&gpll0.clkr.hw
->> +		},
->> +		.num_parents = 1,
->> +		.ops = &clk_fixed_factor_ops,
->> +	},
->> +};
->> +
->> +static struct clk_alpha_pll gpll2 = {
->> +	.offset = 0x21000,
->> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_NSS_HUAYRA],
->> +	.clkr = {
->> +		.enable_reg = 0xb000,
->> +		.enable_mask = BIT(1),
->> +		.hw.init = &(const struct clk_init_data) {
->> +			.name = "gpll2",
->> +			.parent_data = &gcc_parent_data_xo,
->> +			.num_parents = 1,
->> +			.ops = &clk_alpha_pll_ops,
->> +		},
->> +	},
->> +};
->> +
->> +static const struct clk_div_table post_div_table_gpll2_out_main[] = {
->> +	{ 0x1, 2 },
->> +	{ }
->> +};
->> +
->> +static struct clk_alpha_pll_postdiv gpll2_out_main = {
->> +	.offset = 0x21000,
->> +	.post_div_table = post_div_table_gpll2_out_main,
->> +	.num_post_div = ARRAY_SIZE(post_div_table_gpll2_out_main),
->> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_NSS_HUAYRA],
->> +	.clkr.hw.init = &(const struct clk_init_data) {
->> +		.name = "gpll2_out_main",
->> +		.parent_hws = (const struct clk_hw*[]) {
->> +			&gpll2.clkr.hw,
->> +		},
->> +		.num_parents = 1,
->> +		.ops = &clk_alpha_pll_postdiv_ro_ops,
->> +	},
->> +};
->> +
->> +static struct clk_alpha_pll gpll4 = {
->> +	.offset = 0x22000,
->> +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT_EVO],
->> +	.clkr = {
->> +		.enable_reg = 0xb000,
->> +		.enable_mask = BIT(2),
->> +		.hw.init = &(const struct clk_init_data) {
->> +			.name = "gpll4",
->> +			.parent_data = &gcc_parent_data_xo,
->> +			.num_parents = 1,
->> +			.flags = CLK_IS_CRITICAL,
-> 
-> Comment, please.
-> 
-ok, will add
->> +			.ops = &clk_alpha_pll_ops,
->> +		},
->> +	},
->> +};
->> +
-> 
-> [skipped]
-> 
->> +
->> +static struct clk_rcg2 gcc_pcnoc_bfdcd_clk_src = {
->> +	.cmd_rcgr = 0x31004,
->> +	.mnd_width = 0,
->> +	.hid_width = 5,
->> +	.parent_map = gcc_parent_map_0,
->> +	.freq_tbl = ftbl_gcc_pcnoc_bfdcd_clk_src,
->> +	.clkr.hw.init = &(const struct clk_init_data) {
->> +		.name = "gcc_pcnoc_bfdcd_clk_src",
->> +		.parent_data = gcc_parent_data_0,
->> +		.num_parents = ARRAY_SIZE(gcc_parent_data_0),
->> +		.flags = CLK_IS_CRITICAL,
-> 
-> Comment
-> 
-ok
->> +		.ops = &clk_rcg2_ops,
->> +	},
->> +};
->> +
-> 
-> [skipped]
-> 
->> +
->> +static struct clk_branch gcc_qdss_dap_clk = {
->> +	.halt_reg = 0x2d058,
->> +	.clkr = {
->> +		.enable_reg = 0x2d058,
->> +		.enable_mask = BIT(0),
->> +		.hw.init = &(const struct clk_init_data) {
->> +			.name = "gcc_qdss_dap_clk",
->> +			.parent_hws = (const struct clk_hw *[]) {
->> +				&gcc_qdss_dap_sync_clk_src.hw
->> +			},
->> +			.num_parents = 1,
->> +			.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-> 
-> Comment
-> 
-ok
->> +			.ops = &clk_branch2_ops,
->> +		},
->> +	},
->> +};
->> +
->> +static struct clk_branch gcc_qdss_at_clk = {
->> +	.halt_reg = 0x2d034,
->> +	.clkr = {
->> +		.enable_reg = 0x2d034,
->> +		.enable_mask = BIT(0),
->> +		.hw.init = &(const struct clk_init_data) {
->> +			.name = "gcc_qdss_at_clk",
->> +			.parent_hws = (const struct clk_hw *[]) {
->> +				&gcc_qdss_at_clk_src.clkr.hw
->> +			},
->> +			.num_parents = 1,
->> +			.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-> 
-> Comment
-> 
-ok
->> +			.ops = &clk_branch2_ops,
->> +		},
->> +	},
->> +};
->> +
-> 
-> [skipped]
-> 
->> +
->> +static int gcc_ipq5424_probe(struct platform_device *pdev)
+On 14/09/2024 19:40, Markus Elfring wrote:
+> …
+>> +++ b/drivers/gpio/gpio-siul2-s32g2.c
+>> @@ -0,0 +1,581 @@
+> …
+>> +static void siul2_gpio_set_direction(struct siul2_gpio_dev *dev,
+>> +				     unsigned int gpio, int dir)
 >> +{
->> +	struct regmap *regmap;
->> +	struct qcom_cc_desc ipq5424_desc = gcc_ipq5424_desc;
->> +	int ret;
+>> +	unsigned long flags;
 >> +
->> +	regmap = qcom_cc_map(pdev, &ipq5424_desc);
->> +	if (IS_ERR(regmap))
->> +		return PTR_ERR(regmap);
->> +
->> +	ret = qcom_cc_really_probe(&pdev->dev, &ipq5424_desc, regmap);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Failed to register GCC clocks ret=%d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	dev_info(&pdev->dev, "Registered GCC clocks\n");
->> +
->> +	return ret;
+>> +	raw_spin_lock_irqsave(&dev->lock, flags);
+> …
+>> +	raw_spin_unlock_irqrestore(&dev->lock, flags);
+>> +}
+> …
 > 
-> Drop all the cruft and use qcom_cc_probe() directly.
-> 
-ok
+> Under which circumstances would you become interested to apply a statement
+> like “guard(raw_spinlock_irqsave)(&dev->lock);”?
+> https://elixir.bootlin.com/linux/v6.11-rc7/source/include/linux/spinlock.h#L551
 
-Regards,
-  Sricharan
+Thank you very much for the suggestion! I will add it in v3.
+
+> 
+> Regards,
+> Markus
+
+Best regards,
+Andrei
 
 
