@@ -1,135 +1,144 @@
-Return-Path: <linux-gpio+bounces-10225-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10228-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6B3597B393
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2024 19:33:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3700897B3C5
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2024 19:44:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 36A5AB21801
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2024 17:33:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A63A1C22EC9
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2024 17:44:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42C1417C991;
-	Tue, 17 Sep 2024 17:33:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D320D187FE6;
+	Tue, 17 Sep 2024 17:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qO/n5qxh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA63F8248C;
-	Tue, 17 Sep 2024 17:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884E2185956;
+	Tue, 17 Sep 2024 17:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726594402; cv=none; b=m8hRJS9FAYlVvdyoPcIG5gTaT0UglXzjLi/6KO/A6TNhuy5i6ZmXt/yw28fENDI2Rf5d7D6SpayrIo6W0nE675ZrGrM14BVD/YUTPBRfYlvKfoCeHDEmww8vP7CnujGUjkb+3SjGzJkS+Qmiilh15c2nLoTQ5iKwUz2sQads/5c=
+	t=1726595053; cv=none; b=THxnIBDoHO9wLgljJhjAh2zBwh80HqOlAom8uJALbbiMrQpO301ra9/5RZu/wKBNdvYl6PgBRXSuChSoqspYYHXAFTW47CYJLAfxVXnushnsMXX02i5muYekGyNwLkbtZ0vd36cI3RvwWRlhXssMr5DsM6IJ0etfMIe79xaDKQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726594402; c=relaxed/simple;
-	bh=zn7mr17iND6Qec4B93T1SZ0t0V+QUf+1/BFKuoV2TzE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=argUGOj0vizD4SzAIfpl7Enk42WvsnTVjGZAk1jHlzyNGf/7ub7HfPLBb3tw/gXj7VW2zm45troEigHRxvq/qjcGBNfxKdr6AWC+dw5jAfDOVmFstE89GHv4qFDKkM0YoiatZ2r7PCLi53B2vAWfcEf5STnAlpwFvm9WZ9HY97M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-IronPort-AV: E=Sophos;i="6.10,235,1719846000"; 
-   d="scan'208";a="222945896"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 18 Sep 2024 02:33:18 +0900
-Received: from mulinux.example.org (unknown [10.226.92.130])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0CDBD4011F7F;
-	Wed, 18 Sep 2024 02:33:15 +0900 (JST)
-From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chris Paterson <Chris.Paterson2@renesas.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/6] pinctrl: renesas: rzg2l: Remove RZG2L_TINT_IRQ_START_INDEX
-Date: Tue, 17 Sep 2024 18:32:45 +0100
-Message-Id: <20240917173249.158920-3-fabrizio.castro.jz@renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240917173249.158920-1-fabrizio.castro.jz@renesas.com>
-References: <20240917173249.158920-1-fabrizio.castro.jz@renesas.com>
+	s=arc-20240116; t=1726595053; c=relaxed/simple;
+	bh=KgXc00AXqLdO8oCX6XeDFo8v1xGcKrEN18m1Jafc9a8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oRr6OvCCjc4MPBsbEyzhnAJrO157vmYEHCoPZlPegXue+RZjFCHh/Cyzh9cViO4DG45F9zhNJpRvb64zb4n5ZqCk1WqdTzEKLjs/mzDXlC1oxPgJnivhxX9zlXiNgYu1WcA1fhS9qtOcjMztn3+BYGfymkeHu7ojvBhv5EoNOI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qO/n5qxh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B844C4CEC5;
+	Tue, 17 Sep 2024 17:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726595053;
+	bh=KgXc00AXqLdO8oCX6XeDFo8v1xGcKrEN18m1Jafc9a8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qO/n5qxhC+IDBib3ASi06JgdISJhT4kro0TcJcFmICLBPv2bC4VGnv9pFosuLwjUF
+	 O+n/loceG7DsJeNCvP90xSa3OgTjoKaew/vDmLxg2lvMTIvRbmH90ddUeIH0ETfTS5
+	 W+TCgZQYyccRNBBb3iDZNmgPKCw3bfZtPTBWpgOOdHkdtIO2Kq8PkFb728iwyLyA98
+	 lQ4MXwjUXHLHA21BgSVUH3ua5qYFHC0OKsd4Ttn4e2fTDNfpDKaaqoAlvpvSc3fo/Z
+	 IC1CZMk390cw1LJTM1OK7NVTewfRZz4ehYfx/ZGVEFMYuZ+Nn+Wsgg1alE3GymMqu3
+	 yZxAmUnHhznLw==
+Message-ID: <bd886183-273d-472b-a96f-3fed1dd493c1@kernel.org>
+Date: Tue, 17 Sep 2024 19:44:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] MAINTAINERS: add MAINTAINER for S32G2 SIUL2 GPIO
+ driver
+To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chester Lin <chester62515@gmail.com>,
+ Matthias Brugger <mbrugger@suse.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ NXP S32 Linux Team <s32@nxp.com>
+References: <20240913082937.444367-1-andrei.stefanescu@oss.nxp.com>
+ <20240913082937.444367-5-andrei.stefanescu@oss.nxp.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240913082937.444367-5-andrei.stefanescu@oss.nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The RZ/V2H(P) has 16 IRQ interrupts, while every other platforms
-has 8, and this affects the start index of TINT interrupts
-(1 + 16 = 17, rather than 1 + 8 = 9).
-Macro RZG2L_TINT_IRQ_START_INDEX cannot work anymore, replace
-it with a new member within struct rzg2l_hwcfg.
+On 13/09/2024 10:29, Andrei Stefanescu wrote:
+> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+> ---
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 10430778c998..e23c4369b6e1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2689,10 +2689,12 @@ ARM/NXP S32G ARCHITECTURE
+>  R:	Chester Lin <chester62515@gmail.com>
+>  R:	Matthias Brugger <mbrugger@suse.com>
+>  R:	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+> +R: 	Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+That's another patch where NXP adds silently themself as platform
+maintainer without explanation. Although here at least existing
+maintainers are Cced.
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 5a403915fed2..0aba75dce229 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -168,7 +168,6 @@
- #define RZG2L_PIN_ID_TO_PIN(id)		((id) % RZG2L_PINS_PER_PORT)
- 
- #define RZG2L_TINT_MAX_INTERRUPT	32
--#define RZG2L_TINT_IRQ_START_INDEX	9
- #define RZG2L_PACK_HWIRQ(t, i)		(((t) << 16) | (i))
- 
- /* Custom pinconf parameters */
-@@ -251,6 +250,7 @@ enum rzg2l_iolh_index {
-  * @func_base: base number for port function (see register PFC)
-  * @oen_max_pin: the maximum pin number supporting output enable
-  * @oen_max_port: the maximum port number supporting output enable
-+ * @tint_start_index: the start index for the TINT interrupts
-  */
- struct rzg2l_hwcfg {
- 	const struct rzg2l_register_offsets regs;
-@@ -262,6 +262,7 @@ struct rzg2l_hwcfg {
- 	u8 func_base;
- 	u8 oen_max_pin;
- 	u8 oen_max_port;
-+	unsigned int tint_start_index;
- };
- 
- struct rzg2l_dedicated_configs {
-@@ -2379,7 +2380,7 @@ static int rzg2l_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
- 
- 	rzg2l_gpio_irq_endisable(pctrl, child, true);
- 	pctrl->hwirq[irq] = child;
--	irq += RZG2L_TINT_IRQ_START_INDEX;
-+	irq += pctrl->data->hwcfg->tint_start_index;
- 
- 	/* All these interrupts are level high in the CPU */
- 	*parent_type = IRQ_TYPE_LEVEL_HIGH;
-@@ -3035,6 +3036,7 @@ static const struct rzg2l_hwcfg rzg2l_hwcfg = {
- 	},
- 	.iolh_groupb_oi = { 100, 66, 50, 33, },
- 	.oen_max_pin = 0,
-+	.tint_start_index = 9,
- };
- 
- static const struct rzg2l_hwcfg rzg3s_hwcfg = {
-@@ -3067,12 +3069,14 @@ static const struct rzg2l_hwcfg rzg3s_hwcfg = {
- 	.func_base = 1,
- 	.oen_max_pin = 1, /* Pin 1 of P0 and P7 is the maximum OEN pin. */
- 	.oen_max_port = 7, /* P7_1 is the maximum OEN port. */
-+	.tint_start_index = 9,
- };
- 
- static const struct rzg2l_hwcfg rzv2h_hwcfg = {
- 	.regs = {
- 		.pwpr = 0x3c04,
- 	},
-+	.tint_start_index = 17,
- };
- 
- static struct rzg2l_pinctrl_data r9a07g043_data = {
--- 
-2.34.1
+This looks like some pattern, so maybe clarifications are needed.
+
+You wanted to be maintainer of this driver alone, right? So separate entry.
+
+Best regards,
+Krzysztof
 
 
