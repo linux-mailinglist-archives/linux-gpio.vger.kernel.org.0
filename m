@@ -1,171 +1,148 @@
-Return-Path: <linux-gpio+bounces-10218-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10219-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 386F097B06A
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2024 14:55:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D76CF97B33F
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2024 19:01:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0185283A1D
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2024 12:55:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD702283E95
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Sep 2024 17:01:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8901A176AC2;
-	Tue, 17 Sep 2024 12:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 515D717C7A5;
+	Tue, 17 Sep 2024 17:01:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkgBungB"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="T6kLt+Wa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B5016FF25
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Sep 2024 12:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441BE15AD90;
+	Tue, 17 Sep 2024 17:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726577711; cv=none; b=PK2jdZGcj1kYL7tEbFqWyC0e9n4iItxIGG3szboXsUkszH7OmStEMJsNkGEVvDOL6ZH0tc/kl+Aw7WH9qtq9WhEiUcqz12Hk3hKEg4iSkVt9Yk4TGqU6iMlDHM0RO9eukLtEypOzZnyyhT6ZYrTJwRmC7rmZBi5pWOrHaxAlFZs=
+	t=1726592466; cv=none; b=Ju96726331onmyz7JQRF4G0SYoS26cQipLSwXIFARISEWbHABKdRXtcidfzHTkVUB/dBNff7JhqQ+3wuON10wHEmLkzxRs/z/L3A4+VR4GIjcBoMmE9AlhJCzw2FW+th6vs9PAAlzK1b3aXsKDHijhoZGvKzaF24OWDPpKaN2cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726577711; c=relaxed/simple;
-	bh=BIs0HrEmxJMJgdMTzkHfWx2UmOHkRS0eaHFTQcHEoEs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Afr/eOYLpLtblGIvPT2D5JAEnD0yX1hGQ7gvI1ZRiNsnnyppVo0Dxu3YyjTSrkiwR0OAeHaoM9GZpfTAIt2ZX6w5rsUXZRlUNpxp+63O0dpjpbhWfWbmzNGYCy31dXHJwRKeHlPtqAvor6ZAJMzbzJt69oS0EAR/G+F+DVLRsL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hkgBungB; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-20543fdb7acso31004975ad.1
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Sep 2024 05:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726577709; x=1727182509; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=z4D5fNrnAp8q/B6mDWWVTG8M73lBuWFQKBW9B9xeq0k=;
-        b=hkgBungBUb1qsXW0so0yLO7pkrf+kH0MRlvjDRuXhR3NZMEgM+gsEqxbTCH2WXRfE0
-         q3Zvk8EjOp1nozJKFTGSR3cpDUxOluYRSvqYWbjqeTuyYixMDriExWLTN9U0yHRj94pP
-         UqHABF1I8iByi0IGHf2cK/nAzpNXTV7W14rriYMvflKyJNBsScMFrFdphkQ3RlyX+0GW
-         qeGpdfZxf13ktQ1EaNSunRHDB5AcVQXITw3c4X/pIaqSmeOccw9eGO55ctynjyDMW2ge
-         v1ZSBA79lJDaL2IREj66tZXJGKngArBP75T/D+ZeXCGTis/3n06PbgE3poKFJjNLPQjB
-         jAgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726577709; x=1727182509;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z4D5fNrnAp8q/B6mDWWVTG8M73lBuWFQKBW9B9xeq0k=;
-        b=kMv3XtDG5kagEtboOBQSD/5sYB/gd2o6Yz0/49dOXg5cbXU8BJeH/gK0g+fuU4fsQ7
-         3tFFeoltSRMICY9oA344B2zpKf1I3gkPcwtctnUjwAulRZymfcTK+viMZDBFX1twtMwZ
-         emilX9GH4Wa5kcHF85NtqjTQiBTzm+O/aRDXE03f6kHcR4KCWVR0Kj2KQb6k/3w8UHTR
-         nQhFA5E+OLABfnSp9wdXwdLH2Jg1OTAri0azxNiNZnUMv6D6ckpXR/vYiPlYpkrR0PHE
-         gfHvp6fmp6X9wps2hCXpoI4Jm/VbPtXbCHYPFZD+/+0f57GKFP+PJ+e+s9SMpnYpFmyt
-         dPAQ==
-X-Gm-Message-State: AOJu0YxMTDST8sc7O1dxt74RdNsZ+BtOs5aV9jj6+wQS6DRthdXXljn0
-	MgXmwRBisWjOimyuUjPr1+s6hO5jTnT59H7Oe9X3a5ETh079pFG+cI1w//c2
-X-Google-Smtp-Source: AGHT+IGaQeWcVI7xfjHWUPaSXYuwj5cK01E7KrpBnRglymYxLc2zQpsvGQDVU7Ddq/PFXawgBqII1g==
-X-Received: by 2002:a17:903:2292:b0:206:d6ac:854f with SMTP id d9443c01a7336-20781b42a24mr226332805ad.3.1726577708977;
-        Tue, 17 Sep 2024 05:55:08 -0700 (PDT)
-Received: from rigel.home.arpa ([203.63.211.120])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2079473c85fsm49567325ad.285.2024.09.17.05.55.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2024 05:55:08 -0700 (PDT)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH] bindings: python: examples: Add graceful exit to async_watch_line_value
-Date: Tue, 17 Sep 2024 20:54:55 +0800
-Message-Id: <20240917125455.324551-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1726592466; c=relaxed/simple;
+	bh=PCwEG5cM4IEq07AFnUZTSlDXP7VkqJ13jqXIS6+Le1k=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FZQelHhULPKH7z0zxta7gwQsMOYGGjwZMY08iZs26moiNYSCrklf6cmRI747jENlQSjdl6Ll/+gr8ULuC6o6loXPnN+PJrpTwe48CptlYy6LlSSXpYaHezVnz3O1xD7Np38u3hv9hgEHIR9zP8hHEMldZn20S3eqm0HEHmbpb6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=T6kLt+Wa; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2B971FF804;
+	Tue, 17 Sep 2024 17:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1726592456;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VOJA4oKRl1c97qcSG2JsyY/IxozKo3PoM0EutgiNiJk=;
+	b=T6kLt+Wa/cNA9JSypXaiBatuSPPDxb0BnZSHtwn6UOtGmAqcxfW3wICOhChbxk45SkhNVG
+	+gFN2DVb36n5VH1P2tVzcaHXk9hfiFsi6zBzQZJS9V/BC9zSnht9lBCIj1IKRrkVb7xSJu
+	ASzkaweTjkfrEl/2PVAi+Kj8co1e6hQ0xvFfa4zgH3bLhKAFbx9hKZFhDqvRzAGFAyCM2w
+	bxEody8eXV0CEmGBE00uZDOiLedNwtwCkOW8kO4HbopMCGTLqftZ1QGl52pnKmE1IH77Ea
+	ykT+NwFE2tmS6TALFbgyHTcP3gufq9jzXdvsVul3mEvT0hy8yX8keHQIRdMyVg==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v2 0/5] Congatec Board Controller drivers
+Date: Tue, 17 Sep 2024 19:00:46 +0200
+Message-Id: <20240503-congatec-board-controller-v2-0-681511a01c8f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL616WYC/42OTQqDMBCFryJZNyXGX7rqPYqLZBw1oJkyCdIi3
+ r2JJ+jye4/3c4iA7DCIR3EIxt0FRz6BvhUCFuNnlG5MLLTStWpUJYH8bCKCtGR4zBiZ1hVZ9hp
+ a29cw1mhEylsTUFo2HpbcsJkQkbPxZpzc5xp9DYkXFyLx9/qwl1n9Z24vpZITQqOrVncKu6cli
+ qvzd6BNDOd5/gBTgtEr3QAAAA==
+To: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, blake.vermeer@keysight.com, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-The purpose of the example is demonstrate using a request with poll().
-It provides a hint as to how the poll can be combined with other fds but,
-as Python comes with batteries included, the Python version of the example
-can be readily extended to actually demonstrate this, as well as how it
-can be used in multi-threaded environments.
+This is a new iteration of the Congatec Board Controller series.
 
-Extend the example to use an eventfd to allow the poll() to be run in
-a background thread and be gracefully terminated by the main thread.
+For the MFD driver, the main change is the use of
+platform_device_register_simple() which makes the code smaller.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
+For the GPIO driver the main change is the use of guard() and scope_gard().
+
+For the I2C bus driver, the I2C_FUNC_SMBUS_QUICK flag was unset as the
+controller doesn't support smbus quick accesses.
+
+For the Watchdog driver, min_timeout and max_timeout are configured now,
+and watchdog_init_timeout() is used to initialize the timeout. 
+
+More details in the changelog.
+
+Best Regards,
+
+Thomas
+
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- .../python/examples/async_watch_line_value.py | 51 ++++++++++++++-----
- 1 file changed, 38 insertions(+), 13 deletions(-)
+Changes in v2:
+- mfd: use platform_device_register_simple(), so struct cgbc_platform_data
+  and cgbc_create_platform_device() were removed.
+- mfd: rename cgbc_detect_device() to cgbc_wait_device().
+- mfd: remove the useless abstracted function cgbc_command().
+- mfd: set the release session message as warning instead of error.
+- mfd: minor fixes (sort includes, add comments, fix some alignments and
+  nit ...).
+- gpio: use scoped_guard() and guard().
+- gpio: use devm_mutex_init().
+- i2c: unset the I2C_FUNC_SMBUS_QUICK flag as smbus quick accesses are not
+  supported by the controller.
+- i2c: rephrase comment for read_maxtime_us.
+- i2c: set the invalid frequency message as an info (previously a warning).
+- i2c: other minor fixes (sort includes, fix name of i2c_state enum).
+- watchdog: add missing includes.
+- watchdog: remove warning for the pretimeout.
+- watchdog: remove timeout_action and pretimeout_action (ACTION_RESET and
+  ACTION_SMI are directly used in cgbc_wdt_start()).
+- watchdog: set max_timeout and min_timeout.
+- watchdog: use watchdog_init_timeout() to set the timeout.
+- Link to v1: https://lore.kernel.org/r/20240503-congatec-board-controller-v1-0-fec5236270e7@bootlin.com
 
-diff --git a/bindings/python/examples/async_watch_line_value.py b/bindings/python/examples/async_watch_line_value.py
-index 1d6a184..055d54f 100755
---- a/bindings/python/examples/async_watch_line_value.py
-+++ b/bindings/python/examples/async_watch_line_value.py
-@@ -19,7 +19,7 @@ def edge_type_str(event):
-     return "Unknown"
- 
- 
--def async_watch_line_value(chip_path, line_offset):
-+def async_watch_line_value(chip_path, line_offset, done_fd):
-     # Assume a button connecting the pin to ground,
-     # so pull it up and provide some debounce.
-     with gpiod.request_lines(
-@@ -35,20 +35,45 @@ def async_watch_line_value(chip_path, line_offset):
-     ) as request:
-         poll = select.poll()
-         poll.register(request.fd, select.POLLIN)
-+        # Other fds could be registered with the poll and be handled
-+        # separately using the return value (fd, event) from poll():
-+        poll.register(done_fd, select.POLLIN)
-         while True:
--            # Other fds could be registered with the poll and be handled
--            # separately using the return value (fd, event) from poll()
--            poll.poll()
--            for event in request.read_edge_events():
--                print(
--                    "offset: {}  type: {:<7}  event #{}".format(
--                        event.line_offset, edge_type_str(event), event.line_seqno
-+            for fd, _event in poll.poll():
-+                if fd == done_fd:
-+                    # perform any cleanup before exiting...
-+                    return
-+                # handle any edge events
-+                for event in request.read_edge_events():
-+                    print(
-+                        "offset: {}  type: {:<7}  event #{}".format(
-+                            event.line_offset, edge_type_str(
-+                                event), event.line_seqno
-+                        )
-                     )
--                )
- 
- 
- if __name__ == "__main__":
--    try:
--        async_watch_line_value("/dev/gpiochip0", 5)
--    except OSError as ex:
--        print(ex, "\nCustomise the example configuration to suit your situation")
-+    import os
-+    import threading
-+
-+    # run the async executor (select.poll) in a thread to demonstrate a graceful exit.
-+    done_fd = os.eventfd(0)
-+
-+    def bg_thread():
-+        try:
-+            async_watch_line_value("/dev/gpiochip0", 5, done_fd)
-+        except OSError as ex:
-+            print(ex, "\nCustomise the example configuration to suit your situation")
-+        print("background thread exiting...")
-+
-+    t = threading.Thread(target=bg_thread)
-+    t.start()
-+
-+    # Wait for two minutes, unless bg_thread exits earlier, then graceful exit.
-+    t.join(timeout=120)
-+    if t.is_alive():
-+        os.eventfd_write(done_fd, 1)
-+        t.join()
-+    os.close(done_fd)
-+    print("main thread exiting...")
+---
+Thomas Richard (5):
+      mfd: add Congatec Board Controller mfd driver
+      gpio: Congatec Board Controller gpio driver
+      i2c: Congatec Board Controller i2c bus driver
+      watchdog: Congatec Board Controller watchdog timer driver
+      MAINTAINERS: Add entry for Congatec Board Controller
+
+ MAINTAINERS                   |   9 +
+ drivers/gpio/Kconfig          |  10 +
+ drivers/gpio/Makefile         |   1 +
+ drivers/gpio/gpio-cgbc.c      | 196 ++++++++++++++++++++
+ drivers/i2c/busses/Kconfig    |  10 +
+ drivers/i2c/busses/Makefile   |   1 +
+ drivers/i2c/busses/i2c-cgbc.c | 406 +++++++++++++++++++++++++++++++++++++++++
+ drivers/mfd/Kconfig           |  12 ++
+ drivers/mfd/Makefile          |   1 +
+ drivers/mfd/cgbc-core.c       | 411 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/watchdog/Kconfig      |  10 +
+ drivers/watchdog/Makefile     |   1 +
+ drivers/watchdog/cgbc_wdt.c   | 211 ++++++++++++++++++++++
+ include/linux/mfd/cgbc.h      |  44 +++++
+ 14 files changed, 1323 insertions(+)
+---
+base-commit: 83d650136610d87d8ed0626c178ed18879b69564
+change-id: 20240503-congatec-board-controller-82c6b84cd4ea
+
+Best regards,
 -- 
-2.39.5
+Thomas Richard <thomas.richard@bootlin.com>
 
 
