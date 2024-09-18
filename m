@@ -1,227 +1,616 @@
-Return-Path: <linux-gpio+bounces-10236-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10238-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25C7E97B8DD
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Sep 2024 09:58:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FE5B97B927
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Sep 2024 10:19:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBD5F284D3B
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Sep 2024 07:58:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2EE70B25085
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Sep 2024 08:19:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FA3C17625F;
-	Wed, 18 Sep 2024 07:57:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DFE5194C9D;
+	Wed, 18 Sep 2024 08:13:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="x1NEBOUi"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DIWtnZCx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013000.outbound.protection.outlook.com [52.101.67.0])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AF817333D;
-	Wed, 18 Sep 2024 07:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.0
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726646271; cv=fail; b=fBggAEViaPCiVctm+QF+dLzf/VSQXRPWSCbyvwYtROUZyAEYS7FzzyL4KO9gsArM03HXGmPRNrmqYQIcGbQO1gNe2Bot3ez3YidwYRHX6WbJpF6d/rSUiYMBuc6Zt/5EKveck0U3bDgH2p6IXQoFB+G7B7ywCKHNEDmSsw2OI4s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726646271; c=relaxed/simple;
-	bh=dDIpRxITC5rsLkLGbElH4HUPgRXs47TXFC0Kh33C+wE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=B2AWd+oGIAtGoDUi8neCaBx1BVPD5YaFCfhN2t2xrpIa4djgANEc8RiWyt7scJwldcnK/27bnHFtWwfn+kNnrisAbLtzoBbOIk1xy9QpIBmJ/thPwnW6YJJS7Uweck8bV5djn1bcvl9O9Py2emPS529YMOZ/wly348bYWgdMEg0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=x1NEBOUi; arc=fail smtp.client-ip=52.101.67.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EOCTcg71CRZf4d4j96DQXC/La0f7ronfuLT1A5U9BcIIwq3gla02fhEFIfixORIoRXen6WPMCjfLZ+xIurlLUeoXMpZjlp+Z823Ce0FM2CmLDXcIiWHqKvQsmdHOcfRyjG3xzI5Byxe9TsXyOm7N3OjhCweVdxvXRY5Pu4yHc3NM865/Y6TdznN2AYfj4p8dJd0Z+vwJr/auoDNY+Kws0BufM2+qmWK7cnhH664UcZ8iBE6oFN/tioNMxzrD9+jHNt9r0drAW/XHfg+Q0VBEZniRCPhbOqgXN7zbhBx3yL9smD3NK6S55abApPhcfqHKw+d0v9/+rPBrIKqHQQvgmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QIF/CFTubDdCOYAJuYpBINCOtdVFlO5wKYrcmOrXUME=;
- b=ou3o2rJ3fMsJXS/fh/X+k3SuaD6h6+BkvYUOCcOm49plzoZ3I6Ex2g9PkgrI6yxRlskjrxcLYXYwsgDsl0rLvKgVtCt86XrUUc+eAecFcCeyj94yJwFOhHbjO34plGQr+LNFfALDRbhsSpDRz+hUbsO1bLxD+6YKemrmw/nE6JXTIBWPW2Y069LZtPunvA/V1mzILvfLcRzRx4St7V+7v/rfgZsg+QJXkGnXaSrMH20Bnj8pE+nq8vPkvtnSSQzP3fNILAFTnwxcCuRzt+VrQt0ik7/TT/ybgXe/ri89dSss9i+G/mydR7HDqtDJo4HHjGR6j6NNfCek7wAZWupSig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QIF/CFTubDdCOYAJuYpBINCOtdVFlO5wKYrcmOrXUME=;
- b=x1NEBOUiFOkDYMHZ1befIDYtGqnjbwTr/lINiB27j6rzYNTZMIz96iZteUkQnM4cckGodpgDcC7lhs58QG9rpF7liEpWNyDgtb9S4zoGcB6ViBnYbQcCic4DR5TRFOkaU5CtmZ4gHP7z11I1kBtVPiSNwOGjmgTzQGKDxYo20IxWlbCJV4cRhN5RnEyNZMyg3zVQ/fRwo8acR5b98gvYqPGdajjwuQQwkuegLiomdTwFexg1bUWl7zs8vrKG98JR53e56xPNgCr4uQ1Y0d4JGTN85hS+c01upuprIR2GbwAbm+ityFDU1YqAfoeGB8bS9dDHlZmn2TixwwAU+Pytnw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from AM9PR04MB8487.eurprd04.prod.outlook.com (2603:10a6:20b:41a::6)
- by GV1PR04MB10631.eurprd04.prod.outlook.com (2603:10a6:150:202::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.23; Wed, 18 Sep
- 2024 07:57:43 +0000
-Received: from AM9PR04MB8487.eurprd04.prod.outlook.com
- ([fe80::6d7a:8d2:f020:455]) by AM9PR04MB8487.eurprd04.prod.outlook.com
- ([fe80::6d7a:8d2:f020:455%5]) with mapi id 15.20.7962.022; Wed, 18 Sep 2024
- 07:57:43 +0000
-Message-ID: <53bae020-3d82-4966-8a51-2b3853d07eb8@oss.nxp.com>
-Date: Wed, 18 Sep 2024 10:57:37 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] MAINTAINERS: add MAINTAINER for S32G2 SIUL2 GPIO
- driver
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chester Lin <chester62515@gmail.com>,
- Matthias Brugger <mbrugger@suse.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- NXP S32 Linux Team <s32@nxp.com>
-References: <20240913082937.444367-1-andrei.stefanescu@oss.nxp.com>
- <20240913082937.444367-5-andrei.stefanescu@oss.nxp.com>
- <bd886183-273d-472b-a96f-3fed1dd493c1@kernel.org>
-Content-Language: en-US
-From: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-In-Reply-To: <bd886183-273d-472b-a96f-3fed1dd493c1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1PR04CA0064.eurprd04.prod.outlook.com
- (2603:10a6:802:2::35) To AM9PR04MB8487.eurprd04.prod.outlook.com
- (2603:10a6:20b:41a::6)
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE63B194AD5;
+	Wed, 18 Sep 2024 08:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726647218; cv=none; b=eihsV7IaQM1bbx82wc6SvWoPhiBdH/j3fCWBsxClMy2Iqsb/BiO+wvDvxHA/vHah1e8sE4rsaLfwlkVT7sW8tlj/yXXO72CjuDY0o9bBaKtpDqGkxoyN+Dj1EGymUCiQfkJjgKyZAGm5AR5bvmw69DLIt7CULUeni+LMyVsvZD8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726647218; c=relaxed/simple;
+	bh=p0+VNGdg624vh0TVucMBmvLTzv+B9s9iAXAJz67L3a4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s6V85/KWSJUyH20GkPXKJRk9y3GLKLgYftaCrag7vrdgFZrcxO8PJuhpqQNZswo/LwEWT3DgCVuOd8cPL/LZ0Nrdu9Mg1Ajaq2+fvy8kOrIPhXglwGWqL9VQyo28r4Wtn9Q4EflXJXruPjYUbyp6vTJKlWbJ3MYHh78P3hty5Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DIWtnZCx; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=HExARYwQxEimoTdw9gpUMnKEEbHm5ZJTXTSTMk9kBI8=;
+	b=DIWtnZCxOAQJOV00/XPIysMoYuZtgqzHx5nm9j3JfDSzWHwM7RpdV6Y/Wo3k9/
+	Tr1T6/RYugMmept7NV+NUwKuWhGL10WIV/YLS5GyvBcMM+vOHlrbaQTw67R8TR4N
+	sTS20HGKWtaEcnalr06NNR7m2K8ZvBsM6nYiUnpVJV4dg=
+Received: from [192.168.31.242] (unknown [27.18.168.209])
+	by gzga-smtp-mta-g3-2 (Coremail) with SMTP id _____wD3v+AAi+pmGsLKJg--.9338S2;
+	Wed, 18 Sep 2024 16:10:43 +0800 (CST)
+Message-ID: <f1e2ee2c-c54c-4c6b-bcee-0e41687eb9c2@163.com>
+Date: Wed, 18 Sep 2024 16:10:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM9PR04MB8487:EE_|GV1PR04MB10631:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0dd9c858-cb28-4db3-56e5-08dcd7b7927a
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WTRoY3NTaUtVOE4xOUN5T2p2SlFDOHd5bzhBODI2c1NqQW5hM0RmaHpCcTVW?=
- =?utf-8?B?R0t2ZUxQaHY3bnJYSFUrSXFhKzRjWmQ5d0xtWHpNczV4SGZjMVNLRUtqUm1T?=
- =?utf-8?B?Rjd6SHUvUzNQVEd3YkwvZWtnQzA0ZWJhYUNLQ2EzajNreVhhUktWemN4aGZo?=
- =?utf-8?B?OXJVNy9vbjd5eVplLzMzeGNIRUZWNGo5WEVGT1ZXcW9PQlJXbDNsazFaZnVV?=
- =?utf-8?B?NUJHM0plcHpvLzRJNXJWNjd4RHNOU3JEZGpLMTlpZEgxSnRzY2FBd1E1clFm?=
- =?utf-8?B?Uy8wVExHQitrczNGdHhxMTNvTVBqZkYwZkxZUFFVcGRsVUVKMnZMa1Zyamt1?=
- =?utf-8?B?cG5jTzA4eEV3cnVxOElCRmZJSnEzbFJ0ZUw4MGZ6enU5NityNXB1ODdVbUlq?=
- =?utf-8?B?MmtMWWduU21qQmt2TGRPb0UraFAvbUhSOGNsMXA0bk91dUJ3ODRYeDZ3a3ZB?=
- =?utf-8?B?Y3d4ak1kdU1qN0dMYTRMc29wZ2lwUkt4RWNyRFdSWUEvN2NIMmpEek5iTFpY?=
- =?utf-8?B?a2xVT2dIN05jMHluMnlXaFk5dEF2TzNZQTdnREtKeVBpcExJTmFtTVJYeGhp?=
- =?utf-8?B?dm5ZU1ZxUkdveGkrODM4TnRtbk0xcVVsTzNseFlrd01XaTJneThEMmtqQVpt?=
- =?utf-8?B?cG16MWt6SFZmU2VRVEdqSWI5cU5naWJDdTBBV2VVN0s5T3MxeVFld1ZxNGNr?=
- =?utf-8?B?azJpRGZ1eWhWc2ZBZ0IyZWJIeHpIRWdCQzFkcmlNaElJb0xlb0FJdXBwY2lE?=
- =?utf-8?B?cGtqMUNNb1FPc2EyVjV3NkE5T0dyVlhmZ09zNXk2WEFQMHJjRlZEOXJPcHpP?=
- =?utf-8?B?OWpZcVF6U0xkbXhPYysvSW1RL21VWVBqaVpZbjRYbnhPN09EVDJEY2RZU2l2?=
- =?utf-8?B?UGtBeUJpV1UwUWhXcTY4WEtTZ281QWtnaTdvZFAweHdlUitjQ2RpRHpUMVpJ?=
- =?utf-8?B?ZW04dVUrTG1wRnJWeURQcWNrRTlScFBSbzhBTVJhN1pvSkdKbzYyako0Nmxp?=
- =?utf-8?B?Y2Q2dTF1ZkY4ZG1xRmRJNUZPUFVOWXVQVU1udmk2SVZIQnN5TFJZTHREZmlT?=
- =?utf-8?B?bm1PbkdFVjhBb2diR0FFUndHQW5qRTJZNkpSUzg3T2IrNkVua1hVNjh0dGFn?=
- =?utf-8?B?d1hnMGZwQi9DMEV1emhPS0tnK0Zyb2xnMFdxTDR2SDRoUWFKYlhxMytnRVNa?=
- =?utf-8?B?c2FzYW1NTVRUYUpDc1l6dzFXRkJ2VFlmWktaWlptVXRMaDE3bUNRZE9LL0tS?=
- =?utf-8?B?L1pxY3daNWZBTm1DU0dORFZJREQyRnlZeTFyL3AvMkpnbjloN05IdFIwYkZU?=
- =?utf-8?B?QkFhQmxrb3Rnd2FDdncxMUQrL25IUE1GVWZvc3VOUS9CWXhuTWYwMGR5YWZO?=
- =?utf-8?B?UDBmYnNxZlYrd1Y4a3FPa1hnbDQrOTh1dDNFbUZhVUhHbG1DVWRFWnQzUDk1?=
- =?utf-8?B?QTVQR3B1ODZnaXpvRHBaMXU5cXhSRUkyc0FOSDlaRm1aQXRlNzUzeTU3bUFJ?=
- =?utf-8?B?MGpBdVpMR2R1NkkwMTFQcXpIcjNlcjNFcEQ2VFQyeVpXQU9DZ1VWS1Eya0FV?=
- =?utf-8?B?ZFphVS9lZmYreGtGNEdiYU5TNjlxOElJN3kzT0lWS3V5RFZVMXN5dy9haFk4?=
- =?utf-8?B?Yzlwb043U0ZGWXVxNWhkZkpNRzNjM3ZoZXZnT2RvWlgvSGVwYzB5SjJIQnR5?=
- =?utf-8?B?TjJrYUdyZ0F0NW9DT1BZYk9lNk8xSUxaMkoxLzUwTS9KRXFjbW1rRm9nPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8487.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ME1hM2JVNFF2VDkzMkdZeWRsQ3lXRWZXY3lrWnJ0VmNjT040QjZrdC9yMEJS?=
- =?utf-8?B?bUF4RmZuUFZFanhjbCtKL1o2allYUm9KU3pUMjlMOTB2ZDdRdTVmYUNPVm44?=
- =?utf-8?B?T1hBWlpWMlE0Q1JJMW1uc3Q3QVcxMEM2ZGYwZm16bExmOXV2L0dPSk1mY3dY?=
- =?utf-8?B?R04rVkhsWEx1ck9EYmsyQVBURDlRcVY3RWRJNXZ4c2RxZEU3Rkxqa2x1c0xC?=
- =?utf-8?B?L3FvNUt5encwSHF2eDNCYy9nYU9zcjBqZ1lOQnRLV3R1ZUdLTXhOQlMycDgw?=
- =?utf-8?B?cjNmNDNGMEd4dkdKdDZwU2o2aHdMRVNua2QwNi8xS0JTY3ZKbTdXRTg3K3Qy?=
- =?utf-8?B?dVlQSkF2L2NkK01NbmU3TFg5MG1HNWtyV2UzdDNtTXVMaHQxbXpNVWEwcVBr?=
- =?utf-8?B?YWJGTmxzWFQ2dUJ4Z1dlWWZGU1dUQlE5cjZkQkJLdWVFL012ajltYlhwYU9l?=
- =?utf-8?B?UjhZOGN3N1dKMXdRUWZlM243czdiZzJBQ1lsRnZaK3BSbzNwaXROak5vL2Fh?=
- =?utf-8?B?S0F4ODdrTGIwSDkvelo5V2svTEJmZjJwZ1MvbUFNTC93OW1qT1dFU2FSb3h5?=
- =?utf-8?B?NWQ0dFBSdHBOenF0R3ErWGdKalpQLzJBSVBseEc0Mm5icEp1UURwU1E5aHQx?=
- =?utf-8?B?dEhsNXRURWFmU1M5aUQ1bnJzOW9WMGxFRWsyTEpQKzBwaVNDNFJIVjk2WUZl?=
- =?utf-8?B?U2lYUGV3c3VLMjlMRERIUnRvc1RMckw4d3RLNC9xeWV3WndwZXBUQ0syZXls?=
- =?utf-8?B?NkhsUlVZSyt5bDJiLzJxQjIvd1dQZW9xQ0I3Smt0L1ptbStpZnlzWWlDR1hJ?=
- =?utf-8?B?ZnBMNFoxNjVvbEVMRkR2NzUyWVJTY1pZajREK25hbjlYRExrWVJsdGV0aTdC?=
- =?utf-8?B?RUpQU0F1SHo2OFpZalA1dDNKM0xaVW9iSWtwTlUzL3NrM3ZlRGFlU2FRN0R2?=
- =?utf-8?B?SnNrS2NwZ3FmOG83UGYrcHRCZmVtWW0xcnp0OUw4WHl0YnNHVlpGYXVCMkx1?=
- =?utf-8?B?RC81ZzlvNlcvTWJoemJoTys2ZkF6NDh3ZW9IZ0R3MWFOZHhKL0IvSnp2d09U?=
- =?utf-8?B?UUtOZ09lelBaeXcxSmN3cktRenlCbGxXZE5ldWVhNlJwcUZSNjBRQjliSU9W?=
- =?utf-8?B?T0N3eDlpSzQrRUJBRElGSk5KK05HMjNCSDQzK3RrWncyNVJqWFVKUXJLSmts?=
- =?utf-8?B?SCs0dzlWS2o2NnpuMUNvdkltVUtHVmNXV2VZZTdXeEhnYkhwSGh0dEpac3Mz?=
- =?utf-8?B?Z2xJRWE5Mk93bXhVWldQb2VjVUk5d2NzOVhlbllrSFpxQXZHYUh2OEtUejBH?=
- =?utf-8?B?cjlnL2pVWFFtaDN1OG53QVRxKzJaOVFpdjdyYWhmMlliZDdyR1JOZG5qR0Qy?=
- =?utf-8?B?clpxc0U0Si80bUE1bjRBZDhtRTQxV080c1lraTU0THVQWHdaOStScFM0TWNy?=
- =?utf-8?B?UlBqOWF4VlN2TzNRTUVobVNONGlXbXU0ZWFGTFY2cEorbnM2M3lFWDliK3lz?=
- =?utf-8?B?ZFlINGFZS2NZWUtiN1IrN1lwS3A0OXY4ZnI3d3BzSGNGbmhhelAxNFROL1gv?=
- =?utf-8?B?Qm1xYkpNdEMraGtrVHhCeDlDdlFybEZKL0t1UklHY29nMGdvUkhOKzFTM2JH?=
- =?utf-8?B?SEExL0RYbVFuNE9LN0VwWjUvRkUrVEZVdVZncU4zUEw1MW9GbGd4TDk0RmdX?=
- =?utf-8?B?S1NNZVJNODZvSnVmdVR4d2VmdmZmTUMzQ282dG1abEJROGlCQW5NZFB5TWE0?=
- =?utf-8?B?QWt3Uy85UTVWTitVRmUyL3MwQTJ1TkNGRlpCZGRsM0NWeTBObVdoaXkrbjln?=
- =?utf-8?B?SHRSc2daUW1HTjNrenJpa2IvZXVwSXlza0hiMTBiMGZBa1U5MzNCSDg3OE9Z?=
- =?utf-8?B?UHg0bUJycjJDZDVqeUVuNkM5ekx0UWs5K1Z5cHFxRHVhSENNdXZOUzh3MUsv?=
- =?utf-8?B?Mys5TmVEQ2dKdEVXa0ZKdTRmMXo5NTdjK0VNeFZBSm5iZGlWaW54Uk11bTd6?=
- =?utf-8?B?RU1xNEZ5OWhST09Mck8vNzNKcW01QVZ5Mi9pZTMwSDlMRnIvL3RISXlEQXJa?=
- =?utf-8?B?UWpZNVhkL2hxalRCQ1JOd3V6czE0VXczZTlYZm5NTmZLYXNiREJudFZNNGR3?=
- =?utf-8?B?TnFYOExuK2NkTGV5UlRVVXpnc3JIZWRkNFZkR3paWHQycHN6MEdDcUxqenU4?=
- =?utf-8?B?MEE9PQ==?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0dd9c858-cb28-4db3-56e5-08dcd7b7927a
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8487.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2024 07:57:43.1508
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tuaf0M2uPmczcWkxdpF2IHvDeJiGh3dNAyRTjyKfKVyW6LOiPhTqM96yKYkXNjkxKkEFifeBTxK4gMmuRyt2ngx5lSoBIHQ9K89uUYsCZAs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10631
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH 2/3] pinctrl: canaan: Add support for k230 SoC
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Yangyu Chen <cyy@cyyself.name>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20240916063021.311721-1-18771902331@163.com>
+ <20240916064706.318793-1-18771902331@163.com>
+ <1488e936-d906-41d7-ae97-ffdbcc53b08c@linaro.org>
+Content-Language: en-US
+From: Ze Huang <18771902331@163.com>
+In-Reply-To: <1488e936-d906-41d7-ae97-ffdbcc53b08c@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wD3v+AAi+pmGsLKJg--.9338S2
+X-Coremail-Antispam: 1Uf129KBjvAXoW3tw4rtF1rWw4fAr4fZw18Krg_yoW8Ww15Go
+	WSgwn2qw48Jr17WrW5J3s5KF13Zw4jkF1DCFn8ZwnxC3WUt3WYgrsrX3yrGFZYgF4xXrWx
+	Jas3XFW7Aaykt3W5n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUbyCGUUUUU
+X-CM-SenderInfo: zpryllqrzqjjitr6il2tof0z/1tbiUQdeomXAklc8pgAAsQ
 
-Hi Krzysztof,
-
-On 17/09/2024 20:44, Krzysztof Kozlowski wrote:
-> On 13/09/2024 10:29, Andrei Stefanescu wrote:
->> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
->> ---
->>  MAINTAINERS | 2 ++
->>  1 file changed, 2 insertions(+)
+On 9/16/24 11:58 PM, Krzysztof Kozlowski wrote:
+> On 16/09/2024 08:47, Ze Huang wrote:
+>> Configuration of the K230 is similar to that of the K210. However, in K210,
+>> the 256 functions for each pin are shared, whereas in K230, multiplex
+>> functions are different for every pin.
 >>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 10430778c998..e23c4369b6e1 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -2689,10 +2689,12 @@ ARM/NXP S32G ARCHITECTURE
->>  R:	Chester Lin <chester62515@gmail.com>
->>  R:	Matthias Brugger <mbrugger@suse.com>
->>  R:	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
->> +R: 	Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-> 
-> That's another patch where NXP adds silently themself as platform
-> maintainer without explanation. Although here at least existing
-> maintainers are Cced.
-> 
-> This looks like some pattern, so maybe clarifications are needed.
-> 
-> You wanted to be maintainer of this driver alone, right? So separate entry.
+>> Signed-off-by: Ze Huang <18771902331@163.com>
+>> ---
+>>   drivers/pinctrl/Kconfig        |  10 +
+>>   drivers/pinctrl/Makefile       |   1 +
+>>   drivers/pinctrl/pinctrl-k230.c | 674 +++++++++++++++++++++++++++++++++
+>>   3 files changed, 685 insertions(+)
+>>   create mode 100644 drivers/pinctrl/pinctrl-k230.c
+> ...
+>
+>> +
+>> +struct k230_pinctrl {
+>> +	struct pinctrl_desc	pctl;
+>> +	struct pinctrl_dev	*pctl_dev;
+>> +	struct regmap		*regmap_base;
+>> +	void __iomem		*base;
+>> +	struct k230_pin_group	*groups;
+>> +	unsigned int		ngroups;
+>> +	struct k230_pmx_func	*functions;
+>> +	unsigned int		nfunctions;
+>> +};
+>> +
+>> +static struct regmap_config k230_regmap_config = {
+> Why is this not a const?
 
-I would actually want to become a maintainer for the platform. I have
-already added changes to the pinctrl driver and the s32g2.dtsi/s32g3.dtsi files.
-I intend to submit more patches to these files and I would like to review
-changes to them.
+Will move definition of 'name' here and set to const.
 
-However, if you or any of the existing maintainers consider that I should
-only add myself as a maintainer for the SIUL2 GPIO driver, I can fix this in v3.
+>
+>> +	.reg_bits	= 32,
+>> +	.val_bits	= 32,
+>> +	.max_register	= 0x100,
+>> +	.reg_stride	= 4,
+>> +};
+>> +
+>> +static int k230_get_groups_count(struct pinctrl_dev *pctldev)
+>> +{
+>> +	struct k230_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+>> +
+>> +	return info->ngroups;
+>> +}
+>> +
+>> +static const char *k230_get_group_name(struct pinctrl_dev *pctldev,
+>> +				       unsigned int selector)
+>> +{
+>> +	struct k230_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+>> +
+>> +	return info->groups[selector].name;
+>> +}
+>> +
+>> +static int k230_get_group_pins(struct pinctrl_dev *pctldev,
+>> +			       unsigned int selector,
+>> +			       const unsigned int **pins,
+>> +			       unsigned int *num_pins)
+>> +{
+>> +	struct k230_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+>> +
+>> +	if (selector >= info->ngroups)
+>> +		return -EINVAL;
+>> +
+>> +	*pins = info->groups[selector].pins;
+>> +	*num_pins = info->groups[selector].num_pins;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static inline const struct k230_pmx_func *k230_name_to_funtion(
+>> +		const struct k230_pinctrl *info, const char *name)
+>> +{
+>> +	unsigned int i;
+>> +
+>> +	for (i = 0; i < info->nfunctions; i++) {
+>> +		if (!strcmp(info->functions[i].name, name))
+>> +			return &info->functions[i];
+>> +	}
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>> +static int k230_pinctrl_parse_groups(struct device_node *np,
+>> +				     struct k230_pin_group *grp,
+>> +				     struct k230_pinctrl *info,
+>> +				     unsigned int index)
+>> +{
+>> +	struct device *dev = info->pctl_dev->dev;
+>> +	const __be32 *list;
+>> +	int size, i, ret;
+>> +
+>> +	grp->name = np->name;
+>> +
+>> +	list = of_get_property(np, "pinmux", &size);
+>> +	size /= sizeof(*list);
+>> +
+>> +	grp->num_pins = size;
+>> +	grp->pins = devm_kcalloc(dev, grp->num_pins, sizeof(*grp->pins),
+>> +				 GFP_KERNEL);
+>> +	grp->data = devm_kcalloc(dev, grp->num_pins, sizeof(*grp->data),
+>> +				 GFP_KERNEL);
+>> +	if (!grp->pins || !grp->data)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < size; i++) {
+>> +		unsigned int mux_data = be32_to_cpu(*list++);
+>> +
+>> +		grp->pins[i] = (mux_data >> 8);
+>> +		grp->data[i].func = (mux_data & 0xff);
+>> +
+>> +		ret = pinconf_generic_parse_dt_config(np, NULL,
+>> +						      &grp->data[i].configs,
+>> +						      &grp->data[i].nconfigs);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +	of_node_put(np);
+>> +
+> This looks like double free. There is no get in this scope.
 
-> 
+Thanks for pointing that out. 'np' would be released by the caller. Will 
+remove
+`of_node_put()` here.
+
+>> +	return 0;
+>> +}
+>> +
+>> +static void k230_pinctrl_child_count(struct k230_pinctrl *info,
+>> +				     struct device_node *np)
+>> +{
+>> +	struct device_node *child;
+>> +
+>> +	for_each_child_of_node(np, child) {
+>> +		info->nfunctions++;
+>> +		info->ngroups += of_get_child_count(child);
+>> +	}
+>> +}
+>> +
+>> +static int k230_pinctrl_parse_functions(struct device_node *np,
+>> +					struct k230_pinctrl *info,
+>> +					unsigned int index)
+>> +{
+>> +	struct device *dev = info->pctl_dev->dev;
+>> +	struct k230_pmx_func *func;
+>> +	struct k230_pin_group *grp;
+>> +	struct device_node *child;
+>> +	static unsigned int idx, i;
+>> +	int ret;
+>> +
+>> +	func = &info->functions[index];
+>> +
+>> +	func->name = np->name;
+>> +	func->ngroups = of_get_child_count(np);
+>> +	if (func->ngroups <= 0)
+>> +		return 0;
+>> +
+>> +	func->groups = devm_kcalloc(dev, func->ngroups,
+>> +				    sizeof(*func->groups), GFP_KERNEL);
+>> +	func->group_idx = devm_kcalloc(dev, func->ngroups,
+>> +				       sizeof(*func->group_idx), GFP_KERNEL);
+>> +	if (!func->groups || !func->group_idx)
+>> +		return -ENOMEM;
+>> +
+>> +	i = 0;
+>> +
+>> +	for_each_child_of_node(np, child) {
+>> +		func->groups[i] = child->name;
+>> +		func->group_idx[i] = idx;
+>> +		grp = &info->groups[idx];
+>> +		idx++;
+>> +		ret = k230_pinctrl_parse_groups(child, grp, info, i++);
+>> +		if (ret) {
+>> +			of_node_put(child);
+> Use scoped loop instead.
+
+OK, will use `for_each_child_of_node_scoped` instead.
+
+>
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int k230_pinctrl_parse_dt(struct platform_device *pdev,
+>> +				 struct k230_pinctrl *info)
+> Please keep all probe related code next to each other. That's quite
+> confusing to find probe code far away from the probe().
+
+Noted, will do.
+
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	struct device_node *child;
+>> +	unsigned int i;
+>> +	int ret;
+>> +
+>> +	k230_pinctrl_child_count(info, np);
+>> +
+>> +	info->functions = devm_kcalloc(dev, info->nfunctions,
+>> +				       sizeof(*info->functions), GFP_KERNEL);
+>> +	info->groups = devm_kcalloc(dev, info->ngroups,
+>> +				    sizeof(*info->groups), GFP_KERNEL);
+>> +	if (!info->functions || !info->groups)
+>> +		return -ENOMEM;
+>> +
+>> +	i = 0;
+>> +
+>> +	for_each_child_of_node(np, child) {
+>> +		ret = k230_pinctrl_parse_functions(child, info, i++);
+>> +		if (ret) {
+>> +			dev_err(dev, "failed to parse function\n");
+>> +			of_node_put(child);
+> Use scoped loop instead.
+
+Will use `for_each_child_of_node_scoped` instead.
+
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct pinctrl_pin_desc k230_pins[] = {
+> Why is this not a const?
+
+Field `drv_data` was used to point to currently activated group, which would
+be updated in `set_mux()`. It was used to print the name of the current
+function of pin in `k230_pinctrl_pin_dbg_show()`.
+
+>> +	PINCTRL_PIN(0,  "IO0"),  PINCTRL_PIN(1,  "IO1"),  PINCTRL_PIN(2,  "IO2"),
+>> +	PINCTRL_PIN(3,  "IO3"),  PINCTRL_PIN(4,  "IO4"),  PINCTRL_PIN(5,  "IO5"),
+>> +	PINCTRL_PIN(6,  "IO6"),  PINCTRL_PIN(7,  "IO7"),  PINCTRL_PIN(8,  "IO8"),
+>> +	PINCTRL_PIN(9,  "IO9"),  PINCTRL_PIN(10, "IO10"), PINCTRL_PIN(11, "IO11"),
+>> +	PINCTRL_PIN(12, "IO12"), PINCTRL_PIN(13, "IO13"), PINCTRL_PIN(14, "IO14"),
+>> +	PINCTRL_PIN(15, "IO15"), PINCTRL_PIN(16, "IO16"), PINCTRL_PIN(17, "IO17"),
+>> +	PINCTRL_PIN(18, "IO18"), PINCTRL_PIN(19, "IO19"), PINCTRL_PIN(20, "IO20"),
+>> +	PINCTRL_PIN(21, "IO21"), PINCTRL_PIN(22, "IO22"), PINCTRL_PIN(23, "IO23"),
+>> +	PINCTRL_PIN(24, "IO24"), PINCTRL_PIN(25, "IO25"), PINCTRL_PIN(26, "IO26"),
+>> +	PINCTRL_PIN(27, "IO27"), PINCTRL_PIN(28, "IO28"), PINCTRL_PIN(29, "IO29"),
+>> +	PINCTRL_PIN(30, "IO30"), PINCTRL_PIN(31, "IO31"), PINCTRL_PIN(32, "IO32"),
+>> +	PINCTRL_PIN(33, "IO33"), PINCTRL_PIN(34, "IO34"), PINCTRL_PIN(35, "IO35"),
+>> +	PINCTRL_PIN(36, "IO36"), PINCTRL_PIN(37, "IO37"), PINCTRL_PIN(38, "IO38"),
+>> +	PINCTRL_PIN(39, "IO39"), PINCTRL_PIN(40, "IO40"), PINCTRL_PIN(41, "IO41"),
+>> +	PINCTRL_PIN(42, "IO42"), PINCTRL_PIN(43, "IO43"), PINCTRL_PIN(44, "IO44"),
+>> +	PINCTRL_PIN(45, "IO45"), PINCTRL_PIN(46, "IO46"), PINCTRL_PIN(47, "IO47"),
+>> +	PINCTRL_PIN(48, "IO48"), PINCTRL_PIN(49, "IO49"), PINCTRL_PIN(50, "IO50"),
+>> +	PINCTRL_PIN(51, "IO51"), PINCTRL_PIN(52, "IO52"), PINCTRL_PIN(53, "IO53"),
+>> +	PINCTRL_PIN(54, "IO54"), PINCTRL_PIN(55, "IO55"), PINCTRL_PIN(56, "IO56"),
+>> +	PINCTRL_PIN(57, "IO57"), PINCTRL_PIN(58, "IO58"), PINCTRL_PIN(59, "IO59"),
+>> +	PINCTRL_PIN(60, "IO60"), PINCTRL_PIN(61, "IO61"), PINCTRL_PIN(62, "IO62"),
+>> +	PINCTRL_PIN(63, "IO63")
+>> +};
+>> +
+>> +static void k230_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
+>> +				      struct seq_file *s, unsigned int offset)
+>> +{
+>> +	struct k230_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+>> +	u32 val, mode, bias, drive, input, output, slew, schmitt, power;
+>> +	struct k230_pin_group *grp = k230_pins[offset].drv_data;
+>> +	static const char * const biasing[] = {
+>> +			"pull none", "pull down", "pull up", "" };
+>> +	static const char * const enable[] = {
+>> +			"disable", "enable" };
+>> +	static const char * const power_source[] = {
+>> +			"3V3", "1V8" };
+>> +	int ret;
+>> +
+>> +	ret = regmap_read(info->regmap_base, offset * 4, &val);
+>> +	if (ret) {
+>> +		dev_err(info->pctl_dev->dev,
+>> +			"failed to read offset 0x%x\n", offset * 4);
+>> +		return;
+>> +	}
+>> +
+>> +	mode	= (val & K230_PC_SEL) >> K230_SHIFT_SEL;
+>> +	drive	= (val & K230_PC_DS) >> K230_SHIFT_DS;
+>> +	bias	= (val & K230_PC_BIAS) >> K230_SHIFT_BIAS;
+>> +	input	= (val & K230_PC_IE) >> K230_SHIFT_IE;
+>> +	output	= (val & K230_PC_OE) >> K230_SHIFT_OE;
+>> +	slew	= (val & K230_PC_SL) >> K230_SHIFT_SL;
+>> +	schmitt	= (val & K230_PC_ST) >> K230_SHIFT_ST;
+>> +	power	= (val & K230_PC_MSC) >> K230_SHIFT_MSC;
+>> +
+>> +	seq_printf(s, "%s - strength %d - %s - %s - slewrate %s - schmitt %s - %s",
+>> +		   grp ? grp->name : "unknown",
+>> +		   drive,
+>> +		   biasing[bias],
+>> +		   input ? "input" : "output",
+>> +		   enable[slew],
+>> +		   enable[schmitt],
+>> +		   power_source[power]);
+>> +}
+>> +
+>> +static int k230_dt_node_to_map(struct pinctrl_dev *pctldev,
+>> +			       struct device_node *np_config,
+>> +			       struct pinctrl_map **map,
+>> +			       unsigned int *num_maps)
+>> +{
+>> +	struct k230_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+>> +	struct device *dev = info->pctl_dev->dev;
+>> +	const struct k230_pmx_func *func;
+>> +	const struct k230_pin_group *grp;
+>> +	struct pinctrl_map *new_map;
+>> +	int map_num, i, j, idx;
+>> +	unsigned int grp_id;
+>> +
+>> +	func = k230_name_to_funtion(info, np_config->name);
+>> +	if (!func) {
+>> +		dev_err(dev, "function %s not found\n", np_config->name);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	map_num = 0;
+>> +	for (i = 0; i < func->ngroups; ++i) {
+>> +		grp_id = func->group_idx[i];
+>> +		/* npins of config map plus a mux map */
+>> +		map_num += info->groups[grp_id].num_pins + 1;
+>> +	}
+>> +
+>> +	new_map = kcalloc(map_num, sizeof(*new_map), GFP_KERNEL);
+>> +	if (!new_map)
+>> +		return -ENOMEM;
+>> +	*map = new_map;
+>> +	*num_maps = map_num;
+>> +
+>> +	idx = 0;
+>> +	for (i = 0; i < func->ngroups; ++i) {
+>> +		grp_id = func->group_idx[i];
+>> +		grp = &info->groups[grp_id];
+>> +		new_map[idx].type = PIN_MAP_TYPE_MUX_GROUP;
+>> +		new_map[idx].data.mux.group = grp->name;
+>> +		new_map[idx].data.mux.function = np_config->name;
+>> +		idx++;
+>> +
+>> +		for (j = 0; j < grp->num_pins; ++j) {
+>> +			new_map[idx].type = PIN_MAP_TYPE_CONFIGS_PIN;
+>> +			new_map[idx].data.configs.group_or_pin =
+>> +				pin_get_name(pctldev, grp->pins[j]);
+>> +			new_map[idx].data.configs.configs =
+>> +				grp->data[j].configs;
+>> +			new_map[idx].data.configs.num_configs =
+>> +				grp->data[j].nconfigs;
+>> +			idx++;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> ...
+>
+>> +
+>> +	ret = regmap_write(info->regmap_base, pin * 4, val);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to write offset 0x%x\n", pin * 4);
+> Isn't regmap an MMIO? If so, drop all of such messages. This just makes
+> unlikely error paths too big.
+
+Acknowledged. Will drop them.
+
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int k230_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+>> +			    unsigned long *configs, unsigned int num_configs)
+>> +{
+>> +	enum pin_config_param param;
+>> +	unsigned int arg, i;
+>> +	int ret;
+>> +
+>> +	if (WARN_ON(pin >= K230_NPINS))
+> Drop WARN_ON. No need to panic kernel. Instead, handle correctly the error.
+
+Acknowledged. Will use dev_err instead.
+
+>> +		return -EINVAL;
+>> +
+>> +	for (i = 0; i < num_configs; i++) {
+>> +		param = pinconf_to_config_param(configs[i]);
+>> +		arg = pinconf_to_config_argument(configs[i]);
+>> +		ret = k230_pinconf_set_param(pctldev, pin, param, arg);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void k230_pconf_dbg_show(struct pinctrl_dev *pctldev,
+>> +				struct seq_file *s, unsigned int pin)
+>> +{
+>> +	struct k230_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+>> +	unsigned int val;
+>> +	int ret;
+>> +
+>> +	ret = regmap_read(info->regmap_base, pin * 4, &val);
+>> +	if (ret) {
+>> +		dev_err(info->pctl_dev->dev, "failed to read offset 0x%x\n", pin * 4);
+>> +		return;
+>> +	}
+>> +
+>> +	seq_printf(s, " 0x%08x", val);
+>> +}
+>> +
+>> +static const struct pinconf_ops k230_pinconf_ops = {
+>> +	.is_generic		= true,
+>> +	.pin_config_get		= k230_pinconf_get,
+>> +	.pin_config_set		= k230_pinconf_set,
+>> +	.pin_config_dbg_show	= k230_pconf_dbg_show,
+>> +};
+>> +
+>> +static int k230_get_functions_count(struct pinctrl_dev *pctldev)
+>> +{
+>> +	struct k230_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+>> +
+>> +	return info->nfunctions;
+>> +}
+>> +
+>> +static const char *k230_get_fname(struct pinctrl_dev *pctldev,
+>> +				  unsigned int selector)
+>> +{
+>> +	struct k230_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+>> +
+>> +	return info->functions[selector].name;
+>> +}
+>> +
+>> +static int k230_get_groups(struct pinctrl_dev *pctldev, unsigned int selector,
+>> +			   const char * const **groups, unsigned int *num_groups)
+>> +{
+>> +	struct k230_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+>> +
+>> +	*groups = info->functions[selector].groups;
+>> +	*num_groups = info->functions[selector].ngroups;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int k230_set_mux(struct pinctrl_dev *pctldev, unsigned int selector,
+>> +			unsigned int group)
+>> +{
+>> +	struct k230_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+>> +	const struct k230_pin_conf *data = info->groups[group].data;
+>> +	struct k230_pin_group *grp = &info->groups[group];
+>> +	const unsigned int *pins = grp->pins;
+>> +	struct regmap *regmap;
+>> +	unsigned int value, mask;
+>> +	int cnt, reg;
+>> +
+>> +	regmap = info->regmap_base;
+>> +
+>> +	for (cnt = 0; cnt < grp->num_pins; cnt++) {
+>> +		reg = pins[cnt] * 4;
+>> +		value = data[cnt].func << K230_SHIFT_SEL;
+>> +		mask = K230_PC_SEL;
+>> +		regmap_update_bits(regmap, reg, mask, value);
+>> +		k230_pins[pins[cnt]].drv_data = grp;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct pinmux_ops k230_pmxops = {
+>> +	.get_functions_count	= k230_get_functions_count,
+>> +	.get_function_name	= k230_get_fname,
+>> +	.get_function_groups	= k230_get_groups,
+>> +	.set_mux		= k230_set_mux,
+>> +	.strict			= true,
+>> +};
+>> +
+>> +static int k230_pinctrl_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct k230_pinctrl *info;
+>> +	struct pinctrl_desc *pctl;
+>> +
+>> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+>> +	if (!info)
+>> +		return -ENOMEM;
+>> +
+>> +	pctl = &info->pctl;
+>> +
+>> +	pctl->name	= "k230-pinctrl";
+>> +	pctl->owner	= THIS_MODULE;
+>> +	pctl->pins	= k230_pins;
+>> +	pctl->npins	= ARRAY_SIZE(k230_pins);
+>> +	pctl->pctlops	= &k230_pctrl_ops;
+>> +	pctl->pmxops	= &k230_pmxops;
+>> +	pctl->confops	= &k230_pinconf_ops;
+>> +
+>> +	info->base = devm_platform_ioremap_resource(pdev, 0);
+>> +	if (IS_ERR(info->base))
+>> +		return PTR_ERR(info->base);
+>> +
+>> +	k230_regmap_config.name = "canaan,pinctrl";
+> Why this is not part of definition?
+
+Will move to definition and set regmap to const.
+
+>> +	info->regmap_base = devm_regmap_init_mmio(dev, info->base,
+>> +						  &k230_regmap_config);
+>> +	if (IS_ERR(info->regmap_base))
+>> +		return dev_err_probe(dev, PTR_ERR(info->regmap_base),
+>> +				     "failed to init regmap\n");
+>> +
+>> +	info->pctl_dev = devm_pinctrl_register(dev, pctl, info);
+>> +	if (IS_ERR(info->pctl_dev))
+>> +		return dev_err_probe(dev, PTR_ERR(info->pctl_dev),
+>> +				     "devm_pinctrl_register failed\n");
+>> +
+>> +	k230_pinctrl_parse_dt(pdev, info);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id k230_dt_ids[] = {
+>> +	{ .compatible = "canaan,k230-pinctrl", },
+>> +	{ /* sintenel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, k230_dt_ids);
+>> +
+>> +static struct platform_driver k230_pinctrl_driver = {
+>> +	.probe = k230_pinctrl_probe,
+>> +	.driver = {
+>> +		.name = "k230-pinctrl",
+>> +		.of_match_table = k230_dt_ids,
+>> +	},
+>> +};
+>> +module_platform_driver(k230_pinctrl_driver);
+>> +
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_AUTHOR("Ze Huang <18771902331@163.com>");
+>> +MODULE_DESCRIPTION("Canaan K230 pinctrl driver");
 > Best regards,
 > Krzysztof
-> 
 
-Best regards,
-Andrei
 
