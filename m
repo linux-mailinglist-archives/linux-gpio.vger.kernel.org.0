@@ -1,31 +1,31 @@
-Return-Path: <linux-gpio+bounces-10261-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10262-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12EF897C772
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 11:47:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 995C997C775
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 11:48:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 431C21C20958
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 09:47:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 52F411F26085
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 09:48:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 948A91A01D3;
-	Thu, 19 Sep 2024 09:44:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BD5519DF65;
+	Thu, 19 Sep 2024 09:44:12 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBADF1A00FF;
-	Thu, 19 Sep 2024 09:44:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7A21A01D8;
+	Thu, 19 Sep 2024 09:44:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726739050; cv=none; b=ZfLMCRbvDaqf3OriuRDVwsdEYfpT7dH+5GffnHIPAUlxyPcET+YjHV38dgJC6ZG4lJmN9sHOUnxykpjjvAvusfQbsX+KIRHc88v1BSerqhveCh1eW9DiBI+Jch0Yd+ooIHeIw7uXRNsxbmt74bo3q4oZACan/kMD0K5za7zQmnk=
+	t=1726739052; cv=none; b=h2SmRKqVNKLMPbPWAfGObZEgSEl4mu8HcM/CJ4vV7MpVSqQ3t3hj6Eud33xudsPIqHKLQXaT+qu4nJTnpc5pambZx0Bqc2A3UpKUI4JOwsTDWSXph/WU2bp9hmHeSD5o+yohjIEI0L3/iEWFMIjF1IZtdKauVD+e1myhMU9v6qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726739050; c=relaxed/simple;
-	bh=LZo7tXx/X3IYzIBTbPHYkwX4X/ERNVgO5jELty9Bat4=;
+	s=arc-20240116; t=1726739052; c=relaxed/simple;
+	bh=gAlJ7gDxm06bfoNA93gike3Nx8ni1gIqR8faTAfBL60=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RtkNt67P4sHUSgLT0eu0pPMZvlHj6JkfzDbDOZc3kSKIaGpyXHgIrM26rTN2HY2I+eEib0Tr1hZGFj+mmpYeueEDD2kh0Q5ZoyVCh9bOvHd/klPGUBXippYfv/EXMuO4ejja61XGs33pSN7iCp3gkvgc4DrMhA1f4IjgJhaNfnw=
+	 MIME-Version:Content-Type; b=eOJeIoWV+MbYgnIz+JLGu/AWPKCgNTdItFFs+98ljETjGlqGooXmtzZ5rIXsmch23QjoGt7foSL9pWXME+DM+DU505wBnvWqkCvy6nRaMudWbpL2frn4zSsG8VXTE4Pl/7jzGmf9AfyHDJH203XFDoFLMEz8WB/vsgiVXF2b0+w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
@@ -43,9 +43,9 @@ To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
 	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
 	<BMC-SW@aspeedtech.com>, <Peter.Yin@quantatw.com>, <Jay_Zhang@wiwynn.com>
-Subject: [PATCH v4 5/6] gpio: aspeed: Change the macro to support deferred probe
-Date: Thu, 19 Sep 2024 17:43:38 +0800
-Message-ID: <20240919094339.2407641-6-billy_tsai@aspeedtech.com>
+Subject: [PATCH v4 6/6] gpio: aspeed: Add the flush write to ensure the write complete.
+Date: Thu, 19 Sep 2024 17:43:39 +0800
+Message-ID: <20240919094339.2407641-7-billy_tsai@aspeedtech.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240919094339.2407641-1-billy_tsai@aspeedtech.com>
 References: <20240919094339.2407641-1-billy_tsai@aspeedtech.com>
@@ -55,51 +55,36 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-Use module_platform_driver() to replace module_platform_driver_probe().
-The former utilizes platform_driver_register(), which allows the driver to
-defer probing when it doesn't acquire the necessary resources due to probe
-order. In contrast, the latter uses __platform_driver_probe(), which
-includes the comment "Note that this is incompatible with deferred
-probing." Since our GPIO driver requires access to the clock resource, the
-former is more suitable.
+Performing a dummy read ensures that the register write operation is fully
+completed, mitigating any potential bus delays that could otherwise impact
+the frequency of bitbang usage. E.g., if the JTAG application uses GPIO to
+control the JTAG pins (TCK, TMS, TDI, TDO, and TRST), and the application
+sets the TCK clock to 1 MHz, the GPIO’s high/low transitions will rely on
+a delay function to ensure the clock frequency does not exceed 1 MHz.
+However, this can lead to rapid toggling of the GPIO because the write
+operation is POSTed and does not wait for a bus acknowledgment.
 
 Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 ---
- drivers/gpio/gpio-aspeed.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-aspeed.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index 060c0225cb99..c811e84db0b9 100644
+index c811e84db0b9..daa12e21d946 100644
 --- a/drivers/gpio/gpio-aspeed.c
 +++ b/drivers/gpio/gpio-aspeed.c
-@@ -1282,7 +1282,7 @@ static const struct of_device_id aspeed_gpio_of_table[] = {
- };
- MODULE_DEVICE_TABLE(of, aspeed_gpio_of_table);
+@@ -400,6 +400,8 @@ static void __aspeed_gpio_set(struct gpio_chip *gc, unsigned int offset,
+ 	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
  
--static int __init aspeed_gpio_probe(struct platform_device *pdev)
-+static int aspeed_gpio_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *gpio_id;
- 	struct gpio_irq_chip *girq;
-@@ -1382,13 +1382,14 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
+ 	gpio->config->llops->reg_bit_set(gpio, offset, reg_val, val);
++	// flush write
++	gpio->config->llops->reg_bits_get(gpio, offset, reg_val);
  }
  
- static struct platform_driver aspeed_gpio_driver = {
-+	.probe = aspeed_gpio_probe,
- 	.driver = {
- 		.name = KBUILD_MODNAME,
- 		.of_match_table = aspeed_gpio_of_table,
- 	},
- };
- 
--module_platform_driver_probe(aspeed_gpio_driver, aspeed_gpio_probe);
-+module_platform_driver(aspeed_gpio_driver);
- 
- MODULE_DESCRIPTION("Aspeed GPIO Driver");
- MODULE_LICENSE("GPL");
+ static void aspeed_gpio_set(struct gpio_chip *gc, unsigned int offset,
 -- 
 2.25.1
 
