@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-10265-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10266-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6AA997C914
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 14:26:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 62B3297C919
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 14:27:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 11ABB1F236FB
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 12:26:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E24611F23771
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 12:27:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DF2919DF79;
-	Thu, 19 Sep 2024 12:26:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A699019E7DB;
+	Thu, 19 Sep 2024 12:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gg4nAtjE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3j8Zffp"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5E119DF5C;
-	Thu, 19 Sep 2024 12:26:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5281519D8B8;
+	Thu, 19 Sep 2024 12:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726748805; cv=none; b=uZwOXdHAL3l91SrqzjuucVb0HXY0BUvVrEGcHxM1Jr0AEkA4VeWdwwUEW9NmxVhllLstx9rWrorpdqa7xPQAsp9COWlT32xrrHfyso/ROuAIVPr3JHkde7KyMORz0ztRrpP/u+ez7NUHh2oCWmfUtPiFt1eil7FSadPCVCVVW1g=
+	t=1726748811; cv=none; b=gwCY9gzigRShszyqebVs676p0aRqDnnMIbVMPfx7BSVRkrJAI/ZO38BhS+NgU94sZOZvgEr91ie/BUM3KaDSc8CzlsWEtcqas2g4RgyVCuhLJ7b4aPvVQsEBx7rZx5Moz53/Po3IfcYWekEAlc9xn8pUasDrRh+91BGuKJNcIsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726748805; c=relaxed/simple;
-	bh=leQyPxL1L0sSQwR1ysuxz2pWw20dOuldUQKtP+h8zwM=;
+	s=arc-20240116; t=1726748811; c=relaxed/simple;
+	bh=/sbvkvvWbo+R2p0WSTX4lWWIw7JQqF97MvRH9J8oNH8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ME0FN9yEm1iNCXkAwpAwUPYEcLPq+LieOmMeA6CwZUv/iJBbm594XoVOcGCv8dGZrxOUmKT+NVT+TF1ujLr8KCIYnpj2JQ70aYesi85rUnqYVbFMjVYfsvPZuNRmJ4nB8klA9RQXRmoFne1RTtntvn2EiA3L9gwrGUKPd7hQoIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gg4nAtjE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD97DC4DE1D;
-	Thu, 19 Sep 2024 12:26:37 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=mF11K12RE3NJf8AwfnvFKyPT2QjJwFJoPhynVzx5ITNug9lcf953VsDLNj2ruwWL0wFSB7b5JTWPm+ZCDgP9YlOAKprec85g2q3rk9ie2SCc5ogVBTo9ZWOIeyyQ7FkR23XWvRHSI7i11j/lkn5G3UOitXYQVgqwfvclWdKce/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3j8Zffp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F00A3C4CECD;
+	Thu, 19 Sep 2024 12:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726748804;
-	bh=leQyPxL1L0sSQwR1ysuxz2pWw20dOuldUQKtP+h8zwM=;
+	s=k20201202; t=1726748810;
+	bh=/sbvkvvWbo+R2p0WSTX4lWWIw7JQqF97MvRH9J8oNH8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gg4nAtjEGTTihQgTuabTMGp4krUy09H22B4e9WWY5uZCMWIfG8ld2gagyWgBrbA2X
-	 uqWdSwUAF4RmDDCmK3cPd3uOCg5xVJtek+Joq8ZsPvtdrulZGjeOepvUwKE+PCjxx1
-	 ROiQfMxA8bn++XQpYvHQHQZDvIgCE2EqZTO/7Xu8t5LNVhA10eB6erN6dZqZ2HbEqK
-	 cngQqW/75zt2LRK+UwNwOs5VeR7/Ww0Taa3xSnhDVqFdPH0cIGpLEAG3G+GTKtPFLa
-	 CfKkWcDctfmRBwoWF89w17cI/kU3MTaBxMbj/qBnc7am2HC5GDLtMtvCIYSYs7aLML
-	 ARMV6LVgn1kfw==
-Message-ID: <5c61af2f-9f7f-4351-a973-7d08612c50c3@kernel.org>
-Date: Thu, 19 Sep 2024 14:26:35 +0200
+	b=d3j8ZffpFCHU7Jjo1iVK0eMbcRup/sSaXR/OO73o+WfHNSKeeSqAM5/Y/6CFt6Zcc
+	 DVsDIDOWRMpah5x+CHsk9JMs5CWE/pwDii7WOJCp5Px0ykoQq8/zDc4q1u7Y5tEGRn
+	 niI5THLqOrK3JicP8z417S20jBDQ6qknA1RplNyXT8uszVRuw98XTyLMYBqTPaTMNL
+	 nWI57kDrBbk+yaPZpN1UAvoy8R/TJ++nKAzLfiq1N+B7/CBgpoH4tZKREmHCYLps1n
+	 q391xFyWyAEUPn9DsnecHnbXWJgU5CPuNabloP+zhrI1yIj56FRG13McEqMhfyA9J5
+	 GvESBgTOWu+aw==
+Message-ID: <4cd3d3f8-7d73-4171-bb35-aba975cdc11a@kernel.org>
+Date: Thu, 19 Sep 2024 14:26:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/8] dt-bindings: pinctrl: qcom: add IPQ5332 pinctrl
+Subject: Re: [PATCH 1/8] dt-bindings: clock: Add Qualcomm IPQ5424 GCC
 To: Sricharan R <quic_srichara@quicinc.com>, andersson@kernel.org,
  konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
@@ -63,7 +63,7 @@ To: Sricharan R <quic_srichara@quicinc.com>, andersson@kernel.org,
  linux-arm-kernel@lists.infradead.org
 Cc: quic_varada@quicinc.com
 References: <20240913121250.2995351-1-quic_srichara@quicinc.com>
- <20240913121250.2995351-3-quic_srichara@quicinc.com>
+ <20240913121250.2995351-2-quic_srichara@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,74 +109,80 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240913121250.2995351-3-quic_srichara@quicinc.com>
+In-Reply-To: <20240913121250.2995351-2-quic_srichara@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 13/09/2024 14:12, Sricharan R wrote:
 > From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 > 
-> Add device tree bindings for IPQ5332 TLMM block.
+> Add binding for the Qualcomm IPQ5424 Global Clock Controller
 > 
 > Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 > ---
->  .../bindings/pinctrl/qcom,ipq5424-tlmm.yaml   | 115 ++++++++++++++++++
->  1 file changed, 115 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq5424-tlmm.yaml
+>  .../bindings/clock/qcom,ipq5424-gcc.yaml      |  58 ++++
+>  include/dt-bindings/clock/qcom,ipq5424-gcc.h  | 156 +++++++++
+>  include/dt-bindings/reset/qcom,ipq5424-gcc.h  | 310 ++++++++++++++++++
+>  3 files changed, 524 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq5424-gcc.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,ipq5424-gcc.h
+>  create mode 100644 include/dt-bindings/reset/qcom,ipq5424-gcc.h
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq5424-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq5424-tlmm.yaml
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq5424-gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq5424-gcc.yaml
 > new file mode 100644
-> index 000000000000..a16d9725e368
+> index 000000000000..af2d0cec43f3
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq5424-tlmm.yaml
-> @@ -0,0 +1,115 @@
+> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq5424-gcc.yaml
+> @@ -0,0 +1,58 @@
 > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq5424-tlmm.yaml#
+> +$id: http://devicetree.org/schemas/clock/qcom,ipq5424-gcc.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Qualcomm IPQ5424 TLMM pin controller
+> +title: Qualcomm Global Clock & Reset Controller on IPQ5424
 > +
 > +maintainers:
 > +  - Bjorn Andersson <andersson@kernel.org>
-> +  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Sorry, not me. I don't have this hardware.
-
 > +
 > +description: |
+> +  Qualcomm global clock control module provides the clocks, resets and power
+> +  domains on IPQ5424.
+> +
+> +  See also::
 
-Drop |
+Just single :
 
-> +  Top Level Mode Multiplexer pin controller in Qualcomm IPQ5424 SoC.
+> +    include/dt-bindings/clock/qcom,gcc-ipq5424.h
+> +    include/dt-bindings/reset/qcom,ipq5424-gcc.h
+
+Wrong path
+
 > +
 > +allOf:
-> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+> +  - $ref: qcom,gcc.yaml#
 > +
 > +properties:
 > +  compatible:
-> +    const: qcom,ipq5424-tlmm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  gpio-reserved-ranges:
-> +    minItems: 1
-> +    maxItems: 26
+> +    const: qcom,ipq5424-gcc
 
-25, I believe is the max in such case
-
-> +
-> +  gpio-line-names:
-> +    maxItems: 50
-> +
+So everything i sthe same as 5332? Why not adding it there?
 
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> +++ b/include/dt-bindings/reset/qcom,ipq5424-gcc.h
+> @@ -0,0 +1,310 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * Copyright (c) 2018,2020 The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+
+2024 (other places and other patches as well)
+
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_IPQ_GCC_IPQ5424_H
+> +#define _DT_BINDINGS_RESET_IPQ_GCC_IPQ5424_H
+
 
 
 Best regards,
