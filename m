@@ -1,91 +1,155 @@
-Return-Path: <linux-gpio+bounces-10262-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10263-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 995C997C775
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 11:48:03 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D90D197C7EF
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 12:26:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 52F411F26085
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 09:48:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 83C451F24BDA
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 10:26:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BD5519DF65;
-	Thu, 19 Sep 2024 09:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F319619C57F;
+	Thu, 19 Sep 2024 10:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G21MlpYA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7A21A01D8;
-	Thu, 19 Sep 2024 09:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5851199FAB;
+	Thu, 19 Sep 2024 10:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726739052; cv=none; b=h2SmRKqVNKLMPbPWAfGObZEgSEl4mu8HcM/CJ4vV7MpVSqQ3t3hj6Eud33xudsPIqHKLQXaT+qu4nJTnpc5pambZx0Bqc2A3UpKUI4JOwsTDWSXph/WU2bp9hmHeSD5o+yohjIEI0L3/iEWFMIjF1IZtdKauVD+e1myhMU9v6qw=
+	t=1726741562; cv=none; b=OAgZyQEm/qF7xaEf6340hrMxNW7wtHhyDI7REKgd+kSfHp0tSFp9FOaTabDF9jRoLPZEzAyR03bsS07uD+84eaxHz3J3ihCpM7apEJI5zn1SXwGT4N8ZlFJZifcDOa3p+FOF83KfGl3/SJtXAeOFT3/sh0jgmdxU+ZlAK148Kvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726739052; c=relaxed/simple;
-	bh=gAlJ7gDxm06bfoNA93gike3Nx8ni1gIqR8faTAfBL60=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eOJeIoWV+MbYgnIz+JLGu/AWPKCgNTdItFFs+98ljETjGlqGooXmtzZ5rIXsmch23QjoGt7foSL9pWXME+DM+DU505wBnvWqkCvy6nRaMudWbpL2frn4zSsG8VXTE4Pl/7jzGmf9AfyHDJH203XFDoFLMEz8WB/vsgiVXF2b0+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Thu, 19 Sep
- 2024 17:43:39 +0800
-Received: from mail.aspeedtech.com (192.168.10.10) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Thu, 19 Sep 2024 17:43:39 +0800
-From: Billy Tsai <billy_tsai@aspeedtech.com>
-To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <joel@jms.id.au>,
-	<andrew@codeconstruct.com.au>, <linux-gpio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<BMC-SW@aspeedtech.com>, <Peter.Yin@quantatw.com>, <Jay_Zhang@wiwynn.com>
-Subject: [PATCH v4 6/6] gpio: aspeed: Add the flush write to ensure the write complete.
-Date: Thu, 19 Sep 2024 17:43:39 +0800
-Message-ID: <20240919094339.2407641-7-billy_tsai@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240919094339.2407641-1-billy_tsai@aspeedtech.com>
-References: <20240919094339.2407641-1-billy_tsai@aspeedtech.com>
+	s=arc-20240116; t=1726741562; c=relaxed/simple;
+	bh=KEFt1oFo19jE9sxNEVuuRlx+WDgNLtCsTevNidI3PVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kf3CyoDMueWuXQrgdXtdcwCDq4l5RMJA65mLUQFbwxskD0UZ7TWcw3O/k1eyct5BQfM2PwczbMjYhgaqx+ApeQb2bUdx9JM4PDzSldV579ZAWXXXrlozY/89Y0McGYJkQOKkTeJ9wRW8rc2T5TWAUXJZH4Fp2Yb+U6RTxJ8ENks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G21MlpYA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9471EC4CEC4;
+	Thu, 19 Sep 2024 10:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726741562;
+	bh=KEFt1oFo19jE9sxNEVuuRlx+WDgNLtCsTevNidI3PVs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=G21MlpYAqJSseevJLE1SGNU3PXOve1CeGtZVkFGTCkK9hoL00WQidsMJE4IzQp0Dz
+	 LdLhDwdckuBeWaoJCG2bbWcMS6fmYQ95chStaUFhyohegeX6LMxYOlb2ZPVifFUFj+
+	 R5aj9EZ+bRo3LoN8syipFeqLrxqRoPboZQeD3ET61vt4CC8zaZbvXsveCydfvfgyu7
+	 X6LMqkeaT5nzjYCV2SpQw6TZbgCy2Edhaizgrv4g5X9hfeyUFiVNAQf8y+wS3sgjcu
+	 IQfnaU4OhmgcAqcBX+zGzgDMdfkj+CxwgtsDiIiWobHzQlVXAx2r9AfUicuaeAyRfo
+	 8ol2w2brMElAw==
+Message-ID: <b926c116-7d5b-4bb6-8199-b7653fc5794b@kernel.org>
+Date: Thu, 19 Sep 2024 12:25:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 08/10] arm64: dts: exynos: Add initial support for
+ exynos8895 SoC
+To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240909110017.419960-1-ivo.ivanov.ivanov1@gmail.com>
+ <20240909110017.419960-9-ivo.ivanov.ivanov1@gmail.com>
+ <ylxrbde4kafbos3qmx54w2d6hpv26ngxgkkpnbdynjj2wfce32@fyzr4jxzn6z4>
+ <ddda4f98-2402-04ab-108d-a1ee4beb33bd@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <ddda4f98-2402-04ab-108d-a1ee4beb33bd@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Performing a dummy read ensures that the register write operation is fully
-completed, mitigating any potential bus delays that could otherwise impact
-the frequency of bitbang usage. E.g., if the JTAG application uses GPIO to
-control the JTAG pins (TCK, TMS, TDI, TDO, and TRST), and the application
-sets the TCK clock to 1 MHz, the GPIO’s high/low transitions will rely on
-a delay function to ensure the clock frequency does not exceed 1 MHz.
-However, this can lead to rapid toggling of the GPIO because the write
-operation is POSTed and does not wait for a bus acknowledgment.
+On 18/09/2024 19:54, Ivaylo Ivanov wrote:
+>>> +		cpu3: cpu@103 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a53";
+>>> +			reg = <0x103>;
+>>> +			enable-method = "psci";
+>>> +		};
+>>> +
+>>> +		cpu4: cpu@0 {
+>> Why cpu@0 is cpu4 not cpu0? Anyway, these should be ordered by unit
+>> address.
+> 
+> cpu@100 is the boot core of the first cluster consisting of cortex-a53
+> 
+> cores, hence why it's labelled as cpu0. The second cluster contains
+> 
+> the Mongoose cores, labelled and ordered after the first cluster.
+> 
+> 
+> It's ordered like so on a lot of SoCs for sanity's sake, hence why I
+> 
+> believe it should stay like that.
 
-Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
----
- drivers/gpio/gpio-aspeed.c | 2 ++
- 1 file changed, 2 insertions(+)
+I tend to switch to style expressed in DTS coding style, especially that
+we might use at some point sorting tool which would then need exception
+for CPUs. Keep existing labels, assuming they reflect reality, but order
+by unit address.
 
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index c811e84db0b9..daa12e21d946 100644
---- a/drivers/gpio/gpio-aspeed.c
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -400,6 +400,8 @@ static void __aspeed_gpio_set(struct gpio_chip *gc, unsigned int offset,
- 	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
- 
- 	gpio->config->llops->reg_bit_set(gpio, offset, reg_val, val);
-+	// flush write
-+	gpio->config->llops->reg_bits_get(gpio, offset, reg_val);
- }
- 
- static void aspeed_gpio_set(struct gpio_chip *gc, unsigned int offset,
--- 
-2.25.1
+> 
+> 
+> If you still think that they must be ordered by unit address, please
+> 
+> explicitly let me know so that I include that change in the v5.
+> 
+
+
+Best regards,
+Krzysztof
 
 
