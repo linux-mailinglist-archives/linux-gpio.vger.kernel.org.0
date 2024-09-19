@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-10266-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10267-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62B3297C919
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 14:27:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DE3597C925
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 14:28:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E24611F23771
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 12:27:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 074D31F23A0A
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Sep 2024 12:28:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A699019E7DB;
-	Thu, 19 Sep 2024 12:26:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD8D319DF79;
+	Thu, 19 Sep 2024 12:28:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3j8Zffp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Km4vk2c+"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5281519D8B8;
-	Thu, 19 Sep 2024 12:26:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCB11957F8;
+	Thu, 19 Sep 2024 12:28:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726748811; cv=none; b=gwCY9gzigRShszyqebVs676p0aRqDnnMIbVMPfx7BSVRkrJAI/ZO38BhS+NgU94sZOZvgEr91ie/BUM3KaDSc8CzlsWEtcqas2g4RgyVCuhLJ7b4aPvVQsEBx7rZx5Moz53/Po3IfcYWekEAlc9xn8pUasDrRh+91BGuKJNcIsg=
+	t=1726748892; cv=none; b=neOE3Ti9/IKGJqYY580+qfaZUglH9ERLUcgnOpG/yIcOm3hhHAA2QZfZIuFBOabcI64FYHoxR9Z9L8v9USOxPLqsjcJHE3ioOFK3B4XTWlgUKBmjEiuh+Qcx1cH3g7nIPkq0uHlY8oS//KbwtwJolyMis/DxdITCLentuEbYk3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726748811; c=relaxed/simple;
-	bh=/sbvkvvWbo+R2p0WSTX4lWWIw7JQqF97MvRH9J8oNH8=;
+	s=arc-20240116; t=1726748892; c=relaxed/simple;
+	bh=/d191hQZkz4mwJswd90UUJhs+zZXeyAcFTgtal+88Jc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mF11K12RE3NJf8AwfnvFKyPT2QjJwFJoPhynVzx5ITNug9lcf953VsDLNj2ruwWL0wFSB7b5JTWPm+ZCDgP9YlOAKprec85g2q3rk9ie2SCc5ogVBTo9ZWOIeyyQ7FkR23XWvRHSI7i11j/lkn5G3UOitXYQVgqwfvclWdKce/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3j8Zffp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F00A3C4CECD;
-	Thu, 19 Sep 2024 12:26:44 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=pkuoH8Djp94UYotQwuLeiUxFrp4jByvNWquJxKCRoI/9eX2Uk17VQmqmuoZk63LaUS5sS7IPseL76YEt2SmAq0V35qoBhstA+BFY+VHBC8NEQ9Pg3hGmKeie4FdG8gHTaXgyii92TrcXwbgzu0ene/zfkgcG0UauJU2KRb0xQO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Km4vk2c+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED0EBC4CEC4;
+	Thu, 19 Sep 2024 12:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726748810;
-	bh=/sbvkvvWbo+R2p0WSTX4lWWIw7JQqF97MvRH9J8oNH8=;
+	s=k20201202; t=1726748892;
+	bh=/d191hQZkz4mwJswd90UUJhs+zZXeyAcFTgtal+88Jc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d3j8ZffpFCHU7Jjo1iVK0eMbcRup/sSaXR/OO73o+WfHNSKeeSqAM5/Y/6CFt6Zcc
-	 DVsDIDOWRMpah5x+CHsk9JMs5CWE/pwDii7WOJCp5Px0ykoQq8/zDc4q1u7Y5tEGRn
-	 niI5THLqOrK3JicP8z417S20jBDQ6qknA1RplNyXT8uszVRuw98XTyLMYBqTPaTMNL
-	 nWI57kDrBbk+yaPZpN1UAvoy8R/TJ++nKAzLfiq1N+B7/CBgpoH4tZKREmHCYLps1n
-	 q391xFyWyAEUPn9DsnecHnbXWJgU5CPuNabloP+zhrI1yIj56FRG13McEqMhfyA9J5
-	 GvESBgTOWu+aw==
-Message-ID: <4cd3d3f8-7d73-4171-bb35-aba975cdc11a@kernel.org>
-Date: Thu, 19 Sep 2024 14:26:42 +0200
+	b=Km4vk2c+ORrkSW6+rGupYkth3lUduIdFe+RrVcBNWxsZ22jQHRgeT3IRcQeu8ioiu
+	 pgPUoqf7VNnqSSQ+/IpiA2jMJVsXnR915w2JppwutLWnT77fXkg2VMSzkZARV79lM2
+	 dnWoVnyOoLx7TwggqAHOX+rPsiiIdLKDH2tc+qvY0b+KZX6+tVSnzpEAsEIKXKDVAD
+	 3mUipi4/ci7/GoIe5qctxhQV6EgZ6BB1D63s0Az81FSiwLR9ABEjYq3GTH9QmX8QDu
+	 O8CkhvhsZ4lUWIaLZ6ZyeF6cCSgMs97d3+KRRwkHTx4un/Gntug5T4XTglqVhq5/wg
+	 EyYwMLjKLJzlg==
+Message-ID: <a8dc4ca6-531b-40d3-b1de-72d8b6c7cb41@kernel.org>
+Date: Thu, 19 Sep 2024 14:28:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] dt-bindings: clock: Add Qualcomm IPQ5424 GCC
+Subject: Re: [PATCH 6/8] dt-bindings: qcom: Add ipq5424 boards
 To: Sricharan R <quic_srichara@quicinc.com>, andersson@kernel.org,
  konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
@@ -63,7 +63,7 @@ To: Sricharan R <quic_srichara@quicinc.com>, andersson@kernel.org,
  linux-arm-kernel@lists.infradead.org
 Cc: quic_varada@quicinc.com
 References: <20240913121250.2995351-1-quic_srichara@quicinc.com>
- <20240913121250.2995351-2-quic_srichara@quicinc.com>
+ <20240913121250.2995351-7-quic_srichara@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,79 +109,23 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240913121250.2995351-2-quic_srichara@quicinc.com>
+In-Reply-To: <20240913121250.2995351-7-quic_srichara@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 13/09/2024 14:12, Sricharan R wrote:
 > From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 > 
-> Add binding for the Qualcomm IPQ5424 Global Clock Controller
+> Document the new ipq5424 SoC/board device tree bindings
+
+It's nice to say something about hardware...
+
 > 
 > Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 > ---
->  .../bindings/clock/qcom,ipq5424-gcc.yaml      |  58 ++++
->  include/dt-bindings/clock/qcom,ipq5424-gcc.h  | 156 +++++++++
->  include/dt-bindings/reset/qcom,ipq5424-gcc.h  | 310 ++++++++++++++++++
->  3 files changed, 524 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq5424-gcc.yaml
->  create mode 100644 include/dt-bindings/clock/qcom,ipq5424-gcc.h
->  create mode 100644 include/dt-bindings/reset/qcom,ipq5424-gcc.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq5424-gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq5424-gcc.yaml
-> new file mode 100644
-> index 000000000000..af2d0cec43f3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq5424-gcc.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/qcom,ipq5424-gcc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Global Clock & Reset Controller on IPQ5424
-> +
-> +maintainers:
-> +  - Bjorn Andersson <andersson@kernel.org>
-> +
-> +description: |
-> +  Qualcomm global clock control module provides the clocks, resets and power
-> +  domains on IPQ5424.
-> +
-> +  See also::
-
-Just single :
-
-> +    include/dt-bindings/clock/qcom,gcc-ipq5424.h
-> +    include/dt-bindings/reset/qcom,ipq5424-gcc.h
-
-Wrong path
-
-> +
-> +allOf:
-> +  - $ref: qcom,gcc.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ipq5424-gcc
-
-So everything i sthe same as 5332? Why not adding it there?
 
 
-> +++ b/include/dt-bindings/reset/qcom,ipq5424-gcc.h
-> @@ -0,0 +1,310 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> +/*
-> + * Copyright (c) 2018,2020 The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-
-2024 (other places and other patches as well)
-
-> + */
-> +
-> +#ifndef _DT_BINDINGS_RESET_IPQ_GCC_IPQ5424_H
-> +#define _DT_BINDINGS_RESET_IPQ_GCC_IPQ5424_H
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 
 
