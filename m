@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-10320-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10321-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7254997D7B4
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Sep 2024 17:45:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C6B497D7B8
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Sep 2024 17:45:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24B501F22A06
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Sep 2024 15:45:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2EC74287E42
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Sep 2024 15:45:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DA2217E8F7;
-	Fri, 20 Sep 2024 15:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C5C3181D00;
+	Fri, 20 Sep 2024 15:45:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEJThr2S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTspKijT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A924A61FCF;
-	Fri, 20 Sep 2024 15:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C5B76026;
+	Fri, 20 Sep 2024 15:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726847123; cv=none; b=RPJ+RrdR7h0Ne4ybgcpD8cKm5FtXtxAZJCehzH6LiE5C3e8qqyLJ8XrBy0cQU/wBULWyvjMueBB0phF7nWzeockga18N+LvpD/LnyNbVIo+j6L5ay7bxmvqdQ6nNSMV4Qa2nlGI+7UpvWegxz1MdvEi1UMWZJKHVkbA4oj4KG14=
+	t=1726847124; cv=none; b=Qf5FGkFUaiDQeMyedZX/WKHKJ3qRxWkb8e230cTzr4r7ULkbfZFm1eHuKAmQQs2mET7Z6PU0y/FGPe9leY3C4WwL6ckM3vAS6vqTgNdZ6On3wBjSlMMWw/SUEJ+x0ZKrmVyK1asalZEydvB4G73GtgV8fvAAjMdOmNTN9+4BIPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726847123; c=relaxed/simple;
-	bh=yg4lWFLsux2GkZkTBE5nid/8euszrOUu40JI4Fymam4=;
+	s=arc-20240116; t=1726847124; c=relaxed/simple;
+	bh=Vbr+qL+l9qgGtP9JjdPcKkgCw59+u/mbHPDbfem2cKA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eRHOstsiyNBlS58dKTQXk7i9/THgO1YT7U75NEDS7RydN7r7boiCsAdOwPpjFoAQYbWXLFVWK2Tf3+7WYLeM/XHbqxQ0+CUezd95mkGiJxrUjOJKIiFttvBodU8W1ani0obxW3cNWYcCh2H4Mcn9Ai7x1SXS93UzgbJyJPnQe2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OEJThr2S; arc=none smtp.client-ip=209.85.221.46
+	 MIME-Version; b=e9rLR2Ar5q1lakkIlUmvQ6WzfchHFouA3kiQLVUA8pg2IDfASeWHh4eSIUUjIKVm2HZbykghx8DpvHTRTS77wCDGB7t20/uUwNg3tvoTHe8tTlqF14fJmjRBP9ZMrCg7R53ocdGkBkZ0lXALXHFkR1OQNoDkQQhZdDRCS32T2ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iTspKijT; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-375e5c12042so1236112f8f.3;
-        Fri, 20 Sep 2024 08:45:21 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42cafda818aso19964125e9.2;
+        Fri, 20 Sep 2024 08:45:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726847120; x=1727451920; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1726847121; x=1727451921; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gFTIk59DfHte/4Im9/5rXIn7HhETWJ2FxxMWTmfCArg=;
-        b=OEJThr2SIO8zGRIVL8Baz+dVGqVF1EcKMRYZI82XSf1boaNUdf6Z8efZ+dANRBXwEK
-         fnOa1jlcoC9HKRJTo+I4GqC6qEH51lq1M+qoFPKmTzly905Cq7Fceb2ZqeOaNYSq8YTC
-         gD+vKTkN/XWVV3LPS23mN6t1JmcsWP774UHW25hro2yOgthG5B3eIiWBGCMpOSoNPxKb
-         bACm7q9maYpPncYWa61ezp9hPd6TWPDNp5oUNN/ttH6zAXRHkZu4gzxnAPgpU9s3hTXP
-         3Gj9nxHLLOLEC54xAEA07lRaDgOCbmQU6yt5ehBel2X7qb5zX7SO9cBhpj/vhg/56OK0
-         US6Q==
+        bh=2rZEHFg7e16eJD/BbJaGTYxJQBlSimzLkdBWE2FUz+w=;
+        b=iTspKijTQzU0mrLRgKd7IxbyVYiLDPDg6P94Rj4T3Z0A3nzzmip2lZA7T8I6ptNPaU
+         SMW03Olig1r9xCKmD0nKiXDFko26buZ12sKxpYU5BjnHym5Cl6bXFs83yQsq1T7/WTNP
+         YyC0O9K+cAgzndc/IvRNW1p6746fyNImoRpvCESigIqKwVV7cJjwgm27uE6TOc2SVgko
+         dCo+VW8Wotv60reFMAYXdFJtPGVzrWRN0kN9mtN68wBE+fItQg7rth0DtEgepJDoF13F
+         lUMMgtu2nNaTEAzkhplyW66n3NqblGDOqfJetqiKbdj2/f/8WN0GXhb8YOBBlcTwMPgB
+         C2jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726847120; x=1727451920;
+        d=1e100.net; s=20230601; t=1726847121; x=1727451921;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gFTIk59DfHte/4Im9/5rXIn7HhETWJ2FxxMWTmfCArg=;
-        b=fn/gfDjmotjcUIHnZOajViOkBjm361q/xIe2/pzbN37WsMZWg95A88JmvNwH3FdXbu
-         RE89lif0NUb3uZXcswWIgjY+FLasuARt6gmY1EL1Hhg+nnyOTBNoPGe61AZA5Iyy7T3A
-         No1BNagaOfnlYoSkGKFU9XqVB2B7+pcp4slYu+NFXJai44jvv1ujwAr2BdFrZ9+b4kSd
-         kygjju/hD9Yv4XrGD/Ddm//la32mRyETRz/7vaD87vNhuvu6q22w68vj0971W1gOVcyH
-         ud+RgD2LnS6CdQwFBObNKqsgHQedUxdBgwvSsBsJkdV3pjiuEjwHwcqHCv65JoFGYKXN
-         JNaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuCSq+Vwl/fzrTkMglocAQ3NAZmhmsnG+tWsqEZEEsv418exjv3yPGVFkMcNDN6hBroBKOqS9eiYF6yiim@vger.kernel.org, AJvYcCVHj9i5AfweLwMtpQAQ3B8r7VyXP3tc4ygwPCbSn4uYOz3a/pgxSHSagxC7h0xf4a6vwT4fCUJWdHhkBQ==@vger.kernel.org, AJvYcCXU7erJhdpz7YHyrQawLjUtIwtkNT2GXM61Pfc3XkwK2MEubjnXrmZM/gc0Gi2jMeUOqEGoOgun3ht9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvmMsJJe7JFhJFLXYUXJq3+Z1+Y3xA8/tIaaFx/qL/j3ZDgtcX
-	GPm3OyahTUXSuaP9YglAmob6JalMMZWYos7wKvgP5bew6tEAw4ST
-X-Google-Smtp-Source: AGHT+IE1ed1khk3cPITwLgrPUAHSUd1bpo4PNU0Pry7ekwp7U0jekLc5F8l2SdED6qS6d0yr98kx9A==
-X-Received: by 2002:a5d:6d0b:0:b0:378:c2f3:defd with SMTP id ffacd0b85a97d-37a4226bbd5mr2397173f8f.13.1726847119790;
-        Fri, 20 Sep 2024 08:45:19 -0700 (PDT)
+        bh=2rZEHFg7e16eJD/BbJaGTYxJQBlSimzLkdBWE2FUz+w=;
+        b=DiaYONPvCr4Uc+zyP12kEKMNAeZsMVAMtfZ3AQvRycNz4bkVQBMgkggAmpWGq58t2T
+         IzX4nCXsi7rt0B0ZgJVs3GYwwn4B8i+bKTcPS3bhZmaEE32XnSGsatjr2+4tORqBGQz2
+         AEXzJe3ZaD793k902HKkeVpcgvJTYqpKaWMkTeqDSdhy+fU073aCjf9j/W6wWlIF7lrC
+         fSZauIzaPCbiVzObd+6HjMMm/ocJs26spzkQSo7NwsljDvWIN6rMCGL/D/MSbqDz6UaO
+         RHLhqAup9K641qYZvVDWweZScs12Y345tyWPACKmr4nEJ10VhmKZnc5zRj2aMEaKbjtT
+         TL8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWf6LQeHBw6iPlHlZ4xzZEQ1M3MLU4a6EQ7cs5eJEZ0jOPy5YBmYiUxn04YVDHI4329Ho6PeJserFAo@vger.kernel.org, AJvYcCWkwVJNjNXwh8GthX5Ls4Ebnvr7G/h8DhiOb3XsoZgXNQobgnKFaHAtLGIyqZjwJPzW95XBb5LTopdt1KMc@vger.kernel.org, AJvYcCXu/5ue7u7ptmFVqi8meCKeQczdaIE675Lre+irabeorOGXcEpsvLlZvXf0To/hsp4hfFGbmlVWxzV7rg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWsxUd+aDrurdUoeeG6bsUo8Dj5PgYbfZEiu7wxXVpp7d3FEI+
+	6p7nieUvkr7rla9EUPD7FFfvm1CzIQdQODCWaTf77apwdLrMJJiK
+X-Google-Smtp-Source: AGHT+IGWeXNIuIG9gYDvIgB/DnpHPdXOOE1VrSnd3E2Ga9eTS82mq04xru/wUMWY2I5i9AO3i/Ampg==
+X-Received: by 2002:a5d:52c8:0:b0:374:c943:4c0f with SMTP id ffacd0b85a97d-37a42fd83a4mr1621330f8f.0.1726847120911;
+        Fri, 20 Sep 2024 08:45:20 -0700 (PDT)
 Received: from ivaylo-desktop.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e780defdsm17772839f8f.115.2024.09.20.08.45.18
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e780defdsm17772839f8f.115.2024.09.20.08.45.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2024 08:45:19 -0700 (PDT)
+        Fri, 20 Sep 2024 08:45:20 -0700 (PDT)
 From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
@@ -79,9 +79,9 @@ Cc: linux-samsung-soc@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 02/10] dt-bindings: hwinfo: samsung,exynos-chipid: add exynos8895 compatible
-Date: Fri, 20 Sep 2024 18:45:00 +0300
-Message-Id: <20240920154508.1618410-3-ivo.ivanov.ivanov1@gmail.com>
+Subject: [PATCH v5 03/10] soc: samsung: exynos-chipid: add exynos8895 SoC support
+Date: Fri, 20 Sep 2024 18:45:01 +0300
+Message-Id: <20240920154508.1618410-4-ivo.ivanov.ivanov1@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240920154508.1618410-1-ivo.ivanov.ivanov1@gmail.com>
 References: <20240920154508.1618410-1-ivo.ivanov.ivanov1@gmail.com>
@@ -93,26 +93,26 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add "samsung,exynos8895-chipid" compatible string to binding document.
+Add EXYNOS8895 information to soc_ids tables. This SoC product id
+is "0xE8895000".
 
 Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml        | 1 +
+ drivers/soc/samsung/exynos-chipid.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml b/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml
-index 780ccb5ee..c50ee587d 100644
---- a/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml
-+++ b/Documentation/devicetree/bindings/hwinfo/samsung,exynos-chipid.yaml
-@@ -23,6 +23,7 @@ properties:
-       - items:
-           - enum:
-               - samsung,exynos7885-chipid
-+              - samsung,exynos8895-chipid
-               - samsung,exynosautov9-chipid
-               - samsung,exynosautov920-chipid
-           - const: samsung,exynos850-chipid
+diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
+index b1118d377..9e00ac8de 100644
+--- a/drivers/soc/samsung/exynos-chipid.c
++++ b/drivers/soc/samsung/exynos-chipid.c
+@@ -58,6 +58,7 @@ static const struct exynos_soc_id {
+ 	/* Compatible with: samsung,exynos850-chipid */
+ 	{ "EXYNOS7885", 0xE7885000 },
+ 	{ "EXYNOS850", 0xE3830000 },
++	{ "EXYNOS8895", 0xE8895000 },
+ 	{ "EXYNOSAUTOV9", 0xAAA80000 },
+ 	{ "EXYNOSAUTOV920", 0x0A920000 },
+ };
 -- 
 2.34.1
 
