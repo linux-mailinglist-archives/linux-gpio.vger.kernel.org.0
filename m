@@ -1,180 +1,128 @@
-Return-Path: <linux-gpio+bounces-10314-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10315-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42CE697D652
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Sep 2024 15:40:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6216197D6EE
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Sep 2024 16:32:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6874CB21601
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Sep 2024 13:40:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 944281C22AF3
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Sep 2024 14:32:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE67517995E;
-	Fri, 20 Sep 2024 13:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1669B17ADF1;
+	Fri, 20 Sep 2024 14:32:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9qoyG0B"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CSrDQbTB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A797B13A26F;
-	Fri, 20 Sep 2024 13:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45331482F0
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Sep 2024 14:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726839639; cv=none; b=HnL5YcHGmnvIKzqrMUG9s1GlcveS2t1EvHeeSbGtK5q9hLtzhkfWxRvRMMNz4fjd0Sz163DMGjg3OcOK0P2/b6icPC9RUbIRkhKDpf6BnOSiE5vO3M/h+J6DOoS8Vq6CTgFU7v900akn0fQ3Kp7tFxZRi3Jl8BL/ftyl0wxqL70=
+	t=1726842730; cv=none; b=rpYX0DGO6mlObXKCay6YO62g5mfJM5XhQ1yTrzjjPz6kUx0RI+xg1PFVUGLPJirTB+h/Dj/YQZyDYDjhxZmoSRnG3Gu9FRComyCBTWxk78CtiCHnOAz3EY2zaNLpS29L8+NodMzmKE3KgR6Yl+ThVcMqCG9ThuM6wBs0db2QboE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726839639; c=relaxed/simple;
-	bh=MbUsKbc4h3caOjNoLKScCev08uVWhnLJbYiUb/2Rx8s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aDTprqESmDMYm5YTG2QLrdf0Ym5WMyFDdpVwdy+Q7nO+qkrJLpG7Vl3fHEjtMtLgFRjIdIkwH6spAJxxYYbYvQGHtOZobv7gyOPRrWAmW9cPRSXHgpm5Bmvrlu7vGl1PW1ysqcw6iud0QmXwM9SZcDDoEuaGVCW3xtTI0G3xoDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9qoyG0B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB83C4CECD;
-	Fri, 20 Sep 2024 13:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726839639;
-	bh=MbUsKbc4h3caOjNoLKScCev08uVWhnLJbYiUb/2Rx8s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=V9qoyG0BnriVxi3O/C/HOclygXXYDDVIH+nBJ6CEV0Q9l2ERgOxeHyZVc+Xbn43Ku
-	 TWm6cXg3m8YVvXX2obpasH1Jl01OVz0kcOqJRUXyDr73sKWtf9HKSVAYkR7DCFOUxg
-	 fzIjf8rI7idHIisXSkMieXDWBgWdWi6aDDtXN2FNJ5mQP3MASjPl0YgirWaZdJHXLr
-	 ZeyR4ytpgLj4X2Iys9tuER+O3RsTBLwX8CKpLpy5IFxeUTzBRVw3UhgXApgZHg908I
-	 pPaO+pZAJ9t6MqQTsQfjqN+fFPe0LZXCDTQBAnAD8D9e/1QJ/Z8ZcLji7KGV2Q9AR6
-	 ukQ4f+HK37Jcg==
-Message-ID: <bd5a2d24-164c-4707-a5fd-6584e444ee0b@kernel.org>
-Date: Fri, 20 Sep 2024 15:40:31 +0200
+	s=arc-20240116; t=1726842730; c=relaxed/simple;
+	bh=9Z5OfuCbPN2+7v7zKkmwIF3Y/z8/KxWZC1+YVgnOgKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=evmhjL02DehI5uHMQ9Im5UT80cRKLWsdFgp29HfwQhWx0NDWzJ76Av2bOZVp6It3M7Yc0dQIoEjyF/nylb29nkC4L6nYsuBJYYbNbZRwEplKc2bfOhX+MHOQw3cXgkLvfnmqcGWspO1XonznLc17aC4KX/igq0zpZ3V4nAhhxRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CSrDQbTB; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a8d446adf6eso282673666b.2
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Sep 2024 07:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1726842727; x=1727447527; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/EitCs5vQ0GgG+UlsVH6G8Ip+IXpiW9RJtTkmV9RNUQ=;
+        b=CSrDQbTBUSYEJhcFLPH2+wxRe2LjJ6spW80qgC0MMLn8OfZHXWM2z+z5YjvwCsUVUF
+         XPKvyovzPNdglY3vAKLmy3AI7f2PwMojzbtlt0cDFw/t7zyRmxn5gYbxWcbBDac89ZBX
+         VJ6FKhXBf6V0pVmCfrcp/bLhRClQkDLUGxqJxwG5/KSdLoemAG28B/2DoqncgpGJn+BS
+         WLO5ZVG5LRQQzIFEtMt/Kio0Fgn+K15dYrV1Nh2IOj/qEJXe6blkr0FTvPl9+uCTOF9j
+         VUKOIBuU1ukrEz80uofL4nW6TY9uzYa1EodNcWU0YUObknTeNlcKYobPuDK371lUe1a5
+         zgAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726842727; x=1727447527;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/EitCs5vQ0GgG+UlsVH6G8Ip+IXpiW9RJtTkmV9RNUQ=;
+        b=ibXF4gEqjnV6kDJDiE61VYF+bbh+u5VOqHZxn7qiy30RmoFK9nQHKLIgHm+hUtiuet
+         mKfLHDcaaGHKziWawYK3RtuYXlUhiE5vcIlwiz1bwk3pXk3Zm2t8TAYsMCuoPfBnPplp
+         lWZJ3I53/Ura1nxNh4I8n/+MZJmicXSjmx8HlPzXiWXrcGLNSdKuxCnoqPC0g180+p34
+         ZTgoFQiJLR4Yf/RQKBZ6IaWqXy1x57VK6iQaXtfzSl7EOV1PmaOeUr+SWTiOGC2VQ+Dg
+         eVnp4D+2J8iu76prGHuINeJqMV+gOdgwkvErO1fEHJCjRt8lTH45yQJv3nmUi4nglsP8
+         pRPw==
+X-Gm-Message-State: AOJu0Yz+e8YsY5kma+RZwehhLaTJGGvLaEbhn5YILTRQMui02Ds4jMst
+	YLZsmrExiCEOPrP0sT+sPdM1//Xo2Bm7GSfYLZCEA/YIEeVVvno/2FeQuBs4jBw=
+X-Google-Smtp-Source: AGHT+IGdNB8maKmvA1VPLQb84AjzFlV9luATzjXPmZvet12B1CU1E9Nljwm0VCRkQX6EvdPY02Zm3w==
+X-Received: by 2002:a17:907:c893:b0:a77:c95e:9b1c with SMTP id a640c23a62f3a-a90d4ffb9ccmr250006966b.27.1726842726820;
+        Fri, 20 Sep 2024 07:32:06 -0700 (PDT)
+Received: from brgl-uxlite.pool3009.local ([83.68.141.146])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a906109678fsm854375866b.30.2024.09.20.07.32.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Sep 2024 07:32:06 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Vincent Fazio <vfazio@gmail.com>
+Subject: [libgpiod][PATCH] bindings: python: improve LineSettings.__repr__()
+Date: Fri, 20 Sep 2024 16:32:03 +0200
+Message-ID: <20240920143203.6377-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] dt-bindings: gpio: add support for NXP S32G2/S32G3
- SoCs
-To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>,
- Conor Dooley <conor@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chester Lin <chester62515@gmail.com>,
- Matthias Brugger <mbrugger@suse.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, NXP S32 Linux Team <s32@nxp.com>
-References: <20240919134732.2626144-1-andrei.stefanescu@oss.nxp.com>
- <20240919134732.2626144-3-andrei.stefanescu@oss.nxp.com>
- <20240920-reapply-amusement-a37cf13fd910@squawk>
- <16950e81-e0ef-4e7c-b0ef-4f56415dceed@oss.nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <16950e81-e0ef-4e7c-b0ef-4f56415dceed@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20/09/2024 15:33, Andrei Stefanescu wrote:
-> Hi Conor,
-> 
-> Thank you for your review!
-> 
-> On 20/09/2024 15:46, Conor Dooley wrote:
->> On Thu, Sep 19, 2024 at 04:47:22PM +0300, Andrei Stefanescu wrote:
->>> Add support for the GPIO driver of the NXP S32G2/S32G3 SoCs.
->>>
->>> Signed-off-by: Phu Luu An <phu.luuan@nxp.com>
->>> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
->>> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
->>> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
->>> ---
->>>  .../bindings/gpio/nxp,s32g2-siul2-gpio.yaml   | 107 ++++++++++++++++++
->>>  1 file changed, 107 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml b/Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml
->>> new file mode 100644
->>> index 000000000000..0548028e6745
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml
->>> @@ -0,0 +1,107 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause
->>> +# Copyright 2024 NXP
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/gpio/nxp,s32g2-siul2-gpio.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: NXP S32G2 SIUL2 GPIO controller
->>> +
->>> +maintainers:
->>> +  - Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
->>> +  - Larisa Grigore <larisa.grigore@nxp.com>
->>> +  - Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
->>> +
->>> +description:
->>> +  Support for the SIUL2 GPIOs found on the S32G2 and S32G3
->>> +  chips. It includes an IRQ controller for all pins which have
->>> +  an EIRQ associated.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    items:
->>> +      - const: nxp,s32g2-siul2-gpio
->>
->> Commit message and binding description say s32g2 and s32g3, but there's
->> only a compatible here for g2.
-> 
-> Yes, the SIUL2 GPIO hardware is the same for both S32G2 and S32G3 SoCs. I plan
-> to reuse the same compatible when I add the SIUL2 GPIO device tree node for
-> the S32G3 boards. Would that be ok?
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-There are only few exceptions where re-using compatible is allowed. Was
-S32G on them? Please consult existing practice/maintainers and past reviews.
+Currently, for the output of LineSettings.__repr__() to be eval()able,
+the user must have pulled all the relevant definitions from gpiod.line
+within the scope where it is used. Modify the output so that all the user
+needs is `import gpiod`.
 
-Best regards,
-Krzysztof
+Reported-by: Vincent Fazio <vfazio@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ bindings/python/gpiod/line_settings.py       | 2 +-
+ bindings/python/tests/tests_line_settings.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bindings/python/gpiod/line_settings.py b/bindings/python/gpiod/line_settings.py
+index 41712cc..5e32194 100644
+--- a/bindings/python/gpiod/line_settings.py
++++ b/bindings/python/gpiod/line_settings.py
+@@ -27,7 +27,7 @@ class LineSettings:
+     # __repr__ generated by @dataclass uses repr for enum members resulting in
+     # an unusable representation as those are of the form: <NAME: $value>
+     def __repr__(self):
+-        return "gpiod.LineSettings(direction={}, edge_detection={}, bias={}, drive={}, active_low={}, debounce_period={}, event_clock={}, output_value={})".format(
++        return "gpiod.LineSettings(direction=gpiod.line.{}, edge_detection=gpiod.line.{}, bias=gpiod.line.{}, drive=gpiod.line.{}, active_low={}, debounce_period={}, event_clock=gpiod.line.{}, output_value=gpiod.line.{})".format(
+             str(self.direction),
+             str(self.edge_detection),
+             str(self.bias),
+diff --git a/bindings/python/tests/tests_line_settings.py b/bindings/python/tests/tests_line_settings.py
+index c6ca720..83be3d9 100644
+--- a/bindings/python/tests/tests_line_settings.py
++++ b/bindings/python/tests/tests_line_settings.py
+@@ -69,7 +69,7 @@ class LineSettingsStringRepresentation(TestCase):
+     def test_repr(self):
+         self.assertEqual(
+             repr(self.settings),
+-            "gpiod.LineSettings(direction=Direction.OUTPUT, edge_detection=Edge.NONE, bias=Bias.AS_IS, drive=Drive.OPEN_SOURCE, active_low=True, debounce_period=datetime.timedelta(0), event_clock=Clock.MONOTONIC, output_value=Value.INACTIVE)",
++            "gpiod.LineSettings(direction=gpiod.line.Direction.OUTPUT, edge_detection=gpiod.line.Edge.NONE, bias=gpiod.line.Bias.AS_IS, drive=gpiod.line.Drive.OPEN_SOURCE, active_low=True, debounce_period=datetime.timedelta(0), event_clock=gpiod.line.Clock.MONOTONIC, output_value=gpiod.line.Value.INACTIVE)",
+         )
+ 
+         cmp = eval(repr(self.settings))
+-- 
+2.43.0
 
 
