@@ -1,154 +1,148 @@
-Return-Path: <linux-gpio+bounces-10348-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10349-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C473197E37B
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Sep 2024 22:49:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D5BE97E398
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Sep 2024 23:04:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 432EE1F210C6
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Sep 2024 20:49:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 061DCB20D7B
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Sep 2024 21:04:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A8341E885;
-	Sun, 22 Sep 2024 20:49:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E4F7745CB;
+	Sun, 22 Sep 2024 21:04:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0ua46cU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Va1pjudg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4F86F2E7;
-	Sun, 22 Sep 2024 20:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F96EEDB;
+	Sun, 22 Sep 2024 21:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727038186; cv=none; b=mM3T2d8hi2z1zt6nL2hBe4EeyovhdUtXcVjmAXC5UhBzxaTrAsbnXUso5JfRjWczqRMEftjJ9m2yvrnnysCJFYISL8s8ZxiY03NV1SunKTo65DZHDligsAelhmw8CF0XJo4WMCKzQkfx4+C83usU/15V7I2d9NlYU/+Wyb3it6s=
+	t=1727039066; cv=none; b=VTo9cEQKqxzaZJe7xHnNntl6Oxqb+REskpiz0zun5UzRfS8cDj67SiDQKEzTsOELHakVkhYFWWZOgy68MO65HHcH/YIBTZ8aMm6jLyebI5g0pGe1N6dVmYEg4ZYH6aJLigA9mzgn68rHoHLTgEaqWjCXBI1CqT+/KAReb9UMUDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727038186; c=relaxed/simple;
-	bh=oQT3eNJe+2e3pbbk016LlAOPZ6oa4T2prJ8oMWMZmSk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H05cTbxsZoUF1lvZcQnXwCAs/WNRtxhn141qpmBU0pgUKirEnaahepddedRaU9OyhLu82mSBtTYm+dlxCn/HB8+ro+jdIpGtbI0jHdBkpye5er+VfCHhJ4k4zFHJSnqLcXa0Ux+37KErO9a/iPBzQksmF4sK7VAp9oLqNrbYF0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b0ua46cU; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2054feabfc3so32550685ad.1;
-        Sun, 22 Sep 2024 13:49:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727038184; x=1727642984; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=JjGMGfedFTVMB3YLy+hzF2JSal1CaPIr9p9ibjLNREE=;
-        b=b0ua46cUgyG6lZZ0YQ+0CFSFpJ8yL+FIh0lsuUACIAYuz75Ge9mgeIIkcBvZHNhHdf
-         nMT+qiBrfvPyv2yBHYgfIQ8OansSIcb4Yypa9MeVSltxe6NiIkAVJgvsjQwpLcB4lp6R
-         /4PN4a66kGVdGDUyHauRpIN/xhhWviVhEtD/PxrqnBiQpu19m8IjfKcz+NnwXs0p0ycP
-         sE9V9D3GmkA2q416vUEqsbMWaX6KXmYcJTNjQ4et6balbiOhMgWlbL1zfpW+8Wwqfy33
-         8Kr/qtYNTXYMuEYod2tFJI0/ZaJYZAyyIxdD2SnZxl7hhf7g/lm6U2VT8KNVRyxfgdjr
-         KnPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727038184; x=1727642984;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JjGMGfedFTVMB3YLy+hzF2JSal1CaPIr9p9ibjLNREE=;
-        b=ZCUGUtnzSSt9mnlTmrLfeEgbPfh/MJY8nY17tb9AM+7t0i9o5RAy67mk5ZgxRCdFa0
-         ml+XyF8u88N47OFUrT0Zcx1JqdV5BWe0pYf8AW+t7j4XSqp21dlFFXa4/jxcBlAddHiz
-         YTK4CSOsEOC5enUc5PCzBklwa/XAnD5XhcvXdHfJUUDTBvehs4jHfLul55PfTZ2cHH73
-         gH/Re7EA15XTx4sb2ICvEjo/Fvp4T43C8SxPjKAr1gzk/60c+NDhRZ7pg9NAnbEAuUIS
-         FrAqo3Xjj0IL8U0PZv8uus1UJRaFxO+GLDsoFjr/QlLTAayuyY/JDzbfydh25Yp5RJFX
-         cxxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZSQkm/ogp/2Bqkwi1SRM3iua2H7xh8aoRJDdIMMgED5rOnI7D0QOfArmXqjq3pHwnafUduh4INQteiw==@vger.kernel.org, AJvYcCV/FWLX2j3M97H8q16Zbl4Dy2beviC20CpnfJlVHHZ85egNh3uve5y5BNbGyHEJfJ7DgC1TqJyiItd5@vger.kernel.org, AJvYcCXBWRyFXfBz0/tgblYguXjs1IwruvxauwRUHgFcUanKChWRcYmPhhrfbNQDyelu4HTL/7SqxOwgLtN5ex7G@vger.kernel.org, AJvYcCXwBVf8zEwuKRSlX+r3M2SmiKP8q/H36S3t+2N+XPrcjLJehbeIr9Zsn/95/v/lrkmG03Tzkkzh71oXRjneQ4Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7w6mWTkB91gQcvJhaQXZkMRrYrytg3VoUGO66pw6nxTsYFG2K
-	BYFgV3gJWM1zU2oAkCBFCNKuyI+hmINTucdsGE3Zfm8/QLjt+QBSsMhi+Q==
-X-Google-Smtp-Source: AGHT+IGxUKToLdho9J9KYVKuS62u1RAmIwEmj4ZixkolpXYqkF1E8Q8L4I2f+KdNqq48g+/jHdSh2Q==
-X-Received: by 2002:a17:903:11d2:b0:206:d8c2:4a94 with SMTP id d9443c01a7336-208d982fb1dmr146417555ad.25.1727038183892;
-        Sun, 22 Sep 2024 13:49:43 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-207946d7922sm122785505ad.181.2024.09.22.13.49.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Sep 2024 13:49:42 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <6dc08062-9180-419e-aea1-241e636c7321@roeck-us.net>
-Date: Sun, 22 Sep 2024 13:49:40 -0700
+	s=arc-20240116; t=1727039066; c=relaxed/simple;
+	bh=3UZwWZ/k8yycOfVfCgYu9zo+m7c/YEuQ6FtR8R0xTh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DsVSkffS9sduWLdVtynwC8GqSU0rpH+tHoSQt50kCA3B6oHGyD2/3WtysbmwadOBsKXRD7sXF7FgnfJYNWtprKU9uSEsRvFodH05ptSMZLTg1un/US+l36/bNaxA4NRhWf4meyTcYoWDtu2sTqToZDT1lpbcbhHKXcYsEifZ9JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Va1pjudg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CB66C4CEC4;
+	Sun, 22 Sep 2024 21:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727039065;
+	bh=3UZwWZ/k8yycOfVfCgYu9zo+m7c/YEuQ6FtR8R0xTh0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Va1pjudgIYjoEoPXeHt2pN9mwSb5dki3yKACWIFNnwd3m9XsizclebNpSMogJLvkG
+	 ZcXuGuODPk6IkjL1wEOHRQZSPqIiQCt21qN8nrRTqbcBu0RjmOvOz3RsvnxDzeONwe
+	 dLj/vB1Rhtv3eBDsSQJXa3IvNbkc6A5zJwzj8VyLvoEp8wpOfs+HQ5d4zLQxy7Y6Xf
+	 2WQQ9Kzm+uWSIbu9daAC79Tx/oyh27LDr92D+yBr+h9fkgHsqEREBfJDGD56RJnLSG
+	 uEaE2d0oXy144dPVNpyi1whBZB+kgMyLPJloQLWSh7zibNB29p6wkV5WKsATKfR48p
+	 BwHuKGGBEWBoA==
+Date: Sun, 22 Sep 2024 23:04:22 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chester Lin <chester62515@gmail.com>, 
+	Matthias Brugger <mbrugger@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	NXP S32 Linux Team <s32@nxp.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: gpio: add support for NXP
+ S32G2/S32G3 SoCs
+Message-ID: <e6u3kui5md4km5xvjzlq5cfgwvtb73c763uep4j5ysaokmmucr@gz5nxiebg7gu>
+References: <20240919134732.2626144-1-andrei.stefanescu@oss.nxp.com>
+ <20240919134732.2626144-3-andrei.stefanescu@oss.nxp.com>
+ <20240920-reapply-amusement-a37cf13fd910@squawk>
+ <16950e81-e0ef-4e7c-b0ef-4f56415dceed@oss.nxp.com>
+ <bd5a2d24-164c-4707-a5fd-6584e444ee0b@kernel.org>
+ <20240921-party-glass-bfb7099c7ded@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/20] dt-bindings: watchdog: apple,wdt: Add A7-A11
- compatibles
-To: Nick Chan <towinchenmi@gmail.com>, Hector Martin <marcan@marcan.st>,
- Sven Peter <sven@svenpeter.dev>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Wim Van Sebroeck <wim@linux-watchdog.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Mark Kettenis <kettenis@openbsd.org>, asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-watchdog@vger.kernel.org
-Cc: konradybcio@kernel.org, ivo.ivanov.ivanov1@gmail.com
-References: <20240919161443.10340-1-towinchenmi@gmail.com>
- <20240919161443.10340-3-towinchenmi@gmail.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240919161443.10340-3-towinchenmi@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240921-party-glass-bfb7099c7ded@spud>
 
-On 9/19/24 09:05, Nick Chan wrote:
-> The blocks on A7-A11 SoCs are compatible with the existing driver so
-> add their per-SoC compatibles.
+On Sat, Sep 21, 2024 at 10:58:46PM +0100, Conor Dooley wrote:
+> On Fri, Sep 20, 2024 at 03:40:31PM +0200, Krzysztof Kozlowski wrote:
+> > On 20/09/2024 15:33, Andrei Stefanescu wrote:
+> > > Hi Conor,
+> > > 
+> > > Thank you for your review!
+> > > 
+> > > On 20/09/2024 15:46, Conor Dooley wrote:
+> > >> On Thu, Sep 19, 2024 at 04:47:22PM +0300, Andrei Stefanescu wrote:
+> > >>> Add support for the GPIO driver of the NXP S32G2/S32G3 SoCs.
+> > >>>
+> > >>> Signed-off-by: Phu Luu An <phu.luuan@nxp.com>
+> > >>> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
+> > >>> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> > >>> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+> > >>> ---
+> > >>>  .../bindings/gpio/nxp,s32g2-siul2-gpio.yaml   | 107 ++++++++++++++++++
+> > >>>  1 file changed, 107 insertions(+)
+> > >>>  create mode 100644 Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml
+> > >>>
+> > >>> diff --git a/Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml b/Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml
+> > >>> new file mode 100644
+> > >>> index 000000000000..0548028e6745
+> > >>> --- /dev/null
+> > >>> +++ b/Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml
+> > >>> @@ -0,0 +1,107 @@
+> > >>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause
+> > >>> +# Copyright 2024 NXP
+> > >>> +%YAML 1.2
+> > >>> +---
+> > >>> +$id: http://devicetree.org/schemas/gpio/nxp,s32g2-siul2-gpio.yaml#
+> > >>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > >>> +
+> > >>> +title: NXP S32G2 SIUL2 GPIO controller
+> > >>> +
+> > >>> +maintainers:
+> > >>> +  - Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+> > >>> +  - Larisa Grigore <larisa.grigore@nxp.com>
+> > >>> +  - Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+> > >>> +
+> > >>> +description:
+> > >>> +  Support for the SIUL2 GPIOs found on the S32G2 and S32G3
+> > >>> +  chips. It includes an IRQ controller for all pins which have
+> > >>> +  an EIRQ associated.
+> > >>> +
+> > >>> +properties:
+> > >>> +  compatible:
+> > >>> +    items:
+> > >>> +      - const: nxp,s32g2-siul2-gpio
+> > >>
+> > >> Commit message and binding description say s32g2 and s32g3, but there's
+> > >> only a compatible here for g2.
+> > > 
+> > > Yes, the SIUL2 GPIO hardware is the same for both S32G2 and S32G3 SoCs. I plan
+> > > to reuse the same compatible when I add the SIUL2 GPIO device tree node for
+> > > the S32G3 boards. Would that be ok?
+> > 
+> > There are only few exceptions where re-using compatible is allowed. Was
+> > S32G on them? Please consult existing practice/maintainers and past reviews.
+
+Just in case this was not clear - comment "please consult existing..."
+was towards Andrei, not you Conor.
+
 > 
-> Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+> Pretty sure I had a similar conversation about another peripheral on
+> these devices, and it was established that these are not different fusings
+> etc, but rather are independent SoCs that reuse an IP core. Given that,
+> I'd expect to see a fallback compatible used here, as is the norm.
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Yep.
+
+Best regards,
+Krzysztof
 
 
