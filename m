@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-10336-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10337-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7B6997E349
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Sep 2024 22:43:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2812B97E34E
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Sep 2024 22:44:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 563361F211D3
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Sep 2024 20:43:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C5EBF1F211A3
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Sep 2024 20:44:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC3035E093;
-	Sun, 22 Sep 2024 20:43:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7289F60B96;
+	Sun, 22 Sep 2024 20:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHQbSKsi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKYupLf/"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFF555898;
-	Sun, 22 Sep 2024 20:43:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2044B55898;
+	Sun, 22 Sep 2024 20:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727037828; cv=none; b=WapioEpX5MiXExfj91KyRHJkX9/LI46VbwD2bGNiB7eXou++z4CGK8wxDDBtOrul1lDaTQ+D6/IvelJWMk62kjMaE3SeNxBwb+z6Xnn3qbdQ5pObdEd44sGXmfSjClM8cFa/HO//tjMvBZgwKzOfun9rT94pBItddQikqjvslYs=
+	t=1727037845; cv=none; b=V3oOT3Hz3VDARERhsS+1POM5bheQVMhljyg8/botQhuExQcYZySmTh9P6cbpdqEbOg4P7uEMqqKhJmZT08mrwb5SJRyhFHZAOySEhE4InWk3GIEA/LF8bNzZXqQdBFvUj8iuABULNstLYqYOQFNPOYdlwjr+j2MX07uK8sBMduQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727037828; c=relaxed/simple;
-	bh=M4TF5ayIuFRvWwOsi5XVMxki7jlOEntStSvxNGBxNL4=;
+	s=arc-20240116; t=1727037845; c=relaxed/simple;
+	bh=U8Q/GAjZ32JI1g58R1mk3ZgK83IEBwMuA4as012CxkE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fMjiiE+rzTOMXWrN6DFza5W08pmBLE06nmUqZsCQuo3qObIV/aQIIBzDygcRmmbpeg/4x70X1vLGXaCG2N5G6+dwDtYBTbvpkpPdaLy3+jte11llYa0Xh1XzbjX24bvyN77dEGNlPRzwmheHgjiuUkE0Ibg/oTI8J99S5T8d/mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHQbSKsi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52048C4CEC3;
-	Sun, 22 Sep 2024 20:43:47 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=YXsrRA3PPqHd3+2PFDst5gwD3bXYlB1WxlSnS0eWZ40BFzO1GcfzK+PTjhoPHi8pkQLrEBU/LIh5E4eCe/7+nCfJK6WdYyUaUeL6ole52jjrjNsRTkTZxqu6LHEJXyX0fATmxGScCqRNF90F7cnra0lNkGmr/I0SP8uYwfczAc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKYupLf/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 028C5C4CEC3;
+	Sun, 22 Sep 2024 20:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727037828;
-	bh=M4TF5ayIuFRvWwOsi5XVMxki7jlOEntStSvxNGBxNL4=;
+	s=k20201202; t=1727037845;
+	bh=U8Q/GAjZ32JI1g58R1mk3ZgK83IEBwMuA4as012CxkE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qHQbSKsi8PW6RN/qJntYotqc/YBS+PsVmGjJufBBnnUUuwR+qwRACId4ct8dhIjK1
-	 hx1XTohgh+2ZWm9isbcDRzuJR1AMGF2+nKEBvpBPQ568OgQs+qdbMCaBAgRpDfklYr
-	 FYYXyJuCQhSsNCu5MT09WpIw/tMxrkaSo3YzwX87ifEZ+eJpEA7rxrh2/TnMqk8FMI
-	 Fc6mvSUq0wd11kP3oSzUkJOh8RCQptWAhTQmLDldIS5b3lykgtP+F7qI2aSGab8bm7
-	 +va9Jth56cU39irEJORCLzp+d86PVR8ah/uV5KpHD8oeouPS5i1BcPoNFTObv4DHTf
-	 QArRDI9Rix9dg==
-Date: Sun, 22 Sep 2024 22:43:44 +0200
+	b=KKYupLf/Ii7VNLwnVz3zKH2nVKw/9f5rujQbhyu/SRDD3tTII7u/SAx2Q4OdCx5L+
+	 CVmIWBWTY3Xwm0jvX2ZJNCIoQHD+zV4v7eEpIEY92vJ9IwgnRbjq+jcfSOG6qC0M+w
+	 syFytyPKQ/9DSyrBTWj6fLvEIGtyaeiHapd4X3WksZAVYOiLAzJZh0Ylj08PfvP2mL
+	 O4Z510Rj/SWsIV8uskdYw7VP0rsxm/y+tRgpJyCDtVWU2TY8qPFk4e18QfNInOIVWx
+	 WKVholcjdJ0nYj0HXCU1Yq0S9qFY/DndUhG8ZAyvp14JsPRY4EHprvhNc+opn+1gzB
+	 N4QtNgsEuEhvg==
+Date: Sun, 22 Sep 2024 22:44:00 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Nick Chan <towinchenmi@gmail.com>
 Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
@@ -53,11 +53,11 @@ Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
 	Mark Kettenis <kettenis@openbsd.org>, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
 	linux-watchdog@vger.kernel.org, konradybcio@kernel.org, ivo.ivanov.ivanov1@gmail.com
-Subject: Re: [PATCH v4 01/20] dt-bindings: arm: cpus: Add Apple A7-A11 CPU
- cores
-Message-ID: <34fubbbf6jlqjs6q2f73oohkijhudvzni63dtillg4d4fxjm6i@e7oogteye2oe>
+Subject: Re: [PATCH v4 02/20] dt-bindings: watchdog: apple,wdt: Add A7-A11
+ compatibles
+Message-ID: <xvadaefjj3f6c367b4z7cv7y4haf7fjsib77wxuvnen667nhjl@m2bpxstw6ujf>
 References: <20240919161443.10340-1-towinchenmi@gmail.com>
- <20240919161443.10340-2-towinchenmi@gmail.com>
+ <20240919161443.10340-3-towinchenmi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -66,28 +66,16 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240919161443.10340-2-towinchenmi@gmail.com>
+In-Reply-To: <20240919161443.10340-3-towinchenmi@gmail.com>
 
-On Fri, Sep 20, 2024 at 12:05:50AM +0800, Nick Chan wrote:
-> Add the following CPU cores:
-> 
-> - apple,cyclone: A7 cores
-> - apple,typhoon: A8 cores
-> - apple,twister: A9 cores
-> - apple,hurricane-zephyr: A10 logical cores
-> - apple,monsoon: A11 performance cores
-> - apple,mistral: A11 efficiency cores
-> 
-> In the Apple A10, there are physical performance-efficiency cores that
-> forms logical cores to software depending on the current p-state, and
-> only one type of core may be active at one time.
-> 
-> This follows the existing newest-first order.
+On Fri, Sep 20, 2024 at 12:05:51AM +0800, Nick Chan wrote:
+> The blocks on A7-A11 SoCs are compatible with the existing driver so
+> add their per-SoC compatibles.
 > 
 > Signed-off-by: Nick Chan <towinchenmi@gmail.com>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/watchdog/apple,wdt.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
 
 Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
