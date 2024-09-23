@@ -1,115 +1,119 @@
-Return-Path: <linux-gpio+bounces-10353-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10354-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FAD097E416
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 00:44:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFC1597E463
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 02:34:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 585BFB20C9D
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Sep 2024 22:44:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A32112812F0
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 00:34:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C48D574063;
-	Sun, 22 Sep 2024 22:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 074F023AD;
+	Mon, 23 Sep 2024 00:34:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hP4q3Fmy"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="hv7PivUj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC00D7E1
-	for <linux-gpio@vger.kernel.org>; Sun, 22 Sep 2024 22:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39719635;
+	Mon, 23 Sep 2024 00:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727045071; cv=none; b=Gkg+m5GjvQl9mUwv8g450n+ezCY6yvAJF/45cqf5nAG8QeDPzl2FQdeuT40LpuIhmozsyaCp/y9R0H1UckxqYUfxwl3SV+vaA5kmEBCOIJ1ynjJQ6bX3P9tGxt9SUM+wUIIVOeLKNW6Ayh1XeWmrGqn+NndPrBilzxBXcRJjuVI=
+	t=1727051665; cv=none; b=ghaISmUrij3qCoCjSDhPVWwX4YLbNUIin2vkTUZURnP4UNA2K3cHLRWI3a/NPYqhFu3PPEAcMN7n6WXAwHJgXUHv29QZTM45pmebEgR6WjYLifHb9goP3nTFwVA39jUPfotDfPwkxUZQ3korPTMSYmSKVboEpivY0FzTZIjIw1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727045071; c=relaxed/simple;
-	bh=AxoWEMSF2afrRNVb6Le3CZZO5OHhKg+oAtVREcH0qMs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gPo8o0e3No9p+TPhDzHOcgXDWs+K1u9t7KqGkM30Ir5+Vc9tp6eFe+n00hrdcVnYWVDBLPeutseLq7EXNS7Sgw7grOndFxfhlhe5WoaDaRPc8WYqrNhoVPC/CpG3S5WVsY8atbm5hmLtWQ+sYDClFsxGyGjAVXlaL363bEog4ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hP4q3Fmy; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5365c060f47so4361122e87.2
-        for <linux-gpio@vger.kernel.org>; Sun, 22 Sep 2024 15:44:29 -0700 (PDT)
+	s=arc-20240116; t=1727051665; c=relaxed/simple;
+	bh=k0R1VSEBcUQCVT5pa6sW4PDOy6epFWwyRWbhVPCZ+kA=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=O43+T1/o7UMMF52NWoEAQlHdab94UbZ45kpczL+zm66gt3rzDJEZpSvKhxyYwT0OSFxE/M2tembWZsDvIXCA4NnlDWR8qH5kuRgJ8zeKQJ7m5a1/EahuwEJKmS3R5RVLzfB239++JfvsFWITqUas4vqSFJQcD7HZGsCwPJFe38M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=hv7PivUj; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727045068; x=1727649868; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zi37GgBqt/FMeQcWw4DSw8fPwbO9oh8if3fpRrLyOAg=;
-        b=hP4q3FmyfKVqOWthG7yabCSIIKrVEtpYaBP8po8M0eWztPGbFANwol0US76kUS5WOD
-         /IOMQ9w1OOVEvtnCEd7KH7IVWfAKe8UClqLkyOl1qQnjh6zP6bFrSfvvdb+Y+hicEQSw
-         h4HhtgafWEww1am8/p527YZ0ewn0sFpTAIBOLvrem+0Q1JReCeWhNW523AbCN4segyvq
-         ayY7RsF+2MsLjzJZV28Nrnv7jtWdgxBxTB/8hggnjQD1dcxUrARZpDDkX+ErEBcsuvhh
-         reTNaXGmK6vqNFTD4zIDBCxM+osPkB3eq+/HnlVyaFcOn4fFBXFwn6QeozFdk7Ono18/
-         aesw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727045068; x=1727649868;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zi37GgBqt/FMeQcWw4DSw8fPwbO9oh8if3fpRrLyOAg=;
-        b=ugTSOBYIbIZp7WDLVgJlGqtKeWPlVMW0HCDcDCIheb/J38K0ywSVFzPejMZstksG35
-         12y0VR1ezOlWVZ4MspPBeturxi0S0sGAeoiqKFvCSjGuw6hJIedZ7LqKP5EoTuCwHwbN
-         9sTCaF5fFkGh0eg//zy+nofmE0gQy8h/pELKtKkURAHehvWrJAc1kNWQLJNegDklmGgb
-         G3JCFAmZF23ajzojraWlodXn8Xgbyd4Socr4BNPzga1jA65kGroZpEV+UQweb5My7nPY
-         kJHE6mmXZZONBhZYmZFiz83ihxtjRaMzVsOHeBfnp73fUQ7uzSKEkTNNSteTZcjq1C33
-         PD8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUspobvBUJOOD8FftY5mjZN54Uhg+ZFDu4EOgI1cwTxnd3kpzcGiWHxflNSbtJn/XTaySSwXZYdaQlS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOB/rl9p9PvCV/zsDMhsaRxLTqP8kMFkHE7e07CvnxSiEVN6FB
-	GONEEGcKQQSRdVCOiIUIZUEiU5vrWlkurqR8cJBocyvj3MEe6SUY+RygrJAf8KD4DQDW7JOcZZm
-	tAfIHUz694S2fjwC85E7/dk9ow7wmY0TwK82qyb0VRmpe4lgU
-X-Google-Smtp-Source: AGHT+IFYyiKW0YjXtC3WqpA7igtfMapwMNpsgT6Z9Qia35DBOVqyBloMNmFoU6ubCESfoRQywEHBcgfLyATmibHJjJ0=
-X-Received: by 2002:a05:6512:1309:b0:52e:f907:1023 with SMTP id
- 2adb3069b0e04-536ac3400c0mr4386324e87.49.1727045067265; Sun, 22 Sep 2024
- 15:44:27 -0700 (PDT)
+	d=codeconstruct.com.au; s=2022a; t=1727051661;
+	bh=J8lZa+H3G/xwr0+dUXS/TBLSPBCwgo0bJD6759puYZY=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=hv7PivUjzA5mCleEYQ2yPhpRbIv3vJQAqKQWGqTezKx7WLAF2Ou1FzkcuLyIuW5z7
+	 elFpwFaXYpXtxbzAuqQ7nkXVLKQYTUjGNmtWEwCB+ltgV/Azw4kxIC50z4y7pGLREn
+	 44U1efdDyJtxuIOxzUnxjNoTUovGNESkU8QhNn/L73JjMIyIQ3CuI8yfDIijb5GyBU
+	 /BMlp1rT+pbw8qQmwXsLuPc9gnCaDwgolo2E3m4DMfd8LvSNg98DEXe5ha6LknJr7s
+	 u3/CHD+NChCHSe+sAgqFIeQAW9kcHaa8YAfky/Dp4YtKU0OSgBPhItYOQr6pK1/sDI
+	 CYGv6HTS/OALA==
+Received: from [192.168.68.112] (ppp118-210-177-92.adl-adc-lon-bras34.tpg.internode.on.net [118.210.177.92])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id B13FB640E8;
+	Mon, 23 Sep 2024 08:34:17 +0800 (AWST)
+Message-ID: <1333d8dd77c80825cb20bc5a9885a6ced774183b.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v4 3/6] gpio: aspeed: Create llops to handle hardware
+ access
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Billy Tsai <billy_tsai@aspeedtech.com>, "linus.walleij@linaro.org"
+ <linus.walleij@linaro.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>,  "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "joel@jms.id.au" <joel@jms.id.au>,  "linux-gpio@vger.kernel.org"
+ <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
+ <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
+ <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>, 
+ "Peter.Yin@quantatw.com" <Peter.Yin@quantatw.com>, "Jay_Zhang@wiwynn.com"
+ <Jay_Zhang@wiwynn.com>
+Date: Mon, 23 Sep 2024 10:04:17 +0930
+In-Reply-To: <OSQPR06MB7252FDD739DCE7D4A44F63248B6C2@OSQPR06MB7252.apcprd06.prod.outlook.com>
+References: <20240919094339.2407641-1-billy_tsai@aspeedtech.com>
+	 <20240919094339.2407641-4-billy_tsai@aspeedtech.com>
+	 <7aaed8cf171b67300aa5b7e861628278de948a27.camel@codeconstruct.com.au>
+	 <OSQPR06MB7252FDD739DCE7D4A44F63248B6C2@OSQPR06MB7252.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240919141014.4000958-1-mstrodl@csh.rit.edu>
-In-Reply-To: <20240919141014.4000958-1-mstrodl@csh.rit.edu>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 23 Sep 2024 00:44:15 +0200
-Message-ID: <CACRpkdYO4Y_1ZhCw40_2tz70D728hU8aGCThQCiewjkbwboTQw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: add support for FTDI's MPSSE as GPIO
-To: Mary Strodl <mstrodl@csh.rit.edu>
-Cc: linux-kernel@vger.kernel.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 19, 2024 at 4:10=E2=80=AFPM Mary Strodl <mstrodl@csh.rit.edu> w=
-rote:
+On Fri, 2024-09-20 at 09:19 +0000, Billy Tsai wrote:
+> >=20
+> > > @@ -1191,6 +1203,9 @@ static int __init aspeed_gpio_probe(struct
+> > > platform_device *pdev)
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0gpio->config =3D gpio_id->data;
+> > >=20
+> > > +     if (!gpio->config->llops->reg_bit_set || !gpio->config-
+> > > >llops->reg_bits_get)
+> > > +             return -EINVAL;
+> > > +
+>=20
+> > This will need to clean up gpio->clk. Perhaps you could move it
+> > above
+> > the of_clk_get() call instead?
+>=20
+> How about change the `of_clk_get` to `devm_clk_get(&pdev->dev, 0);`?
 
-> FTDI FT2232H is a USB to GPIO chip.
+Yep.
 
-Just came to think about:
+>=20
+> > However, looking through the rest it seems we have a few issues
+> > with
+> > this leak :/
+>=20
+> This gpio driver doesn't have the reset, is it?
 
-> +       priv->gpio.owner =3D THIS_MODULE;
-> +       priv->gpio.parent =3D interface->usb_dev;
-> +       priv->gpio.get_direction =3D gpio_mpsse_get_direction;
-> +       priv->gpio.direction_input =3D gpio_mpsse_direction_input;
-> +       priv->gpio.direction_output =3D gpio_mpsse_direction_output;
-> +       priv->gpio.get =3D gpio_mpsse_gpio_get;
-> +       priv->gpio.set =3D gpio_mpsse_gpio_set;
-> +       priv->gpio.get_multiple =3D gpio_mpsse_get_multiple;
-> +       priv->gpio.set_multiple =3D gpio_mpsse_set_multiple;
-> +       priv->gpio.base =3D -1;
-> +       priv->gpio.ngpio =3D 16;
-> +       priv->gpio.offset =3D priv->intf_id * priv->gpio.ngpio;
-> +       priv->gpio.can_sleep =3D 1;
+No, just leaking the resource.
 
-Maybe you want to provide the gpio.names array for this
-device?
+However, I can't see that we prepare/enable (and disable/unprepare) the
+clock either :( [1]. Do you mind fixing that as well? It would be best
+if debounce didn't work by accident.
 
-It makes it easier to use the lines from userspace if they
-have meaningful names, it looks like those may be printed
-on the board on the Sealevel device.
+Andrew
 
-Yours,
-Linus Walleij
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/include/linux/clk.h?h=3Dv6.11#n527
+
+
+
 
