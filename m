@@ -1,189 +1,121 @@
-Return-Path: <linux-gpio+bounces-10368-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10379-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A396A97E922
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 11:54:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A06FF97E99A
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 12:12:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3AF91C21334
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 09:54:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 52C7E1F21869
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 10:12:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EA70194C78;
-	Mon, 23 Sep 2024 09:53:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6694A194A54;
+	Mon, 23 Sep 2024 10:12:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvUneDpE"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TUjORmG8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCFA8479;
-	Mon, 23 Sep 2024 09:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 798241C36;
+	Mon, 23 Sep 2024 10:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727085237; cv=none; b=oguVboyZ6gOOkXU16oz/ncanXxgZYgq3jc0OCK7n+GXUNSeu2ugeD2CwDXm5ZjHH8rEVflDAXOEEviyIBs0qIwFrmxh/YejR2tebCx4R/eutOMHULwh/KFx3d5BQN1hvB5ENDz76MSkifw1WBb+SERNQAgF/P+Skxs/Do29gZ38=
+	t=1727086354; cv=none; b=pB86EAqtSCcD72RjzfeKNGxsaE3Pe2zCGWDvZF1VQoeQJE6emqn97ZWyBmjpqGaI5Q/smBazxT2fcUfBcfOmznrV/vc0YUctdU88xQWVZ4s4XQ6D3nnGuDsixOJwfLJKOzT5LNI/wAnutvk3YyrpRa3j79n70kATLk41TBLvj3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727085237; c=relaxed/simple;
-	bh=2d106uzkR+8RT+3V8DfFcnrtgh3IoT5F3iqW40LwDNM=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKyl7rNjmvctXYM0N3PI7Vr+At2bVPXGCBE9hxeKBrbXdt1p5bNQz+f6Yd6w6BPK+oVzr/V8URkR/rlbFmO5DL7N7Z481yO1eOb+vrgkjcYi3dqodcsT/8e5PpLB0fDK0cDfFFg+k+pAZe8hriWyDyBRlyzhuxG537cKxZB7doo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TvUneDpE; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-378f600e090so2318874f8f.3;
-        Mon, 23 Sep 2024 02:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727085233; x=1727690033; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=W/G5Y1Yc2GdbX/HaGBtPNbObghnd/ierGxsK5LlHR+M=;
-        b=TvUneDpEWXe0KAHmm/mAHmajWaaIDWHnd/P1qGgu+lVy3NFIh/Q68WxJiXTumSj6gk
-         kEdt9Mg8JQtz+snk9Jw6Hhxwxr70hS06IbvpdZMbzhQCVZMyEy80br5anDwKUuOV6x/a
-         9jEZqVZxBTNtFpbAgnmNXZx/KkQ/9s0RyFhDCpJgeSaTjlKpJ9N3sTZ3bQdIAIYpv27h
-         mgVrAK7/eM0J618HmGlJK78LztN+0JthrfnDG24AEz42afuuJ4pxmVUewM04EgfWAWci
-         hNv4kDNbVqdFYYFIqK4mlh172IlYrzlRwCI0614UDEjTQDxyD4nHl5Rq0Muqazeg74UR
-         p/Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727085233; x=1727690033;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W/G5Y1Yc2GdbX/HaGBtPNbObghnd/ierGxsK5LlHR+M=;
-        b=O9yQ/BTnUvV27w0gXWM5DJE+dSAQRB1tahjXZbkYzrED7pSIR1Veg6U3sKQrxExE4P
-         mXGV83ji/4UvElyDTDtTQ3gbsxKRTojkJBKaOQJihxJgFG5irwMCGlzZQLzMfXa9iKp1
-         AzR+wO5fIGf1lQgnJyGDhMiVkr38/KjljozzKmhxru98gMb6ZlD0+wOFxhtEkFppfTWM
-         Tl7VuON5Q36ciuMFkEod9YT1JOS7SpZXttWcvXbXRYae3U64sQftg05tnsdY7V2rw9uK
-         MGyRver4b/PgDyzwmeSXYeAYMwOzLqYCZkHB/eT6YONNeS/nSR3K44SA/7sVQmgut+k6
-         z95g==
-X-Forwarded-Encrypted: i=1; AJvYcCU8vmZSeRvJJ0rvzPNmDroQEM/edvY6azUI7i9yKK8oaG0SmG0CNsab3YnBbYszNgsIeHOewuDGiq3i@vger.kernel.org, AJvYcCWhVHE7IHYXj9Rz/S8D1zc02gMTHRQ/vllg8QrNJDlKoi158H89jdJNy+DoYWoK4aHq5FEBlv+bDcBTZg==@vger.kernel.org, AJvYcCWmPUHSO8Jwqkl9btt+SHw2+ILwWOMO7nxZoqFZYS3BryGkWWEFSo+4sQB1Z8ZLNdUp3tezH6/xOY1d@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVDaZhS4U68mTQUoELdGblKNSloNaVcqwDO8MBuJVO4kYgh8w4
-	d/PUcmk+L8gEVSlBRboqfPWEU5JRQB1VbQwcFIwyVJ8kATWdbGph
-X-Google-Smtp-Source: AGHT+IHFcRqze8NF48rSN4RfnRVSC5MCHRlQsylzZ05QxbfMJ+tA5vQe9UKElu6ng0HSNIhzNc4qfQ==
-X-Received: by 2002:a5d:5f83:0:b0:374:c977:363 with SMTP id ffacd0b85a97d-37a43154e86mr7174926f8f.24.1727085233174;
-        Mon, 23 Sep 2024 02:53:53 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e7805193sm23850774f8f.98.2024.09.23.02.53.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2024 02:53:52 -0700 (PDT)
-Message-ID: <66f13ab0.5d0a0220.b0c27.b441@mx.google.com>
-X-Google-Original-Message-ID: <ZvE6rpnzlrUJHKLx@Ansuel-XPS.>
-Date: Mon, 23 Sep 2024 11:53:50 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lee Jones <lee@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] Add mfd, pinctrl and pwm support to EN7581 SoC
-References: <20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org>
+	s=arc-20240116; t=1727086354; c=relaxed/simple;
+	bh=wzbqTKNSENMNnM1WJXcjlwbi8yyEVGWGNC4XJRlTbas=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iVwO2iLfrFRysF6x+SzHUSzvj+F3zV7IuWOd36cZLhxyqc7PS9PKzmkE22/j4raRTNF5wLdjE+BJ51a13ylkWQ5SgZXdewCxq6lgISyLHMz1g6GjtJG9wqTCwPFOu0dUYSuVNjd38OqPMxQt7AklyU38RywCVqE0/OEI4kXN0/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TUjORmG8; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=KSpGKT8tqlqF3uvKBUIVDjvirodZerxMHtuK5v8dth0=;
+	b=TUjORmG8AilmAXRxk2sMBokBtdklYj8nnZuKcyl6igsregyr/n84hnYY0c24FJ
+	b/r6Tw0kgpIfvNpKGUOETv7K1W/mDjG4+6hPCvUI1CQCZe2siIgHNaEPsNoZeDXd
+	26LpIVH55UwoOJuxDmHEWoKyT+AsoA4zh7GCQrFNIc4gs=
+Received: from [192.168.31.242] (unknown [27.18.197.191])
+	by gzga-smtp-mta-g2-4 (Coremail) with SMTP id _____wAHDX1PO_Fm3gDcCw--.9132S2;
+	Mon, 23 Sep 2024 17:56:34 +0800 (CST)
+Message-ID: <c8e3f856-d2ca-4e54-af28-50b6bb2bc05a@163.com>
+Date: Mon, 23 Sep 2024 17:56:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH 3/3] riscv: dts: canaan: Add k230's pinctrl node
+To: Conor Dooley <conor@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Yangyu Chen <cyy@cyyself.name>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20240916063021.311721-1-18771902331@163.com>
+ <20240916064706.318793-2-18771902331@163.com>
+ <1d57b766-0db1-4266-9aa5-11c131a636df@linaro.org>
+ <33e64928-0939-434a-9e6c-5f1af57992b2@163.com>
+ <20240923-gyration-enzyme-16cd3fc6d091@spud>
+Content-Language: en-US
+From: Ze Huang <18771902331@163.com>
+In-Reply-To: <20240923-gyration-enzyme-16cd3fc6d091@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wAHDX1PO_Fm3gDcCw--.9132S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZrW7CrW3CF1DKw4kAw4DXFb_yoW8Ww1kpw
+	4agFs8Crn7JrsIyF1aqFyqgr1avan2yr40gw13KryUJr1aqry3GwnYqr48WryDWF4xZ3y0
+	9r4Fq34I9r1YyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRrb15UUUUU=
+X-CM-SenderInfo: zpryllqrzqjjitr6il2tof0z/1tbiNwhjombxMMbYZQAAsi
 
-On Wed, Sep 11, 2024 at 09:50:00PM +0200, Lorenzo Bianconi wrote:
-> Introduce airoha-mfd driver in order to load pinctrl and pwm drivers for
-> EN7581 SoC. airoha-mfd is needed since both pinctrl and pwm drivers
-> needs to access the same memory block (gpio memory region) to configure
-> {gio,irq}_chip and pwm functionalities respectively, so model them as
-> childs of a parent mfd driver.
-> Current EN7581 pinctrl driver supports the following functionalities:
-> - pin multiplexing via chip_scu syscon
-> - pin pull-up, pull-down, open-drain, current strength,
->   {input,output}_enable, output_{low,high} via chip_scu syscon
-> - gpio controller
-> - irq controller
-> 
-> ---
-> Changes in v4:
-> - add 'Limitation' description in pwm driver
-> - fix comments in pwm driver
-> - rely on mfd->base __iomem pointer in pwm driver, modify register
->   offsets according to it and get rid of sgpio_cfg, flash_cfg and
->   cycle_cfg pointers
-> - simplify register utility routines in pwm driver
-> - use 'generator' instead of 'waveform' suffix for pwm routines
-> - fix possible overflow calculating duty cycle in pwm driver
-> - do not modify pwm state in free callback in pwm driver
-> - cap the maximum period in pwm driver
-> - do not allow inverse polarity in pwm driver
-> - do not set of_xlate callback in the pwm driver and allow the stack to
->   do it
-> - fix MAINTAINERS file for airoha pinctrl driver
-> - fix undefined reference to __ffsdi2 in pinctrl driver
-> - simplify airoha,en7581-gpio-sysctl.yam binding
-> - Link to v3: https://lore.kernel.org/r/20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org
-> 
-> Changes in v3:
-> - introduce airoha-mfd driver
-> - add pwm driver to the same series
-> - model pinctrl and pwm drivers as childs of a parent mfd driver.
-> - access chip-scu memory region in pinctrl driver via syscon
-> - introduce a single airoha,en7581-gpio-sysctl.yaml binding and get rid
->   of dedicated bindings for pinctrl and pwm
-> - add airoha,en7581-chip-scu.yaml binding do the series
-> - Link to v2: https://lore.kernel.org/r/20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org
-> 
-> Changes in v2:
-> - Fix compilation errors
-> - Collapse some register mappings for gpio and irq controllers
-> - update dt-bindings according to new register mapping
-> - fix some dt-bindings errors
-> - Link to v1: https://lore.kernel.org/all/cover.1723392444.git.lorenzo@kernel.org/
-> 
-> ---
-> Benjamin Larsson (1):
->       pwm: airoha: Add support for EN7581 SoC
-> 
-> Christian Marangi (2):
->       dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
->       mfd: airoha: Add support for Airoha EN7581 MFD
-> 
-> Lorenzo Bianconi (2):
->       dt-bindings: arm: airoha: Add the chip-scu node for EN7581 SoC
->       pinctrl: airoha: Add support for EN7581 SoC
-> 
->  .../bindings/arm/airoha,en7581-chip-scu.yaml       |   42 +
->  .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    |  433 +++
->  MAINTAINERS                                        |    7 +
->  drivers/mfd/Kconfig                                |    8 +
->  drivers/mfd/Makefile                               |    2 +
->  drivers/mfd/airoha-en7581-gpio-mfd.c               |   72 +
->  drivers/pinctrl/mediatek/Kconfig                   |   16 +-
->  drivers/pinctrl/mediatek/Makefile                  |    1 +
->  drivers/pinctrl/mediatek/pinctrl-airoha.c          | 2964 ++++++++++++++++++++
->  drivers/pwm/Kconfig                                |   10 +
->  drivers/pwm/Makefile                               |    1 +
->  drivers/pwm/pwm-airoha.c                           |  414 +++
->  include/linux/mfd/airoha-en7581-mfd.h              |    9 +
->  13 files changed, 3978 insertions(+), 1 deletion(-)
-> ---
-> base-commit: 264c13114bd71ddfd7b25c7b94f6cda4587eca25
-> change-id: 20240818-en7581-pinctrl-1bf120154be0
-> prerequisite-change-id: 20240705-for-6-11-bpf-a349efc08df8:v2
-> 
+On 9/23/24 5:50 PM, Conor Dooley wrote:
+> On Wed, Sep 18, 2024 at 04:39:29PM +0800, Ze Huang wrote:
+>> On 9/16/24 11:52 PM, Krzysztof Kozlowski wrote:
+>>> On 16/09/2024 08:47, Ze Huang wrote:
+>>>> Add pinctrl device, containing default config for uart, pwm, iis, iic and
+>>>> mmc.
+>>>>
+>>>> Signed-off-by: Ze Huang <18771902331@163.com>
+>>>> ---
+>>>>    arch/riscv/boot/dts/canaan/k230-pinctrl.dtsi | 316 +++++++++++++++++++
+>>>>    arch/riscv/boot/dts/canaan/k230-pinctrl.h    |  18 ++
+>>>>    arch/riscv/boot/dts/canaan/k230.dtsi         |   2 +
+>>>>    3 files changed, 336 insertions(+)
+>>>>    create mode 100644 arch/riscv/boot/dts/canaan/k230-pinctrl.dtsi
+>>>>    create mode 100644 arch/riscv/boot/dts/canaan/k230-pinctrl.h
+>>>>
+>>>> diff --git a/arch/riscv/boot/dts/canaan/k230-pinctrl.dtsi b/arch/riscv/boot/dts/canaan/k230-pinctrl.dtsi
+>>>> new file mode 100644
+>>>> index 000000000000..0737f50d2868
+>>>> --- /dev/null
+>>>> +++ b/arch/riscv/boot/dts/canaan/k230-pinctrl.dtsi
+>>>> @@ -0,0 +1,316 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+>>>> +/*
+>>>> + * Copyright (C) 2024 Ze Huang <18771902331@163.com>
+>>>> + */
+>>>> +#include "k230-pinctrl.h"
+>>>> +
+>>>> +/ {
+>>>> +	soc {
+>>>> +		pinctrl: pinctrl@91105000 {
+>>> That's odd style - defining SoC nodes outside of SoC DTSI. Are you sure
+>>> that's preferred coding style in RISC-V or Canaan?
+>> Pinctrl-related nodes were separated the for ease of maintenance, but the
+>> convention in Canaan is to place them in the board-level DTS file. Would it
+>> be better to stay consistent with their approach?
+> Yeah, please put them in the board-level file.
+
+OK
+
 >
+> Thanks,
+> Conor.
 
-Hi,
-
-any news with this? Rob reviewed the DT schemas and he is ok with them.
-
-Any other comments for the MFD driver and/or the pinctrl or PWM driver?
-
--- 
-	Ansuel
 
