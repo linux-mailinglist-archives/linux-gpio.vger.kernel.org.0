@@ -1,80 +1,86 @@
-Return-Path: <linux-gpio+bounces-10387-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10388-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2210497EE84
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 17:50:40 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2054D97F03D
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 20:13:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 81F7FB2178D
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 15:50:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ABE2BB21814
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 18:13:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DF4B1993BB;
-	Mon, 23 Sep 2024 15:50:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 048DE19F43F;
+	Mon, 23 Sep 2024 18:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4/ZLxs9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from greygoose-centos7.csh.rit.edu (greygoose-centos7.csh.rit.edu [129.21.49.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13262746A;
-	Mon, 23 Sep 2024 15:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.21.49.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903AA8C1A;
+	Mon, 23 Sep 2024 18:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727106631; cv=none; b=UT8/2QdMI9TDJoGcaLLI2wyuY2lPQblV0WnAlzOfngN/vpv5RmDDkaqQWvI6aJh2N1n0bhaTJCwxiwxPjvZVOZDJiey42OJSDXpyPiPeceg4zCRSp1YlwkQXxtH9ZYBxTJNr+ARogGjjVg+YEltioUdbasfFeApjUgH6em3lV5c=
+	t=1727115230; cv=none; b=V6NZzzDzaI0kqBBdSnq6pPGfTnnt4hNoUUEy5f/fCjthnvuPVHSoacw3P35sLATCHBQ0z4aGcjWLVbb52I7QsM3jvBlYofby66Q59kPGjLLOvhR6IabB1+UUZjI8yIEsj5g5EmJK+RbaxqWyd0lYmQM0HR9YKnm8MtyeHkEidkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727106631; c=relaxed/simple;
-	bh=YRCgOb2aa4nSASo563RcWrUr3rwed6+q3AjPu02cBCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rE2cIX+0t3CUGkNW0KexOlN5QICNf6WjI2YZDlHkcS3WJmUZDVtOC8x9pJM6CuHBYSX1IQG2ugfRwUcWkRUJTqJxdWKtqFBNiJfFnrHBzWKUNat5yWkosmjxNFZh7yEHobtxqRF7CdOTVy0Eztb1RjsdhDWEwoQKo0qwDqC+DOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=freedom.csh.rit.edu; spf=none smtp.mailfrom=freedom.csh.rit.edu; arc=none smtp.client-ip=129.21.49.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=freedom.csh.rit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=freedom.csh.rit.edu
-Received: from localhost (localhost [127.0.0.1])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTP id 2800D457363D;
-	Mon, 23 Sep 2024 11:50:23 -0400 (EDT)
-X-Virus-Scanned: amavisd-new at csh.rit.edu
-Received: from greygoose-centos7.csh.rit.edu ([127.0.0.1])
- by localhost (mail.csh.rit.edu [127.0.0.1]) (amavisd-new, port 10026)
- with ESMTP id 1i5uYfQtRbia; Mon, 23 Sep 2024 11:50:22 -0400 (EDT)
-Received: from freedom.csh.rit.edu (unknown [129.21.49.24])
-	by greygoose-centos7.csh.rit.edu (Postfix) with ESMTPS id 802FC45735E9;
-	Mon, 23 Sep 2024 11:50:22 -0400 (EDT)
-Date: Mon, 23 Sep 2024 11:50:21 -0400
-From: Mary Strodl <mstrodl@freedom.csh.rit.edu>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mary Strodl <mstrodl@csh.rit.edu>, linux-kernel@vger.kernel.org,
-	brgl@bgdev.pl, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: add support for FTDI's MPSSE as GPIO
-Message-ID: <ZvGOPRhvn1GhdLy2@freedom.csh.rit.edu>
-References: <20240919141014.4000958-1-mstrodl@csh.rit.edu>
- <CACRpkdYO4Y_1ZhCw40_2tz70D728hU8aGCThQCiewjkbwboTQw@mail.gmail.com>
+	s=arc-20240116; t=1727115230; c=relaxed/simple;
+	bh=1WyhULVRVV/rtdeWwTQ2M9+nk7WPwcxLgUiEtp966xs=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=CyT7WovSano8luJSnKcMFl/ShOd7t2IRz0+H4xK2jI0SK4cnvwIIDj5r+lXitUty+QCoMc+dEWri4qJy8wDpNGpWtJpghI7EIUszQzlr3eeItMzSrKhzUUGNLxTWVXfH1Dh+RzNAdfUuEdo83exrKoF+iNpMS166TaI+gsqbYno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4/ZLxs9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 028FBC4CEC4;
+	Mon, 23 Sep 2024 18:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727115230;
+	bh=1WyhULVRVV/rtdeWwTQ2M9+nk7WPwcxLgUiEtp966xs=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=G4/ZLxs9Q4D9kEnETKRLoXRmkGqSdWz+iEY0I8D29Y4fabg07BpYqGOhriher+Mng
+	 U+fIDfjEsaZayJijn1WSK8tqgfLBt4AmkijpC7CBOoOxRd3b0KeDpSTafSii3pPPDZ
+	 QuUDEXmpBiY7A+Admls8DVdsTim1Xhf0318L5l2f1bv+lPtBzrseo385Y5DguGwap/
+	 dGUePuLxl8uU02UjtfmXxS51GXMAPXuNEHtATnFMc2CWvn+YFDhD3xr2VpopC8VV9B
+	 csiSC1riXKdxRUJ2pAdITGNdUMp4KPSi4qBhVNOPw53swFV9itIbBINfHLcUgQ0XHE
+	 ouCDS8uDHFRhA==
+Message-ID: <146d3866ec57e963713cd07b9eaf5a71.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYO4Y_1ZhCw40_2tz70D728hU8aGCThQCiewjkbwboTQw@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAK7LNAQEx52BYMYfNu+xj8sNmdtH9XfPapdhJDrsbDo43aD3Dg@mail.gmail.com>
+References: <cover.1724159867.git.andrea.porta@suse.com> <12d0909b1612fb6d2caa42b4fda5e5ae63d623a3.1724159867.git.andrea.porta@suse.com> <2113b8df52164733a0ee3860bb793d6e.sboyd@kernel.org> <ZtcBHvI9JxgH9iFT@apocalypse> <d87530b846d0dc9e78789234cfcb602a.sboyd@kernel.org> <CAK7LNAQEx52BYMYfNu+xj8sNmdtH9XfPapdhJDrsbDo43aD3Dg@mail.gmail.com>
+Subject: Re: [PATCH 05/11] vmlinux.lds.h: Preserve DTB sections from being discarded after init
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, Conor Dooley <conor+dt@kernel.org>, David S. Miller <davem@davemloft.net>, Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, Eric Dumazet <edumazet@google.com>, Florian Fainelli <florian.fainelli@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jakub Kicinski <kuba@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.o
+ rg>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, netdev@vger.kernel.org, linux-kbuild@vger.kernel.org
+To: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 23 Sep 2024 11:13:47 -0700
+User-Agent: alot/0.10
 
-On Mon, Sep 23, 2024 at 12:44:15AM +0200, Linus Walleij wrote:
-> Maybe you want to provide the gpio.names array for this
-> device?
-> 
-> It makes it easier to use the lines from userspace if they
-> have meaningful names, it looks like those may be printed
-> on the board on the Sealevel device.
+Quoting Masahiro Yamada (2024-09-22 01:14:12)
+>=20
+> Rather, I'd modify my patch as follows:
+>=20
+> --- a/scripts/Makefile.dtbs
+> +++ b/scripts/Makefile.dtbs
+> @@ -34,12 +34,14 @@ $(obj)/dtbs-list: $(dtb-y) FORCE
+>  # Assembly file to wrap dtb(o)
+>  # ----------------------------------------------------------------------=
+-----
+>=20
+> +builtin-dtb-section =3D $(if $(filter arch/%, $(obj)),.dtb.init.rodata,.=
+rodata)
 
-There are a bunch of devices using this chip in very different ways,
-so I didn't want to tie it too closely to this specific device.
-Also this device kinda doesn't have a good way to label the pins.
-Part of the issue is that sealevel hasn't given us a schematic of how
-the chip is connected, I've had to figure stuff out by trial and error... :S
+I think we want to free the empty root dtb that's always builtin. That
+is in drivers/of/ right? And I worry that an overlay could be in arch/
+and then this breaks again. That's why it feels more correct to treat
+dtbo.o vs. dtb.o differently. Perhaps we can check $(obj) for dtbo vs
+dtb?
 
-> Yours,
-> Linus Walleij
-
-Thanks for reviewing! I'll have a new patch out soon with the feedback
-from your previous email addressed :)
+Also, modpost code looks for .init* named sections and treats them as
+initdata already. Can we rename .dtb.init.rodata to .init.dtb.rodata so
+that modpost can find that?
 
