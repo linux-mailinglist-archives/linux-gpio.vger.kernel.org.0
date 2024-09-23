@@ -1,136 +1,139 @@
-Return-Path: <linux-gpio+bounces-10389-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10390-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F15B097F09D
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 20:27:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99DBB983921
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 23:34:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B262A281EDA
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 18:27:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 442361F22640
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 21:34:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0287D1A01C3;
-	Mon, 23 Sep 2024 18:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82B5883CC7;
+	Mon, 23 Sep 2024 21:34:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jf+lcDVz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B69oEG9i"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B1019F13C
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Sep 2024 18:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311D176F1B;
+	Mon, 23 Sep 2024 21:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727115988; cv=none; b=GOyuX7jCslhkCEpnv+R9ydBoLxuz1NQtu9wYJelII99GfYQ/hOWSsQ401iWWmru9ZQLdDNbqMX/BnjjHyI0hqpkthaOvF+8CHtD0SK2m/ALOeUdRENRpUbTSMRNbOBUSFKbUmiLwXtBojLvrvOJGPM5kjTQqlZ1zN/cm5u9Rm2w=
+	t=1727127251; cv=none; b=Ah7OTZGrFEUS7+3c4HgCgci6GiNLhVOK8NSUt4t8ZEQndYXMSE3/DSwz2TrOB6Zudyu2hNQcwHIC0x7UbxxgWVzkpQ56P4UFLUiYv7mFnGks4d6KiHmWYaEGZfw3YEDtPbWLKV7LxQc0uHrPXwyoaTS1Z8+QguB/ArZC9LdL8uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727115988; c=relaxed/simple;
-	bh=6yAOz26213n2KgfQEQsbiC5BQb5c9sE/isoaVPgReMs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CckhdT4paTRQe17atF4uzAibkasr77fK5h3aZDG6VjqAOWrYXfo2ge/3I86V+5r4jmZKu8UbK5O/GnOiWBRqDSHY/cCMn9HQcMmGwvokaNc2107aEFwinpuAIwILK9+7oftPx1sNovpStiPRoAnf9jio3SqUhcR9ZMOgJtG+X78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jf+lcDVz; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-458311b338eso39469751cf.2
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Sep 2024 11:26:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727115986; x=1727720786; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BBvpgXO5r5dFIZAM8oRzmHzrw+yH88awNg14BJlS8xc=;
-        b=Jf+lcDVzyle1RODyECvQA4rm8zeNri/4X8+jchhZ/vXlPpk8NLdgjkncT7zn5YK7p3
-         QwiRCYunlCQcYHM93fEDRlZ8/Nxfxg2RRB1nmpWnAdRuDonUdOyqI9E1vB31AhQ0uXKb
-         hZDjondnIbgyB94YmiR7eNtlPesibP9+NZZU/pWk8EjqZcD46tuZcBG2WOkFvAiDyi4d
-         vl+q1QvlMNnFNK9e4ShcU3dZV/OMN8W2b7kLmJzC1WkyMlBPXgr2QtgJoY86IikihPQk
-         laP95O13rRjutbNOMqxLiAzed+u5LJBRHbWGvi8ElVuSC7tge3Xhet0qfR1SfAtBZI45
-         OHfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727115986; x=1727720786;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BBvpgXO5r5dFIZAM8oRzmHzrw+yH88awNg14BJlS8xc=;
-        b=K24/7JNog6r5NN0OPDtwn2vSar0BilsTkfHPfxuWUMEu0F8eDD3abXXaWYXqogw5NX
-         ptweac5P/XXNzPhrYNNxeNF4DxAyXetSED6N40AEiACvT7uYCGYgwSofeTBtJ89meSXe
-         8/xa0InZ2Nev89f/2iItpCdg6JrufaIknPTxlxQO2sg1N1MJoi4SfrDu0Gu3gBNqQda4
-         F10lUzYrcqBuVHHLrHdOWtHvMGI8zbsoxdnhCRUCUyuLKyWc0V+gyzv7D2Eq/AuqjqHd
-         qIFMQK1XzocezXo+bGymqUwQI3FSiyG4lmKyiYFtGp3IseK8Jao9siCTj1tOAQFY4Lzm
-         1C+w==
-X-Gm-Message-State: AOJu0YzdgGWSFbSy3yRLY9CNGPUdPWY7ANY+/0OpCXkd0VwgzcpnrXzn
-	4kCdLD78i+5ib7d2qE84+OQQCNe5DElbZVhrMmtpVHUn1ZqY3Zo51Rqnbw==
-X-Google-Smtp-Source: AGHT+IE5+qfL40o05XJorUx61WsygrDFOfQnpeDZyKQ1t/d6G03INA/DlV6YCF7+q0BTXuDwI0xieQ==
-X-Received: by 2002:a05:6214:310c:b0:6c3:63be:e716 with SMTP id 6a1803df08f44-6c7bc80d154mr174104126d6.35.1727115985742;
-        Mon, 23 Sep 2024 11:26:25 -0700 (PDT)
-Received: from vfazio4.xes-mad.com (mail.xes-mad.com. [162.248.234.2])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c75e474465sm49699736d6.42.2024.09.23.11.26.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2024 11:26:24 -0700 (PDT)
-From: Vincent Fazio <vfazio@gmail.com>
-X-Google-Original-From: Vincent Fazio <vfazio@xes-inc.com>
-To: linux-gpio@vger.kernel.org
-Cc: vfazio@gmail.com,
-	Vincent Fazio <vfazio@xes-inc.com>
-Subject: [libgpiod][PATCH] bindings: python: tests: skip some reconfigure tests on older kernels
-Date: Mon, 23 Sep 2024 13:25:50 -0500
-Message-Id: <20240923182550.3724996-1-vfazio@xes-inc.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1727127251; c=relaxed/simple;
+	bh=vVPOUctwnyfB+YD2bNXn8oVlRQeRez4f3tU2z/4oPAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KgwHHhcIkWplVc5/lZhB2b2+sXpFJ5BO6yxAmgoOKUl8Bu+a6X+d9N9cidN6k7H4mQ5LocMyuiu1zxdqPZp9CX67kxkWNKiRgAV43mLd867AVt9w5jWhZbZn1ttewkkF4tw+DNRL/u/JDlIV083KI+I3RRmqWSAuhfWMKoJJGz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B69oEG9i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABAE3C4CEC4;
+	Mon, 23 Sep 2024 21:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727127250;
+	bh=vVPOUctwnyfB+YD2bNXn8oVlRQeRez4f3tU2z/4oPAM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B69oEG9iR2lkgbaavaQIF+rGFjkOhAxIFSb0gLR/US8dDlU1t8itdFNSvLN4acSWA
+	 uezOSixDb4nZ2qizKSmVEHl/IMoat2cNQHh7Gzad5EwtM1/xgfzt10u8K2QbMaao0L
+	 kczydm+8kjvJEHutG8lKOn3DIvS9fWlk2UEoUU3EcovPOOqtgKGXlb7VsALziJSGom
+	 kFb4E1a8b57vx9oP9Drip8Qa6rwlMpEsVTB2p19364RtE40O0KsvlKLLI4Kw3YwICn
+	 pKQENBXWRVORwjwV7gMn3fzyBKIqtVnqv6CpprlMDRlz0jb8oijEvymnwBBpLRuK/d
+	 1CcAHKmZAjuFQ==
+Date: Mon, 23 Sep 2024 22:34:05 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chester Lin <chester62515@gmail.com>,
+	Matthias Brugger <mbrugger@suse.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	NXP S32 Linux Team <s32@nxp.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: gpio: add support for NXP
+ S32G2/S32G3 SoCs
+Message-ID: <20240923-rentable-okay-922af44b66c8@spud>
+References: <20240919134732.2626144-1-andrei.stefanescu@oss.nxp.com>
+ <20240919134732.2626144-3-andrei.stefanescu@oss.nxp.com>
+ <20240920-reapply-amusement-a37cf13fd910@squawk>
+ <16950e81-e0ef-4e7c-b0ef-4f56415dceed@oss.nxp.com>
+ <bd5a2d24-164c-4707-a5fd-6584e444ee0b@kernel.org>
+ <20240921-party-glass-bfb7099c7ded@spud>
+ <e6u3kui5md4km5xvjzlq5cfgwvtb73c763uep4j5ysaokmmucr@gz5nxiebg7gu>
+ <20240922-plug-legible-74f56d898123@spud>
+ <3b51ff7b-ab9b-431c-a43a-49b5a5e74dff@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="D4I/hfqMmYR9lhb8"
+Content-Disposition: inline
+In-Reply-To: <3b51ff7b-ab9b-431c-a43a-49b5a5e74dff@oss.nxp.com>
 
-Commit 40db20e added tests to ensure that lines that were either missing
-from a reconfigure call or were included but had no LineSettings defined
-would _not_ change configuration.
 
-However, this functionality requires the changes from kernel commit
-b44039638 to work as expected. This commit exists in the 6.10 kernel and
-was backported to 6.9.8 [0].
+--D4I/hfqMmYR9lhb8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Now, these tests are skipped if the kernel version is older than 6.9.8.
+On Mon, Sep 23, 2024 at 01:47:25PM +0300, Andrei Stefanescu wrote:
+> Hi,
+>=20
+> On 23/09/2024 00:07, Conor Dooley wrote:
+> > On Sun, Sep 22, 2024 at 11:04:22PM +0200, Krzysztof Kozlowski wrote:
+> >> On Sat, Sep 21, 2024 at 10:58:46PM +0100, Conor Dooley wrote:
+> >>> On Fri, Sep 20, 2024 at 03:40:31PM +0200, Krzysztof Kozlowski wrote:
+> >>>> On 20/09/2024 15:33, Andrei Stefanescu wrote:
+> >=20
+> >>>>>>> +properties:
+> >>>>>>> +  compatible:
+> >>>>>>> +    items:
+> >>>>>>> +      - const: nxp,s32g2-siul2-gpio
+> >>>>>>
+> >>>>>> Commit message and binding description say s32g2 and s32g3, but th=
+ere's
+> >>>>>> only a compatible here for g2.
+> >>>>>
+> >>>>> Yes, the SIUL2 GPIO hardware is the same for both S32G2 and S32G3 S=
+oCs. I plan
+> >>>>> to reuse the same compatible when I add the SIUL2 GPIO device tree =
+node for
+> >>>>> the S32G3 boards. Would that be ok?
+> >>>>
+> >>>> There are only few exceptions where re-using compatible is allowed. =
+Was
+> >>>> S32G on them? Please consult existing practice/maintainers and past =
+reviews.
+>=20
+> I will add another compatible: "nxp,s32g3-siul2-gpio" for the S32G3 SoC. =
+We currently
+> also have the SIUL2 pinctrl driver in upstream with only one compatible:
+> "nxp,s32g2-siul2-pinctrl". Should I also send a separate patch to add an =
+S32G3 compatible
+> to it?
+>=20
 
-[0]: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=d972e7b24a50d1f89967d5bffc3147810af9222d
-Fixes: 40db20eec045 ("bindings: python: tests: extend reconfiguration tests")
-Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
----
- bindings/python/tests/tests_line_request.py | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+That would be great, thanks.
 
-diff --git a/bindings/python/tests/tests_line_request.py b/bindings/python/tests/tests_line_request.py
-index 285c9f1..5c42676 100644
---- a/bindings/python/tests/tests_line_request.py
-+++ b/bindings/python/tests/tests_line_request.py
-@@ -4,9 +4,9 @@
- import errno
- import gpiod
- 
--from . import gpiosim
-+from . import gpiosim, current_version as linux_kernel_version
- from gpiod.line import Clock, Direction, Drive, Edge, Value
--from unittest import TestCase
-+from unittest import TestCase, skipIf
- 
- Pull = gpiosim.Chip.Pull
- SimVal = gpiosim.Chip.Value
-@@ -549,6 +549,7 @@ class ReconfigureRequestedLines(TestCase):
-         info = self.chip.get_line_info(2)
-         self.assertEqual(info.direction, Direction.INPUT)
- 
-+    @skipIf(linux_kernel_version < "6.9.8", "Requires kernel commit b44039638 to pass properly")
-     def test_reconfigure_with_default(self):
-         info = self.chip.get_line_info(2)
-         self.assertEqual(info.direction, Direction.OUTPUT)
-@@ -568,6 +569,7 @@ class ReconfigureRequestedLines(TestCase):
-         self.assertTrue(info.active_low)
-         self.assertEqual(info.drive, Drive.OPEN_DRAIN)
- 
-+    @skipIf(linux_kernel_version < "6.9.8", "Requires kernel commit b44039638 to pass properly")
-     def test_reconfigure_missing_offsets(self):
-         info = self.chip.get_line_info(2)
-         self.assertEqual(info.direction, Direction.OUTPUT)
--- 
-2.34.1
+--D4I/hfqMmYR9lhb8
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZvHezQAKCRB4tDGHoIJi
+0pCmAQC1egpDgRJ3lx7CnNAI1DfohfH3FYOvN94njKldOAyNOgEAjqcWytfOQc+G
+sRWY+YJMcy6ZEW7clxmqi0OwPbJBmws=
+=R/oF
+-----END PGP SIGNATURE-----
+
+--D4I/hfqMmYR9lhb8--
 
