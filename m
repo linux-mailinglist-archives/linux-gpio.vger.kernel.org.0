@@ -1,163 +1,116 @@
-Return-Path: <linux-gpio+bounces-10378-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10380-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FCA997E98C
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 12:10:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 146B197EA0E
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 12:44:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 65BF72837AF
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 10:10:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFB9C281A56
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Sep 2024 10:44:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B4B1990D3;
-	Mon, 23 Sep 2024 10:07:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34643196455;
+	Mon, 23 Sep 2024 10:44:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Gn8Zuav4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RCovq27e"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961A1195F17;
-	Mon, 23 Sep 2024 10:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A285A78B60;
+	Mon, 23 Sep 2024 10:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727086079; cv=none; b=B7/MRuRapQkeEL5Pu8OPzXfz+yFek+XJ0yBnjVHj+8wKRuRdQC1gMJ7Nj/z7IQMlzzqwCANkqC1nFqzbJDmEYRgayAyC/8x6hOjIBwnPmgF1VwjN8TJcHI2y0X5tcezntS/yxzeY+ZoGf1Yj+KWexuKDtfyLKYOaJveaD5ahnU0=
+	t=1727088249; cv=none; b=h0sso3Wr89VPBDrRLQZ7TRR4dVweoKEb14Wfod+R5LSK563vfUp7r/OancxdC/yFWwpY/B8tDTv7+8XzlhZVHNwnkYoQFL2ZIpr+pImAZe2dWGLHYqfICezO7LVFSak8SH7SxNhoSvLMBt+DXuchaVFhXxm/uXWeWFG033sZ1YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727086079; c=relaxed/simple;
-	bh=g7FAc9OYW1op9fQgfvmM6BytK9IwD6jCDZ0xkaq076I=;
-	h=Message-ID:Date:MIME-Version:From:To:CC:Subject:Content-Type; b=i7sKC2ggAFvm28OTyMGXRtLIQZVQswhfquLyKMrLS9rLod/3sJqa0Z49xAlGpVE+lAKdGXh1XlAfuJVUKQGPlpprFtINjHtt6+nUWhSpuCwx6nkPMolRyXJCRAlAUXIz1a5nJsYE2g/SPn8Tt7j32W/PYkwFWPxgxLebzDihDGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Gn8Zuav4; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48MMkVXc008558;
-	Mon, 23 Sep 2024 10:07:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=End3JsuI3AjzcoV07bmLrz
-	l5uJ2BjznpOwfc+5yP960=; b=Gn8Zuav4+Tk/RH3MhRH0KxLhW0Rni5ZX9JiQ2M
-	Mq3KAisgCOkgkbOheLs1hEfsPMpsXW4k/DJeKbueoUIzhjo9cUEwgYOSMeEnN7EA
-	Z6vDc1vcXLl90NAZ/2ntkowehlNKZR6qbQ6wIFFDRx8IPetKepRDdModdlTp3yW2
-	nPRmHzvEO+fIgtGzbmGbZk6dcZ0g0gAHLnK5U1NQX0ykaDGBBFVpgHDiEPcHsAqU
-	h9EuWoFfh9ZOgZS00sYhdsHlPAu+0J9iGkUHGcnc1oa3ql9xlriu42OCF0snL/jv
-	IUg2xoi3lvmRuWrAHQ/h3Ydg+eTPanUfumirpfe+niBAWTvA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41sph6mju7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Sep 2024 10:07:43 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48NA7f50007981
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Sep 2024 10:07:41 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 23 Sep
- 2024 03:07:38 -0700
-Message-ID: <370d023e-ec53-4bf2-a005-48524c9cb4b2@quicinc.com>
-Date: Mon, 23 Sep 2024 18:07:36 +0800
+	s=arc-20240116; t=1727088249; c=relaxed/simple;
+	bh=oKcFWTGa4Wd1F63+4plK6XDY/MxtOsFMlyeMw92+6eY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZxoXdKdS3Svk9vo56g1WUZ1R2Yap2l6PK4/z8nHd95D4etJJA29Z+DooGxvj6ddCqGP77tZ7ig9+Wc7TdJE6c0dT/Ugyr1Ius32JLTZvN2+V/abADh8TBS6YefHdcm0JAC0QsfV5sjpDlkpvLcdDuPBEfuYW4i/42gFmbs99Fl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RCovq27e; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727088248; x=1758624248;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=oKcFWTGa4Wd1F63+4plK6XDY/MxtOsFMlyeMw92+6eY=;
+  b=RCovq27eC04qwnQWoafbT9RI0aD0OjjbyMiZJDUy6eFFojc338BT1qhz
+   PCaK4qsYRVri3TlKuJTibEIRJ29HllUQDJcLe+n/c/Dbh+3A0bbfSKWDF
+   M7F4UZOPfV94tCuvxUDIlQSR53q7lKsUWtiY9ms+pE/yf0huFMJZMuWv3
+   PoP9TbONPJenEK3IAbQkOcV7BcjrTYlXrO/AvapBwWnnMLpxOPBx1AMZv
+   8YJKkvtc3yG14i779MXrC0mtL7Qzmr4bLtAaE2RTz9IId9yA3mobpG3Dr
+   0fvmERxjJ7HP6Wbb4WHtjmaDWoZM1MDcYsSgmwxkEhPR98rqpcOS5FpBu
+   w==;
+X-CSE-ConnectionGUID: 6Pta1CafSZ+nGHyhU0XMQQ==
+X-CSE-MsgGUID: B3iLkegKQTSVxPUcGyKTLw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11202"; a="26123755"
+X-IronPort-AV: E=Sophos;i="6.10,251,1719903600"; 
+   d="scan'208";a="26123755"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 03:44:07 -0700
+X-CSE-ConnectionGUID: wBEHr1JxRz2EvFbS6PFTNg==
+X-CSE-MsgGUID: 5d6hTUnMTfe+LzCf8TrTlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,251,1719903600"; 
+   d="scan'208";a="75970264"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 03:44:05 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1ssgXz-0000000BxIp-0UHc;
+	Mon, 23 Sep 2024 13:44:03 +0300
+Date: Mon, 23 Sep 2024 13:44:02 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] pinctrl: nomadik: Use string_choices API instead
+ of ternary operator
+Message-ID: <ZvFGctwe1vu9lQmd@smile.fi.intel.com>
+References: <20240826095723.1421065-1-andriy.shevchenko@linux.intel.com>
+ <ZtmqdP6Q92vRWh_I@smile.fi.intel.com>
+ <CACRpkdYSPGsQt_FQDurtwmyaLtB3=gaay-hLN2QdOj25e3sK8A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-To: <rafael@kernel.org>, <mika.westerberg@linux.intel.com>,
-        <ulf.hansson@linaro.org>, <bhelgaas@google.com>,
-        <Basavaraj.Natikar@amd.com>, <Shyam-sundar.S-k@amd.com>,
-        <mpearson@lenovo.com>, <markpearson@lenovo.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-CC: <linux-acpi@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>
-Subject: unexptect ACPI GPE wakeup on Lenovo platforms
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: T8CvMl7AuuKOzCoV-KFOANAyj1yL6-RU
-X-Proofpoint-ORIG-GUID: T8CvMl7AuuKOzCoV-KFOANAyj1yL6-RU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxlogscore=949
- mlxscore=0 adultscore=0 phishscore=0 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409230074
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdYSPGsQt_FQDurtwmyaLtB3=gaay-hLN2QdOj25e3sK8A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi,
+On Mon, Sep 23, 2024 at 11:11:12AM +0200, Linus Walleij wrote:
+> On Thu, Sep 5, 2024 at 2:56 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Aug 26, 2024 at 12:57:23PM +0300, Andy Shevchenko wrote:
+> 
+> > > Use modern string_choices API instead of manually determining the
+> > > output using ternary operator.
+> >
+> > Linus, do you have any comment on this?
+> >
+> > I had sent two patches of similar changes (different drivers, thoug),
+> > one got applied and this is not. Anything should I do about it?
+> 
+> Sorry for late reply :(
+> 
+> I thought it looks weird to replace just one string choice
+> in the middle of everything and it will be confusing for readers?
+> They will be "but what is this now, this looks weird".
 
-recently it is reported that on some Lenovo machines (P16v, Z13 etc.) unexpected ACPI event wakeup is seen with kernel 6.10 [1][2]. To summary, the unexpected wakeup is triggered by simply unplug AC power or close lid of the laptop. Regression test shows this is caused by below commit, and with that reverted the issue is gone:
+Do you mean it's incomplete? So, i.o.w., if we have str_output_input()
+it will go?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/net/wireless/ath/ath11k?id=166a490f59ac10340ee5330e51c15188ce2a7f8f
-
-Well what confuses me is that this commit basically resets WLAN hardware before going to suspend. that said, WLAN target maintains limited functionality (PCIe link handling etc...) during system suspend and is thus not expected to wakeup system.
-
-kernel log shows this is an ACPI GPE event wakeup:
-
-Sep 22 22:34:32 fedora kernel: PM: Triggering wakeup from IRQ 9
-Sep 22 22:34:32 fedora kernel: ACPI: PM: ACPI non-EC GPE wakeup
-...
-Sep 22 22:34:32 fedora kernel: PM: noirq resume of devices complete after 693.757 msecs
-Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x07
-Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x0e
-
-Consulting ACPI tables show GPE 0x07 is used by the EC and GPE 0x0e is used by GPP6 device:
-
-Scope (\_SB.PCI0.GPP6)
-{
-    ...
-    Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
-    {
-        M460 ("PLA-ASL-\\_SB.PCI0.GPP6._PRW Return GPRW (0xE, 0x4)\n", 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
-        Return (Package (0x02)
-        {
-            0x0E,
-            0x04
-        })
-    }
-    ...
-}
-
-while GPP6 is the PCI bridge (the PCIe root port in this case) to which WLAN target is attached to:
-
-Device (GPP6)
-{
-    Name (_ADR, 0x00020002)  // _ADR: Address
-    ...
-}
-
-Scope (_SB.PCI0.GPP6)
-{
-    Device (WLAN)
-    {
-        ...
-    }
-    ...
-}
-
-and lspci also shows such relationship:
-
-$ lspci -vt
--[0000:00]-+-00.0  Advanced Micro Devices, Inc. [AMD] Device 14e8
-           ...
-           +-02.2-[03]----00.0  Qualcomm Technologies, Inc QCNFA765 Wireless Network Adapter
-           ....
-
-Based on above info:
-#1 is that valid to get the conclusion that this unexpected wakeup is triggered directly by PCIe bridge?
-#2 if this is related to WLAN (seems so based on the regression test), is it the WLAN wake pin (a GPIO pin?) that originally triggers this? and how does it affect the bridge?
-#3 quick tests show that with GPP6 wakeup disabled this issue is gone. so a workaround is to disable GPP6 wakeup before going to suspend and enable it back after resume. But is it safe to do so?
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=219196
-[2] https://bugzilla.redhat.com/show_bug.cgi?id=2301921
 
