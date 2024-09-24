@@ -1,151 +1,159 @@
-Return-Path: <linux-gpio+bounces-10394-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10395-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02328983B01
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 03:48:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17623983B52
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 04:46:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ACE5A1F230DE
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 01:48:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4546B21668
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 02:46:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 504ED1C32;
-	Tue, 24 Sep 2024 01:48:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FEF513FFC;
+	Tue, 24 Sep 2024 02:46:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="NOXalGUX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXbc8IZr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742EB38C;
-	Tue, 24 Sep 2024 01:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE0D1B85DA;
+	Tue, 24 Sep 2024 02:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727142496; cv=none; b=DAVSdb45nDcHn9ogJtaZv4YGLuQ83+pOZL46Zi7ikfl1oDiiYopt2Mpw0VWJ7ZLH8U7CnCefWTSYHCAimPBGSzdn37HVNpc2iBXvDkZ0eNgEpbyFk0xZV59rlw3yp80mXeK4Of/kEc50TxoTJRw7sXmCN7BiXSO/4eTYilWhvNI=
+	t=1727145997; cv=none; b=JWd7GHHyXM7HWInQJYVy02vFhAgitTQ/q9YcTus3ga77f/JO2v5Z9zVgUCFCkihi4fdAiJxU+GDxxcCJfS8rgjD+6SWfGrT/ltyr+yrApKM6/b9X326kdXlRshXB8HrFXxpX+vIrZTWg1NfSSPJ2ki9EPElOpERKYG2skW09PRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727142496; c=relaxed/simple;
-	bh=Yub2xhfeYUDGpyEbPUsa0PaJtfrLVEY9t/vX1rtaW4g=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZY0wS45Qwq5msc2aiecXabGwUAfHNUGxl0MRMeqYxL9hE15dFoMheEH97RjIhHskxrEiA/fnNKZaSt8WpTXYK93aRMQY55U70X9voX3U4yVEaTuLFWAv/6jLV659a6LpqeUGO1h8zZElUgl2AqbMpqHj8K9uf2SEsi71i5Nayts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=NOXalGUX; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1727142492;
-	bh=GCefvpkLAdF/COhltMUzJr2wnq0riZTXfytdaX3aWA0=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=NOXalGUXVBW/7tJhLWIPxi4cDFvCD59mXvbWbMjer2AyUGx4KPf9J0QB+NWD9thPZ
-	 y+qOMrKmWIZ4VVniJA4Et0wtqBWunOK4DLhGHADgomMtVyl/fsEPwPZ608hbH10DHY
-	 THjixeU0aEchjpsx/DgVVZ0j/Qv5l3CsYWw4SrtoFQAC94YyPd2zedfK0kWDcgk9Xm
-	 rYbGwhTKQ3WPnBUfCcqr/G2LDyyMwXZbAAEWlvx2JatQGOARTs6VO0ZsLtew4X0rqC
-	 /B9A3ONI6DmFH0qVeyf+4xYRwWIDgtR1lbvRVIz9fpJuGrFZK2Zk6xkt+AOexwUbjQ
-	 qhF0mh+7q8ybA==
-Received: from [192.168.68.112] (ppp118-210-177-92.adl-adc-lon-bras34.tpg.internode.on.net [118.210.177.92])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 453B16502A;
-	Tue, 24 Sep 2024 09:48:11 +0800 (AWST)
-Message-ID: <95d87d38cabccb04b82e66123d78137e9cb38958.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v5 3/6] gpio: aspeed: Create llops to handle hardware
- access
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Billy Tsai <billy_tsai@aspeedtech.com>, linus.walleij@linaro.org, 
- brgl@bgdev.pl, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- joel@jms.id.au, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
- linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com,
- Peter.Yin@quantatw.com,  Jay_Zhang@wiwynn.com
-Date: Tue, 24 Sep 2024 11:18:10 +0930
-In-Reply-To: <20240923100611.1597113-4-billy_tsai@aspeedtech.com>
-References: <20240923100611.1597113-1-billy_tsai@aspeedtech.com>
-	 <20240923100611.1597113-4-billy_tsai@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1727145997; c=relaxed/simple;
+	bh=saapds3Tco5OXwRJK6gEwmbqTm5hd9R5EEGQWhxcueg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qyOAfFgzCYU8EisbdYa8/H+uNkLE9RJ+tyILs9HjHHJityjhj5nH7XcCG5kQgzCGiiEDui9ckqzRUG+2WixUTpe2FYDI5vo3BjvVo6SAq6kLOTWihNK8eGFoX5mZieBsK9EBpsEPlTDYC30dMgC6uDJ9tLVsNLI/FsaDreMDfmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXbc8IZr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34100C4CEDA;
+	Tue, 24 Sep 2024 02:46:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727145997;
+	bh=saapds3Tco5OXwRJK6gEwmbqTm5hd9R5EEGQWhxcueg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=CXbc8IZrs+le1x6K8gPklyx59P7UO2MaFH+aBs6qULAOOByQjWz2EwDcFxVQwMXR8
+	 uDC4rvtiiFp1YHSpIIi29Vyf5Xk9vyunyVGL0G9cl9ifmzROQ7XhuRrCY9E2V8NhBk
+	 NDzmD2DsOyPUjbix144H2Z24mARaXizk1TP49VwMXmKKfHfmAtmYD4+5Ro9/+walcc
+	 8e/UpjKbHbslIF1BtWRTkehIxG8ySOToyaah2hOXVz/SmYL/DEtbJVH0X1Y9bKwZHm
+	 s2J769cmRTcYSDwtMzoQbzlIuCXMMyW1wQ6anVZgK2E+vY6MsMycmVCSN0RP/pMgWi
+	 nHBBJxy7ma/AQ==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-53660856a21so4826564e87.2;
+        Mon, 23 Sep 2024 19:46:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUVJXZ8o2fiFRGN34OFI7v4marGFjwMO4b9/YdDkndTX1SJR9PrrDV/uupJfNVvInOYbBwlbnxISIRTKw==@vger.kernel.org, AJvYcCV4qnhlXmd/pNtynF6EoKBLlofyH2WNGeaWZdYcDMDWO1rP70Yx44MSZYDcQ3wPWrQp0HxUNUcLswtD@vger.kernel.org, AJvYcCV8sJpN9/p5r1bthDfvVl05PMAS5ortaswtv0Lv6ySiT324sU8rj4O7XAdtFU4qxR6/EvYetQtSXzsQy/HF@vger.kernel.org, AJvYcCVe0322POMCrVO5cX7/fFNKZseqmP/a2N+6gAG+uknz6i7yxpWtloHo+ctB+ZZBjp5nFJgb7tui/PVY@vger.kernel.org, AJvYcCWc3DP4gCs7l9SHGJDIMKfQ6kLqkhxjKjtfqhi1o7n7uZ7XiIX6gRcd8ZwaammH7u2h8NNCHU2T5TJzkQ==@vger.kernel.org, AJvYcCX7hS7NeoYQHliRuUPyPgSliNiX06FLRz4PI13Lw7xjMxnxKIGE3bafucD8zeR0X953ufD2xYCZsbBG9ODX@vger.kernel.org, AJvYcCXIX6+z9AYMUrgZA6PSF5cAdZFktVUAvNR6vrvu1/Je4+icsqo/glaHp87I9w17aG9e+vQ6QtyS@vger.kernel.org, AJvYcCXTMkWqeZ8UBi7wEXPSjzraiuobgkP94FtHaoXaRSU/x6cw4Wd9uIheSsi4IrIioFs57vDjv8RH7Edx@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIjQmszHN58JgXnSDBpAbIiugia5Jx9c+tkCI5yRRHl9Fdr/JH
+	Daai9wOchvMNlFc/5QCY8QBv4NMu0pG2xrrg0B/nv7QZ1OJKvPAE4D1NEgbSBjh8Bon5vtGZ1tl
+	Tyv8yAHTYU6fZrCR2YvbbDmsFKng=
+X-Google-Smtp-Source: AGHT+IGbFPw/bTRm+UErpcrDrhXiYrSHOwzSiG4p3e4jUUEDfOTfASqMN5Pcr7Ww2ei18DiP8qOt5I2z7sBy9E6rsKI=
+X-Received: by 2002:a05:6512:158e:b0:533:d3e:16f5 with SMTP id
+ 2adb3069b0e04-536ac334255mr7477512e87.38.1727145995657; Mon, 23 Sep 2024
+ 19:46:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <cover.1724159867.git.andrea.porta@suse.com> <12d0909b1612fb6d2caa42b4fda5e5ae63d623a3.1724159867.git.andrea.porta@suse.com>
+ <2113b8df52164733a0ee3860bb793d6e.sboyd@kernel.org> <ZtcBHvI9JxgH9iFT@apocalypse>
+ <d87530b846d0dc9e78789234cfcb602a.sboyd@kernel.org> <CAK7LNAQEx52BYMYfNu+xj8sNmdtH9XfPapdhJDrsbDo43aD3Dg@mail.gmail.com>
+ <146d3866ec57e963713cd07b9eaf5a71.sboyd@kernel.org>
+In-Reply-To: <146d3866ec57e963713cd07b9eaf5a71.sboyd@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 24 Sep 2024 11:45:58 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ1oUvuMcHs-idZcPxE-c4fJgMDt-cURATsrVkjjFPNWg@mail.gmail.com>
+Message-ID: <CAK7LNAQ1oUvuMcHs-idZcPxE-c4fJgMDt-cURATsrVkjjFPNWg@mail.gmail.com>
+Subject: Re: [PATCH 05/11] vmlinux.lds.h: Preserve DTB sections from being
+ discarded after init
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Conor Dooley <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, 
+	Eric Dumazet <edumazet@google.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Stefan Wahren <wahrenst@gmx.net>, 
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	netdev@vger.kernel.org, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2024-09-23 at 18:06 +0800, Billy Tsai wrote:
-> Add low-level operations (llops) to abstract the register access for GPIO
-> registers and the coprocessor request/release. With this abstraction
-> layer, the driver can separate the hardware and software logic, making it
-> easier to extend the driver to support different hardware register
-> layouts.
->=20
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> ---
->  drivers/gpio/gpio-aspeed.c | 443 +++++++++++++++++++------------------
->  1 file changed, 233 insertions(+), 210 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-> index d20e15b2079d..d3994d833684 100644
-> --- a/drivers/gpio/gpio-aspeed.c
-> +++ b/drivers/gpio/gpio-aspeed.c
-> @@ -39,6 +39,10 @@ struct aspeed_bank_props {
->  struct aspeed_gpio_config {
->  	unsigned int nr_gpios;
->  	const struct aspeed_bank_props *props;
-> +	const struct aspeed_gpio_llops *llops;
-> +	const int *debounce_timers_array;
-> +	int debounce_timers_num;
-> +	bool require_dcache;
->  };
-> =20
->  /*
-> @@ -178,6 +182,19 @@ enum aspeed_gpio_reg {
->  	reg_cmdsrc1,
->  };
-> =20
-> +struct aspeed_gpio_llops {
-> +	bool (*copro_request)(struct aspeed_gpio *gpio, unsigned int offset);
-> +	void (*copro_release)(struct aspeed_gpio *gpio, unsigned int offset);
-> +	void (*reg_bit_set)(struct aspeed_gpio *gpio, unsigned int offset,
-> +			    const enum aspeed_gpio_reg reg, bool val);
-> +	bool (*reg_bit_get)(struct aspeed_gpio *gpio, unsigned int offset,
-> +			    const enum aspeed_gpio_reg reg);
-> +	int (*reg_bank_get)(struct aspeed_gpio *gpio, unsigned int offset,
-> +			    const enum aspeed_gpio_reg reg);
-> +	void (*privilege_ctrl)(struct aspeed_gpio *gpio, unsigned int offset, i=
-nt owner);
-> +	void (*privilege_init)(struct aspeed_gpio *gpio);
-
-I made a request down below, so given that, do you mind re-arranging
-the member ordering in this struct? It'd be nice to have some flow to
-it. Probably just move the copro_* members down the bottom? So:
-
-struct aspeed_gpio_llops {
-	void (*reg_bit_set)(struct aspeed_gpio *gpio, unsigned int offset,
-			    const enum aspeed_gpio_reg reg, bool val);
-	bool (*reg_bit_get)(struct aspeed_gpio *gpio, unsigned int offset,
-			    const enum aspeed_gpio_reg reg);
-	int (*reg_bank_get)(struct aspeed_gpio *gpio, unsigned int offset,
-			    const enum aspeed_gpio_reg reg);
-	void (*privilege_ctrl)(struct aspeed_gpio *gpio, unsigned int offset, int =
-owner);
-	void (*privilege_init)(struct aspeed_gpio *gpio);
-	bool (*copro_request)(struct aspeed_gpio *gpio, unsigned int offset);
-	void (*copro_release)(struct aspeed_gpio *gpio, unsigned int offset);
-};
-
-*snip*
+On Tue, Sep 24, 2024 at 3:13=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> wro=
+te:
+>
+> Quoting Masahiro Yamada (2024-09-22 01:14:12)
+> >
+> > Rather, I'd modify my patch as follows:
+> >
+> > --- a/scripts/Makefile.dtbs
+> > +++ b/scripts/Makefile.dtbs
+> > @@ -34,12 +34,14 @@ $(obj)/dtbs-list: $(dtb-y) FORCE
+> >  # Assembly file to wrap dtb(o)
+> >  # --------------------------------------------------------------------=
+-------
+> >
+> > +builtin-dtb-section =3D $(if $(filter arch/%, $(obj)),.dtb.init.rodata=
+,.rodata)
+>
+> I think we want to free the empty root dtb that's always builtin. That
+> is in drivers/of/ right?
 
 
-> @@ -1182,7 +1205,7 @@ static int __init aspeed_gpio_probe(struct platform=
-_device *pdev)
->  	if (!gpio_id)
->  		return -EINVAL;
-> =20
-> -	gpio->clk =3D of_clk_get(pdev->dev.of_node, 0);
-> +	gpio->clk =3D devm_clk_get_enabled(&pdev->dev, 0);
+drivers/of/empty_root.dts is really small.
 
-Nice - however, can you please make this its own patch and add a Fixes:
-tag?
+That is not a big deal even if empty_root.dtb
+remains in the .rodata section.
 
-Otherwise I think the patch is looking okay. I'll try to get some
-testing done.
 
-Andrew
+
+> And I worry that an overlay could be in arch/
+> and then this breaks again. That's why it feels more correct to treat
+> dtbo.o vs. dtb.o differently. Perhaps we can check $(obj) for dtbo vs
+> dtb?
+
+
+This is not a problem either.
+
+
+Checking $(obj)/ is temporary.
+
+See this later patch:
+
+https://lore.kernel.org/linux-kbuild/20240904234803.698424-16-masahiroy@ker=
+nel.org/T/#u
+
+After my work is completed, DTB and DTBO will go
+to the .rodata section unconditionally.
+
+
+
+> Also, modpost code looks for .init* named sections and treats them as
+> initdata already. Can we rename .dtb.init.rodata to .init.dtb.rodata so
+> that modpost can find that?
+
+
+My previous patch checked .dtb.init.rodata.
+
+I do not mind renaming it to .init.dtb.rodata.
+
+
+
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
 
