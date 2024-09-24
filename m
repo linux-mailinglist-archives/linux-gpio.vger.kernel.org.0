@@ -1,442 +1,135 @@
-Return-Path: <linux-gpio+bounces-10398-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10399-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DA1B983F25
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 09:35:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EA91983F84
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 09:43:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0CD2928296D
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 07:35:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F0641C2084E
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 07:43:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD41D142E78;
-	Tue, 24 Sep 2024 07:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 106A21487D5;
+	Tue, 24 Sep 2024 07:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N7phybYa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AtuGKMV2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD5A145B1F
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Sep 2024 07:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E8014830C
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Sep 2024 07:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727163315; cv=none; b=GiIhUsuwt/zAp40GlQDI0f3HPyH8/Ng+7DXvhH1mBWqRf4courvbh5lDx10qct7D8FAVZnNfFOG4e2XiL+UVS1cXKK5QVvyKnwZLWfF0o7CS34BHUtFRE6PIAsNOOGkuV8T4lXBxZNBknY1kX3hr4oMTrpMEkdftR6JFAozdfbw=
+	t=1727163792; cv=none; b=T2tMbgaBNEsB4rW7mgyJ5Mj9eRL/td9R+0QyipWD0wEqFZ7CSt50lMk8VAMuDwG8jA5sRh2jts77Yby9TI955nDQ1DIUvW66M0oTpdOMCD4w8G5ZFouPrcN6EXllNtVes4v/6tZ5G9JMnbzQ8biel+8lh/qiC/8P1nDh84WfFWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727163315; c=relaxed/simple;
-	bh=xDWDpu6IAtKAFxOuiszH6QCZYto+EVgv92InBRudEz8=;
+	s=arc-20240116; t=1727163792; c=relaxed/simple;
+	bh=kjTCESWnozCNSO+5LxU4Dr2NZahYWHk5AXqlWRQen54=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GHD/DS5T/gCvmgGiaWHKVkMMIA7TOgg+7/7bySN62j9oSdTxmwUfkWL9Uq8JFXHqz5x3E3BWcBrokqqYfUIzXro/5f9HKaB357IvTdGZ0dsXV2cCZ6X7dXm/Osdx+iJxvJd+wAlHffMAOkjemynCEVh+kVgFCXEGxi+lZCT0kT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N7phybYa; arc=none smtp.client-ip=209.85.208.175
+	 To:Cc:Content-Type; b=J6cLjKpDRprieyLtTzHck4Aq8SP5urrTKBUMT9BSKvS+bcx26CiDc0pbBl3+eVqZbGxr1GPikStH7MBPT+y+dNb6Y81YANyGSRNRhkpvmUrYVsmZAnlHaklyVAVqLEr1RNvcy4/lrhXjWyavft9hlBres0H9TslZEcWyeFDXZCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AtuGKMV2; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2f74e613a10so77153811fa.1
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Sep 2024 00:35:12 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5365aa568ceso6057349e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Sep 2024 00:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727163310; x=1727768110; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1727163789; x=1727768589; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x6jC7dLYj5DhEJuVDkwTLOL7wYPS+ONiODGiB9WMaMM=;
-        b=N7phybYaDMpoy7tzv/qZBYN1418HCFid+3NDrWyqzN4fElukqUWZ1EXnXPEyweH+P/
-         3hznJ9W5cMMJxvCyoWE5YbHiFiqemg15jbOdm9IWlwBpm77gvKHRUYChgEQBfvohGVmC
-         FRLEVheJrAa6qtxioA54oSlIDocMs2exo8U7p9X/1SsQ6+zcXbOpN4vwK4lUrH/W/4uI
-         ecxu5y20AucwYd2k7b3CCOlHneSUrkIa3v0Fja1ylZs2bebGS7tA7Y7PZNMGo0cHgZq5
-         CmwOOdAf4mGXVKgUeX7gLvXncAcA9zdJgDwxroP/NHOY6YA7LhagdaZjtzyV30A0+kbM
-         6A2g==
+        bh=v4AE3wT085nmxLHX+pXqyuEkqB9MSe4BJ3vsxOltPm0=;
+        b=AtuGKMV22o08HvhV00HTWp+aaMtEXvAXgvPSj3PSaY76YkJqhz+cSIZiDkrjEYdA9S
+         0WzMM7FDs5QXaT0tuYDCpjSspkfxPR0BuNtOmKrL5zuOqRvzOmXggX961M6xL7r6K426
+         nb1dGL276nTTvITh2U+eH/UY1xODD39wOoWRC71I+BX0TMP1oIV64uG+sUVnDHnZAU7I
+         KZ1w+VbLtAqNk9SB5IYDtX8ZnoduDXFPVl3cjG7rLyT8/VSvCtw94j+pJQOm/ujZ0Qi8
+         SOCBUwwCgi8f3vE/HTnbfWsR03KN6jQrFJ04zUPaYHrkXqVyhAp5t/Dihsl8Moyumsnt
+         y+KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727163310; x=1727768110;
+        d=1e100.net; s=20230601; t=1727163789; x=1727768589;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x6jC7dLYj5DhEJuVDkwTLOL7wYPS+ONiODGiB9WMaMM=;
-        b=u5+QdSeBUJPm9JQ2JBEhCE9RNppdxzQQTcF/ZtkrDFEVdVRYrR8o44VyG2s6lmQ+xc
-         dV4CDfP3SczBuayAFoo7rN3LWKr3S4oPRT3qwjxldKS9k0OYSrasbIxxOveEp54EIykP
-         mkXjxYMFuYCeE98cDFN949yQlmc79GUuyOHv/ah68CpYjLoiUXAVSh37R56WtcpC3dHp
-         2xf0h5kfZqa5UTQl4gDUA/hYNl1GnbA7cDQV0BVS7PfAgvhPYQMpfJf6vnVE0SgY8C/I
-         l3MFUxkatCZx/B0Ek3EewWeQlP70IF3ZvHDzd1z0tYNiHswoHt7+rhu6FArK+DS/01sg
-         oQiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9PUx6PEimFTzEyuQwXhKs+il605nAVGu1/PovmeEYYR7Mj1j7aa4dYdg706jaWjC+L8qzFZEV/U2E@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaOeW6z829C7XxhIjyl5tFFJJdaFP9FYDg3e5sF/lcX6I+WqeJ
-	m/yYtZ0koItQhWSi43cZMbY8ThDC0zNSxU/y7AHbdMTVOeZRZoZXBcunmGbxpSjJJdI4iixbrC+
-	jDohvzM9Iiw3xKkSOYoVjltDiBJZp81SDWAg0eA==
-X-Google-Smtp-Source: AGHT+IEdre6uDn55gw82LdZ2pu50IDPqSAXWNGKnyTnveP66xuQ0JFOZY4LGtLABBGvFkj0anWjqmCFJ+EhaGSJNf7U=
-X-Received: by 2002:a2e:5149:0:b0:2f0:27da:6864 with SMTP id
- 38308e7fff4ca-2f7cb30dbabmr76774681fa.17.1727163310389; Tue, 24 Sep 2024
- 00:35:10 -0700 (PDT)
+        bh=v4AE3wT085nmxLHX+pXqyuEkqB9MSe4BJ3vsxOltPm0=;
+        b=sVmtPxL/8AcZ/w8vZbevYIQrIdfRG1dalOoRWNDQ+1ggGdTsrvgj0xLHPV7xGvu57L
+         aiXWlMZ8C8rAE4tVWUfr1+g8sDwlxLRRTeM68cZyowg04FtY4EUrv/9Fb+WGv4ero/MG
+         xWuetDMNTVF9uWyxF0dQ0bIQIOU2VLMAaFR/g1KJm1HESfKi7U8qjMvP0XY+66zfg6p9
+         fTMt4vYxVXlIwpfe3WZQGe8QknSp6xZskQzkCJGEveyrud7FLKkXC5JxgjmUHjuHQXxO
+         Tvwzw8wweAwGjbHZJDudskXP4QdFCyT/Ofk6eNjuKomPJQdiwN7nPwOMtsB/JWM8W2Ad
+         SMaw==
+X-Gm-Message-State: AOJu0YwgTbgwRF9+5ZqTmaBqF4D1lNK3IsVU16ppIB5uxw7F/40VqMtF
+	JV4KiBI7GHTH5waWiX1y23F3XRCyP1dSTeS4Is+FwzZcOsu4yytMeMTKcIJZlhYoFtxgDTHnGi/
+	3yVLcOCX50ZdOo3AF6n7Vgc27jCd0uwM56o8KyoRf1p/I6BajTa0=
+X-Google-Smtp-Source: AGHT+IGtM+ap0Bn1i9jACAwLBdGvwwbEYgZPkKvWofN4DPWUUPOGUFpOvQIXuOiqye/dyccJwkvrUhqRM2fBBjeGj6s=
+X-Received: by 2002:a05:6512:31d5:b0:530:dfab:9315 with SMTP id
+ 2adb3069b0e04-536ac2d91bemr10172249e87.10.1727163789373; Tue, 24 Sep 2024
+ 00:43:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org> <20240911-en7581-pinctrl-v4-4-60ac93d760bb@kernel.org>
-In-Reply-To: <20240911-en7581-pinctrl-v4-4-60ac93d760bb@kernel.org>
+References: <20240912142447.981590-1-quic_mojha@quicinc.com>
+In-Reply-To: <20240912142447.981590-1-quic_mojha@quicinc.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 24 Sep 2024 09:34:57 +0200
-Message-ID: <CACRpkdZbyQ5bk8oR+Q4UmQCdM5h1mF1ztBc26YzqNsze_B=ehA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] pinctrl: airoha: Add support for EN7581 SoC
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
-	linux-pwm@vger.kernel.org
+Date: Tue, 24 Sep 2024 09:42:58 +0200
+Message-ID: <CACRpkdZxu34btYm-ibkgEqWfau97DjuKGib=-xd-WYL2PN_KYA@mail.gmail.com>
+Subject: Re: [RFC PATCH] pinmux: Use sequential access to access desc->pinmux data
+To: Mukesh Ojha <quic_mojha@quicinc.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Lorenzo / Benjamin,
+On Thu, Sep 12, 2024 at 4:25=E2=80=AFPM Mukesh Ojha <quic_mojha@quicinc.com=
+> wrote:
 
-thanks for your patch!
+> When two client of the same gpio call pinctrl_select_state() for the
+> same functionality, we are seeing NULL pointer issue while accessing
+> desc->mux_owner.
 
-This is a real nice driver, I like the design of the pin database to suppor=
-t
-this pretty complex pin controller.
+Uh-oh it looks like a very real issue, weird that we didn't run into
+it earlier.
 
-Some comments and nits:
+I guess we were not parallelizing probe so much in the past so it
+didn't happen for that reason.
 
-On Wed, Sep 11, 2024 at 9:51=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.or=
-g> wrote:
+>         /* Set owner */
+>         pindesc->pctldev =3D pctldev;
+> +#ifdef CONFIG_PINMUX
+> +       spin_lock_init(&pindesc->lock);
+> +#endif
 
-> Introduce pinctrl driver for EN7581 SoC. Current EN7581 pinctrl driver
-> supports the following functionalities:
-> - pin multiplexing
-> - pin pull-up, pull-down, open-drain, current strength,
->   {input,output}_enable, output_{low,high}
-> - gpio controller
-> - irq controller
+Can we rename it "mux_lock" so it is clear what it is locking?
+
+> @@ -115,6 +115,7 @@ static int pin_request(struct pinctrl_dev *pctldev,
+>         struct pin_desc *desc;
+>         const struct pinmux_ops *ops =3D pctldev->desc->pmxops;
+>         int status =3D -EINVAL;
+> +       unsigned long flags;
 >
-> Tested-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Co-developed-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+>         desc =3D pin_desc_get(pctldev, pin);
+>         if (desc =3D=3D NULL) {
+> @@ -127,6 +128,7 @@ static int pin_request(struct pinctrl_dev *pctldev,
+>         dev_dbg(pctldev->dev, "request pin %d (%s) for %s\n",
+>                 pin, desc->name, owner);
+>
+> +       spin_lock_irqsave(&desc->lock, flags);
 
-(...)
-
-> +#include <dt-bindings/pinctrl/mt65xx.h>
-> +#include <linux/bitfield.h>
-
-Isn't just <linux/bits.h> enough for what you're using?
-
-> +#include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/kernel.h>
-
-What do you use from kernel.h? We usually use more fingrained
-headers these days.
-
-(...)
-
-> +#include <linux/mfd/airoha-en7581-mfd.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/pinctrl/consumer.h>
-
-Why do you need the consumer header?
-
-(...)
-
-> +static u32 airoha_pinctrl_rmw_unlock(void __iomem *addr, u32 mask, u32 v=
-al)
-> +{
-> +       val |=3D (readl(addr) & ~mask);
-> +       writel(val, addr);
-> +
-> +       return val;
-> +}
-> +
-> +#define airoha_pinctrl_set_unlock(addr, val)                            =
-       \
-> +       airoha_pinctrl_rmw_unlock((addr), 0, (val))
-> +#define airoha_pinctrl_clear_unlock(addr, mask)                         =
-               \
-> +       airoha_pinctrl_rmw_unlock((addr), (mask), (0))
-> +
-> +static u32 airoha_pinctrl_rmw(struct airoha_pinctrl *pinctrl,
-> +                             void __iomem *addr, u32 mask, u32 val)
-> +{
-> +       mutex_lock(&pinctrl->mutex);
-> +       val =3D airoha_pinctrl_rmw_unlock(addr, mask, val);
-> +       mutex_unlock(&pinctrl->mutex);
-> +
-> +       return val;
-> +}
-
-Thus looks like a reimplementation of regmap-mmio, can't you just use
-regmap MMIO? You use it for the SCU access already...
-
-If you persist with this solution, please use a guard:
+Could you please rewrite all of these using scoped guards as that
+avoids a lot of possible bugs?
 
 #include <linux/cleanup.h>
 
-guard(mutex)(&pinctrl->mutex);
+guard(spinlock_irqsave)(&desc->mux_lock);
 
-And the lock will be released when you exit the function.
+This means the lock will be released when you exit the
+function .
 
-> +static int airoha_pinctrl_get_gpio_from_pin(struct pinctrl_dev *pctrl_de=
-v,
-> +                                           int pin)
-> +{
-> +       struct pinctrl_gpio_range *range;
-> +       int gpio;
-> +
-> +       range =3D pinctrl_find_gpio_range_from_pin_nolock(pctrl_dev, pin)=
-;
-> +       if (!range)
-> +               return -EINVAL;
-> +
-> +       gpio =3D pin - range->pin_base;
-> +       if (gpio < 0)
-> +               return -EINVAL;
-> +
-> +       return gpio;
-> +}
+tighter locks around a block of code are possible with:
+scoped_guard(spinlock_irqsave, &desc->mux_lock) { ... }
 
-This function is just used here:
-
-> +static int airoha_pinconf_get(struct pinctrl_dev *pctrl_dev,
-> +                             unsigned int pin, unsigned long *config)
-> +{
-> +       struct airoha_pinctrl *pinctrl =3D pinctrl_dev_get_drvdata(pctrl_=
-dev);
-> +       enum pin_config_param param =3D pinconf_to_config_param(*config);
-> +       u32 arg;
-> +
-> +       switch (param) {
-> +       case PIN_CONFIG_BIAS_PULL_DOWN:
-> +       case PIN_CONFIG_BIAS_DISABLE:
-> +       case PIN_CONFIG_BIAS_PULL_UP: {
-> +               u32 pull_up, pull_down;
-> +
-> +               if (airoha_pinctrl_get_pullup_conf(pinctrl, pin, &pull_up=
-) ||
-> +                   airoha_pinctrl_get_pulldown_conf(pinctrl, pin, &pull_=
-down))
-> +                       return -EINVAL;
-> +
-> +               if (param =3D=3D PIN_CONFIG_BIAS_PULL_UP &&
-> +                   !(pull_up && !pull_down))
-> +                       return -EINVAL;
-> +               else if (param =3D=3D PIN_CONFIG_BIAS_PULL_DOWN &&
-> +                        !(pull_down && !pull_up))
-> +                       return -EINVAL;
-> +               else if (pull_up || pull_down)
-> +                       return -EINVAL;
-> +
-> +               arg =3D 1;
-> +               break;
-> +       }
-> +       case PIN_CONFIG_DRIVE_STRENGTH: {
-> +               u32 e2, e4;
-> +
-> +               if (airoha_pinctrl_get_drive_e2_conf(pinctrl, pin, &e2) |=
-|
-> +                   airoha_pinctrl_get_drive_e4_conf(pinctrl, pin, &e4))
-> +                       return -EINVAL;
-> +
-> +               arg =3D e4 << 1 | e2;
-> +               break;
-> +       }
-> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +               if (airoha_pinctrl_get_pcie_rst_od_conf(pinctrl, pin, &ar=
-g))
-> +                       return -EINVAL;
-> +               break;
-> +       case PIN_CONFIG_OUTPUT_ENABLE:
-> +       case PIN_CONFIG_INPUT_ENABLE: {
-> +               int gpio =3D airoha_pinctrl_get_gpio_from_pin(pctrl_dev, =
-pin);
-> +
-> +               if (gpio < 0)
-> +                       return gpio;
-> +
-> +               arg =3D airoha_pinctrl_gpio_get_direction(pinctrl, gpio);
-
-I don't see why a pin would have to exist in a GPIO range in order to
-be set as output or input?
-
-Can't you just set up the pin as requested and not care whether
-it has a corresponding GPIO range?
-
-Is it over-reuse of the GPIO code? I'd say just set up the pin instead.
-
-> +static int airoha_pinconf_set(struct pinctrl_dev *pctrl_dev,
-> +                             unsigned int pin, unsigned long *configs,
-> +                             unsigned int num_configs)
-> +{
-> +       struct airoha_pinctrl *pinctrl =3D pinctrl_dev_get_drvdata(pctrl_=
-dev);
-> +       int i;
-> +
-> +       for (i =3D 0; i < num_configs; i++) {
-> +               u32 param =3D pinconf_to_config_param(configs[i]);
-> +               u32 arg =3D pinconf_to_config_argument(configs[i]);
-> +
-> +               switch (param) {
-> +               case PIN_CONFIG_BIAS_DISABLE:
-> +                       airoha_pinctrl_set_pulldown_conf(pinctrl, pin, 0)=
-;
-> +                       airoha_pinctrl_set_pullup_conf(pinctrl, pin, 0);
-> +                       break;
-> +               case PIN_CONFIG_BIAS_PULL_UP:
-> +                       airoha_pinctrl_set_pulldown_conf(pinctrl, pin, 0)=
-;
-> +                       airoha_pinctrl_set_pullup_conf(pinctrl, pin, 1);
-> +                       break;
-> +               case PIN_CONFIG_BIAS_PULL_DOWN:
-> +                       airoha_pinctrl_set_pulldown_conf(pinctrl, pin, 1)=
-;
-> +                       airoha_pinctrl_set_pullup_conf(pinctrl, pin, 0);
-> +                       break;
-> +               case PIN_CONFIG_DRIVE_STRENGTH: {
-> +                       u32 e2 =3D 0, e4 =3D 0;
-> +
-> +                       switch (arg) {
-> +                       case MTK_DRIVE_2mA:
-> +                               break;
-> +                       case MTK_DRIVE_4mA:
-> +                               e2 =3D 1;
-> +                               break;
-> +                       case MTK_DRIVE_6mA:
-> +                               e4 =3D 1;
-> +                               break;
-> +                       case MTK_DRIVE_8mA:
-> +                               e2 =3D 1;
-> +                               e4 =3D 1;
-> +                               break;
-> +                       default:
-> +                               return -EINVAL;
-> +                       }
-> +
-> +                       airoha_pinctrl_set_drive_e2_conf(pinctrl, pin, e2=
-);
-> +                       airoha_pinctrl_set_drive_e4_conf(pinctrl, pin, e4=
-);
-> +                       break;
-> +               }
-> +               case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> +                       airoha_pinctrl_set_pcie_rst_od_conf(pinctrl, pin,=
- !!arg);
-> +                       break;
-> +               case PIN_CONFIG_OUTPUT_ENABLE:
-> +               case PIN_CONFIG_INPUT_ENABLE:
-> +               case PIN_CONFIG_OUTPUT: {
-> +                       int gpio =3D airoha_pinctrl_get_gpio_from_pin(pct=
-rl_dev, pin);
-> +                       bool input =3D param =3D=3D PIN_CONFIG_INPUT_ENAB=
-LE;
-> +
-> +                       if (gpio < 0)
-> +                               return gpio;
-> +
-> +                       airoha_pinctrl_gpio_set_direction(pinctrl, gpio, =
-input);
-> +                       if (param =3D=3D PIN_CONFIG_OUTPUT)
-> +                               airoha_pinctrl_gpio_set_value(pinctrl, gp=
-io, !!arg);
-> +                       break;
-
-Dito. No need to reuse the GPIO set direction function. Make a helper
-that just work on the pin instead, and perhaps the GPIO set direction
-can use that instead.
-
-> +static int airoha_pinctrl_gpio_direction_output(struct gpio_chip *chip,
-> +                                               unsigned int gpio, int va=
-lue)
-> +{
-> +       int err;
-> +
-> +       err =3D pinctrl_gpio_direction_output(chip, gpio);
-> +       if (err)
-> +               return err;
-> +
-> +       airoha_pinctrl_gpio_set(chip, gpio, value);
-
-Hm I get a bit confused by the similarly named helpers I guess...
-
-> +static void airoha_pinctrl_gpio_irq_unmask(struct irq_data *data)
-> +{
-> +       u8 offset =3D data->hwirq % AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> +       u8 index =3D data->hwirq / AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> +       u32 mask =3D GENMASK(2 * offset + 1, 2 * offset);
-> +       struct airoha_pinctrl_gpiochip *gpiochip;
-> +       u32 val =3D BIT(2 * offset);
-> +       unsigned long flags;
-> +
-> +       gpiochip =3D irq_data_get_irq_chip_data(data);
-> +       if (WARN_ON_ONCE(data->hwirq >=3D ARRAY_SIZE(gpiochip->irq_type))=
-)
-> +               return;
-> +
-> +       spin_lock_irqsave(&gpiochip->lock, flags);
-
-Use a scoped guard here
-
-guard(spinlock_irqsave)(&gpiochip->lock);
-
-> +static void airoha_pinctrl_gpio_irq_mask(struct irq_data *data)
-> +{
-> +       u8 offset =3D data->hwirq % AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> +       u8 index =3D data->hwirq / AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> +       u32 mask =3D GENMASK(2 * offset + 1, 2 * offset);
-> +       struct airoha_pinctrl_gpiochip *gpiochip;
-> +       unsigned long flags;
-> +
-> +       gpiochip =3D irq_data_get_irq_chip_data(data);
-> +
-> +       spin_lock_irqsave(&gpiochip->lock, flags);
-
-Dito
-
-> +static int airoha_pinctrl_gpio_irq_type(struct irq_data *data,
-> +                                       unsigned int type)
-> +{
-> +       struct airoha_pinctrl_gpiochip *gpiochip;
-> +       unsigned long flags;
-> +
-> +       gpiochip =3D irq_data_get_irq_chip_data(data);
-> +       if (data->hwirq >=3D ARRAY_SIZE(gpiochip->irq_type))
-> +               return -EINVAL;
-> +
-> +       spin_lock_irqsave(&gpiochip->lock, flags);
-
-Dito
-
-> +       girq->chip =3D devm_kzalloc(dev, sizeof(*girq->chip), GFP_KERNEL)=
-;
-> +       if (!girq->chip)
-> +               return -ENOMEM;
-> +
-> +       girq->chip->name =3D dev_name(dev);
-> +       girq->chip->irq_unmask =3D airoha_pinctrl_gpio_irq_unmask;
-> +       girq->chip->irq_mask =3D airoha_pinctrl_gpio_irq_mask;
-> +       girq->chip->irq_mask_ack =3D airoha_pinctrl_gpio_irq_mask;
-> +       girq->chip->irq_set_type =3D airoha_pinctrl_gpio_irq_type;
-> +       girq->chip->flags =3D IRQCHIP_SET_TYPE_MASKED | IRQCHIP_IMMUTABLE=
-;
-> +       girq->default_type =3D IRQ_TYPE_NONE;
-> +       girq->handler =3D handle_simple_irq;
-
-If the irqchip is immutable it is const and there is no point to malloc it.
-
-Just
-
-static const struct irq_chip airoha_gpio_irq_chip =3D {...
-
-And assign it:
-
-girq =3D &g->gc.irq;
-gpio_irq_chip_set_chip(girq, &airoha_gpio_irq_chip);
+It also removes the need to define a flags variable.
 
 Yours,
 Linus Walleij
