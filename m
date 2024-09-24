@@ -1,156 +1,107 @@
-Return-Path: <linux-gpio+bounces-10402-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10403-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 089059845A2
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 14:11:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F23C9848C9
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 17:39:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 84D4EB23A76
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 12:11:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CE741B2129C
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 15:39:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37B931A7270;
-	Tue, 24 Sep 2024 12:11:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46A9B1AB503;
+	Tue, 24 Sep 2024 15:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PGQs6pD4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FF6Vz2Pz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5741A7261;
-	Tue, 24 Sep 2024 12:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002B927735;
+	Tue, 24 Sep 2024 15:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727179884; cv=none; b=X1YCCxO2maMgF+e+4mTX66ft5CVVhFZrWNSY945jj9mQTwjvKvGsscRQy0ma8JzeueINRZnLdgi5/jqzZlAcOpiDXNM1lWDtWmGbEFrVVW5xnF7ePaZ4KiRoLPLCzIHSgJMuGjpkNxj8KSd4ktL7fRqT7ylpS4jUaTUARvYMPNA=
+	t=1727192366; cv=none; b=EwhQyJksQOoEfQRxUKtFEwMom4L9pS6heUb0r1KlxGq9QaP8Ebtf6FX0+h0oBajMEPGEinNNYel5s1MQOPHuLwcwaYjIa5mqPkSfM2kS3RTIMGIGqOb/bqfraZveKdSjuWjt+jfPYoCWSEYY4lyFfTAfZZf5nZ9OEXBfTU7xSyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727179884; c=relaxed/simple;
-	bh=S+5ZTdN1pPJa9IuFwdIuX2jtdc1wF/KYf3fatFFndeE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=PqKzPOBx3sLCW7WJOS3Sk4dCA/fW3q4TCri6bmba6y1NV0ItQezH9Wh25WZYKLiqkvjDMJqoZ/kPi7AanuyKlZEQ97G02vK6F0JhLdKRWiisSMwSthlyJHovjcu/0myrH3lI+ZTBHje1HOwHDNmepW125CZmMXoIZj9zJ7ifmDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PGQs6pD4; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48O9fAkp017406;
-	Tue, 24 Sep 2024 12:11:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vvNGpzffxQxSM2lHDEfUn4zL+xA1sFHMMkiqkZlU+qo=; b=PGQs6pD4D7IRQ4C8
-	KhmnSJkukKR099RoCamN4s1/ox3gmKy9GjpOdKCNLPETVi08G73gOXwcer9ly6Zp
-	38EfOuRIUreY9OCh39falA8hlZ+ZMeuXJa6ZcIZgwqJWVEf8HbTj/kaEhce6JBZv
-	0MxcSWYSMjS3QWbyYPqmm7fI/WyjOAZ437q+LxMVpLv5SDJh7C4TYUJqMvj8xdaY
-	VsFlhJoEhdPs4J97X5X46mCRybYUbQf4Wm+EGPOfRXIm21uafSjoVNxmg8J8E5aM
-	xoh5IFTW7wGFBFmyj1xyF3cfE6FQZ8tROYvegA5Iu3CHcJYZP6jg2PJgLW2hn4PC
-	zNFFIQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41snqygjnb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Sep 2024 12:11:04 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48OCB22u011774
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Sep 2024 12:11:02 GMT
-Received: from [10.151.37.100] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 24 Sep
- 2024 05:10:55 -0700
-Message-ID: <30fdcb3e-a7ff-4764-bed5-39494c3e3326@quicinc.com>
-Date: Tue, 24 Sep 2024 17:40:52 +0530
+	s=arc-20240116; t=1727192366; c=relaxed/simple;
+	bh=uYOGtuS1GH0n1hKTHBjFXo28BM9xtKgYiatxl2C25fg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uWchvVVUdde3ZNZbdS06M4RguEvP6ZWSHf4N3D4/+5RdZxhCisStpSm8y3v9ZA7x9//0ajdecEDdEqn3j0AIn3ZxoIqFYk/LAyt1VBPR0w9XL6v2ePKA6AlKu+H3dc6bBan4tsW3XJiRirGKcz1+rVdZ8immAhA/1k5OB8Rkw6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FF6Vz2Pz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F731C4CEC4;
+	Tue, 24 Sep 2024 15:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727192365;
+	bh=uYOGtuS1GH0n1hKTHBjFXo28BM9xtKgYiatxl2C25fg=;
+	h=From:Date:Subject:To:Cc:From;
+	b=FF6Vz2PznCg6tglOutn3gIE6VSWq/Elctny4fQsxWLehuu+uwMK9XOCzjlNPPAjmG
+	 XgLMSwwP9ohCDs5SmLlNXBkKMHS5VGTwznA5cQDDJekBn4HBzxr9rEbF1edffX14eu
+	 jk6JCEFmfkFtZAKoh+XA5E4MTlddXa7O4vxxgYr4DWnIykKS8V6NAAfexGbUCGr5Fs
+	 YyMrnzoJR/5H6blxtvQ2WgsnncQHSzN0Biqa8u8mD9kMMqrXCht4tNlcZI0pdRj8TK
+	 N9z1FuJBhaVXwjMTto/5lsLv+gZMJpw0b+hYWwdfztS6sMbDXnAA1e24xtMyCWJhOn
+	 xQhB/mJADorhg==
+From: Mark Brown <broonie@kernel.org>
+Date: Tue, 24 Sep 2024 17:39:18 +0200
+Subject: [PATCH] pinctrl: sx150x: Use maple tree register cache
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Subject: Re: [PATCH 1/8] dt-bindings: clock: Add Qualcomm IPQ5424 GCC
-To: Krzysztof Kozlowski <krzk@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulf.hansson@linaro.org>, <linus.walleij@linaro.org>,
-        <catalin.marinas@arm.com>, <p.zabel@pengutronix.de>,
-        <geert+renesas@glider.be>, <dmitry.baryshkov@linaro.org>,
-        <neil.armstrong@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: <quic_varada@quicinc.com>
-References: <20240913121250.2995351-1-quic_srichara@quicinc.com>
- <20240913121250.2995351-2-quic_srichara@quicinc.com>
- <4cd3d3f8-7d73-4171-bb35-aba975cdc11a@kernel.org>
- <9f2ccf3d-fa71-4784-b6d2-2b12ed50bdd2@quicinc.com>
- <91392141-af8b-4161-8e76-6f461aaba42a@kernel.org>
-Content-Language: en-US
-In-Reply-To: <91392141-af8b-4161-8e76-6f461aaba42a@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Njq9SLglo7LSV5tU12g90qC4kLC3UrBc
-X-Proofpoint-ORIG-GUID: Njq9SLglo7LSV5tU12g90qC4kLC3UrBc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 adultscore=0 bulkscore=0 phishscore=0 mlxlogscore=949
- spamscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409240085
+Message-Id: <20240924-pinctl-sx150x-maple-v1-1-17dcfefefd17@kernel.org>
+X-B4-Tracking: v=1; b=H4sIACXd8mYC/x3MQQqAIBBA0avErBtQsciuEi3MphooE40QorsnL
+ d/i/wcSRaYEffVApJsTn75A1hW4zfqVkOdiUEJpYZTGwN5dO6YsG5HxsGEnnDsnF91MplUGShk
+ iLZz/6zC+7wcSx/eLZQAAAA==
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-99b12
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1101; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=uYOGtuS1GH0n1hKTHBjFXo28BM9xtKgYiatxl2C25fg=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBm8t0rqtZFaXSNN0LZDtkBCH3BPzzlev3DXYZIQ
+ vtrN0BPh6uJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZvLdKwAKCRAk1otyXVSH
+ 0JjLB/0VU5y6mBu4TYbcQXhvSykE+PiyQIptW3o2RECM5I+4DN5yltR24UUqCR0NxzSQUhuFqrb
+ rtM9u5br9gEk/J0TI+4QmSEg3HRwKkYJb7ZFumjKP8y8OpWwzO3LUM4yMfHaFtN+W7Q0h/+8DM4
+ CF3tkDzJjX7G9dvPSzljrTSIJ6ni7C8uPeGbtNKK5O/PBL99DpJuUw2KQp9yvA2zdTWFHfWihzp
+ Dd4mmB4vosGenQs5gF0qGPFvrKpU9zMHhOXlKgVF0FmfeC+vgQcjYcK5IPCJffBwnp8q8k2Om28
+ gWawMwIYiud9js0WPnJpJqpcxKiYT3s1/pobNG5KQHdo+y+C
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
+The sx150x driver uses a rbtree register cache with no obvious reason for
+specifically preferring it. The maple tree register cache is based on a
+more modern data structure and makes implementation decisions more suitable
+for modern systems so let's switch the driver to use that. No functional
+change.
 
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/pinctrl/pinctrl-sx150x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 9/20/2024 6:14 PM, Krzysztof Kozlowski wrote:
-> On 20/09/2024 13:56, Sricharan Ramabadhran wrote:
->>
->>>> +
->>>> +allOf:
->>>> +  - $ref: qcom,gcc.yaml#
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: qcom,ipq5424-gcc
->>>
->>> So everything i sthe same as 5332? Why not adding it there?
->>>
->> infact, ipq5332 has 1 dual lane and 1 single lane pcie, whereas
->> ipq5424 has 2 dual lane and 2 single lane pcie. will update the
->> bindings in v2 accordingly.
-> 
-> Hm? What is the difference in the bindings? I don't see. Maybe some diff
-> would help.
-> 
+diff --git a/drivers/pinctrl/pinctrl-sx150x.c b/drivers/pinctrl/pinctrl-sx150x.c
+index fd0331a87cda..ab87de319ad8 100644
+--- a/drivers/pinctrl/pinctrl-sx150x.c
++++ b/drivers/pinctrl/pinctrl-sx150x.c
+@@ -1105,7 +1105,7 @@ static const struct regmap_config sx150x_regmap_config = {
+ 	.reg_bits = 8,
+ 	.val_bits = 32,
+ 
+-	.cache_type = REGCACHE_RBTREE,
++	.cache_type = REGCACHE_MAPLE,
+ 
+ 	.reg_read = sx150x_regmap_reg_read,
+ 	.reg_write = sx150x_regmap_reg_write,
 
-For IPQ5424, clocks items is like this
+---
+base-commit: 98f7e32f20d28ec452afb208f9cffc08448a2652
+change-id: 20240924-pinctl-sx150x-maple-d8c1f45b9629
 
-       - description: Board XO clock source
-       - description: Sleep clock source
-       - description: PCIE 2lane PHY0 pipe clock source
-       - description: PCIE 2lane PHY1 pipe clock source
-       - description: PCIE 2lane PHY2 pipe clock source
-       - description: PCIE 2lane PHY3 pipe clock source
-       - description: USB PCIE wrapper pipe clock source
-
-
-For IPQ5332, its like this,
-
-       - description: Board XO clock source
-       - description: Sleep clock source
-       - description: PCIE 2lane PHY pipe clock source
-       - description: PCIE 2lane x1 PHY pipe clock source
-       - description: USB PCIE wrapper pipe clock source
-
-So for IPQ5424, there are 2 additional PCI phy's.
-
-So would it be fine to add the new IPQ5424 compatible to
-IPQ5322 file itself with a 'if:' of compatibles ?
-
-Regards,
-  Sricharan
-
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
 
