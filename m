@@ -1,107 +1,113 @@
-Return-Path: <linux-gpio+bounces-10403-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10404-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F23C9848C9
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 17:39:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A15C69848E7
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 17:56:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CE741B2129C
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 15:39:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 49E731F23B18
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 15:56:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46A9B1AB503;
-	Tue, 24 Sep 2024 15:39:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935441AB513;
+	Tue, 24 Sep 2024 15:56:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FF6Vz2Pz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byCAmQTd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002B927735;
-	Tue, 24 Sep 2024 15:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B311B85D5;
+	Tue, 24 Sep 2024 15:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727192366; cv=none; b=EwhQyJksQOoEfQRxUKtFEwMom4L9pS6heUb0r1KlxGq9QaP8Ebtf6FX0+h0oBajMEPGEinNNYel5s1MQOPHuLwcwaYjIa5mqPkSfM2kS3RTIMGIGqOb/bqfraZveKdSjuWjt+jfPYoCWSEYY4lyFfTAfZZf5nZ9OEXBfTU7xSyk=
+	t=1727193410; cv=none; b=WkbpH5v4OC280hcFYSeSZQeUF+rBC8li0/5UGwHO16STB9lOu9OMvjcOAfzoDPKtOgOfrJh6sYLX7r9o5VE/o32YPqrRn39JY1hli2lIW0ibB9upZc96jcA48ZCyQ9MPy8Nqeq2qeSe1QT1uyJ/qU8jD59c5/Vbhl4Ki3+/Q7gI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727192366; c=relaxed/simple;
-	bh=uYOGtuS1GH0n1hKTHBjFXo28BM9xtKgYiatxl2C25fg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uWchvVVUdde3ZNZbdS06M4RguEvP6ZWSHf4N3D4/+5RdZxhCisStpSm8y3v9ZA7x9//0ajdecEDdEqn3j0AIn3ZxoIqFYk/LAyt1VBPR0w9XL6v2ePKA6AlKu+H3dc6bBan4tsW3XJiRirGKcz1+rVdZ8immAhA/1k5OB8Rkw6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FF6Vz2Pz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F731C4CEC4;
-	Tue, 24 Sep 2024 15:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727192365;
-	bh=uYOGtuS1GH0n1hKTHBjFXo28BM9xtKgYiatxl2C25fg=;
-	h=From:Date:Subject:To:Cc:From;
-	b=FF6Vz2PznCg6tglOutn3gIE6VSWq/Elctny4fQsxWLehuu+uwMK9XOCzjlNPPAjmG
-	 XgLMSwwP9ohCDs5SmLlNXBkKMHS5VGTwznA5cQDDJekBn4HBzxr9rEbF1edffX14eu
-	 jk6JCEFmfkFtZAKoh+XA5E4MTlddXa7O4vxxgYr4DWnIykKS8V6NAAfexGbUCGr5Fs
-	 YyMrnzoJR/5H6blxtvQ2WgsnncQHSzN0Biqa8u8mD9kMMqrXCht4tNlcZI0pdRj8TK
-	 N9z1FuJBhaVXwjMTto/5lsLv+gZMJpw0b+hYWwdfztS6sMbDXnAA1e24xtMyCWJhOn
-	 xQhB/mJADorhg==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 24 Sep 2024 17:39:18 +0200
-Subject: [PATCH] pinctrl: sx150x: Use maple tree register cache
+	s=arc-20240116; t=1727193410; c=relaxed/simple;
+	bh=KYqzbrWNHwBSLs5MhGf6ardXq0bF3PUs+mentcC2f2k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J4y6+zI6Bbo+wzRtFsqhNMHkuDJEXVvYI3WVKWM4f82biYqo1UaIb/uVJq0a1BPCA1DpEJnf49+9zDmRKOd+wnSk/PQmf2j15GNhX87nrG4D3ujxwCvBKFfrqSJgg8SXVRFU3oZfbHDXuc6utHzFG3s77YOivkqhglhK6mVYMCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=byCAmQTd; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2055136b612so69123575ad.0;
+        Tue, 24 Sep 2024 08:56:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727193408; x=1727798208; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=C2+i3EAm7MnJBVbC6zFovlymq9xkslWJme6r8uRwJY0=;
+        b=byCAmQTdVesC5szzjJVVNnxaNWGqzNpzIlBqOWXtq/zmjQWoFboXruP2/unIbf7ZXS
+         OFc05ZOaLxd336CNRaPwubCD9jYo7pQD/7O/UI+QvsY64dy3wGh0jEo7fjcoIpwMPT3D
+         sIKgDORj5h1VaWw/CkrrYRolsFaATACoSVut15BiCU2wGjC6YALwoaAUTA5tttUvHWlh
+         4r+SgoY7TkKXTwfsxHlL9WAQ4DMBHb+rnW8tPomh5oZftsfVr2z/JrQflXGeOY0/RP0r
+         UOziye5IOtiUCOXaeMndWTceZqjuaVFY03G00s8odpjKNkEfQprR2cFierKsl0/2iW7W
+         t+Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727193408; x=1727798208;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C2+i3EAm7MnJBVbC6zFovlymq9xkslWJme6r8uRwJY0=;
+        b=xS1+wJeiGtFNgKYQSNf5ZhmoHSOn2DDnWZxrEEfYGIV25hEn+VUMR2S7SLOrm68V7h
+         9clN3ZdKnSLAxRZSCr6+6UzrxzZGZ+7kvCfY18X+GmdAlx4lDTLhZeMDQIg12qkyT7FO
+         hjmyey4i0RoUKT6gRjJ74J3X6AEYW5pdm4dlbEuDr6RUc5CjK6NVE0liY/kT5wMifsJ0
+         qzyzilUbWRodGV+NfcxzTKW/TgWeSXHv06MbuahWPiXnP1cqxoHBFjNFSSQZtMBHVXag
+         P6Oz1xJxS7FGEN+KL3TeialMcZmGwgHEKg3TGvOWhF3wdgjpGpfm4WN/24RRRYVweFBW
+         WOeg==
+X-Forwarded-Encrypted: i=1; AJvYcCXv+fCqBTFGp9tSd4YxwsXjQRSrxxf68yuE30BnQ6u6qt9HgQfa9rVsYZN5P6g+PcvLEc9tGYVdL8a9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfcsorI7BXgY3FeVvXL4jeUJilGYSl1saSrIjQlh+LUGUsVwmD
+	+Dz0kv1lQMEU42kZmoSXHJIIYl4hH4e3EImLrlAl+zxaoItJRR7oGjypyrTk
+X-Google-Smtp-Source: AGHT+IGPTW108ZUC2Attto/ASYesd/TLsOC2Q3UAB92D+DipXuow8ZVs0qxwjF6zvMIYMEXaLD2ctg==
+X-Received: by 2002:a17:902:ea12:b0:206:b618:1da8 with SMTP id d9443c01a7336-208d97f0cb5mr235710545ad.17.1727193408157;
+        Tue, 24 Sep 2024 08:56:48 -0700 (PDT)
+Received: from rigel.home.arpa (194-223-190-55.tpgi.com.au. [194.223.190.55])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20af16df843sm11919375ad.14.2024.09.24.08.56.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2024 08:56:47 -0700 (PDT)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl,
+	linus.walleij@linaro.org
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH] gpiolib: cdev: Fix reference to linereq_set_config_unlocked()
+Date: Tue, 24 Sep 2024 23:56:24 +0800
+Message-Id: <20240924155624.230130-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240924-pinctl-sx150x-maple-v1-1-17dcfefefd17@kernel.org>
-X-B4-Tracking: v=1; b=H4sIACXd8mYC/x3MQQqAIBBA0avErBtQsciuEi3MphooE40QorsnL
- d/i/wcSRaYEffVApJsTn75A1hW4zfqVkOdiUEJpYZTGwN5dO6YsG5HxsGEnnDsnF91MplUGShk
- iLZz/6zC+7wcSx/eLZQAAAA==
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-99b12
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1101; i=broonie@kernel.org;
- h=from:subject:message-id; bh=uYOGtuS1GH0n1hKTHBjFXo28BM9xtKgYiatxl2C25fg=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBm8t0rqtZFaXSNN0LZDtkBCH3BPzzlev3DXYZIQ
- vtrN0BPh6uJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZvLdKwAKCRAk1otyXVSH
- 0JjLB/0VU5y6mBu4TYbcQXhvSykE+PiyQIptW3o2RECM5I+4DN5yltR24UUqCR0NxzSQUhuFqrb
- rtM9u5br9gEk/J0TI+4QmSEg3HRwKkYJb7ZFumjKP8y8OpWwzO3LUM4yMfHaFtN+W7Q0h/+8DM4
- CF3tkDzJjX7G9dvPSzljrTSIJ6ni7C8uPeGbtNKK5O/PBL99DpJuUw2KQp9yvA2zdTWFHfWihzp
- Dd4mmB4vosGenQs5gF0qGPFvrKpU9zMHhOXlKgVF0FmfeC+vgQcjYcK5IPCJffBwnp8q8k2Om28
- gWawMwIYiud9js0WPnJpJqpcxKiYT3s1/pobNG5KQHdo+y+C
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Transfer-Encoding: 8bit
 
-The sx150x driver uses a rbtree register cache with no obvious reason for
-specifically preferring it. The maple tree register cache is based on a
-more modern data structure and makes implementation decisions more suitable
-for modern systems so let's switch the driver to use that. No functional
-change.
+With the change to cleanup.h guards, linereq_set_config_unlocked() was
+collapsed into linereq_set_config(), but documentation referencing it
+was not updated to reflect that change.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Update the reference to linereq_set_config().
+
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- drivers/pinctrl/pinctrl-sx150x.c | 2 +-
+ drivers/gpio/gpiolib-cdev.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-sx150x.c b/drivers/pinctrl/pinctrl-sx150x.c
-index fd0331a87cda..ab87de319ad8 100644
---- a/drivers/pinctrl/pinctrl-sx150x.c
-+++ b/drivers/pinctrl/pinctrl-sx150x.c
-@@ -1105,7 +1105,7 @@ static const struct regmap_config sx150x_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 32,
- 
--	.cache_type = REGCACHE_RBTREE,
-+	.cache_type = REGCACHE_MAPLE,
- 
- 	.reg_read = sx150x_regmap_reg_read,
- 	.reg_write = sx150x_regmap_reg_write,
-
----
-base-commit: 98f7e32f20d28ec452afb208f9cffc08448a2652
-change-id: 20240924-pinctl-sx150x-maple-d8c1f45b9629
-
-Best regards,
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 5aac59de0d76..366c8c5a2e62 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -450,7 +450,7 @@ struct line {
+ 	 * The flags for the active edge detector configuration.
+ 	 *
+ 	 * edflags is set by linereq_create(), linereq_free(), and
+-	 * linereq_set_config_unlocked(), which are themselves mutually
++	 * linereq_set_config(), which are themselves mutually
+ 	 * exclusive, and is accessed by edge_irq_thread(),
+ 	 * process_hw_ts_thread() and debounce_work_func(),
+ 	 * which can all live with a slightly stale value.
 -- 
-Mark Brown <broonie@kernel.org>
+2.39.5
 
 
