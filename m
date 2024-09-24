@@ -1,222 +1,218 @@
-Return-Path: <linux-gpio+bounces-10396-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10397-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7A42983B59
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 04:54:10 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 482D9983C81
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 07:52:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA5F51C22643
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 02:54:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E81EB21729
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 05:52:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96B9011CBD;
-	Tue, 24 Sep 2024 02:54:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51E0249638;
+	Tue, 24 Sep 2024 05:52:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WDt1oin7"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Rzzr9Ap+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824D01802B;
-	Tue, 24 Sep 2024 02:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D77F1FB4;
+	Tue, 24 Sep 2024 05:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727146441; cv=none; b=mI7/Tzhz31Z4gZ+q0XKJ2K+G5JkLiqGyWwVAP5mgJwdaV8xCvHyqxv5q/5RqtMk5fgR2VNANb8m4esL4PrwulTUYO/ZM9WcawCgbNZ/aw+DEKpAgxwFyHsfzSg9PbN2T18jrx4XzyGYVc6yTOAXKYHc1oYBSXbUhllLp1hYmZAI=
+	t=1727157157; cv=none; b=XkERiYVEJckQw8abQ4Bfyf2+AWPPc+15Lz5ieC6I+y0xmWD+X25bs0vzQg3/GoHxrfgKFF4re3an7KoqTaiL0aqURud7QD5WgrgslNzRYXOzPlEBWxoUkep6ZGSY8E61NMHkqJ2W10EMhegJ4Jtvfc6PUPcg9qVPwxYhDVCMF8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727146441; c=relaxed/simple;
-	bh=apgwYaa+hCopS3ypAdBFEVBOYmqMwtamZ5UePFaeU0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rZCfz0lNpfloWen/MULmHy6KG5zme95xpvTrJhmKmuGLhpBcXyjKnng0mxheJB1sI9zWXl+xwmFbqry7p2mzjQludU3/d9ur/vGpr6ubNwovWpcd8K3EHiFjC/NeqwOZIJ2Sk4erc34QldMlHg3Iuqd5XZimfo8gFvL9mg41OPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WDt1oin7; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727146440; x=1758682440;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=apgwYaa+hCopS3ypAdBFEVBOYmqMwtamZ5UePFaeU0k=;
-  b=WDt1oin7AAPD44kp5JnitPeyoDpFjDAoVISoxLzlvI5QcBye76BNRsBR
-   5XECce1+xg/aY/INQykjOe8XG+iSptaQ+JRqlvJi+GqLn2a5RJki0wWvY
-   3izHX2JjCL8NsqIoUMh0qnRWVQ6Yu0ULRqRapp3FWoaSD+Nzx3FBRCM1K
-   dlStpCVaOv9HV2IyIHCbglYB5hwqWrladUgsNHeH0yRhcmN82+y96D0Ur
-   lMlR5mKm2H/1TeWWJX2EiF7915GydCaINMtcmUSvG7JeHx7XBJME7TFfK
-   tU0rbMNdGIaKajhK1nC7XsMLY3pk0KuVC5jvmR40M3JuOn73IYiq6GwHS
-   w==;
-X-CSE-ConnectionGUID: tpe38bxVRWeulT+xy1kHYg==
-X-CSE-MsgGUID: mGVAeUPKR3KQukJyL88bow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11204"; a="25944431"
-X-IronPort-AV: E=Sophos;i="6.10,253,1719903600"; 
-   d="scan'208";a="25944431"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 19:53:59 -0700
-X-CSE-ConnectionGUID: 1sjRCsuuS9+8cGhY+cNfwQ==
-X-CSE-MsgGUID: GbyP1ughQqWsQAEca6+Atg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,253,1719903600"; 
-   d="scan'208";a="76041234"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 23 Sep 2024 19:53:55 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ssvgW-000Hq1-26;
-	Tue, 24 Sep 2024 02:53:52 +0000
-Date: Tue, 24 Sep 2024 10:53:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Billy Tsai <billy_tsai@aspeedtech.com>, linus.walleij@linaro.org,
-	brgl@bgdev.pl, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, BMC-SW@aspeedtech.com,
-	Peter.Yin@quantatw.com, Jay_Zhang@wiwynn.com
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v5 3/6] gpio: aspeed: Create llops to handle hardware
- access
-Message-ID: <202409241029.XEkME4VI-lkp@intel.com>
-References: <20240923100611.1597113-4-billy_tsai@aspeedtech.com>
+	s=arc-20240116; t=1727157157; c=relaxed/simple;
+	bh=bdDtutD2AX+b8M/zUVUc8osppsP9U2nJtxRBvla7F38=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SoVLwpIXDzLP5cL9oBsCN0tWtEzJ/C5oKre6GvRTymWojNa21bd3Nfg+ITAE08kUGNhlIVBvPlSzQ48xP0r9jheggh038DBmMmwQM0IEbaoeyOYhhVY0VzdX6bijKTDDQPOXCH8FNJIwozfUblx70TjTi9gVnHR3N23b9TNdlaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Rzzr9Ap+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48NLea8W018674;
+	Tue, 24 Sep 2024 05:52:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	juHGuZAvU1EMEN/6xg5NxWUpAOPzcKBMkLjcPFHV5Fw=; b=Rzzr9Ap+9g9z3tnb
+	rIuEEB4LXEU+JBp2WlSjwo7MeXplu32PpG3SrWm2R+k50K15gTbxZwadwHEBSx7T
+	rPUZVaxi+Tpw8tgrXIqQDqdkVgl8zCxT1emULBH03bq/IlD2Oxy0j8xuHu7cuJu4
+	7jIGjG40xNiBBfGxXTup7tX2LWtFFrmriLMNheI0j+3H9zs33z7TFM7/bFK9kqb2
+	BalHTBHKcFCnHB8Q4ZS0+Sf8wffeZxjnaROtrxT4lZSkHrKMDUmtKwDpz3Bc7CmL
+	scPWPNx6CNHpxP7Iyvikfst1y/NL2yNn1naUOS19dvG/Uh3zLNpahgX9Tk4e1vzh
+	cJVxlw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41sn3s74mx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Sep 2024 05:52:23 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48O5qMxA009443
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Sep 2024 05:52:22 GMT
+Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 23 Sep
+ 2024 22:52:18 -0700
+Message-ID: <b51c89f0-035a-4e94-adc3-e1b4fc31dfdd@quicinc.com>
+Date: Tue, 24 Sep 2024 13:52:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240923100611.1597113-4-billy_tsai@aspeedtech.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: unexptect ACPI GPE wakeup on Lenovo platforms
+To: Mario Limonciello <mario.limonciello@amd.com>, <rafael@kernel.org>,
+        <mika.westerberg@linux.intel.com>, <ulf.hansson@linaro.org>,
+        <bhelgaas@google.com>, <Basavaraj.Natikar@amd.com>,
+        <Shyam-sundar.S-k@amd.com>, <mpearson@lenovo.com>,
+        <markpearson@lenovo.com>, Kalle Valo <kvalo@kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+CC: <linux-acpi@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+References: <370d023e-ec53-4bf2-a005-48524c9cb4b2@quicinc.com>
+ <79d288c6-6042-4f73-b465-0ddcde14509a@amd.com>
+Content-Language: en-US
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+In-Reply-To: <79d288c6-6042-4f73-b465-0ddcde14509a@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: D305zhPoFIQ_AWylgJW0zGAa734KzMXY
+X-Proofpoint-ORIG-GUID: D305zhPoFIQ_AWylgJW0zGAa734KzMXY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ mlxscore=0 impostorscore=0 spamscore=0 malwarescore=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 clxscore=1011
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2409240038
 
-Hi Billy,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on brgl/gpio/for-next]
-[also build test WARNING on linus/master v6.11 next-20240923]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 9/23/2024 9:37 PM, Mario Limonciello wrote:
+> On 9/23/2024 05:07, Baochen Qiang wrote:
+>> Hi,
+>>
+>> recently it is reported that on some Lenovo machines (P16v, Z13 etc.) unexpected ACPI event wakeup is seen with kernel 6.10 [1][2]. To summary, the unexpected wakeup is triggered by simply unplug AC power or close lid of the laptop. Regression test shows this is caused by below commit, and with that reverted the issue is gone:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/net/wireless/ath/ath11k?id=166a490f59ac10340ee5330e51c15188ce2a7f8f
+>>
+>> Well what confuses me is that this commit basically resets WLAN hardware before going to suspend. that said, WLAN target maintains limited functionality (PCIe link handling etc...) during system suspend and is thus not expected to wakeup system.
+>>
+>> kernel log shows this is an ACPI GPE event wakeup:
+>>
+>> Sep 22 22:34:32 fedora kernel: PM: Triggering wakeup from IRQ 9
+>> Sep 22 22:34:32 fedora kernel: ACPI: PM: ACPI non-EC GPE wakeup
+>> ...
+>> Sep 22 22:34:32 fedora kernel: PM: noirq resume of devices complete after 693.757 msecs
+>> Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x07
+>> Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x0e
+>>
+>> Consulting ACPI tables show GPE 0x07 is used by the EC and GPE 0x0e is used by GPP6 device:
+>>
+>> Scope (\_SB.PCI0.GPP6)
+>> {
+>>      ...
+>>      Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
+>>      {
+>>          M460 ("PLA-ASL-\\_SB.PCI0.GPP6._PRW Return GPRW (0xE, 0x4)\n", 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
+>>          Return (Package (0x02)
+>>          {
+>>              0x0E,
+>>              0x04
+>>          })
+>>      }
+>>      ...
+>> }
+>>
+>> while GPP6 is the PCI bridge (the PCIe root port in this case) to which WLAN target is attached to:
+>>
+>> Device (GPP6)
+>> {
+>>      Name (_ADR, 0x00020002)  // _ADR: Address
+>>      ...
+>> }
+>>
+>> Scope (_SB.PCI0.GPP6)
+>> {
+>>      Device (WLAN)
+>>      {
+>>          ...
+>>      }
+>>      ...
+>> }
+>>
+>> and lspci also shows such relationship:
+>>
+>> $ lspci -vt
+>> -[0000:00]-+-00.0  Advanced Micro Devices, Inc. [AMD] Device 14e8
+>>             ...
+>>             +-02.2-[03]----00.0  Qualcomm Technologies, Inc QCNFA765 Wireless Network Adapter
+>>             ....
+>>
+>> Based on above info:
+>> #1 is that valid to get the conclusion that this unexpected wakeup is triggered directly by PCIe bridge?
+>> #2 if this is related to WLAN (seems so based on the regression test), is it the WLAN wake pin (a GPIO pin?) that originally triggers this? and how does it affect the bridge?
+>> #3 quick tests show that with GPP6 wakeup disabled this issue is gone. so a workaround is to disable GPP6 wakeup before going to suspend and enable it back after resume. But is it safe to do so?
+>>
+>>
+>>
+>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219196
+>> [2] https://bugzilla.redhat.com/show_bug.cgi?id=2301921
+>>
+> 
+> With pinctrl-amd there is an extra debugging message present [1] that is activated when you enable '/sys/power/pm_debug_messages' which will tell you if a GPIO is active during the suspend cycle.  That can help you to rule out whether this is the WoWLAN GPIO pin causing the behavior.
+> 
+> [1] https://github.com/torvalds/linux/blob/v6.11/drivers/pinctrl/pinctrl-amd.c#L626
+Thanks for the reminder, Mario.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Billy-Tsai/dt-bindings-gpio-aspeed-ast2400-gpio-Support-ast2700/20240923-180936
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20240923100611.1597113-4-billy_tsai%40aspeedtech.com
-patch subject: [PATCH v5 3/6] gpio: aspeed: Create llops to handle hardware access
-config: alpha-randconfig-r131-20240924 (https://download.01.org/0day-ci/archive/20240924/202409241029.XEkME4VI-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20240924/202409241029.XEkME4VI-lkp@intel.com/reproduce)
+I do notice that some reporters mentioned about this [1]. and I can also see this on my P16v machine:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409241029.XEkME4VI-lkp@intel.com/
+[  881.799289] PM: suspend entry (s2idle)
+...
+[  897.491440] PM: Triggering wakeup from IRQ 9
+[  897.491714] ACPI: PM: ACPI non-EC GPE wakeup
+[  897.491720] PM: resume from suspend-to-idle
+...
+[  898.153259] PM: noirq resume of devices complete after 556.675 msecs
+[  898.153443] ACPI: GPE event 0x07
+[  898.153502] ACPI: GPE event 0x0e //GPE 0x0e triggered for the 1st time
+...
+[  898.314804] mhi mhi0: Requested to power ON //WLAN begin to reinitialize
+[  898.314841] mhi mhi0: Power on setup success
+[  898.694562] mhi mhi0: Wait for device to enter SBL or Mission mode
+[  899.305898] GPIO 18 is active: 0x10157a00 //I guess this is the WoWLAN GPIO pin
+[  899.306089] ACPI: GPE event 0x0e //GPE 0x0e triggered for the 2nd time
+[  899.333158] ath11k_pci 0000:03:00.0: chip_id 0x12 chip_family 0xb board_id 0xff soc_id 0x400c1211
+[  899.333190] ath11k_pci 0000:03:00.0: fw_version 0x1106196e fw_build_timestamp 2024-01-12 11:30 fw_build_id WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.37
+...
+[  899.826378] PM: suspend exit
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/gpio/gpio-aspeed.c:1208:54: sparse: sparse: Using plain integer as NULL pointer
 
-vim +1208 drivers/gpio/gpio-aspeed.c
+But I don;t think it is the wakeup source, it is just toggled during WLAN reinitialize AFTER system wakeup. actually even with ath11k module removed I can also see this GPE wakeup, but without GPIO 18 toggled:
 
-  1183	
-  1184	static int __init aspeed_gpio_probe(struct platform_device *pdev)
-  1185	{
-  1186		const struct of_device_id *gpio_id;
-  1187		struct gpio_irq_chip *girq;
-  1188		struct aspeed_gpio *gpio;
-  1189		int rc, irq, i, banks, err;
-  1190		u32 ngpio;
-  1191	
-  1192		gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-  1193		if (!gpio)
-  1194			return -ENOMEM;
-  1195	
-  1196		gpio->base = devm_platform_ioremap_resource(pdev, 0);
-  1197		if (IS_ERR(gpio->base))
-  1198			return PTR_ERR(gpio->base);
-  1199	
-  1200		gpio->dev = &pdev->dev;
-  1201	
-  1202		raw_spin_lock_init(&gpio->lock);
-  1203	
-  1204		gpio_id = of_match_node(aspeed_gpio_of_table, pdev->dev.of_node);
-  1205		if (!gpio_id)
-  1206			return -EINVAL;
-  1207	
-> 1208		gpio->clk = devm_clk_get_enabled(&pdev->dev, 0);
-  1209		if (IS_ERR(gpio->clk)) {
-  1210			dev_warn(&pdev->dev,
-  1211					"Failed to get clock from devicetree, debouncing disabled\n");
-  1212			gpio->clk = NULL;
-  1213		}
-  1214	
-  1215		gpio->config = gpio_id->data;
-  1216	
-  1217		if (!gpio->config->llops->reg_bit_set || !gpio->config->llops->reg_bit_get ||
-  1218		    !gpio->config->llops->reg_bank_get)
-  1219			return -EINVAL;
-  1220	
-  1221		gpio->chip.parent = &pdev->dev;
-  1222		err = of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpio);
-  1223		gpio->chip.ngpio = (u16) ngpio;
-  1224		if (err)
-  1225			gpio->chip.ngpio = gpio->config->nr_gpios;
-  1226		gpio->chip.direction_input = aspeed_gpio_dir_in;
-  1227		gpio->chip.direction_output = aspeed_gpio_dir_out;
-  1228		gpio->chip.get_direction = aspeed_gpio_get_direction;
-  1229		gpio->chip.request = aspeed_gpio_request;
-  1230		gpio->chip.free = aspeed_gpio_free;
-  1231		gpio->chip.get = aspeed_gpio_get;
-  1232		gpio->chip.set = aspeed_gpio_set;
-  1233		gpio->chip.set_config = aspeed_gpio_set_config;
-  1234		gpio->chip.label = dev_name(&pdev->dev);
-  1235		gpio->chip.base = -1;
-  1236	
-  1237		if (gpio->config->require_dcache) {
-  1238			/* Allocate a cache of the output registers */
-  1239			banks = DIV_ROUND_UP(gpio->chip.ngpio, 32);
-  1240			gpio->dcache = devm_kcalloc(&pdev->dev, banks, sizeof(u32), GFP_KERNEL);
-  1241			if (!gpio->dcache)
-  1242				return -ENOMEM;
-  1243			/*
-  1244			 * Populate it with initial values read from the HW
-  1245			 */
-  1246			for (i = 0; i < banks; i++)
-  1247				gpio->dcache[i] =
-  1248					gpio->config->llops->reg_bank_get(gpio, (i << 5), reg_rdata);
-  1249		}
-  1250	
-  1251		if (gpio->config->llops->privilege_init)
-  1252			gpio->config->llops->privilege_init(gpio);
-  1253	
-  1254		/* Set up an irqchip */
-  1255		irq = platform_get_irq(pdev, 0);
-  1256		if (irq < 0)
-  1257			return irq;
-  1258		gpio->irq = irq;
-  1259		girq = &gpio->chip.irq;
-  1260		gpio_irq_chip_set_chip(girq, &aspeed_gpio_irq_chip);
-  1261	
-  1262		girq->parent_handler = aspeed_gpio_irq_handler;
-  1263		girq->num_parents = 1;
-  1264		girq->parents = devm_kcalloc(&pdev->dev, 1, sizeof(*girq->parents), GFP_KERNEL);
-  1265		if (!girq->parents)
-  1266			return -ENOMEM;
-  1267		girq->parents[0] = gpio->irq;
-  1268		girq->default_type = IRQ_TYPE_NONE;
-  1269		girq->handler = handle_bad_irq;
-  1270		girq->init_valid_mask = aspeed_init_irq_valid_mask;
-  1271	
-  1272		gpio->offset_timer =
-  1273			devm_kzalloc(&pdev->dev, gpio->chip.ngpio, GFP_KERNEL);
-  1274		if (!gpio->offset_timer)
-  1275			return -ENOMEM;
-  1276	
-  1277		rc = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
-  1278		if (rc < 0)
-  1279			return rc;
-  1280	
-  1281		return 0;
-  1282	}
-  1283	
+[ 2640.849342] PM: suspend entry (s2idle)
+...
+[ 2650.806234] PM: Triggering wakeup from IRQ 9
+...
+[ 2651.467653] PM: noirq resume of devices complete after 558.943 msecs
+[ 2651.467880] ACPI: GPE event 0x07
+[ 2651.467961] ACPI: GPE event 0x0e
+...
+[ 2651.848848] PM: suspend exit
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=219286
+
 
