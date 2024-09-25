@@ -1,115 +1,125 @@
-Return-Path: <linux-gpio+bounces-10446-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10447-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99BCD9865BD
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 19:35:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 728919866A0
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 21:05:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B2AD1F24125
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 17:35:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38AB72854E4
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 19:05:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E941F13BC11;
-	Wed, 25 Sep 2024 17:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2455913D61B;
+	Wed, 25 Sep 2024 19:05:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lk9PKYmn"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gPzsKG+p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00F455785;
-	Wed, 25 Sep 2024 17:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081FB24B21;
+	Wed, 25 Sep 2024 19:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727285715; cv=none; b=h4bOlDYSJXt23GCmKW+DMHNTnESnlZSf/af1fHIDxG/4cnxGFKZnlbQi4L38N9SjvIAfRv3hYwUsRS7hWB+OCMvNqlOLR2bqM0agQWmeC51XnvN2DrZEF9tQmX5fjPcuTSh6DNBU0kiwNdhcsMBBvKP6k+qaMCWjUyTy7fQ+64Q=
+	t=1727291129; cv=none; b=NJrYvwAX32tUKlJN7hwYuke3jjOGWpm24ZTQGuAKZ6sGJSN8Wz1hKKT6urxxO35MZ67DvHWkzDzKQilGRFMmqM3vgI+5E3C9WDVIB1jt85uEzuRfzuzB3UjZTfHSH1rAX2j82QDZeeBOrQfJDktGb9WzYqw2T+Jkho7BAmbgXh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727285715; c=relaxed/simple;
-	bh=1PV8bYybivP4bxKgZEi8u1Gj1Lzo4QO+fIu4LD60VLc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z5Ib9IeP4KNUYXwqKieeDvoH2PxvduFLQQqf5tmeyJOOkj2pJMMqUEOoir4drr4s1v+shc0y6JOqANX1VN5kp9qZQ470D+Cj1C0LjF4cBX1tAYMeLSlOx3HYfrmTzzn38x77/rUpOaCCgwGq3C5m24C0YnNwSoPXnONlYCATM7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lk9PKYmn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC70C4CEC3;
-	Wed, 25 Sep 2024 17:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727285715;
-	bh=1PV8bYybivP4bxKgZEi8u1Gj1Lzo4QO+fIu4LD60VLc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Lk9PKYmnn7QONn58+TjcuZZtGbRroL+00BnoeRX01Pse2v2TFxPc1JUPjt1fe74sy
-	 bdAfoTZ+nz8IlzA4qS1zLwEsh5pEA+dNkGZdOaMZJJwOL4JqldcVv1H1sdFbAMkzWM
-	 lRGVbbFJH6NbXuXrVc7XwW3ISMJfIipkoX9NUBsPII3VVD9kC8ymqNiZbiJNUEGBQN
-	 afRI8BGTSLdbH2xFcodLPFF932iOsDdt7DO2Wc6SlSQACAwpuz7VyfngcOs6SF4ZLe
-	 pJPyhEZjOdPlIKxLHSNBo1QI0Dqwpo3IqDnequY4Qh7j87RxtcJU4HAXc2JUX6DeDT
-	 LA2/lmNd1guxA==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nikita Shubin <nikita.shubin@maquefel.me>
-Cc: Rob Herring <robh@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: gpio: ep9301: Add missing "#interrupt-cells" to examples
-Date: Wed, 25 Sep 2024 12:35:10 -0500
-Message-ID: <20240925173510.1907048-1-robh@kernel.org>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1727291129; c=relaxed/simple;
+	bh=qVyuQ6fOCy7zVhuYfHZM/BSnMq7CmNDmuS9VNsG6Fus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=aAs0LPWJpYJXzyDvnL6LPtQCY52xMX+27qYQ+yfJ/k3AHhZy4VtkK0VUXbUmY9jbQkoVWS3N+htHuWpFe3+BD6cnXu7fPRJwQCb1x/pXRdoDMun5PhvufC4++u4lhu/Xf5aYvljKSSonZBK9lR2HzAEcg0QiaYKldn32TWf8+lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gPzsKG+p; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48PH5Cu6027637;
+	Wed, 25 Sep 2024 19:05:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	wpseR5rYPGLdp3ACOwGjh50SXZEk1xxy1xMTOQ/DvPs=; b=gPzsKG+pSfX1KG4l
+	9EIvIw4VF7/CWfkK5H8T+A5SId10xkCQYVa9bVW2adl5E6GIRbSRpxqB4YEJJg15
+	RcDbea19Gfi7eseiFhVJm7Pl45asCO4Q9hBIwswwAcceSgZgUxALMD6Njx48TT2I
+	ilUOqwJUYKcbtlVU7dXdc/sKlY1/jJZ/3FG2mq5SurRjFDbZo0NK1R9QdYNHXj85
+	fTJd4niXcEnWKROIJELhPMYPUkHPFKljbAdyT/P8Ly+HVL0oAVzC+ccmDuy3N+zY
+	t4qEhROMvqcwXjCmmfc2Dx6zoDyUyDvJzSrUyIOnmWScaeYmh0bYfZ//yyBNH5Qz
+	IU8xQQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41spc2w3jx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Sep 2024 19:05:10 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48PJ59if010435
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Sep 2024 19:05:09 GMT
+Received: from [10.50.63.248] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 25 Sep
+ 2024 12:05:00 -0700
+Message-ID: <2a16d5a2-17a5-4988-8a25-34ac10ff3d08@quicinc.com>
+Date: Thu, 26 Sep 2024 00:34:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 8/8] arm64: defconfig: Enable IPQ5424 SoC base configs
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <p.zabel@pengutronix.de>, <geert+renesas@glider.be>,
+        <neil.armstrong@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <quic_varada@quicinc.com>
+References: <20240913121250.2995351-1-quic_srichara@quicinc.com>
+ <20240913121250.2995351-9-quic_srichara@quicinc.com>
+ <4dxqbm4uuuuht5db7kt6faz2pdeodn224hd34np322divs22ba@dzmjveze3b4f>
+Content-Language: en-US
+From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <4dxqbm4uuuuht5db7kt6faz2pdeodn224hd34np322divs22ba@dzmjveze3b4f>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: csX6H1xMjELLFnLE93bvSt3TXFmGLJf0
+X-Proofpoint-ORIG-GUID: csX6H1xMjELLFnLE93bvSt3TXFmGLJf0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 adultscore=0 phishscore=0 mlxlogscore=561
+ bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2409250135
 
-From: Rob Herring <robh@kernel.org>
 
-Enabling dtc interrupt_provider check reveals the examples are missing
-the "#interrupt-cells" property as it is a dependency of
-"interrupt-controller".
 
-Some of the indentation is off, so fix that too.
+On 9/13/2024 6:23 PM, Dmitry Baryshkov wrote:
+> On Fri, Sep 13, 2024 at 05:42:50PM GMT, Sricharan R wrote:
+>> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+>>
+>> Enable the clock and pinctrl configs for Qualcomm IPQ5332 SoC
+> 
+> Please name the device rather than the platform. The defconfig affects
+> all users, so it should be justified.
+> 
+Sorry, to understand correctly, you mean to use the board name here ?
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- Documentation/devicetree/bindings/gpio/gpio-ep9301.yaml | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+>>
+>> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+>> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> 
+> Usual comment.
+ok, will fix.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-ep9301.yaml b/Documentation/devicetree/bindings/gpio/gpio-ep9301.yaml
-index daadfb4926c3..3a1079d6ee20 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-ep9301.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-ep9301.yaml
-@@ -73,9 +73,10 @@ examples:
-       reg-names = "data", "dir", "intr";
-       gpio-controller;
-       #gpio-cells = <2>;
--        interrupt-controller;
--        interrupt-parent = <&vic1>;
--        interrupts = <27>;
-+      interrupt-controller;
-+      #interrupt-cells = <2>;
-+      interrupt-parent = <&vic1>;
-+      interrupts = <27>;
-     };
- 
-     gpio@80840004 {
-@@ -87,6 +88,7 @@ examples:
-       gpio-controller;
-       #gpio-cells = <2>;
-       interrupt-controller;
-+      #interrupt-cells = <2>;
-       interrupt-parent = <&vic1>;
-       interrupts = <27>;
-     };
-@@ -127,6 +129,7 @@ examples:
-       gpio-controller;
-       #gpio-cells = <2>;
-       interrupt-controller;
-+      #interrupt-cells = <2>;
-       interrupts-extended = <&vic0 19>, <&vic0 20>,
-                             <&vic0 21>, <&vic0 22>,
-                             <&vic1 15>, <&vic1 16>,
--- 
-2.45.2
-
+Regards,
+  Sricharan
 
