@@ -1,144 +1,172 @@
-Return-Path: <linux-gpio+bounces-10439-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10440-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0E7A985550
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 10:18:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12AD898569D
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 11:47:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 53F2BB22A3D
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 08:18:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1BD31F26058
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 09:47:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E88DE158DB9;
-	Wed, 25 Sep 2024 08:18:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7688F143C40;
+	Wed, 25 Sep 2024 09:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DYVqF/wm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RuRyjlJd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700C3158D8B
-	for <linux-gpio@vger.kernel.org>; Wed, 25 Sep 2024 08:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4BF156230;
+	Wed, 25 Sep 2024 09:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727252308; cv=none; b=URxWSa5r5djKz19m+gYattxNu179H3qXUOWPALRel1YlZJlyG77YP1v7UfaDvstabF7KdED/WGpP3IbTsry1Eb1W7KxGFseY3D4KYI46njHKRrm19X2oxkE3Ypb0OdE/BLl2z+M68xWekskYgsXSwYQ2j9KlzNmaNZexd+nQXrQ=
+	t=1727257665; cv=none; b=ukHYF2Zua+P0NQawB39/jq0gPVkdhsX8Yn0X9L19OBowqd1BXGXpIam/tBeYjEX+ZQRldtCJ1mmyxqvJVKLdNiQySST56dMJ2k+CVtLlZoNfPjzQbXdWBy6MnBOFGQ3MSZ80tb7DDiZT/2x94vYz7VABYMR56276XZj1e2peYdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727252308; c=relaxed/simple;
-	bh=ZNN0WA2/p1ORgw0WLog369ZiQNy2kk/Mzv+YGlD0aSc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=L3UBOwfCBQYQMn1kBDVfJDvwLltNfhAq4n/MQWsIyHvzsVjeygZktK8PPs8qTe1J1PkNGYncgTuQ7VrydCUS3oXUV0wFUxIvX8s3xjdCGs4ixXA40ipcSiiRwpUVQuU+pcRpTx4POZXgb6UbQC4Uarvri7Dt0dQrvJgaf4x4Dyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DYVqF/wm; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42cb5b3c57eso63849835e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Sep 2024 01:18:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727252305; x=1727857105; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CjViwqKoOuJx/lbhmfqAwvB3FRCAndqhaaKQMzHxtco=;
-        b=DYVqF/wm5gdqbVfTe9EK/+0aiAIU70Z20kN5LXCHyXXsC2+A9KjoL+xX0jeu5qFgPd
-         lRWaphLh2z4UWpRov70KdrYFMpSETuySqSnYeb9/VhackhZRbm73oH80Z0cJtuUal8+U
-         CJz8+3A95q44b6RFHfwgjxBGufi37TLS/Pf4Jeo/DSrBiXTnTuAl4ew3rHkh6ybCjQsN
-         aZgaw89hnGnL+lT4Tm68MF0Bzntr9iC3qcbj4m4z1jZ0dEeP8zo5HPMkLUuUmBlpZGSG
-         rw4w3pbcXzsYlQKkgOMb4Ks/9iFuqpW7wCrMS2gyWkUCJFoBKR/Vca6u3zeAPTFgYbGJ
-         8lHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727252305; x=1727857105;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CjViwqKoOuJx/lbhmfqAwvB3FRCAndqhaaKQMzHxtco=;
-        b=K/ZbN4CXi9/1swQdidrsK6DvHvfcdo9khF8aTT2JoTD2kPmqQNfDdkbbF1r8YBYK+x
-         bgUYM5YzGXro52MQcnpXun53MhnaUWPYj46q919CAILJhGz0R1OM+jqMxI1zC2f5pEHc
-         eal9L+eHqXrhXmFNfwzKyl/qNP0zFJFd9/+i/EnNeoFG+/wqf3AW0MdCQNrvzDhkNj38
-         kIP53eZ0PwN6pcV3tEiFZhFTo3HkpZTTgDc3XND7WU1fpy/OWeDd61gVR0IUGIQ53fSm
-         Ls7iqDng00xF6/4OGZCsGVjuL8Ry1wpED+tZYB3fw4OZKgboHQchuBF5urEQiWFKknvg
-         TWZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWvne3SKthpznydTzY/mBodyvG0sGujqfb8SnCkngL7gA6sRDVb3WAq1Y51Bd9MD8Rvid3DxzgBnHhL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzf5dc0u5PxaLfG2mAsc2W5hoAJ0XH4P0Unjf8UM6bIa2T6rhaS
-	NsVM610mHiqVqUm4AkDhOZJ/4zYB2h5gXtBv6cNj2j4NbPuCdU4vRbkJWdxAcoI=
-X-Google-Smtp-Source: AGHT+IGzTCJoMIje7BlfvPfP0lS5uStHPhLpQoLdhOq/3pwsQ/1Hd2BTnfsSIdO9RAY8hcw1bZBCyQ==
-X-Received: by 2002:a05:600c:3d05:b0:42c:b9c8:2bb0 with SMTP id 5b1f17b1804b1-42e96103358mr11373925e9.4.1727252304561;
-        Wed, 25 Sep 2024 01:18:24 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cbc2a8bcasm3362899f8f.9.2024.09.25.01.18.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2024 01:18:24 -0700 (PDT)
-Date: Wed, 25 Sep 2024 11:18:20 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Mary Strodl <mstrodl@csh.rit.edu>,
-	linux-kernel@vger.kernel.org
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, linus.walleij@linaro.org,
-	brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	Mary Strodl <mstrodl@csh.rit.edu>
-Subject: Re: [PATCH v2] gpio: add support for FTDI's MPSSE as GPIO
-Message-ID: <0c58010f-3d25-498b-a519-d79e7021cff1@stanley.mountain>
+	s=arc-20240116; t=1727257665; c=relaxed/simple;
+	bh=mes99sViCBF6zif+B7hz6V9ArPg0p/BE3GMmFR/yKTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YTDyLpGxM8deIVk7HF5n2Pt6Ca3p2ACE7fp/CB8VtOrutpyHQHGiLwMdOf3MYdn1QgwsXNIVqMY8THyS9a1fDfnG+q4EV+Lldr01vrM5LBteXs4h9WtHCPRWLbnOVJ0Ylq2Sw2HzphgNasoi5VaB5AenQZ6DgEgKmexKP/KZ4+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RuRyjlJd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A3C1C4CEC3;
+	Wed, 25 Sep 2024 09:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727257664;
+	bh=mes99sViCBF6zif+B7hz6V9ArPg0p/BE3GMmFR/yKTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RuRyjlJdXf1WdwatxCxPZR1VdmzSE9r/ChvwgJke1gj0PClkIWE6mh5ksiTL8YWa9
+	 tVz1iKR9HH8mZXmfZrSSb+fzw3XP2Ey53JTg8AP9SbZ5v944+o2qAppzWHRnaIjcQ6
+	 3+bJ1SeljxYV5mzlYEmgQQdoEDvuoytMLKKRT06xsB59bcrXJuu/GkmgG3DmIIbimn
+	 Lb9sVXRXlpCwPUqmuPfTE2j+ULDfcKIjunJSlcAWNNsrWAbmqxZ/wournJ59k/Dtys
+	 rbUC1OFsr5xvucq4DyJq9SKqP7Q1K781KauxXVcWOqNIuZQmXG2F0r47zmm+pU6wbx
+	 Zrli3O1Cs4tlw==
+Date: Wed, 25 Sep 2024 10:47:38 +0100
+From: Lee Jones <lee@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] Add mfd, pinctrl and pwm support to EN7581 SoC
+Message-ID: <20240925094738.GD7545@google.com>
+References: <20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org>
+ <66f13ab0.5d0a0220.b0c27.b441@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240919141014.4000958-1-mstrodl@csh.rit.edu>
-Received: from imap.gmail.com (108.177.15.109:993) by stanley.mountain with
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <66f13ab0.5d0a0220.b0c27.b441@mx.google.com>
 
-Hi Mary,
+On Mon, 23 Sep 2024, Christian Marangi wrote:
 
-kernel test robot noticed the following build warnings:
+> On Wed, Sep 11, 2024 at 09:50:00PM +0200, Lorenzo Bianconi wrote:
+> > Introduce airoha-mfd driver in order to load pinctrl and pwm drivers for
+> > EN7581 SoC. airoha-mfd is needed since both pinctrl and pwm drivers
+> > needs to access the same memory block (gpio memory region) to configure
+> > {gio,irq}_chip and pwm functionalities respectively, so model them as
+> > childs of a parent mfd driver.
+> > Current EN7581 pinctrl driver supports the following functionalities:
+> > - pin multiplexing via chip_scu syscon
+> > - pin pull-up, pull-down, open-drain, current strength,
+> >   {input,output}_enable, output_{low,high} via chip_scu syscon
+> > - gpio controller
+> > - irq controller
+> > 
+> > ---
+> > Changes in v4:
+> > - add 'Limitation' description in pwm driver
+> > - fix comments in pwm driver
+> > - rely on mfd->base __iomem pointer in pwm driver, modify register
+> >   offsets according to it and get rid of sgpio_cfg, flash_cfg and
+> >   cycle_cfg pointers
+> > - simplify register utility routines in pwm driver
+> > - use 'generator' instead of 'waveform' suffix for pwm routines
+> > - fix possible overflow calculating duty cycle in pwm driver
+> > - do not modify pwm state in free callback in pwm driver
+> > - cap the maximum period in pwm driver
+> > - do not allow inverse polarity in pwm driver
+> > - do not set of_xlate callback in the pwm driver and allow the stack to
+> >   do it
+> > - fix MAINTAINERS file for airoha pinctrl driver
+> > - fix undefined reference to __ffsdi2 in pinctrl driver
+> > - simplify airoha,en7581-gpio-sysctl.yam binding
+> > - Link to v3: https://lore.kernel.org/r/20240831-en7581-pinctrl-v3-0-98eebfb4da66@kernel.org
+> > 
+> > Changes in v3:
+> > - introduce airoha-mfd driver
+> > - add pwm driver to the same series
+> > - model pinctrl and pwm drivers as childs of a parent mfd driver.
+> > - access chip-scu memory region in pinctrl driver via syscon
+> > - introduce a single airoha,en7581-gpio-sysctl.yaml binding and get rid
+> >   of dedicated bindings for pinctrl and pwm
+> > - add airoha,en7581-chip-scu.yaml binding do the series
+> > - Link to v2: https://lore.kernel.org/r/20240822-en7581-pinctrl-v2-0-ba1559173a7f@kernel.org
+> > 
+> > Changes in v2:
+> > - Fix compilation errors
+> > - Collapse some register mappings for gpio and irq controllers
+> > - update dt-bindings according to new register mapping
+> > - fix some dt-bindings errors
+> > - Link to v1: https://lore.kernel.org/all/cover.1723392444.git.lorenzo@kernel.org/
+> > 
+> > ---
+> > Benjamin Larsson (1):
+> >       pwm: airoha: Add support for EN7581 SoC
+> > 
+> > Christian Marangi (2):
+> >       dt-bindings: mfd: Add support for Airoha EN7581 GPIO System Controller
+> >       mfd: airoha: Add support for Airoha EN7581 MFD
+> > 
+> > Lorenzo Bianconi (2):
+> >       dt-bindings: arm: airoha: Add the chip-scu node for EN7581 SoC
+> >       pinctrl: airoha: Add support for EN7581 SoC
+> > 
+> >  .../bindings/arm/airoha,en7581-chip-scu.yaml       |   42 +
+> >  .../bindings/mfd/airoha,en7581-gpio-sysctl.yaml    |  433 +++
+> >  MAINTAINERS                                        |    7 +
+> >  drivers/mfd/Kconfig                                |    8 +
+> >  drivers/mfd/Makefile                               |    2 +
+> >  drivers/mfd/airoha-en7581-gpio-mfd.c               |   72 +
+> >  drivers/pinctrl/mediatek/Kconfig                   |   16 +-
+> >  drivers/pinctrl/mediatek/Makefile                  |    1 +
+> >  drivers/pinctrl/mediatek/pinctrl-airoha.c          | 2964 ++++++++++++++++++++
+> >  drivers/pwm/Kconfig                                |   10 +
+> >  drivers/pwm/Makefile                               |    1 +
+> >  drivers/pwm/pwm-airoha.c                           |  414 +++
+> >  include/linux/mfd/airoha-en7581-mfd.h              |    9 +
+> >  13 files changed, 3978 insertions(+), 1 deletion(-)
+> > ---
+> > base-commit: 264c13114bd71ddfd7b25c7b94f6cda4587eca25
+> > change-id: 20240818-en7581-pinctrl-1bf120154be0
+> > prerequisite-change-id: 20240705-for-6-11-bpf-a349efc08df8:v2
+> > 
+> >
+> 
+> Hi,
+> 
+> any news with this? Rob reviewed the DT schemas and he is ok with them.
+> 
+> Any other comments for the MFD driver and/or the pinctrl or PWM driver?
 
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Mary-Strodl/gpio-add-support-for-FTDI-s-MPSSE-as-GPIO/20240919-221626
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20240919141014.4000958-1-mstrodl%40csh.rit.edu
-patch subject: [PATCH v2] gpio: add support for FTDI's MPSSE as GPIO
-config: x86_64-randconfig-161-20240922 (https://download.01.org/0day-ci/archive/20240923/202409230158.XhvhLOyY-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202409230158.XhvhLOyY-lkp@intel.com/
-
-smatch warnings:
-drivers/gpio/gpio-mpsse.c:211 gpio_mpsse_get_multiple() warn: inconsistent returns '&priv->io_mutex'.
-
-vim +211 drivers/gpio/gpio-mpsse.c
-
-be777399e9baea Mary Strodl 2024-09-19  190  static int gpio_mpsse_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-be777399e9baea Mary Strodl 2024-09-19  191  				   unsigned long *bits)
-be777399e9baea Mary Strodl 2024-09-19  192  {
-be777399e9baea Mary Strodl 2024-09-19  193  	unsigned long i, bank, bank_mask;
-be777399e9baea Mary Strodl 2024-09-19  194  	int ret;
-be777399e9baea Mary Strodl 2024-09-19  195  	struct mpsse_priv *priv = gpiochip_get_data(chip);
-be777399e9baea Mary Strodl 2024-09-19  196  
-be777399e9baea Mary Strodl 2024-09-19  197  	mutex_lock(&priv->io_mutex);
-be777399e9baea Mary Strodl 2024-09-19  198  	for_each_set_clump8(i, bank_mask, mask, chip->ngpio) {
-be777399e9baea Mary Strodl 2024-09-19  199  		bank = i / 8;
-be777399e9baea Mary Strodl 2024-09-19  200  
-be777399e9baea Mary Strodl 2024-09-19  201  		if (bank_mask) {
-be777399e9baea Mary Strodl 2024-09-19  202  			ret = gpio_mpsse_get_bank(priv, bank);
-be777399e9baea Mary Strodl 2024-09-19  203  			if (ret < 0)
-be777399e9baea Mary Strodl 2024-09-19  204  				return ret;
-
-Needs to mutex_unlock(&priv->io_mutex) before returning.
-
-be777399e9baea Mary Strodl 2024-09-19  205  
-be777399e9baea Mary Strodl 2024-09-19  206  			bitmap_set_value8(bits, ret & bank_mask, i);
-be777399e9baea Mary Strodl 2024-09-19  207  		}
-be777399e9baea Mary Strodl 2024-09-19  208  	}
-be777399e9baea Mary Strodl 2024-09-19  209  	mutex_unlock(&priv->io_mutex);
-be777399e9baea Mary Strodl 2024-09-19  210  
-be777399e9baea Mary Strodl 2024-09-19 @211  	return 0;
-be777399e9baea Mary Strodl 2024-09-19  212  }
+Note that the merge-window is still open.  Some maintainers, myself
+included, use this lull to prioritise other things.  This set is on my
+list and will be dealt with shortly.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+Lee Jones [李琼斯]
 
