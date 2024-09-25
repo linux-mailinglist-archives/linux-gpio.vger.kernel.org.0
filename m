@@ -1,382 +1,306 @@
-Return-Path: <linux-gpio+bounces-10409-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10410-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2381A984CD8
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 23:25:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6257E9850E8
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 04:19:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42E1A1C22A16
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Sep 2024 21:25:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8ECF1285003
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 02:19:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00B111411DE;
-	Tue, 24 Sep 2024 21:22:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A3051494DD;
+	Wed, 25 Sep 2024 02:19:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LC3r0Ajp"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KQe6rc+H"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A874013D251;
-	Tue, 24 Sep 2024 21:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDC5946F;
+	Wed, 25 Sep 2024 02:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727212951; cv=none; b=T6jGMCr8wNxPVJje/IHHiywhwpt7odtzJuy64ZgaUm6uHDjMtj2QCtLf03NWoWH5lK7Y16chGjSUF/75qi9yWmQAnr69XAHvS4xHx3RpupyhG6xPAaGXK6k1lDxa0bsDo8/W8phF+Uv3Bl1WP5zBb4xRRo/trKTAbspdd7tt34c=
+	t=1727230752; cv=none; b=utw8qyesGijij8R6kAYL7ondqM3i734c0hlJGv/bvBfmafgdt/5AiTj/udsIo3L7AaH241zo3v1pRSYdc4PuS8TT/AO6UkbsaMqjI+wnzhZMUtEPqmKf8F/OqV9c3K1pzvxrrhN4YdweW+iuZrQDELjWvZiiPwiGr4W0LxtVtIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727212951; c=relaxed/simple;
-	bh=ORN8sDOxLyn58T65c1ZiKJe2Tx746oGRCmfs/xV060s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e9xFOAmFcd6ut4+hT+Ve82ydqceOBM0ogH4NKW0wZxRI/IqzqH3IJVkRDFo8GRu34H6HT3SbJbT9dg/VBZZNYInnJEnTxkLQpmD8fgj5/bB3zYe6buxT8ysT64QeLt+mCwSwrexsbsi6U5cVz/OUug0KM+2JczlRFmuDqo9BpS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LC3r0Ajp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F545C4CECD;
-	Tue, 24 Sep 2024 21:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727212951;
-	bh=ORN8sDOxLyn58T65c1ZiKJe2Tx746oGRCmfs/xV060s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LC3r0AjpUcP/CLjxzfq8ze/z2K+GqMsZdPos87MLlSua4xCqhNuyX2SlqI5yScJwk
-	 dckS1FF9q73Ewk6gV1EpMgnMMNQxx7IxS0FzW1RNuH2Q4qRr/VBCru+sSvVMxsk0ET
-	 +2HuJtamH6NeE6sRNsY4A7sfU1xysodQI3aEujAuSIP2mEOK3cX//30wW+6/p3ewby
-	 APDVXz+UsumblA4hVP0vseua2oMIB1sdvTkxdFQHKjpsbfLR43uNGTWZMqKuEHLuXv
-	 HWEigbUrdGVC1MPYmSS4aLSQPZX4bzpS9+vVCJKwGkFvzR9CTxtSqfQyadZugkHdmS
-	 HoUAIt3yGrUCw==
-Date: Tue, 24 Sep 2024 23:22:28 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lee Jones <lee@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	upstream@airoha.com, benjamin.larsson@genexis.eu,
-	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 4/5] pinctrl: airoha: Add support for EN7581 SoC
-Message-ID: <ZvMtlJN1xAMHoW-E@lore-desk>
-References: <20240911-en7581-pinctrl-v4-0-60ac93d760bb@kernel.org>
- <20240911-en7581-pinctrl-v4-4-60ac93d760bb@kernel.org>
- <CACRpkdZbyQ5bk8oR+Q4UmQCdM5h1mF1ztBc26YzqNsze_B=ehA@mail.gmail.com>
- <ZvKQe73ZKIFy4fny@lore-desk>
+	s=arc-20240116; t=1727230752; c=relaxed/simple;
+	bh=oqMXqPenpnnACiruyiOns6DjEWIO3FXYx2lK3V9hScw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=sWjiq0sanYbfGmUPcaDd0sQ6lrFFL2YAnFszagPYqNcJLByoIr4moQIHtXCE+avZ5sY+7NQRFZsOd6ebPHrpvHEdBKQiNnoOJkhA2PTvHNJAUycbTLjjLVc27v/O/jHqdD8c4V5rvll77AbO3gc/Hhu0VdpPZkvcQ4MtPw4oz5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KQe6rc+H; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48OHeUO0025397;
+	Wed, 25 Sep 2024 02:18:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	6whLWtPSgr0+Y2zMO6IskNPkPfq9lg9PtKIpHEQYVbk=; b=KQe6rc+HIsOSpHji
+	1H3nwUqA2/1WgW8DsyErMEL1t/0UAZgMa/Z1Hfwdsvg9+6YS2qE0UL9nWaU3pxq3
+	NdrrdnHOH9PbX3CCx2njxp9q1yOuNHbKFS+yF5cJZizDcDHNb9N2dd1k9JlPYNU+
+	lcUXlvUUjmtHwckp5Trd/gkSO562aL44sfniiDl77mCgSrLgRYumhnKIDGBV9jFZ
+	ZdF+dylA9z+MguIoh6GnPSjHbzqyKPWmxlUMFP4D4nXNyjV6T0B/+cB6UhzbA0Eb
+	moIHx8Gx4OF7iJyRwY4m0BaTO4p1pJPky2rUH4ujOlCcDnjeNjs2BsKhw12kJyox
+	hEePHw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41sph6tq1k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Sep 2024 02:18:53 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 48P2Iq3q030045
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Sep 2024 02:18:52 GMT
+Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 24 Sep
+ 2024 19:18:48 -0700
+Message-ID: <115efc10-60fd-436f-99b6-0b141f9585e7@quicinc.com>
+Date: Wed, 25 Sep 2024 10:18:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NZtxAZ5/yN8ueZoO"
-Content-Disposition: inline
-In-Reply-To: <ZvKQe73ZKIFy4fny@lore-desk>
-
-
---NZtxAZ5/yN8ueZoO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-[...]
->=20
-> I am fine to switch to regmap but I guess we need to enable fast_io
-> since it can run even in interrupt context. Btw, I figured out even
-> airoha_pinctrl_rmw needs to grab a spin_lock since we can exec a led
-> trigger (like timer) where we run airoha_pinctrl_rmw in interrupt context
-> (so it should be fine to use a single regmap for it).
-> However, I guess we need to keep the spin_lock in airoha_pinctrl_gpiochip
-> since we need to grab it in airoha_pinctrl_gpio_irq_unmask() and
-> airoha_pinctrl_gpio_irq_type() (we access irq_type array there).
-> A possible solution would be to keep the local spin_lock and set
-> disable_locking. What do you think? Do you prefer to switch to regmap or
-> keep the current implementation using 'guard(spinlock_irqsave)' instead?
-
-I reworked the code using regmap APIs and setting disable_locking flag
-in order to keep the spinlock local (I switch to guard(spinlock) as
-well). Thx for pointing this out, the code is simpler and more readable,
-I will add it in v5.
-
->=20
-> >=20
-> > > +static int airoha_pinctrl_get_gpio_from_pin(struct pinctrl_dev *pctr=
-l_dev,
-> > > +                                           int pin)
-> > > +{
-> > > +       struct pinctrl_gpio_range *range;
-> > > +       int gpio;
-> > > +
-> > > +       range =3D pinctrl_find_gpio_range_from_pin_nolock(pctrl_dev, =
-pin);
-> > > +       if (!range)
-> > > +               return -EINVAL;
-> > > +
-> > > +       gpio =3D pin - range->pin_base;
-> > > +       if (gpio < 0)
-> > > +               return -EINVAL;
-> > > +
-> > > +       return gpio;
-> > > +}
-> >=20
-> > This function is just used here:
->=20
-> it is used in airoha_pinconf_get()/airoha_pinconf_set()
->=20
-> >=20
-
-[...]
-
-> > > +       case PIN_CONFIG_OUTPUT_ENABLE:
-> > > +       case PIN_CONFIG_INPUT_ENABLE: {
-> > > +               int gpio =3D airoha_pinctrl_get_gpio_from_pin(pctrl_d=
-ev, pin);
-> > > +
-> > > +               if (gpio < 0)
-> > > +                       return gpio;
-> > > +
-> > > +               arg =3D airoha_pinctrl_gpio_get_direction(pinctrl, gp=
-io);
-> >=20
-> > I don't see why a pin would have to exist in a GPIO range in order to
-> > be set as output or input?
-> >=20
-> > Can't you just set up the pin as requested and not care whether
-> > it has a corresponding GPIO range?
-> >=20
-> > Is it over-reuse of the GPIO code? I'd say just set up the pin instead.
->=20
-> Do you mean to get rid of PIN_CONFIG_OUTPUT_ENABLE, PIN_CONFIG_INPUT_ENAB=
-LE
-> (and even PIN_CONFIG_OUTPUT in airoha_pinconf_set()) here?
-> E.g. we need PIN_CONFIG_OUTPUT_ENABLE to enable pwm for pwm-leds:
->=20
-> &mfd {
-> 	...
-> 	pio: pinctrl {
-> 		...
-> 		pwm_gpio18_idx10_pins: pwm-gpio18-idx10-pins {
-> 			function =3D "pwm";
-> 			pins =3D "gpio18";
-> 			output-enable;
-> 		};
-> 	};
-> };
-
-I reworked the code here in order to not explicitly use gpio value in
-airoha_pinconf_get/airoha_pinconf_set routines. However, we need to switch
-=66rom pin to gpio configuring data/direction/out hw registers since:
-- not all pins can be used as gpio (actually we can configure just pins in =
-the
-  range [13, 59])
-- data, dir and out hw register are indexed using gpio id and not pin one.
-  (e.g BIT(0) in data[0] refers to GPIO0 and not to PIN0).
-
-Regards,
-Lorenzo
-
->=20
-> >=20
-> > > +static int airoha_pinconf_set(struct pinctrl_dev *pctrl_dev,
-> > > +                             unsigned int pin, unsigned long *config=
-s,
-> > > +                             unsigned int num_configs)
-> > > +{
-> > > +       struct airoha_pinctrl *pinctrl =3D pinctrl_dev_get_drvdata(pc=
-trl_dev);
-> > > +       int i;
-> > > +
-> > > +       for (i =3D 0; i < num_configs; i++) {
-> > > +               u32 param =3D pinconf_to_config_param(configs[i]);
-> > > +               u32 arg =3D pinconf_to_config_argument(configs[i]);
-> > > +
-> > > +               switch (param) {
-> > > +               case PIN_CONFIG_BIAS_DISABLE:
-> > > +                       airoha_pinctrl_set_pulldown_conf(pinctrl, pin=
-, 0);
-> > > +                       airoha_pinctrl_set_pullup_conf(pinctrl, pin, =
-0);
-> > > +                       break;
-> > > +               case PIN_CONFIG_BIAS_PULL_UP:
-> > > +                       airoha_pinctrl_set_pulldown_conf(pinctrl, pin=
-, 0);
-> > > +                       airoha_pinctrl_set_pullup_conf(pinctrl, pin, =
-1);
-> > > +                       break;
-> > > +               case PIN_CONFIG_BIAS_PULL_DOWN:
-> > > +                       airoha_pinctrl_set_pulldown_conf(pinctrl, pin=
-, 1);
-> > > +                       airoha_pinctrl_set_pullup_conf(pinctrl, pin, =
-0);
-> > > +                       break;
-> > > +               case PIN_CONFIG_DRIVE_STRENGTH: {
-> > > +                       u32 e2 =3D 0, e4 =3D 0;
-> > > +
-> > > +                       switch (arg) {
-> > > +                       case MTK_DRIVE_2mA:
-> > > +                               break;
-> > > +                       case MTK_DRIVE_4mA:
-> > > +                               e2 =3D 1;
-> > > +                               break;
-> > > +                       case MTK_DRIVE_6mA:
-> > > +                               e4 =3D 1;
-> > > +                               break;
-> > > +                       case MTK_DRIVE_8mA:
-> > > +                               e2 =3D 1;
-> > > +                               e4 =3D 1;
-> > > +                               break;
-> > > +                       default:
-> > > +                               return -EINVAL;
-> > > +                       }
-> > > +
-> > > +                       airoha_pinctrl_set_drive_e2_conf(pinctrl, pin=
-, e2);
-> > > +                       airoha_pinctrl_set_drive_e4_conf(pinctrl, pin=
-, e4);
-> > > +                       break;
-> > > +               }
-> > > +               case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-> > > +                       airoha_pinctrl_set_pcie_rst_od_conf(pinctrl, =
-pin, !!arg);
-> > > +                       break;
-> > > +               case PIN_CONFIG_OUTPUT_ENABLE:
-> > > +               case PIN_CONFIG_INPUT_ENABLE:
-> > > +               case PIN_CONFIG_OUTPUT: {
-> > > +                       int gpio =3D airoha_pinctrl_get_gpio_from_pin=
-(pctrl_dev, pin);
-> > > +                       bool input =3D param =3D=3D PIN_CONFIG_INPUT_=
-ENABLE;
-> > > +
-> > > +                       if (gpio < 0)
-> > > +                               return gpio;
-> > > +
-> > > +                       airoha_pinctrl_gpio_set_direction(pinctrl, gp=
-io, input);
-> > > +                       if (param =3D=3D PIN_CONFIG_OUTPUT)
-> > > +                               airoha_pinctrl_gpio_set_value(pinctrl=
-, gpio, !!arg);
-> > > +                       break;
-> >=20
-> > Dito. No need to reuse the GPIO set direction function. Make a helper
-> > that just work on the pin instead, and perhaps the GPIO set direction
-> > can use that instead.
->=20
-> ack, I will fix it in v5.
->=20
-> >=20
-> > > +static int airoha_pinctrl_gpio_direction_output(struct gpio_chip *ch=
-ip,
-> > > +                                               unsigned int gpio, in=
-t value)
-> > > +{
-> > > +       int err;
-> > > +
-> > > +       err =3D pinctrl_gpio_direction_output(chip, gpio);
-> > > +       if (err)
-> > > +               return err;
-> > > +
-> > > +       airoha_pinctrl_gpio_set(chip, gpio, value);
-> >=20
-> > Hm I get a bit confused by the similarly named helpers I guess...
->=20
-> Naming is always hard, I will try to improve :)
->=20
-> >=20
-> > > +static void airoha_pinctrl_gpio_irq_unmask(struct irq_data *data)
-> > > +{
-> > > +       u8 offset =3D data->hwirq % AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> > > +       u8 index =3D data->hwirq / AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> > > +       u32 mask =3D GENMASK(2 * offset + 1, 2 * offset);
-> > > +       struct airoha_pinctrl_gpiochip *gpiochip;
-> > > +       u32 val =3D BIT(2 * offset);
-> > > +       unsigned long flags;
-> > > +
-> > > +       gpiochip =3D irq_data_get_irq_chip_data(data);
-> > > +       if (WARN_ON_ONCE(data->hwirq >=3D ARRAY_SIZE(gpiochip->irq_ty=
-pe)))
-> > > +               return;
-> > > +
-> > > +       spin_lock_irqsave(&gpiochip->lock, flags);
-> >=20
-> > Use a scoped guard here
-> >=20
-> > guard(spinlock_irqsave)(&gpiochip->lock);
-> >=20
-> > > +static void airoha_pinctrl_gpio_irq_mask(struct irq_data *data)
-> > > +{
-> > > +       u8 offset =3D data->hwirq % AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> > > +       u8 index =3D data->hwirq / AIROHA_REG_GPIOCTRL_NUM_GPIO;
-> > > +       u32 mask =3D GENMASK(2 * offset + 1, 2 * offset);
-> > > +       struct airoha_pinctrl_gpiochip *gpiochip;
-> > > +       unsigned long flags;
-> > > +
-> > > +       gpiochip =3D irq_data_get_irq_chip_data(data);
-> > > +
-> > > +       spin_lock_irqsave(&gpiochip->lock, flags);
-> >=20
-> > Dito
-> >=20
-> > > +static int airoha_pinctrl_gpio_irq_type(struct irq_data *data,
-> > > +                                       unsigned int type)
-> > > +{
-> > > +       struct airoha_pinctrl_gpiochip *gpiochip;
-> > > +       unsigned long flags;
-> > > +
-> > > +       gpiochip =3D irq_data_get_irq_chip_data(data);
-> > > +       if (data->hwirq >=3D ARRAY_SIZE(gpiochip->irq_type))
-> > > +               return -EINVAL;
-> > > +
-> > > +       spin_lock_irqsave(&gpiochip->lock, flags);
-> >=20
-> > Dito
-> >=20
-> > > +       girq->chip =3D devm_kzalloc(dev, sizeof(*girq->chip), GFP_KER=
-NEL);
-> > > +       if (!girq->chip)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       girq->chip->name =3D dev_name(dev);
-> > > +       girq->chip->irq_unmask =3D airoha_pinctrl_gpio_irq_unmask;
-> > > +       girq->chip->irq_mask =3D airoha_pinctrl_gpio_irq_mask;
-> > > +       girq->chip->irq_mask_ack =3D airoha_pinctrl_gpio_irq_mask;
-> > > +       girq->chip->irq_set_type =3D airoha_pinctrl_gpio_irq_type;
-> > > +       girq->chip->flags =3D IRQCHIP_SET_TYPE_MASKED | IRQCHIP_IMMUT=
-ABLE;
-> > > +       girq->default_type =3D IRQ_TYPE_NONE;
-> > > +       girq->handler =3D handle_simple_irq;
-> >=20
-> > If the irqchip is immutable it is const and there is no point to malloc=
- it.
-> >=20
-> > Just
-> >=20
-> > static const struct irq_chip airoha_gpio_irq_chip =3D {...
-> >=20
-> > And assign it:
-> >=20
-> > girq =3D &g->gc.irq;
-> > gpio_irq_chip_set_chip(girq, &airoha_gpio_irq_chip);
->=20
-> ack, I will fix it in v5.
->=20
-> Regards,
-> Lorenzo
->=20
-> >=20
-> > Yours,
-> > Linus Walleij
+User-Agent: Mozilla Thunderbird
+Subject: Re: unexptect ACPI GPE wakeup on Lenovo platforms
+To: Mario Limonciello <mario.limonciello@amd.com>, <rafael@kernel.org>,
+        <mika.westerberg@linux.intel.com>, <ulf.hansson@linaro.org>,
+        <bhelgaas@google.com>, <Basavaraj.Natikar@amd.com>,
+        <Shyam-sundar.S-k@amd.com>, <mpearson@lenovo.com>,
+        <markpearson@lenovo.com>, Kalle Valo <kvalo@kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+CC: <linux-acpi@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+References: <370d023e-ec53-4bf2-a005-48524c9cb4b2@quicinc.com>
+ <79d288c6-6042-4f73-b465-0ddcde14509a@amd.com>
+ <b51c89f0-035a-4e94-adc3-e1b4fc31dfdd@quicinc.com>
+ <91e179ca-ff2e-48b0-813d-7b819e300dca@amd.com>
+Content-Language: en-US
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+In-Reply-To: <91e179ca-ff2e-48b0-813d-7b819e300dca@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: F0YU-THIKDcK4yDkH0twd7aD3rYNUhXX
+X-Proofpoint-ORIG-GUID: F0YU-THIKDcK4yDkH0twd7aD3rYNUhXX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=999
+ mlxscore=0 adultscore=0 phishscore=0 suspectscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2409250016
 
 
 
---NZtxAZ5/yN8ueZoO
-Content-Type: application/pgp-signature; name="signature.asc"
+On 9/25/2024 1:55 AM, Mario Limonciello wrote:
+> On 9/24/2024 00:52, Baochen Qiang wrote:
+>>
+>>
+>> On 9/23/2024 9:37 PM, Mario Limonciello wrote:
+>>> On 9/23/2024 05:07, Baochen Qiang wrote:
+>>>> Hi,
+>>>>
+>>>> recently it is reported that on some Lenovo machines (P16v, Z13 etc.) unexpected ACPI event wakeup is seen with kernel 6.10 [1][2]. To summary, the unexpected wakeup is triggered by simply unplug AC power or close lid of the laptop. Regression test shows this is caused by below commit, and with that reverted the issue is gone:
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/net/wireless/ath/ath11k?id=166a490f59ac10340ee5330e51c15188ce2a7f8f
+>>>>
+>>>> Well what confuses me is that this commit basically resets WLAN hardware before going to suspend. that said, WLAN target maintains limited functionality (PCIe link handling etc...) during system suspend and is thus not expected to wakeup system.
+>>>>
+>>>> kernel log shows this is an ACPI GPE event wakeup:
+>>>>
+>>>> Sep 22 22:34:32 fedora kernel: PM: Triggering wakeup from IRQ 9
+>>>> Sep 22 22:34:32 fedora kernel: ACPI: PM: ACPI non-EC GPE wakeup
+>>>> ...
+>>>> Sep 22 22:34:32 fedora kernel: PM: noirq resume of devices complete after 693.757 msecs
+>>>> Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x07
+>>>> Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x0e
+>>>>
+>>>> Consulting ACPI tables show GPE 0x07 is used by the EC and GPE 0x0e is used by GPP6 device:
+>>>>
+>>>> Scope (\_SB.PCI0.GPP6)
+>>>> {
+>>>>       ...
+>>>>       Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
+>>>>       {
+>>>>           M460 ("PLA-ASL-\\_SB.PCI0.GPP6._PRW Return GPRW (0xE, 0x4)\n", 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
+>>>>           Return (Package (0x02)
+>>>>           {
+>>>>               0x0E,
+>>>>               0x04
+>>>>           })
+>>>>       }
+>>>>       ...
+>>>> }
+>>>>
+>>>> while GPP6 is the PCI bridge (the PCIe root port in this case) to which WLAN target is attached to:
+>>>>
+>>>> Device (GPP6)
+>>>> {
+>>>>       Name (_ADR, 0x00020002)  // _ADR: Address
+>>>>       ...
+>>>> }
+>>>>
+>>>> Scope (_SB.PCI0.GPP6)
+>>>> {
+>>>>       Device (WLAN)
+>>>>       {
+>>>>           ...
+>>>>       }
+>>>>       ...
+>>>> }
+>>>>
+>>>> and lspci also shows such relationship:
+>>>>
+>>>> $ lspci -vt
+>>>> -[0000:00]-+-00.0  Advanced Micro Devices, Inc. [AMD] Device 14e8
+>>>>              ...
+>>>>              +-02.2-[03]----00.0  Qualcomm Technologies, Inc QCNFA765 Wireless Network Adapter
+>>>>              ....
+>>>>
+>>>> Based on above info:
+>>>> #1 is that valid to get the conclusion that this unexpected wakeup is triggered directly by PCIe bridge?
+>>>> #2 if this is related to WLAN (seems so based on the regression test), is it the WLAN wake pin (a GPIO pin?) that originally triggers this? and how does it affect the bridge?
+>>>> #3 quick tests show that with GPP6 wakeup disabled this issue is gone. so a workaround is to disable GPP6 wakeup before going to suspend and enable it back after resume. But is it safe to do so?
+>>>>
+>>>>
+>>>>
+>>>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219196
+>>>> [2] https://bugzilla.redhat.com/show_bug.cgi?id=2301921
+>>>>
+>>>
+>>> With pinctrl-amd there is an extra debugging message present [1] that is activated when you enable '/sys/power/pm_debug_messages' which will tell you if a GPIO is active during the suspend cycle.  That can help you to rule out whether this is the WoWLAN GPIO pin causing the behavior.
+>>>
+>>> [1] https://github.com/torvalds/linux/blob/v6.11/drivers/pinctrl/pinctrl-amd.c#L626
+>> Thanks for the reminder, Mario.
+>>
+>> I do notice that some reporters mentioned about this [1]. and I can also see this on my P16v machine:
+>>
+>> [  881.799289] PM: suspend entry (s2idle)
+>> ...
+>> [  897.491440] PM: Triggering wakeup from IRQ 9
+>> [  897.491714] ACPI: PM: ACPI non-EC GPE wakeup
+>> [  897.491720] PM: resume from suspend-to-idle
+>> ...
+>> [  898.153259] PM: noirq resume of devices complete after 556.675 msecs
+>> [  898.153443] ACPI: GPE event 0x07
+>> [  898.153502] ACPI: GPE event 0x0e //GPE 0x0e triggered for the 1st time
+>> ...
+>> [  898.314804] mhi mhi0: Requested to power ON //WLAN begin to reinitialize
+>> [  898.314841] mhi mhi0: Power on setup success
+>> [  898.694562] mhi mhi0: Wait for device to enter SBL or Mission mode
+>> [  899.305898] GPIO 18 is active: 0x10157a00 //I guess this is the WoWLAN GPIO pin
+> 
+> Yeah that's what it looks like to me too.  The easiest way to confirm this (without a schematic that is) is to look at the _AEI / _EVT in the SSDT and see what is notified when this is active.
+seems GPP6 is notified, does this mean GPIO18 is NOT bound to WLAN wakeup pin? but instead it is bound to the PCIe root port?
 
------BEGIN PGP SIGNATURE-----
+Scope (\_SB.GPIO)
+{
+    Method (_AEI, 0, NotSerialized)  // _AEI: ACPI Event Interrupts
+    {
+        Name (BUF0, ResourceTemplate ()
+        {
+		...
+            	GpioInt (Edge, ActiveLow, ExclusiveAndWake, PullNone, 0x0000,
+                	"\\_SB.GPIO", 0x00, ResourceConsumer, ,)
+                {   	// Pin list
+                    	0x0012
+                }
+		...
+	})
+        Name (BUF1, ResourceTemplate ()
+	{
+		...
+		GpioInt (Edge, ActiveLow, ExclusiveAndWake, PullNone, 0x0000,
+			"\\_SB.GPIO", 0x00, ResourceConsumer, ,)
+		{   	// Pin list
+			0x0012
+		}
+		...
+			
+	})
+	If ((\_SB.PCI0.LPC0.EC0.WWDT != 0x0F))
+	{
+		Return (BUF0) /* \_SB_.GPIO._AEI.BUF0 */
+	}
+	Else
+	{
+		Return (BUF1) /* \_SB_.GPIO._AEI.BUF1 */
+	}
+    }
+	
+    Method (_EVT, 1, Serialized)  // _EVT: Event
+    {
+        M460 ("  OEM-ASL-\\_SB.GPIO._EVT-Start Case %d\n", ToInteger (Arg0), 0x00, 0x00, 0x00, 0x00, 0x00)
+        Switch (ToInteger (Arg0))
+	{
+		...
+            	Case (0x12)
+            	{
+                	M000 (0x3912)
+                	M460 ("    Notify (\\_SB.PCI0.GPP6, 0x02)\n", 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
+                	Notify (\_SB.PCI0.GPP6, 0x02) // Device Wake
+            	}
+		...
+        }
 
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZvMtlAAKCRA6cBh0uS2t
-rNZFAQDh1TQOTGsS6AJYn4S0E1QSvJxVk5y3yGM385PlB1UoHAEA8edZ+wyz5q9H
-yo2JKGgyRdNvxRP0tcPbnjEYEvDbnAg=
-=6/CL
------END PGP SIGNATURE-----
+        M460 ("  OEM-ASL-\\_SB.GPIO._EVT-End Case %d\n", ToInteger (Arg0), 0x00, 0x00, 0x00, 0x00, 0x00)
+    }
+}
 
---NZtxAZ5/yN8ueZoO--
+> 
+>> [  899.306089] ACPI: GPE event 0x0e //GPE 0x0e triggered for the 2nd time
+>> [  899.333158] ath11k_pci 0000:03:00.0: chip_id 0x12 chip_family 0xb board_id 0xff soc_id 0x400c1211
+>> [  899.333190] ath11k_pci 0000:03:00.0: fw_version 0x1106196e fw_build_timestamp 2024-01-12 11:30 fw_build_id WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.37
+>> ...
+>> [  899.826378] PM: suspend exit
+>>
+>>
+>> But I don;t think it is the wakeup source, it is just toggled during WLAN reinitialize AFTER system wakeup. actually even with ath11k module removed I can also see this GPE wakeup, but without GPIO 18 toggled:
+> 
+> I don't believe that just removing the kernel module is enough.  Can you physically remove the hardware?
+not possible, it is soldered, not a M.2 module
+> 
+>>
+>> [ 2640.849342] PM: suspend entry (s2idle)
+>> ...
+>> [ 2650.806234] PM: Triggering wakeup from IRQ 9
+>> ...
+>> [ 2651.467653] PM: noirq resume of devices complete after 558.943 msecs
+>> [ 2651.467880] ACPI: GPE event 0x07
+>> [ 2651.467961] ACPI: GPE event 0x0e
+>> ...
+>> [ 2651.848848] PM: suspend exit
+>>
+>>
+>>
+>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219286
+>>
+> 
+> Is it possible for you to put a scope on the GPIO and/or PCIe analzyer on the bus?
+it is hard to me -- for the GPIO I need the schematic which is not available, and for the PCIe analyzer we need hardware rework for that, but I will try.
+
+> 
+> It sounds to me that most likely what's going on is PME being asserted from WLAN controller.
+But I don;t see a PME interrupt fired on the root port:
+
+$ cat /proc/interrupts
+  36:          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0  IR-PCI-MSI-0000:00:02.2    0-edge      PCIe PME
+
+$ lspci -tv
+-[0000:00]-+-00.0  Advanced Micro Devices, Inc. [AMD] Device 14e8
+	   ...
+           +-02.2-[03]----00.0  Qualcomm Technologies, Inc QCNFA765 Wireless Network Adapter
+
+
+> 
+
 
