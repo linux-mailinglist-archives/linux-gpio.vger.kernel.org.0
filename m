@@ -1,127 +1,109 @@
-Return-Path: <linux-gpio+bounces-10448-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10449-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D97898685A
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 23:31:53 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72B0E986CE2
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 08:50:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5EE731C21776
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Sep 2024 21:31:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 06AF928254A
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 06:50:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D65F155C82;
-	Wed, 25 Sep 2024 21:31:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A86618E372;
+	Thu, 26 Sep 2024 06:49:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vpHxw83B"
+	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="BlvMWbVT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [178.154.239.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2719854767
-	for <linux-gpio@vger.kernel.org>; Wed, 25 Sep 2024 21:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B64C18DF92;
+	Thu, 26 Sep 2024 06:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727299905; cv=none; b=WwfFq0jIvaNpjShsbV36Celf4J6BX/s0mnM8X8U5vofpspwauWrhS3ecOFJ7+67o3soYqmXzcMU25oz0Nai6DUfAv8ec1ZVArMRY02YbAkNYVvPWeI79S5XgzNcodXVMTECH5PtXSTQA5+cCZRiadG2RyhNAs7rhmiG2F6uEIYQ=
+	t=1727333381; cv=none; b=YtTQsDI1x4xSXZ4OOmVXmLkusLwudTBwujGaxJZgf2LTzeY/WlVWwoYgiFyUs2wSPnVVQu+YMAKPx8TnaFNWc40OTG2eAb9D43FBuJlddP5jG84KIwyKHvVuXynxXcw8W6gkjjKyv3eLT3oW+EVDHNa8Bv1AN1ZS+Fxp39sPai4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727299905; c=relaxed/simple;
-	bh=q1hnfW/UYENj/VV96bgSolK/g/2vdQSz2wVyhQteCPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sb7AJoe0k60T2qv3giRnnzlhDtLk79+x8VtmeefzM6a6tw0EJVwGZcnmHG6PKaoSUyrqq1+pt/iBZTEYfFyFQGisNhgqwFbxvS00B/b4KX8Dr2LMGeOU+WhCLqPahX/kcFgm4bAGv73h+7JVynEiLggDSAXMdJu09b0+SGebQAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vpHxw83B; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5365aec6fc1so353783e87.3
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Sep 2024 14:31:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727299902; x=1727904702; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=g2gRWXk6um8ssZG0dTYz3h8O6sPux+vtNyTeziNQM+4=;
-        b=vpHxw83BEcxXUiXAHcwannMowZ5Cp/Zm0//e9txywTNF+VvbYNu8F1jTKNov+mH/Ns
-         5hHQflIjhKUl5G/IPTQ1QlYBoyLU+pl1Qt4Mx572kqq6ImpdtT9nvn7R1iEEZdIHMOxB
-         SzftUfPVRDvh/dh4iGooNg+6fQdfSwKqC2XOKsnIbMuGDmC0MWWgUrNTgHl0q+YB/QjH
-         E6TDD2eqeFktH3aKA7aTMaEBEEEm2Bnp4OTeVI5cdWgWqIyT1MrP4YYAq9UO8Q2phjMl
-         Cl+YWdmPf1FQZtaE2nhr2VGc1ZXKepGxtu0tMXMKlhUgIh3yLSandXdoVQjX1kgBeB6r
-         TSUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727299902; x=1727904702;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g2gRWXk6um8ssZG0dTYz3h8O6sPux+vtNyTeziNQM+4=;
-        b=cOkQc4TCn/B4d+5hnKcqxNTH5Nc2CSxhhsxLKxvm4H4SI+i38mWUrwKML3WNwFyjQy
-         xc+2LiShsZH73FfavtMqBPYZiilQWcEyme1Rx0UnTldIezsqvoZMs30l0L9oRL5E4wgA
-         25v9o7Oy0N9qWLr9sFIOhkGCkF0nn7kIFqgkS5gPY/hv1eUEBSDQhD7hWUkLb9v/1L4q
-         qWHTrN4zlz8nreOrJ2faV+oS1HPiLaW8JDaXVjb0oTH96NK9TLKiZmW5rMjGt1MvXT0P
-         sMOPeYN009uQywBo2R2fgfVULdtpVLy/3qIxWtZx4p3r6Tm37U3xSy2PB3IhJCy85dMD
-         PDrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+SXt1fPMQGMSJp2C7lPNFBNNqqUXMy+RTLtWiJkRNpH1QSly3At7khZuSfUDEowY7VgRuKlQaYVj/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfHZhapLjPCLXUZAzT5x/tQzRojkVzGBrSHE7X7W/s6QHzN9B0
-	5STaAibM1jbVP+xk+XXZGlp5eqCjMFM1dXMdHqOzxFWUgKbAl2IgXJDkc497xVE=
-X-Google-Smtp-Source: AGHT+IGRtxkMp3x13jBkNmqIgOxnVIpZ0WovylKJsjpSzFGlmQuJwR6WMxOTZoa6v7kxp+tzwKvB6Q==
-X-Received: by 2002:a05:6512:3a8f:b0:536:536f:c663 with SMTP id 2adb3069b0e04-538704986fcmr2778800e87.22.1727299902152;
-        Wed, 25 Sep 2024 14:31:42 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-537a86408dasm623111e87.144.2024.09.25.14.31.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2024 14:31:41 -0700 (PDT)
-Date: Thu, 26 Sep 2024 00:31:40 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	ulf.hansson@linaro.org, linus.walleij@linaro.org, catalin.marinas@arm.com, 
-	p.zabel@pengutronix.de, geert+renesas@glider.be, neil.armstrong@linaro.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, quic_varada@quicinc.com
-Subject: Re: [PATCH 8/8] arm64: defconfig: Enable IPQ5424 SoC base configs
-Message-ID: <h6ajhgv5rqabxupove4ge4253ywzbjyxoqq75c7ojmauudd3z5@hhhkbbzfmved>
-References: <20240913121250.2995351-1-quic_srichara@quicinc.com>
- <20240913121250.2995351-9-quic_srichara@quicinc.com>
- <4dxqbm4uuuuht5db7kt6faz2pdeodn224hd34np322divs22ba@dzmjveze3b4f>
- <2a16d5a2-17a5-4988-8a25-34ac10ff3d08@quicinc.com>
+	s=arc-20240116; t=1727333381; c=relaxed/simple;
+	bh=tqh/odynIxXOQ1waZJqQvC8VrmDUVp97OnoXEwg2YRc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=YkoqDSwKhlPikIubv0tBD0r1wyHTK/HF4Nc4+ltOXdBsjfIvhIAUtXfA7OpSP0irV2ZQVIERhTf8IjknlbdA37U8UxOcNlx58o5cNRTcHrBXRNTxpneIrqH/+h8h0R91Mriqc1NIrqTNEnuZ2cVVy8tS5SzF7Z7zISHNYNO+fo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=BlvMWbVT; arc=none smtp.client-ip=178.154.239.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+Received: from mail-nwsmtp-smtp-production-main-44.sas.yp-c.yandex.net (unknown [IPv6:2a02:6b8:c08:df8e:0:640:17d3:0])
+	by forward501b.mail.yandex.net (Yandex) with ESMTPS id 79BD86239B;
+	Thu, 26 Sep 2024 09:44:16 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-44.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id EiO1hD0g1uQ0-WgLdjpxD;
+	Thu, 26 Sep 2024 09:44:15 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
+	t=1727333055; bh=tqh/odynIxXOQ1waZJqQvC8VrmDUVp97OnoXEwg2YRc=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=BlvMWbVTj+3/JU4Q6bpN+tkgXHMNJpecWcUNulBHjSf/0TdosxuOgr7mJc4v10WAZ
+	 SJU8v+v2QUoqVXalDqusCX9K8hi5gd26TSVgXHb8abbMmZ0qwQ6zMIIi8TBXkh5wEi
+	 bRijCpBZhIMiOCJKj/DT8tlAhbtDNaJkUawHFtGI=
+Authentication-Results: mail-nwsmtp-smtp-production-main-44.sas.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
+Message-ID: <555edaf290dd3dd4e1c3cc635b41de05ed4af350.camel@maquefel.me>
+Subject: Re: [PATCH] dt-bindings: gpio: ep9301: Add missing
+ "#interrupt-cells" to examples
+From: Nikita Shubin <nikita.shubin@maquefel.me>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>, Arnd Bergmann
+	 <arnd@arndb.de>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski
+	 <brgl@bgdev.pl>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	 <conor+dt@kernel.org>
+Date: Thu, 26 Sep 2024 09:44:14 +0300
+In-Reply-To: <20240925173510.1907048-1-robh@kernel.org>
+References: <20240925173510.1907048-1-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2a16d5a2-17a5-4988-8a25-34ac10ff3d08@quicinc.com>
+X-Yandex-Filter: 1
 
-On Thu, Sep 26, 2024 at 12:34:56AM GMT, Sricharan Ramabadhran wrote:
-> 
-> 
-> On 9/13/2024 6:23 PM, Dmitry Baryshkov wrote:
-> > On Fri, Sep 13, 2024 at 05:42:50PM GMT, Sricharan R wrote:
-> > > From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> > > 
-> > > Enable the clock and pinctrl configs for Qualcomm IPQ5332 SoC
-> > 
-> > Please name the device rather than the platform. The defconfig affects
-> > all users, so it should be justified.
-> > 
-> Sorry, to understand correctly, you mean to use the board name here ?
+SGkgUm9iIQoKVGhhbmsgeW91IQoKUmV2aWV3ZWQtYnk6IE5pa2l0YSBTaHViaW4gPG5pa2l0YS5z
+aHViaW5AbWFxdWVmZWwubWU+CgpPbiBXZWQsIDIwMjQtMDktMjUgYXQgMTI6MzUgLTA1MDAsIFJv
+YiBIZXJyaW5nIChBcm0pIHdyb3RlOgo+IEZyb206IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5v
+cmc+Cj4gCj4gRW5hYmxpbmcgZHRjIGludGVycnVwdF9wcm92aWRlciBjaGVjayByZXZlYWxzIHRo
+ZSBleGFtcGxlcyBhcmUKPiBtaXNzaW5nCj4gdGhlICIjaW50ZXJydXB0LWNlbGxzIiBwcm9wZXJ0
+eSBhcyBpdCBpcyBhIGRlcGVuZGVuY3kgb2YKPiAiaW50ZXJydXB0LWNvbnRyb2xsZXIiLgo+IAo+
+IFNvbWUgb2YgdGhlIGluZGVudGF0aW9uIGlzIG9mZiwgc28gZml4IHRoYXQgdG9vLgo+IAo+IFNp
+Z25lZC1vZmYtYnk6IFJvYiBIZXJyaW5nIChBcm0pIDxyb2JoQGtlcm5lbC5vcmc+Cj4gLS0tCj4g
+wqBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bpby9ncGlvLWVwOTMwMS55YW1s
+IHwgOSArKysrKystLQo+IC0KPiDCoDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDMg
+ZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9ncGlvL2dwaW8tZXA5MzAxLnlhbWwKPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9ncGlvL2dwaW8tZXA5MzAxLnlhbWwKPiBpbmRleCBkYWFkZmI0OTI2YzMuLjNh
+MTA3OWQ2ZWUyMCAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZ3Bpby9ncGlvLWVwOTMwMS55YW1sCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2dwaW8vZ3Bpby1lcDkzMDEueWFtbAo+IEBAIC03Myw5ICs3MywxMCBAQCBleGFt
+cGxlczoKPiDCoMKgwqDCoMKgwqAgcmVnLW5hbWVzID0gImRhdGEiLCAiZGlyIiwgImludHIiOwo+
+IMKgwqDCoMKgwqDCoCBncGlvLWNvbnRyb2xsZXI7Cj4gwqDCoMKgwqDCoMKgICNncGlvLWNlbGxz
+ID0gPDI+Owo+IC3CoMKgwqDCoMKgwqDCoCBpbnRlcnJ1cHQtY29udHJvbGxlcjsKPiAtwqDCoMKg
+wqDCoMKgwqAgaW50ZXJydXB0LXBhcmVudCA9IDwmdmljMT47Cj4gLcKgwqDCoMKgwqDCoMKgIGlu
+dGVycnVwdHMgPSA8Mjc+Owo+ICvCoMKgwqDCoMKgIGludGVycnVwdC1jb250cm9sbGVyOwo+ICvC
+oMKgwqDCoMKgICNpbnRlcnJ1cHQtY2VsbHMgPSA8Mj47Cj4gK8KgwqDCoMKgwqAgaW50ZXJydXB0
+LXBhcmVudCA9IDwmdmljMT47Cj4gK8KgwqDCoMKgwqAgaW50ZXJydXB0cyA9IDwyNz47Cj4gwqDC
+oMKgwqAgfTsKPiDCoAo+IMKgwqDCoMKgIGdwaW9AODA4NDAwMDQgewo+IEBAIC04Nyw2ICs4OCw3
+IEBAIGV4YW1wbGVzOgo+IMKgwqDCoMKgwqDCoCBncGlvLWNvbnRyb2xsZXI7Cj4gwqDCoMKgwqDC
+oMKgICNncGlvLWNlbGxzID0gPDI+Owo+IMKgwqDCoMKgwqDCoCBpbnRlcnJ1cHQtY29udHJvbGxl
+cjsKPiArwqDCoMKgwqDCoCAjaW50ZXJydXB0LWNlbGxzID0gPDI+Owo+IMKgwqDCoMKgwqDCoCBp
+bnRlcnJ1cHQtcGFyZW50ID0gPCZ2aWMxPjsKPiDCoMKgwqDCoMKgwqAgaW50ZXJydXB0cyA9IDwy
+Nz47Cj4gwqDCoMKgwqAgfTsKPiBAQCAtMTI3LDYgKzEyOSw3IEBAIGV4YW1wbGVzOgo+IMKgwqDC
+oMKgwqDCoCBncGlvLWNvbnRyb2xsZXI7Cj4gwqDCoMKgwqDCoMKgICNncGlvLWNlbGxzID0gPDI+
+Owo+IMKgwqDCoMKgwqDCoCBpbnRlcnJ1cHQtY29udHJvbGxlcjsKPiArwqDCoMKgwqDCoCAjaW50
+ZXJydXB0LWNlbGxzID0gPDI+Owo+IMKgwqDCoMKgwqDCoCBpbnRlcnJ1cHRzLWV4dGVuZGVkID0g
+PCZ2aWMwIDE5PiwgPCZ2aWMwIDIwPiwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8JnZpYzAgMjE+LCA8JnZpYzAgMjI+LAo+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDwmdmlj
+MSAxNT4sIDwmdmljMSAxNj4sCgo=
 
-Yes, the board which is generally accessible, if possible. You are
-increasing kernel size for everybody using defconfig, so at least it
-should be obvious, who is benefiting from that.
-
-> 
-> > > 
-> > > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> > > Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> > 
-> > Usual comment.
-> ok, will fix.
-> 
-> Regards,
->  Sricharan
-
--- 
-With best wishes
-Dmitry
 
