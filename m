@@ -1,106 +1,99 @@
-Return-Path: <linux-gpio+bounces-10452-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10453-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02292986FB0
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 11:13:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2542A987102
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 12:07:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A45B41F236A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 09:13:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8FA991F26FFC
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 10:07:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA4A01AB50F;
-	Thu, 26 Sep 2024 09:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1DC518E760;
+	Thu, 26 Sep 2024 10:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="qQrcpIGx"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="jRW0hwMU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2368208CA;
-	Thu, 26 Sep 2024 09:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5901717838D
+	for <linux-gpio@vger.kernel.org>; Thu, 26 Sep 2024 10:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727341988; cv=none; b=rcrv0H3CyIo1OhBalwrqxgDo6QBdcJTRIO7+Y+3P9qPQKuXF55XMWYq4j4c7+F61bzpr+bdsaWGfGBvEM7c/DWy+btcqKB0iMPgFnUFcArg6h24gwEbTlm8ozDHaWSUEHppkjuOqYDEXEoi5je3/QFdIb7f9Lost/lNwdkZKNsg=
+	t=1727345232; cv=none; b=bYvqnj3Ya5fRanifSiG069Hf5lermsfTxFltRBQ4c+Haab11ETur6Kj0FA51FRsEB6xfQmJUrILolBjP1YxX8/lozBnL/uAJXf0XuE1V7PfTuPT4VoU2QsKf0b6j+ChLhOU+nJkIgFHmOytl4yP3Ncz/oehsVMZTRiGVCLesntw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727341988; c=relaxed/simple;
-	bh=1DXKU4XVx7IHEGgM38c09bSSv1/QCOHdnFhdWz0h454=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u8QwHqWgsyhaGnPIvqfBlZHs7MlGqkkuqCs+AO4bVqf4ZcxIkoNKENkDiQhthSZGHYc7OFsaJQQqIjREzob9dzgRmrS8iVcFn3JZawodSBh9CeCl6XzOj/li9T7nEhmjPajHNTskeEph6ujpi4lMbwI4Srvfo8Tf1RYrJjdDAbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=qQrcpIGx; arc=none smtp.client-ip=1.95.21.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=3yjqlUTIEAtxbRrw6H5T/QaTD7R7yHaK6W6FA1/EZ6M=;
-	b=qQrcpIGxCVy7R5JFeMwIiA4/WGUJY6PuCGaPFk/nKhdictzIn9es9mhm267iFk
-	5JyA2YAvJcXEN5UNBDDDd9w8rgrD4DcgbP2zecxcABbX1T9NJGaATUmmur/ipUa6
-	LAIRhJUlbjBrj/VzLLHjAj4+n0z3SV2EpO9DZIYJ3dk0E=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgBHx53tHfVm9kctAQ--.42439S3;
-	Thu, 26 Sep 2024 16:40:15 +0800 (CST)
-Date: Thu, 26 Sep 2024 16:40:12 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Esben Haabendal <esben@geanix.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] ARM: imx: Allow user to disable pinctrl
-Message-ID: <ZvUd7PekQ4pVXQGU@dragon>
-References: <20240506-imx-pinctrl-optional-v2-0-bdff75085156@geanix.com>
- <20240506-imx-pinctrl-optional-v2-1-bdff75085156@geanix.com>
- <CACRpkdaW14PgLXTRPHUjaLNKfCMRs+hpHrYyMiNaqSs+m0rhqw@mail.gmail.com>
+	s=arc-20240116; t=1727345232; c=relaxed/simple;
+	bh=LoPQpTOriQJdSu4vmV3g09146e46VFNs93UkugRgVN8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ewWSl2ucKy2g7r329JHWhTb2e3z0wu8i8VnhBDQSqPcXNj0yRYu9jZJ17Pd/Sz/LR7llLJwBPLTlwHXNhDZv18q+mpIOz13ntIJrLw64QQohaPSm/OZ9KVisO97hXoAx9p8WtWXKnm/U+1BqYUKIA+mC2A//sHijqAHU83SF6SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=jRW0hwMU; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=I//2n5gzqshCD+
+	iGlaHBOXkSgVg15p4QKo+GuiHMZ+E=; b=jRW0hwMUYkoWLzgXClIXWfuzqAhVzy
+	NzMZ1/0dGAbEYH9Mqm1glkoltQ1PsLuFR3zNGNezyoqW+Isi3sbqPiQdAorZKpZA
+	O+oLVtdESIu2IjnGufyWYWNwhp0c6vY1uwaJcXH5Y71kddvzL2Tt//va5kqa7amm
+	qqMjwerorr2ELZzKt5z9HYltOavM94HxlRcgvypF+gcuq7OAjxEyiHh4xvRYuBHf
+	VjKL0cN1mkJHHvS3EuGt2F98faHJnRhnOmcp33DSJQY6w31edhyy1alSD5evpXof
+	zjbLCwm6J8TZwAjkqGiSpilKb66rjMMBlt0hdnCncNV0l8iOv9ZLYOmQ==
+Received: (qmail 942439 invoked from network); 26 Sep 2024 12:07:05 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 26 Sep 2024 12:07:05 +0200
+X-UD-Smtp-Session: l3s3148p1@kf6I5gIjorggAwDPXzRXADDuo30Z+IZ9
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH] pinctrl: renesas: rza1: mark GPIOs as used
+Date: Thu, 26 Sep 2024 12:06:54 +0200
+Message-ID: <20240926100653.15015-2-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdaW14PgLXTRPHUjaLNKfCMRs+hpHrYyMiNaqSs+m0rhqw@mail.gmail.com>
-X-CM-TRANSID:Ms8vCgBHx53tHfVm9kctAQ--.42439S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZF4DCFW7AFyrXr4DXF4fKrg_yoWDurXE9F
-	4kta97C348CrW7X3Wqyr4avr9YvFW8Kr95Kr90qryrAa4DZFs3JFn5Jr45uw15Ja1kWr9r
-	Ar9Yqr93tFyjqjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUn9iSPUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCRlmZWb00uLnAgAAsU
 
-On Tue, Sep 24, 2024 at 09:45:32AM +0200, Linus Walleij wrote:
-> On Mon, May 6, 2024 at 12:24 PM Esben Haabendal <esben@geanix.com> wrote:
-> 
-> > Making pinctrl drivers and subsequently the pinctrl framework
-> > user-controllable, allows building a kernel without this.
-> > While in many (most) cases, this could make the system unbootable, it
-> > does allow building smaller kernels for those situations where picntrl
-> > is not needed.
-> >
-> > One such situation is when building a kernel for NXP LS1021A systems,
-> > which does not have run-time controllable pinctrl, so pinctrl framework
-> > and drivers are 100% dead-weight.
-> >
-> >
-> > Signed-off-by: Esben Haabendal <esben@geanix.com>
-> 
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> I guess this needs to be merged through the SoC tree.
+GPIOs showed up as unclaimed, so they could be muxed to something else
+even though they were in use. Mark GPIOs as claimed to avoid that.
 
-Hi Linus,
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ drivers/pinctrl/renesas/pinctrl-rza1.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Reading your comment[1], I was thinking that you will merge the series
-through pinctrl tree, no?
-
-Shawn
-
-[1] https://lore.kernel.org/linux-arm-kernel/CACRpkdYbOTXmap-vJy4JNZSaZnE=yzC35EPD2F=bD8gWdD8-GQ@mail.gmail.com/
+diff --git a/drivers/pinctrl/renesas/pinctrl-rza1.c b/drivers/pinctrl/renesas/pinctrl-rza1.c
+index 6527872813dc..797367ce5641 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rza1.c
++++ b/drivers/pinctrl/renesas/pinctrl-rza1.c
+@@ -19,6 +19,7 @@
+ #include <linux/ioport.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/pinctrl/pinconf-generic.h>
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/pinctrl/pinmux.h>
+@@ -750,6 +751,11 @@ static int rza1_pin_mux_single(struct rza1_pinctrl *rza1_pctl,
+ static int rza1_gpio_request(struct gpio_chip *chip, unsigned int gpio)
+ {
+ 	struct rza1_port *port = gpiochip_get_data(chip);
++	int ret;
++
++	ret = pinctrl_gpio_request(chip, gpio);
++	if (ret)
++		return ret;
+ 
+ 	rza1_pin_reset(port, gpio);
+ 
+-- 
+2.45.2
 
 
