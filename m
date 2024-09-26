@@ -1,251 +1,141 @@
-Return-Path: <linux-gpio+bounces-10463-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10464-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 685B09876A3
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 17:38:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F332987714
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 17:58:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56A0F1C24B5D
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 15:38:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BDA0E1C213FC
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 15:58:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 715AD14F126;
-	Thu, 26 Sep 2024 15:38:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D1815748F;
+	Thu, 26 Sep 2024 15:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kT0sjHlx"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="PkBXIQ5z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2487A14F9EA;
-	Thu, 26 Sep 2024 15:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13D6B14AD25;
+	Thu, 26 Sep 2024 15:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727365123; cv=none; b=QEkJEuhHCXegfa3moKfOlIoKXn4G5rP0ZqdO2pYDDuUPjXgSVk3iZU9W5RIJkkQB7WKQWEui6RQ/fMDuMYRCtp3AlR0CNNZ8ze8MvaLpK47IFRxZd9ZXuw5CxiR+s9SdYDrZqFZ5oDitSmpthSAc8sPv64x7Mc2uMQAb+CgaIlQ=
+	t=1727366307; cv=none; b=cIPQBbB44PPoVktM7ytsgi1z+2P6L0YOS3UcoJHMODlG/Vb+9zjm9r624ksBYGlmNys5re0CJMn8ZsziXFUJLqMLRD8aoq8FzSZQzUakXItlNYbw3mwVVaBiDgftVAaKwTQnSd2BgxVR0rXWHzQvSuP8cJVQA3TMeSNDVuVtmIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727365123; c=relaxed/simple;
-	bh=FPT2YAGW9+hHu5TfpaI/ztalhhPfkbiDDiuJtItLTMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cWWrrzLPSxuaPoK79bWzZUzHw2MDAS9CiGkcLB8iYFO42DjEvmIoaY9OAGksHP1rAaZ71a9iUg80OCwK6VFgvhFHsMMmkYfngbDxoG+qGOrPXUqBQiXCGpZR+uD60Da6dwRfHdC6vqsU3uZRw+s0mgGppmVT/Z2JDOCw3B/M84Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kT0sjHlx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 421CAC4CEC5;
-	Thu, 26 Sep 2024 15:38:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727365122;
-	bh=FPT2YAGW9+hHu5TfpaI/ztalhhPfkbiDDiuJtItLTMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kT0sjHlxptVEDKh1a/WtPaYDym9m/flo9vMG/YA4FiNaDb9w/gETJG5bCirboVjnu
-	 KY0whWWWvgBMcvuVJZxrZ2az8NZuo8dXL73pTN7V9MK50GjcOCk1s59/jyoqLuXvoU
-	 Jrt0LTTy5LEj6I7sc94la6XYYxh4rRpZPGpnciHqpAHvrI7WmCsbGL8FgTspvBLdEP
-	 LTiw7+MjJH1r5jX6eQXZ+EFrhxCjtHfe2cDQZ550TfAEhh6vJVn0EPHlwtJ/1tKwTU
-	 MfN8JCrH5KAjAdnZt9bM8yhgCpBwWbjxdKi93E9bmpDwW0LNlB9fHWoLQwVB0qraWH
-	 1rrrwU40i2UGQ==
-Date: Thu, 26 Sep 2024 16:38:37 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chester Lin <chester62515@gmail.com>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	NXP S32 Linux Team <s32@nxp.com>,
-	Christophe Lizzi <clizzi@redhat.com>,
-	Alberto Ruiz <aruizrui@redhat.com>,
-	Enric Balletbo <eballetb@redhat.com>
-Subject: Re: [PATCH v4 2/4] dt-bindings: gpio: add support for NXP
- S32G2/S32G3 SoCs
-Message-ID: <20240926-apricot-unfasten-5577c54a3e2f@spud>
-References: <20240926143122.1385658-1-andrei.stefanescu@oss.nxp.com>
- <20240926143122.1385658-3-andrei.stefanescu@oss.nxp.com>
+	s=arc-20240116; t=1727366307; c=relaxed/simple;
+	bh=Z74RK6GDCBvqMvBn80RCm+M97q5yuOtMvrMvDAcm1wE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QepXQIHw5mp7ECfpfuQ3A8rSWYL0KWavfhz8JPFvldnplSFJceB6VZb3TyTiJFiLZxuWD4qal4G+wrthSkLviRnjVZ5GET1mij5NKzOxK551eiaOIGzxjgLP/6UTLYANZlWtGJpE/4dgKN+k4FEu8IDhKwP16UWKdRP7UQMASGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=PkBXIQ5z; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=KWDkrjoA6/ykzZxErd71KJi/pEVk7YvEBlCsaqgAFKM=;
+	b=PkBXIQ5zu92i0OEw8adPlMF+Ud/z15PUZAcQIUxpQw0zuTrwxCICTJUxBvkspu
+	yPRElNL9gwbQvBlcEDgaJ0YV09IqY6m1NBGHDreVp4AlrE8IGUrKD48g8/k/hqkV
+	9cQ1vatY22Qfrx0icLtX7D+WsPJUqAdtKiuTl7ikbDP1o=
+Received: from [127.0.0.1] (unknown [27.18.107.33])
+	by gzsmtp3 (Coremail) with SMTP id sigvCgBHA3OFhPVmTIX3AA--.42449S2;
+	Thu, 26 Sep 2024 23:57:57 +0800 (CST)
+From: Ze Huang <18771902331@163.com>
+Subject: [PATCH v2 0/3] Add initial support for Canaan Kendryte K230
+ pinctrl
+Date: Thu, 26 Sep 2024 23:57:42 +0800
+Message-Id: <20240926-k230-pinctrl-v2-0-a9a36fba4b34@163.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="IJQMIqEvPuySmWWm"
-Content-Disposition: inline
-In-Reply-To: <20240926143122.1385658-3-andrei.stefanescu@oss.nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHeE9WYC/yWO0W4CIRREf2XDczFwYQU2TVOx3Z9oTINwbYkuu
+ oCNifHfpfp4JpkzcyUFc8RChu5KMv7FEo+pAbx0xP+69IM0hsYEGEhmQNA9CEZPMfmaD1Q4AWI
+ bVO8UklY5ZdzFy0P3tXlyxvncrPUZkq0rSP1xmmIdOobojFZMawcQlAiao1nqgEpI5YNX2Bu5U
+ /CvnrAU97gzdK8Vk8dUvwHsiknorfwY+XrFFRd2CZ9SglhzO9pRM/M+z4s2+EY2t9sdQpfY8e8
+ AAAA=
+X-Change-ID: 20240923-k230-pinctrl-3a323bd75a7e
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Conor Dooley <conor@kernel.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ Ze Huang <18771902331@163.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1727366277; l=2748;
+ i=18771902331@163.com; s=20240926; h=from:subject:message-id;
+ bh=Z74RK6GDCBvqMvBn80RCm+M97q5yuOtMvrMvDAcm1wE=;
+ b=RiVDUFaEWj4AaVpU1CxiOgApYCNY08NOdG4SO0RuHdUkQ0OkbPPblamkd5lVL6sXcCtc9mk+j
+ 39RFaDcgePpCI5z7QNAxg6r0MfKSMzfLhD7xOAQnQnuHwNPNIWFi4In
+X-Developer-Key: i=18771902331@163.com; a=ed25519;
+ pk=M4cXLTlQ3syp0aIw4PNbFtajcroq/y7WBxK2F/jsUWI=
+X-CM-TRANSID:sigvCgBHA3OFhPVmTIX3AA--.42449S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGry5uF48uw1kArW7Gw48WFg_yoW5Xw15pa
+	yakFZxCr1rJr4xtrWS9r4jkryaq3Z5Jr1Yg3W3K34DXF45uryDtws3Kr42qrWDGr4ayrWY
+	vr4DJryxur17ZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piPCztUUUUU=
+X-CM-SenderInfo: zpryllqrzqjjitr6il2tof0z/1tbiJw1momb1fqM32QAAsO
 
+This patch series introduces support for the pinctrl driver of the Canaan
+K230 SoC. The K230 SoC features 64 IO pins, each of which can be configured
+for up to five different functions.
 
---IJQMIqEvPuySmWWm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The controller manages the entire pin configuration and multiplexing
+through a single register, which control features such as schmitt trigger,
+drive strength, bias pull-up/down, input/output enable, power source, and
+mux mode.
 
-On Thu, Sep 26, 2024 at 05:31:19PM +0300, Andrei Stefanescu wrote:
-> Add support for the GPIO driver of the NXP S32G2/S32G3 SoCs.
->=20
-> Signed-off-by: Phu Luu An <phu.luuan@nxp.com>
-> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
-> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+The changes have been tested on CanMV-K230-V1.1 board.
 
-What's up with this SoB chain? You're the author what did
-the other 3 people do? Are they missing co-developed-by tags?
+The pin function definition can be found here [1], and most of the DTS data
+was converted from the vendor's code [2].
 
-> ---
->  .../bindings/gpio/nxp,s32g2-siul2-gpio.yaml   | 110 ++++++++++++++++++
->  1 file changed, 110 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/nxp,s32g2-siul=
-2-gpio.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.=
-yaml b/Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml
-> new file mode 100644
-> index 000000000000..4556505ee9c9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml
-> @@ -0,0 +1,110 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +# Copyright 2024 NXP
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/nxp,s32g2-siul2-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP S32G2 SIUL2 GPIO controller
-> +
-> +maintainers:
-> +  - Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
-> +  - Larisa Grigore <larisa.grigore@nxp.com>
-> +  - Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-> +
-> +description:
-> +  Support for the SIUL2 GPIOs found on the S32G2 and S32G3
-> +  chips. It includes an IRQ controller for all pins which have
-> +  an EIRQ associated.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: nxp,s32g2-siul2-gpio
-> +      - items:
-> +        - const: nxp,s32g3-siul2-gpio
-> +        - const: nxp,s32g2-siul2-gpio
-> +
-> +  reg:
-> +    items:
-> +      - description: PGPDO (output value) registers for SIUL2_0
-> +      - description: PGPDO (output value) registers for SIUL2_1
-> +      - description: PGPDI (input value) registers for SIUL2_0
-> +      - description: PGPDI (input value) registers for SIUL2_1
-> +      - description: EIRQ (interrupt) configuration registers from SIUL2=
-_1
-> +      - description: EIRQ IMCR registers for interrupt muxing between pa=
-ds
-> +
-> +  reg-names:
-> +    items:
-> +      - const: opads0
-> +      - const: opads1
-> +      - const: ipads0
-> +      - const: ipads1
-> +      - const: eirqs
-> +      - const: eirq-imcrs
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  gpio-ranges:
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  gpio-reserved-ranges:
-> +    minItems: 2
-> +
-> +patternProperties:
-> +  "-hog(-[0-9]+)?$":
-> +    required:
-> +      - gpio-hog
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +  - gpio-ranges
-> +  - gpio-reserved-ranges
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    gpio@4009d700 {
-> +        compatible =3D "nxp,s32g2-siul2-gpio";
-> +        reg =3D <0x4009d700 0x10>,
-> +              <0x44011700 0x18>,
-> +              <0x4009d740 0x10>,
-> +              <0x44011740 0x18>,
-> +              <0x44010010 0xb4>,
-> +              <0x44011078 0x80>;
+Changes since v1:
+- bindings: drop unecessary ref and drop unused labels in dt example
+- driver: set remap_config to const
+- driver: fix double free of of_node_put
+- driver: move probe-related code closer to the probe() function
+- driver: drop unlikely MMIO error message and handle correctly minor errors
+- driver: replace `for_each_child_of_node` with `for_each_child_of_node_scoped`
+- dts: place pinctrl nodes in canmv board level file
 
-Huh, I only noticed this now. Are you sure that this is a correct
-representation of this device, and it is not really part of some syscon?
-The "random" nature of the addresses  and the tiny sizes of the
-reservations make it seem that way. What other devices are in these
-regions?
+Link to v1: https://lore.kernel.org/linux-riscv/20240916063021.311721-1-18771902331@163.com/
 
-Additionally, it looks like "opads0" and "ipads0" are in a different
-region to their "1" equivalents. Should this really be represented as
-two disctint GPIO controllers?
+Link: https://developer.canaan-creative.com/k230/dev/_downloads/a53655a81951bc8a440ae647be286e75/K230_PINOUT_V1.1_20230321.xlsx [1]
+Link: https://github.com/kendryte/k230_sdk/blob/main/src/little/uboot/arch/riscv/dts/k230_canmv.dts [2]
 
+Signed-off-by: Ze Huang <18771902331@163.com>
+---
+Ze Huang (3):
+      dt-bindings: pinctrl: Add support for canaan,k230 SoC
+      pinctrl: canaan: Add support for k230 SoC
+      riscv: dts: canaan: Add k230's pinctrl node
 
-Cheers,
-Conor.
+ .../bindings/pinctrl/canaan,k230-pinctrl.yaml      | 127 ++++
+ arch/riscv/boot/dts/canaan/k230-canmv.dts          | 304 ++++++++++
+ arch/riscv/boot/dts/canaan/k230-pinctrl.h          |  18 +
+ arch/riscv/boot/dts/canaan/k230.dtsi               |   6 +
+ drivers/pinctrl/Kconfig                            |  10 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-k230.c                     | 643 +++++++++++++++++++++
+ 7 files changed, 1109 insertions(+)
+---
+base-commit: 0eea987088a22d73d81e968de7347cdc7e594f72
+change-id: 20240923-k230-pinctrl-3a323bd75a7e
+prerequisite-message-id: <tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq.com>
+prerequisite-patch-id: 704efc6e76814e1877748959d7319d558c8386c1
+prerequisite-patch-id: c2144cf468c57b856830a61615ba6ba501e8ec58
+prerequisite-patch-id: ced4a01ccd8ddab2fd308d543ddf47bd1641518a
+prerequisite-patch-id: f8b983b301d0c14f1448b9e4c321262a509e061e
+prerequisite-patch-id: 834b65b6a2b037daed5cffc6a41963622568dc9c
+prerequisite-patch-id: 2401703b57448c9ea2c3dc7650b4502491a28944
 
-> +        reg-names =3D "opads0", "opads1", "ipads0",
-> +                    "ipads1", "eirqs", "eirq-imcrs";
-> +        gpio-controller;
-> +        #gpio-cells =3D <2>;
-> +                      /* GPIO 0-101 */
-> +        gpio-ranges =3D <&pinctrl 0 0 102>,
-> +                      /* GPIO 112-190 */
-> +                      <&pinctrl 112 112 79>;
-> +        gpio-reserved-ranges =3D <102 10>, <123 21>;
-> +        interrupts =3D <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-controller;
-> +        #interrupt-cells =3D <2>;
-> +    };
-> --=20
-> 2.45.2
->=20
->=20
+Best regards,
+-- 
+Ze Huang <18771902331@163.com>
 
---IJQMIqEvPuySmWWm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZvV//QAKCRB4tDGHoIJi
-0uOxAQCvz6m4Nw9QLswXja2k1N2xfO+ZWjULc/Bx8JXrdJFUdwEA6cM/JPQkNWzg
-eS7vasQdUA/KkS2yHj4qhqW9izZk1gQ=
-=aPrA
------END PGP SIGNATURE-----
-
---IJQMIqEvPuySmWWm--
 
