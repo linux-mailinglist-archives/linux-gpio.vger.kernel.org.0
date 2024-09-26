@@ -1,109 +1,82 @@
-Return-Path: <linux-gpio+bounces-10470-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10471-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BEF698788A
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 19:44:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D137987A5D
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 23:16:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C0B5BB25A76
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 17:44:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A098BB24BC1
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 21:16:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D833F1581F3;
-	Thu, 26 Sep 2024 17:43:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D4A1186613;
+	Thu, 26 Sep 2024 21:16:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TR1exI49"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1M1gRS4"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C00C3FF1;
-	Thu, 26 Sep 2024 17:43:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3376E183CD6;
+	Thu, 26 Sep 2024 21:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727372639; cv=none; b=UwX5Hwx74hSW4TBL8PDUNJWdXYZqJ3csX7bp33ic0voiUcMd5zQsvI4Xrjj4YXM/PERLwapvEGElAHtxGN5gcr2iIaxkHkVo9n5NHgx/NnyngjCjTY7zqrvjOQ94/Gj8oR4hfMRj5SrzXCFagkxUsz5hQEx3/QWXqVe1YLnZlWI=
+	t=1727385370; cv=none; b=Hp0emmIuUePA0tR9ssrYZkkmcpvyDWIp22K4mMMfr1T3f4wECqjA6SfwVQsUf1gwuFHjONDl/bvdZ9zoy1SdOEKDa4bXn00ef/6NEaspqEkwzCoKsxlVDYxy/jeNX3I20m0lBWlnMaItwXHNs491t2HpbdBZzy9RqHRul6dSpWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727372639; c=relaxed/simple;
-	bh=nSJMx1a3h0ylmepdIO+5mpI1+TXEC1yBnwRtqqbSKog=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=uAfIV7aGmmmTwrZQR8/hP70PrySlrE694suMyq42neax+H3cYzzA8XOgOEdBCkF62KjszMP3q+E1Rt+aAQu13uMMhC/4mUMAIUJtxaY80cz/yErTZkWe0XfkKQaY+JIF9QDavrdfyUi/u6IinKQKEyS+V23XsLn7Gi7jtPb6pNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TR1exI49; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6C91C4CEC5;
-	Thu, 26 Sep 2024 17:43:58 +0000 (UTC)
+	s=arc-20240116; t=1727385370; c=relaxed/simple;
+	bh=UtnSPoa/rfPJxu9yzCby9GUs+YkJKRJDod5/XoTt8n8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kfcJdzPlipAGp1J7TfLzXQ4HBbZx/sElBqYJKPe0Ll1npo94yHhHtaDWl6gnPs5InPz695vp5HH1inO5j8xNLqVM8x+atxJ6EOmFvhfkOtecjm09ARrkwW7COSujsjidkx4oraDzepCacAtJUcRl/dr0QTomnybWKCQ81jkOVdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1M1gRS4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A8E4C4CEC5;
+	Thu, 26 Sep 2024 21:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727372639;
-	bh=nSJMx1a3h0ylmepdIO+5mpI1+TXEC1yBnwRtqqbSKog=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=TR1exI49vooulKRvJ3WH61RfLu4XXJY31khci3K/pY1pVXQ2B5s5umfCDOdyR8FXv
-	 l+y/0mD1wxdA7p3Tj/lJgLDOQb+zizpRBGTPrOwTj2/naItEvR98SKllUHOKxVX4u3
-	 60dIvEhBbvt+ekP2pA8ZScgaOF94F0MkPnybmkevBMojBpb01bM4knqk9o3ZtidviM
-	 YI8vGltAP2AUMJYcdR4xLPL0ZFhYuUvWFy4OXA2376A3A96cHTm9Bk1v5aanMKZUSh
-	 IpvbWaJsGkMn/S1HuofkVbQCu5qEnryOZwOFToG8tuP0s5U60Z7h5xXwB7K5cO+d5z
-	 4EeqxWVU2TKiA==
-Date: Thu, 26 Sep 2024 12:43:58 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1727385369;
+	bh=UtnSPoa/rfPJxu9yzCby9GUs+YkJKRJDod5/XoTt8n8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u1M1gRS4zEXgjIuvwtzqhdq1GCzP7673b3s0fJ+MYE9D68Nmi063/buFoGEmDDNmH
+	 iw0OtLtiTIkjkqAQgxGoDe6Z/BNH9beEPa9352lVbZycYi6lQi7J5r++ynwESJ9AeG
+	 gvwJXbXGZU3haGYXK8dTI2PmoGfgHVCE31h9K3dvgQ4/kDvJM8BqG8jL9o1ybhb21L
+	 Co0qclaaQgmb46V0pdeD0e5m9Te5Xs9RaFlM+lWGtWBrPNCAWrnXnkx15eS9sWFlfg
+	 SyGiIjk34GyQPDFKPtr0ABtlQZaazSsrVoA4ccLi1+150lDV6nWXHysXpiZkZWxxbt
+	 H7/Kp6dYHbQVA==
+Date: Thu, 26 Sep 2024 16:16:07 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Ze Huang <18771902331@163.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>, linux-gpio@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>, linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Conor Dooley <conor@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Add support for canaan,k230
+ SoC
+Message-ID: <172738536551.3022684.2015400552929682489.robh@kernel.org>
+References: <20240926-k230-pinctrl-v2-0-a9a36fba4b34@163.com>
+ <20240926-k230-pinctrl-v2-1-a9a36fba4b34@163.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-Cc: Matthias Brugger <mbrugger@suse.com>, NXP S32 Linux Team <s32@nxp.com>, 
- Chester Lin <chester62515@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
- devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>, 
- Enric Balletbo <eballetb@redhat.com>, linux-gpio@vger.kernel.org, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20240926143122.1385658-3-andrei.stefanescu@oss.nxp.com>
-References: <20240926143122.1385658-1-andrei.stefanescu@oss.nxp.com>
- <20240926143122.1385658-3-andrei.stefanescu@oss.nxp.com>
-Message-Id: <172737263813.2649710.12417820280324530724.robh@kernel.org>
-Subject: Re: [PATCH v4 2/4] dt-bindings: gpio: add support for NXP
- S32G2/S32G3 SoCs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240926-k230-pinctrl-v2-1-a9a36fba4b34@163.com>
 
 
-On Thu, 26 Sep 2024 17:31:19 +0300, Andrei Stefanescu wrote:
-> Add support for the GPIO driver of the NXP S32G2/S32G3 SoCs.
+On Thu, 26 Sep 2024 23:57:43 +0800, Ze Huang wrote:
+> Add device tree binding details for Canaan K230 pinctrl device.
 > 
-> Signed-off-by: Phu Luu An <phu.luuan@nxp.com>
-> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
-> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+> Signed-off-by: Ze Huang <18771902331@163.com>
 > ---
->  .../bindings/gpio/nxp,s32g2-siul2-gpio.yaml   | 110 ++++++++++++++++++
->  1 file changed, 110 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml
+>  .../bindings/pinctrl/canaan,k230-pinctrl.yaml      | 127 +++++++++++++++++++++
+>  1 file changed, 127 insertions(+)
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml:25:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
-
-dtschema/dtc warnings/errors:
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240926143122.1385658-3-andrei.stefanescu@oss.nxp.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 
