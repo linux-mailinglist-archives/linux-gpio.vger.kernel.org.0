@@ -1,164 +1,111 @@
-Return-Path: <linux-gpio+bounces-10487-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10488-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5583D987FA0
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 09:42:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14E0E987FF2
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 10:04:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11800282A8C
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 07:42:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4AB81F22E69
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 08:04:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EFA41891B5;
-	Fri, 27 Sep 2024 07:42:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400A5189524;
+	Fri, 27 Sep 2024 08:04:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZQL33wck"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kqp8Bjha"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C74D1865FB
-	for <linux-gpio@vger.kernel.org>; Fri, 27 Sep 2024 07:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA66C189506
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Sep 2024 08:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727422950; cv=none; b=kVc7SBtOtUx3zAkAveM8/6zVVlhG7VKu2BoPHoRVrW02Z1c5CMuH+fwFfRr7I8afmcUbFjR7s8IutzuSBSd6TwzyNnRJBCPtJfDVfJtrvMjf08vGp8XyWkqgguDbg/Vgr8jIqeIuwUKqNXb1/HXfn6nHaEluozCnm7mSnimmqD0=
+	t=1727424241; cv=none; b=SVysFfRXNm3ApYJkPYUMw2OX47L15sob6OCsfb5LkvvMjcQ5Mxnis1vLFbF9H56i8otQ97WUsH8zZUqukVXUICmHjNyT8hcgKl8bMVVCOsuwTQo49kDdKb1Y47svWRaF3OpdN+hgkdjEyq7cYZGIWhTXPBCgTpjDmOLrIULeDMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727422950; c=relaxed/simple;
-	bh=WFc3Z2Ci7iK0/myrsyoCWo27iBCWNjw4NgcDOnuMOxU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mmwMG8/69NtlcIiFGsketq6ScmatWcXWb9Da2lFDOGnbniwLWkAsoFPyMRGZWXo7ElNC3t754whk9Nbw16i45Q7PvSJP1p4kzYwIGXG/fxd4e4163KmkCRD8zlCl7zgWHr/sy0MDaS1t3Qh2REMHRT1g1+IoB3JsAkNuEZ7jYhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZQL33wck; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1727424241; c=relaxed/simple;
+	bh=6a93xl8FpW2INESzkmGVVW5uh2N5rJCXS8bzNc5Hiek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lEnxe3ooEENGdyvyrWVbJKWwuLyafJMcpV5GvnCB20FoJQcIWKiuQaz0VFokDDhhefwS/fJNhbpUo2+8iELPWi6sG26yhs+C5Hc1nccmYj1AQQ5JRnWsFWn8jY3IFmI/HWUnsJ3ki8F7t9I1InRQXlWR0x/vwlH6WyW7ZUsU/wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kqp8Bjha; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42ca6ba750eso11613795e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Sep 2024 00:42:27 -0700 (PDT)
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2e0b9bca173so516052a91.0
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Sep 2024 01:03:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1727422946; x=1728027746; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DOdUobVOVtgiYgdW4L8/ozYZLZuDj7lViLzqUU9bECY=;
-        b=ZQL33wckrAnc9qqL0X8NPUuoKfh0zlK7KUiKPwHdLxtHR58LDq8EwIUcwwPTtIyzNC
-         PEHkhYnSu904jLbleyTFWMtVQUyQH5C/PtGOWGO91F9yymOUT5qBzEv7aWICFRKvLMSw
-         Y8pNudQfFQeR7xsiScYFJLSMvCzrFZ4nwLIS4pzk9FXXmDESIh7yqV7RP+swm4EvhCm1
-         pEqQurQtGZGehPkbieB1UFC3jNHD0f8EbNR2rwj27TD2w/3PyLldOAxsbiIUP0ioDym2
-         wymx+ZZWb+eTulq3XkuipdKZrz2O3akZMWFNBnEtEJxjlQCm0UrRXHqrbQ2rnIDrd793
-         p6Vw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1727424239; x=1728029039; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6a93xl8FpW2INESzkmGVVW5uh2N5rJCXS8bzNc5Hiek=;
+        b=kqp8BjhaHuzyRI9FI9/945t5uanM+8AYKy3XlWLZXsHIoE/5FFb3IKOpmAcr3iEkoT
+         qVDd8v9BzOr7NOBZiQNzpgLAHOjIXI7H+Xx+0uv/9Lz+g1n4d3dsIWaZpDfKuOjEdkr/
+         PUWgBCLPpLUQnvhGlHKEAZjilc/D1BEbypQHo/FeAB+nBhHp+IYsSmfAmy83M2NCDFI7
+         VFatw4z0Hdc03XYPekRF67eFZwHv78fSAU+AHVB3HzS/X8Wjlol1hh7zlkUJdcxtYoqI
+         +ET9zXkKhdrnomIRIS+qZMYDIZ4p4vNUGWmT1yEqja1zQrdfUKh+dvpI5qjdTCVVP6tL
+         36Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727422946; x=1728027746;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DOdUobVOVtgiYgdW4L8/ozYZLZuDj7lViLzqUU9bECY=;
-        b=FfX7lrpUGCVqlWIfkkp/MW3fu20QtqrLm6lPgqiu2BIq09LBhRPD2Er3fXPdhKrWGR
-         VCHA8pjoAQLw4xtKj8mFxvP8C6ja6d2s2+DURly4QFcZNOV4yJRKLaMpoN5PGeCX3ALS
-         Za8mLW9/KNTtD5hQ9bIFslBdsZdGj8mPro0Q9bZclVOcs4I8yMPhn+JPmmZMBEM0O2D1
-         ZjJHHHj4VXeefiTB22dPqVsJ+K9Zt+o/+h7g6IwgaYug2mBxig6WIKfvksk5u0Anu/Z+
-         9sKCRDeBiUnwmg8I2ZqKrM/DRRKZBA41STvS29dRz+0P1/sLSqvCgKWtrrmUbH3rZX3M
-         RZIA==
-X-Gm-Message-State: AOJu0Yx3fvhDNTjUCGB1vw1ilPytUoUFHTWnIC7AvH4zg01YBw1cSoCD
-	pbYRV5NqsM5BwgBL9WFe1DpnNyG2C1kWHehWGwzQDaCRpuVENWoBc/wdZKLRIzs=
-X-Google-Smtp-Source: AGHT+IGTLNYx8CXWt5+mDv5PuKKxPV7lSlddClOvc1ENfOSqGWWc0UL48qHYTfSq1l5VF/dXqDa7tA==
-X-Received: by 2002:a05:600c:5117:b0:42c:b166:913 with SMTP id 5b1f17b1804b1-42f57fc9204mr13235475e9.11.1727422946272;
-        Fri, 27 Sep 2024 00:42:26 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:a28d:27a8:18cd:2c6f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e96a36760sm66541265e9.30.2024.09.27.00.42.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2024 00:42:25 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [RFC PATCH] gpio: sysfs: make the sysfs export behavior consistent
-Date: Fri, 27 Sep 2024 09:42:21 +0200
-Message-ID: <20240927074221.9985-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1727424239; x=1728029039;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6a93xl8FpW2INESzkmGVVW5uh2N5rJCXS8bzNc5Hiek=;
+        b=pW59+ysJ1MHwHl1d2BpnScBHMZ7m1Udusl5/v3MOGQ4iJZ9h0RnUKpiqg2/G4fDlZX
+         QwTo2AYhI/76aUF6QeySAwBm+wovWVn4ju0xOYtaYSJl+SSN6NArXn7Bx05/M4gcOQd3
+         m9sbME2F47rfVoHtrmBgRIaXaUvK3RC3eJTlT+QhEIZxRlxSJY+nijyLB28BcRhoXBaB
+         OIF0mhmmpqHdDIO+PMXjBM6/9XrtlWyvFY6KmbSIbSwUaQlIpxHzp3ahd8CRB+LQ4ybZ
+         YCNyiCRDjRwdrVPRsja2P6nZ46cA6VxMw8QEj2AW8SqsBErQGjzpArWWK/yDjsb7pf9c
+         jvaA==
+X-Gm-Message-State: AOJu0YzofGrq454+3mHcYiBbCrQCV1IbfN2GX/zsj+e+IPEqQYop9AUd
+	o1ALe+emufs/E/SK9zOLdD8VG4shwJlORozbXI+eBwXoLKOyFRM0LmK5HB6vlbLEX5GKtrqNKZH
+	Kl6NAsVh+k/T5gv5mYLvPTAy15G/LhSl2F9AucQ==
+X-Google-Smtp-Source: AGHT+IEcFT8vmej2xsz2ybsoir+SHIS4Ii2TyEWuN7zTzvYYQbbs2fcOGo46UjPmTn5RiUGIHJn1tKwQt5c0Vi/YTJ4=
+X-Received: by 2002:a17:90b:96:b0:2e0:caea:8466 with SMTP id
+ 98e67ed59e1d1-2e0caea92f9mr773491a91.27.1727424238941; Fri, 27 Sep 2024
+ 01:03:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240923182550.3724996-1-vfazio@xes-inc.com>
+In-Reply-To: <20240923182550.3724996-1-vfazio@xes-inc.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 27 Sep 2024 10:03:45 +0200
+Message-ID: <CAMRc=MefY_J3n=wFJDwzL+4s8f52ECGxNB5UWGcnD-ncD2cnQg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] bindings: python: tests: skip some reconfigure
+ tests on older kernels
+To: Vincent Fazio <vfazio@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Vincent Fazio <vfazio@xes-inc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Sep 23, 2024 at 8:27=E2=80=AFPM Vincent Fazio <vfazio@gmail.com> wr=
+ote:
+>
+> Commit 40db20e added tests to ensure that lines that were either missing
+> from a reconfigure call or were included but had no LineSettings defined
+> would _not_ change configuration.
+>
+> However, this functionality requires the changes from kernel commit
+> b44039638 to work as expected. This commit exists in the 6.10 kernel and
+> was backported to 6.9.8 [0].
+>
+> Now, these tests are skipped if the kernel version is older than 6.9.8.
+>
+> [0]: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/com=
+mit/?id=3Dd972e7b24a50d1f89967d5bffc3147810af9222d
+> Fixes: 40db20eec045 ("bindings: python: tests: extend reconfiguration tes=
+ts")
+> Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
+> ---
 
-For drivers or board files that set gpio_chip->names, the links to the
-GPIO attribute group created on sysfs export will be named after the
-line's name set in that array. For lines that are named using device
-properties, the names pointer of the gpio_chip struct is never assigned
-so they are exported as if they're not named.
+As discussed on github: I prefer the older stable kernel branches to
+have the relevant patch from Kent backported than to start adding this
+kind of unmaintainable ifdiffery to tests. I see Greg already started
+picking up the backports so let's drop this for now.
 
-The ABI documentation does not mention the former behavior and given
-that the majority of modern systems use device-tree, ACPI or other way
-of passing GPIO names using device properties - bypassing gc->names -
-it's better to make the behavior consistent by always exporting lines as
-"gpioXYZ".
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Story time:
-
-I decided to learn rust. I figured I'd best find me a project to work on
-that would involve some proper coding but wouldn't have much impact on
-anything important when I inevitably get it wrong the first few times.
-
-I decided to write a sysfs-to-libgpiod compatibility layer based on
-FUSE. Since Rust is hard, I started prototyping the thing in python
-first to at least have the logic nailed down before I tackle the rust
-part.
-
-When working on the exporting part, I vagely recalled that when I used
-to work with GPIO sysfs somewhere between 2009 and 2012 (still with
-board-file based systems), named lines exported with sysfs would appear
-under /sys/class/gpio as symbolic links named like the line and not the
-usual "gpioXYZ". I realized that this is not the case now.
-
-Quick glance at the sysfs code reveals that I didn't dream it up, but
-that behavior is reserved to drivers setting gc->names. This has been
-slowly going out of fashion with device-tree and device properties.
-
-We could easily restore the behavior for everybody by taking the name
-from the descriptor we already have access to or even just assign
-gc->names from descriptors in gpiolib core but first: the sysfs ABI
-document does not mention the named links at all and second: given how
-this has naturally effectively been phased out over the years, it would
-probably cause more harm than good when the exported names suddenly
-change for existing users.
-
-I'm proposing to just drop the named links alogether.
-
-Let me know what you think.
-
- drivers/gpio/gpiolib-sysfs.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 17ed229412af..643620d261f5 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -577,7 +577,7 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 	struct gpio_device *gdev;
- 	struct gpiod_data *data;
- 	struct device *dev;
--	int status, offset;
-+	int status;
- 
- 	/* can't export until sysfs is available ... */
- 	if (!class_is_registered(&gpio_class)) {
-@@ -626,10 +626,6 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 	else
- 		data->direction_can_change = false;
- 
--	offset = gpio_chip_hwgpio(desc);
--	if (guard.gc->names && guard.gc->names[offset])
--		ioname = guard.gc->names[offset];
--
- 	dev = device_create_with_groups(&gpio_class, &gdev->dev,
- 					MKDEV(0, 0), data, gpio_groups,
- 					ioname ? ioname : "gpio%u",
--- 
-2.43.0
-
+Bart
 
