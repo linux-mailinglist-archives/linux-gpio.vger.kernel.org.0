@@ -1,266 +1,164 @@
-Return-Path: <linux-gpio+bounces-10486-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10487-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50C37987F44
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 09:20:23 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5583D987FA0
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 09:42:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1EB3E1C22D7C
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 07:20:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11800282A8C
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 07:42:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F55017E000;
-	Fri, 27 Sep 2024 07:20:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EFA41891B5;
+	Fri, 27 Sep 2024 07:42:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="lc/wKUky"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZQL33wck"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2047.outbound.protection.outlook.com [40.107.241.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF5A1D5ADE;
-	Fri, 27 Sep 2024 07:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727421612; cv=fail; b=WKEbiGy4/r4ooDSvE5EVbdk4+F+Dll/84TluAP1qAExX2B1qNyd7kLFYdIhOCTTEu/ttoJj54Aqy95+2DUX+5qonw4d90R+W+5Qxwm8t4Plc8/UYFCVvQQ6occYPkm0Njf9v/2B5YjzTLPnfb1grjYdFPaw6XI6yJphki7reG5o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727421612; c=relaxed/simple;
-	bh=yvwBVEVfL60FT4XC0FOeoSlTZ5KAIogDCGx708pQK1I=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CeGrhSy6NUf7Lfl1kkbgbXYVwq+WidBj19iaTYL1hlAyO96aN52NpaWXRQmkh2Myv983/SYwA6n8HdHQWmPe5Zxz7LqVa0OaSOdwJHLOW0+W0A6maSjmF9fr0n9YzJAbwBUtVJEIe8wn0FxzjmlOT9n0YgCzMxYJG474d08mDmU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=lc/wKUky; arc=fail smtp.client-ip=40.107.241.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IabowfnQ0KuwEb8EMDCHxJePlQxmgMTp3uqc7A69ysTkuZ1PhfOZfft/rzTP5iZwd4bklMj/q8X+bXH5WjdqhiGEOInQXUrQi3uU6T8f3elA3FbfM95Vqj4NC97iZruS4t6mi6NWyhRcBlXVmlFGwelaQtaDKVFXm6hNeCMp29Ema6l0SJtuCqLGeAT3t7Y635cqR2NZ6XLiC8C04eppILulznEenRMOFUbrvA1+zfve6tASzruHjRxpurV47cK5XgYpqq7owqIxwXDmMeISbpma/IJbyvpLLmn4vHe6Kf54dMNFr+ziVglTCHB2WwM/GlfFyJcKCVV4QJBr1+s+Nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4CvyRDFKNYwZwedg0OEZmCxfeGX81gSuaIz18bgWQQ0=;
- b=k8/CZKZGcTlYzemqj5YeNwLXKNkeOgyegrtEke9AK9UwqJIDnCf5GE7VBAmpmskdaT2ZlFZACivzPWt8kLVjC0pSYEv9/TKfMFDnI8EnTP76RGyZagcmg+oLj6Mnv1ZLtUw2lKADxDOpMpdPGGKNRD8Nh/jlsr3WkbGqSD1rfgRoclO3HFnvw5VieUeQayqF7ga6eAa6nQ107dbwn9DdwWVBlr5NSkF9V/powqjS6HFj5UcpVZvMG5TJudX9dWvYh8q5BuiurWddMg7QUArkWIl1F1p/c2IXZhpkDcEVjt1ppH6BIrSzBlt2h01pH2wTw4jWlfnF49kodqLCLBWMrg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4CvyRDFKNYwZwedg0OEZmCxfeGX81gSuaIz18bgWQQ0=;
- b=lc/wKUkyMomzDjOupx+7Z3fGm6PDoLO5r3ryQbvJLtxZj3lG5hkNfYgNnyr+LKJGXfI97UXHWs/1JH2MFTzOQnb4r/3iJE2yayYbIFQnJGvbEcbw4SWovIDbX3PWTCc5G5amVVQQKBcVIX6KQtNN3Or3/UmLQaJNucXxqvgAgKjJ6k4BWK/bneyoNmhxFFirLLLfHz5gJfVkzuq8TRBD2A78JavVlYlpXsUBay3es9YbI6ZL6r2ToP3OfnFw6051hK32bp1L3CMTcX/yIItSuDMcticEz7nuYKhhgFZ+om5zYEZZzCZfbLTEbiHsn6oWJvdbU62Dmlk62AfW2Ik+uQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from AM9PR04MB8487.eurprd04.prod.outlook.com (2603:10a6:20b:41a::6)
- by AM0PR04MB6787.eurprd04.prod.outlook.com (2603:10a6:208:18a::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.21; Fri, 27 Sep
- 2024 07:20:06 +0000
-Received: from AM9PR04MB8487.eurprd04.prod.outlook.com
- ([fe80::6d7a:8d2:f020:455]) by AM9PR04MB8487.eurprd04.prod.outlook.com
- ([fe80::6d7a:8d2:f020:455%5]) with mapi id 15.20.7962.022; Fri, 27 Sep 2024
- 07:20:06 +0000
-Message-ID: <0db056b9-f420-40b7-8757-ed572c65c817@oss.nxp.com>
-Date: Fri, 27 Sep 2024 10:19:55 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] dt-bindings: gpio: add support for NXP S32G2/S32G3
- SoCs
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Matthias Brugger <mbrugger@suse.com>, NXP S32 Linux Team <s32@nxp.com>,
- Chester Lin <chester62515@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
- devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Christophe Lizzi
- <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>,
- Enric Balletbo <eballetb@redhat.com>, linux-gpio@vger.kernel.org,
- Linus Walleij <linus.walleij@linaro.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org
-References: <20240926143122.1385658-1-andrei.stefanescu@oss.nxp.com>
- <20240926143122.1385658-3-andrei.stefanescu@oss.nxp.com>
- <172737263813.2649710.12417820280324530724.robh@kernel.org>
-Content-Language: en-US
-From: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-In-Reply-To: <172737263813.2649710.12417820280324530724.robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS4P195CA0046.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:20b:65a::27) To AM9PR04MB8487.eurprd04.prod.outlook.com
- (2603:10a6:20b:41a::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C74D1865FB
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Sep 2024 07:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727422950; cv=none; b=kVc7SBtOtUx3zAkAveM8/6zVVlhG7VKu2BoPHoRVrW02Z1c5CMuH+fwFfRr7I8afmcUbFjR7s8IutzuSBSd6TwzyNnRJBCPtJfDVfJtrvMjf08vGp8XyWkqgguDbg/Vgr8jIqeIuwUKqNXb1/HXfn6nHaEluozCnm7mSnimmqD0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727422950; c=relaxed/simple;
+	bh=WFc3Z2Ci7iK0/myrsyoCWo27iBCWNjw4NgcDOnuMOxU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mmwMG8/69NtlcIiFGsketq6ScmatWcXWb9Da2lFDOGnbniwLWkAsoFPyMRGZWXo7ElNC3t754whk9Nbw16i45Q7PvSJP1p4kzYwIGXG/fxd4e4163KmkCRD8zlCl7zgWHr/sy0MDaS1t3Qh2REMHRT1g1+IoB3JsAkNuEZ7jYhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZQL33wck; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42ca6ba750eso11613795e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Sep 2024 00:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1727422946; x=1728027746; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DOdUobVOVtgiYgdW4L8/ozYZLZuDj7lViLzqUU9bECY=;
+        b=ZQL33wckrAnc9qqL0X8NPUuoKfh0zlK7KUiKPwHdLxtHR58LDq8EwIUcwwPTtIyzNC
+         PEHkhYnSu904jLbleyTFWMtVQUyQH5C/PtGOWGO91F9yymOUT5qBzEv7aWICFRKvLMSw
+         Y8pNudQfFQeR7xsiScYFJLSMvCzrFZ4nwLIS4pzk9FXXmDESIh7yqV7RP+swm4EvhCm1
+         pEqQurQtGZGehPkbieB1UFC3jNHD0f8EbNR2rwj27TD2w/3PyLldOAxsbiIUP0ioDym2
+         wymx+ZZWb+eTulq3XkuipdKZrz2O3akZMWFNBnEtEJxjlQCm0UrRXHqrbQ2rnIDrd793
+         p6Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727422946; x=1728027746;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DOdUobVOVtgiYgdW4L8/ozYZLZuDj7lViLzqUU9bECY=;
+        b=FfX7lrpUGCVqlWIfkkp/MW3fu20QtqrLm6lPgqiu2BIq09LBhRPD2Er3fXPdhKrWGR
+         VCHA8pjoAQLw4xtKj8mFxvP8C6ja6d2s2+DURly4QFcZNOV4yJRKLaMpoN5PGeCX3ALS
+         Za8mLW9/KNTtD5hQ9bIFslBdsZdGj8mPro0Q9bZclVOcs4I8yMPhn+JPmmZMBEM0O2D1
+         ZjJHHHj4VXeefiTB22dPqVsJ+K9Zt+o/+h7g6IwgaYug2mBxig6WIKfvksk5u0Anu/Z+
+         9sKCRDeBiUnwmg8I2ZqKrM/DRRKZBA41STvS29dRz+0P1/sLSqvCgKWtrrmUbH3rZX3M
+         RZIA==
+X-Gm-Message-State: AOJu0Yx3fvhDNTjUCGB1vw1ilPytUoUFHTWnIC7AvH4zg01YBw1cSoCD
+	pbYRV5NqsM5BwgBL9WFe1DpnNyG2C1kWHehWGwzQDaCRpuVENWoBc/wdZKLRIzs=
+X-Google-Smtp-Source: AGHT+IGTLNYx8CXWt5+mDv5PuKKxPV7lSlddClOvc1ENfOSqGWWc0UL48qHYTfSq1l5VF/dXqDa7tA==
+X-Received: by 2002:a05:600c:5117:b0:42c:b166:913 with SMTP id 5b1f17b1804b1-42f57fc9204mr13235475e9.11.1727422946272;
+        Fri, 27 Sep 2024 00:42:26 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:a28d:27a8:18cd:2c6f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e96a36760sm66541265e9.30.2024.09.27.00.42.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2024 00:42:25 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [RFC PATCH] gpio: sysfs: make the sysfs export behavior consistent
+Date: Fri, 27 Sep 2024 09:42:21 +0200
+Message-ID: <20240927074221.9985-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM9PR04MB8487:EE_|AM0PR04MB6787:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5000bdbe-74be-4fe7-1a1a-08dcdec4cfb3
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?S3RsVjFiL3d4bGZLaGw3eS95OHFrQkFIdzRxdlk2eXluKzhWVVAvc3UwQmVD?=
- =?utf-8?B?NmRTVXlJN2hXTEVIaGVaaFRTQ2tBWFR1OEFHdjQvUnRFUWw5QWZjdkhIb0U0?=
- =?utf-8?B?Z1dyWHEwRlVWYytwYXZjQzNBa2hhVW1kdWZ4b1QydHpmUjVNMnpMK2lWVWRk?=
- =?utf-8?B?NDRKQTdDc3l2MFBtNU9Xb0NkY1Z0aUxUaEdIam5HYjlHWlU5aitIM2pXWXc0?=
- =?utf-8?B?bVdlVEJMVVQzeS9adlhNMVFuWlFRRWErRHd5M0ZmOHNsMXZyQ2JydzFSUEVy?=
- =?utf-8?B?elhVN3hkNll6Ny9PWDhidHo0UUNUM2J3MklmdHNZMHpOQWcwdU9Rb25HYTVZ?=
- =?utf-8?B?MVppODBmdmpCMVNkeHFwTW5YOUFleUxVNHhEMmsxOXVuNkJjeVB1dVVoeHUv?=
- =?utf-8?B?UzA3aDNtdW9mdjFlVVhkcitobUw0eEN1T0FlcGRMZGQwZ0JIaDZJME92VXIv?=
- =?utf-8?B?MHRUL3hOaUpPdDJJTm1SY2hBSG1iYVRWRkRCODljZjRBbnBqcFlqNXNlTlhj?=
- =?utf-8?B?TW14QlNtOFpHVkdWbVdZaG5QWGp2blA4M1RTTTloNEtmWTVNVmxhWjh5K2Y0?=
- =?utf-8?B?R1cwMVMyNnI0VTNBZ1ZBcExYUDd0R3cvYkx6ZUxjb1BMc29QQTk1Nkt2dDFL?=
- =?utf-8?B?eUJ3ZzM3VzFtUWxGVGVMR3hyWU5qRkx3R1BQQUFiM2h5SGwrTXoxdmtOUTJX?=
- =?utf-8?B?M2NCaXFJRmdyL2luekRQUktETkIyRnVUUkVlVXlyaDJrT3VoaURNckVscTZD?=
- =?utf-8?B?Zjk1WWVXYkZsTGR0VXdHRGljdzhUZUhIWHpQWWZzdktFWEo5V3V5QVhmTm5j?=
- =?utf-8?B?N2oyV2c4Zy95d3drMzBLTFRMNUFMMFNQb21vT0xPREw1WGhydUZEYWZ4MEpB?=
- =?utf-8?B?VlVUSTlHKzJPRjlNWkd2alpqL3pFUmtBQnNFS2hQbTV2ZXhFUTZuckJER1Zy?=
- =?utf-8?B?bjY1cTBaQVhsMTV3anRRemxNTmhaSEJvK2Q5Y0t2NjVXR2dNQTdxRE9jemww?=
- =?utf-8?B?SW5iY2ZGSUpkQkZmQlFsZTV5cGxGZHlqMERmWjY2b3NKSmxUd0M5QTBVUWlr?=
- =?utf-8?B?bVVCRnoyR1RTWlQ5N3c0bkVkZUt6V1h5MEswQnFqRjM3eHNrTXdtbTZ4K2k4?=
- =?utf-8?B?QkJoaEdLRVpLZUVTM0x1YmZGRGNPTWpQUnA3dUxwTi9FNTdEaWY4NVVBVFNX?=
- =?utf-8?B?ZjdqWDJqVFl3MS9DVHpjMFNrcEFIZ1huUVl5aCtUaytaZ3ZuNWx0WWJPY21w?=
- =?utf-8?B?SmE2QTQySktFWU53UXZuRW1UUmdLM3RzdjJoeGp6L04yaFpaNXl5eUZVWmRy?=
- =?utf-8?B?c2JERjgyV0lFY2s0dkFsQ1hOZ2RCZGhLcDJmTFk0ditzODNwSDRXQ2dyMXd3?=
- =?utf-8?B?MlhVYk5MZmxhdC8wdzhqUVd4bTh5MkxxV21xaU9pTE1yQ0l6c3l3Sk9uOEtQ?=
- =?utf-8?B?b294YlUvYWpya1ozQ1hObWRicXFWK1VPQi8wZnJCS1A2Y09TNGZzTVR2S1V0?=
- =?utf-8?B?WUl0SWVOa3F3bFcwUDlUNHo1cE8ySk0xb1FlanB0MWVsSWRoR2dGTlB6SUF4?=
- =?utf-8?B?aVdDMFh0b0oyVnBXeEF5ajRBd2JRKzBTUkQ5czNlVThQazc0a1ZFNzJJK1Rk?=
- =?utf-8?B?WWRpWmhlN3pGTmsveUFMdGNBTlRjMUhhUG9nOUplcGxkbjZhbjJjelNpQzBm?=
- =?utf-8?B?UkNiL3BNcVhYbVMzV2hXUWVEQmRFdWNSa0p5WXVOL05vWkxNZnJwQzJ3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8487.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bFQ4NURRUWd6WkdHeTRQUExsdS9kakhSYnFDRHRoMDZ4Y2k1VzY5ZW9qUkVM?=
- =?utf-8?B?aU53aHRHS2dtTHloVk1YMFZuTmxMV3Qrd1VKR1cvUkdjUGR2UkdrcC9ReVNv?=
- =?utf-8?B?aVpwQ1dHSkg1K1FmSU53NnI4OG5UVVR5WUkzMzNjK2RtSkVDc3RYYzFpQUhO?=
- =?utf-8?B?Yzh6OGFxYzErdEJyaFZLck9pRzAwV0k4dEFMVDlScU1oWHNBdVlrZzdPdWNL?=
- =?utf-8?B?NlZjbXV6YXlobWR6MHRRbU9LVUVlRFV4QllRYlg4cXQ2cWdlc3BTTXVRc2xu?=
- =?utf-8?B?OTVDSmRTa1puTXBzYUlOeDduUVdTSUE3SEM5OXlqNHhza3hNR2lGK3dET2NZ?=
- =?utf-8?B?bWxDRkR1dHJGMWFXZlU4MEN1RXF0N0RLd1J2a0MzN3hzektaT1EvRHRpQUhv?=
- =?utf-8?B?VXJFSnE5YXdaRkwxRzZFVWowYXgxd0QzL2VOMkpzNjVFM2I3akx5eHJwb0cr?=
- =?utf-8?B?NFJFYVg4QnM0dnNuK2lDcmdYbnFhSG5OeFZzS1h3ZUF6K053YldZQmVVNHlq?=
- =?utf-8?B?SXdReGZqTzBJZVJRZElONjZCWGhRYWs4dGVZejFYZXAyakhmWHRpU3Zac0VS?=
- =?utf-8?B?QWFDb1d2Yjh4Zm1CcHcra1lxcXp5aHAzTTl6WGpwSHJWK0ZoR1hUT3ZNVGZ0?=
- =?utf-8?B?WktWVWJsaWMyL3dyUXlMaXp2dFVlN0k5ZU9uc0VXSjBCUWl6SDFCcHl1cHkw?=
- =?utf-8?B?Ly9KME1DT0dNRGlkQWdJM0RVUklFRW93ZkN0NXdrQ0M3bStmK2pXWmlPaFZz?=
- =?utf-8?B?bWYvMFU2bURtVnRmYkVQR05ZSytRYTBseFdKUnFSTE9mUjR2REM3RGd5SDhO?=
- =?utf-8?B?ajFKK1dNNmZyYktYcGJPVUtKZVVkMGhLSjBTOXF0blpDMEhYSHVPcVBuWkZp?=
- =?utf-8?B?TXdSNDRPRklyK25lMmNYZFcyRXlQbGNPQ0hadWc0TXpWR0JXQzM1eWxqNlFk?=
- =?utf-8?B?dzUyZ2RERnNPWW8yL1JmbzBUSGhzOEpPZ1dleXZ0YmtVRGo3L0pMcVViVXRY?=
- =?utf-8?B?WW5sVkR2ZklkSTV0cHFTVDhUS25WWmN1UXl4YkY0anNUTnR4TDhxRVp0OFNS?=
- =?utf-8?B?eFFaNGQ4MFQxTXFOeTNKbVBIWGVpV29DZEQ2aUI1bVFyTldpcm42d0dBd2xi?=
- =?utf-8?B?cmRwSTZEYWZ0Mk03dHREc1ZsV1h6YVkxSXBWanIvTXd0NU4vb0F3by9lVG81?=
- =?utf-8?B?QzRJZDlldVo2Y09MWGt4dCtpakFxMDJTaHhJUTBVVE1GalpUenZ1a1N3V3Zm?=
- =?utf-8?B?U0pJK3ZDbUlYVko5NkExY2htbTVQY2xkM1ZGV0l3THFMWmc4aUc2dWExS2hn?=
- =?utf-8?B?K0xWVHVubU9DcVVpVmVYNkZXMmZLQ1dEaXc0WDVnb1pUNHBxc2xpVlcwM29P?=
- =?utf-8?B?dVQ5T2U3UE9NSGlBTXh3ZUdDTytDWENyRmdnMDVGS25uOFhlZndxVmw0Vmw2?=
- =?utf-8?B?TUVVaUtrYlhQa0oxYjluZlpsMlBWaVZRSUpIUGs0b2Ftc0liL3FEZ3pLSHor?=
- =?utf-8?B?d29PMUpTRXlNY1FBY2FKK3puWjVDVjkxVnNiUGRYU3lXaVZNZjBrWUMzK0Fi?=
- =?utf-8?B?Sm1rS1lOZSt2VTlFV21kbURGaGZwRklXU3Q3cllGWkYrdTc0cFlhQkpCa2du?=
- =?utf-8?B?dnNETktTbFE5TTBPQUQ3Rlpab2NsRUlBMkFwUWhZTWRLYTh3S3l4ejJmaTNp?=
- =?utf-8?B?SFphdjhWS0gxRFA2RzBoMmZCTnFOcm10akl3bDdBTjZjTW4yUjh5TUcxc1dv?=
- =?utf-8?B?bFdKakcxdW05eXQ5ajcwbExvbnNDb0tpcE5NenNBZnl4bytXZGh6SGNrN280?=
- =?utf-8?B?UTlNZGVKamdsZ1pmQytYU0F6VWhvZ3hFQkJrWllRRERYSEc1bmlpeVZJcU9p?=
- =?utf-8?B?V0RNelYrQm1tRGx0VzNDTEcycXFOaUUvNkVITnV3dDZaV3F1Z1VDamFsYWpR?=
- =?utf-8?B?N0FVY1p3c04wbXdrS2phd3FwekNjTVg2azVZTVhVcHNHTTJKaDh1emNuVG40?=
- =?utf-8?B?YlRrNDUxaGY4MEk1dktZSDMzeUtPdzR3ZzJIZytDOGtzT0hadnZ1R1BhQXYr?=
- =?utf-8?B?b09rWExzdGhJMTJ0M3V4Q09sVTBNeTM4eXlaT0FCRy8wenJ4eW1tWUJUbkZQ?=
- =?utf-8?B?UHVZWnhlOHA3UHBkenJiT29oUThhUzZOellkK3JFNEh5azhYSThYdVYzdGlM?=
- =?utf-8?B?SUE9PQ==?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5000bdbe-74be-4fe7-1a1a-08dcdec4cfb3
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8487.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2024 07:20:06.0897
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TpCtOAOPf0MOUEVFUu64FdG1UfdLPwpB9hYqf1RYz81Qbw9gvyYONoSLZuESA4OdNjQCc3ml0mLnIrfigWkNCNmJNnbN1UnFiE8UoTMjLDo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6787
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On 26/09/2024 20:43, Rob Herring (Arm) wrote:
-> 
-> On Thu, 26 Sep 2024 17:31:19 +0300, Andrei Stefanescu wrote:
->> Add support for the GPIO driver of the NXP S32G2/S32G3 SoCs.
->>
->> Signed-off-by: Phu Luu An <phu.luuan@nxp.com>
->> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
->> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
->> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
->> ---
->>  .../bindings/gpio/nxp,s32g2-siul2-gpio.yaml   | 110 ++++++++++++++++++
->>  1 file changed, 110 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> yamllint warnings/errors:
-> ./Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.yaml:25:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
+For drivers or board files that set gpio_chip->names, the links to the
+GPIO attribute group created on sysfs export will be named after the
+line's name set in that array. For lines that are named using device
+properties, the names pointer of the gpio_chip struct is never assigned
+so they are exported as if they're not named.
 
-I don't get this error locally:
+The ABI documentation does not mention the former behavior and given
+that the majority of modern systems use device-tree, ACPI or other way
+of passing GPIO names using device properties - bypassing gc->names -
+it's better to make the behavior consistent by always exporting lines as
+"gpioXYZ".
 
-$ make DT_SCHEMA_FILES=nxp,s32g2-siul2-gpio.yaml dt_binding_check
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-  CHKDT   Documentation/devicetree/bindings
-  LINT    Documentation/devicetree/bindings
-  DTEX    Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.example.dts
-  DTC [C] Documentation/devicetree/bindings/gpio/nxp,s32g2-siul2-gpio.example.dtb
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Story time:
 
-$ pip3 show dtschema
-Name: dtschema
-Version: 2024.9
+I decided to learn rust. I figured I'd best find me a project to work on
+that would involve some proper coding but wouldn't have much impact on
+anything important when I inevitably get it wrong the first few times.
 
-$ yamllint --version
-yamllint 1.35.1
+I decided to write a sysfs-to-libgpiod compatibility layer based on
+FUSE. Since Rust is hard, I started prototyping the thing in python
+first to at least have the logic nailed down before I tackle the rust
+part.
 
+When working on the exporting part, I vagely recalled that when I used
+to work with GPIO sysfs somewhere between 2009 and 2012 (still with
+board-file based systems), named lines exported with sysfs would appear
+under /sys/class/gpio as symbolic links named like the line and not the
+usual "gpioXYZ". I realized that this is not the case now.
 
-Lines around 25:
+Quick glance at the sysfs code reveals that I didn't dream it up, but
+that behavior is reserved to drivers setting gc->names. This has been
+slowly going out of fashion with device-tree and device properties.
 
- 20 properties:
- 21   compatible:
- 22     oneOf:
- 23       - description: for S32G2 SoCs
- 24         items:
- 25           - const: nxp,s32g2-siul2-gpio
- 26       - description: for S32G3 SoCs
- 27         items:
- 28           - const: nxp,s32g3-siul2-gpio
- 29           - const: nxp,s32g2-siul2-gpio
+We could easily restore the behavior for everybody by taking the name
+from the descriptor we already have access to or even just assign
+gc->names from descriptors in gpiolib core but first: the sysfs ABI
+document does not mention the named links at all and second: given how
+this has naturally effectively been phased out over the years, it would
+probably cause more harm than good when the exported names suddenly
+change for existing users.
 
-I initially had the reported error but I fixed it locally by adding the following:
+I'm proposing to just drop the named links alogether.
 
-- description: [..]
-  items:
+Let me know what you think.
 
-Any ideas?
+ drivers/gpio/gpiolib-sysfs.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Best regards,
-Andrei
-
-> 
-> dtschema/dtc warnings/errors:
-> 
-> doc reference errors (make refcheckdocs):
-> 
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240926143122.1385658-3-andrei.stefanescu@oss.nxp.com
-> 
-> The base for the series is generally the latest rc1. A different dependency
-> should be noted in *this* patch.
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
-> 
-> pip3 install dtschema --upgrade
-> 
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your schema.
-> 
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index 17ed229412af..643620d261f5 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -577,7 +577,7 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 	struct gpio_device *gdev;
+ 	struct gpiod_data *data;
+ 	struct device *dev;
+-	int status, offset;
++	int status;
+ 
+ 	/* can't export until sysfs is available ... */
+ 	if (!class_is_registered(&gpio_class)) {
+@@ -626,10 +626,6 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 	else
+ 		data->direction_can_change = false;
+ 
+-	offset = gpio_chip_hwgpio(desc);
+-	if (guard.gc->names && guard.gc->names[offset])
+-		ioname = guard.gc->names[offset];
+-
+ 	dev = device_create_with_groups(&gpio_class, &gdev->dev,
+ 					MKDEV(0, 0), data, gpio_groups,
+ 					ioname ? ioname : "gpio%u",
+-- 
+2.43.0
 
 
