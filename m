@@ -1,52 +1,52 @@
-Return-Path: <linux-gpio+bounces-10510-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10512-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40415988A90
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 20:57:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 964D0988A8F
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 20:57:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9163FB207DE
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 18:57:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 55CE72893E9
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 18:57:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6375A1C2320;
-	Fri, 27 Sep 2024 18:55:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F3F1C2426;
+	Fri, 27 Sep 2024 18:55:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="QJ/SoXLX"
+	dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="Y8K95jSd"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail.xes-mad.com (mail.xes-mad.com [162.248.234.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DAA1C231B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634B91C231E
 	for <linux-gpio@vger.kernel.org>; Fri, 27 Sep 2024 18:55:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.248.234.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727463325; cv=none; b=Lo15JS05bs+HO4dE+Z+h57/PNWEsMSJ4UAcy8al0Le/PXpyM1IU16atpjerg0otLvV53z4td2WEzkmivoxt+vm8T5+ZAOb4gtX1/AA5G6nm+eDC6OupTvvw1HkYQkCGz4N9hDlz/+sKRHu2PBsXYItfIJoRChSNhxIWI6wjXEIM=
+	t=1727463326; cv=none; b=Xo9YPW+o0zHZiE9sLBl5J2KTUXmr4tyLru+PAvG9VdK0U4VH/rsMlrXpqemAQIzl1Uq1wNiflcEjvwGoPb+/u1P0v+wnI8IDcTZpf5/Y3OPVd3FisXmiHA9KPH4ICKR0asuNRQl8XUiCes0E+RptNV56XB87O9opcVStwl9FeAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727463325; c=relaxed/simple;
-	bh=wVCQiLvLweTMNBYJUP91mB6k7TSSA3XIFrduCrSM7wY=;
+	s=arc-20240116; t=1727463326; c=relaxed/simple;
+	bh=wihAqMUUZ/CeJbMQ0QDbh2z2wlNTRch3hRgdnl9aX9g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DDKUfVwxGzwqlGANltTCFn7p15Ac7FbfqsqXenJ/jIfMOFzgSQFvW4nci7oZg5EsAu00RN7x11nz/Y4rgGAzT8/zczpE9AUBOsj7bucBrsltHMMB6Fes6F1/3mxilNHwQ6+ssJOs0l3uk5QeZE5SES2NsWkXIpjgvGI3dbLvhME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=QJ/SoXLX; arc=none smtp.client-ip=162.248.234.2
+	 MIME-Version:Content-Type; b=IQoyzyrSFLf2K8sfs0KS0kWUZworV3FLC4qtp9g5Rk+4B6xJ2RV95euaXQtR4xuu3/LfSPDU0vCti11Ct2xj0qixDIhR2mxai6W25e2+LzGexKBmyGmqjAaMVWtfzbfXgd3toEu2lnxvOJXYBlNzFpn+EMPSww84YYz5+SrOJUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (1024-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=Y8K95jSd; arc=none smtp.client-ip=162.248.234.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xes-inc.com
 Received: from vfazio4.xes-mad.com (vfazio4.xes-mad.com [10.52.19.201])
-	by mail.xes-mad.com (Postfix) with ESMTP id 60E4D20F5E;
+	by mail.xes-mad.com (Postfix) with ESMTP id 7724520FDD;
 	Fri, 27 Sep 2024 13:55:16 -0500 (CDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xes-inc.com; s=mail;
-	t=1727463316; bh=wVCQiLvLweTMNBYJUP91mB6k7TSSA3XIFrduCrSM7wY=;
+	t=1727463316; bh=wihAqMUUZ/CeJbMQ0QDbh2z2wlNTRch3hRgdnl9aX9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QJ/SoXLXwTbJPt5f7ZIlYGI2EdtCL1WHhrLpVqraaxhs0Qv/F9RrwdjGMf3nnw+bj
-	 KheYjd0kEHI1jc9eDA4xyhwWenUJNbEncPMXKFPkBmnV0piKHA5FcIeHsEBrqpgqcJ
-	 rOevT4hwtwWd2v04aPKRZWYNOnY3Uid71i++IiTI=
+	b=Y8K95jSdPr5h2czA3H98dklnXrqWSEKOpfk3PWYIAa5Kp4OP8NcmcuAQ4d2hQCiwl
+	 oJNipAK2jZqBH6Hhp9MNIhuJGkzjsxH7950jSyxW0yjYxAAr2S3TGDzHr2jgWT46Zq
+	 FxQECDTnFLMVSlkFfTqOB/eyODKSWGwjNKH+DpQg=
 From: Vincent Fazio <vfazio@xes-inc.com>
 To: linux-gpio@vger.kernel.org
 Cc: vfazio@gmail.com,
 	Vincent Fazio <vfazio@xes-inc.com>
-Subject: [libgpiod][PATCH 07/22] bindings: python: fix Chip union-attr type errors
-Date: Fri, 27 Sep 2024 13:53:43 -0500
-Message-Id: <20240927-vfazio-mypy-v1-7-91a7c2e20884@xes-inc.com>
+Subject: [libgpiod][PATCH 08/22] bindings: python: annotate internal members of LineRequest
+Date: Fri, 27 Sep 2024 13:53:44 -0500
+Message-Id: <20240927-vfazio-mypy-v1-8-91a7c2e20884@xes-inc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com>
 References: <20240927-vfazio-mypy-v1-0-91a7c2e20884@xes-inc.com>
@@ -59,108 +59,29 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Since `Chip._chip` can be `None`, it's necessary to inform type checkers
-of the state of the object to silence the union-attr errors.
-
-Type checkers may not be able to infer that an object is not `None` from
-an earlier call (such as `_check_closed`).
-
-Instead of littering the code with "# type: ignore" comments, use casts
-to inform type checkers that objects are not `None`.
-
-Using `assert` is another option, however this duplicates the logic in
-`_check_closed` so is redundant at best and, at worst, is not a safe
-replacement as `assert` can be elided in optimized Python environments
-and these checks need to be runtime enforced.
-
 Signed-off-by: Vincent Fazio <vfazio@xes-inc.com>
 ---
- bindings/python/gpiod/chip.py | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ bindings/python/gpiod/line_request.py | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
-index 4aa5677f94caf8c5d863aa6d75915a5b650de137..fe7bcfe082d6e9f6220093d3fc45ff232b5d0d17 100644
---- a/bindings/python/gpiod/chip.py
-+++ b/bindings/python/gpiod/chip.py
-@@ -7,7 +7,7 @@ from collections import Counter
- from datetime import timedelta
- from errno import ENOENT
- from types import TracebackType
--from typing import Optional, Union
-+from typing import Optional, Union, cast
- 
- from . import _ext
- from ._internal import poll_fd
-@@ -97,6 +97,7 @@ class Chip:
-         longer be used after this method is called.
+diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpiod/line_request.py
+index f94b6b50d72486da1446abcda8282a8dc6d6e620..77d199ac64e9d3cc68d4a8b38dd0f571a24ab231 100644
+--- a/bindings/python/gpiod/line_request.py
++++ b/bindings/python/gpiod/line_request.py
+@@ -30,7 +30,12 @@ class LineRequest:
+         LineRequest objects can only be instantiated by a Chip parent. This is
+         not part of stable API.
          """
-         self._check_closed()
-+        self._chip = cast(_ext.Chip, self._chip)
-         self._chip.close()
-         self._chip = None
+-        self._req = req
++        self._req: Union[_ext.Request, None] = req
++        self._chip_name: str
++        self._offsets: list[int]
++        self._name_map: dict[str, int]
++        self._offset_map: dict[int, str]
++        self._lines: list[Union[int, str]]
  
-@@ -108,6 +109,7 @@ class Chip:
-           New gpiod.ChipInfo object.
+     def __bool__(self) -> bool:
          """
-         self._check_closed()
-+        self._chip = cast(_ext.Chip, self._chip)
- 
-         if not self._info:
-             self._info = self._chip.get_info()
-@@ -132,6 +134,7 @@ class Chip:
-           so - returns it.
-         """
-         self._check_closed()
-+        self._chip = cast(_ext.Chip, self._chip)
- 
-         if not isinstance(id, int):
-             try:
-@@ -154,6 +157,7 @@ class Chip:
- 
-     def _get_line_info(self, line: Union[int, str], watch: bool) -> LineInfo:
-         self._check_closed()
-+        self._chip = cast(_ext.Chip, self._chip)
-         return self._chip.get_line_info(self.line_offset_from_id(line), watch)
- 
-     def get_line_info(self, line: Union[int, str]) -> LineInfo:
-@@ -192,6 +196,7 @@ class Chip:
-             Offset or name of the line to stop watching.
-         """
-         self._check_closed()
-+        self._chip = cast(_ext.Chip, self._chip)
-         return self._chip.unwatch_line_info(self.line_offset_from_id(line))
- 
-     def wait_info_event(
-@@ -226,6 +231,7 @@ class Chip:
-           This function may block if there are no available events in the queue.
-         """
-         self._check_closed()
-+        self._chip = cast(_ext.Chip, self._chip)
-         return self._chip.read_info_event()
- 
-     def request_lines(
-@@ -258,6 +264,7 @@ class Chip:
-           New LineRequest object.
-         """
-         self._check_closed()
-+        self._chip = cast(_ext.Chip, self._chip)
- 
-         line_cfg = _ext.LineConfig()
- 
-@@ -362,6 +369,7 @@ class Chip:
-         Filesystem path used to open this chip.
-         """
-         self._check_closed()
-+        self._chip = cast(_ext.Chip, self._chip)
-         return self._chip.path
- 
-     @property
-@@ -370,4 +378,5 @@ class Chip:
-         File descriptor associated with this chip.
-         """
-         self._check_closed()
-+        self._chip = cast(_ext.Chip, self._chip)
-         return self._chip.fd
 
 -- 
 2.34.1
