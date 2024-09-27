@@ -1,82 +1,99 @@
-Return-Path: <linux-gpio+bounces-10471-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10472-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D137987A5D
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 23:16:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DC4D987DC2
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 07:00:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A098BB24BC1
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Sep 2024 21:16:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6E031F2386F
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 05:00:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D4A1186613;
-	Thu, 26 Sep 2024 21:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCA7916F824;
+	Fri, 27 Sep 2024 05:00:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1M1gRS4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DRMSI2LA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3376E183CD6;
-	Thu, 26 Sep 2024 21:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E562F2E;
+	Fri, 27 Sep 2024 05:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727385370; cv=none; b=Hp0emmIuUePA0tR9ssrYZkkmcpvyDWIp22K4mMMfr1T3f4wECqjA6SfwVQsUf1gwuFHjONDl/bvdZ9zoy1SdOEKDa4bXn00ef/6NEaspqEkwzCoKsxlVDYxy/jeNX3I20m0lBWlnMaItwXHNs491t2HpbdBZzy9RqHRul6dSpWA=
+	t=1727413229; cv=none; b=cDmsE9ZzxqdbGa+Ux5/yMScxmh0c4RsvQky6kOgvFg9v7ZKz0bfFG28u9jdEcOgWIs45WU/xb+fDrFo6WNx153H0l4JaVAaTaJQ5JfZDHsbO5Gyq9mj0DFYukEiBJUrdvWfSEAMp25ynR4RdSo3zNYVT7Fw9B8w6oap0/ZwRzBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727385370; c=relaxed/simple;
-	bh=UtnSPoa/rfPJxu9yzCby9GUs+YkJKRJDod5/XoTt8n8=;
+	s=arc-20240116; t=1727413229; c=relaxed/simple;
+	bh=fyEkOgWNjkVh2h59wO0cF/KpMYftbWbXFZjDs5tjBfo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kfcJdzPlipAGp1J7TfLzXQ4HBbZx/sElBqYJKPe0Ll1npo94yHhHtaDWl6gnPs5InPz695vp5HH1inO5j8xNLqVM8x+atxJ6EOmFvhfkOtecjm09ARrkwW7COSujsjidkx4oraDzepCacAtJUcRl/dr0QTomnybWKCQ81jkOVdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1M1gRS4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A8E4C4CEC5;
-	Thu, 26 Sep 2024 21:16:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727385369;
-	bh=UtnSPoa/rfPJxu9yzCby9GUs+YkJKRJDod5/XoTt8n8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u1M1gRS4zEXgjIuvwtzqhdq1GCzP7673b3s0fJ+MYE9D68Nmi063/buFoGEmDDNmH
-	 iw0OtLtiTIkjkqAQgxGoDe6Z/BNH9beEPa9352lVbZycYi6lQi7J5r++ynwESJ9AeG
-	 gvwJXbXGZU3haGYXK8dTI2PmoGfgHVCE31h9K3dvgQ4/kDvJM8BqG8jL9o1ybhb21L
-	 Co0qclaaQgmb46V0pdeD0e5m9Te5Xs9RaFlM+lWGtWBrPNCAWrnXnkx15eS9sWFlfg
-	 SyGiIjk34GyQPDFKPtr0ABtlQZaazSsrVoA4ccLi1+150lDV6nWXHysXpiZkZWxxbt
-	 H7/Kp6dYHbQVA==
-Date: Thu, 26 Sep 2024 16:16:07 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Ze Huang <18771902331@163.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>, linux-gpio@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>, linux-riscv@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Conor Dooley <conor@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=lwmx/3TfmT2mYIBlxD45eP80+Xtwm2EBo+8CEqCrZFJGEar9txhYVRKx27YGaCamUq3XgcqJoT300a8M8q9R9C3rtFbCbiLSQEmUf7dpGsdNf4lxwI1J4ykMgDFtVIEKVVbaBGFypoJKVxHUzkVvumfuU2bQDYuqy2/piXB/q6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DRMSI2LA; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727413228; x=1758949228;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fyEkOgWNjkVh2h59wO0cF/KpMYftbWbXFZjDs5tjBfo=;
+  b=DRMSI2LA/te88F0BJTN35VZs8jJmeVkJSHq5FPW2eAOcBFZFzp75IfbY
+   tDM7byQoJ2kvLHqnqCVqeSDq45h1wizpHUAOa1QpkJGJ/ec7BSR3BkC0m
+   lL1Rr7pBXIRHNFTElca8pcerLIHhxj1jSChzpMKAPsvtzkMkLQFPaygTa
+   jmZipcs3znzc7eL2nIAw65A5WXUbpVaAK8R5rnExsv6ShKOYj5xEeKNNt
+   gT312WiGzT7Giqi3JVsQHPfaJSIugiZsZImZijnWdZcpq5j/Kuq+PNk4X
+   j3Y8phAAJwkETU9Q9QQUAyuySm/nf+9NjlXqWcJ+8YaudyUwxKbpVXrgV
+   g==;
+X-CSE-ConnectionGUID: EL00soVsSoutFVN5lONqJA==
+X-CSE-MsgGUID: nqZSdCbTRAupxs2nIVuZvQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11207"; a="44062605"
+X-IronPort-AV: E=Sophos;i="6.11,157,1725346800"; 
+   d="scan'208";a="44062605"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2024 22:00:27 -0700
+X-CSE-ConnectionGUID: y0CtHs0STD2a81Hi67P80A==
+X-CSE-MsgGUID: Ua0jgpiCTPOtT7V2VjnvJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,157,1725346800"; 
+   d="scan'208";a="72558649"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 26 Sep 2024 22:00:25 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id A8CD6170; Fri, 27 Sep 2024 08:00:24 +0300 (EEST)
+Date: Fri, 27 Sep 2024 08:00:24 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Add support for canaan,k230
- SoC
-Message-ID: <172738536551.3022684.2015400552929682489.robh@kernel.org>
-References: <20240926-k230-pinctrl-v2-0-a9a36fba4b34@163.com>
- <20240926-k230-pinctrl-v2-1-a9a36fba4b34@163.com>
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 0/2] pinctrl: intel: platform: fix error path in
+ device_for_each_child_node()
+Message-ID: <20240927050024.GB275077@black.fi.intel.com>
+References: <20240926-intel-pinctrl-platform-scoped-v1-0-5ee4c936eea3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240926-k230-pinctrl-v2-1-a9a36fba4b34@163.com>
+In-Reply-To: <20240926-intel-pinctrl-platform-scoped-v1-0-5ee4c936eea3@gmail.com>
 
-
-On Thu, 26 Sep 2024 23:57:43 +0800, Ze Huang wrote:
-> Add device tree binding details for Canaan K230 pinctrl device.
+On Thu, Sep 26, 2024 at 04:11:01PM +0200, Javier Carrasco wrote:
+> This series fixes an error path where the reference of a child node is
+> not decremented upon early return. When at it, a trivial comma/semicolon
+> substitution I found by chance has been added to improve code clarity.
 > 
-> Signed-off-by: Ze Huang <18771902331@163.com>
+> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 > ---
->  .../bindings/pinctrl/canaan,k230-pinctrl.yaml      | 127 +++++++++++++++++++++
->  1 file changed, 127 insertions(+)
-> 
+> Javier Carrasco (2):
+>       pinctrl: intel: platform: fix error path in device_for_each_child_node()
+>       pinctrl: intel: platform: use semicolon instead of comma in ncommunities assignment
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Both,
 
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
