@@ -1,387 +1,162 @@
-Return-Path: <linux-gpio+bounces-10530-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10531-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1468988B38
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 22:28:11 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56122988D77
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Sep 2024 04:02:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 47389B20D61
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Sep 2024 20:28:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 907BF28315A
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Sep 2024 02:01:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8F351C2DD5;
-	Fri, 27 Sep 2024 20:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6A0A1BDDB;
+	Sat, 28 Sep 2024 02:01:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RK+zxniG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XK6EqbG2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84511C2325;
-	Fri, 27 Sep 2024 20:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B43814295;
+	Sat, 28 Sep 2024 02:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727468874; cv=none; b=iIY/jgxm1izMrbSiQ3dnfNXWCQ84f0yvucFchfcFIxrd8u8p7zXHk1kZ3xBJb9ccqkn39oUUYSU3xbNmjkX4hzBMQMRiKMasNQYG+ulYLlXPlx0lZvztcH2YIyINbnkQQbdrjPaeynXsvpucXlD2Ymg0AbN21m80ztdX8Lmhsxk=
+	t=1727488866; cv=none; b=EcJ3LHK0Nq289KA5Y+D2dKHUuyBatVQpScJ2mbMh8Rhl0xAJB6USNBAaucFnBDkTWEzwiXdXYrX0IPDi61w4nCv/scKmuZbltRnG2NiFERHlD0gCZcoInoAe2D7yGeOd2Bnx434DQE1tAmKKpYLh5QMwyNvZJZRSmpEebfQnC1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727468874; c=relaxed/simple;
-	bh=Gx+F40nhTJgZsr3vg096lZ8Hgm7zvwdGk7H5aNedxfg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gQ4u7JJWJHhE31wD4IgaVrFN0dzqCKpbl2KaoGoR8yhOff7lnWPY7lNbKEBYtIQyzSQ5xnzHbVDionFtHsrpdpDiUR+j/dCarj68U4TsxntgWR0qjrzNK+4FgP3LQBr1hAHPp3hjjwjzLticOPB8MEHJMnhcsoCbBqPQ7FSIU/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RK+zxniG; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48REZUmp001917;
-	Fri, 27 Sep 2024 20:27:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:list-id:message-id:mime-version:references:subject:to; s=
-	qcppdkim1; bh=lcG+MR0GVz0lcteCkPBfG0yQwl3LXds8hSBrgaMx4O8=; b=RK
-	+zxniG2kpZSvMhOJpJD1K5RxjEvj1pLULrvBhsXog+gRxya2S75nY+4py6cty1Yb
-	+viykrIkAPntD4rkvtIpQxTZUWscGnc0JltpIFqiXnJWS87p9tOsLgGBImnF+1fB
-	TB6aQ1vFEfUT3M4UcafYxoriq0SmREup6Eh2t5DkpLBkTlIaJseR1wML8sd10N5H
-	lQphhPl75yL5n99yVHuvzTNKomxWvlMgSVsIyCZt5YwuGI9sqSHDBlI0uMVKuCe4
-	zFA3T73p/hfNreMxh0heUgHMzBhk0yYJ82ijcSbKucQmUgaIorNo9NhMBLWRjLO2
-	9j8NnA0948wmrV3jxRGg==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 41skgnmj9m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Sep 2024 20:27:50 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 48RKRltS009739;
-	Fri, 27 Sep 2024 20:27:47 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 41sq7ms5r7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Sep 2024 20:27:47 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 48RKRkU2009734;
-	Fri, 27 Sep 2024 20:27:46 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.246.180])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 48RKRkQU009733
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Sep 2024 20:27:46 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3944840)
-	id 361C7586; Sat, 28 Sep 2024 01:57:45 +0530 (+0530)
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: quic_mojha@quicinc.com, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pinmux: Use sequential access to access desc->pinmux data
-Date: Sat, 28 Sep 2024 01:57:41 +0530
-Message-ID: <20240927174206.602651-1-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20240927174206.602651-1-quic_mojha@quicinc.com>
-References: <20240927174206.602651-1-quic_mojha@quicinc.com>
+	s=arc-20240116; t=1727488866; c=relaxed/simple;
+	bh=B0hDTo+aoXxw0AAPicUpctplhokJ78Jz3FNO3oGMdjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i268LA3xPf6gUf9pCfgR8Jr1QixWVJcBl01/GPqfFjJ6VPYGbBa5iL7NYd1DEObyuhn+42IiNePfupNxzxXuixvZ+gmnirw3S8iaAj/AqVMYkQhF8LdYTAHHYVqKBsNj1Ao1+tMiky+/9zgW//HFfztRGvQU4N26Ygd5Cfp0dow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XK6EqbG2; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727488863; x=1759024863;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=B0hDTo+aoXxw0AAPicUpctplhokJ78Jz3FNO3oGMdjs=;
+  b=XK6EqbG2mljohs8e/SNqevD1RBQDPqQzfVS6vyoTi+qDz8kv3oMB9V+N
+   RUzvsIR1mAx2SbzehijuJBlbL1O978cYcgrRZ0IdrVeUpSl5kbsxtF/WD
+   xc86Rmexg2rkyxxbKO8ivO6o4/dyJgtJqa6ROUzDkeqQx0+oHM5WBoTRA
+   P6hUH0irrWGwZuRJMU1/HRQD37gcuFd/y6Jr3hK+cMubf+ybjaeyeGFUm
+   6jsTbkNu/NMub1ki02U4MSrQJNRIaMy3cgFAo9oMsGJ6aXezr1fP4Xzn4
+   4/CBFIv8XZS0IPto5vFbzH6c2bz37EASEWJ1N4Lz2tlSc869SkfnWWb1X
+   w==;
+X-CSE-ConnectionGUID: mUOyy1I7T/6ssxlXIs7HWQ==
+X-CSE-MsgGUID: 6ugb0AtbQnye/w7kYtaYNQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11208"; a="30535220"
+X-IronPort-AV: E=Sophos;i="6.11,160,1725346800"; 
+   d="scan'208";a="30535220"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2024 19:01:00 -0700
+X-CSE-ConnectionGUID: uAa4TFtBTmKYWHLL4w/w+g==
+X-CSE-MsgGUID: kLnfXukeRt+crR+PvgSM3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,160,1725346800"; 
+   d="scan'208";a="73025912"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 27 Sep 2024 19:00:55 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1suMlQ-000Mpw-2G;
+	Sat, 28 Sep 2024 02:00:52 +0000
+Date: Sat, 28 Sep 2024 10:00:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chester Lin <chester62515@gmail.com>,
+	Matthias Brugger <mbrugger@suse.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Christophe Lizzi <clizzi@redhat.com>,
+	Alberto Ruiz <aruizrui@redhat.com>,
+	Enric Balletbo <eballetb@redhat.com>,
+	Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+Subject: Re: [PATCH v4 3/4] gpio: siul2-s32g2: add NXP S32G2/S32G3 SoCs
+ support
+Message-ID: <202409280936.0GoVcXMc-lkp@intel.com>
+References: <20240926143122.1385658-4-andrei.stefanescu@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Pqr9cbKE2pb6QEkER7EoJasirDXUsXgm
-X-Proofpoint-GUID: Pqr9cbKE2pb6QEkER7EoJasirDXUsXgm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
- mlxlogscore=999 adultscore=0 suspectscore=0 phishscore=0 impostorscore=0
- spamscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409270150
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240926143122.1385658-4-andrei.stefanescu@oss.nxp.com>
 
-From: Mukesh Ojha <quic_mojha@quicinc.com>
+Hi Andrei,
 
-When two client of the same gpio call pinctrl_select_state() for the
-same functionality, we are seeing NULL pointer issue while accessing
-desc->mux_owner.
+kernel test robot noticed the following build warnings:
 
-Let's say two processes A, B executing in pin_request() for the same pin
-and process A updates the desc->mux_usecount but not yet updated the
-desc->mux_owner while process B see the desc->mux_usecount which got
-updated by A path and further executes strcmp and while accessing
-desc->mux_owner it crashes with NULL pointer.
+[auto build test WARNING on brgl/gpio/for-next]
+[also build test WARNING on driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus robh/for-next linus/master v6.11 next-20240927]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Serialize the access to mux related setting with a spin lock.
+url:    https://github.com/intel-lab-lkp/linux/commits/Andrei-Stefanescu/drivers-provide-devm_platform_get_and_ioremap_resource_byname/20240926-223448
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20240926143122.1385658-4-andrei.stefanescu%40oss.nxp.com
+patch subject: [PATCH v4 3/4] gpio: siul2-s32g2: add NXP S32G2/S32G3 SoCs support
+config: mips-randconfig-r123-20240928 (https://download.01.org/0day-ci/archive/20240928/202409280936.0GoVcXMc-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 14.1.0
+reproduce: (https://download.01.org/0day-ci/archive/20240928/202409280936.0GoVcXMc-lkp@intel.com/reproduce)
 
-	cpu0 (process A)			cpu1(process B)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409280936.0GoVcXMc-lkp@intel.com/
 
-pinctrl_select_state() {		  pinctrl_select_state() {
-  pin_request() {				pin_request() {
-  ...
-						 ....
-    } else {
-         desc->mux_usecount++;
-    						desc->mux_usecount && strcmp(desc->mux_owner, owner)) {
+sparse warnings: (new ones prefixed by >>)
+>> drivers/gpio/gpio-siul2-s32g2.c:296:46: sparse: sparse: incompatible types in comparison expression (different type sizes):
+   drivers/gpio/gpio-siul2-s32g2.c:296:46: sparse:    unsigned int *
+   drivers/gpio/gpio-siul2-s32g2.c:296:46: sparse:    unsigned long long [usertype] *
+   drivers/gpio/gpio-siul2-s32g2.c:143:9: sparse: sparse: context imbalance in 'siul2_gpio_set_direction' - wrong count at exit
+   drivers/gpio/gpio-siul2-s32g2.c:296:46: sparse: sparse: shift too big (32) for type unsigned int
 
-         if (desc->mux_usecount > 1)
-               return 0;
-         desc->mux_owner = owner;
+vim +296 drivers/gpio/gpio-siul2-s32g2.c
 
-  }						}
-
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
-Changes in v2:
- - Used scoped_guard and renamed lock name as per suggestion from Linus.W .
-
- drivers/pinctrl/core.c   |   3 +
- drivers/pinctrl/core.h   |   2 +
- drivers/pinctrl/pinmux.c | 150 +++++++++++++++++++++------------------
- 3 files changed, 86 insertions(+), 69 deletions(-)
-
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 4061890a1748..b00911421cf5 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -220,6 +220,9 @@ static int pinctrl_register_one_pin(struct pinctrl_dev *pctldev,
- 
- 	/* Set owner */
- 	pindesc->pctldev = pctldev;
-+#ifdef CONFIG_PINMUX
-+	spin_lock_init(&pindesc->mux_lock);
-+#endif
- 
- 	/* Copy basic pin info */
- 	if (pin->name) {
-diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-index 4e07707d2435..179e01dfacc2 100644
---- a/drivers/pinctrl/core.h
-+++ b/drivers/pinctrl/core.h
-@@ -12,6 +12,7 @@
- #include <linux/list.h>
- #include <linux/mutex.h>
- #include <linux/radix-tree.h>
-+#include <linux/spinlock.h>
- #include <linux/types.h>
- 
- #include <linux/pinctrl/machine.h>
-@@ -177,6 +178,7 @@ struct pin_desc {
- 	const char *mux_owner;
- 	const struct pinctrl_setting_mux *mux_setting;
- 	const char *gpio_owner;
-+	spinlock_t mux_lock;
- #endif
- };
- 
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index 02033ea1c643..e4d535aabbb6 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -14,6 +14,7 @@
- 
- #include <linux/array_size.h>
- #include <linux/ctype.h>
-+#include <linux/cleanup.h>
- #include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -127,29 +128,31 @@ static int pin_request(struct pinctrl_dev *pctldev,
- 	dev_dbg(pctldev->dev, "request pin %d (%s) for %s\n",
- 		pin, desc->name, owner);
- 
--	if ((!gpio_range || ops->strict) &&
--	    desc->mux_usecount && strcmp(desc->mux_owner, owner)) {
--		dev_err(pctldev->dev,
--			"pin %s already requested by %s; cannot claim for %s\n",
--			desc->name, desc->mux_owner, owner);
--		goto out;
--	}
-+	scoped_guard(spinlock_irqsave, &desc->mux_lock) {
-> Any reason to use spinlock_irqsave and not mutex ? If spinlock is needed
-> can we guard only the mux variables and exclude the printk
-> as the same lock is used with pin_show API too.
-
-> Moreover, is the mux_usecount variable in pinmux_can_be_used_for_gpio()
-> needed guarding ?
-+		if ((!gpio_range || ops->strict) &&
-+		     desc->mux_usecount && strcmp(desc->mux_owner, owner)) {
-+			dev_err(pctldev->dev,
-+				"pin %s already requested by %s; cannot claim for %s\n",
-+				desc->name, desc->mux_owner, owner);
-+			goto out;
-+		}
- 
--	if ((gpio_range || ops->strict) && desc->gpio_owner) {
--		dev_err(pctldev->dev,
--			"pin %s already requested by %s; cannot claim for %s\n",
--			desc->name, desc->gpio_owner, owner);
--		goto out;
--	}
-+		if ((gpio_range || ops->strict) && desc->gpio_owner) {
-+			dev_err(pctldev->dev,
-+				"pin %s already requested by %s; cannot claim for %s\n",
-+				desc->name, desc->gpio_owner, owner);
-+			goto out;
-+		}
- 
--	if (gpio_range) {
--		desc->gpio_owner = owner;
--	} else {
--		desc->mux_usecount++;
--		if (desc->mux_usecount > 1)
--			return 0;
-+		if (gpio_range) {
-+			desc->gpio_owner = owner;
-+		} else {
-+			desc->mux_usecount++;
-+			if (desc->mux_usecount > 1)
-+				return 0;
- 
--		desc->mux_owner = owner;
-+			desc->mux_owner = owner;
-+		}
- 	}
- 
- 	/* Let each pin increase references to this module */
-@@ -178,12 +181,14 @@ static int pin_request(struct pinctrl_dev *pctldev,
- 
- out_free_pin:
- 	if (status) {
--		if (gpio_range) {
--			desc->gpio_owner = NULL;
--		} else {
--			desc->mux_usecount--;
--			if (!desc->mux_usecount)
--				desc->mux_owner = NULL;
-+		scoped_guard(spinlock_irqsave, &desc->mux_lock) {
-+			if (gpio_range) {
-+				desc->gpio_owner = NULL;
-+			} else {
-+				desc->mux_usecount--;
-+				if (!desc->mux_usecount)
-+					desc->mux_owner = NULL;
-+			}
- 		}
- 	}
- out:
-@@ -223,11 +228,13 @@ static const char *pin_free(struct pinctrl_dev *pctldev, int pin,
- 		/*
- 		 * A pin should not be freed more times than allocated.
- 		 */
--		if (WARN_ON(!desc->mux_usecount))
--			return NULL;
--		desc->mux_usecount--;
--		if (desc->mux_usecount)
--			return NULL;
-+		scoped_guard(spinlock_irqsave, &desc->mux_lock) {
-+			if (WARN_ON(!desc->mux_usecount))
-+				return NULL;
-+			desc->mux_usecount--;
-+			if (desc->mux_usecount)
-+				return NULL;
-+		}
- 	}
- 
- 	/*
-@@ -239,13 +246,15 @@ static const char *pin_free(struct pinctrl_dev *pctldev, int pin,
- 	else if (ops->free)
- 		ops->free(pctldev, pin);
- 
--	if (gpio_range) {
--		owner = desc->gpio_owner;
--		desc->gpio_owner = NULL;
--	} else {
--		owner = desc->mux_owner;
--		desc->mux_owner = NULL;
--		desc->mux_setting = NULL;
-+	scoped_guard(spinlock_irqsave, &desc->mux_lock) {
-+		if (gpio_range) {
-+			owner = desc->gpio_owner;
-+			desc->gpio_owner = NULL;
-+		} else {
-+			owner = desc->mux_owner;
-+			desc->mux_owner = NULL;
-+			desc->mux_setting = NULL;
-+		}
- 	}
- 
- 	module_put(pctldev->owner);
-@@ -608,40 +617,43 @@ static int pinmux_pins_show(struct seq_file *s, void *what)
- 		if (desc == NULL)
- 			continue;
- 
--		if (desc->mux_owner &&
--		    !strcmp(desc->mux_owner, pinctrl_dev_get_name(pctldev)))
--			is_hog = true;
--
--		if (pmxops->strict) {
--			if (desc->mux_owner)
--				seq_printf(s, "pin %d (%s): device %s%s",
--					   pin, desc->name, desc->mux_owner,
-+		scoped_guard(spinlock_irqsave, &desc->mux_lock) {
-+			if (desc->mux_owner &&
-+			    !strcmp(desc->mux_owner, pinctrl_dev_get_name(pctldev)))
-+				is_hog = true;
-+
-+			if (pmxops->strict) {
-+				if (desc->mux_owner)
-+					seq_printf(s, "pin %d (%s): device %s%s",
-+						   pin, desc->name, desc->mux_owner,
-+						   is_hog ? " (HOG)" : "");
-+				else if (desc->gpio_owner)
-+					seq_printf(s, "pin %d (%s): GPIO %s",
-+						   pin, desc->name, desc->gpio_owner);
-+				else
-+					seq_printf(s, "pin %d (%s): UNCLAIMED",
-+						   pin, desc->name);
-+			} else {
-+				/* For non-strict controllers */
-+				seq_printf(s, "pin %d (%s): %s %s%s", pin, desc->name,
-+					   desc->mux_owner ? desc->mux_owner
-+					   : "(MUX UNCLAIMED)",
-+					   desc->gpio_owner ? desc->gpio_owner
-+					   : "(GPIO UNCLAIMED)",
- 					   is_hog ? " (HOG)" : "");
--			else if (desc->gpio_owner)
--				seq_printf(s, "pin %d (%s): GPIO %s",
--					   pin, desc->name, desc->gpio_owner);
-+			}
-+
-+			/* If mux: print function+group claiming the pin */
-+			if (desc->mux_setting)
-+				seq_printf(s, " function %s group %s\n",
-+					   pmxops->get_function_name(pctldev,
-+						desc->mux_setting->func),
-+					   pctlops->get_group_name(pctldev,
-+						desc->mux_setting->group));
- 			else
--				seq_printf(s, "pin %d (%s): UNCLAIMED",
--					   pin, desc->name);
--		} else {
--			/* For non-strict controllers */
--			seq_printf(s, "pin %d (%s): %s %s%s", pin, desc->name,
--				   desc->mux_owner ? desc->mux_owner
--				   : "(MUX UNCLAIMED)",
--				   desc->gpio_owner ? desc->gpio_owner
--				   : "(GPIO UNCLAIMED)",
--				   is_hog ? " (HOG)" : "");
--		}
-+				seq_putc(s, '\n');
- 
--		/* If mux: print function+group claiming the pin */
--		if (desc->mux_setting)
--			seq_printf(s, " function %s group %s\n",
--				   pmxops->get_function_name(pctldev,
--					desc->mux_setting->func),
--				   pctlops->get_group_name(pctldev,
--					desc->mux_setting->group));
--		else
--			seq_putc(s, '\n');
-+		}
-> Since we are introducing a lock, do we need to guard mux-settings too ?
- 	}
- 
- 	mutex_unlock(&pctldev->mutex);
+   273	
+   274	static struct regmap *common_regmap_init(struct platform_device *pdev,
+   275						 struct regmap_config *conf,
+   276						 const char *name)
+   277	{
+   278		struct device *dev = &pdev->dev;
+   279		struct resource *res;
+   280		resource_size_t size;
+   281		void __iomem *base;
+   282	
+   283		base = devm_platform_get_and_ioremap_resource_byname(pdev, name, &res);
+   284		if (IS_ERR(base)) {
+   285			dev_err(&pdev->dev, "Failed to get MEM resource: %s\n", name);
+   286			return ERR_PTR(-EINVAL);
+   287		}
+   288	
+   289		size = resource_size(res);
+   290		conf->val_bits = conf->reg_stride * 8;
+   291		conf->max_register = size - conf->reg_stride;
+   292		conf->name = name;
+   293		conf->use_raw_spinlock = true;
+   294	
+   295		if (conf->cache_type != REGCACHE_NONE)
+ > 296			conf->num_reg_defaults_raw = do_div(size, conf->reg_stride);
+   297	
+   298		return devm_regmap_init_mmio(dev, base, conf);
+   299	}
+   300	
 
 -- 
-2.34.1
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
