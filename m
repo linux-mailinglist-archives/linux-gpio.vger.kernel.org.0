@@ -1,133 +1,117 @@
-Return-Path: <linux-gpio+bounces-10548-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10549-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 735B6989C03
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 09:56:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A936989CAB
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 10:22:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 198EDB22D4D
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 07:56:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 716D31C218B4
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 08:22:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83E0616A92E;
-	Mon, 30 Sep 2024 07:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CA6E176AC8;
+	Mon, 30 Sep 2024 08:22:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nsqyNcuZ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="AjVDaqN5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C5C208D0;
-	Mon, 30 Sep 2024 07:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D2E17332C
+	for <linux-gpio@vger.kernel.org>; Mon, 30 Sep 2024 08:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727682950; cv=none; b=EKaT2hXUB6s3qX43BSdt0kTyMWCnRwxQqayARoQ3jjinrWZu0xZEu07DukAzxnwN6RYE50u3Rh6t9+zZUlSTtohulPmIxeNbFNnRQ8XRmorgTfYjFZstaFGRyBoySfgbhXMypLb6PbBI9IKsHIW8b8h0dGn9w29R/XjROW5FdiM=
+	t=1727684561; cv=none; b=jqCmMiC+USFjRoG1Lasigu/EEFY0vMBZYvS7u//ufNqLaGtm7//hpJ9lWp+PmDVMZhzwPFgm+3GHYjlONSVyV+N86k5JMjsDOQJEijDny9VvUax7cxSnAjKQTlZQJpvSEJ3IBjpHawLp8RLl4z27iVbm9hHLHDAF54qiK4HLXyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727682950; c=relaxed/simple;
-	bh=WqiiMn3TOK8qkHGyl30poW6uvLfsNKOs+I8IDx0MaPY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iCGqODT7iTTEODxF3QNPrkY+js39dsV7mPKf17Mcwxotz8NM3QRzLqQPe98wftwkkgeUrIWXzIC1sgKCSUNUYFRRfOj/0sf5oak/P7PYd3GFPlwz4bNum7ESePPMt9bg+hEagOkK41nrxYSXCvg2kO/TdSYK0bVOGQZxh4Nh6TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nsqyNcuZ; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-20b01da232aso28473525ad.1;
-        Mon, 30 Sep 2024 00:55:48 -0700 (PDT)
+	s=arc-20240116; t=1727684561; c=relaxed/simple;
+	bh=jAyQ5z//ge6upJRh90LG5/4z5YzQKZ1YE/rxqgzzDCY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h5XlwVEIsPXtmtmij/wCRb6dE8xqlwdYicWMqgj6dETBVsucs/+ztz4wOFvoQ5TudP/I02NphExKn6KZJCitb8OWhuxKBOrd37bLFJzdjvVezGyhC0nhLKHPYTLBp7DBItF6rN6OVWRXGhq0xxOfO+il9/cOnQvY+5vb33He6kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AjVDaqN5; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-37ccd50faafso2597853f8f.3
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Sep 2024 01:22:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727682948; x=1728287748; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Zii7toS4u8fqK8e7iEXrwK+8PuQ8KNxa6JHJJXvxdRs=;
-        b=nsqyNcuZDs/qx3iJBz9iCv0FXeWuLJuA2Whkh7FpJ6/64lBHRPHRpL+R8MC1w5RkgI
-         HufMAJmyZlmSpSQNnWAgfwXukGv5jv941rBXGWaqKf3dlZH2HgCgTfeIUtViJ2QK4XM+
-         gqXoMGFU4a1jL+DzRjv2vyW6tdMKjVyOnKQMWoYNSPxuKCjMpbtmvs9p5ztmtHSYaesF
-         hWrqOIXiNQQPssDcJ5Gzoxlvc3hGc80MXMTp/DwslECW4yn5CBBvdzGKxSNWaDFBz7jR
-         WbXppE7G7/s8aunzubQIiYeF3f305AJq1hePFuYCaN0llZC7w3k8+0eXT+yne70Lltvz
-         L+Ww==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1727684558; x=1728289358; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qHqObhGRdeHLD7sYS0ZFtby+4VazJd0VGtHv0LVcrpI=;
+        b=AjVDaqN5JmXXAGVjx0bwm31Rcssd1XAxVDvdSkfPLnlj1+egK6KGkbWWTdbFuPrNZj
+         j6pAlLJYLctze4XUS6HhIIld4zHDnCyVup9gXgIPmCcdMKvyrcU18V/rCD8qFUKQlCvb
+         F/BpDNC/WKyXX8mjiap8btcP0npsXDHtxXqwptSuYtSkxvDW5JuZieA+cW5GFtGmuwER
+         VOR+TsWVvxD4vhhNmRGoxt+kaloglbKVex1+DWUAhE6fDRsyT35q7M0zWIOuJ18xPM2u
+         /fP7Li15TCRejQo5u1wdaI62Lw6HBnUV+fA7xvTHHiMcSk9QHDeZWs38suZ5/Ltue/9p
+         NUoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727682948; x=1728287748;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zii7toS4u8fqK8e7iEXrwK+8PuQ8KNxa6JHJJXvxdRs=;
-        b=Y/aFLxdKwqwuDi+FyBWlm/LY1Kj0eaeaIVR+oeArosHEEC/ZZuEFdUSLgrj3lkTOes
-         VUe2WGzd34yg3cyoNPcmfcwzj8i4eY6moe+L0BnYRArVuiEgATab+K9ipEzq4zz92zHK
-         Cw+dO8uCUpoq/n6mxMGGx+gW1m/eczuppahuNXejdczjdj4+DnutgROcMIDpboGdfuKS
-         Cyt1RxdOCH717MC6aHI5YhtgWBBZju0U8sagXbyQq8R2/LF+SJRc7vncoiil49JXPE/3
-         gd3HFxTG7wlfUq6WQRC4XMtRLYwRsQbMepwp8aCk+e0oKY5+TmbprNpMuys3JfovcRAb
-         x6Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCViinI9SwXhfzoXhpMotBQfG4BYUtGC1HKf/IVmb5LAhCj1kPuBAbS+RTGLpSiVvJTVsc9NxPzRREB13v0I@vger.kernel.org, AJvYcCWrq/bd11k49HCXLMqP4z7WDgBx+UE08rBcfPUUs3Ny2tAWidsPF0l4dpk4UYyVZkbOZF38lxsOlnZi@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLRR9bZhoKchiowKw1SGdR5exj8Lu/XDF+03QrFV/xBGaZp830
-	pypX+JJxTwD6EJJyYiUh6jQBvrdbtqKvYDD7qm8EE4zZ62xE48E8
-X-Google-Smtp-Source: AGHT+IFxOMc0d4tCPAQmw7OpnEdG5eybS/WJhfQZ4V9BtWh7rZBQN7P2cPW6Jv34yoG6Xb9/KU8emw==
-X-Received: by 2002:a17:902:c40f:b0:205:7998:3deb with SMTP id d9443c01a7336-20b19c9af59mr221231995ad.19.1727682948163;
-        Mon, 30 Sep 2024 00:55:48 -0700 (PDT)
-Received: from rigel (14-202-6-222.static.tpgi.com.au. [14.202.6.222])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20b37e0d519sm49524575ad.172.2024.09.30.00.55.45
+        d=1e100.net; s=20230601; t=1727684558; x=1728289358;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qHqObhGRdeHLD7sYS0ZFtby+4VazJd0VGtHv0LVcrpI=;
+        b=wtCEfP09REMg4g+xpSy3Cbds+cqPlJo6slp1MEaBN1Wm45oklSL6/7GqR5EVqIYOvS
+         06Ek31bq4eZWX2J/wn6dNoI9Xv6l3AwfortqgE/TjpcR5kWR8Epv51YUJuRZFCz6FO29
+         ZbbnZVqel95BOTVy8XZh3HBcfb6lTlqY6XSjfdoIMk9nsXF7pn3rVhMc0ftG+uZYfxqK
+         hqxd1/nxJKKHJIijvmxts9lYffDoYmgMxRaR6WF4Ba+EwoY+tNpVJ0nYqr0/WSwO/Nxs
+         wPWCdQOYtjUKdPmnrgHyOFBSRGP5+CU2JF+mGRyMW5Dg6u5qfFnLx3SYMvPLp7S5DMAE
+         IXIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0os4IKstPDHT5NsgUfs77QUncESOZ6Cx9F0IZ0v8jqUaSY84qXeWMRub14e2hn3kHcVRz7fGTBtHd@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPvvlcvKEk1pZH/yeHN0LlStD8mLhNXlRvui7f3O3b9YBLYH8B
+	JwlpPppIwtNWc86MCOsdJn96xGFdGre0kgX2qWl2bsxocQPTUseFJ3PNIYQbA2w=
+X-Google-Smtp-Source: AGHT+IFJwgIALLLvKWxIbWeECxXnZbaa1REzw6yfyuDfHJ8ofYfzg4yn2gJPrTUiDYT3hwPmIIO69Q==
+X-Received: by 2002:a5d:58cf:0:b0:374:c69c:2273 with SMTP id ffacd0b85a97d-37cd5b1bb77mr6296782f8f.37.1727684557630;
+        Mon, 30 Sep 2024 01:22:37 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:8791:e3e5:a9ca:31a6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cd564d01esm8522655f8f.3.2024.09.30.01.22.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2024 00:55:47 -0700 (PDT)
-Date: Mon, 30 Sep 2024 15:55:43 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [RFC PATCH] gpio: sysfs: make the sysfs export behavior
- consistent
-Message-ID: <20240930075543.GB57004@rigel>
-References: <20240927074221.9985-1-brgl@bgdev.pl>
- <20240930010334.GA6286@rigel>
- <CAMRc=Mdt8+ATGVU19E+pRrMhKZTcO49HTPdboHLLeN_Omd6LoQ@mail.gmail.com>
+        Mon, 30 Sep 2024 01:22:37 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Herve Codina <herve.codina@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] gpio: free irqs that are still requested when the chip is being removed
+Date: Mon, 30 Sep 2024 10:22:30 +0200
+Message-ID: <172768450502.13259.2790852008542028745.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240919135104.3583-1-brgl@bgdev.pl>
+References: <20240919135104.3583-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mdt8+ATGVU19E+pRrMhKZTcO49HTPdboHLLeN_Omd6LoQ@mail.gmail.com>
 
-On Mon, Sep 30, 2024 at 09:20:48AM +0200, Bartosz Golaszewski wrote:
-> On Mon, Sep 30, 2024 at 3:03 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > > I decided to write a sysfs-to-libgpiod compatibility layer based on
-> > > FUSE. Since Rust is hard, I started prototyping the thing in python
-> > > first to at least have the logic nailed down before I tackle the rust
-> > > part.
-> > >
-> >
-> > Something along these lines[1]?
-> >
-> > Cheers,
-> > Kent.
-> >
-> > [1]https://dev.to/krjakbrjak/simulating-gpio-sysfs-interface-with-fuse-and-c-30ga
-> >
->
-> Well, this doesn't really do anything. I'm thinking about something
-> consuming the libgpiod rust bindings to actually be a useful
-> replacement for kernel sysfs.
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I haven't actually looked at that - but when you mentioned a sysfs fuse
-interface that rang a bell.
 
-> The master plan is: provide a drop-in user-space replacement for
-> sysfs, make users convert to using it instead of the real thing,
-> eventually remove sysfs from the kernel and then some time after
-> remove the compatibility layer from existence forcing everybody to now
-> move to pure libgpiod. :)
->
+On Thu, 19 Sep 2024 15:51:04 +0200, Bartosz Golaszewski wrote:
+> If we remove a GPIO chip that is also an interrupt controller with users
+> not having freed some interrupts, we'll end up leaking resources as
+> indicated by the following warning:
+> 
+>   remove_proc_entry: removing non-empty directory 'irq/30', leaking at least 'gpio'
+> 
+> As there's no way of notifying interrupt users about the irqchip going
+> away and the interrupt subsystem is not plugged into the driver model and
+> so not all cases can be handled by devlinks, we need to make sure to free
+> all interrupts before the complete the removal of the provider.
+> 
+> [...]
 
-Ironically a lot of users would probably be happier with that than with
-the D-bus daemon.  And for that reason I don't think that last step will
-ever happen.  But that is ok too - as long as we can finally remove the
-sysfs interface from the kernel.
+Applied, thanks!
 
-Cheers,
-Kent.
+[1/1] gpio: free irqs that are still requested when the chip is being removed
+      commit: ec8b6f55b98146c41dcf15e8189eb43291e35e89
 
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
