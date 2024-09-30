@@ -1,62 +1,55 @@
-Return-Path: <linux-gpio+bounces-10581-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10580-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF78A98A7F6
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 16:58:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0EC298A7EF
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 16:58:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A9031C22E8A
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 14:58:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D5E31F23779
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 14:58:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7A05192B99;
-	Mon, 30 Sep 2024 14:58:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A4D51925B3;
+	Mon, 30 Sep 2024 14:58:22 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B0141925A3;
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACCCA1922E5;
 	Mon, 30 Sep 2024 14:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727708303; cv=none; b=c4lgWcnjxiOHZCqMWADdSMM5INOW6kQrZVfTsZg+8mBHPy0SLSEzmffQcaeWY9XtoGQzAlCDDJM/wm5T4M2CRE2MoEX5SJXlJ9qfMrMZNTUNM+Ah9kG9smMasbMlKjIYMz8xN+1pxW7wSI56d3Jl2ght62pzVKhrIjC84vluY6c=
+	t=1727708302; cv=none; b=f4MjMyB9FVlvvFsJ1ealA9hwFcdwu99S6blk/0hLMKPbGdQEp+ECJ7M7K5BWLWFsfDQD4g5DFjn7U4FzMax5dSJYo8gcGI1YusTdYOKrxlrye6C6CjRrmVI5EuimkxYBrvK/AVDqW0pWHbjTML5sc84yu+fIr+25kTcmGEzwmkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727708303; c=relaxed/simple;
-	bh=7RX6RwRNa67Vv/ld0q+wViNY36r0TS+nBtx/sUS5LYk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E8HcQCS1AiGHQ4wj4JBzUkskDc3NHmymF5nzGlzuXVX2gxeNUQHrehFP+6fA1O/JSVLX8uDJ9xvOGI+W0PA3K9gGUDfzol9Rgae36fM+/WkKFfU1TM1RAiXTanZmnau1zDeANdh5Awp1SticUlXJkKsdavEqpbrhWq/gXwi2FyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+	s=arc-20240116; t=1727708302; c=relaxed/simple;
+	bh=aSv48EF/xq4kmxfXe/OmnMinPAbSZsyx0W4kFM7uZNI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qO5ARagiVQKX6SbrKnTauO9HJbosEo87ilbKzpKWfsRcpsbsqlkjy308w3IVOnkCliN6kqxjzzNJ22bFQ5RYyzorUHdGa9VQq78dkbXGN0wnPZuddegOfktUAMC1tl9Vpy06iLB2esQ3zPg15Lu/jPcHnkuf9zWJNJvS1z0cEuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 X-IronPort-AV: E=Sophos;i="6.11,165,1725289200"; 
-   d="scan'208";a="220366597"
+   d="scan'208";a="224342602"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 30 Sep 2024 23:53:12 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 30 Sep 2024 23:53:12 +0900
 Received: from mulinux.home (unknown [10.226.92.226])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3763A4204B8B;
-	Mon, 30 Sep 2024 23:52:54 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3584D4204B8F;
+	Mon, 30 Sep 2024 23:53:02 +0900 (JST)
 From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
+To: Linus Walleij <linus.walleij@linaro.org>,
 	Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	Chris Paterson <Chris.Paterson2@renesas.com>,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 0/5] Add support for the RZ/V2H Interrupt Control Unit
-Date: Mon, 30 Sep 2024 15:52:39 +0100
-Message-Id: <20240930145244.356565-1-fabrizio.castro.jz@renesas.com>
+Subject: [PATCH v2 1/5] pinctrl: renesas: rzg2l: Remove RZG2L_TINT_IRQ_START_INDEX
+Date: Mon, 30 Sep 2024 15:52:40 +0100
+Message-Id: <20240930145244.356565-2-fabrizio.castro.jz@renesas.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240930145244.356565-1-fabrizio.castro.jz@renesas.com>
+References: <20240930145244.356565-1-fabrizio.castro.jz@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -65,41 +58,80 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Dear All,
+The RZ/V2H(P) has 16 IRQ interrupts, while every other platforms
+has 8, and this affects the start index of TINT interrupts
+(1 + 16 = 17, rather than 1 + 8 = 9).
+Macro RZG2L_TINT_IRQ_START_INDEX cannot work anymore, replace
+it with a new member within struct rzg2l_hwcfg.
 
-This series adds whatever is required for supporting NMI, IRQ, and
-TINT interrupts to the Renesas RZ/V2H SoC.
-
+Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+---
 v1->v2:
-* Dropped patch "dt-bindings: pinctrl: renesas: rzg2l-pinctrl: Add interrupt-parent".
-* Patch "dt-bindings: interrupt-controller: Add Renesas RZ/V2H(P) Interrupt Controller"
-  amended as per Rob's comments.
-* Patch "irqchip: Add RZ/V2H(P) Interrupt Control Unit (ICU) driver"
-  fixed missing put_device.
+* No change
 
-Thanks,
-Fab
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Fabrizio Castro (5):
-  pinctrl: renesas: rzg2l: Remove RZG2L_TINT_IRQ_START_INDEX
-  dt-bindings: interrupt-controller: Add Renesas RZ/V2H(P) Interrupt
-    Controller
-  clk: renesas: r9a09g057: Add clock and reset entries for ICU
-  irqchip: Add RZ/V2H(P) Interrupt Control Unit (ICU) driver
-  arm64: dts: renesas: r9a09g057: Add ICU node
-
- .../renesas,rzv2h-icu.yaml                    | 276 +++++++++
- arch/arm64/boot/dts/renesas/r9a09g057.dtsi    |  88 +++
- drivers/clk/renesas/r9a09g057-cpg.c           |   2 +
- drivers/irqchip/Kconfig                       |   7 +
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/irq-renesas-rzv2h.c           | 527 ++++++++++++++++++
- drivers/pinctrl/renesas/pinctrl-rzg2l.c       |   8 +-
- drivers/soc/renesas/Kconfig                   |   1 +
- 8 files changed, 908 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzv2h-icu.yaml
- create mode 100644 drivers/irqchip/irq-renesas-rzv2h.c
-
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index 5a403915fed2..0aba75dce229 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -168,7 +168,6 @@
+ #define RZG2L_PIN_ID_TO_PIN(id)		((id) % RZG2L_PINS_PER_PORT)
+ 
+ #define RZG2L_TINT_MAX_INTERRUPT	32
+-#define RZG2L_TINT_IRQ_START_INDEX	9
+ #define RZG2L_PACK_HWIRQ(t, i)		(((t) << 16) | (i))
+ 
+ /* Custom pinconf parameters */
+@@ -251,6 +250,7 @@ enum rzg2l_iolh_index {
+  * @func_base: base number for port function (see register PFC)
+  * @oen_max_pin: the maximum pin number supporting output enable
+  * @oen_max_port: the maximum port number supporting output enable
++ * @tint_start_index: the start index for the TINT interrupts
+  */
+ struct rzg2l_hwcfg {
+ 	const struct rzg2l_register_offsets regs;
+@@ -262,6 +262,7 @@ struct rzg2l_hwcfg {
+ 	u8 func_base;
+ 	u8 oen_max_pin;
+ 	u8 oen_max_port;
++	unsigned int tint_start_index;
+ };
+ 
+ struct rzg2l_dedicated_configs {
+@@ -2379,7 +2380,7 @@ static int rzg2l_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
+ 
+ 	rzg2l_gpio_irq_endisable(pctrl, child, true);
+ 	pctrl->hwirq[irq] = child;
+-	irq += RZG2L_TINT_IRQ_START_INDEX;
++	irq += pctrl->data->hwcfg->tint_start_index;
+ 
+ 	/* All these interrupts are level high in the CPU */
+ 	*parent_type = IRQ_TYPE_LEVEL_HIGH;
+@@ -3035,6 +3036,7 @@ static const struct rzg2l_hwcfg rzg2l_hwcfg = {
+ 	},
+ 	.iolh_groupb_oi = { 100, 66, 50, 33, },
+ 	.oen_max_pin = 0,
++	.tint_start_index = 9,
+ };
+ 
+ static const struct rzg2l_hwcfg rzg3s_hwcfg = {
+@@ -3067,12 +3069,14 @@ static const struct rzg2l_hwcfg rzg3s_hwcfg = {
+ 	.func_base = 1,
+ 	.oen_max_pin = 1, /* Pin 1 of P0 and P7 is the maximum OEN pin. */
+ 	.oen_max_port = 7, /* P7_1 is the maximum OEN port. */
++	.tint_start_index = 9,
+ };
+ 
+ static const struct rzg2l_hwcfg rzv2h_hwcfg = {
+ 	.regs = {
+ 		.pwpr = 0x3c04,
+ 	},
++	.tint_start_index = 17,
+ };
+ 
+ static struct rzg2l_pinctrl_data r9a07g043_data = {
 -- 
 2.34.1
 
