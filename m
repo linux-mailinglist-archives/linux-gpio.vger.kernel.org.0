@@ -1,242 +1,132 @@
-Return-Path: <linux-gpio+bounces-10583-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10584-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2BFA98A81F
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 17:07:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A370E98A895
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 17:33:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3BDA5B28CE4
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 15:07:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D607A1C225EF
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Sep 2024 15:33:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B953192598;
-	Mon, 30 Sep 2024 15:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SbsO7g4P"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E00A192D60;
+	Mon, 30 Sep 2024 15:30:28 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044F31922E5;
-	Mon, 30 Sep 2024 15:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD31A1922E6;
+	Mon, 30 Sep 2024 15:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727708837; cv=none; b=eg4yfm7JFTbtE2iOU6sCFQ3655o5gHWB0aHscdZrs1JlgJ41CqcZud3SuDZtEa1D1ghmmXU8ip5xFf1IP05LgjjcDgLS5Qh7wKsr44ryTsD+2tXxRI/5AbS7PvwvjBj0h2MYMpYjqcZRgW3UIW6R97KMfDLIm8r3UPIx1KFjZlI=
+	t=1727710227; cv=none; b=Wdb6rkYllr0t04zEnDAdAQViclROE/X2yzE8R2SutFrzzh/h/ctT5wUP8KpgRu4JMmpOqsl4yG4gidmcTil4zF9NV9h8Z7SP9KVysKzIcgpduTv4hSQTc1xY2rsAb7Ig8W4+LTZ717XgFhUttwqeyBI+787wa+rwsQkdGAqbIrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727708837; c=relaxed/simple;
-	bh=1mdFYVUyk9PvCk+d9I1dqxT4nmATsY89D3M/XmBH7uI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E2tZxQ3Vyn6qiG3+FUqphICKbfl+kuhsr6deZaG+FTL3P1FUZILjhtwxvL9r3YyTAl15/82RADKmsdKn+l0ApfWUfWP5Ce0zArcq/vExZokqaXm47/hCnuTUNJddlhXfDULwmYvEmTF0EmGijAxNv8uiuYY8HWg95xJVNCJD0aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SbsO7g4P; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9C0C4CEC7;
-	Mon, 30 Sep 2024 15:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727708836;
-	bh=1mdFYVUyk9PvCk+d9I1dqxT4nmATsY89D3M/XmBH7uI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SbsO7g4P6V1MhXPMCtd91iXqb8ha/RVg8lmgjLW925cTpYbI3mpRZ84Xz0/MohUsX
-	 Ld1gGAeJfc+LkO75un+qB7jmW2XXDRTMsu6htxU2QuRyN1MfaA4rp5R2GYmkz4+zW0
-	 2Sv+Nwbd+Wi2h5qtWAuNYA5CaH51HMxWfdDQdEg7s+X663VTrlBEu8j0nOnU8YFCrH
-	 Z88RdWG3GdBTXJNziXCDExlsn/pxYu9moA5v8mHQ//q0ODO57Bf/2ctSXY4qkpUoqQ
-	 1oQBJyXrWwgEFiV1KZf3ZsMcS01zYgyLT7Wq238czM+Oir3uMlutX77iL4migCeWHN
-	 xUE5W2RWnGrRw==
-Date: Mon, 30 Sep 2024 16:07:08 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chester Lin <chester62515@gmail.com>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	NXP S32 Linux Team <s32@nxp.com>,
-	Christophe Lizzi <clizzi@redhat.com>,
-	Alberto Ruiz <aruizrui@redhat.com>,
-	Enric Balletbo <eballetb@redhat.com>
-Subject: Re: [PATCH v4 2/4] dt-bindings: gpio: add support for NXP
- S32G2/S32G3 SoCs
-Message-ID: <20240930-bamboo-curliness-eb4787b81ea3@spud>
-References: <20240926143122.1385658-1-andrei.stefanescu@oss.nxp.com>
- <20240926143122.1385658-3-andrei.stefanescu@oss.nxp.com>
- <20240926-apricot-unfasten-5577c54a3e2f@spud>
- <c2d8f121-903d-4722-825f-c00604ef3991@oss.nxp.com>
- <20240930-shortness-unedited-650f7996e912@spud>
+	s=arc-20240116; t=1727710227; c=relaxed/simple;
+	bh=PYIZjdpD62DjCgg5av5QNpV446iFC/bzdwtY9n1VG9k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ggZners6Aitg+ASKBCvgPPmFzWKpI241WShpRM5gPQUba8MTOfszDp0FQQVOETwKNV5qt0DsKjYpL/jQtgMoSfMX+i3UUZ2l2QsPs+aDe901b2E9HwActIEF5GJCpCfSPuM/TPrCxPzCiEIBf0G2IbQKs5aZPW/Wrc4ygYSiw+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e260754066cso2566286276.1;
+        Mon, 30 Sep 2024 08:30:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727710224; x=1728315024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X4YA9DJY5hrVnnk/i+Fsy/WzY6pmSHUb6GqzZbRLi/A=;
+        b=HBg53UOU1NLrztVPEapKy1KrmOWMNRd+jFyFn25RUY+/sQ9BY2ukq8PYT+WGwXKGDo
+         p0u9Jsd50VkaKaTFGGp2lLu/PHOhFNA6OZVMupHr69SObil5pBUVfbt1s9UEu+mN3KBW
+         QOTmhhQbw0nksi9OHEstd17BD7DkayO5Y5W42nJI6qdLW+ixNmukvlm0KtPrG/NgJzJS
+         83BLI97eOmQNbOBtXmbfgVD1SFNj+ZS8WJ/iHqjmqpSgnK46neASaKWd88MdBoSNXUbi
+         dEU7MWdBh1VEebi+BxU3k8n4URBq5Axp0iJ2CDtY6BGwiU6ObcR9DRo5p6mrlxkn40ev
+         SpEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWEnrdyETJ7u09ICBkrVbAKw/Z9Nnw3s7waTcthbtjDcKG8Hw9kk/0XiBvGMsYxZRPceJenYSeotLXC@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRKF3D0HRa1BLvrXRj51RoW3cTZYA4wsbmQS+Tjs4kL39ZMwYq
+	ZGYz/DUmRRCZZ+JTwUdlK58RrGGZFxHxmvNHiitKgb52fiSMxgHrkwsS1amr
+X-Google-Smtp-Source: AGHT+IHW2let2ol4DAVR8XFQSKURz+Wv9NpqjPgXOv7zxIFC/mISOu2KoZsNgjyBhgqWiklMAoGlow==
+X-Received: by 2002:a05:690c:6612:b0:6e2:1467:17c0 with SMTP id 00721157ae682-6e26944ebb9mr36775927b3.8.1727710223888;
+        Mon, 30 Sep 2024 08:30:23 -0700 (PDT)
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e24538aff0sm14103267b3.126.2024.09.30.08.30.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2024 08:30:23 -0700 (PDT)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6e22f10cc11so35373007b3.1;
+        Mon, 30 Sep 2024 08:30:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVl8tw2dx8f7UtgxGsEHhOL+lERwyie6Y7ZOeH2qNsKp/L28kBj5o7CpqYHhSoYs5awKs7ZCrQUDwJo@vger.kernel.org
+X-Received: by 2002:a05:690c:f92:b0:6dd:f81a:8120 with SMTP id
+ 00721157ae682-6e247519733mr105361637b3.4.1727710223075; Mon, 30 Sep 2024
+ 08:30:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rI5CiW6I9ZSnzML4"
-Content-Disposition: inline
-In-Reply-To: <20240930-shortness-unedited-650f7996e912@spud>
-
-
---rI5CiW6I9ZSnzML4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240926100653.15015-2-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20240926100653.15015-2-wsa+renesas@sang-engineering.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 30 Sep 2024 17:30:10 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUEsLQiQqJbD9BNg7FyastVToP6VS2sFf8EeuyqzQW3dg@mail.gmail.com>
+Message-ID: <CAMuHMdUEsLQiQqJbD9BNg7FyastVToP6VS2sFf8EeuyqzQW3dg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rza1: mark GPIOs as used
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, 
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 30, 2024 at 04:00:57PM +0100, Conor Dooley wrote:
-> On Fri, Sep 27, 2024 at 10:13:54AM +0300, Andrei Stefanescu wrote:
-> > Hi Conor,
-> >=20
-> > Thank you very much for the prompt review!
-> >=20
-> > On 26/09/2024 18:38, Conor Dooley wrote:
-> > > On Thu, Sep 26, 2024 at 05:31:19PM +0300, Andrei Stefanescu wrote:
-> > >> Add support for the GPIO driver of the NXP S32G2/S32G3 SoCs.
-> > >>
-> > >> Signed-off-by: Phu Luu An <phu.luuan@nxp.com>
-> > >> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
-> > >> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> > >> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-> > >=20
-> > > What's up with this SoB chain? You're the author what did
-> > > the other 3 people do? Are they missing co-developed-by tags?
-> >=20
-> > Yes, thank you for suggesting it! I will also add Co-developed-by tags
-> > for them. In the end it should look like this:
-> >=20
-> > Co-developed-by: Phu Luu An <phu.luuan@nxp.com>
-> > Signed-off-by: Phu Luu An <phu.luuan@nxp.com>
-> > Co-developed-by: Larisa Grigore <larisa.grigore@nxp.com>
-> > Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
-> > Co-developed-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> > Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> > Signed-off-by: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
-> >=20
-> > >> +
-> > >> +examples:
-> > >> +  - |
-> > >> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > >> +    #include <dt-bindings/interrupt-controller/irq.h>
-> > >> +
-> > >> +    gpio@4009d700 {
-> > >> +        compatible =3D "nxp,s32g2-siul2-gpio";
-> > >> +        reg =3D <0x4009d700 0x10>,
-> > >> +              <0x44011700 0x18>,
-> > >> +              <0x4009d740 0x10>,
-> > >> +              <0x44011740 0x18>,
-> > >> +              <0x44010010 0xb4>,
-> > >> +              <0x44011078 0x80>;
-> > >=20
-> > > Huh, I only noticed this now. Are you sure that this is a correct
-> > > representation of this device, and it is not really part of some sysc=
-on?
-> > > The "random" nature of the addresses  and the tiny sizes of the
-> > > reservations make it seem that way. What other devices are in these
-> > > regions?
->=20
-> Thanks for your answer to my second question, but I think you missed this
-> part here ^^^
+Hi Wolfram,
 
-Reading it again, I think you might have answered my first question,
-though not explicitly. The regions in question do both pinctrl and gpio,
-but you have chosen to represent it has lots of mini register regions,
-rather than as a simple-mfd type device - which I think would be the
-correct representation. .
+On Thu, Sep 26, 2024 at 12:07=E2=80=AFPM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> GPIOs showed up as unclaimed, so they could be muxed to something else
+> even though they were in use. Mark GPIOs as claimed to avoid that.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Cheers,
-Conor.
+Thanks for your patch, which reminds me to fix the same issue on RZ/A2 ;-)
 
->=20
-> > >=20
-> > > Additionally, it looks like "opads0" and "ipads0" are in a different
-> > > region to their "1" equivalents. Should this really be represented as
-> > > two disctint GPIO controllers?
-> >=20
-> > I will add a bit more context regarding the hardware.
-> >=20
-> > The hardware module which implements pinctrl & GPIO is called SIUL2.
-> > For both S32G2 and S32G3 we have the same version of the module and=20
-> > it is integrated in the same way. Each SoC has two SIUL2 instances which
-> > mostly have the same register types and only differ in the number
-> > of pads associated to them:
-> >=20
-> > - SIUL2_0 mapped at address 0x4009c000, handling pins 0 - 101
-> > - SIUL2_1 mapped at address 0x44010000, handling pins 112 - 190
-> >=20
-> > There are multiple registers for the SIUL2 modules which are important
-> > for pinctrl & GPIO:
-> >=20
-> > - MSCR (Multiplexed Signal Configuration Register)
-> >   It configures the function of a pin and some
-> >   pinconf properties:
-> >     - input buffer
-> >     - output buffer
-> >     - open-drain
-> >     - pull-up/pull-down
-> >     - slew rate
-> >   Function 0 means the pin is to be used as a GPIO.
-> >=20
-> > - IMCR (Input Multiplexed Signal and Configuration Register)
-> >   If the signal on this pad is to be read by another hardware
-> >   module, this register is similar to a multiplexer, its value
-> >   configures which pad the hardware will link to the module.
-> >   As an example let's consider the I2C0 SDA line. It has one
-> >   IMCR associated to it. Below are its possible pins and
-> >   corresponding IMCR values:
-> >     pin 16 <- 2
-> >     pin 24 <- 7
-> >     pin 31 <- 3
-> >     pin 122 <- 4=20
-> >       (Note that MSCR122 is part of SIUL2_1 but the IMCR for
-> >        I2C0_SDA is part of SIUL2_0)
-> >     pin 153 <- 5
-> >     pin 161 <- 6
-> >   The IMCR values should be aligned with the function bits in the
-> >   MSCR bits. If we want to use pin 122 for I2C0_SDA we will configure
-> >   the function bits in MSCR122 and write the value 4 to the I2C0_SDA
-> >   IMCR.=20
-> >=20
-> > - PGPDO/PGPDI Parallel GPIO Pad Data Out/In
-> >   16 bit registers where each bit(besides some gaps) represents
-> >   a GPIO's output/input value
-> >=20
-> > - DISR0, DIRER0, IREER0, IFEER0
-> >   These registers are used for: status, enable, rising/falling edge
-> >   configuration for interrupts. We have 32 interrupts called EIRQ and
-> >   each interrupt has one or more pads associated with it (controlled
-> >   by an IMCR register per EIRQ).
-> >=20
-> >   However, one important thing to note is that even though there are
-> >   EIRQs for SIUL2_0 pads, all the interrupt registers mentioned above
-> >   are only present in SIUL2_1.
-> >=20
-> > Because of mixed pins (I2C0_SDA in the example above with the MSCR
-> > in SIUL2_1 for pad 122 and the IMCR in SIUL2_0) and the interrupt
-> > configuration registers in SIUL2_1 we decided to have a single
-> > driver instance.
-> >=20
-> > >=20
-> > >=20
-> > > Cheers,
-> > > Conor.
-> > >=20
-> >=20
-> > Best regards,
-> > Andrei
-> >=20
+> --- a/drivers/pinctrl/renesas/pinctrl-rza1.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rza1.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/ioport.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/pinctrl/pinconf-generic.h>
+>  #include <linux/pinctrl/pinctrl.h>
+>  #include <linux/pinctrl/pinmux.h>
+> @@ -750,6 +751,11 @@ static int rza1_pin_mux_single(struct rza1_pinctrl *=
+rza1_pctl,
+>  static int rza1_gpio_request(struct gpio_chip *chip, unsigned int gpio)
+>  {
+>         struct rza1_port *port =3D gpiochip_get_data(chip);
+> +       int ret;
+> +
+> +       ret =3D pinctrl_gpio_request(chip, gpio);
+> +       if (ret)
+> +               return ret;
+>
+>         rza1_pin_reset(port, gpio);
 
+rza1_gpio_free() needs a balancing call to pinctrl_gpio_free().
 
+Gr{oetje,eeting}s,
 
---rI5CiW6I9ZSnzML4
-Content-Type: application/pgp-signature; name="signature.asc"
+                        Geert
 
------BEGIN PGP SIGNATURE-----
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZvq+nAAKCRB4tDGHoIJi
-0iQdAQDpVmzuFtiWSE3Ed5Pn+Tzm5lXzptDhPwqs5ffBQtwd3wEAt7HQn7QqknYP
-n+uLRcALZudJ6e7jYxDU3DZjIF3ueAM=
-=Wd+D
------END PGP SIGNATURE-----
-
---rI5CiW6I9ZSnzML4--
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
