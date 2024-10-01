@@ -1,109 +1,129 @@
-Return-Path: <linux-gpio+bounces-10624-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10625-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9006D98BBF8
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 14:20:12 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9775598BC0C
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 14:27:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 16762B212F2
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 12:20:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 563EA283B53
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 12:27:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3E9C1C242D;
-	Tue,  1 Oct 2024 12:20:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E949A1C2432;
+	Tue,  1 Oct 2024 12:27:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PQ2V9UNF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JleF9r8C"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E892A1C232C
-	for <linux-gpio@vger.kernel.org>; Tue,  1 Oct 2024 12:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ED71C2424
+	for <linux-gpio@vger.kernel.org>; Tue,  1 Oct 2024 12:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727785205; cv=none; b=WaNpL8llGaWrqSn1Rtz2J7Y3qiAvZlBs4xw9dk4pleqqtCPAu5l9Cn6NAcjxppYw8HUOlSEqpXXsGgdW5FVaIFtbo823CuK6oHwTBGhDPkDIRWBbp5M+4Z+NT0gGASXlU4ClxRpuKYi7lteQkSuw+olD7v5vAGDS2xB4t81jFPY=
+	t=1727785659; cv=none; b=XsNypwSjk2ugLlWPs5hziE5rKnGrhMDi2CuIPxw5whz+m3LlJyfvOBEKxKmRPnLIWkT/fYZsmc1fWFaPY9YgiOjk/g0aYbiM330sFUNCcc+2rpt9JPrp9hr6I3H4uWHdOMlsc7qkWdj9KqKBZSUzbJVE7PWjYzIeO+39yIKvUe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727785205; c=relaxed/simple;
-	bh=Z8EKtehk1xEe2cpvvzUTJMmi+AHneIFob7zq0Qe/FCY=;
+	s=arc-20240116; t=1727785659; c=relaxed/simple;
+	bh=SoCurHIkleGhUTp4khwR0zEhKLpu15VK4lI1dWVteZ0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EuQQrbI31XGZ4bxUpm5b2ZXoEPnBvoIpBmjEnYLnb2WRv/9bUaQDUmaBhywfNwJArcxXE7NF8LOOBxp2hKr5kjM4Hva2EmxP69xg9d0OFNlz1OQnG9nr/PZFsZU/ji/i0pLr+ApwZ9GD5RYK6dptlxfptFi3KAedXaHL1dQPIp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PQ2V9UNF; arc=none smtp.client-ip=209.85.167.49
+	 To:Cc:Content-Type; b=J72DZU0raEVlSEB61a495kDdJUoC3oWjWzdU4RxWYozBEMsCCp4sKaGZ8Qgz2scz5wawNfNJP+3dfquhQRdI7NMvlnuNDqyWu2A9nz4uZjisNTuvVk2Y+E1c5LZWwomrQxKeNbdZOolTgdjY6Eow1VuHhGZ/6vnXZDDHw5lpn9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JleF9r8C; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53994aadb66so2170101e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2024 05:20:03 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5398e53ca28so2989937e87.3
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2024 05:27:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727785202; x=1728390002; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1727785656; x=1728390456; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z8EKtehk1xEe2cpvvzUTJMmi+AHneIFob7zq0Qe/FCY=;
-        b=PQ2V9UNFwEyUJ+BID+QKrvYnCqM9nAr+7hH6XZ2uz+vbziVmSSmwag4l2F0rTiU7D0
-         1WV921/Y1Qce24sztOjS+lirGPVNWj7EF/9KRSsHce0AcU87Q+fykep037JmQsUiPzk5
-         HQmYNeJjjBpucqHr3+mee0F/0cL7wuH1SxenV8Jdp/b+EulCtKRUCCoIKFXaa4P2X0yr
-         5NczJykTGRMeieXrPClw6eX6JUwf7KFmN/I6vg+L1ND85i84trvkqMBys7Ri12TprSL2
-         fgRIR9QSHEM3h8ccSWNnMzWULu6OQWl8jfCWc5ADl0kEhxPwhnra+2vkIu4K6mQZ2o+x
-         y8GA==
+        bh=SoCurHIkleGhUTp4khwR0zEhKLpu15VK4lI1dWVteZ0=;
+        b=JleF9r8Cgi9SbBqVu55NMMmAoISmLTy0hHRyDrs6xJgV+eVRDowmb0NJmyMZQyxW+N
+         CZI14fImA0403beZLe8mdGEAdZ3UV8JjR51ywik9gPK+N2V9blYDdnMl+DUQ51PD7diZ
+         +pwARflZ8+DC6UNJqGdb821COFI3wNKtJHoEOANmTIfX9XdbHvRPLWRcvujcSrQkFQas
+         arkNUQq+pzqX8BU04co41pNJUhxkAb0qjvXwAEcHpPoj/1/3/JRun5OKwgjDXCep1YdU
+         //TyyJaKEDVSBvj7+yuZq8YlF5repxzxKGMvaQaWL9CAptFaNBq4xhN/e4gfNaBJcvHz
+         NyHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727785202; x=1728390002;
+        d=1e100.net; s=20230601; t=1727785656; x=1728390456;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Z8EKtehk1xEe2cpvvzUTJMmi+AHneIFob7zq0Qe/FCY=;
-        b=DkqEUusWKX69mF0/mw1fo9+hOskzDQj+zyOX1p+HbIpXCbAjqhZQhqEQpLvQ6eRj/u
-         KmmNYZN5A6jEW4rPJpqjGmHLe3ZmpnDOHheVRfU7ZuYwcAD38SYPaMTEbpbFCxwGtvHv
-         GIHT+OohYH1dYWSaBr4578MBX5jEaGTqGEzTKY2Ch4ZZxWURCD+yyQEzA+1pkRUB4uOl
-         spFAiT+qbhLK1Bxj8GHra/RHVSy3MJ+GuxIFdT7oA0LJ15KO/o7KJ4EbSE6+ZApGLLkz
-         M1Ep4dke03QZniIYVeFHNlk43PgZQTQJTGrpvm8PhYiAaxOno4Crhb5K08Qc+QAOiFAU
-         Ue6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWWDAMmKmIwOWO+sMIAxrH56okr7gvH2MCJdyeICT0w+hGESKQYFMRfw8J4gGA9gIg7iVssMmhm41Wr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7q1lEyppcAdAx91QpIpcdRsQDAZP5428NXRdYEzTl+fqZwmfD
-	EUW/DhUVKlNKNp1qzSntV/sRwA8qHjSDyYAyGZBx5eh5rPMHemTBxryRRtb0tBBQiJkt8OZKFuC
-	TynCWc9c7g85XIWb/Q3mLgiBeQ2Kr1Ut1mRPF+w==
-X-Google-Smtp-Source: AGHT+IGQyoP6qjFmrcn14xtETA1f1cCCbR/mpmwH6czArmHvs0YQk4qj2UOndGVDVGLdK0FAKjVu24mo266PWh7RqOI=
-X-Received: by 2002:a05:6512:3994:b0:535:681d:34a4 with SMTP id
- 2adb3069b0e04-5389fc348d8mr7248060e87.7.1727785202031; Tue, 01 Oct 2024
- 05:20:02 -0700 (PDT)
+        bh=SoCurHIkleGhUTp4khwR0zEhKLpu15VK4lI1dWVteZ0=;
+        b=k4ehmeq+Bji8G6/zAKwUTi+7CNQTELMiHMONozfsTQiwX/eqlhl+UQwj0ZedPXb4bf
+         adJsFakkoIIeyTlgSzWe6+yghvt7Bt4XRUoWIwox9R56/qTSF5VMtAOPEgEkn7C2s+/K
+         6mPcj5P0Yz7FBXHSktU3fD4beWvQHiJuiR5VOTlY6oVFHhu/h07BU1nnIFBMUgRguO1y
+         LGPJzHY7/6TJY20BCWMj/5sVPY2nzlQWXCFZaXefWC8KEZpeFTSqT0PMYhb7FxdVm42t
+         uAySdAbBaXQ2eJasDS6v0Y8Ef6Kww6pTVHeX/3uO6HatplXcIEguqT0qpJjdYmvsOnLP
+         1Zvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXr0BbA2LyM9IwJquMxS3WJZfbjF3Pkew62T7bLI9p3fV6iO8b6P8XasoCJbnWq0Lc1EqRAcfnX0Mz+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5gW/SBFB5QYLZLUWB974mwOxKXbLnVnUEGYa8d5COul6Pm8Cj
+	oTn/cQZf8aefXKD7Ae4BcPa6AzZvtc94M7S5A0Y6GA2k8jU629F1T36tMwNHilVsgOqaGS+hikV
+	wSGxBcWhzoCHt5VOhb9pcbt4RrQxrZ05uA7TCHA==
+X-Google-Smtp-Source: AGHT+IG8TzlpP6uZVriUb03XpH7zYmc6S6jIBvK4noZhBbrXE9sWhgUKi4i+nF2zm0Fpa+WkCA4CyjTFVSaUXh1u58w=
+X-Received: by 2002:a05:6512:3ba0:b0:52c:d6a1:5734 with SMTP id
+ 2adb3069b0e04-5389fc3ad9bmr8742854e87.14.1727785656074; Tue, 01 Oct 2024
+ 05:27:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240927065244.3024604-1-quic_srichara@quicinc.com> <20240927065244.3024604-6-quic_srichara@quicinc.com>
-In-Reply-To: <20240927065244.3024604-6-quic_srichara@quicinc.com>
+References: <20240926-k230-pinctrl-v2-0-a9a36fba4b34@163.com>
+In-Reply-To: <20240926-k230-pinctrl-v2-0-a9a36fba4b34@163.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 1 Oct 2024 14:19:51 +0200
-Message-ID: <CACRpkda1iNxpuRjEJNZW9ufNz1TCyVNk2S7cAttB5iCVqQGGww@mail.gmail.com>
-Subject: Re: [PATCH V2 5/9] pinctrl: qcom: Introduce IPQ5424 TLMM driver
-To: Sricharan R <quic_srichara@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com, 
-	sboyd@kernel.org, ulf.hansson@linaro.org, catalin.marinas@arm.com, 
-	p.zabel@pengutronix.de, geert+renesas@glider.be, dmitry.baryshkov@linaro.org, 
-	neil.armstrong@linaro.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	quic_varada@quicinc.com
+Date: Tue, 1 Oct 2024 14:27:25 +0200
+Message-ID: <CACRpkdYk9aCp7mdWJJTT-1cwNZC4RN_eB6v5rducDY5MGJ_dbg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Add initial support for Canaan Kendryte K230 pinctrl
+To: Ze Huang <18771902331@163.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Conor Dooley <conor@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 27, 2024 at 8:53=E2=80=AFAM Sricharan R <quic_srichara@quicinc.=
-com> wrote:
+On Thu, Sep 26, 2024 at 5:58=E2=80=AFPM Ze Huang <18771902331@163.com> wrot=
+e:
 
-> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> This patch series introduces support for the pinctrl driver of the Canaan
+> K230 SoC. The K230 SoC features 64 IO pins, each of which can be configur=
+ed
+> for up to five different functions.
 >
-> The IPQ5424 SoC comes with a TLMM block, like all other Qualcomm
-> platforms, so add a driver for it.
+> The controller manages the entire pin configuration and multiplexing
+> through a single register, which control features such as schmitt trigger=
+,
+> drive strength, bias pull-up/down, input/output enable, power source, and
+> mux mode.
 >
-> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> The changes have been tested on CanMV-K230-V1.1 board.
+>
+> The pin function definition can be found here [1], and most of the DTS da=
+ta
+> was converted from the vendor's code [2].
 
-Nobody complains about the patch, and it sure looks good to me
-so patch applied for v6.13!
+Bindings ACKed and patches look good to I applied patch
+1 & 2 to the pin control tree.
+
+Please funnel patch 3 through the SoC tree.
+
+> prerequisite-message-id: <tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq=
+.com>
+> prerequisite-patch-id: 704efc6e76814e1877748959d7319d558c8386c1
+> prerequisite-patch-id: c2144cf468c57b856830a61615ba6ba501e8ec58
+> prerequisite-patch-id: ced4a01ccd8ddab2fd308d543ddf47bd1641518a
+> prerequisite-patch-id: f8b983b301d0c14f1448b9e4c321262a509e061e
+> prerequisite-patch-id: 834b65b6a2b037daed5cffc6a41963622568dc9c
+> prerequisite-patch-id: 2401703b57448c9ea2c3dc7650b4502491a28944
+
+I don't know about all this stuff but neither bindings or code seems
+to contain anything that won't compile so I just assume that any of these
+dependencies are purely for patch 3/3 and I nothing blocks me
+merging patches 1 & 2 so I just went ahead with that.
 
 Yours,
 Linus Walleij
