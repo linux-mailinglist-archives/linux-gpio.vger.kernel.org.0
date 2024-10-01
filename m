@@ -1,112 +1,159 @@
-Return-Path: <linux-gpio+bounces-10603-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10604-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11A3E98B545
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 09:16:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE3BF98B59B
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 09:34:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2494A2826F1
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 07:15:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFCB71C21527
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 07:34:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA4C31BBBE8;
-	Tue,  1 Oct 2024 07:15:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 245A21BD012;
+	Tue,  1 Oct 2024 07:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="V0bVdl27"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008843307B;
-	Tue,  1 Oct 2024 07:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717AB3307B
+	for <linux-gpio@vger.kernel.org>; Tue,  1 Oct 2024 07:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727766941; cv=none; b=lrdFtglDaSJd1WuDYwnmqzHDS94q91eN/zbqxYZmYTLbDSduqKa7zPAghNKrU6+vRHQwgbjekLx3WU0wse/6riGVl6O0JpZ8YqoTAvh0ruNvXn1QvPKbjR6/ZGnPhSLXEp4UWYy1yRnK7g9q1LpMS07tdm2AVUvmH6+6bziR9S0=
+	t=1727768043; cv=none; b=dDF0iiippKXyvaFt2Km1v0tkO51edU0en9xzQobZdhzCFBOhYXtv4wp75avZ9iO214qyVEu2nnF8oKM/7RELBXWh19AbY/nKrPdee8TlrvvFU+t0o1QA89e/ra8VbOD/GSoUzXaO1nBp8BmDtEjsoUEfjmoWcgcrH56KY/cOExI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727766941; c=relaxed/simple;
-	bh=lYZMOGe00wcQ7E0o9l0fGqVBBQu4VhUkYZgpHiNT5q4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VJXH86qcc63YjV/VwtiOyVb0H+5zBHqZy7xO1b5Bx6jl7o5sYt4HEC4DHRuvJ/5H5duElBjNDAI1qyXXDsME74pY8eZLfqjv+7XGVv5mZnKDkfXW5wfJcrHuLlZueAImS2dlDryrCYEIiIMuVhwsR+bGV9iw/t/ZRibhAoYk5sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e25e4023cafso3313908276.2;
-        Tue, 01 Oct 2024 00:15:39 -0700 (PDT)
+	s=arc-20240116; t=1727768043; c=relaxed/simple;
+	bh=Lu3lQOD70ISxi2MskQKKv1jotKIDB7GMWyk2Eawsh3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vzqwdf34+THlTWs/axrBFPTqxkbiVta8jiDYVcf41WUBQTwWyewlEHzdsQO9JHx/hlkTpeI+DMoAXXLFyZizvmBf6Ajo+5Yet0O0j1K0ShENz0H2nZRc/Sntpkp4L9OS/VcYYJEoVNBe3IQu7YRUoNquTYpd1XAllHxZaXwXHec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=V0bVdl27; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a93a1cda54dso743753066b.2
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2024 00:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1727768040; x=1728372840; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+uAo9PdDq3lMqJTciz90CVzfl+XSP+noJfFEU5CG5JE=;
+        b=V0bVdl27Z/SQXgNern6fu4N5fktPiXO39xMQO3kZkpzwCfmhJSAx2OyERwlaWEeqJ4
+         rivhFVYoMKHEHt4dn8gY++0+MiO8vfzGLJfsjjbZOzKJX/ilmdoIPgdK8ZaOHI0uF4F8
+         QFihD6ZMvz+knTUFezlic/TPcr2BgtfSqXBXWnBmBFXVtnOt+yUNGA2SzATVIB+B16+h
+         tuYgsmWYrc9LATj/4lPcgY690lSjw5TgGgk4VGfVT3owJvZVgUBD6xsBs7Wvp/Rj+fjv
+         MOM8Gso6Az0l+yFU1FKgp/cL7XA/4f7CaW6seeMpHaAfjfe0b7UibLknQ1ii70yAzLc4
+         Z/4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727766938; x=1728371738;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S7FOKhnsCSPjhnW3xt/aqccz+r2uBpJG1OXfNkCG6K8=;
-        b=TEqtOhVA5xmIVJ07stpbeYvM2L2X3zu2AgWxLE80BZ8HcOcMQ/mGWMGhxgqLZtmJYR
-         C15bYPovNZCPT4UhdpMHg3EIX+COrHF5dUoPc8lbRdosW0MmLF8l96kIdgKotsSIqhNK
-         uzc0MPQiBSS79O57rhErKXnynlUww7xh7cILaaBoVM9ZmWSMB8fLvKBA5HwZwTBdiG5p
-         Yd2mRLlrKZ5F9JzcdIl0vzqjIxit12fpDHcYz/SSkYGVpE7QDBF9WSfWJFnKK172zo92
-         Z2YNHTpem/ZsMcT9S4aNPeZr1c1ADX+SAuB4KMGiEG+bNIHsxZdAF5CT+z71idptTiQg
-         GQEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHtp73flEbCCeWERY2FNWssNpOD7etTjBiNIzntdSJFcq+M8sIh4QhR6Odp6oEUjzBQJOQX23cWbWN@vger.kernel.org, AJvYcCVwiwlabnQth0u6PtibmPwift7xlrF3L9TC2jc7z0Ei5qszHRU8zY7TuxixRw5dSYrn3lW2Y53bZVGRg3ANPH5sAk4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqbPgWQaachfrA4ptPCCONRUf1r3Kr+grBs3LdZUC3GEAiQchX
-	mVCZbOi8BY25mADZmzX60ozJftYO9VXXQff/disAwrC+FFlJ0htpxM2qBfiH
-X-Google-Smtp-Source: AGHT+IHsggLxkxr0Uf5t1yJMc2RcZUy6pFdoR68DQJ/3LnyNJvXNUhtv/Uv4V0Ft/C2A+DU0nZbD5Q==
-X-Received: by 2002:a25:7b03:0:b0:e25:abb9:ad5a with SMTP id 3f1490d57ef6-e2604b6646amr8884568276.34.1727766938518;
-        Tue, 01 Oct 2024 00:15:38 -0700 (PDT)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e25e3efab1dsm2950036276.6.2024.10.01.00.15.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Oct 2024 00:15:38 -0700 (PDT)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6dde476d3dfso41242157b3.3;
-        Tue, 01 Oct 2024 00:15:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUPSImsXF/iYxJEzvxq7/6OTb/mcpQPJ0jqhESte4rC3owMnqYTdRipZpfpJVmWjh950UlWjZ3tesDXEocB0IyUEV4=@vger.kernel.org, AJvYcCUtC0+85pHFrBbcOfMrOx1cjd8mQkzDuRyyKoo7ZAPc1PwQEyQF5YNUmasmHTSt6xJqXiDRobTBnzPh@vger.kernel.org
-X-Received: by 2002:a05:690c:389:b0:6e2:71b:150 with SMTP id
- 00721157ae682-6e2475d07c4mr92213587b3.29.1727766937992; Tue, 01 Oct 2024
- 00:15:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727768040; x=1728372840;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+uAo9PdDq3lMqJTciz90CVzfl+XSP+noJfFEU5CG5JE=;
+        b=dQDw1PMoDL0aZAsbURzSlHZM41Thu9j37TKHwOK/adeZM0Uf6LDATqvKK7ab0bdLXG
+         nGXm4pYZfqVF/Gsu2Ay+hCtL+HCq2X4BQLc6422mVTU6EIdQzXOV8RHXqKi6Sl6Im2EA
+         8GP34R9twjRa0j6jwxqbtT+EC5Y8wre01QTI1uW2q0syNCQFlCvChvAGaNwaG9oMWC1q
+         strNe6ABx62Dq/iX4NUEPNcn+RMogyyF/rv6Qn3enB01tYgaKQ6MmXb8l7yiJp6GUP7o
+         lvBqpDhVLJV/SeTgh7sZZ+UTZ7lXdUsuyct17RcKFj+0ZSQUmuc7vEIhL4Gg8+k1jHh1
+         uiGg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7OfFBzZ/pQdRYDEp8RoaEVZ6ea2NwdD79+cSZUetb0AtPiTml1xVJumlv3BI+EwU2KaiXk2vSnAZF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBdtKuUGSuZjVm3Hw0MhE1Z0egnDrx10qQeVmQMNQzAfmQstWf
+	hhHyljKVv0xYUWIlaIFY+1PzbM5BsyEdRLr60coKwj5iNNWMHqY4fOOmKQ/7kYp1wXqIrpVvFE1
+	6
+X-Google-Smtp-Source: AGHT+IHGJD2TDiukpf+j25hF1PEZ/MoKXUvZZuVW1Xi4qK3m0kbgdM7hCYKonAOLBp55EYMPxCFrWQ==
+X-Received: by 2002:a17:906:fe04:b0:a8b:6ee7:ba29 with SMTP id a640c23a62f3a-a93c4ac9401mr1541437366b.44.1727768039653;
+        Tue, 01 Oct 2024 00:33:59 -0700 (PDT)
+Received: from localhost (p5dc68d3d.dip0.t-ipconnect.de. [93.198.141.61])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a93c27c70d3sm656913366b.78.2024.10.01.00.33.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2024 00:33:59 -0700 (PDT)
+Date: Tue, 1 Oct 2024 09:33:57 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 2/2] gpio: mvebu: use generic device properties
+Message-ID: <u7o3fq6b2rlq6e6wwk3axxxpljx5u7o2mc35skg63houf3mhyn@h27t3uubopqo>
+References: <20240930091111.32010-1-brgl@bgdev.pl>
+ <20240930091111.32010-2-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2862093f7701dcaf29f37c0b2f9268234168338f.1727711124.git.geert+renesas@glider.be>
- <Zvr5H1YR8PEdDTL6@shikoro>
-In-Reply-To: <Zvr5H1YR8PEdDTL6@shikoro>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 1 Oct 2024 09:15:26 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXJ+djCJZnc_f24wB3wuzRKObz+a01L2=PjfDW3KaHZnw@mail.gmail.com>
-Message-ID: <CAMuHMdXJ+djCJZnc_f24wB3wuzRKObz+a01L2=PjfDW3KaHZnw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rza2: Mark GPIOs as used
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Chris Brandt <chris.brandt@renesas.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ntmur5knp4oe5idh"
+Content-Disposition: inline
+In-Reply-To: <20240930091111.32010-2-brgl@bgdev.pl>
+
+
+--ntmur5knp4oe5idh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 30, 2024 at 9:16=E2=80=AFPM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> On Mon, Sep 30, 2024 at 05:47:19PM +0200, Geert Uytterhoeven wrote:
-> > GPIOs showed up as unclaimed in debugfs, so they could be muxed to
-> > something else even though they were in use.  Mark GPIOs as claimed whe=
-n
-> > in use to avoid that.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->
-> Maybe also?
-> Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Hello Bart,
 
-Sure ;-)
+On Mon, Sep 30, 2024 at 11:11:11AM +0200, Bartosz Golaszewski wrote:
+> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> index 8cfd3a89c018..5ffb332e9849 100644
+> --- a/drivers/gpio/gpio-mvebu.c
+> +++ b/drivers/gpio/gpio-mvebu.c
+> @@ -794,8 +794,8 @@ static int mvebu_pwm_probe(struct platform_device *pd=
+ev,
+>  	u32 set;
+> =20
+>  	if (mvchip->soc_variant =3D=3D MVEBU_GPIO_SOC_VARIANT_A8K) {
+> -		int ret =3D of_property_read_u32(dev->of_node,
+> -					       "marvell,pwm-offset", &offset);
+> +		int ret =3D device_property_read_u32(dev, "marvell,pwm-offset",
+> +						   &offset);
+>  		if (ret < 0)
+>  			return 0;
+>  	} else {
+> @@ -1106,7 +1106,7 @@ static int mvebu_gpio_probe_syscon(struct platform_=
+device *pdev,
+>  	if (IS_ERR(mvchip->regs))
+>  		return PTR_ERR(mvchip->regs);
+> =20
+> -	if (of_property_read_u32(pdev->dev.of_node, "offset", &mvchip->offset))
+> +	if (device_property_read_u32(&pdev->dev, "offset", &mvchip->offset))
+>  		return -EINVAL;
+> =20
+>  	return 0;
+> @@ -1147,7 +1147,7 @@ static int mvebu_gpio_probe(struct platform_device =
+*pdev)
+> =20
+>  	platform_set_drvdata(pdev, mvchip);
+> =20
+> -	if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios)) {
+> +	if (device_property_read_u32(&pdev->dev, "ngpios", &ngpios)) {
+>  		dev_err(&pdev->dev, "Missing ngpios OF property\n");
+>  		return -ENODEV;
+>  	}
 
-Gr{oetje,eeting}s,
+I didn't look closely, but I wonder if GPIO_MVEBU depending on OF_GPIO
+can be softened with this change?!
 
-                        Geert
+Best regards
+Uwe
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+--ntmur5knp4oe5idh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmb7pdsACgkQj4D7WH0S
+/k433gf7BbbqBejVomJjj3n6Mj8VJzuv+ZDXLiu4czbBM5hYKS++9JHRQAkqKUMn
+CGYEHd4qPGZ8n1jzvoiHzKs0v7XWgqRKVhk7MLdJwQbZj5k2eDCyVYU/OTgVl1ys
+KsIFUQrqxM56nQx8BRR0roJtpGyDKty3VhEoOgqkJzf4LR9LlOSrCiX3sDPmtsWu
+8zgMdyAbX5sTiTlo313XIlPu+6KqFwJz8+RStXznrnaN7re49fHzjU6/EFe5oUqb
+nHJC71qS5jzIidursjG7EiggBrINZHFwOu3PfXiOR/wwnw2DjWXxlXClU6+gL72O
+zSefpX4aOCaWXlIg944CgnUbiXyTXg==
+=Py4Y
+-----END PGP SIGNATURE-----
+
+--ntmur5knp4oe5idh--
 
