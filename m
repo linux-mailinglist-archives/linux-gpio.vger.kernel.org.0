@@ -1,104 +1,151 @@
-Return-Path: <linux-gpio+bounces-10630-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10631-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65BE198BD61
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 15:22:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0456598BEA5
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 15:58:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 002A9B24589
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 13:22:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 365A31C21A05
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 13:58:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F671C3F0A;
-	Tue,  1 Oct 2024 13:21:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70980224CF;
+	Tue,  1 Oct 2024 13:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w1MnatXU"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I+kNij4y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1BC36C
-	for <linux-gpio@vger.kernel.org>; Tue,  1 Oct 2024 13:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E28F282FB;
+	Tue,  1 Oct 2024 13:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727788919; cv=none; b=OWJFyfdFbplm23Fslekry5jIpFwo5tOk9Z1b4wNIxvOLrJW5mbSGf71LVPC6I9s+4cVbEW+wsMoT4NLSkFhjpkZS6kdi28CXs4FBA0ZcT34uhlO+1gn2lc39wJINDCZ/uoo232mHUifEigVA8ZnKTqoUWCMLqdSk0HY3s2SYkPY=
+	t=1727790975; cv=none; b=T8LToI97xGeXmxoZXmv6lz2nf0IJb1hVmt7CIzxttI6QIatOBojsecuyxy6IhM65p9Y045h83/srqUFGA1tURrN7cfQuy9/fcVKYEiGTOQZL7IBv2mHlKTA9m8Jb9sEDBTMGp77tTi3rNkrE1yy0Wu3uo5IzW9jta+FD12rSwaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727788919; c=relaxed/simple;
-	bh=cyEcKeEaGeyjn3FmCQILe/HAvSQ7EjvyAoQhRa/81EQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mlzh/fASR8xM+JnT76pgC93byT2q4bvPPk1BwTw0ijiSHwmyDlI5qeEviCdV3eGabatWT85dsMWFEMUZ37UzSdm8HxeUR1UtSn6tNNGpisB4nMr09f+jXa/AQirO5GdAJQHWH/46h3eku1UdKUVcONNl+Pke5WBEIWdlBKYMXNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w1MnatXU; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e25d405f238so4745587276.3
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2024 06:21:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727788915; x=1728393715; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cyEcKeEaGeyjn3FmCQILe/HAvSQ7EjvyAoQhRa/81EQ=;
-        b=w1MnatXUByKr78z7ZGTplGLKVhk/yoQ5iRYII5biH/oiWFP+8YG/ShZybC0BP7nzKL
-         i4kQykCpZmFvTZdSr0kC7at6CSoSKOf2nT1bxKaMiodRR6LvlX+aV/XfpokIEyI+0rdj
-         RjaWyyDmvyxSebRKsdg6pBnNw93WRNcCt9M29SnNSB1f8yU37Hi7sXiyOQwnQqCaAvH/
-         eYeLrkdZaufFDwCf6QVH6ri/j1cxh+HfUx3Yh6k9gPHy7yRZXeBwwrPZdGhIemt+9nUd
-         v3z4jcwVwYzXk5F2XNHJmPCNV5dB+NKwiW7znvkGM9FcqyxNO4FBB3FMuHZ9QzmaaYly
-         HppA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727788915; x=1728393715;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cyEcKeEaGeyjn3FmCQILe/HAvSQ7EjvyAoQhRa/81EQ=;
-        b=F4w4JawOeF/oQ03H58sIs7y0+rB4jCxi3WAr8uVYx/pK1wdYSdGij8zKfV7aW1sl7g
-         loISnFli7XLF8SBQaJmSjkx4JkH4Oik039sWz4hjUyx5xLOo7CrFScxnARC2xglqYNZf
-         FIzss8fD3RX6N4VO2E+HSuYbIObOsfCotagy0M0WZEm5A8LoH3Qo1C1Ybpsr6yWFN1yx
-         OGW2xv+fLFVHDLEyxp2NtnilGD0j6abaYHzbOJ0/+uFPuNrv/OooEtRyxSU5bZaXzyVk
-         Vrc6l4QaqT7KoQ4OVy+J2WBaxm684pvRdAhybDoPXWRGU3Eq8TTNISLDTjs4TVb3Vwa4
-         vy0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVeM0yJ3H0m7suFyUuN9sZCf28Ea4t4t7ph0WuKrNlERAkad41s5eqGxTOC/2eH+5vwkZzCLGQcMVMS@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz43oPpqrTfAE+c9hScM9W8aPwXzqMevMls57JsPoGtUVE1Q6d5
-	b24ekURxNUaTS+H+pdYxqq4x2ICngyYLn2shaSleT3L2ozajaxYEiv7KrWX5LtT6b9wsRCjlvpO
-	lck382ejD0CNx9doq6BlQXJqQBKOSsXcHyeyLAg==
-X-Google-Smtp-Source: AGHT+IFX+RG9oTFLQI1ImSBKJqO6cvjvCh73Pi/+D7i6lN9FLnM4YRXO332XYCzrUNg6/1KlbELqPZKC4ieZWZ8y//E=
-X-Received: by 2002:a05:6902:15c3:b0:e26:3659:577c with SMTP id
- 3f1490d57ef6-e26365959acmr260283276.49.1727788915541; Tue, 01 Oct 2024
- 06:21:55 -0700 (PDT)
+	s=arc-20240116; t=1727790975; c=relaxed/simple;
+	bh=XZ6Q7aNO3ArLbrN90Qf4WFXgDw694nRGtjX6Ee5uoro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WKjduOCPbCra2odrmn2yB9gZ1g4u7fFhgTk33twyNK5WgivBvBGmWGznMxdu1mcTCmpO9o/lCIDilqXQ8l3iBRTz89h2P92glirHPLf5VkpAfE794B+ZTyM9vXi8vJlA6ZLchEnAUqUTTrv4mPKr9tj6hsBYy2tylr9nzLBCRB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=I+kNij4y; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 491Du28p004536;
+	Tue, 1 Oct 2024 08:56:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1727790962;
+	bh=6m2oEEBm8D8mZlqx8bHpD3+QmDhnwC7gIvkytb0oV2U=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=I+kNij4yFry0Y1zr3t9z8x+CHJ+jBqIEeqTXCltY3Clhp5B/lAmY/HVCKguxgOQpp
+	 ESsBjtW7lCac/G0IBK8Eqf5Lx4igTS4E6nuTz4wTaK8H1zla2HuGA400OTYleftAw1
+	 uwgL5m9a3cwPx6HeLG70JjCvu8d5aFtHd0PzJukM=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 491Du2mL043481
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 1 Oct 2024 08:56:02 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 1
+ Oct 2024 08:56:01 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 1 Oct 2024 08:56:01 -0500
+Received: from [128.247.81.173] (ula0226330.dhcp.ti.com [128.247.81.173])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 491Du1jZ001870;
+	Tue, 1 Oct 2024 08:56:01 -0500
+Message-ID: <46137193-ca6f-483a-958a-96e799e0d729@ti.com>
+Date: Tue, 1 Oct 2024 08:56:01 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240911-topic-amlogic-arm32-upstream-bindings-fixes-meson-pinctrl-gpio-line-names-v1-1-4345ba336ea4@linaro.org>
-In-Reply-To: <20240911-topic-amlogic-arm32-upstream-bindings-fixes-meson-pinctrl-gpio-line-names-v1-1-4345ba336ea4@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 1 Oct 2024 15:21:40 +0200
-Message-ID: <CACRpkdau=4jrL5zWCwDOtcggm05XSXCjUrCr0t2MtAUC8TdR3w@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: amlogic,meson-pinctrl: lower
- gpio-line-names minItems for meson8b
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] gpio: davinci: allow building the module with
+ COMPILE_TEST=y
+To: Bartosz Golaszewski <brgl@bgdev.pl>, kernel test robot <lkp@intel.com>
+CC: Keerthy <j-keerthy@ti.com>, Linus Walleij <linus.walleij@linaro.org>,
+        <oe-kbuild-all@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>
+References: <20240930115116.54626-1-brgl@bgdev.pl>
+ <202410011000.hRJ0JPdV-lkp@intel.com>
+ <CAMRc=MeY_+ZvEgiNegxD012i1NaFN04=8LTzwyUWod_9TRXb-g@mail.gmail.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <CAMRc=MeY_+ZvEgiNegxD012i1NaFN04=8LTzwyUWod_9TRXb-g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Sep 11, 2024 at 5:24=E2=80=AFPM Neil Armstrong
-<neil.armstrong@linaro.org> wrote:
+On 10/1/24 4:17 AM, Bartosz Golaszewski wrote:
+> On Tue, Oct 1, 2024 at 4:35 AM kernel test robot <lkp@intel.com> wrote:
+>>
+>> Hi Bartosz,
+>>
+>> kernel test robot noticed the following build warnings:
+>>
+>> [auto build test WARNING on brgl/gpio/for-next]
+>> [also build test WARNING on linus/master v6.12-rc1 next-20240930]
+>> [If your patch is applied to the wrong git tree, kindly drop us a note.
+>> And when submitting patch, we suggest to use '--base' as documented in
+>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>>
+>> url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-davinci-use-generic-device-properties/20240930-195251
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+>> patch link:    https://lore.kernel.org/r/20240930115116.54626-1-brgl%40bgdev.pl
+>> patch subject: [PATCH 1/2] gpio: davinci: allow building the module with COMPILE_TEST=y
+>> config: sh-randconfig-002-20241001 (https://download.01.org/0day-ci/archive/20241001/202410011000.hRJ0JPdV-lkp@intel.com/config)
+>> compiler: sh4-linux-gcc (GCC) 14.1.0
+>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241001/202410011000.hRJ0JPdV-lkp@intel.com/reproduce)
+>>
+>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>> the same patch/commit), kindly add following tags
+>> | Reported-by: kernel test robot <lkp@intel.com>
+>> | Closes: https://lore.kernel.org/oe-kbuild-all/202410011000.hRJ0JPdV-lkp@intel.com/
+>>
+>> All warnings (new ones prefixed by >>):
+>>
+>>>> drivers/gpio/gpio-davinci.c:652:34: warning: 'davinci_gpio_ids' defined but not used [-Wunused-const-variable=]
+>>       652 | static const struct of_device_id davinci_gpio_ids[] = {
+>>           |                                  ^~~~~~~~~~~~~~~~
+>>
+> 
+> Weird, this doesn't happen on x86 defconfig with OF disabled and W=1...
+> 
 
-> The Amlogic Meson8b SoC has 83 CBUS GPIOs, thus lower the minItems
-> for gpio-line-names to account for it, fixing DTBs check on Meson8b
-> based boards.
->
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+Use of `of_match_ptr` needs removed here. All drivers where their
+of_device_id table is not conditionally defined based on CONFIG_OF
+need that helper function removed. There are a lot of instances
+of this issue..
 
-Patch applied!
+Andrew
 
-Yours,
-Linus Walleij
+> Bart
+> 
+>>
+>> vim +/davinci_gpio_ids +652 drivers/gpio/gpio-davinci.c
+>>
+>> 0651a730924b17 Devarsh Thakkar   2022-06-13  648
+>> 8507f35447e6e5 Min-Hua Chen      2023-06-09  649  static DEFINE_SIMPLE_DEV_PM_OPS(davinci_gpio_dev_pm_ops, davinci_gpio_suspend,
+>> 0651a730924b17 Devarsh Thakkar   2022-06-13  650                         davinci_gpio_resume);
+>> 0651a730924b17 Devarsh Thakkar   2022-06-13  651
+>> c770844c3e30be KV Sujith         2013-11-21 @652  static const struct of_device_id davinci_gpio_ids[] = {
+>> 0c6feb0796ea64 Grygorii Strashko 2014-02-13  653        { .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
+>> 6a4d8b6bd27932 Keerthy           2019-06-05  654        { .compatible = "ti,am654-gpio", keystone_gpio_get_irq_chip},
+>> 0c6feb0796ea64 Grygorii Strashko 2014-02-13  655        { .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
+>> c770844c3e30be KV Sujith         2013-11-21  656        { /* sentinel */ },
+>> c770844c3e30be KV Sujith         2013-11-21  657  };
+>> c770844c3e30be KV Sujith         2013-11-21  658  MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
+>> c770844c3e30be KV Sujith         2013-11-21  659
+>>
+>> --
+>> 0-DAY CI Kernel Test Service
+>> https://github.com/intel/lkp-tests/wiki
+> 
 
