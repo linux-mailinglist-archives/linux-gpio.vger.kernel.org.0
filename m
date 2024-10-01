@@ -1,115 +1,108 @@
-Return-Path: <linux-gpio+bounces-10620-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10621-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51CC898BBA5
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 13:56:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE48898BBB5
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 13:59:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 063311F218ED
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 11:56:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 769F128457B
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 11:59:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3DEA1BF801;
-	Tue,  1 Oct 2024 11:56:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 512931BFE14;
+	Tue,  1 Oct 2024 11:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A+p3vyia"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5dwuVri"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92131BFE1A
-	for <linux-gpio@vger.kernel.org>; Tue,  1 Oct 2024 11:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711AD1BC09F
+	for <linux-gpio@vger.kernel.org>; Tue,  1 Oct 2024 11:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727783769; cv=none; b=EEf6COprpu+PjjCgpxafpzp60g2EQB/+Ml2+zMRy3M2Sf/xqx/bPcw09+j71gW0QXGo9SN3tKwpeYQkdWR8XtEPl74Q9jFO//ZTcDZxfi6juu3itpVBt7W6VWOJH+C1qCyVCRnsqLimWJojBivsj64gN8yHZqq5FrMIOcy9U8hY=
+	t=1727783940; cv=none; b=Ud7eiDrQorv+GCOkXhYhxc6NMomiC6oqDHOnCOAGP/yvi697oVRuFBwGS3+Xm+8fiVcSUNNykMB1l7LYSZUXAdbHQkXiPJu3qNtbl4B0D8B+RoAhTnfW9flkUmfEVRoSEwF9/uflsWSemsMWiExgL5tmriZ9OZJNQPdD7+jErgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727783769; c=relaxed/simple;
-	bh=dCRCTpeBWVQaEGezuqoGfd4YJh6Ew8r8frfM+R+vKoM=;
+	s=arc-20240116; t=1727783940; c=relaxed/simple;
+	bh=tT3uNe+7OwJiWl6dOd3zCd4RwjUbE0KVnThqCE7dP4w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CLJh8UHhhRst8HcsJpbP7eHaIlFgQVDxEqnK9kG8XU5dc8bDjBQIuJDg2UwFk7v6e5v/1zsbBh2cNCIuDCP2Upr6AL9ChmF/OGJvOvFQUXA8g+8O2UoBjwZ8QPjoHFVoBT3kXAqKE9LKeMZqsi1xlPT0BbOstpAjjJEoW8OmfAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A+p3vyia; arc=none smtp.client-ip=209.85.167.46
+	 To:Cc:Content-Type; b=eTatF6jV24MFYPtAidhjBgpltRIIbYzZ5dWzg3zVWWR7BprgK1/IODH/BXF2hnBLdkFv/lMv01ygVpGrhQ9WsT+VLHStV/5uIKTr6BjrHB6BvOLNCvelzUZbJQR6Q0jV1avNrfCRzoUOgW+qAlOD5dawgMspWtMTq923tORlFko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s5dwuVri; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5398fb1a871so2735226e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2024 04:56:07 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5389917ef34so6226848e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2024 04:58:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727783766; x=1728388566; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1727783936; x=1728388736; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dCRCTpeBWVQaEGezuqoGfd4YJh6Ew8r8frfM+R+vKoM=;
-        b=A+p3vyiaUcwV8qih0p8dTFOlKzyp5Ax/laufphx7Ku3mjZv67zBcY1qKGQeJy7LzdL
-         Xq0l8GT9QCmOsjStnqS4klG1vQNLUrkyLaK65cjqxoXsE4Rhl6lF3NYGCtQDyicOjbiO
-         LqNkpTrkQ+0t0YZhNQOvkBkKLDunJJ65zHc48WPyxV4ifkRJ3uF7pnd9sxmYcB8GmwKh
-         jNUxY36/h3cME8T8MohnExoM/aAZiB3iYfvRh3xlJ+kxDBdzn7xz4EFTRtJNsNvjUgJv
-         RpImdvzI6FscgKI4IfgpZjZQ/wvoHU2fVOXQ63XbN+Thv2Hsl9LNIJ0Ep1nWqfC+wTBS
-         M4Ng==
+        bh=tT3uNe+7OwJiWl6dOd3zCd4RwjUbE0KVnThqCE7dP4w=;
+        b=s5dwuVriiLT9PY5kTmOvohth7wSiLhztspRypJI12NVtFer1FkKSP6ire7gzXZW11n
+         xTU5RHrRmTl/LUuMhqp9eRaBI1PaDi83b5ozEj/YViQYDNDalZ5r6j64RcHQG2cup1nI
+         TmW7h45WfAAKE209ymc8AbB+HYcEJwTeSdDP5Jn5Mu/gCFlh5wtSiV75VMpK5ZHtZB06
+         zERlJFCPf/Eva/zCdWvLr3H3P7CdAzGYk/P9gYGXAfEQm+wwqV5l1eWZNCTBraD5z0KO
+         YgeOQJZPaUbghMaiAp2BHS+MoB+kj3PxOsMViY63nK41q5RByjtMVSa7aeO0EimH9uaz
+         WTQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727783766; x=1728388566;
+        d=1e100.net; s=20230601; t=1727783936; x=1728388736;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dCRCTpeBWVQaEGezuqoGfd4YJh6Ew8r8frfM+R+vKoM=;
-        b=YeIUJz7EmxBMpbvYvZOPQT6c2+vB7JdYbzCG5a24/gctc9Xd4yVqyOowkXSwOjR+7Y
-         ZTnlMMrDIzeuaGvsT4aRgtDV6URMWLDS941JQ6AHPj+os/B+J8k1+pX2yPJGV1Xf9mun
-         SxEdN/qB2zmqV8Sq5+jSDO6SOMT5Oa7KUdHlNQdYpak4sKY8ioXUvpLW3vSQg+Q7ZH9d
-         Eq7/jV8Q1W8huSDaD8o4//u2gX/Zw9WsIfasejCz2o/NZODB6YlSud2jwHhF1oye7E3a
-         xhZl1o7pBBgiAombqWUZ4fNGrq+x2hP63meeej0QozkAEayrybBdKFk4DY/6dt4DTgKT
-         T80g==
-X-Forwarded-Encrypted: i=1; AJvYcCUnPYvS1ScsfEZQZxvElzpTtKHm+8PAXRTsu6DD9QnF5sAIMWcpy42yg407X6TXqu/hdy7ir7RXbBzS@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfN/mvh76bNgpPeYuCtaie41LdNa+PGvJzMCSXGdfLtJSEoDWQ
-	EPvOKhUBdFLdbCnocWWRvFqeLhpqBMnKJm8F2ckgSJctdZAlgJEJ/ufxP+000M0QkpiSQQeGMWB
-	nRlZoibWf3kGzSkfdvyo4ZBzSfcffN5wcLt0cVw==
-X-Google-Smtp-Source: AGHT+IF671nYta5t199R7sRxpHHBTnmwujkmlr3MRg6tqyu/Ngc90gmiXkly9+05ccmQF2xTgC3WFKRZUK/UcnVIUxg=
-X-Received: by 2002:a05:6512:1087:b0:530:aa3f:7889 with SMTP id
- 2adb3069b0e04-5389fc7ff3amr8180609e87.56.1727783765958; Tue, 01 Oct 2024
- 04:56:05 -0700 (PDT)
+        bh=tT3uNe+7OwJiWl6dOd3zCd4RwjUbE0KVnThqCE7dP4w=;
+        b=bzAPSSs0Dip5Iq2Ra+nGVDgbq5/XQZVDYf4OLBbq9VUcIkkpB68Q2hVv423chGi39F
+         1MzY5zAA7/VPRLlFbMTMVQf16U4dWncBeOLy6Ny0Qwu6XTi+ORWWZk8bJrC1v9s4ghpn
+         oBeW70Nn0hT+d9hKgSugneBC1b62Isi8NXvhrTJcKcW/jkENp10XGYA0jLnGMN03IE4a
+         EZNm++3lo4b9T6ZrbyK5sakLyX0MFYNZVSvUGbdf2SpkqUoSHRtplj2TapYDi4M0AZ7X
+         t5r06cOWmKTuaqU4zOlw5MjVBahgDwGNpPuCpz9aL4cSenc4RpZpoJsq7H6mX+nKpD6h
+         L8wg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDYLslmmsvj+DEgrKREMesJX6Ispfa360X0PliI/ZbaJOJzTC8Q/mNgDmamw2sb77zcN6IvmaOCWNM@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPeV7mswk42SSU1vT1DcIJJju/cIGuL5FbcbIxNyxRDllsnbog
+	s18Caqs1Jc5ODlnbyHbvmMgmi7pRt+SVByvKF6Ezy6rv1EdIq0lNWuP+A1f1ZrfPkzxxHRmx9fx
+	WjOvyl6tAp7jU9buVhzzUhHcia+xM4l7jiPzmgA==
+X-Google-Smtp-Source: AGHT+IF1aWSW3u0bVeF7TKArbk/atdczzyQVZ7HJ+FgfyXMEiW9tWm+hcgU74jnyncTE1uZzGRzCTWRoyijV6XUmu6w=
+X-Received: by 2002:a05:6512:1054:b0:52c:e05e:849b with SMTP id
+ 2adb3069b0e04-5389fc63377mr8318002e87.39.1727783936401; Tue, 01 Oct 2024
+ 04:58:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506-imx-pinctrl-optional-v2-0-bdff75085156@geanix.com> <CACRpkdYbOTXmap-vJy4JNZSaZnE=yzC35EPD2F=bD8gWdD8-GQ@mail.gmail.com>
-In-Reply-To: <CACRpkdYbOTXmap-vJy4JNZSaZnE=yzC35EPD2F=bD8gWdD8-GQ@mail.gmail.com>
+References: <20240917-lan969x-pinctrl-v2-0-ea02cbc56831@microchip.com>
+In-Reply-To: <20240917-lan969x-pinctrl-v2-0-ea02cbc56831@microchip.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 1 Oct 2024 13:55:54 +0200
-Message-ID: <CACRpkdbOUSS95SJxsZHmYfZtZNhDe_dy7OWZnsxe0WcExC1Wyw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] ARM: imx: only enable pinctrl as needed
-To: Esben Haabendal <esben@geanix.com>
-Cc: Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Rasmus Villemoes <rasmus.villemoes@prevas.dk>, 
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Date: Tue, 1 Oct 2024 13:58:44 +0200
+Message-ID: <CACRpkdZWp8W5W0BLzCJ6hHoqMUwCr4oZ7XZS3RbZ4YYNp__h2Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] pinctrl: ocelot: add support for lan969x SoC
+To: Daniel Machon <daniel.machon@microchip.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Lars Povlsen <lars.povlsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <Steen.Hegelund@microchip.com>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 27, 2024 at 1:05=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
-> On Mon, May 6, 2024 at 12:24=E2=80=AFPM Esben Haabendal <esben@geanix.com=
-> wrote:
->
-> > As not all mach-imx platforms has support for run-time changes of pin
-> > configurations (such as LS1021A), a more selective approach to enabling
-> > pinctrl infrastructure makes sense, so that an e.g. an LS1021A only ker=
-nel
-> > could be built without pinctrl support.
-> >
-> > This is a very late follow up v1 3 years ago [1]. The situation seems t=
-o be
-> > unchanged since then, and I have tried to incorporate the requested
-> > changes.
->
-> What is the verdict from the i.MX pin control maintainers on this?
->
-> I can merge this into the pin control tree for v6.11 but it'd be nice
-> to get an ACK from the maintainers first.
+On Tue, Sep 17, 2024 at 2:46=E2=80=AFPM Daniel Machon
+<daniel.machon@microchip.com> wrote:
 
-I ran out of patience and Shawn ACKed patch 1/3 so patches
-applied.
+> This series adds support for lan969x SoC pinctrl by reusing the existing
+> Ocelot pinctrl driver.
+>
+> There are 66 General Purpose I/O pins that are individually configurable
+> to multiple interfaces. The matrix of available GPIO alternate functions
+> is detailed in the pinmuxing table of patch #2.
+>
+> Patch #1 adds compatible strings for lan969x in the dt-bindings.
+> Patch #2 adds support for lan969x SoC pinctrl.
+>
+> Signed-off-by: Daniel Machon <daniel.machon@microchip.com>
+
+Bindings ACKed and no reaction from other maintainers for two
+weeks, so patches applied!
 
 Yours,
 Linus Walleij
