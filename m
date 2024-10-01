@@ -1,107 +1,116 @@
-Return-Path: <linux-gpio+bounces-10618-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10620-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7391698BB95
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 13:54:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51CC898BBA5
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 13:56:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35CA8283CC1
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 11:54:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 063311F218ED
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 11:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB4CF1C2450;
-	Tue,  1 Oct 2024 11:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3DEA1BF801;
+	Tue,  1 Oct 2024 11:56:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PsfDobaL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A+p3vyia"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6872F1C1AD1;
-	Tue,  1 Oct 2024 11:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92131BFE1A
+	for <linux-gpio@vger.kernel.org>; Tue,  1 Oct 2024 11:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727783651; cv=none; b=bx9PiyUo5M1PddBd8/5/x/10T2BWXGOsJiLu2kE9HQrRvChVoijFbFK+Ag52GatdBnQ++7K0AV25xDXwqs2Sk0LUv4fqOj9FdxvXTQ0lOzPpPTp3YvLUwZb3yosvmlPryQFanYukYp60YUbSVrAwCEY9HpAQ96IplQywYbMTFrQ=
+	t=1727783769; cv=none; b=EEf6COprpu+PjjCgpxafpzp60g2EQB/+Ml2+zMRy3M2Sf/xqx/bPcw09+j71gW0QXGo9SN3tKwpeYQkdWR8XtEPl74Q9jFO//ZTcDZxfi6juu3itpVBt7W6VWOJH+C1qCyVCRnsqLimWJojBivsj64gN8yHZqq5FrMIOcy9U8hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727783651; c=relaxed/simple;
-	bh=AH8jKNrfpB02Bch+UeKQLgAOCwY+kh2jdGOKaLJOh1s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Cp7O29Y7SxOFzxZAwXZi32RJSueoQeRmjmVRZN3/Yp4XO7cWAZ36Z7cFjE/1ipUZzCtMaVMHyAPWltbwp5vsgTcTXq1gngf4r8qUb9diOL8zyEJ1ARRH2ArHI50I1SbAw6hErvj6mzq9N2VhnaokRPleb4KWfZxyJ6zyj711Txc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PsfDobaL; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 700E84000B;
-	Tue,  1 Oct 2024 11:54:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1727783647;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9FquloJFHLrC/bo4utyC5vq8/FwWCs0brZCGadDDad0=;
-	b=PsfDobaL7t5juFxjex9Xbqv6A/T0rqECIsSNi+AU3Vyut6R8hlRk6cCwJgK0wAcCAgoTTk
-	7c48qwGOnYLdzkVtEWY0sQrLND+tHRPiJ2gQfKtNzVAchdvMf2ZF8f2R+FWE+kAk76SRm3
-	Jdkz5pEEwQcmQIrplY+6EfYRvCTAGpYuJhFvdlJlBv2qrVSUPSFp788XlRvIsEuwxDUEUK
-	3P1XAEHJQ80GUWdbw8GcFmLLtfLa1S3os0o93oGIIDAuKIXqficEPNeWFaOel4AprXtEWs
-	ManH7pIMOuSPfliYC6zhpr3VDyTipjyiw61SGmIyr2arxF3e4fDufP7NIvBIlA==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Tue, 01 Oct 2024 13:53:31 +0200
-Subject: [PATCH v3 5/5] MAINTAINERS: Add entry for Congatec Board
- Controller
+	s=arc-20240116; t=1727783769; c=relaxed/simple;
+	bh=dCRCTpeBWVQaEGezuqoGfd4YJh6Ew8r8frfM+R+vKoM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CLJh8UHhhRst8HcsJpbP7eHaIlFgQVDxEqnK9kG8XU5dc8bDjBQIuJDg2UwFk7v6e5v/1zsbBh2cNCIuDCP2Upr6AL9ChmF/OGJvOvFQUXA8g+8O2UoBjwZ8QPjoHFVoBT3kXAqKE9LKeMZqsi1xlPT0BbOstpAjjJEoW8OmfAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A+p3vyia; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5398fb1a871so2735226e87.3
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2024 04:56:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1727783766; x=1728388566; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dCRCTpeBWVQaEGezuqoGfd4YJh6Ew8r8frfM+R+vKoM=;
+        b=A+p3vyiaUcwV8qih0p8dTFOlKzyp5Ax/laufphx7Ku3mjZv67zBcY1qKGQeJy7LzdL
+         Xq0l8GT9QCmOsjStnqS4klG1vQNLUrkyLaK65cjqxoXsE4Rhl6lF3NYGCtQDyicOjbiO
+         LqNkpTrkQ+0t0YZhNQOvkBkKLDunJJ65zHc48WPyxV4ifkRJ3uF7pnd9sxmYcB8GmwKh
+         jNUxY36/h3cME8T8MohnExoM/aAZiB3iYfvRh3xlJ+kxDBdzn7xz4EFTRtJNsNvjUgJv
+         RpImdvzI6FscgKI4IfgpZjZQ/wvoHU2fVOXQ63XbN+Thv2Hsl9LNIJ0Ep1nWqfC+wTBS
+         M4Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727783766; x=1728388566;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dCRCTpeBWVQaEGezuqoGfd4YJh6Ew8r8frfM+R+vKoM=;
+        b=YeIUJz7EmxBMpbvYvZOPQT6c2+vB7JdYbzCG5a24/gctc9Xd4yVqyOowkXSwOjR+7Y
+         ZTnlMMrDIzeuaGvsT4aRgtDV6URMWLDS941JQ6AHPj+os/B+J8k1+pX2yPJGV1Xf9mun
+         SxEdN/qB2zmqV8Sq5+jSDO6SOMT5Oa7KUdHlNQdYpak4sKY8ioXUvpLW3vSQg+Q7ZH9d
+         Eq7/jV8Q1W8huSDaD8o4//u2gX/Zw9WsIfasejCz2o/NZODB6YlSud2jwHhF1oye7E3a
+         xhZl1o7pBBgiAombqWUZ4fNGrq+x2hP63meeej0QozkAEayrybBdKFk4DY/6dt4DTgKT
+         T80g==
+X-Forwarded-Encrypted: i=1; AJvYcCUnPYvS1ScsfEZQZxvElzpTtKHm+8PAXRTsu6DD9QnF5sAIMWcpy42yg407X6TXqu/hdy7ir7RXbBzS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfN/mvh76bNgpPeYuCtaie41LdNa+PGvJzMCSXGdfLtJSEoDWQ
+	EPvOKhUBdFLdbCnocWWRvFqeLhpqBMnKJm8F2ckgSJctdZAlgJEJ/ufxP+000M0QkpiSQQeGMWB
+	nRlZoibWf3kGzSkfdvyo4ZBzSfcffN5wcLt0cVw==
+X-Google-Smtp-Source: AGHT+IF671nYta5t199R7sRxpHHBTnmwujkmlr3MRg6tqyu/Ngc90gmiXkly9+05ccmQF2xTgC3WFKRZUK/UcnVIUxg=
+X-Received: by 2002:a05:6512:1087:b0:530:aa3f:7889 with SMTP id
+ 2adb3069b0e04-5389fc7ff3amr8180609e87.56.1727783765958; Tue, 01 Oct 2024
+ 04:56:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241001-congatec-board-controller-v3-5-39ceceed5c47@bootlin.com>
-References: <20241001-congatec-board-controller-v3-0-39ceceed5c47@bootlin.com>
-In-Reply-To: <20241001-congatec-board-controller-v3-0-39ceceed5c47@bootlin.com>
-To: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-i2c@vger.kernel.org, linux-watchdog@vger.kernel.org, 
- thomas.petazzoni@bootlin.com, blake.vermeer@keysight.com, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.14.1
-X-GND-Sasl: thomas.richard@bootlin.com
+References: <20240506-imx-pinctrl-optional-v2-0-bdff75085156@geanix.com> <CACRpkdYbOTXmap-vJy4JNZSaZnE=yzC35EPD2F=bD8gWdD8-GQ@mail.gmail.com>
+In-Reply-To: <CACRpkdYbOTXmap-vJy4JNZSaZnE=yzC35EPD2F=bD8gWdD8-GQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 1 Oct 2024 13:55:54 +0200
+Message-ID: <CACRpkdbOUSS95SJxsZHmYfZtZNhDe_dy7OWZnsxe0WcExC1Wyw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] ARM: imx: only enable pinctrl as needed
+To: Esben Haabendal <esben@geanix.com>
+Cc: Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Rasmus Villemoes <rasmus.villemoes@prevas.dk>, 
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the Congatec Board Controller drivers and header as Maintained by
-myself.
+On Mon, May 27, 2024 at 1:05=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+> On Mon, May 6, 2024 at 12:24=E2=80=AFPM Esben Haabendal <esben@geanix.com=
+> wrote:
+>
+> > As not all mach-imx platforms has support for run-time changes of pin
+> > configurations (such as LS1021A), a more selective approach to enabling
+> > pinctrl infrastructure makes sense, so that an e.g. an LS1021A only ker=
+nel
+> > could be built without pinctrl support.
+> >
+> > This is a very late follow up v1 3 years ago [1]. The situation seems t=
+o be
+> > unchanged since then, and I have tried to incorporate the requested
+> > changes.
+>
+> What is the verdict from the i.MX pin control maintainers on this?
+>
+> I can merge this into the pin control tree for v6.11 but it'd be nice
+> to get an ACK from the maintainers first.
 
-Acked-by: Andi Shyti <andi.shyti@kernel.org>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+I ran out of patience and Shawn ACKed patch 1/3 so patches
+applied.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c27f3190737f..6f218022bd02 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5760,6 +5760,15 @@ F:	fs/configfs/
- F:	include/linux/configfs.h
- F:	samples/configfs/
- 
-+CONGATEC BOARD CONTROLLER MFD DRIVER
-+M:	Thomas Richard <thomas.richard@bootlin.com>
-+S:	Maintained
-+F:	drivers/gpio/gpio-cgbc.c
-+F:	drivers/i2c/busses/i2c-cgbc.c
-+F:	drivers/mfd/cgbc-core.c
-+F:	drivers/watchdog/cgbc_wdt.c
-+F:	include/linux/mfd/cgbc.h
-+
- CONSOLE SUBSYSTEM
- M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
- S:	Supported
-
--- 
-2.39.5
-
+Yours,
+Linus Walleij
 
