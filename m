@@ -1,146 +1,136 @@
-Return-Path: <linux-gpio+bounces-10626-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10627-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C2C698BC19
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 14:32:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B613598BC25
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 14:33:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD1AE2849E2
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 12:31:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F0011F22F4E
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 12:33:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DCBB1C2452;
-	Tue,  1 Oct 2024 12:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C932B1C0DE8;
+	Tue,  1 Oct 2024 12:33:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tfl4OFDs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHvQlB3f"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37313156C6A
-	for <linux-gpio@vger.kernel.org>; Tue,  1 Oct 2024 12:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816E819AD8C;
+	Tue,  1 Oct 2024 12:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727785913; cv=none; b=ay+bRQ9Fi7hU7cjeu6eJeKz1x4LXPSYR33urxDMEa4LrohM0kD1EruQR/TV8wsWHzQNWoqQnQ6k3V/KsrWGbMb8V18Dni19GcfoJgRWp9TdPLp0tOQYkEBspbfW9u1VCb1YtaUgieBRzwioFojf9O6yB+EwMMLRwJ/S//tQ2Z8o=
+	t=1727785985; cv=none; b=EtmaUmDTqewPf1QDVd6uDLHlJeavb994TwFgMXX3M+weMI0CcgjnwqW9fnXe9qXrLQHFNEFs8MuFaIHWVMDdSMQtkF2eyUZqT25HajL7aiKPcTsYvLes/cpjmFnjnP927UMV0QDqhdJbHAeDNokreio6CvsYn4QK+fGkpSeWWqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727785913; c=relaxed/simple;
-	bh=7cTxSzEbxeF+GrapdnzboHQLIrMSUvGWzJ30ZsSYLz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=knjJbDenw+J0AcO0Yok1rXij9Qea1osXPUnUMXwOnRKu3g4VmZHpi4APMeaqHGIg5YRiHSBsHcKHLU+m9Ha0xy54ZXTwTWXu5KbiOGkYZmZmEnnJoj2hd0mwRNoGHwrrpV59cUTnUEG155oDQQmz9gVLSSFGgs11uGD1bUv5Jqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tfl4OFDs; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5389fbb28f3so4048594e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Oct 2024 05:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1727785907; x=1728390707; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aaxPtIxc6X89i3w/fWNhCG9bzXeEBrVoBRN+stIijtw=;
-        b=tfl4OFDswlFVjHH8gE/N76W0gkYW6MX8G19CaZ+l/JdUSv/EH8+44PKjE72OMNf4Ig
-         l+fuJ3TJV46+M+saN/CsV3gocvb1LHqbn9kQh354IFuTOBqL27jzR2ye9OVeG7QZVUHM
-         fEAkO/ZWCDvygqnN+LEnL3bBjNajs1rooPs3lrrCMiwdrA2Pkf4l+VRulXMwm/nluVF2
-         NWReARK58xX5QJvylwJYlweVB5stVcLI5jqUaPj9Ur0VI0gPHTqy+tbSUXS9UVcXrms1
-         2t/+2ZxGMeEWpmghLhPiUqGsWUooZVLTAP2X/uXd9IY9d2ExTX1d92kLlxLNm9EIcPcX
-         NETQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727785907; x=1728390707;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aaxPtIxc6X89i3w/fWNhCG9bzXeEBrVoBRN+stIijtw=;
-        b=Psdpq3GzEbeOZlZiH5pOwxO8YrbH5FPKO4WuHUVFqzSCoIeU//ooEk/n7B/UkRXlC7
-         5iL1zigtvWlJ7NYIZ5Vvf0zuQkNAeW7gWuR89h/BRBVNSACLV8juN/MCHTrLSSJ8B+bx
-         bTEMCCHZ2w6Qpppx1k5KqbfqiyxYmPMzGDC48y+wlzd/0RhuHiFCnr7TzMZCxCRjI76J
-         EAXKmAuxB11px97cxNV9eAVPZ5yQc+RQDJGAspRULmfjmwh7bwctYua6hs0wsvxNz8zQ
-         MkIR4nV8oxAV0N4QFSVGclnFioOqrHkUKh/s+VKSIzO6peWQ0DJWIQFdy5GOrJQt6tfL
-         mrZw==
-X-Forwarded-Encrypted: i=1; AJvYcCW02Q45YXlokbDzCUJeHQXlebgsejW0ZRWhAWj4HUqnBGgpFCMVuBE6+vUG9OnZybI+7L6A/bzJeL58@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg0Ree8d7G8dgeZsQscDeMejAtrUXQemno0EhOLwa4ylNaUs35
-	+Cw0zwp8UfJRnSr7oM1wE6YUpwjHMgZPb4qGtB3Y3M3Cqu92uyvbO14w+omBHZRPULdqW8j9T3H
-	811qHWGnTud/4twzxaRW7B8FnkQVRwrcLT3/DRw==
-X-Google-Smtp-Source: AGHT+IE6cgwbL2vduTVHBVWFI7W1VvqonH0A4ZabzA3pe8dns/kIazi+ANVfWemf5d3Z3XG8mWpEFAxiZ7o3tz4fgFU=
-X-Received: by 2002:a05:6512:224e:b0:539:96e0:f0a4 with SMTP id
- 2adb3069b0e04-5399a2834b9mr951452e87.23.1727785907094; Tue, 01 Oct 2024
- 05:31:47 -0700 (PDT)
+	s=arc-20240116; t=1727785985; c=relaxed/simple;
+	bh=2mC2Q0SM0qv8F+TbsE6KIL+n1IyhIuMI2WWZSIIkF3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OtvfCfrIRefLmbcjJhUM28/2PqPPeUV9dkMyGbHSj4ITzNzkeArLPUb3++nvmjDBzPFWodrMzaFifnhb2RweJzCafwIA8nrqtVYSDkqyLG+JSuJ6mLskJl3Fu9zmYgzeKO8QHXogYKma8Lkx/tYrSr0T4kxwuaJrw40c+Zb2ITU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHvQlB3f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5267C4CEC6;
+	Tue,  1 Oct 2024 12:33:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727785985;
+	bh=2mC2Q0SM0qv8F+TbsE6KIL+n1IyhIuMI2WWZSIIkF3g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SHvQlB3f4XuJ3Lxeqche4e0Z4YLu/RjBxkGvXOZq+qw3bZnobbUu4REsTnH0GMfV1
+	 ZFxCUvAL9Q2WlSSjSuv15DTgEShQJ+O85Nk7e4j9rbOsdJTyWkHj/ANKRYPAuBSlSl
+	 Dgw7NaF71t8wmtFgBKUFosvG2xqJwOlJK+hsvI5ltPDLj1h38c1yIn9swXl1P48yJi
+	 DR0N75MdvRBwwKNDVN2YMpce4PL4wx9xAL4XD4mAw/FDr/1gXyW2Mkesd+7SacyRcX
+	 47qEMAPT1Aa/QfzM5WR6BGBwri6EvIxZnOnod14g4+VHVcVu2OD/uksSBRcnN7tJ4F
+	 oHBV5Ib02tckw==
+Date: Tue, 1 Oct 2024 13:32:59 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ze Huang <18771902331@163.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 0/3] Add initial support for Canaan Kendryte K230
+ pinctrl
+Message-ID: <20241001-stratus-overplay-96266c33ca89@spud>
+References: <20240926-k230-pinctrl-v2-0-a9a36fba4b34@163.com>
+ <CACRpkdYk9aCp7mdWJJTT-1cwNZC4RN_eB6v5rducDY5MGJ_dbg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240930144804.75068-1-brgl@bgdev.pl> <c56f17e9-8da2-4894-9000-b74b7cb66e86@amd.com>
- <CAMRc=MedULpeE5Dwb4W-ten1sOWr_+6Xgb05VDW+w0_9ZxbMqg@mail.gmail.com> <36b70588-9ef5-4686-89f3-32603022f242@amd.com>
-In-Reply-To: <36b70588-9ef5-4686-89f3-32603022f242@amd.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 1 Oct 2024 14:31:35 +0200
-Message-ID: <CAMRc=Md=3cDWG4snPKqD3UHe3t+hAJo2T1hRTx2YURg3_L1NAA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: xilinx: drop dependency on GPIO_OF
-To: Michal Simek <michal.simek@amd.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="MVunmLxiGHzDTp2O"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYk9aCp7mdWJJTT-1cwNZC4RN_eB6v5rducDY5MGJ_dbg@mail.gmail.com>
+
+
+--MVunmLxiGHzDTp2O
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 1, 2024 at 1:13=E2=80=AFPM Michal Simek <michal.simek@amd.com> =
-wrote:
->
->
->
-> On 10/1/24 12:44, Bartosz Golaszewski wrote:
-> > On Tue, Oct 1, 2024 at 12:30=E2=80=AFPM Michal Simek <michal.simek@amd.=
-com> wrote:
-> >>
-> >> On 9/30/24 16:48, Bartosz Golaszewski wrote:
-> >>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >>>
-> >>> This driver doesn't really depend on gpiolib-of being built and can b=
-e
-> >>> compiled without it.
-> >>>
-> >>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >>> ---
-> >>>    drivers/gpio/Kconfig | 1 -
-> >>>    1 file changed, 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> >>> index d93cd4f722b4..0d676c96b72d 100644
-> >>> --- a/drivers/gpio/Kconfig
-> >>> +++ b/drivers/gpio/Kconfig
-> >>> @@ -796,7 +796,6 @@ config GPIO_XGENE_SB
-> >>>    config GPIO_XILINX
-> >>>        tristate "Xilinx GPIO support"
-> >>>        select GPIOLIB_IRQCHIP
-> >>> -     depends on OF_GPIO
-> >>>        help
-> >>>          Say yes here to support the Xilinx FPGA GPIO device.
-> >>>
-> >>
-> >> The patch itself is fine but it should be likely applied as last one n=
-ot the
-> >> first one.
-> >> If this is applied like that feel free to add
-> >>
-> >> Acked-by: Michal Simek <michal.simek@amd.com>
-> >>
+On Tue, Oct 01, 2024 at 02:27:25PM +0200, Linus Walleij wrote:
+> On Thu, Sep 26, 2024 at 5:58=E2=80=AFPM Ze Huang <18771902331@163.com> wr=
+ote:
+>=20
+> > This patch series introduces support for the pinctrl driver of the Cana=
+an
+> > K230 SoC. The K230 SoC features 64 IO pins, each of which can be config=
+ured
+> > for up to five different functions.
 > >
-> > I think you may be confusing CONFIG_OF with CONFIG_OF_GPIO. This
-> > driver doesn't depend at build-time on the latter and this patch can
-> > be applied right away.
->
-> ok then.
->
-> Thanks,
-> Michal
->
+> > The controller manages the entire pin configuration and multiplexing
+> > through a single register, which control features such as schmitt trigg=
+er,
+> > drive strength, bias pull-up/down, input/output enable, power source, a=
+nd
+> > mux mode.
+> >
+> > The changes have been tested on CanMV-K230-V1.1 board.
+> >
+> > The pin function definition can be found here [1], and most of the DTS =
+data
+> > was converted from the vendor's code [2].
+>=20
+> Bindings ACKed and patches look good to I applied patch
+> 1 & 2 to the pin control tree.
+>=20
+> Please funnel patch 3 through the SoC tree.
+>=20
+> > prerequisite-message-id: <tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@=
+qq.com>
+> > prerequisite-patch-id: 704efc6e76814e1877748959d7319d558c8386c1
+> > prerequisite-patch-id: c2144cf468c57b856830a61615ba6ba501e8ec58
+> > prerequisite-patch-id: ced4a01ccd8ddab2fd308d543ddf47bd1641518a
+> > prerequisite-patch-id: f8b983b301d0c14f1448b9e4c321262a509e061e
+> > prerequisite-patch-id: 834b65b6a2b037daed5cffc6a41963622568dc9c
+> > prerequisite-patch-id: 2401703b57448c9ea2c3dc7650b4502491a28944
+>=20
+> I don't know about all this stuff but neither bindings or code seems
+> to contain anything that won't compile so I just assume that any of these
+> dependencies are purely for patch 3/3 and I nothing blocks me
+> merging patches 1 & 2 so I just went ahead with that.
 
-Now that I think about it - we should probably use of_match_ptr() once
-we drop this dependency though.
+Yah, this should all be cos I haven't yet applied
+https://lore.kernel.org/all/tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq=
+=2Ecom/
+as I am waiting for a clock driver to be sorted out.
 
-Bart
+--MVunmLxiGHzDTp2O
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZvvr+wAKCRB4tDGHoIJi
+0hnQAP93nua+l5hRyOfPimtHNG8Wn/JusylG6RrR+aZbNJtWnQEAhLgo5tqTgYtt
+euXnFikL3ifpzn/KlGUSlx8O8lRN/AI=
+=a1pK
+-----END PGP SIGNATURE-----
+
+--MVunmLxiGHzDTp2O--
 
