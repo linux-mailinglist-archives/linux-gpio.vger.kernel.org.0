@@ -1,65 +1,65 @@
-Return-Path: <linux-gpio+bounces-10610-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10611-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADB1B98B9B4
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 12:29:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E38A798B9BD
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 12:30:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C7CDD1C22CF9
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 10:29:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D0EC41C23596
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Oct 2024 10:30:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABBE23209;
-	Tue,  1 Oct 2024 10:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C69B81A0AFB;
+	Tue,  1 Oct 2024 10:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dLHmSKuy"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="odD8JR77"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2085.outbound.protection.outlook.com [40.107.223.85])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2079.outbound.protection.outlook.com [40.107.223.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E914594C;
-	Tue,  1 Oct 2024 10:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3396F1862BD;
+	Tue,  1 Oct 2024 10:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727778574; cv=fail; b=skwHLXpYNRm0IMY+zSIsnSPgwXrd4M6oCOPjsPZk3ci7xnLyoRlqnu7oxU9GFQ5elOaUZYHaKuGnaXKfNekCnbnBab0thoEJipJL1lQGNc4DjplkCwB1H9H47F+pvA+J1xjYD4VttZbQbRvokEvSB6Na6uUqjZeL+ngZ+iS/Bow=
+	t=1727778628; cv=fail; b=B7VytuDeRa3BWp75/dyuJ9ygzd4kDxOngq+BxgXp4AC2bxCGUePhFTWyOyubHykh/7jROffrn3l6zDZg2IGFuZHIp1gFThuboR/kOlpqwySijw1JQw3FRT94Wv5gTNxrKI+7ECzGaVtdN5QxceFJSt9V0lDkFlMiBpnng/ZTIoA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727778574; c=relaxed/simple;
-	bh=LFl99NDU6iS8wqamOjhe7UtSgqX9WkTdTelqG340v7w=;
+	s=arc-20240116; t=1727778628; c=relaxed/simple;
+	bh=xYtQgeg995BKCA6Ug6FJFaierCCJdPzHmevOxlIOTCg=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IxFx1EhrBJ4gkI1GaSbXNlGNg+z8F/AXVWVhzl1BHByBkeDhp/vEvRYqQkrtSt9XSBWQ2AkTsC4aCqKnXrnyWl4ISoH39E83DgMKVij0+ai1585khvfNDupO0/5WX6LkLqusD1tT6Ih620WE9BgP6bqSdDV4KQegbIvxG/ML2IM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dLHmSKuy; arc=fail smtp.client-ip=40.107.223.85
+	 Content-Type:MIME-Version; b=rqJqZnZR9imcbfMsFZukpIxPgaTl9RCZZWhXDg9SovCtyTws+jL0pxJVxYpsu+wBVOc7RQ1VcAgYLrlq4p5nedIg1c4lH32Oq0rGrdJuS1i2vZQRt8eDGujyckOsnpSKWd4pbCHFGlWNWz4X1CvenfMSDQEUJicaIcryVp5EXec=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=odD8JR77; arc=fail smtp.client-ip=40.107.223.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XxxubMtNGONkpC9HHwzV631hxBXBdwMYQqnxBGeaCP6Ox4VMGH5moygnKLDm2970eJcnwGaepHbguyPeojOrVa1rdXjXbK4M2U5AxROaMYWs3HFIv0OKKtnk7Kl6Q4lV5Mqh6fYR+Qntz0b5VMR0mnSfllzL2x5fQMFHG16kn4YPySBvBumJSrvkkTZ+dOodpjOmeLNEYug977+3BLM2fXT/lgwBuVnnmgOKYnO8oCI1rFuxsoAamZ4+QfvgVRBuivIWo8HU1CyQ0nyaugJxPdtN2fDX3i1nxHoitz3E5GSx1qM5FZPTAEQO27sZYDL924cQxCLiS8qttH79H89feQ==
+ b=N4aHJJYAvy/G8bM9YDPi3JR9ROWvGA2jFquDCRIsMgqDUPTZPeVELP22Tx1/YbIP7/6C/b6oWU2S2sOLpT9o9uEhBzsnqsXcfAemnLktV2EaySTpKwT7mn/x0ppbE4EIlf2cQR1M06Rbnv0s2lEImm7k7PpQfGdOwvyui6alDJe/ZTXhLjM9jJxNXcnS8bJ6kyMQIN5woRPhQ8HEgIpn9vzuHulGpwZmZZHTs7TaXBUxq982isqqZBUDWZlo4iJ46nPxVAnR9vC20GxoUkOZobb0M6f2vFPX4sQHYCvZhNlU9Nc8DH2Rjo3dPp9OswhwQ5rTGSJqCVc97FG0qm32uA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qvq8IhMhe6woHBvrAHUyVrCMl/cbNNFLeXbAkcJd0rs=;
- b=CuIIUmqAV6QkQgQMRy+cml0klYYzFE4x60bXfyd/qTsqBkdzkNPn6vo0CZqlYIpo/Y0UEr3FHiNkx375f2EdyAetjmbOuaDXcTnjoJBsKLjNfoi1T5hqVpUeoP00JLZceb+cwOJ+sSwNBUhw+Rm+PxtS0qvArtBByYMysyVvFZhQ2vBR6qcoOMFzd+BYj2q4HM3rc4XYS+hzU/suJ8EXqGtp0DivlV08jwBL+JMHQU6NdkamYpwAIMvLdkbvwPP2Zkr37CQUbKUJ7/zLKZARRZUCwbfnD5gBcbbN0P0dpnSY95xvHBPQXimOBWiigfgQv9nF4z3cnmFiy49QwST8vw==
+ bh=E9wrihtl49un16+o2CD3cCELMffI1YgklIjbuz+r9lY=;
+ b=wooMv1oBMxs9N6utXG21sF0LrHBoMLNRx7LWri7ShPyC1dueJEXi1mjYEvbVQP2hpzsP+yTnAjMAZAB8scLvJdo5Wf7s0UAzDLnBf7vP+BYMBG/J3rbCS+N0AMM8PYgv+8iE1rwEw9j2bYu/xyQvv1O8iTeBWA96B7dJsWYZTN5PpT2Sgthqzjq3bzwVacUCfcyUzOyCqZ04cG3+HXChtIb9giFrs1EmWFFBkPFZPza2hV3to4qL/B4OCAWlG43H5pIrmIdZ8OjTX+O8u1/DzbJkDXwDXV7QjzqjNgYmUwdFB7yXffop8BzRM30R9PkMtYgJOEwDYA81FioWl/4h/w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qvq8IhMhe6woHBvrAHUyVrCMl/cbNNFLeXbAkcJd0rs=;
- b=dLHmSKuyiWSQl8qWHFfGoiLu+yMz4rrAELqXCmmyH/mvYXm0awehZNGXhyrUzqiP8tf//GWwwlmzSjYq5ffJDP9NiM8G0UPevw0mezQfEFM3C6dA244hLOCnedg3LK6vOgcZmpEWxC6NAD1Vj1mH5m7RN6j0Ayb//ZKKKB3TbVM=
+ bh=E9wrihtl49un16+o2CD3cCELMffI1YgklIjbuz+r9lY=;
+ b=odD8JR77p8D4r0lLXjYwZZLsd7i3KeW0q2zkJo898TB/Vit7HwrLb53XiPrMsE5iESRpkoE2ojZvydhpnN3s0CXKL8hlfstw2Nzp0K2l+piM1hoiB149C6boA6a7TVVIa5RSAsGij/OXvpqiMbvbvLn7Jpq6yxVAcfnRBugT0M0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from SN7PR12MB8101.namprd12.prod.outlook.com (2603:10b6:806:321::7)
  by IA1PR12MB7662.namprd12.prod.outlook.com (2603:10b6:208:425::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.26; Tue, 1 Oct
- 2024 10:29:27 +0000
+ 2024 10:30:24 +0000
 Received: from SN7PR12MB8101.namprd12.prod.outlook.com
  ([fe80::fdb:e120:f99c:c899]) by SN7PR12MB8101.namprd12.prod.outlook.com
  ([fe80::fdb:e120:f99c:c899%6]) with mapi id 15.20.8005.026; Tue, 1 Oct 2024
- 10:29:27 +0000
-Message-ID: <971af2b4-158f-4dcb-9264-90f942b34294@amd.com>
-Date: Tue, 1 Oct 2024 12:29:16 +0200
+ 10:30:24 +0000
+Message-ID: <c56f17e9-8da2-4894-9000-b74b7cb66e86@amd.com>
+Date: Tue, 1 Oct 2024 12:30:13 +0200
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] gpio: xilinx: use generic device properties
+Subject: Re: [PATCH 1/3] gpio: xilinx: drop dependency on GPIO_OF
 To: Bartosz Golaszewski <brgl@bgdev.pl>,
  Linus Walleij <linus.walleij@linaro.org>,
  Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
@@ -68,7 +68,6 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org,
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 References: <20240930144804.75068-1-brgl@bgdev.pl>
- <20240930144804.75068-3-brgl@bgdev.pl>
 Content-Language: en-US
 From: Michal Simek <michal.simek@amd.com>
 Autocrypt: addr=michal.simek@amd.com; keydata=
@@ -115,11 +114,11 @@ Autocrypt: addr=michal.simek@amd.com; keydata=
  y7RkYPOpmElF2pwWI/SXKOgMUgigedGCl1QRUio7iifBmXHkRrTgNT0PWQmeGsWTmfRit2+i
  l2dpB2lxha72cQ6MTEmL65HaoeANhtfO1se2R9dej57g+urO9V2v/UglZG1wsyaP/vOrgs+3
  3i3l5DA=
-In-Reply-To: <20240930144804.75068-3-brgl@bgdev.pl>
+In-Reply-To: <20240930144804.75068-1-brgl@bgdev.pl>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1PR06CA0220.eurprd06.prod.outlook.com
- (2603:10a6:802:2c::41) To SJ2PR12MB8109.namprd12.prod.outlook.com
+X-ClientProxiedBy: VI1PR06CA0205.eurprd06.prod.outlook.com
+ (2603:10a6:802:2c::26) To SJ2PR12MB8109.namprd12.prod.outlook.com
  (2603:10b6:a03:4f5::8)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -129,92 +128,92 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SN7PR12MB8101:EE_|IA1PR12MB7662:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1da9ea64-b3bf-460e-b78f-08dce203ed0f
+X-MS-Office365-Filtering-Correlation-Id: 4e21f06f-adb0-44a8-85f8-08dce2040f05
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MmkwdEdBcjNHNTU0UFN2RVVYS0ErU3VKcGEzSWlpdFprOEpVdnc4NmRNaFYx?=
- =?utf-8?B?cWc2OE1tK2NqTk9tZ0tJU01NT1dOMzJDcVcxU0pGdUtJZldVTjZWeGtkNjRt?=
- =?utf-8?B?ekJobmtjSVZINkNIOTVucUcrUlpBelhiM3VzTjcwRUZldGgrU25FL0dRL3da?=
- =?utf-8?B?Y2ExLzQ5ZEJRRTRMd1UxVjQyc1NuOXgzdGxNcHZIQ3FaM0dTTzJ1V214bzVT?=
- =?utf-8?B?aHlLTjV5aVJ2QUVTdGpEUEg2S1g1ZVIrNGhvd1VpUllySzkxTXR2NVlQMThX?=
- =?utf-8?B?ZndZNG5LNEtyMm1Jb3MwODlRUllLZmVralpibU5xdko0UUxIUWRnZ1ZIWEg4?=
- =?utf-8?B?OENyS3hpdzR2dXJ4dmZuU1JBQnlUZHFuc0M0aVB0RDZsWW1GUGQ1bmloK1Ra?=
- =?utf-8?B?MWVjb2FIN3BwTmU3S1FyREhRdkY1QUZDcUtXTitaOUdvcjRZdU9TU08vSUNs?=
- =?utf-8?B?UXBuVmg2SldYMFhlb3EyZFNmQWVwbnkzRGxhUFdvaEZyN1k3MXlpNGFZbms2?=
- =?utf-8?B?eDdJaU5lcGtKaDQ4bDBra2JLUjNETmZzSEp5bGtPVFBvbDArMFdxNWhrdVJ4?=
- =?utf-8?B?aEZTN3BBWVlTM2VES3RxalZ1ckZYQ2wwbmFjcUZUWGhIWVpQV1g2cCszeXRW?=
- =?utf-8?B?U3RKc2xOOWJTVSsvSUs1MG9aMXdrUmpzVjNjeVc3b1lFTFJ3U2I1QTBnVWUz?=
- =?utf-8?B?KzFnRDZnVnVSK1pEOXA4MFJRRzB6TEpVb0FOZE9yZW9MNEI3cjNDZXNENnNq?=
- =?utf-8?B?bmFkanFkd0hpa29jRlFMZG05a3laeTlVY1lKY0sva1MxazFGMXptVlFOVDR3?=
- =?utf-8?B?alVPK1ViVWc3a0tJNC9GVFlaZEZwczk1TlZnd1dodUdPTXAxUVJRR3hNeDJ4?=
- =?utf-8?B?L0ZxSnhuRkoydTNxWFhtVVlnbWdsdkJ4T05ncHlsS1JEUWRpU2gvSXM4cTRm?=
- =?utf-8?B?eFNHRjBERDM4NDZoQ3J2eVNSc2pkRnhWOUduR3FGQ0djblRqZE0rdks4dVcv?=
- =?utf-8?B?S2JISXpYWEpnZ251L2tXSTZpTmFOU1Ewc0hZaUtTazJEenMwU2Y4cHZ6MlRS?=
- =?utf-8?B?ckVmU1ZoaEF3RUVXSFJaNmVmTUt4QzVVNXNjK2x5TW52NjM4TjVtekdxV3hY?=
- =?utf-8?B?TThHbjFENjBBMUNxb04xNGs4a1hDRmNzN0tYbUFSR09MejN5emgzMmQ4WlFz?=
- =?utf-8?B?SGhhSVpGOHcweENpRmRGck1TMXZvS0FUY05JaG9raURYS2sxMnZMbGlCZFVv?=
- =?utf-8?B?YjZUQnErYlVkOG1TWGJxNmpCL1FwbU8xbG8wcWZvdXlwU3ZXMjRweXdSYnVn?=
- =?utf-8?B?dDdFeHk3Q3BHVmpydnd6aEhva09hMFM4a3E4TXdoOHBQSmtXVmJXc085YkQ1?=
- =?utf-8?B?RnVmQlFnOFpRZ2YyaFQ5VTNsY0N0M25wTFFMRE5BbCs3aUZYbjRWaWcvUGtO?=
- =?utf-8?B?T1lPYmdjMWxiZVFOQ1plemtzOVFITEs0S25tdXF0bHJTUVhMbnV1bW52QXI1?=
- =?utf-8?B?VC9YTGtpN0h4ZjNKd3ZuOHFNMW9ZSnRzS2thSU5aQnJNTS8zM3VmZzkzTU9V?=
- =?utf-8?B?OWJkcjdmNG1GdFBOeGQxckhtMGhIczJiK01RWVZvaFZNYUtBL3kxc05oUlpN?=
- =?utf-8?B?cktHZkZuSGljQzhSTUk0T2FsbmdzTVdyTmpCRnhvRmNZZUJTZTYzbXpzZWlv?=
- =?utf-8?B?TXA1OW1Ub2lHM0JwVUlnTllQaW1WM2Y3THVrSnhmeTdrRHVRczNIRFBWMmkw?=
- =?utf-8?B?MnJuanhRN3F0aHZzWlVCQkl6UVZ4TSt5REpRVjZNNnN3U2dnVCtZd3lEWmNk?=
- =?utf-8?B?UmgyTlZNNDd6WVFxUUZCdz09?=
+	=?utf-8?B?d0FHOFAveVQ0TlZ5OTRvVEUxZWZKdmpBTVFhaEIzaFdLR3BQVjN4YnQ2Zkpm?=
+ =?utf-8?B?T2Z5ak1iZ2pkSEt3SlhXbDFXcW1ZN3oyaW5ialFlbTJndURBSjI4bCtnN2Rm?=
+ =?utf-8?B?citwMzhZUXk0b1RwMUVaOHNBRmxqVEJBam5qaU1NbFhlVndNQjJwM0tJOVF2?=
+ =?utf-8?B?Rk5tWVlnNjJwNG5BWXB4aGRHdVJ6VWVTMk5FRnBjQXo4NDRjTjBhMms4U0tj?=
+ =?utf-8?B?Rkh1Ukh5dHlKQnh2RFdpTGpkQVNBaS9mQ3lGd2tjM1JCaHdoS3BPU1BOczd4?=
+ =?utf-8?B?OHJIdzNEZmc3STl6MHQrd2gyRjVJVnV6YXZIdktrcFNWZmgwaThxQ0trd2h3?=
+ =?utf-8?B?c1JSSGdVZTI3OEozeG9FbHBjcjRuUU81S1UyVzZSQ3J3anExVUlLams3bWd6?=
+ =?utf-8?B?UUJkcm5MeEFqWkhxNExIcXJ3WFJZWHM3My9xNzZrL2J2c2tZcEtyNDQ4eStq?=
+ =?utf-8?B?eTE4cDVBdmJheVFDVUJyajJNVHpZT2FmN3JCRE9oYk4xek5DUEtEczd0YWRT?=
+ =?utf-8?B?S0NUanp5REdPa1hYb0tTaE5LOUE0R3puWnVXcTlMQmprV2hWVjVldkdqUVZl?=
+ =?utf-8?B?cW5PYTRXc0hWaDFrcFhCbWFIczM2eElRdmRUUkk2L09ubUpkQzRYTi9mU2xn?=
+ =?utf-8?B?azB5bHpMYzVOM2dOZ1Uvc0Z4WTBWQ0NWOVB0OFhETnpqSkN3aDhlWmtIa2NI?=
+ =?utf-8?B?b3RhcktKQmdjcmVVSlg5bDMvcThrRDBScDZPM3NGSytNYUpMQnVKV3RyK1pl?=
+ =?utf-8?B?eVcrWHBCQ1J3eUJKcVNYOFlGREV0eS9DQWd1UVFtN1lkWmFCb1hKazlRZVVT?=
+ =?utf-8?B?c0FGYTU3cHVkcWVORzV0b2ZMQ2QxUWlBbjdScHlzR1RGUlNSZ3VncDdwQWJz?=
+ =?utf-8?B?NjBCVlBnNDJpZFZKRS83SUNJOENkSHZrejFKVjk0bTNvdFlvNE1YcXV2dmti?=
+ =?utf-8?B?ZEdQVml5RHQwK2hWK1FyK3JuMW5xbkt3ODZLakNxaUg5UklQZ09VbXJUL2J5?=
+ =?utf-8?B?NFlRTmwvNHlrMFFUTXZFTmNBK3FOVFZyU05kNmVzRklTVll6MFk2bDFiNGpa?=
+ =?utf-8?B?YjFPZVRWeEFCc1ZJRU1MaExyUWN0R00vRmpzTFVXRTBXU1ZaZnJUbnFsQlUv?=
+ =?utf-8?B?WldFbXhvWUtqR1oxQlMzMzRzMit1NElhZHZUeHFrV2d1SURkbElCTHphL0k3?=
+ =?utf-8?B?c1hDdEdONWc4UEc1cnVnaFM4ZXF6NUVZR3NuQXRXTVZFNEhyUExJMGJjV08v?=
+ =?utf-8?B?cFlKQTFhdVVXUGZwajk3SFJvaHcraXFXam1HdkdLM01jakpmcUplalNvTmQw?=
+ =?utf-8?B?Qk0vUDhoRjlaZXJRaGxWTS9naVpLVCt5SW1zUTIwdXZTSlVTYzNWSmRVR25H?=
+ =?utf-8?B?cm0rQS91MFBETU9va1RnQ2VpdHJoanU3emZTWGV3cFlRam1jUTdwN3JuMldv?=
+ =?utf-8?B?MWNVK1FybmRFS3BJN3Y5ak0yVkFpdlk5MzgxckpHSEc4MG9OQ2tzVXhROFR1?=
+ =?utf-8?B?SHNWdzdUSGpQRTBCaFJtVVZrdDRRcDk4cXNRcFhQNzZPYmszNHR5MnhXVzU5?=
+ =?utf-8?B?WWx4QnV3cjJPaEpxQWxFSzA1TmxIZ0h0RHo5bUp2R0ZHM3A5ejNaRUhzeHJi?=
+ =?utf-8?B?OTRZNlpjUUIxcEZ5NnRpSkdNWDR1NlRoM3dTS0JFVXVUdEZ5UWt6VndRRVZo?=
+ =?utf-8?B?ZWE3RThFZjhZcm5SOTZJYjRMcDFjWWtJdnhGbjBqWmhlU2RraHhnNFRET0JN?=
+ =?utf-8?B?a2RJc0EvWGNZRDVyZ2NxaXJSTDhvdVFnQWRoVzJqUmgvQzR5bHFiRk5FLzJ1?=
+ =?utf-8?B?RHE3ZXpFU1hlR0Z5c2YwQT09?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eFZ0WkRWREM2OFVXMGlrV0JNNXE3MmE3Yjd0Y1dyQ0pkM1RkNExEQVpNNGVB?=
- =?utf-8?B?cFZDb09Rc1h5MGJRK0I5K0xSTWVPNVFJaWFka0twZUxoSHdmbGdpWmU4bDR4?=
- =?utf-8?B?eElQK2ZBMHQ3YTRwMHF6d3NOWjh5c3FtMS84dHVKVzBLRmhvRFJhYk1vREZo?=
- =?utf-8?B?ditHN0VabjN1YVB0UjRSNUJIUnhjaUwrVW9RYndEbnp0akp6Q0ZyOWJoVy82?=
- =?utf-8?B?T1NMcEpxSEoyTG1iTmNRTTR0SHpJWVkwQ1ZQVkwwY1FhclVhUGFjdDV6b3Vu?=
- =?utf-8?B?NHZRNUhtZHFvSEk2K3lBWVFXN0tYUDJMekk5bTFpSU5CdTFwV2lVUklBVDBw?=
- =?utf-8?B?em9ZamRxS210U1FsdGxYVzF0Z05abUxGUHJ2ejUxTjZmeHhTcmJ4Y3YySVc3?=
- =?utf-8?B?bVNPVHVhWUtoOGYrcHlYRm9HaUFyOHpWTnhER1JBSHFLMUpEczljSlB5cUFH?=
- =?utf-8?B?SFpiMkJQTXRHN3M2U2hFK21lNkFOUVVnc1Jla0szRVBCbjU4d0dXNkxRMkZM?=
- =?utf-8?B?K3NaQTNPOG5VRHByM2xvZ1hmN09iSW1PWjAyMzhzdkF2ODhPV3pxVlROSUEx?=
- =?utf-8?B?Z0FTc1d2UVIxaXhOck11UTVybVdmTHZVaEI3ZGRFb3R1M1dxMlZpVWtSQlhY?=
- =?utf-8?B?dkxyKyszVndDU0dLeWZNRHBtUEZQaEZaaXpQMGhBWXB5OEhmeFdkUHg4V3dC?=
- =?utf-8?B?Q25Nb3BWQTZhUm9mQTFLS2luOUdsRmtST01tbmZDdVJ3MzhDWU9rcG84VXRy?=
- =?utf-8?B?Nmh2VXVzNEtSUEdGeGkvdUpzRFYzeS9rclpKWHoyZk9VRzBmRm1idXo5bFBa?=
- =?utf-8?B?V0IrOGlHOExIK01VNDVIUml1TGpXL0wraXp6dnJPN2Z3OENPeGZBSFR6UDVE?=
- =?utf-8?B?SGZjOXBJdkRrMTcxVXpaeE8zU0t2dUxHb2RYa0JRQnZOWDdUT0orY3FwVU9C?=
- =?utf-8?B?NlZIRGVHZzdWQ2FqQ2ppeVhLbjQ5NGFtaTZYTlo3ZHo3WGlLci8wZXVjR1hS?=
- =?utf-8?B?NjdMM1Zwd2licTJTRzE3ZS9zUGNUVGdSQitpeVdYRjFZV0ZUTXc4SnBaL1Z4?=
- =?utf-8?B?Y05vTXk2YlhyeDJLaUk2WTJLMkhHVGdWUzhBbW1tZ2ZOZ0xieUJ6ajNzNWs5?=
- =?utf-8?B?RkdlRFloQjIzL1dBczBuMmF3SkF0cTJoSnBuWVc3K1B3d1Z3WmZIZlRMVUpm?=
- =?utf-8?B?L1VyT1RBZEFkNk9zVjNibUkwTGIrU0ROS3hVVGh1enFLQjJadDNuWVpocnJv?=
- =?utf-8?B?cFVlbFVSalJmOXc1Z3NZbms4cDIwdWpZYjNaUGM3MFZXYkJLOXdDNkZCdlll?=
- =?utf-8?B?K1dqbEtRaFJIUmR6Y21jenJySWdETnRzSit6WkNxSG5DNjNIbnAvTHpRalV5?=
- =?utf-8?B?bjZMaUU1bGUvNW5nQndrbXozL0Q4MzNsb3NCcjd2WElGcDZ4N2pwWnZFQzJx?=
- =?utf-8?B?V0xRRkhZMU14S2kxTHhMYVg4YUZzSTdvUldRZXg1di9OSWJyRFVMcFR1ZjR2?=
- =?utf-8?B?Y3JsY1ZWckZiOTFhbnZRSnd1eW1UcWcvR2pEdHU5MVowbmhHb0JQendRQStp?=
- =?utf-8?B?UTM2ODA0N3pGbGxWbmJkSURnbEY0MGU4czR0RDBNRTErSWpud1pVTDdhby9N?=
- =?utf-8?B?Q05mQWltOGtDWVJSa0JYdktKelQ1TGhTKysvWGE3VmNlV28zSmZQMTJxdjV0?=
- =?utf-8?B?ZzVjd3pZYnQ5Ti9YTlpYN2xWY1l3T2ZEOTNYN3pZZ2ZZVDVXaGFycmxzU2oz?=
- =?utf-8?B?QlIxTmgySTJabEQ3L0VWL2J6Q2hEMDdIMEpibXA3RlVZNWVOTmQvS0JENDBm?=
- =?utf-8?B?SXJqUlhUU3dWVGRBSUM2MEdaUE84bkZNT05xV2hLR3RyZk1KanU0eDg2ZGgy?=
- =?utf-8?B?bW1TbFBUYlRiQUcyMWV5Ylh6aE1KYlNHVWhVN3orWVhNYVp2aVhwTktnditx?=
- =?utf-8?B?ZjRTK3E4T01EZEJpaVlmb1huYTJ0MGo3TnBFN3E1cVd1VlhzKzFKT2gxMGNI?=
- =?utf-8?B?NVJjcGQ3V2VLeW9HWG83cEF2QzBybHlVYlNRVlJQUEt6a3VUSkU0UTYrVnhG?=
- =?utf-8?B?RVBiTHV4ZTBVVzdhdTB4UVZ5QkxEVGxPbmEzaW1ld2dZbmtqKzZaQmhhRkVj?=
- =?utf-8?Q?cn1Umr9dK21UUC1Bat2LjaiIi?=
+	=?utf-8?B?RGtubFpoQUFwbDFaNUpOenNjb1VKWFpzUXNtRjhqN1NMaDRLTHdVN1BIcjd2?=
+ =?utf-8?B?RzdyamNES3UvM0Z6d05BdmNublNsN3BQTlphMzBDdmdOMG4wekViaGhLUVZt?=
+ =?utf-8?B?QXg2Nm01Rk9hU056VEc0NnJxbDBlVmx6OWRSekI4MkFqQytxYkJHeG9rM29V?=
+ =?utf-8?B?UGJGL2I0RU91NHdMbkxRbXRNUG9oYzYzT0REeVF5SXRkbW1maDVCRitQaGd6?=
+ =?utf-8?B?ZHRkTmR6U01QNlRCYUxBUy8xWDJKalRZRVJmdHVGL0RFUTJQODN2Z1JZa3o1?=
+ =?utf-8?B?cHRqQWJaRGpBQjJpRzlMek9KVkQxWGRWSjV3M1dZVytaRURCMjBYSHl4clhs?=
+ =?utf-8?B?RHFBa2RQRURib2laaGdDVU51UzFZVzZlQzVSUFdSVng3ZUVWOFBhN3gyTGN6?=
+ =?utf-8?B?MXJOZytUVEhoTlBRU09MOXBleWZmL1RrWWE4alhIZXlRY1NvdHArbFJMM1JK?=
+ =?utf-8?B?Y21wVmlGYkZRNWtpOFRjYTd5cGJ6OFdHZ2RmVGJuczY4REpkQW1sbXZRU2ps?=
+ =?utf-8?B?Q0VPbHpLbVdQcmJmN2lJSEl3OXlBdkZLMHkvcGRIRWEvWFhHT2Z2WkdvdnhV?=
+ =?utf-8?B?NStYNEp1d3RYSUx6dWVBQkRnM0YzN081NzM3aURnWDltMWg1dFNoOFdxbU5D?=
+ =?utf-8?B?Q2hBWE8yR0Y3WityUkFSYUwvU3BEZEZpR0VVbjdNS3h0cHpDQVZ4ODR2TmZm?=
+ =?utf-8?B?czcreU9RMkR4SklVbE1zZzBhdStZTWFPZWExWi84UzNNazBtN20vcXkveDBr?=
+ =?utf-8?B?SkVTd1NUaGNEdjV6U2JtZmUrYUlNQ2ZnV1NUcWloWTU0Q05tRTV0d1ZJeTd3?=
+ =?utf-8?B?cksxcXhjc1dmWGdwL3lCTWN2T21nY1ppK2t0UzBZaFE3RUw1WmFUYWx6K1dF?=
+ =?utf-8?B?ZTM2dGJyZmFlY2VYU0w0NTZ6bGFGTjVMa01HelZ2QkErTDAwMU0xQy9BS3kw?=
+ =?utf-8?B?R2FzTFprQmsrdlhuSmdMcUZHTk1maDJZbjZyV2IxaERpN05kYVVnb1hmQ05O?=
+ =?utf-8?B?VXpMeXRLRFJYOERuQ3Y4bjhWSG1ITWNzdFlleVgzRDdGWUx6L1RRM2VmV0Z6?=
+ =?utf-8?B?eVRUYmZmZzVWY0JWVTJqL0VHR0planc0WkJFSHlJMmMrZTNmc0NRaTU5dHpj?=
+ =?utf-8?B?U0swTTBhMkNNSHIrZHN3NEtpWmdaVVBEVFFuSlZYS3kyaWMrTUd2cS9CaUVG?=
+ =?utf-8?B?QTJCOUgwcktObWYvZW12ZXJlMGFxRHNzRklCVW5WQkxpNzVOaEtsRVVLcTd5?=
+ =?utf-8?B?Mm14RWVxRXVtV2c1NWFBT21jMkFCWitkbFF6YnJzRXFOY3UweUtCN2RHeUtK?=
+ =?utf-8?B?WFAwZDZoK2diZEZ6dDg1eHdmV0RZdVRlYnlQVkh4bTl3ZmFBOWV3TE4zcldm?=
+ =?utf-8?B?YWppWC8zSVRORFdNVHhIT1QzdHFCaUJDRUNsWGNPTTIra3Z4cHg1NnNRM29X?=
+ =?utf-8?B?bkxUU2g5bk5ISlo2aWZiTklNRTVVSm1iZ29Bb1RwRk8xMVEvNi96SVBIcXNI?=
+ =?utf-8?B?TENVQi9mSGUxU3pUN1NHVldmbGpoTS9wU1hJdVUxcVlYQ3diWWlxOHFLb0E4?=
+ =?utf-8?B?eDZIL1hhOUEydGpTQzB2NnI1MHRWVE1mNlovUmV4NkgyemZxc1ErNWJabUtC?=
+ =?utf-8?B?dlBTMnlqQkJyUzkwUmYvV0hqYVFIWXVoTExRYkZrVzlwd2c1Mkk4UXU4TGVm?=
+ =?utf-8?B?bXB2bEVJbnpXNm5hVXJsMGR6dnh4WEJZandqMjdrK21Dbzhrc3hRUy9oMFRk?=
+ =?utf-8?B?cm1ZNUpLaTduaVBnL3lmRFZMTGVvbnZxUUxxYlVIQWZvV1h3RWQzOVJpbHBO?=
+ =?utf-8?B?bVVVaDFEaGMySDVVcytsSHNCQ2ZzUGQzWFMxcWRMSkpyL3F2M1dyOHJmTGZa?=
+ =?utf-8?B?VEkwMm5VbENOODc0aEo5eUpmSldydGhVaUxhSVp4d3Q3bDNPeU0ya2NRTnZv?=
+ =?utf-8?B?ZzVRcUhaa3ByeVZNanI5TkhkOWs2QXZUbit4VGgvNzBlL3VkMnlXMVkvMUFX?=
+ =?utf-8?B?YmVZVlNza1kxcjhnakl6aGNPWWxmYkw2YUptdjV0NmZCNzlwbGFQaUJsb2cy?=
+ =?utf-8?B?dkdlQml3NlU0SENGUStrWTBneW84TnR1WEs2aTkrM2M0S0dNZSt3N2ZkWW5X?=
+ =?utf-8?Q?boWqdqsixqLPGbw2W0OnqD3CA?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1da9ea64-b3bf-460e-b78f-08dce203ed0f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e21f06f-adb0-44a8-85f8-08dce2040f05
 X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8109.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2024 10:29:27.5957
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2024 10:30:24.5197
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OC/QQk695wCdUfcO8Yn+l/RKgyTclxV9rdOq5JgLUdlkgFXtIaEgQ5waXnLwff8W
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9laUnzXYVKh8sWq3cebyMgWBTR5GMN4ytZWDMEZ3hzBm15H8N/iB5VGZTl/o9Hxy
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7662
 
 
@@ -222,84 +221,33 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7662
 On 9/30/24 16:48, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> OF-specific routines should not be used unless necessary. Generic device
-> properties are preferred so switch to using them in the driver code.
+> This driver doesn't really depend on gpiolib-of being built and can be
+> compiled without it.
 > 
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->   drivers/gpio/gpio-xilinx.c | 16 +++++++---------
->   1 file changed, 7 insertions(+), 9 deletions(-)
+>   drivers/gpio/Kconfig | 1 -
+>   1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index d99824d42c77..41c552a58059 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -15,7 +15,6 @@
->   #include <linux/io.h>
->   #include <linux/irq.h>
->   #include <linux/module.h>
-> -#include <linux/of.h>
->   #include <linux/platform_device.h>
->   #include <linux/pm_runtime.h>
->   #include <linux/slab.h>
-> @@ -564,7 +563,6 @@ static int xgpio_probe(struct platform_device *pdev)
->   	struct device *dev = &pdev->dev;
->   	struct xgpio_instance *chip;
->   	int status = 0;
-> -	struct device_node *np = dev->of_node;
->   	u32 is_dual = 0;
->   	u32 width[2];
->   	u32 state[2];
-> @@ -579,7 +577,7 @@ static int xgpio_probe(struct platform_device *pdev)
->   	platform_set_drvdata(pdev, chip);
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index d93cd4f722b4..0d676c96b72d 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -796,7 +796,6 @@ config GPIO_XGENE_SB
+>   config GPIO_XILINX
+>   	tristate "Xilinx GPIO support"
+>   	select GPIOLIB_IRQCHIP
+> -	depends on OF_GPIO
+>   	help
+>   	  Say yes here to support the Xilinx FPGA GPIO device.
 >   
->   	/* First, check if the device is dual-channel */
-> -	of_property_read_u32(np, "xlnx,is-dual", &is_dual);
-> +	device_property_read_u32(dev, "xlnx,is-dual", &is_dual);
->   
->   	/* Setup defaults */
->   	memset32(width, 0, ARRAY_SIZE(width));
-> @@ -587,14 +585,14 @@ static int xgpio_probe(struct platform_device *pdev)
->   	memset32(dir, 0xFFFFFFFF, ARRAY_SIZE(dir));
->   
->   	/* Update GPIO state shadow register with default value */
-> -	of_property_read_u32(np, "xlnx,dout-default", &state[0]);
-> -	of_property_read_u32(np, "xlnx,dout-default-2", &state[1]);
-> +	device_property_read_u32(dev, "xlnx,dout-default", &state[0]);
-> +	device_property_read_u32(dev, "xlnx,dout-default-2", &state[1]);
->   
->   	bitmap_from_arr32(chip->state, state, 64);
->   
->   	/* Update GPIO direction shadow register with default value */
-> -	of_property_read_u32(np, "xlnx,tri-default", &dir[0]);
-> -	of_property_read_u32(np, "xlnx,tri-default-2", &dir[1]);
-> +	device_property_read_u32(dev, "xlnx,tri-default", &dir[0]);
-> +	device_property_read_u32(dev, "xlnx,tri-default-2", &dir[1]);
->   
->   	bitmap_from_arr32(chip->dir, dir, 64);
->   
-> @@ -602,13 +600,13 @@ static int xgpio_probe(struct platform_device *pdev)
->   	 * Check device node and parent device node for device width
->   	 * and assume default width of 32
->   	 */
-> -	if (of_property_read_u32(np, "xlnx,gpio-width", &width[0]))
-> +	if (device_property_read_u32(dev, "xlnx,gpio-width", &width[0]))
->   		width[0] = 32;
->   
->   	if (width[0] > 32)
->   		return -EINVAL;
->   
-> -	if (is_dual && of_property_read_u32(np, "xlnx,gpio2-width", &width[1]))
-> +	if (is_dual && device_property_read_u32(dev, "xlnx,gpio2-width", &width[1]))
->   		width[1] = 32;
->   
->   	if (width[1] > 32)
 
-This is also fine.
+The patch itself is fine but it should be likely applied as last one not the 
+first one.
+If this is applied like that feel free to add
 
 Acked-by: Michal Simek <michal.simek@amd.com>
 
 Thanks,
 Michal
-
 
