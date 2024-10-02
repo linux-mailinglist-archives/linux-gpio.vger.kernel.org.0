@@ -1,118 +1,106 @@
-Return-Path: <linux-gpio+bounces-10697-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10698-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D131D98D52E
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 15:27:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C70C098D590
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 15:31:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8F74D286680
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 13:27:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F3A1288AFF
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 13:31:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C577B1D0480;
-	Wed,  2 Oct 2024 13:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VXl2mcQ4"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1EE71D079C;
+	Wed,  2 Oct 2024 13:31:31 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734181D0430
-	for <linux-gpio@vger.kernel.org>; Wed,  2 Oct 2024 13:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16321D0793;
+	Wed,  2 Oct 2024 13:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727875656; cv=none; b=Eif8/H5D7hOO+SsDJC2deRB/l/QEr1bLVFAjQiVLb6yYktteNDBYkp3cZd//3l7URY04+oNx0vpqLkWz0kUlwwQjsxwcsgI6OTjY8a7Yuoj0z+6Jrm37YirQzQQLqRGIPqAtqJ2HmsXfAk1lMDR83hPOl5v8tbgK9f4+swcuoGA=
+	t=1727875891; cv=none; b=BVEiiN7pIlOhIx8n1KVTB6IcRpUGwRmkoZa2mJxwjtHt+C+NgHXddQRyhUYUMcTBwX3yKSQfWMFv+e19F48orNpiQHPzsCaE0LBMvTy6diWaqk5Oxr4Gz1sClDZEL6V+wBCSoHvg+2QnQ0uefBe3Pakpbn+Gk+RXXmSwpz92dtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727875656; c=relaxed/simple;
-	bh=WoaKlEMcbSsOUyOIA8eSRKVBqOjCka78j9BYwitbv+E=;
+	s=arc-20240116; t=1727875891; c=relaxed/simple;
+	bh=UJcPIwri5UHuUVhJ0RzYo6U9Fh/gZ9NGKBjQkjYFhNs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kQ1gjSrSn7OOmvn8kzgd/Ca5oZVx8FrbOsmcS6+y4jjw4+2rsJLP7qR6+U/zNtvSHdma61zyXoCSBxDB2RFTzBsJKvT8mEMJKbirShELFJF7TRmeGW9klbWFhMIkWmHJGZF06+tdlOLFLZxlBHBin4HaU7Xj6jZKpYnO7TJ/bgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VXl2mcQ4; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e260b266805so4341720276.0
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2024 06:27:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727875653; x=1728480453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2HzBc2EV9uqxoflmRRfK8jFyB3aOAk7qQbpOPz7vBxc=;
-        b=VXl2mcQ4JSg0wJ6R1TaxFWgkde72UF9KMv8tX2Vp9z51EvzF1GpO018dRSoy4bRauz
-         7uSfnhp81eJL3WWPDd5yCk70pbuoiAiEfSowYJ4PjpHLK77kGJss0DU05wgGexr5QLXf
-         mMFSyXvBhOZpz6tjz1Sz4lUgwcSv/+h2fAEf3bE0OFYYQEWbGBx83ddazO5kOHC4Zvge
-         ZgbywDs+OaB+FS+9sJu3NYfgXna+Kf+2x4ahQ6LCe6mDolTvIeN1YFX1tQzMySN00z6L
-         okcPY+QNwEKku5zxG/uOG9fdJMeaMyDXfn0yFuDkqP648OcJau/CurFrRYd0Sx05Jwtz
-         pnkg==
+	 To:Cc:Content-Type; b=ROeHzpXAMTwVkZzUbrSokDVQ+2UO6vsxHXrLvOnaLBndbsJp1JkNoms6ySfd/K8IbNkZOvtKZoSM4rsoQvXEkcqzCAHTArErj82HVQoAw4JC0w59/vS5Xrcf1oXPQY2hxNjFL4VG6s+qpqEsGqVakSSuYV5S4xZe8u+Jc/hVSeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e05f25fb96eso6198101276.1;
+        Wed, 02 Oct 2024 06:31:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727875653; x=1728480453;
+        d=1e100.net; s=20230601; t=1727875888; x=1728480688;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2HzBc2EV9uqxoflmRRfK8jFyB3aOAk7qQbpOPz7vBxc=;
-        b=mpgSNWz7DAp/BpazlYx2WC7lTds3YjZ+Lv5Of0aBTvWFvXYqIlk6cZ41oahPSkzkoF
-         G+IlnQPCveFyBJwn3xf0n7+Q9diURpfGd4Mg5LH3WDKLPKXQwO6oHHulIhQ7qXOPXmJL
-         96U8LIUSYKdHU9Fo2m/94ha4KIvFaXE5+gbmn0MEd/ofQpNBqkGtZBTkvik6LBtWp44S
-         Kj0b0G51iD43YvaVe90sagMOSpypGn63xmXWB2uOD+8VTc0SwJruUZpPt8sMP5hzf0ft
-         9C35dvLsI8Wz94KQrN4edBm0hLBkFCFMUUl8JeWjt0Ul6GGe7VZkKVgto6a/1E/5e8bG
-         Qobg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZn7+nZkHvPMZe5AkJhb8mfBAt82/bkGkQurDOukDX5xboWwjD3E0qbxBTVWbn3Zf4BM4TW1+eNixa@vger.kernel.org
-X-Gm-Message-State: AOJu0YzooCLdcsaKHwq/XfS3k8YlQndkU8K4ARYlX/CeiE9xq9x42qCz
-	mAg52KIBOj6+lOkMUD2TXobOryAl89soK8wYW09gRkU/5zCS5E++nEViuvMh/ksAVJbSdBrh+hf
-	vbP3gEZ0zSi+uVMYhZEPqA7taDATFXtUd56grnw==
-X-Google-Smtp-Source: AGHT+IHZUCB4vEl2AW6EAUkIG+axani700+S0OSjD1AjUsJbKs++2/eQZRuBsA/6kNKQfxt26/FJDiTjtYis5ARK10o=
-X-Received: by 2002:a05:6902:248a:b0:e20:2232:aab6 with SMTP id
- 3f1490d57ef6-e263838535amr2218907276.7.1727875653468; Wed, 02 Oct 2024
- 06:27:33 -0700 (PDT)
+        bh=dEbDBoGYWF+M5R/+/AHp1+KeZvpcoEDuvm7DRN/ZBpQ=;
+        b=SIgX5DfL4TkzVs8ABDXqQ7PZAxyBB3ahJ6YTqePEwKX4hBWR0Jmp7C0+S22/Nqau5F
+         03WjIAArZ+pd+QUobuMEt2QWdtiyMVx1hxdZbmWLnYQ1rNucbF57eYo8NonswM4UJI6T
+         xYU0n8/VqfWcOA8Wp2/C0uhNh9RkpnzbELjwRIeER+pr0UiFSUF9sm5Y1Ts9UT0awNpe
+         CHOhKZ1v/WjvKEgvywxD7tT6DkswdffPy1htvv+ikLG/85rGMeMCtklBhf1onSpB/UP5
+         DJ5sa5Ftr77Yo+FRSGiVECuEh6iMcurhGxu2y2VyILPJhayWFmW+FuJi97noImVQDZKt
+         YH9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWK09yY5RAp/TjICJX0fMuOHx9dhA2YXUhI/2PW0HZFwuB9H8LHxEnCD/1EnhSrLcLFt96nVpsPKde5@vger.kernel.org, AJvYcCXFNxCWHDTRP966vbOO9xu9zYLfXTUPjpJJ67otRfHyYOKPEsSh8cFOr6KM0eUA8ypRAOtZ8TkDFkf0F/nf@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe+0mge2yqbzwyfCPoGOYV7E4P0ad4RUONospYnXH4o3ku2YUE
+	jjNmelJ+3LnlrRjDT3gxopmst/7PLqtJcAnhwPkJk1XcpryqxFZgL/T2uTOz
+X-Google-Smtp-Source: AGHT+IG010ST3/CNyPcPFyV9JHFxFZntcZ7zwnnwLyiiDNQyxvTxBlrwnbRjPNXng4qNI24mn+9DNQ==
+X-Received: by 2002:a05:6902:2608:b0:e26:46f:967d with SMTP id 3f1490d57ef6-e26383b1034mr2668422276.23.1727875888352;
+        Wed, 02 Oct 2024 06:31:28 -0700 (PDT)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e25e3efab1dsm3879999276.6.2024.10.02.06.31.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2024 06:31:27 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6e214c3d045so50803937b3.0;
+        Wed, 02 Oct 2024 06:31:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU3mQ4sW+LEOJ2Xb2W9jzPCkkrseORWwwLxEopKlTVEFoI+d42XGDVxGguy4EBE7utv7tAame7bwTl1@vger.kernel.org, AJvYcCVCOH0TjLe9clm3kKcNyVbxtHYLQWSBX0Ns/jkYLIBNqQA0ODPjKixduC1i3ok3kNseaFtwk2HKqyV8LvGJ@vger.kernel.org
+X-Received: by 2002:a05:690c:39b:b0:6e2:313a:a01e with SMTP id
+ 00721157ae682-6e2a2e05203mr33198877b3.32.1727875887742; Wed, 02 Oct 2024
+ 06:31:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org> <20241001-en7581-pinctrl-v5-4-dc1ce542b6c6@kernel.org>
-In-Reply-To: <20241001-en7581-pinctrl-v5-4-dc1ce542b6c6@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 2 Oct 2024 15:27:16 +0200
-Message-ID: <CACRpkdZMWKb1h0-sWECCY0E3CxxMyLwCr4M3k6vrY9aAfpzMVg@mail.gmail.com>
-Subject: Re: [PATCH v5 4/5] pinctrl: airoha: Add support for EN7581 SoC
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lee Jones <lee@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	upstream@airoha.com, benjamin.larsson@genexis.eu, ansuelsmth@gmail.com, 
-	linux-pwm@vger.kernel.org
+References: <20240930163207.80276-1-brgl@bgdev.pl>
+In-Reply-To: <20240930163207.80276-1-brgl@bgdev.pl>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 2 Oct 2024 15:31:15 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUgoy=q7i2m4HAZFw20R7o25p6Z-PZaOu2xJ_cG+p1y-w@mail.gmail.com>
+Message-ID: <CAMuHMdUgoy=q7i2m4HAZFw20R7o25p6Z-PZaOu2xJ_cG+p1y-w@mail.gmail.com>
+Subject: Re: [PATCH] gpio: aggregator: simplify aggr_parse() with scoped bitmap
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 1, 2024 at 7:30=E2=80=AFPM Lorenzo Bianconi <lorenzo@kernel.org=
-> wrote:
-
-> Introduce pinctrl driver for EN7581 SoC. Current EN7581 pinctrl driver
-> supports the following functionalities:
-> - pin multiplexing
-> - pin pull-up, pull-down, open-drain, current strength,
->   {input,output}_enable, output_{low,high}
-> - gpio controller
-> - irq controller
+On Mon, Sep 30, 2024 at 6:32=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Tested-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Co-developed-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Signed-off-by: Benjamin Larsson <benjamin.larsson@genexis.eu>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> The bitmap allocated in aggr_parse() is always freed before the function
+> returns so use __free(bitmap) to simplify it and drop the goto label.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I missed that there was a v5 out and responded more to v4.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Anyway, I think the last comments on v4 still need to be
-adressed:
-https://lore.kernel.org/linux-gpio/CACRpkdbXWMU+wq6DvviCQPQ0EzKUm9oOnyFh34B=
-m=3DY8K-HmT0Q@mail.gmail.com/
+Gr{oetje,eeting}s,
 
-Yours,
-Linus Walleij
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
