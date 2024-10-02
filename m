@@ -1,95 +1,133 @@
-Return-Path: <linux-gpio+bounces-10748-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10749-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2790E98E2BB
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 20:41:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A96398E330
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 20:55:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CF55E1F23660
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 18:41:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D260284343
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 18:55:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0393E2141BF;
-	Wed,  2 Oct 2024 18:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2D54216A22;
+	Wed,  2 Oct 2024 18:50:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sat.qc.ca header.i=@sat.qc.ca header.b="g+m648oQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B1b++OUI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AAE42141BA
-	for <linux-gpio@vger.kernel.org>; Wed,  2 Oct 2024 18:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DBB221E24
+	for <linux-gpio@vger.kernel.org>; Wed,  2 Oct 2024 18:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727894479; cv=none; b=LSCEpRnlIf3cbZ3smD6/pOx7E1FHkrWcpRFmb4V6CR/d5lQzv4rUt0Q54fjfElSFWGXR8XPT7KtF8cOADc2fZDMKKOqr0GaJ5stUEPU05/+bNhxvi4nXjR8MDFd0Zuv2evlC8Z+0fm1nztYraTwJqHBXCp29kAQUuBGwbA/TtdE=
+	t=1727895033; cv=none; b=HrhutUx1ZlnJhue2z1c0OLr00KHG/95WkwYDTZ9Vi8ds3CrUthSY+Qyyp3pfaMY2ATX3UtLUi/6h3s2knx1SmASs2fpxEYyj/4rpxa6qVUzLMK5LNdK/VvBJJOxOuukdst6BYbbwEtS5XYb1jUS4Ep5fgS7QKEezqpJqhf+x1Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727894479; c=relaxed/simple;
-	bh=QYB166CEL96dIud8KGaPeqQ15U/uMlniHSRdrGp8mtk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=k1VQI59iX5m3HWn1elk/K5Humlr/mtBLsO7dRBwISQCn3NlFYKbzClBtcIBT4KlC51wqvQF1kz8JtcySBE06yG1HXA4nM6FQ23E/ZPhhNVaZ/MenR5A8yGJ6nEv7BS69Brb0V8TWfPmOas4UT4ESdPOPdyeeatN4o0a2bt4JPM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sat.qc.ca; spf=pass smtp.mailfrom=sat.qc.ca; dkim=pass (2048-bit key) header.d=sat.qc.ca header.i=@sat.qc.ca header.b=g+m648oQ; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sat.qc.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sat.qc.ca
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-712422564aaso551738a34.0
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2024 11:41:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sat.qc.ca; s=google; t=1727894477; x=1728499277; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QYB166CEL96dIud8KGaPeqQ15U/uMlniHSRdrGp8mtk=;
-        b=g+m648oQnOdgnGm8SP8QgEPeezp8W1mGClAESdifH7kxpI4WmeLyUsqph75udfSs38
-         hDKsgpzUn/ERUo29O0U5YJ+Drjkj+uHemCtc1iE+/B+tUugs8YDbk7e+WwbRxWBjiMy0
-         u2Y/Lnot1hB2s7w8b/yLgjVE+POGmhIbDt6ij/O1EkLtH8gtvJbbpk8Nnv57DqxLGzh/
-         Yo9ZOc5Ss+gzdwZMdWWYCgBlntudeC8qEfomx68D/XaNZvZ4vw36t2tT4h2IPd/ZtkSW
-         6VCTmFU+6d/NTnm19SMRZAzN4FNUZH4DB5LMp621PUkxdZBS1yP7Plypr5CO+nLDwd7a
-         gkGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727894477; x=1728499277;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QYB166CEL96dIud8KGaPeqQ15U/uMlniHSRdrGp8mtk=;
-        b=evdOgBKowFZ+JDNYXKvMmgrHB5qUlLvVzvMwXeLn3nOuTaH0bi8H+6Oe2uaN/Xg9kW
-         DQklgVnXGlBI0UfNcXW8youffTKqQBcmprEETEMBAHKqedK4eh3SSD27unvm5X6+JOpI
-         QqauP4esx97aMrGdNKKeu8gzqD4riCPt/8rkMK5kebuCLO2UfocD7//ApU7wlsKepwsR
-         M/4a/TIxJtCOhbU3i5A9ZV6OosTVF9XkfCcDhOVyjOiD39nBHpwN8bgF2oN1mAYjkSv4
-         EJdi+7ckrGz3EsSwwxU4UuZuTE/J3MXN+ON1sJ43+dBZofn/IC9379facPpLO0gNVe1Y
-         O1Qg==
-X-Gm-Message-State: AOJu0Yz92n4iRjOjyYbSUPbqPP8cIL6dgyx4wMqzunArjVtmP3hV+vK2
-	f67lG2AOVUeBigYjjJPmLn+P1c9/Mu9QGqa1sE6x1at0Z97LRcf5saMTEyJfcs3lvWXbkHRGd0w
-	KYPL+XsOsMmRk63MEq6EjX1TQtHTVpunGpNKUMDQuR5rf/qLrrJ39NeEt
-X-Google-Smtp-Source: AGHT+IEMzLppBtvIgWkmj0alhaOdXNSKJKUNVN3/HWfHcMoxG1cugNp/AEIBnAN2bHwwwZL9iXzT7nYXhWOc11fFVdk=
-X-Received: by 2002:a05:6870:7182:b0:268:282b:bdec with SMTP id
- 586e51a60fabf-287a3e35caamr307924fac.8.1727894477115; Wed, 02 Oct 2024
- 11:41:17 -0700 (PDT)
+	s=arc-20240116; t=1727895033; c=relaxed/simple;
+	bh=kFlIFumcWI5DnyV/SVBK0Zf8SxnMGxnGS1bghaaosEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ILj3AasowS5/3n8jmnX9yBS/4nnHC9wD1MfJO6qudx+zr9916s/TeHvFg8XLmSrBYzVnampijt5sIzQbDi3v5o3RtAly6zEoW295ojwe1A39f5RVyy/3JQiv0oLoewYIz/oNA9KsZ1jrlHxUVwLwz53JXf31TXZsV9yeP097WT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B1b++OUI; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727895032; x=1759431032;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=kFlIFumcWI5DnyV/SVBK0Zf8SxnMGxnGS1bghaaosEQ=;
+  b=B1b++OUI8W5yjcPLd38+XPsW5StdeGRHdtFqBzQre+5U0uab+5WjBExm
+   yyChzjZeM0Xr9/Ib8K3oUsxj819N3WgrXh6c2tdOhs/F71Wwj2ZQRFudB
+   Q+splk7SagaUlGM3lxO9paeSg+OD3Oo/t5uGBMnosut73kXRmX/nVgVNd
+   6AZvULf4fcLa+AoHvUY7Hl5ew8EhEBmOrdLJ4pkz7tgbwugDLQFLLBHqJ
+   ISIYwN7IOjuvFp9P00bAS4A6wrgfFTUoz39CjLX5anM/NOgQDzr1LvILh
+   BEMhrhcKChQ8DxfzuvMKsrfNBpzlDTF9muML1alXZJGzsdFBcIBimF0BR
+   Q==;
+X-CSE-ConnectionGUID: 6qu8bgN2QtyRntngbHBXsA==
+X-CSE-MsgGUID: vwAJXipjQXWQFSn8G9R0Cg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="26580090"
+X-IronPort-AV: E=Sophos;i="6.11,172,1725346800"; 
+   d="scan'208";a="26580090"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 11:50:31 -0700
+X-CSE-ConnectionGUID: 1Mt92jv6SCau9hxksGkAlg==
+X-CSE-MsgGUID: ljYSm+M/Sv6JUD/jeVEXxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,172,1725346800"; 
+   d="scan'208";a="73769013"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 02 Oct 2024 11:50:30 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sw4Qd-000UPF-1X;
+	Wed, 02 Oct 2024 18:50:27 +0000
+Date: Thu, 3 Oct 2024 02:49:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Esben Haabendal <esben@geanix.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [linusw-pinctrl:devel 8/22]
+ drivers/pinctrl/freescale/pinctrl-imx27.c:21:9: warning: 'PC' macro
+ redefined
+Message-ID: <202410030214.dPrgmUqd-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: =?UTF-8?Q?Jean=2DMicha=C3=ABl_Celerier?= <jmcelerier@sat.qc.ca>
-Date: Wed, 2 Oct 2024 14:41:06 -0400
-Message-ID: <CAA=GyxYyTvweUa1SWGeHkdtRRNuhFTri8cPTrFQY6pO+84vS0A@mail.gmail.com>
-Subject: PWM-GPIO driver: how to configure it?
-To: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello!
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+head:   30e830b8b952e550344224546f8cd83c5c49a5bf
+commit: a55222b7a1327fabad71e1e61661077ab66bb98d [8/22] pinctrl: freescale: enable use with COMPILE_TEST
+config: mips-randconfig-r112-20241002 (https://download.01.org/0day-ci/archive/20241003/202410030214.dPrgmUqd-lkp@intel.com/config)
+compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project fef3566a25ff0e34fb87339ba5e13eca17cec00f)
+reproduce: (https://download.01.org/0day-ci/archive/20241003/202410030214.dPrgmUqd-lkp@intel.com/reproduce)
 
-I am curious of trying the new pwm-gpio driver in Linux 6.11 with a
-Diolan DLN-2 chip, which exposes a gpiochip accessible to linux over
-USB.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410030214.dPrgmUqd-lkp@intel.com/
 
-I haven't managed to see where the configuration options of the driver
-are set: for instance, let's say I want to create a PWM output channel
-over gpiochip1 line 4, 6 and 12, what should my modprobe line look
-like ?
+All warnings (new ones prefixed by >>):
 
-Kind regards,
+>> drivers/pinctrl/freescale/pinctrl-imx27.c:21:9: warning: 'PC' macro redefined [-Wmacro-redefined]
+      21 | #define PC 2
+         |         ^
+   arch/mips/include/uapi/asm/ptrace.h:17:9: note: previous definition is here
+      17 | #define PC              64
+         |         ^
+   1 warning generated.
 
-------
-Jean-Micha=C3=ABl Celerier
-Soci=C3=A9t=C3=A9 des Arts Technologiques
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for PINCTRL_IMX_SCU
+   Depends on [n]: PINCTRL [=y] && IMX_SCU [=n]
+   Selected by [y]:
+   - PINCTRL_IMX8QM [=y] && PINCTRL [=y] && OF [=y] && (IMX_SCU [=n] && ARCH_MXC && ARM64 || COMPILE_TEST [=y])
+   - PINCTRL_IMX8DXL [=y] && PINCTRL [=y] && OF [=y] && (IMX_SCU [=n] && ARCH_MXC && ARM64 || COMPILE_TEST [=y])
+
+
+vim +/PC +21 drivers/pinctrl/freescale/pinctrl-imx27.c
+
+e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  17  
+e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  18  #define PAD_ID(port, pin) (port*32 + pin)
+e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  19  #define PA 0
+e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  20  #define PB 1
+e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29 @21  #define PC 2
+e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  22  #define PD 3
+e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  23  #define PE 4
+e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  24  #define PF 5
+e16dbf60111373 drivers/pinctrl/pinctrl-imx27.c Markus Schneider-Pargmann 2013-10-29  25  
+
+:::::: The code at line 21 was first introduced by commit
+:::::: e16dbf6011137343f51685c1e0c5be36a68fc501 pinctrl: imx27: imx27 pincontrol driver
+
+:::::: TO: Markus Pargmann <mpa@pengutronix.de>
+:::::: CC: Linus Walleij <linus.walleij@linaro.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
