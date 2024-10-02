@@ -1,107 +1,115 @@
-Return-Path: <linux-gpio+bounces-10715-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10716-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10BC598DB90
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 16:32:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7C8598DBB6
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 16:34:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD3F51F2214B
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 14:32:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82E5C283DE2
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 14:34:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56C561D0F45;
-	Wed,  2 Oct 2024 14:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4CF11D1305;
+	Wed,  2 Oct 2024 14:28:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QU/YXkof"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bkyL8vzu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7421D0F44
-	for <linux-gpio@vger.kernel.org>; Wed,  2 Oct 2024 14:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC3D1D043E
+	for <linux-gpio@vger.kernel.org>; Wed,  2 Oct 2024 14:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727879231; cv=none; b=PRTSPRbYJiCKhIYAF7qQitQBzVR82NzmHLtlNogWHXrIsPRI4mbcLOFAt/3opXmuZ0vnO8QwQiAn2KyZIM08IWjNtbpWlLC492mG/CuqR8OIorigKwT4PgtCQr0g05mnCV3jBH98iLKiOS86U6HWfMifFiFogs/NKfBg4YSz+OQ=
+	t=1727879324; cv=none; b=EmVeFW3D6KR5LVpxL3D0cue32UaE0l0NDB8JOTkVK1TcHAP5H3pBfASRRVz6HbKae9gOSCWoQhcz6qw/Wrz7DbvadPCABoJiQ8Uly3q8eNnXjP75jzcWSPupyJMDaM4VqrnWTcBHKGRBSS2imdHfRWs8KbZypZDDUz5/DPtsWVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727879231; c=relaxed/simple;
-	bh=mXpbdK7Sq0w2/rvqDMV4yBmzLIisStvdz6DZb3g+TPo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ithwkx2WUne9MOJ3kAOpMQfKSGwVwts44OLYoi3ST6O1qLJ579d3wQL0n0yslCv6YWISMGbc92BSVeTjSSvinfB+pGFf2OdnhN9FwUby9SFsg04d/YVxs/PdaqfVxbEKyrHjlnOp+OQweJnLCwvUgSLvSdC7A+QjXb4ab779DAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QU/YXkof; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2fabfc06de3so46470891fa.1
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2024 07:27:09 -0700 (PDT)
+	s=arc-20240116; t=1727879324; c=relaxed/simple;
+	bh=0K2PjLzYVOXehuiL6dtcAYObtHjiu9aQ3DrAo/gWFTA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ep0Eh6+K/ZxAOhPyUOabaDri0UTd8EnH+mY9HNvlQMmOQxExmxoG+pCNEGqJwZDtLLKUC35rrZeIa2sgCKxzzOWPZg0bLp/KHZCyndHCbZ1RXkXiH3+634r5Qbb6yjFYXcE9VCixTNBSmX/TaHK8JPFDLybZSYSqZYMLB/fdoLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bkyL8vzu; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42f6bec84b5so30578455e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Oct 2024 07:28:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727879228; x=1728484028; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1727879321; x=1728484121; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nMQuC8eL5QcCXYaC5lzjaR01YW0PMzH7qpPYpr9RF+M=;
-        b=QU/YXkofyp1hSnpe+RuybOHEiTv5wyYRFecPSDeNPnrW52mApLnqjvN11rg6Kd1Mfx
-         /6NlbefgNS57jvsvB3E2hgPT2IaENFWXR/Rh7Gau2Nj9TE37yx2WzVGT+RSv2sJ74edF
-         GywatXDYuTfcQC3ghG/csKB/Hq9LJqM3EEYU4mhAJwe7YDYUiW7KchEUCP7mUZz4F+wu
-         nO/JkVPNR7vekxn76SEhXgcHcjPsmkRiA8/Psz7zKGbM8Xow8d96rwZV+btGcgO8Gohm
-         WqRYDCtReb15yc/mGbKoZz1LbnG0Vs0msWHMtPyCm0zLE6LH6b7R5Mus1CfJ2EAmhoAS
-         3WzQ==
+        bh=WJ27fZvyx19AnkyD7wFd68TFT/kLyZp9eTFNFA/vn6E=;
+        b=bkyL8vzu3rwY5HmdgLKpssFIj18ld1mN8XMQ8z7RE0r7nMxIlaE7MkNxUGyF93e+OA
+         P7yl4cJqPIUxoyStZeB3BkAGNnnmEXq648Q7Na01aDMaJDI23mSllXB1cEAmWYikJEAI
+         GtJ3dwHQtGudwF706leoPDh3Keq/glebwxAJnR2Iev/gCedm8G84/yxSGLZy7FFdhO7V
+         vZ+/DNj3ne87SKxTgblTQ25XJrnFw0we7lrSkcqwQ/tGHdmtdZgBwq35t0hY33fLReyc
+         ADA0FrxOBNUIagtXLcgnJoSJre70CpispUelAwoUhYm9UGgBBVr6O1Va1i73znCpyNXn
+         cBHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727879228; x=1728484028;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1727879321; x=1728484121;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nMQuC8eL5QcCXYaC5lzjaR01YW0PMzH7qpPYpr9RF+M=;
-        b=Tfn+k5Ek7TwOpFTU3r2V8Why/DtWksAB+JUHlFT+Dt10OP7nfqwAI2d1M/kObjTN0U
-         ckPAAeABQqiNruMi0rF1VR7xKGGWt0FVlUZAKPh+LQ0zGYc9a3eNzenU3VMSUW6kK256
-         eHONUMapRsPnG4YqD+gucwsc0n3uEKpaOlgy8yV0z1F/DrS2qETOV39a8rmcteOilhav
-         ed0vmXnZXuJ6/pZrHBkFFWrP7Gcu0iC5W/t6UDacvtH2Wy/WnYVFDKEz0tP6T74ialwN
-         4I4eGPa67pnxFsTxkR6HJAmyCIRlDZnke4t8yCV6o85s/SmXCrb4S3UIypBly+NhDrJH
-         FCgA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWe7Bk2WwVdVlm6mya9MWBMLf6E9dLUCIsfC2QyNxVcs4ToO6TihYOYNX2IN6Hne06E3SPkB8PzjpC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPPb6JJZCZRlvXG+Nb0VYLETTAJWAcJBrviYBrxQrXq2n0nId4
-	MmhnUFgqFdu4vnE4oVXtYEThJ+QugWWvPECcy5P4jXBXe9oSHzcG2RecVJ97CrOAXhqzN1V0sj4
-	1B8LLnuN26NUTMyNH5LjTA6Q+NtZladAD
-X-Google-Smtp-Source: AGHT+IE8qUOPkLOfKh5iV186CwCP2O4ajUyERQPCfMPnVnzucrFoCg/aLu/lkBR4cCrnFTNs6talv9ATZxZh06cXVe0=
-X-Received: by 2002:a05:651c:b2a:b0:2fa:d345:18b9 with SMTP id
- 38308e7fff4ca-2fae10b4157mr20508231fa.38.1727879227334; Wed, 02 Oct 2024
- 07:27:07 -0700 (PDT)
+        bh=WJ27fZvyx19AnkyD7wFd68TFT/kLyZp9eTFNFA/vn6E=;
+        b=qY/n3LjjpLvQuEEstsUzIObQ/2kaDGuyNA62Yo95RZms4SvHWEAsrfBdRn9G8sedze
+         4i6340SdFWkMPSp5nfmVvZovo/0CTKdKZP0Cflr8wH4z1VCObvTY06QH8LhVyVao+hD+
+         85DDA2dJogZMYADpKTJmp7FOrG9v87LdLLzIHiMUpWAL6qLiz9YvR6Mpmt/VwcdAwXta
+         9BkOUJ0qkhKsDnjtBbXHG708tMZffyYicVs33/syFzggGzMNgGwdOcxAGitsiHsut/ec
+         C9qcC+22bK+Dm2KWYL2cvpmkNFHG2UScq2qP7zPmQJnRBOAfmdDQy2+hbpc1qGlbhLmj
+         B4Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCWHFzA+dBA/Grr8nnJRHw+NIVPxAW7ltTdCdO79z9u45T1WXkxLLUOX8btsnTey75HA3eoI0X3Az7Zf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzixepWC+PK6T9BIXGYaD9mZuqR7P8S/7p4ZLK5FTX3azvn+2A
+	Q0G3WvuRNcHq2n3jWvczFUSXLpEAHywFM+gJ8J8O55p5IVmWFr3kWnY6ymLUMEAMrLlGz/aqCSr
+	0
+X-Google-Smtp-Source: AGHT+IGmDRxvmGGzzd+LvWmxuVa4BCIIn9cWsbjCUfdpDhgz9vLCMpXY+029RQlssv7h3P6TqmP7Eg==
+X-Received: by 2002:a05:600c:3b05:b0:42c:acb0:ddb6 with SMTP id 5b1f17b1804b1-42f777b7325mr24629985e9.9.1727879321321;
+        Wed, 02 Oct 2024 07:28:41 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:23c5:7b17:f5a4:f41e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f79ff9196sm19979755e9.39.2024.10.02.07.28.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Oct 2024 07:28:41 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"Rob Herring (Arm)" <robh@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: gpio: st,nomadik-gpio: Add missing "#interrupt-cells" to example
+Date: Wed,  2 Oct 2024 16:28:36 +0200
+Message-ID: <172787931073.72515.12442051165419419116.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240925173504.1906872-1-robh@kernel.org>
+References: <20240925173504.1906872-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241002-fix-imx-pc-v1-1-95f8b89400ee@linaro.org>
-In-Reply-To: <20241002-fix-imx-pc-v1-1-95f8b89400ee@linaro.org>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Wed, 2 Oct 2024 11:26:55 -0300
-Message-ID: <CAOMZO5AijM3jQ9q3xAcPfP=duar+oMbzJJ561LsxbKscmEUyDg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: imx1: Fix too generic defines
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Esben Haabendal <esben@geanix.com>, Dong Aisheng <aisheng.dong@nxp.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Thanks for the fix.
 
-On Wed, Oct 2, 2024 at 11:22=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> The "PC" define is colliding with the (apparently broadcased)
-> define for "program counter" on Loongarch, so let's rename all
-> these 2-letter defines so they don't collide with stuff.
->
-> Fixes: a55222b7a132 pinctrl: freescale: enable use with COMPILE_TEST
+On Wed, 25 Sep 2024 12:35:03 -0500, Rob Herring (Arm) wrote:
+> Enabling dtc interrupt_provider check reveals the example is missing the
+> "#interrupt-cells" property as it is a dependency of
+> "interrupt-controller".
+> 
+> 
 
-Nit: the commit title should be enclosed by ("  "):
+Applied, thanks!
 
-Fixes: a55222b7a132 ("pinctrl: freescale: enable use with COMPILE_TEST")
+[1/1] dt-bindings: gpio: st,nomadik-gpio: Add missing "#interrupt-cells" to example
+      commit: 35c013ac7362a5470d5f30f3da0af50215095121
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
