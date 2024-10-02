@@ -1,126 +1,227 @@
-Return-Path: <linux-gpio+bounces-10695-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10696-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A1FA98D4CE
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 15:24:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEFDB98D4FB
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 15:26:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BCDEC1C2138D
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 13:24:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82213285091
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 13:26:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 239961D048B;
-	Wed,  2 Oct 2024 13:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44EF21D07B9;
+	Wed,  2 Oct 2024 13:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="QjmJs/ev"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LSTUlm5c"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCE21D0412;
-	Wed,  2 Oct 2024 13:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9031D07B2;
+	Wed,  2 Oct 2024 13:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727875459; cv=none; b=LduymBfHBsbBpuUH0aXQUBUDozzWAUxY0DBL7zVRZgy4RRJ9+qlaN3AOXpmKysiUAehAIUXcPm+mcnHUbCVm9W0BlBKZnL1wLE+qTDWeBe0WdppH7SXV0Bmrv76SIetT+Yn28LUp3dWpvIt4AmZMUqCjvAxTzEtnsdIMptiP4I4=
+	t=1727875525; cv=none; b=ldF1/b9cT79JG9WpXiwYtYHXVgsOFo6MZHJq09jc/vkYkWUWw5QPpHTG1f/X/ChOS6aKP3xeq48aIrFhIDOGyzY4BHemM9L/brneQBvR79Xk0ZBLsr6hS0Bc4wx69O6itaQT1tI3bHTqDHLCimVq0zBUszl60EyxSDWBNa3l77w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727875459; c=relaxed/simple;
-	bh=eP3rICiba2AImuO5wSHpe2ShiG6/4n7PBOA7XiAPLA4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sH5LasLTIURXIFFG0HIfiy+hv6g5g5lxkYMxnkSDiaZHu0IpFNxuD9IiJJDP33a8ER8SQlP9rDtAHjkkq1xaYW4kmrSpUyOatNnlHDVv7QFKq+92WL+SR3+RZP7ZZysDZClnLy2zTfSKlD1y9wZWYEhZzQ7560LtHctCYjR+6Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=QjmJs/ev; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=YwhUl73bkuUv9lIPuTqPqFzU/BHHZgYauhuf3U0cLiE=; b=QjmJs/ev6+lV5fyxC2U1rUl+Lu
-	vZgfTnQrXwLNhogzfGbMo9kgT3US/QrlBqp+MAil9YHESKLtwUnVyURPQ2xn3jL3D7aXk/MAt5O1i
-	1URNh3vC9rXLqkkjw0LCt1mTlcN3bIFObk0DI9YDUqDCZT+EQm6kX7EKWW2Vlrr1SjZWp29B1YZfW
-	yPA2nS5QtrppsEGTXr0Rk3BYb0nRD9EJBfU91jrqdcPnUA1b10FAVx9w6K0E6nAFPLuIdNeQLSiDz
-	Bvbcr84NqcWtnHTd5bTECO/pck0BONkRKoCX3nGVE6zBWRSNfUo3BxoMRBdh+rkUlDwEEpl2elVuH
-	8vDt5SBg==;
-Received: from i53875aa1.versanet.de ([83.135.90.161] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1svzKp-0007VF-L4; Wed, 02 Oct 2024 15:24:07 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>,
- Quentin Schulz <foss+kernel@0leil.net>
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Quentin Schulz <quentin.schulz@cherry.de>
-Subject:
- Re: [PATCH] pinctrl: rockchip: improve error message for incorrect
- rockchip,pins property
-Date: Wed, 02 Oct 2024 15:24:06 +0200
-Message-ID: <2014380.yKVeVyVuyW@diego>
-In-Reply-To:
- <20241002-pinctrl-rockchip-error-modulo-4-v1-1-4addb4e5732a@cherry.de>
-References:
- <20241002-pinctrl-rockchip-error-modulo-4-v1-1-4addb4e5732a@cherry.de>
+	s=arc-20240116; t=1727875525; c=relaxed/simple;
+	bh=t2xGM0n6vLNavXXQOnciDAXLytPrgVcYlQAYYF1hRgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fFavLBOPICrr2lJRgpGWasFAWuuVU/1phk71K8aKvDxJzQNhqMOoQmjwj4FSl8xIK6EgxicpbHy94wBd/yJr103aMYKQL/4YleCJxtFbYhqN0e+Kkad4BBPwLocjC03hfTmuKArEjC/DIkk6BaHO/YP3U3m7+oOs9iF9fxzGSyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LSTUlm5c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E5ACC4CECF;
+	Wed,  2 Oct 2024 13:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727875524;
+	bh=t2xGM0n6vLNavXXQOnciDAXLytPrgVcYlQAYYF1hRgI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LSTUlm5co/SiLPHSg6yOj/iz0uAL2OzcmiV/OsCsmh9ioHTCJU8X9ZIOdn66nWuhG
+	 BF723ZbeakpPHUHgIoku8K0FCTaRGBFaPlgfLI6z/ezHvYT85kr0eNRlbdRhq0Mj/+
+	 2wYkbzcEEh+JFVhgjJf6+V6RSlbr+J8zwoFCmGBpFidp+HsVUagDoSPE6ovppTQ+Ft
+	 Ll9A4elZeVJxaWhpIN8R3PeeW9N3YediPmikV/gGT/s9nYbS812oQiGZohlqgfyc2F
+	 jKhUBv1zf36R6+KqdogmrmBa6Ij9H10a9uuDE097yXB+Aflc2pRvevSH5ICrlEXVn+
+	 7PS9BS4vKB4Tg==
+Date: Wed, 2 Oct 2024 14:25:18 +0100
+From: Lee Jones <lee@kernel.org>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	upstream@airoha.com, benjamin.larsson@genexis.eu,
+	ansuelsmth@gmail.com, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] mfd: airoha: Add support for Airoha EN7581 MFD
+Message-ID: <20241002132518.GD7504@google.com>
+References: <20241001-en7581-pinctrl-v5-0-dc1ce542b6c6@kernel.org>
+ <20241001-en7581-pinctrl-v5-3-dc1ce542b6c6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241001-en7581-pinctrl-v5-3-dc1ce542b6c6@kernel.org>
 
-Am Mittwoch, 2. Oktober 2024, 14:03:03 CEST schrieb Quentin Schulz:
-> From: Quentin Schulz <quentin.schulz@cherry.de>
+On Tue, 01 Oct 2024, Lorenzo Bianconi wrote:
+
+> From: Christian Marangi <ansuelsmth@gmail.com>
 > 
-> If one improperly writes a rockchip,pins property, the pinctrl driver
-> basically just states that one in the myriad of pinctrl nodes is
-> improper but does not tell you which one.
-> 
-> Instead, let's print the full name of the Device Tree node that is
-> improper as well as provide more context on what the expected content
-> is.
-> 
-> Note that this should be rather unnecessary if one reads the output of
-> the dtbs_check as it would be highlighted as an error.
+> Support for Airoha EN7581 Multi Function Device that
+> expose PINCTRL functionality and PWM functionality.
 
-Nevertheless, having a more helpful error message in the case this
-happens is still nice to have
+The device is a jumble of pinctrl registers, some of which can oscillate.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+This is *still* not an MFD.
 
+If you wish to spread this functionality over 2 drivers, use syscon to
+obtain the registers and simple-mfd to automatically probe the drivers.
 
-> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 > ---
->  drivers/pinctrl/pinctrl-rockchip.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  drivers/mfd/Kconfig                   |  8 ++++
+>  drivers/mfd/Makefile                  |  2 +
+>  drivers/mfd/airoha-en7581-gpio-mfd.c  | 72 +++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/airoha-en7581-mfd.h |  9 +++++
+>  4 files changed, 91 insertions(+)
 > 
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index 5c1bc4d5b662ed403ea5c8e57a8e1cad913a31a5..04e85a6037c93f415670b286f91fccada0d38fbf 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -3227,7 +3227,9 @@ static int rockchip_pinctrl_parse_groups(struct device_node *np,
->  	/* we do not check return since it's safe node passed down */
->  	size /= sizeof(*list);
->  	if (!size || size % 4)
-> -		return dev_err_probe(dev, -EINVAL, "wrong pins number or pins and configs should be by 4\n");
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "%pOF: rockchip,pins: expected one or more of <bank pin mux CONFIG>, got %d args instead\n",
-> +				     np, size);
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index f9325bcce1b9..eca221351ab7 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -32,6 +32,14 @@ config MFD_ADP5585
+>  	  the core APIs _only_, you have to select individual components like
+>  	  the GPIO and PWM functions under the corresponding menus.
 >  
->  	grp->npins = size / 4;
+> +config MFD_AIROHA_EN7581
+> +	bool "Airoha EN7581 Multi Function Device"
+> +	depends on (ARCH_AIROHA || COMPILE_TEST) && OF
+> +	select MFD_CORE
+> +	help
+> +	  Support for Airoha EN7581 Multi Function Device that
+> +	  expose PINCTRL functionality and PWM functionality.
+> +
+>  config MFD_ALTERA_A10SR
+>  	bool "Altera Arria10 DevKit System Resource chip"
+>  	depends on ARCH_INTEL_SOCFPGA && SPI_MASTER=y && OF
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 2a9f91e81af8..be8448e81a5b 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -257,6 +257,8 @@ obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+= intel_soc_pmic_mrfld.o
 >  
+> +obj-$(CONFIG_MFD_AIROHA_EN7581)	+= airoha-en7581-gpio-mfd.o
+> +
+>  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+>  obj-$(CONFIG_MFD_ALTERA_SYSMGR) += altera-sysmgr.o
+>  obj-$(CONFIG_MFD_STPMIC1)	+= stpmic1.o
+> diff --git a/drivers/mfd/airoha-en7581-gpio-mfd.c b/drivers/mfd/airoha-en7581-gpio-mfd.c
+> new file mode 100644
+> index 000000000000..88407ce5747e
+> --- /dev/null
+> +++ b/drivers/mfd/airoha-en7581-gpio-mfd.c
+> @@ -0,0 +1,72 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * MFD driver for Airoha EN7581
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/mfd/airoha-en7581-mfd.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +
+> +static struct resource airoha_mfd_pinctrl_intr[] = {
+> +	{
+> +		.flags = IORESOURCE_IRQ,
+> +	},
+> +};
+> +
+> +static const struct mfd_cell airoha_mfd_devs[] = {
+> +	{
+> +		.name = "pinctrl-airoha",
+> +		.resources = airoha_mfd_pinctrl_intr,
+> +		.num_resources = ARRAY_SIZE(airoha_mfd_pinctrl_intr),
+> +	}, {
+> +		.name = "pwm-airoha",
+> +	},
+> +};
+> +
+> +static int airoha_mfd_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct airoha_mfd *mfd;
+> +	int irq;
+> +
+> +	mfd = devm_kzalloc(dev, sizeof(*mfd), GFP_KERNEL);
+> +	if (!mfd)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, mfd);
+> +
+> +	mfd->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(mfd->base))
+> +		return PTR_ERR(mfd->base);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	airoha_mfd_pinctrl_intr[0].start = irq;
+> +	airoha_mfd_pinctrl_intr[0].end = irq;
+> +
+> +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, airoha_mfd_devs,
+> +				    ARRAY_SIZE(airoha_mfd_devs), NULL, 0,
+> +				    NULL);
+> +}
+> +
+> +static const struct of_device_id airoha_mfd_of_match[] = {
+> +	{ .compatible = "airoha,en7581-gpio-sysctl" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, airoha_mfd_of_match);
+> +
+> +static struct platform_driver airoha_mfd_driver = {
+> +	.probe = airoha_mfd_probe,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = airoha_mfd_of_match,
+> +	},
+> +};
+> +module_platform_driver(airoha_mfd_driver);
+> +
+> +MODULE_AUTHOR("Christian Marangi <ansuelsmth@gmail.com>");
+> +MODULE_DESCRIPTION("Driver for Airoha EN7581 MFD");
+> diff --git a/include/linux/mfd/airoha-en7581-mfd.h b/include/linux/mfd/airoha-en7581-mfd.h
+> new file mode 100644
+> index 000000000000..25e73952a777
+> --- /dev/null
+> +++ b/include/linux/mfd/airoha-en7581-mfd.h
+> @@ -0,0 +1,9 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_
+> +#define _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_
+> +
+> +struct airoha_mfd {
+> +	void __iomem *base;
+> +};
+> +
+> +#endif  /* _LINUX_INCLUDE_MFD_AIROHA_EN7581_MFD_H_ */
 > 
-> ---
-> base-commit: e32cde8d2bd7d251a8f9b434143977ddf13dcec6
-> change-id: 20241002-pinctrl-rockchip-error-modulo-4-8fb1affc063a
-> 
-> Best regards,
+> -- 
+> 2.46.2
 > 
 
-
-
-
+-- 
+Lee Jones [李琼斯]
 
