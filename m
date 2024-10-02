@@ -1,70 +1,72 @@
-Return-Path: <linux-gpio+bounces-10675-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-10676-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3F9B98CF4A
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 10:55:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72C1C98CF4C
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 10:55:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68C272812E8
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 08:55:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B8192864B4
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Oct 2024 08:55:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C98751974F4;
-	Wed,  2 Oct 2024 08:55:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342841974F4;
+	Wed,  2 Oct 2024 08:55:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKSV8xQ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/Cu+D0k"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC7480BEC;
-	Wed,  2 Oct 2024 08:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5682780BEC;
+	Wed,  2 Oct 2024 08:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727859315; cv=none; b=cNUZ7E7sBzDhpr6AxYe6DuPd0giCjj/LTzZNQ77u4c7SnVOLk/nrfrOeeoMhESjXJRYWEgOspaWBMrlW1fvFKOFCzkCmiPVT/e56w9RuzQUoClUnr346kqOFxhSBi+kGvXRWrtNsrMzXckaEjCC2Xjegc0GTKeRVkUqJQLyzkiY=
+	t=1727859325; cv=none; b=Ff+gYSHogcjrONIvpEjrI2kF1Whczg39CVa0k+zPEVoMyftTKaff2y8HL+P+pz9QhGtknDZ32SyXU9VhFCxWbkSY70wAooRAFzBxq73nEtIG5L24kRI6I/P5tPtZihkZL4J2VVQgnmQq7tbM4nz84CtqcwpAgxRhlRBjByttg4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727859315; c=relaxed/simple;
-	bh=VOWLlvsuC+xi5xUTJdi5z+8TeYUwhYP+kSPsBW3Gg4w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=crG/8khuIJTe1Ggz438h2ceUCqcTg2wgp2uBol/spAcXE51O8SUFanufMgcE74QHoU/TqoKpp1wg9+vGdZmYskttygQMfbgxNJNpwGpz3pdrD3otLi5GYB6i6oIoDu3XQM4N1wIYOS6NW8GuuM0rhEyW+cVj7zfXcX77XMuco8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IKSV8xQ6; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1727859325; c=relaxed/simple;
+	bh=KbrAkFzr0utlwg9j3g6a9w9jxnXNHEnl1dIJMpaIwrQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=J9ygePqJW3G4adlDFG1gb1FNerAwFZnOzR9sLB0pCAHxONZqMHd5+taapzTsXIZgpWZnaMcrzNggPSur3BtR6FqMR0n3arIl52VqRfYmSOp158zAyDQG0OIx7465rghCNLjTiQ6BfKIidb0qG/zoQILfFJQ84lwpHblnBOdX+do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G/Cu+D0k; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42cb806623eso50543755e9.2;
-        Wed, 02 Oct 2024 01:55:13 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42cb806623eso50544935e9.2;
+        Wed, 02 Oct 2024 01:55:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727859312; x=1728464112; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ryp9L0T3TJyn+wTvhlJIzWTs/aJDiuhNhxqXqYUU3vM=;
-        b=IKSV8xQ6RqYPERRkkeoQBV7rCs73eUNHO1j+RXadDCEdpsKi/CVPC+/v9P6JFy0Szr
-         6AvZuy1CTbXE6AoajdS9NCUM9LO+BKR9ho7jz6Ych0YHsaLBgw5VsOj3nMQe62hhM+lF
-         0oDPCMfyAaL8+2RyMpTbcXENyl+bMqR9I41oNV61w9EpaItDRTgEgkPHerwRBlfxQAJj
-         yOlDel8yIN4BsHqs341Ie79vHbKfYB3B9w72tmfGikzmJTYkrCdctcgGxhXH79HUQiE9
-         QLBHVle7R2vJ1FQkVJsQkYYnyO82npTWvdhYNd2dWUNWSm4pbWCF4/TYFWibKxH/Me1n
-         rQIw==
+        d=gmail.com; s=20230601; t=1727859322; x=1728464122; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ODlXL8Ox8f7VfKshYXcTUoTZQaYuJaQq6XuNe88QYzw=;
+        b=G/Cu+D0kWtWNO21+EqnKxNK4jm+PmTckh4rHNFa6plAL5ByFJpzSpfF1cZ4a5AOpe/
+         vLp5F35G6yN7/m1aKZxMS5buv3KqgOLtZnjzEaLj/aCvh+Z0f5ndDLzPJ/tCz4vs5PhY
+         WZiaWtQYnJZZgga33NMmOuRj0WsJOwXOc2JKp//6gLwpB4q1/FQiJx0t1DL/Yd7Yedo6
+         QUfO9GOX8ixfGn3sVBzdC2HEkYLtLbdIWeQl1iL63jaq60U4JHQU/gOx2loOhuLqyEPp
+         mzhDDMCsk1y9p0BB+Pijm2uZnR4iKeue+nWx6PkwB4WQXsBJYLkM0bJhfMZf8cMPulSV
+         WvIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727859312; x=1728464112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ryp9L0T3TJyn+wTvhlJIzWTs/aJDiuhNhxqXqYUU3vM=;
-        b=dKG8O+XzzgLzeiXyLeaYM8Z/WIEzvj0wE7pmS+pL03LVmZcfAM04ILr6QaGcCxlMIl
-         +EwWYmGu2BO7f4EHMydOseXMR9Km+QXV8G946HnKUJaMHogObxMH1RwN1q+0g9EMASJg
-         z5cN7veyKJ3aYNVW0K9CuAnIVNABaP9nvJcM3nc0uRUbXuos18Uq6e1WP+Isgb19oVX6
-         1/HuCzkyKr+XmbwIv6+xEPZ45W6vah7fo8mqtmu3bIK6S7zshdRDvSXHAVG1tpGckXbf
-         jEcXQFfJoKhx536ub4wwiEFLAqVqk61xaMvPBVaId8sJ81/6NO6fpQDd/P4lfWCzeqiZ
-         tn3A==
-X-Forwarded-Encrypted: i=1; AJvYcCX8JPBxVV606pcZm/bHYISjpjI0X47wU6yTE/tjZRTbhWEzxDHVzEu9CeNTicXgvRwuxALqlTuVLGGq@vger.kernel.org, AJvYcCXzXQgL33FL4r9sdJBZAPuqSS4OmMHwqbOtia6RwEAiXOXPyN1GaE4KPIepzcZQCUuMrZIzA3gWByi1KiGJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOCzwX/b4LvgRhZeHkG576IaAgeXMPBVzdphHt4xbxGMWj+cPv
-	qtLrKCiOvGqhORBBfWp3IoPrWCqzS89Bvo0Z9ugjJtOq2/eDpuRT
-X-Google-Smtp-Source: AGHT+IFlLR4aw7gx/T1KKRRfbFiheDQ6i4dkOu70GI6M71RXZVbaf8oPT4yU+NdAmZlXwxFKt2rIMQ==
-X-Received: by 2002:a05:600c:3153:b0:42c:be90:fa2f with SMTP id 5b1f17b1804b1-42f777ed406mr16921935e9.25.1727859312081;
-        Wed, 02 Oct 2024 01:55:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727859322; x=1728464122;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ODlXL8Ox8f7VfKshYXcTUoTZQaYuJaQq6XuNe88QYzw=;
+        b=M2+6fEI7vI3V+c4xQQVtl5WKc/vCYoZ7brrK6t7uCLrAtt3f/9KRnSBNzTeZywyt1u
+         gQnH6CHQGqno/lQhXYNYZqTRMuRRgZ5edyCivclReiEBmCDI69Bry93Ijedl5ftRT5L/
+         1cMFyuBiX/QqoDom/Xsl2C48k5HI01tCor1SplrcXA2yllnKqbqALI77hGNDl7XVWAD5
+         PE6P8NtdMM5J9X7pTsO8DS3mXrZWUzksAuQ5nYL+UDfzIVA6gF/mBcpjY4Z/6nPTClsj
+         z/yEj4b0w+Iju42fHs+eB0APxi6LOhu9ATAiJtqWJqkGNiCw6jlLX/mvD2oTtyFFNHxp
+         meVg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1vHYOZpHpiGfn+Aczgs2ShGvSgHlEFdt1kP9B3U7oODhudJooe1vJHgn89XgOvYW26dlDNwfTvOQc@vger.kernel.org, AJvYcCW+YUyhgbomAgT2NrFDWdZax9P2tWFqAsHAq3HeBv/QilXHbYvt2kR/aEMC2OKHX6MzDvSX8fWLY0qfVHve@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOPdyN+sy5jp2t6+KFWw2l9B8IZb/Ez75WVMnsDpZueBoL7UjD
+	Pju5NBoje0HXimpNO5M2L/bwAgpBG4yjI7VbO1PyI6Oi3s9KtL1z
+X-Google-Smtp-Source: AGHT+IHK6XHiWaSA6VlpTwqdzS2h697jtR078plTCpsEp/p7f5yojjjR/JWgQ1+a8BNLG2kNSqriaw==
+X-Received: by 2002:adf:b1d8:0:b0:375:c4c7:c7ac with SMTP id ffacd0b85a97d-37cfba11c33mr1351244f8f.49.1727859321406;
+        Wed, 02 Oct 2024 01:55:21 -0700 (PDT)
 Received: from hthiery.kontron.local ([213.135.10.150])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cd564ce91sm13578122f8f.2.2024.10.02.01.55.11
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cd564ce91sm13578122f8f.2.2024.10.02.01.55.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2024 01:55:11 -0700 (PDT)
+        Wed, 02 Oct 2024 01:55:20 -0700 (PDT)
 From: Heiko Thiery <heiko.thiery@gmail.com>
 To: "Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>,
 	Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
@@ -75,10 +77,12 @@ To: "Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>,
 	linux-kernel@vger.kernel.org
 Cc: Michael Walle <mwalle@kernel.org>,
 	Heiko Thiery <heiko.thiery@gmail.com>
-Subject: [PATCH 1/2] misc: microchip: pci1xxxx: add support for NVMEM_DEVID_AUTO for EEPROM device
-Date: Wed,  2 Oct 2024 10:54:40 +0200
-Message-Id: <20241002085440.742863-1-heiko.thiery@gmail.com>
+Subject: [PATCH 2/2] misc: microchip: pci1xxxx: add support for NVMEM_DEVID_AUTO for OTP device
+Date: Wed,  2 Oct 2024 10:54:42 +0200
+Message-Id: <20241002085440.742863-2-heiko.thiery@gmail.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20241002085440.742863-1-heiko.thiery@gmail.com>
+References: <20241002085440.742863-1-heiko.thiery@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -90,24 +94,24 @@ Content-Transfer-Encoding: 8bit
 By using NVMEM_DEVID_AUTO we support more than 1 device and
 automatically enumerate.
 
-Fixes: 9ab5465349c0 ("misc: microchip: pci1xxxx: Add support to read and write into PCI1XXXX EEPROM via NVMEM sysfs")
+Fixes: 0969001569e4 ("misc: microchip: pci1xxxx: Add support to read and write into PCI1XXXX OTP via NVMEM sysfs")
 Signed-off-by: Heiko Thiery <heiko.thiery@gmail.com>
 ---
  drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
-index 7c3d8bedf90b..d1cd4544c83c 100644
+index d1cd4544c83c..a2ed477e0370 100644
 --- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
 +++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
-@@ -364,6 +364,7 @@ static int pci1xxxx_otp_eeprom_probe(struct auxiliary_device *aux_dev,
- 	if (is_eeprom_responsive(priv)) {
- 		priv->nvmem_config_eeprom.type = NVMEM_TYPE_EEPROM;
- 		priv->nvmem_config_eeprom.name = EEPROM_NAME;
-+		priv->nvmem_config_eeprom.id = NVMEM_DEVID_AUTO;
- 		priv->nvmem_config_eeprom.dev = &aux_dev->dev;
- 		priv->nvmem_config_eeprom.owner = THIS_MODULE;
- 		priv->nvmem_config_eeprom.reg_read = pci1xxxx_eeprom_read;
+@@ -384,6 +384,7 @@ static int pci1xxxx_otp_eeprom_probe(struct auxiliary_device *aux_dev,
+ 
+ 	priv->nvmem_config_otp.type = NVMEM_TYPE_OTP;
+ 	priv->nvmem_config_otp.name = OTP_NAME;
++	priv->nvmem_config_otp.id = NVMEM_DEVID_AUTO;
+ 	priv->nvmem_config_otp.dev = &aux_dev->dev;
+ 	priv->nvmem_config_otp.owner = THIS_MODULE;
+ 	priv->nvmem_config_otp.reg_read = pci1xxxx_otp_read;
 -- 
 2.39.2
 
